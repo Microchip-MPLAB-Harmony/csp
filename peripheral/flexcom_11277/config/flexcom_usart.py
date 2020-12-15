@@ -21,6 +21,16 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+global dataBitsDict
+
+dataBitsDict = {
+    "_5_BIT": "DRV_USART_DATA_5_BIT",
+    "_6_BIT": "DRV_USART_DATA_6_BIT",
+    "_7_BIT": "DRV_USART_DATA_7_BIT",
+    "_8_BIT": "DRV_USART_DATA_8_BIT",
+    "_9_BIT": "DRV_USART_DATA_9_BIT"
+}
+
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -46,7 +56,7 @@ def updateRingBufferSizeVisibleProperty(symbol, event):
         else:
             symbol.setVisible(False)
     # If Interrupt is enabled, make ring buffer option visible
-    # Further, if Interrupt is disabled, disable the ring buffer mode    
+    # Further, if Interrupt is disabled, disable the ring buffer mode
     elif symbol.getID() == "USART_RING_BUFFER_ENABLE":
         if (flexcom_mode == "USART"):
             #flexcomSym_UsartInterrupt.setReadOnly(symbol.getValue())
@@ -55,7 +65,7 @@ def updateRingBufferSizeVisibleProperty(symbol, event):
                 readOnlyState = symbol.getReadOnly()
                 symbol.setReadOnly(True)
                 symbol.setValue(False)
-                symbol.setReadOnly(readOnlyState)            
+                symbol.setReadOnly(readOnlyState)
         else:
             symbol.setVisible(False)
 
@@ -142,6 +152,11 @@ def updateDMASymbolVisiblity(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
+
+def updateUSARTDataBits (symbol, event):
+
+    dataBits = event["symbol"].getSelectedKey()
+    symbol.setValue(dataBitsDict[dataBits])
 
 ###################################################################################################
 ############################################ FLEXCOM USART ########################################
@@ -388,3 +403,8 @@ flexcomSym_Usart_CSR_PARE_Mask.setVisible(False)
 flexcomSym_Usart_CSR_FRAME_Mask = flexcomComponent.createStringSymbol("USART_FRAMING_ERROR_VALUE", flexcomSym_OperatingMode)
 flexcomSym_Usart_CSR_FRAME_Mask.setDefaultValue("0x40")
 flexcomSym_Usart_CSR_FRAME_Mask.setVisible(False)
+
+flexcomSym_Usart_DataBits = flexcomComponent.createStringSymbol("USART_DATA_BITS", flexcomSym_OperatingMode)
+flexcomSym_Usart_DataBits.setDefaultValue(dataBitsDict[flexcomSym_Usart_MR_CHRL.getSelectedKey()])
+flexcomSym_Usart_DataBits.setVisible(False)
+flexcomSym_Usart_DataBits.setDependencies(updateUSARTDataBits, ["FLEX_USART_MR_CHRL"])
