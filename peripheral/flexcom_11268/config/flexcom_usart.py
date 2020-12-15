@@ -21,6 +21,16 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+global dataBitsDict
+
+dataBitsDict = {
+    "_5_BIT": "DRV_USART_DATA_5_BIT",
+    "_6_BIT": "DRV_USART_DATA_6_BIT",
+    "_7_BIT": "DRV_USART_DATA_7_BIT",
+    "_8_BIT": "DRV_USART_DATA_8_BIT",
+    "_9_BIT": "DRV_USART_DATA_9_BIT"
+}
+
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -140,6 +150,10 @@ def fifoModeVisible (symbol, event):
     else:
         symbol.setVisible(False)
 
+def updateUSARTDataBits (symbol, event):
+
+    dataBits = event["symbol"].getSelectedKey()
+    symbol.setValue(dataBitsDict[dataBits])
 
 ###################################################################################################
 ############################################ FLEXCOM USART ########################################
@@ -421,3 +435,8 @@ flexcomSym_Usart_CSR_FRAME_Mask.setVisible(False)
 flexcomSym_Usart_API_Prefix = flexcomComponent.createStringSymbol("USART_PLIB_API_PREFIX", flexcomSym_OperatingMode)
 flexcomSym_Usart_API_Prefix.setDefaultValue(flexcomInstanceName.getValue() + "_USART")
 flexcomSym_Usart_API_Prefix.setVisible(False)
+
+flexcomSym_Usart_DataBits = flexcomComponent.createStringSymbol("USART_DATA_BITS", flexcomSym_OperatingMode)
+flexcomSym_Usart_DataBits.setDefaultValue(dataBitsDict[flexcomSym_Usart_MR_CHRL.getSelectedKey()])
+flexcomSym_Usart_DataBits.setVisible(False)
+flexcomSym_Usart_DataBits.setDependencies(updateUSARTDataBits, ["FLEX_USART_MR_CHRL"])
