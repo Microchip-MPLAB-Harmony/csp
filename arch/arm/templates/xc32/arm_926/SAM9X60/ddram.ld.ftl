@@ -28,14 +28,13 @@ MEMORY
 	rom         (LRX) : ORIGIN = 0, LENGTH = 0
 }
 
-<#lt><#assign HEAP_SIZE = XC32_HEAP_SIZE!"0x200">
 <#lt><#assign USR_STACK_SIZE = XC32_USR_STACK_SIZE!"0x800">
 <#lt><#assign FIQ_STACK_SIZE = XC32_FIQ_STACK_SIZE!"0x60">
 <#lt><#assign IRQ_STACK_SIZE = XC32_IRQ_STACK_SIZE!"0x60">
 <#lt><#assign SVC_STACK_SIZE = XC32_SVC_STACK_SIZE!"0x800">
 <#lt><#assign ABT_STACK_SIZE = XC32_ABT_STACK_SIZE!"0x40">
 <#lt><#assign UND_STACK_SIZE = XC32_UND_STACK_SIZE!"0x40">
-<#lt><#assign SYS_STACK_SIZE = XC32_SYS_STACK_SIZE!"0x800">
+<#lt><#assign SYS_STACK_SIZE = XC32_USR_STACK_SIZE!"0x800">
 C_STACK_SIZE   = ${USR_STACK_SIZE};
 IRQ_STACK_SIZE = ${IRQ_STACK_SIZE};
 FIQ_STACK_SIZE = ${FIQ_STACK_SIZE};
@@ -43,7 +42,6 @@ SVC_STACK_SIZE = ${SVC_STACK_SIZE};
 ABT_STACK_SIZE = ${ABT_STACK_SIZE};
 UND_STACK_SIZE = ${UND_STACK_SIZE};
 SYS_STACK_SIZE = ${SYS_STACK_SIZE};
-HEAP_SIZE      = ${HEAP_SIZE};
 
 /* Section Definitions */
 SECTIONS
@@ -169,14 +167,6 @@ SECTIONS
 		. = ALIGN(32);
 		*(.region_cache_aligned)
 		. = ALIGN(32);
-	} >ram
-
-	.heap (NOLOAD) :
-	{
-		. = ALIGN(4);
-		PROVIDE(__heap_start__ = .);
-		. += HEAP_SIZE;
-		PROVIDE(__heap_end__ = .);
 	} >ram
 
 	.stacks (NOLOAD) :

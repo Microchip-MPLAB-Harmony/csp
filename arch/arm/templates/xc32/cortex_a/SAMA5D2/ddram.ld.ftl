@@ -40,7 +40,6 @@ MEMORY
 }
 
 /* Sizes of the stacks used by the application. NOTE: you need to adjust */
-<#lt><#assign HEAP_SIZE = XC32_HEAP_SIZE!"0x200">
 <#lt><#assign USR_STACK_SIZE = XC32_USR_STACK_SIZE!"0x800">
 <#lt><#assign FIQ_STACK_SIZE = XC32_FIQ_STACK_SIZE!"0x60">
 <#lt><#assign IRQ_STACK_SIZE = XC32_IRQ_STACK_SIZE!"0x60">
@@ -53,7 +52,6 @@ FIQ_STACK_SIZE = ${FIQ_STACK_SIZE};
 SVC_STACK_SIZE = ${SVC_STACK_SIZE};
 ABT_STACK_SIZE = ${ABT_STACK_SIZE};
 UND_STACK_SIZE = ${UND_STACK_SIZE};
-HEAP_SIZE      = ${HEAP_SIZE};
 
 /* Section Definitions */
 SECTIONS
@@ -179,14 +177,6 @@ SECTIONS
 		. = ALIGN(32);
 		*(.region_cache_aligned)
 		. = ALIGN(32);
-	} >ram
-
-	.heap (NOLOAD) :
-	{
-		. = ALIGN(4);
-		__heap_start__ = .;
-		. += HEAP_SIZE;
-		__heap_end__ = .;
 	} >ram
 
 	.stacks (NOLOAD) :
