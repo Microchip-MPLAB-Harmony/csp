@@ -253,7 +253,7 @@ def generateDeviceVectorList(component):
                                                                 interrupt.getAttribute("header:alternate-name"),
                                                                 interrupt.getAttribute("caption"),
                                                                 interrupt.getAttribute("header:alternate-caption"))
-    
+
     min_interrupts = min(interrupt_dict.keys())
     cortexMHandlerMinSym = component.createIntegerSymbol("CORTEX_M_HANDLER_MIN", None)
     cortexMHandlerMinSym.setVisible(False)
@@ -263,7 +263,7 @@ def generateDeviceVectorList(component):
     cortexMHandlerMaxSym = component.createIntegerSymbol("CORTEX_M_HANDLER_MAX", None)
     cortexMHandlerMaxSym.setVisible(False)
     cortexMHandlerMaxSym.setDefaultValue(max_interrupts)
-    
+
     for index in range(min_interrupts, max_interrupts + 1):
         data = interrupt_dict.get(index)
         if  data is not None:
@@ -272,9 +272,9 @@ def generateDeviceVectorList(component):
             value = field.ljust(50) + comment
         else:
             value = "pfn_handler_t pfnReserved{0}{1};".format(("C" if (index < 0) else ""), int(abs(index)))
-        
+
         symName = "CORTEX_M_" + ("CORE" if (index < 0) else "PERIPHERAL") +"_HANDLER_PTR_"+ str(index)
-        
+
         cortexMHandlerSym = component.createStringSymbol(symName, None)
         cortexMHandlerSym.setVisible(False)
         cortexMHandlerSym.setDefaultValue(value)
@@ -306,7 +306,8 @@ def instantiateComponent( coreComponent ):
 
     isCortexA =     False
     isCortexM =     False
-    isMips =        False
+    isMips    =     False
+    isArm926  =     False
 
     xc32Available = False
     iarAvailable =  False
@@ -349,6 +350,7 @@ def instantiateComponent( coreComponent ):
         multiCompilerSupport = True
         deviceCacheHeaderName = "cache_cortex_m.h.ftl"
     elif "ARM926" in coreArch.getValue():
+        isArm926 = True
         baseArchDir = "arm"
         compilers = [ "XC32", "IAR", "KEIL" + naQualifier ]
         xc32Available = True
@@ -524,7 +526,7 @@ def instantiateComponent( coreComponent ):
         xc32SecureHeapSize.setLabel("Secure Heap Size (bytes)")
         xc32SecureHeapSize.setDefaultValue( 512 )
 
-    if isCortexA == True:
+    if isCortexA == True or isArm926 == True:
         xc32UsrStackSize = coreComponent.createIntegerSymbol("XC32_USR_STACK_SIZE", xc32LdGeneralMenu)
         xc32UsrStackSize.setLabel( "User/System Stack Size (bytes)" )
         xc32UsrStackSize.setDefaultValue( 4096 )
