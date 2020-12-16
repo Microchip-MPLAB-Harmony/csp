@@ -282,10 +282,46 @@ uint16_t ${DMA_INSTANCE_NAME}_ChannelGetTransferredCount( DMAC_CHANNEL channel )
 }
 
 <#if DMAC_LL_ENABLE = true>
+void ${DMA_INSTANCE_NAME}_LinkedListDescriptorSetup (dmac_descriptor_registers_t* currentDescriptor,
+                                                    DMAC_CHANNEL_CONFIG setting,
+                                                    const void *srcAddr,
+                                                    const void *destAddr,
+                                                    size_t blockSize,
+                                                    dmac_descriptor_registers_t* nextDescriptor)
+{
+    uint8_t beat_size = 0;
+  
+    currentDescriptor->DMAC_BTCTRL = setting;
+  
+    // Set source address
+    if (currentDescriptor->DMAC_BTCTRL & DMAC_BTCTRL_SRCINC_Msk)
+    {
+      currentDescriptor->DMAC_SRCADDR = (uint32_t) ((intptr_t)srcAddr + blockSize);
+    }
+    else
+    {
+      currentDescriptor->DMAC_SRCADDR = (uint32_t) (srcAddr);
+    }
+  
+    // Set destination address
+    if (currentDescriptor->DMAC_BTCTRL & DMAC_BTCTRL_DSTINC_Msk)
+    {
+      currentDescriptor->DMAC_DSTADDR = (uint32_t) ((intptr_t)destAddr + blockSize);
+    }
+    else
+    {
+      currentDescriptor->DMAC_DSTADDR = (uint32_t) (destAddr);
+    }
+  
+    // Calculate the beat size and then set the BTCNT value
+    beat_size = (currentDescriptor->DMAC_BTCTRL & DMAC_BTCTRL_BEATSIZE_Msk) >> DMAC_BTCTRL_BEATSIZE_Pos;
+    currentDescriptor->DMAC_BTCNT = blockSize / (1 << beat_size);
+  
+    currentDescriptor->DMAC_DESCADDR = (uint32_t) nextDescriptor;
+}                                                    
 /*******************************************************************************
     This function submit a list of DMA transfers.
 ********************************************************************************/
-
 bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_descriptor_registers_t* channelDesc)
 {
     bool returnStatus = false;
