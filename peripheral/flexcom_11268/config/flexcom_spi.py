@@ -326,6 +326,14 @@ def updateNCPHAFromDatabase(symbol, event):
 ###################################################################################################
 ############################################# FLEXCOM SPI #########################################
 ###################################################################################################
+
+flexcomSPI_FIFONode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"FLEXCOM\"]/instance@[name=\"FLEXCOM0\"]/parameters/param@[name=\"SPI_FIFO_SIZE\"]")
+flexcomSPI_FIFOSize = int(flexcomSPI_FIFONode.getAttribute('value'),10)
+
+flexcomSym_SPI_FIFOSize = flexcomComponent.createIntegerSymbol("FLEXCOM_SPI_FIFO_SIZE", flexcomSym_OperatingMode)
+flexcomSym_SPI_FIFOSize.setDefaultValue(flexcomSPI_FIFOSize)
+flexcomSym_SPI_FIFOSize.setVisible(False)
+
 flexcomSPIModeValues = ["MASTER", "SLAVE"]
 flexcomSym_SPI_MR_MSTR = flexcomComponent.createComboSymbol("FLEXCOM_SPI_MR_MSTR", flexcomSym_OperatingMode, flexcomSPIModeValues)
 flexcomSym_SPI_MR_MSTR.setLabel("Master/Slave Mode")

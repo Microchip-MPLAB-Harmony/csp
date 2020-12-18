@@ -210,6 +210,13 @@ global flexcomSym_UsartFIFOEnable
 global flexcomSym_BaudRatePerErrorComment
 global flexcomSym_UsartMode
 
+flexcomUSARTFIFONode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"FLEXCOM\"]/instance@[name=\"FLEXCOM0\"]/parameters/param@[name=\"USART_FIFO_SIZE\"]")
+flexcomUSARTFIFOSize = int(flexcomUSARTFIFONode.getAttribute('value'),10)
+
+flexcomSym_UsartFIFOSize = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_FIFO_SIZE", flexcomSym_OperatingMode)
+flexcomSym_UsartFIFOSize.setDefaultValue(flexcomUSARTFIFOSize)
+flexcomSym_UsartFIFOSize.setVisible(False)
+
 flexcomSym_UsartMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_MR_USART_MODE", flexcomSym_OperatingMode)
 flexcomSym_UsartMode.setLabel("Mode")
 flexcomSym_USART_MODE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEX_US_MR__USART_MODE\"]")
@@ -447,24 +454,24 @@ flexcomSym_UsartFIFOEnable.setDependencies(fifoModeVisible, ["FLEXCOM_MODE", "FL
 flexcomSym_UsartFIFORXThreshold = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_RX_FIFO_THRESHOLD", flexcomSym_UsartFIFOEnable)
 flexcomSym_UsartFIFORXThreshold.setLabel("RX FIFO Threshold")
 flexcomSym_UsartFIFORXThreshold.setMin(1)
-flexcomSym_UsartFIFORXThreshold.setMax(32)
-flexcomSym_UsartFIFORXThreshold.setDefaultValue(16)
+flexcomSym_UsartFIFORXThreshold.setMax(flexcomUSARTFIFOSize)
+flexcomSym_UsartFIFORXThreshold.setDefaultValue(flexcomUSARTFIFOSize/2)
 flexcomSym_UsartFIFORXThreshold.setVisible(False)
 flexcomSym_UsartFIFORXThreshold.setDependencies(fifoOptionsVisible, ["FLEXCOM_USART_FIFO_ENABLE"])
 
 flexcomSym_UsartFIFOTXThreshold = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_TX_FIFO_THRESHOLD", flexcomSym_UsartFIFOEnable)
 flexcomSym_UsartFIFOTXThreshold.setLabel("TX FIFO Threshold")
 flexcomSym_UsartFIFOTXThreshold.setMin(0)
-flexcomSym_UsartFIFOTXThreshold.setMax(31)
-flexcomSym_UsartFIFOTXThreshold.setDefaultValue(16)
+flexcomSym_UsartFIFOTXThreshold.setMax(flexcomUSARTFIFOSize-1)
+flexcomSym_UsartFIFOTXThreshold.setDefaultValue(flexcomUSARTFIFOSize/2)
 flexcomSym_UsartFIFOTXThreshold.setVisible(False)
 flexcomSym_UsartFIFOTXThreshold.setDependencies(fifoOptionsVisible, ["FLEXCOM_USART_FIFO_ENABLE"])
 
 flexcomSym_UsartFIFORX2Threshold = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_RX_FIFO_THRESHOLD_2", flexcomSym_UsartFIFOEnable)
 flexcomSym_UsartFIFORX2Threshold.setLabel("RX FIFO Threshold 2")
 flexcomSym_UsartFIFORX2Threshold.setMin(1)
-flexcomSym_UsartFIFORX2Threshold.setMax(32)
-flexcomSym_UsartFIFORX2Threshold.setDefaultValue(12)
+flexcomSym_UsartFIFORX2Threshold.setMax(flexcomUSARTFIFOSize)
+flexcomSym_UsartFIFORX2Threshold.setDefaultValue(flexcomUSARTFIFOSize/2)
 flexcomSym_UsartFIFORX2Threshold.setVisible(False)
 flexcomSym_UsartFIFORX2Threshold.setDependencies(rxFifo2OptionVisible, ["FLEXCOM_USART_FIFO_ENABLE", "FLEXCOM_USART_MR_USART_MODE"])
 

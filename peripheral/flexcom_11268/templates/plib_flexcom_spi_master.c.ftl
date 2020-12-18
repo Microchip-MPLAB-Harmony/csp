@@ -359,7 +359,7 @@ static uint8_t ${FLEXCOM_INSTANCE_NAME}_SPI_FIFO_Fill(void)
     uint32_t dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & FLEX_SPI_CSR_BITS_Msk;
 </#if>
 
-    while ((nDataCopiedToFIFO < 32) && (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk))
+    while ((nDataCopiedToFIFO < ${FLEXCOM_SPI_FIFO_SIZE}) && (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk))
     {
         if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
         {
@@ -457,13 +457,13 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
 
         nTxPending = (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize - ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount) + ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize;
 
-        if (nTxPending < 32)
+        if (nTxPending < ${FLEXCOM_SPI_FIFO_SIZE})
         {
             rxThreshold = nTxPending;
         }
         else
         {
-            rxThreshold = 32;
+            rxThreshold = ${FLEXCOM_SPI_FIFO_SIZE};
         }
 
         /* Set RX FIFO level so as to generate interrupt after all bytes are transmitted and response from slave is received for all the bytes */
@@ -690,13 +690,13 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 
     if (nTxPending > 0)
     {
-        if (nTxPending < 32)
+        if (nTxPending < ${FLEXCOM_SPI_FIFO_SIZE})
         {
             rxThreshold = nTxPending;
         }
         else
         {
-            rxThreshold = 32;
+            rxThreshold = ${FLEXCOM_SPI_FIFO_SIZE};
         }
 
         /* Set RX FIFO level so as to generate interrupt after all bytes are transmitted and response from slave is received for all the bytes */
