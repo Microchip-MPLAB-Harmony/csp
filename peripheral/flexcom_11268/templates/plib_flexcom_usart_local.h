@@ -125,6 +125,13 @@ typedef enum
 
 } FLEXCOM_USART_STOP;
 
+typedef enum
+{
+    FLEXCOM_IRDA_DIR_TRANSMIT = 0,
+    FLEXCOM_IRDA_DIR_RECEIVE,
+
+} FLEXCOM_IRDA_DIR;
+
 /* FLEXCOM USART Serial Setup */
 typedef struct
 {
@@ -154,7 +161,7 @@ typedef struct
     FLEXCOM_USART_CALLBACK  rxCallback;
     uintptr_t               rxContext;
     volatile bool           rxBusyStatus;
-	volatile FLEXCOM_USART_ERROR errorStatus;
+    volatile FLEXCOM_USART_ERROR errorStatus;
 
 } FLEXCOM_USART_OBJECT ;
 

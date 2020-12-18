@@ -22,6 +22,7 @@
 *****************************************************************************"""
 
 global dataBitsDict
+global flexcomSym_BaudRatePerErrorComment
 
 dataBitsDict = {
     "_5_BIT": "DRV_USART_DATA_5_BIT",
@@ -72,25 +73,40 @@ clock_source = {"Ext_clk_src_Freq" : 1000000}
 global baudRateCalc
 # Calculates BRG value and Oversampling
 def baudRateCalc(clk, baud):
+    global flexcomSym_BaudRatePerErrorComment
+    per_error = 0
+
     if (clk >= (16 * baud)):
-        brgVal = (clk / (16 * baud))
+        brgVal = (float(clk) / (16 * baud))
         overSamp = 0
+        actualBaud = float(clk)/(int(brgVal)  * 16)
+        per_error = (float(actualBaud - baud)/baud) * 100.0
     elif (clk >= (8 * baud)):
-        brgVal = (clk / (8 * baud))
+        brgVal = (float(clk) / (8 * baud))
         overSamp = 1
+        actualBaud = float(clk)/(int(brgVal)  * 8)
+        per_error = (float(actualBaud - baud)/baud) * 100.0
     else:
         brgVal = 0
         overSamp = 0
+        per_error = 0
 
     # The brgVal must fit into a 16-bit register
     if brgVal > 65535:
         brgVal = 0
         overSamp = 0
+        per_error = 0
 
     if flexcomSym_OperatingMode.getSelectedKey() == "USART":
         flexcomClockInvalidSym.setVisible((brgVal < 1))
 
-    return [brgVal, overSamp]
+    if flexcomSym_UsartMode.getSelectedKey() == "IRDA" and per_error > 1.87:
+        flexcomSym_BaudRatePerErrorComment.setLabel("Baud rate error is " + "{:.3f}".format(per_error) + " %." " Maximum allowable error in IRDA mode is +/- 1.87%.  ")
+        flexcomSym_BaudRatePerErrorComment.setVisible(True)
+    else:
+        flexcomSym_BaudRatePerErrorComment.setVisible(False)
+
+    return [int(brgVal), overSamp, per_error]
 
 def baudRateTrigger(symbol, event):
     if flexcomSym_OperatingMode.getSelectedKey() == "USART":
@@ -100,7 +116,7 @@ def baudRateTrigger(symbol, event):
             clk = Database.getSymbolValue(deviceNamespace, "FLEX_USART_CLOCK_FREQ")
         baud = Database.getSymbolValue(deviceNamespace, "BAUD_RATE")
 
-        brgVal, overSamp = baudRateCalc(clk, baud)
+        brgVal, overSamp, perError = baudRateCalc(clk, baud)
 
         if symbol.getID() == "BRG_VALUE":
             symbol.setValue(brgVal, 2)
@@ -120,6 +136,25 @@ def clockSourceFreq(symbol, event):
             symbol.setVisible(False)
         else :
             symbol.setVisible(True)
+
+def irdaFilterVal(symbol, event):
+    peripheralClkFreq = int(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+    # t_peripheralClock * (IRDA_FILTER + 3) < 1.41 1us
+    # Subtracting 4 instead of 3, as filterVal must be less than 1.41 us
+    filterVal = (int)((1.41e-6)*(peripheralClkFreq) - 4)
+    symbol.setValue(filterVal)
+
+def irdaBaudErrorCalculate(symbol, event):
+    if flexcomSym_OperatingMode.getSelectedKey() == "USART" and flexcomSym_UsartMode.getSelectedKey() == "IRDA":
+        if Database.getSymbolValue(deviceNamespace, "FLEXCOM_USART_MR_USCLKS") == 0x3:
+            clk = Database.getSymbolValue(deviceNamespace, "EXTERNAL_CLOCK_FREQ")
+        else:
+            clk = Database.getSymbolValue(deviceNamespace, "FLEX_USART_CLOCK_FREQ")
+        baud = Database.getSymbolValue(deviceNamespace, "BAUD_RATE")
+
+        baudRateCalc(clk, baud)
+    else:
+        symbol.setVisible(False)
 
 def dataWidthLogic(symbol, event):
     if(event["value"] == 4):
@@ -172,6 +207,8 @@ global flexcomSym_UsartInterrupt
 global flecomRxdmaEnable
 global flecomTxdmaEnable
 global flexcomSym_UsartFIFOEnable
+global flexcomSym_BaudRatePerErrorComment
+global flexcomSym_UsartMode
 
 flexcomSym_UsartMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_MR_USART_MODE", flexcomSym_OperatingMode)
 flexcomSym_UsartMode.setLabel("Mode")
@@ -182,7 +219,8 @@ for index in range(len(flexcomSym_UsartMode_Values)):
     flexcomSym_UsartMode_Key_Name = flexcomSym_UsartMode_Values[index].getAttribute("name")
     flexcomSym_UsartMode_Key_Value = flexcomSym_UsartMode_Values[index].getAttribute("value")
     flexcomSym_UsartMode_Key_Description = flexcomSym_UsartMode_Values[index].getAttribute("caption")
-    flexcomSym_UsartMode.addKey(flexcomSym_UsartMode_Key_Name, flexcomSym_UsartMode_Key_Value, flexcomSym_UsartMode_Key_Description)
+    if flexcomSym_UsartMode_Key_Name == "NORMAL" or flexcomSym_UsartMode_Key_Name == "RS485" or flexcomSym_UsartMode_Key_Name == "HW_HANDSHAKING" or flexcomSym_UsartMode_Key_Name == "IRDA":
+        flexcomSym_UsartMode.addKey(flexcomSym_UsartMode_Key_Name, flexcomSym_UsartMode_Key_Value, flexcomSym_UsartMode_Key_Description)
 flexcomSym_UsartMode.setDisplayMode("Key")
 flexcomSym_UsartMode.setOutputMode("Key")
 flexcomSym_UsartMode.setDefaultValue(0)
@@ -258,6 +296,13 @@ flexcomSym_UsartClkValue.setDefaultValue(int(Database.getSymbolValue("core", fle
 flexcomSym_UsartClkValue.setVisible(False)
 flexcomSym_UsartClkValue.setDependencies(clockSourceFreq, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USCLKS", "core." + flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
+flexcomSym_UsartIRDAFilterValue = flexcomComponent.createIntegerSymbol("FLEX_USART_IRDA_FILTER_VAL", flexcomSym_OperatingMode)
+flexcomSym_UsartIRDAFilterValue.setLabel("Clock Source Value")
+flexcomSym_UsartIRDAFilterValue.setReadOnly(True)
+flexcomSym_UsartIRDAFilterValue.setDefaultValue(int(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+flexcomSym_UsartIRDAFilterValue.setVisible(False)
+flexcomSym_UsartIRDAFilterValue.setDependencies(irdaFilterVal, ["core." + flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
 flexcomSym_UsartBaud = flexcomComponent.createIntegerSymbol("BAUD_RATE", flexcomSym_OperatingMode)
 flexcomSym_UsartBaud.setLabel("Baud Rate")
 flexcomSym_UsartBaud.setDefaultValue(115200)
@@ -265,7 +310,12 @@ flexcomSym_UsartBaud.setMin(1)
 flexcomSym_UsartBaud.setVisible(False)
 flexcomSym_UsartBaud.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
-brgVal, overSamp = baudRateCalc(flexcomSym_UsartClkValue.getValue(), flexcomSym_UsartBaud.getValue())
+flexcomSym_BaudRatePerErrorComment = flexcomComponent.createCommentSymbol("FLEXCOM_BAUD_PER_ERROR_COMMENT", flexcomSym_OperatingMode)
+flexcomSym_BaudRatePerErrorComment.setVisible(False)
+flexcomSym_BaudRatePerErrorComment.setLabel("Baud rate error is" + "" + "Maximum baud rate error must be within +/- 1.87%.  ")
+flexcomSym_BaudRatePerErrorComment.setDependencies(irdaBaudErrorCalculate, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
+
+brgVal, overSamp, perError = baudRateCalc(flexcomSym_UsartClkValue.getValue(), flexcomSym_UsartBaud.getValue())
 flexcomSym_MR_OVER = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_MR_OVER", flexcomSym_OperatingMode)
 flexcomSym_MR_OVER.setVisible(False)
 flexcomSym_MR_OVER.setDefaultValue(overSamp)
