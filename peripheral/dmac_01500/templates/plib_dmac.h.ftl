@@ -176,6 +176,44 @@ typedef enum
 } DMAC_CHANNEL;
 
 // *****************************************************************************
+/* DMA CRC Setup
+
+  Summary:
+    Fundamental data object that represents DMA CRC setup parameters.
+
+  Description:
+    None
+
+  Remarks:
+    None
+*/
+typedef struct
+{
+    /* DCRCCON[CRCAPP]: The DMA transfers data from the source into the CRC engine and 
+     * writes the calculated CRC value to the destination when enabled
+    */
+    bool append_mode;
+
+    /* DCRCCON[BITO]: The input data is bit reversed (reflected input) when enabled */
+    bool reverse_crc_input;
+
+    /* DCRCCON[PLEN]: Determines the length of the polynomial Example: 16, 32 */
+    uint8_t polynomial_length;
+
+    /* DCRCXOR: Polynomial for calculating the CRC */
+    uint32_t polynomial;
+
+    /* DRCRDATA: Input Non direct Seed for calculating the CRC */
+    uint32_t non_direct_seed;
+
+    /* The calculated CRC is bit reversed (reflected output) before final XOR */
+    bool reverse_crc_output;
+
+    /* The XOR value used to generate final CRC output */
+    uint32_t final_xor_value;
+} DMAC_CRC_SETUP;
+
+// *****************************************************************************
 // *****************************************************************************
 // Section: DMAC API
 // *****************************************************************************
@@ -285,6 +323,126 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable (DMAC_CHANNEL channel);
     </code>
 */
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel);
+
+// *****************************************************************************
+/* Function:
+   void ${DMA_INSTANCE_NAME}_ChannelCRCEnable
+
+  Summary:
+    DMA Channel CRC setup and enable function
+
+  Description:
+    Sets up the DMA CRC engine for a particular channel and enables it.
+    CRC can be enabled for only one channel at a time.
+    Application needs to call this API with proper setup parameters every time
+    before starting any DMA transfer.
+
+    Note:
+    - A non direct seed should be used while setting up the DMA CRC
+
+    - The source buffer used for the DMA transfer should be appended with
+      additional zero bits based on the CRC to be generated as shown in example
+      - For 16 Bit CRC - Two bytes of 0's needs to be appended
+      - For 32 Bit CRC - Four bytes of 0's needs to be appended
+
+    - Currently LFSR CRC type is only supported
+
+  Parameters:
+    - DMAC_CHANNEL channel      : DMA channel this callback pertains to
+    - DMAC_CRC_SETUP crcSetup   : parameter holding the crc setup information
+
+  Returns:
+    void
+
+  Example:
+    <code>
+    const uint8_t srcBuffer[13] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 0, 0, 0, 0};
+    uint8_t CACHE_ALIGN dstBuffer[13] = {0};
+
+    DMAC_CRC_SETUP crcSetup = {0};
+
+    crcSetup.reverse_data_input = true;
+    crcSetup.polynomial_length  = 32;
+    crcSetup.polynomial         = 0x04C11DB7;
+    crcSetup.non_direct_seed    = 0x46AF6449;
+    crcSetup.reverse_crc_output = true;
+    crcSetup.final_xor_value    = 0xFFFFFFFF;
+
+    ${DMA_INSTANCE_NAME}_ChannelCRCEnable(DMAC_CHANNEL_0, crcSetup);
+
+    DMAC_ChannelTransfer(DMAC_CHANNEL_0, &srcBuffer, 13, &dstBuffer, 13, 13);
+    </code>
+*/
+void ${DMA_INSTANCE_NAME}_ChannelCRCEnable( DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup );
+
+// *****************************************************************************
+/* Function:
+   void ${DMA_INSTANCE_NAME}_CRCDisable
+
+  Summary:
+    DMA CRC disable function
+
+  Description:
+    Disables CRC generation for the DMA transfers
+
+  Parameters:
+    None
+
+  Returns:
+    void
+
+  Example:
+    <code>
+    ${DMA_INSTANCE_NAME}_CRCDisable();
+    </code>
+*/
+void ${DMA_INSTANCE_NAME}_CRCDisable( void );
+
+// *****************************************************************************
+/* Function:
+   uint32_t ${DMA_INSTANCE_NAME}_CRCRead
+
+  Summary:
+    DMA CRC read function
+
+  Description:
+    Reads the generated DMA CRC value. It performs crc reverse and final xor
+    opeartion based on setup paramters during ${DMA_INSTANCE_NAME}_ChannelCRCEnable()
+
+    Note: Once Read is done, ${DMA_INSTANCE_NAME}_ChannelCRCEnable() has to be called
+    again to setup the seed before performing DMA transfer for CRC generation.
+
+  Parameters:
+    None
+
+  Returns:
+    - crc: Generated crc value
+
+  Example:
+    <code>
+    DMAC_CRC_SETUP crcSetup = {0};
+    transfer_completed = false;
+    uint32_t crc = 0;
+
+    crcSetup.reverse_data_input = true;
+    crcSetup.polynomial_length  = 32;
+    crcSetup.polynomial         = 0x04C11DB7;
+    crcSetup.non_direct_seed    = 0x46AF6449;
+    crcSetup.reverse_crc_output = true;
+    crcSetup.final_xor_value    = 0xFFFFFFFF;
+
+    ${DMA_INSTANCE_NAME}_ChannelCRCEnable(DMAC_CHANNEL_0, crcSetup);
+
+    ${DMA_INSTANCE_NAME}_ChannelTransfer(...);
+
+    if (transfer_completed == true)
+    {
+        crc = ${DMA_INSTANCE_NAME}_CRCRead();
+    }
+
+    </code>
+*/
+uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void );
 
 // *****************************************************************************
 /* Function:

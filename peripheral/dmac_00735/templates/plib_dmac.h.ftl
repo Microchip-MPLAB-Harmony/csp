@@ -125,6 +125,32 @@ typedef enum
 
 } DMAC_CHANNEL;
 
+typedef struct
+{
+    /* DCRCCON[CRCAPP]: The DMA transfers data from the source into the CRC engine and 
+     * writes the calculated CRC value to the destination when enabled
+    */
+    bool append_mode;
+
+    /* DCRCCON[BITO]: The input data is bit reversed (reflected input) when enabled */
+    bool reverse_crc_input;
+
+    /* DCRCCON[PLEN]: Determines the length of the polynomial Example: 16, 32 */
+    uint8_t polynomial_length;
+
+    /* DCRCXOR: Polynomial for calculating the CRC */
+    uint32_t polynomial;
+
+    /* DRCRDATA: Input Non direct Seed for calculating the CRC */
+    uint32_t non_direct_seed;
+
+    /* The calculated CRC is bit reversed (reflected output) before final XOR */
+    bool reverse_crc_output;
+
+    /* The XOR value used to generate final CRC output */
+    uint32_t final_xor_value;
+} DMAC_CRC_SETUP;
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${DMA_INSTANCE_NAME} API
@@ -140,6 +166,12 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
 void ${DMA_INSTANCE_NAME}_ChannelDisable(DMAC_CHANNEL channel);
 
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy(DMAC_CHANNEL channel);
+
+void ${DMA_INSTANCE_NAME}_ChannelCRCEnable( DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup );
+
+void ${DMA_INSTANCE_NAME}_CRCDisable( void );
+
+uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

@@ -53,13 +53,14 @@
 // *****************************************************************************
 
 static DMAC_CHANNEL_OBJECT  gDMAChannelObj[${NUM_DMA_CHANS}];
+static DMAC_CRC_SETUP gCRCSetup;
 
 #define ConvertToPhysicalAddress(a) ((uint32_t)KVA_TO_PA(a))
 #define ConvertToVirtualAddress(a)  PA_TO_KVA1(a)
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: DMAC PLib Local Functions
+// Section: ${DMA_INSTANCE_NAME} PLib Local Functions
 // *****************************************************************************
 // *****************************************************************************
 
@@ -163,6 +164,46 @@ static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses( DMAC_CHANNEL channel, cons
     /* Set destination address, DCHxDSA */
     regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_DSA_OFST});
     *(volatile uint32_t *)(regs) = destAddress;
+}
+
+// *****************************************************************************
+/* Function:
+   static uint32_t ${DMA_INSTANCE_NAME}_BitReverse( uint32_t num, uint32_t bits)
+
+  Summary:
+    Reverses the bits in the given number
+
+  Description:
+    Reverses the bits in the given number based on the size of the number.
+    Example:
+        number  = 10110011
+        reverse = 11001101
+
+  Parameters:
+    num - Number to be reversed
+    bits - size of the number (8, 16, 32)
+
+  Returns:
+    reversed number
+*/
+static uint32_t ${DMA_INSTANCE_NAME}_BitReverse( uint32_t num, uint32_t bits)
+{
+    uint32_t out = 0;
+    uint32_t i;
+
+    for( i = 0; i < bits; i++ )
+    {
+        out <<= 1;
+
+        if( num & 1 )
+        {
+            out |= 1;
+        }
+
+        num >>= 1;
+    }
+
+    return out;
 }
 
 // *****************************************************************************
@@ -407,6 +448,131 @@ bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel)
 
 }
 
+// *****************************************************************************
+/* Function:
+   void ${DMA_INSTANCE_NAME}_ChannelCRCEnable( DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup )
+
+  Summary:
+    DMA Channel CRC setup and enable function
+
+  Description:
+    Sets up the DMA CRC engine for a particular channel and enables it.
+    CRC can be enabled for only one channel at a time.
+    Application needs to call this API with proper setup parameters every time
+    before starting any DMA transfer.
+
+    Note:
+    - A non direct seed should be used while setting up the DMA CRC
+
+    - The source buffer used for the DMA transfer should be appended with
+      additional zero bits based on the CRC to be generated
+      - For 16 Bit CRC - Two bytes of 0's needs to be appended
+      - For 32 Bit CRC - Four bytes of 0's needs to be appended
+
+    - Currently LFSR CRC type is only supported
+
+  Parameters:
+    - DMAC_CHANNEL channel      : DMA channel this callback pertains to
+    - DMAC_CRC_SETUP CRCSetup   : parameter holding the crc setup information
+
+  Returns:
+    void
+
+*/
+void ${DMA_INSTANCE_NAME}_ChannelCRCEnable( DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup )
+{
+    uint32_t mask = 0;
+
+    gCRCSetup.append_mode           = CRCSetup.append_mode;
+    gCRCSetup.reverse_crc_input     = CRCSetup.reverse_crc_input;
+    gCRCSetup.polynomial_length     = CRCSetup.polynomial_length;
+    gCRCSetup.polynomial            = CRCSetup.polynomial;
+    gCRCSetup.non_direct_seed       = CRCSetup.non_direct_seed;
+    gCRCSetup.final_xor_value       = CRCSetup.final_xor_value;
+    gCRCSetup.reverse_crc_output    = CRCSetup.reverse_crc_output;
+
+    if (gCRCSetup.append_mode == true)
+    {
+        mask |= _DCRCCON_CRCAPP_MASK;
+    }
+
+    if (gCRCSetup.reverse_crc_input == true)
+    {
+        mask |= _DCRCCON_BITO_MASK;
+    }
+
+    mask |= (channel | _DCRCCON_CRCEN_MASK | ((gCRCSetup.polynomial_length - 1) << _DCRCCON_PLEN_POSITION));
+
+    /* Setup the DMA CRCCON register */
+    DCRCCON = mask;
+
+    /* Store the polynomial value */
+    DCRCXOR = gCRCSetup.polynomial;
+
+    /* Store the Initial seed value */
+    DCRCDATA = gCRCSetup.non_direct_seed;
+}
+
+// *****************************************************************************
+/* Function:
+   void ${DMA_INSTANCE_NAME}_CRCDisable
+
+  Summary:
+    DMA CRC disable function
+
+  Description:
+    Disables CRC generation for the DMA transfers
+
+  Parameters:
+    None
+
+  Returns:
+    void
+*/
+void ${DMA_INSTANCE_NAME}_CRCDisable( void )
+{
+    DCRCCONCLR = _DCRCCON_CRCEN_MASK;
+}
+
+// *****************************************************************************
+/* Function:
+   uint32_t ${DMA_INSTANCE_NAME}_CRCRead
+
+  Summary:
+    DMA CRC read function
+
+  Description:
+    Reads the generated DMA CRC value. It performs crc reverse and final xor
+    opeartion based on setup paramters during ${DMA_INSTANCE_NAME}_ChannelCRCEnable()
+
+    Note: Once Read is done, ${DMA_INSTANCE_NAME}_ChannelCRCEnable() has to be called
+    again to setup the seed before performing DMA transfer for CRC generation.
+
+  Parameters:
+    None
+
+  Returns:
+    - crc: Generated crc value
+*/
+uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void )
+{
+    uint32_t crc = 0;
+
+    /* Read the generated CRC value.
+     * Once read ${DMA_INSTANCE_NAME}_CRCEnable() has to be called again before DMA Transfer for new CRC.
+    */
+    crc = DCRCDATA;
+
+    /* Reverse the final crc value */
+    if (gCRCSetup.reverse_crc_output == true)
+    {
+        crc = ${DMA_INSTANCE_NAME}_BitReverse(crc, gCRCSetup.polynomial_length);
+    }
+
+    crc ^= gCRCSetup.final_xor_value;
+
+    return crc;
+}
 
 <#list 0..NUM_DMA_CHANS - 1 as i>
     <#assign CHANENABLE = "DMAC_CHAN" + i + "_ENBL">
