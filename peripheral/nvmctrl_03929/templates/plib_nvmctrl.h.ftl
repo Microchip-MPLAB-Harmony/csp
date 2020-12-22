@@ -128,9 +128,7 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (uint32_t address);
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister ( NVMCTRL_CALLBACK callback, uintptr_t context );
 </#if>
 
-<#if NVMCTRL_CACHE_ENABLE == true>
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_CacheInvalidate ( void );
-</#if>
+void ${NVMCTRL_INSTANCE_NAME}_CacheInvalidate ( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility

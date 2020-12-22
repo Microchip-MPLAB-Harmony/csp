@@ -135,21 +135,6 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlReadModeValues = []
     nvmctrlReadModeValues = nvmctrlReadModeNode.getChildren()
 
-    waitState = 6
-    cpuClkFreq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
-
-    if cpuClkFreq != None:
-        for key in sorted(waitStates.keys()):
-            if int(cpuClkFreq) <= int(key):
-                waitState = waitStates.get(key)
-                break
-
-    # Flash Read Wait State (RWS).
-    nvm_rws = nvmctrlComponent.createIntegerSymbol("NVM_RWS", None)
-    nvm_rws.setLabel("Wait States")
-    nvm_rws.setDefaultValue(waitState)
-    nvm_rws.setDependencies(waitStateUpdate, ["core.CPU_CLOCK_FREQUENCY"])
-
     nvmctrlReadModeDefaultValue = 0
     nvmctrlReadModeKeyDescription = ""
 
@@ -170,6 +155,22 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_CTRLB_READMODE.setDefaultValue(nvmctrlReadModeDefaultValue)
     nvmctrlSym_CTRLB_READMODE.setOutputMode("Key")
     nvmctrlSym_CTRLB_READMODE.setDisplayMode("Description")
+
+    # Configure NVM Wait state
+    waitState = 6
+    cpuClkFreq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+
+    if cpuClkFreq != None:
+        for key in sorted(waitStates.keys()):
+            if int(cpuClkFreq) <= int(key):
+                waitState = waitStates.get(key)
+                break
+
+    # Flash Read Wait State (RWS).
+    nvm_rws = nvmctrlComponent.createIntegerSymbol("NVM_RWS", None)
+    nvm_rws.setLabel("Wait States")
+    nvm_rws.setDefaultValue(waitState)
+    nvm_rws.setDependencies(waitStateUpdate, ["core.CPU_CLOCK_FREQUENCY"])
 
     # Configures NVM power reduction mode
     nvmctrlSym_CTRLB_SLEEPPRM = nvmctrlComponent.createKeyValueSetSymbol("NVMCTRL_CTRLB_POWER_REDUCTION_MODE", None)
@@ -206,9 +207,30 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_CTRLB_WRITEPOLICY.setDefaultValue("MANUAL")
 
     # Configures cache operation
-    nvmctrlSym_CTRLB_CACHEENABLE = nvmctrlComponent.createBooleanSymbol("NVMCTRL_CACHE_ENABLE", None)
-    nvmctrlSym_CTRLB_CACHEENABLE.setLabel("Enable Instruction Cache?")
-    nvmctrlSym_CTRLB_CACHEENABLE.setDefaultValue(True)
+    nvmctrlSym_CTRLB_CACHEDIS = nvmctrlComponent.createKeyValueSetSymbol("NVMCTRL_CTRLB_CACHEDIS_SELECTION", None)
+    nvmctrlSym_CTRLB_CACHEDIS.setLabel("NVMCTRL Data and Main Cache Mode")
+
+    nvmctrlCachModeNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"NVMCTRL\"]/value-group@[name=\"NVMCTRL_CTRLB__CACHEDIS\"]")
+    nvmctrlCacheModeValues = []
+    nvmctrlCacheModeValues = nvmctrlCachModeNode.getChildren()
+
+    nvmctrlCacheModeDefaultValue = 0
+    nvmctrlCacheModeKeyDescription = ""
+
+    for index in range(0, len(nvmctrlCacheModeValues)):
+        nvmctrlCacheModeKeyName = nvmctrlCacheModeValues[index].getAttribute("name")
+
+        if (nvmctrlCacheModeKeyName == "CACHE_DF_DIS_MAIN_EN"):
+            nvmctrlCacheModeDefaultValue = index
+
+        nvmctrlCacheModeKeyDescription = nvmctrlCacheModeValues[index].getAttribute("caption")
+        nvmctrlCacheModeKeyValue = nvmctrlCacheModeValues[index].getAttribute("value")
+
+        nvmctrlSym_CTRLB_CACHEDIS.addKey(nvmctrlCacheModeKeyName, nvmctrlCacheModeKeyValue, nvmctrlCacheModeKeyDescription)
+
+    nvmctrlSym_CTRLB_CACHEDIS.setDefaultValue(nvmctrlCacheModeDefaultValue)
+    nvmctrlSym_CTRLB_CACHEDIS.setOutputMode("Key")
+    nvmctrlSym_CTRLB_CACHEDIS.setDisplayMode("Description")
 
     ##### Do not modify below symbol names as they are used by Memory Driver #####
 

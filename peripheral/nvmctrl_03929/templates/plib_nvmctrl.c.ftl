@@ -83,18 +83,17 @@ static uint32_t status = 0;
 
 void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
 {
-    <@compress single_line=true>${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = ${NVMCTRL_CACHE_ENABLE?then('', 'NVMCTRL_CTRLB_CACHEDIS_Msk |')}
+    <@compress single_line=true>${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CACHEDIS_${NVMCTRL_CTRLB_CACHEDIS_SELECTION} |
     <#lt>                       NVMCTRL_CTRLB_READMODE_${NVMCTRL_CTRLB_READMODE_SELECTION} |
     <#lt>                       NVMCTRL_CTRLB_SLEEPPRM_${NVMCTRL_CTRLB_POWER_REDUCTION_MODE} | NVMCTRL_CTRLB_RWS(${NVM_RWS})
     <#lt>                       ${(NVMCTRL_WRITE_POLICY == "MANUAL")?then('| NVMCTRL_CTRLB_MANW_Msk', ' ')};</@compress>
 }
 
-<#if NVMCTRL_CACHE_ENABLE == true>
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_CacheInvalidate(void)
-    <#lt>{
-    <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_INVALL | NVMCTRL_CTRLA_CMDEX_KEY;
-    <#lt>}
-</#if>
+void ${NVMCTRL_INSTANCE_NAME}_CacheInvalidate(void)
+{
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_INVALL | NVMCTRL_CTRLA_CMDEX_KEY;
+}
+
 <#if FLASH_DATAFLASH_START_ADDRESS??>
 bool ${NVMCTRL_INSTANCE_NAME}_DATA_FLASH_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
