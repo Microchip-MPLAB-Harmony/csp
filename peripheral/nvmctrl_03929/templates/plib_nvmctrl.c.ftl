@@ -50,8 +50,6 @@
 #include <string.h>
 #include "plib_${NVMCTRL_INSTANCE_NAME?lower_case}.h"
 
-static uint32_t status = 0;
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${NVMCTRL_INSTANCE_NAME} Implementation
@@ -106,9 +104,6 @@ bool ${NVMCTRL_INSTANCE_NAME}_DATA_FLASH_PageWrite ( uint32_t *data, const uint3
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
 
-    /* Clear global error flag */
-    status = 0;
-
     /* Writing 32-bit words in the given address */
     for ( i = 0; i < (${NVMCTRL_INSTANCE_NAME}_DATAFLASH_PAGESIZE/4); i++)
     {
@@ -130,9 +125,6 @@ bool ${NVMCTRL_INSTANCE_NAME}_DATA_FLASH_PageWrite ( uint32_t *data, const uint3
 
 bool ${NVMCTRL_INSTANCE_NAME}_DATA_FLASH_RowErase( uint32_t address )
 {
-    /* Clear global error flag */
-    status = 0;
-
      /* Set address and command */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
 
@@ -155,9 +147,6 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address 
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
 
-    /* Clear global error flag */
-    status = 0;
-
     /* writing 32-bit data into the given address */
     for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4); i++)
     {
@@ -179,9 +168,6 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address 
 
 bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
 {
-    /* Clear global error flag */
-    status = 0;
-
     /* Set address and command */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
 
@@ -195,8 +181,17 @@ bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
 
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
-    status |= ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_STATUS;
-    return ((NVMCTRL_ERROR) status);
+    volatile uint32_t nvm_error = 0;
+
+    /* Get the error bits set */
+    nvm_error = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_STATUS & (NVMCTRL_STATUS_NVME_Msk | NVMCTRL_STATUS_LOCKE_Msk | NVMCTRL_STATUS_PROGE_Msk));
+
+    /* Clear the error bits in both STATUS and INTFLAG register */
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_STATUS |= nvm_error;
+
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = NVMCTRL_INTFLAG_ERROR_Msk;
+
+    return ((NVMCTRL_ERROR) nvm_error);
 }
 
 bool ${NVMCTRL_INSTANCE_NAME}_IsBusy(void)
@@ -206,9 +201,6 @@ bool ${NVMCTRL_INSTANCE_NAME}_IsBusy(void)
 
 void ${NVMCTRL_INSTANCE_NAME}_RegionLock(uint32_t address)
 {
-    /* Clear global error flag */
-    status = 0;
-
     /* Set address and command */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
 
@@ -217,9 +209,6 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionLock(uint32_t address)
 
 void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock(uint32_t address)
 {
-    /* Clear global error flag */
-    status = 0;
-
     /* Set address and command */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
 

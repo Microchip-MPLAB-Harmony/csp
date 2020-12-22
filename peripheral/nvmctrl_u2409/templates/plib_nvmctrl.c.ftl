@@ -266,14 +266,17 @@ bool ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address )
 
 uint16_t ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
-    <#lt>    uint16_t temp;
-    <#lt>    /* Store previous and current error flags */
-    <#lt>    temp = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
-    <#lt>    nvm_error |= temp;
-    <#if INTERRUPT_ENABLE == false >
+    uint16_t temp;
+    /* Store previous and current error flags */
+    temp = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
+
+    nvm_error |= temp;
+
+<#if INTERRUPT_ENABLE == false >
     /* Clear NVMCTRL INTFLAG register */
-    NVMCTRL_REGS->NVMCTRL_INTFLAG = NVMCTRL_INTFLAG_Msk;
-    </#if>
+    NVMCTRL_REGS->NVMCTRL_INTFLAG = nvm_error;
+</#if>
+
     return nvm_error;
 }
 
@@ -384,7 +387,7 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
     <#lt>    temp = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
     <#lt>    nvm_error |= temp;
 
-    <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
+    <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = temp;
 
     <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn != NULL)
     <#lt>    {
@@ -407,7 +410,7 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
     <#lt>    temp = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
     <#lt>    nvm_error |= temp;
 
-    <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
+    <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = temp;
 
     <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn != NULL)
     <#lt>    {
