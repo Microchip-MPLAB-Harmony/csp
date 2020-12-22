@@ -53,24 +53,37 @@ def setacSymbolVisibility(symbol, event):
     symbol.setVisible(event["value"])
 
 def updateACInterruptStatus(symbol, event):
+    global nvicDep
+    component = symbol.getComponent()
+    interrupt = False
+    for id in range (0, (len(nvicDep) - 1)):
+        val = component.getSymbolValue(nvicDep[id])
+        if val == True:
+            interrupt = True
 
-    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
-
-    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
-
-    if event["value"] == True:
-
+    Database.setSymbolValue("core", InterruptVector, interrupt, 2)
+    Database.setSymbolValue("core", InterruptHandlerLock, interrupt, 2)
+    if interrupt == True:
         Database.setSymbolValue("core", InterruptHandler, acInstanceName.getValue() + "_InterruptHandler", 2)
     else:
         Database.setSymbolValue("core", InterruptHandler, acInstanceName.getValue() + "_Handler", 2)
 
 def updateACInterruptWarningStatus(symbol, event):
-
-    if acSym_UpdateInterruptStatus.getValue() == True:
-        symbol.setVisible(event["value"])
+    global nvicDep
+    component = symbol.getComponent()
+    interrupt = False
+    for id in range (0, (len(nvicDep) - 1)):
+        val = component.getSymbolValue(nvicDep[id])
+        if val == True:
+            interrupt = True
+    
+    InterruptVectorUpdate = acInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    if ((interrupt == True) and (Database.getSymbolValue("core", InterruptVectorUpdate) == True)):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 
 def updateACClockWarningStatus(symbol, event):
-
     if event["value"] == False:
         symbol.setVisible(True)
     else:
@@ -106,6 +119,8 @@ def instantiateComponent(acComponent):
     global InterruptHandler
     global InterruptHandlerLock
     evsysDep = []
+    global nvicDep
+    nvicDep = []
     
     acInstanceName = acComponent.createStringSymbol("AC_INSTANCE_NAME", None)
     acInstanceName.setVisible(False)
@@ -169,6 +184,7 @@ def instantiateComponent(acComponent):
         acInterrupt_Enable.setLabel("Comparator Interrupt Enable")
         acInterrupt_Enable.setVisible(False)
         acInterrupt_Enable.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+        nvicDep.append("COMP" + str(comparatorID) + "INTERRUPT_ENABLE")
 
         #Single-shot Mode
         acSym_COMPCTRL_SINGLE = acComponent.createBooleanSymbol("AC_COMPCTRL_" + str(comparatorID) +"SINGLE_MODE", acSym_Enable[comparatorID])
@@ -387,6 +403,7 @@ def instantiateComponent(acComponent):
     acSym_INTENSET_WIN0 = acComponent.createBooleanSymbol("AC_INTENSET_WIN0", acSym_WINCTRL0)
     acSym_INTENSET_WIN0.setLabel("Window 0 Interrupt Enable")
     acSym_INTENSET_WIN0.setDefaultValue(False)
+    nvicDep.append("AC_INTENSET_WIN0")
     
     #Window 0 interrupt configuration
     acSym_WNCTRL_WINT0 = acComponent.createKeyValueSetSymbol("AC_WINTSEL0", acSym_WINCTRL0)
@@ -426,17 +443,18 @@ def instantiateComponent(acComponent):
     InterruptHandler = acInstanceName.getValue() + "_INTERRUPT_HANDLER"
     InterruptHandlerLock = acInstanceName.getValue()+ "_INTERRUPT_HANDLER_LOCK"
     InterruptVectorUpdate = acInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    nvicDep.append("core." + InterruptVectorUpdate)
 
     # Interrupt Dynamic settings
     acSym_UpdateInterruptStatus = acComponent.createBooleanSymbol("AC_INTERRUPT_STATUS", None)
-    acSym_UpdateInterruptStatus.setDependencies(updateACInterruptStatus, ["COMP0INTERRUPT_ENABLE", "COMP1INTERRUPT_ENABLE", "COMP2INTERRUPT_ENABLE", "COMP3INTERRUPT_ENABLE"])
+    acSym_UpdateInterruptStatus.setDependencies(updateACInterruptStatus, nvicDep)
     acSym_UpdateInterruptStatus.setVisible(False)
-
+ 
     # Interrupt Warning status
     acSym_IntEnComment = acComponent.createCommentSymbol("AC_INTERRUPT_ENABLE_COMMENT", None)
     acSym_IntEnComment.setVisible(False)
     acSym_IntEnComment.setLabel("Warning!!! "+acInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
-    acSym_IntEnComment.setDependencies(updateACInterruptWarningStatus, ["core." + InterruptVectorUpdate])
+    acSym_IntEnComment.setDependencies(updateACInterruptWarningStatus, nvicDep)
 
     # Clock Warning status
     acSym_ClkEnComment = acComponent.createCommentSymbol("AC_CLOCK_ENABLE_COMMENT", None)
