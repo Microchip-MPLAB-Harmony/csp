@@ -169,6 +169,8 @@ def instantiateComponent(nvmctrlComponent):
     # Flash Read Wait State (RWS).
     nvm_rws = nvmctrlComponent.createIntegerSymbol("NVM_RWS", None)
     nvm_rws.setLabel("Wait States")
+    nvm_rws.setMin(0)
+    nvm_rws.setMax(15)
     nvm_rws.setDefaultValue(waitState)
     nvm_rws.setDependencies(waitStateUpdate, ["core.CPU_CLOCK_FREQUENCY"])
 
