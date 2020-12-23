@@ -80,7 +80,7 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size );
 
 UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void );
 
-<#if USART_INTERRUPT_MODE == true>
+<#if UART_INTERRUPT_MODE_ENABLE == true>
 bool ${UART_INSTANCE_NAME}_ReadIsBusy( void );
 
 size_t ${UART_INSTANCE_NAME}_ReadCountGet( void );

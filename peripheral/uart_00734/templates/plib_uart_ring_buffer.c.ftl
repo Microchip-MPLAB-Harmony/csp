@@ -87,14 +87,13 @@ void static ${UART_INSTANCE_NAME}_ErrorClear( void )
             dummyData = U${UART_INSTANCE_NUM}RXREG;
         }
 
-<#if USART_INTERRUPT_MODE == true >
         /* Clear error interrupt flag */
         ${UART_FAULT_IFS_REG}CLR = _${UART_FAULT_IFS_REG}_U${UART_INSTANCE_NUM}EIF_MASK;
 
         /* Clear up the receive interrupt flag so that RX interrupt is not
          * triggered for error bytes */
         ${UART_FAULT_IFS_REG}CLR = _${UART_FAULT_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK;
-</#if>
+
     }
 
     // Ignore the warning
