@@ -20,8 +20,6 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
-from xml import etree as ET
-from os import path
 
 def instantiateComponent(dfpComponent):
 
@@ -61,20 +59,6 @@ def instantiateComponent(dfpComponent):
 
     processorName = Variables.get("__PROCESSOR")
 
-    processorSeries = ATDF.getNode("/avr-tools-device-file/devices/device").getAttribute("series")
-    compatXmlPath = path.join(Variables.get("__CORE_DIR"), "compat", "compat.xml")
-    compatFile = ""
-    if path.isfile(compatXmlPath):
-        compatRoot = ET.parse(compatXmlPath)
-        familyNode = compatRoot.find("./family[@series=\"{0}\"]".format(processorSeries))
-        if familyNode is not None:
-            compatFile = familyNode.get("file")
-    if compatFile:
-        compatFileNameSym = dfpComponent.createStringSymbol("DFP_COMPAT_FILE", None)
-        compatFileNameSym.setDefaultValue("{0}_compat.h".format(processorName.lower()))
-        compatFileNameSym.setVisible(False)
-
-
     deviceHeaderFile = dfpComponent.createFileSymbol("deviceHeaderFile", None)
     deviceHeaderFile.setMarkup(True)
     deviceHeaderFile.setSourcePath("templates/device.h.ftl")
@@ -83,18 +67,6 @@ def instantiateComponent(dfpComponent):
     deviceHeaderFile.setProjectPath("config/" + configName + "/")
     deviceHeaderFile.setType("HEADER")
     deviceHeaderFile.setOverwrite(True)
-
-    if compatFile:
-        deviceCompatHeaderFile = dfpComponent.createFileSymbol("deviceCompatHeaderFile", None)
-        deviceCompatHeaderFile.setMarkup(True)
-        deviceCompatHeaderFile.setSourcePath("compat/templates/" + compatFile)
-        deviceCompatHeaderFile.setOutputName(compatFileNameSym.getValue())
-        deviceCompatHeaderFile.setDestPath("")
-        deviceCompatHeaderFile.setProjectPath("config/" + configName + "/")
-        deviceCompatHeaderFile.setType("HEADER")
-        deviceCompatHeaderFile.setOverwrite(True)
-        deviceCompatHeaderFile.setEnabled(False)
-
 
     if( "PIC32M" not in processorName):
         #add pack files to a project
