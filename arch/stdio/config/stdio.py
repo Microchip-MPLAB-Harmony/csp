@@ -35,9 +35,7 @@ def handleMessage(messageID, args):
 
             result_dict = Database.clearSymbolValue(args["localComponentID"], "UART_INTERRUPT_MODE")
 
-            result_dict = Database.sendMessage(args["localComponentID"], "UART_INTERRUPT_MODE", {"isEnabled":False, "isReadOnly":True})
-
-            result_dict = Database.sendMessage(args["localComponentID"], "UART_RING_BUFFER_MODE", {"isEnabled":False, "isReadOnly":True})
+            result_dict = Database.sendMessage(args["localComponentID"], "UART_BLOCKING_MODE", {"isEnabled":True, "isReadOnly":True})
 
     return result_dict
 
@@ -64,9 +62,7 @@ def onAttachmentDisconnected(source, target):
     debugID.clearValue()
 
     dummyDict = {}
-    dummyDict = Database.sendMessage(remoteID, "UART_INTERRUPT_MODE", {"isReadOnly":False})
-
-    dummyDict = Database.sendMessage(remoteID, "UART_RING_BUFFER_MODE", {"isReadOnly":False})
+    dummyDict = Database.sendMessage(remoteID, "UART_BLOCKING_MODE", {"isReadOnly":False})
 
 def setBuffSymVisibility(symbol, event):
     symbol.setVisible(event["value"] == 0)
