@@ -80,7 +80,7 @@ bool ${UART_INSTANCE_NAME}_AutoBaudQuery( void );
 
 void ${UART_INSTANCE_NAME}_AutoBaudSet( bool enable );
 
-<#if USART_INTERRUPT_MODE == true>
+<#if UART_INTERRUPT_MODE_ENABLE == true>
 bool ${UART_INSTANCE_NAME}_ReadIsBusy( void );
 
 size_t ${UART_INSTANCE_NAME}_ReadCountGet( void );
