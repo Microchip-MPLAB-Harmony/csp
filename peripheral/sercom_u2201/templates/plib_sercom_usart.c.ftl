@@ -63,7 +63,7 @@
 /* ${SERCOM_INSTANCE_NAME} USART baud value for ${USART_BAUD_RATE} Hz baud rate */
 #define ${SERCOM_INSTANCE_NAME}_USART_INT_BAUD_VALUE            (${USART_BAUD_VALUE}UL)
 
-<#if USART_INTERRUPT_MODE = true>
+<#if USART_INTERRUPT_MODE_ENABLE = true>
 static SERCOM_USART_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
 </#if>
 
@@ -173,7 +173,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
         /* Do nothing */
     }
 </#if>
-<#if USART_INTERRUPT_MODE = true>
+<#if USART_INTERRUPT_MODE_ENABLE = true>
 
     /* Initialize instance object */
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer = NULL;
@@ -211,7 +211,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
     uint8_t fp = 0U;
 </#if>
 
-<#if USART_INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE_ENABLE == true>
     bool transferProgress = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus;
     transferProgress = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus || transferProgress; 
     if(transferProgress)
@@ -354,7 +354,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
     return setupStatus;
 }
 
-<#if USART_INTERRUPT_MODE = true>
+<#if USART_INTERRUPT_MODE_ENABLE = true>
 USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 {
     USART_ERROR errorStatus = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.errorStatus;
@@ -419,7 +419,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
 {
     bool writeStatus      = false;
     uint8_t *pu8Data      = (uint8_t*)buffer;
-<#if USART_INTERRUPT_MODE = false>
+<#if USART_INTERRUPT_MODE_ENABLE = false>
     uint32_t u32Length    = size;
 <#else>
     uint32_t processedSize = 0U;
@@ -427,7 +427,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
 
     if(pu8Data != NULL)
     {
-<#if USART_INTERRUPT_MODE = false>
+<#if USART_INTERRUPT_MODE_ENABLE = false>
 
         /* Blocks while buffer is being transferred */
         while(u32Length > 0U)
@@ -492,7 +492,8 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
 bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd)
 {
     /* Command strobe bits cannot be set while transmitter is busy */
-    <#if USART_INTERRUPT_MODE = true>
+
+    <#if USART_INTERRUPT_MODE_ENABLE = true>
     if((${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus == false) && ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_TXE_Msk)!= 0U))
     <#else>
     if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_TXE_Msk) != 0U)
@@ -512,7 +513,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd)
 }
 </#if>
 
-<#if USART_INTERRUPT_MODE = true>
+<#if USART_INTERRUPT_MODE_ENABLE = true>
 bool ${SERCOM_INSTANCE_NAME}_USART_WriteIsBusy( void )
 {
     return ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus;
@@ -608,15 +609,15 @@ void ${SERCOM_INSTANCE_NAME}_USART_ReceiverDisable( void )
 bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
 {
     bool readStatus        = false;
-    uint8_t* pu8Data       = (uint8_t*)buffer;   
-<#if USART_INTERRUPT_MODE = false>
+    uint8_t* pu8Data       = (uint8_t*)buffer;
+<#if USART_INTERRUPT_MODE_ENABLE = false>
     uint32_t processedSize = 0U;
     USART_ERROR errorStatus = USART_ERROR_NONE;
 </#if>
 
     if(pu8Data != NULL)
     {
-<#if USART_INTERRUPT_MODE = false>
+<#if USART_INTERRUPT_MODE_ENABLE = false>
 
         /* Clear error flags and flush out error data that may have been received when no active request was pending */
         ${SERCOM_INSTANCE_NAME}_USART_ErrorClear();
@@ -683,7 +684,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
     return readStatus;
 }
 
-<#if USART_INTERRUPT_MODE = true>
+<#if USART_INTERRUPT_MODE_ENABLE = true>
 bool ${SERCOM_INSTANCE_NAME}_USART_ReadIsBusy( void )
 {
     return ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus;
@@ -741,7 +742,7 @@ int ${SERCOM_INSTANCE_NAME}_USART_ReadByte( void )
 </#if>
 </#if>
 
-<#if USART_INTERRUPT_MODE = true>
+<#if USART_INTERRUPT_MODE_ENABLE = true>
 
 <#if USART_INTENSET_ERROR = true>
 void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )

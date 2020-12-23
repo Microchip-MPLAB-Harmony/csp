@@ -113,35 +113,16 @@ def getUSARTBaudValue():
 ###################################################################################################
 
 def updateRingBufferSizeVisibleProperty(symbol, event):
-    global usartSym_RingBuffer_Enable
     global usartSym_CTRLB_RXEN
     global usartSym_CTRLB_TXEN
-    global usartSym_Interrupt_Mode
+    global usartSym_RingBuffer_Mode
 
     # Enable RX ring buffer size option if Ring buffer is enabled and RX is enabled.
     if symbol.getID() == "USART_RX_RING_BUFFER_SIZE":
-        if ((sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (usartSym_CTRLB_RXEN.getValue() == True)):
-            symbol.setVisible(usartSym_RingBuffer_Enable.getValue())
-        else:
-            symbol.setVisible(False)
+        symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and usartSym_CTRLB_RXEN.getValue() == True and usartSym_RingBuffer_Mode.getValue() == True)
     # Enable TX ring buffer size option if Ring buffer is enabled and TX is enabled.
     elif symbol.getID() == "USART_TX_RING_BUFFER_SIZE":
-        if ((sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (usartSym_CTRLB_TXEN.getValue() == True)):
-            symbol.setVisible(usartSym_RingBuffer_Enable.getValue())
-        else:
-            symbol.setVisible(False)
-    # If Interrupt is enabled, make ring buffer option visible
-    # Further, if Interrupt is disabled, disable the ring buffer mode
-    elif symbol.getID() == "USART_RING_BUFFER_ENABLE":
-        if (sercomSym_OperationMode.getSelectedKey() == "USART_INT"):
-            symbol.setVisible(usartSym_Interrupt_Mode.getValue())
-        else:
-            symbol.setVisible(False)
-        if (usartSym_Interrupt_Mode.getValue() == False):
-            readOnlyState = symbol.getReadOnly()
-            symbol.setReadOnly(True)
-            symbol.setValue(False)
-            symbol.setReadOnly(readOnlyState)
+        symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and usartSym_CTRLB_TXEN.getValue() == True and usartSym_RingBuffer_Mode.getValue() == True)
 
 def updateUSARTConfigurationVisibleProperty(symbol, event):
 
@@ -181,16 +162,12 @@ def updateUSARTFORMValueProperty(symbol, event):
 
     if event["id"] == "USART_FORM":
             usart_form = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
-            usart_interrupt_mode = event['source'].getSymbolByID("USART_INTERRUPT_MODE")
-            usart_ring_buffer_mode = event['source'].getSymbolByID("USART_RING_BUFFER_ENABLE")
+            usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
             if usart_form == "USART_FRAME_AUTO_BAUD_NO_PARITY":
-                usart_interrupt_mode.setReadOnly(True)
-                usart_interrupt_mode.setValue(True)
-                usart_ring_buffer_mode.setReadOnly(True)
-                usart_ring_buffer_mode.setValue(True)
+                usartOperatingModeSym.setReadOnly(True)
+                usartOperatingModeSym.setSelectedKey("RING_BUFFER")
             else:
-                usart_interrupt_mode.setReadOnly(False)
-                usart_ring_buffer_mode.setReadOnly(False)
+                usartOperatingModeSym.setReadOnly(False)
 
 def updateLinMasterModeOptionsVisibility(symbol, event):
 
@@ -201,33 +178,126 @@ def updateUSARTDataBits (symbol, event):
     dataBits = event["symbol"].getSelectedKey()
     symbol.setValue(dataBitsDict[dataBits])
 
+def updateInterruptMode (symbol, event):
+    if symbol.getLabel() != "---":
+        usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
+        if event["value"] == True and usartOperatingModeSym.getSelectedKey() != "RING_BUFFER" :
+            usartOperatingModeSym.setSelectedKey("NON_BLOCKING")
+        elif event["value"] == False:
+            usartOperatingModeSym.setSelectedKey("BLOCKING")
+        symbol.setLabel("---")
+
+def updateRingBufferMode (symbol, event):
+    if symbol.getLabel() != "---":
+        if event["value"] == True:
+            event["source"].getSymbolByID("USART_OPERATING_MODE").setSelectedKey("RING_BUFFER")
+        symbol.setLabel("---")
+
+def updateOperatingMode (symbol, event):
+    if event["id"] == "USART_OPERATING_MODE":
+        interruptModeSym = event["source"].getSymbolByID("USART_INTERRUPT_MODE_ENABLE")
+        ringBufferModeSym = event["source"].getSymbolByID("USART_RING_BUFFER_MODE_ENABLE")
+        if symbol.getSelectedKey() == "RING_BUFFER":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(True)
+        elif symbol.getSelectedKey() == "NON_BLOCKING":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+        elif symbol.getSelectedKey() == "BLOCKING":
+            interruptModeSym.setValue(False)
+            ringBufferModeSym.setValue(False)
+    else:
+        symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+
+def ringBufferConfigVisibility (symbol, event):
+    ringBufferModeEnabled = event["source"].getSymbolByID("USART_RING_BUFFER_MODE_ENABLE").getValue()
+    symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and ringBufferModeEnabled == True)
 ###################################################################################################
 ############################################ USART ################################################
 ###################################################################################################
 
-global usartSym_Interrupt_Mode
 global usartSym_CTRLA_TXPO
 global usartSym_CTRLA_SAMPR
 global usartSym_SAMPLE_COUNT
 global usartSym_BAUD_VALUE
 global usartSym_BaudError_Comment
 global sampleRateSupported
-global usartSym_RingBuffer_Enable
 global usartSym_CTRLB_RXEN
 global usartSym_CTRLB_TXEN
 global usartSym_CTRLA_FORM
+global usartSym_RingBuffer_Mode
+global usartSym_Int_Mode
+global usartSym_OperatingMode
 
 sampleRateSupported = False
 isFlowControlSupported = False
 isRS485Supported = False
 isErrorInterruptSupported = False
 
+# Depricated symbols ---------------------------------------------------------------------------------------------------
 #Interrupt/Non-Interrupt Mode
 usartSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("USART_INTERRUPT_MODE", sercomSym_OperationMode)
 usartSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
 usartSym_Interrupt_Mode.setDefaultValue(True)
-usartSym_Interrupt_Mode.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-usartSym_Interrupt_Mode.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+usartSym_Interrupt_Mode.setVisible(False)
+usartSym_Interrupt_Mode.setReadOnly(True)
+usartSym_Interrupt_Mode.setDependencies(updateInterruptMode, ["USART_INTERRUPT_MODE"])
+
+#Enable Ring buffer?
+usartSym_RingBuffer_Enable = sercomComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", sercomSym_OperationMode)
+usartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
+usartSym_RingBuffer_Enable.setDefaultValue(False)
+usartSym_RingBuffer_Enable.setVisible(False)
+usartSym_RingBuffer_Enable.setReadOnly(True)
+usartSym_RingBuffer_Enable.setDependencies(updateRingBufferMode, ["USART_RING_BUFFER_ENABLE"])
+
+# Depricated symbols ---------------------------------------------------------------------------------------------------
+
+#Interrupt/Non-Interrupt Mode
+usartSym_Int_Mode = sercomComponent.createBooleanSymbol("USART_INTERRUPT_MODE_ENABLE", sercomSym_OperationMode)
+usartSym_Int_Mode.setLabel("Enable Interrupts ?")
+usartSym_Int_Mode.setDefaultValue(True)
+usartSym_Int_Mode.setVisible(False)
+usartSym_Int_Mode.setReadOnly(True)
+
+#Enable Ring buffer?
+usartSym_RingBuffer_Mode = sercomComponent.createBooleanSymbol("USART_RING_BUFFER_MODE_ENABLE", sercomSym_OperationMode)
+usartSym_RingBuffer_Mode.setLabel("Enable Ring Buffer ?")
+usartSym_RingBuffer_Mode.setDefaultValue(False)
+usartSym_RingBuffer_Mode.setVisible(False)
+usartSym_RingBuffer_Mode.setReadOnly(True)
+
+usartSym_OperatingMode = sercomComponent.createKeyValueSetSymbol("USART_OPERATING_MODE", sercomSym_OperationMode)
+usartSym_OperatingMode.setLabel("Operating Mode")
+usartSym_OperatingMode.addKey("BLOCKING", "0", "Blocking mode")
+usartSym_OperatingMode.addKey("NON_BLOCKING", "1", "Non-blocking mode")
+usartSym_OperatingMode.addKey("RING_BUFFER", "2", "Ring buffer mode")
+usartSym_OperatingMode.setDefaultValue(1)
+usartSym_OperatingMode.setDisplayMode("Description")
+usartSym_OperatingMode.setOutputMode("Key")
+usartSym_OperatingMode.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+usartSym_OperatingMode.setDependencies(updateOperatingMode, ["SERCOM_MODE",  "USART_OPERATING_MODE"])
+
+usartSym_UsartRingBufferSizeConfig = sercomComponent.createCommentSymbol("SERCOM_USART_RING_BUFFER_SIZE_CONFIG", sercomSym_OperationMode)
+usartSym_UsartRingBufferSizeConfig.setLabel("Configure Ring Buffer Size-")
+usartSym_UsartRingBufferSizeConfig.setVisible(False)
+usartSym_UsartRingBufferSizeConfig.setDependencies(ringBufferConfigVisibility, ["SERCOM_MODE", "USART_RING_BUFFER_MODE_ENABLE"])
+
+usartSym_TXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", usartSym_UsartRingBufferSizeConfig)
+usartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
+usartSym_TXRingBuffer_Size.setMin(2)
+usartSym_TXRingBuffer_Size.setMax(65535)
+usartSym_TXRingBuffer_Size.setDefaultValue(128)
+usartSym_TXRingBuffer_Size.setVisible(False)
+usartSym_TXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_RING_BUFFER_MODE_ENABLE", "USART_TX_ENABLE"])
+
+usartSym_RXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", usartSym_UsartRingBufferSizeConfig)
+usartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
+usartSym_RXRingBuffer_Size.setMin(2)
+usartSym_RXRingBuffer_Size.setMax(65535)
+usartSym_RXRingBuffer_Size.setDefaultValue(128)
+usartSym_RXRingBuffer_Size.setVisible(False)
+usartSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_RING_BUFFER_MODE_ENABLE", "USART_RX_ENABLE"])
 
 #Receive Enable
 usartSym_CTRLB_RXEN = sercomComponent.createBooleanSymbol("USART_RX_ENABLE", sercomSym_OperationMode)
@@ -242,29 +312,6 @@ usartSym_CTRLB_TXEN.setLabel("Transmit Enable")
 usartSym_CTRLB_TXEN.setDefaultValue(True)
 usartSym_CTRLB_TXEN.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLB_TXEN.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
-
-#Enable Ring buffer?
-usartSym_RingBuffer_Enable = sercomComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", sercomSym_OperationMode)
-usartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
-usartSym_RingBuffer_Enable.setDefaultValue(False)
-usartSym_RingBuffer_Enable.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-usartSym_RingBuffer_Enable.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_INTERRUPT_MODE"])
-
-usartSym_TXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", usartSym_RingBuffer_Enable)
-usartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
-usartSym_TXRingBuffer_Size.setMin(2)
-usartSym_TXRingBuffer_Size.setMax(65535)
-usartSym_TXRingBuffer_Size.setDefaultValue(128)
-usartSym_TXRingBuffer_Size.setVisible(False)
-usartSym_TXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_RING_BUFFER_ENABLE", "USART_TX_ENABLE"])
-
-usartSym_RXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", usartSym_RingBuffer_Enable)
-usartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
-usartSym_RXRingBuffer_Size.setMin(2)
-usartSym_RXRingBuffer_Size.setMax(65535)
-usartSym_RXRingBuffer_Size.setDefaultValue(128)
-usartSym_RXRingBuffer_Size.setVisible(False)
-usartSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_RING_BUFFER_ENABLE", "USART_RX_ENABLE"])
 
 #USART Frame Format
 isLINMasterModeSupported = False
@@ -294,7 +341,6 @@ usartSym_CTRLA_FORM.setDependencies(updateUSARTFORMValueProperty, ["USART_PARITY
 usartSym_LIN_MasterSupport = sercomComponent.createBooleanSymbol("USART_LIN_MASTER_SUPPORTED", sercomSym_OperationMode)
 usartSym_LIN_MasterSupport.setValue(isLINMasterModeSupported)
 usartSym_LIN_MasterSupport.setVisible(False)
-
 
 # BREAK Length - Applicable when LIN Master mode is selected
 usartSym_CTRLC_BRKLEN_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLC__BRKLEN\"]")
@@ -340,11 +386,76 @@ if usartSym_CTRLC_HDRDLY_Node != None:
     usartSym_CTRLC_HDRDLY.setVisible(False)
     usartSym_CTRLC_HDRDLY.setDependencies(updateLinMasterModeOptionsVisibility, ["USART_FORM"])
 
-#Run in StandBy
-usartSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("USART_RUNSTDBY", sercomSym_OperationMode)
-usartSym_CTRLA_RUNSTDBY.setLabel("Enable Run in Standby")
-usartSym_CTRLA_RUNSTDBY.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-usartSym_CTRLA_RUNSTDBY.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+
+#USART Baud Rate
+usartSym_BAUD_RATE = sercomComponent.createIntegerSymbol("USART_BAUD_RATE", sercomSym_OperationMode)
+usartSym_BAUD_RATE.setLabel("Baud Rate in Hz")
+usartSym_BAUD_RATE.setDefaultValue(115200)
+usartSym_BAUD_RATE.setMin(1)
+usartSym_BAUD_RATE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+usartSym_BAUD_RATE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+
+#USART Baud Value
+usartSym_BAUD_VALUE = sercomComponent.createIntegerSymbol("USART_BAUD_VALUE", sercomSym_OperationMode)
+usartSym_BAUD_VALUE.setLabel("Baud Rate Value")
+usartSym_BAUD_VALUE.setVisible(False)
+usartSym_BAUD_VALUE.setDependencies(updateUSARTBaudValueProperty, ["USART_BAUD_RATE", "core." + sercomClkFrequencyId, "USART_FORM"])
+
+#USART Baud Rate not supported comment
+usartSym_BaudError_Comment = sercomComponent.createCommentSymbol("USART_BAUD_ERROR_COMMENT", sercomSym_OperationMode)
+usartSym_BaudError_Comment.setLabel("********** USART Clock source value is low for the desired baud rate **********")
+usartSym_BaudError_Comment.setVisible(False)
+usartSym_BaudError_Comment.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+
+#PMODE : USART PARITY MODE
+usartSym_CTRLB_PMODE = sercomComponent.createKeyValueSetSymbol("USART_PARITY_MODE", sercomSym_OperationMode)
+usartSym_CTRLB_PMODE.setLabel("Parity Mode")
+usartSym_CTRLB_PMODE.addKey("EVEN", "0x0", "Even Parity")
+usartSym_CTRLB_PMODE.addKey("ODD", "0x1", "Odd Parity")
+usartSym_CTRLB_PMODE.addKey("NONE", "0x2", "No Parity")
+usartSym_CTRLB_PMODE.setDefaultValue(2)
+usartSym_CTRLB_PMODE.setOutputMode("Key")
+usartSym_CTRLB_PMODE.setDisplayMode("Description")
+usartSym_CTRLB_PMODE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+usartSym_CTRLB_PMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+
+#Character Size
+usartSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("USART_CHARSIZE_BITS", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE.setLabel("Character Size")
+
+usartSym_CTRLA_CHSIZE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__CHSIZE\"]")
+usartSym_CTRLA_CHSIZE_Values = usartSym_CTRLA_CHSIZE_Node.getChildren()
+
+for index in range(len(usartSym_CTRLA_CHSIZE_Values)):
+    usartSym_CTRLB_CHSIZE_Key_Name = usartSym_CTRLA_CHSIZE_Values[index].getAttribute("name")
+    usartSym_CTRLB_CHSIZE_Key_Description = usartSym_CTRLA_CHSIZE_Values[index].getAttribute("caption")
+    usartSym_CTRLB_CHSIZE_Key_Value = usartSym_CTRLA_CHSIZE_Values[index].getAttribute("value")
+    usartSym_CTRLB_CHSIZE.addKey(usartSym_CTRLB_CHSIZE_Key_Name, usartSym_CTRLB_CHSIZE_Key_Value, usartSym_CTRLB_CHSIZE_Key_Description)
+
+usartSym_CTRLB_CHSIZE.setDefaultValue(0)
+usartSym_CTRLB_CHSIZE.setOutputMode("Key")
+usartSym_CTRLB_CHSIZE.setDisplayMode("Description")
+usartSym_CTRLB_CHSIZE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+usartSym_CTRLB_CHSIZE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+
+#Stop Bit
+usartSym_CTRLB_SBMODE = sercomComponent.createKeyValueSetSymbol("USART_STOP_BIT", sercomSym_OperationMode)
+usartSym_CTRLB_SBMODE.setLabel("Stop Bit Mode")
+
+usartSym_CTRLA_SBMODE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__SBMODE\"]")
+usartSym_CTRLA_SBMODE_Values = usartSym_CTRLA_SBMODE_Node.getChildren()
+
+for index in range(len(usartSym_CTRLA_SBMODE_Values)):
+    usartSym_CTRLB_SBMODE_Key_Name = usartSym_CTRLA_SBMODE_Values[index].getAttribute("name")
+    usartSym_CTRLB_SBMODE_Key_Description = usartSym_CTRLA_SBMODE_Values[index].getAttribute("caption")
+    usartSym_CTRLB_SBMODE_Key_Value = usartSym_CTRLA_SBMODE_Values[index].getAttribute("value")
+    usartSym_CTRLB_SBMODE.addKey(usartSym_CTRLB_SBMODE_Key_Name, usartSym_CTRLB_SBMODE_Key_Value, usartSym_CTRLB_SBMODE_Key_Description)
+
+usartSym_CTRLB_SBMODE.setDefaultValue(0)
+usartSym_CTRLB_SBMODE.setOutputMode("Key")
+usartSym_CTRLB_SBMODE.setDisplayMode("Description")
+usartSym_CTRLB_SBMODE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+usartSym_CTRLB_SBMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #RXPO - Receive Pin Out
 usartSym_CTRLA_RXPO = sercomComponent.createKeyValueSetSymbol("USART_RXPO", sercomSym_OperationMode)
@@ -399,56 +510,11 @@ if isRS485Supported == True:
     usartSym_CTRLC_GTIME.setVisible(False)
     usartSym_CTRLC_GTIME.setDependencies(updateUSARTRS485GuardTimeValueProperty, ["SERCOM_MODE", "USART_TXPO" , "USART_FORM"])
 
-#PMODE : USART PARITY MODE
-usartSym_CTRLB_PMODE = sercomComponent.createKeyValueSetSymbol("USART_PARITY_MODE", sercomSym_OperationMode)
-usartSym_CTRLB_PMODE.setLabel("Parity Mode")
-usartSym_CTRLB_PMODE.addKey("EVEN", "0x0", "Even Parity")
-usartSym_CTRLB_PMODE.addKey("ODD", "0x1", "Odd Parity")
-usartSym_CTRLB_PMODE.addKey("NONE", "0x2", "No Parity")
-usartSym_CTRLB_PMODE.setDefaultValue(2)
-usartSym_CTRLB_PMODE.setOutputMode("Key")
-usartSym_CTRLB_PMODE.setDisplayMode("Description")
-usartSym_CTRLB_PMODE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-usartSym_CTRLB_PMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
-
-#Character Size
-usartSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("USART_CHARSIZE_BITS", sercomSym_OperationMode)
-usartSym_CTRLB_CHSIZE.setLabel("Character Size")
-
-usartSym_CTRLA_CHSIZE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__CHSIZE\"]")
-usartSym_CTRLA_CHSIZE_Values = usartSym_CTRLA_CHSIZE_Node.getChildren()
-
-for index in range(len(usartSym_CTRLA_CHSIZE_Values)):
-    usartSym_CTRLB_CHSIZE_Key_Name = usartSym_CTRLA_CHSIZE_Values[index].getAttribute("name")
-    usartSym_CTRLB_CHSIZE_Key_Description = usartSym_CTRLA_CHSIZE_Values[index].getAttribute("caption")
-    usartSym_CTRLB_CHSIZE_Key_Value = usartSym_CTRLA_CHSIZE_Values[index].getAttribute("value")
-    usartSym_CTRLB_CHSIZE.addKey(usartSym_CTRLB_CHSIZE_Key_Name, usartSym_CTRLB_CHSIZE_Key_Value, usartSym_CTRLB_CHSIZE_Key_Description)
-
-usartSym_CTRLB_CHSIZE.setDefaultValue(0)
-usartSym_CTRLB_CHSIZE.setOutputMode("Key")
-usartSym_CTRLB_CHSIZE.setDisplayMode("Description")
-usartSym_CTRLB_CHSIZE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-usartSym_CTRLB_CHSIZE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
-
-
-#Stop Bit
-usartSym_CTRLB_SBMODE = sercomComponent.createKeyValueSetSymbol("USART_STOP_BIT", sercomSym_OperationMode)
-usartSym_CTRLB_SBMODE.setLabel("Stop Bit Mode")
-
-usartSym_CTRLA_SBMODE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__SBMODE\"]")
-usartSym_CTRLA_SBMODE_Values = usartSym_CTRLA_SBMODE_Node.getChildren()
-
-for index in range(len(usartSym_CTRLA_SBMODE_Values)):
-    usartSym_CTRLB_SBMODE_Key_Name = usartSym_CTRLA_SBMODE_Values[index].getAttribute("name")
-    usartSym_CTRLB_SBMODE_Key_Description = usartSym_CTRLA_SBMODE_Values[index].getAttribute("caption")
-    usartSym_CTRLB_SBMODE_Key_Value = usartSym_CTRLA_SBMODE_Values[index].getAttribute("value")
-    usartSym_CTRLB_SBMODE.addKey(usartSym_CTRLB_SBMODE_Key_Name, usartSym_CTRLB_SBMODE_Key_Value, usartSym_CTRLB_SBMODE_Key_Description)
-
-usartSym_CTRLB_SBMODE.setDefaultValue(0)
-usartSym_CTRLB_SBMODE.setOutputMode("Key")
-usartSym_CTRLB_SBMODE.setDisplayMode("Description")
-usartSym_CTRLB_SBMODE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-usartSym_CTRLB_SBMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+#Run in StandBy
+usartSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("USART_RUNSTDBY", sercomSym_OperationMode)
+usartSym_CTRLA_RUNSTDBY.setLabel("Enable Run in Standby")
+usartSym_CTRLA_RUNSTDBY.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+usartSym_CTRLA_RUNSTDBY.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="CTRLA"]')
 sampleRateValue = sampleRateNode.getChildren()
@@ -471,26 +537,6 @@ usartSym_SAMPLE_COUNT = sercomComponent.createIntegerSymbol("USART_SAMPLE_COUNT"
 usartSym_SAMPLE_COUNT.setLabel("No Of Samples")
 usartSym_SAMPLE_COUNT.setDefaultValue(16)
 usartSym_SAMPLE_COUNT.setVisible(False)
-
-#USART Baud Rate
-usartSym_BAUD_RATE = sercomComponent.createIntegerSymbol("USART_BAUD_RATE", sercomSym_OperationMode)
-usartSym_BAUD_RATE.setLabel("Baud Rate in Hz")
-usartSym_BAUD_RATE.setDefaultValue(115200)
-usartSym_BAUD_RATE.setMin(1)
-usartSym_BAUD_RATE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-usartSym_BAUD_RATE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
-
-#USART Baud Value
-usartSym_BAUD_VALUE = sercomComponent.createIntegerSymbol("USART_BAUD_VALUE", sercomSym_OperationMode)
-usartSym_BAUD_VALUE.setLabel("Baud Rate Value")
-usartSym_BAUD_VALUE.setVisible(False)
-usartSym_BAUD_VALUE.setDependencies(updateUSARTBaudValueProperty, ["USART_BAUD_RATE", "core." + sercomClkFrequencyId, "USART_FORM"])
-
-#USART Baud Rate not supported comment
-usartSym_BaudError_Comment = sercomComponent.createCommentSymbol("USART_BAUD_ERROR_COMMENT", sercomSym_OperationMode)
-usartSym_BaudError_Comment.setLabel("********** USART Clock source value is low for the desired baud rate **********")
-usartSym_BaudError_Comment.setVisible(False)
-usartSym_BaudError_Comment.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 intensetNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="INTENSET"]')
 intensetValue = intensetNode.getChildren()

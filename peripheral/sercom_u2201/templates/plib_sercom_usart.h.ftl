@@ -82,7 +82,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size );
 bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd);
 </#if>
 
-<#if USART_INTERRUPT_MODE = true>
+<#if USART_INTERRUPT_MODE_ENABLE = true>
 bool ${SERCOM_INSTANCE_NAME}_USART_WriteIsBusy( void );
 
 size_t ${SERCOM_INSTANCE_NAME}_USART_WriteCountGet( void );
@@ -105,7 +105,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_ReceiverDisable( void );
 
 bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size );
 
-<#if USART_INTERRUPT_MODE = true>
+<#if USART_INTERRUPT_MODE_ENABLE = true>
 bool ${SERCOM_INSTANCE_NAME}_USART_ReadIsBusy( void );
 
 size_t ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet( void );

@@ -77,14 +77,13 @@ def fileUpdate(symbol, event):
 
 def handleMessage(messageID, args):
     global sercomSym_OperationMode
-    global usartSym_RingBuffer_Enable
-    global usartSym_Interrupt_Mode
     global spiSym_Interrupt_Mode
     global spisSym_Interrupt_Mode
     global i2csSym_Interrupt_Mode
     global mssenSupported
     global spiSym_CTRLB_MSSEN
     global i2csSym_CTRLB_SMEN
+    global usartSym_OperatingMode
     result_dict = {}
 
     if (messageID == "I2C_MASTER_MODE"):
@@ -121,20 +120,6 @@ def handleMessage(messageID, args):
         if args.get("isEnabled") != None and args["isEnabled"] == True:
             sercomSym_OperationMode.setSelectedKey("SPIM", 2)
 
-    elif (messageID == "SPI_SLAVE_MODE"):
-        if args.get("isReadOnly") != None:
-            sercomSym_OperationMode.setReadOnly(args["isReadOnly"])
-        if args.get("isEnabled") != None and args["isEnabled"] == True:
-            sercomSym_OperationMode.setSelectedKey("SPIS", 2)
-
-    elif (messageID == "UART_INTERRUPT_MODE"):
-        if args.get("isReadOnly") != None:
-            usartSym_Interrupt_Mode.setReadOnly(args["isReadOnly"])
-        if args.get("isEnabled") != None:
-            usartSym_Interrupt_Mode.setValue(args["isEnabled"])
-        if args.get("isVisible") != None:
-            usartSym_Interrupt_Mode.setVisible(args["isVisible"])
-
     elif (messageID == "SPI_MASTER_INTERRUPT_MODE"):
         if args.get("isReadOnly") != None:
             spiSym_Interrupt_Mode.setReadOnly(args["isReadOnly"])
@@ -142,22 +127,6 @@ def handleMessage(messageID, args):
             spiSym_Interrupt_Mode.setValue(args["isEnabled"])
         if args.get("isVisible") != None:
             spiSym_Interrupt_Mode.setVisible(args["isVisible"])
-
-    elif (messageID == "SPI_SLAVE_INTERRUPT_MODE"):
-        if args.get("isReadOnly") != None:
-            spisSym_Interrupt_Mode.setReadOnly(args["isReadOnly"])
-        if args.get("isEnabled") != None :
-            spisSym_Interrupt_Mode.setValue(args["isEnabled"])
-        if args.get("isVisible") != None:
-            spisSym_Interrupt_Mode.setVisible(args["isVisible"])
-
-    elif (messageID == "UART_RING_BUFFER_MODE"):
-        if args.get("isReadOnly") != None:
-            usartSym_RingBuffer_Enable.setReadOnly(args["isReadOnly"])
-        if args.get("isVisible") != None:
-            usartSym_RingBuffer_Enable.setVisible(args["isVisible"])
-        if args.get("isEnabled") != None:
-            usartSym_RingBuffer_Enable.setValue(args["isEnabled"])
 
     elif (messageID == "SPI_MASTER_HARDWARE_CS"):
         if mssenSupported == True:
@@ -167,6 +136,50 @@ def handleMessage(messageID, args):
                 spiSym_CTRLB_MSSEN.setValue(args["isEnabled"])
             if args.get("isVisible") != None:
                 spiSym_CTRLB_MSSEN.setVisible(args["isVisible"])
+
+    elif (messageID == "SPI_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            sercomSym_OperationMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            sercomSym_OperationMode.setSelectedKey("SPIS", 2)
+
+    elif (messageID == "SPI_SLAVE_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            spisSym_Interrupt_Mode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None :
+            spisSym_Interrupt_Mode.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            spisSym_Interrupt_Mode.setVisible(args["isVisible"])
+
+    elif (messageID == "UART_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            usartSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                usartSym_OperatingMode.setSelectedKey("NON_BLOCKING")
+            else:
+                usartSym_OperatingMode.setSelectedKey("BLOCKING")
+
+    elif (messageID == "UART_BLOCKING_MODE"):
+        if args.get("isReadOnly") != None:
+            usartSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                usartSym_OperatingMode.setSelectedKey("BLOCKING")
+
+    elif (messageID == "UART_NON_BLOCKING_MODE"):
+        if args.get("isReadOnly") != None:
+            usartSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                usartSym_OperatingMode.setSelectedKey("NON_BLOCKING")
+
+    elif (messageID == "UART_RING_BUFFER_MODE"):
+        if args.get("isReadOnly") != None:
+            usartSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                usartSym_OperatingMode.setSelectedKey("RING_BUFFER")
 
     return result_dict
 
@@ -297,7 +310,7 @@ def updateSERCOMInterruptData(symbol, event):
         pass
     elif (sercomSym_OperationMode.getSelectedKey() == "USART_INT"):
         sercomMode = "USART"
-        if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
+        if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_INTERRUPT_MODE_ENABLE") == True):
             interruptEnable = True
     elif (sercomSym_OperationMode.getSelectedKey() == "SPIM"):
         sercomMode = "SPI"
@@ -520,7 +533,7 @@ def instantiateComponent(sercomComponent):
             InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
 
     # Initial settings for Interrupt
-    if (sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
+    if (sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_INTERRUPT_MODE_ENABLE") == True):
         setSERCOMInterruptData(True, "USART")
     elif (sercomSym_OperationMode.getSelectedKey() == "I2CM") and (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_INTERRUPT_MODE") == True):
         setSERCOMInterruptData(True, "I2C")
@@ -529,7 +542,7 @@ def instantiateComponent(sercomComponent):
     sercomSym_IntEnComment = sercomComponent.createCommentSymbol("SERCOM_INTERRUPT_ENABLE_COMMENT", None)
     sercomSym_IntEnComment.setVisible(False)
     sercomSym_IntEnComment.setLabel("Warning!!! " + sercomInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    sercomSym_IntEnComment.setDependencies(updateSERCOMInterruptData, ["SERCOM_MODE", "USART_INTERRUPT_MODE", "SPI_INTERRUPT_MODE", "SPIS_INTERRUPT_MODE", "I2CS_INTERRUPT_MODE", "I2C_INTERRUPT_MODE"] + InterruptVectorUpdate)
+    sercomSym_IntEnComment.setDependencies(updateSERCOMInterruptData, ["SERCOM_MODE", "USART_INTERRUPT_MODE_ENABLE", "SPI_INTERRUPT_MODE", "SPIS_INTERRUPT_MODE", "I2CS_INTERRUPT_MODE", "I2C_INTERRUPT_MODE"] + InterruptVectorUpdate)
 
     # Clock Warning status
     sercomSym_ClkEnComment = sercomComponent.createCommentSymbol("SERCOM_CLOCK_ENABLE_COMMENT", None)
@@ -551,7 +564,7 @@ def instantiateComponent(sercomComponent):
     usartHeaderFile.setType("HEADER")
     usartHeaderFile.setMarkup(True)
     usartHeaderFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-    usartHeaderFile.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_ENABLE"])
+    usartHeaderFile.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_MODE_ENABLE"])
 
     usartCommonHeaderFile = sercomComponent.createFileSymbol("SERCOM_USART_COMMON_HEADER", None)
     usartCommonHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_usart_common.h.ftl")
@@ -570,7 +583,7 @@ def instantiateComponent(sercomComponent):
     usartSourceFile.setType("SOURCE")
     usartSourceFile.setMarkup(True)
     usartSourceFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-    usartSourceFile.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_ENABLE"])
+    usartSourceFile.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_MODE_ENABLE"])
 
 
     spiSym_HeaderFile = sercomComponent.createFileSymbol("SERCOM_SPIM_HEADER", None)
