@@ -63,7 +63,7 @@
 #ifndef DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS
     #define DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS
 #endif //DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS
-#include "${__PROCESSOR?lower_case}.h"
+#include "${__PROCESSOR?lower_case?remove_beginning("at")}.h"
 <#if core.COMPILER_CHOICE == "XC32">
 #pragma GCC diagnostic pop
 </#if>
