@@ -36,38 +36,9 @@ dataBitsDict = {
 ################################################################################
 
 def updateRingBufferSizeVisibleProperty(symbol, event):
-    global flexcomSym_RingBuffer_Enable
-    global flexcomSym_UsartInterrupt
-    global flecomRxdmaEnable
-    global flecomTxdmaEnable
+    global flexcomSym_RingBuffer_Mode
 
-    flexcom_mode = flexcomSym_OperatingMode.getSelectedKey()
-
-    # Enable RX ring buffer size option if Ring buffer is enabled.
-    if symbol.getID() == "USART_RX_RING_BUFFER_SIZE":
-        if (flexcom_mode == "USART"):
-            symbol.setVisible(flexcomSym_RingBuffer_Enable.getValue())
-        else:
-            symbol.setVisible(False)
-    # Enable TX ring buffer size option if Ring buffer is enabled.
-    elif symbol.getID() == "USART_TX_RING_BUFFER_SIZE":
-        if (flexcom_mode == "USART"):
-            symbol.setVisible(flexcomSym_RingBuffer_Enable.getValue())
-        else:
-            symbol.setVisible(False)
-    # If Interrupt is enabled, make ring buffer option visible
-    # Further, if Interrupt is disabled, disable the ring buffer mode
-    elif symbol.getID() == "USART_RING_BUFFER_ENABLE":
-        if (flexcom_mode == "USART"):
-            #flexcomSym_UsartInterrupt.setReadOnly(symbol.getValue())
-            symbol.setVisible(flexcomSym_UsartInterrupt.getValue())
-            if (flexcomSym_UsartInterrupt.getValue() == False):
-                readOnlyState = symbol.getReadOnly()
-                symbol.setReadOnly(True)
-                symbol.setValue(False)
-                symbol.setReadOnly(readOnlyState)
-        else:
-            symbol.setVisible(False)
+    symbol.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART" and flexcomSym_RingBuffer_Mode.getValue() == True)
 
 # FLEXCOM USART clock source
 clock_source = {"Ext_clk_src_Freq" : 1000000}
@@ -146,64 +117,184 @@ def symbolVisible(symbol, event):
     else :
         symbol.setVisible(False)
 
-def updateDMASymbolVisiblity(symbol, event):
-
-    if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x1 and Database.getSymbolValue(deviceNamespace, "USART_INTERRUPT_MODE") and Database.getSymbolValue(deviceNamespace, "USART_RING_BUFFER_ENABLE") == False:
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-
 def updateUSARTDataBits (symbol, event):
 
     dataBits = event["symbol"].getSelectedKey()
     symbol.setValue(dataBitsDict[dataBits])
 
+def updateInterruptMode (symbol, event):
+    if symbol.getLabel() != "---":
+        if event["value"] == True and event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE").getSelectedKey() != "RING_BUFFER" :
+            event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE").setSelectedKey("NON_BLOCKING")
+        elif event["value"] == False:
+            event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE").setSelectedKey("BLOCKING")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateRingBufferMode (symbol, event):
+    if symbol.getLabel() != "---":
+        if event["value"] == True:
+            event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE").setSelectedKey("RING_BUFFER")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateRxDMAMode(symbol, event):
+    if symbol.getLabel() != "---":
+        usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
+        if event["value"] == True:
+            if usartOperatingModeSym.getSelectedKey() == "NON_BLOCKING_DMA_TX":
+                usartOperatingModeSym.setSelectedKey("NON_BLOCKING_DMA_TX_RX")
+            else:
+                usartOperatingModeSym.setSelectedKey("NON_BLOCKING_DMA_RX")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateTxDMAMode(symbol, event):
+    if symbol.getLabel() != "---":
+        usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
+        if event["value"] == True:
+            if usartOperatingModeSym.getSelectedKey() == "NON_BLOCKING_DMA_RX":
+                usartOperatingModeSym.setSelectedKey("NON_BLOCKING_DMA_TX_RX")
+            else:
+                usartOperatingModeSym.setSelectedKey("NON_BLOCKING_DMA_TX")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateOperatingMode (symbol, event):
+    if event["id"] == "FLEXCOM_USART_OPERATING_MODE":
+
+        interruptModeSym = event["source"].getSymbolByID("FLEXCOM_USART_INTERRUPT_MODE_ENABLE")
+        ringBufferModeSym = event["source"].getSymbolByID("FLEXCOM_USART_RING_BUFFER_MODE_ENABLE")
+        txDMASym = event["source"].getSymbolByID("USE_USART_TRANSMIT_DMA")
+        rxDMASym = event["source"].getSymbolByID("USE_USART_RECEIVE_DMA")
+
+        if symbol.getSelectedKey() == "RING_BUFFER":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(True)
+            txDMASym.setValue(False)
+            rxDMASym.setValue(False)
+        elif symbol.getSelectedKey() == "NON_BLOCKING":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            txDMASym.setValue(False)
+            rxDMASym.setValue(False)
+        elif symbol.getSelectedKey() == "BLOCKING":
+            interruptModeSym.setValue(False)
+            ringBufferModeSym.setValue(False)
+            txDMASym.setValue(False)
+            rxDMASym.setValue(False)
+        elif symbol.getSelectedKey() == "NON_BLOCKING_DMA_TX":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            txDMASym.setValue(True)
+            rxDMASym.setValue(False)
+        elif symbol.getSelectedKey() == "NON_BLOCKING_DMA_RX":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            txDMASym.setValue(False)
+            rxDMASym.setValue(True)
+        elif symbol.getSelectedKey() == "NON_BLOCKING_DMA_TX_RX":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            txDMASym.setValue(True)
+            rxDMASym.setValue(True)
+    else:
+        symbol.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART")
+
 ###################################################################################################
 ############################################ FLEXCOM USART ########################################
 ###################################################################################################
-global flexcomSym_RingBuffer_Enable
-global flexcomSym_UsartInterrupt
-global flecomRxdmaEnable
-global flecomTxdmaEnable
+global flexcomSym_RingBuffer_Mode
+global flexcomSym_UsartOperatingMode
 
+# Depricated symbols ---------------------------------------------------------------------------------------------------
 flexcomSym_UsartInterrupt = flexcomComponent.createBooleanSymbol("USART_INTERRUPT_MODE", flexcomSym_OperatingMode)
 flexcomSym_UsartInterrupt.setLabel("Interrupt Mode (Non-blocking Transfer)")
 flexcomSym_UsartInterrupt.setDefaultValue(True)
 flexcomSym_UsartInterrupt.setVisible(False)
-flexcomSym_UsartInterrupt.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
+flexcomSym_UsartInterrupt.setReadOnly(True)
+flexcomSym_UsartInterrupt.setDependencies(updateInterruptMode, ["USART_INTERRUPT_MODE"])
 
 #Enable Ring buffer?
 flexcomSym_RingBuffer_Enable = flexcomComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", flexcomSym_OperatingMode)
 flexcomSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
 flexcomSym_RingBuffer_Enable.setDefaultValue(False)
 flexcomSym_RingBuffer_Enable.setVisible(False)
-flexcomSym_RingBuffer_Enable.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "USART_INTERRUPT_MODE"])
+flexcomSym_RingBuffer_Enable.setReadOnly(True)
+flexcomSym_RingBuffer_Enable.setDependencies(updateRingBufferMode, ["USART_RING_BUFFER_ENABLE"])
 
-flexcomSym_TXRingBuffer_Size = flexcomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", flexcomSym_RingBuffer_Enable)
+flecomRxdmaEnable = flexcomComponent.createBooleanSymbol("USE_USART_RX_DMA", flexcomSym_OperatingMode)
+flecomRxdmaEnable.setLabel("Enable DMA for Receive")
+flecomRxdmaEnable.setVisible(False)
+flecomRxdmaEnable.setReadOnly(True)
+flecomRxdmaEnable.setDependencies(updateRxDMAMode, ["USE_USART_RX_DMA"])
+
+flecomTxdmaEnable = flexcomComponent.createBooleanSymbol("USE_USART_TX_DMA", flexcomSym_OperatingMode)
+flecomTxdmaEnable.setLabel("Enable DMA for Transmit")
+flecomTxdmaEnable.setVisible(False)
+flecomTxdmaEnable.setReadOnly(True)
+flecomTxdmaEnable.setDependencies(updateTxDMAMode, ["USE_USART_TX_DMA"])
+
+# Depricated symbols ---------------------------------------------------------------------------------------------------
+
+#Interrupt/Non-Interrupt Mode
+flexcomSym_UsartIntMode = flexcomComponent.createBooleanSymbol("FLEXCOM_USART_INTERRUPT_MODE_ENABLE", flexcomSym_OperatingMode)
+flexcomSym_UsartIntMode.setLabel("Enable Interrupts ?")
+flexcomSym_UsartIntMode.setDefaultValue(True)
+flexcomSym_UsartIntMode.setVisible(False)
+flexcomSym_UsartIntMode.setReadOnly(True)
+
+#Enable Ring buffer?
+flexcomSym_RingBuffer_Mode = flexcomComponent.createBooleanSymbol("FLEXCOM_USART_RING_BUFFER_MODE_ENABLE", flexcomSym_OperatingMode)
+flexcomSym_RingBuffer_Mode.setLabel("Enable Ring Buffer ?")
+flexcomSym_RingBuffer_Mode.setDefaultValue(False)
+flexcomSym_RingBuffer_Mode.setVisible(False)
+flexcomSym_RingBuffer_Mode.setReadOnly(True)
+
+flexcomSym_UsartOperatingMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_OPERATING_MODE", flexcomSym_OperatingMode)
+flexcomSym_UsartOperatingMode.setLabel("Operating Mode")
+flexcomSym_UsartOperatingMode.addKey("BLOCKING", "0", "Blocking mode")
+flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING", "1", "Non-blocking mode")
+flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_DMA_TX", "2", "Non-blocking mode with DMA for transmit")
+flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_DMA_RX", "3", "Non-blocking mode with DMA for receive")
+flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_DMA_TX_RX", "4", "Non-blocking mode with DMA for transmit and receive")
+flexcomSym_UsartOperatingMode.addKey("RING_BUFFER", "5", "Ring buffer mode")
+flexcomSym_UsartOperatingMode.setDefaultValue(1)
+flexcomSym_UsartOperatingMode.setDisplayMode("Description")
+flexcomSym_UsartOperatingMode.setOutputMode("Key")
+flexcomSym_UsartOperatingMode.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART")
+flexcomSym_UsartOperatingMode.setDependencies(updateOperatingMode, ["FLEXCOM_MODE",  "FLEXCOM_USART_OPERATING_MODE"])
+
+flexcomSym_UsartRingBufferSizeConfig = flexcomComponent.createCommentSymbol("FLEXCOM_USART_RING_BUFFER_SIZE_CONFIG", flexcomSym_OperatingMode)
+flexcomSym_UsartRingBufferSizeConfig.setLabel("Configure Ring Buffer Size-")
+flexcomSym_UsartRingBufferSizeConfig.setVisible(False)
+flexcomSym_UsartRingBufferSizeConfig.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "FLEXCOM_USART_RING_BUFFER_MODE_ENABLE"])
+
+flexcomSym_TXRingBuffer_Size = flexcomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", flexcomSym_UsartRingBufferSizeConfig)
 flexcomSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
 flexcomSym_TXRingBuffer_Size.setMin(2)
 flexcomSym_TXRingBuffer_Size.setMax(65535)
 flexcomSym_TXRingBuffer_Size.setDefaultValue(128)
 flexcomSym_TXRingBuffer_Size.setVisible(False)
-flexcomSym_TXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "USART_RING_BUFFER_ENABLE", "USART_TX_ENABLE"])
+flexcomSym_TXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "FLEXCOM_USART_RING_BUFFER_MODE_ENABLE"])
 
-flexcomSym_RXRingBuffer_Size = flexcomComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", flexcomSym_RingBuffer_Enable)
+flexcomSym_RXRingBuffer_Size = flexcomComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", flexcomSym_UsartRingBufferSizeConfig)
 flexcomSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
 flexcomSym_RXRingBuffer_Size.setMin(2)
 flexcomSym_RXRingBuffer_Size.setMax(65535)
 flexcomSym_RXRingBuffer_Size.setDefaultValue(128)
 flexcomSym_RXRingBuffer_Size.setVisible(False)
-flexcomSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "USART_RING_BUFFER_ENABLE", "USART_RX_ENABLE"])
+flexcomSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "FLEXCOM_USART_RING_BUFFER_MODE_ENABLE"])
 
-flecomRxdmaEnable = flexcomComponent.createBooleanSymbol("USE_USART_RX_DMA", flexcomSym_OperatingMode)
-flecomRxdmaEnable.setLabel("Enable DMA for Receive")
-flecomRxdmaEnable.setVisible(False)
-flecomRxdmaEnable.setDependencies(updateDMASymbolVisiblity, ["FLEXCOM_MODE", "USART_INTERRUPT_MODE", "USART_RING_BUFFER_ENABLE"])
+usartReceiveDMAEnable = flexcomComponent.createBooleanSymbol("USE_USART_RECEIVE_DMA", flexcomSym_OperatingMode)
+usartReceiveDMAEnable.setLabel("Enable DMA for Receive")
+usartReceiveDMAEnable.setVisible(False)
+usartReceiveDMAEnable.setReadOnly(True)
 
-flecomTxdmaEnable = flexcomComponent.createBooleanSymbol("USE_USART_TX_DMA", flexcomSym_OperatingMode)
-flecomTxdmaEnable.setLabel("Enable DMA for Transmit")
-flecomTxdmaEnable.setVisible(False)
-flecomTxdmaEnable.setDependencies(updateDMASymbolVisiblity, ["FLEXCOM_MODE", "USART_INTERRUPT_MODE", "USART_RING_BUFFER_ENABLE"])
+usartTransmitDMAEnable = flexcomComponent.createBooleanSymbol("USE_USART_TRANSMIT_DMA", flexcomSym_OperatingMode)
+usartTransmitDMAEnable.setLabel("Enable DMA for Transmit")
+usartTransmitDMAEnable.setVisible(False)
+usartTransmitDMAEnable.setReadOnly(True)
 
 flexcomSym_UsartClkSrc = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_MR_USCLKS", flexcomSym_OperatingMode)
 flexcomSym_UsartClkSrc.setLabel("Select Clock Source")

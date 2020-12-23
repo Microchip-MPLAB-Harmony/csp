@@ -25,8 +25,7 @@ global flexcomSym_RingBuffer_Enable
 #### Business Logic ####
 ################################################################################
 def handleMessage(messageID, args):
-    global flexcomSym_RingBuffer_Enable
-    global flexcomSym_UsartInterrupt
+    global flexcomSym_UsartOperatingMode
     global flexcomSym_SPI_InterruptMode
     global flexcomSym_OperatingMode
     global flexcomSym_SPI_MR_PCS
@@ -60,14 +59,6 @@ def handleMessage(messageID, args):
         else:
             result_dict["isSuccessful"] = "false"
 
-    elif (messageID == "SPI_SLAVE_MODE"):
-        if args.get("isReadOnly") != None:
-            flexcomSym_OperatingMode.setReadOnly(args["isReadOnly"])
-            flexcomSym_SPI_MR_MSTR.setReadOnly(args["isReadOnly"])
-        if args.get("isEnabled") != None and args["isEnabled"] == True:
-            flexcomSym_OperatingMode.setSelectedKey("SPI")
-            flexcomSym_SPI_MR_MSTR.setValue("SLAVE")
-
     elif (messageID == "SPI_MASTER_MODE"):
         if args.get("isReadOnly") != None:
             flexcomSym_OperatingMode.setReadOnly(args["isReadOnly"])
@@ -75,14 +66,6 @@ def handleMessage(messageID, args):
         if args.get("isEnabled") != None and args["isEnabled"] == True:
             flexcomSym_OperatingMode.setSelectedKey("SPI")
             flexcomSym_SPI_MR_MSTR.setValue("MASTER")
-
-    elif (messageID == "UART_INTERRUPT_MODE"):
-        if args.get("isReadOnly") != None:
-            flexcomSym_UsartInterrupt.setReadOnly(args["isReadOnly"])
-        if args.get("isEnabled") != None:
-            flexcomSym_UsartInterrupt.setValue(args["isEnabled"])
-        if args.get("isVisible") != None:
-            flexcomSym_UsartInterrupt.setVisible(args["isVisible"])
 
     elif (messageID == "SPI_MASTER_INTERRUPT_MODE"):
         if args.get("isReadOnly") != None:
@@ -92,14 +75,6 @@ def handleMessage(messageID, args):
         if args.get("isVisible") != None:
             flexcomSym_SPI_InterruptMode.setVisible(args["isVisible"])
 
-    elif (messageID == "UART_RING_BUFFER_MODE"):
-        if args.get("isReadOnly") != None:
-            flexcomSym_RingBuffer_Enable.setReadOnly(args["isReadOnly"])
-        if args.get("isEnabled") != None:
-            flexcomSym_RingBuffer_Enable.setValue(args["isEnabled"])
-        if args.get("isVisible") != None:
-            flexcomSym_RingBuffer_Enable.setVisible(args["isVisible"])
-
     elif (messageID == "SPI_MASTER_HARDWARE_CS"):
         if args.get("isReadOnly") != None:
             flexcomSym_SPI_MR_PCS.setReadOnly(args["isReadOnly"])
@@ -108,11 +83,77 @@ def handleMessage(messageID, args):
         if args.get("isVisible") != None:
             flexcomSym_SPI_MR_PCS.setVisible(args["isVisible"])
 
+    elif (messageID == "SPI_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_OperatingMode.setReadOnly(args["isReadOnly"])
+            flexcomSym_SPI_MR_MSTR.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            flexcomSym_OperatingMode.setSelectedKey("SPI")
+            flexcomSym_SPI_MR_MSTR.setValue("SLAVE")
+
+    elif (messageID == "UART_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                flexcomSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING")
+            else:
+                flexcomSym_UsartOperatingMode.setSelectedKey("BLOCKING")
+
+    elif (messageID == "UART_BLOCKING_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                flexcomSym_UsartOperatingMode.setSelectedKey("BLOCKING")
+
+    elif (messageID == "UART_NON_BLOCKING_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                flexcomSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING")
+
+    elif (messageID == "UART_NON_BLOCKING_DMA_TX_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                flexcomSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING_DMA_TX")
+
+    elif (messageID == "UART_NON_BLOCKING_DMA_RX_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                flexcomSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING_DMA_RX")
+
+    elif (messageID == "UART_NON_BLOCKING_DMA_TX_RX_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                flexcomSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING_DMA_TX_RX")
+
+    elif (messageID == "UART_RING_BUFFER_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                flexcomSym_UsartOperatingMode.setSelectedKey("RING_BUFFER")
+
+
     return result_dict
 
 def flexcomInterruptEnableDisableCallback( uartInterruptEnableDisable, event ):
+    interruptMode = False
     flexcom_mode = flexcomSym_OperatingMode.getSelectedKey()
-    if (flexcom_mode != "NO_COM") and (Database.getSymbolValue(deviceNamespace, flexcom_mode + "_INTERRUPT_MODE") == True):
+    if flexcom_mode != "NO_COM":
+        if flexcom_mode == "USART":
+            interruptMode = Database.getSymbolValue(deviceNamespace, "FLEXCOM_USART_INTERRUPT_MODE_ENABLE")
+        else:
+            interruptMode = Database.getSymbolValue(deviceNamespace, flexcom_mode + "_INTERRUPT_MODE")
+    if (flexcom_mode != "NO_COM") and (interruptMode == True):
         Database.setSymbolValue( interruptNamespace, interruptSymbolEnable, True, 2)
         Database.setSymbolValue( interruptNamespace, interruptSymbolHandler, flexcomInstanceName.getValue() + deviceHandlerLastName, 2)
         Database.setSymbolValue( interruptNamespace, interruptSymbolHandlerLock, True, 2)
@@ -129,7 +170,7 @@ def dependencyStatus(symbol, event):
 
     if (event["id"] == interruptSymbolEnable):
         if ((Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x0)
-        or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x1 and Database.getSymbolValue(deviceNamespace, "USART_INTERRUPT_MODE") == False)
+        or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x1 and Database.getSymbolValue(deviceNamespace, "FLEXCOM_USART_INTERRUPT_MODE_ENABLE") == False)
         or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x2 and Database.getSymbolValue(deviceNamespace, "SPI_INTERRUPT_MODE") == False)
         or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x3 and Database.getSymbolValue(deviceNamespace, "TWI_INTERRUPT_MODE") == False)):
             status = False
@@ -177,7 +218,7 @@ def onCapabilityDisconnected(event):
     flexcomSym_OperatingMode.setReadOnly(False)
 
 def setFLEXCOMCodeGenerationProperty(symbol, event):
-    global flexcomSym_RingBuffer_Enable
+    global flexcomSym_RingBuffer_Mode
     global flexcomSym_Twi_OpMode
     global flexcomSym_SPI_MR_MSTR
 
@@ -189,7 +230,7 @@ def setFLEXCOMCodeGenerationProperty(symbol, event):
     flexcom_mode = flexcomSym_OperatingMode.getSelectedKey()
 
     if flexcom_mode == "USART":
-        if flexcomSym_RingBuffer_Enable.getValue() == True:
+        if flexcomSym_RingBuffer_Mode.getValue() == True:
             usartRingBufferMode = "_ring_buffer"
 
     if flexcom_mode == "TWI":
@@ -372,7 +413,7 @@ def instantiateComponent(flexcomComponent):
 
     # Interrupt Dynamic Settings
     flexcomSym_InterruptControl = flexcomComponent.createBooleanSymbol("FLEXCOM_INTERRUPT_ENABLE", None)
-    flexcomSym_InterruptControl.setDependencies(flexcomInterruptEnableDisableCallback, ["USART_INTERRUPT_MODE", "SPI_INTERRUPT_MODE", "TWI_INTERRUPT_MODE", "FLEXCOM_MODE"])
+    flexcomSym_InterruptControl.setDependencies(flexcomInterruptEnableDisableCallback, ["FLEXCOM_USART_INTERRUPT_MODE_ENABLE", "SPI_INTERRUPT_MODE", "TWI_INTERRUPT_MODE", "FLEXCOM_MODE"])
     flexcomSym_InterruptControl.setVisible(False)
 
     # Dependency Status
@@ -406,7 +447,7 @@ def instantiateComponent(flexcomComponent):
     flexcomSym_CodeGeneration = flexcomComponent.createIntegerSymbol("FLEXCOM_CODE_GENERATION", None)
     flexcomSym_CodeGeneration.setDefaultValue(flexcomSym_OperatingMode.getValue())
     flexcomSym_CodeGeneration.setVisible(False)
-    flexcomSym_CodeGeneration.setDependencies(setFLEXCOMCodeGenerationProperty, ["FLEXCOM_MODE", "USART_RING_BUFFER_ENABLE", "FLEXCOM_TWI_OPMODE", "FLEXCOM_SPI_MR_MSTR"])
+    flexcomSym_CodeGeneration.setDependencies(setFLEXCOMCodeGenerationProperty, ["FLEXCOM_MODE", "FLEXCOM_USART_RING_BUFFER_MODE_ENABLE", "FLEXCOM_TWI_OPMODE", "FLEXCOM_SPI_MR_MSTR"])
     flexcomModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]")
     flexcomModuleID = flexcomModuleNode.getAttribute("id")
 

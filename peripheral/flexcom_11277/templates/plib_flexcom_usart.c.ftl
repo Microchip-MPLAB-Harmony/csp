@@ -56,7 +56,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
 </#if>
 
@@ -79,9 +79,9 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
     (void)dummyData;
 }
 
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 
-<#if !(USE_USART_RX_DMA??) || (USE_USART_RX_DMA == false)>
+<#if !(USE_USART_RECEIVE_DMA??) || (USE_USART_RECEIVE_DMA == false)>
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
@@ -120,7 +120,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 }
 
 </#if>
-<#if !(USE_USART_TX_DMA??) || (USE_USART_TX_DMA == false)>
+<#if !(USE_USART_TRANSMIT_DMA??) || (USE_USART_TRANSMIT_DMA == false)>
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true)
@@ -163,11 +163,11 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     /* Channel status */
     uint32_t channelStatus = USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR;
 
-    <#if (USE_USART_TX_DMA?? && USE_USART_TX_DMA == true) || (USE_USART_RX_DMA?? && USE_USART_RX_DMA == true)>
+    <#if (USE_USART_TRANSMIT_DMA?? && USE_USART_TRANSMIT_DMA == true) || (USE_USART_RECEIVE_DMA?? && USE_USART_RECEIVE_DMA == true)>
     USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTCR = US_PTCR_ERRCLR_Msk;
     </#if>
 
-    <#if USE_USART_RX_DMA?? && USE_USART_RX_DMA == true>
+    <#if USE_USART_RECEIVE_DMA?? && USE_USART_RECEIVE_DMA == true>
     if ((USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTSR & US_PTSR_RXTEN_Msk) && (channelStatus & US_CSR_ENDRX_Msk))
     {
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
@@ -214,7 +214,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     }
     </#if>
 
-    <#if USE_USART_TX_DMA?? && USE_USART_TX_DMA == true>
+    <#if USE_USART_TRANSMIT_DMA?? && USE_USART_TRANSMIT_DMA == true>
     if ((USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTSR & US_PTSR_TXTEN_Msk) && (channelStatus & US_CSR_ENDTX_Msk))
     {
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true)
@@ -255,7 +255,7 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
 
     /* Configure ${FLEXCOM_INSTANCE_NAME} USART Baud Rate */
     USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE});
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 
     /* Initialize instance object */
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBuffer = NULL;
@@ -272,7 +272,7 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
 </#if>
 }
 
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 FLEXCOM_USART_ERROR ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 {
     FLEXCOM_USART_ERROR errorStatus = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.errorStatus;
@@ -322,7 +322,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *set
     uint32_t usartMode;
     bool status = false;
 
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
     if((${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true) || (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true))
     {
         /* Transaction is in progress, so return without updating settings */
@@ -377,7 +377,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *set
 bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
 {
     bool status = false;
-<#if USART_INTERRUPT_MODE == false>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == false>
     uint32_t errorStatus = 0;
     size_t processedSize = 0;
 </#if>
@@ -385,7 +385,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
 
     if(pBuffer != NULL)
     {
-<#if USART_INTERRUPT_MODE == false>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == false>
         /* Clear errors that may have got generated when there was no active read request pending */
         ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear();
 
@@ -434,7 +434,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = true;
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.errorStatus = FLEXCOM_USART_ERROR_NONE;
 
-            <#if USE_USART_RX_DMA?? && USE_USART_RX_DMA == true>
+            <#if USE_USART_RECEIVE_DMA?? && USE_USART_RECEIVE_DMA == true>
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RPR = (uint32_t) buffer;
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RCR = (uint32_t) size;
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTCR = US_PTCR_RXTEN_Msk;
@@ -454,14 +454,14 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
 bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
 {
     bool status = false;
-<#if USART_INTERRUPT_MODE == false>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == false>
     size_t processedSize = 0;
 </#if>
     uint8_t* pBuffer = (uint8_t *)buffer;
 
     if(pBuffer != NULL)
     {
-<#if USART_INTERRUPT_MODE == false>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == false>
         while( size > processedSize )
         {
             while (!(USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_TXRDY_Msk));
@@ -488,7 +488,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize = 0;
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus = true;
 
-            <#if USE_USART_TX_DMA?? && USE_USART_TX_DMA == true>
+            <#if USE_USART_TRANSMIT_DMA?? && USE_USART_TRANSMIT_DMA == true>
 
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_TPR = (uint32_t) buffer;
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_TCR = (uint32_t) size;
@@ -520,7 +520,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
     return status;
 }
 
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 void ${FLEXCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context )
 {
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback = callback;
@@ -545,7 +545,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_ReadIsBusy( void )
 
 size_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteCountGet( void )
 {
-    <#if USE_USART_TX_DMA?? && USE_USART_TX_DMA == true>
+    <#if USE_USART_TRANSMIT_DMA?? && USE_USART_TRANSMIT_DMA == true>
     return (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize - USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_TCR);
     <#else>
     return ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize;
@@ -554,7 +554,7 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteCountGet( void )
 
 size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet( void )
 {
-    <#if USE_USART_RX_DMA?? && USE_USART_RX_DMA == true>
+    <#if USE_USART_RECEIVE_DMA?? && USE_USART_RECEIVE_DMA == true>
     return (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize - USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RCR);
     <#else>
     return ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize;
@@ -565,7 +565,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_ReadAbort(void)
 {
     if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
     {
-        <#if USE_USART_RX_DMA?? && USE_USART_RX_DMA == true>
+        <#if USE_USART_RECEIVE_DMA?? && USE_USART_RECEIVE_DMA == true>
         /* Disable PDA channel transfer */
         USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RCR = (uint32_t) 0;
         USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTCR = US_PTCR_RXTDIS_Msk;
@@ -585,7 +585,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_ReadAbort(void)
 }
 
 </#if>
-<#if USART_INTERRUPT_MODE == false>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == false>
 uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadByte( void )
 {
     return (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RHR & US_RHR_RXCHR_Msk);
