@@ -49,12 +49,12 @@
 // *****************************************************************************
 <#assign useUARTRxDMA = false>
 <#assign useUARTTxDMA = false>
-<#if USART_INTERRUPT_MODE == true>
-<#if USE_UART_RX_DMA??>
-<#assign useUARTRxDMA = USE_UART_RX_DMA>
+<#if UART_INTERRUPT_MODE_ENABLE == true>
+<#if USE_UART_RECEIVE_DMA??>
+<#assign useUARTRxDMA = USE_UART_RECEIVE_DMA>
 </#if>
-<#if USE_UART_TX_DMA??>
-<#assign useUARTTxDMA = USE_UART_TX_DMA>
+<#if USE_UART_TRANSMIT_DMA??>
+<#assign useUARTTxDMA = USE_UART_TRANSMIT_DMA>
 </#if>
 
 UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
@@ -229,7 +229,7 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
 
     /* Configure ${UART_INSTANCE_NAME} Baud Rate */
     ${UART_INSTANCE_NAME}_REGS->UART_BRGR = UART_BRGR_CD(${BRG_VALUE});
-<#if USART_INTERRUPT_MODE == true>
+<#if UART_INTERRUPT_MODE_ENABLE == true>
 
     /* Initialize instance object */
     ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer = NULL;
@@ -268,7 +268,7 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
     uint32_t brgVal = 0;
     uint32_t uartMode;
 
-<#if USART_INTERRUPT_MODE == true>
+<#if UART_INTERRUPT_MODE_ENABLE == true>
     if((${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true) || (${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true))
     {
         /* Transaction is in progress, so return without updating settings */
@@ -306,7 +306,7 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
 bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
 {
     bool status = false;
-<#if USART_INTERRUPT_MODE == false>
+<#if UART_INTERRUPT_MODE_ENABLE == false>
     uint32_t errorStatus = 0;
     size_t processedSize = 0;
 </#if>
@@ -319,7 +319,7 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
          * ErrorGet clears errors internally. */
         ${UART_INSTANCE_NAME}_ErrorGet();
 
-<#if USART_INTERRUPT_MODE == false>
+<#if UART_INTERRUPT_MODE_ENABLE == false>
         while( size > processedSize )
         {
             /* Error status */
@@ -370,14 +370,14 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
 bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
 {
     bool status = false;
-<#if USART_INTERRUPT_MODE == false>
+<#if UART_INTERRUPT_MODE_ENABLE == false>
     size_t processedSize = 0;
 </#if>
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if(NULL != lBuffer)
     {
-<#if USART_INTERRUPT_MODE == false>
+<#if UART_INTERRUPT_MODE_ENABLE == false>
         while( size > processedSize )
         {
             if(UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk))
@@ -420,7 +420,7 @@ bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
     return status;
 }
 
-<#if USART_INTERRUPT_MODE == true>
+<#if UART_INTERRUPT_MODE_ENABLE == true>
 void ${UART_INSTANCE_NAME}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
     ${UART_INSTANCE_NAME?lower_case}Obj.txCallback = callback;
@@ -486,7 +486,7 @@ bool ${UART_INSTANCE_NAME}_ReadAbort(void)
 }
 
 </#if>
-<#if USART_INTERRUPT_MODE == false>
+<#if UART_INTERRUPT_MODE_ENABLE == false>
 int ${UART_INSTANCE_NAME}_ReadByte(void)
 {
     return(${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
