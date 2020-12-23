@@ -45,29 +45,72 @@ global interruptHandlerLock
 #### Business Logic ####
 ################################################################################
 
+def isKeyPresent(symbol, key):
+    for i in range(symbol.getKeyCount()):
+        if symbol.getKey(i) == key:
+            return True
+    return False
+
 def handleMessage(messageID, args):
-    global usartSym_RingBuffer_Enable
-    global usartInterrupt
     global usartSym_Mode
     global usartSPISym_Interrupt
     global usartSPISym_CS
+    global usartSym_OperatingMode
     result_dict = {}
 
-    if (messageID == "UART_RING_BUFFER_MODE"):
+    if (messageID == "UART_INTERRUPT_MODE"):
         if args.get("isReadOnly") != None:
-            usartSym_RingBuffer_Enable.setReadOnly(args["isReadOnly"])
+            usartSym_OperatingMode.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None:
-            usartSym_RingBuffer_Enable.setValue(args["isEnabled"])
-        if args.get("isVisible") != None:
-            usartSym_RingBuffer_Enable.setVisible(args["isVisible"])
+            if args["isEnabled"] == True:
+                usartSym_OperatingMode.setSelectedKey("NON_BLOCKING")
+            else:
+                usartSym_OperatingMode.setSelectedKey("BLOCKING")
 
-    elif (messageID == "UART_INTERRUPT_MODE"):
+    elif (messageID == "UART_BLOCKING_MODE"):
         if args.get("isReadOnly") != None:
-            usartInterrupt.setReadOnly(args["isReadOnly"])
+            usartSym_OperatingMode.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None:
-            usartInterrupt.setValue(args["isEnabled"])
-        if args.get("isVisible") != None:
-            usartInterrupt.setVisible(args["isVisible"])
+            if args["isEnabled"] == True:
+                usartSym_OperatingMode.setSelectedKey("BLOCKING")
+
+    elif (messageID == "UART_NON_BLOCKING_MODE"):
+        if args.get("isReadOnly") != None:
+            usartSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                usartSym_OperatingMode.setSelectedKey("NON_BLOCKING")
+
+    elif (messageID == "UART_RING_BUFFER_MODE"):
+        if args.get("isReadOnly") != None:
+            usartSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                usartSym_OperatingMode.setSelectedKey("RING_BUFFER")
+
+    elif (messageID == "UART_NON_BLOCKING_DMA_TX_MODE"):
+        if isKeyPresent(usartSym_OperatingMode, "NON_BLOCKING_DMA_TX") == True:
+            if args.get("isReadOnly") != None:
+                usartSym_OperatingMode.setReadOnly(args["isReadOnly"])
+            if args.get("isEnabled") != None:
+                if args["isEnabled"] == True:
+                    usartSym_OperatingMode.setSelectedKey("NON_BLOCKING_DMA_TX")
+
+    elif (messageID == "UART_NON_BLOCKING_DMA_RX_MODE"):
+        if isKeyPresent(usartSym_OperatingMode, "NON_BLOCKING_DMA_RX") == True:
+            if args.get("isReadOnly") != None:
+                usartSym_OperatingMode.setReadOnly(args["isReadOnly"])
+            if args.get("isEnabled") != None:
+                if args["isEnabled"] == True:
+                    usartSym_OperatingMode.setSelectedKey("NON_BLOCKING_DMA_RX")
+
+    elif (messageID == "UART_NON_BLOCKING_DMA_TX_RX_MODE"):
+        if isKeyPresent(usartSym_OperatingMode, "NON_BLOCKING_DMA_TX_RX") == True:
+            if args.get("isReadOnly") != None:
+                usartSym_OperatingMode.setReadOnly(args["isReadOnly"])
+            if args.get("isEnabled") != None:
+                if args["isEnabled"] == True:
+                    usartSym_OperatingMode.setSelectedKey("NON_BLOCKING_DMA_TX_RX")
 
     elif (messageID == "SPI_MASTER_MODE"):
         if args.get("isReadOnly") != None and args["isReadOnly"] == True:
@@ -116,7 +159,7 @@ def interruptControl(usartNVIC, event):
 
 def dependencyStatus(symbol, event):
 
-    if (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
+    if (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE_ENABLE") == True):
         symbol.setVisible(event["value"])
 
 def clockWarningCb(symbol, event):
@@ -167,48 +210,12 @@ def dataWidthLogic(symbol, event):
     else:
         symbol.setValue(False, 2)
 
-# Dependency Function for symbol visibility
-def updateUSARTDMAConfigurationVisbleProperty(symbol, event):
-    global usartInterrupt
-    global usartSym_RingBuffer_Enable
-
-    rxDMAVal = event["source"].getSymbolByID("USE_USART_RX_DMA").getValue()
-    txDMAVal = event["source"].getSymbolByID("USE_USART_TX_DMA").getValue()
-
-    if event["source"].getSymbolByID("USART_MODE").getValue() == 0:
-        symbol.setVisible(usartInterrupt.getValue() == True)
-        symbol.setReadOnly(usartSym_RingBuffer_Enable.getValue() == True)
-        if symbol.getID() == "USE_USART_RX_DMA" or symbol.getID() == "USE_USART_TX_DMA":
-            usartSym_RingBuffer_Enable.setReadOnly(rxDMAVal == True or txDMAVal == True)
-    else:
-        symbol.setVisible(False)
-
 def updateRingBufferSymbolVisibility(symbol, event):
-    global usartInterrupt
-    global usartSym_RingBuffer_Enable
 
-    peripheral_rxdma = event["source"].getSymbolByID("USE_USART_RX_DMA")
-    peripheral_txdma = event["source"].getSymbolByID("USE_USART_TX_DMA")
+    uartMode = event["source"].getSymbolByID("USART_MODE").getSelectedKey()
+    ringBufferMode = event["source"].getSymbolByID("USART_RING_BUFFER_MODE_ENABLE").getValue()
 
-    if event["source"].getSymbolByID("USART_MODE").getValue() == 0:
-        # Enable RX ring buffer size option if Ring buffer is enabled.
-        if symbol.getID() == "USART_RX_RING_BUFFER_SIZE":
-            symbol.setVisible(usartSym_RingBuffer_Enable.getValue())
-        # Enable TX ring buffer size option if Ring buffer is enabled.
-        elif symbol.getID() == "USART_TX_RING_BUFFER_SIZE":
-            symbol.setVisible(usartSym_RingBuffer_Enable.getValue())
-        elif symbol.getID() == "USART_RING_BUFFER_ENABLE":
-            symbol.setVisible(usartInterrupt.getValue() == True)
-            if (usartInterrupt.getValue() == False):
-                readOnlyState = symbol.getReadOnly()
-                symbol.setReadOnly(True)
-                symbol.setValue(False)
-                symbol.setReadOnly(readOnlyState)
-            if (peripheral_rxdma != None and peripheral_txdma != None):
-                peripheral_rxdma.setReadOnly(symbol.getValue() == True)
-                peripheral_txdma.setReadOnly(symbol.getValue() == True)
-    else:
-        symbol.setVisible(False)
+    symbol.setVisible(uartMode == "USART" and ringBufferMode == True)
 
 def updateUSARTSymVisibility(symbol, event):
 
@@ -257,8 +264,8 @@ def USARTFileGeneration(symbol, event):
     filepath = ""
     outputName = ""
 
-    ringBufferModeEnabled = event["source"].getSymbolByID("USART_RING_BUFFER_ENABLE").getValue()
-    usartInterruptMode = event["source"].getSymbolByID("USART_INTERRUPT_MODE").getValue()
+    ringBufferModeEnabled = event["source"].getSymbolByID("USART_RING_BUFFER_MODE_ENABLE").getValue()
+    usartInterruptMode = event["source"].getSymbolByID("USART_INTERRUPT_MODE_ENABLE").getValue()
     usartMode = event["source"].getSymbolByID("USART_MODE").getValue()
 
     if symbolID == "USART_HEADER":       # Common header file
@@ -296,6 +303,96 @@ def updateUSARTDataBits (symbol, event):
 
     dataBits = event["symbol"].getSelectedKey()
     symbol.setValue(dataBitsDict[dataBits])
+
+def updateInterruptMode (symbol, event):
+    if symbol.getLabel() != "---":
+        usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
+        if event["value"] == True and usartOperatingModeSym.getSelectedKey() != "RING_BUFFER" and usartOperatingModeSym.getSelectedKey() != "NON_BLOCKING_DMA_TX" and usartOperatingModeSym.getSelectedKey() != "NON_BLOCKING_DMA_RX" and usartOperatingModeSym.getSelectedKey() != "NON_BLOCKING_DMA_TX_RX":
+            usartOperatingModeSym.setSelectedKey("NON_BLOCKING")
+        elif event["value"] == False:
+            usartOperatingModeSym.setSelectedKey("BLOCKING")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateRingBufferMode (symbol, event):
+    if symbol.getLabel() != "---":
+        if event["value"] == True:
+            event["source"].getSymbolByID("USART_OPERATING_MODE").setSelectedKey("RING_BUFFER")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateRxDMAMode(symbol, event):
+    if symbol.getLabel() != "---":
+        usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
+        if event["value"] == True:
+            if usartOperatingModeSym.getSelectedKey() == "NON_BLOCKING_DMA_TX":
+                usartOperatingModeSym.setSelectedKey("NON_BLOCKING_DMA_TX_RX")
+            else:
+                usartOperatingModeSym.setSelectedKey("NON_BLOCKING_DMA_RX")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateTxDMAMode(symbol, event):
+    if symbol.getLabel() != "---":
+        usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
+        if event["value"] == True:
+            if usartOperatingModeSym.getSelectedKey() == "NON_BLOCKING_DMA_RX":
+                usartOperatingModeSym.setSelectedKey("NON_BLOCKING_DMA_TX_RX")
+            else:
+                usartOperatingModeSym.setSelectedKey("NON_BLOCKING_DMA_TX")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateOperatingMode (symbol, event):
+    txDMASym = None
+    rxDMASym = None
+    interruptModeSym = event["source"].getSymbolByID("USART_INTERRUPT_MODE_ENABLE")
+    ringBufferModeSym = event["source"].getSymbolByID("USART_RING_BUFFER_MODE_ENABLE")
+    isPeriheralDMASupported = event["source"].getSymbolByID("USART_PERIPHERAL_DMA_SUPPORT").getValue()
+
+    if event["id"] == "USART_OPERATING_MODE":
+        if isPeriheralDMASupported == True:
+            txDMASym = event["source"].getSymbolByID("USE_USART_TRANSMIT_DMA")
+            rxDMASym = event["source"].getSymbolByID("USE_USART_RECEIVE_DMA")
+
+        if symbol.getSelectedKey() == "RING_BUFFER":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(True)
+            if isPeriheralDMASupported == True:
+                txDMASym.setValue(False)
+                rxDMASym.setValue(False)
+        elif symbol.getSelectedKey() == "NON_BLOCKING":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            if isPeriheralDMASupported == True:
+                txDMASym.setValue(False)
+                rxDMASym.setValue(False)
+        elif symbol.getSelectedKey() == "BLOCKING":
+            interruptModeSym.setValue(False)
+            ringBufferModeSym.setValue(False)
+            if isPeriheralDMASupported == True:
+                txDMASym.setValue(False)
+                rxDMASym.setValue(False)
+        elif symbol.getSelectedKey() == "NON_BLOCKING_DMA_TX":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            if isPeriheralDMASupported == True:
+                txDMASym.setValue(True)
+                rxDMASym.setValue(False)
+        elif symbol.getSelectedKey() == "NON_BLOCKING_DMA_RX":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            if isPeriheralDMASupported == True:
+                txDMASym.setValue(False)
+                rxDMASym.setValue(True)
+        elif symbol.getSelectedKey() == "NON_BLOCKING_DMA_TX_RX":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            if isPeriheralDMASupported == True:
+                txDMASym.setValue(True)
+                rxDMASym.setValue(True)
+    else:
+        symbol.setVisible(event["value"] == 0)
 ################################################################################
 #### Component ####
 ################################################################################
@@ -306,7 +403,7 @@ def instantiateComponent(usartComponent):
     global interruptHandler
     global interruptHandlerLock
     global usartInstanceName
-    global usartSym_RingBuffer_Enable
+    global usartSym_OperatingMode
     global usartInterrupt
     global uartCapabilityId
     global spiCapabilityId
@@ -330,6 +427,110 @@ def instantiateComponent(usartComponent):
     usartSym_Mode.setOutputMode("Key")
     usartSym_Mode.setDefaultValue(0)
 
+    # Add DMA support if Peripheral DMA Controller (PDC) exist in the UART register group
+    usartRegisterDMA = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/register-group@[name=\"USART\"]/register@[name=\"US_RPR\"]")
+
+    usartIsPeripheralDMASupported = usartComponent.createBooleanSymbol("USART_PERIPHERAL_DMA_SUPPORT", None)
+    usartIsPeripheralDMASupported.setDefaultValue(usartRegisterDMA != None)
+    usartIsPeripheralDMASupported.setReadOnly(True)
+    usartIsPeripheralDMASupported.setVisible(False)
+
+# Depricated symbols ---------------------------------------------------------------------------------------------------
+    usartInterrupt = usartComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
+    usartInterrupt.setLabel("Interrupt Mode")
+    usartInterrupt.setDefaultValue(True)
+    usartInterrupt.setReadOnly(True)
+    usartInterrupt.setVisible(False)
+    usartInterrupt.setDependencies(updateInterruptMode, ["USART_INTERRUPT_MODE"])
+
+    #Enable Ring buffer?
+    usartSym_RingBuffer_Enable = usartComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", None)
+    usartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
+    usartSym_RingBuffer_Enable.setDefaultValue(False)
+    usartSym_RingBuffer_Enable.setVisible(False)
+    usartSym_RingBuffer_Enable.setReadOnly(True)
+    usartSym_RingBuffer_Enable.setDependencies(updateRingBufferMode, ["USART_RING_BUFFER_ENABLE"])
+
+    if usartIsPeripheralDMASupported.getValue() == True:
+        usartRxDMAEnable = usartComponent.createBooleanSymbol("USE_USART_RX_DMA", None)
+        usartRxDMAEnable.setLabel("Enable DMA for Receive")
+        usartRxDMAEnable.setVisible(False)
+        usartRxDMAEnable.setReadOnly(True)
+        usartRxDMAEnable.setDependencies(updateRxDMAMode, ["USE_USART_RX_DMA"])
+
+        usartTxDMAEnable = usartComponent.createBooleanSymbol("USE_USART_TX_DMA", None)
+        usartTxDMAEnable.setLabel("Enable DMA for Transmit")
+        usartTxDMAEnable.setVisible(False)
+        usartTxDMAEnable.setReadOnly(True)
+        usartTxDMAEnable.setDependencies(updateTxDMAMode, ["USE_USART_TX_DMA"])
+# Depricated symbols ---------------------------------------------------------------------------------------------------
+
+    # Operating mode
+    usartSym_OperatingMode = usartComponent.createKeyValueSetSymbol("USART_OPERATING_MODE", None)
+    usartSym_OperatingMode.setLabel("Operating Mode")
+    usartSym_OperatingMode.addKey("BLOCKING", "0", "Blocking mode")
+    usartSym_OperatingMode.addKey("NON_BLOCKING", "1", "Non-blocking mode")
+    if usartIsPeripheralDMASupported.getValue() == True:
+        usartSym_OperatingMode.addKey("NON_BLOCKING_DMA_TX", "2", "Non-blocking mode with DMA for transmit")
+        usartSym_OperatingMode.addKey("NON_BLOCKING_DMA_RX", "3", "Non-blocking mode with DMA for receive")
+        usartSym_OperatingMode.addKey("NON_BLOCKING_DMA_TX_RX", "4", "Non-blocking mode with DMA for transmit and receive")
+    usartSym_OperatingMode.addKey("RING_BUFFER", "5", "Ring buffer mode")
+    usartSym_OperatingMode.setDefaultValue(1)
+    usartSym_OperatingMode.setDisplayMode("Description")
+    usartSym_OperatingMode.setOutputMode("Key")
+    usartSym_OperatingMode.setVisible((usartSym_Mode.getValue() == 0))
+    usartSym_OperatingMode.setDependencies(updateOperatingMode, ["USART_MODE", "USART_OPERATING_MODE"])
+
+    # Enable Interrupts?
+    usartSymInterruptModeEnable = usartComponent.createBooleanSymbol("USART_INTERRUPT_MODE_ENABLE", None)
+    usartSymInterruptModeEnable.setLabel("Enable Interrrupts ?")
+    usartSymInterruptModeEnable.setDefaultValue(True)
+    usartSymInterruptModeEnable.setReadOnly(True)
+    usartSymInterruptModeEnable.setVisible(False)
+
+    # Enable Ring buffer?
+    usartSym_RingBufferMode_Enable = usartComponent.createBooleanSymbol("USART_RING_BUFFER_MODE_ENABLE", None)
+    usartSym_RingBufferMode_Enable.setLabel("Enable Ring Buffer ?")
+    usartSym_RingBufferMode_Enable.setDefaultValue(False)
+    usartSym_RingBufferMode_Enable.setReadOnly(True)
+    usartSym_RingBufferMode_Enable.setVisible(False)
+
+    if usartIsPeripheralDMASupported.getValue() == True:
+        usartReceiveDMAEnable = usartComponent.createBooleanSymbol("USE_USART_RECEIVE_DMA", None)
+        usartReceiveDMAEnable.setLabel("Enable DMA for Receive")
+        usartReceiveDMAEnable.setVisible(False)
+        usartReceiveDMAEnable.setReadOnly(True)
+
+        usartTransmitDMAEnable = usartComponent.createBooleanSymbol("USE_USART_TRANSMIT_DMA", None)
+        usartTransmitDMAEnable.setLabel("Enable DMA for Transmit")
+        usartTransmitDMAEnable.setVisible(False)
+        usartTransmitDMAEnable.setReadOnly(True)
+
+    # Ring buffer label
+    usartSym_RingBufferSizeConfig = usartComponent.createCommentSymbol("USART_RING_BUFFER_SIZE_CONFIG", None)
+    usartSym_RingBufferSizeConfig.setLabel("Configure Ring Buffer Size-")
+    usartSym_RingBufferSizeConfig.setVisible(False)
+    usartSym_RingBufferSizeConfig.setDependencies(updateRingBufferSymbolVisibility, ["USART_RING_BUFFER_MODE_ENABLE", "USART_MODE"])
+
+    # Ring buffer tx size
+    usartSym_TXRingBuffer_Size = usartComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", usartSym_RingBufferSizeConfig)
+    usartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
+    usartSym_TXRingBuffer_Size.setMin(2)
+    usartSym_TXRingBuffer_Size.setMax(65535)
+    usartSym_TXRingBuffer_Size.setDefaultValue(128)
+    usartSym_TXRingBuffer_Size.setVisible(False)
+    usartSym_TXRingBuffer_Size.setDependencies(updateRingBufferSymbolVisibility, ["USART_RING_BUFFER_MODE_ENABLE", "USART_MODE"])
+
+    # Ring buffer rx size
+    usartSym_RXRingBuffer_Size = usartComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", usartSym_RingBufferSizeConfig)
+    usartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
+    usartSym_RXRingBuffer_Size.setMin(2)
+    usartSym_RXRingBuffer_Size.setMax(65535)
+    usartSym_RXRingBuffer_Size.setDefaultValue(128)
+    usartSym_RXRingBuffer_Size.setVisible(False)
+    usartSym_RXRingBuffer_Size.setDependencies(updateRingBufferSymbolVisibility, ["USART_RING_BUFFER_MODE_ENABLE", "USART_MODE"])
+
+    # Clock
     usart_clock = []
     node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"USART\"]/instance@[name=\"" + usartInstanceName.getValue() + "\"]/parameters")
     usart_clock = node.getChildren()
@@ -353,63 +554,23 @@ def instantiateComponent(usartComponent):
     usartClkValue.setDependencies(clockSourceFreq, ["USART_CLK_SRC", "core." + usartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
     usartClkValue.setDefaultValue(int(Database.getSymbolValue("core", usartInstanceName.getValue() + "_CLOCK_FREQUENCY")))
 
+    usartSymClkEnComment = usartComponent.createCommentSymbol("USART_CLK_ENABLE_COMMENT", None)
+    usartSymClkEnComment.setVisible(False)
+    usartSymClkEnComment.setLabel("Warning!!! USART Peripheral Clock is Disabled in Clock Manager")
+    usartSymClkEnComment.setDependencies(clockWarningCb, ["core." + usartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
+    # Baud
     usartBaud = usartComponent.createIntegerSymbol("BAUD_RATE", None)
     usartBaud.setLabel("Baud Rate")
     usartBaud.setDefaultValue(115200)
     usartBaud.setDependencies(updateUSARTSymVisibility, ["USART_MODE"])
 
+    # Baud comment
     usartBaudComment = usartComponent.createCommentSymbol("USART_BAUD_WARNING", None)
     usartBaudComment.setLabel("USART Clock source value is low for the desired baud rate")
     usartBaudComment.setDependencies(updateUSARTSymVisibility, ["USART_MODE"])
 
-    usartInterrupt = usartComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
-    usartInterrupt.setLabel("Interrupt Mode")
-    usartInterrupt.setDefaultValue(True)
-    usartInterrupt.setDependencies(updateUSARTSymVisibility, ["USART_MODE"])
-
-    # Add DMA support if Peripheral DMA Controller (PDC) exist in the UART register group
-    usartRegisterGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/register-group@[name=\"USART\"]")
-    usartRegisterList = usartRegisterGroup.getChildren()
-
-    #Enable Ring buffer?
-    usartSym_RingBuffer_Enable = usartComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", None)
-    usartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
-    usartSym_RingBuffer_Enable.setDefaultValue(False)
-    usartSym_RingBuffer_Enable.setVisible((usartSym_Mode.getValue() == 0) and (usartInterrupt.getValue() == True))
-    usartSym_RingBuffer_Enable.setDependencies(updateRingBufferSymbolVisibility, ["USART_INTERRUPT_MODE", "USART_MODE"])
-
-    usartSym_TXRingBuffer_Size = usartComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", usartSym_RingBuffer_Enable)
-    usartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
-    usartSym_TXRingBuffer_Size.setMin(2)
-    usartSym_TXRingBuffer_Size.setMax(65535)
-    usartSym_TXRingBuffer_Size.setDefaultValue(128)
-    usartSym_TXRingBuffer_Size.setVisible(usartSym_RingBuffer_Enable.getValue() == True)
-    usartSym_TXRingBuffer_Size.setDependencies(updateRingBufferSymbolVisibility, ["USART_RING_BUFFER_ENABLE", "USART_MODE"])
-
-    usartSym_RXRingBuffer_Size = usartComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", usartSym_RingBuffer_Enable)
-    usartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
-    usartSym_RXRingBuffer_Size.setMin(2)
-    usartSym_RXRingBuffer_Size.setMax(65535)
-    usartSym_RXRingBuffer_Size.setDefaultValue(128)
-    usartSym_RXRingBuffer_Size.setVisible(usartSym_RingBuffer_Enable.getValue() == True)
-    usartSym_RXRingBuffer_Size.setDependencies(updateRingBufferSymbolVisibility, ["USART_RING_BUFFER_ENABLE", "USART_MODE"])
-
-    for index in range(0, len(usartRegisterList)):
-        if (usartRegisterList[index].getAttribute("name") == "US_RPR"):
-            usartRxDMAEnable = usartComponent.createBooleanSymbol("USE_USART_RX_DMA", None)
-            usartRxDMAEnable.setLabel("Enable DMA for Receive")
-            usartRxDMAEnable.setVisible(True)
-            usartRxDMAEnable.setDependencies(updateUSARTDMAConfigurationVisbleProperty, ["USART_INTERRUPT_MODE", "USART_MODE", "USART_RING_BUFFER_ENABLE", "USE_USART_RX_DMA"])
-            break
-
-    for index in range(0, len(usartRegisterList)):
-        if (usartRegisterList[index].getAttribute("name") == "US_TPR"):
-            usartTxDMAEnable = usartComponent.createBooleanSymbol("USE_USART_TX_DMA", None)
-            usartTxDMAEnable.setLabel("Enable DMA for Transmit")
-            usartTxDMAEnable.setVisible(True)
-            usartTxDMAEnable.setDependencies(updateUSARTDMAConfigurationVisbleProperty, ["USART_INTERRUPT_MODE", "USART_MODE", "USART_RING_BUFFER_ENABLE", "USE_USART_TX_DMA"])
-            break
-
+    # Over sampling
     usartSym_MR_OVER = usartComponent.createKeyValueSetSymbol("USART_MR_OVER", None)
     usartSym_MR_OVER.setLabel("OverSampling")
     usartSym_MR_OVER.addKey("0", "0", "16 Times")
@@ -427,6 +588,8 @@ def instantiateComponent(usartComponent):
     usartBRGValue.setVisible(False)
     usartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "USART_MR_OVER", "USART_CLOCK_FREQ", "USART_MODE"])
     usartBRGValue.setDefaultValue(brgVal)
+
+
 
     usartSym_MR_CHRL = usartComponent.createKeyValueSetSymbol("USART_MR_CHRL", None)
     usartSym_MR_CHRL.setLabel("Data")
@@ -582,13 +745,11 @@ def instantiateComponent(usartComponent):
     usartSPISym_Interrupt.setDependencies(updateUSART_SPISymVisibility, ["USART_MODE"])
 
     # Add DMA support if Peripheral DMA Controller (PDC) exist in the UART register group
-    for index in range(0, len(usartRegisterList)):
-        if (usartRegisterList[index].getAttribute("name") == "US_RPR"):
-            usartSPISym_TxRxDMAEnable = usartComponent.createBooleanSymbol("USE_USART_SPI_DMA", usartSPISym_Interrupt)
-            usartSPISym_TxRxDMAEnable.setLabel("Enable DMA for Transmit and Receive")
-            usartSPISym_TxRxDMAEnable.setVisible(True)
-            usartSPISym_TxRxDMAEnable.setDependencies(updateUSART_SPIDMAConfigurationVisbleProperty, ["USART_SPI_INTERRUPT_MODE"])
-            break
+    if usartIsPeripheralDMASupported.getValue() == True:
+        usartSPISym_TxRxDMAEnable = usartComponent.createBooleanSymbol("USE_USART_SPI_DMA", usartSPISym_Interrupt)
+        usartSPISym_TxRxDMAEnable.setLabel("Enable DMA for Transmit and Receive")
+        usartSPISym_TxRxDMAEnable.setVisible(True)
+        usartSPISym_TxRxDMAEnable.setDependencies(updateUSART_SPIDMAConfigurationVisbleProperty, ["USART_SPI_INTERRUPT_MODE"])
 
     usartSPISym_baudRate = usartComponent.createIntegerSymbol("USART_SPI_BAUD_RATE", None)
     usartSPISym_baudRate.setLabel("Baud Rate in Hz")
@@ -711,15 +872,10 @@ def instantiateComponent(usartComponent):
 
     # NVIC Dynamic settings
     usartinterruptControl = usartComponent.createBooleanSymbol("NVIC_USART_ENABLE", None)
-    usartinterruptControl.setDependencies(interruptControl, ["USART_INTERRUPT_MODE"])
+    usartinterruptControl.setDependencies(interruptControl, ["USART_INTERRUPT_MODE_ENABLE"])
     usartinterruptControl.setVisible(False)
 
     # Dependency Status
-    usartSymClkEnComment = usartComponent.createCommentSymbol("USART_CLK_ENABLE_COMMENT", None)
-    usartSymClkEnComment.setVisible(False)
-    usartSymClkEnComment.setLabel("Warning!!! USART Peripheral Clock is Disabled in Clock Manager")
-    usartSymClkEnComment.setDependencies(clockWarningCb, ["core." + usartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
-
     usartSymIntEnComment = usartComponent.createCommentSymbol("USART_NVIC_ENABLE_COMMENT", None)
     usartSymIntEnComment.setVisible(False)
     usartSymIntEnComment.setLabel("Warning!!! USART Interrupt is Disabled in Interrupt Manager")
@@ -748,7 +904,7 @@ def instantiateComponent(usartComponent):
     usartHeader1File.setType("HEADER")
     usartHeader1File.setOverwrite(True)
     usartHeader1File.setMarkup(True)
-    usartHeader1File.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_ENABLE", "USART_MODE", "USART_INTERRUPT_MODE"])
+    usartHeader1File.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_MODE_ENABLE", "USART_MODE", "USART_INTERRUPT_MODE_ENABLE"])
 
     usartSource1File = usartComponent.createFileSymbol("USART_SOURCE1", None)
     usartSource1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.c.ftl")
@@ -758,7 +914,7 @@ def instantiateComponent(usartComponent):
     usartSource1File.setType("SOURCE")
     usartSource1File.setOverwrite(True)
     usartSource1File.setMarkup(True)
-    usartSource1File.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_ENABLE", "USART_MODE", "USART_INTERRUPT_MODE"])
+    usartSource1File.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_MODE_ENABLE", "USART_MODE", "USART_INTERRUPT_MODE_ENABLE"])
 
     usartSystemInitFile = usartComponent.createFileSymbol("USART_INIT", None)
     usartSystemInitFile.setType("STRING")

@@ -72,7 +72,7 @@ bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size );
 
 bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size );
 
-<#if USART_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE_ENABLE == false>
 int ${USART_INSTANCE_NAME}_ReadByte( void );
 
 void ${USART_INSTANCE_NAME}_WriteByte( int data );
@@ -84,7 +84,7 @@ bool ${USART_INSTANCE_NAME}_TransmitComplete( void );
 bool ${USART_INSTANCE_NAME}_ReceiverIsReady( void );
 
 </#if>
-<#if USART_INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE_ENABLE == true>
 bool ${USART_INSTANCE_NAME}_WriteIsBusy( void );
 
 bool ${USART_INSTANCE_NAME}_ReadIsBusy( void );

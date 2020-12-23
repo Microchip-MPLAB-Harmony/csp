@@ -70,12 +70,12 @@ static void ${USART_INSTANCE_NAME}_ErrorClear( void )
 
 <#assign useUSARTRxDMA = false>
 <#assign useUSARTTxDMA = false>
-<#if USART_INTERRUPT_MODE == true>
-<#if USE_USART_RX_DMA??>
-<#assign useUSARTRxDMA = USE_USART_RX_DMA>
+<#if USART_INTERRUPT_MODE_ENABLE == true>
+<#if USE_USART_RECEIVE_DMA??>
+<#assign useUSARTRxDMA = USE_USART_RECEIVE_DMA>
 </#if>
-<#if USE_USART_TX_DMA??>
-<#assign useUSARTTxDMA = USE_USART_TX_DMA>
+<#if USE_USART_TRANSMIT_DMA??>
+<#assign useUSARTTxDMA = USE_USART_TRANSMIT_DMA>
 </#if>
 
 USART_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
@@ -253,7 +253,7 @@ void ${USART_INSTANCE_NAME}_Initialize( void )
 
     /* Configure ${USART_INSTANCE_NAME} Baud Rate */
     ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE});
-<#if USART_INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE_ENABLE == true>
 
     /* Initialize instance object */
     ${USART_INSTANCE_NAME?lower_case}Obj.rxBuffer = NULL;
@@ -270,7 +270,7 @@ void ${USART_INSTANCE_NAME}_Initialize( void )
 </#if>
 }
 
-<#if USART_INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE_ENABLE == true>
 USART_ERROR ${USART_INSTANCE_NAME}_ErrorGet( void )
 {
     USART_ERROR errors = ${USART_INSTANCE_NAME?lower_case}Obj.errorStatus;
@@ -307,7 +307,7 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
     uint32_t usartMode;
     bool status = false;
 
-<#if USART_INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE_ENABLE == true>
     if((${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true) || (${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true))
     {
         /* Transaction is in progress, so return without updating settings */
@@ -360,7 +360,7 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
 bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
 {
     bool status = false;
-<#if USART_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE_ENABLE == false>
     uint32_t errorStatus = 0;
     size_t processedSize = 0;
 </#if>
@@ -368,7 +368,7 @@ bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
 
     if(pBuffer != NULL)
     {
-<#if USART_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE_ENABLE == false>
         /* Clear errors that may have got generated when there was no active read request pending */
         ${USART_INSTANCE_NAME}_ErrorClear();
 
@@ -437,14 +437,14 @@ bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
 bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
 {
     bool status = false;
-<#if USART_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE_ENABLE == false>
     size_t processedSize = 0;
 </#if>
     uint8_t* pBuffer = (uint8_t *)buffer;
 
     if(NULL != pBuffer)
     {
-<#if USART_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE_ENABLE == false>
         while( size > processedSize )
         {
             while (!(${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXRDY_Msk));
@@ -499,7 +499,7 @@ bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
     return status;
 }
 
-<#if USART_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE_ENABLE == false>
 int ${USART_INSTANCE_NAME}_ReadByte( void )
 {
     return(${USART_INSTANCE_NAME}_REGS->US_RHR & US_RHR_RXCHR_Msk);
@@ -544,7 +544,7 @@ bool ${USART_INSTANCE_NAME}_ReceiverIsReady( void )
 
 </#if>
 
-<#if USART_INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE_ENABLE == true>
 void ${USART_INSTANCE_NAME}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context )
 {
     ${USART_INSTANCE_NAME?lower_case}Obj.txCallback = callback;
