@@ -142,19 +142,17 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void )
 
 void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare0Set( uint16_t compare0 )
 {
-    ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[0] = (compare0);
-    while(${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)
+    if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV0_Msk) == 0U)
     {
-        /* Wait for write Synchronization */
-    }
+        ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[0] = (compare0);
+    }    
 }
 
 void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare1Set( uint16_t compare1 )
 {
-    ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[1] = (compare1);
-    while(${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)
+    if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV1_Msk) == 0U)
     {
-        /* Wait for write Synchronization */
+        ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[1] = (compare1);
     }
 }
 
