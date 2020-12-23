@@ -39,24 +39,24 @@ global dbguInstanceName
 #### Business Logic ####
 ################################################################################
 def handleMessage(messageID, args):
-    global dbguSym_RingBuffer_Enable
-    global dbguInterrupt
+    global dbguSym_UsartOperatingMode
     result_dict = {}
 
     if (messageID == "UART_RING_BUFFER_MODE"):
         if args.get("isReadOnly") != None:
-            dbguSym_RingBuffer_Enable.setReadOnly(args["isReadOnly"])
+            dbguSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None:
-            dbguSym_RingBuffer_Enable.setValue(args["isEnabled"])
-        if args.get("isVisible") != None:
-            dbguSym_RingBuffer_Enable.setVisible(args["isVisible"])
+            if args["isEnabled"] == True:
+                dbguSym_UsartOperatingMode.setSelectedKey("RING_BUFFER")
+
     elif (messageID == "UART_INTERRUPT_MODE"):
         if args.get("isReadOnly") != None:
-            dbguInterrupt.setReadOnly(args["isReadOnly"])
+            dbguSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None:
-            dbguInterrupt.setValue(args["isEnabled"])
-        if args.get("isVisible") != None:
-            dbguInterrupt.setVisible(args["isVisible"])
+            if args["isEnabled"] == True:
+                dbguSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING")
+            else:
+                dbguSym_UsartOperatingMode.setSelectedKey("BLOCKING")
 
     return result_dict
 
@@ -74,7 +74,7 @@ def interruptControl(dbguInt, event):
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
-    if (Database.getSymbolValue(dbguInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
+    if (Database.getSymbolValue(dbguInstanceName.getValue().lower(), "DBGU_INTERRUPT_MODE_ENABLE") == True):
         symbol.setVisible(event["value"])
 
 def clockWarningVisible(symbol, event):
@@ -100,24 +100,9 @@ def clockSourceFreq(symbol, event):
     symbol.setValue(int(Database.getSymbolValue("core", dbguInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
 
 def updateSymbolVisibility(symbol, event):
-    global dbguSym_RingBuffer_Enable
-    global dbguInterrupt
+    global dbguSym_RingBuffer_Mode
 
-    # Enable RX ring buffer size option if Ring buffer is enabled.
-    if symbol.getID() == "DBGU_RX_RING_BUFFER_SIZE":
-        symbol.setVisible(dbguSym_RingBuffer_Enable.getValue())
-    # Enable TX ring buffer size option if Ring buffer is enabled.
-    elif symbol.getID() == "DBGU_TX_RING_BUFFER_SIZE":
-        symbol.setVisible(dbguSym_RingBuffer_Enable.getValue())
-    # If Interrupt is enabled, make ring buffer option visible
-    # Further, if Interrupt is disabled, disable the ring buffer mode
-    elif symbol.getID() == "DBGU_RING_BUFFER_ENABLE":
-        symbol.setVisible(dbguInterrupt.getValue())
-        if (dbguInterrupt.getValue() == False):
-            readOnlyState = symbol.getReadOnly()
-            symbol.setReadOnly(True)
-            symbol.setValue(False)
-            symbol.setReadOnly(readOnlyState)
+    symbol.setVisible(dbguSym_RingBuffer_Mode.getValue() == True)
 
 def DBGUFileGeneration(symbol, event):
     componentID = symbol.getID()
@@ -146,6 +131,36 @@ def onCapabilityConnected(event):
     argDict = {"localComponentID" : localComponent.getID()}
     argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 
+def updateInterruptMode (symbol, event):
+    if symbol.getLabel() != "---":
+        usartOperatingModeSym = event["source"].getSymbolByID("DBGU_OPERATING_MODE")
+        if event["value"] == True and usartOperatingModeSym.getSelectedKey() != "RING_BUFFER" :
+            usartOperatingModeSym.setSelectedKey("NON_BLOCKING")
+        elif event["value"] == False:
+            usartOperatingModeSym.setSelectedKey("BLOCKING")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateRingBufferMode (symbol, event):
+    if symbol.getLabel() != "---":
+        if event["value"] == True:
+            event["source"].getSymbolByID("DBGU_OPERATING_MODE").setSelectedKey("RING_BUFFER")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateOperatingMode (symbol, event):
+    interruptModeSym = event["source"].getSymbolByID("DBGU_INTERRUPT_MODE_ENABLE")
+    ringBufferModeSym = event["source"].getSymbolByID("DBGU_RING_BUFFER_MODE_ENABLE")
+    if symbol.getSelectedKey() == "RING_BUFFER":
+        interruptModeSym.setValue(True)
+        ringBufferModeSym.setValue(True)
+    elif symbol.getSelectedKey() == "NON_BLOCKING":
+        interruptModeSym.setValue(True)
+        ringBufferModeSym.setValue(False)
+    elif symbol.getSelectedKey() == "BLOCKING":
+        interruptModeSym.setValue(False)
+        ringBufferModeSym.setValue(False)
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -156,40 +171,77 @@ def instantiateComponent(dbguComponent):
     global interruptHandlerLock
     global dbguClockInvalidSym
     global dbguInterrupt
-    global dbguSym_RingBuffer_Enable
+    global dbguSym_RingBuffer_Mode
+    global dbguSym_UsartOperatingMode
 
     dbguInstanceName = dbguComponent.createStringSymbol("DBGU_INSTANCE_NAME", None)
     dbguInstanceName.setVisible(False)
     dbguInstanceName.setDefaultValue(dbguComponent.getID().upper())
 
+# Depricated symbols ---------------------------------------------------------------------------------------------------
     # The STDIO module looks for USART_INTERRUPT_MODE to disable interrupts so name our
     # variable accordingly to inter-operate correctly
     dbguInterrupt = dbguComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
     dbguInterrupt.setLabel("Interrupt Mode")
+    dbguInterrupt.setReadOnly(True)
+    dbguInterrupt.setVisible(False)
     dbguInterrupt.setDefaultValue(True)
+    dbguInterrupt.setDependencies(updateInterruptMode, ["USART_INTERRUPT_MODE"])
 
     #Enable Ring buffer?
     dbguSym_RingBuffer_Enable = dbguComponent.createBooleanSymbol("DBGU_RING_BUFFER_ENABLE", None)
     dbguSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
     dbguSym_RingBuffer_Enable.setDefaultValue(False)
-    dbguSym_RingBuffer_Enable.setVisible(Database.getSymbolValue(dbguInstanceName.getValue().lower(), "USART_INTERRUPT_MODE"))
-    dbguSym_RingBuffer_Enable.setDependencies(updateSymbolVisibility, ["USART_INTERRUPT_MODE"])
+    dbguSym_RingBuffer_Enable.setVisible(False)
+    dbguSym_RingBuffer_Enable.setReadOnly(True)
+    dbguSym_RingBuffer_Enable.setDependencies(updateRingBufferMode, ["DBGU_RING_BUFFER_ENABLE"])
+# Depricated symbols ---------------------------------------------------------------------------------------------------
 
-    dbguSym_TXRingBuffer_Size = dbguComponent.createIntegerSymbol("DBGU_TX_RING_BUFFER_SIZE", dbguSym_RingBuffer_Enable)
+    #Interrupt/Non-Interrupt Mode
+    dbguSym_UsartIntMode = dbguComponent.createBooleanSymbol("DBGU_INTERRUPT_MODE_ENABLE", None)
+    dbguSym_UsartIntMode.setLabel("Enable Interrupts ?")
+    dbguSym_UsartIntMode.setDefaultValue(True)
+    dbguSym_UsartIntMode.setVisible(False)
+    dbguSym_UsartIntMode.setReadOnly(True)
+
+    #Enable Ring buffer?
+    dbguSym_RingBuffer_Mode = dbguComponent.createBooleanSymbol("DBGU_RING_BUFFER_MODE_ENABLE", None)
+    dbguSym_RingBuffer_Mode.setLabel("Enable Ring Buffer ?")
+    dbguSym_RingBuffer_Mode.setDefaultValue(False)
+    dbguSym_RingBuffer_Mode.setVisible(False)
+    dbguSym_RingBuffer_Mode.setReadOnly(True)
+
+    dbguSym_UsartOperatingMode = dbguComponent.createKeyValueSetSymbol("DBGU_OPERATING_MODE", None)
+    dbguSym_UsartOperatingMode.setLabel("Operating Mode")
+    dbguSym_UsartOperatingMode.addKey("BLOCKING", "0", "Blocking mode")
+    dbguSym_UsartOperatingMode.addKey("NON_BLOCKING", "1", "Non-blocking mode")
+    dbguSym_UsartOperatingMode.addKey("RING_BUFFER", "2", "Ring buffer mode")
+    dbguSym_UsartOperatingMode.setDefaultValue(1)
+    dbguSym_UsartOperatingMode.setDisplayMode("Description")
+    dbguSym_UsartOperatingMode.setOutputMode("Key")
+    dbguSym_UsartOperatingMode.setVisible(True)
+    dbguSym_UsartOperatingMode.setDependencies(updateOperatingMode, ["DBGU_OPERATING_MODE"])
+
+    dbguSym_UsartRingBufferSizeConfig = dbguComponent.createCommentSymbol("DBGU_RING_BUFFER_SIZE_CONFIG", None)
+    dbguSym_UsartRingBufferSizeConfig.setLabel("Configure Ring Buffer Size-")
+    dbguSym_UsartRingBufferSizeConfig.setVisible(False)
+    dbguSym_UsartRingBufferSizeConfig.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_MODE_ENABLE"])
+
+    dbguSym_TXRingBuffer_Size = dbguComponent.createIntegerSymbol("DBGU_TX_RING_BUFFER_SIZE", dbguSym_UsartRingBufferSizeConfig)
     dbguSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
     dbguSym_TXRingBuffer_Size.setMin(2)
     dbguSym_TXRingBuffer_Size.setMax(65535)
     dbguSym_TXRingBuffer_Size.setDefaultValue(128)
     dbguSym_TXRingBuffer_Size.setVisible(False)
-    dbguSym_TXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_ENABLE"])
+    dbguSym_TXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_MODE_ENABLE"])
 
-    dbguSym_RXRingBuffer_Size = dbguComponent.createIntegerSymbol("DBGU_RX_RING_BUFFER_SIZE", dbguSym_RingBuffer_Enable)
+    dbguSym_RXRingBuffer_Size = dbguComponent.createIntegerSymbol("DBGU_RX_RING_BUFFER_SIZE", dbguSym_UsartRingBufferSizeConfig)
     dbguSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
     dbguSym_RXRingBuffer_Size.setMin(2)
     dbguSym_RXRingBuffer_Size.setMax(65535)
     dbguSym_RXRingBuffer_Size.setDefaultValue(128)
     dbguSym_RXRingBuffer_Size.setVisible(False)
-    dbguSym_RXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_ENABLE"])
+    dbguSym_RXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_MODE_ENABLE"])
 
     dbguClkSrc = dbguComponent.createKeyValueSetSymbol("DBGU_CLK_SRC", None)
     dbguClkSrc.setLabel("Select Clock Source")
@@ -329,7 +381,7 @@ def instantiateComponent(dbguComponent):
 
     # Interrupt Dynamic settings
     dbguinterruptControl = dbguComponent.createBooleanSymbol("INTERRUPT_DBGU_ENABLE", None)
-    dbguinterruptControl.setDependencies(interruptControl, ["USART_INTERRUPT_MODE"])
+    dbguinterruptControl.setDependencies(interruptControl, ["DBGU_INTERRUPT_MODE_ENABLE"])
     dbguinterruptControl.setVisible(False)
 
     # Dependency Status
@@ -364,7 +416,7 @@ def instantiateComponent(dbguComponent):
     dbguHeader1File.setType("HEADER")
     dbguHeader1File.setOverwrite(True)
     dbguHeader1File.setMarkup(True)
-    dbguHeader1File.setDependencies(DBGUFileGeneration, ["DBGU_RING_BUFFER_ENABLE"])
+    dbguHeader1File.setDependencies(DBGUFileGeneration, ["DBGU_RING_BUFFER_MODE_ENABLE"])
 
     dbguSource1File = dbguComponent.createFileSymbol("DBGU_SOURCE", None)
     dbguSource1File.setSourcePath("../peripheral/dbgu_6059/templates/plib_dbgu.c.ftl")
@@ -374,7 +426,7 @@ def instantiateComponent(dbguComponent):
     dbguSource1File.setType("SOURCE")
     dbguSource1File.setOverwrite(True)
     dbguSource1File.setMarkup(True)
-    dbguSource1File.setDependencies(DBGUFileGeneration, ["DBGU_RING_BUFFER_ENABLE"])
+    dbguSource1File.setDependencies(DBGUFileGeneration, ["DBGU_RING_BUFFER_MODE_ENABLE"])
 
     dbguSystemInitFile = dbguComponent.createFileSymbol("DBGU_INIT", None)
     dbguSystemInitFile.setType("STRING")
