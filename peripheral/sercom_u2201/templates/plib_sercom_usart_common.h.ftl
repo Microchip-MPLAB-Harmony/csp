@@ -138,7 +138,7 @@ typedef enum
     USART_DATA_9_BIT = SERCOM_USART_INT_CTRLB_CHSIZE_9_BIT,
 
     /* Force the compiler to reserve 32-bit memory for each enum */
-    USART_DATA_INVALID = 0xFFFFFFFF
+    USART_DATA_INVALID = 0xFFFFFFFFU
 
 } USART_DATA;
 
@@ -168,7 +168,7 @@ typedef enum
     USART_PARITY_NONE = 0x2,
 
     /* Force the compiler to reserve 32-bit memory for each enum */
-    USART_PARITY_INVALID = 0xFFFFFFFF
+    USART_PARITY_INVALID = 0xFFFFFFFFU
 
 } USART_PARITY;
 
@@ -193,7 +193,7 @@ typedef enum
     USART_STOP_2_BIT = SERCOM_USART_INT_CTRLB_SBMODE_2_BIT,
 
     /* Force the compiler to reserve 32-bit memory for each enum */
-    USART_STOP_INVALID = 0xFFFFFFFF
+    USART_STOP_INVALID = 0xFFFFFFFFU
 
 } USART_STOP;
 
