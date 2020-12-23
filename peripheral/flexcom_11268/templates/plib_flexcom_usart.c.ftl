@@ -62,7 +62,7 @@
 // Section: ${FLEXCOM_INSTANCE_NAME} ${FLEXCOM_MODE} Implementation
 // *****************************************************************************
 // *****************************************************************************
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
 </#if>
 
@@ -95,7 +95,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
     return;
 }
 
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
@@ -296,7 +296,7 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = (FLEX_US_CR_TXEN_Msk | FLEX_US_CR_RXEN_Msk);
 </#if>
 
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 
     /* Initialize instance object */
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBuffer = NULL;
@@ -315,7 +315,7 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
     return;
 }
 
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 FLEXCOM_USART_ERROR ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 {
     FLEXCOM_USART_ERROR errorStatus = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.errorStatus;
@@ -363,7 +363,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *set
     uint32_t usartMode;
     bool status = false;
 
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
     if((${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true) || (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true))
     {
         /* Transaction is in progress, so return without updating settings */
@@ -413,7 +413,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *set
     return status;
 }
 
-<#if USART_INTERRUPT_MODE == false>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == false>
 bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
 {
     bool status = false;
@@ -589,7 +589,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
 }
 </#if>
 
-<#if USART_INTERRUPT_MODE == true>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 void ${FLEXCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context )
 {
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback = callback;
@@ -639,7 +639,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_ReadAbort(void)
 }
 
 </#if>
-<#if USART_INTERRUPT_MODE == false>
+<#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == false>
 uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadByte(void)
 {
     return(${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR & FLEX_US_RHR_RXCHR_Msk);

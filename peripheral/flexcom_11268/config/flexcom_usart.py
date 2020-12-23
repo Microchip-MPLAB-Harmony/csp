@@ -36,37 +36,9 @@ dataBitsDict = {
 #### Business Logic ####
 ################################################################################
 def updateRingBufferSizeVisibleProperty(symbol, event):
-    global flexcomSym_RingBuffer_Enable
-    global flexcomSym_UsartInterrupt
-    global flecomRxdmaEnable
-    global flecomTxdmaEnable
+    global flexcomSym_RingBuffer_Mode
 
-    flexcom_mode = flexcomSym_OperatingMode.getSelectedKey()
-
-    # Enable RX ring buffer size option if Ring buffer is enabled.
-    if symbol.getID() == "USART_RX_RING_BUFFER_SIZE":
-        if (flexcom_mode == "USART"):
-            symbol.setVisible(flexcomSym_RingBuffer_Enable.getValue())
-        else:
-            symbol.setVisible(False)
-    # Enable TX ring buffer size option if Ring buffer is enabled.
-    elif symbol.getID() == "USART_TX_RING_BUFFER_SIZE":
-        if (flexcom_mode == "USART"):
-            symbol.setVisible(flexcomSym_RingBuffer_Enable.getValue())
-        else:
-            symbol.setVisible(False)
-    # If Interrupt is enabled, make ring buffer option visible
-    # Further, if Interrupt is disabled, disable the ring buffer mode
-    elif symbol.getID() == "USART_RING_BUFFER_ENABLE":
-        if (flexcom_mode == "USART"):
-            symbol.setVisible(flexcomSym_UsartInterrupt.getValue())
-        else:
-            symbol.setVisible(False)
-        if (flexcomSym_UsartInterrupt.getValue() == False):
-            readOnlyState = symbol.getReadOnly()
-            symbol.setReadOnly(True)
-            symbol.setValue(False)
-            symbol.setReadOnly(readOnlyState)
+    symbol.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART" and flexcomSym_RingBuffer_Mode.getValue() == True)
 
 # FLEXCOM USART clock source
 clock_source = {"Ext_clk_src_Freq" : 1000000}
@@ -175,40 +147,95 @@ def symbolVisible(symbol, event):
         symbol.setVisible(False)
 
 def fifoOptionsVisible(symbol, event):
-   fifoEnableSym = event["source"].getSymbolByID("FLEXCOM_USART_FIFO_ENABLE")
-
-   symbol.setVisible(fifoEnableSym.getVisible() and fifoEnableSym.getValue())
+   fifoEnable = event["source"].getSymbolByID("FLEXCOM_USART_FIFO_ENABLE").getValue()
+   symbol.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART" and fifoEnable == True)
 
 def rxFifo2OptionVisible(symbol, event):
-    fifoEnableSym = event["source"].getSymbolByID("FLEXCOM_USART_FIFO_ENABLE")
     uartMode = event["source"].getSymbolByID("FLEXCOM_USART_MR_USART_MODE").getSelectedKey()
 
-    symbol.setVisible(fifoEnableSym.getVisible() and fifoEnableSym.getValue() and uartMode == "HW_HANDSHAKING")
-
-def fifoModeVisible (symbol, event):
-    uartMode = event["source"].getSymbolByID("FLEXCOM_USART_MR_USART_MODE").getSelectedKey()
-    symbol.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART")
-    if uartMode == "HW_HANDSHAKING":
-        symbol.setReadOnly(True)
-        symbol.setValue(True)
-    else:
-        symbol.setReadOnly(False)
+    symbol.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART" and uartMode == "HW_HANDSHAKING")
 
 def updateUSARTDataBits (symbol, event):
 
     dataBits = event["symbol"].getSelectedKey()
     symbol.setValue(dataBitsDict[dataBits])
 
+def updateInterruptMode (symbol, event):
+    print "updateInterruptMode - " + str(event["value"])
+    if symbol.getLabel() != "---":
+        print "entered"
+        if event["value"] == True and event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE").getSelectedKey() != "RING_BUFFER" :
+            event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE").setSelectedKey("NON_BLOCKING")
+        elif event["value"] == False:
+            event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE").setSelectedKey("BLOCKING")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateRingBufferMode (symbol, event):
+    print "updateRingBufferMode - " + str(event["value"])
+    if symbol.getLabel() != "---":
+        print "entered"
+        if event["value"] == True:
+            event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE").setSelectedKey("RING_BUFFER")
+        symbol.setLabel("---")
+        symbol.setVisible(False)
+
+def updateOperatingMode (symbol, event):
+    if event["id"] == "FLEXCOM_USART_OPERATING_MODE":
+
+        interruptModeSym = event["source"].getSymbolByID("FLEXCOM_USART_INTERRUPT_MODE_ENABLE")
+        ringBufferModeSym = event["source"].getSymbolByID("FLEXCOM_USART_RING_BUFFER_MODE_ENABLE")
+        fifoModeSym = event["source"].getSymbolByID("FLEXCOM_USART_FIFO_ENABLE")
+
+        if symbol.getSelectedKey() == "BLOCKING" or symbol.getSelectedKey() == "BLOCKING_FIFO":
+            interruptModeSym.setValue(False)
+            ringBufferModeSym.setValue(False)
+            fifoModeSym.setValue(symbol.getSelectedKey() == "BLOCKING_FIFO")
+        elif symbol.getSelectedKey() == "NON_BLOCKING" or symbol.getSelectedKey() == "NON_BLOCKING_FIFO":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            fifoModeSym.setValue(symbol.getSelectedKey() == "NON_BLOCKING_FIFO")
+        elif symbol.getSelectedKey() == "RING_BUFFER" or symbol.getSelectedKey() == "RING_BUFFER_FIFO":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(True)
+            fifoModeSym.setValue(symbol.getSelectedKey() == "RING_BUFFER_FIFO")
+    else:
+        symbol.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART")
+
+def updateHWHandshakingComment (symbol, event):
+    nonFifoOperatingMode = False
+    flexcomMode = flexcomSym_OperatingMode.getSelectedKey()
+    mode = flexcomSym_UsartMode.getSelectedKey()
+    if "FIFO" not in flexcomSym_UsartOperatingMode.getSelectedKey():
+        nonFifoOperatingMode = True
+    symbol.setVisible(flexcomMode == "USART" and mode == "HW_HANDSHAKING" and nonFifoOperatingMode == True)
 ###################################################################################################
 ############################################ FLEXCOM USART ########################################
 ###################################################################################################
-global flexcomSym_RingBuffer_Enable
-global flexcomSym_UsartInterrupt
-global flecomRxdmaEnable
-global flecomTxdmaEnable
-global flexcomSym_UsartFIFOEnable
 global flexcomSym_BaudRatePerErrorComment
 global flexcomSym_UsartMode
+global flexcomSym_UsartOperatingMode
+global flexcomSym_RingBuffer_Mode
+
+# Depricated symbols ---------------------------------------------------------------------------------------------------
+
+#Interrupt/Non-Interrupt Mode
+flexcomSym_UsartInterrupt = flexcomComponent.createBooleanSymbol("USART_INTERRUPT_MODE", flexcomSym_OperatingMode)
+flexcomSym_UsartInterrupt.setLabel("Interrupt Mode")
+flexcomSym_UsartInterrupt.setDefaultValue(True)
+flexcomSym_UsartInterrupt.setVisible(False)
+flexcomSym_UsartInterrupt.setReadOnly(True)
+flexcomSym_UsartInterrupt.setDependencies(updateInterruptMode, ["USART_INTERRUPT_MODE"])
+
+#Enable Ring buffer?
+flexcomSym_RingBuffer_Enable = flexcomComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", flexcomSym_OperatingMode)
+flexcomSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
+flexcomSym_RingBuffer_Enable.setDefaultValue(False)
+flexcomSym_RingBuffer_Enable.setVisible(False)
+flexcomSym_RingBuffer_Enable.setReadOnly(True)
+flexcomSym_RingBuffer_Enable.setDependencies(updateRingBufferMode, ["USART_RING_BUFFER_ENABLE"])
+
+# Depricated symbols ---------------------------------------------------------------------------------------------------
 
 flexcomUSARTFIFONode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"FLEXCOM\"]/instance@[name=\"FLEXCOM0\"]/parameters/param@[name=\"USART_FIFO_SIZE\"]")
 flexcomUSARTFIFOSize = int(flexcomUSARTFIFONode.getAttribute('value'),10)
@@ -216,6 +243,20 @@ flexcomUSARTFIFOSize = int(flexcomUSARTFIFONode.getAttribute('value'),10)
 flexcomSym_UsartFIFOSize = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_FIFO_SIZE", flexcomSym_OperatingMode)
 flexcomSym_UsartFIFOSize.setDefaultValue(flexcomUSARTFIFOSize)
 flexcomSym_UsartFIFOSize.setVisible(False)
+
+#Interrupt/Non-Interrupt Mode
+flexcomSym_UsartIntMode = flexcomComponent.createBooleanSymbol("FLEXCOM_USART_INTERRUPT_MODE_ENABLE", flexcomSym_OperatingMode)
+flexcomSym_UsartIntMode.setLabel("Enable Interrupts ?")
+flexcomSym_UsartIntMode.setDefaultValue(True)
+flexcomSym_UsartIntMode.setVisible(False)
+flexcomSym_UsartIntMode.setReadOnly(True)
+
+#Enable Ring buffer?
+flexcomSym_RingBuffer_Mode = flexcomComponent.createBooleanSymbol("FLEXCOM_USART_RING_BUFFER_MODE_ENABLE", flexcomSym_OperatingMode)
+flexcomSym_RingBuffer_Mode.setLabel("Enable Ring Buffer ?")
+flexcomSym_RingBuffer_Mode.setDefaultValue(False)
+flexcomSym_RingBuffer_Mode.setVisible(False)
+flexcomSym_RingBuffer_Mode.setReadOnly(True)
 
 flexcomSym_UsartMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_MR_USART_MODE", flexcomSym_OperatingMode)
 flexcomSym_UsartMode.setLabel("Mode")
@@ -234,6 +275,80 @@ flexcomSym_UsartMode.setDefaultValue(0)
 flexcomSym_UsartMode.setVisible(False)
 flexcomSym_UsartMode.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
+flexcomSym_UsartOperatingMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_OPERATING_MODE", flexcomSym_OperatingMode)
+flexcomSym_UsartOperatingMode.setLabel("Operating Mode")
+flexcomSym_UsartOperatingMode.addKey("BLOCKING", "0", "Blocking mode")
+flexcomSym_UsartOperatingMode.addKey("BLOCKING_FIFO", "1", "Blocking mode with FIFO")
+flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING", "2", "Non-blocking mode")
+flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO", "3", "Non-blocking mode with FIFO")
+flexcomSym_UsartOperatingMode.addKey("RING_BUFFER", "4", "Ring buffer mode")
+flexcomSym_UsartOperatingMode.addKey("RING_BUFFER_FIFO", "5", "Ring buffer mode with FIFO")
+flexcomSym_UsartOperatingMode.setDefaultValue(2)
+flexcomSym_UsartOperatingMode.setDisplayMode("Description")
+flexcomSym_UsartOperatingMode.setOutputMode("Key")
+flexcomSym_UsartOperatingMode.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART")
+flexcomSym_UsartOperatingMode.setDependencies(updateOperatingMode, ["FLEXCOM_MODE",  "FLEXCOM_USART_OPERATING_MODE"])
+
+flexcomSym_UsartHwHandshakingComment = flexcomComponent.createCommentSymbol("FLEXCOM_USART_HW_HANDSHAKING_COMMENT", flexcomSym_OperatingMode)
+flexcomSym_UsartHwHandshakingComment.setLabel("!!! Note: For hardware handshaking, select hardware FIFO based Operating Mode !!!")
+flexcomSym_UsartHwHandshakingComment.setVisible(False)
+flexcomSym_UsartHwHandshakingComment.setDependencies(updateHWHandshakingComment, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE", "FLEXCOM_USART_OPERATING_MODE"])
+
+flexcomSym_UsartRingBufferSizeConfig = flexcomComponent.createCommentSymbol("FLEXCOM_USART_RING_BUFFER_SIZE_CONFIG", flexcomSym_OperatingMode)
+flexcomSym_UsartRingBufferSizeConfig.setLabel("Configure Ring Buffer Size-")
+flexcomSym_UsartRingBufferSizeConfig.setVisible(False)
+flexcomSym_UsartRingBufferSizeConfig.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "FLEXCOM_USART_RING_BUFFER_MODE_ENABLE"])
+
+flexcomSym_TXRingBuffer_Size = flexcomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", flexcomSym_UsartRingBufferSizeConfig)
+flexcomSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
+flexcomSym_TXRingBuffer_Size.setMin(2)
+flexcomSym_TXRingBuffer_Size.setMax(65535)
+flexcomSym_TXRingBuffer_Size.setDefaultValue(128)
+flexcomSym_TXRingBuffer_Size.setVisible(False)
+flexcomSym_TXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "FLEXCOM_USART_RING_BUFFER_MODE_ENABLE"])
+
+flexcomSym_RXRingBuffer_Size = flexcomComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", flexcomSym_UsartRingBufferSizeConfig)
+flexcomSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
+flexcomSym_RXRingBuffer_Size.setMin(2)
+flexcomSym_RXRingBuffer_Size.setMax(65535)
+flexcomSym_RXRingBuffer_Size.setDefaultValue(128)
+flexcomSym_RXRingBuffer_Size.setVisible(False)
+flexcomSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "FLEXCOM_USART_RING_BUFFER_MODE_ENABLE"])
+
+flexcomSym_UsartFIFOEnable = flexcomComponent.createBooleanSymbol("FLEXCOM_USART_FIFO_ENABLE", flexcomSym_OperatingMode)
+flexcomSym_UsartFIFOEnable.setLabel("Enable FIFO")
+flexcomSym_UsartFIFOEnable.setDefaultValue(False)
+flexcomSym_UsartFIFOEnable.setVisible(False)
+
+flexcomSym_UsartFIFOThresholdsConfig = flexcomComponent.createCommentSymbol("FLEXCOM_USART_FIFO_THRESHOLD_CONFIG", flexcomSym_OperatingMode)
+flexcomSym_UsartFIFOThresholdsConfig.setLabel("Config FIFO Thresholds-")
+flexcomSym_UsartFIFOThresholdsConfig.setVisible(False)
+flexcomSym_UsartFIFOThresholdsConfig.setDependencies(fifoOptionsVisible, ["FLEXCOM_MODE", "FLEXCOM_USART_FIFO_ENABLE"])
+
+flexcomSym_UsartFIFORXThreshold = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_RX_FIFO_THRESHOLD", flexcomSym_UsartFIFOThresholdsConfig)
+flexcomSym_UsartFIFORXThreshold.setLabel("RX FIFO Threshold")
+flexcomSym_UsartFIFORXThreshold.setMin(1)
+flexcomSym_UsartFIFORXThreshold.setMax(flexcomUSARTFIFOSize)
+flexcomSym_UsartFIFORXThreshold.setDefaultValue(flexcomUSARTFIFOSize/2)
+flexcomSym_UsartFIFORXThreshold.setVisible(False)
+flexcomSym_UsartFIFORXThreshold.setDependencies(fifoOptionsVisible, ["FLEXCOM_MODE", "FLEXCOM_USART_FIFO_ENABLE"])
+
+flexcomSym_UsartFIFOTXThreshold = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_TX_FIFO_THRESHOLD", flexcomSym_UsartFIFOThresholdsConfig)
+flexcomSym_UsartFIFOTXThreshold.setLabel("TX FIFO Threshold")
+flexcomSym_UsartFIFOTXThreshold.setMin(0)
+flexcomSym_UsartFIFOTXThreshold.setMax(flexcomUSARTFIFOSize-1)
+flexcomSym_UsartFIFOTXThreshold.setDefaultValue(flexcomUSARTFIFOSize/2)
+flexcomSym_UsartFIFOTXThreshold.setVisible(False)
+flexcomSym_UsartFIFOTXThreshold.setDependencies(fifoOptionsVisible, ["FLEXCOM_MODE", "FLEXCOM_USART_FIFO_ENABLE"])
+
+flexcomSym_UsartFIFORX2Threshold = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_RX_FIFO_THRESHOLD_2", flexcomSym_UsartFIFOThresholdsConfig)
+flexcomSym_UsartFIFORX2Threshold.setLabel("RX FIFO Threshold 2")
+flexcomSym_UsartFIFORX2Threshold.setMin(1)
+flexcomSym_UsartFIFORX2Threshold.setMax(flexcomUSARTFIFOSize)
+flexcomSym_UsartFIFORX2Threshold.setDefaultValue(flexcomUSARTFIFOSize/2)
+flexcomSym_UsartFIFORX2Threshold.setVisible(False)
+flexcomSym_UsartFIFORX2Threshold.setDependencies(rxFifo2OptionVisible, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
+
 flexcomSym_TimeGuardValue = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_TTGR", flexcomSym_OperatingMode)
 flexcomSym_TimeGuardValue.setLabel("Time Guard Value")
 flexcomSym_TimeGuardValue.setDefaultValue(0)
@@ -241,36 +356,6 @@ flexcomSym_TimeGuardValue.setMin(0)
 flexcomSym_TimeGuardValue.setMax(255)
 flexcomSym_TimeGuardValue.setVisible(False)
 flexcomSym_TimeGuardValue.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
-
-flexcomSym_UsartInterrupt = flexcomComponent.createBooleanSymbol("USART_INTERRUPT_MODE", flexcomSym_OperatingMode)
-flexcomSym_UsartInterrupt.setLabel("Interrupt Mode")
-flexcomSym_UsartInterrupt.setDefaultValue(True)
-flexcomSym_UsartInterrupt.setVisible(False)
-flexcomSym_UsartInterrupt.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
-
-#Enable Ring buffer?
-flexcomSym_RingBuffer_Enable = flexcomComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", flexcomSym_OperatingMode)
-flexcomSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
-flexcomSym_RingBuffer_Enable.setDefaultValue(False)
-flexcomSym_RingBuffer_Enable.setVisible(False)
-flexcomSym_RingBuffer_Enable.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "USART_INTERRUPT_MODE"])
-
-flexcomSym_TXRingBuffer_Size = flexcomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", flexcomSym_RingBuffer_Enable)
-flexcomSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
-flexcomSym_TXRingBuffer_Size.setMin(2)
-flexcomSym_TXRingBuffer_Size.setMax(65535)
-flexcomSym_TXRingBuffer_Size.setDefaultValue(128)
-flexcomSym_TXRingBuffer_Size.setVisible(False)
-flexcomSym_TXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "USART_RING_BUFFER_ENABLE"])
-
-flexcomSym_RXRingBuffer_Size = flexcomComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", flexcomSym_RingBuffer_Enable)
-flexcomSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
-flexcomSym_RXRingBuffer_Size.setMin(2)
-flexcomSym_RXRingBuffer_Size.setMax(65535)
-flexcomSym_RXRingBuffer_Size.setDefaultValue(128)
-flexcomSym_RXRingBuffer_Size.setVisible(False)
-flexcomSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "USART_RING_BUFFER_ENABLE"])
-
 
 flexcomSym_UsartClkSrc = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_MR_USCLKS", flexcomSym_OperatingMode)
 flexcomSym_UsartClkSrc.setLabel("Select Clock Source")
@@ -444,36 +529,6 @@ flexcomSym_Usart_MR_NBSTOP.setOutputMode("Key")
 flexcomSym_Usart_MR_NBSTOP.setDefaultValue(0)
 flexcomSym_Usart_MR_NBSTOP.setVisible(False)
 flexcomSym_Usart_MR_NBSTOP.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
-
-flexcomSym_UsartFIFOEnable = flexcomComponent.createBooleanSymbol("FLEXCOM_USART_FIFO_ENABLE", flexcomSym_OperatingMode)
-flexcomSym_UsartFIFOEnable.setLabel("Enable FIFO")
-flexcomSym_UsartFIFOEnable.setDefaultValue(False)
-flexcomSym_UsartFIFOEnable.setVisible(False)
-flexcomSym_UsartFIFOEnable.setDependencies(fifoModeVisible, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
-
-flexcomSym_UsartFIFORXThreshold = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_RX_FIFO_THRESHOLD", flexcomSym_UsartFIFOEnable)
-flexcomSym_UsartFIFORXThreshold.setLabel("RX FIFO Threshold")
-flexcomSym_UsartFIFORXThreshold.setMin(1)
-flexcomSym_UsartFIFORXThreshold.setMax(flexcomUSARTFIFOSize)
-flexcomSym_UsartFIFORXThreshold.setDefaultValue(flexcomUSARTFIFOSize/2)
-flexcomSym_UsartFIFORXThreshold.setVisible(False)
-flexcomSym_UsartFIFORXThreshold.setDependencies(fifoOptionsVisible, ["FLEXCOM_USART_FIFO_ENABLE"])
-
-flexcomSym_UsartFIFOTXThreshold = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_TX_FIFO_THRESHOLD", flexcomSym_UsartFIFOEnable)
-flexcomSym_UsartFIFOTXThreshold.setLabel("TX FIFO Threshold")
-flexcomSym_UsartFIFOTXThreshold.setMin(0)
-flexcomSym_UsartFIFOTXThreshold.setMax(flexcomUSARTFIFOSize-1)
-flexcomSym_UsartFIFOTXThreshold.setDefaultValue(flexcomUSARTFIFOSize/2)
-flexcomSym_UsartFIFOTXThreshold.setVisible(False)
-flexcomSym_UsartFIFOTXThreshold.setDependencies(fifoOptionsVisible, ["FLEXCOM_USART_FIFO_ENABLE"])
-
-flexcomSym_UsartFIFORX2Threshold = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_RX_FIFO_THRESHOLD_2", flexcomSym_UsartFIFOEnable)
-flexcomSym_UsartFIFORX2Threshold.setLabel("RX FIFO Threshold 2")
-flexcomSym_UsartFIFORX2Threshold.setMin(1)
-flexcomSym_UsartFIFORX2Threshold.setMax(flexcomUSARTFIFOSize)
-flexcomSym_UsartFIFORX2Threshold.setDefaultValue(flexcomUSARTFIFOSize/2)
-flexcomSym_UsartFIFORX2Threshold.setVisible(False)
-flexcomSym_UsartFIFORX2Threshold.setDependencies(rxFifo2OptionVisible, ["FLEXCOM_USART_FIFO_ENABLE", "FLEXCOM_USART_MR_USART_MODE"])
 
 #FLEXCOM USART Stop 1-bit Mask
 flexcomSym_Usart_MR_NBSTOP_1_Mask = flexcomComponent.createStringSymbol("USART_STOP_1_BIT_MASK", flexcomSym_OperatingMode)
