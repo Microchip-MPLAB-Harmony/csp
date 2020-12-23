@@ -143,6 +143,7 @@ void ${TCC_INSTANCE_NAME}_PWMForceUpdate(void);
 
 <#if TCC_IS_PG == 1>
 void ${TCC_INSTANCE_NAME}_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_output);
+
 </#if>
 
 void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptEnable(void);
@@ -164,7 +165,10 @@ void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet(uint32_t count);
 
 __STATIC_INLINE void ${TCC_INSTANCE_NAME}_PWM24bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_CBUF_REG_NAME}[channel] = duty & 0xFFFFFF;
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (1U << (TCC_STATUS_CCBUFV0_Pos + (uint32_t)channel))) == 0U)
+    {
+        ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_CBUF_REG_NAME}[channel] = duty & 0xFFFFFF;
+    }
 }
 
 <#elseif TCC_SIZE == 16>
@@ -176,8 +180,12 @@ void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet(uint16_t count);
 
 __STATIC_INLINE void ${TCC_INSTANCE_NAME}_PWM16bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t duty)
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_CBUF_REG_NAME}[channel] = duty;
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (1U << (TCC_STATUS_CCBUFV0_Pos + (uint32_t)channel))) == 0U)
+    {    
+        ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_CBUF_REG_NAME}[channel] = duty;
+    }
 }
+
 </#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

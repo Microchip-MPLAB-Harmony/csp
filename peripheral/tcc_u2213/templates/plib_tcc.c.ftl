@@ -342,20 +342,19 @@ void ${TCC_INSTANCE_NAME}_PWMStop (void)
 <#if TCC_SIZE == 24>
 void ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet (uint32_t period)
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period & 0xFFFFFF;
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PER_Msk)) == TCC_SYNCBUSY_PER_Msk)
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (TCC_STATUS_PERBUFV_Msk)) == 0U)
     {
-        /* Wait for sync */
-    }
+        ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period & 0xFFFFFF;
+    }    
 }
+
 <#elseif TCC_SIZE == 16>
 void ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet (uint16_t period)
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period;
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PER_Msk)) == TCC_SYNCBUSY_PER_Msk)
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (TCC_STATUS_PERBUFV_Msk)) == 0U)
     {
-        /* Wait for sync */
-    }
+        ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period;
+    }    
 }
 </#if>
 
@@ -392,12 +391,12 @@ void ${TCC_INSTANCE_NAME}_PWMDeadTimeSet (uint8_t deadtime_high, uint8_t deadtim
 <#if TCC_IS_PG == 1>
 void ${TCC_INSTANCE_NAME}_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_output)
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PATBUF_REG_NAME} = (uint16_t)(pattern_enable | (pattern_output << 8));
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PATT_Msk)) == TCC_SYNCBUSY_PATT_Msk)
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (TCC_STATUS_PATTBUFV_Msk)) == 0U)
     {
-        /* Wait for sync */
-    }
+        ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PATBUF_REG_NAME} = (uint16_t)(pattern_enable | (pattern_output << 8));
+    }    
 }
+
 </#if>
 
 /* Set the counter*/
