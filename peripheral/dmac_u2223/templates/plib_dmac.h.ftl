@@ -94,6 +94,38 @@ typedef enum
 
 } DMAC_TRANSFER_EVENT;
 
+typedef enum
+{
+    /* CRC16 (CRC-CCITT): 0x1021 */
+    DMAC_CRC_TYPE_16 = 0x0,
+
+    /* CRC32 (IEEE 802.3): 0x04C11DB7*/
+    DMAC_CRC_TYPE_32 = 0x1
+
+} DMAC_CRC_POLYNOMIAL_TYPE;
+
+typedef enum
+{
+    /* Byte bus access. */
+    DMAC_CRC_BEAT_SIZE_BYTE     = 0x0,
+
+    /* Half-word bus access. */
+    DMAC_CRC_BEAT_SIZE_HWORD    = 0x1,
+
+    /* Word bus access. */
+    DMAC_CRC_BEAT_SIZE_WORD     = 0x2
+
+} DMAC_CRC_BEAT_SIZE;
+
+typedef struct
+{
+    /* CRCCTRL[CRCPOLY]: Polynomial Type (CRC16, CRC32) */
+    DMAC_CRC_POLYNOMIAL_TYPE polynomial_type;
+
+    /* CRCCHKSUM: Initial Seed for calculating the CRC */
+    uint32_t seed;
+} DMAC_CRC_SETUP;
+
 typedef uint32_t DMAC_CHANNEL_CONFIG;
 
 typedef void (*DMAC_CHANNEL_CALLBACK) (DMAC_TRANSFER_EVENT event, uintptr_t contextHandle);
@@ -125,6 +157,14 @@ bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmac
 DMAC_CHANNEL_CONFIG  ${DMA_INSTANCE_NAME}_ChannelSettingsGet ( DMAC_CHANNEL channel );
 bool  ${DMA_INSTANCE_NAME}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG settings );
 uint16_t ${DMA_INSTANCE_NAME}_ChannelGetTransferredCount( DMAC_CHANNEL channel );
+
+void ${DMA_INSTANCE_NAME}_ChannelCRCSetup(DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup);
+uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void );
+
+uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_CRC_SETUP CRCSetup);
+
+void ${DMA_INSTANCE_NAME}_CRCDisable( void );
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
