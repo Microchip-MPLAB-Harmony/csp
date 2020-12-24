@@ -196,6 +196,8 @@ def onCapabilityConnected(event):
     argDict = {"localComponentID" : localComponent.getID()}
     argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 
+def updateI2CBaudHz(symbol, event):
+    symbol.setValue(event["value"])
 ################################################################################
 #### Component ####
 ################################################################################
@@ -242,10 +244,18 @@ def instantiateComponent(twihsComponent):
 
     # Clock speed
     twihsSymClockSpeed = twihsComponent.createIntegerSymbol("I2C_CLOCK_SPEED", None)
-    twihsSymClockSpeed.setLabel("Clock Speed")
+    twihsSymClockSpeed.setLabel("Clock Speed (Hz)")
     twihsSymClockSpeed.setDefaultValue(400000)
     twihsSymClockSpeed.setMax(400000)
     twihsSymClockSpeed.setDependencies(showMasterDependencies, ["TWIHS_OPMODE"])
+    
+    # Clock speed (Hz)
+    twihsSymClockSpeedHz = twihsComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", None)
+    twihsSymClockSpeedHz.setLabel("Clock Speed (Hz)")
+    twihsSymClockSpeedHz.setDefaultValue(twihsSymClockSpeed.getValue())
+    twihsSymClockSpeedHz.setVisible(False)
+    twihsSymClockSpeedHz.setDependencies(updateI2CBaudHz, ["I2C_CLOCK_SPEED"])
+
 
     # Slave Address
     twihsSym_ADDR = twihsComponent.createHexSymbol("TWIHS_SLAVE_ADDRESS", None)
