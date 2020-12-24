@@ -218,6 +218,9 @@ def updateSetupAndRiseTime(symbol, event):
         symbol.setValue(int(calcSetupAndRiseTimeCnt(coreTimerFreq, setupRiseTime[1])))
     else:
         symbol.setValue(int(calcSetupAndRiseTimeCnt(coreTimerFreq, setupRiseTime[0])))
+
+def updateI2CBaudHz(symbol, event):
+    symbol.setValue(event["value"])
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -302,6 +305,12 @@ def instantiateComponent(i2cComponent):
     i2cSym_BAUD.setMin(1)
     i2cSym_BAUD.setMax(1000000)
     i2cSym_BAUD.setDependencies(masterModeVisibility, ["I2C_OPERATING_MODE"])
+
+    i2cSym_BAUD_HZ = i2cComponent.createLongSymbol("I2C_CLOCK_SPEED_HZ", None)
+    i2cSym_BAUD_HZ.setLabel("I2C Baud Rate (Hz)")
+    i2cSym_BAUD_HZ.setDefaultValue(i2cSym_BAUD.getValue())
+    i2cSym_BAUD_HZ.setVisible(False)
+    i2cSym_BAUD_HZ.setDependencies(updateI2CBaudHz, ["I2C_CLOCK_SPEED"])
 
     #I2C Baud Rate not supported comment
     i2cSym_BaudError_Comment = i2cComponent.createCommentSymbol("I2C_BAUD_ERROR_COMMENT", None)
