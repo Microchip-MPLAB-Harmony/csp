@@ -90,6 +90,8 @@ def onCapabilityConnected(event):
     argDict = {"localComponentID" : localComponent.getID()}
     argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 
+def updateI2CBaudHz(symbol, event):
+    symbol.setValue(event["value"])
 ###################################################################################################
 ############################################# TWI #################################################
 ###################################################################################################
@@ -123,6 +125,13 @@ def instantiateComponent(twiComponent):
     twiClockSpeed.setMin(100000)
     twiClockSpeed.setMax(400000)
     twiClockSpeed.setDefaultValue(400000)
+
+    #Operating speed (HZ)
+    twiClockSpeedHz = twiComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", None)
+    twiClockSpeedHz.setLabel("Clock Speed (Hz)")
+    twiClockSpeedHz.setDefaultValue(twiClockSpeed.getValue())
+    twiClockSpeedHz.setVisible(False)
+    twiClockSpeedHz.setDependencies(updateI2CBaudHz, ["I2C_CLOCK_SPEED"])
 
     #Clock invalid comment
     twiClockInvalidSymbol = twiComponent.createCommentSymbol("TWI_INVALID_CLOCK", None)
