@@ -91,6 +91,9 @@ def twihsMasterModeFileGeneration(symbol, event):
 
 def twihsSlaveModeFileGeneration(symbol, event):
     symbol.setEnabled(event["symbol"].getValue() == "SLAVE")
+
+def updateI2CBaudHz(symbol, event):
+    symbol.setValue(event["value"])
 ###################################################################################################
 ############################################# FLEXCOM TWI #########################################
 ###################################################################################################
@@ -136,6 +139,13 @@ flexcomSym_Twi_CLK_SPEED.setMax(400000)
 flexcomSym_Twi_CLK_SPEED.setDefaultValue(400000)
 flexcomSym_Twi_CLK_SPEED.setVisible(False)
 flexcomSym_Twi_CLK_SPEED.setDependencies(showMasterDependencies, ["FLEXCOM_TWI_OPMODE", "FLEXCOM_MODE"])
+
+# Operating speed (Hz)
+flexcomSym_Twi_CLK_SPEED_HZ = flexcomComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", flexcomSym_OperatingMode)
+flexcomSym_Twi_CLK_SPEED_HZ.setLabel("Clock Speed (Hz)")
+flexcomSym_Twi_CLK_SPEED_HZ.setDefaultValue(flexcomSym_Twi_CLK_SPEED.getValue())
+flexcomSym_Twi_CLK_SPEED_HZ.setVisible(False)
+flexcomSym_Twi_CLK_SPEED_HZ.setDependencies(updateI2CBaudHz, ["I2C_CLOCK_SPEED"])
 
 # Slave Address
 flexcomSym_ADDR = flexcomComponent.createHexSymbol("FLEXCOM_TWI_SLAVE_ADDRESS", flexcomSym_OperatingMode)
