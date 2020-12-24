@@ -150,7 +150,9 @@ def updateI2CMasterCodeVisiblity(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-        
+
+def updateI2CBaudHz(symbol, event):
+    symbol.setValue(event["value"] * 1000)
 ###################################################################################################
 ######################################## I2C MASTER ###############################################
 ###################################################################################################
@@ -256,6 +258,13 @@ else:
 i2cmSym_BAUD.setDefaultValue(100)
 i2cmSym_BAUD.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 i2cmSym_BAUD.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
+
+# Operating speed (Hz)
+i2cmSym_BAUD_Hz = sercomComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", sercomSym_OperationMode)
+i2cmSym_BAUD_Hz.setLabel("I2C Speed in Hz")
+i2cmSym_BAUD_Hz.setDefaultValue(i2cmSym_BAUD.getValue() * 1000)
+i2cmSym_BAUD_Hz.setVisible(False)
+i2cmSym_BAUD_Hz.setDependencies(updateI2CBaudHz, ["I2C_CLOCK_SPEED"])
 
 # I2C BAUD register value
 i2cmSym_TRISEVALUE = sercomComponent.createIntegerSymbol("I2CM_TRISE", sercomSym_OperationMode)
