@@ -283,7 +283,7 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
     }
     /* Clock prescaler */
 <#if TCC_SLAVE_MODE == true>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_MSYNC_Msk ${(TCC_CTRLA_RUNSTDBY == true)?then('| (TCC_CTRLA_RUNSTDBY_Msk)', '')};
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_MSYNC_Msk | TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} ${(TCC_CTRLA_RUNSTDBY == true)?then('| (TCC_CTRLA_RUNSTDBY_Msk)', '')};
 <#else>
     ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} ${(TCC_CTRLA_RUNSTDBY == true)?then('| (TCC_CTRLA_RUNSTDBY_Msk)', '')};
 </#if>
@@ -482,10 +482,10 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
     <#if TCC_NUM_INT_LINES != 0>
         <#if TCC_INTENSET_OVF == true || TCC_INTENSET_FAULT0 == true || TCC_INTENSET_FAULT1 == true>
             <#lt>/* Interrupt Handler */
-            <#lt>void ${TCC_INSTANCE_NAME}_PWMInterruptHandler(void)
+            <#lt>void ${TCC_INSTANCE_NAME}_InterruptHandler(void)
             <#lt>{
             <#lt>    uint32_t status;
-            <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
+            <#lt>    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
             <#lt>    /* Clear interrupt flags */
             <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;
             <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
@@ -503,7 +503,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
                 <#lt>void ${TCC_INSTANCE_NAME}_MC${i}_InterruptHandler(void)
                 <#lt>{
                 <#lt>    uint32_t status;
-                <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
+                <#lt>    status = (uint32_t)TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    /* Clear interrupt flags */
                 <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
@@ -517,7 +517,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
 
     <#else>  <#-- TCC_NUM_INT_LINES -->
         <#lt>/* Interrupt Handler */
-        <#lt>void ${TCC_INSTANCE_NAME}_PWMInterruptHandler(void)
+        <#lt>void ${TCC_INSTANCE_NAME}_InterruptHandler(void)
         <#lt>{
         <#lt>    uint32_t status;
         <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;

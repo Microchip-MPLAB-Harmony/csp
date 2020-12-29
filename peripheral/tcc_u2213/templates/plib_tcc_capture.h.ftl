@@ -1,20 +1,22 @@
 /*******************************************************************************
-  Timer/Counter for Control(TCC) Peripheral Library Interface Header File
+  Timer/Counter(${TCC_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_tcc_common.h
+    plib_${TCC_INSTANCE_NAME?lower_case}.h
 
   Summary
-    TCC peripheral library interface.
+    ${TCC_INSTANCE_NAME} PLIB Header File.
 
   Description
     This file defines the interface to the TCC peripheral library. This
     library provides access to and control of the associated peripheral
     instance.
 
+  Remarks:
+    None.
 
 *******************************************************************************/
 
@@ -43,22 +45,22 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TCC_COMMON_H    // Guards against multiple inclusion
-#define PLIB_TCC_COMMON_H
+#ifndef PLIB_${TCC_INSTANCE_NAME}_H       // Guards against multiple inclusion
+#define PLIB_${TCC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/*  This section lists the other files that are included in this file.
+/* This section lists the other files that are included in this file.
 */
 
-#include <stdbool.h>
-#include <stddef.h>
+#include "device.h"
+#include "plib_tcc_common.h"
 
 // DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+#ifdef __cplusplus // Provide C Compatibility
 
     extern "C" {
 
@@ -70,31 +72,75 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this
+/* The following data type definitions are used by the functions in this
     interface and should be considered part it.
 */
-// *****************************************************************************
 
-typedef void (*TCC_CALLBACK)( uint32_t status, uintptr_t context );
-// *****************************************************************************
+/* TCC Channel numbers
 
-typedef struct
+   Summary:
+    Identifies channel number within TCC module
+
+   Description:
+    This enumeration identifies TCC channel number.
+
+   Remarks:
+    None.
+*/
+typedef enum
 {
-    TCC_CALLBACK callback_fn;
-    uintptr_t context;
-}TCC_CALLBACK_OBJECT;
+<#list 0 ..(TCC_NUM_CHANNELS -1) as i >
+    <#assign CH_NUM = i>
+    ${TCC_INSTANCE_NAME}_CHANNEL${CH_NUM},
+</#list>
+}${TCC_INSTANCE_NAME}_CHANNEL_NUM;
 
-typedef enum 
+typedef enum
 {
-    TCC_COMMAND_NONE,
-    TCC_COMMAND_START_RETRIGGER,
-    TCC_COMMAND_STOP,
-    TCC_COMMAND_FORCE_UPDATE,
-    TCC_COMMAND_READ_SYNC
-}TCC_COMMAND;
+    ${TCC_INSTANCE_NAME}_CAPTURE_STATUS_OVF = TCC_INTFLAG_OVF_Msk,
+    ${TCC_INSTANCE_NAME}_CAPTURE_STATUS_ERR = TCC_INTFLAG_ERR_Msk,
+<#list 0 ..(TCC_NUM_CHANNELS -1) as i >
+    ${TCC_INSTANCE_NAME}_CAPTURE_STATUS_MC_${i} = TCC_INTFLAG_MC${i}_Msk,
+</#list>
+}${TCC_INSTANCE_NAME}_CAPTURE_STATUS;
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface Routines
+// *****************************************************************************
+// *****************************************************************************
+/* The following functions make up the methods (set of possible operations) of
+   this interface.
+*/
 
 
+void ${TCC_INSTANCE_NAME}_CaptureInitialize ( void );
 
+void ${TCC_INSTANCE_NAME}_CaptureStart ( void );
+
+void ${TCC_INSTANCE_NAME}_CaptureStop ( void );
+
+uint32_t ${TCC_INSTANCE_NAME}_CaptureFrequencyGet( void );
+
+<#if TCC_SIZE = 16>
+uint16_t ${TCC_INSTANCE_NAME}_Capture16bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel );
+uint16_t ${TCC_INSTANCE_NAME}_Capture16bitCounterGet( void );
+
+<#elseif TCC_SIZE = 24>
+
+uint32_t ${TCC_INSTANCE_NAME}_Capture24bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel );
+
+uint32_t ${TCC_INSTANCE_NAME}_Capture24bitCounterGet( void );
+</#if>
+
+void ${TCC_INSTANCE_NAME}_CaptureCommandSet(TCC_COMMAND command);
+
+<#if TCC_COMPARE_INTERRUPT_MODE = true>
+void ${TCC_INSTANCE_NAME}_CaptureCallbackRegister( TCC_CALLBACK callback, uintptr_t context );
+
+<#else>
+uint32_t ${TCC_INSTANCE_NAME}_CaptureStatusGet( void );
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -104,4 +150,4 @@ typedef enum
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_TCC_COMMON_H */
+#endif /* PLIB_${TCC_INSTANCE_NAME}_H */
