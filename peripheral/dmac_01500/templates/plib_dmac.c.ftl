@@ -450,7 +450,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel)
 
 // *****************************************************************************
 /* Function:
-   void ${DMA_INSTANCE_NAME}_ChannelCRCEnable( DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup )
+   void ${DMA_INSTANCE_NAME}_ChannelCRCSetup( DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup )
 
   Summary:
     DMA Channel CRC setup and enable function
@@ -479,7 +479,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel)
     void
 
 */
-void ${DMA_INSTANCE_NAME}_ChannelCRCEnable( DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup )
+void ${DMA_INSTANCE_NAME}_ChannelCRCSetup( DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup )
 {
     uint32_t mask = 0;
 
@@ -543,9 +543,9 @@ void ${DMA_INSTANCE_NAME}_CRCDisable( void )
 
   Description:
     Reads the generated DMA CRC value. It performs crc reverse and final xor
-    opeartion based on setup paramters during ${DMA_INSTANCE_NAME}_ChannelCRCEnable()
+    opeartion based on setup paramters during ${DMA_INSTANCE_NAME}_ChannelCRCSetup()
 
-    Note: Once Read is done, ${DMA_INSTANCE_NAME}_ChannelCRCEnable() has to be called
+    Note: Once Read is done, ${DMA_INSTANCE_NAME}_ChannelCRCSetup() has to be called
     again to setup the seed before performing DMA transfer for CRC generation.
 
   Parameters:

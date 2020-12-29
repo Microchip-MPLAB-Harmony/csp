@@ -167,7 +167,7 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable(DMAC_CHANNEL channel);
 
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy(DMAC_CHANNEL channel);
 
-void ${DMA_INSTANCE_NAME}_ChannelCRCEnable( DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup );
+void ${DMA_INSTANCE_NAME}_ChannelCRCSetup( DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup );
 
 void ${DMA_INSTANCE_NAME}_CRCDisable( void );
 
