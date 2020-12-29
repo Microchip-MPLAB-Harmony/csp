@@ -106,6 +106,12 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer (DMAC_CHANNEL channel, const void *src
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel );
 void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel );
 <#if DMAC_LL_ENABLE = true>
+void ${DMA_INSTANCE_NAME}_LinkedListDescriptorSetup (dmac_descriptor_registers_t* currentDescriptor,
+                                                    DMAC_CHANNEL_CONFIG setting,
+                                                    const void *srcAddr,
+                                                    const void *destAddr,
+                                                    size_t blockSize,
+                                                    dmac_descriptor_registers_t* nextDescriptor);
 bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmac_descriptor_registers_t * channelDesc );
 </#if>
 DMAC_CHANNEL_CONFIG  ${DMA_INSTANCE_NAME}_ChannelSettingsGet ( DMAC_CHANNEL channel );
