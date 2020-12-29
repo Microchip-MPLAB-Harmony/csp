@@ -1,6 +1,6 @@
 # coding: utf-8
 """*****************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -28,6 +28,12 @@ from xml.etree import ElementTree
 Log.writeInfoMessage("Loading DMA Manager for " + Variables.get("__PROCESSOR"))
 
 global dmaBitfield_DCH0CON_CHPRI
+global dmaBitfield_DCH0INT_CHSHIE
+global dmaBitfield_DCH0INT_CHDHIE
+global dmaBitfield_DCH0CON_CHAEN 
+global dmaBitfield_DCH0CON_CHCHN 
+global dmaBitfield_DCH0CON_CHCHNS
+global dmaBitfield_DCH0CON_CHAED 
 
 global dmacActiveChannels
 dmacActiveChannels = []
@@ -47,11 +53,17 @@ global dmacSystemDefFile
 
 global dmacEnable
 
-dmaReg_DMAECON_SIRQEN     = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0ECON"]/bitfield@[name="SIRQEN"]')
-dmaBitVal_DMAECON_SIRQEN  = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/value-group@[name="DCH0ECON__SIRQEN"]').getChildren()
-dmaValGrp_DCH0CON_CHPRI   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/value-group@[name="DCH0CON__CHPRI"]')
+dmaReg_DMAECON_SIRQEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0ECON"]/bitfield@[name="SIRQEN"]')
+dmaBitVal_DMAECON_SIRQEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/value-group@[name="DCH0ECON__SIRQEN"]').getChildren()
+dmaValGrp_DCH0CON_CHPRI = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/value-group@[name="DCH0CON__CHPRI"]')
 dmaBitfield_DCH0CON_CHPRI = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0CON"]/bitfield@[name="CHPRI"]')
-dmacBaseAddress           = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="DMAC"]/instance@[name="DMAC"]/register-group')
+dmacBaseAddress = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="DMAC"]/instance@[name="DMAC"]/register-group')
+dmaBitfield_DCH0INT_CHSHIE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0INT"]/bitfield@[name="CHSHIE"]')
+dmaBitfield_DCH0INT_CHDHIE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0INT"]/bitfield@[name="CHDHIE"]')
+dmaBitfield_DCH0CON_CHAEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0CON"]/bitfield@[name="CHAEN"]')
+dmaBitfield_DCH0CON_CHCHN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0CON"]/bitfield@[name="CHCHN"]')
+dmaBitfield_DCH0CON_CHCHNS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0CON"]/bitfield@[name="CHCHNS"]')
+dmaBitfield_DCH0CON_CHAED = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0CON"]/bitfield@[name="CHAED"]')
 
 ################################################################################
 #### Business Logic ####
@@ -59,12 +71,14 @@ dmacBaseAddress           = ATDF.getNode('/avr-tools-device-file/devices/device/
 global _get_position
 def _get_position(maskval):
     # finds the least significant bit position of maskval
-    if(maskval.find('0x')!=-1):
+    if maskval.find('0x') != -1:
         value = maskval[2:]
+        value = int(value, 16)
     else:
         value = maskval
-    for ii in range(0,31):
-        if(int(value) & (1<<ii)):
+
+    for ii in range(0, 31):
+        if int(value) & (1 << ii):
             break
     return ii
 
@@ -184,7 +198,7 @@ def dmacPriorityCalc(symbol, event):
     global per_priority
 
     # the "chan enable" boolean is for in/visible setting
-    if(event["id"].find("DMAC_CHAN") != -1):
+    if event["id"].find("DMAC_CHAN") != -1:
         symbol.setVisible(event["value"])
         return
     else:  # get the value for the given key, namely, the priority number for this key name
@@ -239,6 +253,7 @@ def dchconCallback(symbol, event):
     global _get_position
     global chpriSym
 
+    DCHCON_REG_VAL = symbol.getValue()
     channel = 0
     for s in list(event["id"]):
         if s.isdigit():
@@ -246,13 +261,44 @@ def dchconCallback(symbol, event):
     if((event["id"] == "DMAC_CHAN" + str(channel) + "_ENBL") and (event["value"] == False)):
         dmacDchconSym[channel].setValue(0,2)  # for not enabled channel, clear register
         chpriSym[channel].setValue("0",2)       # for comment in ftl file
-    else:
+    elif "_PRIORITY_VALUE" in event["id"]:
         prio_mask = dmaBitfield_DCH0CON_CHPRI.getAttribute("mask")  # get mask from atdf file
         prio_lsb = _get_position(prio_mask)  # compute shift value of CHPRI bitfield
         priority = int(dmacPriorityVal[channel].getValue())
         shifted_priority = priority << prio_lsb
-        dmacDchconSym[channel].setValue(shifted_priority,2)
+        DCHCON_REG_VAL = (DCHCON_REG_VAL & (~int(prio_mask, 16))) | shifted_priority
+
         chpriSym[channel].setValue(str(priority),2)       # for comment in ftl file
+    elif ("_ALWAYS_ENABLE" in event["id"]):
+        prio_mask = dmaBitfield_DCH0CON_CHAEN.getAttribute("mask")  # get mask from atdf file
+        CHAEN_pos = _get_position(prio_mask)
+        if (event["value"] == False):
+            DCHCON_REG_VAL &= ~(1 << CHAEN_pos)
+        else:
+            DCHCON_REG_VAL  |= 1 << CHAEN_pos
+    elif("_CHAIN_ENABLE" in event["id"]):
+        prio_mask = dmaBitfield_DCH0CON_CHCHN.getAttribute("mask")  # get mask from atdf file
+        CHCHN_pos = _get_position(prio_mask)        
+        if (event["value"] == False):
+            DCHCON_REG_VAL &= ~(1 << CHCHN_pos)
+        else:
+            DCHCON_REG_VAL  |= 1 << CHCHN_pos
+    elif ("_CHAIN_DIRECTION" in event["id"]):
+        prio_mask = dmaBitfield_DCH0CON_CHCHNS.getAttribute("mask")  # get mask from atdf file
+        CHCHNS_pos = _get_position(prio_mask)
+        if (event["value"] == 0):
+            DCHCON_REG_VAL &= ~(1 << CHCHNS_pos)
+        else:
+            DCHCON_REG_VAL  |= 1 << CHCHNS_pos
+    elif("_EVENTS_WHEN_DISABLED" in event["id"]):
+        prio_mask = dmaBitfield_DCH0CON_CHAED.getAttribute("mask")  # get mask from atdf file
+        CHAED_pos = _get_position(prio_mask)        
+        if (event["value"] == False):
+            DCHCON_REG_VAL &= ~(1 << CHAED_pos)
+        else:
+            DCHCON_REG_VAL  |= 1 << CHAED_pos            
+
+    symbol.setValue(DCHCON_REG_VAL, 2)
 
 def dcheconCallback(symbol, event):
     # sets up DCHxECON register setting from user-set menu inputs
@@ -272,7 +318,7 @@ def dcheconCallback(symbol, event):
         dmacDcheconSym[channel].setValue(0,2)
     else:
         intnum = int(dmacChanReqSrcVal[channel].getValue())  # interrupt number
-        if(intnum == 0):    # software will force a transfer
+        if intnum == 0:    # software will force a transfer
             dmacDcheconSym[channel].setValue(0,2)           # CFORCE will be set later on
             sirqenSym[channel].setValue(0,2)                # for a comment in ftl code
             dmacChanReqSrcVal[channel].setValue(0,2)
@@ -282,6 +328,25 @@ def dcheconCallback(symbol, event):
             payload |= (intnum & 0xff) << 8  # CHSIRQ, interrupt number to trigger DMA xfer
             dmacDcheconSym[channel].setValue(payload,2)
 
+def dchintCallback(symbol, event):
+    global dmaBitfield_DCH0INT_CHSHIE
+    DCHINT_REG_VAL = symbol.getValue()
+    if ("_SOURCE_HALF_EMPTY_INT_ENABLE" in event["id"]):
+        prio_mask = dmaBitfield_DCH0INT_CHSHIE.getAttribute("mask")  # get mask from atdf file
+        CHSHIE_pos = _get_position(prio_mask)
+        if (event["value"] == False):
+            DCHINT_REG_VAL &= ~(1 << CHSHIE_pos)
+        else:
+            DCHINT_REG_VAL  |= 1 << CHSHIE_pos
+    else:
+        prio_mask = dmaBitfield_DCH0INT_CHDHIE.getAttribute("mask")  # get mask from atdf file
+        CHDHIE_pos = _get_position(prio_mask)        
+        if (event["value"] == False):
+            DCHINT_REG_VAL &= ~(1 << CHDHIE_pos)
+        else:
+            DCHINT_REG_VAL  |= 1 << CHDHIE_pos
+
+    symbol.setValue(DCHINT_REG_VAL, 2)
 ################################################################################
 #### Component ####
 ################################################################################
@@ -309,6 +374,7 @@ dmacChanAutoSym = []
 dmacChanCrcSym = []
 dmacDchconSym = []
 dmacDcheconSym = []
+dmacDchintSym = []
 dmacDchxIntSym = []
 dmacChanReqSrcVal = []
 sirqenSym = []
@@ -333,7 +399,7 @@ per_priority = {}
 priNode = dmaValGrp_DCH0CON_CHPRI.getChildren()
 for ii in range(0,len(priNode)):
     argterm = priNode[ii].getAttribute("value")
-    if(argterm.find('0x') != -1):
+    if argterm.find('0x') != -1:
         argval = argterm[2:]
     else:
         argval = argterm
@@ -499,6 +565,12 @@ symbol = coreComponent.createStringSymbol(SymId, None)
 symbol.setDefaultValue("0x90")
 symbol.setVisible(False)
 
+# offset of DCHxDATA from channel base address
+SymId = "DMAC_PATTERN_DATA_OFST"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0xB0")
+symbol.setVisible(False)
+
 # for DMA manager to work
 dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
 dmaManagerSelect.setVisible(False)
@@ -544,20 +616,46 @@ for dmaChannel in range(0, numDMAChans):
     symbol = coreComponent.createComboSymbol(dmacChanReqSymId, dmacChannelEnable, sorted(per_instance.keys()))
     symbol.setLabel("DMA requestor source")
     symbol.setDefaultValue("Software Trigger")
-    symbol.setUseSingleDynamicValue(True)
 
     # DMA manager will use LOCK symbol to lock the "DMAC_CHCTRLB_TRIGSRC_CH_ + str(dmaChannel)" symbol
     symbol = coreComponent.createBooleanSymbol("DMAC_REQUEST_" + str(dmaChannel) + "_PERID_LOCK", dmacChannelEnable)
     symbol.setLabel("Lock DMA Request")
     symbol.setVisible(False)
-    symbol.setUseSingleDynamicValue(True)
 
     # DMA channel priority
     dmacPrioritySymId = "DMAC_" + str(dmaChannel) + "_PRIORITY"
     symbol = coreComponent.createComboSymbol(dmacPrioritySymId, dmacChannelEnable, sorted(per_priority.keys()))
     symbol.setLabel(dmaValGrp_DCH0CON_CHPRI.getAttribute("caption"))
     symbol.setDefaultValue("0")
-    symbol.setUseSingleDynamicValue(True)
+
+    symbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_SOURCE_HALF_EMPTY_INT_ENABLE", dmacChannelEnable)
+    symbol.setLabel("Source Half Empty Interrupt Enable")
+    symbol.setDefaultValue(False)
+
+    symbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_DESTINATION_HALF_FULL_INT_ENABLE", dmacChannelEnable)
+    symbol.setLabel("Destination Half Full Interrupt Enable")
+    symbol.setDefaultValue(False)
+
+    symbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_ALWAYS_ENABLE", dmacChannelEnable)
+    symbol.setLabel("Channel Always Enable")
+    symbol.setDescription("Once enabled, channel is continuously enabled; and do not automatically disable after a block transfer is complete")
+    symbol.setDefaultValue(False)
+
+    chainSymbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_CHAIN_ENABLE", dmacChannelEnable)
+    chainSymbol.setLabel("Chain Enable")
+    chainSymbol.setDefaultValue(False)    
+
+    symbol = coreComponent.createKeyValueSetSymbol("DMAC_" + str(dmaChannel) + "_CHAIN_DIRECTION", chainSymbol)
+    symbol.setLabel("Chain Direction")
+    symbol.setDefaultValue(0)
+    symbol.setOutputMode("Value")
+    symbol.addKey("CHAIN_FROM_LOWER_PRIORITY", "0x0", "This channel will be Chained from channel lower in natural priority (CH1 will be enabled by CH0 transfer complete)")
+    symbol.addKey("CHAIN_FROM_HIGHER_PRIORITY", "0x1", "This channel will be Chained from channel higher in natural priority (CH1 will be enabled by CH2 transfer complete)")
+
+    chainSymbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_EVENTS_WHEN_DISABLED", dmacChannelEnable)
+    chainSymbol.setLabel("Allow Events When Channel is Disabled")
+    chainSymbol.setDescription("Channel start/abort events will be registered, even if the channel is disabled")
+    chainSymbol.setDefaultValue(False)
 
     ########################## Derived symbols for registers / register settings ###########################
 
@@ -579,8 +677,7 @@ for dmaChannel in range(0, numDMAChans):
 
     # derived symbol, used with DMA channel priority
     dmacPriorityVal.append(dmaChannel)
-    dmacPriorityValSymId = "DMAC_" + str(dmaChannel) + "_PRIORITY_VALUE"
-    dmacPriorityVal[dmaChannel] = coreComponent.createIntegerSymbol(dmacPriorityValSymId, dmacChannelEnable)
+    dmacPriorityVal[dmaChannel] = coreComponent.createIntegerSymbol("DMAC_" + str(dmaChannel) + "_PRIORITY_VALUE", dmacChannelEnable)
     dmacPriorityVal[dmaChannel].setDefaultValue(0)
     dmacPriorityVal[dmaChannel].setDependencies(dmacPriorityCalc, ["DMAC_" + str(dmaChannel) + "_PRIORITY"])
     dmacPriorityVal[dmaChannel].setVisible(False)
@@ -592,7 +689,12 @@ for dmaChannel in range(0, numDMAChans):
     dmacDchconSym[dmaChannel] = coreComponent.createHexSymbol(symId, dmacChannelEnable)
     dmacDchconSym[dmaChannel].setVisible(False)
     dmacDchconSym[dmaChannel].setDefaultValue(0)
-    dmacDchconSym[dmaChannel].setDependencies(dchconCallback, [dmacChanEnSymId, dmacPriorityValSymId])
+    dmacDchconSym[dmaChannel].setDependencies(dchconCallback, [dmacChanEnSymId, \
+                                                    "DMAC_" + str(dmaChannel) + "_PRIORITY_VALUE",   \
+                                                    "DMAC_" + str(dmaChannel) + "_ALWAYS_ENABLE", \
+                                                    "DMAC_" + str(dmaChannel) + "_CHAIN_ENABLE",   \
+                                                    "DMAC_" + str(dmaChannel) + "_CHAIN_DIRECTION",  \
+                                                    "DMAC_" + str(dmaChannel) + "_EVENTS_WHEN_DISABLED"])
 
     # DCHxECON register value - set by python callback function
     dmacDcheconSym.append(dmaChannel)
@@ -602,6 +704,14 @@ for dmaChannel in range(0, numDMAChans):
     dmacDcheconSym[dmaChannel].setDefaultValue(0x00000000)
     dmacDcheconSym[dmaChannel].setDependencies(dcheconCallback, [dmacChanEnSymId, dmacChanReqSrcValSymId])
 
+    # DCHxINT register value - set by python callback function
+    dmacDchintSym.append(dmaChannel)
+    symId = "DCH" + str(dmaChannel) + "_INT_VALUE"
+    dmacDchintSym[dmaChannel] = coreComponent.createHexSymbol(symId, dmacChannelEnable)
+    dmacDchintSym[dmaChannel].setVisible(False)
+    dmacDchintSym[dmaChannel].setDefaultValue(0xB0000)
+    dmacDchintSym[dmaChannel].setDependencies(dchintCallback, ["DMAC_" + str(dmaChannel) + "_SOURCE_HALF_EMPTY_INT_ENABLE","DMAC_" + str(dmaChannel) + "_DESTINATION_HALF_FULL_INT_ENABLE"])
+    
     # DCHxECON<SIRQEN> field value - set by python callback function
     sirqenSym.append(dmaChannel)
     symId = "DCH" + str(dmaChannel) + "_ECON_SIRQEN_VALUE"
@@ -639,7 +749,7 @@ for dmaChannel in range(0, numDMAChans):
     # DCHxDSIZ - populated by API, not python
     # DCHxSPTR - populated by API, not python
     # DCHxDPTR - populated by API, not python
-    # DCHxDAT - feature not used (pattern matching)
+    # DCHxDAT - populated by API, not python
 
 # end of per-channel configurations
 
@@ -652,14 +762,7 @@ symbol = coreComponent.createHexSymbol(SymId, None)
 symbol.setDefaultValue(0x8000) # if any channels are enabled, will always set ON=1
 symbol.setVisible(False)
 
-# DCHxECON<SIRQEN> bitshift from lsb
-symId = "SIRQEN_SHIFT"
-shiftVal = _get_position(dmaReg_DMAECON_SIRQEN.getAttribute('mask'))
-symbol = coreComponent.createIntegerSymbol(symId, None)
-symbol.setDefaultValue(shiftVal)
-symbol.setVisible(False)
-
-#Interface for Peripheral clients
+# Interface for Peripheral clients
 for per in per_instance.keys():
 
     name = per
@@ -710,7 +813,7 @@ dmacSourceFile.setType("SOURCE")
 dmacSourceFile.setMarkup(True)
 dmacSourceFile.setEnabled(False)
 
-#System Initialization
+# System Initialization
 dmacSystemInitFile = coreComponent.createFileSymbol("DMAC_SYS_INIT", None)
 dmacSystemInitFile.setType("STRING")
 dmacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
@@ -718,7 +821,7 @@ dmacSystemInitFile.setSourcePath("../peripheral/dmac_01500/templates/system/init
 dmacSystemInitFile.setMarkup(True)
 dmacSystemInitFile.setEnabled(False)
 
-#System Definition
+# System Definition
 dmacSystemDefFile = coreComponent.createFileSymbol("DMAC_SYS_DEF", None)
 dmacSystemDefFile.setType("STRING")
 dmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
