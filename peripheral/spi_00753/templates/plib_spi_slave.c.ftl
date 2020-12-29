@@ -58,7 +58,10 @@
 <#if SPIS_USE_BUSY_PIN == true>
 #define ${SPI_INSTANCE_NAME}_BUSY_PIN                    ${SPI_BUSY_PIN}
 </#if>
-#define ${SPI_INSTANCE_NAME}_CS_PIN                      ${SPIS_CS_PIN}
+
+<#if SPI_CS_CNX != "">
+#define ${SPI_INSTANCE_NAME}_CS_PIN                      GPIO_PIN_${SPIS_CS_PIN}
+</#if>
 
 <#if SPI_SPICON_MODE == "0">
 
@@ -95,6 +98,7 @@ SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 #define ${SPI_INSTANCE_NAME}_CON_ENHBUF                     (1 << _${SPI_INSTANCE_NAME}CON_ENHBUF_POSITION)
 #define ${SPI_INSTANCE_NAME}_CON_STXISEL                    (3 << _${SPI_INSTANCE_NAME}CON_STXISEL_POSITION)
 #define ${SPI_INSTANCE_NAME}_CON_SRXISEL                    (1 << _${SPI_INSTANCE_NAME}CON_SRXISEL_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_SSEN                       (1 << _${SPI_INSTANCE_NAME}CON_SSEN_POSITION)
 
 #define ${SPI_INSTANCE_NAME}_ENABLE_RX_INT()                ${SPI_RX_IEC_REG}SET = ${SPI_RX_IEC_REG_MASK}
 #define ${SPI_INSTANCE_NAME}_CLEAR_RX_INT_FLAG()            ${SPI_RX_IFS_REG}CLR = ${SPI_RX_IFS_REG_MASK}
@@ -106,8 +110,10 @@ SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 #define ${SPI_INSTANCE_NAME}_ENABLE_ERR_INT()               ${SPI_FLT_IEC_REG}SET = ${SPI_FLT_IEC_REG_MASK}
 #define ${SPI_INSTANCE_NAME}_CLEAR_ERR_INT_FLAG()           ${SPI_FLT_IFS_REG}CLR = ${SPI_FLT_IFS_REG_MASK}
 
+<#if SPI_CS_CNX != "">
 /* Forward declarations */
 static void ${SPI_INSTANCE_NAME}_CS_Handler(CN_PIN pin, uintptr_t context);
+</#if>
 
 void ${SPI_INSTANCE_NAME}_Initialize ( void )
 {
@@ -137,7 +143,7 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     ENHBUF = 1
     */
 
-    ${SPI_INSTANCE_NAME}CONSET = (${SPI_INSTANCE_NAME}_CON_ENHBUF | ${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16 | ${SPI_INSTANCE_NAME}_CON_CKE | ${SPI_INSTANCE_NAME}_CON_CKP | ${SPI_INSTANCE_NAME}_CON_STXISEL | ${SPI_INSTANCE_NAME}_CON_SRXISEL);
+    ${SPI_INSTANCE_NAME}CONSET = (${SPI_INSTANCE_NAME}_CON_ENHBUF | ${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16 | ${SPI_INSTANCE_NAME}_CON_CKE | ${SPI_INSTANCE_NAME}_CON_CKP | ${SPI_INSTANCE_NAME}_CON_STXISEL | ${SPI_INSTANCE_NAME}_CON_SRXISEL) |  ${SPI_INSTANCE_NAME}_CON_SSEN;
 
     <#if SPI_CON2_SPIROVEN??>
     /* Enable generation of interrupt on receiver overflow */
@@ -149,9 +155,11 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes = 0;
     ${SPI_INSTANCE_NAME?lower_case}Obj.errorStatus = SPI_SLAVE_ERROR_NONE;
     ${SPI_INSTANCE_NAME?lower_case}Obj.callback = NULL ;
+<#if SPI_CS_CNX != "">
     ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false ;
     ${SPI_INSTANCE_NAME?lower_case}Obj.csInterruptPending = false;
     ${SPI_INSTANCE_NAME?lower_case}Obj.rxInterruptActive = false;
+</#if>
 
     <#if SPIS_USE_BUSY_PIN == true>
     /* Set the Busy Pin to ready state */
@@ -161,10 +169,11 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     {PLIB_NAME}_PinWrite((${PLIB_NAME}_PIN)${SPI_INSTANCE_NAME}_BUSY_PIN, 1);
     </#if>
     </#if>
-
+<#if SPI_CS_CNX != "">
     /* Register callback and enable notifications on Chip Select logic level change */
-    GPIO_PinInterruptCallbackRegister(${SPI_CS_CNX}, ${SPI_INSTANCE_NAME}_CS_Handler, (uintptr_t)NULL);
-    GPIO_PinInterruptEnable(${SPI_INSTANCE_NAME}_CS_PIN);
+    GPIO_PinInterruptCallbackRegister(${SPI_CS_CNX}_PIN, ${SPI_INSTANCE_NAME}_CS_Handler, (uintptr_t)NULL);
+    GPIO_PinInterruptEnable(${SPI_CS_CNX}_PIN);
+</#if>
 
     /* Enable ${SPI_INSTANCE_NAME} RX and Error Interrupts. TX interrupt will be enabled when a SPI write is submitted. */
     ${SPI_INSTANCE_NAME}_ENABLE_RX_INT();
@@ -185,7 +194,13 @@ size_t ${SPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size)
         rdSize = rdInIndex;
     }
 
+<#if SPI_SPICON_MODE == "0">
     memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
+<#elseif SPI_SPICON_MODE == "1">
+    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
+<#else>
+    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 2));
+</#if>
 
     return rdSize;
 }
@@ -202,7 +217,13 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
         wrSize = ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE;
     }
 
+<#if SPI_SPICON_MODE == "0">
     memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
+<#elseif SPI_SPICON_MODE == "1">
+    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
+<#else>
+    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 2));
+</#if>
 
     ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes = wrSize;
     ${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
@@ -244,11 +265,13 @@ void ${SPI_INSTANCE_NAME}_CallbackRegister(SPI_SLAVE_CALLBACK callBack, uintptr_
     ${SPI_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
+<#if SPI_CS_CNX != "">
 /* The status is returned as busy when CS is asserted */
 bool ${SPI_INSTANCE_NAME}_IsBusy(void)
 {
     return ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy;
 }
+</#if>
 
 <#if SPIS_USE_BUSY_PIN == true>
 /* Drive the GPIO pin to indicate to SPI Master that the slave is ready now */
@@ -271,6 +294,7 @@ SPI_SLAVE_ERROR ${SPI_INSTANCE_NAME}_ErrorGet(void)
     return errorStatus;
 }
 
+<#if SPI_CS_CNX != "">
 static void ${SPI_INSTANCE_NAME}_CS_Handler(CN_PIN pin, uintptr_t context)
 {
     <#if SPIS_CS_PIN_LOGIC_LEVEL == "ACTIVE_LOW">
@@ -321,6 +345,7 @@ static void ${SPI_INSTANCE_NAME}_CS_Handler(CN_PIN pin, uintptr_t context)
         }
     }
 }
+</#if>
 
 <#if SPI_INTERRUPT_COUNT == 1>
 static void ${SPI_INSTANCE_NAME}_ERR_InterruptHandler (void)
@@ -365,8 +390,19 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 </#if>
 {
     uint32_t receivedData = 0;
-
+<#if SPI_CS_CNX != "">
     ${SPI_INSTANCE_NAME?lower_case}Obj.rxInterruptActive = true;
+</#if>
+
+<#if SPI_CS_CNX == "">
+<#if SPIS_USE_BUSY_PIN == true && SPIS_BUSY_PIN_LOGIC_LEVEL == "ACTIVE_HIGH">
+    /* Drive busy line to active state */
+    ${PLIB_NAME}_PinWrite((${PLIB_NAME}_PIN)${SPI_INSTANCE_NAME}_BUSY_PIN, 1);
+<#elseif SPIS_USE_BUSY_PIN == true && SPIS_BUSY_PIN_LOGIC_LEVEL == "ACTIVE_LOW">
+    /* Drive busy line to active state */
+    ${PLIB_NAME}_PinWrite((${PLIB_NAME}_PIN)${SPI_INSTANCE_NAME}_BUSY_PIN, 0);
+</#if>
+</#if>
 
     while (!(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK))
     {
@@ -382,6 +418,7 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
     /* Clear the receive interrupt flag */
     ${SPI_INSTANCE_NAME}_CLEAR_RX_INT_FLAG();
 
+<#if SPI_CS_CNX != "">
     ${SPI_INSTANCE_NAME?lower_case}Obj.rxInterruptActive = false;
 
     /* Check if CS interrupt occured before the RX interrupt and that CS interrupt delegated the responsibility to give
@@ -403,6 +440,15 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
         /* Clear the read index. Application must read out the data by calling ${SPI_INSTANCE_NAME}_Read API in the callback */
         ${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex = 0;
     }
+<#else>
+    if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+    {
+        ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+    }
+
+    /* Clear the read index. Application must read out the data by calling ${SPI_INSTANCE_NAME}_Read API in the callback */
+    ${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex = 0;
+</#if>
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>

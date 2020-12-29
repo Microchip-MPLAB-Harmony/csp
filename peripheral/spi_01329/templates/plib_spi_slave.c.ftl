@@ -94,7 +94,7 @@ SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 #define ${SPI_INSTANCE_NAME}_CON_ENHBUF                     (1 << _${SPI_INSTANCE_NAME}CON_ENHBUF_POSITION)
 #define ${SPI_INSTANCE_NAME}_CON_STXISEL                    (3 << _${SPI_INSTANCE_NAME}CON_STXISEL_POSITION)
 #define ${SPI_INSTANCE_NAME}_CON_SRXISEL                    (1 << _${SPI_INSTANCE_NAME}CON_SRXISEL_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_SSEN						(1 << _${SPI_INSTANCE_NAME}CON_SSEN_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_SSEN                       (1 << _${SPI_INSTANCE_NAME}CON_SSEN_POSITION)
 
 #define ${SPI_INSTANCE_NAME}_ENABLE_RX_INT()                ${SPI_RX_IEC_REG}SET = ${SPI_RX_IEC_REG_MASK}
 #define ${SPI_INSTANCE_NAME}_CLEAR_RX_INT_FLAG()            ${SPI_RX_IFS_REG}CLR = ${SPI_RX_IFS_REG_MASK}
@@ -185,7 +185,13 @@ size_t ${SPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size)
         rdSize = rdInIndex;
     }
 
+<#if SPI_SPICON_MODE == "0">
     memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
+<#elseif SPI_SPICON_MODE == "1">
+    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
+<#else>
+    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 2));
+</#if>
 
     return rdSize;
 }
@@ -202,7 +208,13 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
         wrSize = ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE;
     }
 
+<#if SPI_SPICON_MODE == "0">
     memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
+<#elseif SPI_SPICON_MODE == "1">
+    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
+<#else>
+    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 2));
+</#if>
 
     ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes = wrSize;
     ${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;

@@ -58,7 +58,7 @@
 <#if SPIS_USE_BUSY_PIN == true>
 #define ${SPI_INSTANCE_NAME}_BUSY_PIN                    ${SPI_BUSY_PIN}
 </#if>
-#define ${SPI_INSTANCE_NAME}_CS_PIN                      ${SPIS_CS_PIN}
+#define ${SPI_INSTANCE_NAME}_CS_PIN                      GPIO_PIN_${SPIS_CS_PIN}
 
 <#if SPI_SPICON_MODE == "0">
 
@@ -92,6 +92,7 @@ SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 #define ${SPI_INSTANCE_NAME}_CON_CKP                        (${SPI_SPICON_CLK_POL} << _${SPI_INSTANCE_NAME}CON_CKP_POSITION)
 #define ${SPI_INSTANCE_NAME}_CON_CKE                        (${SPI_SPICON_CLK_PH} << _${SPI_INSTANCE_NAME}CON_CKE_POSITION)
 #define ${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16            (${SPI_SPICON_MODE} << _${SPI_INSTANCE_NAME}CON_MODE16_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_SSEN                       (1 << _${SPI_INSTANCE_NAME}CON_SSEN_POSITION)
 
 #define ${SPI_INSTANCE_NAME}_ENABLE_RX_INT()                ${SPI_RX_IEC_REG}SET = ${SPI_RX_IEC_REG_MASK}
 #define ${SPI_INSTANCE_NAME}_CLEAR_RX_INT_FLAG()            ${SPI_RX_IFS_REG}CLR = ${SPI_RX_IFS_REG_MASK}
@@ -130,7 +131,7 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     MODE<32,16> = ${SPI_SPICON_MODE}
     */
 
-    ${SPI_INSTANCE_NAME}CONSET = (${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16 | ${SPI_INSTANCE_NAME}_CON_CKE | ${SPI_INSTANCE_NAME}_CON_CKP);
+    ${SPI_INSTANCE_NAME}CONSET = (${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16 | ${SPI_INSTANCE_NAME}_CON_CKE | ${SPI_INSTANCE_NAME}_CON_CKP | ${SPI_INSTANCE_NAME}_CON_SSEN );
 
     <#if SPI_CON2_SPIROVEN??>
     /* Enable generation of interrupt on receiver overflow */
@@ -156,7 +157,7 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     </#if>
 
     /* Register callback and enable notifications on Chip Select logic level change */
-    GPIO_PinInterruptCallbackRegister(${SPI_CS_CNX}, ${SPI_INSTANCE_NAME}_CS_Handler, (uintptr_t)NULL);
+    GPIO_PinInterruptCallbackRegister(${SPI_CS_CNX}_PIN, ${SPI_INSTANCE_NAME}_CS_Handler, (uintptr_t)NULL);
     GPIO_PinInterruptEnable(${SPI_INSTANCE_NAME}_CS_PIN);
 
     /* Enable ${SPI_INSTANCE_NAME} RX and Error Interrupts. TX interrupt will be enabled when a SPI write is submitted. */
@@ -178,7 +179,13 @@ size_t ${SPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size)
         rdSize = rdInIndex;
     }
 
+<#if SPI_SPICON_MODE == "0">
     memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
+<#elseif SPI_SPICON_MODE == "1">
+    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
+<#else>
+    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 2));
+</#if>
 
     return rdSize;
 }
@@ -195,7 +202,13 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
         wrSize = ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE;
     }
 
+<#if SPI_SPICON_MODE == "0">
     memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
+<#elseif SPI_SPICON_MODE == "1">
+    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
+<#else>
+    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 2));
+</#if>
 
     ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes = wrSize;
     ${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
