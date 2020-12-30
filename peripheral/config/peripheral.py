@@ -86,7 +86,9 @@ peripherals = {
                 "PM_U2240"      : ["PM"],
                 "PM_U2406"      : ["PM"],
                 "SUPC_U2117"    : ["SUPC"],
-                "SUPC_U2407"    : ["SUPC"]
+                "SUPC_U2407"    : ["SUPC"],
+                "CAN_U2003"     : ["CAN"],
+                "MCAN_11273"    : ["CAN"]
 }
 
 # a dictionary to translate the new id mentioned in ATDF to old id used in csp
