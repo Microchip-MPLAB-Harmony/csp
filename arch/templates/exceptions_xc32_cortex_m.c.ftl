@@ -51,7 +51,9 @@
         <#lt>#include "configuration.h"
     </#if>
 </#if>
+<#if CoreSysIntFile == true>
 #include "interrupts.h"
+</#if>
 #include "definitions.h"
 <#if ADVANCED_EXCEPTION>
 #include <stdio.h>

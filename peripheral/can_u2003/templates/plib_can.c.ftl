@@ -50,7 +50,9 @@
 // *****************************************************************************
 
 #include "device.h"
+<#if core.CoreSysIntFile == true>
 #include "interrupts.h"
+</#if>
 #include "plib_${CAN_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************

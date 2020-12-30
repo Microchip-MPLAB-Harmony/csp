@@ -27,7 +27,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "device.h"
+<#if CoreSysIntFile == true>
 #include "interrupts.h"
+</#if>
 <#if CoreUseMPU??>
 <#if CoreUseMPU>
 #include "peripheral/mpu/plib_mpu.h"

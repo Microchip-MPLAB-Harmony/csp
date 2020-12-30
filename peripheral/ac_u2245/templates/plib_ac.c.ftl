@@ -43,7 +43,9 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
+<#if core.CoreSysIntFile == true>
 #include "interrupts.h"
+</#if>
 #include "plib_${AC_INSTANCE_NAME?lower_case}.h"
 <#assign AC_WINCTRL_VAL = "">
 <#assign AC_EVCTRL_VAL = "">

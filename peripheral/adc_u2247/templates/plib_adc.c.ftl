@@ -53,7 +53,9 @@
 /* This section lists the other files that are included in this file.
 */
 
+<#if core.CoreSysIntFile == true>
 #include "interrupts.h"
+</#if>
 #include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
 <#compress>
 <#assign ADC_CTRLC_VAL = "">

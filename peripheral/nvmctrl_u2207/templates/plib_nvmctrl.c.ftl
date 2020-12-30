@@ -48,7 +48,9 @@
 // *****************************************************************************
 
 #include <string.h>
+<#if core.CoreSysIntFile == true>
 #include "interrupts.h"
+</#if>
 #include "plib_${NVMCTRL_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************

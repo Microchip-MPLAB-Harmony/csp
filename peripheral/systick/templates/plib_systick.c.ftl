@@ -39,7 +39,9 @@
 *******************************************************************************/
 
 #include "device.h"
+<#if CoreSysIntFile == true>
 #include "interrupts.h"
+</#if>
 #include "plib_systick.h"
 <#if SYSTICK_USED_BY_SYS_TIME == true>
 #include "peripheral/nvic/plib_nvic.h"
