@@ -143,12 +143,15 @@ def setDfll48MFreq(symbol, event):
     freq = 0
     if enable:
         mode = Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL48M_OPMODE")
+        usbCrm = Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL48M_USB")
+        mul = int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL48M_MUL"))
         if mode == 0:
             freq = 48000000
-        else:
-            mul = int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL48M_MUL"))
+        elif ((mode == 1) and (usbCrm == False)):
             refFreq = int(Database.getSymbolValue("core", "GCLK_ID_3_FREQ"))
             freq = mul * refFreq
+        elif (mode == 1) and (usbCrm == True):
+            freq = mul * 1000
 
     prevFreq = symbol.getValue()
 
