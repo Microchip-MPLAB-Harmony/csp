@@ -144,11 +144,13 @@ static void DFLL_Initialize(void)
         /* Wait for synchronization */
     }
     </#if>
+    while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
+    {
+        /* Waiting for the Ready state */
+    }
     OSCCTRL_REGS->OSCCTRL_DFLLMUL = OSCCTRL_DFLLMUL_MUL(${CONFIG_CLOCK_DFLL_MUL}) | OSCCTRL_DFLLMUL_FSTEP(${CONFIG_CLOCK_DFLL_FINE}) | OSCCTRL_DFLLMUL_CSTEP(${CONFIG_CLOCK_DFLL_COARSE});
 
     </#if>
-    OSCCTRL_REGS->OSCCTRL_DFLLCTRL = 0 ;
-
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
         /* Waiting for the Ready state */
