@@ -249,7 +249,7 @@ def updateCSRxClockModeInfo(symbol, event):
         symbol.setLabel("***FLEXCOM SPI Mode 2 is Selected***")
 
 def updatePCSFromDatabase(symbol, event):
-    if symbol.getReadOnly() == False:
+    if symbol.getLabel() != "---":
         cs_val = symbol.getSelectedKey()
         if cs_val == "NPCS0" or cs_val == "GPIO":
             event["source"].getSymbolByID("FLEXCOM_SPI_EN_NPCS0").setValue(True)
@@ -266,9 +266,10 @@ def updatePCSFromDatabase(symbol, event):
         event["source"].getSymbolByID("FLEXCOM_SPI_CLOCK_MODE_COMMENT").setVisible(False)
         symbol.setVisible(False)
         symbol.setReadOnly(True)
+        symbol.setLabel("---")
 
 def updateBaudRateFromDatabase(symbol, event):
-    if symbol.getReadOnly() == False:
+    if symbol.getLabel() != "---":
         cs_val = flexcomSym_SPI_MR_PCS.getSelectedKey()
         if cs_val == "NPCS0" or cs_val == "GPIO":
             event["source"].getSymbolByID("FLEXCOM_SPI_CSR0_BAUD_RATE").setValue(symbol.getValue())
@@ -280,9 +281,10 @@ def updateBaudRateFromDatabase(symbol, event):
             event["source"].getSymbolByID("FLEXCOM_SPI_CSR3_BAUD_RATE").setValue(symbol.getValue())
         symbol.setVisible(False)
         symbol.setReadOnly(True)
+        symbol.setLabel("---")
 
 def updateBITSFromDatabase(symbol, event):
-    if symbol.getReadOnly() == False:
+    if symbol.getLabel() != "---":
         cs_val = flexcomSym_SPI_MR_PCS.getSelectedKey()
         if cs_val == "NPCS0" or cs_val == "GPIO":
             event["source"].getSymbolByID("FLEXCOM_SPI_CSR0_BITS").setValue(symbol.getValue())
@@ -294,9 +296,10 @@ def updateBITSFromDatabase(symbol, event):
             event["source"].getSymbolByID("FLEXCOM_SPI_CSR3_BITS").setValue(symbol.getValue())
         symbol.setVisible(False)
         symbol.setReadOnly(True)
+        symbol.setLabel("---")
 
 def updateCPOLFromDatabase(symbol, event):
-    if symbol.getReadOnly() == False:
+    if symbol.getLabel() != "---":
         cs_val = flexcomSym_SPI_MR_PCS.getSelectedKey()
         if cs_val == "NPCS0" or cs_val == "GPIO":
             event["source"].getSymbolByID("FLEXCOM_SPI_CSR0_CPOL").setValue(symbol.getValue())
@@ -308,9 +311,10 @@ def updateCPOLFromDatabase(symbol, event):
             event["source"].getSymbolByID("FLEXCOM_SPI_CSR3_CPOL").setValue(symbol.getValue())
         symbol.setVisible(False)
         symbol.setReadOnly(True)
+        symbol.setLabel("---")
 
 def updateNCPHAFromDatabase(symbol, event):
-    if symbol.getReadOnly() == False:
+    if symbol.getLabel() != "---":
         cs_val = flexcomSym_SPI_MR_PCS.getSelectedKey()
         if cs_val == "NPCS0" or cs_val == "GPIO":
             event["source"].getSymbolByID("FLEXCOM_SPI_CSR0_NCPHA").setValue(symbol.getValue())
@@ -322,6 +326,7 @@ def updateNCPHAFromDatabase(symbol, event):
             event["source"].getSymbolByID("FLEXCOM_SPI_CSR3_NCPHA").setValue(symbol.getValue())
         symbol.setVisible(False)
         symbol.setReadOnly(True)
+        symbol.setLabel("---")
 
 ###################################################################################################
 ############################################# FLEXCOM SPI #########################################

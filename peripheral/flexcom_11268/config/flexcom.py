@@ -74,14 +74,6 @@ def handleMessage(messageID, args):
         if args.get("isVisible") != None:
             flexcomSym_SPI_InterruptMode.setVisible(args["isVisible"])
 
-    elif (messageID == "SPI_MASTER_HARDWARE_CS"):
-        if args.get("isReadOnly") != None:
-            flexcomSym_SPI_MR_PCS.setReadOnly(args["isReadOnly"])
-        if args.get("isEnabled") != None and args["isEnabled"] == False:
-            flexcomSym_SPI_MR_PCS.setSelectedKey("GPIO")
-        if args.get("isVisible") != None:
-            flexcomSym_SPI_MR_PCS.setVisible(args["isVisible"])
-
     elif (messageID == "SPI_SLAVE_MODE"):
         if args.get("isReadOnly") != None:
             flexcomSym_OperatingMode.setReadOnly(args["isReadOnly"])
