@@ -96,7 +96,7 @@ uint32_t ${TC_INSTANCE_NAME}_CompareFrequencyGet( void );
 
 <#if TC_CTRLA_MODE = "COUNT8">
 <#if TC_COMPARE_WAVE_WAVEGEN == "MFRQ" || TC_COMPARE_WAVE_WAVEGEN == "MPWM">
-void ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period );
+bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period );
 </#if>
 
 uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void );
@@ -105,12 +105,12 @@ uint8_t ${TC_INSTANCE_NAME}_Compare8bitCounterGet( void );
 
 void ${TC_INSTANCE_NAME}_Compare8bitCounterSet( uint8_t count );
 
-void ${TC_INSTANCE_NAME}_Compare8bitMatch0Set( uint8_t compareValue );
+bool ${TC_INSTANCE_NAME}_Compare8bitMatch0Set( uint8_t compareValue );
 
-void ${TC_INSTANCE_NAME}_Compare8bitMatch1Set( uint8_t compareValue );
+bool ${TC_INSTANCE_NAME}_Compare8bitMatch1Set( uint8_t compareValue );
 <#elseif TC_CTRLA_MODE = "COUNT16">
 <#if TC_COMPARE_WAVE_WAVEGEN == "MFRQ" || TC_COMPARE_WAVE_WAVEGEN == "MPWM">
-void ${TC_INSTANCE_NAME}_Compare16bitPeriodSet( uint16_t period );
+bool ${TC_INSTANCE_NAME}_Compare16bitPeriodSet( uint16_t period );
 </#if>
 
 uint16_t ${TC_INSTANCE_NAME}_Compare16bitPeriodGet( void );
@@ -119,13 +119,13 @@ uint16_t ${TC_INSTANCE_NAME}_Compare16bitCounterGet( void );
 
 void ${TC_INSTANCE_NAME}_Compare16bitCounterSet( uint16_t count );
 
-void ${TC_INSTANCE_NAME}_Compare16bitMatch0Set( uint16_t compareValue );
+bool ${TC_INSTANCE_NAME}_Compare16bitMatch0Set( uint16_t compareValue );
 
-void ${TC_INSTANCE_NAME}_Compare16bitMatch1Set( uint16_t compareValue );
+bool ${TC_INSTANCE_NAME}_Compare16bitMatch1Set( uint16_t compareValue );
 
 <#elseif TC_CTRLA_MODE = "COUNT32">
 <#if TC_COMPARE_WAVE_WAVEGEN == "MFRQ" || TC_COMPARE_WAVE_WAVEGEN == "MPWM">
-void ${TC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period );
+bool ${TC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period );
 </#if>
 uint32_t ${TC_INSTANCE_NAME}_Compare32bitPeriodGet( void );
 
@@ -133,9 +133,9 @@ uint32_t ${TC_INSTANCE_NAME}_Compare32bitCounterGet( void );
 
 void ${TC_INSTANCE_NAME}_Compare32bitCounterSet( uint32_t count );
 
-void ${TC_INSTANCE_NAME}_Compare32bitMatch0Set( uint32_t compareValue );
+bool ${TC_INSTANCE_NAME}_Compare32bitMatch0Set( uint32_t compareValue );
 
-void ${TC_INSTANCE_NAME}_Compare32bitMatch1Set( uint32_t compareValue );
+bool ${TC_INSTANCE_NAME}_Compare32bitMatch1Set( uint32_t compareValue );
 </#if>
 
 <#if TC_COMPARE_INTENSET_OVF = true>
