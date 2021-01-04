@@ -98,9 +98,9 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void );
 
 uint8_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PatternGet( void );
 
-void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PatternSet( uint8_t pattern );
+bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PatternSet( uint8_t pattern );
 
-void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}TimeWindowSet(uint16_t low_window, uint16_t high_window);
+bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}TimeWindowSet(uint16_t low_window, uint16_t high_window);
 
 <#if PDEC_INTERRUPT == true>
 void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}CallbackRegister( PDEC_${PDEC_CTRLA_MODE}_CALLBACK callback, uintptr_t context );

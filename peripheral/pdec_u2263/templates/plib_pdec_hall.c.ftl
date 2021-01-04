@@ -154,24 +154,30 @@ uint8_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PatternGet( void )
 
 
 /* Set the hall pattern */
-void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PatternSet( uint8_t pattern )
+bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PatternSet( uint8_t pattern )
 {
+    bool status = false;
     if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV0_Msk) == 0U)
     {
         ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[0] = (pattern & 0x07);
+        status = true;
     }    
+    return status;
 }
 
-void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}TimeWindowSet(uint16_t low_window, uint16_t high_window)
+bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}TimeWindowSet(uint16_t low_window, uint16_t high_window)
 {
+    bool status = false;    
     if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV0_Msk) == 0U)
     {    
         ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[0] = low_window << 16;
+        if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV1_Msk) == 0U)
+        {    
+            ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[1] = high_window << 16;
+            status = true;
+        }
     }
-    if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV1_Msk) == 0U)
-    {    
-        ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[1] = high_window << 16;
-    }
+    return status;
 }
 
 

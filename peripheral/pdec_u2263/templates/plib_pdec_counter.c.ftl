@@ -140,20 +140,26 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void )
 }
 
 
-void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare0Set( uint16_t compare0 )
+bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare0Set( uint16_t compare0 )
 {
+    bool status = false;
     if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV0_Msk) == 0U)
     {
         ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[0] = (compare0);
-    }    
+        status = true;
+    }
+    return status;
 }
 
-void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare1Set( uint16_t compare1 )
+bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare1Set( uint16_t compare1 )
 {
+    bool status = false;
     if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV1_Msk) == 0U)
     {
         ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[1] = (compare1);
+        status = true;
     }
+    return status;
 }
 
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare0Get( void )

@@ -96,8 +96,8 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Start( void );
 
 void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void );
 
-void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare0Set( uint16_t compare0 );
-void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare1Set( uint16_t compare1 );
+bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare0Set( uint16_t compare0 );
+bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare1Set( uint16_t compare1 );
 
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare0Get( void );
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare1Get( void );
