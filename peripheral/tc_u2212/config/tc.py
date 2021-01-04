@@ -567,7 +567,7 @@ def instantiateComponent(tcComponent):
 
     # Interrupt Dynamic settings
     tcSym_UpdateInterruptStatus = tcComponent.createBooleanSymbol("TC_INTERRUPT_STATUS", None)
-    tcSym_UpdateInterruptStatus.setDependencies(updateTCInterruptStatus, ["TC_OPERATION_MODE", "TC_TIMER_INTERRUPT_MODE", "TC_COMPARE_INTERRUPT_MODE", "TC_CAPTURE_INTERRUPT"])
+    tcSym_UpdateInterruptStatus.setDependencies(updateTCInterruptStatus, ["TC_OPERATION_MODE", "TC_TIMER_INTENSET_OVF", "TC_TIMER_INTENSET_MC1", "TC_COMPARE_INTERRUPT_MODE", "TC_CAPTURE_INTERRUPT"])
     tcSym_UpdateInterruptStatus.setVisible(False)
 
     # Interrupt Warning status
