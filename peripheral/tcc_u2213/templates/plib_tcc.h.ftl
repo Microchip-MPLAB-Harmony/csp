@@ -142,7 +142,7 @@ void ${TCC_INSTANCE_NAME}_PWMDeadTimeSet(uint8_t deadtime_high, uint8_t deadtime
 void ${TCC_INSTANCE_NAME}_PWMForceUpdate(void);
 
 <#if TCC_IS_PG == 1>
-void ${TCC_INSTANCE_NAME}_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_output);
+bool ${TCC_INSTANCE_NAME}_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_output);
 
 </#if>
 
@@ -157,33 +157,39 @@ uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet(void);
 </#if>
 
 <#if TCC_SIZE == 24>
-void ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet(uint32_t period);
+bool ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet(uint32_t period);
 
 uint32_t ${TCC_INSTANCE_NAME}_PWM24bitPeriodGet(void);
 
 void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet(uint32_t count);
 
-__STATIC_INLINE void ${TCC_INSTANCE_NAME}_PWM24bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
+__STATIC_INLINE bool ${TCC_INSTANCE_NAME}_PWM24bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
 {
+    bool status = false;
     if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (1U << (TCC_STATUS_CCBUFV0_Pos + (uint32_t)channel))) == 0U)
     {
         ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_CBUF_REG_NAME}[channel] = duty & 0xFFFFFF;
+        status = true;
     }
+    return status;
 }
 
 <#elseif TCC_SIZE == 16>
-void ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet(uint16_t period);
+bool ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet(uint16_t period);
 
 uint16_t ${TCC_INSTANCE_NAME}_PWM16bitPeriodGet(void);
 
 void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet(uint16_t count);
 
-__STATIC_INLINE void ${TCC_INSTANCE_NAME}_PWM16bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t duty)
+__STATIC_INLINE bool ${TCC_INSTANCE_NAME}_PWM16bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t duty)
 {
+    bool status = false;
     if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (1U << (TCC_STATUS_CCBUFV0_Pos + (uint32_t)channel))) == 0U)
     {    
         ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_CBUF_REG_NAME}[channel] = duty;
+        status = true;
     }
+    return status;
 }
 
 </#if>
