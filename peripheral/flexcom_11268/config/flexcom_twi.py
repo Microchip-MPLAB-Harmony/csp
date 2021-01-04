@@ -64,27 +64,27 @@ def symbolVisible(symbol, event):
         symbol.setVisible(False)
 
 def showTwiDependencies(symbol, event):
-    flexcom_mode = event["source"].getSymbolByID("FLEXCOM_MODE").getValue()
+    flexcom_mode = event["source"].getSymbolByID("FLEXCOM_MODE").getSelectedKey()
     twi_opmode = event["source"].getSymbolByID("FLEXCOM_TWI_OPMODE").getValue()
 
     if symbol.getID() == "TWI_INTERRUPT_MODE":
         symbol.setReadOnly(twi_opmode == "MASTER")
         symbol.setValue(True)
-        symbol.setVisible(flexcom_mode == 0x03)
+        symbol.setVisible(flexcom_mode == "TWI")
     else:
-        symbol.setVisible(flexcom_mode == 0x03)
+        symbol.setVisible(flexcom_mode == "TWI")
 
 def showMasterDependencies(symbol, event):
-    flexcom_mode = event["source"].getSymbolByID("FLEXCOM_MODE").getValue()
+    flexcom_mode = event["source"].getSymbolByID("FLEXCOM_MODE").getSelectedKey()
     twi_opmode = event["source"].getSymbolByID("FLEXCOM_TWI_OPMODE").getValue()
 
-    symbol.setVisible(flexcom_mode == 0x03 and twi_opmode == "MASTER")
+    symbol.setVisible(flexcom_mode == "TWI" and twi_opmode == "MASTER")
 
 def showSlaveDependencies(symbol, event):
-    flexcom_mode = event["source"].getSymbolByID("FLEXCOM_MODE").getValue()
+    flexcom_mode = event["source"].getSymbolByID("FLEXCOM_MODE").getSelectedKey()
     twi_opmode = event["source"].getSymbolByID("FLEXCOM_TWI_OPMODE").getValue()
 
-    symbol.setVisible(flexcom_mode == 0x03 and twi_opmode == "SLAVE")
+    symbol.setVisible(flexcom_mode == "TWI" and twi_opmode == "SLAVE")
 
 def twihsMasterModeFileGeneration(symbol, event):
     symbol.setEnabled(event["symbol"].getValue() == "MASTER")
