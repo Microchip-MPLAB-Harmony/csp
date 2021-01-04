@@ -45,6 +45,9 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 #include "plib_${SERCOM_INSTANCE_NAME?lower_case}_spi_master.h"
 
 // *****************************************************************************
@@ -58,17 +61,17 @@
 
 /* ${SERCOM_INSTANCE_NAME} clk freq value for the baud calculation */
 <#if SPI_PLIB_CLOCK_FREQUENCY?eval??>
-    <#lt>#define ${SERCOM_INSTANCE_NAME}_Frequency      (uint32_t) (${SPI_PLIB_CLOCK_FREQUENCY?eval}UL)
+    <#lt>#define ${SERCOM_INSTANCE_NAME}_Frequency      (${SPI_PLIB_CLOCK_FREQUENCY?eval}UL)
 <#else>
-    <#lt>#define ${SERCOM_INSTANCE_NAME}_Frequency      0
+    <#lt>#define ${SERCOM_INSTANCE_NAME}_Frequency      0U
 </#if>
 
 /* ${SERCOM_INSTANCE_NAME} SPI baud value for ${SPI_BAUD_RATE} Hz baud rate */
-#define ${SERCOM_INSTANCE_NAME}_SPIM_BAUD_VALUE         (${SPI_BAUD_REG_VALUE}U)
+#define ${SERCOM_INSTANCE_NAME}_SPIM_BAUD_VALUE         (${SPI_BAUD_REG_VALUE}UL)
 
 <#if SPI_INTERRUPT_MODE = true>
 /*Global object to save SPI Exchange related data  */
-SPI_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}SPIObj;
+static SPI_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}SPIObj;
 </#if>
 
 // *****************************************************************************
@@ -100,8 +103,8 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
     /* Instantiate the ${SERCOM_INSTANCE_NAME} SPI object */
     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.callback = NULL ;
     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = false ;
-	${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize = 0;
-	${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize = 0;
+	${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize = 0U;
+	${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize = 0U;
 </#if>
 
     /* Selection of the Character Size and Receiver Enable */
@@ -111,13 +114,19 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
 
     /* Wait for synchronization */
     <#if SERCOM_SYNCBUSY = false>
-    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & SERCOM_SPIM_STATUS_SYNCBUSY_Msk) & SERCOM_SPIM_STATUS_SYNCBUSY_Msk);
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & (uint16_t)SERCOM_SPIM_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_SPIM_STATUS_SYNCBUSY_Msk)
+    {
+        /* Do nothing */
+    }
     <#else>
-    while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY);
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY) != 0U)
+    {
+        /* Do nothing */
+    }
     </#if>
 
     /* Selection of the Baud Value */
-    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_BAUD = SERCOM_SPIM_BAUD_BAUD(${SERCOM_INSTANCE_NAME}_SPIM_BAUD_VALUE);
+    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_BAUD = (uint8_t)SERCOM_SPIM_BAUD_BAUD(${SERCOM_INSTANCE_NAME}_SPIM_BAUD_VALUE);
 
     /* Configure Data Out Pin Out , Master Mode,
      * Data In and Pin Out,Data Order and Standby mode if configured
@@ -132,11 +141,18 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
                                                                                   SERCOM_SPIM_CTRLA_ENABLE_Msk
                                                                                   ${SPI_RUNSTDBY?then(' | SERCOM_SPIM_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 
+
     /* Wait for synchronization */
     <#if SERCOM_SYNCBUSY = false>
-    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & SERCOM_SPIM_STATUS_SYNCBUSY_Msk) & SERCOM_SPIM_STATUS_SYNCBUSY_Msk);
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & (uint16_t)SERCOM_SPIM_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_SPIM_STATUS_SYNCBUSY_Msk)
+    {
+        /* Do nothing */
+    }
     <#else>
-    while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY);
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY) != 0U)
+    {
+        /* Do nothing */
+    }
     </#if>
 }
 
@@ -170,11 +186,11 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
 
 bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock)
 {
-    uint32_t baudValue = 0;
+    uint32_t baudValue = 0U;
 
     bool statusValue = false;
 
-    if(spiSourceClock == 0)
+    if(spiSourceClock == 0U)
     {
         /* Fetch Master Clock Frequency directly */
         spiSourceClock = ${SERCOM_INSTANCE_NAME}_Frequency;
@@ -185,33 +201,45 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
 
     /* Wait for synchronization */
     <#if SERCOM_SYNCBUSY = false>
-    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & SERCOM_SPIM_STATUS_SYNCBUSY_Msk) & SERCOM_SPIM_STATUS_SYNCBUSY_Msk);
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & (uint16_t)SERCOM_SPIM_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_SPIM_STATUS_SYNCBUSY_Msk)
+    {
+        /* Do nothing */
+    }
     <#else>
-    while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY);
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY) != 0U)
+    {
+        /* Do nothing */
+    }
     </#if>
 
     if(setup != NULL)
     {
-        baudValue = (spiSourceClock/(2*(setup->clockFrequency))) - 1;
+        baudValue = (spiSourceClock/(2U*(setup->clockFrequency))) - 1U;
 
-        if((baudValue > 0) & (baudValue <= 255))
+        if((baudValue > 0U) && (baudValue <= 255U))
         {
             /* Selection of the Clock Polarity and Clock Phase */
 			${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLA &= ~(SERCOM_SPIM_CTRLA_CPOL_Msk | SERCOM_SPIM_CTRLA_CPHA_Msk);
             ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLA |= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase;
 
             /* Selection of the Baud Value */
-            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_BAUD = baudValue;
+            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_BAUD = (uint8_t)baudValue;
 
             /* Selection of the Character Size */
 			${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB &= ~SERCOM_SPIM_CTRLB_CHSIZE_Msk;
-            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB |= setup->dataBits;
+            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB |= (uint32_t)setup->dataBits;
 
             /* Wait for synchronization */
             <#if SERCOM_SYNCBUSY = false>
-            while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & SERCOM_SPIM_STATUS_SYNCBUSY_Msk) & SERCOM_SPIM_STATUS_SYNCBUSY_Msk);
+            while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & (uint16_t)SERCOM_SPIM_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_SPIM_STATUS_SYNCBUSY_Msk)
+            {
+                /* Do nothing */
+            }
             <#else>
-            while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY);
+            while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY) != 0U)
+            {
+                /* Do nothing */
+            }
             </#if>
 
             statusValue = true;
@@ -223,9 +251,15 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
 
     /* Wait for synchronization */
     <#if SERCOM_SYNCBUSY = false>
-    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & SERCOM_SPIM_STATUS_SYNCBUSY_Msk) & SERCOM_SPIM_STATUS_SYNCBUSY_Msk);
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & (uint16_t)SERCOM_SPIM_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_SPIM_STATUS_SYNCBUSY_Msk)
+    {
+        /* Do nothing */
+    }
     <#else>
-    while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY);
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY) != 0U)
+    {
+        /* Do nothing */
+    }
     </#if>
 
     return statusValue;
@@ -285,15 +319,18 @@ void ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, 
 
 bool ${SERCOM_INSTANCE_NAME}_SPI_IsBusy(void)
 {
-	if ((${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize == 0) && (${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize == 0))
+    bool isBusy = false;
+	if ((${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize == 0U) && (${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize == 0U))
 	{
 		/* This means no transfer has been requested yet; hence SPI is not busy. */
-		return false;
+		isBusy = false;
 	}
 	else
 	{
-		return ((${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == true) || ((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) == 0));
+        /* if transmit is not complete or if the state flag is not set, SPI is busy */
+        isBusy = (((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) == 0U) || ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy);
 	}
+    return isBusy;
 }
 </#if>
 
@@ -336,22 +373,22 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_IsBusy(void)
 <#if SPI_INTERRUPT_MODE == false >
 bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
 {
-    size_t txCount = 0;
-    size_t rxCount = 0;
-    size_t dummySize = 0;
+    size_t txCount = 0U;
+    size_t rxCount = 0U;
+    size_t dummySize = 0U;
     size_t receivedData;
     uint32_t dataBits;
     bool isSuccess = false;
 
     /* Verify the request */
-    if(((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL)))
+    if(((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL)))
     {
         dataBits = ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB & SERCOM_SPIM_CTRLB_CHSIZE_Msk;
 
-        if(dataBits != SPI_DATA_BITS_8)
+        if(dataBits != (uint32_t)SPI_DATA_BITS_8)
         {
             /* For 9-bit transmission, the txSize and rxSize must be an even number. */
-            if(((txSize > 0) && (txSize & 0x01)) || ((rxSize > 0) && (rxSize & 0x01)))
+            if(((txSize > 0U) && ((txSize & 0x01U) != 0U)) || ((rxSize > 0U) && ((rxSize & 0x01U) != 0U)))
             {
                 return isSuccess;
             }
@@ -359,24 +396,24 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
 
         if(pTransmitData == NULL)
         {
-            txSize = 0;
+            txSize = 0U;
         }
 
         if(pReceiveData == NULL)
         {
-            rxSize = 0;
+            rxSize = 0U;
         }
 
         /* Flush out any unread data in SPI DATA Register from the previous transfer */
-        while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk)
+        while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk) == SERCOM_SPIM_INTFLAG_RXC_Msk)
         {
             receivedData = ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA;
         }
 
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS |= SERCOM_SPIM_STATUS_BUFOVF_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS |= (uint16_t)SERCOM_SPIM_STATUS_BUFOVF_Msk;
 
         <#if SPI_INTENSET_ERROR = true>
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG |= SERCOM_SPIM_INTFLAG_ERROR_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG |= (uint8_t)SERCOM_SPIM_INTFLAG_ERROR_Msk;
 
         </#if>
         if(rxSize > txSize)
@@ -384,21 +421,24 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
             dummySize = rxSize - txSize;
         }
 
-        if(dataBits != SPI_DATA_BITS_8)
+        if(dataBits != (uint32_t)SPI_DATA_BITS_8)
         {
-            rxSize >>= 1;
-            txSize >>= 1;
-            dummySize >>= 1;
+            rxSize >>= 1U;
+            txSize >>= 1U;
+            dummySize >>= 1U;
         }
 
         /* Make sure DRE is empty */
-        while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_DRE_Msk) != SERCOM_SPIM_INTFLAG_DRE_Msk);
+        while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_DRE_Msk) != SERCOM_SPIM_INTFLAG_DRE_Msk)
+        {
+            /* Do nothing */
+        }
 
-        while((txCount != txSize) || (dummySize != 0))
+        while((txCount != txSize) || (dummySize != 0U))
         {
             if(txCount != txSize)
             {
-                if(dataBits == SPI_DATA_BITS_8)
+                if(dataBits == (uint32_t)SPI_DATA_BITS_8)
                 {
                     ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = ((uint8_t*)pTransmitData)[txCount++];
                 }
@@ -407,48 +447,61 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
                     ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = ((uint16_t*)pTransmitData)[txCount++] & SERCOM_SPIM_DATA_Msk;
                 }
             }
-            else if(dummySize > 0)
+            else if(dummySize > 0U)
             {
-                if(dataBits == SPI_DATA_BITS_8)
+                if(dataBits == (uint32_t)SPI_DATA_BITS_8)
                 {
-                    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFF;
+                    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFFU;
                 }
                 else
                 {
-                    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFFFF & SERCOM_SPIM_DATA_Msk;
+                    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFFFFU & SERCOM_SPIM_DATA_Msk;
                 }
 
                 dummySize--;
             }
+            else
+            {
+                /* Do nothing */
+            }
 
-            if(rxSize == 0)
+            if(rxSize == 0U)
             {
                 /* For transmit only request, wait for DRE to become empty */
-                while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_DRE_Msk) != SERCOM_SPIM_INTFLAG_DRE_Msk);
+                while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_DRE_Msk) != SERCOM_SPIM_INTFLAG_DRE_Msk)
+                {
+                    /* Do nothing */
+                }
             }
             else
             {
                 /* If data is read, wait for the Receiver Data Register to become full */
-                while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk) != SERCOM_SPIM_INTFLAG_RXC_Msk);
+                while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk) != SERCOM_SPIM_INTFLAG_RXC_Msk)
+                {
+                    /* Do nothing */
+                }
 
                 receivedData = ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA;
 
                 if(rxCount < rxSize)
                 {
-                    if(dataBits == SPI_DATA_BITS_8)
+                    if(dataBits == (uint32_t)SPI_DATA_BITS_8)
                     {
-                        ((uint8_t*)pReceiveData)[rxCount++] = receivedData;
+                        ((uint8_t*)pReceiveData)[rxCount++] = (uint8_t)receivedData;
                     }
                     else
                     {
-                        ((uint16_t*)pReceiveData)[rxCount++] = receivedData & SERCOM_SPIM_DATA_Msk;
+                        ((uint16_t*)pReceiveData)[rxCount++] = (uint16_t)(receivedData & SERCOM_SPIM_DATA_Msk);
                     }
                 }
             }
         }
 
         /* Make sure no data is pending in the shift register */
-        while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) != SERCOM_SPIM_INTFLAG_TXC_Msk);
+        while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) != SERCOM_SPIM_INTFLAG_TXC_Msk)
+        {
+            /* Do nothing */
+        }
 
         isSuccess = true;
     }
@@ -459,15 +512,15 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
 bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
 {
     bool isRequestAccepted = false;
-    uint32_t dummyData = 0;
+    uint32_t dummyData = 0U;
 
     /* Verify the request */
-    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == false))
+    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == false))
     {
-        if((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB & SERCOM_SPIM_CTRLB_CHSIZE_Msk) == SPI_DATA_BITS_9)
+        if((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB & SERCOM_SPIM_CTRLB_CHSIZE_Msk) == (uint32_t)SPI_DATA_BITS_9)
         {
             /* For 9-bit transmission, the txSize and rxSize must be an even number. */
-            if(((txSize > 0) && (txSize & 0x01)) || ((rxSize > 0) && (rxSize & 0x01)))
+            if(((txSize > 0U) && ((txSize & 0x01U) != 0U)) || ((rxSize > 0U) && ((rxSize & 0x01U) != 0U)))
             {
                 return isRequestAccepted;
             }
@@ -476,9 +529,9 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
         isRequestAccepted = true;
         ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txBuffer = pTransmitData;
         ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxBuffer = pReceiveData;
-        ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxCount = 0;
-        ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount = 0;
-        ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize = 0;
+        ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxCount = 0U;
+        ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount = 0U;
+        ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize = 0U;
 
         if(pTransmitData != NULL)
         {
@@ -486,7 +539,7 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
         }
         else
         {
-            ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize = 0;
+            ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize = 0U;
         }
 
         if(pReceiveData != NULL)
@@ -495,22 +548,22 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
         }
         else
         {
-            ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize = 0;
+            ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize = 0U;
         }
 
         ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = true;
 
         /* Flush out any unread data in SPI read buffer */
-        while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk)
+        while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk) == SERCOM_SPIM_INTFLAG_RXC_Msk)
         {
             dummyData = ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA;
             (void)dummyData;
         }
 
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS |= SERCOM_SPIM_STATUS_BUFOVF_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS |= (uint16_t)SERCOM_SPIM_STATUS_BUFOVF_Msk;
 
         <#if SPI_INTENSET_ERROR = true>
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG |= SERCOM_SPIM_INTFLAG_ERROR_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG |= (uint8_t)SERCOM_SPIM_INTFLAG_ERROR_Msk;
 
         </#if>
         if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize > ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize)
@@ -519,7 +572,7 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
         }
 
         /* Start the first write here itself, rest will happen in ISR context */
-        if((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB & SERCOM_SPIM_CTRLB_CHSIZE_Msk) == SPI_DATA_BITS_8)
+        if((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB & SERCOM_SPIM_CTRLB_CHSIZE_Msk) == (uint32_t)SPI_DATA_BITS_8)
         {
             if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount < ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize)
             {
@@ -527,18 +580,22 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
 
                 ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount++;
             }
-            else if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0)
+            else if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0U)
             {
-                ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFF;
+                ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFFU;
 
                 ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize--;
+            }
+            else
+            {
+                /* Do nothing */    
             }
         }
         else
         {
-            ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize >>= 1;
-            ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize >>= 1;
-            ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize >>= 1;
+            ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize >>= 1U;
+            ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize >>= 1U;
+            ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize >>= 1U;
 
             if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount < ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize)
             {
@@ -546,23 +603,27 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
 
                 ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount++;
             }
-            else if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0)
+            else if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0U)
             {
-                ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFFFF & SERCOM_SPIM_DATA_Msk;
+                ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFFFFU & SERCOM_SPIM_DATA_Msk;
 
                 ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize--;
             }
+            else
+            {
+                /* Do nothing */
+            }
         }
 
-        if(rxSize > 0)
+        if(rxSize > 0U)
         {
             /* Enable ReceiveComplete  */
-            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET = SERCOM_SPIM_INTENSET_RXC_Msk;
+            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET = (uint8_t)SERCOM_SPIM_INTENSET_RXC_Msk;
         }
         else
         {
             /* Enable the DataRegisterEmpty  */
-            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET = SERCOM_SPIM_INTENSET_DRE_Msk;
+            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET = (uint8_t)SERCOM_SPIM_INTENSET_DRE_Msk;
         }
     }
 
@@ -572,12 +633,12 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
 
 bool ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pTransmitData, size_t txSize)
 {
-    return ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(pTransmitData, txSize, NULL, 0);
+    return ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(pTransmitData, txSize, NULL, 0U);
 }
 
 bool ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pReceiveData, size_t rxSize)
 {
-    return ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize);
+    return ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(NULL, 0U, pReceiveData, rxSize);
 }
 
 <#if SPI_INTERRUPT_MODE = true>
@@ -598,11 +659,11 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pReceiveData, size_t rxSize)
 
 void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
 {
-    uint32_t dataBits = 0;
-    uint32_t receivedData = 0;
+    uint32_t dataBits = 0U;
+    uint32_t receivedData = 0U;
     static bool isLastByteTransferInProgress = false;
 
-    if(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET != 0)
+    if(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET != 0U)
     {
         dataBits = ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB & SERCOM_SPIM_CTRLB_CHSIZE_Msk;
 
@@ -612,13 +673,13 @@ void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
 
             if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxCount < ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize)
             {
-                if(dataBits == SPI_DATA_BITS_8)
+                if(dataBits == (uint32_t)SPI_DATA_BITS_8)
                 {
-                    ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxCount++] = receivedData;
+                    ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxCount++] = (uint8_t)receivedData;
                 }
                 else
                 {
-                    ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxCount++] = receivedData;
+                    ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxCount++] = (uint16_t)receivedData;
                 }
             }
         }
@@ -628,19 +689,23 @@ void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
         {
             /* Disable the DRE interrupt. This will be enabled back if more than
              * one byte is pending to be transmitted */
-            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENCLR = SERCOM_SPIM_INTENCLR_DRE_Msk;
+            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENCLR = (uint8_t)SERCOM_SPIM_INTENCLR_DRE_Msk;
 
-            if(dataBits == SPI_DATA_BITS_8)
+            if(dataBits == (uint32_t)SPI_DATA_BITS_8)
             {
                 if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount < ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize)
                 {
                     ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txBuffer)[${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount++];
                 }
-                else if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0)
+                else if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0U)
                 {
-                    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFF;
+                    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFFU;
 
                     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize--;
+                }
+                else
+                {
+                    /* Do nothing */
                 }
             }
             else
@@ -649,15 +714,19 @@ void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
                 {
                     ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txBuffer)[${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount++];
                 }
-                else if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0)
+                else if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0U)
                 {
-                    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFFFF;
+                    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA = 0xFFFFU;
 
                     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize--;
                 }
+                else
+                {
+                    /* Do nothing */
+                }
             }
 
-            if((${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount == ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize) && (${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize == 0))
+            if((${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount == ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize) && (${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize == 0U))
             {
                  /* At higher baud rates, the data in the shift register can be
                  * shifted out and TXC flag can get set resulting in a
@@ -672,9 +741,13 @@ void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
             }
             else if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxCount == ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize)
             {
-                ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET = SERCOM_SPIM_INTENSET_DRE_Msk;
+                ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET = (uint8_t)SERCOM_SPIM_INTENSET_DRE_Msk;
 
-                ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENCLR = SERCOM_SPIM_INTENCLR_RXC_Msk;
+                ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENCLR = (uint8_t)SERCOM_SPIM_INTENCLR_RXC_Msk;
+            }
+            else
+            {
+                /* Do nothing */
             }
         }
 
@@ -685,7 +758,7 @@ void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
                 ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = false;
 
                 /* Disable the Data Register empty and Receive Complete Interrupt flags */
-                ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENCLR = SERCOM_SPIM_INTENCLR_DRE_Msk | SERCOM_SPIM_INTENCLR_RXC_Msk | SERCOM_SPIM_INTENSET_TXC_Msk;
+                ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENCLR = (uint8_t)(SERCOM_SPIM_INTENCLR_DRE_Msk | SERCOM_SPIM_INTENCLR_RXC_Msk | SERCOM_SPIM_INTENSET_TXC_Msk);
 
                 isLastByteTransferInProgress = false;
 
@@ -702,7 +775,7 @@ void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
              * Enable TXC interrupt to ensure no data is present in the shift
              * register before application callback is called.
              */
-            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET = SERCOM_SPIM_INTENSET_TXC_Msk;
+            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET = (uint8_t)SERCOM_SPIM_INTENSET_TXC_Msk;
         }
     }
 }
