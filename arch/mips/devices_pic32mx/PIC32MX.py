@@ -314,6 +314,8 @@ else:
 # load wdt
 if deviceFamily.getValue() in ["DS60001156", "DS60001143"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_00781/config/wdt.py")
+elif deviceFamily.getValue() in ["DS60001404"]:
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_02674/config/wdt.py")    
 else:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_01385/config/wdt.py")
 

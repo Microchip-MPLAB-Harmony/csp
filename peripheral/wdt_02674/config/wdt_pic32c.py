@@ -98,7 +98,7 @@ def getDSWDTTimeOutPeriod():
     dswdtFreq = Database.getSymbolValue("core", "DSWDT_CLOCK_FREQUENCY")
     postScaler = int(Database.getSymbolValue("core", "CONFIG_DSWDTPS")[4:])
 
-    period = (pow(2,postScaler) * 1000.0)/dswdtFreq
+    period = (pow(2,postScaler+4) * 1000.0)/dswdtFreq
 
     if period < 1000:
         DSWDTTimeoutPeriod = (str(period) + " ms")

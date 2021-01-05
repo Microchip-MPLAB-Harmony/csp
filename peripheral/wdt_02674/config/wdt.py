@@ -100,6 +100,40 @@ def updateWDTTimeOutPeriodVisibleProperty(symbol, event):
         symbol.setVisible(event["value"])
     else:
         symbol.setValue(getWDTTimeOutPeriod(event["value"]), 1)
+def dswdtEnableStatusUpdate(symbol,event):
+    if event["value"] == "OFF":
+        symbol.setValue("DISABLED")
+    else:
+        symbol.setValue("ENABLED")
+
+global getDSWDTTimeOutPeriod
+def getDSWDTTimeOutPeriod():
+    dswdtFreq = Database.getSymbolValue("core", "DSWDT_CLOCK_FREQUENCY")
+    postScaler = int(Database.getSymbolValue("core", "CONFIG_DSWDTPS")[4:])
+
+    period = (pow(2,postScaler+4) * 1000.0)/dswdtFreq
+
+    if period < 1000:
+        DSWDTTimeoutPeriod = (str(period) + " ms")
+    elif period < 1000 * 60:
+        DSWDTTimeoutPeriod = (str(period/1000) + " sec")
+    elif period < 1000 * 60 * 60:
+        DSWDTTimeoutPeriod = (str(period/(1000 * 60)) + " minutes")
+    elif period < 1000 * 60 * 60 * 24:
+        DSWDTTimeoutPeriod = (str(period/(1000 * 60 * 60)) + " hours")
+    else:
+        DSWDTTimeoutPeriod = (str(period/(1000 * 60 * 60 * 24)) + " days")
+
+    return DSWDTTimeoutPeriod
+
+def updateDSWDTTimeOutPeriodVisibleProperty(symbol, event):
+    if event["id"] == "CONFIG_DSWDTEN":
+        if event["value"] == "OFF":
+            symbol.setVisible(False)
+        else:
+            symbol.setVisible(True)
+    else:
+        symbol.setValue(getDSWDTTimeOutPeriod(), 1)
 
 def updateWDTWindowModeEnableVisibleProperty(symbol, event):
 
@@ -197,6 +231,31 @@ wdtSym_AllowedWindowPeriod.setReadOnly(True)
 wdtSym_AllowedWindowPeriod.setVisible(isWDTEnabled and isWDTWindowModeEnabled)
 wdtSym_AllowedWindowPeriod.setDependencies(updateWDTAllowedWindowPeriodVisibleProperty, ["WDT_USE", wdtWindowSizeFuse, "CONFIG_WINDIS", "CONFIG_WDTPS"])
 
+###################################################################################################
+#######################################  Deep Sleep WDT  ##########################################
+###################################################################################################
+dswdtValGrp_DEVCFG4__DSWDTEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]/value-group@[name="DEVCFG4__DSWDTEN"]')
+dswdtValGrp_DEVCFG2__DSWDTEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]/value-group@[name="DEVCFG2__DSWDTEN"]')
+
+if (dswdtValGrp_DEVCFG4__DSWDTEN is not None) or (dswdtValGrp_DEVCFG2__DSWDTEN is not None):
+    dswdtMenu = coreComponent.createMenuSymbol("DSWDT_MENU", None)
+    dswdtMenu.setLabel("Deep Sleep WDT (DSWDT)")
+
+    dswdtSym_ConfigComment = coreComponent.createCommentSymbol("DSWDT_CONFIG_COMMENT", dswdtMenu)
+    dswdtSym_ConfigComment.setLabel("************** Configure DSWDT From Device Configuration Fuses ***************")
+
+    dswdtSym_EnableStatus = coreComponent.createStringSymbol("DSWDT_ENABLE_STATUS", dswdtMenu)
+    dswdtSym_EnableStatus.setLabel("Configured DSWDT Enable Status")
+    dswdtSym_EnableStatus.setDefaultValue("DISABLED")
+    dswdtSym_EnableStatus.setReadOnly(True)
+    dswdtSym_EnableStatus.setDependencies(dswdtEnableStatusUpdate, ["CONFIG_DSWDTEN"])
+
+    dswdtSym_TimeOutPeriod = coreComponent.createStringSymbol("DSWDT_TIMEOUT_PERIOD", dswdtMenu)
+    dswdtSym_TimeOutPeriod.setLabel("Configured DSWDT Time-out Period")
+    dswdtSym_TimeOutPeriod.setDefaultValue(getDSWDTTimeOutPeriod())
+    dswdtSym_TimeOutPeriod.setReadOnly(True)
+    dswdtSym_TimeOutPeriod.setVisible(False)
+    dswdtSym_TimeOutPeriod.setDependencies(updateDSWDTTimeOutPeriodVisibleProperty, ["CONFIG_DSWDTEN","DSWDT_CLOCK_FREQUENCY", "CONFIG_DSWDTPS"])
 ###################################################################################################
 ####################################### Code Generation  ##########################################
 ###################################################################################################
