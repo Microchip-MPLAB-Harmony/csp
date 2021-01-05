@@ -44,6 +44,13 @@
 #include "plib_${DIVAS_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 
+<#if DIVAS_DIV_OVERLOAD>
+/* Provide forward declaration for overloaded division operators */
+extern int32_t __aeabi_idiv(int32_t numerator, int32_t denominator);
+extern uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator);
+extern uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator);
+extern uint64_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator);
+</#if>
 
 void ${DIVAS_INSTANCE_NAME}_Initialize(void)
 {
@@ -55,25 +62,34 @@ void ${DIVAS_INSTANCE_NAME}_Initialize(void)
     </#if>
 }
 
-#define _DIVAS_CRITICAL_ENTER()                        \
+#define DIVAS_CRITICAL_ENTER()                        \
     do {                                               \
         volatile uint32_t globalInterruptState;        \
         globalInterruptState = __get_PRIMASK();        \
         __disable_irq()
-#define _DIVAS_CRITICAL_LEAVE()                        \
+#define DIVAS_CRITICAL_LEAVE()                        \
         __set_PRIMASK(globalInterruptState);           \
     }                                                  \
-    while (0)
+    while (false)
 
 /* Return 32 bit result, the result only. */
-#define _divas_result32() (DIVAS_REGS->DIVAS_RESULT)
+static inline uint32_t divas_result32(void)
+{
+    return DIVAS_REGS->DIVAS_RESULT;
+}
 
 /* Return 64 bit result, the result and remainder. */
-#define _divas_result64() (*((uint64_t *)(&DIVAS_REGS->DIVAS_RESULT)))
-
-static inline void _divas_div(const uint8_t sign, const uint32_t dividend, const uint32_t divisor)
+static inline uint64_t divas_result64(void)
 {
-    DIVAS_REGS->DIVAS_CTRLA = (DIVAS_REGS->DIVAS_CTRLA & ~DIVAS_CTRLA_SIGNED_Msk) | sign ;
+    uint64_t res = (uint64_t)DIVAS_REGS->DIVAS_REM;
+    res <<= 32U;
+    res |= (uint64_t)(DIVAS_REGS->DIVAS_RESULT);
+    return res;
+}
+
+static inline void divas_div(const uint8_t sign, const uint32_t dividend, const uint32_t divisor)
+{
+    DIVAS_REGS->DIVAS_CTRLA = (uint8_t)(((uint32_t)DIVAS_REGS->DIVAS_CTRLA & ~DIVAS_CTRLA_SIGNED_Msk) | (uint32_t)sign);
     DIVAS_REGS->DIVAS_DIVIDEND = dividend;
     DIVAS_REGS->DIVAS_DIVISOR  = divisor;
     while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
@@ -87,10 +103,10 @@ static inline void _divas_div(const uint8_t sign, const uint32_t dividend, const
 int32_t ${DIVAS_INSTANCE_NAME}_DivSigned(int32_t numerator, int32_t denominator)
 {
     int32_t res;
-    _DIVAS_CRITICAL_ENTER();
-    _divas_div(1, numerator, denominator);
-    res = _divas_result32();
-    _DIVAS_CRITICAL_LEAVE();
+    DIVAS_CRITICAL_ENTER();
+    divas_div(1U, (uint32_t)numerator, (uint32_t)denominator);
+    res = (int32_t)divas_result32();
+    DIVAS_CRITICAL_LEAVE();
     return res;
 }
 
@@ -98,10 +114,10 @@ int32_t ${DIVAS_INSTANCE_NAME}_DivSigned(int32_t numerator, int32_t denominator)
 uint32_t ${DIVAS_INSTANCE_NAME}_DivUnsigned(uint32_t numerator, uint32_t denominator)
 {
     uint32_t res;
-    _DIVAS_CRITICAL_ENTER();
-    _divas_div(0, numerator, denominator);
-    res = _divas_result32();
-    _DIVAS_CRITICAL_LEAVE();
+    DIVAS_CRITICAL_ENTER();
+    divas_div(0U, numerator, denominator);
+    res = divas_result32();
+    DIVAS_CRITICAL_LEAVE();
     return res;
 }
 
@@ -109,10 +125,10 @@ uint32_t ${DIVAS_INSTANCE_NAME}_DivUnsigned(uint32_t numerator, uint32_t denomin
 uint64_t ${DIVAS_INSTANCE_NAME}_DivmodSigned(int32_t numerator, int32_t denominator)
 {
     uint64_t res;
-    _DIVAS_CRITICAL_ENTER();
-    _divas_div(1, numerator, denominator);
-    res = _divas_result64();
-    _DIVAS_CRITICAL_LEAVE();
+    DIVAS_CRITICAL_ENTER();
+    divas_div(1U, (uint32_t)numerator, (uint32_t)denominator);
+    res = divas_result64();
+    DIVAS_CRITICAL_LEAVE();
     return res;
 }
 
@@ -120,10 +136,10 @@ uint64_t ${DIVAS_INSTANCE_NAME}_DivmodSigned(int32_t numerator, int32_t denomina
 uint64_t ${DIVAS_INSTANCE_NAME}_DivmodUnsigned(uint32_t numerator, uint32_t denominator)
 {
     uint64_t res;
-    _DIVAS_CRITICAL_ENTER();
-    _divas_div(0, numerator, denominator);
-    res = _divas_result64();
-    _DIVAS_CRITICAL_LEAVE();
+    DIVAS_CRITICAL_ENTER();
+    divas_div(0U, numerator, denominator);
+    res = divas_result64();
+    DIVAS_CRITICAL_LEAVE();
     return res;
 }
 <#else>
@@ -131,10 +147,10 @@ uint64_t ${DIVAS_INSTANCE_NAME}_DivmodUnsigned(uint32_t numerator, uint32_t deno
 int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
 {
     int32_t res;
-    _DIVAS_CRITICAL_ENTER();
-    _divas_div(1, numerator, denominator);
-    res = _divas_result32();
-    _DIVAS_CRITICAL_LEAVE();
+    DIVAS_CRITICAL_ENTER();
+    divas_div(1U, (uint32_t)numerator, (uint32_t)denominator);
+    res = (int32_t)divas_result32();
+    DIVAS_CRITICAL_LEAVE();
     return res;
 }
 
@@ -142,10 +158,10 @@ int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
 uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
 {
     uint32_t res;
-    _DIVAS_CRITICAL_ENTER();
-    _divas_div(0, numerator, denominator);
-    res = _divas_result32();
-    _DIVAS_CRITICAL_LEAVE();
+    DIVAS_CRITICAL_ENTER();
+    divas_div(0U, numerator, denominator);
+    res = divas_result32();
+    DIVAS_CRITICAL_LEAVE();
     return res;
 }
 
@@ -153,10 +169,10 @@ uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
 uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator)
 {
     uint64_t res;
-    _DIVAS_CRITICAL_ENTER();
-    _divas_div(1, numerator, denominator);
-    res = _divas_result64();
-    _DIVAS_CRITICAL_LEAVE();
+    DIVAS_CRITICAL_ENTER();
+    divas_div(1U, (uint32_t)numerator, (uint32_t)denominator);
+    res = divas_result64();
+    DIVAS_CRITICAL_LEAVE();
     return res;
 }
 
@@ -164,26 +180,26 @@ uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator)
 uint64_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
 {
     uint64_t res;
-    _DIVAS_CRITICAL_ENTER();
-    _divas_div(0, numerator, denominator);
-    res = _divas_result64();
-    _DIVAS_CRITICAL_LEAVE();
+    DIVAS_CRITICAL_ENTER();
+    divas_div(0U, numerator, denominator);
+    res = divas_result64();
+    DIVAS_CRITICAL_LEAVE();
     return res;
 }
 </#if>
 
 uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot(uint32_t number)
 {
-    uint32_t res = 0;
+    uint32_t res = 0U;
 
-    _DIVAS_CRITICAL_ENTER();
+    DIVAS_CRITICAL_ENTER();
     DIVAS_REGS->DIVAS_SQRNUM = number;
     while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
     {
         /* Wait for the square root to complete */
     }
     res = DIVAS_REGS->DIVAS_RESULT;
-    _DIVAS_CRITICAL_LEAVE();
+    DIVAS_CRITICAL_LEAVE();
 
 
     return res;
