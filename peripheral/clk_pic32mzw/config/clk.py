@@ -590,7 +590,7 @@ def sqiClockFreqCalc(symbol, event):
     symbol.setValue(freq, 1)
 
 def tmr1ClockFreqCalc(symbol, event):
-
+    global LPRC_DEFAULT_FREQ
     freq = 0
     tmr1ClkSrc = Database.getSymbolValue("tmr1", "TIMER1_SRC_SEL")
     tmr1ExtClkSrc = Database.getSymbolValue("tmr1", "TIMER1_TECS")
@@ -602,7 +602,7 @@ def tmr1ClockFreqCalc(symbol, event):
             if tmr1ExtClkSrc != None:
                 if tmr1ExtClkSrc == 0:
                     #LPRC Oscillator Frequency
-                    freq = 32768
+                    freq = LPRC_DEFAULT_FREQ
                 elif tmr1ExtClkSrc == 2:
                     #Secondary Oscillator Frequency
                     freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"))
@@ -610,7 +610,7 @@ def tmr1ClockFreqCalc(symbol, event):
     symbol.setValue(freq, 1)
 
 def rtccClockFreqCalc(symbol, event):
-
+    global LPRC_DEFAULT_FREQ
     freq = 0
     rtccClkSrc = Database.getSymbolValue("rtcc", "RTCC_CLOCK_SOURCE")
 
@@ -618,7 +618,7 @@ def rtccClockFreqCalc(symbol, event):
         if rtccClkSrc != None:
             if rtccClkSrc == 1:
                 #LPRC Oscillator Frequency
-                freq = 32768
+                freq = LPRC_DEFAULT_FREQ
             else:
                 #Secondary Oscillator Frequency
                 freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"))
@@ -989,6 +989,12 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
         targetName = "CONFIG_SYS_CLK_REFCLK"+ii+"_ENABLE"
         symbolRefoscFreqList[index].setDependencies(updateRefFreq, [targetName])
         index += 1
+
+    dswdt_clk_freq = clk_comp.createIntegerSymbol("DSWDT_CLOCK_FREQUENCY", sym_calc_freq_menu)
+    dswdt_clk_freq.setLabel("Deep Sleep WDT Clock Frequency (Hz)")
+    dswdt_clk_freq.setDefaultValue(dswdtClockDefaultFreq())
+    dswdt_clk_freq.setReadOnly(True)
+    dswdt_clk_freq.setDependencies(dswdtClockFreqCalc,["CONFIG_DSWDTOSC","CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
 
 def find_lsb_position(field):
     # Take a field, and return the least significant bit position.  Range: 0-31
@@ -1528,6 +1534,20 @@ def scan_atdf_for_osccon_fields(component, parentMenu, regNode):
     symbolOscconValue.setDefaultValue(initialOscconVal)
     symbolOscconValue.setDependencies(updateOSCCon, dependencyList)
 
+# Deep Sleep WDT
+global dswdtClockDefaultFreq
+def dswdtClockDefaultFreq():
+    global LPRC_DEFAULT_FREQ
+    if Database.getSymbolValue("core", "CONFIG_DSWDTOSC") == "LPRC":
+        dswdtFreq = LPRC_DEFAULT_FREQ
+    else:
+        dswdtFreq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"))
+    return dswdtFreq
+
+global dswdtClockFreqCalc
+def dswdtClockFreqCalc(symbol,event):
+    symbol.setValue(dswdtClockDefaultFreq())
+
 if __name__ == "__main__":
 
     global refOscList
@@ -2016,9 +2036,11 @@ if __name__ == "__main__":
     FRC_FREQ.setDefaultValue(int(FrcFreq))
 
     # LPRC default frequency
+    global LPRC_DEFAULT_FREQ
+    LPRC_DEFAULT_FREQ = 32768
     LPRC_FREQ = coreComponent.createIntegerSymbol("CONFIG_SYS_CLK_CONFIG_LPRC", CLK_CFG_SETTINGS)
     LPRC_FREQ.setVisible(False)
-    LPRC_FREQ.setDefaultValue(32768)
+    LPRC_FREQ.setDefaultValue(LPRC_DEFAULT_FREQ)
 
     # this is added to resolve a dependency in ftl file
     HAVE_REFCLK5 = coreComponent.createBooleanSymbol("CONFIG_HAVE_REFCLOCK5", CLK_CFG_SETTINGS)
