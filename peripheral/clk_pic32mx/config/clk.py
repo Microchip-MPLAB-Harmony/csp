@@ -35,6 +35,9 @@ global set_refotrim_value
 global peripheralModuleDisableDict
 peripheralModuleDisableDict = {}
 
+global LPRC_DEFAULT_FREQ
+LPRC_DEFAULT_FREQ = 32768
+
 peripheralModuleDisableDict_1xx_2xx_3xx_4xx = {
 
         #Peripheral : ["PMD register no", "PMD register bit no"]
@@ -167,7 +170,7 @@ def peripheralClockFreqCalc(symbol, event):
     symbol.setValue(freq, 1)
 
 def tmr1ClockFreqCalc(symbol, event):
-
+    global LPRC_DEFAULT_FREQ
     freq = 0
     tmr1ClkSrc = Database.getSymbolValue("tmr1", "TIMER1_SRC_SEL")
     tmr1ExtClkSrc = Database.getSymbolValue("tmr1", "TIMER1_TECS")
@@ -179,7 +182,7 @@ def tmr1ClockFreqCalc(symbol, event):
             if tmr1ExtClkSrc != None:
                 if tmr1ExtClkSrc == 0:
                     #LPRC Oscillator Frequency
-                    freq = 32768
+                    freq = LPRC_DEFAULT_FREQ
                 elif tmr1ExtClkSrc == 2:
                     #Secondary Oscillator Frequency
                     freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"))
@@ -442,6 +445,14 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
         targetName = "CONFIG_SYS_CLK_REFCLK_ENABLE"
         symbolRefoscFreqList.setDependencies(updateRefFreq, [targetName])
 
+    dswdtValGrp_DEVCFG2__DSWDTEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]/value-group@[name="DEVCFG2__DSWDTEN"]')
+
+    if dswdtValGrp_DEVCFG2__DSWDTEN is not None:
+        dswdt_clk_freq = clk_comp.createIntegerSymbol("DSWDT_CLOCK_FREQUENCY", sym_calc_freq_menu)
+        dswdt_clk_freq.setLabel("Deep Sleep WDT Clock Frequency (Hz)")
+        dswdt_clk_freq.setDefaultValue(dswdtClockDefaultFreq())
+        dswdt_clk_freq.setReadOnly(True)
+        dswdt_clk_freq.setDependencies(dswdtClockFreqCalc,["CONFIG_DSWDTOSC","CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
 
 global find_lsb_position
 def find_lsb_position(field):
@@ -900,6 +911,20 @@ def scan_atdf_for_upllcon_fields(coreComponent, parentMenu):
     symbolUpllconDefaultValue.setVisible(False)
     symbolUpllconDefaultValue.setDefaultValue(initialUpllconVal)
     symbolUpllconDefaultValue.setDependencies(updateUpllcon,['CONFIG_SYS_CLK_UPLLIDIV'])
+
+# Deep Sleep WDT
+global dswdtClockDefaultFreq
+def dswdtClockDefaultFreq():
+    global LPRC_DEFAULT_FREQ
+    if Database.getSymbolValue("core", "CONFIG_DSWDTOSC") == "LPRC":
+        dswdtFreq = LPRC_DEFAULT_FREQ
+    else:
+        dswdtFreq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"))
+    return dswdtFreq
+
+global dswdtClockFreqCalc
+def dswdtClockFreqCalc(symbol,event):
+    symbol.setValue(dswdtClockDefaultFreq())
 
 if __name__ == "__main__":
     global atdf_content
