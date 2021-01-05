@@ -53,6 +53,9 @@
 /* This section lists the other files that are included in this file.
 */
 
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
 
 <#assign TC_CTRLBSET_VAL = "">
@@ -141,7 +144,7 @@
 // *****************************************************************************
 
 <#if TC_COMPARE_INTERRUPT_MODE = true>
-TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+static TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -169,16 +172,16 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
                                 ${TC_CTRLA_ONDEMAND?then('| TC_CTRLA_ONDEMAND_Msk', '')};</@compress>
 
     /* Configure waveform generation mode */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_WAVE = TC_WAVE_WAVEGEN_${TC_COMPARE_WAVE_WAVEGEN};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_WAVE = (uint8_t)TC_WAVE_WAVEGEN_${TC_COMPARE_WAVE_WAVEGEN};
 
     <#if TC_CTRLBSET_VAL?has_content>
     /* Configure timer one shot mode & direction */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = ${TC_CTRLBSET_VAL};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = (uint8_t)(${TC_CTRLBSET_VAL});
     </#if>
 
     <#if TC_DRVCTRL_VAL?has_content>
     /* Configure timer one shot mode & direction */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_DRVCTRL = ${TC_DRVCTRL_VAL};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_DRVCTRL = (uint8_t)(${TC_DRVCTRL_VAL});
     </#if>
     <#if TC_CTRLA_MODE == "COUNT8" && (TC_COMPARE_WAVE_WAVEGEN == "NFRQ" || TC_COMPARE_WAVE_WAVEGEN == "NPWM")>
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER = ${TC_COMPARE_PERIOD}U;
@@ -189,18 +192,18 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
     </#if>
 
     /* Clear all interrupt flags */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
 
     <#if TC_COMPARE_INTERRUPT_MODE = true>
     /* Enable period Interrupt */
     ${TC_INSTANCE_NAME}_CallbackObject.callback = NULL;
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = ${TC_INTENSET_VAL};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = (uint8_t)(${TC_INTENSET_VAL});
     </#if>
 
     <#if TC_EVCTRL_VAL?has_content>
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = ${TC_EVCTRL_VAL};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = (uint8_t)(${TC_EVCTRL_VAL});
     </#if>
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -241,8 +244,8 @@ uint32_t ${TC_INSTANCE_NAME}_CompareFrequencyGet( void )
 
 void ${TC_INSTANCE_NAME}_CompareCommandSet(TC_COMMAND command)
 {
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = command << TC_CTRLBSET_CMD_Pos;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = (uint8_t)((uint32_t)command << TC_CTRLBSET_CMD_Pos);
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
     }    
@@ -253,14 +256,14 @@ void ${TC_INSTANCE_NAME}_CompareCommandSet(TC_COMMAND command)
 uint8_t ${TC_INSTANCE_NAME}_Compare8bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= TC_CTRLBSET_CMD_READSYNC;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= (uint8_t)TC_CTRLBSET_CMD_READSYNC;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CTRLB_Msk) == TC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for Write Synchronization */
     }
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0U)
     {
         /* Wait for CMD to become zero */
     }
@@ -295,7 +298,7 @@ bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
     <#else>
     /* Configure period value */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER = period;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
     }    
@@ -314,7 +317,7 @@ uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
 /* Read period value */
 uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
 {
-    return 0xFF;
+    return 0xFFU;
 }
 </#if>
 
@@ -370,14 +373,14 @@ bool ${TC_INSTANCE_NAME}_Compare8bitMatch1Set( uint8_t compareValue )
 uint16_t ${TC_INSTANCE_NAME}_Compare16bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= TC_CTRLBSET_CMD_READSYNC;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= (uint8_t)TC_CTRLBSET_CMD_READSYNC;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CTRLB_Msk) == TC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for Write Synchronization */
     }
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0U)
     {
         /* Wait for CMD to become zero */
     }
@@ -432,7 +435,7 @@ uint16_t ${TC_INSTANCE_NAME}_Compare16bitPeriodGet( void )
 uint16_t ${TC_INSTANCE_NAME}_Compare16bitPeriodGet( void )
 {
     /* Get period value */
-    return 0xFFFF;
+    return 0xFFFFU;
 }
 </#if>
 
@@ -488,14 +491,14 @@ bool ${TC_INSTANCE_NAME}_Compare16bitMatch1Set( uint16_t compareValue )
 uint32_t ${TC_INSTANCE_NAME}_Compare32bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= TC_CTRLBSET_CMD_READSYNC;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= (uint8_t)TC_CTRLBSET_CMD_READSYNC;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CTRLB_Msk) == TC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for Write Synchronization */
     }
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0U)
     {
         /* Wait for CMD to become zero */
     }
@@ -550,7 +553,7 @@ uint32_t ${TC_INSTANCE_NAME}_Compare32bitPeriodGet( void )
 uint32_t ${TC_INSTANCE_NAME}_Compare32bitPeriodGet( void )
 {
     /* Get period value */
-    return 0xFFFFFFFF;
+    return 0xFFFFFFFFU;
 }
 </#if>
 
@@ -617,12 +620,12 @@ void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, 
 /* Compare match interrupt handler */
 void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
 {
-    if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0)
+    if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0U)
     {
         TC_COMPARE_STATUS status;
         status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
         /* clear period interrupt */
-        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
         if((status != TC_COMPARE_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
         {
             ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
@@ -637,7 +640,7 @@ TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CompareStatusGet( void )
     TC_COMPARE_STATUS compare_status;
     compare_status = ((TC_COMPARE_STATUS)(${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG));
     /* Clear timer overflow interrupt */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = compare_status;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)compare_status;
     return compare_status;
 }
 </#if>
