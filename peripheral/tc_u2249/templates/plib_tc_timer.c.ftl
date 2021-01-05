@@ -53,6 +53,9 @@
 /* This section lists the other files that are included in this file.
 */
 
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
 
 <#assign TC_INTENSET_VAL = "">
@@ -95,7 +98,7 @@
 // *****************************************************************************
 
 <#if TC_TIMER_INTENSET_OVF = true || TC_TIMER_INTENSET_MC1 == true>
-TC_TIMER_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+static TC_TIMER_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -124,31 +127,31 @@ void ${TC_INSTANCE_NAME}_TimerInitialize( void )
                                 ${TC_CTRLA_ONDEMAND?then('| TC_CTRLA_ONDEMAND_Msk', '')};</@compress>
 
     /* Configure in Match Frequency Mode */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_WAVE = TC_WAVE_WAVEGEN_MPWM;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_WAVE = (uint8_t)TC_WAVE_WAVEGEN_MPWM;
 
 <#if TC_TIMER_CTRLBSET_ONESHOT == true>
     /* Configure timer one shot mode */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = TC_CTRLBSET_ONESHOT_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = (uint8_t)TC_CTRLBSET_ONESHOT_Msk;
 </#if>
     /* Configure timer period */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0U] = ${TC_TIMER_PERIOD}U;
 
     /* Clear all interrupt flags */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
 
 <#if TC_TIMER_INTENSET_OVF = true || TC_TIMER_INTENSET_MC1 == true>
     ${TC_INSTANCE_NAME}_CallbackObject.callback = NULL;
     /* Enable interrupt*/
     <#if TC_INTENSET_VAL?has_content>
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = ${TC_INTENSET_VAL};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = (uint8_t)(${TC_INTENSET_VAL});
     </#if>
 </#if>
 
 <#if TC_EVCTRL_VAL?has_content>
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = ${TC_EVCTRL_VAL};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = (uint8_t)(${TC_EVCTRL_VAL});
 </#if>
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -184,13 +187,13 @@ void ${TC_INSTANCE_NAME}_TimerStop( void )
 
 uint32_t ${TC_INSTANCE_NAME}_TimerFrequencyGet( void )
 {
-    return (uint32_t)(${TC_FREQUENCY}UL);
+    return (uint32_t)(${TC_FREQUENCY}U);
 }
 
 void ${TC_INSTANCE_NAME}_TimerCommandSet(TC_COMMAND command)
 {
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = command << TC_CTRLBSET_CMD_Pos;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = (uint8_t)((uint32_t)command << TC_CTRLBSET_CMD_Pos);
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
     }    
@@ -201,14 +204,14 @@ void ${TC_INSTANCE_NAME}_TimerCommandSet(TC_COMMAND command)
 uint8_t ${TC_INSTANCE_NAME}_Timer8bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= TC_CTRLBSET_CMD_READSYNC;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= (uint8_t)TC_CTRLBSET_CMD_READSYNC;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CTRLB_Msk) == TC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for Write Synchronization */
     }
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0U)
     {
         /* Wait for CMD to become zero */
     }
@@ -260,14 +263,14 @@ void ${TC_INSTANCE_NAME}_Timer8bitCompareSet( uint8_t compare )
 uint16_t ${TC_INSTANCE_NAME}_Timer16bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= TC_CTRLBSET_CMD_READSYNC;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= (uint8_t)TC_CTRLBSET_CMD_READSYNC;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CTRLB_Msk) == TC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for Write Synchronization */
     }
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0U)
     {
         /* Wait for CMD to become zero */
     }
@@ -319,14 +322,14 @@ void ${TC_INSTANCE_NAME}_Timer16bitCompareSet( uint16_t compare )
 uint32_t ${TC_INSTANCE_NAME}_Timer32bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= TC_CTRLBSET_CMD_READSYNC;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET |= (uint8_t)TC_CTRLBSET_CMD_READSYNC;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CTRLB_Msk) == TC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for Write Synchronization */
     }
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0U)
     {
         /* Wait for CMD to become zero */
     }
@@ -388,12 +391,12 @@ void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uint
 /* Timer Interrupt handler */
 void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
 {
-    if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0)
+    if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0U)
     {
         TC_TIMER_STATUS status;
         status = (TC_TIMER_STATUS) ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
         /* Clear interrupt flags */
-        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
         if((status != TC_TIMER_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
         {
             ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
@@ -405,9 +408,9 @@ void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
 /* Polling method to check if timer period interrupt flag is set */
 bool ${TC_INSTANCE_NAME}_TimerPeriodHasExpired( void )
 {
-    bool timer_status;
-    timer_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
+    uint8_t timer_status = 0U;
+    timer_status = (uint8_t)((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = timer_status;
-    return timer_status;
+    return (timer_status != 0U);
 }
 </#if>
