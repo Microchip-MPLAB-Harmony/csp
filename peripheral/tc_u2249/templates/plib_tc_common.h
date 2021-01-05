@@ -71,7 +71,7 @@
 // *****************************************************************************
 
 // *****************************************************************************
-/* Convenience macros for TC compare status */
+/* Convenience macros for TC capture status */
 // *****************************************************************************
 
 #define TC_CAPTURE_STATUS_NONE              0U
@@ -94,7 +94,7 @@
 #define TC_CAPTURE_STATUS_INVALID           0xFFFFFFFFU
 
 // *****************************************************************************
-/* Convenience macros for TC capture status */
+/* Convenience macros for TC compare status */
 // *****************************************************************************
 
 #define TC_COMPARE_STATUS_NONE          0U
@@ -111,7 +111,7 @@
 #define TC_COMPARE_STATUS_INVALID       0xFFFFFFFFU
 
 // *****************************************************************************
-/* Convenience macros for TC capture status */
+/* Convenience macros for TC timer status */
 // *****************************************************************************
 
 #define TC_TIMER_STATUS_NONE        0U
