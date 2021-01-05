@@ -52,7 +52,9 @@
 // *****************************************************************************
 /* This section lists the other files that are included in this file.
 */
-
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
@@ -201,7 +203,7 @@
 </#compress>
 
 <#if TC_INTSET_VAL != "">
-TC_CAPTURE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+static TC_CAPTURE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -227,19 +229,19 @@ void ${TC_INSTANCE_NAME}_CaptureInitialize( void )
                                   <#lt>${TC_CTRLA_ONDEMAND?then('| TC_CTRLA_ONDEMAND_Msk', '')};
 
 <#if TC_DRVCTRL_VAL?has_content>
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_DRVCTRL = ${TC_DRVCTRL_VAL};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_DRVCTRL = (uint8_t)(${TC_DRVCTRL_VAL});
 </#if>
 
 <#if TC_EVCTRL_VAL?has_content>
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = ${TC_EVCTRL_VAL};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = (uint8_t)(${TC_EVCTRL_VAL});
 </#if>
 
     /* Clear all interrupt flags */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
 
 <#if TC_INTSET_VAL != "">
     /* Enable Interrupt */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = ${TC_INTSET_VAL};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = (uint8_t)(${TC_INTSET_VAL});
     ${TC_INSTANCE_NAME}_CallbackObject.callback = NULL;
 </#if>
 }
@@ -269,13 +271,13 @@ void ${TC_INSTANCE_NAME}_CaptureStop( void )
 
 uint32_t ${TC_INSTANCE_NAME}_CaptureFrequencyGet( void )
 {
-    return (uint32_t)(${TC_FREQUENCY}UL);
+    return (uint32_t)(${TC_FREQUENCY}U);
 }
 
 void ${TC_INSTANCE_NAME}_CaptureCommandSet(TC_COMMAND command)
 {
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = command << TC_CTRLBSET_CMD_Pos;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = (uint8_t)((uint32_t)command << TC_CTRLBSET_CMD_Pos);
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
     }    
@@ -326,12 +328,12 @@ void ${TC_INSTANCE_NAME}_CaptureCallbackRegister( TC_CAPTURE_CALLBACK callback, 
 
 void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
 {
-    if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0)
+    if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0U)
     {
         TC_CAPTURE_STATUS status;
         status = (TC_CAPTURE_STATUS) (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG);
         /* Clear all interrupts */
-        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
 
         if((status != TC_CAPTURE_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
         {
@@ -346,7 +348,7 @@ TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CaptureStatusGet(void)
 {
     TC_CAPTURE_STATUS capture_status;
     capture_status = (TC_CAPTURE_STATUS) ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_CAPTURE_STATUS_MSK);
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = capture_status;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)capture_status;
     return capture_status;
 }
 </#if>
