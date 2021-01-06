@@ -54,10 +54,11 @@
 */
 
 #include "device.h"
-#include "plib_${SDADC_INSTANCE_NAME?lower_case}.h"
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
+#include "plib_${SDADC_INSTANCE_NAME?lower_case}.h"
+
 <#compress>
 <#assign SDADC_SEQCTRL_VAL = "">
 <#assign SDADC_INTERRUPT_MODE = false>
@@ -70,9 +71,9 @@
         <#assign SDADC_SEQCTRL = "SDADC_SEQCTRL_SEQ" + i>
         <#if .vars[SDADC_SEQCTRL] == true>
             <#if SDADC_SEQCTRL_VAL != "">
-                <#assign SDADC_SEQCTRL_VAL = SDADC_SEQCTRL_VAL + " | " + "SDADC_SEQCTRL_SEQEN(1U << " + i +")">
+                <#assign SDADC_SEQCTRL_VAL = SDADC_SEQCTRL_VAL + " | " + "SDADC_SEQCTRL_SEQEN(1UL << " + i +"U)">
             <#else>
-                <#assign SDADC_SEQCTRL_VAL = "SDADC_SEQCTRL_SEQEN(1U << " + i +")">
+                <#assign SDADC_SEQCTRL_VAL = "SDADC_SEQCTRL_SEQEN(1UL << " + i +"U)">
             </#if>
         </#if>
     </#list>
@@ -150,7 +151,7 @@
 // *****************************************************************************
 
 <#if SDADC_INTERRUPT_MODE == true>
-SDADC_CALLBACK_OBJECT ${SDADC_INSTANCE_NAME}_CallbackObj;
+static SDADC_CALLBACK_OBJECT ${SDADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -162,7 +163,7 @@ SDADC_CALLBACK_OBJECT ${SDADC_INSTANCE_NAME}_CallbackObj;
 void ${SDADC_INSTANCE_NAME}_Initialize( void )
 {
     /* Software Reset */
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA = SDADC_CTRLA_SWRST_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA = (uint8_t)SDADC_CTRLA_SWRST_Msk;
 
     while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_SWRST_Msk) == SDADC_SYNCBUSY_SWRST_Msk)
     {
@@ -170,54 +171,54 @@ void ${SDADC_INSTANCE_NAME}_Initialize( void )
     }
 
     /* Set prescaler, over sampling ratio and skip count */
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLB = SDADC_CTRLB_PRESCALER_${SDADC_CTRLB_PRESCALER} | SDADC_CTRLB_OSR_${SDADC_CTRLB_OSR} | SDADC_CTRLB_SKPCNT(2U);
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLB = (uint16_t)(SDADC_CTRLB_PRESCALER_${SDADC_CTRLB_PRESCALER} | SDADC_CTRLB_OSR_${SDADC_CTRLB_OSR} | SDADC_CTRLB_SKPCNT(2UL));
 
     /* Configure reference voltage */
     <#if SDADC_REFCTRL_REFSEL == "INTREF" || SDADC_REFCTRL_REFSEL == "DAC">
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_REFCTRL = SDADC_REFCTRL_REFSEL_${SDADC_REFCTRL_REFSEL} | SDADC_REFCTRL_ONREFBUF_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_REFCTRL = (uint8_t)(SDADC_REFCTRL_REFSEL_${SDADC_REFCTRL_REFSEL} | SDADC_REFCTRL_ONREFBUF_Msk);
     <#else>
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_REFCTRL = SDADC_REFCTRL_REFSEL_${SDADC_REFCTRL_REFSEL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_REFCTRL = (uint8_t)SDADC_REFCTRL_REFSEL_${SDADC_REFCTRL_REFSEL};
     </#if>
 
     <#if SDADC_TRIGGER == "0">
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLC = SDADC_CTRLC_FREERUN_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLC = (uint8_t)SDADC_CTRLC_FREERUN_Msk;
     </#if>
     <#if SDADC_SEQCTRL_VAL?has_content>
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_SEQCTRL = ${SDADC_SEQCTRL_VAL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_SEQCTRL = ${SDADC_SEQCTRL_VAL}U;
     </#if>
     <#if SDADC_AUTO_SEQUENCE == false>
     /* Configure positive and negative input pins */
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INPUTCTRL = SDADC_INPUTCTRL_MUXSEL_${SDADC_INPUTCTRL_MUXSEL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INPUTCTRL = (uint8_t)SDADC_INPUTCTRL_MUXSEL_${SDADC_INPUTCTRL_MUXSEL};
     </#if>
     <#if SDADC_WINCTRL_WINMODE != "0">
     /* Window monitor configurations */
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINCTRL = SDADC_WINCTRL_WINMODE(${SDADC_WINCTRL_WINMODE});
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINLT = (int16_t)(${SDADC_WINLT}) << 8;
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINUT = (int16_t)(${SDADC_WINUT}) << 8;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINCTRL = (uint8_t)SDADC_WINCTRL_WINMODE(${SDADC_WINCTRL_WINMODE}UL);
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINLT = ${SDADC_WINLT}UL << 8U;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINUT = ${SDADC_WINUT}UL << 8U;
     </#if>
 
     /* Clear all interrupts */
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = (uint8_t)SDADC_INTFLAG_Msk;
 
 <#if SDADC_INTENSET_VAL?has_content>
     /* Enable interrupt */
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTENSET = ${SDADC_INTENSET_VAL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTENSET = (uint8_t)(${SDADC_INTENSET_VAL});
     ${SDADC_INSTANCE_NAME}_CallbackObj.callback = NULL;
 </#if>
 
 <#if SDADC_EVCTRL_VAL?has_content>
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_EVCTRL = ${SDADC_EVCTRL_VAL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_EVCTRL = (uint8_t)(${SDADC_EVCTRL_VAL});
 </#if>
 
 <#if SDADC_CTRLA_VAL?has_content>
    /* Configure Run in standby, On demand property */
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA |= ${SDADC_CTRLA_VAL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA |= (uint8_t)(${SDADC_CTRLA_VAL});
 </#if>
 
     /* Enable SDADC */
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA |= SDADC_CTRLA_ENABLE_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA |= (uint8_t)SDADC_CTRLA_ENABLE_Msk;
 
-    while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY))
+    while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY) != 0U)
     {
         /* Wait for synchronization */
     }
@@ -225,7 +226,7 @@ void ${SDADC_INSTANCE_NAME}_Initialize( void )
 
 void ${SDADC_INSTANCE_NAME}_Enable( void )
 {
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA |= SDADC_CTRLA_ENABLE_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA |= (uint8_t)SDADC_CTRLA_ENABLE_Msk;
     while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_ENABLE_Msk) == SDADC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for synchronization */
@@ -234,7 +235,7 @@ void ${SDADC_INSTANCE_NAME}_Enable( void )
 
 void ${SDADC_INSTANCE_NAME}_Disable( void )
 {
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA &= ~SDADC_CTRLA_ENABLE_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA &= (uint8_t)(~SDADC_CTRLA_ENABLE_Msk);
     while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_ENABLE_Msk) == SDADC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for synchronization */
@@ -245,7 +246,7 @@ void ${SDADC_INSTANCE_NAME}_Disable( void )
 void ${SDADC_INSTANCE_NAME}_ConversionStart( void )
 {
     /* Start conversion */
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_SWTRIG = SDADC_SWTRIG_START_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_SWTRIG = (uint8_t)SDADC_SWTRIG_START_Msk;
 
     while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_SWTRIG_Msk) == SDADC_SYNCBUSY_SWTRIG_Msk)
     {
@@ -257,7 +258,8 @@ void ${SDADC_INSTANCE_NAME}_ConversionStart( void )
 int16_t ${SDADC_INSTANCE_NAME}_ConversionResultGet( void )
 {
     /* right-shift by 8-bits to get signed 16-bit result */
-    return ((int16_t)(${SDADC_INSTANCE_NAME}_REGS->SDADC_RESULT >> 8));
+    uint32_t result = SDADC_REGS->SDADC_RESULT >> 8U;
+    return ((int16_t)result);
 }
 
 <#if SDADC_AUTO_SEQUENCE == true>
@@ -276,9 +278,9 @@ bool ${SDADC_INSTANCE_NAME}_ConversionSequenceIsFinished(void)
 void ${SDADC_INSTANCE_NAME}_ComparisonWindowSet(int16_t low_threshold, int16_t high_threshold)
 {
     /* Update threshold values as 24-bit signed value */
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINLT = low_threshold << 8;
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINUT = high_threshold << 8;
-    while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY))
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINLT = ((uint32_t)low_threshold << 8U);
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINUT = ((uint32_t)high_threshold << 8U);
+    while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY) != 0U)
     {
         /* Wait for synchronization */
     }
@@ -296,10 +298,10 @@ void ${SDADC_INSTANCE_NAME}_CallbackRegister( SDADC_CALLBACK callback, uintptr_t
 
 void ${SDADC_INSTANCE_NAME}_InterruptHandler( void )
 {
-    volatile SDADC_STATUS status;
+    SDADC_STATUS status;
     status = ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG;
     /* Clear interrupt flags */
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = (uint8_t)SDADC_INTFLAG_Msk;
 
     if (${SDADC_INSTANCE_NAME}_CallbackObj.callback != NULL)
     {
@@ -313,10 +315,10 @@ void ${SDADC_INSTANCE_NAME}_InterruptHandler( void )
 bool ${SDADC_INSTANCE_NAME}_ConversionResultIsReady( void )
 {
     bool status;
-    status = (bool)((${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk) >> SDADC_INTFLAG_RESRDY_Pos);
-    if (status == true)
+    status = (((${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk) >> SDADC_INTFLAG_RESRDY_Pos) != 0U);
+    if (status)
     {
-        ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_RESRDY_Msk;
+        ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = (uint8_t)SDADC_INTFLAG_RESRDY_Msk;
     }
     return status;
 }
@@ -326,10 +328,10 @@ bool ${SDADC_INSTANCE_NAME}_ConversionResultIsReady( void )
 bool ${SDADC_INSTANCE_NAME}_WindowMonitorIsSet( void )
 {
     bool status;
-    status =  (bool)((${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_WINMON_Msk) >> SDADC_INTFLAG_WINMON_Pos);
+    status =  (((${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_WINMON_Msk) >> SDADC_INTFLAG_WINMON_Pos) != 0U);
     if (status == true)
     {
-        ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_WINMON_Msk;
+        ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = (uint8_t)SDADC_INTFLAG_WINMON_Msk;
     }
     return status;
 }
