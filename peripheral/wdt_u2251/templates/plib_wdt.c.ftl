@@ -47,6 +47,9 @@
 // *****************************************************************************
 
 #include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if WDT_EW_ENABLE = true>
 WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;

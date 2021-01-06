@@ -43,6 +43,9 @@
 
 #include "plib_${QSPI_INSTANCE_NAME?lower_case}_spi.h"
 #include "string.h" // memmove
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 qspi_spi_obj qspiObj;
 

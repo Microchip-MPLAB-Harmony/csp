@@ -45,6 +45,9 @@
 // DOM-IGNORE-END
 #include "device.h"
 #include "plib_${AC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 <#assign AC_WINCTRL_VAL = "">
 <#assign AC_EVCTRL_VAL = "">
 <#assign AC_INTENSET_VAL = "">

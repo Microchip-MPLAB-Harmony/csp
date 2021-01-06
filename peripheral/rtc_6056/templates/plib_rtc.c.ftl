@@ -40,6 +40,9 @@
 
 #include "device.h"
 #include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if rtcEnableInterrupt == true>
 RTC_OBJECT rtc;

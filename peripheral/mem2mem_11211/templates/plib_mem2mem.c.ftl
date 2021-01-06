@@ -48,6 +48,9 @@ Description:
 
 #include "device.h"
 #include "plib_${MEM2MEM_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************

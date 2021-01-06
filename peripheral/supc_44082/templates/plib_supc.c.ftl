@@ -25,6 +25,9 @@
 
 #include "device.h"
 #include "plib_${SUPC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 void ${SUPC_INSTANCE_NAME}_Initialize (void)
 {

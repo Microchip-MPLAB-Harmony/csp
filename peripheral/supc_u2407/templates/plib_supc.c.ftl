@@ -55,6 +55,9 @@
 
 #include "device.h"
 #include "plib_${SUPC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 <#assign SUPC_BKOUT_VAL = "">
 <#assign SUPC_VREF_SEL_VAL = "">
 <#assign SUPC_VREF_VAL = "">

@@ -44,6 +44,9 @@
 #include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 #include <stdlib.h>
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if ( RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0" ) ||
      ( RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ) >

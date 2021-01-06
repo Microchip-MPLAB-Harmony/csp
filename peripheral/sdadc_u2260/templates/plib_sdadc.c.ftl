@@ -55,6 +55,9 @@
 
 #include "device.h"
 #include "plib_${SDADC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 <#compress>
 <#assign SDADC_SEQCTRL_VAL = "">
 <#assign SDADC_INTERRUPT_MODE = false>

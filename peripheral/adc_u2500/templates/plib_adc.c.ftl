@@ -54,6 +54,9 @@
 */
 
 #include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 <#compress>
 <#assign DSEQCTRL_0_BIT =  "ADC_DSEQCTRL_INPUTCTRL_Msk">
 <#assign DSEQCTRL_1_BIT =  "ADC_DSEQCTRL_CTRLB_Msk">

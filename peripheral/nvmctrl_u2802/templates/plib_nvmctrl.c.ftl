@@ -49,6 +49,9 @@
 
 #include <string.h>
 #include "plib_${NVMCTRL_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#assign NVMCTRL_REG_NAME = NVMCTRL_INSTANCE_NAME>
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">

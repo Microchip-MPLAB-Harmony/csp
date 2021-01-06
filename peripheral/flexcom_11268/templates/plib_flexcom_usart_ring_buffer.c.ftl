@@ -49,6 +49,9 @@
 // *****************************************************************************
 
 #include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_${FLEXCOM_MODE?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define ${FLEXCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE             ${USART_RX_RING_BUFFER_SIZE}
 #define ${FLEXCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE_9BIT        (${USART_RX_RING_BUFFER_SIZE} >> 1)

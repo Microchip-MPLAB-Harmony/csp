@@ -40,6 +40,9 @@
 
 #include "device.h"
 #include "plib_${RSWDT_INSTANCE_NAME?lower_case}.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if rswdtinterruptMode == true>
 	<#lt>RSWDT_OBJECT rswdt;

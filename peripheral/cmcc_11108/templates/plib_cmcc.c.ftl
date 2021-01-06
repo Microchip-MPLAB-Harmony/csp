@@ -42,6 +42,9 @@
 
 #include "device.h"
 #include "peripheral/cmcc/plib_cmcc.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 void ${CMCC_INSTANCE_NAME}_Disable (void )
 {

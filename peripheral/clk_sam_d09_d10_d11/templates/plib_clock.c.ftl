@@ -48,6 +48,9 @@
 
 #include "plib_clock.h"
 #include "device.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
 SYSCTRL_CALLBACK_OBJECT SYSCTRL_CallbackObj;

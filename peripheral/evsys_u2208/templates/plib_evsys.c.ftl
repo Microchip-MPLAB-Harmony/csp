@@ -39,6 +39,9 @@
 *******************************************************************************/
 
 #include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
 <#assign CONFIGURED_CHANNEL = 0>

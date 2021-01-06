@@ -41,6 +41,9 @@
 <#macro GenerateCode>
 #include "device.h"
 #include "plib_${TRNG_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if trngEnableInterrupt == true>
 	<#lt>TRNG_OBJECT trng;

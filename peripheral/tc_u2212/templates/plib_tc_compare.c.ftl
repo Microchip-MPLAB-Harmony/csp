@@ -54,6 +54,9 @@
 */
 
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#assign TC_CTRLBSET_VAL = "">
 <#assign TC_CTRLC_VAL = "">

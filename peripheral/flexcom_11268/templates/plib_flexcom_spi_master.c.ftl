@@ -46,6 +46,9 @@
 // DOM-IGNORE-END
 
 #include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi_master.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************

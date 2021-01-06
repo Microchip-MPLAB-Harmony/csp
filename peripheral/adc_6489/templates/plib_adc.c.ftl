@@ -42,6 +42,9 @@
 
 #include "device.h"
 #include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define ADC_SEQ1_CHANNEL_NUM (8U)
 

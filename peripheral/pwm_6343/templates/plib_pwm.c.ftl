@@ -53,6 +53,9 @@
 */
 #include "device.h"
 #include "plib_${PWM_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#compress>
 <#assign PWM_FPE_VAL = "">

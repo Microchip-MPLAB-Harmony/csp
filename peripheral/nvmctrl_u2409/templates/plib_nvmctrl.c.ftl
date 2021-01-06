@@ -49,6 +49,9 @@
 
 #include <string.h>
 #include "plib_${NVMCTRL_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 static volatile uint16_t nvm_error;
 static uint16_t nvm_status;

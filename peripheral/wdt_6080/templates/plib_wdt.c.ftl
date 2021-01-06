@@ -40,6 +40,9 @@
 
 #include "device.h"
 #include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 <#if WDT_CR_LOCKMR??>
 
 #define WDT_CLK_DELAY  ((3 * ${CPU_CLOCK_FREQUENCY}) / 32768)

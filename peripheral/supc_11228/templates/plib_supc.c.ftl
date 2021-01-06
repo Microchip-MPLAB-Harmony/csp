@@ -47,6 +47,9 @@
 #include "plib_${SUPC_INSTANCE_NAME?lower_case}.h"
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/efc/plib_efc.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if SUPC_WUMR>
 <#compress>

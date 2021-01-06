@@ -40,6 +40,9 @@
 
 #include "plib_clock.h"
 #include "device.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if CONFIG_CLOCK_XOSC_CFDEN == true>
 

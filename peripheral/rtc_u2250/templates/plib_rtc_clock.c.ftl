@@ -51,6 +51,9 @@
 
 #include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
 #include <stdlib.h>
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 /* Reference Year */
 #define REFERENCE_YEAR              (${RTC_MODE2_REFERENCE_YEAR}U)

@@ -55,6 +55,9 @@
 #include "peripheral/${PLIB_NAME_LC}/plib_${PLIB_NAME_LC}.h"
 </#if>
 #include <string.h>
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
 #define ${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE            ${FLEXCOM_SPIS_RX_BUFFER_SIZE}

@@ -43,6 +43,9 @@ It allows user to Program, Erase and lock the on-chip FLASH memory.
 #include <string.h>
 #include "device.h"
 #include "plib_${HEFC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 static uint32_t status = 0;
 

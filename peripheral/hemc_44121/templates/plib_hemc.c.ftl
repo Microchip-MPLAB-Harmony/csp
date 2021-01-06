@@ -38,7 +38,9 @@
 #include <string.h>
 #include "device.h"
 #include "plib_${HEMC_INSTANCE_NAME?lower_case}.h"
-
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************

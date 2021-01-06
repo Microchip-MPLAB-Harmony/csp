@@ -40,6 +40,9 @@
 
 #include "device.h"
 #include "plib_${DMA_INSTANCE_NAME?lower_case}.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 /* Macro for limiting XDMAC objects to highest channel enabled */
 #define XDMAC_ACTIVE_CHANNELS_MAX ${XDMAC_HIGHEST_CHANNEL}

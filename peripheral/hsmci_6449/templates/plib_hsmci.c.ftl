@@ -41,6 +41,9 @@
 #include "device.h"
 #include "plib_${HSMCI_INSTANCE_NAME?lower_case}.h"
 #include "peripheral/xdmac/plib_${XDMAC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL      ${HSMCI_DMA}
 

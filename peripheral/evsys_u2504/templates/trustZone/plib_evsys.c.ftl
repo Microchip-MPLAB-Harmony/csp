@@ -39,7 +39,9 @@
 *******************************************************************************/
 
 #include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
-
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#assign EVSYS_REG_NAME = EVSYS_INSTANCE_NAME>
 

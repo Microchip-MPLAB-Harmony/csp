@@ -41,6 +41,9 @@
 #include "plib_${SUPC_INSTANCE_NAME?lower_case}.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/efc/plib_efc.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 static void WaitEntryClockSetup (bool xtal_disable);
 

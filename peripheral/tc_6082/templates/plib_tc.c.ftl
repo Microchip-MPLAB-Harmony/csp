@@ -53,6 +53,9 @@
 */
 #include "device.h"
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 <#compress>
 <#assign TC_UNSIGNED_INT_TYPE = "uint16_t">
 <#assign TC_SIGNED_INT_TYPE = "int16_t">
