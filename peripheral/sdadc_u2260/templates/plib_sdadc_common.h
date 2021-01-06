@@ -63,18 +63,25 @@ extern "C" {
 
 // *****************************************************************************
 // *****************************************************************************
+// Section:Preprocessor macros
+// *****************************************************************************
+// *****************************************************************************
+// *****************************************************************************
+
+// *****************************************************************************
+/* Convenience macros for SDADC status */
+// *****************************************************************************
+#define SDADC_STATUS_RESRDY   SDADC_INTFLAG_RESRDY_Msk
+#define SDADC_STATUS_OVERRUN  SDADC_INTFLAG_OVERRUN_Msk
+#define SDADC_STATUS_WINMON   SDADC_INTFLAG_WINMON_Msk
+#define SDADC_STATUS_INVALID  0xFFFFFFFFU
+// *****************************************************************************
+// *****************************************************************************
 // Section: Global data
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum
-{
-    SDADC_STATUS_RESRDY = SDADC_INTFLAG_RESRDY_Msk,
-    SDADC_STATUS_OVERRUN = SDADC_INTFLAG_OVERRUN_Msk,
-    SDADC_STATUS_WINMON = SDADC_INTFLAG_WINMON_Msk,
-    /* Force compiler to reserve 32-bit memory for this enum */
-    SDADC_STATUS_INVALID = 0xFFFFFFFF
-}SDADC_STATUS;
+typedef uint32_t SDADC_STATUS;
 
 typedef void (*SDADC_CALLBACK)( SDADC_STATUS status, uintptr_t context);
 
