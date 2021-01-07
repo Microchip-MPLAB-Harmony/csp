@@ -24,11 +24,14 @@
 def instantiateComponent(dfpComponent):
 
     from os import listdir
+    from os import path
     import xml.etree.ElementTree as ET
 
     configName =    Variables.get( "__CONFIGURATION_NAME" )
 
     MCC_HEADERS_SUBPATH = "/include"
+
+    instanceDir = path.normpath(path.join(Variables.get("__DFP_PACK_DIR"), "include", "instance"))
 
     dfpDevice = dfpComponent.createCommentSymbol("dfpDevice", None)
     dfpDevice.setLabel("Device: " + Variables.get("__PROCESSOR"))
@@ -83,6 +86,20 @@ def instantiateComponent(dfpComponent):
             headerFile.setDestPath("../../packs/" + processorName + "_DFP/component/")
             headerFile.setProjectPath("packs/" + processorName + "_DFP/component/")
             headerFile.setType("HEADER")
+        
+        if path.isdir(instanceDir):
+            for headerFileName in listdir(instanceDir):
+                szSymbol = "PART_PERIPH_{}_INSTANCE".format(headerFileName[:-2].upper())
+                headerFile = dfpComponent.createFileSymbol(szSymbol, None)
+                headerFile.setRelative(False)
+                headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/instance/" + headerFileName)
+                headerFile.setOutputName(headerFileName)
+                headerFile.setMarkup(False)
+                headerFile.setOverwrite(True)
+                headerFile.setDestPath("../../packs/" + processorName + "_DFP/instance/")
+                headerFile.setProjectPath("packs/" + processorName + "_DFP/instance/")
+                headerFile.setType("HEADER")
+
 
         headerFile = dfpComponent.createFileSymbol("PART_MAIN_DEFS", None)
         headerFile.setRelative(False)
@@ -130,6 +147,19 @@ def instantiateComponent(dfpComponent):
                 headerFile.setProjectPath("packs/" + processorName + "_DFP/component/")
                 headerFile.setType("HEADER")
                 headerFile.setSecurity("SECURE")
+
+            if path.isdir(instanceDir):
+                for headerFileName in listdir(instanceDir):
+                    szSymbol = "secure_" + "PART_PERIPH_{}_INSTANCE".format(headerFileName[:-2].upper())
+                    headerFile = dfpComponent.createFileSymbol(szSymbol, None)
+                    headerFile.setRelative(False)
+                    headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/instance/" + headerFileName)
+                    headerFile.setOutputName(headerFileName)
+                    headerFile.setMarkup(False)
+                    headerFile.setOverwrite(True)
+                    headerFile.setDestPath("../../packs/" + processorName + "_DFP/instance/")
+                    headerFile.setProjectPath("packs/" + processorName + "_DFP/instance/")
+                    headerFile.setType("HEADER")
 
             headerFile = dfpComponent.createFileSymbol("secure_PART_MAIN_DEFS", None)
             headerFile.setRelative(False)
