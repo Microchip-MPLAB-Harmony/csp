@@ -34,7 +34,7 @@ extern void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]} ( void );
         <#assign NVIC_VECTOR_ENABLE = "NVIC_" + i + "_" + "0_ENABLE">
         <#assign NVIC_VECTOR_HANDLER = "NVIC_" + i + "_" + "0_HANDLER">
         <#assign NVIC_VECTOR_NONSECURE = "NVIC_" + i + "_" + "0_SECURITY_TYPE">
-        <#if ([-5,-2]?seq_contains(i)) || ((.vars[NVIC_VECTOR_NONSECURE])?? && (.vars[NVIC_VECTOR_NONSECURE] == "NON-SECURE") && (.vars[NVIC_VECTOR_ENABLE] == false))>
+        <#if ([-5,-2]?seq_contains(i)) || (i == -1 && (.vars[NVIC_VECTOR_ENABLE] == false)) || ((.vars[NVIC_VECTOR_NONSECURE])?? && (.vars[NVIC_VECTOR_NONSECURE] == "NON-SECURE") && (.vars[NVIC_VECTOR_ENABLE] == false))>
         <#if .vars[NVIC_VECTOR]?has_content && (.vars[NVIC_VECTOR] != "None")>
             <#assign handler = .vars[NVIC_VECTOR_HANDLER]>
             <#if !dummyHandlers?seq_contains(handler)>
