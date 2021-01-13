@@ -70,6 +70,33 @@
 
 // *****************************************************************************
 // *****************************************************************************
+// Section:Preprocessor macros
+// *****************************************************************************
+// *****************************************************************************
+
+<#list 0..(RSTC_RCAUSE_LENGTH - 1) as i>
+<#assign resetReason = "RSTC_RCAUSE" + i>
+#define RSTC_RESET_CAUSE_${.vars[resetReason]}_RESET  RSTC_RCAUSE_${.vars[resetReason]}_Msk
+
+</#list>
+
+<#if RSTC_BKUPEXIT_LENGTH??>
+<#list 0..(RSTC_BKUPEXIT_LENGTH - 1) as i>
+<#assign resetBckup = "RSTC_BKUPEXIT" + i>
+#define RSTC_BKUPEXIT_CAUSE_${.vars[resetBckup]}  RSTC_BKUPEXIT_${.vars[resetBckup]}_Msk
+
+</#list>
+</#if>
+
+<#if RSTC_WAKEUP_PIN_NUMBER??>
+<#list 0..(RSTC_WAKEUP_PIN_NUMBER - 1) as i>
+#define RSTC_WAKEUP_CAUSE_${i}  ${i}
+
+</#list>
+</#if>
+
+// *****************************************************************************
+// *****************************************************************************
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
@@ -91,36 +118,13 @@
     Refer to the specific device data sheet to determine availability.
 */
 
-typedef enum
-{
-
-<#list 0..(RSTC_RCAUSE_LENGTH - 1) as i>
-    <#assign resetReason = "RSTC_RCAUSE" + i>
-    RSTC_RESET_CAUSE_${.vars[resetReason]}_RESET = RSTC_RCAUSE_${.vars[resetReason]}_Msk,
-
-</#list>
-} RSTC_RESET_CAUSE;
+typedef uint32_t RSTC_RESET_CAUSE;
 
 <#if RSTC_BKUPEXIT_LENGTH??>
-typedef enum
-{
-
-<#list 0..(RSTC_BKUPEXIT_LENGTH - 1) as i>
-    <#assign resetBckup = "RSTC_BKUPEXIT" + i>
-    RSTC_BKUPEXIT_CAUSE_${.vars[resetBckup]} = RSTC_BKUPEXIT_${.vars[resetBckup]}_Msk,
-
-</#list>
-} RSTC_BKUPEXIT_CAUSE;
+typedef uint32_t RSTC_BKUPEXIT_CAUSE;
 
 <#if RSTC_WAKEUP_PIN_NUMBER??>
-typedef enum
-{
-
-<#list 0..(RSTC_WAKEUP_PIN_NUMBER - 1) as i>
-    RSTC_WAKEUP_CAUSE_${i} = ${i},
-
-</#list>
-} RSTC_WAKEUP_CAUSE;
+typedef uint32_t RSTC_WAKEUP_CAUSE;
 
 void RSTC_Initialize(void);
 
