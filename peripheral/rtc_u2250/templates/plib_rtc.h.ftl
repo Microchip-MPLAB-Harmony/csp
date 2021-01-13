@@ -57,22 +57,54 @@
 extern "C" {
 #endif
 // DOM-IGNORE-END
+// *****************************************************************************
+// *****************************************************************************
+// Section:Preprocessor macros
+// *****************************************************************************
+// *****************************************************************************
+// *****************************************************************************
 
 <#if RTC_MODULE_SELECTION = "MODE0">
     <#lt>/* Frequency of Counter Clock for RTC */
     <#if RTC_MODE0_PRESCALER = "0x0">
-        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY         0
+        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY         0U
     <#else>
-        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY} / (1 << (${RTC_MODE0_PRESCALER} - 1)))
+        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY}U / (1UL << (${RTC_MODE0_PRESCALER}U - 1U)))
     </#if>
 <#elseif RTC_MODULE_SELECTION = "MODE1">
     <#lt>/* Frequency of Counter Clock for RTC */
     <#if RTC_MODE1_PRESCALER = "0x0">
-        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY         0
+        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY         0U
     <#else>
-        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY} / (1 << (${RTC_MODE1_PRESCALER} - 1)))
+        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY}U / (1UL << (${RTC_MODE1_PRESCALER}U - 1U)))
     </#if>
 </#if>
+
+<#if RTC_MODULE_SELECTION = "MODE2">
+    <#lt><#list 0..(RTC_MODE2_INT - 1) as i>
+    <#lt><#assign interruptName = "RTC_MODE2_" + i>
+#define RTC_CLOCK_INT_MASK_${.vars[interruptName]}  RTC_MODE2_INTENSET_${.vars[interruptName]}_Msk
+    <#lt></#list>
+#define RTC_CLOCK_INT_MASK_INVALID  0xFFFFFFFFU
+<#elseif RTC_MODULE_SELECTION = "MODE0">
+    <#lt><#list 0..(RTC_MODE0_INT - 1) as i>
+    <#lt><#assign interruptName = "RTC_MODE0_" + i>
+#define RTC_TIMER32_INT_MASK_${.vars[interruptName]}  RTC_MODE0_INTENSET_${.vars[interruptName]}_Msk
+    <#lt></#list>
+#define RTC_TIMER32_INT_MASK_INVALID 0xFFFFFFFFU
+<#elseif RTC_MODULE_SELECTION = "MODE1">
+    <#lt><#list 0..(RTC_MODE1_INT - 1) as i>
+    <#lt><#assign interruptName = "RTC_MODE1_" + i>
+#define RTC_TIMER16_INT_MASK_${.vars[interruptName]}  RTC_MODE1_INTENSET_${.vars[interruptName]}_Msk
+    <#lt></#list>
+#define RTC_TIMER16_INT_MASK_INVALID 0xFFFFFFFFU
+</#if>
+// *****************************************************************************
+// *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
+// *****************************************************************************
+// *****************************************************************************
 
 <#if RTC_MODE2_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE2" ||
      RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ||
@@ -80,7 +112,7 @@ extern "C" {
     <#if RTC_MODULE_SELECTION = "MODE2">
         <#lt>typedef enum
         <#lt>{
-        <#lt>    RTC_ALARM_MASK_SS = 0x1,    //Alarm every minute
+        <#lt>    RTC_ALARM_MASK_SS = 0x1U,    //Alarm every minute
         <#lt>    RTC_ALARM_MASK_MMSS,        //Alarm every Hour
         <#lt>    RTC_ALARM_MASK_HHMMSS,      //Alarm Every Day
         <#lt>    RTC_ALARM_MASK_DDHHMMSS,    //Alarm Every Month
@@ -88,43 +120,24 @@ extern "C" {
         <#lt>    RTC_ALARM_MASK_YYMMDDHHMMSS //Alarm Once
         <#lt>} RTC_ALARM_MASK;
 
-        <#lt>typedef enum
-        <#lt>{<#list 0..(RTC_MODE2_INT - 1) as i>
-            <#assign interruptName = "RTC_MODE2_" + i>
-                <#lt>    RTC_CLOCK_INT_MASK_${.vars[interruptName]} = RTC_MODE2_INTENSET_${.vars[interruptName]}_Msk,</#list>
-                <#lt>   /* Force the compiler to reserve 32-bit memory for enum */
-                <#lt>    RTC_CLOCK_INT_MASK_INVALID = 0xFFFFFFFF
-        <#lt>} RTC_CLOCK_INT_MASK;
+        <#lt>typedef uint32_t RTC_CLOCK_INT_MASK;
 
     <#elseif RTC_MODULE_SELECTION = "MODE0">
-        <#lt>typedef enum
-        <#lt>{<#list 0..(RTC_MODE0_INT - 1) as i>
-            <#assign interruptName = "RTC_MODE0_" + i>
-                <#lt>    RTC_TIMER32_INT_MASK_${.vars[interruptName]} = RTC_MODE0_INTENSET_${.vars[interruptName]}_Msk,</#list>
-                <#lt>   /* Force the compiler to reserve 32-bit memory for enum */
-                <#lt>    RTC_TIMER32_INT_MASK_INVALID = 0xFFFFFFFF
-        <#lt>} RTC_TIMER32_INT_MASK;
+        <#lt>typedef uint32_t RTC_TIMER32_INT_MASK;
     <#else>
-        <#lt>typedef enum
-        <#lt>{
-        <#list 0..(RTC_MODE1_INT - 1) as i>
-            <#assign interruptName = "RTC_MODE1_" + i>
-                <#lt>    RTC_TIMER16_INT_MASK_${.vars[interruptName]} = RTC_MODE1_INTENSET_${.vars[interruptName]}_Msk,</#list>
-                <#lt>   /* Force the compiler to reserve 32-bit memory for enum */
-                <#lt>    RTC_TIMER16_INT_MASK_INVALID = 0xFFFFFFFF
-        <#lt>} RTC_TIMER16_INT_MASK;
+        <#lt>typedef uint32_t RTC_TIMER16_INT_MASK;
     </#if>
     <#else>
         <#lt>typedef enum
         <#lt>{
-        <#lt>    RTC_PER0_MASK = 0x0001,
-        <#lt>    RTC_PER1_MASK = 0x0002,
-        <#lt>    RTC_PER2_MASK = 0x0004,
-        <#lt>    RTC_PER3_MASK = 0x0008,
-        <#lt>    RTC_PER4_MASK = 0x0010,
-        <#lt>    RTC_PER5_MASK = 0x0020,
-        <#lt>    RTC_PER6_MASK = 0x0040,
-        <#lt>    RTC_PER7_MASK = 0x0080
+        <#lt>    RTC_PER0_MASK = 0x0001U,
+        <#lt>    RTC_PER1_MASK = 0x0002U,
+        <#lt>    RTC_PER2_MASK = 0x0004U,
+        <#lt>    RTC_PER3_MASK = 0x0008U,
+        <#lt>    RTC_PER4_MASK = 0x0010U,
+        <#lt>    RTC_PER5_MASK = 0x0020U,
+        <#lt>    RTC_PER6_MASK = 0x0040U,
+        <#lt>    RTC_PER7_MASK = 0x0080U
         <#lt>} RTC_PERIODIC_INT_MASK;
 </#if>
 <#if TAMP_DETECTION_SUPPORTED??>
@@ -132,23 +145,23 @@ extern "C" {
         <#if RTC_BKUP_SUPPORTED??>
             <#lt>typedef enum
             <#lt>{
-            <#lt>    BACKUP_REGISTER_0 = 0,
-            <#lt>    BACKUP_REGISTER_1 = 1,
-            <#lt>    BACKUP_REGISTER_2 = 2,
-            <#lt>    BACKUP_REGISTER_3 = 3,
-            <#lt>    BACKUP_REGISTER_4 = 4,
-            <#lt>    BACKUP_REGISTER_5 = 5,
-            <#lt>    BACKUP_REGISTER_6 = 6,
-            <#lt>    BACKUP_REGISTER_7 = 7
+            <#lt>    BACKUP_REGISTER_0 = 0U,
+            <#lt>    BACKUP_REGISTER_1 = 1U,
+            <#lt>    BACKUP_REGISTER_2 = 2U,
+            <#lt>    BACKUP_REGISTER_3 = 3U,
+            <#lt>    BACKUP_REGISTER_4 = 4U,
+            <#lt>    BACKUP_REGISTER_5 = 5U,
+            <#lt>    BACKUP_REGISTER_6 = 6U,
+            <#lt>    BACKUP_REGISTER_7 = 7U
             <#lt>} BACKUP_REGISTER;
         </#if>
         <#lt>typedef enum
         <#lt>{
-        <#lt>    TAMPER_CHANNEL_0 = 0,
-        <#lt>    TAMPER_CHANNEL_1 = 1,
-        <#lt>    TAMPER_CHANNEL_2 = 2,
-        <#lt>    TAMPER_CHANNEL_3 = 3,
-        <#lt>    TAMPER_CHANNEL_4 = 4
+        <#lt>    TAMPER_CHANNEL_0 = 0U,
+        <#lt>    TAMPER_CHANNEL_1 = 1U,
+        <#lt>    TAMPER_CHANNEL_2 = 2U,
+        <#lt>    TAMPER_CHANNEL_3 = 3U,
+        <#lt>    TAMPER_CHANNEL_4 = 4U
         <#lt>} TAMPER_CHANNEL;
     </#if>
 </#if>
@@ -219,8 +232,8 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
     </#if>
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32PeriodGet ( void );
     <#if RTC_MODE0_INTERRUPT = true>
-        <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptEnable( RTC_TIMER32_INT_MASK interrupt );
-        <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptDisable( RTC_TIMER32_INT_MASK interrupt );
+        <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptEnable( RTC_TIMER32_INT_MASK interruptMask );
+        <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptDisable( RTC_TIMER32_INT_MASK interruptMask );
     </#if>
 <#elseif RTC_MODULE_SELECTION = "MODE1">
     <#if RTC_MODE1_INTERRUPT = false>
@@ -241,8 +254,8 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
         <#lt>void ${RTC_INSTANCE_NAME}_Timer16Compare${i}Set ( uint16_t comparisionValue );
     </#list>
     <#if RTC_MODE1_INTERRUPT = true>
-        <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptEnable( RTC_TIMER16_INT_MASK interrupt );
-        <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptDisable( RTC_TIMER16_INT_MASK interrupt );
+        <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptEnable( RTC_TIMER16_INT_MASK interruptMask );
+        <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptDisable( RTC_TIMER16_INT_MASK interruptMask );
     </#if>
 <#else>
     <#lt>bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime );
