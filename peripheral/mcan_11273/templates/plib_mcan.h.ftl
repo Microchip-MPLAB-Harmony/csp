@@ -169,6 +169,8 @@ bool ${MCAN_INSTANCE_NAME}_StandardFilterElementGet(uint8_t filterNumber, mcan_s
 bool ${MCAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, mcan_xidfe_registers_t *extMsgIDFilterElement);
 bool ${MCAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, mcan_xidfe_registers_t *extMsgIDFilterElement);
 </#if>
+void ${MCAN_INSTANCE_NAME}_SleepModeEnter(void);
+void ${MCAN_INSTANCE_NAME}_SleepModeExit(void);
 <#if INTERRUPT_MODE == true>
 void ${MCAN_INSTANCE_NAME}_TxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle);
 void ${MCAN_INSTANCE_NAME}_RxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle, MCAN_MSG_RX_ATTRIBUTE msgAttr);

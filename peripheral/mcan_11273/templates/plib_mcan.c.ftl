@@ -403,7 +403,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t*
         fifo->MCAN_TXBE_0 |= MCAN_TXBE_0_RTR_Msk;
     }
 
-    fifo->MCAN_TXBE_1 |= ((++messageMarker << MCAN_TXBE_1_MM_Pos) & MCAN_TXBE_1_MM_Msk);
+    fifo->MCAN_TXBE_1 |= ((++messageMarker << MCAN_TXBE_1_MM_Pos) & MCAN_TXBE_1_MM_Msk) | MCAN_TXBE_1_EFC_Msk;
 <#if INTERRUPT_MODE == true>
 
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE = 1U << tfqpi;
@@ -1156,6 +1156,29 @@ bool ${MCAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, mcan_x
     return true;
 }
 </#if>
+
+void ${MCAN_INSTANCE_NAME}_SleepModeEnter(void)
+{
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |=  MCAN_CCCR_CSR_Msk;
+    while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_CSA_Msk) != MCAN_CCCR_CSA_Msk)
+    {
+        /* Wait for clock stop request to complete */
+    }
+}
+
+void ${MCAN_INSTANCE_NAME}_SleepModeExit(void)
+{
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR &=  ~MCAN_CCCR_CSR_Msk;
+    while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_CSA_Msk) == MCAN_CCCR_CSA_Msk)
+    {
+        /* Wait for no clock stop */
+    }
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR &= ~MCAN_CCCR_INIT_Msk;
+    while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
+    {
+        /* Wait for initialization complete */
+    }
+}
 
 <#if INTERRUPT_MODE == true>
 // *****************************************************************************
