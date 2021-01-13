@@ -49,10 +49,10 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "plib_${FREQM_INSTANCE_NAME?lower_case}.h"
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
+#include "plib_${FREQM_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -69,7 +69,7 @@ typedef struct
 
 } FREQM_OBJECT;
 
-FREQM_OBJECT ${FREQM_INSTANCE_NAME?lower_case}Obj;
+static FREQM_OBJECT ${FREQM_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 // *****************************************************************************
@@ -80,18 +80,20 @@ FREQM_OBJECT ${FREQM_INSTANCE_NAME?lower_case}Obj;
 
 void ${FREQM_INSTANCE_NAME}_Initialize(void)
 {
-    ${FREQM_INSTANCE_NAME}_REGS->FREQM_CFGA = FREQM_CFGA_REFNUM(${FREQM_REF_CLK_CYCLES}) ${FREQM_REF_CLK_DIV?then('| FREQM_CFGA_DIVREF_Msk', '')};
+    ${FREQM_INSTANCE_NAME}_REGS->FREQM_CFGA = (uint16_t)(FREQM_CFGA_REFNUM(${FREQM_REF_CLK_CYCLES}UL) ${FREQM_REF_CLK_DIV?then('| FREQM_CFGA_DIVREF_Msk', '')});
 <#if FREQM_INTERRUPT_MODE == true>
 
     /* Enable DONE Interrupt */
-    ${FREQM_INSTANCE_NAME}_REGS->FREQM_INTENSET = FREQM_INTENSET_DONE_Msk;
+    ${FREQM_INSTANCE_NAME}_REGS->FREQM_INTENSET = (uint8_t)FREQM_INTENSET_DONE_Msk;
 </#if>
 
     /* Enable FREQM */
-    ${FREQM_INSTANCE_NAME}_REGS->FREQM_CTRLA = FREQM_CTRLA_ENABLE_Msk;
+    ${FREQM_INSTANCE_NAME}_REGS->FREQM_CTRLA = (uint8_t)FREQM_CTRLA_ENABLE_Msk;
 
-    /* Wait for Sync */
-    while(${FREQM_INSTANCE_NAME}_REGS->FREQM_SYNCBUSY);
+    while((${FREQM_INSTANCE_NAME}_REGS->FREQM_SYNCBUSY) != 0U)
+    {
+        /* Wait for Sync */
+    }
 }
 
 bool ${FREQM_INSTANCE_NAME}_MeasurementStart(void)
@@ -102,10 +104,10 @@ bool ${FREQM_INSTANCE_NAME}_MeasurementStart(void)
     if((${FREQM_INSTANCE_NAME}_REGS->FREQM_STATUS & FREQM_STATUS_BUSY_Msk) != FREQM_STATUS_BUSY_Msk)
     {
         /* Clear the Done Interrupt flag */
-        ${FREQM_INSTANCE_NAME}_REGS->FREQM_INTFLAG = FREQM_INTFLAG_DONE_Msk;
+        ${FREQM_INSTANCE_NAME}_REGS->FREQM_INTFLAG = (uint8_t)FREQM_INTFLAG_DONE_Msk;
 
         /* Start measurement */
-        ${FREQM_INSTANCE_NAME}_REGS->FREQM_CTRLB = FREQM_CTRLB_START_Msk;
+        ${FREQM_INSTANCE_NAME}_REGS->FREQM_CTRLB = (uint8_t)FREQM_CTRLB_START_Msk;
 
         status = true;
     }
@@ -132,25 +134,19 @@ FREQM_ERROR ${FREQM_INSTANCE_NAME}_ErrorGet(void)
     errorStatus = (FREQM_ERROR) (${FREQM_INSTANCE_NAME}_REGS->FREQM_STATUS & FREQM_STATUS_OVF_Msk);
 
     /* Clear overflow status */
-    ${FREQM_INSTANCE_NAME}_REGS->FREQM_STATUS = FREQM_STATUS_OVF_Msk;
+    ${FREQM_INSTANCE_NAME}_REGS->FREQM_STATUS = (uint8_t)FREQM_STATUS_OVF_Msk;
 
     return errorStatus;
 }
 
 static uint64_t ${FREQM_INSTANCE_NAME}_Mul32x32(uint32_t r0, uint32_t r1)
 {
-    uint16_t r0h = r0 >> 16, r0l = r0 & 0xFFFF;
-    uint16_t r1h = r1 >> 16, r1l = r1 & 0xFFFF;
-
-    return ((uint64_t)(r0h * r1h) << 32)
-         + ((uint64_t)(r0h * r1l) << 16)
-         + ((uint64_t)(r0l * r1h) << 16)
-         + ((uint64_t)(r0l * r1l) << 0);
+    return (r0 * (uint64_t)r1);
 }
 
 uint32_t ${FREQM_INSTANCE_NAME}_FrequencyGet(void)
 {
-    uint64_t result = 0;
+    uint64_t result = 0U;
 
     result = ${FREQM_INSTANCE_NAME}_Mul32x32(${FREQM_INSTANCE_NAME}_REGS->FREQM_VALUE, ${FREQM_REF_CLOCK_FREQUENCY}UL);
 
@@ -169,7 +165,7 @@ void ${FREQM_INSTANCE_NAME}_CallbackRegister(FREQM_CALLBACK freqmCallback, uintp
 
 void ${FREQM_INSTANCE_NAME}_InterruptHandler(void)
 {
-    ${FREQM_INSTANCE_NAME}_REGS->FREQM_INTFLAG = FREQM_INTFLAG_DONE_Msk;
+    ${FREQM_INSTANCE_NAME}_REGS->FREQM_INTFLAG = (uint8_t)FREQM_INTFLAG_DONE_Msk;
 
     if(${FREQM_INSTANCE_NAME?lower_case}Obj.callback != NULL)
     {
