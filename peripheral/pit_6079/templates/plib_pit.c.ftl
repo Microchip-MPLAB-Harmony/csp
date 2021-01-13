@@ -141,11 +141,13 @@ bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void)
 void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t delay)
 {
     uint32_t tickStart, delayTicks;
+    uint32_t periodVal = (${PIT_INSTANCE_NAME}_REGS->PIT_MR & PIT_MR_PIV_Msk) + 1;
+    uint32_t timerFreq = ${core.PIT_CLOCK_FREQUENCY} / 16;
 
     if((${PIT_INSTANCE_NAME}_REGS->PIT_MR & (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk)) == (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk))
     {
         tickStart=${PIT_INSTANCE_NAME?lower_case}.tickCounter;
-        delayTicks=delay/${PERIOD_MS};
+        delayTicks = ((timerFreq / periodVal) * delay ) / 1000;
 
         while( (${PIT_INSTANCE_NAME?lower_case}.tickCounter-tickStart) < delayTicks ) {
             ;
