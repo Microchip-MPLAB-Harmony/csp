@@ -179,6 +179,12 @@ def updateSysTickMS(symbol, event):
     sysTickPeriodLong = symbol.getValue()/1000.0
     systickPeriodMS.setValue(sysTickPeriodLong)
 
+def setInterruptEnable(symbol, event):
+    if (event["value"] == False):
+        symbol.setReadOnly(True)
+        symbol.setValue(False)
+        symbol.setReadOnly(False)
+
 
 ################################################################################
 #### Menu ####
@@ -208,13 +214,13 @@ systickEnable.setDependencies(systickUse, ["HarmonyCore.SELECT_RTOS"])
 systickPublishCapabilities = coreComponent.createBooleanSymbol("SYSTICK_PUBLISH_CAPABILITIES", sysTickMenu)
 systickPublishCapabilities.setLabel("Systick Publish Capabilities")
 systickPublishCapabilities.setVisible(False)
-systickPublishCapabilities.setValue(False)
+systickPublishCapabilities.setDefaultValue(False)
 systickPublishCapabilities.setDependencies(systickPubCapabilities, ["SYSTICK_PUBLISH_CAPABILITIES"])
 
 systickUsedBySysTime = coreComponent.createBooleanSymbol("SYSTICK_USED_BY_SYS_TIME", sysTickMenu)
 systickUsedBySysTime.setLabel("Systick Used By SYS Time")
 systickUsedBySysTime.setVisible(False)
-systickUsedBySysTime.setValue(False)
+systickUsedBySysTime.setDefaultValue(False)
 
 systickConfigMenu = coreComponent.createMenuSymbol("SYSTICK_MENU_0", systickEnable)
 systickConfigMenu.setLabel("SysTick Configuration")
@@ -223,6 +229,7 @@ systickConfigMenu.setDependencies(sysTickEnableCfgMenu, ["systickEnable"])
 
 systickInterrupt = coreComponent.createBooleanSymbol("USE_SYSTICK_INTERRUPT", systickConfigMenu)
 systickInterrupt.setLabel("Enable Interrupt")
+systickInterrupt.setDependencies(setInterruptEnable, ["systickEnable"])
 
 systickClock = coreComponent.createKeyValueSetSymbol("SYSTICK_CLOCK", systickConfigMenu)
 systickClock.setLabel("SysTick Clock")
