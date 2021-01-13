@@ -164,7 +164,8 @@ void AIC_INT_IrqEnable( void )
 
 bool AIC_INT_IrqDisable( void )
 {
-    bool previousValue = (CPSR_I_Msk & __get_CPSR())? false:true;
+    /* Add a volatile qualifier to the return value to prevent the compiler from optimizing out this function */
+    volatile bool previousValue = (CPSR_I_Msk & __get_CPSR())? false:true;
     __disable_irq();
     __DMB();
     return( previousValue );
