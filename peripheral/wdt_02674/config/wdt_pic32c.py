@@ -36,10 +36,13 @@ global wdtSystemDefFile
 
 global getWDTTimeOutPeriod
 global getWDTAllowedWindowPeriod
+global getWDTTimeOutPeriod_Sleep
 
 global wdtAllowedWindowDictionary
 
 global wdtPreScalerFuse
+global LPRC_FREQ
+LPRC_FREQ = 32768
 
 wdtAllowedWindowDictionary = {
 
@@ -75,6 +78,16 @@ def getWDTTimeOutPeriod():
     else:
         return (str(period) + " ms")
 
+def getWDTTimeOutPeriod_Sleep():
+    wdtFreq = LPRC_FREQ/32.0
+    postScaler = int(Database.getSymbolValue("core", "CONFIG_WDTPSS")[3:])
+
+    period = (postScaler * 1000)/wdtFreq
+    if period > 1000:
+        return (str(period/1000) + " s")
+    else:
+        return (str(period) + " ms")
+
 def updateWDTUseProperties(symbol, event):
 
     symbol.setReadOnly((event["value"] == "ON"))
@@ -86,6 +99,13 @@ def updateWDTTimeOutPeriodVisibleProperty(symbol, event):
         symbol.setVisible(event["value"])
     else:
         symbol.setValue(getWDTTimeOutPeriod(), 1)
+
+def updateWDTTimeOutPeriodVisibleProperty_Sleep(symbol, event):
+
+    if event["id"] == "WDT_USE":
+        symbol.setVisible(event["value"])
+    else:
+        symbol.setValue(getWDTTimeOutPeriod_Sleep(), 1)
 
 def dswdtEnableStatusUpdate(symbol,event):
     if event["value"] == "OFF":
@@ -169,6 +189,7 @@ else:
 isWDTEnabled = (Database.getSymbolValue("core", wdtEnableFuse) == "ON")
 isWDTWindowModeEnabled = (Database.getSymbolValue("core", "CONFIG_WINDIS") == "WINDOW")
 
+wdtValGrp_DEVCFG1__WDTPSS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSES"]/value-group@[name="DEVCFG1__WDTPSS"]')
 wdtInstances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"WDT\"]")
 
 wdtInstanceName = coreComponent.createStringSymbol("WDT_INSTANCE_NAME", None)
@@ -210,6 +231,15 @@ wdtSym_TimeOutPeriod.setDefaultValue(getWDTTimeOutPeriod())
 wdtSym_TimeOutPeriod.setReadOnly(True)
 wdtSym_TimeOutPeriod.setVisible(isWDTEnabled)
 wdtSym_TimeOutPeriod.setDependencies(updateWDTTimeOutPeriodVisibleProperty, ["WDT_USE","WDT_CLOCK_FREQUENCY", wdtPreScalerFuse])
+
+#WDT Time-out Period for Sleep Mode
+if (wdtValGrp_DEVCFG1__WDTPSS is not None):
+    wdtSym_TimeOutPeriodSleep = coreComponent.createStringSymbol("WDT_TIMEOUT_PERIOD_SLEEP", wdtSym_Use)
+    wdtSym_TimeOutPeriodSleep.setLabel("Configured WDT Time-out Period in Sleep Mode")
+    wdtSym_TimeOutPeriodSleep.setDefaultValue(getWDTTimeOutPeriod_Sleep())
+    wdtSym_TimeOutPeriodSleep.setReadOnly(True)
+    wdtSym_TimeOutPeriodSleep.setVisible(isWDTEnabled)
+    wdtSym_TimeOutPeriodSleep.setDependencies(updateWDTTimeOutPeriodVisibleProperty_Sleep, ["WDT_USE", "CONFIG_WDTPSS"])
 
 #WDT Allowed Window Period
 wdtSym_AllowedWindowPeriod = coreComponent.createStringSymbol("WDT_ALLOWED_WINDOW_PERIOD", wdtSym_Use)
