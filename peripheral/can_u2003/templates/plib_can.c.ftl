@@ -216,7 +216,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 </#if>
 <#if RXBUF_USE>
     /*lint -e{9048} PC lint incorrectly reports a missing 'U' Suffix */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = CAN_NDAT1_Msk; 
+    ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = CAN_NDAT1_Msk;
     /*lint -e{9048} PC lint incorrectly reports a missing 'U' Suffix */
     ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = CAN_NDAT2_Msk;
 
@@ -326,7 +326,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
             /* The Tx buffers are not full */
             if(bufferIndex != ${TX_BUFFER_ELEMENTS})
             {
-                
+
                 fifo = (can_txbe_registers_t *) ((uint8_t*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)tfqpi * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
                 op_successs = true;
             }
@@ -343,7 +343,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
                 ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex |= (1UL << ((tfqpi + ${TX_BUFFER_ELEMENTS}) & 0x1FU));
 </#if>
                 fifo = (can_txbe_registers_t *) ((uint8_t*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)tfqpi * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
-                op_success = true;            
+                op_success = true;
             }
             break;
 </#if>
@@ -409,7 +409,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
         }
 
         messageMarker++;
-        fifo->CAN_TXBE_1 |= (((uint32_t)(messageMarker) << CAN_TXBE_1_MM_Pos) & CAN_TXBE_1_MM_Msk);
+        fifo->CAN_TXBE_1 |= (((uint32_t)(messageMarker) << CAN_TXBE_1_MM_Pos) & CAN_TXBE_1_MM_Msk) | CAN_TXBE_1_EFC_Msk;
 <#if INTERRUPT_MODE == true>
 
         ${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE = 1UL << tfqpi;
@@ -502,7 +502,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                     if ((${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 & (1UL << rxgi)) == (1UL << rxgi))
                     {
                         break;
-                    } 
+                    }
                 }
             }
             else
@@ -1151,6 +1151,29 @@ bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, can_xid
 }
 </#if>
 
+void ${CAN_INSTANCE_NAME}_SleepModeEnter(void)
+{
+    ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |=  CAN_CCCR_CSR_Msk;
+    while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_CSA_Msk) != CAN_CCCR_CSA_Msk)
+    {
+        /* Wait for clock stop request to complete */
+    }
+}
+
+void ${CAN_INSTANCE_NAME}_SleepModeExit(void)
+{
+    ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR &=  ~CAN_CCCR_CSR_Msk;
+    while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_CSA_Msk) == CAN_CCCR_CSA_Msk)
+    {
+        /* Wait for no clock stop */
+    }
+    ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR &= ~CAN_CCCR_INIT_Msk;
+    while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk)
+    {
+        /* Wait for initialization complete */
+    }
+}
+
 <#if INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
@@ -1272,7 +1295,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_RF0N_Msk;
         ${CAN_INSTANCE_NAME}_REGS->CAN_IE &= (~CAN_IE_RF0NE_Msk);
 
-        if ((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0FL_Msk) != 0U) 
+        if ((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0FL_Msk) != 0U)
         {
             /* Read data from the Rx FIFO0 */
             rxgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0GI_Msk) >> CAN_RXF0S_F0GI_Pos);
@@ -1400,7 +1423,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 if ((${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 & (1UL << rxgi)) == (1UL << rxgi))
                 {
                     break;
-                }     
+                }
             }
         }
         else
