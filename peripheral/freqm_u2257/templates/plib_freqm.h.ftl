@@ -69,19 +69,20 @@
 
 // *****************************************************************************
 // *****************************************************************************
+// Section:Preprocessor macros
+// *****************************************************************************
+// *****************************************************************************
+
+#define FREQM_ERROR_NONE 0x0U
+#define FREQM_ERROR_OVERFLOW FREQM_STATUS_OVF_Msk
+
+// *****************************************************************************
+// *****************************************************************************
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum
-{
-    /* No error has occurred */
-    FREQM_ERROR_NONE = 0x0,
-
-    /* A measurement overflow has occurred. Measured value is not valid. */
-    FREQM_ERROR_OVERFLOW = FREQM_STATUS_OVF_Msk
-
-} FREQM_ERROR;
+typedef uint32_t FREQM_ERROR;
 
 <#if FREQM_INTERRUPT_MODE = true>
 typedef void (*FREQM_CALLBACK)(uintptr_t context);
