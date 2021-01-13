@@ -293,7 +293,7 @@ def timerMaxValue(symbol, event):
         resolution = 1000.0/float(clock)
     else:
         resolution  = 0
-    symbol.setMax(65536.0 * resolution)
+    symbol.setMax(65537.0 * resolution)
 
 def timerPeriodCalc(symbol, event):
     component = symbol.getComponent()
@@ -445,12 +445,12 @@ def instantiateComponent(tmr1Component):
     clock = Database.getSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY")
     if(clock != 0):
         resolution = 1000.0 * tmr1PrescalerValue.getValue()/float(clock)
-        max = (65536.0 * resolution)
+        max = (65537.0 * resolution)
     else:
         max = 0
 
     tmr1Sym_PERIOD_MS = tmr1Component.createFloatSymbol("TIMER1_TIME_PERIOD_MS", None)
-    tmr1Sym_PERIOD_MS.setLabel("Timer Period (Milli Sec)")
+    tmr1Sym_PERIOD_MS.setLabel("Timer Period (milliseconds)")
     tmr1Sym_PERIOD_MS.setDefaultValue(0.3)
     tmr1Sym_PERIOD_MS.setMin(0.0)
     tmr1Sym_PERIOD_MS.setMax(max)

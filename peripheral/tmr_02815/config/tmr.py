@@ -263,9 +263,9 @@ def timerMaxValue(symbol, event):
         resolution = 0
     mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
     if(mode_32 == 0):
-        symbol.setMax(4294967296.0 * resolution)
+        symbol.setMax(4294967297.0 * resolution)
     else:
-        symbol.setMax(65536.0 * resolution)
+        symbol.setMax(65537.0 * resolution)
 
 def timerPeriodCalc(symbol, event):
     component = symbol.getComponent()
@@ -459,12 +459,12 @@ def instantiateComponent(tmrComponent):
     clock = Database.getSymbolValue("core", tmrInstanceName.getValue() + "_CLOCK_FREQUENCY")
     if(clock != 0):
         resolution = 1000.0 * tmrPrescalerValue.getValue()/float(clock)
-        max = (65536.0 * resolution)
+        max = (65537.0 * resolution)
     else:
         max = 0
 
     tmrSym_PERIOD_MS = tmrComponent.createFloatSymbol("TIMER_TIME_PERIOD_MS", None)
-    tmrSym_PERIOD_MS.setLabel("Timer Period (Milli Sec)")
+    tmrSym_PERIOD_MS.setLabel("Timer Period (milliseconds)")
     tmrSym_PERIOD_MS.setDefaultValue(0.3)
     tmrSym_PERIOD_MS.setMin(0.0)
     tmrSym_PERIOD_MS.setMax(max)
