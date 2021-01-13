@@ -69,7 +69,7 @@ void ${RCON_INSTANCE_NAME}_ResetCauseClear( RCON_RESET_CAUSE cause )
     RCONCLR = cause;
 }
 
-void ${RCON_INSTANCE_NAME}_SoftwareReset( void )
+void __attribute__((noreturn)) ${RCON_INSTANCE_NAME}_SoftwareReset( void )
 {
     __builtin_disable_interrupts();
     

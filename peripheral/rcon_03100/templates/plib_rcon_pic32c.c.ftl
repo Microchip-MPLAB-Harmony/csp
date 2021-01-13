@@ -69,7 +69,7 @@ void ${RCON_INSTANCE_NAME}_ResetCauseClear( RCON_RESET_CAUSE cause )
     RCON_REGS->RCON_RCONCLR = cause;
 }
 
-void ${RCON_INSTANCE_NAME}_SoftwareReset( void )
+void __attribute__((noreturn)) ${RCON_INSTANCE_NAME}_SoftwareReset( void )
 {   
     /* Unlock System */
     CFG_REGS->CFG_SYSKEY = 0x00000000;
