@@ -144,10 +144,12 @@ void ${PIT64B_INSTANCE_NAME}_DelayMs(uint32_t delay)
 {
     uint32_t tickStart;
     uint32_t delayTicks;
+    uint64_t periodVal = ${PIT64B_INSTANCE_NAME}_TimerPeriodGet();
+    uint32_t timerFreq = ${SRC_FREQ};
 
     if (${PIT64B_INSTANCE_NAME?lower_case}.running && ((${PIT64B_INSTANCE_NAME}_REGS->PIT64B_IMR & PIT64B_IMR_PERIOD_Msk) == PIT64B_IMR_PERIOD_Msk)) {
         tickStart=${PIT64B_INSTANCE_NAME?lower_case}.tickCounter;
-        delayTicks=1000*delay/${PERIOD_US};
+        delayTicks = ((timerFreq / periodVal) * delay ) / 1000;
 
         while((${PIT64B_INSTANCE_NAME?lower_case}.tickCounter-tickStart) < delayTicks);
     }
