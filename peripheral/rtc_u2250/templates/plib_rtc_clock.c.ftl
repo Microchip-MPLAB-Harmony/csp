@@ -49,11 +49,12 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
-#include <stdlib.h>
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
+#include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
+#include <stdlib.h>
+
 
 /* Reference Year */
 #define REFERENCE_YEAR              (${RTC_MODE2_REFERENCE_YEAR}U)
@@ -65,13 +66,13 @@
 #define ADJUST_TM_YEAR(year)        (year + TM_STRUCT_REFERENCE_YEAR)
 
 /* Adjust user month */
-#define ADJUST_MONTH(month)         (month + 1)
+#define ADJUST_MONTH(month)         (month + 1U)
 
 /* Adjust to tm structure month */
-#define ADJUST_TM_STRUCT_MONTH(mon) (mon - 1)
+#define ADJUST_TM_STRUCT_MONTH(mon) (mon - 1U)
 
 <#if RTC_MODE2_INTERRUPT = true >
-    <#lt>RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
+    <#lt>static RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${RTC_INSTANCE_NAME}_Initialize(void)
@@ -79,7 +80,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#if RTC_MODE2_DISABLE_RTC_RESET == true>
     if ((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA & RTC_MODE2_CTRLA_ENABLE_Msk) != RTC_MODE2_CTRLA_ENABLE_Msk)
     {
-        ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_SWRST_Msk;
+        ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= (uint16_t)RTC_MODE2_CTRLA_SWRST_Msk;
 
         while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
         {
@@ -87,7 +88,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         }
     }
     <#else>
-    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_SWRST_Msk;
+    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= (uint16_t)RTC_MODE2_CTRLA_SWRST_Msk;
 
     while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
     {
@@ -98,37 +99,37 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#if TAMP_DETECTION_SUPPORTED??>
         <#if TAMP_DETECTION_SUPPORTED>
             <#if (TAMP_DEBOUNCE_MAJ != "0") || (TAMP_DEBOUNCE_ASYNCH != "0") || TAMP_OUT || TAMP_DMA || (TAMP_DEBOUNCE_FREQUENCY != "0x0") || (TAMP_ACTIVE_FREQUENCY != "0x0")>
-                <#lt>    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLB = RTC_MODE2_CTRLB_DEBF(${TAMP_DEBOUNCE_FREQUENCY})|
-                <#lt>                                                        RTC_MODE2_CTRLB_ACTF(${TAMP_ACTIVE_FREQUENCY})
+                <#lt>    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLB = (uint16_t)(RTC_MODE2_CTRLB_DEBF(${TAMP_DEBOUNCE_FREQUENCY}UL)|
+                <#lt>                                                        RTC_MODE2_CTRLB_ACTF(${TAMP_ACTIVE_FREQUENCY}UL)
                 <#lt>                                                        ${TAMP_OUT?then("| RTC_MODE2_CTRLB_RTCOUT_Msk", "")}
                 <#lt>                                                        ${TAMP_DMA?then("| RTC_MODE2_CTRLB_DMAEN_Msk", "")}
                 <#lt>                                                        ${(TAMP_DEBOUNCE_ASYNCH != "0")?then("| RTC_MODE2_CTRLB_DEBASYNC_Msk", "")}
-                <#lt>                                                        ${(TAMP_DEBOUNCE_MAJ != "0")?then("| RTC_MODE2_CTRLB_DEBMAJ_Msk", "")};</@compress>
+                <#lt>                                                        ${(TAMP_DEBOUNCE_MAJ != "0")?then("| RTC_MODE2_CTRLB_DEBMAJ_Msk", "")});</@compress>
               </#if>
             <#if TAMP_CHANNEL4_ACTION??>
                  <#if (TAMP_CHANNEL0_ACTION != '0x0') || (TAMP_CHANNEL1_ACTION != '0x0') ||(TAMP_CHANNEL2_ACTION != '0x0') ||(TAMP_CHANNEL3_ACTION != '0x0') ||(TAMP_CHANNEL4_ACTION != '0x0')>
-                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_TAMPCTRL = RTC_TAMPCTRL_IN0ACT(${TAMP_CHANNEL0_ACTION}) ${(TAMP_CHANNEL0_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL0_Msk", "")} ${(TAMP_CHANNEL0_DEBNC)?then("| RTC_TAMPCTRL_DEBNC0_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN1ACT(${TAMP_CHANNEL1_ACTION}) <#if TAMP_CHANNEL1_LEVEL??>${(TAMP_CHANNEL1_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL1_Msk", "")}${(TAMP_CHANNEL1_DEBNC)?then("| RTC_TAMPCTRL_DEBNC1_Msk", "")} </#if>| \
-                    <#lt>                                   RTC_TAMPCTRL_IN2ACT(${TAMP_CHANNEL2_ACTION}) ${(TAMP_CHANNEL2_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL2_Msk", "")}${(TAMP_CHANNEL2_DEBNC)?then("| RTC_TAMPCTRL_DEBNC2_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN3ACT(${TAMP_CHANNEL3_ACTION}) ${(TAMP_CHANNEL3_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL3_Msk", "")}${(TAMP_CHANNEL3_DEBNC)?then("| RTC_TAMPCTRL_DEBNC3_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN4ACT(${TAMP_CHANNEL4_ACTION}) ${(TAMP_CHANNEL4_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL4_Msk", "")}${(TAMP_CHANNEL4_DEBNC)?then("| RTC_TAMPCTRL_DEBNC4_Msk", "")};
+                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_TAMPCTRL = (uint16_t)(RTC_TAMPCTRL_IN0ACT(${TAMP_CHANNEL0_ACTION}UL) ${(TAMP_CHANNEL0_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL0_Msk", "")} ${(TAMP_CHANNEL0_DEBNC)?then("| RTC_TAMPCTRL_DEBNC0_Msk", "")} | \
+                    <#lt>                                   RTC_TAMPCTRL_IN1ACT(${TAMP_CHANNEL1_ACTION}UL) <#if TAMP_CHANNEL1_LEVEL??>${(TAMP_CHANNEL1_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL1_Msk", "")}${(TAMP_CHANNEL1_DEBNC)?then("| RTC_TAMPCTRL_DEBNC1_Msk", "")} </#if>| \
+                    <#lt>                                   RTC_TAMPCTRL_IN2ACT(${TAMP_CHANNEL2_ACTION}UL) ${(TAMP_CHANNEL2_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL2_Msk", "")}${(TAMP_CHANNEL2_DEBNC)?then("| RTC_TAMPCTRL_DEBNC2_Msk", "")} | \
+                    <#lt>                                   RTC_TAMPCTRL_IN3ACT(${TAMP_CHANNEL3_ACTION}UL) ${(TAMP_CHANNEL3_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL3_Msk", "")}${(TAMP_CHANNEL3_DEBNC)?then("| RTC_TAMPCTRL_DEBNC3_Msk", "")} | \
+                    <#lt>                                   RTC_TAMPCTRL_IN4ACT(${TAMP_CHANNEL4_ACTION}UL) ${(TAMP_CHANNEL4_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL4_Msk", "")}${(TAMP_CHANNEL4_DEBNC)?then("| RTC_TAMPCTRL_DEBNC4_Msk", "")});
                 </#if>
             <#else>
                  <#if (TAMP_CHANNEL0_ACTION != '0x0') || (TAMP_CHANNEL1_ACTION != '0x0') ||(TAMP_CHANNEL2_ACTION != '0x0') ||(TAMP_CHANNEL3_ACTION != '0x0')>
-                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_TAMPCTRL = RTC_TAMPCTRL_IN0ACT(${TAMP_CHANNEL0_ACTION}) ${(TAMP_CHANNEL0_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL0_Msk", "")} ${(TAMP_CHANNEL0_DEBNC)?then("| RTC_TAMPCTRL_DEBNC0_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN1ACT(${TAMP_CHANNEL1_ACTION}) <#if TAMP_CHANNEL1_LEVEL??>${(TAMP_CHANNEL1_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL1_Msk", "")}${(TAMP_CHANNEL1_DEBNC)?then("| RTC_TAMPCTRL_DEBNC1_Msk", "")} </#if> | \
-                    <#lt>                                   RTC_TAMPCTRL_IN2ACT(${TAMP_CHANNEL2_ACTION}) ${(TAMP_CHANNEL2_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL2_Msk", "")}${(TAMP_CHANNEL2_DEBNC)?then("| RTC_TAMPCTRL_DEBNC2_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN3ACT(${TAMP_CHANNEL3_ACTION}) ${(TAMP_CHANNEL3_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL3_Msk", "")}${(TAMP_CHANNEL3_DEBNC)?then("| RTC_TAMPCTRL_DEBNC3_Msk", "")};
+                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_TAMPCTRL = (uint16_t)(RTC_TAMPCTRL_IN0ACT(${TAMP_CHANNEL0_ACTION}UL) ${(TAMP_CHANNEL0_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL0_Msk", "")} ${(TAMP_CHANNEL0_DEBNC)?then("| RTC_TAMPCTRL_DEBNC0_Msk", "")} | \
+                    <#lt>                                   RTC_TAMPCTRL_IN1ACT(${TAMP_CHANNEL1_ACTION}UL) <#if TAMP_CHANNEL1_LEVEL??>${(TAMP_CHANNEL1_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL1_Msk", "")}${(TAMP_CHANNEL1_DEBNC)?then("| RTC_TAMPCTRL_DEBNC1_Msk", "")} </#if> | \
+                    <#lt>                                   RTC_TAMPCTRL_IN2ACT(${TAMP_CHANNEL2_ACTION}UL) ${(TAMP_CHANNEL2_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL2_Msk", "")}${(TAMP_CHANNEL2_DEBNC)?then("| RTC_TAMPCTRL_DEBNC2_Msk", "")} | \
+                    <#lt>                                   RTC_TAMPCTRL_IN3ACT(${TAMP_CHANNEL3_ACTION}UL) ${(TAMP_CHANNEL3_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL3_Msk", "")}${(TAMP_CHANNEL3_DEBNC)?then("| RTC_TAMPCTRL_DEBNC3_Msk", "")});
                 </#if>
             </#if>
         </#if>
     </#if>
     <#if RTC_MODE2_EVCTRL != "0">
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL};
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL}UL;
     </#if>
 
-    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA = RTC_MODE2_CTRLA_MODE(2) |
-                                                            RTC_MODE2_CTRLA_PRESCALER(${RTC_MODE2_PRESCALER}) |
+    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA = (uint16_t)(RTC_MODE2_CTRLA_MODE(2UL) |
+                                                            RTC_MODE2_CTRLA_PRESCALER(${RTC_MODE2_PRESCALER}UL) |
                                                             RTC_MODE2_CTRLA_CLOCKSYNC_Msk |
                                                             RTC_MODE2_CTRLA_ENABLE_Msk
                                                             <#if TAMP_DETECTION_SUPPORTED??>
@@ -138,7 +139,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
                                                                     ${TAMP_RESET_BACKUP?then("| RTC_MODE2_CTRLA_BKTRST_Msk", "")}
                                                                     </#if>
                                                                 </#if>
-                                                            </#if>;</@compress>
+                                                            </#if>);</@compress>
 
 
     while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_ENABLE_Msk) == RTC_MODE2_SYNCBUSY_ENABLE_Msk)
@@ -147,7 +148,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     }
 
     <#if (RTC_MODE2_INTERRUPT = true) && (RTC_MODE2_INTENSET != "0")>
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = 0x${RTC_MODE2_INTENSET};
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = 0x${RTC_MODE2_INTENSET}U;
 
     </#if>
 }
@@ -155,9 +156,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction)
     <#lt>{
-    <#lt>    uint32_t newCorrectionValue = 0;
+    <#lt>    uint32_t newCorrectionValue = 0U;
     <#lt>
-    <#lt>    newCorrectionValue = abs(correction);
+    <#lt>    newCorrectionValue = (uint32_t)abs(correction);
     <#lt>
     <#lt>    /* Convert to positive value and adjust Register sign bit. */
     <#lt>    if (correction < 0)
@@ -165,7 +166,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>        newCorrectionValue |= RTC_FREQCORR_SIGN_Msk;
     <#lt>    }
 
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_FREQCORR = newCorrectionValue;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_FREQCORR = (uint8_t)newCorrectionValue;
 
     <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_FREQCORR_Msk) == RTC_MODE2_SYNCBUSY_FREQCORR_Msk)
     <#lt>    {
@@ -180,12 +181,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>{
     <#lt>    bool periodIntervalComplete = false;
 
-    <#lt>    if( (${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG & period) == period )
+    <#lt>    if( (${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG & (uint16_t)period) == (uint16_t)period )
     <#lt>    {
     <#lt>        periodIntervalComplete = true;
 
     <#lt>        /* Clear Periodic Interval Interrupt */
-    <#lt>        ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG = period;
+    <#lt>        ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG = (uint16_t)period;
     <#lt>    }
 
     <#lt>    return periodIntervalComplete;
@@ -199,12 +200,12 @@ bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
      * Set YEAR(according to Reference Year), MONTH and DAY
      *set Hour Minute and Second
      */
-    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CLOCK = ((TM_STRUCT_REFERENCE_YEAR + initialTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
-                    ((ADJUST_MONTH(initialTime->tm_mon)) << RTC_MODE2_CLOCK_MONTH_Pos) |
-                    (initialTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
-                    (initialTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
-                    (initialTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
-                    (initialTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
+    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CLOCK = (uint32_t)(((TM_STRUCT_REFERENCE_YEAR + (uint32_t)initialTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
+                    ((ADJUST_MONTH((uint32_t)initialTime->tm_mon)) << RTC_MODE2_CLOCK_MONTH_Pos) |
+                    ((uint32_t)initialTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
+                    ((uint32_t)initialTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
+                    ((uint32_t)initialTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
+                    ((uint32_t)initialTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos));
 
     while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCK_Msk) == RTC_MODE2_SYNCBUSY_CLOCK_Msk)
     {
@@ -215,7 +216,8 @@ bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
 
 void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 {
-    uint32_t dataClockCalendar = 0;
+    uint32_t dataClockCalendar = 0U;
+    uint32_t timeMask = 0U;
 
     while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
     {
@@ -224,13 +226,19 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 
     dataClockCalendar = ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CLOCK;
 
-    currentTime->tm_hour =  (dataClockCalendar & RTC_MODE2_CLOCK_HOUR_Msk) >> RTC_MODE2_CLOCK_HOUR_Pos;
-    currentTime->tm_min  =  (dataClockCalendar & RTC_MODE2_CLOCK_MINUTE_Msk) >> RTC_MODE2_CLOCK_MINUTE_Pos;
-    currentTime->tm_sec  =  (dataClockCalendar & RTC_MODE2_CLOCK_SECOND_Msk) >> RTC_MODE2_CLOCK_SECOND_Pos;
+    timeMask = (dataClockCalendar & RTC_MODE2_CLOCK_HOUR_Msk) >> RTC_MODE2_CLOCK_HOUR_Pos;
+    currentTime->tm_hour = (int)timeMask;
+    timeMask = (dataClockCalendar & RTC_MODE2_CLOCK_MINUTE_Msk) >> RTC_MODE2_CLOCK_MINUTE_Pos;
+    currentTime->tm_min = (int)timeMask;
+    timeMask = (dataClockCalendar & RTC_MODE2_CLOCK_SECOND_Msk) >> RTC_MODE2_CLOCK_SECOND_Pos;
+    currentTime->tm_sec = (int)timeMask;
 
-    currentTime->tm_mon  =  ADJUST_TM_STRUCT_MONTH(((dataClockCalendar & RTC_MODE2_CLOCK_MONTH_Msk) >> RTC_MODE2_CLOCK_MONTH_Pos));
-    currentTime->tm_year =  (((dataClockCalendar & RTC_MODE2_CLOCK_YEAR_Msk)>> RTC_MODE2_CLOCK_YEAR_Pos) + REFERENCE_YEAR) - TM_STRUCT_REFERENCE_YEAR;
-    currentTime->tm_mday =  (dataClockCalendar & RTC_MODE2_CLOCK_DAY_Msk) >> RTC_MODE2_CLOCK_DAY_Pos;
+    timeMask = ADJUST_TM_STRUCT_MONTH(((dataClockCalendar & RTC_MODE2_CLOCK_MONTH_Msk) >> RTC_MODE2_CLOCK_MONTH_Pos));
+    currentTime->tm_mon  = (int)timeMask; 
+    timeMask = (((dataClockCalendar & RTC_MODE2_CLOCK_YEAR_Msk)>> RTC_MODE2_CLOCK_YEAR_Pos) + REFERENCE_YEAR) - TM_STRUCT_REFERENCE_YEAR;
+    currentTime->tm_year = (int)timeMask; 
+    timeMask = (dataClockCalendar & RTC_MODE2_CLOCK_DAY_Msk) >> RTC_MODE2_CLOCK_DAY_Pos;
+    currentTime->tm_mday = (int)timeMask; 
 }
 <#if TAMP_DETECTION_SUPPORTED??>
     <#if TAMP_DETECTION_SUPPORTED>
@@ -247,22 +255,28 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
         </#if>
         <#lt> TAMPER_CHANNEL ${RTC_INSTANCE_NAME}_TamperSourceGet( void )
         <#lt>{
-        <#lt>    return((TAMPER_CHANNEL) (${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_TAMPID) & (0xFF));
+        <#lt>    return((TAMPER_CHANNEL) (${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_TAMPID) & (0xFFU));
         <#lt>}
 
         <#lt>void ${RTC_INSTANCE_NAME}_RTCCTimeStampGet(  struct tm * timeStamp  )
         <#lt>{
-        <#lt>    uint32_t dataClockCalendar = 0;
+        <#lt>   uint32_t dataClockCalendar = 0U;
+        <#lt>   uint32_t timeMask = 0U;
 
-        <#lt>    dataClockCalendar = ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_TIMESTAMP;
+        <#lt>   dataClockCalendar = ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_TIMESTAMP;
+        <#lt>   timeMask = (dataClockCalendar & RTC_MODE2_TIMESTAMP_HOUR_Msk) >> RTC_MODE2_TIMESTAMP_HOUR_Pos;
+        <#lt>   timeStamp->tm_hour = (int)timeMask;
+        <#lt>   timeMask = (dataClockCalendar & RTC_MODE2_TIMESTAMP_MINUTE_Msk) >> RTC_MODE2_TIMESTAMP_MINUTE_Pos;
+        <#lt>   timeStamp->tm_min = (int)timeMask;
+        <#lt>   timeMask = (dataClockCalendar & RTC_MODE2_TIMESTAMP_SECOND_Msk) >> RTC_MODE2_TIMESTAMP_SECOND_Pos;
+        <#lt>   timeStamp->tm_sec = (int)timeMask;
 
-        <#lt>    timeStamp->tm_hour =  (dataClockCalendar & RTC_MODE2_TIMESTAMP_HOUR_Msk) >> RTC_MODE2_TIMESTAMP_HOUR_Pos;
-        <#lt>    timeStamp->tm_min  =  (dataClockCalendar & RTC_MODE2_TIMESTAMP_MINUTE_Msk) >> RTC_MODE2_TIMESTAMP_MINUTE_Pos;
-        <#lt>    timeStamp->tm_sec  =  (dataClockCalendar & RTC_MODE2_TIMESTAMP_SECOND_Msk) >> RTC_MODE2_TIMESTAMP_SECOND_Pos;
-
-        <#lt>    timeStamp->tm_mon  =  ADJUST_TM_STRUCT_MONTH(((dataClockCalendar & RTC_MODE2_TIMESTAMP_MONTH_Msk) >> RTC_MODE2_TIMESTAMP_MONTH_Pos));
-        <#lt>    timeStamp->tm_year =  (((dataClockCalendar & RTC_MODE2_TIMESTAMP_YEAR_Msk)>> RTC_MODE2_TIMESTAMP_YEAR_Pos) + REFERENCE_YEAR) - TM_STRUCT_REFERENCE_YEAR;
-        <#lt>    timeStamp->tm_mday =  (dataClockCalendar & RTC_MODE2_TIMESTAMP_DAY_Msk) >> RTC_MODE2_TIMESTAMP_DAY_Pos;
+        <#lt>   timeMask = ADJUST_TM_STRUCT_MONTH(((dataClockCalendar & RTC_MODE2_TIMESTAMP_MONTH_Msk) >> RTC_MODE2_TIMESTAMP_MONTH_Pos));
+        <#lt>   timeStamp->tm_mon  = (int)timeMask;
+        <#lt>   timeMask = (((dataClockCalendar & RTC_MODE2_TIMESTAMP_YEAR_Msk)>> RTC_MODE2_TIMESTAMP_YEAR_Pos) + REFERENCE_YEAR) - TM_STRUCT_REFERENCE_YEAR;
+        <#lt>   timeStamp->tm_year = (int)timeMask; 
+        <#lt>   timeMask = (dataClockCalendar & RTC_MODE2_TIMESTAMP_DAY_Msk) >> RTC_MODE2_TIMESTAMP_DAY_Pos;
+        <#lt>   timeStamp->tm_mday = (int)timeMask; 
         <#lt>}
     </#if>
 </#if>
@@ -276,26 +290,26 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
         <#lt>     * Set YEAR(according to Reference Year), MONTH and DAY
         <#lt>     * Set Hour, Minute and second
         <#lt>     */
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_${RTC_MODE2_ALARM_REGISTER_NAME} = ((TM_STRUCT_REFERENCE_YEAR + alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
-        <#lt>                    (ADJUST_MONTH(alarmTime->tm_mon) << RTC_MODE2_CLOCK_MONTH_Pos) |
-        <#lt>                    (alarmTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
-        <#lt>                    (alarmTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
-        <#lt>                     (alarmTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
-        <#lt>                     (alarmTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_${RTC_MODE2_ALARM_REGISTER_NAME} = (uint32_t)(((TM_STRUCT_REFERENCE_YEAR + (uint32_t)alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
+        <#lt>                    (ADJUST_MONTH((uint32_t)alarmTime->tm_mon) << RTC_MODE2_CLOCK_MONTH_Pos) |
+        <#lt>                    ((uint32_t)alarmTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
+        <#lt>                    ((uint32_t)alarmTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
+        <#lt>                    ((uint32_t)alarmTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
+        <#lt>                    ((uint32_t)alarmTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos));
 
         <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_ALARM0_Msk) == RTC_MODE2_SYNCBUSY_ALARM0_Msk)
         <#lt>    {
         <#lt>        /* Synchronization after writing to ALARM register */
         <#lt>    }
 
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_${RTC_MODE2_MASK_REGISTER_NAME} = mask;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_${RTC_MODE2_MASK_REGISTER_NAME} = (uint8_t)mask;
 
         <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_MASK0_Msk) == RTC_MODE2_SYNCBUSY_MASK0_Msk)
         <#lt>    {
         <#lt>        /* Synchronization after writing value to MASK Register */
         <#lt>    }
 
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = RTC_MODE2_INTENSET_ALARM0_Msk;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = (uint16_t)RTC_MODE2_INTENSET_ALARM0_Msk;
 
         <#lt>    return true;
         <#lt>}
@@ -308,26 +322,26 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
             <#lt>     * Set YEAR(according to Reference Year), MONTH and DAY
             <#lt>     * Set Hour, Minute and second
             <#lt>     */
-            <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_ALARM${i} = ((TM_STRUCT_REFERENCE_YEAR + alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
-            <#lt>                    (ADJUST_MONTH(alarmTime->tm_mon) << RTC_MODE2_CLOCK_MONTH_Pos) |
-            <#lt>                    (alarmTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
-            <#lt>                    (alarmTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
-            <#lt>                     (alarmTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
-            <#lt>                     (alarmTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
+            <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_ALARM${i} = (uint32_t)(((TM_STRUCT_REFERENCE_YEAR + (uint32_t)alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
+            <#lt>                    (ADJUST_MONTH((uint32_t)alarmTime->tm_mon) << RTC_MODE2_CLOCK_MONTH_Pos) |
+            <#lt>                    ((uint32_t)alarmTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
+            <#lt>                    ((uint32_t)alarmTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
+            <#lt>                    ((uint32_t)alarmTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
+            <#lt>                    ((uint32_t)alarmTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos));
 
             <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_ALARM${i}_Msk) == RTC_MODE2_SYNCBUSY_ALARM${i}_Msk)
             <#lt>    {
             <#lt>        /* Synchronization after writing to ALARM register */
             <#lt>    }
 
-            <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_MASK${i} = mask;
+            <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_MASK${i} = (uint8_t)mask;
 
             <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_MASK${i}_Msk) == RTC_MODE2_SYNCBUSY_MASK${i}_Msk)
             <#lt>    {
             <#lt>        /* Synchronization after writing value to MASK Register */
             <#lt>    }
 
-            <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = RTC_MODE2_INTENSET_ALARM${i}_Msk;
+            <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = (uint16_t)RTC_MODE2_INTENSET_ALARM${i}_Msk;
 
             <#lt>    return true;
             <#lt>}
@@ -345,7 +359,7 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
     <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.intCause = (RTC_CLOCK_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG;
 
     <#lt>    /* Clear All Interrupts */
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG = RTC_MODE2_INTFLAG_Msk;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG = (uint16_t)RTC_MODE2_INTFLAG_Msk;
 
     <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback != NULL)
     <#lt>    {
