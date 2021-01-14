@@ -51,10 +51,10 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "plib_${PAC_INSTANCE_NAME?lower_case}.h"
 <#if CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
+#include "plib_${PAC_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -69,7 +69,7 @@
 </#if>
 
 <#if PAC_INTERRRUPT_MODE = true>
-PAC_CALLBACK_OBJ ${PAC_INSTANCE_NAME?lower_case}CallbackObject;
+static PAC_CALLBACK_OBJ ${PAC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -82,22 +82,22 @@ void ${PAC_INSTANCE_NAME}_Initialize( void )
 {
 <#if PAC_INTERRRUPT_MODE == true>
     /* Enable PAC interrupt */
-    ${PAC_REG_NAME}_REGS->PAC_INTENSET = PAC_INTENSET_ERR_Msk;
+    ${PAC_REG_NAME}_REGS->PAC_INTENSET = (uint8_t)PAC_INTENSET_ERR_Msk;
 
 </#if>
 <#if PAC_ERROR_EVENT == true>
     /* Enable PAC Error Event Output */
-    ${PAC_REG_NAME}_REGS->PAC_EVCTRL = PAC_EVCTRL_ERREO_Msk;
+    ${PAC_REG_NAME}_REGS->PAC_EVCTRL = (uint8_t)PAC_EVCTRL_ERREO_Msk;
 </#if>
 }
 
 bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected( PAC_PERIPHERAL peripheral )
 {
     bool status = false;
-    uint32_t *statusRegBaseAddr = (uint32_t*) &(${PAC_REG_NAME}_REGS->PAC_STATUSA);
+    const volatile uint32_t *statusRegBaseAddr = (const volatile uint32_t*) &(${PAC_REG_NAME}_REGS->PAC_STATUSA);
 
     /* Verify if the peripheral is protected or not */
-    status = (bool)((*(statusRegBaseAddr + (peripheral / 32))) & (1 << (peripheral % 32)));
+    status = (((*(statusRegBaseAddr + ((uint32_t)peripheral / 32U))) & (1UL << ((uint32_t)peripheral % 32U))) != 0U);
 
     return status;
 }
@@ -105,7 +105,7 @@ bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected( PAC_PERIPHERAL peripheral )
 void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation )
 {
     /* Set Peripheral Access Control */
-    ${PAC_REG_NAME}_REGS->PAC_WRCTRL = PAC_WRCTRL_PERID(peripheral) | PAC_WRCTRL_KEY(operation);
+    ${PAC_REG_NAME}_REGS->PAC_WRCTRL = PAC_WRCTRL_PERID((uint32_t)peripheral) | PAC_WRCTRL_KEY((uint32_t)operation);
 }
 
 <#if PAC_INTERRRUPT_MODE = true>
