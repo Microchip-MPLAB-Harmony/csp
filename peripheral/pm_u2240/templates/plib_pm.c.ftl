@@ -58,7 +58,7 @@
 <#assign PM_STDBYCFG_VAL = "">
 <#if PM_STDBYCFG_BBIASLP?has_content >
     <#if PM_STDBYCFG_VAL != "">
-        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_BBIASLP("+PM_STDBYCFG_BBIASLP+")">
+        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_BBIASLP("+PM_STDBYCFG_BBIASLP+"UL)">
     <#else>
         <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_BBIASLP("+PM_STDBYCFG_BBIASLP+")">
     </#if>
@@ -67,9 +67,9 @@
     <#if HAS_BBIASHS_FIELD??>
         <#assign BBIASHS_VAL = PM_STDBYCFG_BBIASHS>
         <#if PM_STDBYCFG_VAL != "">
-            <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_BBIASHS("+BBIASHS_VAL+")">
+            <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_BBIASHS("+BBIASHS_VAL+"UL)">
         <#else>
-            <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_BBIASHS("+BBIASHS_VAL+")">
+            <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_BBIASHS("+BBIASHS_VAL+"UL)">
         </#if>
     <#else>
         <#if PM_STDBYCFG_BBIASHS>
@@ -83,16 +83,16 @@
 </#if>
 <#if PM_STDBYCFG_LINKPD?has_content >
     <#if PM_STDBYCFG_VAL != "">
-        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_LINKPD("+PM_STDBYCFG_LINKPD+")">
+        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_LINKPD("+PM_STDBYCFG_LINKPD+"UL)">
     <#else>
-        <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_LINKPD("+PM_STDBYCFG_LINKPD+")">
+        <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_LINKPD("+PM_STDBYCFG_LINKPD+"UL)">
     </#if>
 </#if>
 <#if PM_STDBYCFG_VREGSMOD?has_content >
     <#if PM_STDBYCFG_VAL != "">
-        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_VREGSMOD("+PM_STDBYCFG_VREGSMOD+")">
+        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_VREGSMOD("+PM_STDBYCFG_VREGSMOD+"UL)">
     <#else>
-        <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_VREGSMOD("+PM_STDBYCFG_VREGSMOD+")">
+        <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_VREGSMOD("+PM_STDBYCFG_VREGSMOD+"UL)">
     </#if>
 </#if>
 <#if PM_STDBYCFG_DPGPD1?has_content >
@@ -134,9 +134,9 @@
 <#if HAS_PDCFG_FIELD??>
 <#if PM_STDBYCFG_PDCFG?has_content >
     <#if PM_STDBYCFG_VAL != "">
-        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_PDCFG("+PM_STDBYCFG_PDCFG+")">
+        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_PDCFG("+PM_STDBYCFG_PDCFG+"UL)">
     <#else>
-        <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_PDCFG("+PM_STDBYCFG_PDCFG+")">
+        <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_PDCFG("+PM_STDBYCFG_PDCFG+"UL)">
     </#if>
 </#if>
 </#if>
@@ -157,30 +157,32 @@ void ${PM_INSTANCE_NAME}_Initialize( void )
 {
 <#if PM_STDBYCFG_VAL?has_content>
     /* Configure PM */
-    ${PM_INSTANCE_NAME}_REGS->PM_STDBYCFG = ${PM_STDBYCFG_VAL};
+    ${PM_INSTANCE_NAME}_REGS->PM_STDBYCFG = (uint16_t)(${PM_STDBYCFG_VAL});
 </#if>
 
 <#if HAS_PLCFG??>
 <#if PLCFG_PLDIS>
-    ${PM_INSTANCE_NAME}_REGS->PM_PLCFG = PM_PLCFG_PLDIS_Msk;
+    ${PM_INSTANCE_NAME}_REGS->PM_PLCFG = (uint8_t)PM_PLCFG_PLDIS_Msk;
 <#else>
     /* Clear INTFLAG.PLRDY */
-    ${PM_INSTANCE_NAME}_REGS->PM_INTFLAG |= PM_INTENCLR_PLRDY_Msk;
+    ${PM_INSTANCE_NAME}_REGS->PM_INTFLAG |= (uint8_t)PM_INTENCLR_PLRDY_Msk;
 
     if ((${PM_INSTANCE_NAME}_REGS->PM_PLCFG & PM_PLCFG_PLSEL_Msk) != PM_PLCFG_PLSEL_${PM_PLCFG_PLSEL})
     {
         /* Configure performance level */
-        ${PM_INSTANCE_NAME}_REGS->PM_PLCFG = PM_PLCFG_PLSEL_${PM_PLCFG_PLSEL};
+        ${PM_INSTANCE_NAME}_REGS->PM_PLCFG = (uint8_t)PM_PLCFG_PLSEL_${PM_PLCFG_PLSEL};
 
-        /* Wait for performance level transition to complete */
-        while(!(${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk));
+        while((${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk) == 0U)
+        {
+            /* Wait for performance level transition to complete */
+        }
     }
 </#if>
 </#if>
 <#if HAS_PWCFG??>
     <#if PM_PWCFG_RAMPSWC != "0x0">
         /* Clear INTFLAG.PLRDY */
-    <#lt>    ${PM_INSTANCE_NAME}_REGS->PM_PWCFG = PM_PWCFG_RAMPSWC(${PM_PWCFG_RAMPSWC});
+    <#lt>    ${PM_INSTANCE_NAME}_REGS->PM_PWCFG = (uint8_t)PM_PWCFG_RAMPSWC(${PM_PWCFG_RAMPSWC}UL);
     </#if>
 </#if>
 }
@@ -189,16 +191,21 @@ void ${PM_INSTANCE_NAME}_Initialize( void )
 void ${PM_INSTANCE_NAME}_IdleModeEnter( void )
 {
     <#if PM_IDLE_OPTION ? has_content>
-    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE(${PM_IDLE_OPTION});
+    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = (uint8_t)PM_SLEEPCFG_SLEEPMODE(${PM_IDLE_OPTION}UL);
 
-    /* Ensure that SLEEPMODE bits are configured with the given value */
-    while ((${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_Msk) != PM_SLEEPCFG_SLEEPMODE(${PM_IDLE_OPTION}));
+    
+    while ((${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_Msk) != PM_SLEEPCFG_SLEEPMODE(${PM_IDLE_OPTION}UL))
+    {
+        /* Ensure that SLEEPMODE bits are configured with the given value */
+    }
     <#else>
     /* Configure Idle Sleep mode */
-    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE_Val;
+    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = (uint8_t)PM_SLEEPCFG_SLEEPMODE_IDLE_Val;
 
-    /* Ensure that SLEEPMODE bits are configured with the given value */
-    while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_IDLE_Val));
+    while ((${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_IDLE_Val) == 0U)
+    {
+        /* Ensure that SLEEPMODE bits are configured with the given value */
+    }
     </#if>
     /* Wait for interrupt instruction execution */
     __WFI();
@@ -207,10 +214,12 @@ void ${PM_INSTANCE_NAME}_IdleModeEnter( void )
 void ${PM_INSTANCE_NAME}_StandbyModeEnter( void )
 {
     /* Configure Standby Sleep */
-    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_STANDBY_Val;
-
-    /* Ensure that SLEEPMODE bits are configured with the given value */
-    while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_STANDBY_Val));
+    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = (uint8_t)PM_SLEEPCFG_SLEEPMODE_STANDBY_Val;
+  
+    while ((${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_STANDBY_Val) == 0U)
+    {
+        /* Ensure that SLEEPMODE bits are configured with the given value */
+    }
 
     /* Wait for interrupt instruction execution */
     __WFI();
@@ -220,10 +229,12 @@ void ${PM_INSTANCE_NAME}_StandbyModeEnter( void )
 void ${PM_INSTANCE_NAME}_BackupModeEnter( void )
 {
     /* Configure Backup Sleep */
-    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_BACKUP_Val;
-
-    /* Ensure that SLEEPMODE bits are configured with the given value */
-    while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_BACKUP_Val));
+    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = (uint8_t)PM_SLEEPCFG_SLEEPMODE_BACKUP_Val;
+    
+    while ((${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_BACKUP_Val) == 0U)
+    {
+        /* Ensure that SLEEPMODE bits are configured with the given value */
+    }
 
     /* Wait for interrupt instruction execution */
     __WFI();
@@ -234,10 +245,12 @@ void ${PM_INSTANCE_NAME}_BackupModeEnter( void )
 void ${PM_INSTANCE_NAME}_OffModeEnter( void )
 {
     /* Configure Off Sleep */
-    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_OFF_Val;
+    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = (uint8_t)PM_SLEEPCFG_SLEEPMODE_OFF_Val;
 
-    /* Ensure that SLEEPMODE bits are configured with the given value */
-    while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_OFF_Val));
+    while ((${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_OFF_Val) == 0U)
+    {
+        /* Ensure that SLEEPMODE bits are configured with the given value */
+    }
 
     /* Wait for interrupt instruction execution */
     __WFI();
@@ -252,12 +265,12 @@ void ${PM_INSTANCE_NAME}_OffModeEnter( void )
  */
 void ${PM_INSTANCE_NAME}_IO_RetentionSet( void )
 {
-    ${PM_INSTANCE_NAME}_REGS->PM_CTRLA |= PM_CTRLA_IORET_Msk;
+    ${PM_INSTANCE_NAME}_REGS->PM_CTRLA |= (uint8_t)PM_CTRLA_IORET_Msk;
 }
 
 void ${PM_INSTANCE_NAME}_IO_RetentionClear( void )
 {
-    ${PM_INSTANCE_NAME}_REGS->PM_CTRLA &= (~PM_CTRLA_IORET_Msk);
+    ${PM_INSTANCE_NAME}_REGS->PM_CTRLA &= (uint8_t)(~PM_CTRLA_IORET_Msk);
 }
 </#if>
 
@@ -267,18 +280,20 @@ bool ${PM_INSTANCE_NAME}_ConfigurePerformanceLevel(PLCFG_PLSEL plsel)
     bool status = false;
 
     /* Write the value only if Performance Level Disable is not set */
-    if (!(${PM_INSTANCE_NAME}_REGS->PM_PLCFG & PM_PLCFG_PLDIS_Msk))
+    if ((${PM_INSTANCE_NAME}_REGS->PM_PLCFG & PM_PLCFG_PLDIS_Msk) == 0U)
     {
         if((${PM_INSTANCE_NAME}_REGS->PM_PLCFG & PM_PLCFG_PLSEL_Msk) != plsel)
         {
             /* Clear INTFLAG.PLRDY */
-            ${PM_INSTANCE_NAME}_REGS->PM_INTFLAG |= PM_INTENCLR_PLRDY_Msk;
+            ${PM_INSTANCE_NAME}_REGS->PM_INTFLAG |= (uint8_t)PM_INTENCLR_PLRDY_Msk;
 
             /* Write PLSEL bits */
             ${PM_INSTANCE_NAME}_REGS->PM_PLCFG  = plsel;
 
-            /* Wait for performance level transition to complete */
-            while(!(${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk));
+            while((${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk) == 0U)
+            {
+                /* Wait for performance level transition to complete */
+            }
 
             status = true;
         }
