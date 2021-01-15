@@ -63,6 +63,11 @@ PrescalerDict = {
                     "1:2 prescale value"  : 2,
                     "1:1 prescale value"  : 1,
                 }
+global tmrTimerUnit
+tmrTimerUnit = { "millisecond" : 1000.0,
+                "microsecon" : 1000000.0, 
+                "nanosecond"  : 1000000000.0,
+                }                 
 global tmrInterruptVector
 global tmrInterruptHandlerLock
 global tmrInterruptHandler
@@ -103,7 +108,7 @@ def handleMessage(messageID, args):
 
     if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
         if sysTimeComponentId.getValue() != "":
-            #Set the Time Period (Milli Sec)
+            #Set the Time Period (millisecond)
             tmrSym_PERIOD_MS.setValue(args["sys_time_tick_ms"])
 
     return dummy_dict
@@ -253,12 +258,13 @@ def calcTimerFreq(symbol, event):
 def timerMaxValue(symbol, event):
     component = symbol.getComponent()
     src = component.getSymbolValue("TIMER_SRC_SEL")
+    unit = tmrTimerUnit[component.getSymbolValue("TIMER_UNIT")]
     if(src == 0):
         clock = component.getSymbolValue("TIMER_EXT_CLOCK_FREQ")
     else:
         clock = Database.getSymbolValue("core", tmrInstanceName.getValue() + "_CLOCK_FREQUENCY")
     if(clock != 0):
-        resolution = 1000.0 * component.getSymbolValue("TMR_PRESCALER_VALUE")/float(clock)
+        resolution = unit * component.getSymbolValue("TMR_PRESCALER_VALUE")/float(clock)
     else:
         resolution = 0
     mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
@@ -270,8 +276,10 @@ def timerMaxValue(symbol, event):
 def timerPeriodCalc(symbol, event):
     component = symbol.getComponent()
     clock = component.getSymbolValue("TIMER_CLOCK_FREQ")
+    unit = tmrTimerUnit[component.getSymbolValue("TIMER_UNIT")]
+    print(unit)    
     if(clock != 0):
-        resolution = 1000.0/clock
+        resolution = unit/clock
         period = (component.getSymbolValue("TIMER_TIME_PERIOD_MS") / resolution) - 1
         symbol.setValue(long(period), 2)
         mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
@@ -456,6 +464,12 @@ def instantiateComponent(tmrComponent):
     tmrSym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core." + tmrInstanceName.getValue() + "_CLOCK_FREQUENCY","TMR_PRESCALER_VALUE",
         "TIMER_SRC_SEL", "TIMER_EXT_CLOCK_FREQ"])
 
+    global tmrSym_TimerUnit
+    timerUnit = ["millisecond", "microsecon", "nanosecond"]
+    tmrSym_TimerUnit = tmrComponent.createComboSymbol("TIMER_UNIT", None, timerUnit)
+    tmrSym_TimerUnit.setLabel("Timer Period Unit")
+    tmrSym_TimerUnit.setDefaultValue("millisecond")          
+
     clock = Database.getSymbolValue("core", tmrInstanceName.getValue() + "_CLOCK_FREQUENCY")
     if(clock != 0):
         resolution = 1000.0 * tmrPrescalerValue.getValue()/float(clock)
@@ -464,12 +478,12 @@ def instantiateComponent(tmrComponent):
         max = 0
 
     tmrSym_PERIOD_MS = tmrComponent.createFloatSymbol("TIMER_TIME_PERIOD_MS", None)
-    tmrSym_PERIOD_MS.setLabel("Timer Period (milliseconds)")
+    tmrSym_PERIOD_MS.setLabel("Time")
     tmrSym_PERIOD_MS.setDefaultValue(0.3)
     tmrSym_PERIOD_MS.setMin(0.0)
     tmrSym_PERIOD_MS.setMax(max)
     tmrSym_PERIOD_MS.setDependencies(timerMaxValue, ["core." + tmrInstanceName.getValue() + "_CLOCK_FREQUENCY", "TIMER_CLOCK_FREQ",
-        "TIMER_32BIT_MODE_SEL"])
+        "TIMER_32BIT_MODE_SEL", "TIMER_UNIT"])
 
     if clock != 0:
         period = (tmrSym_PERIOD_MS.getValue() / resolution) - 1
@@ -484,7 +498,7 @@ def instantiateComponent(tmrComponent):
     tmrSym_PR2.setMin(0)
     tmrSym_PR2.setMax(65535)
     tmrSym_PR2.setDependencies(timerPeriodCalc, ["core." + tmrInstanceName.getValue() + "_CLOCK_FREQUENCY", "TIMER_TIME_PERIOD_MS",
-        "TIMER_CLOCK_FREQ", "TIMER_32BIT_MODE_SEL"])
+        "TIMER_CLOCK_FREQ", "TIMER_32BIT_MODE_SEL", "TIMER_UNIT"])
 
     #timer SIDL configuration
     sidl_names = []
