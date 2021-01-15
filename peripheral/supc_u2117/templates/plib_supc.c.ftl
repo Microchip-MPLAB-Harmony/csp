@@ -53,11 +53,12 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "device.h"
-#include "plib_${SUPC_INSTANCE_NAME?lower_case}.h"
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
+#include "device.h"
+#include "plib_${SUPC_INSTANCE_NAME?lower_case}.h"
+
 <#assign SUPC_BKOUT_VAL = "">
 <#assign SUPC_VREF_SEL_VAL = "">
 <#assign SUPC_VREF_VAL = "">
@@ -117,7 +118,7 @@
 </#if>
 
 <#if SUPC_BOD_PSEL??>
-    <#assign SUPC_BOD_PSEL_VAL = "${SUPC_BOD_PSEL}(${.vars[SUPC_BOD_PSEL]})">
+    <#assign SUPC_BOD_PSEL_VAL = "${SUPC_BOD_PSEL}(${.vars[SUPC_BOD_PSEL]}UL)">
     <#assign SUPC_BOD_VAL = SUPC_BOD_PSEL_VAL>
 </#if>
 
@@ -180,14 +181,14 @@
 </#if>
 <#if SUPC_VREG_VSVSTEP??>
     <#if SUPC_VREG_VAL != "">
-    <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_VSVSTEP(${SUPC_VREG_VSVSTEP})">
+    <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_VSVSTEP(${SUPC_VREG_VSVSTEP}UL)">
     <#else>
     <#assign SUPC_VREG_VAL = "SUPC_VREG_VSVSTEP(${SUPC_VREG_VSVSTEP})">
     </#if>
 </#if>
 <#if SUPC_VREG_VSPER??>
     <#if SUPC_VREG_VAL != "">
-    <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_VSPER(${SUPC_VREG_VSPER})">
+    <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_VSPER(${SUPC_VREG_VSPER}UL)">
     <#else>
     <#assign SUPC_VREG_VAL = "SUPC_VREG_VSPER(${SUPC_VREG_VSPER})">
     </#if>
@@ -226,7 +227,7 @@
     </#if>
 </#if>
 <#if SUPC_VREF_SEL?has_content >
-<#assign SUPC_VREF_SEL_VAL = "SUPC_VREF_SEL("+SUPC_VREF_SEL+")">
+<#assign SUPC_VREF_SEL_VAL = "SUPC_VREF_SEL("+SUPC_VREF_SEL+"UL)">
 <#assign SUPC_VREF_VAL = SUPC_VREF_SEL_VAL>
 </#if>
 <#if SUPC_VREF_ONDEMAND?has_content >
@@ -274,7 +275,7 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
     /* Configure ${SUPC_BOD_NAME}. Mask the values loaded from NVM during reset. */
     ${SUPC_INSTANCE_NAME}_REGS->${SUPC_BOD_REGNAME} &= ~SUPC_${SUPC_BOD_NAME}_ENABLE_Msk;
     ${SUPC_INSTANCE_NAME}_REGS->${SUPC_BOD_REGNAME} = (${SUPC_INSTANCE_NAME}_REGS->${SUPC_BOD_REGNAME} & (${SUPC_BOD_FACTORY_DATA_MASK})) | ${SUPC_BOD_VAL};
-    if (bodEnable)
+    if (bodEnable != 0U)
     {
         ${SUPC_INSTANCE_NAME}_REGS->${SUPC_BOD_REGNAME} |= SUPC_${SUPC_BOD_NAME}_ENABLE_Msk;
     }
@@ -310,12 +311,12 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
 <#if HAS_BKOUT_REG??>
 void ${SUPC_INSTANCE_NAME}_SetOutputPin( SUPC_OUTPIN pin )
 {
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_SETOUT(1 << pin);
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_SETOUT(1UL <<(uint32_t)pin);
 }
 
 void ${SUPC_INSTANCE_NAME}_ClearOutputPin( SUPC_OUTPIN pin )
 {
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLROUT(1 << pin);
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLROUT(1UL <<(uint32_t)pin);
 }
 </#if>
 
@@ -324,13 +325,16 @@ void ${SUPC_INSTANCE_NAME}_SelectVoltageRegulator(SUPC_VREGSEL regsel)
 {
     if(SUPC_VREGSEL_BUCK == regsel)
     {
-        ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG |= (1 << SUPC_VREG_SEL_Pos);
+        ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG |= (1UL << SUPC_VREG_SEL_Pos);
     }
     else
     {
-        ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG &= ~(1 << SUPC_VREG_SEL_Pos);
+        ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG &= ~(1UL << SUPC_VREG_SEL_Pos);
     }
-    while(!(${SUPC_INSTANCE_NAME}_REGS->SUPC_STATUS & SUPC_STATUS_VREGRDY_Msk));
+    while((${SUPC_INSTANCE_NAME}_REGS->SUPC_STATUS & SUPC_STATUS_VREGRDY_Msk) == 0U)
+    {
+        /* Do nothing */
+    }
 }
 </#if>
 
@@ -341,7 +345,7 @@ typedef struct
     uintptr_t context;
 } SUPC_${SUPC_BOD_NAME}_CALLBACK_OBJ;
 
-SUPC_${SUPC_BOD_NAME}_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
+static SUPC_${SUPC_BOD_NAME}_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 <#if SUPC_INTERRUPT_ENABLE>
