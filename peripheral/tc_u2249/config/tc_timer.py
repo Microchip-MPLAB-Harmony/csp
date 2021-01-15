@@ -29,6 +29,11 @@
 ###################################################################################################
 
 global calcAchievableFreq
+global tcTimerUnit
+tcTimerUnit = { "millisecond" : 1,
+                "microsecond" : 1000, 
+                "nanosecond"  : 1000000,
+                }
 
 def updateTimerMenuVisibleProperty(symbol, event):
     if event["value"] == "Timer":
@@ -41,15 +46,17 @@ def tcTimeMaxValue(symbol, event):
     if clock_freq == 0:
         clock_freq = 1
     prescaler = int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:])
-    resolution = (prescaler * 1000000000.0) / clock_freq
+    resolution = (prescaler * 1000.0) / clock_freq  #mSec
     mode = tcSym_CTRLA_MODE.getValue()
+    unit = tcTimerUnit[tcSym_TimerUnit.getValue()]
+
     max = 0.0
     if (mode == 0):
-        max = (65535.0 * resolution / 1000000)
+        max = (65536.0 * resolution * unit)
     elif (mode == 1):
-        max = (255.0 * resolution / 1000000)
+        max = (256.0 * resolution * unit)
     elif (mode == 2):
-        max = (4294967295.0 * resolution / 1000000)
+        max = (4294967296.0 * resolution * unit)
     symbol.setMax(max)
 
 def tcPeriodCalc(symbol, event):
@@ -57,10 +64,13 @@ def tcPeriodCalc(symbol, event):
     if clock_freq == 0:
         clock_freq = 1
     prescaler = int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:])
-    resolution = (prescaler * 1000.0) / clock_freq
+    resolution = (prescaler * 1000.0) / clock_freq   #mSec
     time = tcSym_Timer_TIME_MS.getValue()
-    period = time / resolution
+    unit = tcTimerUnit[tcSym_TimerUnit.getValue()]
+    period = time / (resolution * unit)
     symbol.setValue(long(period), 2)
+    symbol.setMax(pow(2, int(tcSym_CTRLA_MODE.getSelectedKey()[5:])) - 1)
+
     calcAchievableFreq()
 
 def tcTimerEvsys(symbol, event):
@@ -102,32 +112,39 @@ tcSym_TimerMenu.setDependencies(updateTimerMenuVisibleProperty, ["TC_OPERATION_M
 tcSym_Timer_CTRLBSET_ONESHOT = tcComponent.createBooleanSymbol("TC_TIMER_CTRLBSET_ONESHOT", tcSym_TimerMenu)
 tcSym_Timer_CTRLBSET_ONESHOT.setLabel("Enable One-Shot Mode")
 
+global tcSym_TimerUnit
+timerUnit = ["millisecond", "microsecond", "nanosecond"]
+tcSym_TimerUnit = tcComponent.createComboSymbol("TC_TIMER_UNIT", tcSym_TimerMenu, timerUnit)
+tcSym_TimerUnit.setLabel("Timer Period Unit")
+tcSym_TimerUnit.setDefaultValue("millisecond")
+
 #time in float
 global tcSym_Timer_TIME_MS
 clock_freq = Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
 if clock_freq == 0:
     clock_freq = 1
 resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / clock_freq
-max = (65535.0 * resolution / 1000000)
+max = (65536.0 * resolution / 1000000)
 tcSym_Timer_TIME_MS = tcComponent.createFloatSymbol("TC_TIMER_TIME_MS", tcSym_TimerMenu)
-tcSym_Timer_TIME_MS.setLabel("Timer Period (Milli Sec)")
+tcSym_Timer_TIME_MS.setLabel("Time")
 tcSym_Timer_TIME_MS.setDefaultValue(1)
 tcSym_Timer_TIME_MS.setMin(0.0)
 tcSym_Timer_TIME_MS.setMax(max)
 tcSym_Timer_TIME_MS.setDependencies(tcTimeMaxValue, ["TC_CTRLA_MODE", "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
-    "TC_CTRLA_PRESCALER"])
+    "TC_CTRLA_PRESCALER", "TC_TIMER_UNIT"])
 
 #timer period
 global tcSym_TimerPeriod
 period = tcSym_Timer_TIME_MS.getValue() * 1000000 / resolution
-tcSym_TimerPeriod = tcComponent.createLongSymbol("TC_TIMER_PERIOD", tcSym_TimerMenu)
+tcSym_TimerPeriod = tcComponent.createLongSymbol("TC_TIMER_PERIOD", tcSym_Timer_TIME_MS)
 tcSym_TimerPeriod.setLabel("Timer Period")
-tcSym_TimerPeriod.setVisible(False)
+tcSym_TimerPeriod.setVisible(True)
+tcSym_TimerPeriod.setReadOnly(True)
 tcSym_TimerPeriod.setDefaultValue(long(period))
 tcSym_TimerPeriod.setMin(0)
-tcSym_TimerPeriod.setMax(2**32)
+tcSym_TimerPeriod.setMax((2**32) - 1)
 tcSym_TimerPeriod.setDependencies(tcPeriodCalc, ["TC_CTRLA_MODE", "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
-    "TC_CTRLA_PRESCALER", "TC_TIMER_TIME_MS"])
+    "TC_CTRLA_PRESCALER", "TC_TIMER_TIME_MS", "TC_TIMER_UNIT"])
 
 #timer interrupt mode
 global tcSym_Timer_INTENSET_OVF

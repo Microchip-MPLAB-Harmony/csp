@@ -27,6 +27,12 @@
 global tcInstanceName
 global extClock
 global tcNumInterruptLines
+global tcTimerUnit
+tcTimerUnit = { "millisecond" : 1000000,
+                "microsecond" : 1000, 
+                "nanosecond"  : 1,
+                }
+
 channel_periphId = [0, 0, 0]
 
 tcChannelMenu = []
@@ -44,6 +50,7 @@ tcSym_SYS_TIME_CONNECTED = []
 tcSym_CH_TimerPeriod = []
 tcSym_CH_TimerPeriodComment = []
 tcSym_CH_TimerPeriodCount = []
+tcSym_TimerUnit = []
 tcSym_CH_CMR_CPCSTOP = []
 tcSym_CH_IER_CPCS = []
 tcSym_CH_IER_CPAS = []
@@ -241,7 +248,7 @@ def handleMessage(messageID, args):
     if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
         tc_channel = sysTimeChannel_Sym.getSelectedKey()
         channelID = int(tc_channel[3])
-        #Set the Time Period (Milli Sec)
+        #Set the Time Period (millisecond)
         sysTimeTickRateMs.setValue(args["sys_time_tick_ms"])
         tcSym_CH_TimerPeriod[channelID].setValue(sysTimeTickRateMs.getValue())
 
@@ -680,10 +687,11 @@ def tcPeriodCountCalc(symbol, event):
         time = tcSym_CH_TimerPeriod[channelID].getValue()
 
     resolution_ns = tcGetClockResolution(clock, channelID)
+    unit = tcTimerUnit[tcSym_TimerUnit[channelID].getValue()]    
     if (float(resolution_ns) == 0.0):
         resolution_ns = 1
-    time_period = int((time * 1000000.0 / float(resolution_ns)))
-
+    time_period = int((time * unit / float(resolution_ns)))
+    
     if (mode == "TIMER"):
         if (time_period > tcCounterMaxValue):
             tcSym_CH_TimerPeriodComment[channelID].setLabel("****Period Count is >" + str(tcCounterMaxValue) + ". Reduce timer period ****")
@@ -697,7 +705,8 @@ def tcPeriodMaxVal(symbol, event):
     channelID = int(id[2])
     clock = tcSym_CH_CMR_TCCLKS[channelID].getSelectedKey()
     resolution_ns = tcGetClockResolution(clock, channelID)
-    symbol.setMax(float(((float(resolution_ns) * float(tcCounterMaxValue))/1000000)))
+    unit = tcTimerUnit[tcSym_TimerUnit[channelID].getValue()]
+    symbol.setMax(float(((float(resolution_ns) * float((tcCounterMaxValue+1)))/unit)))
 
 def tcCompareMaxCalc(tcCompare, event):
     id = tcCompare.getID()
@@ -1366,21 +1375,28 @@ def instantiateComponent(tcComponent):
         tcTimerMenu[channelID].setLabel("Timer")
         tcTimerMenu[channelID].setDependencies(tcTimerVisible, ["TC"+str(channelID)+"_OPERATING_MODE"])
 
+        global tcSym_TimerUnit
+        tcSym_TimerUnit.append(channelID)
+        timerUnit = ["millisecond", "microsecond", "nanosecond"]
+        tcSym_TimerUnit[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_TIMER_UNIT", tcTimerMenu[channelID], timerUnit)
+        tcSym_TimerUnit[channelID].setLabel("Timer Period Unit")
+        tcSym_TimerUnit[channelID].setDefaultValue("millisecond")     
+
         if (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") != 0):
-            max =  tcCounterMaxValue * 1000.0 / int((Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") ))
+            max =  (tcCounterMaxValue + 1) * 1000.0 / int((Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") ))
         else:
             max = 0
 
         global tcSym_CH_TimerPeriod
         tcSym_CH_TimerPeriod.append(channelID)
         tcSym_CH_TimerPeriod[channelID] = tcComponent.createFloatSymbol("TC"+str(channelID)+"_TIMER_PERIOD_MS", tcTimerMenu[channelID])
-        tcSym_CH_TimerPeriod[channelID].setLabel("Timer Period (Milli Sec)")
+        tcSym_CH_TimerPeriod[channelID].setLabel("Time")
         tcSym_CH_TimerPeriod[channelID].setDefaultValue(0.4)
         tcSym_CH_TimerPeriod[channelID].setMin(0.0)
         tcSym_CH_TimerPeriod[channelID].setMax(max)
         tcSym_CH_TimerPeriod[channelID].setDependencies(tcPeriodMaxVal, \
         ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
+            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC", "TC"+str(channelID)+"_TIMER_UNIT"])
 
         tcSym_CH_TimerPeriodComment.append(channelID)
         tcSym_CH_TimerPeriodComment[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_TIMER_PERIOD_CMT", tcTimerMenu[channelID])
@@ -1388,15 +1404,18 @@ def instantiateComponent(tcComponent):
         tcSym_CH_TimerPeriodComment[channelID].setVisible(False)
         tcSym_CH_TimerPeriodComment[channelID].setDependencies(tcPeriodCountCalc, \
         ["TC"+str(channelID)+"_TIMER_PERIOD_MS", "TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
+            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC", "TC"+str(channelID)+"_TIMER_UNIT"])
 
         tcSym_CH_TimerPeriodCount.append(channelID)
-        tcSym_CH_TimerPeriodCount[channelID] = tcComponent.createLongSymbol("TC"+str(channelID)+"_TIMER_PERIOD_COUNT", tcTimerMenu[channelID])
-        tcSym_CH_TimerPeriodCount[channelID].setVisible(False)
+        tcSym_CH_TimerPeriodCount[channelID] = tcComponent.createLongSymbol("TC"+str(channelID)+"_TIMER_PERIOD_COUNT", tcSym_CH_TimerPeriod[channelID])
+        tcSym_CH_TimerPeriodCount[channelID].setLabel("Timer Period")
+        tcSym_CH_TimerPeriodCount[channelID].setVisible(True)
+        tcSym_CH_TimerPeriodCount[channelID].setReadOnly(True)
         tcSym_CH_TimerPeriodCount[channelID].setDefaultValue(60000)
+        tcSym_CH_TimerPeriodCount[channelID].setMax(tcCounterMaxValue)
         tcSym_CH_TimerPeriodCount[channelID].setDependencies(tcPeriodCountCalc, \
         ["TC"+str(channelID)+"_TIMER_PERIOD_MS", "TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC", "TC"+str(channelID)+"_ENABLE"])
+            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC", "TC"+str(channelID)+"_ENABLE", "TC"+str(channelID)+"_TIMER_UNIT"])
 
         #one-shot timer
         tcSym_CH_CMR_CPCSTOP.append(channelID)
