@@ -46,13 +46,13 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
 <#if CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
+#include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
 
 <#if WDT_EW_ENABLE = true>
-WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
+static WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
 </#if>
 
 // *****************************************************************************
@@ -67,15 +67,18 @@ void ${WDT_INSTANCE_NAME}_Enable( void )
     if((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != WDT_CTRLA_ALWAYSON_Msk)
     {
         /* Enable Watchdog Timer */
-        ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA |= WDT_CTRLA_ENABLE_Msk;
+        ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA |= (uint8_t)WDT_CTRLA_ENABLE_Msk;
 
         /* Wait for synchronization */
-        while(${WDT_INSTANCE_NAME}_REGS->WDT_SYNCBUSY);
+        while(${WDT_INSTANCE_NAME}_REGS->WDT_SYNCBUSY != 0U)
+        {
+
+        }
     }
 <#if WDT_EW_ENABLE = true>
 
     /* Enable early warning interrupt */
-    ${WDT_INSTANCE_NAME}_REGS->WDT_INTENSET = WDT_INTENSET_EW_Msk;
+    ${WDT_INSTANCE_NAME}_REGS->WDT_INTENSET = (uint8_t)WDT_INTENSET_EW_Msk;
 </#if>
 }
 
@@ -83,17 +86,23 @@ void ${WDT_INSTANCE_NAME}_Enable( void )
 void ${WDT_INSTANCE_NAME}_Disable( void )
 {
     /* Wait for synchronization */
-    while(${WDT_INSTANCE_NAME}_REGS->WDT_SYNCBUSY);
+    while(${WDT_INSTANCE_NAME}_REGS->WDT_SYNCBUSY != 0U)
+    {
+
+    }
 
     /* Disable Watchdog Timer */
-    ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA &= ~(WDT_CTRLA_ENABLE_Msk);
+    ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA &= (uint8_t)(~WDT_CTRLA_ENABLE_Msk);
 
     /* Wait for synchronization */
-    while(${WDT_INSTANCE_NAME}_REGS->WDT_SYNCBUSY);
+    while(${WDT_INSTANCE_NAME}_REGS->WDT_SYNCBUSY != 0U)
+    {
+
+    }
 <#if WDT_EW_ENABLE = true>
 
     /* Disable Early Watchdog Interrupt */
-    ${WDT_INSTANCE_NAME}_REGS->WDT_INTENCLR = WDT_INTENCLR_EW_Msk;
+    ${WDT_INSTANCE_NAME}_REGS->WDT_INTENCLR = (uint8_t)WDT_INTENCLR_EW_Msk;
 </#if>
 }
 
@@ -106,7 +115,7 @@ void ${WDT_INSTANCE_NAME}_Clear( void )
     {
         /* Clear WDT and reset the WDT timer before the
         timeout occurs */
-        ${WDT_INSTANCE_NAME}_REGS->WDT_CLEAR = WDT_CLEAR_CLEAR_KEY;
+        ${WDT_INSTANCE_NAME}_REGS->WDT_CLEAR = (uint8_t)WDT_CLEAR_CLEAR_KEY;
     }
 }
 
@@ -117,14 +126,20 @@ void ${WDT_INSTANCE_NAME}_Clear( void )
 void ${WDT_INSTANCE_NAME}_ClearWithSync( void )
 {
     /* Wait for synchronization */
-    while(${WDT_INSTANCE_NAME}_REGS->WDT_SYNCBUSY);
+    while(${WDT_INSTANCE_NAME}_REGS->WDT_SYNCBUSY != 0U)
+    {
+
+    }
 
     /* Clear WDT and reset the WDT timer before the
     timeout occurs */
-    ${WDT_INSTANCE_NAME}_REGS->WDT_CLEAR = WDT_CLEAR_CLEAR_KEY;
+    ${WDT_INSTANCE_NAME}_REGS->WDT_CLEAR = (uint8_t)WDT_CLEAR_CLEAR_KEY;
 
     /* Wait for synchronization */
-    while(${WDT_INSTANCE_NAME}_REGS->WDT_SYNCBUSY);
+    while(${WDT_INSTANCE_NAME}_REGS->WDT_SYNCBUSY != 0U)
+    {
+
+    }
 }
 
 <#if WDT_EW_ENABLE = true>
@@ -138,7 +153,7 @@ void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t con
 void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Clear Early Watchdog Interrupt */
-    ${WDT_INSTANCE_NAME}_REGS->WDT_INTFLAG = WDT_INTFLAG_EW_Msk;
+    ${WDT_INSTANCE_NAME}_REGS->WDT_INTFLAG = (uint8_t)WDT_INTFLAG_EW_Msk;
 
     if( ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL )
     {
