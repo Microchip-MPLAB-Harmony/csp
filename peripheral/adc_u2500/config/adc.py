@@ -33,6 +33,24 @@ InterruptVectorUpdate = []
 global adcInstanceName
 adcSym_SEQCTRL_SEQ = []
 
+global adcResult
+adcResult = {"13 Bit": 
+                {"SAMPLENUM": 2,
+                 "ADJRES": 1
+                },
+            "14 Bit": 
+                {"SAMPLENUM": 4,
+                 "ADJRES": 2
+                },
+            "15 Bit": 
+                {"SAMPLENUM": 6,
+                 "ADJRES": 1
+                },
+            "16 Bit": 
+                {"SAMPLENUM": 8,
+                 "ADJRES": 0
+                },
+            }
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
@@ -112,12 +130,41 @@ def adcNegativeInput(symbol, event):
     else:
         symbol.setReadOnly(True)
 
-def adcResultConfVisibility(symbol, event):
+def adcResultBitVisibility(symbol, event):
     symObj = event["symbol"]
-    if (symObj.getSelectedKey() == "16BIT"):
+    if(symObj.getSelectedKey() == "16BIT"):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
+
+def adcResultConfVisibility(symbol, event):
+    component = symbol.getComponent()
+    resolution = component.getSymbolValue("ADC_CTRLB_RESSEL")
+    bit = component.getSymbolValue("ADC_RES_BIT")
+    if (resolution == 1 and bit == "Accumulation/Averaging"):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def adcADJRESCalc(symbol, event):
+    component = symbol.getComponent()
+    resolution = component.getSymbolValue("ADC_CTRLB_RESSEL")
+    bit = component.getSymbolValue("ADC_RES_BIT")
+    shift = component.getSymbolValue("ADC_AVGCTRL_ADJRES")
+    if resolution == 1 and bit != "Accumulation/Averaging":
+        symbol.setValue(adcResult[bit]["ADJRES"])
+    else:
+        symbol.setValue(shift)   
+
+def adcSAMPLENUMCalc(symbol, event):
+    component = symbol.getComponent()
+    resolution = component.getSymbolValue("ADC_CTRLB_RESSEL")
+    bit = component.getSymbolValue("ADC_RES_BIT")
+    samples = component.getSymbolValue("ADC_AVGCTRL_SAMPLENUM")
+    if resolution == 1 and bit != "Accumulation/Averaging":
+        symbol.setValue(adcResult[bit]["SAMPLENUM"])
+    else:
+        symbol.setValue(samples)     
 
 def adcSlaveModeVisibility(symbol, event):
     if (event["value"] == True):
@@ -591,8 +638,14 @@ def instantiateComponent(adcComponent):
         adcSym_CTRLC_RESSEL.addKey(adcResultResolutionValues[index].getAttribute("name"), adcResultResolutionValues[index].getAttribute("value"),
         adcResultResolutionValues[index].getAttribute("caption"))
 
+    adcBits = ["13 Bit", "14 Bit", "15 Bit", "16 Bit", "Accumulation/Averaging"]
+    adcSym_RES_BIT = adcComponent.createComboSymbol("ADC_RES_BIT", adcSym_CTRLC_RESSEL, adcBits)
+    adcSym_RES_BIT.setLabel("Number of Bits")
+    adcSym_RES_BIT.setVisible(False)
+    adcSym_RES_BIT.setDependencies(adcResultBitVisibility, ["ADC_CTRLB_RESSEL"])        
+
     #Averaging
-    adcSym_AVGCTRL_SAMPLENUM = adcComponent.createKeyValueSetSymbol("ADC_AVGCTRL_SAMPLENUM", adcSym_CTRLC_RESSEL)
+    adcSym_AVGCTRL_SAMPLENUM = adcComponent.createKeyValueSetSymbol("ADC_AVGCTRL_SAMPLENUM", adcSym_RES_BIT)
     adcSym_AVGCTRL_SAMPLENUM.setLabel("Number of Accumulated Samples")
     adcSym_AVGCTRL_SAMPLENUM.setDefaultValue(0)
     adcSym_AVGCTRL_SAMPLENUM.setOutputMode("Key")
@@ -604,16 +657,24 @@ def instantiateComponent(adcComponent):
     for index in range (0 , len(adcResultResolutionValues)):
         adcSym_AVGCTRL_SAMPLENUM.addKey(adcResultResolutionValues[index].getAttribute("name"), adcResultResolutionValues[index].getAttribute("value"),
         adcResultResolutionValues[index].getAttribute("caption"))
-    adcSym_AVGCTRL_SAMPLENUM.setDependencies(adcResultConfVisibility, ["ADC_CTRLB_RESSEL"])
+    adcSym_AVGCTRL_SAMPLENUM.setDependencies(adcResultConfVisibility, ["ADC_CTRLB_RESSEL", "ADC_RES_BIT"])
 
     #division coefficient
-    adcSym_AVGCTRL_ADJRES = adcComponent.createIntegerSymbol("ADC_AVGCTRL_ADJRES", adcSym_CTRLC_RESSEL)
+    adcSym_AVGCTRL_ADJRES = adcComponent.createIntegerSymbol("ADC_AVGCTRL_ADJRES", adcSym_RES_BIT)
     adcSym_AVGCTRL_ADJRES.setLabel("Number of Right Shifts")
     adcSym_AVGCTRL_ADJRES.setMin(0)
     adcSym_AVGCTRL_ADJRES.setMax(7)
     adcSym_AVGCTRL_ADJRES.setDefaultValue(0)
     adcSym_AVGCTRL_ADJRES.setVisible(False)
-    adcSym_AVGCTRL_ADJRES.setDependencies(adcResultConfVisibility, ["ADC_CTRLB_RESSEL"])
+    adcSym_AVGCTRL_ADJRES.setDependencies(adcResultConfVisibility, ["ADC_CTRLB_RESSEL", "ADC_RES_BIT"])
+
+    adcSym_ADJRES = adcComponent.createIntegerSymbol("ADC_ADJRES", adcSym_RES_BIT)
+    adcSym_ADJRES.setVisible(False)
+    adcSym_ADJRES.setDependencies(adcADJRESCalc, ["ADC_CTRLB_RESSEL", "ADC_RES_BIT", "ADC_AVGCTRL_ADJRES"])
+
+    adcSym_SAMPLENUM = adcComponent.createIntegerSymbol("ADC_SAMPLENUM", adcSym_RES_BIT)
+    adcSym_SAMPLENUM.setVisible(False)
+    adcSym_SAMPLENUM.setDependencies(adcSAMPLENUMCalc, ["ADC_CTRLB_RESSEL", "ADC_RES_BIT", "ADC_AVGCTRL_SAMPLENUM"])
 
     #left adjusted mode
     adcSym_CTRLC_LEFTADJ = adcComponent.createBooleanSymbol("ADC_CTRLB_LEFTADJ", adcResultMenu)
