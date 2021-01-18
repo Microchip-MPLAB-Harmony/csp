@@ -135,7 +135,7 @@ static void FDPLL_Initialize(void)
                                                                   ${CONFIG_CLOCK_DPLL_LOCK_BYPASS?then('| SYSCTRL_DPLLCTRLB_LBYPASS_Msk', ' ')}
                                                                   ${CONFIG_CLOCK_DPLL_WAKEUP_FAST?then('| SYSCTRL_DPLLCTRLB_WUF_Msk', ' ')}
                                                                   ${CONFIG_CLOCK_DPLL_LOWPOWER_ENABLE?then('| SYSCTRL_DPLLCTRLB_LPEN_Msk', ' ')}
-                                                                  ${(CONFIG_CLOCK_DPLL_REF_CLOCK == "1")?then('| SYSCTRL_DPLLCTRLB_DIV(${CONFIG_CLOCK_DPLL_DIVIDER})', ' ')};</@compress>
+                                                                  ${(CONFIG_CLOCK_DPLL_REF_CLOCK == "0x1")?then('| SYSCTRL_DPLLCTRLB_DIV(${CONFIG_CLOCK_DPLL_DIVIDER})', ' ')};</@compress>
 
 
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_DPLLRATIO = SYSCTRL_DPLLRATIO_LDRFRAC(${CONFIG_CLOCK_DPLL_LDRFRAC_FRACTION}) |
