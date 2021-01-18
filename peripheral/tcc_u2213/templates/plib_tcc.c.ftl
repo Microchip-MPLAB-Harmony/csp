@@ -169,6 +169,20 @@
 </#if>
 </#list>
 
+<#-- Invert outputs -->
+<#assign TCC_DRVCTRL_INVEN = "">
+<#list 0..(TCC_NUM_OUTPUTS-1) as i>
+<#assign CH_NUM = i>
+<#assign TCC_INVEN = "TCC_DRVCTRL_INVEN" + i>
+<#if .vars[TCC_INVEN] == true> 
+    <#if TCC_DRVCTRL_INVEN != "">
+        <#assign TCC_DRVCTRL_INVEN = TCC_DRVCTRL_INVEN + "\n\t\t | TCC_DRVCTRL_INVEN"+i+"_Msk">
+    <#else>
+        <#assign TCC_DRVCTRL_INVEN = "TCC_DRVCTRL_INVEN" + i + "_Msk">
+    </#if>
+</#if>    
+</#list>
+
 <#-- Pattern Generation -->
 <#if TCC_IS_PG == 1>
 <#list 0..(TCC_NUM_OUTPUTS-1) as i>
@@ -301,8 +315,12 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 <#if TCC_PATT_VAL?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_PATT =(uint16_t)(${TCC_PATT_VAL});
 </#if>
+<#if TCC_DRVCTRL_INVEN?has_content>
+    ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL = ${TCC_DRVCTRL_INVEN};
+</#if>    
+
 <#if TCC_EVCTRL_EVACT0 == "FAULT" || TCC_EVCTRL_EVACT1 == "FAULT">
-    ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL = TCC_DRVCTRL_FILTERVAL0(${TCC_DRVCTRL_FILTERVAL}UL)
+    ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL |= TCC_DRVCTRL_FILTERVAL0(${TCC_DRVCTRL_FILTERVAL}UL)
           | TCC_DRVCTRL_FILTERVAL1(${TCC_DRVCTRL_FILTERVAL1}UL)<#rt>
                 <#lt><#if TCC_DRVCTRL_FAULT_VAL?has_content>| ${TCC_DRVCTRL_FAULT_VAL}</#if>;
 </#if>

@@ -704,6 +704,14 @@ def instantiateComponent(tccComponent):
         tccSym_Channel_EVCTRL_MCEI[channelID].setDefaultValue(False)
         eventDepList.append("TCC_EVCTRL_MCEI_"+str(channelID))
 
+    #Invert outputs
+    tccSym_Outputs_Menu = tccComponent.createMenuSymbol("TCC_OUTPUTS", None)
+    tccSym_Outputs_Menu.setLabel("Outputs")
+
+    for output in range (0, numOfOutputs):
+        tccSym_DRVCTRL_INVEN = tccComponent.createBooleanSymbol("TCC_DRVCTRL_INVEN"+str(output), tccSym_Outputs_Menu)
+        tccSym_DRVCTRL_INVEN.setLabel("Invert Output " + str(output))
+    
     #dead time menu
     tccSym_DeadTime_Menu = tccComponent.createMenuSymbol("TCC_DEAD_TIME_MENU", None)
     tccSym_DeadTime_Menu.setLabel("Dead Time")
