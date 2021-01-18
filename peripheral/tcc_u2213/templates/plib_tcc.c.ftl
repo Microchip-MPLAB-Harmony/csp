@@ -345,7 +345,7 @@ void ${TCC_INSTANCE_NAME}_PWMStop (void)
 bool ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet (uint32_t period)
 {
     bool status = false;
-    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (TCC_STATUS_PERBUFV_Msk)) == 0U)
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (TCC_STATUS_${TCC_PBUF_REG_NAME}V_Msk)) == 0U)
     {
         ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period & 0xFFFFFFU;
         status = true;
@@ -357,7 +357,7 @@ bool ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet (uint32_t period)
 bool ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet (uint16_t period)
 {
     bool status = false;
-    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (TCC_STATUS_PERBUFV_Msk)) == 0U)
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (TCC_STATUS_${TCC_PBUF_REG_NAME}V_Msk)) == 0U)
     {
         ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period;
         status = true;
@@ -400,7 +400,7 @@ void ${TCC_INSTANCE_NAME}_PWMDeadTimeSet (uint8_t deadtime_high, uint8_t deadtim
 bool ${TCC_INSTANCE_NAME}_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_output)
 {
     bool status = false;
-    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (TCC_STATUS_PATTBUFV_Msk)) == 0U)
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (TCC_STATUS_${TCC_PATBUF_REG_NAME}V_Msk)) == 0U)
     {
         ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PATBUF_REG_NAME} = (uint16_t)(pattern_enable | ((uint32_t)pattern_output << 8U));
         status = true;

@@ -166,7 +166,7 @@ void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet(uint32_t count);
 __STATIC_INLINE bool ${TCC_INSTANCE_NAME}_PWM24bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
 {
     bool status = false;
-    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (1UL << (TCC_STATUS_CCBUFV0_Pos + (uint32_t)channel))) == 0U)
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (1UL << (TCC_STATUS_${TCC_CBUF_REG_NAME}V0_Pos + (uint32_t)channel))) == 0U)
     {
         ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_CBUF_REG_NAME}[channel] = duty & 0xFFFFFFU;
         status = true;
@@ -184,7 +184,7 @@ void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet(uint16_t count);
 __STATIC_INLINE bool ${TCC_INSTANCE_NAME}_PWM16bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t duty)
 {
     bool status = false;
-    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (1UL << (TCC_STATUS_CCBUFV0_Pos + (uint32_t)channel))) == 0U)
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (1UL << (TCC_STATUS_${TCC_CBUF_REG_NAME}V0_Pos + (uint32_t)channel))) == 0U)
     {    
         ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_CBUF_REG_NAME}[channel] = duty;
         status = true;
