@@ -155,11 +155,14 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
         /* Wait for Synchronization */
     }
 
+    <#if AC_LOAD_CALIB == 1>
     /*Load Calibration Value*/
     uint8_t calibVal = (uint8_t)((*(uint32_t*)0x00800080) & 0x3);
     calibVal = (((calibVal) == 0x3) ? 0x3 : (calibVal));
+    
 
     ${AC_INSTANCE_NAME}_REGS->AC_CALIB = calibVal;
+    </#if>
 
      /* Disable the module and configure COMPCTRL */
     <#list 0..4 as i>
@@ -200,7 +203,11 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   ${.vars[AC_COMPCTRL_RUNSTDBY]?then(' | AC_COMPCTRL_RUNSTDBY_Msk','')};</@compress>
     <#if AC_COMPCTRL_SINGLE_MODE?has_content>
         <#if (.vars[AC_COMPCTRL_SINGLE_MODE] == false) & (.vars[AC_COMPCTRL_HYSTEN] == true)>
+            <#if AC_COMPCTRL_HYST_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYST(${.vars[AC_COMPCTRL_HYST_VAL]}) | AC_COMPCTRL_HYSTEN_Msk;
+            <#else>
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYSTEN_Msk;   
+            </#if>         
         </#if>
     </#if>
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;

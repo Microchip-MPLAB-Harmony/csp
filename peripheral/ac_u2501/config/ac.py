@@ -140,15 +140,26 @@ def instantiateComponent(acComponent):
     ################################ ATDF ####################################################
     node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AC\"]/instance@[name=\"AC""\"]/parameters")
     numOfComparators = 0
+    calibRequired = -1
     parameters = []
     parameters = node.getChildren()
     for param in range (0, len(parameters)):
         if(parameters[param].getAttribute("name") == "NUM_CMP"):
             numOfComparators = int(parameters[param].getAttribute("value"))
+        if(parameters[param].getAttribute("name") == "LOAD_CALIB"):
+            calibRequired = int(parameters[param].getAttribute("value"))
+
+    # If LOAD_CALIB parameter is not present, it is assumed that CALIB register update is required to maintain backward compatibility
+    if calibRequired == -1:
+        calibRequired = 1   
             
     acSym_NUM_CHANNELS = acComponent.createIntegerSymbol("AC_NUM_COMPARATORS", None)
     acSym_NUM_CHANNELS.setDefaultValue(int(numOfComparators))
     acSym_NUM_CHANNELS.setVisible(False)
+
+    acSym_LOAD_CALIB = acComponent.createIntegerSymbol("AC_LOAD_CALIB", None)
+    acSym_LOAD_CALIB.setVisible(False)
+    acSym_LOAD_CALIB.setDefaultValue(calibRequired)
 
     acSym_COMPCTRL_MUXPOS_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__MUXPOS\"]")
     acSym_COMPCTRL_MUXPOS_Node_Values = acSym_COMPCTRL_MUXPOS_Node.getChildren()   
@@ -163,7 +174,7 @@ def instantiateComponent(acComponent):
         acSym_MUXNEG_ENUM = acComponent.createStringSymbol("AC_MUXNEG_ENUM_"+str(id), None)
         acSym_MUXNEG_ENUM.setDefaultValue(acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("name"))
         acSym_MUXNEG_ENUM.setVisible(False)     
-    
+   
     #Populate menu for all comparators in the AC peripheral
     for comparatorID in range(0, int(numOfComparators)):
         acSym_Enable.append(comparatorID)
@@ -324,30 +335,31 @@ def instantiateComponent(acComponent):
         #Should not be shown when single-shot is selected.
         acSym_COMPCTRL_HYSTEN.setDependencies(setacHystVisibility,["AC_COMPCTRL_" + str(comparatorID) +"SINGLE_MODE"])
         
-        #Hysteresis selection
-        acSym_COMPCTRL_HYST = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_HYST_VAL", acSym_COMPCTRL_HYSTEN)
-        acSym_COMPCTRL_HYST.setLabel("Hysteresis Selection")
-        acSym_COMPCTRL_HYST.setVisible(False)
-        acSym_COMPCTRL_HYST_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__HYST\"]")
-        acSym_COMPCTRL_HYST_Values = []
-        acSym_COMPCTRL_HYST_Values = acSym_COMPCTRL_HYST_node.getChildren()
+        if (ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__HYST\"]") != None):
+            #Hysteresis selection
+            acSym_COMPCTRL_HYST = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_HYST_VAL", acSym_COMPCTRL_HYSTEN)
+            acSym_COMPCTRL_HYST.setLabel("Hysteresis Selection")
+            acSym_COMPCTRL_HYST.setVisible(False)
+            acSym_COMPCTRL_HYST_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__HYST\"]")
+            acSym_COMPCTRL_HYST_Values = []
+            acSym_COMPCTRL_HYST_Values = acSym_COMPCTRL_HYST_node.getChildren()
 
-        acSym_COMPCTRL_HYST_Default_Val = 0
+            acSym_COMPCTRL_HYST_Default_Val = 0
 
-        for id in range(len(acSym_COMPCTRL_HYST_Values)):
-            acSym_COMPCTRL_HYST_Key_Name = acSym_COMPCTRL_HYST_Values[id].getAttribute("name")
+            for id in range(len(acSym_COMPCTRL_HYST_Values)):
+                acSym_COMPCTRL_HYST_Key_Name = acSym_COMPCTRL_HYST_Values[id].getAttribute("name")
 
-            if(acSym_COMPCTRL_HYST_Key_Name == "HYST50"):
-                acSym_COMPCTRL_HYST_Default_Val = id
+                if(acSym_COMPCTRL_HYST_Key_Name == "HYST50"):
+                    acSym_COMPCTRL_HYST_Default_Val = id
 
-            acSym_COMPCTRL_HYST_Key_Description = acSym_COMPCTRL_HYST_Values[id].getAttribute("caption")
-            acSym_COMPCTRL_HYST_Key_Value = acSym_COMPCTRL_HYST_Values[id].getAttribute("value")
-            acSym_COMPCTRL_HYST.addKey(acSym_COMPCTRL_HYST_Key_Name, acSym_COMPCTRL_HYST_Key_Value, acSym_COMPCTRL_HYST_Key_Description)
+                acSym_COMPCTRL_HYST_Key_Description = acSym_COMPCTRL_HYST_Values[id].getAttribute("caption")
+                acSym_COMPCTRL_HYST_Key_Value = acSym_COMPCTRL_HYST_Values[id].getAttribute("value")
+                acSym_COMPCTRL_HYST.addKey(acSym_COMPCTRL_HYST_Key_Name, acSym_COMPCTRL_HYST_Key_Value, acSym_COMPCTRL_HYST_Key_Description)
 
-        acSym_COMPCTRL_HYST.setDefaultValue(acSym_COMPCTRL_HYST_Default_Val)
-        acSym_COMPCTRL_HYST.setOutputMode("Value")
-        acSym_COMPCTRL_HYST.setDisplayMode("Description")
-        acSym_COMPCTRL_HYST.setDependencies(setacSymbolVisibility,["AC" + str(comparatorID) + "_HYSTEN"])
+            acSym_COMPCTRL_HYST.setDefaultValue(acSym_COMPCTRL_HYST_Default_Val)
+            acSym_COMPCTRL_HYST.setOutputMode("Value")
+            acSym_COMPCTRL_HYST.setDisplayMode("Description")
+            acSym_COMPCTRL_HYST.setDependencies(setacSymbolVisibility,["AC" + str(comparatorID) + "_HYSTEN"])
         
         #Filter Length selection
         acSym_COMPCTRL_FLEN = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_FLEN_VAL", acSym_AdvConf)
