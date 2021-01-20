@@ -102,6 +102,13 @@ if("PIC32M" in processor):
     coreTimerComponent.addCapability("CORE_TIMER_TMR", "TMR")
     coreTimerComponent.setDisplayType("Peripheral Library")
 
+    powerComponent = Module.CreateComponent("power", "POWER", "/Peripherals/POWER/", "../peripheral/power/config/power.py")
+    powerComponent.setDisplayType("Peripheral Library")
+
+elif ("PIC32CX" in processor) and ("BZ" in processor):
+    powerComponent = Module.CreateComponent("power", "POWER", "/Peripherals/POWER/", "../peripheral/power/config/power.py")
+    powerComponent.setDisplayType("Peripheral Library")
+
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
 modules = periphNode.getChildren()
 

@@ -1,0 +1,1 @@
+	POWER_Initialize();
