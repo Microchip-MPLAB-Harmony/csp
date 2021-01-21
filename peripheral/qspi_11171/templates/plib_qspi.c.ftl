@@ -99,11 +99,6 @@ static void ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit(uint8_t* dst, uint8_t* 
     }
 }
 
-static inline void ${QSPI_INSTANCE_NAME?lower_case}_end_transfer( void )
-{
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_LASTXFER_Msk;
-}
-
 static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t *qspi_memory_xfer, QSPI_TRANSFER_TYPE tfr_type, uint32_t address )
 {
     uint32_t mask = 0;
@@ -186,6 +181,11 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
     return true;
 }
 
+void ${QSPI_INSTANCE_NAME}_EndTransfer( void )
+{
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_LASTXFER_Msk;
+}
+
 bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address )
 {
     uint32_t mask = 0;
@@ -263,7 +263,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     __DSB();
     __ISB();
 
-    ${QSPI_INSTANCE_NAME?lower_case}_end_transfer();
+    ${QSPI_INSTANCE_NAME}_EndTransfer();
 
     /* Poll Status register to know status if instruction has end */
     while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk)) {
@@ -310,7 +310,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     __DSB();
     __ISB();
 
-    ${QSPI_INSTANCE_NAME?lower_case}_end_transfer();
+    ${QSPI_INSTANCE_NAME}_EndTransfer();
 
     /* Poll Status register to know status if instruction has end */
     while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk)) {
@@ -457,7 +457,7 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
     __DSB();
     __ISB();
 
-    ${QSPI_INSTANCE_NAME?lower_case}_end_transfer();
+    ${QSPI_INSTANCE_NAME}_EndTransfer();
     // Poll Status register to know status if instruction has ended
     while( !(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_INSTRE_Msk) ) {
         ;   // spin lock
@@ -490,7 +490,7 @@ bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, ui
     __DSB();
     __ISB();
 
-    ${QSPI_INSTANCE_NAME?lower_case}_end_transfer();
+    ${QSPI_INSTANCE_NAME}_EndTransfer();
 
     /* Poll Status register to know status if instruction has end */
     while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk)) {

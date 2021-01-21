@@ -88,11 +88,6 @@ static void ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit(uint8_t* dst, uint8_t* 
     }
 }
 
-static inline void ${QSPI_INSTANCE_NAME?lower_case}_end_transfer( void )
-{
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLA = QSPI_CTRLA_ENABLE_Msk | QSPI_CTRLA_LASTXFER_Msk;
-}
-
 static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t *qspi_memory_xfer, uint8_t tfr_type, uint32_t address )
 {
     uint32_t mask = 0;
@@ -130,6 +125,11 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
     (uint32_t)${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRFRAME;
 
     return true;
+}
+
+void ${QSPI_INSTANCE_NAME}_EndTransfer( void )
+{
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLA = QSPI_CTRLA_ENABLE_Msk | QSPI_CTRLA_LASTXFER_Msk;
 }
 
 bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address )
@@ -193,7 +193,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     __DSB();
     __ISB();
 
-    ${QSPI_INSTANCE_NAME?lower_case}_end_transfer();
+    ${QSPI_INSTANCE_NAME}_EndTransfer();
 
     while((${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG & QSPI_INTFLAG_INSTREND_Msk) != QSPI_INTFLAG_INSTREND_Msk)
     {
@@ -231,7 +231,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     __DSB();
     __ISB();
 
-    ${QSPI_INSTANCE_NAME?lower_case}_end_transfer();
+    ${QSPI_INSTANCE_NAME}_EndTransfer();
 
     while((${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG & QSPI_INTFLAG_INSTREND_Msk) != QSPI_INTFLAG_INSTREND_Msk)
     {
@@ -276,7 +276,7 @@ bool ${QSPI_INSTANCE_NAME}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uin
     __DSB();
     __ISB();
 
-    ${QSPI_INSTANCE_NAME?lower_case}_end_transfer();
+    ${QSPI_INSTANCE_NAME}_EndTransfer();
 
     while((${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG & QSPI_INTFLAG_INSTREND_Msk) != QSPI_INTFLAG_INSTREND_Msk)
     {
@@ -316,7 +316,7 @@ bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, ui
     __DSB();
     __ISB();
 
-    ${QSPI_INSTANCE_NAME?lower_case}_end_transfer();
+    ${QSPI_INSTANCE_NAME}_EndTransfer();
 
     while((${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG & QSPI_INTFLAG_INSTREND_Msk) != QSPI_INTFLAG_INSTREND_Msk)
     {

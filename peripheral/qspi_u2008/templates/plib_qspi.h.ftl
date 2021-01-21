@@ -76,6 +76,8 @@ Interface definition of ${QSPI_INSTANCE_NAME} PLIB.
 
 void ${QSPI_INSTANCE_NAME}_Initialize( void );
 
+void ${QSPI_INSTANCE_NAME}_EndTransfer( void );
+
 bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address );
 
 bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length );
