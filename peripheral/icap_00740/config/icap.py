@@ -374,6 +374,8 @@ def instantiateComponent(icapComponent):
 
     #Calculate the proper interrupt registers using ERROR IRQ#
     irqString = "INPUT_CAPTURE_" + str(instanceNum) + "_ERROR"
+    if "PIC32MX" in Variables.get("__PROCESSOR"):
+        irqString = "INPUT_CAPTURE_ERROR_" + str(instanceNum)
     icxIrq_index = int(getIRQIndex(irqString))
     if icxIrq_index == -1:
         icxIrq_index = int(getVectorIndex(irqString))
@@ -414,11 +416,6 @@ def instantiateComponent(icapComponent):
     icapinterrupt2Control = icapComponent.createBooleanSymbol("ICAP_ERROR_INTERRUPT_ENABLE", None)
     icapinterrupt2Control.setLabel("Enable Error Interrupt")
     icapinterrupt2Control.setDefaultValue(False)
-    if icxIrq_index == -1:
-        icapinterrupt2Control.setVisible(False)
-    else:
-        icapinterrupt2Control.setVisible(True)
-
 
 ############################################################################
 #### Dependency ####
