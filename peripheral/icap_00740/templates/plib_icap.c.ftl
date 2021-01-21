@@ -157,6 +157,10 @@ void ${ICAP_INSTANCE_NAME}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t co
 
 void INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
 {
+    if( (${ICAP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
+    {
+        ${ICAP_INSTANCE_NAME?lower_case}Obj.callback(${ICAP_INSTANCE_NAME?lower_case}Obj.context);
+    }
 <#if ICAP_NUM_INT_LINES == 1>
     if ((${ICAPx_IFS_REG} & _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK) && (${ICAPx_IEC_REG} & _${ICAPx_IEC_REG}_IC${INDEX}IE_MASK))
     {
@@ -172,10 +176,6 @@ void INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
     ${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK;    //Clear IRQ flag
 </#if>
 
-    if( (${ICAP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
-    {
-        ${ICAP_INSTANCE_NAME?lower_case}Obj.callback(${ICAP_INSTANCE_NAME?lower_case}Obj.context);
-    }
 }
 </#if>
 
@@ -198,12 +198,11 @@ void ${ICAP_INSTANCE_NAME}_ErrorCallbackRegister(ICAP_CALLBACK callback, uintptr
 
 void INPUT_CAPTURE_${INDEX}_ERROR_InterruptHandler(void)
 {
-    ${ERROR_IFS_REG}CLR = _${ERROR_IFS_REG}_IC${INDEX}EIF_MASK;    //Clear IRQ flag
-
     if( (${ICAP_INSTANCE_NAME?lower_case}errObj.callback != NULL))
     {
         ${ICAP_INSTANCE_NAME?lower_case}errObj.callback(${ICAP_INSTANCE_NAME?lower_case}errObj.context);
-    }
+    }    
+    ${ERROR_IFS_REG}CLR = _${ERROR_IFS_REG}_IC${INDEX}EIF_MASK;    //Clear IRQ flag
 }
 </#if>
 <#if ICAP_ERROR_INTERRUPT_ENABLE?c == "false">
