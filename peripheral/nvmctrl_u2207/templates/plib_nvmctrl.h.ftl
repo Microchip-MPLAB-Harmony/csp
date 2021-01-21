@@ -68,7 +68,6 @@
 // *****************************************************************************
 
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_START_ADDRESS        (${.vars["FLASH_START_ADDRESS"]}U)
-#define ${NVMCTRL_INSTANCE_NAME}_FLASH_SIZE                 (${FLASH_SIZE}U)
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE             (${FLASH_PROGRAM_SIZE}U)
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_ROWSIZE              (${FLASH_ERASE_SIZE}U)
 
