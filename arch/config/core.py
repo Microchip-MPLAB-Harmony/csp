@@ -39,13 +39,15 @@ for mem_idx in range(0, len(addr_space_children)):
 
 def getFlashParams(app_start):
 
-    if (int(app_start,16) == flash_start):
+    arch = Database.getSymbolValue("core", "CoreArchitecture")
+
+    if (int(app_start,16) == flash_start) or ("CORTEX-A" in arch) or ("ARM926" in arch):
         return ("")
 
     app_offset  = (int(app_start,16) - flash_start)
     app_len     = str(hex(flash_size - app_offset))
 
-    rom_origin  = "ROM_ORIGIN=0x" + app_start
+    rom_origin  = "ROM_ORIGIN=" + hex(int(app_start,16))
     rom_length  = "ROM_LENGTH=" + app_len
 
     return (rom_origin + ";" + rom_length)
