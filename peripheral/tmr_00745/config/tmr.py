@@ -719,6 +719,10 @@ def instantiateComponent(tmrComponent):
     tmrHeaderFile.setType("HEADER")
     tmrHeaderFile.setMarkup(True)
     tmrHeaderFile.setOverwrite(True)
+    if (Database.getSymbolValue("tmr" + str(int(instanceNum) - 1), "TIMER_32BIT_MODE_SEL") == 0):
+        tmrHeaderFile.setEnabled(False)
+    else:
+        tmrHeaderFile.setEnabled(True)
 
     # Instance Source File
     tmrSourceFile = tmrComponent.createFileSymbol("TMR_SOURCE", None)
@@ -729,6 +733,10 @@ def instantiateComponent(tmrComponent):
     tmrSourceFile.setType("SOURCE")
     tmrSourceFile.setMarkup(True)
     tmrSourceFile.setOverwrite(True)
+    if (Database.getSymbolValue("tmr" + str(int(instanceNum) - 1), "TIMER_32BIT_MODE_SEL") == 0):
+        tmrSourceFile.setEnabled(False)
+    else:
+        tmrSourceFile.setEnabled(True)
 
     tmrSym_SystemInitFile = tmrComponent.createFileSymbol("TMR_SYS_INT", None)
     tmrSym_SystemInitFile.setType("STRING")
