@@ -109,12 +109,12 @@ void POWER_LowPowerModeEnter (POWER_LOW_POWER_MODE mode)
 }
 
 <#if DEEP_SLEEP_MODE_EXIST??>
-POWER_DS_WAKEUP_SOURCE POWER_DS_WakeupSourceGet( void )
+POWER_WAKEUP_SOURCE POWER_WakeupSourceGet( void )
 {
-    return (POWER_DS_WAKEUP_SOURCE)(DSWAKE);
+    return (POWER_WAKEUP_SOURCE)(DSWAKE);
 }
 
-void POWER_DS_SoftwareRestore(void)
+void POWER_ReleaseGPIO(void)
 {
     /* unlock system */
     SYSKEY = 0x00000000;
@@ -127,43 +127,42 @@ void POWER_DS_SoftwareRestore(void)
     SYSKEY = 0;
 }
 
-// DSCON.RELEASE must be 0 before calling this
-void POWER_DS_WakeupSourceClear( POWER_DS_WAKEUP_SOURCE wakeupSource )
+void POWER_WakeupSourceClear( POWER_WAKEUP_SOURCE wakeupSource )
 {
     DSWAKE &= ~wakeupSource;
 }
 
-void POWER_DS_GPR0Write(uint32_t GPR0Value)
+void POWER_DSGPR_Write(POWER_DSGPR gprNumb, uint32_t gprValue)
 {
-    /* unlock system */
+    /* Unlock system */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
 
-    DSGPR0 = GPR0Value;
-    DSGPR0 = GPR0Value;
-}
+    if (gprNumb == POWER_DSGPR0)
+    {
+        DSGPR0 = gprValue;
+        DSGPR0 = gprValue;
+    }
+    else
+    {
+        *((volatile uint32_t *)(&DSGPR1)+ gprNumb-1) = gprValue;
+        *((volatile uint32_t *)(&DSGPR1)+ gprNumb-1) = gprValue;
+    }
 
-uint32_t POWER_DS_GPR0Read(void)
-{
-    return DSGPR0;
-}
-
-<#if DS_EXTENDED_REG_ENABLE == true>
-void POWER_DS_GPRnWrite(POWER_DS_GPR gprNumb, uint32_t gprValue)
-{
-    /* unlock system */
+    /* Lock system */
     SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
-
-    *((volatile uint32_t *)(&DSGPR1)+ gprNumb) = gprValue;
-    *((volatile uint32_t *)(&DSGPR1)+ gprNumb) = gprValue;
 }
 
-uint32_t POWER_DS_GPRnRead(POWER_DS_GPR gprNumb)
+uint32_t POWER_DSGPR_Read(POWER_DSGPR gprNumb)
 {
-    return (*((volatile uint32_t *)(&DSGPR1)+ gprNumb));
+    if (gprNumb == POWER_DSGPR0)
+    {
+        return DSGPR0;
+    }
+    else
+    {
+        return (*((volatile uint32_t *)(&DSGPR1)+ gprNumb-1));
+    }
 }
-</#if>
 </#if>

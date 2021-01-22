@@ -51,8 +51,6 @@ def updateDSCON(symbol, event):
 ###################################################################################################
 ########################################## Component ##############################################
 ###################################################################################################
-global dsModuleName
-
 def instantiateComponent(powerComponent):
     # DRMEN symbol
     if "PIC32M" in Variables.get("__PROCESSOR"):
@@ -65,14 +63,7 @@ def instantiateComponent(powerComponent):
         dreamModeExist.setDefaultValue(True)
         dreamModeExist.setVisible(False)
 
-    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCON"]') is not None:
-        dsModuleName = "DSCON"
-    elif ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCTRL"]') is not None:
-        dsModuleName = "DSCTRL"
-    else:
-        dsModuleName = "None"
-
-    if dsModuleName != "None":
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCTRL"]') is not None:
         deepSleepSymMenu = powerComponent.createMenuSymbol("DEEP_SLEEP_MODE_MENU", None)
         deepSleepSymMenu.setLabel("Deep Sleep Mode Configuration")
 
@@ -89,10 +80,7 @@ def instantiateComponent(powerComponent):
         deepSleepSym_RTCCWDIS.setDefaultValue(True)
 
         deepSleepSym_DSGPREN = powerComponent.createBooleanSymbol("DS_EXTENDED_REG_ENABLE", deepSleepSymMenu)
-        if dsModuleName == "DSCTRL":
-            deepSleepSym_DSGPREN.setLabel("Enable General Purpose Registers 1 to 32")
-        elif dsModuleName == "DSCON":
-            deepSleepSym_DSGPREN.setLabel("Enable Extended Semaphore Registers")
+        deepSleepSym_DSGPREN.setLabel("Enable General Purpose Registers 1 to 32")
         deepSleepSym_DSGPREN.setDefaultValue(False)
         
         deepSleepSym_DSCON_RegValue = powerComponent.createHexSymbol("DSCON_VALUE", deepSleepSymMenu)
@@ -100,7 +88,7 @@ def instantiateComponent(powerComponent):
         deepSleepSym_DSCON_RegValue.setVisible(False)
         deepSleepSym_DSCON_RegValue.setDependencies(updateDSCON, ["DS_EXTENDED_REG_ENABLE", "DS_RTCC_WAKEUP_DISABLE", "DS_RTCC_ENABLE"])
 
-        dswakeRegister = ATDF.getNode('/avr-tools-device-file/modules/module@[name="'+dsModuleName+'"]/register-group@[name="'+dsModuleName+'"]/register@[name="DSWAKE"]')
+        dswakeRegister = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCTRL"]/register-group@[name="DSCTRL"]/register@[name="DSWAKE"]')
 
         deepSleepSym_ResetCount = powerComponent.createIntegerSymbol("DS_WAKEUP_CAUSE_COUNT", deepSleepSymMenu)
         deepSleepSym_ResetCount.setDefaultValue(len(dswakeRegister.getChildren()))
@@ -124,9 +112,7 @@ def instantiateComponent(powerComponent):
     Database.setSymbolValue("core", "CONFIG_DSEN", "ON", 1)
 
     power_HeaderFile = powerComponent.createFileSymbol("POWER_HEADER", None)
-    if (("PIC32MZ" in Variables.get("__PROCESSOR")) and ("W" in Variables.get("__PROCESSOR"))):
-        power_HeaderFile.setSourcePath("../peripheral/power/templates/plib_power_pic32mzw.h.ftl")
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
+    if "PIC32M" in Variables.get("__PROCESSOR"):
         power_HeaderFile.setSourcePath("../peripheral/power/templates/plib_power.h.ftl")        
     else:
         power_HeaderFile.setSourcePath("../peripheral/power/templates/plib_power_pic32c.h.ftl")
@@ -137,9 +123,7 @@ def instantiateComponent(powerComponent):
     power_HeaderFile.setMarkup(True)
 
     power_SourceFile = powerComponent.createFileSymbol("POWER_SOURCE", None)
-    if (("PIC32MZ" in Variables.get("__PROCESSOR")) and ("W" in Variables.get("__PROCESSOR"))):
-        power_SourceFile.setSourcePath("../peripheral/power/templates/plib_power_pic32mzw.c.ftl")
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
+    if "PIC32M" in Variables.get("__PROCESSOR"):
         power_SourceFile.setSourcePath("../peripheral/power/templates/plib_power.c.ftl")        
     else:
         power_SourceFile.setSourcePath("../peripheral/power/templates/plib_power_pic32c.c.ftl")
@@ -149,7 +133,7 @@ def instantiateComponent(powerComponent):
     power_SourceFile.setType("SOURCE")
     power_SourceFile.setMarkup(True)
 
-    if dsModuleName != "None":
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCTRL"]') is not None:
         dsctrl_SystemInitFile = powerComponent.createFileSymbol("POWER_INIT", None)
         dsctrl_SystemInitFile.setType("STRING")
         dsctrl_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE1")

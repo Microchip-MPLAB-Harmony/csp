@@ -83,6 +83,7 @@ typedef enum {
 </#if>
 } POWER_LOW_POWER_MODE;
 
+<#if DEEP_SLEEP_MODE_EXIST??>
 typedef enum
 {
 <#list 0..(DS_WAKEUP_CAUSE_COUNT - 1) as i>
@@ -96,6 +97,7 @@ typedef enum
 {
     POWER_DS_EXTENDED_SEMAPHORE_1,
 } POWER_DS_EXTENDED_SEMAPHORE;
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface
