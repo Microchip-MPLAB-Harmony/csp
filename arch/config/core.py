@@ -33,7 +33,7 @@ for mem_idx in range(0, len(addr_space_children)):
     mem_seg     = addr_space_children[mem_idx].getAttribute("name")
     mem_type    = addr_space_children[mem_idx].getAttribute("type")
 
-    if (((any(x == mem_seg for x in FlashNames) == True) and (mem_type == "flash")) or ("code" in mem_seg)):
+    if (((any(x == mem_seg for x in FlashNames) == True) and (mem_type == "flash")) or (mem_seg == "code")):
         flash_start = int(addr_space_children[mem_idx].getAttribute("start"), 16)
         flash_size  = int(addr_space_children[mem_idx].getAttribute("size"), 16)
 
