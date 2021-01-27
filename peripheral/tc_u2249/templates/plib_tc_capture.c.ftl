@@ -233,7 +233,7 @@ void ${TC_INSTANCE_NAME}_CaptureInitialize( void )
 </#if>
 
 <#if TC_EVCTRL_VAL?has_content>
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = (uint8_t)(${TC_EVCTRL_VAL});
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = (uint16_t)(${TC_EVCTRL_VAL});
 </#if>
 
     /* Clear all interrupt flags */
