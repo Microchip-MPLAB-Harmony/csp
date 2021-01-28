@@ -271,7 +271,9 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel )
 
 uint16_t ${DMA_INSTANCE_NAME}_ChannelGetTransferredCount( DMAC_CHANNEL channel )
 {
-    return(descriptor_section[channel].DMAC_BTCNT - _write_back_section[channel].DMAC_BTCNT);
+    uint16_t transferredCount = descriptor_section[channel].DMAC_BTCNT;
+    transferredCount -= _write_back_section[channel].DMAC_BTCNT;
+    return(transferredCount);
 }
 
 <#if DMAC_LL_ENABLE = true>
@@ -318,7 +320,7 @@ void ${DMA_INSTANCE_NAME}_LinkedListDescriptorSetup (dmac_descriptor_registers_t
 
     /* Set Block Transfer Count */
     currentDescriptor->DMAC_BTCNT = blockSize / (1 << beat_size);
-    
+
     currentDescriptor->DMAC_DESCADDR = (uint32_t) nextDescriptor;
 }
 /*******************************************************************************
@@ -496,7 +498,7 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_C
         }
 
         /* Clear the busy bit */
-        ${DMA_INSTANCE_NAME}_REGS->DMAC_CRCSTATUS = DMAC_CRCSTATUS_CRCBUSY_Msk; 
+        ${DMA_INSTANCE_NAME}_REGS->DMAC_CRCSTATUS = DMAC_CRCSTATUS_CRCBUSY_Msk;
     }
 
     /* Return the final CRC calculated for the entire buffer */
