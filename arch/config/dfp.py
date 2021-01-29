@@ -86,7 +86,7 @@ def instantiateComponent(dfpComponent):
             headerFile.setDestPath("../../packs/" + processorName + "_DFP/component/")
             headerFile.setProjectPath("packs/" + processorName + "_DFP/component/")
             headerFile.setType("HEADER")
-        
+
         if path.isdir(instanceDir):
             for headerFileName in listdir(instanceDir):
                 szSymbol = "PART_PERIPH_{}_INSTANCE".format(headerFileName[:-2].upper())
@@ -160,6 +160,7 @@ def instantiateComponent(dfpComponent):
                     headerFile.setDestPath("../../packs/" + processorName + "_DFP/instance/")
                     headerFile.setProjectPath("packs/" + processorName + "_DFP/instance/")
                     headerFile.setType("HEADER")
+                    headerFile.setSecurity("SECURE")
 
             headerFile = dfpComponent.createFileSymbol("secure_PART_MAIN_DEFS", None)
             headerFile.setRelative(False)
