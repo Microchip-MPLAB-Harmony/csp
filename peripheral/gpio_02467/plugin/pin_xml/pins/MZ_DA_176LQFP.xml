@@ -595,6 +595,7 @@
       </modifiers>
       <number package="1" pin="104" />
       <function name="ERXDV" />
+      <function name="ECRSDV" />
     </pin>
     <pin name="RH12">
        <modifiers>

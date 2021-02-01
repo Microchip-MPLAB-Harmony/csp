@@ -871,6 +871,7 @@
       </modifiers>
       <number package="1" pin="M5" />
       <function name="ERXDV" />
+      <function name="ECRSDV" />
     </pin>
     <pin name="RH10">
        <modifiers>
