@@ -86,17 +86,20 @@ USART_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
 <#if useUSARTRxDMA == false>
 static void ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
 {
+    uint16_t rxData = 0;
+
     if(${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
         while((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_RXRDY_Msk) && (${USART_INSTANCE_NAME?lower_case}Obj.rxSize > ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize))
         {
+            rxData = ${USART_INSTANCE_NAME}_REGS->US_RHR & US_RHR_RXCHR_Msk;
             if (${USART_INSTANCE_NAME}_REGS->US_MR & US_MR_USART_MODE9_Msk)
             {
-                ((uint16_t*)${USART_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = ${USART_INSTANCE_NAME}_REGS->US_RHR & US_RHR_RXCHR_Msk;
+                ((uint16_t*)${USART_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = (uint16_t)rxData;
             }
             else
             {
-                ${USART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = ${USART_INSTANCE_NAME}_REGS->US_RHR & US_RHR_RXCHR_Msk;
+                ${USART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = (uint8_t)rxData;
             }
         }
 
