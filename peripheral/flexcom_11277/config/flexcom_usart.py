@@ -140,7 +140,7 @@ def updateRingBufferMode (symbol, event):
 
 def updateRxDMAMode(symbol, event):
     if symbol.getLabel() != "---":
-        usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
+        usartOperatingModeSym = event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE")
         if event["value"] == True:
             if usartOperatingModeSym.getSelectedKey() == "NON_BLOCKING_DMA_TX":
                 usartOperatingModeSym.setSelectedKey("NON_BLOCKING_DMA_TX_RX")
@@ -151,7 +151,7 @@ def updateRxDMAMode(symbol, event):
 
 def updateTxDMAMode(symbol, event):
     if symbol.getLabel() != "---":
-        usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
+        usartOperatingModeSym = event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE")
         if event["value"] == True:
             if usartOperatingModeSym.getSelectedKey() == "NON_BLOCKING_DMA_RX":
                 usartOperatingModeSym.setSelectedKey("NON_BLOCKING_DMA_TX_RX")
