@@ -153,12 +153,6 @@ void ${HEMC_INSTANCE_NAME}_FixCallbackRegister(HEMC_CALLBACK callback, uintptr_t
 
 void ${HEMC_INSTANCE_NAME}_NoFixCallbackRegister(HEMC_CALLBACK callback, uintptr_t contextHandle);
 
-void ${HEMC_INSTANCE_NAME}_InterruptHandler(void);
-
-void ${HEMC_INSTANCE_NAME}_INTFIX_InterruptHandler(void);
-
-void ${HEMC_INSTANCE_NAME}_INTNOFIX_InterruptHandler(void);
-
 </#if>
 
 <#if HECC_INJECTION_TEST_MODE == true>
