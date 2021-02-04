@@ -52,6 +52,7 @@
         <#lt>#include "configuration.h"
     </#if>
 </#if>
+#include "device.h"
 #include "definitions.h"
 #include <stdio.h>
 
