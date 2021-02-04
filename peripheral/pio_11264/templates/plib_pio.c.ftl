@@ -140,12 +140,6 @@ void PIO_Initialize ( void )
 	<#lt>	PIO${port}_REGS->PIO_SODR = ${.vars[PORT_LATCH]};
 	
 	</#if>
-	<#assign PORT_SLCK = "PORT_" + port + "_SCLK_DIV" >
-	<#if .vars[PORT_SLCK] != 0>
-	<#lt> /* Port ${port} Slow clock Divider configuration */
-	<#lt>	PIO${port}_REGS->PIO_SCDR = ${.vars[PORT_SLCK]};
-	
-	</#if>
 
 	<#assign PORT_ISR = "PORT_" + port + "_NUM_INT_PINS" >
 	<#if .vars[PORT_ISR] != 0>
@@ -153,7 +147,11 @@ void PIO_Initialize ( void )
 	<#lt>	(uint32_t)PIO${port}_REGS->PIO_ISR;
   </#if>	
 </#list>
+<#if PORT_SCLK_DIV?? && PORT_SCLK_DIV != 0>
+<#lt> /* Slow Clock Divider Selection for Debouncing */
+<#lt>	PIO_REGS->PIO_SCDR = ${PORT_SCLK_DIV}U;
 
+</#if>
 <#if TOTAL_NUM_OF_INT_USED gt 0>
     uint32_t i;
     /* Initialize Interrupt Pin data structures */

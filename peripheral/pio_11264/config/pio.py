@@ -614,10 +614,12 @@ for func in per_func:
 
 portConfiguration = coreComponent.createMenuSymbol("PIO_CONFIGURATION", pioEnable)
 portConfiguration.setLabel("PIO Registers Configuration")
-for port in pioSymChannel:
-    pioSCLKDIV = coreComponent.createIntegerSymbol("PORT_" + str(port) + "_SCLK_DIV", portConfiguration)
-    pioSCLKDIV.setLabel("PORT" + str(port) + " Slow Clock Divider")
-    pioSCLKDIV.setMax(8192)
+scdrNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PIO\"]/register-group@[name=\"PIO\"]/register@[name=\"PIO_SCDR\"]")
+if scdrNode:
+    pioSCLKDIV = coreComponent.createIntegerSymbol("PORT_SCLK_DIV", portConfiguration)
+    pioSCLKDIV.setLabel("Slow Clock Divider Selection for Debouncing")
+    pioSCLKDIV.setMax(16383)
+    pioSCLKDIV.setMin(0)
     pioSCLKDIV.setDefaultValue(0)
 
 ###################################################################################################
