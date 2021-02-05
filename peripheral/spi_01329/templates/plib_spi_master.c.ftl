@@ -63,7 +63,7 @@ SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 
 void ${SPI_INSTANCE_NAME}_Initialize ( void )
 {
-    uint32_t rdata;
+    uint32_t rdata = 0U;
 
     /* Disable ${SPI_INSTANCE_NAME} Interrupts */
     ${SPI_FLT_IEC_REG}CLR = ${SPI_FLT_IEC_REG_MASK};
@@ -313,7 +313,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
 bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
 {
     bool isRequestAccepted = false;
-    uint32_t dummyData;
+    uint32_t dummyData = 0U;
 
     /* Verify the request */
     if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false))
