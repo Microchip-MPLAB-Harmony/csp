@@ -250,17 +250,17 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
         <#else>
         if(clkFrequency >= (16U * serialSetup->baudRate))
         {
-            baudValue = 65536U - ((uint32_t)((uint64_t)65536U * 16U * serialSetup->baudRate) / clkFrequency);
+            baudValue = 65536U - (uint32_t)(((uint64_t)65536U * 16U * serialSetup->baudRate) / clkFrequency);
             sampleRate = 0U;
         }
         else if(clkFrequency >= (8U * serialSetup->baudRate))
         {
-            baudValue = 65536U - ((uint32_t)((uint64_t)65536U * 8U * serialSetup->baudRate) / clkFrequency);
+            baudValue = 65536U - (uint32_t)(((uint64_t)65536U * 8U * serialSetup->baudRate) / clkFrequency);
             sampleRate = 2U;
         }
         else if(clkFrequency >= (3U * serialSetup->baudRate))
         {
-            baudValue = 65536U - ((uint32_t)((uint64_t)65536U * 3U * serialSetup->baudRate) / clkFrequency);
+            baudValue = 65536U - (uint32_t)(((uint64_t)65536U * 3U * serialSetup->baudRate) / clkFrequency);
             sampleRate = 4U;
         }
         else
@@ -271,7 +271,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
         <#else>
         if(clkFrequency >= (16U * serialSetup->baudRate))
         {
-            baudValue = 65536U - ((uint32_t)((uint64_t)65536U * 16U * serialSetup->baudRate) / clkFrequency);
+            baudValue = 65536U - (uint32_t)(((uint64_t)65536U * 16U * serialSetup->baudRate) / clkFrequency);
         }
         </#if>
 
