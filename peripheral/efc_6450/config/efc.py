@@ -124,6 +124,8 @@ def instantiateComponent(efcComponent):
     # Flash Read Wait State (RWS).
     nvm_rws = efcComponent.createIntegerSymbol("NVM_RWS", efcMenu)
     nvm_rws.setLabel("Wait States")
+    nvm_rws.setMin(0)
+    nvm_rws.setMax(15)
     nvm_rws.setDefaultValue(waitState)
     nvm_rws.setDependencies(waitStateUpdate, ["core.MASTER_CLOCK_FREQUENCY"])
     efcNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EFC\"]/register-group/register@[name=\"EEFC_FMR\"]/bitfield@[name=\"FAM\"]")
