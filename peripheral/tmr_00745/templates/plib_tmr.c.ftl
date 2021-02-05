@@ -161,7 +161,7 @@ void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
 void TIMER_${TMR_INSTANCE_NUM?number + 1}_InterruptHandler (void)
 </#if>
 {
-    uint32_t status;
+    uint32_t status  = 0U;
 <#if TIMER_32BIT_MODE_SEL =="0">
     status = ${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM}IF;
     ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
