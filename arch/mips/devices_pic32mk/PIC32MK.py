@@ -239,7 +239,10 @@ SYM_REFEN.addKey("OPTION1", "0", "Disable predictive prefetch")
 SYM_REFEN.addKey("OPTION2", "1", "Enable predictive prefetch for CPU instructions only")
 SYM_REFEN.setOutputMode("Value")
 SYM_REFEN.setDisplayMode("Description")
-SYM_REFEN.setDefaultValue(1)
+if  ds60001402Regex.search(processor):
+    SYM_REFEN.setDefaultValue(0)
+else:
+    SYM_REFEN.setDefaultValue(1)
 
 SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_CHECON_PFMWS", prefetchMenu)
 SYM_PFMWS.setLabel("Program Flash memory Wait states")
