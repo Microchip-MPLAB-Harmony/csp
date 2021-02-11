@@ -74,15 +74,17 @@ def sysTickEnableCfgMenu(CfgMenu, event):
         systickSystemInitFile.setEnabled(False)
 
 def sysTickinterruptControl(symbol, event):
-    Database.clearSymbolValue("core", systickinterruptVector)
-    Database.clearSymbolValue("core", systickinterruptHandlerLock)
+    if (Database.getSymbolValue("HarmonyCore","SELECT_RTOS") == "BareMetal" or
+        Database.getSymbolValue("HarmonyCore","SELECT_RTOS") == None):
+        Database.clearSymbolValue("core", systickinterruptVector)
+        Database.clearSymbolValue("core", systickinterruptHandlerLock)
 
-    if event["value"] == True:
-        Database.setSymbolValue("core", systickinterruptVector, True, 2)
-        Database.setSymbolValue("core", systickinterruptHandlerLock, True, 2)
-    else:
-        Database.setSymbolValue("core", systickinterruptVector, False, 2)
-        Database.setSymbolValue("core", systickinterruptHandlerLock, False, 2)
+        if event["value"] == True:
+            Database.setSymbolValue("core", systickinterruptVector, True)
+            Database.setSymbolValue("core", systickinterruptHandlerLock, True)
+        else:
+            Database.setSymbolValue("core", systickinterruptVector, False)
+            Database.setSymbolValue("core", systickinterruptHandlerLock, False)
 
 def sysTickMax(systick, event):
     clock = 0
@@ -172,6 +174,7 @@ def systickPubCapabilities(symbol, event):
         systickPeriodMS.setReadOnly(False)
         systickEnable.setValue(False)
         systickEnable.setReadOnly(False)
+        systickInterrupt.setValue(False)
         systickInterrupt.setReadOnly(False)
         systickCommentForSysTime.setVisible(False)
 
@@ -180,10 +183,12 @@ def updateSysTickMS(symbol, event):
     systickPeriodMS.setValue(sysTickPeriodLong)
 
 def setInterruptEnable(symbol, event):
-    if (event["value"] == False):
-        symbol.setReadOnly(True)
-        symbol.setValue(False)
-        symbol.setReadOnly(False)
+    if (Database.getSymbolValue("HarmonyCore","SELECT_RTOS") == "BareMetal" or
+        Database.getSymbolValue("HarmonyCore","SELECT_RTOS") == None):
+        if (event["value"] == False):
+            symbol.setReadOnly(True)
+            symbol.setValue(False)
+            symbol.setReadOnly(False)
 
 
 ################################################################################

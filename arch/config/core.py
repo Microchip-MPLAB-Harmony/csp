@@ -101,6 +101,16 @@ def handleMessage(messageID, args):
               (args["heap_size"] > Database.getSymbolValue("core", "KEIL_HEAP_SIZE"))):
             Database.setSymbolValue("core", "KEIL_HEAP_SIZE", args["heap_size"])
 
+    elif ((messageID == "SysTick_INTERRUPT_ENABLE") or (messageID == "SysTick_INTERRUPT_HANDLER_LOCK") or
+          (messageID == "PendSV_INTERRUPT_ENABLE") or (messageID == "PendSV_INTERRUPT_HANDLER_LOCK") or
+          (messageID == "SVCall_INTERRUPT_ENABLE") or (messageID == "SVCall_INTERRUPT_HANDLER_LOCK") or
+          (messageID == "TIMER_1_INTERRUPT_ENABLE") or (messageID == "CORE_SOFTWARE_0_INTERRUPT_ENABLE") or
+          (messageID == "TMR1_CLOCK_ENABLE")):
+        Database.setSymbolValue("core", messageID, args["isEnabled"])
+    elif ((messageID == "SysTick_INTERRUPT_HANDLER") or (messageID == "PendSV_INTERRUPT_HANDLER") or
+          (messageID == "SVCall_INTERRUPT_HANDLER")):
+        Database.setSymbolValue("core", messageID, args["intHandler"])
+
     return symbolDict
 
 def genExceptionAsmSourceFile(symbol, event):
