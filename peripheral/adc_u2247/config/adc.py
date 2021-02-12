@@ -304,7 +304,7 @@ def handleMessage(messageID, args):
     if (messageID == "PMSM_FOC_ADC_CH_CONF"):
         component = str(adcInstanceName.getValue()).lower()
         instanceNum = int(filter(str.isdigit,str(adcInstanceName.getValue())))
-        dict['ADC_MAX_CH'] = Database.getSymbolValue(component, "ADC_MAX_CHANNELS")
+        dict['ADC_MAX_CH'] = Database.getSymbolValue(component, "ADC_NUM_CHANNELS")
         dict['ADC_MAX_MODULES'] = Database.getSymbolValue(component, "ADC_NUM_MODULES")
         #Change ADC channels if they are changed in the PMSM_FOC
         resetChannelsForPMSMFOC()
