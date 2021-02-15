@@ -63,7 +63,7 @@
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>
-    <#lt>#define SYSTICK_INTERRUPT_PERIOD_IN_US  (${SYSTICK_PERIOD_US}U)
+    <#lt>#define SYSTICK_INTERRUPT_PERIOD_IN_US  (${(SYSTICK_PERIOD_US != 0)?then(SYSTICK_PERIOD_US, "1")}U)
 
     <#lt>typedef void (*SYSTICK_CALLBACK)(uintptr_t context);
 </#if>

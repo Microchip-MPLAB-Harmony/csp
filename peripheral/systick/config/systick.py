@@ -253,7 +253,7 @@ systickPeriodMS = coreComponent.createFloatSymbol("SYSTICK_PERIOD_MS", systickCo
 systickPeriodMS.setLabel("Systick Period(Milliseconds)")
 systickPeriodMS.setVisible(True)
 systickPeriodMS.setDefaultValue(float(1.0))
-systickPeriodMS.setMin(0)
+systickPeriodMS.setMin(float(0.001))
 systickPeriodMS.setMax(float(max))
 systickPeriodMS.setDependencies(sysTickMax, ["core.CPU_CLOCK_FREQUENCY", "SYSTICK_CLOCK", "core.SYSTICK_CLOCK_FREQUENCY"])
 
