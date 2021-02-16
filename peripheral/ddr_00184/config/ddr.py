@@ -214,21 +214,21 @@ def instantiateComponent(ddrComponent):
     ddrSym_ColumnBits.setLabel("Number of Column Bits")
     ddrSym_ColumnBits.setDefaultValue(9)
     ddrSym_ColumnBits.setMin(0)
-    ddrSym_ColumnBits.setMax(31)
+    ddrSym_ColumnBits.setMax(13)
     ddrSym_ColumnBits.setVisible(True)
     #Number of Row Bits - number field
     ddrSym_RowBits = ddrComponent.createIntegerSymbol("DDR_ROW_BITS", ddrSym_ADDRESSING_STRING)
     ddrSym_RowBits.setLabel("Number of Row Bits")
     ddrSym_RowBits.setDefaultValue(13)
     ddrSym_RowBits.setMin(0)
-    ddrSym_RowBits.setMax(31)
+    ddrSym_RowBits.setMax(13)
     ddrSym_RowBits.setVisible(True)
     #Number of Bank Bits - number field
     ddrSym_BankBits = ddrComponent.createIntegerSymbol("DDR_BANK_BITS", ddrSym_ADDRESSING_STRING)
     ddrSym_BankBits.setLabel("Number of Bank Bits")
     ddrSym_BankBits.setDefaultValue(2)
     ddrSym_BankBits.setMin(0)
-    ddrSym_BankBits.setMax(31)
+    ddrSym_BankBits.setMax(5)
     ddrSym_BankBits.setVisible(True)
 
     #Timing
