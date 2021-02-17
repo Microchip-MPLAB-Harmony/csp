@@ -413,6 +413,58 @@ TWI_ERROR ${TWI_INSTANCE_NAME}_ErrorGet(void)
     return error;
 }
 
+bool ${TWI_INSTANCE_NAME}_TransferSetup( TWI_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
+{
+    uint32_t i2cClkSpeed;
+    uint32_t cldiv;
+    uint8_t ckdiv = 0;
+
+    if (setup == NULL)
+    {
+        return false;
+    }
+
+    i2cClkSpeed = setup->clkSpeed;
+
+    /* Maximum I2C clock speed in Master mode cannot be greater than 400 KHz */
+    if (i2cClkSpeed > 4000000)
+    {
+        return false;
+    }
+
+    if(srcClkFreq == 0)
+    {
+        srcClkFreq = ${TWI_CLK_SRC_FREQ};
+    }
+
+    /* Formula for calculating baud value involves two unknowns. Fix one unknown and calculate the other.
+       Fix the CKDIV value and see if CLDIV (or CHDIV) fits into the 8-bit register. */
+
+    /* Calculate CLDIV with CKDIV set to 0 */
+    cldiv = (srcClkFreq /(2 * i2cClkSpeed)) - 4;
+
+    /* CLDIV must fit within 8-bits and CKDIV must fit within 3-bits */
+    while ((cldiv > 255) && (ckdiv < 7))
+    {
+        ckdiv++;
+        cldiv /= 2;
+    }
+
+    if (cldiv > 255)
+    {
+        /* Could not generate CLDIV and CKDIV register values for the requested baud rate */
+        return false;
+    }
+
+    /* set clock waveform generator register */
+    <@compress single_line=true>${TWI_INSTANCE_NAME}_REGS->TWI_CWGR = (TWI_CWGR_HOLD_Msk & ${TWI_INSTANCE_NAME}_REGS->TWI_CWGR)
+                                                                          | TWI_CWGR_CLDIV(cldiv)
+                                                                          | TWI_CWGR_CHDIV(cldiv)
+                                                                          | TWI_CWGR_CKDIV(ckdiv)</@compress>;
+
+    return true;
+}
+
 // *****************************************************************************
 /* Function:
     void ${TWI_INSTANCE_NAME}_InterruptHandler(void)

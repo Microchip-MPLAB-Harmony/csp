@@ -356,6 +356,8 @@ bool ${TWI_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t *wdata, size_t wle
 
 TWI_ERROR ${TWI_INSTANCE_NAME}_ErrorGet(void);
 
+bool ${TWI_INSTANCE_NAME}_TransferSetup( TWI_TRANSFER_SETUP* setup, uint32_t srcClkFreq );
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
