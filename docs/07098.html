@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>SERCOM_I2C_SLAVE_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="07097.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="07098.html" target="topic">Library Interface</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07040.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="07018.html" target="topic">I2C</a> &gt; <a href="07029.html" target="topic">Slave</a> &gt; <a href="07034.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="07098.html" target="topic">SERCOM_I2C_SLAVE_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07101.html" target="topic">Previous</a> | <a href="07097.html" target="topic">Up</a> | <a href="07176.html" target="topic">Next</a></div>
+<a href="07095.html" target="topic">Previous</a> | <a href="07034.html" target="topic">Up</a> | <a href="07099.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC U2407 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c_slave::SERCOM_I2C_SLAVE_CALLBACK Topic Title: SERCOM_I2C_SLAVE_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+SERCOM_I2C_SLAVE_CALLBACK Type</div>
 </div>
 </div>
 
@@ -46,142 +46,104 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
-a) Initialization Function</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+SERCOM I2C Slave Transfer Event Callback Function Pointer.&nbsp;</p>
+<p class="Element10">
+This data type defines the function signature for the SERCOM I2C Slave callback function. The SERCOM I2C peripheral will call back the client's function with this signature to report SERCOM I2C slave events.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">bool</span></strong> (* <strong><span style="color: #000000">SERCOM_I2C_SLAVE_CALLBACK</span></strong>)(<a href="07118.html" target="topic">SERCOM_I2C_SLAVE_TRANSFER_EVENT</a> event, uintptr_t contextHandle);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07176.html" target="topic">SUPC_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes the SUPC peripheral.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<a href="07129.html" target="topic">SERCOMx_I2C_Initialize</a> must have been called for the given SERCOM I2C peripheral instance and <a href="07126.html" target="topic">SERCOMx_I2C_CallbackRegister</a> must have been called to set the function to be called. The callback register function should have been called before a read, write or transfer function has been initiated.</p></div>
 </div>
-</div>
-<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
-b) Setup Functions</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07174.html" target="topic">SUPC_BOD33CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Registers the function to be called when a Brown Out Event has occurred.&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+event&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Indicates the data transfer event for which the callback function has been called.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+contextHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
-c) Transaction Functions</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07175.html" target="topic">SUPC_ClearOutputPin</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Clears a specific output pin (OUTx) to logic LOW.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07180.html" target="topic">SUPC_SelectTempSenorChannel</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Selects a specific channel of the temperature sensor.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07181.html" target="topic">SUPC_SelectVoltageRegulator</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Selects the main voltage regulator.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07182.html" target="topic">SUPC_SetOutputPin</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets a specific output pin (OUTx) to logic HIGH.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+bool - The return value indicates to the SERCOM PLIB, whether to send ACK or NAK to the I2C master. The return value is valid only during the address match event or when the I2C slave is receiving data from the I2C master (SERCOM_I2C_SLAVE_TRANSFER_EVENT_RX_READY); that is during the I2C master write operation. The return value is ignored by the PLIB when the I2C slave is providing data to the I2C master (SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY); that is during the I2C master read operation.</p></div>
 </div>
-</div>
-<a name="6429204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-d) Data Types and Constants</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07173.html" target="topic">SUPC_BOD33_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type and function signature for the SUPC peripheral callback function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07177.html" target="topic">SUPC_OUTPIN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies the output pins of SUPC peripheral.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07183.html" target="topic">SUPC_TSSEL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies the temperature sensor channels of SUPC peripheral.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07186.html" target="topic">SUPC_VREGSEL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies the Main Voltage Regulators.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">     <strong><span style="color: #000080">bool</span></strong> APP_SERCOM_I2C_Callback ( <a href="07118.html" target="topic">SERCOM_I2C_SLAVE_TRANSFER_EVENT</a> event, uintptr_t contextHandle )
+     {
+         <strong><span style="color: #000080">switch</span></strong>(event)
+         {
+             <strong><span style="color: #000080">case</span></strong> SERCOM_I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH:
+                 
+                 <i><span style="color: #008000">// Handle address match event</span></i>
+                 
+                 <strong><span style="color: #000080">break</span></strong>;
+                 
+             <strong><span style="color: #000080">case</span></strong> SERCOM_I2C_SLAVE_TRANSFER_EVENT_RX_READY:
+             
+                 <i><span style="color: #008000">// I2C master is writing to data to I2C slave.</span></i>
+                 <i><span style="color: #008000">// Read the received data byte.</span></i>
+                 
+                 rxData = SERCOM1_I2C_ReadByte();
+             
+                 <strong><span style="color: #000080">break</span></strong>;
+             <strong><span style="color: #000080">case</span></strong> SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY:
+                 
+                 <i><span style="color: #008000">// I2C master is reading data from I2C slave.</span></i>
+                 <i><span style="color: #008000">// Provide data to I2C master.</span></i>
+                 
+                 SERCOM1_I2C_WriteByte(txData);
+                 
+                 <strong><span style="color: #000080">break</span></strong>;
+                 
+             <strong><span style="color: #000080">case</span></strong> SERCOM_I2C_SLAVE_TRANSFER_EVENT_STOP_BIT_RECEIVED:
+             
+                 <i><span style="color: #008000">// Handle stop bit received event</span></i>
+             
+                 <strong><span style="color: #000080">break</span></strong>;                                  
+         }
+     }
+
+     <i><span style="color: #008000">// Register Callback function which is defined above</span></i>
+     SERCOM1_I2C_CallbackRegister(APP_SERCOM_I2C_Callback, 0);
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -189,7 +151,7 @@ Identifies the Main Voltage Regulators.&nbsp;</div></td></tr></table></div></div
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="07097.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="07098.html" target="topic">Library Interface</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07040.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="07018.html" target="topic">I2C</a> &gt; <a href="07029.html" target="topic">Slave</a> &gt; <a href="07034.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="07098.html" target="topic">SERCOM_I2C_SLAVE_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -197,13 +159,13 @@ Identifies the Main Voltage Regulators.&nbsp;</div></td></tr></table></div></div
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07101.html" target="topic">Previous</a> | <a href="07097.html" target="topic">Up</a> | <a href="07176.html" target="topic">Next</a></div>
+<a href="07095.html" target="topic">Previous</a> | <a href="07034.html" target="topic">Up</a> | <a href="07099.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC U2407 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c_slave::SERCOM_I2C_SLAVE_CALLBACK Topic Title: SERCOM_I2C_SLAVE_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

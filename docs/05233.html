@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PIC32MZ DA Peripheral Libraries</title>
+<title>PIO_PortRead Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05233.html" target="topic">PIC32MZ DA Peripheral Libraries</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05077.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="05078.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="05233.html" target="topic">PIO_PortRead Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05232.html" target="topic">Previous</a> | <a href="04753.html" target="topic">Up</a> | <a href="05234.html" target="topic">Next</a></div>
+<a href="05232.html" target="topic">Previous</a> | <a href="05078.html" target="topic">Up</a> | <a href="05234.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB PIC32MZ DA Topic Title: PIC32MZ DA Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PortRead@PIO_PORT Topic Title: PIO_PortRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PIC32MZ DA Peripheral Libraries</div>
+PIO_PortRead Function</div>
 </div>
 </div>
 
@@ -49,99 +49,67 @@ PIC32MZ DA Peripheral Libraries</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following Table lists all the Peripheral Libraries for the PIC32MZ DA Family.&nbsp;</p>
+This function reads the live data values on all the I/O lines of the selected port. Bit values returned in each position indicate corresponding pin levels.</p>
+<ul class="Element630">
+<li class="Element600">1 - Pin is high.</li>
+<li class="Element600">0 - Pin is low.</li>
+</ul><p class="Element10">
+This function reads the value regardless of pin configuration, whether it is set as as an input, driven by the PIO Controller, or driven by a peripheral.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">PIO_PortRead</span></strong>(
+    <a href="05221.html" target="topic">PIO_PORT</a> <strong><span style="color: #000000">port</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p><div class="Element63">
+Reading the I/O line levels requires the clock of the PIO Controller to be enabled, otherwise this API reads the levels present on the I/O line at the time the clock was disabled.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element65" valign="top" width="100%">
-<div class="Element66">
-PIC32MZ DA Peripheral Libraries&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="00699.html" target="topic">ADCHS Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="00866.html" target="topic">CACHE Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="00900.html" target="topic">CAN Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01244.html" target="topic">CDAC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01386.html" target="topic">Clock Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01441.html" target="topic">CMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01498.html" target="topic">CORETIMER Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01538.html" target="topic">CVR Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01660.html" target="topic">DDR Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01691.html" target="topic">DMAC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01828.html" target="topic">DMT Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01871.html" target="topic">EBI Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02042.html" target="topic">EVIC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02977.html" target="topic">GPIO Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03600.html" target="topic">I2C Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03717.html" target="topic">ICAP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04174.html" target="topic">NVM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04459.html" target="topic">OCMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05312.html" target="topic">PMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05734.html" target="topic">RNG Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06198.html" target="topic">RTCC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06319.html" target="topic">SDHC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06854.html" target="topic">SPI Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="07001.html" target="topic">SQI Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="07780.html" target="topic">TMR1 Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="07726.html" target="topic">TMR Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="07881.html" target="topic">UART Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="08160.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td></tr></table></div></div>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+One of the IO ports from the enum <a href="05221.html" target="topic">PIO_PORT</a>&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Returns the read value of all the I/O lines of the selected port port.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+If the port has less than 32-bits, unimplemented pins will read as low (0).&nbsp;</p>
+<p class="Element10">
+Implemented pins are Right aligned in the 32-bit return value.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t value;
+    value = PIO_PortRead(PIO_PORT_C);</pre></div></div>
 </div>
 </div>
 </div>
@@ -149,7 +117,7 @@ PIC32MZ DA Peripheral Libraries&nbsp;</div></td></tr><tr>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05233.html" target="topic">PIC32MZ DA Peripheral Libraries</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05077.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="05078.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="05233.html" target="topic">PIO_PortRead Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -157,13 +125,13 @@ PIC32MZ DA Peripheral Libraries&nbsp;</div></td></tr><tr>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05232.html" target="topic">Previous</a> | <a href="04753.html" target="topic">Up</a> | <a href="05234.html" target="topic">Next</a></div>
+<a href="05232.html" target="topic">Previous</a> | <a href="05078.html" target="topic">Up</a> | <a href="05234.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB PIC32MZ DA Topic Title: PIC32MZ DA Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PortRead@PIO_PORT Topic Title: PIO_PortRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

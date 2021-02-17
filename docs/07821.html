@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="07822.html" target="topic">TRNG Peripheral Library Help</a> &gt; <a href="07821.html" target="topic">Introduction</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07823.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07812.html" target="topic">Compare</a> &gt; <a href="07821.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07822.html" target="topic">Previous</a> | <a href="07822.html" target="topic">Up</a> | <a href="07819.html" target="topic">Next</a></div>
+<a href="07813.html" target="topic">Previous</a> | <a href="07812.html" target="topic">Up</a> | <a href="07815.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRNG 6334 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2212 Compare Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -49,16 +49,62 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-As soon as the TRNG is enabled, the module provides a new 32-bit random data, for every 84 peripheral clock cycles.&nbsp;</p>
+When using the TC and the <a href="01578.html" target="topic">Compare</a>/<a href="01235.html" target="topic">Capture</a> Value registers (CCx) for compare operations, the counter value is continuously compared to the values in the CCx registers. Output polarity can be reversed by inverting the output waveforms. This library provides below waveform types:&nbsp;</p>
 <p class="Element10">
-The TRNG can optionally generate an interrupt when a new random value is available.</p></div>
+&nbsp;</p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="30%">
+<div class="Element66">
+Name&nbsp;</div></td><td class="Element65" valign="top" width="19%">
+<div class="Element66">
+Operation&nbsp;</div></td><td class="Element65" valign="top" width="5%">
+<div class="Element66">
+TOP&nbsp;</div></td><td class="Element65" valign="top" width="12%">
+<div class="Element66">
+Update&nbsp;</div></td><td class="Element65" valign="top" width="16%">
+<div class="Element66">
+Output On Match&nbsp;</div></td><td class="Element65" valign="top" width="17%">
+<div class="Element66">
+Output On Update&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="30%">
+<div class="Element68">
+MFRQ (output on WO[0] )&nbsp;</div></td><td class="Element67" valign="top" width="19%">
+<div class="Element68">
+Match Frequency&nbsp;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+CC0&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+TOP/ZERO&nbsp;</div></td><td class="Element67" valign="top" width="16%">
+<div class="Element68">
+Toggle&nbsp;</div></td><td class="Element67" valign="top" width="17%">
+<div class="Element68">
+Stable&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="30%">
+<div class="Element68">
+MPWM (output on WO[1] )&nbsp;</div></td><td class="Element67" valign="top" width="19%">
+<div class="Element68">
+Match <a href="05839.html" target="topic">PWM</a>&nbsp;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+CC0&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+TOP/ZERO&nbsp;</div></td><td class="Element67" valign="top" width="16%">
+<div class="Element68">
+Toggle&nbsp;</div></td><td class="Element67" valign="top" width="17%">
+<div class="Element68">
+Toggle&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+In compare mode, overflow interrupt and compare match interrupts can be used to change the frequency or duty cycle of the waveform.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="07822.html" target="topic">TRNG Peripheral Library Help</a> &gt; <a href="07821.html" target="topic">Introduction</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07823.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07812.html" target="topic">Compare</a> &gt; <a href="07821.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -66,13 +112,13 @@ The TRNG can optionally generate an interrupt when a new random value is availab
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07822.html" target="topic">Previous</a> | <a href="07822.html" target="topic">Up</a> | <a href="07819.html" target="topic">Next</a></div>
+<a href="07813.html" target="topic">Previous</a> | <a href="07812.html" target="topic">Up</a> | <a href="07815.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRNG 6334 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2212 Compare Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

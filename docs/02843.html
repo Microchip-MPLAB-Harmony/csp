@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOMx_SPI_Read Function</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02667.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02668.html" target="topic">SPI</a> &gt; <a href="02673.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02843.html" target="topic">FLEXCOMx_SPI_Read Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="02816.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02838.html" target="topic">USART</a> &gt; <a href="02843.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02844.html" target="topic">Previous</a> | <a href="02673.html" target="topic">Up</a> | <a href="02845.html" target="topic">Next</a></div>
+<a href="02847.html" target="topic">Previous</a> | <a href="02838.html" target="topic">Up</a> | <a href="03044.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_spi::FLEXCOMx_SPI_Read@void*@size_t Topic Title: FLEXCOMx_SPI_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM 11268 USART Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOMx_SPI_Read Function</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -46,103 +46,355 @@ FLEXCOMx_SPI_Read Function</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
-<div class="Element10">
-<p class="Element10">
-This function should be used to read &quot;rxSize&quot; number of bytes on FLEXCOMx SPI module. Received data is saved in the location pointed by pReceiveData.&nbsp;</p>
-<p class="Element10">
-The function will work differently as per the configuration done in MHC as described below:&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<ol class="Element630">
-<li value="1" class="Element600">Blocking Configuration (Non-Interrupt mode): When &quot;Interrupt Mode&quot; option is unchecked in GUI, the generated code for that particular FLEXCOM SPI PLIB instance will be blocking. In this particular mode, the Read API will not return until all the requested data is transferred.</li>
-</ol><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-After transferring all the data, boolean status 'True' is returned indicating operation completion.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<ol class="Element630">
-<li value="2" class="Element600">Non-Blocking Configuration (Interrupt mode): When &quot;Interrupt Mode&quot; option is selected in GUI, the generated code for that particular FLEXCOM SPI PLIB instance will be Non-blocking in nature. In this particular mode, application will give the data transfer responsibility to the PLIB and come back and start doing other activities, FLEXCOM SPI Data transaction will happen in the corresponding ISR. in this mode, the receive data locations provided by user must remain valid until the data transfer is complete. Application can check the data transfer completion status via callback or polling mechanism. In case of callback, it needs to be registered prior to calling the Read API. Data transfer status polling can be done using &quot;<a href="02842.html" target="topic">FLEXCOMx_SPI_IsBusy</a>&quot; API.</li>
-</ol></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_SPI_Read</span></strong>(
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pReceiveData</span></strong>, 
-    size_t <strong><span style="color: #000000">rxSize</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
+a) Initialization Function</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The <a href="02841.html" target="topic">FLEXCOMx_SPI_Initialize</a> function must have been called.&nbsp;</p>
-<p class="Element10">
-Callback has to be registered using <a href="02840.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a> API if the peripheral instance has been configured in Interrupt mode and transfer completion status needs to be communicated back to application via callback.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-*pReceiveData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the location where received data has to be stored. It is user's responsibility to ensure pointed location has sufficient memory to store the read data. if it is NULL, that means only data transmission is expected. For 9 to 15bit mode, received data will be right aligned in the 16 bit memory location.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rxSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be received. Always, size should be given in terms of bytes. For example, if 5 16-bit data are to be received, the receive size should be 10 bytes.&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03044.html" target="topic">FLEXCOMx_USART_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Initializes given instance of the FLEXCOM USART peripheral.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
+b) Setup Functions</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-In Blocking mode, API returns True once the transfer is complete. It returns False if rxSize is 0 and receive data pointer is NULL.&nbsp;</p>
-<p class="Element10">
-In interrupt mode, if previous buffer request is not completed and a new transfer request comes, then this API will reject the new request and will return &quot;False&quot;. Also, Same as blocking mode, It returns False if rxSize is 0 and receive data pointer is NULL.</p></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03052.html" target="topic">FLEXCOMx_USART_SerialSetup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the FLEXCOM USART serial communication settings dynamically.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03048.html" target="topic">FLEXCOMx_USART_ReadCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the pointer to the function (and it's context) to be called when the given FLEXCOM USART's read events occur. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03056.html" target="topic">FLEXCOMx_USART_WriteCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the pointer to the function (and it's context) to be called when the given FLEXCOM USART's write events occur. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03068.html" target="topic">FLEXCOMx_USART_ReadCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the pointer to the function (and it's context) to be called when the given FLEXCOM_USART's read events occur. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03075.html" target="topic">FLEXCOMx_USART_WriteCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the pointer to the function (and it's context) to be called when the given FLEXCOM_USART's write events occur. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03071.html" target="topic">FLEXCOMx_USART_ReadNotificationEnable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This API lets the application turn the receive notifications on/off. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03078.html" target="topic">FLEXCOMx_USART_WriteNotificationEnable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This API lets the application turn the transmit notifications on/off. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03072.html" target="topic">FLEXCOMx_USART_ReadThresholdSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This API allows the application to set a threshold level on the number of bytes of data available in the receive buffer. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03079.html" target="topic">FLEXCOMx_USART_WriteThresholdSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This API allows the application to set a threshold level on the number of free space available in the transmit buffer. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
+</div>
+<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
+c) Transaction Functions</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-Non-blocking interrupt mode configuration implementation of this function will be used by Harmony driver implementation APIs.</p></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03045.html" target="topic">FLEXCOMx_USART_Read</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Submits a read buffer to the given FLEXCOM USART peripheral to process. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03047.html" target="topic">FLEXCOMx_USART_ReadByte</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Submits request to read a byte of data to the given FLEXCOM USART peripheral. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03054.html" target="topic">FLEXCOMx_USART_Write</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Submits a write buffer to the given FLEXCOM USART peripheral to transfer. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03055.html" target="topic">FLEXCOMx_USART_WriteByte</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Submits a byte of data to the given FLEXCOM USART peripheral to transfer. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03066.html" target="topic">FLEXCOMx_USART_Read</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Read the requested data from the receive buffer into the application buffer. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03073.html" target="topic">FLEXCOMx_USART_Write</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Submits a write buffer to the given FLEXCOM_USART peripheral to transfer. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03046.html" target="topic">FLEXCOMx_USART_ReadAbort</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Aborts the ongoing read request. This API is available when UART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
+</div>
+<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
+d) Status Functions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t     rxBuffer[10];
-size_t      rxSize = 10;
-<strong><span style="color: #000080">bool</span></strong>        reqAccepted;
-
-<a href="02841.html" target="topic">FLEXCOMx_SPI_Initialize</a>();
-
-<a href="02840.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a>(&amp;APP_SPITransferHandler, NULL);
-
-reqAccepted = FLEXCOMx_SPI_Read(&amp;rxBuffer, rxSize);
-
-<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
-{
-    <strong><span style="color: #000080">if</span></strong>(FLEXCOMx_SPI_ErrorGet() == FLEXCOM_SPI_ERROR_NONE)
-    {
-        Transfer was completed without error, <strong><span style="color: #000080">do</span></strong> something <strong><span style="color: #000080">else</span></strong> now.
-    }
-}</pre></div></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03043.html" target="topic">FLEXCOMx_USART_ErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Gets the error of the given FLEXCOM USART peripheral instance.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03049.html" target="topic">FLEXCOMx_USART_ReadCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the count of number of bytes processed for a given FLEXCOM USART read operation. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03050.html" target="topic">FLEXCOMx_USART_ReadIsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the read request status associated with the given FLEXCOM USART peripheral instance. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03051.html" target="topic">FLEXCOMx_USART_ReceiverIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the hardware status of the FLEXCOM USART Receiver. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03053.html" target="topic">FLEXCOMx_USART_TransmitterIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the hardware status of the FLEXCOM USART Transmitter. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03057.html" target="topic">FLEXCOMx_USART_WriteCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the count of number of bytes processed for a given FLEXCOM USART write operation. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03058.html" target="topic">FLEXCOMx_USART_WriteIsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the write request status associated with the given FLEXCOM USART peripheral instance. This API is available when USART ring buffer mode is disabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03067.html" target="topic">FLEXCOMx_USART_ReadBufferSizeGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the size of the receive ring buffer. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03074.html" target="topic">FLEXCOMx_USART_WriteBufferSizeGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the size of the internal transmit ring buffer. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03069.html" target="topic">FLEXCOMx_USART_ReadCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the number of bytes available in the receive buffer. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03076.html" target="topic">FLEXCOMx_USART_WriteCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the number of bytes pending to be transmitted out in the transmit buffer. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03070.html" target="topic">FLEXCOMx_USART_ReadFreeBufferCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the number of bytes of free space available in the internal receive buffer. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03077.html" target="topic">FLEXCOMx_USART_WriteFreeBufferCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the number of bytes of free space available in the internal transmit buffer. This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+e) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03065.html" target="topic">FLEXCOM_USART_RING_BUFFER_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the data type and function signature for the FLEXCOM_USART peripheral callback function in the ring buffer mode.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03011.html" target="topic">FLEXCOM_USART_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the data type and function signature for the FLEXCOM USART peripheral callback function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03012.html" target="topic">FLEXCOM_USART_DATA</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the data type for the FLEXCOM USART serial setup.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03019.html" target="topic">FLEXCOM_USART_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the data type for the FLEXCOM USART peripheral errors.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03025.html" target="topic">FLEXCOM_USART_PARITY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type flexcom_11268_usart::FLEXCOM_USART_PARITY.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03033.html" target="topic">FLEXCOM_USART_SERIAL_SETUP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type flexcom_11268_usart::FLEXCOM_USART_SERIAL_SETUP.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03038.html" target="topic">FLEXCOM_USART_STOP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type flexcom_11268_usart::FLEXCOM_USART_STOP.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03060.html" target="topic">FLEXCOM_USART_EVENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the data type for the FLEXCOM USART events.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -150,7 +402,7 @@ reqAccepted = FLEXCOMx_SPI_Read(&amp;rxBuffer, rxSize);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02667.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02668.html" target="topic">SPI</a> &gt; <a href="02673.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02843.html" target="topic">FLEXCOMx_SPI_Read Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="02816.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02838.html" target="topic">USART</a> &gt; <a href="02843.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -158,13 +410,13 @@ reqAccepted = FLEXCOMx_SPI_Read(&amp;rxBuffer, rxSize);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02844.html" target="topic">Previous</a> | <a href="02673.html" target="topic">Up</a> | <a href="02845.html" target="topic">Next</a></div>
+<a href="02847.html" target="topic">Previous</a> | <a href="02838.html" target="topic">Up</a> | <a href="03044.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_spi::FLEXCOMx_SPI_Read@void*@size_t Topic Title: FLEXCOMx_SPI_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM 11268 USART Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

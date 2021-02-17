@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SPIx_ErrorGet Function</title>
+<title>SDHC_RESET_TYPE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06854.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06858.html" target="topic">Slave</a> &gt; <a href="06885.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06896.html" target="topic">SPIx_ErrorGet Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="06781.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="06782.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06896.html" target="topic">SDHC_RESET_TYPE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06901.html" target="topic">Previous</a> | <a href="06885.html" target="topic">Up</a> | <a href="06898.html" target="topic">Next</a></div>
+<a href="06890.html" target="topic">Previous</a> | <a href="06782.html" target="topic">Up</a> | <a href="06900.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi__slave_01329::SPIx_ErrorGet Topic Title: SPIx_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHC_RESET_TYPE Topic Title: SDHC_RESET_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SPIx_ErrorGet Function</div>
+SDHC_RESET_TYPE Enumeration</div>
 </div>
 </div>
 
@@ -49,26 +49,46 @@ SPIx_ErrorGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the error status of the last SPI transfer. Applicaiton must check the status of a transfer in the application callback and take appropriate action in case there is an error during the data transfer. Calling this API clears the error status flags.</p></div>
+SDHC error reset type&nbsp;</p>
+<p class="Element10">
+The enumeration is used to select the error type to reset.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="06892.html" target="topic">SPI_SLAVE_ERROR</a> <strong><span style="color: #000000">SPIx_ErrorGet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">SDHC_RESET_ALL</span></strong> = 0x01,
+  <strong><span style="color: #000000">SDHC_RESET_CMD</span></strong> = 0x02,
+  <strong><span style="color: #000000">SDHC_RESET_DAT</span></strong> = 0x04
+} SDHC_RESET_TYPE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The <a href="06897.html" target="topic">SPIx_Initialize</a>() should have been called.</p></div>
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_RESET_ALL = 0x01&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Reset all errors&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_RESET_CMD = 0x02&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Reset command errors&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_RESET_DAT = 0x04&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Reset data errors&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-
-<ul class="Element630">
-<li class="Element600"><a href="06892.html" target="topic">SPI_SLAVE_ERROR</a> - SPI Slave Errors</li>
-</ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -77,34 +97,12 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">void</span></strong> SPIEventHandler(uintptr_t context )
-    {
-        <strong><span style="color: #000080">if</span></strong> (SPIx_ErrorGet() == SPI_SLAVE_ERROR_NONE)
-        {
-            nBytesAvailable = <a href="06901.html" target="topic">SPIx_ReadCountGet</a>();
-            
-            nBytesRead = <a href="06899.html" target="topic">SPIx_Read</a>(APP_RxData, nBytesAvailable); 
-        }
-        <strong><span style="color: #000080">else</span></strong>
-        {
-            <i><span style="color: #008000">// Handle error</span></i>
-        }
-
-    }
-
-    <a href="06895.html" target="topic">SPIx_CallbackRegister</a>(SPIEventHandler, (uintptr_t) 0);</pre></div></div>
-</div>
-</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06854.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06858.html" target="topic">Slave</a> &gt; <a href="06885.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06896.html" target="topic">SPIx_ErrorGet Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="06781.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="06782.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06896.html" target="topic">SDHC_RESET_TYPE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -112,13 +110,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06901.html" target="topic">Previous</a> | <a href="06885.html" target="topic">Up</a> | <a href="06898.html" target="topic">Next</a></div>
+<a href="06890.html" target="topic">Previous</a> | <a href="06782.html" target="topic">Up</a> | <a href="06900.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi__slave_01329::SPIx_ErrorGet Topic Title: SPIx_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHC_RESET_TYPE Topic Title: SDHC_RESET_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

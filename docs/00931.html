@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="00930.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00931.html" target="topic">Library Interface</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="00930.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00931.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,7 +26,7 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="00935.html" target="topic">Previous</a> | <a href="00930.html" target="topic">Up</a> | <a href="01221.html" target="topic">Next</a></div>
@@ -96,7 +96,7 @@ Sets the pointer to the function (and it's contextHandle) to be called when the 
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01231.html" target="topic">CANx_TxCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01233.html" target="topic">CANx_TxCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
 Sets the pointer to the function (and it's contextHandle) to be called when the given CAN's Tx transfer events occur.&nbsp;</div></td></tr></table></div></div>
 </div>
@@ -176,23 +176,37 @@ Receives a message from CAN bus.&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01228.html" target="topic">CANx_StandardFilterElementGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01230.html" target="topic">CANx_StandardFilterElementGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
 Get a standard filter element configuration.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01229.html" target="topic">CANx_StandardFilterElementSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01231.html" target="topic">CANx_StandardFilterElementSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
 Set a standard filter element configuration.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01230.html" target="topic">CANx_TransmitEventFIFOElementGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01228.html" target="topic">CANx_SleepModeEnter</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Get the Transmit Event FIFO Element for the transmitted message.&nbsp;</div></td></tr></table></div></div>
+Puts the CAN Peripheral in sleep mode (clock stop request).&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01232.html" target="topic">CANx_TransmitEventFIFOElementGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get the Transmit Event FIFO Element for the transmitted message.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01229.html" target="topic">CANx_SleepModeExit</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Exits CAN peripheral from sleep mode (clock stop request).&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
@@ -214,7 +228,7 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01232.html" target="topic">CANx_TxFIFOIsFull</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01234.html" target="topic">CANx_TxFIFOIsFull</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
 Returns true if Tx FIFO is full otherwise false.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
@@ -311,7 +325,7 @@ CAN RX Message Buffer structure.&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="00930.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00931.html" target="topic">Library Interface</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="00930.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00931.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -319,7 +333,7 @@ CAN RX Message Buffer structure.&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="00935.html" target="topic">Previous</a> | <a href="00930.html" target="topic">Up</a> | <a href="01221.html" target="topic">Next</a></div>

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PWMx_ChannelsStart Function</title>
+<title>PIC32CM LE00/LS00/LS60 Peripheral Libraries</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="05468.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05469.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05542.html" target="topic">PWMx_ChannelsStart Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05542.html" target="topic">PIC32CM LE00/LS00/LS60 Peripheral Libraries</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05541.html" target="topic">Previous</a> | <a href="05469.html" target="topic">Up</a> | <a href="05543.html" target="topic">Next</a></div>
+<a href="05541.html" target="topic">Previous</a> | <a href="05072.html" target="topic">Up</a> | <a href="05543.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWMx_ChannelsStart@PWM_CHANNEL_MASK Topic Title: PWMx_ChannelsStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB PIC32CM_LE00_LS00_LS60 Topic Title: PIC32CM LE00/LS00/LS60 Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PWMx_ChannelsStart Function</div>
+PIC32CM LE00/LS00/LS60 Peripheral Libraries</div>
 </div>
 </div>
 
@@ -49,60 +49,90 @@ PWMx_ChannelsStart Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function enables the PWM channels specified in channelMask. If channels are configured in sync mode, only channel 0 should be enabled which will ensure all sync channels are started together.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PWMx_ChannelsStart</span></strong>(
-    <a href="05504.html" target="topic">PWM_CHANNEL_MASK</a> <strong><span style="color: #000000">channelMask</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+The following Table lists all the Peripheral Libraries for the PIC32CM LE00/LS00/LS60 Family.&nbsp;</p>
 <p class="Element10">
-<a href="05546.html" target="topic">PWMx_Initialize</a>() function must have been called first for the associated instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+&nbsp;</p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-channelMask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-set of channel numbers&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    PWM0_Initialize();
-    PWM0_ChannelsStart(PWM_CHANNEL_0_MASK);</pre></div></div>
+<td class="Element65" valign="top" width="100%">
+<div class="Element66">
+PIC32CM LE00/LS00/LS60 Peripheral Libraries&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="00014.html" target="topic">AC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="00164.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01239.html" target="topic">CCL Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01451.html" target="topic">Clock Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01643.html" target="topic">DAC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01786.html" target="topic">DMAC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="02014.html" target="topic">DSU Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="02113.html" target="topic">EIC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="02685.html" target="topic">EVSYS Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="03262.html" target="topic">FREQM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04459.html" target="topic">NVIC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04631.html" target="topic">NVMCTRL Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04801.html" target="topic">OPAMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04859.html" target="topic">PAC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05591.html" target="topic">PM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05653.html" target="topic">PORT Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06264.html" target="topic">RSTC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06396.html" target="topic">RTC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="07040.html" target="topic">SERCOM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="07593.html" target="topic">SUPC Peripheral Library</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="07855.html" target="topic">TC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="08209.html" target="topic">TCC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="08387.html" target="topic">TRAM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="08403.html" target="topic">TRNG Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="08843.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -110,7 +140,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="05468.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05469.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05542.html" target="topic">PWMx_ChannelsStart Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05542.html" target="topic">PIC32CM LE00/LS00/LS60 Peripheral Libraries</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -118,13 +148,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05541.html" target="topic">Previous</a> | <a href="05469.html" target="topic">Up</a> | <a href="05543.html" target="topic">Next</a></div>
+<a href="05541.html" target="topic">Previous</a> | <a href="05072.html" target="topic">Up</a> | <a href="05543.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWMx_ChannelsStart@PWM_CHANNEL_MASK Topic Title: PWMx_ChannelsStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB PIC32CM_LE00_LS00_LS60 Topic Title: PIC32CM LE00/LS00/LS60 Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

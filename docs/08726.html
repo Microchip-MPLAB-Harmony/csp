@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Using the Library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '08726.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08721.html" target="topic">USART Peripheral Library Help</a> &gt; <a href="08726.html" target="topic">Using the Library</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="08717.html" target="topic">Previous</a> | <a href="08721.html" target="topic">Up</a> | <a href="08722.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: USART 6089 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Using the Library</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The USART library supports the byte and buffer model to transfer data. The buffer model can process a block of data in a blocking or a non-blocking manner.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Byte-by-Byte Transfer Model:</strong>&nbsp;</p>
+<p class="Element10">
+The Byte-by-Byte Model allows the application to transfer data through the USART one byte at a time. With this model, the driver reads one byte from the receive buffer or writes one byte to the transmit buffer. The application must check if data has been received before reading the data. Similarly, it must check if the transmit buffer is empty before writing to the transmit buffer. The byte-by-byte data transfer model places the responsibility of maintaining the USART peripheral on the Application.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The following example shows the byte-by-byte model usage. </p><div class="Element13"><div class="Element12"><pre class="Element12"> <strong><span style="color: #000080">char</span></strong> rxData;
+ <strong><span style="color: #000080">char</span></strong> txData = 'A';
+
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+{
+    <strong><span style="color: #000080">if</span></strong>(USARTx_ReceiverIsReady() == <strong><span style="color: #000080">true</span></strong>)
+    {
+        rxData = USARTx_ReadByte();
+    }
+
+    <strong><span style="color: #000080">if</span></strong>(USARTx_TransmitterIsReady() == <strong><span style="color: #000080">true</span></strong>)
+    {
+        USARTx_WriteByte(txData);
+    }
+
+}</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Buffer Transfer Model:</strong>&nbsp;</p>
+<p class="Element10">
+The buffer model can process a block of data in a blocking or a non-blocking manner.
+<ul class="Element632">
+<li class="Element602">With blocking, the read and write APIs will block until all of the data is transferred. The CPU polls the peripheral register continuously to manage the transfer.</li>
+<li class="Element602">With non-blocking, the read and write APIs will return immediately. The peripheral interrupt is used to manage the transfer. The user application can either use polling or callback method to indicate the transfer status.
+<ul class="Element633">
+<li class="Element603">With polling, the application will need to continuously poll to check if the transfer is completed.</li>
+<li class="Element603">With callback, the registered callback function will be called once the transfer is completed. This means the application do not have to poll continuously.</li>
+</ul></li>
+</ul>&nbsp;</p>
+<p class="Element10">
+<strong>Blocking Transfer</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows the blocking transfer. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> myData[6] = {&quot;hello&quot;};
+
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+{
+   <i><span style="color: #008000">/* Write 6 bytes of data */</span></i>
+   USARTx_Write(&amp;myData, 6)
+
+}</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Non-blocking Transfer with callback</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows a non-blocking transfer with callback. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> readBuffer[10];
+
+<strong><span style="color: #000080">void</span></strong> USARTx_Callback(uintptr_t context)
+{
+    <strong><span style="color: #000080">if</span></strong>(USARTx_ErrorGet() != USART_ERROR_NONE)
+    {
+        <i><span style="color: #008000">//Handle error case</span></i>
+    }
+    <strong><span style="color: #000080">else</span></strong>
+    {
+        <i><span style="color: #008000">//Transfer completed successfully</span></i>
+    }
+}
+
+<strong><span style="color: #000080">int</span></strong> main (<strong><span style="color: #000080">void</span></strong>)
+{
+    <i><span style="color: #008000">/* Register Callback function for Read operation*/</span></i>
+    USARTx_ReadCallbackRegister(USARTx_Callback, (uintptr_t)NULL);
+
+    <i><span style="color: #008000">/* Submit Read request to read 10 bytes of data */</span></i>
+    USARTx_Read(&amp;readBuffer, 10);
+
+}</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Non-blocking Transfer with polling</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows a non-blocking transfer with polling. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> readBuffer[10];
+
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+{
+
+    USARTx_Read(&amp;readBuffer, 10);
+
+    <i><span style="color: #008000">/* Poll and wait for the transfer to complete */</span></i>
+    <strong><span style="color: #000080">while</span></strong>(USARTx_ReadIsBusy());
+
+    <strong><span style="color: #000080">if</span></strong>(USARTx_ErrorGet() != USART_ERROR_NONE)
+    {
+        <i><span style="color: #008000">// Error occurred while receiving the buffer</span></i>
+    }
+    <strong><span style="color: #000080">else</span></strong>
+    {
+        <i><span style="color: #008000">//  Received the buffer without any error</span></i>
+    }
+}</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Non-blocking Transfer with Ring Buffer enabled</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows a non-blocking transfer with ring buffer enabled. </p><div class="Element13"><div class="Element12"><pre class="Element12">uint8_t txBuffer[50];
+uint8_t rxBuffer[10];
+<strong><span style="color: #000080">volatile</span></strong> uint32_t nBytesRead = 0;
+<strong><span style="color: #000080">volatile</span></strong> <strong><span style="color: #000080">bool</span></strong> txThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
+<strong><span style="color: #000080">volatile</span></strong> <strong><span style="color: #000080">bool</span></strong> rxThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
+
+<i><span style="color: #008000">// *****************************************************************************</span></i>
+<i><span style="color: #008000">// *****************************************************************************</span></i>
+<i><span style="color: #008000">// Section: Main Entry Point</span></i>
+<i><span style="color: #008000">// *****************************************************************************</span></i>
+<i><span style="color: #008000">// *****************************************************************************</span></i>
+
+<strong><span style="color: #000080">void</span></strong> usartReadEventHandler(USART_EVENT event, uintptr_t context )
+{
+    uint32_t nBytesAvailable = 0;
+
+    <strong><span style="color: #000080">if</span></strong> (event == USART_EVENT_READ_THRESHOLD_REACHED)
+    {
+        <i><span style="color: #008000">/* Receiver should atleast have the thershold number of bytes in the ring buffer */</span></i>
+        nBytesAvailable = USART1_ReadCountGet();
+
+        nBytesRead += USART1_Read((uint8_t*)&amp;rxBuffer[nBytesRead], nBytesAvailable);
+    }
+}
+
+<strong><span style="color: #000080">void</span></strong> usartWriteEventHandler(USART_EVENT event, uintptr_t context )
+{
+    txThresholdEventReceived = <strong><span style="color: #000080">true</span></strong>;
+}
+
+<strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
+{
+    uint32_t nBytes = 0;
+
+    <i><span style="color: #008000">/* Initialize all modules */</span></i>
+    SYS_Initialize ( NULL );
+
+    <i><span style="color: #008000">/* Register a callback for write events */</span></i>
+    USARTx_WriteCallbackRegister(usartWriteEventHandler, (uintptr_t) NULL);
+
+    <i><span style="color: #008000">/* Register a callback for read events */</span></i>
+    USARTx_ReadCallbackRegister(usartReadEventHandler, (uintptr_t) NULL);
+
+    <i><span style="color: #008000">/* Print the size of the read buffer on the terminal */</span></i>
+    nBytes = sprintf((<strong><span style="color: #000080">char</span></strong>*)txBuffer, &quot;RX Buffer Size = %d\r\n&quot;, (<strong><span style="color: #000080">int</span></strong>)USARTx_ReadBufferSizeGet());
+
+    USARTx_Write((uint8_t*)txBuffer, nBytes);
+
+    <i><span style="color: #008000">/* Print the size of the write buffer on the terminal */</span></i>
+    nBytes = sprintf((<strong><span style="color: #000080">char</span></strong>*)txBuffer, &quot;TX Buffer Size = %d\r\n&quot;, (<strong><span style="color: #000080">int</span></strong>)USARTx_WriteBufferSizeGet());
+
+    USARTx_Write((uint8_t*)txBuffer, nBytes);
+
+    USARTx_Write((uint8_t*)&quot;Adding 10 characters to the TX buffer - &quot;, <strong><span style="color: #000080">sizeof</span></strong>(&quot;Adding 10 characters to the TX buffer - &quot;));
+
+    <i><span style="color: #008000">/* Wait for all bytes to be transmitted out */</span></i>
+    <strong><span style="color: #000080">while</span></strong> (USARTx_WriteCountGet() != 0);
+
+    USARTx_Write((uint8_t*)&quot;0123456789&quot;, 10);
+
+    <i><span style="color: #008000">/* Print the amount of free space available in the TX buffer. This should be 10 bytes less than the configured write buffer size. */</span></i>
+    nBytes = sprintf((<strong><span style="color: #000080">char</span></strong>*)txBuffer, &quot;\r\nFree Space in Transmit Buffer = %d\r\n&quot;, (<strong><span style="color: #000080">int</span></strong>)USARTx_WriteFreeBufferCountGet());
+
+    USARTx_Write((uint8_t*)txBuffer, nBytes);
+
+    <i><span style="color: #008000">/* Let's enable notifications to get notified when the TX buffer is empty */</span></i>
+    USARTx_WriteThresholdSet(USARTx_WriteBufferSizeGet());
+
+    <i><span style="color: #008000">/* Enable notifications */</span></i>
+    USARTx_WriteNotificationEnable(<strong><span style="color: #000080">true</span></strong>, <strong><span style="color: #000080">false</span></strong>);
+
+    <i><span style="color: #008000">/* Wait for the TX buffer to become empty. Flag &quot;txThresholdEventReceived&quot; is set in the callback. */</span></i>
+    <strong><span style="color: #000080">while</span></strong> (txThresholdEventReceived == <strong><span style="color: #000080">false</span></strong>);
+
+    txThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
+
+    <i><span style="color: #008000">/* Disable TX notifications */</span></i>
+    USARTx_WriteNotificationEnable(<strong><span style="color: #000080">false</span></strong>, <strong><span style="color: #000080">false</span></strong>);
+
+    USARTx_Write((uint8_t*)&quot;Enter 10 characters. The received characters are echoed back. \r\n&gt;&quot;, <strong><span style="color: #000080">sizeof</span></strong>(&quot;Enter 10 characters. The received characters are echoed back. \r\n&gt;&quot;));
+
+    <i><span style="color: #008000">/* Wait till 10 (or more) characters are received */</span></i>
+    <strong><span style="color: #000080">while</span></strong> (USARTx_ReadCountGet() &lt; 10);
+
+    <i><span style="color: #008000">/* At-least 10 characters are available in the RX buffer. Read out into the application buffer */</span></i>
+    USARTx_Read((uint8_t*)rxBuffer, 10);
+
+    <i><span style="color: #008000">/* Echo the received data */</span></i>
+    USARTx_Write((uint8_t*)rxBuffer, 10);
+
+    <i><span style="color: #008000">/* Now demonstrating receiver notifications */</span></i>
+    USARTx_Write((uint8_t*)&quot;\r\n Now turning on RX notifications \r\n&gt;&quot;, <strong><span style="color: #000080">sizeof</span></strong>(&quot;\r\n Now turning on RX notifications \r\n&gt;&quot;));
+
+    <i><span style="color: #008000">/* For demonstration purpose, set a threshold value to receive a callback after every 5 characters are received */</span></i>
+    USARTx_ReadThresholdSet(5);
+
+    <i><span style="color: #008000">/* Enable RX event notifications */</span></i>
+    USARTx_ReadNotificationEnable(<strong><span style="color: #000080">true</span></strong>, <strong><span style="color: #000080">false</span></strong>);
+
+    <strong><span style="color: #000080">while</span></strong>(1)
+    {
+        <i><span style="color: #008000">/* Wait until at-least 10 characters are entered by the user */</span></i>
+        <strong><span style="color: #000080">while</span></strong> (nBytesRead &lt; 10);
+
+        <i><span style="color: #008000">/* Echo the received data */</span></i>
+        USARTx_Write((uint8_t*)rxBuffer, nBytesRead);
+
+        USARTx_Write((uint8_t*)&quot;\r\n&gt;&quot;, 3);
+
+        nBytesRead = 0;
+    }
+
+    <i><span style="color: #008000">/* Execution should not come here during normal operation */</span></i>
+
+    <strong><span style="color: #000080">return</span></strong> ( EXIT_FAILURE );
+}</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08721.html" target="topic">USART Peripheral Library Help</a> &gt; <a href="08726.html" target="topic">Using the Library</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="08717.html" target="topic">Previous</a> | <a href="08721.html" target="topic">Up</a> | <a href="08722.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: USART 6089 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

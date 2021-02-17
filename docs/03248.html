@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>GPIO_PinInterruptEnable Function</title>
+<title>FLEXCOMx_USART_ReadNotificationEnable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02970.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02982.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="03248.html" target="topic">GPIO_PinInterruptEnable Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="02870.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02892.html" target="topic">USART</a> &gt; <a href="02897.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03248.html" target="topic">FLEXCOMx_USART_ReadNotificationEnable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03247.html" target="topic">Previous</a> | <a href="02982.html" target="topic">Up</a> | <a href="03263.html" target="topic">Next</a></div>
+<a href="03252.html" target="topic">Previous</a> | <a href="02897.html" target="topic">Up</a> | <a href="03255.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01618::GPIO_PinInterruptEnable@GPIO_PIN Topic Title: GPIO_PinInterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_usart_ring_buffer::FLEXCOMx_USART_ReadNotificationEnable@bool@bool Topic Title: FLEXCOMx_USART_ReadNotificationEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-GPIO_PinInterruptEnable Function</div>
+FLEXCOMx_USART_ReadNotificationEnable Function</div>
 </div>
 </div>
 
@@ -49,19 +49,20 @@ GPIO_PinInterruptEnable Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function enables interrupt on selected IO pin.</p></div>
+This API allows the application to enable or disable receive notifications. Further the application can choose to get notified persistently until the threshold condition is true. For example, if the receive threshold is set to 5, a notification is given when the internal receive buffer has 5 bytes. If persistent notification is turned off, the application is notified only once when there are 5 unread bytes in the receive buffer. However, if persistent notification is turned on, the application is notified every time a byte is received and the receive buffer has 5 or more unread characters. In this case, the notification will be stopped, when the application reads data out from the receive buffer and the number of bytes pedning in the receive buffer becomes less than 5.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">GPIO_PinInterruptEnable</span></strong>(
-    <a href="03143.html" target="topic">GPIO_PIN</a> <strong><span style="color: #000000">pin</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_USART_ReadNotificationEnable</span></strong>(
+    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">isEnabled</span></strong>, 
+    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">isPersistent</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Corresponding pin must be configured in interrupt mode in MHC Pin Manager.</p></div>
+FLEXCOMx_USART_Initialize must have been called for the associated FLEXCOM_USART instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,9 +79,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-pin&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+isEnabled&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-One of the IO pins from the enum <a href="03143.html" target="topic">GPIO_PIN</a>&nbsp;</div></td></tr></table></div></div>
+A true value turns on notification, false value turns off notification&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+isPersistent&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A true value turns on persistent notification. A false value disables persistent notifications&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -88,20 +94,47 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+The API returns the previous state of notifications. A true value indicates notifications were previously enabled; false value indicates notifications were perviously disabled.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    GPIO_PinInterruptEnable(GPIO_PIN_RB3);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">
+uint8_t rxBuffer[50];
+uint32_t nBytes;
+
+<strong><span style="color: #000080">void</span></strong> usartReadEventHandler(<a href="03237.html" target="topic">FLEXCOM_USART_EVENT</a> event, uintptr_t context )
+{
+    uint32_t nBytesAvailable = 0;
+    
+    <strong><span style="color: #000080">if</span></strong> (event == FLEXCOM_USART_EVENT_READ_THRESHOLD_REACHED)
+    {
+        <i><span style="color: #008000">// Receiver should have the thershold number of bytes in the receive buffer</span></i>
+        nBytesAvailable = FLEXCOM1_USART_ReadCountGet();
+        
+        nBytesRead += FLEXCOM1_USART_Read((uint8_t*)&amp;rxBuffer[nBytesRead], nBytesAvailable);                          
+    }
+}   
+
+<i><span style="color: #008000">//----------------------------------------------------------//</span></i>
+
+<i><span style="color: #008000">// Register a callback for read events</span></i>
+FLEXCOM1_USART_ReadCallbackRegister(usartReadEventHandler, (uintptr_t) NULL);  
+
+<i><span style="color: #008000">// Set a threshold value to receive a callback after every 10 characters are received </span></i>
+FLEXCOM1_USART_ReadThresholdSet(10);
+
+<i><span style="color: #008000">// Enable RX event notifications</span></i>
+FLEXCOM1_USART_ReadNotificationEnable(<strong><span style="color: #000080">true</span></strong>, <strong><span style="color: #000080">false</span></strong>);     
+    </pre></div></div>
 </div>
 </div>
 </div>
@@ -109,7 +142,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02970.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02982.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="03248.html" target="topic">GPIO_PinInterruptEnable Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="02870.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02892.html" target="topic">USART</a> &gt; <a href="02897.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03248.html" target="topic">FLEXCOMx_USART_ReadNotificationEnable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -117,13 +150,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03247.html" target="topic">Previous</a> | <a href="02982.html" target="topic">Up</a> | <a href="03263.html" target="topic">Next</a></div>
+<a href="03252.html" target="topic">Previous</a> | <a href="02897.html" target="topic">Up</a> | <a href="03255.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01618::GPIO_PinInterruptEnable@GPIO_PIN Topic Title: GPIO_PinInterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_usart_ring_buffer::FLEXCOMx_USART_ReadNotificationEnable@bool@bool Topic Title: FLEXCOMx_USART_ReadNotificationEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

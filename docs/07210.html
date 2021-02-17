@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SYSTICK_TimerPeriodSet Function</title>
+<title>USART_PARITY Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="07193.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="07194.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07210.html" target="topic">SYSTICK_TimerPeriodSet Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07040.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="07062.html" target="topic">USART</a> &gt; <a href="07066.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="07210.html" target="topic">USART_PARITY Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07213.html" target="topic">Previous</a> | <a href="07194.html" target="topic">Up</a> | <a href="07211.html" target="topic">Next</a></div>
+<a href="07205.html" target="topic">Previous</a> | <a href="07066.html" target="topic">Up</a> | <a href="07215.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK_TimerPeriodSet@uint32_t Topic Title: SYSTICK_TimerPeriodSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::USART_PARITY Topic Title: USART_PARITY Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SYSTICK_TimerPeriodSet Function</div>
+USART_PARITY Enumeration</div>
 </div>
 </div>
 
@@ -49,62 +49,70 @@ SYSTICK_TimerPeriodSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function is used to update SysTick Load value</p></div>
+USART PARITY&nbsp;</p>
+<p class="Element10">
+This may be used to check the type of parity with the USART peripheral during serial setup.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SYSTICK_TimerPeriodSet</span></strong>(
-    uint32_t <strong><span style="color: #000000">period</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">USART_PARITY_EVEN</span></strong>,
+  <strong><span style="color: #000000">USART_PARITY_ODD</span></strong>,
+  <strong><span style="color: #000000">USART_PARITY_NONE</span></strong>,
+  <strong><span style="color: #000000">USART_PARITY_INVALID</span></strong>
+} USART_PARITY;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-Systick should be stopped prior to setting up the new Load value by calling <a href="07213.html" target="topic">SYSTICK_TimerStop</a>. This will make sure that the new value is used for the next Tick</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-Period&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The period is specified as a number of clock ticks between SysTick interrupt. It must be between 1 and 16,777,216, inclusive.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+USART_PARITY_EVEN&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Even Parity&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+USART_PARITY_ODD&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Odd Parity&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+USART_PARITY_NONE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+This enum is defined to set frame format only</p>
+<ul class="Element630">
+<li class="Element600">This value won't be written to register</li>
+</ul><p class="Element267">
+&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+USART_PARITY_INVALID&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Force the compiler to reserve 32-bit memory for each enum&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
 None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="07213.html" target="topic">SYSTICK_TimerStop</a>();
-    SYSTICK_TimerPeriodSet(0x00004567);
-    <a href="07212.html" target="topic">SYSTICK_TimerStart</a>();</pre></div></div>
-</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="07193.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="07194.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07210.html" target="topic">SYSTICK_TimerPeriodSet Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07040.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="07062.html" target="topic">USART</a> &gt; <a href="07066.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="07210.html" target="topic">USART_PARITY Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -112,13 +120,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07213.html" target="topic">Previous</a> | <a href="07194.html" target="topic">Up</a> | <a href="07211.html" target="topic">Next</a></div>
+<a href="07205.html" target="topic">Previous</a> | <a href="07066.html" target="topic">Up</a> | <a href="07215.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK_TimerPeriodSet@uint32_t Topic Title: SYSTICK_TimerPeriodSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::USART_PARITY Topic Title: USART_PARITY Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

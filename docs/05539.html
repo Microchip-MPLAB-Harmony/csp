@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PWMx_ChannelOverrideEnable Function</title>
+<title>Peripheral Libraries</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="05468.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05469.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05539.html" target="topic">PWMx_ChannelOverrideEnable Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05538.html" target="topic">Previous</a> | <a href="05469.html" target="topic">Up</a> | <a href="05535.html" target="topic">Next</a></div>
+<a href="05570.html" target="topic">Previous</a> | <a href="05072.html" target="topic">Up</a> | <a href="00024.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWMx_ChannelOverrideEnable@PWM_CHANNEL_NUM Topic Title: PWMx_ChannelOverrideEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB Libraries Topic Title: Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PWMx_ChannelOverrideEnable Function</div>
+Peripheral Libraries</div>
 </div>
 </div>
 
@@ -49,40 +49,996 @@ PWMx_ChannelOverrideEnable Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function overrides the PWM output as the value defined in PWM_OOV register</p></div>
+The Microchip 32-bit Chip Support Package (CSP) contains the following peripheral libraries.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PWMx_ChannelOverrideEnable</span></strong>(
-    <a href="05509.html" target="topic">PWM_CHANNEL_NUM</a> <strong><span style="color: #000000">channel</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="05546.html" target="topic">PWMx_Initialize</a>() function must have been called first for the associated instance.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    PWM0_Initialize();
-    PWM0_ChannelOverrideEnable(PWM_CHANNEL_0);</pre></div></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00024.html" target="topic">AC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Analog Comparator (AC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00014.html" target="topic">AC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Analog Comparator (AC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00004.html" target="topic">AC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Analog Comparator (AC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00117.html" target="topic">ACC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Analog Comparator Controller (ACC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00164.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Analog-to-Digital Converter (ADC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00174.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Analog-to-Digital Converter (ADC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00134.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Analog-to-Digital Converter (ADC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00154.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Analog-to-Digital Converter (ADC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00294.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the 10-bit Analog to Digital Converter (ADC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00185.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the 10-bit Analog to Digital Converter (ADC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00144.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Analog to Digital Controller (ADC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00699.html" target="topic">ADCHS Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the High Speed Analog to Digital Converter (ADCHS) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00786.html" target="topic">AFEC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Analog Front-End Controller (AFEC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00854.html" target="topic">AIC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Advanced Interrupt Controller (AIC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00866.html" target="topic">Cache Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Cache peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00930.html" target="topic">CAN Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Controller Area Network (CAN) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00920.html" target="topic">CAN Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Controller Area Network (CAN) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00910.html" target="topic">CAN Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Controller Area Network (CAN) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00900.html" target="topic">CAN Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Controller Area Network (CAN) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01239.html" target="topic">CCL Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Configurable Custom Logic (CCL) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01247.html" target="topic">CDAC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Control Digital-to-Analog Converter (CDAC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01259.html" target="topic">CLC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the <span style="color: #0000FF">&lt;library_name&gt;</span>peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01451.html" target="topic">Clock (PIC32CM LE/LS) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of PIC32CM LE/LS family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01464.html" target="topic">Clock (PIC32MK) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the PIC32MK Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01339.html" target="topic">Clock (PIC32MX) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the PIC32 MX Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01470.html" target="topic">Clock (PIC32MZ EF and PIC32MZ DA) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the PIC32MZ Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01476.html" target="topic">Clock (PIC32MZ W1) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the PIC32MZ W1 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01488.html" target="topic">Clock (SAM 9X60) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of SAM 9X60.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01271.html" target="topic">Clock (SAM A5D2) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM A5D2 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01278.html" target="topic">Clock (SAM C20/C21) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM C20/C21 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01286.html" target="topic">Clock (SAM D09_D10_D11) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM D09_D10_D11 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01294.html" target="topic">Clock (SAM D20) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM D20 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01302.html" target="topic">Clock (SAM D21/HA1) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM D21 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01482.html" target="topic">Clock (SAM D5x/E5x) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM D5x/E5x Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01309.html" target="topic">Clock (SAM E70) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM E70/S70/V70/V71 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01444.html" target="topic">Clock (SAM G51 G53 G54) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM G51/G53/G54 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06721.html" target="topic">Clock (SAM G55) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM G55 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06727.html" target="topic">Clock (SAM L21) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM L21 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06734.html" target="topic">Clock (SAM L22) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM L22 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01315.html" target="topic">Clock (SAM RH71) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM RH71 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01425.html" target="topic">Clock (SAML10/L11) Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the SAM L10/L11 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01458.html" target="topic">Clock PIC32CX_BZ Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the clock system of the PIC32CX_BZ Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01494.html" target="topic">CMCC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Cortex M Cache Controller (CMCC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01502.html" target="topic">CMCC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Cortex M Cache Controller (CMCC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01525.html" target="topic">CMP Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Comparator (CMP) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01535.html" target="topic">CMP Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Op Amp/Comparator (CMP) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01583.html" target="topic">Core Timer Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Core <a href="08295.html" target="topic">Timer</a> module.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01605.html" target="topic">CRCCU Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Cyclic Redundancy Check Calculation Unit (CRCCU) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01623.html" target="topic">CVR Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Comparator Voltage Reference (CVref) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01652.html" target="topic">DAC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Digital-to-Analog Converter (DAC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01634.html" target="topic">DAC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Digital-to-Analog Converter (DAC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01643.html" target="topic">DAC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Digital-to-Analog Converter (DAC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01681.html" target="topic">DACC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Digital-to-Analog Converter Controller (DACC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01697.html" target="topic">DBGU Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the DBGU peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01745.html" target="topic">DDR2 SDRAM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the DDR2 SDRAM Controller.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01752.html" target="topic">DIVAS Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Divide and Square Root Accelerator (DIVAS) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01776.html" target="topic">DMAC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the DMA Controller (DMAC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01766.html" target="topic">DMAC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the DMA Controller (DMAC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01796.html" target="topic">DMAC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the DMA Controller (DMAC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01786.html" target="topic">DMAC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the DMA Controller (DMAC) peripheral&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01982.html" target="topic">DMT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Deadman <a href="08295.html" target="topic">Timer</a> (DMT) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01997.html" target="topic">DSU Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Device Service Unit (DSU) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02004.html" target="topic">DSU Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Device Service Unit (DSU) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02014.html" target="topic">DSU Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Device Service Unit (DSU) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02026.html" target="topic">DWT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Data Watchpoint and Trace (<a href="02027.html" target="topic">DWT</a>) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02041.html" target="topic">EBI Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the External Bus Interface (EBI) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02049.html" target="topic">EEPROM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the EEPROM peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02067.html" target="topic">EFC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Embedded Flash Controller (EFC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02103.html" target="topic">EIC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the External Interrupt Controller (EIC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02093.html" target="topic">EIC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the External Interrupt Controller (EIC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02113.html" target="topic">EIC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the External Interrupt Controller (EIC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02212.html" target="topic">EVIC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use Enhanced Vectored Interrupt Controller (EVIC) module.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02203.html" target="topic">EVIC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use Enhanced Vectored Interrupt Controller (EVIC) module.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02685.html" target="topic">EVSYS Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Event System (EVSYS) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02667.html" target="topic">EVSYS Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Event System (EVSYS) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02676.html" target="topic">EVSYS Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Event System (EVSYS) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02816.html" target="topic">FLEXCOM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Flexible Serial Communication Controller (FLEXCOM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="02870.html" target="topic">FLEXCOM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Flexible Serial Communication Controller (FLEXCOM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03262.html" target="topic">FREQM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Frequency meter (FREQM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03282.html" target="topic">GPIO Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the General Purpose I/O (GPIO) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03294.html" target="topic">GPIO Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the General Purpose I/O (GPIO) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03287.html" target="topic">GPIO Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the General Purpose I/O (GPIO) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03768.html" target="topic">HEFC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Hardedned Embedded Flash Controller (HEFC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03793.html" target="topic">HEMC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Hardened External Memory Controller (HEMC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03830.html" target="topic">HSMCI Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the HSMCI peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03917.html" target="topic">I2C Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the I2C peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03905.html" target="topic">I2C Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the I2C peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04034.html" target="topic">ICAP Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Input <a href="01235.html" target="topic">Capture</a> (ICAP) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04056.html" target="topic">L2CC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the L2 Cache Controller (L2CC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04063.html" target="topic">LCDC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the LCD Controller (LCDC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04211.html" target="topic">Matrix Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Matrix peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04205.html" target="topic">MATRIX Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Matrix peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04221.html" target="topic">MCAN Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Controller Area Network (MCAN) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04331.html" target="topic">MCPWM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Motor Control Pulse Width Modulation (MCPWM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04383.html" target="topic">MEM2MEM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the memory to memory (MEM2MEM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04409.html" target="topic">MMU Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Memory Management Unit (MMU) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04402.html" target="topic">MMU Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Memory Management Unit (MMU) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04430.html" target="topic">MPU Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Memory Protection Unit (MPU).&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04438.html" target="topic">NMIC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Non-Maskable Interrupt Controller peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04459.html" target="topic">NVIC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Nested Vectored Interrupt Controller (NVIC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04475.html" target="topic">NVM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Non-Volatile Memory (NVM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04502.html" target="topic">NVM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Non-Volatile Memory (NVM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04484.html" target="topic">NVM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Non-Volatile Memory (NVM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04493.html" target="topic">NVM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Non-Volatile Memory (NVM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04466.html" target="topic">NVM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Non Volatile Memory (NVM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04611.html" target="topic">NVMCTRL Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Non-Volatile Memory Controller (NVMCTRL) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04601.html" target="topic">NVMCTRL Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Non-Volatile Memory Controller (NVMCTRL) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04631.html" target="topic">NVMCTRL Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Non-Volatile Memory Controller (NVMCTRL) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04621.html" target="topic">NVMCTRL Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Non-Volatile Memory Controller (NVMCTRL) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04778.html" target="topic">OCMP Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Output <a href="01578.html" target="topic">Compare</a> (OCMP) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04801.html" target="topic">OPAMP Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the OPAMP peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04810.html" target="topic">OTPC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the OTPC peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04859.html" target="topic">PAC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Peripheral Access Controller (PAC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04868.html" target="topic">PAC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Peripheral Access Controller (PAC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="04996.html" target="topic">PDEC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Position Decoder (PDEC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05086.html" target="topic">PIO Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Parallel Input Output (PIO) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05077.html" target="topic">PIO Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Parallel Input Output (PIO) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05496.html" target="topic">PIT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Periodic Interval <a href="08295.html" target="topic">Timer</a> (PIT) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05520.html" target="topic">PIT64B Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the 64-bit Periodic Interval <a href="08295.html" target="topic">Timer</a> (PIT64B) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05591.html" target="topic">PM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Power Manager (PM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05582.html" target="topic">PM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Power Manager (PM) peripheral&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05598.html" target="topic">PM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Power Manager (PM) peripheral&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05633.html" target="topic">PMP Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the PMP peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05653.html" target="topic">PORT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the PORT peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05781.html" target="topic">POWER Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Power peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05844.html" target="topic">PWM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Pulse Width Modulation (<a href="05839.html" target="topic">PWM</a>) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05854.html" target="topic">PWM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Pulse Width Modulation (<a href="05839.html" target="topic">PWM</a>) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05940.html" target="topic">QEI Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Quadrature Encoder Interface (QEI) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05986.html" target="topic">QSPI Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Quad Serial Peripheral Interface (QSPI) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05978.html" target="topic">QSPI Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Quad Serial Peripheral Interface (QSPI) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06082.html" target="topic">RCON Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Reset Controller (RCON) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06074.html" target="topic">RCON Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Reset Controller (RCON) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06091.html" target="topic">RCON Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Reset Controller (RCON) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06100.html" target="topic">RCON Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Reset Controller (RCON) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06193.html" target="topic">RNG Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Random Number Generator (RNG) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06184.html" target="topic">RNG Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Random Number Generator (RNG) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06247.html" target="topic">RSTC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Reset Controller (RSTC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06237.html" target="topic">RSTC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Reset Controller (RSTC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06256.html" target="topic">RSTC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Reset Controller (RSTC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06264.html" target="topic">RSTC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Reset Controller (RSTC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06339.html" target="topic">RSWDT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Reinforced Safety Watchdog <a href="08295.html" target="topic">Timer</a> (<span style="color: #000000">RSWDT) peripheral.</span>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06363.html" target="topic">RTC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Real-Time Clock (<span style="color: #000000">RTC) peripheral.</span>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06396.html" target="topic">RTC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Real-Time Clock (<span style="color: #000000">RTC) peripheral.</span>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06357.html" target="topic">RTC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Real-Time Clock (<span style="color: #000000">RTC) peripheral.</span>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06639.html" target="topic">RTCC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Real Time Clock and Calendar (RTCC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06648.html" target="topic">RTCC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Real Time Clock and Calendar (RTCC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06689.html" target="topic">RTT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Real-Time <a href="08295.html" target="topic">Timer</a> (RTT) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06714.html" target="topic">RXLP Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Low Power Asynchronous Receiver (RXLP) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06742.html" target="topic">SDADC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Sigma-Delta Analog-to-Digital Converter (SDADC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06771.html" target="topic">SDHC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the SDHC peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06781.html" target="topic">SDHC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the SDHC peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06932.html" target="topic">SDMMC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use theSecure Digital Multimedia Card peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07014.html" target="topic">SDRAMC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the SDRAM Controller (SDRAMC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07040.html" target="topic">SERCOM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Serial Communication Interface (SERCOM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07249.html" target="topic">SHDWC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Shutdown Controller (SHDWC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07276.html" target="topic">SMC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the <span style="color: #000000">Static Memory Controller </span>(<span style="color: #000000">SMC) peripheral.</span>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07261.html" target="topic">SMC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Static Memory Controller (SMC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07268.html" target="topic">SMC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Static Memory Controller (SMC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07325.html" target="topic">SPI Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Serial Peripheral Interface (SPI) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07337.html" target="topic">SPI Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Serial Peripheral Interface (SPI) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07313.html" target="topic">SPI Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Serial Peripheral Interface (SPI) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07505.html" target="topic">SQI Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Serial Quad Interface (SQI) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07514.html" target="topic">SQI Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Serial Quad Interface (SQI) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07565.html" target="topic">SUPC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Supply Controller (SUPC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07574.html" target="topic">SUPC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Supply Controller (SUPC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07601.html" target="topic">SUPC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Supply Controller (SUPC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07593.html" target="topic">SUPC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Supply Controller (SUPC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07584.html" target="topic">SUPC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Supply Controller (SUPC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07697.html" target="topic">SYSTICK Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the System <a href="08295.html" target="topic">Timer</a> (SysTick) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07739.html" target="topic">TC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the <a href="08295.html" target="topic">Timer</a> Counter (TC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07855.html" target="topic">TC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the <a href="08295.html" target="topic">Timer</a> Counter (TC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07781.html" target="topic">TC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the <a href="08295.html" target="topic">Timer</a> Counter (TC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07823.html" target="topic">TC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the <a href="08295.html" target="topic">Timer</a> Counter (TC) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08209.html" target="topic">TCC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the <a href="08295.html" target="topic">Timer</a>/Counter (TCC) peripheral for Control Applications.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08300.html" target="topic">Timer Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the <a href="08295.html" target="topic">Timer</a> peripheral (<a href="08295.html" target="topic">Timer</a> 2 onward).&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08310.html" target="topic">Timer Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the <a href="08295.html" target="topic">Timer</a> peripheral (<a href="08295.html" target="topic">Timer</a> 2 onward).&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08354.html" target="topic">Timer1 Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the <a href="08295.html" target="topic">Timer</a> 1 peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08344.html" target="topic">Timer1 Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the <a href="08295.html" target="topic">Timer</a> 1 peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08387.html" target="topic">TRAM Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the TrustRAM (TRAM) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08403.html" target="topic">TRNG Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use theTrue Random Number Generator (TRNG) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08396.html" target="topic">TRNG Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the True Random Number Generator (TRNG) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08421.html" target="topic">TWI Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the TWI (Two Wire Interface) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08446.html" target="topic">TWIHS Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Two-wire Interface (TWIHS) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08513.html" target="topic">UART Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Universal Asynchronous Receiver Transceiver (UART) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08533.html" target="topic">UART Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the UART peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08523.html" target="topic">UART Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Universal Asynchronous Receiver Transceiver (UART) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08721.html" target="topic">USART Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the USART peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08802.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Watchdog <a href="08295.html" target="topic">Timer</a> (WDT) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08808.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Watchdog <a href="08295.html" target="topic">Timer</a> (WDT) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08834.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Watchdog <a href="08295.html" target="topic">Timer</a> (WDT) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08843.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Watchdog <a href="08295.html" target="topic">Timer</a> (WDT) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08825.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Watchdog <a href="08295.html" target="topic">Timer</a> (WDT) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08796.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Watchdog <a href="08295.html" target="topic">Timer</a> (WDT) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08816.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the Watchdog <a href="08295.html" target="topic">Timer</a> (WDT) peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="08895.html" target="topic">XDMAC Peripheral Library Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides an interface to use the DMA Controller (XDMAC) peripheral.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -90,7 +1046,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="05468.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05469.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05539.html" target="topic">PWMx_ChannelOverrideEnable Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +1054,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05538.html" target="topic">Previous</a> | <a href="05469.html" target="topic">Up</a> | <a href="05535.html" target="topic">Next</a></div>
+<a href="05570.html" target="topic">Previous</a> | <a href="05072.html" target="topic">Up</a> | <a href="00024.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWMx_ChannelOverrideEnable@PWM_CHANNEL_NUM Topic Title: PWMx_ChannelOverrideEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB Libraries Topic Title: Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

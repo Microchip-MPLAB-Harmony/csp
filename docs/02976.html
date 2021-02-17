@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>FLEXCOMx_TWI_TransferSetup Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02977.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02976.html" target="topic">Introduction</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="02816.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02794.html" target="topic">I2C</a> &gt; <a href="02800.html" target="topic">Master</a> &gt; <a href="02799.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02976.html" target="topic">FLEXCOMx_TWI_TransferSetup Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02977.html" target="topic">Previous</a> | <a href="02977.html" target="topic">Up</a> | <a href="02973.html" target="topic">Next</a></div>
+<a href="02971.html" target="topic">Previous</a> | <a href="02799.html" target="topic">Up</a> | <a href="02975.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: GPIO 02467 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_twi::FLEXCOMx_TWI_TransferSetup@FLEXCOM_TWI_TRANSFER_SETUP*@uint32_t Topic Title: FLEXCOMx_TWI_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+FLEXCOMx_TWI_TransferSetup Function</div>
 </div>
 </div>
 
@@ -49,28 +49,85 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-General purpose I/O pins are the simplest of peripherals. They allow the PIC32MZ EF family device to monitor and control other devices. To add flexibility and functionality, some pins are multiplexed with alternate function(s). These functions depend on which peripheral features are on the device. In general, when a peripheral is functioning, that pin may not be used as a general purpose I/O pin.&nbsp;</p>
+This API is generally used when there are multiple clients on the same I2C bus having different I2C clock speed. In such a case, the FLEXCOMx_TWI_TransferSetup API must be called to set the appropriate I2C bus speed before starting the I2C transfer for the I2C slave.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_TWI_TransferSetup</span></strong>(
+    <a href="02969.html" target="topic">FLEXCOM_TWI_TRANSFER_SETUP</a>* <strong><span style="color: #000000">setup</span></strong>, 
+    uint32_t <strong><span style="color: #000000">srcClkFreq</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
+FLEXCOMx_Initialize must have been called for the associated TWI instance. The transfer status should not be busy.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+setup&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the structure containing the transfer setup.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+srcClkFreq&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+TWI Peripheral Clock Source Frequency.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-Some of the key features of the I/O ports are:&nbsp;</p>
+true - Transfer setup was updated Successfully. false - Failure while updating transfer setup.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-• Individual output pin open-drain enable/disable&nbsp;</p>
-<p class="Element10">
-• Individual input pin weak pull-up and pull-down&nbsp;</p>
-<p class="Element10">
-• Monitor selective inputs and generate interrupt when change in pin state is detected&nbsp;</p>
-<p class="Element10">
-• Operation during Sleep and Idle modes&nbsp;</p>
-<p class="Element10">
-• Fast bit manipulation using CLR, SET and INV registers</p></div>
+srcClkFreq overrides any change in the peripheral clock frequency. If configured to zero PLib takes the peripheral clock frequency from MHC.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<a href="02969.html" target="topic">FLEXCOM_TWI_TRANSFER_SETUP</a> setup;
+
+setup.clkSpeed = 400000;
+
+<i><span style="color: #008000">// Make sure that the I2C is not busy before changing the I2C clock frequency</span></i>
+<strong><span style="color: #000080">if</span></strong> (<a href="02974.html" target="topic">FLEXCOMx_TWI_IsBusy</a>() == <strong><span style="color: #000080">false</span></strong>)
+{
+    <strong><span style="color: #000080">if</span></strong> (FLEXCOMx_TWI_TransferSetup( &amp;setup, 0 ) == <strong><span style="color: #000080">true</span></strong>)
+    {
+        <i><span style="color: #008000">// Transfer Setup updated successfully</span></i>
+    }
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02977.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02976.html" target="topic">Introduction</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="02816.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02794.html" target="topic">I2C</a> &gt; <a href="02800.html" target="topic">Master</a> &gt; <a href="02799.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02976.html" target="topic">FLEXCOMx_TWI_TransferSetup Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -78,13 +135,13 @@ Some of the key features of the I/O ports are:&nbsp;</p>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02977.html" target="topic">Previous</a> | <a href="02977.html" target="topic">Up</a> | <a href="02973.html" target="topic">Next</a></div>
+<a href="02971.html" target="topic">Previous</a> | <a href="02799.html" target="topic">Up</a> | <a href="02975.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: GPIO 02467 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_twi::FLEXCOMx_TWI_TransferSetup@FLEXCOM_TWI_TRANSFER_SETUP*@uint32_t Topic Title: FLEXCOMx_TWI_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

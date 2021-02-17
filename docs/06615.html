@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>RTC_Timer32Compare0Set Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06588.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06610.html" target="topic">USART</a> &gt; <a href="06615.html" target="topic">Using the Library</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="06396.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="06397.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="06402.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06615.html" target="topic">RTC_Timer32Compare0Set Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06611.html" target="topic">Previous</a> | <a href="06610.html" target="topic">Up</a> | <a href="06614.html" target="topic">Next</a></div>
+<a href="06624.html" target="topic">Previous</a> | <a href="06402.html" target="topic">Up</a> | <a href="06617.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM U2201 USART Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32Compare0Set@uint32_t Topic Title: RTC_Timer32Compare0Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+RTC_Timer32Compare0Set Function</div>
 </div>
 </div>
 
@@ -49,231 +49,64 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The SERCOM UART library supports the byte and buffer model to transfer data. The buffer model can process a block of data in a blocking or a non-blocking manner.&nbsp;</p>
+This function sets the 32-bit timer compare value. The counter value will be compared against the compare value and a compare match event will occur when the counter matches the compare value. If the library is configured for interrupt mode and if a event handler function has been set through the <a href="06613.html" target="topic">RTC_Timer32CallbackRegister</a>() function, the event handling function will be called. When the match occurs, the counter can optionally be reset if clear on compare is enabled to generate periodic interrupt.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer32Compare0Set</span></strong>(
+    uint32_t <strong><span style="color: #000000">compare</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
+<a href="06546.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 32-bit <a href="08295.html" target="topic">Timer</a> Counter mode.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+compare&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+<a href="01578.html" target="topic">Compare</a> value&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<strong>Byte-by-Byte Transfer Model:</strong>&nbsp;</p>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The Byte-by-Byte Model allows the application to transfer data through the USART one byte at a time. With this model, the driver reads one byte from the receive buffer or writes one byte to the transmit buffer. The application must check if data has been received before reading the data. Similarly, it must check if the transmit buffer is empty before writing to the transmit buffer. The byte-by-byte data transfer model places the responsibility of maintaining the USART peripheral on the Application.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The following example shows the byte-by-byte model usage. </p><div class="Element13"><div class="Element12"><pre class="Element12"> <strong><span style="color: #000080">char</span></strong> rxData;
- <strong><span style="color: #000080">char</span></strong> txData = 'A';
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-    <strong><span style="color: #000080">if</span></strong>(SERCOM0_USART_ReceiverIsReady() == <strong><span style="color: #000080">true</span></strong>)
-    {
-        rxData = SERCOM0_USART_ReadByte();
-    }
-
-    <strong><span style="color: #000080">if</span></strong>(SERCOM0_USART_TransmitterIsReady() == <strong><span style="color: #000080">true</span></strong>)
-    {
-        SERCOM0_USART_WriteByte(txData);
-    }
-
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Buffer Transfer Model:</strong>&nbsp;</p>
-<p class="Element10">
-The buffer model can process a block of data in a blocking or a non-blocking manner.</p>
-<ul class="Element630">
-<li class="Element600">With blocking, the read and write APIs will block until all of the data is transferred. The CPU polls the peripheral register continuously to manage the transfer.</li>
-<li class="Element600">With non-blocking, the read and write APIs will return immediately. The peripheral interrupt is used to manage the transfer. The user application can either use polling or callback method to indicate the transfer status.
-<ul class="Element631">
-<li class="Element601">With polling, the application will need to continuously poll to check if the transfer is completed.</li>
-<li class="Element601">With callback, the registered callback function will be called once the transfer is completed. This means the application do not have to poll continuously.</li>
-</ul></li>
-</ul><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Blocking Transfer</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows the blocking transfer. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> myData[6] = {&quot;hello&quot;};
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-   <i><span style="color: #008000">/* Write 6 bytes of data */</span></i>
-   SERCOM0_USART_Write(&amp;myData, 6);
-
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Non-blocking Transfer with callback</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows a non-blocking transfer with callback. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> readBuffer[10];
-
-<strong><span style="color: #000080">void</span></strong> SERCOM0_USART_Callback(uintptr_t context)
-{
-    <strong><span style="color: #000080">if</span></strong>(SERCOM0_USART_ErrorGet() != USART_ERROR_NONE)
-    {
-        <i><span style="color: #008000">//Handle error case</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//Transfer completed successfully</span></i>
-    }
-}
-
-<strong><span style="color: #000080">int</span></strong> main (<strong><span style="color: #000080">void</span></strong>)
-{
-    <i><span style="color: #008000">/* Register Callback function for Read operation*/</span></i>
-    SERCOM0_USART_ReadCallbackRegister(SERCOM0_USART_Callback, (uintptr_t)NULL);
-
-    <i><span style="color: #008000">/* Submit Read request to read 10 bytes of data */</span></i>
-    SERCOM0_USART_Read(&amp;readBuffer, 10);
-
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Non-blocking Transfer with polling</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows a non-blocking transfer with polling. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> readBuffer[10];
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-
-    SERCOM0_USART_Read(&amp;readBuffer, 10);
-
-    <i><span style="color: #008000">/* Poll and wait for the transfer to complete */</span></i>
-    <strong><span style="color: #000080">while</span></strong>(SERCOM0_USART_ReadIsBusy());
-
-    <strong><span style="color: #000080">if</span></strong>(SERCOM0_USART_ErrorGet() != USART_ERROR_NONE)
-    {
-        <i><span style="color: #008000">// Error occurred while receiving the buffer</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//  Received the buffer without any error</span></i>
-    }
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Non-blocking Transfer with Ring Buffer enabled</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows a non-blocking transfer with ring buffer enabled. </p><div class="Element13"><div class="Element12"><pre class="Element12">uint8_t txBuffer[50];
-uint8_t rxBuffer[10];
-<strong><span style="color: #000080">volatile</span></strong> uint32_t nBytesRead = 0;
-<strong><span style="color: #000080">volatile</span></strong> <strong><span style="color: #000080">bool</span></strong> txThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
-<strong><span style="color: #000080">volatile</span></strong> <strong><span style="color: #000080">bool</span></strong> rxThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
-
-<i><span style="color: #008000">// *****************************************************************************</span></i>
-<i><span style="color: #008000">// *****************************************************************************</span></i>
-<i><span style="color: #008000">// Section: Main Entry Point</span></i>
-<i><span style="color: #008000">// *****************************************************************************</span></i>
-<i><span style="color: #008000">// *****************************************************************************</span></i>
-
-<strong><span style="color: #000080">void</span></strong> usartReadEventHandler(SERCOM_USART_EVENT event, uintptr_t context )
-{
-    uint32_t nBytesAvailable = 0;
-
-    <strong><span style="color: #000080">if</span></strong> (event == SERCOM_USART_EVENT_READ_THRESHOLD_REACHED)
-    {
-        <i><span style="color: #008000">/* Receiver should atleast have the thershold number of bytes in the ring buffer */</span></i>
-        nBytesAvailable = SERCOMx_USART_ReadCountGet();
-
-        nBytesRead += SERCOMx_USART_Read((uint8_t*)&amp;rxBuffer[nBytesRead], nBytesAvailable);
-    }
-}
-
-<strong><span style="color: #000080">void</span></strong> usartWriteEventHandler(SERCOM_USART_EVENT event, uintptr_t context )
-{
-    txThresholdEventReceived = <strong><span style="color: #000080">true</span></strong>;
-}
-
-<strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
-{
-    uint32_t nBytes = 0;
-
-    <i><span style="color: #008000">/* Initialize all modules */</span></i>
-    SYS_Initialize ( NULL );
-
-    <i><span style="color: #008000">/* Register a callback for write events */</span></i>
-    SERCOMx_USART_WriteCallbackRegister(usartWriteEventHandler, (uintptr_t) NULL);
-
-    <i><span style="color: #008000">/* Register a callback for read events */</span></i>
-    SERCOMx_USART_ReadCallbackRegister(usartReadEventHandler, (uintptr_t) NULL);
-
-    <i><span style="color: #008000">/* Print the size of the read buffer on the terminal */</span></i>
-    nBytes = sprintf((<strong><span style="color: #000080">char</span></strong>*)txBuffer, &quot;RX Buffer Size = %d\r\n&quot;, (<strong><span style="color: #000080">int</span></strong>)SERCOMx_USART_ReadBufferSizeGet());
-
-    SERCOMx_USART_Write((uint8_t*)txBuffer, nBytes);
-
-    <i><span style="color: #008000">/* Print the size of the write buffer on the terminal */</span></i>
-    nBytes = sprintf((<strong><span style="color: #000080">char</span></strong>*)txBuffer, &quot;TX Buffer Size = %d\r\n&quot;, (<strong><span style="color: #000080">int</span></strong>)SERCOMx_USART_WriteBufferSizeGet());
-
-    SERCOMx_USART_Write((uint8_t*)txBuffer, nBytes);
-
-    SERCOMx_USART_Write((uint8_t*)&quot;Adding 10 characters to the TX buffer - &quot;, <strong><span style="color: #000080">sizeof</span></strong>(&quot;Adding 10 characters to the TX buffer - &quot;));
-
-    <i><span style="color: #008000">/* Wait for all bytes to be transmitted out */</span></i>
-    <strong><span style="color: #000080">while</span></strong> (SERCOMx_USART_WriteCountGet() != 0);
-
-    SERCOMx_USART_Write((uint8_t*)&quot;0123456789&quot;, 10);
-
-    <i><span style="color: #008000">/* Print the amount of free space available in the TX buffer. This should be 10 bytes less than the configured write buffer size. */</span></i>
-    nBytes = sprintf((<strong><span style="color: #000080">char</span></strong>*)txBuffer, &quot;\r\nFree Space in Transmit Buffer = %d\r\n&quot;, (<strong><span style="color: #000080">int</span></strong>)SERCOMx_USART_WriteFreeBufferCountGet());
-
-    SERCOMx_USART_Write((uint8_t*)txBuffer, nBytes);
-
-    <i><span style="color: #008000">/* Let's enable notifications to get notified when the TX buffer is empty */</span></i>
-    SERCOMx_USART_WriteThresholdSet(SERCOMx_USART_WriteBufferSizeGet());
-
-    <i><span style="color: #008000">/* Enable notifications */</span></i>
-    SERCOMx_USART_WriteNotificationEnable(<strong><span style="color: #000080">true</span></strong>, <strong><span style="color: #000080">false</span></strong>);
-
-    <i><span style="color: #008000">/* Wait for the TX buffer to become empty. Flag &quot;txThresholdEventReceived&quot; is set in the callback. */</span></i>
-    <strong><span style="color: #000080">while</span></strong> (txThresholdEventReceived == <strong><span style="color: #000080">false</span></strong>);
-
-    txThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
-
-    <i><span style="color: #008000">/* Disable TX notifications */</span></i>
-    SERCOMx_USART_WriteNotificationEnable(<strong><span style="color: #000080">false</span></strong>, <strong><span style="color: #000080">false</span></strong>);
-
-    SERCOM4_USART_Write((uint8_t*)&quot;Enter 10 characters. The received characters are echoed back. \r\n&gt;&quot;, <strong><span style="color: #000080">sizeof</span></strong>(&quot;Enter 10 characters. The received characters are echoed back. \r\n&gt;&quot;));
-
-    <i><span style="color: #008000">/* Wait till 10 (or more) characters are received */</span></i>
-    <strong><span style="color: #000080">while</span></strong> (SERCOM4_USART_ReadCountGet() &lt; 10);
-
-    <i><span style="color: #008000">/* At-least 10 characters are available in the RX buffer. Read out into the application buffer */</span></i>
-    SERCOMx_USART_Read((uint8_t*)rxBuffer, 10);
-
-    <i><span style="color: #008000">/* Echo the received data */</span></i>
-    SERCOMx_USART_Write((uint8_t*)rxBuffer, 10);
-
-    <i><span style="color: #008000">/* Now demonstrating receiver notifications */</span></i>
-    SERCOMx_USART_Write((uint8_t*)&quot;\r\n Now turning on RX notifications \r\n&gt;&quot;, <strong><span style="color: #000080">sizeof</span></strong>(&quot;\r\n Now turning on RX notifications \r\n&gt;&quot;));
-
-    <i><span style="color: #008000">/* For demonstration purpose, set a threshold value to receive a callback after every 5 characters are received */</span></i>
-    SERCOMx_USART_ReadThresholdSet(5);
-
-    <i><span style="color: #008000">/* Enable RX event notifications */</span></i>
-    SERCOMx_USART_ReadNotificationEnable(<strong><span style="color: #000080">true</span></strong>, <strong><span style="color: #000080">false</span></strong>);
-
-    <strong><span style="color: #000080">while</span></strong>(1)
-    {
-        <i><span style="color: #008000">/* Wait until at-least 10 characters are entered by the user */</span></i>
-        <strong><span style="color: #000080">while</span></strong> (nBytesRead &lt; 10);
-
-        <i><span style="color: #008000">/* Echo the received data */</span></i>
-        SERCOMx_USART_Write((uint8_t*)rxBuffer, nBytesRead);
-
-        SERCOMx_USART_Write((uint8_t*)&quot;\r\n&gt;&quot;, 3);
-
-        nBytesRead = 0;
-    }
-
-    <i><span style="color: #008000">/* Execution should not come here during normal operation */</span></i>
-
-    <strong><span style="color: #000080">return</span></strong> ( EXIT_FAILURE );
-}</pre></div></div>
+This API is available for devices that have more than one compare register in 32-bit mode.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t period = 0x00000FFF;
+    <a href="06546.html" target="topic">RTC_Initialize</a>();
+    RTC_Timer32Compare0Set(period);
+    <a href="06622.html" target="topic">RTC_Timer32CounterSet</a>(0);
+    <a href="06627.html" target="topic">RTC_Timer32Start</a>();
+    <strong><span style="color: #000080">while</span></strong>(!<a href="06614.html" target="topic">RTC_Timer32Compare0HasMatched</a>());</pre></div></div>
 </div>
 </div>
 </div>
@@ -281,7 +114,7 @@ uint8_t rxBuffer[10];
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06588.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06610.html" target="topic">USART</a> &gt; <a href="06615.html" target="topic">Using the Library</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="06396.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="06397.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="06402.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06615.html" target="topic">RTC_Timer32Compare0Set Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -289,13 +122,13 @@ uint8_t rxBuffer[10];
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06611.html" target="topic">Previous</a> | <a href="06610.html" target="topic">Up</a> | <a href="06614.html" target="topic">Next</a></div>
+<a href="06624.html" target="topic">Previous</a> | <a href="06402.html" target="topic">Up</a> | <a href="06617.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM U2201 USART Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32Compare0Set@uint32_t Topic Title: RTC_Timer32Compare0Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

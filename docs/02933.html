@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOMx_USART_Write Function</title>
+<title>FLEXCOMx_SPI_CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02667.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02678.html" target="topic">USART</a> &gt; <a href="02683.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02933.html" target="topic">FLEXCOMx_USART_Write Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="02816.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02817.html" target="topic">SPI</a> &gt; <a href="02823.html" target="topic">Master</a> &gt; <a href="02822.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02933.html" target="topic">FLEXCOMx_SPI_CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02926.html" target="topic">Previous</a> | <a href="02683.html" target="topic">Up</a> | <a href="02906.html" target="topic">Next</a></div>
+<a href="02935.html" target="topic">Previous</a> | <a href="02822.html" target="topic">Up</a> | <a href="02938.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_usart_ring_buffer::FLEXCOMx_USART_Write@uint8_t*@size_t Topic Title: FLEXCOMx_USART_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_spi::FLEXCOMx_SPI_CallbackRegister@FLEXCOM_SPI_CALLBACK@uintptr_t Topic Title: FLEXCOMx_SPI_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOMx_USART_Write Function</div>
+FLEXCOMx_SPI_CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,22 +49,24 @@ FLEXCOMx_USART_Write Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function submits a write buffer to the FLEXCOM_USART peripheral to transfer. The data to be transmitted is deep copied into the FLEXCOM_USART peripheral's transmit ring buffer. The size of this buffer is configurable in MHC. Since, the data is deep copied into the transmit buffer, it allows the use of local variables/buffers.&nbsp;</p>
+This function allows application to register a callback function for the PLIB to call back when requested data transfer operation has completed or any error has occurred.&nbsp;</p>
 <p class="Element10">
-This function call is always non-blocking. Call to this function copies the application's transmit buffer into the internal transmit ring buffer and returns immediately. If notifications are enabled and a callback is registered, a callback is given when the threshold condition is met.</p></div>
+The callback should be registered before the client performs transfer operation.&nbsp;</p>
+<p class="Element10">
+At any point if application wants to stop the callback, it can call this function with &quot;callback&quot; value as NULL.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">FLEXCOMx_USART_Write</span></strong>(
-    uint8_t* <strong><span style="color: #000000">pWrBuffer</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> size_t <strong><span style="color: #000000">size</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">FLEXCOMx_SPI_CallbackRegister</span></strong>(
+    <a href="02903.html" target="topic">FLEXCOM_SPI_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-FLEXCOMx_USART_Initialize must have been called for the associated FLEXCOM_USART instance.</p></div>
+The <a href="02935.html" target="topic">FLEXCOMx_SPI_Initialize</a> function must have been called.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,14 +83,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-pWrBuffer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to the user buffer.&nbsp;</div></td></tr><tr>
+Pointer to the callback function implemented by the user<br>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-size&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Number of bytes to be transferred.&nbsp;</div></td></tr></table></div></div>
+The value of parameter will be passed back to the application unchanged, when the callback function is called. It can be used to identify any application specific value that identifies the instance of the client module (for example, it may be a pointer to the client module's state structure).&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -96,35 +98,30 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The API returns the number of bytes actually copied. Depending on the space available in the transmit buffer, the number of bytes copied may be less than or equal to the requested size. Application must retry by calling this API again if the return value is less than the number of bytes requested. Application can also use the <a href="02937.html" target="topic">FLEXCOMx_USART_WriteFreeBufferCountGet</a> API to determine the free space available in the transmit buffer before calling this API. Application can also choose to register for event notification to get notified when there is sufficient free space (using the <a href="02939.html" target="topic">FLEXCOMx_USART_WriteThresholdSet</a> API) in the transmit buffer.</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.</p></div>
+If the client does not want to be notified when the queued operation has completed, it does not need to register a callback.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-size_t nBytesCopied;
-uint8_t txBuffer[50];
-uint32_t nBytes;
+<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t     txBuffer[4];
+uint8_t     rxBuffer[10];
+size_t      txSize = 4;
+size_t      rxSize = 10;
+<strong><span style="color: #000080">bool</span></strong>        reqAccepted;
 
-<i><span style="color: #008000">// Check if there is any free space is available in the transmit buffer</span></i>
-<strong><span style="color: #000080">if</span></strong> (FLEXCOM1_USART_WriteFreeBufferCountGet() &gt; 0)
-{
-    nBytesCopied = FLEXCOM1_USART_Write((uint8_t*)txBuffer, nBytes);  
-    
-    <strong><span style="color: #000080">if</span></strong> (nBytesCopied != nBytes)
-    {
-        <i><span style="color: #008000">//The transmit buffer is full. Try after some time.  </span></i>
-    }
-}       
-</pre></div></div>
+FLEXCOM0_SPI_Initialize();
+
+FLEXCOM0_SPI_CallbackRegister(&amp;APP_SPITransferHandler, NULL);
+
+FLEXCOM0_SPI_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);</pre></div></div>
 </div>
 </div>
 </div>
@@ -132,7 +129,7 @@ uint32_t nBytes;
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02667.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02678.html" target="topic">USART</a> &gt; <a href="02683.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02933.html" target="topic">FLEXCOMx_USART_Write Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="02816.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02817.html" target="topic">SPI</a> &gt; <a href="02823.html" target="topic">Master</a> &gt; <a href="02822.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02933.html" target="topic">FLEXCOMx_SPI_CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -140,13 +137,13 @@ uint32_t nBytes;
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02926.html" target="topic">Previous</a> | <a href="02683.html" target="topic">Up</a> | <a href="02906.html" target="topic">Next</a></div>
+<a href="02935.html" target="topic">Previous</a> | <a href="02822.html" target="topic">Up</a> | <a href="02938.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_usart_ring_buffer::FLEXCOMx_USART_Write@uint8_t*@size_t Topic Title: FLEXCOMx_USART_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_spi::FLEXCOMx_SPI_CallbackRegister@FLEXCOM_SPI_CALLBACK@uintptr_t Topic Title: FLEXCOMx_SPI_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

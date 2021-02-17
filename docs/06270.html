@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>RSTC_CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06271.html" target="topic">Clock (SAM G55) Peripheral Library Help</a> &gt; <a href="06270.html" target="topic">Introduction</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="06237.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="06238.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06270.html" target="topic">RSTC_CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06271.html" target="topic">Previous</a> | <a href="06271.html" target="topic">Up</a> | <a href="06268.html" target="topic">Next</a></div>
+<a href="06271.html" target="topic">Previous</a> | <a href="06238.html" target="topic">Up</a> | <a href="06273.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SAM G55 Clock Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rstc_11009::RSTC_CallbackRegister@RSTC_CALLBACK@uintptr_t Topic Title: RSTC_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+RSTC_CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,44 +49,84 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Clock system generates and distributes the clock for the processor and peripherals. <strong>The Clock Generator is made up of</strong>:</p>
-<ul class="Element630">
-<li class="Element600">A low-power 32768 Hz crystal oscillator with Bypass mode</li>
-<li class="Element600">A low-power embedded 32 kHz (typical) RC oscillator</li>
-<li class="Element600">A 3 to 20 MHz crystal or ceramic resonator-based oscillator, which can be bypassed.</li>
-<li class="Element600">A factory-trimmed embedded RC oscillator. Three output frequencies can be selected: 8/16/24 MHz. By default 8 MHz is selected.</li>
-<li class="Element600">Two programmable PLLs, (PLLA input from 20 to 300 KHz, output clock range 48 to 120 MHz and PLLB input from 20 to 100KHz, output clock range 24 to 48MHz), capable of providing the clock MCK to the processor and to the peripherals.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+This function allows application to register a callback function for the PLIB to call back when interrupt occurred.&nbsp;</p>
 <p class="Element10">
-<strong>The Clock Generator provides following clocks</strong>:</p>
-<ul class="Element630">
-<li class="Element600">SLCK, the slow clock, which is the only permanent clock within the system.</li>
-<li class="Element600">MAINCK is the output of the main clock oscillator selection: either the crystal or ceramic resonator-based oscillator or 8/16/24 MHz RC oscillator.</li>
-<li class="Element600">PLLACK is the output of the 48 to 120 MHz programmable PLL (PLLA).</li>
-<li class="Element600">PLLBCK is the output of the 24 to 48MHz programmable PLL (PLLB).</li>
-</ul><p class="Element10">
-&nbsp;</p>
+At any point if application wants to stop the callback, it can call this function with &quot;callback&quot; value as NULL.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RSTC_CallbackRegister</span></strong>(
+    <a href="06269.html" target="topic">RSTC_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The Power Management Controller (PMC) optimizes power consumption by controlling all system and user peripheral clocks. The PMC enables/disables the clock inputs to many of the peripherals and the Cortex-M4 processor.&nbsp;</p>
+The <a href="06271.html" target="topic">RSTC_Initialize</a> function must have been called.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the callback function implemented by the user<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The value of parameter will be passed back to the application unchanged, when the callback function is called. It can be used to identify any application specific value that identifies the instance of the client module (for example, it may be a pointer to the client module's state structure).&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<strong>The PMC provides the following clocks:</strong>&nbsp;</p>
-<ul class="Element630">
-<li class="Element600">MCK, the Master Clock, programmable from a few hundred Hz to the maximum operating frequency of the device. It is available to the modules running permanently, such as the Enhanced Embedded Flash Controller.</li>
-<li class="Element600">Processor Clock (HCLK) , automatically switched off when entering the processor in Sleep Mode</li>
-<li class="Element600">Free-running processor Clock (FCLK)</li>
-<li class="Element600">The Cortex-M4 SysTick external clock</li>
-<li class="Element600">Peripheral Clocks, provided to the embedded peripherals (USART, SPI, TWI, TC, etc.) and independently controllable. Some of the peripherals can be configured to be driven by MCK divided by 2, 4, 8.</li>
-<li class="Element600">Programmable Clock Outputs (PCKx), selected from the clock generator outputs to drive the device PCK pins</li>
-<li class="Element600">Clock sources independent of MCK and HCLK, provided by internal PCKx for FLEXCOM (USART/SPI/TWI), Timer, ADCC and PDMIC</li>
-</ul></div>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    MY_APP_OBJ myAppObj;
+    <strong><span style="color: #000080">void</span></strong> APP_RSTC_CallbackFunction(uintptr_t context)
+    {  
+        <i><span style="color: #008000">// The context was set to an application specific object.</span></i>
+        <i><span style="color: #008000">// It is now retrievable easily in the event handler.</span></i>
+           MY_APP_OBJ myAppObj = (MY_APP_OBJ *) context;
+        <i><span style="color: #008000">//Application related tasks</span></i>
+    }
+              
+    RSTC_CallbackRegister(APP_RSTC_CallbackFunction, (uintptr_t)&amp;myAppObj);</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06271.html" target="topic">Clock (SAM G55) Peripheral Library Help</a> &gt; <a href="06270.html" target="topic">Introduction</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="06237.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="06238.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06270.html" target="topic">RSTC_CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -94,13 +134,13 @@ The Power Management Controller (PMC) optimizes power consumption by controlling
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06271.html" target="topic">Previous</a> | <a href="06271.html" target="topic">Up</a> | <a href="06268.html" target="topic">Next</a></div>
+<a href="06271.html" target="topic">Previous</a> | <a href="06238.html" target="topic">Up</a> | <a href="06273.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SAM G55 Clock Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rstc_11009::RSTC_CallbackRegister@RSTC_CALLBACK@uintptr_t Topic Title: RSTC_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

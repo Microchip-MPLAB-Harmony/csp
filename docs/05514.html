@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PWM_COMPARE Enumeration</title>
+<title>PIT_TimerStart Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="05468.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05469.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05514.html" target="topic">PWM_COMPARE Enumeration</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05496.html" target="topic">PIT Peripheral Library Help</a> &gt; <a href="05497.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05514.html" target="topic">PIT_TimerStart Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05509.html" target="topic">Previous</a> | <a href="05469.html" target="topic">Up</a> | <a href="05523.html" target="topic">Next</a></div>
+<a href="05513.html" target="topic">Previous</a> | <a href="05497.html" target="topic">Up</a> | <a href="05515.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWM_COMPARE Topic Title: PWM_COMPARE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT_TimerStart Topic Title: PIT_TimerStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PWM_COMPARE Enumeration</div>
+PIT_TimerStart Function</div>
 </div>
 </div>
 
@@ -49,24 +49,20 @@ PWM_COMPARE Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-PWM compare unit&nbsp;</p>
-<p class="Element10">
-This enumeration identifies PWM compare unit.</p></div>
+Start the PIT counter. If interrupts are enabled an interrupt will occur every time the PIV value is reached.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">PWM_COMPARE_0</span></strong>,
-  <strong><span style="color: #000000">PWM_COMPARE_1</span></strong>,
-  <strong><span style="color: #000000">PWM_COMPARE_2</span></strong>,
-  <strong><span style="color: #000000">PWM_COMPARE_3</span></strong>,
-  <strong><span style="color: #000000">PWM_COMPARE_4</span></strong>,
-  <strong><span style="color: #000000">PWM_COMPARE_5</span></strong>,
-  <strong><span style="color: #000000">PWM_COMPARE_6</span></strong>,
-  <strong><span style="color: #000000">PWM_COMPARE_7</span></strong>
-} PWM_COMPARE;</pre></div></div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PIT_TimerStart</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
@@ -77,7 +73,7 @@ None.</p></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="05468.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05469.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05514.html" target="topic">PWM_COMPARE Enumeration</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05496.html" target="topic">PIT Peripheral Library Help</a> &gt; <a href="05497.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05514.html" target="topic">PIT_TimerStart Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -85,13 +81,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05509.html" target="topic">Previous</a> | <a href="05469.html" target="topic">Up</a> | <a href="05523.html" target="topic">Next</a></div>
+<a href="05513.html" target="topic">Previous</a> | <a href="05497.html" target="topic">Up</a> | <a href="05515.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWM_COMPARE Topic Title: PWM_COMPARE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT_TimerStart Topic Title: PIT_TimerStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

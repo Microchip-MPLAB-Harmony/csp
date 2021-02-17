@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_RTCCAlarmSet Function</title>
+<title>QSPI_MemoryWrite Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="05913.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05935.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="05941.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06018.html" target="topic">RTC_RTCCAlarmSet Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05978.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05979.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="06018.html" target="topic">QSPI_MemoryWrite Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06019.html" target="topic">Previous</a> | <a href="05941.html" target="topic">Up</a> | <a href="06021.html" target="topic">Next</a></div>
+<a href="06017.html" target="topic">Previous</a> | <a href="05979.html" target="topic">Up</a> | <a href="06028.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_RTCCAlarmSet@struct tm *@RTC_ALARM_MASK Topic Title: RTC_RTCCAlarmSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI_MemoryWrite@qspi_memory_xfer_t *@uint32_t *@uint32_t@uint32_t Topic Title: QSPI_MemoryWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_RTCCAlarmSet Function</div>
+QSPI_MemoryWrite Function</div>
 </div>
 </div>
 
@@ -49,20 +49,26 @@ RTC_RTCCAlarmSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function allows the application to set the time at which the alarm should occur. The date and time fields to be compared while generating the alarm can also be specified.</p></div>
+This function can be used to write maximum of one page of data to the specified address of the serial flash device connected as a QSPI slave.&nbsp;</p>
+<p class="Element10">
+If the number of bytes to be written is greater than the page size then QSPI_MemoryWrite API needs to be called multiple times.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">RTC_RTCCAlarmSet</span></strong>(
-    <strong><span style="color: #000080">struct</span></strong> tm * <strong><span style="color: #000000">alarmTime</span></strong>, 
-    <a href="06005.html" target="topic">RTC_ALARM_MASK</a> <strong><span style="color: #000000">mask</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">QSPI_MemoryWrite</span></strong>(
+    <a href="06008.html" target="topic">qspi_memory_xfer_t</a> * <strong><span style="color: #000000">qspi_memory_xfer</span></strong>, 
+    uint32_t * <strong><span style="color: #000000">tx_data</span></strong>, 
+    uint32_t <strong><span style="color: #000000">tx_data_length</span></strong>, 
+    uint32_t <strong><span style="color: #000000">address</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="06017.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured for Real Time Clock Calendar mode. The <a href="06021.html" target="topic">RTC_RTCCTimeSet</a> function should have been called to set the current time. Setting this mode will also enable interrupts.</p></div>
+<a href="05999.html" target="topic">QSPI_Initialize</a> must have been called for the associated QSPI instance.&nbsp;</p>
+<p class="Element10">
+Write enable command has to be sent before write memory request.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -79,60 +85,72 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-alarmTime&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+*qspi_memory_xfer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Time structure defines the alarm time.<br>&nbsp;</div></td></tr><tr>
+pointer to QSPI memory transfer structure holding the instruction code register and instruction frame register information.<br>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-mask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+*tx_data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-This enum value defines the date and time fields to be matched at the time of generating alarm. Refer to the description of the <a href="06005.html" target="topic">RTC_ALARM_MASK</a> enumeration for more details.&nbsp;</div></td></tr></table></div></div>
+Pointer to transmit buffer holding the data to write into memory.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+tx_data_length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+number of bytes to write.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Memory location to write to.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-bool.</p></div>
+
+<ul class="Element630">
+<li class="Element600">True on transfer request success.</li>
+<li class="Element600">False on transfer request failure.</li>
+</ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+Before sending next write request <a href="06028.html" target="topic">QSPI_RegisterRead</a>() can be called to read the status register of the slave device to check if the previous write operation is completed.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">struct</span></strong> tm alarmTime, initialTime;
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">#define</span></strong> WRITE_PAGE_CODE       0x02
+<strong><span style="color: #000080">#define</span></strong> WRITE_IN_PROGRESS      (1 &lt;&lt; 0)
 
-    <a href="06005.html" target="topic">RTC_ALARM_MASK</a> mask = RTC_ALARM_MASK_HHMMSS;
-    <a href="06017.html" target="topic">RTC_Initialize</a>();
+<strong><span style="color: #000080">static</span></strong> <a href="06008.html" target="topic">qspi_memory_xfer_t</a> qspi_memory_xfer;
+<strong><span style="color: #000080">static</span></strong> uint8_t buffer[256];
+uint32_t address = 0x0;
 
-    <i><span style="color: #008000">// Set the time first to 22:31:23 on 7 April 1980.</span></i>
-    initialTime.tm_sec = 23;
-    initialTime.tm_min = 31;
-    initialTime.tm_hour = 22;
-    initialTime.tm_mday = 7;
-    initialTime.tm_mon = 3;
-    initialTime.tm_year = 80;
+<strong><span style="color: #000080">for</span></strong> (<strong><span style="color: #000080">int</span></strong> i = 0; i &lt; 256; i++)
+    buffer[i] = i;
 
-    <a href="06021.html" target="topic">RTC_RTCCTimeSet</a>(&amp;initialTime);
+<i><span style="color: #008000">// Write to memory location starting from address 0x0</span></i>
+qspi_memory_xfer.instruction = WRITE_PAGE_CODE;
 
-    <i><span style="color: #008000">// Set the alarm time to 08:00:00.</span></i>
-    alarmTime.tm_sec = 00;
-    alarmTime.tm_min = 00;
-    alarmTime.tm_hour = 08;
+<i><span style="color: #008000">// Use QAUD SPI Lane</span></i>
+qspi_memory_xfer.width = QUAD_CMD;
 
-    <i><span style="color: #008000">// The mask is specified to match all time field and ignore all date</span></i>
-    <i><span style="color: #008000">// fields.</span></i>
-    <strong><span style="color: #000080">if</span></strong>(RTC_RTCCAlarmSet(&amp;alarmTime, mask) == <strong><span style="color: #000080">false</span></strong>)
-    {
-        <i><span style="color: #008000">//incorrect format</span></i>
-    }</pre></div></div>
+<strong><span style="color: #000080">if</span></strong> (TRUE != QSPI_MemoryWrite(&amp;qspi_memory_xfer, buffer, <strong><span style="color: #000080">sizeof</span></strong>(buffer), address))
+{
+    <i><span style="color: #008000">// Handle Error</span></i>
+}
+
+<i><span style="color: #008000">// Query the status register and wait until WIP bit is cleared.</span></i>
+<strong><span style="color: #000080">while</span></strong>(status_reg &amp; WRITE_IN_PROGRESS);
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -140,7 +158,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="05913.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05935.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="05941.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06018.html" target="topic">RTC_RTCCAlarmSet Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05978.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05979.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="06018.html" target="topic">QSPI_MemoryWrite Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -148,13 +166,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06019.html" target="topic">Previous</a> | <a href="05941.html" target="topic">Up</a> | <a href="06021.html" target="topic">Next</a></div>
+<a href="06017.html" target="topic">Previous</a> | <a href="05979.html" target="topic">Up</a> | <a href="06028.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_RTCCAlarmSet@struct tm *@RTC_ALARM_MASK Topic Title: RTC_RTCCAlarmSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI_MemoryWrite@qspi_memory_xfer_t *@uint32_t *@uint32_t@uint32_t Topic Title: QSPI_MemoryWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

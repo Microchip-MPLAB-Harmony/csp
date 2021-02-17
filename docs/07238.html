@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>e) Data Types and Constants</title>
+<title>SERCOMx_USART_ReadThresholdSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="07235.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07236.html" target="topic">Quadrature Decoder</a> &gt; <a href="07241.html" target="topic">Library Interface</a> &gt; <a href="07238.html" target="topic">e) Data Types and Constants</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07040.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="07062.html" target="topic">USART</a> &gt; <a href="07066.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="07238.html" target="topic">SERCOMx_USART_ReadThresholdSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07427.html" target="topic">Previous</a> | <a href="07241.html" target="topic">Up</a> | <a href="07411.html" target="topic">Next</a></div>
+<a href="07244.html" target="topic">Previous</a> | <a href="07066.html" target="topic">Up</a> | <a href="07245.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Quadrature Data Types and Constants Topic Title: e) Data Types and Constants)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart_ring_buffer::SERCOMx_USART_ReadThresholdSet@uint32_t Topic Title: SERCOMx_USART_ReadThresholdSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-e) Data Types and Constants</div>
+SERCOMx_USART_ReadThresholdSet Function</div>
 </div>
 </div>
 
@@ -48,78 +48,87 @@ e) Data Types and Constants</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+<p class="Element10">
+This API allows the application to set a threshold level on the number of bytes of data available in the receive buffer. Once the threshold is reached a notification is given to the application if it is enabled.</p></div>
 </div>
-</div>
-<a name="456E756D65726174696F6E73"></a><div class="Element14">
-Enumerations</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SERCOMx_USART_ReadThresholdSet</span></strong>(
+    uint32_t <strong><span style="color: #000000">nBytesThreshold</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07415.html" target="topic">TCx_QUADRATURE_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies channel interrupt source mask&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+SERCOMx_USART_Initialize must have been called for the associated SERCOM_USART instance.</p></div>
 </div>
-</div>
-<a name="53747275637475726573"></a><div class="Element14">
-Structures</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07412.html" target="topic">TCx_QUADRATURE_CALLBACK_OBJECT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Callback structure&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+nBytesThreshold&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Threshold value for number of bytes available in the receive buffer after which a notification must be given&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="5479706573"></a><div class="Element14">
-Types</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07411.html" target="topic">TCx_QUADRATURE_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the function pointer data type and function signature for the tc channel callback function.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+None</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This API is only available when SERCOM_USART ring buffer mode is enabled in MHC.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+uint8_t rxBuffer[50];
+uint32_t nBytes;
+
+<strong><span style="color: #000080">void</span></strong> usartReadEventHandler(<a href="07225.html" target="topic">SERCOM_USART_EVENT</a> event, uintptr_t context )
+{
+    uint32_t nBytesAvailable = 0;
+    
+    <strong><span style="color: #000080">if</span></strong> (event == SERCOM_USART_EVENT_READ_THRESHOLD_REACHED)
+    {
+        <i><span style="color: #008000">// Receiver should have the thershold number of bytes in the ring buffer</span></i>
+        nBytesAvailable = SERCOM1_USART_ReadCountGet();
+        
+        nBytesRead += SERCOM1_USART_Read((uint8_t*)&amp;rxBuffer[nBytesRead], nBytesAvailable);                          
+    }
+}   
+
+<i><span style="color: #008000">//----------------------------------------------------------//</span></i>
+
+<i><span style="color: #008000">// Register a callback for read events</span></i>
+SERCOM1_USART_ReadCallbackRegister(usartReadEventHandler, (uintptr_t) NULL);  
+
+<i><span style="color: #008000">// Set a threshold value to receive a callback after every 10 characters are received </span></i>
+SERCOM1_USART_ReadThresholdSet(10);
+
+<i><span style="color: #008000">// Enable RX event notifications</span></i>
+SERCOM1_USART_ReadNotificationEnable(<strong><span style="color: #000080">true</span></strong>, <strong><span style="color: #000080">false</span></strong>);              
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -127,7 +136,7 @@ Defines the function pointer data type and function signature for the tc channel
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="07235.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07236.html" target="topic">Quadrature Decoder</a> &gt; <a href="07241.html" target="topic">Library Interface</a> &gt; <a href="07238.html" target="topic">e) Data Types and Constants</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07040.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="07062.html" target="topic">USART</a> &gt; <a href="07066.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="07238.html" target="topic">SERCOMx_USART_ReadThresholdSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -135,13 +144,13 @@ Defines the function pointer data type and function signature for the tc channel
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07427.html" target="topic">Previous</a> | <a href="07241.html" target="topic">Up</a> | <a href="07411.html" target="topic">Next</a></div>
+<a href="07244.html" target="topic">Previous</a> | <a href="07066.html" target="topic">Up</a> | <a href="07245.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Quadrature Data Types and Constants Topic Title: e) Data Types and Constants)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart_ring_buffer::SERCOMx_USART_ReadThresholdSet@uint32_t Topic Title: SERCOMx_USART_ReadThresholdSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

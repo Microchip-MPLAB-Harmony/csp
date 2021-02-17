@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>UARTx_WriteIsBusy Function</title>
+<title>TCx_QuadratureSpeedGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="07891.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="07892.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="08005.html" target="topic">UARTx_WriteIsBusy Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07781.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07782.html" target="topic">Quadrature Decoder</a> &gt; <a href="07787.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="08005.html" target="topic">TCx_QuadratureSpeedGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07996.html" target="topic">Previous</a> | <a href="07892.html" target="topic">Up</a> | <a href="07997.html" target="topic">Next</a></div>
+<a href="08008.html" target="topic">Previous</a> | <a href="07787.html" target="topic">Up</a> | <a href="08003.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_6418::UARTx_WriteIsBusy Topic Title: UARTx_WriteIsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_6082::TCx_QuadratureSpeedGet Topic Title: TCx_QuadratureSpeedGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-UARTx_WriteIsBusy Function</div>
+TCx_QuadratureSpeedGet Function</div>
 </div>
 </div>
 
@@ -49,49 +49,40 @@ UARTx_WriteIsBusy Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the status of the write request which was made using UART1_Write function. It can be used to poll the write status if callback is not intended.&nbsp;</p>
-<p class="Element10">
-This function is available only in interrupt mode of operation.</p></div>
+This function reads the number of quadrature pulses captured in timer channel for given time base.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">UARTx_WriteIsBusy</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCx_QuadratureSpeedGet</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="07990.html" target="topic">UARTx_Initialize</a> must have been called for the associated UART instance.</p></div>
+<a href="08002.html" target="topic">TCx_QuadratureInitialize</a> function must have been called first for the given channel.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true - UART is busy in processing write request.</li>
-<li class="Element600">false - UART is free and ready to accept the new write request.</li>
-</ul></div>
+<p class="Element10">
+Number of quadrature pulses counted in given time base which is used to determine speed of motion tracked by the encoder.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API is available when UART ring buffer mode is disabled in MHC.</p></div>
+Caller must calculate the actual speed based on returned speed count value, time base and number of quadrature encoder pulses.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">true</span></strong> == UART1_WriteIsBusy())
-{
-    <i><span style="color: #008000">//UART is currently processing the write request.</span></i>
-}
-<strong><span style="color: #000080">else</span></strong>
-{
-    <i><span style="color: #008000">// write is completed.</span></i>
-}</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">uint16_t speed;
+TC0_QuadratureInitialize();
+TC0_QuadratureStart();
+speed = TC0_QuadratureSpeedGet();</pre></div></div>
 </div>
 </div>
 </div>
@@ -99,7 +90,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="07891.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="07892.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="08005.html" target="topic">UARTx_WriteIsBusy Function</a></div>
+<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07781.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07782.html" target="topic">Quadrature Decoder</a> &gt; <a href="07787.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="08005.html" target="topic">TCx_QuadratureSpeedGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -107,13 +98,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07996.html" target="topic">Previous</a> | <a href="07892.html" target="topic">Up</a> | <a href="07997.html" target="topic">Next</a></div>
+<a href="08008.html" target="topic">Previous</a> | <a href="07787.html" target="topic">Up</a> | <a href="08003.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_6418::UARTx_WriteIsBusy Topic Title: UARTx_WriteIsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_6082::TCx_QuadratureSpeedGet Topic Title: TCx_QuadratureSpeedGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
