@@ -706,7 +706,7 @@ for portNumber in range(0, len(pioSymChannel)):
     portInterrupt[portNumber].setLabel("Use Change Notice On PORT " + pioSymChannel[portNumber])
     portInterrupt[portNumber].setDefaultValue(False)
     portInterrupt[portNumber].setVisible(True)
-    portInterrupt[portNumber].setReadOnly(False)
+    portInterrupt[portNumber].setReadOnly(True)
 
     #list created only for dependency
     portInterruptList.append(portNumber)
