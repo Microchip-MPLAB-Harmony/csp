@@ -64,6 +64,13 @@ def xc32SetStackInTcm(symbol, event):
 def udpateSymbolEnableAndVisibility (symbol, event):
     symbol.setVisible(event["symbol"].getSelectedKey() == "XC32")
 
+def calculateRAMLength(symbol, event):
+    if event["value"] == 0:
+        RAMSize = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"HSRAM\"]").getAttribute("size")
+        symbol.setValue("RAM_LENGTH=" + str(hex(int(RAMSize, 16) / 2)))
+    else:
+        symbol.setValue("")
+
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
@@ -89,6 +96,11 @@ deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
 deviceSecurity.setSelectedKey("CLEAR",1)
 deviceSecurity.setVisible(compilerChoice.getSelectedKey() == "XC32")
 deviceSecurity.setDependencies(udpateSymbolEnableAndVisibility, ['core.COMPILER_CHOICE'])
+
+xc32LinkerMacroRAMLength = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RAM_LENGTH", None)
+xc32LinkerMacroRAMLength.setCategory("C32-LD")
+xc32LinkerMacroRAMLength.setKey("preprocessor-macros")
+xc32LinkerMacroRAMLength.setAppend(True, ";=")
 
 registerGroup = "USER_FUSES"
 registerNames = ["USER_WORD_0", "USER_WORD_1", "USER_WORD_2"]
@@ -141,6 +153,9 @@ for i in range(0, len(registerNames)):
             else:
                 keyValueSymbol.setOutputMode("Key")
             keyValueSymbol.setDisplayMode("Description")
+
+        if key == "RAMECC_ECCDIS":
+            xc32LinkerMacroRAMLength.setDependencies(calculateRAMLength, ["FUSE_SYMBOL_VALUE" + str(numfuses)])
 
         numfuses = numfuses + 1
 
