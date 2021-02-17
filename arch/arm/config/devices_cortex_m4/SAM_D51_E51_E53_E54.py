@@ -132,11 +132,14 @@ for i in range(0, len(registerNames)):
             keyValueSymbol.setLabel(caption)
             for j in range(0, len(valueGroupChildren)):
                 name = valueGroupChildren[j].getAttribute("name")
-                value = valueGroupChildren[j].getAttribute("values")
+                value = valueGroupChildren[j].getAttribute("value")
                 caption = valueGroupChildren[j].getAttribute("caption")
                 keyValueSymbol.addKey(name, str(value), caption)
             keyValueSymbol.setDefaultValue(default[numfuses])
-            keyValueSymbol.setOutputMode("Key")
+            if valueGroup == "NVMCTRL_STATUS__BOOTPROT":
+                keyValueSymbol.setOutputMode("Value")
+            else:
+                keyValueSymbol.setOutputMode("Key")
             keyValueSymbol.setDisplayMode("Description")
 
         numfuses = numfuses + 1
