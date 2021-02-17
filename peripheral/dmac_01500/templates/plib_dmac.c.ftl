@@ -671,6 +671,7 @@ void DMA${i}_InterruptHandler (void)
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_NONE;
         dmaEvent = DMAC_TRANSFER_EVENT_HALF_COMPLETE;
+        /* Since transfer is only half done yet, do not make inUse flag false */
     }
     if(${.vars[INTBITSREG]}.CHTAIF == true) /* irq due to transfer abort */
     {
@@ -681,6 +682,7 @@ void DMA${i}_InterruptHandler (void)
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_NONE;
         dmaEvent = DMAC_TRANSFER_EVENT_ERROR;
+        chanObj->inUse = false;
     }
     if(${.vars[INTBITSREG]}.CHBCIF == true) /* irq due to transfer complete */
     {
@@ -691,6 +693,7 @@ void DMA${i}_InterruptHandler (void)
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_NONE;
         dmaEvent = DMAC_TRANSFER_EVENT_COMPLETE;
+        chanObj->inUse = false;
     }
     if(${.vars[INTBITSREG]}.CHERIF == true) /* irq due to address error */
     {
@@ -700,9 +703,8 @@ void DMA${i}_InterruptHandler (void)
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_ADDRESS_ERROR;
         dmaEvent = DMAC_TRANSFER_EVENT_ERROR;
+        chanObj->inUse = false;
     }
-
-    chanObj->inUse = false;
 
     /* Clear the interrupt flag and call event handler */
     IFS${.vars[STATCLRREG]}CLR = ${.vars[STATREGMASK]};
