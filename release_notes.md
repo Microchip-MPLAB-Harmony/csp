@@ -35,13 +35,16 @@
 
 The current known issues are as follows:
 - PIC32M SPI peripheral library is updated to allow only IO pins with SSEN function as the chip select lines in slave mode. If the SPI slave mode is used in PIC32M, then SPI component must be re-configured by removing from the project graph and then re-adding it.
--  The clock PLIB on SAM D20 is updated to use DFLL in closed loop mode by default. This requires enabling the internal 8 MHZ Oscillator clock source for GLCK1 in MHC Clock configurator, which is used as a reference clock for DFLL.
--  Removed weak declaration for interrupts that are enabled in NVIC. Build error will occur if unused interrupts are enabled in the NVIC
-  -  The following product family requires newer DFP version to be downloaded from packs server and to be used in the MPLAB project to build with MPLAB X IDE v5.45.
-     -  **SAM 9X6 Family**: SAM9X6 DFP v1.5.50
-     -  **SAM A5D2 Family**: SAMA5D2 DFP 1.5.53
-     -  **PIC32MZ-W Family**: PIC32MZ-W DFP v1.4.193
-
+-  Clock PLIB on SAM D20 is updated to use DFLL in closed loop mode by default. This requires enabling the internal 8 MHZ Oscillator clock source for GLCK1 in MHC Clock configurator, which is used as a reference clock for DFLL.
+- The following product families specifically requires the below mentioned DFP versions to be [installed](https://microchipdeveloper.com/mplabx:projects-packs)  with MPLABX v5.45. It is always recommended to use the latest version of DFPs for all products provided by Microchip.
+     -  **SAM 9X6 Family**: SAM9X6 DFP v1.5.50 or higher
+     -  **SAM A5D2 Family**: SAMA5D2 DFP 1.5.53 or higher
+     -  **SAM D51 Family**: SAMD51 DFP v3.4.91 or higher
+     -  **SAM E51 Family**: SAME51 DFP v3.4.98 or higher
+     -  **SAM E53 Family**: SAME53 DFP v3.4.79 or higher
+     -  **SAM E54 Family**: SAME54 DFP v3.5.87 or higher
+     -  **PIC32MZ-W Family**: PIC32MZ-W DFP v1.4.193 or higher 
+- CANFD peripheral library data types are updated to support co-existence of CAN and CANFD peripheral in the same MCU. Applications that use CANFD peripheral in PIC32M devices should be updated to use the new data types.
 
 ### Development Tools
 
@@ -51,7 +54,12 @@ The current known issues are as follows:
 - [KEIL MDK v5.31](https://www2.keil.com/mdk5)
 - MPLAB® X IDE plug-ins:
   - MPLAB® Harmony Configurator (MHC) v3.7.0
-  - 
+
+
+### Notes
+
+-  Removed weak declaration for interrupts that are enabled in NVIC to enforce definition of interrupt handlers for MISRA C Required rules compliance. Any interrupts that are enabled without a corresponding interrupt handler will result in build error and hence the unused interrupts must be disabled.
+
 ## CSP Release v3.8.3
 
 ### New Features
