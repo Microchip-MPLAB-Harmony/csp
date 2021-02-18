@@ -3,7 +3,55 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.9.0
 
+### New Features
+
+- **New part support** - This release introduces support for
+[PIC32MX3/4](https://www.microchip.com/en-us/products/microcontrollers-and-microprocessors/32-bit-mcus/pic32-32-bit-mcus/pic32mx),
+[SAM R21](https://www.microchip.com/wwwproducts/en/ATSAMR21G18A),
+[SAM R30](https://www.microchip.com/en-us/products/wireless-connectivity/sub-ghz/sam-r30), and
+[SAM R34/R35](https://www.microchip.com/en-us/products/wireless-connectivity/lora-technology/sam-r34-r35) families of 32-bit microcontrollers.
+
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+- **New Features and Enhancements**
+  - Added Compatibility with C++
+  - Added SPI Slave support for FLEXCOM and SPI peripheral
+  - Added I2C Slave support for FLEXCOM and TWIHS peripheral
+  - Added 9-bit UART mode support
+  - Added UART FIFO support for FLEXCOM peripheral
+  - Added SPI FIFO and multiple chip-select support for FLEXCOM and SPI peripheral
+  - Added CRC support for DMA peripheral
+  - Added Timer, Compare and Capture mode support for TCC peripheral
+  - Added DWT peripheral library for Cortex-M4 and Cortex-M7
+  - Added support to configure security bit to lock FLASH memory for SAM MCUs
+  - Added Power peripheral library to support low power mode for PIC32M MCUs
+  - Added support for DMA chaining, Auto-enable, Half-done and pattern match features in PIC32M DMA peripheral
+
+### Known Issues
+
+The current known issues are as follows:
+- PIC32M SPI peripheral library is updated to allow only IO pins with SSEN function as the chip select lines in slave mode. If the SPI slave mode is used in PIC32M, then SPI component must be re-configured by removing from the project graph and then re-adding it.
+-  The clock PLIB on SAM D20 is updated to use DFLL in closed loop mode by default. This requires enabling the internal 8 MHZ Oscillator clock source for GLCK1 in MHC Clock configurator, which is used as a reference clock for DFLL.
+-  Removed weak declaration for interrupts that are enabled in NVIC. Build error will occur if unused interrupts are enabled in the NVIC
+  -  The following product family requires newer DFP version to be downloaded from packs server and to be used in the MPLAB project to build with MPLAB X IDE v5.45.
+     -  **SAM 9X6 Family**: SAM9X6 DFP v1.5.50
+     -  **SAM A5D2 Family**: SAMA5D2 DFP 1.5.53
+     -  **PIC32MZ-W Family**: PIC32MZ-W DFP v1.4.193
+
+
+### Development Tools
+
+- [MPLAB® X IDE v5.45](https://www.microchip.com/mplab/mplab-x-ide)
+- [MPLAB® XC32 C/C++ Compiler v2.50](https://www.microchip.com/mplab/compilers)
+- [IAR EWARM v8.50](https://www.iar.com/iar-embedded-workbench/#!?architecture=Arm)
+- [KEIL MDK v5.31](https://www2.keil.com/mdk5)
+- MPLAB® X IDE plug-ins:
+  - MPLAB® Harmony Configurator (MHC) v3.7.0
+  - 
 ## CSP Release v3.8.3
 
 ### New Features
