@@ -213,7 +213,7 @@ def canInterruptSet(symbol, event):
     for handler in canInterruptHandler:
         interruptName = handler.split("_INTERRUPT_HANDLER")[0]
         if event["value"] == True:
-            Database.setSymbolValue("core", handler, canInstanceName.getValue() + "_InterruptHandler")
+            Database.setSymbolValue("core", handler, interruptName + "_InterruptHandler")
         else:
             Database.setSymbolValue("core", handler, interruptName + "_Handler")
 
@@ -536,6 +536,10 @@ def instantiateComponent(canComponent):
         canInterruptHandlerLock.append(canInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK")
         canInterruptVectorUpdate.append("core." + canInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE")
         canIrq_index = int(getIRQnumber(canInstanceName.getValue()))
+
+    canInterruptCount = canComponent.createIntegerSymbol("CAN_INTERRUPT_COUNT", None)
+    canInterruptCount.setDefaultValue(len(canInterruptVector))
+    canInterruptCount.setVisible(False)
 
     enblRegName = _get_enblReg_parms(canIrq_index)
     statRegName = _get_statReg_parms(canIrq_index)
@@ -970,27 +974,27 @@ def instantiateComponent(canComponent):
 
     #Master Header
     canMasterHeaderFile = canComponent.createFileSymbol("headerFile", None)
-    canMasterHeaderFile.setSourcePath("../peripheral/can_03247/templates/plib_can_common.h")
-    canMasterHeaderFile.setOutputName("plib_can_common.h")
-    canMasterHeaderFile.setDestPath("/peripheral/can/")
-    canMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/can/")
+    canMasterHeaderFile.setSourcePath("../peripheral/can_03247/templates/plib_canfd_common.h")
+    canMasterHeaderFile.setOutputName("plib_canfd_common.h")
+    canMasterHeaderFile.setDestPath("/peripheral/canfd/")
+    canMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/canfd/")
     canMasterHeaderFile.setType("HEADER")
 
     #Instance Source File
     canMainSourceFile = canComponent.createFileSymbol("sourceFile", None)
-    canMainSourceFile.setSourcePath("../peripheral/can_03247/templates/plib_can.c.ftl")
-    canMainSourceFile.setOutputName("plib_"+canInstanceName.getValue().lower()+".c")
-    canMainSourceFile.setDestPath("/peripheral/can/")
-    canMainSourceFile.setProjectPath("config/" + configName + "/peripheral/can/")
+    canMainSourceFile.setSourcePath("../peripheral/can_03247/templates/plib_canfd.c.ftl")
+    canMainSourceFile.setOutputName("plib_canfd" + canInstanceNum.getValue() + ".c")
+    canMainSourceFile.setDestPath("/peripheral/canfd/")
+    canMainSourceFile.setProjectPath("config/" + configName + "/peripheral/canfd/")
     canMainSourceFile.setType("SOURCE")
     canMainSourceFile.setMarkup(True)
 
     #Instance Header File
     canInstHeaderFile = canComponent.createFileSymbol("instHeaderFile", None)
-    canInstHeaderFile.setSourcePath("../peripheral/can_03247/templates/plib_can.h.ftl")
-    canInstHeaderFile.setOutputName("plib_"+canInstanceName.getValue().lower()+".h")
-    canInstHeaderFile.setDestPath("/peripheral/can/")
-    canInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/can/")
+    canInstHeaderFile.setSourcePath("../peripheral/can_03247/templates/plib_canfd.h.ftl")
+    canInstHeaderFile.setOutputName("plib_canfd" + canInstanceNum.getValue() + ".h")
+    canInstHeaderFile.setDestPath("/peripheral/canfd/")
+    canInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/canfd/")
     canInstHeaderFile.setType("HEADER")
     canInstHeaderFile.setMarkup(True)
 

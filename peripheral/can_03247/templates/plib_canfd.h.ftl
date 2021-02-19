@@ -1,19 +1,19 @@
 /*******************************************************************************
-  CAN Peripheral Library Interface Header File
+  CANFD Peripheral Library Interface Header File
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_${CAN_INSTANCE_NAME?lower_case}.h
+    plib_canfd${CAN_INSTANCE_NUM}.h
 
   Summary:
-    CAN PLIB interface declarations.
+    CANFD PLIB interface declarations.
 
   Description:
-    The CAN plib provides a simple interface to manage the CAN modules on
+    The CANFD plib provides a simple interface to manage the CANFD modules on
     Microchip microcontrollers. This file defines the interface declarations
-    for the CAN plib.
+    for the CANFD plib.
 
   Remarks:
     None.
@@ -44,8 +44,8 @@
 *******************************************************************************/
 //DOM-IGNORE-END
 
-#ifndef PLIB_${CAN_INSTANCE_NAME}_H
-#define PLIB_${CAN_INSTANCE_NAME}_H
+#ifndef PLIB_CANFD${CAN_INSTANCE_NUM}_H
+#define PLIB_CANFD${CAN_INSTANCE_NUM}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -59,7 +59,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "device.h"
-#include "plib_can_common.h"
+#include "plib_canfd_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -73,8 +73,8 @@
 // *****************************************************************************
 // *****************************************************************************
 void ${CAN_INSTANCE_NAME}_Initialize(void);
-bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoQueueNum, CAN_MODE mode, CAN_MSG_TX_ATTRIBUTE msgAttr);
-bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint32_t *timestamp, uint8_t fifoNum, CAN_MSG_RX_ATTRIBUTE *msgAttr);
+bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoQueueNum, CANFD_MODE mode, CANFD_MSG_TX_ATTRIBUTE msgAttr);
+bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint32_t *timestamp, uint8_t fifoNum, CANFD_MSG_RX_ATTRIBUTE *msgAttr);
 void ${CAN_INSTANCE_NAME}_MessageAbort(uint8_t fifoQueueNum);
 void ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterSet(uint8_t filterNum, uint32_t id);
 uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterGet(uint8_t filterNum);
@@ -83,14 +83,14 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskGet(uint8_t acceptanceF
 <#if TX_EVENT_FIFO_USE == true>
 bool ${CAN_INSTANCE_NAME}_TransmitEventFIFOElementGet(uint32_t *id, uint32_t *sequence, uint32_t *timestamp);
 </#if>
-CAN_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void);
+CANFD_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void);
 void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount);
-bool ${CAN_INSTANCE_NAME}_InterruptGet(uint8_t fifoQueueNum, CAN_FIFO_INTERRUPT_FLAG_MASK fifoInterruptFlagMask);
+bool ${CAN_INSTANCE_NAME}_InterruptGet(uint8_t fifoQueueNum, CANFD_FIFO_INTERRUPT_FLAG_MASK fifoInterruptFlagMask);
 bool ${CAN_INSTANCE_NAME}_TxFIFOQueueIsFull(uint8_t fifoQueueNum);
 bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum);
 <#if CAN_INTERRUPT_MODE == true>
-void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, uint8_t fifoQueueNum);
-void ${CAN_INSTANCE_NAME}_ErrorCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle);
+void ${CAN_INSTANCE_NAME}_CallbackRegister(CANFD_CALLBACK callback, uintptr_t contextHandle, uint8_t fifoQueueNum);
+void ${CAN_INSTANCE_NAME}_ErrorCallbackRegister(CANFD_CALLBACK callback, uintptr_t contextHandle);
 </#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -98,4 +98,4 @@ void ${CAN_INSTANCE_NAME}_ErrorCallbackRegister(CAN_CALLBACK callback, uintptr_t
 #endif
 // DOM-IGNORE-END
 
-#endif // PLIB_${CAN_INSTANCE_NAME}_H
+#endif // PLIB_CANFD${CAN_INSTANCE_NUM}_H

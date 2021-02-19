@@ -1,17 +1,17 @@
 /*******************************************************************************
-  CAN Peripheral Library Interface Header File
+  CANFD Peripheral Library Interface Header File
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_can_common.h
+    plib_canfd_common.h
 
   Summary
-    CAN peripheral library interface.
+    CANFD peripheral library interface.
 
   Description
-    This file defines the interface to the CAN peripheral library. This
+    This file defines the interface to the CANFD peripheral library. This
     library provides access to and control of the associated peripheral
     instance.
 
@@ -44,8 +44,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_CAN_COMMON_H
-#define PLIB_CAN_COMMON_H
+#ifndef PLIB_CANFD_COMMON_H
+#define PLIB_CANFD_COMMON_H
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -62,13 +62,13 @@
 // *****************************************************************************
 
 // *****************************************************************************
-/* CAN Mode
+/* CANFD Mode
 
    Summary:
-    CAN Mode for Classic CAN and CAN FD.
+    CANFD Mode for Classic CAN and CAN FD.
 
    Description:
-    This data type defines CAN mode Classic CAN, CAN FD without BRS(Bit rate switching)
+    This data type defines CANFD mode Classic CAN, CAN FD without BRS(Bit rate switching)
     and CAN FD with BRS.
 
    Remarks:
@@ -76,19 +76,19 @@
 */
 typedef enum
 {
-    CAN_MODE_NORMAL = 0,
-    CAN_MODE_FD_WITHOUT_BRS,
-    CAN_MODE_FD_WITH_BRS
-} CAN_MODE;
+    CANFD_MODE_NORMAL = 0,
+    CANFD_MODE_FD_WITHOUT_BRS,
+    CANFD_MODE_FD_WITH_BRS
+} CANFD_MODE;
 
 // *****************************************************************************
-/* CAN Tx Message Attribute
+/* CANFD Tx Message Attribute
 
    Summary:
-    CAN Tx Message Attribute for Tx FIFO and Tx Queue.
+    CANFD Tx Message Attribute for Tx FIFO and Tx Queue.
 
    Description:
-    This data type defines CAN Message TX Attribute for Data Frame and Remote Frame.
+    This data type defines CANFD Message TX Attribute for Data Frame and Remote Frame.
     Only One attribute need to be passed as parameter value while invoking
     message transmit function.
 
@@ -97,36 +97,36 @@ typedef enum
 */
 typedef enum
 {
-    CAN_MSG_TX_DATA_FRAME = 0,
-    CAN_MSG_TX_REMOTE_FRAME
-} CAN_MSG_TX_ATTRIBUTE;
+    CANFD_MSG_TX_DATA_FRAME = 0,
+    CANFD_MSG_TX_REMOTE_FRAME
+} CANFD_MSG_TX_ATTRIBUTE;
 
 // *****************************************************************************
-/* CAN Message Object Type RX Attribute
+/* CANFD Message Object Type RX Attribute
 
    Summary:
-    CAN Message RX Attribute for Data Frame and Remote Frame.
+    CANFD Message RX Attribute for Data Frame and Remote Frame.
 
    Description:
-    This data type defines CAN Message RX Attribute for Data Frame and Remote Frame.
+    This data type defines CANFD Message RX Attribute for Data Frame and Remote Frame.
 
    Remarks:
     None.
 */
 typedef enum
 {
-    CAN_MSG_RX_DATA_FRAME = 0,
-    CAN_MSG_RX_REMOTE_FRAME
-} CAN_MSG_RX_ATTRIBUTE;
+    CANFD_MSG_RX_DATA_FRAME = 0,
+    CANFD_MSG_RX_REMOTE_FRAME
+} CANFD_MSG_RX_ATTRIBUTE;
 
 // *****************************************************************************
-/* CAN FIFO Interrupt Status Flag Mask
+/* CANFD FIFO Interrupt Status Flag Mask
 
    Summary:
-    CAN FIFO Interrupt Status Flag Mask.
+    CANFD FIFO Interrupt Status Flag Mask.
 
    Description:
-    This data type defines the CAN FIFO Interrupt Status Flag Mask.
+    This data type defines the CANFD FIFO Interrupt Status Flag Mask.
 
    Remarks:
     None.
@@ -134,63 +134,63 @@ typedef enum
 typedef enum
 {
     /* Receive FIFO Not Empty / Transmit FIFO Not Full Interrupt Mask */
-    CAN_FIFO_INTERRUPT_TFNRFNIF_MASK = 0x1,
+    CANFD_FIFO_INTERRUPT_TFNRFNIF_MASK = 0x1,
 
     /* Transmit FIFO Half Empty / Receive FIFO Half Full Interrupt Mask */
-    CAN_FIFO_INTERRUPT_TFHRFHIF_MASK = 0x2,
+    CANFD_FIFO_INTERRUPT_TFHRFHIF_MASK = 0x2,
 
     /* Transmit FIFO Empty / Receive FIFO Full Interrupt Mask */
-    CAN_FIFO_INTERRUPT_TFERFFIF_MASK = 0x4,
+    CANFD_FIFO_INTERRUPT_TFERFFIF_MASK = 0x4,
 
     /* Receive FIFO Overflow Interrupt Mask */
-    CAN_FIFO_INTERRUPT_RXOVIF_MASK = 0x8,
+    CANFD_FIFO_INTERRUPT_RXOVIF_MASK = 0x8,
 
     /* Transmit Attempts Exhausted Interrupt Pending Mask */
-    CAN_FIFO_INTERRUPT_TXATIF_MASK = 0x10
-} CAN_FIFO_INTERRUPT_FLAG_MASK;
+    CANFD_FIFO_INTERRUPT_TXATIF_MASK = 0x10
+} CANFD_FIFO_INTERRUPT_FLAG_MASK;
 
 // *****************************************************************************
-/* CAN Transfer Error
+/* CANFD Transfer Error
 
    Summary:
-    CAN Transfer Error data type.
+    CANFD Transfer Error data type.
 
    Description:
-    This data type defines the CAN Transfer Error.
+    This data type defines the CANFD Transfer Error.
 
    Remarks:
     None.
 */
 typedef enum
 {
-    CAN_ERROR_NONE = 0x0,
-    CAN_ERROR_TX_RX_WARNING_STATE = 0x10000,
-    CAN_ERROR_RX_WARNING_STATE = 0x20000,
-    CAN_ERROR_TX_WARNING_STATE = 0x40000,
-    CAN_ERROR_RX_BUS_PASSIVE_STATE = 0x80000,
-    CAN_ERROR_TX_BUS_PASSIVE_STATE = 0x100000,
-    CAN_ERROR_TX_BUS_OFF_STATE = 0x200000
-} CAN_ERROR;
+    CANFD_ERROR_NONE = 0x0,
+    CANFD_ERROR_TX_RX_WARNING_STATE = 0x10000,
+    CANFD_ERROR_RX_WARNING_STATE = 0x20000,
+    CANFD_ERROR_TX_WARNING_STATE = 0x40000,
+    CANFD_ERROR_RX_BUS_PASSIVE_STATE = 0x80000,
+    CANFD_ERROR_TX_BUS_PASSIVE_STATE = 0x100000,
+    CANFD_ERROR_TX_BUS_OFF_STATE = 0x200000
+} CANFD_ERROR;
 
 // *****************************************************************************
-/* CAN Callback
+/* CANFD Callback
 
    Summary:
-    CAN Callback Function Pointer.
+    CANFD Callback Function Pointer.
 
    Description:
-    This data type defines the CAN Callback Function Pointer.
+    This data type defines the CANFD Callback Function Pointer.
 
    Remarks:
     None.
 */
-typedef void (*CAN_CALLBACK) (uintptr_t contextHandle);
+typedef void (*CANFD_CALLBACK) (uintptr_t contextHandle);
 
 // *****************************************************************************
-/* CAN RX Message
+/* CANFD RX Message
 
    Summary:
-    CAN RX Message Buffer structure.
+    CANFD RX Message Buffer structure.
 
    Description:
     This data structure stores RX Message.
@@ -209,89 +209,89 @@ typedef struct
     /* Rx Message timestamp */
     uint32_t *timestamp;
     /* Rx Message attribute */
-    CAN_MSG_RX_ATTRIBUTE *msgAttr;
-} CAN_RX_MSG;
+    CANFD_MSG_RX_ATTRIBUTE *msgAttr;
+} CANFD_RX_MSG;
 
 // *****************************************************************************
-/* CAN Receive Message Object
+/* CANFD Receive Message Object
 
    Summary:
-    CAN Receive Message Object structure.
+    CANFD Receive Message Object structure.
 
    Description:
-    This data structure defines the CAN Rx Message Object format.
+    This data structure defines the CANFD Rx Message Object format.
 
    Remarks:
     None.
 */
 typedef struct
 {
-    /* CAN Rx message - SID[10:0] and EID[28:11]  */
+    /* CANFD Rx message - SID[10:0] and EID[28:11]  */
     uint32_t r0;
 
-    /* CAN Rx message - DLC[3:0], IDE[4], RTR[5], BRS[6], FDF[7]
-                        ESI[8] and FILHIT[15:11]    */
+    /* CANFD Rx message - DLC[3:0], IDE[4], RTR[5], BRS[6], FDF[7]
+                          ESI[8] and FILHIT[15:11]    */
     uint32_t r1;
 
-    /* CAN Rx message - RXMSGTS and Receive Buffer Data Bytes */
+    /* CANFD Rx message - RXMSGTS and Receive Buffer Data Bytes */
     uint8_t data[];
-} CAN_RX_MSG_OBJECT;
+} CANFD_RX_MSG_OBJECT;
 
 // *****************************************************************************
-/* CAN Trasmit Message Object
+/* CANFD Trasmit Message Object
 
    Summary:
-    CAN Transmit Message Object structure.
+    CANFD Transmit Message Object structure.
 
    Description:
-    This data structure defines the CAN Tx Message Object format.
+    This data structure defines the CANFD Tx Message Object format.
 
    Remarks:
     None.
 */
 typedef struct
 {
-    /* CAN Tx message - SID[10:0] and EID[28:11] */
+    /* CANFD Tx message - SID[10:0] and EID[28:11] */
     uint32_t t0;
 
-    /* CAN Tx message - DLC[3:0], IDE[4], RTR[5], BRS[6], FDF[7]
-                        ESI[8] and SEQ[31:9] */
+    /* CANFD Tx message - DLC[3:0], IDE[4], RTR[5], BRS[6], FDF[7]
+                          ESI[8] and SEQ[31:9] */
     uint32_t t1;
 
-    /* CAN Tx message - Transmit Buffer Data Bytes */
+    /* CANFD Tx message - Transmit Buffer Data Bytes */
     uint8_t data[];
-} CAN_TX_MSG_OBJECT;
+} CANFD_TX_MSG_OBJECT;
 
 // *****************************************************************************
-/* CAN Trasmit Event FIFO Element
+/* CANFD Trasmit Event FIFO Element
 
    Summary:
-    CAN Trasmit Event FIFO Element structure.
+    CANFD Trasmit Event FIFO Element structure.
 
    Description:
-    This data structure defines the CAN Tx Event FIFO Element format.
+    This data structure defines the CANFD Tx Event FIFO Element format.
 
    Remarks:
     None.
 */
 typedef struct
 {
-    /* CAN Tx Event FIFO - SID[10:0] and EID[28:11] */
+    /* CANFD Tx Event FIFO - SID[10:0] and EID[28:11] */
     uint32_t te0;
 
-    /* CAN Tx Event FIFO - DLC[3:0], IDE[4], RTR[5], BRS[6], FDF[7]
-                           ESI[8] and SEQ[31:9] */
+    /* CANFD Tx Event FIFO - DLC[3:0], IDE[4], RTR[5], BRS[6], FDF[7]
+                             ESI[8] and SEQ[31:9] */
     uint32_t te1;
 
-    /* CAN Tx Event FIFO - Transmit Message Time Stamp */
+    /* CANFD Tx Event FIFO - Transmit Message Time Stamp */
     uint8_t timestamp[];
-} CAN_TX_EVENT_FIFO_ELEMENT;
+} CANFD_TX_EVENT_FIFO_ELEMENT;
 
 // *****************************************************************************
-/* CAN Callback Object
+/* CANFD Callback Object
 
    Summary:
-    CAN transfer event callback structure.
+    CANFD transfer event callback structure.
 
    Description:
     This data structure stores transfer event callback and it's context.
@@ -302,29 +302,29 @@ typedef struct
 typedef struct
 {
     /* Transfer Event Callback */
-    CAN_CALLBACK callback;
+    CANFD_CALLBACK callback;
 
     /* Transfer Event Callback Context */
     uintptr_t context;
-} CAN_CALLBACK_OBJ;
+} CANFD_CALLBACK_OBJ;
 
 // *****************************************************************************
-/* CAN PLib Instance Object
+/* CANFD PLib Instance Object
 
    Summary:
-    CAN PLib Object structure.
+    CANFD PLib Object structure.
 
    Description:
-    This data structure defines the CAN PLib Instance Object.
+    This data structure defines the CANFD PLib Instance Object.
 
    Remarks:
     None.
 */
 typedef struct
 {
-    /* CAN Error Status */
+    /* CANFD Error Status */
     uint32_t errorStatus;
-} CAN_OBJ;
+} CANFD_OBJ;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -332,4 +332,4 @@ typedef struct
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_CAN_COMMON_H
+#endif //PLIB_CANFD_COMMON_H

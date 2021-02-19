@@ -24,4 +24,4 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 -->
-#include "peripheral/can/plib_${CAN_INSTANCE_NAME?lower_case}.h"
+#include "peripheral/canfd/plib_canfd${CAN_INSTANCE_NUM}.h"
