@@ -55,6 +55,15 @@ def setDMACDefaultSettings():
 
     return triggerSettings
 
+def calculateRAMLength(symbol, event):
+    if event["symbol"].getSelectedKey() != None:
+        RAMSize = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"HSRAM\"]").getAttribute("size")
+        RAMPowerSwitchConfVal = int(event["symbol"].getSelectedKey().replace("KB", "")) * 1024
+        if RAMPowerSwitchConfVal < int(RAMSize, 16):
+            symbol.setValue("RAM_LENGTH=" + str(hex(RAMPowerSwitchConfVal)))
+        else:
+            symbol.setValue("")
+
 # Device Configuration
 deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", devCfgMenu)
 deviceSecurity.setLabel("Security")
@@ -64,6 +73,20 @@ deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)" )
 deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
 deviceSecurity.setSelectedKey("CLEAR",1)
 deviceSecurity.setVisible(False)
+
+xc32LinkerMacroRAMLength = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RAM_LENGTH", None)
+xc32LinkerMacroRAMLength.setCategory("C32-LD")
+xc32LinkerMacroRAMLength.setKey("preprocessor-macros")
+xc32LinkerMacroRAMLength.setAppend(True, ";=")
+xc32LinkerMacroRAMLength.setDependencies(calculateRAMLength, ["pm.PM_PWCFG_RAMPSWC"])
+
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    secXc32LinkerMacroRAMLength = coreComponent.createSettingSymbol("SECURE_XC32_LINKER_MACRO_RAM_LENGTH", None)
+    secXc32LinkerMacroRAMLength.setCategory("C32-LD")
+    secXc32LinkerMacroRAMLength.setKey("preprocessor-macros")
+    secXc32LinkerMacroRAMLength.setAppend(True, ";=")
+    secXc32LinkerMacroRAMLength.setDependencies(calculateRAMLength, ["pm.PM_PWCFG_RAMPSWC"])
+    secXc32LinkerMacroRAMLength.setSecurity("SECURE")
 
 # SysTick External Clock Source
 systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK", devCfgMenu)
