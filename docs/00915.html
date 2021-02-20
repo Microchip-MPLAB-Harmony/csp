@@ -97,7 +97,7 @@ uint8_t count = 0;&nbsp;</p>
 <p class="Element10">
 uint8_t user_input = 0;&nbsp;</p>
 <p class="Element10">
-CAN_MSG_RX_ATTRIBUTE msgAttr = CAN_MSG_RX_DATA_FRAME;&nbsp;</p>
+CANFD_MSG_RX_ATTRIBUTE msgAttr = CANFD_MSG_RX_DATA_FRAME;&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
@@ -163,7 +163,7 @@ messageID = 0x45A;&nbsp;</p>
 <p class="Element10">
 messageLength = 64;&nbsp;</p>
 <p class="Element10">
-if (CAN1_MessageTransmit(messageID, messageLength, message, 1, CAN_MODE_FD_WITH_BRS, CAN_MSG_TX_DATA_FRAME) == true)&nbsp;</p>
+if (CAN1_MessageTransmit(messageID, messageLength, message, 1, CANFD_MODE_FD_WITH_BRS, CANFD_MSG_TX_DATA_FRAME) == true)&nbsp;</p>
 <p class="Element10">
 {&nbsp;</p>
 <p class="Element10">
@@ -191,7 +191,7 @@ messageID = 0x469;&nbsp;</p>
 <p class="Element10">
 messageLength = 8;&nbsp;</p>
 <p class="Element10">
-if (CAN1_MessageTransmit(messageID, messageLength, message, 1, CAN_MODE_NORMAL, CAN_MSG_TX_DATA_FRAME) == true)&nbsp;</p>
+if (CAN1_MessageTransmit(messageID, messageLength, message, 1, CANFD_MODE_NORMAL, CANFD_MSG_TX_DATA_FRAME) == true)&nbsp;</p>
 <p class="Element10">
 {&nbsp;</p>
 <p class="Element10">
@@ -219,7 +219,7 @@ while (true)&nbsp;</p>
 <p class="Element10">
 {&nbsp;</p>
 <p class="Element10">
-if (CAN1_InterruptGet(2, CAN_FIFO_INTERRUPT_TFNRFNIF_MASK))&nbsp;</p>
+if (CAN1_InterruptGet(2, CANFD_FIFO_INTERRUPT_TFNRFNIF_MASK))&nbsp;</p>
 <p class="Element10">
 {&nbsp;</p>
 <p class="Element10">
@@ -229,7 +229,7 @@ status = CAN1_ErrorGet();&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-if (status == CAN_ERROR_NONE)&nbsp;</p>
+if (status == CANFD_ERROR_NONE)&nbsp;</p>
 <p class="Element10">
 {&nbsp;</p>
 <p class="Element10">
@@ -247,7 +247,7 @@ printf(&quot; New Message Received \r\n&quot;);&nbsp;</p>
 <p class="Element10">
 status = CAN1_ErrorGet();&nbsp;</p>
 <p class="Element10">
-if (status == CAN_ERROR_NONE)&nbsp;</p>
+if (status == CANFD_ERROR_NONE)&nbsp;</p>
 <p class="Element10">
 {&nbsp;</p>
 <p class="Element10">
@@ -383,11 +383,11 @@ status = CAN1_ErrorGet();&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-if ((status &amp; (CAN_ERROR_TX_RX_WARNING_STATE | CAN_ERROR_RX_WARNING_STATE |&nbsp;</p>
+if ((status &amp; (CANFD_ERROR_TX_RX_WARNING_STATE | CANFD_ERROR_RX_WARNING_STATE |&nbsp;</p>
 <p class="Element10">
-CAN_ERROR_TX_WARNING_STATE | CAN_ERROR_RX_BUS_PASSIVE_STATE |&nbsp;</p>
+CANFD_ERROR_TX_WARNING_STATE | CANFD_ERROR_RX_BUS_PASSIVE_STATE |&nbsp;</p>
 <p class="Element10">
-CAN_ERROR_TX_BUS_PASSIVE_STATE | CAN_ERROR_TX_BUS_OFF_STATE)) == CAN_ERROR_NONE)&nbsp;</p>
+CANFD_ERROR_TX_BUS_PASSIVE_STATE | CANFD_ERROR_TX_BUS_OFF_STATE)) == CANFD_ERROR_NONE)&nbsp;</p>
 <p class="Element10">
 {&nbsp;</p>
 <p class="Element10">
@@ -485,7 +485,7 @@ CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT, 1 );
 <p class="Element10">
 state = APP_STATE_CAN_IDLE;&nbsp;</p>
 <p class="Element10">
-CAN1_MessageTransmit(messageID, messageLength, message, 1, CAN_MODE_FD_WITH_BRS, CAN_MSG_TX_DATA_FRAME);&nbsp;</p>
+CAN1_MessageTransmit(messageID, messageLength, message, 1, CANFD_MODE_FD_WITH_BRS, CANFD_MSG_TX_DATA_FRAME);&nbsp;</p>
 <p class="Element10">
 break;&nbsp;</p>
 <p class="Element10">
