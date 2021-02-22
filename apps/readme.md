@@ -7,6 +7,7 @@ Microchip MPLAB Harmony provides several application examples for most supported
 | [csp_apps_pic32mz_da](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mz_da) | Application examples for: <br> PIC32MZ Graphics (DA) Family <br> PIC32MZ Graphics (DAK/DAL/DAR/DAS) Family |
 | [csp_apps_pic32mz_ef](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mz_ef) | Application examples for PIC32MZ Embedded Connectivity with Floating Point Unit (EF) Family |
 | [csp_apps_pic32mz_w1](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mz_w1) | Application examples for PIC32MZ W1 and WFI32E01 family|
+| [csp_apps_pic32cm_mc00](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cm_mc00) | Application examples for PIC32CM MC00 family|
 | [csp_apps_sam_9x60](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_9x60) | Application examples for SAM9X60 family |
 | [csp_apps_sam_a5d2](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_a5d2) | Application examples for SAMA5D2 family |
 | [csp_apps_sam_c20_c21](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_c20_c21) | Application examples for SAM C20/C21 Family |
