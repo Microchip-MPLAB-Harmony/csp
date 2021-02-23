@@ -148,10 +148,7 @@ for i in range(0, len(registerNames)):
                 caption = valueGroupChildren[j].getAttribute("caption")
                 keyValueSymbol.addKey(name, str(value), caption)
             keyValueSymbol.setDefaultValue(default[numfuses])
-            if valueGroup == "NVMCTRL_STATUS__BOOTPROT":
-                keyValueSymbol.setOutputMode("Value")
-            else:
-                keyValueSymbol.setOutputMode("Key")
+            keyValueSymbol.setOutputMode("Key")
             keyValueSymbol.setDisplayMode("Description")
 
         if key == "RAMECC_ECCDIS":
