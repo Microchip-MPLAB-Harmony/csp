@@ -73,7 +73,7 @@ def PPSOptionsVisibilityControlAndSpecialCase(symbol, event):
     if "USE_PPS_INPUT_" in event["id"]:
         symbol.setVisible(event["value"])
     elif "SYS_PORT_PPS_INPUT_FUNCTION_" in event["id"]:
-        if(Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001185"):
+        if(Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1185"):
             # This special case is written for PIC32MX330/350/370/430/450/470 Family.
             if (symbol.getKey(symbol.getValue()) == "RPF2"):
                 if (event["value"] in ["INT3", "T2CK", "IC3", "U1RX", "U2RX", "U5CTS", "REFCLKI"]):
@@ -87,7 +87,7 @@ def PPSOptionsVisibilityControlAndSpecialCase(symbol, event):
                     symbol.setKeyValue("RPB2", "15")
                 elif (event["value"] in ["INT1", "T3CK", "IC1", "U4RX", "U3CTS", "U5RX", "SS2 (in)", "OCFA"]):
                     symbol.setKeyValue("RPB2", "7")
-        elif(Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001290"):
+        elif(Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1290"):
             # This special case is written for PIC32MX1XX/2XX/5XX Family.
             if (symbol.getKey(symbol.getValue()) == "RPF2"):
                 if (event["value"] in ["INT3", "T2CK", "IC3", "U1RX", "U2RX", "U5CTS", "SDI3", "SDI4", "REFCLKI"]):

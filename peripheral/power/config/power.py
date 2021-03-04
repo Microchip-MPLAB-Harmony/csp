@@ -53,7 +53,7 @@ def updateDSCON(symbol, event):
 ###################################################################################################
 def instantiateComponent(powerComponent):
     # DRMEN symbol
-    if "PIC32M" in Variables.get("__PROCESSOR"):
+    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
         clkValGrp_OSCCON__DRMEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="OSCCON__DRMEN"]')
     else:
         clkValGrp_OSCCON__DRMEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="OSCCON__DRMEN"]')
@@ -112,7 +112,7 @@ def instantiateComponent(powerComponent):
     Database.setSymbolValue("core", "CONFIG_DSEN", "ON", 1)
 
     power_HeaderFile = powerComponent.createFileSymbol("POWER_HEADER", None)
-    if "PIC32M" in Variables.get("__PROCESSOR"):
+    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
         power_HeaderFile.setSourcePath("../peripheral/power/templates/plib_power.h.ftl")        
     else:
         power_HeaderFile.setSourcePath("../peripheral/power/templates/plib_power_pic32c.h.ftl")
@@ -123,7 +123,7 @@ def instantiateComponent(powerComponent):
     power_HeaderFile.setMarkup(True)
 
     power_SourceFile = powerComponent.createFileSymbol("POWER_SOURCE", None)
-    if "PIC32M" in Variables.get("__PROCESSOR"):
+    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
         power_SourceFile.setSourcePath("../peripheral/power/templates/plib_power.c.ftl")        
     else:
         power_SourceFile.setSourcePath("../peripheral/power/templates/plib_power_pic32c.c.ftl")

@@ -391,13 +391,11 @@ def getChipSelectPinList(ss_pin):
     gpioIP = ""
     final_pin_list = []
 
-    processor = Variables.get("__PROCESSOR")
-    if ("PIC32MX" in processor):
-        deviceFamily = Database.getSymbolValue("core", "DEVICE_FAMILY")
-        if deviceFamily in ["DS60001185", "DS60001290", "DS60001404", "DS60001168"]:
-            gpioIP = "gpio_01618"
-        elif deviceFamily in ["DS60001156", "DS60001143"]:
-            gpioIP = "gpio_01166"
+    deviceFamily = Database.getSymbolValue("core", "PRODUCT_FAMILY")
+    if deviceFamily in ["PIC32MX1185", "PIC32MX1290", "PIC32MX1404", "PIC32MX1168"]:
+        gpioIP = "gpio_01618"
+    elif deviceFamily in ["PIC32MX1156", "PIC32MX1143"]:
+        gpioIP = "gpio_01166"
     else:
         gpioIP = "gpio_02467"
 

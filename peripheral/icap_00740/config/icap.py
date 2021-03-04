@@ -36,7 +36,7 @@ icapValGrp_IC1CON_SIDL    = ATDF.getNode('/avr-tools-device-file/modules/module@
 
 cfgBifield_ICACLK           = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGCON"]/bitfield@[name="ICACLK"]')
 
-if all(x in Variables.get("__PROCESSOR") for x in ["PIC32MZ", "W"]):
+if (Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MZW"):
     cfgBifield_ICACLK           = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGCON0"]/bitfield@[name="IC_ACLK"]')
     configRegName = "CFGCON0"
 
@@ -374,7 +374,7 @@ def instantiateComponent(icapComponent):
 
     #Calculate the proper interrupt registers using ERROR IRQ#
     irqString = "INPUT_CAPTURE_" + str(instanceNum) + "_ERROR"
-    if "PIC32MX" in Variables.get("__PROCESSOR"):
+    if "PIC32MX" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
         irqString = "INPUT_CAPTURE_ERROR_" + str(instanceNum)
     icxIrq_index = int(getIRQIndex(irqString))
     if icxIrq_index == -1:

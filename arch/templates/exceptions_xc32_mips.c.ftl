@@ -154,7 +154,7 @@ void __attribute__((noreturn)) _bootstrap_exception_handler(void)
         #endif
     }
 }
-<#if __PROCESSOR?contains("PIC32MZ")>
+<#if PRODUCT_FAMILY?contains("PIC32MZ")>
 /*******************************************************************************
   Function:
     void _cache_err_exception_handler ( void )

@@ -96,22 +96,22 @@ peripheral_ID_map = {
     "RTC_03608" : "RTC_U2250"
 }
 
-processor = Variables.get("__PROCESSOR")
-if("PIC32M" in processor):
+if("MIPS" in coreArch):
     coreTimerComponent = Module.CreateComponent("core_timer", "CORE TIMER", "/Peripherals/CORE TIMER/", "../peripheral/coretimer/config/coretimer.py")
     coreTimerComponent.addCapability("CORE_TIMER_TMR", "TMR")
     coreTimerComponent.setDisplayType("Peripheral Library")
 
-    powerComponent = Module.CreateComponent("power", "POWER", "/Peripherals/POWER/", "../peripheral/power/config/power.py")
-    powerComponent.setDisplayType("Peripheral Library")
-
-elif ("PIC32CX" in processor) and ("BZ" in processor):
+valueGroup_OSCCON_SLPEN = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CRU\"]/value-group@[name=\"OSCCON__SLPEN\"]")
+if valueGroup_OSCCON_SLPEN is None:
+    valueGroup_OSCCON_SLPEN = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OSC\"]/value-group@[name=\"OSCCON__SLPEN\"]")
+if valueGroup_OSCCON_SLPEN is not None:
     powerComponent = Module.CreateComponent("power", "POWER", "/Peripherals/POWER/", "../peripheral/power/config/power.py")
     powerComponent.setDisplayType("Peripheral Library")
 
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
 modules = periphNode.getChildren()
 
+processor = Variables.get("__PROCESSOR")
 # Certain members of certain families use the QSPI peripheral only in SPI mode - this makes the capability key/value match for those parts
 if( (("SAMV7" in processor) or ("SAME7" in processor) or ("SAMS7" in processor)) and
     (("J19" in processor[-4:]) or ("J20" in processor[-4:]) or ("J21" in processor[-4:])) ):

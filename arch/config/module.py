@@ -23,13 +23,13 @@
 
 def loadModule():
 
+    coreArch = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" )
+
     print("Load Module: Device Family Pack (DFP)")
     dfpComponent = Module.CreateComponent("dfp", "Device Family Pack (DFP)", "/Packs/", "config/dfp.py")
 
     # Avoid loading CMSIS for non-relevant processors
-    if ("SAM9" in Variables.get("__PROCESSOR")) or ("PIC32M" in Variables.get("__PROCESSOR")):
-        print("Processor doesn't support CMSIS.  Skipping...")
-    else:
+    if ("CORTEX" in coreArch):
         print("Load Module: CMSIS Pack")
         cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis.py")
 

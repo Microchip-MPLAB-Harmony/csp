@@ -270,9 +270,9 @@ if numOfShadowSet == 1: # For PIC323xx/4xx and PIC32MX5XX/6XX/7XX series
 
     SRS_MENU_COMMENT = coreComponent.createCommentSymbol("EVIC_SRS_COMMENT", evicShadowRegMenu)
     SRS_MENU_COMMENT.setLabel("**** Configure Shadow Register Set in DEVCFG3 Fuse Settings ****")
-    if (Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001156"):
+    if (Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1156"):
         SRS_MENU_COMMENT.setVisible(True)
-    else: # for "DS60001143"
+    else: # for "PIC32MX1143"
         SRS_MENU_COMMENT.setVisible(False)
 
     evicNumOfShadowSet = coreComponent.createIntegerSymbol("EVIC_PRIORITY_FOR_SHADOW_SET", evicShadowRegMenu)

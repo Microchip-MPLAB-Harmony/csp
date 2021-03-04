@@ -115,7 +115,7 @@ global getWaitStates
 def getWaitStates():
     sysclk = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
 
-    if Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001402":
+    if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1402":
         if sysclk <= 60000000:
             ws = 1
         elif sysclk <= 80000000:
@@ -202,17 +202,14 @@ coreFPU.setDefaultValue(True)
 coreFPU.setReadOnly(True)
 coreFPU.setVisible(False)
 
+# "DEVICE_FAMILY" symbol related code is only for backward compatibility
 ds60001402Regex = re.compile(r'MK\w+(GPD|GPE|MCF)')       #PIC32MKXXXXGPD/GPE/MCF
 ds60001570Regex = re.compile(r'MK\w+(GPG|GPH|MCJ)')       #PIC32MKXXXXGPG/GPH/MCJ
 ds60001519Regex = re.compile(r'MK\w+(GPK|GPL|MCM)')       #PIC32MKXXXXGPK/GPL/MCM
-
-global deviceFamily
-
 deviceFamily = coreComponent.createStringSymbol("DEVICE_FAMILY", devCfgMenu)
 deviceFamily.setLabel("Device Family")
 deviceFamily.setReadOnly(True)
 deviceFamily.setVisible(False)
-
 # decide on the family this processor belongs
 if  ds60001402Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001402")
@@ -220,6 +217,17 @@ elif ds60001570Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001570")
 elif ds60001519Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001519")
+
+# productFamily (ID = "PRODUCT_FAMILY") symbol should be used everywhere to identify the product family
+# This symbol is created inside core.py with the default value obtained from ATDF
+# Since some of the ATDF doesn't give uniquely identifiable family name, same is updated in family python like this
+global productFamily
+if  ds60001402Regex.search(processor):
+    productFamily.setDefaultValue("PIC32MK1402")
+elif ds60001570Regex.search(processor):
+    productFamily.setDefaultValue("PIC32MK1570")
+elif ds60001519Regex.search(processor):
+    productFamily.setDefaultValue("PIC32MK1519")
 
 mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
 mipsMenu.setLabel("MIPS Configuration")

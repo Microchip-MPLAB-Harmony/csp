@@ -68,7 +68,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     <#assign ADCHS_CH_ENABLE = "ADCHS_"+ i + "_ENABLE">
     <#assign ADCHS_TIME = "ADCHS_ADCTIME" + i>
     <#if .vars[ADCHS_CH_ENABLE] == true>
-    <#if (__PROCESSOR?contains("PIC32MZ") && __PROCESSOR?contains("W"))>
+    <#if (core.PRODUCT_FAMILY == "PIC32MZW")>
     <#else>
     ADC${i}CFG = DEVADC${i};
     </#if>
@@ -79,7 +79,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 </#if>
 
 <#if ADCHS_7_ENABLE == true>
-    <#if (__PROCESSOR?contains("PIC32MZ") && __PROCESSOR?contains("W"))>
+    <#if (core.PRODUCT_FAMILY == "PIC32MZW")>
     <#else>
     ADC7CFG = DEVADC7;
     </#if>
@@ -127,10 +127,10 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     </#if>
 </#if>
 <#if ADCCON2__EOSIEN == true>
-<#if __PROCESSOR?contains("PIC32MZ")>
+<#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
     ${ADCHS_EOS_IEC_REG}SET = _${ADCHS_EOS_IEC_REG}_ADCEOSIE_MASK;
 </#if>
-<#if __PROCESSOR?contains("PIC32MK")>
+<#if core.PRODUCT_FAMILY?contains("PIC32MK")>
     ${ADCHS_EOS_IEC_REG}SET = _${ADCHS_EOS_IEC_REG}_AD1EOSIE_MASK;
 </#if>
 </#if>
@@ -201,7 +201,7 @@ void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptDisable (ADCHS_CHANNEL_NUM cha
     </#if>
 }
 
-<#if (__PROCESSOR?contains("PIC32MZ") && __PROCESSOR?contains("W"))>
+<#if (core.PRODUCT_FAMILY == "PIC32MZW")>
 <#else>
 void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptEnable (ADCHS_CHANNEL_NUM channel)
 {
@@ -274,9 +274,9 @@ bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 /* Read the conversion result */
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
 {
-<#if (__PROCESSOR?contains("PIC32MK")) || (__PROCESSOR?contains("PIC32MZ") && __PROCESSOR?contains("W"))>
+<#if (core.PRODUCT_FAMILY?contains("PIC32MK")) || (core.PRODUCT_FAMILY == "PIC32MZW")>
     return (uint16_t) (*((&ADCDATA0) + (channel << 2)));
-<#elseif __PROCESSOR?contains("PIC32MZ")>
+<#elseif core.PRODUCT_FAMILY?contains("PIC32MZ")>
     return (*((&ADCDATA0) + channel));
 </#if>
 
@@ -301,10 +301,10 @@ void ${ADCHS_INSTANCE_NAME}_EOSCallbackRegister(ADCHS_EOS_CALLBACK callback, uin
 void ADC_EOS_InterruptHandler(void)
 {
     uint32_t status = ADCCON2;
-<#if __PROCESSOR?contains("PIC32MZ")>
+<#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
     ${ADCHS_EOS_IFS_REG}CLR = _${ADCHS_EOS_IFS_REG}_ADCEOSIF_MASK;
 </#if>
-<#if __PROCESSOR?contains("PIC32MK")>
+<#if core.PRODUCT_FAMILY?contains("PIC32MK")>
     ${ADCHS_EOS_IFS_REG}CLR = _${ADCHS_EOS_IFS_REG}_AD1EOSIF_MASK;
 </#if>
     if (${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn != NULL)
@@ -331,7 +331,7 @@ void ADC_DATA${i}_InterruptHandler(void)
       ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
     }
 
-<#if __PROCESSOR?contains("PIC32MZ")>
+<#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
 <#if i < ADCHS_IFS0_NUM_IRQ>
     IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_ADCD${i}IF_MASK;
 <#elseif (i gt ADCHS_IFS0_NUM_IRQ) && (i < ADCHS_IFS1_NUM_IRQ)>
@@ -339,7 +339,7 @@ void ADC_DATA${i}_InterruptHandler(void)
 </#if>
 </#if>
 
-<#if __PROCESSOR?contains("PIC32MK")>
+<#if core.PRODUCT_FAMILY?contains("PIC32MK")>
 <#if i < ADCHS_IFS0_NUM_IRQ>
     IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_AD1D${i}IF_MASK;
 <#elseif (i gt ADCHS_IFS0_NUM_IRQ) && (i < ADCHS_IFS1_NUM_IRQ)>
@@ -359,7 +359,7 @@ void ADC_DATA${i}_InterruptHandler(void)
     {
         ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
     }
-<#if __PROCESSOR?contains("PIC32MZ")>
+<#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
 <#if i < ADCHS_IFS0_NUM_IRQ>
     IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_ADCD${i}IF_MASK;
 <#elseif (i gt ADCHS_IFS0_NUM_IRQ) && (i < ADCHS_IFS1_NUM_IRQ)>
@@ -369,7 +369,7 @@ void ADC_DATA${i}_InterruptHandler(void)
 </#if>
 </#if>
 
-<#if __PROCESSOR?contains("PIC32MK")>
+<#if core.PRODUCT_FAMILY?contains("PIC32MK")>
 <#if i < ADCHS_IFS0_NUM_IRQ>
     IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_AD1D${i}IF_MASK;
 <#elseif (i gt ADCHS_IFS0_NUM_IRQ) && (i < ADCHS_IFS1_NUM_IRQ)>

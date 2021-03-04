@@ -1,5 +1,5 @@
 
-<#if DEVICE_FAMILY != "DS60001290">
+<#if PRODUCT_FAMILY != "PIC32MX1290">
     /* Configure KSEG0 as cacheable memory. This is needed for Prefetch Buffer */
     __builtin_mtc0(16, 0,(__builtin_mfc0(16, 0) | 0x3));
 

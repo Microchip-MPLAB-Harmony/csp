@@ -33,7 +33,7 @@ ocmpValGrp_OCxCON_SIDL      = ATDF.getNode('/avr-tools-device-file/modules/modul
 
 cfgBifield_OCACLK           = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGCON"]/bitfield@[name="OCACLK"]')
 
-if all(x in Variables.get("__PROCESSOR") for x in ["PIC32MZ", "W"]):
+if (Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MZW"):
     cfgBifield_OCACLK           = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGCON0"]/bitfield@[name="OC_ACLK"]')
     configRegName = "CFGCON0"
 

@@ -73,7 +73,7 @@ void ${ADC_INSTANCE_NAME}_Initialize(void)
     /* Input Scan */
     AD1CSSL = 0x${ADC_AD1CSSL};
 </#if>
-<#if (core.DEVICE_FAMILY == "DS60001290") && ADC_AD1CSSL2?has_content && (ADC_AD1CSSL2 != "0")>
+<#if (core.PRODUCT_FAMILY == "PIC32MX1290") && ADC_AD1CSSL2?has_content && (ADC_AD1CSSL2 != "0")>
     AD1CSSL2 = 0x${ADC_AD1CSSL2};
 </#if>
 
@@ -125,7 +125,7 @@ void ${ADC_INSTANCE_NAME}_InputSelect(${ADC_INSTANCE_NAME}_MUX muxType, ${ADC_IN
 
 void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanInputs)
 {
-<#if core.DEVICE_FAMILY == "DS60001290">
+<#if core.PRODUCT_FAMILY == "PIC32MX1290">
     AD1CSSL = (uint32_t)(scanInputs);
     <#if AD1CSSL__CSSL_COUNT gt 31> 
     AD1CSSL2 = (uint32_t)(scanInputs >> 32);

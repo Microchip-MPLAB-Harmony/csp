@@ -185,8 +185,7 @@ peripheralBusDict_DA =  {
 }
 
 def updateMaxFreq(symbol, event):
-
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" not in Variables.get("__PROCESSOR")) ):
+    if(Database.getSymbolValue("core", "PRODUCT_FAMILY") != "PIC32MZDA"):
         if event["value"] == 0:
             symbol.setValue(180000000, 2)
         elif event["value"] == 1:
@@ -944,13 +943,6 @@ if __name__ == "__main__":
             argval = argterm
         per_divider[node[ii].getAttribute("name")] = argval
 
-    # Used to include family-specific code in ftl file
-    PROC_FAM_SYMBOL = coreComponent.createStringSymbol("PROC_FAMILY",None)
-    PROC_FAM_SYMBOL.setVisible(False)
-    PROC_FAM_SYMBOL.setDefaultValue('Default')              # set to nominal value
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR")) ):
-        PROC_FAM_SYMBOL.setDefaultValue('PIC32MZDA')
-
     # Clock Manager Configuration Menu
     SYM_CLK_MENU = coreComponent.createMenuSymbol("CLK_MIPS32", None)
     SYM_CLK_MENU.setLabel("Clock Menu")
@@ -958,7 +950,7 @@ if __name__ == "__main__":
 
     CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
     CLK_MANAGER_SELECT.setVisible(False)
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR")) ):
+    if( Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MZDA"):
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mzda:MZDAClockModel")
         peripheralBusDict = peripheralBusDict_DA.copy()
     else:
@@ -1166,7 +1158,7 @@ if __name__ == "__main__":
     max_clk_freq_for_selected_temp.setReadOnly(True)
     max_clk_freq_for_selected_temp.setVisible(False)
 
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR")) ):
+    if(Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MZDA"):
         TEMP_RANGE.addKey("RANGE1", "1", "-40C to +85C, DC to 200 MHz")
         TEMP_RANGE.setDefaultValue(0)
         TEMP_RANGE.setReadOnly(True)
@@ -1184,7 +1176,7 @@ if __name__ == "__main__":
     FRC_CLK_SETTING = coreComponent.createComboSymbol("CONFIG_SYS_CLK_FRCDIV", CLK_CFG_SETTINGS, frcdiv.keys())
     FRC_CLK_SETTING.setLabel("FRC Clock Divider")
     FRC_CLK_SETTING.setDescription(clkValGrp_OSCCON__FRCDIV.getAttribute('caption'))
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR")) ):
+    if(Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MZDA"):
         FRC_CLK_SETTING.setDefaultValue("DIV1")
     else:
         FRC_CLK_SETTING.setDefaultValue("OSC_FRC_DIV_1")
@@ -1502,7 +1494,7 @@ if __name__ == "__main__":
         enSymbolList[listIndex].setDescription("Sets whether to have reference clock 1 enabled")
         enSymbolList[listIndex].setDefaultValue(False)
 
-        if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR")) ) or (("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR")) and (int(clk) in [1,3,4] )):
+        if( (Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MZEF") or ((Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MZDA") and (int(clk) in [1,3,4])) ):
             # output enable of ref clk
             oeSymId = "CONFIG_SYS_CLK_REFCLK"+clk+"_OE"
             oeSymbolList[listIndex] = coreComponent.createBooleanSymbol(oeSymId, enSymbolList[listIndex])
@@ -1666,10 +1658,10 @@ if __name__ == "__main__":
             else:
                 peripheral_clock_freq.setDefaultValue(0)
 
-                if all(x in Variables.get("__PROCESSOR") for x in ["PIC32MZ", "DA"]) and peripheralName.startswith("UART"):
+                if (Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MZDA") and peripheralName.startswith("UART"):
                     peripheral_clock_freq.setDependencies(uartClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".UART_CLKSEL", "CONFIG_SYS_CLK_FRCDIV",
                                                                                          "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ"])
-                elif all(x in Variables.get("__PROCESSOR") for x in ["PIC32MZ", "DA"]) and peripheralName == "TMR1":
+                elif (Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MZDA") and peripheralName == "TMR1":
                     peripheral_clock_freq.setDependencies(tmr1ClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "tmr1.TIMER1_SRC_SEL", "tmr1.TIMER1_TECS", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ",
                                                                                          "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
                 elif peripheralName == "ADCHS":

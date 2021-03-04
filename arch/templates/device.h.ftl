@@ -44,7 +44,7 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
-<#if __PROCESSOR?contains("PIC32M") == true>
+<#if core.PRODUCT_FAMILY?contains("PIC32M") == true>
 #include <xc.h>
 #include <sys/attribs.h>
 <#else>

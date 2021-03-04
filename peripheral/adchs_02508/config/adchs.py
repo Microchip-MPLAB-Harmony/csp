@@ -1749,7 +1749,7 @@ def instantiateComponent(adchsComponent):
     adchsGlobalHeaderFile.setMarkup(True)
 
     adchsSource1File = adchsComponent.createFileSymbol("ADCHS_SOURCE", None)
-    if "PIC32M" in Variables.get("__PROCESSOR"):
+    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
         adchsSource1File.setSourcePath("../peripheral/adchs_02508/templates/plib_adchs.c.ftl")
     else:
         adchsSource1File.setSourcePath("../peripheral/adchs_02508/templates/plib_adchs_pic32c.c.ftl")
