@@ -41,7 +41,7 @@ global peripheralBusDict
 peripheralBusDict = {}
 
 # PIC32MK GPK/GPL/MCM
-peripheralBusDict_DS60001519 =  {
+peripheralBusDict_PIC32MK1519 =  {
 
         #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
         # if "Peripheral bus no" == -1 then clocked by SYSCLK
@@ -152,7 +152,7 @@ peripheralBusDict_DS60001519 =  {
 }
 
 # PIC32MK GPG/GPH/MCJ
-peripheralBusDict_DS60001570 =  {
+peripheralBusDict_PIC32MK1570 =  {
 
         #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
         # if "Peripheral bus no" == -1 then clocked by SYSCLK
@@ -230,7 +230,7 @@ peripheralBusDict_DS60001570 =  {
 }
 
 # PIC32MK GPD/GPE/MCF
-peripheralBusDict_DS60001402 =  {
+peripheralBusDict_PIC32MK1402 =  {
 
         #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
         # if "Peripheral bus no" == -1 then clocked by SYSCLK
@@ -1216,13 +1216,6 @@ if __name__ == "__main__":
             argval = argterm
         per_divider[node[ii].getAttribute("name")] = argval
 
-    # Used to include family-specific code in ftl file
-    PROC_FAM_SYMBOL = coreComponent.createStringSymbol("PROC_FAMILY",None)
-    PROC_FAM_SYMBOL.setVisible(False)
-    PROC_FAM_SYMBOL.setDefaultValue('Default')              # set to nominal value
-    if("PIC32MK" in Variables.get("__PROCESSOR")):
-        PROC_FAM_SYMBOL.setDefaultValue('PIC32MK')
-
     # Clock Manager Configuration Menu
     SYM_CLK_MENU = coreComponent.createMenuSymbol("CLK_MIPS32", None)
     SYM_CLK_MENU.setLabel("Clock Menu")
@@ -1230,14 +1223,14 @@ if __name__ == "__main__":
 
     CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
     CLK_MANAGER_SELECT.setVisible(False)
-    if Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001402":
+    if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1402":
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk:MKClockModel")
-        peripheralBusDict = peripheralBusDict_DS60001402.copy()
-    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001570":
+        peripheralBusDict = peripheralBusDict_PIC32MK1402.copy()
+    elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1570":
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk_no_USB:MKClockModel")
-        peripheralBusDict = peripheralBusDict_DS60001570.copy()
-    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001519":
-        peripheralBusDict = peripheralBusDict_DS60001519.copy()
+        peripheralBusDict = peripheralBusDict_PIC32MK1570.copy()
+    elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1519":
+        peripheralBusDict = peripheralBusDict_PIC32MK1519.copy()
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk_2:MKClockModel")
 
     # see if UPLL is enabled through FUSE configuration
@@ -1747,12 +1740,12 @@ if __name__ == "__main__":
     global adchs_clock_map
     adchs_clock_map = {}
 
-    if Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001402":  #PIC32MK GPD/GPE/MCF
+    if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1402":  #PIC32MK GPD/GPE/MCF
         adchs_clock_map[0] = "CONFIG_SYS_CLK_PBCLK5_FREQ"
         adchs_clock_map[1] = "CONFIG_SYS_CLK_FRCDIV"
         adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
         adchs_clock_map[3] = "SYS_CLK_FREQ"
-    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001570" or Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001519": #PIC32MK GPH/GPG/GPK/GPL/MCJ/MCM
+    elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1570" or Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1519": #PIC32MK GPH/GPG/GPK/GPL/MCJ/MCM
         adchs_clock_map[0] = "SYS_CLK_FREQ"
         adchs_clock_map[1] = "CONFIG_SYS_CLK_FRCDIV"
         adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"

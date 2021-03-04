@@ -1003,7 +1003,7 @@ def instantiateComponent(canComponent):
     canSystemInitFile.setType("STRING")
     canSystemInitFile.setSourcePath("../peripheral/can_03247/templates/system/initialization.c.ftl")
     canSystemInitFile.setMarkup(True)
-    if "PIC32MZ1025W104132" == Variables.get("__PROCESSOR"):
+    if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MZW":
         canSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS1")
     else:
         canSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")

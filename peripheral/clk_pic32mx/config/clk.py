@@ -132,14 +132,14 @@ peripheralModuleDisableDict_5xx_6xx_7xx = {
 }
 
 def updateMaxFreq(symbol, event):
-    if (Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001185"):
+    if (Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1185"):
         if event["value"] == 0:
             symbol.setValue(80000000, 2)
         elif event["value"] == 1:
             symbol.setValue(100000000, 2)
         elif event["value"] == 2:
             symbol.setValue(120000000, 2)
-    elif (Database.getSymbolValue("core", "DEVICE_FAMILY") in ["DS60001168", "DS60001290"]):
+    elif (Database.getSymbolValue("core", "PRODUCT_FAMILY") in ["PIC32MX1168", "PIC32MX1290"]):
         if event["value"] == 0:
             symbol.setValue(40000000, 2)
         elif event["value"] == 1:
@@ -966,7 +966,7 @@ if __name__ == "__main__":
     usbPartSym.setVisible(False)
 
     # atdf-specific areas
-    if(Database.getSymbolValue("core", "DEVICE_FAMILY") != "DS60001404"):
+    if(Database.getSymbolValue("core", "PRODUCT_FAMILY") != "PIC32MX1404"):
         clkValGrp_REFOCON__ROSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="REFOCON__ROSEL"]')
         clkValGrp_REFOCON__RODIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="REFOCON__RODIV"]')
         clkValGrp_REFOTRIM__ROTRIM = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="REFOTRIM__ROTRIM"]')
@@ -1011,13 +1011,13 @@ if __name__ == "__main__":
 
     CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
     CLK_MANAGER_SELECT.setVisible(False)
-    if(Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001404"):
+    if(Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1404"):
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mx_xlp:MXClockModel")
         peripheralModuleDisableDict = peripheralModuleDisableDict_1xx_2xx_3xx_4xx.copy()
-    elif Database.getSymbolValue("core", "DEVICE_FAMILY") in ["DS60001168", "DS60001185", "DS60001290"]:
+    elif Database.getSymbolValue("core", "PRODUCT_FAMILY") in ["PIC32MX1168", "PIC32MX1185", "PIC32MX1290"]:
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mx1:MXClockModel")
         peripheralModuleDisableDict = peripheralModuleDisableDict_1xx_2xx_3xx_4xx.copy()
-    else: # DS60001156 and DS60001143
+    else: # PIC32MX1156 and PIC32MX1143
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mx_no_refOsc:MXClockModel")
         peripheralModuleDisableDict = peripheralModuleDisableDict_5xx_6xx_7xx.copy()
 
@@ -1040,29 +1040,29 @@ if __name__ == "__main__":
     max_clk_freq_for_selected_temp.setReadOnly(True)
     max_clk_freq_for_selected_temp.setVisible(False)
 
-    if Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001185":
+    if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1185":
         TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 80 MHz")
         TEMP_RANGE.addKey("RANGE2", "1", "-40C to +85C, DC to 100 MHz")
         TEMP_RANGE.addKey("RANGE3", "2", "0C to +70C, DC to 120 MHz")
         TEMP_RANGE.setDefaultValue(2)
         max_clk_freq_for_selected_temp.setDefaultValue(120000000)
-    elif Database.getSymbolValue("core", "DEVICE_FAMILY") in ["DS60001168","DS60001290"]:
+    elif Database.getSymbolValue("core", "PRODUCT_FAMILY") in ["PIC32MX1168","PIC32MX1290"]:
         TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 40 MHz")
         TEMP_RANGE.addKey("RANGE2", "1", "-40C to +85C, DC to 50 MHz")
         TEMP_RANGE.setDefaultValue(1)
         max_clk_freq_for_selected_temp.setDefaultValue(50000000)
-    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001404":
+    elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1404":
         TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 72 MHz")
         TEMP_RANGE.setReadOnly(True)
         TEMP_RANGE.setDefaultValue(0)
         max_clk_freq_for_selected_temp.setDefaultValue(72000000)
-    elif (Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001156") or \
-                ((Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001143") and Variables.get("__PROCESSOR").find("032H") == -1):
+    elif (Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1156") or \
+                ((Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1143") and Variables.get("__PROCESSOR").find("032H") == -1):
         TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 80 MHz")
         TEMP_RANGE.setReadOnly(True)
         TEMP_RANGE.setDefaultValue(0)
         max_clk_freq_for_selected_temp.setDefaultValue(80000000)
-    else: # it means DS60001143 datasheet 032H parts
+    else: # it means PIC32MX1143 datasheet 032H parts
         TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 40 MHz")
         TEMP_RANGE.setReadOnly(True)
         TEMP_RANGE.setDefaultValue(0)
@@ -1117,7 +1117,7 @@ if __name__ == "__main__":
         # REFOTRIM
         scan_atdf_for_refotrim_fields(coreComponent, enSymbol)
 
-    if(Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001404"):   # following registers only exist in this subset of PIC32MX family
+    if(Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1404"):   # following registers only exist in this subset of PIC32MX family
         symbolEnName = coreComponent.createBooleanSymbol("CONFIG_SYS_CLK_PBCLK_ENABLE", CLK_CFG_SETTINGS)
         symbolEnName.setLabel("Enable Peripheral Clock Bus")
         symbolEnName.setDefaultValue(True)
@@ -1191,16 +1191,16 @@ if __name__ == "__main__":
                     peripheral_clock_freq.setReadOnly(True)
                     peripheral_clock_freq.setDefaultValue(0)
 
-                    if Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001404" and peripheralName.startswith("UART"):
+                    if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1404" and peripheralName.startswith("UART"):
                         peripheral_clock_freq.setDependencies(uartClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".UART_CLKSEL", "CONFIG_SYS_CLK_FRCDIV",
                                                                                          "CONFIG_SYS_CLK_PBCLK_FREQ"])
-                    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001404" and peripheralName == "TMR1":
+                    elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1404" and peripheralName == "TMR1":
                         peripheral_clock_freq.setDependencies(tmr1ClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "tmr1.TIMER1_SRC_SEL", "tmr1.TIMER1_TECS", "CONFIG_SYS_CLK_PBCLK_FREQ",
                                                                                          "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
                     elif peripheralName.startswith("SPI"):
                         peripheral_clock_freq.setDependencies(spiClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK_FREQ",
                                                                                         "CONFIG_SYS_CLK_REFCLK_FREQ"])
-                    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001290" and peripheralName.startswith("CAN"):
+                    elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1290" and peripheralName.startswith("CAN"):
                         peripheral_clock_freq.setDependencies(canClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
                     elif peripheralName.startswith("ETH"):
                         peripheral_clock_freq.setDependencies(sysPeripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])

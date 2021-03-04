@@ -118,7 +118,7 @@ def getWaitStates():
 
     ws = 3
 
-    if deviceFamily.getValue() == "DS60001404":
+    if productFamily.getValue() == "PIC32MX1404":
         if sysclk <= 72000000:
             ws = 3
         if sysclk <= 54000000:
@@ -234,24 +234,17 @@ coreFPU.setDefaultValue(True)
 coreFPU.setReadOnly(True)
 coreFPU.setVisible(False)
 
+# "DEVICE_FAMILY" symbol related code is only for backward compatibility
 ds60001168Regex = re.compile(r'[12][12357]0F\d+[BCD]')  #PIC32MX1XX/2XX
 ds60001185Regex = re.compile(r'[34][357]0F')            #PIC32MX330/350/370/430/450/470
 ds60001290Regex = re.compile(r'[125][2357]0F\d+[HL]')   #PIC32MX1XX/2XX/5XX
 ds60001404Regex = re.compile(r'[12][57]4F')             #PIC32MX1XX/2XX XLP
 ds60001156Regex = re.compile(r'[567][3679][45]F\d+[HL]')  #PIC32MX5XX/6XX/7XX
 ds60001143Regex = re.compile(r'[34][246]0F\d+[HL]')     #PIC32MX3XX/4XX
-
-global deviceFamily
-
 deviceFamily = coreComponent.createStringSymbol("DEVICE_FAMILY", devCfgMenu)
 deviceFamily.setLabel("Device Family")
 deviceFamily.setReadOnly(True)
 deviceFamily.setVisible(False)
-
-mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
-mipsMenu.setLabel("MIPS Configuration")
-mipsMenu.setDescription("Configuration for MIPS processor")
-
 # decide on the family this processor belongs
 if  ds60001168Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001168")
@@ -265,6 +258,27 @@ elif ds60001156Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001156")
 elif ds60001143Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001143")
+
+# productFamily (ID = "PRODUCT_FAMILY") symbol should be used everywhere to identify the product family
+# This symbol is created inside core.py with the default value obtained from ATDF
+# Since some of the ATDF doesn't give uniquely identifiable family name, same is updated in family python like this
+global productFamily
+if  ds60001168Regex.search(processor):
+    productFamily.setDefaultValue("PIC32MX1168")
+elif ds60001185Regex.search(processor):
+    productFamily.setDefaultValue("PIC32MX1185")
+elif ds60001290Regex.search(processor):
+    productFamily.setDefaultValue("PIC32MX1290")
+elif ds60001404Regex.search(processor):
+    productFamily.setDefaultValue("PIC32MX1404")
+elif ds60001156Regex.search(processor):
+    productFamily.setDefaultValue("PIC32MX1156")
+elif ds60001143Regex.search(processor):
+    productFamily.setDefaultValue("PIC32MX1143")
+
+mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
+mipsMenu.setLabel("MIPS Configuration")
+mipsMenu.setDescription("Configuration for MIPS processor")
 
 pcacheNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PCACHE"]')
 
@@ -294,17 +308,18 @@ if pcacheNode != None:
     SYM_PFMWS.setReadOnly(False)
     SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY", "CONFIG_TEMPERATURE_RANGE"])
 
-if deviceFamily.getValue() in ["DS60001185", "DS60001290", "DS60001404", "DS60001168"]:
+global productFamily
+if productFamily.getValue() in ["PIC32MX1185", "PIC32MX1290", "PIC32MX1404", "PIC32MX1168"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_01618/config/gpio.py")
     coreComponent.addPlugin("../peripheral/gpio_01618/plugin/gpio_01618.jar")
-elif deviceFamily.getValue() in ["DS60001156", "DS60001143"]:
+elif productFamily.getValue() in ["PIC32MX1156", "PIC32MX1143"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_01166/config/gpio.py")
     coreComponent.addPlugin("../peripheral/gpio_01166/plugin/gpio_01166.jar")
 
 cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", mipsMenu)
 cacheMenu.setLabel("(no additional MIPS configuration)")
 
-if deviceFamily.getValue() in ["DS60001156", "DS60001143"]:
+if productFamily.getValue() in ["PIC32MX1156", "PIC32MX1143"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_01166/config/evic.py")
     coreComponent.addPlugin("../peripheral/evic_01166/plugin/evic_01166.jar")
 else:
@@ -312,9 +327,9 @@ else:
     coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
 
 # load wdt
-if deviceFamily.getValue() in ["DS60001156", "DS60001143"]:
+if productFamily.getValue() in ["PIC32MX1156", "PIC32MX1143"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_00781/config/wdt.py")
-elif deviceFamily.getValue() in ["DS60001404"]:
+elif productFamily.getValue() in ["PIC32MX1404"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_02674/config/wdt.py")    
 else:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_01385/config/wdt.py")

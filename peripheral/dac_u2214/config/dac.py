@@ -84,7 +84,6 @@ def instantiateComponent(dacComponent):
         syncbusyExists = dacComponent.createBooleanSymbol("STATUS_SYNCBUSY_AVAILABLE", None)
         syncbusyExists.setVisible(False)
 
-    global dacSym_DeviceName
     global invertAvailable
     invertAvailable = False
     ditheringSupported = False
@@ -108,11 +107,6 @@ def instantiateComponent(dacComponent):
     dacInstanceName.setVisible(False)
     dacInstanceName.setDefaultValue(dacComponent.getID().upper())
     Log.writeInfoMessage("Running " + dacInstanceName.getValue())
-
-    # Device name
-    dacSym_DeviceName = dacComponent.createStringSymbol("DAC_DEVICE_NAME", None)
-    dacSym_DeviceName.setVisible(False)
-    dacSym_DeviceName.setDefaultValue(Variables.get("__PROCESSOR"))
 
     # clock enable
     Database.clearSymbolValue("core", dacInstanceName.getValue()+"_CLOCK_ENABLE")

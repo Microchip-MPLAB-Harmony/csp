@@ -58,7 +58,7 @@ def instantiateComponent(rconComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     rconSym_HeaderFile = rconComponent.createFileSymbol("RCON_HEADER", None)
-    if "PIC32M" in Variables.get("__PROCESSOR"):
+    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
         rconSym_HeaderFile.setSourcePath("../peripheral/rcon_03100/templates/plib_rcon.h.ftl")
     else: # for PIC32C devices
         rconSym_HeaderFile.setSourcePath("../peripheral/rcon_03100/templates/plib_rcon_pic32c.h.ftl")
@@ -69,7 +69,7 @@ def instantiateComponent(rconComponent):
     rconSym_HeaderFile.setMarkup(True)
 
     rconSym_SourceFile = rconComponent.createFileSymbol("RCON_SOURCE", None)
-    if "PIC32M" in Variables.get("__PROCESSOR"):
+    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
         rconSym_SourceFile.setSourcePath("../peripheral/rcon_03100/templates/plib_rcon.c.ftl")
     else: # for PIC32C devices
         rconSym_SourceFile.setSourcePath("../peripheral/rcon_03100/templates/plib_rcon_pic32c.c.ftl")

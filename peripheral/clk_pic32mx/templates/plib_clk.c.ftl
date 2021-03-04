@@ -84,7 +84,7 @@
 
 void CLK_Initialize( void )
 {
-<#if DEVICE_FAMILY == "DS60001404">
+<#if PRODUCT_FAMILY == "PIC32MX1404">
     <#assign REFOTRIMreg = "REFO1TRIM">
     <#assign REFOCONreg = "REFO1CON">
 <#else>
@@ -97,7 +97,7 @@ void CLK_Initialize( void )
 <#if (CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT) ||
      ((USB_PART = true) && (CONFIG_SYS_CLK_UFRCEN == "ON")) ||
      ((CONFIG_SYS_CLK_REFCLK_ENABLE?has_content) && (CONFIG_SYS_CLK_REFCLK_ENABLE == true)) ||
-     ((DEVICE_FAMILY == "DS60001404") && (UPLLCON_VALUE != UPLLCON_DEFAULT_VALUE))>
+     ((PRODUCT_FAMILY == "PIC32MX1404") && (UPLLCON_VALUE != UPLLCON_DEFAULT_VALUE))>
 
     /* unlock system for clock configuration */
     SYSKEY = 0x00000000;
@@ -136,7 +136,7 @@ void CLK_Initialize( void )
     </#if>
 </#if>
 
-<#if (DEVICE_FAMILY == "DS60001404") && (UPLLCON_VALUE != UPLLCON_DEFAULT_VALUE)>
+<#if (PRODUCT_FAMILY == "PIC32MX1404") && (UPLLCON_VALUE != UPLLCON_DEFAULT_VALUE)>
     /* PLLODIV  = ${CONFIG_SYS_CLK_UPLLODIV} */
     /* PLLMULT  = ${CONFIG_SYS_CLK_UPLLMULT} */
     /* PLLIDIV  = ${CONFIG_SYS_CLK_UPLLIDIV} */

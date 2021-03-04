@@ -311,9 +311,7 @@ def instantiateComponent(sqiComponent):
     sqiStatCmd.setVisible(sqiFlashStatusCheck.getValue())
     sqiStatCmd.setDependencies(setFlashStatusCheck, ["SQI_FLASH_STATUS_CHECK"])
 
-    processor = Variables.get( "__PROCESSOR" )
-
-    if (("PIC32MZ" in processor) and ("DA" in processor)):
+    if (Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MZDA"):
         sqiSdhcDisableComment = sqiComponent.createCommentSymbol("SQI_SDHC_DISABLE", sqiMenu)
         sqiSdhcDisableComment.setLabel("!!! SDHC peripheral will be disabled as SQI and SDHC share Port Pins !!!")
 

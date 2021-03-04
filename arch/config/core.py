@@ -173,7 +173,7 @@ def genSysSourceFile(symbol, event):
         coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysStdioSyscallsFile")
     elif(event["id"] == "FILTERING_EXCEPTION") or (event["id"] == "ADVANCED_EXCEPTION"):
         coreSysSourceFileEnabled = True
-        if "PIC32M" in processor:
+        if "MIPS" in Database.getSymbolValue("core","CoreArchitecture"):
             if (Database.getSymbolValue("core", "FILTERING_EXCEPTION")== True) and (Database.getSymbolValue("core", "ADVANCED_EXCEPTION")== True):
                 symbol.setSourcePath("templates/filtering_exceptions_xc32_mips.c.ftl")
             elif Database.getSymbolValue("core", "ADVANCED_EXCEPTION")== True:
@@ -232,7 +232,9 @@ def setLinkerScriptParams(symbol, arch, compiler, addLinkerFile):
         symbol.setRelative(False)
         symbol.setMarkup(False)
         if "MIPS" in arch:
-            processor = processor.split("PIC")[1]
+            if "PIC" in processor:
+                processor = processor.split("PIC")[1]
+            # for the device like WFI32E01 do not change processor value
             symbol.setSourcePath("{0}/xc32/{1}/p{1}.ld".format(dfpPath, processor))
             symbol.setOutputName("p{0}.ld".format(processor))
         else:
@@ -330,15 +332,26 @@ def instantiateComponent( coreComponent ):
     xc32Visibility = False
     multiCompilerSupport = False
 
+    # core architecture symbol
     coreArch = coreComponent.createStringSymbol( "CoreArchitecture", None )
     coreArch.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" ) )
     coreArch.setReadOnly( True )
     coreArch.setVisible( False )
 
+    #family series symbol
     coreSeries = coreComponent.createStringSymbol( "CoreSeries", None )
     coreSeries.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" ) )
     coreSeries.setReadOnly( True )
     coreSeries.setVisible( False )
+
+    # productFamily (ID = "PRODUCT_FAMILY") symbol should be used everywhere to identify the product family.
+    # Its default value is obtained from ATDF, but since some of the ATDF doesn't give uniquely identifiable
+    # family name, same can be updated in family python like it is done in PIC32MX.py
+    global productFamily
+    productFamily = coreComponent.createStringSymbol("PRODUCT_FAMILY", None)
+    productFamily.setReadOnly(True)
+    productFamily.setVisible(False)
+    productFamily.setDefaultValue(ATDF.getNode('/avr-tools-device-file/devices/device').getAttribute('family'))
 
     if "CORTEX-A" in coreArch.getValue():
         isCortexA = True
@@ -835,7 +848,7 @@ def instantiateComponent( coreComponent ):
         intHeaderFile.setType("HEADER")
 
 
-    if "PIC32M" in processor:
+    if "MIPS" in Database.getSymbolValue("core","CoreArchitecture"):
         intASMSourceFile = coreComponent.createFileSymbol("INTERRUPTS_ASM", None)
         intASMSourceFile.setSourcePath("templates/interrupts_a.S.ftl")
         intASMSourceFile.setOutputName("interrupts_a.S")
@@ -856,10 +869,10 @@ def instantiateComponent( coreComponent ):
     systemIntVectorsHandlesList =           coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_HANDLERS",           None )
     systemIntVectorsASMList =               coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_ASM",                None )
 
-    if not ("CORTEX-A" in coreArch.getValue() or "ARM926" in coreArch.getValue()):
+    if ("CORTEX-M" in coreArch.getValue()) or ("MIPS" in coreArch.getValue()):
         # generate exceptions.c file
         exceptSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_C", None)
-        if "PIC32M" in processor:
+        if "MIPS" in coreArch.getValue():
             exceptSourceFile.setSourcePath("templates/exceptions_xc32_mips.c.ftl")
         else:
             exceptSourceFile.setSourcePath("templates/exceptions_xc32_cortex_m.c.ftl")
@@ -871,10 +884,9 @@ def instantiateComponent( coreComponent ):
         exceptSourceFile.setType("SOURCE")
         exceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "FILTERING_EXCEPTION", "ADVANCED_EXCEPTION" ] )
 
-    if not ("CORTEX-A" in coreArch.getValue() or "ARM926" in coreArch.getValue()):
         # generate exceptionsHandler.s file
         exceptionAsmSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_ASM", None)
-        if "PIC32M" in processor:
+        if "MIPS" in coreArch.getValue():
             exceptionAsmSourceFile.setSourcePath("templates/general-exception-context_mips.S.ftl")
         else:
             exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler.s.ftl")
@@ -887,8 +899,6 @@ def instantiateComponent( coreComponent ):
         exceptionAsmSourceFile.setEnabled(False)
         exceptionAsmSourceFile.setDependencies( genExceptionAsmSourceFile, ["CoreSysFiles", "CoreSysExceptionFile", "ADVANCED_EXCEPTION"])
 
-
-    if "CORTEX-M" in coreArch.getValue() or "MIPS" in coreArch.getValue():
         linkerFile = coreComponent.createFileSymbol("LINKER_SCRIPT", None)
         linkerFile.setOverwrite(True)
         linkerFile.setType("LINKER")
@@ -946,29 +956,20 @@ def instantiateComponent( coreComponent ):
         xc32SecureHeapSizeSym.setSecurity("SECURE")
 
     # set include path and monitor file
-    corePath = ""
-    if "SAMA5" in processor:
-        corePath = "../src/packs/CMSIS/CMSIS/Core_A/Include"
-    else:
-        if "PIC32M" in processor:
-            corePath = ""
-        else:
-            corePath = "../src/packs/CMSIS/CMSIS/Core/Include"
+    packsPath = ""
+    if "CORTEX-A" in Database.getSymbolValue("core","CoreArchitecture"):
+        packsPath = "../src/packs/" + processor + "_DFP;../src/packs/CMSIS/CMSIS/Core_A/Include;"
+    elif "CORTEX-M" in Database.getSymbolValue("core","CoreArchitecture"):
+        packsPath = "../src/packs/" + processor + "_DFP;../src/packs/CMSIS/CMSIS/Core/Include;"
+    elif "ARM9" in Database.getSymbolValue("core","CoreArchitecture"):
+        packsPath = "../src/packs/" + processor + "_DFP;"       
+    else: #mips
+        packsPath = ""
 
     defSym = coreComponent.createSettingSymbol("XC32_INCLUDE_DIRS", None)
     defSym.setCategory("C32")
     defSym.setKey("extra-include-directories")
-    if "PIC32M" in processor:
-        defSym.setValue( "../src;../src/config/" + configName
-                        + ";../src/packs/" + processor + "_DFP;"
-                        + corePath
-                        )
-    else:
-        defSym.setValue( "../src;../src/config/" + configName
-                        + ";../src/packs/" + processor + "_DFP;"
-                        + corePath
-                        + ";../src/packs/CMSIS/"
-                        )
+    defSym.setValue( "../src;../src/config/" + configName + ";" + packsPath)
     defSym.setAppend(True, ";")
 
     defXc32cppSym = coreComponent.createSettingSymbol("XC32CPP_INCLUDE_DIRS", None)

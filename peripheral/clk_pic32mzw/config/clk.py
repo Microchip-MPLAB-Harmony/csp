@@ -1578,11 +1578,6 @@ if __name__ == "__main__":
             argval = argterm
         per_divider[node[ii].getAttribute("name")] = argval
 
-    # Used to include family-specific code in ftl file
-    PROC_FAM_SYMBOL = coreComponent.createStringSymbol("PROC_FAMILY",None)
-    PROC_FAM_SYMBOL.setVisible(False)
-    PROC_FAM_SYMBOL.setDefaultValue('PIC32MZW')              # set to nominal value
-
     # Clock Manager Configuration Menu
     SYM_CLK_MENU = coreComponent.createMenuSymbol("CLK_MIPS32", None)
     SYM_CLK_MENU.setLabel("Clock Menu")
