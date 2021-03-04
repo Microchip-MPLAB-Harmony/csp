@@ -108,17 +108,28 @@
 */
 void GPIO_Initialize ( void )
 {
-      <#if (CoreSeries == 'PIC32MZW')>
-        <#if ((BSP_PIN_56_FUNCTION_TYPE == "TDI" || BSP_PIN_56_FUNCTION_TYPE == "") &&
-          (BSP_PIN_57_FUNCTION_TYPE == "TDO" || BSP_PIN_57_FUNCTION_TYPE == "") &&
-          (BSP_PIN_118_FUNCTION_TYPE == "TCK" || BSP_PIN_118_FUNCTION_TYPE == "") &&
-          (BSP_PIN_119_FUNCTION_TYPE == "TMS" || BSP_PIN_119_FUNCTION_TYPE == "")) >
+    <#if (PRODUCT_FAMILY == 'PIC32MZW')>
+        <#if __PROCESSOR?contains("WFI")>
+            <#if ((BSP_PIN_48_FUNCTION_TYPE == "TDI" || BSP_PIN_48_FUNCTION_TYPE == "") &&
+                (BSP_PIN_49_FUNCTION_TYPE == "TDO" || BSP_PIN_49_FUNCTION_TYPE == "") &&
+                (BSP_PIN_47_FUNCTION_TYPE == "TCK" || BSP_PIN_47_FUNCTION_TYPE == "") &&
+                (BSP_PIN_46_FUNCTION_TYPE == "TMS" || BSP_PIN_46_FUNCTION_TYPE == "")) >
+            <#else>
+                <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
+                <#lt>    CFGCON0bits.JTAGEN = 0;
+            </#if>
         <#else>
-          <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
-          <#lt>    CFGCON0bits.JTAGEN = 0;
-
+            <#if ((BSP_PIN_56_FUNCTION_TYPE == "TDI" || BSP_PIN_56_FUNCTION_TYPE == "") &&
+                (BSP_PIN_57_FUNCTION_TYPE == "TDO" || BSP_PIN_57_FUNCTION_TYPE == "") &&
+                (BSP_PIN_118_FUNCTION_TYPE == "TCK" || BSP_PIN_118_FUNCTION_TYPE == "") &&
+                (BSP_PIN_119_FUNCTION_TYPE == "TMS" || BSP_PIN_119_FUNCTION_TYPE == "")) >
+            <#else>
+                <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
+                <#lt>    CFGCON0bits.JTAGEN = 0;
+            </#if>           
         </#if>
-      </#if>
+    </#if>
+
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
     <#if .vars[channel]?has_content>
@@ -166,7 +177,7 @@ void GPIO_Initialize ( void )
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
-    <#if CoreSeries != 'PIC32MZW'>
+    <#if PRODUCT_FAMILY != 'PIC32MZW'>
       <#lt>    CFGCONbits.IOLOCK = 0;
     <#else>
       <#lt>    CFGCON0bits.IOLOCK = 0;
@@ -204,7 +215,7 @@ void GPIO_Initialize ( void )
 
 <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
     /* Lock back the system after PPS configuration */
-    <#if CoreSeries != 'PIC32MZW'>
+    <#if PRODUCT_FAMILY != 'PIC32MZW'>
       <#lt>    CFGCONbits.IOLOCK = 1;
     <#else>
       <#lt>    CFGCON0bits.IOLOCK = 1;
