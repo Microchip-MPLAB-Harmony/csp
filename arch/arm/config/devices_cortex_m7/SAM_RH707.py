@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2021 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -139,8 +139,8 @@ cacheAlign.setVisible(False)
 cacheAlign.setDefaultValue(32)
 
 # load clock manager information
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_rh71/config/clk.py")
-coreComponent.addPlugin("../peripheral/clk_sam_rh71/plugin/clk_sam_rh71.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_rh707/config/clk.py")
+#coreComponent.addPlugin("../peripheral/clk_sam_rh707/plugin/clk_sam_rh707.jar")
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
@@ -168,6 +168,9 @@ coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
+
+# load ADC manager information
+coreComponent.addPlugin("../peripheral/adc_44073/plugin/adc_44073.jar")
 
 global armLibCSourceFile
 global devconSystemInitFile
