@@ -40,21 +40,45 @@ cacheAlign.setLabel("Cache Alignment Length")
 cacheAlign.setVisible(False)
 cacheAlign.setDefaultValue(32)
 
-ddrNoCacheStart = int(Database.getSymbolValue("core", "DDRAM_NO_CACHE_START"), 0)
-ddrCacheStart = int(Database.getSymbolValue("core", "DDRAM_CACHE_START"), 0)
-ddrCacheEnd = int(Database.getSymbolValue("core", "DDRAM_CACHE_END"), 0)
+#mmu_segments list have to be defined in the device arch file (Refer sama5d2.py for example)
+symSegCount = coreComponent.createIntegerSymbol("MMU_SEG_COUNT", None)
+symSegCount.setVisible(False)
+symSegCount.setDefaultValue(len(mmu_segments))
 
-noCacheBegin = coreComponent.createStringSymbol("NO_CACHE_START", cacheMenu)
-noCacheBegin.setVisible(False)
-noCacheBegin.setDefaultValue("0x%X"% (ddrNoCacheStart >> 20))
+for index, segment in enumerate(mmu_segments):
 
-cacheBegin = coreComponent.createStringSymbol("CACHE_START", cacheMenu)
-cacheBegin.setVisible(False)
-cacheBegin.setDefaultValue("0x%X"% (ddrCacheStart >> 20))
+    symDesc = coreComponent.createStringSymbol("MMU_SEG{0}_DESC".format(index),None )
+    symDesc.setVisible(False)
+    symDesc.setDefaultValue(segment[0].replace("_", " "))
 
-cacheEnd = coreComponent.createStringSymbol("CACHE_END", cacheMenu)
-cacheEnd.setVisible(False)
-cacheEnd.setDefaultValue("0x%X"% ((ddrCacheEnd + 1) >> 20))
+    #create symbols for 1MB sections
+    start_aligned = (segment[1] & 0xFFF00000)
+    size_adjusted = segment[2] if segment[2] > 0x00100000 else 0x00100000
+    end_aligned = start_aligned + size_adjusted
+
+    symStart = coreComponent.createStringSymbol("MMU_SEG{0}_START".format(index),None )
+    symStart.setVisible(False)
+    symStart.setDefaultValue("0x%03X"%(start_aligned >> 20))
+
+    symEnd =  coreComponent.createStringSymbol("MMU_SEG{0}_END".format(index), None)
+    symEnd.setVisible(False)
+    symEnd.setDefaultValue("0x%03X"%(end_aligned >> 20))
+
+    symNeedLoop = coreComponent.createBooleanSymbol("MMU_SEG{0}_LOOP".format(index), None)
+    symNeedLoop.setVisible(False)
+    symNeedLoop.setDefaultValue(size_adjusted > 0x00100000)
+
+    symMemType    = coreComponent.createStringSymbol("MMU_SEG{0}_TYPE".format(index), None)
+    symMemType.setVisible(False)
+    symMemType.setDefaultValue(segment[3])
+
+    symReadOnly = coreComponent.createBooleanSymbol("MMU_SEG{0}_RO".format(index), None)
+    symReadOnly.setVisible(False)
+    symReadOnly.setDefaultValue(segment[4] == "ro")
+
+    symExecutable = coreComponent.createBooleanSymbol("MMU_SEG{0}_EXEC".format(index), None)
+    symExecutable.setVisible(False)
+    symExecutable.setDefaultValue(segment[5] == "exec" )
 
 configName = Variables.get("__CONFIGURATION_NAME")
 
