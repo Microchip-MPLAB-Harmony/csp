@@ -68,7 +68,7 @@ def setAppStartAddress(symbol, event):
 
 def setDRAMAddresses(symbol, event):
     comp = event["source"]
-    no_cache_size = event["value"]
+    no_cache_size = event["value"]* pow(2,20)
     no_cache_start = int(comp.getSymbolValue("DDRAM_NO_CACHE_START_ADDR"), 16)
     cache_end = int(comp.getSymbolValue("DDRAM_CACHE_END_ADDR"), 16)
     cache_start = no_cache_start + no_cache_size
@@ -111,6 +111,8 @@ memory_loc.setDescription("Generate image to run out of either SRAM or DDR")
 dramStartAddress = coreComponent.createStringSymbol("DRAM_APP_START_ADDRESS", cortexMenu)
 dramStartAddress.setLabel("Execution start address in DDR")
 dramStartAddress.setDefaultValue("0x26F00000")
+dramStartAddress.setVisible(False)
+dramStartAddress.setReadOnly(True)
 Database.setSymbolValue("core", "APP_START_ADDRESS", dramStartAddress.getValue())
 
 memory_loc.setDependencies(setAppStartAddress, ["EXECUTION_MEMORY", "DRAM_APP_START_ADDRESS"])
@@ -118,7 +120,7 @@ memory_loc.setDependencies(setAppStartAddress, ["EXECUTION_MEMORY", "DRAM_APP_ST
 #MMU Configuration data
 mmu_segments = [
                 ("IROM", 0x00000000, 0x00100000, "normal", "ro", "exec"),
-                ("NFC_RAM", 0x00100000, 0x00100000, "device", "rw", "no-exec"),
+                ("NFC_RAM", 0x00100000, 0x00100000, "device", "rw", "exec"),
                 ("SRAM", 0x00200000, 0x00100000, "normal", "rw", "exec"),
                 ("UDPHS_RAM", 0x00300000, 0x00100000, "device", "rw", "no-exec"),
                 ("UHPHS_OHCI", 0x00400000, 0x00100000, "device", "rw", "no-exec"),
@@ -132,8 +134,8 @@ mmu_segments = [
                 ("EBI_CS1", 0x60000000, 0x10000000, "strongly-ordered", "rw", "no-exec"),
                 ("EBI_CS2", 0x70000000, 0x10000000, "strongly-ordered", "rw", "no-exec"),
                 ("EBI_CS3", 0x80000000, 0x10000000, "strongly-ordered", "rw", "no-exec"),
-                ("QSPI_AES0", 0x90000000, 0x08000000, "strongly-ordered", "rw", "no-exec"),
-                ("QSPI_AES1", 0x98000000, 0x08000000, "strongly-ordered", "rw", "no-exec"),
+                ("QSPI_AES0", 0x90000000, 0x08000000, "strongly-ordered", "rw", "exec"),
+                ("QSPI_AES1", 0x98000000, 0x08000000, "strongly-ordered", "rw", "exec"),
                 ("SDMMC0", 0xA0000000, 0x00100000, "strongly-ordered", "rw", "no-exec"),
                 ("SDMMC1", 0xB0000000, 0x00100000, "strongly-ordered", "rw", "no-exec"),
                 ("NFC", 0xC0000000, 0x10000000, "strongly-ordered", "rw", "no-exec"),
