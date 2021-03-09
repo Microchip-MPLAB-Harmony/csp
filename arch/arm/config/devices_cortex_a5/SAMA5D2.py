@@ -66,6 +66,20 @@ def setAppStartAddress(symbol, event):
 
     comp.getSymbolByID("DRAM_APP_START_ADDRESS").setVisible(ddr_mem)
 
+def setDRAMAddresses(symbol, event):
+    comp = event["source"]
+    no_cache_size = event["value"]
+    no_cache_start = int(comp.getSymbolValue("DDRAM_NO_CACHE_START_ADDR"), 16)
+    cache_end = int(comp.getSymbolValue("DDRAM_CACHE_END_ADDR"), 16)
+    cache_start = no_cache_start + no_cache_size
+    no_cache_end =cache_start - 1
+    cache_size = cache_end - cache_start + 1
+    comp.setSymbolValue("DDRAM_NO_CACHE_SIZE", "0x%08X" % no_cache_size)
+    comp.setSymbolValue("DDRAM_NO_CACHE_END_ADDR", "0x%08X" % no_cache_end)
+    comp.setSymbolValue("DDRAM_CACHE_START_ADDR", "0x%08X" % cache_start)
+    comp.setSymbolValue("DDRAM_CACHE_SIZE", "0x%08X" % cache_size)
+    
+    
 print ("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
@@ -96,10 +110,40 @@ memory_loc.setDescription("Generate image to run out of either SRAM or DDR")
 
 dramStartAddress = coreComponent.createStringSymbol("DRAM_APP_START_ADDRESS", cortexMenu)
 dramStartAddress.setLabel("Execution start address in DDR")
-dramStartAddress.setDefaultValue("0x26f00000")
+dramStartAddress.setDefaultValue("0x26F00000")
 Database.setSymbolValue("core", "APP_START_ADDRESS", dramStartAddress.getValue())
 
 memory_loc.setDependencies(setAppStartAddress, ["EXECUTION_MEMORY", "DRAM_APP_START_ADDRESS"])
+
+#MMU Configuration data
+mmu_segments = [
+                ("IROM", 0x00000000, 0x00100000, "normal", "ro", "exec"),
+                ("NFC_RAM", 0x00100000, 0x00100000, "device", "rw", "no-exec"),
+                ("SRAM", 0x00200000, 0x00100000, "normal", "rw", "exec"),
+                ("UDPHS_RAM", 0x00300000, 0x00100000, "device", "rw", "no-exec"),
+                ("UHPHS_OHCI", 0x00400000, 0x00100000, "device", "rw", "no-exec"),
+                ("UHPHS_EHCI", 0x00500000, 0x00100000, "device", "rw", "no-exec"),
+                ("AXIMX", 0x00600000, 0x00100000, "device", "rw", "no-exec"),
+                ("DAP", 0x00700000, 0x00100000, "device", "rw", "no-exec"),
+                ("PTCMEM", 0x00800000, 0x00100000, "device", "rw", "no-exec"),
+                ("L2CC", 0x00A00000, 0x00200000, "device", "rw", "no-exec"),
+                ("EBI_CS0", 0x10000000, 0x10000000, "strongly-ordered", "rw", "no-exec"),
+                ("DDR_AES_CS", 0x40000000, 0x20000000, "normal", "rw", "exec"),
+                ("EBI_CS1", 0x60000000, 0x10000000, "strongly-ordered", "rw", "no-exec"),
+                ("EBI_CS2", 0x70000000, 0x10000000, "strongly-ordered", "rw", "no-exec"),
+                ("EBI_CS3", 0x80000000, 0x10000000, "strongly-ordered", "rw", "no-exec"),
+                ("QSPI_AES0", 0x90000000, 0x08000000, "strongly-ordered", "rw", "no-exec"),
+                ("QSPI_AES1", 0x98000000, 0x08000000, "strongly-ordered", "rw", "no-exec"),
+                ("SDMMC0", 0xA0000000, 0x00100000, "strongly-ordered", "rw", "no-exec"),
+                ("SDMMC1", 0xB0000000, 0x00100000, "strongly-ordered", "rw", "no-exec"),
+                ("NFC", 0xC0000000, 0x10000000, "strongly-ordered", "rw", "no-exec"),
+                ("QSPI0MEM", 0xD0000000, 0x08000000, "strongly-ordered", "rw", "exec"),
+                ("QSPI1MEM", 0xD8000000, 0x08000000, "strongly-ordered", "rw", "exec"),
+                ("PERIPHERALS_0", 0xF0000000, 0x00100000, "strongly-ordered", "rw", "no-exec"),
+                ("PERIPHERALS_1", 0xF8000000, 0x00100000, "strongly-ordered", "rw", "no-exec"),
+                ("PERIPHERALS_2", 0xFC000000, 0x00100000, "strongly-ordered", "rw", "no-exec")
+            ]
+
 
 #DRAM cache configuration
 ddr_node = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"DDR_CS\"]")
@@ -122,29 +166,44 @@ else:
     #Non SiP variants, use entire DRAM region
     ddr_size = int(ddr_node.getAttribute("size"), 0)
 
-dram_non_cacheable_start_addr = coreComponent.createStringSymbol("DDRAM_NO_CACHE_START", None)
+
+#DRAM coherent region
+dram_coherent_region = coreComponent.createIntegerSymbol("DRAM_COHERENT_REGION_SIZE", cortexMenu)
+dram_coherent_region.setLabel("Size of non-cached region in DRAM (MB)")
+dram_coherent_region.setMin(2)
+dram_coherent_region.setMax(ddr_size/pow(2, 20))
+dram_coherent_region.setDefaultValue(non_cacheable_size/pow(2, 20))
+
+#DRAM internal symbols for MMU and linker scripts
+dram_non_cacheable_start_addr = coreComponent.createStringSymbol("DDRAM_NO_CACHE_START_ADDR", None)
 dram_non_cacheable_start_addr.setVisible(False)
-dram_non_cacheable_start_addr.setDefaultValue("0x%X" % ddr_start)
+dram_non_cacheable_start_addr.setDefaultValue("0x%08X" % ddr_start)
 
 dram_non_cacheable_size = coreComponent.createStringSymbol("DDRAM_NO_CACHE_SIZE", None)
 dram_non_cacheable_size.setVisible(False)
-dram_non_cacheable_size.setDefaultValue("0x%X" % non_cacheable_size)
+dram_non_cacheable_size.setLabel("Coherent region size in DRAM")
+dram_non_cacheable_size.setDefaultValue("0x%08X" % non_cacheable_size)
+dram_non_cacheable_size.setDependencies(setDRAMAddresses, ["DRAM_COHERENT_REGION_SIZE"])
 
-dram_non_cacheable_end_addr = coreComponent.createStringSymbol("DDRAM_NO_CACHE_END", None)
+dram_non_cacheable_end_addr = coreComponent.createStringSymbol("DDRAM_NO_CACHE_END_ADDR", None)
 dram_non_cacheable_end_addr.setVisible(False)
-dram_non_cacheable_end_addr.setDefaultValue("0x%X" % (ddr_start + non_cacheable_size - 1))
+dram_non_cacheable_end_addr.setDefaultValue("0x%08X" % (ddr_start + non_cacheable_size - 1))
 
-dram_cacheable_start_addr = coreComponent.createStringSymbol("DDRAM_CACHE_START", None)
+dram_cacheable_start_addr = coreComponent.createStringSymbol("DDRAM_CACHE_START_ADDR", None)
 dram_cacheable_start_addr.setVisible(False)
-dram_cacheable_start_addr.setDefaultValue("0x%X" % (ddr_start + non_cacheable_size))
+dram_cacheable_start_addr.setDefaultValue("0x%08X" % (ddr_start + non_cacheable_size))
 
 dram_cacheable_size = coreComponent.createStringSymbol("DDRAM_CACHE_SIZE", None)
 dram_cacheable_size.setVisible(False)
-dram_cacheable_size.setDefaultValue("0x%X" % (ddr_size - non_cacheable_size))
+dram_cacheable_size.setDefaultValue("0x%08X" % (ddr_size - non_cacheable_size))
 
-dram_cacheable_end_addr = coreComponent.createStringSymbol("DDRAM_CACHE_END", None)
+dram_cacheable_end_addr = coreComponent.createStringSymbol("DDRAM_CACHE_END_ADDR", None)
 dram_cacheable_end_addr.setVisible(False)
-dram_cacheable_end_addr.setDefaultValue("0x%X" % (ddr_start + ddr_size - 1))
+dram_cacheable_end_addr.setDefaultValue("0x%08X" % (ddr_start + ddr_size - 1))
+
+dram_boundary_addr = coreComponent.createStringSymbol("DDRAM_BOUNDARY_ADDR", None)
+dram_boundary_addr.setVisible(False)
+dram_boundary_addr.setDefaultValue("0x%08X" % (ddr_start + ddr_size))
 
 
 #load MMU with default 1:1 mapping so we can use cache
