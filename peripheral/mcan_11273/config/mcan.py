@@ -489,10 +489,7 @@ def instantiateComponent(mcanComponent):
             mcanSFRReg = mcanSFRRegs.getChildren()
             for index in range(0, len(mcanSFRReg)):
                 if (mcanSFRReg[index].getAttribute("name") == "SFR_CAN"):
-                    if (mcanSFRReg[index].getAttribute("count") > 1):
-                        mcanSFRRegSym.setValue(2)
-                    else:
-                        mcanSFRRegSym.setValue(1)
+                    mcanSFRRegSym.setValue(1)
                     break
                 elif (mcanSFRReg[index].getAttribute("name") == "SFR_" + mcanInstanceName.getValue()[1:]):
                     mcanSFRRegSym.setValue(3)
