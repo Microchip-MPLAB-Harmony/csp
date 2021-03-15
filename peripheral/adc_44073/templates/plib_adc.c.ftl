@@ -45,7 +45,10 @@
 #define ADC_SEQ1_CHANNEL_NUM (8U)
 
 <#compress> <#-- To remove unwanted new lines -->
+<#assign ADC_CGR_GAIN = "">
+<#assign ADC_COR_OFFSET = "">
 <#assign ADC_COR_DIFF = "">
+<#assign ADC_COR_VALUE = "">
 <#assign ADC_IER_EOC = "">
 <#assign ADC_CHER_CH = "">
 <#assign ADC_SEQR1_USCH = "">
@@ -60,6 +63,8 @@
 <#assign ADC_CH_IER_EOC = "ADC_"+i+"_IER_EOC">
 <#assign ADC_CH_SEQR1_USCH = "ADC_SEQR1_USCH"+(i+1)>
 <#assign ADC_CH_DIFF_PAIR = "">
+<#assign ADC_CH_CGR_GAIN = "ADC_"+i+"_CGR_GAIN">
+<#assign ADC_CH_COR_OFFSET = "ADC_"+i+"_COR_OFFSET">
 
 <#if (.vars[ADC_CH_CHER] == true) && ((.vars[ADC_CH_IER_EOC] == true) || (ADC_IER_COMPE == true))>
     <#assign ADC_INTERRUPT = true>
@@ -79,6 +84,30 @@
 <#if i % 2 !=0 >
 <#-- Save the diff mode of the even channel. Do not configure odd paired channel if diff mode is enabled for even channel -->
     <#assign ADC_CH_DIFF_PAIR = "ADC_"+(i-1)+"_NEG_INP">
+</#if>
+
+<#-- Gain -->
+<#if .vars[ADC_CH_CHER] == true && .vars[ADC_CH_CGR_GAIN]?? && .vars[ADC_CH_CGR_GAIN] != "SE1_DIFF0_5">
+    <#if (i % 2 != 0) && (.vars[ADC_CH_DIFF_PAIR] != "GND")>
+    <#else>
+        <#if ADC_CGR_GAIN != "">
+            <#assign ADC_CGR_GAIN = ADC_CGR_GAIN + " | " + "ADC_CGR_GAIN" + i + "_" + .vars[ADC_CH_CGR_GAIN]>
+        <#else>
+            <#assign ADC_CGR_GAIN = "ADC_CGR_GAIN" + i + "_" + .vars[ADC_CH_CGR_GAIN]>
+        </#if>
+    </#if>
+</#if>
+
+<#-- Offset -->
+<#if .vars[ADC_CH_CHER] == true && .vars[ADC_CH_COR_OFFSET]?? && .vars[ADC_CH_COR_OFFSET] == true>
+    <#if (i % 2 != 0) && (.vars[ADC_CH_DIFF_PAIR] != "GND")>
+    <#else>
+        <#if ADC_COR_OFFSET != "">
+            <#assign ADC_COR_OFFSET = ADC_COR_OFFSET + " | " + "ADC_COR_OFFSET" + i + "_Msk">
+        <#else>
+            <#assign ADC_COR_OFFSET = "ADC_COR_OFFSET" + i + "_Msk">
+        </#if>
+    </#if>
 </#if>
 
 <#-- Interrupt -->
@@ -135,6 +164,18 @@
 
 </#list>
 
+<#if ADC_COR_DIFF?has_content>
+    <#assign ADC_COR_VALUE = ADC_COR_DIFF>
+</#if>
+
+<#if ADC_COR_OFFSET?has_content>
+    <#if ADC_COR_VALUE != "">
+        <#assign ADC_COR_VALUE = ADC_COR_VALUE + " | " + ADC_COR_OFFSET>
+    <#else>
+        <#assign ADC_COR_VALUE = ADC_COR_OFFSET>
+    </#if>
+</#if>
+
 <#if ADC_EMR_OSR_VALUE == "0">
     <#assign ADC_OSR = "ADC_EMR_OSR_NO_AVERAGE">
     <#assign ADC_ASTE = "">
@@ -186,16 +227,20 @@ void ${ADC_INSTANCE_NAME}_Initialize()
     /* Prescaler and different time settings as per CLOCK section  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_MR = ADC_MR_PRESCAL(${ADC_MR_PRESCAL}U) | ADC_MR_TRACKTIM(15U) | ADC_MR_STARTUP_SUT512 |
         ADC_MR_TRANSFER(2U) | ADC_MR_ANACH_ALLOWED<#rt>
-        <#lt>${((ADC_TRGR_MODE == "TRGMOD_EXT_TRIG_RISE") || (ADC_TRGR_MODE == "TRGMOD_EXT_TRIG_FALL") || (ADC_TRGR_MODE == "TRGMOD_EXT_TRIG_ANY"))?then(' | ADC_MR_${ADC_MR_TRGSEL_VALUE}', '')}<#rt>
+        <#lt>${((ADC_TRGR_MODE == "EXT_TRIG_RISE") || (ADC_TRGR_MODE == "EXT_TRIG_FALL") || (ADC_TRGR_MODE == "EXT_TRIG_ANY"))?then(' | ADC_MR_TRGSEL_${ADC_MR_TRGSEL_VALUE}', '')}<#rt>
+        <#lt>${(ADC_TRGR_MODE == "HW_TRIGGER")?then(' | ADC_MR_TRGSEL_${ADC_MR_TRGSEL_VALUE} | ADC_MR_TRGEN_Msk', '')}<#rt>
+        <#lt>${(ADC_TRGR_MODE == "FREERUN")?then(' | ADC_MR_FREERUN_Msk', '')}<#rt>
         <#lt>${(ADC_MR_SLEEP == true)?then(' | ADC_MR_SLEEP_Msk | ADC_MR_FWUP_${ADC_MR_FWUP}', '')};
 
     /* resolution<#if ADC_CLK_SRC??>, source clock</#if> and sign mode of result */
     ${ADC_INSTANCE_NAME}_REGS->ADC_EMR = ${ADC_OSR} ${ADC_ASTE} <#if ADC_CLK_SRC??>| ADC_EMR_SRCCLK_${ADC_CLK_SRC} </#if>
-         | ADC_EMR_SIGNMODE_${ADC_EMR_SIGNMODE_VALUE} | ADC_EMR_TAG_Msk;
+         <#if ADC_EMR_SIGNMODE_VALUE??>| ADC_EMR_SIGNMODE_${ADC_EMR_SIGNMODE_VALUE}</#if> | ADC_EMR_TAG_Msk;
 
+    <#if ADC_TRGR_TRIGGER_PERIOD??>
     /* Trigger mode */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_TRGR = ADC_TRGR_${ADC_TRGR_MODE}${(ADC_TRGR_MODE == "TRGMOD_PERIOD_TRIG")?then(' | ADC_TRGR_TRGPER(${ADC_TRGR_TRIGGER_PERIOD}U)', '')};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_TRGR = ADC_TRGR_TRGMOD_${ADC_TRGR_MODE}${(ADC_TRGR_MODE == "TRGMOD_PERIOD_TRIG")?then(' | ADC_TRGR_TRGPER(${ADC_TRGR_TRIGGER_PERIOD}U)', '')};
 
+    </#if>
 <#if ADC_COMP_WINDOW == true>
     /* Automatic Window Comparison */
     ${ADC_INSTANCE_NAME}_REGS->ADC_EMR |= ADC_EMR_${ADC_EMR_CMPMODE} | ADC_EMR_${ADC_EMR_CMPTYPE} | ${(ADC_EMR_CMPSEL == "All")?then('ADC_EMR_CMPALL_Msk','ADC_EMR_CMPSEL(ADC_${ADC_EMR_CMPSEL})')};
@@ -204,9 +249,14 @@ void ${ADC_INSTANCE_NAME}_Initialize()
     ${ADC_INSTANCE_NAME}_REGS->ADC_IER = ADC_IER_COMPE_Msk;
 </#if>
 </#if>
-<#if ADC_COR_DIFF?has_content>
-    /* Differential mode */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_COR = ${ADC_COR_DIFF};
+<#if ADC_CGR_GAIN?has_content>
+    /* Gain */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CGR = ${ADC_CGR_GAIN};
+
+</#if>
+<#if ADC_COR_VALUE?has_content>
+    /* Differential mode and offset */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_COR = ${ADC_COR_VALUE};
 
 </#if>
 <#if ADC_MR_USEQ == true>
@@ -279,19 +329,20 @@ void ${ADC_INSTANCE_NAME}_ConversionSequenceSet(ADC_CHANNEL_NUM *channelList, ui
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 = 0U;
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 = 0U;
 
-    for (channelIndex = 0U; channelIndex < ADC_SEQ1_CHANNEL_NUM; channelIndex++)
+    if (numChannel > ${ADC_CHANNEL_SEQ_NUM})
     {
-        if (channelIndex >= numChannel)
-            break;
-        ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 |= channelList[channelIndex] << (channelIndex * 4U);
+        return;
     }
-    if (numChannel > ADC_SEQ1_CHANNEL_NUM)
+
+    for (channelIndex = 0U; channelIndex < numChannel; channelIndex++)
     {
-        for (channelIndex = 0U; channelIndex < (numChannel - ADC_SEQ1_CHANNEL_NUM); channelIndex++)
+        if (channelIndex < ADC_SEQ1_CHANNEL_NUM)
         {
-            if (channelIndex >= 3)
-                break;
-            ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 |= channelList[channelIndex + ADC_SEQ1_CHANNEL_NUM] << (channelIndex * 4U);
+            ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 |= channelList[channelIndex] << (channelIndex * 4U);
+        }
+        else
+        {
+            ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 |= channelList[channelIndex] << ((channelIndex - ADC_SEQ1_CHANNEL_NUM) * 4U);
         }
     }
 }
@@ -326,9 +377,11 @@ void ${ADC_INSTANCE_NAME}_ComparisonRestart(void)
     <#lt>/* Interrupt Handler */
     <#lt>void ${ADC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
+    <#lt>    uint32_t status;
+    <#lt>    status = ${ADC_INSTANCE_NAME}_REGS->ADC_ISR;
     <#lt>    if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(${ADC_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${ADC_INSTANCE_NAME}_CallbackObj.context);
     <#lt>    }
     <#lt>}
 </#if>
