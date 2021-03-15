@@ -93,7 +93,7 @@ extern "C" {
 <#if .vars[ADC_CH_ENABLE] == true>
     <#if (i % 2 != 0) && (.vars[ADC_CH_DIFF_PAIR] != "GND")>
     <#else>
-
+      <#if ADC_EMR_SIGNMODE_VALUE??>
         <#if .vars[ADC_CH_NEG_INP] != "GND">
             <#if ((ADC_EMR_SIGNMODE_VALUE == "ALL_UNSIGNED") || (ADC_EMR_SIGNMODE_VALUE == "SE_SIGN_DF_UNSG")) >
                 <#if (ADC_EMR_OSR_VALUE == "0")>
@@ -169,6 +169,7 @@ extern "C" {
                 </#if>
             </#if>
         </#if>
+      </#if>
 
 #define ${.vars[ADC_CH_NAME]} (${CH_NUM}U)
 /***********************************************************************/

@@ -31,6 +31,8 @@ adcSym_CH_CHER = []
 adcSym_CH_NAME = []
 adcSym_CH_PositiveInput = []
 adcSym_CH_NegativeInput = []
+adcSym_CGR_Gain = []
+adcSym_COR_Offset = []
 adcSym_CH_IER_EOC = []
 
 ###################################################################################################
@@ -40,7 +42,7 @@ adcSym_CH_IER_EOC = []
 def adcClockControl(symbol, event):
     clockSet = False
     Database.clearSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE")
-    for channelID in range(0, 12):
+    for channelID in range(0, Database.getSymbolValue(adcInstanceName.getValue().lower(), "ADC_NUM_CHANNELS")):
         if (adcSym_CH_CHER[channelID].getValue() == True):
             clockSet = True
     if(clockSet == True):
@@ -61,7 +63,7 @@ def adcInterruptEnableDisableCallback(symbol, event):
     Database.clearSymbolValue("core", interruptSymbolHandlerLock)
     Database.clearSymbolValue("core", interruptSymbolEnable)
     Database.clearSymbolValue("core", interruptSymbolHandler)
-    for channelID in range(0, 12):
+    for channelID in range(0, Database.getSymbolValue(adcInstanceName.getValue().lower(), "ADC_NUM_CHANNELS")):
         if (adcSym_CH_IER_EOC[channelID].getValue() == True):
             interruptSet = True
     if (adcSym_IER_COMPE.getValue() == True):
@@ -78,7 +80,7 @@ def adcInterruptEnableDisableCallback(symbol, event):
 def dependencyClockStatus(symbol, event):
     clockSet = False
     clock = bool(Database.getSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE"))
-    for channelID in range(0, 12):
+    for channelID in range(0, Database.getSymbolValue(adcInstanceName.getValue().lower(), "ADC_NUM_CHANNELS")):
         if (adcSym_CH_CHER[channelID].getValue() == True):
             clockSet = True
     if(clockSet == True and clock == False):
@@ -90,7 +92,7 @@ def dependencyIntStatus(symbol, event):
     global interruptSymbolEnable
     interruptSet = False
     interrupt = bool(Database.getSymbolValue("core", interruptSymbolEnable))
-    for channelID in range(0, 12):
+    for channelID in range(0, Database.getSymbolValue(adcInstanceName.getValue().lower(), "ADC_NUM_CHANNELS")):
         if (adcSym_CH_IER_EOC[channelID].getValue() == True):
             interruptSet = True
     if (adcSym_IER_COMPE.getValue() == True):
@@ -146,7 +148,7 @@ def adcCalcConversionTime(adcSym_CONV_TIME, event):
     adcSym_CONV_TIME.setLabel("**** Conversion Time is "+str(conv_time)+" us ****")
 
 def adcUserSeqVisible(adcSym_SEQR1_USCHLocal, event):
-    for channelID in range(0, 11):
+    for channelID in range(0, Database.getSymbolValue(adcInstanceName.getValue().lower(), "ADC_CHANNEL_SEQ_NUM")):
         adcSym_SEQR1_USCH[channelID].setVisible(event["value"])
 
 def adcCHNameVisible(symbol, event):
@@ -192,8 +194,10 @@ def adcCHEnable(symbol, event):
 
 def adcTriggerVisible(symbol, event):
     symObj = event["symbol"]
-    triggerVal = int(symObj.getSelectedValue())
-    if((triggerVal >= 1) and (triggerVal <= 3)):
+    if(symObj.getSelectedKey() == "EXT_TRIG_RISE" or
+       symObj.getSelectedKey() == "EXT_TRIG_FALL" or
+       symObj.getSelectedKey() == "EXT_TRIG_ANY" or
+       symObj.getSelectedKey() == "HW_TRIGGER"):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -232,7 +236,7 @@ def instantiateComponent(adcComponent):
 
     #------------------------- ATDF Read -------------------------------------
     availablePins = []      # array to save available pins
-    channel = ["False", "False", "False", "False", "False", "False", "False", "False", "False", "False", "False", "False"] #array to save available channels
+    channel = [] #array to save available channels
     adcChannelsValues = [] #array used for combo symbol
     adcChannelsValues.append("NONE")
 
@@ -248,20 +252,18 @@ def instantiateComponent(adcComponent):
     for pad in range(0, len(adc_signals)):
         group = adc_signals[pad].getAttribute("group")
         if (("AD" in group) and ("index" in adc_signals[pad].getAttributeList())):
+            channel.append("False")
             padSignal = adc_signals[pad].getAttribute("pad")
             if padSignal in availablePins:
                 channel[int(adc_signals[pad].getAttribute("index"))] = "True"
                 adcChannelsValues.append("CH"+adc_signals[pad].getAttribute("index"))
-
-    adcSym_AvailableChannels = adcComponent.createComboSymbol("ADC_AVAILABLE_CHANNELS", None, channel)
-    adcSym_AvailableChannels.setVisible(False)
 
     adcMenu = adcComponent.createMenuSymbol("ADC_MENU", None)
     adcMenu.setLabel("ADC Configuration")
 
     #max no of channels
     adcSym_NUM_CHANNELS = adcComponent.createIntegerSymbol("ADC_NUM_CHANNELS", adcMenu)
-    adcSym_NUM_CHANNELS.setDefaultValue(12)
+    adcSym_NUM_CHANNELS.setDefaultValue(len(channel))
     adcSym_NUM_CHANNELS.setVisible(False)
 
     # Provide a source clock selection symbol for masks that supports it
@@ -338,29 +340,34 @@ def instantiateComponent(adcComponent):
     adcSym_CONV_TIME.setDependencies(adcCalcConversionTime, ["ADC_MR_PRESCAL", "ADC_EMR_OSR_VALUE", "core." + adcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     #Result sign
-    adcSym_EMR_SIGNMODE_VALUE = adcComponent.createKeyValueSetSymbol("ADC_EMR_SIGNMODE_VALUE", adcMenu)
-    adcSym_EMR_SIGNMODE_VALUE.setLabel("Result Sign")
-    adcSym_EMR_SIGNMODE_VALUE.setDefaultValue(0)
-    adcSym_EMR_SIGNMODE_VALUE.setOutputMode("Key")
-    adcSym_EMR_SIGNMODE_VALUE.setDisplayMode("Description")
-    adcSym_EMR_SIGNMODE_VALUE.addKey("SE_UNSG_DF_SIGN", "0", "Single Ended: Unsigned, Differential: Signed")
-    adcSym_EMR_SIGNMODE_VALUE.addKey("SE_SIGN_DF_UNSG", "1", "Single Ended: Signed, Differential: Unsigned")
-    adcSym_EMR_SIGNMODE_VALUE.addKey("ALL_UNSIGNED", "2", "All Unsigned")
-    adcSym_EMR_SIGNMODE_VALUE.addKey("ALL_SIGNED", "3", "All Signed")
+    valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_EMR__SIGNMODE\"]")
+    if valueGroup is not None:
+        adcSym_EMR_SIGNMODE_VALUE = adcComponent.createKeyValueSetSymbol("ADC_EMR_SIGNMODE_VALUE", adcMenu)
+        adcSym_EMR_SIGNMODE_VALUE.setLabel("Result Sign")
+        adcSym_EMR_SIGNMODE_VALUE.setDefaultValue(0)
+        adcSym_EMR_SIGNMODE_VALUE.setOutputMode("Key")
+        adcSym_EMR_SIGNMODE_VALUE.setDisplayMode("Description")
+        signmodeValues = valueGroup.getChildren()
+        for index in range(len(signmodeValues)):
+            adcSym_EMR_SIGNMODE_VALUE.addKey(signmodeValues[index].getAttribute("name"), signmodeValues[index].getAttribute("value"), signmodeValues[index].getAttribute("caption"))
 
     #Trigger Mode
     adcSym_TRGR_MODE = adcComponent.createKeyValueSetSymbol("ADC_TRGR_MODE", adcMenu)
     adcSym_TRGR_MODE.setLabel("Trigger Mode")
-    adcSym_TRGR_MODE.setDefaultValue(5)
     adcSym_TRGR_MODE.setOutputMode("Key")
     adcSym_TRGR_MODE.setDisplayMode("Description")
-    adcSym_TRGR_MODE.addKey("TRGMOD_NO_TRIGGER", "0", "Software Trigger")
-    adcSym_TRGR_MODE.addKey("TRGMOD_EXT_TRIG_RISE", "1", "External Trigger Rising Edge")
-    adcSym_TRGR_MODE.addKey("TRGMOD_EXT_TRIG_FALL", "2", "External Trigger Falling Edge")
-    adcSym_TRGR_MODE.addKey("TRGMOD_EXT_TRIG_ANY", "3", "External Trigger Any Edge")
-    #adcSym_TRGR_MODE.addKey("TRGMOD_PEN_TRIG", "4", "Pen Detect Trigger") #For Touchscreen mode only
-    adcSym_TRGR_MODE.addKey("TRGMOD_PERIOD_TRIG", "4", "ADC Internal Periodic Trigger")
-    adcSym_TRGR_MODE.addKey("TRGMOD_CONTINUOUS", "5", "Continuous")
+    valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_TRGR__TRGMOD\"]")
+    if valueGroup is not None:
+        trgmodeValues = valueGroup.getChildren()
+        for index in range(len(trgmodeValues)):
+            if trgmodeValues[index].getAttribute("name") != "PEN_TRIG": #Touchscreen mode is not supported
+                adcSym_TRGR_MODE.addKey(trgmodeValues[index].getAttribute("name"), trgmodeValues[index].getAttribute("value"), trgmodeValues[index].getAttribute("caption"))
+        adcSym_TRGR_MODE.setDefaultValue(5)
+    else:
+        adcSym_TRGR_MODE.addKey("FREERUN", "0", "Free Run")
+        adcSym_TRGR_MODE.addKey("SW_TRIGGER", "1", "Software Trigger")
+        adcSym_TRGR_MODE.addKey("HW_TRIGGER", "2", "Hardware Trigger")
+        adcSym_TRGR_MODE.setDefaultValue(0)
 
     #External Trigger Mode
     adcSym_MR_TRGSEL_VALUE = adcComponent.createKeyValueSetSymbol("ADC_MR_TRGSEL_VALUE", adcSym_TRGR_MODE)
@@ -369,29 +376,28 @@ def instantiateComponent(adcComponent):
     adcSym_MR_TRGSEL_VALUE.setDefaultValue(1)
     adcSym_MR_TRGSEL_VALUE.setOutputMode("Key")
     adcSym_MR_TRGSEL_VALUE.setDisplayMode("Description")
-    adcSym_MR_TRGSEL_VALUE.addKey("TRGSEL_ADC_TRIG0", "0", "ADTRG")
-    adcSym_MR_TRGSEL_VALUE.addKey("TRGSEL_ADC_TRIG1", "1", "TIOA0")
-    adcSym_MR_TRGSEL_VALUE.addKey("TRGSEL_ADC_TRIG2", "2", "TIOA1")
-    adcSym_MR_TRGSEL_VALUE.addKey("TRGSEL_ADC_TRIG3", "3", "TIOA2")
-    adcSym_MR_TRGSEL_VALUE.addKey("TRGSEL_ADC_TRIG4", "4", "PWM event line 0")
-    adcSym_MR_TRGSEL_VALUE.addKey("TRGSEL_ADC_TRIG5", "5", "PWM event line 1")
-    adcSym_MR_TRGSEL_VALUE.addKey("TRGSEL_ADC_TRIG6", "6", "TIOA3")
-    adcSym_MR_TRGSEL_VALUE.addKey("TRGSEL_ADC_TRIG7", "7", "RTCOUT0")
+    valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_MR__TRGSEL\"]")
+    if valueGroup is not None:
+        trgselValues = valueGroup.getChildren()
+        for index in range(len(trgselValues)):
+            adcSym_MR_TRGSEL_VALUE.addKey(trgselValues[index].getAttribute("name"), trgselValues[index].getAttribute("value"), trgselValues[index].getAttribute("caption"))
     adcSym_MR_TRGSEL_VALUE.setDependencies(adcTriggerVisible, ["ADC_TRGR_MODE"])
 
-    #ADC Internal Periodic Trigger
-    global adcSym_TRIGGER_TIME
-    adcSym_TRIGGER_TIME = adcComponent.createIntegerSymbol("ADC_TRIGGER_TIME", adcSym_TRGR_MODE)
-    adcSym_TRIGGER_TIME.setLabel("Trigger Period (ms)")
-    adcSym_TRIGGER_TIME.setDefaultValue(2)
-    adcSym_TRIGGER_TIME.setMin(1)
-    adcSym_TRIGGER_TIME.setMax(int((65536 * 1000.0)))
-    adcSym_TRIGGER_TIME.setVisible(False)
-    adcSym_TRIGGER_TIME.setDependencies(adcTriggerTimeVisible, ["ADC_TRGR_MODE"])
+    trgmodevalueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_TRGR__TRGMOD\"]")
+    if trgmodevalueGroup is not None:
+        #ADC Internal Periodic Trigger
+        global adcSym_TRIGGER_TIME
+        adcSym_TRIGGER_TIME = adcComponent.createIntegerSymbol("ADC_TRIGGER_TIME", adcSym_TRGR_MODE)
+        adcSym_TRIGGER_TIME.setLabel("Trigger Period (ms)")
+        adcSym_TRIGGER_TIME.setDefaultValue(2)
+        adcSym_TRIGGER_TIME.setMin(1)
+        adcSym_TRIGGER_TIME.setMax(int((65536 * 1000.0)))
+        adcSym_TRIGGER_TIME.setVisible(False)
+        adcSym_TRIGGER_TIME.setDependencies(adcTriggerTimeVisible, ["ADC_TRGR_MODE"])
 
-    adcSym_TRGR_TRGPER = adcComponent.createIntegerSymbol("ADC_TRGR_TRIGGER_PERIOD", adcSym_TRIGGER_TIME)
-    adcSym_TRGR_TRGPER.setVisible(False)
-    adcSym_TRGR_TRGPER.setDependencies(adcCalcTriggerPeriod, ["ADC_TRIGGER_TIME", "ADC_TRGR_MODE"])
+        adcSym_TRGR_TRGPER = adcComponent.createIntegerSymbol("ADC_TRGR_TRIGGER_PERIOD", adcSym_TRIGGER_TIME)
+        adcSym_TRGR_TRGPER.setVisible(False)
+        adcSym_TRGR_TRGPER.setDependencies(adcCalcTriggerPeriod, ["ADC_TRIGGER_TIME", "ADC_TRGR_MODE"])
 
     #Sleep Mode
     adcSym_MR_SLEEP = adcComponent.createBooleanSymbol("ADC_MR_SLEEP", adcMenu)
@@ -445,7 +451,8 @@ def instantiateComponent(adcComponent):
     adcSym_CWR_LOWTHRES.setDefaultValue(0)
     adcSym_CWR_LOWTHRES.setVisible(False)
     adcSym_CWR_LOWTHRES.setMin(0)
-    adcSym_CWR_LOWTHRES.setMax(16383)
+    maxThreshold = int(ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_CWR\"]/bitfield@[name=\"LOWTHRES\"]").getAttribute("mask"), 16)
+    adcSym_CWR_LOWTHRES.setMax(maxThreshold)
     adcSym_CWR_LOWTHRES.setDependencies(adcSymbolVisible, ["ADC_COMP_WINDOW"])
 
     adcSym_CWR_HIGHTHRES = adcComponent.createIntegerSymbol("ADC_CWR_HIGHTHRES_VALUE", adcSym_COMP_WINDOW)
@@ -453,7 +460,7 @@ def instantiateComponent(adcComponent):
     adcSym_CWR_HIGHTHRES.setDefaultValue(0)
     adcSym_CWR_HIGHTHRES.setVisible(False)
     adcSym_CWR_HIGHTHRES.setMin(0)
-    adcSym_CWR_HIGHTHRES.setMax(16383)
+    adcSym_CWR_HIGHTHRES.setMax(maxThreshold)
     adcSym_CWR_HIGHTHRES.setDependencies(adcSymbolVisible, ["ADC_COMP_WINDOW"])
 
     global adcSym_IER_COMPE
@@ -467,6 +474,11 @@ def instantiateComponent(adcComponent):
     adcUserSeq = adcComponent.createMenuSymbol("ADC_USER_SEQ", None)
     adcUserSeq.setLabel("User Channel Sequence Configuration")
 
+    adcSym_ChannelSeqNum = adcComponent.createIntegerSymbol("ADC_CHANNEL_SEQ_NUM", adcUserSeq)
+    adcSym_ChannelSeqNum.setLabel("Total number of User Channel Sequence")
+    adcSym_ChannelSeqNum.setDefaultValue(len(ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_SEQR2\"]").getChildren()) + 8)
+    adcSym_ChannelSeqNum.setVisible(False)
+
     #user sequence comment
     adcSym_USEQ_COMMENT = adcComponent.createCommentSymbol("ADC_USEQ_COMMENT", adcUserSeq)
     adcSym_USEQ_COMMENT.setLabel("**** Configure selected channels in the Channel Configuration Menu ****")
@@ -476,7 +488,7 @@ def instantiateComponent(adcComponent):
     adcSym_MR_USEQ.setLabel("Enable User Sequence Mode")
     adcSym_MR_USEQ.setDefaultValue(False)
 
-    for channelID in range(0, len(channel)-1):
+    for channelID in range(0, adcSym_ChannelSeqNum.getValue()):
         #channel selection for user sequence
         adcSym_SEQR1_USCH.append(channelID)
         adcSym_SEQR1_USCH[channelID] = adcComponent.createComboSymbol("ADC_SEQR1_USCH" + str(channelID + 1), adcSym_MR_USEQ, adcChannelsValues)
@@ -489,7 +501,7 @@ def instantiateComponent(adcComponent):
     adcCHConfMenu = adcComponent.createMenuSymbol("ADC_CH_CONF", None)
     adcCHConfMenu.setLabel("Channel Configuration")
 
-    # Loop runs for 12 channels and visibility of the channel is controlled as per available pins
+    # Loop runs for ADC channels and visibility of the channel is controlled as per available pins
     for channelID in range(0, len(channel)):
         #Channel menu
         global adcCHMenu
@@ -542,6 +554,30 @@ def instantiateComponent(adcComponent):
         adcSym_CH_NegativeInput[channelID].setVisible(False)
         adcSym_CH_NegativeInput[channelID].setDependencies(adcCHNegInpVisible, ["ADC_"+str(channelID)+"_CHER"])
 
+        #Channel Gain
+        channelGainValueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_CGR__GAIN" + str(channelID) + "\"]")
+        if channelGainValueGroup is not None:
+            adcSym_CGR_Gain.append(channelID)
+            adcSym_CGR_Gain[channelID] = adcComponent.createKeyValueSetSymbol("ADC_" + str(channelID) + "_CGR_GAIN", adcSym_CH_CHER[channelID])
+            adcSym_CGR_Gain[channelID].setLabel("Gain")
+            adcSym_CGR_Gain[channelID].setOutputMode("Key")
+            adcSym_CGR_Gain[channelID].setDisplayMode("Description")
+            adcSym_CGR_Gain[channelID].setVisible(False)
+            cgrGainValues = channelGainValueGroup.getChildren()
+            for index in range(len(cgrGainValues)):
+                adcSym_CGR_Gain[channelID].addKey(cgrGainValues[index].getAttribute("name"), cgrGainValues[index].getAttribute("value"), cgrGainValues[index].getAttribute("caption"))
+            adcSym_CGR_Gain[channelID].setDependencies(adcSymbolVisible, ["ADC_" + str(channelID) + "_CHER"])
+
+        #Channel Offset
+        channelOffsetReg = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_COR\"]/bitfield@[name=\"OFFSET" + str(channelID) + "\"]")
+        if channelOffsetReg is not None:
+            adcSym_COR_Offset.append(channelID)
+            adcSym_COR_Offset[channelID] = adcComponent.createBooleanSymbol("ADC_" + str(channelID) + "_COR_OFFSET", adcSym_CH_CHER[channelID])
+            adcSym_COR_Offset[channelID].setLabel("Offset")
+            adcSym_COR_Offset[channelID].setDescription("Centers the analog signal on VADVREF/2 before the gain scaling. The offset applied is (G-1)VADVREF/2 where G is the gain applied.")
+            adcSym_COR_Offset[channelID].setVisible(False)
+            adcSym_COR_Offset[channelID].setDependencies(adcSymbolVisible, ["ADC_" + str(channelID) + "_CHER"])
+
         #Channel interrupt
         adcSym_CH_IER_EOC.append(channelID)
         adcSym_CH_IER_EOC[channelID] = adcComponent.createBooleanSymbol("ADC_"+str(channelID)+"_IER_EOC", adcSym_CH_CHER[channelID])
@@ -552,28 +588,33 @@ def instantiateComponent(adcComponent):
 
     # Clock dynamic settings
     adcSym_ClockControl = adcComponent.createBooleanSymbol("ADC_CLOCK_ENABLE", None)
-    adcSym_ClockControl.setDependencies(adcClockControl, ["ADC_0_CHER", "ADC_1_CHER", "ADC_2_CHER", "ADC_3_CHER", "ADC_4_CHER", \
-    "ADC_5_CHER", "ADC_6_CHER", "ADC_7_CHER", "ADC_8_CHER", "ADC_9_CHER", "ADC_10_CHER", "ADC_11_CHER"])
+    adcSym_ClockControl.setDependencies(adcClockControl, [str("ADC_" + str(channelID) + "_CHER") for channelID in range(adcSym_NUM_CHANNELS.getValue())])
     adcSym_ClockControl.setVisible(False)
+
+    adcInterruptList = [str("ADC_" + str(channelID) + "_IER_EOC") for channelID in range(adcSym_NUM_CHANNELS.getValue())]
+    adcInterruptList.append("ADC_IER_COMPE")
 
     # Interrupt Dynamic settings
     adcSym_InterruptControl = adcComponent.createBooleanSymbol("ADC_INTERRUPT_ENABLE", None)
-    adcSym_InterruptControl.setDependencies(adcInterruptEnableDisableCallback, ["ADC_0_IER_EOC", "ADC_1_IER_EOC", "ADC_2_IER_EOC", "ADC_3_IER_EOC", "ADC_4_IER_EOC",\
-    "ADC_5_IER_EOC", "ADC_6_IER_EOC", "ADC_7_IER_EOC", "ADC_8_IER_EOC", "ADC_9_IER_EOC", "ADC_10_IER_EOC", "ADC_11_IER_EOC", "ADC_IER_COMPE"])
+    adcSym_InterruptControl.setDependencies(adcInterruptEnableDisableCallback, adcInterruptList)
     adcSym_InterruptControl.setVisible(False)
+
+    adcClkEnCommentList = [str("ADC_" + str(channelID) + "_CHER") for channelID in range(adcSym_NUM_CHANNELS.getValue())]
+    adcClkEnCommentList.append("core." + adcInstanceName.getValue() + "_CLOCK_ENABLE")
 
     # Dependency Status
     adcSym_ClkEnComment = adcComponent.createCommentSymbol("ADC_CLK_ENABLE_COMMENT", None)
     adcSym_ClkEnComment.setVisible(False)
     adcSym_ClkEnComment.setLabel("Warning!!! " + adcInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
-    adcSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core." + adcInstanceName.getValue() + "_CLOCK_ENABLE", "ADC_0_CHER", "ADC_1_CHER", "ADC_2_CHER", "ADC_3_CHER", "ADC_4_CHER", \
-    "ADC_5_CHER", "ADC_6_CHER", "ADC_7_CHER", "ADC_8_CHER", "ADC_9_CHER", "ADC_10_CHER", "ADC_11_CHER"])
+    adcSym_ClkEnComment.setDependencies(dependencyClockStatus, adcClkEnCommentList)
+
+    adcInterruptEnCommentList = adcInterruptList
+    adcInterruptEnCommentList.append("core." + interruptSymbolEnable)
 
     adcSym_IntEnComment = adcComponent.createCommentSymbol("ADC_INTERRUPT_ENABLE_COMMENT", None)
     adcSym_IntEnComment.setVisible(False)
     adcSym_IntEnComment.setLabel("Warning!!! " + adcInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    adcSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + interruptSymbolEnable, "ADC_0_IER_EOC", "ADC_1_IER_EOC", "ADC_2_IER_EOC", "ADC_3_IER_EOC", "ADC_4_IER_EOC",\
-    "ADC_5_IER_EOC", "ADC_6_IER_EOC", "ADC_7_IER_EOC", "ADC_8_IER_EOC", "ADC_9_IER_EOC", "ADC_10_IER_EOC", "ADC_11_IER_EOC", "ADC_IER_COMPE"])
+    adcSym_IntEnComment.setDependencies(dependencyIntStatus, adcInterruptEnCommentList)
 
     #--------------------------------------------------------------------------------------
     configName = Variables.get("__CONFIGURATION_NAME")
@@ -593,11 +634,12 @@ def instantiateComponent(adcComponent):
     adcHeaderFile.setMarkup(True)
 
     adcCommonHeaderFile = adcComponent.createFileSymbol("ADC_COMMON_HEADER", None)
-    adcCommonHeaderFile.setSourcePath("../peripheral/adc_" + str(adcID) + "/templates/plib_adc_common.h")
+    adcCommonHeaderFile.setSourcePath("../peripheral/adc_" + str(adcID) + "/templates/plib_adc_common.h.ftl")
     adcCommonHeaderFile.setOutputName("plib_adc_common.h")
     adcCommonHeaderFile.setDestPath("peripheral/adc/")
     adcCommonHeaderFile.setProjectPath("config/" + configName +"/peripheral/adc/")
     adcCommonHeaderFile.setType("HEADER")
+    adcCommonHeaderFile.setMarkup(True)
 
     adcSource1File = adcComponent.createFileSymbol("ADC_SOURCE", None)
     adcSource1File.setSourcePath("../peripheral/adc_" + str(adcID) + "/templates/plib_adc.c.ftl")
