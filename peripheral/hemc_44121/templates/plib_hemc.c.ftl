@@ -58,7 +58,7 @@ static HEMC_OBJ ${HEMC_INSTANCE_NAME?lower_case}Obj;
 // *****************************************************************************
 // *****************************************************************************
 
-<#if USE_HSDRAM>
+<#if USE_HSDRAM?? && USE_HSDRAM>
 void SW_DelayUs(uint32_t delay)
 {
     uint32_t i, count;
@@ -177,16 +177,16 @@ void ${HSMC_INSTANCE_NAME}_Initialize( void )
 
     /* Chip Select CS${i} Timings */
     /* Setup HSMC SETUP register */
-    ${HSMC_INSTANCE_NAME}_REGS->HSMC_SETUP${i}= HSMC_SETUP${i}_NWE_SETUP(${.vars[HSMC_NWE_SETUP_CS]}) | HSMC_SETUP${i}_NCS_WR_SETUP(${.vars[HSMC_NCS_WR_SETUP_CS]}) | HSMC_SETUP${i}_NRD_SETUP(${.vars[HSMC_NRD_SETUP_CS]}) | HSMC_SETUP${i}_NCS_RD_SETUP(${.vars[HSMC_NCS_RD_SETUP_CS]});
+    ${HSMC_INSTANCE_NAME}_REGS->HSMC_CS[${i}].HSMC_SETUP = HSMC_SETUP_NWE_SETUP(${.vars[HSMC_NWE_SETUP_CS]}) | HSMC_SETUP_NCS_WR_SETUP(${.vars[HSMC_NCS_WR_SETUP_CS]}) | HSMC_SETUP_NRD_SETUP(${.vars[HSMC_NRD_SETUP_CS]}) | HSMC_SETUP_NCS_RD_SETUP(${.vars[HSMC_NCS_RD_SETUP_CS]});
 
     /* Setup HSMC CYCLE register */
-    ${HSMC_INSTANCE_NAME}_REGS->HSMC_CYCLE${i}= HSMC_CYCLE${i}_NWE_CYCLE(${.vars[HSMC_NWE_CYCLE_CS]}) | HSMC_CYCLE${i}_NRD_CYCLE(${.vars[HSMC_NRD_CYCLE_CS]});
+    ${HSMC_INSTANCE_NAME}_REGS->HSMC_CS[${i}].HSMC_CYCLE = HSMC_CYCLE_NWE_CYCLE(${.vars[HSMC_NWE_CYCLE_CS]}) | HSMC_CYCLE_NRD_CYCLE(${.vars[HSMC_NRD_CYCLE_CS]});
 
     /* Setup HSMC_PULSE register */
-    ${HSMC_INSTANCE_NAME}_REGS->HSMC_PULSE${i}= HSMC_PULSE${i}_NWE_PULSE(${.vars[HSMC_NWE_PULSE_CS]}) | HSMC_PULSE${i}_NCS_WR_PULSE(${.vars[HSMC_NCS_WR_PULSE_CS]}) | HSMC_PULSE${i}_NRD_PULSE(${.vars[HSMC_NRD_PULSE_CS]}) | HSMC_PULSE${i}_NCS_RD_PULSE(${.vars[HSMC_NCS_RD_PULSE_CS]});
+    ${HSMC_INSTANCE_NAME}_REGS->HSMC_CS[${i}].HSMC_PULSE = HSMC_PULSE_NWE_PULSE(${.vars[HSMC_NWE_PULSE_CS]}) | HSMC_PULSE_NCS_WR_PULSE(${.vars[HSMC_NCS_WR_PULSE_CS]}) | HSMC_PULSE_NRD_PULSE(${.vars[HSMC_NRD_PULSE_CS]}) | HSMC_PULSE_NCS_RD_PULSE(${.vars[HSMC_NCS_RD_PULSE_CS]});
 
     /* Setup HSMC MODE register */
-    ${HSMC_INSTANCE_NAME}_REGS->HSMC_MODE${i}= HSMC_MODE${i}_EXNW_MODE(${.vars[HSMC_NWAIT_MODE_CS]}) | HSMC_MODE${i}_DBW(${.vars[HSMC_DATA_BUS_CS]}) <#if (.vars[HSMC_WRITE_MODE_CS] == true)>| HSMC_MODE${i}_WRITE_MODE_Msk</#if> <#if (.vars[HSMC_READ_MODE_CS] == true)>| HSMC_MODE${i}_READ_MODE_Msk</#if> <#if (.vars[HSMC_RMW] == true)>| HSMC_MODE${i}_RMW_ENABLE_Msk</#if>;
+    ${HSMC_INSTANCE_NAME}_REGS->HSMC_CS[${i}].HSMC_MODE = HSMC_MODE_EXNW_MODE(${.vars[HSMC_NWAIT_MODE_CS]}) | HSMC_MODE_DBW(${.vars[HSMC_DATA_BUS_CS]}) <#if (.vars[HSMC_WRITE_MODE_CS] == true)>| HSMC_MODE_WRITE_MODE_Msk</#if> <#if (.vars[HSMC_READ_MODE_CS] == true)>| HSMC_MODE_READ_MODE_Msk</#if> <#if (.vars[HSMC_RMW] == true)>| HSMC_MODE_RMW_ENABLE_Msk</#if>;
     </#if>
     </#if>
     </#if>
@@ -209,14 +209,14 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
     /* Enable NCS0 configuration modification through registers */
     ${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS0 |= HEMC_CR_NCS0_WRITE_ECC_CONF(1);
 
-  <#list 0..5 as i>
+  <#list 0..(HSMC_CHIP_SELECT_COUNT - 1) as i>
   <#assign HEMC_TYPE = "CS_" + i + "_MEMORY_TYPE" >
   <#assign HEMC_BANK =  "CS_" + i + "_MEMORY_BANK_SIZE">
   <#assign HEMC_ADDRESS = "CS_" + i + "_MEMORY_BASE" >
   <#assign HEMC_ECC_ENABLE = "CS_" + i + "_HECC_ENABLE" >
   <#assign HEMC_ECC_BCH = "CS_" + i + "_HECC_BCH_ENABLE" >
   <#assign NUM_SPACE_MULTILINE = "${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS${i}"?length >
-    <#if (i == 0) && (.vars[HEMC_NCS0_WRITE_CONF] == false) >
+    <#if (i == 0) && (.vars[HEMC_NCS0_WRITE_CONF] == false)>
     ${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS${i} = HEMC_CR_NCS${i}_TYPE(${.vars[HEMC_TYPE]}) |
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ADDBASE(0x${.vars[HEMC_ADDRESS]}) |
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_BANKSIZE(${.vars[HEMC_BANK]}) |
@@ -235,13 +235,13 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
     </#if>
     </#if>
   </#list>
-  <#if USE_HSDRAM>
+  <#if USE_HSDRAM?? && USE_HSDRAM>
     ${HSDRAMC_INSTANCE_NAME}_Initialize();
   </#if>
     ${HSMC_INSTANCE_NAME}_Initialize();
 
 <#assign IS_RAM_INIT = false >
-<#list 0..5 as i>
+<#list 0..(HSMC_CHIP_SELECT_COUNT - 1) as i>
 <#assign HEMC_ADDRESS = "CS_" + i + "_START_ADDRESS" >
 <#assign HEMC_ECC_ENABLE = "CS_" + i + "_HECC_ENABLE" >
 <#assign HEMC_RAM_CHECK_BIT_INIT = "CS_" + i + "_RAM_CHECK_BIT_INIT" >
@@ -335,9 +335,13 @@ uint32_t* ${HEMC_INSTANCE_NAME}_HeccGetFailAddress(void)
 */
 void ${HEMC_INSTANCE_NAME}_HeccResetCounters(void)
 {
+<#if HEMC_HECC_CR0_REG == false>
+    HEMC_REGS->HEMC_HECC_CR |= (HEMC_HECC_CR_RST_FIX_CPT_Msk | HEMC_HECC_CR_RST_NOFIX_CPT_Msk);
+<#else>
     HEMC_REGS->HEMC_HECC_CR0 |= (HEMC_HECC_CR0_RST_FIX_CPT_Msk | HEMC_HECC_CR0_RST_NOFIX_CPT_Msk);
     HEMC_REGS->HEMC_HECC_CR1 |= (HEMC_HECC_CR1_RST_FIX_CPT_Msk | HEMC_HECC_CR1_RST_NOFIX_CPT_Msk);
     HEMC_REGS->HEMC_HECC_CR2 |= (HEMC_HECC_CR2_RST_FIX_CPT_Msk | HEMC_HECC_CR2_RST_NOFIX_CPT_Msk);
+</#if>
 }
 
 <#if HECC_INTERRUPT_MODE == true>
