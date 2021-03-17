@@ -661,6 +661,8 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_CMR_CPRE[channelID].setLabel("Select Channel Clock")
         childrenNodes = []
         pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR0__CPRE\"]")
+        if pwm == None:
+            pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR__CPRE\"]")
         childrenNodes = pwm.getChildren()
         for param in range(0, len(childrenNodes)):
             pwmSym_PWM_CMR_CPRE[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
@@ -683,6 +685,8 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_CMR_CALG[channelID].setLabel("Select Alignment")
         childrenNodes = []
         pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR0__CALG\"]")
+        if pwm == None:
+            pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR__CALG\"]")
         childrenNodes = pwm.getChildren()
         for param in range(0, len(childrenNodes)):
             pwmSym_PWM_CMR_CALG[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
@@ -698,6 +702,8 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_CMR_UPDS[channelID].setLabel("Select Duty-Cycle Update Trigger")
         childrenNodes = []
         pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR0__UPDS\"]")
+        if pwm == None:
+            pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR__UPDS\"]")
         childrenNodes = pwm.getChildren()
         for param in range(0, len(childrenNodes)):
             pwmSym_PWM_CMR_UPDS[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
@@ -711,6 +717,8 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_CMR_CES[channelID].setLabel("Select Counter Event Occurrence")
         childrenNodes = []
         pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR0__CES\"]")
+        if pwm == None:
+            pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR__CES\"]")
         childrenNodes = pwm.getChildren()
         for param in range(0, len(childrenNodes)):
             pwmSym_PWM_CMR_CES[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
@@ -724,6 +732,8 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_CMR_CPOL[channelID].setLabel("Output Polarity")
         childrenNodes = []
         pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR0__CPOL\"]")
+        if pwm == None:
+            pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR__CPOL\"]")
         childrenNodes = pwm.getChildren()
         for param in range(0, len(childrenNodes)):
             pwmSym_PWM_CMR_CPOL[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
@@ -1001,6 +1011,8 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_CMPV_CVM[compareID].setLabel("Comparison Mode")
         childrenNodes = []
         pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMPV0__CVM\"]")
+        if pwm == None:
+            pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMPV__CVM\"]")
         childrenNodes = pwm.getChildren()
         for param in range(0, len(childrenNodes)):
             pwmSym_PWM_CMPV_CVM[compareID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
