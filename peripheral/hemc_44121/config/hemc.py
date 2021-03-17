@@ -51,9 +51,10 @@ global noFixInterruptHandlerLock
 ################################################################################
 #### Register Information ####
 ################################################################################
-ValGrp_CR__NC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSDRAMC"]/value-group@[name="HSDRAMC_CR__NC"]')
-ValGrp_CR__NR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSDRAMC"]/value-group@[name="HSDRAMC_CR__NR"]')
-ValGrp_CR__NB = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSDRAMC"]/value-group@[name="HSDRAMC_CR__NB"]')
+if ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSDRAMC"]') != None:
+    ValGrp_CR__NC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSDRAMC"]/value-group@[name="HSDRAMC_CR__NC"]')
+    ValGrp_CR__NR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSDRAMC"]/value-group@[name="HSDRAMC_CR__NR"]')
+    ValGrp_CR__NB = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSDRAMC"]/value-group@[name="HSDRAMC_CR__NB"]')
 ValGrp_CR_Banksize = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HEMC"]/value-group@[name="HEMC_CR_NCS__BANKSIZE"]')
 ComboVal_CR_DBW = ["16-bits", "32-bits"]
 ComboVal_BURST_TYPE = ["SEQUENTIAL", "INTERLEAVED"]
@@ -77,7 +78,7 @@ HSDRAMC_SDR_TXSR_DEFAULT_VALUE = 7
 HSDRAMC_CFR1_TMRD_DEFAULT_VALUE = 2
 HSDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE = 16
 
-chipSelectCount = 6
+chipSelectCount = int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register-group@[name="HSMC_CS"]').getAttribute("count"))
 
 ################################################################################
 #### Business Logic ####
@@ -109,7 +110,7 @@ def hideMenus(symbol, event):
         else:
             useHSMC[id].setValue(True)
             hsmcCSmenu[id].setVisible(True)
-    
+
     if sdRamcs == None:
         commentHSDRAM.setVisible(True)
         useHSDRAM.setValue(False)
@@ -251,7 +252,7 @@ def emcBaseCalculation(symbol, event):
         csBase[chipSelectId].setValue(0x3ffff)
     else:
         value = (int(startAddress, 0) - int(0x60000000))
-        csBase[chipSelectId].setValue(value >> 14) 
+        csBase[chipSelectId].setValue(value >> 14)
         Database.setSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_END_ADDRESS", str(hex(int(startAddress, 0) + memSizeMap[bankSize] -1 )).replace("L", ""))
     for i in range(0, chipSelectCount):
         if Database.getSymbolValue(event["namespace"], "CS_" + str(i) + "_MEMORY_BANK_SIZE") != 17:
@@ -265,6 +266,9 @@ def emcBaseCalculation(symbol, event):
                         chipSelectComment[j].setValue(True)
                     else:
                         chipSelectComment[j].setValue(False)
+
+def updateHemcClockComment(symbol, event):
+    symbol.setLabel("**** HEMC is running at " + str(event["value"]) + " Hz ****")
 
 ################################################################################
 #### Component ####
@@ -305,12 +309,17 @@ def instantiateComponent(hemcComponent):
     hemcInstanceName.setVisible(False)
     hemcInstanceName.setDefaultValue(hemcComponent.getID().upper())
 
-    hemcComment = hemcComponent.createCommentSymbol("HEMC_COMMENT", None)
-    hemcComment.setLabel("**** HEMC is running at " + str(Database.getSymbolValue("core", hemcInstanceName.getValue() + "_CLOCK_FREQUENCY")) + "Hz ****")
+    # Enable Peripheral Clock in Clock manager
+    Database.setSymbolValue("core", hemcInstanceName.getValue() + "_CLOCK_ENABLE", True)
 
-    hsdramcInstanceName = hemcComponent.createStringSymbol("HSDRAMC_INSTANCE_NAME", None)
-    hsdramcInstanceName.setVisible(False)
-    hsdramcInstanceName.setDefaultValue("HSDRAMC")
+    hemcComment = hemcComponent.createCommentSymbol("HEMC_COMMENT", None)
+    hemcComment.setLabel("**** HEMC is running at " + str(Database.getSymbolValue("core", hemcInstanceName.getValue() + "_CLOCK_FREQUENCY")) + " Hz ****")
+    hemcComment.setDependencies(updateHemcClockComment, ["core." + hemcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSDRAMC"]') != None:
+        hsdramcInstanceName = hemcComponent.createStringSymbol("HSDRAMC_INSTANCE_NAME", None)
+        hsdramcInstanceName.setVisible(False)
+        hsdramcInstanceName.setDefaultValue("HSDRAMC")
 
     hsmcInstanceName = hemcComponent.createStringSymbol("HSMC_INSTANCE_NAME", None)
     hsmcInstanceName.setVisible(False)
@@ -319,14 +328,19 @@ def instantiateComponent(hemcComponent):
     memMemu = hemcComponent.createMenuSymbol("MEMORY_MENU", None)
     memMemu.setLabel("HEMC Memory Configuration Menu")
 
-    sdramMenu = hemcComponent.createMenuSymbol("HSDRAMC_MENU", None)
-    sdramMenu.setLabel("HSDRAM Controller Menu")
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSDRAMC"]') != None:
+        sdramMenu = hemcComponent.createMenuSymbol("HSDRAMC_MENU", None)
+        sdramMenu.setLabel("HSDRAM Controller Menu")
 
     hsmcMenu = hemcComponent.createMenuSymbol("HSMC_MENU", None)
     hsmcMenu.setLabel("HSMC Menu")
 
     csDependencies = []
 ############################################## Memory configuration ################################################
+
+    hemcHeccCr0Reg = hemcComponent.createBooleanSymbol("HEMC_HECC_CR0_REG", memMemu)
+    hemcHeccCr0Reg.setDefaultValue((ATDF.getNode('/avr-tools-device-file/modules/module@[name="HEMC"]/register-group@[name="HEMC"]/register@[name="HEMC_HECC_CR0"]') != None))
+    hemcHeccCr0Reg.setVisible(False)
 
     for id in range(0, chipSelectCount):
         csMenu = hemcComponent.createMenuSymbol("CS_" + str(id) + "_MEMORY_MENU", memMemu)
@@ -338,13 +352,15 @@ def instantiateComponent(hemcComponent):
         csType.setDisplayMode("Description")
         csType.addKey("HSMC", "0", "HSMC (PROM or SRAM) is connected")
         csType.addKey("SDRAMC", "1", "SDRAMC is connected")
+        if ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSDRAMC"]') == None:
+            csType.setReadOnly(True)
         csDependencies.append("CS_" + str(id) + "_MEMORY_TYPE")
-        
+
         csStart = hemcComponent.createStringSymbol("CS_" + str(id) + "_START_ADDRESS", csMenu)
         csStart.setLabel("Start  Address")
         csStart.setDefaultValue("0x60000000")
         csStart.setVisible(True)
-        
+
         csEnd = hemcComponent.createStringSymbol("CS_" + str(id) + "_END_ADDRESS", csMenu)
         csEnd.setLabel("End  Address")
         csEnd.setDefaultValue("0x60000000")
@@ -366,7 +382,7 @@ def instantiateComponent(hemcComponent):
             elif "MB" in name:
                 memSizeMap[i] = int(re.search(r'\d+', name).group()) * 1024 * 1024
 
-        csBankSize.setDefaultValue(17)
+        csBankSize.setDefaultValue((len(value) - 1))
 
         csBase.append(id)
         csBase[id] = hemcComponent.createHexSymbol("CS_" + str(id) + "_MEMORY_BASE", csMenu)
@@ -386,28 +402,34 @@ def instantiateComponent(hemcComponent):
         if (id == 0):
             csheccWriteEccConf = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_WRITE_ECC_CONF", csMenu)
             csheccWriteEccConf.setLabel("Override NCS0 ECC configuration Pins")
-            csheccWriteEccConf.setDefaultValue(False)
+            if hemcHeccCr0Reg.getValue() == False:
+                csheccWriteEccConf.setDefaultValue(True)
+                csheccWriteEccConf.setVisible(False)
+            else:
+                csheccWriteEccConf.setDefaultValue(False)
 
         csheccEnable = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_HECC_ENABLE", csMenu)
         csheccEnable.setLabel("Enable ECC")
         csheccEnable.setDefaultValue(False)
         if (id == 0):
             csheccEnable.setDependencies(setVisibleIfEventTrue, ["CS_" + str(id) + "_WRITE_ECC_CONF"])
-            csheccEnable.setVisible(False)
+            csheccEnable.setVisible(csheccWriteEccConf.getValue())
 
         csheccEnableBCH = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_HECC_BCH_ENABLE", csMenu)
         csheccEnableBCH.setLabel("ECC use BCH Algorithm")
         csheccEnableBCH.setDefaultValue(False)
+        if hemcHeccCr0Reg.getValue() == False:
+            csheccEnableBCH.setReadOnly(True)
         if (id == 0):
             csheccEnableBCH.setDependencies(setVisibleIfEventTrue, ["CS_" + str(id) + "_WRITE_ECC_CONF"])
-            csheccEnableBCH.setVisible(False)
+            csheccEnableBCH.setVisible(csheccWriteEccConf.getValue())
 
         csheccRamCheckBitInit = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_RAM_CHECK_BIT_INIT", csMenu)
         csheccRamCheckBitInit.setLabel("RAM need check bit initialization")
         csheccEnableBCH.setDefaultValue(False)
         if (id == 0):
             csheccRamCheckBitInit.setDependencies(setVisibleIfEventTrue, ["CS_" + str(id) + "_WRITE_ECC_CONF"])
-            csheccRamCheckBitInit.setVisible(False)
+            csheccRamCheckBitInit.setVisible(csheccWriteEccConf.getValue())
 
         csheccRamCheckBitInitSize = hemcComponent.createHexSymbol("CS_" + str(id) + "_RAM_CHECK_BIT_INIT_SIZE", csheccRamCheckBitInit)
         csheccRamCheckBitInitSize.setLabel("Initialization size")
@@ -428,149 +450,150 @@ def instantiateComponent(hemcComponent):
     cpuclk = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
     cpuclk = int(cpuclk)
 
-    hsdramcSymClkFreq = hemcComponent.createIntegerSymbol("HSDRAMC_CPU_CLK_FREQ", sdramMenu)
-    hsdramcSymClkFreq.setLabel("Get Core Clock Frequency")
-    hsdramcSymClkFreq.setVisible(False)
-    hsdramcSymClkFreq.setDefaultValue(cpuclk)
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSDRAMC"]') != None:
+        hsdramcSymClkFreq = hemcComponent.createIntegerSymbol("HSDRAMC_CPU_CLK_FREQ", sdramMenu)
+        hsdramcSymClkFreq.setLabel("Get Core Clock Frequency")
+        hsdramcSymClkFreq.setVisible(False)
+        hsdramcSymClkFreq.setDefaultValue(cpuclk)
 
-    useHSDRAM = hemcComponent.createBooleanSymbol("USE_HSDRAM", None)
-    useHSDRAM.setVisible(False)
+        useHSDRAM = hemcComponent.createBooleanSymbol("USE_HSDRAM", None)
+        useHSDRAM.setVisible(False)
 
-    commentHSDRAM = hemcComponent.createCommentSymbol("HSDRAM_COMPONENT", sdramMenu)
-    commentHSDRAM.setLabel("/* Use HEMC Memory Configuration Menu to configure one of the Chip Select to use SDRAM")
+        commentHSDRAM = hemcComponent.createCommentSymbol("HSDRAM_COMPONENT", sdramMenu)
+        commentHSDRAM.setLabel("/* Use HEMC Memory Configuration Menu to configure one of the Chip Select to use SDRAM")
 
-    # HSDRAMC Features
-    hsdramcSymMenu_features = hemcComponent.createMenuSymbol("HSDRAMC_FEATURE_MENU", sdramMenu)
-    hsdramcSymMenu_features.setLabel("Configure SDRAM features")
-    hsdramcSymMenu_features.setVisible(False)
+        # HSDRAMC Features
+        hsdramcSymMenu_features = hemcComponent.createMenuSymbol("HSDRAMC_FEATURE_MENU", sdramMenu)
+        hsdramcSymMenu_features.setLabel("Configure SDRAM features")
+        hsdramcSymMenu_features.setVisible(False)
 
-    sdRamStartAddress = hemcComponent.createHexSymbol("SDRAMC_START_ADDRESS", hsdramcSymMenu_features)
-    sdRamStartAddress.setLabel("SDRAMC Start Address")
-    sdRamStartAddress.setDefaultValue(0x60000000)
+        sdRamStartAddress = hemcComponent.createHexSymbol("SDRAMC_START_ADDRESS", hsdramcSymMenu_features)
+        sdRamStartAddress.setLabel("SDRAMC Start Address")
+        sdRamStartAddress.setDefaultValue(0x60000000)
 
-    hsdramcSym_CR__NR = hemcComponent.createKeyValueSetSymbol("HSDRAMC_CR__NR", hsdramcSymMenu_features)
-    hsdramcSym_CR__NR.setOutputMode("Key")
-    hsdramcSym_CR__NR.setDisplayMode("Description")
-    hsdramcSym_CR__NR.setLabel("Number of Row Bits")
-    value = ValGrp_CR__NR.getChildren()
-    for id in range(0, len(value)):
-        hsdramcSym_CR__NR.addKey(value[id].getAttribute("name"), str(value[id].getAttribute("value")), value[id].getAttribute("caption"))
-    hsdramcSym_CR__NR.setSelectedKey("ROW13", 2)
+        hsdramcSym_CR__NR = hemcComponent.createKeyValueSetSymbol("HSDRAMC_CR__NR", hsdramcSymMenu_features)
+        hsdramcSym_CR__NR.setOutputMode("Key")
+        hsdramcSym_CR__NR.setDisplayMode("Description")
+        hsdramcSym_CR__NR.setLabel("Number of Row Bits")
+        value = ValGrp_CR__NR.getChildren()
+        for id in range(0, len(value)):
+            hsdramcSym_CR__NR.addKey(value[id].getAttribute("name"), str(value[id].getAttribute("value")), value[id].getAttribute("caption"))
+        hsdramcSym_CR__NR.setSelectedKey("ROW13", 2)
 
-    hsdramcSym_CR__NC = hemcComponent.createKeyValueSetSymbol("HSDRAMC_CR__NC", hsdramcSymMenu_features)
-    hsdramcSym_CR__NC.setOutputMode("Key")
-    hsdramcSym_CR__NC.setDisplayMode("Description")
-    hsdramcSym_CR__NC.setLabel("Number of Column Bits")
-    value = ValGrp_CR__NC.getChildren()
-    for id in range(0, len(value)):
-        hsdramcSym_CR__NC.addKey(value[id].getAttribute("name"), str(value[id].getAttribute("value")), value[id].getAttribute("caption"))
-    hsdramcSym_CR__NC.setSelectedKey("COL9", 2)
+        hsdramcSym_CR__NC = hemcComponent.createKeyValueSetSymbol("HSDRAMC_CR__NC", hsdramcSymMenu_features)
+        hsdramcSym_CR__NC.setOutputMode("Key")
+        hsdramcSym_CR__NC.setDisplayMode("Description")
+        hsdramcSym_CR__NC.setLabel("Number of Column Bits")
+        value = ValGrp_CR__NC.getChildren()
+        for id in range(0, len(value)):
+            hsdramcSym_CR__NC.addKey(value[id].getAttribute("name"), str(value[id].getAttribute("value")), value[id].getAttribute("caption"))
+        hsdramcSym_CR__NC.setSelectedKey("COL9", 2)
 
-    hsdramcSym_CR__NB = hemcComponent.createKeyValueSetSymbol("HSDRAMC_CR__NB", hsdramcSymMenu_features)
-    hsdramcSym_CR__NB.setOutputMode("Key")
-    hsdramcSym_CR__NB.setDisplayMode("Description")
-    hsdramcSym_CR__NB.setLabel("Number of Banks")
-    value = ValGrp_CR__NB.getChildren()
-    for id in range(0, len(value)):
-        hsdramcSym_CR__NB.addKey(value[id].getAttribute("name"), str(value[id].getAttribute("value")), value[id].getAttribute("caption"))
-    hsdramcSym_CR__NB.setSelectedKey("BANK4", 2)
+        hsdramcSym_CR__NB = hemcComponent.createKeyValueSetSymbol("HSDRAMC_CR__NB", hsdramcSymMenu_features)
+        hsdramcSym_CR__NB.setOutputMode("Key")
+        hsdramcSym_CR__NB.setDisplayMode("Description")
+        hsdramcSym_CR__NB.setLabel("Number of Banks")
+        value = ValGrp_CR__NB.getChildren()
+        for id in range(0, len(value)):
+            hsdramcSym_CR__NB.addKey(value[id].getAttribute("name"), str(value[id].getAttribute("value")), value[id].getAttribute("caption"))
+        hsdramcSym_CR__NB.setSelectedKey("BANK4", 2)
 
-    hsdramcSym_CR_DBW = hemcComponent.createComboSymbol("HSDRAMC_CR_DBW", hsdramcSymMenu_features, ComboVal_CR_DBW)
-    hsdramcSym_CR_DBW.setLabel("Data Bus Width")
-    hsdramcSym_CR_DBW.setDefaultValue("32-bits")
-    hsdramcSym_CR_DBW.setReadOnly(False)
+        hsdramcSym_CR_DBW = hemcComponent.createComboSymbol("HSDRAMC_CR_DBW", hsdramcSymMenu_features, ComboVal_CR_DBW)
+        hsdramcSym_CR_DBW.setLabel("Data Bus Width")
+        hsdramcSym_CR_DBW.setDefaultValue("32-bits")
+        hsdramcSym_CR_DBW.setReadOnly(False)
 
-    hsdramcSym_WPMR_WPEN = hemcComponent.createBooleanSymbol("HSDRAMC_WRITE_PROTECTION", hsdramcSymMenu_features)
-    hsdramcSym_WPMR_WPEN.setLabel("Enable Write Protection")
-    hsdramcSym_WPMR_WPEN.setDefaultValue(False)
+        hsdramcSym_WPMR_WPEN = hemcComponent.createBooleanSymbol("HSDRAMC_WRITE_PROTECTION", hsdramcSymMenu_features)
+        hsdramcSym_WPMR_WPEN.setLabel("Enable Write Protection")
+        hsdramcSym_WPMR_WPEN.setDefaultValue(False)
 
-    hsdramcSym_CTRL_RMW = hemcComponent.createBooleanSymbol("HSDRAMC_RMW", hsdramcSymMenu_features)
-    hsdramcSym_CTRL_RMW.setLabel("Enable Read Modify Write")
-    hsdramcSym_CTRL_RMW.setDefaultValue(False)
+        hsdramcSym_CTRL_RMW = hemcComponent.createBooleanSymbol("HSDRAMC_RMW", hsdramcSymMenu_features)
+        hsdramcSym_CTRL_RMW.setLabel("Enable Read Modify Write")
+        hsdramcSym_CTRL_RMW.setDefaultValue(False)
 
-    # HSDRAMC Timing Parameters
-    hsdramcSymMenu_TIMING_MENU = hemcComponent.createMenuSymbol("HSDRAMC_TIMING_MENU", sdramMenu)
-    hsdramcSymMenu_TIMING_MENU.setLabel("Configure SDRAM Timing Parameters")
-    hsdramcSymMenu_TIMING_MENU.setVisible(False)
+        # HSDRAMC Timing Parameters
+        hsdramcSymMenu_TIMING_MENU = hemcComponent.createMenuSymbol("HSDRAMC_TIMING_MENU", sdramMenu)
+        hsdramcSymMenu_TIMING_MENU.setLabel("Configure SDRAM Timing Parameters")
+        hsdramcSymMenu_TIMING_MENU.setVisible(False)
 
-    hsdramcSym_CR_TRCD = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TRCD", hsdramcSymMenu_TIMING_MENU)
-    hsdramcSym_CR_TRCD.setLabel("Row Active to Column Read/Write Delay (TRCD)")
-    hsdramcSym_CR_TRCD.setMin(0)
-    hsdramcSym_CR_TRCD.setMax(15)
-    hsdramcSym_CR_TRCD.setDefaultValue(HSDRAMC_SDR_TRCD_DEFAULT_VALUE)
+        hsdramcSym_CR_TRCD = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TRCD", hsdramcSymMenu_TIMING_MENU)
+        hsdramcSym_CR_TRCD.setLabel("Row Active to Column Read/Write Delay (TRCD)")
+        hsdramcSym_CR_TRCD.setMin(0)
+        hsdramcSym_CR_TRCD.setMax(15)
+        hsdramcSym_CR_TRCD.setDefaultValue(HSDRAMC_SDR_TRCD_DEFAULT_VALUE)
 
-    hsdramcSym_CR_CAS = hemcComponent.createIntegerSymbol("HSDRAMC_CR_CAS", hsdramcSymMenu_TIMING_MENU)
-    hsdramcSym_CR_CAS.setLabel("CAS Latency (TCAS)")
-    hsdramcSym_CR_CAS.setMin(1)
-    hsdramcSym_CR_CAS.setMax(3)
-    hsdramcSym_CR_CAS.setDefaultValue(HSDRAMC_CR_CAS_DEFAULT_VALUE)
+        hsdramcSym_CR_CAS = hemcComponent.createIntegerSymbol("HSDRAMC_CR_CAS", hsdramcSymMenu_TIMING_MENU)
+        hsdramcSym_CR_CAS.setLabel("CAS Latency (TCAS)")
+        hsdramcSym_CR_CAS.setMin(1)
+        hsdramcSym_CR_CAS.setMax(3)
+        hsdramcSym_CR_CAS.setDefaultValue(HSDRAMC_CR_CAS_DEFAULT_VALUE)
 
-    hsdramcSym_CR_TRAS = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TRAS", hsdramcSymMenu_TIMING_MENU)
-    hsdramcSym_CR_TRAS.setLabel("Row Active to Precharge Delay(RAS)")
-    hsdramcSym_CR_TRAS.setMin(0)
-    hsdramcSym_CR_TRAS.setMax(15)
-    hsdramcSym_CR_TRAS.setDefaultValue(HSDRAMC_SDR_TRAS_DEFAULT_VALUE)
+        hsdramcSym_CR_TRAS = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TRAS", hsdramcSymMenu_TIMING_MENU)
+        hsdramcSym_CR_TRAS.setLabel("Row Active to Precharge Delay(RAS)")
+        hsdramcSym_CR_TRAS.setMin(0)
+        hsdramcSym_CR_TRAS.setMax(15)
+        hsdramcSym_CR_TRAS.setDefaultValue(HSDRAMC_SDR_TRAS_DEFAULT_VALUE)
 
-    hsdramcSym_CR_TRP = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TRP", hsdramcSymMenu_TIMING_MENU)
-    hsdramcSym_CR_TRP.setLabel("Row Precharge Delay (TRP)")
-    hsdramcSym_CR_TRP.setMin(0)
-    hsdramcSym_CR_TRP.setMax(15)
-    hsdramcSym_CR_TRP.setDefaultValue(HSDRAMC_SDR_TRP_DEFAULT_VALUE)
+        hsdramcSym_CR_TRP = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TRP", hsdramcSymMenu_TIMING_MENU)
+        hsdramcSym_CR_TRP.setLabel("Row Precharge Delay (TRP)")
+        hsdramcSym_CR_TRP.setMin(0)
+        hsdramcSym_CR_TRP.setMax(15)
+        hsdramcSym_CR_TRP.setDefaultValue(HSDRAMC_SDR_TRP_DEFAULT_VALUE)
 
-    hsdramcSym_CR_TRC_TRFC = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TRC_TRFC", hsdramcSymMenu_TIMING_MENU)
-    hsdramcSym_CR_TRC_TRFC.setLabel("Row Cycle Delay/Row Refresh Cycle(TRC_TRFC)")
-    hsdramcSym_CR_TRC_TRFC.setMin(0)
-    hsdramcSym_CR_TRC_TRFC.setMax(15)
-    hsdramcSym_CR_TRC_TRFC.setDefaultValue(HSDRAMC_SDR_TRC_TRFC_DEFAULT_VALUE)
+        hsdramcSym_CR_TRC_TRFC = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TRC_TRFC", hsdramcSymMenu_TIMING_MENU)
+        hsdramcSym_CR_TRC_TRFC.setLabel("Row Cycle Delay/Row Refresh Cycle(TRC_TRFC)")
+        hsdramcSym_CR_TRC_TRFC.setMin(0)
+        hsdramcSym_CR_TRC_TRFC.setMax(15)
+        hsdramcSym_CR_TRC_TRFC.setDefaultValue(HSDRAMC_SDR_TRC_TRFC_DEFAULT_VALUE)
 
-    hsdramcSym_CR_TWR = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TWR", hsdramcSymMenu_TIMING_MENU)
-    hsdramcSym_CR_TWR.setLabel("Write Recovery Delay (TWR)")
-    hsdramcSym_CR_TWR.setMin(0)
-    hsdramcSym_CR_TWR.setMax(15)
-    hsdramcSym_CR_TWR.setDefaultValue(HSDRAMC_SDR_TWR_DEFAULT_VALUE)
+        hsdramcSym_CR_TWR = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TWR", hsdramcSymMenu_TIMING_MENU)
+        hsdramcSym_CR_TWR.setLabel("Write Recovery Delay (TWR)")
+        hsdramcSym_CR_TWR.setMin(0)
+        hsdramcSym_CR_TWR.setMax(15)
+        hsdramcSym_CR_TWR.setDefaultValue(HSDRAMC_SDR_TWR_DEFAULT_VALUE)
 
-    hsdramcSym_CFR1_TMRD = hemcComponent.createIntegerSymbol("HSDRAMC_CFR1_TMRD", hsdramcSymMenu_TIMING_MENU)
-    hsdramcSym_CFR1_TMRD.setLabel("Mode Register Set to Command Delay Time(TMRD)")
-    hsdramcSym_CFR1_TMRD.setMin(0)
-    hsdramcSym_CFR1_TMRD.setMax(15)
-    hsdramcSym_CFR1_TMRD.setDefaultValue(HSDRAMC_CFR1_TMRD_DEFAULT_VALUE)
+        hsdramcSym_CFR1_TMRD = hemcComponent.createIntegerSymbol("HSDRAMC_CFR1_TMRD", hsdramcSymMenu_TIMING_MENU)
+        hsdramcSym_CFR1_TMRD.setLabel("Mode Register Set to Command Delay Time(TMRD)")
+        hsdramcSym_CFR1_TMRD.setMin(0)
+        hsdramcSym_CFR1_TMRD.setMax(15)
+        hsdramcSym_CFR1_TMRD.setDefaultValue(HSDRAMC_CFR1_TMRD_DEFAULT_VALUE)
 
-    hsdramcSym_REFRESH_TIME_IN_MS = hemcComponent.createIntegerSymbol("HSDRAMC_REFRESH_TIME_IN_MS", hsdramcSymMenu_TIMING_MENU)
-    hsdramcSym_REFRESH_TIME_IN_MS.setLabel("Refresh time in ms")
-    hsdramcSym_REFRESH_TIME_IN_MS.setDefaultValue(HSDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE)
+        hsdramcSym_REFRESH_TIME_IN_MS = hemcComponent.createIntegerSymbol("HSDRAMC_REFRESH_TIME_IN_MS", hsdramcSymMenu_TIMING_MENU)
+        hsdramcSym_REFRESH_TIME_IN_MS.setLabel("Refresh time in ms")
+        hsdramcSym_REFRESH_TIME_IN_MS.setDefaultValue(HSDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE)
 
-    clk = int(Database.getSymbolValue("core", hemcInstanceName.getValue() + "_CLOCK_FREQUENCY"))
-    count = calcRefreshCount(HSDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE, "ROW13", clk)
+        clk = int(Database.getSymbolValue("core", hemcInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+        count = calcRefreshCount(HSDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE, "ROW13", clk)
 
-    hsdramcSym_HSDRAMC_TR_COUNT = hemcComponent.createIntegerSymbol("HSDRAMC_TR_COUNT", hsdramcSymMenu_TIMING_MENU)
-    hsdramcSym_HSDRAMC_TR_COUNT.setDependencies(calcRefreshCount_CB, ["HSDRAMC_REFRESH_TIME_IN_MS", "core." + hemcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
-    hsdramcSym_HSDRAMC_TR_COUNT.setDefaultValue(count)
-    hsdramcSym_HSDRAMC_TR_COUNT.setVisible(False)
+        hsdramcSym_HSDRAMC_TR_COUNT = hemcComponent.createIntegerSymbol("HSDRAMC_TR_COUNT", hsdramcSymMenu_TIMING_MENU)
+        hsdramcSym_HSDRAMC_TR_COUNT.setDependencies(calcRefreshCount_CB, ["HSDRAMC_REFRESH_TIME_IN_MS", "core." + hemcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+        hsdramcSym_HSDRAMC_TR_COUNT.setDefaultValue(count)
+        hsdramcSym_HSDRAMC_TR_COUNT.setVisible(False)
 
-    hsdramcSym_CR_TXSR = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TXSR", hsdramcSymMenu_TIMING_MENU)
-    hsdramcSym_CR_TXSR.setLabel("Exit Self Refresh to Active Time (TXSR)")
-    hsdramcSym_CR_TXSR.setMin(0)
-    hsdramcSym_CR_TXSR.setMax(15)
-    hsdramcSym_CR_TXSR.setDefaultValue(HSDRAMC_SDR_TXSR_DEFAULT_VALUE)
+        hsdramcSym_CR_TXSR = hemcComponent.createIntegerSymbol("HSDRAMC_SDR_TXSR", hsdramcSymMenu_TIMING_MENU)
+        hsdramcSym_CR_TXSR.setLabel("Exit Self Refresh to Active Time (TXSR)")
+        hsdramcSym_CR_TXSR.setMin(0)
+        hsdramcSym_CR_TXSR.setMax(15)
+        hsdramcSym_CR_TXSR.setDefaultValue(HSDRAMC_SDR_TXSR_DEFAULT_VALUE)
 
-    # HSDRAMC Mode Configuration
-    hsdramcSymMenu_MR_MENU = hemcComponent.createMenuSymbol("HSDRAMC_MR_MENU", sdramMenu)
-    hsdramcSymMenu_MR_MENU.setLabel("HSDRAMC Mode Register Configurations")
-    hsdramcSymMenu_MR_MENU.setVisible(False)
+        # HSDRAMC Mode Configuration
+        hsdramcSymMenu_MR_MENU = hemcComponent.createMenuSymbol("HSDRAMC_MR_MENU", sdramMenu)
+        hsdramcSymMenu_MR_MENU.setLabel("HSDRAMC Mode Register Configurations")
+        hsdramcSymMenu_MR_MENU.setVisible(False)
 
-    hsdramcSym_BURST_LENGTH = hemcComponent.createIntegerSymbol("HSDRAMC_BURST_LENGTH", hsdramcSymMenu_MR_MENU)
-    hsdramcSym_BURST_LENGTH.setLabel("Burst Length")
-    hsdramcSym_BURST_LENGTH.setMin(HSDRAMC_DEFAULT_MIN_VALUE)
-    hsdramcSym_BURST_LENGTH.setMax(HSDRAMC_BURST_LENGHT_MAX_VALUE)
-    hsdramcSym_BURST_LENGTH.setDefaultValue(HSDRAMC_DEFAULT_MIN_VALUE)
+        hsdramcSym_BURST_LENGTH = hemcComponent.createIntegerSymbol("HSDRAMC_BURST_LENGTH", hsdramcSymMenu_MR_MENU)
+        hsdramcSym_BURST_LENGTH.setLabel("Burst Length")
+        hsdramcSym_BURST_LENGTH.setMin(HSDRAMC_DEFAULT_MIN_VALUE)
+        hsdramcSym_BURST_LENGTH.setMax(HSDRAMC_BURST_LENGHT_MAX_VALUE)
+        hsdramcSym_BURST_LENGTH.setDefaultValue(HSDRAMC_DEFAULT_MIN_VALUE)
 
-    hsdramcSym_BURST_TYPE = hemcComponent.createComboSymbol("HSDRAMC_BURST_TYPE", hsdramcSymMenu_MR_MENU, ComboVal_BURST_TYPE)
-    hsdramcSym_BURST_TYPE.setLabel("Burst Type")
-    hsdramcSym_BURST_TYPE.setDefaultValue("SEQUENTIAL")
+        hsdramcSym_BURST_TYPE = hemcComponent.createComboSymbol("HSDRAMC_BURST_TYPE", hsdramcSymMenu_MR_MENU, ComboVal_BURST_TYPE)
+        hsdramcSym_BURST_TYPE.setLabel("Burst Type")
+        hsdramcSym_BURST_TYPE.setDefaultValue("SEQUENTIAL")
 
-    hsdramcSym_MRS = hemcComponent.createHexSymbol("HSDRAMC_MRS_VALUE", hsdramcSymMenu_MR_MENU)
-    hsdramcSym_MRS.setDependencies(calcMRS, ["HSDRAMC_BURST_TYPE", "HSDRAMC_BURST_LENGTH", "HSDRAMC_CR_CAS"])
-    hsdramcSym_MRS.setVisible(False)
+        hsdramcSym_MRS = hemcComponent.createHexSymbol("HSDRAMC_MRS_VALUE", hsdramcSymMenu_MR_MENU)
+        hsdramcSym_MRS.setDependencies(calcMRS, ["HSDRAMC_BURST_TYPE", "HSDRAMC_BURST_LENGTH", "HSDRAMC_CR_CAS"])
+        hsdramcSym_MRS.setVisible(False)
 
 ##################################################### HSMC Configuration #################################################################
 
@@ -582,23 +605,23 @@ def instantiateComponent(hemcComponent):
     #          ATDF Read to get HSMC Register | Bitfield | Mask | Value Group
     #------------------------------------------------------------------------------
     # HSMC_SETUP Register Bitfield Names and Mask
-    hsmcRegBitField_SETUP_NWE_SETUP      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register@[name="HSMC_SETUP0"]/bitfield@[name="NWE_SETUP"]')
-    hsmcRegBitField_SETUP_NCS_WR_SETUP   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register@[name="HSMC_SETUP0"]/bitfield@[name="NCS_WR_SETUP"]')
-    hsmcRegBitField_SETUP_NRD_SETUP      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register@[name="HSMC_SETUP0"]/bitfield@[name="NRD_SETUP"]')
-    hsmcRegBitField_SETUP_NCS_RD_SETUP   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register@[name="HSMC_SETUP0"]/bitfield@[name="NCS_RD_SETUP"]')
+    hsmcRegBitField_SETUP_NWE_SETUP      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC_CS"]/register@[name="HSMC_SETUP"]/bitfield@[name="NWE_SETUP"]')
+    hsmcRegBitField_SETUP_NCS_WR_SETUP   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC_CS"]/register@[name="HSMC_SETUP"]/bitfield@[name="NCS_WR_SETUP"]')
+    hsmcRegBitField_SETUP_NRD_SETUP      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC_CS"]/register@[name="HSMC_SETUP"]/bitfield@[name="NRD_SETUP"]')
+    hsmcRegBitField_SETUP_NCS_RD_SETUP   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC_CS"]/register@[name="HSMC_SETUP"]/bitfield@[name="NCS_RD_SETUP"]')
 
     # HSMC_PULSE Register Bitfield Names and Mask
-    hsmcRegBitField_PULSE_NWE_PULSE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register@[name="HSMC_PULSE0"]/bitfield@[name="NWE_PULSE"]')
-    hsmcRegBitField_PULSE_NCS_WR_PULSE   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register@[name="HSMC_PULSE0"]/bitfield@[name="NCS_WR_PULSE"]')
-    hsmcRegBitField_PULSE_NRD_PULSE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register@[name="HSMC_PULSE0"]/bitfield@[name="NRD_PULSE"]')
-    hsmcRegBitField_PULSE_NCS_RD_PULSE   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register@[name="HSMC_PULSE0"]/bitfield@[name="NCS_RD_PULSE"]')
+    hsmcRegBitField_PULSE_NWE_PULSE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC_CS"]/register@[name="HSMC_PULSE"]/bitfield@[name="NWE_PULSE"]')
+    hsmcRegBitField_PULSE_NCS_WR_PULSE   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC_CS"]/register@[name="HSMC_PULSE"]/bitfield@[name="NCS_WR_PULSE"]')
+    hsmcRegBitField_PULSE_NRD_PULSE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC_CS"]/register@[name="HSMC_PULSE"]/bitfield@[name="NRD_PULSE"]')
+    hsmcRegBitField_PULSE_NCS_RD_PULSE   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC_CS"]/register@[name="HSMC_PULSE"]/bitfield@[name="NCS_RD_PULSE"]')
 
     # HSMC_CYCLE Register Bitfield Names and Mask
-    hsmcRegBitField_CYCLE_NWE_CYCLE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register@[name="HSMC_CYCLE0"]/bitfield@[name="NWE_CYCLE"]')
-    hsmcRegBitField_CYCLE_NRD_CYCLE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register@[name="HSMC_CYCLE0"]/bitfield@[name="NRD_CYCLE"]')
+    hsmcRegBitField_CYCLE_NWE_CYCLE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC_CS"]/register@[name="HSMC_CYCLE"]/bitfield@[name="NWE_CYCLE"]')
+    hsmcRegBitField_CYCLE_NRD_CYCLE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC_CS"]/register@[name="HSMC_CYCLE"]/bitfield@[name="NRD_CYCLE"]')
 
     # HSMC_Mode Register Bitfield Names and Mask
-    hsmcRegBitField_MODE_TDF_CYCLES      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register@[name="HSMC_MODE0"]/bitfield@[name="TDF_CYCLES"]')
+    hsmcRegBitField_MODE_TDF_CYCLES      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC_CS"]/register@[name="HSMC_MODE"]/bitfield@[name="TDF_CYCLES"]')
 
     #------------------------------------------------------------------------------
     #                     Global HSMC Array sysmbol declaration
@@ -785,10 +808,6 @@ def instantiateComponent(hemcComponent):
 ############################################################################
 #### Dependency ####
 ############################################################################
-    # Enable Peripheral Clock in Clock manager
-    Database.clearSymbolValue("core", hemcInstanceName.getValue()+"_CLOCK_ENABLE")
-    Database.setSymbolValue("core", hemcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
-
     fixInterruptVector = hemcInstanceName.getValue() + "_INTFIX_INTERRUPT_ENABLE"
     fixInterruptHandler = hemcInstanceName.getValue() + "_INTFIX_INTERRUPT_HANDLER"
     fixInterruptHandlerLock = hemcInstanceName.getValue() + "_INTFIX_INTERRUPT_HANDLER_LOCK"
@@ -843,5 +862,5 @@ def instantiateComponent(hemcComponent):
     hemcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
     hemcSystemInitFile.setSourcePath("../peripheral/hemc_44121/templates/system/initialization.c.ftl")
     hemcSystemInitFile.setMarkup(True)
-   
+
     hemcComponent.addPlugin("../peripheral/hemc_44121/plugin/hemc_44121.jar")
