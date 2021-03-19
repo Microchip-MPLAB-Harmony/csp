@@ -146,7 +146,10 @@ def genMainSourceFile(symbol, event):
     genMainSrc  = Database.getSymbolValue("core", "CoreMainFile")
 
     if (genMainSrc == True):
-        symbol.setOutputName(mainName.lower() + ".c")
+        if Database.getSymbolValue("core", "CPLUSPLUS_PROJECT") == True:
+            symbol.setOutputName(mainName.lower() + ".cpp")
+        else:
+            symbol.setOutputName(mainName.lower() + ".c")
         symbol.setEnabled(True)
     else:
         symbol.setEnabled(False)
@@ -406,6 +409,11 @@ def instantiateComponent( coreComponent ):
 
     projMenu = coreComponent.createMenuSymbol("CoreProjMenu", devMenu)
     projMenu.setLabel("Project Configuration")
+
+    cplusplusProject = coreComponent.createBooleanSymbol("CPLUSPLUS_PROJECT", projMenu)
+    cplusplusProject.setLabel("Generate C++ Project")
+    cplusplusProject.setDescription("Generate Main Source File (main) and Application Source File (app) with .cpp file extension")
+    cplusplusProject.setDefaultValue(False)
 
     genMainFile = coreComponent.createBooleanSymbol("CoreMainFile", projMenu)
     genMainFile.setLabel("Generate Main Source File")
@@ -743,7 +751,7 @@ def instantiateComponent( coreComponent ):
     mainSourceFile.setDestPath("../../")
     mainSourceFile.setProjectPath("")
     mainSourceFile.setType("SOURCE")
-    mainSourceFile.setDependencies( genMainSourceFile, ["CoreMainFile", "CoreMainFileName"] )
+    mainSourceFile.setDependencies( genMainSourceFile, ["CoreMainFile", "CoreMainFileName", "CPLUSPLUS_PROJECT"] )
 
     bspHeaderInclude =          coreComponent.createListSymbol( "LIST_BSP_MACRO_INCLUDES", None )
     bspHeaderInclude =          coreComponent.createListSymbol( "LIST_BSP_INITIALIZATION", None )
@@ -962,7 +970,7 @@ def instantiateComponent( coreComponent ):
     elif "CORTEX-M" in Database.getSymbolValue("core","CoreArchitecture"):
         packsPath = "../src/packs/" + processor + "_DFP;../src/packs/CMSIS/CMSIS/Core/Include;"
     elif "ARM9" in Database.getSymbolValue("core","CoreArchitecture"):
-        packsPath = "../src/packs/" + processor + "_DFP;"       
+        packsPath = "../src/packs/" + processor + "_DFP;"
     else: #mips
         packsPath = ""
 

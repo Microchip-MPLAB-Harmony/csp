@@ -259,7 +259,7 @@ secmainSourceFile.setDestPath("../../")
 secmainSourceFile.setProjectPath("")
 secmainSourceFile.setType("SOURCE")
 secmainSourceFile.setSecurity("SECURE")
-secmainSourceFile.setDependencies( genMainSourceFile, ["CoreMainFile", "CoreMainFileName"] )
+secmainSourceFile.setDependencies( genMainSourceFile, ["CoreMainFile", "CoreMainFileName", "CPLUSPLUS_PROJECT"] )
 
 nonsecureEntrySourceFile = coreComponent.createFileSymbol("NONSECURE_ENTRY_C", None)
 nonsecureEntrySourceFile.setSourcePath("templates/trustZone/nonsecure_entry.c.ftl")
