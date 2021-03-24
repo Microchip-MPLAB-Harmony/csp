@@ -202,6 +202,13 @@ coreFPU.setDefaultValue(True)
 coreFPU.setReadOnly(True)
 coreFPU.setVisible(False)
 
+IOLOCKEnable = coreComponent.createBooleanSymbol("IOLOCK_ENABLE", devCfgMenu)
+IOLOCKEnable.setLabel("Enable Peripheral Pin Select Lock bit (IOLOCK)")
+IOLOCKEnable.setDefaultValue(True)
+
+PMDLOCKEnable = coreComponent.createBooleanSymbol("PMDLOCK_ENABLE", devCfgMenu)
+PMDLOCKEnable.setLabel("Enable Peripheral Module Disable Lock bit (PMDLOCK)")
+PMDLOCKEnable.setDefaultValue(True)
 
 mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
 mipsMenu.setLabel("MIPS Configuration")

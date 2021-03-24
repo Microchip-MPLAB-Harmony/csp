@@ -166,13 +166,15 @@ void GPIO_Initialize ( void )
     </#if>
 </#list>
 
-<#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
-    /* Unlock system for PPS configuration */
-    CFG_REGS->CFG_SYSKEY = 0x00000000;
-    CFG_REGS->CFG_SYSKEY = 0xAA996655;
-    CFG_REGS->CFG_SYSKEY = 0x556699AA;
-
-    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_IOLOCK_Msk;
+<#if IOLOCK_ENABLE?? && IOLOCK_ENABLE == true>
+    <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
+        <#lt>    /* Unlock system for PPS configuration */
+        <#lt>    CFG_REGS->CFG_SYSKEY = 0x00000000;
+        <#lt>    CFG_REGS->CFG_SYSKEY = 0xAA996655;
+        <#lt>    CFG_REGS->CFG_SYSKEY = 0x556699AA;
+        <#lt>
+        <#lt>    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_IOLOCK_Msk;
+    </#if>
 </#if>
 
 <#lt>    /* PPS Input Remapping */
@@ -204,10 +206,12 @@ void GPIO_Initialize ( void )
     </#if>
 </#list>
 
-<#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
-    /* Lock back the system after PPS configuration */
-    CFG_REGS->CFG_CFGCON0SET = CFG_CFGCON0_IOLOCK_Msk;
-    CFG_REGS->CFG_SYSKEY = 0x00000000;
+<#if IOLOCK_ENABLE?? && IOLOCK_ENABLE == true>
+    <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
+        <#lt>    /* Lock back the system after PPS configuration */
+        <#lt>    CFG_REGS->CFG_CFGCON0SET = CFG_CFGCON0_IOLOCK_Msk;
+        <#lt>    CFG_REGS->CFG_SYSKEY = 0x00000000;
+    </#if>
 </#if>
 
 <#if TOTAL_NUM_OF_INT_USED gt 0>

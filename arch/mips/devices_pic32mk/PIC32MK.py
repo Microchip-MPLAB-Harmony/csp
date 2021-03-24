@@ -202,6 +202,14 @@ coreFPU.setDefaultValue(True)
 coreFPU.setReadOnly(True)
 coreFPU.setVisible(False)
 
+IOLOCKEnable = coreComponent.createBooleanSymbol("IOLOCK_ENABLE", devCfgMenu)
+IOLOCKEnable.setLabel("Enable Peripheral Pin Select Lock bit (IOLOCK)")
+IOLOCKEnable.setDefaultValue(True)
+
+PMDLOCKEnable = coreComponent.createBooleanSymbol("PMDLOCK_ENABLE", devCfgMenu)
+PMDLOCKEnable.setLabel("Enable Peripheral Module Disable Lock bit (PMDLOCK)")
+PMDLOCKEnable.setDefaultValue(True)
+
 # "DEVICE_FAMILY" symbol related code is only for backward compatibility
 ds60001402Regex = re.compile(r'MK\w+(GPD|GPE|MCF)')       #PIC32MKXXXXGPD/GPE/MCF
 ds60001570Regex = re.compile(r'MK\w+(GPG|GPH|MCJ)')       #PIC32MKXXXXGPG/GPH/MCJ

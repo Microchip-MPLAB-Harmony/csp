@@ -71,14 +71,14 @@ def handleMessage(messageID, args):
         else:
             Database.setSymbolValue("core", "SYSTICK_PUBLISH_CAPABILITIES", False)
 
-    if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
+    elif (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
         if Database.getSymbolValue("core", "SYSTICK_SYS_TIME_COMPONENT_ID") != "":
             #Set the Time Period (Milli Sec)
             #Using an intermediate long symbol to pass tick period, as setSymbolValue does not allow passing float values
             sys_time_tick_ms = (long)(args["sys_time_tick_ms"]*1000)
             Database.setSymbolValue("core","SYSTICK_PERIOD_MS_LONG_INT", sys_time_tick_ms)
 
-    if messageID == "PIN_LIST":              # Indicates core to return available pins for device
+    elif messageID == "PIN_LIST":              # Indicates core to return available pins for device
         symbolDict = getAvailablePins()      # this API must be defined as global in every port plibs
 
     elif messageID == "WAIT_STATES":
@@ -110,6 +110,10 @@ def handleMessage(messageID, args):
     elif ((messageID == "SysTick_INTERRUPT_HANDLER") or (messageID == "PendSV_INTERRUPT_HANDLER") or
           (messageID == "SVCall_INTERRUPT_HANDLER")):
         Database.setSymbolValue("core", messageID, args["intHandler"])
+
+    elif (messageID == "CONTROL_REGISTER_LOCK"):
+        Database.setSymbolValue("core", "IOLOCK_ENABLE", args["isEnabled"])
+        Database.setSymbolValue("core", "PMDLOCK_ENABLE", args["isEnabled"])
 
     return symbolDict
 
