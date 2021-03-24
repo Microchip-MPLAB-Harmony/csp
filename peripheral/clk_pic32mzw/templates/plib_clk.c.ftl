@@ -285,7 +285,11 @@ void CLK_Initialize( void )
 </#list>
 </#if>  <#-- CONFIG_HAVE_REFCLOCK == true -->
 
-<#lt>    /* Peripheral Module Disable Configuration */
+    /* Peripheral Module Disable Configuration */
+
+<#if PMDLOCK_ENABLE?? && PMDLOCK_ENABLE == true>
+    CFGCON0bits.PMDLOCK = 0;
+</#if>
 
 <#list 1..PMD_COUNT + 1 as i>
     <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
@@ -294,6 +298,9 @@ void CLK_Initialize( void )
     </#if>
 </#list>
 
+<#if PMDLOCK_ENABLE?? && PMDLOCK_ENABLE == true>
+    CFGCON0bits.PMDLOCK = 1;
+</#if>
 
     /* Lock system since done with clock configuration */
     SYSKEY = 0x33333333;

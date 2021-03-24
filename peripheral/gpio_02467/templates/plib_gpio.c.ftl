@@ -172,15 +172,18 @@ void GPIO_Initialize ( void )
     </#if>
 </#list>
 
-<#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
-    /* Unlock system for PPS configuration */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
-    <#if PRODUCT_FAMILY != 'PIC32MZW'>
-      <#lt>    CFGCONbits.IOLOCK = 0;
-    <#else>
-      <#lt>    CFGCON0bits.IOLOCK = 0;
+<#if IOLOCK_ENABLE?? && IOLOCK_ENABLE == true>
+    <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
+        <#lt>    /* Unlock system for PPS configuration */
+        <#lt>    SYSKEY = 0x00000000;
+        <#lt>    SYSKEY = 0xAA996655;
+        <#lt>    SYSKEY = 0x556699AA;
+
+        <#if PRODUCT_FAMILY != 'PIC32MZW'>
+            <#lt>    CFGCONbits.IOLOCK = 0;
+        <#else>
+            <#lt>    CFGCON0bits.IOLOCK = 0;
+        </#if>
     </#if>
 </#if>
 
@@ -213,14 +216,17 @@ void GPIO_Initialize ( void )
     </#if>
 </#list>
 
-<#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
-    /* Lock back the system after PPS configuration */
-    <#if PRODUCT_FAMILY != 'PIC32MZW'>
-      <#lt>    CFGCONbits.IOLOCK = 1;
-    <#else>
-      <#lt>    CFGCON0bits.IOLOCK = 1;
+<#if IOLOCK_ENABLE?? && IOLOCK_ENABLE == true>
+    <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
+        /* Lock back the system after PPS configuration */
+        <#if PRODUCT_FAMILY != 'PIC32MZW'>
+            <#lt>    CFGCONbits.IOLOCK = 1;
+        <#else>
+            <#lt>    CFGCON0bits.IOLOCK = 1;
+        </#if>
+
+        <#lt>    SYSKEY = 0x00000000;
     </#if>
-    SYSKEY = 0x00000000;
 </#if>
 
 <#if TOTAL_NUM_OF_INT_USED gt 0>

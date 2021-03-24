@@ -144,12 +144,15 @@ void GPIO_Initialize ( void )
     </#if>
 </#list>
 
-<#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
-    /* unlock system for PPS configuration */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
-    CFGCONbits.IOLOCK = 0;
+<#if IOLOCK_ENABLE?? && IOLOCK_ENABLE == true>
+    <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
+        <#lt>    /* unlock system for PPS configuration */
+        <#lt>    SYSKEY = 0x00000000;
+        <#lt>    SYSKEY = 0xAA996655;
+        <#lt>    SYSKEY = 0x556699AA;
+
+        <#lt>    CFGCONbits.IOLOCK = 0;
+    </#if>
 </#if>
 
 <#lt>    /* PPS Input Remapping */
@@ -181,10 +184,12 @@ void GPIO_Initialize ( void )
     </#if>
 </#list>
 
-<#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
-    /* Lock back the system after PPS configuration */
-    CFGCONbits.IOLOCK = 1;
-    SYSKEY = 0x00000000; 
+<#if IOLOCK_ENABLE?? && IOLOCK_ENABLE == true>
+    <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
+        <#lt>    /* Lock back the system after PPS configuration */
+        <#lt>    CFGCONbits.IOLOCK = 1;
+        <#lt>    SYSKEY = 0x00000000; 
+    </#if>
 </#if>
 
 <#if TOTAL_NUM_OF_INT_USED gt 0>
