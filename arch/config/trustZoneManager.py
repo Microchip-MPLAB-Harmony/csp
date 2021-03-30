@@ -405,11 +405,7 @@ xc32LinkerMacro.setAppend(True, ";")
 defSym = coreComponent.createSettingSymbol("SEC_XC32_INCLUDE_DIRS", None)
 defSym.setCategory("C32")
 defSym.setKey("extra-include-directories")
-defSym.setValue( "../src;../src/config/" + configName
-                + ";../src/packs/" + processor + "_DFP;"
-                + corePath
-                + ";../src/packs/CMSIS/;../src/" + baseArchDir
-                )
+defSym.setValue("../src;../src/config/" + configName + ";" + packsPath)
 defSym.setAppend(True, ";")
 defSym.setSecurity("SECURE")
 
