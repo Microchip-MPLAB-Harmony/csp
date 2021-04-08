@@ -95,6 +95,9 @@ extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) __xc32_on_b
  */
 void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, noreturn)) Reset_Handler(void)
 {
+<#if RAM_INIT??>
+    PIC32CZ_RAM_Initialize();
+</#if>
 #ifdef SCB_VTOR_TBLOFF_Msk
     uint32_t *pSrc;
 #endif
