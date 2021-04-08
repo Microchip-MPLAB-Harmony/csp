@@ -65,6 +65,7 @@ peripherals = {
                 "NVM_03140"     : ["MEMORY"],
                 "NVM_02695"     : ["MEMORY"],
                 "HEFC_44123"    : ["MEMORY"],
+                "FCW_03433"     : ["MEMORY"]
                 "SDMMC_44002"   : ["SDHC"],
                 "SDHC_U2011"    : ["SDHC"],
                 "HSMCI_6449"    : ["SDHC"],
@@ -94,8 +95,18 @@ peripherals = {
 
 # a dictionary to translate the new id mentioned in ATDF to old id used in csp
 peripheral_ID_map = {
-    "RTC_03608" : "RTC_U2250",
-    "PORT_03720" : "PORT_U2210"
+    "AC_03784"     : "AC_U2501",
+    "CAN_03723"    : "CAN_U2003",
+    "DSU_03716"    : "DSU_U2810",
+    "EIC_03706"    : "EIC_U2804",
+    "EVSYS_03601"   : "EVSYS_U2504",
+    "FREQM_03707"  : "FREQM_U2257",
+    "PTC_03721"    : "PTC_U2215",
+    "RTC_03608"    : "RTC_U2250",
+    "SERCOM_03715" : "SERCOM_U2201",
+    "TCC_03610"    : "TCC_U2213",
+    "TRAM_03938"   : "TRAM_U2801",
+    "TRNG_03597"   : "TRNG_U2242"
 }
 
 if("MIPS" in coreArch):
