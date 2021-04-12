@@ -93,7 +93,13 @@ void ${ICAP_INSTANCE_NAME}_Initialize (void)
     IC${INDEX}CON = 0x${ICxCON_VALUE};
 
     <#if ICAP_CFGCON_ICACLK?? && ICAP_CFGCON_ICACLK?c == 'true'>
+    /* unlock system for configuration */
+    SYSKEY = 0x00000000;
+    SYSKEY = 0xAA996655;
+    SYSKEY = 0x556699AA;
     ${ICAP_CFG_REG_NAME} |= ${ICAP_CFGCON_ICACLK_MASK};
+    /* Lock system since done with configuration */
+    SYSKEY = 0x33333333;
     </#if>
 
 <#if ERROR_IEC_REG??>
