@@ -71,7 +71,13 @@ void ${OCMP_INSTANCE_NAME}_Initialize (void)
     OC${INDEX}CON = 0x${OCxCON_VALUE};
 
   <#if OCMP_CFGCON_OCACLK?? && OCMP_CFGCON_OCACLK?c == 'true'>
+    /* unlock system for configuration */
+    SYSKEY = 0x00000000;
+    SYSKEY = 0xAA996655;
+    SYSKEY = 0x556699AA;  
     ${OCMP_CFG_REG_NAME} |= ${OCMP_CFGCON_OCACLK_MASK};
+    /* Lock system since done with configuration */
+    SYSKEY = 0x33333333;    
   </#if>
     OC${INDEX}R = ${OCMP_OCxR};
     <#if mode == 4 || mode == 5>
