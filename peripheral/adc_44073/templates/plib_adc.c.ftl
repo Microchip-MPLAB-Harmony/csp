@@ -365,6 +365,30 @@ void ${ADC_INSTANCE_NAME}_ComparisonRestart(void)
     ${ADC_INSTANCE_NAME}_REGS->ADC_CR = ADC_CR_CMPRST_Msk;
 }
 
+/* Low power - Enable Sleep mode */
+void ${ADC_INSTANCE_NAME}_SleepModeEnable(void)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_MR |= ADC_MR_SLEEP_Msk;
+}
+
+/* Low power - Disable Sleep mode */
+void ${ADC_INSTANCE_NAME}_SleepModeDisable(void)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_MR &= ~(ADC_MR_SLEEP_Msk);
+}
+
+/* Low power - Enable Fast wake up mode */
+void ${ADC_INSTANCE_NAME}_FastWakeupEnable(void)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_MR |= ADC_MR_FWUP_Msk;
+}
+
+/* Low power - Disable Fast wake up mode */
+void ${ADC_INSTANCE_NAME}_FastWakeupDisable(void)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_MR &= ~(ADC_MR_FWUP_Msk);
+}
+
 <#if ADC_INTERRUPT == true>
     <#lt>/* Register the callback function */
     <#lt>void ${ADC_INSTANCE_NAME}_CallbackRegister(ADC_CALLBACK callback, uintptr_t context)
