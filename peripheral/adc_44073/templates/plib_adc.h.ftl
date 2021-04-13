@@ -210,6 +210,15 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t lowThreshold, uint16_t hi
 bool ${ADC_INSTANCE_NAME}_ComparisonEventResultIsReady(void);
 
 void ${ADC_INSTANCE_NAME}_ComparisonRestart(void);
+
+void ${ADC_INSTANCE_NAME}_SleepModeEnable(void);
+
+void ${ADC_INSTANCE_NAME}_SleepModeDisable(void);
+
+void ${ADC_INSTANCE_NAME}_FastWakeupEnable(void);
+
+void ${ADC_INSTANCE_NAME}_FastWakeupDisable(void);
+
 <#if ADC_INTERRUPT == true>
 
 void ${ADC_INSTANCE_NAME}_CallbackRegister(ADC_CALLBACK callback, uintptr_t context);
