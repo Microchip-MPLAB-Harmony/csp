@@ -35,6 +35,8 @@ cmpValGrp_CMx_CON_CFSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[n
 cmpValGrp_CMx_CON_CFDIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__CFDIV"]')
 
 cmpBitFld_CMSTAT_SIDL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CMSTAT"]/bitfield@[name="SIDL"]')
+cmpBitFld_CMSTAT_CVREFSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CMSTAT"]/bitfield@[name="CVREFSEL"]')
+cmpValGrp_CMSTAT_CVREFSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CMSTAT__CVREFSEL"]')
 
 cmpBitFld_CMx_CON_OPAON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM1CON"]/bitfield@[name="OPAON"]')
 cmpBitFld_CMx_CON_ENPGA = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM1CON"]/bitfield@[name="ENPGA"]')
@@ -186,6 +188,16 @@ def updateCMPxInterruptData(MySymbol, event):
         MySymbol.setVisible(True)
     else:
         MySymbol.setVisible(False)
+
+def combineCMSTATConfigValues(MySymbol, event):
+    global cmpSym_CMSTAT_SIDL
+    global cmpSym_CMSTAT_CVREFSEL
+    cvrefselValue = 0
+    sidlValue     = int(cmpSym_CMSTAT_SIDL.getValue()) << 13
+    if event["id"] == "CMP_CMSTAT_CVREFSEL":
+        cvrefselValue    = cmpSym_CMSTAT_CVREFSEL.getValue() << 8
+    cmstatValue = sidlValue | cvrefselValue
+    MySymbol.setValue(cmstatValue)
 
 def combineCMxCONConfigValues(MySymbol, event):
 
@@ -415,12 +427,39 @@ def instantiateComponent(cmpComponent):
     print("Running " + cmpInstanceName.getValue())
 
     #Stop in Idle mode if device is not
+    global cmpSym_CMSTAT_SIDL
     cmpSym_CMSTAT_SIDL = cmpComponent.createBooleanSymbol("CMP_CMSTAT_SIDL", None)
     cmpSym_CMSTAT_SIDL.setLabel(cmpBitFld_CMSTAT_SIDL.getAttribute("caption"))
     cmpSym_CMSTAT_SIDL.setDefaultValue(False)
 
+    global cmpSym_CMSTAT_CVREFSEL
+    if cmpValGrp_CMSTAT_CVREFSEL is not None:
+        CMSTAT_CVREFSEL_names = []
+        _get_bitfield_names(cmpValGrp_CMSTAT_CVREFSEL, CMSTAT_CVREFSEL_names)
+        cmpSym_CMSTAT_CVREFSEL = cmpComponent.createKeyValueSetSymbol("CMP_CMSTAT_CVREFSEL", None)
+        cmpSym_CMSTAT_CVREFSEL.setLabel(cmpBitFld_CMSTAT_CVREFSEL.getAttribute("caption"))
+        cmpSym_CMSTAT_CVREFSEL.setDefaultValue(0)
+        cmpSym_CMSTAT_CVREFSEL.setOutputMode("Value")
+        cmpSym_CMSTAT_CVREFSEL.setDisplayMode("Description")
+        for ii in CMSTAT_CVREFSEL_names:
+            cmpSym_CMSTAT_CVREFSEL.addKey( ii['desc'], ii['value'], ii['key'] )
+
+    #Collecting user input to combine into CMSTAT register
+    #CMSTAT is updated every time a user selection changes
+    cmpSym_CMSTAT = cmpComponent.createHexSymbol("CMP_CMSTAT_VALUE", None)
+    cmpSym_CMSTAT.setDefaultValue(0)
+    cmpSym_CMSTAT.setVisible(False)
+    cmpSym_CMSTAT.setDependencies(combineCMSTATConfigValues, ["CMP_CMSTAT_SIDL", "CMP_CMSTAT_CVREFSEL"])
+
     #Generate menu for all comparators and Op Amps in the CMP peripheral
-    for id in range(0, 5):
+    node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__NUM_CMP_CHANNELS"]')
+    numOfCMPInstances = int(node.getAttribute("value"))
+
+    cmpSym_CMP_NUM = cmpComponent.createIntegerSymbol("CMP_NUM_OF_INSTANCES", None)
+    cmpSym_CMP_NUM.setVisible(False)
+    cmpSym_CMP_NUM.setDefaultValue(numOfCMPInstances)
+
+    for id in range(0, numOfCMPInstances):
         # generate list of all bitfields present in CMxCON register - varies from family to family, and within certain families as well
         CMxCON_list = []
         _survey_bitfields("CM"+str(id+1)+"CON", CMxCON_list)  # CMxCON_list is used below, to prevent accessing (absent) elements in the atdf file   

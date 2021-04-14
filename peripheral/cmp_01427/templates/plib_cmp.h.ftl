@@ -61,12 +61,9 @@
 typedef enum
 {
     /*CMP Output*/
-    CMP1_OUTPUT_STATUS = _CMSTAT_C1OUT_MASK,
-    CMP2_OUTPUT_STATUS = _CMSTAT_C2OUT_MASK,
-    CMP3_OUTPUT_STATUS = _CMSTAT_C3OUT_MASK,
-    CMP4_OUTPUT_STATUS = _CMSTAT_C4OUT_MASK,
-    CMP5_OUTPUT_STATUS = _CMSTAT_C5OUT_MASK,
-
+  <#list 1..CMP_NUM_OF_INSTANCES as i>
+    CMP${i}_OUTPUT_STATUS = _CMSTAT_C${i}OUT_MASK,
+  </#list>
 } CMP_STATUS_SOURCE;
 
 typedef void (*CMP_CALLBACK) (uintptr_t context);
@@ -85,24 +82,14 @@ typedef struct
 
 void ${CMP_INSTANCE_NAME}_Initialize (void);
 
-void ${CMP_INSTANCE_NAME}_1_CompareEnable (void);
-void ${CMP_INSTANCE_NAME}_2_CompareEnable (void);
-void ${CMP_INSTANCE_NAME}_3_CompareEnable (void);
-void ${CMP_INSTANCE_NAME}_4_CompareEnable (void);
-void ${CMP_INSTANCE_NAME}_5_CompareEnable (void);
-
-void ${CMP_INSTANCE_NAME}_1_CompareDisable (void);
-void ${CMP_INSTANCE_NAME}_2_CompareDisable (void);
-void ${CMP_INSTANCE_NAME}_3_CompareDisable (void);
-void ${CMP_INSTANCE_NAME}_4_CompareDisable (void);
-void ${CMP_INSTANCE_NAME}_5_CompareDisable (void);
-
 bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE source);
-<#list 1..5 as i>
+<#list 1..CMP_NUM_OF_INSTANCES as i>
 <#assign CMP_CMxCON_EVPOL = "CMP_" + i + "_CON_EVPOL">
+void ${CMP_INSTANCE_NAME}_${i}_CompareEnable (void);
+void ${CMP_INSTANCE_NAME}_${i}_CompareDisable (void);
+
 <#if .vars[CMP_CMxCON_EVPOL] != "0">
 
-CMP_OBJECT cmp${i}Obj;
 void ${CMP_INSTANCE_NAME}_${i}_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
 </#if>
 </#list>
