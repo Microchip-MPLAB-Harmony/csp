@@ -28,7 +28,6 @@
 
 global wdtEnableFuse
 global wdtWindowSizeFuse
-global WDTPS_SleepFuse
 
 global wdtSym_Use
 global wdtHeaderFile
@@ -39,40 +38,22 @@ global getWDTTimeOutPeriod
 global getWDTAllowedWindowPeriod
 global getWDTTimeOutPeriod_Sleep
 
-global wdtTimeOutDictionary
 global wdtAllowedWindowDictionary
 
+global WDTPS_SleepFuse
 global LPRC_FREQ
 LPRC_FREQ = 32768
 
-wdtTimeOutDictionary = {
+if("PIC32MM" in Database.getSymbolValue("core", "PRODUCT_FAMILY")):
+    wdtAllowedWindowDictionary = {
 
-    #Entry          :       [#Period,   #TimeUnit(mili-second/second)]
-
-    "PS1"           :       ["1",        "ms"],
-    "PS2"           :       ["2",        "ms"],
-    "PS4"           :       ["4",        "ms"],
-    "PS8"           :       ["8",        "ms"],
-    "PS16"          :       ["16",       "ms"],
-    "PS32"          :       ["32",       "ms"],
-    "PS64"          :       ["64",       "ms"],
-    "PS128"         :       ["128",      "ms"],
-    "PS256"         :       ["256",      "ms"],
-    "PS512"         :       ["512",      "ms"],
-    "PS1024"        :       ["1.024",    "s"],
-    "PS2048"        :       ["2.048",    "s"],
-    "PS4096"        :       ["4.096",    "s"],
-    "PS8192"        :       ["8.192",    "s"],
-    "PS16384"       :       ["16.384",   "s"],
-    "PS32768"       :       ["32.768",   "s"],
-    "PS65536"       :       ["65.536",   "s"],
-    "PS131072"      :       ["131.072",  "s"],
-    "PS262144"      :       ["262.144",  "s"],
-    "PS524288"      :       ["524.288",  "s"],
-    "PS1048576"     :       ["1048.576", "s"]
-}
-
-wdtAllowedWindowDictionary = {
+        "PS25_0"      :       "0.25",
+        "PS37_5"      :       "0.375",
+        "PS50_0"      :       "0.50",
+        "PS75_0"      :       "0.75"
+    }
+else:
+    wdtAllowedWindowDictionary = {
 
     "WINSZ_25"      :       "0.25",
     "WINSZ_37"      :       "0.375",
@@ -84,21 +65,48 @@ wdtAllowedWindowDictionary = {
 ########################################## Callbacks ##############################################
 ###################################################################################################
 
-def getWDTAllowedWindowPeriod(period, windowSize):
+def wdtClockFreqCalc(symbol,event):
+    global LPRC_DEFAULT_FREQ
+    if event["id"] == "WDT_USE":
+        symbol.setVisible(event["value"])
+    else:
+        wdtClkSrc = Database.getSymbolValue("core", "CONFIG_RCLKSEL")
+        if  wdtClkSrc == "LPRC":
+            symbol.setValue(LPRC_FREQ)
+        elif wdtClkSrc == "SYSCLK":
+            symbol.setValue(int(Database.getSymbolValue("core", "SYS_CLK_FREQ")))
+        else:#FRC
+            symbol.setValue(8000000)
 
-    allowedPeriod = str((float(wdtTimeOutDictionary[period][0]) * float(wdtAllowedWindowDictionary[windowSize])))
+def getWDTAllowedWindowPeriod():
+        
+    windowSize = Database.getSymbolValue("core", wdtWindowSizeFuse)    
+    wdtFreq = Database.getSymbolValue("core", "WDT_CLOCK_FREQUENCY")/32.0
+    postScaler = int(Database.getSymbolValue("core", WDTPS_RunFuse)[2:])
 
-    return (allowedPeriod + " " + wdtTimeOutDictionary[period][1])
+    period = (postScaler * 1000 * float(wdtAllowedWindowDictionary[windowSize]))/wdtFreq
+    if period > 1000:
+        return (str(period/1000) + " s")
+    else:
+        return (str(period) + " ms")
 
-def getWDTTimeOutPeriod(period):
+def getWDTTimeOutPeriod():
+    wdtFreq = Database.getSymbolValue("core", "WDT_CLOCK_FREQUENCY")/32.0
+    postScaler = int(Database.getSymbolValue("core", WDTPS_RunFuse)[2:])
 
-    return (wdtTimeOutDictionary[period][0] + " " + wdtTimeOutDictionary[period][1])
+    period = (postScaler * 1000)/wdtFreq
+    if period > 1000:
+        return (str(period/1000) + " s")
+    else:
+        return (str(period) + " ms")
 
 def getWDTTimeOutPeriod_Sleep():
     global WDTPS_SleepFuse
     wdtFreq = LPRC_FREQ/32.0
-    postScaler = int(Database.getSymbolValue("core", WDTPS_SleepFuse)[3:])
-
+    if("PIC32MM" in Database.getSymbolValue("core", "PRODUCT_FAMILY")):
+        postScaler = int(Database.getSymbolValue("core", WDTPS_SleepFuse)[2:])
+    else:
+        postScaler = int(Database.getSymbolValue("core", WDTPS_SleepFuse)[3:])
     period = (postScaler * 1000)/wdtFreq
     if period > 1000:
         return (str(period/1000) + " s")
@@ -115,7 +123,7 @@ def updateWDTTimeOutPeriodVisibleProperty(symbol, event):
     if event["id"] == "WDT_USE":
         symbol.setVisible(event["value"])
     else:
-        symbol.setValue(getWDTTimeOutPeriod(event["value"]), 1)
+        symbol.setValue(getWDTTimeOutPeriod(), 1)
 
 def updateWDTTimeOutPeriodVisibleProperty_Sleep(symbol, event):
 
@@ -175,12 +183,9 @@ def updateWDTConfigCommentVisibleProperty(symbol, event):
     symbol.setVisible(event["value"])
 
 def updateWDTAllowedWindowPeriodVisibleProperty(symbol, event):
-
-    if event["id"] == wdtWindowSizeFuse or event["id"] == "CONFIG_WDTPS":
-        period = Database.getSymbolValue("core", "CONFIG_WDTPS")
-        windowSize = Database.getSymbolValue("core", wdtWindowSizeFuse)
-
-        symbol.setValue(getWDTAllowedWindowPeriod(period, windowSize), 1)
+    global WDTPS_RunFuse
+    if event["id"] == wdtWindowSizeFuse or event["id"] == WDTPS_RunFuse or event["id"] == "WDT_CLOCK_FREQUENCY":
+        symbol.setValue(getWDTAllowedWindowPeriod(), 1)
     else:
         if wdtSym_Use.getValue() == True and Database.getSymbolValue("core", "CONFIG_WINDIS") == "WINDOW":
             symbol.setVisible(True)
@@ -206,11 +211,19 @@ if wdtValGrp_DEVCFG1__WDTPSS is not None:
 wdtValGrp_DEVCFG4__SWDTPS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]/value-group@[name="DEVCFG4__SWDTPS"]')
 if wdtValGrp_DEVCFG4__SWDTPS is not None:
     WDTPS_SleepFuse = "CONFIG_SWDTPS"
+wdtValGrp_FWDT__SWDTPS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]/value-group@[name="FWDT__SWDTPS"]')
+if wdtValGrp_FWDT__SWDTPS is not None:
+    WDTPS_SleepFuse = "CONFIG_SWDTPS"
+
+global WDTPS_RunFuse
+wdtValGrp_FWDT__RWDTPS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]/value-group@[name="FWDT__RWDTPS"]')
+if wdtValGrp_FWDT__RWDTPS is not None:
+    WDTPS_RunFuse = "CONFIG_RWDTPS"
+else:
+    WDTPS_RunFuse = "CONFIG_WDTPS"
 
 isWDTEnabled = (Database.getSymbolValue("core", wdtEnableFuse) == "ON")
 isWDTWindowModeEnabled = (Database.getSymbolValue("core", "CONFIG_WINDIS") == "WINDOW")
-wdtTimeOut = Database.getSymbolValue("core", "CONFIG_WDTPS")
-wdtAllowedWindowSize = Database.getSymbolValue("core", wdtWindowSizeFuse)
 
 wdtInstances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"WDT\"]")
 
@@ -246,16 +259,26 @@ wdtSym_WindowMode.setVisible(isWDTEnabled)
 wdtSym_WindowMode.setReadOnly(True)
 wdtSym_WindowMode.setDependencies(updateWDTWindowModeEnableVisibleProperty, ["WDT_USE", "CONFIG_WINDIS"])
 
+wdt_clock_freq = coreComponent.createIntegerSymbol("WDT_CLOCK_FREQUENCY", wdtSym_Use)
+wdt_clock_freq.setLabel("WDT Clock Frequency (in Hz)")
+wdt_clock_freq.setReadOnly(True)
+wdt_clock_freq.setVisible(isWDTEnabled)
+wdt_clock_freq.setDefaultValue(LPRC_FREQ)
+if("PIC32MM" in Database.getSymbolValue("core", "PRODUCT_FAMILY")):
+    wdt_clock_freq.setDependencies(wdtClockFreqCalc, ["WDT_USE", "CONFIG_RCLKSEL", "SYS_CLK_FREQ"])
+else:
+    wdt_clock_freq.setDependencies(wdtClockFreqCalc, ["WDT_USE"])
+
 #WDT Time-out Period
 wdtSym_TimeOutPeriod = coreComponent.createStringSymbol("WDT_TIMEOUT_PERIOD", wdtSym_Use)
-wdtSym_TimeOutPeriod.setLabel("Configured WDT Time-out Period")
-wdtSym_TimeOutPeriod.setDefaultValue(getWDTTimeOutPeriod(wdtTimeOut))
+wdtSym_TimeOutPeriod.setLabel("Configured WDT Time-out Period in Run Mode")
+wdtSym_TimeOutPeriod.setDefaultValue(getWDTTimeOutPeriod())
 wdtSym_TimeOutPeriod.setReadOnly(True)
 wdtSym_TimeOutPeriod.setVisible(isWDTEnabled)
-wdtSym_TimeOutPeriod.setDependencies(updateWDTTimeOutPeriodVisibleProperty, ["WDT_USE", "CONFIG_WDTPS"])
+wdtSym_TimeOutPeriod.setDependencies(updateWDTTimeOutPeriodVisibleProperty, ["WDT_USE","WDT_CLOCK_FREQUENCY", WDTPS_RunFuse])
 
 #WDT Time-out Period for Sleep Mode
-if (wdtValGrp_DEVCFG1__WDTPSS is not None) or (wdtValGrp_DEVCFG4__SWDTPS is not None):
+if (wdtValGrp_DEVCFG1__WDTPSS is not None) or (wdtValGrp_DEVCFG4__SWDTPS is not None) or (wdtValGrp_FWDT__SWDTPS is not None):
     wdtSym_TimeOutPeriodSleep = coreComponent.createStringSymbol("WDT_TIMEOUT_PERIOD_SLEEP", wdtSym_Use)
     wdtSym_TimeOutPeriodSleep.setLabel("Configured WDT Time-out Period in Sleep Mode")
     wdtSym_TimeOutPeriodSleep.setDefaultValue(getWDTTimeOutPeriod_Sleep())
@@ -266,10 +289,10 @@ if (wdtValGrp_DEVCFG1__WDTPSS is not None) or (wdtValGrp_DEVCFG4__SWDTPS is not 
 #WDT Allowed Window Period
 wdtSym_AllowedWindowPeriod = coreComponent.createStringSymbol("WDT_ALLOWED_WINDOW_PERIOD", wdtSym_Use)
 wdtSym_AllowedWindowPeriod.setLabel("Configured WDT Allowed Window Period")
-wdtSym_AllowedWindowPeriod.setDefaultValue(getWDTAllowedWindowPeriod(wdtTimeOut, wdtAllowedWindowSize))
+wdtSym_AllowedWindowPeriod.setDefaultValue(getWDTAllowedWindowPeriod())
 wdtSym_AllowedWindowPeriod.setReadOnly(True)
 wdtSym_AllowedWindowPeriod.setVisible(isWDTEnabled and isWDTWindowModeEnabled)
-wdtSym_AllowedWindowPeriod.setDependencies(updateWDTAllowedWindowPeriodVisibleProperty, ["WDT_USE", wdtWindowSizeFuse, "CONFIG_WINDIS", "CONFIG_WDTPS"])
+wdtSym_AllowedWindowPeriod.setDependencies(updateWDTAllowedWindowPeriodVisibleProperty, ["WDT_USE", wdtWindowSizeFuse, "CONFIG_WINDIS", WDTPS_RunFuse,"WDT_CLOCK_FREQUENCY"])
 
 ###################################################################################################
 #######################################  Deep Sleep WDT  ##########################################
