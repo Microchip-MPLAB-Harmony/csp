@@ -166,7 +166,7 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     <#if SPIS_BUSY_PIN_LOGIC_LEVEL == "ACTIVE_HIGH">
     ${PLIB_NAME}_PinWrite((${PLIB_NAME}_PIN)${SPI_INSTANCE_NAME}_BUSY_PIN, 0);
     <#else>
-    {PLIB_NAME}_PinWrite((${PLIB_NAME}_PIN)${SPI_INSTANCE_NAME}_BUSY_PIN, 1);
+    ${PLIB_NAME}_PinWrite((${PLIB_NAME}_PIN)${SPI_INSTANCE_NAME}_BUSY_PIN, 1);
     </#if>
     </#if>
 <#if SPI_CS_CNX != "">

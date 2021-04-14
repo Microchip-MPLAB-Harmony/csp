@@ -165,7 +165,7 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
     <#if SPIS_BUSY_PIN_LOGIC_LEVEL = "ACTIVE_HIGH">
     ${PLIB_NAME}_PinWrite(${SPI_BUSY_PIN}, false);
     <#else>
-    {PLIB_NAME}_PinWrite(${SPI_BUSY_PIN}, true);
+    ${PLIB_NAME}_PinWrite(${SPI_BUSY_PIN}, true);
     </#if>
     </#if>
 }
