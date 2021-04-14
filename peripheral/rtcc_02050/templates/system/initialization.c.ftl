@@ -1,0 +1,1 @@
+    ${RTCC_INSTANCE_NAME}_Initialize();
