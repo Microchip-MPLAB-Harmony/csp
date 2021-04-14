@@ -66,9 +66,12 @@ def instantiateComponent(cdacComponent):
     Database.setSymbolValue("core", cdacInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     # Resolution
+    node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__DAC_RESOLUTION"]')
+    dacResolution = node.getAttribute("value")
+
     cdacSym_Resolution = cdacComponent.createStringSymbol("CDAC_RESOLUTION", None)
     cdacSym_Resolution.setLabel("CDAC Resolution")
-    cdacSym_Resolution.setDefaultValue("12-bit")
+    cdacSym_Resolution.setDefaultValue(dacResolution + "-bit")
     cdacSym_Resolution.setReadOnly(True)
 
     cdacReferenceValues = []
@@ -81,7 +84,6 @@ def instantiateComponent(cdacComponent):
     cdacSym_REFSEL.setDefaultValue(0)
     cdacSym_REFSEL.setOutputMode("Value")
     cdacSym_REFSEL.setDisplayMode("Description")
-    cdacSym_REFSEL.setReadOnly(True)
 
     for dict in cdacReferenceValues:
         cdacSym_REFSEL.addKey(dict["key"], dict["value"], dict["desc"])
