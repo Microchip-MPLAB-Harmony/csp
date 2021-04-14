@@ -40,7 +40,18 @@
 
 #include "plib_${CMP_INSTANCE_NAME?lower_case}.h"
 
-<#--Implementation-->
+// *****************************************************************************
+// *****************************************************************************
+// Section: Global Data
+// *****************************************************************************
+// *****************************************************************************
+
+<#list 1..CMP_NUM_OF_INSTANCES as i>
+    <#assign CMP_CMxCON_EVPOL = "CMP_" + i + "_CON_EVPOL">
+    <#if .vars[CMP_CMxCON_EVPOL] != "0">
+        <#lt>CMP_OBJECT cmp${i}Obj;
+    </#if>
+</#list>
 // *****************************************************************************
 
 // *****************************************************************************
@@ -50,7 +61,14 @@
 
 void ${CMP_INSTANCE_NAME}_Initialize (void)
 {
-    <#list 1..5 as i>
+    /*  Setup CMSTAT    */
+    /* SIDL = ${CMP_CMSTAT_SIDL?c} */
+    <#if CMP_CMSTAT_CVREFSEL??>
+    /* CVREFSEL = ${CMP_CMSTAT_CVREFSEL} */
+    </#if>
+    CMSTAT = 0x${CMP_CMSTAT_VALUE};
+
+    <#list 1..CMP_NUM_OF_INSTANCES as i>
     /*  Setup CM${i}CON    */
     <#assign CMP_CMxCON_CCH = "CMP_" + i + "_CON_CCH">
     <#assign CMP_CMxCON_CREF = "CMP_" + i + "_CON_CREF">
@@ -134,14 +152,14 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
     </#list>
 }
 
-<#list 1..5 as i>
+<#list 1..CMP_NUM_OF_INSTANCES as i>
 void ${CMP_INSTANCE_NAME}_${i}_CompareEnable (void)
 {
     CM${i}CONSET = _CM${i}CON_ON_MASK;
 }
 </#list>
 
-<#list 1..5 as i>
+<#list 1..CMP_NUM_OF_INSTANCES as i>
 void ${CMP_INSTANCE_NAME}_${i}_CompareDisable (void)
 {
     CM${i}CONCLR = _CM${i}CON_ON_MASK;
@@ -153,7 +171,7 @@ bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE ch_status)
     return ((CMSTAT & ch_status)?true:false);
 }
 
-<#list 1..5 as i>
+<#list 1..CMP_NUM_OF_INSTANCES as i>
 <#assign CMP_CMxCON_EVPOL = "CMP_" + i + "_CON_EVPOL">
 <#assign CMP_IFS_REG = "CMP_" + i + "_IFS_REG">
 <#if .vars[CMP_CMxCON_EVPOL] != "0">
