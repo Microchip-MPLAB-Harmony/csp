@@ -377,10 +377,30 @@ def instantiateComponent(i2cComponent):
     i2cMasterIntIEC.setDefaultValue(enblRegName)
     i2cMasterIntIEC.setVisible(False)
 
+    # find the correct bit name for bus collision error interrupt IECx.BCIE or IECx.BIE
+    IEC_BCIE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="INT"]/register-group@[name="INT"]/register@[name="' + enblRegName + '"]/bitfield@[name="' + i2cInstanceName.getValue() + "BCIE" + '"]')
+    IEC_BIE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="INT"]/register-group@[name="INT"]/register@[name="' + enblRegName + '"]/bitfield@[name="' + i2cInstanceName.getValue() + "BIE" + '"]')
+    i2cBusCollisionIntEnableBitName = i2cComponent.createStringSymbol("I2C_BUS_COLLISION_INT_ENABLE_BIT_NAME", None)
+    i2cBusCollisionIntEnableBitName.setVisible(False)
+    if IEC_BCIE is not None:
+        i2cBusCollisionIntEnableBitName.setDefaultValue(IEC_BCIE.getAttribute("name"))
+    elif IEC_BIE is not None:
+        i2cBusCollisionIntEnableBitName.setDefaultValue(IEC_BIE.getAttribute("name"))
+
     #IFS REG
     i2cMasterIntIFS = i2cComponent.createStringSymbol("I2C_MASTER_IFS_REG", None)
     i2cMasterIntIFS.setDefaultValue(statRegName)
     i2cMasterIntIFS.setVisible(False)
+
+    # find the correct bit name for bus collision error interrupt IFSx.BCIF or IFSx.BIF
+    IFS_BCIE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="INT"]/register-group@[name="INT"]/register@[name="' + statRegName + '"]/bitfield@[name="' + i2cInstanceName.getValue() + "BCIF" + '"]')
+    IFS_BIE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="INT"]/register-group@[name="INT"]/register@[name="' + statRegName + '"]/bitfield@[name="' + i2cInstanceName.getValue() + "BIF" + '"]')
+    i2cBusCollisionIntFlagBitName = i2cComponent.createStringSymbol("I2C_BUS_COLLISION_INT_FLAG_BIT_NAME", None)
+    i2cBusCollisionIntFlagBitName.setVisible(False)
+    if IFS_BCIE is not None:
+        i2cBusCollisionIntFlagBitName.setDefaultValue(IFS_BCIE.getAttribute("name"))
+    elif IFS_BIE is not None:
+        i2cBusCollisionIntFlagBitName.setDefaultValue(IFS_BIE.getAttribute("name"))
 
     ## Slave Interrupt Setup (List index 1)
     i2cSlaveInt = i2cInstanceName.getValue() + "_SLAVE"
