@@ -131,7 +131,10 @@ def _get_bitfield_names(node, outputList):
         dict = {}
         if bitfield.getAttribute("caption").lower() != "reserved":  ##  skip (unused) reserved fields
             dict["desc"] = bitfield.getAttribute("caption")
-            dict["key"] = bitfield.getAttribute("caption")
+            if bitfield.getAttribute("name") == "":
+                dict["key"] = bitfield.getAttribute("caption")
+            else:
+                dict["key"] = bitfield.getAttribute("name")
 
             ##  Get rid of leading '0x', and convert to int if was hex
             value = bitfield.getAttribute("value")
@@ -442,7 +445,7 @@ def instantiateComponent(tmr1Component):
     tmr1Sym_T1CON_SOURCE_SEL.setOutputMode("Value")
     tmr1Sym_T1CON_SOURCE_SEL.setDisplayMode("Description")
     for ii in tcs_names:
-        tmr1Sym_T1CON_SOURCE_SEL.addKey( ii['desc'], ii['value'], ii['key'] )
+        tmr1Sym_T1CON_SOURCE_SEL.addKey( ii['key'], ii['value'], ii['desc'] )
     tmr1Sym_T1CON_SOURCE_SEL.setDefaultValue(find_key_value(0,tcs_names))   # internal peripheral clock
 
     #timer TECS configuration
