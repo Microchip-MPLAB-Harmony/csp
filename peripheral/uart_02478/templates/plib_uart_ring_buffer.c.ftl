@@ -692,7 +692,7 @@ void ${UART_INSTANCE_NAME}_AutoBaudSet( bool enable )
 <#if UART_INTERRUPT_COUNT == 1>
 static void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 <#else>
-void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
+void ${UART_INSTANCE_NAME}${UART_ERROR_NAME}_InterruptHandler (void)
 </#if>
 {
     /* Save the error to be reported later */
