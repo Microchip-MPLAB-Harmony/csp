@@ -618,6 +618,10 @@ def instantiateComponent(uartComponent):
     uartSym_RXRingBuffer_Size.setVisible(False)
     uartSym_RXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["UART_RING_BUFFER_MODE_ENABLE"])
 
+    uartSym_ErrorName = uartComponent.createStringSymbol("UART_ERROR_NAME", None)
+    uartSym_ErrorName.setDefaultValue("_FAULT")
+    uartSym_ErrorName.setVisible(False)
+
     uartIrq = "UART_" + uartInstanceNum.getValue()
     uartVectorNum = getVectorIndex(uartIrq)
 
@@ -641,11 +645,16 @@ def instantiateComponent(uartComponent):
     else:
         ## UART Fault Interrrupt
         uartIrqFault = uartInstanceName.getValue() + "_FAULT"
+        uartFaultVectorNum = int(getVectorIndex(uartIrqFault))
+        if uartFaultVectorNum == -1:
+            uartIrqFault = uartInstanceName.getValue() + "_ERR"
+            uartFaultVectorNum = int(getVectorIndex(uartIrqFault))
+            uartSym_ErrorName.setDefaultValue("_ERR")
         InterruptVector.append(uartIrqFault + "_INTERRUPT_ENABLE")
         InterruptHandler.append(uartIrqFault + "_INTERRUPT_HANDLER")
         InterruptHandlerLock.append(uartIrqFault + "_INTERRUPT_HANDLER_LOCK")
         InterruptVectorUpdate.append("core." + uartIrqFault + "_INTERRUPT_ENABLE_UPDATE")
-        uartFaultVectorNum = int(getVectorIndex(uartIrqFault))
+        
 
         ## UART RX Interrupt
         uartIrqrRx = uartInstanceName.getValue() + "_RX"
