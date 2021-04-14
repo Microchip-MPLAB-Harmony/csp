@@ -448,7 +448,11 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void )
         <#assign INTREG = "DCH" + i + "INT_REG">
         <#assign STATCLRREG = "DMA" + i + "_STATREG_RD">
         <#assign STATREGMASK = "DMA" + i + "_STATREG_MASK">
+<#if PRODUCT_FAMILY?contains("PIC32MM")>
+void DMA${i}_InterruptHandler(void)
+<#else>     
 void DMA_${i}_InterruptHandler(void)
+</#if>
 {
     DMAC_CHANNEL_OBJECT *chanObj;
     DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;
