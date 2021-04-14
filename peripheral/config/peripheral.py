@@ -63,6 +63,7 @@ peripherals = {
                 "NVM_02629"     : ["MEMORY"],
                 "NVM_00761"     : ["MEMORY"],
                 "NVM_03140"     : ["MEMORY"],
+                "NVM_02695"     : ["MEMORY"],
                 "HEFC_44123"    : ["MEMORY"],
                 "SDMMC_44002"   : ["SDHC"],
                 "SDHC_U2011"    : ["SDHC"],
