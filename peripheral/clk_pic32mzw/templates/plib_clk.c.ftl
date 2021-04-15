@@ -82,102 +82,214 @@
     function of the 'configuration bits' to configure the system oscillators.
 */
 
+static void DelayMs ( uint32_t delay_ms)
+{
+    uint32_t startCount, endCount;
+    /* Calculate the end count for the given delay */
+    endCount=(CORE_TIMER_FREQ/1000)*delay_ms;
+    startCount=_CP0_GET_COUNT();
+    while((_CP0_GET_COUNT()-startCount)<endCount);
+}
+
+ void wifi_spi_write(unsigned int spi_addr, unsigned int data)
+{
+    unsigned int  addr_bit, data_bit, bit_idx;
+    unsigned int cs_high, clk_high, en_bit_bang;
+    unsigned int *wifi_spi_ctrl_reg = (unsigned int *)0xBF8C8028;
+    clk_high = 0x1 ;
+    cs_high  = 0x2;
+    en_bit_bang  = 0x1 << 31;
+    addr_bit = 0; data_bit = 0;
+
+    *wifi_spi_ctrl_reg = en_bit_bang | cs_high ;
+    *wifi_spi_ctrl_reg = (en_bit_bang | cs_high | clk_high );
+     *wifi_spi_ctrl_reg = (en_bit_bang);
+     *wifi_spi_ctrl_reg = (en_bit_bang | clk_high);
+
+    for (bit_idx=0;bit_idx<=7;bit_idx++) {
+        addr_bit = (spi_addr>>(7-bit_idx)) & 0x1;
+        *wifi_spi_ctrl_reg = (en_bit_bang | (addr_bit << 2 ));               // Falling edge of clk
+        *wifi_spi_ctrl_reg = (en_bit_bang | (addr_bit << 2 ) | clk_high);    // Rising edge of clk
+    }
+
+    for (bit_idx=0;bit_idx<=15;bit_idx++) {
+        data_bit = (data>>(15-bit_idx)) & 0x1;
+        *wifi_spi_ctrl_reg = (en_bit_bang | (data_bit << 2 ));                // Falling edge of clk with data bit
+        *wifi_spi_ctrl_reg = (en_bit_bang | (data_bit << 2 ) | clk_high);     // Rising edge of clk
+    }
+
+    *wifi_spi_ctrl_reg = (en_bit_bang | cs_high | clk_high); // Rising edge of clk
+    *wifi_spi_ctrl_reg = 0;                                // Set the RF override bit and CS_n high
+}
+
+unsigned int wifi_spi_read(unsigned int spi_addr)
+{
+    unsigned int  addr_bit, bit_idx, read_data;
+    unsigned int cs_high, clk_high, cmd_high, en_bit_bang;
+    unsigned int *wifi_spi_ctrl_reg = (unsigned int *)0xBF8C8028;
+
+    clk_high = 0x1 ;
+    cs_high  = 0x2;
+    cmd_high = 0x8;
+    en_bit_bang  = 0x1 << 31;
+    addr_bit = 0;
+
+
+    *wifi_spi_ctrl_reg = (en_bit_bang | cs_high);            // Set the RF override bit and CS_n high
+    *wifi_spi_ctrl_reg = (en_bit_bang | cs_high | clk_high); // Rising edge of clk
+    *wifi_spi_ctrl_reg = ((en_bit_bang)| cmd_high | (0x1 << 2));                // Falling edge of clk with CS going low and command bit 1
+    *wifi_spi_ctrl_reg = ((en_bit_bang | cmd_high | (0x1 << 2) | clk_high));     // Falling edge of clk with CS going low and command bit 1
+
+    for (bit_idx=0;bit_idx<=7;bit_idx++) {
+        addr_bit = (spi_addr>>(7-bit_idx)) & 0x1;
+        *wifi_spi_ctrl_reg = ((en_bit_bang | cmd_high | (addr_bit << 2 )));               // Falling edge of clk
+        *wifi_spi_ctrl_reg =((en_bit_bang | cmd_high | (addr_bit << 2 ) | clk_high));    // Rising edge of clk
+    }
+
+    for (bit_idx=0;bit_idx<=16;bit_idx++) {
+        *wifi_spi_ctrl_reg = ((en_bit_bang | cmd_high ));               // Falling edge of clk
+        *wifi_spi_ctrl_reg = ((en_bit_bang | cmd_high | clk_high));     // Rising edge of clk
+    }
+
+    *wifi_spi_ctrl_reg = 0;                                // Set the RF override bit and CS_n high
+
+    read_data = *wifi_spi_ctrl_reg ; //soc_reg_rd(0xBF8C8130,15,0) & 0xFFFF;
+    return read_data;
+}
+
 void CLK_Initialize( void )
 {
+    volatile unsigned int *PLLDBG = (unsigned int*) 0xBF8000E0;
+    volatile unsigned int *PMDRCLR = (unsigned int *) 0xBF8000B4;
     /* unlock system for clock configuration */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
 
-    OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
+    if(((DEVID & 0x0FF00000) >> 20) == SG407_MASK_ID)
+    {
+        CFGCON2  = 0x7F7FFF38; // Start with POSC Turned OFF
+        /* if POSC was on give some time for POSC to shut off */
+        DelayMs(2);
+        // Read counter part is there only for debug and testing, or else not needed, so use ifdef as needed
+        wifi_spi_write(0x85, 0x00F0); /* MBIAS filter and A31 analog_test */ //if (wifi_spi_read (0x85) != 0xF0) {Error, Stop};
+        wifi_spi_write(0x84, 0x0001); /* A31 Analog test */// if (wifi_spi_read (0x84) != 0x1) {Error, Stop};
+        wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */ //if (wifi_spi_read (0x1e) != 0x510) {Error, Stop};
+        wifi_spi_write(0x82, 0x6400); /* XTAL LDO feedback divider (1.3+v) */ //if (wifi_spi_read (0x82) != 0x6000) {Error, Stop};
 
-    /* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
-    /* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
-    /* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
-    /* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
-    /* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
-    /* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
-    /* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
-    /* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
-    /* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
-    ${SPLLCON_REG} = 0x${SPLLCON_VALUE};
+        /* Enable POSC */
+        CFGCON2  = 0x7F7FFC38; // enable POSC
+
+        /* Wait for POSC ready */
+        while(!(CLKSTAT & 0x00000004)) ;
+
+        /*Configure SPLL*/
+        CFGCON3 = 0x1E78A;
+        CFGCON0bits.SPLLHWMD = 1;
+        SPLLCON = 0x01496869;
+
+        OSCCON = 0x103;
+        while (((OSCCON) & 0x1)); // -- Add timeout
+        DelayMs(5);
+
+        EWPLLCON = 0x010A094A;
+        CFGCON0bits.ETHPLLHWMD = 1;
+
+        while(!((*PLLDBG) & 0x4));
+
+        *(PMDRCLR)  = 0x1000;
+    }
+    else if(((DEVID & 0x0FF00000) >> 20) == SG402_MASK_ID)
+    {
+    	OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
+
+		/* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
+		/* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
+		/* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
+		/* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
+		/* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
+		/* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
+		/* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
+		/* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
+		/* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
+		${SPLLCON_REG} = 0x${SPLLCON_VALUE};
 
 <#if USBPLL_ENABLE == true>
-    /* Configure UPLL */
-    /* UPLLBSWSEL   = ${UPLLCON_UPLLBSWSEL_VALUE} */
-    /* UPLLPWDN     = ${UPLLCON_UPLLPWDN_VALUE} */
-    /* UPLLPOSTDIV1 = ${UPLLCON_UPLLPOSTDIV1_VALUE} */
-    /* UPLLFLOCK    = ${UPLLCON_UPLLFLOCK_VALUE} */
-    /* UPLLRST      = ${UPLLCON_UPLLRST_VALUE} */
-    /* UPLLFBDIV    = ${UPLLCON_UPLLFBDIV_VALUE} */
-    /* UPLLREFDIV   = ${UPLLCON_UPLLREFDIV_VALUE} */
-    /* UPLL_BYP     = ${UPLLCON_UPLL_BYP_VALUE} */
-    ${UPLLCON_REG} = 0x${UPLLCON_VALUE};
+		/* Configure UPLL */
+		/* UPLLBSWSEL   = ${UPLLCON_UPLLBSWSEL_VALUE} */
+		/* UPLLPWDN     = ${UPLLCON_UPLLPWDN_VALUE} */
+		/* UPLLPOSTDIV1 = ${UPLLCON_UPLLPOSTDIV1_VALUE} */
+		/* UPLLFLOCK    = ${UPLLCON_UPLLFLOCK_VALUE} */
+		/* UPLLRST      = ${UPLLCON_UPLLRST_VALUE} */
+		/* UPLLFBDIV    = ${UPLLCON_UPLLFBDIV_VALUE} */
+		/* UPLLREFDIV   = ${UPLLCON_UPLLREFDIV_VALUE} */
+		/* UPLL_BYP     = ${UPLLCON_UPLL_BYP_VALUE} */
+		${UPLLCON_REG} = 0x${UPLLCON_VALUE};
 <#else>
-    /* Power down the UPLL */
-    UPLLCONbits.UPLLPWDN = 1;
+		/* Power down the UPLL */
+		UPLLCONbits.UPLLPWDN = 1;
 </#if>
 
 <#if EWPLL_ENABLE == true>
-    /* Configure EWPLL */
-    /* EWPLLBSWSEL   = ${EWPLLCON_EWPLLBSWSEL_VALUE} */
-    /* EWPLLPWDN     = ${EWPLLCON_EWPLLPWDN_VALUE} */
-    /* EWPLLPOSTDIV1 = ${EWPLLCON_EWPLLPOSTDIV1_VALUE} */
-    /* EWPLLFLOCK    = ${EWPLLCON_EWPLLFLOCK_VALUE} */
-    /* EWPLLRST      = ${EWPLLCON_EWPLLRST_VALUE} */
-    /* EWPLLFBDIV    = ${EWPLLCON_EWPLLFBDIV_VALUE} */
-    /* EWPLLREFDIV   = ${EWPLLCON_EWPLLREFDIV_VALUE} */
-    /* EWPLLICLK     = ${EWPLLCON_EWPLLICLK_VALUE} */
-    /* ETHCLKOUTEN   = ${EWPLLCON_ETHCLKOUTEN_VALUE} */
-    /* EWPLL_BYP     = ${EWPLLCON_EWPLL_BYP_VALUE} */
-    ${EWPLLCON_REG} = 0x${EWPLLCON_VALUE};
+		/* Configure EWPLL */
+		/* EWPLLBSWSEL   = ${EWPLLCON_EWPLLBSWSEL_VALUE} */
+		/* EWPLLPWDN     = ${EWPLLCON_EWPLLPWDN_VALUE} */
+		/* EWPLLPOSTDIV1 = ${EWPLLCON_EWPLLPOSTDIV1_VALUE} */
+		/* EWPLLFLOCK    = ${EWPLLCON_EWPLLFLOCK_VALUE} */
+		/* EWPLLRST      = ${EWPLLCON_EWPLLRST_VALUE} */
+		/* EWPLLFBDIV    = ${EWPLLCON_EWPLLFBDIV_VALUE} */
+		/* EWPLLREFDIV   = ${EWPLLCON_EWPLLREFDIV_VALUE} */
+		/* EWPLLICLK     = ${EWPLLCON_EWPLLICLK_VALUE} */
+		/* ETHCLKOUTEN   = ${EWPLLCON_ETHCLKOUTEN_VALUE} */
+		/* EWPLL_BYP     = ${EWPLLCON_EWPLL_BYP_VALUE} */
+		${EWPLLCON_REG} = 0x${EWPLLCON_VALUE};
 <#else>
-    /* Power down the EWPLL */
-    EWPLLCONbits.EWPLLPWDN = 1;
+		/* Power down the EWPLL */
+		EWPLLCONbits.EWPLLPWDN = 1;
 </#if>
 
 <#if BTPLL_ENABLE == true>
-    /* Configure BYPLL */
-    /* BTPLLBSWSEL   = ${BTPLLCON_BTPLLBSWSEL_VALUE} */
-    /* BTPLLPWDN     = ${BTPLLCON_BTPLLPWDN_VALUE} */
-    /* BTPLLPOSTDIV1 = ${BTPLLCON_BTPLLPOSTDIV1_VALUE} */
-    /* BTPLLFLOCK    = ${BTPLLCON_BTPLLFLOCK_VALUE} */
-    /* BTPLLRST      = ${BTPLLCON_BTPLLRST_VALUE} */
-    /* BTPLLFBDIV    = ${BTPLLCON_BTPLLFBDIV_VALUE} */
-    /* BTPLLREFDIV   = ${BTPLLCON_BTPLLREFDIV_VALUE} */
-    /* BTCLKOUTEN    = ${BTPLLCON_BTCLKOUTEN_VALUE} */
-    /* BTPLLICLK     = ${BTPLLCON_BTPLLCLK_VALUE} */
-    /* BTPLL_BYP     = ${BTPLLCON_BTPLL_BYP_VALUE} */
-    ${BTPLLCON_REG} = 0x${BTPLLCON_VALUE};
+		/* Configure BYPLL */
+		/* BTPLLBSWSEL   = ${BTPLLCON_BTPLLBSWSEL_VALUE} */
+		/* BTPLLPWDN     = ${BTPLLCON_BTPLLPWDN_VALUE} */
+		/* BTPLLPOSTDIV1 = ${BTPLLCON_BTPLLPOSTDIV1_VALUE} */
+		/* BTPLLFLOCK    = ${BTPLLCON_BTPLLFLOCK_VALUE} */
+		/* BTPLLRST      = ${BTPLLCON_BTPLLRST_VALUE} */
+		/* BTPLLFBDIV    = ${BTPLLCON_BTPLLFBDIV_VALUE} */
+		/* BTPLLREFDIV   = ${BTPLLCON_BTPLLREFDIV_VALUE} */
+		/* BTCLKOUTEN    = ${BTPLLCON_BTCLKOUTEN_VALUE} */
+		/* BTPLLICLK     = ${BTPLLCON_BTPLLCLK_VALUE} */
+		/* BTPLL_BYP     = ${BTPLLCON_BTPLL_BYP_VALUE} */
+		${BTPLLCON_REG} = 0x${BTPLLCON_VALUE};
 <#else>
-    /* Power down the BTPLL */
-    BTPLLCONbits.BTPLLPWDN = 1;
+		/* Power down the BTPLL */
+		BTPLLCONbits.BTPLLPWDN = 1;
 </#if>
 
-    /* ETHPLLPOSTDIV2 = ${CFG_ETHPLLPOSTDIV2} */
-    /* SPLLPOSTDIV2   = ${CFG_SPLLPOSTDIV2} */
-    /* BTPLLPOSTDIV2  = ${CFG_BTPLLPOSTDIV2} */
-    ${CFGCON3_NAME} = ${CFGCON3_VALUE};
+		/* ETHPLLPOSTDIV2 = ${CFG_ETHPLLPOSTDIV2} */
+		/* SPLLPOSTDIV2   = ${CFG_SPLLPOSTDIV2} */
+		/* BTPLLPOSTDIV2  = ${CFG_BTPLLPOSTDIV2} */
+		${CFGCON3_NAME} = ${CFGCON3_VALUE};
 
-    /* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
-    /* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
-    /* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
-    /* CF       = ${OSCCON_CF_VALUE}       */
-    /* SLPEN    = ${OSCCON_SLPEN_VALUE}    */
-    /* CLKLOCK  = ${OSCCON_CLKLOCK_VALUE}  */
-    /* NOSC     = ${OSCCON_NOSC_VALUE}     */
-    /* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
-    /* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
-    /* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
-    ${OSCCON_REG} = 0x${OSCCON_VALUE};
+		/* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
+		/* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
+		/* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
+		/* CF       = ${OSCCON_CF_VALUE}       */
+		/* SLPEN    = ${OSCCON_SLPEN_VALUE}    */
+		/* CLKLOCK  = ${OSCCON_CLKLOCK_VALUE}  */
+		/* NOSC     = ${OSCCON_NOSC_VALUE}     */
+		/* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
+		/* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
+		/* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
+		${OSCCON_REG} = 0x${OSCCON_VALUE};
 
-    OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
+		OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
 
-    Nop();
-    Nop();
+		Nop();
+		Nop();
 
-    while( OSCCONbits.OSWEN );        /* wait for indication of successful clock change before proceeding */
-
+		while( OSCCONbits.OSWEN );        /* wait for indication of successful clock change before proceeding */
+	}
 <#if CONFIG_SYS_CLK_PBCLK1_ENABLE == true && CONFIG_SYS_CLK_PBDIV1 != 2>
     <#lt>    /* Peripheral Bus 1 is by default enabled, set its divisor */
     <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV1} */

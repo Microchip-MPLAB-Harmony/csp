@@ -67,7 +67,12 @@
 
 #endif
 // DOM-IGNORE-END
-void SYS_PMU_MLDO_TRIM(void);
+
+#define SG407_MASK_ID 0xA4
+#define SG402_MASK_ID 0x8C
+#define CORE_TIMER_FREQ 100000000
+
+void PMU_Initialize(void);
  
 // *****************************************************************************
 // *****************************************************************************
