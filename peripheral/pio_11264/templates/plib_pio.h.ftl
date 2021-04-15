@@ -196,36 +196,34 @@
     device data sheet to determine which ports are supported.
 */
 
-typedef enum
-{
-    /* Port A Pins */
-    PIO_PORT_A = (uint32_t)&(PIO_REGS->PIO_GROUP[0]),
+/* Port A Pins */
+#define PIO_PORT_A 0U
 
-    /* Port B Pins */
-    PIO_PORT_B = (uint32_t)&(PIO_REGS->PIO_GROUP[1]),
+/* Port B Pins */
+#define PIO_PORT_B 1U
 
     /* Port C Pins */
-    PIO_PORT_C = (uint32_t)&(PIO_REGS->PIO_GROUP[2]),
+#define PIO_PORT_C 2U
 
-    /* Port D Pins */
-    PIO_PORT_D = (uint32_t)&(PIO_REGS->PIO_GROUP[3]),
+/* Port D Pins */
+#define PIO_PORT_D 3U
 
 <#if PIO_PORT_E_ENBALE>
-    /* Port E Pins */
-    PIO_PORT_E = (uint32_t)&(PIO_REGS->PIO_GROUP[4]),
+/* Port E Pins */
+#define PIO_PORT_E 4U
 </#if>
 
 <#if PIO_PORT_F_ENBALE>
-    /* Port F Pins */
-    PIO_PORT_F = (uint32_t)&(PIO_REGS->PIO_GROUP[5]),
+/* Port F Pins */
+#define PIO_PORT_F 5U
 </#if>
 
 <#if PIO_PORT_G_ENBALE>
-    /* Port G Pins */
-    PIO_PORT_G = (uint32_t)&(PIO_REGS->PIO_GROUP[6])
+/* Port G Pins */
+#define PIO_PORT_G 6U
 </#if>
 
-} PIO_PORT;
+typedef uint32_t PIO_PORT;
 
 // *****************************************************************************
 /* PIO Port Pins
@@ -317,7 +315,7 @@ typedef enum
     <code>
     void APP_PinEventHandler(PIN_NAME pin, uintptr_t context)
     {
-        // Do Something
+
     }
     </code>
     Is registered as follows:
@@ -457,7 +455,7 @@ uint32_t PIO_PortRead(PIO_PORT port);
 
   Example:
     <code>
-    // Write binary value 0011 to the pins PC3, PC2, PC1 and PC0 respectively.
+
     PIO_PortWrite(PIO_PORT_C, 0x0F, 0xF563D453);
 
     </code>
@@ -532,7 +530,6 @@ uint32_t PIO_PortLatchRead ( PIO_PORT port );
   Example:
     <code>
 
-    // Set PC5 and PC7 pins to 1
     PIO_PortSet(PIO_PORT_C, 0x00A0);
 
     </code>
@@ -569,7 +566,6 @@ void PIO_PortSet(PIO_PORT port, uint32_t mask);
   Example:
     <code>
 
-    // Clear PC5 and PC7 pins to 0
     PIO_PortClear(PIO_PORT_C, 0x00A0);
 
     </code>
@@ -644,7 +640,6 @@ void PIO_PortToggle(PIO_PORT port, uint32_t mask);
   Example:
     <code>
 
-    // Make PC5 and PC7 pins as input
     PIO_PortInputEnable(PIO_PORT_C, 0x00A0);
 
     </code>
@@ -680,7 +675,6 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask);
   Example:
     <code>
 
-    // Make PC5 and PC7 pins as output
     PIO_PortOutputEnable(PIO_PORT_C, 0x00A0);
 
     </code>
@@ -727,7 +721,6 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask);
   Example:
     <code>
 
-    // Enable IO interrupt for PC5 and PC7 pins
     PIO_PortInterruptEnable(PIO_PORT_C, 0x00A0);
 
     </code>
@@ -765,7 +758,6 @@ void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask);
   Example:
     <code>
 
-    // Disable IO interrupt for PB9 and PB1 pins
     PIO_PortInterruptDisable(PIO_PORT_C, 0x0202);
 
     </code>
@@ -847,7 +839,9 @@ typedef struct {
 */
 static inline void PIO_PinWrite(PIO_PIN pin, bool value)
 {
-    PIO_PortWrite((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f));
+    uint32_t port = (uint32_t)pin >> 5U;
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    PIO_PortWrite(port, mask, value ? mask : 0U);
 }
 
 // *****************************************************************************
@@ -887,7 +881,9 @@ static inline void PIO_PinWrite(PIO_PIN pin, bool value)
 
 static inline bool PIO_PinRead(PIO_PIN pin)
 {
-    return (bool)((PIO_PortRead((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
+    uint32_t port = (uint32_t)pin >> 5U;
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    return (((PIO_PortRead(port) & mask) != 0U) ? true : false);
 }
 
 
@@ -925,7 +921,9 @@ static inline bool PIO_PinRead(PIO_PIN pin)
 */
 static inline bool PIO_PinLatchRead(PIO_PIN pin)
 {
-    return (bool)((PIO_PortLatchRead((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
+    uint32_t port = (uint32_t)pin >> 5U;
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    return (((PIO_PortLatchRead(port) & mask) != 0U) ? true : false);
 }
 
 // *****************************************************************************
@@ -959,7 +957,9 @@ static inline bool PIO_PinLatchRead(PIO_PIN pin)
 */
 static inline void PIO_PinToggle(PIO_PIN pin)
 {
-    PIO_PortToggle((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    uint32_t port = (uint32_t)pin >> 5U;
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    PIO_PortToggle(port, mask);
 }
 
 // *****************************************************************************
@@ -993,7 +993,9 @@ static inline void PIO_PinToggle(PIO_PIN pin)
 */
 static inline void PIO_PinSet(PIO_PIN pin)
 {
-    PIO_PortSet((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    uint32_t port = (uint32_t)pin >> 5U;
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    PIO_PortSet(port, mask);
 }
 
 // *****************************************************************************
@@ -1027,7 +1029,9 @@ static inline void PIO_PinSet(PIO_PIN pin)
 */
 static inline void PIO_PinClear(PIO_PIN pin)
 {
-    PIO_PortClear((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    uint32_t port = (uint32_t)pin >> 5U;
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    PIO_PortClear(port, mask);
 }
 
 // *****************************************************************************
@@ -1060,8 +1064,10 @@ static inline void PIO_PinClear(PIO_PIN pin)
     None.
 */
 static inline void PIO_PinInputEnable(PIO_PIN pin)
-{
-    PIO_PortInputEnable((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+{   
+    uint32_t port = (uint32_t)pin >> 5U;
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    PIO_PortInputEnable(port, mask);
 }
 
 // *****************************************************************************
@@ -1095,7 +1101,9 @@ static inline void PIO_PinInputEnable(PIO_PIN pin)
 */
 static inline void PIO_PinOutputEnable(PIO_PIN pin)
 {
-    PIO_PortOutputEnable((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    uint32_t port = (uint32_t)pin >> 5U;
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    PIO_PortOutputEnable(port, mask);
 }
 
 <#if PORT_A_INTERRUPT_USED == true ||
@@ -1136,7 +1144,9 @@ static inline void PIO_PinOutputEnable(PIO_PIN pin)
 */
 static inline void PIO_PinInterruptEnable(PIO_PIN pin)
 {
-    PIO_PortInterruptEnable((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    uint32_t port = (uint32_t)pin >> 5U;
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);     
+    PIO_PortInterruptEnable(port, mask);
 }
 
 
@@ -1171,7 +1181,9 @@ static inline void PIO_PinInterruptEnable(PIO_PIN pin)
 */
 static inline void PIO_PinInterruptDisable(PIO_PIN pin)
 {
-    PIO_PortInterruptDisable((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    uint32_t port = (uint32_t)pin >> 5U;
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);     
+    PIO_PortInterruptDisable(port, mask);
 }
 
 // *****************************************************************************
