@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<!-- This is an auto-generated pin data file created: 23:05:44 04/29/21 -->
+<pinfile family="MM_GPL">
+   <packages>
+     <package diagram="MM_36_QFN" id="1" name="VQFN" />
+    <package diagram="MM_40_UQFN" id="2" name="UQFN" />
+  </packages>
+  <pins>
+     <pin name="RB2">
+       <number package="1" pin="1" />
+      <number package="2" pin="1" />
+      <function name="AN4" />
+      <function name="C1INB" />
+      <function name="RPB2" />
+    </pin>
+    <pin name="RB3">
+       <number package="1" pin="2" />
+      <number package="2" pin="2" />
+      <function name="AN11" />
+      <function name="C1INA" />
+    </pin>
+    <pin name="RC0">
+       <number package="1" pin="3" />
+      <number package="2" pin="3" />
+      <function name="AN12" />
+    </pin>
+    <pin name="RC1">
+       <number package="1" pin="4" />
+      <number package="2" pin="4" />
+      <function name="AN13" />
+    </pin>
+    <pin name="RC2">
+       <number package="1" pin="5" />
+      <number package="2" pin="5" />
+    </pin>
+    <pin name="VSS">
+       <number package="1" pin="6" />
+      <number package="2" pin="6" />
+    </pin>
+    <pin name="RA2">
+       <number package="1" pin="7" />
+      <number package="2" pin="7" />
+      <function name="OSC1" />
+      <function name="CLKI" />
+      <function name="AN5" />
+      <function name="RPA2" />
+      <function name="OCM1C" />
+    </pin>
+    <pin name="RA3">
+       <number package="1" pin="8" />
+      <number package="2" pin="8" />
+      <function name="OSC2" />
+      <function name="CLKO" />
+      <function name="AN6" />
+      <function name="RPA3" />
+      <function name="OCM1D" />
+    </pin>
+    <pin name="RB4">
+       <number package="1" pin="9" />
+      <number package="2" pin="9" />
+      <function name="SOSCI" />
+      <function name="RPB4" />
+    </pin>
+    <pin name="RA4">
+       <number package="1" pin="10" />
+      <number package="2" pin="10" />
+      <function name="SOSCO" />
+      <function name="SCLKI" />
+      <function name="RPA4" />
+      <function name="PWRLCLK" />
+    </pin>
+    <pin name="RA9">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="11" />
+      <number package="2" pin="11" />
+      <function name="RPA9" />
+    </pin>
+    <pin name="VSS">
+       <number package="1" pin="12" />
+      <number package="2" pin="12" />
+    </pin>
+    <pin name="VDD">
+       <number package="1" pin="13" />
+      <number package="2" pin="13" />
+    </pin>
+    <pin name="RC3">
+       <number package="1" pin="14" />
+      <number package="2" pin="14" />
+    </pin>
+    <pin name="RB5">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="15" />
+      <number package="2" pin="15" />
+      <function name="PGED3" />
+    </pin>
+    <pin name="RB6">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="16" />
+      <number package="2" pin="16" />
+      <function name="PGEC3" />
+    </pin>
+    <pin name="RB7">
+       <number package="1" pin="17" />
+      <number package="2" pin="17" />
+      <function name="RPB7" />
+    </pin>
+    <pin name="RB8">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="18" />
+      <number package="2" pin="18" />
+      <function name="TCK" />
+      <function name="RPB8" />
+      <function name="U1CTS" />
+      <function name="SCK1" />
+      <function name="OCM1A" />
+    </pin>
+    <pin name="RB9">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="19" />
+      <number package="2" pin="20" />
+      <function name="TMS" />
+      <function name="REFCLKI" />
+      <function name="RPB9" />
+      <function name="T1CK" />
+      <function name="T1G" />
+      <function name="U1RTS" />
+      <function name="U1BCLK" />
+      <function name="SDO1" />
+      <function name="C2OUT" />
+      <function name="OCM1B" />
+      <function name="INT2" />
+    </pin>
+    <pin name="RC8">
+       <number package="1" pin="20" />
+      <number package="2" pin="21" />
+    </pin>
+    <pin name="RC9">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="21" />
+      <number package="2" pin="22" />
+      <function name="RPC9" />
+    </pin>
+    <pin name="VCAP">
+       <number package="1" pin="22" />
+      <number package="2" pin="24" />
+    </pin>
+    <pin name="VDD">
+       <number package="1" pin="23" />
+      <number package="2" pin="26" />
+    </pin>
+    <pin name="RB10">
+       <number package="1" pin="24" />
+      <number package="2" pin="27" />
+      <function name="PGED2" />
+      <function name="TDO" />
+      <function name="RPB10" />
+    </pin>
+    <pin name="RB11">
+       <number package="1" pin="25" />
+      <number package="2" pin="28" />
+      <function name="PGEC2" />
+      <function name="TDI" />
+      <function name="RPB11" />
+    </pin>
+    <pin name="RB12">
+       <number package="1" pin="26" />
+      <number package="2" pin="29" />
+      <function name="AN7" />
+      <function name="LVDIN" />
+      <function name="RPB12" />
+    </pin>
+    <pin name="RB13">
+       <number package="1" pin="27" />
+      <number package="2" pin="30" />
+      <function name="AN8" />
+      <function name="RPB13" />
+    </pin>
+    <pin name="RB14">
+       <number package="1" pin="28" />
+      <number package="2" pin="31" />
+      <function name="CDAC1" />
+      <function name="AN9" />
+      <function name="RPB14" />
+      <function name="RTCC" />
+      <function name="U1TX" />
+      <function name="SDI1" />
+      <function name="C1OUT" />
+      <function name="INT1" />
+    </pin>
+    <pin name="RB15">
+       <number package="1" pin="29" />
+      <number package="2" pin="32" />
+      <function name="AN10" />
+      <function name="REFCLKO" />
+      <function name="RPB15" />
+      <function name="U1RX" />
+      <function name="SS1" />
+      <function name="FSYNC1" />
+      <function name="INT0" />
+    </pin>
+    <pin name="AVSS">
+       <number package="1" pin="30" />
+      <number package="2" pin="33" />
+    </pin>
+    <pin name="AVDD">
+       <number package="1" pin="31" />
+      <number package="2" pin="34" />
+    </pin>
+    <pin name="MCLR">
+       <number package="1" pin="32" />
+      <number package="2" pin="35" />
+    </pin>
+    <pin name="RA0">
+       <number package="1" pin="33" />
+      <number package="2" pin="36" />
+      <function name="VREF+" />
+      <function name="AN0" />
+      <function name="RPA0" />
+      <function name="OCM1E" />
+      <function name="INT3" />
+    </pin>
+    <pin name="RA1">
+       <number package="1" pin="34" />
+      <number package="2" pin="37" />
+      <function name="VREF-" />
+      <function name="AN1" />
+      <function name="RPA1" />
+      <function name="OCM1F" />
+    </pin>
+    <pin name="RB0">
+       <number package="1" pin="35" />
+      <number package="2" pin="38" />
+      <function name="PGED1" />
+      <function name="AN2" />
+      <function name="C1IND" />
+      <function name="C2INB" />
+      <function name="RPB0" />
+    </pin>
+    <pin name="RB1">
+       <number package="1" pin="36" />
+      <number package="2" pin="39" />
+      <function name="PGEC1" />
+      <function name="AN3" />
+      <function name="C1INC" />
+      <function name="C2INA" />
+      <function name="RPB1" />
+    </pin>
+    <pin name="NC">
+       <number package="2" pin="19" />
+    </pin>
+    <pin name="NC">
+       <number package="2" pin="23" />
+    </pin>
+    <pin name="NC">
+       <number package="2" pin="25" />
+    </pin>
+    <pin name="NC">
+       <number package="2" pin="40" />
+    </pin>
+  </pins>
+</pinfile>
