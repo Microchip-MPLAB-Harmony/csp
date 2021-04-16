@@ -233,13 +233,13 @@ bool EVIC_ExternalInterruptCallbackRegister(
     <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
 // *****************************************************************************
 /* Function:
-    void EXTERNAL_${i}_InterruptHandler()
+    void EXTERNAL_${i}_InterruptHandler(void)
   Summary:
     Interrupt Handler for External Interrupt pin ${i}.
   Remarks:
     It is an internal function called from ISR, user should not call it directly.
 */
-void EXTERNAL_${i}_InterruptHandler()
+void EXTERNAL_${i}_InterruptHandler(void)
 {
     IFS0CLR = _IFS0_INT${i}IF_MASK;
 
