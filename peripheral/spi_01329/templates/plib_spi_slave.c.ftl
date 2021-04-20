@@ -337,7 +337,7 @@ static void ${SPI_INSTANCE_NAME}_CS_Handler(GPIO_PIN pin, uintptr_t context)
 <#if SPI_INTERRUPT_COUNT == 1>
 static void ${SPI_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_FAULT_InterruptHandler (void)
+void ${SPI_INSTANCE_NAME}${SPI_ERROR_NAME}_InterruptHandler (void)
 </#if>
 {
     ${SPI_INSTANCE_NAME?lower_case}Obj.errorStatus = (${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK);
