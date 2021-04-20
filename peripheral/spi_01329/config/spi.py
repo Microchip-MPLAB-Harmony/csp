@@ -98,21 +98,21 @@ dummyDataDict = {
 def setSPIInterruptData(mode, status):
 
     for id in InterruptVector:
-        if (("FAULT" in id) and (mode == "Master mode")):
+        if ((("FAULT" in id) or ("ERR_" in id)) and (mode == "Master mode")):
             # Disable Fault interrupt for Master mode
             Database.setSymbolValue("core", id, False, 1)
         else:
             Database.setSymbolValue("core", id, status, 1)
 
     for id in InterruptHandlerLock:
-        if (("FAULT" in id) and (mode == "Master mode")):
+        if ((("FAULT" in id) or ("ERR_" in id)) and (mode == "Master mode")):
             Database.setSymbolValue("core", id, False, 1)
         else:
             Database.setSymbolValue("core", id, status, 1)
 
     for id in InterruptHandler:
         interruptName = id.split("_INTERRUPT_HANDLER")[0]
-        if (("FAULT" in id) and (mode == "Master mode")):
+        if ((("FAULT" in id) or ("ERR_" in id)) and (mode == "Master mode")):
             continue
         if status == True:
             Database.setSymbolValue("core", id, interruptName + "_InterruptHandler", 1)
@@ -130,7 +130,7 @@ def updateSPIInterruptData(symbol, event):
 
     for id in InterruptVectorUpdate:
         id = id.replace("core.", "")
-        if (("FAULT" in id) and (mode == "Master mode")):
+        if ((("FAULT" in id) or ("ERR_" in id)) and (mode == "Master mode")):
             continue
         elif Database.getSymbolValue("core", id) == True:
             status = True
@@ -339,7 +339,6 @@ def onCapabilityConnected(event):
 
 def getChipSelectPinList(ss_pin):
     # parse XML
-    global pinoutXmlPath
     gpioIP = ""
 
     deviceFamily = Database.getSymbolValue("core", "PRODUCT_FAMILY")
@@ -347,6 +346,8 @@ def getChipSelectPinList(ss_pin):
         gpioIP = "gpio_01618"
     elif deviceFamily in ["PIC32MX1156", "PIC32MX1143"]:
         gpioIP = "gpio_01166"
+    elif "PIC32MM" in deviceFamily:
+        gpioIP = "gpio_02922"
     else:
         gpioIP = "gpio_02467"
 
@@ -357,20 +358,27 @@ def getChipSelectPinList(ss_pin):
     deviceXmlPath = os.path.join(gpioPlibPath, "plugin/pin_xml/components/" + Variables.get("__PROCESSOR") + ".xml")
     deviceXmlTree = ET.parse(deviceXmlPath)
     deviceXmlRoot = deviceXmlTree.getroot()
-    pinoutXmlName = deviceXmlRoot.get("families")
-    pinoutXmlPath = os.path.join(gpioPlibPath, "plugin/pin_xml/families/" + pinoutXmlName + ".xml")
+
+    familiesXmlName = deviceXmlRoot.get("families")
+    familiesXmlPath = os.path.join(gpioPlibPath, "plugin/pin_xml/families/" + familiesXmlName + ".xml")
+    familiesXmlPath = os.path.normpath(familiesXmlPath)
+    familiesXmlTree = ET.parse(familiesXmlPath)
+    familiesXmlRoot = familiesXmlTree.getroot()
+
+    pinoutXmlName = deviceXmlRoot.get("pins")
+    pinoutXmlPath = os.path.join(gpioPlibPath, "plugin/pin_xml/pins/" + pinoutXmlName + ".xml")
     pinoutXmlPath = os.path.normpath(pinoutXmlPath)
-    tree = ET.parse(pinoutXmlPath)
-    root = tree.getroot()
-    tag_list = [elem.tag for elem in root.iter()]
+    pinoutXmlTree = ET.parse(pinoutXmlPath)
+    pinoutXmlRoot = pinoutXmlTree.getroot()
+
     # Get all elements with tag = "group" and having attribute "id"
-    group_elements = root.findall(".//group/[@id]")
+    group_elements = familiesXmlRoot.findall(".//group/[@id]")
     # Get a list of all group elements. Each element of list is a dictionary.
     # key is tag and value is attribute which is another dictionary.
     group_elements_list = [{t.tag : t.attrib} for t in group_elements]
     final_pin_list = []
     for group_elem in group_elements_list:
-        target_elements = root.findall(".//group/[@id='" + group_elem["group"]["id"] + "']/*")
+        target_elements = familiesXmlRoot.findall(".//group/[@id='" + group_elem["group"]["id"] + "']/*")
         # Create a list containing a dictionary of "tag":"attrib"
         # Each element of list is a dictionary. t.attrib is another dictionary.
         result = [{t.tag : t.attrib} for t in target_elements]
@@ -383,7 +391,19 @@ def getChipSelectPinList(ss_pin):
                             pin = dic["pin"]["name"]
                             # Discard any pin that does not start with character 'R'. Example: "PTG30"
                             if pin.startswith('R'):
-                                final_pin_list.append(pin.replace('P', ''))
+                                pinFromFamilyXml = pin.replace('P', '')
+                                # make the pin part of list only if it is present in pin xml
+                                for pin in pinoutXmlRoot.iter("pin"):
+                                    if pinFromFamilyXml == pin.get('name'):
+                                        final_pin_list.append(pinFromFamilyXml)
+                                        break
+                    break
+    # for some of the devices like PIC32MM, few SPI instances have fixed SSx pins, get their pin name from pin xml
+    if not final_pin_list:
+        for pin in pinoutXmlRoot.iter("pin"):
+            for function in pin.iter("function"):
+                if ss_pin == function.get('name'):
+                    final_pin_list.append(pin.get('name'))
                     break
 
     final_pin_list.sort()
@@ -457,6 +477,10 @@ def instantiateComponent(spiComponent):
     spiSymInterruptMode.setDefaultValue(True)
     spiSymInterruptMode.setDependencies(updateIntReadOnlyAttr, ["SPI_MSTR_MODE_EN"])
 
+    spiSym_ErrorName = spiComponent.createStringSymbol("SPI_ERROR_NAME", None)
+    spiSym_ErrorName.setDefaultValue("_FAULT")
+    spiSym_ErrorName.setVisible(False)
+
     spiIrq = "SPI_" + spiInstanceNum.getValue()
     spiVectorNum = getVectorIndex(spiIrq)
 
@@ -480,11 +504,16 @@ def instantiateComponent(spiComponent):
     else:
         ## SPI Fault Interrrupt
         spiIrqFault = spiInstanceName.getValue() + "_FAULT"
+        spiFaultVectorNum = int(getVectorIndex(spiIrqFault))
+        if spiFaultVectorNum == -1:
+            spiIrqFault = spiInstanceName.getValue() + "_ERR"
+            spiFaultVectorNum = int(getVectorIndex(spiIrqFault))
+            spiSym_ErrorName.setDefaultValue("_ERR")
         InterruptVector.append(spiIrqFault + "_INTERRUPT_ENABLE")
         InterruptHandler.append(spiIrqFault + "_INTERRUPT_HANDLER")
         InterruptHandlerLock.append(spiIrqFault + "_INTERRUPT_HANDLER_LOCK")
         InterruptVectorUpdate.append("core." + spiIrqFault + "_INTERRUPT_ENABLE_UPDATE")
-        spiFaultVectorNum = int(getVectorIndex(spiIrqFault))
+        
 
         ## SPI RX Interrupt
         spiIrqrRx = spiInstanceName.getValue() + "_RX"
