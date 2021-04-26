@@ -96,9 +96,9 @@ void ${NVM_INSTANCE_NAME}_Initialize( void );
 
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address );
 
-bool ${NVM_INSTANCE_NAME}_SingleDoubleWordWrite( uint32_t *data, uint32_t address );
+bool ${NVM_INSTANCE_NAME}_WordWrite( uint32_t data, uint32_t address );
 
-bool ${NVM_INSTANCE_NAME}_QuadDoubleWordWrite( uint32_t *data, uint32_t address );
+bool ${NVM_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address );
 
 bool ${NVM_INSTANCE_NAME}_RowWrite( uint32_t *data, uint32_t address );
 
