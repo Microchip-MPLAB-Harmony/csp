@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 22:27:03 07/31/20 -->
+<!-- This is an auto-generated pin data file created: 17:22:24 03/25/21 -->
 <pinfile family="CX_BZ">
    <packages>
      <package diagram="MX_48_QFN" id="1" name="QFN48" />
@@ -165,7 +165,10 @@
        <number package="1" pin="28" />
     </pin>
     <pin name="NMCLR">
-       <number package="1" pin="29" />
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="29" />
     </pin>
     <pin name="RB0">
        <number package="1" pin="30" />
@@ -230,18 +233,12 @@
        <number package="1" pin="39" />
     </pin>
     <pin name="RB9">
-       <modifiers>
-         <modifier value="5V" />
-      </modifiers>
-      <number package="1" pin="40" />
+       <number package="1" pin="40" />
       <function name="CM4_SWDIO" />
       <function name="RPB9" />
     </pin>
     <pin name="RB8">
-       <modifiers>
-         <modifier value="5V" />
-      </modifiers>
-      <number package="1" pin="41" />
+       <number package="1" pin="41" />
       <function name="CM4_SWCLK" />
       <function name="RPB8" />
     </pin>
@@ -281,10 +278,7 @@
       <fixed-direction name="In" />
     </pin>
     <pin name="RA3">
-       <modifiers>
-         <modifier value="5V" />
-      </modifiers>
-      <number package="1" pin="47" />
+       <number package="1" pin="47" />
       <function name="SCLKI" />
       <function name="SERCOM0_PAD2" />
       <function name="RTC_IN0" />
