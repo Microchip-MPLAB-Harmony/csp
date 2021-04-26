@@ -3,6 +3,20 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.9.1
+
+### New Features
+- N/A
+
+### Bug fixes
+- Fixed issues reported by MPLAB XC32 Compiler v3.00 in HSMCI and PIO
+
+### Known Issues
+- Same as v3.9.0
+
+### Development Tools
+- Same as v3.9.0
+
 ## CSP Release v3.9.0
 
 ### New Features
