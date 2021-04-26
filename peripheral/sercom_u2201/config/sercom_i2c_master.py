@@ -29,6 +29,15 @@
 global getI2CBaudValue
 global getCalculatedI2CClockSpeed
 
+global transferModeBaud
+
+transferModeBaud = {
+    # Transfer Mode value : Max baud value
+    0:400,
+    1:1000,
+    2:3400
+}
+
 def getCalculatedI2CClockSpeed(f_gclk, trise, baud):
     global desiredI2CBaudRate
     desiredI2CBaudRate = False
@@ -45,7 +54,7 @@ def getI2CBaudValue():
     f_gclk = int(Database.getSymbolValue("core", sercomClkFrequencyId))
     f_scl = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_CLOCK_SPEED")) * 1000
     trise = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CM_TRISE")
-    
+
     # Standard mode = 100 KHz, Fast mode = upto 400 KHz, Fast mode plus = upto 1 MHz
     # Fast Mode Plus requires SCL High:SCL Low = 1:2
     # Baud.baudlow != 0, SCL Low controlled by Baud.baudlow, SCL High controlled by Baud.baud
@@ -59,15 +68,15 @@ def getI2CBaudValue():
     if f_gclk >= (2 * f_scl):
         desiredI2CBaudRate = True
         i2cmSym_BaudError_Comment.setVisible(False)
-               
-        if (mode == 2):            
-            # For HS mode, the master code is transmitted at 400 kHz. After calculating HS mode baud, force f_scl to 400kHz 
+
+        if (mode == 2):
+            # For HS mode, the master code is transmitted at 400 kHz. After calculating HS mode baud, force f_scl to 400kHz
             # calculate the baud for master code transmission
             hs_baudValue = int(round(((f_gclk / f_scl) - 2)))
             f_scl = 400000
-            
+
         baudValue = int(round(((f_gclk / f_scl) * (1 - float("{0:.15f}".format(float(trise * f_scl) / 1000000000)))) - 10))
-            
+
         if (mode == 0):
             if baudValue >= (0xFF * 2):
                 calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, (0xFF * 2))
@@ -96,17 +105,17 @@ def getI2CBaudValue():
                 baud = 1
             else:
                 baud = baudValue/2
-                
+
             if hs_baudValue >= 382:
                 calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, 382)
                 baud |= ((255 << 8) | 127) << 16
             elif hs_baudValue <= 3:
                 calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, 3)
                 baud |= ((2 << 8) | 1) << 16
-            else:                
+            else:
                 baud |= ((hs_baudValue * 2)/3) << 24
                 baud |= (hs_baudValue/3) << 16
-            
+
         if desiredI2CBaudRate == False:
             i2cmSym_BaudError_Comment.setLabel("**** Achievable I2C Clock Frequency = " + str(calculated_f_scl) + "Hz")
             i2cmSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
@@ -131,21 +140,30 @@ def updateI2CMasterConfigurationVisibleProperty(symbol, event):
     else:
         symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 
+def baudDependencyChanged(symbol, event):
+    global transferModeBaud
+
+    if event["id"] == "SERCOM_MODE":
+        symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
+    else:
+        baudMax = transferModeBaud[event["value"]]
+        symbol.setMax(baudMax)
+
 # baud rate calc
 def updateI2CBaudValueProperty(symbol, event):
 
     symbol.setValue(getI2CBaudValue(), 1)
 
 def updateI2CClockStretchConfigValue(symbol, event):
-    
+
     # Enable SCLSM to 1 if High Speed mode is enabled
     if event["symbol"].getValue() == 0x02:
         symbol.setValue(1)
     else:
         symbol.setValue(0)
-        
+
 def updateI2CMasterCodeVisiblity(symbol, event):
-            
+
     if event["symbol"].getValue() == 0x02:
         symbol.setVisible(True)
     else:
@@ -180,7 +198,7 @@ for index in range(len(ctrlaValue)):
 if speedSupported == True:
     # I2C Transfer Speed Mode
     i2cmSym_mode = sercomComponent.createKeyValueSetSymbol("I2CM_MODE", sercomSym_OperationMode)
-    i2cmSym_mode.setLabel("Transfer Speed Mode")    
+    i2cmSym_mode.setLabel("Transfer Speed Mode")
 
     i2cmTransferSpeedNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/value-group@[name="SERCOM_I2CM_CTRLA__SPEED"]')
     i2cmTransferSpeedNodeValues = i2cmTransferSpeedNode.getChildren()
@@ -195,8 +213,8 @@ if speedSupported == True:
     i2cmSym_mode.setOutputMode("Key")
     i2cmSym_mode.setDisplayMode("Key")
     i2cmSym_mode.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
-    i2cmSym_mode.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])        
-    
+    i2cmSym_mode.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
+
     i2cmSym_HSMasterCode = sercomComponent.createIntegerSymbol("I2C_MASTER_CODE", sercomSym_OperationMode)
     i2cmSym_HSMasterCode.setLabel("Master Code (0-7)")
     i2cmSym_HSMasterCode.setVisible(False)
@@ -214,8 +232,8 @@ for index in range(len(ctrlaValue)):
     if bitFieldName == "SCLSM":
         sclsmSupported = True
         break
-        
-if sclsmSupported == True:      
+
+if sclsmSupported == True:
     i2cmSym_CTRLA_SCLSM = sercomComponent.createIntegerSymbol("I2C_SCLSM", sercomSym_OperationMode)
     i2cmSym_CTRLA_SCLSM.setLabel("Clock Stretch Mode")
     i2cmSym_CTRLA_SCLSM.setVisible(False)
@@ -251,13 +269,14 @@ i2cmSym_CTRLA_SDAHOLD.setDependencies(updateI2CMasterConfigurationVisiblePropert
 i2cmSym_BAUD = sercomComponent.createIntegerSymbol("I2C_CLOCK_SPEED", sercomSym_OperationMode)
 i2cmSym_BAUD.setLabel("I2C Speed in KHz")
 i2cmSym_BAUD.setMin(1)
+i2cmSym_BAUD.setMax(400)
 if speedSupported == True:
-    i2cmSym_BAUD.setMax(3400)
-else:
-    i2cmSym_BAUD.setMax(400)
+    maxBaud = transferModeBaud[i2cmSym_mode.getValue()]
+    i2cmSym_BAUD.setMax(maxBaud)
+
 i2cmSym_BAUD.setDefaultValue(100)
 i2cmSym_BAUD.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
-i2cmSym_BAUD.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
+i2cmSym_BAUD.setDependencies(baudDependencyChanged, ["SERCOM_MODE", "I2CM_MODE"])
 
 # Operating speed (Hz)
 i2cmSym_BAUD_Hz = sercomComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", sercomSym_OperationMode)
