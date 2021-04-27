@@ -339,11 +339,11 @@ def AdcConfigForPMSMFOC(component, instanceNum, args):
 
     # Enable ADC modules, Ph U interrupt
     if (int(phUModule) == instanceNum):
-        Database.setSymbolValue(component, "ADC_INPUTCTRL_MUXPOS", int(phUCh))
+        adcSym_INPUTCTRL_MUXPOS.setSelectedKey("AIN"+str(phUCh))
         Database.setSymbolValue(component, "ADC_INTENSET_RESRDY", True)
         Database.setSymbolValue(component, "ADC_CH_PHASE_U", "ADC_POSINPUT_AIN"+str(phUCh))
     if (int(phVModule) == instanceNum):
-        Database.setSymbolValue(component, "ADC_INPUTCTRL_MUXPOS", int(phVCh))
+        adcSym_INPUTCTRL_MUXPOS.setSelectedKey("AIN"+str(phVCh))
         Database.setSymbolValue(component, "ADC_CH_PHASE_V", "ADC_POSINPUT_AIN"+str(phUCh))
     if (int(phPotModule) == instanceNum):
         Database.setSymbolValue(component, "ADC_CH_POT", "ADC_POSINPUT_AIN"+str(phPotCh))
@@ -648,6 +648,7 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLC_DIFFMODE.setDefaultValue(False)
 
     # positive input
+    global adcSym_INPUTCTRL_MUXPOS
     adcSym_INPUTCTRL_MUXPOS = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_MUXPOS", adcChannelMenu)
     adcSym_INPUTCTRL_MUXPOS.setLabel("Select Positive Input")
     adcSym_INPUTCTRL_MUXPOS.setDefaultValue(0)
