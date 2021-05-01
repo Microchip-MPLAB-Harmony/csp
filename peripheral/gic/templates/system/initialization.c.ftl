@@ -1,0 +1,1 @@
+	GIC_Initialize();
