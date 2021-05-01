@@ -148,7 +148,9 @@ pinPeripheralFunction = []
 pinBitPosition = []
 
 pincfgrValue = []
-drvSTRVal = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/value-group@[name="PIO_CFGR0__DRVSTR"]')
+
+driveStrBit =  ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/register-group@[name="PIO_GROUP"]/register@[name="PIO_CFGR"]/bitfield@[name="DRVSTR"]')
+drvSTRVal = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/value-group@[name="{0}"]'.format(driveStrBit.getAttribute("values")))
 
 node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PIO\"]/instance@[name=\"PIOA\"]/parameters/param@[name=\"DEBOUNCE_GLITCH_ACTIVE\"]")
 pioDebounceConf = coreComponent.createBooleanSymbol("PIO_DEBOUNCE_NOT_CONFIGURABLE", None)
