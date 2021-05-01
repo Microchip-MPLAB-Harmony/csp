@@ -22,9 +22,10 @@
 *****************************************************************************"""
 
 def update_period(symbol, event):
+    instance_name = event['source'].getSymbolValue("PIT64B_INSTANCE_NAME")
     period = event['source'].getSymbolByID("PERIOD")
     prescaler = event['source'].getSymbolByID("PRESCALER")
-    input_freq = Database.getSymbolValue("core", "PIT64B_CLOCK_FREQUENCY")
+    input_freq = Database.getSymbolValue("core", instance_name + "_CLOCK_FREQUENCY")
     input_freq = input_freq / (prescaler.getValue()+1)
     symbol.setValue(1000000.0 * period.getValue() / input_freq, 0)
 
@@ -32,18 +33,18 @@ def update_ints(symbol, event):
     period_int = event['source'].getSymbolByID("PERIOD_INT")
     ovre_int = event['source'].getSymbolByID("OVRE_INT")
     sece_int = event['source'].getSymbolByID("SECE_INT")
-    instance_name = event['source'].getSymbolByID("PIT64B_INSTANCE_NAME")
+    instance_name = event['source'].getSymbolValue("PIT64B_INSTANCE_NAME")
     int_en = event['source'].getSymbolByID("ENABLE_INTERRUPT")
 
     if period_int.getValue() or ovre_int.getValue() or sece_int.getValue() :
-        Database.setSymbolValue("core", instance_name.getValue() + "_INTERRUPT_ENABLE", True, 0)
-        Database.setSymbolValue("core", instance_name.getValue() + "_INTERRUPT_HANDLER", "PIT64B_InterruptHandler", 0)
-        Database.setSymbolValue("core", instance_name.getValue() + "_INTERRUPT_HANDLER_LOCK", True, 0)
+        Database.setSymbolValue("core", instance_name + "_INTERRUPT_ENABLE", True, 0)
+        Database.setSymbolValue("core", instance_name + "_INTERRUPT_HANDLER", instance_name + "_InterruptHandler", 0)
+        Database.setSymbolValue("core", instance_name + "_INTERRUPT_HANDLER_LOCK", True, 0)
         int_en.setValue(True, 0)
     else:
-        Database.clearSymbolValue("core", instance_name.getValue() + "_INTERRUPT_ENABLE")
-        Database.clearSymbolValue("core", instance_name.getValue() + "_INTERRUPT_HANDLER")
-        Database.clearSymbolValue("core", instance_name.getValue() + "_INTERRUPT_HANDLER_LOCK")
+        Database.clearSymbolValue("core", instance_name + "_INTERRUPT_ENABLE")
+        Database.clearSymbolValue("core", instance_name + "_INTERRUPT_HANDLER")
+        Database.clearSymbolValue("core", instance_name + "_INTERRUPT_HANDLER_LOCK")
         int_en.setValue(False, 0)
 
 def update_warning(symbol, event):
@@ -103,15 +104,15 @@ def instantiateComponent(pit64Component):
     period_us = pit64Component.createFloatSymbol("PERIOD_US", None)
     period_us.setLabel("Timer Period(us)")
     period_us.setReadOnly(True)
-    input_freq = Database.getSymbolValue("core", "PIT64B_CLOCK_FREQUENCY")
+    input_freq = Database.getSymbolValue("core", instanceName.getValue() + "_CLOCK_FREQUENCY")
     input_freq = input_freq / (prescaler.getValue()+1)
     period_us.setDefaultValue(1000000.0 * period.getValue() / input_freq)
-    period_us.setDependencies(update_period, ['PERIOD', 'core.PIT64B_CLOCK_FREQUENCY'])
+    period_us.setDependencies(update_period, ['PERIOD', "core." + instanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     freq_sym = pit64Component.createIntegerSymbol("SRC_FREQ", None)
     freq_sym.setVisible(False)
-    freq_sym.setDefaultValue(Database.getSymbolValue("core", "PIT64B_CLOCK_FREQUENCY"))
-    freq_sym.setDependencies(lambda symbol, event: symbol.setValue(event['value'], 0), ['core.PIT64B_CLOCK_FREQUENCY'])
+    freq_sym.setDefaultValue(Database.getSymbolValue("core", instanceName.getValue() + "_CLOCK_FREQUENCY"))
+    freq_sym.setDependencies(lambda symbol, event: symbol.setValue(event['value']), ["core." + instanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     period_int = pit64Component.createBooleanSymbol("PERIOD_INT", None)
     period_int.setLabel("Timer Interrupt")
