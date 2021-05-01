@@ -9,23 +9,11 @@
     <#lt>    }
     <#lt>}
     <#lt>
-    <#lt>uint32_t spuriousEventCount = 0;
-    <#lt>void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandlerForSpurious"),long_call))DefaultInterruptHandlerForSpurious( void )
-    <#lt>{
-    <#lt>    ++spuriousEventCount;
-    <#lt>}
-    <#lt>
 <#lt><#elseif "IAR" == COMPILER_CHOICE>
     <#lt>void DefaultInterruptHandler( void )
     <#lt>{
     <#lt>    while( true ){
     <#lt>    }
-    <#lt>}
-    <#lt>
-    <#lt>uint32_t spuriousEventCount = 0;
-    <#lt>void DefaultInterruptHandlerForSpurious( void )
-    <#lt>{
-    <#lt>    ++spuriousEventCount;
     <#lt>}
     <#lt>
 <#lt></#if>
