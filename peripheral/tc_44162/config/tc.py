@@ -1134,6 +1134,9 @@ def instantiateComponent(tcComponent):
     irqEnumName_Sym.setVisible(False)
 #------------------------------------------------------------
 
+    #----------- Formatter strings for bitfields and value groups -------#
+    tcBitFieldString = "/avr-tools-device-file/modules/module@[name=\"TC\"]/register-group@[name=\"{0}\"]/register@[name=\"{1}\"]/bitfield@[name=\"{2}\"]"
+    tcValueGroupString = "/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"{0}\"]"
 
     #*****************************QUADRATURE******************************
     if tcSym_QDEC_PRESENT.getValue() == True:
@@ -1454,7 +1457,8 @@ def instantiateComponent(tcComponent):
         global tcSym_CH_CMR_LDRA
         childrenNodes = []
         loadEdgeA = []
-        tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__LDRA\"]")
+        tcBitField = ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "LDRA"))
+        tc = ATDF.getNode(tcValueGroupString.format(tcBitField.getAttribute("values")))
         childrenNodes = tc.getChildren()
         for param in range(0, len(childrenNodes)):
             loadEdgeA.append(childrenNodes[param].getAttribute("name"))
@@ -1466,7 +1470,8 @@ def instantiateComponent(tcComponent):
         #edge for capture B
         childrenNodes = []
         loadEdgeB = []
-        tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__LDRB\"]")
+        tcBitField = ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "LDRB"))
+        tc = ATDF.getNode(tcValueGroupString.format(tcBitField.getAttribute("values")))
         childrenNodes = tc.getChildren()
         for param in range(0, len(childrenNodes)):
             loadEdgeB.append(childrenNodes[param].getAttribute("name"))
@@ -1493,7 +1498,8 @@ def instantiateComponent(tcComponent):
         #external event edge
         childrenNodes = []
         comboOptions = []
-        tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__ETRGEDG\"]")
+        tcBitField = ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "ETRGEDG"))
+        tc = ATDF.getNode(tcValueGroupString.format(tcBitField.getAttribute("values")))
         childrenNodes = tc.getChildren()
         for param in range(0, len(childrenNodes)):
             comboOptions.append(childrenNodes[param].getAttribute("name"))
@@ -1588,7 +1594,8 @@ def instantiateComponent(tcComponent):
         tcSym_CH_CMR_EEVT[channelID] = tcComponent.createKeyValueSetSymbol("TC"+str(channelID)+"_CMR_EEVT", tcEventMenu[channelID])
         tcSym_CH_CMR_EEVT[channelID].setLabel("Select External Event Input")
         childrenNodes = []
-        tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__EEVT\"]")
+        tcBitField = ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "EEVT"))
+        tc = ATDF.getNode(tcValueGroupString.format(tcBitField.getAttribute("values")))
         childrenNodes = tc.getChildren()
         for param in range(0, len(childrenNodes)):
             tcSym_CH_CMR_EEVT[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
@@ -1599,7 +1606,8 @@ def instantiateComponent(tcComponent):
         #External reset edge
         childrenNodes = []
         comboOptions = []
-        tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__EEVTEDG\"]")
+        tcBitField = ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "EEVTEDG"))
+        tc = ATDF.getNode(tcValueGroupString.format(tcBitField.getAttribute("values")))
         childrenNodes = tc.getChildren()
         for param in range(0, len(childrenNodes)):
             comboOptions.append(childrenNodes[param].getAttribute("name"))
@@ -1626,7 +1634,8 @@ def instantiateComponent(tcComponent):
         #action on compare A
         childrenNodes = []
         comboOptions = []
-        tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__ACPA\"]")
+        tcBitField = ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "ACPA"))
+        tc = ATDF.getNode(tcValueGroupString.format(tcBitField.getAttribute("values")))
         childrenNodes = tc.getChildren()
         for param in range(0, len(childrenNodes)):
             comboOptions.append(childrenNodes[param].getAttribute("name"))
@@ -1638,7 +1647,8 @@ def instantiateComponent(tcComponent):
         #action on compare C
         childrenNodes = []
         comboOptions = []
-        tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__ACPC\"]")
+        tcBitField = ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "ACPC"))
+        tc = ATDF.getNode(tcValueGroupString.format(tcBitField.getAttribute("values")))
         childrenNodes = tc.getChildren()
         for param in range(0, len(childrenNodes)):
             comboOptions.append(childrenNodes[param].getAttribute("name"))
@@ -1650,7 +1660,8 @@ def instantiateComponent(tcComponent):
         #action on external event
         childrenNodes = []
         comboOptions = []
-        tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__AEEVT\"]")
+        tcBitField = ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "AEEVT"))
+        tc = ATDF.getNode(tcValueGroupString.format(tcBitField.getAttribute("values")))
         childrenNodes = tc.getChildren()
         for param in range(0, len(childrenNodes)):
             comboOptions.append(childrenNodes[param].getAttribute("name"))
@@ -1680,7 +1691,8 @@ def instantiateComponent(tcComponent):
         #Action on compare B
         childrenNodes = []
         comboOptions = []
-        tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__BCPB\"]")
+        tcBitField = ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "BCPB"))
+        tc = ATDF.getNode(tcValueGroupString.format(tcBitField.getAttribute("values")))
         childrenNodes = tc.getChildren()
         for param in range(0, len(childrenNodes)):
             comboOptions.append(childrenNodes[param].getAttribute("name"))
@@ -1692,7 +1704,8 @@ def instantiateComponent(tcComponent):
         #Action on compare C
         childrenNodes = []
         comboOptions = []
-        tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__BCPC\"]")
+        tcBitField = ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "BCPC"))
+        tc = ATDF.getNode(tcValueGroupString.format(tcBitField.getAttribute("values")))
         childrenNodes = tc.getChildren()
         for param in range(0, len(childrenNodes)):
             comboOptions.append(childrenNodes[param].getAttribute("name"))
@@ -1704,7 +1717,8 @@ def instantiateComponent(tcComponent):
         #Action on external event
         childrenNodes = []
         comboOptions = []
-        tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__BEEVT\"]")
+        tcBitField = ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "BEEVT"))
+        tc = ATDF.getNode(tcValueGroupString.format(tcBitField.getAttribute("values")))
         childrenNodes = tc.getChildren()
         for param in range(0, len(childrenNodes)):
             comboOptions.append(childrenNodes[param].getAttribute("name"))
