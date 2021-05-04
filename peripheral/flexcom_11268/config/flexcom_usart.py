@@ -25,11 +25,11 @@ global dataBitsDict
 global flexcomSym_BaudRatePerErrorComment
 
 dataBitsDict = {
-    "_5_BIT": "DRV_USART_DATA_5_BIT",
-    "_6_BIT": "DRV_USART_DATA_6_BIT",
-    "_7_BIT": "DRV_USART_DATA_7_BIT",
-    "_8_BIT": "DRV_USART_DATA_8_BIT",
-    "_9_BIT": "DRV_USART_DATA_9_BIT"
+    "5_BIT": "DRV_USART_DATA_5_BIT",
+    "6_BIT": "DRV_USART_DATA_6_BIT",
+    "7_BIT": "DRV_USART_DATA_7_BIT",
+    "8_BIT": "DRV_USART_DATA_8_BIT",
+    "9_BIT": "DRV_USART_DATA_9_BIT"
 }
 
 ################################################################################
