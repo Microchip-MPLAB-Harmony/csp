@@ -228,6 +228,46 @@ bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(const uint32_t *data, const uint32
     return wr_status;
 }
 
+/* This function only loads the internal NVM page buffer. This function must be used when multiple updates
+ * to the same page are expected. Once all the updates are done, call the ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit API
+ * to write the contents of the page buffer to the NVM memory. This functionality only works in manual write mode.
+ */
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address)
+{
+    uint32_t i = 0;
+    uint32_t * paddress = (uint32_t *)address;
+
+    /* Clear global error flag */
+    nvm_error = 0;
+
+    /* writing 32-bit data into the given address.  Writes to the page buffer must be 32 bits */
+    for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4); i++)
+    {
+        *paddress++ = data[i];
+    }    
+    
+    return true;
+}
+
+/* This API must be used to write the contents of the page buffer to the NVM memory when the manual write mode is enabled */
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit(  const uint32_t address )
+{
+	/* Clear global error flag */
+    nvm_error = 0;
+	
+	/* Set address and command */
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address;
+	
+    /* If write mode is manual, */
+    if ((${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk) == NVMCTRL_CTRLA_WMODE_MAN)
+    {
+        /* Set address and command */
+        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_WP | NVMCTRL_CTRLB_CMDEX_KEY;
+    }
+
+    return true;
+}
+
 /* This function assumes that the page written is fresh or it is erased by
  * calling ${NVMCTRL_INSTANCE_NAME}_BlockErase
  */
