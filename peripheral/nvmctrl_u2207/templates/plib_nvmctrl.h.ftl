@@ -101,6 +101,14 @@ bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t ad
 
 bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t* data, uint32_t address );
 
+<#if NVMCTRL_WRITE_POLICY == "MANUAL">
+
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address);
+
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address);
+
+</#if>
+
 bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address );
 <#if FLASH_RWWEEPROM_START_ADDRESS??>
 
