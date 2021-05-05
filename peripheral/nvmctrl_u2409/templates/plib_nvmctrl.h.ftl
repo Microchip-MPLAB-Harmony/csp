@@ -128,6 +128,10 @@ bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(const uint32_t *data, const uint32
 
 bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( const uint32_t* data, uint32_t address );
 
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address);
+
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address );
+
 bool ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address );
 
 uint16_t ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void );
