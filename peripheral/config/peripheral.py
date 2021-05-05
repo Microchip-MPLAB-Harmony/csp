@@ -94,7 +94,8 @@ peripherals = {
 
 # a dictionary to translate the new id mentioned in ATDF to old id used in csp
 peripheral_ID_map = {
-    "RTC_03608" : "RTC_U2250"
+    "RTC_03608" : "RTC_U2250",
+    "PORT_03720" : "PORT_U2210"
 }
 
 if("MIPS" in coreArch):
