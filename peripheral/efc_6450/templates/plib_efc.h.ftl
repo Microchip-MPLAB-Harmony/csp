@@ -97,6 +97,10 @@ bool ${EFC_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t addres
 
 bool ${EFC_INSTANCE_NAME}_SectorErase( uint32_t address );
 
+bool ${EFC_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address);
+
+bool ${EFC_INSTANCE_NAME}_PageBufferCommit( const uint32_t address);
+
 bool ${EFC_INSTANCE_NAME}_PageWrite( uint32_t *data, uint32_t address );
 
 bool ${EFC_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address );
