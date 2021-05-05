@@ -81,6 +81,46 @@ bool ${EFC_INSTANCE_NAME}_SectorErase( uint32_t address )
     return true;
 }
 
+bool ${EFC_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address)
+{
+    uint16_t page_number;
+
+    /*Calculate the Page number to be passed for FARG register*/
+    page_number = (address - ${MEM_SEGMENT_NAME}_ADDR) / ${MEM_SEGMENT_NAME}_PAGE_SIZE;
+
+    for (uint32_t i = 0; i < ${MEM_SEGMENT_NAME}_PAGE_SIZE; i += 4)
+    {
+    *((uint32_t *)( ${MEM_SEGMENT_NAME}_ADDR + ( page_number * ${MEM_SEGMENT_NAME}_PAGE_SIZE ) + i )) =    *(( data++ ));
+    }
+
+    __DSB();
+    __ISB();    
+
+    return true;
+}
+
+bool ${EFC_INSTANCE_NAME}_PageBufferCommit( const uint32_t address)
+{
+    uint16_t page_number;
+
+    /*Calculate the Page number to be passed for FARG register*/
+    page_number = (address - ${MEM_SEGMENT_NAME}_ADDR) / ${MEM_SEGMENT_NAME}_PAGE_SIZE;    
+
+    __DSB();
+    __ISB();
+
+    /* Issue the FLASH write operation*/
+    ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
+
+    status = 0;
+
+    <#if INTERRUPT_ENABLE == true>
+        <#lt>    ${EFC_INSTANCE_NAME}_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
+    </#if>
+
+    return true;
+}
+
 bool ${EFC_INSTANCE_NAME}_PageWrite( uint32_t *data, uint32_t address )
 {
     uint16_t page_number;
