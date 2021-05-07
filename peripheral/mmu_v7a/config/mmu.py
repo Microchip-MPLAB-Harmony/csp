@@ -83,7 +83,7 @@ mmuHeader.setMarkup(True)
 
 mmuSystemInitFile = coreComponent.createFileSymbol("mmuSystemInitFile", None)
 mmuSystemInitFile.setType("STRING")
-mmuSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+mmuSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
 mmuSystemInitFile.setSourcePath("../peripheral/mmu_v7a/templates/system/initialization.c.ftl")
 mmuSystemInitFile.setMarkup(True)
 

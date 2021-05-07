@@ -79,11 +79,8 @@ void icache_Enable(void);
 void icache_Disable(void);
 </#if>
 <#if DATA_CACHE_ENABLE>
-/* Deprecated, Wont work with multilevel caches, Use CMSIS API instead */
 void dcache_InvalidateAll(void);
-/* Deprecated, Wont work with multilevel caches, Use CMSIS API instead */
 void dcache_CleanAll(void);
-/* Deprecated, Wont work with multilevel caches, Use CMSIS API instead */
 void dcache_CleanInvalidateAll(void);
 
 void dcache_InvalidateByAddr (uint32_t *addr, uint32_t size);

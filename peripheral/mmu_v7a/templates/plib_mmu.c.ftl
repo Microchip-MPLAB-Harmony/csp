@@ -127,50 +127,21 @@ void icache_Disable(void)
 </#if>
 
 <#if DATA_CACHE_ENABLE>
-/* Deprecated, Wont work with multilevel caches, Use CMSIS API instead */
 void dcache_InvalidateAll(void)
 {
-    uint32_t set, way;
-
-    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
-    {
-        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
-        {
-            __set_DCISW(L1_DATA_CACHE_SETWAY(set, way));
-        }
-    }
-    __DSB();
+    L1C_InvalidateDCacheAll();
 }
 
-/* Deprecated, Wont work with multilevel caches, Use CMSIS API instead */
 void dcache_CleanAll(void)
 {
-    uint32_t set, way;
-
-    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
-    {
-        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
-        {
-            __set_DCCSW(L1_DATA_CACHE_SETWAY(set, way));
-        }
-    }
-    __DSB();
+    L1C_CleanDCacheAll();
 }
 
-/* Deprecated, Wont work with multilevel caches, Use CMSIS API instead */
 void dcache_CleanInvalidateAll(void)
 {
-    uint32_t set, way;
-
-    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
-    {
-        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
-        {
-            __set_DCCISW(L1_DATA_CACHE_SETWAY(set, way));
-        }
-    }
-    __DSB();
+    L1C_CleanInvalidateDCacheAll();
 }
+
 void dcache_InvalidateByAddr (uint32_t *addr, uint32_t size)
 {
     uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1);
