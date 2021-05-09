@@ -27,7 +27,10 @@ def update_period(symbol, event):
     prescaler = event['source'].getSymbolByID("PRESCALER")
     input_freq = Database.getSymbolValue("core", instance_name + "_CLOCK_FREQUENCY")
     input_freq = input_freq / (prescaler.getValue()+1)
-    symbol.setValue(1000000.0 * period.getValue() / input_freq, 0)
+    if input_freq > 0:
+        symbol.setValue(1000000.0 * period.getValue() / input_freq, 0)
+    else:
+        symbol.setValue(1)
 
 def update_ints(symbol, event):
     period_int = event['source'].getSymbolByID("PERIOD_INT")
