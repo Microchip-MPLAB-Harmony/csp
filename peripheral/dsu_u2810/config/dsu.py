@@ -48,6 +48,15 @@ def instantiateComponent(dsuComponent):
     dsuInstanceName.setDefaultValue(dsuComponent.getID().upper())
     Log.writeInfoMessage("Running " + dsuInstanceName.getValue())
 
+    CtrlCmdNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DSU\"]/register-group@[name=\"DSU\"]/register@[name=\"CTRL\"]/bitfield@[name=\"CMD\"]")
+
+    dsuCrcOnCommandBased = dsuComponent.createBooleanSymbol("DSU_CRC_ON_COMMAND", None)
+    dsuCrcOnCommandBased.setVisible(False)
+    if CtrlCmdNode is not None:
+        dsuCrcOnCommandBased.setDefaultValue(True)
+    else:
+        dsuCrcOnCommandBased.setDefaultValue(False)
+
 ################################################################################
 #############             CODE GENERATION             ##########################
 ################################################################################
