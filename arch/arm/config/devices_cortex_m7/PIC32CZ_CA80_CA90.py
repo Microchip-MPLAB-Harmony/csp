@@ -256,6 +256,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")
 # load PAC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pac_u2120/config/pac.py")
 
+# Activate Event System
+periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EVSYS\"]")
+modules = periphNode.getChildren()
+components = []
+for evsys_instance in range (0, len(modules)):
+    components.append(str(modules[evsys_instance].getAttribute("name")).lower())
+Database.activateComponents(components)
+
 global armLibCSourceFile
 global devconSystemInitFile
 global compilerSpecifics
