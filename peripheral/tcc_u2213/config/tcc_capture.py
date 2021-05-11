@@ -58,11 +58,14 @@ def tccCaptureEvsys(symbol, event):
                 if component.getSymbolValue("TCC_CAPTURE_CTRLA_CAPTEN"+str(channelID)) == True:
                     Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_READY", True, 2)                    
 
-            if component.getSymbolValue("TCC_CAPTURE_EVCTRL_EVACT1") == True:
+            if component.getSymbolValue("TCC_CAPTURE_EVCTRL_EVACT1") != 0: # 0 stands for Event OFF
                 Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", True, 2)
     else:
         if(event["id"] == "TCC_CAPTURE_EVCTRL_EVACT1"):
-            Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", event["value"], 2) 
+            if(event["value"] == 0): # 0 stands for Event OFF
+                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", False, 2)
+            else:
+                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", True, 2) 
         for channelID in range(0, int(numOfChannels)):
             if component.getSymbolValue("TCC_CAPTURE_EVCTRL_MCEO" + str(channelID)) == True:
                 Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_ACTIVE", True, 2)           
@@ -102,10 +105,13 @@ tccSym_CaptureNumChannels.setLabel("Number of capture channels")
 tccSym_CaptureNumChannels.setVisible(False)
 tccSym_CaptureNumChannels.setDefaultValue(int(numOfChannels))
 
+
+
 tccSym_Capture_EVCTRL_EVACT1 = tccComponent.createKeyValueSetSymbol("TCC_CAPTURE_EVCTRL_EVACT1", tccSym_CaptureMenu)
 tccSym_Capture_EVCTRL_EVACT1.setLabel("Select Input Event 1 Action")
 tccSym_Capture_EVCTRL_EVACT1.addKey("OFF", "0", "Disabled")
-tccSym_Capture_EVCTRL_EVACT1.addKey("PPW", "5", "Period captured into CC0 Pulse Width on CC1")
+if ATDF.getNode('/avr-tools-device-file/modules/module@[name="TCC"]/value-group@[name="EVCTRL__EVACT1"]/value@[name="PPW"]') is not None:
+    tccSym_Capture_EVCTRL_EVACT1.addKey("PPW", "5", "Period captured into CC0 Pulse Width on CC1")
 tccSym_Capture_EVCTRL_EVACT1.addKey("PWP", "6", "Period captured into CC1 Pulse Width on CC0")
 tccSym_Capture_EVCTRL_EVACT1.setDisplayMode("Description")
 tccSym_Capture_EVCTRL_EVACT1.setOutputMode("Key")

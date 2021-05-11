@@ -21,6 +21,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+import re
 
 global InterruptVector
 InterruptVector = []
@@ -107,7 +108,7 @@ def updateTCCInterruptStatus(symbol, event):
         for intr in range(0, len(InterruptVector)):
             Database.setSymbolValue("core", InterruptVector[intr], False, 2)
             Database.setSymbolValue("core", InterruptHandlerLock[intr], False, 2)
-            Database.setSymbolValue("core", InterruptHandler[intr], tccInstanceName.getValue() + "_Handler", 2)
+            Database.setSymbolValue("core", InterruptHandler[intr], InterruptHandler[intr].split("_INTERRUPT_HANDLER")[0] + "_Handler", 2)
 
         if ((mode == "Timer" and component.getSymbolValue("TCC_TIMER_INTENSET_OVF") == True)
             or (mode == "Compare" and component.getSymbolValue("TCC_COMPARE_INTENSET_OVF") == True)
@@ -116,7 +117,7 @@ def updateTCCInterruptStatus(symbol, event):
 
             Database.setSymbolValue("core", InterruptVector[0], True, 2)
             Database.setSymbolValue("core", InterruptHandlerLock[0], True, 2)
-            Database.setSymbolValue("core", InterruptHandler[0], tccInstanceName.getValue() + "_InterruptHandler", 2)
+            Database.setSymbolValue("core", InterruptHandler[0],  InterruptHandler[0].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
 
         if ((mode == "Timer" and component.getSymbolValue("TCC_TIMER_INTENSET_MC1") == True)):
             Database.setSymbolValue("core", InterruptVector[2], True, 2)
@@ -124,25 +125,34 @@ def updateTCCInterruptStatus(symbol, event):
             Database.setSymbolValue("core", InterruptHandler[2], InterruptHandler[2].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
 
         if (mode == "Compare"):
-            for intr in range(0, numOfChannels):
-                if component.getSymbolValue("TCC_COMPARE_INTENSET_MC" + str(intr)) == True:
-                    Database.setSymbolValue("core", InterruptVector[intr+1], True, 2)
-                    Database.setSymbolValue("core", InterruptHandlerLock[intr+1], True, 2)
-                    Database.setSymbolValue("core", InterruptHandler[intr+1], InterruptHandler[intr+1].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
+            for intr in range(0, len(InterruptVector)):
+                z = re.match("TCC\d+_MC(\d+)",InterruptHandler[intr].split("_INTERRUPT_HANDLER")[0])
+                if (z):
+                    channelIndex = z.groups()[0]
+                    if (component.getSymbolValue("TCC_COMPARE_INTENSET_MC" + str(channelIndex)) == True):
+                        Database.setSymbolValue("core", InterruptVector[intr], True, 2)
+                        Database.setSymbolValue("core", InterruptHandlerLock[intr], True, 2)
+                        Database.setSymbolValue("core", InterruptHandler[intr], InterruptHandler[intr].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
 
         if (mode == "Capture"):
-            for intr in range(0, numOfChannels):
-                if component.getSymbolValue("TCC_CAPTURE_INTENSET_MC" + str(intr)) == True:
-                    Database.setSymbolValue("core", InterruptVector[intr+1], True, 2)
-                    Database.setSymbolValue("core", InterruptHandlerLock[intr+1], True, 2)
-                    Database.setSymbolValue("core", InterruptHandler[intr+1], InterruptHandler[intr+1].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)  
+            for intr in range(0, len(InterruptVector)):
+                z = re.match("TCC\d+_MC(\d+)",InterruptHandler[intr].split("_INTERRUPT_HANDLER")[0])
+                if (z):
+                    channelIndex = z.groups()[0]
+                    if component.getSymbolValue("TCC_CAPTURE_INTENSET_MC" + str(channelIndex)) == True:
+                        Database.setSymbolValue("core", InterruptVector[intr], True, 2)
+                        Database.setSymbolValue("core", InterruptHandlerLock[intr], True, 2)
+                        Database.setSymbolValue("core", InterruptHandler[intr], InterruptHandler[intr].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)  
 
         if (mode == "PWM"):
-            for intr in range(0, numOfChannels):
-                if component.getSymbolValue("TCC_INTENSET_MC_" + str(intr)) == True:
-                    Database.setSymbolValue("core", InterruptVector[intr+1],True, 2)
-                    Database.setSymbolValue("core", InterruptHandlerLock[intr+1], True, 2)
-                    Database.setSymbolValue("core", InterruptHandler[intr+1], InterruptHandler[intr+1].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
+            for intr in range(0, len(InterruptVector)):
+                z = re.match("TCC\d+_MC(\d+)",InterruptHandler[intr].split("_INTERRUPT_HANDLER")[0])
+                if (z):
+                    channelIndex = z.groups()[0]                
+                    if component.getSymbolValue("TCC_INTENSET_MC_" + str(channelIndex)) == True:
+                        Database.setSymbolValue("core", InterruptVector[intr],True, 2)
+                        Database.setSymbolValue("core", InterruptHandlerLock[intr], True, 2)
+                        Database.setSymbolValue("core", InterruptHandler[intr], InterruptHandler[intr].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
 
 
 def updateTCCInterruptWarningStatus(symbol, event):

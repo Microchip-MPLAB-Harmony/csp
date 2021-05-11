@@ -359,7 +359,7 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 <#-- multiple interrupt lines -->
 <#else>
 <#if TCC_TIMER_INTENSET_OVF == true>
-void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
+void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
     uint32_t status;
     status = (uint32_t) (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);

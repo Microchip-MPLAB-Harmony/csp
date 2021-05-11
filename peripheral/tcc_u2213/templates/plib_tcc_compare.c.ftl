@@ -437,6 +437,91 @@ bool ${TCC_INSTANCE_NAME}_Compare24bitMatchSet(${TCC_INSTANCE_NAME}_CHANNEL_NUM 
 </#if>
     return status;
 }
+
+<#elseif TCC_SIZE == 32>
+/* Get the current counter value */
+uint32_t ${TCC_INSTANCE_NAME}_Compare32bitCounterGet( void )
+{
+    /* Write command to force COUNT register read synchronization */
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET |= (uint8_t)TCC_CTRLBSET_CMD_READSYNC;
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CTRLB_Msk) == TCC_SYNCBUSY_CTRLB_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET & TCC_CTRLBSET_CMD_Msk) != 0U)
+    {
+        /* Wait for CMD to become zero */
+    }
+
+    /* Read current count value */
+    return ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT;
+}
+
+/* Configure counter value */
+void ${TCC_INSTANCE_NAME}_Compare32bitCounterSet( uint32_t count )
+{
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+
+/* Configure period value */
+bool ${TCC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period )
+{
+    bool status = false;
+    <#if TCC_COMPARE_CTRLBSET_LUPD == true>
+    if((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & TCC_STATUS_${TCC_PBUF_REG_NAME}V_Msk) == 0U)
+    {
+        /* Configure period value */
+        ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period;
+        status = true;
+    }
+    <#else>
+    /* Configure period value */
+    ${TCC_INSTANCE_NAME}_REGS->TCC_PER = period;
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) == TCC_SYNCBUSY_PER_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }    
+    status = true;
+    </#if>
+    return status;
+}
+
+/* Read period value */
+uint32_t ${TCC_INSTANCE_NAME}_Compare32bitPeriodGet( void )
+{
+    /* Get period value */
+    return ${TCC_INSTANCE_NAME}_REGS->TCC_PER;
+}
+
+/* Configure duty cycle value */
+bool ${TCC_INSTANCE_NAME}_Compare32bitMatchSet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t compareValue )
+{
+    bool status = false;
+<#if TCC_COMPARE_CTRLBSET_LUPD == true>
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (1UL << (TCC_STATUS_${TCC_CBUF_REG_NAME}V0_Pos + (uint32_t)channel))) == 0U)
+    {
+        /* Set new compare value for compare channel */
+        ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_CBUF_REG_NAME}[channel] = compareValue;
+        status = true;
+    }
+<#else>
+    /* Set new compare value for compare channel */
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CC[channel] = compareValue;
+    while(((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) & (1UL << (TCC_SYNCBUSY_CC0_Pos + (uint32_t)channel))) != 0U)
+    {
+        /* Wait for Write Synchronization */
+    }    
+    status = true;
+</#if>
+    return status;
+}
 </#if>
 
 <#if TCC_COMPARE_INTERRUPT_MODE = true>
@@ -467,7 +552,7 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 <#else>
         <#if TCC_COMPARE_INTENSET_OVF == true >
             <#lt>/* Interrupt Handler */
-            <#lt>void ${TCC_INSTANCE_NAME}_InterruptHandler(void)
+            <#lt>void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
             <#lt>{
             <#lt>    uint32_t status;
             <#lt>    status = (uint32_t)(${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);

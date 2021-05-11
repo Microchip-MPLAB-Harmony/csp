@@ -382,6 +382,17 @@ bool ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet (uint16_t period)
     }    
     return status;
 }
+<#elseif TCC_SIZE == 32>
+bool ${TCC_INSTANCE_NAME}_PWM32bitPeriodSet (uint32_t period)
+{
+    bool status = false;
+    if ((${TCC_INSTANCE_NAME}_REGS->TCC_STATUS & (TCC_STATUS_${TCC_PBUF_REG_NAME}V_Msk)) == 0U)
+    {
+        ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period;
+        status = true;
+    }    
+    return status;
+}
 </#if>
 
 /* Read TCC period */
@@ -402,6 +413,15 @@ uint16_t ${TCC_INSTANCE_NAME}_PWM16bitPeriodGet (void)
         /* Wait for sync */
     }
     return (uint16_t)${TCC_INSTANCE_NAME}_REGS->TCC_PER;
+}
+<#elseif TCC_SIZE == 32>
+uint32_t ${TCC_INSTANCE_NAME}_PWM32bitPeriodGet (void)
+{
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) != 0U)
+    {
+        /* Wait for sync */
+    }
+    return (${TCC_INSTANCE_NAME}_REGS->TCC_PER);
 }
 </#if>
 
@@ -447,6 +467,15 @@ void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet (uint16_t count_value)
         /* Wait for sync */
     }
 }
+<#elseif TCC_SIZE == 32>
+void ${TCC_INSTANCE_NAME}_PWM32bitCounterSet (uint32_t count)
+{
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) != 0U)
+    {
+        /* Wait for sync */
+    }
+}
 </#if>
 
 /* Enable forced synchronous update */
@@ -482,7 +511,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
     <#if TCC_NUM_INT_LINES != 0>
         <#if TCC_INTENSET_OVF == true || TCC_INTENSET_FAULT0 == true || TCC_INTENSET_FAULT1 == true>
             <#lt>/* Interrupt Handler */
-            <#lt>void ${TCC_INSTANCE_NAME}_InterruptHandler(void)
+            <#lt>void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
             <#lt>{
             <#lt>    uint32_t status;
             <#lt>    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
