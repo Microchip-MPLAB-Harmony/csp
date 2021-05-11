@@ -70,7 +70,11 @@ bool ${DSU_INSTANCE_NAME}_CRCCalculate (uint32_t startAddress, size_t length, ui
         /* Clear Status Register */
         ${DSU_INSTANCE_NAME}_REGS->DSU_STATUSA = ${DSU_INSTANCE_NAME}_REGS->DSU_STATUSA;
 
+        <#if DSU_CRC_ON_COMMAND == true>
+        ${DSU_INSTANCE_NAME}_REGS->DSU_CTRL = DSU_CTRL_CMD(DSU_CTRL_CMD_CRC32_Val);
+        <#else>
         ${DSU_INSTANCE_NAME}_REGS->DSU_CTRL = DSU_CTRL_CRC_Msk;
+        </#if>
 
         while(!(${DSU_INSTANCE_NAME}_REGS->DSU_STATUSA & DSU_STATUSA_DONE_Msk))
         {
