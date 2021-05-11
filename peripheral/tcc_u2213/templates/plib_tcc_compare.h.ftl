@@ -147,6 +147,16 @@ void ${TCC_INSTANCE_NAME}_Compare24bitCounterSet( uint32_t count );
 
 bool ${TCC_INSTANCE_NAME}_Compare24bitMatchSet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t compareValue );
 
+<#elseif TCC_SIZE = 32>
+bool ${TCC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period );
+
+uint32_t ${TCC_INSTANCE_NAME}_Compare32bitPeriodGet( void );
+
+uint32_t ${TCC_INSTANCE_NAME}_Compare32bitCounterGet( void );
+
+void ${TCC_INSTANCE_NAME}_Compare32bitCounterSet( uint32_t count );
+
+bool ${TCC_INSTANCE_NAME}_Compare32bitMatchSet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t compareValue );
 </#if>
 
 <#if TCC_COMPARE_INTERRUPT_MODE = true>

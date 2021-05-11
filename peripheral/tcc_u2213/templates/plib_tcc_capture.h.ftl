@@ -127,15 +127,17 @@ uint16_t ${TCC_INSTANCE_NAME}_Capture16bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL
 uint16_t ${TCC_INSTANCE_NAME}_Capture16bitCounterGet( void );
 
 <#elseif TCC_SIZE = 24>
-
 uint32_t ${TCC_INSTANCE_NAME}_Capture24bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel );
-
 uint32_t ${TCC_INSTANCE_NAME}_Capture24bitCounterGet( void );
+
+<#elseif TCC_SIZE = 32>
+uint32_t ${TCC_INSTANCE_NAME}_Capture32bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel );
+uint32_t ${TCC_INSTANCE_NAME}_Capture32bitCounterGet( void );
 </#if>
 
 void ${TCC_INSTANCE_NAME}_CaptureCommandSet(TCC_COMMAND command);
 
-<#if TCC_COMPARE_INTERRUPT_MODE = true>
+<#if TCC_CAPTURE_INTERRUPT_MODE = true>
 void ${TCC_INSTANCE_NAME}_CaptureCallbackRegister( TCC_CALLBACK callback, uintptr_t context );
 
 <#else>

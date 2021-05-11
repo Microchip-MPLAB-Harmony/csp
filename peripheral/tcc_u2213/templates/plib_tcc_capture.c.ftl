@@ -239,6 +239,12 @@ uint32_t ${TCC_INSTANCE_NAME}_Capture24bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL
     return (${TCC_INSTANCE_NAME}_REGS->TCC_CC[channel] & 0xFFFFFFU);
 }
 
+<#elseif TCC_SIZE = 32>
+
+uint32_t ${TCC_INSTANCE_NAME}_Capture32bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel )
+{
+    return (${TCC_INSTANCE_NAME}_REGS->TCC_CC[channel]);
+}
 </#if>
 
 uint32_t ${TCC_INSTANCE_NAME}_CaptureFrequencyGet( void )
@@ -287,6 +293,27 @@ uint32_t ${TCC_INSTANCE_NAME}_Capture24bitCounterGet( void )
     /* Read current count value */
     return ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT;
 }
+
+<#elseif TCC_SIZE == 32>
+/* Get the current counter value */
+uint32_t ${TCC_INSTANCE_NAME}_Capture32bitCounterGet( void )
+{
+    /* Write command to force COUNT register read synchronization */
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET |= (uint8_t)TCC_CTRLBSET_CMD_READSYNC;
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CTRLB_Msk) == TCC_SYNCBUSY_CTRLB_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET & TCC_CTRLBSET_CMD_Msk) != 0U)
+    {
+        /* Wait for CMD to become zero */
+    }
+
+    /* Read current count value */
+    return ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT;
+}
 </#if>
 
 <#if TCC_CAPTURE_INTERRUPT_MODE = true>
@@ -317,7 +344,7 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 <#else>
         <#if TCC_CAPTURE_OVF_INTERRUPT_MODE == true || TCC_CAPTURE_ERR_INTERRUPT_MODE == true>
             <#lt>/* Interrupt Handler */
-            <#lt>void ${TCC_INSTANCE_NAME}_InterruptHandler(void)
+            <#lt>void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
             <#lt>{
             <#lt>    uint32_t status;
             <#lt>    status = (uint32_t)(${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);

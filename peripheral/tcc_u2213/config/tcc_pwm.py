@@ -228,7 +228,10 @@ tccSym_CTRLBSET_DIR.setDependencies(tccDirVisible, ["TCC_WAVE_WAVEGEN", "TCC_SLA
 
 #Period Value
 global tccSym_PER_PER
-tccSym_PER_PER = tccComponent.createIntegerSymbol("TCC_PER_PER", tccSym_PWMMenu)
+if size == 32:
+    tccSym_PER_PER = tccComponent.createLongSymbol("TCC_PER_PER", tccSym_PWMMenu)
+else:
+    tccSym_PER_PER = tccComponent.createIntegerSymbol("TCC_PER_PER", tccSym_PWMMenu)
 tccSym_PER_PER.setLabel("Period Value")
 tccSym_PER_PER.setDefaultValue(2399)
 tccSym_PER_PER.setMin(0)
@@ -290,7 +293,10 @@ for channelID in range(0, int(numOfChannels)):
 
     #Duty
     tccSym_Channel_CC.append(channelID)
-    tccSym_Channel_CC[channelID] = tccComponent.createIntegerSymbol("TCC_"+str(channelID)+"_CC", tccSym_Channel_Menu[channelID])
+    if size == 32:
+        tccSym_Channel_CC[channelID] = tccComponent.createLongSymbol("TCC_"+str(channelID)+"_CC", tccSym_Channel_Menu[channelID])
+    else:
+        tccSym_Channel_CC[channelID] = tccComponent.createIntegerSymbol("TCC_"+str(channelID)+"_CC", tccSym_Channel_Menu[channelID])
     tccSym_Channel_CC[channelID].setLabel("Duty Value")
     tccSym_Channel_CC[channelID].setMin(0)
     tccSym_Channel_CC[channelID].setMax(pow(2, size) - 1)
