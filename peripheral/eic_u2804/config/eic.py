@@ -599,6 +599,7 @@ def instantiateComponent(eicComponent):
     eicIntLines.setVisible(False)
     eicIntLines.setDefaultValue((len(InterruptVector) - 1))
 
+    sharedVector = False
     if (len(InterruptVector) < extIntCount):
         sharedVector = True
         eicOtherHandler = eicComponent.createBooleanSymbol("EIC_OTHER_HANDLER_ACTIVE", None)
