@@ -359,7 +359,9 @@ def instantiateComponent(evsysComponent):
         for i in range(0, len(pathNode.getChildren())):
             evsysPath.addKey(pathNode.getChildren()[i].getAttribute("name"), str(pathNode.getChildren()[
                              i].getAttribute("value")), pathNode.getChildren()[i].getAttribute("caption"))
-        evsysPath.setDefaultValue(2)
+            if pathNode.getChildren()[i].getAttribute("name") == "ASYNCHRONOUS":
+                defaultIndex = i
+        evsysPath.setDefaultValue(defaultIndex)
         if id > numsyncChannels:
             evsysPath.setReadOnly(True)
 
