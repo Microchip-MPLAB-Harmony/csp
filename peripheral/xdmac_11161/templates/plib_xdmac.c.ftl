@@ -72,11 +72,11 @@ XDMAC_CH_OBJECT xdmacChannelObj[XDMAC_ACTIVE_CHANNELS_MAX];
 void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
 {
     XDMAC_CH_OBJECT *xdmacChObj = (XDMAC_CH_OBJECT *)&xdmacChannelObj[0];
-    uint8_t channel = 0;
-    volatile uint32_t chanIntStatus = 0;
+    uint8_t channel = 0U;
+    volatile uint32_t chanIntStatus = 0U;
 
     /* Iterate all channels */
-    for (channel = 0; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
+    for (channel = 0U; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
     {
         /* Process events only on active channels */
         if (1 == xdmacChObj->inUse)
@@ -107,25 +107,25 @@ void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
         }
 
         /* Point to next channel object */
-        xdmacChObj += 1;
+        xdmacChObj += 1U;
     }
 }
 
 void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
     XDMAC_CH_OBJECT *xdmacChObj = (XDMAC_CH_OBJECT *)&xdmacChannelObj[0];
-    uint8_t channel = 0;
+    uint8_t channel = 0U;
 
     /* Initialize channel objects */
-    for(channel = 0; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
+    for(channel = 0U; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
     {
-        xdmacChObj->inUse = 0;
+        xdmacChObj->inUse = 0U;
         xdmacChObj->callback = NULL;
-        xdmacChObj->context = 0;
+        xdmacChObj->context = 0U;
         xdmacChObj->busyStatus = false;
 
         /* Point to next channel object */
-        xdmacChObj += 1;
+        xdmacChObj += 1U;
     }
 
     <#list 0..DMA_CHANNEL_COUNT as i>
@@ -146,14 +146,38 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     /* Configure Channel ${i} */
                 <#if .vars[XDMAC_CC_TYPE]?has_content>
                     <#if (.vars[XDMAC_CC_TYPE] == "PER_TRAN")>
-    ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[${i}].XDMAC_CC= (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} | XDMAC_CC_PERID(${.vars[XDMAC_CC_PERID_VAL]}) | XDMAC_CC_DSYNC_${.vars[XDMAC_CC_DSYNC]} | XDMAC_CC_SWREQ_${.vars[XDMAC_CC_SWREQ]} | XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} | XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} | XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} | XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} | XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} | XDMAC_CC_CSIZE_${.vars[XDMAC_CC_CSIZE]} | XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
+    ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[${i}].XDMAC_CC =  (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} | \
+                                            XDMAC_CC_PERID(${.vars[XDMAC_CC_PERID_VAL]}U) |\
+                                            XDMAC_CC_DSYNC_${.vars[XDMAC_CC_DSYNC]} |\
+                                            XDMAC_CC_SWREQ_${.vars[XDMAC_CC_SWREQ]} |\
+                                            XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} |\
+                                            XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} |\
+<#if .vars[XDMAC_CC_SIF]??>
+                                            XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} |\
+</#if>
+<#if .vars[XDMAC_CC_DIF]??>                                           
+                                            XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} |\
+</#if>
+                                            XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} |\
+                                            XDMAC_CC_CSIZE_${.vars[XDMAC_CC_CSIZE]} |\
+                                            XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
                     <#elseif (.vars[XDMAC_CC_TYPE] == "MEM_TRAN")>
-    ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[${i}].XDMAC_CC= (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} | XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} | XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} | XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} | XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} | XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} | XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
+    ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[${i}].XDMAC_CC =  (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} |\
+                                            XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} |\
+                                            XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} |\
+<#if .vars[XDMAC_CC_SIF]??>
+                                            XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} |\
+</#if>
+<#if .vars[XDMAC_CC_DIF]??>                                           
+                                            XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} |\
+</#if>
+                                            XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} |\
+                                            XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
                     </#if>
                 </#if>
     ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[${i}].XDMAC_CIE= (XDMAC_CIE_BIE_Msk | XDMAC_CIE_RBIE_Msk | XDMAC_CIE_WBIE_Msk | XDMAC_CIE_ROIE_Msk);
     ${DMA_INSTANCE_NAME}_REGS->XDMAC_GIE= (XDMAC_GIE_IE0_Msk << ${i});
-    xdmacChannelObj[${i}].inUse = 1;
+    xdmacChannelObj[${i}].inUse = 1U;
 
             </#if>
         </#if>
@@ -171,7 +195,7 @@ void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister( XDMAC_CHANNEL channel, const 
 
 bool ${DMA_INSTANCE_NAME}_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize )
 {
-    volatile uint32_t status = 0;
+    volatile uint32_t status = 0U;
     bool returnStatus = false;
 
     if (xdmacChannelObj[channel].busyStatus == false)
@@ -203,7 +227,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( XDMAC_CHANNEL channel, const void *sr
 
 bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t firstDescriptorAddress, XDMAC_DESCRIPTOR_CONTROL* firstDescriptorControl)
 {
-    volatile uint32_t status = 0;
+    volatile uint32_t status = 0U;
     bool returnStatus = false;
 
     if (xdmacChannelObj[channel].busyStatus == false)
