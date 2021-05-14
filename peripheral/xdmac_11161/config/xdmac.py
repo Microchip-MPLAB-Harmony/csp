@@ -282,6 +282,8 @@ dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT",
 dmaManagerSelect.setVisible(False)
 dmaManagerSelect.setDefaultValue("xdmac_11161:SAME70DMAModel")
 
+xdmacBitFieldString = "/avr-tools-device-file/modules/module@[name=\"XDMAC\"]/register-group@[name=\"{0}\"]/register@[name=\"{1}\"]/bitfield@[name=\"{2}\"]"
+
 xdmacMenu = coreComponent.createMenuSymbol("XDMAC_MENU", None)
 xdmacMenu.setLabel("DMA (XDMAC)")
 xdmacMenu.setDescription("DMA (XDMAC) Configuration")
@@ -399,23 +401,25 @@ for channelID in range(0, xdmacChCount.getValue()):
     xdmacSym_CC_DAM.setDefaultValue(1)
     xdmacSym_CC_DAM.setDependencies(xdmacTriggerLogic, ["XDMAC_CC" + str(channelID) + "_PERID"])
 
-    xdmacSym_CC_SIF = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_SIF", xdmacChannelMenu)
-    xdmacSym_CC_SIF.setLabel("DMA Interface Bus To Read Source Data")
-    xdmacSym_CC_SIF.addKey("AHB_IF0", "0", "DMA Interface Bus 0")
-    xdmacSym_CC_SIF.addKey("AHB_IF1", "1", "DMA Interface Bus 1")
-    xdmacSym_CC_SIF.setOutputMode("Key")
-    xdmacSym_CC_SIF.setDisplayMode("Description")
-    xdmacSym_CC_SIF.setDefaultValue(1)
-    xdmacSym_CC_SIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC" + str(channelID) + "_PERID"])
+    if ATDF.getNode(xdmacBitFieldString.format("XDMAC_CHID", "XDMAC_CC", "SIF")) is not None:
+        xdmacSym_CC_SIF = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_SIF", xdmacChannelMenu)
+        xdmacSym_CC_SIF.setLabel("DMA Interface Bus To Read Source Data")
+        xdmacSym_CC_SIF.addKey("AHB_IF0", "0", "DMA Interface Bus 0")
+        xdmacSym_CC_SIF.addKey("AHB_IF1", "1", "DMA Interface Bus 1")
+        xdmacSym_CC_SIF.setOutputMode("Key")
+        xdmacSym_CC_SIF.setDisplayMode("Description")
+        xdmacSym_CC_SIF.setDefaultValue(1)
+        xdmacSym_CC_SIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC" + str(channelID) + "_PERID"])
 
-    xdmacSym_CC_DIF = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_DIF", xdmacChannelMenu)
-    xdmacSym_CC_DIF.setLabel("DMA Interface Bus To Write Destination Data")
-    xdmacSym_CC_DIF.addKey("AHB_IF0", "0", "DMA Interface Bus 0")
-    xdmacSym_CC_DIF.addKey("AHB_IF1", "1", "DMA Interface Bus 1")
-    xdmacSym_CC_DIF.setOutputMode("Key")
-    xdmacSym_CC_DIF.setDisplayMode("Description")
-    xdmacSym_CC_DIF.setDefaultValue(1)
-    xdmacSym_CC_DIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC" + str(channelID) + "_PERID"])
+    if ATDF.getNode(xdmacBitFieldString.format("XDMAC_CHID", "XDMAC_CC", "DIF")) is not None:
+        xdmacSym_CC_DIF = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_DIF", xdmacChannelMenu)
+        xdmacSym_CC_DIF.setLabel("DMA Interface Bus To Write Destination Data")
+        xdmacSym_CC_DIF.addKey("AHB_IF0", "0", "DMA Interface Bus 0")
+        xdmacSym_CC_DIF.addKey("AHB_IF1", "1", "DMA Interface Bus 1")
+        xdmacSym_CC_DIF.setOutputMode("Key")
+        xdmacSym_CC_DIF.setDisplayMode("Description")
+        xdmacSym_CC_DIF.setDefaultValue(1)
+        xdmacSym_CC_DIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC" + str(channelID) + "_PERID"])
 
     xdmacSym_CC_DWIDTH = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_DWIDTH", xdmacChannelMenu)
     xdmacSym_CC_DWIDTH.setLabel("Data Width")
