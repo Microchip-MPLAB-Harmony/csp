@@ -227,6 +227,25 @@ typedef enum
 } ${LCDC_INSTANCE_NAME}_OUTPUT_COLOR_MODE;
 
 // *****************************************************************************
+/* LCDC System Bus DMA Burst Length
+
+   Summary:
+    Defines the length value for System Bus DMA Bursting
+
+   Description:
+
+   Remarks:
+    None.
+*/
+typedef enum 
+{
+    ${LCDC_INSTANCE_NAME}_BUS_BURST_LENGTH_AHB_SINGLE = LCDC_BASECFG0_BLEN_AHB_SINGLE_Val,
+    ${LCDC_INSTANCE_NAME}_BUS_BURST_LENGTH_AHB_INCR4  = LCDC_BASECFG0_BLEN_AHB_INCR4_Val,
+    ${LCDC_INSTANCE_NAME}_BUS_BURST_LENGTH_AHB_INCR8  = LCDC_BASECFG0_BLEN_AHB_INCR8_Val,
+    ${LCDC_INSTANCE_NAME}_BUS_BURST_LENGTH_AHB_INCR16 = LCDC_BASECFG0_BLEN_AHB_INCR16_Val,
+} LCDC_BUS_BURST_LENGTH;
+
+// *****************************************************************************
 /* LCDC Interrupts
 
    Summary:
@@ -269,6 +288,58 @@ typedef enum
     ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_DONE,
     ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_OVR,
 } ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT;
+
+// *****************************************************************************
+/* Function:
+    void ${LCDC_INSTANCE_NAME}_SetSytemBusDMABurstEnable(LCDC_LAYER_ID layer, bool enable)
+
+   Summary:
+    Enables/disables the LCDC System Bus DMA Burst DBLO bit
+
+   Description:
+    None
+
+   Precondition:
+    None.
+
+   Parameters:
+    enable - if true, DMA Burst is enabled. Disabled if false
+
+   Returns:
+    None
+
+   Remarks:
+    None
+*/
+void ${LCDC_INSTANCE_NAME}_SetSytemBusDMABurstEnable(LCDC_LAYER_ID layer, bool enable);
+
+// *****************************************************************************
+/* Function:
+    void ${LCDC_INSTANCE_NAME}_SetSytemBusDMABurstLength(LCDC_LAYER_ID layer, ${LCDC_INSTANCE_NAME}_BUS_BURST_LENGTH value)
+
+   Summary:
+    Sets the LCDC System Bus DMA Burst BLEN value
+
+   Description:
+    None
+
+   Precondition:
+    None.
+
+   Parameters:
+    ${LCDC_INSTANCE_NAME}_BUS_BURST_LENGTH
+    AHB_SINGLE
+    AHB_INCR4
+    AHB_INCR8
+    AHB_INCR16
+
+   Returns:
+    None
+
+   Remarks:
+    None
+*/
+void ${LCDC_INSTANCE_NAME}_SetSytemBusDMABurstLength(LCDC_LAYER_ID layer, ${LCDC_INSTANCE_NAME}_BUS_BURST_LENGTH value);
 
 // *****************************************************************************
 /* Function:
