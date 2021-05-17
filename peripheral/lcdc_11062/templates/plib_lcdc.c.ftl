@@ -352,6 +352,58 @@ void ${LCDC_INSTANCE_NAME}_WaitForDISPSignal( void )
     while (!(${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDSR & ${LCDC_INSTANCE_NAME}_LCDSR_DISPSTS_Msk));
 }
 
+void ${LCDC_INSTANCE_NAME}_SetSytemBusDMABurstEnable(LCDC_LAYER_ID layer, bool enable)
+{
+    switch(layer)
+    {
+        case ${LCDC_INSTANCE_NAME}_LAYER_BASE:
+            ${LCDC_INSTANCE_NAME}_REGS->LCDC_BASECFG0 = (LCDC_REGS->LCDC_BASECFG0 & ~LCDC_BASECFG0_DLBO_Msk) | 
+                                        ${LCDC_INSTANCE_NAME}_BASECFG0_DLBO(enable == true);
+          break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR1:
+            ${LCDC_INSTANCE_NAME}_REGS->LCDC_OVR1CFG0 = (LCDC_REGS->LCDC_OVR1CFG0 & ~LCDC_OVR1CFG0_DLBO_Msk) | 
+                                        ${LCDC_INSTANCE_NAME}_OVR1CFG0_DLBO(enable == true);
+          break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR2:
+            ${LCDC_INSTANCE_NAME}_REGS->LCDC_OVR2CFG0 = (LCDC_REGS->LCDC_OVR2CFG0 & ~LCDC_OVR2CFG0_DLBO_Msk) | 
+                                        ${LCDC_INSTANCE_NAME}_OVR2CFG0_DLBO(enable == true);
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_HEO:
+            ${LCDC_INSTANCE_NAME}_REGS->LCDC_HEOCFG0 = (LCDC_REGS->LCDC_HEOCFG0 & ~LCDC_HEOCFG0_DLBO_Msk) | 
+                                       ${LCDC_INSTANCE_NAME}_HEOCFG0_DLBO(enable == true);
+            break;            
+        case ${LCDC_INSTANCE_NAME}_LAYER_PP:
+        default:
+          break;
+    }    
+}
+
+void ${LCDC_INSTANCE_NAME}_SetSytemBusDMABurstLength(LCDC_LAYER_ID layer, ${LCDC_INSTANCE_NAME}_BUS_BURST_LENGTH value)
+{
+    switch(layer)
+    {
+        case ${LCDC_INSTANCE_NAME}_LAYER_BASE:
+            ${LCDC_INSTANCE_NAME}_REGS->LCDC_BASECFG0 = (LCDC_REGS->LCDC_BASECFG0 & ~LCDC_BASECFG0_BLEN_Msk) | 
+                                        ${LCDC_INSTANCE_NAME}_BASECFG0_BLEN(value);
+          break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR1:
+            ${LCDC_INSTANCE_NAME}_REGS->LCDC_OVR1CFG0 = (LCDC_REGS->LCDC_OVR1CFG0 & ~LCDC_OVR1CFG0_BLEN_Msk) | 
+                                        ${LCDC_INSTANCE_NAME}_OVR1CFG0_BLEN(value);
+          break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR2:
+            ${LCDC_INSTANCE_NAME}_REGS->LCDC_OVR2CFG0 = (LCDC_REGS->LCDC_OVR2CFG0 & ~LCDC_OVR2CFG0_BLEN_Msk) | 
+                                        ${LCDC_INSTANCE_NAME}_OVR2CFG0_BLEN(value);
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_HEO:
+            ${LCDC_INSTANCE_NAME}_REGS->LCDC_HEOCFG0 = (LCDC_REGS->LCDC_HEOCFG0 & ~LCDC_HEOCFG0_BLEN_Msk) | 
+                                       ${LCDC_INSTANCE_NAME}_HEOCFG0_BLEN(value);
+            break;            
+        case ${LCDC_INSTANCE_NAME}_LAYER_PP:
+        default:
+          break;
+    }    
+}
+
 void ${LCDC_INSTANCE_NAME}_SetRGBModeInput(${LCDC_INSTANCE_NAME}_LAYER_ID layer, ${LCDC_INSTANCE_NAME}_INPUT_COLOR_MODE mode)
 {
     switch(layer)
@@ -477,16 +529,16 @@ void ${LCDC_INSTANCE_NAME}_SetHorizStride(${LCDC_INSTANCE_NAME}_LAYER_ID layer, 
 {
     switch(layer)
     {
-        case LCDC_LAYER_OVR1:
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR1:
             ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR1CFG4 = ${LCDC_INSTANCE_NAME}_OVR1CFG4_XSTRIDE(xstride);
             break;
-        case LCDC_LAYER_OVR2:
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR2:
             ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR2CFG4 = ${LCDC_INSTANCE_NAME}_OVR2CFG4_XSTRIDE(xstride);
             break;
-        case LCDC_LAYER_BASE:
+        case ${LCDC_INSTANCE_NAME}_LAYER_BASE:
             ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_BASECFG2 = ${LCDC_INSTANCE_NAME}_BASECFG2_XSTRIDE(xstride);
             break;
-        case LCDC_LAYER_HEO:
+        case ${LCDC_INSTANCE_NAME}_LAYER_HEO:
             ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOCFG5 = ${LCDC_INSTANCE_NAME}_HEOCFG5_XSTRIDE(xstride);
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_PP:
