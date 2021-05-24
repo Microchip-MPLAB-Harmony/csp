@@ -671,6 +671,11 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     /* Set CCE to unlock the configuration registers */
     ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_CCE_Msk;
 
+<#if CAN_MRCFG_OFFSET_ENABLE??>
+    /* Message RAM Base Address Offset */
+    ${CAN_INSTANCE_NAME}_REGS->CAN_MRCFG = (uint32_t)msgRAMConfigBaseAddress & CAN_MRCFG_OFFSET_Msk;
+
+</#if>
 <#if RXF0_USE>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address = (can_rxf0e_registers_t *)msgRAMConfigBaseAddress;
     offset = ${CAN_INSTANCE_NAME}_RX_FIFO0_SIZE;

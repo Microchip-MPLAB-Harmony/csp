@@ -489,6 +489,11 @@ def instantiateComponent(canComponent):
     interruptHandlerLock = canInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     interruptVectorUpdate = canInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="CAN"]/register-group@[name="CAN"]/register@[name="MRCFG"]/bitfield@[name="OFFSET"]') != None:
+        canMRCFGOffsetRegSym = canComponent.createBooleanSymbol("CAN_MRCFG_OFFSET_ENABLE", None)
+        canMRCFGOffsetRegSym.setDefaultValue(True)
+        canMRCFGOffsetRegSym.setVisible(False)
+
     # CAN Bit Timing Calculation
     canBitTimingCalculationMenu = canComponent.createMenuSymbol("BIT_TIMING_CALCULATION", None)
     canBitTimingCalculationMenu.setLabel("Bit Timing Calculation")
