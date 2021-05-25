@@ -25,6 +25,13 @@
 global xc32StackInTCMSym
 global tcmEnable
 
+def getCorePeripherals():
+
+    # Components which are creating critical section
+    corePeripherals = ["DMA", "I2S", "RTC", "TC", "SERCOM"]
+
+    return corePeripherals
+
 def xc32SetStackInTcm(symbol, event):
     if (event["value"]):
         xc32StackInTCMSym.setValue("true")
@@ -146,6 +153,10 @@ cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M7 Configuration")
 cortexMenu.setDescription("Configuration for Cortex M7")
 
+periInstanceMultiVectorSupport = coreComponent.createBooleanSymbol("PERIPHERAL_MULTI_VECTOR", None)
+periInstanceMultiVectorSupport.setDefaultValue(True)
+periInstanceMultiVectorSupport.setVisible(False)
+
 global nvmWaitStates
 nvmWaitStates = { #VDD > 2.7
                     23000000 : 0,
@@ -235,7 +246,8 @@ execfile(Variables.get("__CORE_DIR")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
 
 # load dma manager information
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/dma_03639/config/dma.py")
+
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/dma_03639/config/dma.py")
 #coreComponent.addPlugin("../peripheral/dma_03639/plugin/dmamanager.jar")
 
 # load wdt
