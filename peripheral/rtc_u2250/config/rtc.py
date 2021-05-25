@@ -26,12 +26,24 @@ from collections import defaultdict
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
+global InterruptVectorUpdate
 global rtcInstanceName
 global eventMap
 global eventMapInverse
 global RTCfilesArray
 global InterruptVectorSecurity
+global rtcInterruptVectorDict
 RTCfilesArray = []
+InterruptVector = []
+InterruptHandler = []
+InterruptHandlerLock = []
+InterruptVectorUpdate = []
+InterruptVectorSecurity = []
+
+# Needed by SYS TIME to disable RTC interrupt during critical code execution
+rtcInterruptVectorDict = {
+    "COMPARE": "RTC_IRQn", "PERIOD": "RTC_IRQn"
+}
 ################################################################################
 #                        Callback Functions                      ########
 ################################################################################
@@ -45,14 +57,16 @@ def fileUpdate(symbol, event):
         RTCfilesArray[2].setSecurity("SECURE")
         RTCfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         RTCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
-        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+        for index in range(len(InterruptVectorSecurity)):
+            Database.setSymbolValue("core", InterruptVectorSecurity[index], False)
     else:
         RTCfilesArray[0].setSecurity("NON_SECURE")
         RTCfilesArray[1].setSecurity("NON_SECURE")
         RTCfilesArray[2].setSecurity("NON_SECURE")
         RTCfilesArray[3].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         RTCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-        Database.setSymbolValue("core", InterruptVectorSecurity, True)
+        for index in range(len(InterruptVectorSecurity)):
+            Database.setSymbolValue("core", InterruptVectorSecurity[index], True)
 
 def sysTimeCalendarModeCommentVisibility(symbol, event):
     global sysTimeComponentId
@@ -117,6 +131,7 @@ def calcSysTimeCompareVal(rtcOperationMode):
     tickRateDict = {"tick_rate_hz": 0}
     dummy_dict = dict()
     periodVal = 0
+    achievableTickRateHz = 0
     if ((sysTimeComponentId.getValue() != "") and (sysTimePlibMode.getValue() == "SYS_TIME_PLIB_MODE_PERIOD")):
         #Get the RTC clock frequency
         rtcClockFrequency = Database.getSymbolValue("core", "RTC_CLOCK_FREQUENCY")
@@ -153,8 +168,10 @@ def calcSysTimeCompareVal(rtcOperationMode):
             Database.setSymbolValue("rtc", "RTC_MODE1_TIMER_COUNTER_PERIOD", long(newPeriodValue))
             periodVal = newPeriodValue + 1
         if ((rtcOperationMode == "MODE0") or (rtcOperationMode == "MODE1")):
-            achievableTickRateHz = float(1.0/float(rtcClockFrequency)) * long(periodVal)
-            achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
+            if rtcClockFrequency > 0:
+                achievableTickRateHz = float(1.0/float(rtcClockFrequency)) * long(periodVal)
+                if achievableTickRateHz > 0:
+                    achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
             tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
             dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
 
@@ -175,7 +192,6 @@ def handleMessage(messageID, args):
         sysTimeComponentId.setValue(args["ID"])
         modeDict = {"plib_mode": "PERIOD_MODE"}
         sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
-        print sysTimePLIBConfig
         rtcModeSelection_Sym.setSelectedKey("MODE0", 1)
         sysTimePlibMode.setValue(sysTimePLIBConfig["plib_mode"])
         if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
@@ -225,14 +241,15 @@ def setRTCInterruptData(status):
     global InterruptHandler
     global InterruptHandlerLock
 
-    Database.setSymbolValue("core", InterruptVector, status, 2)
-    Database.setSymbolValue("core", InterruptHandlerLock, status, 2)
+    for index in range(len(InterruptVector)):
+        Database.setSymbolValue("core", InterruptVector[index], status, 2)
+        Database.setSymbolValue("core", InterruptHandlerLock[index], status, 2)
 
-    if status:
-        Database.setSymbolValue(
-            "core", InterruptHandler, rtcInstanceName.getValue() + "_InterruptHandler", 2)
-    else:
-        Database.setSymbolValue("core", InterruptHandler, "RTC_Handler", 2)
+        if status:
+            Database.setSymbolValue(
+                "core", InterruptHandler[index], rtcInstanceName.getValue() + "_InterruptHandler", 2)
+        else:
+            Database.setSymbolValue("core", InterruptHandler[index], InterruptHandler[index].replace("_INTERRUPT_HANDLER", "_Handler"), 2)
 
 
 def updateRTCInterruptStatus(symbol, event):
@@ -432,7 +449,8 @@ def sysTime_modeSelection(symbol, event):
     symObj = event["symbol"]
     rtcMode = symObj.getSelectedKey()
 
-    irqEnumName = "RTC_IRQn"
+    # Currently only Period (Tick-based) mode is supported. Hence hard-code to "PERIOD"
+    irqEnumName = rtcInterruptVectorDict["PERIOD"]
 
     if rtcMode == "MODE0":
         # 32-bit counter
@@ -473,6 +491,29 @@ def sysTime_modeSelection(symbol, event):
         callbackApiName_Sym.setValue(callbackApiName, 2)
         irqEnumName_Sym.setValue(irqEnumName, 2)
 
+# Tamper register value calculation
+def RTC_TAMPCTRL_REG_Update(symbol, event):    
+    tampctrl_val = symbol.getValue()
+
+    if "LEVEL" in event["id"]:
+        tamperChannel = int(event["id"].split("TAMP_CHANNEL")[1].split("_LEVEL")[0])
+        if event["value"] == 1:
+            tampctrl_val |= 1 << (tamperChannel + 16)
+        else: #0
+            tampctrl_val &= ~(1 << (tamperChannel + 16))
+    elif "DEBNC" in event["id"]:
+        tamperChannel = int(event["id"].split("TAMP_CHANNEL")[1].split("_DEBNC")[0])
+        if event["value"] == True:
+            tampctrl_val |= 1 << (tamperChannel + 24)
+        else:
+            tampctrl_val &= ~(1 << (tamperChannel + 24))
+    elif "ACTION" in event["id"]:  
+        tamperChannel = int(event["id"].split("TAMP_CHANNEL")[1].split("_ACTION")[0])
+        
+        tampctrl_val &= ~(0x3 << (tamperChannel *2))
+        tampctrl_val |= event["value"] << (tamperChannel * 2)
+
+    symbol.setValue(tampctrl_val)
 ################################################################################
 #                      RTC DATABASE COMPONENTS                      ########
 ################################################################################
@@ -512,6 +553,8 @@ def instantiateComponent(rtcComponent):
     global rtcSymMode0_CTRLA_PRESCALER
     global sysTimePlibMode
     global sysTimeTickRateMs
+    global rtcInterruptVectorDict
+
     rtcMode0InterruptMap = {}
     rtcMode1InterruptMap = {}
     rtcMode2InterruptMap = {}
@@ -540,11 +583,24 @@ def instantiateComponent(rtcComponent):
     rtcInstanceName.setDefaultValue(rtcComponent.getID().upper())
     Log.writeInfoMessage("Running " + rtcInstanceName.getValue())
 
-    InterruptVector = rtcInstanceName.getValue() + "_INTERRUPT_ENABLE"
-    InterruptHandler = rtcInstanceName.getValue() + "_INTERRUPT_HANDLER"
-    InterruptHandlerLock = rtcInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = rtcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
-    InterruptVectorSecurity = rtcInstanceName.getValue() + "_SET_NON_SECURE"
+    interruptValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+
+    for index in range(len(interruptValues)):
+        moduleInstance = list(str(interruptValues[index].getAttribute("module-instance")).split(" "))
+        if rtcInstanceName.getValue() in moduleInstance:
+
+            name = str(interruptValues[index].getAttribute("name"))
+
+            InterruptVector.append(name + "_INTERRUPT_ENABLE")
+            InterruptHandler.append(name + "_INTERRUPT_HANDLER")
+            InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
+            InterruptVectorUpdate.append("core." + name +  "_INTERRUPT_ENABLE_UPDATE")
+            InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
+            
+            if "COMPARE" in name:
+                rtcInterruptVectorDict["COMPARE"] = name + "_IRQn"
+            if "PERIOD" in name:
+                rtcInterruptVectorDict["PERIOD"] = name + "_IRQn"
 
     rtcNode = ATDF.getNode(
         '/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]')
@@ -623,8 +679,8 @@ def instantiateComponent(rtcComponent):
     if rtcNode != None:
         rtcBkupSupported = rtcComponent.createBooleanSymbol("RTC_BKUP_SUPPORTED", None)
         rtcBkupSupported.setVisible(False)
-    rtcSymMode0_FREQCORR = rtcComponent.createBooleanSymbol(
-        "RTC_FREQCORR", rtcSym_Menu)
+
+    rtcSymMode0_FREQCORR = rtcComponent.createBooleanSymbol("RTC_FREQCORR", rtcSym_Menu)
     rtcSymMode0_FREQCORR.setLabel("Generate Frequency Correction API")
 
     rtcTampAvailable = rtcComponent.createBooleanSymbol("TAMP_DETECTION_SUPPORTED", rtcSym_Menu)
@@ -705,6 +761,7 @@ def instantiateComponent(rtcComponent):
         tampMaj.addKey("Disable", "0", "Match three equal values")
         tampMaj.addKey("Enable", "1", "Match majority two of three values.")
 
+        TAMPCTRL_Field_List = []
         for id in range(0, tamperChannels):
             tampChannelMenu = rtcComponent.createMenuSymbol("TAMP_CHANNEL" + str(id), rtcTampMenu)
             tampChannelMenu.setLabel("Tamper Channel " + str(id) + " Configuration")
@@ -720,14 +777,17 @@ def instantiateComponent(rtcComponent):
                                     "A rising edge condition will be detected on Tamper input INn.")
                 tampChannelLvl.setDisplayMode("Key")
                 tampChannelLvl.setOutputMode("Value")
+                TAMPCTRL_Field_List.append("TAMP_CHANNEL" + str(id) + "_LEVEL")
 
                 tampChannelDebounce = rtcComponent.createBooleanSymbol(
                     "TAMP_CHANNEL" + str(id) + "_DEBNC", tampChannelMenu)
                 tampChannelDebounce.setLabel("Enable Debouncing")
+                TAMPCTRL_Field_List.append("TAMP_CHANNEL" + str(id) + "_DEBNC")
 
             tampChannelAction = rtcComponent.createKeyValueSetSymbol(
                 "TAMP_CHANNEL" + str(id) + "_ACTION", tampChannelMenu)
             tampChannelAction.setLabel("Channel Action")
+            TAMPCTRL_Field_List.append("TAMP_CHANNEL" + str(id) + "_ACTION")
 
             channelActionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RTC\"]/value-group@[name=\"" "RTC_TAMPCTRL__IN" + str(id) + "ACT""\"]")
             if channelActionNode!= None:
@@ -740,6 +800,13 @@ def instantiateComponent(rtcComponent):
 
                 tampChannelAction.setOutputMode("Value")
                 tampChannelAction.setDisplayMode("Description")
+
+        # TAMPCTRL Register Value
+        RTC_TAMPCTRL_REG_Config = rtcComponent.createHexSymbol("RTC_TAMPCTRL_REG", None)
+        RTC_TAMPCTRL_REG_Config.setDefaultValue(0x00000000)
+        RTC_TAMPCTRL_REG_Config.setVisible(False)
+        RTC_TAMPCTRL_REG_Config.setDependencies(RTC_TAMPCTRL_REG_Update, TAMPCTRL_Field_List)
+
 
         tampEventMenu = rtcComponent.createMenuSymbol("TAMP_EVENT_MENU", rtcTampMenu)
         tampEventMenu.setLabel("Event System Configuration")
@@ -919,26 +986,20 @@ def instantiateComponent(rtcComponent):
 
     for i in range(0, len(rtcEventsValues)):
         if "TAMP" not in rtcEventsValues[i].getAttribute("name"):
-            rtcSymMode0_Event = rtcComponent.createBooleanSymbol(
-                "RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE", rtcSymMode0Events)
+            rtcSymMode0_Event = rtcComponent.createBooleanSymbol("RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE", rtcSymMode0Events)
             rtcSymMode0_Event.setLabel(rtcEventsValues[i].getAttribute("caption"))
-            rtcMode0EvctrlMap[rtcEventsValues[i].getAttribute(
-                "name")] = rtcEventsValues[i].getAttribute("mask")
-            rtcMode0EvctrlDep.append(
-                "RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE")
-            if "PER" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PER_" + str(
-                    rtcEventsValues[i].getAttribute("name")).replace("PEREO", "") + "_ACTIVE"
+            rtcMode0EvctrlMap[rtcEventsValues[i].getAttribute("name")] = rtcEventsValues[i].getAttribute("mask")
+            rtcMode0EvctrlDep.append("RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE")
+            if "PERE" in rtcEventsValues[i].getAttribute("name"):
+                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PER_" + str(rtcEventsValues[i].getAttribute("name")).replace("PEREO", "") + "_ACTIVE"
             if "OVF" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute(
-                    "name") + "_ENABLE"] = "GENERATOR_RTC_OVF_ACTIVE"
+                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_OVF_ACTIVE"
             if "CMP" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_CMP_" + str(
-                    rtcEventsValues[i].getAttribute("name")).replace("CMPEO", "") + "_ACTIVE"
-
+                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_CMP_" + str(rtcEventsValues[i].getAttribute("name")).replace("CMPEO", "") + "_ACTIVE"
+            if "PERD" in rtcEventsValues[i].getAttribute("name"):
+                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PERD_ACTIVE"
     # Periodic Interval Notification
-    rtcSymMode0_PERIN = rtcComponent.createHexSymbol(
-        "RTC_MODE0_EVCTRL", rtcSymMode0Menu)
+    rtcSymMode0_PERIN = rtcComponent.createHexSymbol("RTC_MODE0_EVCTRL", rtcSymMode0Menu)
     rtcSymMode0_PERIN.setDefaultValue(0)
     rtcSymMode0_PERIN.setVisible(False)
     rtcSymMode0_PERIN.setDependencies(rtcMode0Evctrl, rtcMode0EvctrlDep)
@@ -1069,7 +1130,7 @@ def instantiateComponent(rtcComponent):
                 "name")] = rtcEventsValues[i].getAttribute("mask")
             rtcMode1EvctrlDep.append(
                 "RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE")
-            if "PER" in rtcEventsValues[i].getAttribute("name"):
+            if "PERE" in rtcEventsValues[i].getAttribute("name"):
                 eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PER_" + str(
                     rtcEventsValues[i].getAttribute("name")).replace("PEREO", "") + "_ACTIVE"
             if "OVF" in rtcEventsValues[i].getAttribute("name"):
@@ -1078,6 +1139,8 @@ def instantiateComponent(rtcComponent):
             if "CMP" in rtcEventsValues[i].getAttribute("name"):
                 eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_CMP_" + str(
                     rtcEventsValues[i].getAttribute("name")).replace("CMPEO", "") + "_ACTIVE"
+            if "PERD" in rtcEventsValues[i].getAttribute("name"):
+                eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PERD_ACTIVE"
 
     # Periodic Interval Notification
     rtcSymMode1_PERIN = rtcComponent.createHexSymbol(
@@ -1198,7 +1261,7 @@ def instantiateComponent(rtcComponent):
                 "name")] = rtcEventsValues[i].getAttribute("mask")
             rtcMode2EvctrlDep.append(
                 "RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE")
-            if "PER" in rtcEventsValues[i].getAttribute("name"):
+            if "PERE" in rtcEventsValues[i].getAttribute("name"):
                 eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PER_" + str(
                     rtcEventsValues[i].getAttribute("name")).replace("PEREO", "") + "_ACTIVE"
             if "OVF" in rtcEventsValues[i].getAttribute("name"):
@@ -1207,6 +1270,8 @@ def instantiateComponent(rtcComponent):
             if "ALARM" in rtcEventsValues[i].getAttribute("name"):
                 eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_CMP_" + str(
                     rtcEventsValues[i].getAttribute("name")).replace("ALARMEO", "") + "_ACTIVE"
+            if "PERD" in rtcEventsValues[i].getAttribute("name"):
+                eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PERD_ACTIVE"
 
     # Periodic Interval Notification
     rtcSymMode2_PERIN = rtcComponent.createHexSymbol(
@@ -1229,6 +1294,14 @@ def instantiateComponent(rtcComponent):
     else:
         rtcSymMode2_MaskRegName.setDefaultValue("MASK")
 
+    # Used for code generation
+    rtcMode2AlarmRegisterDefType = rtcComponent.createStringSymbol("RTC_MODE2_ALARM_REG_DEF_TYPE", None)
+    rtcMode2AlarmRegisterDefType.setVisible(False)
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="MODE2_ALARM"]') is not None:
+        rtcMode2AlarmRegisterDefType.setDefaultValue("NEW")
+    else:
+        rtcMode2AlarmRegisterDefType.setDefaultValue("OLD")
+        
     ############################################################################
     # Dependency ####
     ############################################################################
@@ -1246,8 +1319,7 @@ def instantiateComponent(rtcComponent):
     rtcSym_IntEnComment.setVisible(False)
     rtcSym_IntEnComment.setLabel(
         "Warning!!! " + rtcInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    rtcSym_IntEnComment.setDependencies(updateRTCInterruptWarringStatus, [
-                                        "core." + InterruptVectorUpdate])
+    rtcSym_IntEnComment.setDependencies(updateRTCInterruptWarringStatus, InterruptVectorUpdate)
 
     # Clock Warning status
     rtcSym_ClkEnComment = rtcComponent.createCommentSymbol(
@@ -1335,7 +1407,8 @@ def instantiateComponent(rtcComponent):
         RTCfilesArray.append(rtcSource1File)
         RTCfilesArray.append(rtcSystemInitFile)
         RTCfilesArray.append(rtcSystemDefFile)
-        Database.setSymbolValue("core", InterruptVectorSecurity, rtcIsNonSecure)
+        for index in range(len(InterruptVectorSecurity)):
+            Database.setSymbolValue("core", InterruptVectorSecurity[index], rtcIsNonSecure)
         if rtcIsNonSecure == False:
             RTCfilesArray[0].setSecurity("SECURE")
             RTCfilesArray[1].setSecurity("SECURE")
