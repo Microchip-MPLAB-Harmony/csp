@@ -70,6 +70,7 @@ peripherals = {
                 "SDHC_U2011"    : ["SDHC"],
                 "HSMCI_6449"    : ["SDHC"],
                 "SDHC_00187"    : ["SDHC"],
+                "SDMMC_03592"   : ["SDHC"],
                 "DBGU_6059"     : ["UART"],
                 "PMP_00751"     : ["PMP"],
                 "TMR1_00687"    : ["TMR"],
