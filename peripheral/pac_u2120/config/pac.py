@@ -36,18 +36,19 @@ global pacSym_INTENSET
 
 def updatePACInterruptStatus(symbol, event):
 
-    Database.setSymbolValue("core", pacInterruptVector, event["value"], 2)
-    Database.setSymbolValue("core", pacInterruptHandlerLock, event["value"], 2)
-
-    if event["value"] == True:
-        Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_InterruptHandler", 2)
+    if ((pacSym_INTENSET.getValue() == True) and (pacSym_Use.getValue() == True)):
+        Database.setSymbolValue("core", pacInterruptVector, True)
+        Database.setSymbolValue("core", pacInterruptHandlerLock, True)
+        Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_InterruptHandler")
     else:
-        Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_Handler", 2)
+        Database.setSymbolValue("core", pacInterruptVector, False)
+        Database.setSymbolValue("core", pacInterruptHandlerLock, False)
+        Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_Handler")
 
 
 def updatePACInterruptWarringStatus(symbol, event):
 
-    if pacSym_INTENSET.getValue() == True and pacSym_Use.getValue() == True:
+    if ((pacSym_INTENSET.getValue() == True) and (pacSym_Use.getValue() == True)):
         symbol.setVisible(event["value"])
 
 
@@ -56,13 +57,13 @@ def updatePACInterruptVisibleProperty(symbol, event):
     symbol.setVisible(event["value"])
 
     if pacSym_INTENSET.getValue() == True:
-        Database.setSymbolValue("core", pacInterruptVector, event["value"], 2)
-        Database.setSymbolValue("core", pacInterruptHandlerLock, event["value"], 2)
+        Database.setSymbolValue("core", pacInterruptVector, event["value"])
+        Database.setSymbolValue("core", pacInterruptHandlerLock, event["value"])
 
         if event["value"] == True:
-            Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_InterruptHandler", 2)
+            Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_InterruptHandler")
         else:
-            Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_Handler", 2)
+            Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_Handler")
 
 
 def updatePACErrorEventVisibleProperty(symbol, event):
@@ -87,7 +88,7 @@ def evsysSetup(symbol, event):
     prevStatus = Database.getSymbolValue("evsys", "GENERATOR_PAC_ACCERR_ACTIVE")
 
     if (prevStatus != (pacActive & eventActive)):
-        Database.setSymbolValue("evsys", "GENERATOR_PAC_ACCERR_ACTIVE", (pacActive & eventActive), 2)
+        Database.setSymbolValue("evsys", "GENERATOR_PAC_ACCERR_ACTIVE", (pacActive & eventActive))
 
 ###################################################################################################
 ########################################## Component  #############################################
