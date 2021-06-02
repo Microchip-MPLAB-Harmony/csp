@@ -48,6 +48,9 @@
 
 #if __ARMCC_VERSION >= 6000000
     __asm(".global __use_no_semihosting");
+#elif __ARMCC_VERSION >= 5000000
+    #pragma import(__use_no_semihosting)
+    struct __FILE { int handle; };
 #else
     #error Unsupported compiler
 #endif
@@ -88,4 +91,7 @@ int fputc(int c, FILE* stream)
 
 void _sys_exit(int return_code) {
   while (1);    /* endless loop */
+}
+
+void _ttywrch(int ch) {
 }
