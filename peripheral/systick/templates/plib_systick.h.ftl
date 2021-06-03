@@ -85,12 +85,14 @@ void SYSTICK_TimerPeriodSet ( uint32_t period );
 uint32_t SYSTICK_TimerPeriodGet ( void );
 uint32_t SYSTICK_TimerCounterGet ( void );
 uint32_t SYSTICK_TimerFrequencyGet ( void );
+void SYSTICK_DelayMs ( uint32_t delay_ms );
+void SYSTICK_DelayUs ( uint32_t delay_us );
+
 <#if USE_SYSTICK_INTERRUPT == false>
     <#lt>bool SYSTICK_TimerPeriodHasExpired(void);
 </#if>
 <#if USE_SYSTICK_INTERRUPT == true>
-	<#lt>void SYSTICK_DelayMs ( uint32_t delay_ms );
-	<#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );
+    <#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );
 </#if>
 <#if SYSTICK_USED_BY_SYS_TIME == true>
 void SYSTICK_TimerInterruptEnable ( void );

@@ -43,105 +43,150 @@
 #include "plib_systick.h"
 
 <#if USE_SYSTICK_SECURE_INTERRUPT == true>
-	<#lt>SYSTICK_OBJECT systick;
+    <#lt>SYSTICK_OBJECT systick;
 </#if>
 
 void SYSTICK_TimerInitialize ( void )
 {
-	SysTick->CTRL = 0;
-	SysTick->VAL = 0;
+    SysTick->CTRL = 0;
+    SysTick->VAL = 0;
     <#if SYSTICK_SECURE_PERIOD != "0x0">
-	SysTick->LOAD = ${SYSTICK_SECURE_PERIOD} - 1;
+    SysTick->LOAD = ${SYSTICK_SECURE_PERIOD} - 1;
     </#if>
-	<#if USE_SYSTICK_SECURE_INTERRUPT == true && SYSTICK_SECURE_CLOCK == "0">
-		<#lt>	SysTick->CTRL = SysTick_CTRL_TICKINT_Msk;
-	</#if>
-	<#if USE_SYSTICK_SECURE_INTERRUPT == true && SYSTICK_SECURE_CLOCK == "1">
-		<#lt>	SysTick->CTRL = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk;
-	</#if>
-	<#if USE_SYSTICK_SECURE_INTERRUPT == false && SYSTICK_SECURE_CLOCK == "1">
-		<#lt>	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk;
-	</#if>
-	<#if USE_SYSTICK_SECURE_INTERRUPT == true >
+    <#if USE_SYSTICK_SECURE_INTERRUPT == true && SYSTICK_SECURE_CLOCK == "0">
+        <#lt>   SysTick->CTRL = SysTick_CTRL_TICKINT_Msk;
+    </#if>
+    <#if USE_SYSTICK_SECURE_INTERRUPT == true && SYSTICK_SECURE_CLOCK == "1">
+        <#lt>   SysTick->CTRL = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk;
+    </#if>
+    <#if USE_SYSTICK_SECURE_INTERRUPT == false && SYSTICK_SECURE_CLOCK == "1">
+        <#lt>   SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk;
+    </#if>
+    <#if USE_SYSTICK_SECURE_INTERRUPT == true >
 
-		<#lt>	systick.tickCounter = 0;
-		<#lt>	systick.callback = NULL;
-	</#if>
+        <#lt>   systick.tickCounter = 0;
+        <#lt>   systick.callback = NULL;
+    </#if>
 }
 
 void SYSTICK_TimerRestart ( void )
 {
-	SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
-	SysTick->VAL = 0;
-	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+    SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
+    SysTick->VAL = 0;
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
 }
 
 void SYSTICK_TimerStart ( void )
 {
-	SysTick->VAL = 0;
-	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+    SysTick->VAL = 0;
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
 }
 
 void SYSTICK_TimerStop ( void )
 {
-	SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
+    SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
 }
 
 void SYSTICK_TimerPeriodSet ( uint32_t period )
 {
-	SysTick->LOAD = period - 1;
+    SysTick->LOAD = period - 1;
 }
 
 uint32_t SYSTICK_TimerPeriodGet ( void )
 {
-		return(SysTick->LOAD);
+        return(SysTick->LOAD);
 }
 
 uint32_t SYSTICK_TimerCounterGet ( void )
 {
-	return (SysTick->VAL);
+    return (SysTick->VAL);
 }
 
 uint32_t SYSTICK_TimerFrequencyGet ( void )
 {
-	return (SYSTICK_FREQ);
+    return (SYSTICK_FREQ);
+}
+void SYSTICK_DelayMs ( uint32_t delay_ms)
+{
+   uint32_t elapsedCount=0U, delayCount;
+   uint32_t deltaCount, oldCount, newCount, period;
+
+   period = SysTick->LOAD + 1U;
+
+   /* Calculate the count for the given delay */
+   delayCount=(SYSTICK_FREQ/1000U)*delay_ms;
+
+   if((SysTick->CTRL & SysTick_CTRL_ENABLE_Msk) == SysTick_CTRL_ENABLE_Msk)
+   {
+       oldCount = SysTick->VAL;
+
+       while (elapsedCount < delayCount)
+       {
+           newCount = SysTick->VAL;
+           deltaCount = oldCount - newCount;
+
+           if(newCount > oldCount)
+           {
+               deltaCount = period - newCount + oldCount;
+           }
+
+           oldCount = newCount;
+           elapsedCount = elapsedCount + deltaCount;
+       }
+   }
 }
 
+void SYSTICK_DelayUs ( uint32_t delay_us)
+{
+   uint32_t elapsedCount=0U, delayCount;
+   uint32_t deltaCount, oldCount, newCount, period;
+
+   period = SysTick->LOAD + 1U;
+
+    /* Calculate the count for the given delay */
+   delayCount=(SYSTICK_FREQ/1000000U)*delay_us;
+
+   if((SysTick->CTRL & SysTick_CTRL_ENABLE_Msk) == SysTick_CTRL_ENABLE_Msk)
+   {
+       oldCount = SysTick->VAL;
+
+       while (elapsedCount < delayCount)
+       {
+           newCount = SysTick->VAL;
+           deltaCount = oldCount - newCount;
+
+           if(newCount > oldCount)
+           {
+               deltaCount = period - newCount + oldCount;
+           }
+
+           oldCount = newCount;
+           elapsedCount = elapsedCount + deltaCount;
+       }
+   }
+}
+
+
 <#if USE_SYSTICK_SECURE_INTERRUPT == false>
-	<#lt>bool SYSTICK_TimerPeriodHasExpired(void)
-	<#lt>{
-	<#lt>	return (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) > 0;
-	<#lt>}
+    <#lt>bool SYSTICK_TimerPeriodHasExpired(void)
+    <#lt>{
+    <#lt>   return (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) > 0;
+    <#lt>}
 </#if>
 
 <#if USE_SYSTICK_SECURE_INTERRUPT == true>
-	<#lt>void SYSTICK_DelayMs ( uint32_t delay)
-	<#lt>{
-	<#lt>	uint32_t tickStart, delayTicks;
+    <#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
+    <#lt>{
+    <#lt>   systick.callback = callback;
+    <#lt>   systick.context = context;
+    <#lt>}
 
-	<#lt>	if( (SysTick->CTRL & (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk)) == (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk))
-	<#lt>	{
-	<#lt>		tickStart=systick.tickCounter;
-	<#lt>		delayTicks=(1000 * delay)/SYSTICK_INTERRUPT_PERIOD_IN_US;  // Number of tick interrupts for a given delay (in ms)
-
-	<#lt>		while((systick.tickCounter-tickStart)<delayTicks)
-	<#lt>		{
-	<#lt>		}
-	<#lt>	}
-	<#lt>}
-
-	<#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
-	<#lt>{
-	<#lt>	systick.callback = callback;
-	<#lt>	systick.context = context;
-	<#lt>}
-
-	<#lt>void SysTick_Handler(void)
-	<#lt>{
-	<#lt>	systick.tickCounter++;
-	<#lt>	if(systick.callback != NULL)
-	<#lt>	{
-	<#lt>		systick.callback(systick.context);
-	<#lt>	}
-	<#lt>}
+    <#lt>void SysTick_Handler(void)
+    <#lt>{
+    <#lt>   systick.tickCounter++;
+    <#lt>   if(systick.callback != NULL)
+    <#lt>   {
+    <#lt>       systick.callback(systick.context);
+    <#lt>   }
+    <#lt>}
 </#if>
