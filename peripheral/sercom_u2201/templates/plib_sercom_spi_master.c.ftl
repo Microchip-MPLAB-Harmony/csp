@@ -103,8 +103,8 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
     /* Instantiate the ${SERCOM_INSTANCE_NAME} SPI object */
     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.callback = NULL ;
     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = false ;
-	${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize = 0U;
-	${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize = 0U;
+    ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize = 0U;
+    ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize = 0U;
 </#if>
 
     /* Selection of the Character Size and Receiver Enable */
@@ -219,14 +219,14 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
         if((baudValue > 0U) && (baudValue <= 255U))
         {
             /* Selection of the Clock Polarity and Clock Phase */
-			${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLA &= ~(SERCOM_SPIM_CTRLA_CPOL_Msk | SERCOM_SPIM_CTRLA_CPHA_Msk);
+            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLA &= ~(SERCOM_SPIM_CTRLA_CPOL_Msk | SERCOM_SPIM_CTRLA_CPHA_Msk);
             ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLA |= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase;
 
             /* Selection of the Baud Value */
             ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_BAUD = (uint8_t)baudValue;
 
             /* Selection of the Character Size */
-			${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB &= ~SERCOM_SPIM_CTRLB_CHSIZE_Msk;
+            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB &= ~SERCOM_SPIM_CTRLB_CHSIZE_Msk;
             ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB |= (uint32_t)setup->dataBits;
 
             /* Wait for synchronization */
@@ -333,6 +333,11 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_IsBusy(void)
     return isBusy;
 }
 </#if>
+
+bool ${SERCOM_INSTANCE_NAME}_SPI_IsTransmitterBusy(void)
+{
+    return ((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) == 0)? true : false;
+}
 
 // *****************************************************************************
 /* Function:
@@ -588,7 +593,7 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
             }
             else
             {
-                /* Do nothing */    
+                /* Do nothing */
             }
         }
         else
