@@ -63,7 +63,7 @@
 <#assign I2C_PLIB = "SERCOM_INSTANCE_NAME">
 <#assign I2C_PLIB_CLOCK_FREQUENCY = "core." + I2C_PLIB?eval + "_CORE_CLOCK_FREQUENCY">
 
-#define ${SERCOM_INSTANCE_NAME}_I2CM_SPEED_HZ			${I2C_CLOCK_SPEED_HZ}
+#define ${SERCOM_INSTANCE_NAME}_I2CM_SPEED_HZ           ${I2C_CLOCK_SPEED_HZ}
 
 /* ${SERCOM_INSTANCE_NAME} I2C baud value */
 #define ${SERCOM_INSTANCE_NAME}_I2CM_BAUD_VALUE         (0x${I2CM_BAUD?upper_case}U)
@@ -837,7 +837,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_IsBusy(void)
     {
         if(((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) == SERCOM_I2CM_STATUS_BUSSTATE(0x01UL)))
         {
-           isBusy = false; 
+           isBusy = false;
         }
     }
     return isBusy;
@@ -1057,6 +1057,19 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     else
                     {
                         ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount++];
+
+                        /* Wait for synchronization */
+                        <#if SERCOM_SYNCBUSY = false>
+                            while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & (uint16_t)SERCOM_I2CM_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_I2CM_STATUS_SYNCBUSY_Msk)
+                            {
+                                /* Do nothing */
+                            }
+                        <#else>
+                            while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY) != 0U)
+                            {
+                                /* Do nothing */
+                            }
+                        </#if>
                     }
 
                     break;
@@ -1103,6 +1116,19 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                         ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_DONE;
                     }
 
+                    /* Wait for synchronization */
+                    <#if SERCOM_SYNCBUSY = false>
+                        while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & (uint16_t)SERCOM_I2CM_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_I2CM_STATUS_SYNCBUSY_Msk)
+                        {
+                            /* Do nothing */
+                        }
+                    <#else>
+                        while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY) != 0U)
+                        {
+                            /* Do nothing */
+                        }
+                    </#if>
+
                     /* Read the received data */
                     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount++] = ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;
 
@@ -1128,6 +1154,19 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 
                         ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_DONE;
                     }
+
+                    /* Wait for synchronization */
+                    <#if SERCOM_SYNCBUSY = false>
+                        while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & (uint16_t)SERCOM_I2CM_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_I2CM_STATUS_SYNCBUSY_Msk)
+                        {
+                            /* Do nothing */
+                        }
+                    <#else>
+                        while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY) != 0U)
+                        {
+                            /* Do nothing */
+                        }
+                    </#if>
 
                     /* Read the received data */
                     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount++] = ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;

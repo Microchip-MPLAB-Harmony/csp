@@ -253,6 +253,9 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dma_03639/config/dma.py")
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")
 
+# load PAC
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/pac_u2120/config/pac.py")
+
 global armLibCSourceFile
 global devconSystemInitFile
 global compilerSpecifics
