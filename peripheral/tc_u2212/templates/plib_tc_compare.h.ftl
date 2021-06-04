@@ -138,7 +138,7 @@ void ${TC_INSTANCE_NAME}_Compare32bitMatch0Set( uint32_t compareValue );
 void ${TC_INSTANCE_NAME}_Compare32bitMatch1Set( uint32_t compareValue );
 </#if>
 
-<#if TC_COMPARE_INTENSET_OVF = true>
+<#if TC_COMPARE_INTERRUPT_MODE = true>
 
 void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, uintptr_t context );
 
