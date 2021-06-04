@@ -182,17 +182,6 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
             <#if (.vars[ANALOG_COMPARATOR_ENABLE] != false)>
 
     /**************** Comparator ${i} Configurations ************************/    
-    /* Disable the module and configure COMPCTRL */
-    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_COMPCTRL${i}_Msk) == AC_SYNCBUSY_COMPCTRL${i}_Msk)
-    {
-        /* Wait for Synchronization */
-    }
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] &= ~(AC_COMPCTRL_ENABLE_Msk);
-    /* Check Synchronization to ensure that the comparator is disabled */
-    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_COMPCTRL${i}_Msk) == AC_SYNCBUSY_COMPCTRL${i}_Msk)
-    {
-        /* Wait for Synchronization */
-    }
     <@compress single_line=true>${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] = AC_COMPCTRL_MUXPOS_${.vars[AC_COMPCTRL_MUXPOS]}
                                   | AC_COMPCTRL_MUXNEG_${.vars[AC_COMPCTRL_MUXNEG]}
                                   | AC_COMPCTRL_INTSEL_${.vars[AC_COMPCTRL_INTSEL]}
