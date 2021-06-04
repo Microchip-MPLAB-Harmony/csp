@@ -505,8 +505,8 @@ void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
 {
     TC_COMPARE_STATUS status;
     status = (TC_COMPARE_STATUS) (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG);
-    /* clear period interrupt */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
+    /* clear all interrupts */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
     if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
         ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
