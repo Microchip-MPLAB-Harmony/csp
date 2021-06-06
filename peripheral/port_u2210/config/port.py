@@ -71,12 +71,12 @@ def packageChange(symbol, pinout):
             pin_position = []
             portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(pinout["value"])) + "\"]")
             for id in range(0,len(portBitPositionNode.getChildren())):
-                if "BGA" in pinout["value"] or "WLCSP" in pinout["value"]:
+                if "BGA" in pinout["value"] or "WLCSP" in pinout["value"] or "DRQFN" in pinout["value"]:
                     pin_map[portBitPositionNode.getChildren()[id].getAttribute("position")] = portBitPositionNode.getChildren()[id].getAttribute("pad")
                 else:
                     pin_map[int(portBitPositionNode.getChildren()[id].getAttribute("position"))] = portBitPositionNode.getChildren()[id].getAttribute("pad")
 
-            if "BGA" in pinout["value"] or "WLCSP" in pinout["value"]:
+            if "BGA" in pinout["value"] or "WLCSP" in pinout["value"] or "DRQFN" in pinout["value"]:
                 ## BGA package ID's are alphanumeric unlike TQFP special sorting required
                 pin_position = sort_alphanumeric(pin_map.keys())
             else:
@@ -358,14 +358,14 @@ for letter in range(65,91):
 pinoutNode = ATDF.getNode('/avr-tools-device-file/pinouts/pinout@[name= "' + str(package.get(portPackage.getValue())) + '"]')
 for id in range(0,len(pinoutNode.getChildren())):
     if pinoutNode.getChildren()[id].getAttribute("type") == None:
-        if "BGA" in portPackage.getValue() or "WLCSP" in portPackage.getValue():
+        if "BGA" in portPackage.getValue() or "WLCSP" in portPackage.getValue() or "DRQFN" in portPackage.getValue():
             pin_map[pinoutNode.getChildren()[id].getAttribute("position")] = pinoutNode.getChildren()[id].getAttribute("pad")
         else:
             pin_map[int(pinoutNode.getChildren()[id].getAttribute("position"))] = pinoutNode.getChildren()[id].getAttribute("pad")
     else:
         pin_map_internal[pinoutNode.getChildren()[id].getAttribute("type").split("INTERNAL_")[1]] = pinoutNode.getChildren()[id].getAttribute("pad")
 
-if "BGA" in portPackage.getValue() or "WLCSP" in portPackage.getValue():
+if "BGA" in portPackage.getValue() or "WLCSP" in portPackage.getValue() or "DRQFN" in portPackage.getValue():
     pin_position = sort_alphanumeric(pin_map.keys())
     pin_position_internal = sort_alphanumeric(pin_map_internal.keys())
 else:
