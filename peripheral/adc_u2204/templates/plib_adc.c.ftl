@@ -183,7 +183,10 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     /* positive and negative input pins */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint32_t) ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | (uint32_t) ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG} \
         | ADC_INPUTCTRL_INPUTSCAN(${ADC_INPUTCTRL_INPUTSCAN}) | ADC_INPUTCTRL_INPUTOFFSET(${ADC_INPUTCTRL_INPUTOFFSET}) | ADC_INPUTCTRL_GAIN_${ADC_INPUTCTRL_GAIN};
-
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }
     <#if ADC_INPUTCTRL_MUXPOS == "TEMP">
     /* Enable temperature sensor */
     SYSCTRL_REGS->SYSCTRL_VREF |= SYSCTRL_VREF_TSEN_Msk;
@@ -196,7 +199,10 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     /* Prescaler, Resolution & Operation Mode */
     <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER} | ADC_CTRLB_RESSEL_${ADC_CTRLB_RESSEL}
                                      <#if ADC_CTRLB_VAL?has_content>| ${ADC_CTRLB_VAL}</#if>;</@compress>
-
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }
 <#if ADC_CTRLB_RESSEL == "16BIT">
     /* Result averaging */
     ${ADC_INSTANCE_NAME}_REGS->ADC_AVGCTRL = ADC_AVGCTRL_SAMPLENUM(${ADC_SAMPLENUM}UL) | ADC_AVGCTRL_ADJRES(${ADC_ADJRES}UL);
@@ -205,10 +211,22 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 <#if ADC_WINCTRL_WINMODE != "DISABLE">
     /* Window mode configurations */
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINCTRL = ADC_WINCTRL_WINMODE_${ADC_WINCTRL_WINMODE};
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }    
     /* Upper threshold for window mode  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = ${ADC_WINUT};
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }    
     /* Lower threshold for window mode  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = ${ADC_WINLT};
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }    
 </#if>
     /* Clear all interrupt flags */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_Msk;
@@ -283,6 +301,10 @@ void ${ADC_INSTANCE_NAME}_ConversionStart( void )
 void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = low_threshold;
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }    
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = high_threshold;
     while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
     {
