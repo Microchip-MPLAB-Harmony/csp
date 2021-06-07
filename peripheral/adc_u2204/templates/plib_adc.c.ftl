@@ -184,6 +184,15 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint32_t) ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | (uint32_t) ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG} \
         | ADC_INPUTCTRL_INPUTSCAN(${ADC_INPUTCTRL_INPUTSCAN}) | ADC_INPUTCTRL_INPUTOFFSET(${ADC_INPUTCTRL_INPUTOFFSET}) | ADC_INPUTCTRL_GAIN_${ADC_INPUTCTRL_GAIN};
 
+    <#if ADC_INPUTCTRL_MUXPOS == "TEMP">
+    /* Enable temperature sensor */
+    SYSCTRL_REGS->SYSCTRL_VREF |= SYSCTRL_VREF_TSEN_Msk;
+    </#if>
+    <#if ADC_INPUTCTRL_MUXPOS == "BANDGAP">
+    /* Enable bandgap output */
+    SYSCTRL_REGS->SYSCTRL_VREF |= SYSCTRL_VREF_BGOUTEN_Msk;
+    </#if>
+
     /* Prescaler, Resolution & Operation Mode */
     <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER} | ADC_CTRLB_RESSEL_${ADC_CTRLB_RESSEL}
                                      <#if ADC_CTRLB_VAL?has_content>| ${ADC_CTRLB_VAL}</#if>;</@compress>
