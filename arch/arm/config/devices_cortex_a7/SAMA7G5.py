@@ -225,6 +225,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwdt_44149/config/dwdt.py
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_a7g5/config/clk.py")
+coreComponent.addPlugin("../peripheral/clk_sam_a7g5/plugin/clk_sam_a7g5.jar")
 
 # load GIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gic/config/gic.py")
