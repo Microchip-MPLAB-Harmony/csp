@@ -69,7 +69,6 @@
     <#lt>void CORETIMER_PeriodSet (uint32_t period);
     <#lt>void CORETIMER_Start(void);
     <#lt>void CORETIMER_Stop(void);
-    <#lt>void CORETIMER_DelayMs (uint32_t delay_ms);
 </#if>
 
 <#if CORE_TIMER_INTERRUPT_MODE == true && CORE_TIMER_PERIODIC_INTERRUPT == false>
@@ -88,17 +87,12 @@
     <#lt>void CORETIMER_Stop(void);
     <#lt>uint32_t CORETIMER_CounterGet(void);
     <#lt>void CORETIMER_CompareSet(uint32_t compare);
-
-    <#lt>void CORETIMER_DelayMs (uint32_t delay_ms);
-    <#lt>void CORETIMER_DelayUs (uint32_t delay_us);
 </#if>
 
 <#if CORE_TIMER_INTERRUPT_MODE == false>
     <#lt>#define CORE_TIMER_COMPARE_VALUE    ${CORE_TIMER_PERIOD_VALUE}
 
     <#lt>void CORETIMER_Initialize(void);
-    <#lt>void CORETIMER_DelayMs (uint32_t delay_ms);
-    <#lt>void CORETIMER_DelayUs (uint32_t delay_us);
     <#lt>void CORETIMER_Start(void);
     <#lt>void CORETIMER_Stop(void);
     <#lt>uint32_t CORETIMER_FrequencyGet (void);
@@ -106,6 +100,10 @@
     <#lt>uint32_t CORETIMER_CounterGet (void);
     <#lt>bool CORETIMER_CompareHasExpired(void);
 </#if>
+
+
+void CORETIMER_DelayMs (uint32_t delay_ms);
+void CORETIMER_DelayUs (uint32_t delay_us);
 
 #ifdef __cplusplus // Provide C++ Compatibility
  }
