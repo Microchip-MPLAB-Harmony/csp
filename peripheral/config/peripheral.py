@@ -45,6 +45,7 @@ peripherals = {
                 "USART_11278"   : ["UART"],
                 "QSPI_U2008"    : ["SQI","SPI"],
                 "SQI_00206"     : ["SQI"],
+                "SQI_04044"     : ["SQI"],
                 "TC_U2212"      : ["TMR"],
                 "TC_U2249"      : ["TMR"],
                 "TC_44162"      : ["TMR"],
@@ -65,7 +66,7 @@ peripherals = {
                 "NVM_03140"     : ["MEMORY"],
                 "NVM_02695"     : ["MEMORY"],
                 "HEFC_44123"    : ["MEMORY"],
-                "FCW_03433"     : ["MEMORY"]
+                "FCW_03433"     : ["MEMORY"],
                 "SDMMC_44002"   : ["SDHC"],
                 "SDHC_U2011"    : ["SDHC"],
                 "HSMCI_6449"    : ["SDHC"],
