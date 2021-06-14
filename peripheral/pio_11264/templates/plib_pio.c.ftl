@@ -134,12 +134,17 @@ void PIO_Initialize ( void )
 	
 	</#if>   
 	</#list>
+    <#assign PORT_MSKR_GPIO = "PORT_" + port + "_MSKR_ValueGPIO">
+    <#if .vars[PORT_MSKR_GPIO] != '0x0'>
 	<#assign PORT_LATCH = "PORT_" + port + "_LATCH" >
+    <#lt> /* Port ${port} Latch configuration */
 	<#if .vars[PORT_LATCH] != '0x0'>
-	<#lt> /* Port ${port} Latch configuration */
 	<#lt>	PIO${port}_REGS->PIO_SODR = ${.vars[PORT_LATCH]}U;
-	
 	</#if>
+    <#if .vars[PORT_MSKR_GPIO] != .vars[PORT_LATCH]>
+    <#lt>	PIO${port}_REGS->PIO_CODR = ${.vars[PORT_MSKR_GPIO]}U${(.vars[PORT_LATCH] != '0x0')?string(" & ~" + .vars[PORT_LATCH] +"U", "")};
+    </#if>
+    </#if>
 
 	<#assign PORT_ISR = "PORT_" + port + "_NUM_INT_PINS" >
 	<#if .vars[PORT_ISR] != 0>
