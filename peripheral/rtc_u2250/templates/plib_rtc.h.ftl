@@ -127,7 +127,7 @@ extern "C" {
     <#else>
         <#lt>typedef uint32_t RTC_TIMER16_INT_MASK;
     </#if>
-    <#else>
+<#else>
         <#lt>typedef enum
         <#lt>{
         <#lt>    RTC_PER0_MASK = 0x0001U,
@@ -157,11 +157,9 @@ extern "C" {
         </#if>
         <#lt>typedef enum
         <#lt>{
-        <#lt>    TAMPER_CHANNEL_0 = 0U,
-        <#lt>    TAMPER_CHANNEL_1 = 1U,
-        <#lt>    TAMPER_CHANNEL_2 = 2U,
-        <#lt>    TAMPER_CHANNEL_3 = 3U,
-        <#lt>    TAMPER_CHANNEL_4 = 4U
+        <#list 0..(TAMPER_CHANNEL_NUMBER - 1) as i>
+            <#lt>    TAMPER_CHANNEL_${i} = ${i}U,
+        </#list>
         <#lt>} TAMPER_CHANNEL;
     </#if>
 </#if>

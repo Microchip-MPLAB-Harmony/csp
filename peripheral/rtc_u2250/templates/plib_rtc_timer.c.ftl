@@ -63,35 +63,22 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     }
 
     <#if RTC_MODULE_SELECTION = "MODE0">
-    <#if TAMP_DETECTION_SUPPORTED??>
-        <#if TAMP_DETECTION_SUPPORTED>
-            <#if (TAMP_DEBOUNCE_MAJ != "0") || (TAMP_DEBOUNCE_ASYNCH != "0") || TAMP_OUT || TAMP_DMA || (TAMP_DEBOUNCE_FREQUENCY != "0x0") || (TAMP_ACTIVE_FREQUENCY != "0x0")>
-            <#lt>    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLB = (uint16_t)(RTC_MODE0_CTRLB_DEBF(${TAMP_DEBOUNCE_FREQUENCY}UL)|
-                                                                    RTC_MODE0_CTRLB_ACTF(${TAMP_ACTIVE_FREQUENCY}UL)
-                                                                    ${TAMP_OUT?then("| RTC_MODE0_CTRLB_RTCOUT_Msk", "")}
-                                                                    ${TAMP_DMA?then("| RTC_MODE0_CTRLB_DMAEN_Msk", "")}
-                                                                    ${(TAMP_DEBOUNCE_ASYNCH != "0")?then("| RTC_MODE0_CTRLB_DEBASYNC_Msk", "")}
-                                                                    ${(TAMP_DEBOUNCE_MAJ != "0")?then("| RTC_MODE0_CTRLB_DEBMAJ_Msk", "")});</@compress>
-              </#if>
+        <#if TAMP_DETECTION_SUPPORTED??>
+            <#if TAMP_DETECTION_SUPPORTED>
+                <#if (TAMP_DEBOUNCE_MAJ != "0") || (TAMP_DEBOUNCE_ASYNCH != "0") || TAMP_OUT || TAMP_DMA || (TAMP_DEBOUNCE_FREQUENCY != "0x0") || (TAMP_ACTIVE_FREQUENCY != "0x0")>
+                    <#lt>    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLB = (uint16_t)(RTC_MODE0_CTRLB_DEBF(${TAMP_DEBOUNCE_FREQUENCY}UL)|
+                                                                        RTC_MODE0_CTRLB_ACTF(${TAMP_ACTIVE_FREQUENCY}UL)
+                                                                        ${TAMP_OUT?then("| RTC_MODE0_CTRLB_RTCOUT_Msk", "")}
+                                                                        ${TAMP_DMA?then("| RTC_MODE0_CTRLB_DMAEN_Msk", "")}
+                                                                        ${(TAMP_DEBOUNCE_ASYNCH != "0")?then("| RTC_MODE0_CTRLB_DEBASYNC_Msk", "")}
+                                                                        ${(TAMP_DEBOUNCE_MAJ != "0")?then("| RTC_MODE0_CTRLB_DEBMAJ_Msk", "")});</@compress>
+                </#if>
+                <#if RTC_TAMPCTRL_REG != "0">
+                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_TAMPCTRL = 0x${RTC_TAMPCTRL_REG};
+                </#if>
 
-            <#if TAMP_CHANNEL4_ACTION??>
-                <#if (TAMP_CHANNEL0_ACTION != '0x0') || (TAMP_CHANNEL1_ACTION != '0x0') ||(TAMP_CHANNEL2_ACTION != '0x0') ||(TAMP_CHANNEL3_ACTION != '0x0') ||(TAMP_CHANNEL4_ACTION != '0x0')>
-                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_TAMPCTRL = (uint16_t)(RTC_TAMPCTRL_IN0ACT(${TAMP_CHANNEL0_ACTION}UL) ${(TAMP_CHANNEL0_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL0_Msk", "")} ${(TAMP_CHANNEL0_DEBNC)?then("| RTC_TAMPCTRL_DEBNC0_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN1ACT(${TAMP_CHANNEL1_ACTION}UL) <#if TAMP_CHANNEL1_LEVEL??>${(TAMP_CHANNEL1_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL1_Msk", "")}${(TAMP_CHANNEL1_DEBNC)?then("| RTC_TAMPCTRL_DEBNC1_Msk", "")} </#if> | \
-                    <#lt>                                   RTC_TAMPCTRL_IN2ACT(${TAMP_CHANNEL2_ACTION}UL) ${(TAMP_CHANNEL2_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL2_Msk", "")}${(TAMP_CHANNEL2_DEBNC)?then("| RTC_TAMPCTRL_DEBNC2_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN3ACT(${TAMP_CHANNEL3_ACTION}UL) ${(TAMP_CHANNEL3_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL3_Msk", "")}${(TAMP_CHANNEL3_DEBNC)?then("| RTC_TAMPCTRL_DEBNC3_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN4ACT(${TAMP_CHANNEL4_ACTION}UL) ${(TAMP_CHANNEL4_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL4_Msk", "")}${(TAMP_CHANNEL4_DEBNC)?then("| RTC_TAMPCTRL_DEBNC4_Msk", "")});
-                </#if>
-            <#else>
-                <#if (TAMP_CHANNEL0_ACTION != '0x0') || (TAMP_CHANNEL1_ACTION != '0x0') ||(TAMP_CHANNEL2_ACTION != '0x0') ||(TAMP_CHANNEL3_ACTION != '0x0')>
-                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_TAMPCTRL = (uint16_t)(RTC_TAMPCTRL_IN0ACT(${TAMP_CHANNEL0_ACTION}UL) ${(TAMP_CHANNEL0_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL0_Msk", "")} ${(TAMP_CHANNEL0_DEBNC)?then("| RTC_TAMPCTRL_DEBNC0_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN1ACT(${TAMP_CHANNEL1_ACTION}UL) <#if TAMP_CHANNEL1_LEVEL??>${(TAMP_CHANNEL1_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL1_Msk", "")}${(TAMP_CHANNEL1_DEBNC)?then("| RTC_TAMPCTRL_DEBNC1_Msk", "")} </#if> | \
-                    <#lt>                                   RTC_TAMPCTRL_IN2ACT(${TAMP_CHANNEL2_ACTION}UL) ${(TAMP_CHANNEL2_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL2_Msk", "")}${(TAMP_CHANNEL2_DEBNC)?then("| RTC_TAMPCTRL_DEBNC2_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN3ACT(${TAMP_CHANNEL3_ACTION}UL) ${(TAMP_CHANNEL3_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL3_Msk", "")}${(TAMP_CHANNEL3_DEBNC)?then("| RTC_TAMPCTRL_DEBNC3_Msk", "")});
-                </#if>
             </#if>
         </#if>
-    </#if>
 
         <#lt>    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA = (uint16_t)(RTC_MODE0_CTRLA_MODE(0UL) |
                                                                 RTC_MODE0_CTRLA_PRESCALER(${RTC_MODE0_PRESCALER}UL) |
@@ -129,35 +116,21 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
             <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_EVCTRL = 0x${RTC_MODE0_EVCTRL}U;
         </#if>
     <#else>
-    <#if TAMP_DETECTION_SUPPORTED??>
-        <#if TAMP_DETECTION_SUPPORTED>
-            <#if (TAMP_DEBOUNCE_MAJ != "0") || (TAMP_DEBOUNCE_ASYNCH != "0") || TAMP_OUT || TAMP_DMA || (TAMP_DEBOUNCE_FREQUENCY != "0x0") || (TAMP_ACTIVE_FREQUENCY != "0x0")>
-            <#lt>    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLB = (uint16_t)(RTC_MODE1_CTRLB_DEBF(${TAMP_DEBOUNCE_FREQUENCY}UL)|
-                                                                    RTC_MODE1_CTRLB_ACTF(${TAMP_ACTIVE_FREQUENCY}UL)
-                                                                    ${TAMP_OUT?then("| RTC_MODE1_CTRLB_RTCOUT_Msk", "")}
-                                                                    ${TAMP_DMA?then("| RTC_MODE1_CTRLB_DMAEN_Msk", "")}
-                                                                    ${(TAMP_DEBOUNCE_ASYNCH != "0")?then("| RTC_MODE1_CTRLB_DEBASYNC_Msk", "")}
-                                                                    ${(TAMP_DEBOUNCE_MAJ != "0")?then("| RTC_MODE1_CTRLB_DEBMAJ_Msk", "")});</@compress>
-              </#if>
-
-            <#if TAMP_CHANNEL4_ACTION??>
-                 <#if (TAMP_CHANNEL0_ACTION != '0x0') || (TAMP_CHANNEL1_ACTION != '0x0') ||(TAMP_CHANNEL2_ACTION != '0x0') ||(TAMP_CHANNEL3_ACTION != '0x0') ||(TAMP_CHANNEL4_ACTION != '0x0')>
-                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_TAMPCTRL = (uint16_t)(RTC_TAMPCTRL_IN0ACT(${TAMP_CHANNEL0_ACTION}UL) ${(TAMP_CHANNEL0_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL0_Msk", "")} ${(TAMP_CHANNEL0_DEBNC)?then("| RTC_TAMPCTRL_DEBNC0_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN1ACT(${TAMP_CHANNEL1_ACTION}UL) <#if TAMP_CHANNEL1_LEVEL??>${(TAMP_CHANNEL1_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL1_Msk", "")}${(TAMP_CHANNEL1_DEBNC)?then("| RTC_TAMPCTRL_DEBNC1_Msk", "")} </#if> | \
-                    <#lt>                                   RTC_TAMPCTRL_IN2ACT(${TAMP_CHANNEL2_ACTION}UL) ${(TAMP_CHANNEL2_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL2_Msk", "")}${(TAMP_CHANNEL2_DEBNC)?then("| RTC_TAMPCTRL_DEBNC2_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN3ACT(${TAMP_CHANNEL3_ACTION}UL) ${(TAMP_CHANNEL3_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL3_Msk", "")}${(TAMP_CHANNEL3_DEBNC)?then("| RTC_TAMPCTRL_DEBNC3_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN4ACT(${TAMP_CHANNEL4_ACTION}UL) ${(TAMP_CHANNEL4_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL4_Msk", "")}${(TAMP_CHANNEL4_DEBNC)?then("| RTC_TAMPCTRL_DEBNC4_Msk", "")});
+        <#if TAMP_DETECTION_SUPPORTED??>
+            <#if TAMP_DETECTION_SUPPORTED>
+                <#if (TAMP_DEBOUNCE_MAJ != "0") || (TAMP_DEBOUNCE_ASYNCH != "0") || TAMP_OUT || TAMP_DMA || (TAMP_DEBOUNCE_FREQUENCY != "0x0") || (TAMP_ACTIVE_FREQUENCY != "0x0")>
+                    <#lt>    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLB = (uint16_t)(RTC_MODE1_CTRLB_DEBF(${TAMP_DEBOUNCE_FREQUENCY}UL)|
+                                                                        RTC_MODE1_CTRLB_ACTF(${TAMP_ACTIVE_FREQUENCY}UL)
+                                                                        ${TAMP_OUT?then("| RTC_MODE1_CTRLB_RTCOUT_Msk", "")}
+                                                                        ${TAMP_DMA?then("| RTC_MODE1_CTRLB_DMAEN_Msk", "")}
+                                                                        ${(TAMP_DEBOUNCE_ASYNCH != "0")?then("| RTC_MODE1_CTRLB_DEBASYNC_Msk", "")}
+                                                                        ${(TAMP_DEBOUNCE_MAJ != "0")?then("| RTC_MODE1_CTRLB_DEBMAJ_Msk", "")});</@compress>
                 </#if>
-            <#else>
-                 <#if (TAMP_CHANNEL0_ACTION != '0x0') || (TAMP_CHANNEL1_ACTION != '0x0') ||(TAMP_CHANNEL2_ACTION != '0x0') ||(TAMP_CHANNEL3_ACTION != '0x0')>
-                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_TAMPCTRL = (uint16_t)(RTC_TAMPCTRL_IN0ACT(${TAMP_CHANNEL0_ACTION}) ${(TAMP_CHANNEL0_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL0_Msk", "")} ${(TAMP_CHANNEL0_DEBNC)?then("| RTC_TAMPCTRL_DEBNC0_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN1ACT(${TAMP_CHANNEL1_ACTION}UL) <#if TAMP_CHANNEL1_LEVEL??>${(TAMP_CHANNEL1_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL1_Msk", "")}${(TAMP_CHANNEL1_DEBNC)?then("| RTC_TAMPCTRL_DEBNC1_Msk", "")} </#if> | \
-                    <#lt>                                   RTC_TAMPCTRL_IN2ACT(${TAMP_CHANNEL2_ACTION}UL) ${(TAMP_CHANNEL2_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL2_Msk", "")}${(TAMP_CHANNEL2_DEBNC)?then("| RTC_TAMPCTRL_DEBNC2_Msk", "")} | \
-                    <#lt>                                   RTC_TAMPCTRL_IN3ACT(${TAMP_CHANNEL3_ACTION}UL) ${(TAMP_CHANNEL3_LEVEL != "0")?then("| RTC_TAMPCTRL_TAMLVL3_Msk", "")}${(TAMP_CHANNEL3_DEBNC)?then("| RTC_TAMPCTRL_DEBNC3_Msk", "")});
-                </#if>
+                <#if RTC_TAMPCTRL_REG != "0">
+                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_TAMPCTRL = 0x${RTC_TAMPCTRL_REG};
+                </#if>    
             </#if>
         </#if>
-    </#if>
 
         <#lt>    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA = (uint16_t)(RTC_MODE1_CTRLA_MODE(1UL) |
         <#lt>                                                        RTC_MODE1_CTRLA_PRESCALER(${RTC_MODE1_PRESCALER}UL) |
