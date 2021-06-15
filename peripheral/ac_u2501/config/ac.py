@@ -54,6 +54,18 @@ def setacHystVisibility(MySymbol, event):
 def setacSymbolVisibility(symbol, event):
     symbol.setVisible(event["value"])
 
+def updateDACOutputVol(symbol, event):
+    if "DACCTRL_VALUE" in event["id"]:
+        dac_out_val = event["value"]
+        dac_out_vol = ((3.3) * (dac_out_val))/128
+
+        dac_out_vol_str = "{:.2f}".format(dac_out_vol)
+
+        symbol.setLabel("[With VDD = 3.3V, DAC Output = " + str(dac_out_vol_str) + "V]")
+    else:
+        comparator_enabled = event["value"]
+        symbol.setVisible(comparator_enabled == True)
+
 def updateACInterruptStatus(symbol, event):
     global nvicDep
     component = symbol.getComponent()
@@ -78,7 +90,7 @@ def updateACInterruptWarningStatus(symbol, event):
         val = component.getSymbolValue(nvicDep[id])
         if val == True:
             interrupt = True
-    
+
     InterruptVectorUpdate = acInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
     if ((interrupt == True) and (Database.getSymbolValue("core", InterruptVectorUpdate) == True)):
         symbol.setVisible(True)
@@ -127,7 +139,7 @@ def instantiateComponent(acComponent):
     evsysDep = []
     global nvicDep
     nvicDep = []
-    
+
     acInstanceName = acComponent.createStringSymbol("AC_INSTANCE_NAME", None)
     acInstanceName.setVisible(False)
     acInstanceName.setDefaultValue(acComponent.getID().upper())
@@ -151,8 +163,23 @@ def instantiateComponent(acComponent):
 
     # If LOAD_CALIB parameter is not present, it is assumed that CALIB register update is required to maintain backward compatibility
     if calibRequired == -1:
-        calibRequired = 1   
-            
+        calibRequired = 1
+
+    ctrlc_reg_present = False
+    acSym_CTRLC_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"CTRLC\"]")
+    if acSym_CTRLC_Node != None:
+        ctrlc_reg_present = True
+
+    dacctrl_reg_present = False
+    acSym_DACCTRL_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"DACCTRL\"]")
+    if acSym_CTRLC_Node != None:
+        dacctrl_reg_present = True
+
+    compctrl_sut_bitfield_present = False
+    acSym_COMPCTRL_SUT_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"COMPCTRL\"]/bitfield@[name=\"SUT\"]")
+    if acSym_COMPCTRL_SUT_Node != None:
+        compctrl_sut_bitfield_present = True
+
     acSym_NUM_CHANNELS = acComponent.createIntegerSymbol("AC_NUM_COMPARATORS", None)
     acSym_NUM_CHANNELS.setDefaultValue(int(numOfComparators))
     acSym_NUM_CHANNELS.setVisible(False)
@@ -160,21 +187,29 @@ def instantiateComponent(acComponent):
     acSym_LOAD_CALIB = acComponent.createIntegerSymbol("AC_LOAD_CALIB", None)
     acSym_LOAD_CALIB.setVisible(False)
     acSym_LOAD_CALIB.setDefaultValue(calibRequired)
+    
+    isDACPresent = acComponent.createBooleanSymbol("AC_IS_DAC_PRESENT", None)
+    isDACPresent.setValue(dacctrl_reg_present)
+    isDACPresent.setVisible(False)
 
     acSym_COMPCTRL_MUXPOS_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__MUXPOS\"]")
-    acSym_COMPCTRL_MUXPOS_Node_Values = acSym_COMPCTRL_MUXPOS_Node.getChildren()   
+    acSym_COMPCTRL_MUXPOS_Node_Values = acSym_COMPCTRL_MUXPOS_Node.getChildren()
     for id in range(len(acSym_COMPCTRL_MUXPOS_Node_Values)):
         acSym_MUXPOS_ENUM = acComponent.createStringSymbol("AC_MUXPOS_ENUM_"+str(id), None)
         acSym_MUXPOS_ENUM.setDefaultValue(acSym_COMPCTRL_MUXPOS_Node_Values[id].getAttribute("name"))
         acSym_MUXPOS_ENUM.setVisible(False)
 
     acSym_COMPCTRL_MUXNEG_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__MUXNEG\"]")
-    acSym_COMPCTRL_MUXNEG_Node_Values = acSym_COMPCTRL_MUXNEG_Node.getChildren()   
+    acSym_COMPCTRL_MUXNEG_Node_Values = acSym_COMPCTRL_MUXNEG_Node.getChildren()
     for id in range(len(acSym_COMPCTRL_MUXNEG_Node_Values)):
         acSym_MUXNEG_ENUM = acComponent.createStringSymbol("AC_MUXNEG_ENUM_"+str(id), None)
         acSym_MUXNEG_ENUM.setDefaultValue(acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("name"))
-        acSym_MUXNEG_ENUM.setVisible(False)     
-   
+        acSym_MUXNEG_ENUM.setVisible(False)
+
+    if ctrlc_reg_present == True:
+        acSym_ChargePumpEnable = acComponent.createBooleanSymbol("ANALOG_INPUT_CHARGE_PUMP_ENABLE", None)
+        acSym_ChargePumpEnable.setLabel("Analog Input Charge Pump Enable")
+
     #Populate menu for all comparators in the AC peripheral
     for comparatorID in range(0, int(numOfComparators)):
         acSym_Enable.append(comparatorID)
@@ -244,23 +279,25 @@ def instantiateComponent(acComponent):
             acSym_COMPCTRL_MUXNEG_Key_Description = acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("caption")
             acSym_COMPCTRL_MUXNEG_Key_Value = acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("value")
             acSym_COMPCTRL_MUXNEG.addKey(acSym_COMPCTRL_MUXNEG_Key_Name, acSym_COMPCTRL_MUXNEG_Key_Value, acSym_COMPCTRL_MUXNEG_Key_Description)
-        
-        
+
+
         acSym_COMPCTRL_MUXNEG.setDefaultValue(acSym_COMPCTRL_MUXNEG_Default_Val)
         acSym_COMPCTRL_MUXNEG.setOutputMode("Key")
         acSym_COMPCTRL_MUXNEG.setDisplayMode("Description")
         acSym_COMPCTRL_MUXNEG.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
-        
-        #Scaling factor for VDD scaler
-        acSym_SCALERn.append(comparatorID)
-        acSym_SCALERn[comparatorID] = acComponent.createIntegerSymbol("AC_SCALER_N_" + str(comparatorID), acSym_Enable[comparatorID])
-        acSym_SCALERn[comparatorID].setLabel("Scaling factor for VDD scaler")
-        acSym_SCALERn[comparatorID].setMin(0)
-        acSym_SCALERn[comparatorID].setMax(63)
-        acSym_SCALERn[comparatorID].setDefaultValue(0)
-        acSym_SCALERn[comparatorID].setVisible(False)
-        #This should be enabled only when mux pos or mux neg value is VDDSCALER
-        acSym_SCALERn[comparatorID].setDependencies(setacScalerVisibility, ["AC" + str(comparatorID) + "_MUXNEG", "AC" + str(comparatorID) + "_MUXPOS"])
+
+        acSym_SCALER_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"SCALER\"]")
+        if acSym_SCALER_Node != None:
+            #Scaling factor for VDD scaler
+            acSym_SCALERn.append(comparatorID)
+            acSym_SCALERn[comparatorID] = acComponent.createIntegerSymbol("AC_SCALER_N_" + str(comparatorID), acSym_Enable[comparatorID])
+            acSym_SCALERn[comparatorID].setLabel("Scaling factor for VDD scaler")
+            acSym_SCALERn[comparatorID].setMin(0)
+            acSym_SCALERn[comparatorID].setMax(63)
+            acSym_SCALERn[comparatorID].setDefaultValue(0)
+            acSym_SCALERn[comparatorID].setVisible(False)
+            #This should be enabled only when mux pos or mux neg value is VDDSCALER
+            acSym_SCALERn[comparatorID].setDependencies(setacScalerVisibility, ["AC" + str(comparatorID) + "_MUXNEG", "AC" + str(comparatorID) + "_MUXPOS"])
 
         #Output Mode
         acSym_COMPCTRL_OUT = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_OUTPUT_TYPE", acSym_Enable[comparatorID])
@@ -314,19 +351,57 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_ISEL.setDisplayMode("Description")
         acSym_COMPCTRL_ISEL.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
 
+        # COMPCTRLx.SUT
+        if compctrl_sut_bitfield_present == True:
+            acSym_COMPCTRL_SUT = acComponent.createIntegerSymbol("AC" + str(comparatorID) + "_COMPCTRL_SUT", acSym_Enable[comparatorID])
+            acSym_COMPCTRL_SUT.setLabel("Start-up Time")
+            acSym_COMPCTRL_SUT.setMin(0)
+            acSym_COMPCTRL_SUT.setMax(31)
+            acSym_COMPCTRL_SUT.setDefaultValue(0)
+            acSym_COMPCTRL_SUT.setVisible(False)
+            acSym_COMPCTRL_SUT.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+
         #RUNSTDBY Enable
         acSym_COMPCTRL_RUNSTDBY = acComponent.createBooleanSymbol("AC" + str(comparatorID) + "_COMPCTRL_RUNSTDBY", acSym_Enable[comparatorID])
         acSym_COMPCTRL_RUNSTDBY.setLabel("Enable Run in Standby")
         acSym_COMPCTRL_RUNSTDBY.setDefaultValue(False)
         acSym_COMPCTRL_RUNSTDBY.setVisible(False)
         acSym_COMPCTRL_RUNSTDBY.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
-        
+
+        if dacctrl_reg_present == True:
+            # Internal DAC Configuration -
+
+            # DACCTRL.VALUEx
+            acSym_DACCTRL_VALUE = acComponent.createIntegerSymbol("AC" + str(comparatorID) + "_DACCTRL_VALUE", acSym_Enable[comparatorID])
+            acSym_DACCTRL_VALUE.setLabel("DAC Output Value")
+            acSym_DACCTRL_VALUE.setMin(0)
+            acSym_DACCTRL_VALUE.setMax(127)
+            acSym_DACCTRL_VALUE.setDefaultValue(0)
+            acSym_DACCTRL_VALUE.setVisible(False)
+            acSym_DACCTRL_VALUE.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+
+            acSym_DAC_OutVol = acComponent.createCommentSymbol("AC" + str(comparatorID) + "_DAC_OUTPUT_COMMENT", acSym_Enable[comparatorID])
+            acSym_DAC_OutVol.setLabel("[With VDD = 3.3V, DAC Output = 0V]")
+            acSym_DAC_OutVol.setVisible(False)
+            acSym_DAC_OutVol.setDependencies(updateDACOutputVol, ["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID), "AC" + str(comparatorID) + "_DACCTRL_VALUE"])
+
+            # DACCTRL.SHENx
+            acSym_DACCTRL_SHEN = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_DACCTRL_SHEN", acSym_Enable[comparatorID])
+            acSym_DACCTRL_SHEN.setLabel("DAC Enable Sample and Hold Operation Mode")
+            acSym_DACCTRL_SHEN.addKey("0x0", "0x0", "Continuous operation mode is enabled")
+            acSym_DACCTRL_SHEN.addKey("0x1", "0x1", "Sample-and-hold operation mode is enabled")
+            acSym_DACCTRL_SHEN.setDefaultValue(0)
+            acSym_DACCTRL_SHEN.setOutputMode("Key")
+            acSym_DACCTRL_SHEN.setDisplayMode("Description")
+            acSym_DACCTRL_SHEN.setVisible(False)
+            acSym_DACCTRL_SHEN.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+
         #Menu item for advanced configurations
         acSym_AdvConf = acComponent.createMenuSymbol("AC_ADVANCED_CONFIGURATION_"+ str(comparatorID),  acSym_Enable[comparatorID])
         acSym_AdvConf.setLabel("Advanced Configurations")
         acSym_AdvConf.setVisible(False)
         acSym_AdvConf.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
-    
+
         #Hysteresis Enable
         acSym_COMPCTRL_HYSTEN = acComponent.createBooleanSymbol("AC" + str(comparatorID) + "_HYSTEN", acSym_AdvConf)
         acSym_COMPCTRL_HYSTEN.setLabel("Hysteresis Enable")
@@ -334,7 +409,7 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_HYSTEN.setVisible(True)
         #Should not be shown when single-shot is selected.
         acSym_COMPCTRL_HYSTEN.setDependencies(setacHystVisibility,["AC_COMPCTRL_" + str(comparatorID) +"SINGLE_MODE"])
-        
+
         if (ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__HYST\"]") != None):
             #Hysteresis selection
             acSym_COMPCTRL_HYST = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_HYST_VAL", acSym_COMPCTRL_HYSTEN)
@@ -360,7 +435,7 @@ def instantiateComponent(acComponent):
             acSym_COMPCTRL_HYST.setOutputMode("Value")
             acSym_COMPCTRL_HYST.setDisplayMode("Description")
             acSym_COMPCTRL_HYST.setDependencies(setacSymbolVisibility,["AC" + str(comparatorID) + "_HYSTEN"])
-        
+
         #Filter Length selection
         acSym_COMPCTRL_FLEN = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_FLEN_VAL", acSym_AdvConf)
         acSym_COMPCTRL_FLEN.setLabel("Filter Length Selection")
@@ -384,7 +459,7 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_FLEN.setDefaultValue(acSym_COMPCTRL_FLEN_Default_Val)
         acSym_COMPCTRL_FLEN.setOutputMode("Key")
         acSym_COMPCTRL_FLEN.setDisplayMode("Description")
-        
+
         #Event Input Enable
         acSym_EVCTRL_COMPEI = acComponent.createKeyValueSetSymbol("AC_EVCTRL_COMPEI" + str(comparatorID), acSym_AdvConf)
         acSym_EVCTRL_COMPEI.setLabel("Enable Event Input")
@@ -396,7 +471,7 @@ def instantiateComponent(acComponent):
         acSym_EVCTRL_COMPEI.addKey("ENABLED_FALLING_EDGE", "2", "Enabled on Falling Edge")
         acSym_EVCTRL_COMPEI.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
         evsysDep.append("AC_EVCTRL_COMPEI" + str(comparatorID))
-    
+
         #Event Output Enable
         acSym_EVCTRL_COMPEO = acComponent.createBooleanSymbol("AC_EVCTRL_COMPEO" + str(comparatorID), acSym_AdvConf)
         acSym_EVCTRL_COMPEO.setLabel("Enable Event Output")
@@ -404,16 +479,16 @@ def instantiateComponent(acComponent):
         acSym_EVCTRL_COMPEO.setVisible(False)
         acSym_EVCTRL_COMPEO.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
         evsysDep.append("AC_EVCTRL_COMPEO" + str(comparatorID))
-    
+
     #Menu item for window configurations
     acSym_WindowConf = acComponent.createMenuSymbol("WINDOW_CONFIGURATION", None)
     acSym_WindowConf.setLabel("Comparator Window Configurations")
-    
+
     #Window 0 configuration
     acSym_WINCTRL0 = acComponent.createBooleanSymbol("AC_WINCTRL_WIN0", acSym_WindowConf)
     acSym_WINCTRL0.setLabel("Window 0 Enable")
     acSym_WINCTRL0.setDefaultValue(False)
-    
+
     #Window 0 Interrupt Enable
     acSym_INTENSET_WIN0 = acComponent.createBooleanSymbol("AC_INTENSET_WIN0", acSym_WINCTRL0)
     acSym_INTENSET_WIN0.setLabel("Window 0 Interrupt Enable")
@@ -421,17 +496,17 @@ def instantiateComponent(acComponent):
     acSym_INTENSET_WIN0.setVisible(False)
     acSym_INTENSET_WIN0.setDependencies(setacSymbolVisibility,["AC_WINCTRL_WIN0"])
     nvicDep.append("AC_INTENSET_WIN0")
-    
+
     #Window 0 interrupt configuration
     acSym_WNCTRL_WINT0 = acComponent.createKeyValueSetSymbol("AC_WINTSEL0", acSym_WINCTRL0)
     acSym_WNCTRL_WINT0.setLabel("AC Window 0 Interrupt Selection")
     acSym_WNCTRL_WINT0.setVisible(False)
     acSym_WNCTRL_WINT0.setDependencies(setacSymbolVisibility,["AC_WINCTRL_WIN0"])
-    
+
     acSym_WNCTRL_WINT0_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_WINCTRL__WINTSEL0\"]")
     acSym_WNCTRL_WINT0_Values = []
     acSym_WNCTRL_WINT0_Values = acSym_WNCTRL_WINT0_node.getChildren()
-    
+
     acSym_WNCTRL_WINT0_Default_Val = 0
 
     for id in range(len(acSym_WNCTRL_WINT0_Values)):
@@ -447,7 +522,7 @@ def instantiateComponent(acComponent):
     acSym_WNCTRL_WINT0.setDefaultValue(acSym_WNCTRL_WINT0_Default_Val)
     acSym_WNCTRL_WINT0.setOutputMode("Value")
     acSym_WNCTRL_WINT0.setDisplayMode("Description")
-    
+
     #Window 0 Event Output
     acSym_WINCTRL_EVENT_OUT0 = acComponent.createBooleanSymbol("AC_EVCTRL_WINEO0", acSym_WINCTRL0)
     acSym_WINCTRL_EVENT_OUT0.setLabel("Enable Window 0 Event Output")
@@ -455,7 +530,47 @@ def instantiateComponent(acComponent):
     acSym_WINCTRL_EVENT_OUT0.setVisible(False)
     acSym_WINCTRL_EVENT_OUT0.setDependencies(setacSymbolVisibility,["AC_WINCTRL_WIN0"])
     evsysDep.append("AC_EVCTRL_WINEO0")
-    
+
+    # DAC Sample-and-hold configuration:
+
+    if ctrlc_reg_present == True:
+
+        #Menu item for advanced configurations
+        acSym_InternalDAC_SH_Conf = acComponent.createMenuSymbol("AC_DAC_SH_CONFIG",  None)
+        acSym_InternalDAC_SH_Conf.setLabel("Internal DAC Sample-Hold configuration")
+
+        # CTRLC.PRESCALER
+        acSym_CTRLC_PRESCALER_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"CTRLC__PRESCALER\"]")
+        acSym_CTRLC_PRESCALER_Values = acSym_CTRLC_PRESCALER_Node.getChildren()
+
+        acSym_CTRLC_PRESCALSER = acComponent.createKeyValueSetSymbol("AC_CTRLC_PRESCALER", acSym_InternalDAC_SH_Conf)
+        acSym_CTRLC_PRESCALSER.setLabel("Prescaler for DAC sampling clock")
+
+        for id in range (len(acSym_CTRLC_PRESCALER_Values)):
+            acSym_CTRLC_PRESCALSER_Key_Name = acSym_CTRLC_PRESCALER_Values[id].getAttribute("name")
+            acSym_CTRLC_PRESCALSER_Key_Value = acSym_CTRLC_PRESCALER_Values[id].getAttribute("value")
+            acSym_CTRLC_PRESCALSER_Key_Description = acSym_CTRLC_PRESCALER_Values[id].getAttribute("caption")
+            acSym_CTRLC_PRESCALSER.addKey(acSym_CTRLC_PRESCALSER_Key_Name, acSym_CTRLC_PRESCALSER_Key_Value, acSym_CTRLC_PRESCALSER_Key_Description)
+
+        acSym_CTRLC_PRESCALSER.setDefaultValue(0)
+        acSym_CTRLC_PRESCALSER.setOutputMode("Key")
+        acSym_CTRLC_PRESCALSER.setDisplayMode("Description")
+
+        # CTRLC.PERIOD
+        acSym_CTRLC_PERIOD = acComponent.createIntegerSymbol("AC_CTRLC_PERIOD", acSym_InternalDAC_SH_Conf)
+        acSym_CTRLC_PERIOD.setLabel("Sample and Hold Clock Period")
+        acSym_CTRLC_PERIOD.setMin(0)
+        acSym_CTRLC_PERIOD.setMax(511)
+        acSym_CTRLC_PERIOD.setDefaultValue(0)
+
+        # CTRLC.WIDTH
+        acSym_CTRLC_WIDTH = acComponent.createIntegerSymbol("AC_CTRLC_WIDTH", acSym_InternalDAC_SH_Conf)
+        acSym_CTRLC_WIDTH.setLabel("Sample and Hold Clock Pulse Width")
+        acSym_CTRLC_WIDTH.setMin(0)
+        acSym_CTRLC_WIDTH.setMax(511)
+        acSym_CTRLC_WIDTH.setDefaultValue(0)
+
+
     ############################################################################
     #### Dependency ####
     ############################################################################
@@ -482,10 +597,10 @@ def instantiateComponent(acComponent):
     acSym_ClkEnComment.setVisible(False)
     acSym_ClkEnComment.setLabel("Warning!!! " +acInstanceName.getValue()+" Clock is Disabled in Clock Manager")
     acSym_ClkEnComment.setDependencies(updateACClockWarningStatus, ["core." + acInstanceName.getValue() + "_CLOCK_ENABLE"])
-    
+
     acSym_EVESYS_CONFIGURE = acComponent.createIntegerSymbol("AC_EVESYS_CONFIGURE", None)
     acSym_EVESYS_CONFIGURE.setVisible(False)
-    acSym_EVESYS_CONFIGURE.setDependencies(acEvesysConfigure, evsysDep)     
+    acSym_EVESYS_CONFIGURE.setDependencies(acEvesysConfigure, evsysDep)
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################

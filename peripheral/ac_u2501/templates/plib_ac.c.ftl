@@ -51,6 +51,10 @@
 <#assign AC_WINCTRL_VAL = "">
 <#assign AC_EVCTRL_VAL = "">
 <#assign AC_INTENSET_VAL = "">
+<#assign AC_SCALER_REG_PRESENT = false>
+<#assign AC_INTERNAL_DAC_ENABLED = false>
+<#assign AC_CTRLC_ENABLE = false>
+
 <#if AC_WINCTRL_WIN0 == true>
     <#if AC_WINCTRL_VAL != "">
         <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WEN0_Msk">
@@ -138,6 +142,30 @@
     </#if>
 </#if>
 
+<#list 0..(AC_NUM_COMPARATORS-1) as i>
+    <#assign AC_SCALER_REG = "AC_SCALER_N_" + i>
+    <#if .vars[AC_SCALER_REG]?has_content>
+        <#assign AC_SCALER_REG_PRESENT = true>
+    </#if>
+</#list>
+
+<#list 0..(AC_NUM_COMPARATORS-1) as i>
+    <#assign ANALOG_COMPARATOR_ENABLE = "ANALOG_COMPARATOR_ENABLE_" + i>
+    <#assign AC_COMPCTRL_MUXPOSx = "AC" + i + "_MUXPOS">
+    <#assign AC_COMPCTRL_MUXNEGx = "AC" + i + "_MUXNEG">
+    <#if .vars[ANALOG_COMPARATOR_ENABLE]?has_content>
+    <#if (.vars[ANALOG_COMPARATOR_ENABLE] != false)>
+    <#if .vars[AC_COMPCTRL_MUXPOSx] == "INTDAC" || .vars[AC_COMPCTRL_MUXNEGx] == "INTDAC">
+        <#assign AC_INTERNAL_DAC_ENABLED = true>
+    </#if>
+    </#if>
+    </#if>
+</#list>
+
+<#if (ANALOG_INPUT_CHARGE_PUMP_ENABLE?? && ANALOG_INPUT_CHARGE_PUMP_ENABLE == true) || AC_INTERNAL_DAC_ENABLED == true>
+    <#assign AC_CTRLC_ENABLE = true>
+</#if>
+
 AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
@@ -145,6 +173,8 @@ AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
+
+
 
 void ${AC_INSTANCE_NAME}_Initialize(void)
 {
@@ -159,9 +189,13 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     /*Load Calibration Value*/
     uint8_t calibVal = (uint8_t)((*(uint32_t*)0x00800080) & 0x3);
     calibVal = (((calibVal) == 0x3) ? 0x3 : (calibVal));
-    
+
 
     ${AC_INSTANCE_NAME}_REGS->AC_CALIB = calibVal;
+    </#if>
+
+    <#if AC_CTRLC_ENABLE == true>
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLC = AC_CTRLC_PRESCALER_${AC_CTRLC_PRESCALER}_Val | AC_CTRLC_PER(${AC_CTRLC_PERIOD}) | AC_CTRLC_WIDTH(${AC_CTRLC_WIDTH}) <#if (ANALOG_INPUT_CHARGE_PUMP_ENABLE?? && ANALOG_INPUT_CHARGE_PUMP_ENABLE == true)> | AC_CTRLC_AIPMPEN_Msk </#if>;
     </#if>
 
      /* Disable the module and configure COMPCTRL */
@@ -177,11 +211,15 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     <#assign AC_COMPCTRL_RUNSTDBY = "AC" + i + "_COMPCTRL_RUNSTDBY">
     <#assign AC_COMPCTRL_SPEED = "AC" + i + "_SPEED">
     <#assign AC_COMPCTRL_FLEN = "AC" + i + "_FLEN_VAL">
+    <#assign AC_COMPCTRL_SUT = "AC" + i + "_COMPCTRL_SUT">
     <#assign AC_SCALERn = "AC_SCALER_N_" + i>
+    <#assign AC_DACCTRL_VALUE = "AC" + i + "_DACCTRL_VALUE">
+    <#assign AC_DACCTRL_SHEN = "AC" + i + "_DACCTRL_SHEN">
+
         <#if .vars[ANALOG_COMPARATOR_ENABLE]?has_content>
             <#if (.vars[ANALOG_COMPARATOR_ENABLE] != false)>
 
-    /**************** Comparator ${i} Configurations ************************/    
+    /**************** Comparator ${i} Configurations ************************/
     <@compress single_line=true>${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] = AC_COMPCTRL_MUXPOS_${.vars[AC_COMPCTRL_MUXPOS]}
                                   | AC_COMPCTRL_MUXNEG_${.vars[AC_COMPCTRL_MUXNEG]}
                                   | AC_COMPCTRL_INTSEL_${.vars[AC_COMPCTRL_INTSEL]}
@@ -189,17 +227,23 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   | AC_COMPCTRL_SPEED(0x03)
                                   | AC_COMPCTRL_FLEN_${.vars[AC_COMPCTRL_FLEN]}
                                   ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')}
-                                  ${.vars[AC_COMPCTRL_RUNSTDBY]?then(' | AC_COMPCTRL_RUNSTDBY_Msk','')};</@compress>
+                                  ${.vars[AC_COMPCTRL_RUNSTDBY]?then(' | AC_COMPCTRL_RUNSTDBY_Msk','')}
+                                  <#if .vars[AC_COMPCTRL_SUT]?has_content> | AC_COMPCTRL_SUT(${.vars[AC_COMPCTRL_SUT]}) </#if>;</@compress>
+
+    <#if .vars[AC_COMPCTRL_MUXPOS] == "INTDAC" || .vars[AC_COMPCTRL_MUXNEG] == "INTDAC">
+    ${AC_INSTANCE_NAME}_REGS->AC_DACCTRL |=  AC_DACCTRL_VALUE${i}(${.vars[AC_DACCTRL_VALUE]}) <#if .vars[AC_DACCTRL_SHEN] == "0x1"> | AC_DACCTRL_SHEN${i}_Msk </#if>;
+    </#if>
+
     <#if AC_COMPCTRL_SINGLE_MODE?has_content>
         <#if (.vars[AC_COMPCTRL_SINGLE_MODE] == false) & (.vars[AC_COMPCTRL_HYSTEN] == true)>
             <#if AC_COMPCTRL_HYST_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYST(${.vars[AC_COMPCTRL_HYST_VAL]}) | AC_COMPCTRL_HYSTEN_Msk;
             <#else>
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYSTEN_Msk;   
-            </#if>         
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYSTEN_Msk;
+            </#if>
         </#if>
     </#if>
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;	
                 <#if .vars[AC_SCALERn]?has_content >
     ${AC_INSTANCE_NAME}_REGS->AC_SCALER[${i}] = ${.vars[AC_SCALERn]};
                 </#if>
@@ -219,12 +263,12 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
 </#if>
 <#if AC_INTENSET_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_INTENSET = ${AC_INTENSET_VAL};
-</#if>
-    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
+</#if>    
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA = AC_CTRLA_ENABLE_Msk;
+	while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization */
     }
-    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA = AC_CTRLA_ENABLE_Msk;
 }
 
 void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
@@ -233,10 +277,53 @@ void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
     ${AC_INSTANCE_NAME}_REGS->AC_CTRLB |= (1 << channel_id);
 }
 
+<#if AC_SCALER_REG_PRESENT == true>
 void ${AC_INSTANCE_NAME}_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scalar)
 {
     ${AC_INSTANCE_NAME}_REGS->AC_SCALER[channel_id] = vdd_scalar;
 }
+</#if>
+
+<#if AC_IS_DAC_PRESENT == true>
+void ${AC_INSTANCE_NAME}_SetDACOutput( AC_CHANNEL channel_id , uint8_t value)
+{
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA &= ~AC_CTRLA_ENABLE_Msk;
+	while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
+    {
+        /* Wait for Synchronization */
+    }
+
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
+
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
+    {
+        /* Wait for Synchronization */
+    }
+
+    if (channel_id == AC_CHANNEL0)
+    {
+        ${AC_INSTANCE_NAME}_REGS->AC_DACCTRL = (${AC_INSTANCE_NAME}_REGS->AC_DACCTRL & ~AC_DACCTRL_VALUE0_Msk) | (value);
+    }
+    else
+    {
+        ${AC_INSTANCE_NAME}_REGS->AC_DACCTRL = (${AC_INSTANCE_NAME}_REGS->AC_DACCTRL & ~AC_DACCTRL_VALUE1_Msk) | (value << AC_DACCTRL_VALUE1_Pos);
+    }
+
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
+
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
+    {
+        /* Wait for Synchronization */
+    }
+
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA |= AC_CTRLA_ENABLE_Msk;
+	while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
+    {
+        /* Wait for Synchronization */
+    }
+}
+</#if>
+
 
 void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
 {
@@ -274,7 +361,7 @@ void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT posi
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_Msk) == AC_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization */
-    }   
+    }
 
 }
 
