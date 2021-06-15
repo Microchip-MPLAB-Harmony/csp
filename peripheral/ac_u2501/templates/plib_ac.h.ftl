@@ -100,6 +100,15 @@ typedef struct
 
 } AC_OBJECT ;
 
+<#assign AC_SCALER_REG_PRESENT = false>
+
+<#list 0..(AC_NUM_COMPARATORS-1) as i>
+    <#assign AC_SCALER_REG = "AC_SCALER_N_" + i>
+    <#if .vars[AC_SCALER_REG]?has_content>
+        <#assign AC_SCALER_REG_PRESENT = true>
+    </#if>
+</#list>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -116,7 +125,13 @@ bool ${AC_INSTANCE_NAME}_StatusGet (AC_CHANNEL channel);
 
 void ${AC_INSTANCE_NAME}_CallbackRegister (AC_CALLBACK callback, uintptr_t context);
 
+<#if AC_SCALER_REG_PRESENT == true>
 void ${AC_INSTANCE_NAME}_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scalar);
+</#if>
+
+<#if AC_IS_DAC_PRESENT == true>
+void ${AC_INSTANCE_NAME}_SetDACOutput( AC_CHANNEL channel_id , uint8_t value);
+</#if>
 
 void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT positiveInput, AC_NEGINPUT negativeInput);
 
