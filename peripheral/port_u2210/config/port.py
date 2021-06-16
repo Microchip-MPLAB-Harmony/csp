@@ -116,6 +116,7 @@ def setupPortPINCFG(usePortLocalPINCFG, event):
         driveStrength = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_DRVSTR")
         peripheralFunc = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) +"_PERIPHERAL_FUNCTION")
 
+
         if groupName != "None":
 
             cfgValue = 0
@@ -138,6 +139,12 @@ def setupPortPINCFG(usePortLocalPINCFG, event):
                 cfgValue &= ~ (1 << 0)
 
             component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PINCFG" + str(bitPosition), str(hex(cfgValue)))
+
+            functionType = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) +"_FUNCTION_TYPE")
+            if functionType != "":
+                component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PIN_" + str(bitPosition) + "_USED", True)
+            else:
+                component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PIN_" + str(bitPosition) + "_USED", False)
 
 def setupPortDir(usePortLocalDir, event):
     component = event["source"]
@@ -440,6 +447,7 @@ for pinNumber in range(1, internalPincount + 1):
     pinName[pinNumber-1].setDefaultValue("")
     pinName[pinNumber-1].setReadOnly(True)
 
+
     pinType.append(pinNumber)
     pinType[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_TYPE", pin[pinNumber-1])
     pinType[pinNumber-1].setLabel("Type")
@@ -603,6 +611,10 @@ for portNumber in range(0, len(group)):
         portPad = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PAD_" + str(pinNum), port[portNumber])
         portPad.setVisible(False)
         portPad.setDefaultValue("0")
+
+        portPinUsed = coreComponent.createBooleanSymbol("PORT_GROUP_" + str(portNumber) + "_PIN_" + str(pinNum) + "_USED", port[portNumber])
+        portPinUsed.setVisible(False)
+        portPinUsed.setDefaultValue(False)
 
     for pinNum in range(0, 16):
         portSym_PORT_PMUX = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PMUX" + str(pinNum) , port[portNumber])
