@@ -89,7 +89,7 @@
 #define NVMCTRL_ERROR_LOCK 0x8U
 #define NVMCTRL_ERROR_NVM 0x10U
 
-typedef uint32_t NVMCTRL_ERROR;
+typedef uint16_t NVMCTRL_ERROR;
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>typedef void (*NVMCTRL_CALLBACK)(uintptr_t context);
@@ -97,9 +97,9 @@ typedef uint32_t NVMCTRL_ERROR;
 
 void ${NVMCTRL_INSTANCE_NAME}_Initialize(void);
 
-bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address );
 
-bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t* data, uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address );
 
 <#if NVMCTRL_WRITE_POLICY == "MANUAL">
 
@@ -114,7 +114,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address );
 
 bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_Read( uint32_t *data, uint32_t length, const uint32_t address );
 
-bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PageWrite( uint32_t* data, uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PageWrite ( uint32_t *data, const uint32_t address );
 
 bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_RowErase ( uint32_t address );
 

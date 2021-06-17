@@ -100,7 +100,7 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
 bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     uint32_t *paddress = (uint32_t*)address;
-    memcpy(data, paddress, length);
+    (void)memcpy(data, paddress, length);
     return true;
 }
 
@@ -112,7 +112,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PageWrite ( uint32_t *data, const uint32
     /* Writing 32-bit words in the given address */
     for ( i = 0U; i < (${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PAGESIZE/4U); i++)
     {
-        *paddress = data[i];
+        *paddress = *(data + i);
         paddress++;
     }
 
@@ -145,7 +145,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_RowErase( uint32_t address )
 bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     uint32_t *paddress = (uint32_t*)address;
-    memcpy(data, paddress, length);
+    (void)memcpy(data, paddress, length);
     return true;
 }
 
@@ -158,7 +158,8 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t ad
     /* writing 32-bit data into the given address */
     for (i = 0U; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4U); i++)
     {
-        *paddress++ = data[i];
+        *paddress = *(data + i);
+        paddress++;
     }
 
     return true;
@@ -196,7 +197,8 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address 
     /* writing 32-bit data into the given address */
     for (i = 0U; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4U); i++)
     {
-        *paddress++ = data[i];
+        *paddress = *(data + i);
+        paddress++;
     }
 
 <#if NVMCTRL_WRITE_POLICY == "MANUAL">
@@ -227,7 +229,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
 
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
-    volatile uint32_t nvm_error = 0;
+    volatile uint16_t nvm_error = 0;
 
     /* Get the error bits set */
     nvm_error = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_STATUS & (NVMCTRL_STATUS_NVME_Msk | NVMCTRL_STATUS_LOCKE_Msk | NVMCTRL_STATUS_PROGE_Msk));
