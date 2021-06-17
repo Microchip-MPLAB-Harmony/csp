@@ -112,7 +112,8 @@ bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PageWrite ( uint32_t *data, const uint32
     /* Writing 32-bit words in the given address */
     for ( i = 0U; i < (${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PAGESIZE/4U); i++)
     {
-        *paddress++ = data[i];
+        *paddress = data[i];
+        paddress++;
     }
 
 <#if NVMCTRL_WRITE_POLICY == "MANUAL">
