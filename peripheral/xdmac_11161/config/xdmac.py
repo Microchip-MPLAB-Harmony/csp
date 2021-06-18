@@ -374,6 +374,16 @@ for channelID in range(0, xdmacChCount.getValue()):
     xdmacSym_CC_DSYNC.setDefaultValue(0)
     xdmacSym_CC_DSYNC.setDependencies(xdmacTriggerLogic, ["XDMAC_CC" + str(channelID) + "_PERID"])
 
+    if ATDF.getNode(xdmacBitFieldString.format("XDMAC_CHID", "XDMAC_CC", "PROT")) is not None:
+        xdmacSym_CC_PROT = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_PROT", xdmacChannelMenu)
+        xdmacSym_CC_PROT.setLabel("Channel Protection")
+        xdmacSym_CC_PROT.addKey("SEC", "0", "Channel is secured")
+        xdmacSym_CC_PROT.addKey("UNSEC", "1", "Channel is unsecured")
+        xdmacSym_CC_PROT.setOutputMode("Key")
+        xdmacSym_CC_PROT.setDisplayMode("Description")
+        xdmacSym_CC_PROT.setDefaultValue(1)
+        xdmacSym_CC_PROT.setReadOnly(True)
+
     xdmacSym_CC_SWREQ = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_SWREQ", xdmacChannelMenu)
     xdmacSym_CC_SWREQ.setLabel("DMA Request Type")
     xdmacSym_CC_SWREQ.addKey("HWR_CONNECTED", "0", "Peripheral Generates DMA Request")
@@ -420,7 +430,7 @@ for channelID in range(0, xdmacChCount.getValue()):
         xdmacSym_CC_DIF.setDisplayMode("Description")
         xdmacSym_CC_DIF.setDefaultValue(1)
         xdmacSym_CC_DIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC" + str(channelID) + "_PERID"])
-
+    
     xdmacSym_CC_DWIDTH = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_DWIDTH", xdmacChannelMenu)
     xdmacSym_CC_DWIDTH.setLabel("Data Width")
     xdmacSym_CC_DWIDTH.addKey("BYTE", "0", "8-Bits")
