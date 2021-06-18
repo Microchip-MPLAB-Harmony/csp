@@ -597,6 +597,11 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup( SPI_TRANSFER_SETUP * setup, uint32_t sp
     return true;
 }
 
+bool ${SPI_INSTANCE_NAME}_IsTransmitterBusy( void )
+{
+    return ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0)? true : false;
+}
+
 <#if SPI_INTERRUPT_MODE == true >
 void ${SPI_INSTANCE_NAME}_CallbackRegister( SPI_CALLBACK callback, uintptr_t context )
 {

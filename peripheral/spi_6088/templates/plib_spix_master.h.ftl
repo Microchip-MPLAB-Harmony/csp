@@ -64,6 +64,8 @@ bool ${SPI_INSTANCE_NAME}_Read( void* pReceiveData, size_t rxSize );
 
 bool ${SPI_INSTANCE_NAME}_TransferSetup( SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock );
 
+bool ${SPI_INSTANCE_NAME}_IsTransmitterBusy( void );
+
 <#if SPI_NUM_CSR != 1>
 void ${SPI_INSTANCE_NAME}_ChipSelectSetup(SPI_CHIP_SELECT chipSelect);
 </#if>
