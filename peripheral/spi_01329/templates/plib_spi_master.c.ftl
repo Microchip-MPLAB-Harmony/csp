@@ -166,6 +166,11 @@ bool ${SPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize)
     return(${SPI_INSTANCE_NAME}_WriteRead(NULL, 0, pReceiveData, rxSize));
 }
 
+bool ${SPI_INSTANCE_NAME}_IsTransmitterBusy (void)
+{
+    return ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == 0)? true : false;
+}
+
 <#if SPI_INTERRUPT_MODE == false>
 bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
 {
