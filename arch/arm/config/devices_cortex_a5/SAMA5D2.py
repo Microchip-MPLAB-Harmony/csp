@@ -207,6 +207,22 @@ dram_boundary_addr = coreComponent.createStringSymbol("DDRAM_BOUNDARY_ADDR", Non
 dram_boundary_addr.setVisible(False)
 dram_boundary_addr.setDefaultValue("0x%08X" % (ddr_start + ddr_size))
 
+cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", cortexMenu)
+cacheMenu.setLabel("Cache")
+cacheMenu.setDescription("Cache Configuration")
+
+dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)
+dcacheEnable.setLabel("Enable Data Cache")
+dcacheEnable.setDefaultValue(True)
+
+icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cacheMenu)
+icacheEnable.setLabel("Enable Instruction Cache")
+icacheEnable.setDefaultValue(True)
+
+cacheAlign = coreComponent.createIntegerSymbol("CACHE_ALIGN", cacheMenu)
+cacheAlign.setLabel("Cache Alignment Length")
+cacheAlign.setVisible(False)
+cacheAlign.setDefaultValue(32)
 
 #load MMU with default 1:1 mapping so we can use cache
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
