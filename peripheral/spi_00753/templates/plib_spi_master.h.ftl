@@ -65,6 +65,8 @@ bool ${SPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize);
 
 bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 
+bool ${SPI_INSTANCE_NAME}_IsTransmitterBusy (void);
+
 <#if SPI_INTERRUPT_MODE == true>
 bool ${SPI_INSTANCE_NAME}_IsBusy(void);
 
