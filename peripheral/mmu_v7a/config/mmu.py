@@ -23,23 +23,6 @@
 
 Log.writeInfoMessage("Loading MMU for " + Variables.get("__PROCESSOR"))
 
-cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", cortexMenu)
-cacheMenu.setLabel("CACHE")
-cacheMenu.setDescription("CACHE Configuration")
-
-dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)
-dcacheEnable.setLabel("Enable Data Cache")
-dcacheEnable.setDefaultValue(True)
-
-icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cacheMenu)
-icacheEnable.setLabel("Enable Instruction Cache")
-icacheEnable.setDefaultValue(True)
-
-cacheAlign = coreComponent.createIntegerSymbol("CACHE_ALIGN", cacheMenu)
-cacheAlign.setLabel("Cache Alignment Length")
-cacheAlign.setVisible(False)
-cacheAlign.setDefaultValue(32)
-
 #mmu_segments list have to be defined in the device arch file (Refer sama5d2.py for example)
 symSegCount = coreComponent.createIntegerSymbol("MMU_SEG_COUNT", None)
 symSegCount.setVisible(False)

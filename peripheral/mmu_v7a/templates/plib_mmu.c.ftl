@@ -74,8 +74,8 @@
 /* TTB Section Descriptor: Section Base Address */
 #define TTB_SECT_ADDR(x)           ((x) & 0xFFF00000)
 <#if DATA_CACHE_ENABLE>
-/* L1 data cache line size, Number of ways and Number of sets */
-#define L1_DATA_CACHE_BYTES        32U
+
+#define L1_DATA_CACHE_BYTES            ${CACHE_ALIGN}U
 #define L1_DATA_CACHE_WAYS         4U
 #define L1_DATA_CACHE_SETS         256U
 #define L1_DATA_CACHE_SETWAY(set, way) (((set) << 5) | ((way) << 30))
@@ -104,36 +104,13 @@ static void mmu_configure(void *p_tlb)
     __ISB();
 }
 
-// *****************************************************************************
-/* Function:
-     void mmu_enable(void)
-
-  Summary:
-    Enable the MMU.
-
-*/
-static void mmu_enable(void)
-{
-    uint32_t control;
-
-    control = __get_SCTLR();
-    if ((control & SCTLR_M_Msk) == 0)
-        __set_SCTLR(control | SCTLR_M_Msk);
-}
-
 <#if INSTRUCTION_CACHE_ENABLE>
-void icache_InvalidateAll(void)
-{
-    __set_ICIALLU(0);
-    __ISB();
-}
-
 void icache_Enable(void)
 {
     uint32_t sctlr = __get_SCTLR();
     if ((sctlr & SCTLR_I_Msk) == 0)
     {
-        icache_InvalidateAll();
+        L1C_InvalidateICacheAll();
         __set_SCTLR(sctlr | SCTLR_I_Msk);
     }
 }
@@ -144,12 +121,13 @@ void icache_Disable(void)
     if (sctlr & SCTLR_I_Msk)
     {
         __set_SCTLR(sctlr & ~SCTLR_I_Msk);
-        icache_InvalidateAll();
+        L1C_InvalidateICacheAll();
     }
 }
 </#if>
 
 <#if DATA_CACHE_ENABLE>
+/* Deprecated, Wont work with multilevel caches, Use CMSIS API instead */
 void dcache_InvalidateAll(void)
 {
     uint32_t set, way;
@@ -164,6 +142,7 @@ void dcache_InvalidateAll(void)
     __DSB();
 }
 
+/* Deprecated, Wont work with multilevel caches, Use CMSIS API instead */
 void dcache_CleanAll(void)
 {
     uint32_t set, way;
@@ -178,6 +157,7 @@ void dcache_CleanAll(void)
     __DSB();
 }
 
+/* Deprecated, Wont work with multilevel caches, Use CMSIS API instead */
 void dcache_CleanInvalidateAll(void)
 {
     uint32_t set, way;
@@ -191,7 +171,6 @@ void dcache_CleanInvalidateAll(void)
     }
     __DSB();
 }
-
 void dcache_InvalidateByAddr (uint32_t *addr, uint32_t size)
 {
     uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1);
@@ -233,7 +212,7 @@ void dcache_Enable(void)
     uint32_t sctlr = __get_SCTLR();
     if ((sctlr & SCTLR_C_Msk) == 0)
     {
-        dcache_InvalidateAll();
+        L1C_InvalidateDCacheAll();
         __set_SCTLR(sctlr | SCTLR_C_Msk);
     }
 }
@@ -243,25 +222,13 @@ void dcache_Disable(void)
     uint32_t sctlr = __get_SCTLR();
     if (sctlr & SCTLR_C_Msk)
     {
-        dcache_CleanAll();
+        L1C_CleanDCacheAll();
         __set_SCTLR(sctlr & ~SCTLR_C_Msk);
-        dcache_InvalidateAll();
+        L1C_InvalidateDCacheAll();
     }
 }
 
 </#if>
-
-static inline uint32_t cp15_read_sctlr(void)
-{
-    uint32_t sctlr = 0;
-    asm("mrc p15, 0, %0, c1, c0, 0" : "=r"(sctlr));
-    return sctlr;
-}
-
-static inline void cp15_write_sctlr(uint32_t value)
-{
-    asm("mcr p15, 0, %0, c1, c0, 0" :: "r"(value));
-}
 
 // *****************************************************************************
 /* Function:
@@ -353,13 +320,9 @@ void MMU_Initialize(void)
 <#if INSTRUCTION_CACHE_ENABLE>
     icache_Enable();
 </#if>
-    mmu_enable();
+    MMU_Enable();
 <#if DATA_CACHE_ENABLE>
     dcache_Enable();
 </#if>
 
-    // disable the processor alignment fault testing
-    uint32_t sctlrValue = cp15_read_sctlr();
-    sctlrValue &= ~0x00000002;
-    cp15_write_sctlr( sctlrValue );
 }
