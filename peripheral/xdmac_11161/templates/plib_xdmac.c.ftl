@@ -221,6 +221,9 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( XDMAC_CHANNEL channel, const void *sr
 
         /* Set block size */
         ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[channel].XDMAC_CUBC= XDMAC_CUBC_UBLEN(blockSize);
+		
+		/* Make sure all memory transfers are completed before enabling the DMA */
+		__DMB();
 
         /* Enable the channel */
         ${DMA_INSTANCE_NAME}_REGS->XDMAC_GE= (XDMAC_GE_EN0_Msk << channel);
