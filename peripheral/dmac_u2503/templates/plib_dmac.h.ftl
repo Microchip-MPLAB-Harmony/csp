@@ -175,6 +175,8 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void );
 uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_CRC_SETUP CRCSetup);
 
 void ${DMA_INSTANCE_NAME}_CRCDisable( void );
+void ${DMA_INSTANCE_NAME}_ChannelSuspend ( DMAC_CHANNEL channel );
+void ${DMA_INSTANCE_NAME}_ChannelResume ( DMAC_CHANNEL channel );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
