@@ -395,6 +395,16 @@ bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL
     return true;
 }
 
+void ${DMA_INSTANCE_NAME}_ChannelSuspend ( DMAC_CHANNEL channel )
+{    
+    ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB & ~DMAC_CHCTRLB_CMD_Msk) | DMAC_CHCTRLB_CMD_SUSPEND;    
+}
+
+void ${DMA_INSTANCE_NAME}_ChannelResume ( DMAC_CHANNEL channel )
+{
+    ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB & ~DMAC_CHCTRLB_CMD_Msk) | DMAC_CHCTRLB_CMD_RESUME;    
+}
+
 /*******************************************************************************
     This function Disables the CRC engine and clears the CRC Control register
 ********************************************************************************/
