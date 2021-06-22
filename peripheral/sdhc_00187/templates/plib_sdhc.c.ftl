@@ -389,20 +389,12 @@ void ${SDHC_INSTANCE_NAME}_DmaSetup (
     ${SDHC_INSTANCE_NAME}AADDR = (uint32_t)KVA_TO_PA(&${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0]);
 }
 
+<#assign SDHC_CLOCK = "core." + SDHC_INSTANCE_NAME + "_CLOCK_FREQUENCY">
+
 bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t speed)
 {
     uint32_t div = 0;
-    uint32_t baseclk_frq = 0;
-
-    /* Find the maximum clock frequency supported by the Host Controller. */
-    baseclk_frq = (${SDHC_INSTANCE_NAME}CAP & (_SDHCCAP_BASECLK_MASK)) >> _SDHCCAP_BASECLK_POSITION;
-    if (baseclk_frq == 0)
-    {
-        return false;
-    }
-
-    /* Convert to Hertz */
-    baseclk_frq *= 1000000;
+    uint32_t sdhc_clk = ${SDHC_CLOCK?eval};
 
     /* Disable clock before changing it */
     if (${SDHC_INSTANCE_NAME}CON2 & _SDHCCON2_SDCLKEN_MASK)
@@ -411,9 +403,9 @@ bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t speed)
         ${SDHC_INSTANCE_NAME}CON2 &= ~(_SDHCCON2_SDCLKEN_MASK | _SDHCCON2_ICLKEN_MASK);
     }
 
-    if (speed < baseclk_frq)
+    if (speed < sdhc_clk)
     {
-        div = baseclk_frq / speed;
+        div = sdhc_clk / speed;
         div >>= 1;
     }
 
