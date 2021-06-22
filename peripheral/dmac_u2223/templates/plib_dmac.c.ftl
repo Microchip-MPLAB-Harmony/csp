@@ -371,6 +371,40 @@ bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_
 }
 </#if>
 
+void ${DMA_INSTANCE_NAME}_ChannelSuspend ( DMAC_CHANNEL channel )
+{
+    uint8_t channelId = 0;
+
+    /* Save channel ID */
+    channelId = (uint8_t)${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
+
+    /* Set the DMA Channel ID */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channel;
+
+    /* Suspend the DMA channel */  
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB = (${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB & ~DMAC_CHCTRLB_CMD_Msk) | DMAC_CHCTRLB_CMD_SUSPEND;
+    
+    /* Restore channel ID */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
+}
+
+void ${DMA_INSTANCE_NAME}_ChannelResume ( DMAC_CHANNEL channel )
+{
+    uint8_t channelId = 0;
+
+    /* Save channel ID */
+    channelId = (uint8_t)${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
+
+    /* Set the DMA Channel ID */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channel;
+
+    /* Suspend the DMA channel */  
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB = (${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB & ~DMAC_CHCTRLB_CMD_Msk) | DMAC_CHCTRLB_CMD_RESUME;
+    
+    /* Restore channel ID */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
+}
+
 /*******************************************************************************
     This function function allows a DMAC PLIB client to set an event handler.
 ********************************************************************************/
