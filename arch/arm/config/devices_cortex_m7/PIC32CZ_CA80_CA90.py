@@ -189,7 +189,7 @@ coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32cz_ca/config/clk.py")
-#coreComponent.addPlugin("../peripheral/clk_pic32cz_ca/plugin/clockmanager.jar")
+coreComponent.addPlugin("../peripheral/clk_pic32cz_ca/plugin/clk_pic32cz_ca.jar")
 
 # Cortex-M7 IP Configuration
 tcmMenu = coreComponent.createMenuSymbol("TCM_MENU", cortexMenu)
