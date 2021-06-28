@@ -268,6 +268,11 @@ def instantiateComponent( smcComponent ):
     smcInstanceName = smcComponent.createStringSymbol( "SMC_INSTANCE_NAME", None )
     smcInstanceName.setVisible( False )
     smcInstanceName.setDefaultValue( myNamespace.upper() )
+
+    smcRegisterName = smcComponent.createStringSymbol( "SMC_REGS", None )
+    smcRegisterName.setVisible( False )
+    smcRegName = ATDF.getNode( '/avr-tools-device-file/devices/device/peripherals/module@[name="SMC"]/instance@[name="' + smcInstanceName.getValue() + '"]/register-group' ).getAttribute("name") + "_REGS"
+    smcRegisterName.setDefaultValue( smcRegName )
     #--------------------------------------------------------------------------
     nandFlashControllerMenu = smcComponent.createMenuSymbol( "SMC_NAND_FLASH_CONTROLLER", None ) 
     nandFlashControllerMenu.setLabel( "NAND Flash Controller" )
@@ -447,7 +452,7 @@ def instantiateComponent( smcComponent ):
         modeDbw.setOutputMode( "Key" )
         modeDbw.setDisplayMode( "Description" )
         modeDbw.setDefaultValue( 1 )
-        for tupleElem in getNameValueCaptionTuple( "HSMC_MODE0__DBW" ):
+        for tupleElem in getNameValueCaptionTuple( bitField_MODE_DBW.getAttribute( "values" ) ):
             modeDbw.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
         modeBatNameStem = "SMC_MODE_BAT"
@@ -457,7 +462,7 @@ def instantiateComponent( smcComponent ):
         modeBat.setOutputMode( "Key" )
         modeBat.setDisplayMode( "Description" )
         modeBat.setDefaultValue( 1 )
-        for tupleElem in getNameValueCaptionTuple( "HSMC_MODE0__BAT" ):
+        for tupleElem in getNameValueCaptionTuple( bitField_MODE_BAT.getAttribute( "values" ) ):
             modeBat.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
         modeBat.setDependencies( smcModeByteWriteOrSelectAccessVisible, [modeDbwName] )
 
@@ -468,7 +473,7 @@ def instantiateComponent( smcComponent ):
         modeNWait.setOutputMode( "Key" )
         modeNWait.setDisplayMode( "Description" )
         modeNWait.setDefaultValue( 0 )
-        for tupleElem in getNameValueCaptionTuple( "HSMC_MODE0__EXNW_MODE" ):
+        for tupleElem in getNameValueCaptionTuple( bitField_MODE_EXNW_MODE.getAttribute( "values" ) ):
             modeNWait.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
         # "Read Cycle Configuration"
@@ -485,7 +490,7 @@ def instantiateComponent( smcComponent ):
         modeReadMode.setOutputMode( "Key" )
         modeReadMode.setDisplayMode( "Description" )
         modeReadMode.setDefaultValue( 1 )
-        for tupleElem in getNameValueCaptionTuple( "HSMC_MODE0__READ_MODE" ):
+        for tupleElem in getNameValueCaptionTuple( bitField_MODE_READ_MODE.getAttribute( "values"  )):
             modeReadMode.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
         setupNCsRdNameStem = "SMC_SETUP_NCS_RD"
@@ -540,7 +545,7 @@ def instantiateComponent( smcComponent ):
         modeWriteMode.setOutputMode( "Key" )
         modeWriteMode.setDisplayMode( "Description" )
         modeWriteMode.setDefaultValue( 1 )
-        for tupleElem in getNameValueCaptionTuple( "HSMC_MODE0__WRITE_MODE" ):
+        for tupleElem in getNameValueCaptionTuple( bitField_MODE_WRITE_MODE.getAttribute( "values" ) ):
             modeWriteMode.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
         setupNCsWrNameStem = "SMC_SETUP_NCS_WR"

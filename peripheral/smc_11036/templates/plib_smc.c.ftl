@@ -55,7 +55,6 @@
   Returns:
     None
  */
-<#lt><#assign SMC_REGS = "H" + SMC_INSTANCE_NAME + "_REGS">
 
 void 
 ${SMC_INSTANCE_NAME}_Initialize( void )
