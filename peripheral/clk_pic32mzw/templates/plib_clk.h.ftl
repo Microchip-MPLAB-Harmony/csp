@@ -68,8 +68,8 @@
 #endif
 // DOM-IGNORE-END
 
-#define SG407_MASK_ID 0xA4
-#define SG402_MASK_ID 0x8C
+#define PIC32MZW1_B0 0xA4
+#define PIC32MZW1_A1 0x8C
 #define CORE_TIMER_FREQ 100000000
 
 void PMU_Initialize(void);

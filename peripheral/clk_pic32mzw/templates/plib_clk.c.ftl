@@ -159,50 +159,40 @@ unsigned int wifi_spi_read(unsigned int spi_addr)
 
 void CLK_Initialize( void )
 {
+<#if EWPLL_ENABLE == true>
     volatile unsigned int *PLLDBG = (unsigned int*) 0xBF8000E0;
+</#if>
     volatile unsigned int *PMDRCLR = (unsigned int *) 0xBF8000B4;
+	volatile unsigned int *RFSPICTL = (unsigned int *) 0xBF8C8028;
+
     /* unlock system for clock configuration */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
 
-    if(((DEVID & 0x0FF00000) >> 20) == SG407_MASK_ID)
+    if(((DEVID & 0x0FF00000) >> 20) == PIC32MZW1_B0)
     {
-        CFGCON2  = 0x7F7FFF38; // Start with POSC Turned OFF
-        /* if POSC was on give some time for POSC to shut off */
-        DelayMs(2);
-        // Read counter part is there only for debug and testing, or else not needed, so use ifdef as needed
-        wifi_spi_write(0x85, 0x00F0); /* MBIAS filter and A31 analog_test */ //if (wifi_spi_read (0x85) != 0xF0) {Error, Stop};
-        wifi_spi_write(0x84, 0x0001); /* A31 Analog test */// if (wifi_spi_read (0x84) != 0x1) {Error, Stop};
-        wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */ //if (wifi_spi_read (0x1e) != 0x510) {Error, Stop};
-        wifi_spi_write(0x82, 0x6400); /* XTAL LDO feedback divider (1.3+v) */ //if (wifi_spi_read (0x82) != 0x6000) {Error, Stop};
+	CFGCON2  = 0x7F7FFF38; // Start with POSC Turned OFF
+	/* if POSC was on give some time for POSC to shut off */
+	DelayMs(2);
+	// Read counter part is there only for debug and testing, or else not needed, so use ifdef as needed
+	wifi_spi_write(0x85, 0x00F0); /* MBIAS filter and A31 analog_test */ //if (wifi_spi_read (0x85) != 0xF0) {Error, Stop};
+	wifi_spi_write(0x84, 0x0001); /* A31 Analog test */// if (wifi_spi_read (0x84) != 0x1) {Error, Stop};
+	wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */ //if (wifi_spi_read (0x1e) != 0x510) {Error, Stop};
+	wifi_spi_write(0x82, 0x6400); /* XTAL LDO feedback divider (1.3+v) */ //if (wifi_spi_read (0x82) != 0x6000) {Error, Stop};
 
-        /* Enable POSC */
-        CFGCON2  = 0x7F7FFC38; // enable POSC
+	/* Enable POSC */
+	CFGCON2  = 0x7F7FFC38; // enable POSC
 
-        /* Wait for POSC ready */
-        while(!(CLKSTAT & 0x00000004)) ;
+	/* Wait for POSC ready */
+	while(!(CLKSTAT & 0x00000004)) ;
 
-        /*Configure SPLL*/
-        CFGCON3 = 0x1E78A;
-        CFGCON0bits.SPLLHWMD = 1;
-        SPLLCON = 0x01496869;
+	/*Configure SPLL*/
+	//CFGCON3 = 0x1E78A;
+	${CFGCON3_NAME} = ${CFGCON3_VALUE} | 0x780;
+	CFGCON0bits.SPLLHWMD = 1;
 
-        OSCCON = 0x103;
-        while (((OSCCON) & 0x1)); // -- Add timeout
-        DelayMs(5);
-
-        EWPLLCON = 0x010A094A;
-        CFGCON0bits.ETHPLLHWMD = 1;
-
-        while(!((*PLLDBG) & 0x4));
-
-        *(PMDRCLR)  = 0x1000;
-    }
-    else if(((DEVID & 0x0FF00000) >> 20) == SG402_MASK_ID)
-    {
-    	OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
-
+		/* SPLLCON = 0x01496869 */
 		/* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
 		/* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
 		/* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
@@ -213,6 +203,109 @@ void CLK_Initialize( void )
 		/* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
 		/* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
 		${SPLLCON_REG} = 0x${SPLLCON_VALUE};
+
+        OSCCON = 0x103;
+        while (((OSCCON) & 0x1)); // -- Add timeout
+        DelayMs(5);
+
+        /* EWPLLCON = 0x010A094A; */
+
+<#if EWPLL_ENABLE == true>
+		/* Configure EWPLL */
+		/* EWPLLBSWSEL   = ${EWPLLCON_EWPLLBSWSEL_VALUE} */
+		/* EWPLLPWDN     = ${EWPLLCON_EWPLLPWDN_VALUE} */
+		/* EWPLLPOSTDIV1 = ${EWPLLCON_EWPLLPOSTDIV1_VALUE} */
+		/* EWPLLFLOCK    = ${EWPLLCON_EWPLLFLOCK_VALUE} */
+		/* EWPLLRST      = ${EWPLLCON_EWPLLRST_VALUE} */
+		/* EWPLLFBDIV    = ${EWPLLCON_EWPLLFBDIV_VALUE} */
+		/* EWPLLREFDIV   = ${EWPLLCON_EWPLLREFDIV_VALUE} */
+		/* EWPLLICLK     = ${EWPLLCON_EWPLLICLK_VALUE} */
+		/* ETHCLKOUTEN   = ${EWPLLCON_ETHCLKOUTEN_VALUE} */
+		/* EWPLL_BYP     = ${EWPLLCON_EWPLL_BYP_VALUE} */
+		${EWPLLCON_REG} = 0x${EWPLLCON_VALUE} ^ 0x0438080c;
+		CFGCON0bits.ETHPLLHWMD = 1;
+		while(!((*PLLDBG) & 0x4));
+<#else>
+		/* Power down the EWPLL */
+		EWPLLCONbits.EWPLLPWDN = 1;
+</#if>
+
+<#if USBPLL_ENABLE == true>
+		/* Configure UPLL */
+		/* UPLLBSWSEL   = ${UPLLCON_UPLLBSWSEL_VALUE} */
+		/* UPLLPWDN     = ${UPLLCON_UPLLPWDN_VALUE} */
+		/* UPLLPOSTDIV1 = ${UPLLCON_UPLLPOSTDIV1_VALUE} */
+		/* UPLLFLOCK    = ${UPLLCON_UPLLFLOCK_VALUE} */
+		/* UPLLRST      = ${UPLLCON_UPLLRST_VALUE} */
+		/* UPLLFBDIV    = ${UPLLCON_UPLLFBDIV_VALUE} */
+		/* UPLLREFDIV   = ${UPLLCON_UPLLREFDIV_VALUE} */
+		/* UPLL_BYP     = ${UPLLCON_UPLL_BYP_VALUE} */
+		${UPLLCON_REG} = 0x${UPLLCON_VALUE};
+<#else>
+		/* Power down the UPLL */
+		UPLLCONbits.UPLLPWDN = 1;
+</#if>
+
+<#if BTPLL_ENABLE == true>
+		/* Configure BYPLL */
+		/* BTPLLBSWSEL   = ${BTPLLCON_BTPLLBSWSEL_VALUE} */
+		/* BTPLLPWDN     = ${BTPLLCON_BTPLLPWDN_VALUE} */
+		/* BTPLLPOSTDIV1 = ${BTPLLCON_BTPLLPOSTDIV1_VALUE} */
+		/* BTPLLFLOCK    = ${BTPLLCON_BTPLLFLOCK_VALUE} */
+		/* BTPLLRST      = ${BTPLLCON_BTPLLRST_VALUE} */
+		/* BTPLLFBDIV    = ${BTPLLCON_BTPLLFBDIV_VALUE} */
+		/* BTPLLREFDIV   = ${BTPLLCON_BTPLLREFDIV_VALUE} */
+		/* BTCLKOUTEN    = ${BTPLLCON_BTCLKOUTEN_VALUE} */
+		/* BTPLLICLK     = ${BTPLLCON_BTPLLCLK_VALUE} */
+		/* BTPLL_BYP     = ${BTPLLCON_BTPLL_BYP_VALUE} */
+		${BTPLLCON_REG} = 0x${BTPLLCON_VALUE};
+<#else>
+		/* Power down the BTPLL */
+		BTPLLCONbits.BTPLLPWDN = 1;
+</#if>
+
+        *(PMDRCLR)  = 0x1000;
+    }
+    else if(((DEVID & 0x0FF00000) >> 20) == PIC32MZW1_A1)
+    {
+
+	CFGCON2  = 0x7F7FFF38; // Start with POSC Turned OFF
+	DelayMs(2);
+
+	/* make sure we properly reset SPI to a known state */
+	*RFSPICTL = 0x80000022;
+        /* now wifi is properly reset enable POSC */
+        CFGCON2  = 0x7F7FFC38; // enable POSC
+
+	DelayMs(2);
+
+        /* make sure we properly take out of reset */
+        *RFSPICTL = 0x80000002;
+
+        wifi_spi_write(0x85, 0x00F0); // MBIAS filter and A31 analog_test
+        wifi_spi_write(0x84, 0x0001); // A31 Analog test
+        wifi_spi_write(0x1e, 0x510); // MBIAS reference adjustment
+        wifi_spi_write(0x82, 0x6000); // XTAL LDO feedback divider (1.3+v)
+
+		 /* Wait for POSC ready */
+        while(!(CLKSTAT & 0x00000004)) ;
+
+    	OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
+
+		${CFGCON3_NAME} = ${CFGCON3_VALUE} | 0x780;
+        CFGCON0bits.SPLLHWMD = 1;
+		/* SPLLCON = 0x01496869 */
+		/* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
+		/* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
+		/* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
+		/* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
+		/* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
+		/* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
+		/* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
+		/* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
+		/* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
+		${SPLLCON_REG} = 0x${SPLLCON_VALUE};
+
 
 <#if USBPLL_ENABLE == true>
 		/* Configure UPLL */
@@ -242,7 +335,9 @@ void CLK_Initialize( void )
 		/* EWPLLICLK     = ${EWPLLCON_EWPLLICLK_VALUE} */
 		/* ETHCLKOUTEN   = ${EWPLLCON_ETHCLKOUTEN_VALUE} */
 		/* EWPLL_BYP     = ${EWPLLCON_EWPLL_BYP_VALUE} */
-		${EWPLLCON_REG} = 0x${EWPLLCON_VALUE};
+		${EWPLLCON_REG} = 0x${EWPLLCON_VALUE} ^ 0x438080c;
+		CFGCON0bits.ETHPLLHWMD = 1;
+		while(!((*PLLDBG) & 0x4));
 <#else>
 		/* Power down the EWPLL */
 		EWPLLCONbits.EWPLLPWDN = 1;
