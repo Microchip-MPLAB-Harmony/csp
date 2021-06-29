@@ -2,14 +2,14 @@
   PIC32MZW1 PMU MLDO TRIMMING
 
   File Name:
-    sys_pmu_mldo_trim.c
+    pmu_init.c
 
   Summary:
-    PIC32MZW1 boot time PMU MLDO mode Configuration.
+    PIC32MZW1 boot time PMU mode and output Configuration.
 
   Description:
-    This interface helps configure the PMU in MLDO only mode and also trim
-    the voltages in this mode to the operating range.
+    This interface helps configure the PMU in either DC-DC/MLDO mode and also trim
+    the voltages in the corresponding mode to the operating range.
 
  *******************************************************************************/
 
@@ -65,8 +65,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define VREG4_BITS 0x1F000000
 #define CORE_TIMER_FREQ 100000000
 
-#define SG407_MASK_ID 0xA4
-#define SG402_MASK_ID 0x8C
+#define PIC32MZW1_B0 0xA4
+#define PIC32MZW1_A1 0x8C
 #define PMUSPI_BUCKCFG1_DEFAULT_VAL     0x5480
 #define PMUSPI_BUCKCFG2_DEFAULT_VAL     0x8C28
 #define PMUSPI_BUCKCFG3_DEFAULT_VAL     0x00C8
@@ -105,7 +105,7 @@ static unsigned int SYS_PMU_SPI_READ(unsigned int spi_addr)
     int status = 0;
     reg_val = (1 << SPI_CMD_OFFSET) | (spi_addr << SPI_ADDR_OFFSET) ;
     *spi_cntrl_reg = reg_val;
-    DelayMs(20);
+    DelayMs(5);
 
     while (1)
     {
@@ -114,7 +114,6 @@ static unsigned int SYS_PMU_SPI_READ(unsigned int spi_addr)
             break;
     }
     spi_val = ((status & PMU_SPI_READ_MASK) >> SPI_ADDR_OFFSET);
-    DelayMs(20);
     return spi_val;
 }
 
@@ -125,14 +124,13 @@ static void SYS_PMU_SPI_WRITE(unsigned int spi_addr, unsigned int reg_val)
     reg_val &= 0xFFFF;
     spi_val = (spi_addr << SPI_ADDR_OFFSET) | reg_val;
     *spi_cntrl_reg = spi_val;
-    DelayMs(20);
+    DelayMs(5);
     while (1)
     {
         status = *spi_status_reg;
         if (status & PMU_STATUS_SPIRDY)
             break;
     }
-    DelayMs(20);
 }
 
 /*This function will configure the PMU with
@@ -163,7 +161,7 @@ void PMU_Initialize(void)
     unsigned int mldocfg1, mldocfg2, buckcfg1, buckcfg2, buckcfg3;
     unsigned int vreg1, vreg2, vreg3, vreg4;
 
-    if(((DEVID & 0x0FF00000) >> 20) == SG407_MASK_ID)
+    if(((DEVID & 0x0FF00000) >> 20) == PIC32MZW1_B0)
     {
        if ((RCONbits.BOR == 1) || (RCONbits.POR == 1))
        {
@@ -192,22 +190,19 @@ void PMU_Initialize(void)
 
         SYS_PMU_SPI_WRITE(BUCKCFG3_ADDR, buckcfg3);
 
-        //printf("Perform MLDOCFGX calibration \n");
         mldocfg1 = *otp_mldocfg1_data;
         if((mldocfg1 == 0x00000000) || (mldocfg1 == 0xFFFFFFFF)) {
             mldocfg1 = PMUSPI_MLDOCFG1_DEFAULT_VAL;
-           // printf("PMU MLDOCFG1 not calibrated : Using MLDOCFG1 = %x \n", PMUSPI_MLDOCFG1_DEFAULT_VAL);
         }
         SYS_PMU_SPI_WRITE(MLDOCFG1_ADDR, mldocfg1);
 
         mldocfg2 = *otp_mldocfg2_data;
         if((mldocfg2 == 0x00000000) || (mldocfg2 == 0xFFFFFFFF)) {
             mldocfg2 = PMUSPI_MLDOCFG2_DEFAULT_VAL;
-           // printf("PMU MLDOCFG2 not calibrated : Using MLDOCFG2 = %x \n", PMUSPI_MLDOCFG2_DEFAULT_VAL);
         }
         SYS_PMU_SPI_WRITE(MLDOCFG2_ADDR, mldocfg2);
+		SYS_PMU_SPI_READ(MLDOCFG2_ADDR);
 
-       // printf("Read VREG values from flash and populate MODE control regs \n");
         otp_treg_val = *otp_treg3_data;
         if((otp_treg_val == 0xFFFFFFFF) || (otp_treg_val == 0x00000000))
         {
@@ -218,7 +213,6 @@ void PMU_Initialize(void)
         vreg2 = (otp_treg_val & VREG3_BITS) >> 16;
         vreg1 = (otp_treg_val & VREG4_BITS) >> 24;
 
-       // printf("Configure  MODE control 1\n");
         // Mission mode PMU Mode #1 register
 
         M_BUCKEN = 1;
@@ -227,7 +221,6 @@ void PMU_Initialize(void)
         PMUMODECTRL1 = ((M_BUCKEN << 31) | (M_MLDOEN << 30) | (M_BUCKMODE << 29) |
                 (vreg1 << 24) | (vreg2 <<16) | (vreg3 << 8) | vreg4);
 
-        //printf("Configure  MODE control 2\n");
         // Sleep mode PMU Mode #2 register
         // TODO - When available, use the Sleep Mode Calibration values
         S_BUCKEN = 1;
@@ -236,7 +229,6 @@ void PMU_Initialize(void)
         PMUMODECTRL2 = ((S_BUCKEN << 31) | (S_MLDOEN << 30) | (S_BUCKMODE << 29) |
                 (vreg1 << 24) | (vreg2 <<16) | (vreg3 << 8) | vreg4);
 
-        //printf("Put the PMU in SW Override Mode\n");
          // For HUT Code keeping the PMU in SW Override Mode
         // OVEREN = 1, triggers the mode change
         O_BUCKEN = 1;
@@ -247,49 +239,27 @@ void PMU_Initialize(void)
                 (OVEREN << 23) | (vreg1 << 24) | (vreg2 <<16) | (vreg3 << 8) | vreg4);
 
         // Trigger PMU Mode Change, with CLKCTRL.BACWD=0
-        //printf("Trigger PMU Mode Change, with CLKCTRL.BACWD=0\n");
         PMUOVERCTRLbits.PHWC = 0;
 
         // Poll for Buck switching to be complete
         while (!((PMUCMODEbits.CBUCKEN) && (PMUCMODEbits.CBUCKMODE) && !(PMUCMODEbits.CMLDOEN)));
-        //printf("Switch to BUCK mode complete PMUCMODE: %x \n", PMUCMODE);
-
-        //printf("PMU REG BUCKCFG1 after config: 0x%x\n", pmu_spi_read(BUCKCFG1_ADDR));
-        //printf("PMU REG BUCKCFG2 after config: 0x%x \n", pmu_spi_read(BUCKCFG2_ADDR));
-        //printf("PMU REG BUCKCFG3 after config: 0x%x \n", pmu_spi_read(BUCKCFG3_ADDR));
-        //printf("PMU REG MLDOCFG1 after config: 0x%x \n", pmu_spi_read(MLDOCFG1_ADDR));
-        //printf("PMU REG MLDOCFG2 after config: 0x%x \n", pmu_spi_read(MLDOCFG2_ADDR));
 
         // Post process the Buck switching if Calibration values are not present
         // VTUNE[3:0]=0x0 if no calibration
         buckcfg1 = *otp_buckcfg1_data;
         if((buckcfg1 == 0x00000000) || (buckcfg1 == 0xFFFFFFFF)) {
             SYS_PMU_SPI_WRITE(BUCKCFG1_ADDR, (SYS_PMU_SPI_READ(BUCKCFG1_ADDR) & 0xEBFF));
-           // printf("PMU BUCKCFG1 not calibrated : Using BUCKCFG1 = %x \n", pmu_spi_read(BUCKCFG1_ADDR));
         }
 
         // BUCKCFG2 0x8C28 - If no calibration, we need to update buk_scp_tune at the least to 2?b10, so update it o 0x8D28
         buckcfg2 = *otp_buckcfg2_data;
         if((buckcfg2 == 0x00000000) || (buckcfg2 == 0xFFFFFFFF)) {
             SYS_PMU_SPI_WRITE(BUCKCFG2_ADDR, (SYS_PMU_SPI_READ(BUCKCFG2_ADDR) | BUCK_SCP_TUNE));
-           // printf("PMU BUCKCFG2 not calibrated : Using BUCKCFG2 = %x \n", pmu_spi_read(BUCKCFG2_ADDR));
         }
 
-        // BUCKCFG3 check - If no calibration, skip, use PMU Default
-        buckcfg3 = *otp_buckcfg3_data;
-        if ((buckcfg3 == 0x00000000) || (buckcfg3 == 0xFFFFFFFF)) {
-            //printf("PMU BUCKCFG3 not calibrated : Using BUCKCFG3 = %x \n",
-            //        pmu_spi_read(BUCKCFG3_ADDR));
-
-        }
-
-        //Post calibration attempt complete and Buck switch is complete, need to put MLDO VTUNE in serial mode : mldo_hw_bp=1
-        //printf("BUCKCFG1 before mldo_hw_bp configuration  0x%x\n", pmu_spi_read(BUCKCFG1_ADDR));
-        SYS_PMU_SPI_WRITE(BUCKCFG1_ADDR, ((SYS_PMU_SPI_READ(BUCKCFG1_ADDR) | MLDO_HW_BP_EN)));
-        //printf("BUCKCFG1 after mldo_hw_bp configuration  0x%x\n", pmu_spi_read(BUCKCFG1_ADDR));
        }
     }
-    else if(((DEVID & 0x0FF00000) >> 20) == SG402_MASK_ID)
+    else if(((DEVID & 0x0FF00000) >> 20) == PIC32MZW1_A1)
     {
     //PMU_MLDO_Cfg()
     {
