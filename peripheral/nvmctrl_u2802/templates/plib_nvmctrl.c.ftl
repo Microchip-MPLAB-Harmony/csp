@@ -194,13 +194,30 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock(NVMCTRL_MEMORY_REGION region)
 }
 
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-void ${NVMCTRL_INSTANCE_NAME}_SecureRegionLock (NVMCTRL_SECURE_MEMORY_REGION region)
-{
-    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_SULCK = (${NVMCTRL_REG_NAME}_REGS->NVMCTRL_SULCK & ~(region)) | NVMCTRL_SULCK_SLKEY_KEY;
-}
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_SecureRegionLock (NVMCTRL_SECURE_MEMORY_REGION region)
+    <#lt>{
+    <#lt>    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_SULCK = (${NVMCTRL_REG_NAME}_REGS->NVMCTRL_SULCK & ~(region)) | NVMCTRL_SULCK_SLKEY_KEY;
+    <#lt>}
 
-void ${NVMCTRL_INSTANCE_NAME}_SecureRegionUnlock (NVMCTRL_SECURE_MEMORY_REGION region)
-{
-    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_SULCK |= NVMCTRL_SULCK_SLKEY_KEY | region;
-}
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_SecureRegionUnlock (NVMCTRL_SECURE_MEMORY_REGION region)
+    <#lt>{
+    <#lt>    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_SULCK |= NVMCTRL_SULCK_SLKEY_KEY | region;
+    <#lt>}
+
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_DataScrambleKeySet(uint32_t dsckey)
+    <#lt>{
+    <#lt>    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_DSCC = NVMCTRL_DSCC_DSCKEY(dsckey);
+    <#lt>}
+
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_DataScrambleEnable(bool enable)
+    <#lt>{
+    <#lt>    if (enable == true)
+    <#lt>    {
+    <#lt>        ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_SECCTRL |= (NVMCTRL_SECCTRL_KEY_KEY | NVMCTRL_SECCTRL_DSCEN_Msk);
+    <#lt>    }
+    <#lt>    else
+    <#lt>    {
+    <#lt>        ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_SECCTRL = ((${NVMCTRL_REG_NAME}_REGS->NVMCTRL_SECCTRL & ~NVMCTRL_SECCTRL_DSCEN_Msk) | NVMCTRL_SECCTRL_KEY_KEY);
+    <#lt>    }
+    <#lt>}
 </#if>
