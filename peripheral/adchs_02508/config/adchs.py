@@ -28,6 +28,7 @@ import math
 
 global adchsInstanceName
 global adchsSym_ADCTRGMODE__SHxALT
+global isDMAFeatureAvailable
 # A set of arrays for keeping track of each chanel's parameters.
 adchsCHMenu = []
 adchsCONMenu = [None] * 64
@@ -399,14 +400,19 @@ def adchsVisibilityOnEvent(symbol, event):
 
 #ADCCON1 register value
 def adchsCalcADCCON1(symbol, event):
+    global isDMAFeatureAvailable
     global adchsSym_ADCCON1__STRGSRC
     adccon1 = 0x0
+    dmabl = 0
     component = symbol.getComponent()
     fract = component.getSymbolValue("ADCCON1__FRACT") << 23
     slres = component.getSymbolValue("ADCCON1__SELRES") << 21
     strgsrc = int(adchsSym_ADCCON1__STRGSRC.getSelectedValue()) << 16
     sidl = component.getSymbolValue("ADCCON1__SIDL") << 13
-    adccon1 = fract + slres + strgsrc + sidl
+    if isDMAFeatureAvailable == True:
+        dmabl = int(component.getSymbolByID("ADCCON1__DMABL").getSelectedValue())
+
+    adccon1 = fract + slres + strgsrc + sidl + dmabl
     symbol.setValue(adccon1, 2)
 
 def adchsCalcADCCON2(symbol, event):
@@ -529,15 +535,42 @@ def adchsCalcADCTRG(symbol, event):
     symbol.setValue(adctrg, 2)
 
 def adchsCalcADCTIME(symbol, event):
+    global isDMAFeatureAvailable
     adctime = [ADC_Max_Class_1]
+    bchen = 0
     component = symbol.getComponent()
     for channelID in range(0, ADC_Max_Class_1):
         samc = (component.getSymbolValue("ADC"+ str(channelID)+"TIME__SAMC") << (0))
         adcdiv = (component.getSymbolValue("ADC"+ str(channelID)+"TIME__ADCDIV") << (16))
         selres = (component.getSymbolValue("ADC"+ str(channelID)+"TIME__SELRES") << (24))
+        if isDMAFeatureAvailable == True:
+            bchen = (component.getSymbolValue("ADC"+ str(channelID)+"TIME__BCHEN") << (23))
         adctime.append(channelID)
-        adctime[channelID] = samc +  adcdiv + selres
+        adctime[channelID] = samc +  adcdiv + selres + bchen
         adchsSym_ADCTIME[channelID].setValue(adctime[channelID], 2)
+
+def adchsCalcADCDSTAT (symbol, event):
+    adcdstat = 0
+    rafien = 0
+    rbfien = 0
+    dmagen = 0
+
+    component = symbol.getComponent()
+    for channelID in range(0, ADC_Max_Class_1):
+        if component.getSymbolValue("ADC" + str(channelID) + "TIME__BCHEN") == True:
+            dmagen = ((0x1) << (31))        # Enable global DMA bit if any channel's DMA is enabled
+            rafien |= (component.getSymbolValue("ADCDSTAT__RAFIEN" + str(channelID)) << (8 + channelID))
+            rbfien |= (component.getSymbolValue("ADCDSTAT__RBFIEN" + str(channelID)) << (24 + channelID))
+
+    if rafien != 0 or rbfien != 0:
+        component.setSymbolValue("ADC_DMA_INT_ENABLED", True)
+    else:
+        component.setSymbolValue("ADC_DMA_INT_ENABLED", False)
+
+    dmacen = (component.getSymbolValue("ADCDSTAT__DMACEN") << (15))
+
+    adcdstat = dmagen + rbfien + dmacen + rafien
+    symbol.setValue(adcdstat)
 
 def adchsCalcADCTRGSNS(symbol, event):
     adctrgsns = 0x0
@@ -651,6 +684,20 @@ def adchsEOSInterrupt(symbol, event):
     if(event["value"] == True):
         Database.setSymbolValue("core", InterruptHandler, interruptName + "_InterruptHandler", 1)
     else:
+        Database.setSymbolValue("core", InterruptHandler, interruptName + "_Handler", 1)
+
+def adchsDMAInterrupt(symbol, event):
+    InterruptVector = "ADC_DMA_INTERRUPT_ENABLE"
+    InterruptHandlerLock = "ADC_DMA_INTERRUPT_HANDLER_LOCK"
+    InterruptHandler = "ADC_DMA_INTERRUPT_HANDLER"
+
+    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+    interruptName = InterruptHandler.split("_INTERRUPT_HANDLER")[0]
+    if(event["value"] == True):
+        Database.setSymbolValue("core", InterruptHandler, interruptName + "_InterruptHandler", 1)
+    else:
+        print interruptName + "_Handler"
         Database.setSymbolValue("core", InterruptHandler, interruptName + "_Handler", 1)
 
 def adchsNVICInterrupt(symbol, event):
@@ -920,7 +967,8 @@ def instantiateComponent(adchsComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
-    global InterruptVectorUpdate    
+    global InterruptVectorUpdate
+    global isDMAFeatureAvailable
 
     MAX_AVAILABLE_SIGNALS = 64
 
@@ -929,6 +977,14 @@ def instantiateComponent(adchsComponent):
     adchsInstanceName.setDefaultValue(adchsComponent.getID().upper())
     Module = adchsInstanceName.getValue()
     Log.writeInfoMessage("Running " + Module)
+
+    isDMAFeatureAvailable = False
+    if "PIC32MK" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
+        isDMAFeatureAvailable = True
+
+    adchsSym_IsDMAAvailable = adchsComponent.createBooleanSymbol("ADC_IS_DMA_AVAILABLE", None)
+    adchsSym_IsDMAAvailable.setDefaultValue(isDMAFeatureAvailable)
+    adchsSym_IsDMAAvailable.setVisible(False)
 
     #----------------- motor control APIs ---------------------------------
     adchsConvAPI = adchsComponent.createStringSymbol("ADC_START_CONV_API", None)
@@ -1007,7 +1063,7 @@ def instantiateComponent(adchsComponent):
     # If ADCHS signal pin is present in the pinouts, indicate that there is an Analog pin for the signal.
     signal_node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADCHS\"]/instance@[name=\""+adchsInstanceName.getValue()+"\"]/signals")
     if (signal_node != None and signal_node.getChildren() != None):
-        # First find the available pins on the selected package 
+        # First find the available pins on the selected package
         packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
         availablePins = []      # array to save available pins
         pinout = ""
@@ -1087,6 +1143,23 @@ def instantiateComponent(adchsComponent):
     if node != None:    #if MIPS Interrupt unit is present
         ADC_MIPS_Interrupt = True
 
+        if isDMAFeatureAvailable == True:
+            #Calculate the proper ADC_DMA interrupt registers using IRQ#
+            irqString = "ADC_DMA"
+            Irq_index = int(getIRQnumber(irqString))
+            statRegName = _get_statReg_parms(Irq_index)
+            enblRegIndex = _get_enblReg_parms(Irq_index)
+
+            #IEC REG
+            adchsSym_DMA_IEC = adchsComponent.createStringSymbol("ADCHS_DMA_IEC_REG", None)
+            adchsSym_DMA_IEC.setDefaultValue("IEC"+str(enblRegIndex))
+            adchsSym_DMA_IEC.setVisible(False)
+
+            #IFS REG
+            adchsSym_DMA_IFS = adchsComponent.createStringSymbol("ADCHS_DMA_IFS_REG", None)
+            adchsSym_DMA_IFS.setDefaultValue("IFS"+str(enblRegIndex))
+            adchsSym_DMA_IFS.setVisible(False)
+
         #Calculate the proper ADC_EOS interrupt registers using IRQ#
         irqString = "ADC_EOS"
         Irq_index = int(getIRQnumber(irqString))
@@ -1159,6 +1232,7 @@ def instantiateComponent(adchsComponent):
     adcinterruptmode_deplist = []
     adcimcon_deplist = [[] for i in range (int(math.ceil(ADC_Max_Signals / 16.0)))]
     adcEvsys_deplist = []
+    adcDMAStat_deplist = []
 ############################## Dependency Lists End ##################################
 
 ################################################################################
@@ -1199,7 +1273,7 @@ def instantiateComponent(adchsComponent):
         adchsSym_EARLY_INTERRUPT.setDefaultValue(False)
     adchsSym_EARLY_INTERRUPT.setVisible(False)
 
-    adchsSym_ADCCON3__ADCSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "ADCSEL", adchsMenu, True)    
+    adchsSym_ADCCON3__ADCSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "ADCSEL", adchsMenu, True)
 
     adchsSym_TCLK = adchsComponent.createFloatSymbol("ADCHS_TCLK", adchsMenu)
     adchsSym_TCLK.setLabel("ADCHS Clock (Tclk) (nano sec)")
@@ -1224,6 +1298,27 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON1__FRACT = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "FRACT", adchsMenu, True)
     adchsSym_ADCCON1__SIDL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "SIDL", adchsMenu, True)
 
+    if isDMAFeatureAvailable == True:
+        adchsSym_ADCCON1__DMABL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "DMABL", adchsMenu, True)
+
+        adchsSym_ADCDSTAT__DMACEN = adchsComponent.createBooleanSymbol("ADCDSTAT__DMACEN", adchsMenu)
+        adchsSym_ADCDSTAT__DMACEN.setLabel("Enable storing of sample count in DMA buffer")
+        adchsSym_ADCDSTAT__DMACEN.setDefaultValue(False)
+        adcDMAStat_deplist.append("ADCDSTAT__DMACEN")
+
+        # Internal symbol to indicate if DMA interrupt is enabled or not (used in FTL)
+        adchsSym_DMAINTEN = adchsComponent.createBooleanSymbol("ADC_DMA_INT_ENABLED", None)
+        adchsSym_DMAINTEN.setDefaultValue(False)
+        adchsSym_DMAINTEN.setVisible(False)
+        adchsSym_DMAINTEN.setDependencies(adchsDMAInterrupt, ["ADC_DMA_INT_ENABLED"])
+
+        # Internal symbol to indicate DMA flag mask (used in FTL)
+        dma_flag_mask = (((2 ** ADC_Max_Class_1) -1) << 16) | ((2 ** ADC_Max_Class_1) -1) | (1 << 23)
+        adchsSym_DMAINTFLAG_MASK = adchsComponent.createHexSymbol("ADC_DMA_INT_FLAG_MASK", None)
+        adchsSym_DMAINTFLAG_MASK.setDefaultValue(dma_flag_mask)
+        adchsSym_DMAINTFLAG_MASK.setVisible(False)
+
+
 ################################################################################
 ########## ADCHS Module Configurations  ################################################
 ########################################################################
@@ -1234,6 +1329,9 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCTIME__ADCDIV = []
     global adchsSym_ADCTIME__SELRES
     adchsSym_ADCTIME__SELRES = []
+    adchsSym_ADCTIME__BCHEN = []
+    adchsSym_ADCDMASTAT__RAFIEN = []
+    adchsSym_ADCDMASTAT__RBFIEN = []
     adchsSym_ADCTRG__TRGSRC = [None] * MAX_AVAILABLE_SIGNALS
     adchsSym_ADCTRGSNS__LVL = []
     adchsSym_ADCCSS__CSS = [None] * MAX_AVAILABLE_SIGNALS
@@ -1356,6 +1454,50 @@ def instantiateComponent(adchsComponent):
         adchsSym_ADCCSS__CSS[channelID].setLabel("Select AN" + str(channelID) + " for Input Scan")
         adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_"+str(channelID)+"_ENABLE"])
         adccss_deplist[0].append(RegisterBaseName_ADCCSS + "__" + BitFieldBaseName_CSS + str(channelID))
+
+        if isDMAFeatureAvailable == True:
+            # ADCTIME__BCHEN (Enable DMA?)
+            RegisterBaseName_ADCTIME = "ADC" + str(channelID) + "TIME"
+            BitFieldBaseName_BCHEN = "BCHEN"
+
+            adchsSym_ADCTIME__BCHEN.append(channelID)
+            adchsSym_ADCTIME__BCHEN[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
+                adchsComponent, Module, RegisterBaseName_ADCTIME, BitFieldBaseName_BCHEN,
+                adchsSym_CH_ENABLE[channelID], False)
+            adchsSym_ADCTIME__BCHEN[channelID].setLabel("Enable DMA?")
+            adchsSym_ADCTIME__BCHEN[channelID].setDefaultValue(False)
+            adchsSym_ADCTIME__BCHEN[channelID].setDependencies(adchsVisibilityOnEvent,
+                ["ADCHS_"+str(channelID)+"_ENABLE"])
+            adctime_deplist[channelID].append(RegisterBaseName_ADCTIME + "__" + BitFieldBaseName_BCHEN)
+            adcDMAStat_deplist.append(RegisterBaseName_ADCTIME + "__" + BitFieldBaseName_BCHEN)
+
+            # ADCDMASTAT__RBFIEN (Enable BufferA Full Interrupt?)
+            RegisterBaseName_ADCDSTAT = "ADCDSTAT"
+            BitFieldBaseName_RAFIEN = "RAFIEN" + str(channelID)
+
+            adchsSym_ADCDMASTAT__RAFIEN.append(channelID)
+            adchsSym_ADCDMASTAT__RAFIEN[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
+                adchsComponent, Module, RegisterBaseName_ADCDSTAT, BitFieldBaseName_RAFIEN,
+                adchsSym_ADCTIME__BCHEN[channelID], False)
+            adchsSym_ADCDMASTAT__RAFIEN[channelID].setLabel("Enable Buffer A Full Interrupt?")
+            adchsSym_ADCDMASTAT__RAFIEN[channelID].setDefaultValue(False)
+            adchsSym_ADCDMASTAT__RAFIEN[channelID].setDependencies(adchsVisibilityOnEvent,
+                ["ADCHS_"+str(channelID)+"_ENABLE"])
+            adcDMAStat_deplist.append(RegisterBaseName_ADCDSTAT + "__" + BitFieldBaseName_RAFIEN)
+
+            # ADCDMASTAT__RBFIEN (Enable BufferB Full Interrupt?)
+            RegisterBaseName_ADCDSTAT = "ADCDSTAT"
+            BitFieldBaseName_RBFIEN = "RBFIEN" + str(channelID)
+
+            adchsSym_ADCDMASTAT__RBFIEN.append(channelID)
+            adchsSym_ADCDMASTAT__RBFIEN[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
+                adchsComponent, Module, RegisterBaseName_ADCDSTAT, BitFieldBaseName_RBFIEN,
+                adchsSym_ADCTIME__BCHEN[channelID], False)
+            adchsSym_ADCDMASTAT__RBFIEN[channelID].setLabel("Enable Buffer B Full Interrupt?")
+            adchsSym_ADCDMASTAT__RBFIEN[channelID].setDefaultValue(False)
+            adchsSym_ADCDMASTAT__RBFIEN[channelID].setDependencies(adchsVisibilityOnEvent,
+                ["ADCHS_"+str(channelID)+"_ENABLE"])
+            adcDMAStat_deplist.append(RegisterBaseName_ADCDSTAT + "__" + BitFieldBaseName_RBFIEN)
 
     adchsSharedADCMenu = adchsComponent.createMenuSymbol("ADCHS_SHARED_ADC_CONF", adchsCHConfMenu)
     adchsSharedADCMenu.setLabel("Shared ADC Module")
@@ -1558,7 +1700,7 @@ def instantiateComponent(adchsComponent):
 ###################################################################################################
 
     adccon1_deplist = ["ADCCON1__IRQVS", "ADCCON1__SIDL", "ADCCON1__CVDEN", "ADCCON1__FRACT",
-    "ADCCON1__SELRES", "ADCCON1__STRGLVL", "ADCCON1__FSSCLKEN", "ADCCON1__FSPBCLKEN", "ADCCON1__STRGSRC"]
+    "ADCCON1__SELRES", "ADCCON1__STRGLVL", "ADCCON1__FSSCLKEN", "ADCCON1__FSPBCLKEN", "ADCCON1__STRGSRC", "ADCCON1__DMABL"]
     adchsSym_ADCCON1 = adchsComponent.createHexSymbol("ADCHS_ADCCON1", adchsMenu)
     adchsSym_ADCCON1.setLabel("ADCCON1 register value")
     adchsSym_ADCCON1.setVisible(False)
@@ -1662,6 +1804,12 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCSS2.setVisible(False)
     adchsSym_ADCCSS2.setDependencies(adchsCalcADCCSS2, adccss_deplist[1])
 
+    if isDMAFeatureAvailable == True:
+        adchsSym_ADCDSTAT = adchsComponent.createHexSymbol("ADCHS_ADCDSTAT", None)
+        adchsSym_ADCDSTAT.setLabel("ADCDSTAT Register")
+        adchsSym_ADCDSTAT.setVisible(False)
+        adchsSym_ADCDSTAT.setDependencies(adchsCalcADCDSTAT, adcDMAStat_deplist)
+
 ###################################################################################################
 ########################### Events   #################################
 ###################################################################################################
@@ -1694,11 +1842,11 @@ def instantiateComponent(adchsComponent):
 
         adchsSym_InterruptMode = adchsComponent.createBooleanSymbol("ADCHS_INTERRUPT", None)
         adchsSym_InterruptMode.setVisible(False)
-        adchsSym_InterruptMode.setDependencies(adchsInterruptMode, adcinterruptmode_deplist)   
+        adchsSym_InterruptMode.setDependencies(adchsInterruptMode, adcinterruptmode_deplist)
 
         adchsSym_EOSInterrupt = adchsComponent.createStringSymbol("ADCHS_EOS_INTERRUPT", None)
         adchsSym_EOSInterrupt.setVisible(False)
-        adchsSym_EOSInterrupt.setDependencies(adchsEOSInterrupt, ["ADCCON2__EOSIEN"])                 
+        adchsSym_EOSInterrupt.setDependencies(adchsEOSInterrupt, ["ADCCON2__EOSIEN"])
 
     else:
         vectorNode=ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
@@ -1710,7 +1858,7 @@ def instantiateComponent(adchsComponent):
                 InterruptHandler.append(name + "_INTERRUPT_HANDLER")
                 InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
                 InterruptVectorUpdate.append("core." + name + "_INTERRUPT_ENABLE_UPDATE")
-        
+
         adcinterruptmode_deplist.append("ADCCON2__EOSIEN")
 
         adchsSym_UpdateInterrupt = adchsComponent.createBooleanSymbol("ADCHS_INTERRUPT", None)
