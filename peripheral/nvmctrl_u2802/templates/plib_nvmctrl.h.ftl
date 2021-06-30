@@ -131,10 +131,15 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionLock (NVMCTRL_MEMORY_REGION region);
 void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (NVMCTRL_MEMORY_REGION region);
 
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-void ${NVMCTRL_INSTANCE_NAME}_SecureRegionLock (NVMCTRL_SECURE_MEMORY_REGION region);
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_SecureRegionLock (NVMCTRL_SECURE_MEMORY_REGION region);
 
-void ${NVMCTRL_INSTANCE_NAME}_SecureRegionUnlock (NVMCTRL_SECURE_MEMORY_REGION region);
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_SecureRegionUnlock (NVMCTRL_SECURE_MEMORY_REGION region);
+
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_DataScrambleKeySet(uint32_t dsckey);
+
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_DataScrambleEnable(bool enable);
 </#if>
+
 <#if INTERRUPT_ENABLE == true>
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister ( NVMCTRL_CALLBACK callback, uintptr_t context );
 </#if>
