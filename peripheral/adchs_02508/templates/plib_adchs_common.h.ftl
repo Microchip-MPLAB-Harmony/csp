@@ -96,12 +96,30 @@ typedef enum
 </#list>
 }ADCHS_CHANNEL_NUM;
 
+<#if ADC_IS_DMA_AVAILABLE == true>
+typedef enum
+{
+<#if ADCHS_NUM_CLASS1_SIGNALS != 0>
+<#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
+    ADCHS_DMA_STATUS_RAF${i} = (1U << ${i}U),
+</#list>
+<#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
+    ADCHS_DMA_STATUS_RBF${i} = (1U << (16U + ${i}U)),
+</#list>
+</#if>
+    ADCHS_DMA_STATUS_WROVERR = (1U << 23U)
+}ADCHS_DMA_STATUS;
+</#if>
+
 // *****************************************************************************
 
 typedef void (*ADCHS_CALLBACK)(ADCHS_CHANNEL_NUM channel, uintptr_t context);
 
 typedef void (*ADCHS_EOS_CALLBACK)(uintptr_t context);
 
+<#if ADC_IS_DMA_AVAILABLE == true>
+typedef void (*ADCHS_DMA_CALLBACK)(ADCHS_DMA_STATUS dmaStatus, uintptr_t context);
+</#if>
 // *****************************************************************************
 
 typedef struct
@@ -115,6 +133,14 @@ typedef struct
     ADCHS_EOS_CALLBACK callback_fn;
     uintptr_t context;
 }ADCHS_EOS_CALLBACK_OBJECT;
+
+<#if ADC_IS_DMA_AVAILABLE == true>
+typedef struct
+{
+    ADCHS_DMA_CALLBACK callback_fn;
+    uintptr_t context;
+}ADCHS_DMA_CALLBACK_OBJECT;
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

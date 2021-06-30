@@ -59,6 +59,12 @@
     <#lt>/* Object to hold callback function and context for end of scan interrupt*/
     <#lt>ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
 </#if>
+<#if ADC_IS_DMA_AVAILABLE == true>
+<#if ADC_DMA_INT_ENABLED?? && ADC_DMA_INT_ENABLED == true>
+    <#lt>/* Object to hold callback function and context for ADC DMA interrupt*/
+    <#lt>ADCHS_DMA_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DMACallbackObj;
+</#if>
+</#if>
 
 void ${ADCHS_INSTANCE_NAME}_Initialize()
 {
@@ -110,6 +116,11 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     ADCCSS1 = 0x${ADCHS_ADCCSS1};
     <#if ADCHS_NUM_SIGNALS gt 31>ADCCSS2 = 0x${ADCHS_ADCCSS2}; </#if>
 
+<#if ADC_IS_DMA_AVAILABLE == true>
+<#if ADCHS_ADCDSTAT?? && ADCHS_ADCDSTAT != "0">
+    ADCDSTAT = 0x${ADCHS_ADCDSTAT};
+</#if>
+</#if>
 <#if ADCHS_INTERRUPT == true>
     /* Result interrupt enable */
     ADCGIRQEN1 = 0x${ADCHS_ADCGIRQEN1};
@@ -134,6 +145,13 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     ${ADCHS_EOS_IEC_REG}SET = _${ADCHS_EOS_IEC_REG}_AD1EOSIE_MASK;
 </#if>
 </#if>
+
+<#if ADC_IS_DMA_AVAILABLE == true>
+<#if ADC_DMA_INT_ENABLED?? && ADC_DMA_INT_ENABLED == true>
+    ${ADCHS_DMA_IEC_REG}SET = _${ADCHS_DMA_IEC_REG}_AD1FCBTIE_MASK;
+</#if>
+</#if>
+
     /* Turn ON ADC */
     ADCCON1bits.ON = 1;
     while(!ADCCON2bits.BGVRRDY); // Wait until the reference voltage is ready
@@ -288,6 +306,47 @@ void ${ADCHS_INSTANCE_NAME}_CallbackRegister(ADCHS_CHANNEL_NUM channel, ADCHS_CA
     ${ADCHS_INSTANCE_NAME}_CallbackObj[channel].callback_fn = callback;
     ${ADCHS_INSTANCE_NAME}_CallbackObj[channel].context = context;
 }
+</#if>
+
+<#if ADC_IS_DMA_AVAILABLE == true>
+void ${ADCHS_INSTANCE_NAME}_DMASampleCountBaseAddrSet(uint32_t baseAddr)
+{
+    ADCCNTB = baseAddr;
+}
+
+void ${ADCHS_INSTANCE_NAME}_DMAResultBaseAddrSet(uint32_t baseAddr)
+{
+    ADCDMAB = baseAddr;
+}
+
+<#if ADC_DMA_INT_ENABLED?? && ADC_DMA_INT_ENABLED == true>
+
+void ${ADCHS_INSTANCE_NAME}_DMACallbackRegister(ADCHS_DMA_CALLBACK callback, uintptr_t context)
+{
+    ${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn = callback;
+    ${ADCHS_INSTANCE_NAME}_DMACallbackObj.context = context;
+}
+
+void ADC_DMA_InterruptHandler(void)
+{
+    ADCHS_DMA_STATUS dmaStatus = ADCDSTAT & 0x${ADC_DMA_INT_FLAG_MASK?upper_case};
+
+    ${ADCHS_DMA_IFS_REG}CLR = _${ADCHS_DMA_IFS_REG}_AD1FCBTIF_MASK;
+
+    if (${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn != NULL)
+    {
+      ${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn(dmaStatus, ${ADCHS_INSTANCE_NAME}_DMACallbackObj.context);
+    }
+}
+
+<#else>
+
+ADCHS_DMA_STATUS ${ADCHS_INSTANCE_NAME}_DMAStatusGet(void)
+{
+    return ADCDSTAT & 0x${ADC_DMA_INT_FLAG_MASK?upper_case};
+}
+
+</#if>
 </#if>
 
 <#if ADCCON2__EOSIEN == true>
