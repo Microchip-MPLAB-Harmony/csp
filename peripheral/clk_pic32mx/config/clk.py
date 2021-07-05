@@ -1200,7 +1200,7 @@ if __name__ == "__main__":
                     elif peripheralName.startswith("SPI"):
                         peripheral_clock_freq.setDependencies(spiClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK_FREQ",
                                                                                         "CONFIG_SYS_CLK_REFCLK_FREQ"])
-                    elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1290" and peripheralName.startswith("CAN"):
+                    elif (Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1290" or Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MX1156") and peripheralName.startswith("CAN"):
                         peripheral_clock_freq.setDependencies(canClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
                     elif peripheralName.startswith("ETH"):
                         peripheral_clock_freq.setDependencies(sysPeripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
