@@ -56,6 +56,32 @@
 // *****************************************************************************
 // *****************************************************************************
 
+<#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
+<#assign EVSYS_CHANNEL_EN = 0>
+<#list 0..TOTAL_CHANNEL as i>
+    <#assign CHANNEL_ENABLE    = "EVSYS_CHANNEL_"  + i>
+    <#if .vars[CHANNEL_ENABLE]?has_content>
+    <#if (.vars[CHANNEL_ENABLE] == true)>
+    <#assign EVSYS_CHANNEL_EN = 1>
+    <#break>
+    </#if>
+    </#if>
+</#list>
+<#if EVSYS_CHANNEL_EN == 1>
+typedef enum
+{
+<#list 0..TOTAL_CHANNEL as i>
+    <#assign CHANNEL_ENABLE    = "EVSYS_CHANNEL_"  + i>
+    <#if .vars[CHANNEL_ENABLE]?has_content>
+    <#if (.vars[CHANNEL_ENABLE] == true)>
+    /* EVSYS Channel ${i} */
+    EVSYS_CHANNEL_${i} = ${i},
+    </#if>
+    </#if>
+</#list>
+} EVSYS_CHANNEL;
+</#if>
+
 <#if EVSYS_INTERRUPT_MODE == true>
     <#lt>typedef void (*EVSYS_CALLBACK)(uint32_t int_cause, uintptr_t context);
 </#if>
@@ -66,20 +92,6 @@
     <#lt>   EVSYS_INT_OVERRUN = EVSYS_INTENSET_OVR0_Msk,
     <#lt>   EVSYS_INT_EVENT_DETECT = EVSYS_INTENSET_EVD0_Msk,
     <#lt>} EVSYS_INT_MASK;
-<#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
-
-    <#lt>typedef enum
-    <#lt>{
-        <#list 0..TOTAL_CHANNEL as i>
-            <#assign CHANNEL_ENABLE    = "EVSYS_CHANNEL_"  + i>
-            <#if .vars[CHANNEL_ENABLE]?has_content>
-            <#if (.vars[CHANNEL_ENABLE] == true)>
-        <#lt>    /* EVSYS Channel ${i} */
-        <#lt>    EVSYS_CHANNEL_${i} = ${i},
-            </#if>
-            </#if>
-        </#list>
-    <#lt>} EVSYS_CHANNEL;
 
     <#lt>typedef struct
     <#lt>{
@@ -89,6 +101,16 @@
 </#if>
 /***************************** EVSYS API *******************************/
 void ${EVSYS_INSTANCE_NAME}_Initialize( void );
+<#list 0..EVSYS_CHANNEL_NUMBER as i>
+    <#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+    <#if .vars[CHANNEL_ENABLE]?has_content && .vars[CHANNEL_ENABLE] != false>
+    <#lt>void ${EVSYS_INSTANCE_NAME}_GeneratorEnable(EVSYS_CHANNEL channel, uint8_t generator);
+    <#lt>void ${EVSYS_INSTANCE_NAME}_GeneratorDisable(EVSYS_CHANNEL channel);
+    <#lt>void ${EVSYS_INSTANCE_NAME}_UserEnable(EVSYS_CHANNEL channel, uint8_t user);
+    <#lt>void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user);
+    <#break>
+    </#if>
+</#list>
 <#if EVSYS_INTERRUPT_MODE == true>
     <#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister( EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context );
     <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable( EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask );
