@@ -98,6 +98,33 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 </#if>
 }
 
+<#list 0..EVSYS_CHANNEL_NUMBER as i>
+    <#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+    <#if .vars[CHANNEL_ENABLE]?has_content && .vars[CHANNEL_ENABLE] != false>
+    <#lt>void ${EVSYS_INSTANCE_NAME}_GeneratorEnable(EVSYS_CHANNEL channel, uint8_t generator)
+    <#lt>{
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL = (${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL & (~EVSYS_CHANNEL_EVGEN_Msk | ~EVSYS_CHANNEL_CHANNEL_Msk))
+                                                          | EVSYS_CHANNEL_EVGEN(generator) | EVSYS_CHANNEL_CHANNEL(channel);
+    <#lt>}
+
+    <#lt>void ${EVSYS_INSTANCE_NAME}_GeneratorDisable(EVSYS_CHANNEL channel)
+    <#lt>{
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL = (${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL & ~EVSYS_CHANNEL_EVGEN_Msk) | EVSYS_CHANNEL_CHANNEL(channel);
+    <#lt>}
+
+    <#lt>void ${EVSYS_INSTANCE_NAME}_UserEnable(EVSYS_CHANNEL channel, uint8_t user)
+    <#lt>{
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER = EVSYS_USER_CHANNEL((channel + 1)) | EVSYS_USER_USER(user);
+    <#lt>}
+
+    <#lt>void ${EVSYS_INSTANCE_NAME}_UserDisable(void)
+    <#lt>{
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER = (${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER & ~EVSYS_USER_USER_Msk);
+    <#lt>}
+    <#break>
+    </#if>
+</#list>
+
 <#if EVSYS_INTERRUPT_MODE == true>
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
