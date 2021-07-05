@@ -266,6 +266,10 @@
         </#if>
     </#if>
 </#if>
+<#assign SUPC_BOD_SRDY = "B33SRDY">
+<#if SUPC_BOD_NAME == "BODVDD">
+<#assign SUPC_BOD_SRDY = "BVDDSRDY">
+</#if>
 
 void ${SUPC_INSTANCE_NAME}_Initialize( void )
 {
@@ -278,6 +282,19 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
     if (bodEnable != 0U)
     {
         ${SUPC_INSTANCE_NAME}_REGS->${SUPC_BOD_REGNAME} |= SUPC_${SUPC_BOD_NAME}_ENABLE_Msk;
+
+        /* Wait for ${SUPC_BOD_NAME} Synchronization Ready */
+        while((${SUPC_INSTANCE_NAME}_REGS->SUPC_STATUS & SUPC_STATUS_${SUPC_BOD_SRDY}_Msk) == 0U)
+        {
+        }
+
+        /* If ${SUPC_BOD_NAME} in continuous mode then wait for ${SUPC_BOD_NAME} Ready */
+        if((${SUPC_INSTANCE_NAME}_REGS->${SUPC_BOD_REGNAME} & SUPC_${SUPC_BOD_NAME}_ACTCFG_Msk) == 0U)
+        {
+            while((${SUPC_INSTANCE_NAME}_REGS->SUPC_STATUS & SUPC_STATUS_${SUPC_BOD_NAME}RDY_Msk) == 0U)
+            {
+            }
+        }
     }
 
 </#if>
