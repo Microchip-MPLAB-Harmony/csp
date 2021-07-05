@@ -509,7 +509,7 @@ dmaInstanceName.setVisible(False)
 
 dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
 dmaManagerSelect.setVisible(False)
-dmaManagerSelect.setDefaultValue("dma_u2503:SAME5XDMAModel")
+dmaManagerSelect.setDefaultValue("dma_03639:PIC32CZDMAModel")
 
 dmaMenu = coreComponent.createMenuSymbol("DMA_MENU", None)
 dmaMenu.setLabel("DMA (DMAC)")

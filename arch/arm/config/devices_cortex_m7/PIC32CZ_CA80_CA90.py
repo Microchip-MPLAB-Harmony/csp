@@ -248,7 +248,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
 # load dma manager information
 
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dma_03639/config/dma.py")
-#coreComponent.addPlugin("../peripheral/dma_03639/plugin/dmamanager.jar")
+coreComponent.addPlugin("../peripheral/dma_03639/plugin/dmamanager.jar")
 
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")
