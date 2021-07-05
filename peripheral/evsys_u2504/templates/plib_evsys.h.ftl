@@ -57,6 +57,35 @@
 // *****************************************************************************
 
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+    <#assign EVSYS_CHANNEL_EN = 0>
+    <#list 0..EVSYS_CHANNEL_NUMBER as i>
+    <#assign EVSYS_CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+    <#if .vars[EVSYS_CHANNEL_ENABLE]?has_content>
+    <#if .vars[EVSYS_CHANNEL_ENABLE] == true>
+    <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+    <#if .vars[EVSYS_NONSEC] == "SECURE">
+    <#assign EVSYS_CHANNEL_EN = 1>
+    <#break>
+    </#if>
+    </#if>
+    </#if>
+    </#list>
+
+    <#if EVSYS_CHANNEL_EN == 1>
+    <#lt>typedef enum
+    <#lt>{<#list 0..EVSYS_CHANNEL_NUMBER as i>
+    <#assign EVSYS_CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+    <#if .vars[EVSYS_CHANNEL_ENABLE]?has_content>
+    <#if .vars[EVSYS_CHANNEL_ENABLE] == true>
+    <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+    <#if .vars[EVSYS_NONSEC] == "SECURE">
+    <#lt>   EVSYS_CHANNEL_${i} = ${i},
+    </#if>
+    </#if>
+    </#if></#list>
+    <#lt>} EVSYS_CHANNEL;
+    </#if>
+
 <#if INTERRUPT_ACTIVE>
 <#list 0..NUM_SYNC_CHANNELS as i>
     <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
@@ -68,19 +97,6 @@
     <#lt>   EVSYS_INT_OVERRUN = EVSYS_CHINTENSET_OVR_Msk,
 
     <#lt>} EVSYS_INT_MASK;
-
-    <#lt>typedef enum
-    <#lt>{<#list 0..NUM_SYNC_CHANNELS as i>
-    <#assign EVSYS_CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
-    <#if .vars[EVSYS_CHANNEL_ENABLE]?has_content>
-    <#if .vars[EVSYS_CHANNEL_ENABLE] == true>
-    <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
-    <#if .vars[EVSYS_NONSEC] == "SECURE">
-    <#lt>   EVSYS_CHANNEL_${i} = ${i},
-    </#if>
-    </#if>
-    </#if></#list>
-    <#lt>} EVSYS_CHANNEL;
 
     <#lt>typedef void (*EVSYS_CALLBACK)(uint32_t int_cause, uintptr_t context);
 
@@ -95,16 +111,20 @@
 </#list>
 </#if>
 <#else>
-<#if INTERRUPT_ACTIVE>
-    <#lt>typedef enum
-    <#lt>{
-    <#lt>   EVSYS_INT_EVD = EVSYS_CHINTENSET_EVD_Msk,
-    <#lt>   EVSYS_INT_OVERRUN = EVSYS_CHINTENSET_OVR_Msk,
+    <#assign EVSYS_CHANNEL_EN = 0>
+    <#list 0..EVSYS_CHANNEL_NUMBER as i>
+    <#assign EVSYS_CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+    <#if .vars[EVSYS_CHANNEL_ENABLE]?has_content>
+    <#if .vars[EVSYS_CHANNEL_ENABLE] == true>
+    <#assign EVSYS_CHANNEL_EN = 1>
+    <#break>
+    </#if>
+    </#if>
+    </#list>
 
-    <#lt>} EVSYS_INT_MASK;
-
+    <#if EVSYS_CHANNEL_EN == 1>
     <#lt>typedef enum
-    <#lt>{<#list 0..NUM_SYNC_CHANNELS as i>
+    <#lt>{<#list 0..EVSYS_CHANNEL_NUMBER as i>
     <#assign EVSYS_CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
     <#if .vars[EVSYS_CHANNEL_ENABLE]?has_content>
     <#if .vars[EVSYS_CHANNEL_ENABLE] == true>
@@ -113,6 +133,15 @@
     </#if></#list>
 
     <#lt>} EVSYS_CHANNEL;
+    </#if>
+
+<#if INTERRUPT_ACTIVE>
+    <#lt>typedef enum
+    <#lt>{
+    <#lt>   EVSYS_INT_EVD = EVSYS_CHINTENSET_EVD_Msk,
+    <#lt>   EVSYS_INT_OVERRUN = EVSYS_CHINTENSET_OVR_Msk,
+
+    <#lt>} EVSYS_INT_MASK;
 
     <#lt>typedef void (*EVSYS_CALLBACK)(uint32_t int_cause, uintptr_t context);
 
@@ -125,6 +154,33 @@
 </#if>
 /***************************** EVSYS API *******************************/
 void ${EVSYS_INSTANCE_NAME}_Initialize( void );
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+    <#list 0..EVSYS_CHANNEL_NUMBER as i>
+    <#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+    <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+    <#if .vars[CHANNEL_ENABLE]?has_content && .vars[CHANNEL_ENABLE] != false>
+    <#if .vars[EVSYS_NONSEC]?has_content && .vars[EVSYS_NONSEC] == "SECURE">
+    <#lt>void ${EVSYS_INSTANCE_NAME}_GeneratorEnable(EVSYS_CHANNEL channel, uint8_t generator);
+    <#lt>void ${EVSYS_INSTANCE_NAME}_GeneratorDisable(EVSYS_CHANNEL channel);
+    <#lt>void ${EVSYS_INSTANCE_NAME}_UserEnable(EVSYS_CHANNEL channel, uint8_t user);
+    <#lt>void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user);
+    <#break>
+    </#if>
+    </#if>
+    </#list>
+<#else>
+    <#list 0..EVSYS_CHANNEL_NUMBER as i>
+    <#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+    <#if .vars[CHANNEL_ENABLE]?has_content && .vars[CHANNEL_ENABLE] != false>
+    <#lt>void ${EVSYS_INSTANCE_NAME}_GeneratorEnable(EVSYS_CHANNEL channel, uint8_t generator);
+    <#lt>void ${EVSYS_INSTANCE_NAME}_GeneratorDisable(EVSYS_CHANNEL channel);
+    <#lt>void ${EVSYS_INSTANCE_NAME}_UserEnable(EVSYS_CHANNEL channel, uint8_t user);
+    <#lt>void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user);
+    <#break>
+    </#if>
+    </#list>
+</#if>
+
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
 <#if INTERRUPT_ACTIVE>
 <#list 0..NUM_SYNC_CHANNELS as i>
