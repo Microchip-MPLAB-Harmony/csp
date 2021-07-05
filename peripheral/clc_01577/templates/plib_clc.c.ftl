@@ -98,7 +98,7 @@ static CLC_CALLBACK_OBJECT ${CLC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 <#if CLC_PORT_ENABLE>
-  <#assign CLCxCON += "_" + CLC_INSTANCE_NAME +  "CON_LCOUT_MASK,">
+  <#assign CLCxCON += "_" + CLC_INSTANCE_NAME +  "CON_LCOE_MASK,">
 </#if>
 
 <#if CLC_LOGIC_CELL_OUTPUT_POLARITY>
