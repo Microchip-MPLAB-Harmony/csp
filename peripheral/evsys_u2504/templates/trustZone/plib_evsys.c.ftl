@@ -45,6 +45,34 @@
 
 <#assign EVSYS_REG_NAME = EVSYS_INSTANCE_NAME>
 
+<#list 0..EVSYS_CHANNEL_NUMBER as i>
+<#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+<#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+<#if .vars[CHANNEL_ENABLE]?has_content && .vars[CHANNEL_ENABLE] != false>
+<#if .vars[EVSYS_NONSEC]?has_content && .vars[EVSYS_NONSEC] == "NON-SECURE">
+void ${EVSYS_INSTANCE_NAME}_GeneratorEnable(EVSYS_CHANNEL channel, uint8_t generator)
+{
+    ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHANNEL = (${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHANNEL & ~EVSYS_CHANNEL_EVGEN_Msk) | EVSYS_CHANNEL_EVGEN(generator);
+}
+
+void ${EVSYS_INSTANCE_NAME}_GeneratorDisable(EVSYS_CHANNEL channel)
+{
+    ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHANNEL = (${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHANNEL & ~EVSYS_CHANNEL_EVGEN_Msk);
+}
+
+void ${EVSYS_INSTANCE_NAME}_UserEnable(EVSYS_CHANNEL channel, uint8_t user)
+{
+    ${EVSYS_REG_NAME}_REGS->EVSYS_USER[user] = EVSYS_USER_CHANNEL((channel + 1));
+}
+
+void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user)
+{
+    ${EVSYS_REG_NAME}_REGS->EVSYS_USER[user] = 0x0;
+}
+<#break>
+</#if>
+</#if>
+</#list>
 
 <#if INTERRUPT_ACTIVE>
 <#assign CONFIGURED_SYNC_CHANNEL = 0>

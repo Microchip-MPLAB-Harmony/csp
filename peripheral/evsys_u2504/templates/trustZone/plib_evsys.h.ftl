@@ -55,7 +55,35 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
-
+<#assign EVSYS_CHANNEL_EN = 0>
+<#list 0..EVSYS_CHANNEL_NUMBER as i>
+    <#assign EVSYS_CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+    <#if .vars[EVSYS_CHANNEL_ENABLE]?has_content>
+    <#if .vars[EVSYS_CHANNEL_ENABLE] == true>
+    <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+    <#if .vars[EVSYS_NONSEC] == "NON-SECURE">
+    <#assign EVSYS_CHANNEL_EN = 1>
+    <#break>
+    </#if>
+    </#if>
+    </#if>
+</#list>
+<#if EVSYS_CHANNEL_EN == 1>
+typedef enum
+{
+<#list 0..EVSYS_CHANNEL_NUMBER as i>
+    <#assign EVSYS_CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+    <#if .vars[EVSYS_CHANNEL_ENABLE]?has_content>
+    <#if .vars[EVSYS_CHANNEL_ENABLE] == true>
+    <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+    <#if .vars[EVSYS_NONSEC] == "NON-SECURE">
+    <#lt>   EVSYS_CHANNEL_${i} = ${i},
+    </#if>
+    </#if>
+    </#if>
+</#list>
+} EVSYS_CHANNEL;
+</#if>
 
 <#if INTERRUPT_ACTIVE>
 <#list 0..NUM_SYNC_CHANNELS as i>
@@ -68,21 +96,6 @@
     <#lt>   EVSYS_INT_OVERRUN = EVSYS_CHINTENSET_OVR_Msk,
 
     <#lt>} EVSYS_INT_MASK;
-
-    <#lt>typedef enum
-    <#lt>{<#list 0..NUM_SYNC_CHANNELS as i>
-        <#assign EVSYS_CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
-        <#if .vars[EVSYS_CHANNEL_ENABLE]?has_content>
-        <#if .vars[EVSYS_CHANNEL_ENABLE] == true>
-        <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
-        <#if .vars[EVSYS_NONSEC] == "NON-SECURE">
-        <#lt>   EVSYS_CHANNEL_${i} = ${i},
-        </#if>
-        </#if>
-        </#if>
-        </#list>
-
-    <#lt>} EVSYS_CHANNEL;
 
     <#lt>typedef void (*EVSYS_CALLBACK)(uint32_t int_cause, uintptr_t context);
 
@@ -98,6 +111,20 @@
 </#if>
 
 /***************************** EVSYS API *******************************/
+<#list 0..EVSYS_CHANNEL_NUMBER as i>
+<#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+<#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+<#if .vars[CHANNEL_ENABLE]?has_content && .vars[CHANNEL_ENABLE] != false>
+<#if .vars[EVSYS_NONSEC]?has_content && .vars[EVSYS_NONSEC] == "NON-SECURE">
+void ${EVSYS_INSTANCE_NAME}_GeneratorEnable(EVSYS_CHANNEL channel, uint8_t generator);
+void ${EVSYS_INSTANCE_NAME}_GeneratorDisable(EVSYS_CHANNEL channel);
+void ${EVSYS_INSTANCE_NAME}_UserEnable(EVSYS_CHANNEL channel, uint8_t user);
+void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user);
+<#break>
+</#if>
+</#if>
+</#list>
+
 <#if INTERRUPT_ACTIVE>
 <#list 0..NUM_SYNC_CHANNELS as i>
     <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >

@@ -192,7 +192,7 @@ def evsysUserNonSecVisible(symbol, event):
 
 def fileGenLogic(symbol, event):
     global EVSYSfilesArray
-    if int(Database.getSymbolValue(event["namespace"], "EVSYS_NONSEC")) > 0 and Database.getSymbolValue(event["namespace"], "INTERRUPT_ACTIVE"):
+    if int(Database.getSymbolValue(event["namespace"], "EVSYS_NONSEC")) > 0:
         EVSYSfilesArray[0].setEnabled(True)
         EVSYSfilesArray[1].setEnabled(True)
         EVSYSfilesArray[2].setEnabled(True)
@@ -583,7 +583,7 @@ def instantiateComponent(evsysComponent):
         nonSecevsysSystemDefFile.setSourcePath("../peripheral/evsys_u2504/templates/system/definitions.h.ftl")
         nonSecevsysSystemDefFile.setMarkup(True)
         nonSecevsysSystemDefFile.setEnabled(False)
-        nonSecevsysSystemDefFile.setDependencies(fileGenLogic, ["EVSYS_NONSEC", "INTERRUPT_ACTIVE"])
+        nonSecevsysSystemDefFile.setDependencies(fileGenLogic, ["EVSYS_NONSEC"])
 
         EVSYSfilesArray.append(nonSecevsysSym_HeaderFile)
         EVSYSfilesArray.append(nonSecevsysSym_SourceFile)
