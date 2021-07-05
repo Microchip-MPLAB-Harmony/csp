@@ -57,6 +57,9 @@ static DMAC_CRC_SETUP gCRCSetup;
 
 #define ConvertToPhysicalAddress(a) ((uint32_t)KVA_TO_PA(a))
 #define ConvertToVirtualAddress(a)  PA_TO_KVA1(a)
+<#if CoreSeries == 'PIC32MZW'>
+#define ConvertPA_FROM_CpuFlash_TO_DataFlash(pa) ((pa) | 0x00800000U)
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -123,6 +126,14 @@ static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses( DMAC_CHANNEL channel, cons
         sourceAddress = ConvertToPhysicalAddress(sourceAddress);
     }
 
+    <#if CoreSeries == 'PIC32MZW'>
+    /* For PIC32MZW* device flash access, use peripheral flash address range: 0x1080_0000 to 0x108F_FFFF */
+    if (((sourceAddress & 0x10000000U) != 0) && (sourceAddress < 0x10100000U))
+    {
+        sourceAddress = ConvertPA_FROM_CpuFlash_TO_DataFlash(sourceAddress);
+    }
+    </#if>
+
     /* Set the source address, DCHxSSA */
     regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_SSA_OFST});
     *(volatile uint32_t *)(regs) = sourceAddress;
@@ -160,6 +171,14 @@ static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses( DMAC_CHANNEL channel, cons
         /* For KSEG0 and KSEG1, The translation is done by KVA_TO_PA */
         destAddress = ConvertToPhysicalAddress(destAddress);
     }
+
+    <#if CoreSeries == 'PIC32MZW'>
+    /* For PIC32MZW* device flash access, use peripheral flash address range: 0x1080_0000 to 0x108F_FFFF */
+    if (((destAddress & 0x10000000U) != 0) && (destAddress < 0x10100000U))
+    {
+        destAddress = ConvertPA_FROM_CpuFlash_TO_DataFlash(destAddress);
+    }
+    </#if>    
 
     /* Set destination address, DCHxDSA */
     regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_DSA_OFST});
