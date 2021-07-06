@@ -431,6 +431,23 @@ def tmr1ClockFreqCalc(symbol, event):
         
     symbol.setValue(freq)
 
+def ccpClockFreqCalc(symbol, event):
+    freq = 0
+    periName = symbol.getID().split("_")[0]
+    if Database.getSymbolValue("core", periName + "_CLOCK_ENABLE"):
+        ClkSrc = Database.getSymbolValue(periName.lower(), "CCP_CCPCON1_CLKSEL")
+        if ClkSrc == None:
+            freq = int(Database.getSymbolValue("core", "SYS_CLK_FREQ"))
+        else:
+            if ClkSrc == 0: #Sys clk
+                freq = int(Database.getSymbolValue("core", "SYS_CLK_FREQ"))
+            elif ClkSrc == 1: #REFCLK
+                freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK1_FREQ"))            
+            elif ClkSrc == 2: #SOSC
+                freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"))
+      
+    symbol.setValue(freq)    
+
 def rtccClockFreqCalc(symbol, event):
     global LPRC_DEFAULT_FREQ
     freq = 0
@@ -1100,6 +1117,9 @@ if __name__ == "__main__":
                                                                                     "CONFIG_SYS_CLK_PBCLK_FREQ", "CONFIG_SYS_CLK_FRCDIV", "SYS_CLK_FREQ"])
         elif peripheralName.startswith("ADC"):
             peripheral_clock_freq.setDependencies(adcClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".AD1CON3__ADRC", "CONFIG_SYS_CLK_PBCLK_FREQ"])       
+        elif peripheralName.startswith("CCP"):
+            peripheral_clock_freq.setDependencies(ccpClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".CCP_CCPCON1_CLKSEL", "SYS_CLK_FREQ",
+                                                                                    "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL", "CONFIG_SYS_CLK_REFCLK1_FREQ"])            
         else:
             peripheral_clock_freq.setDependencies(peripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_PBCLK_FREQ"])
 
