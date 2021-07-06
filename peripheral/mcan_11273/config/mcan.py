@@ -418,6 +418,17 @@ def updateDataBitTimingSymbols(symbol, event):
         symbol.getComponent().getSymbolByID("DBTP_DBRP").setReadOnly(False)
         symbol.getComponent().getSymbolByID("DATA_SAMPLE_POINT").setReadOnly(False)
 
+def updateSourceFileName(symbol, event):
+    mcanInt = ""
+    if event["value"] == True:
+        mcanInt = "_interrupt"
+    id = symbol.getID()
+
+    if id == "sourceFile":
+        symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan" + mcanInt + ".c.ftl")
+    elif id == "instHeaderFile":
+        symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan" + mcanInt + ".h.ftl")
+
 def instantiateComponent(mcanComponent):
     global mcanInstanceName
     global interruptVector
@@ -1022,6 +1033,7 @@ def instantiateComponent(mcanComponent):
     mcanMainSourceFile.setProjectPath("config/" + configName + "/peripheral/mcan/")
     mcanMainSourceFile.setType("SOURCE")
     mcanMainSourceFile.setMarkup(True)
+    mcanMainSourceFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE"])
 
     #Instance Header File
     mcanInstHeaderFile = mcanComponent.createFileSymbol("instHeaderFile", None)
@@ -1031,6 +1043,7 @@ def instantiateComponent(mcanComponent):
     mcanInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/mcan/")
     mcanInstHeaderFile.setType("HEADER")
     mcanInstHeaderFile.setMarkup(True)
+    mcanInstHeaderFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE"])
 
     #MCAN Initialize
     mcanSystemInitFile = mcanComponent.createFileSymbol("initFile", None)

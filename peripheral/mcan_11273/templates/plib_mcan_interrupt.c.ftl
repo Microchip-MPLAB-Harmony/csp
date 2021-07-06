@@ -21,7 +21,7 @@
 
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2021 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -66,12 +66,27 @@
 <#assign MCAN_DBTP_DTSEG1  = DBTP_DTSEG1 - 1>
 <#assign MCAN_DBTP_DTSEG2  = DBTP_DTSEG2 - 1>
 <#assign MCAN_DBTP_DSJW    = DBTP_DSJW - 1>
+#define MCAN_STD_ID_Msk        0x7FFU
+
+<#if TX_USE>
+static MCAN_TX_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj;
+</#if>
+<#if TXBUF_USE>
+static MCAN_TXRX_BUFFERS_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj;
+</#if>
+<#if TX_USE || TXBUF_USE>
 <#assign TX_EVENT_FIFO_ELEMENTS = TX_FIFO_ELEMENTS>
 <#if TXBUF_USE>
 <#assign TX_EVENT_FIFO_ELEMENTS = TX_BUFFER_ELEMENTS + TX_FIFO_ELEMENTS>
 </#if>
-#define MCAN_STD_ID_Msk        0x7FFU
-
+static MCAN_TX_EVENT_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj;
+</#if>
+<#if RXBUF_USE>
+static MCAN_TXRX_BUFFERS_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj;
+</#if>
+<#if RXF0_USE || RXF1_USE>
+static MCAN_RX_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[2];
+</#if>
 static MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
@@ -203,6 +218,21 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
         /* Wait for initialization complete */
     }
 
+    /* Select interrupt line */
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_ILS = 0x0U;
+
+    /* Enable interrupt line */
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_ILE = MCAN_ILE_EINT0_Msk;
+
+    /* Enable MCAN interrupts */
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE = MCAN_IE_BOE_Msk<#rt>
+                                        <#lt><#if TX_USE> | MCAN_IE_TFEE_Msk</#if><#rt>
+                                        <#lt><#if TXBUF_USE> | MCAN_IE_TCE_Msk</#if><#rt>
+                                        <#lt><#if TX_USE || TXBUF_USE> | MCAN_IE_TEFNE_Msk</#if><#rt>
+                                        <#lt><#if RXF0_USE> | MCAN_IE_RF0NE_Msk</#if><#rt>
+                                        <#lt><#if RXF1_USE> | MCAN_IE_RF1NE_Msk</#if><#rt>
+                                        <#lt><#if RXBUF_USE> | MCAN_IE_DRXE_Msk</#if>;
+
     memset(&${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(MCAN_MSG_RAM_CONFIG));
 }
 
@@ -238,6 +268,9 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint8_t bufferNumber, MCAN_TX_BUFFER 
     txBuf = (uint8_t *)((uint8_t*)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)bufferNumber * ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
 
     memcpy(txBuf, (uint8_t *)txBuffer, ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
+
+    /* Enable Transmission Interrupt */
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE = 1UL << bufferNumber;
 
     /* Set Transmission request */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBAR = 1UL << bufferNumber;
@@ -410,27 +443,6 @@ bool ${MCAN_INSTANCE_NAME}_TxEventFifoRead(uint8_t numberOfTxEvent, MCAN_TX_EVEN
 
     return true;
 }
-
-// *****************************************************************************
-/* Function:
-    uint8_t ${MCAN_INSTANCE_NAME}_TxEventFifoFillLevelGet(void)
-
-   Summary:
-    Returns Tx Event FIFO Fill Level.
-
-   Precondition:
-    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
-
-   Parameters:
-    None.
-
-   Returns:
-    Tx Event FIFO Fill Level.
-*/
-uint8_t ${MCAN_INSTANCE_NAME}_TxEventFifoFillLevelGet(void)
-{
-    return (uint8_t)(${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFS & MCAN_TXEFS_EFFL_Msk);
-}
 </#if>
 
 <#if RXBUF_USE>
@@ -477,67 +489,6 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, MCAN_RX_BUFFER *
     }
 
     return true;
-}
-
-// *****************************************************************************
-/* Function:
-    bool ${MCAN_INSTANCE_NAME}_RxBufferNumberGet(uint8_t* bufferNumber)
-
-   Summary:
-    Get Rx Buffer Number.
-
-   Precondition:
-    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
-
-   Parameters:
-    None.
-
-   Returns:
-    Request status.
-    true  - Request was successful.
-    false - Request has failed.
-*/
-bool ${MCAN_INSTANCE_NAME}_RxBufferNumberGet(uint8_t* bufferNumber)
-{
-    bool     status = false;
-    uint8_t  bufferNum = 0;
-    uint32_t newData1 = ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1;
-    <#if RX_BUFFER_ELEMENTS gt 32>
-    uint32_t newData2 = ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2;
-    </#if>
-
-    if (newData1 != 0U)
-    {
-        <#assign BUF_NUM = 32>
-        <#if RX_BUFFER_ELEMENTS lt 32>
-        <#assign BUF_NUM = RX_BUFFER_ELEMENTS>
-        </#if>
-        for (bufferNum = 0U; bufferNum < ${BUF_NUM}U; bufferNum++)
-        {
-            if ((newData1 & (1UL << bufferNum)) == (1UL << bufferNum))
-            {
-                *bufferNumber = bufferNum;
-                status = true;
-                break;
-            }
-        }
-    }
-    <#if RX_BUFFER_ELEMENTS gt 32>
-    if ((newData2 != 0U) && (status == false))
-    {
-        for (bufferNum = 0U; bufferNum < (${RX_BUFFER_ELEMENTS}U - 32U); bufferNum++)
-        {
-            if ((newData2 & (1UL << bufferNum)) == (1UL << bufferNum))
-            {
-                *bufferNumber = (bufferNum + 32U);
-                status = true;
-                break;
-            }
-        }
-    }
-    </#if>
-
-    return status;
 }
 </#if>
 
@@ -638,34 +589,6 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceiveFifo(MCAN_RX_FIFO_NUM rxFifoNum, uint8_
     }
     return status;
 }
-
-// *****************************************************************************
-/* Function:
-    uint8_t ${MCAN_INSTANCE_NAME}_RxFifoFillLevelGet(MCAN_RX_FIFO_NUM rxFifoNum)
-
-   Summary:
-    Returns Rx FIFO0/FIFO1 Fill Level.
-
-   Precondition:
-    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
-
-   Parameters:
-    None.
-
-   Returns:
-    Rx FIFO0/FIFO1 Fill Level.
-*/
-uint8_t ${MCAN_INSTANCE_NAME}_RxFifoFillLevelGet(MCAN_RX_FIFO_NUM rxFifoNum)
-{
-    if (rxFifoNum == MCAN_RX_FIFO_0)
-    {
-        return (uint8_t)(${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0S & MCAN_RXF0S_F0FL_Msk);
-    }
-    else
-    {
-        return (uint8_t)(${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1S & MCAN_RXF1S_F1FL_Msk);
-    }
-}
 </#if>
 
 // *****************************************************************************
@@ -730,49 +653,6 @@ void ${MCAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxError
 {
     *txErrorCount = (uint8_t)(${MCAN_INSTANCE_NAME}_REGS->MCAN_ECR & MCAN_ECR_TEC_Msk);
     *rxErrorCount = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_ECR & MCAN_ECR_REC_Msk) >> MCAN_ECR_REC_Pos);
-}
-
-// *****************************************************************************
-/* Function:
-    bool ${MCAN_INSTANCE_NAME}_InterruptGet(MCAN_INTERRUPT_MASK interruptMask)
-
-   Summary:
-    Returns the Interrupt status.
-
-   Precondition:
-    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
-
-   Parameters:
-    interruptMask - Interrupt source number
-
-   Returns:
-    true - Requested interrupt is occurred.
-    false - Requested interrupt is not occurred.
-*/
-bool ${MCAN_INSTANCE_NAME}_InterruptGet(MCAN_INTERRUPT_MASK interruptMask)
-{
-    return ((${MCAN_INSTANCE_NAME}_REGS->MCAN_IR & (uint32_t)interruptMask) != 0x0U);
-}
-
-// *****************************************************************************
-/* Function:
-    void ${MCAN_INSTANCE_NAME}_InterruptClear(MCAN_INTERRUPT_MASK interruptMask)
-
-   Summary:
-    Clears Interrupt status.
-
-   Precondition:
-    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
-
-   Parameters:
-    interruptMask - Interrupt to be cleared
-
-   Returns:
-    None
-*/
-void ${MCAN_INSTANCE_NAME}_InterruptClear(MCAN_INTERRUPT_MASK interruptMask)
-{
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = (uint32_t)interruptMask;
 }
 
 // *****************************************************************************
@@ -1056,6 +936,352 @@ void ${MCAN_INSTANCE_NAME}_SleepModeExit(void)
     {
         /* Wait for initialization complete */
     }
+}
+
+<#if TXBUF_USE>
+// *****************************************************************************
+/* Function:
+    void ${MCAN_INSTANCE_NAME}_TxBuffersCallbackRegister(MCAN_TXRX_BUFFERS_CALLBACK callback, uintptr_t contextHandle)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given MCAN's transfer events occur.
+
+   Precondition:
+    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined
+    by the MCAN_TXRX_BUFFERS_CALLBACK data type.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+   Returns:
+    None.
+*/
+void ${MCAN_INSTANCE_NAME}_TxBuffersCallbackRegister(MCAN_TXRX_BUFFERS_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback = callback;
+    ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.context = contextHandle;
+}
+</#if>
+
+<#if TX_USE>
+// *****************************************************************************
+/* Function:
+    void ${MCAN_INSTANCE_NAME}_TxFifoCallbackRegister(MCAN_TX_FIFO_CALLBACK callback, uintptr_t contextHandle)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given MCAN's transfer events occur.
+
+   Precondition:
+    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined
+    by the MCAN_TX_FIFO_CALLBACK data type.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+   Returns:
+    None.
+*/
+void ${MCAN_INSTANCE_NAME}_TxFifoCallbackRegister(MCAN_TX_FIFO_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    ${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback = callback;
+    ${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.context = contextHandle;
+}
+</#if>
+
+<#if TX_USE || TXBUF_USE>
+// *****************************************************************************
+/* Function:
+    void ${MCAN_INSTANCE_NAME}_TxEventFifoCallbackRegister(MCAN_TX_EVENT_FIFO_CALLBACK callback, uintptr_t contextHandle)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given MCAN's transfer events occur.
+
+   Precondition:
+    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined
+    by the MCAN_TX_EVENT_FIFO_CALLBACK data type.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+   Returns:
+    None.
+*/
+void ${MCAN_INSTANCE_NAME}_TxEventFifoCallbackRegister(MCAN_TX_EVENT_FIFO_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback = callback;
+    ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.context = contextHandle;
+}
+</#if>
+
+<#if RXBUF_USE>
+// *****************************************************************************
+/* Function:
+    void ${MCAN_INSTANCE_NAME}_RxBuffersCallbackRegister(MCAN_TXRX_BUFFERS_CALLBACK callback, uintptr_t contextHandle)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given MCAN's transfer events occur.
+
+   Precondition:
+    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined
+    by the MCAN_TXRX_BUFFERS_CALLBACK data type.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+   Returns:
+    None.
+*/
+void ${MCAN_INSTANCE_NAME}_RxBuffersCallbackRegister(MCAN_TXRX_BUFFERS_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback = callback;
+    ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context = contextHandle;
+}
+</#if>
+
+<#if RXF0_USE || RXF1_USE>
+// *****************************************************************************
+/* Function:
+    void ${MCAN_INSTANCE_NAME}_RxFifoCallbackRegister(MCAN_RX_FIFO_NUM rxFifoNum, MCAN_RX_FIFO_CALLBACK callback, uintptr_t contextHandle)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given MCAN's transfer events occur.
+
+   Precondition:
+    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    rxFifoNum - Rx FIFO Number
+
+    callback  - A pointer to a function with a calling signature defined
+    by the MCAN_RX_FIFO_CALLBACK data type.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+   Returns:
+    None.
+*/
+void ${MCAN_INSTANCE_NAME}_RxFifoCallbackRegister(MCAN_RX_FIFO_NUM rxFifoNum, MCAN_RX_FIFO_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[rxFifoNum].callback = callback;
+    ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[rxFifoNum].context = contextHandle;
+}
+</#if>
+
+// *****************************************************************************
+/* Function:
+    void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
+
+   Summary:
+    ${MCAN_INSTANCE_NAME} Peripheral Interrupt Handler.
+
+   Description:
+    This function is ${MCAN_INSTANCE_NAME} Peripheral Interrupt Handler and will
+    called on every ${MCAN_INSTANCE_NAME} interrupt.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None.
+
+   Returns:
+    None.
+
+   Remarks:
+    The function is called as peripheral instance's interrupt handler if the
+    instance interrupt is enabled. If peripheral instance's interrupt is not
+    enabled user need to call it from the main while loop of the application.
+*/
+void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
+{
+<#if RXBUF_USE>
+    uint32_t newData1 = 0U;
+  <#if RX_BUFFER_ELEMENTS gt 32>
+    uint32_t newData2 = 0U;
+  </#if>
+</#if>
+<#if TXBUF_USE || RXBUF_USE>
+    uint8_t bufferNumber = 0U;
+</#if>
+<#if TXBUF_USE>
+    bool testCondition = false;
+</#if>
+<#if RXF0_USE || RXF1_USE>
+    uint8_t numberOfMessage = 0;
+</#if>
+<#if TX_USE || TXBUF_USE>
+    uint8_t numberOfTxEvent = 0;
+</#if>
+
+    uint32_t ir = ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR;
+
+    /* Check if error occurred */
+    if ((ir & MCAN_IR_BO_Msk) != 0U)
+    {
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_BO_Msk;
+    }
+<#if RXF0_USE>
+    /* New Message in Rx FIFO 0 */
+    if ((ir & MCAN_IR_RF0N_Msk) != 0U)
+    {
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_RF0N_Msk;
+
+        numberOfMessage = (uint8_t)(${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0S & MCAN_RXF0S_F0FL_Msk);
+
+        if (${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_0].callback != NULL)
+        {
+            ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_0].callback(numberOfMessage, ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_0].context);
+        }
+    }
+</#if>
+<#if RXF1_USE>
+    /* New Message in Rx FIFO 1 */
+    if ((ir & MCAN_IR_RF1N_Msk) != 0U)
+    {
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_RF1N_Msk;
+
+        numberOfMessage = (uint8_t)(${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1S & MCAN_RXF1S_F1FL_Msk);
+
+        if (${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_1].callback != NULL)
+        {
+            ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_1].callback(numberOfMessage, ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_1].context);
+        }
+    }
+</#if>
+<#if RXBUF_USE>
+    /* New Message in Dedicated Rx Buffer */
+    if ((ir & MCAN_IR_DRX_Msk) != 0U)
+    {
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_DRX_Msk;
+
+        newData1 = ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1;
+        <#if RX_BUFFER_ELEMENTS gt 32>
+        newData2 = ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2;
+        </#if>
+        if (newData1 != 0U)
+        {
+            <#assign BUF_NUM = 32>
+            <#if RX_BUFFER_ELEMENTS lt 32>
+            <#assign BUF_NUM = RX_BUFFER_ELEMENTS>
+            </#if>
+            for (bufferNumber = 0U; bufferNumber < ${BUF_NUM}U; bufferNumber++)
+            {
+                if ((newData1 & (1UL << bufferNumber)) == (1UL << bufferNumber))
+                {
+                    if (${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback != NULL)
+                    {
+                        ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback(bufferNumber, ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context);
+                    }
+                }
+            }
+        }
+        <#if RX_BUFFER_ELEMENTS gt 32>
+        if (newData2 != 0U)
+        {
+            for (bufferNumber = 0U; bufferNumber < (${RX_BUFFER_ELEMENTS}U - 32U); bufferNumber++)
+            {
+                if ((newData2 & (1UL << bufferNumber)) == (1UL << bufferNumber))
+                {
+                    if (${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback != NULL)
+                    {
+                        ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback((bufferNumber + 32U), ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context);
+                    }
+                }
+            }
+        }
+        </#if>
+    }
+</#if>
+
+<#if TXBUF_USE>
+    /* TX Completed */
+    if ((ir & MCAN_IR_TC_Msk) != 0U)
+    {
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_TC_Msk;
+        for (bufferNumber = 0U; bufferNumber < ${TX_BUFFER_ELEMENTS}U; bufferNumber++)
+        {
+            uint32_t txbufferMask = (1UL << ((uint32_t)bufferNumber & 0x1FU));
+            testCondition = ((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTO & txbufferMask) != 0U);
+            testCondition = ((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE & txbufferMask) != 0U) && testCondition;
+            if (testCondition)
+            {
+                ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE &= ~txbufferMask;
+                if (${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback != NULL)
+                {
+                    ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback(bufferNumber, ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.context);
+                }
+            }
+        }
+    }
+</#if>
+<#if TX_USE>
+    /* TX FIFO is empty */
+    if ((ir & MCAN_IR_TFE_Msk) != 0U)
+    {
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_TFE_Msk;
+        if (${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback != NULL)
+        {
+            ${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback(${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.context);
+        }
+    }
+</#if>
+<#if TX_USE || TXBUF_USE>
+    /* Tx Event FIFO new entry */
+    if ((ir & MCAN_IR_TEFN_Msk) != 0U)
+    {
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_TEFN_Msk;
+
+        numberOfTxEvent = (uint8_t)(${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFS & MCAN_TXEFS_EFFL_Msk);
+
+        if (${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback != NULL)
+        {
+            ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback(numberOfTxEvent, ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.context);
+        }
+    }
+</#if>
 }
 
 /*******************************************************************************
