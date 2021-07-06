@@ -21,7 +21,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2021 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -161,20 +161,15 @@ uint8_t ${CAN_INSTANCE_NAME}_TxFifoFreeLevelGet(void);
 <#if TX_USE || TXBUF_USE>
 bool ${CAN_INSTANCE_NAME}_TxBufferIsBusy(uint8_t bufferNumber);
 bool ${CAN_INSTANCE_NAME}_TxEventFifoRead(uint8_t numberOfTxEvent, CAN_TX_EVENT_FIFO *txEventFifo);
-uint8_t ${CAN_INSTANCE_NAME}_TxEventFifoFillLevelGet(void);
 </#if>
 <#if RXBUF_USE>
 bool ${CAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, CAN_RX_BUFFER *rxBuffer);
-bool ${CAN_INSTANCE_NAME}_RxBufferNumberGet(uint8_t* bufferNumber);
 </#if>
 <#if RXF0_USE || RXF1_USE>
 bool ${CAN_INSTANCE_NAME}_MessageReceiveFifo(CAN_RX_FIFO_NUM rxFifoNum, uint8_t numberOfMessage, CAN_RX_BUFFER *rxBuffer);
-uint8_t ${CAN_INSTANCE_NAME}_RxFifoFillLevelGet(CAN_RX_FIFO_NUM rxFifoNum);
 </#if>
 CAN_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void);
 void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount);
-bool ${CAN_INSTANCE_NAME}_InterruptGet(CAN_INTERRUPT_MASK interruptMask);
-void ${CAN_INSTANCE_NAME}_InterruptClear(CAN_INTERRUPT_MASK interruptMask);
 void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress);
 <#if FILTERS_STD?number gt 0>
 bool ${CAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement);
@@ -186,6 +181,21 @@ bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, can_xid
 </#if>
 void ${CAN_INSTANCE_NAME}_SleepModeEnter(void);
 void ${CAN_INSTANCE_NAME}_SleepModeExit(void);
+<#if TXBUF_USE>
+void ${CAN_INSTANCE_NAME}_TxBuffersCallbackRegister(CAN_TXRX_BUFFERS_CALLBACK callback, uintptr_t contextHandle);
+</#if>
+<#if TX_USE>
+void ${CAN_INSTANCE_NAME}_TxFifoCallbackRegister(CAN_TX_FIFO_CALLBACK callback, uintptr_t contextHandle);
+</#if>
+<#if TX_USE || TXBUF_USE>
+void ${CAN_INSTANCE_NAME}_TxEventFifoCallbackRegister(CAN_TX_EVENT_FIFO_CALLBACK callback, uintptr_t contextHandle);
+</#if>
+<#if RXBUF_USE>
+void ${CAN_INSTANCE_NAME}_RxBuffersCallbackRegister(CAN_TXRX_BUFFERS_CALLBACK callback, uintptr_t contextHandle);
+</#if>
+<#if RXF0_USE || RXF1_USE>
+void ${CAN_INSTANCE_NAME}_RxFifoCallbackRegister(CAN_RX_FIFO_NUM rxFifoNum, CAN_RX_FIFO_CALLBACK callback, uintptr_t contextHandle);
+</#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }

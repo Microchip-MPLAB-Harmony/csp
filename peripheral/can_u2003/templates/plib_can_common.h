@@ -21,7 +21,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2021 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -60,7 +60,7 @@
 // Section: Preprocessor macros
 // *****************************************************************************
 // *****************************************************************************
- 
+
  // *****************************************************************************
 /* CAN Transfer Errors
 
@@ -73,27 +73,27 @@
    Remarks:
     None.
 */
- 
-    #define CAN_ERROR_NONE  0x0U
-    #define CAN_ERROR_LEC_STUFF  0x1U
-    #define CAN_ERROR_LEC_FORM  0x2U
-    #define CAN_ERROR_LEC_ACK  0x3U
-    #define CAN_ERROR_LEC_BIT1  0x4U
-    #define CAN_ERROR_LEC_BIT0  0x5U
-    #define CAN_ERROR_LEC_CRC  0x6U
-    #define CAN_ERROR_LEC_NC  0x7U
-    #define CAN_ERROR_PASSIVE  0x20U
-    #define CAN_ERROR_WARNING_STATUS  0x40U
-    #define CAN_ERROR_BUS_OFF  0x80U
-    #define CAN_ERROR_DLEC_STUFF  0x100U
-    #define CAN_ERROR_DLEC_FORM  0x200U
-    #define CAN_ERROR_DLEC_ACK  0x300U
-    #define CAN_ERROR_DLEC_BIT1  0x400U
-    #define CAN_ERROR_DLEC_BIT0  0x500U
-    #define CAN_ERROR_DLEC_CRC  0x600U
-    #define CAN_ERROR_DLEC_NC  0x700U
-    #define CAN_ERROR_PROTOCOL_EXCEPTION_EVENT  0x4000U
-    #define CAN_ERROR_INVALID  0xFFFFFFFFU
+
+#define CAN_ERROR_NONE                      0x0U
+#define CAN_ERROR_LEC_STUFF                 0x1U
+#define CAN_ERROR_LEC_FORM                  0x2U
+#define CAN_ERROR_LEC_ACK                   0x3U
+#define CAN_ERROR_LEC_BIT1                  0x4U
+#define CAN_ERROR_LEC_BIT0                  0x5U
+#define CAN_ERROR_LEC_CRC                   0x6U
+#define CAN_ERROR_LEC_NC                    0x7U
+#define CAN_ERROR_PASSIVE                   0x20U
+#define CAN_ERROR_WARNING_STATUS            0x40U
+#define CAN_ERROR_BUS_OFF                   0x80U
+#define CAN_ERROR_DLEC_STUFF                0x100U
+#define CAN_ERROR_DLEC_FORM                 0x200U
+#define CAN_ERROR_DLEC_ACK                  0x300U
+#define CAN_ERROR_DLEC_BIT1                 0x400U
+#define CAN_ERROR_DLEC_BIT0                 0x500U
+#define CAN_ERROR_DLEC_CRC                  0x600U
+#define CAN_ERROR_DLEC_NC                   0x700U
+#define CAN_ERROR_PROTOCOL_EXCEPTION_EVENT  0x4000U
+#define CAN_ERROR_INVALID                   0xFFFFFFFFU
 
 // *****************************************************************************
 // *****************************************************************************
@@ -102,84 +102,22 @@
 // *****************************************************************************
 
 // *****************************************************************************
-/* CAN Mode
+/* CAN Rx FIFO Number
 
    Summary:
-    CAN Mode for Classic CAN and CAN FD.
+    CAN Rx FIFO Number.
 
    Description:
-    This data type defines CAN mode Classic CAN, CAN FD without BRS(Bit rate switching)
-    and CAN FD with BRS.
+    This data type defines CAN Rx FIFO number for Rx FIFO0 and FIFO1.
 
    Remarks:
     None.
 */
 typedef enum
 {
-    CAN_MODE_NORMAL = 0U,
-    CAN_MODE_FD_WITHOUT_BRS,
-    CAN_MODE_FD_WITH_BRS
-} CAN_MODE;
-
-// *****************************************************************************
-/* CAN Tx Message Attribute
-
-   Summary:
-    CAN Tx Message Attribute for Tx Buffer/FIFO.
-
-   Description:
-    This data type defines CAN Tx Message Attribute. Only One attribute
-    need to be passed as parameter value while invoking message transmit function.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    CAN_MSG_ATTR_TX_FIFO_DATA_FRAME = 0U,
-    CAN_MSG_ATTR_TX_FIFO_RTR_FRAME,
-    CAN_MSG_ATTR_TX_BUFFER_DATA_FRAME,
-    CAN_MSG_ATTR_TX_BUFFER_RTR_FRAME
-} CAN_MSG_TX_ATTRIBUTE;
-
-// *****************************************************************************
-/* CAN Rx Message Attribute
-
-   Summary:
-    CAN Rx Message Attribute for Rx Buffer/FIFO0/FIFO1.
-
-   Description:
-    This data type defines CAN Rx Message Attribute. Only One attribute
-    need to be passed as parameter value while invoking message receive function.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    CAN_MSG_ATTR_RX_FIFO0 = 0U,
-    CAN_MSG_ATTR_RX_FIFO1,
-    CAN_MSG_ATTR_RX_BUFFER
-} CAN_MSG_RX_ATTRIBUTE;
-
-// *****************************************************************************
-/* CAN Message Object Type RX Frame Attribute
-
-   Summary:
-    CAN Message RX Frame Attribute for Data Frame and Remote Frame.
-
-   Description:
-    This data type defines CAN Message RX Frame Attribute for Data Frame and Remote Frame.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    CAN_MSG_RX_DATA_FRAME = 0U,
-    CAN_MSG_RX_REMOTE_FRAME
-} CAN_MSG_RX_FRAME_ATTRIBUTE;
-
+    CAN_RX_FIFO_0 = 0U,
+    CAN_RX_FIFO_1
+} CAN_RX_FIFO_NUM;
 
 // *****************************************************************************
 /* CAN Interrupt Mask
@@ -240,18 +178,60 @@ typedef enum
 typedef uint32_t CAN_ERROR;
 
 // *****************************************************************************
-/* CAN Callback
+/* CAN Tx FIFO Callback
 
    Summary:
-    CAN Callback Function Pointer.
+    CAN Callback Function Pointer for Tx FIFO.
 
    Description:
-    This data type defines the CAN Callback Function Pointer.
+    This data type defines the CAN Callback Function Pointer for Tx FIFO.
 
    Remarks:
     None.
 */
-typedef void (*CAN_CALLBACK) (uintptr_t contextHandle);
+typedef void (*CAN_TX_FIFO_CALLBACK) (uintptr_t contextHandle);
+
+// *****************************************************************************
+/* CAN TX/RX Buffers Callback
+
+   Summary:
+    CAN Callback Function Pointer for TX/RX Buffers.
+
+   Description:
+    This data type defines the CAN Callback Function Pointer for TX/RX Buffers.
+
+   Remarks:
+    None.
+*/
+typedef void (*CAN_TXRX_BUFFERS_CALLBACK) (uint8_t bufferNumber, uintptr_t contextHandle);
+
+// *****************************************************************************
+/* CAN Tx Event FIFO Callback
+
+   Summary:
+    CAN Callback Function Pointer for Tx Event FIFO.
+
+   Description:
+    This data type defines the CAN Callback Function Pointer for Tx Event FIFO.
+
+   Remarks:
+    None.
+*/
+typedef void (*CAN_TX_EVENT_FIFO_CALLBACK) (uint8_t numberOfTxEvent, uintptr_t contextHandle);
+
+// *****************************************************************************
+/* CAN Rx FIFO0/FIFO1 Callback
+
+   Summary:
+    CAN Callback Function Pointer for Rx FIFO0/FIFO1.
+
+   Description:
+    This data type defines the CAN Callback Function Pointer for Rx FIFO0/FIFO1.
+
+   Remarks:
+    None.
+*/
+typedef void (*CAN_RX_FIFO_CALLBACK) (uint8_t numberOfMessage, uintptr_t contextHandle);
 
 // *****************************************************************************
 /* CAN Message RAM Configuration
@@ -292,36 +272,134 @@ typedef struct
 } CAN_MSG_RAM_CONFIG;
 
 // *****************************************************************************
-/* CAN RX Message
+/* CAN Rx Buffer and FIFO Element
 
    Summary:
-    CAN RX Message Buffer structure.
+    CAN Rx Buffer and FIFO Element Structure.
 
    Description:
-    This data structure stores RX Message.
+    This data structure defines CAN Rx Buffer and FIFO Element.
 
    Remarks:
     None.
 */
 typedef struct
 {
-    /* Rx Message ID */
-    uint32_t *rxId;
-    /* Rx Message buffer */
-    uint8_t *rxBuffer;
-    /* Rx Message size */
-    uint8_t *rxsize;
-    /* Rx Message timestamp */
-    uint16_t *timestamp;
-    /* Rx Message frame attribute */
-    CAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr;
-} CAN_RX_MSG;
+    /* Identifier */
+    uint32_t id:29;
+    /* Remote Transmission Request */
+    uint32_t rtr:1;
+    /* Extended Identifier */
+    uint32_t xtd:1;
+    /* Error State Indicator */
+    uint32_t esi:1;
+
+    /* Rx Timestamp */
+    uint32_t rxts:16;
+    /* Data Length Code */
+    uint32_t dlc:4;
+    /* Bit Rate Switching */
+    uint32_t brs:1;
+    /* FD Format */
+    uint32_t fdf:1;
+    /* Reserved */
+    uint32_t :2;
+    /* Filter Index */
+    uint32_t fidx:7;
+    /* Accepted Non-matching Frame */
+    uint32_t anmf:1;
+
+    /* Data field */
+    uint8_t data[8];
+
+} CAN_RX_BUFFER;
 
 // *****************************************************************************
-/* CAN Callback Object
+/* CAN Tx Buffer Element
 
    Summary:
-    CAN transfer event callback structure.
+    CAN Tx Buffer Element Structure.
+
+   Description:
+    This data structure defines CAN Tx Buffer Element.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Identifier */
+    uint32_t id:29;
+    /* Remote Transmission Request */
+    uint32_t rtr:1;
+    /* Extended Identifier */
+    uint32_t xtd:1;
+    /* Error State Indicator */
+    uint32_t esi:1;
+
+    /* Reserved */
+    uint32_t :16;
+    /* Data Length Code */
+    uint32_t dlc:4;
+    /* Bit Rate Switching */
+    uint32_t brs:1;
+    /* FD Format */
+    uint32_t fdf:1;
+    /* Reserved */
+    uint32_t :1;
+    /* Event FIFO Control */
+    uint32_t efc:1;
+    /* Message Marker */
+    uint32_t mm:8;
+
+    /* Data field */
+    uint8_t data[8];
+
+} CAN_TX_BUFFER;
+
+// *****************************************************************************
+/* CAN Tx Event FIFO Element
+
+   Summary:
+    CAN Tx Event FIFO Element Structure.
+
+   Description:
+    This data structure defines CAN Tx Event FIFO Element.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Identifier */
+    uint32_t id:29;
+    /* Remote Transmission Request */
+    uint32_t rtr:1;
+    /* Extended Identifier */
+    uint32_t xtd:1;
+    /* Error State Indicator */
+    uint32_t esi:1;
+
+    /* Tx Timestamp */
+    uint32_t txts:16;
+    /* Data Length Code */
+    uint32_t dlc:4;
+    /* Bit Rate Switch */
+    uint32_t brs:1;
+    /* FD Format */
+    uint32_t fdf:1;
+    /* Event Type */
+    uint32_t et:2;
+    /* Message Marker */
+    uint32_t mm:8;
+
+} CAN_TX_EVENT_FIFO;
+
+// *****************************************************************************
+/* CAN Tx FIFO Callback Object
+
+   Summary:
+    CAN transfer event callback structure for Tx FIFO.
 
    Description:
     This data structure stores transfer event callback and it's context.
@@ -332,11 +410,74 @@ typedef struct
 typedef struct
 {
     /* Transfer Event Callback */
-    CAN_CALLBACK callback;
+    CAN_TX_FIFO_CALLBACK callback;
 
     /* Transfer Event Callback Context */
     uintptr_t context;
-} CAN_CALLBACK_OBJ;
+} CAN_TX_FIFO_CALLBACK_OBJ;
+
+// *****************************************************************************
+/* CAN Tx/Rx Buffers Callback Object
+
+   Summary:
+    CAN transfer event callback structure for Tx/Rx Buffers.
+
+   Description:
+    This data structure stores transfer event callback and it's context.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Transfer Event Callback */
+    CAN_TXRX_BUFFERS_CALLBACK callback;
+
+    /* Transfer Event Callback Context */
+    uintptr_t context;
+} CAN_TXRX_BUFFERS_CALLBACK_OBJ;
+
+// *****************************************************************************
+/* CAN Tx Event FIFO Callback Object
+
+   Summary:
+    CAN transfer event callback structure for Tx Event FIFO.
+
+   Description:
+    This data structure stores transfer event callback and it's context.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Transfer Event Callback */
+    CAN_TX_EVENT_FIFO_CALLBACK callback;
+
+    /* Transfer Event Callback Context */
+    uintptr_t context;
+} CAN_TX_EVENT_FIFO_CALLBACK_OBJ;
+
+// *****************************************************************************
+/* CAN Rx FIFO0/FIFO1 Callback Object
+
+   Summary:
+    CAN transfer event callback structure for Rx FIFO0/FIFO1.
+
+   Description:
+    This data structure stores transfer event callback and it's context.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Transfer Event Callback */
+    CAN_RX_FIFO_CALLBACK callback;
+
+    /* Transfer Event Callback Context */
+    uintptr_t context;
+} CAN_RX_FIFO_CALLBACK_OBJ;
 
 // *****************************************************************************
 /* CAN PLib Instance Object
@@ -352,12 +493,6 @@ typedef struct
 */
 typedef struct
 {
-    /* Tx Buffer Index */
-    uint32_t txBufferIndex;
-    /* Rx Buffer Index */
-    uint32_t rxBufferIndex1;
-    uint32_t rxBufferIndex2;
-
     /* Message RAM Configuration */
     CAN_MSG_RAM_CONFIG msgRAMConfig;
 

@@ -418,6 +418,17 @@ def updateDataBitTimingSymbols(symbol, event):
         symbol.getComponent().getSymbolByID("DBTP_DBRP").setReadOnly(False)
         symbol.getComponent().getSymbolByID("DATA_SAMPLE_POINT").setReadOnly(False)
 
+def updateSourceFileName(symbol, event):
+    canInt = ""
+    if event["value"] == True:
+        canInt = "_interrupt"
+    id = symbol.getID()
+
+    if id == "sourceFile":
+        symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can" + canInt + ".c.ftl")
+    elif id == "instHeaderFile":
+        symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can" + canInt + ".h.ftl")
+
 def instantiateComponent(canComponent):
     global canInstanceName
     global interruptVector
@@ -980,6 +991,7 @@ def instantiateComponent(canComponent):
     canMainSourceFile.setProjectPath("config/" + configName + "/peripheral/can/")
     canMainSourceFile.setType("SOURCE")
     canMainSourceFile.setMarkup(True)
+    canMainSourceFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE"])
 
     #Instance Header File
     canInstHeaderFile = canComponent.createFileSymbol("instHeaderFile", None)
@@ -989,6 +1001,7 @@ def instantiateComponent(canComponent):
     canInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/can/")
     canInstHeaderFile.setType("HEADER")
     canInstHeaderFile.setMarkup(True)
+    canInstHeaderFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE"])
 
     #CAN Initialize
     canSystemInitFile = canComponent.createFileSymbol("initFile", None)
