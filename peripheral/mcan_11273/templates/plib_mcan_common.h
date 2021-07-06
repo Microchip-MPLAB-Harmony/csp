@@ -57,125 +57,67 @@
 
 // *****************************************************************************
 // *****************************************************************************
+// Section: Preprocessor macros
+// *****************************************************************************
+// *****************************************************************************
+
+ // *****************************************************************************
+/* MCAN Transfer Errors
+
+   Summary:
+    MCAN Transfer Error macros.
+
+   Description:
+    Helper macros to identify MCAN errors.
+
+   Remarks:
+    None.
+*/
+
+#define MCAN_ERROR_NONE                      0x0U
+#define MCAN_ERROR_LEC_STUFF                 0x1U
+#define MCAN_ERROR_LEC_FORM                  0x2U
+#define MCAN_ERROR_LEC_ACK                   0x3U
+#define MCAN_ERROR_LEC_BIT1                  0x4U
+#define MCAN_ERROR_LEC_BIT0                  0x5U
+#define MCAN_ERROR_LEC_CRC                   0x6U
+#define MCAN_ERROR_LEC_NO_CHANGE             0x7U
+#define MCAN_ERROR_PASSIVE                   0x20U
+#define MCAN_ERROR_WARNING_STATUS            0x40U
+#define MCAN_ERROR_BUS_OFF                   0x80U
+#define MCAN_ERROR_DLEC_STUFF                0x100U
+#define MCAN_ERROR_DLEC_FORM                 0x200U
+#define MCAN_ERROR_DLEC_ACK                  0x300U
+#define MCAN_ERROR_DLEC_BIT1                 0x400U
+#define MCAN_ERROR_DLEC_BIT0                 0x500U
+#define MCAN_ERROR_DLEC_CRC                  0x600U
+#define MCAN_ERROR_DLEC_NO_CHANGE            0x700U
+#define MCAN_ERROR_PROTOCOL_EXCEPTION_EVENT  0x4000U
+#define MCAN_ERROR_INVALID                   0xFFFFFFFFU
+
+// *****************************************************************************
+// *****************************************************************************
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
-/* MCAN Mode
+/* MCAN Rx FIFO Number
 
    Summary:
-    MCAN Mode for Classic CAN and CAN FD.
+    MCAN Rx FIFO Number.
 
    Description:
-    This data type defines MCAN mode Classic CAN, CAN FD without BRS(Bit rate switching)
-    and CAN FD with BRS.
+    This data type defines MCAN Rx FIFO number for Rx FIFO0 and FIFO1.
 
    Remarks:
     None.
 */
 typedef enum
 {
-    MCAN_MODE_NORMAL = 0,
-    MCAN_MODE_FD_WITHOUT_BRS,
-    MCAN_MODE_FD_WITH_BRS
-} MCAN_MODE;
-
-// *****************************************************************************
-/* MCAN Tx Message Attribute
-
-   Summary:
-    MCAN Tx Message Attribute for Tx Buffer/FIFO.
-
-   Description:
-    This data type defines MCAN Tx Message Attribute. Only One attribute
-    need to be passed as parameter value while invoking message transmit function.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME = 0,
-    MCAN_MSG_ATTR_TX_FIFO_RTR_FRAME,
-    MCAN_MSG_ATTR_TX_BUFFER_DATA_FRAME,
-    MCAN_MSG_ATTR_TX_BUFFER_RTR_FRAME
-} MCAN_MSG_TX_ATTRIBUTE;
-
-// *****************************************************************************
-/* MCAN Rx Message Attribute
-
-   Summary:
-    MCAN Rx Message Attribute for Rx Buffer/FIFO0/FIFO1.
-
-   Description:
-    This data type defines MCAN Rx Message Attribute. Only One attribute
-    need to be passed as parameter value while invoking message receive function.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    MCAN_MSG_ATTR_RX_FIFO0 = 0,
-    MCAN_MSG_ATTR_RX_FIFO1,
-    MCAN_MSG_ATTR_RX_BUFFER
-} MCAN_MSG_RX_ATTRIBUTE;
-
-// *****************************************************************************
-/* MCAN Message Object Type RX Frame Attribute
-
-   Summary:
-    MCAN Message RX Frame Attribute for Data Frame and Remote Frame.
-
-   Description:
-    This data type defines MCAN Message RX Frame Attribute for Data Frame and Remote Frame.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    MCAN_MSG_RX_DATA_FRAME = 0,
-    MCAN_MSG_RX_REMOTE_FRAME
-} MCAN_MSG_RX_FRAME_ATTRIBUTE;
-
-// *****************************************************************************
-/* MCAN Transfer Error
-
-   Summary:
-    MCAN Transfer Error data type.
-
-   Description:
-    This data type defines the MCAN Transfer Error.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    MCAN_ERROR_NONE = 0x0,
-    MCAN_ERROR_LEC_STUFF = 0x1,
-    MCAN_ERROR_LEC_FORM = 0x2,
-    MCAN_ERROR_LEC_ACK = 0x3,
-    MCAN_ERROR_LEC_BIT1 = 0x4,
-    MCAN_ERROR_LEC_BIT0 = 0x5,
-    MCAN_ERROR_LEC_CRC = 0x6,
-    MCAN_ERROR_LEC_NO_CHANGE = 0x7,
-    MCAN_ERROR_PASSIVE = 0x20,
-    MCAN_ERROR_WARNING_STATUS = 0x40,
-    MCAN_ERROR_BUS_OFF = 0x80,
-    MCAN_ERROR_DLEC_STUFF = 0x100,
-    MCAN_ERROR_DLEC_FORM = 0x200,
-    MCAN_ERROR_DLEC_ACK = 0x300,
-    MCAN_ERROR_DLEC_BIT1 = 0x400,
-    MCAN_ERROR_DLEC_BIT0 = 0x500,
-    MCAN_ERROR_DLEC_CRC = 0x600,
-    MCAN_ERROR_DLEC_NO_CHANGE = 0x700,
-    MCAN_ERROR_PROTOCOL_EXCEPTION_EVENT = 0x4000,
-    /* Force the compiler to reserve 32-bit space for each enum value */
-    MCAN_ERROR_INVALID = 0xFFFFFFFF
-} MCAN_ERROR;
+    MCAN_RX_FIFO_0 = 0U,
+    MCAN_RX_FIFO_1
+} MCAN_RX_FIFO_NUM;
 
 // *****************************************************************************
 /* MCAN Interrupt Mask
@@ -191,49 +133,105 @@ typedef enum
 */
 typedef enum
 {
-    MCAN_INTERRUPT_RF0N_MASK = (1U << 0U),
-    MCAN_INTERRUPT_RF0W_MASK = (1U << 1U),
-    MCAN_INTERRUPT_RF0F_MASK = (1U << 2U),
-    MCAN_INTERRUPT_RF0L_MASK = (1U << 3U),
-    MCAN_INTERRUPT_RF1N_MASK = (1U << 4U),
-    MCAN_INTERRUPT_RF1W_MASK = (1U << 5U),
-    MCAN_INTERRUPT_RF1F_MASK = (1U << 6U),
-    MCAN_INTERRUPT_RF1L_MASK = (1U << 7U),
-    MCAN_INTERRUPT_HPM_MASK = (1U << 8U),
-    MCAN_INTERRUPT_TC_MASK = (1U << 9U),
-    MCAN_INTERRUPT_TCF_MASK = (1U << 10U),
-    MCAN_INTERRUPT_TFE_MASK = (1U << 11U),
-    MCAN_INTERRUPT_TEFN_MASK = (1U << 12U),
-    MCAN_INTERRUPT_TEFW_MASK = (1U << 13U),
-    MCAN_INTERRUPT_TEFF_MASK = (1U << 14U),
-    MCAN_INTERRUPT_TEFL_MASK = (1U << 15U),
-    MCAN_INTERRUPT_TSW_MASK = (1U << 16U),
-    MCAN_INTERRUPT_MRAF_MASK = (1U << 17U),
-    MCAN_INTERRUPT_TOO_MASK = (1U << 18U),
-    MCAN_INTERRUPT_DRX_MASK = (1U << 19U),
-    MCAN_INTERRUPT_ELO_MASK = (1U << 22U),
-    MCAN_INTERRUPT_EP_MASK = (1U << 23U),
-    MCAN_INTERRUPT_EW_MASK = (1U << 24U),
-    MCAN_INTERRUPT_BO_MASK = (1U << 25U),
-    MCAN_INTERRUPT_WDI_MASK = (1U << 26U),
-    MCAN_INTERRUPT_PEA_MASK = (1U << 27U),
-    MCAN_INTERRUPT_PED_MASK = (1U << 28U),
-    MCAN_INTERRUPT_ARA_MASK = (1U << 29U)
+    MCAN_INTERRUPT_RF0N_MASK = (1UL << 0U),
+    MCAN_INTERRUPT_RF0W_MASK = (1UL << 1U),
+    MCAN_INTERRUPT_RF0F_MASK = (1UL << 2U),
+    MCAN_INTERRUPT_RF0L_MASK = (1UL << 3U),
+    MCAN_INTERRUPT_RF1N_MASK = (1UL << 4U),
+    MCAN_INTERRUPT_RF1W_MASK = (1UL << 5U),
+    MCAN_INTERRUPT_RF1F_MASK = (1UL << 6U),
+    MCAN_INTERRUPT_RF1L_MASK = (1UL << 7U),
+    MCAN_INTERRUPT_HPM_MASK = (1UL << 8U),
+    MCAN_INTERRUPT_TC_MASK = (1UL << 9U),
+    MCAN_INTERRUPT_TCF_MASK = (1UL << 10U),
+    MCAN_INTERRUPT_TFE_MASK = (1UL << 11U),
+    MCAN_INTERRUPT_TEFN_MASK = (1UL << 12U),
+    MCAN_INTERRUPT_TEFW_MASK = (1UL << 13U),
+    MCAN_INTERRUPT_TEFF_MASK = (1UL << 14U),
+    MCAN_INTERRUPT_TEFL_MASK = (1UL << 15U),
+    MCAN_INTERRUPT_TSW_MASK = (1UL << 16U),
+    MCAN_INTERRUPT_MRAF_MASK = (1UL << 17U),
+    MCAN_INTERRUPT_TOO_MASK = (1UL << 18U),
+    MCAN_INTERRUPT_DRX_MASK = (1UL << 19U),
+    MCAN_INTERRUPT_ELO_MASK = (1UL << 22U),
+    MCAN_INTERRUPT_EP_MASK = (1UL << 23U),
+    MCAN_INTERRUPT_EW_MASK = (1UL << 24U),
+    MCAN_INTERRUPT_BO_MASK = (1UL << 25U),
+    MCAN_INTERRUPT_WDI_MASK = (1UL << 26U),
+    MCAN_INTERRUPT_PEA_MASK = (1UL << 27U),
+    MCAN_INTERRUPT_PED_MASK = (1UL << 28U),
+    MCAN_INTERRUPT_ARA_MASK = (1UL << 29U)
 }MCAN_INTERRUPT_MASK;
 
 // *****************************************************************************
-/* MCAN Callback
+/* MCAN Transfer Error
 
    Summary:
-    MCAN Callback Function Pointer.
+    MCAN Transfer Error data type.
 
    Description:
-    This data type defines the MCAN Callback Function Pointer.
+    This data type defines the MCAN Transfer Error.
 
    Remarks:
     None.
 */
-typedef void (*MCAN_CALLBACK) (uintptr_t contextHandle);
+typedef uint32_t MCAN_ERROR;
+
+// *****************************************************************************
+/* MCAN Tx FIFO Callback
+
+   Summary:
+    MCAN Callback Function Pointer for Tx FIFO.
+
+   Description:
+    This data type defines the MCAN Callback Function Pointer for Tx FIFO.
+
+   Remarks:
+    None.
+*/
+typedef void (*MCAN_TX_FIFO_CALLBACK) (uintptr_t contextHandle);
+
+// *****************************************************************************
+/* MCAN TX/RX Buffers Callback
+
+   Summary:
+    MCAN Callback Function Pointer for TX/RX Buffers.
+
+   Description:
+    This data type defines the MCAN Callback Function Pointer for TX/RX Buffers.
+
+   Remarks:
+    None.
+*/
+typedef void (*MCAN_TXRX_BUFFERS_CALLBACK) (uint8_t bufferNumber, uintptr_t contextHandle);
+
+// *****************************************************************************
+/* MCAN Tx Event FIFO Callback
+
+   Summary:
+    MCAN Callback Function Pointer for Tx Event FIFO.
+
+   Description:
+    This data type defines the MCAN Callback Function Pointer for Tx Event FIFO.
+
+   Remarks:
+    None.
+*/
+typedef void (*MCAN_TX_EVENT_FIFO_CALLBACK) (uint8_t numberOfTxEvent, uintptr_t contextHandle);
+
+// *****************************************************************************
+/* MCAN Rx FIFO0/FIFO1 Callback
+
+   Summary:
+    MCAN Callback Function Pointer for Rx FIFO0/FIFO1.
+
+   Description:
+    This data type defines the MCAN Callback Function Pointer for Rx FIFO0/FIFO1.
+
+   Remarks:
+    None.
+*/
+typedef void (*MCAN_RX_FIFO_CALLBACK) (uint8_t numberOfMessage, uintptr_t contextHandle);
 
 // *****************************************************************************
 /* MCAN Message RAM Configuration
@@ -274,36 +272,134 @@ typedef struct
 } MCAN_MSG_RAM_CONFIG;
 
 // *****************************************************************************
-/* MCAN RX Message
+/* MCAN Rx Buffer and FIFO Element
 
    Summary:
-    MCAN RX Message Buffer structure.
+    MCAN Rx Buffer and FIFO Element Structure.
 
    Description:
-    This data structure stores RX Message.
+    This data structure defines MCAN Rx Buffer and FIFO Element.
 
    Remarks:
     None.
 */
 typedef struct
 {
-    /* Rx Message ID */
-    uint32_t *rxId;
-    /* Rx Message buffer */
-    uint8_t *rxBuffer;
-    /* Rx Message size */
-    uint8_t *rxsize;
-    /* Rx Message timestamp */
-    uint16_t *timestamp;
-    /* Rx Message frame attribute */
-    MCAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr;
-} MCAN_RX_MSG;
+    /* Identifier */
+    uint32_t id:29;
+    /* Remote Transmission Request */
+    uint32_t rtr:1;
+    /* Extended Identifier */
+    uint32_t xtd:1;
+    /* Error State Indicator */
+    uint32_t esi:1;
+
+    /* Rx Timestamp */
+    uint32_t rxts:16;
+    /* Data Length Code */
+    uint32_t dlc:4;
+    /* Bit Rate Switching */
+    uint32_t brs:1;
+    /* FD Format */
+    uint32_t fdf:1;
+    /* Reserved */
+    uint32_t :2;
+    /* Filter Index */
+    uint32_t fidx:7;
+    /* Accepted Non-matching Frame */
+    uint32_t anmf:1;
+
+    /* Data field */
+    uint8_t data[8];
+
+} MCAN_RX_BUFFER;
 
 // *****************************************************************************
-/* MCAN Callback Object
+/* MCAN Tx Buffer Element
 
    Summary:
-    MCAN transfer event callback structure.
+    MCAN Tx Buffer Element Structure.
+
+   Description:
+    This data structure defines MCAN Tx Buffer Element.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Identifier */
+    uint32_t id:29;
+    /* Remote Transmission Request */
+    uint32_t rtr:1;
+    /* Extended Identifier */
+    uint32_t xtd:1;
+    /* Error State Indicator */
+    uint32_t esi:1;
+
+    /* Reserved */
+    uint32_t :16;
+    /* Data Length Code */
+    uint32_t dlc:4;
+    /* Bit Rate Switching */
+    uint32_t brs:1;
+    /* FD Format */
+    uint32_t fdf:1;
+    /* Reserved */
+    uint32_t :1;
+    /* Event FIFO Control */
+    uint32_t efc:1;
+    /* Message Marker */
+    uint32_t mm:8;
+
+    /* Data field */
+    uint8_t data[8];
+
+} MCAN_TX_BUFFER;
+
+// *****************************************************************************
+/* MCAN Tx Event FIFO Element
+
+   Summary:
+    MCAN Tx Event FIFO Element Structure.
+
+   Description:
+    This data structure defines MCAN Tx Event FIFO Element.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Identifier */
+    uint32_t id:29;
+    /* Remote Transmission Request */
+    uint32_t rtr:1;
+    /* Extended Identifier */
+    uint32_t xtd:1;
+    /* Error State Indicator */
+    uint32_t esi:1;
+
+    /* Tx Timestamp */
+    uint32_t txts:16;
+    /* Data Length Code */
+    uint32_t dlc:4;
+    /* Bit Rate Switch */
+    uint32_t brs:1;
+    /* FD Format */
+    uint32_t fdf:1;
+    /* Event Type */
+    uint32_t et:2;
+    /* Message Marker */
+    uint32_t mm:8;
+
+} MCAN_TX_EVENT_FIFO;
+
+// *****************************************************************************
+/* MCAN Tx FIFO Callback Object
+
+   Summary:
+    MCAN transfer event callback structure for Tx FIFO.
 
    Description:
     This data structure stores transfer event callback and it's context.
@@ -314,11 +410,74 @@ typedef struct
 typedef struct
 {
     /* Transfer Event Callback */
-    MCAN_CALLBACK callback;
+    MCAN_TX_FIFO_CALLBACK callback;
 
     /* Transfer Event Callback Context */
     uintptr_t context;
-} MCAN_CALLBACK_OBJ;
+} MCAN_TX_FIFO_CALLBACK_OBJ;
+
+// *****************************************************************************
+/* MCAN Tx/Rx Buffers Callback Object
+
+   Summary:
+    MCAN transfer event callback structure for Tx/Rx Buffers.
+
+   Description:
+    This data structure stores transfer event callback and it's context.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Transfer Event Callback */
+    MCAN_TXRX_BUFFERS_CALLBACK callback;
+
+    /* Transfer Event Callback Context */
+    uintptr_t context;
+} MCAN_TXRX_BUFFERS_CALLBACK_OBJ;
+
+// *****************************************************************************
+/* MCAN Tx Event FIFO Callback Object
+
+   Summary:
+    MCAN transfer event callback structure for Tx Event FIFO.
+
+   Description:
+    This data structure stores transfer event callback and it's context.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Transfer Event Callback */
+    MCAN_TX_EVENT_FIFO_CALLBACK callback;
+
+    /* Transfer Event Callback Context */
+    uintptr_t context;
+} MCAN_TX_EVENT_FIFO_CALLBACK_OBJ;
+
+// *****************************************************************************
+/* MCAN Rx FIFO0/FIFO1 Callback Object
+
+   Summary:
+    MCAN transfer event callback structure for Rx FIFO0/FIFO1.
+
+   Description:
+    This data structure stores transfer event callback and it's context.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Transfer Event Callback */
+    MCAN_RX_FIFO_CALLBACK callback;
+
+    /* Transfer Event Callback Context */
+    uintptr_t context;
+} MCAN_RX_FIFO_CALLBACK_OBJ;
 
 // *****************************************************************************
 /* MCAN PLib Instance Object
@@ -334,12 +493,6 @@ typedef struct
 */
 typedef struct
 {
-    /* Tx Buffer Index */
-    uint32_t txBufferIndex;
-    /* Rx Buffer Index */
-    uint32_t rxBufferIndex1;
-    uint32_t rxBufferIndex2;
-
     /* Message RAM Configuration */
     MCAN_MSG_RAM_CONFIG msgRAMConfig;
 

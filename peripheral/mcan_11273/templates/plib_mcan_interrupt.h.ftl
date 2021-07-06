@@ -21,7 +21,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2021 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -161,20 +161,15 @@ uint8_t ${MCAN_INSTANCE_NAME}_TxFifoFreeLevelGet(void);
 <#if TX_USE || TXBUF_USE>
 bool ${MCAN_INSTANCE_NAME}_TxBufferIsBusy(uint8_t bufferNumber);
 bool ${MCAN_INSTANCE_NAME}_TxEventFifoRead(uint8_t numberOfTxEvent, MCAN_TX_EVENT_FIFO *txEventFifo);
-uint8_t ${MCAN_INSTANCE_NAME}_TxEventFifoFillLevelGet(void);
 </#if>
 <#if RXBUF_USE>
 bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, MCAN_RX_BUFFER *rxBuffer);
-bool ${MCAN_INSTANCE_NAME}_RxBufferNumberGet(uint8_t* bufferNumber);
 </#if>
 <#if RXF0_USE || RXF1_USE>
 bool ${MCAN_INSTANCE_NAME}_MessageReceiveFifo(MCAN_RX_FIFO_NUM rxFifoNum, uint8_t numberOfMessage, MCAN_RX_BUFFER *rxBuffer);
-uint8_t ${MCAN_INSTANCE_NAME}_RxFifoFillLevelGet(MCAN_RX_FIFO_NUM rxFifoNum);
 </#if>
 MCAN_ERROR ${MCAN_INSTANCE_NAME}_ErrorGet(void);
 void ${MCAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount);
-bool ${MCAN_INSTANCE_NAME}_InterruptGet(MCAN_INTERRUPT_MASK interruptMask);
-void ${MCAN_INSTANCE_NAME}_InterruptClear(MCAN_INTERRUPT_MASK interruptMask);
 void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress);
 <#if FILTERS_STD?number gt 0>
 bool ${MCAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, mcan_sidfe_registers_t *stdMsgIDFilterElement);
@@ -186,6 +181,21 @@ bool ${MCAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, mcan_x
 </#if>
 void ${MCAN_INSTANCE_NAME}_SleepModeEnter(void);
 void ${MCAN_INSTANCE_NAME}_SleepModeExit(void);
+<#if TXBUF_USE>
+void ${MCAN_INSTANCE_NAME}_TxBuffersCallbackRegister(MCAN_TXRX_BUFFERS_CALLBACK callback, uintptr_t contextHandle);
+</#if>
+<#if TX_USE>
+void ${MCAN_INSTANCE_NAME}_TxFifoCallbackRegister(MCAN_TX_FIFO_CALLBACK callback, uintptr_t contextHandle);
+</#if>
+<#if TX_USE || TXBUF_USE>
+void ${MCAN_INSTANCE_NAME}_TxEventFifoCallbackRegister(MCAN_TX_EVENT_FIFO_CALLBACK callback, uintptr_t contextHandle);
+</#if>
+<#if RXBUF_USE>
+void ${MCAN_INSTANCE_NAME}_RxBuffersCallbackRegister(MCAN_TXRX_BUFFERS_CALLBACK callback, uintptr_t contextHandle);
+</#if>
+<#if RXF0_USE || RXF1_USE>
+void ${MCAN_INSTANCE_NAME}_RxFifoCallbackRegister(MCAN_RX_FIFO_NUM rxFifoNum, MCAN_RX_FIFO_CALLBACK callback, uintptr_t contextHandle);
+</#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }
