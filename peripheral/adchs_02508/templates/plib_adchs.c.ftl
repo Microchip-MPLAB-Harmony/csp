@@ -66,9 +66,40 @@
 </#if>
 </#if>
 
+<#compress> <#-- To remove unwanted new lines -->
+<#assign ADCHS_MAX_FILTER_NUM = 0>
+
+<#list 1..(ADCHS_NUM_FILTERS) as i>
+<#assign ADCFLTR_AFEN = "ADCFLTR" + i + "__AFEN">
+<#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
+<#if .vars[ADCFLTR_AFEN] == true && .vars[ADCHS_DFx_INT_ENABLED] == true>
+<#assign ADCHS_MAX_FILTER_NUM = i>
+</#if>
+</#list>
+
+<#if ADCHS_MAX_FILTER_NUM gt 0>
+ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
+</#if>
+
+<#assign ADCHS_MAX_COMPARATOR_NUM = 0>
+
+<#list 1..(ADCHS_NUM_COMPARATORS) as i>
+<#assign ADCHS_ADCCMPCON_ENDCMP = "ADCCMPCON" + i + "__ENDCMP">
+<#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
+<#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true && .vars[ADCHS_DCx_INT_ENABLED] == true>
+<#assign ADCHS_MAX_COMPARATOR_NUM = i>
+</#if>
+</#list>
+
+<#if ADCHS_MAX_COMPARATOR_NUM gt 0>
+ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
+</#if>
+</#compress>
+
 void ${ADCHS_INSTANCE_NAME}_Initialize()
 {
     ADCCON1bits.ON = 0;
+<#compress> <#-- To remove unwanted new lines -->
 <#if ADCHS_NUM_CHANNELS != 0>
 <#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
     <#assign ADCHS_CH_ENABLE = "ADCHS_"+ i + "_ENABLE">
@@ -83,6 +114,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     </#if>
 </#list>
 </#if>
+</#compress>
 
 <#if ADCHS_7_ENABLE == true>
     <#if (core.PRODUCT_FAMILY == "PIC32MZW")>
@@ -116,11 +148,45 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     ADCCSS1 = 0x${ADCHS_ADCCSS1};
     <#if ADCHS_NUM_SIGNALS gt 31>ADCCSS2 = 0x${ADCHS_ADCCSS2}; </#if>
 
+<#compress> <#-- To remove unwanted new lines -->
 <#if ADC_IS_DMA_AVAILABLE == true>
 <#if ADCHS_ADCDSTAT?? && ADCHS_ADCDSTAT != "0">
     ADCDSTAT = 0x${ADCHS_ADCDSTAT};
 </#if>
 </#if>
+</#compress>
+
+<#compress> <#-- To remove unwanted new lines -->
+<#list 1..(ADCHS_NUM_COMPARATORS) as i>
+<#assign ADCHS_ADCCMPEN = "ADCHS_ADCCMPEN" + i>
+<#assign ADCHS_ADCCMP = "ADCHS_ADCCMP" + i>
+<#assign ADCHS_ADCCMPCON = "ADCHS_ADCCMPCON" + i>
+
+<#if .vars[ADCHS_ADCCMPEN] != "0">
+    ADCCMPEN${i} = 0x${.vars[ADCHS_ADCCMPEN]?upper_case};
+</#if>
+
+<#if .vars[ADCHS_ADCCMP] != "0">
+    ADCCMP${i} = 0x${.vars[ADCHS_ADCCMP]?upper_case};
+</#if>
+
+<#if .vars[ADCHS_ADCCMPCON] != "0">
+    ADCCMPCON${i} = 0x${.vars[ADCHS_ADCCMPCON]?upper_case};
+</#if>
+</#list>
+</#compress>
+
+<#compress> <#-- To remove unwanted new lines -->
+<#list 1..(ADCHS_NUM_FILTERS) as i>
+<#assign ADCHS_ADCFLTR = "ADCHS_ADCFLTR" + i>
+<#if .vars[ADCHS_ADCFLTR] != "0">
+    ADCFLTR${i} = 0x${.vars[ADCHS_ADCFLTR]?upper_case};
+</#if>
+
+</#list>
+</#compress>
+
+<#compress> <#-- To remove unwanted new lines -->
 <#if ADCHS_INTERRUPT == true>
     /* Result interrupt enable */
     ADCGIRQEN1 = 0x${ADCHS_ADCGIRQEN1};
@@ -137,6 +203,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     ${ADCHS_IEC2_REG}SET = 0x${ADCHS_IEC2};
     </#if>
 </#if>
+</#compress>
 <#if ADCCON2__EOSIEN == true>
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
     ${ADCHS_EOS_IEC_REG}SET = _${ADCHS_EOS_IEC_REG}_ADCEOSIE_MASK;
@@ -151,6 +218,38 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     ${ADCHS_DMA_IEC_REG}SET = _${ADCHS_DMA_IEC_REG}_AD1FCBTIE_MASK;
 </#if>
 </#if>
+
+<#compress> <#-- To remove unwanted new lines -->
+<#list 1..(ADCHS_NUM_COMPARATORS) as i>
+<#assign ADCHS_ADCCMPCON_ENDCMP = "ADCCMPCON" + i + "__ENDCMP">
+<#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
+<#assign ADCHS_DCx_IEC_REG = "ADCHS_DC" + i + "_IEC_REG">
+<#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true && .vars[ADCHS_DCx_INT_ENABLED] == true>
+	<#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
+	${.vars[ADCHS_DCx_IEC_REG]}SET = _${.vars[ADCHS_DCx_IEC_REG]}_ADCDC${i}IE_MASK;
+	</#if>
+    <#if core.PRODUCT_FAMILY?contains("PIC32MK")>
+    ${.vars[ADCHS_DCx_IEC_REG]}SET = _${.vars[ADCHS_DCx_IEC_REG]}_AD1DC${i}IE_MASK;
+    </#if>
+</#if>
+</#list>
+</#compress>
+
+<#compress> <#-- To remove unwanted new lines -->
+<#list 1..(ADCHS_NUM_FILTERS) as i>
+<#assign ADCFLTR_AFEN = "ADCFLTR" + i + "__AFEN">
+<#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
+<#assign ADCHS_DFx_IEC_REG = "ADCHS_DF" + i + "_IEC_REG">
+<#if .vars[ADCFLTR_AFEN] == true && .vars[ADCHS_DFx_INT_ENABLED] == true>
+	<#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
+	${.vars[ADCHS_DFx_IEC_REG]}SET = _${.vars[ADCHS_DFx_IEC_REG]}_ADCDF${i}IE_MASK;
+	</#if>
+    <#if core.PRODUCT_FAMILY?contains("PIC32MK")>
+    ${.vars[ADCHS_DFx_IEC_REG]}SET = _${.vars[ADCHS_DFx_IEC_REG]}_AD1DF${i}IE_MASK;
+    </#if>
+</#if>
+</#list>
+</#compress>
 
     /* Turn ON ADC */
     ADCCON1bits.ON = 1;
@@ -175,6 +274,8 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     while(!ADCANCONbits.WKRDY7); // Wait until ADC is ready
     ADCCON3bits.DIGEN7 = 1;      // Enable ADC
 </#if>
+
+
 }
 
 
@@ -348,6 +449,104 @@ ADCHS_DMA_STATUS ${ADCHS_INSTANCE_NAME}_DMAStatusGet(void)
 
 </#if>
 </#if>
+
+<#list 1..(ADCHS_NUM_COMPARATORS) as i>
+<#assign ADCHS_ADCCMPCON_ENDCMP = "ADCCMPCON" + i + "__ENDCMP">
+<#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
+<#assign ADCHS_DCx_IFS_REG = "ADCHS_DC" + i + "_IFS_REG">
+<#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true>
+void ${ADCHS_INSTANCE_NAME}_Comparator${i}Enable(void)
+{
+    ADCCMPCON${i}bits.ENDCMP = 1;
+}
+void ${ADCHS_INSTANCE_NAME}_Comparator${i}Disable(void)
+{
+    ADCCMPCON${i}bits.ENDCMP = 0;
+}
+void ${ADCHS_INSTANCE_NAME}_Comparator${i}LimitSet(uint16_t low_threshold, uint16_t high_threshold)
+{
+    ADCCMP${i}bits.DCMPHI = high_threshold;
+    ADCCMP${i}bits.DCMPLO = low_threshold;
+}
+void ${ADCHS_INSTANCE_NAME}_Comparator${i}EventModeSet(ADCHS_CMP_EVENT_MODE eventMode)
+{
+    ADCCMPCON${i} = (ADCCMPCON${i} & ~(ADCHS_CMP_EVENT_MODE_IEBTWN | ADCHS_CMP_EVENT_MODE_IEHIHI | ADCHS_CMP_EVENT_MODE_IEHILO | ADCHS_CMP_EVENT_MODE_IELOHI | ADCHS_CMP_EVENT_MODE_IELOLO)) | (eventMode);
+}
+uint8_t ${ADCHS_INSTANCE_NAME}_Comparator${i}AnalogInputIDGet(void)
+{
+    return ADCCMPCON${i}bits.AINID;
+}
+
+<#if .vars[ADCHS_DCx_INT_ENABLED] == true>
+void ${ADCHS_INSTANCE_NAME}_Comparator${i}CallbackRegister(ADCHS_DC_CALLBACK callback, uintptr_t context)
+{
+    ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].callback_fn = callback;
+    ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].context = context;
+}
+
+void ADC_DC${i}_InterruptHandler(void)
+{
+    ADCHS_CHANNEL_NUM channelId;
+<#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
+    ${.vars[ADCHS_DCx_IFS_REG]}CLR = _${.vars[ADCHS_DCx_IFS_REG]}_ADCDC${i}IF_MASK;
+</#if>
+<#if core.PRODUCT_FAMILY?contains("PIC32MK")>
+    ${.vars[ADCHS_DCx_IFS_REG]}CLR = _${.vars[ADCHS_DCx_IFS_REG]}_AD1DC${i}IF_MASK;
+</#if>
+
+    channelId = ADCCMPCON${i}bits.AINID;
+
+    if (${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].callback_fn != NULL)
+    {
+      ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].callback_fn(channelId, ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].context);
+    }
+}
+<#else>
+bool ${ADCHS_INSTANCE_NAME}_Comparator${i}StatusGet(void)
+{
+    return ADCCMPCON${i}bits.DCMPED;
+}
+</#if>
+</#if>
+</#list>
+
+<#list 1..(ADCHS_NUM_FILTERS) as i>
+<#assign ADCFLTR_AFEN = "ADCFLTR" + i + "__AFEN">
+<#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
+<#assign ADCHS_DFx_IFS_REG = "ADCHS_DF" + i + "_IFS_REG">
+<#if .vars[ADCFLTR_AFEN] == true>
+uint16_t ${ADCHS_INSTANCE_NAME}_Filter${i}DataGet(void)
+{
+    return ADCFLTR${i}bits.FLTRDATA;
+}
+<#if .vars[ADCHS_DFx_INT_ENABLED] == true>
+void ${ADCHS_INSTANCE_NAME}_Filter${i}CallbackRegister(ADCHS_DF_CALLBACK callback, uintptr_t context)
+{
+    ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn = callback;
+    ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].context = context;
+}
+
+void ADC_DF${i}_InterruptHandler(void)
+{
+<#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
+    ${.vars[ADCHS_DFx_IFS_REG]}CLR = _${.vars[ADCHS_DFx_IFS_REG]}_ADCDF${i}IF_MASK;
+</#if>
+<#if core.PRODUCT_FAMILY?contains("PIC32MK")>
+    ${.vars[ADCHS_DFx_IFS_REG]}CLR = _${.vars[ADCHS_DFx_IFS_REG]}_AD1DF${i}IF_MASK;
+</#if>
+    if (${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn != NULL)
+    {
+      ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn(${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].context);
+    }
+}
+<#else>
+bool ${ADCHS_INSTANCE_NAME}_Filter${i}IsReady(void)
+{
+    return ADCFLTR${i}bits.AFRDY;
+}
+</#if>
+</#if>
+</#list>
 
 <#if ADCCON2__EOSIEN == true>
 void ${ADCHS_INSTANCE_NAME}_EOSCallbackRegister(ADCHS_EOS_CALLBACK callback, uintptr_t context)

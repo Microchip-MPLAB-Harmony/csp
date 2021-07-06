@@ -67,6 +67,30 @@ extern "C" {
 
 // DOM-IGNORE-END
 
+<#assign ADCHS_COMPARATOR_ENABLED = 0>
+<#assign ADCHS_COMPARATOR_INT_ENABLED = 0>
+
+<#list 1..(ADCHS_NUM_COMPARATORS) as i>
+<#assign ADCHS_ADCCMPCON_ENDCMP = "ADCCMPCON" + i + "__ENDCMP">
+<#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
+<#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true>
+<#assign ADCHS_COMPARATOR_ENABLED = 1>
+<#if .vars[ADCHS_DCx_INT_ENABLED] == true>
+<#assign ADCHS_COMPARATOR_INT_ENABLED = 1>
+</#if>
+</#if>
+</#list>
+
+<#assign ADCHS_FILTER_INT_ENABLED = 0>
+
+<#list 1..(ADCHS_NUM_FILTERS) as i>
+<#assign ADCFLTR_AFEN = "ADCFLTR" + i + "__AFEN">
+<#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
+<#if .vars[ADCFLTR_AFEN] == true && .vars[ADCHS_DFx_INT_ENABLED] == true>
+<#assign ADCHS_FILTER_INT_ENABLED = 1>
+</#if>
+</#list>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Types
@@ -96,6 +120,17 @@ typedef enum
 </#list>
 }ADCHS_CHANNEL_NUM;
 
+<#if ADCHS_COMPARATOR_ENABLED == 1>
+typedef enum
+{
+    ADCHS_CMP_EVENT_MODE_IELOLO = 0x01,
+    ADCHS_CMP_EVENT_MODE_IELOHI = 0x02,
+    ADCHS_CMP_EVENT_MODE_IEHILO = 0x04,
+    ADCHS_CMP_EVENT_MODE_IEHIHI = 0x08,
+    ADCHS_CMP_EVENT_MODE_IEBTWN = 0x10,
+}ADCHS_CMP_EVENT_MODE;
+</#if>
+
 <#if ADC_IS_DMA_AVAILABLE == true>
 typedef enum
 {
@@ -120,6 +155,15 @@ typedef void (*ADCHS_EOS_CALLBACK)(uintptr_t context);
 <#if ADC_IS_DMA_AVAILABLE == true>
 typedef void (*ADCHS_DMA_CALLBACK)(ADCHS_DMA_STATUS dmaStatus, uintptr_t context);
 </#if>
+
+<#if ADCHS_COMPARATOR_INT_ENABLED == 1>
+typedef void (*ADCHS_DC_CALLBACK)(ADCHS_CHANNEL_NUM channel, uintptr_t context);
+</#if>
+
+<#if ADCHS_FILTER_INT_ENABLED == 1>
+typedef void (*ADCHS_DF_CALLBACK)(uintptr_t context);
+</#if>
+
 // *****************************************************************************
 
 typedef struct
@@ -140,6 +184,22 @@ typedef struct
     ADCHS_DMA_CALLBACK callback_fn;
     uintptr_t context;
 }ADCHS_DMA_CALLBACK_OBJECT;
+</#if>
+
+<#if ADCHS_COMPARATOR_INT_ENABLED == 1>
+typedef struct
+{
+    ADCHS_DC_CALLBACK callback_fn;
+    uintptr_t context;
+}ADCHS_DC_CALLBACK_OBJECT;
+</#if>
+
+<#if ADCHS_FILTER_INT_ENABLED == 1>
+typedef struct
+{
+    ADCHS_DF_CALLBACK callback_fn;
+    uintptr_t context;
+}ADCHS_DF_CALLBACK_OBJECT;
 </#if>
 
 // DOM-IGNORE-BEGIN

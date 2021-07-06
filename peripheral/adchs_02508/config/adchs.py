@@ -35,6 +35,16 @@ adchsCONMenu = [None] * 64
 adchsSym_CH_ENABLE = []
 adchsSym_CH_NAME = []
 
+OversamplingModeDescription = [
+{"0x7" : "(If DFMODE is 0) 128 samples (shift sum 3 bits to right output data is in 15.1 format) / (If DFMODE is 1) 256 samples (256 samples to be averaged)"},
+{"0x6" : "(If DFMODE is 0) 32 samples (shift sum 2 bits to right output data is in 14.1 format) / (If DFMODE is 1) 128 samples (128 samples to be averaged)"},
+{"0x5" : "(If DFMODE is 0) 8 samples (shift sum 1 bit to right output data is in 13.1 format) / (If DFMODE is 1) 64 samples (64 samples to be averaged)"},
+{"0x4" : "(If DFMODE is 0) 2 samples (shift sum 0 bits to right output data is in 12.1 format) / (If DFMODE is 1) 32 samples (32 samples to be averaged)"},
+{"0x3" : "(If DFMODE is 0) 256 samples (shift sum 4 bits to right output data is 16 bits) / (If DFMODE is 1) 16 samples (16 samples to be averaged)"},
+{"0x2" : "(If DFMODE is 0) 64 samples (shift sum 3 bits to right output data is 15 bits) / (If DFMODE is 1) 8 samples (8 samples to be averaged)"},
+{"0x1" : "(If DFMODE is 0) 16 samples (shift sum 2 bits to right output data is 14 bits) / (If DFMODE is 1) 4 samples (4 samples to be averaged)"},
+{"0x0" : "(If DFMODE is 0) 4 samples (shift sum 1 bit to right output data is 13 bits) / (If DFMODE is 1) 2 samples (2 samples to be averaged)"}]
+
 ###################################################################################################
 ########################### Locally Used Functions   #################################
 ###################################################################################################
@@ -572,6 +582,81 @@ def adchsCalcADCDSTAT (symbol, event):
     adcdstat = dmagen + rbfien + dmacen + rafien
     symbol.setValue(adcdstat)
 
+def adchsADCCMPCON_Update(symbol, event):
+    component = symbol.getComponent()
+    regIndex = symbol.getID()[-1]
+
+    adccmpcon = 0
+
+    if component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__ENDCMP") ==  True:
+        endcmp = component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__ENDCMP") << 7
+        dcmpgien = component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__DCMPGIEN") << 6
+        iebtwn = component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__IEBTWN") << 4
+        iehihi = component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__IEHIHI") << 3
+        iehilo = component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__IEHILO") << 2
+        ielohi = component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__IELOHI") << 1
+        ielolo = component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__IELOLO")
+
+        adccmpcon = endcmp + dcmpgien + iebtwn + iehihi + iehilo + ielohi + ielolo
+
+    symbol.setValue(adccmpcon)
+
+    # Enable EVIC interrupt if both comparator and interrupt are enabled
+    if component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__ENDCMP") ==  True and component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__DCMPGIEN") == True:
+        component.setSymbolValue("ADCHS_DC" + str(regIndex) + "_INT_ENABLED", True)
+    else:
+        component.setSymbolValue("ADCHS_DC" + str(regIndex) + "_INT_ENABLED", False)
+
+
+def adchsADCCMPEN_Update(symbol, event):
+    component = symbol.getComponent()
+    regIndex = symbol.getID()[-1]
+
+    cmpe = 0
+
+    if component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__ENDCMP") ==  True:
+        for index in range (0, 31):
+            cmpe |= component.getSymbolValue("ADCCMPEN" + str(regIndex) + "__CMPE" + str(index)) << index
+
+    symbol.setValue(cmpe)
+
+def adchsADCCMP_Update(symbol, event):
+    component = symbol.getComponent()
+    regIndex = symbol.getID()[-1]
+
+    adccmp = 0
+
+    if component.getSymbolValue("ADCCMPCON" + str(regIndex) + "__ENDCMP") ==  True:
+        dcmphi = component.getSymbolValue("ADCCMP" + str(regIndex) + "__DCMPHI") << 16
+        dcmplo = component.getSymbolValue("ADCCMP" + str(regIndex) + "__DCMPLO")
+
+        adccmp = dcmphi + dcmplo
+
+    symbol.setValue(adccmp)
+
+def adchsADCFLTR_Update (symbol, event):
+    component = symbol.getComponent()
+    regIndex = symbol.getID()[-1]
+
+    adcfltr = 0
+
+    if component.getSymbolValue("ADCFLTR" + str(regIndex) + "__AFEN") == True:
+        afen = component.getSymbolValue("ADCFLTR" + str(regIndex) + "__AFEN") << 31
+        dfmode = int(component.getSymbolByID("ADCFLTR" + str(regIndex) + "__DFMODE").getSelectedValue()) << 29
+        ovrsam = int(component.getSymbolByID("ADCFLTR" + str(regIndex) + "__OVRSAM").getSelectedValue(), 16) << 26
+        afgien = component.getSymbolValue("ADCFLTR" + str(regIndex) + "__AFGIEN") << 25
+        chnlid = component.getSymbolValue("ADCFLTR" + str(regIndex) + "__CHNLID") << 16
+
+        adcfltr = afen + dfmode + ovrsam + afgien + chnlid
+
+    symbol.setValue(adcfltr)
+
+    # Enable EVIC interrupt if both filter and interrupt are enabled
+    if component.getSymbolValue("ADCFLTR" + str(regIndex) + "__AFEN") ==  True and component.getSymbolValue("ADCFLTR" + str(regIndex) + "__AFGIEN") == True:
+        component.setSymbolValue("ADCHS_DF" + str(regIndex) + "_INT_ENABLED", True)
+    else:
+        component.setSymbolValue("ADCHS_DF" + str(regIndex) + "_INT_ENABLED", False)
+
 def adchsCalcADCTRGSNS(symbol, event):
     adctrgsns = 0x0
     lvl = 0x0
@@ -697,7 +782,36 @@ def adchsDMAInterrupt(symbol, event):
     if(event["value"] == True):
         Database.setSymbolValue("core", InterruptHandler, interruptName + "_InterruptHandler", 1)
     else:
-        print interruptName + "_Handler"
+        Database.setSymbolValue("core", InterruptHandler, interruptName + "_Handler", 1)
+
+def adchsCMPInterrupt(symbol, event):
+    cmpIndex = symbol.getID()[len("ADCHS_DC")]
+
+    InterruptVector = "ADC_DC" + cmpIndex +"_INTERRUPT_ENABLE"
+    InterruptHandlerLock = "ADC_DC" + cmpIndex + "_INTERRUPT_HANDLER_LOCK"
+    InterruptHandler = "ADC_DC" + cmpIndex + "_INTERRUPT_HANDLER"
+
+    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+    interruptName = InterruptHandler.split("_INTERRUPT_HANDLER")[0]
+    if(event["value"] == True):
+        Database.setSymbolValue("core", InterruptHandler, interruptName + "_InterruptHandler", 1)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, interruptName + "_Handler", 1)
+
+def adchsFLTInterrupt(symbol, event):
+    cmpIndex = symbol.getID()[len("ADCHS_DF")]
+
+    InterruptVector = "ADC_DF" + cmpIndex +"_INTERRUPT_ENABLE"
+    InterruptHandlerLock = "ADC_DF" + cmpIndex + "_INTERRUPT_HANDLER_LOCK"
+    InterruptHandler = "ADC_DF" + cmpIndex + "_INTERRUPT_HANDLER"
+
+    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+    interruptName = InterruptHandler.split("_INTERRUPT_HANDLER")[0]
+    if(event["value"] == True):
+        Database.setSymbolValue("core", InterruptHandler, interruptName + "_InterruptHandler", 1)
+    else:
         Database.setSymbolValue("core", InterruptHandler, interruptName + "_Handler", 1)
 
 def adchsNVICInterrupt(symbol, event):
@@ -787,6 +901,11 @@ def adchsSharedConvRateCalc(symbol, event):
     ch_enable = component.getSymbolValue("ADCHS_"+str(channelID)+"_ENABLE")
     symbol.setVisible(ch_enable)
 
+def adcCompVisibility (symbol, event):
+    symbol.setVisible(event["value"])
+
+def adcFilterVisibility (symbol, event):
+    symbol.setVisible(event["value"])
 ###################################################################################################
 ########################### Dependency   #################################
 ###################################################################################################
@@ -981,6 +1100,24 @@ def instantiateComponent(adchsComponent):
     isDMAFeatureAvailable = False
     if "PIC32MK" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
         isDMAFeatureAvailable = True
+
+    numComparators = 0
+    numFilters = 0
+    adchs = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADCHS\"]/register-group@[name=\"ADCHS\"]").getChildren()
+    for index in range(0, len(adchs)):
+        register_name = adchs[index].getAttribute("name")
+        if "ADCCMPEN" in register_name:
+            numComparators = numComparators + 1
+        if "ADCFLTR" in register_name:
+            numFilters = numFilters + 1
+
+    adchsSym_nComparators = adchsComponent.createIntegerSymbol("ADCHS_NUM_COMPARATORS", None)
+    adchsSym_nComparators.setVisible(False)
+    adchsSym_nComparators.setDefaultValue(numComparators)
+
+    adchsSym_nFilters = adchsComponent.createIntegerSymbol("ADCHS_NUM_FILTERS", None)
+    adchsSym_nFilters.setVisible(False)
+    adchsSym_nFilters.setDefaultValue(numFilters)
 
     adchsSym_IsDMAAvailable = adchsComponent.createBooleanSymbol("ADC_IS_DMA_AVAILABLE", None)
     adchsSym_IsDMAAvailable.setDefaultValue(isDMAFeatureAvailable)
@@ -1694,6 +1831,213 @@ def instantiateComponent(adchsComponent):
                         adciec_depList[1].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
                     else:
                         adciec_depList[2].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+
+    adchsCompMenu = adchsComponent.createMenuSymbol("ADCHS_COMPARATOR_MENU", None)
+    adchsCompMenu.setLabel("Digital Comparator Configuration")
+
+    adchsSym_ADCCMPCON_deplist = []
+    adchsSym_ADCCMPEN_deplist = []
+    adchsSym_ADCCMP_deplist = []
+
+    for n in range(1, numComparators + 1):
+        adchsSym_ADCCMPCON_deplist.append([])
+        adchsSym_ADCCMPEN_deplist.append([])
+        adchsSym_ADCCMP_deplist.append([])
+
+        #Calculate the proper ADC_DCx interrupt registers using IRQ#
+        irqString = "ADC_DC" + str(n)
+        Irq_index = int(getIRQnumber(irqString))
+        statRegName = _get_statReg_parms(Irq_index)
+        enblRegIndex = _get_enblReg_parms(Irq_index)
+
+        #IEC REG
+        adchsSym_DCx_IEC = adchsComponent.createStringSymbol("ADCHS_DC" + str(n) + "_IEC_REG", None)
+        adchsSym_DCx_IEC.setDefaultValue("IEC"+str(enblRegIndex))
+        adchsSym_DCx_IEC.setVisible(False)
+
+        #IFS REG
+        adchsSym_DCx_IFS = adchsComponent.createStringSymbol("ADCHS_DC" + str(n) + "_IFS_REG", None)
+        adchsSym_DCx_IFS.setDefaultValue("IFS"+str(enblRegIndex))
+        adchsSym_DCx_IFS.setVisible(False)
+
+        adchsSym_ADCCMPCON_ENDCMP = adchsComponent.createBooleanSymbol("ADCCMPCON" + str(n) + "__ENDCMP", adchsCompMenu)
+        adchsSym_ADCCMPCON_ENDCMP.setLabel("Digital Comparator " + str(n) + " Enable")
+        adchsSym_ADCCMPCON_deplist[n-1].append("ADCCMPCON" + str(n) + "__ENDCMP")
+        adchsSym_ADCCMPEN_deplist[n-1].append("ADCCMPCON" + str(n) + "__ENDCMP")
+        adchsSym_ADCCMP_deplist[n-1].append("ADCCMPCON" + str(n) + "__ENDCMP")
+
+        adchsSym_ADCCMP_DCMPHI = adchsComponent.createIntegerSymbol("ADCCMP" + str(n) + "__DCMPHI", adchsSym_ADCCMPCON_ENDCMP)
+        adchsSym_ADCCMP_DCMPHI.setLabel("High Limit")
+        adchsSym_ADCCMP_DCMPHI.setMin(0)
+        adchsSym_ADCCMP_DCMPHI.setMax(65535)
+        adchsSym_ADCCMP_DCMPHI.setDefaultValue(0)
+        adchsSym_ADCCMP_DCMPHI.setVisible(False)
+        adchsSym_ADCCMP_DCMPHI.setDependencies(adcCompVisibility, ["ADCCMPCON" + str(n) + "__ENDCMP"])
+        adchsSym_ADCCMP_deplist[n-1].append("ADCCMP" + str(n) + "__DCMPHI")
+
+        adchsSym_ADCCMP_DCMPLO = adchsComponent.createIntegerSymbol("ADCCMP" + str(n) + "__DCMPLO", adchsSym_ADCCMPCON_ENDCMP)
+        adchsSym_ADCCMP_DCMPLO.setLabel("Low Limit")
+        adchsSym_ADCCMP_DCMPLO.setMin(0)
+        adchsSym_ADCCMP_DCMPLO.setMax(65535)
+        adchsSym_ADCCMP_DCMPLO.setDefaultValue(0)
+        adchsSym_ADCCMP_DCMPLO.setVisible(False)
+        adchsSym_ADCCMP_DCMPLO.setDependencies(adcCompVisibility, ["ADCCMPCON" + str(n) + "__ENDCMP"])
+        adchsSym_ADCCMP_deplist[n-1].append("ADCCMP" + str(n) + "__DCMPLO")
+
+        adchsSym_ADCCMPCON_IEHIHI = adchsComponent.createBooleanSymbol("ADCCMPCON" + str(n) + "__IEHIHI", adchsSym_ADCCMPCON_ENDCMP)
+        adchsSym_ADCCMPCON_IEHIHI.setLabel("Enable Comparision Event - ADC value >= High Limit")
+        adchsSym_ADCCMPCON_IEHIHI.setDefaultValue(False)
+        adchsSym_ADCCMPCON_IEHIHI.setVisible(False)
+        adchsSym_ADCCMPCON_IEHIHI.setDependencies(adcCompVisibility, ["ADCCMPCON" + str(n) + "__ENDCMP"])
+        adchsSym_ADCCMPCON_deplist[n-1].append("ADCCMPCON" + str(n) + "__IEHIHI")
+
+        adchsSym_ADCCMPCON_IEHILO = adchsComponent.createBooleanSymbol("ADCCMPCON" + str(n) + "__IEHILO", adchsSym_ADCCMPCON_ENDCMP)
+        adchsSym_ADCCMPCON_IEHILO.setLabel("Enable Comparision Event - ADC value < High Limit")
+        adchsSym_ADCCMPCON_IEHILO.setDefaultValue(False)
+        adchsSym_ADCCMPCON_IEHILO.setVisible(False)
+        adchsSym_ADCCMPCON_IEHILO.setDependencies(adcCompVisibility, ["ADCCMPCON" + str(n) + "__ENDCMP"])
+        adchsSym_ADCCMPCON_deplist[n-1].append("ADCCMPCON" + str(n) + "__IEHILO")
+
+        adchsSym_ADCCMPCON_IELOHI = adchsComponent.createBooleanSymbol("ADCCMPCON" + str(n) + "__IELOHI", adchsSym_ADCCMPCON_ENDCMP)
+        adchsSym_ADCCMPCON_IELOHI.setLabel("Enable Comparision Event - ADC value >= Low Limit")
+        adchsSym_ADCCMPCON_IELOHI.setDefaultValue(False)
+        adchsSym_ADCCMPCON_IELOHI.setVisible(False)
+        adchsSym_ADCCMPCON_IELOHI.setDependencies(adcCompVisibility, ["ADCCMPCON" + str(n) + "__ENDCMP"])
+        adchsSym_ADCCMPCON_deplist[n-1].append("ADCCMPCON" + str(n) + "__IELOHI")
+
+        adchsSym_ADCCMPCON_IELOLO = adchsComponent.createBooleanSymbol("ADCCMPCON" + str(n) + "__IELOLO", adchsSym_ADCCMPCON_ENDCMP)
+        adchsSym_ADCCMPCON_IELOLO.setLabel("Enable Comparision Event - ADC value < Low Limit")
+        adchsSym_ADCCMPCON_IELOLO.setDefaultValue(False)
+        adchsSym_ADCCMPCON_IELOLO.setVisible(False)
+        adchsSym_ADCCMPCON_IELOLO.setDependencies(adcCompVisibility, ["ADCCMPCON" + str(n) + "__ENDCMP"])
+        adchsSym_ADCCMPCON_deplist[n-1].append("ADCCMPCON" + str(n) + "__IELOLO")
+
+        adchsSym_ADCCMPCON_IEBTWN = adchsComponent.createBooleanSymbol("ADCCMPCON" + str(n) + "__IEBTWN", adchsSym_ADCCMPCON_ENDCMP)
+        adchsSym_ADCCMPCON_IEBTWN.setLabel("Enable Comparision Event - Low Limit <= ADC Value < High Limit")
+        adchsSym_ADCCMPCON_IEBTWN.setDefaultValue(False)
+        adchsSym_ADCCMPCON_IEBTWN.setVisible(False)
+        adchsSym_ADCCMPCON_IEBTWN.setDependencies(adcCompVisibility, ["ADCCMPCON" + str(n) + "__ENDCMP"])
+        adchsSym_ADCCMPCON_deplist[n-1].append("ADCCMPCON" + str(n) + "__IEBTWN")
+
+        adchsSym_ADCCMPCON_DCMPGIEN = adchsComponent.createBooleanSymbol("ADCCMPCON" + str(n) + "__DCMPGIEN", adchsSym_ADCCMPCON_ENDCMP)
+        adchsSym_ADCCMPCON_DCMPGIEN.setLabel("Enable Interrupt")
+        adchsSym_ADCCMPCON_DCMPGIEN.setDefaultValue(False)
+        adchsSym_ADCCMPCON_DCMPGIEN.setVisible(False)
+        adchsSym_ADCCMPCON_DCMPGIEN.setDependencies(adcCompVisibility, ["ADCCMPCON" + str(n) + "__ENDCMP"])
+        adchsSym_ADCCMPCON_deplist[n-1].append("ADCCMPCON" + str(n) + "__DCMPGIEN")
+
+        for index in range (0, 32):
+            adchsSym_ADCCMPEN_CMPE = adchsComponent.createBooleanSymbol("ADCCMPEN" + str(n) + "__CMPE" + str(index), adchsSym_ADCCMPCON_ENDCMP)
+            adchsSym_ADCCMPEN_CMPE.setLabel("Enable Comparator on Analog Input AN" + str(index))
+            adchsSym_ADCCMPEN_CMPE.setVisible(False)
+            adchsSym_ADCCMPEN_CMPE.setDependencies(adcCompVisibility, ["ADCCMPCON" + str(n) + "__ENDCMP"])
+            adchsSym_ADCCMPEN_deplist[n-1].append("ADCCMPEN" + str(n) + "__CMPE" + str(index))
+
+        adchsSym_ADCCMPCON = adchsComponent.createHexSymbol("ADCHS_ADCCMPCON" + str(n), None)
+        adchsSym_ADCCMPCON.setVisible(False)
+        adchsSym_ADCCMPCON.setDefaultValue(0x00)
+        adchsSym_ADCCMPCON.setDependencies(adchsADCCMPCON_Update, adchsSym_ADCCMPCON_deplist[n-1])
+
+        adchsSym_ADCCMPEN = adchsComponent.createHexSymbol("ADCHS_ADCCMPEN" + str(n), None)
+        adchsSym_ADCCMPEN.setVisible(False)
+        adchsSym_ADCCMPEN.setDefaultValue(0x00)
+        adchsSym_ADCCMPEN.setDependencies(adchsADCCMPEN_Update, adchsSym_ADCCMPEN_deplist[n-1])
+
+        adchsSym_ADCCMP = adchsComponent.createHexSymbol("ADCHS_ADCCMP" + str(n), None)
+        adchsSym_ADCCMP.setVisible(False)
+        adchsSym_ADCCMP.setDefaultValue(0x00)
+        adchsSym_ADCCMP.setDependencies(adchsADCCMP_Update, adchsSym_ADCCMP_deplist[n-1])
+
+        # Internal symbol to indicate if ADC CMP interrupt is enabled or not (used in FTL)
+        adchsSym_DCINTEN = adchsComponent.createBooleanSymbol("ADCHS_DC" + str(n) + "_INT_ENABLED", None)
+        adchsSym_DCINTEN.setDefaultValue(False)
+        adchsSym_DCINTEN.setVisible(False)
+        adchsSym_DCINTEN.setDependencies(adchsCMPInterrupt, ["ADCHS_DC" + str(n) + "_INT_ENABLED"])
+
+
+
+    adchsFilterMenu = adchsComponent.createMenuSymbol("ADCHS_FILTER_MENU", None)
+    adchsFilterMenu.setLabel("Digital Filter Configuration")
+
+    adchsSym_ADCFLTR_deplist = []
+
+    for n in range(1, numFilters + 1):
+        adchsSym_ADCFLTR_deplist.append([])
+
+        #Calculate the proper ADC_DFx interrupt registers using IRQ#
+        irqString = "ADC_DF" + str(n)
+        Irq_index = int(getIRQnumber(irqString))
+        statRegName = _get_statReg_parms(Irq_index)
+        enblRegIndex = _get_enblReg_parms(Irq_index)
+
+        #IEC REG
+        adchsSym_DFx_IEC = adchsComponent.createStringSymbol("ADCHS_DF" + str(n) + "_IEC_REG", None)
+        adchsSym_DFx_IEC.setDefaultValue("IEC"+str(enblRegIndex))
+        adchsSym_DFx_IEC.setVisible(False)
+
+        #IFS REG
+        adchsSym_DFx_IFS = adchsComponent.createStringSymbol("ADCHS_DF" + str(n) + "_IFS_REG", None)
+        adchsSym_DFx_IFS.setDefaultValue("IFS"+str(enblRegIndex))
+        adchsSym_DFx_IFS.setVisible(False)
+
+        adchsSym_ADCFLTR_AFEN = adchsComponent.createBooleanSymbol("ADCFLTR" + str(n) + "__AFEN", adchsFilterMenu)
+        adchsSym_ADCFLTR_AFEN.setLabel("Digital Filter " + str(n) + " Enable")
+        adchsSym_ADCFLTR_deplist[n-1].append("ADCFLTR" + str(n) + "__AFEN")
+
+        adchsSym_ADCFLTR_DFMODE = adchsComponent.createKeyValueSetSymbol("ADCFLTR" + str(n) + "__DFMODE", adchsSym_ADCFLTR_AFEN)
+        adchsSym_ADCFLTR_DFMODE.setLabel("Filter Mode")
+        adchsSym_ADCFLTR_DFMODE.addKey("0", "0", "Oversampling Mode")
+        adchsSym_ADCFLTR_DFMODE.addKey("1", "1", "Averaging Mode")
+        adchsSym_ADCFLTR_DFMODE.setDefaultValue(0)
+        adchsSym_ADCFLTR_DFMODE.setOutputMode("Key")
+        adchsSym_ADCFLTR_DFMODE.setDisplayMode("Description")
+        adchsSym_ADCFLTR_DFMODE.setVisible(False)
+        adchsSym_ADCFLTR_DFMODE.setDependencies(adcFilterVisibility, ["ADCFLTR" + str(n) + "__AFEN"])
+        adchsSym_ADCFLTR_deplist[n-1].append("ADCFLTR" + str(n) + "__DFMODE")
+
+        adchsSym_ADCFLTR_OVRSAM = adchsComponent.createKeyValueSetSymbol("ADCFLTR" + str(n) + "__OVRSAM", adchsSym_ADCFLTR_AFEN)
+        adchsSym_ADCFLTR_OVRSAM.setLabel("Oversampling Ratio")
+        for id in range(len(OversamplingModeDescription)):
+            for key, desc in OversamplingModeDescription[id].items():
+                key = key
+                value = key
+                description = desc             # ATDF does not have proper description attribute. Hence reading from a python list to avoid updating all ATDFs.
+            adchsSym_ADCFLTR_OVRSAM.addKey(key, value, description)
+        adchsSym_ADCFLTR_OVRSAM.setDefaultValue(0)
+        adchsSym_ADCFLTR_OVRSAM.setOutputMode("Value")
+        adchsSym_ADCFLTR_OVRSAM.setDisplayMode("Description")
+        adchsSym_ADCFLTR_OVRSAM.setVisible(False)
+        adchsSym_ADCFLTR_OVRSAM.setDependencies(adcFilterVisibility, ["ADCFLTR" + str(n) + "__AFEN"])
+        adchsSym_ADCFLTR_deplist[n-1].append("ADCFLTR" + str(n) + "__OVRSAM")
+
+        adchsSym_ADCFLTR_CHNLID = adchsComponent.createIntegerSymbol("ADCFLTR" + str(n) + "__CHNLID", adchsSym_ADCFLTR_AFEN)
+        adchsSym_ADCFLTR_CHNLID.setLabel("Channel ID to Filter")
+        adchsSym_ADCFLTR_CHNLID.setMin(0)
+        adchsSym_ADCFLTR_CHNLID.setMax(31)
+        adchsSym_ADCFLTR_CHNLID.setDefaultValue(0)
+        adchsSym_ADCFLTR_CHNLID.setVisible(False)
+        adchsSym_ADCFLTR_CHNLID.setDependencies(adcFilterVisibility, ["ADCFLTR" + str(n) + "__AFEN"])
+        adchsSym_ADCFLTR_deplist[n-1].append("ADCFLTR" + str(n) + "__CHNLID")
+
+        adchsSym_ADCFLTR_AFGIEN = adchsComponent.createBooleanSymbol("ADCFLTR" + str(n) + "__AFGIEN", adchsSym_ADCFLTR_AFEN)
+        adchsSym_ADCFLTR_AFGIEN.setLabel("Enable Interrupt")
+        adchsSym_ADCFLTR_AFGIEN.setVisible(False)
+        adchsSym_ADCFLTR_AFGIEN.setDependencies(adcFilterVisibility, ["ADCFLTR" + str(n) + "__AFEN"])
+        adchsSym_ADCFLTR_deplist[n-1].append("ADCFLTR" + str(n) + "__AFGIEN")
+
+        adchsSym_ADCFLTR = adchsComponent.createHexSymbol("ADCHS_ADCFLTR" + str(n), None)
+        adchsSym_ADCFLTR.setVisible(False)
+        adchsSym_ADCFLTR.setDefaultValue(0x00)
+        adchsSym_ADCFLTR.setDependencies(adchsADCFLTR_Update, adchsSym_ADCFLTR_deplist[n-1])
+
+        # Internal symbol to indicate if ADC Filter interrupt is enabled or not (used in FTL)
+        adchsSym_DFINTEN = adchsComponent.createBooleanSymbol("ADCHS_DF" + str(n) + "_INT_ENABLED", None)
+        adchsSym_DFINTEN.setDefaultValue(False)
+        adchsSym_DFINTEN.setVisible(False)
+        adchsSym_DFINTEN.setDependencies(adchsFLTInterrupt, ["ADCHS_DF" + str(n) + "_INT_ENABLED"])
+
+
+
 
 ###################################################################################################
 ########################### Register Values Calculation   #################################
