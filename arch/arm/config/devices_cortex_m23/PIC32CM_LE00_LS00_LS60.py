@@ -194,9 +194,9 @@ def getCorePeripherals():
 
 global nvmWaitStates
 nvmWaitStates = { #VDD > 2.7
-                    21000000 : 0,
-                    43000000 : 1,
-                    48000000 : 2
+                    21000000 : 1,
+                    43000000 : 2,
+                    48000000 : 3
                 }
 
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]")
