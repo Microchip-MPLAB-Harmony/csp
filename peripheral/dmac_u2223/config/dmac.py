@@ -30,7 +30,9 @@ Log.writeInfoMessage("Loading DMA Manager for " + Variables.get("__PROCESSOR"))
 ################################################################################
 #### Global Variables ####
 ################################################################################
-
+global createDMAChannelVectorList
+global dmaChannelVectorList
+dmaChannelVectorList = []
 global dmacInstanceName
 global dmacHeaderFile
 global dmacSourceFile
@@ -198,44 +200,74 @@ def dmacGlobalLogic(symbol, event):
 
         if not dmacActiveChannels:
             symbol.setValue(False, 2)
+def createDMAChannelVectorList():
+    # Returns a list containing dictionary {channel_number : vector_name}, where vector_name is read from ATDF
+    # The list index corelates to DMAC channel and contains a dictionary with channel number and the vector name to use for that channel
+    # Total size of the list will be equal to DMA_CHANNEL_COUNT (read from ATDF)
+    # Example: dmaChannelVectorList = [{0 : DMAC_0}, {1 : DMAC_1}, {2 : DMAC_2}, {3 : DMAC_3}, {4 : DMAC_OTHER}, {5 : DMAC_OTHER} ... {31 : DMAC_OTHER}]
+    global dmaChannelVectorList
+
+    dmaVectorNameList = []
+
+    dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
+    vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+
+    for id in range(0, len(vectorValues)):
+        if vectorValues[id].getAttribute("module-instance") == "DMAC":
+            dmaVectorNameList.append(vectorValues[id].getAttribute("name"))
+
+    for n in dmaVectorNameList:
+        if "OTHER" in n:
+            # DMA vector name is "DMAC_OTHER"
+            for y in range(len(dmaChannelVectorList), dmaChannelCount):
+                dmaChannelVectorList.append({str(y): n})
+        else:
+            channelList = n[5:].split("_")
+            if len(channelList) == 1:
+                # Enter here where DMA vector names are defined as "DMAC_0" and "DMAC_OTHER"
+                dmaChannelVectorList.append({channelList[0]: n})
+            else:
+                # Enter here for PIC32CX where NVIC interrupt vector names are defined as "DMAC_0_3" and "DMAC_4_15"
+                startCh = channelList[0]
+                endCh = channelList[1]
+                for x in range(int(startCh), int(endCh) + 1):
+                    dmaChannelVectorList.append({str(x): n})
+
+    return dmaChannelVectorList
 
 def onGlobalEnableLogic(symbol, event):
 
     global dmacInstanceName
     global dmacMultiVectorSupported
     global dmacInterruptVectorSecurity
+    global dmaChannelVectorList
 
     # clock enable
     Database.clearSymbolValue("core", dmacInstanceName.getValue() + "_CLOCK_ENABLE")
     Database.setSymbolValue("core", dmacInstanceName.getValue() + "_CLOCK_ENABLE", event["value"], 2)
 
     if dmacMultiVectorSupported:
-        InterruptVector = []
-        InterruptHandler = []
-        InterruptHandlerLock = []
-        dmacInterruptVectorSecurity  = []
-        # interrupt enable
+        dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
         vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+
+        # First disable all the DMAC channel interrupt lines, unlock them and set the default handler
         for id in range(0, len(vectorValues)):
             if vectorValues[id].getAttribute("module-instance") == "DMAC":
-                name = vectorValues[id].getAttribute("name")
-                InterruptVector.append(name + "_INTERRUPT_ENABLE")
-                InterruptHandler.append(name + "_INTERRUPT_HANDLER")
-                InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
-                dmacInterruptVectorSecurity.append(name + "_SET_NON_SECURE")
+                vectorName = vectorValues[id].getAttribute("name")
+                Database.setSymbolValue("core", vectorName + "_INTERRUPT_ENABLE", False, 2)
+                Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER_LOCK", False, 2)
+                Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER", vectorName + "_Handler", 2)
 
         if event["value"] == True:
-            for i in range(0, len(InterruptHandler)):
-                Database.setSymbolValue("core", InterruptVector[i], event["value"], 2)
-                Database.setSymbolValue("core", InterruptHandlerLock[i], event["value"], 2)
-                Database.setSymbolValue("core", InterruptHandler[i], InterruptHandler[i].split(
-                    "_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
-        else:
-            for i in range(0, len(InterruptHandler)):
-                Database.setSymbolValue("core", InterruptVector[i], event["value"], 2)
-                Database.setSymbolValue("core", InterruptHandlerLock[i], event["value"], 2)
-                Database.setSymbolValue("core", InterruptHandler[i], InterruptHandler[i].split(
-                    "_INTERRUPT_HANDLER")[0] + "_Handler", 2)
+            # Now enable DMAC channel interrupt lines for which DMAC channel is enabled
+            for n in range(0, dmaChannelCount):
+                dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(n))
+                # Get the vector name to use for the given DMAC channel
+                vectorName = dmaChannelVectorList[n].get(str(n))
+                if dmaChannelEnable == True:
+                    Database.setSymbolValue("core", vectorName + "_INTERRUPT_ENABLE", True, 2)
+                    Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER_LOCK", True, 2)
+                    Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER", vectorName + "_InterruptHandler", 2)
     else:
         InterruptVector = dmacInstanceName.getValue()+"_INTERRUPT_ENABLE"
         InterruptHandler = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER"
@@ -387,6 +419,9 @@ dmacChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", dmacEnable)
 dmacChCount.setLabel("DMA (DMAC) Channels Count")
 dmacChCount.setDefaultValue(dmacChannelCount)
 dmacChCount.setVisible(False)
+
+if dmacMultiVectorSupported == True:
+    createDMAChannelVectorList()
 
 dmacEventCount = coreComponent.createIntegerSymbol("DMA_EVSYS_CHANNEL_COUNT", dmacEnable)
 dmacEventCount.setDefaultValue(4)
@@ -709,7 +744,7 @@ if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_E
             Database.setSymbolValue("core", vector, dmacIsNonSecure)
     else:
         Database.setSymbolValue("core", dmacInterruptVectorSecurity, dmacIsNonSecure)
-        
+
     if dmacIsNonSecure == False:
         DMACfilesArray[0].setSecurity("SECURE")
         DMACfilesArray[1].setSecurity("SECURE")
