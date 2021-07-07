@@ -283,6 +283,7 @@ dmaManagerSelect.setVisible(False)
 dmaManagerSelect.setDefaultValue("xdmac_11161:SAME70DMAModel")
 
 xdmacBitFieldString = "/avr-tools-device-file/modules/module@[name=\"XDMAC\"]/register-group@[name=\"{0}\"]/register@[name=\"{1}\"]/bitfield@[name=\"{2}\"]"
+xdmacValueGrpString = "/avr-tools-device-file/modules/module@[name=\"XDMAC\"]/value-group@[name=\"{0}\"]"
 
 xdmacMenu = coreComponent.createMenuSymbol("XDMAC_MENU", None)
 xdmacMenu.setLabel("DMA (XDMAC)")
@@ -374,11 +375,14 @@ for channelID in range(0, xdmacChCount.getValue()):
     xdmacSym_CC_DSYNC.setDefaultValue(0)
     xdmacSym_CC_DSYNC.setDependencies(xdmacTriggerLogic, ["XDMAC_CC" + str(channelID) + "_PERID"])
 
-    if ATDF.getNode(xdmacBitFieldString.format("XDMAC_CHID", "XDMAC_CC", "PROT")) is not None:
+    prot_node = ATDF.getNode(xdmacBitFieldString.format("XDMAC_CHID", "XDMAC_CC", "PROT"))
+    if prot_node is not None:
         xdmacSym_CC_PROT = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_PROT", xdmacChannelMenu)
         xdmacSym_CC_PROT.setLabel("Channel Protection")
-        xdmacSym_CC_PROT.addKey("SEC", "0", "Channel is secured")
-        xdmacSym_CC_PROT.addKey("UNSEC", "1", "Channel is unsecured")
+        for value_node in ATDF.getNode(xdmacValueGrpString.format(prot_node.getAttribute("values"))).getChildren():
+            xdmacSym_CC_PROT.addKey(value_node.getAttribute("name"),
+                                    value_node.getAttribute("value"),
+                                    value_node.getAttribute("caption"))
         xdmacSym_CC_PROT.setOutputMode("Key")
         xdmacSym_CC_PROT.setDisplayMode("Description")
         xdmacSym_CC_PROT.setDefaultValue(1)
