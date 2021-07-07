@@ -31,6 +31,8 @@ Log.writeInfoMessage("Loading DMA Manager for " + Variables.get("__PROCESSOR"))
 #### Global Variables ####
 ################################################################################
 global createDMAChannelVectorList
+global dmaChannelVectorList
+dmaChannelVectorList = []
 global dmacInstanceName
 global dmacHeaderFile
 global dmacSourceFile
@@ -176,10 +178,8 @@ def createDMAChannelVectorList():
     # The list index corelates to DMAC channel and contains a dictionary with channel number and the vector name to use for that channel
     # Total size of the list will be equal to DMA_CHANNEL_COUNT (read from ATDF)
     # Example: dmaChannelVectorList = [{0 : DMAC_0}, {1 : DMAC_1}, {2 : DMAC_2}, {3 : DMAC_3}, {4 : DMAC_OTHER}, {5 : DMAC_OTHER} ... {31 : DMAC_OTHER}]
-
+    global dmaChannelVectorList
     dmaVectorNameList = []
-    dmaChannelVectorList = []
-    channelList = []
 
     dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
     vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
@@ -205,8 +205,7 @@ def createDMAChannelVectorList():
     return dmaChannelVectorList
 
 def onGlobalEnableLogic(symbol, event):
-
-    dmaChannelVectorList = createDMAChannelVectorList()
+    global dmaChannelVectorList
 
     #clock enable
     Database.setSymbolValue("core", dmacInstanceName.getValue() + "_CLOCK_ENABLE", event["value"], 2)
@@ -374,6 +373,8 @@ dmacChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", dmacEnable)
 dmacChCount.setLabel("DMA (DMAC) Channels Count")
 dmacChCount.setDefaultValue(dmacChannelCount)
 dmacChCount.setVisible(False)
+
+createDMAChannelVectorList()
 
 dmacEventCount = coreComponent.createIntegerSymbol("DMA_EVSYS_GENERATOR_COUNT", dmacEnable)
 dmacEventCount.setDefaultValue(numGenerators)
