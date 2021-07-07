@@ -398,11 +398,6 @@ dfllOndemand.addKey("Disable",str(0),"Always Enable")
 dfllOndemand.addKey("Enable",str(1),"Only on Peripheral Request")
 dfllOndemand.setDefaultValue(0)
 
-dfllRunstdy = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_RUNSTDY", dfll_Menu)
-dfllRunstdy.setLabel("Run DFLL in Standby Sleep Mode")
-dfllRunstdy.setDescription("DFLL to run in standby mode or not")
-dfllRunstdy.setDefaultValue(False)
-
 dfllQuickLock = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_QUICK_LOCK", dfll_Menu)
 dfllQuickLock.setLabel("Quick lock disable")
 dfllQuickLock.setDescription("Disable quick lock")
