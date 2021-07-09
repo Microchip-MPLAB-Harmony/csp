@@ -52,7 +52,14 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
+<#assign DMA_INTERRUPT_ENABLED = false>
+<#list 0..DMAC_HIGHEST_CHANNEL as i>
+    <#assign CHANENABLE = "DMAC_ENABLE_CH_" + i>
+    <#assign CHANINTENABLE = "DMAC_ENABLE_CH_" + i + "_INTERRUPT">
+    <#if .vars[CHANENABLE] == true && .vars[CHANINTENABLE] == true>
+        <#assign DMA_INTERRUPT_ENABLED = true>
+    </#if>
+</#list>
 /*  This section lists the other files that are included in this file.
 */
 #include <device.h>
@@ -88,11 +95,14 @@ typedef enum
 
 typedef enum
 {
+    /* No event */
+    DMAC_TRANSFER_EVENT_NONE = 0,
+
     /* Data was transferred successfully. */
-    DMAC_TRANSFER_EVENT_COMPLETE,
+    DMAC_TRANSFER_EVENT_COMPLETE = 1,
 
     /* Error while processing the request */
-    DMAC_TRANSFER_EVENT_ERROR
+    DMAC_TRANSFER_EVENT_ERROR = 2
 
 } DMAC_TRANSFER_EVENT;
 
@@ -149,10 +159,12 @@ typedef struct
 
 typedef uint32_t DMAC_CHANNEL_CONFIG;
 
+<#if DMA_INTERRUPT_ENABLED == true>
 typedef void (*DMAC_CHANNEL_CALLBACK) (DMAC_TRANSFER_EVENT event, uintptr_t contextHandle);
+void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle);
+</#if>
 
 void ${DMA_INSTANCE_NAME}_Initialize( void );
-void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle);
 bool ${DMA_INSTANCE_NAME}_ChannelTransfer (DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize);
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel );
 void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel );
@@ -177,6 +189,7 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_C
 void ${DMA_INSTANCE_NAME}_CRCDisable( void );
 void ${DMA_INSTANCE_NAME}_ChannelSuspend ( DMAC_CHANNEL channel );
 void ${DMA_INSTANCE_NAME}_ChannelResume ( DMAC_CHANNEL channel );
+DMAC_TRANSFER_EVENT ${DMA_INSTANCE_NAME}_ChannelTransferStatusGet(DMAC_CHANNEL channel);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
