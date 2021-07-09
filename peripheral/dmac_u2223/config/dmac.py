@@ -46,6 +46,9 @@ global dmacInterruptVectorSecurity
 dmacInterruptVectorSecurity  = []
 DMACfilesArray = []
 
+global dmacChannelInt
+dmacChannelInt = []
+
 # Parse atdf xml file to get instance name for the peripheral which has DMA id.
 # And construct a list of PERIDs
 
@@ -167,9 +170,10 @@ def dmacTriggerLogic(symbol, event):
 # Highest index will be used to create DMAC objects in source code.
 # List empty or non-empty status helps to generate/discard DMAC code.
 
-def dmacGlobalLogic(symbol, event):
+def onChannelEnable(symbol, event):
 
     global dmacActiveChannels
+    dmaGlobalEnable = False
 
     index = event["id"].strip("DMAC_ENABLE_CH_")
 
@@ -189,17 +193,30 @@ def dmacGlobalLogic(symbol, event):
     dmacActiveChannels.reverse()
 
     symbol.clearValue()
+
     # Check if the list is not empty first since list element is accessed in the code
     if dmacActiveChannels:
         if symbol.getID() == "DMAC_HIGHEST_CHANNEL":
             symbol.setValue(int(dmacActiveChannels[0]) + 1, 2)
 
     if symbol.getID() == "DMA_ENABLE":
-        if dmacActiveChannels and symbol.getValue() == False:
-            symbol.setValue(True, 2)
+        if dmacActiveChannels:
+            dmaGlobalEnable = True
 
-        if not dmacActiveChannels:
-            symbol.setValue(False, 2)
+
+        symbol.setValue(dmaGlobalEnable, 2)
+        # clock enable
+        Database.clearSymbolValue("core", dmacInstanceName.getValue() + "_CLOCK_ENABLE")
+        Database.setSymbolValue("core", dmacInstanceName.getValue() + "_CLOCK_ENABLE", dmaGlobalEnable, 2)
+
+        # File generation logic
+        dmacHeaderFile.setEnabled(dmaGlobalEnable)
+        dmacSourceFile.setEnabled(dmaGlobalEnable)
+        dmacSystemInitFile.setEnabled(dmaGlobalEnable)
+        dmacSystemDefFile.setEnabled(dmaGlobalEnable)
+
+
+
 def createDMAChannelVectorList():
     # Returns a list containing dictionary {channel_number : vector_name}, where vector_name is read from ATDF
     # The list index corelates to DMAC channel and contains a dictionary with channel number and the vector name to use for that channel
@@ -235,19 +252,16 @@ def createDMAChannelVectorList():
 
     return dmaChannelVectorList
 
-def onGlobalEnableLogic(symbol, event):
+def updateInterruptLogic(symbol, event):
 
     global dmacInstanceName
     global dmacMultiVectorSupported
     global dmacInterruptVectorSecurity
     global dmaChannelVectorList
 
-    # clock enable
-    Database.clearSymbolValue("core", dmacInstanceName.getValue() + "_CLOCK_ENABLE")
-    Database.setSymbolValue("core", dmacInstanceName.getValue() + "_CLOCK_ENABLE", event["value"], 2)
+    dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
 
     if dmacMultiVectorSupported:
-        dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
         vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
         # First disable all the DMAC channel interrupt lines, unlock them and set the default handler
@@ -258,40 +272,38 @@ def onGlobalEnableLogic(symbol, event):
                 Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER_LOCK", False, 2)
                 Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER", vectorName + "_Handler", 2)
 
-        if event["value"] == True:
-            # Now enable DMAC channel interrupt lines for which DMAC channel is enabled
-            for n in range(0, dmaChannelCount):
-                dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(n))
-                # Get the vector name to use for the given DMAC channel
-                vectorName = dmaChannelVectorList[n].get(str(n))
-                if dmaChannelEnable == True:
-                    Database.setSymbolValue("core", vectorName + "_INTERRUPT_ENABLE", True, 2)
-                    Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER_LOCK", True, 2)
-                    Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER", vectorName + "_InterruptHandler", 2)
+        # Now enable DMAC channel interrupt lines for which DMAC channel is enabled
+        for n in range(0, dmaChannelCount):
+            dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(n))
+            dmaChannelInterrupt = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(n) + "_INTERRUPT")
+            # Get the vector name to use for the given DMAC channel
+            vectorName = dmaChannelVectorList[n].get(str(n))
+            if dmaChannelEnable == True and dmaChannelInterrupt == True:
+                Database.setSymbolValue("core", vectorName + "_INTERRUPT_ENABLE", True, 2)
+                Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER_LOCK", True, 2)
+                Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER", vectorName + "_InterruptHandler", 2)
+
     else:
         InterruptVector = dmacInstanceName.getValue()+"_INTERRUPT_ENABLE"
         InterruptHandler = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER"
         InterruptHandlerLock = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
         dmacInterruptVectorSecurity = dmacInstanceName.getValue() + "_SET_NON_SECURE"
 
-        Database.clearSymbolValue("core", InterruptVector)
-        Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+        dmaIntEnabled = False
 
-        Database.clearSymbolValue("core", InterruptHandlerLock)
-        Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+        for n in range(0, dmaChannelCount):
+            dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(n))
+            dmaChannelInterrupt = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(n) + "_INTERRUPT")
+            if dmaChannelEnable == True and dmaChannelInterrupt == True:
+                dmaIntEnabled = True
 
-        Database.clearSymbolValue("core", InterruptHandler)
+        Database.setSymbolValue("core", InterruptVector, dmaIntEnabled, 2)
+        Database.setSymbolValue("core", InterruptHandlerLock, dmaIntEnabled, 2)
 
-        if event["value"] == True:
+        if dmaIntEnabled == True:
             Database.setSymbolValue("core", InterruptHandler, dmacInstanceName.getValue()+"_InterruptHandler", 2)
         else:
             Database.setSymbolValue("core", InterruptHandler, "DMAC_Handler", 2)
-
-    # File generation logic
-    dmacHeaderFile.setEnabled(event["value"])
-    dmacSourceFile.setEnabled(event["value"])
-    dmacSystemInitFile.setEnabled(event["value"])
-    dmacSystemDefFile.setEnabled(event["value"])
 
 
 def updateDMACInterruptWarringStatus(symbol, event):
@@ -414,6 +426,9 @@ dmacEnable.setLabel("Use DMA Service ?")
 dmacEnable.setVisible(False)
 dmacEnable.setDefaultValue(False)
 
+dmacIntEnable = coreComponent.createBooleanSymbol("DMA_INT_ENABLE", dmacMenu)
+dmacIntEnable.setVisible(False)
+
 # DMA_CHANNEL_COUNT: Needed for DMA system service to generate channel enum
 dmacChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", dmacEnable)
 dmacChCount.setLabel("DMA (DMAC) Channels Count")
@@ -426,11 +441,6 @@ if dmacMultiVectorSupported == True:
 dmacEventCount = coreComponent.createIntegerSymbol("DMA_EVSYS_CHANNEL_COUNT", dmacEnable)
 dmacEventCount.setDefaultValue(4)
 dmacEventCount.setVisible(False)
-
-dmacFileGen = coreComponent.createBooleanSymbol("DMAC_FILE_GEN", dmacEnable)
-dmacFileGen.setLabel("DMA (DMAC) File Generation")
-dmacFileGen.setVisible(False)
-dmacFileGen.setDependencies(onGlobalEnableLogic, ["DMA_ENABLE"])
 
 dmacHighestCh = coreComponent.createIntegerSymbol("DMAC_HIGHEST_CHANNEL", dmacEnable)
 dmacHighestCh.setLabel("DMA (DMAC) Highest Active Channel")
@@ -471,6 +481,12 @@ for channelID in range(0, dmacChCount.getValue()):
         # Channel Run in Standby
         CH_CHCTRLA_RUNSTDBY_Ctrl = coreComponent.createBooleanSymbol("DMAC_CHCTRLA_RUNSTDBY_CH_" + str(channelID), dmacChannelEnable)
         CH_CHCTRLA_RUNSTDBY_Ctrl.setLabel("Run Channel in Standby mode")
+
+    # Enable interrupt
+    dmacChannelEnableInt = coreComponent.createBooleanSymbol("DMAC_ENABLE_CH_" + str(channelID) + "_INTERRUPT", dmacChannelEnable)
+    dmacChannelEnableInt.setLabel("Enable Interrupt")
+    dmacChannelEnableInt.setDefaultValue(True)
+    dmacChannelInt.append("DMAC_ENABLE_CH_" + str(channelID) + "_INTERRUPT")
 
     # CHCTRLB - Trigger Source
     dmacSym_CHCTRLB_TRIGSRC = coreComponent.createComboSymbol("DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID), dmacChannelEnable, sorted(per_instance.keys()))
@@ -604,8 +620,9 @@ for channelID in range(0, dmacChCount.getValue()):
         dmacEvsys.setVisible(False)
         dmacEvsys.setDependencies(dmacEvsysControl, ["DMAC_ENABLE_CH_" + str(channelID), "DMAC_ENABLE_EVSYS_OUT_" + str(channelID), "DMAC_ENABLE_EVSYS_IN_" + str(channelID)])
 
-dmacEnable.setDependencies(dmacGlobalLogic, dmacChannelIds)
-dmacHighestCh.setDependencies(dmacGlobalLogic, dmacChannelIds)
+dmacEnable.setDependencies(onChannelEnable, dmacChannelIds)
+dmacHighestCh.setDependencies(onChannelEnable, dmacChannelIds)
+dmacIntEnable.setDependencies(updateInterruptLogic, dmacChannelIds + dmacChannelInt)
 
 # DMA - Source AM Mask
 xdmacSym_BTCTRL_SRCINC_MASK = coreComponent.createStringSymbol("DMA_SRC_AM_MASK", dmacChannelEnable)
