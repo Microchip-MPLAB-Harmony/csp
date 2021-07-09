@@ -62,6 +62,9 @@ xdmacActiveChannels = []
 global xdmacChannelIds
 xdmacChannelIds = []
 
+global dmacChannelInt
+dmacChannelInt = []
+
 # Device specific XDMAC settings
 triggerSettings = setXDMACDefaultSettings()
 
@@ -158,6 +161,8 @@ def xdmacTriggerLogic(xdmacSym, event):
 def xdmacGlobalLogic(xdmacGlobalSym, event):
     global xdmacActiveChannels
 
+    dmaGlobalEnable = False
+
     index = event["id"].strip("XDMAC_CH")
     index = index.strip("_ENABLE")
     try:
@@ -183,40 +188,44 @@ def xdmacGlobalLogic(xdmacGlobalSym, event):
             xdmacGlobalSym.setValue(int(xdmacActiveChannels[0]) + 1, 2)
 
     if xdmacGlobalSym.getID() == "DMA_ENABLE":
-        if xdmacActiveChannels and xdmacGlobalSym.getValue() is False:
-            xdmacGlobalSym.setValue(True, 2)
+        if xdmacActiveChannels:
+            dmaGlobalEnable = True
 
-        if not xdmacActiveChannels:
-            xdmacGlobalSym.setValue(False, 2)
+        xdmacGlobalSym.setValue(dmaGlobalEnable, 2)
+        Database.setSymbolValue("core", xdmacInstanceName.getValue() + "_CLOCK_ENABLE", dmaGlobalEnable, 2)
+
+        # File generation logic
+        xdmacHeaderFile.setEnabled(dmaGlobalEnable)
+        xdmacCommonHeaderFile.setEnabled(dmaGlobalEnable)
+        xdmacSourceFile.setEnabled(dmaGlobalEnable)
+        xdmacSystemInitFile.setEnabled(dmaGlobalEnable)
+        xdmacSystemDefFile.setEnabled(dmaGlobalEnable)
 
 
-def onGlobalEnableLogic(xdmacFileGen, event):
+def updateInterruptLogic(xdmacFileGen, event):
+
+    dmaIntEnabled = False
 
     interruptVector = xdmacInstanceName.getValue() + "_INTERRUPT_ENABLE"
     interruptHandler = xdmacInstanceName.getValue() + "_INTERRUPT_HANDLER"
     interruptHandlerLock = xdmacInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
 
-    # Initial settings for CLK and NVIC
-    Database.clearSymbolValue("core", xdmacInstanceName.getValue() + "_CLOCK_ENABLE")
-    Database.setSymbolValue("core", xdmacInstanceName.getValue() + "_CLOCK_ENABLE", event["value"], 2)
-    Database.clearSymbolValue("core", interruptVector)
-    Database.setSymbolValue("core", interruptVector, event["value"], 2)
-    Database.clearSymbolValue("core", interruptHandlerLock)
-    Database.setSymbolValue("core", interruptHandlerLock, event["value"], 2)
-    Database.clearSymbolValue("core", interruptHandler)
+    dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
 
-    if event["value"] == True:
+    for channelID in range(0, dmaChannelCount):
+        dmaChannelEnable = Database.getSymbolValue("core", "XDMAC_CH" + str(channelID) + "_ENABLE")
+        dmaChannelInterrupt = Database.getSymbolValue("core", "XDMAC_CH" + str(channelID) + "_ENABLE_INTERRUPT")
+        if dmaChannelEnable == True and dmaChannelInterrupt == True:
+            dmaIntEnabled = True
+            break
+
+    Database.setSymbolValue("core", interruptVector, dmaIntEnabled, 2)
+    Database.setSymbolValue("core", interruptHandlerLock, dmaIntEnabled, 2)
+
+    if dmaIntEnabled == True:
         Database.setSymbolValue("core", interruptHandler, xdmacInstanceName.getValue() + "_InterruptHandler", 2)
     else:
         Database.setSymbolValue("core", interruptHandler, xdmacInstanceName.getValue() + "_Handler", 2)
-
-    # File generation logic
-    xdmacHeaderFile.setEnabled(event["value"])
-    xdmacCommonHeaderFile.setEnabled(event["value"])
-    xdmacSourceFile.setEnabled(event["value"])
-    xdmacSystemInitFile.setEnabled(event["value"])
-    xdmacSystemDefFile.setEnabled(event["value"])
-
 
 def xdmacTriggerCalc(xdmacPERIDVal, event):
     global per_instance
@@ -255,7 +264,7 @@ def xdmacChannelAllocLogic(Sym, event):
                 Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, i, 2)
                 channelAllocated = True
                 break
-        
+
         if channelAllocated == False:
             Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
             Log.writeWarningMessage("Warning!!! Couldn't Allocate any DMA Channel. Check DMA manager.")
@@ -271,7 +280,7 @@ def xdmacChannelAllocLogic(Sym, event):
             Database.setSymbolValue("core", "XDMAC_CC" + str(channelNumber) + "_PERID", "Software Trigger", 2)
             Database.setSymbolValue("core", "XDMAC_CC" + str(channelNumber) + "_PERID_LOCK", False, 2)
             Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
-            
+
 
 
 
@@ -306,17 +315,15 @@ xdmacEnable.setLabel("Use DMA Service?")
 xdmacEnable.setVisible(False)
 xdmacEnable.setDefaultValue(False)
 
+xdmacIntEnable = coreComponent.createBooleanSymbol("DMA_INT_ENABLE", None)
+xdmacIntEnable.setVisible(False)
+
 # DMA_CHANNEL_COUNT: Needed for DMA system service to generate channel enum
 countNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="XDMAC"]/register-group@[name="XDMAC"]/register-group@[name="XDMAC_CHID"]')
 xdmacChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", xdmacEnable)
 xdmacChCount.setLabel("DMA (XDMAC) Channels Count")
 xdmacChCount.setDefaultValue(int(countNode.getAttribute("count")))
 # xdmacChCount.setVisible(False)
-
-xdmacFileGen = coreComponent.createBooleanSymbol("XDMAC_FILE_GEN", xdmacEnable)
-xdmacFileGen.setLabel("DMA (XDMAC) File Generation")
-xdmacFileGen.setDependencies(onGlobalEnableLogic, ["DMA_ENABLE"])
-xdmacFileGen.setVisible(False)
 
 xdmacHighestCh = coreComponent.createIntegerSymbol("XDMAC_HIGHEST_CHANNEL", xdmacEnable)
 xdmacHighestCh.setLabel("DMA (XDMAC) Highest Active Channel")
@@ -338,6 +345,12 @@ for channelID in range(0, xdmacChCount.getValue()):
     xdmacChannelMenu = coreComponent.createMenuSymbol("XDMAC_CH" + str(channelID) + "CONFIG", xdmacChannelEnable)
     xdmacChannelMenu.setLabel("XDMAC Channel " + str(channelID) + " Settings")
     xdmacChannelMenu.setDescription("Configuration for DMA Channel" + str(channelID))
+
+    # Enable interrupt
+    dmacChannelEnableInt = coreComponent.createBooleanSymbol("XDMAC_CH" + str(channelID) + "_ENABLE_INTERRUPT", xdmacChannelMenu)
+    dmacChannelEnableInt.setLabel("Enable Interrupt")
+    dmacChannelEnableInt.setDefaultValue(True)
+    dmacChannelInt.append("XDMAC_CH" + str(channelID) + "_ENABLE_INTERRUPT")
 
     xdmacSym_CC_PERID = coreComponent.createComboSymbol("XDMAC_CC" + str(channelID) + "_PERID", xdmacChannelMenu, sorted(per_instance.keys()))
     xdmacSym_CC_PERID.setLabel("DMA Request")
@@ -434,7 +447,7 @@ for channelID in range(0, xdmacChCount.getValue()):
         xdmacSym_CC_DIF.setDisplayMode("Description")
         xdmacSym_CC_DIF.setDefaultValue(1)
         xdmacSym_CC_DIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC" + str(channelID) + "_PERID"])
-    
+
     xdmacSym_CC_DWIDTH = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_DWIDTH", xdmacChannelMenu)
     xdmacSym_CC_DWIDTH.setLabel("Data Width")
     xdmacSym_CC_DWIDTH.addKey("BYTE", "0", "8-Bits")
@@ -470,6 +483,7 @@ for channelID in range(0, xdmacChCount.getValue()):
 
 xdmacEnable.setDependencies(xdmacGlobalLogic, xdmacChannelIds)
 xdmacHighestCh.setDependencies(xdmacGlobalLogic, xdmacChannelIds)
+xdmacIntEnable.setDependencies(updateInterruptLogic, xdmacChannelIds + dmacChannelInt)
 
 # DMA - Source AM Mask
 xdmacSym_CC_SAM_MASK = coreComponent.createStringSymbol("DMA_SRC_AM_MASK", xdmacChannelMenu)

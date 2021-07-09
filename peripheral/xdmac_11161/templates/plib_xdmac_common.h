@@ -87,11 +87,13 @@
 */
 typedef enum
 {
+    XDMAC_TRANSFER_NONE = 0,
+
     /* Data was transferred successfully. */
-    XDMAC_TRANSFER_COMPLETE,
+    XDMAC_TRANSFER_COMPLETE = 1,
 
     /* Error while processing the request */
-    XDMAC_TRANSFER_ERROR
+    XDMAC_TRANSFER_ERROR = 2
 
 } XDMAC_TRANSFER_EVENT;
 
