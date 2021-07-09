@@ -59,6 +59,14 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+<#assign XDMAC_INTERRUPT_ENABLED = false>
+<#list 0..DMA_CHANNEL_COUNT - 1 as i>
+    <#assign XDMAC_CH_ENABLE = "XDMAC_CH" + i + "_ENABLE">
+    <#assign XDMAC_INT_ENABLE = "XDMAC_CH" + i + "_ENABLE_INTERRUPT">
+    <#if .vars[XDMAC_CH_ENABLE] == true && .vars[XDMAC_INT_ENABLE] == true>
+        <#assign XDMAC_INTERRUPT_ENABLED = true>
+    </#if>
+</#list>
 
 /****************************** XDMAC Data Types ******************************/
 /* XDMAC Channels */
@@ -78,7 +86,9 @@ typedef enum {
 
 void ${DMA_INSTANCE_NAME}_Initialize( void );
 
+<#if XDMAC_INTERRUPT_ENABLED == true>
 void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister( XDMAC_CHANNEL channel, const XDMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle );
+</#if>
 
 bool ${DMA_INSTANCE_NAME}_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize );
 <#if XDMAC_LL_ENABLE == true>
@@ -99,6 +109,8 @@ void ${DMA_INSTANCE_NAME}_ChannelBlockLengthSet (XDMAC_CHANNEL channel, uint16_t
 void ${DMA_INSTANCE_NAME}_ChannelSuspend (XDMAC_CHANNEL channel);
 
 void ${DMA_INSTANCE_NAME}_ChannelResume (XDMAC_CHANNEL channel);
+
+XDMAC_TRANSFER_EVENT ${DMA_INSTANCE_NAME}_ChannelTransferStatusGet(XDMAC_CHANNEL channel);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
