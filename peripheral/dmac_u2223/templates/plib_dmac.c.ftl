@@ -49,6 +49,14 @@
 </#if>
 #include "plib_${DMA_INSTANCE_NAME?lower_case}.h"
 
+<#assign DMA_INTERRUPT_ENABLED = false>
+<#list 0..DMAC_HIGHEST_CHANNEL - 1 as i>
+    <#assign CHANENABLE = "DMAC_ENABLE_CH_" + i>
+    <#assign CHANINTENABLE = "DMAC_ENABLE_CH_" + i + "_INTERRUPT">
+    <#if .vars[CHANENABLE] == true && .vars[CHANINTENABLE] == true>
+        <#assign DMA_INTERRUPT_ENABLED = true>
+    </#if>
+</#list>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data
@@ -63,10 +71,11 @@
 typedef struct
 {
     uint8_t                inUse;
-
+<#if DMA_INTERRUPT_ENABLED == true>
     DMAC_CHANNEL_CALLBACK  callback;
 
     uintptr_t              context;
+</#if>
 
     bool                busyStatus;
 
@@ -100,8 +109,10 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     for(channel = 0U; channel < DMAC_CHANNELS_NUMBER; channel++)
     {
         dmacChObj->inUse = 0U;
+<#if DMA_INTERRUPT_ENABLED == true>
         dmacChObj->callback = NULL;
         dmacChObj->context = 0U;
+</#if>
         dmacChObj->busyStatus = false;
 
         /* Point to next channel object */
@@ -133,6 +144,7 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
         <#assign DMAC_BTCTRL_DSTINC     = "DMAC_BTCTRL_DSTINC_CH_"    + i>
         <#assign DMAC_BTCTRL_BEATSIZE   = "DMAC_BTCTRL_BEATSIZE_CH_"  + i>
         <#assign DMAC_TRIGSRC_PERID_VAL = "DMAC_CHCTRLB_TRIGSRC_CH_" + i + "_PERID_VAL">
+        <#assign DMAC_INT_ENABLE        = "DMAC_ENABLE_CH_" + i + "_INTERRUPT">
         <#if i < DMA_EVSYS_CHANNEL_COUNT>
             <#assign DMAC_EVSYS_OUT = "DMAC_ENABLE_EVSYS_OUT_" + i >
             <#assign DMAC_EVSYS_IN = "DMAC_ENABLE_EVSYS_IN_" + i >
@@ -169,8 +181,9 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
                                                                                     );</@compress>
 
         <#lt>    dmacChannelObj[${i}].inUse = 1U;
-
+        <#if (.vars[DMAC_INT_ENABLE] == true)>
         <#lt>    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTENSET = (uint8_t)(DMAC_CHINTENSET_TERR_Msk | DMAC_CHINTENSET_TCMPL_Msk);
+        </#if>
         </#if>
     </#list>
 
@@ -189,12 +202,21 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
     bool returnStatus = false;
     bool triggerCondition = false;
 
-    if (dmacChannelObj[channel].busyStatus == false)
+    /* Save channel ID */
+    channelId = ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
+
+    /* Set the DMA channel */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = (uint8_t)channel;
+
+    if ((dmacChannelObj[channel].busyStatus == false) || (${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)))
     {
-        /* Get a pointer to the module hardware instance */
-        dmac_descriptor_registers_t *const dmacDescReg = &descriptor_section[channel];
+        /* Clear the transfer complete flag */
+        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk;
 
         dmacChannelObj[channel].busyStatus = true;
+
+        /* Get a pointer to the module hardware instance */
+        dmac_descriptor_registers_t *const dmacDescReg = &descriptor_section[channel];
 
         /* Set source address */
         if ((dmacDescReg->DMAC_BTCTRL & DMAC_BTCTRL_SRCINC_Msk) == DMAC_BTCTRL_SRCINC_Msk)
@@ -222,12 +244,6 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
         /* Set Block Transfer Count */
         dmacDescReg->DMAC_BTCNT = (uint16_t)(blockSize / (1UL << beat_size));
 
-        /* Save channel ID */
-        channelId = ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
-
-        /* Set the DMA channel */
-        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = (uint8_t)channel;
-
         /* Enable the channel */
         ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLA |= (uint8_t)DMAC_CHCTRLA_ENABLE_Msk;
 
@@ -240,11 +256,11 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
             ${DMA_INSTANCE_NAME}_REGS->DMAC_SWTRIGCTRL |= (1UL << (uint32_t)channel);
         }
 
-        /* Restore channel ID */
-        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
-
         returnStatus = true;
     }
+
+    /* Restore channel ID */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
 
     return returnStatus;
 }
@@ -255,8 +271,59 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
 
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel )
 {
-    return (bool)dmacChannelObj[channel].busyStatus;
+    uint8_t channelId = 0U;
+    bool isBusy = false;
+
+    /* Save channel ID */
+    channelId = (uint8_t)${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
+
+    /* Set the DMA channel */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = (uint8_t)channel;
+
+    if (dmacChannelObj[channel].busyStatus == true && ((${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) == 0))
+    {
+        isBusy = true;
+    }
+
+    /* Restore channel ID */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
+
+    return isBusy;
 }
+
+DMAC_TRANSFER_EVENT ${DMA_INSTANCE_NAME}_ChannelTransferStatusGet(DMAC_CHANNEL channel)
+{
+    uint32_t chanIntFlagStatus = 0;
+    uint8_t channelId = 0U;
+
+    DMAC_TRANSFER_EVENT event = DMAC_TRANSFER_EVENT_NONE;
+
+    /* Save channel ID */
+    channelId = (uint8_t)${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
+
+    /* Set the DMA channel */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = (uint8_t)channel;
+
+    /* Get the DMAC channel interrupt status */
+    chanIntFlagStatus = ${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG;
+
+    if (chanIntFlagStatus & DMAC_CHINTENCLR_TCMPL_Msk)
+    {
+        event = DMAC_TRANSFER_EVENT_COMPLETE;
+    }
+
+    /* Verify if DMAC Channel Error flag is set */
+    if (chanIntFlagStatus & DMAC_CHINTENCLR_TERR_Msk)
+    {
+        event = DMAC_TRANSFER_EVENT_ERROR;
+    }
+
+    /* Restore channel ID */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
+
+    return event;
+}
+
 
 /*******************************************************************************
     This function disables the specified DMAC channel.
@@ -302,9 +369,9 @@ void ${DMA_INSTANCE_NAME}_LinkedListDescriptorSetup (dmac_descriptor_registers_t
                                                     dmac_descriptor_registers_t* nextDescriptor)
 {
     uint8_t beat_size = 0U;
-  
+
     currentDescriptor->DMAC_BTCTRL = (uint16_t)setting;
-  
+
     // Set source address
     if ((currentDescriptor->DMAC_BTCTRL & DMAC_BTCTRL_SRCINC_Msk) == DMAC_BTCTRL_SRCINC_Msk)
     {
@@ -314,7 +381,7 @@ void ${DMA_INSTANCE_NAME}_LinkedListDescriptorSetup (dmac_descriptor_registers_t
     {
       currentDescriptor->DMAC_SRCADDR = (uint32_t) (srcAddr);
     }
-  
+
     // Set destination address
     if ((currentDescriptor->DMAC_BTCTRL & DMAC_BTCTRL_DSTINC_Msk) == DMAC_BTCTRL_DSTINC_Msk)
     {
@@ -324,13 +391,13 @@ void ${DMA_INSTANCE_NAME}_LinkedListDescriptorSetup (dmac_descriptor_registers_t
     {
       currentDescriptor->DMAC_DSTADDR = (uint32_t) (destAddr);
     }
-  
+
     // Calculate the beat size and then set the BTCNT value
     beat_size = (uint8_t)((currentDescriptor->DMAC_BTCTRL & DMAC_BTCTRL_BEATSIZE_Msk) >> DMAC_BTCTRL_BEATSIZE_Pos);
     currentDescriptor->DMAC_BTCNT = (uint16_t)(blockSize / (1UL << beat_size));
-  
+
     currentDescriptor->DMAC_DESCADDR = (uint32_t) nextDescriptor;
-}                                                    
+}
 /*******************************************************************************
     This function submit a list of DMA transfers.
 ********************************************************************************/
@@ -339,13 +406,16 @@ bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_
     bool returnStatus = false;
     uint8_t channelId = 0U;
 
-    if (dmacChannelObj[channel].busyStatus == false)
-    {
-        /* Save channel ID */
-        channelId = (uint8_t)${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
+    /* Save channel ID */
+    channelId = ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
 
-        /* Set the DMA channel */
-        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = (uint8_t)channel;
+    /* Set the DMA channel */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = (uint8_t)channel;
+
+    if ((dmacChannelObj[channel].busyStatus == false) || (${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)))
+    {
+        /* Clear the transfer complete flag */
+        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk;
 
         dmacChannelObj[channel].busyStatus = true;
 
@@ -361,11 +431,11 @@ bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_
             ${DMA_INSTANCE_NAME}_REGS->DMAC_SWTRIGCTRL |= (1UL << channel);
         }
 
-        /* Restore channel ID */
-        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
-
         returnStatus = true;
     }
+
+    /* Restore channel ID */
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
 
     return returnStatus;
 }
@@ -381,9 +451,9 @@ void ${DMA_INSTANCE_NAME}_ChannelSuspend ( DMAC_CHANNEL channel )
     /* Set the DMA Channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channel;
 
-    /* Suspend the DMA channel */  
+    /* Suspend the DMA channel */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB = (${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB & ~DMAC_CHCTRLB_CMD_Msk) | DMAC_CHCTRLB_CMD_SUSPEND;
-    
+
     /* Restore channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
 }
@@ -398,13 +468,14 @@ void ${DMA_INSTANCE_NAME}_ChannelResume ( DMAC_CHANNEL channel )
     /* Set the DMA Channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channel;
 
-    /* Suspend the DMA channel */  
+    /* Suspend the DMA channel */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB = (${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB & ~DMAC_CHCTRLB_CMD_Msk) | DMAC_CHCTRLB_CMD_RESUME;
-    
+
     /* Restore channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
 }
 
+<#if DMA_INTERRUPT_ENABLED == true>
 /*******************************************************************************
     This function function allows a DMAC PLIB client to set an event handler.
 ********************************************************************************/
@@ -414,6 +485,7 @@ void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister( DMAC_CHANNEL channel, const D
 
     dmacChannelObj[channel].context  = contextHandle;
 }
+</#if>
 
 /*******************************************************************************
     This function returns the current channel settings for the specified DMAC Channel
@@ -570,13 +642,14 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_C
         }
 
         /* Clear the busy bit */
-        ${DMA_INSTANCE_NAME}_REGS->DMAC_CRCSTATUS = (uint8_t)DMAC_CRCSTATUS_CRCBUSY_Msk; 
+        ${DMA_INSTANCE_NAME}_REGS->DMAC_CRCSTATUS = (uint8_t)DMAC_CRCSTATUS_CRCBUSY_Msk;
     }
 
     /* Return the final CRC calculated for the entire buffer */
     return (${DMA_INSTANCE_NAME}_REGS->DMAC_CRCCHKSUM);
 }
 
+<#if DMA_INTERRUPT_ENABLED == true>
 /*******************************************************************************
     This function handles the DMA interrupt events.
 */
@@ -744,4 +817,5 @@ void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
     /* Restore channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
 }
+</#if>
 </#if>
