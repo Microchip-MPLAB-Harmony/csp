@@ -49,6 +49,15 @@
 #include "interrupts.h"
 </#if>
 
+<#assign DMA_INTERRUPT_ENABLED = false>
+<#list 0..DMAC_HIGHEST_CHANNEL as i>
+    <#assign CHANENABLE = "DMAC_ENABLE_CH_" + i>
+    <#assign CHANINTENABLE = "DMAC_ENABLE_CH_" + i + "_INTERRUPT">
+    <#if .vars[CHANENABLE] == true && .vars[CHANINTENABLE] == true>
+        <#assign DMA_INTERRUPT_ENABLED = true>
+    </#if>
+</#list>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data
@@ -63,8 +72,10 @@
 typedef struct
 {
     uint8_t                inUse;
+<#if DMA_INTERRUPT_ENABLED == true>
     DMAC_CHANNEL_CALLBACK  callback;
     uintptr_t              context;
+</#if>
     uint8_t                busyStatus;
 } DMAC_CH_OBJECT ;
 
@@ -96,8 +107,10 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     for(channel = 0; channel < DMAC_CHANNELS_NUMBER; channel++)
     {
         dmacChObj->inUse = 0;
+<#if DMA_INTERRUPT_ENABLED == true>
         dmacChObj->callback = NULL;
         dmacChObj->context = 0;
+</#if>
         dmacChObj->busyStatus = false;
 
         /* Point to next channel object */
@@ -124,6 +137,7 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
         <#assign DMAC_TRIGSRC_PERID_VAL = "DMAC_CHCTRLA_TRIGSRC_CH_" + i + "_PERID_VAL">
         <#assign DMAC_BURSTLEN = "DMAC_CHCTRLA_BURSTLEN_CH_" + i>
         <#assign DMAC_THRESH = "DMAC_CHCTRLA_THRESH_CH_" + i>
+        <#assign DMAC_INT_ENABLE = "DMAC_ENABLE_CH_" + i + "_INTERRUPT">
         <#if i < DMA_EVSYS_GENERATOR_COUNT>
             <#assign DMAC_EVSYS_OUT = "DMAC_ENABLE_EVSYS_OUT_" + i >
             <#assign DMAC_EVSYS_EVOSEL = "DMAC_BTCTRL_EVSYS_EVOSEL_" + i >
@@ -160,7 +174,9 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
 
         <#lt>   dmacChannelObj[${i}].inUse = 1;
 
+        <#if (.vars[DMAC_INT_ENABLE] == true)>
         <#lt>   ${DMA_INSTANCE_NAME}_REGS->CHANNEL[${i}].DMAC_CHINTENSET = (DMAC_CHINTENSET_TERR_Msk | DMAC_CHINTENSET_TCMPL_Msk);
+        </#if>
 
         <#if i < DMA_EVSYS_USER_COUNT>
         <#if (.vars[DMAC_EVSYS_OUT] == true) || (.vars[DMAC_EVSYS_IN] == true)>
@@ -188,12 +204,15 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
     uint8_t beat_size = 0;
     bool returnStatus = false;
 
-    if (dmacChannelObj[channel].busyStatus == false)
+    if ((dmacChannelObj[channel].busyStatus == false) || (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)))
     {
-        /* Get a pointer to the module hardware instance */
-        dmac_descriptor_registers_t *const dmacDescReg = &descriptor_section[channel];
+        /* Clear the transfer complete flag */
+        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk;
 
         dmacChannelObj[channel].busyStatus = true;
+
+        /* Get a pointer to the module hardware instance */
+        dmac_descriptor_registers_t *const dmacDescReg = &descriptor_section[channel];
 
        /*Set source address */
         if ( dmacDescReg->DMAC_BTCTRL & DMAC_BTCTRL_SRCINC_Msk)
@@ -251,7 +270,36 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
 
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel )
 {
-    return (bool)dmacChannelObj[channel].busyStatus;
+    if (dmacChannelObj[channel].busyStatus == true && ((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) == 0))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+DMAC_TRANSFER_EVENT ${DMA_INSTANCE_NAME}_ChannelTransferStatusGet(DMAC_CHANNEL channel)
+{
+    uint32_t chanIntFlagStatus = 0;
+    DMAC_TRANSFER_EVENT event = DMAC_TRANSFER_EVENT_NONE;
+
+    /* Get the DMAC channel interrupt status */
+    chanIntFlagStatus = ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG;
+
+    if (chanIntFlagStatus & DMAC_CHINTENCLR_TCMPL_Msk)
+    {
+        event = DMAC_TRANSFER_EVENT_COMPLETE;
+    }
+
+    /* Verify if DMAC Channel Error flag is set */
+    if (chanIntFlagStatus & DMAC_CHINTENCLR_TERR_Msk)
+    {
+        event = DMAC_TRANSFER_EVENT_ERROR;
+    }
+
+    return event;
 }
 
 /*******************************************************************************
@@ -330,8 +378,11 @@ bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_
 {
     bool returnStatus = false;
 
-    if (dmacChannelObj[channel].busyStatus == false)
+    if ((dmacChannelObj[channel].busyStatus == false) || (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)))
     {
+        /* Clear the transfer complete flag */
+        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk;
+
         dmacChannelObj[channel].busyStatus = true;
 
         memcpy(&descriptor_section[channel], channelDesc, sizeof(dmac_descriptor_registers_t));
@@ -355,12 +406,13 @@ bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_
 /*******************************************************************************
     This function function allows a DMAC PLIB client to set an event handler.
 ********************************************************************************/
-
+<#if DMA_INTERRUPT_ENABLED == true>
 void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister( DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK callback, const uintptr_t context )
 {
     dmacChannelObj[channel].callback = callback;
     dmacChannelObj[channel].context  = context;
 }
+</#if>
 
 /*******************************************************************************
     This function returns the current channel settings for the specified DMAC Channel
@@ -396,13 +448,13 @@ bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL
 }
 
 void ${DMA_INSTANCE_NAME}_ChannelSuspend ( DMAC_CHANNEL channel )
-{    
-    ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB & ~DMAC_CHCTRLB_CMD_Msk) | DMAC_CHCTRLB_CMD_SUSPEND;    
+{
+    ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB & ~DMAC_CHCTRLB_CMD_Msk) | DMAC_CHCTRLB_CMD_SUSPEND;
 }
 
 void ${DMA_INSTANCE_NAME}_ChannelResume ( DMAC_CHANNEL channel )
 {
-    ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB & ~DMAC_CHCTRLB_CMD_Msk) | DMAC_CHCTRLB_CMD_RESUME;    
+    ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLB & ~DMAC_CHCTRLB_CMD_Msk) | DMAC_CHCTRLB_CMD_RESUME;
 }
 
 /*******************************************************************************
@@ -515,6 +567,7 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_C
     return (${DMA_INSTANCE_NAME}_REGS->DMAC_CRCCHKSUM);
 }
 
+<#if DMA_INTERRUPT_ENABLED == true>
 //*******************************************************************************
 //    Functions to handle DMA interrupt events.
 //*******************************************************************************
@@ -595,3 +648,4 @@ void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
 }
 </#if>
 </#list>
+</#if>
