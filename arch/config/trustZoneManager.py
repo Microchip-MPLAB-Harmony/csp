@@ -37,6 +37,21 @@ def updateSecureEnabledState(symbol, event):
 def updateSecureBootloaderEnabledState(symbol, event):
     symbol.setEnabled(event["value"])
 
+def updateSecureBootSettings(symbol, event):
+    SecureBoot = ""
+    if event["value"] == True:
+        SecureBoot = "_boot"
+    id = symbol.getID()
+
+    if id == "NONSECURE_ENTRY_C":
+        symbol.setOutputName("nonsecure_entry" + SecureBoot + ".c")
+    elif id == "NONSECURE_ENTRY_H":
+        symbol.setOutputName("nonsecure_entry" + SecureBoot + ".h")
+    elif id == "SEC_XC32_LINKER_CMSE_FLAG":
+        symbol.setValue( "--out-implib=" + "../../../NonSecure/firmware/" + str(Variables.get("__NON_SECURE_PROJECT_FOLDER_NAME")) + "/" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + SecureBoot + "_sg_veneer.lib" + " ,--cmse-implib")
+    elif id == "XC32_LINKER_LIBRARY_":
+        symbol.setValue( "-l:" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + SecureBoot + "_sg_veneer.lib")
+
 global fuseMapSymbol
 global fusedependencyList
 fusedependencyList = []
@@ -270,6 +285,7 @@ nonsecureEntrySourceFile.setDestPath("../../trustZone/")
 nonsecureEntrySourceFile.setProjectPath("trustZone/")
 nonsecureEntrySourceFile.setType("SOURCE")
 nonsecureEntrySourceFile.setSecurity("SECURE")
+nonsecureEntrySourceFile.setDependencies(updateSecureBootSettings, ["GENERATE_SECURE_BOOT_MAIN_FILE"])
 
 nonsecureEntryHeaderFile = coreComponent.createFileSymbol("NONSECURE_ENTRY_H", None)
 nonsecureEntryHeaderFile.setSourcePath("templates/trustZone/nonsecure_entry.h.ftl")
@@ -279,6 +295,7 @@ nonsecureEntryHeaderFile.setOverwrite(False)
 nonsecureEntryHeaderFile.setDestPath("../../trustZone/")
 nonsecureEntryHeaderFile.setProjectPath("trustZone/")
 nonsecureEntryHeaderFile.setType("HEADER")
+nonsecureEntryHeaderFile.setDependencies(updateSecureBootSettings, ["GENERATE_SECURE_BOOT_MAIN_FILE"])
 
 def calculateASSize(symbol, event):
     symbol.setValue("AS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
@@ -436,12 +453,14 @@ xc32CMSELinkerFlag.setKey("appendMe")
 xc32CMSELinkerFlag.setValue( "--out-implib=" + "../../../NonSecure/firmware/" + str(Variables.get("__NON_SECURE_PROJECT_FOLDER_NAME")) + "/" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + "_sg_veneer.lib" + " ,--cmse-implib")
 xc32CMSELinkerFlag.setAppend(True, " ")
 xc32CMSELinkerFlag.setSecurity("SECURE")
+xc32CMSELinkerFlag.setDependencies(updateSecureBootSettings, ["GENERATE_SECURE_BOOT_MAIN_FILE"])
 
 xc32LinkerLibraryPath =  coreComponent.createSettingSymbol("XC32_LINKER_LIBRARY_", None)
 xc32LinkerLibraryPath.setCategory("C32-LD")
 xc32LinkerLibraryPath.setKey("appendMe")
 xc32LinkerLibraryPath.setValue( "-l:" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + "_sg_veneer.lib")
 xc32LinkerLibraryPath.setAppend(True, " ")
+xc32LinkerLibraryPath.setDependencies(updateSecureBootSettings, ["GENERATE_SECURE_BOOT_MAIN_FILE"])
 
 xc32LinkerLibraryDirectoryPath = coreComponent.createSettingSymbol("XC32_LINKER_LIBRARY_DIR_PATH", None)
 xc32LinkerLibraryDirectoryPath.setCategory("C32-LD")
