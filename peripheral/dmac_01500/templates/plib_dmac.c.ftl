@@ -46,6 +46,14 @@
 
 #include "plib_${DMA_INSTANCE_NAME?lower_case}.h"
 
+<#assign DMA_INTERRUPT_ENABLED = false>
+<#list 0..NUM_DMA_CHANS - 1 as i>
+    <#assign CHANENABLE = "DMAC_CHAN" + i + "_ENBL">
+    <#assign CHANINTENABLE = "DMAC_" + i + "_ENABLE_INTERRUPT">
+    <#if .vars[CHANENABLE] == true && .vars[CHANINTENABLE] == true>
+        <#assign DMA_INTERRUPT_ENABLED = true>
+    </#if>
+</#list>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data
@@ -253,8 +261,10 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     for(chanIndex = 0; chanIndex < ${NUM_DMA_CHANS}; chanIndex++)
     {
         chanObj->inUse          =    false;
+<#if DMA_INTERRUPT_ENABLED == true>
         chanObj->pEventCallBack =    NULL;
         chanObj->hClientArg     =    0;
+</#if>
         chanObj->errorInfo      =    DMAC_ERROR_NONE;
         chanObj                 =    chanObj + 1;  /* linked list 'next' */
     }
@@ -301,25 +311,26 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
 <#lt>    /* Enable DMA channel interrupts */
 <#list 0..NUM_DMA_CHANS - 1 as i>
     <#assign CHANENABLE = "DMAC_CHAN" + i + "_ENBL">
-    <#if .vars[CHANENABLE] == true>
+    <#assign CHANINTENABLE = "DMAC_" + i + "_ENABLE_INTERRUPT">
+    <#if .vars[CHANENABLE] == true && .vars[CHANINTENABLE] == true>
         <#assign STATCLRREGi = "DMA" + i + "_STATREG_RD">
         <#if .vars[STATCLRREGi] == .vars[STATCLRREG0] >
           <#assign STATREGMASK1 = STATREGMASK1 + " | " + .vars["DMA" + i + "_STATREG_MASK"]>
         <#else>
           <#assign STATREGMASK2 = STATREGMASK2 + " | " + .vars["DMA" + i + "_STATREG_MASK"]>
-        </#if> 
+        </#if>
     </#if>
 </#list>
 <#if STATREGMASK1 != "0">
     IEC${.vars[STATCLRREG0]}SET = ${STATREGMASK1};
-</#if>  
+</#if>
 <#if STATREGMASK2 != "0">
     IEC${.vars[STATCLRREGi]}SET = ${STATREGMASK2};
-</#if>  
+</#if>
 
 
 }
-
+<#if DMA_INTERRUPT_ENABLED == true>
 // *****************************************************************************
 /* Function:
    void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister
@@ -344,7 +355,7 @@ void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMAC_CHANNEL channel, const DM
 
     gDMAChannelObj[channel].hClientArg = contextHandle;
 }
-
+</#if>
 // *****************************************************************************
 /* Function:
    bool ${DMA_INSTANCE_NAME}_ChannelTransfer
@@ -369,9 +380,17 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
 {
     bool returnStatus = false;
     volatile uint32_t *regs;
+    uint32_t DCHxINT_Flags;
 
-    if(gDMAChannelObj[channel].inUse == false)
+    regs = ((volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST}));
+    DCHxINT_Flags = *(volatile uint32_t *)(regs) & (_DCH0INT_CHERIF_MASK | _DCH0INT_CHTAIF_MASK | _DCH0INT_CHBCIF_MASK);
+
+    if((gDMAChannelObj[channel].inUse == false) || (DCHxINT_Flags != 0))
     {
+        /* Clear all the interrupt flags */
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST}) + 1;
+        *(volatile uint32_t *)(regs) = (_DCH0INT_CHSHIF_MASK |_DCH0INT_CHDHIF_MASK | _DCH0INT_CHBCIF_MASK | _DCH0INT_CHTAIF_MASK| _DCH0INT_CHERIF_MASK);
+
         gDMAChannelObj[channel].inUse = true;
         returnStatus = true;
 
@@ -414,9 +433,17 @@ bool ${DMA_INSTANCE_NAME}_ChainTransferSetup( DMAC_CHANNEL channel, const void *
 {
     bool returnStatus = false;
     volatile uint32_t *regs;
+    uint32_t DCHxINT_Flags;
 
-    if(gDMAChannelObj[channel].inUse == false)
+    regs = ((volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST}));
+    DCHxINT_Flags = *(volatile uint32_t *)(regs) & (_DCH0INT_CHERIF_MASK | _DCH0INT_CHTAIF_MASK | _DCH0INT_CHBCIF_MASK);
+
+    if((gDMAChannelObj[channel].inUse == false) || (DCHxINT_Flags != 0))
     {
+        /* Clear all the interrupt flags */
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST}) + 1;
+        *(volatile uint32_t *)(regs) = (_DCH0INT_CHSHIF_MASK |_DCH0INT_CHDHIF_MASK | _DCH0INT_CHBCIF_MASK | _DCH0INT_CHTAIF_MASK| _DCH0INT_CHERIF_MASK);
+
         gDMAChannelObj[channel].inUse = true;
         returnStatus = true;
 
@@ -512,8 +539,44 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable (DMAC_CHANNEL channel)
 */
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel)
 {
-    return (gDMAChannelObj[channel].inUse);
+    uint32_t DCHxINT_Flags;
 
+    DCHxINT_Flags = *(volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST});
+    DCHxINT_Flags = DCHxINT_Flags & (_DCH0INT_CHERIF_MASK | _DCH0INT_CHTAIF_MASK | _DCH0INT_CHBCIF_MASK);
+
+    if ((gDMAChannelObj[channel].inUse == true) && (DCHxINT_Flags == 0))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+}
+
+DMAC_TRANSFER_EVENT ${DMA_INSTANCE_NAME}_ChannelTransferStatusGet(DMAC_CHANNEL channel)
+{
+    uint32_t DCHxINT_Flags;
+
+    DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;
+
+    DCHxINT_Flags = *(volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST});
+
+    if (DCHxINT_Flags & (_DCH0INT_CHSHIF_MASK | _DCH0INT_CHDHIF_MASK))  /* Dest Half-full or Src Half-empty flags */
+    {
+        dmaEvent = DMAC_TRANSFER_EVENT_HALF_COMPLETE;
+    }
+    if (DCHxINT_Flags & (_DCH0INT_CHTAIF_MASK | _DCH0INT_CHERIF_MASK))  /* Abort or Error flags*/
+    {
+        dmaEvent = DMAC_TRANSFER_EVENT_ERROR;
+    }
+    if (DCHxINT_Flags & _DCH0INT_CHBCIF_MASK)   /* Block Transfer complete flag */
+    {
+        dmaEvent = DMAC_TRANSFER_EVENT_COMPLETE;
+    }
+
+    return dmaEvent;
 }
 
 // *****************************************************************************
@@ -644,7 +707,8 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void )
 
 <#list 0..NUM_DMA_CHANS - 1 as i>
     <#assign CHANENABLE = "DMAC_CHAN" + i + "_ENBL">
-    <#if .vars[CHANENABLE] == true>
+    <#assign CHANINTENABLE = "DMAC_" + i + "_ENABLE_INTERRUPT">
+    <#if .vars[CHANENABLE] == true && .vars[CHANINTENABLE] ==true>
         <#assign INTBITSREG = "DCH" + i + "INTbits_REG">
         <#assign INTREG = "DCH" + i + "INT_REG">
         <#assign STATCLRREG = "DMA" + i + "_STATREG_RD">

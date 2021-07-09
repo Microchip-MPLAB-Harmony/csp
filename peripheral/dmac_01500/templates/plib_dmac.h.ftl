@@ -66,6 +66,14 @@
 #endif
 // DOM-IGNORE-END
 
+<#assign DMA_INTERRUPT_ENABLED  = false>
+<#list 0..NUM_DMA_CHANS - 1 as i>
+    <#assign CHANENABLE = "DMAC_CHAN" + i + "_ENBL">
+    <#assign CHANINTENABLE = "DMAC_" + i + "_ENABLE_INTERRUPT">
+    <#if .vars[CHANENABLE] == true && .vars[CHANINTENABLE] == true>
+        <#assign DMA_INTERRUPT_ENABLED  = true>
+    </#if>
+</#list>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -110,17 +118,17 @@ typedef enum
 */
 typedef enum
 {
+    /* No events yet. */
+    DMAC_TRANSFER_EVENT_NONE = 0,
+
     /* Data was transferred successfully. */
-    DMAC_TRANSFER_EVENT_COMPLETE,
+    DMAC_TRANSFER_EVENT_COMPLETE = 1,
 
     /* Error while processing the request */
-    DMAC_TRANSFER_EVENT_ERROR,
-
-    /* No events yet. */
-    DMAC_TRANSFER_EVENT_NONE,
+    DMAC_TRANSFER_EVENT_ERROR = 2,
 
     /* Half Data is transferred */
-    DMAC_TRANSFER_EVENT_HALF_COMPLETE
+    DMAC_TRANSFER_EVENT_HALF_COMPLETE = 4
 
 } DMAC_TRANSFER_EVENT;
 
@@ -138,7 +146,7 @@ typedef enum
     None.
 */
 typedef enum
-{ 
+{
   /* pattern size is of 1 byte */
   DMAC_DATA_PATTERN_SIZE_1_BYTE,
 
@@ -147,7 +155,9 @@ typedef enum
 
 } DMAC_DATA_PATTERN_SIZE;
 
+<#if DMA_INTERRUPT_ENABLED  == true>
 typedef void (*DMAC_CHANNEL_CALLBACK) (DMAC_TRANSFER_EVENT status, uintptr_t contextHandle);
+</#if>
 
 // *****************************************************************************
 /* DMA channel object
@@ -170,11 +180,13 @@ typedef struct
        the last DMA operation on this channel */
     DMAC_ERROR errorInfo;
 
+<#if DMA_INTERRUPT_ENABLED  == true>
     /* Call back function for this DMA channel */
     DMAC_CHANNEL_CALLBACK  pEventCallBack;
 
     /* Client data(Event Context) that will be returned at callback */
     uintptr_t hClientArg;
+</#if>
 
 } DMAC_CHANNEL_OBJECT;
 
@@ -215,7 +227,7 @@ typedef enum
 */
 typedef struct
 {
-    /* DCRCCON[CRCAPP]: The DMA transfers data from the source into the CRC engine and 
+    /* DCRCCON[CRCAPP]: The DMA transfers data from the source into the CRC engine and
      * writes the calculated CRC value to the destination when enabled
     */
     bool append_mode;
@@ -244,7 +256,7 @@ typedef struct
 // Section: DMAC API
 // *****************************************************************************
 // *****************************************************************************
-
+<#if DMA_INTERRUPT_ENABLED  == true>
 // *****************************************************************************
 /* Function:
    void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister
@@ -269,6 +281,7 @@ typedef struct
     </code>
 */
 void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle );
+</#if>
 
 // *****************************************************************************
 /* Function:
@@ -497,6 +510,8 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void );
 */
 void ${DMA_INSTANCE_NAME}_Initialize( void );
 
+
+DMAC_TRANSFER_EVENT ${DMA_INSTANCE_NAME}_ChannelTransferStatusGet(DMAC_CHANNEL channel);
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
