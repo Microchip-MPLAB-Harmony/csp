@@ -30,10 +30,10 @@ Log.writeInfoMessage("Loading DMA Manager for " + Variables.get("__PROCESSOR"))
 global dmaBitfield_DCH0CON_CHPRI
 global dmaBitfield_DCH0INT_CHSHIE
 global dmaBitfield_DCH0INT_CHDHIE
-global dmaBitfield_DCH0CON_CHAEN 
-global dmaBitfield_DCH0CON_CHCHN 
+global dmaBitfield_DCH0CON_CHAEN
+global dmaBitfield_DCH0CON_CHCHN
 global dmaBitfield_DCH0CON_CHCHNS
-global dmaBitfield_DCH0CON_CHAED 
+global dmaBitfield_DCH0CON_CHAED
 
 global dmacActiveChannels
 dmacActiveChannels = []
@@ -212,23 +212,30 @@ def updateDMACChannelInterruptData(symbol, event):
 
     channelNumber = ''.join([i for i in symbol.getID() if i.isdigit()])
 
-    if "_ENBL" in event["id"]:
+    dmaIntEnabled = False
+
+    if "_ENBL" in event["id"] or "_ENABLE_INTERRUPT" in event["id"]:
         InterruptVector = dmaInterruptName + channelNumber + "_INTERRUPT_ENABLE"
         InterruptHandler = dmaInterruptName + channelNumber + "_INTERRUPT_HANDLER"
         InterruptHandlerLock = dmaInterruptName + channelNumber + "_INTERRUPT_HANDLER_LOCK"
         InterruptVectorUpdate = dmaInterruptName + channelNumber + "_INTERRUPT_ENABLE_UPDATE"
 
-        Database.setSymbolValue("core", InterruptVector, event["value"], 1)
-        Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 1)
+        dmaChannelEnable = Database.getSymbolValue("core", "DMAC_CHAN" + channelNumber + "_ENBL")
+        dmaChannelInterrupt = Database.getSymbolValue("core", "DMAC_" + channelNumber + "_ENABLE_INTERRUPT")
+        if dmaChannelEnable == True and dmaChannelInterrupt == True:
+            dmaIntEnabled = True
 
-        if event["value"] == True:
+        Database.setSymbolValue("core", InterruptVector, dmaIntEnabled, 1)
+        Database.setSymbolValue("core", InterruptHandlerLock, dmaIntEnabled, 1)
+
+        if dmaIntEnabled == True:
             Database.setSymbolValue("core", InterruptHandler, dmaInterruptName + channelNumber + "_InterruptHandler", 1)
         else:
             Database.setSymbolValue("core", InterruptHandler, dmaInterruptName + channelNumber + "_Handler", 1)
     else:
         InterruptVectorUpdate = event["id"].replace("core.", "")
 
-    if Database.getSymbolValue("core", "DMAC_CHAN" + channelNumber + "_ENBL") == True and Database.getSymbolValue("core", InterruptVectorUpdate) == True :
+    if Database.getSymbolValue("core", "DMAC_CHAN" + channelNumber + "_ENBL") == True and Database.getSymbolValue("core", "DMAC_" + channelNumber + "_ENABLE_INTERRUPT") == True and Database.getSymbolValue("core", InterruptVectorUpdate) == True :
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -278,7 +285,7 @@ def dchconCallback(symbol, event):
             DCHCON_REG_VAL  |= 1 << CHAEN_pos
     elif("_CHAIN_ENABLE" in event["id"]):
         prio_mask = dmaBitfield_DCH0CON_CHCHN.getAttribute("mask")  # get mask from atdf file
-        CHCHN_pos = _get_position(prio_mask)        
+        CHCHN_pos = _get_position(prio_mask)
         if (event["value"] == False):
             DCHCON_REG_VAL &= ~(1 << CHCHN_pos)
         else:
@@ -292,11 +299,11 @@ def dchconCallback(symbol, event):
             DCHCON_REG_VAL  |= 1 << CHCHNS_pos
     elif("_EVENTS_WHEN_DISABLED" in event["id"]):
         prio_mask = dmaBitfield_DCH0CON_CHAED.getAttribute("mask")  # get mask from atdf file
-        CHAED_pos = _get_position(prio_mask)        
+        CHAED_pos = _get_position(prio_mask)
         if (event["value"] == False):
             DCHCON_REG_VAL &= ~(1 << CHAED_pos)
         else:
-            DCHCON_REG_VAL  |= 1 << CHAED_pos            
+            DCHCON_REG_VAL  |= 1 << CHAED_pos
 
     symbol.setValue(DCHCON_REG_VAL, 2)
 
@@ -340,7 +347,7 @@ def dchintCallback(symbol, event):
             DCHINT_REG_VAL  |= 1 << CHSHIE_pos
     else:
         prio_mask = dmaBitfield_DCH0INT_CHDHIE.getAttribute("mask")  # get mask from atdf file
-        CHDHIE_pos = _get_position(prio_mask)        
+        CHDHIE_pos = _get_position(prio_mask)
         if (event["value"] == False):
             DCHINT_REG_VAL &= ~(1 << CHDHIE_pos)
         else:
@@ -622,6 +629,12 @@ for dmaChannel in range(0, numDMAChans):
     dmacChannelEnable.setLabel("Enable Channel " + str(dmaChannel) + " ?")
     dmacChannelIds.append(dmacChanEnSymId)
 
+    # Enable interrupt
+    dmacChanIntEnSymId = "DMAC_" + str(dmaChannel) + "_ENABLE_INTERRUPT"
+    dmacChannelEnableInt = coreComponent.createBooleanSymbol(dmacChanIntEnSymId, dmacChannelEnable)
+    dmacChannelEnableInt.setLabel("Enable Interrupt")
+    dmacChannelEnableInt.setDefaultValue(True)
+
     # DMA requestor source - menu item.  Name of particular interrupt for src.  SW trigger, or peripheral-triggered.
     dmacChanReqSymId = "DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE"
     symbol = coreComponent.createComboSymbol(dmacChanReqSymId, dmacChannelEnable, sorted(per_instance.keys()))
@@ -654,7 +667,7 @@ for dmaChannel in range(0, numDMAChans):
 
     chainSymbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_CHAIN_ENABLE", dmacChannelEnable)
     chainSymbol.setLabel("Chain Enable")
-    chainSymbol.setDefaultValue(False)    
+    chainSymbol.setDefaultValue(False)
 
     symbol = coreComponent.createKeyValueSetSymbol("DMAC_" + str(dmaChannel) + "_CHAIN_DIRECTION", chainSymbol)
     symbol.setLabel("Chain Direction")
@@ -676,7 +689,7 @@ for dmaChannel in range(0, numDMAChans):
     dmacInterruptWarn[dmaChannel] = coreComponent.createCommentSymbol(symId, dmacChannelEnable)
     dmacInterruptWarn[dmaChannel].setLabel("*** Warning: enable DMA Channel " + str(dmaChannel) + " Interrupt in Interrupt settings ***")
     dmacInterruptWarn[dmaChannel].setVisible(False)
-    dmacInterruptWarn[dmaChannel].setDependencies(updateDMACChannelInterruptData, [dmacInterruptVectorUpdate[dmaChannel], dmacChanEnSymId])
+    dmacInterruptWarn[dmaChannel].setDependencies(updateDMACChannelInterruptData, [dmacInterruptVectorUpdate[dmaChannel], dmacChanEnSymId, dmacChanIntEnSymId])
 
     # derived symbol, used with above:  this will have the interrupt value (which is what is actually needed)
     dmacChanReqSrcVal.append(dmaChannel)
@@ -722,7 +735,7 @@ for dmaChannel in range(0, numDMAChans):
     dmacDchintSym[dmaChannel].setVisible(False)
     dmacDchintSym[dmaChannel].setDefaultValue(0xB0000)
     dmacDchintSym[dmaChannel].setDependencies(dchintCallback, ["DMAC_" + str(dmaChannel) + "_SOURCE_HALF_EMPTY_INT_ENABLE","DMAC_" + str(dmaChannel) + "_DESTINATION_HALF_FULL_INT_ENABLE"])
-    
+
     # DCHxECON<SIRQEN> field value - set by python callback function
     sirqenSym.append(dmaChannel)
     symId = "DCH" + str(dmaChannel) + "_ECON_SIRQEN_VALUE"
