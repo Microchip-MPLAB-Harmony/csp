@@ -1,11 +1,11 @@
 /*******************************************************************************
- Non-secure entry header File for non-secure project
+ Non-secure entry header File for <#if GENERATE_SECURE_BOOT_MAIN_FILE == true>boot </#if>non-secure project
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    nonsecure_entry.h
+    <#if GENERATE_SECURE_BOOT_MAIN_FILE == true>nonsecure_entry_boot.h<#else>nonsecure_entry.h</#if>
 
   Summary:
     Function prototype declarations for Non-secure callable functions
@@ -46,6 +46,15 @@
 // *****************************************************************************
 // *****************************************************************************
 
+<#if GENERATE_SECURE_BOOT_MAIN_FILE == true>
+#ifndef NONSECURE_ENTRY_BOOT_H_
+#define NONSECURE_ENTRY_BOOT_H_
+
+/* Boot Non-secure callable functions */
+extern int boot_secure_add(int x, int y);
+
+#endif /* NONSECURE_ENTRY_BOOT_H_ */
+<#else>
 #ifndef NONSECURE_ENTRY_H_
 #define NONSECURE_ENTRY_H_
 
@@ -53,3 +62,4 @@
 extern int secure_add(int x, int y);
 
 #endif /* NONSECURE_ENTRY_H_ */
+</#if>

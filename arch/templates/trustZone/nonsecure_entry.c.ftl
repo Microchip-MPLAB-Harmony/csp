@@ -1,11 +1,11 @@
 /*******************************************************************************
- Non-secure entry source file for secure project
+ Non-secure entry source file for <#if GENERATE_SECURE_BOOT_MAIN_FILE == true>boot </#if>secure project
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    nonsecure_entry.c
+    <#if GENERATE_SECURE_BOOT_MAIN_FILE == true>nonsecure_entry_boot.c<#else>nonsecure_entry.c</#if>
 
   Summary:
     Implements hooks for Non-secure application
@@ -40,8 +40,13 @@
  *******************************************************************************/
 // DOM-IGNORE-END
 
+<#if GENERATE_SECURE_BOOT_MAIN_FILE == true>
+/* Boot Non-secure callable (entry) function */
+int __attribute__((cmse_nonsecure_entry)) boot_secure_add(int x, int y)
+<#else>
 /* Non-secure callable (entry) function */
 int __attribute__((cmse_nonsecure_entry)) secure_add(int x, int y)
+</#if>
 {
     return (x + y);
 }
