@@ -61,3 +61,44 @@ void ${TRAM_INSTANCE_NAME}_Initialize( void )
 
 }
 
+bool ${TRAM_INSTANCE_NAME}_RAMSet(uint32_t ramIndex, uint32_t data)
+{
+    if (ramIndex > ${TRAM_RAM_COUNT})
+    {
+        return false;
+    }
+
+    ${TRAM_INSTANCE_NAME}_REGS->TRAM_RAM[ramIndex] = TRAM_RAM_DATA(data);
+
+    return true;
+}
+
+bool ${TRAM_INSTANCE_NAME}_RAMGet(uint32_t ramIndex, uint32_t *data)
+{
+    if (ramIndex > ${TRAM_RAM_COUNT})
+    {
+        return false;
+    }
+
+    *data = ${TRAM_INSTANCE_NAME}_REGS->TRAM_RAM[ramIndex];
+
+    return true;
+}
+
+void ${TRAM_INSTANCE_NAME}_DataScrambleKeySet(uint32_t dsckey)
+{
+    ${TRAM_INSTANCE_NAME}_REGS->TRAM_DSCC = TRAM_DSCC_DSCKEY(dsckey);
+}
+
+void ${TRAM_INSTANCE_NAME}_DataScrambleEnable(bool enable)
+{
+    if (enable == true)
+    {
+        ${TRAM_INSTANCE_NAME}_REGS->TRAM_DSCC |= TRAM_DSCC_DSCEN_Msk;
+    }
+    else
+    {
+        /* Clear DSCEN bit and retain the DSCKEY bits (Existing values of DSCKEY bits will be XOR'ed with 0)*/
+        ${TRAM_INSTANCE_NAME}_REGS->TRAM_DSCC = TRAM_DSCC_RESETVALUE;
+    }
+}
