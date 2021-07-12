@@ -59,6 +59,17 @@ def instantiateComponent(tramComponent):
     tramTamper.setLabel("Erase Data on Tamper Detection")
     tramTamper.setDefaultValue(False)
 
+
+    tramRAMNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TRAM"]/register-group@[name="TRAM"]/register@[name="RAM"]')
+    ramCount = int(tramRAMNode.getAttribute("count")) - 1
+
+    tramRAMCount = tramComponent.createIntegerSymbol("TRAM_RAM_COUNT", None)
+    tramRAMCount.setLabel("TRAM RAM Maximum Counter")
+    tramRAMCount.setMin(0)
+    tramRAMCount.setMax(ramCount)
+    tramRAMCount.setDefaultValue(ramCount)
+    tramRAMCount.setVisible(False)
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
     # Generate Output Header
