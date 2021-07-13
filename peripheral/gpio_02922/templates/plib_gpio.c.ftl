@@ -139,15 +139,16 @@ void GPIO_Initialize ( void )
              <#lt>    SR1${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_SRCON1"]}; /* Slew Rate Control */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_CN_USED"] == true>
-             <#lt>    /* Change Notice Enable */
-             <#lt>    CNCON${.vars[channel]}SET = _CNCON${.vars[channel]}_ON_MASK;
-             <#lt>    PORT${.vars[channel]};
-             <#lt>    IEC${SYS_PORT_IFS_REG_INDEX}SET = _IEC${SYS_PORT_IFS_REG_INDEX}_CN${.vars[channel]}IE_MASK;
-        </#if>
-   <#--     <#if .vars["SYS_PORT_${.vars[channel]}_CNEN0"] != "0">
-             <#lt>    CNEN0${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_CNEN0"]};
-        </#if> -->
 
+            <#lt>    /* Change Notice Enable */
+            <#if .vars["SYS_PORT_${.vars[channel]}_CN_STYLE"] == true>
+                <#lt>    CNCON${.vars[channel]}SET = _CNCON${.vars[channel]}_CNSTYLE_MASK | _CNCON${.vars[channel]}_ON_MASK;
+            <#else>
+                <#lt>    CNCON${.vars[channel]}SET = _CNCON${.vars[channel]}_ON_MASK;
+                <#lt>    PORT${.vars[channel]};
+            </#if>
+            <#lt>    IEC${SYS_PORT_IFS_REG_INDEX}SET = _IEC${SYS_PORT_IFS_REG_INDEX}_CN${.vars[channel]}IE_MASK;
+        </#if>
     </#if>
 </#list>
 
@@ -403,6 +404,66 @@ void GPIO_PortInterruptDisable(GPIO_PORT port, uint32_t mask)
 
 // *****************************************************************************
 /* Function:
+    void GPIO_PinIntEnable(GPIO_PIN pin, GPIO_INTERRUPT_STYLE style)
+
+  Summary:
+    Enables IO interrupt of particular style on selected IO pins of a port.
+
+  Remarks:
+    See plib_gpio.h for more details.
+*/
+void GPIO_PinIntEnable(GPIO_PIN pin, GPIO_INTERRUPT_STYLE style)
+{
+    GPIO_PORT port;
+    uint32_t mask;
+
+    port = (GPIO_PORT)(pin>>4);
+    mask =  0x1 << (pin & 0xF);
+
+    if (style == GPIO_INTERRUPT_ON_MISMATCH)
+    {
+        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+    }
+    else if (style == GPIO_INTERRUPT_ON_RISING_EDGE)
+    {
+        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+        *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+    }
+    else if (style == GPIO_INTERRUPT_ON_FALLING_EDGE)
+    {
+        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+        *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+    }
+    else if (style == GPIO_INTERRUPT_ON_BOTH_EDGES)
+    {
+        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+        *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+    }
+}
+
+// *****************************************************************************
+/* Function:
+    void GPIO_PinIntDisable(GPIO_PIN pin)
+
+  Summary:
+    Disables IO interrupt on selected IO pins of a port.
+
+  Remarks:
+    See plib_gpio.h for more details.
+*/
+void GPIO_PinIntDisable(GPIO_PIN pin)
+{
+    GPIO_PORT port;
+    uint32_t mask;
+    
+    port = (GPIO_PORT)(pin>>4);
+    mask =  0x1 << (pin & 0xF);
+
+    *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+}
+// *****************************************************************************
+/* Function:
     bool GPIO_PinInterruptCallbackRegister(
         GPIO_PIN pin,
         const GPIO_PIN_CALLBACK callback,
@@ -460,6 +521,28 @@ bool GPIO_PinInterruptCallbackRegister(
   Remarks:
 	It is an internal function called from ISR, user should not call it directly.
 */
+<#if .vars["SYS_PORT_${.vars[channel]}_CN_STYLE"] == true>
+<#-- ISR for edge type interrupt -->
+void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
+{
+    uint8_t i;
+    uint32_t status;
+
+    status  = CNF${.vars[channel]};
+    CNF${.vars[channel]} = 0;
+
+    IFS${SYS_PORT_IFS_REG_INDEX}CLR = _IFS${SYS_PORT_IFS_REG_INDEX}_CN${.vars[channel]}IF_MASK;
+
+    /* Check pending events and call callback if registered */
+    for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}; i++)
+    {
+        if((status & (1 << (portPinCbObj[i].pin & 0xF))) && (portPinCbObj[i].callback != NULL))
+        {
+            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
+        }
+    }
+}
+<#else>    <#-- ISR for mismatch type interrupt -->
 void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
 {
     uint8_t i;
@@ -480,6 +563,7 @@ void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
         }
     }
 }
+</#if>
         </#if>
     </#if>
 </#list>
