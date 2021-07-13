@@ -840,7 +840,7 @@ def VBKP_32KCSEL_MuxOutput():
     elif mux == "LPRC":
         muxOutputFreq = lprcDefaultFreq
     elif mux == "POSC":
-        muxOutputFreq = Database.getSymbolValue("core", "POSC_OUT_FREQ")
+        muxOutputFreq = Database.getSymbolValue("core", "POSC_OUT_FREQ")/500
     else: # FRC will be divided to give 32000
         muxOutputFreq = 32000
 
