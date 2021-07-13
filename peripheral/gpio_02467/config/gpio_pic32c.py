@@ -712,6 +712,8 @@ portInterruptList = []
 
 global portInterrupt
 portInterrupt = []
+global portInterruptStyle
+portInterruptStyle = []
 global gpioSym_GPIO_CNPU
 gpioSym_GPIO_CNPU = []
 global gpioSym_GPIO_CNPD
@@ -775,6 +777,13 @@ for portNumber in range(0, len(pioSymChannel)):
     portInterrupt[portNumber].setDefaultValue(False)
     portInterrupt[portNumber].setVisible(True)
     portInterrupt[portNumber].setReadOnly(True)
+    portInterruptStyle.append(portNumber)
+    portInterruptStyle[portNumber] = coreComponent.createBooleanSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_CN_STYLE", port[portNumber])
+    portInterruptStyle[portNumber].setLabel("Use Edge Type Interrupt On PORT " + pioSymChannel[portNumber])
+    portInterruptStyle[portNumber].setDescription("if False, mismatch type interrupt will be used; check the box for edge style interrupt")
+    portInterruptStyle[portNumber].setDefaultValue(False)
+    portInterruptStyle[portNumber].setVisible(True)
+    portInterruptStyle[portNumber].setReadOnly(False)
 
     #list created only for dependency
     portInterruptList.append(portNumber)
