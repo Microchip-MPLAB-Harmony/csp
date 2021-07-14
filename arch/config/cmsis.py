@@ -132,34 +132,37 @@ def instantiateComponent(cmsisComponent):
 
         # add dsp header files
         cmsisDSPIncludePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "DSP", "Include")
-        for headerFileName in os.listdir(cmsisDSPIncludePath):
-            szSymbol = headerFileName.replace(".", "_").upper()
-            headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
-            headerFile.setRelative(False)
-            headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/DSP/Include/" + headerFileName)
-            headerFile.setOutputName(headerFileName)
-            headerFile.setMarkup(False)
-            headerFile.setOverwrite(True)
-            headerFile.setDestPath("../../packs/CMSIS/CMSIS/DSP/Include/")
-            headerFile.setProjectPath("packs/CMSIS/CMSIS/DSP/Include/")
-            headerFile.setType("HEADER")
-            headerFile.setEnabled(cmsisDSPEnableSym.getValue())
-            headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
-
-            if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
-                #for Secure
-                headerFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
+        for includePath, _, headerFiles in os.walk(cmsisDSPIncludePath):
+            for headerFileName in headerFiles:
+                filePath = os.path.join(includePath, headerFileName).replace("\\", "/")
+                projPath = os.path.relpath(includePath, Variables.get("__CMSIS_PACK_DIR")).replace("\\", "/")
+                szSymbol = headerFileName.replace(".", "_").upper()
+                headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
                 headerFile.setRelative(False)
-                headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/DSP/Include/" + headerFileName)
+                headerFile.setSourcePath(filePath)
                 headerFile.setOutputName(headerFileName)
                 headerFile.setMarkup(False)
                 headerFile.setOverwrite(True)
-                headerFile.setDestPath("../../packs/CMSIS/CMSIS/DSP/Include/")
-                headerFile.setProjectPath("packs/CMSIS/CMSIS/DSP/Include/")
+                headerFile.setDestPath("../../packs/CMSIS/{0}/".format(projPath))
+                headerFile.setProjectPath("packs/CMSIS/{0}/".format(projPath))
                 headerFile.setType("HEADER")
-                headerFile.setSecurity("SECURE")
                 headerFile.setEnabled(cmsisDSPEnableSym.getValue())
                 headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
+
+                if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                    #for Secure
+                    headerFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
+                    headerFile.setRelative(False)
+                    headerFile.setSourcePath(filePath)
+                    headerFile.setOutputName(headerFileName)
+                    headerFile.setMarkup(False)
+                    headerFile.setOverwrite(True)
+                    headerFile.setDestPath("../../packs/CMSIS/{0}/".format(projPath))
+                    headerFile.setProjectPath("packs/CMSIS/{0}/".format(projPath))
+                    headerFile.setType("HEADER")
+                    headerFile.setSecurity("SECURE")
+                    headerFile.setEnabled(cmsisDSPEnableSym.getValue())
+                    headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
 
         #CMSIS DSP include path setting symbol
         cmsisDSPIncludeSetting = cmsisComponent.createSettingSymbol("CMSIS_DSP_INCLUDE_DIRS", None)
