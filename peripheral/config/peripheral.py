@@ -126,6 +126,13 @@ if( (("SAMV7" in processor) or ("SAME7" in processor) or ("SAMS7" in processor) 
 else:
     peripherals["TC_6082"]=["TMR"]
 
+# Create RAM Peripheral Library
+print("CSP: create component: Peripheral RAM")
+ramComponent = Module.CreateComponent("ram", "RAM", "/Peripherals/RAM/", "../peripheral/ram/config/ram.py")
+ramComponent.setDisplayType("Peripheral Library")
+ramComponent.addCapability("RAM_MEMORY", "MEMORY")
+
+
 for module in range (0, len(modules)):
 
     periphName = str(modules[module].getAttribute("name"))
