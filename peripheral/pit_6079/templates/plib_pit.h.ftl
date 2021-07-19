@@ -278,32 +278,9 @@ void ${PIT_INSTANCE_NAME}_TimerCompareSet( uint16_t compare );
 */
 uint32_t ${PIT_INSTANCE_NAME}_TimerFrequencyGet(void);
 
-<#if ENABLE_INTERRUPT == false>
 // *****************************************************************************
 /* Function:
-    bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void);
-
-  Summary:
-    Return whether or not the Timer Period has expired.
-
-  Description:
-    Check the ${PIT_INSTANCE_NAME} Status register to determine if period has expired.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-  
-  Returns:
-    True    - Indicates period has expired
-    False   - Indicates period has not expired
-*/
-bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void);
-<#elseif ENABLE_INTERRUPT == true>
-// *****************************************************************************
-/* Function:
-    void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t ms);
+    void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t delay_ms)
 
   Summary:
     Delays processing for x milliseconds.
@@ -316,12 +293,35 @@ bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void);
     ${PIT_INSTANCE_NAME} is configured and enabled.  The ${PIT_INSTANCE_NAME} interrupt is also enabled.
 
   Parameters:
-    ms      - number of milliseconds to delay
+    delay_ms - number of milliseconds to delay
   
   Returns:
     None.
 */
-void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t ms);
+void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t delay_ms);
+
+// *****************************************************************************
+/* Function:
+    void ${PIT_INSTANCE_NAME}_DelayUs(uint32_t delay_us)
+
+  Summary:
+    Delays processing for x microseconds.
+
+  Description:
+    Delays execution by using  the ${PIT_INSTANCE_NAME} timer to determine when given number of
+    microseconds has expired.  
+
+  Precondition:
+    ${PIT_INSTANCE_NAME} is configured and enabled.  The ${PIT_INSTANCE_NAME} interrupt is also enabled.
+
+  Parameters:
+    delay_us - number of microseconds to delay
+  
+  Returns:
+    None.
+*/
+void ${PIT_INSTANCE_NAME}_DelayUs(uint32_t delay_us);
+<#if ENABLE_INTERRUPT == true>
 
 // *****************************************************************************
 /* Function:
@@ -370,6 +370,29 @@ __STATIC_INLINE void ${PIT_INSTANCE_NAME}_ClearInterrupt(void)
 {
     (uint32_t)${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
 }
+<#else>
+
+// *****************************************************************************
+/* Function:
+    bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void);
+
+  Summary:
+    Return whether or not the Timer Period has expired.
+
+  Description:
+    Check the ${PIT_INSTANCE_NAME} Status register to determine if period has expired.
+
+  Precondition:
+    None.
+
+  Parameters:
+    None.
+  
+  Returns:
+    True    - Indicates period has expired
+    False   - Indicates period has not expired
+*/
+bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void);
 </#if>
 
 #ifdef __cplusplus  // Provide C++ Compatibility
