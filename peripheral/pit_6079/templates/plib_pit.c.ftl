@@ -47,6 +47,8 @@
 #include "plib_${PIT_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 
+#define PIT_COUNTER_FREQUENCY       (${core.PIT_CLOCK_FREQUENCY}U / 16U)
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -72,20 +74,16 @@ static PIT_OBJECT ${PIT_INSTANCE_NAME?lower_case};
 
 void ${PIT_INSTANCE_NAME}_TimerInitialize(void)
 {
-    <#if ENABLE_INTERRUPT == true>
-        <#assign INTENABLE=1>
-    <#else>
-        <#assign INTENABLE=0>
-    </#if>
     ${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
-    ${PIT_INSTANCE_NAME}_REGS->PIT_MR = PIT_MR_PIV(${PERIOD_TICKS}-1) | PIT_MR_PITEN(${ENABLE_COUNTER?string('1', '0')}) | PIT_MR_PITIEN(${INTENABLE});
+    ${PIT_INSTANCE_NAME}_REGS->PIT_MR = PIT_MR_PIV(${PERIOD_TICKS - 1}U)${ENABLE_COUNTER?string(' | PIT_MR_PITEN_Msk', "")}${ENABLE_INTERRUPT?string(" | PIT_MR_PITIEN_Msk", "")};
 }
 
 void ${PIT_INSTANCE_NAME}_TimerRestart(void)
 {
     ${PIT_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PITEN_Msk;
-    while((${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0) {
-        ;
+    while((${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0U)
+    {
+        //do nothing
     }
     ${PIT_INSTANCE_NAME}_REGS->PIT_MR |= PIT_MR_PITEN_Msk;
 }
@@ -98,8 +96,9 @@ void ${PIT_INSTANCE_NAME}_TimerStart(void)
 void ${PIT_INSTANCE_NAME}_TimerStop(void)
 {
     ${PIT_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PITEN_Msk;
-    while ((${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0) {
-        ;
+    while ((${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0U)
+    {
+        //do nothing
     }
 }
 
@@ -128,33 +127,48 @@ void ${PIT_INSTANCE_NAME}_TimerCompareSet( uint16_t compare )
 
 uint32_t ${PIT_INSTANCE_NAME}_TimerFrequencyGet(void)
 {
-    return ${core.PIT_CLOCK_FREQUENCY} / 16;
+    return PIT_COUNTER_FREQUENCY;
 }
 
-<#if ENABLE_INTERRUPT == false>
-bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void)
+void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t delay_ms)
 {
-    return !!(${PIT_INSTANCE_NAME}_REGS->PIT_SR & PIT_SR_PITS_Msk);
-}
-</#if>
-<#if ENABLE_INTERRUPT == true>
-void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t delay)
-{
-    uint32_t tickStart, delayTicks;
-    uint32_t periodVal = (${PIT_INSTANCE_NAME}_REGS->PIT_MR & PIT_MR_PIV_Msk) + 1;
-    uint32_t timerFreq = ${core.PIT_CLOCK_FREQUENCY} / 16;
+    uint32_t period = (${PIT_INSTANCE_NAME}_REGS->PIT_MR & PIT_MR_PIV_Msk) + 1U;
+    uint32_t delayCount = (PIT_COUNTER_FREQUENCY / 1000U) * delay_ms;
+    uint32_t oldCount = ${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk;
+    uint32_t newCount = 0U, deltaCount = 0U, elapsedCount = 0U;
 
-    if((${PIT_INSTANCE_NAME}_REGS->PIT_MR & (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk)) == (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk))
+    if((${PIT_INSTANCE_NAME}_REGS->PIT_MR & PIT_MR_PITEN_Msk) != 0U)
     {
-        tickStart=${PIT_INSTANCE_NAME?lower_case}.tickCounter;
-        delayTicks = ((timerFreq / periodVal) * delay ) / 1000;
-
-        while( (${PIT_INSTANCE_NAME?lower_case}.tickCounter-tickStart) < delayTicks ) {
-            ;
+        while(elapsedCount < delayCount)
+        {
+            newCount = ${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk;
+            deltaCount = (newCount > oldCount) ? (newCount - oldCount) : (period - oldCount + newCount);
+            elapsedCount += deltaCount;
+            oldCount = newCount;
         }
     }
 }
 
+void ${PIT_INSTANCE_NAME}_DelayUs(uint32_t delay_us)
+{
+    uint32_t period = (${PIT_INSTANCE_NAME}_REGS->PIT_MR & PIT_MR_PIV_Msk) + 1U;
+    uint32_t delayCount = (PIT_COUNTER_FREQUENCY / 1000000U) * delay_us;
+    uint32_t oldCount = ${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk;
+    uint32_t newCount = 0U, deltaCount = 0U, elapsedCount = 0U;
+
+    if((${PIT_INSTANCE_NAME}_REGS->PIT_MR & PIT_MR_PITEN_Msk) != 0U)
+    {
+        while(elapsedCount < delayCount)
+        {
+            newCount = ${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk;
+            deltaCount = (newCount > oldCount) ? (newCount - oldCount) : (period - oldCount + newCount);
+            elapsedCount += deltaCount;
+            oldCount = newCount;
+        }
+    }
+}
+
+<#if ENABLE_INTERRUPT == true>
 void ${PIT_INSTANCE_NAME}_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t context)
 {
     ${PIT_INSTANCE_NAME?lower_case}.callback = callback;
@@ -168,10 +182,17 @@ void ${PIT_INSTANCE_NAME}_InterruptHandler(void)
         volatile uint32_t reg = ${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
         (void)reg;
         ${PIT_INSTANCE_NAME?lower_case}.tickCounter++;
-        if(${PIT_INSTANCE_NAME?lower_case}.callback) {
+        if(${PIT_INSTANCE_NAME?lower_case}.callback)
+        {
             ${PIT_INSTANCE_NAME?lower_case}.callback(${PIT_INSTANCE_NAME?lower_case}.context);
         }
     }
+}
+<#else>
+
+bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void)
+{
+    return ((${PIT_INSTANCE_NAME}_REGS->PIT_SR & PIT_SR_PITS_Msk) != 0U);
 }
 </#if>
 /*******************************************************************************
