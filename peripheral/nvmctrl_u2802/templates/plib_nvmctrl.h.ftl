@@ -66,6 +66,12 @@
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE             (${FLASH_PROGRAM_SIZE}U)
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_ROWSIZE              (${FLASH_ERASE_SIZE}U)
 
+<#if FLASH_DATAFLASH_START_ADDRESS??>
+#define ${NVMCTRL_INSTANCE_NAME}_DATAFLASH_START_ADDRESS    (${.vars["FLASH_DATAFLASH_START_ADDRESS"]}U)
+#define ${NVMCTRL_INSTANCE_NAME}_DATAFLASH_PAGESIZE         (${FLASH_DATAFLASH_PROGRAM_SIZE}U)
+#define ${NVMCTRL_INSTANCE_NAME}_DATAFLASH_ROWSIZE          (${FLASH_DATAFLASH_ERASE_SIZE}U)
+</#if>
+
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_MEDIA_SIZE                 ${MEMORY_MEDIA_SIZE}
@@ -146,6 +152,12 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (NVMCTRL_MEMORY_REGION region);
 
 <#if NVMCTRL_CACHE_ENABLE == true>
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_CacheInvalidate ( void );
+</#if>
+
+<#if NVMCTRL_WRITE_POLICY == "MANUAL">
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address);
+
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address);
 </#if>
 
 // DOM-IGNORE-BEGIN

@@ -110,6 +110,28 @@ def instantiateComponent(nvmctrlComponent):
         nvmctrlSym_FLASH_PROGRAM_SIZE.setVisible(False)
         nvmctrlSym_FLASH_PROGRAM_SIZE.setDefaultValue(nvmctrlFlashNode.getAttribute("pagesize"))
 
+        # Data Flash Address
+    nvmctrlDATAFLASHNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"DATAFLASH\"]")
+    if nvmctrlDATAFLASHNode != None:
+        nvmctrlSym_DATAFLASH_START_ADDRESS = nvmctrlComponent.createStringSymbol("FLASH_DATAFLASH_START_ADDRESS", None)
+        nvmctrlSym_DATAFLASH_START_ADDRESS.setVisible(False)
+        nvmctrlSym_DATAFLASH_START_ADDRESS.setDefaultValue(nvmctrlDATAFLASHNode.getAttribute("start"))
+
+        # DATAFLASH size
+        nvmctrlSym_DATAFLASH_SIZE = nvmctrlComponent.createStringSymbol("FLASH_DATAFLASH_SIZE", None)
+        nvmctrlSym_DATAFLASH_SIZE.setVisible(False)
+        nvmctrlSym_DATAFLASH_SIZE.setDefaultValue(nvmctrlDATAFLASHNode.getAttribute("size"))
+
+        # DATAFLASH Page size
+        nvmctrlSym_DATAFLASH_PROGRAM_SIZE = nvmctrlComponent.createStringSymbol("FLASH_DATAFLASH_PROGRAM_SIZE", None)
+        nvmctrlSym_DATAFLASH_PROGRAM_SIZE.setVisible(False)
+        nvmctrlSym_DATAFLASH_PROGRAM_SIZE.setDefaultValue(nvmctrlDATAFLASHNode.getAttribute("pagesize"))
+
+        # DATAFLASH Row size
+        nvmctrlSym_DATAFLASH_ERASE_SIZE = nvmctrlComponent.createStringSymbol("FLASH_DATAFLASH_ERASE_SIZE", None)
+        nvmctrlSym_DATAFLASH_ERASE_SIZE.setVisible(False)
+        nvmctrlSym_DATAFLASH_ERASE_SIZE.setDefaultValue(str(int(nvmctrlSym_DATAFLASH_PROGRAM_SIZE.getValue(), 0) * 4))
+
     nvmctrlParamNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]/instance@[name=\""+nvmctrlInstanceName.getValue()+"\"]/parameters")
     rowSize = "256"
     eeRowSize = "0"
