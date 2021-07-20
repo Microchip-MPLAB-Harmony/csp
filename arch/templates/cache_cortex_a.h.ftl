@@ -54,8 +54,8 @@
 /*  This section Includes other configuration headers necessary to completely
     define this configuration.
 */
-<#if __PROCESSOR?matches("ATSAMA5.*")>
-<#if L2CC_ENABLE == true >
+<#if __PROCESSOR?matches("SAMA.*")>
+<#if L2CC_ENABLE?? && L2CC_ENABLE == true >
 #include <stdint.h>
 #include "peripheral/l2cc/plib_l2cc.h"
 </#if>
