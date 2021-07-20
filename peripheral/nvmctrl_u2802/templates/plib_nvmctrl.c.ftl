@@ -165,6 +165,46 @@ bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
     return true;
 }
 
+<#if NVMCTRL_WRITE_POLICY == "MANUAL">
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address)
+{
+    uint32_t i = 0;
+    uint32_t * paddress = (uint32_t *)address;
+
+    if (!(${NVMCTRL_REG_NAME}_REGS->NVMCTRL_STATUS & NVMCTRL_STATUS_LOAD_Msk))
+    {
+        ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_ADDR = 0;
+
+        if((address & DATAFLASH_ADDR) == DATAFLASH_ADDR)
+        {
+            ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_ADDR = NVMCTRL_ADDR_ARRAY_DATAFLASH;
+        }
+    }
+
+    /* writing 32-bit data into the given address */
+    for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4); i++)
+    {
+        *paddress++ = data[i];
+    }
+
+    return true;
+}
+
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address)
+{
+     /* Set address and command */
+    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_ADDR |= address;
+
+    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_WP_Val | NVMCTRL_CTRLA_CMDEX_KEY;
+
+<#if INTERRUPT_ENABLE == true>
+    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_DONE_Msk;
+</#if>
+
+    return true;
+}
+</#if>
+
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
     volatile uint32_t nvm_error = 0;
