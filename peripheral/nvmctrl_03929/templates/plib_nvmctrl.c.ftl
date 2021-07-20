@@ -145,6 +145,45 @@ bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint3
     return true;
 }
 
+<#if NVMCTRL_WRITE_POLICY == "MANUAL">
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address)
+{
+    uint32_t i = 0;
+    uint32_t * paddress = (uint32_t *)address;
+
+    /* writing 32-bit data into the given address */
+    for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4); i++)
+    {
+        *paddress++ = data[i];
+    }
+
+    return true;
+}
+
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address)
+{
+    uint16_t command = NVMCTRL_CTRLA_CMD_WP_Val;
+
+    /* Set address and command */
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
+
+<#if FLASH_DATAFLASH_START_ADDRESS??>
+    if (address >= ${NVMCTRL_INSTANCE_NAME}_DATAFLASH_START_ADDRESS)
+    {
+        command = NVMCTRL_CTRLA_CMD_DFWP;
+    }
+</#if>
+
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = (uint16_t)(command | NVMCTRL_CTRLA_CMDEX_KEY);
+
+<#if INTERRUPT_ENABLE == true>
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
+</#if>
+
+    return true;
+}
+</#if>
+
 bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address )
 {
     uint32_t i = 0;
@@ -157,7 +196,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address 
     }
 
 <#if NVMCTRL_WRITE_POLICY == "MANUAL">
-     /* Set address and command */
+    /* Set address and command */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
 
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_WP_Val | NVMCTRL_CTRLA_CMDEX_KEY;

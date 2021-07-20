@@ -126,6 +126,12 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (uint32_t address);
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister ( NVMCTRL_CALLBACK callback, uintptr_t context );
 </#if>
 
+<#if NVMCTRL_WRITE_POLICY == "MANUAL">
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address);
+
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address);
+</#if>
+
 void ${NVMCTRL_INSTANCE_NAME}_CacheInvalidate ( void );
 
 // DOM-IGNORE-BEGIN
