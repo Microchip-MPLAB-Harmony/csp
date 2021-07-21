@@ -110,7 +110,7 @@ def instantiateComponent(pit64Component):
     input_freq = Database.getSymbolValue("core", instanceName.getValue() + "_CLOCK_FREQUENCY")
     input_freq = input_freq / (prescaler.getValue()+1)
     period_us.setDefaultValue(1000000.0 * period.getValue() / input_freq)
-    period_us.setDependencies(update_period, ['PERIOD', "core." + instanceName.getValue() + "_CLOCK_FREQUENCY"])
+    period_us.setDependencies(update_period, ['PERIOD', "core." + instanceName.getValue() + "_CLOCK_FREQUENCY", "PRESCALER"])
 
     freq_sym = pit64Component.createIntegerSymbol("SRC_FREQ", None)
     freq_sym.setVisible(False)
