@@ -183,7 +183,7 @@ def UARTFileGeneration(symbol, event):
 def updateInterruptMode (symbol, event):
     if symbol.getLabel() != "---":
         uartOperatingModeSym = event["source"].getSymbolByID("UART_OPERATING_MODE")
-        if event["value"] == True and uartOperatingModeSym.getSelectedKey() != "RING_BUFFER" and usartOperatingModeSym.getSelectedKey() != "NON_BLOCKING_DMA_TX" and usartOperatingModeSym.getSelectedKey() != "NON_BLOCKING_DMA_RX" and usartOperatingModeSym.getSelectedKey() != "NON_BLOCKING_DMA_TX_RX":
+        if event["value"] == True and uartOperatingModeSym.getSelectedKey() != "RING_BUFFER" and uartOperatingModeSym.getSelectedKey() != "NON_BLOCKING_DMA_TX" and uartOperatingModeSym.getSelectedKey() != "NON_BLOCKING_DMA_RX" and uartOperatingModeSym.getSelectedKey() != "NON_BLOCKING_DMA_TX_RX":
             uartOperatingModeSym.setSelectedKey("NON_BLOCKING")
         elif event["value"] == False:
             uartOperatingModeSym.setSelectedKey("BLOCKING")
