@@ -214,10 +214,15 @@ def instantiateComponent(twihsComponent):
     twihsInstanceName.setDefaultValue(twihsComponent.getID().upper())
 
     twihsBitField_CR_THRCLR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TWIHS"]/register-group@[name="TWIHS"]/register@[name="TWIHS_CR"]/bitfield@[name="THRCLR"]')
+    twihsBitField_SMR_NACKEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TWIHS"]/register-group@[name="TWIHS"]/register@[name="TWIHS_SMR"]/bitfield@[name="NACKEN"]')
 
     twihsSym_CR_THRCLR = twihsComponent.createBooleanSymbol("TWIHS_CR_THRCLR", None)
     twihsSym_CR_THRCLR.setVisible(False)
     twihsSym_CR_THRCLR.setDefaultValue(twihsBitField_CR_THRCLR != None)
+
+    twihsSym_SMR_NACKEN = twihsComponent.createBooleanSymbol("TWIHS_SMR_NACKEN", None)
+    twihsSym_SMR_NACKEN.setVisible(False)
+    twihsSym_SMR_NACKEN.setDefaultValue(twihsBitField_SMR_NACKEN != None)
 
     twihsOpMode = twihsComponent.createComboSymbol("TWIHS_OPMODE", None, opModeValues)
     twihsOpMode.setLabel("TWIHS Operation Mode")
