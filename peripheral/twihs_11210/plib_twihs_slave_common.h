@@ -55,6 +55,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

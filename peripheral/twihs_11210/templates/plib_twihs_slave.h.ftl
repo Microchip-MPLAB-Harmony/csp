@@ -79,7 +79,9 @@ TWIHS_SLAVE_TRANSFER_DIR ${TWIHS_INSTANCE_NAME}_TransferDirGet(void);
 
 TWIHS_SLAVE_ACK_STATUS ${TWIHS_INSTANCE_NAME}_LastByteAckStatusGet(void);
 
+<#if TWIHS_SMR_NACKEN == true>
 void ${TWIHS_INSTANCE_NAME}_NACKDataPhase(bool isNACKEnable);
+</#if>
 
 <#if TWIHS_INTERRUPT_MODE = true>
 
