@@ -71,11 +71,11 @@
 /****************************** XDMAC Data Types ******************************/
 /* XDMAC Channels */
 typedef enum {
-    <#list 0..DMA_CHANNEL_COUNT as i>
+    <#list 0..XDMAC_HIGHEST_CHANNEL as i>
     <#assign XDMAC_CH_ENABLE = "XDMAC_CH" + i + "_ENABLE">
         <#if .vars[XDMAC_CH_ENABLE]?has_content>
             <#if (.vars[XDMAC_CH_ENABLE] != false)>
-    XDMAC_CHANNEL_${i},
+    XDMAC_CHANNEL_${i} = ${i},
             </#if>
         </#if>
     </#list>
