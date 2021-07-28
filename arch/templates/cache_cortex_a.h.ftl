@@ -54,14 +54,12 @@
 /*  This section Includes other configuration headers necessary to completely
     define this configuration.
 */
-<#if __PROCESSOR?matches("SAMA.*")>
 <#if L2CC_ENABLE?? && L2CC_ENABLE == true >
 #include <stdint.h>
 #include "peripheral/l2cc/plib_l2cc.h"
 </#if>
 <#if INSTRUCTION_CACHE_ENABLE == true || DATA_CACHE_ENABLE == true>
 #include "peripheral/mmu/plib_mmu.h"
-</#if>
 </#if>
 
 // DOM-IGNORE-BEGIN
