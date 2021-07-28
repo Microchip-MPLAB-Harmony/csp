@@ -79,8 +79,8 @@ if __name__ == "__main__":
 
             sym_config = coreComponent.createKeyValueSetSymbol("{0}_INTERRUPT_CONFIG".format(name), sym_enable)
             sym_config.setLabel("{0} Configuration".format(name))
-            sym_config.addKey("EDGE", "2", "Edge triggered interrupt")
             sym_config.addKey("LEVEL", "0", "Level Sensitive interrupt")
+            sym_config.addKey("EDGE", "2", "Edge triggered interrupt")
             sym_config.setOutputMode("Key")
             sym_config.setReadOnly(index < 32)
 
