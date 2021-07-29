@@ -632,6 +632,43 @@ def getBitMask(node, bitfield):
     print("getBitMask:  cannot find ",bitfield)    # should never get here
     return ''
 
+def update_OSCTUN(symbol, event):
+    global OSCTUN_REG_VALUE_SYM
+    OSCTUN_Value = OSCTUN_REG_VALUE_SYM.getValue()
+    
+    if event["id"] == "FRC_TUNING_ENABLE":
+        bit_pos_ON = 15
+        if event["value"] == True:
+            OSCTUN_Value |= 1 << bit_pos_ON
+        else:
+            OSCTUN_Value &= ~(1 << bit_pos_ON)
+    elif event["id"] == "FRC_TUNING_SOURCE":
+        bit_pos_SRC = 12
+        if event["value"] == 1:
+            OSCTUN_Value |= 1 << bit_pos_SRC
+        else: #0
+            OSCTUN_Value &= ~(1 << bit_pos_SRC)
+
+    OSCTUN_REG_VALUE_SYM.setValue(OSCTUN_Value)  
+
+global updateSPLLCON
+def updateSPLLCON(symbol, event):
+    global PLLMULT_VALSYM
+    global PLLODIV_VALSYM
+
+    if Database.getSymbolValue("core", "CONFIG_PLLSRC") == "FRC":
+        PLLICLK_Value = 1 << 7
+    else:
+        PLLICLK_Value = 0
+
+    val = int(PLLODIV_VALSYM.getSelectedValue(), 16)
+    PLLODIV_Value = val  << 24
+
+    val = int(PLLMULT_VALSYM.getSelectedValue(), 16)
+    MUL_Value = val  << 16
+
+    symbol.setValue (PLLICLK_Value | PLLODIV_Value | MUL_Value)
+
 def scan_atdf_for_spll_fields(coreComponent, CLK_CFG_SETTINGS):
     global _process_valuegroup_entry
     global atdf_content
@@ -648,8 +685,7 @@ def scan_atdf_for_spll_fields(coreComponent, CLK_CFG_SETTINGS):
     global clkValGrp_SPLLCON__PLLODIV
     global UPOSCEN_VALSYM
     global SPLL_SYM
-    symbolName = []
-    index = 0
+
     for register_group in atdf_content.iter("register-group"):
         if "CRU" in register_group.attrib["name"]:
             for register_tag in register_group.iter("register"):
@@ -658,11 +694,10 @@ def scan_atdf_for_spll_fields(coreComponent, CLK_CFG_SETTINGS):
                     SPLL_SYM.setLabel("SPLL Clock Configuration")
                     SPLL_SYM.setVisible(True)
 
-                    symbolName.append([])
-                    symbolName[index] = coreComponent.createStringSymbol("SPLLCON_REG",None)
-                    symbolName[index].setVisible(False)
-                    symbolName[index].setDefaultValue(register_tag.attrib["name"])
-                    index += 1
+                    spllcon_RegName = coreComponent.createStringSymbol("SPLLCON_REG",None)
+                    spllcon_RegName.setVisible(False)
+                    spllcon_RegName.setDefaultValue(register_tag.attrib["name"])
+
                     for bitfield_tag in register_tag.iter("bitfield"):
                         if(bitfield_tag.attrib["name"] == "PLLMULT"):
                             '''
@@ -671,15 +706,17 @@ def scan_atdf_for_spll_fields(coreComponent, CLK_CFG_SETTINGS):
                                 then define the combo symbol using those pairs
                             '''
                             items = clkValGrp_SPLLCON__PLLMULT.getChildren()  # all <value > children of this bitfield
+                            global PLLMULT_VALSYM
                             PLLMULT_VALSYM = coreComponent.createKeyValueSetSymbol("PLLMULT_VAL", SPLL_SYM)
                             PLLMULT_VALSYM.setLabel("PLLMULT")
                             PLLMULT_VALSYM.setVisible(True)
-                            PLLMULT_VALSYM.setOutputMode("Value")
+                            PLLMULT_VALSYM.setOutputMode("Key")
                             PLLMULT_VALSYM.setDisplayMode("Key")
                             for index, ii in enumerate(items):
                                 PLLMULT_VALSYM.addKey( ii.getAttribute("name"), ii.getAttribute("value"), ii.getAttribute("caption") )
                                 if  ii.getAttribute("name") == "MUL_3":
                                     default = index
+                                    default_MUL_Value  = int(ii.getAttribute("value"),16)
                             PLLMULT_VALSYM.setDefaultValue(default)
                         if(bitfield_tag.attrib["name"] == "PLLODIV"):  # PLLODIV field
                             '''
@@ -688,17 +725,27 @@ def scan_atdf_for_spll_fields(coreComponent, CLK_CFG_SETTINGS):
                                 then define the combo symbol using those pairs
                             '''
                             items = clkValGrp_SPLLCON__PLLODIV.getChildren()  # all <value > children of this bitfield
+                            global PLLODIV_VALSYM
                             PLLODIV_VALSYM = coreComponent.createKeyValueSetSymbol("PLLODIV_VAL", SPLL_SYM)
                             PLLODIV_VALSYM.setLabel("PLLODIV")
                             PLLODIV_VALSYM.setVisible(True)
-                            PLLODIV_VALSYM.setOutputMode("Value")
+                            PLLODIV_VALSYM.setOutputMode("Key")
                             PLLODIV_VALSYM.setDisplayMode("Key")
                             for index, ii in enumerate(items):
                                 PLLODIV_VALSYM.addKey( ii.getAttribute("name"), ii.getAttribute("value"), ii.getAttribute("caption") )
                                 if  ii.getAttribute("name") == "DIV_1":
                                     default = index
+                                    default_PLLODIV_Value  = int(ii.getAttribute("value"),16)
                             PLLODIV_VALSYM.setDefaultValue(default)
-    
+                    
+                    global updateSPLLCON
+                    default_PLLICLK_Value = 1 # corresponds to CONFIG_PLLSRC = FRC
+                    defaut_SPLLCON_Value = (default_MUL_Value << 16) | (default_PLLODIV_Value << 24) | (default_PLLICLK_Value << 7)
+                    spllcon_RegValue = coreComponent.createHexSymbol("SPLLCON_REG_VALUE",None)
+                    spllcon_RegValue.setVisible(False)
+                    spllcon_RegValue.setDefaultValue(defaut_SPLLCON_Value)
+                    spllcon_RegValue.setDependencies(updateSPLLCON, ["PLLODIV_VAL", "PLLMULT_VAL", "CONFIG_PLLSRC"])
+
 if __name__ == "__main__":
     global atdf_content
     global refOscList
@@ -1052,6 +1099,31 @@ if __name__ == "__main__":
         symbolrefotrimval.append({"symbol":refotrimval[listIndex], "index":clk})
 
         listIndex += 1  # needs to be at end of for loop
+
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/register-group@[name="CRU"]/register@[name="OSCTUN"]/bitfield@[name="ON"]') != None:
+        OSCTUN_SYM = coreComponent.createMenuSymbol("CONFIG_OSCTUN", CLK_CFG_SETTINGS)
+        OSCTUN_SYM.setLabel("FRC Tuning Configuration")
+        OSCTUN_SYM.setVisible(True)
+
+        frcTuningEnable_SYM = coreComponent.createBooleanSymbol("FRC_TUNING_ENABLE", OSCTUN_SYM)
+        frcTuningEnable_SYM.setLabel("FRC Self Tuning Enable")
+        frcTuningEnable_SYM.setDefaultValue(False)
+
+        tuningSource_SYM = coreComponent.createKeyValueSetSymbol("FRC_TUNING_SOURCE", OSCTUN_SYM)
+        tuningSource_SYM.setLabel("FRC Self Tuning Source")
+        tuningSource_SYM.setVisible(True)
+        tuningSource_SYM.setOutputMode("Value")
+        tuningSource_SYM.setDisplayMode("Key")
+        tuningSource_SYM.addKey( "32.768 kHz SOSC Clock", "0x0", "32.768 kHz SOSC Clock is used to tune FRC" )
+        tuningSource_SYM.addKey( "USB Host Clock", "0x1", "USB Host Clock is used to tune FRC" )
+        tuningSource_SYM.setDefaultValue(0)       
+
+        global OSCTUN_REG_VALUE_SYM
+        OSCTUN_REG_VALUE_SYM = coreComponent.createHexSymbol("OSCTUN_REG_VALUE", OSCTUN_SYM)
+        OSCTUN_REG_VALUE_SYM.setDefaultValue(0x0)
+        OSCTUN_REG_VALUE_SYM.setVisible(False)
+        OSCTUN_REG_VALUE_SYM.setDependencies(update_OSCTUN, ["FRC_TUNING_ENABLE", "FRC_TUNING_SOURCE"])
+          
 
     # primary oscillator frequency
     POSC_IN_FREQ = coreComponent.createIntegerSymbol("CONFIG_SYS_CLK_CONFIG_PRIMARY_XTAL", CLK_CFG_SETTINGS)

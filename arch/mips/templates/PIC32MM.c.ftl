@@ -60,7 +60,11 @@
 
 /*** FOSCSEL ***/
 <#if CONFIG_FNOSC?has_content>
-#pragma config FNOSC =      ${CONFIG_FNOSC}
+    <#if CONFIG_FNOSC == "PLL">
+        <#lt>#pragma config FNOSC =      FRCDIV
+    <#else>    
+        <#lt>#pragma config FNOSC =      ${CONFIG_FNOSC}
+    </#if>
 </#if>
 <#if CONFIG_PLLSRC?has_content>
 #pragma config PLLSRC =     ${CONFIG_PLLSRC}
