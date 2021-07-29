@@ -93,10 +93,25 @@ void CLK_Initialize( void )
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
 
 </#if>
+<#if CONFIG_FNOSC?contains("PLL")>
+    /* Even though SPLL is selected in FNOSC, Harmony generates #pragma code as FRCDIV, not as SPLL, in "initilization.c".
+    * Switching to SPLL is done here after appropriate setting of SPLLCON register. 
+    * This is done to ensure we don't end-up changing PLL setting when it is ON. */
 
     /* Configure SPLL */
-    ${SPLLCON_REG}bits.PLLODIV = ${PLLODIV_VAL};
-    ${SPLLCON_REG}bits.PLLMULT = ${PLLMULT_VAL};
+    /* ${PLLODIV_VAL}, ${PLLMULT_VAL}, PLLSRC= ${CONFIG_PLLSRC} */
+    ${SPLLCON_REG} = 0x${SPLLCON_REG_VALUE};
+
+    /* Now switch to the PLL source */
+    OSCCON = OSCCON | 0x00000101;    //NOSC = SPLL, initiate clock switch (OSWEN = 1)
+    
+    /* Wait for PLL to be ready and clock switching operation to complete */
+    while(!CLKSTATbits.SPLLRDY || !CLKSTATbits.SPDIVRDY || OSCCONbits.OSWEN);
+<#else>
+    /* Configure SPLL */
+    /* ${PLLODIV_VAL}, ${PLLMULT_VAL}, PLLSRC= ${CONFIG_PLLSRC} */
+    ${SPLLCON_REG} = 0x${SPLLCON_REG_VALUE};
+</#if>
 
 <#if CONFIG_HAVE_REFCLOCK == true>
 <#list 1..NUM_REFOSC_ELEMENTS as i>
@@ -135,7 +150,11 @@ void CLK_Initialize( void )
 </#if>
 </#list>
 </#if>  <#-- CONFIG_HAVE_REFCLOCK == true -->
+<#if OSCTUN_REG_VALUE != "0">
+    /* Configure FRC Self Tuning */
+    OSCTUN = 0x${OSCTUN_REG_VALUE};
 
+</#if>
     /* Peripheral Module Disable Configuration */
 <#list 1..PMD_COUNT + 1 as i>
     <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
