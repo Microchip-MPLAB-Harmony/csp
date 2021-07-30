@@ -1846,9 +1846,9 @@ def instantiateComponent(adchsComponent):
 
         #Calculate the proper ADC_DCx interrupt registers using IRQ#
         irqString = "ADC_DC" + str(n)
-        Irq_index = int(getIRQnumber(irqString))
-        statRegName = _get_statReg_parms(Irq_index)
-        enblRegIndex = _get_enblReg_parms(Irq_index)
+        adc_dcx_irq_index = int(getIRQnumber(irqString))
+        statRegName = _get_statReg_parms(adc_dcx_irq_index)
+        enblRegIndex = _get_enblReg_parms(adc_dcx_irq_index)
 
         #IEC REG
         adchsSym_DCx_IEC = adchsComponent.createStringSymbol("ADCHS_DC" + str(n) + "_IEC_REG", None)
@@ -1966,9 +1966,9 @@ def instantiateComponent(adchsComponent):
 
         #Calculate the proper ADC_DFx interrupt registers using IRQ#
         irqString = "ADC_DF" + str(n)
-        Irq_index = int(getIRQnumber(irqString))
-        statRegName = _get_statReg_parms(Irq_index)
-        enblRegIndex = _get_enblReg_parms(Irq_index)
+        adc_dfx_irq_index = int(getIRQnumber(irqString))
+        statRegName = _get_statReg_parms(adc_dfx_irq_index)
+        enblRegIndex = _get_enblReg_parms(adc_dfx_irq_index)
 
         #IEC REG
         adchsSym_DFx_IEC = adchsComponent.createStringSymbol("ADCHS_DF" + str(n) + "_IEC_REG", None)
