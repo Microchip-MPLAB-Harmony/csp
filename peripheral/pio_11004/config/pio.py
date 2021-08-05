@@ -700,7 +700,6 @@ portAvailable = {}
 for id in pioSymChannel:
     node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PIO\"]/instance@[name=\"" "PIO" + str(id) + "" "\"]")
     if node != None:
-        print "Available"
         portAvailable["PIO" + id] = True
     else:
         portAvailable["PIO" + id] = False
