@@ -150,7 +150,7 @@ void CLK_Initialize( void )
 </#if>
 </#list>
 </#if>  <#-- CONFIG_HAVE_REFCLOCK == true -->
-<#if OSCTUN_REG_VALUE != "0">
+<#if OSCTUN_REG_VALUE?has_content && OSCTUN_REG_VALUE != "0">
     /* Configure FRC Self Tuning */
     OSCTUN = 0x${OSCTUN_REG_VALUE};
 
