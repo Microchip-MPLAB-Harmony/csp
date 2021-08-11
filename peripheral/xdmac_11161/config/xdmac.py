@@ -398,8 +398,6 @@ for channelID in range(0, xdmacChCount.getValue()):
                                     value_node.getAttribute("caption"))
         xdmacSym_CC_PROT.setOutputMode("Key")
         xdmacSym_CC_PROT.setDisplayMode("Description")
-        xdmacSym_CC_PROT.setDefaultValue(1)
-        xdmacSym_CC_PROT.setReadOnly(True)
 
     xdmacSym_CC_SWREQ = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_SWREQ", xdmacChannelMenu)
     xdmacSym_CC_SWREQ.setLabel("DMA Request Type")
