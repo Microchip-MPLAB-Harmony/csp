@@ -1,0 +1,938 @@
+<?xml version="1.0"?>
+<family>
+	<groups>
+		<group id="1">
+			<pin name="RPA3" value="1"/>
+			<pin name="RPA7" value="2"/>
+			<pin name="RPA11" value="3"/>
+			<pin name="RPB0" value="4"/>
+			<pin name="RPB4" value="5"/>
+			<pin name="RPB8" value="6"/>
+			<pin name="RPB12" value="7"/>
+			<pin name="RPA2" value="8"/>
+			<pin name="RPA6" value="9"/>
+			<pin name="RPA10" value="10"/>
+			<pin name="RPA14" value="11"/>
+			<pin name="RPB3" value="12"/>
+			<pin name="RPB7" value="13"/>
+			<pin name="RPB11" value="14"/>
+			<pin name="RPA9" value="15"/>
+			<function name="EXTINT0" direction="in" register-name = "EXTINT0R"/>
+			<function name="SERCOM0_PAD3 (in)" direction="in" register-name = "SCOM0P3R"/>
+			<function name="SERCOM1_PAD2 (in)" direction="in" register-name = "SCOM1P2R"/>
+			<function name="QSPI_DATA1 (in)" direction="in" register-name = "QD1R"/>
+			<function name="CCLIN0" direction="in" register-name = "CCLIN0R"/>
+			<function name="CCLIN3" direction="in" register-name = "CCLIN3R"/>
+			<function name="TC0_WO0 (in)" direction="in" register-name = "TC0WO0G1R"/>
+			<function name="TC1_WO0 (in)" direction="in" register-name = "TC1WO0G1R"/>
+			<function name="TC2_WO0 (in)" direction="in" register-name = "TC2WO0G1R"/>
+			<function name="TC3_WO0 (in)" direction="in" register-name = "TC3WO0G1R"/>
+			<function name="TC4_WO0 (in)" direction="in" register-name = "TC4WO0G1R"/>
+			<function name="TC5_WO0 (in)" direction="in" register-name = "TC5WO0G1R"/>
+			<function name="TC6_WO0 (in)" direction="in" register-name = "TC6WO0G1R"/>
+			<function name="TC7_WO0 (in)" direction="in" register-name = "TC7WO0G1R"/>
+		</group>
+		
+		<group id="2">
+			<pin name="RPA4" value="1"/>
+			<pin name="RPA8" value="2"/>
+			<pin name="RPA12" value="3"/>
+			<pin name="RPB1" value="4"/>
+			<pin name="RPB5" value="5"/>
+			<pin name="RPB9" value="6"/>
+			<pin name="RPB13" value="7"/>
+			<pin name="RPA3" value="8"/>
+			<pin name="RPA7" value="9"/>
+			<pin name="RPA11" value="10"/>
+			<pin name="RPB0" value="11"/>
+			<pin name="RPB4" value="12"/>
+			<pin name="RPB8" value="13"/>
+			<pin name="RPB12" value="14"/>
+			<pin name="RPA0" value="15"/>
+			<function name="EXTINT1" direction="in" register-name = "EXTINT1R"/>
+			<function name="SERCOM0_PAD0 (in)" direction="in" register-name = "SCOM0P0R"/>
+			<function name="SERCOM1_PAD3 (in)" direction="in" register-name = "SCOM1P3R"/>
+			<function name="QSPI_DATA2 (in)" direction="in" register-name = "QD2R"/>
+			<function name="CCLIN1" direction="in" register-name = "CCLIN1R"/>
+			<function name="CCLIN4" direction="in" register-name = "CCLIN4R"/>
+			<function name="TC0_WO0 (in)" direction="in" register-name = "TC0WO0G2R"/>
+			<function name="TC1_WO1 (in)" direction="in" register-name = "TC1WO1G2R"/>
+			<function name="TC2_WO1 (in)" direction="in" register-name = "TC2WO1G2R"/>
+			<function name="TC3_WO1 (in)" direction="in" register-name = "TC3WO1G2R"/>
+			<function name="TC4_WO1 (in)" direction="in" register-name = "TC4WO1G2R"/>
+			<function name="TC5_WO1 (in)" direction="in" register-name = "TC5WO1G2R"/>
+			<function name="TC6_WO1 (in)" direction="in" register-name = "TC6WO1G2R"/>
+			<function name="TC7_WO1 (in)" direction="in" register-name = "TC7WO1G2R"/>			
+		</group>
+
+		<group id="3">
+			<pin name="RPA5" value="1"/>
+			<pin name="RPA9" value="2"/>
+			<pin name="RPA13" value="3"/>
+			<pin name="RPB2" value="4"/>
+			<pin name="RPB6" value="5"/>
+			<pin name="RPB10" value="6"/>
+			<pin name="RPA0" value="7"/>
+			<pin name="RPA4" value="8"/>
+			<pin name="RPA8" value="9"/>
+			<pin name="RPA12" value="10"/>
+			<pin name="RPB1" value="11"/>
+			<pin name="RPB5" value="12"/>
+			<pin name="RPB9" value="13"/>
+			<pin name="RPB13" value="14"/>
+			<pin name="RPA1" value="15"/>
+			<function name="EXTINT2" direction="in" register-name = "EXTINT2R"/>
+			<function name="SERCOM1_PAD0 (in)" direction="in" register-name = "SCOM1P0R"/>
+			<function name="QSPI_DATA3 (in)" direction="in" register-name = "QD3R"/>
+			<function name="CCLIN2" direction="in" register-name = "CCLIN2R"/>
+			<function name="CCLIN5" direction="in" register-name = "CCLIN5R"/>
+			<function name="TC0_WO1 (in)" direction="in" register-name = "TC0WO1G3R"/>
+			<function name="TC2_WO0 (in)" direction="in" register-name = "TC2WO0G3R"/>
+			<function name="TC3_WO0 (in)" direction="in" register-name = "TC3WO0G3R"/>
+			<function name="TC4_WO0 (in)" direction="in" register-name = "TC4WO0G3R"/>
+			<function name="TC5_WO0 (in)" direction="in" register-name = "TC5WO0G3R"/>
+			<function name="TC6_WO0 (in)" direction="in" register-name = "TC6WO0G3R"/>			
+			<function name="TC7_WO0 (in)" direction="in" register-name = "TC7WO0G3R"/>
+		</group>
+
+		<group id="4">
+			<pin name="RPA6" value="1"/>
+			<pin name="RPA10" value="2"/>
+			<pin name="RPA14" value="3"/>
+			<pin name="RPB3" value="4"/>
+			<pin name="RPB7" value="5"/>
+			<pin name="RPB11" value="6"/>
+			<pin name="RPA1" value="7"/>
+			<pin name="RPA5" value="8"/>
+			<pin name="RPA9" value="9"/>
+			<pin name="RPA13" value="10"/>
+			<pin name="RPB2" value="11"/>
+			<pin name="RPB6" value="12"/>
+			<pin name="RPB10" value="13"/>
+			<pin name="RPA8" value="14"/>
+			<pin name="RPA2" value="15"/>
+			<function name="EXTINT3" direction="in" register-name = "EXTINT3R"/>
+			<function name="NMI" direction="in" register-name = "NMIR"/>
+			<function name="SERCOM0_PAD2 (in)" direction="in" register-name = "SCOM0P2R"/>
+			<function name="QSPI_DATA0 (in)" direction="in" register-name = "QD0R"/>
+			<function name="TC0_WO1 (in)" direction="in" register-name = "TC0WO1G4R"/>
+			<function name="TC2_WO1 (in)" direction="in" register-name = "TC2WO1G4R"/>
+			<function name="TC3_WO1 (in)" direction="in" register-name = "TC3WO1G4R"/>
+			<function name="TC4_WO1 (in)" direction="in" register-name = "TC4WO1G4R"/>
+			<function name="TC5_WO1 (in)" direction="in" register-name = "TC5WO1G4R"/>
+			<function name="TC6_WO1 (in)" direction="in" register-name = "TC6WO1G4R"/>
+			<function name="TC7_WO1 (in)" direction="in" register-name = "TC7WO1G4R"/>
+		</group>
+
+		<group id="5">
+			<pin name="RPA3" value="1"/>
+			<pin name="RPA5" value="2"/>
+			<pin name="RPA6" value="3"/>
+			<pin name="RPA7" value="4"/>
+			<pin name="RPB5" value="5"/>
+			<pin name="RPB6" value="6"/>
+			<pin name="RPB8" value="7"/>
+			<pin name="RPB9" value="8"/>
+			<function name="SERCOM0_PAD1 (in)" direction="in" register-name = "SCOM0P1R"/>
+			<function name="SERCOM1_PAD1 (in)" direction="in" register-name = "SCOM1P1R"/>
+			<function name="REFI" direction="in" register-name = "REFIR"/>
+		</group>
+
+		<group id="6">
+			<pin name="RPA3" register-name = "RPA3G1R"/>
+			<pin name="RPA5" register-name = "RPA5G1R"/>
+			<pin name="RPA6" register-name = "RPA6G1R"/>
+			<pin name="RPA7" register-name = "RPA7G1R"/>
+			<pin name="RPB5" register-name = "RPB5G1R"/>
+			<pin name="RPB6" register-name = "RPB6G1R"/>
+			<pin name="RPB7" register-name = "RPB7G1R"/>
+			<pin name="RPB8" register-name = "RPB8G1R"/>
+			<pin name="RPB9" register-name = "RPB9G1R"/>
+			<function name="SERCOM0_PAD1 (out)"	direction="out" value="1"/>
+			<function name="SERCOM1_PAD1 (out)"	direction="out" value="2"/>
+			<function name="REFO1"	    direction="out" value="3"/>
+			<function name="REFO2"	    direction="out" value="4"/>
+			<function name="REFO3"	    direction="out" value="5"/>
+			<function name="REFO4"	    direction="out" value="6"/>						
+			<function name="QSPI_SCK (out)"	direction="out" value="7"/>
+		</group>
+		
+		<group id="7">
+			<pin name="RPA0" register-name = "RPA0G2R"/>
+			<pin name="RPA3" register-name = "RPA3G2R"/>
+			<pin name="RPA4" register-name = "RPA4G2R"/>
+			<pin name="RPA6" register-name = "RPA6G2R"/>
+			<pin name="RPA7" register-name = "RPA7G2R"/>
+			<pin name="RPA8" register-name = "RPA8G2R"/>
+			<pin name="RPB0" register-name = "RPB0G2R"/>
+			<pin name="RPB1" register-name = "RPB1G2R"/>
+			<pin name="RPB4" register-name = "RPB4G2R"/>
+			<pin name="RPB5" register-name = "RPB5G2R"/>
+			<pin name="RPB8" register-name = "RPB8G2R"/>
+			<pin name="RPB12" register-name = "RPB12G2R"/>
+			<pin name="RPB13" register-name = "RPB13G2R"/>
+			<function name="SERCOM0_PAD0 (out)"	direction="out" value="1"/>
+			<function name="SERCOM0_PAD3 (out)"	direction="out" value="2"/>
+			<function name="SERCOM0_PAD2 (out)"	direction="out" value="3"/>
+			<function name="SERCOM1_PAD3 (out)"	direction="out" value="5"/>
+			<function name="SERCOM1_PAD2 (out)"	direction="out" value="6"/>
+			<function name="TCC0_WO1"	direction="out" value="7"/>
+			<function name="TCC0_WO5"	direction="out" value="8"/>
+			<function name="TCC0_WO3"	direction="out" value="9"/>
+			<function name="TCC1_WO1"	direction="out" value="10"/>
+			<function name="TCC1_WO5"	direction="out" value="11"/>
+			<function name="TCC1_WO3"	direction="out" value="12"/>
+			<function name="TCC2_WO1"	direction="out" value="13"/>
+			<function name="TC0_WO1 (out)"	direction="out" value="15"/>
+			<function name="TC1_WO1 (out)"	direction="out" value="16"/>
+			<function name="TC2_WO1 (out)"	direction="out" value="17"/>
+			<function name="TC3_WO1 (out)"	direction="out" value="18"/>
+			<function name="TC4_WO1 (out)"	direction="out" value="19"/>
+			<function name="TC5_WO1 (out)"	direction="out" value="20"/>
+			<function name="TC6_WO1 (out)"	direction="out" value="21"/>
+			<function name="TC7_WO1 (out)"	direction="out" value="22"/>			
+			<function name="QSPI_CS (out)"	direction="out" value="23"/>
+			<function name="QSPI_DATA0 (out)"	direction="out" value="24"/>
+			<function name="QSPI_DATA3 (out)"	direction="out" value="25"/>
+			<function name="QSPI_DATA2 (out)"	direction="out" value="26"/>
+			<function name="CCL_OUT1"	direction="out" value="27"/>
+		</group>
+
+		<group id="8">
+			<pin name="RPA0" register-name = "RPA0G3R"/>
+			<pin name="RPA1" register-name = "RPA1G3R"/>
+			<pin name="RPA3" register-name = "RPA3G3R"/>
+			<pin name="RPA4" register-name = "RPA4G3R"/>
+			<pin name="RPA5" register-name = "RPA5G3R"/>
+			<pin name="RPA8" register-name = "RPA8G3R"/>
+			<pin name="RPA9" register-name = "RPA9G3R"/>
+			<pin name="RPA13" register-name = "RPA13G3R"/>
+			<pin name="RPB1" register-name = "RPB1G3R"/>
+			<pin name="RPB2" register-name = "RPB2G3R"/>
+			<pin name="RPB6" register-name = "RPB6G3R"/>
+			<pin name="RPB9" register-name = "RPB9G3R"/>
+			<pin name="RPB10" register-name = "RPB10G3R"/>
+			<pin name="RPB13" register-name = "RPB13G3R"/>	
+			<function name="SERCOM0_PAD0 (out)"	direction="out" value="2"/>
+			<function name="SERCOM0_PAD3 (out)"	direction="out" value="3"/>
+			<function name="SERCOM1_PAD2 (out)"	direction="out" value="4"/>
+			<function name="SERCOM1_PAD3 (out)"	direction="out" value="6"/>
+			<function name="TCC0_WO2"	direction="out" value="7"/>
+			<function name="TCC0_WO0"	direction="out" value="8"/>
+			<function name="TCC0_WO4"	direction="out" value="9"/>
+			<function name="TCC1_WO2"	direction="out" value="10"/>
+			<function name="TCC1_WO0"	direction="out" value="11"/>
+			<function name="TCC1_WO4"	direction="out" value="12"/>
+			<function name="TCC2_WO0"	direction="out" value="13"/>
+			<function name="TC0_WO0 (out)"	direction="out" value="15"/>
+			<function name="TC1_WO0 (out)"	direction="out" value="16"/>
+			<function name="TC2_WO0 (out)"	direction="out" value="17"/>
+			<function name="TC3_WO0 (out)"	direction="out" value="18"/>
+			<function name="TC4_WO0 (out)"	direction="out" value="19"/>
+			<function name="TC5_WO0 (out)"	direction="out" value="20"/>
+			<function name="TC6_WO0 (out)"	direction="out" value="21"/>
+			<function name="TC7_WO0 (out)"	direction="out" value="22"/>			
+			<function name="QSPI_CS (out)"	direction="out" value="23"/>
+			<function name="QSPI_DATA1 (out)"	direction="out" value="24"/>
+			<function name="QSPI_DATA0 (out)"	direction="out" value="25"/>
+			<function name="QSPI_DATA3 (out)"	direction="out" value="26"/>
+			<function name="CCL_OUT0"	direction="out" value="27"/>
+		</group>
+
+		<group id="9">
+			<pin name="RPA1" register-name = "RPA1G4R"/>
+			<pin name="RPA2" register-name = "RPA2G4R"/>
+			<pin name="RPA4" register-name = "RPA4G4R"/>
+			<pin name="RPA5" register-name = "RPA5G4R"/>
+			<pin name="RPA6" register-name = "RPA6G4R"/>
+			<pin name="RPA8" register-name = "RPA8G4R"/>
+			<pin name="RPA9" register-name = "RPA9G4R"/>
+			<pin name="RPA10" register-name = "RPA10G4R"/>
+			<pin name="RPA13" register-name = "RPA13G4R"/>
+			<pin name="RPA14" register-name = "RPA14G4R"/>
+			<pin name="RPB2" register-name = "RPB2G4R"/>
+			<pin name="RPB3" register-name = "RPB3G4R"/>
+			<pin name="RPB7" register-name = "RPB7G4R"/>			
+			<pin name="RPB10" register-name = "RPB10G4R"/>
+			<pin name="RPB11" register-name = "RPB11G4R"/>			
+			<function name="SERCOM0_PAD2 (out)"	direction="out" value="1"/>
+			<function name="SERCOM0_PAD0 (out)"	direction="out" value="3"/>
+			<function name="SERCOM1_PAD3 (out)"	direction="out" value="4"/>
+			<function name="SERCOM1_PAD0 (out)"	direction="out" value="6"/>
+			<function name="TCC0_WO3"	direction="out" value="7"/>
+			<function name="TCC0_WO1"	direction="out" value="8"/>
+			<function name="TCC0_WO5"	direction="out" value="9"/>
+			<function name="TCC1_WO3"	direction="out" value="10"/>
+			<function name="TCC1_WO1"	direction="out" value="11"/>
+			<function name="TCC1_WO5"	direction="out" value="12"/>
+			<function name="TCC2_WO1"	direction="out" value="13"/>
+			<function name="TC0_WO0 (out)"	direction="out" value="15"/>
+			<function name="TC1_WO1 (out)"	direction="out" value="16"/>
+			<function name="TC2_WO1 (out)"	direction="out" value="17"/>
+			<function name="TC3_WO1 (out)"	direction="out" value="18"/>
+			<function name="TC4_WO1 (out)"	direction="out" value="19"/>
+			<function name="TC5_WO1 (out)"	direction="out" value="20"/>
+			<function name="TC6_WO1 (out)"	direction="out" value="21"/>
+			<function name="TC7_WO1 (out)"	direction="out" value="22"/>			
+			<function name="QSPI_CS (out)"	direction="out" value="23"/>
+			<function name="QSPI_DATA2 (out)"	direction="out" value="24"/>
+			<function name="QSPI_DATA1 (out)"	direction="out" value="25"/>
+			<function name="QSPI_DATA0 (out)"	direction="out" value="26"/>
+			<function name="CCL_OUT1"	direction="out" value="27"/>
+		</group>
+        <!-- next three groups are only meant to support in/out on QSPI_DATA1 pin -->
+		<group id="10">
+			<pin name="RPA3" value="1"/>
+			<pin name="RPA2" value="8"/>
+			<pin name="RPA6" value="9"/>
+			<pin name="RPA10" value="10"/>
+			<pin name="RPA14" value="11"/>
+			<pin name="RPB3" value="12"/>
+			<pin name="RPB7" value="13"/>
+			<pin name="RPB11" value="14"/>
+			<pin name="RPA9" value="15"/>
+			<function name="QSPI_DATA1 (in/out)" direction="in/out" register-name = "QD1R"/>
+        </group>
+		<group id="11">
+			<pin name="RPA3" register-name = "RPA3G3R"/>
+       		<function name="QSPI_DATA1 (in/out)"	direction="in/out" value="24"/>
+        </group>
+		<group id="12">
+			<pin name="RPA2" register-name = "RPA2G4R"/>
+			<pin name="RPA6" register-name = "RPA6G4R"/>
+			<pin name="RPA10" register-name = "RPA10G4R"/>
+			<pin name="RPA14" register-name = "RPA14G4R"/>
+			<pin name="RPB3" register-name = "RPB3G4R"/>
+			<pin name="RPB7" register-name = "RPB7G4R"/>
+			<pin name="RPB11" register-name = "RPB11G4R"/>
+			<pin name="RPA9" register-name = "RPA9G4R"/>
+       		<function name="QSPI_DATA1 (in/out)"	direction="in/out" value="25"/>               
+        </group>
+
+ 		<!-- next two groups are only meant to support in/out on QSPI_DATA2 pin -->
+		<group id="13">
+			<pin name="RPA0" register-name = "RPA0G2R"/>
+			<pin name="RPA3" register-name = "RPA3G2R"/>
+			<pin name="RPA4" register-name = "RPA4G2R"/>
+			<pin name="RPA7" register-name = "RPA7G2R"/>
+			<pin name="RPA8" register-name = "RPA8G2R"/>
+			<pin name="RPB0" register-name = "RPB0G2R"/>
+			<pin name="RPB1" register-name = "RPB1G2R"/>
+			<pin name="RPB4" register-name = "RPB4G2R"/>
+			<pin name="RPB5" register-name = "RPB5G2R"/>
+			<pin name="RPB8" register-name = "RPB8G2R"/>
+			<pin name="RPB12" register-name = "RPB12G2R"/>
+			<pin name="RPB13" register-name = "RPB13G2R"/>
+			<function name="QSPI_DATA2 (in/out)"	direction="in/out" value="26"/>			
+		</group>
+		<group id="14">
+			<pin name="RPA4" value="1"/>
+			<pin name="RPA8" value="2"/>
+			<pin name="RPB1" value="4"/>
+			<pin name="RPB5" value="5"/>
+			<pin name="RPB13" value="7"/>
+			<pin name="RPA3" value="8"/>
+			<pin name="RPA7" value="9"/>
+			<pin name="RPB0" value="11"/>
+			<pin name="RPB4" value="12"/>
+			<pin name="RPB8" value="13"/>
+			<pin name="RPB12" value="14"/>
+			<pin name="RPA0" value="15"/>
+			<function name="QSPI_DATA2 (in/out)" direction="in/out" register-name = "QD2R"/>			
+		</group>
+		<!-- next three groups are only meant to support in/out on QSPI_DATA3 pin -->
+		<group id="15">
+			<pin name="RPA5" value="1"/>
+			<pin name="RPA9" value="2"/>
+			<pin name="RPA13" value="3"/>
+			<pin name="RPB2" value="4"/>
+			<pin name="RPB6" value="5"/>
+			<pin name="RPB10" value="6"/>
+			<pin name="RPA0" value="7"/>
+			<pin name="RPA4" value="8"/>
+			<pin name="RPA8" value="9"/>
+			<pin name="RPB1" value="11"/>
+			<pin name="RPB5" value="12"/>
+			<pin name="RPB9" value="13"/>
+			<pin name="RPB13" value="14"/>
+			<pin name="RPA1" value="15"/>
+			<function name="QSPI_DATA3 (in/out)" direction="in/out" register-name = "QD3R"/>
+		</group>
+		<group id="16">
+			<pin name="RPB5" register-name = "RPB5G2R"/>
+			<function name="QSPI_DATA3 (in/out)"	direction="in/out" value="25"/>
+		</group>
+		<group id="17">
+			<pin name="RPA0" register-name = "RPA0G3R"/>
+			<pin name="RPA1" register-name = "RPA1G3R"/>
+			<pin name="RPA4" register-name = "RPA4G3R"/>
+			<pin name="RPA5" register-name = "RPA5G3R"/>
+			<pin name="RPA8" register-name = "RPA8G3R"/>
+			<pin name="RPA9" register-name = "RPA9G3R"/>
+			<pin name="RPA13" register-name = "RPA13G3R"/>
+			<pin name="RPB1" register-name = "RPB1G3R"/>
+			<pin name="RPB2" register-name = "RPB2G3R"/>
+			<pin name="RPB6" register-name = "RPB6G3R"/>
+			<pin name="RPB9" register-name = "RPB9G3R"/>
+			<pin name="RPB10" register-name = "RPB10G3R"/>
+			<pin name="RPB13" register-name = "RPB13G3R"/>	
+			<function name="QSPI_DATA3 (in/out)"	direction="in/out" value="26"/>
+		</group>
+		<!-- next three groups are only meant to support in/out on QSPI_DATA0 pin -->
+		<group id="18">
+			<pin name="RPA6" value="1"/>
+			<pin name="RPA10" value="2"/>
+			<pin name="RPA14" value="3"/>
+			<pin name="RPB3" value="4"/>
+			<pin name="RPB7" value="5"/>
+			<pin name="RPB11" value="6"/>
+			<pin name="RPA1" value="7"/>
+			<pin name="RPA5" value="8"/>
+			<pin name="RPA9" value="9"/>
+			<pin name="RPA13" value="10"/>
+			<pin name="RPB2" value="11"/>
+			<pin name="RPB6" value="12"/>
+			<pin name="RPB10" value="13"/>
+			<pin name="RPA8" value="14"/>
+			<pin name="RPA2" value="15"/>
+			<function name="QSPI_DATA0 (in/out)" direction="in/out" register-name = "QD0R"/>
+		</group>
+		<group id="19">
+			<pin name="RPB6" register-name = "RPB6G3R"/>
+			<function name="QSPI_DATA0 (in/out)"	direction="in/out" value="25"/>
+		</group>
+		<group id="20">
+			<pin name="RPA1" register-name = "RPA1G4R"/>
+			<pin name="RPA2" register-name = "RPA2G4R"/>
+			<pin name="RPA5" register-name = "RPA5G4R"/>
+			<pin name="RPA6" register-name = "RPA6G4R"/>
+			<pin name="RPA8" register-name = "RPA8G4R"/>
+			<pin name="RPA9" register-name = "RPA9G4R"/>
+			<pin name="RPA10" register-name = "RPA10G4R"/>
+			<pin name="RPA13" register-name = "RPA13G4R"/>
+			<pin name="RPA14" register-name = "RPA14G4R"/>
+			<pin name="RPB2" register-name = "RPB2G4R"/>
+			<pin name="RPB3" register-name = "RPB3G4R"/>
+			<pin name="RPB7" register-name = "RPB7G4R"/>		
+			<pin name="RPB10" register-name = "RPB10G4R"/>
+			<pin name="RPB11" register-name = "RPB11G4R"/>		
+			<function name="QSPI_DATA0 (in/out)"	direction="in/out" value="26"/>
+		</group>			
+	</groups>
+	
+	<modules>
+        <module name="ADC" desc="ADC\n(ADC_ID_1)" analog="true">
+            <function name="AN0">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_0_ALT_INP_SEL_IDX[0-1]" value="ADCHS_DEFAULT_CLASS1_AN0"/>
+                </constraint>                
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN0"/>
+                </constraint>
+            </function>
+			<function name="ANA0">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_0_ALT_INP_SEL_IDX[0-1]" value="ADCHS_ALTERNATE_CLASS1_AN0"/>
+                </constraint>                
+            </function>
+			<function name="ANB0">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_0_ALT_INP_SEL_IDX[0-1]" value="ADCHS_ALTERNATE_CLASS1_AN1"/>
+                </constraint>                
+            </function>
+            <function name="AN1">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN1"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-6]" value="ADCHS_CLASS2_AN1"/>
+                </constraint> 
+            </function>
+			<function name="AN2">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN2"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-6]" value="ADCHS_CLASS2_AN2"/>
+                </constraint> 
+            </function>
+			<function name="AN3">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN3"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-6]" value="ADCHS_CLASS2_AN3"/>
+                </constraint> 
+            </function>
+			<function name="AN4">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN4"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-6]" value="ADCHS_CLASS2_AN4"/>
+                </constraint> 
+            </function>
+			<function name="AN5">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN5"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-6]" value="ADCHS_CLASS2_AN5"/>
+                </constraint> 
+            </function>
+			<function name="AN6">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN6"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-6]" value="ADCHS_CLASS2_AN6"/>
+                </constraint> 
+            </function>
+			<function name="AN7">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN7"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-6]" value="ADCHS_CLASS2_AN7"/>
+                </constraint> 
+            </function>
+			<function name="AN8">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN8"/>
+                </constraint>
+            </function>
+			<function name="AN9">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN9"/>
+                </constraint>
+            </function>
+			<function name="AN10">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN10"/>
+                </constraint>
+            </function>
+			<function name="AN11">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN11"/>
+                </constraint>
+            </function>
+			<function name="AN12">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN12"/>
+                </constraint>
+            </function>
+			<function name="AN13">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN13"/>
+                </constraint>
+            </function>
+			<function name="AN14">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN14"/>
+                </constraint>
+            </function>
+			<function name="AN15">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN15"/>
+                </constraint>
+            </function>
+			<function name="AN16">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN15"/>
+                </constraint>
+            </function>
+			<function name="AN17">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN15"/>
+                </constraint>
+            </function>
+			<function name="AN18">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN15"/>
+                </constraint>
+            </function>	
+			<function name="AN19">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN15"/>
+                </constraint>
+            </function>		
+			<function name="ANN1"/>
+			<function name="ANN0"/>									
+		</module>
+		<module name="CVD0">
+			<function name="CVD0"/>
+			<function name="CVDT0"/>
+			<function name="CVDR0"/>
+		</module>
+		<module name="CVD1">
+			<function name="CVD1"/>
+			<function name="CVDT1"/>
+			<function name="CVDR1"/>
+		</module>
+		<module name="CVD2">
+			<function name="CVD2"/>
+			<function name="CVDT2"/>
+			<function name="CVDR2"/>
+		</module>
+		<module name="CVD3">
+			<function name="CVD3"/>
+			<function name="CVDT3"/>
+			<function name="CVDR3"/>
+		</module>
+		<module name="CVD4">
+			<function name="CVD4"/>
+			<function name="CVDT4"/>
+			<function name="CVDR4"/>
+		</module>
+		<module name="CVD5">
+			<function name="CVD5"/>
+			<function name="CVDT5"/>
+			<function name="CVDR5"/>
+		</module>
+		<module name="CVD6">
+			<function name="CVD6"/>
+			<function name="CVDT6"/>
+			<function name="CVDR6"/>
+		</module>
+		<module name="CVD7">
+			<function name="CVD7"/>
+			<function name="CVDT7"/>
+			<function name="CVDR7"/>
+		</module>								
+        <module name="Clock" desc="Clock\n(OSC_ID_0)">
+			<function name="OSC1" analog="true">
+                <constraint type="enable">
+                    <pair key="POSCMOD" value="HS"/>
+                </constraint>
+            </function>
+			<function name="OSC2" analog="true">
+                <constraint type="enable">
+                    <pair key="POSCMOD" value="HS"/>
+                </constraint>
+            </function>		
+			<function name="SOSCI" analog="true">
+                <constraint type="enable">
+					<pair key="SYS_CLK_DISPLAY_SOSC" value="y"/>
+                </constraint>
+            </function>
+			<function name="SOSCO" analog="true">
+                <constraint type="enable">
+					<pair key="SYS_CLK_DISPLAY_SOSC" value="y"/>
+                </constraint>
+            </function>
+			<function name="SCLKI">
+                <constraint type="enable">
+					<pair key="SYS_CLK_DISPLAY_SCLKI" value="y"/>
+                </constraint>
+            </function>	
+			<function name="REFI">
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK_ROSEL0" value="8"/>
+                </constraint>
+            </function>
+			<function name="REFO1">
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK0_OE" value="y"/>
+                </constraint>
+            </function>
+			<function name="REFO2">
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK1_OE" value="y"/>
+                </constraint>
+            </function>			
+			<function name="REFO3">
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK2_OE" value="y"/>
+                </constraint>
+            </function>
+			<function name="REFO4">
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK3_OE" value="y"/>
+                </constraint>
+            </function>
+			<function name="BT_CLK_OUT">
+                <constraint type="enable">
+                    <pair key="SYS_CLK_BTCLKOUTEN" value="y"/>
+                </constraint>
+            </function>
+		</module>					
+		
+		<module name="Edge Interrupt">
+			<function name="INT0"/>
+		</module>
+
+		<module name="EIC">
+			<function name="EXTINT0"/>
+			<function name="EXTINT1"/>
+			<function name="EXTINT2"/>
+			<function name="EXTINT3"/>
+			<function name="NMI"/>
+		</module>
+
+		<module name="RTCC" desc="RTCC (RTCC_ID_0)">
+			<function name="RTCC">
+			    <constraint type="enable">
+			    	<pair key="DRV_RTCC_OUTPUT_ENABLE" value="y"/>
+			    </constraint>
+		    </function>
+        </module>		
+
+		<module name="RTC">
+			<function name="RTC_IN0"/>
+			<function name="RTC_IN1"/>
+			<function name="RTC_IN2"/>
+			<function name="RTC_IN3"/>
+			<function name="RTC_EVENT"/>
+			<function name="RTC_OUT"/>
+			<function name="RTC_IN0_ALT"/>
+			<function name="RTC_OUT_ALT"/>
+        </module>
+
+        <module name="SERCOM 0">
+			<function name="SERCOM0_PAD0"/>
+			<function name="SERCOM0_PAD1"/>
+			<function name="SERCOM0_PAD2"/>
+			<function name="SERCOM0_PAD3"/>
+
+			<function name="SERCOM0_PAD0 (in)"/>
+			<function name="SERCOM0_PAD1 (in)"/>
+			<function name="SERCOM0_PAD2 (in)"/>
+			<function name="SERCOM0_PAD3 (in)"/>
+			<function name="SERCOM0_PAD0 (out)"/>
+			<function name="SERCOM0_PAD1 (out)"/>
+			<function name="SERCOM0_PAD2 (out)"/>
+			<function name="SERCOM0_PAD3 (out)"/>
+		</module>	
+        <module name="SERCOM 1">
+			<function name="SERCOM1_PAD0"/>
+			<function name="SERCOM1_PAD1"/>
+			<function name="SERCOM1_PAD2"/>
+			<function name="SERCOM1_PAD3"/>
+
+			<function name="SERCOM1_PAD0 (in)"/>
+			<function name="SERCOM1_PAD1 (in)"/>
+			<function name="SERCOM1_PAD2 (in)"/>
+			<function name="SERCOM1_PAD3 (in)"/>
+			<function name="SERCOM1_PAD0 (out)"/>
+			<function name="SERCOM1_PAD1 (out)"/>
+			<function name="SERCOM1_PAD2 (out)"/>
+			<function name="SERCOM1_PAD3 (out)"/>
+		</module>	
+        <module name="SERCOM 2">
+			<function name="SERCOM2_SDA"/>
+			<function name="SERCOM2_SCL"/>
+			<function name="SERCOM2_PAD0"/>
+			<function name="SERCOM2_PAD1"/>
+			<function name="SERCOM2_PAD2"/>
+			<function name="SERCOM2_PAD3"/>
+
+			<function name="SERCOM2_PAD0 (in)"/>
+			<function name="SERCOM2_PAD1 (in)"/>
+			<function name="SERCOM2_PAD2 (in)"/>
+			<function name="SERCOM2_PAD3 (in)"/>
+			<function name="SERCOM2_PAD0 (out)"/>
+			<function name="SERCOM2_PAD1 (out)"/>
+			<function name="SERCOM2_PAD2 (out)"/>
+			<function name="SERCOM2_PAD3 (out)"/>
+		</module>	
+        <module name="SERCOM 3">
+			<function name="SERCOM3_PAD0"/>
+			<function name="SERCOM3_PAD1"/>
+			<function name="SERCOM3_PAD2"/>
+			<function name="SERCOM3_PAD3"/>
+
+			<function name="SERCOM3_PAD0 (in)"/>
+			<function name="SERCOM3_PAD1 (in)"/>
+			<function name="SERCOM3_PAD2 (in)"/>
+			<function name="SERCOM3_PAD3 (in)"/>
+			<function name="SERCOM3_PAD0 (out)"/>
+			<function name="SERCOM3_PAD1 (out)"/>
+			<function name="SERCOM3_PAD2 (out)"/>
+			<function name="SERCOM3_PAD3 (out)"/>
+		</module>
+		
+		<module name="DAC">
+			<function name="DACOUT"/>
+		</module>
+
+        <module name="CAN1" desc="CAN1\n(CAN_ID_1)">
+            <constraint type="enable">
+                <pair key="DRV_CAN_PERIPHERAL_ID_IDX[0-1]" value="CAN_ID_1"/>
+            </constraint>
+			<function name="C1RX"/>
+			<function name="C1TX"/>
+		</module>
+        <module name="CAN2" desc="CAN2\n(CAN_ID_2)">
+            <constraint type="enable">
+                <pair key="DRV_CAN_PERIPHERAL_ID_IDX[0-1]" value="CAN_ID_2"/>
+            </constraint>
+			<function name="C2RX"/>
+			<function name="C2TX"/>
+		</module>		
+		<module name="QSPI">
+			<function name="QSPI_SCK"/>
+			<function name="QSPI_CS"/>
+			<function name="QSPI_DATA0"/>
+			<function name="QSPI_DATA1"/>
+			<function name="QSPI_DATA2"/>
+			<function name="QSPI_DATA3"/>
+
+			<function name="QSPI_SCK (in)"/>
+			<function name="QSPI_DATA0 (in)"/>
+			<function name="QSPI_DATA1 (in)"/>
+			<function name="QSPI_DATA2 (in)"/>
+			<function name="QSPI_DATA3 (in)"/>
+
+			<function name="QSPI_SCK (out)"/>
+			<function name="QSPI_CS (out)"/>
+			<function name="QSPI_DATA0 (out)"/>
+			<function name="QSPI_DATA1 (out)"/>
+			<function name="QSPI_DATA2 (out)"/>
+			<function name="QSPI_DATA3 (out)"/>
+
+			<function name="QSPI_DATA0 (in/out)"/>
+			<function name="QSPI_DATA1 (in/out)"/>
+			<function name="QSPI_DATA2 (in/out)"/>
+			<function name="QSPI_DATA3 (in/out)"/>
+		</module>
+		<module name="CCL">
+			<function name="CCLIN0"/>
+			<function name="CCLIN1"/>
+			<function name="CCLIN2"/>
+			<function name="CCLIN3"/>
+			<function name="CCLIN4"/>
+			<function name="CCLIN5"/>
+			<function name="CCL_OUT0"/>
+			<function name="CCL_OUT1"/>			
+		</module>
+
+		<module name="TC0">
+			<function name="TC0_WO0 (in)"/>
+			<function name="TC0_WO1 (in)"/>
+			<function name="TC0_WO0 (out)"/>
+			<function name="TC0_WO1 (out)"/>
+		</module>
+		<module name="TC1">
+			<function name="TC1_WO0 (in)"/>
+			<function name="TC1_WO1 (in)"/>
+			<function name="TC1_WO0 (out)"/>
+			<function name="TC1_WO1 (out)"/>
+		</module>
+		<module name="TC2">
+			<function name="TC2_WO0 (in)"/>
+			<function name="TC2_WO1 (in)"/>
+			<function name="TC2_WO0 (out)"/>
+			<function name="TC2_WO1 (out)"/>
+		</module>
+		<module name="TC3">
+			<function name="TC3_WO0 (in)"/>
+			<function name="TC3_WO1 (in)"/>
+			<function name="TC3_WO0 (out)"/>
+			<function name="TC3_WO1 (out)"/>
+		</module>	
+		<module name="TC4">
+			<function name="TC4_WO0 (in)"/>
+			<function name="TC4_WO1 (in)"/>
+			<function name="TC4_WO0 (out)"/>
+			<function name="TC4_WO1 (out)"/>
+		</module>
+		<module name="TC5">
+			<function name="TC5_WO0 (in)"/>
+			<function name="TC5_WO1 (in)"/>
+			<function name="TC5_WO0 (out)"/>
+			<function name="TC5_WO1 (out)"/>
+		</module>
+		<module name="TC6">
+			<function name="TC6_WO0 (in)"/>
+			<function name="TC6_WO1 (in)"/>
+			<function name="TC6_WO0 (out)"/>
+			<function name="TC6_WO1 (out)"/>
+		</module>
+		<module name="TC7">
+			<function name="TC7_WO0 (in)"/>
+			<function name="TC7_WO1 (in)"/>
+			<function name="TC7_WO0 (out)"/>
+			<function name="TC7_WO1 (out)"/>
+		</module>	
+		<module name="TCC0">
+			<function name="TCC0_WO0"/>
+			<function name="TCC0_WO1"/>
+			<function name="TCC0_WO2"/>
+			<function name="TCC0_WO3"/>	
+			<function name="TCC0_WO4"/>
+			<function name="TCC0_WO5"/>
+		</module>
+		<module name="TCC1">					
+			<function name="TCC1_WO0"/>
+			<function name="TCC1_WO1"/>
+			<function name="TCC1_WO2"/>
+			<function name="TCC1_WO3"/>
+			<function name="TCC1_WO4"/>
+			<function name="TCC1_WO5"/>
+		</module>
+		<module name="TCC2">
+			<function name="TCC2_WO0"/>
+			<function name="TCC2_WO1"/>
+			<function name="TCC2_WO2"/>
+			<function name="TCC2_WO3"/>
+			<function name="TCC2_WO4"/>
+			<function name="TCC2_WO5"/>				
+		</module>
+
+		<module name="AC">
+			<function name="AC_CMP0"/>
+			<function name="AC_CMP1"/>
+			<function name="AC_CMP1_ALT"/>
+			<function name="AC_CMPTOUT"/>
+			<function name="AC_CMPTRDY"/>
+			<function name="AC_CMPTEN"/>
+			<function name="AC_AIN0"/>
+			<function name="AC_AIN1"/>	
+			<function name="AC_AIN2"/>
+			<function name="AC_AIN3"/>		
+		</module>
+
+		<module name="RF Radio">
+			<function name="COEXCTRL0"/>
+			<function name="COEXCTRL1"/>
+			<function name="COEXCTRL2"/>			
+		</module>
+		<module name="JTAG">
+			<constraint type="enable">
+				<pair key="SYS_DEVCON_USE_JTAG" value="y"/>
+			</constraint>
+			<function name="TMS"/>
+			<function name="TCK"/>
+			<function name="TDI"/>
+			<function name="TDO"/>
+		</module>
+		<module name="TPIU">
+			<constraint type="enable">
+				<pair key="SYS_DEVCON_USE_TRACE" value="y"/>
+			</constraint>
+			<function name="TRCLK"/>
+			<function name="TRD0"/>
+			<function name="TRD1"/>
+			<function name="TRD2"/>
+			<function name="TRD3"/>
+		</module>
+		<module name="ICE">
+			<function name="CM4_SWCLK"/>
+			<function name="CM4_SWO"/>
+			<function name="CM4_SWDIO"/>			
+		</module>
+
+		<module name="BSP" desc="Board Support Package">
+			<constraint type="enable">
+				<pair key="USE_BSP" value="y"/>
+			</constraint>
+			<function name="RESERVED"/>
+		</module>
+		<module name="LVD Voltage Reference">
+			<constraint type="enable"/>
+			<function name="LVDIN"/>
+
+		</module>		
+	</modules>
+</family>
+

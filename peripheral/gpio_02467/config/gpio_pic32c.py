@@ -625,9 +625,9 @@ for myGroups in root.findall('groups'):
             elif "register-name" in myPin.attrib.keys(): # means its group for output pins
                 PORTS_REMAP_OUTPUT_PIN[myPin.get("name")] = myPin.get("register-name")
         for myFunction in myGroup.findall('function'):
-            if myFunction.get("direction") == "out":  # means its group for output functions
+            if "value" in myFunction.attrib.keys():  # means its group for output functions
                 ppsOutputFunctionMap[myFunction.get("name")] = myFunction.get("value")
-            elif  myFunction.get("direction") == "in":  # means its group for input functions
+            elif "register-name" in myFunction.attrib.keys():  # means its group for input functions
                 PORTS_REMAP_INPUT_FUNCTION[myFunction.get("name")] = myFunction.get("register-name")
 
 for pinNumber in range(0, PPSPinCount):
