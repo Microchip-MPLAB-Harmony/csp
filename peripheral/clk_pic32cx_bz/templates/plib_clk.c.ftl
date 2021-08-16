@@ -102,7 +102,7 @@ void CLK_Initialize( void )
         clk_ready_tries++;
     } while(BTZB_XTAL_NOT_READY && (clk_ready_tries < CLK_READY_RETRIES));
     
-    if((clk_ready_tries >= CLK_READY_RETRIES) && !BTZB_XTAL_NOT_READY)
+    if((clk_ready_tries >= CLK_READY_RETRIES) && BTZB_XTAL_NOT_READY)
     {
         BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |=(BTZBSYS_SUBSYS_CNTRL_REG1_subsys_bypass_xtal_ready_Msk);
         while(BTZB_XTAL_NOT_READY);
@@ -118,7 +118,7 @@ void CLK_Initialize( void )
         clk_ready_tries++;
     } while(BTZB_PLL_NOT_LOCKED && (clk_ready_tries < CLK_READY_RETRIES));
     
-    if((clk_ready_tries >= CLK_READY_RETRIES) && !BTZB_PLL_NOT_LOCKED)
+    if((clk_ready_tries >= CLK_READY_RETRIES) && BTZB_PLL_NOT_LOCKED)
     {
         BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |= BTZBSYS_SUBSYS_CNTRL_REG1_subsys_bypass_pll_lock_Msk;
         while(BTZB_PLL_NOT_LOCKED);
