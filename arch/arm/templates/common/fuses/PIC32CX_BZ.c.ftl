@@ -111,6 +111,9 @@
 <#if CONFIG_TRCEN?has_content>
 #pragma config TRCEN =      ${CONFIG_TRCEN}
 </#if>
+<#if CONFIG_ECC_SEL_MEM?has_content>
+#pragma config ECC_SEL_MEM =      ${CONFIG_ECC_SEL_MEM}
+</#if>
 <#if CONFIG_ZBTWKSYS?has_content>
 #pragma config ZBTWKSYS =      ${CONFIG_ZBTWKSYS}
 </#if>

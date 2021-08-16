@@ -203,7 +203,10 @@ deviceFamily.setVisible(False)
 # This symbol is created inside core.py with the default value obtained from ATDF
 # Since some of the ATDF doesn't give uniquely identifiable family name, same is updated in family python like this
 global productFamily
-productFamily.setDefaultValue("PIC32CX_BZ")
+if "BZ3" in Variables.get("__PROCESSOR"):
+    productFamily.setDefaultValue("PIC32CX_BZ3")
+else:
+    productFamily.setDefaultValue("PIC32CX_BZ2")
 
 cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M4 Configuration")
@@ -275,7 +278,7 @@ def setDMACDefaultSettings():
 
 def setMPUDefaultSettings():
     mpuRegions = 8
-    mpuSettings = {"FLASH"              : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00000000",   "4MB"   ],
+    mpuSettings = {"FLASH"              : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x1000000",   "4MB"   ],
                     "SRAM"              : ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20000000",   "8MB"],
                     "PERIPHERALS"       : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
                     "SYSTEM"            : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"   ],
