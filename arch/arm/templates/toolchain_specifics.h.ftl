@@ -115,6 +115,8 @@ extern "C" {
         <#lt>#define CACHE_ALIGN
     </#if>
 
+	<#lt>#define CACHE_ALIGNED_SIZE_GET(size)     (size + ((size % CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (size % CACHE_LINE_SIZE)) : 0))
+	
     <#lt>#ifndef FORMAT_ATTRIBUTE
     <#lt>   #define FORMAT_ATTRIBUTE(archetype, string_index, first_to_check)  __attribute__ ((format (archetype, string_index, first_to_check)))
     <#lt>#endif
@@ -147,7 +149,7 @@ extern "C" {
     <#lt>#endif
     <#lt>#endif
     <#lt>typedef _ssize_t ssize_t;
-    <#lt>#define	_SSIZE_T_DECLARED
+    <#lt>#define    _SSIZE_T_DECLARED
     <#lt>#endif
     <#if CACHE_ALIGN?? >
 
@@ -159,6 +161,8 @@ extern "C" {
         <#lt>#define CACHE_ALIGN
     </#if>
 
+	<#lt>#define CACHE_ALIGNED_SIZE_GET(size)     (size + ((size % CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (size % CACHE_LINE_SIZE)) : 0))
+	
     <#lt>#ifndef FORMAT_ATTRIBUTE
     <#lt>   #define FORMAT_ATTRIBUTE(archetype, string_index, first_to_check)
     <#lt>#endif
@@ -277,7 +281,7 @@ extern "C" {
     <#lt>#endif
     <#lt>#endif
     <#lt>typedef _ssize_t ssize_t;
-    <#lt>#define	_SSIZE_T_DECLARED
+    <#lt>#define    _SSIZE_T_DECLARED
     <#lt>#endif
 
     <#lt>#define NO_INIT        __attribute__((section(".no_init")))
@@ -290,6 +294,8 @@ extern "C" {
         <#lt>#define CACHE_LINE_SIZE    (4u)
         <#lt>#define CACHE_ALIGN
     </#if>
+
+    <#lt>#define CACHE_ALIGNED_SIZE_GET(size)     (size + ((size % CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (size % CACHE_LINE_SIZE)) : 0))
 
     <#lt>#ifndef FORMAT_ATTRIBUTE
     <#lt>   #define FORMAT_ATTRIBUTE(archetype, string_index, first_to_check)  __attribute__ ((format (archetype, string_index, first_to_check)))
