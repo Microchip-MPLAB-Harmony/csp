@@ -169,7 +169,7 @@ def setDPLLClockFreq(symbol, event):
         # XOSC Clock
         elif clockSrc == 1:
             divisor = int(Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_DIVIDER"))
-            srcFreq = int(Database.getSymbolValue("core", "XOSC0_FREQ")) / (2 * (divisor + 1))
+            srcFreq = int(Database.getSymbolValue("core", "XOSC_FREQ")) / (2 * (divisor + 1))
 
         # GCLK_DPLL Clock
         elif clockSrc == 2:
