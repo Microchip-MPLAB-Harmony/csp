@@ -284,7 +284,7 @@ void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectDisable( NVM_BOOT_FLASH_WRITE_PRO
     __builtin_mtc0(12, 0, processorStatus);
 }
 
-void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectLock()
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectLock(void)
 {
     volatile uint32_t processorStatus;
 
