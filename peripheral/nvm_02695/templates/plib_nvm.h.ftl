@@ -125,7 +125,7 @@ void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectEnable( NVM_BOOT_FLASH_WRITE_PROT
 
 void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectDisable( NVM_BOOT_FLASH_WRITE_PROTECT writeProtectPage );
 
-void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectLock();
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectLock(void);
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister( NVM_CALLBACK callback, uintptr_t context );
