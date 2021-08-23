@@ -510,7 +510,7 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
-<#if (core.PRODUCT_FAMILY == "PIC32MX1402") || (core.PRODUCT_FAMILY == "PIC32MZW")>
+<#if (core.PRODUCT_FAMILY == "PIC32MK1402") || (core.PRODUCT_FAMILY == "PIC32MZW")>
         /* Clear ${UART_INSTANCE_NAME} RX Interrupt flag */
         ${UART_RX_IFS_REG}CLR = _${UART_RX_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK;
 
@@ -589,7 +589,7 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
-<#if (core.PRODUCT_FAMILY == "PIC32MX1402") || (core.PRODUCT_FAMILY == "PIC32MZW")>
+<#if (core.PRODUCT_FAMILY == "PIC32MK1402") || (core.PRODUCT_FAMILY == "PIC32MZW")>
         /* Clear ${UART_INSTANCE_NAME}TX Interrupt flag */
         ${UART_TX_IFS_REG}CLR = _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK;
 
