@@ -207,3 +207,9 @@
 <#if CONFIG_SOSCEN?has_content>
 #pragma config SOSCEN =    ${CONFIG_SOSCEN}
 </#if>
+
+
+/*** FCPN0 ***/
+<#if CONFIG_CP?has_content>
+#pragma config CP =    ${CONFIG_CP}
+</#if>
