@@ -22,6 +22,7 @@
 *****************************************************************************"""
 
 global dataBitsDict
+global calcBaud
 
 dataBitsDict = {
     "_5_BIT": "DRV_USART_DATA_5_BIT",
@@ -43,27 +44,55 @@ def updateRingBufferSizeVisibleProperty(symbol, event):
 # FLEXCOM USART clock source
 clock_source = {"Ext_clk_src_Freq" : 1000000}
 global baudRateCalc
+
 # Calculates BRG value and Oversampling
-def baudRateCalc(clk, baud):
+def calcBaud(clk, baudrate, over_samp):
+    CD = 0,
+    FP = 0,
+    BaudError = 0
 
-    if (clk >= (16 * baud)):
-        brgVal = (clk / (16 * baud))
-        overSamp = 0
-    elif (clk >= (8 * baud)):
-        brgVal = (clk / (8 * baud))
-        overSamp = 1
+    CD = int((clk / (baudrate * 8 * (2 - over_samp))))
+
+    if CD > 0:
+        FP = int(((clk / (baudrate * (2 - over_samp))) - CD * 8))
+        ActualBaudRate = (clk / (CD * 8 + FP)) / (2 - over_samp)
+        BaudError = ((ActualBaudRate - baudrate)/float(baudrate)) * 100
+
+    return CD, FP, BaudError
+
+def baudRateCalc(clk, baudrate):
+
+    global calcBaud
+
+    CD0 = 0
+    CD1 = 0
+    FP0 = 0
+    FP1 = 0
+    BaudError0 = 0
+    BaudError1 = 0
+    OVSAMP = 0
+
+    # Calculate CD and FP for 8x and 16x oversampling:
+    CD0, FP0, BaudError0 = calcBaud(clk, baudrate, 0)
+    CD1, FP1, BaudError1 = calcBaud(clk, baudrate, 1)
+
+    if ( (not(CD0 > 0 and CD0 <= 65535) ) and (not(CD1 > 0 and CD1 <= 65535)) ):
+        # Baudrate cannot be generated either with 8x or 16x oversampling
+        return 0, 0, 0
+
+    # If baudrate can be generated with both 8x and 16x oversampling, then choose the one that gives less error:
+    if (CD0 > 0 and CD0 <= 65535) and (CD1 > 0 and CD1 <= 65535):
+        if BaudError1 < BaudError0:
+            CD0 = CD1
+            FP0 = FP1
+            OVSAMP = 1
     else:
-        brgVal = 0
-        overSamp = 0
+        if (CD1 > 0 and CD1 <= 65535):
+            CD0 = CD1
+            FP0 = FP1
+            OVSAMP = 1
 
-    # The brgVal must fit into a 16-bit register
-    if brgVal > 65535:
-        brgVal = 0
-        overSamp = 0
-
-    flexcomClockInvalidSym.setVisible((brgVal < 1))
-
-    return [brgVal, overSamp]
+    return int(CD0), int(FP0), OVSAMP
 
 def baudRateTrigger(symbol, event):
     if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x1:
@@ -74,12 +103,14 @@ def baudRateTrigger(symbol, event):
 
         baud = Database.getSymbolValue(deviceNamespace, "BAUD_RATE")
 
-        brgVal, overSamp = baudRateCalc(clk, baud)
+        cd, fp, oversamp = baudRateCalc(clk, baud)
 
         if symbol.getID() == "BRG_VALUE":
-            symbol.setValue(brgVal, 2)
+            symbol.setValue(cd, 2)
         if symbol.getID() == "FLEXCOM_USART_MR_OVER":
-            symbol.setValue(overSamp, 2)
+            symbol.setValue(oversamp, 2)
+        if symbol.getID() == "FP_VALUE":
+            symbol.setValue(fp, 2)
 
 def clockSourceFreq(symbol, event):
 
@@ -334,7 +365,7 @@ flexcomSym_UsartBaud.setVisible(False)
 flexcomSym_UsartBaud.setMin(1)
 flexcomSym_UsartBaud.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
-brgVal, overSamp = baudRateCalc(flexcomSym_UsartClkValue.getValue(), flexcomSym_UsartBaud.getValue())
+cd, fp, overSamp = baudRateCalc(flexcomSym_UsartClkValue.getValue(), flexcomSym_UsartBaud.getValue())
 flexcomSym_MR_OVER = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_MR_OVER", flexcomSym_OperatingMode)
 flexcomSym_MR_OVER.setVisible(False)
 flexcomSym_MR_OVER.setDefaultValue(overSamp)
@@ -342,8 +373,13 @@ flexcomSym_MR_OVER.setDependencies(baudRateTrigger, ["BAUD_RATE", "FLEX_USART_CL
 
 flexcomSym_UsartBRGValue = flexcomComponent.createIntegerSymbol("BRG_VALUE", flexcomSym_OperatingMode)
 flexcomSym_UsartBRGValue.setVisible(False)
-flexcomSym_UsartBRGValue.setDefaultValue(brgVal)
+flexcomSym_UsartBRGValue.setDefaultValue(cd)
 flexcomSym_UsartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "FLEX_USART_CLOCK_FREQ", "EXTERNAL_CLOCK_FREQ"])
+
+flexcomSym_UsartFPValue = flexcomComponent.createIntegerSymbol("FP_VALUE", flexcomSym_OperatingMode)
+flexcomSym_UsartFPValue.setVisible(False)
+flexcomSym_UsartFPValue.setDefaultValue(fp)
+flexcomSym_UsartFPValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "FLEX_USART_CLOCK_FREQ", "EXTERNAL_CLOCK_FREQ"])
 
 flexcomSym_Usart_MR_CHRL = flexcomComponent.createKeyValueSetSymbol("FLEX_USART_MR_CHRL", flexcomSym_OperatingMode)
 flexcomSym_Usart_MR_CHRL.setLabel("Character Length")
