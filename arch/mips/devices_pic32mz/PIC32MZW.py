@@ -122,10 +122,12 @@ def getWaitStates():
         ws = 4
     if sysclk <= 120000000:
         ws = 3
+    # WS 1 or 2 seems to have some issue in B0 silicon, so commenting for now.
+    '''    
     if sysclk <= 80000000:
         ws = 2
     if sysclk <= 40000000:
-        ws = 1
+        ws = 1'''
 
     return ws
 
