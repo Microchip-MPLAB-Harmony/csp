@@ -343,6 +343,7 @@ def adchsAddLongFromATDFBitfieldCaption(Parent, ModuleName, RegisterName, BitFie
 def getIRQnumber(string):
     interrupts = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts')
     interruptsChildren = interrupts.getChildren()
+    irq_index = 0
     for param in interruptsChildren:
         modInst = param.getAttribute('name')
         if(string == modInst):
