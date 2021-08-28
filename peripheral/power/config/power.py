@@ -53,9 +53,9 @@ def updateDSCON(symbol, event):
 ###################################################################################################
 def instantiateComponent(powerComponent):
     # DRMEN symbol
-    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
-        clkValGrp_OSCCON__DRMEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="OSCCON__DRMEN"]')
-    else:
+
+    clkValGrp_OSCCON__DRMEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="OSCCON__DRMEN"]')
+    if clkValGrp_OSCCON__DRMEN is None:
         clkValGrp_OSCCON__DRMEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="OSCCON__DRMEN"]')
     
     if clkValGrp_OSCCON__DRMEN is not None:
