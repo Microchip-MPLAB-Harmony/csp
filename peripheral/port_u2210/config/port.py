@@ -545,7 +545,7 @@ portSym_PinCount.setVisible(False)
 portSym_PinCount.setDefaultValue(internalPincount)
 
 global portPeripheralFunc
-portPeripheralFunc = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"]
+portPeripheralFunc = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"]
 
 global group
 group = [0 for i in range(int(portModuleGC.getAttribute("count")))]
