@@ -399,12 +399,13 @@ def getChipSelectPinList(ss_pin):
                                         break
                     break
     # for some of the devices like PIC32MM, few SPI instances have fixed SSx pins, get their pin name from pin xml
-    if not final_pin_list:
-        for pin in pinoutXmlRoot.iter("pin"):
-            for function in pin.iter("function"):
-                if ss_pin == function.get('name'):
-                    final_pin_list.append(pin.get('name'))
-                    break
+    # for some of the devices like PIC32MZW1, few spi instances have fixed SSx pins as well as mappable SSx pins
+    # so its needed to run through pin xml file as well and find such instances
+    for pin in pinoutXmlRoot.iter("pin"):
+        for function in pin.iter("function"):
+            if ss_pin == function.get('name'):
+                final_pin_list.append(pin.get('name'))
+                break
 
     final_pin_list.sort()
     return final_pin_list
