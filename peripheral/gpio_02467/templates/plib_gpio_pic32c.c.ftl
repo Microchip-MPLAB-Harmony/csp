@@ -118,7 +118,7 @@ void GPIO_Initialize ( void )
           <#lt>    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_JTAGEN_Msk;
 
         </#if>
-      <#else> <#-- 32 pin devices -->
+      <#elseif (GPIO_PIN_TOTAL == 32)> <#-- 32 pin devices -->
         <#if ((BSP_PIN_23_FUNCTION_TYPE == "TDI" || BSP_PIN_23_FUNCTION_TYPE == "") &&
           (BSP_PIN_26_FUNCTION_TYPE == "TDO" || BSP_PIN_26_FUNCTION_TYPE == "") &&
           (BSP_PIN_22_FUNCTION_TYPE == "TCK" || BSP_PIN_22_FUNCTION_TYPE == "") &&
@@ -127,7 +127,27 @@ void GPIO_Initialize ( void )
           <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
           <#lt>    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_JTAGEN_Msk;
 
-        </#if>        
+        </#if>
+      <#elseif (GPIO_PIN_TOTAL == 39)> <#-- 39 pin devices -->
+        <#if ((BSP_PIN_6_FUNCTION_TYPE == "TDI" || BSP_PIN_6_FUNCTION_TYPE == "") &&
+          (BSP_PIN_13_FUNCTION_TYPE == "TDO" || BSP_PIN_13_FUNCTION_TYPE == "") &&
+          (BSP_PIN_39_FUNCTION_TYPE == "TCK" || BSP_PIN_39_FUNCTION_TYPE == "") &&
+          (BSP_PIN_12_FUNCTION_TYPE == "TMS" || BSP_PIN_12_FUNCTION_TYPE == "")) >
+        <#else>
+          <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
+          <#lt>    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_JTAGEN_Msk;
+
+        </#if>
+      <#elseif (GPIO_PIN_TOTAL == 30)> <#-- 30 pin devices -->
+        <#if ((BSP_PIN_9_FUNCTION_TYPE == "TDI" || BSP_PIN_9_FUNCTION_TYPE == "") &&
+          (BSP_PIN_15_FUNCTION_TYPE == "TDO" || BSP_PIN_15_FUNCTION_TYPE == "") &&
+          (BSP_PIN_11_FUNCTION_TYPE == "TCK" || BSP_PIN_11_FUNCTION_TYPE == "") &&
+          (BSP_PIN_12_FUNCTION_TYPE == "TMS" || BSP_PIN_12_FUNCTION_TYPE == "")) >
+        <#else>
+          <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
+          <#lt>    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_JTAGEN_Msk;
+
+        </#if>                     
       </#if>
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
