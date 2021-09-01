@@ -73,7 +73,7 @@ extern "C" {
 <#list 1..(ADCHS_NUM_COMPARATORS) as i>
 <#assign ADCHS_ADCCMPCON_ENDCMP = "ADCCMPCON" + i + "__ENDCMP">
 <#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
-<#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true>
+<#if .vars[ADCHS_ADCCMPCON_ENDCMP]?has_content && .vars[ADCHS_ADCCMPCON_ENDCMP] == true>
 <#assign ADCHS_COMPARATOR_ENABLED = 1>
 <#if .vars[ADCHS_DCx_INT_ENABLED] == true>
 <#assign ADCHS_COMPARATOR_INT_ENABLED = 1>
@@ -86,7 +86,7 @@ extern "C" {
 <#list 1..(ADCHS_NUM_FILTERS) as i>
 <#assign ADCFLTR_AFEN = "ADCFLTR" + i + "__AFEN">
 <#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
-<#if .vars[ADCFLTR_AFEN] == true && .vars[ADCHS_DFx_INT_ENABLED] == true>
+<#if .vars[ADCFLTR_AFEN]?has_content && .vars[ADCFLTR_AFEN] == true && .vars[ADCHS_DFx_INT_ENABLED] == true>
 <#assign ADCHS_FILTER_INT_ENABLED = 1>
 </#if>
 </#list>
