@@ -195,6 +195,12 @@ deviceFamily.setDefaultValue("PIC32CX_BZ")
 deviceFamily.setReadOnly(True)
 deviceFamily.setVisible(False)
 
+# productFamily (ID = "PRODUCT_FAMILY") symbol should be used everywhere to identify the product family
+# This symbol is created inside core.py with the default value obtained from ATDF
+# Since some of the ATDF doesn't give uniquely identifiable family name, same is updated in family python like this
+global productFamily
+productFamily.setDefaultValue("PIC32CX_BZ")
+
 cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M4 Configuration")
 cortexMenu.setDescription("Configuration for Cortex M4")
