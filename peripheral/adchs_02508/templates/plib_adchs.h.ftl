@@ -128,7 +128,7 @@ ADCHS_DMA_STATUS ${ADCHS_INSTANCE_NAME}_DMAStatusGet(void);
 <#list 1..(ADCHS_NUM_COMPARATORS) as i>
 <#assign ADCHS_ADCCMPCON_ENDCMP = "ADCCMPCON" + i + "__ENDCMP">
 <#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
-<#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true>
+<#if .vars[ADCHS_ADCCMPCON_ENDCMP]?has_content && .vars[ADCHS_ADCCMPCON_ENDCMP] == true>
 void ${ADCHS_INSTANCE_NAME}_Comparator${i}Enable(void);
 void ${ADCHS_INSTANCE_NAME}_Comparator${i}Disable(void);
 void ${ADCHS_INSTANCE_NAME}_Comparator${i}LimitSet(uint16_t low_threshold, uint16_t high_threshold);
@@ -145,7 +145,7 @@ bool ${ADCHS_INSTANCE_NAME}_Comparator${i}StatusGet(void);
 <#list 1..(ADCHS_NUM_FILTERS) as i>
 <#assign ADCFLTR_AFEN = "ADCFLTR" + i + "__AFEN">
 <#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
-<#if .vars[ADCFLTR_AFEN] == true>
+<#if .vars[ADCFLTR_AFEN]?has_content && .vars[ADCFLTR_AFEN] == true>
 uint16_t ${ADCHS_INSTANCE_NAME}_Filter${i}DataGet(void);
 <#if .vars[ADCHS_DFx_INT_ENABLED] == true>
 void ${ADCHS_INSTANCE_NAME}_Filter${i}CallbackRegister(ADCHS_DF_CALLBACK callback, uintptr_t context);
