@@ -567,11 +567,13 @@ def adchsCalcADCDSTAT (symbol, event):
     dmagen = 0
 
     component = symbol.getComponent()
+    adcstat_reg_name = component.getSymbolValue("ADCHS_DMA_STATUS_REG")
+
     for channelID in range(0, ADC_Max_Class_1):
         if component.getSymbolValue("ADC" + str(channelID) + "TIME__BCHEN") == True:
             dmagen = ((0x1) << (31))        # Enable global DMA bit if any channel's DMA is enabled
-            rafien |= (component.getSymbolValue("ADCDSTAT__RAFIEN" + str(channelID)) << (8 + channelID))
-            rbfien |= (component.getSymbolValue("ADCDSTAT__RBFIEN" + str(channelID)) << (24 + channelID))
+            rafien |= (component.getSymbolValue(adcstat_reg_name + "__RAFIEN" + str(channelID)) << (8 + channelID))
+            rbfien |= (component.getSymbolValue(adcstat_reg_name + "__RBFIEN" + str(channelID)) << (24 + channelID))
 
     if rafien != 0 or rbfien != 0:
         component.setSymbolValue("ADC_DMA_INT_ENABLED", True)
@@ -579,6 +581,11 @@ def adchsCalcADCDSTAT (symbol, event):
         component.setSymbolValue("ADC_DMA_INT_ENABLED", False)
 
     dmacen = (component.getSymbolValue("ADCDSTAT__DMACEN") << (15))
+    
+    if dmagen != 0:
+        component.setSymbolValue("ADC_DMA_ENABLED", True)
+    else:
+        component.setSymbolValue("ADC_DMA_ENABLED", False)
 
     adcdstat = dmagen + rbfien + dmacen + rafien
     symbol.setValue(adcdstat)
@@ -1099,8 +1106,14 @@ def instantiateComponent(adchsComponent):
     Log.writeInfoMessage("Running " + Module)
 
     isDMAFeatureAvailable = False
-    if "PIC32MK" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
-        isDMAFeatureAvailable = True
+    dma_reg_name = ""
+    if not ( "PIC32CX_BZ" in Database.getSymbolValue("core", "PRODUCT_FAMILY")):
+        adchs_dma = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADCHS\"]/register-group@[name=\"ADCHS\"]").getChildren()
+        for index in range(0, len(adchs_dma)):
+            register_name = adchs_dma[index].getAttribute("name")
+            if (register_name == "ADCDSTAT") or (register_name == "ADCDMAST"):
+                dma_reg_name = register_name
+                isDMAFeatureAvailable = True
 
     numComparators = 0
     numFilters = 0
@@ -1444,6 +1457,11 @@ def instantiateComponent(adchsComponent):
         adchsSym_ADCDSTAT__DMACEN.setLabel("Enable storing of sample count in DMA buffer")
         adchsSym_ADCDSTAT__DMACEN.setDefaultValue(False)
         adcDMAStat_deplist.append("ADCDSTAT__DMACEN")
+        
+        # Internal symbol to indicate if DMA is enabled or not (used in FTL)
+        adchsSym_DMAEN = adchsComponent.createBooleanSymbol("ADC_DMA_ENABLED", None)
+        adchsSym_DMAEN.setDefaultValue(False)
+        adchsSym_DMAEN.setVisible(False)
 
         # Internal symbol to indicate if DMA interrupt is enabled or not (used in FTL)
         adchsSym_DMAINTEN = adchsComponent.createBooleanSymbol("ADC_DMA_INT_ENABLED", None)
@@ -1600,9 +1618,8 @@ def instantiateComponent(adchsComponent):
             BitFieldBaseName_BCHEN = "BCHEN"
 
             adchsSym_ADCTIME__BCHEN.append(channelID)
-            adchsSym_ADCTIME__BCHEN[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
-                adchsComponent, Module, RegisterBaseName_ADCTIME, BitFieldBaseName_BCHEN,
-                adchsSym_CH_ENABLE[channelID], False)
+            adchsSym_ADCTIME__BCHEN[channelID] = adchsComponent.createBooleanSymbol(RegisterBaseName_ADCTIME + '__' + BitFieldBaseName_BCHEN, adchsSym_CH_ENABLE[channelID])
+            adchsSym_ADCTIME__BCHEN[channelID].setVisible(False)
             adchsSym_ADCTIME__BCHEN[channelID].setLabel("Enable DMA?")
             adchsSym_ADCTIME__BCHEN[channelID].setDefaultValue(False)
             adchsSym_ADCTIME__BCHEN[channelID].setDependencies(adchsVisibilityOnEvent,
@@ -1611,13 +1628,12 @@ def instantiateComponent(adchsComponent):
             adcDMAStat_deplist.append(RegisterBaseName_ADCTIME + "__" + BitFieldBaseName_BCHEN)
 
             # ADCDMASTAT__RBFIEN (Enable BufferA Full Interrupt?)
-            RegisterBaseName_ADCDSTAT = "ADCDSTAT"
+            RegisterBaseName_ADCDSTAT = dma_reg_name
             BitFieldBaseName_RAFIEN = "RAFIEN" + str(channelID)
 
             adchsSym_ADCDMASTAT__RAFIEN.append(channelID)
-            adchsSym_ADCDMASTAT__RAFIEN[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
-                adchsComponent, Module, RegisterBaseName_ADCDSTAT, BitFieldBaseName_RAFIEN,
-                adchsSym_ADCTIME__BCHEN[channelID], False)
+            adchsSym_ADCDMASTAT__RAFIEN[channelID] = adchsComponent.createBooleanSymbol(RegisterBaseName_ADCDSTAT + '__' + BitFieldBaseName_RAFIEN, adchsSym_ADCTIME__BCHEN[channelID])
+            adchsSym_ADCDMASTAT__RAFIEN[channelID].setVisible(False)
             adchsSym_ADCDMASTAT__RAFIEN[channelID].setLabel("Enable Buffer A Full Interrupt?")
             adchsSym_ADCDMASTAT__RAFIEN[channelID].setDefaultValue(False)
             adchsSym_ADCDMASTAT__RAFIEN[channelID].setDependencies(adchsVisibilityOnEvent,
@@ -1625,13 +1641,12 @@ def instantiateComponent(adchsComponent):
             adcDMAStat_deplist.append(RegisterBaseName_ADCDSTAT + "__" + BitFieldBaseName_RAFIEN)
 
             # ADCDMASTAT__RBFIEN (Enable BufferB Full Interrupt?)
-            RegisterBaseName_ADCDSTAT = "ADCDSTAT"
+            RegisterBaseName_ADCDSTAT = dma_reg_name
             BitFieldBaseName_RBFIEN = "RBFIEN" + str(channelID)
 
             adchsSym_ADCDMASTAT__RBFIEN.append(channelID)
-            adchsSym_ADCDMASTAT__RBFIEN[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
-                adchsComponent, Module, RegisterBaseName_ADCDSTAT, BitFieldBaseName_RBFIEN,
-                adchsSym_ADCTIME__BCHEN[channelID], False)
+            adchsSym_ADCDMASTAT__RBFIEN[channelID] = adchsComponent.createBooleanSymbol(RegisterBaseName_ADCDSTAT + '__' + BitFieldBaseName_RBFIEN, adchsSym_ADCTIME__BCHEN[channelID])
+            adchsSym_ADCDMASTAT__RBFIEN[channelID].setVisible(False)
             adchsSym_ADCDMASTAT__RBFIEN[channelID].setLabel("Enable Buffer B Full Interrupt?")
             adchsSym_ADCDMASTAT__RBFIEN[channelID].setDefaultValue(False)
             adchsSym_ADCDMASTAT__RBFIEN[channelID].setDependencies(adchsVisibilityOnEvent,
@@ -2152,6 +2167,10 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCSS2.setDependencies(adchsCalcADCCSS2, adccss_deplist[1])
 
     if isDMAFeatureAvailable == True:
+        adchsSym_ADCDSTAT_REG = adchsComponent.createStringSymbol("ADCHS_DMA_STATUS_REG", None)
+        adchsSym_ADCDSTAT_REG.setValue(dma_reg_name)
+        adchsSym_ADCDSTAT_REG.setVisible(False)
+
         adchsSym_ADCDSTAT = adchsComponent.createHexSymbol("ADCHS_ADCDSTAT", None)
         adchsSym_ADCDSTAT.setLabel("ADCDSTAT Register")
         adchsSym_ADCDSTAT.setVisible(False)

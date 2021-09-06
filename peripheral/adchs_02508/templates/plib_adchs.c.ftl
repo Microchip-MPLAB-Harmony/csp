@@ -59,7 +59,7 @@
     <#lt>/* Object to hold callback function and context for end of scan interrupt*/
     <#lt>ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
 </#if>
-<#if ADC_IS_DMA_AVAILABLE == true>
+<#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true)>
 <#if ADC_DMA_INT_ENABLED?? && ADC_DMA_INT_ENABLED == true>
     <#lt>/* Object to hold callback function and context for ADC DMA interrupt*/
     <#lt>ADCHS_DMA_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DMACallbackObj;
@@ -149,9 +149,9 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     <#if ADCHS_NUM_SIGNALS gt 31>ADCCSS2 = 0x${ADCHS_ADCCSS2}; </#if>
 
 <#compress> <#-- To remove unwanted new lines -->
-<#if ADC_IS_DMA_AVAILABLE == true>
+<#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true)>
 <#if ADCHS_ADCDSTAT?? && ADCHS_ADCDSTAT != "0">
-    ADCDSTAT = 0x${ADCHS_ADCDSTAT};
+    ${ADCHS_DMA_STATUS_REG} = 0x${ADCHS_ADCDSTAT};
 </#if>
 </#if>
 </#compress>
@@ -213,9 +213,14 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 </#if>
 </#if>
 
-<#if ADC_IS_DMA_AVAILABLE == true>
+<#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true)>
 <#if ADC_DMA_INT_ENABLED?? && ADC_DMA_INT_ENABLED == true>
+<#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
+    ${ADCHS_DMA_IEC_REG}SET = _${ADCHS_DMA_IEC_REG}_ADCFCBTIE_MASK;
+</#if>
+<#if core.PRODUCT_FAMILY?contains("PIC32MK")>
     ${ADCHS_DMA_IEC_REG}SET = _${ADCHS_DMA_IEC_REG}_AD1FCBTIE_MASK;
+</#if>
 </#if>
 </#if>
 
@@ -225,9 +230,9 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 <#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
 <#assign ADCHS_DCx_IEC_REG = "ADCHS_DC" + i + "_IEC_REG">
 <#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true && .vars[ADCHS_DCx_INT_ENABLED] == true>
-	<#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
-	${.vars[ADCHS_DCx_IEC_REG]}SET = _${.vars[ADCHS_DCx_IEC_REG]}_ADCDC${i}IE_MASK;
-	</#if>
+    <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
+    ${.vars[ADCHS_DCx_IEC_REG]}SET = _${.vars[ADCHS_DCx_IEC_REG]}_ADCDC${i}IE_MASK;
+    </#if>
     <#if core.PRODUCT_FAMILY?contains("PIC32MK")>
     ${.vars[ADCHS_DCx_IEC_REG]}SET = _${.vars[ADCHS_DCx_IEC_REG]}_AD1DC${i}IE_MASK;
     </#if>
@@ -241,9 +246,9 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 <#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
 <#assign ADCHS_DFx_IEC_REG = "ADCHS_DF" + i + "_IEC_REG">
 <#if .vars[ADCFLTR_AFEN] == true && .vars[ADCHS_DFx_INT_ENABLED] == true>
-	<#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
-	${.vars[ADCHS_DFx_IEC_REG]}SET = _${.vars[ADCHS_DFx_IEC_REG]}_ADCDF${i}IE_MASK;
-	</#if>
+    <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
+    ${.vars[ADCHS_DFx_IEC_REG]}SET = _${.vars[ADCHS_DFx_IEC_REG]}_ADCDF${i}IE_MASK;
+    </#if>
     <#if core.PRODUCT_FAMILY?contains("PIC32MK")>
     ${.vars[ADCHS_DFx_IEC_REG]}SET = _${.vars[ADCHS_DFx_IEC_REG]}_AD1DF${i}IE_MASK;
     </#if>
@@ -409,7 +414,7 @@ void ${ADCHS_INSTANCE_NAME}_CallbackRegister(ADCHS_CHANNEL_NUM channel, ADCHS_CA
 }
 </#if>
 
-<#if ADC_IS_DMA_AVAILABLE == true>
+<#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true)>
 void ${ADCHS_INSTANCE_NAME}_DMASampleCountBaseAddrSet(uint32_t baseAddr)
 {
     ADCCNTB = baseAddr;
@@ -430,9 +435,14 @@ void ${ADCHS_INSTANCE_NAME}_DMACallbackRegister(ADCHS_DMA_CALLBACK callback, uin
 
 void ADC_DMA_InterruptHandler(void)
 {
-    ADCHS_DMA_STATUS dmaStatus = ADCDSTAT & 0x${ADC_DMA_INT_FLAG_MASK?upper_case};
+    ADCHS_DMA_STATUS dmaStatus = ${ADCHS_DMA_STATUS_REG} & 0x${ADC_DMA_INT_FLAG_MASK?upper_case};
 
+    <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
+    ${ADCHS_DMA_IFS_REG}CLR = _${ADCHS_DMA_IFS_REG}_ADCFCBTIF_MASK;
+    </#if>
+    <#if core.PRODUCT_FAMILY?contains("PIC32MK")>
     ${ADCHS_DMA_IFS_REG}CLR = _${ADCHS_DMA_IFS_REG}_AD1FCBTIF_MASK;
+    </#if>
 
     if (${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn != NULL)
     {
@@ -444,7 +454,7 @@ void ADC_DMA_InterruptHandler(void)
 
 ADCHS_DMA_STATUS ${ADCHS_INSTANCE_NAME}_DMAStatusGet(void)
 {
-    return ADCDSTAT & 0x${ADC_DMA_INT_FLAG_MASK?upper_case};
+    return  ${ADCHS_DMA_STATUS_REG} & 0x${ADC_DMA_INT_FLAG_MASK?upper_case};
 }
 
 </#if>

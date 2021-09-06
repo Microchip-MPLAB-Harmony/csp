@@ -131,7 +131,7 @@ typedef enum
 }ADCHS_CMP_EVENT_MODE;
 </#if>
 
-<#if ADC_IS_DMA_AVAILABLE == true>
+<#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true)>
 typedef enum
 {
 <#if ADCHS_NUM_CLASS1_SIGNALS != 0>
@@ -152,7 +152,7 @@ typedef void (*ADCHS_CALLBACK)(ADCHS_CHANNEL_NUM channel, uintptr_t context);
 
 typedef void (*ADCHS_EOS_CALLBACK)(uintptr_t context);
 
-<#if ADC_IS_DMA_AVAILABLE == true>
+<#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true) && (ADC_DMA_INT_ENABLED?? && ADC_DMA_INT_ENABLED == true)>
 typedef void (*ADCHS_DMA_CALLBACK)(ADCHS_DMA_STATUS dmaStatus, uintptr_t context);
 </#if>
 
@@ -178,7 +178,7 @@ typedef struct
     uintptr_t context;
 }ADCHS_EOS_CALLBACK_OBJECT;
 
-<#if ADC_IS_DMA_AVAILABLE == true>
+<#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true) && (ADC_DMA_INT_ENABLED?? && ADC_DMA_INT_ENABLED == true)>
 typedef struct
 {
     ADCHS_DMA_CALLBACK callback_fn;

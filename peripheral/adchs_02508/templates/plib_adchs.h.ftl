@@ -105,7 +105,7 @@ void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptDisable (ADCHS_CHANNEL_NUM chan
 bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel);
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel);
 
-<#if ADC_IS_DMA_AVAILABLE == true>
+<#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true)>
 void ${ADCHS_INSTANCE_NAME}_DMASampleCountBaseAddrSet(uint32_t baseAddr);
 void ${ADCHS_INSTANCE_NAME}_DMAResultBaseAddrSet(uint32_t baseAddr);
 <#if ADC_DMA_INT_ENABLED?? && ADC_DMA_INT_ENABLED == true>
