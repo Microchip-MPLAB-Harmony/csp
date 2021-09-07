@@ -335,7 +335,7 @@ void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
         /* Clear all interrupts */
         ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
 
-        if((status != TC_CAPTURE_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
+        if((status != TC_CAPTURE_STATUS_NONE) && (${TC_INSTANCE_NAME}_CallbackObject.callback != NULL))
         {
             ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
         }
