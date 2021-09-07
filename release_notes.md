@@ -3,6 +3,49 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.10.0
+
+### New Features
+
+- **New part support** - This release introduces support for
+[PIC32MM](https://www.microchip.com/en-us/products/microcontrollers-and-microprocessors/32-bit-mcus/pic32-32-bit-mcus/pic32mm),
+[WFI32E01](https://www.microchip.com/en-us/product/WFI32E01PE) and
+[SAMRH707](https://www.microchip.com/en-us/product/SAMRH707)
+
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+  - All MPLAB X applications are updated to work with both MHC and MCC tools.
+
+- **New Features and Enhancements**
+  - Added CMSIS v5.8.0 Support
+  - Added blocking millisecond and microsecond delay APIs for MCU and MPU products
+  - Added DMA mode support, Digital Comparator and Digital Filter support in ADCHS peripheral library used in PIC32MZ and PIC32MK products
+  - Added polled mode support in DMA peripheral library
+  - Added edge interrupt support for PIC32M/PIC32C products
+
+### Known Issues
+
+The current known issues are as follows:
+- Simplified the API for CAN and MCAN peripheral library used in MCU and MPU products based on ARM Cortex-M and Cortex-A series processor. Configuration option is provided to generate older version of API and the old APIs will be deprecated in the future release. 
+- The following product families specifically requires the below mentioned DFP versions to be [installed](https://microchipdeveloper.com/mplabx:projects-packs)  with MPLABX v5.50. It is always recommended to use the latest version of DFPs for all products provided by Microchip.
+     -  **SAM L11 Family**: SAML11 DFP v4.3.139 or higher
+     -  **SAM RH707 Family**: SAMRH707 DFP 1.0.28 or higher
+
+### Development Tools
+
+- [MPLAB® X IDE v5.50](https://www.microchip.com/mplab/mplab-x-ide)
+- [MPLAB® XC32 C/C++ Compiler v3.01](https://www.microchip.com/mplab/compilers)
+- [IAR EWARM v8.50](https://www.iar.com/iar-embedded-workbench/#!?architecture=Arm)
+- [KEIL MDK v5.31](https://www2.keil.com/mdk5)
+- MPLAB® X IDE plug-ins:
+  - MPLAB® Harmony Configurator (MHC) v3.8.0
+
+
+### Notes
+
+-  None
+
 ## CSP Release v3.9.1
 
 ### New Features
