@@ -459,9 +459,9 @@ void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet (uint32_t count)
     }
 }
 <#elseif TCC_SIZE == 16>
-void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet (uint16_t count_value)
+void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet (uint16_t count)
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count_value;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
     while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) != 0U)
     {
         /* Wait for sync */
