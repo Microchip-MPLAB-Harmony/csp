@@ -419,15 +419,26 @@ def updateDataBitTimingSymbols(symbol, event):
         symbol.getComponent().getSymbolByID("DATA_SAMPLE_POINT").setReadOnly(False)
 
 def updateSourceFileName(symbol, event):
-    canInt = ""
-    if event["value"] == True:
-        canInt = "_interrupt"
     id = symbol.getID()
 
-    if id == "sourceFile":
-        symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can" + canInt + ".c.ftl")
-    elif id == "instHeaderFile":
-        symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can" + canInt + ".h.ftl")
+    if Database.getSymbolValue(canInstanceName.getValue().lower(), "CAN_GENERATE_LEGACY_APIS") == True:
+        if id == "sourceFile":
+            symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can_legacy.c.ftl")
+        elif id == "instHeaderFile":
+            symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can_legacy.h.ftl")
+        elif id == "headerFile":
+            symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can_common_legacy.h")
+    else:
+        canInt = ""
+        if Database.getSymbolValue(canInstanceName.getValue().lower(), "INTERRUPT_MODE") == True:
+            canInt = "_interrupt"
+
+        if id == "sourceFile":
+            symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can" + canInt + ".c.ftl")
+        elif id == "instHeaderFile":
+            symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can" + canInt + ".h.ftl")
+        elif id == "headerFile":
+            symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can_common.h")
 
 def instantiateComponent(canComponent):
     global canInstanceName
@@ -966,6 +977,11 @@ def instantiateComponent(canComponent):
     canTCP.setMin(0)
     canTCP.setMax(15)
 
+    canGenerateLegacyAPIs = canComponent.createBooleanSymbol("CAN_GENERATE_LEGACY_APIS", None)
+    canGenerateLegacyAPIs.setLabel("Generate Legacy APIs")
+    canGenerateLegacyAPIs.setDescription("Generates Legacy APIs for backward compatibility. Legacy APIs will be deprecated in future")
+    canGenerateLegacyAPIs.setDefaultValue(False)
+
     # Interrupt Dynamic settings
     caninterruptControl = canComponent.createBooleanSymbol("CAN_INTERRUPT_ENABLE", None)
     caninterruptControl.setVisible(False)
@@ -987,6 +1003,7 @@ def instantiateComponent(canComponent):
     canMasterHeaderFile.setDestPath("/peripheral/can/")
     canMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/can/")
     canMasterHeaderFile.setType("HEADER")
+    canMasterHeaderFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE", "CAN_GENERATE_LEGACY_APIS"])
 
     #Instance Source File
     canMainSourceFile = canComponent.createFileSymbol("sourceFile", None)
@@ -996,7 +1013,7 @@ def instantiateComponent(canComponent):
     canMainSourceFile.setProjectPath("config/" + configName + "/peripheral/can/")
     canMainSourceFile.setType("SOURCE")
     canMainSourceFile.setMarkup(True)
-    canMainSourceFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE"])
+    canMainSourceFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE", "CAN_GENERATE_LEGACY_APIS"])
 
     #Instance Header File
     canInstHeaderFile = canComponent.createFileSymbol("instHeaderFile", None)
@@ -1006,7 +1023,7 @@ def instantiateComponent(canComponent):
     canInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/can/")
     canInstHeaderFile.setType("HEADER")
     canInstHeaderFile.setMarkup(True)
-    canInstHeaderFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE"])
+    canInstHeaderFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE", "CAN_GENERATE_LEGACY_APIS"])
 
     #CAN Initialize
     canSystemInitFile = canComponent.createFileSymbol("initFile", None)
