@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_CALLBACK Type</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="06396.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="06419.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="06425.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06527.html" target="topic">RTC_CALLBACK Type</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="06526.html" target="topic">PIT Peripheral Library Help</a> &gt; <a href="06527.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06352.html" target="topic">Previous</a> | <a href="06425.html" target="topic">Up</a> | <a href="06518.html" target="topic">Next</a></div>
+<a href="06531.html" target="topic">Previous</a> | <a href="06526.html" target="topic">Up</a> | <a href="06539.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_CALLBACK Topic Title: RTC_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT 6079 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_CALLBACK Type</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -46,93 +46,187 @@ RTC_CALLBACK Type</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Real Time Clock Calendar Callback Function Pointer Type&nbsp;</p>
-<p class="Element10">
-This data type defines the function signature of the RTC Real Time Clock Calendar Callback function. The RTC peripheral will call back the client's function with this signature when the configured RTCC Alarm has occurred.&nbsp;</p>
-<p class="Element10">
-The application should register a callback function whose signature (input arguments and return type) must match the signature of this function. The calllback function should be registered by calling the <a href="06558.html" target="topic">RTC_RTCCCallbackRegister</a>() function. The callback function should be registered before setting the alarm.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">RTC_CALLBACK</span></strong>)(<a href="06528.html" target="topic">RTC_CLOCK_EVENT</a> event, uintptr_t context);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
+a) Initialization Function</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The <a href="06546.html" target="topic">RTC_Initialize</a>() function should have been called to initialize the RTC peripheral. The <a href="06558.html" target="topic">RTC_RTCCCallbackRegister</a>() function should have been called to register the callback function. The RTC peripheral should have been configured for RTCC operation in MHC. The RTC peripheral should have been configured for interrupt mode of operation in MHC.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-event&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-RTCC event that caused the callback function to be called. Multiple events could be active. Application should process all events in the callback function.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06539.html" target="topic">PIT_TimerInitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Initialize PIT registers per user config.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
+b) Setup Functions</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06535.html" target="topic">PIT_TimerCallbackSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Register callback for PIT interrupt.&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
+</div>
+<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
+c) Transaction Functions</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The Real Time Clock Calendar feature is available whe the RTC peripheral is configured for Real Time Clock Calendar mode. The callback function will be execute in an interrupt context. Avoid calling blocking functions , performing computationally intensive operations or interrupt un-safe functions from the callback function.</p></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06533.html" target="topic">PIT_ClearInterrupt</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+PIT Clear Interrupt.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06534.html" target="topic">PIT_DelayMs</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Delays processing for x milliseconds.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06536.html" target="topic">PIT_TimerCompareSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Set the timer comparison value.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06541.html" target="topic">PIT_TimerPeriodHasExpired</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Return whether or not the <a href="09648.html" target="topic">Timer</a> Period has expired.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06542.html" target="topic">PIT_TimerPeriodSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Set the timer period value.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06543.html" target="topic">PIT_TimerRestart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Restart the PIT counter.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06544.html" target="topic">PIT_TimerStart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Start the PIT counter.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06545.html" target="topic">PIT_TimerStop</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Stop the PIT counter.&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
+</div>
+<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
+d) Status Functions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">void</span></strong> MyRTCCCallback ( <a href="06528.html" target="topic">RTC_CLOCK_EVENT</a> event, uintptr_t context )
-{
-    <strong><span style="color: #000080">if</span></strong>((event &amp; RTC_CLOCK_EVENT_YEAR_OVERFLOW) ==
-                                            RTC_CLOCK_EVENT_YEAR_OVERFLOW)
-    {
-        <i><span style="color: #008000">// This means a year overflow has occurred.</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong> <strong><span style="color: #000080">if</span></strong> ((event &amp; RTC_CLOCK_EVENT_ALARM) == RTC_CLOCK_EVENT_ALARM)
-    {
-        <i><span style="color: #008000">// This means an alarm has occurred.</span></i>
-    }
-}
-
-<i><span style="color: #008000">// Initialize the RTC Peripheral and register the callback function.</span></i>
-<i><span style="color: #008000">// Note how the pointer to the alarmOccurred flag is specified</span></i>
-<i><span style="color: #008000">// as the context. This is passed back into the callback function.</span></i>
-<i><span style="color: #008000">// Refer to the description of the RTC_RTCCTimeSet() and</span></i>
-<i><span style="color: #008000">// RTC_RTCCAlarmSet() function for API usage details.</span></i>
-
-<a href="06546.html" target="topic">RTC_Initialize</a>();
-<a href="06560.html" target="topic">RTC_RTCCTimeSet</a>(&amp;time);
-<a href="06557.html" target="topic">RTC_RTCCAlarmSet</a>(&amp;alarm);
-<a href="06558.html" target="topic">RTC_RTCCCallbackRegister</a>(MyRTCCCallback, &amp;alarmOccurred);
-</pre></div></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06540.html" target="topic">PIT_TimerPeriodGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get the timer period value.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06537.html" target="topic">PIT_TimerCounterGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get the timer counter value.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06538.html" target="topic">PIT_TimerFrequencyGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get the timer clock frequency.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+e) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06532.html" target="topic">PIT_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+PIT Interrupt Callback Function definition.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -140,7 +234,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="06396.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="06419.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="06425.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06527.html" target="topic">RTC_CALLBACK Type</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="06526.html" target="topic">PIT Peripheral Library Help</a> &gt; <a href="06527.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -148,13 +242,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06352.html" target="topic">Previous</a> | <a href="06425.html" target="topic">Up</a> | <a href="06518.html" target="topic">Next</a></div>
+<a href="06531.html" target="topic">Previous</a> | <a href="06526.html" target="topic">Up</a> | <a href="06539.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_CALLBACK Topic Title: RTC_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT 6079 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

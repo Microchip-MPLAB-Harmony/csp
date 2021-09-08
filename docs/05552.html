@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PIC32MX 3XX/4XX Peripheral Libraries</title>
+<title>NVM_BootFlashWriteProtectLock Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05552.html" target="topic">PIC32MX 3XX/4XX Peripheral Libraries</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="05482.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="05483.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="05552.html" target="topic">NVM_BootFlashWriteProtectLock Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05551.html" target="topic">Previous</a> | <a href="05072.html" target="topic">Up</a> | <a href="05553.html" target="topic">Next</a></div>
+<a href="05550.html" target="topic">Previous</a> | <a href="05483.html" target="topic">Up</a> | <a href="05560.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB PIC32MX 3xx/4xx Topic Title: PIC32MX 3XX/4XX Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02695::NVM_BootFlashWriteProtectLock Topic Title: NVM_BootFlashWriteProtectLock Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PIC32MX 3XX/4XX Peripheral Libraries</div>
+NVM_BootFlashWriteProtectLock Function</div>
 </div>
 </div>
 
@@ -49,78 +49,39 @@ PIC32MX 3XX/4XX Peripheral Libraries</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following Table lists all the Peripheral Libraries for the PIC32MX 3XX/4XX Family.&nbsp;</p>
+This Function will disable writes to write protect lock register. Once locked calling <a href="05551.html" target="topic">NVM_BootFlashWriteProtectEnable</a>() and <a href="05550.html" target="topic">NVM_BootFlashWriteProtectDisable</a>() does not have any effect.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">NVM_BootFlashWriteProtectLock</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="100%">
-<div class="Element66">
-PIC32MX 3XX/4XX Peripheral Libraries&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="00185.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01339.html" target="topic">Clock Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01525.html" target="topic">CMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01583.html" target="topic">CORETIMER Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01623.html" target="topic">CVR Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01766.html" target="topic">DMAC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02203.html" target="topic">EVIC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03282.html" target="topic">GPIO Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03905.html" target="topic">I2C Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04034.html" target="topic">ICAP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04466.html" target="topic">NVM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04778.html" target="topic">OCMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05633.html" target="topic">PMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05781.html" target="topic">POWER Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06074.html" target="topic">RCON Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06639.html" target="topic">RTCC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="07313.html" target="topic">SPI Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="08300.html" target="topic">TMR Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="08344.html" target="topic">TMR1 Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="08513.html" target="topic">UART Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="08796.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td></tr></table></div></div>
+None</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Writes to write protect lock register can be enabled only by Reset.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+NVM_BootFlashWriteProtectLock();
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -128,7 +89,7 @@ PIC32MX 3XX/4XX Peripheral Libraries&nbsp;</div></td></tr><tr>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05552.html" target="topic">PIC32MX 3XX/4XX Peripheral Libraries</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="05482.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="05483.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="05552.html" target="topic">NVM_BootFlashWriteProtectLock Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -136,13 +97,13 @@ PIC32MX 3XX/4XX Peripheral Libraries&nbsp;</div></td></tr><tr>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05551.html" target="topic">Previous</a> | <a href="05072.html" target="topic">Up</a> | <a href="05553.html" target="topic">Next</a></div>
+<a href="05550.html" target="topic">Previous</a> | <a href="05483.html" target="topic">Up</a> | <a href="05560.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB PIC32MX 3xx/4xx Topic Title: PIC32MX 3XX/4XX Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02695::NVM_BootFlashWriteProtectLock Topic Title: NVM_BootFlashWriteProtectLock Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

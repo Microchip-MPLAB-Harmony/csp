@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07261.html" target="topic">SMC Peripheral Library Help</a> &gt; <a href="07260.html" target="topic">Introduction</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07261.html" target="topic">RCON Peripheral Library Help</a> &gt; <a href="07260.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07261.html" target="topic">Previous</a> | <a href="07261.html" target="topic">Up</a> | <a href="07258.html" target="topic">Next</a></div>
+<a href="07261.html" target="topic">Previous</a> | <a href="07261.html" target="topic">Up</a> | <a href="07257.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SMC 11036 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RCON 03100 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Introduction</div>
 </div>
@@ -49,36 +49,26 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This Static Memory Controller (SMC) is capable of handling several types of external memory and peripheral devices, such as SRAM,&nbsp;</p>
+The Resets collects the various reset sources and generates reset for the device and allows the reset source to be identified by the software. Some of the resets the device support are:</p>
+<ul class="Element630">
+<li class="Element600"><strong>Power On Reset: </strong>The device contains a power-on-reset (POR) detector, which keeps the system reset until power is stable. This eliminates the need for external reset circuitry to guarantee stable operation when powering up the device.</li>
+<li class="Element600"><strong>Brown Out Reset: </strong>If the voltage supplied to the regulator is inadequate to maintain a regulated level, the regulator Reset circuitry will generate a BOR event, which is synchronized with the system clock, SYSCLK, before asserting the system Reset..</li>
+<li class="Element600"><strong>Watchdog Reset:</strong> The watchdog reset occurs when it times out</li>
+<li class="Element600"><strong>External Reset/MCLR: </strong>A external reset is generated when a low level is detected on the RESET pin</li>
+<li class="Element600"><strong>Software Reset: </strong>Caused by performing software reset command sequence</li>
+<li class="Element600"><strong>Configuration Mismatch:</strong> Caused due to configuration bit values are not opposite to each other.</li>
+<li class="Element600"><strong>High Voltage Detect:</strong> Caused when high voltage is detected.</li>
+</ul><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-PSRAM, PROM, EPROM, EEPROM, LCD Module, NOR Flash and NAND Flash.&nbsp;</p>
-<p class="Element10">
-The SMC generates the signals that control the access to external memory devices or peripheral devices. It has 4 Chip Selects and a 26-&nbsp;</p>
-<p class="Element10">
-bit address bus. The 16-bit data bus can be configured to interface with 8- or 16-bit external devices. Separate read and write control&nbsp;</p>
-<p class="Element10">
-signals allow for direct memory and peripheral interfacing. Read and write signal waveforms are fully parametrizable.&nbsp;</p>
-<p class="Element10">
-The SMC can manage wait requests from external devices to extend the current access. The SMC is provided with an automatic Slow&nbsp;</p>
-<p class="Element10">
-Clock mode. In Slow Clock mode, it switches from user-programmed waveforms to slow-rate specific waveforms on read and write signals.&nbsp;</p>
-<p class="Element10">
-The SMC embeds a NAND Flash Controller (NFC). The NFC can handle automatic transfers, sending the commands and address cycles&nbsp;</p>
-<p class="Element10">
-to the NAND Flash and transferring the contents of the page (for read and write) to the NFC SRAM. It minimizes the CPU overhead.&nbsp;</p>
-<p class="Element10">
-The SMC includes programmable hardware error correcting code with one-bit error correction capability and supports two-bit error detection.&nbsp;</p>
-<p class="Element10">
-In order to improve the overall system performance, the DATA phase of the transfer can be DMA-assisted.&nbsp;</p>
-<p class="Element10">
-The External Data Bus can be scrambled/unscrambled by means of user keys.</p></div>
+Refer to the device datasheet for more reset reason details.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07261.html" target="topic">SMC Peripheral Library Help</a> &gt; <a href="07260.html" target="topic">Introduction</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07261.html" target="topic">RCON Peripheral Library Help</a> &gt; <a href="07260.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -86,13 +76,13 @@ The External Data Bus can be scrambled/unscrambled by means of user keys.</p></d
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07261.html" target="topic">Previous</a> | <a href="07261.html" target="topic">Up</a> | <a href="07258.html" target="topic">Next</a></div>
+<a href="07261.html" target="topic">Previous</a> | <a href="07261.html" target="topic">Up</a> | <a href="07257.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SMC 11036 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RCON 03100 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

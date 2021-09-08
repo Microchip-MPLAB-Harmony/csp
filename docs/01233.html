@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>CANx_TxCallbackRegister Function</title>
+<title>CACHE_InstructionCacheLock Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="00930.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00931.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01233.html" target="topic">CANx_TxCallbackRegister Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="01205.html" target="topic">Cache Peripheral Library Help</a> &gt; <a href="01206.html" target="topic">Library Interface</a> &gt; c) Instruction Cache Operations &gt; <a href="01233.html" target="topic">CACHE_InstructionCacheLock Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01227.html" target="topic">Previous</a> | <a href="00931.html" target="topic">Up</a> | <a href="01218.html" target="topic">Next</a></div>
+<a href="01232.html" target="topic">Previous</a> | <a href="01206.html" target="topic">Up</a> | <a href="01234.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_u2003::CANx_TxCallbackRegister@CAN_CALLBACK@uintptr_t Topic Title: CANx_TxCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CACHE_InstructionCacheLock@uint32_t@size_t Topic Title: CACHE_InstructionCacheLock Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-CANx_TxCallbackRegister Function</div>
+CACHE_InstructionCacheLock Function</div>
 </div>
 </div>
 
@@ -46,19 +46,17 @@ CANx_TxCallbackRegister Function</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">CANx_TxCallbackRegister</span></strong>(
-    <a href="01136.html" target="topic">CAN_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">contextHandle</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="01221.html" target="topic">CANx_Initialize</a> must have been called for the associated CAN instance.</p></div>
+Fetch and lock a block of instructions in the instruction cache.</p></div>
 </div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">CACHE_InstructionCacheLock</span></strong>(
+    uint32_t <strong><span style="color: #000000">addr</span></strong>, 
+    size_t <strong><span style="color: #000000">len</span></strong>
+);</pre></div></div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
 <div class="Element11">
@@ -74,14 +72,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+uint32_t addr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-A pointer to callback function which function prototype defined by the <a href="01136.html" target="topic">CAN_CALLBACK</a> data type.<br>&nbsp;</div></td></tr><tr>
+address (aligned to 32-byte boundary)&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-contextHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+size_t len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-A value passed into the callback function as callback parameter.&nbsp;</div></td></tr></table></div></div>
+size of memory block (in number of bytes)&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -96,18 +94,13 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+Global flush functions will invalidate and unlock any cache lines locked with this function.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> CAN0_callbackHandler (uintptr_t contextHandle)
-{
-}
-uint8_t buf[] = {0xAA, 0x55};
-CAN0_TxCallbackRegister(CAN0_callbackHandler, 0);
-CAN0_MessageTransmit(0x555, <strong><span style="color: #000080">sizeof</span></strong>(buf), buf, CAN_MODE_NORMAL, CAN_MSG_ATTR_TX_FIFO_DATA_FRAME);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">CACHE_InstructionCacheLock(addr, len);</pre></div></div>
 </div>
 </div>
 </div>
@@ -115,7 +108,7 @@ CAN0_MessageTransmit(0x555, <strong><span style="color: #000080">sizeof</span></
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="00930.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00931.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01233.html" target="topic">CANx_TxCallbackRegister Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="01205.html" target="topic">Cache Peripheral Library Help</a> &gt; <a href="01206.html" target="topic">Library Interface</a> &gt; c) Instruction Cache Operations &gt; <a href="01233.html" target="topic">CACHE_InstructionCacheLock Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -123,13 +116,13 @@ CAN0_MessageTransmit(0x555, <strong><span style="color: #000080">sizeof</span></
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01227.html" target="topic">Previous</a> | <a href="00931.html" target="topic">Up</a> | <a href="01218.html" target="topic">Next</a></div>
+<a href="01232.html" target="topic">Previous</a> | <a href="01206.html" target="topic">Up</a> | <a href="01234.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_u2003::CANx_TxCallbackRegister@CAN_CALLBACK@uintptr_t Topic Title: CANx_TxCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CACHE_InstructionCacheLock@uint32_t@size_t Topic Title: CACHE_InstructionCacheLock Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

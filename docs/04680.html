@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NVMCTRL_IsBusy Function</title>
+<title>GPIO_PinInterruptDisable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="04611.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04612.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04680.html" target="topic">NVMCTRL_IsBusy Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="04128.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="04129.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="04680.html" target="topic">GPIO_PinInterruptDisable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04688.html" target="topic">Previous</a> | <a href="04612.html" target="topic">Up</a> | <a href="04674.html" target="topic">Next</a></div>
+<a href="04681.html" target="topic">Previous</a> | <a href="04129.html" target="topic">Up</a> | <a href="04693.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2207::NVMCTRL_IsBusy Topic Title: NVMCTRL_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_02922::GPIO_PinInterruptDisable@GPIO_PIN Topic Title: GPIO_PinInterruptDisable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NVMCTRL_IsBusy Function</div>
+GPIO_PinInterruptDisable Function</div>
 </div>
 </div>
 
@@ -49,47 +49,62 @@ NVMCTRL_IsBusy Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the busy status of the NVM Controller. This function should be called to check for module readiness before initiating a Erase or a Write operation. The controller becomes busy on a NVM Write, Erase or an EEPROM Write, Erase operation. Once initiated, this function can be called to poll the completion of the Erase or Write operation.&nbsp;</p>
-<p class="Element10">
-This function can be used as an alternative to the callback function. In that, the application can call this function periodically to check for operation completion instead of waiting for callback to be called.</p></div>
+This function disables IO interrupt on selected IO pin.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NVMCTRL_IsBusy</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">GPIO_PinInterruptDisable</span></strong>(
+    <a href="04613.html" target="topic">GPIO_PIN</a> <strong><span style="color: #000000">pin</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
+
+<ul class="Element630">
+<li class="Element600">Corresponding pin must be configured in interrupt mode in MHC Pin Manager.</li>
+<li class="Element600"><a href="04607.html" target="topic">GPIO_Initialize</a>() must have been called.</li>
+</ul></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pin&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+One of the IO pins from the enum <a href="04613.html" target="topic">GPIO_PIN</a>&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-true - NVM controller is busy. false - NVM controller is ready for a new operation.</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function is only available when the library is generated (in MHC) with interrupt mode enabled.</p></div>
+This function will be deprecated. Use <a href="04677.html" target="topic">GPIO_PinIntDisable</a> instead.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<i><span style="color: #008000">// Erase the row. This will erase all the pages in the row.</span></i>
-<a href="04685.html" target="topic">NVMCTRL_RowErase</a>(0x00030000);
-<strong><span style="color: #000080">while</span></strong>(NVMCTRL_IsBusy());
-
-<i><span style="color: #008000">// Now write the page.</span></i>
-<a href="04681.html" target="topic">NVMCTRL_PageWrite</a>((uint32_t *)buffer, 0x00030000);
-<strong><span style="color: #000080">while</span></strong>(NVMCTRL_IsBusy());
-</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    GPIO_PinInterruptDisable(GPIO_PIN_RB3);</pre></div></div>
 </div>
 </div>
 </div>
@@ -97,7 +112,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="04611.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04612.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04680.html" target="topic">NVMCTRL_IsBusy Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="04128.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="04129.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="04680.html" target="topic">GPIO_PinInterruptDisable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -105,13 +120,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04688.html" target="topic">Previous</a> | <a href="04612.html" target="topic">Up</a> | <a href="04674.html" target="topic">Next</a></div>
+<a href="04681.html" target="topic">Previous</a> | <a href="04129.html" target="topic">Up</a> | <a href="04693.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2207::NVMCTRL_IsBusy Topic Title: NVMCTRL_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_02922::GPIO_PinInterruptDisable@GPIO_PIN Topic Title: GPIO_PinInterruptDisable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

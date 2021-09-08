@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Initialization Function</title>
+<title>SDMMC_READ_RESPONSE_REG Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08209.html" target="topic">TCC Peripheral Library Help</a> &gt; <a href="01578.html" target="topic">Compare</a> &gt; <a href="08200.html" target="topic">Library Interface</a> &gt; <a href="08199.html" target="topic">Initialization Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08160.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="08161.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="08199.html" target="topic">SDMMC_READ_RESPONSE_REG Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="08200.html" target="topic">Previous</a> | <a href="08200.html" target="topic">Up</a> | <a href="08256.html" target="topic">Next</a></div>
+<a href="08195.html" target="topic">Previous</a> | <a href="08161.html" target="topic">Up</a> | <a href="08205.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCC U2213 Compare Initialization Function Topic Title: Initialization Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMC_READ_RESPONSE_REG Topic Title: SDMMC_READ_RESPONSE_REG Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Initialization Function</div>
+SDMMC_READ_RESPONSE_REG Enumeration</div>
 </div>
 </div>
 
@@ -48,38 +48,33 @@ Initialization Function</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+<p class="Element10">
+SDMMC read response register&nbsp;</p>
+<p class="Element10">
+The enumeration is used to identify the response register that the client wants to read.</p></div>
 </div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">SDMMC_READ_RESP_REG_0</span></strong> = 0,
+  <strong><span style="color: #000000">SDMMC_READ_RESP_REG_1</span></strong>,
+  <strong><span style="color: #000000">SDMMC_READ_RESP_REG_2</span></strong>,
+  <strong><span style="color: #000000">SDMMC_READ_RESP_REG_3</span></strong>,
+  <strong><span style="color: #000000">SDMMC_READ_RESP_REG_ALL</span></strong>
+} SDMMC_READ_RESPONSE_REG;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="08256.html" target="topic">TCCx_CompareInitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes given instance of TCC.&nbsp;</div></td></tr></table></div></div>
-</div>
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08209.html" target="topic">TCC Peripheral Library Help</a> &gt; <a href="01578.html" target="topic">Compare</a> &gt; <a href="08200.html" target="topic">Library Interface</a> &gt; <a href="08199.html" target="topic">Initialization Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08160.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="08161.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="08199.html" target="topic">SDMMC_READ_RESPONSE_REG Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -87,13 +82,13 @@ Initializes given instance of TCC.&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="08200.html" target="topic">Previous</a> | <a href="08200.html" target="topic">Up</a> | <a href="08256.html" target="topic">Next</a></div>
+<a href="08195.html" target="topic">Previous</a> | <a href="08161.html" target="topic">Up</a> | <a href="08205.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCC U2213 Compare Initialization Function Topic Title: Initialization Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMC_READ_RESPONSE_REG Topic Title: SDMMC_READ_RESPONSE_REG Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

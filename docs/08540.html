@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>UART_CALLBACK Type</title>
+<title>SERCOMx_USART_WriteCountGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08513.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="08514.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="08540.html" target="topic">UART_CALLBACK Type</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08338.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="08360.html" target="topic">USART</a> &gt; <a href="08364.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="08540.html" target="topic">SERCOMx_USART_WriteCountGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="08658.html" target="topic">Previous</a> | <a href="08514.html" target="topic">Up</a> | <a href="08541.html" target="topic">Next</a></div>
+<a href="08533.html" target="topic">Previous</a> | <a href="08364.html" target="topic">Up</a> | <a href="08534.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UART_CALLBACK Topic Title: UART_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart_ring_buffer::SERCOMx_USART_WriteCountGet Topic Title: SERCOMx_USART_WriteCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-UART_CALLBACK Type</div>
+SERCOMx_USART_WriteCountGet Function</div>
 </div>
 </div>
 
@@ -49,75 +49,42 @@ UART_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Callback Function Pointer&nbsp;</p>
-<p class="Element10">
-This data type defines the function signature for the UART peripheral callback function. The UART peripheral will call back the client's function with this signature when the UART buffer event has occurred.</p></div>
+This function returns the number of bytes of data pending for transmission.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">UART_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">SERCOMx_USART_WriteCountGet</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
-<ul class="Element632">
-<li class="Element602"><a href="08564.html" target="topic">UARTx_Initialize</a> must have been called for the given UART peripheral instance.</li>
-<li class="Element602">Callback must have been registered using <a href="08576.html" target="topic">UARTx_WriteCallbackRegister</a> or <a href="08568.html" target="topic">UARTx_ReadCallbackRegister</a>.</li>
-</ul></p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multiple clients).&nbsp;</div></td></tr></table></div></div>
-</div>
+SERCOMx_USART_Initialize must have been called for the associated SERCOM_USART instance.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+The API returns the number of bytes that are pending for transmission in the internal transmit buffer. If 9-bit mode is enabled, then the return value indicates the number of 9-bit data pending transmission.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+This API is only available when SERCOM_USART ring buffer mode is enabled in MHC.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> MyUartCallback(uintptr_t context)
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">if</span></strong> (SERCOM1_USART_WriteCountGet() == 0)
 {
-    <strong><span style="color: #000080">if</span></strong>(UART1_ErrorGet() != UART_ERROR_NONE)
-    {
-        <i><span style="color: #008000">//Handle error case</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//Transfer completed successfully</span></i>
-    }
+    <i><span style="color: #008000">// All the data has been transmitted out.</span></i>
 }
-
-UART1_WriteCallbackRegister(MyUartCallback, (uintptr_t)NULL);</pre></div></div>
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -125,7 +92,7 @@ UART1_WriteCallbackRegister(MyUartCallback, (uintptr_t)NULL);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08513.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="08514.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="08540.html" target="topic">UART_CALLBACK Type</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08338.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="08360.html" target="topic">USART</a> &gt; <a href="08364.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="08540.html" target="topic">SERCOMx_USART_WriteCountGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -133,13 +100,13 @@ UART1_WriteCallbackRegister(MyUartCallback, (uintptr_t)NULL);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="08658.html" target="topic">Previous</a> | <a href="08514.html" target="topic">Up</a> | <a href="08541.html" target="topic">Next</a></div>
+<a href="08533.html" target="topic">Previous</a> | <a href="08364.html" target="topic">Up</a> | <a href="08534.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UART_CALLBACK Topic Title: UART_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart_ring_buffer::SERCOMx_USART_WriteCountGet Topic Title: SERCOMx_USART_WriteCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

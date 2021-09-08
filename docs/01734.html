@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>dcache_CleanAll Function</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="04409.html" target="topic">MMU Peripheral Library Help</a> &gt; <a href="04410.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01734.html" target="topic">dcache_CleanAll Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="01735.html" target="topic">Clock (SAM A7G5) Peripheral Library Help</a> &gt; <a href="01734.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04413.html" target="topic">Previous</a> | <a href="04410.html" target="topic">Up</a> | <a href="01735.html" target="topic">Next</a></div>
+<a href="01735.html" target="topic">Previous</a> | <a href="01735.html" target="topic">Up</a> | <a href="01732.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dcache_CleanAll Topic Title: dcache_CleanAll Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CLK SAM A7G5 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-dcache_CleanAll Function</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,31 +49,59 @@ dcache_CleanAll Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Clean whole L1 Data Cache.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">dcache_CleanAll</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+The Clock Generator user interface is embedded within the Power Management Controller. The Clock system generates and distributes the clock for the processor and peripherals.&nbsp;</p>
 <p class="Element10">
-None.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
 <p class="Element10">
-None.</p></div>
+<strong>Clock Generators:</strong>&nbsp;</p>
+<p class="Element10">
+The Clock Generator is made up of:</p>
+<ul class="Element630">
+<li class="Element600">Oscillators
+<ul class="Element631">
+<li class="Element601">A low-power 32.768 kHz oscillator supporting crystalsand resonators (referred to as “32.768 KHz crystal oscillator” throughout the document)</li>
+<li class="Element601">An embedded always-on, slow RC oscillator generating a typical 32 kHz clock</li>
+<li class="Element601">A 12 to 50 MHz oscillator supporting crystals, resonators and Bypass mode (referred to as “main crystal oscillator” throughout the document)</li>
+<li class="Element601">A main RC oscillator generating a typical 12 MHz clock</li>
+</ul></li>
+<li class="Element600">A set of 7 fractional-N PLLs with an input frequency range of 12 to 50 MHz and an internal frequency range of 600 to 1200 MHz, namely:
+<ul class="Element631">
+<li class="Element601">CPUPLL</li>
+<li class="Element601">SYSPLL</li>
+<li class="Element601">DDRPLL</li>
+<li class="Element601">IMGPLL</li>
+<li class="Element601">BAUDPLL</li>
+<li class="Element601">AUDIOPLL</li>
+<li class="Element601">ETHPLL</li>
+</ul></li>
+</ul><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The Clock Generator provides the following clocks:</p>
+<ul class="Element630">
+<li class="Element600">MD_SLCK—Monitoring domain slow clock. This clock, sourced from the always-on slow RC oscillator only, is the only permanent clock of the system and feeds safety-critical functions of the device (WDT, RSTC, SCKC, frequency monitors and detectors, PMC startup time counters).</li>
+<li class="Element600">TD_SLCK—Timing domain slow clock. This clock, sourced from the 32.768 kHz crystal oscillator or the alwayson slow RC oscillator, is routed to the RTC and RTT peripherals.</li>
+<li class="Element600">MAINCK—Output of the main clock oscillator selection. This clock is either the main crystal oscillator or the main RC oscillator.</li>
+<li class="Element600">PLL Clocks—Outputs of embedded PLLs</li>
+</ul><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The Power Management Controller provides the following clocks:</p>
+<ul class="Element630">
+<li class="Element600">Main System Bus Clocks (MCKx)—clock signals that are the root clock of a group of peripherals. They are programmable from a few hundred Hz to the maximum operating frequency of the peripheral group. MCK0 is the main system bus clock associated to all peripherals that are synchronous with the processor.</li>
+<li class="Element600">Processor Clock (CPU_CLK)—can be tuned through a frequency scaler module and automatically switched off when entering the processor in Sleep mode.</li>
+<li class="Element600">Free-running Processor Clock (FCLK)—the source clock of CPU_CLK. Is not affected when Sleep mode or the frequency scaler is activated.</li>
+<li class="Element600">Peripheral Clocks with independent on/off control, provided to the peripherals. Each peripheral clock is inherited from one of the MCKx clocks.</li>
+<li class="Element600">Programmable Clock Outputs (PCKx), selected from the clock generator outputs to drive the device PCKx pins.</li>
+<li class="Element600">Generic Clock (GCLK) with controllable division and on/off control, independent of MCKx and CPU_CLK. Provided to selected peripherals. Refer to the table “Peripheral Identifiers” for more details on GCLK availability per peripheral.</li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="04409.html" target="topic">MMU Peripheral Library Help</a> &gt; <a href="04410.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01734.html" target="topic">dcache_CleanAll Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="01735.html" target="topic">Clock (SAM A7G5) Peripheral Library Help</a> &gt; <a href="01734.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -81,13 +109,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04413.html" target="topic">Previous</a> | <a href="04410.html" target="topic">Up</a> | <a href="01735.html" target="topic">Next</a></div>
+<a href="01735.html" target="topic">Previous</a> | <a href="01735.html" target="topic">Up</a> | <a href="01732.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dcache_CleanAll Topic Title: dcache_CleanAll Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CLK SAM A7G5 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

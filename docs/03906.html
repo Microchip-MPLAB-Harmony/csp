@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>FLEXCOMx_SPI_WriteRead Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="03905.html" target="topic">I2C Peripheral Library Help</a> &gt; <a href="03907.html" target="topic">Master</a> &gt; <a href="03906.html" target="topic">Library Interface</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="03658.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="03659.html" target="topic">SPI</a> &gt; <a href="03665.html" target="topic">Master</a> &gt; <a href="03664.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03906.html" target="topic">FLEXCOMx_SPI_WriteRead Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03912.html" target="topic">Previous</a> | <a href="03907.html" target="topic">Up</a> | <a href="03953.html" target="topic">Next</a></div>
+<a href="03905.html" target="topic">Previous</a> | <a href="03664.html" target="topic">Up</a> | <a href="03902.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2C 00774 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_spi::FLEXCOMx_SPI_WriteRead@void*@size_t@void*@size_t Topic Title: FLEXCOMx_SPI_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+FLEXCOMx_SPI_WriteRead Function</div>
 </div>
 </div>
 
@@ -46,173 +46,117 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
-a) Initialization Function</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function should be used to write &quot;txSize&quot; number of bytes and read &quot;rxSize&quot; number of bytes on FLEXCOMx SPI module. Data pointed by pTransmitData is transmitted and received data is saved in the location pointed by pReceiveData.&nbsp;</p>
+<p class="Element10">
+The function will work differently as per the configuration done in MHC as described below:&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<ol class="Element630">
+<li value="1" class="Element600">Blocking Configuration (Non-Interrupt mode): When &quot;Interrupt Mode&quot; option is unchecked in GUI, the generated code for that particular FLEXCOM SPI PLIB instance will be blocking. In this particular mode, the WriteRead API will not return until all the requested data is transferred.</li>
+</ol><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+After transferring all the data, boolean status 'True' is returned indicating operation completion.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<ol class="Element630">
+<li value="2" class="Element600">Non-Blocking Configuration (Interrupt mode): When &quot;Interrupt Mode&quot; option is selected in GUI, the generated code for that particular FLEXCOM SPI PLIB instance will be Non-blocking in nature. In this particular mode, application will give the data transfer responsibility to the PLIB and come back and start doing other activities, FLEXCOM SPI Data transaction will happen in the corresponding ISR. in this mode, the transmit and receive data locations provided by user must remain valid until the data transfer is complete. Application can check the data transfer completion status via callback or polling mechanism. In case of callback, it needs to be registered prior to calling the WriteRead API. Data transfer status polling can be done using &quot;<a href="03902.html" target="topic">FLEXCOMx_SPI_IsBusy</a>&quot; API.</li>
+</ol></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_SPI_WriteRead</span></strong>(
+    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pTransmitData</span></strong>, 
+    size_t <strong><span style="color: #000000">txSize</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pReceiveData</span></strong>, 
+    size_t <strong><span style="color: #000000">rxSize</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03953.html" target="topic">I2Cx_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes the instance of the I2C peripheral operating in I2C mode.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The <a href="03901.html" target="topic">FLEXCOMx_SPI_Initialize</a> function must have been called.&nbsp;</p>
+<p class="Element10">
+Callback has to be registered using <a href="03899.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a> API if the peripheral instance has been configured in Interrupt mode and transfer completion status needs to be communicated back to application via callback.</p></div>
 </div>
-</div>
-<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
-b) Setup Functions</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03951.html" target="topic">I2Cx_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the pointer to the function (and it's context) to be called when the given I2C's transfer events occur.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03956.html" target="topic">I2Cx_TransferSetup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Dynamic setup of I2C Peripheral.&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+*pTransmitData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the data which has to be transmitted. if it is NULL, that means only data receiving is expected. For 9 to 15bit mode, data should be right aligned in the 16 bit memory location.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+txSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to be transmitted. Always, size should be given in terms of bytes. For example, if 5 16-bit data are to be transmitted, the transmit size should be 10 bytes.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+*pReceiveData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the location where received data has to be stored. It is user's responsibility to ensure pointed location has sufficient memory to store the read data. if it is NULL, that means only data transmission is expected. For 9 to 15bit mode, received data will be right aligned in the 16 bit memory location.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+rxSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to be received. Always, size should be given in terms of bytes. For example, if 5 16-bit data are to be received, the receive size should be 10 bytes. if &quot;n&quot; number of bytes has to be received AFTER transmitting &quot;m&quot; number of bytes, then &quot;rxSize&quot; should be set as &quot;m+n&quot;.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
-c) Transaction Functions</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03955.html" target="topic">I2Cx_Read</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads data from the slave.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03957.html" target="topic">I2Cx_Write</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Writes data to the slave.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03959.html" target="topic">I2Cx_WriteRead</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Write and Read data from Slave.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03958.html" target="topic">I2Cx_WriteForced</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Forced writes data to the slave.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+In Blocking mode, API returns True once the transfer is complete. It returns False if either of the size parameters are 0 and corresponding data pointer is NULL.&nbsp;</p>
+<p class="Element10">
+In interrupt mode, if previous buffer request is not completed and a new transfer request comes, then this API will reject the new request and will return &quot;False&quot;. Also, Same as blocking mode, It returns False if either of the size parameters are 0 and corresponding data pointer is NULL.</p></div>
 </div>
-</div>
-<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
-d) Status Functions</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03952.html" target="topic">I2Cx_ErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the error occurred during transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03954.html" target="topic">I2Cx_IsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the Peripheral busy status.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+Non-blocking interrupt mode configuration implementation of this function will be used by Harmony driver implementation APIs.</p></div>
 </div>
-</div>
-<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-e) Data Types and Constants</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03944.html" target="topic">I2C_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-I2C Callback Function Pointer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03945.html" target="topic">I2C_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-I2C Transfer Status data type.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03949.html" target="topic">I2C_TRANSFER_SETUP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-I2C Transfer Setup Data Structure&nbsp;</div></td></tr></table></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t     txBuffer[4];
+uint8_t     rxBuffer[10];
+size_t      txSize = 4;
+size_t      rxSize = 10;
+<strong><span style="color: #000080">bool</span></strong>        reqAccepted;
+
+<a href="03901.html" target="topic">FLEXCOMx_SPI_Initialize</a>();
+
+<a href="03899.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a>(&amp;APP_SPITransferHandler, NULL);
+
+reqAccepted = FLEXCOMx_SPI_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);
+
+<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
+{
+    <strong><span style="color: #000080">if</span></strong>(FLEXCOMx_SPI_ErrorGet() == FLEXCOM_SPI_ERROR_NONE)
+    {
+        Transfer was completed without error, <strong><span style="color: #000080">do</span></strong> something <strong><span style="color: #000080">else</span></strong> now.
+    }
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -220,7 +164,7 @@ I2C Transfer Setup Data Structure&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="03905.html" target="topic">I2C Peripheral Library Help</a> &gt; <a href="03907.html" target="topic">Master</a> &gt; <a href="03906.html" target="topic">Library Interface</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="03658.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="03659.html" target="topic">SPI</a> &gt; <a href="03665.html" target="topic">Master</a> &gt; <a href="03664.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03906.html" target="topic">FLEXCOMx_SPI_WriteRead Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -228,13 +172,13 @@ I2C Transfer Setup Data Structure&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03912.html" target="topic">Previous</a> | <a href="03907.html" target="topic">Up</a> | <a href="03953.html" target="topic">Next</a></div>
+<a href="03905.html" target="topic">Previous</a> | <a href="03664.html" target="topic">Up</a> | <a href="03902.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2C 00774 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_spi::FLEXCOMx_SPI_WriteRead@void*@size_t@void*@size_t Topic Title: FLEXCOMx_SPI_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

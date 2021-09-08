@@ -1,0 +1,1719 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Using the Library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '05176.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="05171.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="05176.html" target="topic">Using the Library</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="05167.html" target="topic">Previous</a> | <a href="05171.html" target="topic">Up</a> | <a href="05172.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN 11273 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Using the Library</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The MCAN library supports the Normal and CAN-FD modes. The MCAN Normal or CAN-FD mode can transfer message in a polling or an interrupt mode.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>MCAN Message RAM Configuration</strong>&nbsp;</p>
+<p class="Element10">
+Allocate MCAN Message RAM configuration in contiguous non-cacheable buffer in the application.&nbsp;</p>
+<p class="Element10">
+For example in SAME70, uint8_t Mcan1MessageRAM[MCAN1_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32)))__attribute__((space(data), section (&quot;.ram_nocache&quot;)));&nbsp;</p>
+<p class="Element10">
+For example in SAMA5D2, uint8_t Mcan0MessageRAM[MCAN0_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32))) __attribute__((__section__(&quot;.region_nocache&quot;)))&nbsp;</p>
+<p class="Element10">
+If cache is enabled then non-cacheable section &quot;ram_nocache&quot; or &quot;region_nocache&quot; should be added in linker script (if non-cacheable section is not present in linker script).&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>MCAN polling mode:</strong>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+#include &lt;stddef.h&gt; // Defines NULL&nbsp;</p>
+<p class="Element10">
+#include &lt;stdbool.h&gt; // Defines true&nbsp;</p>
+<p class="Element10">
+#include &lt;stdlib.h&gt; // Defines EXIT_FAILURE&nbsp;</p>
+<p class="Element10">
+#include &quot;definitions.h&quot; // SYS function prototypes&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+uint8_t Mcan1MessageRAM[MCAN1_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32)))__attribute__((space(data), section (&quot;.ram_nocache&quot;)));&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Standard identifier id[28:18]*/&nbsp;</p>
+<p class="Element10">
+#define WRITE_ID(id) (id &lt;&lt; 18)&nbsp;</p>
+<p class="Element10">
+#define READ_ID(id) (id &gt;&gt; 18)&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+static uint32_t status = 0;&nbsp;</p>
+<p class="Element10">
+static uint8_t loop_count = 0;&nbsp;</p>
+<p class="Element10">
+static uint8_t user_input = 0;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+static uint8_t txFiFo[MCAN1_TX_FIFO_BUFFER_SIZE];&nbsp;</p>
+<p class="Element10">
+static uint8_t rxFiFo0[MCAN1_RX_FIFO0_SIZE];&nbsp;</p>
+<p class="Element10">
+static uint8_t rxFiFo1[MCAN1_RX_FIFO1_SIZE];&nbsp;</p>
+<p class="Element10">
+static uint8_t rxBuffer[MCAN1_RX_BUFFER_SIZE];&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// Section: Local functions&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Message Length to Data length code */&nbsp;</p>
+<p class="Element10">
+static uint8_t MCANLengthToDlcGet(uint8_t length)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+uint8_t dlc = 0;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (length &lt;= 8U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = length;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 12U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0x9U;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 16U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xAU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 20U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xBU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 24U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xCU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 32U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xDU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 48U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xEU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xFU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+return dlc;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Data length code to Message Length */&nbsp;</p>
+<p class="Element10">
+static uint8_t MCANDlcToLengthGet(uint8_t dlc)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+uint8_t msgLength[] = {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 12U, 16U, 20U, 24U, 32U, 48U, 64U};&nbsp;</p>
+<p class="Element10">
+return msgLength[dlc];&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Menu */&nbsp;</p>
+<p class="Element10">
+static void display_menu(void)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot;Menu :\r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; -- Select the action:\r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; 0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63. \r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; 1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191. \r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; 2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63. \r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; 3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191. \r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; 4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; m: Display menu \r\n\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Print Rx Message */&nbsp;</p>
+<p class="Element10">
+static void print_message(uint8_t numberOfMessage, MCAN_RX_BUFFER *rxBuf, uint8_t rxBufLen, uint8_t rxFifoBuf)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+uint8_t length = 0;&nbsp;</p>
+<p class="Element10">
+uint8_t msgLength = 0;&nbsp;</p>
+<p class="Element10">
+uint32_t id = 0;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (rxFifoBuf == 0)&nbsp;</p>
+<p class="Element10">
+printf(&quot; Rx FIFO0 :&quot;);&nbsp;</p>
+<p class="Element10">
+else if (rxFifoBuf == 1)&nbsp;</p>
+<p class="Element10">
+printf(&quot; Rx FIFO1 :&quot;);&nbsp;</p>
+<p class="Element10">
+else if (rxFifoBuf == 2)&nbsp;</p>
+<p class="Element10">
+printf(&quot; Rx Buffer :&quot;);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+for (uint8_t count = 0; count &lt; numberOfMessage; count++)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Print message to Console */&nbsp;</p>
+<p class="Element10">
+printf(&quot; New Message Received\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+id = rxBuf-&gt;xtd ? rxBuf-&gt;id : READ_ID(rxBuf-&gt;id);&nbsp;</p>
+<p class="Element10">
+msgLength = MCANDlcToLengthGet(rxBuf-&gt;dlc);&nbsp;</p>
+<p class="Element10">
+length = msgLength;&nbsp;</p>
+<p class="Element10">
+printf(&quot; Message - ID : 0x%x Length : 0x%x &quot;, (unsigned int)id, (unsigned int)msgLength);&nbsp;</p>
+<p class="Element10">
+printf(&quot;Message : &quot;);&nbsp;</p>
+<p class="Element10">
+while(length)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot;0x%x &quot;, rxBuf-&gt;data[msgLength - length--]);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot;\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+rxBuf += rxBufLen;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// Section: Main Entry Point&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+int main ( void )&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+MCAN_TX_BUFFER *txBuffer = NULL;&nbsp;</p>
+<p class="Element10">
+uint8_t bufferNumber = 0;&nbsp;</p>
+<p class="Element10">
+uint8_t numberOfMessage = 0;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Initialize all modules */&nbsp;</p>
+<p class="Element10">
+SYS_Initialize ( NULL );&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+printf(&quot; ------------------------------ \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+printf(&quot; MCAN FD Demo \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+printf(&quot; ------------------------------ \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Set Message RAM Configuration */&nbsp;</p>
+<p class="Element10">
+MCAN1_MessageRAMConfigSet(Mcan1MessageRAM);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+display_menu();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+while ( true )&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Rx Buffers */&nbsp;</p>
+<p class="Element10">
+if (MCAN1_InterruptGet(MCAN_INTERRUPT_DRX_MASK))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+MCAN1_InterruptClear(MCAN_INTERRUPT_DRX_MASK);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Check MCAN Status */&nbsp;</p>
+<p class="Element10">
+status = MCAN1_ErrorGet();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_NONE) || ((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_LEC_NO_CHANGE))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+if (MCAN1_RxBufferNumberGet(&amp;bufferNumber))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+memset(rxBuffer, 0x00, MCAN1_RX_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageReceive(bufferNumber, (MCAN_RX_BUFFER *)rxBuffer) == true)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+print_message(1, (MCAN_RX_BUFFER *)rxBuffer, MCAN1_RX_BUFFER_ELEMENT_SIZE, 2);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Error in received message\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Error in received message\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Rx FIFO0 */&nbsp;</p>
+<p class="Element10">
+if (MCAN1_InterruptGet(MCAN_INTERRUPT_RF0N_MASK))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+MCAN1_InterruptClear(MCAN_INTERRUPT_RF0N_MASK);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Check MCAN Status */&nbsp;</p>
+<p class="Element10">
+status = MCAN1_ErrorGet();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_NONE) || ((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_LEC_NO_CHANGE))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+numberOfMessage = MCAN1_RxFifoFillLevelGet(MCAN_RX_FIFO_0);&nbsp;</p>
+<p class="Element10">
+if (numberOfMessage != 0)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+memset(rxFiFo0, 0x00, (numberOfMessage * MCAN1_RX_FIFO0_ELEMENT_SIZE));&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageReceiveFifo(MCAN_RX_FIFO_0, numberOfMessage, (MCAN_RX_BUFFER *)rxFiFo0) == true)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+print_message(numberOfMessage, (MCAN_RX_BUFFER *)rxFiFo0, MCAN1_RX_FIFO0_ELEMENT_SIZE, 0);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Error in received message\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Error in received message\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Rx FIFO1 */&nbsp;</p>
+<p class="Element10">
+if (MCAN1_InterruptGet(MCAN_INTERRUPT_RF1N_MASK))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+MCAN1_InterruptClear(MCAN_INTERRUPT_RF1N_MASK);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Check MCAN Status */&nbsp;</p>
+<p class="Element10">
+status = MCAN1_ErrorGet();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_NONE) || ((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_LEC_NO_CHANGE))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+numberOfMessage = MCAN1_RxFifoFillLevelGet(MCAN_RX_FIFO_1);&nbsp;</p>
+<p class="Element10">
+if (numberOfMessage != 0)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+memset(rxFiFo1, 0x00, (numberOfMessage * MCAN1_RX_FIFO1_ELEMENT_SIZE));&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageReceiveFifo(MCAN_RX_FIFO_1, numberOfMessage, (MCAN_RX_BUFFER *)rxFiFo1) == true)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+print_message(numberOfMessage, (MCAN_RX_BUFFER *)rxFiFo1, MCAN1_RX_FIFO1_ELEMENT_SIZE, 1);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Error in received message\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Error in received message\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* User input */&nbsp;</p>
+<p class="Element10">
+if (USART1_ReceiverIsReady() == false)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+continue;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+user_input = (uint8_t)USART1_ReadByte();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+switch (user_input)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+case '0':&nbsp;</p>
+<p class="Element10">
+memset(txFiFo, 0x00, MCAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+txBuffer = (MCAN_TX_BUFFER *)txFiFo;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;id = WRITE_ID(0x45A);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;dlc = MCANLengthToDlcGet(64);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;fdf = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;brs = 1;&nbsp;</p>
+<p class="Element10">
+for (loop_count = 0; loop_count &lt; 64; loop_count++){&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;data[loop_count] = loop_count;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot; 0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63.\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageTransmitFifo(1, txBuffer) == true)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Success \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Failed \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+case '1':&nbsp;</p>
+<p class="Element10">
+memset(txFiFo, 0x00, MCAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+txBuffer = (MCAN_TX_BUFFER *)txFiFo;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;id = WRITE_ID(0x469);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;dlc = MCANLengthToDlcGet(64);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;fdf = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;brs = 1;&nbsp;</p>
+<p class="Element10">
+for (loop_count = 128; loop_count &lt; 192; loop_count++){&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;data[loop_count - 128] = loop_count;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot; 1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191.\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageTransmitFifo(1, txBuffer) == true)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Success \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Failed \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+case '2':&nbsp;</p>
+<p class="Element10">
+memset(txFiFo, 0x00, MCAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+txBuffer = (MCAN_TX_BUFFER *)txFiFo;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;id = 0x100000A5;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;dlc = MCANLengthToDlcGet(64);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;xtd = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;fdf = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;brs = 1;&nbsp;</p>
+<p class="Element10">
+for (loop_count = 0; loop_count &lt; 64; loop_count++){&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;data[loop_count] = loop_count;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot; 2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63.\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageTransmitFifo(1, txBuffer) == true)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Success \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Failed \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+case '3':&nbsp;</p>
+<p class="Element10">
+memset(txFiFo, 0x00, MCAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+txBuffer = (MCAN_TX_BUFFER *)txFiFo;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;id = 0x10000096;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;dlc = MCANLengthToDlcGet(64);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;xtd = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;fdf = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;brs = 1;&nbsp;</p>
+<p class="Element10">
+for (loop_count = 128; loop_count &lt; 192; loop_count++){&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;data[loop_count - 128] = loop_count;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot; 3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191.\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageTransmitFifo(1, txBuffer) == true)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Success \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Failed \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+case '4':&nbsp;</p>
+<p class="Element10">
+memset(txFiFo, 0x00, MCAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+txBuffer = (MCAN_TX_BUFFER *)txFiFo;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;id = WRITE_ID(0x469);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;dlc = 8;&nbsp;</p>
+<p class="Element10">
+for (loop_count = 0; loop_count &lt; 8; loop_count++){&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;data[loop_count] = loop_count;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot; 4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7.\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageTransmitFifo(1, txBuffer) == true)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Success \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Failed \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+case 'm':&nbsp;</p>
+<p class="Element10">
+case 'M':&nbsp;</p>
+<p class="Element10">
+display_menu();&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+default:&nbsp;</p>
+<p class="Element10">
+printf(&quot; Invalid Input \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Execution should not come here during normal operation */&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+return ( EXIT_FAILURE );&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>MCAN interrupt mode:</strong>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+#include &lt;stddef.h&gt; // Defines NULL&nbsp;</p>
+<p class="Element10">
+#include &lt;stdbool.h&gt; // Defines true&nbsp;</p>
+<p class="Element10">
+#include &lt;stdlib.h&gt; // Defines EXIT_FAILURE&nbsp;</p>
+<p class="Element10">
+#include &quot;definitions.h&quot; // SYS function prototypes&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+uint8_t Mcan1MessageRAM[MCAN1_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32)))__attribute__((space(data), section (&quot;.ram_nocache&quot;)));&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Standard identifier id[28:18]*/&nbsp;</p>
+<p class="Element10">
+#define WRITE_ID(id) (id &lt;&lt; 18)&nbsp;</p>
+<p class="Element10">
+#define READ_ID(id) (id &gt;&gt; 18)&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Application's state machine enum */&nbsp;</p>
+<p class="Element10">
+typedef enum&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+APP_STATE_MCAN_RECEIVE,&nbsp;</p>
+<p class="Element10">
+APP_STATE_MCAN_TRANSMIT,&nbsp;</p>
+<p class="Element10">
+APP_STATE_MCAN_IDLE,&nbsp;</p>
+<p class="Element10">
+APP_STATE_MCAN_XFER_SUCCESSFUL,&nbsp;</p>
+<p class="Element10">
+APP_STATE_MCAN_XFER_ERROR,&nbsp;</p>
+<p class="Element10">
+APP_STATE_MCAN_USER_INPUT&nbsp;</p>
+<p class="Element10">
+} APP_STATES;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Variable to save Tx/Rx transfer status and context */&nbsp;</p>
+<p class="Element10">
+static uint32_t status = 0;&nbsp;</p>
+<p class="Element10">
+static uint32_t xferContext = 0;&nbsp;</p>
+<p class="Element10">
+/* Variable to save Tx/Rx message */&nbsp;</p>
+<p class="Element10">
+static uint8_t loop_count = 0;&nbsp;</p>
+<p class="Element10">
+static uint8_t user_input = 0;&nbsp;</p>
+<p class="Element10">
+/* Variable to save application state */&nbsp;</p>
+<p class="Element10">
+volatile static APP_STATES state = APP_STATE_MCAN_USER_INPUT;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+static uint8_t txFiFo[MCAN1_TX_FIFO_BUFFER_SIZE];&nbsp;</p>
+<p class="Element10">
+static uint8_t rxFiFo0[MCAN1_RX_FIFO0_SIZE];&nbsp;</p>
+<p class="Element10">
+static uint8_t rxFiFo1[MCAN1_RX_FIFO1_SIZE];&nbsp;</p>
+<p class="Element10">
+static uint8_t rxBuffer[MCAN1_RX_BUFFER_SIZE];&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// Section: Local functions&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Message Length to Data length code */&nbsp;</p>
+<p class="Element10">
+static uint8_t MCANLengthToDlcGet(uint8_t length)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+uint8_t dlc = 0;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (length &lt;= 8U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = length;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 12U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0x9U;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 16U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xAU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 20U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xBU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 24U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xCU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 32U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xDU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else if (length &lt;= 48U)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xEU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+dlc = 0xFU;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+return dlc;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Data length code to Message Length */&nbsp;</p>
+<p class="Element10">
+static uint8_t MCANDlcToLengthGet(uint8_t dlc)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+uint8_t msgLength[] = {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 12U, 16U, 20U, 24U, 32U, 48U, 64U};&nbsp;</p>
+<p class="Element10">
+return msgLength[dlc];&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Menu */&nbsp;</p>
+<p class="Element10">
+static void display_menu(void)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot;Menu :\r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; -- Select the action:\r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; 0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63. \r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; 1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191. \r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; 2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63. \r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; 3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191. \r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; 4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n&quot;&nbsp;</p>
+<p class="Element10">
+&quot; m: Display menu \r\n\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Print Rx Message */&nbsp;</p>
+<p class="Element10">
+static void print_message(uint8_t numberOfMessage, MCAN_RX_BUFFER *rxBuf, uint8_t rxBufLen, uint8_t rxFifoBuf)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+uint8_t length = 0;&nbsp;</p>
+<p class="Element10">
+uint8_t msgLength = 0;&nbsp;</p>
+<p class="Element10">
+uint32_t id = 0;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (rxFifoBuf == 0)&nbsp;</p>
+<p class="Element10">
+printf(&quot; Rx FIFO0 :&quot;);&nbsp;</p>
+<p class="Element10">
+else if (rxFifoBuf == 1)&nbsp;</p>
+<p class="Element10">
+printf(&quot; Rx FIFO1 :&quot;);&nbsp;</p>
+<p class="Element10">
+else if (rxFifoBuf == 2)&nbsp;</p>
+<p class="Element10">
+printf(&quot; Rx Buffer :&quot;);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+for (uint8_t count = 0; count &lt; numberOfMessage; count++)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Print message to Console */&nbsp;</p>
+<p class="Element10">
+printf(&quot; New Message Received\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+id = rxBuf-&gt;xtd ? rxBuf-&gt;id : READ_ID(rxBuf-&gt;id);&nbsp;</p>
+<p class="Element10">
+msgLength = MCANDlcToLengthGet(rxBuf-&gt;dlc);&nbsp;</p>
+<p class="Element10">
+length = msgLength;&nbsp;</p>
+<p class="Element10">
+printf(&quot; Message - Timestamp : 0x%x ID : 0x%x Length : 0x%x &quot;, (unsigned int)rxBuf-&gt;rxts, (unsigned int)id, (unsigned int)msgLength);&nbsp;</p>
+<p class="Element10">
+printf(&quot;Message : &quot;);&nbsp;</p>
+<p class="Element10">
+while(length)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot;0x%x &quot;, rxBuf-&gt;data[msgLength - length--]);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot;\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+rxBuf += rxBufLen;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* This function will be called by MCAN PLIB when transfer is completed from Tx FIFO */&nbsp;</p>
+<p class="Element10">
+void APP_MCAN_TxFifoCallback(uintptr_t context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+xferContext = context;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Check MCAN Status */&nbsp;</p>
+<p class="Element10">
+status = MCAN1_ErrorGet();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_NONE) || ((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_LEC_NO_CHANGE))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+switch ((APP_STATES)context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+case APP_STATE_MCAN_TRANSMIT:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_XFER_SUCCESSFUL;&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+default:&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_XFER_ERROR;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* This function will be called by MCAN PLIB when Message received in Rx Buffer */&nbsp;</p>
+<p class="Element10">
+void APP_MCAN_RxBufferCallback(uint8_t bufferNumber, uintptr_t context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+xferContext = context;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Check MCAN Status */&nbsp;</p>
+<p class="Element10">
+status = MCAN1_ErrorGet();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_NONE) || ((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_LEC_NO_CHANGE))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+switch ((APP_STATES)context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+case APP_STATE_MCAN_RECEIVE:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+memset(rxBuffer, 0x00, MCAN1_RX_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageReceive(bufferNumber, (MCAN_RX_BUFFER *)rxBuffer) == true)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+print_message(1, (MCAN_RX_BUFFER *)rxBuffer, MCAN1_RX_BUFFER_ELEMENT_SIZE, 2);&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_XFER_SUCCESSFUL;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_XFER_ERROR;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+default:&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_XFER_ERROR;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* This function will be called by MCAN PLIB when Message received in Rx FIFO0 */&nbsp;</p>
+<p class="Element10">
+void APP_MCAN_RxFifo0Callback(uint8_t numberOfMessage, uintptr_t context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+xferContext = context;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Check MCAN Status */&nbsp;</p>
+<p class="Element10">
+status = MCAN1_ErrorGet();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_NONE) || ((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_LEC_NO_CHANGE))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+switch ((APP_STATES)context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+case APP_STATE_MCAN_RECEIVE:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+memset(rxFiFo0, 0x00, (numberOfMessage * MCAN1_RX_FIFO0_ELEMENT_SIZE));&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageReceiveFifo(MCAN_RX_FIFO_0, numberOfMessage, (MCAN_RX_BUFFER *)rxFiFo0) == true)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+print_message(numberOfMessage, (MCAN_RX_BUFFER *)rxFiFo0, MCAN1_RX_FIFO0_ELEMENT_SIZE, 0);&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_XFER_SUCCESSFUL;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_XFER_ERROR;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+default:&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_XFER_ERROR;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* This function will be called by MCAN PLIB when Message received in Rx FIFO1 */&nbsp;</p>
+<p class="Element10">
+void APP_MCAN_RxFifo1Callback(uint8_t numberOfMessage, uintptr_t context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+xferContext = context;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Check MCAN Status */&nbsp;</p>
+<p class="Element10">
+status = MCAN1_ErrorGet();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_NONE) || ((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_LEC_NO_CHANGE))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+switch ((APP_STATES)context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+case APP_STATE_MCAN_RECEIVE:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+memset(rxFiFo1, 0x00, (numberOfMessage * MCAN1_RX_FIFO1_ELEMENT_SIZE));&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageReceiveFifo(MCAN_RX_FIFO_1, numberOfMessage, (MCAN_RX_BUFFER *)rxFiFo1) == true)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+print_message(numberOfMessage, (MCAN_RX_BUFFER *)rxFiFo1, MCAN1_RX_FIFO1_ELEMENT_SIZE, 1);&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_XFER_SUCCESSFUL;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_XFER_ERROR;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+default:&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_XFER_ERROR;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// Section: Main Entry Point&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+// *****************************************************************************&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+int main ( void )&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+MCAN_TX_BUFFER *txBuffer = NULL;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Initialize all modules */&nbsp;</p>
+<p class="Element10">
+SYS_Initialize ( NULL );&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+printf(&quot; ------------------------------ \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+printf(&quot; MCAN FD Demo \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+printf(&quot; ------------------------------ \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Set Message RAM Configuration */&nbsp;</p>
+<p class="Element10">
+MCAN1_MessageRAMConfigSet(Mcan1MessageRAM);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+MCAN1_RxFifoCallbackRegister(MCAN_RX_FIFO_0, APP_MCAN_RxFifo0Callback, APP_STATE_MCAN_RECEIVE);&nbsp;</p>
+<p class="Element10">
+MCAN1_RxFifoCallbackRegister(MCAN_RX_FIFO_1, APP_MCAN_RxFifo1Callback, APP_STATE_MCAN_RECEIVE);&nbsp;</p>
+<p class="Element10">
+MCAN1_RxBuffersCallbackRegister(APP_MCAN_RxBufferCallback, APP_STATE_MCAN_RECEIVE);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+display_menu();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+while ( true )&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+if (state == APP_STATE_MCAN_USER_INPUT)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Read user input */&nbsp;</p>
+<p class="Element10">
+scanf(&quot;%c&quot;, (char *) &amp;user_input);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+switch (user_input)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+case '0':&nbsp;</p>
+<p class="Element10">
+memset(txFiFo, 0x00, MCAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+txBuffer = (MCAN_TX_BUFFER *)txFiFo;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;id = WRITE_ID(0x45A);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;dlc = MCANLengthToDlcGet(64);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;fdf = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;brs = 1;&nbsp;</p>
+<p class="Element10">
+for (loop_count = 0; loop_count &lt; 64; loop_count++){&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;data[loop_count] = loop_count;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot; 0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63.\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+MCAN1_TxFifoCallbackRegister( APP_MCAN_TxFifoCallback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_IDLE;&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageTransmitFifo(1, txBuffer) == false)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Failed \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+case '1':&nbsp;</p>
+<p class="Element10">
+memset(txFiFo, 0x00, MCAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+txBuffer = (MCAN_TX_BUFFER *)txFiFo;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;id = WRITE_ID(0x469);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;dlc = MCANLengthToDlcGet(64);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;fdf = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;brs = 1;&nbsp;</p>
+<p class="Element10">
+for (loop_count = 128; loop_count &lt; 192; loop_count++){&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;data[loop_count - 128] = loop_count;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot; 1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191.\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+MCAN1_TxFifoCallbackRegister( APP_MCAN_TxFifoCallback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_IDLE;&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageTransmitFifo(1, txBuffer) == false)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Failed \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+case '2':&nbsp;</p>
+<p class="Element10">
+memset(txFiFo, 0x00, MCAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+txBuffer = (MCAN_TX_BUFFER *)txFiFo;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;id = 0x100000A5;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;dlc = MCANLengthToDlcGet(64);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;xtd = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;fdf = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;brs = 1;&nbsp;</p>
+<p class="Element10">
+for (loop_count = 0; loop_count &lt; 64; loop_count++){&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;data[loop_count] = loop_count;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot; 2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63.\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+MCAN1_TxFifoCallbackRegister( APP_MCAN_TxFifoCallback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_IDLE;&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageTransmitFifo(1, txBuffer) == false)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Failed \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+case '3':&nbsp;</p>
+<p class="Element10">
+memset(txFiFo, 0x00, MCAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+txBuffer = (MCAN_TX_BUFFER *)txFiFo;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;id = 0x10000096;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;dlc = MCANLengthToDlcGet(64);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;xtd = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;fdf = 1;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;brs = 1;&nbsp;</p>
+<p class="Element10">
+for (loop_count = 128; loop_count &lt; 192; loop_count++){&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;data[loop_count - 128] = loop_count;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot; 3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191.\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+MCAN1_TxFifoCallbackRegister( APP_MCAN_TxFifoCallback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_IDLE;&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageTransmitFifo(1, txBuffer) == false)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Failed \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+case '4':&nbsp;</p>
+<p class="Element10">
+memset(txFiFo, 0x00, MCAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&nbsp;</p>
+<p class="Element10">
+txBuffer = (MCAN_TX_BUFFER *)txFiFo;&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;id = WRITE_ID(0x469);&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;dlc = 8;&nbsp;</p>
+<p class="Element10">
+for (loop_count = 0; loop_count &lt; 8; loop_count++){&nbsp;</p>
+<p class="Element10">
+txBuffer-&gt;data[loop_count] = loop_count;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+printf(&quot; 4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7.\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+MCAN1_TxFifoCallbackRegister( APP_MCAN_TxFifoCallback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_IDLE;&nbsp;</p>
+<p class="Element10">
+if (MCAN1_MessageTransmitFifo(1, txBuffer) == false)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Failed \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+case 'm':&nbsp;</p>
+<p class="Element10">
+case 'M':&nbsp;</p>
+<p class="Element10">
+display_menu();&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+default:&nbsp;</p>
+<p class="Element10">
+printf(&quot; Invalid Input \r\n&quot;);&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Check the application's current state. */&nbsp;</p>
+<p class="Element10">
+switch (state)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+case APP_STATE_MCAN_IDLE:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Application can do other task here */&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+case APP_STATE_MCAN_XFER_SUCCESSFUL:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+if ((APP_STATES)xferContext == APP_STATE_MCAN_TRANSMIT)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Success\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_USER_INPUT;&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+case APP_STATE_MCAN_XFER_ERROR:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+if ((APP_STATES)xferContext == APP_STATE_MCAN_RECEIVE)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Error in received message\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+printf(&quot; Failed\r\n&quot;);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_USER_INPUT;&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+default:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Execution should not come here during normal operation */&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+return ( EXIT_FAILURE );&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+/* ********** */</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="05171.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="05176.html" target="topic">Using the Library</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="05167.html" target="topic">Previous</a> | <a href="05171.html" target="topic">Up</a> | <a href="05172.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN 11273 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

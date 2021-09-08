@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>I2Cx_IsBusy Function</title>
+<title>FLEXCOMx_TWI_ReadByte Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="03917.html" target="topic">I2C Peripheral Library Help</a> &gt; <a href="03919.html" target="topic">Master</a> &gt; <a href="03918.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="03971.html" target="topic">I2Cx_IsBusy Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="03658.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="03636.html" target="topic">I2C</a> &gt; <a href="03644.html" target="topic">Slave</a> &gt; <a href="03649.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03971.html" target="topic">FLEXCOMx_TWI_ReadByte Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03969.html" target="topic">Previous</a> | <a href="03918.html" target="topic">Up</a> | <a href="03961.html" target="topic">Next</a></div>
+<a href="03967.html" target="topic">Previous</a> | <a href="03649.html" target="topic">Up</a> | <a href="03974.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: i2c_01441::I2Cx_IsBusy Topic Title: I2Cx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_twi_slave::FLEXCOMx_TWI_ReadByte Topic Title: FLEXCOMx_TWI_ReadByte Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-I2Cx_IsBusy Function</div>
+FLEXCOMx_TWI_ReadByte Function</div>
 </div>
 </div>
 
@@ -49,27 +49,24 @@ I2Cx_IsBusy Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns I2C PLIB busy status. The application can use this function to check if I2C module is busy before calling any of the data transfer functions. The library does not allow a data transfer operation if another transfer operation is already in progress.</p></div>
+This function returns the TWI data byte.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">I2Cx_IsBusy</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint8_t <strong><span style="color: #000000">FLEXCOMx_TWI_ReadByte</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="03970.html" target="topic">I2Cx_Initialize</a> must have been called for the associated I2C instance.</p></div>
+<a href="03968.html" target="topic">FLEXCOMx_TWI_Initialize</a> must have been called for the associated FLEXCOM TWI instance.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true - Busy.</li>
-<li class="Element600">false - Not busy.</li>
-</ul></div>
+<p class="Element10">
+The data byte present in the data buffer.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -82,15 +79,31 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
-
-    <i><span style="color: #008000">// wait for the current transfer to complete</span></i>
-    <strong><span style="color: #000080">while</span></strong>(I2C1_IsBusy());
-
-    <i><span style="color: #008000">// perform the next transfer</span></i>
-    <strong><span style="color: #000080">if</span></strong>(!I2C1_Write( SLAVE_ADDR, &amp;myData[0], NUM_BYTES ))
+<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">void</span></strong> APP_FLEXCOM_TWI_Callback ( <a href="03961.html" target="topic">FLEXCOM_TWI_SLAVE_TRANSFER_EVENT</a> event, uintptr_t contextHandle )
     {
-        <i><span style="color: #008000">// error handling</span></i>
+        <strong><span style="color: #000080">switch</span></strong>(event)
+        {
+            <strong><span style="color: #000080">case</span></strong> FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_ADDR_MATCH:
+                <i><span style="color: #008000">// Handle address match event</span></i>
+                <strong><span style="color: #000080">break</span></strong>;
+
+            <strong><span style="color: #000080">case</span></strong> FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_RX_READY:
+
+                <i><span style="color: #008000">// Read the received data byte</span></i>
+                rxData = FLEXCOM1_TWI_ReadByte();
+
+                <strong><span style="color: #000080">break</span></strong>;
+            <strong><span style="color: #000080">case</span></strong> FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TX_READY:
+
+                <i><span style="color: #008000">// Provide data to TWI master</span></i>
+                FLEXCOM1_TWI_WriteByte(txData);
+
+                <strong><span style="color: #000080">break</span></strong>;
+
+            <strong><span style="color: #000080">case</span></strong> FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE:
+                <i><span style="color: #008000">// Handle stop bit received event</span></i>
+                <strong><span style="color: #000080">break</span></strong>;
+        }
     }
 </pre></div></div>
 </div>
@@ -100,7 +113,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="03917.html" target="topic">I2C Peripheral Library Help</a> &gt; <a href="03919.html" target="topic">Master</a> &gt; <a href="03918.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="03971.html" target="topic">I2Cx_IsBusy Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="03658.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="03636.html" target="topic">I2C</a> &gt; <a href="03644.html" target="topic">Slave</a> &gt; <a href="03649.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03971.html" target="topic">FLEXCOMx_TWI_ReadByte Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -108,13 +121,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03969.html" target="topic">Previous</a> | <a href="03918.html" target="topic">Up</a> | <a href="03961.html" target="topic">Next</a></div>
+<a href="03967.html" target="topic">Previous</a> | <a href="03649.html" target="topic">Up</a> | <a href="03974.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: i2c_01441::I2Cx_IsBusy Topic Title: I2Cx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_twi_slave::FLEXCOMx_TWI_ReadByte Topic Title: FLEXCOMx_TWI_ReadByte Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

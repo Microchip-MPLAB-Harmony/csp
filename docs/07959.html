@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCx_CHy_CaptureStatusGet Function</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07781.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07760.html" target="topic">Capture</a> &gt; <a href="07763.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="07959.html" target="topic">TCx_CHy_CaptureStatusGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07960.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="07959.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07955.html" target="topic">Previous</a> | <a href="07763.html" target="topic">Up</a> | <a href="07943.html" target="topic">Next</a></div>
+<a href="07960.html" target="topic">Previous</a> | <a href="07960.html" target="topic">Up</a> | <a href="07956.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_6082::TCx_CHy_CaptureStatusGet Topic Title: TCx_CHy_CaptureStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADC U2260 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCx_CHy_CaptureStatusGet Function</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,50 +49,31 @@ TCx_CHy_CaptureStatusGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the status of the events that occur in capture mode.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="07947.html" target="topic">TCx_CAPTURE_STATUS</a> <strong><span style="color: #000000">TCx_CHy_CaptureStatusGet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="07975.html" target="topic">TCx_CHy_TimerInitialize</a>() function must have been called first for the given channel to configure channel in capture mode.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="07947.html" target="topic">TCx_CAPTURE_STATUS</a> - status of the capture events</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-This function is applicable only for capture mode. Event status bits are cleared after reading the status register.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint16_t capture;
+<span style="color: #000000">The Sigma-Delta Analog-to-Digital Converter (SDADC) converts analog signals to digital values. This peripheral provides below features:</span>&nbsp;</p>
 
-<strong><span style="color: #000080">if</span></strong> ((TC0_CH1_CaptureStatusGet() &amp; TC_CAPTURE_A_LOAD) == <strong><span style="color: #000080">true</span></strong>)
-{
-    capture = TC0_CH1_CaptureAGet();
-}</pre></div></div>
-</div>
+<ul class="Element630">
+<li class="Element600"><span style="color: #000000">16-bit resolution</span></li>
+<li class="Element600"> <span style="color: #000000"> Up to 1,500,000 divided by Over Sampling Ratio (OSR) samples per second</span></li>
+<li class="Element600"><span style="color: #000000">Three analog differential inputs</span></li>
+<li class="Element600"><span style="color: #000000">Conversion Range:</span>
+<ul class="Element631">
+<li class="Element601"><span style="color: #000000">Differential mode: -VREF to +VREF</span></li>
+<li class="Element601"><span style="color: #000000">Single-ended mode: 0V to +VREF</span></li>
+</ul></li>
+<li class="Element600"><span style="color: #000000">Signed results</span></li>
+<li class="Element600"><span style="color: #000000">Event-triggered conversion (one event input)</span></li>
+<li class="Element600"><span style="color: #000000">Optional DMA transfer of conversion settings or result</span></li>
+<li class="Element600"><span style="color: #000000">Single, continuous and sequencing options</span></li>
+<li class="Element600"><span style="color: #000000">Hardware gain, offset and shift compensation</span></li>
+<li class="Element600"><span style="color: #000000">Windowing monitor</span></li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07781.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07760.html" target="topic">Capture</a> &gt; <a href="07763.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="07959.html" target="topic">TCx_CHy_CaptureStatusGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07960.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="07959.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -100,13 +81,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07955.html" target="topic">Previous</a> | <a href="07763.html" target="topic">Up</a> | <a href="07943.html" target="topic">Next</a></div>
+<a href="07960.html" target="topic">Previous</a> | <a href="07960.html" target="topic">Up</a> | <a href="07956.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_6082::TCx_CHy_CaptureStatusGet Topic Title: TCx_CHy_CaptureStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADC U2260 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>EIC_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="02816.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02794.html" target="topic">I2C</a> &gt; <a href="02800.html" target="topic">Master</a> &gt; <a href="02814.html" target="topic">Using the Library</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="02724.html" target="topic">EIC Peripheral Library Help</a> &gt; <a href="02725.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="02814.html" target="topic">EIC_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02795.html" target="topic">Previous</a> | <a href="02800.html" target="topic">Up</a> | <a href="02799.html" target="topic">Next</a></div>
+<a href="02830.html" target="topic">Previous</a> | <a href="02725.html" target="topic">Up</a> | <a href="02815.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM 11268 I2C Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: eic_44139::EIC_CALLBACK Topic Title: EIC_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+EIC_CALLBACK Type</div>
 </div>
 </div>
 
@@ -49,72 +49,65 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The FLEXCOM I2C peripheral library supports the following I2C transfers:</p>
-<ul class="Element630">
-<li class="Element600"><strong>Master Write: </strong>The master writes a block of data to the slave</li>
-<li class="Element600"><strong>Master Read: </strong>The master reads a block of data from the slave</li>
-<li class="Element600"><strong>Master Write/Read: </strong>The master writes and then reads back a block of data from slave.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+EIC Interrupt Pin Callback Function Pointer Type&nbsp;</p>
 <p class="Element10">
-The block of data is transferred in a non-blocking manner using a peripheral interrupt. It provides both polling and callback methods to indicate the end of the transfer.</p>
-<ul class="Element630">
-<li class="Element600">With polling, the application will need to continuously poll to check if the transfer is completed.</li>
-<li class="Element600">With callback, the registered callback function will be called when the transfer is completed. This means the application do not have to poll continuously.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+This data type defines the function signature for the EIC peripheral callback function. The EIC peripheral will call back the client's function with this signature when a interrupt condition has been sensed on the pin. The EIC library allows the application to register a callback function for each enabled external interrupt.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">EIC_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The example code demonstrates the write operation using polling method. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> APP_SLAVE_ADDR 0x0057
-<strong><span style="color: #000080">#define</span></strong> NUM_BYTES      10
-
-uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+<a href="02821.html" target="topic">EIC_Initialize</a> must have been called for the given EIC peripheral instance and EIC_CallbackRegister must have been called to set the function to be called.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">void</span></strong> EIC_Pin0Callback (uintptr_t context)
 {
-    <i><span style="color: #008000">/* Write data to the TWIHS0 Slave */</span></i>
-    FLEXCOM0_I2C_Write(APP_SLAVE_ADDR, &amp;myWriteData[0], NUM_BYTES);
-
-    <i><span style="color: #008000">/* Poll and wait for the transfer to complete */</span></i>
-    <strong><span style="color: #000080">while</span></strong>(FLEXCOM0_I2C_IsBusy());
-
-    <i><span style="color: #008000">/* Check if any error occurred */</span></i>
-    <strong><span style="color: #000080">if</span></strong>(FLEXCOM0_I2C_ErrorGet() == FLEXCOM_I2C_ERROR_NONE)
-    {
-        <i><span style="color: #008000">//Transfer is completed successfully</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//Error occurred during transfer.</span></i>
-    }
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The example code demonstrates write operation using callback method. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> APP_SLAVE_ADDR 0x0057
-<strong><span style="color: #000080">#define</span></strong> NUM_BYTES      10
-
-uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-
-<strong><span style="color: #000080">void</span></strong> FLEXCOM0_I2C_Callback(uintptr_t context)
-{
-    <strong><span style="color: #000080">if</span></strong>(FLEXCOM0_I2C_ErrorGet() == FLEXCOM_I2C_ERROR_NONE)
-    {
-        <i><span style="color: #008000">//Transfer is completed successfully</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//Error occurred during transfer.</span></i>
-    }
+    <i><span style="color: #008000">// This pin an interrupt condition has been sensed on Pin 0.</span></i>
 }
 
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-    <i><span style="color: #008000">/* Register Callback function */</span></i>
-    FLEXCOM0_I2C_CallbackRegister(FLEXCOM0_I2C_Callback, (uintptr_t)NULL);
-
-    <i><span style="color: #008000">/* Submit Write Request */</span></i>
-    FLEXCOM0_I2C_Write(APP_SLAVE_ADDR, &amp;myWriteData[0], NUM_BYTES);
-}</pre></div></div>
+EIC_CallbackRegister(EIC_PIN_0, EIC_Callback, 0);</pre></div></div>
 </div>
 </div>
 </div>
@@ -122,7 +115,7 @@ uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', 
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="02816.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02794.html" target="topic">I2C</a> &gt; <a href="02800.html" target="topic">Master</a> &gt; <a href="02814.html" target="topic">Using the Library</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="02724.html" target="topic">EIC Peripheral Library Help</a> &gt; <a href="02725.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="02814.html" target="topic">EIC_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -130,13 +123,13 @@ uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02795.html" target="topic">Previous</a> | <a href="02800.html" target="topic">Up</a> | <a href="02799.html" target="topic">Next</a></div>
+<a href="02830.html" target="topic">Previous</a> | <a href="02725.html" target="topic">Up</a> | <a href="02815.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM 11268 I2C Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: eic_44139::EIC_CALLBACK Topic Title: EIC_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

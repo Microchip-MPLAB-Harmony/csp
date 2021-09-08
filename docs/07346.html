@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07337.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="07341.html" target="topic">Slave</a> &gt; <a href="07346.html" target="topic">Library Interface</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07345.html" target="topic">RNG Peripheral Library Help</a> &gt; <a href="07346.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07350.html" target="topic">Previous</a> | <a href="07341.html" target="topic">Up</a> | <a href="07493.html" target="topic">Next</a></div>
+<a href="07350.html" target="topic">Previous</a> | <a href="07345.html" target="topic">Up</a> | <a href="07361.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPI 6088 Slave Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RNG 00159 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Library Interface</div>
 </div>
@@ -46,10 +46,6 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
-<div class="Element10">
-</div>
-</div>
 <a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
 a) Initialization Function</div>
 <div class="Element11">
@@ -69,9 +65,9 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="07493.html" target="topic">SPIx_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="07361.html" target="topic">RNG_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Initializes SPI PLIB in slave mode&nbsp;</div></td></tr></table></div></div>
+Initializes RNG module of the device&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
@@ -93,9 +89,16 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="07491.html" target="topic">SPIx_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="07367.html" target="topic">RNG_Poly1Set</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Allows application to register a callback function with SPI Slave PLIB.&nbsp;</div></td></tr></table></div></div>
+Loads a value into the RNGPOLY1 register.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="07369.html" target="topic">RNG_Poly2Set</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Loads a value into the RNGPOLY2 register.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
@@ -117,23 +120,86 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="07495.html" target="topic">SPIx_Read</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="07362.html" target="topic">RNG_LoadSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Reads data from the PLIB's internal buffer to the application buffer&nbsp;</div></td></tr><tr>
+Sets the LOAD bit in RNGCON.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="07499.html" target="topic">SPIx_Write</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="07363.html" target="topic">RNG_NumGen1Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Writes data to SPI x peripheral.&nbsp;</div></td></tr><tr>
+Returns the value in the RNGNUMGEN1 register.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="07498.html" target="topic">SPIx_Ready</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="07364.html" target="topic">RNG_NumGen1Set</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Drives the SPI slave busy line to ready state&nbsp;</div></td></tr></table></div></div>
+Loads a value into the RNGNUMGEN1 register.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="07365.html" target="topic">RNG_NumGen2Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the value in the RNGNUMGEN2 register.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="07366.html" target="topic">RNG_NumGen2Set</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Loads a value into the RNGNUMGEN2 register.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="07368.html" target="topic">RNG_Poly2Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the value of the RNGPOLY2 register.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="07370.html" target="topic">RNG_PrngDisable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Disables the PRNG block inside the RNG peripheral&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="07371.html" target="topic">RNG_PrngEnable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enables the PRNG block inside the RNG peripheral&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="07372.html" target="topic">RNG_Seed1Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the content of RNGSEED1 register.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="07373.html" target="topic">RNG_Seed2Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the content of RNGSEED2 register.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="07374.html" target="topic">RNG_TrngDisable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Disables the TRNG block inside the RNG peripheral&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="07375.html" target="topic">RNG_TrngEnable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enables the TRNG block inside the RNG peripheral&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
@@ -155,68 +221,9 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="07494.html" target="topic">SPIx_IsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="07376.html" target="topic">RNG_WaitForTrngCnt</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Returns transfer status of the SPI slave PLIB.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07497.html" target="topic">SPIx_ReadCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the number of bytes pending to be read out from the PLIB's internal buffer&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07496.html" target="topic">SPIx_ReadBufferSizeGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the size of the PLIB's internal receive buffer&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07492.html" target="topic">SPIx_ErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the status of SPI transfer&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07500.html" target="topic">SPIx_WriteBufferSizeGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the size of the PLIB's internal transmit buffer&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-e) Data Types and Constants</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07487.html" target="topic">SPI_SLAVE_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Pointer to a SPI Call back function when SPI is configued in slave mode.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="07488.html" target="topic">SPI_SLAVE_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type for the SPI Slave mode errors&nbsp;</div></td></tr></table></div></div>
+Waits for RNGCNT to reach the number of bits required for the PRNG seed.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -224,7 +231,7 @@ Defines the data type for the SPI Slave mode errors&nbsp;</div></td></tr></table
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07337.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="07341.html" target="topic">Slave</a> &gt; <a href="07346.html" target="topic">Library Interface</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07345.html" target="topic">RNG Peripheral Library Help</a> &gt; <a href="07346.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -232,13 +239,13 @@ Defines the data type for the SPI Slave mode errors&nbsp;</div></td></tr></table
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07350.html" target="topic">Previous</a> | <a href="07341.html" target="topic">Up</a> | <a href="07493.html" target="topic">Next</a></div>
+<a href="07350.html" target="topic">Previous</a> | <a href="07345.html" target="topic">Up</a> | <a href="07361.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPI 6088 Slave Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RNG 00159 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

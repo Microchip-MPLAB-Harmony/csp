@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>ADC_CALLBACK Type</title>
+<title>ADC_ChannelResultIsReady Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="00164.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00165.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00582.html" target="topic">ADC_CALLBACK Type</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="00161.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00162.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="00582.html" target="topic">ADC_ChannelResultIsReady Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00623.html" target="topic">Previous</a> | <a href="00165.html" target="topic">Up</a> | <a href="00593.html" target="topic">Next</a></div>
+<a href="00581.html" target="topic">Previous</a> | <a href="00162.html" target="topic">Up</a> | <a href="00615.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_u2247::ADC_CALLBACK Topic Title: ADC_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_03620::ADC_ChannelResultIsReady@ADC_CORE_NUM@ADC_CHANNEL_NUM Topic Title: ADC_ChannelResultIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-ADC_CALLBACK Type</div>
+ADC_ChannelResultIsReady Function</div>
 </div>
 </div>
 
@@ -49,19 +49,20 @@ ADC_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Callback function Pointer&nbsp;</p>
-<p class="Element10">
-This data type defines the function signature for the adc peripheral callback function. The adc peripheral will call back the client's function with this signature at the end of conversion.</p></div>
+Indicates whether ADC conversion is complete on the specified ADC core's channel</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">ADC_CALLBACK</span></strong>)(<a href="00619.html" target="topic">ADC_STATUS</a> status, uintptr_t context);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">ADC_ChannelResultIsReady</span></strong>(
+    <a href="00607.html" target="topic">ADC_CORE_NUM</a> <strong><span style="color: #000000">core</span></strong>, 
+    <a href="00572.html" target="topic">ADC_CHANNEL_NUM</a> <strong><span style="color: #000000">channel</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="00592.html" target="topic">ADC_Initialize</a>() must have been called for the given adc peripheral instance and <a href="00583.html" target="topic">ADC_CallbackRegister</a>() must have been called to set the function to be called.</p></div>
+<a href="00647.html" target="topic">ADCx_Initialize</a>() function must have been called first for the associated instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,14 +79,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+core&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr><tr>
+ADC core n&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-status&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-interrupt status.&nbsp;</div></td></tr></table></div></div>
+ADC channel k&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -93,25 +94,26 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+bool - True if conversion is complete</p>
+<ul class="Element630">
+<li class="Element600">False if conversion is not complete</li>
+</ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The callback feature is only available when the library was generated with interrupt option (in MHC) enabled.</p></div>
+None</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">  <strong><span style="color: #000080">void</span></strong> ADC_ResultReadyCallback(<a href="00619.html" target="topic">ADC_STATUS</a> status, uintptr_t context )
-  {
-      uint16_t adcResult = 0;
-      adcResult = <a href="00586.html" target="topic">ADC_ConversionResultGet</a>();
-  }
-  <a href="00583.html" target="topic">ADC_CallbackRegister</a>(ADC_ResultReadyCallback, uintptr_t(NULL));</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">if</span></strong> (ADC_ChannelResultIsReady(ADC_CORE_NUM1, ADC_CH0))
+    {
+        <i><span style="color: #008000">// ADC conversion is complete. Read the conversion result.</span></i>
+    }</pre></div></div>
 </div>
 </div>
 </div>
@@ -119,7 +121,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="00164.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00165.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00582.html" target="topic">ADC_CALLBACK Type</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="00161.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00162.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="00582.html" target="topic">ADC_ChannelResultIsReady Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -127,13 +129,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00623.html" target="topic">Previous</a> | <a href="00165.html" target="topic">Up</a> | <a href="00593.html" target="topic">Next</a></div>
+<a href="00581.html" target="topic">Previous</a> | <a href="00162.html" target="topic">Up</a> | <a href="00615.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_u2247::ADC_CALLBACK Topic Title: ADC_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_03620::ADC_ChannelResultIsReady@ADC_CORE_NUM@ADC_CHANNEL_NUM Topic Title: ADC_ChannelResultIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

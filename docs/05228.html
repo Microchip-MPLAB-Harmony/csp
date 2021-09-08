@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PIO_PortInputEnable Function</title>
+<title>MCAN_MSG_RAM_CONFIG Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05077.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="05078.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="05228.html" target="topic">PIO_PortInputEnable Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="05171.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="05172.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05228.html" target="topic">MCAN_MSG_RAM_CONFIG Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05227.html" target="topic">Previous</a> | <a href="05078.html" target="topic">Up</a> | <a href="05229.html" target="topic">Next</a></div>
+<a href="05190.html" target="topic">Previous</a> | <a href="05172.html" target="topic">Up</a> | <a href="05189.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PortInputEnable@PIO_PORT@uint32_t Topic Title: PIO_PortInputEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mcan_11273::MCAN_MSG_RAM_CONFIG Topic Title: MCAN_MSG_RAM_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PIO_PortInputEnable Function</div>
+MCAN_MSG_RAM_CONFIG Structure</div>
 </div>
 </div>
 
@@ -49,57 +49,70 @@ PIO_PortInputEnable Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function enables selected IO pins of a port as input.</p></div>
+MCAN Message RAM Configuration&nbsp;</p>
+<p class="Element10">
+This data structure defines the MCAN Message RAM Base address for Rx FIFO0, Rx FIFO1, Rx Buffers, Tx Buffers/FIFO, Tx Event FIFO, Standard Message ID Filter and Extended Message ID Filter configuration.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PIO_PortInputEnable</span></strong>(
-    <a href="05221.html" target="topic">PIO_PORT</a> <strong><span style="color: #000000">port</span></strong>, 
-    uint32_t <strong><span style="color: #000000">mask</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  mcan_rxf0e_registers_t * <strong><span style="color: #000000">rxFIFO0Address</span></strong>;
+  mcan_rxf1e_registers_t * <strong><span style="color: #000000">rxFIFO1Address</span></strong>;
+  mcan_rxbe_registers_t * <strong><span style="color: #000000">rxBuffersAddress</span></strong>;
+  mcan_txbe_registers_t * <strong><span style="color: #000000">txBuffersAddress</span></strong>;
+  mcan_txefe_registers_t * <strong><span style="color: #000000">txEventFIFOAddress</span></strong>;
+  mcan_sidfe_registers_t * <strong><span style="color: #000000">stdMsgIDFilterAddress</span></strong>;
+  mcan_xidfe_registers_t * <strong><span style="color: #000000">extMsgIDFilterAddress</span></strong>;
+} MCAN_MSG_RAM_CONFIG;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-One or more of the of the IO ports from the enum <a href="05221.html" target="topic">PIO_PORT</a>.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-mask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be setup as inputs.</p>
-<ul class="Element630">
-<li class="Element600">1's - Will set corresponding IO pins as input(s).</li>
-<li class="Element600">0's - Will cause the direction of the corresponding IO pins to remain unchanged.</li>
-</ul><p class="Element307">
-&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+mcan_rxf0e_registers_t * rxFIFO0Address;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Rx FIFO0 base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+mcan_rxf1e_registers_t * rxFIFO1Address;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Rx FIFO1 base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+mcan_rxbe_registers_t * rxBuffersAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Rx Buffer base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+mcan_txbe_registers_t * txBuffersAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Tx Buffers/FIFO base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+mcan_txefe_registers_t * txEventFIFOAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Tx Event FIFO base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+mcan_sidfe_registers_t * stdMsgIDFilterAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Standard Message ID Filter base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+mcan_xidfe_registers_t * extMsgIDFilterAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Extended Message ID Filter base address&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -108,20 +121,12 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Make PC5 and PC7 pins as input</span></i>
-    PIO_PortInputEnable(PIO_PORT_C, 0x00A0);</pre></div></div>
-</div>
-</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05077.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="05078.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="05228.html" target="topic">PIO_PortInputEnable Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="05171.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="05172.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05228.html" target="topic">MCAN_MSG_RAM_CONFIG Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -129,13 +134,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05227.html" target="topic">Previous</a> | <a href="05078.html" target="topic">Up</a> | <a href="05229.html" target="topic">Next</a></div>
+<a href="05190.html" target="topic">Previous</a> | <a href="05172.html" target="topic">Up</a> | <a href="05189.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PortInputEnable@PIO_PORT@uint32_t Topic Title: PIO_PortInputEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mcan_11273::MCAN_MSG_RAM_CONFIG Topic Title: MCAN_MSG_RAM_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

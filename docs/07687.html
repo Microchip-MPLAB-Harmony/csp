@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SUPC_TSSEL Enumeration</title>
+<title>RTC_Timer32FrequencyGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07601.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="07602.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="07687.html" target="topic">SUPC_TSSEL Enumeration</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07548.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="07549.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="07554.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07687.html" target="topic">RTC_Timer32FrequencyGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07681.html" target="topic">Previous</a> | <a href="07602.html" target="topic">Up</a> | <a href="07690.html" target="topic">Next</a></div>
+<a href="07690.html" target="topic">Previous</a> | <a href="07554.html" target="topic">Up</a> | <a href="07688.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_u2407::SUPC_TSSEL Topic Title: SUPC_TSSEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer32FrequencyGet Topic Title: RTC_Timer32FrequencyGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SUPC_TSSEL Enumeration</div>
+RTC_Timer32FrequencyGet Function</div>
 </div>
 </div>
 
@@ -49,16 +49,25 @@ SUPC_TSSEL Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SUPC Temperature Sensor Selection&nbsp;</p>
-<p class="Element10">
-There are two temperature sensor channels controlled by SUPC. This enum type can be used to specify the channel when calling the APIs which controls temperature sensors channels. eg. <a href="07684.html" target="topic">SUPC_SelectTempSenorChannel</a>( SUPC_TSSEL_PTAT );</p></div>
+This function returns the frequency at which the 32-bit timer counter is operating. The return value can be used to compute the period that needs to be set in order to operate the timer counter at a desired frequency.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">SUPC_TSSEL_PTAT</span></strong> = 0,
-  <strong><span style="color: #000000">SUPC_TSSEL_CTAT</span></strong> = 1
-} SUPC_TSSEL;</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">RTC_Timer32FrequencyGet</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Returns the frequency at which the 32-bit timer counter is operating.</p></div>
+</div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
@@ -66,12 +75,25 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Compute the period required to operate the timer at 1KHz.</span></i>
+
+    uint32_t desiredFrequency = 1000;
+    uint32_t period = RTC_Timer32FrequencyGet()/desiredFrequency;
+    <a href="07652.html" target="topic">RTC_Initialize</a>();
+    <a href="07683.html" target="topic">RTC_Timer32CompareSet</a>(period);
+</pre></div></div>
+</div>
+</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07601.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="07602.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="07687.html" target="topic">SUPC_TSSEL Enumeration</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07548.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="07549.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="07554.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07687.html" target="topic">RTC_Timer32FrequencyGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -79,13 +101,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07681.html" target="topic">Previous</a> | <a href="07602.html" target="topic">Up</a> | <a href="07690.html" target="topic">Next</a></div>
+<a href="07690.html" target="topic">Previous</a> | <a href="07554.html" target="topic">Up</a> | <a href="07688.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_u2407::SUPC_TSSEL Topic Title: SUPC_TSSEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer32FrequencyGet Topic Title: RTC_Timer32FrequencyGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

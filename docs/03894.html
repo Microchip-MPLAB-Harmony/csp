@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>HSMCI_SPEED_MODE Enumeration</title>
+<title>FLEXCOM_SPI_TRANSFER_SETUP Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="03830.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="03831.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03894.html" target="topic">HSMCI_SPEED_MODE Enumeration</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="03658.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="03659.html" target="topic">SPI</a> &gt; <a href="03665.html" target="topic">Master</a> &gt; <a href="03664.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03894.html" target="topic">FLEXCOM_SPI_TRANSFER_SETUP Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03887.html" target="topic">Previous</a> | <a href="03831.html" target="topic">Up</a> | <a href="03898.html" target="topic">Next</a></div>
+<a href="03883.html" target="topic">Previous</a> | <a href="03664.html" target="topic">Up</a> | <a href="03870.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_SPEED_MODE Topic Title: HSMCI_SPEED_MODE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_spi::FLEXCOM_SPI_TRANSFER_SETUP Topic Title: FLEXCOM_SPI_TRANSFER_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-HSMCI_SPEED_MODE Enumeration</div>
+FLEXCOM_SPI_TRANSFER_SETUP Structure</div>
 </div>
 </div>
 
@@ -49,16 +49,18 @@ HSMCI_SPEED_MODE Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-HSMCI speed mode&nbsp;</p>
+FLEXCOM SPI Setup Parameters&nbsp;</p>
 <p class="Element10">
-The enumeration is used to identify the bus width mode for the HSMCI bus.</p></div>
+This structure identifies the possible setup parameters for FLEXCOM SPI which can be changed dynamically if needed.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">HSMCI_SPEED_MODE_NORMAL</span></strong> = 0,
-  <strong><span style="color: #000000">HSMCI_SPEED_MODE_HIGH</span></strong>
-} HSMCI_SPEED_MODE;</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  uint32_t <strong><span style="color: #000000">clockFrequency</span></strong>;
+  <a href="03875.html" target="topic">FLEXCOM_SPI_CLOCK_PHASE</a> <strong><span style="color: #000000">clockPhase</span></strong>;
+  <a href="03879.html" target="topic">FLEXCOM_SPI_CLOCK_POLARITY</a> <strong><span style="color: #000000">clockPolarity</span></strong>;
+  <a href="03883.html" target="topic">FLEXCOM_SPI_DATA_BITS</a> <strong><span style="color: #000000">dataBits</span></strong>;
+} FLEXCOM_SPI_TRANSFER_SETUP;</pre></div></div>
 <a name="4D656D62657273"></a><div class="Element14">
 Members</div>
 <div class="Element11">
@@ -74,14 +76,24 @@ Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-HSMCI_SPEED_MODE_NORMAL = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+uint32_t clockFrequency;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-HSMCI speed normal&nbsp;</div></td></tr><tr>
+Baud Rate or clock frequency&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-HSMCI_SPEED_MODE_HIGH&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+FLEXCOM_SPI_CLOCK_PHASE clockPhase;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-HSMCI speed high speed&nbsp;</div></td></tr></table></div></div>
+Clock Phase&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_CLOCK_POLARITY clockPolarity;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Clock Polarity&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_DATA_BITS dataBits;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of bits per transfer&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -96,7 +108,7 @@ None.</p></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="03830.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="03831.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03894.html" target="topic">HSMCI_SPEED_MODE Enumeration</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="03658.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="03659.html" target="topic">SPI</a> &gt; <a href="03665.html" target="topic">Master</a> &gt; <a href="03664.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03894.html" target="topic">FLEXCOM_SPI_TRANSFER_SETUP Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -104,13 +116,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03887.html" target="topic">Previous</a> | <a href="03831.html" target="topic">Up</a> | <a href="03898.html" target="topic">Next</a></div>
+<a href="03883.html" target="topic">Previous</a> | <a href="03664.html" target="topic">Up</a> | <a href="03870.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_SPEED_MODE Topic Title: HSMCI_SPEED_MODE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_spi::FLEXCOM_SPI_TRANSFER_SETUP Topic Title: FLEXCOM_SPI_TRANSFER_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

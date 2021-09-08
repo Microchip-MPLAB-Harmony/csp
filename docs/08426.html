@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>SERCOMx_I2C_ErrorGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08421.html" target="topic">TWI Peripheral Library Help</a> &gt; <a href="08426.html" target="topic">Using the Library</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08338.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="08316.html" target="topic">I2C</a> &gt; <a href="08327.html" target="topic">Slave</a> &gt; <a href="08332.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="08426.html" target="topic">SERCOMx_I2C_ErrorGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="08417.html" target="topic">Previous</a> | <a href="08421.html" target="topic">Up</a> | <a href="08422.html" target="topic">Next</a></div>
+<a href="08428.html" target="topic">Previous</a> | <a href="08332.html" target="topic">Up</a> | <a href="08430.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWI 6212 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c_slave::SERCOMx_I2C_ErrorGet Topic Title: SERCOMx_I2C_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+SERCOMx_I2C_ErrorGet Function</div>
 </div>
 </div>
 
@@ -49,70 +49,57 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The TWI peripheral library supports the following I2C transfers:
-<ul class="Element632">
-<li class="Element602"><strong>Master Write:</strong> The master writes a block of data to the slave</li>
-<li class="Element602"><strong>Master Read: </strong>The master reads a block of data from the slave</li>
-<li class="Element602"><strong>Master Write/Read:</strong> The master writes and then reads back a block of data from slave.</li>
-</ul>&nbsp;</p>
+This function returns the I2C error that occurred on the bus. The function can be called to identify the error cause.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="08402.html" target="topic">SERCOM_I2C_SLAVE_ERROR</a> <strong><span style="color: #000000">SERCOMx_I2C_ErrorGet</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The block of data is transferred in a non-blocking manner using a peripheral interrupt. It provides both polling and callback methods to indicate the end of the transfer.
-<ul class="Element632">
-<li class="Element602">With polling, the application will need to continuously poll to check if the transfer is completed.</li>
-<li class="Element602">With callback, the registered callback function will be called when the transfer is completed. This means the application do not have to poll continuously.</li>
-</ul>&nbsp;</p>
+<a href="08427.html" target="topic">SERCOMx_I2C_Initialize</a> must have been called for the associated SERCOM I2C instance.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The example code demonstrates the write operation using polling method. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> APP_SLAVE_ADDR 0x0057
-<strong><span style="color: #000080">#define</span></strong> NUM_BYTES      10
-
-uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-    <i><span style="color: #008000">/* Write data to the TWI0 Slave */</span></i>
-    TWIx_Write(APP_SLAVE_ADDR, &amp;myWriteData[0], NUM_BYTES);
-
-    <i><span style="color: #008000">/* Poll and wait for the transfer to complete */</span></i>
-    <strong><span style="color: #000080">while</span></strong>(TWIx_IsBusy());
-
-    <i><span style="color: #008000">/* Check if any error occurred */</span></i>
-    <strong><span style="color: #000080">if</span></strong>(TWIx_ErrorGet() == TWI_ERROR_NONE)
+<a href="08402.html" target="topic">SERCOM_I2C_SLAVE_ERROR</a> - enum identifying the error that has occurred.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="08402.html" target="topic">SERCOM_I2C_SLAVE_ERROR</a> i2c_error;
+    
+    i2c_error = SERCOM1_I2C_ErrorGet();
+    
+    <strong><span style="color: #000080">if</span></strong>(i2c_error)
     {
-        <i><span style="color: #008000">//Transfer is completed successfully</span></i>
+        <i><span style="color: #008000">//Error occurred during transfer.</span></i>
+        <strong><span style="color: #000080">if</span></strong> (i2c_error &amp; SERCOM_I2C_SLAVE_ERROR_BUSERR)
+        {
+            <i><span style="color: #008000">// I2C Bus error has occured</span></i>
+        }
+        <strong><span style="color: #000080">if</span></strong> (i2c_error &amp; SERCOM_I2C_SLAVE_ERROR_COLL)
+        {
+            <i><span style="color: #008000">// I2C bus collision error has occured</span></i>
+        }
+        <i><span style="color: #008000">// Handle other error bits here ...</span></i>
     }
     <strong><span style="color: #000080">else</span></strong>
     {
-        <i><span style="color: #008000">//Error occurred during transfer.</span></i>
-    }
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The example code demonstrates write operation using callback method. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> APP_SLAVE_ADDR 0x0057
-<strong><span style="color: #000080">#define</span></strong> NUM_BYTES      10
-
-uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-
-<strong><span style="color: #000080">void</span></strong> TWIx_Callback(uintptr_t context)
-{
-    <strong><span style="color: #000080">if</span></strong>(TWIx_ErrorGet() == TWI_ERROR_NONE)
-    {
-        <i><span style="color: #008000">//Transfer is completed successfully</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//Error occurred during transfer.</span></i>
-    }
-}
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-    <i><span style="color: #008000">/* Register Callback function */</span></i>
-    TWIx_CallbackRegister(TWIx_Callback, (uintptr_t)NULL);
-
-    <i><span style="color: #008000">/* Submit Write Request */</span></i>
-    TWIx_Write(APP_SLAVE_ADDR, &amp;myWriteData[0], NUM_BYTES);
-}</pre></div></div>
+        <i><span style="color: #008000">//Transfer is completed successfully            </span></i>
+    }</pre></div></div>
 </div>
 </div>
 </div>
@@ -120,7 +107,7 @@ uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', 
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08421.html" target="topic">TWI Peripheral Library Help</a> &gt; <a href="08426.html" target="topic">Using the Library</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08338.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="08316.html" target="topic">I2C</a> &gt; <a href="08327.html" target="topic">Slave</a> &gt; <a href="08332.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="08426.html" target="topic">SERCOMx_I2C_ErrorGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -128,13 +115,13 @@ uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="08417.html" target="topic">Previous</a> | <a href="08421.html" target="topic">Up</a> | <a href="08422.html" target="topic">Next</a></div>
+<a href="08428.html" target="topic">Previous</a> | <a href="08332.html" target="topic">Up</a> | <a href="08430.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWI 6212 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c_slave::SERCOMx_I2C_ErrorGet Topic Title: SERCOMx_I2C_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

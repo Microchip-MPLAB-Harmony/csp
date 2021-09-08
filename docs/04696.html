@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NVMCTRL_CALLBACK Type</title>
+<title>GPIO_PortInterruptEnable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="04621.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04622.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04696.html" target="topic">NVMCTRL_CALLBACK Type</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="04128.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="04129.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="04696.html" target="topic">GPIO_PortInterruptEnable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04736.html" target="topic">Previous</a> | <a href="04622.html" target="topic">Up</a> | <a href="04708.html" target="topic">Next</a></div>
+<a href="04695.html" target="topic">Previous</a> | <a href="04129.html" target="topic">Up</a> | <a href="04697.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_CALLBACK Topic Title: NVMCTRL_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_02922::GPIO_PortInterruptEnable@GPIO_PORT@uint32_t Topic Title: GPIO_PortInterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NVMCTRL_CALLBACK Type</div>
+GPIO_PortInterruptEnable Function</div>
 </div>
 </div>
 
@@ -49,13 +49,23 @@ NVMCTRL_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Callback Function Pointer&nbsp;</p>
-<p class="Element10">
-This data type defines the function signature for the NVMCTRL peripheral callback function. The NVMCTRL peripheral library will call back the client's function with this signature when an operation has completed and the NVMCTRL is ready to accept a new operation request. A function of this type should be registered by calling the NVMCTRL_CallbackRegister function.</p></div>
+This function enables interrupt on selected IO pins of selected port.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">NVMCTRL_CALLBACK</span></strong>)(uint8_t int_flags, uintptr_t context);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">GPIO_PortInterruptEnable</span></strong>(
+    <a href="04688.html" target="topic">GPIO_PORT</a> <strong><span style="color: #000000">port</span></strong>, 
+    uint32_t <strong><span style="color: #000000">mask</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Corresponding pins must be configured in interrupt mode in MHC Pin Manager.&nbsp;</p>
+<p class="Element10">
+<a href="04607.html" target="topic">GPIO_Initialize</a>() must have been called.&nbsp;</p></div>
+</div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
 <div class="Element11">
@@ -71,14 +81,19 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-int_flags&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Returns the INTFLAG register&nbsp;</div></td></tr><tr>
+One of the IO ports from the enum <a href="04688.html" target="topic">GPIO_PORT</a><br>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+mask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+Is a 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will have interrupt enabled.</p>
+<ul class="Element630">
+<li class="Element600">The bit positions of mask value which are set as 1, IO interrupt of corresponding IO pin of the selected port will be enabled.</li>
+<li class="Element600">The bit positions of mask value which are cleared to 0, IO interrupt of corresponding IO pin of the selected port will remain unchanged.</li>
+</ul><p class="Element307">
+&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -93,29 +108,14 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The callback feature is only available when the library was generated with interrupt option (in MHC) enabled.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-uintptr_t flash_context;
-<i><span style="color: #008000">// Callback is called when an operation completes.</span></i>
-<strong><span style="color: #000080">void</span></strong> flash_cb(uint8_t int_flags, uintptr_t context)
-{
-    <i><span style="color: #008000">//Code to check int_flags and decide next action</span></i>
-}
-
-<a href="04707.html" target="topic">NVMCTRL_Initialize</a>();
-
-<i><span style="color: #008000">// Register the callback</span></i>
-<a href="04722.html" target="topic">NVMCTRL_MainCallbackRegister</a>(flash_cb, flash_context);
-
-<i><span style="color: #008000">// Perform some operation.</span></i>
-<a href="04723.html" target="topic">NVMCTRL_PageWrite</a>(data_to_fill, TEST_ADDRESS);
-
-<i><span style="color: #008000">// The callback 'flash_cb' will be invoked after the above operation is done.</span></i></pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Enable IO interrupt for RC5 and RC7 pins</span></i>
+    GPIO_PortInterruptEnable(GPIO_PORT_C, 0x00A0);</pre></div></div>
 </div>
 </div>
 </div>
@@ -123,7 +123,7 @@ uintptr_t flash_context;
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="04621.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04622.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04696.html" target="topic">NVMCTRL_CALLBACK Type</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="04128.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="04129.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="04696.html" target="topic">GPIO_PortInterruptEnable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -131,13 +131,13 @@ uintptr_t flash_context;
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04736.html" target="topic">Previous</a> | <a href="04622.html" target="topic">Up</a> | <a href="04708.html" target="topic">Next</a></div>
+<a href="04695.html" target="topic">Previous</a> | <a href="04129.html" target="topic">Up</a> | <a href="04697.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_CALLBACK Topic Title: NVMCTRL_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_02922::GPIO_PortInterruptEnable@GPIO_PORT@uint32_t Topic Title: GPIO_PortInterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

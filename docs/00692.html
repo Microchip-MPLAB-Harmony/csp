@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>ADCx_LastConversionResultGet Function</title>
+<title>ADC_INTERRUPT_MASK Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="00174.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00175.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00692.html" target="topic">ADCx_LastConversionResultGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="00171.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00172.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00692.html" target="topic">ADC_INTERRUPT_MASK Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00684.html" target="topic">Previous</a> | <a href="00175.html" target="topic">Up</a> | <a href="00685.html" target="topic">Next</a></div>
+<a href="00667.html" target="topic">Previous</a> | <a href="00172.html" target="topic">Up</a> | <a href="00221.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_u2500::ADCx_LastConversionResultGet Topic Title: ADCx_LastConversionResultGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_44073::ADC_INTERRUPT_MASK Topic Title: ADC_INTERRUPT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-ADCx_LastConversionResultGet Function</div>
+ADC_INTERRUPT_MASK Enumeration</div>
 </div>
 </div>
 
@@ -49,53 +49,40 @@ ADCx_LastConversionResultGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the result of previous completed conversion of the channel.</p></div>
+Interrupt sources number&nbsp;</p>
+<p class="Element10">
+This enumeration identifies ADC channel end of conversion (EOC) and Comparison event interrupt sources number. This may be ORed together to enable/disable multiple interrupts.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">ADCx_LastConversionResultGet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="00688.html" target="topic">ADCx_Initialize</a>() function must have been called first for the associated instance and conversion must have been started. Also check whether result is ready to read.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-adcResult - result of the previous adc conversion of the channel.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_0_MASK</span></strong> = (1U &lt;&lt; 0U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_1_MASK</span></strong> = (1U &lt;&lt; 1U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_2_MASK</span></strong> = (1U &lt;&lt; 2U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_3_MASK</span></strong> = (1U &lt;&lt; 3U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_4_MASK</span></strong> = (1U &lt;&lt; 4U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_5_MASK</span></strong> = (1U &lt;&lt; 5U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_6_MASK</span></strong> = (1U &lt;&lt; 6U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_7_MASK</span></strong> = (1U &lt;&lt; 7U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_8_MASK</span></strong> = (1U &lt;&lt; 8U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_9_MASK</span></strong> = (1U &lt;&lt; 9U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_10_MASK</span></strong> = (1U &lt;&lt; 10U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_11_MASK</span></strong> = (1U &lt;&lt; 11U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_COMPE_MASK</span></strong> = (1U &lt;&lt; 26U)
+} ADC_INTERRUPT_MASK;</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function can be called from interrupt or by polling the status when result is available. User should decode the result based on result sign mode (differential mode) and result resolution (8, 10, 12 or 16 bit) configuration.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">  uint16_t adcResultPrev = 0;
-  uint16_t adcResultCurrent = 0;
-  <a href="00688.html" target="topic">ADCx_Initialize</a>();
-  <a href="00684.html" target="topic">ADCx_ConversionStart</a>();
-  <strong><span style="color: #000080">while</span></strong>(!<a href="00685.html" target="topic">ADCx_ConversionStatusGet</a>());
-  <a href="00684.html" target="topic">ADCx_ConversionStart</a>();
-  <strong><span style="color: #000080">while</span></strong>(!<a href="00685.html" target="topic">ADCx_ConversionStatusGet</a>());
-  adcResultPrev = ADCx_LastConversionResultGet();
-  adcResultCurrent = <a href="00683.html" target="topic">ADCx_ConversionResultGet</a>();</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="00174.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00175.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00692.html" target="topic">ADCx_LastConversionResultGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="00171.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00172.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00692.html" target="topic">ADC_INTERRUPT_MASK Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +90,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00684.html" target="topic">Previous</a> | <a href="00175.html" target="topic">Up</a> | <a href="00685.html" target="topic">Next</a></div>
+<a href="00667.html" target="topic">Previous</a> | <a href="00172.html" target="topic">Up</a> | <a href="00221.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_u2500::ADCx_LastConversionResultGet Topic Title: ADCx_LastConversionResultGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_44073::ADC_INTERRUPT_MASK Topic Title: ADC_INTERRUPT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

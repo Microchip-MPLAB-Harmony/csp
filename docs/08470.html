@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TWIHSx_CallbackRegister Function</title>
+<title>SERCOMx_SPI_Ready Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08446.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="08448.html" target="topic">Master</a> &gt; <a href="08447.html" target="topic">Library Interface</a> &gt; b) Setup Function &gt; <a href="08470.html" target="topic">TWIHSx_CallbackRegister Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08338.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="08339.html" target="topic">SPI</a> &gt; <a href="08347.html" target="topic">Slave</a> &gt; <a href="08352.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="08470.html" target="topic">SERCOMx_SPI_Ready Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="08475.html" target="topic">Previous</a> | <a href="08447.html" target="topic">Up</a> | <a href="08474.html" target="topic">Next</a></div>
+<a href="08471.html" target="topic">Previous</a> | <a href="08352.html" target="topic">Up</a> | <a href="08469.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twihs_11210_master::TWIHSx_CallbackRegister@TWIHS_CALLBACK@uintptr_t Topic Title: TWIHSx_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_spi_slave::SERCOMx_SPI_Ready Topic Title: SERCOMx_SPI_Ready Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TWIHSx_CallbackRegister Function</div>
+SERCOMx_SPI_Ready Function</div>
 </div>
 </div>
 
@@ -49,45 +49,17 @@ TWIHSx_CallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the pointer to a client function to be called &quot;back&quot; when the given TWIHS's transfer events occur. It also passes a context value (usually a pointer to a context structure) that is passed into the function when it is called.</p></div>
+This function drives the SPI slave busy line to ready state. The slave busy line is driven to active state (busy) when the chip select is driven active by the SPI master. When the data transfer is complete, the chip select is driven inactive and a callback is given to the application. The application can parse the received data and prepare a response for the SPI master. Once the response is ready, the SPI slave can release the busy line by calling this API which drives the busy line to inactive state (not busy). All this while the SPI master must wait for the busy line to become inactive (not busy) before initiating a new transfer with the SPI slave.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TWIHSx_CallbackRegister</span></strong>(
-    <a href="08464.html" target="topic">TWIHS_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">contextHandle</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SERCOMx_SPI_Ready</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="08472.html" target="topic">TWIHSx_Initialize</a> must have been called for the associated TWIHS instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A pointer to a function with a calling signature defined by the <a href="08464.html" target="topic">TWIHS_CALLBACK</a> data type.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
-</div>
+The <a href="08465.html" target="topic">SERCOMx_SPI_Initialize</a>() should have been called.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -101,13 +73,50 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The context parameter is ignored if the pointer passed is NULL. To disable the callback function, pass a NULL for the callback parameter. See the <a href="08464.html" target="topic">TWIHS_CALLBACK</a> type definition for additional information.</p></div>
+This API is available only if the Busy signal feature is enabled in MHC.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">TWIHS1_CallbackRegister(MyTWIHSCallback, &amp;myData);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint8_t APP_TxData[10];
+    size_t nBytesRead;
+    
+    <strong><span style="color: #000080">void</span></strong> SPIEventHandler(uintptr_t context )
+    {                   
+        <strong><span style="color: #000080">if</span></strong> (SERCOM1_SPI_ErrorGet() == SPI_SLAVE_ERROR_NONE)
+        {
+            nBytesRead = SERCOM1_SPI_Read(APP_RxData, SERCOM1_SPI_ReadCountGet()); 
+
+            <strong><span style="color: #000080">switch</span></strong>(APP_RxData[0])
+            {            
+                <strong><span style="color: #000080">case</span></strong> APP_CMD_WRITE:
+                    <i><span style="color: #008000">// SPI master is writing data to SPI slave</span></i>
+                    <i><span style="color: #008000">// Keep the busy line asserted until the write operation is complete</span></i>
+                    <i><span style="color: #008000">// Busy line will be de-asserted later when the write operation is complete</span></i>
+                    appData.status.busy = 1;
+                    
+                    <i><span style="color: #008000">// Change the state to perform write operation</span></i>
+                    state = APP_STATE_WRITE; 
+                    
+                    <strong><span style="color: #000080">break</span></strong>;
+
+                <strong><span style="color: #000080">case</span></strong> APP_CMD_READ:
+
+                    <i><span style="color: #008000">// SPI master is reading data from SPI slave</span></i>
+                    <i><span style="color: #008000">// Provide the requested data and drive the busy line inactive</span></i>
+                    SERCOM1_SPI_Write(APP_TxData, 10);
+                    <strong><span style="color: #000080">break</span></strong>;
+            } 
+
+            <strong><span style="color: #000080">if</span></strong> (appData.status.busy == 0)
+            {
+                <i><span style="color: #008000">// Indicate to SPI Master that slave is ready for data transfer</span></i>
+                <i><span style="color: #008000">// This if condition will be executed for the APP_CMD_READ case.</span></i>
+                SERCOM1_SPI_Ready();
+            }
+        }       
+    }</pre></div></div>
 </div>
 </div>
 </div>
@@ -115,7 +124,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08446.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="08448.html" target="topic">Master</a> &gt; <a href="08447.html" target="topic">Library Interface</a> &gt; b) Setup Function &gt; <a href="08470.html" target="topic">TWIHSx_CallbackRegister Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08338.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="08339.html" target="topic">SPI</a> &gt; <a href="08347.html" target="topic">Slave</a> &gt; <a href="08352.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="08470.html" target="topic">SERCOMx_SPI_Ready Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -123,13 +132,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="08475.html" target="topic">Previous</a> | <a href="08447.html" target="topic">Up</a> | <a href="08474.html" target="topic">Next</a></div>
+<a href="08471.html" target="topic">Previous</a> | <a href="08352.html" target="topic">Up</a> | <a href="08469.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twihs_11210_master::TWIHSx_CallbackRegister@TWIHS_CALLBACK@uintptr_t Topic Title: TWIHSx_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_spi_slave::SERCOMx_SPI_Ready Topic Title: SERCOMx_SPI_Ready Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

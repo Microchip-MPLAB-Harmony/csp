@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>QSPI_LANE_WIDTH Enumeration</title>
+<title>PDEC_COUNTER_CALLBACK_OBJ Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05986.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05987.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="06039.html" target="topic">QSPI_LANE_WIDTH Enumeration</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="06026.html" target="topic">PDEC Peripheral Library Help</a> &gt; <a href="06005.html" target="topic">COUNTER</a> &gt; <a href="06010.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06039.html" target="topic">PDEC_COUNTER_CALLBACK_OBJ Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06034.html" target="topic">Previous</a> | <a href="05987.html" target="topic">Up</a> | <a href="06047.html" target="topic">Next</a></div>
+<a href="06038.html" target="topic">Previous</a> | <a href="06010.html" target="topic">Up</a> | <a href="06042.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qspi_u2008::QSPI_LANE_WIDTH Topic Title: QSPI_LANE_WIDTH Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pdec_u2263::PDEC_COUNTER_CALLBACK_OBJ Topic Title: PDEC_COUNTER_CALLBACK_OBJ Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-QSPI_LANE_WIDTH Enumeration</div>
+PDEC_COUNTER_CALLBACK_OBJ Structure</div>
 </div>
 </div>
 
@@ -49,21 +49,16 @@ QSPI_LANE_WIDTH Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-QSPI Lane Width&nbsp;</p>
+Callback structure for counter mode&nbsp;</p>
 <p class="Element10">
-This data type can be used to specify the lane length to be used for QSPI transaction</p></div>
+This stores the callback function pointer and context</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">SINGLE_BIT_SPI</span></strong> = QSPI_IFR_WIDTH_SINGLE_BIT_SPI,
-  <strong><span style="color: #000000">DUAL_OUTPUT</span></strong> = QSPI_IFR_WIDTH_DUAL_OUTPUT,
-  <strong><span style="color: #000000">QUAD_OUTPUT</span></strong> = QSPI_IFR_WIDTH_QUAD_OUTPUT,
-  <strong><span style="color: #000000">DUAL_IO</span></strong> = QSPI_IFR_WIDTH_DUAL_IO,
-  <strong><span style="color: #000000">QUAD_IO</span></strong> = QSPI_IFR_WIDTH_QUAD_IO,
-  <strong><span style="color: #000000">DUAL_CMD</span></strong> = QSPI_IFR_WIDTH_DUAL_CMD,
-  <strong><span style="color: #000000">QUAD_CMD</span></strong> = QSPI_IFR_WIDTH_QUAD_CMD
-} QSPI_LANE_WIDTH;</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <a href="06038.html" target="topic">PDEC_COUNTER_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>;
+  uintptr_t <strong><span style="color: #000000">context</span></strong>;
+} PDEC_COUNTER_CALLBACK_OBJ;</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
@@ -76,7 +71,7 @@ None.</p></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05986.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05987.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="06039.html" target="topic">QSPI_LANE_WIDTH Enumeration</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="06026.html" target="topic">PDEC Peripheral Library Help</a> &gt; <a href="06005.html" target="topic">COUNTER</a> &gt; <a href="06010.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06039.html" target="topic">PDEC_COUNTER_CALLBACK_OBJ Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -84,13 +79,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06034.html" target="topic">Previous</a> | <a href="05987.html" target="topic">Up</a> | <a href="06047.html" target="topic">Next</a></div>
+<a href="06038.html" target="topic">Previous</a> | <a href="06010.html" target="topic">Up</a> | <a href="06042.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qspi_u2008::QSPI_LANE_WIDTH Topic Title: QSPI_LANE_WIDTH Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pdec_u2263::PDEC_COUNTER_CALLBACK_OBJ Topic Title: PDEC_COUNTER_CALLBACK_OBJ Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

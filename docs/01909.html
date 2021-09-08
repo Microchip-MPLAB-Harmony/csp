@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DMAC_LinkedListDescriptorSetup Function</title>
+<title>MCLK_CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="01786.html" target="topic">DMAC Peripheral Library Help</a> &gt; <a href="01787.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01909.html" target="topic">DMAC_LinkedListDescriptorSetup Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07952.html" target="topic">Clock (SAM L22) Peripheral Library Help</a> &gt; <a href="07953.html" target="topic">Library Interface</a> &gt; b) Setup Function &gt; <a href="01909.html" target="topic">MCLK_CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01893.html" target="topic">Previous</a> | <a href="01787.html" target="topic">Up</a> | <a href="01888.html" target="topic">Next</a></div>
+<a href="01911.html" target="topic">Previous</a> | <a href="07953.html" target="topic">Up</a> | <a href="01914.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DMAC_LinkedListDescriptorSetup@dmac_descriptor_registers_t*@DMAC_CHANNEL_CONFIG@void *@void *@size_t@dmac_descriptor_registers_t* Topic Title: DMAC_LinkedListDescriptorSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: clk_sam_l22::MCLK_CallbackRegister@MCLK_CKRDY_CALLBACK@uintptr_t Topic Title: MCLK_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DMAC_LinkedListDescriptorSetup Function</div>
+MCLK_CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,27 +49,20 @@ DMAC_LinkedListDescriptorSetup Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets up DMA linked list descriptor. Once the descriptor is setup, <a href="01891.html" target="topic">DMAC_ChannelLinkedListTransfer</a> API can be used to initate the linked list mode of DMA transfer.</p></div>
+This function register the function to be called when the MCLK is ready.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">DMAC_LinkedListDescriptorSetup</span></strong>(
-    dmac_descriptor_registers_t* <strong><span style="color: #000000">currentDescriptor</span></strong>, 
-    DMAC_CHANNEL_CONFIG <strong><span style="color: #000000">setting</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">srcAddr</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">destAddr</span></strong>, 
-    size_t <strong><span style="color: #000000">blockSize</span></strong>, 
-    dmac_descriptor_registers_t* <strong><span style="color: #000000">nextDescriptor</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">MCLK_CallbackRegister</span></strong>(
+    <a href="01910.html" target="topic">MCLK_CKRDY_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">DMAC should have been initialized by calling the <a href="01908.html" target="topic">DMAC_Initialize</a>.</li>
-<li class="Element600">The Linked List option should have been enabled in MHC DMA manager</li>
-</ul></div>
+<p class="Element10">
+The MCLK should have been configured in MHC and enabled.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -86,34 +79,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-currentDescriptor&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Address of current descriptor<br>&nbsp;</div></td></tr><tr>
+Pointer to the <a href="01910.html" target="topic">MCLK_CKRDY_CALLBACK</a> type of function that will be called when a clock failure is detected. This can be NULL, in which case no callback will be generated.<br>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-setting&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Block transfer setting of current descriptor<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-srcAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Source address of the DMAC transfer<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-destAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Destination address of the DMAC transfer<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-blockSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Size of the transfer block in bytes.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-nextDescriptor&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Address of next descriptor. if user wants to stop the transfer, this argument should be NULL.&nbsp;</div></td></tr></table></div></div>
+Context value to be passed into the callback function when it called.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -134,31 +107,10 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t txPingBuffer[] = &quot;INITIAL_DMA_DATA_FROM_PING_BUFFER&quot;;
-uint8_t txPongBuffer[] = &quot;initial_dma_data_from_pong_buffer&quot;;
-
-__attribute__((__aligned__(16))) <strong><span style="color: #000080">static</span></strong> dmac_descriptor_registers_t pTxLinkedListDesc[2];
-
-<strong><span style="color: #000080">#define</span></strong> BUFEER0_TX_BTCTRL  (DMAC_BTCTRL_STEPSIZE_X1 | DMAC_BTCTRL_SRCINC_Msk |     
-                            DMAC_BTCTRL_BEATSIZE_BYTE | DMAC_BTCTRL_BLOCKACT_INT | DMAC_BTCTRL_VALID_Msk)
-
-    <i><span style="color: #008000">// Setup DMA linked list</span></i>
-    DMAC_LinkedListDescriptorSetup (&amp;pTxLinkedListDesc[0],
-                                    BUFEER0_TX_BTCTRL,
-                                    (<strong><span style="color: #000080">void</span></strong> *)&amp;txPingBuffer[0],
-                                    (<strong><span style="color: #000080">void</span></strong> *)&amp;SERCOM1_REGS-&gt;SPIM.SERCOM_DATA,
-                                    <strong><span style="color: #000080">sizeof</span></strong>(txPingBuffer),
-                                    &amp;pTxLinkedListDesc[1]);
-    DMAC_LinkedListDescriptorSetup (&amp;pTxLinkedListDesc[1],
-                                    BUFEER0_TX_BTCTRL,
-                                    (<strong><span style="color: #000080">void</span></strong> *)&amp;txPongBuffer[0],
-                                    (<strong><span style="color: #000080">void</span></strong> *)&amp;SERCOM1_REGS-&gt;SPIM.SERCOM_DATA,
-                                    <strong><span style="color: #000080">sizeof</span></strong>(txPongBuffer),
-    <i><span style="color: #008000">// this setting will enable continous transfer, to stopp the transfer this argument should be NULL.                                       </span></i>
-                                    &amp;pTxLinkedListDesc[0]); 
-
-    <i><span style="color: #008000">// Start the DMA in linked list mode</span></i>
-    <a href="01891.html" target="topic">DMAC_ChannelLinkedListTransfer</a>(DMAC_CHANNEL_1, &amp;pTxLinkedListDesc[0]);                                                                               </pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">
+Refer to the code example provided in the description of the
+<a href="01910.html" target="topic">MCLK_CKRDY_CALLBACK</a> function pointer type.
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -166,7 +118,7 @@ __attribute__((__aligned__(16))) <strong><span style="color: #000080">static</sp
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="01786.html" target="topic">DMAC Peripheral Library Help</a> &gt; <a href="01787.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01909.html" target="topic">DMAC_LinkedListDescriptorSetup Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07952.html" target="topic">Clock (SAM L22) Peripheral Library Help</a> &gt; <a href="07953.html" target="topic">Library Interface</a> &gt; b) Setup Function &gt; <a href="01909.html" target="topic">MCLK_CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -174,13 +126,13 @@ __attribute__((__aligned__(16))) <strong><span style="color: #000080">static</sp
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01893.html" target="topic">Previous</a> | <a href="01787.html" target="topic">Up</a> | <a href="01888.html" target="topic">Next</a></div>
+<a href="01911.html" target="topic">Previous</a> | <a href="07953.html" target="topic">Up</a> | <a href="01914.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DMAC_LinkedListDescriptorSetup@dmac_descriptor_registers_t*@DMAC_CHANNEL_CONFIG@void *@void *@size_t@dmac_descriptor_registers_t* Topic Title: DMAC_LinkedListDescriptorSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: clk_sam_l22::MCLK_CallbackRegister@MCLK_CKRDY_CALLBACK@uintptr_t Topic Title: MCLK_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

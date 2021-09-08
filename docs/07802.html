@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Capture</title>
+<title>RTC_Timer32Compare1Set Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07823.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07802.html" target="topic">Capture</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07581.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="07582.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="07587.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07802.html" target="topic">RTC_Timer32Compare1Set Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="08046.html" target="topic">Previous</a> | <a href="07823.html" target="topic">Up</a> | <a href="07804.html" target="topic">Next</a></div>
+<a href="07800.html" target="topic">Previous</a> | <a href="07587.html" target="topic">Up</a> | <a href="07814.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2212 Capture Topic Title: Capture)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32Compare1Set@uint32_t Topic Title: RTC_Timer32Compare1Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Capture</div>
+RTC_Timer32Compare1Set Function</div>
 </div>
 </div>
 
@@ -46,39 +46,67 @@ Capture</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function sets the 32-bit timer compare value. The counter value will be compared against the compare value and a compare match event will occur when the counter matches the compare value. If the library is configured for interrupt mode and if a event handler function has been set through the <a href="07798.html" target="topic">RTC_Timer32CallbackRegister</a>() function, the event handling function will be called. When the match occurs, the counter can optionally be reset if clear on compare is enabled to generate periodic interrupt.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer32Compare1Set</span></strong>(
+    uint32_t <strong><span style="color: #000000">compare</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<p class="Element10">
+<a href="07731.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 32-bit <a href="09648.html" target="topic">Timer</a> Counter mode.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="07804.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides a brief overview of the TC peripheral library in <a href="01235.html" target="topic">Capture</a> mode.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="07803.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section explains how to configure the peripheral library using the MHC.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="07811.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section explains how to use the peripheral library.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="07805.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section describes the Application Programming Interface (API) functions of the TC Peripheral Library in <a href="01235.html" target="topic">Capture</a> mode<br>Refer to each section for a detailed description.&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+compare&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+<a href="02066.html" target="topic">Compare</a> value&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This API is available for devices that have more than one compare register in 32-bit mode.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t period = 0x00000FFF;
+    <a href="07731.html" target="topic">RTC_Initialize</a>();
+    RTC_Timer32Compare1Set(period);
+    <a href="07807.html" target="topic">RTC_Timer32CounterSet</a>(0);
+    <a href="07812.html" target="topic">RTC_Timer32Start</a>();
+    <strong><span style="color: #000080">while</span></strong>(!<a href="07801.html" target="topic">RTC_Timer32Compare1HasMatched</a>());</pre></div></div>
 </div>
 </div>
 </div>
@@ -86,7 +114,7 @@ This section describes the Application Programming Interface (API) functions of 
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07823.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07802.html" target="topic">Capture</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07581.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="07582.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="07587.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07802.html" target="topic">RTC_Timer32Compare1Set Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -94,13 +122,13 @@ This section describes the Application Programming Interface (API) functions of 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="08046.html" target="topic">Previous</a> | <a href="07823.html" target="topic">Up</a> | <a href="07804.html" target="topic">Next</a></div>
+<a href="07800.html" target="topic">Previous</a> | <a href="07587.html" target="topic">Up</a> | <a href="07814.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2212 Capture Topic Title: Capture)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32Compare1Set@uint32_t Topic Title: RTC_Timer32Compare1Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

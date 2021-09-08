@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SDMMCx_CommandErrorGet Function</title>
+<title>QEI_INTERRUPT Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="06932.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="06933.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06997.html" target="topic">SDMMCx_CommandErrorGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="06989.html" target="topic">QEI Peripheral Library Help</a> &gt; <a href="06990.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="06997.html" target="topic">QEI_INTERRUPT Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07009.html" target="topic">Previous</a> | <a href="06933.html" target="topic">Up</a> | <a href="06999.html" target="topic">Next</a></div>
+<a href="06994.html" target="topic">Previous</a> | <a href="06990.html" target="topic">Up</a> | <a href="07006.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMCx_CommandErrorGet Topic Title: SDMMCx_CommandErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qei_01494::QEI_INTERRUPT Topic Title: QEI_INTERRUPT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SDMMCx_CommandErrorGet Function</div>
+QEI_INTERRUPT Enumeration</div>
 </div>
 </div>
 
@@ -49,24 +49,71 @@ SDMMCx_CommandErrorGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Returns the errors associated with a command transfer. For a command transfer, the returned value is a bit wise OR of the following errors, Command Timeout Error, Command CRC Error, Data CRC Error and Command End Bit Error. Refer the data sheet for the bit position of the errors.</p></div>
+Interrupt source&nbsp;</p>
+<p class="Element10">
+This enumeration identifies quadrature mode interrupt source .</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">SDMMCx_CommandErrorGet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">QEI_NONE</span></strong> = 0,
+  <strong><span style="color: #000000">QEI_INDEX</span></strong> = _QEI1STAT_IDXIEN_MASK,
+  <strong><span style="color: #000000">QEI_HOME</span></strong> = _QEI1STAT_HOMIEN_MASK,
+  <strong><span style="color: #000000">QEI_VELOCITY_OVERFLOW</span></strong> = _QEI1STAT_VELOVIEN_MASK,
+  <strong><span style="color: #000000">QEI_POSITION_OVERFLOW</span></strong> = _QEI1STAT_POSOVIEN_MASK,
+  <strong><span style="color: #000000">QEI_POS_INIT_COMPLETE</span></strong> = _QEI1STAT_PCIIEN_MASK,
+  <strong><span style="color: #000000">QEI_POS_LESS_EQ</span></strong> = _QEI1STAT_PCLEQIEN_MASK,
+  <strong><span style="color: #000000">QEI_POS_HIGH_EQ</span></strong> = _QEI1STAT_PCHEQIEN_MASK
+} QEI_INTERRUPT;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-A command must have been initiated using the <a href="06998.html" target="topic">SDMMCx_CommandSend</a>() function.</p></div>
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+QEI_INDEX = _QEI1STAT_IDXIEN_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Interrupt is generated on index signal&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+QEI_HOME = _QEI1STAT_HOMIEN_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Interrupt is generated on home signal&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+QEI_VELOCITY_OVERFLOW = _QEI1STAT_VELOVIEN_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+When velocity counter rolls over from 0x7FFFFFFF to 0x80000000 or from 0x80000000 to 0x7FFFFFFF&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+QEI_POSITION_OVERFLOW = _QEI1STAT_POSOVIEN_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+When position counter rolls over from 0x7FFFFFFF to 0x80000000 or from 0x80000000 to 0x7FFFFFFF&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+QEI_POS_INIT_COMPLETE = _QEI1STAT_PCIIEN_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Position counter initialization process is complete&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+QEI_POS_LESS_EQ = _QEI1STAT_PCLEQIEN_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Position counter is less than or equal to compare value&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+QEI_POS_HIGH_EQ = _QEI1STAT_PCHEQIEN_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Position counter is greater than or equal to compare value&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Bit wise OR of the following command error flags - Command Timeout Error, Command CRC Error, Data CRC Error and Command End Bit Error. Refer the data sheet for the bit position of the errors.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -75,24 +122,12 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint16_t cmd_error = SDMMC1_CommandErrorGet();
-
-<strong><span style="color: #000080">if</span></strong> (cmd_error != 0)
-{
-    <i><span style="color: #008000">// Handle command error</span></i>
-}</pre></div></div>
-</div>
-</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="06932.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="06933.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06997.html" target="topic">SDMMCx_CommandErrorGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="06989.html" target="topic">QEI Peripheral Library Help</a> &gt; <a href="06990.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="06997.html" target="topic">QEI_INTERRUPT Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -100,13 +135,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07009.html" target="topic">Previous</a> | <a href="06933.html" target="topic">Up</a> | <a href="06999.html" target="topic">Next</a></div>
+<a href="06994.html" target="topic">Previous</a> | <a href="06990.html" target="topic">Up</a> | <a href="07006.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMCx_CommandErrorGet Topic Title: SDMMCx_CommandErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qei_01494::QEI_INTERRUPT Topic Title: QEI_INTERRUPT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

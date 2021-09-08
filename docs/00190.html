@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="00185.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00190.html" target="topic">Using the Library</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="00191.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00190.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00181.html" target="topic">Previous</a> | <a href="00185.html" target="topic">Up</a> | <a href="00186.html" target="topic">Next</a></div>
+<a href="00191.html" target="topic">Previous</a> | <a href="00191.html" target="topic">Up</a> | <a href="00187.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC_00755 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC 6489 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,63 +49,22 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The ADC can work in manual or automated way. Both sampling and conversion can be configured in MHC to be manual or automated. The PLIB also provides both polling and callback methods to indicate the end of a conversion to read the converted data from the result data registers.</p>
+The Analog to Digital Controller (ADC) peripheral supports the following features.</p>
 <ul class="Element630">
-<li class="Element600">With polling, the application will need to continuously poll to check if the conversion is completed.</li>
-<li class="Element600">With callback, the registered callback function will be called once the conversion is completed. This means the application do not have to poll continuously.</li>
-</ul><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Callback method</strong>&nbsp;</p>
-<p class="Element10">
-This example demonstrates how to read the result of conversion in the callback function. For this example, it is assumed that auto sampling and conversion is configured in MHC. </p><div class="Element13"><div class="Element12"><pre class="Element12">
-uint32_t adc_count;
-<i><span style="color: #008000">/* This function is called after conversion is completed */</span></i>
-<strong><span style="color: #000080">void</span></strong> ADC_ChanneHandler(uintptr_t context)
-{
-    <i><span style="color: #008000">/* Read the result */</span></i>
-    adc_count = ADC_ResultGet(ADC_RESULT_BUFFER_0);
-}
-
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-    <i><span style="color: #008000">/* Register callback function for ADC end of conversion interrupt*/</span></i>
-    ADC_CallbackRegister(ADC_ChanneHandler, (uintptr_t)NULL);
-
-    <strong><span style="color: #000080">while</span></strong>(<strong><span style="color: #000080">true</span></strong>)
-    {
-
-    }
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Polling method</strong>&nbsp;</p>
-<p class="Element10">
-This example demonstrates how to start the conversion and read the converted data in polled mode. For this example, it is assumed that auto sampling is configured in MHC.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12">uint32_t adc_count;
-
-<i><span style="color: #008000">/* Start ADC conversion */</span></i>
-ADC_ConversionStart();
-
-<i><span style="color: #008000">/* Wait till ADC conversion result is available */</span></i>
-<strong><span style="color: #000080">while</span></strong>(!ADC_ResultIsReady())
-{
-
-};
-
-<i><span style="color: #008000">/* Read the ADC result */</span></i>
-adc_count = ADC_ResultGet(ADC_RESULT_BUFFER_0);</pre></div></div>
-</div>
+<li class="Element600">12-bit resolution with enhanced mode up to 16-bit Resolution</li>
+<li class="Element600">500 ksps conversion rate</li>
+<li class="Element600">Selectable Single-ended or Differential Input Voltage</li>
+<li class="Element600">Individual Enable and Disable of Each Channel</li>
+<li class="Element600">Customized channel sequencer to control order of conversion</li>
+<li class="Element600">Selectable Conversion Trigger sources</li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="00185.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00190.html" target="topic">Using the Library</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="00191.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00190.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -113,13 +72,13 @@ adc_count = ADC_ResultGet(ADC_RESULT_BUFFER_0);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00181.html" target="topic">Previous</a> | <a href="00185.html" target="topic">Up</a> | <a href="00186.html" target="topic">Next</a></div>
+<a href="00191.html" target="topic">Previous</a> | <a href="00191.html" target="topic">Up</a> | <a href="00187.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC_00755 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC 6489 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

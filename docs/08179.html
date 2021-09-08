@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCx_Timer8bitCounterGet Function</title>
+<title>SDMMC_CMD_RESP_TYPE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07855.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07856.html" target="topic">Timer</a> &gt; <a href="07861.html" target="topic">Library Interface</a> &gt; <a href="07864.html" target="topic">c) Transaction Functions</a> &gt; <a href="08179.html" target="topic">TCx_Timer8bitCounterGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08160.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="08161.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="08179.html" target="topic">SDMMC_CMD_RESP_TYPE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="08178.html" target="topic">Previous</a> | <a href="07864.html" target="topic">Up</a> | <a href="08180.html" target="topic">Next</a></div>
+<a href="08171.html" target="topic">Previous</a> | <a href="08161.html" target="topic">Up</a> | <a href="08189.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_Timer8bitCounterGet Topic Title: TCx_Timer8bitCounterGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMC_CMD_RESP_TYPE Topic Title: SDMMC_CMD_RESP_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCx_Timer8bitCounterGet Function</div>
+SDMMC_CMD_RESP_TYPE Enumeration</div>
 </div>
 </div>
 
@@ -49,48 +49,96 @@ TCx_Timer8bitCounterGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function reads the timer count value.</p></div>
+SDMMC command response type&nbsp;</p>
+<p class="Element10">
+The enumeration is used to identify the response type expected for a given command.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint8_t <strong><span style="color: #000000">TCx_Timer8bitCounterGet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">SDMMC_CMD_RESP_NONE</span></strong>,
+  <strong><span style="color: #000000">SDMMC_CMD_RESP_R1</span></strong>,
+  <strong><span style="color: #000000">SDMMC_CMD_RESP_R1B</span></strong>,
+  <strong><span style="color: #000000">SDMMC_CMD_RESP_R2</span></strong>,
+  <strong><span style="color: #000000">SDMMC_CMD_RESP_R3</span></strong>,
+  <strong><span style="color: #000000">SDMMC_CMD_RESP_R4</span></strong>,
+  <strong><span style="color: #000000">SDMMC_CMD_RESP_R5</span></strong>,
+  <strong><span style="color: #000000">SDMMC_CMD_RESP_R6</span></strong>,
+  <strong><span style="color: #000000">SDMMC_CMD_RESP_R7</span></strong>
+} SDMMC_CMD_RESP_TYPE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="08185.html" target="topic">TCx_TimerInitialize</a>() function must have been called first.</p></div>
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDMMC_CMD_RESP_NONE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; no response type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDMMC_CMD_RESP_R1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; normal response command&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDMMC_CMD_RESP_R1B&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; normal with busy signal&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDMMC_CMD_RESP_R2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; CID, CSD register&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDMMC_CMD_RESP_R3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; OCR register&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDMMC_CMD_RESP_R4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt;&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDMMC_CMD_RESP_R5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt;&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDMMC_CMD_RESP_R6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; Published RCA response&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDMMC_CMD_RESP_R7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; Card interface condition&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-counter - The timer's current count value.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The caller must know the number of significant bytes of timer. Period value is right-aligned.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">  uint8_t counter = 0;
-  <a href="08185.html" target="topic">TCx_TimerInitialize</a>();
-  <a href="08187.html" target="topic">TCx_TimerStart</a>();
-  counter = TCx_Timer8bitCounterGet();</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07855.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07856.html" target="topic">Timer</a> &gt; <a href="07861.html" target="topic">Library Interface</a> &gt; <a href="07864.html" target="topic">c) Transaction Functions</a> &gt; <a href="08179.html" target="topic">TCx_Timer8bitCounterGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08160.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="08161.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="08179.html" target="topic">SDMMC_CMD_RESP_TYPE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +146,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="08178.html" target="topic">Previous</a> | <a href="07864.html" target="topic">Up</a> | <a href="08180.html" target="topic">Next</a></div>
+<a href="08171.html" target="topic">Previous</a> | <a href="08161.html" target="topic">Up</a> | <a href="08189.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_Timer8bitCounterGet Topic Title: TCx_Timer8bitCounterGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMC_CMD_RESP_TYPE Topic Title: SDMMC_CMD_RESP_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

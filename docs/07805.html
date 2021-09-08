@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>RTC_Timer32CounterGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07823.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07802.html" target="topic">Capture</a> &gt; <a href="07805.html" target="topic">Library Interface</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07581.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="07582.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="07587.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07805.html" target="topic">RTC_Timer32CounterGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07811.html" target="topic">Previous</a> | <a href="07802.html" target="topic">Up</a> | <a href="07807.html" target="topic">Next</a></div>
+<a href="07807.html" target="topic">Previous</a> | <a href="07587.html" target="topic">Up</a> | <a href="07804.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2212 Capture Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32CounterGet Topic Title: RTC_Timer32CounterGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+RTC_Timer32CounterGet Function</div>
 </div>
 </div>
 
@@ -46,44 +46,50 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function returns the current 32-bit count value. This function can be used to retrieve the counter value at the end of a time measurement.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">RTC_Timer32CounterGet</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="07807.html" target="topic">a) Initialization Function</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
- &nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="07808.html" target="topic">b) Setup Functions</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
- &nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="07810.html" target="topic">c) Transaction Functions</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
- &nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="07809.html" target="topic">d) Status Functions</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
- &nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="07806.html" target="topic">e) Data Types and Constants</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
- &nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<a href="07731.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 32-bit <a href="09648.html" target="topic">Timer</a> Counter mode</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+uint32_t returns the current 32 bit counter value.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// The following code example stops the counter when the counter value</span></i>
+    <i><span style="color: #008000">// has reached 0xFFF.</span></i>
+
+    <a href="07731.html" target="topic">RTC_Initialize</a>();
+    <a href="07804.html" target="topic">RTC_Timer32CompareSet</a>(0);
+    <a href="07807.html" target="topic">RTC_Timer32CounterSet</a>(0);
+    <a href="07812.html" target="topic">RTC_Timer32Start</a>();
+    <strong><span style="color: #000080">while</span></strong>(RTC_Timer32CounterGet() &lt; 0xFFF);
+
+    <i><span style="color: #008000">// Stop the counter.</span></i>
+    <a href="07813.html" target="topic">RTC_Timer32Stop</a>();</pre></div></div>
 </div>
 </div>
 </div>
@@ -91,7 +97,7 @@ Description&nbsp;</div></td></tr><tr>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07823.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07802.html" target="topic">Capture</a> &gt; <a href="07805.html" target="topic">Library Interface</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07581.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="07582.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="07587.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07805.html" target="topic">RTC_Timer32CounterGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -99,13 +105,13 @@ Description&nbsp;</div></td></tr><tr>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07811.html" target="topic">Previous</a> | <a href="07802.html" target="topic">Up</a> | <a href="07807.html" target="topic">Next</a></div>
+<a href="07807.html" target="topic">Previous</a> | <a href="07587.html" target="topic">Up</a> | <a href="07804.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2212 Capture Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32CounterGet Topic Title: RTC_Timer32CounterGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

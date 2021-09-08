@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>RTC_Timer16Compare2HasMatched Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07781.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07760.html" target="topic">Capture</a> &gt; <a href="07769.html" target="topic">Using the Library</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07581.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="07592.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="07598.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="07769.html" target="topic">RTC_Timer16Compare2HasMatched Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07761.html" target="topic">Previous</a> | <a href="07760.html" target="topic">Up</a> | <a href="07763.html" target="topic">Next</a></div>
+<a href="07599.html" target="topic">Previous</a> | <a href="07598.html" target="topic">Up</a> | <a href="07771.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 6082 Capture Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16Compare2HasMatched Topic Title: RTC_Timer16Compare2HasMatched Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+RTC_Timer16Compare2HasMatched Function</div>
 </div>
 </div>
 
@@ -49,40 +49,48 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The <a href="01235.html" target="topic">Capture</a> mode allows the TC channel to perform measurements such as pulse timing, frequency, period, duty cycle and phase on TIOAx and TIOBx signals.&nbsp;</p>
+This function returns true if the 16-bit <a href="09648.html" target="topic">Timer</a> <a href="02066.html" target="topic">Compare</a> 2 value has matched the counter. When operating in 16-bit <a href="09648.html" target="topic">Timer</a> Counter mode, the RTC peripheral compares the counter value with compare values (<a href="02066.html" target="topic">Compare</a> 2). This function will return true if the counter value has matched the <a href="02066.html" target="topic">Compare</a> 2 value.&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
+The <a href="02066.html" target="topic">Compare</a> 2 Value could have been configured via MHC or at run time by calling the <a href="07770.html" target="topic">RTC_Timer16Compare2Set</a>() function. The RTC_Timer16Compare2ValueMatched() function allows the application to poll for the compare value match.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">RTC_Timer16Compare2HasMatched</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-In <a href="01235.html" target="topic">Capture</a> mode, TIOAx and TIOBx are configured as inputs. The counter value is captured in the buffer on the selected input edge and it is used as a timestamp for the event. The user can select up to two input events and the respective timestamp is captured in <a href="01235.html" target="topic">Capture</a> A and <a href="01235.html" target="topic">Capture</a> B buffers, it can be used to measure pulse, period, frequency and duty cycle of the external input.&nbsp;</p>
+<a href="07731.html" target="topic">RTC_Initialize</a>, <a href="07781.html" target="topic">RTC_Timer16Start</a> must have been called for the associated RTC instance. The RTC value should have been configured for 16-bit <a href="09648.html" target="topic">Timer</a> Counter Mode.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-It provides both polling and callback methods to indicate capture event has occurred.</p>
-<ul class="Element630">
-<li class="Element600">With polling, the application will need to continuously poll to check if the capture event has occurred.</li>
-<li class="Element600">With callback, the registered callback function will be called when the capture event occurs. This means the application do not have to poll continuously.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+true - Counter has matched <a href="02066.html" target="topic">Compare</a> 2 Value. false - Counter has not matched <a href="02066.html" target="topic">Compare</a> 2 Value.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<strong>Callback method</strong>&nbsp;</p>
-<p class="Element10">
-This example demonstrates how to use the TC channel in capture mode to measure off time and period. The rising edge is captured in <a href="01235.html" target="topic">Capture</a> A and Falling edge is captured in <a href="01235.html" target="topic">Capture</a> B register, and then the timer is reset.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">/* This function is called after Capture B */</span></i>
-<strong><span style="color: #000080">void</span></strong> TC0_CH0_CaptureInterruptHandler(TC_CAPTURE_STATUS status, uintptr_t context)
-{
-    <i><span style="color: #008000">/* Read Captured values */</span></i>
-    off_time = TC0_CH0_CaptureAGet();
-    period = TC0_CH0_CaptureBGet();
-}
+This API is available for devices that have more than two compare register in 16-bit mode.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="07731.html" target="topic">RTC_Initialize</a>();
+    <a href="07775.html" target="topic">RTC_Timer16CounterSet</a>(0);
+    <a href="07780.html" target="topic">RTC_Timer16PeriodSet</a>(0xFFF);
 
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
+    <i><span style="color: #008000">// Calling the RTC_Timer16Compare2Set() function will override the</span></i>
+    <a href="07770.html" target="topic">RTC_Timer16Compare2Set</a>(0x3F);
+    <a href="07781.html" target="topic">RTC_Timer16Start</a>();
 
-    <i><span style="color: #008000">/* Register callback function for CH0 period interrupt */</span></i>
-    TC0_CH0_CaptureCallbackRegister(TC0_CH0_CaptureInterruptHandler, (uintptr_t)NULL);
-
-    <i><span style="color: #008000">/* Start the Capture channel 0*/</span></i>
-    TC0_CH0_CaptureStart();
-}</pre></div></div>
+    <i><span style="color: #008000">// Wait till the Compare 2 value has matched.</span></i>
+    <strong><span style="color: #000080">while</span></strong>(!RTC_Timer16Compare2HasMatched());</pre></div></div>
 </div>
 </div>
 </div>
@@ -90,7 +98,7 @@ This example demonstrates how to use the TC channel in capture mode to measure o
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="07781.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07760.html" target="topic">Capture</a> &gt; <a href="07769.html" target="topic">Using the Library</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="07581.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="07592.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="07598.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="07769.html" target="topic">RTC_Timer16Compare2HasMatched Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +106,13 @@ This example demonstrates how to use the TC channel in capture mode to measure o
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07761.html" target="topic">Previous</a> | <a href="07760.html" target="topic">Up</a> | <a href="07763.html" target="topic">Next</a></div>
+<a href="07599.html" target="topic">Previous</a> | <a href="07598.html" target="topic">Up</a> | <a href="07771.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 6082 Capture Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16Compare2HasMatched Topic Title: RTC_Timer16Compare2HasMatched Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

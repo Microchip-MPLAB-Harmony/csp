@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>QSPI_RegisterWrite Function</title>
+<title>e) Data Types and Constants</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05978.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05979.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="06029.html" target="topic">QSPI_RegisterWrite Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="06026.html" target="topic">PDEC Peripheral Library Help</a> &gt; <a href="06027.html" target="topic">QDEC</a> &gt; <a href="06032.html" target="topic">Library Interface</a> &gt; <a href="06029.html" target="topic">e) Data Types and Constants</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06028.html" target="topic">Previous</a> | <a href="05979.html" target="topic">Up</a> | <a href="05990.html" target="topic">Next</a></div>
+<a href="06100.html" target="topic">Previous</a> | <a href="06032.html" target="topic">Up</a> | <a href="06063.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI_RegisterWrite@qspi_register_xfer_t *@uint32_t *@uint8_t Topic Title: QSPI_RegisterWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PDEC U2263 QDEC Data Types and Constants Topic Title: e) Data Types and Constants)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-QSPI_RegisterWrite Function</div>
+e) Data Types and Constants</div>
 </div>
 </div>
 
@@ -48,86 +48,78 @@ QSPI_RegisterWrite Function</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-This function can be used to write to a particular register of QSPI slave device which has a command code associated to it.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">QSPI_RegisterWrite</span></strong>(
-    <a href="06024.html" target="topic">qspi_register_xfer_t</a> * <strong><span style="color: #000000">qspi_register_xfer</span></strong>, 
-    uint32_t * <strong><span style="color: #000000">tx_data</span></strong>, 
-    uint8_t <strong><span style="color: #000000">tx_data_length</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+</div>
+<a name="456E756D65726174696F6E73"></a><div class="Element14">
+Enumerations</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="05999.html" target="topic">QSPI_Initialize</a> must have been called for the associated QSPI instance.&nbsp;</p>
-<p class="Element10">
-Write enable command has to be sent before write register request and</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-*qspi_register_xfer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to QSPI register transfer structure holding the instruction code register and instruction frame register information.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-*tx_data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to transmit buffer holding the data to write into register.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-tx_data_length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Register width in bytes.&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06067.html" target="topic">PDEC_QDEC_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Identifies Quadrature mode interrupt source mask.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+<a name="53747275637475726573"></a><div class="Element14">
+Structures</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">True on transfer request success.</li>
-<li class="Element600">False on transfer request failure.</li>
-</ul></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06064.html" target="topic">PDEC_QDEC_CALLBACK_OBJ</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Callback structure&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
+</div>
+<a name="5479706573"></a><div class="Element14">
+Types</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">#define</span></strong> WRITE_STATUS_REG_CODE 0x01
-<strong><span style="color: #000080">#define</span></strong> QUAD_ENABLE_BIT       (1 &lt;&lt; 1)
-
-<strong><span style="color: #000080">static</span></strong> <a href="06024.html" target="topic">qspi_register_xfer_t</a> qspi_register_xfer;
-<strong><span style="color: #000080">static</span></strong> uint8_t reg_data = QUAD_ENABLE_BIT;
-
-qspi_register_xfer.width = QUAD_CMD;
-
-<i><span style="color: #008000">// Write status register of 1 Byte width</span></i>
-qspi_register_xfer.instruction = WRITE_STATUS_REG_CODE;
-
-<strong><span style="color: #000080">if</span></strong> (TRUE != QSPI_RegisterWrite(&amp;qspi_register_xfer, (uint32_t *)&amp;reg_data, 1))
-{
-    <i><span style="color: #008000">// Handle Error</span></i>
-}
-</pre></div></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06063.html" target="topic">PDEC_QDEC_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the function pointer data type and function signature for the pdec QDEC callback function.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -135,7 +127,7 @@ qspi_register_xfer.instruction = WRITE_STATUS_REG_CODE;
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="05978.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05979.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="06029.html" target="topic">QSPI_RegisterWrite Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="06026.html" target="topic">PDEC Peripheral Library Help</a> &gt; <a href="06027.html" target="topic">QDEC</a> &gt; <a href="06032.html" target="topic">Library Interface</a> &gt; <a href="06029.html" target="topic">e) Data Types and Constants</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -143,13 +135,13 @@ qspi_register_xfer.instruction = WRITE_STATUS_REG_CODE;
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06028.html" target="topic">Previous</a> | <a href="05979.html" target="topic">Up</a> | <a href="05990.html" target="topic">Next</a></div>
+<a href="06100.html" target="topic">Previous</a> | <a href="06032.html" target="topic">Up</a> | <a href="06063.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI_RegisterWrite@qspi_register_xfer_t *@uint32_t *@uint8_t Topic Title: QSPI_RegisterWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PDEC U2263 QDEC Data Types and Constants Topic Title: e) Data Types and Constants)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

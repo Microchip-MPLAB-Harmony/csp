@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SAM G55 Peripheral Libraries</title>
+<title>NVM_Read Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05565.html" target="topic">SAM G55 Peripheral Libraries</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="05482.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="05483.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="05565.html" target="topic">NVM_Read Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05564.html" target="topic">Previous</a> | <a href="05072.html" target="topic">Up</a> | <a href="05566.html" target="topic">Next</a></div>
+<a href="05566.html" target="topic">Previous</a> | <a href="05483.html" target="topic">Up</a> | <a href="05563.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB SAM G55 Topic Title: SAM G55 Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02695::NVM_Read@uint32_t *@uint32_t@uint32_t Topic Title: NVM_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SAM G55 Peripheral Libraries</div>
+NVM_Read Function</div>
 </div>
 </div>
 
@@ -49,69 +49,35 @@ SAM G55 Peripheral Libraries</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following Table lists all the Peripheral Libraries for the SAM G55 Family.&nbsp;</p>
+Reads length number of bytes from a given address in FLASH memory into the user buffer.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NVM_Read</span></strong>(
+    uint32_t * <strong><span style="color: #000000">data</span></strong>, 
+    uint32_t <strong><span style="color: #000000">length</span></strong>, 
+    uint32_t <strong><span style="color: #000000">address</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="100%">
-<div class="Element66">
-SAM G55 Peripheral Libraries&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="00144.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06721.html" target="topic">Clock Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01502.html" target="topic">CMCC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01605.html" target="topic">CRCCU Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02026.html" target="topic">DWT Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02067.html" target="topic">EFC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02870.html" target="topic">FLEXCOM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04383.html" target="topic">MEM2MEM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04430.html" target="topic">MPU Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04459.html" target="topic">NVIC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05077.html" target="topic">PIO Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06237.html" target="topic">RSTC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06357.html" target="topic">RTC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06689.html" target="topic">RTT Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="07565.html" target="topic">SUPC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="07697.html" target="topic">SYSTICK Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="07781.html" target="topic">TC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="08825.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td></tr></table></div></div>
+None</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t buffer[256];
+NVM_Read( (uint32_t *) buffer, 256, 0x9D100000);</pre></div></div>
 </div>
 </div>
 </div>
@@ -119,7 +85,7 @@ SAM G55 Peripheral Libraries&nbsp;</div></td></tr><tr>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05565.html" target="topic">SAM G55 Peripheral Libraries</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="05482.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="05483.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="05565.html" target="topic">NVM_Read Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -127,13 +93,13 @@ SAM G55 Peripheral Libraries&nbsp;</div></td></tr><tr>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05564.html" target="topic">Previous</a> | <a href="05072.html" target="topic">Up</a> | <a href="05566.html" target="topic">Next</a></div>
+<a href="05566.html" target="topic">Previous</a> | <a href="05483.html" target="topic">Up</a> | <a href="05563.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB SAM G55 Topic Title: SAM G55 Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02695::NVM_Read@uint32_t *@uint32_t@uint32_t Topic Title: NVM_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

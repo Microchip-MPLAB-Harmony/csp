@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>UARTx_Read Function</title>
+<title>SPIx_Ready Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08523.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="08524.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="08682.html" target="topic">UARTx_Read Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08623.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="08627.html" target="topic">Slave</a> &gt; <a href="08665.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="08682.html" target="topic">SPIx_Ready Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="08615.html" target="topic">Previous</a> | <a href="08524.html" target="topic">Up</a> | <a href="08689.html" target="topic">Next</a></div>
+<a href="08683.html" target="topic">Previous</a> | <a href="08665.html" target="topic">Up</a> | <a href="08681.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_ring_buffer_02478::UARTx_Read@uint8_t*@size_t Topic Title: UARTx_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi__slave_01329::SPIx_Ready Topic Title: SPIx_Ready Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-UARTx_Read Function</div>
+SPIx_Ready Function</div>
 </div>
 </div>
 
@@ -49,78 +49,74 @@ UARTx_Read Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API is non-blocking. The API copies the number of bytes available in the receive buffer and returns the number of bytes actually copied. If the number of bytes copied is less than the requested size, the application must try reading after some time. If notifications are enabled and a callback is registered, a callback is given when the receive threshold condition is met. This lets the application to get notified when the data is available in the receive buffer.</p></div>
+This function drives the SPI slave busy line to ready state. The slave busy line is driven to active state (busy) by the SPI slave PLIB when the chip select is driven active by the SPI master. When the data transfer is complete, the chip select is driven inactive and a callback is given to the application. The application can parse the received data and prepare a response for the SPI master. Once the response is ready, the SPI slave can release the busy line by calling this API which drives the busy line to inactive state (not busy). All this while the SPI master must wait for the busy line to become inactive (not busy) before initiating a new transfer with the SPI slave.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">UARTx_Read</span></strong>(
-    uint8_t* <strong><span style="color: #000000">pRdBuffer</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> size_t <strong><span style="color: #000000">size</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SPIx_Ready</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-UARTx_Initialize must have been called for the associated UART instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pRdBuffer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the user buffer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-size&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be read. If 9-bit mode is enabled, then the size parameter indicates the number of 9-bit data to read.&nbsp;</div></td></tr></table></div></div>
-</div>
+The <a href="08677.html" target="topic">SPIx_Initialize</a>() should have been called.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The API returns the number of bytes actually read into the user buffer. Application must retry by calling this API again if the return value is less than the number of bytes requested. Application can use the <a href="08685.html" target="topic">UARTx_ReadCountGet</a> API to determine the number of unread bytes available in the receive buffer. Application can also choose to register for event notification to get notified when data is available in the receive buffer (set by the <a href="08688.html" target="topic">UARTx_ReadThresholdSet</a> API).&nbsp;</p>
-<p class="Element10">
-If 9-bit mode is enabled, then the return value indicates the number of 9-bit data copied to the application buffer.</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API is only available when UART ring buffer mode is enabled in MHC.</p></div>
+This API is available only if the Busy signal feature is enabled in MHC.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-uint8_t rxBuffer[100];
-uint32_t nBytesRead = 0;
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint8_t APP_TxData[10];
+    size_t nBytesRead;
+    
+    <strong><span style="color: #000080">void</span></strong> SPIEventHandler(uintptr_t context )
+    {                   
+        <strong><span style="color: #000080">if</span></strong> (SPI1_ErrorGet() == SPI_SLAVE_ERROR_NONE)
+        {
+            nBytesRead = SPI1_Read(APP_RxData, SPI1_ReadCountGet()); 
 
-nBytesRead = UART1_Read((uint8_t*)rxBuffer, 100);
-<strong><span style="color: #000080">if</span></strong> (nBytesRead &lt; 100)
-{
-    <i><span style="color: #008000">// Receive buffer does not have more data, try after some time</span></i>
-    <i><span style="color: #008000">// Application can even enable notification to get notified when the</span></i>
-    <i><span style="color: #008000">// data becomes available in the receive buffer</span></i>
-}
-</pre></div></div>
+            <strong><span style="color: #000080">switch</span></strong>(APP_RxData[0])
+            {            
+                <strong><span style="color: #000080">case</span></strong> APP_CMD_WRITE:
+                    <i><span style="color: #008000">// SPI master is writing data to SPI slave</span></i>
+                    <i><span style="color: #008000">// Keep the busy line asserted until the write operation is complete</span></i>
+                    <i><span style="color: #008000">// Busy line will be de-asserted later when the write operation is complete</span></i>
+                    appData.status.busy = 1;
+                    
+                    <i><span style="color: #008000">// Change the state to perform write operation</span></i>
+                    state = APP_STATE_WRITE; 
+                    
+                    <strong><span style="color: #000080">break</span></strong>;
+
+                <strong><span style="color: #000080">case</span></strong> APP_CMD_READ:
+
+                    <i><span style="color: #008000">// SPI master is reading data from SPI slave</span></i>
+                    <i><span style="color: #008000">// Provide the requested data and drive the busy line inactive</span></i>
+                    SPI1_Write(APP_TxData, 10);
+                    <strong><span style="color: #000080">break</span></strong>;
+            } 
+
+            <strong><span style="color: #000080">if</span></strong> (appData.status.busy == 0)
+            {
+                <i><span style="color: #008000">// Indicate to SPI Master that slave is ready for data transfer</span></i>
+                <i><span style="color: #008000">// This if condition will be executed for the APP_CMD_READ case.</span></i>
+                SPI1_Ready();
+            }
+        }       
+    }</pre></div></div>
 </div>
 </div>
 </div>
@@ -128,7 +124,7 @@ nBytesRead = UART1_Read((uint8_t*)rxBuffer, 100);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05540.html" target="topic">Peripheral Library Overview</a> &gt; <a href="05072.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05539.html" target="topic">Peripheral Libraries</a> &gt; <a href="08523.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="08524.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="08682.html" target="topic">UARTx_Read Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="08623.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="08627.html" target="topic">Slave</a> &gt; <a href="08665.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="08682.html" target="topic">SPIx_Ready Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -136,13 +132,13 @@ nBytesRead = UART1_Read((uint8_t*)rxBuffer, 100);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05540.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="08615.html" target="topic">Previous</a> | <a href="08524.html" target="topic">Up</a> | <a href="08689.html" target="topic">Next</a></div>
+<a href="08683.html" target="topic">Previous</a> | <a href="08665.html" target="topic">Up</a> | <a href="08681.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_ring_buffer_02478::UARTx_Read@uint8_t*@size_t Topic Title: UARTx_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi__slave_01329::SPIx_Ready Topic Title: SPIx_Ready Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
