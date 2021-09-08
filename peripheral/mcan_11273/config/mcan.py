@@ -419,15 +419,26 @@ def updateDataBitTimingSymbols(symbol, event):
         symbol.getComponent().getSymbolByID("DATA_SAMPLE_POINT").setReadOnly(False)
 
 def updateSourceFileName(symbol, event):
-    mcanInt = ""
-    if event["value"] == True:
-        mcanInt = "_interrupt"
     id = symbol.getID()
 
-    if id == "sourceFile":
-        symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan" + mcanInt + ".c.ftl")
-    elif id == "instHeaderFile":
-        symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan" + mcanInt + ".h.ftl")
+    if Database.getSymbolValue(mcanInstanceName.getValue().lower(), "MCAN_GENERATE_LEGACY_APIS") == True:
+        if id == "sourceFile":
+            symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan_legacy.c.ftl")
+        elif id == "instHeaderFile":
+            symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan_legacy.h.ftl")
+        elif id == "headerFile":
+            symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan_common_legacy.h")
+    else:
+        mcanInt = ""
+        if Database.getSymbolValue(mcanInstanceName.getValue().lower(), "INTERRUPT_MODE") == True:
+            mcanInt = "_interrupt"
+
+        if id == "sourceFile":
+            symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan" + mcanInt + ".c.ftl")
+        elif id == "instHeaderFile":
+            symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan" + mcanInt + ".h.ftl")
+        elif id == "headerFile":
+            symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan_common.h")
 
 def instantiateComponent(mcanComponent):
     global mcanInstanceName
@@ -1003,6 +1014,11 @@ def instantiateComponent(mcanComponent):
     mcanTCP.setMin(0)
     mcanTCP.setMax(15)
 
+    mcanGenerateLegacyAPIs = mcanComponent.createBooleanSymbol("MCAN_GENERATE_LEGACY_APIS", None)
+    mcanGenerateLegacyAPIs.setLabel("Generate Legacy APIs")
+    mcanGenerateLegacyAPIs.setDescription("Generates Legacy APIs for backward compatibility. Legacy APIs will be deprecated in future")
+    mcanGenerateLegacyAPIs.setDefaultValue(False)
+
     # Interrupt Dynamic settings
     mcaninterruptControl = mcanComponent.createBooleanSymbol("MCAN_INTERRUPT_ENABLE", None)
     mcaninterruptControl.setVisible(False)
@@ -1024,6 +1040,7 @@ def instantiateComponent(mcanComponent):
     mcanMasterHeaderFile.setDestPath("/peripheral/mcan/")
     mcanMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/mcan/")
     mcanMasterHeaderFile.setType("HEADER")
+    mcanMasterHeaderFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE", "MCAN_GENERATE_LEGACY_APIS"])
 
     #Instance Source File
     mcanMainSourceFile = mcanComponent.createFileSymbol("sourceFile", None)
@@ -1033,7 +1050,7 @@ def instantiateComponent(mcanComponent):
     mcanMainSourceFile.setProjectPath("config/" + configName + "/peripheral/mcan/")
     mcanMainSourceFile.setType("SOURCE")
     mcanMainSourceFile.setMarkup(True)
-    mcanMainSourceFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE"])
+    mcanMainSourceFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE", "MCAN_GENERATE_LEGACY_APIS"])
 
     #Instance Header File
     mcanInstHeaderFile = mcanComponent.createFileSymbol("instHeaderFile", None)
@@ -1043,7 +1060,7 @@ def instantiateComponent(mcanComponent):
     mcanInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/mcan/")
     mcanInstHeaderFile.setType("HEADER")
     mcanInstHeaderFile.setMarkup(True)
-    mcanInstHeaderFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE"])
+    mcanInstHeaderFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE", "MCAN_GENERATE_LEGACY_APIS"])
 
     #MCAN Initialize
     mcanSystemInitFile = mcanComponent.createFileSymbol("initFile", None)
