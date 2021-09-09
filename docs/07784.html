@@ -49,9 +49,9 @@ RTC_TIMER32_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-RTC 32-bit <a href="09648.html" target="topic">Timer</a> Counter Callback Function Pointer Type&nbsp;</p>
+RTC 32-bit <a href="09649.html" target="topic">Timer</a> Counter Callback Function Pointer Type&nbsp;</p>
 <p class="Element10">
-This data type defines the function signature of the RTC 32-bit <a href="09648.html" target="topic">Timer</a> Counter Callback function. The RTC peripheral will call back the client's function with this signature every time when the 32-bit Time Counter related event has occurred. Refer to the description of the <a href="07785.html" target="topic">RTC_TIMER32_INT_MASK</a> enumeration for possible events. Hardware event flags are cleared when the callback function exits.&nbsp;</p>
+This data type defines the function signature of the RTC 32-bit <a href="09649.html" target="topic">Timer</a> Counter Callback function. The RTC peripheral will call back the client's function with this signature every time when the 32-bit Time Counter related event has occurred. Refer to the description of the <a href="07785.html" target="topic">RTC_TIMER32_INT_MASK</a> enumeration for possible events. Hardware event flags are cleared when the callback function exits.&nbsp;</p>
 <p class="Element10">
 The application should register a callback function whose signature (input arguments and return type) must match the signature of this function. The calllback function should be registered by calling the <a href="07798.html" target="topic">RTC_Timer32CallbackRegister</a>() function. The callback function should be registered before starting the timer.</p></div>
 </div>
@@ -63,7 +63,7 @@ Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The <a href="07731.html" target="topic">RTC_Initialize</a>() function should have been called to initialize the RTC peripheral. The <a href="07798.html" target="topic">RTC_Timer32CallbackRegister</a>() function should have been called to register the callback function. The RTC peripheral should have been configured for 32-bit <a href="09648.html" target="topic">Timer</a> Counter mode in MHC. The RTC peripheral should have been configured for Interrupt mode operation in MHC.</p></div>
+The <a href="07731.html" target="topic">RTC_Initialize</a>() function should have been called to initialize the RTC peripheral. The <a href="07798.html" target="topic">RTC_Timer32CallbackRegister</a>() function should have been called to register the callback function. The RTC peripheral should have been configured for 32-bit <a href="09649.html" target="topic">Timer</a> Counter mode in MHC. The RTC peripheral should have been configured for Interrupt mode operation in MHC.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -82,7 +82,7 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 event&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The 32-bit <a href="09648.html" target="topic">Timer</a> Counter event that caused the callback function to be called. Multiple events can be active. The application should check for all events in the callback function.<br>&nbsp;</div></td></tr><tr>
+The 32-bit <a href="09649.html" target="topic">Timer</a> Counter event that caused the callback function to be called. Multiple events can be active. The application should check for all events in the callback function.<br>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
@@ -102,7 +102,7 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This callback if only available when the RTC peripheral is configured for 32-bit <a href="09648.html" target="topic">Timer</a> Counter operation. The callback function will be execute in an interrupt context. Avoid calling blocking , computationally intensive or interrupt un-safe function from the callback function.</p></div>
+This callback if only available when the RTC peripheral is configured for 32-bit <a href="09649.html" target="topic">Timer</a> Counter operation. The callback function will be execute in an interrupt context. Avoid calling blocking , computationally intensive or interrupt un-safe function from the callback function.</p></div>
 </div>
 </div>
 <!-- End Page Content -->

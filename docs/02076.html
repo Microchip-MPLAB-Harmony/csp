@@ -53,35 +53,9 @@ The core timer peripheral library can be used to generate periodic callback in i
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>Blocking Delay</strong>&nbsp;</p>
-<p class="Element10">
-When the interrupt mode is not enabled, the function can generate accuracy delay. The resolution of the delay is in terms of system clock period. The delay may get impacted if the processor is interrupted.</p>
-<ul class="Element630">
-<li class="Element600"><a href="02081.html" target="topic">CORETIMER_DelayMs</a>() function generated delay by the specified number of milliseconds.</li>
-<li class="Element600"><a href="02082.html" target="topic">CORETIMER_DelayUs</a>() function generated delay by the specified number of microseconds.</li>
-</ul><p class="Element10">
-&nbsp;</p>
-<div class="Element13"><div class="Element12"><pre class="Element12">CORETIMER_DelayMs(100);
-
-CORETIMER_DelayUs(1000);</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Blocking Delay in Interrupt mode</strong>&nbsp;</p>
-<p class="Element10">
-The <a href="02081.html" target="topic">CORETIMER_DelayMs</a>() function generates delay by the specified number of milliseconds. When the core timer is configured to generate periodic interrupt, the delay time accuracy and resolution is dependent on the interrupt time period. For example, if the core timer is configured to generate interrupt every 10 ms, the delay resolution is 10 ms and the delay accuracy is +/- 10ms. The delay may get extended if processor is interrupted by the higher priority interrupt.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12">
-CORETIMER_DelayMs(100);
-</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
 <strong>Periodic Callback in Interrupt mode</strong>&nbsp;</p>
 <p class="Element10">
-This example demonstrates how to use Core <a href="09648.html" target="topic">Timer</a> to generate periodic callback. The time period is configured using MHC or the period set API.&nbsp;</p>
+This example demonstrates how to use Core <a href="09649.html" target="topic">Timer</a> to generate periodic callback. The time period is configured using MHC or the period set API.&nbsp;</p>
 <p class="Element10">
 &nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">/* This function is called at specified periodic interval */</span></i>
 <strong><span style="color: #000080">void</span></strong> CORETIMER_EventHandler(uintptr_t context)

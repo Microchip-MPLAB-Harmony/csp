@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TWIHSx_LastByteAckStatusGet Function</title>
+<title>TWIHSx_IsBusy Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09799.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="09803.html" target="topic">Slave</a> &gt; <a href="09808.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="09856.html" target="topic">TWIHSx_LastByteAckStatusGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09800.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="09804.html" target="topic">Slave</a> &gt; <a href="09809.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="09856.html" target="topic">TWIHSx_IsBusy Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -29,12 +29,12 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="09855.html" target="topic">Previous</a> | <a href="09808.html" target="topic">Up</a> | <a href="09859.html" target="topic">Next</a></div>
+<a href="09858.html" target="topic">Previous</a> | <a href="09809.html" target="topic">Up</a> | <a href="09857.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twihs_11210_slave::TWIHSx_LastByteAckStatusGet Topic Title: TWIHSx_LastByteAckStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twihs_11210_slave::TWIHSx_IsBusy Topic Title: TWIHSx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TWIHSx_LastByteAckStatusGet Function</div>
+TWIHSx_IsBusy Function</div>
 </div>
 </div>
 
@@ -49,39 +49,42 @@ TWIHSx_LastByteAckStatusGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the ACK status of the last byte written to the TWI master.</p></div>
+This function returns true if the FLEXCOMx TWI module is busy with a transfer. The application can use the function to check if FLEXCOMx TWI module is busy with a data transfer. The function returns true as soon as the address match event occurs and it returns false after a STOP bit has been detected.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="09832.html" target="topic">TWIHS_SLAVE_ACK_STATUS</a> <strong><span style="color: #000000">TWIHSx_LastByteAckStatusGet</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TWIHSx_IsBusy</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="09854.html" target="topic">TWIHSx_Initialize</a> must have been called for the associated TWIHS instance.</p></div>
+<a href="09855.html" target="topic">TWIHSx_Initialize</a> must have been called for the associated FLEXCOM instance.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TWIHS_SLAVE_ACK_STATUS_RECEIVED_ACK - TWI master acknowledged the last byte TWIHS_SLAVE_ACK_STATUS_RECEIVED_NAK - TWI master sent NAK</p></div>
+
+<ul class="Element632">
+<li class="Element602">true - Busy.</li>
+<li class="Element602">false - Not busy.</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Since this API indicates the status of the last byte sent to the TWI master; for sending the first byte to the TWI master, the application must not call this API. Instead, the application should always send the first byte to TWI master's read request. The application would use this API when the TWIHS slave PLIB is used in polled mode (interrupt is disabled).</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="09832.html" target="topic">TWIHS_SLAVE_ACK_STATUS</a> ackStatus;
-    ackStatus = TWIHSx_LastByteAckStatusGet();
-</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// wait for the current transfer to complete</span></i>
+<strong><span style="color: #000080">while</span></strong>(TWIHS1_IsBusy( ));</pre></div></div>
 </div>
 </div>
 </div>
@@ -89,7 +92,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09799.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="09803.html" target="topic">Slave</a> &gt; <a href="09808.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="09856.html" target="topic">TWIHSx_LastByteAckStatusGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09800.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="09804.html" target="topic">Slave</a> &gt; <a href="09809.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="09856.html" target="topic">TWIHSx_IsBusy Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -100,10 +103,10 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="09855.html" target="topic">Previous</a> | <a href="09808.html" target="topic">Up</a> | <a href="09859.html" target="topic">Next</a></div>
+<a href="09858.html" target="topic">Previous</a> | <a href="09809.html" target="topic">Up</a> | <a href="09857.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twihs_11210_slave::TWIHSx_LastByteAckStatusGet Topic Title: TWIHSx_LastByteAckStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twihs_11210_slave::TWIHSx_IsBusy Topic Title: TWIHSx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

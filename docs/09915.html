@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>UARTx_AutoBaudSet Function</title>
+<title>UARTx_AutoBaudQuery Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09866.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="09867.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="09915.html" target="topic">UARTx_AutoBaudSet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09867.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="09868.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="09915.html" target="topic">UARTx_AutoBaudQuery Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -29,12 +29,12 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="10025.html" target="topic">Previous</a> | <a href="09867.html" target="topic">Up</a> | <a href="09918.html" target="topic">Next</a></div>
+<a href="10024.html" target="topic">Previous</a> | <a href="09868.html" target="topic">Up</a> | <a href="10012.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UARTx_AutoBaudSet@bool Topic Title: UARTx_AutoBaudSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UARTx_AutoBaudQuery Topic Title: UARTx_AutoBaudQuery Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-UARTx_AutoBaudSet Function</div>
+UARTx_AutoBaudQuery Function</div>
 </div>
 </div>
 
@@ -49,51 +49,28 @@ UARTx_AutoBaudSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API enables the auto-baud detection in hardware.</p></div>
+This API lets the application know if the auto-baud is complete or not. After enabling auto-baud, the hardware waits for a 0x55 character to determine the baud rate. Once complete, the API returns false.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">UARTx_AutoBaudSet</span></strong>(
-    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">enable</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">UARTx_AutoBaudQuery</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="09917.html" target="topic">UARTx_Initialize</a> must have been called for the associated UART instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-true&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-enable auto-baud detection&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-false&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-not supported, should not be used&nbsp;</div></td></tr></table></div></div>
-</div>
+<a href="09918.html" target="topic">UARTx_Initialize</a> must have been called for the associated UART instance and <a href="09916.html" target="topic">UARTx_AutoBaudSet</a>( true ) must have been called to enable auto-baud detection.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+
+<ul class="Element632">
+<li class="Element602">true - auto-baud operation is not complete</li>
+<li class="Element602">false - auto-baud operation is complete</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -119,7 +96,7 @@ UART1_AutoBaudSet(<strong><span style="color: #000080">true</span></strong>);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09866.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="09867.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="09915.html" target="topic">UARTx_AutoBaudSet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09867.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="09868.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="09915.html" target="topic">UARTx_AutoBaudQuery Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -130,10 +107,10 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="10025.html" target="topic">Previous</a> | <a href="09867.html" target="topic">Up</a> | <a href="09918.html" target="topic">Next</a></div>
+<a href="10024.html" target="topic">Previous</a> | <a href="09868.html" target="topic">Up</a> | <a href="10012.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UARTx_AutoBaudSet@bool Topic Title: UARTx_AutoBaudSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UARTx_AutoBaudQuery Topic Title: UARTx_AutoBaudQuery Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

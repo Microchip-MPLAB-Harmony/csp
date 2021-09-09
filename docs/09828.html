@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TWIHSx_TransferSetup Function</title>
+<title>TWIHSx_Read Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09799.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="09801.html" target="topic">Master</a> &gt; <a href="09800.html" target="topic">Library Interface</a> &gt; b) Setup Function &gt; <a href="09828.html" target="topic">TWIHSx_TransferSetup Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09800.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="09802.html" target="topic">Master</a> &gt; <a href="09801.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="09828.html" target="topic">TWIHSx_Read Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -29,12 +29,12 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="09825.html" target="topic">Previous</a> | <a href="09800.html" target="topic">Up</a> | <a href="09823.html" target="topic">Next</a></div>
+<a href="09824.html" target="topic">Previous</a> | <a href="09801.html" target="topic">Up</a> | <a href="09830.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twihs_11210_master::TWIHSx_TransferSetup@TWIHS_TRANSFER_SETUP*@uint32_t Topic Title: TWIHSx_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twihs_11210_master::TWIHSx_Read@uint16_t@uint8_t *@size_t Topic Title: TWIHSx_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TWIHSx_TransferSetup Function</div>
+TWIHSx_Read Function</div>
 </div>
 </div>
 
@@ -49,20 +49,21 @@ TWIHSx_TransferSetup Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API is generally used when there are multiple clients on the same TWIHS bus having different clock speed. In such a case, the TWIHSx_TransferSetup API must be called to set the appropriate bus speed before starting the read/write transfer for the I2C slave.</p></div>
+This function reads the data of size in bytes equal to length into pdata buffer from the slave having given address. Master will generate Stop condition after completion of the read.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TWIHSx_TransferSetup</span></strong>(
-    <a href="09821.html" target="topic">TWIHS_TRANSFER_SETUP</a>* <strong><span style="color: #000000">setup</span></strong>, 
-    uint32_t <strong><span style="color: #000000">srcClkFreq</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TWIHSx_Read</span></strong>(
+    uint16_t <strong><span style="color: #000000">address</span></strong>, 
+    uint8_t * <strong><span style="color: #000000">pdata</span></strong>, 
+    size_t <strong><span style="color: #000000">length</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="09825.html" target="topic">TWIHSx_Initialize</a> must have been called for the associated TWIHS instance. The transfer status should not be busy.</p></div>
+<a href="09826.html" target="topic">TWIHSx_Initialize</a> must have been called for the associated TWIHS instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -79,14 +80,19 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-setup&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to the structure containing the transfer setup.&nbsp;</div></td></tr><tr>
+7-bit / 10-bit slave address.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-srcClkFreq&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+pdata&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-TWIHS Peripheral Clock Source Frequency.&nbsp;</div></td></tr></table></div></div>
+pointer to destination data buffer&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+length of data buffer in number of bytes.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -94,32 +100,29 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-true - Transfer setup was updated Successfully. false - Failure while updating transfer setup.</p></div>
+
+<ul class="Element632">
+<li class="Element602">True - Read request was submitted successfully.</li>
+<li class="Element602">False - Failed while submitting the read request.</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-srcClkFreq overrides any change in the peripheral clock frequency. If configured to zero PLib takes the peripheral clock frequency from MHC.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<a href="09821.html" target="topic">TWIHS_TRANSFER_SETUP</a> setup;
+<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t myData [NUM_BYTES];
 
-setup.clkSpeed = 400000;
-
-<i><span style="color: #008000">// Make sure that the I2C is not busy before changing the I2C clock frequency</span></i>
-<strong><span style="color: #000080">if</span></strong> (<a href="09826.html" target="topic">TWIHSx_IsBusy</a>() == <strong><span style="color: #000080">false</span></strong>)
+<strong><span style="color: #000080">if</span></strong>(!TWIHS1_Read( SLAVE_ADDR, &amp;myData[0], NUM_BYTES ))
 {
-    <strong><span style="color: #000080">if</span></strong> (TWIHSx_TransferSetup( &amp;setup, 0 ) == <strong><span style="color: #000080">true</span></strong>)
-    {
-        <i><span style="color: #008000">// Transfer Setup updated successfully</span></i>
-    }
-}    </pre></div></div>
+    <i><span style="color: #008000">// error handling</span></i>
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -127,7 +130,7 @@ setup.clkSpeed = 400000;
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09799.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="09801.html" target="topic">Master</a> &gt; <a href="09800.html" target="topic">Library Interface</a> &gt; b) Setup Function &gt; <a href="09828.html" target="topic">TWIHSx_TransferSetup Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09800.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="09802.html" target="topic">Master</a> &gt; <a href="09801.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="09828.html" target="topic">TWIHSx_Read Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -138,10 +141,10 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="09825.html" target="topic">Previous</a> | <a href="09800.html" target="topic">Up</a> | <a href="09823.html" target="topic">Next</a></div>
+<a href="09824.html" target="topic">Previous</a> | <a href="09801.html" target="topic">Up</a> | <a href="09830.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twihs_11210_master::TWIHSx_TransferSetup@TWIHS_TRANSFER_SETUP*@uint32_t Topic Title: TWIHSx_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twihs_11210_master::TWIHSx_Read@uint16_t@uint8_t *@size_t Topic Title: TWIHSx_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

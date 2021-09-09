@@ -51,7 +51,7 @@ RTC_Timer16Start Function</div>
 <p class="Element10">
 This function starts the 16-bit timer. The timer will start counting up from the value that was set using the <a href="07669.html" target="topic">RTC_Timer16CounterSet</a>() function. The timer will count at a rate configured by the input clock and the input prescalar.&nbsp;</p>
 <p class="Element10">
-The timer can be configured to count up till a specific non-zero value. This value is specified using the <a href="07674.html" target="topic">RTC_Timer16PeriodSet</a>() function. Setting a non-zero will cause the timer counter to operate as timer. The counter will count up to the period value and then reset and start counting again. This causes a period expiry event. <a href="09648.html" target="topic">Timer</a> type operations are preferred to implement a delay or obtain periodic notification.&nbsp;</p>
+The timer can be configured to count up till a specific non-zero value. This value is specified using the <a href="07674.html" target="topic">RTC_Timer16PeriodSet</a>() function. Setting a non-zero will cause the timer counter to operate as timer. The counter will count up to the period value and then reset and start counting again. This causes a period expiry event. <a href="09649.html" target="topic">Timer</a> type operations are preferred to implement a delay or obtain periodic notification.&nbsp;</p>
 <p class="Element10">
 Setting the period to 0 will result in a counter type operation. In this mode, starting the timer will cause the counter to count up to 0xFFFF and then overflow to 0 and continue counting. This causes an overflow event. A counter can be used to count in timer input clock units. This is useful when needed to perform temporal measurements.&nbsp;</p>
 <p class="Element10">
@@ -65,7 +65,7 @@ Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="07652.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 16-bit <a href="09648.html" target="topic">Timer</a> Counter mode. The <a href="07674.html" target="topic">RTC_Timer16PeriodSet</a> and <a href="07669.html" target="topic">RTC_Timer16CounterSet</a> function should have been called to set the desired period and starting count.</p></div>
+<a href="07652.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 16-bit <a href="09649.html" target="topic">Timer</a> Counter mode. The <a href="07674.html" target="topic">RTC_Timer16PeriodSet</a> and <a href="07669.html" target="topic">RTC_Timer16CounterSet</a> function should have been called to set the desired period and starting count.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>

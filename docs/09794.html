@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TWIx_WriteRead Function</title>
+<title>TWIx_Write Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09774.html" target="topic">TWI Peripheral Library Help</a> &gt; <a href="09775.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="09794.html" target="topic">TWIx_WriteRead Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09775.html" target="topic">TWI Peripheral Library Help</a> &gt; <a href="09776.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="09794.html" target="topic">TWIx_Write Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -29,12 +29,12 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="09793.html" target="topic">Previous</a> | <a href="09775.html" target="topic">Up</a> | <a href="09788.html" target="topic">Next</a></div>
+<a href="09792.html" target="topic">Previous</a> | <a href="09776.html" target="topic">Up</a> | <a href="09795.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twi_6212_master::TWIx_WriteRead@uint16_t@uint8_t *@size_t@uint8_t *@size_t Topic Title: TWIx_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twi_6212_master::TWIx_Write@uint16_t@uint8_t *@size_t Topic Title: TWIx_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TWIx_WriteRead Function</div>
+TWIx_Write Function</div>
 </div>
 </div>
 
@@ -49,23 +49,21 @@ TWIx_WriteRead Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function writes data from wdata buffer to the slave of given address and of size(in bytes) equal to wlength. Master then generates a repeated start and do a read operation. Read operation reads data into rdata buffer of size(in bytes) equal to rlength from the slave of given address. Master generates a stop condition after reading the data.</p></div>
+This function writes the data from pdata buffer of size in bytes equal to length onto the slave with given address. Master will generate Stop condition after completion of the write.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TWIx_WriteRead</span></strong>(
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TWIx_Write</span></strong>(
     uint16_t <strong><span style="color: #000000">address</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">wdata</span></strong>, 
-    size_t <strong><span style="color: #000000">wlength</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">rdata</span></strong>, 
-    size_t <strong><span style="color: #000000">rlength</span></strong>
+    uint8_t * <strong><span style="color: #000000">pdata</span></strong>, 
+    size_t <strong><span style="color: #000000">length</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="09789.html" target="topic">TWIx_Initialize</a> must have been called for the associated TWI instance.</p></div>
+<a href="09790.html" target="topic">TWIx_Initialize</a> must have been called for the associated TWI instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -87,24 +85,14 @@ address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 7-bit / 10-bit slave address.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-wdata&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+pdata&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-pointer to write data buffer&nbsp;</div></td></tr><tr>
+pointer to source data buffer&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-wlength&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-write data length in bytes.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rdata&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to read data buffer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rlength&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-read data length in bytes.&nbsp;</div></td></tr></table></div></div>
+length of data buffer in number of bytes.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -114,8 +102,8 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element632">
-<li class="Element602">True - Write read request was submitted successfully.</li>
-<li class="Element602">False - Failed while submitting the write read request.</li>
+<li class="Element602">True - Write request was submitted successfully.</li>
+<li class="Element602">False - Failed while submitting the write request.</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -129,10 +117,9 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t myTxData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
-uint8_t myRxData [NUM_BYTES] = {0};
+<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
 
-<strong><span style="color: #000080">if</span></strong>(!TWIx_WriteRead( SLAVE_ADDR, &amp;myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
+<strong><span style="color: #000080">if</span></strong>(!TWI1_Write( SLAVE_ADDR, &amp;myData[0], NUM_BYTES ))
 {
     <i><span style="color: #008000">// error handling</span></i>
 }</pre></div></div>
@@ -143,7 +130,7 @@ uint8_t myRxData [NUM_BYTES] = {0};
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09774.html" target="topic">TWI Peripheral Library Help</a> &gt; <a href="09775.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="09794.html" target="topic">TWIx_WriteRead Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09775.html" target="topic">TWI Peripheral Library Help</a> &gt; <a href="09776.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="09794.html" target="topic">TWIx_Write Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -154,10 +141,10 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="09793.html" target="topic">Previous</a> | <a href="09775.html" target="topic">Up</a> | <a href="09788.html" target="topic">Next</a></div>
+<a href="09792.html" target="topic">Previous</a> | <a href="09776.html" target="topic">Up</a> | <a href="09795.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twi_6212_master::TWIx_WriteRead@uint16_t@uint8_t *@size_t@uint8_t *@size_t Topic Title: TWIx_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: twi_6212_master::TWIx_Write@uint16_t@uint8_t *@size_t Topic Title: TWIx_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

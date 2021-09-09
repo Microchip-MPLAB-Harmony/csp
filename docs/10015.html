@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>UARTx_ReadCountGet Function</title>
+<title>UARTx_ReadCallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09866.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="09867.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="10015.html" target="topic">UARTx_ReadCountGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09867.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="09868.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="10015.html" target="topic">UARTx_ReadCallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -29,12 +29,12 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="10020.html" target="topic">Previous</a> | <a href="09867.html" target="topic">Up</a> | <a href="10022.html" target="topic">Next</a></div>
+<a href="09926.html" target="topic">Previous</a> | <a href="09868.html" target="topic">Up</a> | <a href="10022.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_ring_buffer_00734::UARTx_ReadCountGet Topic Title: UARTx_ReadCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_ring_buffer_00734::UARTx_ReadCallbackRegister@UART_RING_BUFFER_CALLBACK@uintptr_t Topic Title: UARTx_ReadCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-UARTx_ReadCountGet Function</div>
+UARTx_ReadCallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,11 +49,14 @@ UARTx_ReadCountGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the number of bytes available in the receive buffer.</p></div>
+This function sets the pointer to a client function to be called &quot;back&quot; when the given UART's read events occur. It also passes a context value (usually a pointer to a context structure) that is passed into the function when it is called.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">UARTx_ReadCountGet</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">UARTx_ReadCallbackRegister</span></strong>(
+    <a href="10012.html" target="topic">UART_RING_BUFFER_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
@@ -61,33 +64,78 @@ Preconditions</div>
 <p class="Element10">
 UARTx_Initialize must have been called for the associated UART instance.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A pointer to a function with a calling signature defined by the <a href="10012.html" target="topic">UART_RING_BUFFER_CALLBACK</a> data type.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The API returns the number of bytes pending to be read out from the receive buffer. If 9-bit mode is enabled, then the API returns the number of 9-bit data pending to be read out from the receive buffer.</p></div>
+None</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API is only available when UART ring buffer mode is enabled in MHC.</p></div>
+This API is only available when UART ring buffer mode is enabled in MHC.&nbsp;</p>
+<p class="Element10">
+To disable the callback function, pass a NULL for the callback parameter. See the UART_CALLBACK type definition for additional information.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t rxBuffer[100];
-uint32_t nBytesAvailable;
+<div class="Element13"><div class="Element12"><pre class="Element12">
+uint8_t rxBuffer[50];
+uint32_t nBytes;
 
-nBytesAvailable = UART1_ReadCountGet();
-
-<strong><span style="color: #000080">if</span></strong> (nBytesAvailable != 0)
+<strong><span style="color: #000080">void</span></strong> usartReadEventHandler(<a href="10007.html" target="topic">UART_EVENT</a> event, uintptr_t context )
 {
-    UART1_Read((uint8_t*)rxBuffer, nBytesAvailable)
+    uint32_t nBytesAvailable = 0;
+
+    <strong><span style="color: #000080">if</span></strong> (event == UART_EVENT_READ_THRESHOLD_REACHED)
+    {
+        <i><span style="color: #008000">// Receiver should have the thershold number of bytes in the receive buffer</span></i>
+        nBytesAvailable = UART1_ReadCountGet();
+
+        nBytesRead += UART1_Read((uint8_t*)&amp;rxBuffer[nBytesRead], nBytesAvailable);
+    }
 }
+
+<i><span style="color: #008000">//----------------------------------------------------------//</span></i>
+
+<i><span style="color: #008000">// Register a callback for read events</span></i>
+UART1_ReadCallbackRegister(usartReadEventHandler, (uintptr_t) NULL);
+
+<i><span style="color: #008000">// Set a threshold value to receive a callback after every 10 characters are received</span></i>
+UART1_ReadThresholdSet(10);
+
+<i><span style="color: #008000">// Enable RX event notifications</span></i>
+UART1_ReadNotificationEnable(<strong><span style="color: #000080">true</span></strong>, <strong><span style="color: #000080">false</span></strong>);
 </pre></div></div>
 </div>
 </div>
@@ -96,7 +144,7 @@ nBytesAvailable = UART1_ReadCountGet();
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09866.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="09867.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="10015.html" target="topic">UARTx_ReadCountGet Function</a></div>
+<a href="06570.html" target="topic">Peripheral Library Overview</a> &gt; <a href="06102.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="06569.html" target="topic">Peripheral Libraries</a> &gt; <a href="09867.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="09868.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="10015.html" target="topic">UARTx_ReadCallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -107,10 +155,10 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="06570.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="10020.html" target="topic">Previous</a> | <a href="09867.html" target="topic">Up</a> | <a href="10022.html" target="topic">Next</a></div>
+<a href="09926.html" target="topic">Previous</a> | <a href="09868.html" target="topic">Up</a> | <a href="10022.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_ring_buffer_00734::UARTx_ReadCountGet Topic Title: UARTx_ReadCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_ring_buffer_00734::UARTx_ReadCallbackRegister@UART_RING_BUFFER_CALLBACK@uintptr_t Topic Title: UARTx_ReadCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
