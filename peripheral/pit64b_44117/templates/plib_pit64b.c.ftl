@@ -96,7 +96,8 @@ void ${PIT64B_INSTANCE_NAME}_TimerRestart(void)
     ${PIT64B_INSTANCE_NAME}_TimerInitialize();
     ${PIT64B_INSTANCE_NAME}_TimerStart();
 <#else>
-    ${PIT64B_INSTANCE_NAME}_TimerPeriodSet(${PIT64B_INSTANCE_NAME?lower_case}.period);
+    ${PIT64B_INSTANCE_NAME}_PERIOD_SET(${PIT64B_INSTANCE_NAME?lower_case}.periodLSB, ${PIT64B_INSTANCE_NAME?lower_case}.periodMSB);
+    ${PIT64B_INSTANCE_NAME?lower_case}.running = true;
 </#if>
 }
 
