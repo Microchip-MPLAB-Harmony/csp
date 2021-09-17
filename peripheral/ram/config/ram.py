@@ -21,7 +21,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-RamNames = ["HSRAM", "HRAMC0", "HMCRAMC0", "IRAM", "EBI_MPDDR", "FlexRAM", "FLEXRAM", "DRAM", "SDRAM_CS", "DDR_CS", "kseg0_data_mem", "kseg1_data_mem"]
+RamNames = ["HSRAM", "HRAMC0", "HMCRAMC0", "IRAM", "EBI_MPDDR", "FlexRAM", "FLEXRAM", "DRAM", "SDRAM_CS", "DDR_CS", "kseg0_data_mem", "kseg1_data_mem", "RAM_SYSTEM_RAM"]
 
 addr_space          = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space")
 addr_space_children = addr_space.getChildren()
