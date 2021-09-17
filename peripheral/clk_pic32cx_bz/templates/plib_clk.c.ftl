@@ -257,6 +257,14 @@ void CLK_Initialize( void )
     // Change src_clk source to PLL CLK
     BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |= 0x00000010;
 
-    // set bt_en_main_clk[20], bt_pdc_ov[16], zb_en_main_clk[4]
+<#if ZIGBEE_CLOCK_ENABLE == true>
+    // set aclb_reset_n[24], bt_en_main_clk[20] zb_en_main_clk[4]
     BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 = 0x01100010;
+<#elseif BLE_CLOCK_ENABLE == true>
+    // set aclb_reset_n[24], bt_en_main_clk[20]
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 = 0x01100000;
+<#else>
+    // set aclb_reset_n[24]
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 = 0x01000000;
+</#if>
 }
