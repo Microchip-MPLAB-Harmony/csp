@@ -517,12 +517,15 @@ def instantiateComponent(sercomComponent):
     ###################################################################################################
     ########################################## SERCOM MODE ############################################
     ###################################################################################################
-
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_usart.py")
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_spi_master.py")
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_spi_slave.py")
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_i2c_master.py")
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_i2c_slave.py")
+    if sercomDisableUSART != 1:
+        execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_usart.py")
+    if sercomDisableSPI != 1:
+        execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_spi_master.py")
+        execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_spi_slave.py")
+    if sercomDisableI2CM != 1:        
+        execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_i2c_master.py")
+    if sercomDisableI2CS != 1:        
+        execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_i2c_slave.py")
 
     ############################################################################
     #### Dependency ####
