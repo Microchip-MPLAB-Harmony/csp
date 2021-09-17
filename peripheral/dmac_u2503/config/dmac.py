@@ -338,6 +338,8 @@ dmacInstanceName.setDefaultValue(instances[0].getAttribute("name"))
 dmacInstanceName.setVisible(False)
 
 dmacChannelNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]/instance@[name=\""+dmacInstanceName.getValue()+"\"]/parameters/param@[name=\"CH_NUM\"]")
+if dmacChannelNode is None:
+    dmacChannelNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]/instance@[name=\""+dmacInstanceName.getValue()+"\"]/parameters/param@[name=\"DMA_CH_NUM\"]") 
 dmacChannelCount = int(dmacChannelNode.getAttribute("value"))
 
 dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
