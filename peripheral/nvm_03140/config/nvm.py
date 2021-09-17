@@ -27,14 +27,15 @@ def nvmSetMemoryDependency(symbol, event):
     symbol.setVisible(event["value"])
 
 def setNVMInterruptData(status):
-
+    global NVM_nameInATDF
+    
     Database.setSymbolValue("core", nvmInterruptVector, status, 1)
     Database.setSymbolValue("core", nvmInterruptHandlerLock, status, 1)
 
     if status == True:
         Database.setSymbolValue("core", nvmInterruptHandler, nvmInstanceName.getValue() + "_InterruptHandler", 1)
     else:
-        Database.setSymbolValue("core", nvmInterruptHandler, "FLASH_CONTROL_Handler", 1)
+        Database.setSymbolValue("core", nvmInterruptHandler, NVM_nameInATDF + "_Handler", 1)
 
 def updateNVMInterruptData(symbol, event):
 
@@ -79,6 +80,18 @@ def getIRQnumber(string):
 
     return irq_index
 
+def get_NVM_name():
+
+    interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+    NVM_name = ""
+
+    for param in interruptsChildren:
+        modInst = param.getAttribute("module-instance")
+        if "NVM" == modInst:
+            NVM_name = param.getAttribute("name")
+            break
+
+    return NVM_name
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -97,17 +110,20 @@ def instantiateComponent(nvmComponent):
     nvmInstanceName.setDefaultValue(nvmComponent.getID().upper())
     Log.writeInfoMessage("Running " + nvmInstanceName.getValue())
 
-    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
-        nvmFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"code\"]")
-    else:
+
+    nvmFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"code\"]")
+    if nvmFlashNode is None:
         nvmFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FLASH\"]")
+    if nvmFlashNode is None:
+        nvmFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FCR_PFM\"]")
 
     ##### Do not modify below symbol names as they are used by Memory Driver #####
 
     flashStartAddress = nvmFlashNode.getAttribute("start")
 
-    #Convert Physical Address to Virtual Address 0x1Dxxxxx to 0x9Dxxxx
-    flashStartAddress = flashStartAddress.replace('0x1', '0x9')
+    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
+        #Convert Physical Address to Virtual Address 0x1Dxxxxx to 0x9Dxxxx
+        flashStartAddress = flashStartAddress.replace('0x1', '0x9')
 
     #Flash Address
     nvmSym_FLASH_ADDRESS = nvmComponent.createStringSymbol("FLASH_START_ADDRESS", None)
@@ -122,7 +138,7 @@ def instantiateComponent(nvmComponent):
     nvmParamNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVM\"]/instance@[name=\"" + nvmInstanceName.getValue() + "\"]/parameters")
 
     pageSize = "4096"
-    rowSize = "512"
+    rowSize = "1024"
 
     if nvmParamNode != None:
         param_values = []
@@ -190,11 +206,12 @@ def instantiateComponent(nvmComponent):
     ################# Interrupt Settings ###########################
 
     # Get register names, mask values, bit shifts based on vector number
-    nvmInterruptVector = "FLASH_CONTROL_INTERRUPT_ENABLE"
-    nvmInterruptHandler = "FLASH_CONTROL_INTERRUPT_HANDLER"
-    nvmInterruptHandlerLock = "FLASH_CONTROL_INTERRUPT_HANDLER_LOCK"
-    nvmInterruptVectorUpdate = "FLASH_CONTROL_INTERRUPT_ENABLE_UPDATE"
-    nvmIrq_index = int(getIRQnumber("FLASH_CONTROL"))
+    NVM_nameInATDF = get_NVM_name()
+    nvmInterruptVector = NVM_nameInATDF + "_INTERRUPT_ENABLE"
+    nvmInterruptHandler = NVM_nameInATDF + "_INTERRUPT_HANDLER"
+    nvmInterruptHandlerLock = NVM_nameInATDF + "_INTERRUPT_HANDLER_LOCK"
+    nvmInterruptVectorUpdate = NVM_nameInATDF + "_INTERRUPT_ENABLE_UPDATE"
+    nvmIrq_index = int(getIRQnumber(NVM_nameInATDF))
 
     #Configures the library for interrupt mode operations
     nvmInterruptEnable = nvmComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
