@@ -151,10 +151,10 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
 	<#if EIC_DEBOUNCEN?? && EIC_DEBOUNCEN != "0">
     /* Debouncer Setting */
     <@compress single_line=true>${EIC_INSTANCE_NAME}_REGS->EIC_DPRESCALER = EIC_DPRESCALER_PRESCALER0(${EIC_DEBOUNCER_PRESCALER_0}UL)
-                                                        | EIC_DPRESCALER_PRESCALER1(${EIC_DEBOUNCER_PRESCALER_1}UL)
+                                                        <#if EIC_DEBOUNCER_PRESCALER_1??>| EIC_DPRESCALER_PRESCALER1(${EIC_DEBOUNCER_PRESCALER_1}UL)</#if>
                                                         ${(EIC_PRESCALER_TICKON == "1")?then('| EIC_DPRESCALER_TICKON_Msk' , '')}
                                                         ${(EIC_DEBOUNCER_NO_STATES_0 == "1")?then('| EIC_DPRESCALER_STATES0_Msk' , '')}
-                                                        ${(EIC_DEBOUNCER_NO_STATES_1 == "1")?then('| EIC_DPRESCALER_STATES1_Msk' , '')};</@compress>
+                                                        <#if EIC_DEBOUNCER_NO_STATES_1??>${(EIC_DEBOUNCER_NO_STATES_1 == "1")?then('| EIC_DPRESCALER_STATES1_Msk' , '')}</#if>;</@compress>
 	</#if>
 
     <#if EIC_INT != "0">

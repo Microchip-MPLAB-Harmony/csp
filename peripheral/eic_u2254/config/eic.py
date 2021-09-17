@@ -177,6 +177,8 @@ def instantiateComponent(eicComponent):
     Database.setSymbolValue("core", eicInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
     extIntNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EIC\"]/instance@[name=\""+eicInstanceName.getValue()+"\"]/parameters/param@[name=\"EXTINT_NUM\"]")
+    if extIntNode is None:
+        extIntNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EIC\"]/instance@[name=\""+eicInstanceName.getValue()+"\"]/parameters/param@[name=\"CHIP_EIC_EXTINT_NUM\"]")
     extIntCount = int(extIntNode.getAttribute("value"))
     eicSym_IntCount = eicComponent.createIntegerSymbol("EIC_INT_COUNT" , None)
     eicSym_IntCount.setDefaultValue(extIntCount)
@@ -412,38 +414,39 @@ def instantiateComponent(eicComponent):
         DEBOUNCER_PRESCALER_SelectionSymbol.setDisplayMode("Description")
 
         #DEBOUNCER - Number of States x (8:15)
-        DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_1" , eicDebounceMenu)
-        DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States Duration for EXTINT[15:8]")
-
         eicStates0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"STATES1\"]")
-        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicStates0Node.getAttribute("values") + "\"]")
+        if eicStates0Node != None:
+            eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicStates0Node.getAttribute("values") + "\"]")
 
-        for index in range(len(eicStatesxNode.getChildren())):
-            eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
-            eicStatesxKeyDescription = eicStatesxNode.getChildren()[index].getAttribute("caption")
-            eicStatesxKeyValue = eicStatesxNode.getChildren()[index].getAttribute("value")
-            DEBOUNCER_NO_STATES_SelectionSymbol.addKey(eicStatesxKeyName, eicStatesxKeyValue , eicStatesxKeyDescription)
+            DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_1" , eicDebounceMenu)
+            DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States Duration for EXTINT[15:8]")
 
-        DEBOUNCER_NO_STATES_SelectionSymbol.setDefaultValue(0)
-        DEBOUNCER_NO_STATES_SelectionSymbol.setOutputMode("Value")
-        DEBOUNCER_NO_STATES_SelectionSymbol.setDisplayMode("Description")
+            for index in range(len(eicStatesxNode.getChildren())):
+                eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
+                eicStatesxKeyDescription = eicStatesxNode.getChildren()[index].getAttribute("caption")
+                eicStatesxKeyValue = eicStatesxNode.getChildren()[index].getAttribute("value")
+                DEBOUNCER_NO_STATES_SelectionSymbol.addKey(eicStatesxKeyName, eicStatesxKeyValue , eicStatesxKeyDescription)
 
-        #BOUNCER - Prescaler x (8:15)
-        DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_1" , eicDebounceMenu)
-        DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[15:8]")
+            DEBOUNCER_NO_STATES_SelectionSymbol.setDefaultValue(0)
+            DEBOUNCER_NO_STATES_SelectionSymbol.setOutputMode("Value")
+            DEBOUNCER_NO_STATES_SelectionSymbol.setDisplayMode("Description")
 
-        eicPrescaler0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"PRESCALER1\"]")
-        eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicPrescaler0Node.getAttribute("values") + "\"]")
+            #BOUNCER - Prescaler x (8:15)
+            DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_1" , eicDebounceMenu)
+            DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[15:8]")
 
-        for index in range(len(eicPrescalerNode.getChildren())):
-            eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
-            eicPrescalerKeyDescription = eicPrescalerNode.getChildren()[index].getAttribute("caption")
-            eicPrescalerKeyValue = eicPrescalerNode.getChildren()[index].getAttribute("value")
-            DEBOUNCER_PRESCALER_SelectionSymbol.addKey(eicPrescalerKeyName, eicPrescalerKeyValue , eicPrescalerKeyDescription)
+            eicPrescaler0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"PRESCALER1\"]")
+            eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicPrescaler0Node.getAttribute("values") + "\"]")
 
-        DEBOUNCER_PRESCALER_SelectionSymbol.setDefaultValue(0)
-        DEBOUNCER_PRESCALER_SelectionSymbol.setOutputMode("Value")
-        DEBOUNCER_PRESCALER_SelectionSymbol.setDisplayMode("Description")
+            for index in range(len(eicPrescalerNode.getChildren())):
+                eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
+                eicPrescalerKeyDescription = eicPrescalerNode.getChildren()[index].getAttribute("caption")
+                eicPrescalerKeyValue = eicPrescalerNode.getChildren()[index].getAttribute("value")
+                DEBOUNCER_PRESCALER_SelectionSymbol.addKey(eicPrescalerKeyName, eicPrescalerKeyValue , eicPrescalerKeyDescription)
+
+            DEBOUNCER_PRESCALER_SelectionSymbol.setDefaultValue(0)
+            DEBOUNCER_PRESCALER_SelectionSymbol.setOutputMode("Value")
+            DEBOUNCER_PRESCALER_SelectionSymbol.setDisplayMode("Description")
 
     ############################################################################
     #### Dependency ####
