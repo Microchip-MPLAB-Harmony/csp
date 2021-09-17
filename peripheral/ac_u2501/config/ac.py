@@ -156,7 +156,7 @@ def instantiateComponent(acComponent):
     parameters = []
     parameters = node.getChildren()
     for param in range (0, len(parameters)):
-        if(parameters[param].getAttribute("name") == "NUM_CMP"):
+        if("NUM_CMP" in parameters[param].getAttribute("name")):
             numOfComparators = int(parameters[param].getAttribute("value"))
         if(parameters[param].getAttribute("name") == "LOAD_CALIB"):
             calibRequired = int(parameters[param].getAttribute("value"))
@@ -367,6 +367,11 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_RUNSTDBY.setDefaultValue(False)
         acSym_COMPCTRL_RUNSTDBY.setVisible(False)
         acSym_COMPCTRL_RUNSTDBY.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+
+        if ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"COMPCTRL\"]/bitfield@[name=\"SPEED\"]") != None:
+            acSym_COMPCTRL_SPEED = acComponent.createIntegerSymbol("AC" + str(comparatorID) + "_COMPCTRL_SPEED", acSym_Enable[comparatorID])
+            acSym_COMPCTRL_SPEED.setDefaultValue(3)
+            acSym_COMPCTRL_SPEED.setVisible(False)
 
         if dacctrl_reg_present == True:
             # Internal DAC Configuration -

@@ -209,7 +209,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     <#assign AC_COMPCTRL_HYSTEN = "AC" + i + "_HYSTEN">
     <#assign AC_COMPCTRL_HYST_VAL = "AC" + i + "_HYST_VAL">
     <#assign AC_COMPCTRL_RUNSTDBY = "AC" + i + "_COMPCTRL_RUNSTDBY">
-    <#assign AC_COMPCTRL_SPEED = "AC" + i + "_SPEED">
+    <#assign AC_COMPCTRL_SPEED = "AC" + i + "_COMPCTRL_SPEED">
     <#assign AC_COMPCTRL_FLEN = "AC" + i + "_FLEN_VAL">
     <#assign AC_COMPCTRL_SUT = "AC" + i + "_COMPCTRL_SUT">
     <#assign AC_SCALERn = "AC_SCALER_N_" + i>
@@ -224,7 +224,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   | AC_COMPCTRL_MUXNEG_${.vars[AC_COMPCTRL_MUXNEG]}
                                   | AC_COMPCTRL_INTSEL_${.vars[AC_COMPCTRL_INTSEL]}
                                   | AC_COMPCTRL_OUT_${.vars[AC_COMPCTRL_OUTPUT_TYPE]}
-                                  | AC_COMPCTRL_SPEED(0x03U)
+                                  <#if .vars[AC_COMPCTRL_SPEED]?has_content> | AC_COMPCTRL_SPEED(${.vars[AC_COMPCTRL_SPEED]}) </#if>
                                   | AC_COMPCTRL_FLEN_${.vars[AC_COMPCTRL_FLEN]}
                                   ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')}
                                   ${.vars[AC_COMPCTRL_RUNSTDBY]?then(' | AC_COMPCTRL_RUNSTDBY_Msk','')}
