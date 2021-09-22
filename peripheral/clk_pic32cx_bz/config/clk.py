@@ -120,51 +120,87 @@ _1200_Mhz = 1200000000
 _1600_Mhz = 1600000000
 
 
-global peripheralBusDict
-peripheralBusDict = {}
+global pmdDict
+pmdDict = {}
+pmdDict_bz2 = {}
+pmdDict_bz3 = {}
 
-peripheralBusDict =  {
+pmdDict_bz2 =  {
 
-        #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
-        # if "Peripheral bus no" == -1 then clocked by SYSCLK
+        #Peripheral : ["PMD register no", "PMD register bit no"]
 
-        "ZIGBEE":["2","1","0"],
-        "BLE":["2","1","1"],
-        "MPA":["2","1","2"], # RF Hogh Power
-        "LPA":["2","1","3"], # RF Low Power
-        "PLVD":["1","1","4"],
-        "AC":["1","1","6"],
-        "ADCHS":["2","1","7","8"], # ADC has multiple PMD bits
-       # "ADCSAR":["2","1","8"],
-        "RTC":["4","1","16"],
-        "QSPI":["3","1","29"],
+        "ZIGBEE":["1","0"],
+        "BLE":["1","1"],
+        "MPA":["1","2"], # RF High Power
+        "LPA":["1","3"], # RF Low Power
+        "PLVD":["1","4"],
+        "AC":["1","6"],
+        "ADCHS":["1","7","8"], # ADC has multiple PMD bits
+        "RTC":["1","16"],
+        "QSPI":["1","29"],
 
-        "REFO1":["-1","2","28"],
-        "REFO2":["-1","2","29"],
-        "REFO3":["-1","2","30"],
-        "REFO4":["-1","2","31"],
-        "REFO5":["-1","2","24"],
-        "REFO6":["-1","2","25"],
+        "REFO1":["2","28"],
+        "REFO2":["2","29"],
+        "REFO3":["2","30"],
+        "REFO4":["2","31"],
+        "REFO5":["2","24"],
+        "REFO6":["2","25"],
 
-        "SERCOM0_CORE":["3","3","0"],
-        "SERCOM1_CORE":["3","3","1"],
-        "SERCOM2_CORE":["1","3","2"],
-        "SERCOM3_CORE":["3","3","3"],
-        "ICM":["2","3","4"], # INTEGRITY CHECK MONITOR
-        "PUKCC":["3","3","5"], # PUBLIC KEY CRYPTOGRAPHY CONTROLLER
-        "TRNG":["3","3","6"],
-        "AES":["2","3","7"], # ADVANCED ENCRYPTION STANDARD
-        "TC0":["-1","3","8"],
-        "TC1":["-1","3","9"],
-        "TC2":["-1","3","10"],
-        "TC3":["-1","3","11"],
-        "TCC0":["-1","3","12"],
-        "TCC1":["-1","3","13"],
-        "TCC2":["-1","3","14"],
+        "SERCOM0_CORE":["3","0"],
+        "SERCOM1_CORE":["3","1"],
+        "SERCOM2_CORE":["3","2"],
+        "SERCOM3_CORE":["3","3"],
+        "ICM":["3","4"], # INTEGRITY CHECK MONITOR
+        "PUKCC":["3","5"], # PUBLIC KEY CRYPTOGRAPHY CONTROLLER
+        "TRNG":["3","6"],
+        "AES":["3","7"], # ADVANCED ENCRYPTION STANDARD
+        "TC0":["3","8"],
+        "TC1":["3","9"],
+        "TC2":["3","10"],
+        "TC3":["3","11"],
+        "TCC0":["3","12"],
+        "TCC1":["3","13"],
+        "TCC2":["3","14"],
+}
+
+pmdDict_bz3 =  {
+
+        #Peripheral : ["PMD register no", "PMD register bit no"]
+        "ZIGBEE":[], # empty list because there is no PMD bit for this peripheral. however, CLOCK_ENABLE symbol for it is still needed, hence it is made part of this dictionary
+        "BLE":[], # empty list because there is no PMD bit for this peripheral. however, CLOCK_ENABLE symbol for it is still needed, hence it is made part of this dictionary
+        "AC":["1","6"],
+        "ADCHS":["1","7","8", "9"], # ADC has multiple PMD bits
+        #"CVD":["1","9"], #CVD is part of ADCHS itself
+        "RTC":["1","16"],
+        "DGISPI":["1","23"],
+        "QSPI":["1","29"],
+
+        "REFO1":["2","28"],
+        "REFO2":["2","29"],
+        "REFO3":["2","30"],
+        "REFO4":["2","31"],
+        "REFO5":["2","24"],
+        "REFO6":["2","25"],
+
+        "SERCOM0_CORE":["3","0"],
+        "SERCOM1_CORE":["3","1"],
+        "SERCOM2_CORE":["3","2"],
+        "DAC":["3","3"],
+        "TC0":["3","4"],
+        "TC1":["3","5"],
+        "TC2":["3","6"],
+        "TC3":["3","7"],
+        "TC4":["3","8"],
+        "TC5":["3","9"],
+        "TC6":["3","10"],
+        "TC7":["3","11"],        
+        "TCC0":["3","12"],
+        "TCC1":["3","13"],
+        "TCC2":["3","14"],
 }
 
 global defaultEnablePeripheralsList
-defaultEnablePeripheralsList = ["PLVD", "REFO1", "REFO2", "REFO3", "REFO4", "REFO5", "REFO6"]
+defaultEnablePeripheralsList = ["PLVD","REFO1", "REFO2", "REFO3", "REFO4", "REFO5", "REFO6", "DGISPI"]
 
 global item_update
 
@@ -710,16 +746,16 @@ def updatePMDxRegValue(symbol, event):
     else:    
         periName = event["id"].replace("_CLOCK_ENABLE", "")
 
-    if periName in peripheralBusDict:
-        pmdRegId = "PMD" + peripheralBusDict[periName][1] + "_REG_VALUE"
+    if (periName in pmdDict) and (pmdDict[periName]):
+        pmdRegId = "PMD" + pmdDict[periName][0] + "_REG_VALUE"
         pmdxValue = Database.getSymbolValue("core", pmdRegId)
 
         # Check if peripheral is having multiple PMD bits
-        if len(peripheralBusDict[periName]) > 3:
-            for i in range(2, len(peripheralBusDict[periName])):
-                bitShift |= 1 << int(peripheralBusDict[periName][i])
+        if len(pmdDict[periName]) > 2:
+            for i in range(1, len(pmdDict[periName])):
+                bitShift |= 1 << int(pmdDict[periName][i])
         else:
-            bitShift = 1 << int(peripheralBusDict[periName][2])
+            bitShift = 1 << int(pmdDict[periName][1])
 
         if event["value"]:
             pmdxValue = pmdxValue & ~bitShift
@@ -755,7 +791,10 @@ def soscOutFreqCalc(symbol, event):
 # SPLL3 or RFPLL
 global spll3DefaultFreq 
 def spll3DefaultFreq():
-    return (Database.getSymbolValue("core","POSC_OUT_FREQ") * 6)
+    if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32CX_BZ2":
+        return (Database.getSymbolValue("core","POSC_OUT_FREQ") * 6)
+    else: #BZ3
+        return (Database.getSymbolValue("core","POSC_OUT_FREQ") * 4)
 
 global spll3OutFreqCalc 
 def spll3OutFreqCalc(symbol, event):
@@ -770,8 +809,8 @@ def spll1DefaultFreq():
 
     if dividor == 0: # meaning it is divide by 1
         return freq
-    elif dividor == 1: # meaning it is divide by 1.5
-        return (freq * 2)/3
+    elif dividor == 1 and Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32CX_BZ2":
+        return (freq * 2)/3 # divide by 1.5
     else:
         return (freq/dividor)
 
@@ -1123,7 +1162,7 @@ global updateOSCCon
 
 def updateOSCCon(symbol, event):
     # updates OSCCON register value based on any of its bitfield values changing
-    startVal = symbol.getValue()  # value for the register SPLLCON
+    startVal = symbol.getValue()  # value for the register OSCCON
     for ii in osccon_symbols:
         if(ii['name'] == event['id'].split('OSCCON_')[1].split('_VALUE')[0]):
             maskval = ii['symmaskname'].getValue()
@@ -1232,7 +1271,7 @@ def scan_atdf_for_osccon_fields(component, parentMenu, regNode):
     global osccon_symbols
     osccon_symbols = [
                         {'name':'OSWEN', 'symmaskname':'osccon_oswen_mask', 'symvaluename':'osccon_oswen_val', 'keyvalbuf':'oswen', 'visible':'False'},
-                        {'name':'SOSCEN', 'symmaskname':'osccon_soscen_mask', 'symvaluename':'osccon_soscen_val', 'keyvalbuf':'soscen', 'visible':'True'},
+                        {'name':'SOSCEN', 'symmaskname':'osccon_soscen_mask', 'symvaluename':'osccon_soscen_val', 'keyvalbuf':'soscen', 'visible':'False'},
                         {'name':'CF', 'symmaskname':'osccon_cf_mask', 'symvaluename':'osccon_cf_val', 'keyvalbuf':'cf', 'visible':'False'},
                         {'name':'SLPEN', 'symmaskname':'osccon_slpen_mask', 'symvaluename':'osccon_slpen_val', 'keyvalbuf':'slpen', 'visible':'False'},
                         {'name':'CLKLOCK', 'symmaskname':'osccon_clklock_mask', 'symvaluename':'osccon_clklock_val', 'keyvalbuf':'clklock', 'visible':'False'},
@@ -1255,12 +1294,12 @@ def scan_atdf_for_osccon_fields(component, parentMenu, regNode):
                     ii['symvaluename'].setDescription(where.getAttribute('caption'))
                     ii['symvaluename'].setDefaultValue(_get_default_value(clkRegGrp_OSCCON, ii['name'], where))
                     if(ii['name']=='SOSCEN'):   # on reset, this field is set to DEVCFG4:SOSCEN bitfield
-                        targetSym = 'CONFIG_SOSCEN'
+                        targetSym = 'CONFIG_LPOSCEN'
                         soscenVal = Database.getSymbolValue("core",targetSym)
                         for jj in ii['keyvalbuf']:
                             if(jj == soscenVal):
                                 ii['symvaluename'].setDefaultValue(jj)
-                        ii['symvaluename'].setDependencies(item_update, ["core."+targetSym])  # update SOSCEN whenever user updates DEVCFG4:SOSCEN
+                        ii['symvaluename'].setDependencies(item_update, [targetSym])  # update SOSCEN whenever user updates DEVCFG4:SOSCEN
                 else:   # numeric bitfield (no <value-group ..> section associated with it)
                     ii['symvaluename'] = component.createIntegerSymbol('OSCCON_'+ii['name']+'_VALUE', parentMenu)
                     ii['symvaluename'].setDefaultValue(_get_default_value(clkRegGrp_OSCCON, ii['name'], 'None'))
@@ -1279,13 +1318,14 @@ def scan_atdf_for_osccon_fields(component, parentMenu, regNode):
                     frcdivBfValSym.setDefaultValue(int(ii['keyvalbuf'][(_get_default_value(clkRegGrp_OSCCON, ii['name'], where))]))
 
                 dependencyList.append('OSCCON_'+ii['name'].upper()+'_VALUE')
-
+                
     # get initial value of OSCCON register from 'initval' field in atdf file
     symbolOscconValue = component.createHexSymbol("OSCCON_VALUE", parentMenu)
     symbolOscconValue.setVisible(False)
     initialOscconVal = int((clkRegGrp_OSCCON.getAttribute('initval')),16)
     symbolOscconValue.setDefaultValue(initialOscconVal)
     symbolOscconValue.setDependencies(updateOSCCon, dependencyList)
+    Database.setSymbolValue("core", 'OSCCON_NOSC_VALUE', "SPLL") # make the device run from SPLL after clock initialization
 
 if __name__ == "__main__":
 
@@ -1330,8 +1370,13 @@ if __name__ == "__main__":
 
     CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
     CLK_MANAGER_SELECT.setVisible(False)
-    CLK_MANAGER_SELECT.setDefaultValue("clk_pic32cx_bz:MZClockModel")
-
+    if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32CX_BZ2":
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32cx_bz:MZClockModel")
+        pmdDict = pmdDict_bz2
+    else:
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32cx_bz:MZClockModel")
+        pmdDict = pmdDict_bz3
+        
     # parse atdf file to get key parameters
     atdf_file_path = join(Variables.get("__DFP_PACK_DIR"), "atdf", Variables.get("__PROCESSOR") + ".atdf")
     atdf_file = open(atdf_file_path, "r")
@@ -1653,7 +1698,10 @@ if __name__ == "__main__":
             oeSymbolList[listIndex].setDescription("Sets whether to have reference clock 1 output enable")
             oeSymbolList[listIndex].setReadOnly(False)
             oeSymbolList[listIndex].setDefaultValue(False)
-            oeSymbolList[listIndex].setVisible(False)
+            if clk == "1": # refo1 is enabled by default, so corresponding symbols should be visible by default
+                oeSymbolList[listIndex].setVisible(True)
+            else:
+                oeSymbolList[listIndex].setVisible(False)
 
         # ROSEL
         srcSymId = "CONFIG_SYS_CLK_REFCLK_SOURCE" + clk
@@ -1666,7 +1714,10 @@ if __name__ == "__main__":
         sourceSymbolList[listIndex].setDescription(clkValGrp_REFO1CON__ROSEL.getAttribute('caption'))
         sourceSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
         sourceSymbolList[listIndex].setDefaultValue("SPLL1")
-        sourceSymbolList[listIndex].setVisible(False)
+        if clk == "1": # refo1 is enabled by default, so corresponding symbols should be visible by default
+            sourceSymbolList[listIndex].setVisible(True)
+        else:
+            sourceSymbolList[listIndex].setVisible(False)
         symbolRoselValueList.append({'symbol':sourceSymbolList[listIndex],'index':clk})
         for ii in roselsrc:
             roselMap[ii] = roselsrc[ii]
@@ -1681,7 +1732,10 @@ if __name__ == "__main__":
         rodivSymbolList[listIndex].setMin(minValue)
         rodivSymbolList[listIndex].setMax(maxValue)
         rodivSymbolList[listIndex].setDefaultValue(0)
-        rodivSymbolList[listIndex].setVisible(False)
+        if clk == "1": # refo1 is enabled by default, so corresponding symbols should be visible by default
+            rodivSymbolList[listIndex].setVisible(True)
+        else:
+            rodivSymbolList[listIndex].setVisible(False)
         symbolRodivValueList.append({'symbol':rodivSymbolList[listIndex],'index':clk})
 
         # ROTRIM
@@ -1693,7 +1747,10 @@ if __name__ == "__main__":
         rotrimSymbolList[listIndex].setMin(minValue)
         rotrimSymbolList[listIndex].setMax(maxValue)
         rotrimSymbolList[listIndex].setDefaultValue(0)
-        rotrimSymbolList[listIndex].setVisible(False)
+        if clk == "1": # refo1 is enabled by default, so corresponding symbols should be visible by default
+            rotrimSymbolList[listIndex].setVisible(True)
+        else:
+            rotrimSymbolList[listIndex].setVisible(False)
         symbolRotrimUserVal.append({'symbol':rotrimSymbolList[listIndex],'index':clk})
 
         #RSLP
@@ -1704,7 +1761,10 @@ if __name__ == "__main__":
         rslpSymbolList[listIndex].setDescription("Sets whether to run the reference clock 1 output in sleep mode or not")
         rslpSymbolList[listIndex].setReadOnly(False)
         rslpSymbolList[listIndex].setDefaultValue(False)
-        rslpSymbolList[listIndex].setVisible(False)
+        if clk == "1": # refo1 is enabled by default, so corresponding symbols should be visible by default
+            rslpSymbolList[listIndex].setVisible(True)
+        else:
+            rslpSymbolList[listIndex].setVisible(False)
 
         #SIDL
         sidlSymId = "CONFIG_SYS_CLK_REFCLK_SIDL" + clk
@@ -1714,7 +1774,10 @@ if __name__ == "__main__":
         sidlSymbolList[listIndex].setDescription("Sets whether to run the reference clock 1 output in idle mode or not")
         sidlSymbolList[listIndex].setReadOnly(False)
         sidlSymbolList[listIndex].setDefaultValue(False)
-        sidlSymbolList[listIndex].setVisible(False)
+        if clk == "1": # refo1 is enabled by default, so corresponding symbols should be visible by default
+            sidlSymbolList[listIndex].setVisible(True)
+        else:
+            sidlSymbolList[listIndex].setVisible(False)
 
         # python-computed REFOxCON register setting to use in ftl file
         refconval.append([])
@@ -1898,7 +1961,7 @@ if __name__ == "__main__":
     clockTrigger.setVisible(False)
     clockTrigger.setDependencies(clkSetup, triggerdepList)
 
-    for peripheralName, PmdReg in sorted(peripheralBusDict.items()):
+    for peripheralName, PmdReg in sorted(pmdDict.items()):
         if (peripheralName not in peripheralList) and ("REF" not in peripheralName):
             clksym_CLK_ENABLE = coreComponent.createBooleanSymbol(peripheralName + "_CLOCK_ENABLE", peripheralClockMenu)
             clksym_CLK_ENABLE.setLabel(peripheralName + " Clock Enable")
@@ -1943,7 +2006,7 @@ if __name__ == "__main__":
     cfgRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]').getChildren()
 
     pmdCount = 0
-    pmdDict = {}
+    pmdRegDict = {}
 
     # create a map of PMD register vs its mask value
     for register in cfgRegGroup:
@@ -1957,7 +2020,7 @@ if __name__ == "__main__":
                     mask &= ~bitMask
                 else:    
                     mask |= bitMask
-                pmdDict[pmdCount] = mask
+                pmdRegDict[pmdCount] = mask
 
     peripheralModuleDisableMenu = coreComponent.createMenuSymbol("PMD_CONFIG", SYM_CLK_MENU)
     peripheralModuleDisableMenu.setLabel("Peripheral Module Disable")
@@ -1966,7 +2029,7 @@ if __name__ == "__main__":
     for i in range(1, pmdCount + 1):
         pmdxRegMaskValue = coreComponent.createHexSymbol("PMD" + str(i) + "_REG_VALUE", peripheralModuleDisableMenu)
         pmdxRegMaskValue.setLabel("PMD" + str(i) + " Register Value")
-        pmdxRegMaskValue.setDefaultValue(pmdDict[i])
+        pmdxRegMaskValue.setDefaultValue(pmdRegDict[i])
         pmdxRegMaskValue.setReadOnly(True)
 
     # for FTL
@@ -1988,7 +2051,10 @@ if __name__ == "__main__":
     CLK_INTERFACE_HDR.setMarkup(True)
 
     CLK_SRC_FILE = coreComponent.createFileSymbol("CLK_C", None)
-    CLK_SRC_FILE.setSourcePath("../peripheral/clk_pic32cx_bz/templates/plib_clk.c.ftl")
+    if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32CX_BZ2":
+        CLK_SRC_FILE.setSourcePath("../peripheral/clk_pic32cx_bz/templates/plib_clk.c.ftl")
+    else: #BZ3
+        CLK_SRC_FILE.setSourcePath("../peripheral/clk_pic32cx_bz/templates/plib_clk_bz3.c.ftl")  
     CLK_SRC_FILE.setOutputName("plib_clk.c")
     CLK_SRC_FILE.setDestPath("/peripheral/clk/")
     CLK_SRC_FILE.setProjectPath("config/" + CONFIG_NAME + "/peripheral/clk/")
