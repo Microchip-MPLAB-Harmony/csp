@@ -268,7 +268,7 @@ def instantiateComponent(evsysComponent):
     channelNode=ATDF.getNode(
         '/avr-tools-device-file/devices/device/peripherals/module@[name="EVSYS"]/instance@[name="' + evsysInstanceName.getValue() + '"]/parameters')
     for id in range(0, len(channelNode.getChildren())):
-        if channelNode.getChildren()[id].getAttribute("name") == "CHANNELS":
+        if (channelNode.getChildren()[id].getAttribute("name") == "CHANNELS") or (channelNode.getChildren()[id].getAttribute("name") == "CHIP_EVSYS_CHANNELS"):
             channel=int(channelNode.getChildren()[id].getAttribute("value"))
             break
 
