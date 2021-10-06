@@ -173,6 +173,15 @@
     <#assign ADC_STM = "">
 </#if>
 
+<#if ADC_IER_COMPE == true>
+<#if ADC_IER_EOC != "">
+    <#assign ADC_IER = ADC_IER_EOC + " | " + "ADC_IER_COMPE_Msk">
+<#else>
+    <#assign ADC_IER = "ADC_IER_COMPE_Msk">
+</#if>
+    <#assign ADC_INTERRUPT = true>
+</#if>
+
 </#compress>
 
 // *****************************************************************************
@@ -202,7 +211,11 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
                                                                     ${(ADC_CONV_MODE == "2")?then('| ADC_MR_TRGEN_Msk | ADC_MR_${ADC_MR_TRGSEL_VALUE}', '')};</@compress>
 
     /* resolution and sign mode of result */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR = ${ADC_RES} ${ADC_STM}<#if ADC_CLK_SRC??> | ADC_EMR_${ADC_CLK_SRC}</#if> | ADC_EMR_TAG_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR = ${ADC_RES} ${ADC_STM}<#if ADC_CLK_SRC??> | ADC_EMR_${ADC_CLK_SRC}</#if> | ADC_EMR_TAG_Msk | ADC_EMR_CMPFILTER(${ADC_EMR_CMPFILTER}) <#if ADC_EMR_CMPALL == true> | ADC_EMR_CMPALL_Msk <#else> | ADC_EMR_CMPSEL(${ADC_EMR_CMPSEL}) </#if> | ADC_EMR_CMPTYPE(${ADC_EMR_CMPTYPE}_Val) | ADC_EMR_CMPMODE(ADC_EMR_CMPMODE_${ADC_EMR_CMPMODE});
+
+<#if ADC_CWR_HIGHTHRES != 0 || ADC_CWR_LOWTHRES != 0>
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CWR = (${ADC_CWR_HIGHTHRES} << ADC_CWR_HIGHTHRES_Pos) | ${ADC_CWR_LOWTHRES};
+</#if>
 
 <#if ADC_DIFFR_DIFF?has_content>
     /* Differential mode */
@@ -222,9 +235,9 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 
     </#if>
 </#if>
-<#if ADC_IER_EOC?has_content>
+<#if ADC_IER?has_content>
     /* Enable interrupt */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_IER = ${ADC_IER_EOC};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_IER = ${ADC_IER};
 
     ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn = NULL;
 
@@ -290,6 +303,38 @@ void ${ADC_INSTANCE_NAME}_ConversionSequenceSet( ADC_CHANNEL_NUM *channelList, u
     }
 }
 
+/* Set the comparator channel */
+void ${ADC_INSTANCE_NAME}_ComparatorChannelSet(ADC_CHANNEL_NUM channel)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR &= ~(ADC_EMR_CMPSEL_Msk | ADC_EMR_CMPALL_Msk);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR |= (channel << ADC_EMR_CMPSEL_Pos);
+}
+
+/* Enable compare on all channels */
+void ${ADC_INSTANCE_NAME}_CompareAllChannelsEnable(void)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR |= ADC_EMR_CMPALL_Msk;
+}
+
+/* Disable compare on all channels */
+void ${ADC_INSTANCE_NAME}_CompareAllChannelsDisable(void)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR &= ~ADC_EMR_CMPALL_Msk;
+}
+
+/* Stops the conversion result storage until the next comparison match */
+void ${ADC_INSTANCE_NAME}_CompareRestart(void)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CR |= ADC_CR_CMPRST_Msk;
+}
+
+/* Set the comparator mode */
+void ${ADC_INSTANCE_NAME}_ComparatorModeSet(ADC_COMPARATOR_MODE cmpMode)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR &= ~(ADC_EMR_CMPMODE_Msk);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR |= ((cmpMode) << ADC_EMR_CMPMODE_Pos);
+}
+
 <#if ADC_INTERRUPT == true>
 /* Register the callback function */
 void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
@@ -308,5 +353,15 @@ void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
     {
         ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${ADC_INSTANCE_NAME}_CallbackObj.context);
     }
+}
+<#else>
+uint32_t ${ADC_INSTANCE_NAME}_StatusGet(void)
+{
+    return (${ADC_INSTANCE_NAME}_REGS->ADC_ISR);
+}
+
+bool ${ADC_INSTANCE_NAME}_ComparatorStatusGet(void)
+{
+    return ((${ADC_INSTANCE_NAME}_REGS->ADC_ISR & ADC_ISR_COMPE_Msk) == ADC_ISR_COMPE_Msk);
 }
 </#if>

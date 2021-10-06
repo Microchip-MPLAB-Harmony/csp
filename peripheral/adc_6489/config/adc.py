@@ -72,6 +72,10 @@ def adcinterruptControl(symbol, event):
         if (adcSym_CH_IER_EOC[channelID].getValue() == True):
             nvicSet = True
 
+    localComponent = symbol.getComponent()
+    if localComponent.getSymbolValue("ADC_IER_COMPE") == True:
+        nvicSet = True
+
     if nvicSet == True:
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.setSymbolValue("core", interruptHandler, adcInstanceName.getValue() + "_InterruptHandler", 2)
@@ -230,6 +234,9 @@ def adcTriggerVisible(symbol, event):
 
     symbol.setVisible(event["symbol"].getSelectedKey() == "HW_TRIGGER")
 
+
+def adc_EMR_CMPSEL_Update(symbol, event):
+    symbol.setVisible(event["value"] == False)
 ###################################################################################################
 ######################################### Component ###############################################
 ###################################################################################################
@@ -479,6 +486,64 @@ def instantiateComponent(adcComponent):
         adcSym_CH_IER_EOC[channelID].setVisible(False)
         adcSym_CH_IER_EOC[channelID].setDependencies(adcCHInterruptVisible, ["ADC_" + str(channelID) + "_CHER"])
 
+    adcComparatorMenu = adcComponent.createMenuSymbol("ADC_COMPARE_MENU", None)
+    adcComparatorMenu.setLabel("Comparator Configuration")
+
+    adcSym_EMR_CMPALL = adcComponent.createBooleanSymbol("ADC_EMR_CMPALL", adcComparatorMenu)
+    adcSym_EMR_CMPALL.setLabel("Compare all channels")
+    adcSym_EMR_CMPALL.setDefaultValue(False)
+
+    adcSym_EMR_CMPSEL = adcComponent.createKeyValueSetSymbol("ADC_EMR_CMPSEL", adcComparatorMenu)
+    adcSym_EMR_CMPSEL.setLabel("Compare Channel")
+    adcSym_EMR_CMPSEL.setOutputMode("Value")
+    adcSym_EMR_CMPSEL.setDisplayMode("Description")
+    for channelID in range(0, len(channel)):
+        #Show channels as per available pins in package
+        if (channel[channelID] == "True"):
+            adcSym_EMR_CMPSEL.addKey("CHANNEL_" + str(channelID), str(channelID), "Channel " + str(channelID))
+
+    adcSym_EMR_CMPSEL.setDependencies(adc_EMR_CMPSEL_Update, ["ADC_EMR_CMPALL"])
+
+    adcSym_CWR_HIGHTHRES = adcComponent.createIntegerSymbol("ADC_CWR_HIGHTHRES", adcComparatorMenu)
+    adcSym_CWR_HIGHTHRES.setLabel("High Threshold")
+    adcSym_CWR_HIGHTHRES.setMin(0)
+    adcSym_CWR_HIGHTHRES.setMax(65535)
+    adcSym_CWR_HIGHTHRES.setDefaultValue(0)
+
+    adcSym_CWR_LOWTHRES = adcComponent.createIntegerSymbol("ADC_CWR_LOWTHRES", adcComparatorMenu)
+    adcSym_CWR_LOWTHRES.setLabel("Low Threshold")
+    adcSym_CWR_LOWTHRES.setMin(0)
+    adcSym_CWR_LOWTHRES.setMax(65535)
+    adcSym_CWR_LOWTHRES.setDefaultValue(0)
+
+    adcSym_EMR_CMPMODE = adcComponent.createKeyValueSetSymbol("ADC_EMR_CMPMODE", adcComparatorMenu)
+    adcSym_EMR_CMPMODE.setLabel("Compare Mode")
+    adcSym_EMR_CMPMODE.setDefaultValue(0)
+    adcSym_EMR_CMPMODE.setOutputMode("Key")
+    adcSym_EMR_CMPMODE.setDisplayMode("Description")
+    adcSym_EMR_CMPMODE.addKey("LOW", "0", "Generates an event when the converted data is lower than the low threshold of the window")
+    adcSym_EMR_CMPMODE.addKey("HIGH", "1", "Generates an event when the converted data is higher than the high threshold of the window")
+    adcSym_EMR_CMPMODE.addKey("IN", "2", "Generates an event when the converted data is in the comparison window")
+    adcSym_EMR_CMPMODE.addKey("OUT", "3", "Generates an event when the converted data is out of the comparison window")
+
+    adcSym_EMR_CMPFILTER = adcComponent.createIntegerSymbol("ADC_EMR_CMPFILTER", adcComparatorMenu)
+    adcSym_EMR_CMPFILTER.setLabel("Compare Event Filter")
+    adcSym_EMR_CMPFILTER.setDefaultValue(0)
+    adcSym_EMR_CMPFILTER.setMin(0)
+    adcSym_EMR_CMPFILTER.setMax(3)
+
+    adcSym_EMR_CMPTYPE = adcComponent.createKeyValueSetSymbol("ADC_EMR_CMPTYPE", adcComparatorMenu)
+    adcSym_EMR_CMPTYPE.setLabel("Comparision Type")
+    adcSym_EMR_CMPTYPE.addKey("ADC_EMR_CMPTYPE_FLAG_ONLY", "0" , "Flag Only")
+    adcSym_EMR_CMPTYPE.addKey("ADC_EMR_CMPTYPE_START_CONDITION", "1" , "Start Condition")
+    adcSym_EMR_CMPTYPE.setOutputMode("Key")
+    adcSym_EMR_CMPTYPE.setDisplayMode("Description")
+    adcSym_EMR_CMPTYPE.setDefaultValue(0)
+
+    adcSym_EMR_COMPE = adcComponent.createBooleanSymbol("ADC_IER_COMPE", adcComparatorMenu)
+    adcSym_EMR_COMPE.setLabel("Enable Compare Interrupt")
+    adcSym_EMR_COMPE.setDefaultValue(False)
+
     #--------------------------------------------------------------------------------------
     # Clock dynamic settings
     adcSym_ClockControl = adcComponent.createBooleanSymbol(adcInstanceName.getValue() + "_CLOCK_ENABLE", None)
@@ -489,7 +554,7 @@ def instantiateComponent(adcComponent):
     # NVIC Dynamic settings
     adcSym_interruptControl = adcComponent.createBooleanSymbol("ADC_NVIC_ENABLE", None)
     adcSym_interruptControl.setDependencies(adcinterruptControl, ["ADC_0_IER_EOC", "ADC_1_IER_EOC", "ADC_2_IER_EOC", "ADC_3_IER_EOC", "ADC_4_IER_EOC",\
-        "ADC_5_IER_EOC", "ADC_6_IER_EOC", "ADC_7_IER_EOC"])
+        "ADC_5_IER_EOC", "ADC_6_IER_EOC", "ADC_7_IER_EOC", "ADC_IER_COMPE"])
     adcSym_interruptControl.setVisible(False)
 
     # Dependency Status
@@ -504,7 +569,7 @@ def instantiateComponent(adcComponent):
     adcSym_IntEnComment.setVisible(False)
     adcSym_IntEnComment.setLabel("Warning!!! " + adcInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     adcSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + interruptVectorUpdate, "ADC_0_IER_EOC", "ADC_1_IER_EOC", "ADC_2_IER_EOC", "ADC_3_IER_EOC", "ADC_4_IER_EOC",\
-        "ADC_5_IER_EOC", "ADC_6_IER_EOC", "ADC_7_IER_EOC"])
+        "ADC_5_IER_EOC", "ADC_6_IER_EOC", "ADC_7_IER_EOC", "ADC_IER_COMPE"])
 
     ###################################################################################################
     ######################################### Code Generation #########################################

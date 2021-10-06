@@ -106,6 +106,10 @@
 /***********************************************************************/
 </#if> <#-- CH ENABLE -->
 </#list>
+
+<#if ADC_IER_COMPE == true>
+    <#assign ADC_INTERRUPT = true>
+</#if>
 </#compress>
 
 // *****************************************************************************
@@ -134,7 +138,20 @@ void ${ADC_INSTANCE_NAME}_ConversionSequenceSet( ADC_CHANNEL_NUM *channelList, u
 
 <#if ADC_INTERRUPT == true>
     <#lt>void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context );
+<#else>
+    <#lt>uint32_t ${ADC_INSTANCE_NAME}_StatusGet(void);
+    <#lt>bool ${ADC_INSTANCE_NAME}_ComparatorStatusGet(void);
 </#if>
+
+void ${ADC_INSTANCE_NAME}_ComparatorChannelSet(ADC_CHANNEL_NUM channel);
+
+void ${ADC_INSTANCE_NAME}_CompareAllChannelsEnable(void);
+
+void ${ADC_INSTANCE_NAME}_CompareAllChannelsDisable(void);
+
+void ${ADC_INSTANCE_NAME}_CompareRestart(void);
+
+void ${ADC_INSTANCE_NAME}_ComparatorModeSet(ADC_COMPARATOR_MODE cmpMode);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

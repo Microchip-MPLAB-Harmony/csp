@@ -53,6 +53,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <device.h>
 
 
 // DOM-IGNORE-BEGIN
@@ -105,8 +106,17 @@ typedef enum
     ADC_INTERRUPT_EOC_5_MASK = (1U << 5U),
     ADC_INTERRUPT_EOC_6_MASK = (1U << 6U),
     ADC_INTERRUPT_EOC_7_MASK = (1U << 7U),
+    ADC_INTERRUPT_COMPE_MASK = (1U << 26U)
 
 } ADC_INTERRUPT_MASK;
+
+typedef enum
+{
+    ADC_COMPARATOR_MODE_LOW = ADC_EMR_CMPMODE_LOW,
+    ADC_COMPARATOR_MODE_HIGH = ADC_EMR_CMPMODE_HIGH,
+    ADC_COMPARATOR_MODE_IN = ADC_EMR_CMPMODE_IN,
+    ADC_COMPARATOR_MODE_OUT = ADC_EMR_CMPMODE_OUT
+}ADC_COMPARATOR_MODE;
 
 typedef void (*ADC_CALLBACK)( uint32_t status, uintptr_t context );
 
