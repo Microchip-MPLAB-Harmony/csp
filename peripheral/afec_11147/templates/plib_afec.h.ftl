@@ -175,6 +175,11 @@ extern "C" {
     </#if>
 </#if> <#-- CH ENABLE -->
 </#list>
+
+<#if AFEC_IER_COMPE == true>
+    <#assign AFEC_INTERRUPT = true>
+</#if>
+
 </#compress>
 
 
@@ -209,8 +214,20 @@ void ${AFEC_INSTANCE_NAME}_ChannelGainSet(AFEC_CHANNEL_NUM channel, AFEC_CHANNEL
 
 void ${AFEC_INSTANCE_NAME}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset);
 
+void ${AFEC_INSTANCE_NAME}_ComparatorChannelSet(AFEC_CHANNEL_NUM channel);
+
+void ${AFEC_INSTANCE_NAME}_CompareAllChannelsEnable(void);
+
+void ${AFEC_INSTANCE_NAME}_CompareAllChannelsDisable(void);
+
+void ${AFEC_INSTANCE_NAME}_ComparatorModeSet(AFEC_COMPARATOR_MODE cmpMode);
+
 <#if AFEC_INTERRUPT == true>
     <#lt>void ${AFEC_INSTANCE_NAME}_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context);
+<#else>
+    <#lt>bool ${AFEC_INSTANCE_NAME}_ComparatorStatusGet(void);
+	
+	<#lt>uint32_t ${AFEC_INSTANCE_NAME}_StatusGet(void);
 </#if>
 // *****************************************************************************
 

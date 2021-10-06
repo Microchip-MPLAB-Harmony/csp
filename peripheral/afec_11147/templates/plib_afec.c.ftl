@@ -214,6 +214,15 @@
     <#assign AFEC_STM = "">
 </#if>
 
+<#if AFEC_IER_COMPE == true>
+<#if AFEC_IER_EOC != "">
+    <#assign AFEC_IER = AFEC_IER_EOC + " | " + "AFEC_IER_COMPE_Msk">
+<#else>
+    <#assign AFEC_IER = "AFEC_IER_COMPE_Msk">
+</#if>
+    <#assign AFEC_INTERRUPT = true>
+</#if>
+
 </#compress>
 
 <#-- *********************************************************************************************** -->
@@ -240,7 +249,11 @@ void ${AFEC_INSTANCE_NAME}_Initialize()
 
     /* resolution and sign mode of result */
     ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR = ${AFEC_RES} ${AFEC_STM}
-         | AFEC_EMR_SIGNMODE_${AFEC_EMR_SIGNMODE_VALUE} | AFEC_EMR_TAG_Msk;
+         | AFEC_EMR_SIGNMODE_${AFEC_EMR_SIGNMODE_VALUE} | AFEC_EMR_TAG_Msk | AFEC_EMR_CMPFILTER(${AFEC_EMR_CMPFILTER}) <#if AFEC_EMR_CMPALL == true> | AFEC_EMR_CMPALL_Msk <#else> | AFEC_EMR_CMPSEL(${AFEC_EMR_CMPSEL}) </#if> | AFEC_EMR_CMPMODE(AFEC_EMR_CMPMODE_${AFEC_EMR_CMPMODE});
+
+    <#if AFEC_CWR_HIGHTHRES != 0 || AFEC_CWR_LOWTHRES != 0>
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CWR = (${AFEC_CWR_HIGHTHRES} << AFEC_CWR_HIGHTHRES_Pos) | ${AFEC_CWR_LOWTHRES};
+    </#if>
 
     /* Enable gain amplifiers */
     ${AFEC_INSTANCE_NAME}_REGS->AFEC_ACR = AFEC_ACR_PGA0EN_Msk | AFEC_ACR_PGA1EN_Msk | AFEC_ACR_IBCTL(${AFEC_IBCTL});
@@ -289,9 +302,9 @@ void ${AFEC_INSTANCE_NAME}_Initialize()
     </#if>
 </#if>
 
-<#if AFEC_IER_EOC?has_content>
+<#if AFEC_IER?has_content>
     /* Enable interrupt */
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_IER = ${AFEC_IER_EOC};
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_IER = ${AFEC_IER};
     ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn = NULL;
 </#if>
 
@@ -380,6 +393,32 @@ void ${AFEC_INSTANCE_NAME}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t o
     ${AFEC_INSTANCE_NAME}_REGS->AFEC_COCR = offset;
 }
 
+/* Set the comparator channel */
+void ${AFEC_INSTANCE_NAME}_ComparatorChannelSet(AFEC_CHANNEL_NUM channel)
+{
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR &= ~(AFEC_EMR_CMPSEL_Msk | AFEC_EMR_CMPALL_Msk);
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR |= (channel << AFEC_EMR_CMPSEL_Pos);
+}
+
+/* Enable compare on all channels */
+void ${AFEC_INSTANCE_NAME}_CompareAllChannelsEnable(void)
+{
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR |= AFEC_EMR_CMPALL_Msk;
+}
+
+/* Disable compare on all channels */
+void ${AFEC_INSTANCE_NAME}_CompareAllChannelsDisable(void)
+{
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR &= ~AFEC_EMR_CMPALL_Msk;
+}
+
+/* Set the comparator mode */
+void ${AFEC_INSTANCE_NAME}_ComparatorModeSet(AFEC_COMPARATOR_MODE cmpMode)
+{
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR &= ~(AFEC_EMR_CMPMODE_Msk);
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR |= ((cmpMode) << AFEC_EMR_CMPMODE_Pos);
+}
+
 <#if AFEC_INTERRUPT == true>
     <#lt>/* Register the callback function */
     <#lt>void ${AFEC_INSTANCE_NAME}_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context)
@@ -400,4 +439,15 @@ void ${AFEC_INSTANCE_NAME}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t o
     <#lt>        ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${AFEC_INSTANCE_NAME}_CallbackObj.context);
     <#lt>    }
     <#lt>}
+<#else>
+
+uint32_t ${AFEC_INSTANCE_NAME}_StatusGet(void)
+{
+    return ${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR;
+}
+
+bool ${AFEC_INSTANCE_NAME}_ComparatorStatusGet(void)
+{
+    return ((${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR & AFEC_ISR_COMPE_Msk) == AFEC_ISR_COMPE_Msk);
+}
 </#if>

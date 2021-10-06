@@ -57,6 +57,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <device.h>
 
 
 // DOM-IGNORE-BEGIN
@@ -129,8 +130,19 @@ typedef enum
     AFEC_INTERRUPT_EOC_8_MASK = (1U << 8U),
     AFEC_INTERRUPT_EOC_9_MASK = (1U << 9U),
     AFEC_INTERRUPT_EOC_10_MASK = (1U << 10U),
-    AFEC_INTERRUPT_EOC_11_MASK = (1U << 11U)
+    AFEC_INTERRUPT_EOC_11_MASK = (1U << 11U),
+    AFEC_INTERRUPT_COMPE_MASK = (1U << 26U)
 }AFEC_INTERRUPT_MASK;
+
+// *****************************************************************************
+
+typedef enum
+{
+    AFEC_COMPARATOR_MODE_LOW = AFEC_EMR_CMPMODE_LOW,
+    AFEC_COMPARATOR_MODE_HIGH = AFEC_EMR_CMPMODE_HIGH,
+    AFEC_COMPARATOR_MODE_IN = AFEC_EMR_CMPMODE_IN,
+    AFEC_COMPARATOR_MODE_OUT = AFEC_EMR_CMPMODE_OUT
+}AFEC_COMPARATOR_MODE;
 
 // *****************************************************************************
 

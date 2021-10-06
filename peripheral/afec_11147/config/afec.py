@@ -66,6 +66,11 @@ def afecinterruptControl(symbol, event):
     for channelID in range(0, 12):
         if (afecSym_CH_IER_EOC[channelID].getValue() == True):
             nvicSet = True
+
+    localComponent = symbol.getComponent()
+    if localComponent.getSymbolValue("AFEC_IER_COMPE") == True:
+        nvicSet = True
+
     if(nvicSet == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.setSymbolValue("core", interruptHandler, afecInstanceName.getValue()+"_InterruptHandler", 2)
@@ -259,6 +264,8 @@ def afecTriggerVisible(symbol, event):
     else:
         symbol.setVisible(False)
 
+def afec_EMR_CMPSEL_Update(symbol, event):
+    symbol.setVisible(event["value"] == False)
 ###################################################################################################
 ########################### Dependency   #################################
 ###################################################################################################
@@ -690,6 +697,59 @@ def instantiateComponent(afecComponent):
         afecSym_CH_IER_EOC[channelID].setVisible(False)
         afecSym_CH_IER_EOC[channelID].setDependencies(afecCHInterruptVisible, ["AFEC_"+str(channelID)+"_CHER"])
 
+    afecComparatorMenu = afecComponent.createMenuSymbol("AFEC_COMPARE_MENU", None)
+    afecComparatorMenu.setLabel("Comparator Configuration")
+
+    afecSym_EMR_CMPALL = afecComponent.createBooleanSymbol("AFEC_EMR_CMPALL", afecComparatorMenu)
+    afecSym_EMR_CMPALL.setLabel("Compare all channels")
+    afecSym_EMR_CMPALL.setDefaultValue(False)
+
+    afecSym_EMR_CMPSEL = afecComponent.createKeyValueSetSymbol("AFEC_EMR_CMPSEL", afecComparatorMenu)
+    afecSym_EMR_CMPSEL.setLabel("Compare Channel")
+    afecSym_EMR_CMPSEL.setOutputMode("Value")
+    afecSym_EMR_CMPSEL.setDisplayMode("Description")
+    for channelID in range(0, len(channel)):
+        #Show channels as per available pins in package
+        if (channel[channelID] == "True"):
+            afecSym_EMR_CMPSEL.addKey("CHANNEL_" + str(channelID), str(channelID), "Channel " + str(channelID))
+
+    afecSym_EMR_CMPSEL.setDependencies(afec_EMR_CMPSEL_Update, ["AFEC_EMR_CMPALL"])
+
+    afecSym_CWR_HIGHTHRES = afecComponent.createIntegerSymbol("AFEC_CWR_HIGHTHRES", afecComparatorMenu)
+    afecSym_CWR_HIGHTHRES.setLabel("High Threshold")
+    afecSym_CWR_HIGHTHRES.setMin(0)
+    afecSym_CWR_HIGHTHRES.setMax(65535)
+    afecSym_CWR_HIGHTHRES.setDefaultValue(0)
+
+    afecSym_CWR_LOWTHRES = afecComponent.createIntegerSymbol("AFEC_CWR_LOWTHRES", afecComparatorMenu)
+    afecSym_CWR_LOWTHRES.setLabel("Low Threshold")
+    afecSym_CWR_LOWTHRES.setMin(0)
+    afecSym_CWR_LOWTHRES.setMax(65535)
+    afecSym_CWR_LOWTHRES.setDefaultValue(0)
+
+    afecSym_EMR_CMPFILTER = afecComponent.createIntegerSymbol("AFEC_EMR_CMPFILTER", afecComparatorMenu)
+    afecSym_EMR_CMPFILTER.setLabel("Compare Event Filter")
+    afecSym_EMR_CMPFILTER.setDefaultValue(0)
+    afecSym_EMR_CMPFILTER.setMin(0)
+    afecSym_EMR_CMPFILTER.setMax(3)
+
+    afecSym_EMR_CMPMODE = afecComponent.createKeyValueSetSymbol("AFEC_EMR_CMPMODE", afecComparatorMenu)
+    afecSym_EMR_CMPMODE.setLabel("Compare Mode")
+    afecSym_EMR_CMPMODE.setDefaultValue(0)
+    afecSym_EMR_CMPMODE.setOutputMode("Key")
+    afecSym_EMR_CMPMODE.setDisplayMode("Description")
+    afecSym_EMR_CMPMODE.addKey("LOW", "0", "Generates an event when the converted data is lower than the low threshold of the window")
+    afecSym_EMR_CMPMODE.addKey("HIGH", "1", "Generates an event when the converted data is higher than the high threshold of the window")
+    afecSym_EMR_CMPMODE.addKey("IN", "2", "Generates an event when the converted data is in the comparison window")
+    afecSym_EMR_CMPMODE.addKey("OUT", "3", "Generates an event when the converted data is out of the comparison window")
+
+    afecSym_EMR_COMPE = afecComponent.createBooleanSymbol("AFEC_IER_COMPE", afecComparatorMenu)
+    afecSym_EMR_COMPE.setLabel("Enable Compare Interrupt")
+    afecSym_EMR_COMPE.setDefaultValue(False)
+
+
+
+
     #--------------------------------------------------------------------------------------
     # Clock dynamic settings
     afecSym_ClockControl = afecComponent.createBooleanSymbol(afecInstanceName.getValue()+"_CLOCK_ENABLE", None)
@@ -700,7 +760,7 @@ def instantiateComponent(afecComponent):
     # NVIC Dynamic settings
     afecSym_interruptControl = afecComponent.createBooleanSymbol("AFEC_NVIC_ENABLE", None)
     afecSym_interruptControl.setDependencies(afecinterruptControl, ["AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
-        "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC"])
+        "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC", "AFEC_IER_COMPE"])
     afecSym_interruptControl.setVisible(False)
 
     # Dependency Status
@@ -715,7 +775,7 @@ def instantiateComponent(afecComponent):
     afecSym_IntEnComment.setVisible(False)
     afecSym_IntEnComment.setLabel("Warning!!! "+afecInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
     afecSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + interruptVectorUpdate, "AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
-        "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC"])
+        "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC", "AFEC_IER_COMPE"])
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
