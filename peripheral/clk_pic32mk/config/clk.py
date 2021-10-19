@@ -229,6 +229,63 @@ peripheralBusDict_PIC32MK1570 =  {
         "RTCC": ["6"],              #PMD support not there
 }
 
+# PIC32MK MCA
+peripheralBusDict_PIC32MK1690 =  {
+
+        #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
+        # if "Peripheral bus no" == -1 then clocked by SYSCLK
+
+        "ADCHS": ["-1", "1", "0"],
+        "CDAC1": ["2", "1", "6"],
+        "CTMU": ["2", "1", "8"],
+        "HLVD": ["1", "1", "20"],
+        "CLC1": ["2", "1", "24"],
+
+        "CMP1": ["2", "2", "0"],
+        "CMP2": ["2", "2", "1"],
+        "CMP3": ["2", "2", "2"],
+        "OPAMP1": ["2", "2", "16"],
+        "OPAMP2": ["2", "2", "17"],
+        "OPAMP3": ["2", "2", "18"],
+
+        "ICAP1": ["2", "3", "0"],
+        "ICAP2": ["2", "3", "1"],
+        "ICAP3": ["2", "3", "2"],
+        "ICAP4": ["2", "3", "3"],
+        "OCMP1": ["2", "3", "16"],
+        "OCMP2": ["2", "3", "17"],
+        "OCMP3": ["2", "3", "18"],
+        "OCMP4": ["2", "3", "19"],
+
+        "TMR1": ["2", "4", "0"],
+        "TMR2": ["2", "4", "1"],
+        "TMR3": ["2", "4", "2"],
+        "TMR4": ["2", "4", "3"],
+        "TMR5": ["2", "4", "4"],
+        "MCPWM1": ["-1", "4", "16"],
+        "MCPWM2": ["-1", "4", "17"],
+        "MCPWM3": ["-1", "4", "18"],
+        "MCPWM4": ["-1", "4", "19"],
+
+        "UART1": ["2", "5", "0"],
+        "UART2": ["2", "5", "1"],
+        "SPI1": ["2", "5", "8"],
+        "SPI2": ["2", "5", "9"],
+        "I2C1": ["2", "5", "16"],
+        "I2C2": ["2", "5", "17"],
+
+        "REFO1": ["-1", "6", "8"],
+        "REFO2": ["-1", "6", "9"],
+        "REFO3": ["-1", "6", "10"],
+        "REFO4": ["-1", "6", "11"],
+        "QEI1": ["-1", "6", "24"],
+        "QEI2": ["-1", "6", "25"],
+
+        "DMAC": ["-1", "7", "4"],
+        "RTCC": ["6"],              #PMD support not there
+}
+
+
 # PIC32MK GPD/GPE/MCF
 peripheralBusDict_PIC32MK1402 =  {
 
@@ -1229,6 +1286,9 @@ if __name__ == "__main__":
     elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1570":
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk_no_USB:MKClockModel")
         peripheralBusDict = peripheralBusDict_PIC32MK1570.copy()
+    elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1690":
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk_no_USB:MKClockModel")
+        peripheralBusDict = peripheralBusDict_PIC32MK1690.copy()        
     elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1519":
         peripheralBusDict = peripheralBusDict_PIC32MK1519.copy()
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk_2:MKClockModel")
@@ -1745,7 +1805,7 @@ if __name__ == "__main__":
         adchs_clock_map[1] = "CONFIG_SYS_CLK_FRCDIV"
         adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
         adchs_clock_map[3] = "SYS_CLK_FREQ"
-    elif Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1570" or Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32MK1519": #PIC32MK GPH/GPG/GPK/GPL/MCJ/MCM
+    else:  #PIC32MK GPH/GPG/GPK/GPL/MCJ/MCM/MCA
         adchs_clock_map[0] = "SYS_CLK_FREQ"
         adchs_clock_map[1] = "CONFIG_SYS_CLK_FRCDIV"
         adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
