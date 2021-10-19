@@ -1,0 +1,22 @@
+<diagram min_x="300" min_y="460" >
+	<shape type="rect" width="82" height="240"/>
+	<!--<shape type="complex_rect" width="300" height="300">
+		<corner loc="topleft" type="round" arc="60"/>
+		<corner loc="topright" type="round" arc="60"/>
+		<corner loc="bottomright" type="round" arc="60"/>
+		<corner loc="bottomleft" type="round" arc="60"/>
+	</shape>-->
+	<shape type="circle" x="-36" y="-115" radius="5" stroke="1"/>
+	<!--<shape type="line" x="-150" y="0" x2="150" y2="0" line="FF0000"/>
+	<shape type="line" x="0" y="-150" x2="0" y2="150" line="FF0000"/>-->
+	<shape type="string" line="000000" val="$DEVICE_NAME" orientation="down" size="16"/>
+	<!--<style number="outside" oriented="false" margin_left="10" margin_right="20"/>-->
+	<layout type="row">
+		<row pins="1-14" x="-51" margin="5" direction="down"
+			 pin_width="10" pin_height="10" pin_name_location="left" pin_name_size="10" pin_name_margin="10"
+			 pin_number_location="right" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+		<row pins="15-28" x="41" margin="5" direction="up"
+			 pin_width="10" pin_height="10" pin_name_location="right" pin_name_size="10" pin_name_margin="10"
+			 pin_number_location="left" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+	</layout>
+</diagram>		

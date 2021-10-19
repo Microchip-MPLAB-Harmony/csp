@@ -1,0 +1,2166 @@
+<?xml version="1.0"?>
+<family>
+    <groups>
+        <group id="1">
+            <pin name="RPA0" value="0"/>
+            <pin name="RPB3" value="1"/>
+            <pin name="RPB4" value="2"/>
+            <pin name="RPB15" value="3"/>
+            <pin name="RPB7" value="4"/>
+            <pin name="RPC7" value="5"/>
+            <pin name="RPC0" value="6"/>
+            <pin name="RPA11" value="8"/>
+            <function name="INT4" direction="in"/>
+            <function name="T2CK" direction="in"/>
+            <function name="IC4" direction="in"/>
+            <function name="SDI1" direction="in"/>
+			<function name="QEA1" direction="in"/>
+			<function name="INDX2" direction="in"/>
+			<function name="FLT1" direction="in"/>
+            <function name="REFCLKI" direction="in"/>
+            <function name="CLCINC" direction="in"/>
+            <function name="U1TX" direction="out" value="1"/>
+            <function name="U2RTS" direction="out" value="2"/>
+            <function name="SDO1" direction="out" value="3"/>
+            <function name="SDO2" direction="out" value="4"/>
+            <function name="OC1" direction="out" value="5"/>
+            <function name="OC7" direction="out" value="6"/>
+            <function name="C2OUT" direction="out" value="7"/>
+            <function name="C4OUT" direction="out" value="8"/>
+            <function name="C1TX" direction="out" value="12"/>
+            <function name="REFCLKO4" direction="out" value="18"/>
+			<function name="QEICMP1" direction="out" value="20"/>
+			<function name="CLCO2" direction="out" value="24"/>
+        </group>
+        <group id="2">
+            <pin name="RPA1" value="0"/>
+            <pin name="RPB5" value="1"/>
+            <pin name="RPB1" value="2"/>
+            <pin name="RPB11" value="3"/>
+            <pin name="RPA8" value="5"/>
+            <pin name="RPC8" value="6"/>
+            <pin name="RPB12" value="7"/>
+            <pin name="RPA12" value="8"/>
+            <function name="INT3" direction="in"/>
+            <function name="T3CK" direction="in"/>
+            <function name="IC3" direction="in"/>
+            <function name="U1CTS" direction="in"/>
+            <function name="U2RX" direction="in"/>
+            <function name="SDI2" direction="in"/>
+            <function name="QEB1" direction="in"/>
+            <function name="HOME2" direction="in"/>
+	        <function name="FLT2" direction="in"/>
+	        <function name="CLCINA" direction="in"/>
+            <function name="SDO1" direction="out" value="3"/>
+            <function name="SDO2" direction="out" value="4"/>
+            <function name="OC2" direction="out" value="5"/>
+            <function name="OC8" direction="out" value="6"/>
+            <function name="C3OUT" direction="out" value="7"/>
+            <function name="OC9" direction="out" value="8"/>
+            <function name="REFCLKO3" direction="out" value="18"/>
+            <function name="QEICMP2" direction="out" value="20"/>
+            <function name="CLCO1" direction="out" value="24"/>
+		</group>
+        <group id="3">
+            <pin name="RPB6" value="0"/>
+            <pin name="RPC15" value="1"/>
+            <pin name="RPA4" value="2"/>
+            <pin name="RPB13" value="3"/>
+            <pin name="RPB2" value="4"/>
+            <pin name="RPC6" value="5"/>
+            <pin name="RPC1" value="6"/>
+            <pin name="RPA7" value="7"/>
+            <function name="INT2" direction="in"/>
+            <function name="T4CK" direction="in"/>
+            <function name="IC1" direction="in"/>
+            <function name="U1RX" direction="in"/>
+            <function name="U2CTS" direction="in"/>
+            <function name="SS1 (in)" direction="in"/>
+            <function name="SCK2 (in)" direction="in"/>
+            <function name="INDX1" direction="in"/>
+            <function name="QEB2" direction="in"/>
+            <function name="OCFB" direction="in"/>
+            <function name="CLCIND" direction="in"/>
+            <function name="SS1 (out)" direction="out" value="3"/>
+            <function name="SCK2 (out)" direction="out" value="4"/>
+            <function name="OC4" direction="out" value="5"/>
+            <function name="OC5" direction="out" value="6"/>
+            <function name="REFCLKO1" direction="out" value="7"/>
+            <function name="C5OUT" direction="out" value="8"/>
+            <function name="REFCLKO2" direction="out" value="18"/>
+            <function name="QEICMP3" direction="out" value="20"/>
+            <function name="CLCO4" direction="out" value="24"/>
+        </group>
+        <group id="4">
+            <pin name="RPB14" value="0"/>
+            <pin name="RPC12" value="1"/>
+            <pin name="RPB0" value="2"/>
+            <pin name="RPB10" value="3"/>
+            <pin name="RPB9" value="4"/>
+            <pin name="RPC9" value="5"/>
+            <pin name="RPC2" value="6"/>
+            <pin name="RPD8" value="7"/>
+            <pin name="RPC10" value="9"/>
+            <function name="INT1" direction="in"/>
+            <function name="T5CK" direction="in"/>
+            <function name="IC2" direction="in"/>
+            <function name="SS2 (in)" direction="in"/>
+            <function name="HOME1" direction="in"/>
+            <function name="QEA2" direction="in"/>
+            <function name="OCFA" direction="in"/>
+            <function name="CLCINB" direction="in"/>
+            <function name="U1RTS" direction="out" value="1"/>
+            <function name="U2TX" direction="out" value="2"/>
+            <function name="SS2 (out)" direction="out" value="4"/>
+            <function name="OC3" direction="out" value="5"/>
+            <function name="OC6" direction="out" value="6"/>
+            <function name="C1OUT" direction="out" value="7"/>
+            <function name="CLCO3" direction="out" value="24"/>
+        </group>
+        <group id="5">
+            <pin name="RPB8" value="4"/>
+            <function name="INT3" direction="in"/>
+            <function name="T3CK" direction="in"/>
+            <function name="IC3" direction="in"/>
+            <function name="U1CTS" direction="in"/>
+            <function name="U2RX" direction="in"/>
+            <function name="SDI2" direction="in"/>
+            <function name="QEB1" direction="in"/>
+            <function name="HOME2" direction="in"/>
+	        <function name="FLT2" direction="in"/>
+	        <function name="CLCINA" direction="in"/>
+        </group>
+        <group id="6">
+            <pin name="RPC13" value="9"/>
+            <function name="INT2" direction="in"/>
+            <function name="T4CK" direction="in"/>
+            <function name="IC1" direction="in"/>
+            <function name="U1RX" direction="in"/>
+            <function name="U2CTS" direction="in"/>
+            <function name="SS1 (in)" direction="in"/>
+            <function name="SCK2 (in)" direction="in"/>
+            <function name="INDX1" direction="in"/>
+            <function name="QEB2" direction="in"/>
+            <function name="OCFB" direction="in"/>
+            <function name="CLCIND" direction="in"/>
+        </group>
+    </groups>
+    <modules>
+        <module name="ADC" desc="ADCHS" analog="true">
+            <function name="AN0">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_0_ALT_INP_SEL_IDX[0-5]" value="ADCHS_DEFAULT_CLASS1_AN0"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN0"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_1_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN0"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_3_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN0"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_4_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN0"/>
+                </constraint>
+            </function>
+            <function name="AN1">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_1_ALT_INP_SEL_IDX[0-5]" value="ADCHS_DEFAULT_CLASS1_AN1"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN1"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_4_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN1"/>
+                </constraint>
+            </function>
+        <function name="AN2">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_2_ALT_INP_SEL_IDX[0-5]" value="ADCHS_DEFAULT_CLASS1_AN2"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN2"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_5_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN2"/>
+                </constraint>
+            </function>
+        <function name="AN3">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_3_ALT_INP_SEL_IDX[0-5]" value="ADCHS_DEFAULT_CLASS1_AN3"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_0_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN3"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN3"/>
+                </constraint>
+            </function>
+        <function name="AN4">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_4_ALT_INP_SEL_IDX[0-5]" value="ADCHS_DEFAULT_CLASS1_AN4"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN4"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_1_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN4"/>
+                </constraint>
+            </function>
+        <function name="AN5">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_5_ALT_INP_SEL_IDX[0-5]" value="ADCHS_DEFAULT_CLASS1_AN5"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN5"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_0_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN5"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_2_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN5"/>
+                </constraint>
+            </function>
+        <function name="AN6">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN6"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN6"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_2_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN6"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_5_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN6"/>
+                </constraint>
+            </function>
+        <function name="AN7">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN7"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN7"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_1_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN7"/>
+                </constraint>
+            </function>
+        <function name="AN8">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN8"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN8"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_3_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN8"/>
+                </constraint>
+            </function>
+        <function name="AN9">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN9"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN9"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_4_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN9"/>
+                </constraint>
+            </function>
+        <function name="AN10">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN10"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN10"/>
+                </constraint>
+            </function>
+        <function name="AN11">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN11"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN11"/>
+                </constraint>
+            </function>
+        <function name="AN12">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN12"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN12"/>
+                </constraint>
+            </function>
+        <function name="AN13">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN13"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN13"/>
+                </constraint>
+            </function>
+            <function name="AN14">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN14"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN14"/>
+                </constraint>
+            </function>
+        <function name="AN15">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN15"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN15"/>
+                </constraint>
+            </function>
+        <function name="AN16">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN16"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN16"/>
+                </constraint>
+            </function>
+        <function name="AN17">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN17"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN17"/>
+                </constraint>
+            </function>
+        <function name="AN18">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN18"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN18"/>
+                </constraint>
+            </function>
+        <function name="AN19">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN19"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN19"/>
+                </constraint>
+            </function>
+        <function name="AN20">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN20"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN20"/>
+                </constraint>
+            </function>
+        <function name="AN21">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN21"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN21"/>
+                </constraint>
+            </function>
+        <function name="AN22">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN22"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN22"/>
+                </constraint>
+            </function>
+        <function name="AN23">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN23"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN23"/>
+                </constraint>
+            </function>
+        <function name="AN24">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN24"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN24"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_0_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN24"/>
+                </constraint>
+            </function>
+            <function name="AN25">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN25"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN25"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_2_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN25"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_5_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN25"/>
+                </constraint>
+            </function>
+        <function name="AN26">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN26"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN26"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CHNL_3_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN26"/>
+                </constraint>
+            </function>
+        <function name="AN27">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN27"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-21]" value="ADCHS_CLASS2_AN27"/>
+                </constraint>
+            </function>
+        <function name="AN28">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN28"/>
+                </constraint>
+            </function>
+        <function name="AN29">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN29"/>
+                </constraint>
+            </function>
+        <function name="AN30">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN30"/>
+                </constraint>
+            </function>
+        <function name="AN31">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN31"/>
+                </constraint>
+            </function>
+        <function name="AN32">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN32"/>
+                </constraint>
+            </function>
+        <function name="AN33">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN33"/>
+                </constraint>
+            </function>
+        <function name="AN34">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN34"/>
+                </constraint>
+            </function>
+        <function name="AN35">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN35"/>
+                </constraint>
+            </function>
+        <function name="AN36">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN36"/>
+                </constraint>
+            </function>
+        <function name="AN37">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN37"/>
+                </constraint>
+            </function>
+        <function name="AN38">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN38"/>
+                </constraint>
+            </function>
+        <function name="AN39">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN39"/>
+                </constraint>
+            </function>
+        <function name="AN40">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN40"/>
+                </constraint>
+            </function>
+        <function name="AN41">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN41"/>
+                </constraint>
+            </function>
+        <function name="AN42">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN42"/>
+                </constraint>
+            </function>
+        <function name="AN43">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN43"/>
+                </constraint>
+            </function>
+        <function name="AN44">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN44"/>
+                </constraint>
+            </function>
+        <function name="AN45">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN45"/>
+                </constraint>
+            </function>
+        <function name="AN46">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN46"/>
+                </constraint>
+            </function>
+        <function name="AN47">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN47"/>
+                </constraint>
+            </function>
+        <function name="AN48">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN48"/>
+                </constraint>
+            </function>
+        <function name="AN49">
+                <constraint type="enable">
+                    <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-53]" value="ADCHS_AN49"/>
+                </constraint>
+            </function>
+    </module>
+        <module name="CVD" desc="Capacitive Voltage Divider">
+        <function name="CVD1">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD2">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD3">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD4">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD5">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD6">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD7">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD8">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD9">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD10">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD11">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD12">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD13">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD14">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD15">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD16">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD17">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD18">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD19">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD20">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD21">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD22">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD23">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD24">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD25">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD26">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD27">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD28">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD29">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD30">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD31">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD32">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD33">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD34">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD35">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD36">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD37">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD38">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD39">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD40">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD41">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD42">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD43">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD44">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD45">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD46">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD47">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD48">
+                <constraint type="enable"/>
+        </function>
+        <function name="CVD49">
+                <constraint type="enable"/>
+        </function>
+    </module>
+        <module name="Clock" desc="Clock">
+            <function name="CLKI">
+                <constraint type="enable">
+                    <pair key="POSCMOD" value="EC"/>
+                </constraint>
+            </function>
+            <function name="CLKO">
+                <constraint type="enable">
+                    <pair key="OSCIOFNC" value="ON"/>
+                </constraint>
+            </function>
+            <function name="OSCI">
+                <constraint type="enable">
+                    <pair key="POSCMOD" value="HS"/>
+                </constraint>
+            </function>
+            <function name="OSCO">
+                <constraint type="enable">
+                    <pair key="POSCMOD" value="HS"/>
+                </constraint>
+            </function>
+            <function name="SOSCI">
+                <constraint type="enable">
+                    <pair key="FSOSCEN" value="ON"/>
+                </constraint>
+            </function>
+            <function name="SOSCO">
+                <constraint type="enable">
+                    <pair key="FSOSCEN" value="ON"/>
+                </constraint>
+            </function>
+            <function name="REFCLKI">
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK_ROSEL0" value="0"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK_ROSEL1" value="0"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK_ROSEL2" value="0"/>
+                </constraint>
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK_ROSEL3" value="0"/>
+                </constraint>
+            </function>
+            <function name="REFCLKO1">
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK0_OE" value="y"/>
+                </constraint>
+            </function>
+            <function name="REFCLKO2">
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK1_OE" value="y"/>
+                </constraint>
+            </function>
+            <function name="REFCLKO3">
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK2_OE" value="y"/>
+                </constraint>
+            </function>
+            <function name="REFCLKO4">
+                <constraint type="enable">
+                    <pair key="SYS_CLK_REFCLK3_OE" value="y"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="IC1" desc="IC1">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_1"/>
+            </constraint>
+            <function name="IC1"/>
+        </module>
+        <module name="IC2" desc="IC2">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_2"/>
+            </constraint>
+            <function name="IC2"/>
+        </module>
+        <module name="IC3" desc="IC3">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_3"/>
+            </constraint>
+            <function name="IC3"/>
+        </module>
+        <module name="IC4" desc="IC4">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_4"/>
+            </constraint>
+            <function name="IC4"/>
+        </module>
+        <module name="IC5" desc="IC5">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_5"/>
+            </constraint>
+            <function name="IC5"/>
+        </module>
+        <module name="IC6" desc="IC6">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_6"/>
+            </constraint>
+            <function name="IC6"/>
+        </module>
+        <module name="IC7" desc="IC7">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_7"/>
+            </constraint>
+            <function name="IC7"/>
+        </module>
+        <module name="IC8" desc="IC8">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_8"/>
+            </constraint>
+            <function name="IC8"/>
+        </module>
+        <module name="IC9" desc="IC9">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_9"/>
+            </constraint>
+            <function name="IC9"/>
+        </module>
+        <module name="IC10" desc="IC10">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_10"/>
+            </constraint>
+            <function name="IC10"/>
+        </module>
+        <module name="IC11" desc="IC11">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_11"/>
+            </constraint>
+            <function name="IC11"/>
+        </module>
+        <module name="IC12" desc="IC12">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_12"/>
+            </constraint>
+            <function name="IC12"/>
+        </module>
+        <module name="IC13" desc="IC13">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_13"/>
+            </constraint>
+            <function name="IC13"/>
+        </module>
+        <module name="IC14" desc="IC14">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_14"/>
+            </constraint>
+            <function name="IC14"/>
+        </module>
+        <module name="IC15" desc="IC15">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_15"/>
+            </constraint>
+            <function name="IC15"/>
+        </module>
+        <module name="IC16" desc="IC16">
+            <constraint type="enable">
+                <pair key="DRV_IC_PERIPHERAL_ID_IDX[0-15]" value="IC_ID_16"/>
+            </constraint>
+            <function name="IC16"/>
+        </module>
+        <module name="OC1" desc="OC1">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_1"/>
+            </constraint>
+            <function name="OC1"/>
+        </module>
+        <module name="OC2" desc="OC2">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_2"/>
+            </constraint>
+            <function name="OC2"/>
+        </module>
+        <module name="OC3" desc="OC3">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_3"/>
+            </constraint>
+            <function name="OC3"/>
+        </module>
+        <module name="OC4" desc="OC4">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_4"/>
+            </constraint>
+            <function name="OC4"/>
+        </module>
+        <module name="OC5" desc="OC5">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_5"/>
+            </constraint>
+            <function name="OC5"/>
+        </module>
+        <module name="OC6" desc="OC6">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_6"/>
+            </constraint>
+            <function name="OC6"/>
+        </module>
+        <module name="OC7" desc="OC7">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_7"/>
+            </constraint>
+            <function name="OC7"/>
+        </module>
+        <module name="OC8" desc="OC8">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_8"/>
+            </constraint>
+            <function name="OC8"/>
+        </module>
+        <module name="OC9" desc="OC9">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_9"/>
+            </constraint>
+            <function name="OC9"/>
+        </module>
+        <module name="OC10" desc="OC10">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_10"/>
+            </constraint>
+            <function name="OC10"/>
+        </module>
+        <module name="OC11" desc="OC11">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_11"/>
+            </constraint>
+            <function name="OC11"/>
+        </module>
+        <module name="OC12" desc="OC12">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_12"/>
+            </constraint>
+            <function name="OC12"/>
+        </module>
+        <module name="OC13" desc="OC13">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_13"/>
+            </constraint>
+            <function name="OC13"/>
+        </module>
+        <module name="OC14" desc="OC14">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_14"/>
+            </constraint>
+            <function name="OC14"/>
+        </module>
+        <module name="OC15" desc="OC15">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_15"/>
+            </constraint>
+            <function name="OC15"/>
+        </module>
+        <module name="OC16" desc="OC16">
+            <constraint type="enable">
+                <pair key="DRV_OC_PERIPHERAL_ID_IDX[0-15]" value="OC_ID_16"/>
+            </constraint>
+            <function name="OC16"/>
+        </module>
+        <module name="OC Faults" desc="OC Faults">
+            <function name="OCFA">
+                <constraint type="enable">
+                    <pair key="DRV_OC_FAULT_A_USED_IDX[0-15]" value="y"/>
+                </constraint>
+            </function>
+            <function name="OCFB">
+                <constraint type="enable">
+                    <pair key="DRV_OC_FAULT_B_USED_IDX[0-15]" value="y"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="External Interrupt 0">
+            <constraint type="enable">
+                <pair key="EXT_INT_PERIPHERAL_ID_IDX[0-4]" value="INT_EXTERNAL_INT_SOURCE0"/>
+            </constraint>
+            <function name="INT0"/>
+        </module>
+        <module name="External Interrupt 1">
+            <constraint type="enable">
+                <pair key="EXT_INT_PERIPHERAL_ID_IDX[0-4]" value="INT_EXTERNAL_INT_SOURCE1"/>
+            </constraint>
+            <function name="INT1"/>
+        </module>
+        <module name="External Interrupt 2">
+            <constraint type="enable">
+                <pair key="EXT_INT_PERIPHERAL_ID_IDX[0-4]" value="INT_EXTERNAL_INT_SOURCE2"/>
+            </constraint>
+            <function name="INT2"/>
+        </module>
+        <module name="External Interrupt 3">
+            <constraint type="enable">
+                <pair key="EXT_INT_PERIPHERAL_ID_IDX[0-4]" value="INT_EXTERNAL_INT_SOURCE3"/>
+            </constraint>
+            <function name="INT3"/>
+        </module>
+        <module name="External Interrupt 4">
+            <constraint type="enable">
+                <pair key="EXT_INT_PERIPHERAL_ID_IDX[0-4]" value="INT_EXTERNAL_INT_SOURCE4"/>
+            </constraint>
+            <function name="INT4"/>
+        </module>
+        <module name="Timer 1" desc="Timer 1">
+            <function name="T1CK">
+                <constraint type="enable">
+                    <pair key="DRV_TMR_USE_EXT_INPUT_IDX[0-8]" value="TMR_ID_1"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Timer 2" desc="Timer 2">
+            <function name="T2CK">
+                <constraint type="enable">
+                    <pair key="DRV_TMR_USE_EXT_INPUT_IDX[0-8]" value="TMR_ID_2"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Timer 3" desc="Timer 3">
+            <function name="T3CK">
+                <constraint type="enable">
+                    <pair key="DRV_TMR_USE_EXT_INPUT_IDX[0-8]" value="TMR_ID_3"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Timer 4" desc="Timer 4">
+            <function name="T4CK">
+                <constraint type="enable">
+                    <pair key="DRV_TMR_USE_EXT_INPUT_IDX[0-8]" value="TMR_ID_4"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Timer 5" desc="Timer 5">
+            <function name="T5CK">
+                <constraint type="enable">
+                    <pair key="DRV_TMR_USE_EXT_INPUT_IDX[0-8]" value="TMR_ID_5"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Timer 6" desc="Timer 6">
+            <function name="T6CK">
+                <constraint type="enable">
+                    <pair key="DRV_TMR_USE_EXT_INPUT_IDX[0-8]" value="TMR_ID_6"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Timer 7" desc="Timer 7">
+            <function name="T7CK">
+                <constraint type="enable">
+                    <pair key="DRV_TMR_USE_EXT_INPUT_IDX[0-8]" value="TMR_ID_7"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Timer 8" desc="Timer 8">
+            <function name="T8CK">
+                <constraint type="enable">
+                    <pair key="DRV_TMR_USE_EXT_INPUT_IDX[0-8]" value="TMR_ID_8"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Timer 9" desc="Timer 9">
+            <function name="T9CK">
+                <constraint type="enable">
+                    <pair key="DRV_TMR_USE_EXT_INPUT_IDX[0-8]" value="TMR_ID_9"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="RTCC" desc="RTCC">
+            <function name="RTCC">
+                <constraint type="enable">
+                    <pair key="DRV_RTCC_OUTPUT_ENABLE" value="y"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="UART 1" desc="UART 1">
+            <function name="U1RX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RX_PIN_IDX[0-5]" value="USART_ID_1"/>
+                </constraint>
+            </function>
+            <function name="U1TX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_TX_PIN_IDX[0-5]" value="USART_ID_1"/>
+                </constraint>
+            </function>
+            <function name="U1CTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_CTS_PIN_IDX[0-5]" value="USART_ID_1"/>
+                </constraint>
+            </function>
+            <function name="U1RTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RTS_PIN_IDX[0-5]" value="USART_ID_1"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="UART 2" desc="UART 2">
+            <function name="U2RX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RX_PIN_IDX[0-5]" value="USART_ID_2"/>
+                </constraint>
+            </function>
+            <function name="U2TX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_TX_PIN_IDX[0-5]" value="USART_ID_2"/>
+                </constraint>
+            </function>
+            <function name="U2CTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_CTS_PIN_IDX[0-5]" value="USART_ID_2"/>
+                </constraint>
+            </function>
+            <function name="U2RTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RTS_PIN_IDX[0-5]" value="USART_ID_2"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="UART 3" desc="UART 3">
+            <function name="U3RX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RX_PIN_IDX[0-5]" value="USART_ID_3"/>
+                </constraint>
+            </function>
+            <function name="U3TX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_TX_PIN_IDX[0-5]" value="USART_ID_3"/>
+                </constraint>
+            </function>
+            <function name="U3CTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_CTS_PIN_IDX[0-5]" value="USART_ID_3"/>
+                </constraint>
+            </function>
+            <function name="U3RTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RTS_PIN_IDX[0-5]" value="USART_ID_3"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="UART 4" desc="UART 4">
+            <function name="U4RX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RX_PIN_IDX[0-5]" value="USART_ID_4"/>
+                </constraint>
+            </function>
+            <function name="U4TX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_TX_PIN_IDX[0-5]" value="USART_ID_4"/>
+                </constraint>
+            </function>
+            <function name="U4CTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_CTS_PIN_IDX[0-5]" value="USART_ID_4"/>
+                </constraint>
+            </function>
+            <function name="U4RTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RTS_PIN_IDX[0-5]" value="USART_ID_4"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="UART 5" desc="UART 5">
+            <function name="U5RX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RX_PIN_IDX[0-5]" value="USART_ID_5"/>
+                </constraint>
+            </function>
+            <function name="U5TX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_TX_PIN_IDX[0-5]" value="USART_ID_5"/>
+                </constraint>
+            </function>
+            <function name="U5CTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_CTS_PIN_IDX[0-5]" value="USART_ID_5"/>
+                </constraint>
+            </function>
+            <function name="U5RTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RTS_PIN_IDX[0-5]" value="USART_ID_5"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="UART 6" desc="UART 6">
+            <function name="U6RX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RX_PIN_IDX[0-5]" value="USART_ID_6"/>
+                </constraint>
+            </function>
+            <function name="U6TX">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_TX_PIN_IDX[0-5]" value="USART_ID_6"/>
+                </constraint>
+            </function>
+            <function name="U6CTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_CTS_PIN_IDX[0-5]" value="USART_ID_6"/>
+                </constraint>
+            </function>
+            <function name="U6RTS">
+                <constraint type="enable">
+                    <pair key="DRV_USART_USE_RTS_PIN_IDX[0-5]" value="USART_ID_6"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="SPI/I2S 1" desc="SPI/I2S 1">
+            <function name="SCK1">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SCK_PIN_IDX[0-5]" value="SPI_ID_1"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_1"/>
+                </constraint>
+            </function>
+            <function name="SDI1">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDI_PIN_IDX[0-5]" value="SPI_ID_1"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_1"/>
+                </constraint>
+            </function>
+            <function name="SDO1">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDO_PIN_IDX[0-5]" value="SPI_ID_1"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_1"/>
+                </constraint>
+            </function>
+            <function name="SS1 (in)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_1"/>
+                    <pair key="DRV_I2S_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_1"/>
+                </constraint>
+            </function>
+            <function name="SS1 (out)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_1"/>
+                    <pair key="DRV_I2S_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_1"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="SPI/I2S 2" desc="SPI/I2S 2">
+            <function name="SCK2 (in)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SCK_PIN_IDX[0-5]" value="SPI_ID_2"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_2"/>
+                </constraint>
+            </function>
+            <function name="SCK2 (out)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SCK_PIN_IDX[0-5]" value="SPI_ID_2"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_2"/>
+                </constraint>
+            </function>
+            <function name="SDI2">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDI_PIN_IDX[0-5]" value="SPI_ID_2"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_2"/>
+                </constraint>
+            </function>
+            <function name="SDO2">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDO_PIN_IDX[0-5]" value="SPI_ID_2"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_2"/>
+                </constraint>
+            </function>
+            <function name="SS2 (in)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_2"/>
+                    <pair key="DRV_I2S_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_2"/>
+                </constraint>
+            </function>
+            <function name="SS2 (out)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_2"/>
+                    <pair key="DRV_I2S_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_2"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="SPI/I2S 3" desc="SPI/I2S 3">
+            <function name="SCK3 (in)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SCKIN_PIN_IDX[0-5]" value="SPI_ID_3"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_3"/>
+                </constraint>
+            </function>
+            <function name="SCK3 (out)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SCKOUT_PIN_IDX[0-5]" value="SPI_ID_3"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_3"/>
+                </constraint>
+            </function>
+			<function name="SDI3">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDI_PIN_IDX[0-5]" value="SPI_ID_3"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_3"/>
+                </constraint>
+            </function>
+            <function name="SDO3">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDO_PIN_IDX[0-5]" value="SPI_ID_3"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_3"/>
+                </constraint>
+            </function>
+            <function name="SS3 (in)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_3"/>
+                    <pair key="DRV_I2S_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_3"/>
+                </constraint>
+            </function>
+            <function name="SS3 (out)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_3"/>
+                    <pair key="DRV_I2S_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_3"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="SPI/I2S 4" desc="SPI/I2S 4">
+            <function name="SCK4 (in)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SCKIN_PIN_IDX[0-5]" value="SPI_ID_4"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_4"/>
+                </constraint>
+            </function>
+            <function name="SCK4 (out)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SCKOUT_PIN_IDX[0-5]" value="SPI_ID_4"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_4"/>
+                </constraint>
+            </function>
+			<function name="SDI4">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDI_PIN_IDX[0-5]" value="SPI_ID_4"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_4"/>
+                </constraint>
+            </function>
+            <function name="SDO4">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDO_PIN_IDX[0-5]" value="SPI_ID_4"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_4"/>
+                </constraint>
+            </function>
+            <function name="SS4 (in)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_4"/>
+                    <pair key="DRV_I2S_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_4"/>
+                </constraint>
+            </function>
+            <function name="SS4 (out)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_4"/>
+                    <pair key="DRV_I2S_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_4"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="SPI/I2S 5" desc="SPI/I2S 5">
+            <function name="SCK5 (in)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SCKIN_PIN_IDX[0-5]" value="SPI_ID_5"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_5"/>
+                </constraint>
+            </function>
+            <function name="SCK5 (out)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SCKOUT_PIN_IDX[0-5]" value="SPI_ID_5"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_5"/>
+                </constraint>
+            </function>
+			<function name="SDI5">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDI_PIN_IDX[0-5]" value="SPI_ID_5"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_5"/>
+                </constraint>
+            </function>
+            <function name="SDO5">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDO_PIN_IDX[0-5]" value="SPI_ID_5"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_5"/>
+                </constraint>
+            </function>
+            <function name="SS5 (in)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_5"/>
+                    <pair key="DRV_I2S_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_5"/>
+                </constraint>
+            </function>
+            <function name="SS5 (out)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_5"/>
+                    <pair key="DRV_I2S_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_5"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="SPI/I2S 6" desc="SPI/I2S 6">
+            <function name="SCK6 (in)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SCKIN_PIN_IDX[0-5]" value="SPI_ID_6"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_6"/>
+                </constraint>
+            </function>
+			<function name="SCK6 (out)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SCKOUT_PIN_IDX[0-5]" value="SPI_ID_6"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_6"/>
+                </constraint>
+            </function>
+            <function name="SDI6">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDI_PIN_IDX[0-5]" value="SPI_ID_6"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_6"/>
+                </constraint>
+            </function>
+            <function name="SDO6">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SDO_PIN_IDX[0-5]" value="SPI_ID_6"/>
+                    <pair key="DRV_I2S_PERIPHERAL_ID_IDX[0-5]" value="SPI_ID_6"/>
+                </constraint>
+            </function>
+            <function name="SS6 (in)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_6"/>
+                    <pair key="DRV_I2S_USE_SSIN_PIN_IDX[0-5]" value="SPI_ID_6"/>
+                </constraint>
+            </function>
+            <function name="SS6 (out)">
+                <constraint type="enable">
+                    <pair key="DRV_SPI_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_6"/>
+                    <pair key="DRV_I2S_USE_SSOUT_PIN_IDX[0-5]" value="SPI_ID_6"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="I2C 1" desc="I2C 1">
+            <constraint type="enable">
+                <pair key="DRV_I2C_PERIPHERAL_ID_IDX[0-4]" value="I2C_ID_1"/>
+            </constraint>
+            <function name="SCL1"/>
+            <function name="SDA1"/>
+        </module>
+        <module name="I2C 2" desc="I2C 2">
+            <constraint type="enable">
+                <pair key="DRV_I2C_PERIPHERAL_ID_IDX[0-4]" value="I2C_ID_2"/>
+            </constraint>
+            <function name="SCL2"/>
+            <function name="SDA2"/>
+        </module>
+        <module name="I2C 3" desc="I2C 3">
+            <constraint type="enable">
+                <pair key="DRV_I2C_PERIPHERAL_ID_IDX[0-4]" value="I2C_ID_3"/>
+            </constraint>
+            <function name="SCL3"/>
+            <function name="SDA3"/>
+        </module>
+        <module name="I2C 4" desc="I2C 4">
+            <constraint type="enable">
+                <pair key="DRV_I2C_PERIPHERAL_ID_IDX[0-4]" value="I2C_ID_4"/>
+            </constraint>
+            <function name="SCL4"/>
+            <function name="SDA4"/>
+        </module>
+        <module name="Voltage Reference" analog="true">
+            <function name="VREF-">
+                <constraint type="enable">
+                    <pair key="DRV_ADC_USE_VREFN_PIN" value="y"/>
+                    <pair key="DRV_CMP_CVREF_VOLTAGE_SOURCE" value="CMP_CVREF_VOLTAGE_SOURCE_EXTERNAL"/>
+                </constraint>
+            </function>
+            <function name="VREF+">
+                <constraint type="enable">
+                    <pair key="DRV_ADC_USE_VREFP_PIN" value="y"/>
+                    <pair key="DRV_CMP_CVREF_VOLTAGE_SOURCE" value="CMP_CVREF_VOLTAGE_SOURCE_EXTERNAL"/>
+                </constraint>
+            </function>
+            <function name="CVREFOUT">
+                <constraint type="enable">
+                    <pair key="DRV_CMP_CVREF_OE" value="y"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Comparator OpAmp 1" desc="Comparator/OpAmp 1">
+            <constraint type="enable">
+                <pair key="DRV_OAC_PERIPHERAL_ID_IDX[0-4]" value="OAC_ID_1"/>
+            </constraint>
+            <function name="C1IN1+" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C1IN1+"/>
+                </constraint>
+            </function>
+            <function name="C1IN1-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C1IN1-"/>
+                </constraint>
+            </function>
+            <function name="C1IN2-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C1IN2-"/>
+                </constraint>
+            </function>
+            <function name="C1IN3-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C1IN3-"/>
+                </constraint>
+            </function>
+            <function name="C1IN4-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C1IN4-"/>
+                </constraint>
+            </function>
+            <function name="C1OUT">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_USE_OUTPUT_PIN_IDX[0-4]" value="OAC_ID_1"/>
+                </constraint>
+            </function>
+            <function name="OA1IN-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C1IN1-"/>
+                </constraint>
+            </function>
+            <function name="OA1IN+" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C1IN1+"/>
+                </constraint>
+            </function>
+            <function name="OA1OUT" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_USE_OA_OUTPUT_PIN_IDX[0-4]" value="OAC_ID_1"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Comparator OpAmp 2" desc="Comparator/OpAmp 2">
+            <constraint type="enable">
+                <pair key="DRV_OAC_PERIPHERAL_ID_IDX[0-4]" value="OAC_ID_2"/>
+            </constraint>
+            <function name="C2IN1+" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C2IN1+"/>
+                </constraint>
+            </function>
+            <function name="C2IN1-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C2IN1-"/>
+                </constraint>
+            </function>
+            <function name="C2IN2-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C2IN2-"/>
+                </constraint>
+            </function>
+            <function name="C2IN3-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C2IN3-"/>
+                </constraint>
+            </function>
+            <function name="C2IN4-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C2IN4-"/>
+                </constraint>
+            </function>
+            <function name="C2OUT">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_USE_OUTPUT_PIN_IDX[0-4]" value="OAC_ID_2"/>
+                </constraint>
+            </function>
+            <function name="OA2IN-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C2IN1-"/>
+                </constraint>
+            </function>
+            <function name="OA2IN+" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C2IN1+"/>
+                </constraint>
+            </function>
+            <function name="OA2OUT" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_USE_OA_OUTPUT_PIN_IDX[0-4]" value="OAC_ID_2"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Comparator OpAmp 3" desc="Comparator/OpAmp 3">
+            <constraint type="enable">
+                <pair key="DRV_OAC_PERIPHERAL_ID_IDX[0-4]" value="OAC_ID_3"/>
+            </constraint>
+            <function name="C3IN1+" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C3IN1+"/>
+                </constraint>
+            </function>
+            <function name="C3IN1-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C3IN1-"/>
+                </constraint>
+            </function>
+            <function name="C3IN2-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C3IN2-"/>
+                </constraint>
+            </function>
+            <function name="C3IN3-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C3IN3-"/>
+                </constraint>
+            </function>
+            <function name="C3IN4-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C3IN4-"/>
+                </constraint>
+            </function>
+            <function name="C3OUT">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_USE_OUTPUT_PIN_IDX[0-4]" value="OAC_ID_3"/>
+                </constraint>
+            </function>
+            <function name="OA3IN-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C3IN1-"/>
+                </constraint>
+            </function>
+            <function name="OA3IN+" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C3IN1+"/>
+                </constraint>
+            </function>
+            <function name="OA3OUT" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_USE_OA_OUTPUT_PIN_IDX[0-4]" value="OAC_ID_3"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Comparator 4" desc="Comparator 4">
+            <constraint type="enable">
+                <pair key="DRV_CMP_PERIPHERAL_ID_IDX[0-4]" value="CMP_ID_4"/>
+            </constraint>
+            <function name="C4IN1+" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C4IN1+"/>
+                </constraint>
+            </function>
+            <function name="C4IN1-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C4IN1-"/>
+                </constraint>
+            </function>
+            <function name="C4IN2-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C4IN2-"/>
+                </constraint>
+            </function>
+            <function name="C4IN3-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C4IN3-"/>
+                </constraint>
+            </function>
+            <function name="C4IN4-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C4IN4-"/>
+                </constraint>
+            </function>
+            <function name="C4OUT">
+                <constraint type="enable">
+                    <pair key="DRV_CMP_USE_OUTPUT_PIN_IDX[0-4]" value="CMP_ID_4"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="Comparator OpAmp 5" desc="Comparator/OpAmp 5">
+            <constraint type="enable">
+                <pair key="DRV_CMP_PERIPHERAL_ID_IDX[0-4]" value="CMP_ID_5"/>
+            </constraint>
+            <function name="C5IN1+" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C3IN1+"/>
+                </constraint>
+            </function>
+            <function name="C5IN1-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C5IN1-"/>
+                </constraint>
+            </function>
+            <function name="C5IN2-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C5IN2-"/>
+                </constraint>
+            </function>
+            <function name="C5IN3-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C5IN3-"/>
+                </constraint>
+            </function>
+            <function name="C5IN4-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C5IN4-"/>
+                </constraint>
+            </function>
+            <function name="C5OUT">
+                <constraint type="enable">
+                    <pair key="DRV_CMP_USE_OUTPUT_PIN_IDX[0-4]" value="CMP_ID_5"/>
+                </constraint>
+            </function>
+            <function name="OA5IN-" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_INVPIN_IDX[0-4]" value="C5IN1-"/>
+                </constraint>
+            </function>
+            <function name="OA5IN+" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_NONINVPIN_IDX[0-4]" value="C5IN1+"/>
+                </constraint>
+            </function>
+            <function name="OA5OUT" analog="true">
+                <constraint type="enable">
+                    <pair key="DRV_OAC_USE_OA_OUTPUT_PIN_IDX[0-4]" value="OAC_ID_5"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="PMP" desc="PMP">
+            <constraint type="enable">
+                <pair key="USE_DRV_PMP" value="y"/>
+            </constraint>
+            <function name="PMD0"/>
+            <function name="PMD1"/>
+            <function name="PMD2"/>
+            <function name="PMD3"/>
+            <function name="PMD4"/>
+            <function name="PMD5"/>
+            <function name="PMD6"/>
+            <function name="PMD7"/>
+            <function name="PMD8">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_DATA_SIZE" value="PMP_DATA_SIZE_16_BITS"/>
+                </constraint>
+            </function>
+            <function name="PMD9">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_DATA_SIZE" value="PMP_DATA_SIZE_16_BITS"/>
+                </constraint>
+            </function>
+            <function name="PMD10">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_DATA_SIZE" value="PMP_DATA_SIZE_16_BITS"/>
+                </constraint>
+            </function>
+            <function name="PMD11">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_DATA_SIZE" value="PMP_DATA_SIZE_16_BITS"/>
+                </constraint>
+            </function>
+            <function name="PMD12">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_DATA_SIZE" value="PMP_DATA_SIZE_16_BITS"/>
+                </constraint>
+            </function>
+            <function name="PMD13">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_DATA_SIZE" value="PMP_DATA_SIZE_16_BITS"/>
+                </constraint>
+            </function>
+            <function name="PMD14">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_DATA_SIZE" value="PMP_DATA_SIZE_16_BITS"/>
+                </constraint>
+            </function>
+            <function name="PMD15">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_DATA_SIZE" value="PMP_DATA_SIZE_16_BITS"/>
+                </constraint>
+            </function>
+            <function name="PMA0">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_0" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA1">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_1" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA2">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_2" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA3">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_3" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA4">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_4" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA5">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_5" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA6">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_6" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA7">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_7" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA8">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_8" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA9">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_9" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA10">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_10" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA11">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_11" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA12">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_12" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA13">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_13" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA14">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_14" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA15">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_15" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA16">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_16" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA17">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_17" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA18">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_18" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA19">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_19" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA20">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_20" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA21">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_21" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA22">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_22" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMA23">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_ADDRESSPORT_23" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMRD">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_READSTROBE_ENABLE" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMWR">
+                <constraint type="enable">
+                    <pair key="DRV_PMP_WRITESTROBE_ENABLE" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMCS1">
+                <constraint type="enable">
+                    <pair key="DO_NOT_SHOW" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMCS2">
+                <constraint type="enable">
+                    <pair key="DO_NOT_SHOW" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMALL">
+                <constraint type="enable">
+                    <pair key="DO_NOT_SHOW" value="y"/>
+                </constraint>
+            </function>
+            <function name="PMALH">
+                <constraint type="enable">
+                    <pair key="DO_NOT_SHOW" value="y"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="USB 1" desc="USB1">
+            <constraint type="enable">
+                <pair key="USE_USB_STACK" value="y"/>
+            </constraint>
+            <function name="D1+" analog="true"/>
+            <function name="D1-" analog="true"/>
+            <function name="USBID1">
+                <constraint type="enable">
+                    <pair key="FUSBIDIO1" value="ON"/>
+                </constraint>
+            </function>
+            <function name="VBUSON1">
+                <constraint type="enable">
+                    <pair key="FVBUSIO1" value="ON"/>
+                </constraint>
+            </function>
+			<function name="USBOEN1"/>
+        </module>
+        <module name="USB 2" desc="USB2">
+            <constraint type="enable">
+                <pair key="USE_USB_STACK" value="y"/>
+            </constraint>
+            <function name="D2+" analog="true"/>
+            <function name="D2-" analog="true"/>
+            <function name="USBID2">
+                <constraint type="enable">
+                    <pair key="FUSBIDIO2" value="ON"/>
+                </constraint>
+            </function>
+            <function name="VBUSON2">
+                <constraint type="enable">
+                    <pair key="FVBUSIO2" value="ON"/>
+                </constraint>
+            </function>
+			<function name="USBOEN2"/>
+        </module>
+        <module name="CAN1" desc="CAN1">
+            <constraint type="enable">
+                <pair key="DRV_CAN_PERIPHERAL_ID_IDX[0-3]" value="CAN_ID_1"/>
+            </constraint>
+            <function name="C1RX"/>
+            <function name="C1TX"/>
+        </module>
+        <module name="CAN2" desc="CAN2">
+            <constraint type="enable">
+                <pair key="DRV_CAN_PERIPHERAL_ID_IDX[0-3]" value="CAN_ID_2"/>
+            </constraint>
+            <function name="C2RX"/>
+            <function name="C2TX"/>
+        </module>
+        <module name="CAN3" desc="CAN3">
+            <constraint type="enable">
+                <pair key="DRV_CAN_PERIPHERAL_ID_IDX[0-3]" value="CAN_ID_3"/>
+            </constraint>
+            <function name="C3RX"/>
+            <function name="C3TX"/>
+        </module>
+        <module name="CAN4" desc="CAN4">
+            <constraint type="enable">
+                <pair key="DRV_CAN_PERIPHERAL_ID_IDX[0-3]" value="CAN_ID_4"/>
+            </constraint>
+            <function name="C4RX"/>
+            <function name="C4TX"/>
+        </module>
+        <module name="JTAG">
+            <constraint type="enable">
+                <pair key="SYS_DEVCON_USE_JTAG" value="y"/>
+            </constraint>
+            <function name="TMS"/>
+            <function name="TCK"/>
+            <function name="TDI"/>
+            <function name="TDO"/>
+        </module>
+        <module name="Trace">
+            <constraint type="enable">
+                <pair key="SYS_DEVCON_USE_TRACE" value="y"/>
+            </constraint>
+            <function name="TRCLK"/>
+            <function name="TRD0"/>
+            <function name="TRD1"/>
+            <function name="TRD2"/>
+            <function name="TRD3"/>
+        </module>
+        <module name="Debug">
+            <function name="PGED1">
+                <constraint type="debug">
+                    <pair key="ICESEL" value="ICS_PGx1"/>
+                </constraint>
+            </function>
+            <function name="PGEC1">
+                <constraint type="debug">
+                    <pair key="ICESEL" value="ICS_PGx1"/>
+                </constraint>
+            </function>
+            <function name="PGED2">
+                <constraint type="debug">
+                    <pair key="ICESEL" value="ICS_PGx2"/>
+                </constraint>
+            </function>
+            <function name="PGEC2">
+                <constraint type="debug">
+                    <pair key="ICESEL" value="ICS_PGx2"/>
+                </constraint>
+            </function>
+            <function name="PGED3">
+                <constraint type="debug">
+                    <pair key="ICESEL" value="ICS_PGx3"/>
+                </constraint>
+            </function>
+            <function name="PGEC3">
+                <constraint type="debug">
+                    <pair key="ICESEL" value="ICS_PGx3"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="HLVD">
+            <function name="LVDIN">
+                <constraint type="debug">
+                    <pair key="SYS_POWER_LVD_LIMIT" value="SYS_POWER_LVD_LVDIN"/>
+                </constraint>
+            </function>
+        </module>
+        <module name="CTMU" desc="CTMU">
+            <constraint type="enable">
+                <pair key="USE_DRV_CTMU" value="y"/>
+            </constraint>
+            <function name="CTED1" analog="true"/>
+            <function name="CTED2" analog="true"/>
+            <function name="CTCMP" analog="true"/>
+            <function name="CTPLS"/>
+        </module>
+        <module name="CDAC1" analog="true">
+            <function name="DAC1" analog="true"/>
+        </module>
+        <module name="CDAC2" analog="true">
+            <function name="DAC2" analog="true"/>
+        </module>
+        <module name="CDAC3" analog="true">
+            <function name="DAC3" analog="true"/>
+        </module>
+        <module name="CLC" desc="CLC">
+            <function name="CLCINA"/>
+            <function name="CLCINB"/>
+            <function name="CLCINC"/>
+            <function name="CLCIND"/>
+        </module>
+        <module name="CLC1" desc="CLC 1">
+            <function name="CLCO1"/>
+        </module>
+        <module name="CLC2" desc="CLC 2">
+            <function name="CLCO2"/>
+        </module>
+        <module name="CLC3" desc="CLC 3">
+            <function name="CLCO3"/>
+        </module>
+        <module name="CLC4" desc="CLC 4">
+            <function name="CLCO4"/>
+        </module>
+        <module name="PWM">
+            <function name="FLT1"/>
+			<function name="FLT2"/>
+        	<function name="FLT3"/>
+			<function name="FLT4"/>
+			<function name="FLT5"/>
+            <function name="FLT6"/>
+            <function name="FLT7"/>
+            <function name="FLT8"/>
+            <function name="FLT12"/>
+        	<function name="FLT13"/>
+			<function name="FLT14"/>
+            <function name="FLT15"/>
+        </module>
+        <module name="PWM1">
+            <function name="PWM1L"/>
+			<function name="PWM1H"/>
+        </module>
+        <module name="PWM2">
+            <function name="PWM2L"/>
+			<function name="PWM2H"/>
+        </module>
+        <module name="PWM3">
+            <function name="PWM3L"/>
+			<function name="PWM3H"/>
+        </module>
+        <module name="PWM4">
+            <function name="PWM4L"/>
+			<function name="PWM4H"/>
+        </module>
+        <module name="PWM5">
+            <function name="PWM5L"/>
+			<function name="PWM5H"/>
+        </module>
+        <module name="PWM6">
+            <function name="PWM6L"/>
+			<function name="PWM6H"/>
+        </module>
+        <module name="PWM7">
+            <function name="PWM7L"/>
+			<function name="PWM7H"/>
+        </module>
+        <module name="PWM8">
+            <function name="PWM8L"/>
+			<function name="PWM8H"/>
+        </module>
+        <module name="PWM9">
+            <function name="PWM9L"/>
+			<function name="PWM9H"/>
+        </module>
+        <module name="PWM10">
+            <function name="PWM10L"/>
+			<function name="PWM10H"/>
+        </module>
+        <module name="PWM11">
+            <function name="PWM11L"/>
+			<function name="PWM11H"/>
+        </module>
+        <module name="PWM12">
+            <function name="PWM12L"/>
+			<function name="PWM12H"/>
+        </module>
+        <module name="BSP" desc="Board Support Package">
+            <constraint type="enable">
+                <pair key="USE_BSP" value="y"/>
+            </constraint>
+            <function name="RESERVED"/>
+        </module>
+        <module name="QEI1">
+            <function name="QEA1"/>
+            <function name="QEB1"/>
+            <function name="INDX1"/>
+            <function name="HOME1"/>
+            <function name="QEICMP1"/>
+        </module>
+        <module name="QEI2">
+            <function name="QEA2"/>
+            <function name="QEB2"/>
+            <function name="INDX2"/>
+            <function name="HOME2"/>
+            <function name="QEICMP2"/>
+        </module>
+        <module name="QEI3">
+            <function name="QEA3"/>
+            <function name="QEB3"/>
+            <function name="INDX3"/>
+            <function name="HOME3"/>
+            <function name="QEICMP3"/>
+        </module>
+        <module name="QEI4">
+            <function name="QEA4"/>
+            <function name="QEB4"/>
+            <function name="INDX4"/>
+            <function name="HOME4"/>
+            <function name="QEICMP4"/>
+        </module>
+        <module name="QEI5">
+            <function name="QEA5"/>
+            <function name="QEB5"/>
+            <function name="INDX5"/>
+            <function name="HOME5"/>
+            <function name="QEICMP5"/>
+        </module>
+        <module name="QEI6">
+            <function name="QEA6"/>
+            <function name="QEB6"/>
+            <function name="INDX6"/>
+            <function name="HOME6"/>
+            <function name="QEICMP6"/>
+        </module>
+    </modules>
+</family>
