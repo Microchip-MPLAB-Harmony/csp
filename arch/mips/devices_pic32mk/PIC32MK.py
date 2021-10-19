@@ -214,6 +214,7 @@ PMDLOCKEnable.setDefaultValue(True)
 ds60001402Regex = re.compile(r'MK\w+(GPD|GPE|MCF)')       #PIC32MKXXXXGPD/GPE/MCF
 ds60001570Regex = re.compile(r'MK\w+(GPG|GPH|MCJ)')       #PIC32MKXXXXGPG/GPH/MCJ
 ds60001519Regex = re.compile(r'MK\w+(GPK|GPL|MCM)')       #PIC32MKXXXXGPK/GPL/MCM
+ds60001690Regex = re.compile(r'MK\w+(MCA)')               #PIC32MKXXXXMCA
 deviceFamily = coreComponent.createStringSymbol("DEVICE_FAMILY", devCfgMenu)
 deviceFamily.setLabel("Device Family")
 deviceFamily.setReadOnly(True)
@@ -225,6 +226,8 @@ elif ds60001570Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001570")
 elif ds60001519Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001519")
+elif ds60001690Regex.search(processor):
+    deviceFamily.setDefaultValue("DS60001690")
 
 # productFamily (ID = "PRODUCT_FAMILY") symbol should be used everywhere to identify the product family
 # This symbol is created inside core.py with the default value obtained from ATDF
@@ -236,6 +239,8 @@ elif ds60001570Regex.search(processor):
     productFamily.setDefaultValue("PIC32MK1570")
 elif ds60001519Regex.search(processor):
     productFamily.setDefaultValue("PIC32MK1519")
+elif ds60001690Regex.search(processor):
+    productFamily.setDefaultValue("PIC32MK1690")
 
 mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
 mipsMenu.setLabel("MIPS Configuration")
