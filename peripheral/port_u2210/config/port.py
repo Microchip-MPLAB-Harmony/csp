@@ -403,8 +403,6 @@ for pinNumber in range(1, internalPincount + 1):
             if signalIndex > max_index:
                 max_index = signalIndex
 
-            availablePinDictionary[str(signalIndex)] = signalPad
-
     if pinNumber < pincount + 1:
         pin.append(pinNumber)
         pin[pinNumber-1] = coreComponent.createMenuSymbol("PORT_PIN" + str(pinNumber), pinConfiguration)
@@ -435,11 +433,13 @@ for pinNumber in range(1, internalPincount + 1):
             pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber-1]))[0]))
             pinGroup[pinNumber-1].setDefaultValue(pin_map.get(pin_position[pinNumber-1])[1])
             pinGroupNum[pinNumber-1].setDefaultValue(portGroupName.index(str(pin_map.get(pin_position[pinNumber-1]))[1]))
+            availablePinDictionary[str(pinNumber)] = "P" + str(pinGroup[pinNumber-1].getValue()) + str(pinBitPosition[pinNumber-1].getValue())
     else:
         if (pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]).startswith("P")) and (pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1])[-1].isdigit()):
             pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]))[0]))
             pinGroup[pinNumber-1].setDefaultValue(pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1])[1])
             pinGroupNum[pinNumber-1].setDefaultValue(portGroupName.index(str(pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]))[1]))
+            availablePinDictionary[str(pinNumber)] = "P" + str(pinGroup[pinNumber-1].getValue()) + str(pinBitPosition[pinNumber-1].getValue())
 
     pinName.append(pinNumber)
     pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
