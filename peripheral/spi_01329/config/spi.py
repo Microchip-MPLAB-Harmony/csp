@@ -36,6 +36,8 @@ def sort_alphanumeric(l):
 def handleMessage(messageID, args):
     global spiSym_SPICON_MSTEN
     global spiSym_SPICON_MSSEN
+    global spisSym_RXBuffer_Size
+    global spisSym_TXBuffer_Size
     global spiSymInterruptMode
     result_dict = {}
 
@@ -45,8 +47,23 @@ def handleMessage(messageID, args):
         if args.get("isEnabled") != None and args["isEnabled"] == True:
             spiSym_SPICON_MSTEN.setSelectedKey("Master mode")
 
-    #elif (messageID == "SPI_SLAVE_MODE"):
-        # To be implemented
+    elif (messageID == "SPI_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            spiSym_SPICON_MSTEN.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            spiSym_SPICON_MSTEN.setSelectedKey("Slave mode")
+            
+    elif (messageID == "SPI_SLAVE_RX_BUFFER_SIZE"):
+        if args.get("isReadOnly") != None:
+            spisSym_RXBuffer_Size.setReadOnly(args["isReadOnly"])
+        if args.get("size") != None:
+            spisSym_RXBuffer_Size.setValue(args["size"], 2)
+            
+    elif (messageID == "SPI_SLAVE_TX_BUFFER_SIZE"):
+        if args.get("isReadOnly") != None:
+            spisSym_TXBuffer_Size.setReadOnly(args["isReadOnly"])
+        if args.get("size") != None:
+            spisSym_TXBuffer_Size.setValue(args["size"], 2)
 
     elif (messageID == "SPI_MASTER_INTERRUPT_MODE"):
         if args.get("isReadOnly") != None:
@@ -423,6 +440,8 @@ def instantiateComponent(spiComponent):
     global mode_names
     global spiSym_SPICON_MSTEN
     global spiSym_SPICON_MSSEN
+    global spisSym_RXBuffer_Size
+    global spisSym_TXBuffer_Size
 
     InterruptVector = []
     InterruptHandler = []
