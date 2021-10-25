@@ -133,6 +133,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
        SERCOM_USART_INT_CTRLB_SBMODE_${USART_STOP_BIT}
        ${(USART_PARITY_MODE == "ODD")?then('| SERCOM_USART_INT_CTRLB_PMODE_Msk', '')}
        ${USART_RX_ENABLE?then('| SERCOM_USART_INT_CTRLB_RXEN_Msk', '')}
+	   <#if USART_INTERRUPT_MODE_ENABLE = true> ${USART_SFDE?then('| SERCOM_USART_INT_CTRLB_SFDE_Msk', '')} </#if>
        ${USART_TX_ENABLE?then('| SERCOM_USART_INT_CTRLB_TXEN_Msk', '')};</@compress>
 
     /* Wait for sync */

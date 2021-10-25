@@ -177,6 +177,10 @@ def updateUSARTDataBits (symbol, event):
 
     dataBits = event["symbol"].getSelectedKey()
     symbol.setValue(dataBitsDict[dataBits])
+    
+def update_CTRLB_SFDE_Visibility(symbol, event):
+    usartOperatingMode = event["source"].getSymbolByID("USART_OPERATING_MODE").getSelectedKey()
+    symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and (usartOperatingMode != "BLOCKING"))
 
 def updateInterruptMode (symbol, event):
     if symbol.getLabel() != "---":
@@ -456,6 +460,11 @@ usartSym_CTRLB_SBMODE.setOutputMode("Key")
 usartSym_CTRLB_SBMODE.setDisplayMode("Description")
 usartSym_CTRLB_SBMODE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLB_SBMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+
+usartSym_CTRLB_SFDE = sercomComponent.createBooleanSymbol("USART_SFDE", sercomSym_OperationMode)
+usartSym_CTRLB_SFDE.setLabel("Start-of-Frame Detection Enable")
+usartSym_CTRLB_SFDE.setDefaultValue(False)
+usartSym_CTRLB_SFDE.setDependencies(update_CTRLB_SFDE_Visibility, ["SERCOM_MODE", "USART_OPERATING_MODE"])
 
 #RXPO - Receive Pin Out
 usartSym_CTRLA_RXPO = sercomComponent.createKeyValueSetSymbol("USART_RXPO", sercomSym_OperationMode)
