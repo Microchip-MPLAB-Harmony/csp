@@ -145,7 +145,6 @@ def instantiateComponent(clcComponent):
     clcSymIrqRegIndex.setVisible(False)
     clcSymIrqRegIndex.setReadOnly(True)
     irqNode = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts/interrupt@[name=\"{0}\"]'.format(clcInstanceName.getValue()))
-    print irqNode.getAttribute("index")
     clcSymIrqRegIndex.setDefaultValue(str(int(irqNode.getAttribute("index"))/32))
 
     clcLogicPortEnable = clcComponent.createBooleanSymbol("CLC_PORT_ENABLE", clcLogicCellMenu)
