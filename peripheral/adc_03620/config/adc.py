@@ -189,6 +189,8 @@ def conversionTimeUpdate(symbol, event):
     if localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_ENABLE") == True:
         sample_time_usec, conversion_time_usec, conversion_freq_mhz = conversionTimeCalculate(localComponent, n)
         symbol.setLabel("[ Sampling Time = " + sample_time_usec + " micro sec, " + "Total Conversion Time = " + conversion_time_usec + " micro sec, " + "Max Sampling Freq = " + conversion_freq_mhz + " MHz ]")
+        # This symbol is used by the ADC UI to display Actual Rate
+        localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_ADC_CONVERSION_RATE").setValue(conversion_freq_mhz)
 
 def adcClockFreqUpdate(symbol, event):
     localComponent = symbol.getComponent()
@@ -762,6 +764,10 @@ def readATDF(adcInstanceName, adcComponent):
     adcNumSARCores.setVisible(False)
 
     for n in range(0, nSARCore):
+        adcNumCoreChannels = adcComponent.createIntegerSymbol("ADC_CORE_" + str(n) + "_NUM_CHANNELS", None)
+        adcNumCoreChannels.setDefaultValue(nSARChannel[n])
+        adcNumCoreChannels.setVisible(True)
+    
         adcMaxChannelsDepList.append("ADC_CORE_" + str(n) + "_ENABLE")
 
     adcMaxChannels = adcComponent.createIntegerSymbol("ADC_MAX_CHANNELS", None)
@@ -1161,6 +1167,12 @@ def coreConfig(n, nChannels, adcComponent):
     adc_conversion_time.setLabel("[ Sampling Time = " + sample_time_usec + " micro sec, " + "Total Conversion Time = " + conversion_time_usec + " micro sec, " + "Max Sampling Freq = " + conversion_freq_mhz + " MHz ]")
     adc_conversion_time.setDependencies(conversionTimeUpdate, adcConversionTimeDepList[n])
     adcCoreConfigSymbolsList[n].append("ADC_CORE_" + str(n) + "_ADC_CONVERSION_TIME")
+    
+    # This symbol is used by the ADC UI to display Actual Rate
+    adc_conversion_rate = adcComponent.createStringSymbol("ADC_CORE_" + str(n) + "_ADC_CONVERSION_RATE", adcCoreEnable)
+    adc_conversion_rate.setLabel("ADC RATE IN MSPS")
+    adc_conversion_rate.setVisible(False)
+    adc_conversion_rate.setDefaultValue(conversion_freq_mhz)
 
     # CORCTRL_STRGSRC
     scan_trigger_src_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CORCTRL__STRGSRC\"]").getChildren()
