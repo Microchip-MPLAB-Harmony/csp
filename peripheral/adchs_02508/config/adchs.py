@@ -1372,7 +1372,7 @@ def instantiateComponent(adchsComponent):
 ############################## Dependency Lists ##################################
     adctrgmode_deplist = []
     adctrgsns_deplist = []
-    if ADC_Max_Class_1 != 0:
+    if ADC_Max_Class_1and2 % 4 == 0:
         adctrg_deplist = [[] for i in range ((ADC_Max_Class_1and2 / 4))]
     else:
         adctrg_deplist = [[] for i in range ((ADC_Max_Class_1and2 / 4)+1)]
@@ -1547,6 +1547,7 @@ def instantiateComponent(adchsComponent):
             adchsSym_CH_ENABLE[channelID], False)
         adchsSym_ADCTIME__ADCDIV[channelID].setDependencies(adchsVisibilityOnEvent,
             ["ADCHS_"+str(channelID)+"_ENABLE"])
+        adchsSym_ADCTIME__ADCDIV[channelID].setDefaultValue(1)
         adchsSym_ADCTIME__ADCDIV[channelID].setMin(1)
         adchsSym_ADCTIME__ADCDIV[channelID].setMax(127)
         adctime_deplist[channelID].append(RegisterName + "__" + BitFieldBaseName_ADCDIV)
@@ -2093,19 +2094,19 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCIMCON1.setVisible(False)
     adchsSym_ADCIMCON1.setDependencies(adchsCalcADCIMCON1, adcimcon_deplist[0])
 
-    if (len(adcimcon_deplist) > 1):
+    if ATDF.getNode(adchsATDFRegisterPath("ADCHS", "ADCIMCON2")) is not None:
         adchsSym_ADCIMCON2 = adchsComponent.createHexSymbol("ADCHS_ADCIMCON2", None)
         adchsSym_ADCIMCON2.setLabel("ADCIMCON2 Register")
         adchsSym_ADCIMCON2.setVisible(False)
         adchsSym_ADCIMCON2.setDependencies(adchsCalcADCIMCON2, adcimcon_deplist[1])
 
-    if (len(adcimcon_deplist) > 2):
+    if ATDF.getNode(adchsATDFRegisterPath("ADCHS", "ADCIMCON3")) is not None:
         adchsSym_ADCIMCON3 = adchsComponent.createHexSymbol("ADCHS_ADCIMCON3", None)
         adchsSym_ADCIMCON3.setLabel("ADCIMCON3 Register")
         adchsSym_ADCIMCON3.setVisible(False)
         adchsSym_ADCIMCON3.setDependencies(adchsCalcADCIMCON3, adcimcon_deplist[2])
 
-    if (len(adcimcon_deplist) > 3):
+    if ATDF.getNode(adchsATDFRegisterPath("ADCHS", "ADCIMCON4")) is not None:
         adchsSym_ADCIMCON4 = adchsComponent.createHexSymbol("ADCHS_ADCIMCON4", None)
         adchsSym_ADCIMCON4.setLabel("ADCIMCON4 Register")
         adchsSym_ADCIMCON4.setVisible(False)
@@ -2143,7 +2144,7 @@ def instantiateComponent(adchsComponent):
         adchsSym_ADCTIME[module_id] = adchsComponent.createHexSymbol("ADCHS_ADCTIME" + str(module_id), None)
         adchsSym_ADCTIME[module_id].setLabel("ADCTIME" + str(module_id))
         adchsSym_ADCTIME[module_id].setVisible(False)
-        adchsSym_ADCTIME[module_id].setDefaultValue(0x3000001)
+        adchsSym_ADCTIME[module_id].setDefaultValue(0x3010001)
         adchsSym_ADCTIME[module_id].setDependencies(adchsCalcADCTIME, adctime_deplist[module_id])
 
     adchsSym_ADCGIRQEN1 = adchsComponent.createHexSymbol("ADCHS_ADCGIRQEN1", None)
