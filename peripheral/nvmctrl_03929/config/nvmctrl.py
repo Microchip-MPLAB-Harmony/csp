@@ -127,6 +127,24 @@ def instantiateComponent(nvmctrlComponent):
         nvmctrlSym_DATAFLASH_ERASE_SIZE.setVisible(False)
         nvmctrlSym_DATAFLASH_ERASE_SIZE.setDefaultValue(str(int(nvmctrlSym_DATAFLASH_PROGRAM_SIZE.getValue(), 0) * 4))
 
+    # NVM user row Address
+    nvmctrlUSERPAGENode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"USER_PAGE\"]")
+    if nvmctrlUSERPAGENode != None:
+        nvmctrlSym_USERROW_START_ADDRESS = nvmctrlComponent.createStringSymbol("FLASH_USERROW_START_ADDRESS", None)
+        nvmctrlSym_USERROW_START_ADDRESS.setVisible(False)
+        nvmctrlSym_USERROW_START_ADDRESS.setDefaultValue(nvmctrlUSERPAGENode.getAttribute("start"))
+
+        # NVM user row size
+        nvmctrlSym_USERROW_SIZE = nvmctrlComponent.createStringSymbol("FLASH_USERROW_SIZE", None)
+        nvmctrlSym_USERROW_SIZE.setVisible(False)
+        nvmctrlSym_USERROW_SIZE.setDefaultValue(nvmctrlUSERPAGENode.getAttribute("size"))
+        
+        # NVM user row Page size
+        nvmctrlSym_USERROW_PROGRAM_SIZE = nvmctrlComponent.createStringSymbol("FLASH_USERROW_PROGRAM_SIZE", None)
+        nvmctrlSym_USERROW_PROGRAM_SIZE.setVisible(False)
+        nvmctrlSym_USERROW_PROGRAM_SIZE.setDefaultValue(nvmctrlUSERPAGENode.getAttribute("pagesize"))
+    
+
     # Configures NVM read mode
     nvmctrlSym_CTRLB_READMODE = nvmctrlComponent.createKeyValueSetSymbol("NVMCTRL_CTRLB_READMODE_SELECTION", None)
     nvmctrlSym_CTRLB_READMODE.setLabel("NVMCTRL Read Mode")
@@ -284,6 +302,8 @@ def instantiateComponent(nvmctrlComponent):
 
     writeApiName = nvmctrlComponent.getID().upper() + "_PageWrite"
     eraseApiName = nvmctrlComponent.getID().upper() + "_RowErase"
+    devCfgEraseApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_RowErase"
+    devCfgWriteApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_PageWrite"
 
     nvmctrlWriteApiName = nvmctrlComponent.createStringSymbol("WRITE_API_NAME", None)
     nvmctrlWriteApiName.setVisible(False)
@@ -294,6 +314,16 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlEraseApiName.setVisible(False)
     nvmctrlEraseApiName.setReadOnly(True)
     nvmctrlEraseApiName.setDefaultValue(eraseApiName)
+    
+    nvmctrlDevcfgEraseApiName = nvmctrlComponent.createStringSymbol("DEVCFG_ERASE_API_NAME", None)
+    nvmctrlDevcfgEraseApiName.setVisible(False)
+    nvmctrlDevcfgEraseApiName.setReadOnly(True)
+    nvmctrlDevcfgEraseApiName.setDefaultValue(devCfgEraseApiName)
+    
+    nvmctrlDevcfgWriteApiName = nvmctrlComponent.createStringSymbol("DEVCFG_WRITE_API_NAME", None)
+    nvmctrlDevcfgWriteApiName.setVisible(False)
+    nvmctrlDevcfgWriteApiName.setReadOnly(True)
+    nvmctrlDevcfgWriteApiName.setDefaultValue(devCfgWriteApiName)
 
     ############################################################################
     #### Dependency ####

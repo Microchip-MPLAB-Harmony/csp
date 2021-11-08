@@ -221,6 +221,55 @@ bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
     return true;
 }
 
+<#if FLASH_USERROW_START_ADDRESS??>
+bool ${NVMCTRL_INSTANCE_NAME}_USER_ROW_PageWrite( uint32_t *data, const uint32_t address )
+{
+    uint32_t i = 0;
+    uint32_t * paddress = (uint32_t *)address;
+	
+	if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= ((${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE) - ${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE)))
+	{
+		/* writing 32-bit data into the given address */
+		for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE/4); i++)
+		{
+			*paddress++ = data[i];
+		}
+		
+		/* Set address and command */
+		${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
+	
+		${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_WAP_Val | NVMCTRL_CTRLA_CMDEX_KEY;
+		
+		<#if INTERRUPT_ENABLE == true>
+			${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
+		</#if>
+		
+		return true;
+	}
+
+    return false;
+}
+
+bool ${NVMCTRL_INSTANCE_NAME}_USER_ROW_RowErase( uint32_t address )
+{    	
+	if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= (${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE)))
+	{
+		/* Set address and command */
+		${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
+		
+		${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_EAR_Val | NVMCTRL_CTRLA_CMDEX_KEY;
+		
+		<#if INTERRUPT_ENABLE == true>
+			${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
+		</#if>
+		
+		return true;
+	}
+	
+    return false;
+}
+</#if>
+
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
     volatile uint32_t nvm_error = 0;
