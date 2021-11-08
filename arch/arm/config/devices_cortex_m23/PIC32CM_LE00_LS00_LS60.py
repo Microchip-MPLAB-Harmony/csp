@@ -194,8 +194,9 @@ def getCorePeripherals():
 
 global nvmWaitStates
 nvmWaitStates = { #VDD > 2.7
-                    21000000 : 1,
-                    43000000 : 2,
+                    11000000 : 0,
+                    22000000 : 1,
+                    35000000 : 2,
                     48000000 : 3
                 }
 
