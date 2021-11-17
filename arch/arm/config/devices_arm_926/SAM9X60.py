@@ -156,7 +156,7 @@ dram_boundary_addr.setVisible(False)
 dram_boundary_addr.setDefaultValue("0x%08X" % (ddr_start + ddr_size))
 
 # load MMU
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_sam9/config/mmu.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v5/config/mmu.py")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_9x60/config/clk.py")

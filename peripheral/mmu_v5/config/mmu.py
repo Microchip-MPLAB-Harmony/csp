@@ -40,40 +40,72 @@ cacheAlign.setLabel("Cache Alignment Length")
 cacheAlign.setVisible(False)
 cacheAlign.setDefaultValue(32)
 
+#mmu_segments list have to be defined in the device arch file (i.e. SAM9X60.py)
+symSegCount = coreComponent.createIntegerSymbol("MMU_SEG_COUNT", None)
+symSegCount.setVisible(False)
+symSegCount.setDefaultValue(len(mmu_segments))
+
+for index, segment in enumerate(mmu_segments):
+
+    symDesc = coreComponent.createStringSymbol("MMU_SEG{0}_DESC".format(index),None )
+    symDesc.setVisible(False)
+    symDesc.setDefaultValue(segment[0].replace("_", " "))
+
+    #create symbols for 1MB sections
+    start_aligned = (segment[1] & 0xFFF00000)
+    size_adjusted = segment[2] if segment[2] > 0x00100000 else 0x00100000
+    end_aligned = start_aligned + size_adjusted
+
+    symStart = coreComponent.createStringSymbol("MMU_SEG{0}_START".format(index),None )
+    symStart.setVisible(False)
+    symStart.setDefaultValue("0x%03X"%(start_aligned >> 20))
+
+    symEnd =  coreComponent.createStringSymbol("MMU_SEG{0}_END".format(index), None)
+    symEnd.setVisible(False)
+    symEnd.setDefaultValue("0x%03X"%(end_aligned >> 20))
+
+    symNeedLoop = coreComponent.createBooleanSymbol("MMU_SEG{0}_LOOP".format(index), None)
+    symNeedLoop.setVisible(False)
+    symNeedLoop.setDefaultValue(size_adjusted > 0x00100000)
+
+    symMemType = coreComponent.createStringSymbol("MMU_SEG{0}_TYPE".format(index), None)
+    symMemType.setVisible(False)
+    symMemType.setDefaultValue(segment[3])
+
 configName = Variables.get("__CONFIGURATION_NAME")
 
-mmuFile = coreComponent.createFileSymbol(None, None)
-mmuFile.setSourcePath("../peripheral/mmu_sam_9x60/templates/plib_mmu.c.ftl")
+mmuFile = coreComponent.createFileSymbol("MMU_C", None)
+mmuFile.setSourcePath("../peripheral/mmu_v5/templates/plib_mmu.c.ftl")
 mmuFile.setOutputName("plib_mmu.c")
 mmuFile.setDestPath("peripheral/mmu/")
 mmuFile.setProjectPath("config/" + configName + "/peripheral/mmu/")
 mmuFile.setType("SOURCE")
 mmuFile.setMarkup(True)
 
-mmuHeader = coreComponent.createFileSymbol(None, None)
-mmuHeader.setSourcePath("../peripheral/mmu_sam_9x60/templates/plib_mmu.h.ftl")
+mmuHeader = coreComponent.createFileSymbol("MMU_H", None)
+mmuHeader.setSourcePath("../peripheral/mmu_v5/templates/plib_mmu.h.ftl")
 mmuHeader.setOutputName("plib_mmu.h")
 mmuHeader.setDestPath("peripheral/mmu/")
 mmuHeader.setProjectPath("config/" + configName + "/peripheral/mmu/")
 mmuHeader.setType("HEADER")
 mmuHeader.setMarkup(True)
 
-cp15Header = coreComponent.createFileSymbol(None, None)
-cp15Header.setSourcePath("../peripheral/mmu_sam_9x60/templates/cp15.h")
+cp15Header = coreComponent.createFileSymbol("CP15_H", None)
+cp15Header.setSourcePath("../peripheral/mmu_v5/templates/cp15.h")
 cp15Header.setOutputName("cp15.h")
 cp15Header.setDestPath("peripheral/mmu/")
 cp15Header.setProjectPath("config/" + configName + "/peripheral/mmu/")
 cp15Header.setType("HEADER")
 cp15Header.setMarkup(False)
 
-mmuSystemInitFile = coreComponent.createFileSymbol(None, None)
+mmuSystemInitFile = coreComponent.createFileSymbol("mmuSystemInitFile", None)
 mmuSystemInitFile.setType("STRING")
 mmuSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-mmuSystemInitFile.setSourcePath("../peripheral/mmu_sam_9x60/templates/system/initialization.c.ftl")
+mmuSystemInitFile.setSourcePath("../peripheral/mmu_v5/templates/system/initialization.c.ftl")
 mmuSystemInitFile.setMarkup(True)
 
-mmuSystemDefFile = coreComponent.createFileSymbol(None, None)
+mmuSystemDefFile = coreComponent.createFileSymbol("mmuSystemDefFile", None)
 mmuSystemDefFile.setType("STRING")
 mmuSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-mmuSystemDefFile.setSourcePath("../peripheral/mmu_sam_9x60/templates/system/definitions.h.ftl")
+mmuSystemDefFile.setSourcePath("../peripheral/mmu_v5/templates/system/definitions.h.ftl")
 mmuSystemDefFile.setMarkup(True)

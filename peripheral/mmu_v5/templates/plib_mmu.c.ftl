@@ -278,198 +278,60 @@ void MMU_Initialize(void)
         trns_tbl[addr] = 0;
     }
 
-	/* 0x00000000: SRAM (Remapped) */
-	trns_tbl[0x000] = TTB_SECT_ADDR(0x00000000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_CACHEABLE_WB
-	           | TTB_SECT_SBO
-	           | TTB_TYPE_SECT;
-
-	/* 0x00100000: ECC ROM */
-	trns_tbl[0x001] = TTB_SECT_ADDR(0x00100000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_CACHEABLE_WB
-	           | TTB_SECT_SBO
-	           | TTB_TYPE_SECT;
-
-	/* 0x00300000: SRAM0 */
-	trns_tbl[0x003] = TTB_SECT_ADDR(0x00300000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_CACHEABLE_WB
-	           | TTB_SECT_SBO
-	           | TTB_TYPE_SECT;
-
-	/* 0x00400000: SRAM1 (OTP Emulation)*/
-	trns_tbl[0x004] = TTB_SECT_ADDR(0x00400000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_SECT_SBO
-	           | TTB_TYPE_SECT;
-
-	/* 0x00500000: UDPHS RAM */
-	trns_tbl[0x005] = TTB_SECT_ADDR(0x00500000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_SECT_SBO
-	           | TTB_TYPE_SECT;
-
-	/* 0x00600000: UHP (OHCI) */
-	trns_tbl[0x006] = TTB_SECT_ADDR(0x00600000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_SECT_SBO
-	           | TTB_TYPE_SECT;
-
-	/* 0x00700000: UHP (EHCI) */
-	trns_tbl[0x007] = TTB_SECT_ADDR(0x00700000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_SECT_SBO
-	           | TTB_TYPE_SECT;
-
-	/* 0x10000000: EBI Chip Select 0 */
-	for (addr = 0x100; addr < 0x200; addr++)
-		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_SECT_SBO
-	                  | TTB_TYPE_SECT;
-
-	/* 0x20000000: EBI Chip Select 1 / DDR CS */
-<#if __PROCESSOR?matches("SAM9X60D6K")>
-	/* (1MB strongly ordered, 7MB cachable) */
-	for (addr = 0x200; addr < 0x201; addr++)
+<#list 0..MMU_SEG_COUNT - 1 as i>
+<#assign SEG_START_ADDR = .vars["MMU_SEG" + i +"_START"]>
+<#assign SEG_END_ADDR = .vars["MMU_SEG" + i +"_END"]>
+<#assign SEG_LOOP = .vars["MMU_SEG" + i +"_LOOP"]>
+<#assign SEG_DESC = .vars["MMU_SEG" + i + "_DESC"]>
+<#if .vars["MMU_SEG" + i + "_TYPE"] == "strongly-ordered">
+<#assign TYPE_FLAG = "TTB_SECT_STRONGLY_ORDERED">
+<#elseif .vars["MMU_SEG" + i + "_TYPE"] == "device">
+<#assign TYPE_FLAG = "TTB_SECT_SHAREABLE_DEVICE">
 <#else>
-<#if __PROCESSOR?matches("SAM9X60D1G")>
-	/* (16MB strongly ordered, 112MB cachable) */
-<#elseif __PROCESSOR?matches("SAM9X60D5M")>
-	/* (16MB strongly ordered, 48MB cachable) */
+<#assign TYPE_FLAG = "TTB_SECT_CACHEABLE_WB">
+</#if>
+<#if SEG_LOOP>
+
+    /* ${SEG_START_ADDR}00000: ${SEG_DESC} */
+    for (addr = ${SEG_START_ADDR}; addr < ${SEG_END_ADDR}; addr++)
+    {
+        trns_tbl[addr] = TTB_SECT_ADDR(addr << 20U)
+                    | TTB_SECT_AP_FULL_ACCESS
+                    | TTB_SECT_DOMAIN(0xF)
+                    | ${TYPE_FLAG}
+                    | TTB_SECT_SBO
+                    | TTB_TYPE_SECT;
+    }
 <#else>
-	/* (16MB strongly ordered, 240MB cachable) */
+
+    /* ${SEG_START_ADDR}00000: ${SEG_DESC} */
+    trns_tbl[${SEG_START_ADDR}] = TTB_SECT_ADDR(${SEG_START_ADDR}00000)
+                  | TTB_SECT_AP_FULL_ACCESS
+                  | TTB_SECT_DOMAIN(0xF)
+                  | ${TYPE_FLAG}
+                  | TTB_SECT_SBO
+                  | TTB_TYPE_SECT;
 </#if>
-	for (addr = 0x200; addr < 0x210; addr++)
-</#if>
-		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_SECT_SBO
-	                  | TTB_TYPE_SECT;
-<#if __PROCESSOR?matches("SAM9X60D1G")>
-	for (addr = 0x210; addr < 0x280; addr++)
-<#elseif __PROCESSOR?matches("SAM9X60D5M")>
-	for (addr = 0x210; addr < 0x240; addr++)
-<#elseif __PROCESSOR?matches("SAM9X60D6K")>
-	for (addr = 0x201; addr < 0x208; addr++)
-<#else>
-	for (addr = 0x210; addr < 0x300; addr++)
-</#if>
-		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_CACHEABLE_WB
-	                  | TTB_SECT_SBO
-	                  | TTB_TYPE_SECT;
+</#list>
 
-	/* 0x30000000: EBI Chip Select 2 */
-	for (addr = 0x300; addr < 0x400; addr++)
-		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_SECT_SBO
-	                  | TTB_TYPE_SECT;
+    /* ${DDRAM_NO_CACHE_START_ADDR}: DDR Chip Select */
+    /* (${DRAM_COHERENT_REGION_SIZE}MB strongly ordered) */
+    for (addr = ${DDRAM_NO_CACHE_START_ADDR?remove_ending("00000")}; addr < ${DDRAM_CACHE_START_ADDR?remove_ending("00000")}; addr++)
+        trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_STRONGLY_ORDERED
+                      | TTB_SECT_SBO
+                      | TTB_TYPE_SECT;
 
-	/* 0x40000000: EBI Chip Select 3 */
-	for (addr = 0x400; addr < 0x500; addr++)
-		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_SECT_SBO
-	                  | TTB_TYPE_SECT;
-
-	/* 0x50000000: EBI Chip Select 4 */
-	for (addr = 0x500; addr < 0x600; addr++)
-		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_SECT_SBO
-	                  | TTB_TYPE_SECT;
-
-	/* 0x60000000: EBI Chip Select 5 */
-	for (addr = 0x600; addr < 0x700; addr++)
-		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_SECT_SBO
-	                  | TTB_TYPE_SECT;
-
-	/* 0x70000000: QSPI MEM */
-	for (addr = 0x700; addr < 0x800; addr++)
-		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
-
-	/* 0x80000000: SDMMC0 */
-	for (addr = 0x800; addr < 0x900; addr++)
-		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
-
-	/* 0x90000000: SDMMC1 */
-	for (addr = 0x900; addr < 0xa00; addr++)
-		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
-
-	/* 0xeff00000: OTPC */
-	trns_tbl[0xeff] = TTB_SECT_ADDR(0xeff00000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_STRONGLY_ORDERED
-	           | TTB_SECT_SBO
-	           | TTB_TYPE_SECT;
-
-	/* 0xf0000000: Peripherals */
-	trns_tbl[0xf00] = TTB_SECT_ADDR(0xf0000000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_STRONGLY_ORDERED
-	           | TTB_SECT_SBO
-	           | TTB_TYPE_SECT;
-
-	/* 0xf8000000: Peripherals */
-	trns_tbl[0xf80] = TTB_SECT_ADDR(0xf8000000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_STRONGLY_ORDERED
-	           | TTB_SECT_SBO
-	           | TTB_TYPE_SECT;
-
-	/* 0xfff0000: System Controller */
-	trns_tbl[0xfff] = TTB_SECT_ADDR(0xfff00000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_STRONGLY_ORDERED
-	           | TTB_SECT_SBO
-	           | TTB_TYPE_SECT;
+    /* Remainder of the DRAM is configured as cacheable */
+    for (addr = ${DDRAM_CACHE_START_ADDR?remove_ending("00000")}; addr < ${DDRAM_BOUNDARY_ADDR?remove_ending("00000")}; addr++)
+        trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_CACHEABLE_WB
+                      | TTB_SECT_SBO
+                      | TTB_TYPE_SECT;
 
     /* Enable MMU, I-Cache and D-Cache */
     mmu_configure(trns_tbl);
