@@ -90,6 +90,16 @@ void ${WDT_INSTANCE_NAME}_Enable( void );
 
 void ${WDT_INSTANCE_NAME}_Disable( void );
 
+void ${WDT_INSTANCE_NAME}_EnableWindowMode( void );
+
+void ${WDT_INSTANCE_NAME}_DisableWindowMode( void );
+
+bool ${WDT_INSTANCE_NAME}_IsEnabled(void);
+
+bool ${WDT_INSTANCE_NAME}_IsAlwaysOn(void);
+
+bool ${WDT_INSTANCE_NAME}_IsWindowModeEnabled(void);
+
 void ${WDT_INSTANCE_NAME}_TimeoutPeriodSet(uint8_t TimeoutPeriod);
 
 void ${WDT_INSTANCE_NAME}_Clear( void );

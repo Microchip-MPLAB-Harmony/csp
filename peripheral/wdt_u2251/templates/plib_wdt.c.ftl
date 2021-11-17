@@ -106,6 +106,62 @@ void ${WDT_INSTANCE_NAME}_Disable( void )
 </#if>
 }
 
+void ${WDT_INSTANCE_NAME}_EnableWindowMode( void )
+{
+	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+    {
+
+    }
+	
+    /* Window mode can be changed only if peripheral is disabled or ALWAYS ON bit is set */
+    if((!(${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk)) || (${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk))
+    {
+        /* Enable window mode */
+        ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA |= (uint8_t)WDT_CTRLA_WEN_Msk;
+    }
+	
+	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+    {
+
+    }
+}
+
+void ${WDT_INSTANCE_NAME}_DisableWindowMode( void )
+{
+	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+    {
+
+    }
+	
+    /* Window mode can be changed only if peripheral is disabled or ALWAYS ON bit is set */
+    if((!(${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk)) || (${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk))
+    {
+        /* Disable window mode */
+        ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA &= (uint8_t)(~WDT_CTRLA_WEN_Msk);
+    }
+	
+	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+    {
+
+    }
+}
+
+bool ${WDT_INSTANCE_NAME}_IsEnabled(void)
+{
+    return (${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & (WDT_CTRLA_ALWAYSON_Msk | WDT_CTRLA_ENABLE_Msk))? true : false;
+}
+
+bool ${WDT_INSTANCE_NAME}_IsAlwaysOn(void)
+{
+    return (${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk)? true : false;
+}
+
+bool ${WDT_INSTANCE_NAME}_IsWindowModeEnabled(void)
+{
+    return (${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_WEN_Msk)? true : false;
+}
+
+
 void ${WDT_INSTANCE_NAME}_TimeoutPeriodSet(uint8_t TimeoutPeriod)
 {
     /* Set WDT timeout period */
