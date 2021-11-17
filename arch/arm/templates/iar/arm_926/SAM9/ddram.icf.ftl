@@ -1,21 +1,7 @@
 define memory mem with size = 4G;
 define region RAM_region           = mem:[from 0x00300000 to 0x0030FFFF];
-<#if __PROCESSOR?matches("SAM9X60D6K")>
-/* 1 MB of uncached */
-define region DDRAM_NOCACHE_region = mem:[from 0x20000000 to 0x200FFFFF];
-<#else>
-/* 16 MB of uncached */
-define region DDRAM_NOCACHE_region = mem:[from 0x20000000 to 0x20FFFFFF];
-</#if>
-<#if __PROCESSOR?matches("SAM9X60D1G")>
-define region DDRAM_region         = mem:[from 0x21000000 to 0x27FFFFFF];
-<#elseif __PROCESSOR?matches("SAM9X60D5M")>
-define region DDRAM_region         = mem:[from 0x21000000 to 0x23FFFFFF];
-<#elseif __PROCESSOR?matches("SAM9X60D6K")>
-define region DDRAM_region         = mem:[from 0x20100000 to 0x207FFFFF];
-<#else>
-define region DDRAM_region         = mem:[from 0x21000000 to 0x2FFFFFFF];
-</#if>
+define region DDRAM_NOCACHE_region = mem:[from ${DDRAM_NO_CACHE_START_ADDR} to ${DDRAM_NO_CACHE_END_ADDR}];
+define region DDRAM_region         = mem:[from ${DDRAM_CACHE_START_ADDR} to ${DDRAM_CACHE_END_ADDR}];
 
 <#lt><#assign HEAP_SIZE = IAR_HEAP_SIZE!"0x200">
 <#lt><#assign USR_STACK_SIZE = IAR_USR_STACK_SIZE!"0x1000">
