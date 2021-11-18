@@ -164,7 +164,7 @@ peripheralBusDict =  {
 }
 
 global defaultEnablePeripheralsList
-defaultEnablePeripheralsList = ["PLVD"]
+defaultEnablePeripheralsList = ["PLVD", "REFO1", "REFO2", "REFO3", "REFO4", "REFO5", "REFO6"]
 
 global item_update
 
