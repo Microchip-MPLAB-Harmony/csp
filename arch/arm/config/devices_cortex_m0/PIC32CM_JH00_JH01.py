@@ -215,6 +215,28 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")
 # # load PAC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pac_u2120/config/pac.py")
 
+ram_start = 0
+ram_size = 0
+
+ramInit = coreComponent.createBooleanSymbol("RAM_INIT", xc32Menu)
+ramInit.setDefaultValue(True)
+ramInit.setVisible(True)
+
+addr_space = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space").getChildren()
+for mem_idx in range(0, len(addr_space_children)):
+    if addr_space_children[mem_idx].getAttribute("type") == "ram":
+        ram_start   = addr_space_children[mem_idx].getAttribute("start")
+        ram_size    = addr_space_children[mem_idx].getAttribute("size")
+
+ramStart = coreComponent.createStringSymbol("RAM_START", xc32Menu)
+ramStart.setDefaultValue(ram_start)
+ramStart.setVisible(False)
+
+ramLength = coreComponent.createStringSymbol("RAM_LENGTH", xc32Menu)
+ramLength.setDefaultValue(ram_size)
+ramLength.setVisible(False)
+
+
 # Activate Event System
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EVSYS\"]")
 modules = periphNode.getChildren()

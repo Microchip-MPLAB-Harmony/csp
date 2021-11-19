@@ -11,7 +11,7 @@
 #define INIT_LEN  FLEXRAM_SIZE
 #endif
 
-__STATIC_INLINE void  __attribute__((optimize("-O1")))  PIC32CZ_RAM_Initialize(void)
+__STATIC_INLINE void  __attribute__((optimize("-O1")))  RAM_Initialize(void)
 {
     register uint64_t *pFlexRam;
 

@@ -59,7 +59,6 @@ extern int main(void);
 extern void __attribute__((long_call)) __libc_init_array(void);
 
 /* Device Vector information is available in interrupt.c file */
-
 <#if CoreArchitecture == "CORTEX-M7">
 <#include "arch/startup_xc32_cortex_m7.c.ftl">
 <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
@@ -69,6 +68,11 @@ extern void __attribute__((long_call)) __libc_init_array(void);
 <#include "arch/startup_xc32_cortex_m4.c.ftl">
 </#if>
 <#if DATA_CACHE_ENABLE??>
+<#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
+</#if>
+</#if>
+<#if CoreArchitecture == "CORTEX-M0PLUS">
+<#if RAM_INIT??>
 <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
 </#if>
 </#if>
@@ -96,7 +100,7 @@ extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) __xc32_on_b
 void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, noreturn)) Reset_Handler(void)
 {
 <#if RAM_INIT??>
-    PIC32CZ_RAM_Initialize();
+    RAM_Initialize();
 </#if>
 #ifdef SCB_VTOR_TBLOFF_Msk
     uint32_t *pSrc;
