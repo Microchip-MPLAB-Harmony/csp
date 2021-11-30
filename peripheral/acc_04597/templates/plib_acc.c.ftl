@@ -70,7 +70,7 @@
 struct
 {
     ACC_CALLBACK pCallback;
-    void* pContext;
+    uintptr_t context;
 }accCallbackObj;
 
 
@@ -129,35 +129,28 @@ void ${ACC_INSTANCE_NAME}_Disable(void)
 <#if ACC_INTERRUPT_ENABLE>
 
 
-void ${ACC_INSTANCE_NAME}_RegisterCallback(ACC_CALLBACK pCallback, void* pContext)
+void ${ACC_INSTANCE_NAME}_CallbackRegister(ACC_CALLBACK pCallback, uintptr_t context)
 {
     accCallbackObj.pCallback = pCallback;
-    accCallbackObj.pContext = pContext;
+    accCallbackObj.context = context;
 }
 
 
-void ACC_InterruptHandler(void)
+void ${ACC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t isr = ${ACC_INSTANCE_NAME}_REGS->ACC_ISR;
-    if (((isr & ACC_ISR_MASK_Msk) != ACC_ISR_MASK_Msk) && 
+    if (((isr & ACC_ISR_MASK_Msk) == 0U) && 
          (accCallbackObj.pCallback != NULL))
     {
-        accCallbackObj.pCallback(((isr & ACC_ISR_SCO_Msk) == ACC_ISR_SCO_Msk),
-                                  accCallbackObj.pContext);
+        accCallbackObj.pCallback(((isr & ACC_ISR_SCO_Msk) != 0U), accCallbackObj.context);
     }
 }
 <#else>
 
 
-bool ${ACC_INSTANCE_NAME}_GetOuptut(bool* pOutput)
+bool ${ACC_INSTANCE_NAME}_StatusGet(ACC_STATUS_SOURCE status)
 {
-    bool success = false;
     uint32_t isr = ${ACC_INSTANCE_NAME}_REGS->ACC_ISR;
-    if ((isr & ACC_ISR_MASK_Msk) != ACC_ISR_MASK_Msk)
-    {
-       *pOutput =  ((isr & ACC_ISR_SCO_Msk) == ACC_ISR_SCO_Msk);
-       success = true;
-    }
-    return success;
+    return (((isr & ACC_ISR_MASK_Msk) == 0U) && ((isr & (uint32_t)status) != 0U));
 }
 </#if>

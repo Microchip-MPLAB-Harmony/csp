@@ -54,15 +54,21 @@
 extern "C" {
 #endif /* __cplusplus */
 
-typedef void(*ACC_CALLBACK)(bool status, void* pContext);
+typedef enum
+{
+    ACC_STATUS_SOURCE_COMPARATOR_OUTPUT = ACC_ISR_SCO_Msk,
+    ACC_STATUS_SOURCE_COMPARISON_EDGE = ACC_ISR_CE_Msk,
+} ACC_STATUS_SOURCE;
+
+typedef void(*ACC_CALLBACK)(bool output, uintptr_t context);
 
 void ${ACC_INSTANCE_NAME}_Initialize(void);
 void ${ACC_INSTANCE_NAME}_Enable(void);
 void ${ACC_INSTANCE_NAME}_Disable(void);
 <#if ACC_INTERRUPT_ENABLE>
-void ${ACC_INSTANCE_NAME}_RegisterCallback(ACC_CALLBACK pCallback, void* pContext);
+void ${ACC_INSTANCE_NAME}_CallbackRegister(ACC_CALLBACK callback, uintptr_t context);
 <#else>
-bool ${ACC_INSTANCE_NAME}_GetOuptut(bool* pOutput);
+bool ${ACC_INSTANCE_NAME}_StatusGet(ACC_STATUS_SOURCE status);
 </#if>
 
 #ifdef __cplusplus // Provide C++ Compatibility
