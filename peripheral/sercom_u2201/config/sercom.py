@@ -79,6 +79,8 @@ def handleMessage(messageID, args):
     global sercomSym_OperationMode
     global spiSym_Interrupt_Mode
     global spisSym_Interrupt_Mode
+    global spisSym_RXBuffer_Size
+    global spisSym_TXBuffer_Size
     global i2csSym_Interrupt_Mode
     global mssenSupported
     global spiSym_CTRLB_MSSEN
@@ -142,6 +144,18 @@ def handleMessage(messageID, args):
             sercomSym_OperationMode.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None and args["isEnabled"] == True:
             sercomSym_OperationMode.setSelectedKey("SPIS", 2)
+            
+    elif (messageID == "SPI_SLAVE_RX_BUFFER_SIZE"):
+        if args.get("isReadOnly") != None:
+            spisSym_RXBuffer_Size.setReadOnly(args["isReadOnly"])
+        if args.get("size") != None:
+            spisSym_RXBuffer_Size.setValue(args["size"], 2)
+            
+    elif (messageID == "SPI_SLAVE_TX_BUFFER_SIZE"):
+        if args.get("isReadOnly") != None:
+            spisSym_TXBuffer_Size.setReadOnly(args["isReadOnly"])
+        if args.get("size") != None:
+            spisSym_TXBuffer_Size.setValue(args["size"], 2)
 
     elif (messageID == "SPI_SLAVE_INTERRUPT_MODE"):
         if args.get("isReadOnly") != None:

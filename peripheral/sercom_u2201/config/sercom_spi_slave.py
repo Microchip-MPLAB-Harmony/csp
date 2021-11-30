@@ -72,6 +72,8 @@ def setSPIClockModeInfo(symbol, event):
 ###################################################################################################
 
 global spisSym_Interrupt_Mode
+global spisSym_RXBuffer_Size
+global spisSym_TXBuffer_Size
 
 #SPI Interrupt Mode
 spisSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("SPIS_INTERRUPT_MODE", sercomSym_OperationMode)
