@@ -124,6 +124,12 @@ def handleMessage(messageID, args):
     elif (messageID == "ECIA_GET_INT_SRC_DICT"):
         symbolDict = ECIA_GetInterruptNumber(args["int_source"])
 
+    elif (messageID == "WDT_ENABLE"):
+        if (Database.getSymbolValue("core", "WDT_USE") != None):
+            Database.setSymbolValue("core", "WDT_USE", args["isEnabled"])
+        elif (Database.getSymbolValue("core", "wdtENABLE") != None):
+            Database.setSymbolValue("core", "wdtENABLE", args["isEnabled"])
+
     return symbolDict
 
 def genExceptionAsmSourceFile(symbol, event):
