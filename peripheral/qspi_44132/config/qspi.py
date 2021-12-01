@@ -233,17 +233,25 @@ def instantiateComponent(qspiComponent):
     qspiMasterClkComment.setLabel("WARNING!!! QSPI Peripheral Clock Is Disabled In Clock Manager")
     qspiMasterClkComment.setDependencies(setMasterClkDependency, ["core." + qspiInstanceName.getValue() + "_CLOCK_ENABLE"])
 
-    qspiPcalcfgClkdiv = qspiComponent.createIntegerSymbol("QSPI_PCALCFG_CLKDIV", qspiMenu)
-    qspiPcalcfgClkdiv.setLabel("Calibration Clock Division")
-    qspiPcalcfgClkdiv.setVisible(False)
-    qspiPcalcfgClkdiv.setDefaultValue(7)
-    qspiPcalcfgClkdiv.setDependencies(setQspiClkdiv, ["core." + qspiInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="QSPI"]/register-group@[name="QSPI"]/register@[name="QSPI_PCALCFG"]/bitfield@[name="CLKDIV"]') != None:
+        qspiPcalcfgClkdiv = qspiComponent.createIntegerSymbol("QSPI_PCALCFG_CLKDIV", qspiMenu)
+        qspiPcalcfgClkdiv.setLabel("Calibration Clock Division")
+        qspiPcalcfgClkdiv.setVisible(False)
+        qspiPcalcfgClkdiv.setDefaultValue(7)
+        qspiPcalcfgClkdiv.setDependencies(setQspiClkdiv, ["core." + qspiInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
-    qspiDllcfgRange = qspiComponent.createBooleanSymbol("QSPI_DLLCFG_RANGE", qspiMenu)
-    qspiDllcfgRange.setLabel("DLL Range")
-    qspiDllcfgRange.setVisible(False)
-    qspiDllcfgRange.setDefaultValue((qspiClkFreq.getValue() > 100000000))
-    qspiDllcfgRange.setDependencies(setQspiDllRange, ["QSPI_CLK_FREQ"])
+        qspiDllcfgRange = qspiComponent.createBooleanSymbol("QSPI_DLLCFG_RANGE", qspiMenu)
+        qspiDllcfgRange.setLabel("DLL Range")
+        qspiDllcfgRange.setVisible(False)
+        qspiDllcfgRange.setDefaultValue((qspiClkFreq.getValue() > 100000000))
+        qspiDllcfgRange.setDependencies(setQspiDllRange, ["QSPI_CLK_FREQ"])
+
+    qspiMemAddr = qspiComponent.createStringSymbol("QSPI_MEM_ADDR", None)
+    qspiMemAddr.setVisible(False)
+    qspiMemoryAddress = "QSPIMEM" + qspiInstanceNum.getValue() + "_ADDR"
+    if ATDF.getNode('/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name="QSPI_MEM"]') != None:
+        qspiMemoryAddress = "QSPI_MEM_ADDR"
+    qspiMemAddr.setDefaultValue(qspiMemoryAddress)
 
     ###################################################################################################
     ######################################### QSPI-SPI MODE ###########################################

@@ -72,6 +72,7 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
 
     while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk);
 
+<#if QSPI_PCALCFG_CLKDIV??>
     // Pad Calibration Configuration
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG = (${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG & ~QSPI_PCALCFG_CLKDIV_Msk) |
                                                 QSPI_PCALCFG_CLKDIV(${QSPI_PCALCFG_CLKDIV});
@@ -91,6 +92,7 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
 
     /* Wait for Pad Calibration complete */
     while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_CALBSY_Msk);
+</#if>
 
     /* DLYCS  = 0x0 */
     /* DLYBCT = 0x0 */

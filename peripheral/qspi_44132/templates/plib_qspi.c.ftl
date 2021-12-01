@@ -67,6 +67,7 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
 
     while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk);
 
+<#if QSPI_PCALCFG_CLKDIV??>
     // Pad Calibration Configuration
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG = (${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG & ~QSPI_PCALCFG_CLKDIV_Msk) |
                                                 QSPI_PCALCFG_CLKDIV(${QSPI_PCALCFG_CLKDIV});
@@ -86,6 +87,7 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
 
     /* Wait for Pad Calibration complete */
     while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_CALBSY_Msk);
+</#if>
 
     /* DLYCS  = 0x0 */
     /* DLYBCT = 0x0 */
@@ -287,7 +289,7 @@ bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer,
 
 bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length, uint32_t address )
 {
-    uint32_t *qspi_buffer = (uint32_t *)QSPIMEM${QSPI_INSTANCE_NUM}_ADDR;
+    uint32_t *qspi_buffer = (uint32_t *)${QSPI_MEM_ADDR};
     uint32_t mask = 0;
 
     /* Configure address */
@@ -347,7 +349,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
 
 bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length, uint32_t address )
 {
-    uint32_t *qspi_buffer = (uint32_t *)QSPIMEM${QSPI_INSTANCE_NUM}_ADDR;
+    uint32_t *qspi_buffer = (uint32_t *)${QSPI_MEM_ADDR};
     uint32_t mask = 0;
 
     /* Configure address */
@@ -427,7 +429,7 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
         Single byte accesses at the head, or tail, are done as necessary.  The
         coding attempts to minimize unnecessary byte manipulations.
     */
-    uint8_t *   qspi_mem  = (uint8_t *) (QSPIMEM${QSPI_INSTANCE_NUM}_ADDR | address);
+    uint8_t *   qspi_mem  = (uint8_t *) (${QSPI_MEM_ADDR} | address);
     uint8_t *   pRxBuffer = (uint8_t *) rx_data;
     uint32_t    numDstPreWordBytes;
     uint32_t    numSrcPreWordBytes;
@@ -554,7 +556,7 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
 
 bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
 {
-    uint32_t *qspi_mem = (uint32_t *)(QSPIMEM${QSPI_INSTANCE_NUM}_ADDR | address);
+    uint32_t *qspi_mem = (uint32_t *)(${QSPI_MEM_ADDR} | address);
     uint32_t length_32bit, length_8bit;
 
     /* Number of Write Access */
