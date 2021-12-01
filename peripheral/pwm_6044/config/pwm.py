@@ -160,7 +160,8 @@ def instantiateComponent(pwmComponent):
         #Channel prescaler
         pwmChannelPrescaler = pwmComponent.createKeyValueSetSymbol("CH" + str(channel) + "_PRES", pwmChannelMenu)
         pwmChannelPrescaler.setLabel("Prescaler")
-        setSymbolValueFromATDF(pwmChannelPrescaler, "PWM", "PWM_CMR0__CPRE")
+        valueGroupName = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PWM"]/register-group@[name="PWM_CH_NUM"]/register@[name="PWM_CMR"]/bitfield@[name="CPRE"]').getAttribute("values")
+        setSymbolValueFromATDF(pwmChannelPrescaler, "PWM", valueGroupName)
         pwmChannelPrescaler.setDisplayMode("Description")
         pwmChannelPrescaler.setOutputMode("Key")
         pwmChannelPrescaler.setReadOnly(True)
@@ -180,7 +181,8 @@ def instantiateComponent(pwmComponent):
         #Channel Alignment
         pwmChannelAlignment = pwmComponent.createKeyValueSetSymbol("CH" + str(channel) + "_CALG", pwmChannelMenu)
         pwmChannelAlignment.setLabel("Alignment")
-        setSymbolValueFromATDF(pwmChannelAlignment, "PWM", "PWM_CMR0__CALG")
+        valueGroupName = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PWM"]/register-group@[name="PWM_CH_NUM"]/register@[name="PWM_CMR"]/bitfield@[name="CALG"]').getAttribute("values")
+        setSymbolValueFromATDF(pwmChannelAlignment, "PWM", valueGroupName)
         pwmChannelAlignment.setDisplayMode("Description")
         pwmChannelAlignment.setOutputMode("Key")
         pwmChannelAlignment.setReadOnly(True)
@@ -189,7 +191,8 @@ def instantiateComponent(pwmComponent):
         #Channel Polarity
         pwmChannelPolarity = pwmComponent.createKeyValueSetSymbol("CH" + str(channel) + "_CPOL", pwmChannelMenu)
         pwmChannelPolarity.setLabel("Polarity")
-        setSymbolValueFromATDF(pwmChannelPolarity, "PWM", "PWM_CMR0__CPOL")
+        valueGroupName = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PWM"]/register-group@[name="PWM_CH_NUM"]/register@[name="PWM_CMR"]/bitfield@[name="CPOL"]').getAttribute("values")
+        setSymbolValueFromATDF(pwmChannelPolarity, "PWM", valueGroupName)
         pwmChannelPolarity.setDisplayMode("Description")
         pwmChannelPolarity.setOutputMode("Key")
         pwmChannelPolarity.setReadOnly(True)
