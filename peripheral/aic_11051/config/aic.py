@@ -34,9 +34,9 @@ global interruptSymbolEnable
 global interruptSymbolHandler
 global interruptSymbolHandlerLock
 
-global interruptLastNameEnable 
-global interruptLastNameHandler 
-global interruptLastNameLock 
+global interruptLastNameEnable
+global interruptLastNameHandler
+global interruptLastNameLock
 
 interruptNamespace =        "core"
 interruptLastNameEnable =   "_INTERRUPT_ENABLE"
@@ -125,7 +125,7 @@ def getNameValueCaptionTuple( aGroupName, aTupleArray ):
         choiceValues = choiceNode.getChildren()
         del aTupleArray[:]
         for ii in range( 0, len( choiceValues ) ):
-            aTupleArray.append( ( choiceValues[ ii ].getAttribute("name"), 
+            aTupleArray.append( ( choiceValues[ ii ].getAttribute("name"),
                                  choiceValues[ ii ].getAttribute("value"),
                                  choiceValues[ ii ].getAttribute("caption")
                                 ) )
@@ -159,8 +159,8 @@ def aicMapTypeRedirectionCallback( aicMapType, eventDictionary ):
 
 def priorityMapTypeCallback( aicVectorPriority, eventDictionary ):
     global aicMaxPriorityName
-    if(     ("AlwaysSecure" == eventDictionary[ "value" ]) 
-        or  ("Secure" == eventDictionary[ "value" ]) 
+    if(     ("AlwaysSecure" == eventDictionary[ "value" ])
+        or  ("Secure" == eventDictionary[ "value" ])
     ):
         aicVectorPriority.setSelectedKey( aicMaxPriorityName, 0 )
         aicVectorPriority.setVisible( False )
@@ -169,7 +169,7 @@ def priorityMapTypeCallback( aicVectorPriority, eventDictionary ):
 
 
 def aicCodeGenerationCallback( aicCodeGeneration, eventDictionary ):
-    global interruptLastNameEnable 
+    global interruptLastNameEnable
     # Interrupt enables and map type determine the code generation to be done later
     secureCount = 0
     nonSecureCount = 0
@@ -179,8 +179,8 @@ def aicCodeGenerationCallback( aicCodeGeneration, eventDictionary ):
         enableSymbol = component.getSymbolByID( interruptName + interruptLastNameEnable )
         if( enableSymbol.getValue() ):
             mapTypeSymbol = component.getSymbolByID( interruptName + interruptLastNameMapType )
-            if(     ("NeverSecure" == mapTypeSymbol.value) 
-                or  ("NonSecure" == mapTypeSymbol.value) 
+            if(     ("NeverSecure" == mapTypeSymbol.value)
+                or  ("NonSecure" == mapTypeSymbol.value)
                 or  ("RedirectedToNonSecure" == mapTypeSymbol.value)
             ):
                 nonSecureCount = nonSecureCount + 1
@@ -198,21 +198,21 @@ def aicCodeGenerationCallback( aicCodeGeneration, eventDictionary ):
 
 global aicVectorEnableCallback
 def aicVectorEnableCallback(aicVectorEnable, eventDictionary):
-    #if atleast one sub vector is enabled, enable the shared vector 
+    #if atleast one sub vector is enabled, enable the shared vector
     if eventDictionary["value"]:
         #Enable only it it not enabled already
         if not aicVectorEnable.getValue():
             aicVectorEnable.setValue(True)
-    
-    #if the current sub vector is disabled, check all subvectors before 
+
+    #if the current sub vector is disabled, check all subvectors before
     # disabling the shared vector
-    else: 
+    else:
         #Get the shared vector name
         interruptName = aicVectorEnable.getID().split(interruptLastNameEnable)[0]
         global sharedVectors
         subElements = sharedVectors[ interruptName ]
         for elem in subElements:
-            # A subvector is enabled, do nothing 
+            # A subvector is enabled, do nothing
             if eventDictionary["source"].getSymbolValue(elem + interruptLastNameEnable):
                 return
         #None of the subvectors are enabled, disabled the shared vector(if enabled)
@@ -244,7 +244,7 @@ def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHan
             subVectorHandlerLock = component.createBooleanSymbol( elem + interruptLastNameLock, subVectorEnable )
             subVectorHandlerLock.setDefaultValue( False )
             subVectorHandlerLock.setVisible( False )
-            
+
             subVectorHandler = component.createStringSymbol( elem + interruptLastNameHandler, subVectorEnable )
             subVectorHandler.setLabel( elem + " Handler" )
             subVectorHandler.setDefaultValue( elem + "_Handler" )
@@ -262,19 +262,19 @@ def setupSharedVectorFtlSymbols( component, anInterrupt, aicVectorEnable ):
     if 1 < numShares:
         numSharedVectors = numSharedVectors + 1
         # SHARED_VECTOR_N = "name", e.g. SHARED_VECTOR_1 = "SYSC"
-        # Create a generic shared handler symbol with a value indicating the HANDLER 
+        # Create a generic shared handler symbol with a value indicating the HANDLER
         sharedVector = component.createStringSymbol( "SHARED_VECTOR_" + str( numSharedVectors - 1 ), aicVectorEnable )
         Database.clearSymbolValue( "core", interruptName + "SHARED_VECTOR_" + str( numSharedVectors - 1 ) )
         sharedVector.setDefaultValue( interruptName )
         sharedVector.setVisible( False )
-        
+
         sharedVectorNumShares = component.createIntegerSymbol( interruptName + "_NUM_SHARES", sharedVector )
         sharedVectorNumShares.setMin( numShares )
         sharedVectorNumShares.setMax( numShares )
         Database.clearSymbolValue( "core", interruptName + "_NUM_SHARES" )
         sharedVectorNumShares.setValue( numShares, 0 )
         sharedVectorNumShares.setVisible( showSharedVectorsInMenu )
-        # Create symbols for the shared handler names 
+        # Create symbols for the shared handler names
         # {SHARED_VECTOR_#}_HANDLER_#, e.g.
         #    SYSC_HANDLER_0 = "PMC"    ==> PMC_InterruptHandler
         #    SYSC_HANDLER_1 = "RSTC"   ==> RSTC_InterruptHandler
@@ -331,11 +331,11 @@ def formAicPyGlobalData( theProcessor, theCoreComponent ):
         alwaysSecureList =          [  '0', '14', '15', '16', '18', '51', '61', '68', '69', '70' ]
         programmedSecureList =      []                                                                      # Todo create map interface to populate this list
         externalList =              [  '0', '49' ] # '2', '56', '57', '64', '65', '66', '67', '71', '72' have been subsumed data sheet peripheral table is misleading
-    elif "SAM9X60" in theProcessor:
+    elif "SAM9" in theProcessor:
         aicMenuTitle =              "Interrupts"
         aicRedirectionVisibility =  False
         aicMapTypeVisibility =      False
-        neverSecureList =           [ str( ii ) for ii in list( range( 0, 50 ) ) ]     # '0', '1',...'49'
+        neverSecureList =           [ str( ii ) for ii in list( range( 0, len(interruptsChildren) ) ) ]
         alwaysSecureList =          []
         programmedSecureList =      []
         externalList =              [  '0', '31' ]
@@ -418,7 +418,7 @@ for interrupt in interruptsChildren:
     aicMapType.clearValue()
     aicMapType.setReadOnly( True )
     aicMapType.setDependencies( aicMapTypeRedirectionCallback, [ "SECURE_TO_NONSECURE_REDIRECTION" ] )
-    
+
     aicVectorSourceType = coreComponent.createKeyValueSetSymbol( interruptName + interruptLastNameSrcType, aicVectorEnable )
     aicVectorSourceType.setLabel( "Source Type" )
     for tupleElem in aicSrcTypes:
@@ -441,7 +441,7 @@ for interrupt in interruptsChildren:
     if( ("AlwaysSecure" == aicMapType.value) or ("Secure" == aicMapType.value) ):
         aicVectorPriority.setSelectedKey( aicMaxPriorityName, 0 )
         aicVectorPriority.setVisible( False )   # fiq interrupts do not have a priority, but if the get forced nonSecure we want a reasonable value
-    else: 
+    else:
         aicVectorPriority.setSelectedKey( aicMinPriorityName, 0 )
     aicVectorPriority.setDependencies( priorityMapTypeCallback, [ interruptName + interruptLastNameMapType ] )
 
