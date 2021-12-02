@@ -189,7 +189,7 @@ for module in range (0, len(modules)):
                     smcRegGroup = ATDF.getNode( '/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]' )
                     smcChipSelCount = int( smcRegGroup.getAttribute( "count" ) )
                     for smcChipSel in range(0, smcChipSelCount):
-                        if ("SAM9X60" in processor) and smcChipSel == 3:
+                        if (("SAM9X60" in processor) and smcChipSel == 3) or (("SAM9X7" in processor) and smcChipSel == 2):
                             periphComponent.addCapability("smc_cs"  + str(smcChipSel), "NAND_CS", "SMC_CS"  + str(smcChipSel), False)
                         else:
                             periphComponent.addCapability("smc_cs"  + str(smcChipSel), "SMC_CS", "SMC_CS"  + str(smcChipSel), False)

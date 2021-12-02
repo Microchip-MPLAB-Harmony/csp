@@ -43,7 +43,9 @@
 #include "device.h"
 #include <stddef.h>         // NULL
 
-<#if SFR_CCFG_EBICSA_EBI_CS3A == true>
+<#assign SFR_CCFG_EBICSA_EBI_CS = "SFR_CCFG_EBICSA_EBI_CS" + SMC_NAND_CS_NUM + "A">
+<#assign SMC_CS_ENABLE = "SMC_CS_ENABLE_" + SMC_NAND_CS_NUM>
+<#if .vars[SFR_CCFG_EBICSA_EBI_CS] == true>
 /* Address for transferring command bytes, CLE A22 */
 #define COMMAND_ADDR    0x400000
 /* Address for transferring address bytes, ALE A21 */
@@ -114,8 +116,8 @@ static void ${PMERRLOC_INSTANCE_NAME}_Initialize( void );
 */
 void ${SMC_INSTANCE_NAME}_Initialize( void )
 {
-    <#if SMC_CS_ENABLE_3 == true && SFR_CCFG_EBICSA_EBI_CS3A == true>
-    SFR_REGS->SFR_CCFG_EBICSA |= SFR_CCFG_EBICSA_EBI_CS3A_Msk<#if SFR_CCFG_EBICSA_NFD0_ON_D16 == true> | SFR_CCFG_EBICSA_NFD0_ON_D16_Msk</#if>;
+    <#if .vars[SMC_CS_ENABLE] == true && .vars[SFR_CCFG_EBICSA_EBI_CS] == true>
+    SFR_REGS->SFR_CCFG_EBICSA |= SFR_CCFG_EBICSA_EBI_CS${SMC_NAND_CS_NUM}A_Msk<#if SFR_CCFG_EBICSA_NFD0_ON_D16 == true> | SFR_CCFG_EBICSA_NFD0_ON_D16_Msk</#if>;
     </#if>
 
     // Write protection disable
@@ -230,7 +232,7 @@ void ${SMC_INSTANCE_NAME}_Initialize( void )
     <#lt>    return;
 }
 
-<#if SFR_CCFG_EBICSA_EBI_CS3A == true>
+<#if .vars[SFR_CCFG_EBICSA_EBI_CS] == true>
 uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect)
 {
     uint32_t dataAddress = 0;

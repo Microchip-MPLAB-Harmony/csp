@@ -63,6 +63,8 @@
 #endif
 // DOM-IGNORE-END
 
+<#assign SFR_CCFG_EBICSA_EBI_CS = "SFR_CCFG_EBICSA_EBI_CS" + SMC_NAND_CS_NUM + "A">
+
 <#if SMC_SRIER_SRIE == true>
     <#lt>typedef void (* SMC_CALLBACK)( uintptr_t context, uint32_t interruptStatus );
 </#if>
@@ -77,7 +79,7 @@
     <#lt>void ${SMC_INSTANCE_NAME}_CallbackRegister( SMC_CALLBACK callback, uintptr_t context );
 </#if>
 void ${SMC_INSTANCE_NAME}_Initialize( void );
-<#if SFR_CCFG_EBICSA_EBI_CS3A == true>
+<#if .vars[SFR_CCFG_EBICSA_EBI_CS] == true>
 uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect);
 void ${SMC_INSTANCE_NAME}_CommandWrite(uint32_t dataAddress, uint8_t command);
 void ${SMC_INSTANCE_NAME}_CommandWrite16(uint32_t dataAddress, uint16_t command);

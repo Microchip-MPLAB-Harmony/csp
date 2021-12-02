@@ -319,6 +319,17 @@ def instantiateComponent( staticMemoryComponent ):
     smcCsCount.setDefaultValue( atdfSmcCsCount )
     smcCsCount.setVisible( False )
 
+    nandCsNum = 3
+    nandAddr = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"EBI_NF\"]").getAttribute("start")
+    addressSpaces = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space").getChildren()
+    for index in range(len(addressSpaces)):
+        if ("EBI_CS" in addressSpaces[index].getAttribute("name")) and (addressSpaces[index].getAttribute("start") == nandAddr):
+            nandCsNum = addressSpaces[index].getAttribute("name").split("EBI_CS")[1]
+            break
+    smcNandCsNum = staticMemoryComponent.createIntegerSymbol("SMC_NAND_CS_NUM", chipSelectionAndSettingsMenu)
+    smcNandCsNum.setDefaultValue(int(nandCsNum))
+    smcNandCsNum.setVisible(False)
+
     for csNumIndex in range( 0, atdfSmcCsCount ):
         csNum = str( csNumIndex )
         smcCsEnable = staticMemoryComponent.createBooleanSymbol( "SMC_CS_ENABLE_" + csNum, chipSelectionAndSettingsMenu )
@@ -414,7 +425,10 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeDbw.setOutputMode( "Key" )
         smcModeDbw.setDisplayMode( "Description" )
         smcModeDbw.setDefaultValue( 0 )
-        for tupleElem in getNameValueCaptionTuple( ModuleSmc, "SMC_MODE0__DBW" ):
+        smcModeValGroupPrefix = "SMC_MODE0"
+        if ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/value-group@[name="SMC_MODE0__DBW"]') == None:
+            smcModeValGroupPrefix = "SMC_MODE"
+        for tupleElem in getNameValueCaptionTuple( ModuleSmc, smcModeValGroupPrefix + "__DBW" ):
             smcModeDbw.addKey( smcModeDbwNameStem + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
         smcModeBatNameStem = "SMC_MODE_BAT"
@@ -425,7 +439,7 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeBat.setDisplayMode( "Description" )
         smcModeBat.setDefaultValue( 0 )
         # using name twice, not caption -- the atdf caption is too long; a couple of sentences
-        for tupleElem in getNameValueCaptionTuple( ModuleSmc, "SMC_MODE0__BAT" ):
+        for tupleElem in getNameValueCaptionTuple( ModuleSmc, smcModeValGroupPrefix + "__BAT" ):
             smcModeBat.addKey( smcModeBatNameStem + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 0 ] )
         smcModeBat.setDependencies( smcModeByteWriteOrSelectAccessVisible, [ smcModeDbwName ] )
         smcModeBat.setVisible( False )
@@ -443,7 +457,7 @@ def instantiateComponent( staticMemoryComponent ):
         smcModePs.setOutputMode( "Key" )
         smcModePs.setDisplayMode( "Description" )
         smcModePs.setDefaultValue( 0 )
-        for tupleElem in getNameValueCaptionTuple( ModuleSmc, "SMC_MODE0__PS" ):
+        for tupleElem in getNameValueCaptionTuple( ModuleSmc, smcModeValGroupPrefix + "__PS" ):
             smcModePs.addKey( smcModePsNameStem + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
         smcModePs.setDependencies( visibilityBasedOnBoolSymbol, [ smcModePmenName ] )
 
@@ -470,7 +484,7 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeExnwMode.setDisplayMode( "Description" )
         smcModeExnwMode.setDefaultValue( 0 )
         # using name twice, not caption -- the atdf caption is too long; a couple of sentences
-        for tupleElem in getNameValueCaptionTuple( ModuleSmc, "SMC_MODE0__EXNW_MODE" ):
+        for tupleElem in getNameValueCaptionTuple( ModuleSmc, smcModeValGroupPrefix + "__EXNW_MODE" ):
             smcModeExnwMode.addKey( smcModeExnwModeNameStem + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 0 ] )
 
         smcModeReadModeNameStem = "SMC_MODE_READ_MODE"
@@ -480,9 +494,9 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeReadMode.setOutputMode( "Key" )
         smcModeReadMode.setDisplayMode( "Description" )
         # using name twice, not caption -- the atdf caption is too long; a couple of sentences
-        for tupleElem in getNameValueCaptionTuple( ModuleSmc, "SMC_MODE0__READ_MODE" ):
+        for tupleElem in getNameValueCaptionTuple( ModuleSmc, smcModeValGroupPrefix + "__READ_MODE" ):
             smcModeReadMode.addKey( smcModeReadModeNameStem + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 0 ] )
-        if csNumIndex == 3:
+        if csNumIndex == smcNandCsNum.getValue():
             smcModeReadMode.setDefaultValue(1)
         else:
             smcModeReadMode.setDefaultValue(0)
@@ -494,21 +508,21 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeWriteMode.setOutputMode( "Key" )
         smcModeWriteMode.setDisplayMode( "Description" )
         # using name twice, not caption -- the atdf caption is too long; a couple of sentences
-        for tupleElem in getNameValueCaptionTuple( ModuleSmc, "SMC_MODE0__WRITE_MODE" ):
+        for tupleElem in getNameValueCaptionTuple( ModuleSmc, smcModeValGroupPrefix + "__WRITE_MODE" ):
             smcModeWriteMode.addKey( smcModeWriteModeNameStem + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 0 ] )
-        if csNumIndex == 3:
+        if csNumIndex == smcNandCsNum.getValue():
             smcModeWriteMode.setDefaultValue(1)
         else:
             smcModeWriteMode.setDefaultValue(0)
 
-        if csNumIndex == 3:
-            smcEbiCS3A = staticMemoryComponent.createBooleanSymbol("SFR_CCFG_EBICSA_EBI_CS3A", smcCsEnable)
-            smcEbiCS3A.setLabel("Enable NAND Flash Logic")
-            smcEbiCS3A.setDefaultValue(True)
+        if csNumIndex == smcNandCsNum.getValue():
+            smcEbiCS = staticMemoryComponent.createBooleanSymbol("SFR_CCFG_EBICSA_EBI_CS" + str(smcNandCsNum.getValue()) + "A", smcCsEnable)
+            smcEbiCS.setLabel("Enable NAND Flash Logic")
+            smcEbiCS.setDefaultValue(True)
 
-            smcEbiCS3A = staticMemoryComponent.createBooleanSymbol("SFR_CCFG_EBICSA_NFD0_ON_D16", smcCsEnable)
-            smcEbiCS3A.setLabel("Enable NAND Flash I/Os on D16-D23")
-            smcEbiCS3A.setDefaultValue(True)
+            smcEbiCSNFD = staticMemoryComponent.createBooleanSymbol("SFR_CCFG_EBICSA_NFD0_ON_D16", smcCsEnable)
+            smcEbiCSNFD.setLabel("Enable NAND Flash I/Os on D16-D23")
+            smcEbiCSNFD.setDefaultValue(True)
 
     #--------------------------------------------------------------------------
     # PMECC
