@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 03:25:19 07/17/20 -->
+<!-- This is an auto-generated pin data file created: 09:25:09 12/01/21 -->
 <pinfile family="MZ_EF">
    <packages>
      <package diagram="JEDEC_MS_026D_BFB_LQFP144" id="1" name="LQFP" />
@@ -1199,7 +1199,7 @@
     <pin name="RE4">
        <number package="1" pin="144" />
       <number package="2" pin="144" />
-      <number package="3" pin="Z13" />
+      <number package="3" pin="A13" />
       <function name="EBID4" />
       <function name="AN18" />
       <function name="PMD4" />
