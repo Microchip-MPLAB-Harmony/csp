@@ -69,11 +69,11 @@ static struct
     volatile uint32_t* const pSCFGR;
     bool active;
     EIC_CALLBACK callback;
-    void* context;
+    uintptr_t context;
 }eicData[] = 
 {
 <#list 0..EIC_NUM_INTERRUPTS - 1 as index>
-    {&(${EIC_INSTANCE_NAME}_REGS->EIC_SCFG${index}R), false, NULL, NULL},
+    {&(${EIC_INSTANCE_NAME}_REGS->EIC_SCFG${index}R), false, NULL, 0U},
 </#list>
 };
 
@@ -146,20 +146,14 @@ void ${EIC_INSTANCE_NAME}_Initialize(void)
 }
 
 
-bool ${EIC_INSTANCE_NAME}_RegisterCallback(EIC_PIN pin, EIC_CALLBACK callback, void* context)
+void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context)
 {
-    bool retVal = false;
-    if(eicData[pin].active)
-    {
-        eicData[pin].callback = callback;
-        eicData[pin].context = context;
-        retVal  = true;
-    }
-    return retVal;
+    eicData[pin].callback = callback;
+    eicData[pin].context = context;
 }
 
 
-bool ${EIC_INSTANCE_NAME}_EnableInterrupt(EIC_PIN pin)
+bool ${EIC_INSTANCE_NAME}_InterruptEnable(EIC_PIN pin)
 {
     bool retVal = false;
     /* check if interrupt is active */
@@ -183,7 +177,7 @@ bool ${EIC_INSTANCE_NAME}_EnableInterrupt(EIC_PIN pin)
 }
 
 
-bool ${EIC_INSTANCE_NAME}_DisableInterrupt(EIC_PIN pin)
+bool ${EIC_INSTANCE_NAME}_InterruptDisable(EIC_PIN pin)
 {
     bool retVal = false;
     /* check if interrupt is active */

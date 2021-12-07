@@ -88,13 +88,13 @@ typedef enum
 }EIC_DETECTION;
 
 
-typedef void (*EIC_CALLBACK) (void* context);
+typedef void (*EIC_CALLBACK) (uintptr_t context);
 
 
 void ${EIC_INSTANCE_NAME}_Initialize(void);
-bool ${EIC_INSTANCE_NAME}_RegisterCallback(EIC_PIN pin, EIC_CALLBACK callback, void* context);
-bool ${EIC_INSTANCE_NAME}_EnableInterrupt(EIC_PIN pin);
-bool ${EIC_INSTANCE_NAME}_DisableInterrupt(EIC_PIN pin);
+void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context);
+bool ${EIC_INSTANCE_NAME}_InterruptEnable(EIC_PIN pin);
+bool ${EIC_INSTANCE_NAME}_InterruptDisable(EIC_PIN pin);
 bool ${EIC_INSTANCE_NAME}_SetPolarity(EIC_PIN pin, EIC_POLARITY polarity);
 bool ${EIC_INSTANCE_NAME}_FreezeConfiguration(EIC_PIN pin);
 
