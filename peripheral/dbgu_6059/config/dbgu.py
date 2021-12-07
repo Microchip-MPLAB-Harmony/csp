@@ -49,13 +49,18 @@ def handleMessage(messageID, args):
             if args["isEnabled"] == True:
                 dbguSym_UsartOperatingMode.setSelectedKey("RING_BUFFER")
 
-    elif (messageID == "UART_INTERRUPT_MODE"):
+    elif (messageID == "UART_NON_BLOCKING_MODE"):
         if args.get("isReadOnly") != None:
             dbguSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None:
             if args["isEnabled"] == True:
                 dbguSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING")
-            else:
+                
+    elif (messageID == "UART_BLOCKING_MODE"):
+        if args.get("isReadOnly") != None:
+            dbguSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
                 dbguSym_UsartOperatingMode.setSelectedKey("BLOCKING")
 
     return result_dict
