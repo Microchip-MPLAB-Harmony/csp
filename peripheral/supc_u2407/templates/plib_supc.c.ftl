@@ -231,10 +231,12 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
                                                           ${SUPC_VREG_VSEN?then('| SUPC_VREG_VSEN_Msk', '')};</@compress>
 }
 
+<#if SUPC_TEMP_SENSOR_SUPPORT == true>
 void ${SUPC_INSTANCE_NAME}_SelectTempSenorChannel( SUPC_TSSEL sensor )
 {
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREF = (${SUPC_INSTANCE_NAME}_REGS->SUPC_VREF & (~SUPC_VREF_TSSEL_Msk)) | (sensor << SUPC_VREF_TSSEL_Pos);
 }
+</#if>
 
 void ${SUPC_INSTANCE_NAME}_SetOutputPin( SUPC_OUTPIN pin )
 {

@@ -204,19 +204,30 @@ def instantiateComponent(supcComponent):
     supcSym_VREF_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_VREF_RUNSTDBY", supcSym_VREF_Menu)
     supcSym_VREF_RUNSTDBY.setLabel("Enable Run in Standby")
     supcSym_VREF_RUNSTDBY.setDescription("Enable VREF operation in Standby Sleep Mode")
+    
+    # Check if temperature sensor is supported
+    supcVREF_TSEN_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/register-group@[name=\"SUPC\"]/register@[name=\"VREF\"]/bitfield@[name=\"TSEN\"]")
+    supcSym_VREF_TSEN = supcComponent.createBooleanSymbol("SUPC_TEMP_SENSOR_SUPPORT", supcSym_VREF_Menu)
+    supcSym_VREF_TSEN.setVisible(False)
+    supcSym_VREF_TSEN.setDefaultValue(supcVREF_TSEN_Node != None)
 
     #VREF VREFOE
     supcSym_VREF_VREFOE = supcComponent.createBooleanSymbol("SUPC_VREF_VREFOE", supcSym_VREF_Menu)
     supcSym_VREF_VREFOE.setLabel("Enable VREF output")
-    supcSym_VREF_VREFOE.setDescription("Enable VREF connection to ADC. If ONDEMAND is 0 and VREF is enabled, Temperature Sensor cannot be used")
-    supcSym_VREF_VREFOE.setDefaultValue(False)
+    if supcVREF_TSEN_Node != None:
+        supcSym_VREF_VREFOE.setDescription("Enable VREF connection to ADC. If ONDEMAND is 0 and VREF is enabled, Temperature Sensor cannot be used")
+    else:
+        supcSym_VREF_VREFOE.setDescription("Enable VREF connection to ADC")
+    supcSym_VREF_VREFOE.setDefaultValue(False)        
 
     #VREF TSEN
     supcSym_VREF_TSEN = supcComponent.createBooleanSymbol("SUPC_VREF_TSEN", supcSym_VREF_Menu)
     supcSym_VREF_TSEN.setLabel("Enable Temperature Sensor")
     supcSym_VREF_TSEN.setDescription("Enable Temperature Sensor connection to ADC")
     supcSym_VREF_TSEN.setDefaultValue(False)
-    supcSym_VREF_TSEN.setDependencies(updateVrefVisibleProperty, ["SUPC_VREF_ONDEMAND", "SUPC_VREF_VREFOE"])
+    supcSym_VREF_TSEN.setVisible(supcVREF_TSEN_Node != None)
+    if supcVREF_TSEN_Node != None:
+        supcSym_VREF_TSEN.setDependencies(updateVrefVisibleProperty, ["SUPC_VREF_ONDEMAND", "SUPC_VREF_VREFOE"])
 
     #BBPS Menu
     supcSym_BBPS_Menu= supcComponent.createMenuSymbol("SUPC_BBPS", None)
