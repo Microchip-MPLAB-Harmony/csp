@@ -81,6 +81,9 @@ typedef enum {
 <#if DEEP_SLEEP_MODE_EXIST??>
     LOW_POWER_DEEP_SLEEP_MODE,
 </#if>
+<#if EXTREME_DEEP_SLEEP_MODE_EXIST??>
+    LOW_POWER_EXTREME_DEEP_SLEEP_MODE,
+</#if>
 } POWER_LOW_POWER_MODE;
 
 <#if DEEP_SLEEP_MODE_EXIST??>
@@ -88,20 +91,20 @@ typedef enum
 {
 <#list 0..(DS_WAKEUP_CAUSE_COUNT - 1) as i>
     <#assign DS_WAKEUP_CAUSE = "DS_WAKEUP_CAUSE_" + i>
-    POWER_WAKEUP_SOURCE_${.vars[DS_WAKEUP_CAUSE]} = _DSWAKE_${.vars[DS_WAKEUP_CAUSE]}_MASK,
+    POWER_DS_WAKEUP_SOURCE_${.vars[DS_WAKEUP_CAUSE]} = _DSWAKE_${.vars[DS_WAKEUP_CAUSE]}_MASK,
 
 </#list>
-} POWER_WAKEUP_SOURCE;
+} POWER_DS_WAKEUP_SOURCE;
 
 typedef enum
 {
-    POWER_DSGPR0,
+    POWER_DS_GPR0,
 <#if DS_EXTENDED_REG_ENABLE == true>    
 <#list 1..32 as i>
-    POWER_DSGPR${i},
+    POWER_DS_GPR${i},
 </#list>
 </#if>
-} POWER_DSGPR;
+} POWER_DS_GPR;
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -112,11 +115,17 @@ typedef enum
 void POWER_LowPowerModeEnter( POWER_LOW_POWER_MODE mode );
 <#if DEEP_SLEEP_MODE_EXIST??>
 void POWER_Initialize( void );
-POWER_WAKEUP_SOURCE POWER_WakeupSourceGet( void );
-void POWER_ReleaseGPIO(void);
-void POWER_WakeupSourceClear( POWER_WAKEUP_SOURCE wakeupSource );
-void POWER_DSGPR_Write(POWER_DSGPR gprNumb, uint32_t gprValue);
-uint32_t POWER_DSGPR_Read(POWER_DSGPR gprNumb);
+POWER_DS_WAKEUP_SOURCE POWER_DS_WakeupSourceGet( void );
+void POWER_DS_ReleaseGPIO(void);
+void POWER_DS_WakeupSourceClear( POWER_DS_WAKEUP_SOURCE wakeupSource );
+void POWER_DS_GPR_Enable(void);
+void POWER_DS_GPR_Disable(void);
+void POWER_DS_RTCC_Enable(void);
+void POWER_DS_RTCC_Disable(void);
+void POWER_DS_RTCC_WakeupEnable(void);
+void POWER_DS_RTCC_WakeupDisable(void);
+void POWER_DS_GPR_Write(POWER_DS_GPR gprNumb, uint32_t gprValue);
+uint32_t POWER_DS_GPR_Read(POWER_DS_GPR gprNumb);
 </#if>
 
 // DOM-IGNORE-BEGIN

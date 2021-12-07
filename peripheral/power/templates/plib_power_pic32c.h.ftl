@@ -81,6 +81,7 @@ typedef enum {
 <#if DEEP_SLEEP_MODE_EXIST??>
     LOW_POWER_DEEP_SLEEP_MODE,
 </#if>
+    LOW_POWER_EXTREME_DEEP_SLEEP_MODE,
 } POWER_LOW_POWER_MODE;
 
 <#if DEEP_SLEEP_MODE_EXIST??>
@@ -95,8 +96,10 @@ typedef enum
 
 typedef enum
 {
+    POWER_DS_SEMAPHORE_1,
+    
     POWER_DS_EXTENDED_SEMAPHORE_1,
-} POWER_DS_EXTENDED_SEMAPHORE;
+} POWER_DS_SEMAPHORE;
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -110,10 +113,14 @@ void POWER_Initialize( void );
 POWER_DS_WAKEUP_SOURCE POWER_DS_WakeupSourceGet( void );
 void POWER_DS_SoftwareRestore(void);
 void POWER_DS_WakeupSourceClear( POWER_DS_WAKEUP_SOURCE wakeupSource );
-void POWER_DS_SemaphoreWrite(uint32_t sema1Value);
-uint32_t POWER_DS_SemaphoreRead(void);
-void POWER_DS_ExtendedSemaphoreWrite(POWER_DS_EXTENDED_SEMAPHORE xsema, uint32_t xsemaValue);
-uint32_t POWER_DS_ExtendedSemaphoreRead(POWER_DS_EXTENDED_SEMAPHORE xsema);
+void POWER_DS_ExtendedSemaphoreEnable(void);
+void POWER_DS_ExtendedSemaphoreDisable(void);
+void POWER_DS_RTCC_PowerEnable(void);
+void POWER_DS_RTCC_PowerDisable(void);
+void POWER_DS_RTCC_WakeupEnable(void);
+void POWER_DS_RTCC_WakeupDisable(void);
+void POWER_DS_SemaphoreWrite(POWER_DS_SEMAPHORE sema, uint32_t semaValue);
+uint32_t POWER_DS_SemaphoreRead(POWER_DS_SEMAPHORE sema);
 </#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
