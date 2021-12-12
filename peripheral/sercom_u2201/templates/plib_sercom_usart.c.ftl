@@ -133,7 +133,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
        SERCOM_USART_INT_CTRLB_SBMODE_${USART_STOP_BIT}
        ${(USART_PARITY_MODE == "ODD")?then('| SERCOM_USART_INT_CTRLB_PMODE_Msk', '')}
        ${USART_RX_ENABLE?then('| SERCOM_USART_INT_CTRLB_RXEN_Msk', '')}
-	   <#if USART_INTERRUPT_MODE_ENABLE = true> ${USART_SFDE?then('| SERCOM_USART_INT_CTRLB_SFDE_Msk', '')} </#if>
+       <#if USART_INTERRUPT_MODE_ENABLE = true> ${USART_SFDE?then('| SERCOM_USART_INT_CTRLB_SFDE_Msk', '')} </#if>
        ${USART_TX_ENABLE?then('| SERCOM_USART_INT_CTRLB_TXEN_Msk', '')};</@compress>
 
     /* Wait for sync */
@@ -217,7 +217,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
 
 <#if USART_INTERRUPT_MODE_ENABLE == true>
     bool transferProgress = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus;
-    transferProgress = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus || transferProgress; 
+    transferProgress = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus || transferProgress;
     if(transferProgress)
     {
         /* Transaction is in progress, so return without updating settings */
@@ -278,82 +278,79 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
         }
         </#if>
 
-        if(baudValue != 0U)
+        /* Disable the USART before configurations */
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA &= ~SERCOM_USART_INT_CTRLA_ENABLE_Msk;
+
+        /* Wait for sync */
+        <#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
         {
-            /* Disable the USART before configurations */
-            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA &= ~SERCOM_USART_INT_CTRLA_ENABLE_Msk;
+            /* Do nothing */
+        }
+        <#else>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
+        {
+            /* Do nothing */
+        }
+        </#if>
 
-            /* Wait for sync */
-            <#if SERCOM_SYNCBUSY = false>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
-            {
-                /* Do nothing */
-            }
-            <#else>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
-            {
-                /* Do nothing */
-            }
+        /* Configure Baud Rate */
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_BAUD = (uint16_t)SERCOM_USART_INT_BAUD_BAUD(baudValue);
+
+        <#if USART_FORM == "0x2">
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_SAMPR_Msk) | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
+
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~(SERCOM_USART_INT_CTRLB_CHSIZE_Msk | SERCOM_USART_INT_CTRLB_SBMODE_Msk)) | ((uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->stopBits);
+        <#else>
+        /* Configure Parity Options */
+        if(serialSetup->parity == USART_PARITY_NONE)
+        {
+            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = <#if USART_SAMPLE_RATE??> (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~(SERCOM_USART_INT_CTRLA_SAMPR_Msk | SERCOM_USART_INT_CTRLA_FORM_Msk)) | SERCOM_USART_INT_CTRLA_FORM(0x0UL) | SERCOM_USART_INT_CTRLA_SAMPR((uint32_t)sampleRate); <#else>
+            (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_FORM_Msk) | SERCOM_USART_INT_CTRLA_FORM(0x0);
             </#if>
-
-            /* Configure Baud Rate */
-            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_BAUD = (uint16_t)SERCOM_USART_INT_BAUD_BAUD(baudValue);
-
-            <#if USART_FORM == "0x2">
-            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_SAMPR_Msk) | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
 
             ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~(SERCOM_USART_INT_CTRLB_CHSIZE_Msk | SERCOM_USART_INT_CTRLB_SBMODE_Msk)) | ((uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->stopBits);
-            <#else>
-            /* Configure Parity Options */
-            if(serialSetup->parity == USART_PARITY_NONE)
-            {
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = <#if USART_SAMPLE_RATE??> (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~(SERCOM_USART_INT_CTRLA_SAMPR_Msk | SERCOM_USART_INT_CTRLA_FORM_Msk)) | SERCOM_USART_INT_CTRLA_FORM(0x0UL) | SERCOM_USART_INT_CTRLA_SAMPR((uint32_t)sampleRate); <#else>
-                (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_FORM_Msk) | SERCOM_USART_INT_CTRLA_FORM(0x0);
-                </#if>
-
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~(SERCOM_USART_INT_CTRLB_CHSIZE_Msk | SERCOM_USART_INT_CTRLB_SBMODE_Msk)) | ((uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->stopBits);
-            }
-            else
-            {
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = <#if USART_SAMPLE_RATE??> (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~(SERCOM_USART_INT_CTRLA_SAMPR_Msk | SERCOM_USART_INT_CTRLA_FORM_Msk)) | SERCOM_USART_INT_CTRLA_FORM(0x1UL) | SERCOM_USART_INT_CTRLA_SAMPR((uint32_t)sampleRate); <#else>
-                (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_FORM_Msk) | SERCOM_USART_INT_CTRLA_FORM(0x1UL);
-                </#if>
-
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~(SERCOM_USART_INT_CTRLB_CHSIZE_Msk | SERCOM_USART_INT_CTRLB_SBMODE_Msk | SERCOM_USART_INT_CTRLB_PMODE_Msk)) | (uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->stopBits | (uint32_t) serialSetup->parity ;
-            }
-            </#if>
-
-            /* Wait for sync */
-            <#if SERCOM_SYNCBUSY = false>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
-            {
-                /* Do nothing */
-            }
-            <#else>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
-            {
-                /* Do nothing */
-            }
-            </#if>
-
-            /* Enable the USART after the configurations */
-            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_ENABLE_Msk;
-
-            /* Wait for sync */
-            <#if SERCOM_SYNCBUSY = false>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
-            {
-                /* Do nothing */
-            }
-            <#else>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
-            {
-                /* Do nothing */
-            }
-            </#if>
-
-            setupStatus = true;
         }
+        else
+        {
+            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = <#if USART_SAMPLE_RATE??> (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~(SERCOM_USART_INT_CTRLA_SAMPR_Msk | SERCOM_USART_INT_CTRLA_FORM_Msk)) | SERCOM_USART_INT_CTRLA_FORM(0x1UL) | SERCOM_USART_INT_CTRLA_SAMPR((uint32_t)sampleRate); <#else>
+            (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_FORM_Msk) | SERCOM_USART_INT_CTRLA_FORM(0x1UL);
+            </#if>
+
+            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~(SERCOM_USART_INT_CTRLB_CHSIZE_Msk | SERCOM_USART_INT_CTRLB_SBMODE_Msk | SERCOM_USART_INT_CTRLB_PMODE_Msk)) | (uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->stopBits | (uint32_t) serialSetup->parity ;
+        }
+        </#if>
+
+        /* Wait for sync */
+        <#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
+        {
+            /* Do nothing */
+        }
+        <#else>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
+        {
+            /* Do nothing */
+        }
+        </#if>
+
+        /* Enable the USART after the configurations */
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_ENABLE_Msk;
+
+        /* Wait for sync */
+        <#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
+        {
+            /* Do nothing */
+        }
+        <#else>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
+        {
+            /* Do nothing */
+        }
+        </#if>
+
+        setupStatus = true;
     }
 
     return setupStatus;
@@ -885,7 +882,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
     {
         dataAvailable = (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize);
         dataRegisterEmpty = ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk);
-        
+
         while(dataRegisterEmpty && dataAvailable)
         {
             if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)

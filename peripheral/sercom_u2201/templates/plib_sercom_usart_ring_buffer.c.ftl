@@ -124,7 +124,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
        SERCOM_USART_INT_CTRLB_SBMODE_${USART_STOP_BIT}
        ${(USART_PARITY_MODE == "ODD")?then('| SERCOM_USART_INT_CTRLB_PMODE_Msk', '')}
        ${USART_RX_ENABLE?then('| SERCOM_USART_INT_CTRLB_RXEN_Msk', '')}
-	   ${USART_SFDE?then('| SERCOM_USART_INT_CTRLB_SFDE_Msk', '')}
+       ${USART_SFDE?then('| SERCOM_USART_INT_CTRLB_SFDE_Msk', '')}
        ${USART_TX_ENABLE?then('| SERCOM_USART_INT_CTRLB_TXEN_Msk', '')};</@compress>
 
     /* Wait for sync */
@@ -286,94 +286,91 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
         }
         </#if>
 
-        if(baudValue != 0U)
+        /* Disable the USART before configurations */
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA &= ~SERCOM_USART_INT_CTRLA_ENABLE_Msk;
+
+        /* Wait for sync */
+        <#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
         {
-            /* Disable the USART before configurations */
-            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA &= ~SERCOM_USART_INT_CTRLA_ENABLE_Msk;
+            /* Do nothing */
+        }
+        <#else>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
+        {
+            /* Do nothing */
+        }
+        </#if>
 
-            /* Wait for sync */
-            <#if SERCOM_SYNCBUSY = false>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
-            {
-                /* Do nothing */
-            }
-            <#else>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
-            {
-                /* Do nothing */
-            }
+        /* Configure Baud Rate */
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_BAUD = (uint16_t)SERCOM_USART_INT_BAUD_BAUD(baudValue);
+
+        <#if (USART_FORM == "0x2" || USART_FORM == "0x4" || USART_FORM == "0x5")>
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_SAMPR_Msk) | SERCOM_USART_INT_CTRLA_SAMPR((uint32_t)sampleRate);
+
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~(SERCOM_USART_INT_CTRLB_CHSIZE_Msk | SERCOM_USART_INT_CTRLB_SBMODE_Msk)) | ((uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->stopBits);
+        <#else>
+        /* Configure Parity Options */
+        if(serialSetup->parity == USART_PARITY_NONE)
+        {
+            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = <#if USART_SAMPLE_RATE??> (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~(SERCOM_USART_INT_CTRLA_SAMPR_Msk | SERCOM_USART_INT_CTRLA_FORM_Msk)) | SERCOM_USART_INT_CTRLA_FORM(0x0UL) | SERCOM_USART_INT_CTRLA_SAMPR((uint32_t)sampleRate); <#else>
+            (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_FORM_Msk) | SERCOM_USART_INT_CTRLA_FORM(0x0UL);
             </#if>
-
-            /* Configure Baud Rate */
-            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_BAUD = (uint16_t)SERCOM_USART_INT_BAUD_BAUD(baudValue);
-
-            <#if (USART_FORM == "0x2" || USART_FORM == "0x4" || USART_FORM == "0x5")>
-            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_SAMPR_Msk) | SERCOM_USART_INT_CTRLA_SAMPR((uint32_t)sampleRate);
 
             ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~(SERCOM_USART_INT_CTRLB_CHSIZE_Msk | SERCOM_USART_INT_CTRLB_SBMODE_Msk)) | ((uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->stopBits);
-            <#else>
-            /* Configure Parity Options */
-            if(serialSetup->parity == USART_PARITY_NONE)
-            {
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = <#if USART_SAMPLE_RATE??> (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~(SERCOM_USART_INT_CTRLA_SAMPR_Msk | SERCOM_USART_INT_CTRLA_FORM_Msk)) | SERCOM_USART_INT_CTRLA_FORM(0x0UL) | SERCOM_USART_INT_CTRLA_SAMPR((uint32_t)sampleRate); <#else>
-                (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_FORM_Msk) | SERCOM_USART_INT_CTRLA_FORM(0x0UL);
-                </#if>
-
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~(SERCOM_USART_INT_CTRLB_CHSIZE_Msk | SERCOM_USART_INT_CTRLB_SBMODE_Msk)) | ((uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->stopBits);
-            }
-            else
-            {
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = <#if USART_SAMPLE_RATE??> (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~(SERCOM_USART_INT_CTRLA_SAMPR_Msk | SERCOM_USART_INT_CTRLA_FORM_Msk)) | SERCOM_USART_INT_CTRLA_FORM(0x1UL) | SERCOM_USART_INT_CTRLA_SAMPR((uint32_t)sampleRate); <#else>
-                (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_FORM_Msk) | SERCOM_USART_INT_CTRLA_FORM(0x1UL);
-                </#if>
-
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~(SERCOM_USART_INT_CTRLB_CHSIZE_Msk | SERCOM_USART_INT_CTRLB_SBMODE_Msk | SERCOM_USART_INT_CTRLB_PMODE_Msk)) | (uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->stopBits | (uint32_t) serialSetup->parity ;
-            }
-            </#if>
-
-            /* Wait for sync */
-            <#if SERCOM_SYNCBUSY = false>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
-            {
-                /* Do nothing */
-            }
-            <#else>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
-            {
-                /* Do nothing */
-            }
-            </#if>
-
-            /* Enable the USART after the configurations */
-            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_ENABLE_Msk;
-
-            /* Wait for sync */
-            <#if SERCOM_SYNCBUSY = false>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
-            {
-                /* Do nothing */
-            }
-            <#else>
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
-            {
-                /* Do nothing */
-            }
-            </#if>
-
-
-            if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
-            {
-                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdBufferSize = ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE;
-                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrBufferSize = ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE;
-            }
-            else
-            {
-                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdBufferSize = ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_9BIT_SIZE;
-                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrBufferSize = ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_9BIT_SIZE;
-            }
-
-            setupStatus = true;
         }
+        else
+        {
+            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = <#if USART_SAMPLE_RATE??> (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~(SERCOM_USART_INT_CTRLA_SAMPR_Msk | SERCOM_USART_INT_CTRLA_FORM_Msk)) | SERCOM_USART_INT_CTRLA_FORM(0x1UL) | SERCOM_USART_INT_CTRLA_SAMPR((uint32_t)sampleRate); <#else>
+            (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & ~SERCOM_USART_INT_CTRLA_FORM_Msk) | SERCOM_USART_INT_CTRLA_FORM(0x1UL);
+            </#if>
+
+            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~(SERCOM_USART_INT_CTRLB_CHSIZE_Msk | SERCOM_USART_INT_CTRLB_SBMODE_Msk | SERCOM_USART_INT_CTRLB_PMODE_Msk)) | (uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->stopBits | (uint32_t) serialSetup->parity ;
+        }
+        </#if>
+
+        /* Wait for sync */
+        <#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
+        {
+            /* Do nothing */
+        }
+        <#else>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
+        {
+            /* Do nothing */
+        }
+        </#if>
+
+        /* Enable the USART after the configurations */
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_ENABLE_Msk;
+
+        /* Wait for sync */
+        <#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
+        {
+            /* Do nothing */
+        }
+        <#else>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
+        {
+            /* Do nothing */
+        }
+        </#if>
+
+
+        if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
+        {
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdBufferSize = ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE;
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrBufferSize = ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE;
+        }
+        else
+        {
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdBufferSize = ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_9BIT_SIZE;
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrBufferSize = ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_9BIT_SIZE;
+        }
+
+        setupStatus = true;
     }
 
     return setupStatus;
@@ -416,7 +413,7 @@ USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 static inline bool ${SERCOM_INSTANCE_NAME}_USART_RxPushByte(uint16_t rdByte)
 {
     uint32_t tempInIndex;
-	uint32_t rdInIdx;
+    uint32_t rdInIdx;
     bool isSuccess = false;
 
     tempInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex + 1U;
@@ -453,11 +450,11 @@ static inline bool ${SERCOM_INSTANCE_NAME}_USART_RxPushByte(uint16_t rdByte)
         }
         else
         {
-			/* 9-bit */
-			rdInIdx = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex << 1U;	
-			
-			${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdInIdx] = (uint8_t)rdByte;
-			${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdInIdx + 1U] = (uint8_t)(rdByte >> 8U);
+            /* 9-bit */
+            rdInIdx = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex << 1U;
+
+            ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdInIdx] = (uint8_t)rdByte;
+            ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdInIdx + 1U] = (uint8_t)(rdByte >> 8U);
         }
 
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex = tempInIndex;
@@ -505,8 +502,8 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_Read(uint8_t* pRdBuffer, const size_t size)
     size_t nBytesRead = 0U;
     uint32_t rdOutIndex;
     uint32_t rdInIndex;
-	uint32_t rdOutIdx;
-	uint32_t nBytesReadIdx;
+    uint32_t rdOutIdx;
+    uint32_t nBytesReadIdx;
 
     /* Take a snapshot of indices to avoid creation of critical section */
 
@@ -525,14 +522,14 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_Read(uint8_t* pRdBuffer, const size_t size)
             }
             else
             {
-				rdOutIdx = rdOutIndex << 1U;
-				nBytesReadIdx = nBytesRead << 1U;
-				
-				pRdBuffer[nBytesReadIdx] = ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdOutIdx];
-				pRdBuffer[nBytesReadIdx + 1U] = ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdOutIdx + 1U];
-				
-				rdOutIndex += 1U;
-				nBytesRead += 1U;				
+                rdOutIdx = rdOutIndex << 1U;
+                nBytesReadIdx = nBytesRead << 1U;
+
+                pRdBuffer[nBytesReadIdx] = ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdOutIdx];
+                pRdBuffer[nBytesReadIdx + 1U] = ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdOutIdx + 1U];
+
+                rdOutIndex += 1U;
+                nBytesRead += 1U;
             }
 
             if (rdOutIndex >= ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdBufferSize)
@@ -631,8 +628,8 @@ static bool ${SERCOM_INSTANCE_NAME}_USART_TxPullByte(void* pWrData)
     bool isSuccess = false;
     uint32_t wrInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex;
     uint32_t wrOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex;
-	uint32_t wrOutIdx;
-	uint8_t* pWrByte = (uint8_t*)pWrData;
+    uint32_t wrOutIdx;
+    uint8_t* pWrByte = (uint8_t*)pWrData;
 
     if (wrOutIndex != wrInIndex)
     {
@@ -643,10 +640,10 @@ static bool ${SERCOM_INSTANCE_NAME}_USART_TxPullByte(void* pWrData)
         }
         else
         {
-			wrOutIdx = wrOutIndex << 1U;
-			pWrByte[0] = ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrOutIdx];
-			pWrByte[1] = ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrOutIdx + 1U];
-			
+            wrOutIdx = wrOutIndex << 1U;
+            pWrByte[0] = ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrOutIdx];
+            pWrByte[1] = ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrOutIdx + 1U];
+
             wrOutIndex++;
         }
 
@@ -669,7 +666,7 @@ static inline bool ${SERCOM_INSTANCE_NAME}_USART_TxPushByte(uint16_t wrByte)
     uint32_t tempInIndex;
     uint32_t wrInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex;
     uint32_t wrOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex;
-	uint32_t wrInIdx;
+    uint32_t wrInIdx;
 
     bool isSuccess = false;
 
@@ -687,10 +684,10 @@ static inline bool ${SERCOM_INSTANCE_NAME}_USART_TxPushByte(uint16_t wrByte)
         }
         else
         {
-			wrInIdx = wrInIndex << 1U;
-			
-			${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrInIdx++] = (uint8_t)wrByte;
-			${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrInIdx] = (uint8_t)(wrByte >> 8U);			
+            wrInIdx = wrInIndex << 1U;
+
+            ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrInIdx++] = (uint8_t)wrByte;
+            ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrInIdx] = (uint8_t)(wrByte >> 8U);
         }
 
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex = tempInIndex;

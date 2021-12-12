@@ -44,12 +44,6 @@ def getSPIBaudValue():
         baud = int(round(float("{0:.15f}".format(float(refClkFreq / (2 * baudRate)))) - 1))
     else:
         desiredSPIBaudRate = False
-
-        if baud < 0:
-            baud = 0
-        elif baud > 255:
-            baud = 255
-
         spiSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "SPIM")
 
     return baud
