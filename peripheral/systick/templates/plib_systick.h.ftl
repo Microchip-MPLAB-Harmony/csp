@@ -69,6 +69,13 @@
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>
+
+	<#lt>typedef struct
+	<#lt>{ 
+	<#lt>    uint32_t start; 
+	<#lt>    uint32_t count; 
+	<#lt>}SYSTICK_TIMEOUT;
+
     <#lt>typedef struct
     <#lt>{
     <#lt>   SYSTICK_CALLBACK          callback;
@@ -93,6 +100,10 @@ void SYSTICK_DelayUs ( uint32_t delay_us );
 </#if>
 <#if USE_SYSTICK_INTERRUPT == true>
     <#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );
+	<#lt>uint32_t SYSTICK_GetTickCounter(void);
+	<#lt>void SYSTICK_StartTimeOut (SYSTICK_TIMEOUT* timeout, uint32_t delay_ms);
+	<#lt>void SYSTICK_ResetTimeOut (SYSTICK_TIMEOUT* timeout);
+	<#lt>bool SYSTICK_IsTimeoutReached (SYSTICK_TIMEOUT* timeout);
 </#if>
 <#if SYSTICK_USED_BY_SYS_TIME == true>
 void SYSTICK_TimerInterruptEnable ( void );

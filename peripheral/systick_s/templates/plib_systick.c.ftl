@@ -177,6 +177,33 @@ void SYSTICK_DelayUs ( uint32_t delay_us)
 </#if>
 
 <#if USE_SYSTICK_SECURE_INTERRUPT == true>
+uint32_t SYSTICK_GetTickCounter(void)
+{ 
+	return systick.tickCounter; 
+}
+
+void SYSTICK_StartTimeOut (SYSTICK_TIMEOUT* timeout, uint32_t delay_ms)
+{ 
+	timeout->start = SYSTICK_GetTickCounter();
+	timeout->count = (delay_ms*1000)/SYSTICK_INTERRUPT_PERIOD_IN_US; 
+}
+
+void SYSTICK_ResetTimeOut (SYSTICK_TIMEOUT* timeout)
+{ 
+	timeout->start = SYSTICK_GetTickCounter(); 
+}
+
+bool SYSTICK_IsTimeoutReached (SYSTICK_TIMEOUT* timeout)
+{ 
+	if ((SYSTICK_GetTickCounter() - timeout->start) < timeout->count)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
     <#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
     <#lt>{
     <#lt>   systick.callback = callback;
