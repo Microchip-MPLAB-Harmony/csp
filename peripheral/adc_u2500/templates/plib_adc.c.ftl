@@ -183,28 +183,28 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if ADC_INTENSET_RESRDY = true || (ADC_CTRLB_WINMODE != "0" && ADC_INTENSET_WINMON = true)>
-ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
+static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 <#if ADC_INSTANCE_NAME = "ADC0">
-#define ${ADC_INSTANCE_NAME}_BIASCOMP_POS  (2)
-#define ${ADC_INSTANCE_NAME}_BIASCOMP_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCOMP_POS)
+#define ${ADC_INSTANCE_NAME}_BIASCOMP_POS     (2U)
+#define ${ADC_INSTANCE_NAME}_BIASCOMP_Msk     (0x7U << ${ADC_INSTANCE_NAME}_BIASCOMP_POS)
 
-#define ${ADC_INSTANCE_NAME}_BIASREFBUF_POS  (5)
-#define ${ADC_INSTANCE_NAME}_BIASREFBUF_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASREFBUF_POS)
+#define ${ADC_INSTANCE_NAME}_BIASREFBUF_POS   (5U)
+#define ${ADC_INSTANCE_NAME}_BIASREFBUF_Msk   (0x7U << ${ADC_INSTANCE_NAME}_BIASREFBUF_POS)
 
-#define ${ADC_INSTANCE_NAME}_BIASR2R_POS  (8)
-#define ${ADC_INSTANCE_NAME}_BIASR2R_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASR2R_POS)
+#define ${ADC_INSTANCE_NAME}_BIASR2R_POS      (8U)
+#define ${ADC_INSTANCE_NAME}_BIASR2R_Msk      (0x7UL << ${ADC_INSTANCE_NAME}_BIASR2R_POS)
 
 <#elseif ADC_INSTANCE_NAME = "ADC1">
-#define ${ADC_INSTANCE_NAME}_BIASCOMP_POS  (16)
-#define ${ADC_INSTANCE_NAME}_BIASCOMP_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCOMP_POS)
+#define ${ADC_INSTANCE_NAME}_BIASCOMP_POS     (16U)
+#define ${ADC_INSTANCE_NAME}_BIASCOMP_Msk     (0x7UL << ${ADC_INSTANCE_NAME}_BIASCOMP_POS)
 
-#define ${ADC_INSTANCE_NAME}_BIASREFBUF_POS  (19)
-#define ${ADC_INSTANCE_NAME}_BIASREFBUF_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASREFBUF_POS)
+#define ${ADC_INSTANCE_NAME}_BIASREFBUF_POS   (19U)
+#define ${ADC_INSTANCE_NAME}_BIASREFBUF_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_BIASREFBUF_POS)
 
-#define ${ADC_INSTANCE_NAME}_BIASR2R_POS  (22)
-#define ${ADC_INSTANCE_NAME}_BIASR2R_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASR2R_POS)
+#define ${ADC_INSTANCE_NAME}_BIASR2R_POS      (22U)
+#define ${ADC_INSTANCE_NAME}_BIASR2R_Msk      (0x7UL << ${ADC_INSTANCE_NAME}_BIASR2R_POS)
 </#if>
 
 // *****************************************************************************
@@ -226,9 +226,9 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     }
 
     /* Writing calibration values in BIASREFBUF, BIASCOMP and BIASR2R */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB =(uint32_t)(ADC_CALIB_BIASCOMP((((*(uint64_t*)SW0_ADDR) & ${ADC_INSTANCE_NAME}_BIASCOMP_Msk) >> ${ADC_INSTANCE_NAME}_BIASCOMP_POS))) \
-            | ADC_CALIB_BIASR2R((((*(uint64_t*)SW0_ADDR) & ${ADC_INSTANCE_NAME}_BIASR2R_Msk) >> ${ADC_INSTANCE_NAME}_BIASR2R_POS))
-            | ADC_CALIB_BIASREFBUF(((*(uint64_t*)SW0_ADDR) & ${ADC_INSTANCE_NAME}_BIASREFBUF_Msk)>> ${ADC_INSTANCE_NAME}_BIASREFBUF_POS );
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB =(uint16_t)((ADC_CALIB_BIASCOMP((((*(uint32_t*)SW0_ADDR) & ${ADC_INSTANCE_NAME}_BIASCOMP_Msk) >> ${ADC_INSTANCE_NAME}_BIASCOMP_POS))) \
+            | ADC_CALIB_BIASR2R((((*(uint32_t*)SW0_ADDR) & ${ADC_INSTANCE_NAME}_BIASR2R_Msk) >> ${ADC_INSTANCE_NAME}_BIASR2R_POS))
+            | ADC_CALIB_BIASREFBUF(((*(uint32_t*)SW0_ADDR) & ${ADC_INSTANCE_NAME}_BIASREFBUF_Msk)>> ${ADC_INSTANCE_NAME}_BIASREFBUF_POS ));
 
 <#if ADC_CTRLA_SLAVEEN == true>
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = ADC_CTRLA_SLAVEEN_Msk;
@@ -252,7 +252,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
                                                <#if ADC_INPUTCTRL_VAL?has_content>| ${ADC_INPUTCTRL_VAL}</#if>;</@compress>
 
     /* Resolution & Operation Mode */
-    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_RESSEL_${ADC_CTRLB_RESSEL} | ADC_CTRLB_WINMODE(${ADC_CTRLB_WINMODE})
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_RESSEL_${ADC_CTRLB_RESSEL} | ADC_CTRLB_WINMODE(${ADC_CTRLB_WINMODE}U)
                                      <#if ADC_CTRLB_VAL?has_content>| ${ADC_CTRLB_VAL}</#if>;</@compress>
 
 <#if ADC_CTRLB_RESSEL == "16BIT">
@@ -280,7 +280,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 <#if ADC_CTRLA_VAL?has_content>
     <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ${ADC_CTRLA_VAL};</@compress>
 </#if>
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -290,7 +290,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 void ${ADC_INSTANCE_NAME}_Enable( void )
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ADC_CTRLA_ENABLE_Msk;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -299,8 +299,8 @@ void ${ADC_INSTANCE_NAME}_Enable( void )
 /* Disable ADC module */
 void ${ADC_INSTANCE_NAME}_Disable( void )
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA &= ~ADC_CTRLA_ENABLE_Msk;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA &=(uint16_t) ~ADC_CTRLA_ENABLE_Msk;
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -310,9 +310,9 @@ void ${ADC_INSTANCE_NAME}_Disable( void )
 void ${ADC_INSTANCE_NAME}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput )
 {
     /* Configure positive and negative input pins */
-    uint32_t channel;
+    uint16_t channel;
     channel = ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL;
-    channel &= ~(ADC_INPUTCTRL_MUXPOS_Msk | ADC_INPUTCTRL_MUXNEG_Msk);
+    channel &= (uint16_t)~(ADC_INPUTCTRL_MUXPOS_Msk | ADC_INPUTCTRL_MUXNEG_Msk);
     channel |= (uint16_t) positiveInput | (uint16_t) negativeInput;
     ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = channel;
 
@@ -339,7 +339,7 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = low_threshold;
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = high_threshold;
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -347,9 +347,9 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
 
 void ${ADC_INSTANCE_NAME}_WindowModeSet(ADC_WINMODE mode)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB &= ~ADC_CTRLB_WINMODE_Msk;
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB |= mode << ADC_CTRLB_WINMODE_Pos;
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB &= (uint16_t)~ADC_CTRLB_WINMODE_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB |= (uint16_t)mode << ADC_CTRLB_WINMODE_Pos;
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -408,7 +408,7 @@ void ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
 bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 {
     bool status;
-    status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    status =  (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos) !=0U);
     /* Clear interrupt flag */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
     return status;
@@ -445,7 +445,7 @@ bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 {
     bool status;
-    status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    status =  (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos) != 0U);
     if (status == true)
     {
         /* Clear interrupt flag */
