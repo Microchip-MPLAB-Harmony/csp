@@ -322,13 +322,13 @@ def updateCSRxClockModeInfo(symbol, event):
     en_npcsx = event["source"].getSymbolByID("SPI_EN_NPCS" + csx).getValue()
     symbol.setVisible(en_npcsx == True)
 
-    CPHA = event["source"].getSymbolByID("SPI_CSR" + csx + "_NCPHA").getValue()
-    CPOL = event["source"].getSymbolByID("SPI_CSR" + csx + "_CPOL").getValue()
-    if (CPOL == 0) and (CPHA == 0):
+    NCPHA = int (event["source"].getSymbolByID("SPI_CSR" + csx + "_NCPHA").getSelectedValue(), 16)
+    CPOL = int (event["source"].getSymbolByID("SPI_CSR" + csx + "_CPOL").getSelectedValue(), 16)
+    if (CPOL == 0) and (NCPHA == 0):
         symbol.setLabel("***SPI Mode 1 is Selected***")
-    elif (CPOL == 0) and (CPHA == 1):
+    elif (CPOL == 0) and (NCPHA == 1):
         symbol.setLabel("***SPI Mode 0 is Selected***")
-    elif (CPOL == 1) and (CPHA == 0):
+    elif (CPOL == 1) and (NCPHA == 0):
         symbol.setLabel("***SPI Mode 3 is Selected***")
     else:
         symbol.setLabel("***SPI Mode 2 is Selected***")
@@ -734,7 +734,7 @@ def instantiateComponent(spiComponent):
 
         # CSRx CLOCK MODE Comment
         spiSym_SPI_CSRx_ClockModeComment = spiComponent.createCommentSymbol("SPI_CSR" + str(i) + "_CLOCK_MODE_COMMENT", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
-        spiSym_SPI_CSRx_ClockModeComment.setLabel("***SPI Mode 1 is Selected***")
+        spiSym_SPI_CSRx_ClockModeComment.setLabel("***SPI Mode 0 is Selected***")
         spiSym_SPI_CSRx_ClockModeComment.setVisible(i == 0)
         spiSym_SPI_CSRx_ClockModeComment.setDependencies(updateCSRxClockModeInfo, ["SPI_EN_NPCS" + str(i), "SPI_CSR" + str(i) + "_CPOL", "SPI_CSR" + str(i) +"_NCPHA"])
 
