@@ -110,6 +110,9 @@ def handleMessage(messageID, args):
     global tcSym_Timer_TIME_MS
     global tcSym_SYS_TIME_CONNECTED
     global sysTimePlibMode
+    global tySym_Slave_Mode
+    global tcSym_CTRLA_MODE
+
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
 
@@ -117,7 +120,6 @@ def handleMessage(messageID, args):
         sysTimeComponentId.setValue(args["ID"])
         modeDict = {"plib_mode": "PERIOD_AND_COMPARE_MODES"}
         sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
-        print sysTimePLIBConfig
         sysTimePlibMode.setValue(sysTimePLIBConfig["plib_mode"])
         sysTimePLIBModeConfig(sysTimePlibMode.getValue())
         tcSym_SYS_TIME_CONNECTED.setValue(True, 2)
@@ -131,7 +133,13 @@ def handleMessage(messageID, args):
     if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
         tcSym_Timer_TIME_MS.setValue(args["sys_time_tick_ms"])
 
-
+    if (messageID == "TC_MASTER_DESTROYED"):
+        #if the message is received by a slave, disable the slave mode and make the mode selection visible
+        if tySym_Slave_Mode.getValue() == True:
+            tySym_Slave_Mode.setValue(False)
+            tySym_Slave_Mode.setVisible(False)
+            tcSym_CTRLA_MODE.setValue(tcSym_CTRLA_MODE.getDefaultValue())
+            tcSym_CTRLA_MODE.setVisible(True)
 
     return dummy_dict
 
@@ -157,8 +165,8 @@ def updateCodeGenerationProperty(symbol, event):
             component.getSymbolByID("TC_CAPTURE_SOURCE").setEnabled(True)
 
 def tcResolutionCalc(symbol, event):
-    if (event["id"] == "TC_CTRLA_MODE"):
-        if event["value"] == 2:
+    if (event["id"] == "TC_SLAVE_MODE"):
+        if event["value"] == True:
             symbol.setVisible(False)
         else:
             symbol.setVisible(True)
@@ -174,7 +182,8 @@ def tcFreqCalc(symbol, event):
     symbol.setValue(Database.getSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_FREQUENCY") / int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]), 2)
 
 def tcSlaveModeVisible(symbol, event):
-    if event["value"] == 2:   #COUNT32
+
+    if event["value"] == True:
         symbol.setVisible(False)
     else:
         symbol.setVisible(True)
@@ -184,24 +193,22 @@ def tcSlaveClockEnable(symbol, event):
     if event["value"] == 2:   #COUNT32
         if (Database.getSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE") == False):
             #clock enable
-            Database.clearSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE")
-            Database.setSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE", True, 2)
+            Database.sendMessage("core", "TC"+str(component)+"_CLOCK_ENABLE", {"isEnabled":True})
     else:
         if (Database.getSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE") == True):
             activeComponentList = Database.getActiveComponentIDs()
             if ("tc"+str(component) not in activeComponentList):
                 #clock disable
-                Database.clearSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE")
-                Database.setSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE", False, 2)
+                Database.sendMessage("core", "TC"+str(component)+"_CLOCK_ENABLE", {"isEnabled":False})
 
 def tcSlaveModeCommentVisible(symbol, event):
-    if event["value"] == 2:  #COUNT32
+    if event["value"] == True: 
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
 def tcSlaveModeSet(symbol, event):
-    if event["value"] == 2:   #COUNT32
+    if event["value"] == 2: 
         symbol.setVisible(True)
         symbol.setValue(True, 2)
     else:
@@ -240,7 +247,7 @@ def updateTCInterruptStatus(symbol, event):
             if(tcSym_Timer_INTENSET_OVF.getValue() == True or tcSym_Timer_INTENSET_MC1.getValue() == True):
                 setTCInterruptData(True, tcSym_OperationMode.getValue())
             else:
-                setTCInterruptData(False, tcSym_OperationMode.getValue())        
+                setTCInterruptData(False, tcSym_OperationMode.getValue())
         else:
             setTCInterruptData(event["value"], tcSym_OperationMode.getValue())
 
@@ -318,6 +325,25 @@ def sysTime_APIUpdate(symbol,event):
 ########################################## Component  #############################################
 ###################################################################################################
 
+def destroyComponent(tcComponent):
+    global tcInstanceName
+    global tySym_Slave_Mode
+    instance = int(tcInstanceName.getValue()[-1])
+
+    if tySym_Slave_Mode.getValue() == False:
+        # Disable the clock only if master is getting destroyed. 
+        Database.sendMessage("core", "TC"+str(instance)+"_CLOCK_ENABLE", {"isEnabled":False})
+
+    # If master is getting destroyed, then disable slave's clock if the slave tc instance is not active. 
+    # If the slave tc is active, then send a message to slave indicating that master is destroyed, thereby allowing slave to work as a normal timer (8/16 bit mode)
+    if tcComponent.getSymbolByID("TC_CTRLA_MODE").getSelectedKey() == "COUNT32":
+        activeComponentList = Database.getActiveComponentIDs()
+        slave_instance = instance + 1
+        if ("tc"+str(slave_instance) not in activeComponentList):
+            Database.sendMessage("core", "TC"+str(slave_instance)+"_CLOCK_ENABLE", {"isEnabled":False})
+        else:
+            Database.sendMessage("tc"+str(slave_instance), "TC_MASTER_DESTROYED", None)
+
 def instantiateComponent(tcComponent):
 
     """ Function to instantiate tcComponent to Active Component """
@@ -345,9 +371,7 @@ def instantiateComponent(tcComponent):
     Log.writeInfoMessage("Running " + tcInstanceName.getValue())
 
     if Database.getSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_ENABLE") == False:
-        Database.clearSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_ENABLE")
-        #clock enable
-        Database.setSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
+        Database.sendMessage("core", tcInstanceName.getValue()+"_CLOCK_ENABLE", {"isEnabled":True})
 
     tcInstanceMasterNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/parameters/param@[name=\"MASTER\"]")
     tcInstanceMasterValue = int(tcInstanceMasterNode.getAttribute("value"))
@@ -399,11 +423,12 @@ def instantiateComponent(tcComponent):
     if isMasterSlaveModeEnable == True:
         tcSym_CTRLA_MODE.setVisible(False)
     if (tcInstanceMasterValue == 0):
-        tcSym_CTRLA_MODE.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
+        tcSym_CTRLA_MODE.setDependencies(tcSlaveModeVisible, ["TC_SLAVE_MODE"])
 
     tcSym_SLAVE_CLOCK_ENABLE = tcComponent.createIntegerSymbol("TC_SLAVE_CLOCK_ENABLE", None)
     tcSym_SLAVE_CLOCK_ENABLE.setVisible(False)
-    tcSym_SLAVE_CLOCK_ENABLE.setDependencies(tcSlaveClockEnable, ["TC_CTRLA_MODE"])
+    if (tcInstanceMasterValue == 1):
+        tcSym_SLAVE_CLOCK_ENABLE.setDependencies(tcSlaveClockEnable, ["TC_CTRLA_MODE"])
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
@@ -493,7 +518,7 @@ def instantiateComponent(tcComponent):
     if isMasterSlaveModeEnable == True:
         tcSym_CTRLA_PRESCALER.setVisible(False)
     if (tcInstanceMasterValue == 0):
-        tcSym_CTRLA_PRESCALER.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
+        tcSym_CTRLA_PRESCALER.setDependencies(tcSlaveModeVisible, ["TC_SLAVE_MODE"])
 
     #clock resolution display
     tcSym_Resolution = tcComponent.createCommentSymbol("TC_Resolution", None)
@@ -504,7 +529,7 @@ def instantiateComponent(tcComponent):
     tcSym_Resolution.setLabel("****Timer resolution is " + str(resolution) + " nS****")
     if isMasterSlaveModeEnable == True:
         tcSym_Resolution.setVisible(False)
-    tcSym_Resolution.setDependencies(tcResolutionCalc, [masterComponentSymbolId, "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
+    tcSym_Resolution.setDependencies(tcResolutionCalc, ["TC_SLAVE_MODE", "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
         "TC_CTRLA_PRESCALER"])
 
     #TC clock frequency
@@ -523,7 +548,7 @@ def instantiateComponent(tcComponent):
     if isMasterSlaveModeEnable == True:
         tcSym_OperationMode.setVisible(False)
     if (tcInstanceMasterValue == 0):
-        tcSym_OperationMode.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
+        tcSym_OperationMode.setDependencies(tcSlaveModeVisible, ["TC_SLAVE_MODE"])
 
     tcSym_SlaveMode_Comment = tcComponent.createCommentSymbol("TC_SLAVE_MODE_COMMENT", None)
     tcSym_SlaveMode_Comment.setVisible(False)
@@ -531,7 +556,7 @@ def instantiateComponent(tcComponent):
         tcSym_SlaveMode_Comment.setVisible(True)
     tcSym_SlaveMode_Comment.setLabel("TC is configured in Slave mode to support 32-bit operation")
     if (tcInstanceMasterValue == 0):
-        tcSym_SlaveMode_Comment.setDependencies(tcSlaveModeCommentVisible, [masterComponentSymbolId])
+        tcSym_SlaveMode_Comment.setDependencies(tcSlaveModeCommentVisible, ["TC_SLAVE_MODE"])
 
     ###################################################################################################
     #################################### Sleep Configuration  #######################################
@@ -543,7 +568,7 @@ def instantiateComponent(tcComponent):
     if isMasterSlaveModeEnable == True:
         tcSym_SleepConfiguration.setVisible(False)
     if (tcInstanceMasterValue == 0):
-        tcSym_SleepConfiguration.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
+        tcSym_SleepConfiguration.setDependencies(tcSlaveModeVisible, ["TC_SLAVE_MODE"])
 
     #run standby mode
     tcSym_CTRLA_RUNSTDBY = tcComponent.createBooleanSymbol("TC_CTRLA_RUNSTDBY", tcSym_SleepConfiguration)
