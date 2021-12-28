@@ -33,6 +33,7 @@ def updateCompareMenuVisibleProperty(symbol, event):
         symbol.setVisible(False)
 
 def tccComparePeriodCalc(symbol, event):
+    wave = ""
     clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY")
     if clock_freq != 0:
         resolution = (int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / clock_freq
