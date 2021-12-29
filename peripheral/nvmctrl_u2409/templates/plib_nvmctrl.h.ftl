@@ -66,6 +66,15 @@
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE             (${FLASH_PROGRAM_SIZE}U)
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_BLOCKSIZE            (${FLASH_ERASE_SIZE}U)
 
+/* NVM supports four write modes */
+
+#define NVMCTRL_WMODE_MAN  NVMCTRL_CTRLA_WMODE_MAN
+#define NVMCTRL_WMODE_ADW  NVMCTRL_CTRLA_WMODE_ADW
+#define NVMCTRL_WMODE_AQW  NVMCTRL_CTRLA_WMODE_AQW
+#define NVMCTRL_WMODE_AP   NVMCTRL_CTRLA_WMODE_AP
+
+typedef uint16_t NVMCTRL_WRITEMODE;
+
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_MEDIA_SIZE                 ${MEMORY_MEDIA_SIZE}
@@ -81,15 +90,6 @@ typedef struct
     uintptr_t context;
 }NVMCTRL_CALLBACK_OBJECT;
 </#if>
-
-/* NVM supports four write modes */
-typedef enum
-{
-    NVMCTRL_WMODE_MAN = NVMCTRL_CTRLA_WMODE_MAN,
-    NVMCTRL_WMODE_ADW = NVMCTRL_CTRLA_WMODE_ADW,
-    NVMCTRL_WMODE_AQW = NVMCTRL_CTRLA_WMODE_AQW,
-    NVMCTRL_WMODE_AP = NVMCTRL_CTRLA_WMODE_AP,
-} NVMCTRL_WRITEMODE;
 
 <#if INTERRUPT_ENABLE == true>
 /* Interrupt sources for the main flash */
@@ -118,7 +118,7 @@ typedef enum
 
 void ${NVMCTRL_INSTANCE_NAME}_Initialize(void);
 
-bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address );
 
 void ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_WRITEMODE mode);
 
@@ -126,9 +126,9 @@ bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(const uint32_t *data, const uint32_t
 
 bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(const uint32_t *data, const uint32_t address);
 
-bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( const uint32_t* data, uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( const uint32_t* data, const uint32_t address );
 
-bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address);
+bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( const uint32_t *data, const uint32_t address);
 
 bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address );
 
