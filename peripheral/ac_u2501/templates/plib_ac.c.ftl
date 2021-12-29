@@ -65,7 +65,7 @@
 <#if AC_WINCTRL_WIN0 == true>
     <#if AC_WINTSEL0 ?has_content >
         <#if AC_WINCTRL_VAL != "">
-            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL0(${AC_WINTSEL0})">
+            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL0(${AC_WINTSEL0}U)">
         <#else>
             <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL0(${AC_WINTSEL0})">
         </#if>
@@ -166,7 +166,7 @@
     <#assign AC_CTRLC_ENABLE = true>
 </#if>
 
-AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
+static AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -187,8 +187,8 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
 
     <#if AC_LOAD_CALIB == 1>
     /*Load Calibration Value*/
-    uint8_t calibVal = (uint8_t)((*(uint32_t*)0x00800080) & 0x3);
-    calibVal = (((calibVal) == 0x3) ? 0x3 : (calibVal));
+    uint8_t calibVal = (uint8_t)((*(uint32_t*)0x00800080) & 0x3U);
+    calibVal = (((calibVal) == 0x3U) ? 0x3U : (calibVal));
 
 
     ${AC_INSTANCE_NAME}_REGS->AC_CALIB = calibVal;
@@ -224,7 +224,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   | AC_COMPCTRL_MUXNEG_${.vars[AC_COMPCTRL_MUXNEG]}
                                   | AC_COMPCTRL_INTSEL_${.vars[AC_COMPCTRL_INTSEL]}
                                   | AC_COMPCTRL_OUT_${.vars[AC_COMPCTRL_OUTPUT_TYPE]}
-                                  | AC_COMPCTRL_SPEED(0x03)
+                                  | AC_COMPCTRL_SPEED(0x03U)
                                   | AC_COMPCTRL_FLEN_${.vars[AC_COMPCTRL_FLEN]}
                                   ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')}
                                   ${.vars[AC_COMPCTRL_RUNSTDBY]?then(' | AC_COMPCTRL_RUNSTDBY_Msk','')}
@@ -237,7 +237,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     <#if AC_COMPCTRL_SINGLE_MODE?has_content>
         <#if (.vars[AC_COMPCTRL_SINGLE_MODE] == false) & (.vars[AC_COMPCTRL_HYSTEN] == true)>
             <#if AC_COMPCTRL_HYST_VAL?has_content>
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYST(${.vars[AC_COMPCTRL_HYST_VAL]}) | AC_COMPCTRL_HYSTEN_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYST(${.vars[AC_COMPCTRL_HYST_VAL]}U) | AC_COMPCTRL_HYSTEN_Msk;
             <#else>
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYSTEN_Msk;
             </#if>
@@ -245,7 +245,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     </#if>
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;	
                 <#if .vars[AC_SCALERn]?has_content >
-    ${AC_INSTANCE_NAME}_REGS->AC_SCALER[${i}] = ${.vars[AC_SCALERn]};
+    ${AC_INSTANCE_NAME}_REGS->AC_SCALER[${i}] = ${.vars[AC_SCALERn]}U;
                 </#if>
 
             </#if>
@@ -274,7 +274,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
 void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
 {
     /* Start Comparison */
-    ${AC_INSTANCE_NAME}_REGS->AC_CTRLB |= (1 << channel_id);
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLB |= (1U << (uint8_t)channel_id);
 }
 
 <#if AC_SCALER_REG_PRESENT == true>
@@ -354,7 +354,7 @@ void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT posi
         /* Wait for Synchronization */
     }
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~(AC_COMPCTRL_MUXPOS_Msk | AC_COMPCTRL_MUXNEG_Msk);
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= (positiveInput | negativeInput);
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= ((uint32_t)positiveInput | (uint32_t)negativeInput);
 
     /* Enable comparator channel */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
@@ -369,9 +369,9 @@ bool ${AC_INSTANCE_NAME}_StatusGet (AC_CHANNEL channel)
 {
     bool breturnVal = false;
 
-    if((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & (AC_STATUSB_READY0_Msk << channel)) == (AC_STATUSB_READY0_Msk << channel))
+    if((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & (AC_STATUSB_READY0_Msk << (uint8_t)channel)) == (AC_STATUSB_READY0_Msk << (uint8_t)channel))
     {
-        if((${AC_INSTANCE_NAME}_REGS->AC_STATUSA & (AC_STATUSA_STATE0_Msk << channel)) == (AC_STATUSA_STATE0_Msk << channel))
+        if((${AC_INSTANCE_NAME}_REGS->AC_STATUSA & (AC_STATUSA_STATE0_Msk << (uint8_t)channel)) == (AC_STATUSA_STATE0_Msk << (uint8_t)channel))
         {
             breturnVal = true;
         }
