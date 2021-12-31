@@ -53,7 +53,7 @@ extern "C" {
 #endif //__cplusplus
 
 <#if GENERIC_TIMER_INTERRUPT>   
-typedef void (*GENERIC_TIMER_CALLBACK) (void* context);
+typedef void (*GENERIC_TIMER_CALLBACK) (uintptr_t context);
 
 </#if>
 void GENERIC_TIMER_Initialize(void);
@@ -76,7 +76,7 @@ uint64_t GENERIC_TIMER_PeriodGet(void);
 void GENERIC_TIMER_Stop(void);
 <#if RTOS_INTERRUPT_HANDLER == "">
 
-void GENERIC_TIMER_RegisterCallback(GENERIC_TIMER_CALLBACK pCallback, void* pContext);
+void GENERIC_TIMER_CallbackRegister(GENERIC_TIMER_CALLBACK pCallback, uintptr_t context);
 </#if>
 </#if>
 

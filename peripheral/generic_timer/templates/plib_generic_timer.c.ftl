@@ -58,7 +58,7 @@ static uint64_t compareDelta = ${GENERIC_TIMER_COMPARE_DELTA}UL;
 static struct callbackObject
 {
     GENERIC_TIMER_CALLBACK pCallback;
-    void* pContext;
+    uintptr_t context;
 }genericTimerCallbackObj;
 </#if>
 </#if>
@@ -131,10 +131,10 @@ void GENERIC_TIMER_Stop(void)
 <#if RTOS_INTERRUPT_HANDLER == "">
 
 
-void GENERIC_TIMER_RegisterCallback(GENERIC_TIMER_CALLBACK pCallback, void* pContext)
+void GENERIC_TIMER_CallbackRegister(GENERIC_TIMER_CALLBACK pCallback, uintptr_t context)
 {
     genericTimerCallbackObj.pCallback = pCallback;
-    genericTimerCallbackObj.pContext = pContext;
+    genericTimerCallbackObj.context = context;
 }
 
 
@@ -144,7 +144,7 @@ void GENERIC_TIMER_InterruptHandler (void)
     PL1_SetPhysicalCompareValue(currentCompVal + compareDelta);
     if(genericTimerCallbackObj.pCallback != NULL)
     {
-        genericTimerCallbackObj.pCallback(genericTimerCallbackObj.pContext);
+        genericTimerCallbackObj.pCallback(genericTimerCallbackObj.context);
     }
 }
 </#if>
