@@ -19,7 +19,7 @@ void ${HANDLER?right_pad(36)}__attribute__((weak, alias("DefaultInterruptHandler
 
 /* Array of interrupt handlers indexed by its IRQn_Type IDs */
 
-peripheral_interrupt_handler_t gicPIVectorTable[${GIC_INTERRUPT_MAX_INDEX - 15}U] = 
+PPI_SPI_HANDLER gicPIVectorTable[${GIC_INTERRUPT_MAX_INDEX - 15}U] = 
 {
 <#list 16..GIC_INTERRUPT_MAX_INDEX as index>
 <#assign INTERRUPT_ID = "INTERRUPT_ID_" + index>
