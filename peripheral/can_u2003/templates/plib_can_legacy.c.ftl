@@ -163,7 +163,7 @@ static void CANLengthToDlcGet(uint8_t length, uint8_t *dlc)
 </#if>
 static uint8_t CANDlcToLengthGet(uint8_t dlc)
 {
-    uint8_t msgLength[] = {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 12U, 16U, 20U, 24U, 32U, 48U, 64U};
+    const uint8_t msgLength[] = {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 12U, 16U, 20U, 24U, 32U, 48U, 64U};
     return msgLength[dlc];
 }
 
@@ -267,9 +267,9 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex = 0U;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 = 0U;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 = 0U;
-    memset(${CAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
+    (void) memset(${CAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
 </#if>
-    memset(&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(CAN_MSG_RAM_CONFIG));
+    (void) memset(&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(CAN_MSG_RAM_CONFIG));
 }
 
 // *****************************************************************************
@@ -296,6 +296,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 */
 bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE mode, CAN_MSG_TX_ATTRIBUTE msgAttr)
 {
+
 <#if CAN_OPMODE =="CAN FD">
     uint8_t dlc = 0U;
 </#if>
@@ -308,6 +309,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
 </#if>
     static uint8_t messageMarker = 0U;
     bool op_success = false;
+    (void) mode;
 
     switch (msgAttr)
     {
@@ -324,7 +326,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
                 }
             }
             /* The Tx buffers are not full */
-            if(bufferIndex != ${TX_BUFFER_ELEMENTS})
+            if(bufferIndex != ${TX_BUFFER_ELEMENTS}U)
             {
 
                 fifo = (can_txbe_registers_t *) ((uint8_t*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)tfqpi * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
@@ -340,7 +342,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
             {
                 tfqpi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFQPI_Msk) >> CAN_TXFQS_TFQPI_Pos);
 <#if TXBUF_USE>
-                ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex |= (1UL << ((tfqpi + ${TX_BUFFER_ELEMENTS}) & 0x1FU));
+                ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex |= (1UL << ((tfqpi + ${TX_BUFFER_ELEMENTS}U) & 0x1FU));
 </#if>
                 fifo = (can_txbe_registers_t *) ((uint8_t*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)tfqpi * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
                 op_success = true;
@@ -397,9 +399,9 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
         if ((msgAttr == CAN_MSG_ATTR_TX_BUFFER_DATA_FRAME) || (msgAttr == CAN_MSG_ATTR_TX_FIFO_DATA_FRAME))
         {
             /* copy the data into the payload */
-            memcpy((uint8_t *)&fifo->CAN_TXBE_DATA, data, length);
+            (void) memcpy((uint8_t *)&fifo->CAN_TXBE_DATA, data, length);
         }
-        else if (msgAttr == CAN_MSG_ATTR_TX_BUFFER_RTR_FRAME || msgAttr == CAN_MSG_ATTR_TX_FIFO_RTR_FRAME)
+        else if ((msgAttr == CAN_MSG_ATTR_TX_BUFFER_RTR_FRAME) || (msgAttr == CAN_MSG_ATTR_TX_FIFO_RTR_FRAME))
         {
             fifo->CAN_TXBE_0 |= CAN_TXBE_0_RTR_Msk;
         }
@@ -544,7 +546,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             msgLength = CANDlcToLengthGet((uint8_t)((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_DLC_Msk) >> CAN_RXBE_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(data, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, msgLength);
+            (void) memcpy(data, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, msgLength);
             *length = msgLength;
 
 <#if TIMESTAMP_ENABLE>
@@ -619,7 +621,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             }
             else
             {
-                *id = (rxf0eFifo->CAN_RXF0E_0 >> 18) & CAN_STD_ID_Msk;
+                *id = (rxf0eFifo->CAN_RXF0E_0 >> 18U) & CAN_STD_ID_Msk;
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
@@ -638,7 +640,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             msgLength = CANDlcToLengthGet((uint8_t)((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_DLC_Msk) >> CAN_RXF0E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(data, (uint8_t *)&rxf0eFifo->CAN_RXF0E_DATA, msgLength);
+            (void) memcpy(data, (uint8_t *)&rxf0eFifo->CAN_RXF0E_DATA, msgLength);
             *length = msgLength;
 
 <#if TIMESTAMP_ENABLE>
@@ -701,7 +703,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             msgLength = CANDlcToLengthGet((uint8_t)((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_DLC_Msk) >> CAN_RXF1E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(data, (uint8_t *)&rxf1eFifo->CAN_RXF1E_DATA, msgLength);
+            (void) memcpy(data, (uint8_t *)&rxf1eFifo->CAN_RXF1E_DATA, msgLength);
             *length = msgLength;
 
 <#if TIMESTAMP_ENABLE>
@@ -941,7 +943,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 {
     uint32_t offset = 0U;
 
-    memset(msgRAMConfigBaseAddress, 0x00, ${CAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
+    (void) memset(msgRAMConfigBaseAddress, 0x00, ${CAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
 
     /* Set CAN CCCR Init for Message RAM Configuration */
     ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = CAN_CCCR_INIT_Msk;
@@ -991,7 +993,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 </#if>
 <#if FILTERS_STD?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (can_sidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
+    (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
            (const void *)${CAN_INSTANCE_NAME?lower_case}StdFilter,
            ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE);
     offset += ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE;
@@ -1002,7 +1004,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 </#if>
 <#if FILTERS_EXT?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (can_xidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
+    (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
            (const void *)${CAN_INSTANCE_NAME?lower_case}ExtFilter,
            ${CAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE);
     /* Extended ID Filter Configuration Register */
@@ -1044,13 +1046,14 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 */
 bool ${CAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL))
+    bool retval = false;
+    if (!((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL)))
     {
-        return false;
+        ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].CAN_SIDFE_0 = stdMsgIDFilterElement->CAN_SIDFE_0;
+        retval = true;
     }
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].CAN_SIDFE_0 = stdMsgIDFilterElement->CAN_SIDFE_0;
 
-    return true;
+    return retval;
 }
 
 // *****************************************************************************
@@ -1075,13 +1078,13 @@ bool ${CAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, can_sid
 */
 bool ${CAN_INSTANCE_NAME}_StandardFilterElementGet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL))
+    bool retval = false;
+    if (!((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL)))
     {
-        return false;
+        stdMsgIDFilterElement->CAN_SIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].CAN_SIDFE_0;
+        retval = true;
     }
-    stdMsgIDFilterElement->CAN_SIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].CAN_SIDFE_0;
-
-    return true;
+    return retval;
 }
 </#if>
 
@@ -1108,14 +1111,14 @@ bool ${CAN_INSTANCE_NAME}_StandardFilterElementGet(uint8_t filterNumber, can_sid
 */
 bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, can_xidfe_registers_t *extMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL))
+    bool retval = false;
+    if (!((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL)))
     {
-        return false;
+        ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_0 = extMsgIDFilterElement->CAN_XIDFE_0;
+        ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_1 = extMsgIDFilterElement->CAN_XIDFE_1;
+        retval = true;
     }
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_0 = extMsgIDFilterElement->CAN_XIDFE_0;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_1 = extMsgIDFilterElement->CAN_XIDFE_1;
-
-    return true;
+    return retval;
 }
 
 // *****************************************************************************
@@ -1140,14 +1143,14 @@ bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, can_xid
 */
 bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, can_xidfe_registers_t *extMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL))
+    bool retval = false;
+    if (!((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL)))
     {
-        return false;
+         extMsgIDFilterElement->CAN_XIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_0;
+         extMsgIDFilterElement->CAN_XIDFE_1 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_1;
+         retval = true;
     }
-    extMsgIDFilterElement->CAN_XIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_0;
-    extMsgIDFilterElement->CAN_XIDFE_1 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_1;
-
-    return true;
+    return retval;
 }
 </#if>
 
@@ -1198,13 +1201,11 @@ void ${CAN_INSTANCE_NAME}_SleepModeExit(void)
 */
 void ${CAN_INSTANCE_NAME}_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
 {
-    if (callback == NULL)
+    if (callback != NULL)
     {
-        return;
+        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_CALLBACK_TX_INDEX].callback = callback;
+        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_CALLBACK_TX_INDEX].context = contextHandle;
     }
-
-    ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_CALLBACK_TX_INDEX].callback = callback;
-    ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_CALLBACK_TX_INDEX].context = contextHandle;
 }
 
 // *****************************************************************************
@@ -1232,13 +1233,11 @@ void ${CAN_INSTANCE_NAME}_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t co
 */
 void ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MSG_RX_ATTRIBUTE msgAttr)
 {
-    if (callback == NULL)
+    if (callback != NULL)
     {
-        return;
+        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[msgAttr].callback = callback;
+        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[msgAttr].context = contextHandle;
     }
-
-    ${CAN_INSTANCE_NAME?lower_case}CallbackObj[msgAttr].callback = callback;
-    ${CAN_INSTANCE_NAME?lower_case}CallbackObj[msgAttr].context = contextHandle;
 }
 
 // *****************************************************************************
@@ -1308,7 +1307,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             }
             else
             {
-                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = (rxf0eFifo->CAN_RXF0E_0 >> 18) & CAN_STD_ID_Msk;
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = (rxf0eFifo->CAN_RXF0E_0 >> 18U) & CAN_STD_ID_Msk;
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
@@ -1327,7 +1326,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             length = CANDlcToLengthGet((uint8_t)((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_DLC_Msk) >> CAN_RXF0E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxBuffer, (uint8_t *)&rxf0eFifo->CAN_RXF0E_DATA, length);
+            (void) memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxBuffer, (uint8_t *)&rxf0eFifo->CAN_RXF0E_DATA, length);
             *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxsize = length;
 
             <#if TIMESTAMP_ENABLE>
@@ -1368,7 +1367,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             }
             else
             {
-                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = (rxf1eFifo->CAN_RXF1E_0 >> 18) & CAN_STD_ID_Msk;
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = (rxf1eFifo->CAN_RXF1E_0 >> 18U) & CAN_STD_ID_Msk;
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
@@ -1387,7 +1386,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             length = CANDlcToLengthGet((uint8_t)((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_DLC_Msk) >> CAN_RXF1E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxBuffer, (uint8_t *)&rxf1eFifo->CAN_RXF1E_DATA, length);
+            (void) memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxBuffer, (uint8_t *)&rxf1eFifo->CAN_RXF1E_DATA, length);
             *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxsize = length;
 
             <#if TIMESTAMP_ENABLE>
@@ -1491,7 +1490,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         length = CANDlcToLengthGet((uint8_t)((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_DLC_Msk) >> CAN_RXBE_1_DLC_Pos));
 
         /* Copy data to user buffer */
-        memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxBuffer, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, length);
+        (void) memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxBuffer, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, length);
         *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxsize = length;
 
         <#if TIMESTAMP_ENABLE>
@@ -1552,7 +1551,8 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_TFE_Msk;
         uint8_t getIndex = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFGI_Msk) >> CAN_TXFQS_TFGI_Pos);
         uint8_t putIndex = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFQPI_Msk) >> CAN_TXFQS_TFQPI_Pos);
-        for (uint8_t fifoIndex = getIndex; ; fifoIndex++)
+        uint8_t fifoIndex = getIndex;
+        while(true)
         {
             <#if TXBUF_USE>
             if (fifoIndex >= (${TX_BUFFER_ELEMENTS}U + ${TX_FIFO_ELEMENTS}U))
@@ -1565,11 +1565,12 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 break;
             }
             <#if TXBUF_USE>
-            if (0U != (${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1UL << ((fifoIndex + ${TX_BUFFER_ELEMENTS}) & 0x1FU))))
+            if (0U != (${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1UL << ((fifoIndex + ${TX_BUFFER_ELEMENTS}U) & 0x1FU))))
             {
-                ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1UL << ((fifoIndex + ${TX_BUFFER_ELEMENTS}) & 0x1FU)));
+                ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1UL << ((fifoIndex + ${TX_BUFFER_ELEMENTS}U) & 0x1FU)));
             }
             </#if>
+            fifoIndex++;
         }
     }
 </#if>

@@ -188,7 +188,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
         /* Wait for initialization complete */
     }
 
-    memset(&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(CAN_MSG_RAM_CONFIG));
+   (void) memset(&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(CAN_MSG_RAM_CONFIG));
 }
 
 <#if TXBUF_USE>
@@ -214,20 +214,20 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint8_t bufferNumber, CAN_TX_BUFFER *txBuffer)
 {
     uint8_t *txBuf = NULL;
+    bool message_transmit_event = false;
 
-    if ((bufferNumber >= ${TX_BUFFER_ELEMENTS}U) || (txBuffer == NULL))
+    if (!((bufferNumber >= ${TX_BUFFER_ELEMENTS}U) || (txBuffer == NULL)))
     {
-        return false;
+        txBuf = (uint8_t *)((uint8_t*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)bufferNumber * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
+
+       (void) memcpy(txBuf, (uint8_t *)txBuffer, ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
+
+        /* Set Transmission request */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = 1UL << bufferNumber;
+
+        message_transmit_event = true;
     }
-
-    txBuf = (uint8_t *)((uint8_t*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)bufferNumber * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
-
-    memcpy(txBuf, (uint8_t *)txBuffer, ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
-
-    /* Set Transmission request */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = 1UL << bufferNumber;
-
-    return true;
+    return message_transmit_event;
 }
 </#if>
 
@@ -258,40 +258,41 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmitFifo(uint8_t numberOfMessage, CAN_TX_BU
     uint32_t bufferNumber = 0U;
     uint8_t  tfqpi = 0U;
     uint8_t  count = 0U;
+    bool transmitFifo_event = false;
 
-    if (((numberOfMessage < 1U) || (numberOfMessage > ${TX_FIFO_ELEMENTS}U)) || (txBuffer == NULL))
+    if (!(((numberOfMessage < 1U) || (numberOfMessage > ${TX_FIFO_ELEMENTS}U)) || (txBuffer == NULL)))
     {
-        return false;
-    }
 
-    tfqpi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFQPI_Msk) >> CAN_TXFQS_TFQPI_Pos);
+        tfqpi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFQPI_Msk) >> CAN_TXFQS_TFQPI_Pos);
 
-    for (count = 0; count < numberOfMessage; count++)
-    {
-        txFifo = (uint8_t *)((uint8_t*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)tfqpi * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
-
-        memcpy(txFifo, txBuf, ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
-
-        txBuf += ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE;
-        bufferNumber |= (1UL << tfqpi);
-        tfqpi++;
-        <#if TXBUF_USE>
-        if (tfqpi == (${TX_BUFFER_ELEMENTS}U + ${TX_FIFO_ELEMENTS}U))
+        for (count = 0U; count < numberOfMessage; count++)
         {
-            tfqpi = ${TX_BUFFER_ELEMENTS}U;
+            txFifo = (uint8_t *)((uint8_t*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)tfqpi * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
+
+            (void) memcpy(txFifo, txBuf, ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
+
+            txBuf += ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE;
+            bufferNumber |= (1UL << tfqpi);
+            tfqpi++;
+            <#if TXBUF_USE>
+            if (tfqpi == (${TX_BUFFER_ELEMENTS}U + ${TX_FIFO_ELEMENTS}U))
+            {
+                tfqpi = ${TX_BUFFER_ELEMENTS}U;
+            }
+            <#else>
+            if (tfqpi == ${TX_FIFO_ELEMENTS}U)
+            {
+                tfqpi = 0U;
+            }
+            </#if>
         }
-        <#else>
-        if (tfqpi == ${TX_FIFO_ELEMENTS}U)
-        {
-            tfqpi = 0U;
-        }
-        </#if>
+
+        /* Set Transmission request */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = bufferNumber;
+
+        transmitFifo_event = true;
     }
-
-    /* Set Transmission request */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = bufferNumber;
-
-    return true;
+    return transmitFifo_event;
 }
 
 // *****************************************************************************
@@ -364,36 +365,36 @@ bool ${CAN_INSTANCE_NAME}_TxEventFifoRead(uint8_t numberOfTxEvent, CAN_TX_EVENT_
     uint8_t count      = 0U;
     uint8_t *txEvent   = NULL;
     uint8_t *txEvtFifo = (uint8_t *)txEventFifo;
+    bool txFifo_event = false;
 
-    if (txEventFifo == NULL)
+    if (txEventFifo != NULL)
     {
-        return false;
-    }
-
-    /* Read data from the Rx FIFO0 */
-    txefgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXEFS & CAN_TXEFS_EFGI_Msk) >> CAN_TXEFS_EFGI_Pos);
-    for (count = 0; count < numberOfTxEvent; count++)
-    {
-        txEvent = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress + ((uint32_t)txefgi * sizeof(CAN_TX_EVENT_FIFO)));
-
-        memcpy(txEvtFifo, txEvent, sizeof(CAN_TX_EVENT_FIFO));
-
-        if ((count + 1) == numberOfTxEvent)
+        /* Read data from the Rx FIFO0 */
+        txefgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXEFS & CAN_TXEFS_EFGI_Msk) >> CAN_TXEFS_EFGI_Pos);
+        for (count = 0U; count < numberOfTxEvent; count++)
         {
-            break;
+            txEvent = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress + ((uint32_t)txefgi * sizeof(CAN_TX_EVENT_FIFO)));
+
+            (void) memcpy(txEvtFifo, txEvent, sizeof(CAN_TX_EVENT_FIFO));
+
+            if ((count + 1U) == numberOfTxEvent)
+            {
+                break;
+            }
+            txEvtFifo += sizeof(CAN_TX_EVENT_FIFO);
+            txefgi++;
+            if (txefgi == ${TX_EVENT_FIFO_ELEMENTS}U)
+            {
+                txefgi = 0U;
+            }
         }
-        txEvtFifo += sizeof(CAN_TX_EVENT_FIFO);
-        txefgi++;
-        if (txefgi == ${TX_EVENT_FIFO_ELEMENTS}U)
-        {
-            txefgi = 0U;
-        }
+
+        /* Ack the Tx Event FIFO position */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_TXEFA = CAN_TXEFA_EFAI((uint32_t)txefgi);
+
+        txFifo_event = true;
     }
-
-    /* Ack the Tx Event FIFO position */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TXEFA = CAN_TXEFA_EFAI((uint32_t)txefgi);
-
-    return true;
+    return txFifo_event;
 }
 
 // *****************************************************************************
@@ -441,27 +442,27 @@ uint8_t ${CAN_INSTANCE_NAME}_TxEventFifoFillLevelGet(void)
 bool ${CAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, CAN_RX_BUFFER *rxBuffer)
 {
     uint8_t *rxBuf = NULL;
+    bool message_receive_event = false;
 
-    if ((bufferNumber >= ${RX_BUFFER_ELEMENTS}U) || (rxBuffer == NULL))
+    if (!((bufferNumber >= ${RX_BUFFER_ELEMENTS}U) || (rxBuffer == NULL)))
     {
-        return false;
+        rxBuf = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + ((uint32_t)bufferNumber * ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE));
+
+        (void) memcpy((uint8_t *)rxBuffer, rxBuf, ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
+
+        /* Clear new data flag */
+        if (bufferNumber < 32U)
+        {
+            ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1UL << bufferNumber);
+        }
+        else
+        {
+            ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1UL << (bufferNumber - 32U));
+        }
+
+        message_receive_event = true;
     }
-
-    rxBuf = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + ((uint32_t)bufferNumber * ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE));
-
-    memcpy((uint8_t *)rxBuffer, rxBuf, ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
-
-    /* Clear new data flag */
-    if (bufferNumber < 32U)
-    {
-        ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1UL << bufferNumber);
-    }
-    else
-    {
-        ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1UL << (bufferNumber - 32U));
-    }
-
-    return true;
+    return message_receive_event;
 }
 
 // *****************************************************************************
@@ -485,7 +486,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, CAN_RX_BUFFER *rx
 bool ${CAN_INSTANCE_NAME}_RxBufferNumberGet(uint8_t* bufferNumber)
 {
     bool     status = false;
-    uint8_t  bufferNum = 0;
+    uint8_t  bufferNum = 0U;
     uint32_t newData1 = ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1;
     <#if RX_BUFFER_ELEMENTS gt 32>
     uint32_t newData2 = ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2;
@@ -555,71 +556,69 @@ bool ${CAN_INSTANCE_NAME}_MessageReceiveFifo(CAN_RX_FIFO_NUM rxFifoNum, uint8_t 
     uint8_t *rxBuf = (uint8_t *)rxBuffer;
     bool status = false;
 
-    if (rxBuffer == NULL)
+    if (rxBuffer != NULL)
     {
-        return status;
-    }
-
-    switch (rxFifoNum)
-    {
-<#if RXF0_USE>
-        case CAN_RX_FIFO_0:
-            /* Read data from the Rx FIFO0 */
-            rxgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0GI_Msk) >> CAN_RXF0S_F0GI_Pos);
-            for (count = 0; count < numberOfMessage; count++)
-            {
-                rxFifo = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address + ((uint32_t)rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE));
-
-                memcpy(rxBuf, rxFifo, ${CAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE);
-
-                if ((count + 1) == numberOfMessage)
+        switch (rxFifoNum)
+        {
+        <#if RXF0_USE>
+            case CAN_RX_FIFO_0:
+                /* Read data from the Rx FIFO0 */
+                rxgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0GI_Msk) >> CAN_RXF0S_F0GI_Pos);
+                for (count = 0U; count < numberOfMessage; count++)
                 {
-                    break;
+                    rxFifo = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address + ((uint32_t)rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE));
+
+                    (void) memcpy(rxBuf, rxFifo, ${CAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE);
+
+                    if ((count + 1U) == numberOfMessage)
+                    {
+                        break;
+                    }
+                    rxBuf += ${CAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE;
+                    rxgi++;
+                    if (rxgi == ${RXF0_ELEMENTS}U)
+                    {
+                        rxgi = 0U;
+                    }
                 }
-                rxBuf += ${CAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE;
-                rxgi++;
-                if (rxgi == ${RXF0_ELEMENTS}U)
+
+                /* Ack the fifo position */
+                ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0A = CAN_RXF0A_F0AI((uint32_t)rxgi);
+
+                status = true;
+                break;
+        </#if>
+        <#if RXF1_USE>
+            case CAN_RX_FIFO_1:
+                /* Read data from the Rx FIFO1 */
+                rxgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1GI_Msk) >> CAN_RXF1S_F1GI_Pos);
+                for (count = 0U; count < numberOfMessage; count++)
                 {
-                    rxgi = 0U;
+                    rxFifo = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address + ((uint32_t)rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE));
+
+                    (void) memcpy(rxBuf, rxFifo, ${CAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE);
+
+                    if ((count + 1U) == numberOfMessage)
+                    {
+                        break;
+                    }
+                    rxBuf += ${CAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE;
+                    rxgi++;
+                    if (rxgi == ${RXF1_ELEMENTS}U)
+                    {
+                        rxgi = 0U;
+                    }
                 }
-            }
+                /* Ack the fifo position */
+                ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1A = CAN_RXF1A_F1AI((uint32_t)rxgi);
 
-            /* Ack the fifo position */
-            ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0A = CAN_RXF0A_F0AI((uint32_t)rxgi);
-
-            status = true;
-            break;
-</#if>
-<#if RXF1_USE>
-        case CAN_RX_FIFO_1:
-            /* Read data from the Rx FIFO1 */
-            rxgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1GI_Msk) >> CAN_RXF1S_F1GI_Pos);
-            for (count = 0; count < numberOfMessage; count++)
-            {
-                rxFifo = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address + ((uint32_t)rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE));
-
-                memcpy(rxBuf, rxFifo, ${CAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE);
-
-                if ((count + 1) == numberOfMessage)
-                {
-                    break;
-                }
-                rxBuf += ${CAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE;
-                rxgi++;
-                if (rxgi == ${RXF1_ELEMENTS}U)
-                {
-                    rxgi = 0U;
-                }
-            }
-            /* Ack the fifo position */
-            ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1A = CAN_RXF1A_F1AI((uint32_t)rxgi);
-
-            status = true;
-            break;
-</#if>
-        default:
-            /* Do nothing */
-            break;
+                status = true;
+                break;
+        </#if>
+            default:
+                /* Do nothing */
+                break;
+        }
     }
     return status;
 }
@@ -642,14 +641,17 @@ bool ${CAN_INSTANCE_NAME}_MessageReceiveFifo(CAN_RX_FIFO_NUM rxFifoNum, uint8_t 
 */
 uint8_t ${CAN_INSTANCE_NAME}_RxFifoFillLevelGet(CAN_RX_FIFO_NUM rxFifoNum)
 {
+    uint8_t fillLevel = 0U;
+
     if (rxFifoNum == CAN_RX_FIFO_0)
     {
-        return (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0FL_Msk);
+        fillLevel = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0FL_Msk);
     }
     else
     {
-        return (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1FL_Msk);
+        fillLevel = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1FL_Msk);
     }
+    return fillLevel;
 }
 </#if>
 
@@ -779,7 +781,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 {
     uint32_t offset = 0U;
 
-    memset(msgRAMConfigBaseAddress, 0x00, ${CAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
+    (void) memset(msgRAMConfigBaseAddress, 0x00, ${CAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
 
     /* Set CAN CCCR Init for Message RAM Configuration */
     ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = CAN_CCCR_INIT_Msk;
@@ -834,7 +836,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 </#if>
 <#if FILTERS_STD?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (can_sidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
+    (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
            (const void *)${CAN_INSTANCE_NAME?lower_case}StdFilter,
            ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE);
     offset += ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE;
@@ -845,7 +847,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 </#if>
 <#if FILTERS_EXT?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (can_xidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
+    (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
            (const void *)${CAN_INSTANCE_NAME?lower_case}ExtFilter,
            ${CAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE);
     /* Extended ID Filter Configuration Register */
@@ -887,13 +889,13 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 */
 bool ${CAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL))
+    bool retval = false;
+    if (!((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL)))
     {
-        return false;
+        ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].CAN_SIDFE_0 = stdMsgIDFilterElement->CAN_SIDFE_0;
+        retval = true;
     }
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].CAN_SIDFE_0 = stdMsgIDFilterElement->CAN_SIDFE_0;
-
-    return true;
+    return retval;
 }
 
 // *****************************************************************************
@@ -918,13 +920,13 @@ bool ${CAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, can_sid
 */
 bool ${CAN_INSTANCE_NAME}_StandardFilterElementGet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL))
+    bool retval = false;
+    if (!((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL)))
     {
-        return false;
+        stdMsgIDFilterElement->CAN_SIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].CAN_SIDFE_0;
+        retval = true;
     }
-    stdMsgIDFilterElement->CAN_SIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].CAN_SIDFE_0;
-
-    return true;
+    return retval;
 }
 </#if>
 
@@ -951,14 +953,15 @@ bool ${CAN_INSTANCE_NAME}_StandardFilterElementGet(uint8_t filterNumber, can_sid
 */
 bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, can_xidfe_registers_t *extMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL))
+    bool retval = false;
+    if (!((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL)))
     {
-        return false;
+        ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_0 = extMsgIDFilterElement->CAN_XIDFE_0;
+        ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_1 = extMsgIDFilterElement->CAN_XIDFE_1;
+        retval = true;
     }
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_0 = extMsgIDFilterElement->CAN_XIDFE_0;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_1 = extMsgIDFilterElement->CAN_XIDFE_1;
 
-    return true;
+    return retval;;
 }
 
 // *****************************************************************************
@@ -983,14 +986,14 @@ bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, can_xid
 */
 bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, can_xidfe_registers_t *extMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL))
+    bool retval = false;
+    if (!((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL)))
     {
-        return false;
+        extMsgIDFilterElement->CAN_XIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_0;
+        extMsgIDFilterElement->CAN_XIDFE_1 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_1;
+        retval = true;
     }
-    extMsgIDFilterElement->CAN_XIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_0;
-    extMsgIDFilterElement->CAN_XIDFE_1 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_1;
-
-    return true;
+    return retval;
 }
 </#if>
 
