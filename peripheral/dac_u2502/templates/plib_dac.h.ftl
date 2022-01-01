@@ -60,14 +60,10 @@
 extern "C" {
 #endif
 
-typedef enum
-{
-    /* Channel 0 */
-    DAC_CHANNEL_0,
+#define DAC_CHANNEL_0   (0U)
+#define DAC_CHANNEL_1   (1U)
 
-    /* Channel 1 */
-    DAC_CHANNEL_1
-} DAC_CHANNEL_NUM;
+typedef uint8_t DAC_CHANNEL_NUM;
 
 void ${DAC_INSTANCE_NAME}_Initialize (void);
 void ${DAC_INSTANCE_NAME}_DataWrite (DAC_CHANNEL_NUM channel, uint16_t data);
