@@ -185,12 +185,12 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
 
 void ${EIC_INSTANCE_NAME}_InterruptEnable (EIC_PIN pin)
 {
-    ${EIC_INSTANCE_NAME}_REGS->EIC_INTENSET = (1UL << pin);
+    ${EIC_INSTANCE_NAME}_REGS->EIC_INTENSET = (1UL << (uint32_t)pin);
 }
 
 void ${EIC_INSTANCE_NAME}_InterruptDisable (EIC_PIN pin)
 {
-    ${EIC_INSTANCE_NAME}_REGS->EIC_INTENCLR = (1UL << pin);
+    ${EIC_INSTANCE_NAME}_REGS->EIC_INTENCLR = (1UL << (uint32_t)pin);
 }
 
 void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context)
