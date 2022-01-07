@@ -169,16 +169,14 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
 {
     bool status = false;
     uint32_t baud;
-    int32_t brgValHigh = 0;
-    int32_t brgValLow = 0;
-    uint32_t brgVal = 0;
-    uint32_t uartMode;
+    uint8_t brgh = ${UART_BRGH};
+    int32_t uxbrg = 0;
 
     if (setup != NULL)
     {
         baud = setup->baudRate;
 
-        if (baud == 0)
+        if ((baud == 0) || ((setup->dataWidth == UART_DATA_9_BIT) && (setup->parity != UART_PARITY_NONE)))
         {
             return status;
         }
@@ -188,55 +186,41 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
             srcClkFreq = ${UART_INSTANCE_NAME}_FrequencyGet();
         }
 
-        /* Calculate BRG value */
-        brgValLow = (((srcClkFreq >> 4) + (baud >> 1)) / baud ) - 1;
-        brgValHigh = (((srcClkFreq >> 2) + (baud >> 1)) / baud ) - 1;
-
-        /* Check if the baud value can be set with low baud settings */
-        if((brgValLow >= 0) && (brgValLow <= UINT16_MAX))
+         /* Calculate BRG value */
+        if (brgh == 0)
         {
-            brgVal =  brgValLow;
-            U${UART_INSTANCE_NUM}MODECLR = _U${UART_INSTANCE_NUM}MODE_BRGH_MASK;
-        }
-        else if ((brgValHigh >= 0) && (brgValHigh <= UINT16_MAX))
-        {
-            brgVal = brgValHigh;
-            U${UART_INSTANCE_NUM}MODESET = _U${UART_INSTANCE_NUM}MODE_BRGH_MASK;
+            uxbrg = (((srcClkFreq >> 4) + (baud >> 1)) / baud ) - 1;
         }
         else
+        {
+            uxbrg = (((srcClkFreq >> 2) + (baud >> 1)) / baud ) - 1;
+        }
+
+        /* Check if the baud value can be set with low baud settings */
+        if((uxbrg < 0) || (uxbrg > UINT16_MAX))
         {
             return status;
         }
 
+        /* Turn OFF ${UART_INSTANCE_NAME} */
+        U${UART_INSTANCE_NUM}MODECLR = _U${UART_INSTANCE_NUM}MODE_ON_MASK;
+
         if(setup->dataWidth == UART_DATA_9_BIT)
         {
-            if(setup->parity != UART_PARITY_NONE)
-            {
-               return status;
-            }
-            else
-            {
-               /* Configure ${UART_INSTANCE_NAME} mode */
-               uartMode = U${UART_INSTANCE_NUM}MODE;
-               uartMode &= ~_U${UART_INSTANCE_NUM}MODE_PDSEL_MASK;
-               U${UART_INSTANCE_NUM}MODE = uartMode | setup->dataWidth;
-            }
+            /* Configure ${UART_INSTANCE_NAME} mode */
+            U${UART_INSTANCE_NUM}MODE = (U${UART_INSTANCE_NUM}MODE & (~_U${UART_INSTANCE_NUM}MODE_PDSEL_MASK)) | setup->dataWidth;
         }
         else
         {
             /* Configure ${UART_INSTANCE_NAME} mode */
-            uartMode = U${UART_INSTANCE_NUM}MODE;
-            uartMode &= ~_U${UART_INSTANCE_NUM}MODE_PDSEL_MASK;
-            U${UART_INSTANCE_NUM}MODE = uartMode | setup->parity ;
+            U${UART_INSTANCE_NUM}MODE = (U${UART_INSTANCE_NUM}MODE & (~_U${UART_INSTANCE_NUM}MODE_PDSEL_MASK)) | setup->parity;
         }
 
         /* Configure ${UART_INSTANCE_NAME} mode */
-        uartMode = U${UART_INSTANCE_NUM}MODE;
-        uartMode &= ~_U${UART_INSTANCE_NUM}MODE_STSEL_MASK;
-        U${UART_INSTANCE_NUM}MODE = uartMode | setup->stopBits ;
+        U${UART_INSTANCE_NUM}MODE = (U${UART_INSTANCE_NUM}MODE & (~_U${UART_INSTANCE_NUM}MODE_STSEL_MASK)) | setup->stopBits;
 
         /* Configure ${UART_INSTANCE_NAME} Baud Rate */
-        U${UART_INSTANCE_NUM}BRG = brgVal;
+        U${UART_INSTANCE_NUM}BRG = uxbrg;
 
 <#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == false>
         if (${UART_INSTANCE_NAME}_IS_9BIT_MODE_ENABLED())
@@ -250,6 +234,8 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
             ${UART_INSTANCE_NAME?lower_case}Obj.wrBufferSize = ${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE;
         }
 </#if>
+
+        U${UART_INSTANCE_NUM}MODESET = _U${UART_INSTANCE_NUM}MODE_ON_MASK;
 
         status = true;
     }

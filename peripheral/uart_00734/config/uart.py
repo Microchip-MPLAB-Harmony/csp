@@ -212,11 +212,14 @@ def getVectorIndex(string):
 def baudRateCalc(clk, baud):
 
     global uartSym_U1MODE_BRGH
+    global uartSym_BaudPerError_Comment
     brgh0 = False
     brgh1 = False
 
     if clk == 0:
-        return -1
+        uartSym_BaudError_Comment.setVisible(True)
+        uartSym_U1MODE_BRGH.setValue(1, 2)
+        return 0
 
     UxBRG_BRGH0 = (((clk >> 4) + (baud >> 1)) / baud) - 1
     UxBRG_BRGH1 = (((clk >> 2) + (baud >> 1)) / baud) - 1
@@ -226,52 +229,74 @@ def baudRateCalc(clk, baud):
     if ((UxBRG_BRGH1 >= 0) and (UxBRG_BRGH1 <= 65535)):
         brgh1 = True
 
+    # Baud rate is not possible with either BRGH=0 or BRGH=1
+    if brgh0 == False and brgh1 == False:
+        uartSym_BaudError_Comment.setVisible(True)
+        uartSym_U1MODE_BRGH.setValue(1, 2)
+        return UxBRG_BRGH0
+
     # Baud rate is possible with both BRGH = 0 and BRGH = 1. Decide which one to use based on error.
     if brgh0 == True and brgh1 == True:
         actualBaud_BRGH0 = (clk/(16*(UxBRG_BRGH0 + 1)))
         actualBaud_BRGH1 = (clk/(4*(UxBRG_BRGH1 + 1)))
 
-        error_BRGH0 = abs((baud - actualBaud_BRGH0))
-        error_BRGH1 = abs((baud - actualBaud_BRGH1))
+        error_BRGH0 = ((actualBaud_BRGH0 - baud)/float(baud))*100.0
+        error_BRGH1 = ((actualBaud_BRGH1 - baud)/float(baud))*100.0
 
         # If error with BRGH0 is less or same as with BRGH1, use BRGH0
-        if (error_BRGH0 <= error_BRGH1):
+        if (abs(error_BRGH0) <= abs(error_BRGH1)):
             uartSym_U1MODE_BRGH.setValue(1, 2)
+            uartSym_BaudPerError_Comment.setLabel("*** Baud Error = " + "{:.4f}".format(error_BRGH0) + " % ***")
             return UxBRG_BRGH0
-        # If error with BRGH1 is less, use BRGH0
+        # If error with BRGH1 is less, use BRGH1
         else:
             uartSym_U1MODE_BRGH.setValue(0, 2)
+            uartSym_BaudPerError_Comment.setLabel("*** Baud Error = " + "{:.4f}".format(error_BRGH1)  + " % ***")
             return UxBRG_BRGH1
     else:
         if brgh0 == True:
             uartSym_U1MODE_BRGH.setValue(1, 2)
+            uartSym_BaudPerError_Comment.setLabel("*** Baud Error = " + "{:.4f}".format(error_BRGH0)  + " % ***")
             return UxBRG_BRGH0
         elif brgh1 == True:
             uartSym_U1MODE_BRGH.setValue(0, 2)
-            return UxBRG_BRGH1
-        elif UxBRG_BRGH0 > 65535:
-            return UxBRG_BRGH0
-        elif UxBRG_BRGH1 < 0:
+            uartSym_BaudPerError_Comment.setLabel("*** Baud Error = " + "{:.4f}".format(error_BRGH1)  + " % ***")
             return UxBRG_BRGH1
 
 def baudRateTrigger(symbol, event):
 
+    localComponent = symbol.getComponent()
     clk = int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY"))
-    baud = int(Database.getSymbolValue(uartInstanceName.getValue().lower(), "BAUD_RATE"))
+    baud = int(localComponent.getSymbolByID("BAUD_RATE").getValue())
+    brgh = int(localComponent.getSymbolByID("UART_BRGH").getSelectedValue())
 
-    brgVal = baudRateCalc(clk, baud)
+    UxBRG_BRGH = 0
+    actualBaud = 0
 
-    uartSym_BaudError_Comment.setVisible(False)
+    if brgh == 0:
+        UxBRG_BRGH = (((clk >> 4) + (baud >> 1)) / baud) - 1
+        if UxBRG_BRGH > 0:
+            actualBaud = (clk/(16*(UxBRG_BRGH + 1)))
+    else:
+        UxBRG_BRGH = (((clk >> 2) + (baud >> 1)) / baud) - 1
+        if UxBRG_BRGH > 0:
+            actualBaud = (clk/(4*(UxBRG_BRGH + 1)))
 
-    if brgVal < 0:
-        brgVal = 0
+    per_error = ((actualBaud - baud)/float(baud))*100.0
+
+    per_error_comment_sym = localComponent.getSymbolByID("UART_BAUD_PER_ERROR_COMMENT")
+    per_error_comment_sym.setLabel("*** Baud Error = " + "{:.4f}".format(per_error) + " % ***")
+
+    if ((UxBRG_BRGH >= 0) and (UxBRG_BRGH <= 65535)):
+        uartSym_BaudError_Comment.setVisible(False)
+    else:
+        if UxBRG_BRGH < 0:
+            UxBRG_BRGH = 0
+        else:
+            UxBRG_BRGH = 65535
         uartSym_BaudError_Comment.setVisible(True)
-        return
-    elif brgVal > 65535:
-        brgVal = 65535
-        uartSym_BaudError_Comment.setVisible(True)
 
-    symbol.setValue(brgVal, 2)
+    symbol.setValue(UxBRG_BRGH, 2)
 
 def clockSourceFreq(symbol, event):
 
@@ -415,6 +440,7 @@ def instantiateComponent(uartComponent):
     global InterruptVectorUpdate
     global uartSymInterruptModeEnable
     global uartSym_BaudError_Comment
+    global uartSym_BaudPerError_Comment
     global uartSym_RingBufferMode_Enable
     global uartSym_OperatingMode
 
@@ -639,7 +665,7 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_BRGH.setDisplayMode( "Description" )
     for ii in BRGH_names:
         uartSym_U1MODE_BRGH.addKey( ii['key'],ii['value'], ii['desc'] )
-    uartSym_U1MODE_BRGH.setVisible(False)
+    uartSym_U1MODE_BRGH.setVisible(True)
 
     ##UEN Selection Bit
     if uartBitField_U1MODE_UEN != None:
@@ -688,22 +714,21 @@ def instantiateComponent(uartComponent):
     uartBaud.setLabel("Baud Rate")
     uartBaud.setDefaultValue(115200)
 
-    brgVal = baudRateCalc(uartClkValue.getValue(), uartBaud.getValue())
+
 
     ## Baud Rate Frequency dependency
     uartBRGValue = uartComponent.createIntegerSymbol("BRG_VALUE", None)
     uartBRGValue.setVisible(False)
-    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "UART_BRGH", "core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
-    uartSymBRGHModeComment = uartComponent.createCommentSymbol("UART_BRGH_MODE_COMMENT", None)
-    uartSymBRGHModeComment.setLabel("*** Standard Speed mode 16x baud clock enabled (BRGH = 0) ***")
-    uartSymBRGHModeComment.setDependencies(uartBRGHModeInfo, ["UART_BRGH"])
+    uartSym_BaudPerError_Comment = uartComponent.createCommentSymbol("UART_BAUD_PER_ERROR_COMMENT", None)
 
     #UART Baud Rate not supported comment
     uartSym_BaudError_Comment = uartComponent.createCommentSymbol("UART_BAUD_ERROR_COMMENT", None)
     uartSym_BaudError_Comment.setLabel("********** UART Clock source value is low for the desired baud rate **********")
     uartSym_BaudError_Comment.setVisible(False)
 
+    brgVal = baudRateCalc(uartClkValue.getValue(), uartBaud.getValue())
     #Use setValue instead of setDefaultValue to store symbol value in default.xml
     uartBRGValue.setValue(brgVal, 1)
 
