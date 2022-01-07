@@ -58,12 +58,8 @@
 </#if>
 
 #include "plib_${EIC_INSTANCE_NAME?lower_case}.h"
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-#include "interrupts.h"
-<#else>
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
-</#if>
 </#if>
 
 // *****************************************************************************

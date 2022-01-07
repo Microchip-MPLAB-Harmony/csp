@@ -39,13 +39,10 @@
 *******************************************************************************/
 
 #include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-#include "interrupts.h"
-<#else>
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
-</#if>
+
 <#assign EVSYS_REG_NAME = EVSYS_INSTANCE_NAME>
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
     <#assign EVSYS_REG_NAME = EVSYS_INSTANCE_NAME + "_SEC">

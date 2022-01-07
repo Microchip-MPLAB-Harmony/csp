@@ -39,7 +39,9 @@
 *******************************************************************************/
 
 #include "device.h"
+<#if CoreSysIntFile == true>
 #include "interrupts.h"
+</#if>
 #include "plib_systick.h"
 
 <#if USE_SYSTICK_SECURE_INTERRUPT == true>
