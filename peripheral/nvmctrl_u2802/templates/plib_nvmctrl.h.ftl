@@ -67,9 +67,21 @@
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_ROWSIZE              (${FLASH_ERASE_SIZE}U)
 
 <#if FLASH_DATAFLASH_START_ADDRESS??>
-#define ${NVMCTRL_INSTANCE_NAME}_DATAFLASH_START_ADDRESS    (${.vars["FLASH_DATAFLASH_START_ADDRESS"]}U)
-#define ${NVMCTRL_INSTANCE_NAME}_DATAFLASH_PAGESIZE         (${FLASH_DATAFLASH_PROGRAM_SIZE}U)
-#define ${NVMCTRL_INSTANCE_NAME}_DATAFLASH_ROWSIZE          (${FLASH_DATAFLASH_ERASE_SIZE}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_DATAFLASH_START_ADDRESS    (${.vars["FLASH_DATAFLASH_START_ADDRESS"]}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_DATAFLASH_PAGESIZE         (${FLASH_DATAFLASH_PROGRAM_SIZE}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_DATAFLASH_ROWSIZE          (${FLASH_DATAFLASH_ERASE_SIZE}U)
+</#if>
+
+<#if FLASH_USERROW_START_ADDRESS??>
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS     (${.vars["FLASH_USERROW_START_ADDRESS"]}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE              (${FLASH_USERROW_SIZE}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE          (${FLASH_USERROW_PROGRAM_SIZE}U)
+</#if>
+
+<#if FLASH_BOCORROW_START_ADDRESS??>
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_BOCORROW_START_ADDRESS     (${.vars["FLASH_BOCORROW_START_ADDRESS"]}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_BOCORROW_SIZE              (${FLASH_BOCORROW_SIZE}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_BOCORROW_PAGESIZE          (${FLASH_BOCORROW_PROGRAM_SIZE}U)
 </#if>
 
 <#if DRV_MEMORY_CONNECTED == true>
@@ -124,9 +136,9 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void);
 
 bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address );
 
-bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t* data, uint32_t address );
+bool ${WRITE_API_NAME}( uint32_t* data, uint32_t address );
 
-bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address );
+bool ${ERASE_API_NAME}( uint32_t address );
 
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void );
 
@@ -155,9 +167,21 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (NVMCTRL_MEMORY_REGION region);
 </#if>
 
 <#if NVMCTRL_WRITE_POLICY == "MANUAL">
-bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address);
+    <#lt>bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address);
 
-bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address);
+    <#lt>bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address);
+</#if>
+
+<#if FLASH_USERROW_START_ADDRESS??>
+    <#lt>bool ${USER_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address );
+
+    <#lt>bool ${USER_ROW_ERASE_API_NAME}( uint32_t address );
+</#if>
+
+<#if FLASH_BOCORROW_START_ADDRESS??>
+    <#lt>bool ${BOCOR_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address );
+
+    <#lt>bool ${BOCOR_ROW_ERASE_API_NAME}( uint32_t address );
 </#if>
 
 // DOM-IGNORE-BEGIN

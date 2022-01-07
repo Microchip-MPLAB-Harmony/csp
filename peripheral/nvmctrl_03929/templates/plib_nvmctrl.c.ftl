@@ -184,7 +184,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address)
 }
 </#if>
 
-bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address )
+bool ${WRITE_API_NAME}( uint32_t *data, const uint32_t address )
 {
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
@@ -208,7 +208,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address 
     return true;
 }
 
-bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
+bool ${ERASE_API_NAME}( uint32_t address )
 {
     /* Set address and command */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
@@ -222,52 +222,52 @@ bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
 }
 
 <#if FLASH_USERROW_START_ADDRESS??>
-bool ${NVMCTRL_INSTANCE_NAME}_USER_ROW_PageWrite( uint32_t *data, const uint32_t address )
-{
-    uint32_t i = 0;
-    uint32_t * paddress = (uint32_t *)address;
-	
-	if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= ((${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE) - ${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE)))
-	{
-		/* writing 32-bit data into the given address */
-		for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE/4); i++)
-		{
-			*paddress++ = data[i];
-		}
-		
-		/* Set address and command */
-		${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
-	
-		${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_WAP_Val | NVMCTRL_CTRLA_CMDEX_KEY;
-		
-		<#if INTERRUPT_ENABLE == true>
-			${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
-		</#if>
-		
-		return true;
-	}
+    <#lt>bool ${USER_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address )
+    <#lt>{
+    <#lt>    uint32_t i = 0;
+    <#lt>    uint32_t * paddress = (uint32_t *)address;
 
-    return false;
-}
+    <#lt>    if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= ((${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE) - ${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE)))
+    <#lt>    {
+    <#lt>        /* writing 32-bit data into the given address */
+    <#lt>        for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE/4); i++)
+    <#lt>        {
+    <#lt>            *paddress++ = data[i];
+    <#lt>        }
 
-bool ${NVMCTRL_INSTANCE_NAME}_USER_ROW_RowErase( uint32_t address )
-{    	
-	if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= (${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE)))
-	{
-		/* Set address and command */
-		${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
-		
-		${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_EAR_Val | NVMCTRL_CTRLA_CMDEX_KEY;
-		
-		<#if INTERRUPT_ENABLE == true>
-			${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
-		</#if>
-		
-		return true;
-	}
-	
-    return false;
-}
+    <#lt>        /* Set address and command */
+    <#lt>        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
+
+    <#lt>        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_WAP_Val | NVMCTRL_CTRLA_CMDEX_KEY;
+
+    <#if INTERRUPT_ENABLE == true>
+        <#lt>        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
+    </#if>
+
+    <#lt>        return true;
+    <#lt>    }
+
+    <#lt>    return false;
+    <#lt>}
+
+    <#lt>bool ${USER_ROW_ERASE_API_NAME}( uint32_t address )
+    <#lt>{
+    <#lt>    if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= (${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE)))
+    <#lt>    {
+    <#lt>        /* Set address and command */
+    <#lt>        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
+
+    <#lt>        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_EAR_Val | NVMCTRL_CTRLA_CMDEX_KEY;
+
+    <#if INTERRUPT_ENABLE == true>
+        <#lt>        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
+    </#if>
+
+    <#lt>        return true;
+    <#lt>    }
+
+    <#lt>    return false;
+    <#lt>}
 </#if>
 
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )

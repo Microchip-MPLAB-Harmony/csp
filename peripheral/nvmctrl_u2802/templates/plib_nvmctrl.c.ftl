@@ -118,11 +118,13 @@ bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint3
     return true;
 }
 
-bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address )
+bool ${WRITE_API_NAME}( uint32_t *data, const uint32_t address )
 {
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
+
     ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_ADDR = 0;
+
     if((address & DATAFLASH_ADDR) == DATAFLASH_ADDR)
     {
         ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_ADDR = NVMCTRL_ADDR_ARRAY_DATAFLASH;
@@ -147,7 +149,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address 
     return true;
 }
 
-bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
+bool ${ERASE_API_NAME}( uint32_t address )
 {
     ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_ADDR = 0;
     if((address & DATAFLASH_ADDR) == DATAFLASH_ADDR)
@@ -203,6 +205,58 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address)
 
     return true;
 }
+</#if>
+
+<#if FLASH_USERROW_START_ADDRESS??>
+    <#lt>bool ${USER_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address )
+    <#lt>{
+    <#lt>    bool status = false;
+
+    <#lt>    if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= ((${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE) - ${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE)))
+    <#lt>    {
+    <#lt>        status = ${WRITE_API_NAME}(data, address);
+    <#lt>    }
+
+    <#lt>    return status;
+    <#lt>}
+
+    <#lt>bool ${USER_ROW_ERASE_API_NAME}( uint32_t address )
+    <#lt>{
+    <#lt>    bool status = false;
+
+    <#lt>    if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= (${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE)))
+    <#lt>    {
+    <#lt>        status = ${ERASE_API_NAME}(address);
+    <#lt>    }
+
+    <#lt>    return status;
+    <#lt>}
+</#if>
+
+<#if FLASH_BOCORROW_START_ADDRESS??>
+    <#lt>bool ${BOCOR_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address )
+    <#lt>{
+    <#lt>    bool status = false;
+
+    <#lt>    if ((address >= ${NVMCTRL_INSTANCE_NAME}_BOCORROW_START_ADDRESS) && (address <= ((${NVMCTRL_INSTANCE_NAME}_BOCORROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_BOCORROW_SIZE) - ${NVMCTRL_INSTANCE_NAME}_BOCORROW_PAGESIZE)))
+    <#lt>    {
+    <#lt>        status = ${WRITE_API_NAME}(data, address);
+    <#lt>    }
+
+    <#lt>    return status;
+    <#lt>}
+
+    <#lt>bool ${BOCOR_ROW_ERASE_API_NAME}( uint32_t address )
+    <#lt>{
+    <#lt>    bool status = false;
+
+    <#lt>    if ((address >= ${NVMCTRL_INSTANCE_NAME}_BOCORROW_START_ADDRESS) && (address <= (${NVMCTRL_INSTANCE_NAME}_BOCORROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_BOCORROW_SIZE)))
+    <#lt>    {
+    <#lt>        status = ${ERASE_API_NAME}(address);
+    <#lt>    }
+
+    <#lt>    return status;
+    <#lt>}
 </#if>
 
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )

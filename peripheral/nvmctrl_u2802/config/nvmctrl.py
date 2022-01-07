@@ -132,6 +132,40 @@ def instantiateComponent(nvmctrlComponent):
         nvmctrlSym_DATAFLASH_ERASE_SIZE.setVisible(False)
         nvmctrlSym_DATAFLASH_ERASE_SIZE.setDefaultValue(str(int(nvmctrlSym_DATAFLASH_PROGRAM_SIZE.getValue(), 0) * 4))
 
+    # NVM USER row Address
+    nvmctrlUSERPAGENode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"USER_PAGE\"]")
+    if nvmctrlUSERPAGENode != None:
+        nvmctrlSym_USERROW_START_ADDRESS = nvmctrlComponent.createStringSymbol("FLASH_USERROW_START_ADDRESS", None)
+        nvmctrlSym_USERROW_START_ADDRESS.setVisible(False)
+        nvmctrlSym_USERROW_START_ADDRESS.setDefaultValue(nvmctrlUSERPAGENode.getAttribute("start"))
+
+        # NVM user row size
+        nvmctrlSym_USERROW_SIZE = nvmctrlComponent.createStringSymbol("FLASH_USERROW_SIZE", None)
+        nvmctrlSym_USERROW_SIZE.setVisible(False)
+        nvmctrlSym_USERROW_SIZE.setDefaultValue(nvmctrlUSERPAGENode.getAttribute("size"))
+        
+        # NVM user row Page size
+        nvmctrlSym_USERROW_PROGRAM_SIZE = nvmctrlComponent.createStringSymbol("FLASH_USERROW_PROGRAM_SIZE", None)
+        nvmctrlSym_USERROW_PROGRAM_SIZE.setVisible(False)
+        nvmctrlSym_USERROW_PROGRAM_SIZE.setDefaultValue(nvmctrlUSERPAGENode.getAttribute("pagesize"))
+
+    # NVM BOCOR Row Address
+    nvmctrlBOCORNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"BOCOR\"]")
+    if nvmctrlBOCORNode != None:
+        nvmctrlSym_BOCORROW_START_ADDRESS = nvmctrlComponent.createStringSymbol("FLASH_BOCORROW_START_ADDRESS", None)
+        nvmctrlSym_BOCORROW_START_ADDRESS.setVisible(False)
+        nvmctrlSym_BOCORROW_START_ADDRESS.setDefaultValue(nvmctrlBOCORNode.getAttribute("start"))
+
+        # NVM bocor row size
+        nvmctrlSym_BOCORROW_SIZE = nvmctrlComponent.createStringSymbol("FLASH_BOCORROW_SIZE", None)
+        nvmctrlSym_BOCORROW_SIZE.setVisible(False)
+        nvmctrlSym_BOCORROW_SIZE.setDefaultValue(nvmctrlBOCORNode.getAttribute("size"))
+        
+        # NVM user bocor Page size
+        nvmctrlSym_BOCORROW_PROGRAM_SIZE = nvmctrlComponent.createStringSymbol("FLASH_BOCORROW_PROGRAM_SIZE", None)
+        nvmctrlSym_BOCORROW_PROGRAM_SIZE.setVisible(False)
+        nvmctrlSym_BOCORROW_PROGRAM_SIZE.setDefaultValue(nvmctrlBOCORNode.getAttribute("pagesize"))
+
     nvmctrlParamNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]/instance@[name=\""+nvmctrlInstanceName.getValue()+"\"]/parameters")
     rowSize = "256"
     eeRowSize = "0"
@@ -231,6 +265,12 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_CTRLB_CACHEENABLE.setLabel("Enable Instruction Cache?")
     nvmctrlSym_CTRLB_CACHEENABLE.setDefaultValue(True)
 
+    # Required by Bootloader
+    nvmctrlSym_Region_LockUnlock_Type = nvmctrlComponent.createBooleanSymbol("NVMCTRL_REGION_LOCK_UNLOCK_WITHOUT_ADDR", None)
+    nvmctrlSym_Region_LockUnlock_Type.setVisible(False)
+    nvmctrlSym_Region_LockUnlock_Type.setDefaultValue(True)
+
+
     ##### Do not modify below symbol names as they are used by Memory Driver #####
 
     # Configures the library for interrupt mode operations
@@ -311,6 +351,10 @@ def instantiateComponent(nvmctrlComponent):
 
     writeApiName = nvmctrlComponent.getID().upper() + "_PageWrite"
     eraseApiName = nvmctrlComponent.getID().upper() + "_RowErase"
+    userRowEraseApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_RowErase"
+    userRowWriteApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_PageWrite"
+    bocorRowEraseApiName = nvmctrlComponent.getID().upper() + "_BOCOR_ROW_RowErase"
+    bocorRowWriteApiName = nvmctrlComponent.getID().upper() + "_BOCOR_ROW_PageWrite"
 
     nvmctrlWriteApiName = nvmctrlComponent.createStringSymbol("WRITE_API_NAME", None)
     nvmctrlWriteApiName.setVisible(False)
@@ -321,6 +365,26 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlEraseApiName.setVisible(False)
     nvmctrlEraseApiName.setReadOnly(True)
     nvmctrlEraseApiName.setDefaultValue(eraseApiName)
+
+    nvmctrlUserRowEraseApiName = nvmctrlComponent.createStringSymbol("USER_ROW_ERASE_API_NAME", None)
+    nvmctrlUserRowEraseApiName.setVisible(False)
+    nvmctrlUserRowEraseApiName.setReadOnly(True)
+    nvmctrlUserRowEraseApiName.setDefaultValue(userRowEraseApiName)
+    
+    nvmctrlUserRowWriteApiName = nvmctrlComponent.createStringSymbol("USER_ROW_WRITE_API_NAME", None)
+    nvmctrlUserRowWriteApiName.setVisible(False)
+    nvmctrlUserRowWriteApiName.setReadOnly(True)
+    nvmctrlUserRowWriteApiName.setDefaultValue(userRowWriteApiName)
+
+    nvmctrlBocorRowEraseApiName = nvmctrlComponent.createStringSymbol("BOCOR_ROW_ERASE_API_NAME", None)
+    nvmctrlBocorRowEraseApiName.setVisible(False)
+    nvmctrlBocorRowEraseApiName.setReadOnly(True)
+    nvmctrlBocorRowEraseApiName.setDefaultValue(bocorRowEraseApiName)
+    
+    nvmctrlBocorRowWriteApiName = nvmctrlComponent.createStringSymbol("BOCOR_ROW_WRITE_API_NAME", None)
+    nvmctrlBocorRowWriteApiName.setVisible(False)
+    nvmctrlBocorRowWriteApiName.setReadOnly(True)
+    nvmctrlBocorRowWriteApiName.setDefaultValue(bocorRowWriteApiName)
 
     nvmctrlNonSecureUnlockBNSNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"NVMCTRL\"]/register-group@[name=\"NVMCTRL\"]/register@[name=\"NSULCK\"]/bitfield@[name=\"BNS\"]")
     nvmctrlNonSecureUnlockBNS = nvmctrlComponent.createBooleanSymbol("NVMCTRL_NSULCK_BNS", None)

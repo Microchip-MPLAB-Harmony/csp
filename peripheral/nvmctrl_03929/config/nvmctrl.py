@@ -127,7 +127,7 @@ def instantiateComponent(nvmctrlComponent):
         nvmctrlSym_DATAFLASH_ERASE_SIZE.setVisible(False)
         nvmctrlSym_DATAFLASH_ERASE_SIZE.setDefaultValue(str(int(nvmctrlSym_DATAFLASH_PROGRAM_SIZE.getValue(), 0) * 4))
 
-    # NVM user row Address
+    # NVM USER row Address
     nvmctrlUSERPAGENode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"USER_PAGE\"]")
     if nvmctrlUSERPAGENode != None:
         nvmctrlSym_USERROW_START_ADDRESS = nvmctrlComponent.createStringSymbol("FLASH_USERROW_START_ADDRESS", None)
@@ -302,8 +302,8 @@ def instantiateComponent(nvmctrlComponent):
 
     writeApiName = nvmctrlComponent.getID().upper() + "_PageWrite"
     eraseApiName = nvmctrlComponent.getID().upper() + "_RowErase"
-    devCfgEraseApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_RowErase"
-    devCfgWriteApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_PageWrite"
+    userRowEraseApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_RowErase"
+    userRowWriteApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_PageWrite"
 
     nvmctrlWriteApiName = nvmctrlComponent.createStringSymbol("WRITE_API_NAME", None)
     nvmctrlWriteApiName.setVisible(False)
@@ -315,15 +315,15 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlEraseApiName.setReadOnly(True)
     nvmctrlEraseApiName.setDefaultValue(eraseApiName)
     
-    nvmctrlDevcfgEraseApiName = nvmctrlComponent.createStringSymbol("DEVCFG_ERASE_API_NAME", None)
-    nvmctrlDevcfgEraseApiName.setVisible(False)
-    nvmctrlDevcfgEraseApiName.setReadOnly(True)
-    nvmctrlDevcfgEraseApiName.setDefaultValue(devCfgEraseApiName)
+    nvmctrlUserRowEraseApiName = nvmctrlComponent.createStringSymbol("USER_ROW_ERASE_API_NAME", None)
+    nvmctrlUserRowEraseApiName.setVisible(False)
+    nvmctrlUserRowEraseApiName.setReadOnly(True)
+    nvmctrlUserRowEraseApiName.setDefaultValue(userRowEraseApiName)
     
-    nvmctrlDevcfgWriteApiName = nvmctrlComponent.createStringSymbol("DEVCFG_WRITE_API_NAME", None)
-    nvmctrlDevcfgWriteApiName.setVisible(False)
-    nvmctrlDevcfgWriteApiName.setReadOnly(True)
-    nvmctrlDevcfgWriteApiName.setDefaultValue(devCfgWriteApiName)
+    nvmctrlUserRowWriteApiName = nvmctrlComponent.createStringSymbol("USER_ROW_WRITE_API_NAME", None)
+    nvmctrlUserRowWriteApiName.setVisible(False)
+    nvmctrlUserRowWriteApiName.setReadOnly(True)
+    nvmctrlUserRowWriteApiName.setDefaultValue(userRowWriteApiName)
 
     ############################################################################
     #### Dependency ####
