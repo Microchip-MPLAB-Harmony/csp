@@ -615,6 +615,18 @@ size_t ${UART_INSTANCE_NAME}_WriteBufferSizeGet(void)
     return (${UART_INSTANCE_NAME?lower_case}Obj.wrBufferSize - 1);
 }
 
+bool ${UART_INSTANCE_NAME}_TransmitComplete(void)
+{    
+    if((U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK))
+    {
+        return true;
+    }
+	else
+	{
+		return false;
+	}
+}
+
 bool ${UART_INSTANCE_NAME}_WriteNotificationEnable(bool isEnabled, bool isPersistent)
 {
     bool previousStatus = ${UART_INSTANCE_NAME?lower_case}Obj.isWrNotificationEnabled;

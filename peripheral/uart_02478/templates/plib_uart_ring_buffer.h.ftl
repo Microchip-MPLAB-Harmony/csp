@@ -84,6 +84,8 @@ size_t ${UART_INSTANCE_NAME}_WriteFreeBufferCountGet(void);
 
 size_t ${UART_INSTANCE_NAME}_WriteBufferSizeGet(void);
 
+bool ${UART_INSTANCE_NAME}_TransmitComplete(void);
+
 bool ${UART_INSTANCE_NAME}_WriteNotificationEnable(bool isEnabled, bool isPersistent);
 
 void ${UART_INSTANCE_NAME}_WriteThresholdSet(uint32_t nBytesThreshold);
