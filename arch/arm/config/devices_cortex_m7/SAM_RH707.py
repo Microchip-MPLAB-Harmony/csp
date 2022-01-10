@@ -166,6 +166,10 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
 coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 
+# load rswdt
+execfile(Variables.get("__CORE_DIR")
+         + "/../peripheral/rswdt_11110/config/rswdt.py")
+
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
