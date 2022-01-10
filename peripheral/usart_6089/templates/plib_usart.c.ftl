@@ -528,16 +528,6 @@ bool ${USART_INSTANCE_NAME}_TransmitterIsReady( void )
     return false;
 }
 
-bool ${USART_INSTANCE_NAME}_TransmitComplete( void )
-{
-    if(${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXEMPTY_Msk)
-    {
-        return true;
-    }
-
-    return false;
-}
-
 bool ${USART_INSTANCE_NAME}_ReceiverIsReady( void )
 {
     if(${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_RXRDY_Msk)
@@ -549,6 +539,17 @@ bool ${USART_INSTANCE_NAME}_ReceiverIsReady( void )
 }
 
 </#if>
+
+
+bool ${USART_INSTANCE_NAME}_TransmitComplete( void )
+{
+    if(${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXEMPTY_Msk)
+    {
+        return true;
+    }
+
+    return false;
+}
 
 <#if USART_INTERRUPT_MODE_ENABLE == true>
 void ${USART_INSTANCE_NAME}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context )

@@ -560,6 +560,18 @@ size_t ${USART_INSTANCE_NAME}_WriteBufferSizeGet(void)
     return (${USART_INSTANCE_NAME?lower_case}Obj.wrBufferSize - 1);
 }
 
+bool ${USART_INSTANCE_NAME}_TransmitComplete(void)
+{
+    if(${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXEMPTY_Msk)
+    {
+        return true;
+    }
+	else
+	{
+		return false;
+	}
+}
+
 bool ${USART_INSTANCE_NAME}_WriteNotificationEnable(bool isEnabled, bool isPersistent)
 {
     bool previousStatus = ${USART_INSTANCE_NAME?lower_case}Obj.isWrNotificationEnabled;

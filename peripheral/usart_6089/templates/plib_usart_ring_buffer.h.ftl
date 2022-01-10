@@ -76,6 +76,8 @@ size_t ${USART_INSTANCE_NAME}_WriteFreeBufferCountGet(void);
 
 size_t ${USART_INSTANCE_NAME}_WriteBufferSizeGet(void);
 
+bool ${USART_INSTANCE_NAME}_TransmitComplete(void);
+
 bool ${USART_INSTANCE_NAME}_WriteNotificationEnable(bool isEnabled, bool isPersistent);
 
 void ${USART_INSTANCE_NAME}_WriteThresholdSet(uint32_t nBytesThreshold);
