@@ -88,8 +88,6 @@ uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadByte( void );
 
 void ${FLEXCOM_INSTANCE_NAME}_USART_WriteByte( uint8_t data );
 
-bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitComplete( void );
-
 bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void );
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_ReceiverIsReady( void );
@@ -110,6 +108,8 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBAC
 void ${FLEXCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
 
 </#if>
+
+bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitComplete( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

@@ -419,6 +419,18 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteBufferSizeGet(void)
     return (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrBufferSize - 1);
 }
 
+bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitComplete( void )
+{
+    bool status = false;
+
+    if (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_TXEMPTY_Msk)
+    {
+        status = true;
+    }
+
+    return status;
+}
+
 bool ${FLEXCOM_INSTANCE_NAME}_USART_WriteNotificationEnable(bool isEnabled, bool isPersistent)
 {
     bool previousStatus = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isWrNotificationEnabled;

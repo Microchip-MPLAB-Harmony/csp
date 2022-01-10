@@ -627,18 +627,6 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_WriteByte( uint8_t data )
     USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
 }
 
-bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitComplete( void )
-{
-    bool status = false;
-
-    if (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_TXEMPTY_Msk)
-    {
-        status = true;
-    }
-
-    return status;
-}
-
 bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void )
 {
     bool status = false;
@@ -663,3 +651,15 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_ReceiverIsReady( void )
     return status;
 }
 </#if>
+
+bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitComplete( void )
+{
+    bool status = false;
+
+    if (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_TXEMPTY_Msk)
+    {
+        status = true;
+    }
+
+    return status;
+}
