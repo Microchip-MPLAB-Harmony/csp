@@ -78,6 +78,8 @@ void ${SERCOM_INSTANCE_NAME}_USART_TransmitterDisable( void );
 
 bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size );
 
+bool ${SERCOM_INSTANCE_NAME}_USART_TransmitComplete( void );
+
 <#if USART_FORM == "0x2">
 bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd);
 </#if>
@@ -90,8 +92,6 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_WriteCountGet( void );
 void ${SERCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context );
 <#else>
 bool ${SERCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void );
-
-bool ${SERCOM_INSTANCE_NAME}_USART_TransmitComplete( void );
 
 void ${SERCOM_INSTANCE_NAME}_USART_WriteByte( int data );
 </#if>

@@ -546,18 +546,6 @@ bool ${SERCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void )
     return transmitterStatus;
 }
 
-bool ${SERCOM_INSTANCE_NAME}_USART_TransmitComplete( void )
-{
-    bool transmitComplete = false;
-
-    if ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_TXC_Msk) == SERCOM_USART_INT_INTFLAG_TXC_Msk)
-    {
-        transmitComplete = true;
-    }
-
-    return transmitComplete;
-}
-
 void ${SERCOM_INSTANCE_NAME}_USART_WriteByte( int data )
 {
     /* Check if USART is ready for new data */
@@ -570,6 +558,18 @@ void ${SERCOM_INSTANCE_NAME}_USART_WriteByte( int data )
 }
 </#if>
 </#if>
+
+bool ${SERCOM_INSTANCE_NAME}_USART_TransmitComplete( void )
+{
+    bool transmitComplete = false;
+
+    if ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_TXC_Msk) == SERCOM_USART_INT_INTFLAG_TXC_Msk)
+    {
+        transmitComplete = true;
+    }
+
+    return transmitComplete;
+}
 
 <#if USART_RX_ENABLE = true>
 void ${SERCOM_INSTANCE_NAME}_USART_ReceiverEnable( void )

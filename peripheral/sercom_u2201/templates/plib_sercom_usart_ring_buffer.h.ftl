@@ -76,6 +76,9 @@ USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void );
 uint32_t ${SERCOM_INSTANCE_NAME}_USART_FrequencyGet( void );
 
 <#if USART_TX_ENABLE = true>
+
+bool ${SERCOM_INSTANCE_NAME}_USART_TransmitComplete( void );
+
 size_t ${SERCOM_INSTANCE_NAME}_USART_Write(uint8_t* pWrBuffer, const size_t size );
 
 size_t ${SERCOM_INSTANCE_NAME}_USART_WriteCountGet(void);

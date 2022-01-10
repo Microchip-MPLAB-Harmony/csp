@@ -609,6 +609,18 @@ void ${SERCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( SERCOM_USART_RING_BUFFE
 
 <#if USART_TX_ENABLE = true>
 
+bool ${SERCOM_INSTANCE_NAME}_USART_TransmitComplete( void )
+{
+    bool transmitComplete = false;
+
+    if ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_TXC_Msk) == SERCOM_USART_INT_INTFLAG_TXC_Msk)
+    {
+        transmitComplete = true;
+    }
+
+    return transmitComplete;
+}
+
 /* This routine is only called from ISR. Hence do not disable/enable USART interrupts. */
 static bool ${SERCOM_INSTANCE_NAME}_USART_TxPullByte(void* pWrData)
 {
