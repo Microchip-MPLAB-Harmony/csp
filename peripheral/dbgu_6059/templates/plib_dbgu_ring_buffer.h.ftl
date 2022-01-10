@@ -76,6 +76,8 @@ size_t ${DBGU_INSTANCE_NAME}_WriteFreeBufferCountGet(void);
 
 size_t ${DBGU_INSTANCE_NAME}_WriteBufferSizeGet(void);
 
+bool ${DBGU_INSTANCE_NAME}_TransmitComplete(void);
+
 bool ${DBGU_INSTANCE_NAME}_WriteNotificationEnable(bool isEnabled, bool isPersistent);
 
 void ${DBGU_INSTANCE_NAME}_WriteThresholdSet(uint32_t nBytesThreshold);

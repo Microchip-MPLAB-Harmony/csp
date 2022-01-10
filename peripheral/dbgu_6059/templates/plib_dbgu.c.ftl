@@ -86,7 +86,7 @@ void static ${DBGU_INSTANCE_NAME}_ISR_TX_Handler(void)
 {
     if (${DBGU_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
-        while ((DBGU_SR_TXEMPTY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXEMPTY_Msk)) && (${DBGU_INSTANCE_NAME?lower_case}Obj.txSize > ${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
+        while ((DBGU_SR_TXRDY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXRDY_Msk)) && (${DBGU_INSTANCE_NAME?lower_case}Obj.txSize > ${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
         {
             ${DBGU_INSTANCE_NAME}_REGS->DBGU_THR = ${DBGU_INSTANCE_NAME?lower_case}Obj.txBuffer[${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
         }
@@ -141,7 +141,7 @@ void ${DBGU_INSTANCE_NAME}_InterruptHandler(void)
     }
 
     /* Transmitter status */
-    if (DBGU_SR_TXEMPTY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXEMPTY_Msk))
+    if (DBGU_SR_TXRDY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXRDY_Msk))
     {
         ${DBGU_INSTANCE_NAME}_ISR_TX_Handler();
     }
@@ -328,7 +328,7 @@ bool ${DBGU_INSTANCE_NAME}_Write(void *buffer, const size_t size)
 <#if DBGU_INTERRUPT_MODE_ENABLE == false>
         while (size > processedSize)
         {
-            if (DBGU_SR_TXEMPTY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXEMPTY_Msk))
+            if (DBGU_SR_TXRDY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXRDY_Msk))
             {
                 ${DBGU_INSTANCE_NAME}_REGS->DBGU_THR = (DBGU_THR_TXCHR(*lBuffer++) & DBGU_THR_TXCHR_Msk);
                 processedSize++;
@@ -347,13 +347,13 @@ bool ${DBGU_INSTANCE_NAME}_Write(void *buffer, const size_t size)
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if (DBGU_SR_TXEMPTY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXEMPTY_Msk))
+            if (DBGU_SR_TXRDY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXRDY_Msk))
             {
                 ${DBGU_INSTANCE_NAME}_REGS->DBGU_THR = (DBGU_THR_TXCHR(*lBuffer) & DBGU_THR_TXCHR_Msk);
                 ${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
             }
 
-            ${DBGU_INSTANCE_NAME}_REGS->DBGU_IER = DBGU_IER_TXEMPTY_Msk;
+            ${DBGU_INSTANCE_NAME}_REGS->DBGU_IER = DBGU_IER_TXRDY_Msk;
         }
 </#if>
     }
@@ -422,13 +422,13 @@ uint8_t ${DBGU_INSTANCE_NAME}_ReadByte(void)
 
 void ${DBGU_INSTANCE_NAME}_WriteByte(uint8_t data)
 {
-    while ((${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXEMPTY_Msk) != DBGU_SR_TXEMPTY_Msk);
+    while ((${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXRDY_Msk) != DBGU_SR_TXRDY_Msk);
     ${DBGU_INSTANCE_NAME}_REGS->DBGU_THR = (DBGU_THR_TXCHR(data) & DBGU_THR_TXCHR_Msk);
 }
 
 bool ${DBGU_INSTANCE_NAME}_TransmitterIsReady(void)
 {
-    return ((${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXEMPTY_Msk) == DBGU_SR_TXEMPTY_Msk);
+    return ((${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXRDY_Msk) == DBGU_SR_TXRDY_Msk);
 }
 
 bool ${DBGU_INSTANCE_NAME}_ReceiverIsReady(void)
@@ -437,3 +437,8 @@ bool ${DBGU_INSTANCE_NAME}_ReceiverIsReady(void)
 }
 
 </#if>
+
+bool ${DBGU_INSTANCE_NAME}_TransmitComplete(void)
+{
+    return ((${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXEMPTY_Msk) == DBGU_SR_TXEMPTY_Msk);
+}

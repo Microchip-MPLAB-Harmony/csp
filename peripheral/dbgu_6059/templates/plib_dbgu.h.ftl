@@ -96,6 +96,8 @@ bool ${DBGU_INSTANCE_NAME}_ReadAbort(void);
 
 </#if>
 
+bool ${DBGU_INSTANCE_NAME}_TransmitComplete(void);
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
