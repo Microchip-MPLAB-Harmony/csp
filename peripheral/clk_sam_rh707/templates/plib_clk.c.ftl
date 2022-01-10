@@ -82,11 +82,10 @@ Initialize Main Clock (MAINCK)
 *********************************************************************************/
 static void CLK_MainClockInitialize(void)
 {
-<#if CLK_MAINCK_EXT_OSC>
+<#if CLK_MAINCK_MOSCSEL != "0">
     /* Enable External Clock Signal on XIN pin */
     PMC_REGS->CKGR_MOR |= CKGR_MOR_MOSCXTEN_Msk | CKGR_MOR_KEY_PASSWD;
 
-    <#if CLK_MAINCK_MOSCSEL != "0">
     /* External clock signal (XIN pin) is selected as the Main Clock (MAINCK) source.
        Switch Main Clock (MAINCK) to External signal on XIN pin */
     PMC_REGS->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
@@ -94,7 +93,6 @@ static void CLK_MainClockInitialize(void)
     /* Wait until MAINCK is switched to External Clock Signal (XIN pin) */
     while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk);
 
-    </#if>
 </#if>
 <#if CLK_MAINCK_MOSCRCEN>
     /* Enable the RC Oscillator */

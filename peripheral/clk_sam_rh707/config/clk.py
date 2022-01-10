@@ -528,13 +528,7 @@ def __main_clock_menu(clk_comp, clk_menu):
     mainck_xtal_sel.setOutputMode("Value")
     mainck_xtal_sel.setDisplayMode("Description")
     mainck_xtal_sel.addKey("Internal RC", str(0), "Internal RC Oscilator")
-    mainck_xtal_sel.addKey("External Osc", str(1), "External Oscillator")
-
-    # External clock (default is RC)
-    mainck_ext_osc = clk_comp.createBooleanSymbol("CLK_MAINCK_EXT_OSC", mainck_menu)
-    mainck_ext_osc.setLabel("Enable External Oscillator")
-    mainck_ext_osc.setDescription("Enable External Oscillator")
-    mainck_ext_osc.setDefaultValue(False)
+    mainck_xtal_sel.addKey("External clock", str(1), "External clock")
 
     # Main Clock External Frequency
     mainck_bp_freq = clk_comp.createIntegerSymbol("CLK_MAINCK_EXT_FREQ", mainck_menu)
@@ -551,7 +545,7 @@ def __main_clock_menu(clk_comp, clk_menu):
     mainck_freq.setDefaultValue(int(mainck_rc_freq.getKey(mainck_rc_freq.getValue()).split("_")[1]) * 1000000)
     mainck_freq.setReadOnly(True)
     mainck_freq.setVisible(True)
-    mainck_freq.setDependencies(upd_mainck_freq, ["CLK_MAINCK_MOSCRCF", "CLK_MAINCK_MOSCSEL", "CLK_MAINCK_EXT_OSC", "CLK_MAINCK_EXT_FREQ"])
+    mainck_freq.setDependencies(upd_mainck_freq, ["CLK_MAINCK_MOSCRCF", "CLK_MAINCK_MOSCSEL", "CLK_MAINCK_EXT_FREQ"])
 
 # RC2 OSCILLATOR MENU
 def __rc2_clock_menu(clk_comp, clk_menu):
@@ -661,7 +655,7 @@ def __plla_clock_menu(clk_comp, clk_menu):
     pllack_freq.setDependencies(upd_pllack_freq, ["CLK_PLLACK_DIVA", "CLK_PLLACK_MULA", "CLK_MAINCK_FREQ"])
 
     #default clock
-    pllack_mula.setValue(4)
+    pllack_mula.setValue(9)
     pllack_diva.setValue(1)
 # PLLB CLOCK MENU
 def __pllb_clock_menu(clk_comp, clk_menu):
@@ -776,7 +770,7 @@ def __mast_clock_menu(clk_comp, clk_menu):
     mck_pres.setOutputMode("Key")
     for value in mck_pres_vg_node.getChildren():
         mck_pres.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
-    mck_pres.setDefaultValue(0)
+    mck_pres.setDefaultValue(1)
 
     # Master Clock Divider
     mck_mdiv_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_MCKR__MDIV"]')
@@ -815,7 +809,7 @@ def __mast_clock_menu(clk_comp, clk_menu):
 
     #default clock
     mck_css.setValue(2)
-    mck_mdiv.setValue(1)
+    mck_mdiv.setValue(0)
 # PROGRAMMABLE CLOCK MENU
 def __prog_clock_menu(clk_comp, clk_menu):
     pck_menu = clk_comp.createMenuSymbol("CLK_PCK_MENU", clk_menu)
