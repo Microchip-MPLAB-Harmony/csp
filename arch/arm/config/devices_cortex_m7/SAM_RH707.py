@@ -207,13 +207,13 @@ armLibCSourceFile.setDependencies(genSysSourceFile, ["CoreSysCallsFile", "CoreSy
 xc32ITCMSizeSym = coreComponent.createSettingSymbol("XC32_ITCM_SIZE", None)
 xc32ITCMSizeSym.setCategory("C32Global")
 xc32ITCMSizeSym.setKey("mitcm")
-xc32ITCMSizeSym.setValue("0x20000")
+xc32ITCMSizeSym.setValue("0x10000")
 
 # set XC32 DTCM Size
 xc32DTCMSizeSym = coreComponent.createSettingSymbol("XC32_DTCM_SIZE", None)
 xc32DTCMSizeSym.setCategory("C32Global")
 xc32DTCMSizeSym.setKey("mdtcm")
-xc32DTCMSizeSym.setValue("0x40000")
+xc32DTCMSizeSym.setValue("0x20000")
 
 # set XC32 Stack in TCM: True or False
 xc32StackInTCMSym = coreComponent.createSettingSymbol("XC32_STACK_IN_TCM", None)
