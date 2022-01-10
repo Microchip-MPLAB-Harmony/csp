@@ -51,6 +51,27 @@
 
 void MATRIX_Initialize(void)
 {
+<#if CoreSeries == "SAMRH707">
+    /* Set FlexRAM memory in user mode */
+    MATRIX0_REGS->MATRIX_PASSR[0]= 0xFF;
+    MATRIX0_REGS->MATRIX_PSR[0]= 0x00030303;
+    MATRIX0_REGS->MATRIX_PASSR[1]= 0xFF;
+    MATRIX0_REGS->MATRIX_PSR[1]= 0x00030303;
+    MATRIX0_REGS->MATRIX_PASSR[7]= 0xFF;
+    MATRIX0_REGS->MATRIX_PSR[7]= 0x00030303;
+
+    /* Set AHB Slave in user mode */
+    MATRIX0_REGS->MATRIX_PSR[6] = 0xF;
+    MATRIX0_REGS->MATRIX_PASSR[6] = 0x00070707;
+
+    /* Set HEFC TOP value and set memory in user mode */
+    MATRIX0_REGS->MATRIX_PASSR[2] = 0x5;
+    MATRIX0_REGS->MATRIX_PSR[2] = 0x00010101;
+    MATRIX0_REGS->MATRIX_PRTSR[2] = 0x5;
+
+    /* Enable Master Remap Control for ICM to access address 0 */
+    MATRIX0_REGS->MATRIX_MRCR |= (1 << 11);
+<#else>
     MATRIX0_REGS->MATRIX_PASSR[0]= 0x00000FFF;
     MATRIX0_REGS->MATRIX_PSR[0]= 0x07070707;
     MATRIX0_REGS->MATRIX_PASSR[1]= 0x00000FFF;
@@ -59,6 +80,7 @@ void MATRIX_Initialize(void)
     MATRIX0_REGS->MATRIX_PASSR[6] = 0x00000FFF;
     MATRIX0_REGS->MATRIX_PASSR[7]= 0x00000FFF;
     MATRIX0_REGS->MATRIX_PSR[7]= 0x07070707;
+</#if>
 }
 
 /*******************************************************************************
