@@ -318,7 +318,7 @@ typedef enum
     /* Receive ring buffer is full. Application must read the data out to avoid missing data on the next RX interrupt. */
     SERCOM_USART_EVENT_READ_BUFFER_FULL,
 
-    /* USART error. Application must call the USARTx_ErrorGet API to get the type of error and clear the error. */
+    /* USART error. Application must call the SERCOMx_USART_ErrorGet API to get the type of error and clear the error. */
     SERCOM_USART_EVENT_READ_ERROR,
 
     /* Threshold number of free space is available in the transmit ring buffer */
