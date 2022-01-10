@@ -709,6 +709,18 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_ReceiverIsReady( void )
 
 </#if>
 
+bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitComplete( void )
+{
+    bool status = false;
+
+    if (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_TXEMPTY_Msk)
+    {
+        status = true;
+    }
+
+    return status;
+}
+
 <#if FLEXCOM_USART_MR_USART_MODE == "IRDA">
 void ${FLEXCOM_INSTANCE_NAME}_USART_IrDA_DirectionSet(FLEXCOM_IRDA_DIR dir)
 {

@@ -105,6 +105,8 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBAC
 void ${FLEXCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
 </#if>
 
+bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitComplete( void );
+
 <#if FLEXCOM_USART_MR_USART_MODE == "IRDA">
 void ${FLEXCOM_INSTANCE_NAME}_USART_IrDA_DirectionSet(FLEXCOM_IRDA_DIR dir);
 </#if>
