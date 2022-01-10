@@ -225,11 +225,11 @@ void ${ADC_INSTANCE_NAME}_Initialize()
     ${ADC_INSTANCE_NAME}_REGS->ADC_CR = ADC_CR_SWRST_Msk;
 
     /* Prescaler and different time settings as per CLOCK section  */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_MR = ADC_MR_PRESCAL(${ADC_MR_PRESCAL}U) | ADC_MR_TRACKTIM(15U) | ADC_MR_STARTUP_SUT512 |
+    ${ADC_INSTANCE_NAME}_REGS->ADC_MR = ADC_MR_PRESCAL(${ADC_MR_PRESCAL}U) | ADC_MR_TRACKTIM(${ADC_MR_TRACKTIM_VALUE}U) | ADC_MR_STARTUP_${ADC_MR_STARTUP_VALUE} |
         ADC_MR_TRANSFER(2U) | ADC_MR_ANACH_ALLOWED<#rt>
         <#lt>${((ADC_TRGR_MODE == "EXT_TRIG_RISE") || (ADC_TRGR_MODE == "EXT_TRIG_FALL") || (ADC_TRGR_MODE == "EXT_TRIG_ANY"))?then(' | ADC_MR_TRGSEL_${ADC_MR_TRGSEL_VALUE}', '')}<#rt>
         <#lt>${(ADC_TRGR_MODE == "HW_TRIGGER")?then(' | ADC_MR_TRGSEL_${ADC_MR_TRGSEL_VALUE} | ADC_MR_TRGEN_Msk', '')}<#rt>
-        <#lt>${(ADC_TRGR_MODE == "FREERUN")?then(' | ADC_MR_FREERUN_Msk', '')}<#rt>
+        <#lt>${(ADC_TRGR_MODE == "FREERUN")?then(' | ADC_MR_FREERUN_Msk | ADC_MR_MAXSPEED_Msk', '')}<#rt>
         <#lt>${(ADC_MR_SLEEP == true)?then(' | ADC_MR_SLEEP_Msk | ADC_MR_FWUP_${ADC_MR_FWUP}', '')};
 
     /* resolution<#if ADC_CLK_SRC??>, source clock</#if> and sign mode of result */

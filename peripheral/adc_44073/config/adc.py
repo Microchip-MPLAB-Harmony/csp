@@ -144,7 +144,11 @@ def adcCalcConversionTime(adcSym_CONV_TIME, event):
         multiplier = 64
     elif (over_sampling_rate == "OSR256_SIN") or (over_sampling_rate == "OSR256_MUL"):
         multiplier = 256
-    conv_time = ((2 * prescaler) * 21.0 * 1000000.0 * multiplier) / clock
+    if adcSym_MR_TRACKING_TIME_VALUE.getValue() != 15:
+        adcClkMul = 20.0
+    else:
+        adcClkMul = 21.0
+    conv_time = ((2 * prescaler) * adcClkMul * 1000000.0 * multiplier) / clock
     adcSym_CONV_TIME.setLabel("**** Conversion Time is "+str(conv_time)+" us ****")
 
 def adcUserSeqVisible(adcSym_SEQR1_USCHLocal, event):
@@ -302,6 +306,26 @@ def instantiateComponent(adcComponent):
     adcSym_Clock.setReadOnly(True)
     adcSym_Clock.setDependencies(adcFreqCalc, ["ADC_MR_PRESCAL", "core." + adcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
+    #Startup time
+    valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_MR__STARTUP\"]")
+    if valueGroup is not None:
+        adcSym_MR_STARTUP_TIME_VALUE = adcComponent.createKeyValueSetSymbol("ADC_MR_STARTUP_VALUE", adcMenu)
+        adcSym_MR_STARTUP_TIME_VALUE.setLabel("Startup Time")
+        adcSym_MR_STARTUP_TIME_VALUE.setDefaultValue(8)
+        adcSym_MR_STARTUP_TIME_VALUE.setOutputMode("Key")
+        adcSym_MR_STARTUP_TIME_VALUE.setDisplayMode("Description")
+        startupTimeValues = valueGroup.getChildren()
+        for index in range(len(startupTimeValues)):
+            adcSym_MR_STARTUP_TIME_VALUE.addKey(startupTimeValues[index].getAttribute("name"), startupTimeValues[index].getAttribute("value"), startupTimeValues[index].getAttribute("caption"))
+
+    #Tracking time
+    global adcSym_MR_TRACKING_TIME_VALUE
+    adcSym_MR_TRACKING_TIME_VALUE = adcComponent.createIntegerSymbol("ADC_MR_TRACKTIM_VALUE", adcMenu)
+    adcSym_MR_TRACKING_TIME_VALUE.setLabel("Tracking Time")
+    adcSym_MR_TRACKING_TIME_VALUE.setDefaultValue(15)
+    adcSym_MR_TRACKING_TIME_VALUE.setMin(0)
+    adcSym_MR_TRACKING_TIME_VALUE.setMax(15)
+
     adcSym_PRESCAL_WARNING = adcComponent.createCommentSymbol("ADC_PRESCAL_WARNING", adcMenu)
     adcSym_PRESCAL_WARNING.setLabel("**** ADC Frequency = " + str(defaultAdcFreq) + " Hz. ****")
     adcSym_PRESCAL_WARNING.setVisible(False)
@@ -337,7 +361,7 @@ def instantiateComponent(adcComponent):
     #Conversion time
     adcSym_CONV_TIME = adcComponent.createCommentSymbol("ADC_CONV_TIME", adcMenu)
     adcSym_CONV_TIME.setLabel("**** Conversion Time is 0 us ****")
-    adcSym_CONV_TIME.setDependencies(adcCalcConversionTime, ["ADC_MR_PRESCAL", "ADC_EMR_OSR_VALUE", "core." + adcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+    adcSym_CONV_TIME.setDependencies(adcCalcConversionTime, ["ADC_MR_PRESCAL", "ADC_EMR_OSR_VALUE", "ADC_MR_TRACKTIM_VALUE", "core." + adcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     #Result sign
     valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_EMR__SIGNMODE\"]")
