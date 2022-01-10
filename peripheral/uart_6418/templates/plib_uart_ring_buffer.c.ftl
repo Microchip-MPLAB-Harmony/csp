@@ -478,6 +478,18 @@ size_t ${UART_INSTANCE_NAME}_WriteBufferSizeGet(void)
     return (${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE - 1);
 }
 
+bool ${UART_INSTANCE_NAME}_TransmitComplete(void)
+{
+    if(UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXEMPTY_Msk))
+    {
+        return true;
+    }
+	else
+	{
+		return false;
+	}
+}
+
 bool ${UART_INSTANCE_NAME}_WriteNotificationEnable(bool isEnabled, bool isPersistent)
 {
     bool previousStatus = ${UART_INSTANCE_NAME?lower_case}Obj.isWrNotificationEnabled;

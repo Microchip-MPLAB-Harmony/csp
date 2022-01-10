@@ -79,8 +79,6 @@ void ${UART_INSTANCE_NAME}_WriteByte( int data );
 
 bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void );
 
-bool ${UART_INSTANCE_NAME}_TransmitComplete( void );
-
 bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void );
 
 </#if>
@@ -100,6 +98,8 @@ void ${UART_INSTANCE_NAME}_WriteCallbackRegister( UART_CALLBACK callback, uintpt
 void ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context );
 
 </#if>
+
+bool ${UART_INSTANCE_NAME}_TransmitComplete( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

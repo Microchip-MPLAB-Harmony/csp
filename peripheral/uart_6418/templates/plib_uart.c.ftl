@@ -514,18 +514,6 @@ bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void )
     return status;
 }
 
-bool ${UART_INSTANCE_NAME}_TransmitComplete( void )
-{
-    bool status = false;
-
-    if(UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXEMPTY_Msk))
-    {
-        status = true;
-    }
-
-    return status;
-}
-
 bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void )
 {
     bool status = false;
@@ -539,3 +527,15 @@ bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void )
 }
 
 </#if>
+
+bool ${UART_INSTANCE_NAME}_TransmitComplete( void )
+{
+    bool status = false;
+
+    if(UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXEMPTY_Msk))
+    {
+        status = true;
+    }
+
+    return status;
+}
