@@ -270,7 +270,7 @@ void NMI_InterruptHandler(void)
     if ((${EIC_INSTANCE_NAME}_REGS->EIC_NMIFLAG & EIC_NMIFLAG_NMI_Msk) == EIC_NMIFLAG_NMI_Msk)
     {
         /* Clear flag */
-        ${EIC_INSTANCE_NAME}_REGS->EIC_NMIFLAG = (uint16_t)EIC_NMIFLAG_NMI_Msk;
+        ${EIC_INSTANCE_NAME}_REGS->EIC_NMIFLAG = EIC_NMIFLAG_NMI_Msk;
 
         /* Find any associated callback entries in the callback table */
         if (${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback != NULL)
