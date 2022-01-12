@@ -73,7 +73,7 @@
 </#if>
 <#if PDEC_INTENSET != "0x0">
     <#lt>/* Object to hold callback function and context */
-    <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
+   static <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
 </#if>
 
 // *****************************************************************************
@@ -112,9 +112,9 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Initialize( void )
     ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback = NULL;
 </#if>
 
-    ${PDEC_INSTANCE_NAME}_REGS->PDEC_EVCTRL = 0x${PDEC_COUNTER_EVCTRL} | PDEC_EVCTRL_EVACT(PDEC_EVCTRL_EVACT_${PDEC_EVCTRL_EVACT}_Val);
+    ${PDEC_INSTANCE_NAME}_REGS->PDEC_EVCTRL = 0x${PDEC_COUNTER_EVCTRL}U | PDEC_EVCTRL_EVACT(PDEC_EVCTRL_EVACT_${PDEC_EVCTRL_EVACT}_Val);
 
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY))
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -125,7 +125,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Start( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLA |= PDEC_CTRLA_ENABLE_Msk;
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_START;
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY))
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -136,7 +136,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_STOP;
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLA &= ~PDEC_CTRLA_ENABLE_Msk;
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY))
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -168,7 +168,7 @@ bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare1Set( uint16_t compare1 )
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare0Get( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
-    while(${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for read Synchronization */
     }
@@ -179,7 +179,7 @@ uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare0Get( void )
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare1Get( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
-    while(${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for read Synchronization */
     }
@@ -208,7 +208,7 @@ PDEC_${PDEC_CTRLA_MODE}_STATUS ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}StatusGet
 void ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
 {
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
-    status = (PDEC_${PDEC_CTRLA_MODE}_STATUS) ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
+    status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = 0xFF;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
@@ -223,7 +223,7 @@ void ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
 void ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 {
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
-    status = (PDEC_${PDEC_CTRLA_MODE}_STATUS) ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
+    status =  ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC0_Msk;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
@@ -237,7 +237,7 @@ void ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 void ${PDEC_INSTANCE_NAME}_MC1_InterruptHandler( void )
 {
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
-    status = (PDEC_${PDEC_CTRLA_MODE}_STATUS) ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
+    status =  ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC1_Msk;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)

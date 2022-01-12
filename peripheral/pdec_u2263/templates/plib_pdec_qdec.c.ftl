@@ -73,7 +73,7 @@
 </#if>
 <#if PDEC_INTENSET != "0x0">
     <#lt>/* Object to hold callback function and context */
-    <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
+   static <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
 </#if>
 
 // *****************************************************************************
@@ -96,15 +96,15 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Initialize( void )
 
     /* Configure quadrature control settings */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLA = PDEC_CTRLA_MODE_${PDEC_CTRLA_MODE} | PDEC_CTRLA_CONF_${PDEC_CTRLA_CONF}
-                                | PDEC_CTRLA_PINEN(0x${PDEC_PIN}) | PDEC_CTRLA_PINVEN(0x${PDEC_PIN_INV})
+                                | PDEC_CTRLA_PINEN(0x${PDEC_PIN}U) | PDEC_CTRLA_PINVEN(0x${PDEC_PIN_INV}U)
                                 ${PDEC_CTRLA_SWAP?then(' | PDEC_CTRLA_SWAP_Msk', '')}<#rt>
                                 <#lt>${PDEC_CTRLA_PEREN?then(' | PDEC_CTRLA_PEREN_Msk', '')}<#rt>
-                                <#lt> | PDEC_CTRLA_ANGULAR(${PDEC_CTRLA_ANGULAR - 9})
-                                 | PDEC_CTRLA_MAXCMP(${PDEC_CTRLA_MAXCMP})<#rt>
+                                <#lt> | PDEC_CTRLA_ANGULAR(${PDEC_CTRLA_ANGULAR - 9}U)
+                                 | PDEC_CTRLA_MAXCMP(${PDEC_CTRLA_MAXCMP}U)<#rt>
                                 <#lt>${PDEC_CTRLA_RUNSTDBY?then(' | PDEC_CTRLA_RUNSTDBY_Msk', '')}; <#rt>
 
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_PRESC = PDEC_PRESC_PRESC_${PDEC_PRESC_PRESC};
-    ${PDEC_INSTANCE_NAME}_REGS->PDEC_FILTER = PDEC_FILTER_FILTER(${PDEC_FILTER});
+    ${PDEC_INSTANCE_NAME}_REGS->PDEC_FILTER = PDEC_FILTER_FILTER(${PDEC_FILTER}U);
 
     /* Configure angular and revolution period */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CC[0U] = ${PDEC_CC0_ANGULAR}U | (${PDEC_CC0_REVOLUTION}U << ${PDEC_INSTANCE_NAME}_ANGULAR_COUNTER_BITS);
@@ -123,7 +123,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Initialize( void )
 
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_EVCTRL = 0x${PDEC_EVCTRL};
 
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY))
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -134,7 +134,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Start( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLA |= PDEC_CTRLA_ENABLE_Msk;
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_START;
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY))
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -145,7 +145,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_STOP;
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLA &= ~PDEC_CTRLA_ENABLE_Msk;
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY))
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -155,7 +155,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void )
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PositionGet( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
-    while(${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for read Synchronization */
     }
@@ -170,7 +170,7 @@ uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PositionGet( void )
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}RevolutionsGet( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
-    while(${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for read Synchronization */
     }
@@ -178,14 +178,14 @@ uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}RevolutionsGet( void )
     {
         /* Wait for CMD to become zero */
     }
-    return (uint16_t)(${PDEC_INSTANCE_NAME}_REGS->PDEC_COUNT & 0x${PDEC_CTRLA_REVOLUTION_MASK});
+    return (uint16_t)(${PDEC_INSTANCE_NAME}_REGS->PDEC_COUNT & 0x${PDEC_CTRLA_REVOLUTION_MASK}U);
 }
 
 /* Read the angular position */
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}AngleGet( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
-    while(${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for read Synchronization */
     }
@@ -193,7 +193,7 @@ uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}AngleGet( void )
     {
         /* Wait for CMD to become zero */
     }    
-    return (uint16_t)(${PDEC_INSTANCE_NAME}_REGS->PDEC_COUNT & 0x${PDEC_CTRLA_ANGULAR_MASK});
+    return (uint16_t)(${PDEC_INSTANCE_NAME}_REGS->PDEC_COUNT & 0x${PDEC_CTRLA_ANGULAR_MASK}U);
 }
 
 <#if PDEC_INTERRUPT == true>
@@ -217,7 +217,7 @@ PDEC_QDEC_STATUS ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}StatusGet( void )
 void ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
 {
     PDEC_QDEC_STATUS status;
-    status = (PDEC_${PDEC_CTRLA_MODE}_STATUS) ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
+    status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = 0xFF;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
@@ -232,7 +232,7 @@ void ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
 void ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 {
     PDEC_QDEC_STATUS status;
-    status = (PDEC_${PDEC_CTRLA_MODE}_STATUS) ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
+    status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC0_Msk;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
@@ -246,7 +246,7 @@ void ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 void ${PDEC_INSTANCE_NAME}_MC1_InterruptHandler( void )
 {
     PDEC_QDEC_STATUS status;
-    status = (PDEC_${PDEC_CTRLA_MODE}_STATUS) ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
+    status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC1_Msk;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)

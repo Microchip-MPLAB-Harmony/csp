@@ -73,7 +73,7 @@
 </#if>
 <#if PDEC_INTENSET != "0x0">
     <#lt>/* Object to hold callback function and context */
-    <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
+   static <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
 </#if>
 
 // *****************************************************************************
@@ -96,11 +96,11 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Initialize( void )
 
     /* Configure quadrature control settings */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLA = PDEC_CTRLA_MODE_${PDEC_CTRLA_MODE}
-                  | PDEC_CTRLA_PINEN(0x${PDEC_HALL_PIN}) | PDEC_CTRLA_PINVEN(0x${PDEC_HALL_PIN_INV})<#rt>
+                  | PDEC_CTRLA_PINEN(0x${PDEC_HALL_PIN}U) | PDEC_CTRLA_PINVEN(0x${PDEC_HALL_PIN_INV}U)<#rt>
                   <#lt>${PDEC_CTRLA_RUNSTDBY?then(' | PDEC_CTRLA_RUNSTDBY_Msk', '')}; <#rt>
 
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_PRESC = PDEC_PRESC_PRESC_${PDEC_PRESC_PRESC};
-    ${PDEC_INSTANCE_NAME}_REGS->PDEC_FILTER = PDEC_FILTER_FILTER(${PDEC_FILTER});
+    ${PDEC_INSTANCE_NAME}_REGS->PDEC_FILTER = PDEC_FILTER_FILTER(${PDEC_FILTER}U);
 
     /* Clear all interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_Msk;
@@ -112,7 +112,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Initialize( void )
 
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_EVCTRL = 0x${PDEC_HALL_EVCTRL};
 
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY))
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -123,7 +123,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Start( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLA |= PDEC_CTRLA_ENABLE_Msk;
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_START;
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY))
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -134,7 +134,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_STOP;
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLA &= ~PDEC_CTRLA_ENABLE_Msk;
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY))
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -144,7 +144,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void )
 uint8_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PatternGet( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
-    while(${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for read Synchronization */
     }
@@ -152,7 +152,7 @@ uint8_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PatternGet( void )
     {
         /* Wait for CMD to become zero */
     }
-    return (uint8_t)(${PDEC_INSTANCE_NAME}_REGS->PDEC_COUNT & 0x07);
+    return (uint8_t)(${PDEC_INSTANCE_NAME}_REGS->PDEC_COUNT & 0x07U);
 }
 
 
@@ -162,7 +162,7 @@ bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PatternSet( uint8_t pattern )
     bool status = false;
     if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV0_Msk) == 0U)
     {
-        ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[0] = (pattern & 0x07);
+        ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[0] =((uint32_t)pattern & 0x07U);
         status = true;
     }    
     return status;
@@ -173,10 +173,10 @@ bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}TimeWindowSet(uint16_t low_window, 
     bool status = false;    
     if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV0_Msk) == 0U)
     {    
-        ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[0] = low_window << 16;
+        ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[0] =(uint32_t)low_window << 16;
         if((${PDEC_INSTANCE_NAME}_REGS->PDEC_STATUS & PDEC_STATUS_CCBUFV1_Msk) == 0U)
         {    
-            ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[1] = high_window << 16;
+            ${PDEC_INSTANCE_NAME}_REGS->PDEC_CCBUF[1] = (uint32_t)high_window << 16;
             status = true;
         }
     }
@@ -205,7 +205,7 @@ PDEC_${PDEC_CTRLA_MODE}_STATUS ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}StatusGet
 void ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
 {
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
-    status = (PDEC_${PDEC_CTRLA_MODE}_STATUS) ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
+    status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = 0xFF;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
@@ -219,8 +219,8 @@ void ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
 <#if PDEC_INTENSET_MC_0 == true>
 void ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 {
-    PDEC_${PDEC_CTRLA_MODE}C_STATUS status;
-    status = (PDEC_${PDEC_CTRLA_MODE}_STATUS) ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
+    PDEC_${PDEC_CTRLA_MODE}_STATUS status;
+    status =  ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC0_Msk;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
@@ -234,7 +234,7 @@ void ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 void ${PDEC_INSTANCE_NAME}_MC1_InterruptHandler( void )
 {
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
-    status = (PDEC_${PDEC_CTRLA_MODE}_STATUS) ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
+    status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC1_Msk;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
