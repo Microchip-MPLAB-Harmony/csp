@@ -514,6 +514,18 @@ def RTC_TAMPCTRL_REG_Update(symbol, event):
         tampctrl_val |= event["value"] << (tamperChannel * 2)
 
     symbol.setValue(tampctrl_val)
+    
+def RTC_COUNTSYNC_Update (symbol, event):
+    symObj = event["symbol"]
+    rtcMode = symObj.getSelectedKey()    
+    
+    symbol.setVisible(rtcMode != "MODE2")
+
+def RTC_CLOCKSYNC_Update (symbol, event):
+    symObj = event["symbol"]
+    rtcMode = symObj.getSelectedKey()    
+    
+    symbol.setVisible(rtcMode == "MODE2")
 ################################################################################
 #                      RTC DATABASE COMPONENTS                      ########
 ################################################################################
@@ -682,6 +694,20 @@ def instantiateComponent(rtcComponent):
 
     rtcSymMode0_FREQCORR = rtcComponent.createBooleanSymbol("RTC_FREQCORR", rtcSym_Menu)
     rtcSymMode0_FREQCORR.setLabel("Generate Frequency Correction API")
+    
+    # RTC Count Sync Enable
+    rtcSym_CountSyncEnable = rtcComponent.createBooleanSymbol( "RTC_COUNTSYNC_ENABLE", rtcSym_Menu)
+    rtcSym_CountSyncEnable.setLabel("RTC Count Sync Enable")   
+    rtcSym_CountSyncEnable.setDefaultValue(True)
+    rtcSym_CountSyncEnable.setVisible(True)
+    rtcSym_CountSyncEnable.setDependencies(RTC_COUNTSYNC_Update, ["RTC_MODULE_SELECTION"])
+    
+    # RTC Clock Sync Enable
+    rtcSym_ClockSyncEnable = rtcComponent.createBooleanSymbol( "RTC_CLOCKSYNC_ENABLE", rtcSym_Menu)
+    rtcSym_ClockSyncEnable.setLabel("RTC Clock Sync Enable")   
+    rtcSym_ClockSyncEnable.setDefaultValue(True)
+    rtcSym_ClockSyncEnable.setVisible(False)
+    rtcSym_ClockSyncEnable.setDependencies(RTC_CLOCKSYNC_Update, ["RTC_MODULE_SELECTION"])
 
     rtcTampAvailable = rtcComponent.createBooleanSymbol("TAMP_DETECTION_SUPPORTED", rtcSym_Menu)
     rtcTampAvailable.setVisible(False)

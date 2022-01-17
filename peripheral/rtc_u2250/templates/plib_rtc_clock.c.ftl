@@ -116,9 +116,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     </#if>
 
     <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA = (uint16_t)(RTC_MODE2_CTRLA_MODE(2UL) |
-                                                            RTC_MODE2_CTRLA_PRESCALER(${RTC_MODE2_PRESCALER}UL) |
-                                                            RTC_MODE2_CTRLA_CLOCKSYNC_Msk |
-                                                            RTC_MODE2_CTRLA_ENABLE_Msk
+                                                            RTC_MODE2_CTRLA_PRESCALER(${RTC_MODE2_PRESCALER}UL)
+                                                            <#if RTC_CLOCKSYNC_ENABLE == true> | RTC_MODE2_CTRLA_CLOCKSYNC_Msk </#if>
+                                                            | RTC_MODE2_CTRLA_ENABLE_Msk
                                                             <#if TAMP_DETECTION_SUPPORTED??>
                                                                 <#if TAMP_DETECTION_SUPPORTED>
                                                                     ${TAMP_RESET_GP?then("| RTC_MODE2_CTRLA_GPTRST_Msk", "")}
@@ -128,7 +128,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
                                                                 </#if>
                                                             </#if>);</@compress>
 
-
+	<#if RTC_CLOCKSYNC_ENABLE == true>
+	while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
+	{
+		/* Wait for Synchronization */
+	}
+	</#if>
     while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_ENABLE_Msk) == RTC_MODE2_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization after Enabling RTC */
@@ -201,12 +206,42 @@ bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
     return true;
 }
 
+void ${RTC_INSTANCE_NAME}_RTCCClockSyncEnable ( void )
+{
+	${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_CLOCKSYNC_Msk;
+
+	while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_CTRLA_CLOCKSYNC_Msk) == RTC_MODE2_CTRLA_CLOCKSYNC_Msk)
+	{
+		/* Wait for Synchronization */
+	}
+}
+
+void ${RTC_INSTANCE_NAME}_RTCCClockSyncDisable ( void )
+{
+	${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA &= ~RTC_MODE2_CTRLA_CLOCKSYNC_Msk;
+
+	while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_CTRLA_CLOCKSYNC_Msk) == RTC_MODE2_CTRLA_CLOCKSYNC_Msk)
+	{
+		/* Wait for Synchronization */
+	}
+}
+	
 void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 {
     uint32_t dataClockCalendar = 0U;
     uint32_t timeMask = 0U;
 
-    while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
+	if (!(${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA & RTC_MODE2_CTRLA_CLOCKSYNC_Msk))
+	{
+		${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_CLOCKSYNC_Msk;
+	
+		while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
+		{
+			/* Wait for Synchronization */
+		}
+	}
+			
+    while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCK_Msk) == RTC_MODE2_SYNCBUSY_CLOCK_Msk)
     {
         /* Synchronization before reading value from CLOCK Register */
     }

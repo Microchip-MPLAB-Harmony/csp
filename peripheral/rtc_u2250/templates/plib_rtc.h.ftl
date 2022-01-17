@@ -216,6 +216,8 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
         </#list>
         </#if>
     </#if>
+	<#lt>void ${RTC_INSTANCE_NAME}_Timer32CountSyncEnable ( void );
+	<#lt>void ${RTC_INSTANCE_NAME}_Timer32CountSyncDisable ( void );
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32Start ( void );
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32Stop ( void );
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32CounterSet ( uint32_t count );
@@ -241,6 +243,8 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
             <#lt>bool ${RTC_INSTANCE_NAME}_Timer16Compare${i}HasMatched( void );
         </#list>
     </#if>
+	<#lt>void ${RTC_INSTANCE_NAME}_Timer16CountSyncEnable ( void );
+	<#lt>void ${RTC_INSTANCE_NAME}_Timer16CountSyncDisable ( void );
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16Start ( void );
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16Stop ( void );
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16CounterSet ( uint16_t count );
@@ -256,6 +260,8 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
         <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptDisable( RTC_TIMER16_INT_MASK interruptMask );
     </#if>
 <#else>
+	<#lt>void ${RTC_INSTANCE_NAME}_RTCCClockSyncEnable ( void );
+	<#lt>void ${RTC_INSTANCE_NAME}_RTCCClockSyncDisable ( void );
     <#lt>bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime );
     <#lt>void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime );
     <#if RTC_MODE2_INTERRUPT = true>
