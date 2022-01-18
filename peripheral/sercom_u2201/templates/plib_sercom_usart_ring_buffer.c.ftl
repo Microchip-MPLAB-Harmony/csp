@@ -74,8 +74,8 @@ static SERCOM_USART_RING_BUFFER_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTOb
 // *****************************************************************************
 
 <#if USART_RX_ENABLE = true>
-#define ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE      ${USART_RX_RING_BUFFER_SIZE}
-#define ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_9BIT_SIZE     (${USART_RX_RING_BUFFER_SIZE} >> 1)
+#define ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE      ${USART_RX_RING_BUFFER_SIZE}U
+#define ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_9BIT_SIZE     (${USART_RX_RING_BUFFER_SIZE}U >> 1U)
 #define ${SERCOM_INSTANCE_NAME}_USART_RX_INT_DISABLE()      ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_RXC_Msk
 #define ${SERCOM_INSTANCE_NAME}_USART_RX_INT_ENABLE()       ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTENSET_RXC_Msk
 
@@ -83,8 +83,8 @@ static uint8_t ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[${SERCOM_INSTANCE_NAME}_
 </#if>
 
 <#if USART_TX_ENABLE = true>
-#define ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE     ${USART_TX_RING_BUFFER_SIZE}
-#define ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_9BIT_SIZE  (${USART_TX_RING_BUFFER_SIZE} >> 1)
+#define ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE     ${USART_TX_RING_BUFFER_SIZE}U
+#define ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_9BIT_SIZE  (${USART_TX_RING_BUFFER_SIZE}U >> 1U)
 #define ${SERCOM_INSTANCE_NAME}_USART_TX_INT_DISABLE()      ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_DRE_Msk
 #define ${SERCOM_INSTANCE_NAME}_USART_TX_INT_ENABLE()       ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTENSET_DRE_Msk
 
@@ -379,7 +379,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
 
 void static ${SERCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 {
-    uint8_t  u8dummyData = 0;
+    uint16_t  u16dummyData = 0;
 
 <#if USART_INTENSET_ERROR = true>
     /* Clear error flag */
@@ -392,11 +392,11 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ErrorClear( void )
     /* Flush existing error bytes from the RX FIFO */
     while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) == SERCOM_USART_INT_INTFLAG_RXC_Msk)
     {
-        u8dummyData = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+        u16dummyData = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
     }
 
     /* Ignore the warning */
-    (void)u8dummyData;
+    (void)u16dummyData;
 }
 
 USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void )
@@ -666,7 +666,7 @@ static inline bool ${SERCOM_INSTANCE_NAME}_USART_TxPushByte(uint16_t wrByte)
 }
 
 /* This routine is only called from ISR. Hence do not disable/enable USART interrupts. */
-static void ${SERCOM_INSTANCE_NAME}_USART_WriteNotificationSend(void)
+static void ${SERCOM_INSTANCE_NAME}_USART_SendWriteNotification(void)
 {
     uint32_t nFreeWrBufferCount;
 
@@ -961,7 +961,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
                 ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = wrByte;
             }
 
-            ${SERCOM_INSTANCE_NAME}_USART_WriteNotificationSend();
+            ${SERCOM_INSTANCE_NAME}_USART_SendWriteNotification();
         }
         else
         {
@@ -1003,16 +1003,16 @@ void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
         <#if USART_RX_ENABLE = true>
         <#if USART_FORM == "0x4" || USART_FORM == "0x5">
         /* Checks for receive complete empty flag */
-        testCondition = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & (SERCOM_USART_INT_INTFLAG_RXC_Msk | SERCOM_USART_INT_INTFLAG_RXBRK_Msk));
-        testCondition = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET & (SERCOM_USART_INT_INTENSET_RXC_Msk | SERCOM_USART_INT_INTENSET_RXBRK_Msk)) && testCondition;
+        testCondition = ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & (SERCOM_USART_INT_INTFLAG_RXC_Msk | SERCOM_USART_INT_INTFLAG_RXBRK_Msk)) != 0U);
+        testCondition = ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET & (SERCOM_USART_INT_INTENSET_RXC_Msk | SERCOM_USART_INT_INTENSET_RXBRK_Msk)) != 0U) && testCondition;
         if(testCondition)
         {
             ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
         }
         <#else>
         /* Checks for receive complete empty flag */
-        testCondition = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk);
-        testCondition = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET & SERCOM_USART_INT_INTENSET_RXC_Msk) && testCondition;
+        testCondition = ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) != 0U);
+        testCondition = ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET & SERCOM_USART_INT_INTENSET_RXC_Msk) != 0U) && testCondition;
         if(testCondition)
         {
             ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
