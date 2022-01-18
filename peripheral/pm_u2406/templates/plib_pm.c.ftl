@@ -59,30 +59,30 @@
 <#assign PM_HIBCFG_VAL = "">
 <#if PM_STDBYCFG_RAMCFG?has_content >
         <#if PM_STDBYCFG_VAL != "">
-        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_RAMCFG("+PM_STDBYCFG_RAMCFG+")">
+        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_RAMCFG("+PM_STDBYCFG_RAMCFG+"U)">
         <#else>
-        <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_RAMCFG("+PM_STDBYCFG_RAMCFG+")">
+        <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_RAMCFG("+PM_STDBYCFG_RAMCFG+"U)">
     </#if>
 </#if>
 <#if PM_STDBYCFG_FASTWKUP?has_content >
         <#if PM_STDBYCFG_VAL != "">
-        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_FASTWKUP("+PM_STDBYCFG_FASTWKUP+")">
+        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_FASTWKUP("+PM_STDBYCFG_FASTWKUP+"U)">
         <#else>
-        <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_FASTWKUP("+PM_STDBYCFG_RAMCFG+")">
+        <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_FASTWKUP("+PM_STDBYCFG_RAMCFG+"U)">
     </#if>
 </#if>
 <#if PM_HIBCFG_RAMCFG?has_content >
         <#if PM_HIBCFG_VAL != "">
-        <#assign PM_HIBCFG_VAL = PM_HIBCFG_VAL + "| PM_HIBCFG_RAMCFG("+PM_HIBCFG_RAMCFG+")">
+        <#assign PM_HIBCFG_VAL = PM_HIBCFG_VAL + "| PM_HIBCFG_RAMCFG("+PM_HIBCFG_RAMCFG+"U)">
         <#else>
-        <#assign PM_HIBCFG_VAL = "PM_HIBCFG_RAMCFG("+PM_HIBCFG_RAMCFG+")">
+        <#assign PM_HIBCFG_VAL = "PM_HIBCFG_RAMCFG("+PM_HIBCFG_RAMCFG+"U)">
     </#if>
 </#if>
 <#if PM_HIBCFG_BRAMCFG?has_content >
         <#if PM_HIBCFG_VAL != "">
-        <#assign PM_HIBCFG_VAL = PM_HIBCFG_VAL + "| PM_HIBCFG_BRAMCFG("+PM_HIBCFG_BRAMCFG+")">
+        <#assign PM_HIBCFG_VAL = PM_HIBCFG_VAL + "| PM_HIBCFG_BRAMCFG("+PM_HIBCFG_BRAMCFG+"U)">
         <#else>
-        <#assign PM_HIBCFG_VAL = "PM_HIBCFG_BRAMCFG("+PM_HIBCFG_BRAMCFG+")">
+        <#assign PM_HIBCFG_VAL = "PM_HIBCFG_BRAMCFG("+PM_HIBCFG_BRAMCFG+"U)">
     </#if>
 </#if>
 void ${PM_INSTANCE_NAME}_Initialize( void )
@@ -92,7 +92,7 @@ void ${PM_INSTANCE_NAME}_Initialize( void )
     ${PM_INSTANCE_NAME}_REGS->PM_STDBYCFG = ${PM_STDBYCFG_VAL};
     ${PM_INSTANCE_NAME}_REGS->PM_HIBCFG = ${PM_HIBCFG_VAL};
     <#if PM_HIBCFG_BRAMCFG?has_content >
-    ${PM_INSTANCE_NAME}_REGS->PM_BKUPCFG = PM_BKUPCFG_BRAMCFG(${PM_BKUPCFG_BRAMCFG});
+    ${PM_INSTANCE_NAME}_REGS->PM_BKUPCFG = PM_BKUPCFG_BRAMCFG(${PM_BKUPCFG_BRAMCFG}U);
     </#if>
 </#if>
 }
@@ -110,7 +110,10 @@ void ${PM_INSTANCE_NAME}_StandbyModeEnter( void )
     /* Configure Standby Sleep */
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_STANDBY_Val;
     /* Wait till the voltage regulator low power mode is ready */
-    while(!${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_SLEEPRDY_Msk);
+    while((${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_SLEEPRDY_Msk) == 0U)
+    {
+
+    }
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -120,7 +123,10 @@ void ${PM_INSTANCE_NAME}_HibernateModeEnter( void )
     /* Configure Hibernate Sleep */
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_HIBERNATE_Val;
     /* Wait till the voltage regulator low power mode is ready */
-    while(!${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_SLEEPRDY_Msk);
+    while((${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_SLEEPRDY_Msk) == 0U)
+    {
+
+    }
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -130,7 +136,10 @@ void ${PM_INSTANCE_NAME}_BackupModeEnter( void )
     /* Configure Backup Sleep */
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_BACKUP_Val;
     /* Wait till the voltage regulator low power mode is ready */
-    while(!${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_SLEEPRDY_Msk);
+    while((${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_SLEEPRDY_Msk) == 0U)
+    {
+
+    }
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -157,7 +166,7 @@ void ${PM_INSTANCE_NAME}_IO_RetentionSet( void )
 
 void ${PM_INSTANCE_NAME}_IO_RetentionClear( void )
 {
-    ${PM_INSTANCE_NAME}_REGS->PM_CTRLA &= (~PM_CTRLA_IORET_Msk);
+    ${PM_INSTANCE_NAME}_REGS->PM_CTRLA &= (uint8_t)(~PM_CTRLA_IORET_Msk);
 }
 
 
