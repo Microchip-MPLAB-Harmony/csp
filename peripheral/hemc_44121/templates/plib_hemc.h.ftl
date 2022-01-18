@@ -147,6 +147,10 @@ HEMC_HECC_STATUS ${HEMC_INSTANCE_NAME}_HeccGetStatus(void);
 
 uint32_t* ${HEMC_INSTANCE_NAME}_HeccGetFailAddress(void);
 
+<#if HEMC_HECC_HAS_FAIL_DATA == true >
+uint32_t ${HEMC_INSTANCE_NAME}_HeccGetFailData(void);
+
+</#if>
 void ${HEMC_INSTANCE_NAME}_HeccResetCounters(void);
 
 <#if HECC_INTERRUPT_MODE == true>

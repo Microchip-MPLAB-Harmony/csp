@@ -202,8 +202,12 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
 <#assign HEMC_NCS0_WRITE_CONF = "CS_0_WRITE_ECC_CONF" >
 <#if (.vars[HEMC_NCS0_WRITE_CONF] == false) >
     /* Read NCS0 Pin configuration for HECC */
+<#if HEMC_HECC_CR0_REG == true>
     uint8_t eccEnableDefault = ( (${HEMC_INSTANCE_NAME}_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ENABLE_Msk) >> HEMC_HECC_CR0_ENABLE_Pos);
     uint8_t eccAlgoDefault = ( (${HEMC_INSTANCE_NAME}_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ECC12_ENABLE_Msk) >> HEMC_HECC_CR0_ECC12_ENABLE_Pos);
+<#else>
+    uint8_t eccEnableDefault = ( (${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS0 & HEMC_CR_NCS0_ECC_ENABLE_Msk) >> HEMC_CR_NCS0_ECC_ENABLE_Pos);
+</#if>
 </#if>
 
     /* Enable NCS0 configuration modification through registers */
@@ -221,8 +225,8 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ADDBASE(0x${.vars[HEMC_ADDRESS]}) |
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_BANKSIZE(${.vars[HEMC_BANK]}) |
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_WRITE_ECC_CONF(1) |
-    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC_ENABLE(eccEnableDefault) |
-    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC12_ENABLE(eccAlgoDefault);
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC_ENABLE(eccEnableDefault)<#if HEMC_HECC_CR0_REG == true> |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC12_ENABLE(eccAlgoDefault)</#if>;
 
     <#else>
     <#if (.vars[HEMC_ADDRESS] != "3ffff") || (i == 0) >
@@ -317,6 +321,29 @@ uint32_t* ${HEMC_INSTANCE_NAME}_HeccGetFailAddress(void)
     return (uint32_t*)(HEMC_REGS->HEMC_HECC_FAILAR);
 }
 
+<#if HEMC_HECC_HAS_FAIL_DATA == true >
+// *****************************************************************************
+/* Function:
+    uint32_t ${HEMC_INSTANCE_NAME}_HeccGetFailData(void)
+
+   Summary:
+    Get the last fail data were ECC error occurs in HEMC memory.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None.
+
+   Returns:
+    Data were fixable or unfixable error occurred in HEMC memory.
+*/
+uint32_t ${HEMC_INSTANCE_NAME}_HeccGetFailData(void)
+{
+    return (uint32_t)(HEMC_REGS->HEMC_HECC_FAILDR);
+}
+
+</#if>
 // *****************************************************************************
 /* Function:
     void ${HEMC_INSTANCE_NAME}_HeccResetCounters(void)

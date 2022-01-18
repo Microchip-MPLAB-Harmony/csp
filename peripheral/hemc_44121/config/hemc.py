@@ -193,6 +193,33 @@ def checkAndupdateInitSize(symbol, event):
     else:
         symbol.setValue(memSizeMap[event["value"]])
 
+def EccCheckBitInitSizeWarning(symbol, event):
+    id = symbol.getID()[-1]
+    hsmcChipSelNum = int(id)
+    setVisible = False
+    csBusWidth = Database.getSymbolValue(hemcInstanceName.getValue().lower(), "HSMC_DATA_BUS_CS" + str(hsmcChipSelNum))
+    isCbInit = Database.getSymbolValue(hemcInstanceName.getValue().lower(), "CS_" + str(hsmcChipSelNum) + "_RAM_CHECK_BIT_INIT")
+
+    # Check if initialization overwrites only when data bus is 8 or 16 bits
+    if ( (isCbInit==True) and (csBusWidth < 2)):
+        csSizeBytes = memSizeMap[Database.getSymbolValue(hemcInstanceName.getValue().lower(), "CS_" + str(hsmcChipSelNum) + "_MEMORY_BANK_SIZE")]
+        csEccInitSizeBytes = Database.getSymbolValue(hemcInstanceName.getValue().lower(), "CS_" + str(hsmcChipSelNum) + "_RAM_CHECK_BIT_INIT_SIZE")
+        isEccAlgoBCH = Database.getSymbolValue(hemcInstanceName.getValue().lower(), "CS_" + str(hsmcChipSelNum) + "_HECC_BCH_ENABLE")
+
+        if (isEccAlgoBCH == True):
+            availableMemSizePercent = 66
+        else:
+            availableMemSizePercent = 80
+
+        if (csEccInitSizeBytes > ((csSizeBytes * availableMemSizePercent) / 100) ):
+            setVisible = True
+        else:
+            setVisible = False
+    else:
+        setVisible = False
+
+    symbol.setVisible(setVisible)
+
 ############################################################# HSMC ###################################################
 # Function to convert Bitfield mask string to Integer
 def hsmcConvertMaskToInt( aRegMask ):
@@ -342,6 +369,10 @@ def instantiateComponent(hemcComponent):
     hemcHeccCr0Reg.setDefaultValue((ATDF.getNode('/avr-tools-device-file/modules/module@[name="HEMC"]/register-group@[name="HEMC"]/register@[name="HEMC_HECC_CR0"]') != None))
     hemcHeccCr0Reg.setVisible(False)
 
+    hemcEccHasFailData = hemcComponent.createBooleanSymbol("HEMC_HECC_HAS_FAIL_DATA", None)
+    hemcEccHasFailData.setDefaultValue((ATDF.getNode('/avr-tools-device-file/modules/module@[name="HEMC"]/register-group@[name="HEMC"]/register@[name="HEMC_HECC_FAILDR"]') != None))
+    hemcEccHasFailData.setVisible(False)
+
     for id in range(0, chipSelectCount):
         csMenu = hemcComponent.createMenuSymbol("CS_" + str(id) + "_MEMORY_MENU", memMemu)
         csMenu.setLabel("Chip Select " + str(id) + " Memory Configuration")
@@ -402,11 +433,7 @@ def instantiateComponent(hemcComponent):
         if (id == 0):
             csheccWriteEccConf = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_WRITE_ECC_CONF", csMenu)
             csheccWriteEccConf.setLabel("Override NCS0 ECC configuration Pins")
-            if hemcHeccCr0Reg.getValue() == False:
-                csheccWriteEccConf.setDefaultValue(True)
-                csheccWriteEccConf.setVisible(False)
-            else:
-                csheccWriteEccConf.setDefaultValue(False)
+            csheccWriteEccConf.setDefaultValue(False)
 
         csheccEnable = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_HECC_ENABLE", csMenu)
         csheccEnable.setLabel("Enable ECC")
@@ -418,18 +445,19 @@ def instantiateComponent(hemcComponent):
         csheccEnableBCH = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_HECC_BCH_ENABLE", csMenu)
         csheccEnableBCH.setLabel("ECC use BCH Algorithm")
         csheccEnableBCH.setDefaultValue(False)
-        if hemcHeccCr0Reg.getValue() == False:
-            csheccEnableBCH.setReadOnly(True)
-        if (id == 0):
-            csheccEnableBCH.setDependencies(setVisibleIfEventTrue, ["CS_" + str(id) + "_WRITE_ECC_CONF"])
-            csheccEnableBCH.setVisible(csheccWriteEccConf.getValue())
+        if (hemcHeccCr0Reg.getValue() == True):
+            if (id == 0):
+                csheccEnableBCH.setDependencies(setVisibleIfEventTrue, ["CS_" + str(id) + "_WRITE_ECC_CONF"])
+                csheccEnableBCH.setVisible(False)
+        else:
+            csheccEnableBCH.setVisible(False)
 
         csheccRamCheckBitInit = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_RAM_CHECK_BIT_INIT", csMenu)
         csheccRamCheckBitInit.setLabel("RAM need check bit initialization")
         csheccEnableBCH.setDefaultValue(False)
         if (id == 0):
             csheccRamCheckBitInit.setDependencies(setVisibleIfEventTrue, ["CS_" + str(id) + "_WRITE_ECC_CONF"])
-            csheccRamCheckBitInit.setVisible(csheccWriteEccConf.getValue())
+            csheccRamCheckBitInit.setVisible(False)
 
         csheccRamCheckBitInitSize = hemcComponent.createHexSymbol("CS_" + str(id) + "_RAM_CHECK_BIT_INIT_SIZE", csheccRamCheckBitInit)
         csheccRamCheckBitInitSize.setLabel("Initialization size")
@@ -800,10 +828,19 @@ def instantiateComponent(hemcComponent):
         hsmcSym_MODE_WRITE.setLabel("Write Operation is controlled by NWE Signal")
         hsmcSym_MODE_WRITE.setDefaultValue(True)
 
+        # Warning for ECC check bit initialization size for 16-bit and 8-bit data size
+        hemcHeccInitCbSizeComment = hemcComponent.createCommentSymbol("HEMC_HECC_INIT_CB_SIZE_COMMENT_CS"+ str(hsmcChipSelNum), None)
+        hemcHeccInitCbSizeComment.setVisible(False)
+        hemcHeccInitCbSizeComment.setLabel("Warning!!! " + hemcInstanceName.getValue() + " Chip select " + str(hsmcChipSelNum) +  ": ECC check bit initialization size will overwrite check bit at end of memory ")
+        hemcHeccInitCbSizeComment.setDependencies(EccCheckBitInitSizeWarning, ["CS_" + str(hsmcChipSelNum) + "_RAM_CHECK_BIT_INIT",
+                                                                               "CS_" + str(hsmcChipSelNum) + "_RAM_CHECK_BIT_INIT_SIZE",
+                                                                               "CS_" + str(hsmcChipSelNum) + "_MEMORY_BANK_SIZE",
+                                                                               "HSMC_DATA_BUS_CS" + str(hsmcChipSelNum),
+                                                                               "CS_" + str(hsmcChipSelNum) + "_HECC_BCH_ENABLE"])
+
     hemcCsLogic = hemcComponent.createBooleanSymbol("DUMMY", None)
     hemcCsLogic.setDependencies(hideMenus, csDependencies)
     hemcCsLogic.setVisible(False)
-
 
 ############################################################################
 #### Dependency ####
