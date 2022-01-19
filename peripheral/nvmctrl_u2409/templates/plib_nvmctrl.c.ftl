@@ -83,7 +83,7 @@ static uint32_t smart_eep_status;
         <#assign NVMCTRL_CTRLA_VAL = "NVMCTRL_CTRLA_CACHEDIS1_Msk">
     </#if>
 </#if>
-<#if NVM_WMODE_ENABLE == true>
+<#if NVM_WMODE_ENABLE?? && NVM_WMODE_ENABLE == true>
     <#if NVMCTRL_SEECFG_VAL != "">
         <#assign NVMCTRL_SEECFG_VAL = NVMCTRL_SEECFG_VAL + " | NVMCTRL_SEECFG_WMODE_Msk">
     <#else>
@@ -384,6 +384,7 @@ void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMSectorReallocate(void)
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_SEERALOC | NVMCTRL_CTRLB_CMDEX_KEY;
 }
 
+<#if NVM_WMODE_ENABLE??>
 void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMFlushPageBuffer(void)
 {
     /* Clear global error flag */
@@ -391,6 +392,8 @@ void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMFlushPageBuffer(void)
 
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_SEEFLUSH | NVMCTRL_CTRLB_CMDEX_KEY;
 }
+</#if>
+
 <#if INTERRUPT_ENABLE == true >
 
 void ${NVMCTRL_INSTANCE_NAME}_EnableMainFlashInterruptSource(NVMCTRL_INTERRUPT0_SOURCE int_source)

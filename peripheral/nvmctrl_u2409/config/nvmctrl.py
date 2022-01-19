@@ -189,10 +189,15 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_Interrupt1.setDefaultValue(False)
     nvmctrlSym_Interrupt1.setDescription("Enables interrupt for 'SmartEEPROM sector full' (SEESFULL) condition. Rest of the interrupts need to be enabled via code")
 
-    #Enable Buffered mode for SmartEEPROM
-    nvmctrlSym_WMODE = nvmctrlComponent.createBooleanSymbol("NVM_WMODE_ENABLE", nvmctrlSymSEEP)
-    nvmctrlSym_WMODE.setLabel("Enable Buffered Mode")
-    nvmctrlSym_WMODE.setDefaultValue(False)
+    #Enable Buffered mode for SmartEEPROM (if supported)
+    bufferedWriteModeSupported = False
+    
+    bufferedWriteModeSupported = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"NVMCTRL\"]/value-group@[name=\"NVMCTRL_SEECFG__WMODE\"]/value@[name=\"BUFFERED\"]") is not None
+    
+    if bufferedWriteModeSupported == True:
+        nvmctrlSym_WMODE = nvmctrlComponent.createBooleanSymbol("NVM_WMODE_ENABLE", nvmctrlSymSEEP)
+        nvmctrlSym_WMODE.setLabel("Enable Buffered Mode")
+        nvmctrlSym_WMODE.setDefaultValue(False)
 
     #Automatic Page Reallocation Disable
     nvmctrlSym_APRDIS = nvmctrlComponent.createBooleanSymbol("NVM_APRDIS_ENABLE", nvmctrlSymSEEP)
