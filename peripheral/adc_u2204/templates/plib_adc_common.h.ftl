@@ -64,6 +64,15 @@
 #endif
 // DOM-IGNORE-END
 
+#define  ADC_STATUS_NONE  0
+#define    ADC_STATUS_RESRDY  ADC_INTFLAG_RESRDY_Msk
+#define   ADC_STATUS_OVERRUN  ADC_INTFLAG_OVERRUN_Msk
+#define   ADC_STATUS_WINMON  ADC_INTFLAG_WINMON_Msk
+#define   ADC_STATUS_MASK  ADC_STATUS_RESRDY | ADC_STATUS_OVERRUN | ADC_STATUS_WINMON
+    /* Force compiler to reserve 32-bit for this enum */
+#define   ADC_STATUS_INVALID  0xFFFFFFFFU
+typedef uint8_t ADC_STATUS;
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Types
@@ -96,16 +105,6 @@ typedef enum
 
 
 // *****************************************************************************
-typedef enum
-{
-    ADC_STATUS_NONE = 0,
-    ADC_STATUS_RESRDY = ADC_INTFLAG_RESRDY_Msk,
-    ADC_STATUS_OVERRUN = ADC_INTFLAG_OVERRUN_Msk,
-    ADC_STATUS_WINMON = ADC_INTFLAG_WINMON_Msk,
-    ADC_STATUS_MASK = ADC_STATUS_RESRDY | ADC_STATUS_OVERRUN | ADC_STATUS_WINMON,
-    /* Force compiler to reserve 32-bit for this enum */
-    ADC_STATUS_INVALID = 0xFFFFFFFF
-}ADC_STATUS;
 
 // *****************************************************************************
 typedef enum

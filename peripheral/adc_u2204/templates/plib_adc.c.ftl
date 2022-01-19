@@ -133,18 +133,18 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if ADC_INTENSET_RESRDY = true || (ADC_WINCTRL_WINMODE != "DISABLE" && ADC_INTENSET_WINMON = true)>
-ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
+static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 <#if ADC_CALIB??>
-#define ADC_LINEARITY0_POS  (27)
-#define ADC_LINEARITY0_Msk   ((0x1F << ADC_LINEARITY0_POS))
+#define ADC_LINEARITY0_POS  (27U)
+#define ADC_LINEARITY0_Msk   ((0x1FUL << ADC_LINEARITY0_POS))
 
-#define ADC_LINEARITY1_POS  (0)
-#define ADC_LINEARITY1_Msk   ((0x7 << ADC_LINEARITY1_POS))
+#define ADC_LINEARITY1_POS  (0U)
+#define ADC_LINEARITY1_Msk   ((0x7U << ADC_LINEARITY1_POS))
 
-#define ADC_BIASCAL_POS  (3)
-#define ADC_BIASCAL_Msk   ((0x7 << ADC_BIASCAL_POS))
+#define ADC_BIASCAL_POS  (3U)
+#define ADC_BIASCAL_Msk   ((0x7U << ADC_BIASCAL_POS))
 </#if>
 
 // *****************************************************************************
@@ -160,18 +160,18 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     /* Reset ADC */
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = ADC_CTRLA_SWRST_Msk;
 
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Synchronization */
     }
 
 <#if ADC_CALIB??>
-    uint32_t adc_linearity0 = (((*(uint64_t*)OTP4_ADDR) & (uint64_t)ADC_LINEARITY0_Msk) >> ADC_LINEARITY0_POS);
-    uint32_t adc_linearity1 = (((*(uint64_t*)(OTP4_ADDR + 4)) & ADC_LINEARITY1_Msk) >> ADC_LINEARITY1_POS);
+    uint32_t adc_linearity0 = (((*(uint32_t*)OTP4_ADDR) & ADC_LINEARITY0_Msk) >> ADC_LINEARITY0_POS);
+    uint32_t adc_linearity1 = (((*(uint32_t*)(OTP4_ADDR + 4U)) & ADC_LINEARITY1_Msk) >> ADC_LINEARITY1_POS);
 
     /* Write linearity calibration and bias calibration */
-    ADC_REGS->ADC_CALIB = (uint32_t)(ADC_CALIB_LINEARITY_CAL(adc_linearity0 | (adc_linearity1 << 5))) \
-        | ADC_CALIB_BIAS_CAL((((*(uint64_t*)(OTP4_ADDR + 4)) & ADC_BIASCAL_Msk) >> ADC_BIASCAL_POS));
+    ADC_REGS->ADC_CALIB = (uint16_t)((ADC_CALIB_LINEARITY_CAL(adc_linearity0 | (adc_linearity1 << 5U))) \
+        | ADC_CALIB_BIAS_CAL((((*(uint32_t*)(OTP4_ADDR + 4U)) & ADC_BIASCAL_Msk) >> ADC_BIASCAL_POS)));
 
 </#if>
     /* Sampling length */
@@ -182,8 +182,8 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 
     /* positive and negative input pins */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint32_t) ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | (uint32_t) ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG} \
-        | ADC_INPUTCTRL_INPUTSCAN(${ADC_INPUTCTRL_INPUTSCAN}) | ADC_INPUTCTRL_INPUTOFFSET(${ADC_INPUTCTRL_INPUTOFFSET}) | ADC_INPUTCTRL_GAIN_${ADC_INPUTCTRL_GAIN};
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+        | ADC_INPUTCTRL_INPUTSCAN(${ADC_INPUTCTRL_INPUTSCAN}U) | ADC_INPUTCTRL_INPUTOFFSET(${ADC_INPUTCTRL_INPUTOFFSET}U) | ADC_INPUTCTRL_GAIN_${ADC_INPUTCTRL_GAIN};
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Synchronization */
     }
@@ -199,7 +199,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     /* Prescaler, Resolution & Operation Mode */
     <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER} | ADC_CTRLB_RESSEL_${ADC_CTRLB_RESSEL}
                                      <#if ADC_CTRLB_VAL?has_content>| ${ADC_CTRLB_VAL}</#if>;</@compress>
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Synchronization */
     }
@@ -211,19 +211,19 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 <#if ADC_WINCTRL_WINMODE != "DISABLE">
     /* Window mode configurations */
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINCTRL = ADC_WINCTRL_WINMODE_${ADC_WINCTRL_WINMODE};
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
     }    
     /* Upper threshold for window mode  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = ${ADC_WINUT};
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
     }    
     /* Lower threshold for window mode  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = ${ADC_WINLT};
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
     }    
@@ -243,7 +243,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |=
                                       ${ADC_CTRLA_RUNSTDBY?then('ADC_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 </#if>
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -253,7 +253,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 void ${ADC_INSTANCE_NAME}_Enable( void )
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ADC_CTRLA_ENABLE_Msk;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -262,8 +262,8 @@ void ${ADC_INSTANCE_NAME}_Enable( void )
 /* Disable ADC module */
 void ${ADC_INSTANCE_NAME}_Disable( void )
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA &= ~ADC_CTRLA_ENABLE_Msk;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = ((${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA) & (uint8_t)(~ADC_CTRLA_ENABLE_Msk));
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -276,10 +276,10 @@ void ${ADC_INSTANCE_NAME}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPU
     uint32_t channel;
     channel = ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL;
     channel &= ~(ADC_INPUTCTRL_MUXPOS_Msk | ADC_INPUTCTRL_MUXNEG_Msk);
-    channel |= (uint16_t) positiveInput | (uint16_t) negativeInput;
+    channel |= (uint32_t) positiveInput | (uint32_t) negativeInput;
     ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = channel;
 
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -291,7 +291,7 @@ void ${ADC_INSTANCE_NAME}_ConversionStart( void )
     /* Start conversion */
     ${ADC_INSTANCE_NAME}_REGS->ADC_SWTRIG |= ADC_SWTRIG_START_Msk;
 
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -301,12 +301,12 @@ void ${ADC_INSTANCE_NAME}_ConversionStart( void )
 void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = low_threshold;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
     }    
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = high_threshold;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -314,8 +314,8 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
 
 void ${ADC_INSTANCE_NAME}_WindowModeSet(ADC_WINMODE mode)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_WINCTRL = mode << ADC_WINCTRL_WINMODE_Pos;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    ${ADC_INSTANCE_NAME}_REGS->ADC_WINCTRL = (uint8_t)mode << ADC_WINCTRL_WINMODE_Pos;
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -371,7 +371,7 @@ void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
 bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 {
     bool status;
-    status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    status =  (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos)!= 0U);
     if (status == true)
     {
         ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
@@ -384,7 +384,7 @@ bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 {
     bool status;
-    status = (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos);
+    status = (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos) != 0U);
     if (status == true)
     {
         ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk;
