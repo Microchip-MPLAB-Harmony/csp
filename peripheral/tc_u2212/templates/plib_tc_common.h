@@ -64,6 +64,60 @@
 #endif
 // DOM-IGNORE-END
 
+#define  TC_TIMER_STATUS_NONE              (0)
+
+/*  overflow */
+#define  TC_TIMER_STATUS_OVERFLOW          (TC_INTFLAG_OVF_Msk)
+
+/* match compare 1 */
+#define  TC_TIMER_STATUS_MATCH1            (TC_INTFLAG_MC1_Msk)
+
+#define  TC_TIMER_STATUS_MSK               (TC_TIMER_STATUS_OVERFLOW | TC_TIMER_STATUS_MATCH1)
+
+/* Force the compiler to reserve 32-bit memory for enum */
+#define  TC_TIMER_STATUS_INVALID           (0xFFFFFFFFU)
+
+typedef uint8_t TC_TIMER_STATUS;
+
+#define  TC_CAPTURE_STATUS_NONE            (0)
+
+    /* Capture status overflow */
+#define  TC_CAPTURE_STATUS_OVERFLOW        (TC_INTFLAG_OVF_Msk)
+
+    /* Capture status error */
+#define  TC_CAPTURE_STATUS_ERROR           (TC_INTFLAG_ERR_Msk)
+
+    /* Capture status ready for channel 0 */
+#define  TC_CAPTURE_STATUS_CAPTURE0_READY  (TC_INTFLAG_MC0_Msk)
+
+    /* Capture status ready for channel 1 */
+#define  TC_CAPTURE_STATUS_CAPTURE1_READY  (TC_INTFLAG_MC1_Msk)
+
+#define  TC_CAPTURE_STATUS_MSK             (TC_CAPTURE_STATUS_OVERFLOW | TC_CAPTURE_STATUS_ERROR | TC_CAPTURE_STATUS_CAPTURE0_READY | TC_CAPTURE_STATUS_CAPTURE1_READY)
+
+    /* Force the compiler to reserve 32-bit memory for enum */
+#define  TC_CAPTURE_STATUS_INVALID         (0xFFFFFFFFU)
+
+typedef uint8_t TC_CAPTURE_STATUS;
+
+#define TC_COMPARE_STATUS_NONE             (0)
+
+    /*  overflow */
+#define TC_COMPARE_STATUS_OVERFLOW         (TC_INTFLAG_OVF_Msk)
+
+    /* match compare 0 */
+#define TC_COMPARE_STATUS_MATCH0           (TC_INTFLAG_MC0_Msk)
+
+    /* match compare 1 */
+#define TC_COMPARE_STATUS_MATCH1           (TC_INTFLAG_MC1_Msk)
+
+#define TC_COMPARE_STATUS_MSK              (TC_COMPARE_STATUS_OVERFLOW | TC_COMPARE_STATUS_MATCH0 | TC_COMPARE_STATUS_MATCH1)
+
+    /* Force the compiler to reserve 32-bit memory for enum */
+#define   TC_COMPARE_STATUS_INVALID  0xFFFFFFFFU
+	
+typedef uint8_t TC_COMPARE_STATUS;
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Types
@@ -74,59 +128,6 @@
 */
 
 // *****************************************************************************
-
-typedef enum
-{
-    TC_CAPTURE_STATUS_NONE = 0,
-
-    /* Capture status overflow */
-    TC_CAPTURE_STATUS_OVERFLOW = TC_INTFLAG_OVF_Msk,
-
-    /* Capture status error */
-    TC_CAPTURE_STATUS_ERROR = TC_INTFLAG_ERR_Msk,
-
-    /* Capture status ready for channel 0 */
-    TC_CAPTURE_STATUS_CAPTURE0_READY = TC_INTFLAG_MC0_Msk,
-
-    /* Capture status ready for channel 1 */
-    TC_CAPTURE_STATUS_CAPTURE1_READY = TC_INTFLAG_MC1_Msk,
-
-    TC_CAPTURE_STATUS_MSK = TC_CAPTURE_STATUS_OVERFLOW | TC_CAPTURE_STATUS_ERROR | TC_CAPTURE_STATUS_CAPTURE0_READY | TC_CAPTURE_STATUS_CAPTURE1_READY,
-
-    /* Force the compiler to reserve 32-bit memory for enum */
-    TC_CAPTURE_STATUS_INVALID = 0xFFFFFFFF
-} TC_CAPTURE_STATUS;
-
-typedef enum
-{
-    TC_COMPARE_STATUS_NONE = 0,
-    /*  overflow */
-    TC_COMPARE_STATUS_OVERFLOW = TC_INTFLAG_OVF_Msk,
-    /* match compare 0 */
-    TC_COMPARE_STATUS_MATCH0 = TC_INTFLAG_MC0_Msk,
-    /* match compare 1 */
-    TC_COMPARE_STATUS_MATCH1 = TC_INTFLAG_MC1_Msk,
-    TC_COMPARE_STATUS_MSK = TC_COMPARE_STATUS_OVERFLOW | TC_COMPARE_STATUS_MATCH0 | TC_COMPARE_STATUS_MATCH1,
-
-    /* Force the compiler to reserve 32-bit memory for enum */
-    TC_COMPARE_STATUS_INVALID = 0xFFFFFFFF
-}TC_COMPARE_STATUS;
-
-typedef enum
-{
-    TC_TIMER_STATUS_NONE = 0,
-    /*  overflow */
-    TC_TIMER_STATUS_OVERFLOW = TC_INTFLAG_OVF_Msk,
-
-    /* match compare 1 */
-    TC_TIMER_STATUS_MATCH1 = TC_INTFLAG_MC1_Msk,
-
-    TC_TIMER_STATUS_MSK = TC_TIMER_STATUS_OVERFLOW | TC_TIMER_STATUS_MATCH1,
-
-    /* Force the compiler to reserve 32-bit memory for enum */
-    TC_TIMER_STATUS_INVALID = 0xFFFFFFFF
-} TC_TIMER_STATUS;
-
 typedef enum 
 {
     TC_COMMAND_NONE,

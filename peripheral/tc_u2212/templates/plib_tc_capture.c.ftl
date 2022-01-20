@@ -152,7 +152,7 @@
 </#compress>
 
 <#if TC_INTSET_VAL != "">
-TC_CAPTURE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+static TC_CAPTURE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -166,7 +166,7 @@ void ${TC_INSTANCE_NAME}_CaptureInitialize( void )
     /* Reset TC */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_SWRST_Msk;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -199,7 +199,7 @@ void ${TC_INSTANCE_NAME}_CaptureStart( void )
     /* Enable TC */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA |= TC_CTRLA_ENABLE_Msk;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -208,9 +208,9 @@ void ${TC_INSTANCE_NAME}_CaptureStart( void )
 void ${TC_INSTANCE_NAME}_CaptureStop( void )
 {
     /* Disable TC */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA &= ~TC_CTRLA_ENABLE_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA =((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA) & (uint16_t)(~TC_CTRLA_ENABLE_Msk));
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -223,8 +223,8 @@ uint32_t ${TC_INSTANCE_NAME}_CaptureFrequencyGet( void )
 
 void ${TC_INSTANCE_NAME}_CaptureCommandSet(TC_COMMAND command)
 {
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = command << TC_CTRLBSET_CMD_Pos;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET =(uint8_t)command << TC_CTRLBSET_CMD_Pos;
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }   
@@ -235,9 +235,9 @@ void ${TC_INSTANCE_NAME}_CaptureCommandSet(TC_COMMAND command)
 uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel0Get( void )
 {
     /* Write command to force CC register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -247,9 +247,9 @@ uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel0Get( void )
 uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel1Get( void )
 {
     /* Write command to force CC register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -261,9 +261,9 @@ uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel1Get( void )
 uint16_t ${TC_INSTANCE_NAME}_Capture16bitChannel0Get( void )
 {
     /* Write command to force CC register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -273,9 +273,9 @@ uint16_t ${TC_INSTANCE_NAME}_Capture16bitChannel0Get( void )
 uint16_t ${TC_INSTANCE_NAME}_Capture16bitChannel1Get( void )
 {
     /* Write command to force CC register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -286,9 +286,9 @@ uint16_t ${TC_INSTANCE_NAME}_Capture16bitChannel1Get( void )
 uint32_t ${TC_INSTANCE_NAME}_Capture32bitChannel0Get( void )
 {
     /* Write command to force CC register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -298,9 +298,9 @@ uint32_t ${TC_INSTANCE_NAME}_Capture32bitChannel0Get( void )
 uint32_t ${TC_INSTANCE_NAME}_Capture32bitChannel1Get( void )
 {
     /* Write command to force CC register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -318,7 +318,7 @@ void ${TC_INSTANCE_NAME}_CaptureCallbackRegister( TC_CAPTURE_CALLBACK callback, 
 void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
 {
     TC_CAPTURE_STATUS status;
-    status = (TC_CAPTURE_STATUS) (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG);
+    status = (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG);
     /* Clear all interrupts */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 

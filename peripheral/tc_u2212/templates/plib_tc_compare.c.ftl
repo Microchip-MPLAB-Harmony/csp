@@ -137,7 +137,7 @@
 // *****************************************************************************
 
 <#if TC_COMPARE_INTERRUPT_MODE = true>
-TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+static TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -152,7 +152,7 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
     /* Reset TC */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_SWRST_Msk;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -192,7 +192,7 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = ${TC_EVCTRL_VAL};
     </#if>
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -203,14 +203,14 @@ void ${TC_INSTANCE_NAME}_CompareStart( void )
 {
 <#if TC_COMPARE_CTRLBSET_ONESHOT == true>
     /* In one-shot mode, first disable the TC and then enable */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA &= ~TC_CTRLA_ENABLE_Msk;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA) & (uint16_t)(~TC_CTRLA_ENABLE_Msk));
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
 </#if>
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA |= TC_CTRLA_ENABLE_Msk;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -219,8 +219,8 @@ void ${TC_INSTANCE_NAME}_CompareStart( void )
 /* Disable the counter */
 void ${TC_INSTANCE_NAME}_CompareStop( void )
 {
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA &= ~TC_CTRLA_ENABLE_Msk;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA) & (uint16_t)(~TC_CTRLA_ENABLE_Msk));
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -233,8 +233,8 @@ uint32_t ${TC_INSTANCE_NAME}_CompareFrequencyGet( void )
 
 void ${TC_INSTANCE_NAME}_CompareCommandSet(TC_COMMAND command)
 {
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = command << TC_CTRLBSET_CMD_Pos;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = (uint8_t)command << TC_CTRLBSET_CMD_Pos;
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }    
@@ -245,9 +245,9 @@ void ${TC_INSTANCE_NAME}_CompareCommandSet(TC_COMMAND command)
 uint8_t ${TC_INSTANCE_NAME}_Compare8bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_COUNT_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_COUNT_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -260,7 +260,7 @@ uint8_t ${TC_INSTANCE_NAME}_Compare8bitCounterGet( void )
 void ${TC_INSTANCE_NAME}_Compare8bitCounterSet( uint8_t count )
 {
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_COUNT = count;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -272,7 +272,7 @@ void ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
 {
     /* Configure period value */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER = period;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -282,9 +282,9 @@ void ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
 uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
 {
     /* Write command to force PER register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -304,7 +304,7 @@ void ${TC_INSTANCE_NAME}_Compare8bitMatch0Set( uint8_t compareValue )
 {
     /* Set new compare value for compare channel 0 */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = compareValue;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -315,7 +315,7 @@ void ${TC_INSTANCE_NAME}_Compare8bitMatch1Set( uint8_t compareValue )
 {
     /* Set new compare value for compare channel 1 */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = compareValue;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -327,9 +327,9 @@ void ${TC_INSTANCE_NAME}_Compare8bitMatch1Set( uint8_t compareValue )
 uint16_t ${TC_INSTANCE_NAME}_Compare16bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_COUNT_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_COUNT_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -343,7 +343,7 @@ void ${TC_INSTANCE_NAME}_Compare16bitCounterSet( uint16_t count )
 {
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_COUNT = count;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -355,7 +355,7 @@ void ${TC_INSTANCE_NAME}_Compare16bitPeriodSet( uint16_t period )
 {
     /* Configure period value */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = period;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -365,9 +365,9 @@ void ${TC_INSTANCE_NAME}_Compare16bitPeriodSet( uint16_t period )
 uint16_t ${TC_INSTANCE_NAME}_Compare16bitPeriodGet( void )
 {
     /* Write command to force CC register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -388,7 +388,7 @@ void ${TC_INSTANCE_NAME}_Compare16bitMatch0Set( uint16_t compareValue )
 {
     /* Set new compare value for compare channel 0 */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = compareValue;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -399,7 +399,7 @@ void ${TC_INSTANCE_NAME}_Compare16bitMatch1Set( uint16_t compareValue )
 {
     /* Set new compare value for compare channel 1 */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = compareValue;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -411,9 +411,9 @@ void ${TC_INSTANCE_NAME}_Compare16bitMatch1Set( uint16_t compareValue )
 uint32_t ${TC_INSTANCE_NAME}_Compare32bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_COUNT_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_COUNT_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -426,7 +426,7 @@ uint32_t ${TC_INSTANCE_NAME}_Compare32bitCounterGet( void )
 void ${TC_INSTANCE_NAME}_Compare32bitCounterSet( uint32_t count )
 {
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_COUNT = count;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -438,7 +438,7 @@ void ${TC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period )
 {
     /* Configure period value */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = period;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -448,9 +448,9 @@ void ${TC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period )
 uint32_t ${TC_INSTANCE_NAME}_Compare32bitPeriodGet( void )
 {
     /* Write command to force CC register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -470,7 +470,7 @@ void ${TC_INSTANCE_NAME}_Compare32bitMatch0Set( uint32_t compareValue )
 {
     /* Set new compare value for compare channel 0 */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = compareValue;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -481,7 +481,7 @@ void ${TC_INSTANCE_NAME}_Compare32bitMatch1Set( uint32_t compareValue )
 {
     /* Set new compare value for compare channel 1 */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = compareValue;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
@@ -518,9 +518,9 @@ void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
 TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CompareStatusGet( void )
 {
     TC_COMPARE_STATUS compare_status;
-    compare_status = ((TC_COMPARE_STATUS)(${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG));
+    compare_status = (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG);
     /* Clear timer overflow interrupt */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = compare_status;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)compare_status;
     return compare_status;
 }
 </#if>
