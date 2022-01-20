@@ -46,14 +46,14 @@
 
 bool ${RAM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    memcpy((void *)data, (void *)address, length);
+    (void) memcpy((void *)data, (void *)address, length);
     
     return true;
 }
 
 bool ${RAM_INSTANCE_NAME}_Write( uint32_t *data, uint32_t length, uint32_t address )
 {
-    memcpy((void *)address, (void *)data, length);
+    (void) memcpy((void *)address, (void *)data, length);
     
     return true;
 }
