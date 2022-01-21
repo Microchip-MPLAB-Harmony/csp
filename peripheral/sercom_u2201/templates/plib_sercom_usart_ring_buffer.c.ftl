@@ -414,6 +414,7 @@ USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 static inline bool ${SERCOM_INSTANCE_NAME}_USART_RxPushByte(uint16_t rdByte)
 {
     uint32_t tempInIndex;
+	uint32_t rdInIdx;
     bool isSuccess = false;
 
     tempInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex + 1U;
@@ -450,8 +451,11 @@ static inline bool ${SERCOM_INSTANCE_NAME}_USART_RxPushByte(uint16_t rdByte)
         }
         else
         {
-            /* 9-bit */
-            ((uint16_t*)&${SERCOM_INSTANCE_NAME}_USART_ReadBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex] = rdByte;
+			/* 9-bit */
+			rdInIdx = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex << 1U;	
+			
+			${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdInIdx] = (uint8_t)rdByte;
+			${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdInIdx + 1U] = (uint8_t)(rdByte >> 8U);
         }
 
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex = tempInIndex;
@@ -499,6 +503,8 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_Read(uint8_t* pRdBuffer, const size_t size)
     size_t nBytesRead = 0U;
     uint32_t rdOutIndex;
     uint32_t rdInIndex;
+	uint32_t rdOutIdx;
+	uint32_t nBytesReadIdx;
 
     /* Take a snapshot of indices to avoid creation of critical section */
 
@@ -515,7 +521,14 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_Read(uint8_t* pRdBuffer, const size_t size)
             }
             else
             {
-                ((uint16_t*)pRdBuffer)[nBytesRead++] = ((uint16_t*)&${SERCOM_INSTANCE_NAME}_USART_ReadBuffer)[rdOutIndex++];
+				rdOutIdx = rdOutIndex << 1U;
+				nBytesReadIdx = nBytesRead << 1U;
+				
+				pRdBuffer[nBytesReadIdx] = ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdOutIdx];
+				pRdBuffer[nBytesReadIdx + 1U] = ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdOutIdx + 1U];
+				
+				rdOutIndex += 1U;
+				nBytesRead += 1U;				
             }
 
             if (rdOutIndex >= ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdBufferSize)
@@ -597,11 +610,13 @@ void ${SERCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( SERCOM_USART_RING_BUFFE
 <#if USART_TX_ENABLE = true>
 
 /* This routine is only called from ISR. Hence do not disable/enable USART interrupts. */
-static bool ${SERCOM_INSTANCE_NAME}_USART_TxPullByte(uint16_t* pWrByte)
+static bool ${SERCOM_INSTANCE_NAME}_USART_TxPullByte(void* pWrData)
 {
     bool isSuccess = false;
     uint32_t wrInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex;
     uint32_t wrOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex;
+	uint32_t wrOutIdx;
+	uint8_t* pWrByte = (uint8_t*)pWrData;
 
     if (wrOutIndex != wrInIndex)
     {
@@ -611,7 +626,11 @@ static bool ${SERCOM_INSTANCE_NAME}_USART_TxPullByte(uint16_t* pWrByte)
         }
         else
         {
-            *pWrByte = ((uint16_t*)&${SERCOM_INSTANCE_NAME}_USART_WriteBuffer)[wrOutIndex++];
+			wrOutIdx = wrOutIndex << 1U;
+			pWrByte[0] = ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrOutIdx];
+			pWrByte[1] = ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrOutIdx + 1U];
+			
+            wrOutIndex++;
         }
 
 
@@ -633,6 +652,7 @@ static inline bool ${SERCOM_INSTANCE_NAME}_USART_TxPushByte(uint16_t wrByte)
     uint32_t tempInIndex;
     uint32_t wrInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex;
     uint32_t wrOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex;
+	uint32_t wrInIdx;
 
     bool isSuccess = false;
 
@@ -650,7 +670,10 @@ static inline bool ${SERCOM_INSTANCE_NAME}_USART_TxPushByte(uint16_t wrByte)
         }
         else
         {
-            ((uint16_t*)&${SERCOM_INSTANCE_NAME}_USART_WriteBuffer)[wrInIndex] = wrByte;
+			wrInIdx = wrInIndex << 1U;
+			
+			${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrInIdx++] = (uint8_t)wrByte;
+			${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrInIdx] = (uint8_t)(wrByte >> 8U);			
         }
 
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex = tempInIndex;
