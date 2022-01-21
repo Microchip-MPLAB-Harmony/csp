@@ -184,9 +184,9 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
     }
 
 <#if SPIS_CHARSIZE_BITS == "8_BIT">
-    memcpy(pRdBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, rdSize);
+    (void) memcpy(pRdBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, rdSize);
 <#else>
-    memcpy(pRdBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, (rdSize << 1U));
+    (void) memcpy(pRdBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, (rdSize << 1U));
 </#if>
 
     ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET = intState;
@@ -209,9 +209,9 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
     }
 
 <#if SPIS_CHARSIZE_BITS == "8_BIT">
-    memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pWrBuffer, wrSize);
+   (void) memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pWrBuffer, wrSize);
 <#else>
-    memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pWrBuffer, (wrSize << 1U));
+   (void) memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pWrBuffer, (wrSize << 1U));
 </#if>
 
     ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes = wrSize;
@@ -221,7 +221,8 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
     writeReady = ((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_DRE_Msk) == SERCOM_SPIS_INTFLAG_DRE_Msk) && writeReady;
     while (writeReady)
     {
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA = ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex++];
+        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA = ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex];
+		${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex++;
         writeReady = (${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex < ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes);
         writeReady = ((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_DRE_Msk) == SERCOM_SPIS_INTFLAG_DRE_Msk) && writeReady;
     }
@@ -311,7 +312,7 @@ void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
         ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.errorStatus = SERCOM_SPIS_STATUS_BUFOVF_Msk;
 
         /* Clear the status register */
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_STATUS = (uint16_t)SERCOM_SPIS_STATUS_BUFOVF_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_STATUS = SERCOM_SPIS_STATUS_BUFOVF_Msk;
 
         /* Flush out the received data until RXC flag is set */
         while((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_RXC_Msk) == SERCOM_SPIS_INTFLAG_RXC_Msk)
@@ -341,7 +342,8 @@ void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
 
         if (${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex < ${SERCOM_INSTANCE_NAME}_SPI_READ_BUFFER_SIZE)
         {
-            ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer[${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex++] = txRxData;
+            ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer[${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex] = txRxData;
+			${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex++;
         }
     }
 
@@ -349,7 +351,8 @@ void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
     {
         if (${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex < ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes)
         {
-            txRxData = ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex++];
+            txRxData = ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex];
+			${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex++;
 
             /* Before writing to DATA register (which clears TXC flag), check if TXC flag is set */
             if((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_TXC_Msk) == SERCOM_SPIS_INTFLAG_TXC_Msk)
