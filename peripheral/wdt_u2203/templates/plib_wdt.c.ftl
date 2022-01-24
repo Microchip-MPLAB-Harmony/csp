@@ -58,7 +58,7 @@
 // *****************************************************************************
 
 <#if WDT_EW_ENABLE = true>
-WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
+static WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
 </#if>
 
 // *****************************************************************************
@@ -76,7 +76,10 @@ void ${WDT_INSTANCE_NAME}_Enable( void )
         ${WDT_INSTANCE_NAME}_REGS->WDT_CTRL |= WDT_CTRL_ENABLE_Msk;
 
         /* Wait for synchronization */
-        while(${WDT_INSTANCE_NAME}_REGS->WDT_STATUS);
+        while(${WDT_INSTANCE_NAME}_REGS->WDT_STATUS != 0U)
+        {
+            /* Do nothing */
+        }
     }
 <#if WDT_EW_ENABLE = true>
 
@@ -89,13 +92,19 @@ void ${WDT_INSTANCE_NAME}_Enable( void )
 void ${WDT_INSTANCE_NAME}_Disable( void )
 {
     /* Wait for synchronization */
-    while(${WDT_INSTANCE_NAME}_REGS->WDT_STATUS);
+    while(${WDT_INSTANCE_NAME}_REGS->WDT_STATUS != 0U)
+    {
+        /* Do nothing */
+    }
 
     /* Disable Watchdog Timer */
-    ${WDT_INSTANCE_NAME}_REGS->WDT_CTRL &= ~(WDT_CTRL_ENABLE_Msk);
+    ${WDT_INSTANCE_NAME}_REGS->WDT_CTRL = ((${WDT_INSTANCE_NAME}_REGS->WDT_CTRL)&(uint8_t)(~WDT_CTRL_ENABLE_Msk));
 
     /* Wait for synchronization */
-    while(${WDT_INSTANCE_NAME}_REGS->WDT_STATUS);
+    while(${WDT_INSTANCE_NAME}_REGS->WDT_STATUS != 0U)
+    {
+        /* Do nothing */
+    }
 <#if WDT_EW_ENABLE = true>
 
     /* Disable Early Watchdog Interrupt */
@@ -108,7 +117,7 @@ void ${WDT_INSTANCE_NAME}_Disable( void )
  */
 void ${WDT_INSTANCE_NAME}_Clear( void )
 {
-    if (${WDT_INSTANCE_NAME}_REGS->WDT_STATUS == 0)
+    if (${WDT_INSTANCE_NAME}_REGS->WDT_STATUS == 0U)
     {
         /* Clear WDT and reset the WDT timer before the
         timeout occurs */
@@ -123,14 +132,20 @@ void ${WDT_INSTANCE_NAME}_Clear( void )
 void ${WDT_INSTANCE_NAME}_ClearWithSync( void )
 {
     /* Wait for synchronization */
-    while(${WDT_INSTANCE_NAME}_REGS->WDT_STATUS);
+    while(${WDT_INSTANCE_NAME}_REGS->WDT_STATUS != 0U)
+    {
+        /* Do nothing */
+    }
 
     /* Clear WDT and reset the WDT timer before the
     timeout occurs */
     ${WDT_INSTANCE_NAME}_REGS->WDT_CLEAR = WDT_CLEAR_CLEAR_KEY;
 
     /* Wait for synchronization */
-    while(${WDT_INSTANCE_NAME}_REGS->WDT_STATUS);
+    while(${WDT_INSTANCE_NAME}_REGS->WDT_STATUS != 0U)
+    {
+        /* Do nothing */
+    }
 }
 
 <#if WDT_EW_ENABLE = true>
