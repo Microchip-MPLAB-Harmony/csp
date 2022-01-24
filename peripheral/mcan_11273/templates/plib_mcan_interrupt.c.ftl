@@ -150,7 +150,7 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
     /* Set CCE to unlock the configuration registers */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
 
-<#if MCAN_OPMODE == "CAN FD">
+<#if MCAN_OPMODE != "NORMAL">
 <#if MCAN_REVISION_A_ENABLE == true>
     /* Set Fast Bit Timing and Prescaler Register */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_FBTP = MCAN_FBTP_FTSEG2(${MCAN_DBTP_DTSEG2}) | MCAN_FBTP_FTSEG1(${MCAN_DBTP_DTSEG1}) | MCAN_FBTP_FBRP(${DBTP_DBRP}) | MCAN_FBTP_FSJW(${MCAN_DBTP_DSJW});
@@ -170,7 +170,7 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
 </#if>
 
 <#if RXF0_USE || RXF1_USE || RXBUF_USE>
-  <#if MCAN_OPMODE == "CAN FD">
+  <#if MCAN_OPMODE != "NORMAL">
     /* Receive Buffer / FIFO Element Size Configuration Register */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXESC = 0UL <#if RXF0_USE> | MCAN_RXESC_F0DS(${RXF0_BYTES_CFG!0}UL)</#if><#if RXF1_USE> | MCAN_RXESC_F1DS(${RXF1_BYTES_CFG!0}UL)</#if><#if RXBUF_USE> | MCAN_RXESC_RBDS(${RX_BUFFER_BYTES_CFG!0}UL)</#if>;
   </#if>
@@ -183,7 +183,7 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
 
 </#if>
 <#if TX_USE || TXBUF_USE>
-  <#if MCAN_OPMODE == "CAN FD">
+  <#if MCAN_OPMODE != "NORMAL">
     /* Transmit Buffer/FIFO Element Size Configuration Register */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXESC = MCAN_TXESC_TBDS(${TX_FIFO_BYTES_CFG}UL);
   </#if>
@@ -209,10 +209,31 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
 
     /* Set the operation mode */
 <#if MCAN_REVISION_A_ENABLE == true>
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED${(MCAN_OPMODE == "CAN FD")?then(' | MCAN_CCCR_CME_FD | MCAN_CCCR_CMR_FD_BITRATE_SWITCH','')}<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>;
+    <#if MCAN_OPMODE != "NORMAL">
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_CME_FD | MCAN_CCCR_CMR_FD_BITRATE_SWITCH<#rt>
+                                           <#lt><#if MCAN_OPMODE == "Restricted Operation Mode"> | MCAN_CCCR_ASM_Msk</#if><#rt>
+                                           <#lt><#if MCAN_OPMODE == "Bus Monitoring Mode"> | MCAN_CCCR_MON_Msk</#if><#rt>
+                                           <#lt><#if MCAN_OPMODE == "External Loop Back Mode"> | MCAN_CCCR_TEST_Msk</#if><#rt>
+                                           <#lt><#if MCAN_OPMODE == "Internal Loop Back Mode"> | MCAN_CCCR_TEST_Msk | MCAN_CCCR_MON_Msk</#if>;
+    </#if>
 <#else>
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED${(MCAN_OPMODE == "CAN FD")?then(' | MCAN_CCCR_FDOE_ENABLED | MCAN_CCCR_BRSE_ENABLED','')}<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>;
+    <#if MCAN_OPMODE != "NORMAL">
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_FDOE_ENABLED | MCAN_CCCR_BRSE_ENABLED<#rt>
+                                           <#lt><#if MCAN_OPMODE == "Restricted Operation Mode"> | MCAN_CCCR_ASM_Msk</#if><#rt>
+                                           <#lt><#if MCAN_OPMODE == "Bus Monitoring Mode"> | MCAN_CCCR_MON_Msk</#if><#rt>
+                                           <#lt><#if MCAN_OPMODE == "External Loop Back Mode"> | MCAN_CCCR_TEST_Msk</#if><#rt>
+                                           <#lt><#if MCAN_OPMODE == "Internal Loop Back Mode"> | MCAN_CCCR_TEST_Msk | MCAN_CCCR_MON_Msk</#if>;
+    </#if>
 </#if>
+    <#if TX_PAUSE == true>
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_TXP_Msk;
+    </#if>
+
+    <#if MCAN_OPMODE == "External Loop Back Mode" || MCAN_OPMODE == "Internal Loop Back Mode">
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TEST |= MCAN_TEST_LBCK_Msk;
+    </#if>
+
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR &= ~MCAN_CCCR_INIT_Msk;
     while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
     {
         /* Wait for initialization complete */
@@ -617,12 +638,7 @@ MCAN_ERROR ${MCAN_INSTANCE_NAME}_ErrorGet(void)
 
     if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
     {
-        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
-<#if MCAN_REVISION_A_ENABLE == true>
-        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED${(MCAN_OPMODE == "CAN FD")?then(' | MCAN_CCCR_CME_FD | MCAN_CCCR_CMR_FD_BITRATE_SWITCH','')}<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>;
-<#else>
-        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED${(MCAN_OPMODE == "CAN FD")?then(' | MCAN_CCCR_FDOE_ENABLED | MCAN_CCCR_BRSE_ENABLED','')}<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>;
-</#if>
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR &= ~MCAN_CCCR_INIT_Msk;
         while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
         {
             /* Wait for initialization complete */
@@ -681,7 +697,7 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     memset((void*)msgRAMConfigBaseAddress, 0x00, ${MCAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
 
     /* Set MCAN CCCR Init for Message RAM Configuration */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_ENABLED;
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_INIT_ENABLED;
     while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) != MCAN_CCCR_INIT_Msk)
     {
         /* Wait for configuration complete */
@@ -774,11 +790,7 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     (void)offset;
 
     /* Complete Message RAM Configuration by clearing MCAN CCCR Init */
-<#if MCAN_REVISION_A_ENABLE == true>
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED${(MCAN_OPMODE == "CAN FD")?then(' | MCAN_CCCR_CME_FD | MCAN_CCCR_CMR_FD_BITRATE_SWITCH','')}<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>;
-<#else>
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED${(MCAN_OPMODE == "CAN FD")?then(' | MCAN_CCCR_FDOE_ENABLED | MCAN_CCCR_BRSE_ENABLED','')}<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>;
-</#if>
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR &= ~MCAN_CCCR_INIT_Msk;
     while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
     {
         /* Wait for configuration complete */

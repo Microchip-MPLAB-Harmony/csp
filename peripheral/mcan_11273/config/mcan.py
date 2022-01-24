@@ -27,22 +27,22 @@ global interruptHandler
 global interruptHandlerLock
 
 mcanElementSizes = ["8 bytes", "12 bytes", "16 bytes", "20 bytes", "24 bytes", "32 bytes", "48 bytes", "64 bytes"]
-opModeValues = ["NORMAL", "CAN FD"]
+opModeValues = ["NORMAL", "CAN FD", "Restricted Operation Mode", "Bus Monitoring Mode", "External Loop Back Mode", "Internal Loop Back Mode"]
 
 stdFilterList = []
 extFilterList = []
 
 # if the mode is changed to FD, then show options for more bytes
 def showWhenFD(element, event):
-    if event["value"] == 'CAN FD':
+    if event["value"] != 'NORMAL':
         element.setVisible(True)
     else:
         element.setVisible(False)
 
 # Rx Buffer Element size
 def RxBufferElementSize(element, event):
-    if ((event["id"] == 'MCAN_OPMODE' and event["value"] == 'CAN FD' and Database.getSymbolValue(mcanInstanceName.getValue().lower(), "RXBUF_USE") == True)
-    or (event["id"] == 'RXBUF_USE' and event["value"] == True and Database.getSymbolValue(mcanInstanceName.getValue().lower(), "MCAN_OPMODE") == 'CAN FD')):
+    if ((event["id"] == 'MCAN_OPMODE' and event["value"] != 'NORMAL' and Database.getSymbolValue(mcanInstanceName.getValue().lower(), "RXBUF_USE") == True)
+    or (event["id"] == 'RXBUF_USE' and event["value"] == True and Database.getSymbolValue(mcanInstanceName.getValue().lower(), "MCAN_OPMODE") != 'NORMAL')):
         element.setVisible(True)
         element.setReadOnly(False)
     else:
@@ -65,7 +65,7 @@ def adornElementSize(fifo):
 
 # if mode is changed to NORMAL then set element size to 8 bytes
 def updateElementSize(symbol, event):
-    if event["value"] == 'CAN FD':
+    if event["value"] != 'NORMAL':
         symbol.setVisible(True)
         symbol.setReadOnly(False)
     else:
@@ -356,7 +356,7 @@ def bitTimingCalculation(bitTiming, lowTq, highTq):
     return "{:.3f}".format(errorRate), (int(calculatedBitrate) / 1000), "{:.3f}".format(tqPeriod * 1000000000.0), calculatedTimeQuanta, (tseg1 + 1), (tseg2 + 1), (sjw + 1)
 
 def dataBitTimingCalculation(symbol, event):
-    if (Database.getSymbolValue(mcanInstanceName.getValue().lower(), "MCAN_OPMODE") == "CAN FD"):
+    if (Database.getSymbolValue(mcanInstanceName.getValue().lower(), "MCAN_OPMODE") != "NORMAL"):
         if Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_DATA_BIT_TIMING_CALCULATION") == True:
             if event["id"] == "DBTP_DBRP" or event["id"] == "DATA_SAMPLE_POINT":
                 return
