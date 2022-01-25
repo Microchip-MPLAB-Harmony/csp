@@ -127,7 +127,7 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_SMMR = SUPC_SMMR_SMSMPL_SMD;
 </#if>
 
-    <@compress single_line=true>${SUPC_INSTANCE_NAME}_REGS->SUPC_MR = SUPC_MR_KEY_PASSWD
+    <@compress single_line=true>${SUPC_INSTANCE_NAME}_REGS->SUPC_MR = (${SUPC_INSTANCE_NAME}_REGS->SUPC_MR & ~SUPC_MR_Msk) | SUPC_MR_KEY_PASSWD
                                                                       ${SUPC_MR_ONE?then('| SUPC_MR_ONE_Msk', '')}
                                                                       ${SUPC_MR_ONEA?then('| SUPC_MR_ONEA_Msk', '')}
                                                                       ${SUPC_MR_BODRSTEN?then('| SUPC_MR_BODRSTEN_ENABLE', '')}
