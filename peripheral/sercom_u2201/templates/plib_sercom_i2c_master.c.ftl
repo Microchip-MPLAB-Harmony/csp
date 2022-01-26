@@ -835,7 +835,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_IsBusy(void)
     bool isBusy = true;
     if((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state == SERCOM_I2C_STATE_IDLE))
     {
-        if(((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) == SERCOM_I2CM_STATUS_BUSSTATE(0x01UL)))
+        if(((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) == SERCOM_I2CM_STATUS_BUSSTATE(0x01U)))
         {
            isBusy = false;
         }
@@ -984,16 +984,16 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                                  * Write ADDR[7:0] register to "11110 address[9:8] 1"
                                  * ADDR.TENBITEN must be cleared
                                  */
-                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true? 1UL: 0UL) | (((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) >> RIGHT_ALIGNED) << 1U) | (uint32_t)I2C_TRANSFER_READ;
+                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)? 1UL: 0UL) | (((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) >> RIGHT_ALIGNED) << 1U) | (uint32_t)I2C_TRANSFER_READ;
                             }
                             else
                             {
                                 /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
-                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true? 1UL: 0UL) | ((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1U) | (uint32_t)I2C_TRANSFER_READ;
+                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)? 1UL: 0UL) | ((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1U) | (uint32_t)I2C_TRANSFER_READ;
                             }
                             <#else>
                             /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
-                             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true? 1UL: 0UL) | ((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1UL) | (uint32_t)I2C_TRANSFER_READ;
+                             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)? 1UL: 0UL) | ((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1UL) | (uint32_t)I2C_TRANSFER_READ;
                             </#if>
                             <#else>
                             <#if (I2C_ADDR_TENBITEN?? && I2C_ADDR_TENBITEN = true)>
@@ -1056,8 +1056,8 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     /* Write next byte */
                     else
                     {
-                        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount++];
-
+                        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount];
+                        ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount++;
                         /* Wait for synchronization */
                         <#if SERCOM_SYNCBUSY = false>
                             while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & (uint16_t)SERCOM_I2CM_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_I2CM_STATUS_SYNCBUSY_Msk)
@@ -1130,8 +1130,8 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     </#if>
 
                     /* Read the received data */
-                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount++] = ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;
-
+                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount] =(uint8_t) ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;
+                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount++;
                     <#else>
 
                     if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount == (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize - 1U))
@@ -1169,8 +1169,8 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     </#if>
 
                     /* Read the received data */
-                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount++] = ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;
-
+                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount] = (uint8_t) ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;
+                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount++;
                     </#if>
 
                     break;
@@ -1222,7 +1222,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG = (uint8_t)SERCOM_I2CM_INTFLAG_Msk;
 
             /* Wait for the NAK and STOP bit to be transmitted out and I2C state machine to rest in IDLE state */
-            while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) != SERCOM_I2CM_STATUS_BUSSTATE(0x01UL))
+            while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) != SERCOM_I2CM_STATUS_BUSSTATE(0x01U))
             {
                 /* Do nothing */
             }
