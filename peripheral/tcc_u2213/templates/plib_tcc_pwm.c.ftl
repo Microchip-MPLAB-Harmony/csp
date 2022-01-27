@@ -313,7 +313,7 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 </#if>
 
 <#if TCC_PATT_VAL?has_content>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_PATT =(uint16_t)(${TCC_PATT_VAL});
+    ${TCC_INSTANCE_NAME}_REGS->TCC_PATT =${TCC_PATT_VAL};
 </#if>
 <#if TCC_DRVCTRL_INVEN?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL = ${TCC_DRVCTRL_INVEN};
