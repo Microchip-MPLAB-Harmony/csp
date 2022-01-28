@@ -45,7 +45,7 @@
 </#if>
 
 <#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
-SYSCTRL_CALLBACK_OBJECT SYSCTRL_CallbackObj;
+static SYSCTRL_CALLBACK_OBJECT SYSCTRL_CallbackObj;
 
 </#if>
 static void SYSCTRL_Initialize(void)
