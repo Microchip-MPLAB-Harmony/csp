@@ -2,6 +2,7 @@
 <@mhc_expand_list list=LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION/>
 </#if>
 
+<#if FUSE_CONFIG_ENABLE>
 /*** DEVCFG0 ***/
 <#if CONFIG_DEBUG?has_content>
 #pragma config DEBUG =      ${CONFIG_DEBUG}
@@ -207,3 +208,4 @@
 #pragma config BOOTSEL =       ${CONFIG_BOOTSEL}
 </#if>
 
+</#if>

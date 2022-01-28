@@ -172,9 +172,13 @@ def calcWaitStates(symbol, event):
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
+fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
+fuseSettings.setLabel("Generate Fuse Settings")
+fuseSettings.setDefaultValue(True)
+
 # loaded from atdf file
 node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSES\"]/register-group")
-populate_config_items(node, 'CONFIG_', ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSES\"]"), coreComponent, devCfgMenu, True)
+populate_config_items(node, 'CONFIG_', ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSES\"]"), coreComponent, fuseSettings, True)
 
 
 # SysTick External Clock Source

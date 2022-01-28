@@ -2,6 +2,7 @@
 <@mhc_expand_list list=LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION/>
 </#if>
 
+<#if FUSE_CONFIG_ENABLE>
 /*** FUSERID ***/
 <#if CONFIG_USER_ID?has_content>
 #pragma config USER_ID =      0x${CONFIG_USER_ID}
@@ -289,4 +290,6 @@
 /*** FCPN0 ***/
 <#if CONFIG_CP?has_content>
 #pragma config CP =      ${CONFIG_CP}
+</#if>
+
 </#if>

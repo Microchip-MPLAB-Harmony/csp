@@ -141,6 +141,10 @@ def calcWaitStates(symbol, event):
 
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
+fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
+fuseSettings.setLabel("Generate Fuse Settings")
+fuseSettings.setDefaultValue(True)
+
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
 
 # load device specific configurations (fuses), temporary, to be removed once XC32 updated
@@ -153,7 +157,7 @@ register = node.getChildren() # these are <register > fields for fuse config sec
 for ii in range(len(register)):
     porValue = register[ii].getAttribute('initval')
     symbolName = register[ii].getAttribute('name')
-    menuitem = coreComponent.createMenuSymbol(symbolName, devCfgMenu)
+    menuitem = coreComponent.createMenuSymbol(symbolName, fuseSettings)
     menuitem.setVisible(True)
     menuitem.setLabel(symbolName)
     bitfields = register[ii].getChildren()

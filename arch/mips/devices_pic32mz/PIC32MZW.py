@@ -215,11 +215,15 @@ clkValGrp_DEVCFG0__FECCCON = ATDF.getNode('/avr-tools-device-file/modules/module
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
 
+fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
+fuseSettings.setLabel("Generate Fuse Settings")
+fuseSettings.setDefaultValue(True)
+
 # loaded from atdf file
 # Most fields are key/value pairs, but a handful of them are integer.  Need to know which ones those are.
 bitfieldHexSymbols = [ 'USERID', 'SOSCCFG', 'CANFDDIV', 'USBDMTRIM', 'USBDPTRIM' ]
 node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSECONFIG\"]/register-group")
-populate_config_items(node, bitfieldHexSymbols, 'CONFIG_', ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSECONFIG\"]"), coreComponent, devCfgMenu, True)
+populate_config_items(node, bitfieldHexSymbols, 'CONFIG_', ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSECONFIG\"]"), coreComponent, fuseSettings, True)
 
 bitfieldHexSymbols = ['SPLLPOSTDIV2', 'ETHPLLPOSTDIV2', 'BTPLLPOSTDIV2']
 node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group")

@@ -2,9 +2,7 @@
 <@mhc_expand_list list=LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION/>
 </#if>
 
-
-
-
+<#if FUSE_CONFIG_ENABLE>
 /*** FBCFG0 ***/
 <#if CONFIG_BUHSWEN?has_content>
 #pragma config BUHSWEN =    ${CONFIG_BUHSWEN}
@@ -15,7 +13,6 @@
 <#if CONFIG_BOOTISA?has_content>
 #pragma config BOOTISA =    ${CONFIG_BOOTISA}
 </#if>
-
 
 
 /*** DEVCFG0 ***/
@@ -135,7 +132,6 @@
 </#if>
 
 
-
 /*** DEVCFG2 ***/
 <#if CONFIG_DMTINTV?has_content>
 #pragma config DMTINTV =    ${CONFIG_DMTINTV}
@@ -181,7 +177,6 @@
 </#if>
 
 
-
 /*** DEVCFG4 ***/
 <#if CONFIG_SOSCCFG?has_content>
 #pragma config SOSCCFG =    ${CONFIG_SOSCCFG}
@@ -212,4 +207,6 @@
 /*** FCPN0 ***/
 <#if CONFIG_CP?has_content>
 #pragma config CP =    ${CONFIG_CP}
+</#if>
+
 </#if>

@@ -1,6 +1,8 @@
 <#if LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION?has_content>
 <@mhc_expand_list list=LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION/>
 </#if>
+
+<#if FUSE_CONFIG_ENABLE>
 /*** FDEVOPT ***/
 <#if CONFIG_SOSCHP?has_content>
 #pragma config SOSCHP =      ${CONFIG_SOSCHP}
@@ -91,4 +93,6 @@
 /*** FSEC ***/
 <#if CONFIG_CP?has_content>
 #pragma config CP =         ${CONFIG_CP}
+</#if>
+
 </#if>
