@@ -611,7 +611,7 @@ def __plla_clock_menu(clk_comp, clk_menu):
     pllack_vco.setOutputMode("Key")
     for value in pllack_vco_vg_node.getChildren():
         pllack_vco.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
-    pllack_vco.setDefaultValue(0)
+    pllack_vco.setDefaultValue(1)
 
     # PLLA Internal Filter Resistor Value (SRA)
     pllack_sra_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PLL_CFG__SRA"]')
@@ -633,7 +633,7 @@ def __plla_clock_menu(clk_comp, clk_menu):
     pllack_sca.setOutputMode("Key")
     for value in pllack_sca_vg_node.getChildren():
         pllack_sca.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
-    pllack_sca.setDefaultValue(0)
+    pllack_sca.setDefaultValue(3)
 
     # PLLA Output Current (OUTCUR_PLLA)
     pllack_outcur_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PLL_CFG__OUTCUR_PLLA"]')
@@ -644,7 +644,7 @@ def __plla_clock_menu(clk_comp, clk_menu):
     pllack_outcur.setOutputMode("Key")
     for value in pllack_outcur_vg_node.getChildren():
         pllack_outcur.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
-    pllack_outcur.setDefaultValue(0)
+    pllack_outcur.setDefaultValue(3)
 
     # PLLACK Frequency
     pllack_freq = clk_comp.createIntegerSymbol("CLK_PLLACK_FREQ", pllack_menu)
