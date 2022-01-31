@@ -713,7 +713,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitComplete( void )
 {
     bool status = false;
 
-    if (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_TXEMPTY_Msk)
+    if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk)
     {
         status = true;
     }
