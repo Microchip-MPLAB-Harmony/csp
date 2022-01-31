@@ -99,7 +99,7 @@
 </#if>
 <#if SUPC_BOD33_RUNHIB == true || SUPC_BOD33_RUNBKUP == true || SUPC_BOD33_STDBYCFG == "1">
     <#if SUPC_BOD33_PSEL?has_content >
-        <#assign SUPC_BOD33_PSEL_VAL = "SUPC_BOD33_PSEL("+SUPC_BOD33_PSEL+")">
+        <#assign SUPC_BOD33_PSEL_VAL = "SUPC_BOD33_PSEL("+SUPC_BOD33_PSEL+"U)">
         <#assign SUPC_BOD33_VAL = SUPC_BOD33_PSEL_VAL>
     </#if>
 </#if>
@@ -141,7 +141,7 @@
 </#if>
 
 <#if SUPC_VREF_SEL?has_content >
-<#assign SUPC_VREF_SEL_VAL = "SUPC_VREF_SEL("+SUPC_VREF_SEL+")">
+<#assign SUPC_VREF_SEL_VAL = "SUPC_VREF_SEL("+SUPC_VREF_SEL+"U)">
 <#assign SUPC_VREF_VAL = SUPC_VREF_SEL_VAL>
 </#if>
 <#if SUPC_VREF_ONDEMAND?has_content >
@@ -187,7 +187,7 @@ typedef struct
     uintptr_t context;
 } SUPC_BOD33_CALLBACK_OBJ;
 
-SUPC_BOD33_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
+static SUPC_BOD33_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 void ${SUPC_INSTANCE_NAME}_Initialize( void )
@@ -197,8 +197,8 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
 
     /* Configure BOD33. Mask the values loaded from NVM during reset. */
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 &= ~SUPC_BOD33_ENABLE_Msk;
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 = (${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 & (${SUPC_BOD33_FACTORY_DATA_MASK})) | ${SUPC_BOD33_VAL};
-    if (bodEnable)
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 = (  ${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 & (${SUPC_BOD33_FACTORY_DATA_MASK})) | ${SUPC_BOD33_VAL};
+    if (bodEnable != 0U)
     {
         ${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 |= SUPC_BOD33_ENABLE_Msk;
     }
@@ -226,7 +226,7 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
 </#if>
     /* Configure VREG. Mask the values loaded from NVM during reset.*/
     <@compress single_line=true>${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG = (${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG & (${SUPC_VREG_FACTORY_DATA_MASK}))
-                                                          | SUPC_VREG_VSPER(${SUPC_VREG_VSPER})
+                                                          | SUPC_VREG_VSPER(${SUPC_VREG_VSPER}U)
                                                           ${(SUPC_VREG_RUNBKUP == "1")?then ('| SUPC_VREG_RUNBKUP_Msk', '')}
                                                           ${SUPC_VREG_VSEN?then('| SUPC_VREG_VSEN_Msk', '')};</@compress>
 }
@@ -234,25 +234,28 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
 <#if SUPC_TEMP_SENSOR_SUPPORT == true>
 void ${SUPC_INSTANCE_NAME}_SelectTempSenorChannel( SUPC_TSSEL sensor )
 {
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREF = (${SUPC_INSTANCE_NAME}_REGS->SUPC_VREF & (~SUPC_VREF_TSSEL_Msk)) | (sensor << SUPC_VREF_TSSEL_Pos);
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREF = (${SUPC_INSTANCE_NAME}_REGS->SUPC_VREF & (~SUPC_VREF_TSSEL_Msk)) | ((uint32_t)sensor << SUPC_VREF_TSSEL_Pos);
 }
 </#if>
 
 void ${SUPC_INSTANCE_NAME}_SetOutputPin( SUPC_OUTPIN pin )
 {
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_SETOUT(1 << pin);
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_SETOUT((1UL << (uint32_t)pin));
 }
 
 void ${SUPC_INSTANCE_NAME}_SelectVoltageRegulator(SUPC_VREGSEL regsel)
 {
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG |= (regsel << SUPC_VREG_SEL_Pos);
-    while(!(${SUPC_INSTANCE_NAME}_REGS->SUPC_STATUS & SUPC_STATUS_VREGRDY_Msk));
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG |= ((uint32_t)regsel << SUPC_VREG_SEL_Pos);
+    while((${SUPC_INSTANCE_NAME}_REGS->SUPC_STATUS & SUPC_STATUS_VREGRDY_Msk) == 0U)
+    {
+        /* do nothing */
+    }
 }
 
 
 void ${SUPC_INSTANCE_NAME}_ClearOutputPin( SUPC_OUTPIN pin )
 {
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLROUT(1 << pin);
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLROUT((1UL << (uint32_t)pin));
 }
 
 <#if SUPC_INTERRUPT_ENABLE = true>
