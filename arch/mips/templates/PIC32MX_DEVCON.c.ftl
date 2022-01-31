@@ -10,8 +10,8 @@
     CHECONbits.PREFEN = ${CONFIG_CHECON_PREFEN};
 
 </#if>
-    /* Set the SRAM wait states to zero */
-    BMXCONbits.BMXWSDRM = 0;
+    /* Set the SRAM wait states to One */
+    BMXCONbits.BMXWSDRM = 1;
 
 <#if (DDPCON_JTAG_ENABLE?? && DDPCON_JTAG_ENABLE == false) || (DDPCON_TDO_ENABLE?? && DDPCON_TDO_ENABLE == true) || (DDPCON_TRACE_ENABLE?? && DDPCON_TRACE_ENABLE == true)>
     /* Configure Debug Data Port */
