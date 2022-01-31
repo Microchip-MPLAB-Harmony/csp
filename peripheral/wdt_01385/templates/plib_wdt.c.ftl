@@ -69,6 +69,11 @@ void ${WDT_INSTANCE_NAME}_Disable(void)
 }
 
 </#if>
+bool ${WDT_INSTANCE_NAME}_IsEnabled( void )
+{
+    return((bool)WDTCONbits.ON);
+}
+
 <#if CONFIG_WINDIS == "OFF">
 void ${WDT_INSTANCE_NAME}_WindowEnable( void )
 {
@@ -83,7 +88,12 @@ void ${WDT_INSTANCE_NAME}_WindowDisable( void )
 }
 
 </#if>
-void ${WDT_INSTANCE_NAME}_Clear(void)
+bool ${WDT_INSTANCE_NAME}_IsWindowEnabled( void )
+{
+    return((bool)WDTCONbits.WDTWINEN);
+}
+
+void ${WDT_INSTANCE_NAME}_Clear( void )
 {
     /* Clear WDT timer */
     WDTCONbits.WDTCLR = 1;

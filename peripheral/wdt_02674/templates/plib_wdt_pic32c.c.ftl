@@ -69,6 +69,11 @@ void ${WDT_INSTANCE_NAME}_Disable( void )
 }
 
 </#if>
+bool ${WDT_INSTANCE_NAME}_IsEnabled( void )
+{
+    return((WDT_REGS->WDT_WDTCON & WDT_WDTCON_ON_Msk) == WDT_WDTCON_ON_Msk ? true : false);
+}
+
 <#if CONFIG_WINDIS == "NORMAL">
 void ${WDT_INSTANCE_NAME}_WindowEnable( void )
 {
@@ -83,6 +88,11 @@ void ${WDT_INSTANCE_NAME}_WindowDisable( void )
 }
 
 </#if>
+bool ${WDT_INSTANCE_NAME}_IsWindowEnabled( void )
+{
+    return((WDT_REGS->WDT_WDTCON & WDT_WDTCON_WDTWINEN_Msk) == WDT_WDTCON_WDTWINEN_Msk ? true : false);
+}
+
 void ${WDT_INSTANCE_NAME}_Clear( void )
 {
     <#-- Below is done family-by-family, as there are differences in clearing WDT -->

@@ -69,6 +69,10 @@ void ${WDT_INSTANCE_NAME}_Disable(void)
 }
 
 </#if>
+bool ${WDT_INSTANCE_NAME}_IsEnabled( void )
+{
+    return((bool)WDTCONbits.ON);
+}
 
 void ${WDT_INSTANCE_NAME}_Clear(void)
 {

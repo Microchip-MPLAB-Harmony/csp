@@ -51,6 +51,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -72,6 +73,8 @@ void ${WDT_INSTANCE_NAME}_Enable( void );
 void ${WDT_INSTANCE_NAME}_Disable( void );
 
 </#if>
+bool ${WDT_INSTANCE_NAME}_IsEnabled( void );
+
 void ${WDT_INSTANCE_NAME}_Clear( void );
 
 // DOM-IGNORE-BEGIN
