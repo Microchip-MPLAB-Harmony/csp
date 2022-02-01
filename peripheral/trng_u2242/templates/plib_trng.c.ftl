@@ -46,7 +46,7 @@
 </#if>
 
 <#if trngEnableInterrupt == true>
-	<#lt>TRNG_OBJECT trng;
+	<#lt>static TRNG_OBJECT trng;
 </#if>
 
 void ${TRNG_INSTANCE_NAME}_Initialize( void )
@@ -85,7 +85,7 @@ void ${TRNG_INSTANCE_NAME}_Initialize( void )
 <#if trngEnableInterrupt == true>
     <#lt>void ${TRNG_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
-    <#lt>   ${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA &= ~(TRNG_CTRLA_ENABLE_Msk);
+    <#lt>   ${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA = ((${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA) & (uint8_t)(~TRNG_CTRLA_ENABLE_Msk));
     <#lt>   ${TRNG_INSTANCE_NAME}_REGS->TRNG_INTENCLR = TRNG_INTENCLR_DATARDY_Msk;
     <#lt>   trng.data = ${TRNG_INSTANCE_NAME}_REGS->TRNG_DATA;
     <#lt>   if(trng.callback != NULL)
