@@ -210,8 +210,9 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
     uint32_t sampleRate    = 0U;
 </#if>
 <#if USART_FORM == "0x2">
-    float f_baudValue      = 0.0;
-    uint8_t fp = 0U;
+    float f_baudValue      = 0.0f;
+    float f_temp           = 0.0f;
+    uint32_t fractionPart  = 0U;
 </#if>
 
 <#if USART_INTERRUPT_MODE_ENABLE == true>
@@ -235,16 +236,17 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
         <#if USART_FORM == "0x2">
         if(clkFrequency >= (16U * serialSetup->baudRate))
         {
-            f_baudValue = (float)clkFrequency/(16U * (float)serialSetup->baudRate);
-            fp = (uint8_t)((f_baudValue - (int)f_baudValue) * 8.0);
-            baudValue = (int)f_baudValue;
+            f_baudValue = (float)clkFrequency/(16.0f * (float)serialSetup->baudRate);
+            f_temp = ((f_baudValue - ((float)((int)f_baudValue))) * 8.0f);
+            fractionPart = ((uint32_t)f_temp & 0xFFU);
+            baudValue = (uint32_t)f_baudValue;
             if ((baudValue == 0U) || (baudValue >= 8192U))
             {
                 baudValue = 0U;
             }
             else
             {
-                baudValue |= (fp << 13U);
+                baudValue |= (fractionPart << 13U);
             }
             sampleRate = 1U;
         }
@@ -471,13 +473,14 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
                 if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
                 {
                     /* 8-bit mode */
-                    ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint8_t*)(buffer))[processedSize++];
+                    ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint8_t*)(buffer))[processedSize];
                 }
                 else
                 {
                     /* 9-bit mode */
-                    ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint16_t*)(buffer))[processedSize++];
+                    ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint16_t*)(buffer))[processedSize];
                 }
+                processedSize += 1U;
             }
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize = processedSize;
             ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET = (uint8_t)SERCOM_USART_INT_INTFLAG_DRE_Msk;
@@ -496,15 +499,15 @@ bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd)
     /* Command strobe bits cannot be set while transmitter is busy */
 
     <#if USART_INTERRUPT_MODE_ENABLE = true>
-    if((${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus == false) && ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_TXE_Msk)!= 0U))
+    if((${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus == false) && ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_TXE_Msk)!= 0U))
     <#else>
-    if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_TXE_Msk) != 0U)
+    if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_TXE_Msk) != 0U)
     </#if>
     {
         /* Clear the flag */
-        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS = (uint16_t)SERCOM_USART_INT_STATUS_TXE_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS = SERCOM_USART_INT_STATUS_TXE_Msk;
 
-        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB |= (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~SERCOM_USART_INT_CTRLB_LINCMD_Msk) | cmd;
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB |= ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & ~SERCOM_USART_INT_CTRLB_LINCMD_Msk) | (uint16_t)cmd);
 
         return true;
     }
@@ -643,12 +646,12 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
             {
                 /* 8-bit mode */
-                pu8Data[u32Index] = (uint8_t) (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA);
+                pu8Data[u32Index] = (uint8_t)${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
             }
             else
             {
                 /* 9-bit mode */
-                pu16Data[u32Index] = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+                pu16Data[u32Index] = (uint16_t)${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
             }
 
             /* Increment index */
@@ -810,7 +813,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
             }
             else
             {
-                temp = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+                temp = (uint16_t)${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
 
                 if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
                 {
@@ -839,7 +842,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
                 }
             }
             <#else>
-            temp = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+            temp = (uint16_t)${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
 
             if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
             {

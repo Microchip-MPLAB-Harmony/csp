@@ -228,8 +228,9 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
     uint32_t sampleRate    = 0U;
 </#if>
 <#if (USART_FORM == "0x2" || USART_FORM == "0x4" || USART_FORM == "0x5")>
-    float f_baudValue      = 0.0;
-    uint8_t fp = 0U;
+    float f_baudValue      = 0.0f;
+    float f_temp           = 0.0f;
+    uint32_t fractionPart  = 0U;
 </#if>
 
     if((serialSetup != NULL) && (serialSetup->baudRate != 0U))
@@ -243,16 +244,17 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
         <#if (USART_FORM == "0x2" || USART_FORM == "0x4" || USART_FORM == "0x5")>
         if(clkFrequency >= (16U * serialSetup->baudRate))
         {
-            f_baudValue = (float)clkFrequency/(16U * (float)serialSetup->baudRate);
-            fp = (uint8_t)((f_baudValue - (int)f_baudValue) * 8.0);
-            baudValue = (int)f_baudValue;
+            f_baudValue = (float)clkFrequency/(16.0f * (float)serialSetup->baudRate);
+            f_temp = ((f_baudValue - ((float)((int)f_baudValue))) * 8.0f);
+            fractionPart = ((uint32_t)f_temp & 0xFFU);
+            baudValue = (uint32_t)f_baudValue;
             if ((baudValue == 0U) || (baudValue >= 8192U))
             {
                 baudValue = 0U;
             }
             else
             {
-                baudValue |= (fp << 13U);
+                baudValue |= (fractionPart << 13U);
             }
             sampleRate = 1U;
         }
@@ -392,7 +394,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ErrorClear( void )
     /* Flush existing error bytes from the RX FIFO */
     while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) == SERCOM_USART_INT_INTFLAG_RXC_Msk)
     {
-        u16dummyData = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+        u16dummyData = (uint16_t)${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
     }
 
     /* Ignore the warning */
@@ -517,7 +519,9 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_Read(uint8_t* pRdBuffer, const size_t size)
         {
             if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
             {
-                pRdBuffer[nBytesRead++] = ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdOutIndex++];
+                pRdBuffer[nBytesRead] = ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdOutIndex];
+                nBytesRead += 1U;
+                rdOutIndex += 1U;
             }
             else
             {
@@ -634,7 +638,8 @@ static bool ${SERCOM_INSTANCE_NAME}_USART_TxPullByte(void* pWrData)
     {
         if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
         {
-            *pWrByte = ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrOutIndex++];
+            *pWrByte = ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrOutIndex];
+            wrOutIndex++;
         }
         else
         {
@@ -778,7 +783,10 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_Write(uint8_t* pWrBuffer, const size_t size
         }
         else
         {
-            if (${SERCOM_INSTANCE_NAME}_USART_TxPushByte(((uint16_t*)pWrBuffer)[nBytesWritten]) == true)
+            uint16_t halfWordData = (uint16_t)(pWrBuffer[(2U * nBytesWritten) + 1U]);
+            halfWordData <<= 8U;
+            halfWordData |= (uint16_t)pWrBuffer[2U * nBytesWritten];
+            if (${SERCOM_INSTANCE_NAME}_USART_TxPushByte(halfWordData) == true)
             {
                 nBytesWritten++;
             }
