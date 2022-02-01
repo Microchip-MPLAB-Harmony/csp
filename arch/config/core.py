@@ -759,6 +759,25 @@ def instantiateComponent( coreComponent ):
             sizeInt = int(nodeIRAM.getAttribute("size"), 16)
             endAddressInt = startAddressInt + sizeInt - 1
             endAddressIRAM1.setDefaultValue("0x%08X" % endAddressInt)
+    
+
+    ############################# MISRAC Menu #################################
+    misracMenu = coreComponent.createMenuSymbol("MISRAC_MENU", projMenu)
+    misracMenu.setLabel( "MISRA-C:2012" )
+
+    suppressionMenu = coreComponent.createMenuSymbol("SUPPRESS_DEVIATIONS_MENU", misracMenu)
+    suppressionMenu.setLabel("Suppress Deviations")
+
+    coveritySuppression = coreComponent.createBooleanSymbol("COVERITY_SUPPRESS_DEVIATION", suppressionMenu)
+    coveritySuppression.setLabel("Suppress for Coverity")
+
+    xc32AppendMePragmaWarning =  coreComponent.createSettingSymbol("SUPPRESS_UNKNOWN_PRAGMA_WARNING", suppressionMenu)
+    xc32AppendMePragmaWarning.setCategory("C32")
+    xc32AppendMePragmaWarning.setKey("appendMe")
+    xc32AppendMePragmaWarning.setValue("-Wno-unkown-pragmas")
+    xc32AppendMePragmaWarning.setAppend(True, " ")
+    xc32AppendMePragmaWarning.setEnabled(coveritySuppression.getValue())
+    xc32AppendMePragmaWarning.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["COVERITY_SUPPRESS_DEVIATION"])
 
     #################### Main File ####################
     # generate main.c file
