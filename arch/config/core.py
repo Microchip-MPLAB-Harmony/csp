@@ -774,7 +774,7 @@ def instantiateComponent( coreComponent ):
     xc32AppendMePragmaWarning =  coreComponent.createSettingSymbol("SUPPRESS_UNKNOWN_PRAGMA_WARNING", suppressionMenu)
     xc32AppendMePragmaWarning.setCategory("C32")
     xc32AppendMePragmaWarning.setKey("appendMe")
-    xc32AppendMePragmaWarning.setValue("-Wno-unkown-pragmas")
+    xc32AppendMePragmaWarning.setValue("-Wno-unknown-pragmas")
     xc32AppendMePragmaWarning.setAppend(True, " ")
     xc32AppendMePragmaWarning.setEnabled(coveritySuppression.getValue())
     xc32AppendMePragmaWarning.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["COVERITY_SUPPRESS_DEVIATION"])
