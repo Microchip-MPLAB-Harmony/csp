@@ -347,7 +347,7 @@ void ${TCC_INSTANCE_NAME}_TimerCallbackRegister( TCC_CALLBACK callback, uintptr_
 void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status;
-    status = (uint32_t) ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
+    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     /* Clear interrupt flags */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
     if( ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
@@ -362,7 +362,7 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
     uint32_t status;
-    status = (uint32_t) (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
+    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
     /* Clear interrupt flags */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;
     if( ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
@@ -376,7 +376,7 @@ void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
         <#lt>void ${TCC_INSTANCE_NAME}_MC1_InterruptHandler(void)
         <#lt>{
         <#lt>    uint32_t status;
-        <#lt>    status = (uint32_t)TCC_INTFLAG_MC1_Msk;
+        <#lt>    status = TCC_INTFLAG_MC1_Msk;
         <#lt>    /* Clear interrupt flags */
         <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC1_Msk;
         <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)

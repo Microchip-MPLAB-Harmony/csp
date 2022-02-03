@@ -532,7 +532,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
                 <#lt>void ${TCC_INSTANCE_NAME}_MC${i}_InterruptHandler(void)
                 <#lt>{
                 <#lt>    uint32_t status;
-                <#lt>    status = (uint32_t)TCC_INTFLAG_MC${i}_Msk;
+                <#lt>    status = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    /* Clear interrupt flags */
                 <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
