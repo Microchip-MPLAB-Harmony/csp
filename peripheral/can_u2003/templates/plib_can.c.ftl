@@ -135,7 +135,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     /* Set CCE to unlock the configuration registers */
     ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_CCE_Msk;
 
-<#if CAN_OPMODE == "CAN FD">
+<#if CAN_OPMODE != "NORMAL">
     /* Set Data Bit Timing and Prescaler Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_DBTP = CAN_DBTP_DTSEG2(${CAN_DBTP_DTSEG2}UL) | CAN_DBTP_DTSEG1(${CAN_DBTP_DTSEG1}UL) | CAN_DBTP_DBRP(${DBTP_DBRP}UL) | CAN_DBTP_DSJW(${CAN_DBTP_DSJW}UL);
 
@@ -144,7 +144,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     ${CAN_INSTANCE_NAME}_REGS->CAN_NBTP  = CAN_NBTP_NTSEG2(${CAN_NBTP_NTSEG2}UL) | CAN_NBTP_NTSEG1(${CAN_NBTP_NTSEG1}UL) | CAN_NBTP_NBRP(${NBTP_NBRP}UL) | CAN_NBTP_NSJW(${CAN_NBTP_NSJW}UL);
 
 <#if RXF0_USE || RXF1_USE || RXBUF_USE>
-  <#if CAN_OPMODE == "CAN FD">
+  <#if CAN_OPMODE != "NORMAL">
     /* Receive Buffer / FIFO Element Size Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_RXESC = 0UL <#if RXF0_USE> | CAN_RXESC_F0DS(${RXF0_BYTES_CFG!0}UL)</#if><#if RXF1_USE> | CAN_RXESC_F1DS(${RXF1_BYTES_CFG!0}UL)</#if><#if RXBUF_USE> | CAN_RXESC_RBDS(${RX_BUFFER_BYTES_CFG!0}UL)</#if>;
   </#if>
@@ -157,7 +157,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 
 </#if>
 <#if TX_USE || TXBUF_USE>
-  <#if CAN_OPMODE == "CAN FD">
+  <#if CAN_OPMODE != "NORMAL">
     /* Transmit Buffer/FIFO Element Size Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_TXESC = CAN_TXESC_TBDS(${TX_FIFO_BYTES_CFG}UL);
   </#if>
@@ -182,7 +182,22 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 </#if>
 
     /* Set the operation mode */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = (${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & ~CAN_CCCR_INIT_Msk)${(CAN_OPMODE == "CAN FD")?then(' | CAN_CCCR_FDOE_Msk | CAN_CCCR_BRSE_Msk','')}<#if TX_PAUSE!false> | CAN_CCCR_TXP_Msk</#if>;
+    <#if CAN_OPMODE != "NORMAL">
+    ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_FDOE_Msk | CAN_CCCR_BRSE_Msk<#rt>
+                                           <#lt><#if CAN_OPMODE == "Restricted Operation Mode"> | CAN_CCCR_ASM_Msk</#if><#rt>
+                                           <#lt><#if CAN_OPMODE == "Bus Monitoring Mode"> | CAN_CCCR_MON_Msk</#if><#rt>
+                                           <#lt><#if CAN_OPMODE == "External Loop Back Mode"> | CAN_CCCR_TEST_Msk</#if><#rt>
+                                           <#lt><#if CAN_OPMODE == "Internal Loop Back Mode"> | CAN_CCCR_TEST_Msk | CAN_CCCR_MON_Msk</#if>;
+    </#if>
+    <#if TX_PAUSE == true>
+    ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_TXP_Msk;
+    </#if>
+
+    <#if CAN_OPMODE == "External Loop Back Mode" || CAN_OPMODE == "Internal Loop Back Mode">
+    ${CAN_INSTANCE_NAME}_REGS->CAN_TEST |= CAN_TEST_LBCK_Msk;
+    </#if>
+
+    ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR &= ~CAN_CCCR_INIT_Msk;
     while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk)
     {
         /* Wait for initialization complete */
@@ -681,8 +696,7 @@ CAN_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void)
 
     if ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk)
     {
-        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_CCE_Msk;
-        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = (${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & ~CAN_CCCR_INIT_Msk)${(CAN_OPMODE == "CAN FD")?then(' | CAN_CCCR_FDOE_Msk | CAN_CCCR_BRSE_Msk','')}<#if TX_PAUSE!false> | CAN_CCCR_TXP_Msk</#if>;
+        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR &= ~CAN_CCCR_INIT_Msk;
         while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk)
         {
             /* Wait for initialization complete */
@@ -784,7 +798,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     (void) memset(msgRAMConfigBaseAddress, 0x00, ${CAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
 
     /* Set CAN CCCR Init for Message RAM Configuration */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = CAN_CCCR_INIT_Msk;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_INIT_Msk;
     while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) != CAN_CCCR_INIT_Msk)
     {
         /* Wait for initialization complete */
@@ -859,7 +873,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     (void)offset;
 
     /* Complete Message RAM Configuration by clearing CAN CCCR Init */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = (${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & ~CAN_CCCR_INIT_Msk)${(CAN_OPMODE == "CAN FD")?then(' | CAN_CCCR_FDOE_Msk | CAN_CCCR_BRSE_Msk','')}<#if TX_PAUSE!false> | CAN_CCCR_TXP_Msk</#if>;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR &= ~CAN_CCCR_INIT_Msk;
     while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk)
     {
         /* Wait for configuration complete */
