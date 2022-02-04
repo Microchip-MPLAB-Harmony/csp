@@ -52,19 +52,19 @@
 
 #include "plib_sdhc_common.h"
 
-#define ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES        ${SDHC_NUM_DESCRIPTOR_LINES}
-#define ${SDHC_INSTANCE_NAME}_BASE_CLOCK_FREQUENCY       ${SDHC_CLK_FREQ}
-#define ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE                   0x200
-#define ${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE	 (8 * ${SDHC_NUM_DESCRIPTOR_LINES})
-#define ${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE_CACHE_ALIGN	 (${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE + ((${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE % CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE % CACHE_LINE_SIZE)) : 0))
+#define ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES        (${SDHC_NUM_DESCRIPTOR_LINES}U)
+#define ${SDHC_INSTANCE_NAME}_BASE_CLOCK_FREQUENCY       (${SDHC_CLK_FREQ}U)
+#define ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE             (0x200U)
+#define ${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE	     (8U * ${SDHC_NUM_DESCRIPTOR_LINES})
+#define ${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE_CACHE_ALIGN	 (${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE + ((${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE % CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE % CACHE_LINE_SIZE)) : 0U))
 
-static CACHE_ALIGN SDHC_ADMA_DESCR ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[(${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE_CACHE_ALIGN/8)];
+static CACHE_ALIGN SDHC_ADMA_DESCR ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[(${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE_CACHE_ALIGN/8U)];
 
 static SDHC_OBJECT ${SDHC_INSTANCE_NAME?lower_case}Obj;
 
 static void ${SDHC_INSTANCE_NAME}_VariablesInit ( void )
 {
-    ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus = 0;
+    ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus = 0U;
     ${SDHC_INSTANCE_NAME?lower_case}Obj.isCmdInProgress = false;
     ${SDHC_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
     ${SDHC_INSTANCE_NAME?lower_case}Obj.callback = NULL;
@@ -72,7 +72,7 @@ static void ${SDHC_INSTANCE_NAME}_VariablesInit ( void )
 
 static void ${SDHC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode )
 {
-    uint16_t transferMode = 0;
+    uint16_t transferMode = 0U;
 
     switch(opcode)
     {
@@ -103,6 +103,7 @@ static void ${SDHC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode )
             break;
 
         default:
+		   /* Do Nothing here */
             break;
     }
 
@@ -111,8 +112,8 @@ static void ${SDHC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode )
 
 void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
 {
-    uint16_t nistr = 0;
-    uint16_t eistr = 0;
+    uint16_t nistr = 0U;
+    uint16_t eistr = 0U;
     SDHC_XFER_STATUS xferStatus = (SDHC_XFER_STATUS) 0;
 
     nistr = ${SDHC_INSTANCE_NAME}_REGS->SDHC_NISTR;
@@ -121,11 +122,11 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
     ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus |= eistr;
     <#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
 
-    if (nistr & SDHC_NISTR_CINS_Msk)
+    if ((nistr & SDHC_NISTR_CINS_Msk) != 0U)
     {
         xferStatus |= SDHC_XFER_STATUS_CARD_INSERTED;
     }
-    if (nistr & SDHC_NISTR_CREM_Msk)
+    if ((nistr & SDHC_NISTR_CREM_Msk) != 0U)
     {
         xferStatus |= SDHC_XFER_STATUS_CARD_REMOVED;
     }
@@ -133,14 +134,14 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
 
     if (${SDHC_INSTANCE_NAME?lower_case}Obj.isCmdInProgress == true)
     {
-        if (nistr & (SDHC_NISTR_CMDC_Msk | SDHC_NISTR_TRFC_Msk | SDHC_NISTR_ERRINT_Msk))
+        if ((nistr & (SDHC_NISTR_CMDC_Msk | SDHC_NISTR_TRFC_Msk | SDHC_NISTR_ERRINT_Msk)) != 0U)
         {
-            if (nistr & SDHC_NISTR_ERRINT_Msk)
+            if ((nistr & SDHC_NISTR_ERRINT_Msk) != 0U)
             {
-                if (eistr & (SDHC_EISTR_CMDTEO_Msk | \
+                if (((eistr & (SDHC_EISTR_CMDTEO_Msk | \
                                       SDHC_EISTR_CMDCRC_Msk | \
                                       SDHC_EISTR_CMDEND_Msk | \
-                                      SDHC_EISTR_CMDIDX_Msk))
+                                      SDHC_EISTR_CMDIDX_Msk))) != 0U)
                 {
                     ${SDHC_INSTANCE_NAME}_ErrorReset (SDHC_RESET_CMD);
                 }
@@ -152,21 +153,21 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
 
     if (${SDHC_INSTANCE_NAME?lower_case}Obj.isDataInProgress == true)
     {
-        if (nistr & (SDHC_NISTR_TRFC_Msk | SDHC_NISTR_DMAINT_Msk | SDHC_NISTR_ERRINT_Msk))
+        if ((nistr & (SDHC_NISTR_TRFC_Msk | SDHC_NISTR_DMAINT_Msk | SDHC_NISTR_ERRINT_Msk)) != 0U)
         {
-            if (nistr & SDHC_NISTR_ERRINT_Msk)
+            if ((nistr & SDHC_NISTR_ERRINT_Msk) != 0U)
             {
-                if (eistr & (SDHC_EISTR_DATTEO_Msk | \
+                if ((eistr & (SDHC_EISTR_DATTEO_Msk | \
                             SDHC_EISTR_DATCRC_Msk | \
-                            SDHC_EISTR_DATEND_Msk))
+                            SDHC_EISTR_DATEND_Msk)) != 0U)
                 {
                     ${SDHC_INSTANCE_NAME}_ErrorReset (SDHC_RESET_DAT);
                 }
             }
-            if (nistr & SDHC_NISTR_TRFC_Msk)
+            if ((nistr & SDHC_NISTR_TRFC_Msk) != 0U)
             {
                 /* Clear the data timeout error as transfer complete has higher priority */
-                ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus &= ~SDHC_EISTR_DATTEO_Msk;
+                ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus &= (uint16_t)(~SDHC_EISTR_DATTEO_Msk);
             }
             ${SDHC_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
             xferStatus |= SDHC_XFER_STATUS_DATA_COMPLETED;
@@ -177,7 +178,7 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_NISTR = nistr;
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_EISTR = eistr;
 
-    if ((${SDHC_INSTANCE_NAME?lower_case}Obj.callback != NULL) && (xferStatus > 0))
+    if ((${SDHC_INSTANCE_NAME?lower_case}Obj.callback != NULL) && ((uint32_t)xferStatus > 0U))
     {
         ${SDHC_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, ${SDHC_INSTANCE_NAME?lower_case}Obj.context);
     }
@@ -185,10 +186,13 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
 
 void ${SDHC_INSTANCE_NAME}_ErrorReset ( SDHC_RESET_TYPE resetType )
 {
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_SRR = resetType;
+    ${SDHC_INSTANCE_NAME}_REGS->SDHC_SRR = (uint8_t)resetType;
 
     /* Wait until host resets the error status */
-    while (${SDHC_INSTANCE_NAME}_REGS->SDHC_SRR & resetType);
+    while ((${SDHC_INSTANCE_NAME}_REGS->SDHC_SRR & (uint8_t)resetType) != 0U)
+	{
+
+	}
 }
 
 uint16_t ${SDHC_INSTANCE_NAME}_GetError(void)
@@ -216,7 +220,7 @@ void ${SDHC_INSTANCE_NAME}_BusWidthSet ( SDHC_BUS_WIDTH busWidth )
     }
     else
     {
-        ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R &= ~SDHC_HC1R_DW_4BIT;
+        ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R &= (uint8_t)(~SDHC_HC1R_DW_4BIT);
     }
 }
 
@@ -228,7 +232,7 @@ void ${SDHC_INSTANCE_NAME}_SpeedModeSet ( SDHC_SPEED_MODE speedMode )
     }
     else
     {
-       ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R &= ~SDHC_HC1R_HSEN_Msk;
+       ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R &= (uint8_t)(~SDHC_HC1R_HSEN_Msk);
     }
 }
 
@@ -258,9 +262,9 @@ bool ${SDHC_INSTANCE_NAME}_IsCardAttached ( void )
 
 void ${SDHC_INSTANCE_NAME}_BlockSizeSet ( uint16_t blockSize )
 {
-    if(blockSize == 0)
+    if(blockSize == 0U)
     {
-        blockSize = 1;
+        blockSize = 1U;
     }
     else if(blockSize > ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE)
     {
@@ -283,8 +287,10 @@ void ${SDHC_INSTANCE_NAME}_ClockEnable ( void )
     /* Start the internal clock  */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_INTCLKEN_Msk;
 
-    /* Wait for the internal clock to stabilize */
-    while (!(${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR & SDHC_CCR_INTCLKS_Msk)) ;
+    while ((${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR & SDHC_CCR_INTCLKS_Msk) == 0U)
+	{
+        /* Wait for the internal clock to stabilize */
+	}
 
     /* Enable the SD Clock */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_SDCLKEN_Msk;
@@ -292,7 +298,7 @@ void ${SDHC_INSTANCE_NAME}_ClockEnable ( void )
 
 void ${SDHC_INSTANCE_NAME}_ClockDisable ( void )
 {
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR &= ~(SDHC_CCR_INTCLKEN_Msk | SDHC_CCR_SDCLKEN_Msk);
+    ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR &= (uint16_t)(~(SDHC_CCR_INTCLKEN_Msk | SDHC_CCR_SDCLKEN_Msk));
 }
 
 void ${SDHC_INSTANCE_NAME}_DmaSetup (
@@ -301,10 +307,6 @@ void ${SDHC_INSTANCE_NAME}_DmaSetup (
     SDHC_DATA_TRANSFER_DIR direction
 )
 {
-    uint32_t i;
-    uint32_t pendingBytes = numBytes;
-    uint32_t nBytes = 0;
-
     (void)direction;
 
     /* Each ADMA2 descriptor can transfer 65536 bytes (or 128 blocks) of data.
@@ -314,128 +316,139 @@ void ${SDHC_INSTANCE_NAME}_DmaSetup (
      * a block size of 512 bytes.
      */
 
-    if (pendingBytes > (65536 * ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES))
+<#if SDHC_NUM_DESCRIPTOR_LINES == 1>
+    if (numBytes <= 65536U)
     {
-        /* Too many blocks requested in one go */
-        return;
-    }
-
-    for (i = 0; (i < ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES) && (pendingBytes > 0); i++)
-    {
-        if (pendingBytes > 65536)
-        {
-            nBytes = 65536;
-        }
-        else
-        {
-            nBytes = pendingBytes;
-        }
-        ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[i].address = (uint32_t)(buffer);
-        ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[i].length = nBytes;
-        ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[i].attribute = \
+        ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0].address = (uint32_t)(buffer);
+        ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0].length = (uint16_t)numBytes;
+        ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0].attribute = \
             (SDHC_DESC_TABLE_ATTR_XFER_DATA | SDHC_DESC_TABLE_ATTR_VALID | SDHC_DESC_TABLE_ATTR_INTR);
 
-        pendingBytes = pendingBytes - nBytes;
+
+         /* The last descriptor line must indicate the end of the descriptor list */
+        ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0].attribute |= (uint16_t)(SDHC_DESC_TABLE_ATTR_END);
+
+        /* Clean the cache associated with the modified descriptors */
+        DCACHE_CLEAN_BY_ADDR((uint32_t*)(${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable), (sizeof(SDHC_ADMA_DESCR)));
+
+        /* Set the starting address of the descriptor table */
+        ${SDHC_INSTANCE_NAME}_REGS->SDHC_ASAR[0] = (uint32_t)(&${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0]);
     }
+<#else>
+    uint32_t i = 0U;
+    uint32_t pendingBytes = numBytes;
+    uint32_t nBytes = 0U;
 
-    /* The last descriptor line must indicate the end of the descriptor list */
-    ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[i-1].attribute |= (SDHC_DESC_TABLE_ATTR_END);
+    if ((pendingBytes > 0U) && (pendingBytes <= (65536U * ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES)))
+    {
+        do
+        {
+            if (pendingBytes > 65536U)
+            {
+                nBytes = 65536U;
+            }
+            else
+            {
+                nBytes = pendingBytes;
+            }
+            ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[i].address = (uint32_t)(buffer);
+            ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[i].length = (uint16_t)nBytes;
+            ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[i].attribute = \
+                (SDHC_DESC_TABLE_ATTR_XFER_DATA | SDHC_DESC_TABLE_ATTR_VALID | SDHC_DESC_TABLE_ATTR_INTR);
 
-    /* Clean the cache associated with the modified descriptors */
-    DCACHE_CLEAN_BY_ADDR((uint32_t*)(${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable), (i * sizeof(SDHC_ADMA_DESCR)));
+            pendingBytes = pendingBytes - nBytes;
+            i++;
+        }while((i < ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES) && (pendingBytes > 0U));
 
-    /* Set the starting address of the descriptor table */
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_ASAR[0] = (uint32_t)(&${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0]);
+        /* The last descriptor line must indicate the end of the descriptor list */
+        ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[i-1U].attribute |= (uint16_t)(SDHC_DESC_TABLE_ATTR_END);
+
+        /* Clean the cache associated with the modified descriptors */
+        DCACHE_CLEAN_BY_ADDR((uint32_t*)(${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable), (i * sizeof(SDHC_ADMA_DESCR)));
+
+        /* Set the starting address of the descriptor table */
+        ${SDHC_INSTANCE_NAME}_REGS->SDHC_ASAR[0] = (uint32_t)(&${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0]);
+    }
+</#if>
 }
 
 bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t speed)
 {
-    uint32_t baseclk_frq = 0;
-    uint16_t divider = 0;
-    uint32_t clkmul = 0;
-    SDHC_CLK_MODE clkMode = SDHC_PROGRAMMABLE_CLK_MODE;
+    uint32_t baseclk_frq = 0U;
+    uint16_t divider = 0U;
+    uint32_t clkmul = 0U;
+    bool retval = false;
 
     /* Disable clock before changing it */
-    if (${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR & SDHC_CCR_SDCLKEN_Msk)
+    if ((${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR & SDHC_CCR_SDCLKEN_Msk) != 0U)
     {
-        while (${SDHC_INSTANCE_NAME}_REGS->SDHC_PSR & (SDHC_PSR_CMDINHC_Msk | SDHC_PSR_CMDINHD_Msk));
-        ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR &= ~SDHC_CCR_SDCLKEN_Msk;
+        while ((${SDHC_INSTANCE_NAME}_REGS->SDHC_PSR & (SDHC_PSR_CMDINHC_Msk | SDHC_PSR_CMDINHD_Msk)) != 0U)
+		{
+            /* Wait for clock status to clear */
+		}
+        ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR &= (uint16_t)(~SDHC_CCR_SDCLKEN_Msk);
     }
 
     /* Get the base clock frequency */
     baseclk_frq = (${SDHC_INSTANCE_NAME}_REGS->SDHC_CA0R & (SDHC_CA0R_BASECLKF_Msk)) >> SDHC_CA0R_BASECLKF_Pos;
-    if (baseclk_frq == 0)
+    if (baseclk_frq == 0U)
     {
-        baseclk_frq = ${SDHC_INSTANCE_NAME}_BASE_CLOCK_FREQUENCY/2;
+        baseclk_frq = (uint32_t)(${SDHC_INSTANCE_NAME}_BASE_CLOCK_FREQUENCY/2U);
     }
     else
     {
-        baseclk_frq *= 1000000;
+        baseclk_frq *= 1000000U;
     }
 
-    if (clkMode == SDHC_DIVIDED_CLK_MODE)
+    clkmul = (${SDHC_INSTANCE_NAME}_REGS->SDHC_CA1R & (SDHC_CA1R_CLKMULT_Msk)) >> SDHC_CA1R_CLKMULT_Pos;
+    if (clkmul > 0U)
     {
-        /* F_SDCLK = F_BASECLK/(2 x DIV).
-           For a given F_SDCLK, DIV = F_BASECLK/(2 x F_SDCLK)
+        /* F_SDCLK = F_MULTCLK/(DIV+1), where F_MULTCLK = F_BASECLK x (CLKMULT+1)
+            F_SDCLK = (F_BASECLK x (CLKMULT + 1))/(DIV + 1)
+            For a given F_SDCLK, DIV = [(F_BASECLK x (CLKMULT + 1))/F_SDCLK] - 1
         */
-
-        divider =  baseclk_frq/(2 * speed);
-        ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR &= ~SDHC_CCR_CLKGSEL_Msk;
-    }
-    else
-    {
-        clkmul = (${SDHC_INSTANCE_NAME}_REGS->SDHC_CA1R & (SDHC_CA1R_CLKMULT_Msk)) >> SDHC_CA1R_CLKMULT_Pos;
-        if (clkmul > 0)
+        divider = (uint16_t)((baseclk_frq * (clkmul + 1U)) / speed);
+        if (divider > 0U)
         {
-            /* F_SDCLK = F_MULTCLK/(DIV+1), where F_MULTCLK = F_BASECLK x (CLKMULT+1)
-               F_SDCLK = (F_BASECLK x (CLKMULT + 1))/(DIV + 1)
-               For a given F_SDCLK, DIV = [(F_BASECLK x (CLKMULT + 1))/F_SDCLK] - 1
-            */
-            divider = (baseclk_frq * (clkmul + 1)) / speed;
-            if (divider > 0)
-            {
-                divider = divider - 1;
-            }
-            ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_CLKGSEL_Msk;
+            divider = divider - 1U;
+        }
+        ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_CLKGSEL_Msk;
+
+        if (speed > SDHC_CLOCK_FREQ_DS_25_MHZ)
+        {
+            /* Enable the high speed mode */
+            ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R |= SDHC_HC1R_HSEN_Msk;
         }
         else
         {
-            /* Programmable clock mode is not supported */
-            return false;
+            /* Clear the high speed mode */
+            ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R &= (uint8_t)(~SDHC_HC1R_HSEN_Msk);
         }
+
+        if (((${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R & SDHC_HC1R_HSEN_Msk) != 0U) && (divider == 0U))
+        {
+            /* IP limitation, if high speed mode is active divider must be non zero */
+            divider = 1;
+        }
+
+        /* Set the divider */
+        ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR &= (uint16_t)(~(SDHC_CCR_SDCLKFSEL_Msk | SDHC_CCR_USDCLKFSEL_Msk));
+        ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_SDCLKFSEL((divider & 0xffU)) | SDHC_CCR_USDCLKFSEL((divider >> 8U));
+
+        /* Enable internal clock */
+        ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_INTCLKEN_Msk;
+
+        while((${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR & SDHC_CCR_INTCLKS_Msk) == 0U)
+        {
+            /* Wait for the internal clock to stabilize */
+        }
+
+        /* Enable the SDCLK */
+        ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_SDCLKEN_Msk;
+
+        retval = true;
     }
-
-    if (speed > SDHC_CLOCK_FREQ_DS_25_MHZ)
-    {
-        /* Enable the high speed mode */
-        ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R |= SDHC_HC1R_HSEN_Msk;
-    }
-    else
-    {
-        /* Clear the high speed mode */
-        ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R &= ~SDHC_HC1R_HSEN_Msk;
-    }
-
-    if ((${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R & SDHC_HC1R_HSEN_Msk) && (divider == 0))
-    {
-        /* IP limitation, if high speed mode is active divider must be non zero */
-        divider = 1;
-    }
-
-    /* Set the divider */
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR &= ~(SDHC_CCR_SDCLKFSEL_Msk | SDHC_CCR_USDCLKFSEL_Msk);
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_SDCLKFSEL((divider & 0xff)) | SDHC_CCR_USDCLKFSEL((divider >> 8));
-
-    /* Enable internal clock */
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_INTCLKEN_Msk;
-
-    /* Wait for the internal clock to stabilize */
-    while((${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR & SDHC_CCR_INTCLKS_Msk) == 0);
-
-    /* Enable the SDCLK */
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_SDCLKEN_Msk;
-
-    return true;
+    return retval;
 }
 
 void ${SDHC_INSTANCE_NAME}_ResponseRead (
@@ -445,11 +458,6 @@ void ${SDHC_INSTANCE_NAME}_ResponseRead (
 {
     switch (respReg)
     {
-        case SDHC_READ_RESP_REG_0:
-        default:
-            *response = ${SDHC_INSTANCE_NAME}_REGS->SDHC_RR[0];
-            break;
-
         case SDHC_READ_RESP_REG_1:
             *response = ${SDHC_INSTANCE_NAME}_REGS->SDHC_RR[1];
             break;
@@ -468,6 +476,11 @@ void ${SDHC_INSTANCE_NAME}_ResponseRead (
             response[2] = ${SDHC_INSTANCE_NAME}_REGS->SDHC_RR[2];
             response[3] = ${SDHC_INSTANCE_NAME}_REGS->SDHC_RR[3];
             break;
+
+		case SDHC_READ_RESP_REG_0:
+        default:
+            *response = ${SDHC_INSTANCE_NAME}_REGS->SDHC_RR[0];
+            break;
     }
 }
 
@@ -478,14 +491,14 @@ void ${SDHC_INSTANCE_NAME}_CommandSend (
     SDHC_DataTransferFlags transferFlags
 )
 {
-    uint16_t cmd = 0;
-    uint16_t normalIntSigEnable = 0;
-    uint8_t flags = 0;
+    uint16_t cmd = 0U;
+    uint16_t normalIntSigEnable = 0U;
+    uint16_t flags = 0U;
 
     /* Clear the flags */
     ${SDHC_INSTANCE_NAME?lower_case}Obj.isCmdInProgress = false;
     ${SDHC_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
-    ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus = 0;
+    ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus = 0U;
 
 <#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
     /* Keep the card insertion and removal interrupts enabled */
@@ -523,7 +536,7 @@ void ${SDHC_INSTANCE_NAME}_CommandSend (
     }
 
     /* Enable command complete interrupt, for commands that do not have busy response type */
-    if (respType != SDHC_CMD_RESP_R1B)
+    if (respType != (uint8_t)SDHC_CMD_RESP_R1B)
     {
         normalIntSigEnable |= SDHC_NISIER_CMDC_Msk;
     }
@@ -537,7 +550,7 @@ void ${SDHC_INSTANCE_NAME}_CommandSend (
     }
     else
     {
-        ${SDHC_INSTANCE_NAME}_REGS->SDHC_TMR = 0;
+        ${SDHC_INSTANCE_NAME}_REGS->SDHC_TMR = 0U;
     }
 
     /* Enable the needed normal interrupt signals */
@@ -550,7 +563,7 @@ void ${SDHC_INSTANCE_NAME}_CommandSend (
 
     ${SDHC_INSTANCE_NAME?lower_case}Obj.isCmdInProgress = true;
 
-    cmd = (SDHC_CR_CMDIDX(opCode) | (transferFlags.isDataPresent << SDHC_CR_DPSEL_Pos) | flags);
+    cmd = (SDHC_CR_CMDIDX((uint16_t)opCode) | (transferFlags.isDataPresent ? (1U << SDHC_CR_DPSEL_Pos) : 0U) | (uint16_t)flags);
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_CR = cmd;
 }
 
@@ -562,7 +575,10 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
 {
     /* Reset module*/
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_SRR |= SDHC_SRR_SWRSTALL_Msk;
-    while((${SDHC_INSTANCE_NAME}_REGS->SDHC_SRR & SDHC_SRR_SWRSTALL_Msk) == SDHC_SRR_SWRSTALL_Msk);
+    while((${SDHC_INSTANCE_NAME}_REGS->SDHC_SRR & SDHC_SRR_SWRSTALL_Msk) == SDHC_SRR_SWRSTALL_Msk)
+	{
+        /* Wait for reset to complete */
+	}
 
     /* Clear the normal and error interrupt status flags */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_EISTR = SDHC_EISTR_Msk;
@@ -573,14 +589,14 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_EISTER = SDHC_EISTER_Msk;
 
     /* Set timeout control register */
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_TCR = SDHC_TCR_DTCVAL(0xE);
+    ${SDHC_INSTANCE_NAME}_REGS->SDHC_TCR = SDHC_TCR_DTCVAL(0xEU);
 
 <#if SDCARD_SDCDEN == false>
     /* If card detect line is not used, enable the card detect test signal */
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R |= SDHC_HC1R_CARDDTL_YES | SDHC_HC1R_CARDDSEL_TEST | SDHC_HC1R_DMASEL(2);
+    ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R |= SDHC_HC1R_CARDDTL_YES | SDHC_HC1R_CARDDSEL_TEST | SDHC_HC1R_DMASEL(2U);
 <#else>
     /* Enable ADMA2 (Check CA0R capability register first) */
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R |= SDHC_HC1R_DMASEL(2);
+    ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R |= SDHC_HC1R_DMASEL(2U);
 </#if>
 <#if USE_FCD>
 
@@ -592,10 +608,10 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_PCR = (SDHC_PCR_SDBVSEL_3V3 | SDHC_PCR_SDBPWR_ON);
 
     /* Set initial clock to 400 KHz*/
-    ${SDHC_INSTANCE_NAME}_ClockSet (SDHC_CLOCK_FREQ_400_KHZ);
+    (void)${SDHC_INSTANCE_NAME}_ClockSet (SDHC_CLOCK_FREQ_400_KHZ);
 
     /* Clear the high speed bit and set the data width to 1-bit mode */
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R &= ~(SDHC_HC1R_HSEN_Msk | SDHC_HC1R_DW_Msk);
+    ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R &= (uint8_t)(~(SDHC_HC1R_HSEN_Msk | SDHC_HC1R_DW_Msk));
 <#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
 
     /* Enable card inserted and card removed interrupt signals */

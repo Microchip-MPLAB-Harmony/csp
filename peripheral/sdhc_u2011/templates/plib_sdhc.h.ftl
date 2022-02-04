@@ -75,7 +75,7 @@ bool ${SDHC_INSTANCE_NAME}_IsWriteProtected ( void );
 bool ${SDHC_INSTANCE_NAME}_IsCardAttached ( void );
 </#if>
 
-bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t clock);
+bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t speed);
 
 void ${SDHC_INSTANCE_NAME}_ClockEnable ( void );
 
@@ -86,6 +86,8 @@ uint16_t ${SDHC_INSTANCE_NAME}_CommandErrorGet (void);
 uint16_t ${SDHC_INSTANCE_NAME}_DataErrorGet (void);
 
 void ${SDHC_INSTANCE_NAME}_ErrorReset ( SDHC_RESET_TYPE resetType );
+
+uint16_t ${SDHC_INSTANCE_NAME}_GetError(void);
 
 void ${SDHC_INSTANCE_NAME}_ResponseRead ( SDHC_READ_RESPONSE_REG respReg, uint32_t* response );
 
@@ -116,4 +118,3 @@ void ${SDHC_INSTANCE_NAME}_DmaSetup (
 #endif
 // DOM-IGNORE-END
 #endif // PLIB_${SDHC_INSTANCE_NAME}_H
-
