@@ -46,6 +46,7 @@
 </#if>
 #include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
 #include <stdlib.h>
+#include <limits.h>
 
 <#if ( RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0" ) ||
      ( RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ) >
@@ -55,7 +56,7 @@
 
 void ${RTC_INSTANCE_NAME}_Initialize(void)
 {
-    ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_CTRLA = (uint16_t)RTC_${RTC_MODULE_SELECTION}_CTRLA_SWRST_Msk;
+    ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_CTRLA = RTC_${RTC_MODULE_SELECTION}_CTRLA_SWRST_Msk;
 
     while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_SYNCBUSY & RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_SWRST_Msk) == RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_SWRST_Msk)
     {
@@ -189,8 +190,13 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction)
     <#lt>{
     <#lt>    uint32_t newCorrectionValue = 0;
-
-    <#lt>    newCorrectionValue = (uint32_t)abs(correction);
+	
+	<#lt>    int32_t temp_val = correction;
+	
+	<#lt>    if(temp_val > INT_MIN)
+	<#lt>    {
+    <#lt>        newCorrectionValue = (uint32_t)abs(temp_val);	
+	<#lt>    }
 
     <#lt>    /* Convert to positive value and adjust register sign bit. */
     <#lt>    if (correction < 0)
@@ -337,7 +343,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 	
 	<#lt>void ${RTC_INSTANCE_NAME}_Timer32CountSyncDisable ( void )
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA &= ~RTC_MODE0_CTRLA_COUNTSYNC_Msk;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA &= (uint16_t)(~RTC_MODE0_CTRLA_COUNTSYNC_Msk);
 
     <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNTSYNC_Msk) == RTC_MODE0_SYNCBUSY_COUNTSYNC_Msk)
     <#lt>    {
@@ -347,7 +353,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 	
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32Start ( void )
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA |= (uint16_t)RTC_MODE0_CTRLA_ENABLE_Msk;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA |= RTC_MODE0_CTRLA_ENABLE_Msk;
 
     <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
     <#lt>    {
@@ -401,7 +407,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     </#if>
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32CounterGet ( void )
     <#lt>{
-    <#lt>    if (!(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA & RTC_MODE0_CTRLA_COUNTSYNC_Msk))
+    <#lt>    if ((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA & RTC_MODE0_CTRLA_COUNTSYNC_Msk) == 0U)
     <#lt>    {
     <#lt>        ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA |= RTC_MODE0_CTRLA_COUNTSYNC_Msk;
 
@@ -460,7 +466,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 	
 	<#lt>void ${RTC_INSTANCE_NAME}_Timer16CountSyncDisable ( void )
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA &= ~RTC_MODE1_CTRLA_COUNTSYNC_Msk;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA &= (uint16_t)(~RTC_MODE1_CTRLA_COUNTSYNC_Msk);
 
     <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_SYNCBUSY & RTC_MODE1_SYNCBUSY_COUNTSYNC_Msk) == RTC_MODE1_SYNCBUSY_COUNTSYNC_Msk)
     <#lt>    {
@@ -588,7 +594,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
             </#if>
         <#lt> TAMPER_CHANNEL ${RTC_INSTANCE_NAME}_TamperSourceGet( void )
         <#lt>{
-        <#lt>    return((TAMPER_CHANNEL) ((${RTC_INSTANCE_NAME}_REGS->MODE${mode}.RTC_TAMPID) & (0xFF)));
+        <#lt>    return((TAMPER_CHANNEL) ((${RTC_INSTANCE_NAME}_REGS->MODE${mode}.RTC_TAMPID) & (0xFFU)));
         <#lt>}
 
         <#if RTC_MODULE_SELECTION = "MODE0">

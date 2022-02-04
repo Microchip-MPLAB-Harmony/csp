@@ -80,7 +80,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#if RTC_MODE2_DISABLE_RTC_RESET == true>
     if ((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA & RTC_MODE2_CTRLA_ENABLE_Msk) != RTC_MODE2_CTRLA_ENABLE_Msk)
     {
-        ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= (uint16_t)RTC_MODE2_CTRLA_SWRST_Msk;
+        ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_SWRST_Msk;
 
         while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
         {
@@ -88,7 +88,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         }
     }
     <#else>
-    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= (uint16_t)RTC_MODE2_CTRLA_SWRST_Msk;
+    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_SWRST_Msk;
 
     while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
     {
@@ -192,8 +192,8 @@ bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
      * Set YEAR(according to Reference Year), MONTH and DAY
      *set Hour Minute and Second
      */
-    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CLOCK = (uint32_t)(((TM_STRUCT_REFERENCE_YEAR + (uint32_t)initialTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
-                    ((ADJUST_MONTH((uint32_t)initialTime->tm_mon)) << RTC_MODE2_CLOCK_MONTH_Pos) |
+    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CLOCK = (uint32_t)((((TM_STRUCT_REFERENCE_YEAR + (uint32_t)initialTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos) |
+                    ((ADJUST_MONTH((uint32_t)(initialTime->tm_mon))) << RTC_MODE2_CLOCK_MONTH_Pos) |
                     ((uint32_t)initialTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
                     ((uint32_t)initialTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
                     ((uint32_t)initialTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
@@ -218,7 +218,7 @@ void ${RTC_INSTANCE_NAME}_RTCCClockSyncEnable ( void )
 
 void ${RTC_INSTANCE_NAME}_RTCCClockSyncDisable ( void )
 {
-	${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA &= ~RTC_MODE2_CTRLA_CLOCKSYNC_Msk;
+	${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA &= (uint16_t)(~RTC_MODE2_CTRLA_CLOCKSYNC_Msk);
 
 	while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_CTRLA_CLOCKSYNC_Msk) == RTC_MODE2_CTRLA_CLOCKSYNC_Msk)
 	{
@@ -231,7 +231,7 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
     uint32_t dataClockCalendar = 0U;
     uint32_t timeMask = 0U;
 
-	if (!(${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA & RTC_MODE2_CTRLA_CLOCKSYNC_Msk))
+	if ((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA & RTC_MODE2_CTRLA_CLOCKSYNC_Msk) == 0U)
 	{
 		${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_CLOCKSYNC_Msk;
 	
@@ -312,8 +312,8 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
         <#lt>     * Set YEAR(according to Reference Year), MONTH and DAY
         <#lt>     * Set Hour, Minute and second
         <#lt>     */
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_${RTC_MODE2_ALARM_REGISTER_NAME} = (uint32_t)(((TM_STRUCT_REFERENCE_YEAR + (uint32_t)alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
-        <#lt>                    (ADJUST_MONTH((uint32_t)alarmTime->tm_mon) << RTC_MODE2_CLOCK_MONTH_Pos) |
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_${RTC_MODE2_ALARM_REGISTER_NAME} = (uint32_t)((((TM_STRUCT_REFERENCE_YEAR + (uint32_t)alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos) |
+        <#lt>                    (ADJUST_MONTH((uint32_t)(alarmTime->tm_mon)) << RTC_MODE2_CLOCK_MONTH_Pos) |
         <#lt>                    ((uint32_t)alarmTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
         <#lt>                    ((uint32_t)alarmTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
         <#lt>                    ((uint32_t)alarmTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
@@ -349,8 +349,8 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
             <#else>
                 <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.MODE2_ALARM[${i}].RTC_ALARM =
             </#if>
-            <#lt>                    (uint32_t)(((TM_STRUCT_REFERENCE_YEAR + (uint32_t)alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
-            <#lt>                    (ADJUST_MONTH((uint32_t)alarmTime->tm_mon) << RTC_MODE2_CLOCK_MONTH_Pos) |
+            <#lt>                    (uint32_t)((((TM_STRUCT_REFERENCE_YEAR + (uint32_t)alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos) |
+            <#lt>                    (ADJUST_MONTH((uint32_t)(alarmTime->tm_mon)) << RTC_MODE2_CLOCK_MONTH_Pos) |
             <#lt>                    ((uint32_t)alarmTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
             <#lt>                    ((uint32_t)alarmTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
             <#lt>                    ((uint32_t)alarmTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
@@ -370,7 +370,7 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
             <#lt>        /* Synchronization after writing value to MASK Register */
             <#lt>    }
 
-            <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = (uint16_t)RTC_MODE2_INTENSET_ALARM${i}_Msk;
+            <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = RTC_MODE2_INTENSET_ALARM${i}_Msk;
 
             <#lt>    return true;
             <#lt>}

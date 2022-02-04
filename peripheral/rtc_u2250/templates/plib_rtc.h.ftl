@@ -154,13 +154,11 @@ extern "C" {
             <#lt>    BACKUP_REGISTER_6 = 6U,
             <#lt>    BACKUP_REGISTER_7 = 7U
             <#lt>} BACKUP_REGISTER;
-        </#if>
-        <#lt>typedef enum
-        <#lt>{
+        </#if>       
         <#list 0..(TAMPER_CHANNEL_NUMBER - 1) as i>
-            <#lt>    TAMPER_CHANNEL_${i} = ${i}U,
+            <#lt> #define   TAMPER_CHANNEL_${i}  (${i}U)
         </#list>
-        <#lt>} TAMPER_CHANNEL;
+        <#lt>typedef uint32_t TAMPER_CHANNEL;
     </#if>
 </#if>
 <#if RTC_MODE2_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE2" ||
