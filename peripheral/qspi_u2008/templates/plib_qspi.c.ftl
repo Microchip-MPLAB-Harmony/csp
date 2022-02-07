@@ -58,10 +58,10 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     /* DATALEN = ${QSPI_DATALEN} */
     /* DLYCBT = 0 */
     /* DLYCS = 0 */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLB = QSPI_CTRLB_MODE_${QSPI_SMM} | QSPI_CTRLB_CSMODE_${QSPI_CSMODE} | QSPI_CTRLB_DATALEN(${QSPI_DATALEN});
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLB = QSPI_CTRLB_MODE_${QSPI_SMM} | QSPI_CTRLB_CSMODE_${QSPI_CSMODE} | QSPI_CTRLB_DATALEN(${QSPI_DATALEN}U);
 
     // Set serial clock register
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_BAUD = (QSPI_BAUD_BAUD(${QSPI_SCBR})) <#if QSPI_CPOL=="HIGH"> | QSPI_BAUD_CPOL_Msk </#if> <#if QSPI_CPHA=="TRAILING"> | QSPI_BAUD_CPHA_Msk </#if>;
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_BAUD = (QSPI_BAUD_BAUD(${QSPI_SCBR}U)) <#if QSPI_CPOL=="HIGH"> | QSPI_BAUD_CPOL_Msk </#if> <#if QSPI_CPHA=="TRAILING"> | QSPI_BAUD_CPHA_Msk </#if>;
 
     // Enable the qspi Module
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLA = QSPI_CTRLA_ENABLE_Msk;
@@ -74,17 +74,22 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
 
 static void ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(uint32_t* dst, uint32_t* src, uint32_t count)
 {
-    while (count--)
+    while (count-- != 0U)
     {
-        *dst++ = *src++;
+        *dst = *src;
+        dst++;
+        src++;
     }
 }
 
 static void ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit(uint8_t* dst, uint8_t* src, uint32_t count)
 {
-    while (count--)
+    while (count-- != 0U)
     {
-        *dst++ = *src++;
+        *dst = *src;
+         dst++;
+         src++;
+
     }
 }
 
@@ -96,15 +101,15 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRADDR = QSPI_INSTRADDR_ADDR(address);
 
     /* Set Instruction code register */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRCTRL = (QSPI_INSTRCTRL_INSTR(qspi_memory_xfer->instruction)) | (QSPI_INSTRCTRL_OPTCODE(qspi_memory_xfer->option));
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRCTRL = (QSPI_INSTRCTRL_INSTR((uint32_t)qspi_memory_xfer->instruction)) | (QSPI_INSTRCTRL_OPTCODE((uint32_t)qspi_memory_xfer->option));
 
     /* Set Instruction Frame register*/
 
-    mask |= qspi_memory_xfer->width;
-    mask |= qspi_memory_xfer->addr_len;
+    mask |= (uint32_t)qspi_memory_xfer->width;
+    mask |= (uint32_t)qspi_memory_xfer->addr_len;
 
     if (qspi_memory_xfer->option_en) {
-        mask |= qspi_memory_xfer->option_len;
+        mask |= (uint32_t)qspi_memory_xfer->option_len;
         mask |= QSPI_INSTRFRAME_OPTCODEEN_Msk;
     }
 
@@ -113,11 +118,11 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
         mask |= QSPI_INSTRFRAME_CRMODE_Msk;
     }
 
-    mask |= QSPI_INSTRFRAME_DUMMYLEN(qspi_memory_xfer->dummy_cycles);
+    mask |= QSPI_INSTRFRAME_DUMMYLEN((uint32_t)qspi_memory_xfer->dummy_cycles);
 
     mask |= QSPI_INSTRFRAME_INSTREN_Msk | QSPI_INSTRFRAME_ADDREN_Msk | QSPI_INSTRFRAME_DATAEN_Msk;
 
-    mask |= QSPI_INSTRFRAME_TFRTYPE(tfr_type);
+    mask |= QSPI_INSTRFRAME_TFRTYPE((uint32_t)tfr_type);
 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRFRAME = mask;
 
@@ -142,14 +147,14 @@ bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer,
         ${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRADDR = QSPI_INSTRADDR_ADDR(address);
 
         mask |= QSPI_INSTRFRAME_ADDREN_Msk;
-        mask |= qspi_command_xfer->addr_len;
+        mask |= (uint32_t)qspi_command_xfer->addr_len;
     }
 
     /* Configure instruction */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRCTRL = (QSPI_INSTRCTRL_INSTR(qspi_command_xfer->instruction));
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRCTRL = (QSPI_INSTRCTRL_INSTR((uint32_t)qspi_command_xfer->instruction));
 
     /* Configure instruction frame */
-    mask |= qspi_command_xfer->width;
+    mask |= (uint32_t)qspi_command_xfer->width;
     mask |= QSPI_INSTRFRAME_INSTREN_Msk;
     mask |= QSPI_INSTRFRAME_TFRTYPE(QSPI_INSTRFRAME_TFRTYPE_READ_Val);
 
@@ -171,12 +176,12 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     uint32_t mask = 0;
 
     /* Configure Instruction */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRCTRL = (QSPI_INSTRCTRL_INSTR(qspi_register_xfer->instruction));
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRCTRL = (QSPI_INSTRCTRL_INSTR((uint32_t)qspi_register_xfer->instruction));
 
     /* Configure Instruction Frame */
-    mask |= qspi_register_xfer->width;
+    mask |= (uint32_t)qspi_register_xfer->width;
 
-    mask |= QSPI_INSTRFRAME_DUMMYLEN(qspi_register_xfer->dummy_cycles);
+    mask |= QSPI_INSTRFRAME_DUMMYLEN((uint32_t)qspi_register_xfer->dummy_cycles);
 
     mask |= QSPI_INSTRFRAME_INSTREN_Msk | QSPI_INSTRFRAME_DATAEN_Msk;
 
@@ -211,10 +216,10 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     uint32_t mask = 0;
 
     /* Configure Instruction */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRCTRL = (QSPI_INSTRCTRL_INSTR(qspi_register_xfer->instruction));
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INSTRCTRL = (QSPI_INSTRCTRL_INSTR((uint32_t)qspi_register_xfer->instruction));
 
     /* Configure Instruction Frame */
-    mask |= qspi_register_xfer->width;
+    mask |= (uint32_t)qspi_register_xfer->width;
 
     mask |= QSPI_INSTRFRAME_INSTREN_Msk | QSPI_INSTRFRAME_DATAEN_Msk;
 
@@ -247,85 +252,81 @@ bool ${QSPI_INSTANCE_NAME}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uin
 {
     uint32_t *qspi_mem = (uint32_t *)(QSPI_ADDR | address);
     uint32_t length_32bit, length_8bit;
-
-    if (false == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_INSTRFRAME_TFRTYPE_READMEMORY_Val, address))
+    bool memory_read_status = false;
+    if (true == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_INSTRFRAME_TFRTYPE_READMEMORY_Val, address))
     {
-        return false;
+        /* Read serial flash memory */
+        length_32bit = rx_data_length / 4UL;
+        length_8bit = rx_data_length & 0x03U;
+
+        if(length_32bit > 0U)
+        {
+            ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(rx_data , qspi_mem,  length_32bit);
+        }
+
+        rx_data = rx_data + length_32bit;
+        qspi_mem = qspi_mem + length_32bit;
+
+        if(length_8bit > 0U)
+        {
+            ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_mem,  length_8bit);
+        }
+
+        /* Dummy Read to clear QSPI_SR.INSTRE and QSPI_SR.CSR */
+        (uint32_t)${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG;
+
+        __DSB();
+        __ISB();
+
+        ${QSPI_INSTANCE_NAME}_EndTransfer();
+
+        while((${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG & QSPI_INTFLAG_INSTREND_Msk) != QSPI_INTFLAG_INSTREND_Msk)
+        {
+                /* Poll Status register to know status if instruction has end */
+        }
+
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
+        memory_read_status = true;
     }
-
-    /* Read serial flash memory */
-    length_32bit = rx_data_length / 4;
-    length_8bit = rx_data_length & 0x03;
-
-    if(length_32bit > 0)
-    {
-        ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(rx_data , qspi_mem,  length_32bit);
-    }
-
-    rx_data = rx_data + length_32bit;
-    qspi_mem = qspi_mem + length_32bit;
-
-    if(length_8bit > 0)
-    {
-        ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_mem,  length_8bit);
-    }
-
-    /* Dummy Read to clear QSPI_SR.INSTRE and QSPI_SR.CSR */
-    (uint32_t)${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG;
-
-    __DSB();
-    __ISB();
-
-    ${QSPI_INSTANCE_NAME}_EndTransfer();
-
-    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG & QSPI_INTFLAG_INSTREND_Msk) != QSPI_INTFLAG_INSTREND_Msk)
-    {
-            /* Poll Status register to know status if instruction has end */
-    }
-
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
-
-    return true;
+    return memory_read_status;
 }
 
 bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
 {
     uint32_t *qspi_mem = (uint32_t *)(QSPI_ADDR | address);
     uint32_t length_32bit, length_8bit;
-
-    if (${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_INSTRFRAME_TFRTYPE_WRITEMEMORY_Val, address) == false)
+    bool memory_write_status = false;
+    if (${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_INSTRFRAME_TFRTYPE_WRITEMEMORY_Val, address) == true)
     {
-        return false;
+        /* Write to serial flash memory */
+        length_32bit = tx_data_length / 4UL;
+        length_8bit = tx_data_length & 0x03U;
+
+        if(length_32bit > 0U)
+        {
+            ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(qspi_mem, tx_data, length_32bit);
+        }
+        tx_data = tx_data + length_32bit;
+        qspi_mem = qspi_mem + length_32bit;
+
+        if(length_8bit > 0U)
+        {
+            ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)qspi_mem, (uint8_t *)tx_data, length_8bit);
+        }
+        __DSB();
+        __ISB();
+
+        ${QSPI_INSTANCE_NAME}_EndTransfer();
+
+        while((${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG & QSPI_INTFLAG_INSTREND_Msk) != QSPI_INTFLAG_INSTREND_Msk)
+        {
+                /* Poll Status register to know status if instruction has end */
+        }
+
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
+        memory_write_status = true;
     }
-
-    /* Write to serial flash memory */
-    length_32bit = tx_data_length / 4;
-    length_8bit = tx_data_length & 0x03;
-
-    if(length_32bit > 0)
-    {
-        ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(qspi_mem, tx_data, length_32bit);
-    }
-    tx_data = tx_data + length_32bit;
-    qspi_mem = qspi_mem + length_32bit;
-
-    if(length_8bit > 0)
-    {
-        ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)qspi_mem, (uint8_t *)tx_data, length_8bit);
-    }
-    __DSB();
-    __ISB();
-
-    ${QSPI_INSTANCE_NAME}_EndTransfer();
-
-    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG & QSPI_INTFLAG_INSTREND_Msk) != QSPI_INTFLAG_INSTREND_Msk)
-    {
-            /* Poll Status register to know status if instruction has end */
-    }
-
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
-
-    return true;
+    return memory_write_status;
 }
 
 /*******************************************************************************

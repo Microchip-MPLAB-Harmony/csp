@@ -47,7 +47,7 @@
 #include "interrupts.h"
 </#if>
 
-qspi_spi_obj qspiObj;
+static qspi_spi_obj qspiObj;
 
 
 void ${QSPI_INSTANCE_NAME}_Initialize(void)
@@ -64,10 +64,10 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     /* DATALEN = ${QSPI_DATALEN} */
     /* DLYCBT = 0 */
     /* DLYCS = 0 */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLB = QSPI_CTRLB_MODE_${QSPI_SMM} | QSPI_CTRLB_CSMODE_${QSPI_CSMODE} | QSPI_CTRLB_DATALEN(${QSPI_DATALEN}) | QSPI_CTRLB_LOOPEN(${QSPI_LOOPEN});
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLB = QSPI_CTRLB_MODE_${QSPI_SMM} | QSPI_CTRLB_CSMODE_${QSPI_CSMODE} | QSPI_CTRLB_DATALEN(${QSPI_DATALEN}U) | QSPI_CTRLB_LOOPEN(${QSPI_LOOPEN}U);
 
     // Set serial clock register
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_BAUD = (QSPI_BAUD_BAUD(${QSPI_SCBR})) <#if QSPI_CPOL=="HIGH"> | QSPI_BAUD_CPOL_Msk </#if> <#if QSPI_CPHA=="TRAILING"> | QSPI_BAUD_CPHA_Msk </#if>;
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_BAUD = (QSPI_BAUD_BAUD(${QSPI_SCBR}U)) <#if QSPI_CPOL=="HIGH"> | QSPI_BAUD_CPOL_Msk </#if> <#if QSPI_CPHA=="TRAILING"> | QSPI_BAUD_CPHA_Msk </#if>;
 
     // Enable the qspi Module
     /* LASTXFER = 0 */
@@ -85,7 +85,7 @@ bool ${QSPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* 
     uint32_t dummyData;
 
     /* Verify the request */
-    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (qspiObj.transferIsBusy == false))
+    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (qspiObj.transferIsBusy == false))
     {
         isRequestAccepted = true;
         qspiObj.txBuffer = pTransmitData;
@@ -130,10 +130,14 @@ bool ${QSPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* 
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TXDATA = *((uint8_t*)qspiObj.txBuffer);
                 qspiObj.txCount++;
             }
-            else if (qspiObj.dummySize > 0)
+            else if (qspiObj.dummySize > 0U)
             {
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TXDATA = (uint8_t)(0xff);
                 qspiObj.dummySize--;
+            }
+            else
+            {
+                /* No action required */
             }
         }
         else
@@ -147,14 +151,18 @@ bool ${QSPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* 
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TXDATA = *((uint16_t*)qspiObj.txBuffer);
                 qspiObj.txCount++;
             }
-            else if (qspiObj.dummySize > 0)
+            else if (qspiObj.dummySize > 0U)
             {
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TXDATA = (uint16_t)(0xff);
                 qspiObj.dummySize--;
             }
+            else
+            {
+                /* No action required */
+            }
         }
 
-        if ((int)rxSize > 0)
+        if ((int32_t)rxSize > 0)
         {
             /* Enable receive interrupt to complete the transfer in ISR context */
             ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTENSET = QSPI_INTENSET_RXC_Msk;
@@ -182,42 +190,41 @@ bool ${QSPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize)
 bool ${QSPI_INSTANCE_NAME}_TransferSetup (QSPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
-    if ((setup == NULL) || (setup->clockFrequency == 0))
+    bool setup_status = false;
+    if ((setup != NULL) && (setup->clockFrequency != 0U))
     {
-        return false;
+        /* Disable the module */
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLA &= ~QSPI_CTRLA_ENABLE_Msk;
+
+        if(spiSourceClock == 0U)
+        {
+            // Fetch Master Clock Frequency directly
+            spiSourceClock = ${QSPI_BAUD_RATE};
+        }
+
+        scbr = spiSourceClock/setup->clockFrequency;
+
+        if(scbr > 255U)
+        {
+            scbr = 255;
+        }
+
+        /* Set up clock polarity, phase, and baud rate */
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_BAUD= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | QSPI_BAUD_BAUD(scbr);
+
+        /* Set up number of bits per transfer */
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLB = (${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLB & ~QSPI_CTRLB_DATALEN_Msk) | (uint32_t)setup->dataBits;
+
+        /* Enable the module */
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLA = QSPI_CTRLA_ENABLE_Msk;
+
+        while((${QSPI_INSTANCE_NAME}_REGS->QSPI_STATUS & QSPI_STATUS_ENABLE_Msk) != QSPI_STATUS_ENABLE_Msk)
+        {
+            /* Wait for QSPI enable flag to set */
+        }
+        setup_status = true;
     }
-
-    /* Disable the module */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLA &= ~QSPI_CTRLA_ENABLE_Msk;
-
-    if(spiSourceClock == 0)
-    {
-        // Fetch Master Clock Frequency directly
-        spiSourceClock = ${QSPI_BAUD_RATE};
-    }
-
-    scbr = spiSourceClock/setup->clockFrequency;
-
-    if(scbr > 255)
-    {
-        scbr = 255;
-    }
-
-    /* Set up clock polarity, phase, and baud rate */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_BAUD= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | QSPI_BAUD_BAUD(scbr);
-
-    /* Set up number of bits per transfer */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLB = (${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLB & ~QSPI_CTRLB_DATALEN_Msk) | (uint32_t)setup->dataBits;
-
-    /* Enable the module */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLA = QSPI_CTRLA_ENABLE_Msk;
-
-    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_STATUS & QSPI_STATUS_ENABLE_Msk) != QSPI_STATUS_ENABLE_Msk)
-    {
-        /* Wait for QSPI enable flag to set */
-    }
-
-    return true;
+    return setup_status;
 }
 
 void ${QSPI_INSTANCE_NAME}_CallbackRegister (QSPI_CALLBACK callback, uintptr_t context)
@@ -228,7 +235,7 @@ void ${QSPI_INSTANCE_NAME}_CallbackRegister (QSPI_CALLBACK callback, uintptr_t c
 
 bool ${QSPI_INSTANCE_NAME}_IsBusy(void)
 {
-    return ((qspiObj.transferIsBusy) || ((${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG & QSPI_INTFLAG_DRE_Msk ) == 0));
+    return ((qspiObj.transferIsBusy) || ((${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG & QSPI_INTFLAG_DRE_Msk ) == 0U));
 }
 
 void ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
@@ -248,11 +255,13 @@ void ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
         {
             if(dataBits == QSPI_CTRLB_DATALEN_8BITS)
             {
-                ((uint8_t*)qspiObj.rxBuffer)[qspiObj.rxCount++] = receivedData;
+                ((uint8_t*)qspiObj.rxBuffer)[qspiObj.rxCount] = (uint8_t)receivedData;
+                qspiObj.rxCount++;
             }
             else
             {
-                ((uint16_t*)qspiObj.rxBuffer)[qspiObj.rxCount++] = receivedData;
+                ((uint16_t*)qspiObj.rxBuffer)[qspiObj.rxCount] = (uint16_t)receivedData;
+                qspiObj.rxCount++;
             }
         }
     }
@@ -268,27 +277,38 @@ void ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
         {
             if (qspiObj.txCount < qspiObj.txSize)
             {
-                ${QSPI_INSTANCE_NAME}_REGS->QSPI_TXDATA = ((uint8_t*)qspiObj.txBuffer)[qspiObj.txCount++];
+                ${QSPI_INSTANCE_NAME}_REGS->QSPI_TXDATA = ((uint8_t*)qspiObj.txBuffer)[qspiObj.txCount];
+                qspiObj.txCount++;
             }
-            else if (qspiObj.dummySize > 0)
+            else if (qspiObj.dummySize > 0U)
             {
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TXDATA = (uint8_t)(0xff);
                 qspiObj.dummySize--;
+            }
+            else
+            {
+                /* No action required */
             }
         }
         else
         {
             if (qspiObj.txCount < qspiObj.txSize)
             {
-                ${QSPI_INSTANCE_NAME}_REGS->QSPI_TXDATA = ((uint16_t*)qspiObj.txBuffer)[qspiObj.txCount++];
+                ${QSPI_INSTANCE_NAME}_REGS->QSPI_TXDATA = ((uint16_t*)qspiObj.txBuffer)[qspiObj.txCount];
+                qspiObj.txCount++;
             }
-            else if (qspiObj.dummySize > 0)
+            else if (qspiObj.dummySize > 0U)
             {
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TXDATA = (uint16_t)(0xff);
                 qspiObj.dummySize--;
             }
+            else
+            {
+                /* No action required */
+            }
+
         }
-        if ((qspiObj.txCount == qspiObj.txSize) && (qspiObj.dummySize == 0))
+        if ((qspiObj.txCount == qspiObj.txSize) && (qspiObj.dummySize == 0U))
         {
             /* At higher baud rates, the data in the shift register can be
              * shifted out and TXEMPTY flag can get set resulting in a
@@ -310,6 +330,10 @@ void ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
              */
             ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTENCLR = QSPI_INTENCLR_RXC_Msk;
             ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTENSET = QSPI_INTENSET_DRE_Msk;
+        }
+        else
+        {
+            /* No action required */
         }
     }
 
