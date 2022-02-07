@@ -98,7 +98,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     <#assign CHANNEL = "EVSYS_USER_" + i >
     <#if .vars[CHANNEL]?has_content>
     <#if .vars[CHANNEL] != '0'>
-    ${EVSYS_REG_NAME}_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]});
+    ${EVSYS_REG_NAME}_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]}U);
     </#if>
     </#if>
 </#list>
@@ -136,7 +136,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     <#if .vars[CHANNEL_ENABLE]?has_content>
     <#if (.vars[CHANNEL_ENABLE] != false)>
     /* Event Channel ${i} Configuration */
-    ${EVSYS_REG_NAME}_REGS->CHANNEL[${i}].EVSYS_CHANNEL = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}) | EVSYS_CHANNEL_PATH(${.vars[PATH]}) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}) \
+    ${EVSYS_REG_NAME}_REGS->CHANNEL[${i}].EVSYS_CHANNEL = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}U) | EVSYS_CHANNEL_PATH(${.vars[PATH]}U) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}U) \
                                     ${(.vars[RUNSTANDBY])?then('| EVSYS_CHANNEL_RUNSTDBY_Msk', '')} ${(.vars[ONDEMAND])?then('| EVSYS_CHANNEL_ONDEMAND_Msk', '')};
     <#if .vars[PATH] != '2' >
     <#if (.vars[EVD] || .vars[OVERRUN])>
@@ -175,7 +175,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_UserEnable(EVSYS_CHANNEL channel, uint8_t user)
     <#lt>{
-    <#lt>   ${EVSYS_REG_NAME}_REGS->EVSYS_USER[user] = EVSYS_USER_CHANNEL((channel + 1));
+    <#lt>   ${EVSYS_REG_NAME}_REGS->EVSYS_USER[user] = EVSYS_USER_CHANNEL(((uint32_t)channel + 1U));
     <#lt>}
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user)
@@ -202,7 +202,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_UserEnable(EVSYS_CHANNEL channel, uint8_t user)
     <#lt>{
-    <#lt>   ${EVSYS_REG_NAME}_REGS->EVSYS_USER[user] = EVSYS_USER_CHANNEL((channel + 1));
+    <#lt>   ${EVSYS_REG_NAME}_REGS->EVSYS_USER[user] = EVSYS_USER_CHANNEL(((uint32_t)channel + 1U));
     <#lt>}
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user)
