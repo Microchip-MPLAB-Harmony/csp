@@ -65,7 +65,7 @@
 // *****************************************************************************
 <#if EIC_INT != "0">
 /* EIC Channel Callback object */
-EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
+static EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
 
 </#if>
 <#if NMI_CTRL == true>
@@ -151,12 +151,12 @@ void ${EIC_INSTANCE_NAME}_Initialize(void)
 <#if EIC_INT != "0">
 void ${EIC_INSTANCE_NAME}_InterruptEnable(EIC_PIN pin)
 {
-    ${EIC_INSTANCE_NAME}_REGS->EIC_INTENSET = (1UL << pin);
+    ${EIC_INSTANCE_NAME}_REGS->EIC_INTENSET = (1UL << (uint32_t)pin);
 }
 
 void ${EIC_INSTANCE_NAME}_InterruptDisable(EIC_PIN pin)
 {
-    ${EIC_INSTANCE_NAME}_REGS->EIC_INTENCLR = (1UL << pin);
+    ${EIC_INSTANCE_NAME}_REGS->EIC_INTENCLR = (1UL << (uint32_t)pin);
 }
 
 void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context)
@@ -178,12 +178,12 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
     for (currentChannel = 0; currentChannel < EXTINT_COUNT; currentChannel++)
     {
         /* Verify if the EXTINT x Interrupt Pin is enabled */
-        if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].eicPinNo == currentChannel))
+        if (((uint8_t)${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].eicPinNo == currentChannel))
         {
             /* Read the interrupt flag status */
             eicIntFlagStatus = ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG & (1UL << currentChannel);
 
-            if (eicIntFlagStatus)
+            if (eicIntFlagStatus != 0U)
             {
                 /* Find any associated callback entries in the callback table */
                 if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback != NULL))
