@@ -74,6 +74,16 @@
 #endif
 // DOM-IGNORE-END
 
+/* Byte bus access. */
+#define    DMAC_CRC_BEAT_SIZE_BYTE      (0x0U)
+
+/* Half-word bus access. */
+#define    DMAC_CRC_BEAT_SIZE_HWORD     (0x1U)
+
+/* Word bus access. */
+#define    DMAC_CRC_BEAT_SIZE_WORD      (0x2U)
+
+typedef uint8_t DMAC_CRC_BEAT_SIZE;
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Types
@@ -82,16 +92,15 @@
 
 // *****************************************************************************
 
-typedef enum
-{
+
 <#list 0..DMAC_HIGHEST_CHANNEL as i>
     <#assign DMAC_CHCTRLA_ENABLE    = "DMAC_ENABLE_CH_"  + i>
     <#if (.vars[DMAC_CHCTRLA_ENABLE] == true)>
     /* DMAC Channel ${i} */
-    DMAC_CHANNEL_${i} = ${i},
+#define  DMAC_CHANNEL_${i}   (${i}U)
     </#if>
 </#list>
-} DMAC_CHANNEL;
+typedef uint32_t DMAC_CHANNEL;
 
 typedef enum
 {
@@ -115,19 +124,6 @@ typedef enum
     DMAC_CRC_TYPE_32 = 0x1
 
 } DMAC_CRC_POLYNOMIAL_TYPE;
-
-typedef enum
-{
-    /* Byte bus access. */
-    DMAC_CRC_BEAT_SIZE_BYTE     = 0x0,
-
-    /* Half-word bus access. */
-    DMAC_CRC_BEAT_SIZE_HWORD    = 0x1,
-
-    /* Word bus access. */
-    DMAC_CRC_BEAT_SIZE_WORD     = 0x2
-
-} DMAC_CRC_BEAT_SIZE;
 
 typedef enum
 {
@@ -161,9 +157,8 @@ typedef uint32_t DMAC_CHANNEL_CONFIG;
 
 <#if DMA_INTERRUPT_ENABLED == true>
 typedef void (*DMAC_CHANNEL_CALLBACK) (DMAC_TRANSFER_EVENT event, uintptr_t contextHandle);
-void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle);
+void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK callback, const uintptr_t context);
 </#if>
-
 void ${DMA_INSTANCE_NAME}_Initialize( void );
 bool ${DMA_INSTANCE_NAME}_ChannelTransfer (DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize);
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel );
@@ -178,7 +173,7 @@ void ${DMA_INSTANCE_NAME}_LinkedListDescriptorSetup (dmac_descriptor_registers_t
 bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmac_descriptor_registers_t * channelDesc );
 </#if>
 DMAC_CHANNEL_CONFIG  ${DMA_INSTANCE_NAME}_ChannelSettingsGet ( DMAC_CHANNEL channel );
-bool  ${DMA_INSTANCE_NAME}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG settings );
+bool  ${DMA_INSTANCE_NAME}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG setting );
 uint16_t ${DMA_INSTANCE_NAME}_ChannelGetTransferredCount( DMAC_CHANNEL channel );
 
 void ${DMA_INSTANCE_NAME}_ChannelCRCSetup(DMAC_CHANNEL channel, DMAC_CRC_SETUP CRCSetup);
