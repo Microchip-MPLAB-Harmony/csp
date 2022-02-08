@@ -20,6 +20,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+global ECIA_EN_SET_RegUpdate
 
 FlashNames          = ["FLASH", "IFLASH"]
 
@@ -114,6 +115,14 @@ def handleMessage(messageID, args):
     elif (messageID == "CONTROL_REGISTER_LOCK"):
         Database.setSymbolValue("core", "IOLOCK_ENABLE", args["isEnabled"])
         Database.setSymbolValue("core", "PMDLOCK_ENABLE", args["isEnabled"])
+    elif (messageID == "NVIC_INT_UPDATE"):
+        ECIA_EN_SET_RegUpdate(args["int_source"], args["isEnabled"])
+
+    elif (messageID == "NVIC_GET_MODULE_INSTANCE_LIST"):
+        symbolDict = ECIA_GetNVICModuleList(args["int_source"])
+
+    elif (messageID == "ECIA_GET_INT_SRC_DICT"):
+        symbolDict = ECIA_GetInterruptNumber(args["int_source"])
 
     return symbolDict
 

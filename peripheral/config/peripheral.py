@@ -43,6 +43,7 @@ peripherals = {
                 "UART_6418"     : ["UART"],
                 "USART_6089"    : ["UART", "SPI"],
                 "USART_11278"   : ["UART"],
+                "UART_39"       : ["UART"],
                 "QSPI_U2008"    : ["SQI","SPI"],
                 "SQI_00206"     : ["SQI"],
                 "SQI_04044"     : ["SQI"],
@@ -141,10 +142,11 @@ else:
     peripherals["TC_6082"]=["TMR"]
 
 # Create RAM Peripheral Library
-print("CSP: create component: Peripheral RAM")
-ramComponent = Module.CreateComponent("ram", "RAM", "/Peripherals/RAM/", "../peripheral/ram/config/ram.py")
-ramComponent.setDisplayType("Peripheral Library")
-ramComponent.addCapability("RAM_MEMORY", "MEMORY")
+if ("CEC173" not in processor):
+    print("CSP: create component: Peripheral RAM")
+    ramComponent = Module.CreateComponent("ram", "RAM", "/Peripherals/RAM/", "../peripheral/ram/config/ram.py")
+    ramComponent.setDisplayType("Peripheral Library")
+    ramComponent.addCapability("RAM_MEMORY", "MEMORY")
 
 
 for module in range (0, len(modules)):
@@ -158,7 +160,7 @@ for module in range (0, len(modules)):
                     "/config/" + periphName.lower() + ".py"
 
     # Don't load system services. They will be loaded by family specific script
-    if any(x in periphName for x in ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "DMA", "OSCILLATOR", "PMC", "WDT", "DMT", "PAC", "MATRIX", "L2CC", "CMCC"]):
+    if any(x in periphName for x in ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "DMA", "OSCILLATOR", "PMC", "WDT", "DMT", "PAC", "MATRIX", "L2CC", "CMCC", "ECIA"]):
         print("CSP: System Peripheral [" + periphName + " id=" + periphID + "]")
         continue
 
