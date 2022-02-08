@@ -40,9 +40,18 @@
  *  The MPLAB X Simulator does not yet support simulation of programming the
  *  GPNVM bits yet. We can remove this once it supports the FRDY bit.
  */
+ /* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 21.1 deviated 1 time. Deviation record ID -  H3_MISRAC_2012_R_21_1_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 21.1" "H3_MISRAC_2012_R_21_1_DR_1"
+</#if>
 #ifdef __MPLAB_DEBUGGER_SIMULATOR
 #define __XC32_SKIP_STARTUP_GPNVM_WAIT
 #endif
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.1"
+</#if>
+/* MISRAC 2012 deviation block end */
 
 /*
  *  This startup code relies on features that are specific to the MPLAB XC32
@@ -52,11 +61,37 @@
 #warning This startup code is intended for use with the MPLAB XC32 Compiler only.
 #endif
 
-/* Initialize segments */
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 21.2 deviated 5 times. Deviation record ID -  H3_MISRAC_2012_R_21_2_DR_1 */
+/* MISRA C-2012 Rule 8.6 deviated 6 times.  Deviation record ID -  H3_MISRAC_2012_R_8_6_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance block \
+(deviate:5 "MISRA C-2012 Rule 21.2" "H3_MISRAC_2012_R_21_2_DR_1")\
+(deviate:6 "MISRA C-2012 Rule 8.6" "H3_MISRAC_2012_R_8_6_DR_1")
+</#if>
+
+/* array initialization  function */
+extern void __attribute__((long_call)) __libc_init_array(void);
+
+/* Optional application-provided functions */
+extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) _on_reset(void);
+extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) _on_bootstrap(void);
+
+/* Reserved for use by the MPLAB XC32 Compiler */
+extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) __xc32_on_reset(void);
+extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) __xc32_on_bootstrap(void);
+
+/* Linker defined variables */
 extern uint32_t __svectors;
 
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 8.6"
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.2"
+</#if>
+/* MISRAC 2012 deviation block end */
+
+
 extern int main(void);
-extern void __attribute__((long_call)) __libc_init_array(void);
 
 /* Device Vector information is available in interrupt.c file */
 <#if CoreArchitecture == "CORTEX-M7">
@@ -77,21 +112,13 @@ extern void __attribute__((long_call)) __libc_init_array(void);
 </#if>
 </#if>
 
-extern void Dummy_App_Func(void);
-
 /* Brief default application function used as a weak reference */
+extern void Dummy_App_Func(void);
 void __attribute__((optimize("-O1"),long_call))Dummy_App_Func(void)
 {
+    /* Do nothing */
     return;
 }
-
-/* Optional application-provided functions */
-extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) _on_reset(void);
-extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) _on_bootstrap(void);
-
-/* Reserved for use by the MPLAB XC32 Compiler */
-extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) __xc32_on_reset(void);
-extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) __xc32_on_bootstrap(void);
 
 /**
  * \brief This is the code that gets called on processor reset.

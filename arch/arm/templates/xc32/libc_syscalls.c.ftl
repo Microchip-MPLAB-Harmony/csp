@@ -33,6 +33,12 @@
 extern "C" {
 #endif
 
+
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 21.2 deviated twice.  Deviation record ID -  H3_MISRAC_2012_R_21_2_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 21.2" "H3_MISRAC_2012_R_21_2_DR_1"
+</#if>
 /* Harmony specific
  * We implement only the syscalls we want over the stubs provided by libpic32c
  */
@@ -54,3 +60,8 @@ void _exit(int status)
 #ifdef __cplusplus
 }
 #endif
+
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.2"
+</#if>
+/* MISRAC 2012 deviation block end */
