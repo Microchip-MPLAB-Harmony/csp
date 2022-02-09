@@ -72,13 +72,12 @@
 // Section: Data Types
 // *****************************************************************************
 
-typedef enum
-{
 <#list 0..(PM_RCAUSE_OPTIONS - 1) as i>
     <#assign resetReason = "PM_RCAUSE" + i>
-    PM_RESET_CAUSE_${.vars[resetReason]}_RESET = PM_RCAUSE_${.vars[resetReason]}_Msk,
+    <#lt>#define PM_RESET_CAUSE_${.vars[resetReason]}_RESET  PM_RCAUSE_${.vars[resetReason]}_Msk
 </#list>
-} PM_RESET_CAUSE;
+
+typedef uint8_t PM_RESET_CAUSE;
 
 // *****************************************************************************
 // *****************************************************************************

@@ -61,7 +61,7 @@ void ${PM_INSTANCE_NAME}_IdleModeEnter( void )
     <#if PM_SLEEP_IDLE_OPTION ? has_content>
     /* Configure Idle Sleep mode */
     SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
-    <@compress single_line=true>${PM_INSTANCE_NAME}_REGS->PM_SLEEP = PM_SLEEP_IDLE(${PM_SLEEP_IDLE_OPTION});</@compress>
+    <@compress single_line=true>${PM_INSTANCE_NAME}_REGS->PM_SLEEP = PM_SLEEP_IDLE(${PM_SLEEP_IDLE_OPTION}U);</@compress>
     </#if>
     /* Wait for interrupt instruction execution */
     __WFI();
