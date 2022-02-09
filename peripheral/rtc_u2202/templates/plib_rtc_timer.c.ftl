@@ -44,13 +44,14 @@
 #include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 #include <stdlib.h>
+#include <limits.h>
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
 
 <#if ( RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0" ) ||
      ( RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ) >
-    <#lt>RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
+    <#lt> static RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
 
 </#if>
 static void ${RTC_INSTANCE_NAME}_CountReadSynchronization(void)
@@ -59,7 +60,7 @@ static void ${RTC_INSTANCE_NAME}_CountReadSynchronization(void)
     <#lt>   /* Enable continuous read-synchronization for COUNT register */
     <#lt>   if( (${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ & RTC_READREQ_RCONT_Msk) != RTC_READREQ_RCONT_Msk)
     <#lt>   {
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ = RTC_READREQ_RCONT_Msk | RTC_READREQ_ADDR(0x10);
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ = RTC_READREQ_RCONT_Msk | RTC_READREQ_ADDR(0x10U);
     <#lt>       ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ |= RTC_READREQ_RREQ_Msk;
     <#lt>       while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     <#lt>       {
@@ -68,7 +69,7 @@ static void ${RTC_INSTANCE_NAME}_CountReadSynchronization(void)
     <#lt>   }
 <#else>
     <#lt>   /* Read-synchronization for COUNT register */
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ = RTC_READREQ_RREQ_Msk | RTC_READREQ_ADDR(0x10);
+    <#lt>   ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ = RTC_READREQ_RREQ_Msk | RTC_READREQ_ADDR(0x10U);
     <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     <#lt>   {
     <#lt>       /* Wait for Read-Synchronization */
@@ -87,8 +88,8 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#if RTC_MODULE_SELECTION = "MODE0">
         <#lt>   /* Writing to CTRL register will trigger write-synchronization */
-        <#lt>   <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRL = RTC_MODE0_CTRL_MODE(0) |
-                                                            RTC_MODE0_CTRL_PRESCALER(${RTC_MODE0_PRESCALER})
+        <#lt>   <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRL = RTC_MODE0_CTRL_MODE(0U) |
+                                                            RTC_MODE0_CTRL_PRESCALER(${RTC_MODE0_PRESCALER}U)
                                                             ${RTC_MODE0_MATCHCLR?then("| RTC_MODE0_CTRL_MATCHCLR_Msk", "")};</@compress>
         <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
         <#lt>   {
@@ -96,49 +97,49 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>   }
 
         <#lt>   /* Writing to COMP register will trigger write-synchronization */
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COMP = 0x${RTC_MODE0_TIMER_COMPARE};
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COMP = 0x${RTC_MODE0_TIMER_COMPARE}U;
         <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
         <#lt>   {
         <#lt>       /* Wait for Write-Synchronization */
         <#lt>   }
 
         <#if (RTC_MODE0_INTERRUPT = true) && (RTC_MODE0_INTENSET != "0")>
-            <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTENSET = 0x${RTC_MODE0_INTENSET};
+            <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTENSET = 0x${RTC_MODE0_INTENSET}U;
         </#if>
         <#if RTC_MODE0_EVCTRL != "0">
-            <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_EVCTRL = 0x${RTC_MODE0_EVCTRL};
+            <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_EVCTRL = 0x${RTC_MODE0_EVCTRL}U;
         </#if>
     <#else>
         <#lt>   /* Writing to CTRL register will trigger write-synchronization */
-        <#lt>   <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRL = RTC_MODE1_CTRL_MODE(1) |
-        <#lt>                                                        RTC_MODE1_CTRL_PRESCALER(${RTC_MODE1_PRESCALER});</@compress>
+        <#lt>   <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRL = RTC_MODE1_CTRL_MODE(1U) |
+        <#lt>                                                        RTC_MODE1_CTRL_PRESCALER(${RTC_MODE1_PRESCALER}U);</@compress>
 
         <#lt>   /* Writing to COMP register will trigger write-synchronization */
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COMP[0] = 0x${RTC_MODE1_COMPARE0_MATCH_VALUE};
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COMP[0] = 0x${RTC_MODE1_COMPARE0_MATCH_VALUE}U;
         <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
         <#lt>   {
         <#lt>       /* Wait for Write-Synchronization */
         <#lt>   }
 
         <#lt>   /* Writing to COMP register will trigger write-synchronization */
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COMP[1] = 0x${RTC_MODE1_COMPARE1_MATCH_VALUE};
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COMP[1] = 0x${RTC_MODE1_COMPARE1_MATCH_VALUE}U;
         <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
         <#lt>   {
         <#lt>       /* Wait for Write-Synchronization */
         <#lt>   }
 
         <#lt>   /* Writing to PER register will trigger write-synchronization */
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_PER = 0x${RTC_MODE1_TIMER_COUNTER_PERIOD};
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_PER = 0x${RTC_MODE1_TIMER_COUNTER_PERIOD}U;
         <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
         <#lt>   {
         <#lt>       /* Wait for Write-Synchronization */
         <#lt>   }
 
         <#if (RTC_MODE1_INTERRUPT = true) && (RTC_MODE1_INTENSET != "0")>
-            <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTENSET = 0x${RTC_MODE1_INTENSET};
+            <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTENSET = 0x${RTC_MODE1_INTENSET}U;
         </#if>
         <#if RTC_MODE1_EVCTRL != "0">
-            <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_EVCTRL = 0x${RTC_MODE1_EVCTRL};
+            <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_EVCTRL = 0x${RTC_MODE1_EVCTRL}U;
         </#if>
     </#if>
 
@@ -152,18 +153,21 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 <#if RTC_FREQCORR >
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction)
     <#lt>{
-    <#lt>   uint32_t newCorrectionValue = 0;
-
-    <#lt>   newCorrectionValue = abs(correction);
+    <#lt>   uint32_t newCorrectionValue = 0U;
+	<#lt>   int32_t freq_correct_val = correction;
+	<#lt>   if(freq_correct_val > INT_MIN)
+	<#lt>   {
+    <#lt>       newCorrectionValue = (uint32_t)abs(freq_correct_val);
+	<#lt>   }
 
     <#lt>   /* Convert to positive value and adjust register sign bit. */
-    <#lt>   if (correction < 0)
+    <#lt>   if (freq_correct_val < 0)
     <#lt>   {
     <#lt>       newCorrectionValue |= RTC_FREQCORR_SIGN_Msk;
     <#lt>   }
 
     <#lt>   /* Writing to FREQCORR register will trigger write-synchronization */
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_FREQCORR = newCorrectionValue;
+    <#lt>   ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_FREQCORR = (uint8_t)newCorrectionValue;
     <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     <#lt>   {
     <#lt>       /* Wait for Write-Synchronization */
@@ -267,7 +271,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32Stop ( void )
     <#lt>{
     <#lt>   /* Writing to CTRL register will trigger write-synchronization */
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRL &= ~(RTC_MODE0_CTRL_ENABLE_Msk);
+    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRL &= (uint16_t)(~(RTC_MODE0_CTRL_ENABLE_Msk));
     <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     <#lt>   {
     <#lt>       /* Wait for Write-Synchronization */
@@ -299,7 +303,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>   /* Enable read-synchronization for COUNT register to avoid CPU stall */
     <#lt>   ${RTC_INSTANCE_NAME}_CountReadSynchronization();
     <#if SYS_TIME_COMPONENT_ID == "sys_time">
-        <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT) + 6;
+        <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT) + 6U;
     <#else>
         <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT);
     </#if>
@@ -320,12 +324,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#if RTC_MODE0_INTERRUPT = true>
         <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptEnable(RTC_TIMER32_INT_MASK interrupt)
         <#lt>{
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTENSET = interrupt;
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTENSET = (uint8_t)interrupt;
         <#lt>}
 
         <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptDisable(RTC_TIMER32_INT_MASK interrupt)
         <#lt>{
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTENCLR = interrupt;
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTENCLR = (uint8_t)interrupt;
         <#lt>}
     </#if>
 <#else>
@@ -376,7 +380,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>   ${RTC_INSTANCE_NAME}_CountReadSynchronization();
 
     <#if SYS_TIME_COMPONENT_ID == "sys_time">
-        <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COUNT) + 6;
+        <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COUNT) + 6U;
     <#else>
         <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COUNT);
     </#if>
@@ -416,12 +420,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
         <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptEnable(RTC_TIMER16_INT_MASK interrupt)
         <#lt>{
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTENSET = interrupt;
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTENSET = (uint8_t)interrupt;
         <#lt>}
 
         <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptDisable(RTC_TIMER16_INT_MASK interrupt)
         <#lt>{
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTENCLR = interrupt;
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTENCLR = (uint8_t)interrupt;
         <#lt>}
 
     </#if>

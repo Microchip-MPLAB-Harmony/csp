@@ -52,6 +52,7 @@
 #include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 #include <stdlib.h>
+#include <limits.h>
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
@@ -66,13 +67,13 @@
 #define ADJUST_TM_YEAR(year)        (year + TM_STRUCT_REFERENCE_YEAR)
 
 /* Adjust user month */
-#define ADJUST_MONTH(month)         (month + 1)
+#define ADJUST_MONTH(month)         ((month) + (1U))
 
 /* Adjust to tm structure month */
-#define ADJUST_TM_STRUCT_MONTH(mon) (mon - 1)
+#define ADJUST_TM_STRUCT_MONTH(mon) ((mon) - (1U))
 
 <#if RTC_MODE2_INTERRUPT = true >
-    <#lt>RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
+    <#lt>static RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 static void ${RTC_INSTANCE_NAME}_ClockReadSynchronization(void)
@@ -81,7 +82,7 @@ static void ${RTC_INSTANCE_NAME}_ClockReadSynchronization(void)
     <#lt>   /* Enable continuous read-synchronization request for CLOCK register */
     <#lt>   if( (${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ & RTC_READREQ_RCONT_Msk) != RTC_READREQ_RCONT_Msk)
     <#lt>   {
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ = RTC_READREQ_RCONT_Msk | RTC_READREQ_ADDR(0x10);
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ = RTC_READREQ_RCONT_Msk | RTC_READREQ_ADDR(0x10U);
     <#lt>       ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ |= RTC_READREQ_RREQ_Msk;
     <#lt>       while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     <#lt>       {
@@ -90,7 +91,7 @@ static void ${RTC_INSTANCE_NAME}_ClockReadSynchronization(void)
     <#lt>   }
 <#else>
     <#lt>   /* Read-synchronization for CLOCK register */
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ = RTC_READREQ_RREQ_Msk | RTC_READREQ_ADDR(0x10);
+    <#lt>   ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ = RTC_READREQ_RREQ_Msk | RTC_READREQ_ADDR(0x10U);
     <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     <#lt>   {
     <#lt>       /* Wait for Read-Synchronization */
@@ -107,12 +108,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         /* Wait for Write-Synchronization */
     }
     <#if RTC_MODE2_EVCTRL != "0">
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL};
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL}U;
     </#if>
 
     /* Writing to CTRL register will trigger write-synchronization */
-    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRL = RTC_MODE2_CTRL_MODE(2) |
-                                                            RTC_MODE2_CTRL_PRESCALER(${RTC_MODE2_PRESCALER}) |
+    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRL = RTC_MODE2_CTRL_MODE(2U) |
+                                                            RTC_MODE2_CTRL_PRESCALER(${RTC_MODE2_PRESCALER}U) |
                                                             RTC_MODE2_CTRL_ENABLE_Msk;</@compress>
     while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     {
@@ -120,7 +121,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     }
 
     <#if (RTC_MODE2_INTERRUPT = true) && (RTC_MODE2_INTENSET != "0")>
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = 0x${RTC_MODE2_INTENSET};
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = 0x${RTC_MODE2_INTENSET}U;
     </#if>
     <#if RTC_COUNT_CLOCK_RCONT >
         <#lt>   /* Enable continuous read request for CLOCK register */
@@ -130,18 +131,22 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 <#if RTC_FREQCORR = true >
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction)
     <#lt>{
-    <#lt>   uint32_t newCorrectionValue = 0;
-    <#lt>
-    <#lt>   newCorrectionValue = abs(correction);
+    <#lt>   uint32_t newCorrectionValue = 0U;
+    <#lt>   int32_t temp_correct = correction;
+	<#lt>
+	<#lt>   if(temp_correct > INT_MIN)
+	<#lt>	{
+    <#lt>      newCorrectionValue = (uint32_t)abs(temp_correct);
+	<#lt>   }
     <#lt>
     <#lt>   /* Convert to positive value and adjust Register sign bit. */
-    <#lt>   if (correction < 0)
+    <#lt>   if (temp_correct < 0)
     <#lt>   {
     <#lt>       newCorrectionValue |= RTC_FREQCORR_SIGN_Msk;
     <#lt>   }
 
     <#lt>   /* Writing to FREQCORR register will trigger write-synchronization */
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_FREQCORR = newCorrectionValue;
+    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_FREQCORR = (uint8_t)newCorrectionValue;
     <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     <#lt>   {
     <#lt>       /* Wait for Write-Synchronization */
@@ -152,12 +157,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
 {
     /* Writing to CLOCK register will trigger write-synchronization */
-    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CLOCK = ((TM_STRUCT_REFERENCE_YEAR + initialTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
-                    ((ADJUST_MONTH(initialTime->tm_mon)) << RTC_MODE2_CLOCK_MONTH_Pos) |
-                    (initialTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
-                    (initialTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
-                    (initialTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
-                    (initialTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
+    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CLOCK = (((TM_STRUCT_REFERENCE_YEAR + (uint32_t)initialTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos) |
+                    ((ADJUST_MONTH((uint32_t)initialTime->tm_mon)) << RTC_MODE2_CLOCK_MONTH_Pos) |
+                    ((uint32_t)initialTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
+                    ((uint32_t)initialTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
+                    ((uint32_t)initialTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
+                    ((uint32_t)initialTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
     while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     {
         /* Wait for Write-Synchronization */
@@ -167,38 +172,47 @@ bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
 
 void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 {
-    uint32_t dataClockCalendar = 0;
+    uint32_t dataClockCalendar = 0U;
+	
+	/* Added temp variable for suppressing MISRA C 2012 Rule : 10.x. 
+	   Please don't ignore this variable for any future modifications */
+	uint32_t temp;
 
     /* Enable read-synchronization for CLOCK register to avoid CPU stall */
     ${RTC_INSTANCE_NAME}_ClockReadSynchronization();
     dataClockCalendar = ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CLOCK;
-
-    currentTime->tm_hour =  (dataClockCalendar & RTC_MODE2_CLOCK_HOUR_Msk) >> RTC_MODE2_CLOCK_HOUR_Pos;
-    currentTime->tm_min  =  (dataClockCalendar & RTC_MODE2_CLOCK_MINUTE_Msk) >> RTC_MODE2_CLOCK_MINUTE_Pos;
-    currentTime->tm_sec  =  (dataClockCalendar & RTC_MODE2_CLOCK_SECOND_Msk) >> RTC_MODE2_CLOCK_SECOND_Pos;
-
-    currentTime->tm_mon  =  ADJUST_TM_STRUCT_MONTH(((dataClockCalendar & RTC_MODE2_CLOCK_MONTH_Msk) >> RTC_MODE2_CLOCK_MONTH_Pos));
-    currentTime->tm_year =  (((dataClockCalendar & RTC_MODE2_CLOCK_YEAR_Msk)>> RTC_MODE2_CLOCK_YEAR_Pos) + REFERENCE_YEAR) - TM_STRUCT_REFERENCE_YEAR;
-    currentTime->tm_mday =  (dataClockCalendar & RTC_MODE2_CLOCK_DAY_Msk) >> RTC_MODE2_CLOCK_DAY_Pos;
+    
+	temp = ((dataClockCalendar & RTC_MODE2_CLOCK_HOUR_Msk) >> RTC_MODE2_CLOCK_HOUR_Pos);
+    currentTime->tm_hour = (int)temp;
+	temp = ((dataClockCalendar & RTC_MODE2_CLOCK_MINUTE_Msk) >> RTC_MODE2_CLOCK_MINUTE_Pos);
+    currentTime->tm_min  = (int)temp;
+	temp = ((dataClockCalendar & RTC_MODE2_CLOCK_SECOND_Msk) >> RTC_MODE2_CLOCK_SECOND_Pos);
+    currentTime->tm_sec  = (int)temp;
+    temp = (ADJUST_TM_STRUCT_MONTH(((dataClockCalendar & RTC_MODE2_CLOCK_MONTH_Msk) >> RTC_MODE2_CLOCK_MONTH_Pos)));
+    currentTime->tm_mon  = (int)temp;
+	temp = ((((dataClockCalendar & RTC_MODE2_CLOCK_YEAR_Msk)>> RTC_MODE2_CLOCK_YEAR_Pos) + REFERENCE_YEAR) - TM_STRUCT_REFERENCE_YEAR);
+    currentTime->tm_year = (int)temp;
+	temp = ((dataClockCalendar & RTC_MODE2_CLOCK_DAY_Msk) >> RTC_MODE2_CLOCK_DAY_Pos);
+    currentTime->tm_mday = (int)temp;
 }
 <#if RTC_MODE2_INTERRUPT = true>
 
     <#lt>bool ${RTC_INSTANCE_NAME}_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask)
     <#lt>{
     <#lt>   /* Writing to ALARM register will trigger write-synchronization */
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_ALARM = ((TM_STRUCT_REFERENCE_YEAR + alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
-    <#lt>                    (ADJUST_MONTH(alarmTime->tm_mon) << RTC_MODE2_CLOCK_MONTH_Pos) |
-    <#lt>                    (alarmTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
-    <#lt>                    (alarmTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
-    <#lt>                     (alarmTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
-    <#lt>                     (alarmTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
+    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_ALARM = (((TM_STRUCT_REFERENCE_YEAR + (uint32_t)alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos) |
+    <#lt>                    (ADJUST_MONTH((uint32_t)alarmTime->tm_mon) << RTC_MODE2_CLOCK_MONTH_Pos) |
+    <#lt>                    ((uint32_t)alarmTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
+    <#lt>                    ((uint32_t)alarmTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
+    <#lt>                     ((uint32_t)alarmTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
+    <#lt>                     ((uint32_t)alarmTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
     <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     <#lt>   {
     <#lt>       /* Wait for Write-Synchronization */
     <#lt>   }
 
     <#lt>   /* Writing to MASK register will trigger write-synchronization */
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_MASK = mask;
+    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_MASK = (uint8_t)mask;
     <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     <#lt>   {
     <#lt>       /* Wait for Write-Synchronization */
