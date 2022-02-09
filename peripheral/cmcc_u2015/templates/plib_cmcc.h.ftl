@@ -52,10 +52,10 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define CMCC_NO_OF_WAYS     4
-#define CMCC_LINE_PER_WAY   64
-#define CMCC_LINE_SIZE      16
-#define CMCC_WAY_SIZE       1024
+#define CMCC_NO_OF_WAYS     (4U)
+#define CMCC_LINE_PER_WAY   (64U)
+#define CMCC_LINE_SIZE      (16U)
+#define CMCC_WAY_SIZE       (1024U)
 
 /***************************** CMCC API *******************************/
 void CMCC_Disable (void );
