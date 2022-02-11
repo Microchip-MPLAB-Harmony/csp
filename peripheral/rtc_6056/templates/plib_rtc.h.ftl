@@ -60,15 +60,15 @@
 
 /***************************** RTC API *******************************/
 void ${RTC_INSTANCE_NAME}_Initialize( void );
-bool ${RTC_INSTANCE_NAME}_TimeSet( struct tm *Time );
-void ${RTC_INSTANCE_NAME}_TimeGet( struct tm *Time );
+bool ${RTC_INSTANCE_NAME}_TimeSet( struct tm *sysTime );
+void ${RTC_INSTANCE_NAME}_TimeGet( struct tm *sysTime );
 <#if rtcEnableInterrupt == true>
-	<#lt>bool ${RTC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
-	<#lt>void ${RTC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context );
-	<#lt>void ${RTC_INSTANCE_NAME}_InterruptDisable(RTC_INT_MASK interrupt);
-	<#lt>void ${RTC_INSTANCE_NAME}_InterruptEnable(RTC_INT_MASK interrupt);
+    <#lt>bool ${RTC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
+    <#lt>void ${RTC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context );
+    <#lt>void ${RTC_INSTANCE_NAME}_InterruptDisable(RTC_INT_MASK interrupt);
+    <#lt>void ${RTC_INSTANCE_NAME}_InterruptEnable(RTC_INT_MASK interrupt);
 </#if>
-	
+
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif

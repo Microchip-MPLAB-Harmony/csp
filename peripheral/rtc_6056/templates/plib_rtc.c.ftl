@@ -45,28 +45,28 @@
 </#if>
 
 <#if rtcEnableInterrupt == true>
-RTC_OBJECT rtc;
+static RTC_OBJECT rtc;
 </#if>
 
 __STATIC_INLINE uint32_t decimaltobcd( uint32_t aDecValue )
 {
-    uint32_t  decValueDiv10 = aDecValue / 10;
+    uint32_t  decValueDiv10 = aDecValue / 10U;
 
-    return( (decValueDiv10 << 4) + ( aDecValue - (decValueDiv10 * 10) ) );
+    return( (decValueDiv10 << 4U) + ( aDecValue - (decValueDiv10 * 10U) ) );
 }
 
 __STATIC_INLINE uint32_t bcdtodecimal( uint32_t aBcdValue )
 {
-    return( (10 * ((aBcdValue & 0xF0) >> 4)) + (aBcdValue & 0x0F) );
+    return( (10U * ((aBcdValue & 0xF0U) >> 4U)) + (aBcdValue & 0x0FU) );
 }
 
 void ${RTC_INSTANCE_NAME}_Initialize( void )
 {
-    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->RTC_MR = RTC_MR_PERSIAN( 0 ) | RTC_MR_OUT1_${RTC_MR_OUT1} | RTC_MR_OUT0_${RTC_MR_OUT0}
+    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->RTC_MR = RTC_MR_PERSIAN( 0U ) | RTC_MR_OUT1_${RTC_MR_OUT1} | RTC_MR_OUT0_${RTC_MR_OUT0}
                                                                    <#if RTC_MR_TPERIOD??>| RTC_MR_TPERIOD_${RTC_MR_TPERIOD}</#if>
                                                                    <#if RTC_MR_THIGH??>| RTC_MR_THIGH_${RTC_MR_THIGH}</#if>
                                                                    <#if RTC_MR_UTC??>| RTC_MR_UTC(${RTC_MR_UTC?then('1', '0')})</#if>
-                                                                   | RTC_MR_HRMOD(${RTC_12HR_MODE?then('1', '0')});</@compress>
+                                                                   | RTC_MR_HRMOD(${RTC_12HR_MODE?then('1', '0')}U);</@compress>
 
     ${RTC_INSTANCE_NAME}_REGS->RTC_CR = RTC_CR_TIMEVSEL_${RTC_CR_TIMEVSEL} | RTC_CR_CALEVSEL_${RTC_CR_CALEVSEL};
 
@@ -77,19 +77,19 @@ void ${RTC_INSTANCE_NAME}_Initialize( void )
     ${RTC_INSTANCE_NAME}_REGS->RTC_SCCR = RTC_SCCR_Msk;
 }
 
-bool ${RTC_INSTANCE_NAME}_TimeSet( struct tm * Time )
+bool ${RTC_INSTANCE_NAME}_TimeSet( struct tm * sysTime )
 {
     bool retval = true;
-    Time->tm_year += 1900;
-    uint32_t data_cal = (decimaltobcd( Time->tm_mday ) << RTC_CALR_DATE_Pos)
-                        | (decimaltobcd( Time->tm_wday + 1 ) << RTC_CALR_DAY_Pos)
-                        | (decimaltobcd( Time->tm_mon + 1 ) << RTC_CALR_MONTH_Pos)
-                        | (decimaltobcd( Time->tm_year - ( (Time->tm_year/100) * 100 ) ) << RTC_CALR_YEAR_Pos)
-                        | (decimaltobcd( Time->tm_year/100 ) << RTC_CALR_CENT_Pos);
+    sysTime->tm_year += 1900;
+    uint32_t data_cal = (decimaltobcd((uint32_t)sysTime->tm_mday ) << RTC_CALR_DATE_Pos)
+                        | (decimaltobcd(((uint32_t)sysTime->tm_wday + 1U )) << RTC_CALR_DAY_Pos)
+                        | (decimaltobcd(((uint32_t)sysTime->tm_mon + 1U )) << RTC_CALR_MONTH_Pos)
+                        | (decimaltobcd(((uint32_t)sysTime->tm_year - (((uint32_t)sysTime->tm_year/100U) * 100U ))) << RTC_CALR_YEAR_Pos)
+                        | (decimaltobcd(((uint32_t)sysTime->tm_year/100U) ) << RTC_CALR_CENT_Pos);
 
-    uint32_t data_time = (decimaltobcd( Time->tm_hour ) << RTC_TIMR_HOUR_Pos )
-                        | (decimaltobcd( Time->tm_min ) << RTC_TIMR_MIN_Pos)
-                        | (decimaltobcd( Time->tm_sec ) << RTC_TIMR_SEC_Pos);
+    uint32_t data_time = (decimaltobcd((uint32_t)sysTime->tm_hour) << RTC_TIMR_HOUR_Pos )
+                        | (decimaltobcd((uint32_t)sysTime->tm_min) << RTC_TIMR_MIN_Pos)
+                        | (decimaltobcd((uint32_t)sysTime->tm_sec) << RTC_TIMR_SEC_Pos);
 
     ${RTC_INSTANCE_NAME}_REGS->RTC_CR &= ~(RTC_CR_UPDCAL_Msk | RTC_CR_UPDTIM_Msk);
 
@@ -104,7 +104,7 @@ bool ${RTC_INSTANCE_NAME}_TimeSet( struct tm * Time )
     ${RTC_INSTANCE_NAME}_REGS->RTC_CR |= RTC_CR_UPDCAL_Msk | RTC_CR_UPDTIM_Msk;
 
     // Wait for ack
-    while( !(${RTC_INSTANCE_NAME}_REGS->RTC_SR & RTC_SR_ACKUPD_Msk) )
+    while( (${RTC_INSTANCE_NAME}_REGS->RTC_SR & RTC_SR_ACKUPD_Msk) == 0U )
     {
         ;   // spin lock
     }
@@ -115,7 +115,7 @@ bool ${RTC_INSTANCE_NAME}_TimeSet( struct tm * Time )
     ${RTC_INSTANCE_NAME}_REGS->RTC_TIMR = data_time;
     ${RTC_INSTANCE_NAME}_REGS->RTC_CR &= ~(RTC_CR_UPDCAL_Msk | RTC_CR_UPDTIM_Msk);
 
-    if( ${RTC_INSTANCE_NAME}_REGS->RTC_VER & (RTC_VER_NVTIM_Msk | RTC_VER_NVCAL_Msk) )
+    if( (${RTC_INSTANCE_NAME}_REGS->RTC_VER & (RTC_VER_NVTIM_Msk | RTC_VER_NVCAL_Msk)) != 0U )
     {
         retval = false;     // valid entry register indicates a problem
     }
@@ -123,8 +123,9 @@ bool ${RTC_INSTANCE_NAME}_TimeSet( struct tm * Time )
     return retval;
 }
 
-void ${RTC_INSTANCE_NAME}_TimeGet( struct tm * Time )
+void ${RTC_INSTANCE_NAME}_TimeGet( struct tm * sysTime )
 {
+    uint32_t temp;
     // two sequential read should be the same to insure syncrhonization
     uint32_t data_time = ${RTC_INSTANCE_NAME}_REGS->RTC_TIMR;
 
@@ -140,40 +141,49 @@ void ${RTC_INSTANCE_NAME}_TimeGet( struct tm * Time )
     {
         data_cal = ${RTC_INSTANCE_NAME}_REGS->RTC_CALR;
     }
-
-    Time->tm_hour = bcdtodecimal( (data_time & RTC_TIMR_HOUR_Msk) >> RTC_TIMR_HOUR_Pos );
-    Time->tm_sec =  bcdtodecimal( data_time & RTC_TIMR_SEC_Msk );
-    Time->tm_min =  bcdtodecimal( (data_time & RTC_TIMR_MIN_Msk) >> RTC_TIMR_MIN_Pos );
-    Time->tm_mday = bcdtodecimal( (data_cal & RTC_CALR_DATE_Msk) >> RTC_CALR_DATE_Pos );
-    Time->tm_wday = bcdtodecimal( (data_cal & RTC_CALR_DAY_Msk) >> RTC_CALR_DAY_Pos ) - 1;
-    Time->tm_mon =  bcdtodecimal( (data_cal & RTC_CALR_MONTH_Msk) >> RTC_CALR_MONTH_Pos ) - 1;
-    Time->tm_year = ( (100 * bcdtodecimal( data_cal & RTC_CALR_CENT_Msk ))
+    temp = bcdtodecimal( (data_time & RTC_TIMR_HOUR_Msk) >> RTC_TIMR_HOUR_Pos );
+    sysTime->tm_hour = (int32_t)temp;
+    temp = bcdtodecimal( data_time & RTC_TIMR_SEC_Msk );
+    sysTime->tm_sec = (int32_t)temp;
+    temp = bcdtodecimal( (data_time & RTC_TIMR_MIN_Msk) >> RTC_TIMR_MIN_Pos );
+    sysTime->tm_min = (int32_t)temp;
+    temp = bcdtodecimal( (data_cal & RTC_CALR_DATE_Msk) >> RTC_CALR_DATE_Pos );
+    sysTime->tm_mday = (int32_t)temp;
+    temp = bcdtodecimal( (data_cal & RTC_CALR_DAY_Msk) >> RTC_CALR_DAY_Pos ) - 1U;
+    sysTime->tm_wday = (int32_t)temp;
+    temp = bcdtodecimal( (data_cal & RTC_CALR_MONTH_Msk) >> RTC_CALR_MONTH_Pos ) - 1U;
+    sysTime->tm_mon = (int32_t)temp;
+    temp = (( (100U * bcdtodecimal( data_cal & RTC_CALR_CENT_Msk ))
                         + bcdtodecimal( (data_cal & RTC_CALR_YEAR_Msk) >> RTC_CALR_YEAR_Pos )
-                    ) - 1900;
+                    ) - 1900U);
+    sysTime->tm_year = (int32_t)temp;
 }
 
 <#if rtcEnableInterrupt == true>
-bool ${RTC_INSTANCE_NAME}_AlarmSet( struct tm * Time, RTC_ALARM_MASK mask )
+bool ${RTC_INSTANCE_NAME}_AlarmSet( struct tm * alarmTime, RTC_ALARM_MASK mask )
 {
-    bool       retval = true;
-    uint32_t   alarm_cal;
-    uint32_t   alarm_tmr;
-    uint32_t   data_cal = (decimaltobcd(Time->tm_mon + 1) << 16) | (decimaltobcd(Time->tm_mday) << 24);
-    uint32_t   data_time = (decimaltobcd(Time->tm_sec)) | (decimaltobcd(Time->tm_min) << 8) | (decimaltobcd(Time->tm_hour) << 16);
+    bool     retval = true;
+    volatile uint32_t temp;
+    uint32_t alarm_cal;
+    uint32_t alarm_tmr;
+    uint32_t data_cal = (decimaltobcd(((uint32_t)alarmTime->tm_mon + 1U)) << 16U) | (decimaltobcd((uint32_t)alarmTime->tm_mday) << 24U);
+    uint32_t data_time = (decimaltobcd((uint32_t)alarmTime->tm_sec)) | (decimaltobcd((uint32_t)alarmTime->tm_min) << 8U) | (decimaltobcd((uint32_t)alarmTime->tm_hour) << 16U);
 
-    alarm_tmr = ${RTC_INSTANCE_NAME}_REGS->RTC_TIMALR;
-    alarm_tmr = (mask & 0x04) << 21 | (mask & 0x02) << 14 | (mask & 0x01) << 7;
+    temp = ${RTC_INSTANCE_NAME}_REGS->RTC_TIMALR;
+    (void)temp;
+    alarm_tmr = (((uint32_t)mask & 0x04U) << 21) | (((uint32_t)mask & 0x02U) << 14) | (((uint32_t)mask & 0x01U) << 7);
 
     ${RTC_INSTANCE_NAME}_REGS->RTC_TIMALR = data_time;
     ${RTC_INSTANCE_NAME}_REGS->RTC_TIMALR |= alarm_tmr;
 
-    alarm_cal = ${RTC_INSTANCE_NAME}_REGS->RTC_CALALR;
-    alarm_cal = (mask & 0x10) << 19 | (mask & 0x08) << 28;
+    temp = ${RTC_INSTANCE_NAME}_REGS->RTC_CALALR;
+    (void)temp;
+    alarm_cal = (((uint32_t)mask & 0x10U) << 19) | (((uint32_t)mask & 0x08U) << 28);
 
     ${RTC_INSTANCE_NAME}_REGS->RTC_CALALR = data_cal;
     ${RTC_INSTANCE_NAME}_REGS->RTC_CALALR |= alarm_cal;
 
-    if( ${RTC_INSTANCE_NAME}_REGS->RTC_VER & (RTC_VER_NVTIMALR_Msk | RTC_VER_NVCALALR_Msk) )
+    if( (${RTC_INSTANCE_NAME}_REGS->RTC_VER & (RTC_VER_NVTIMALR_Msk | RTC_VER_NVCALALR_Msk)) != 0U )
     {
         retval = false;        // valid entry register indicates a problem
     }
@@ -187,12 +197,12 @@ bool ${RTC_INSTANCE_NAME}_AlarmSet( struct tm * Time, RTC_ALARM_MASK mask )
 
 void ${RTC_INSTANCE_NAME}_InterruptEnable( RTC_INT_MASK interrupt )
 {
-    ${RTC_INSTANCE_NAME}_REGS->RTC_IER = interrupt;
+    ${RTC_INSTANCE_NAME}_REGS->RTC_IER = (uint32_t)interrupt;
 }
 
 void ${RTC_INSTANCE_NAME}_InterruptDisable( RTC_INT_MASK interrupt )
 {
-    ${RTC_INSTANCE_NAME}_REGS->RTC_IDR = interrupt;
+    ${RTC_INSTANCE_NAME}_REGS->RTC_IDR = (uint32_t)interrupt;
 }
 
 void ${RTC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
@@ -206,16 +216,16 @@ void ${RTC_INSTANCE_NAME}_InterruptHandler( void )
 {
     // This handler may be chained with other sys control interrupts. So
     // the user call back should only occur if an RTC stimulus is present.
-    volatile uint32_t status = ${RTC_INSTANCE_NAME}_REGS->RTC_SR;
+    volatile uint32_t rtc_status = ${RTC_INSTANCE_NAME}_REGS->RTC_SR;
     uint32_t enabledInterrupts = ${RTC_INSTANCE_NAME}_REGS->RTC_IMR;
 
-    if( status & enabledInterrupts )
+    if( (rtc_status & enabledInterrupts) != 0U )
     {
         ${RTC_INSTANCE_NAME}_REGS->RTC_SCCR |= enabledInterrupts;
 
         if( rtc.callback != NULL )
         {
-            rtc.callback( status, rtc.context );
+            rtc.callback( rtc_status, rtc.context );
         }
     }
 }
