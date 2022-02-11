@@ -48,7 +48,7 @@
 
 void ${ACC_INSTANCE_NAME}_Initialize (void)
 {
-    uint32_t regValue = 0;
+    uint32_t regValue = 0U;
     /*Reset ACC registers*/
     ${ACC_INSTANCE_NAME}_REGS->ACC_CR = ACC_CR_SWRST_Msk;
 
@@ -56,19 +56,19 @@ void ${ACC_INSTANCE_NAME}_Initialize (void)
       Enable/Disable, Fault Generation to Enable/Disable, Set Fault source and
       Output Edge type*/
     <#if HAS_MINUS_COMPARATOR_SELECTION??>
-    regValue |= ACC_MR_SELMINUS(${ACC_MR_SELMINUS});
+    regValue |= ACC_MR_SELMINUS(${ACC_MR_SELMINUS}U);
     </#if>
     <#if HAS_PLUS_COMPARATOR_SELECTION??>
-    regValue |= ACC_MR_SELPLUS(${ACC_MR_SELPLUS});
+    regValue |= ACC_MR_SELPLUS(${ACC_MR_SELPLUS}U);
     </#if>
     <#if HAS_EDGETYPE??>
-    regValue |= ACC_MR_EDGETYP(${ACC_MR_EDGETYP});
+    regValue |= ACC_MR_EDGETYP(${ACC_MR_EDGETYP}U);
     </#if>
     <#if HAS_INVERTED_COMPARATOR??>
-    regValue |= ${ACC_ACR_INV?then('ACC_MR_INV_Msk', '0')};
+    regValue |= ${ACC_ACR_INV?then('ACC_MR_INV_Msk', '0U')};
     </#if>
     <#if HAS_FAULT_ENABLE??>
-    regValue |= ${ACC_ACR_FE?then('ACC_MR_FE_Msk', '0')};
+    regValue |= ${ACC_ACR_FE?then('ACC_MR_FE_Msk', '0U')};
     regValue |= ACC_MR_SELFS_${ACC_MR_SELFS};
     </#if>
     regValue |= ACC_MR_ACEN_Msk;
@@ -76,7 +76,7 @@ void ${ACC_INSTANCE_NAME}_Initialize (void)
 
     <#if HAS_CURRENT_SELECTION?? && HAS_HYSTERESIS??>
     /*Set Current level and Hysteresis level*/
-    ${ACC_INSTANCE_NAME}_REGS->ACC_ACR = ACC_ACR_ISEL_${ACC_ACR_ISEL} | ACC_ACR_HYST(${ACC_ACR_HYST});
+    ${ACC_INSTANCE_NAME}_REGS->ACC_ACR = ACC_ACR_ISEL_${ACC_ACR_ISEL} | ACC_ACR_HYST(${ACC_ACR_HYST}U);
     </#if>
 
     <#if HAS_INTERRUPTS??>
@@ -86,19 +86,22 @@ void ${ACC_INSTANCE_NAME}_Initialize (void)
     </#if>
 
     /*Wait till output mask period gets over*/
-    while (${ACC_INSTANCE_NAME}_REGS->ACC_ISR& (uint32_t) ACC_ISR_MASK_Msk);
+    while ((${ACC_INSTANCE_NAME}_REGS->ACC_ISR & ACC_ISR_MASK_Msk) != 0U)
+    {
+        /* Do nothing */
+    }
     </#if>
 }
 
 <#if HAS_INTERRUPTS??>
-bool ${ACC_INSTANCE_NAME}_StatusGet (ACC_STATUS_SOURCE status)
+bool ${ACC_INSTANCE_NAME}_StatusGet (ACC_STATUS_SOURCE status_var)
 {
-    return (bool)(${ACC_INSTANCE_NAME}_REGS->ACC_ISR& status);
+    return ((${ACC_INSTANCE_NAME}_REGS->ACC_ISR & (uint32_t)status_var) != 0U);
 }
 
 <#if INTERRUPT_MODE == true>
 
-ACC_OBJECT ${ACC_INSTANCE_NAME?lower_case}Obj;
+static ACC_OBJECT ${ACC_INSTANCE_NAME?lower_case}Obj;
 
 void ${ACC_INSTANCE_NAME}_CallbackRegister (ACC_CALLBACK callback, uintptr_t context)
 {

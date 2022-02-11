@@ -38,8 +38,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef _PLIB_${ACC_INSTANCE_NAME}_H
-#define _PLIB_${ACC_INSTANCE_NAME}_H
+#ifndef PLIB_${ACC_INSTANCE_NAME}_H
+#define PLIB_${ACC_INSTANCE_NAME}_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -63,10 +63,8 @@
 
 /*************************** ${ACC_INSTANCE_NAME} API ***************************/
 void ${ACC_INSTANCE_NAME}_Initialize (void);
-
 <#if HAS_INTERRUPTS??>
-bool ${ACC_INSTANCE_NAME}_StatusGet (ACC_STATUS_SOURCE status);
-
+bool ${ACC_INSTANCE_NAME}_StatusGet (ACC_STATUS_SOURCE status_var);
 <#if INTERRUPT_MODE == true>
 void ${ACC_INSTANCE_NAME}_CallbackRegister (ACC_CALLBACK callback, uintptr_t context);
 </#if>
