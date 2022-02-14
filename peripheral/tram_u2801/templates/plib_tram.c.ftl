@@ -63,26 +63,24 @@ void ${TRAM_INSTANCE_NAME}_Initialize( void )
 
 bool ${TRAM_INSTANCE_NAME}_RAMSet(uint32_t ramIndex, uint32_t data)
 {
-    if (ramIndex > ${TRAM_RAM_COUNT})
+    bool ramIndexStatus = false;
+    if (ramIndex < ${TRAM_RAM_COUNT + 1}U)
     {
-        return false;
+        ${TRAM_INSTANCE_NAME}_REGS->TRAM_RAM[ramIndex] = TRAM_RAM_DATA(data);
+        ramIndexStatus = true;
     }
-
-    ${TRAM_INSTANCE_NAME}_REGS->TRAM_RAM[ramIndex] = TRAM_RAM_DATA(data);
-
-    return true;
+    return ramIndexStatus;
 }
 
 bool ${TRAM_INSTANCE_NAME}_RAMGet(uint32_t ramIndex, uint32_t *data)
 {
-    if (ramIndex > ${TRAM_RAM_COUNT})
+    bool ramIndexStatus = false;
+    if (ramIndex < ${TRAM_RAM_COUNT + 1}U)
     {
-        return false;
+        *data = ${TRAM_INSTANCE_NAME}_REGS->TRAM_RAM[ramIndex];
+        ramIndexStatus = true;
     }
-
-    *data = ${TRAM_INSTANCE_NAME}_REGS->TRAM_RAM[ramIndex];
-
-    return true;
+    return ramIndexStatus;
 }
 
 void ${TRAM_INSTANCE_NAME}_DataScrambleKeySet(uint32_t dsckey)
