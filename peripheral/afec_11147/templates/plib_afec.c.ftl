@@ -233,11 +233,11 @@
 // *****************************************************************************
 <#if AFEC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>AFEC_CALLBACK_OBJECT ${AFEC_INSTANCE_NAME}_CallbackObj;
+    <#lt>static AFEC_CALLBACK_OBJECT ${AFEC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize AFEC peripheral */
-void ${AFEC_INSTANCE_NAME}_Initialize()
+void ${AFEC_INSTANCE_NAME}_Initialize(void)
 {
     /* Software reset */
     ${AFEC_INSTANCE_NAME}_REGS->AFEC_CR = AFEC_CR_SWRST_Msk;
@@ -249,7 +249,7 @@ void ${AFEC_INSTANCE_NAME}_Initialize()
 
     /* resolution and sign mode of result */
     ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR = ${AFEC_RES} ${AFEC_STM}
-         | AFEC_EMR_SIGNMODE_${AFEC_EMR_SIGNMODE_VALUE} | AFEC_EMR_TAG_Msk | AFEC_EMR_CMPFILTER(${AFEC_EMR_CMPFILTER}) <#if AFEC_EMR_CMPALL == true> | AFEC_EMR_CMPALL_Msk <#else> | AFEC_EMR_CMPSEL(${AFEC_EMR_CMPSEL}) </#if> | AFEC_EMR_CMPMODE(AFEC_EMR_CMPMODE_${AFEC_EMR_CMPMODE});
+         | AFEC_EMR_SIGNMODE_${AFEC_EMR_SIGNMODE_VALUE} | AFEC_EMR_TAG_Msk | AFEC_EMR_CMPFILTER(${AFEC_EMR_CMPFILTER}U) <#if AFEC_EMR_CMPALL == true> | AFEC_EMR_CMPALL_Msk <#else> | AFEC_EMR_CMPSEL(${AFEC_EMR_CMPSEL}U) </#if> | AFEC_EMR_CMPMODE(AFEC_EMR_CMPMODE_${AFEC_EMR_CMPMODE});
 
     <#if AFEC_CWR_HIGHTHRES != 0 || AFEC_CWR_LOWTHRES != 0>
     ${AFEC_INSTANCE_NAME}_REGS->AFEC_CWR = (${AFEC_CWR_HIGHTHRES} << AFEC_CWR_HIGHTHRES_Pos) | ${AFEC_CWR_LOWTHRES};
@@ -285,7 +285,7 @@ void ${AFEC_INSTANCE_NAME}_Initialize()
         <#if (i % 2 != 0) && (.vars[AFEC_CH_DIFF_PAIR] != "GND")>
         <#else>
         <#lt>    /* Offset */
-        <#lt>    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CSELR = AFEC_CH${i};
+        <#lt>    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CSELR = (uint32_t)AFEC_CH${i};
         <#lt>    ${AFEC_INSTANCE_NAME}_REGS->AFEC_COCR = ${.vars[AFEC_CH_OFFSET]}U;
         </#if>
     </#if>
@@ -317,25 +317,25 @@ void ${AFEC_INSTANCE_NAME}_Initialize()
 /* Enable AFEC channels */
 void ${AFEC_INSTANCE_NAME}_ChannelsEnable (AFEC_CHANNEL_MASK channelsMask)
 {
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CHER |= channelsMask;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CHER |= (uint32_t)channelsMask;
 }
 
 /* Disable AFEC channels */
 void ${AFEC_INSTANCE_NAME}_ChannelsDisable (AFEC_CHANNEL_MASK channelsMask)
 {
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CHDR |= channelsMask;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CHDR |= (uint32_t)channelsMask;
 }
 
 /* Enable channel end of conversion interrupt */
 void ${AFEC_INSTANCE_NAME}_ChannelsInterruptEnable (AFEC_INTERRUPT_MASK channelsInterruptMask)
 {
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_IER |= channelsInterruptMask;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_IER |= (uint32_t)channelsInterruptMask;
 }
 
 /* Disable channel end of conversion interrupt */
 void ${AFEC_INSTANCE_NAME}_ChannelsInterruptDisable (AFEC_INTERRUPT_MASK channelsInterruptMask)
 {
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_IDR |= channelsInterruptMask;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_IDR |= (uint32_t)channelsInterruptMask;
 }
 
 /* Start the conversion with software trigger */
@@ -347,14 +347,14 @@ void ${AFEC_INSTANCE_NAME}_ConversionStart(void)
 /*Check if conversion result is available */
 bool ${AFEC_INSTANCE_NAME}_ChannelResultIsReady(AFEC_CHANNEL_NUM channel)
 {
-    return (${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR >> channel) & 0x1U;
+    return (((${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR >> (uint32_t)channel) & 0x1U) != 0U);
 }
 
 /* Read the conversion result */
 uint16_t ${AFEC_INSTANCE_NAME}_ChannelResultGet(AFEC_CHANNEL_NUM channel)
 {
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CSELR = channel;
-    return (${AFEC_INSTANCE_NAME}_REGS->AFEC_CDR);
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CSELR = (uint32_t)channel;
+    return (uint16_t)(${AFEC_INSTANCE_NAME}_REGS->AFEC_CDR);
 }
 
 /* Configure the user defined conversion sequence */
@@ -367,14 +367,16 @@ void ${AFEC_INSTANCE_NAME}_ConversionSequenceSet(AFEC_CHANNEL_NUM *channelList, 
     for (channelIndex = 0U; channelIndex < AFEC_SEQ1_CHANNEL_NUM; channelIndex++)
     {
         if (channelIndex >= numChannel)
+		{
             break;
-        ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ1R |= channelList[channelIndex] << (channelIndex * 4U);
+		}
+        ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ1R |= (uint32_t)channelList[channelIndex] << (channelIndex * 4U);
     }
     if (numChannel > AFEC_SEQ1_CHANNEL_NUM)
     {
         for (channelIndex = 0U; channelIndex < (numChannel - AFEC_SEQ1_CHANNEL_NUM); channelIndex++)
         {
-            ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ2R |= channelList[channelIndex + AFEC_SEQ1_CHANNEL_NUM] << (channelIndex * 4U);
+            ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ2R |= (uint32_t)channelList[channelIndex + AFEC_SEQ1_CHANNEL_NUM] << (channelIndex * 4U);
         }
     }
 }
@@ -382,14 +384,14 @@ void ${AFEC_INSTANCE_NAME}_ConversionSequenceSet(AFEC_CHANNEL_NUM *channelList, 
 /* Set the channel gain */
 void ${AFEC_INSTANCE_NAME}_ChannelGainSet(AFEC_CHANNEL_NUM channel, AFEC_CHANNEL_GAIN gain)
 {
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CGR &= ~(0x03U << (2U * channel));
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CGR |= (gain << ( 2U * channel));
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CGR &= (uint32_t)(~((uint32_t)0x03U << (2U * (uint32_t)channel)));
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CGR |= ((uint32_t)gain << ( 2U * (uint32_t)channel));
 }
 
 /* Set the channel offset */
 void ${AFEC_INSTANCE_NAME}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset)
 {
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CSELR = channel;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CSELR = (uint32_t)channel;
     ${AFEC_INSTANCE_NAME}_REGS->AFEC_COCR = offset;
 }
 
@@ -397,7 +399,7 @@ void ${AFEC_INSTANCE_NAME}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t o
 void ${AFEC_INSTANCE_NAME}_ComparatorChannelSet(AFEC_CHANNEL_NUM channel)
 {
     ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR &= ~(AFEC_EMR_CMPSEL_Msk | AFEC_EMR_CMPALL_Msk);
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR |= (channel << AFEC_EMR_CMPSEL_Pos);
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR |= ((uint32_t)channel << AFEC_EMR_CMPSEL_Pos);
 }
 
 /* Enable compare on all channels */
@@ -416,7 +418,7 @@ void ${AFEC_INSTANCE_NAME}_CompareAllChannelsDisable(void)
 void ${AFEC_INSTANCE_NAME}_ComparatorModeSet(AFEC_COMPARATOR_MODE cmpMode)
 {
     ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR &= ~(AFEC_EMR_CMPMODE_Msk);
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR |= ((cmpMode) << AFEC_EMR_CMPMODE_Pos);
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR |= ((uint32_t)(cmpMode) << AFEC_EMR_CMPMODE_Pos);
 }
 
 <#if AFEC_INTERRUPT == true>
@@ -432,11 +434,11 @@ void ${AFEC_INSTANCE_NAME}_ComparatorModeSet(AFEC_COMPARATOR_MODE cmpMode)
     <#lt>/* Interrupt Handler */
     <#lt>void ${AFEC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>    uint32_t status;
-    <#lt>    status = ${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR;
+    <#lt>    uint32_t var_status;
+    <#lt>    var_status = ${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR;
     <#lt>    if (${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${AFEC_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn(var_status, ${AFEC_INSTANCE_NAME}_CallbackObj.context);
     <#lt>    }
     <#lt>}
 <#else>
