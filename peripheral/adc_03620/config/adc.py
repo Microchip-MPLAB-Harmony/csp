@@ -254,12 +254,14 @@ def updateTriggerDelayCounter (symbol, event):
     else:
         symbol.setReadOnly(False)
 
+def enableCoreNSymbols(localComponent, core, enable_disable):
+    for coreSym in adcCoreConfigSymbolsList[core]:
+        localComponent.getSymbolByID(coreSym).setVisible(enable_disable)
+
 def coreSymVisibilityUpdate (symbol, event):
     localComponent = symbol.getComponent()
     n = getCore(symbol.getID())
-
-    for coreSym in adcCoreConfigSymbolsList[n]:
-        localComponent.getSymbolByID(coreSym).setVisible(event["value"])
+    enableCoreNSymbols(localComponent, n, event["value"])
 
 def updateAdcNVICInterrutps(symbol, event):
     intEnable = False if event["value"] == 0 else True
@@ -766,8 +768,8 @@ def readATDF(adcInstanceName, adcComponent):
     for n in range(0, nSARCore):
         adcNumCoreChannels = adcComponent.createIntegerSymbol("ADC_CORE_" + str(n) + "_NUM_CHANNELS", None)
         adcNumCoreChannels.setDefaultValue(nSARChannel[n])
-        adcNumCoreChannels.setVisible(True)
-    
+        adcNumCoreChannels.setVisible(False)
+
         adcMaxChannelsDepList.append("ADC_CORE_" + str(n) + "_ENABLE")
 
     adcMaxChannels = adcComponent.createIntegerSymbol("ADC_MAX_CHANNELS", None)
@@ -1082,7 +1084,10 @@ def coreConfig(n, nChannels, adcComponent):
     # Core enable -
     adcCoreEnable = adcComponent.createBooleanSymbol("ADC_CORE_" + str(n) + "_ENABLE", None)
     adcCoreEnable.setLabel("Enable ADC Core " + str(n))
-    adcCoreEnable.setDefaultValue(False)
+    if n == 0:
+        adcCoreEnable.setDefaultValue(True)
+    else:
+        adcCoreEnable.setDefaultValue(False)
 
     ADC_CORCTRL_REG_DepList[n].append("ADC_CORE_" + str(n) + "_ENABLE")
     ADC_CHNCFG1_REG_DepList[n].append("ADC_CORE_" + str(n) + "_ENABLE")
@@ -1167,7 +1172,7 @@ def coreConfig(n, nChannels, adcComponent):
     adc_conversion_time.setLabel("[ Sampling Time = " + sample_time_usec + " micro sec, " + "Total Conversion Time = " + conversion_time_usec + " micro sec, " + "Max Sampling Freq = " + conversion_freq_mhz + " MHz ]")
     adc_conversion_time.setDependencies(conversionTimeUpdate, adcConversionTimeDepList[n])
     adcCoreConfigSymbolsList[n].append("ADC_CORE_" + str(n) + "_ADC_CONVERSION_TIME")
-    
+
     # This symbol is used by the ADC UI to display Actual Rate
     adc_conversion_rate = adcComponent.createStringSymbol("ADC_CORE_" + str(n) + "_ADC_CONVERSION_RATE", adcCoreEnable)
     adc_conversion_rate.setLabel("ADC RATE IN MSPS")
@@ -1665,7 +1670,7 @@ def codeGenerationConfig (adcComponent, Module):
     adcSystemDefFile.setSourcePath("../peripheral/adc_03620/templates/system/definitions.h.ftl")
     adcSystemDefFile.setMarkup(True)
 
-    # adcComponent.addPlugin("../peripheral/adc_03620/plugin/adc_03620.jar")
+    adcComponent.addPlugin("../peripheral/adc_03620/plugin/adc_03620.jar")
 
 
 def instantiateComponent(adcComponent):
@@ -1701,5 +1706,8 @@ def instantiateComponent(adcComponent):
     adcInterruptHandlerConfig(adcComponent)
 
     adcEvsysConfig(adcComponent)
+
+    # Enable ADC Core 0 by default
+    enableCoreNSymbols(adcInstanceName.getComponent(), 0, True)
 
     codeGenerationConfig(adcComponent, Module)
