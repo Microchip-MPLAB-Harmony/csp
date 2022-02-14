@@ -47,10 +47,10 @@ Description:
 </#if>
 
 <#if rttINCIEN == true || rttALMIEN == true>
-    <#lt>RTT_OBJECT rtt;
+    <#lt>static RTT_OBJECT rtt;
 
 </#if>
-<#assign RTT_MR_VAL = "RTT_MR_RTPRES(" + rttRTPRES + ") | RTT_MR_RTTDIS_Msk">
+<#assign RTT_MR_VAL = "RTT_MR_RTPRES(" + rttRTPRES + "U) | RTT_MR_RTTDIS_Msk">
 <#if rttINCIEN>
 <#assign RTT_MR_VAL = RTT_MR_VAL + " | RTT_MR_RTTINCIEN_Msk">
 </#if>
@@ -103,7 +103,7 @@ void ${RTT_INSTANCE_NAME}_PrescalarUpdate(uint16_t prescale)
     uint32_t flag = rtt_mr & RTT_MR_RTTINCIEN_Msk;
     rtt_mr &= ~(RTT_MR_RTPRES_Msk | RTT_MR_RTTINCIEN_Msk);
     ${RTT_INSTANCE_NAME}_REGS->RTT_MR = rtt_mr | prescale | RTT_MR_RTTRST_Msk;
-    if (flag)
+    if (flag != 0U)
     {
         ${RTT_INSTANCE_NAME}_REGS->RTT_MR|=  RTT_MR_RTTINCIEN_Msk;
     }
@@ -116,7 +116,7 @@ void ${RTT_INSTANCE_NAME}_PrescalarUpdate(uint16_t prescale)
     <#lt>	flag = ${RTT_INSTANCE_NAME}_REGS->RTT_MR& (RTT_MR_ALMIEN_Msk);
     <#lt>	${RTT_INSTANCE_NAME}_REGS->RTT_MR&= ~(RTT_MR_ALMIEN_Msk);
     <#lt>	${RTT_INSTANCE_NAME}_REGS->RTT_AR = alarm;
-    <#lt>	if (flag)
+    <#lt>	if (flag != 0U)
     <#lt>	{
     <#lt>		${RTT_INSTANCE_NAME}_REGS->RTT_MR|= RTT_MR_ALMIEN_Msk;
     <#lt>	}
@@ -125,12 +125,12 @@ void ${RTT_INSTANCE_NAME}_PrescalarUpdate(uint16_t prescale)
     <#lt>
     <#lt>void ${RTT_INSTANCE_NAME}_EnableInterrupt (RTT_INTERRUPT_TYPE type)
     <#lt>{
-    <#lt>	${RTT_INSTANCE_NAME}_REGS->RTT_MR|= type;
+    <#lt>	${RTT_INSTANCE_NAME}_REGS->RTT_MR|= (uint32_t)type;
     <#lt>}
     <#lt>
     <#lt>void ${RTT_INSTANCE_NAME}_DisableInterrupt(RTT_INTERRUPT_TYPE type)
     <#lt>{
-    <#lt>	${RTT_INSTANCE_NAME}_REGS->RTT_MR&= ~(type);
+    <#lt>	${RTT_INSTANCE_NAME}_REGS->RTT_MR&= ~((uint32_t)type);
     <#lt>}
     <#lt>
     <#lt>void ${RTT_INSTANCE_NAME}_CallbackRegister( RTT_CALLBACK callback, uintptr_t context )
@@ -156,20 +156,20 @@ uint32_t ${RTT_INSTANCE_NAME}_FrequencyGet(void)
 
     flag =  (${RTT_INSTANCE_NAME}_REGS->RTT_MR) & (RTT_MR_RTC1HZ_Msk);
 
-    if (flag)
+    if (flag !=0U)
     {
         return 1;
     }
     else
     {
         flag = (${RTT_INSTANCE_NAME}_REGS->RTT_MR) & (RTT_MR_RTPRES_Msk);
-        if (flag == 0)
+        if (flag == 0U)
         {
             return (0);
         }
         else
         {
-            return (32768 / flag);
+            return (32768U / flag);
         }
     }
 }
@@ -177,12 +177,12 @@ uint32_t ${RTT_INSTANCE_NAME}_FrequencyGet(void)
 
     <#lt>void ${RTT_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>	uint32_t status = ${RTT_INSTANCE_NAME}_REGS->RTT_SR;
+    <#lt>	uint32_t rtt_status = ${RTT_INSTANCE_NAME}_REGS->RTT_SR;
     <#lt>	uint32_t flags = ${RTT_INSTANCE_NAME}_REGS->RTT_MR;
     <#lt>	${RTT_INSTANCE_NAME}_REGS->RTT_MR&= ~(RTT_MR_ALMIEN_Msk | RTT_MR_RTTINCIEN_Msk);
-    <#lt>	if(flags & RTT_MR_RTTINCIEN_Msk)
+    <#lt>	if((flags & RTT_MR_RTTINCIEN_Msk) != 0U)
     <#lt>	{
-    <#lt>		if(status & RTT_SR_RTTINC_Msk)
+    <#lt>		if((rtt_status & RTT_SR_RTTINC_Msk) != 0U)
     <#lt>		{
     <#lt>			if (rtt.callback != NULL)
     <#lt>			{
@@ -191,9 +191,9 @@ uint32_t ${RTT_INSTANCE_NAME}_FrequencyGet(void)
     <#lt>		}
     <#lt>		${RTT_INSTANCE_NAME}_REGS->RTT_MR|= (RTT_MR_RTTINCIEN_Msk);
     <#lt>	}
-    <#lt>	if(flags & RTT_MR_ALMIEN_Msk)
+    <#lt>	if((flags & RTT_MR_ALMIEN_Msk) != 0U)
     <#lt>	{
-    <#lt>		if(status & RTT_SR_ALMS_Msk)
+    <#lt>		if((rtt_status & RTT_SR_ALMS_Msk) != 0U)
     <#lt>		{
     <#lt>			if (rtt.callback != NULL)
     <#lt>			{
