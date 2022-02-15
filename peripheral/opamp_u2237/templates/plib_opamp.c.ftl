@@ -89,9 +89,9 @@ void ${OPAMP_INSTANCE_NAME}_Initialize(void)
     </#list>
     <#if RESCTRL_RES1MUX??>
         <#if (RESCTRL_RES2OUT) || (RESCTRL_RES1EN) || (RESCTRL_RES1MUX != "0") || (RESCTRL_POTMUX != "0") || (RESCTRL_REFBUFLEVEL != "0")>
-        <#lt>    <@compress single_line=true>${OPAMP_INSTANCE_NAME}_REGS->OPAMP_RESCTRL = OPAMP_RESCTRL_REFBUFLEVEL(${RESCTRL_REFBUFLEVEL})
-                                        | OPAMP_RESCTRL_RES1MUX(${RESCTRL_POTMUX})
-                                        | OPAMP_RESCTRL_POTMUX(${RESCTRL_RES1MUX})
+        <#lt>    <@compress single_line=true>${OPAMP_INSTANCE_NAME}_REGS->OPAMP_RESCTRL = OPAMP_RESCTRL_REFBUFLEVEL(${RESCTRL_REFBUFLEVEL}U)
+                                        | OPAMP_RESCTRL_RES1MUX(${RESCTRL_POTMUX}U)
+                                        | OPAMP_RESCTRL_POTMUX(${RESCTRL_RES1MUX}U)
                                         ${RESCTRL_RES1EN?then(' | OPAMP_RESCTRL_RES1EN_Msk','')}
                                         ${RESCTRL_RES2OUT?then(' | OPAMP_RESCTRL_RES2OUT_Msk','')}
                                         ;</@compress>
