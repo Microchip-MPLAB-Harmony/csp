@@ -58,7 +58,7 @@ bool ${DSU_INSTANCE_NAME}_CRCCalculate (uint32_t startAddress, size_t length, ui
 {
     bool statusValue = false;
 
-    if( (0 != length) && (NULL != crc) )
+    if( (0U != length) && (NULL != crc) )
     {
         ${DSU_INSTANCE_NAME}_REGS->DSU_ADDR = startAddress;
 
@@ -76,12 +76,12 @@ bool ${DSU_INSTANCE_NAME}_CRCCalculate (uint32_t startAddress, size_t length, ui
         ${DSU_INSTANCE_NAME}_REGS->DSU_CTRL = DSU_CTRL_CRC_Msk;
         </#if>
 
-        while(!(${DSU_INSTANCE_NAME}_REGS->DSU_STATUSA & DSU_STATUSA_DONE_Msk))
+        while((${DSU_INSTANCE_NAME}_REGS->DSU_STATUSA & DSU_STATUSA_DONE_Msk) == 0U)
         {
             /* Wait for the DSU Operation to Complete */
         }
 
-        if(!(${DSU_INSTANCE_NAME}_REGS->DSU_STATUSA & DSU_STATUSA_BERR_Msk))
+        if((${DSU_INSTANCE_NAME}_REGS->DSU_STATUSA & DSU_STATUSA_BERR_Msk) == 0U)
         {
             /* Reading the resultant crc value from the DATA register */
             *crc = (uint32_t) ${DSU_INSTANCE_NAME}_REGS->DSU_DATA;
