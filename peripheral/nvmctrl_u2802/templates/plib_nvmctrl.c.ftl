@@ -90,7 +90,7 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
 {
     <@compress single_line=true>${NVMCTRL_REG_NAME}_REGS->NVMCTRL_CTRLB = ${NVMCTRL_CACHE_ENABLE?then('', 'NVMCTRL_CTRLB_CACHEDIS_Msk |')}
     <#lt>                       NVMCTRL_CTRLB_READMODE_${NVMCTRL_CTRLB_READMODE_SELECTION} |
-    <#lt>                       NVMCTRL_CTRLB_SLEEPPRM_${NVMCTRL_CTRLB_POWER_REDUCTION_MODE} | NVMCTRL_CTRLB_RWS(${NVM_RWS})${FAST_WAKEUP_ENABLE?then(' | NVMCTRL_CTRLB_FWUP_Msk', '')}
+    <#lt>                       NVMCTRL_CTRLB_SLEEPPRM_${NVMCTRL_CTRLB_POWER_REDUCTION_MODE} | NVMCTRL_CTRLB_RWS(${NVM_RWS}U)${FAST_WAKEUP_ENABLE?then(' | NVMCTRL_CTRLB_FWUP_Msk', '')}
     <#lt>                       ;</@compress>
     <#if (NVMCTRL_WRITE_POLICY == "MANUAL")>
         <#lt>    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_CTRLC = NVMCTRL_CTRLC_MANW_Msk;
@@ -114,7 +114,8 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
 
 bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    memcpy((void *)data, (void *)address, length);
+    uint32_t *pAddress = (uint32_t *)address;
+    (void)memcpy(data, pAddress, length);
     return true;
 }
 
@@ -131,9 +132,10 @@ bool ${WRITE_API_NAME}( uint32_t *data, const uint32_t address )
     }
 
     /* writing 32-bit data into the given address */
-    for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4); i++)
+    for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4U); i++)
     {
-        *paddress++ = data[i];
+        *paddress = data[i];
+         paddress++;
     }
 
 <#if NVMCTRL_WRITE_POLICY == "MANUAL">
@@ -173,7 +175,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t ad
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
 
-    if (!(${NVMCTRL_REG_NAME}_REGS->NVMCTRL_STATUS & NVMCTRL_STATUS_LOAD_Msk))
+    if ((${NVMCTRL_REG_NAME}_REGS->NVMCTRL_STATUS & NVMCTRL_STATUS_LOAD_Msk) == 0U)
     {
         ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_ADDR = 0;
 
@@ -184,9 +186,10 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t ad
     }
 
     /* writing 32-bit data into the given address */
-    for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4); i++)
+    for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4U); i++)
     {
-        *paddress++ = data[i];
+        *paddress = data[i];
+         paddress++;
     }
 
     return true;
@@ -264,27 +267,27 @@ NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
     volatile uint32_t nvm_error = 0;
 
     /* Get the error bits set */
-    nvm_error = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG & (NVMCTRL_INTFLAG_PROGE_Msk | NVMCTRL_INTFLAG_LOCKE_Msk | NVMCTRL_INTFLAG_NVME_Msk | NVMCTRL_INTFLAG_KEYE_Msk));
+    nvm_error = (uint32_t)((uint32_t)${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG & (NVMCTRL_INTFLAG_PROGE_Msk | NVMCTRL_INTFLAG_LOCKE_Msk | NVMCTRL_INTFLAG_NVME_Msk | NVMCTRL_INTFLAG_KEYE_Msk));
 
     /* Clear the error bits in INTFLAG register */
-    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG |= nvm_error;
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG |= (uint8_t)nvm_error;
 
     return ((NVMCTRL_ERROR) nvm_error);
 }
 
 bool ${NVMCTRL_INSTANCE_NAME}_IsBusy(void)
 {
-    return (bool)(!(${NVMCTRL_REG_NAME}_REGS->NVMCTRL_STATUS & NVMCTRL_STATUS_READY_Msk));
+    return (bool)((${NVMCTRL_REG_NAME}_REGS->NVMCTRL_STATUS & NVMCTRL_STATUS_READY_Msk) == 0U);
 }
 
 void ${NVMCTRL_INSTANCE_NAME}_RegionLock(NVMCTRL_MEMORY_REGION region)
 {
-    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_NSULCK = (${NVMCTRL_REG_NAME}_REGS->NVMCTRL_NSULCK & ~(region)) | NVMCTRL_NSULCK_NSLKEY_KEY;
+    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_NSULCK = (${NVMCTRL_REG_NAME}_REGS->NVMCTRL_NSULCK & ~((uint16_t)region)) | NVMCTRL_NSULCK_NSLKEY_KEY;
 }
 
 void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock(NVMCTRL_MEMORY_REGION region)
 {
-    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_NSULCK |= NVMCTRL_NSULCK_NSLKEY_KEY | region;
+    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_NSULCK |= NVMCTRL_NSULCK_NSLKEY_KEY | (uint16_t)region;
 }
 
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">

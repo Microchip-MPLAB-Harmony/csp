@@ -90,25 +90,18 @@
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_ERASE_BUFFER_SIZE          ${ERASE_BUFFER_SIZE}
 </#if>
 
-typedef enum
-{
     /* No error */
-    NVMCTRL_ERROR_NONE = 0x0,
+#define NVMCTRL_ERROR_NONE  0x0
+   /* NVMCTRL invalid commands and/or bad keywords error */
+#define NVMCTRL_ERROR_PROG  0x2
+   /* NVMCTRL lock error */
+#define NVMCTRL_ERROR_LOCK  0x4
+   /* NVMCTRL programming or erase error */
+#define NVMCTRL_ERROR_NVM   0x8
+   /* Key Error */
+#define NVMCTRL_ERROR_KEY   0x10
 
-    /* NVMCTRL invalid commands and/or bad keywords error */
-    NVMCTRL_ERROR_PROG = 0x2,
-
-    /* NVMCTRL lock error */
-    NVMCTRL_ERROR_LOCK = 0x4,
-
-    /* NVMCTRL programming or erase error */
-    NVMCTRL_ERROR_NVM = 0x8,
-
-
-    /* Key Error */
-    NVMCTRL_ERROR_KEY = 0x10
-
-} NVMCTRL_ERROR;
+typedef uint8_t NVMCTRL_ERROR;
 
 typedef enum
 {
@@ -134,9 +127,9 @@ typedef enum
 
 void ${NVMCTRL_INSTANCE_NAME}_Initialize(void);
 
-bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length,const uint32_t address );
 
-bool ${WRITE_API_NAME}( uint32_t* data, uint32_t address );
+bool ${WRITE_API_NAME}( uint32_t* data,const uint32_t address );
 
 bool ${ERASE_API_NAME}( uint32_t address );
 
