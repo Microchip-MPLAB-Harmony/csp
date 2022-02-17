@@ -126,6 +126,12 @@ peripheral_ID_map = {
     "TRNG_03597"   : "TRNG_U2242"
 }
 
+system_components = ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "DMA", "OSCILLATOR", "PMC", "WDT", "DMT", "PAC", "MATRIX", "L2CC", "CMCC", "ECIA"]
+
+#RSTC is loaded as a system component for PIC32CXMT devices
+if ATDF.getNode("/avr-tools-device-file/devices/device").getAttribute("family") == "PIC32CXMT":
+    system_components.append("RSTC")
+
 if("MIPS" in coreArch):
     coreTimerComponent = Module.CreateComponent("core_timer", "CORE TIMER", "/Peripherals/CORE TIMER/", "../peripheral/coretimer/config/coretimer.py")
     coreTimerComponent.addCapability("CORE_TIMER_TMR", "TMR")
@@ -174,7 +180,7 @@ for module in range (0, len(modules)):
                     "/config/" + periphName.lower() + ".py"
 
     # Don't load system services. They will be loaded by family specific script
-    if any(x in periphName for x in ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "DMA", "OSCILLATOR", "PMC", "WDT", "DMT", "PAC", "MATRIX", "L2CC", "CMCC", "ECIA"]):
+    if any(x in periphName for x in system_components):
         print("CSP: System Peripheral [" + periphName + " id=" + periphID + "]")
         continue
 
