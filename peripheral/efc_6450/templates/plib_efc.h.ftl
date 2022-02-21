@@ -69,18 +69,17 @@
 </#if>
 
 
-typedef enum
-{
-    EFC_ERROR_NONE = 0x1,
+#define EFC_ERROR_NONE              0x1
     /*In-valid command*/
-    EFC_CMD_ERROR = 0x2,
+#define EFC_CMD_ERROR               0x2
     /*Flash region is locked*/
-    EFC_LOCK_ERROR = 0x4,
+#define EFC_LOCK_ERROR              0x4
     /*Flash Error*/
-    EFC_FLERR_ERROR = 0x8,
+#define EFC_FLERR_ERROR             0x8
     /*Flash Encountered an ECC error*/
-    EFC_ECC_ERROR = 0xF0000,
-} EFC_ERROR;
+#define EFC_ECC_ERROR               0xF0000
+
+typedef uint32_t EFC_ERROR;
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>typedef void (*EFC_CALLBACK)(uintptr_t context);
