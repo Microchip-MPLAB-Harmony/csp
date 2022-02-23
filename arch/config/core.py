@@ -906,7 +906,7 @@ def instantiateComponent( coreComponent ):
         intASMSourceFile.setMarkup(True)
         intASMSourceFile.setOverwrite(True)
         intASMSourceFile.setEnabled(False)
-        intASMSourceFile.setDependencies(genSysIntASMSourceFile, ["CoreSysIntFile", "CoreSysFiles", "HarmonyCore.SELECT_RTOS"])
+        intASMSourceFile.setDependencies(genSysIntASMSourceFile, ["CoreSysIntFile", "CoreSysFiles", "HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
 
     systemIntHeadersList =                  coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_C_INCLUDES",         None )
     systemIntHandlerdeclsList =             coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_HANDLER_DECLS",       None)
