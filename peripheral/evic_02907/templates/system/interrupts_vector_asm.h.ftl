@@ -4,7 +4,7 @@
     <#assign INT_ENABLE = "EVIC_" + i + "_ENABLE">
     <#assign INT_ENABLE_GENERATE = "EVIC_" + i + "_ENABLE_GENERATE">
     <#if .vars[INT_ENABLE]?? && .vars[INT_ENABLE] == true>
-        <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS != "BareMetal">
+        <#if ((HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS != "BareMetal") || ((FreeRTOS.SET_RTOS)?? && FreeRTOS.SET_RTOS == "FreeRTOS")>
             <#if !((.vars[INT_ENABLE_GENERATE]??) && (.vars[INT_ENABLE_GENERATE] == false))>
                 <#if __PROCESSOR?matches("PIC32MX.*") == true>
                     <#lt>   .extern  ${.vars[INT_HANDLER]}

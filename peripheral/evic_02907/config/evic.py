@@ -168,7 +168,7 @@ def updateEVICVectorParametersValue(symbol, event):
     symbol.setValue(event["value"])
 
 def updateEVICVectorParametersValue1(symbol, event):
-    if "SELECT_RTOS" in event["id"]:
+    if ("SELECT_RTOS" in event["id"]) or ("SET_RTOS" in event["id"]):
         symbolId = symbol.getID()
         vectorIndex=symbolId.split("_")[1]
         if not ((event["value"] == "ThreadX") and (vectorIndex == "1")): # Software Interrupt 0 is not used by ThreadX
@@ -291,7 +291,7 @@ if numOfShadowSet > 0:
     SRS_FeatureEnable = coreComponent.createBooleanSymbol("EVIC_SRS_ENABLE", evicShadowRegMenu)
     SRS_FeatureEnable.setLabel("Enable Shadow Register Set Feature")
     SRS_FeatureEnable.setDefaultValue(True)
-    SRS_FeatureEnable.setDependencies(updateShadowEnable, ["HarmonyCore.SELECT_RTOS"])
+    SRS_FeatureEnable.setDependencies(updateShadowEnable, ["HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
 
     SRS_MENU_COMMENT = coreComponent.createCommentSymbol("EVIC_SRS_COMMENT", evicShadowRegMenu)
     SRS_MENU_COMMENT.setLabel("**** Configure Shadow Register Set in DEVCFG3 Fuse Settings ****")
@@ -327,7 +327,7 @@ for i in range (1,8):
         if i == 7: #for highest priority
             evicPriorityISR_Attribute.setDefaultValue("SRS")
         else:
-            evicPriorityISR_Attribute.setDefaultValue("SOFT") 
+            evicPriorityISR_Attribute.setDefaultValue("SOFT")
     else: # when numOfShadowSet is 0
         evicPriorityISR_Attribute.setDefaultValue("SOFT")
 if numOfShadowSet == 1:
@@ -343,7 +343,7 @@ if ATDF.getNode('/avr-tools-device-file/modules/module@[name="INT"]/register-gro
     else:
         evicPRISSValue.setDefaultValue(0x10000000)
         evicPRISSValue.setDependencies(updatePRISS, ["EVIC_PRIORITY_FOR_SHADOW_SET"])
-############################################# Shadow Register Setting End ############################################## 
+############################################# Shadow Register Setting End ##############################################
 
 evicVectorMax = coreComponent.createIntegerSymbol("EVIC_VECTOR_MAX", evicMenu)
 evicVectorMax.setDefaultValue(vecHighestID)
@@ -433,7 +433,7 @@ for vectorDict in evicVectorDataStructure:
         if "EXTERNAL_" == vName[:-1]:
             evicExtIntPolarity = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_EXT_INT_EDGE_POLARITY", evicVectorEnable, ["Rising Edge", "Falling Edge"])
             evicExtIntPolarity.setLabel("Edge Polarity")
-            evicExtIntPolarity.setDefaultValue("Falling Edge") 
+            evicExtIntPolarity.setDefaultValue("Falling Edge")
 
         evicVectorPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_PRIORITY", evicVectorEnable, evicPriorityGroup)
         evicVectorPriority.setLabel("Priority")
@@ -470,43 +470,43 @@ for vectorDict in evicVectorDataStructure:
         if vName in evicVectorSettings:
 
             if evicVectorSettings[vName][0] == True:
-                evicVectorEnable.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+                evicVectorEnable.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
 
             vector = "Peripheral"
 
             evicVectorHandlerLock.setDefaultValue(evicVectorSettings[vector][9])
             # override the dependency to add "SELECT_RTOS" symbol
-            evicVectorHandlerLock.setDependencies(updateEVICVectorParametersValue1, [vName + "_INTERRUPT_HANDLER_LOCK", "HarmonyCore.SELECT_RTOS"])
+            evicVectorHandlerLock.setDependencies(updateEVICVectorParametersValue1, [vName + "_INTERRUPT_HANDLER_LOCK", "HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
 
             evicVectorEnableLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE_LOCK", evicVectorEnable)
             evicVectorEnableLock.setVisible(False)
             evicVectorEnableLock.setDefaultValue(evicVectorSettings[vector][1])
-            evicVectorEnableLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+            evicVectorEnableLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
 
             evicVectorEnableGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE_GENERATE", evicVectorEnable)
             evicVectorEnableGenerate.setVisible(False)
             evicVectorEnableGenerate.setDefaultValue(evicVectorSettings[vector][2])
-            evicVectorEnableGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+            evicVectorEnableGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
 
             evicVectorPriorityLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_PRIORITY_LOCK", evicVectorEnable)
             evicVectorPriorityLock.setVisible(False)
             evicVectorPriorityLock.setDefaultValue(evicVectorSettings[vector][4])
-            evicVectorPriorityLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+            evicVectorPriorityLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
 
             evicVectorPriorityGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_PRIORITY_GENERATE", evicVectorEnable)
             evicVectorPriorityGenerate.setVisible(False)
             evicVectorPriorityGenerate.setDefaultValue(evicVectorSettings[vector][5])
-            evicVectorPriorityGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+            evicVectorPriorityGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
 
             evicVectorSubPriorityLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY_LOCK", evicVectorEnable)
             evicVectorSubPriorityLock.setVisible(False)
             evicVectorSubPriorityLock.setDefaultValue(evicVectorSettings[vector][7])
-            evicVectorSubPriorityLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+            evicVectorSubPriorityLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
 
             evicVectorSubPriorityGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY_GENERATE", evicVectorEnable)
             evicVectorSubPriorityGenerate.setVisible(False)
             evicVectorSubPriorityGenerate.setDefaultValue(evicVectorSettings[vector][8])
-            evicVectorSubPriorityGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+            evicVectorSubPriorityGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
 
         regName, prioBit, prioMask, subPrioBit, subPrioMask = _get_sub_priority_parms(vIndex)
 

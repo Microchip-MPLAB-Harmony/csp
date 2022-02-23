@@ -7,7 +7,7 @@
     <#assign INT_ENABLE_GENERATE = "EVIC_" + i + "_ENABLE_GENERATE">
     <#assign INT_PRIORITY = "EVIC_" + i + "_PRIORITY">
     <#if .vars[INT_ENABLE]?? && .vars[INT_ENABLE] == true>
-        <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "FreeRTOS">
+        <#if ((HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "FreeRTOS") || ((FreeRTOS.SET_RTOS)?? && FreeRTOS.SET_RTOS == "FreeRTOS")>
             <#if !((.vars[INT_ENABLE_GENERATE]??) && (.vars[INT_ENABLE_GENERATE] == false))>
                 <#lt>void ${.vars[INT_HANDLER]} (void)
                 <#lt>{
