@@ -57,7 +57,7 @@
 #include "device.h"
 #include "plib_clk.h"
 
-#define CLK_READY_RETRIES  8000
+#define CLK_READY_RETRIES  8000U
 #define BTZB_XTAL_NOT_READY ((BTZBSYS_REGS->BTZBSYS_SUBSYS_STATUS_REG1 \
                             & BTZBSYS_SUBSYS_STATUS_REG1_xtal_ready_out_Msk) \
                             != BTZBSYS_SUBSYS_STATUS_REG1_xtal_ready_out_Msk)
@@ -93,10 +93,13 @@
 void CLK_Initialize( void )
 {
     //check CLDO ready
-    while ((CFG_REGS->CFG_MISCSTAT & CFG_MISCSTAT_CLDORDY_Msk) == 0);    
+    while ((CFG_REGS->CFG_MISCSTAT & CFG_MISCSTAT_CLDORDY_Msk) == 0U)
+	{
+        /* Do Nothing */
+	}		
     
     // wait for xtal_ready      
-    uint32_t clk_ready_tries = 0;
+    uint32_t clk_ready_tries = 0U;
     do
     {
         clk_ready_tries++;
@@ -105,14 +108,17 @@ void CLK_Initialize( void )
     if((clk_ready_tries >= CLK_READY_RETRIES) && BTZB_XTAL_NOT_READY)
     {
         BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |=(BTZBSYS_SUBSYS_CNTRL_REG1_subsys_bypass_xtal_ready_Msk);
-        while(BTZB_XTAL_NOT_READY);
+        while(BTZB_XTAL_NOT_READY)
+		{
+			/* Do Nothing */
+		}
     }
        
     // set PLL_enable
-    BLE_REGS->BLE_DPLL_RG2 &= ~(0x02);
+    BLE_REGS->BLE_DPLL_RG2 &= ((uint8_t)~(0x02U));
 
     // wait for PLL Lock
-    clk_ready_tries = 0;
+    clk_ready_tries = 0U;
     do
     {
         clk_ready_tries++;
@@ -121,13 +127,16 @@ void CLK_Initialize( void )
     if((clk_ready_tries >= CLK_READY_RETRIES) && BTZB_PLL_NOT_LOCKED)
     {
         BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |= BTZBSYS_SUBSYS_CNTRL_REG1_subsys_bypass_pll_lock_Msk;
-        while(BTZB_PLL_NOT_LOCKED);
+        while(BTZB_PLL_NOT_LOCKED)
+		{
+			/* Do Nothing */
+		}
     }
 
     /* Unlock system for clock configuration */
-    CFG_REGS->CFG_SYSKEY = 0x00000000;
-    CFG_REGS->CFG_SYSKEY = 0xAA996655;
-    CFG_REGS->CFG_SYSKEY = 0x556699AA;
+    CFG_REGS->CFG_SYSKEY = 0x00000000U;
+    CFG_REGS->CFG_SYSKEY = 0xAA996655U;
+    CFG_REGS->CFG_SYSKEY = 0x556699AAU;
 
 
     /* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
@@ -136,7 +145,7 @@ void CLK_Initialize( void )
     /* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
     /* SPLLPOSTDIV2 = ${SPLLCON_SPLLPOSTDIV2_VALUE} */    
     /* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
-    CRU_REGS->CRU_${SPLLCON_REG} = 0x${SPLLCON_VALUE};
+    CRU_REGS->CRU_${SPLLCON_REG} = 0x${SPLLCON_VALUE}U;
 
 
     /* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
@@ -148,23 +157,26 @@ void CLK_Initialize( void )
     /* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
     /* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
     /* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
-    CRU_REGS->CRU_${OSCCON_REG} = 0x${OSCCON_VALUE};
+    CRU_REGS->CRU_${OSCCON_REG} = 0x${OSCCON_VALUE}U;
 
     CRU_REGS->CRU_OSCCONSET = CRU_OSCCON_OSWEN_Msk;  /* request oscillator switch to occur */
 
-    while(CRU_REGS->CRU_OSCCON & CRU_OSCCON_OSWEN_Msk);        /* wait for indication of successful clock change before proceeding */
-
+    while((CRU_REGS->CRU_OSCCON & CRU_OSCCON_OSWEN_Msk) != 0U)	/* wait for indication of successful clock change before proceeding */
+    {
+		/* Do Nothing */
+	}
+  
 <#if CONFIG_SYS_CLK_PBDIV1 != 1>
     <#lt>    /* Peripheral Bus 1 is by default enabled, set its divisor */
     <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV1} */
-    <#lt>    CRU_REGS->CRU_${PBREGNAME1} = CRU_PB1DIV_PBDIVON_Msk | CRU_PB1DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV1 - 1});
+    <#lt>    CRU_REGS->CRU_${PBREGNAME1} = CRU_PB1DIV_PBDIVON_Msk | CRU_PB1DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV1 - 1}U);
 
 </#if>
 <#if CONFIG_SYS_CLK_PBCLK2_ENABLE == true>
     <#if CONFIG_SYS_CLK_PBDIV2 != 1>
         <#lt>    /* Peripheral Bus 2 is by default enabled, set its divisor */
         <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV2} */
-        <#lt>    CRU_REGS->CRU_${PBREGNAME2} = CRU_PB2DIV_PBDIVON_Msk | CRU_PB2DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV2 - 1});
+        <#lt>    CRU_REGS->CRU_${PBREGNAME2} = CRU_PB2DIV_PBDIVON_Msk | CRU_PB2DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV2 - 1}U);
 
     </#if>
 <#else>
@@ -176,7 +188,7 @@ void CLK_Initialize( void )
     <#if CONFIG_SYS_CLK_PBDIV3 != 1>
         <#lt>    /* Peripheral Bus 3 is by default enabled, set its divisor */
         <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV3} */
-        <#lt>    CRU_REGS->CRU_${PBREGNAME3} = CRU_PB3DIV_PBDIVON_Msk | CRU_PB3DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV3 - 1});
+        <#lt>    CRU_REGS->CRU_${PBREGNAME3} = CRU_PB3DIV_PBDIVON_Msk | CRU_PB3DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV3 - 1}U);
 
     </#if>
 <#else>
@@ -208,21 +220,21 @@ void CLK_Initialize( void )
         <#lt>    /* RSLP = ${.vars[REFOCONRSLP]?c} */ 
         <#lt>    /* SIDL = ${.vars[REFOCONSIDL]?c} */ 
         <#lt>    /* RODIV = ${.vars[REFOCONRODIV]} */
-        <#lt>    CRU_REGS->CRU_${.vars[REFCONREG]} = ${.vars[REFCONVAL]};
+        <#lt>    CRU_REGS->CRU_${.vars[REFCONREG]} = ${.vars[REFCONVAL]}U;
 
     <#if .vars[REFOTRIMVAL] != "0x0">
         <#lt>    /* REFO${i}TRIM register */
         <#lt>    /* ROTRIM = ${.vars[ROTRIMVAL]} */
-        <#lt>    CRU_REGS->CRU_${.vars[REFTRIMREG]} = ${.vars[REFOTRIMVAL]};
+        <#lt>    CRU_REGS->CRU_${.vars[REFTRIMREG]} = ${.vars[REFOTRIMVAL]}U;
 
     </#if>
     <#if (.vars[REFCLKOE]?has_content) && (.vars[REFCLKOE] == true)>
         <#lt>    /* Enable oscillator (ON bit) and Enable Output (OE bit) */
-        <#lt>    CRU_REGS->CRU_${.vars[REFCONREG]}SET = ${.vars[OEMASK]} | ${.vars[ONMASK]};
+        <#lt>    CRU_REGS->CRU_${.vars[REFCONREG]}SET = ${.vars[OEMASK]}U | ${.vars[ONMASK]}U;
 
     <#else>
         <#lt>    /* Enable oscillator (ON bit) */
-        <#lt>    CRU_REGS->CRU_${.vars[REFCONREG]}SET = ${.vars[ONMASK]};
+        <#lt>    CRU_REGS->CRU_${.vars[REFCONREG]}SET = ${.vars[ONMASK]}U;
 
     </#if>
 </#if>
@@ -231,7 +243,7 @@ void CLK_Initialize( void )
     /* Peripheral Clock Generators */
 <#list 1..PER_GEN_REG_COUNT as i>
     <#assign CFGPCLKGEN_REG_VALUE = "CFGPCLKGEN" + i + "_REG">
-    CFG_REGS->CFG_CFGPCLKGEN${i} = 0x${.vars[CFGPCLKGEN_REG_VALUE]};
+    CFG_REGS->CFG_CFGPCLKGEN${i} = 0x${.vars[CFGPCLKGEN_REG_VALUE]}U;
 </#list>
 
     /* Peripheral Module Disable Configuration */
@@ -243,7 +255,7 @@ void CLK_Initialize( void )
 <#list 1..PMD_COUNT + 1 as i>
     <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
     <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None" && .vars[PMDREG_VALUE] != "0">
-        <#lt>    CFG_REGS->CFG_PMD${i} = 0x${.vars[PMDREG_VALUE]};
+        <#lt>    CFG_REGS->CFG_PMD${i} = 0x${.vars[PMDREG_VALUE]}U;
     </#if>
 </#list>
 
@@ -252,19 +264,19 @@ void CLK_Initialize( void )
 </#if>
 
     /* Lock system since done with clock configuration */
-    CFG_REGS->CFG_SYSKEY = 0x33333333;
+    CFG_REGS->CFG_SYSKEY = 0x33333333U;
 
     // Change src_clk source to PLL CLK
-    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |= 0x00000010;
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |= 0x00000010U;
 
 <#if ZIGBEE_CLOCK_ENABLE == true>
     // set aclb_reset_n[24], bt_en_main_clk[20] zb_en_main_clk[4]
-    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 = 0x01100010;
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 = 0x01100010U;
 <#elseif BLE_CLOCK_ENABLE == true>
     // set aclb_reset_n[24], bt_en_main_clk[20]
-    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 = 0x01100000;
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 = 0x01100000U;
 <#else>
     // set aclb_reset_n[24]
-    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 = 0x01000000;
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 = 0x01000000U;
 </#if>
 }
