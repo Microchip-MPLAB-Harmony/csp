@@ -13,7 +13,7 @@
   Description
 
   Remarks:
-    
+
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -50,7 +50,8 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     // Reset and Disable the qspi Module
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_SWRST_Msk | QSPI_CR_QSPIDIS_Msk;
 
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_QSPIENS_Msk){
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_QSPIENS_Msk) != 0U)
+    {
         ;   // spin lock
     }
 
@@ -66,7 +67,7 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     /* LLB    = 0 */
     /* SMM    = ${QSPI_SMM} */
     <#if (QSPI_NBBITS?has_content)>
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} | QSPI_MR_NBBITS(${QSPI_NBBITS}));
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} | QSPI_MR_NBBITS(${QSPI_NBBITS}U));
     <#else>
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} );
     </#if>
@@ -75,27 +76,35 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     /* CPHA = <#if QSPI_CPHA=="TRAILING">1 <#else>0 </#if>*/
     /* SCBR = ${QSPI_SCBR} */
     /* DLYBS = 0 */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_SCR = (QSPI_SCR_SCBR(${QSPI_SCBR})) <#if QSPI_CPOL=="HIGH"> | QSPI_SCR_CPOL_Msk </#if> <#if QSPI_CPHA=="TRAILING"> | QSPI_SCR_CPHA_Msk </#if>;
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_SCR = (QSPI_SCR_SCBR(${QSPI_SCBR}U)) <#if QSPI_CPOL=="HIGH"> | QSPI_SCR_CPOL_Msk </#if> <#if QSPI_CPHA=="TRAILING"> | QSPI_SCR_CPHA_Msk </#if>;
 
     // Enable the qspi Module
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_QSPIEN_Msk;
 
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_QSPIENS_Msk)){
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_QSPIENS_Msk) == 0U)
+    {
         ;   // spin lock
     }
 }
 
 static void ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(uint32_t* dst, uint32_t* src, uint32_t count)
 {
-    while (count--) {
-        *dst++ = *src++;
+    while (count-- != 0U)
+    {
+        *dst = *src;
+         dst++;
+         src++;
     }
 }
 
 static void ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit(uint8_t* dst, uint8_t* src, uint32_t count)
 {
-    while (count--) {
-        *dst++ = *src++;
+    while (count-- != 0U)
+    {
+        *dst = *src;
+         dst++;
+         src++;
+
     }
 }
 
@@ -109,30 +118,35 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
 
     /* Set Instruction code register */
     <#if HAS_SPLIT_ICR>
-    if (tfr_type == QSPI_REG_READ || tfr_type == QSPI_MEM_READ) {
+    if (tfr_type == QSPI_REG_READ || tfr_type == QSPI_MEM_READ)
+    {
         ${QSPI_INSTANCE_NAME}_REGS->QSPI_RICR = (QSPI_RICR_RDINST(qspi_memory_xfer->instruction)) | (QSPI_RICR_RDOPT(qspi_memory_xfer->option));
-    } else {
+    }
+    else
+    {
         ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = (QSPI_WICR_WRINST(qspi_memory_xfer->instruction)) | (QSPI_WICR_WROPT(qspi_memory_xfer->option));
     }
     <#else>
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_memory_xfer->instruction)) | (QSPI_ICR_OPT(qspi_memory_xfer->option));
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST((uint32_t)qspi_memory_xfer->instruction)) | (QSPI_ICR_OPT((uint32_t)qspi_memory_xfer->option));
     </#if>
 
     /* Set Instruction Frame register*/
 
-    mask |= qspi_memory_xfer->width;
-    mask |= qspi_memory_xfer->addr_len;
+    mask |= (uint32_t)qspi_memory_xfer->width;
+    mask |= (uint32_t)qspi_memory_xfer->addr_len;
 
-    if (qspi_memory_xfer->option_en) {
-        mask |= qspi_memory_xfer->option_len;
+    if (qspi_memory_xfer->option_en)
+    {
+        mask |= (uint32_t)qspi_memory_xfer->option_len;
         mask |= QSPI_IFR_OPTEN_Msk;
     }
 
-    if (qspi_memory_xfer->continuous_read_en) {
+    if (qspi_memory_xfer->continuous_read_en)
+    {
         mask |= QSPI_IFR_CRM_Msk;
     }
 
-    mask |= QSPI_IFR_NBDUM(qspi_memory_xfer->dummy_cycles);
+    mask |= QSPI_IFR_NBDUM((uint32_t)qspi_memory_xfer->dummy_cycles);
 
     mask |= QSPI_IFR_INSTEN_Msk | QSPI_IFR_ADDREN_Msk | QSPI_IFR_DATAEN_Msk;
 
@@ -169,6 +183,9 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
         case QSPI_MEM_WRITE:
             mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_WRITE_MEMORY_Val);
             break;
+        default:
+            /*default*/
+            break;
     };
     </#if>
 
@@ -191,22 +208,23 @@ bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer,
     uint32_t mask = 0;
 
     /* Configure address */
-    if(qspi_command_xfer->addr_en) {
+    if(qspi_command_xfer->addr_en)
+    {
         ${QSPI_INSTANCE_NAME}_REGS->QSPI_IAR = QSPI_IAR_ADDR(address);
 
         mask |= QSPI_IFR_ADDREN_Msk;
-        mask |= qspi_command_xfer->addr_len;
+        mask |= (uint32_t)qspi_command_xfer->addr_len;
     }
 
     /* Configure instruction */
     <#if HAS_SPLIT_ICR>
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = (QSPI_WICR_WRINST(qspi_command_xfer->instruction));
     <#else>
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_command_xfer->instruction));
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST((uint32_t)qspi_command_xfer->instruction));
     </#if>
 
     /* Configure instruction frame */
-    mask |= qspi_command_xfer->width;
+    mask |= (uint32_t)qspi_command_xfer->width;
     mask |= QSPI_IFR_INSTEN_Msk;
     <#if HAS_SPLIT_ICR>
     mask |= QSPI_IFR_TFRTYP(0);
@@ -217,9 +235,9 @@ bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer,
 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
-    /* Poll Status register to know status if instruction has end */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk)) {
-        ;   // spin lock
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk) == 0U)
+    {
+        /* Poll Status register to know status if instruction has end */
     }
 
     return true;
@@ -235,13 +253,13 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     <#if HAS_SPLIT_ICR>
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_RICR = (QSPI_RICR_RDINST(qspi_register_xfer->instruction));
     <#else>
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_register_xfer->instruction));
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST((uint32_t)qspi_register_xfer->instruction));
     </#if>
 
     /* Configure Instruction Frame */
-    mask |= qspi_register_xfer->width;
+    mask |= (uint32_t)qspi_register_xfer->width;
 
-    mask |= QSPI_IFR_NBDUM(qspi_register_xfer->dummy_cycles);
+    mask |= QSPI_IFR_NBDUM((uint32_t)qspi_register_xfer->dummy_cycles);
 
     mask |= QSPI_IFR_INSTEN_Msk | QSPI_IFR_DATAEN_Msk;
 
@@ -256,6 +274,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
 
     /* To synchronize APB and AHB accesses */
     dummy = ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR;
+    (void)dummy;
 
     /* Read the register content */
     ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_buffer,  rx_data_length);
@@ -265,12 +284,11 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
 
     ${QSPI_INSTANCE_NAME}_EndTransfer();
 
-    /* Poll Status register to know status if instruction has end */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk)) {
-        ;   // spin lock
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk) == 0U)
+    {
+        /* Poll Status register to know status if instruction has end */
     }
 
-    (void)dummy;
     return true;
 }
 
@@ -284,11 +302,11 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     <#if HAS_SPLIT_ICR>
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = (QSPI_WICR_WRINST(qspi_register_xfer->instruction));
     <#else>
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_register_xfer->instruction));
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST((uint32_t)qspi_register_xfer->instruction));
     </#if>
 
     /* Configure Instruction Frame */
-    mask |= qspi_register_xfer->width;
+    mask |= (uint32_t)qspi_register_xfer->width;
 
     mask |= QSPI_IFR_INSTEN_Msk | QSPI_IFR_DATAEN_Msk;
 
@@ -312,9 +330,9 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
 
     ${QSPI_INSTANCE_NAME}_EndTransfer();
 
-    /* Poll Status register to know status if instruction has end */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk)) {
-        ;   // spin lock
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk) == 0U)
+    {
+        /* Poll Status register to know status if instruction has end */
     }
 
     (void)dummy;
@@ -329,16 +347,16 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
     uint32_t                address
     )
 {
-    /*  This implements a transfer from device source to a destination memory buffer 
-        without an intermediate local buffer.  The algorithm is used for efficiency 
-        sake, allowing a maximum number of word transfers from the device; but, 
+    /*  This implements a transfer from device source to a destination memory buffer
+        without an intermediate local buffer.  The algorithm is used for efficiency
+        sake, allowing a maximum number of word transfers from the device; but,
         not requiring word alignment at either end of source, or destination,
         locations.
-        The non-boundary aligned header and trailer element sizes are used to 
-        characterizes the number of word transfers for the body.  The body is 
+        The non-boundary aligned header and trailer element sizes are used to
+        characterizes the number of word transfers for the body.  The body is
         transfered in a word wide fashion followed by an appropriate shift of the
         bytes in the destination buffer.
-        Single byte accesses at the head, or tail, are done as necessary.  The 
+        Single byte accesses at the head, or tail, are done as necessary.  The
         coding attempts to minimize unnecessary byte manipulations.
     */
     uint8_t *   qspi_mem  = (uint8_t *) (${QSPI_INSTANCE_NAME}MEM_ADDR | address);
@@ -350,154 +368,187 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
     uint32_t    numWordTransferBytes = 0;
     int32_t     shiftBytes = 0;             // gt(0)=>right, lt(0)=>left shift
     uint8_t     tmpBuffer[ sizeof( uint32_t) ];
+    bool readStatus = false;
 
     ///// device preliminaries
-    if( false == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer, 
-                            QSPI_MEM_READ, 
-                            address 
-                        ) ) {
-        return false;
-    }
-
-    ///// dst and src buffer characterization
-    numDstPreWordBytes =  0x03 & (uint32_t) pRxBuffer;
-    if( numDstPreWordBytes ) {
-        numDstPreWordBytes =  sizeof( uint32_t ) - numDstPreWordBytes;
-    }
-    if( rx_data_length >= numDstPreWordBytes ) {
-        numDstPostWordBytes = 0x03 & (uint32_t) (pRxBuffer + rx_data_length);
-    }
-    //
-    numSrcPreWordBytes =  0x03 & (uint32_t) qspi_mem;
-    if( numSrcPreWordBytes ) {
-        numSrcPreWordBytes =  sizeof( uint32_t ) - numSrcPreWordBytes;
-    }
-    if( rx_data_length >= numSrcPreWordBytes ) {
-        numSrcPostWordBytes = 0x03 & (uint32_t) (qspi_mem + rx_data_length);
-    }
-    else {
-        numSrcPreWordBytes = rx_data_length;
-    }
-
-    if( rx_data_length > (numSrcPreWordBytes + numSrcPostWordBytes) ) {
-        // number of word size transfers is equal to length of buffer
-        // minus single byte transfers
-        numWordTransferBytes = rx_data_length - (numSrcPreWordBytes + numSrcPostWordBytes);
-    }
-
-    // test if src has same number of word alignments as the dst buffer
-    if( (numDstPreWordBytes + numDstPostWordBytes) != (numSrcPreWordBytes + numSrcPostWordBytes)) {
-        // a word size space will be needed for shifting purposes; the
-        // common case optimization for equal word alignments cannot be used
-        if( numWordTransferBytes >= sizeof( uint32_t ) ) {
-            numWordTransferBytes -= sizeof( uint32_t );
-            numSrcPostWordBytes += sizeof( uint32_t );
+    if( ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer,
+                            QSPI_MEM_READ,
+                            address
+                        ) )
+    {
+        //// dst and src buffer characterization
+        numDstPreWordBytes =  0x03U & (uint32_t) pRxBuffer;
+        if( numDstPreWordBytes != 0U )
+        {
+            numDstPreWordBytes =  sizeof(uint32_t) - numDstPreWordBytes;
         }
-        else {
-            numWordTransferBytes = 0;
+
+        if( rx_data_length >= numDstPreWordBytes )
+        {
+            numDstPostWordBytes = 0x03U & (uint32_t) (pRxBuffer + rx_data_length);
         }
-    }
 
-    shiftBytes = numSrcPreWordBytes - numDstPreWordBytes;
+        numSrcPreWordBytes =  0x03U & (uint32_t) qspi_mem;
+        if( numSrcPreWordBytes != 0U)
+        {
+            numSrcPreWordBytes =  sizeof(uint32_t) - numSrcPreWordBytes;
+        }
+        if( rx_data_length >= numSrcPreWordBytes )
+        {
+            numSrcPostWordBytes = 0x03U & (uint32_t) (qspi_mem + rx_data_length);
+        }
+        else
+        {
+            numSrcPreWordBytes = rx_data_length;
+        }
 
-    ///// Transfer of data from src device to dst buffer
-    // Perform single byte transfers necessary before word alignment begins
-    if( numSrcPreWordBytes ) {
-        // get these now so we don't have to backup the device access later
-        ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit( tmpBuffer, qspi_mem, numSrcPreWordBytes );
-        qspi_mem += numSrcPreWordBytes;     // word alignment point for the src
-    }
-    pRxBuffer += numDstPreWordBytes;        // word alignment point for the dst
+        if( rx_data_length > (numSrcPreWordBytes + numSrcPostWordBytes) )
+        {
+            // number of word size transfers is equal to length of buffer
+            // minus single byte transfers
+            numWordTransferBytes = rx_data_length - (numSrcPreWordBytes + numSrcPostWordBytes);
+        }
 
-    // Perform word aligned transfers
-    if( numWordTransferBytes / 4 ) {
-        ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit( (uint32_t *) pRxBuffer, 
-                (uint32_t *) qspi_mem, 
-                numWordTransferBytes / 4 
-            );
-        qspi_mem += numWordTransferBytes;
-        pRxBuffer += numWordTransferBytes;
-    }
+        // test if src has same number of word alignments as the dst buffer
+        if( (numDstPreWordBytes + numDstPostWordBytes) != (numSrcPreWordBytes + numSrcPostWordBytes))
+        {
+            // a word size space will be needed for shifting purposes; the
+            // common case optimization for equal word alignments cannot be used
+            if( numWordTransferBytes >= sizeof(uint32_t))
+            {
+                numWordTransferBytes -= sizeof(uint32_t);
+                numSrcPostWordBytes += sizeof(uint32_t);
+            }
+            else
+            {
+                numWordTransferBytes = 0;
+            }
+        }
 
-    if( 0 >= shiftBytes ) {                 // left, or no, shift
-        if( shiftBytes ) {
-            // Shift the data left to its final destination buffer location
-            memmove( ((uint8_t *) rx_data) + numDstPreWordBytes + shiftBytes,
-                    ((uint8_t *) rx_data) + numDstPreWordBytes,
-                    numWordTransferBytes 
+        shiftBytes = ((int32_t)numSrcPreWordBytes - (int32_t)numDstPreWordBytes);
+
+        ///// Transfer of data from src device to dst buffer
+        // Perform single byte transfers necessary before word alignment begins
+        if( numSrcPreWordBytes != 0U)
+        {
+            // get these now so we don't have to backup the device access later
+            ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit( tmpBuffer, qspi_mem, numSrcPreWordBytes );
+            // word alignment point for the src
+            qspi_mem += numSrcPreWordBytes;
+        }
+        // word alignment point for the dst
+        pRxBuffer += numDstPreWordBytes;
+
+        // Perform word aligned transfers
+        if( (numWordTransferBytes / 4U) != 0U )
+        {
+            ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit( (uint32_t *) pRxBuffer,
+                    (uint32_t *) qspi_mem,
+                    numWordTransferBytes / 4U
                 );
-            pRxBuffer += shiftBytes;        // adjust end point
+            qspi_mem += numWordTransferBytes;
+            pRxBuffer += numWordTransferBytes;
         }
-        // Now we have room at the end, perform the single byte transfers 
-        // necessary after word alignment ends
-        if( numSrcPostWordBytes ) {
-            ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit( pRxBuffer, qspi_mem, numSrcPostWordBytes );
-        }
-    }
-    else {                                  // right shift
-        // Perform the single byte transfers necessary after word alignment ends
-        if( numSrcPostWordBytes ) {
-            ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit( pRxBuffer, qspi_mem, numSrcPostWordBytes );
-        }
-        // Shift the data to right to its final destination buffer location
-        memmove( ((uint8_t *) rx_data) + numDstPreWordBytes + shiftBytes, 
-                ((uint8_t *) rx_data) + numDstPreWordBytes, 
-                numWordTransferBytes + numSrcPostWordBytes 
-            );
-    }
 
-    if( numSrcPreWordBytes ) {
-        // Now we have room at the beginning; 
-        // place the previously saved pre-word aligned bytes
-        memmove( rx_data, tmpBuffer, numSrcPreWordBytes );
-    }
-    ///// Clean up
-    /* Dummy Read to clear QSPI_SR.INSTRE and QSPI_SR.CSR */
-    (uint32_t) ${QSPI_INSTANCE_NAME}_REGS->QSPI_SR;
-    __DSB();
-    __ISB();
+        // left, or no, shift
+        if( 0 >= shiftBytes )
+        {
+            if( shiftBytes != 0 )
+            {
+                if(numWordTransferBytes > 0U)
+                {
+                    // Shift the data left to its final destination buffer location
+                    (void)memmove( ((uint8_t *) rx_data) + numDstPreWordBytes + shiftBytes,
+                            ((uint8_t *) rx_data) + numDstPreWordBytes,
+                            numWordTransferBytes
+                        );
+                }
+                // adjust end point
+                pRxBuffer += shiftBytes;
+            }
+            // Now we have room at the end, perform the single byte transfers
+            // necessary after word alignment ends
+            if( numSrcPostWordBytes != 0U )
+            {
+                ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit( pRxBuffer, qspi_mem, numSrcPostWordBytes );
+            }
+        }
+        // right shift
+        else
+        {
+            // Perform the single byte transfers necessary after word alignment ends
+            if( numSrcPostWordBytes != 0U )
+            {
+                ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit( pRxBuffer, qspi_mem, numSrcPostWordBytes );
+            }
+            if((numWordTransferBytes + numSrcPostWordBytes) > 0U)
+            {
+                // Shift the data to right to its final destination buffer location
+                (void)memmove( ((uint8_t *) rx_data) + numDstPreWordBytes + shiftBytes,
+                        ((uint8_t *) rx_data) + numDstPreWordBytes,
+                        numWordTransferBytes + numSrcPostWordBytes
+                    );
+            }
+        }
 
-    ${QSPI_INSTANCE_NAME}_EndTransfer();
-    // Poll Status register to know status if instruction has ended
-    while( !(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_INSTRE_Msk) ) {
-        ;   // spin lock
+        if( numSrcPreWordBytes != 0U)
+        {
+            // Now we have room at the beginning;
+            // place the previously saved pre-word aligned bytes
+            (void)memmove((uint8_t *) rx_data, tmpBuffer, numSrcPreWordBytes );
+        }
+        ///// Clean up
+        /* Dummy Read to clear QSPI_SR.INSTRE and QSPI_SR.CSR */
+        (void) ${QSPI_INSTANCE_NAME}_REGS->QSPI_SR;
+        __DSB();
+        __ISB();
+
+        ${QSPI_INSTANCE_NAME}_EndTransfer();
+
+        while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_INSTRE_Msk) == 0U )
+        {
+            // Poll Status register to know status if instruction has ended
+        }
+        readStatus = true;
     }
-  
-    return true;
+    return readStatus;
 }
 
 bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
 {
     uint32_t *qspi_mem = (uint32_t *)(${QSPI_INSTANCE_NAME}MEM_ADDR | address);
     uint32_t length_32bit, length_8bit;
+    bool writeStatus = false;
 
-    if (false == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_MEM_WRITE, address))
-        return false;
+    if (${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_MEM_WRITE, address))
+    {
+        /* Write to serial flash memory */
+        length_32bit = tx_data_length / 4U;
+        length_8bit= tx_data_length & 0x03U;
 
-    /* Write to serial flash memory */
-    length_32bit = tx_data_length / 4;
-    length_8bit= tx_data_length & 0x03;
+        if(length_32bit != 0U)
+        {
+            ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(qspi_mem, tx_data, length_32bit);
+        }
+        tx_data = tx_data + length_32bit;
+        qspi_mem = qspi_mem + length_32bit;
 
-    if(length_32bit)
-        ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(qspi_mem, tx_data, length_32bit);
-    
-    tx_data = tx_data + length_32bit;
-    qspi_mem = qspi_mem + length_32bit;
+        if(length_8bit != 0U)
+        {
+            ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)qspi_mem, (uint8_t *)tx_data, length_8bit);
+        }
+        __DSB();
+        __ISB();
 
-    if(length_8bit)
-        ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)qspi_mem, (uint8_t *)tx_data, length_8bit);
+        ${QSPI_INSTANCE_NAME}_EndTransfer();
 
-    __DSB();
-    __ISB();
-
-    ${QSPI_INSTANCE_NAME}_EndTransfer();
-
-    /* Poll Status register to know status if instruction has end */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk)) {
-        ;   // spin lock
+        while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk) == 0U)
+        {
+            /* Poll Status register to know status if instruction has end */
+        }
+        writeStatus = true;
     }
-
-    return true;
+    return writeStatus;
 }
 
 /*******************************************************************************
