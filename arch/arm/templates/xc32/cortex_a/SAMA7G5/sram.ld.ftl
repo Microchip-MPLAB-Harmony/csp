@@ -140,7 +140,7 @@ SECTIONS
 	.region_nocache (NOLOAD) :
 	{
 		. = ALIGN(4);
-		*(.region_nocache)
+		*(.region_nocache .region_nocache.*)
 	} >dram_nocache
 
 	/* .bss section which is used for uninitialized data */
