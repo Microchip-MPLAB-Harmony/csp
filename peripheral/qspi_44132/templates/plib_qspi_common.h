@@ -164,6 +164,7 @@ typedef struct {
     QSPI_LANE_WIDTH width;
     bool addr_en;
     QSPI_ADDRESS_LENGTH addr_len;
+    uint32_t address;
     /* For Read Register */
     uint8_t dummy_cycles;
     /* DDR mode enable */

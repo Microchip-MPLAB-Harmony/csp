@@ -287,14 +287,14 @@ bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer,
     return true;
 }
 
-bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length, uint32_t address )
+bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length )
 {
     uint32_t *qspi_buffer = (uint32_t *)${QSPI_MEM_ADDR};
     uint32_t mask = 0;
 
     /* Configure address */
     if(qspi_register_xfer->addr_en) {
-        ${QSPI_INSTANCE_NAME}_REGS->QSPI_IAR = QSPI_IAR_ADDR(address);
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_IAR = QSPI_IAR_ADDR(qspi_register_xfer->address);
 
         mask |= QSPI_IFR_ADDREN_Msk;
         mask |= qspi_register_xfer->addr_len;
@@ -347,14 +347,14 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     return true;
 }
 
-bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length, uint32_t address )
+bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length )
 {
     uint32_t *qspi_buffer = (uint32_t *)${QSPI_MEM_ADDR};
     uint32_t mask = 0;
 
     /* Configure address */
     if(qspi_register_xfer->addr_en) {
-        ${QSPI_INSTANCE_NAME}_REGS->QSPI_IAR = QSPI_IAR_ADDR(address);
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_IAR = QSPI_IAR_ADDR(qspi_register_xfer->address);
 
         mask |= QSPI_IFR_ADDREN_Msk;
         mask |= qspi_register_xfer->addr_len;
