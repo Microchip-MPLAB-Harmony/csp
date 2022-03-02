@@ -1070,4 +1070,3 @@ initFile.setType("STRING")
 initFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
 initFile.setSourcePath("../peripheral/clk_sam_9x7/templates/system/initialization.c.ftl")
 initFile.setMarkup(True)
-

@@ -1,0 +1,780 @@
+{
+  "sym_CLK_GENERATOR_CODE": {
+    "attr": {
+      "position": "absolute",
+      "width": "18px",
+      "height": "18px",
+      "left": "722px",
+      "top": "22px"
+    }
+  },
+  "label_enableGenerator": {
+    "attr": {
+      "position": "absolute",
+      "height": "20px",
+      "width": "200px",
+      "left": "750px",
+      "top": "22px",
+      "font-family": "Calibri",
+      "font-size": "16px"
+    }
+  },
+  "label_sym_MD_SLOW_CLK_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "width": "130px",
+      "left": "472px",
+      "top": "35px"
+    }
+  },
+  "label_sym_TD_SLOW_CLOCK_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "width": "130px",
+      "left": "472px",
+      "top": "145px"
+    }
+  },
+  "sym_CLK_OSC32EN": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "margin": "0",
+      "top": "213px",
+      "left": "108px"
+    }
+  },
+  "sym_CLK_OSC32BYP_FREQ": {
+    "attr": {
+      "position": "absolute",
+      "width": "80px",
+      "height": "25px",
+      "left": "108px",
+      "top": "282px"
+    }
+  },
+  "label_externalClockFreq": {
+    "attr": {
+      "position": "absolute",
+      "top": "289.275px",
+      "height": "20px",
+      "left": "100px",
+      "width": "120px"
+    }
+  },
+  "sym_CLK_OSC32BYP": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "left": "237px",
+      "top": "269px"
+    }
+  },
+  "sym_CLK_TD_OSCSEL": {
+    "attr": {
+      "position": "absolute",
+      "width": "80px",
+      "height": "25px",
+      "left": "313px",
+      "top": "275px"
+    }
+  },
+  "sym_CLK_MOSCXTEN": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "left": "103px",
+      "top": "379px"
+    }
+  },
+  "label_sym_MAINCK_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "width": "130px",
+      "left": "472px",
+      "top": "422px"
+    }
+  },
+  "sym_CLK_MOSCXTST": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "width": "70px",
+      "left": "202px",
+      "top": "511px"
+    }
+  },
+  "sym_CLK_MOSCXT_FREQ": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "width": "100px",
+      "top": "542px",
+      "left": "85px"
+    }
+  },
+  "label_startupTime": {
+    "attr": {
+      "position": "absolute",
+      "width": "80px",
+      "height": "15px",
+      "left": "221px",
+      "top": "542px"
+    }
+  },
+  "label_externalClockXTALFreq": {
+    "attr": {
+      "position": "absolute",
+      "height": "12px",
+      "width": "125px",
+      "left": "74px",
+      "top": "557px"
+    }
+  },
+  "sym_CLK_PLLA_MUL": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "width": "70px",
+      "left": "84px",
+      "top": "782px"
+    }
+  },
+  "sym_CLK_PLLA_FRACR": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "left": "202px",
+      "top": "778px",
+      "width": "85px"
+    }
+  },
+  "sym_CLK_PLLA_DIVPMC": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "top": "779px",
+      "width": "70px",
+      "left": "305px"
+    }
+  },
+  "sym_CLK_PLLADIV2_EN": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "left": "454px",
+      "top": "776px"
+    }
+  },
+  "sym_CLK_PLLA_EN": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "left": "381px",
+      "top": "745px"
+    }
+  },
+  "label_sym_PLLA_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "width": "90px",
+      "height": "25px",
+      "left": "496px",
+      "top": "695px"
+    }
+  },
+  "label_sym_PLLADIV2CLK_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "width": "90px",
+      "height": "25px",
+      "left": "496px",
+      "top": "729px"
+    }
+  },
+  "sym_CLK_UPLL_MUL": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "top": "1091px",
+      "width": "70px",
+      "left": "98px"
+    }
+  },
+  "sym_CLK_AUDIOPLL_FRACR": {
+    "attr": {
+      "position": "absolute",
+      "top": "1362px",
+      "height": "25px",
+      "width": "70px",
+      "left": "228px"
+    }
+  },
+  "sym_CLK_UPLL_EN": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "top": "1042px",
+      "left": "418px"
+    }
+  },
+  "label_sym_UPLL_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "width": "90px",
+      "height": "25px",
+      "left": "472px",
+      "top": "993px"
+    }
+  },
+  "sym_CLK_AUDIOPLL_MUL": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "top": "1362px",
+      "width": "70px",
+      "left": "88px"
+    }
+  },
+  "sym_CLK_UPLL_FRACR": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "top": "1089px",
+      "width": "70px",
+      "left": "244px"
+    }
+  },
+  "sym_CLK_AUDIOPLL_DIVPMC": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "top": "1274px",
+      "width": "70px",
+      "left": "337px"
+    }
+  },
+  "sym_CLK_AUDIOPLL_EN": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "left": "436px",
+      "top": "1258px"
+    }
+  },
+  "sym_CLK_AUDIO_IOPLLCK_DIVIO": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "top": "1369px",
+      "width": "70px",
+      "left": "336px"
+    }
+  },
+  "sym_CLK_AUDIO_IOPLLCK_EN": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "top": "1360px",
+      "left": "431px"
+    }
+  },
+  "label_sym_AUDIOPLL_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "width": "100px",
+      "height": "25px",
+      "left": "496px",
+      "top": "1213px"
+    }
+  },
+  "label_sym_AUDIO_IOPLLCK_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "width": "100px",
+      "left": "499px",
+      "height": "25px",
+      "top": "1312px"
+    }
+  },
+  "sym_CLK_LVDSPLL_MUL": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "top": "1598px",
+      "width": "70px",
+      "left": "85px"
+    }
+  },
+  "sym_CLK_LVDSPLL_FRACR": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "top": "1596px",
+      "width": "70px",
+      "left": "230px"
+    }
+  },
+  "sym_CLK_LVDSPLL_DIVPMC": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "width": "70px",
+      "left": "327px",
+      "top": "1596px"
+    }
+  },
+  "sym_CLK_LVDSPLL_EN": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "top": "1549px",
+      "left": "415px"
+    }
+  },
+  "label_sym_LVDSPLL_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "width": "100px",
+      "left": "498px",
+      "height": "25px",
+      "top": "1500px"
+    }
+  },
+  "sym_CLK_CPU_CKR_CSS": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "top": "300px",
+      "left": "732px",
+      "width": "100px"
+    }
+  },
+  "sym_CLK_CPU_CKR_PRES": {
+    "attr": {
+      "position": "absolute",
+      "width": "80px",
+      "left": "779px",
+      "height": "25px",
+      "top": "239px"
+    }
+  },
+  "label_pclkPres": {
+    "attr": {
+      "position": "absolute",
+      "height": "20px",
+      "top": "185px",
+      "width": "70px",
+      "left": "782px",
+      "text-align": "center"
+    }
+  },
+  "sym_CLK_CPU_CKR_MDIV": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "width": "100px",
+      "left": "880px",
+      "top": "262px"
+    }
+  },
+  "label_pclkMdiv": {
+    "attr": {
+      "position": "absolute",
+      "height": "15px",
+      "top": "333px",
+      "left": "898px",
+      "width": "70px",
+      "text-align": "center"
+    }
+  },
+  "label_pclk_1": {
+    "attr": {
+      "position": "absolute",
+      "height": "15px",
+      "top": "221px",
+      "left": "898px",
+      "width": "70px",
+      "text-align": "center"
+    }
+  },
+  "label_sym_DDRCLK_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "width": "80px",
+      "height": "25px",
+      "top": "201px",
+      "left": "1123px"
+    }
+  },
+  "label_sym_QSPI_CLOCK_FREQUENCY": {
+    "attr": {
+      "width": "80px",
+      "position": "absolute",
+      "height": "25px",
+      "top": "267px",
+      "left": "1122px"
+    }
+  },
+  "label_sym_MCK_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "width": "80px",
+      "height": "25px",
+      "left": "1120px",
+      "top": "317px"
+    }
+  },
+  "button_peripheralClockConfig": {
+    "attr": {
+      "position": "absolute",
+      "width": "120px",
+      "height": "40px",
+      "left": "802px",
+      "top": "508px"
+    }
+  },
+  "button_genericClockCtrl": {
+    "attr": {
+      "position": "absolute",
+      "width": "120px",
+      "height": "40px",
+      "top": "707px",
+      "left": "818px"
+    }
+  },
+  "sym_CLK_PCK0_CSS": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "left": "772px",
+      "top": "964px",
+      "width": "125px"
+    }
+  },
+  "sym_CLK_PCK0_PRES": {
+    "attr": {
+      "position": "absolute",
+      "width": "80px",
+      "height": "25px",
+      "left": "831px",
+      "top": "919px"
+    }
+  },
+  "label_pclkPresVal": {
+    "attr": {
+      "position": "absolute",
+      "height": "18px",
+      "top": "874px",
+      "left": "836px",
+      "width": "70px",
+      "text-align": "center"
+    }
+  },
+  "sym_CLK_PCK0_EN": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "left": "924px",
+      "top": "898px"
+    }
+  },
+  "label_sym_CLK_PCK0_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "width": "100px",
+      "left": "966px",
+      "height": "25px",
+      "top": "853px"
+    }
+  },
+  "sym_CLK_USB_USBS": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "left": "759px",
+      "top": "1162px",
+      "width": "100px"
+    }
+  },
+  "sym_CLK_USB_USBDIV": {
+    "attr": {
+      "position": "absolute",
+      "height": "25px",
+      "width": "70px",
+      "left": "816px",
+      "top": "1115px"
+    }
+  },
+  "label_usbdivVal": {
+    "attr": {
+      "position": "absolute",
+      "height": "18px",
+      "top": "1084px",
+      "left": "814px",
+      "width": "70px",
+      "text-align": "center"
+    }
+  },
+  "sym_CLK_USB_EN": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "top": "1115px",
+      "left": "904px"
+    }
+  },
+  "label_pllaDivpmcVal": {
+    "attr": {
+      "height": "20px",
+      "position": "absolute",
+      "left": "302px",
+      "width": "70px",
+      "top": "712px",
+      "text-align": "center"
+    }
+  },
+  "label_audioPllDivpmcVal": {
+    "attr": {
+      "position": "absolute",
+      "top": "1229px",
+      "width": "70px",
+      "left": "338px",
+      "text-align": "center"
+    }
+  },
+  "label_audiopllDivioVal": {
+    "attr": {
+      "height": "18px",
+      "position": "absolute",
+      "top": "1336px",
+      "left": "338px",
+      "width": "70px",
+      "text-align": "center"
+    }
+  },
+  "label_lvdspllDIVPMCVal": {
+    "attr": {
+      "position": "absolute",
+      "height": "18px",
+      "top": "1519px",
+      "left": "328px",
+      "width": "70px",
+      "text-align": "center"
+    }
+  },
+  "button_pclkTab1": {
+    "attr": {
+      "position": "absolute",
+      "height": "15px",
+      "text-align": "left",
+      "width": "70px",
+      "left": "962px",
+      "top": "810px"
+    }
+  },
+  "button_pclkTab0": {
+    "attr": {
+      "position": "absolute",
+      "text-align": "left",
+      "height": "60px",
+      "width": "80px",
+      "left": "956px",
+      "top": "790px"
+    }
+  },
+  "sym_CLK_MOSCSEL": {
+    "attr": {
+      "position": "absolute",
+      "width": "80px",
+      "height": "25px",
+      "left": "291px",
+      "top": "541px"
+    }
+  },
+  "label_sym_CPU_CLOCK_FREQUENCY": {
+    "attr": {
+      "position": "absolute",
+      "width": "80px",
+      "height": "25px",
+      "top": "165px",
+      "left": "1123px"
+    }
+  },
+  "sym_CLK_MOSCRCEN": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "left": "104px",
+      "top": "478px"
+    }
+  },
+  "sym_CLK_QSPICLK_ENABLE": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "top": "314px",
+      "left": "1077px"
+    }
+  },
+  "sym_CLK_DDR_ENABLE": {
+    "attr": {
+      "position": "absolute",
+      "width": "20px",
+      "height": "20px",
+      "left": "1075px",
+      "top": "247px"
+    }
+  },
+  "label_MD_SLCK": {
+    "attr": {
+      "position": "absolute",
+      "height": "20px",
+      "width": "60px",
+      "left": "660px",
+      "top": "140px"
+    }
+  },
+  "label_MAINCK": {
+    "attr": {
+      "position": "absolute",
+      "left": "660px",
+      "height": "20px",
+      "top": "173px",
+      "width": "60px"
+    }
+  },
+  "label_PLLACK": {
+    "attr": {
+      "position": "absolute",
+      "left": "660px",
+      "top": "206px",
+      "height": "20px",
+      "width": "60px"
+    }
+  },
+  "label_UPLLACK": {
+    "attr": {
+      "position": "absolute",
+      "top": "239px",
+      "height": "20px",
+      "left": "670px",
+      "width": "50px"
+    }
+  },
+  "label_pclk_MD_SLCK": {
+    "attr": {
+      "position": "absolute",
+      "height": "20px",
+      "left": "707px",
+      "width": "60px",
+      "top": "791px"
+    }
+  },
+  "label_pclk_TD_SLCK": {
+    "attr": {
+      "position": "absolute",
+      "left": "707px",
+      "height": "20px",
+      "width": "60px",
+      "top": "816px"
+    }
+  },
+  "label_pclk_MAINCK": {
+    "attr": {
+      "position": "absolute",
+      "left": "707px",
+      "height": "20px",
+      "width": "60px",
+      "top": "843px"
+    }
+  },
+  "label_pclk_MANCK": {
+    "attr": {
+      "position": "absolute",
+      "height": "20px",
+      "left": "707px",
+      "width": "60px",
+      "top": "868px"
+    }
+  },
+  "label_pclk_PLLACK": {
+    "attr": {
+      "position": "absolute",
+      "height": "20px",
+      "width": "60px",
+      "top": "893px",
+      "left": "707px"
+    }
+  },
+  "label_sym_CLK_UHP48M": {
+    "attr": {
+      "position": "absolute",
+      "width": "100px",
+      "height": "20px",
+      "top": "1056px",
+      "left": "954px"
+    }
+  },
+  "label_usb_PLLACK": {
+    "attr": {
+      "position": "absolute",
+      "left": "695px",
+      "top": "1056px",
+      "height": "20px",
+      "width": "60px"
+    }
+  },
+  "label_usb_UPLLCK": {
+    "attr": {
+      "position": "absolute",
+      "height": "20px",
+      "top": "1080px",
+      "width": "60px",
+      "left": "696px"
+    }
+  },
+  "label_MAINXTLCK": {
+    "attr": {
+      "position": "absolute",
+      "top": "1102px",
+      "height": "20px",
+      "left": "695px",
+      "width": "60px"
+    }
+  },
+  "label_pclk_UPLLCK": {
+    "attr": {
+      "left": "704px",
+      "top": "913px",
+      "height": "20px",
+      "width": "60px",
+      "position": "absolute"
+    }
+  },
+  "label_pclk_AUDIOPLLCK": {
+    "attr": {
+      "position": "absolute",
+      "left": "704px",
+      "height": "20px",
+      "width": "60px",
+      "top": "934px"
+    }
+  }
+}

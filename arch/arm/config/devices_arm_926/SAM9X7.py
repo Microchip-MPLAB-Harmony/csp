@@ -173,7 +173,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v5/config/mmu.py")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_9x7/config/clk.py")
-#coreComponent.addPlugin("../peripheral/clk_sam_9x7/plugin/clk_sam_9x7.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_UI_MANAGER_ID_MX7", {"plugin_name": "Clock Manager", "main_html_path": "../csp/peripheral/clk_sam_9x7/plugins/clock_sam_9x7/build/index.html"})
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
