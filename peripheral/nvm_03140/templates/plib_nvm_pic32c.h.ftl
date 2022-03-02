@@ -69,25 +69,23 @@
 #define ${NVM_INSTANCE_NAME}_FLASH_ROWSIZE          (${FLASH_PROGRAM_SIZE}U)
 #define ${NVM_INSTANCE_NAME}_FLASH_PAGESIZE         (${FLASH_ERASE_SIZE}U)
 
+
+/* No error */
+#define    NVM_ERROR_NONE      ( 0x0U )
+
+/* NVM write error */
+#define    NVM_ERROR_WRITE     ( NVM_NVMCON_WRERR_Msk )
+
+/* NVM Low Voltage Detect error */
+#define    NVM_ERROR_LOWVOLTAGE ( NVM_NVMCON_LVDERR_Msk )
+
+typedef uint32_t NVM_ERROR;
+
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>#define ${NVM_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}
     <#lt>#define ${NVM_INSTANCE_NAME}_MEDIA_SIZE                 ${MEMORY_MEDIA_SIZE}
     <#lt>#define ${NVM_INSTANCE_NAME}_ERASE_BUFFER_SIZE          ${ERASE_BUFFER_SIZE}
 </#if>
-
-typedef enum
-{
-    /* No error */
-    NVM_ERROR_NONE = 0x0,
-
-    /* NVM write error */
-    NVM_ERROR_WRITE = NVM_NVMCON_WRERR_Msk,
-
-    /* NVM Low Voltage Detect error */
-    NVM_ERROR_LOWVOLTAGE = NVM_NVMCON_LVDERR_Msk,
-
-} NVM_ERROR;
-
 
 
 <#if INTERRUPT_ENABLE == true>

@@ -48,6 +48,9 @@
 // *****************************************************************************
 
 #include <string.h>
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 #include "plib_${NVM_INSTANCE_NAME?lower_case}.h"
 
 /* ************************************************************************** */
@@ -92,9 +95,9 @@ typedef enum
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
+    <#lt>static NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
 
-    <#lt>uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
+    <#lt>static uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
 
     <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister( NVM_CALLBACK callback, uintptr_t context )
     <#lt>{
@@ -115,9 +118,9 @@ typedef enum
 static void ${NVM_INSTANCE_NAME}_WriteUnlockSequence( void )
 {
     // Write the unlock key sequence
-    NVM_REGS->NVM_NVMKEY = 0x0;
-    NVM_REGS->NVM_NVMKEY = NVM_UNLOCK_KEY1;
-    NVM_REGS->NVM_NVMKEY = NVM_UNLOCK_KEY2;
+    NVM_REGS->NVM_NVMKEY = 0x0U;
+    NVM_REGS->NVM_NVMKEY = (uint32_t)NVM_UNLOCK_KEY1;
+    NVM_REGS->NVM_NVMKEY = (uint32_t)NVM_UNLOCK_KEY2;
 }
 
 static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation )
@@ -174,7 +177,8 @@ void ${NVM_INSTANCE_NAME}_Initialize( void )
 
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    memcpy((void *)data, (void *)address, length);
+	const uint32_t *paddress = (uint32_t *)address;
+    (void) memcpy(data, paddress, length);
 
     return true;
 }
@@ -190,10 +194,14 @@ bool ${NVM_INSTANCE_NAME}_WordWrite( uint32_t data, uint32_t address )
 
 bool ${NVM_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address )
 {
-   NVM_REGS->NVM_NVMDATA0 = *(data++);
-   NVM_REGS->NVM_NVMDATA1 = *(data++);
-   NVM_REGS->NVM_NVMDATA2 = *(data++);
-   NVM_REGS->NVM_NVMDATA3 = *(data++);
+   NVM_REGS->NVM_NVMDATA0 = *data;
+   data++;
+   NVM_REGS->NVM_NVMDATA1 = *data;
+   data++;
+   NVM_REGS->NVM_NVMDATA2 = *data;
+   data++;
+   NVM_REGS->NVM_NVMDATA3 = *data;
+   data++;
 
    ${NVM_INSTANCE_NAME}_StartOperationAtAddress( address,  QUAD_WORD_PROGRAM_OPERATION);
 
@@ -224,7 +232,7 @@ NVM_ERROR ${NVM_INSTANCE_NAME}_ErrorGet( void )
 
 bool ${NVM_INSTANCE_NAME}_IsBusy( void )
 {
-    return (bool)((NVM_REGS->NVM_NVMCON & NVM_NVMCON_WR_Msk) >> NVM_NVMCON_WR_Pos);
+    return (((NVM_REGS->NVM_NVMCON & NVM_NVMCON_WR_Msk) >> NVM_NVMCON_WR_Pos) != 0U);
 }
 
 void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t laddress, uint32_t haddress )

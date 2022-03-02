@@ -48,6 +48,9 @@
 // *****************************************************************************
 
 #include <string.h>
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 #include "sys/kmem.h"
 #include "plib_${NVM_INSTANCE_NAME?lower_case}.h"
 
@@ -121,9 +124,9 @@ typedef enum
 static void ${NVM_INSTANCE_NAME}_WriteUnlockSequence( void )
 {
     // Write the unlock key sequence
-    NVMKEY = 0x0;
-    NVMKEY = NVM_UNLOCK_KEY1;
-    NVMKEY = NVM_UNLOCK_KEY2;
+    NVMKEY = 0x0U;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY1;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY2;
 }
 
 static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation )
@@ -165,7 +168,7 @@ static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM
     // Start the operation
     NVMCONSET = _NVMCON_WR_MASK;
 
-    __builtin_mtc0(12, 0, processorStatus);
+    __builtin_mtc0(12U, 0U, processorStatus);
 
 <#if INTERRUPT_ENABLE == true>
     ${NVM_IEC_REG}SET   = ${NVM_INSTANCE_NAME}_INTERRUPT_ENABLE_MASK;
@@ -185,8 +188,8 @@ void ${NVM_INSTANCE_NAME}_Initialize( void )
 
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
-
+    const uint32_t *paddress_read = (uint32_t *)address;
+    (void) memcpy(data, KVA0_TO_KVA1(paddress_read), length);
     return true;
 }
 
@@ -259,7 +262,7 @@ void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t laddress, uint32_t 
     NVMPWPLT = (laddress & _NVMPWPLT_PWPLT_MASK) | _NVMPWPLT_ULOCK_MASK;
     NVMPWPGTE = (haddress & _NVMPWPGTE_PWPGTE_MASK) | _NVMPWPGTE_ULOCK_MASK;
 
-    __builtin_mtc0(12, 0, processorStatus);
+    __builtin_mtc0(12U, 0U, processorStatus);
 }
 
 void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectLock( void )
@@ -274,5 +277,5 @@ void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectLock( void )
     NVMPWPLTCLR = _NVMPWPLT_ULOCK_MASK;
     NVMPWPGTECLR = _NVMPWPGTE_ULOCK_MASK;
 
-    __builtin_mtc0(12, 0, processorStatus);
+    __builtin_mtc0(12U, 0U, processorStatus);
 }
