@@ -240,45 +240,31 @@ void ${ADC_INSTANCE_NAME}_Initialize(void)
     </#if>
 
     /* Analog and bias circuitry enable for the ADC SAR Core n (ANLEN) */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLD |= 0x${ADC_CTRLD__ANLEN?upper_case};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLD |= 0x${ADC_CTRLD__ANLEN?upper_case}U;
 
     /* Enable the ADC Core n modules digital interface (CHNEN) */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLD |= 0x${ADC_CTRLD__CHNEN};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLD |= 0x${ADC_CTRLD__CHNEN}U;
 
     /*Enable ADC module */
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ADC_CTRLA_ENABLE_Msk;
 
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
 
     /* Wait for WKUPEXP delay to expire after which ADC SAR Core n is Ready (CRDY) */
-    while (!(${ADC_INSTANCE_NAME}_REGS->ADC_CTLINTFLAG & 0x${ADC_CTLINTFLAG__CRDY?upper_case}));
+    while ((${ADC_INSTANCE_NAME}_REGS->ADC_CTLINTFLAG & 0x${ADC_CTLINTFLAG__CRDY?upper_case}U) == 0U)
+    {
+
+    }
 
     /* Wait for voltage reference to be stable */
-    while (!(${ADC_INSTANCE_NAME}_REGS->ADC_CTLINTFLAG & ADC_CTLINTFLAG_VREFRDY_Msk));
-
-}
-
-/* Enable ADC module */
-inline void ${ADC_INSTANCE_NAME}_Enable( void )
-{
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ADC_CTRLA_ENABLE_Msk;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
+    while ((${ADC_INSTANCE_NAME}_REGS->ADC_CTLINTFLAG & ADC_CTLINTFLAG_VREFRDY_Msk) == 0U)
     {
-        /* Wait for Synchronization */
-    }
-}
 
-/* Disable ADC module */
-inline void ${ADC_INSTANCE_NAME}_Disable( void )
-{
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA &= ~ADC_CTRLA_ENABLE_Msk;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
-    {
-        /* Wait for Synchronization */
     }
+
 }
 
 /* Enable channel compare mode */
@@ -286,7 +272,7 @@ void ${ADC_INSTANCE_NAME}_CompareEnable(ADC_CORE_NUM core, ADC_CHANNEL_NUM chann
 {
     ${ADC_INSTANCE_NAME}_Disable();
 
-    ${ADC_INSTANCE_NAME}_REGS->CONFIG[core].ADC_CHNCFG1 |= (1 << channel);
+    ${ADC_INSTANCE_NAME}_REGS->CONFIG[core].ADC_CHNCFG1 |= (1UL << (uint32_t)channel);
 
     ${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] |= ADC_CMPCTRL_CMPEN_Msk;
 
@@ -298,7 +284,7 @@ void ${ADC_INSTANCE_NAME}_CompareDisable(ADC_CORE_NUM core, ADC_CHANNEL_NUM chan
 {
     ${ADC_INSTANCE_NAME}_Disable();
 
-    ${ADC_INSTANCE_NAME}_REGS->CONFIG[core].ADC_CHNCFG1 &= ~(1 << channel);
+    ${ADC_INSTANCE_NAME}_REGS->CONFIG[core].ADC_CHNCFG1 &= ~(1UL << (uint32_t)channel);
 
     ${ADC_INSTANCE_NAME}_Enable();
 }
@@ -352,7 +338,7 @@ void ${ADC_INSTANCE_NAME}_GlobalEdgeConversionStart(void)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB |= ADC_CTRLB_GSWTRG_Msk;
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -362,7 +348,7 @@ void ${ADC_INSTANCE_NAME}_GlobalLevelConversionStart(void)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB |= ADC_CTRLB_LSWTRG_Msk;
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -372,7 +358,7 @@ void ${ADC_INSTANCE_NAME}_GlobalLevelConversionStop(void)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB &= ~ADC_CTRLB_LSWTRG_Msk;
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -380,9 +366,9 @@ void ${ADC_INSTANCE_NAME}_GlobalLevelConversionStop(void)
 
 void ${ADC_INSTANCE_NAME}_SyncTriggerEnable(void)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB |= (1<<11);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB |= (1UL<<11U);
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -390,9 +376,9 @@ void ${ADC_INSTANCE_NAME}_SyncTriggerEnable(void)
 
 void ${ADC_INSTANCE_NAME}_SyncTriggerDisable(void)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB &= ~(1<<11);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB &= ~(1UL<<11U);
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -405,7 +391,7 @@ void ${ADC_INSTANCE_NAME}_SyncTriggerCounterSet(uint16_t counterVal)
 
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC = (${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC & ~ADC_CTRLC_CNT_Msk) | (counterVal);
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -415,16 +401,16 @@ void ${ADC_INSTANCE_NAME}_SyncTriggerCounterSet(uint16_t counterVal)
 
 void ${ADC_INSTANCE_NAME}_SoftwareControlledConversionEnable(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = (${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB & ~(ADC_CTRLB_ADCORSEL_Msk | ADC_CTRLB_ADCHSEL_Msk)) | ((core << ADC_CTRLB_ADCORSEL_Pos) | (channel << ADC_CTRLB_ADCHSEL_Pos));
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = (${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB & ~(ADC_CTRLB_ADCORSEL_Msk | ADC_CTRLB_ADCHSEL_Msk)) | (((uint32_t)core << ADC_CTRLB_ADCORSEL_Pos) | ((uint32_t)channel << ADC_CTRLB_ADCHSEL_Pos));
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
 
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB |= ADC_CTRLB_SWCNVEN_Msk;
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -434,7 +420,7 @@ void ${ADC_INSTANCE_NAME}_ChannelSamplingStart(void)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB |= ADC_CTRLB_SAMP_Msk;
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -444,7 +430,7 @@ void ${ADC_INSTANCE_NAME}_ChannelSamplingStop(void)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB &= ~ADC_CTRLB_SAMP_Msk;
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -454,7 +440,7 @@ void ${ADC_INSTANCE_NAME}_ChannelConversionStart(void)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB |= ADC_CTRLB_RQCNVRT_Msk;
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -462,7 +448,7 @@ void ${ADC_INSTANCE_NAME}_ChannelConversionStart(void)
 
 bool ${ADC_INSTANCE_NAME}_ChannelResultIsReady(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel)
 {
-    return (bool)((${ADC_INSTANCE_NAME}_REGS->INT[core].ADC_INTFLAG & (1 << (ADC_INTFLAG_CHRDY_Pos + channel))));
+    return (bool)((${ADC_INSTANCE_NAME}_REGS->INT[core].ADC_INTFLAG & (1UL << (ADC_INTFLAG_CHRDY_Pos + (uint32_t)channel))) != 0U);
 }
 
 bool ${ADC_INSTANCE_NAME}_EOSStatusGet(ADC_CORE_NUM core)
@@ -473,7 +459,7 @@ bool ${ADC_INSTANCE_NAME}_EOSStatusGet(ADC_CORE_NUM core)
 /* Read the conversion result for the given core, channel */
 uint32_t ${ADC_INSTANCE_NAME}_ResultGet( ADC_CORE_NUM core, ADC_CHANNEL_NUM channel)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CORCHDATAID = (${ADC_INSTANCE_NAME}_REGS->ADC_CORCHDATAID & ~(ADC_CORCHDATAID_CORDYID_Msk | ADC_CORCHDATAID_CHRDYID_Msk)) | ((core << ADC_CORCHDATAID_CORDYID_Pos) | channel);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CORCHDATAID = (${ADC_INSTANCE_NAME}_REGS->ADC_CORCHDATAID & ~(ADC_CORCHDATAID_CORDYID_Msk | ADC_CORCHDATAID_CHRDYID_Msk)) | (((uint32_t)core << ADC_CORCHDATAID_CORDYID_Pos) | (uint32_t)channel);
 
     return ${ADC_INSTANCE_NAME}_REGS->ADC_CHRDYDAT;
 }

@@ -87,8 +87,26 @@ extern "C" {
 
 void ${ADC_INSTANCE_NAME}_Initialize (void);
 
-void ${ADC_INSTANCE_NAME}_Enable( void );
-void ${ADC_INSTANCE_NAME}_Disable( void );
+/* Enable ADC module */
+static inline void ${ADC_INSTANCE_NAME}_Enable( void )
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ADC_CTRLA_ENABLE_Msk;
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
+    {
+        /* Wait for Synchronization */
+    }
+}
+
+
+/* Disable ADC module */
+static inline void ${ADC_INSTANCE_NAME}_Disable( void )
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA &= ~ADC_CTRLA_ENABLE_Msk;
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY) != 0U)
+    {
+        /* Wait for Synchronization */
+    }
+}
 
 void ${ADC_INSTANCE_NAME}_CompareEnable(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel);
 void ${ADC_INSTANCE_NAME}_CompareDisable(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel);
