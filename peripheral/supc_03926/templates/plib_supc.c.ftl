@@ -67,12 +67,12 @@
     <#if SUPC_BOR_VAL != "">
         <#assign SUPC_BOR_VAL = SUPC_BOR_VAL + " | SUPC_BOR_DCBORPSEL("+SUPC_BOR_DCBORPSEL+")">
     <#else>
-        <#assign SUPC_BOR_VAL = "SUPC_BOR_DCBORPSEL("+SUPC_BOR_DCBORPSEL+")">
+        <#assign SUPC_BOR_VAL = "SUPC_BOR_DCBORPSEL("+SUPC_BOR_DCBORPSEL+"U)">
     </#if>
 </#if>
 <#if SUPC_BOR_BORFILT?has_content>
     <#if SUPC_BOR_VAL != "">
-        <#assign SUPC_BOR_VAL = SUPC_BOR_VAL + " | SUPC_BOR_BORFILT("+SUPC_BOR_BORFILT+")">
+        <#assign SUPC_BOR_VAL = SUPC_BOR_VAL + " | SUPC_BOR_BORFILT("+SUPC_BOR_BORFILT+"U)">
     <#else>
         <#assign SUPC_BOR_VAL = "SUPC_BOR_BORFILT("+SUPC_BOR_BORFILT+")">
     </#if>
@@ -81,7 +81,7 @@
     <#assign SUPC_LVD_VAL = "SUPC_LVD_ENABLE_Msk">
     <#if SUPC_LVD_DIR?has_content>
         <#if SUPC_LVD_VAL != "">
-            <#assign SUPC_LVD_VAL = SUPC_LVD_VAL + " | SUPC_LVD_DIR("+SUPC_LVD_DIR+")">
+            <#assign SUPC_LVD_VAL = SUPC_LVD_VAL + " | SUPC_LVD_DIR("+SUPC_LVD_DIR+"U)">
         <#else>
             <#assign SUPC_LVD_VAL = "SUPC_LVD_DIR("+SUPC_LVD_DIR+")">
         </#if>
@@ -119,12 +119,12 @@
         <#if SUPC_BKOUT_VAL != "">
             <#assign SUPC_BKOUT_VAL = SUPC_BKOUT_VAL + " | SUPC_BKOUT_TGLOM0("+SUPC_BKOUT_TGLOM0+")">
         <#else>
-            <#assign SUPC_BKOUT_VAL = "SUPC_BKOUT_TGLOM0("+SUPC_BKOUT_TGLOM0+")">
+            <#assign SUPC_BKOUT_VAL = "SUPC_BKOUT_TGLOM0("+SUPC_BKOUT_TGLOM0+"U)">
         </#if>
 </#if>
 <#if SUPC_BKOUT_TGLOM1?has_content>
         <#if SUPC_BKOUT_VAL != "">
-            <#assign SUPC_BKOUT_VAL = SUPC_BKOUT_VAL + " | SUPC_BKOUT_TGLOM1("+SUPC_BKOUT_TGLOM1+")">
+            <#assign SUPC_BKOUT_VAL = SUPC_BKOUT_VAL + " | SUPC_BKOUT_TGLOM1("+SUPC_BKOUT_TGLOM1+"U)">
         <#else>
             <#assign SUPC_BKOUT_VAL = "SUPC_BKOUT_TGLOM1("+SUPC_BKOUT_TGLOM1+")">
         </#if>
@@ -133,12 +133,12 @@
     <#if SUPC_VREF_VAL != "">
         <#assign SUPC_VREF_VAL = SUPC_VREF_VAL + " | SUPC_VREFCTRL_LPSTDBY("+SUPC_VREF_LPSTDBY+")">
     <#else>
-        <#assign SUPC_VREF_VAL = "SUPC_VREFCTRL_LPSTDBY("+SUPC_VREF_LPSTDBY+")">
+        <#assign SUPC_VREF_VAL = "SUPC_VREFCTRL_LPSTDBY("+SUPC_VREF_LPSTDBY+"U)">
     </#if>
 </#if>
 <#if SUPC_VREF_LPHIB?has_content>
     <#if SUPC_VREF_VAL != "">
-        <#assign SUPC_VREF_VAL = SUPC_VREF_VAL + " | SUPC_VREFCTRL_LPHIB("+SUPC_VREF_LPHIB+")">
+        <#assign SUPC_VREF_VAL = SUPC_VREF_VAL + " | SUPC_VREFCTRL_LPHIB("+SUPC_VREF_LPHIB+"U)">
     <#else>
         <#assign SUPC_VREF_VAL = "SUPC_VREFCTRL_LPHIB("+SUPC_VREF_LPHIB+")">
     </#if>
@@ -154,7 +154,7 @@
     <#if SUPC_VREG_VAL != "">
         <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_VREGOUT("+SUPC_VREGCTRL_VREGOUT+")">
     <#else>
-        <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_VREGOUT("+SUPC_VREGCTRL_VREGOUT+")">
+        <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_VREGOUT("+SUPC_VREGCTRL_VREGOUT+"U)">
     </#if>
 </#if>
 <#if SUPC_VREGCTRL_OFFSTDBY == true>
@@ -194,7 +194,7 @@
 </#if>
 <#if SUPC_VREGCTRL_AVREGSTDBY?has_content>
     <#if SUPC_VREG_VAL != "">
-        <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_AVREGSTDBY("+SUPC_VREGCTRL_AVREGSTDBY+")">
+        <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_AVREGSTDBY("+SUPC_VREGCTRL_AVREGSTDBY+"U)">
     <#else>
         <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_AVREGSTDBY("+SUPC_VREGCTRL_AVREGSTDBY+")">
     </#if>
