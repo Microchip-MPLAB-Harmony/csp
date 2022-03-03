@@ -87,8 +87,8 @@ extern "C" {
 
 void ${ADCHS_INSTANCE_NAME}_Initialize (void);
 
-void ${ADCHS_INSTANCE_NAME}_ModulesEnable (ADCHS_MODULE_MASK modulesMask);
-void ${ADCHS_INSTANCE_NAME}_ModulesDisable (ADCHS_MODULE_MASK modulesMask);
+void ${ADCHS_INSTANCE_NAME}_ModulesEnable (ADCHS_MODULE_MASK moduleMask);
+void ${ADCHS_INSTANCE_NAME}_ModulesDisable (ADCHS_MODULE_MASK moduleMask);
 
 void ${ADCHS_INSTANCE_NAME}_GlobalEdgeConversionStart(void);
 void ${ADCHS_INSTANCE_NAME}_GlobalLevelConversionStart(void);

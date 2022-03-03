@@ -60,7 +60,7 @@
     <#lt>ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
 </#if>
 
-void ${ADCHS_INSTANCE_NAME}_Initialize()
+void ${ADCHS_INSTANCE_NAME}_Initialize(void)
 {
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON1 = 0;
 
@@ -95,8 +95,15 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 
     /* Turn ON ADC */
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON1 |= ADCHS_ADCCON1_ON_Msk;
-    while((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_BGVRRDY_Msk) == ADCHS_ADCCON2_BGVRRDY_Msk); // Wait until the reference voltage is ready
-    while((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_REFFLT_Msk) == ADCHS_ADCCON2_REFFLT_Msk); // Wait if there is a fault with the reference voltage
+    while((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_BGVRRDY_Msk) == ADCHS_ADCCON2_BGVRRDY_Msk) 
+    {
+        // Wait until the reference voltage is ready
+    }
+    
+    while((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_REFFLT_Msk) == ADCHS_ADCCON2_REFFLT_Msk) 
+    {
+        // Wait if there is a fault with the reference voltage
+    }
 
 <#if ADCHS_NUM_CLASS1_SIGNALS != 0>
 <#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
@@ -122,21 +129,21 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 /* Enable ADCHS channels */
 void ${ADCHS_INSTANCE_NAME}_ModulesEnable (ADCHS_MODULE_MASK moduleMask)
 {
-    ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON3 |= (moduleMask << 16);
+    ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON3 |= ((uint32_t)moduleMask << 16U);
 }
 
 /* Disable ADCHS channels */
 void ${ADCHS_INSTANCE_NAME}_ModulesDisable (ADCHS_MODULE_MASK moduleMask)
 {
-    ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON3 &= ~(moduleMask << 16);
+    ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON3 &= ~((uint32_t)moduleMask << 16U);
 }
 
 
 void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptEnable (ADCHS_CHANNEL_NUM channel)
 {
-    if (channel < ADCHS_CHANNEL_32)
+    if ((uint32_t)channel < ADCHS_CHANNEL_32)
     {
-        ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCGIRQEN1 |= 0x01 << channel;
+        ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCGIRQEN1 |= 0x01UL << (uint32_t)channel;
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
@@ -148,9 +155,9 @@ void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptEnable (ADCHS_CHANNEL_NUM chan
 
 void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptDisable (ADCHS_CHANNEL_NUM channel)
 {
-    if (channel < ADCHS_CHANNEL_32)
+    if ((uint32_t)channel < ADCHS_CHANNEL_32)
     {
-        ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCGIRQEN1 &= ~(0x01 << channel);
+        ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCGIRQEN1 &= ~(0x01UL << (uint32_t)channel);
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
@@ -179,7 +186,7 @@ void ADCHS_GlobalLevelConversionStop(void)
 void ADCHS_ChannelConversionStart(ADCHS_CHANNEL_NUM channel)
 {
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON3 &= ~(ADCHS_ADCCON3_ADINSEL_Msk);
-    ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON3 |= ((channel << ADCHS_ADCCON3_ADINSEL_Pos) | ADCHS_ADCCON3_RQCNVRT_Msk);
+    ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON3 |= (((uint32_t)channel << ADCHS_ADCCON3_ADINSEL_Pos) | ADCHS_ADCCON3_RQCNVRT_Msk);
 }
 
 
@@ -187,9 +194,9 @@ void ADCHS_ChannelConversionStart(ADCHS_CHANNEL_NUM channel)
 bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 {
     bool status = false;
-    if (channel < ADCHS_CHANNEL_32)
+    if ((uint32_t)channel < ADCHS_CHANNEL_32)
     {
-        status = (${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCDSTAT1 >> channel) & 0x01;
+        status = ((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCDSTAT1 >> (uint32_t)channel) & 0x01U) != 0U;
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
@@ -203,7 +210,7 @@ bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 /* Read the conversion result */
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
 {
-    return (uint16_t) (*((&${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCDATA0) + (channel << 2)));
+    return (uint16_t) (*((&${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCDATA0) + ((uint32_t)channel << 2U)));
 }
 
 <#if ADCHS_INTERRUPT == true>
@@ -224,8 +231,8 @@ void ${ADCHS_INSTANCE_NAME}_EOSCallbackRegister(ADCHS_EOS_CALLBACK callback, uin
 <#else>
 bool ${ADCHS_INSTANCE_NAME}_EOSStatusGet(void)
 {
-    return (bool)((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSRDY_Msk) 
-                    >> ADCHS_ADCCON2_EOSRDY_Pos);
+    return (bool)(((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSRDY_Msk) 
+                    >> ADCHS_ADCCON2_EOSRDY_Pos) != 0U);
 }
 </#if>
 
