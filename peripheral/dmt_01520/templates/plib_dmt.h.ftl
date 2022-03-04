@@ -72,9 +72,6 @@
 
 <#if (CONFIG_FDMTEN?? && CONFIG_FDMTEN == "OFF") || (CONFIG_DMTEN?? && CONFIG_DMTEN == "OFF")>
 void ${DMT_INSTANCE_NAME}_Enable( void );
-
-void ${DMT_INSTANCE_NAME}_Disable( void );
-
 </#if>
 void ${DMT_INSTANCE_NAME}_Clear( void );
 
