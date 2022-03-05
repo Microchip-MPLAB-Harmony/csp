@@ -131,14 +131,14 @@
 						<#if ledName?counter == ledPinPos?counter>
 							<#if ledName?counter == ledActiveLevel?counter>
 								/*** LED Macros for ${ledName} ***/
-								#define ${ledName}_Toggle()     (LAT${ledChannel}INV = (1<<${ledPinPos}))
-								#define ${ledName}_Get()        ((PORT${ledChannel} >> ${ledPinPos}) & 0x1)
+								#define ${ledName}_Toggle()     (LAT${ledChannel}INV = (1U<<${ledPinPos}))
+								#define ${ledName}_Get()        ((PORT${ledChannel} >> ${ledPinPos}) & 0x1U)
 								<#if ledActiveLevel == "High">
-									#define ${ledName}_On()         (LAT${ledChannel}SET = (1<<${ledPinPos}))
-									#define ${ledName}_Off()        (LAT${ledChannel}CLR = (1<<${ledPinPos}))
+									#define ${ledName}_On()         (LAT${ledChannel}SET = (1U<<${ledPinPos}))
+									#define ${ledName}_Off()        (LAT${ledChannel}CLR = (1U<<${ledPinPos}))
 								<#else>
-									#define ${ledName}_On()         (LAT${ledChannel}CLR = (1<<${ledPinPos}))
-									#define ${ledName}_Off()        (LAT${ledChannel}SET = (1<<${ledPinPos}))
+									#define ${ledName}_On()         (LAT${ledChannel}CLR = (1U<<${ledPinPos}))
+									#define ${ledName}_Off()        (LAT${ledChannel}SET = (1U<<${ledPinPos}))
 								</#if>
 							</#if>
 						</#if>
@@ -160,13 +160,13 @@
 						<#if switchName?counter == switchPinPos?counter>
 							<#if switchName?counter == switchActiveLevel?counter>
 								/*** SWITCH Macros for ${switchName} ***/
-								#define ${switchName}_Get()     ((PORT${switchChannel} >> ${switchPinPos}) & 0x1)
+								#define ${switchName}_Get()     ((PORT${switchChannel} >> ${switchPinPos}) & 0x1U)
 								<#if switchActiveLevel == "High">
-									#define ${switchName}_STATE_PRESSED  1
-									#define ${switchName}_STATE_RELEASED 0
+									#define ${switchName}_STATE_PRESSED  1U
+									#define ${switchName}_STATE_RELEASED 0U
 								<#else>
-									#define ${switchName}_STATE_PRESSED  	0
-									#define ${switchName}_STATE_RELEASED  1
+									#define ${switchName}_STATE_PRESSED   0U
+									#define ${switchName}_STATE_RELEASED  1U
 								</#if>
 							</#if>
 						</#if>
@@ -189,11 +189,11 @@
 							<#if vbusChannel?counter == vbusActiveLevel?counter>
 								/*** VBUS Macros for ${vbusName} ***/
 								<#if vbusActiveLevel == "High">
-									#define ${vbusName}_PowerEnable()         (LAT${vbusChannel}SET = (1<<${vbusPinPos}))
-									#define ${vbusName}_PowerDisable()        (LAT${vbusChannel}CLR = (1<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (LAT${vbusChannel}SET = (1U<<${vbusPinPos}))
+									#define ${vbusName}_PowerDisable()        (LAT${vbusChannel}CLR = (1U<<${vbusPinPos}))
 								<#else>
-									#define ${vbusName}_PowerEnable()         (LAT${vbusChannel}CLR = (1<<${vbusPinPos}))
-									#define ${vbusName}_PowerDisable()        (LAT${vbusChannel}SET = (1<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (LAT${vbusChannel}CLR = (1U<<${vbusPinPos}))
+									#define ${vbusName}_PowerDisable()        (LAT${vbusChannel}SET = (1U<<${vbusPinPos}))
 								</#if>
 							</#if>
 						</#if>

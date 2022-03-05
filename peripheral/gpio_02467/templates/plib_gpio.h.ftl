@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_gpio.h
+    plib_gpio.h UUUUUUUUU
 
   Summary:
     GPIO PLIB Header File
@@ -108,17 +108,17 @@
 
                             <#lt>/*** Macros for ${.vars[funcname]} pin ***/
                             <#if .vars[functype] == "GPIO">
-                                <#lt>#define ${.vars[funcname]}_Set()               (LAT${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_Clear()             (LAT${.vars[pinChannel]}CLR = (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_Toggle()            (LAT${.vars[pinChannel]}INV= (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_OutputEnable()      (TRIS${.vars[pinChannel]}CLR = (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_InputEnable()       (TRIS${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_Set()               (LAT${.vars[pinChannel]}SET = (1U<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_Clear()             (LAT${.vars[pinChannel]}CLR = (1U<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_Toggle()            (LAT${.vars[pinChannel]}INV= (1U<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_OutputEnable()      (TRIS${.vars[pinChannel]}CLR = (1U<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_InputEnable()       (TRIS${.vars[pinChannel]}SET = (1U<<${.vars[pinPort]}))
                             </#if>
-                            <#lt>#define ${.vars[funcname]}_Get()               ((PORT${.vars[pinChannel]} >> ${.vars[pinPort]}) & 0x1)
+                            <#lt>#define ${.vars[funcname]}_Get()               ((PORT${.vars[pinChannel]} >> ${.vars[pinPort]}) & 0x1U)
                             <#lt>#define ${.vars[funcname]}_PIN                  GPIO_PIN_R${.vars[pinChannel]}${.vars[pinPort]}
                             <#if .vars[interruptType]?has_content>
-                                <#lt>#define ${.vars[funcname]}_InterruptEnable()   (CNEN${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_InterruptDisable()  (CNEN${.vars[pinChannel]}CLR = (1<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_InterruptEnable()   (CNEN${.vars[pinChannel]}SET = (1U<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_InterruptDisable()  (CNEN${.vars[pinChannel]}CLR = (1U<<${.vars[pinPort]}))
                             </#if>
                         </#if>
                     </#if>
@@ -145,17 +145,16 @@
     device data sheet to determine which ports are supported.
 */
 
-typedef enum
-{
+
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
     <#if .vars[channel]?has_content>
         <#if (.vars["PORT${.vars[channel]}_Pin_List"])?has_content>
-                <#lt>    GPIO_PORT_${.vars[channel]} = ${i},
+                <#lt>#define    GPIO_PORT_${.vars[channel]}  (${i})
         </#if>
     </#if>
 </#list>
-} GPIO_PORT;
+typedef uint32_t GPIO_PORT;
 
 typedef enum
 {
@@ -182,15 +181,14 @@ typedef enum
     device data sheet to determine which pins are supported.
 */
 
-typedef enum
-{
+
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
     <#if .vars[channel]?has_content>
         <#if .vars["PORT${.vars[channel]}_Pin_List"]?has_content>
             <@"<#assign PORT${.vars[channel]}_Pin_List =  PORT${.vars[channel]}_Pin_List?sort>"?interpret />
             <#list .vars["PORT${.vars[channel]}_Pin_List"] as pin>
-                <#lt>    GPIO_PIN_R${.vars[channel]}${pin} = ${pin+(16*i)},
+                <#lt>#define     GPIO_PIN_R${.vars[channel]}${pin}  (${pin+(16*i)}U)
             </#list>
         </#if>
     </#if>
@@ -198,9 +196,9 @@ typedef enum
 
     /* This element should not be used in any of the GPIO APIs.
        It will be used by other modules or application to denote that none of the GPIO Pin is used */
-    GPIO_PIN_NONE = -1
+#define    GPIO_PIN_NONE   (-1)
 
-} GPIO_PIN;
+typedef uint32_t GPIO_PIN;
 
 <#if GPIO_ATLEAST_ONE_INTERRUPT_USED == true >
 typedef  void (*GPIO_PIN_CALLBACK) ( GPIO_PIN pin, uintptr_t context);
@@ -263,42 +261,43 @@ typedef struct {
 
 static inline void GPIO_PinWrite(GPIO_PIN pin, bool value)
 {
-    GPIO_PortWrite((GPIO_PORT)(pin>>4), (uint32_t)(0x1) << (pin & 0xF), (uint32_t)(value) << (pin & 0xF));
+	 uint32_t xvalue = (uint32_t)value;
+    GPIO_PortWrite((pin>>4U), (uint32_t)(0x1U) << (pin & 0xFU), (xvalue) << (pin & 0xFU));
 }
 
 static inline bool GPIO_PinRead(GPIO_PIN pin)
 {
-    return (bool)(((GPIO_PortRead((GPIO_PORT)(pin>>4))) >> (pin & 0xF)) & 0x1);
+    return ((((GPIO_PortRead((GPIO_PORT)(pin>>4U))) >> (pin & 0xFU)) & 0x1U) != 0U);
 }
 
 static inline bool GPIO_PinLatchRead(GPIO_PIN pin)
 {
-    return (bool)((GPIO_PortLatchRead((GPIO_PORT)(pin>>4)) >> (pin & 0xF)) & 0x1);
+    return (((GPIO_PortLatchRead((GPIO_PORT)(pin>>4U)) >> (pin & 0xFU)) & 0x1U) != 0U);
 }
 
 static inline void GPIO_PinToggle(GPIO_PIN pin)
 {
-    GPIO_PortToggle((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+    GPIO_PortToggle((pin>>4U), (uint32_t)0x1U << (pin & 0xFU));
 }
 
 static inline void GPIO_PinSet(GPIO_PIN pin)
 {
-    GPIO_PortSet((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+    GPIO_PortSet((pin>>4U), (uint32_t)0x1U << (pin & 0xFU));
 }
 
 static inline void GPIO_PinClear(GPIO_PIN pin)
 {
-    GPIO_PortClear((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+    GPIO_PortClear((pin>>4U), (uint32_t)0x1U << (pin & 0xFU));
 }
 
 static inline void GPIO_PinInputEnable(GPIO_PIN pin)
 {
-    GPIO_PortInputEnable((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+    GPIO_PortInputEnable((pin>>4U), (uint32_t)0x1U << (pin & 0xFU));
 }
 
 static inline void GPIO_PinOutputEnable(GPIO_PIN pin)
 {
-    GPIO_PortOutputEnable((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+    GPIO_PortOutputEnable((pin>>4U), (uint32_t)0x1U << (pin & 0xFU));
 }
 
 <#if GPIO_ATLEAST_ONE_INTERRUPT_USED == true >

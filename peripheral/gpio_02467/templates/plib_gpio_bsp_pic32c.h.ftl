@@ -131,14 +131,14 @@
 						<#if ledName?counter == ledPinPos?counter>
 							<#if ledName?counter == ledActiveLevel?counter>
 								/*** LED Macros for ${ledName} ***/
-								#define ${ledName}_Toggle()     (GPIO${ledChannel}_REGS->GPIO_LATINV = (1<<${ledPinPos}))
-								#define ${ledName}_Get()        ((GPIO${ledChannel}_REGS->GPIO_PORT >> ${ledPinPos}) & 0x1)
+								#define ${ledName}_Toggle()     (GPIO${ledChannel}_REGS->GPIO_LATINV = (1U<<${ledPinPos}))
+								#define ${ledName}_Get()        ((GPIO${ledChannel}_REGS->GPIO_PORT >> ${ledPinPos}) & 0x1U)
 								<#if ledActiveLevel == "High">
-									#define ${ledName}_On()         (GPIO${ledChannel}_REGS->GPIO_LATSET = (1<<${ledPinPos}))
-									#define ${ledName}_Off()        (GPIO${ledChannel}_REGS->GPIO_LATCLR = (1<<${ledPinPos}))
+									#define ${ledName}_On()         (GPIO${ledChannel}_REGS->GPIO_LATSET = (1U<<${ledPinPos}))
+									#define ${ledName}_Off()        (GPIO${ledChannel}_REGS->GPIO_LATCLR = (1U<<${ledPinPos}))
 								<#else>
-									#define ${ledName}_On()         (GPIO${ledChannel}_REGS->GPIO_LATCLR = (1<<${ledPinPos}))
-									#define ${ledName}_Off()        (GPIO${ledChannel}_REGS->GPIO_LATSET = (1<<${ledPinPos}))
+									#define ${ledName}_On()         (GPIO${ledChannel}_REGS->GPIO_LATCLR = (1U<<${ledPinPos}))
+									#define ${ledName}_Off()        (GPIO${ledChannel}_REGS->GPIO_LATSET = (1U<<${ledPinPos}))
 								</#if>
 							</#if>
 						</#if>
@@ -160,13 +160,13 @@
 						<#if switchName?counter == switchPinPos?counter>
 							<#if switchName?counter == switchActiveLevel?counter>
 								/*** SWITCH Macros for ${switchName} ***/
-								#define ${switchName}_Get()     ((GPIO${switchChannel}_REGS->GPIO_PORT >> ${switchPinPos}) & 0x1)
+								#define ${switchName}_Get()     ((GPIO${switchChannel}_REGS->GPIO_PORT >> ${switchPinPos}) & 0x1U)
 								<#if switchActiveLevel == "High">
-									#define ${switchName}_STATE_PRESSED  1
-									#define ${switchName}_STATE_RELEASED 0
+									#define ${switchName}_STATE_PRESSED  1U
+									#define ${switchName}_STATE_RELEASED 0U
 								<#else>
-									#define ${switchName}_STATE_PRESSED  	0
-									#define ${switchName}_STATE_RELEASED  1
+									#define ${switchName}_STATE_PRESSED   0U
+									#define ${switchName}_STATE_RELEASED  1U
 								</#if>
 							</#if>
 						</#if>

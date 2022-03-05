@@ -154,29 +154,29 @@ void GPIO_Initialize ( void )
     <#if .vars[channel]?has_content>
         <#lt>    /* PORT${.vars[channel]} Initialization */
         <#if .vars["SYS_PORT_${.vars[channel]}_ODC"] != "0">
-             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_ODCSET = 0x${.vars["SYS_PORT_${.vars[channel]}_ODC"]}; /* Open Drain Enable */
+             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_ODCSET = 0x${.vars["SYS_PORT_${.vars[channel]}_ODC"]}U; /* Open Drain Enable */
         </#if>
         <#-- if channel has even one pin configured as output, then generate code for LAT register irrespective of LAT value '0' or '1' -->
         <#if .vars["SYS_PORT_${.vars[channel]}_TRIS"] != "0">
-             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_LAT = 0x${.vars["SYS_PORT_${.vars[channel]}_LAT"]}; /* Initial Latch Value */
+             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_LAT = 0x${.vars["SYS_PORT_${.vars[channel]}_LAT"]}U; /* Initial Latch Value */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_TRIS"] != "0">
-             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_TRISCLR = 0x${.vars["SYS_PORT_${.vars[channel]}_TRIS"]}; /* Direction Control */
+             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_TRISCLR = 0x${.vars["SYS_PORT_${.vars[channel]}_TRIS"]}U; /* Direction Control */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_ANSEL"] != "0">
-             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_ANSELCLR = 0x${.vars["SYS_PORT_${.vars[channel]}_ANSEL"]}; /* Digital Mode Enable */
+             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_ANSELCLR = 0x${.vars["SYS_PORT_${.vars[channel]}_ANSEL"]}U; /* Digital Mode Enable */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_CNPU"] != "0">
-             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_CNPUSET = 0x${.vars["SYS_PORT_${.vars[channel]}_CNPU"]}; /* Pull-Up Enable */
+             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_CNPUSET = 0x${.vars["SYS_PORT_${.vars[channel]}_CNPU"]}U; /* Pull-Up Enable */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_CNPD"] != "0">
-             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_CNPDSET = 0x${.vars["SYS_PORT_${.vars[channel]}_CNPD"]}; /* Pull-Down Enable */
+             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_CNPDSET = 0x${.vars["SYS_PORT_${.vars[channel]}_CNPD"]}U; /* Pull-Down Enable */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_SRCON0"] != "0">
-             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_SRCON0SET = 0x${.vars["SYS_PORT_${.vars[channel]}_SRCON0"]}; /* Slew Rate Control */
+             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_SRCON0SET = 0x${.vars["SYS_PORT_${.vars[channel]}_SRCON0"]}U; /* Slew Rate Control */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_SRCON1"] != "0">
-             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_SRCON1SET = 0x${.vars["SYS_PORT_${.vars[channel]}_SRCON1"]}; /* Slew Rate Control */
+             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_SRCON1SET = 0x${.vars["SYS_PORT_${.vars[channel]}_SRCON1"]}U; /* Slew Rate Control */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_CN_USED"] == true>
             <#lt>    /* Change Notice Enable */
@@ -193,9 +193,9 @@ void GPIO_Initialize ( void )
 <#if IOLOCK_ENABLE?? && IOLOCK_ENABLE == true>
     <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
         <#lt>    /* Unlock system for PPS configuration */
-        <#lt>    CFG_REGS->CFG_SYSKEY = 0x00000000;
-        <#lt>    CFG_REGS->CFG_SYSKEY = 0xAA996655;
-        <#lt>    CFG_REGS->CFG_SYSKEY = 0x556699AA;
+        <#lt>    CFG_REGS->CFG_SYSKEY = 0x00000000U;
+        <#lt>    CFG_REGS->CFG_SYSKEY = 0xAA996655U;
+        <#lt>    CFG_REGS->CFG_SYSKEY = 0x556699AAU;
         <#lt>
         <#lt>    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_IOLOCK_Msk;
     </#if>
@@ -210,9 +210,9 @@ void GPIO_Initialize ( void )
         <#if .vars[usePPSInputPin] == true>
             <#assign res = .vars[inputFunction]?matches(r"(\w+) \((\w+)\)")>
             <#if res>
-                <#lt>    PPS_REGS->PPS_${res?groups[1]} = ${.vars[remapInputPin]};
+                <#lt>    PPS_REGS->PPS_${res?groups[1]} = ${.vars[remapInputPin]}U;
             <#else>
-                <#lt>    PPS_REGS->PPS_${.vars[inputFunction]} = ${.vars[remapInputPin]};
+                <#lt>    PPS_REGS->PPS_${.vars[inputFunction]} = ${.vars[remapInputPin]}U;
             </#if>
         </#if>
     </#if>
@@ -225,7 +225,7 @@ void GPIO_Initialize ( void )
     <#assign remapOutputPin = "SYS_PORT_PPS_OUTPUT_PIN_" + i>
     <#if .vars[usePPSOutputPin]?has_content>
         <#if .vars[usePPSOutputPin] == true>
-            <#lt>    PPS_REGS->PPS_${.vars[remapOutputPin]} = ${.vars[outputFunction]};
+            <#lt>    PPS_REGS->PPS_${.vars[remapOutputPin]} = ${.vars[outputFunction]}U;
         </#if>
     </#if>
 </#list>
@@ -234,7 +234,7 @@ void GPIO_Initialize ( void )
     <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
         <#lt>    /* Lock back the system after PPS configuration */
         <#lt>    CFG_REGS->CFG_CFGCON0SET = CFG_CFGCON0_IOLOCK_Msk;
-        <#lt>    CFG_REGS->CFG_SYSKEY = 0x00000000;
+        <#lt>    CFG_REGS->CFG_SYSKEY = 0x00000000U;
     </#if>
 </#if>
 
@@ -258,7 +258,7 @@ void GPIO_Initialize ( void )
             </#if>
         </#if>
     </#list>
-    <#lt>    for(i=0; i<${TOTAL_NUM_OF_INT_USED}; i++)
+    <#lt>    for(i=0U; i<${TOTAL_NUM_OF_INT_USED}; i++)
     <#lt>    {
     <#lt>        portPinCbObj[i].callback = NULL;
     <#lt>    }

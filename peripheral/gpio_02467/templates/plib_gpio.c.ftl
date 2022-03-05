@@ -116,7 +116,7 @@ void GPIO_Initialize ( void )
                 (BSP_PIN_46_FUNCTION_TYPE == "TMS" || BSP_PIN_46_FUNCTION_TYPE == "")) >
             <#else>
                 <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
-                <#lt>    CFGCON0bits.JTAGEN = 0;
+                <#lt>    CFGCON0bits.JTAGEN = 0U;
             </#if>
         <#else>
             <#if ((BSP_PIN_56_FUNCTION_TYPE == "TDI" || BSP_PIN_56_FUNCTION_TYPE == "") &&
@@ -125,7 +125,7 @@ void GPIO_Initialize ( void )
                 (BSP_PIN_119_FUNCTION_TYPE == "TMS" || BSP_PIN_119_FUNCTION_TYPE == "")) >
             <#else>
                 <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
-                <#lt>    CFGCON0bits.JTAGEN = 0;
+                <#lt>    CFGCON0bits.JTAGEN = 0U;
             </#if>           
         </#if>
     </#if>
@@ -135,29 +135,29 @@ void GPIO_Initialize ( void )
     <#if .vars[channel]?has_content>
         <#lt>    /* PORT${.vars[channel]} Initialization */
         <#if .vars["SYS_PORT_${.vars[channel]}_ODC"] != "0">
-             <#lt>    ODC${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_ODC"]}; /* Open Drain Enable */
+             <#lt>    ODC${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_ODC"]}U; /* Open Drain Enable */
         </#if>
         <#-- if channel has even one pin configured as output, then generate code for LAT register irrespective of LAT value '0' or '1' -->
         <#if .vars["SYS_PORT_${.vars[channel]}_TRIS"] != "0">
-             <#lt>    LAT${.vars[channel]} = 0x${.vars["SYS_PORT_${.vars[channel]}_LAT"]}; /* Initial Latch Value */
+             <#lt>    LAT${.vars[channel]} = 0x${.vars["SYS_PORT_${.vars[channel]}_LAT"]}U; /* Initial Latch Value */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_TRIS"] != "0">
-             <#lt>    TRIS${.vars[channel]}CLR = 0x${.vars["SYS_PORT_${.vars[channel]}_TRIS"]}; /* Direction Control */
+             <#lt>    TRIS${.vars[channel]}CLR = 0x${.vars["SYS_PORT_${.vars[channel]}_TRIS"]}U; /* Direction Control */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_ANSEL"] != "0">
-             <#lt>    ANSEL${.vars[channel]}CLR = 0x${.vars["SYS_PORT_${.vars[channel]}_ANSEL"]}; /* Digital Mode Enable */
+             <#lt>    ANSEL${.vars[channel]}CLR = 0x${.vars["SYS_PORT_${.vars[channel]}_ANSEL"]}U; /* Digital Mode Enable */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_CNPU"] != "0">
-             <#lt>    CNPU${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_CNPU"]}; /* Pull-Up Enable */
+             <#lt>    CNPU${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_CNPU"]}U; /* Pull-Up Enable */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_CNPD"] != "0">
-             <#lt>    CNPD${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_CNPD"]}; /* Pull-Down Enable */
+             <#lt>    CNPD${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_CNPD"]}U; /* Pull-Down Enable */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_SRCON0"] != "0">
-             <#lt>    SRCON0${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_SRCON0"]}; /* Slew Rate Control */
+             <#lt>    SRCON0${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_SRCON0"]}U; /* Slew Rate Control */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_SRCON1"] != "0">
-             <#lt>    SRCON1${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_SRCON1"]}; /* Slew Rate Control */
+             <#lt>    SRCON1${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_SRCON1"]}U; /* Slew Rate Control */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_CN_USED"] == true>
 
@@ -176,14 +176,14 @@ void GPIO_Initialize ( void )
 <#if IOLOCK_ENABLE?? && IOLOCK_ENABLE == true>
     <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
         <#lt>    /* Unlock system for PPS configuration */
-        <#lt>    SYSKEY = 0x00000000;
-        <#lt>    SYSKEY = 0xAA996655;
-        <#lt>    SYSKEY = 0x556699AA;
+        <#lt>    SYSKEY = 0x00000000U;
+        <#lt>    SYSKEY = 0xAA996655U;
+        <#lt>    SYSKEY = 0x556699AAU;
 
         <#if PRODUCT_FAMILY != 'PIC32MZW'>
-            <#lt>    CFGCONbits.IOLOCK = 0;
+            <#lt>    CFGCONbits.IOLOCK = 0U;
         <#else>
-            <#lt>    CFGCON0bits.IOLOCK = 0;
+            <#lt>    CFGCON0bits.IOLOCK = 0U;
         </#if>
     </#if>
 </#if>
@@ -221,12 +221,12 @@ void GPIO_Initialize ( void )
     <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
         /* Lock back the system after PPS configuration */
         <#if PRODUCT_FAMILY != 'PIC32MZW'>
-            <#lt>    CFGCONbits.IOLOCK = 1;
+            <#lt>    CFGCONbits.IOLOCK = 1U;
         <#else>
-            <#lt>    CFGCON0bits.IOLOCK = 1;
+            <#lt>    CFGCON0bits.IOLOCK = 1U;
         </#if>
 
-        <#lt>    SYSKEY = 0x00000000;
+        <#lt>    SYSKEY = 0x00000000U;
     </#if>
 </#if>
 
@@ -250,7 +250,7 @@ void GPIO_Initialize ( void )
             </#if>
         </#if>
     </#list>
-    <#lt>    for(i=0; i<${TOTAL_NUM_OF_INT_USED}; i++)
+    <#lt>    for(i=0U; i<${TOTAL_NUM_OF_INT_USED}U; i++)
     <#lt>    {
     <#lt>        portPinCbObj[i].callback = NULL;
     <#lt>    }
@@ -287,7 +287,7 @@ void GPIO_Initialize ( void )
 */
 uint32_t GPIO_PortRead(GPIO_PORT port)
 {
-    return (*(volatile uint32_t *)(&PORT${GPIO_CHANNEL_0_NAME} + (port * 0x40)));
+    return (*(volatile uint32_t *)(&PORT${GPIO_CHANNEL_0_NAME} + (port * 0x40U)));
 }
 
 // *****************************************************************************
@@ -302,7 +302,7 @@ uint32_t GPIO_PortRead(GPIO_PORT port)
 */
 void GPIO_PortWrite(GPIO_PORT port, uint32_t mask, uint32_t value)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40)) & (~mask)) | (mask & value);
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40U)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40U)) & (~mask)) | (mask & value);
 }
 
 // *****************************************************************************
@@ -317,7 +317,7 @@ void GPIO_PortWrite(GPIO_PORT port, uint32_t mask, uint32_t value)
 */
 uint32_t GPIO_PortLatchRead(GPIO_PORT port)
 {
-    return (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40)));
+    return (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40U)));
 }
 
 // *****************************************************************************
@@ -332,7 +332,7 @@ uint32_t GPIO_PortLatchRead(GPIO_PORT port)
 */
 void GPIO_PortSet(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
 }
 
 // *****************************************************************************
@@ -347,7 +347,7 @@ void GPIO_PortSet(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortClear(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
 }
 
 // *****************************************************************************
@@ -362,7 +362,7 @@ void GPIO_PortClear(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortToggle(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}INV + (port * 0x40))= mask;
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}INV + (port * 0x40U))= mask;
 }
 
 // *****************************************************************************
@@ -377,7 +377,7 @@ void GPIO_PortToggle(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortInputEnable(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
 }
 
 // *****************************************************************************
@@ -392,7 +392,7 @@ void GPIO_PortInputEnable(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
 }
 
 <#if TOTAL_NUM_OF_INT_USED gt 0>
@@ -408,7 +408,7 @@ void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortInterruptEnable(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
 }
 
 // *****************************************************************************
@@ -423,7 +423,7 @@ void GPIO_PortInterruptEnable(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortInterruptDisable(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
 }
 
 // *****************************************************************************
@@ -447,27 +447,27 @@ void GPIO_PinIntEnable(GPIO_PIN pin, GPIO_INTERRUPT_STYLE style)
     GPIO_PORT port;
     uint32_t mask;
 
-    port = (GPIO_PORT)(pin>>4);
-    mask =  0x1 << (pin & 0xF);
+    port = (GPIO_PORT)(pin>>4U);
+    mask =  0x1U << (pin & 0xFU);
 
     if (style == GPIO_INTERRUPT_ON_MISMATCH)
     {
-        *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+        *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
     }
     else if (style == GPIO_INTERRUPT_ON_RISING_EDGE)
     {
-        *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
-        *(volatile uint32_t *)(&CNNE${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+        *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
+        *(volatile uint32_t *)(&CNNE${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
     }
     else if (style == GPIO_INTERRUPT_ON_FALLING_EDGE)
     {
-        *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
-        *(volatile uint32_t *)(&CNNE${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+        *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
+        *(volatile uint32_t *)(&CNNE${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
     }
     else if (style == GPIO_INTERRUPT_ON_BOTH_EDGES)
     {
-        *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
-        *(volatile uint32_t *)(&CNNE${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+        *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
+        *(volatile uint32_t *)(&CNNE${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
     }
 }
 
@@ -486,11 +486,11 @@ void GPIO_PinIntDisable(GPIO_PIN pin)
     GPIO_PORT port;
     uint32_t mask;
     
-    port = (GPIO_PORT)(pin>>4);
-    mask =  0x1 << (pin & 0xF);
+    port = (GPIO_PORT)(pin>>4U);
+    mask =  0x1U << (pin & 0xFU);
 
-    *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
-    *(volatile uint32_t *)(&CNNE${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
+    *(volatile uint32_t *)(&CNNE${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
 }
 // *****************************************************************************
 /* Function:
@@ -515,7 +515,7 @@ bool GPIO_PinInterruptCallbackRegister(
     uint8_t i;
     uint8_t portIndex;
 
-    portIndex = pin >> 4;
+    portIndex = pin >> 4U;
 
     for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
     {
@@ -559,14 +559,14 @@ void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
     uint32_t status;
 
     status  = CNF${.vars[channel]};
-    CNF${.vars[channel]} = 0;
+    CNF${.vars[channel]} = 0U;
 
     IFS${SYS_PORT_IFS_REG_INDEX}CLR = _IFS${SYS_PORT_IFS_REG_INDEX}_CN${.vars[channel]}IF_MASK;
 
     /* Check pending events and call callback if registered */
     for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}; i++)
     {
-        if((status & (1 << (portPinCbObj[i].pin & 0xF))) && (portPinCbObj[i].callback != NULL))
+        if((status & (1U << (portPinCbObj[i].pin & 0xFU))) && (portPinCbObj[i].callback != NULL))
         {
             portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
         }
@@ -587,7 +587,7 @@ void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
     /* Check pending events and call callback if registered */
     for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}; i++)
     {
-        if((status & (1 << (portPinCbObj[i].pin & 0xF))) && (portPinCbObj[i].callback != NULL))
+        if((status & (1U << (portPinCbObj[i].pin & 0xFU))) && (portPinCbObj[i].callback != NULL))
         {
             portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
         }
