@@ -55,7 +55,7 @@
         </#if>
     </#list>
     <#if CONFIGURED_CHANNEL != 0>
-        <#lt>EVSYS_OBJECT evsys[${CONFIGURED_CHANNEL}];
+        <#lt>static EVSYS_OBJECT evsys[${CONFIGURED_CHANNEL}];
     </#if>
 </#if>
 
@@ -70,7 +70,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     <#assign CHANNEL = "EVSYS_USER_" + i >
     <#if .vars[CHANNEL]?has_content>
     <#if .vars[CHANNEL] != '0'>
-    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER = EVSYS_USER_CHANNEL(${.vars[CHANNEL]}) | EVSYS_USER_USER(${i});
+    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER = EVSYS_USER_CHANNEL(${.vars[CHANNEL]}U) | EVSYS_USER_USER(${i}U);
     </#if>
     </#if>
 </#list>
@@ -85,8 +85,8 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     <#if .vars[CHANNEL_ENABLE]?has_content>
     <#if (.vars[CHANNEL_ENABLE] != false)>
     /* Event Channel ${i} Configuration */
-    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}) | EVSYS_CHANNEL_PATH(${.vars[PATH]}) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}) \
-                                    | EVSYS_CHANNEL_CHANNEL(${i});
+    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}U) | EVSYS_CHANNEL_PATH(${.vars[PATH]}U) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}U) \
+                                    | EVSYS_CHANNEL_CHANNEL(${i}U);
     </#if>
     </#if>
 </#list>
@@ -94,7 +94,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 <#if EVSYS_INTERRUPT_MODE>
 
     /*Interrupt setting for Event System*/
-    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = ${EVSYS_INTERRUPT_VALUE};
+    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = ${EVSYS_INTERRUPT_VALUE}U;
 </#if>
 }
 
@@ -104,7 +104,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     <#lt>void ${EVSYS_INSTANCE_NAME}_GeneratorEnable(EVSYS_CHANNEL channel, uint8_t generator)
     <#lt>{
     <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL = (${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL & (~EVSYS_CHANNEL_EVGEN_Msk | ~EVSYS_CHANNEL_CHANNEL_Msk))
-                                                          | EVSYS_CHANNEL_EVGEN(generator) | EVSYS_CHANNEL_CHANNEL(channel);
+                                                          | EVSYS_CHANNEL_EVGEN((uint32_t)generator) | EVSYS_CHANNEL_CHANNEL((uint32_t)channel);
     <#lt>}
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_GeneratorDisable(EVSYS_CHANNEL channel)
@@ -114,12 +114,12 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_UserEnable(EVSYS_CHANNEL channel, uint8_t user)
     <#lt>{
-    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER = EVSYS_USER_CHANNEL((channel + 1)) | EVSYS_USER_USER(user);
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER = EVSYS_USER_CHANNEL((uint16_t)(channel + 1U)) | EVSYS_USER_USER((uint16_t)user);
     <#lt>}
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_UserDisable(void)
     <#lt>{
-    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER = (${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER & ~EVSYS_USER_USER_Msk);
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER = (${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER & (uint8_t)~EVSYS_USER_USER_Msk);
     <#lt>}
     <#break>
     </#if>
@@ -129,20 +129,20 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
     <#lt>{
-    <#lt>   if(channel > 7)
+    <#lt>   if(channel > 7U)
     <#lt>   {
-    <#lt>       channel = channel + 8;
+    <#lt>       channel = channel + 8U;
     <#lt>   }
-    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = interruptMask << channel;
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = (uint32_t)interruptMask << channel;
     <#lt>}
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
     <#lt>{
-    <#lt>   if(channel > 7)
+    <#lt>   if(channel > 7U)
     <#lt>   {
-    <#lt>       channel = channel + 8;
+    <#lt>       channel = channel + 8U;
     <#lt>   }
-    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENCLR = interruptMask << channel;
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENCLR = (uint32_t)interruptMask << channel;
     <#lt>}
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context)
@@ -155,28 +155,29 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 <#if EVSYS_INTERRUPT_MODE == true>
     <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
-         <#lt>    uint8_t currentChannel = 0;
-         <#lt>    uint8_t channel = 0;
-         <#lt>    uint32_t eventIntFlagStatus = 0;
-         <#lt>    uint32_t overrunIntFlagStatus = 0;
+         <#lt>    uint8_t currentChannel = 0U;
+         <#lt>    uint8_t channel = 0U;
+         <#lt>    uint32_t eventIntFlagStatus = 0U;
+         <#lt>    uint32_t overrunIntFlagStatus = 0U;
 
          <#lt>    /* Find any triggered channels, run associated callback handlers */
-         <#lt>    for (currentChannel = 0; currentChannel < ${CONFIGURED_CHANNEL}; currentChannel++)
+         <#lt>    for (currentChannel = 0U; currentChannel < ${CONFIGURED_CHANNEL}U; currentChannel++)
          <#lt>    {
-         <#lt>        if (currentChannel > 7)
+		 <#lt> <#if CONFIGURED_CHANNEL &gt; 7 >
+         <#lt>        if (currentChannel > 7U)
          <#lt>        {
-         <#lt>            channel = currentChannel + 8;
+         <#lt>            channel = currentChannel + 8U;
          <#lt>        }
          <#lt>        else
          <#lt>        {
          <#lt>            channel = currentChannel;
          <#lt>        }
-
+         <#lt> </#if>
          <#lt>        /* Read the interrupt flag status */
-         <#lt>        overrunIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & (EVSYS_INT_OVERRUN << channel);
-         <#lt>        eventIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & (EVSYS_INT_EVENT_DETECT << channel);
+         <#lt>        overrunIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & ((uint32_t)EVSYS_INT_OVERRUN << channel);
+         <#lt>        eventIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & ((uint32_t)EVSYS_INT_EVENT_DETECT << channel);
 
-         <#lt>        if (eventIntFlagStatus | overrunIntFlagStatus)
+         <#lt>        if ((eventIntFlagStatus | overrunIntFlagStatus) != 0U)
          <#lt>        {
          <#lt>            /* Find any associated callback entries in the callback table */
          <#lt>            if (evsys[currentChannel].callback != NULL)
@@ -185,7 +186,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
          <#lt>            }
 
          <#lt>            /* Clear interrupt flag */
-         <#lt>            ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG = (EVSYS_INT_OVERRUN | EVSYS_INT_EVENT_DETECT) << channel;
+         <#lt>            ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG = ((uint32_t)EVSYS_INT_OVERRUN | (uint32_t)EVSYS_INT_EVENT_DETECT) << channel;
          <#lt>        }
          <#lt>    }
     <#lt>}

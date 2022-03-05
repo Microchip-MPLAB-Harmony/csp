@@ -68,18 +68,17 @@
     </#if>
 </#list>
 <#if EVSYS_CHANNEL_EN == 1>
-typedef enum
-{
+
 <#list 0..TOTAL_CHANNEL as i>
     <#assign CHANNEL_ENABLE    = "EVSYS_CHANNEL_"  + i>
     <#if .vars[CHANNEL_ENABLE]?has_content>
     <#if (.vars[CHANNEL_ENABLE] == true)>
     /* EVSYS Channel ${i} */
-    EVSYS_CHANNEL_${i} = ${i},
+#define    EVSYS_CHANNEL_${i}    (${i}U)
     </#if>
     </#if>
 </#list>
-} EVSYS_CHANNEL;
+typedef uint32_t EVSYS_CHANNEL;
 </#if>
 
 <#if EVSYS_INTERRUPT_MODE == true>
