@@ -1186,8 +1186,9 @@ def instantiateComponent(adchsComponent):
     ADC_Max_DedicatedChannels = 0
     ADC_Max_Signals = 0
     ADC_Max_Class_1and2 = 0
+    ADC_Class_1and2_Count = 0
     ADC_Max_Class_1 = 0
-    ADC_Max_Class_2 = 0
+    ADC_Class_2_Count = 0
     ADC_Input_Signals_List = [False] * MAX_AVAILABLE_SIGNALS
 
     # Each of the dedicated ADCHS SARs must have a DIGEN bit field in the
@@ -1275,8 +1276,10 @@ def instantiateComponent(adchsComponent):
                     SignalName )
                 labelNode = ATDF.getNode(labelPath)
                 if labelNode is not None:
-                    ADC_Max_Class_1and2 += 1
-    ADC_Max_Class_2 = ADC_Max_Class_1and2 - ADC_Max_Class_1
+                    ADC_Class_1and2_Count += 1
+                    ADC_Max_Class_1and2 = signalID # It will have the max signal ID of class 2
+    ADC_Class_2_Count = ADC_Class_1and2_Count - ADC_Max_Class_1
+    ADC_Max_Class_1and2 += 1 # done for easy usage later
 
     ADC_EVSYSTrigEnd = 0
     ADC_EVSYSTrigStart = 0
@@ -1410,7 +1413,7 @@ def instantiateComponent(adchsComponent):
 
     #no of Class 2 signals
     adchsSym_NUM_CLASS2_SIGNALS = adchsComponent.createIntegerSymbol("ADCHS_NUM_CLASS2_SIGNALS", adchsMenu)
-    adchsSym_NUM_CLASS2_SIGNALS.setDefaultValue(ADC_Max_Class_2)
+    adchsSym_NUM_CLASS2_SIGNALS.setDefaultValue(ADC_Class_2_Count)
     adchsSym_NUM_CLASS2_SIGNALS.setVisible(False)
 
     adchsSym_MIPS_INTERRUPT = adchsComponent.createBooleanSymbol("ADCHS_MIPS_INT_PRESENT", adchsMenu)
@@ -1492,7 +1495,7 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCTRG__TRGSRC = [None] * MAX_AVAILABLE_SIGNALS
     adchsSym_ADCTRGSNS__LVL = []
     adchsSym_ADCCSS__CSS = [None] * MAX_AVAILABLE_SIGNALS
-    adchsSym_class2 = [None] * ADC_Max_Class_2
+    adchsSym_class2 = [None] * (ADC_Max_Class_1and2)
     adcSym_TADC = []
     adcSym_CONV_RATE = []
 
@@ -1742,7 +1745,6 @@ def instantiateComponent(adchsComponent):
                 adchsSym_ADCCSS__CSS[channelID].setLabel("Select AN" + str(channelID) + " for Input Scan")
                 adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
                 adccss_deplist[int(channelID/32)].append(RegisterName + "__" + BitFieldBaseName_CSS + str(channelID))
-
 
     adchsSym_class3 = adchsComponent.createCommentSymbol("ADCHS_CLASS3_INPUTS", adchsSym_CH_ENABLE7)
     adchsSym_class3.setLabel("CLASS 3 Inputs")
