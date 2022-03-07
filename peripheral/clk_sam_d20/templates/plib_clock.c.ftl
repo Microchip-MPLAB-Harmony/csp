@@ -135,10 +135,9 @@ static void DFLL_Initialize(void)
     /*Load Calibration Value*/
     uint8_t calibCoarse = (uint8_t)(((*(uint32_t*)0x806024U) >> 26U ) & 0x3fU);
     calibCoarse = (((calibCoarse) == 0x3FU) ? 0x1FU : (calibCoarse));
-    uint16_t calibFine = (uint16_t)(((*(uint32_t*)0x806028U)) & 0x3ffU);
 
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_DFLLVAL = SYSCTRL_DFLLVAL_COARSE((uint32_t)calibCoarse) |
-                                                                SYSCTRL_DFLLVAL_FINE((uint32_t)calibFine);</@compress>
+                                                                SYSCTRL_DFLLVAL_FINE((uint32_t)512U);</@compress>
     <#if CONFIG_CLOCK_DFLL_OPMODE == "1">
     GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_GEN((uint16_t)${GCLK_ID_0_GENSEL}U)${GCLK_ID_0_WRITELOCK?then(' | GCLK_CLKCTRL_WRTLOCK_Msk', ' ')} | GCLK_CLKCTRL_CLKEN_Msk | GCLK_CLKCTRL_ID((uint16_t)${GCLK_ID_0_INDEX}U);
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_DFLLRDY_Msk) != SYSCTRL_PCLKSR_DFLLRDY_Msk)
