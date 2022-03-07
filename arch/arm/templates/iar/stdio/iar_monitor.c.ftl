@@ -44,6 +44,10 @@
     <#lt>#include "definitions.h"
 <#lt></#if>
 
+<#assign USART_PLIB = "stdio.DEBUG_PERIPHERAL">
+<#assign USART_PLIB_RX_ENABLED = USART_PLIB?eval + ".USART_RX_ENABLE">
+<#assign USART_PLIB_TX_ENABLED = USART_PLIB?eval + ".USART_TX_ENABLE">
+
 /*******************
  *
  * Copyright 1998-2003 IAR Systems.  All rights reserved.
@@ -79,15 +83,29 @@ size_t
 __write( int handle, const unsigned char * buffer, size_t size )
 {
 <#lt><#if stdio?? && stdio.DEBUG_PERIPHERAL?has_content>
-    <#lt>    size_t nChars = _LLIO_ERROR;
-    <#lt>    if(     handle == _LLIO_STDOUT 
-    <#lt>        ||  handle == _LLIO_STDERR 
-    <#lt>    ){
-    <#lt>        nChars = 0;
-    <#lt>        if( buffer ){
-    <#lt>           nChars = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write( (void*) buffer, size );      // "MyLowLevelPutchar"
-    <#lt>        }
-    <#lt>    }
+    <#if USART_PLIB_RX_ENABLED?eval??>
+        <#if USART_PLIB_RX_ENABLED?eval>
+            <#lt>    size_t nChars = _LLIO_ERROR;
+            <#lt>    if(     handle == _LLIO_STDOUT 
+            <#lt>        ||  handle == _LLIO_STDERR 
+            <#lt>    ){
+            <#lt>        nChars = 0;
+            <#lt>        if( buffer ){
+            <#lt>           nChars = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write( (void*) buffer, size );      // "MyLowLevelPutchar"
+            <#lt>        }
+            <#lt>    }
+        </#if>
+    <#else>
+        <#lt>    size_t nChars = _LLIO_ERROR;
+        <#lt>    if(     handle == _LLIO_STDOUT 
+        <#lt>        ||  handle == _LLIO_STDERR 
+        <#lt>    ){
+        <#lt>        nChars = 0;
+        <#lt>        if( buffer ){
+        <#lt>           nChars = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write( (void*) buffer, size );      // "MyLowLevelPutchar"
+        <#lt>        }
+        <#lt>    }
+    </#if>
 <#lt><#else>
     <#lt>    (void) handle;      // avoid compiler warning
     <#lt>    (void) buffer;      // avoid compiler warning
@@ -126,19 +144,37 @@ size_t
 __read( int handle, unsigned char * buffer, size_t size )
 {
 <#lt><#if stdio?? && stdio.DEBUG_PERIPHERAL?has_content>
-    <#lt>    size_t nChars = _LLIO_ERROR;
-    <#lt>    if( handle == _LLIO_STDIN ){
-    <#lt>        unsigned char cc = 0;
-    <#lt>        for( nChars = 0; nChars < size; ++nChars ){
-    <#lt>            while( ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read( (void*) &cc, 1 ) != true );     // "MyLowLevelGetchar"
-    <#lt>            if( cc ){
-    <#lt>                buffer[ nChars ] = cc;
-    <#lt>            }
-    <#lt>            else{
-    <#lt>                break;
-    <#lt>            }
-    <#lt>        }
-    <#lt>    }
+    <#if USART_PLIB_TX_ENABLED?eval??>
+        <#if USART_PLIB_TX_ENABLED?eval>
+            <#lt>    size_t nChars = _LLIO_ERROR;
+            <#lt>    if( handle == _LLIO_STDIN ){
+            <#lt>        unsigned char cc = 0;
+            <#lt>        for( nChars = 0; nChars < size; ++nChars ){
+            <#lt>            while( ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read( (void*) &cc, 1 ) != true );     // "MyLowLevelGetchar"
+            <#lt>            if( cc ){
+            <#lt>                buffer[ nChars ] = cc;
+            <#lt>            }
+            <#lt>            else{
+            <#lt>                break;
+            <#lt>            }
+            <#lt>        }
+            <#lt>    }
+        </#if>
+    <#else>
+        <#lt>    size_t nChars = _LLIO_ERROR;
+        <#lt>    if( handle == _LLIO_STDIN ){
+        <#lt>        unsigned char cc = 0;
+        <#lt>        for( nChars = 0; nChars < size; ++nChars ){
+        <#lt>            while( ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read( (void*) &cc, 1 ) != true );     // "MyLowLevelGetchar"
+        <#lt>            if( cc ){
+        <#lt>                buffer[ nChars ] = cc;
+        <#lt>            }
+        <#lt>            else{
+        <#lt>                break;
+        <#lt>            }
+        <#lt>        }
+        <#lt>    }
+    </#if>
 <#lt><#else>        
     <#lt>    (void) handle;      // avoid compiler warning
     <#lt>    (void) buffer;      // avoid compiler warning

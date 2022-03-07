@@ -55,6 +55,10 @@
     #error Unsupported compiler
 #endif
 
+<#assign USART_PLIB = "stdio.DEBUG_PERIPHERAL">
+<#assign USART_PLIB_RX_ENABLED = USART_PLIB?eval + ".USART_RX_ENABLE">
+<#assign USART_PLIB_TX_ENABLED = USART_PLIB?eval + ".USART_TX_ENABLE">
+
 FILE __stdout;
 FILE __stdin;
 
@@ -62,9 +66,19 @@ int fgetc(FILE* stream)
 {
     <#if stdio??>
         <#if stdio.DEBUG_PERIPHERAL?has_content>
-        <#lt>    volatile int c = 0;
-        <#lt>    while(${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read((void*)&c, 1) != true);
-        <#lt>    return c;
+            <#if USART_PLIB_RX_ENABLED?eval??>
+                <#if USART_PLIB_RX_ENABLED?eval>
+                    <#lt>    volatile int c = 0;
+                    <#lt>    while(${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read((void*)&c, 1) != true);
+                    <#lt>    return c;
+                <#else>
+                    <#lt>    return 0;
+                </#if>
+            <#else>
+                <#lt>    volatile int c = 0;
+                <#lt>    while(${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read((void*)&c, 1) != true);
+                <#lt>    return c;
+            </#if>
         <#else>
             <#lt>    return 0;
         </#if>
@@ -77,12 +91,23 @@ int fputc(int c, FILE* stream)
 {
     <#if stdio??>
         <#if stdio.DEBUG_PERIPHERAL?has_content>
-        <#lt>    uint8_t size = 0;
-        <#lt>    do
-        <#lt>    {
-        <#lt>        size = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write((void*)&c, 1);
-        <#lt>    }while (size != 1);
-        <#lt>    return c;
+            <#if USART_PLIB_TX_ENABLED?eval??>
+                <#if USART_PLIB_TX_ENABLED?eval>
+                    <#lt>    uint8_t size = 0;
+                    <#lt>    do
+                    <#lt>    {
+                    <#lt>        size = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write((void*)&c, 1);
+                    <#lt>    }while (size != 1);
+                    <#lt>    return c;
+                </#if>
+            <#else>
+                <#lt>    uint8_t size = 0;
+                <#lt>    do
+                <#lt>    {
+                <#lt>        size = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write((void*)&c, 1);
+                <#lt>    }while (size != 1);
+                <#lt>    return c;
+            </#if>
         </#if>
     <#else>
         <#lt>    return 0;

@@ -56,18 +56,38 @@ int _mon_getc(int canblock);
 void _mon_putc(char c);
 #endif //__arm__
 
+<#assign USART_PLIB = "stdio.DEBUG_PERIPHERAL">
+<#assign USART_PLIB_RX_ENABLED = USART_PLIB?eval + ".USART_RX_ENABLE">
+<#assign USART_PLIB_TX_ENABLED = USART_PLIB?eval + ".USART_TX_ENABLE">
+
+
 int _mon_getc(int canblock)
 {
     <#if stdio??>
         <#if stdio.DEBUG_PERIPHERAL?has_content>
-        <#lt>   int c = 0;
-        <#lt>   bool success = false;
-        <#lt>   (void)canblock;
-        <#lt>   do
-        <#lt>   {
-        <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read(&c, 1);                
-        <#lt>   }while( !success);
-        <#lt>   return c;
+            <#if USART_PLIB_RX_ENABLED?eval??>
+                <#if USART_PLIB_RX_ENABLED?eval>
+                    <#lt>   int c = 0;
+                    <#lt>   bool success = false;
+                    <#lt>   (void)canblock;
+                    <#lt>   do
+                    <#lt>   {
+                    <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read(&c, 1);
+                    <#lt>   }while( !success);
+                    <#lt>   return c;
+                <#else>
+                    <#lt>   return 0;
+                </#if>
+            <#else>
+                <#lt>   int c = 0;
+                <#lt>   bool success = false;
+                <#lt>   (void)canblock;
+                <#lt>   do
+                <#lt>   {
+                <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read(&c, 1);
+                <#lt>   }while( !success);
+                <#lt>   return c;
+            </#if>
         <#else>
             <#lt>   return 0;
         </#if>
@@ -81,11 +101,21 @@ void _mon_putc(char c)
 {
     <#if stdio??>
         <#if stdio.DEBUG_PERIPHERAL?has_content>
-        <#lt>   bool success = false;
-        <#lt>   do
-        <#lt>   {
-        <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write(&c, 1);
-        <#lt>   }while (!success);
+            <#if USART_PLIB_TX_ENABLED?eval??>
+                <#if USART_PLIB_TX_ENABLED?eval>
+                    <#lt>   bool success = false;
+                    <#lt>   do
+                    <#lt>   {
+                    <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write(&c, 1);
+                    <#lt>   }while (!success);
+                </#if>
+            <#else>
+                <#lt>   bool success = false;
+                <#lt>   do
+                <#lt>   {
+                <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write(&c, 1);
+                <#lt>   }while (!success);
+            </#if>
         </#if>
     <#else>
         <#lt>   (void)c;
