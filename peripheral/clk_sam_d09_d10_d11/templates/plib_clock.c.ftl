@@ -185,9 +185,8 @@ static void DFLL_Initialize( void )
     /* Load Calibration Value */
     uint8_t calibCoarse = (uint8_t)(((*(uint32_t*)0x806024U) >> 26U ) & 0x3fU);
     calibCoarse = (((calibCoarse) == 0x3FU) ? 0x1FU : (calibCoarse));
-    uint16_t calibFine = (uint16_t)(((*(uint32_t*)0x806028U)) & 0x3ffU);
 
-    SYSCTRL_REGS->SYSCTRL_DFLLVAL = SYSCTRL_DFLLVAL_COARSE((uint32_t)calibCoarse) | SYSCTRL_DFLLVAL_FINE((uint32_t)calibFine);
+    SYSCTRL_REGS->SYSCTRL_DFLLVAL = SYSCTRL_DFLLVAL_COARSE((uint32_t)calibCoarse) | SYSCTRL_DFLLVAL_FINE((uint32_t)512U);
 
     <#if CONFIG_CLOCK_DFLL_OPMODE == "1">
     <#if CONFIG_CLOCK_DFLL_USB == false>
