@@ -234,7 +234,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     ${AC_INSTANCE_NAME}_REGS->AC_DACCTRL |=  AC_DACCTRL_VALUE${i}(${.vars[AC_DACCTRL_VALUE]}) <#if .vars[AC_DACCTRL_SHEN] == "0x1"> | AC_DACCTRL_SHEN${i}_Msk </#if>;
     </#if>
 
-    <#if AC_COMPCTRL_SINGLE_MODE?has_content>
+    <#if AC_COMPCTRL_SINGLE_MODE?has_content && .vars[AC_COMPCTRL_HYSTEN]?has_content>
         <#if (.vars[AC_COMPCTRL_SINGLE_MODE] == false) & (.vars[AC_COMPCTRL_HYSTEN] == true)>
             <#if AC_COMPCTRL_HYST_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYST(${.vars[AC_COMPCTRL_HYST_VAL]}U) | AC_COMPCTRL_HYSTEN_Msk;

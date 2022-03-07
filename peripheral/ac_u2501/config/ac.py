@@ -288,12 +288,13 @@ def instantiateComponent(acComponent):
 
         acSym_SCALER_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"SCALER\"]")
         if acSym_SCALER_Node != None:
+            acSym_SCALER_MaxVal = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"SCALER\"]/bitfield@[name=\"VALUE\"]").getAttribute("mask")
             #Scaling factor for VDD scaler
             acSym_SCALERn.append(comparatorID)
             acSym_SCALERn[comparatorID] = acComponent.createIntegerSymbol("AC_SCALER_N_" + str(comparatorID), acSym_Enable[comparatorID])
             acSym_SCALERn[comparatorID].setLabel("Scaling factor for VDD scaler")
             acSym_SCALERn[comparatorID].setMin(0)
-            acSym_SCALERn[comparatorID].setMax(63)
+            acSym_SCALERn[comparatorID].setMax(int(acSym_SCALER_MaxVal, 16))
             acSym_SCALERn[comparatorID].setDefaultValue(0)
             acSym_SCALERn[comparatorID].setVisible(False)
             #This should be enabled only when mux pos or mux neg value is VDDSCALER
@@ -408,12 +409,14 @@ def instantiateComponent(acComponent):
         acSym_AdvConf.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
 
         #Hysteresis Enable
-        acSym_COMPCTRL_HYSTEN = acComponent.createBooleanSymbol("AC" + str(comparatorID) + "_HYSTEN", acSym_AdvConf)
-        acSym_COMPCTRL_HYSTEN.setLabel("Hysteresis Enable")
-        acSym_COMPCTRL_HYSTEN.setDefaultValue(False)
-        acSym_COMPCTRL_HYSTEN.setVisible(True)
-        #Should not be shown when single-shot is selected.
-        acSym_COMPCTRL_HYSTEN.setDependencies(setacHystVisibility,["AC_COMPCTRL_" + str(comparatorID) +"SINGLE_MODE"])
+        acSym_COMPCTRL_HYSTEN_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"COMPCTRL\"]/bitfield@[name=\"HYSTEN\"]")
+        if acSym_COMPCTRL_HYSTEN_Node != None:
+            acSym_COMPCTRL_HYSTEN = acComponent.createBooleanSymbol("AC" + str(comparatorID) + "_HYSTEN", acSym_AdvConf)
+            acSym_COMPCTRL_HYSTEN.setLabel("Hysteresis Enable")
+            acSym_COMPCTRL_HYSTEN.setDefaultValue(False)
+            acSym_COMPCTRL_HYSTEN.setVisible(True)
+            #Should not be shown when single-shot is selected.
+            acSym_COMPCTRL_HYSTEN.setDependencies(setacHystVisibility,["AC_COMPCTRL_" + str(comparatorID) +"SINGLE_MODE"])
 
         if (ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__HYST\"]") != None):
             #Hysteresis selection
