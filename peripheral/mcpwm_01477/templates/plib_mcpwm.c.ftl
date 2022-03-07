@@ -103,6 +103,8 @@ void ${MCPWM_INSTANCE_NAME}_Initialize (void)
 <#assign PMOD = "IOCON" + i + "__PMOD">
 <#assign POLH = "IOCON" + i + "__POLH">
 <#assign POLL = "IOCON" + i + "__POLL">
+<#assign PENL = "IOCON" + i + "__PENL">
+<#assign PENH = "IOCON" + i + "__PENH">
 <#assign FLTMOD = "IOCON" + i + "__FLTMOD">
 <#assign FLTPOL = "IOCON" + i + "__FLTPOL">
 <#assign FLTSRC = "IOCON" + i + "__FLTSRC">
@@ -153,6 +155,8 @@ void ${MCPWM_INSTANCE_NAME}_Initialize (void)
     /*  POLL    = ${.vars[POLL]}*/
     /*  FLTDAT  = 0b${.vars[FLTDAT_PWMH] + .vars[FLTDAT_PWML]} */
     /*  FLTMOD  = ${.vars[FLTMOD]} */
+    /*  PENH  = ${.vars[PENH]} */
+    /*  PENL  = ${.vars[PENL]} */
     /*  FLTPOL  = ${.vars[FLTPOL]}  */
     /*  FLTSRC  = ${.vars[FLTSRC]}  */
     /*  CLDAT  = 0b${.vars[CLDAT_PWMH] + .vars[CLDAT_PWML]} */

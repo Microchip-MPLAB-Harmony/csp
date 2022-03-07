@@ -410,6 +410,9 @@ def mcpwmCalcIOCON(symbol, event):
     poll = component.getSymbolValue("IOCON"+str(channelID)+"__POLL") << 11
     polh = component.getSymbolValue("IOCON"+str(channelID)+"__POLH") << 12
 
+    penl = int(component.getSymbolByID("IOCON"+str(channelID)+"__PENL").getSelectedValue()) << 14
+    penh = int(component.getSymbolByID("IOCON"+str(channelID)+"__PENH").getSelectedValue()) << 15
+
     fltdat_pwmh = component.getSymbolValue("IOCON"+str(channelID)+"__FLTDAT_PWMH") << 5
     fltdat_pwml = component.getSymbolValue("IOCON"+str(channelID)+"__FLTDAT_PWML") << 4
     id = component.getSymbolByID("IOCON"+str(channelID)+"__FLTMOD")
@@ -425,7 +428,7 @@ def mcpwmCalcIOCON(symbol, event):
     id = component.getSymbolByID("IOCON"+str(channelID)+"__CLSRC")
     clsrc = int(id.getSelectedValue()) << 26
 
-    iocon = swap + pmod + poll + polh + (0x3 << 14) + \
+    iocon = swap + pmod + penl + penh + poll + polh + \
             fltdat_pwmh + fltdat_pwml + fltmod + fltpol + fltsrc + \
             cldat_pwmh + cldat_pwml + clmod + clpol + clsrc
     symbol.setValue(iocon, 2)
@@ -922,6 +925,51 @@ def instantiateComponent(mcpwmComponent):
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__POLH")
         mcpwmSym_IOCON_POLL = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "IOCON"+str(channelID), "POLL", mcpwmSym_CHANNEL_MENU, True)
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__POLL")
+
+        # mcpwmSym_IOCON_PENH = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "IOCON"+str(channelID), "PENH", mcpwmSym_CHANNEL_MENU, True)
+        # ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__PENH")
+        # mcpwmSym_IOCON_PENL = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "IOCON"+str(channelID), "PENL", mcpwmSym_CHANNEL_MENU, True)
+        # ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__PENL")
+
+        PENx_NameList = ["PWM", "GPIO"]
+        PENx_ValueList = ["1", "0"]
+
+        IOCON__PENH_Node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="' + Module + '"]/register-group@[name="' + Module + '"]/register@[name="' + "IOCON"+str(channelID) + '"]/bitfield@[name="' + "PENH" +'"]')
+        IOCON__PENH_ValGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="' + Module + '"]/value-group@[name="' + "IOCON"+str(channelID) + "__PENH" '"]')
+        if IOCON__PENH_Node != None and IOCON__PENH_ValGroup != None:
+            IOCON__PENH_Node.getAttribute("caption")
+            mcpwmSym_IOCON_PENH = mcpwmComponent.createKeyValueSetSymbol("IOCON"+ str(channelID) + "__PENH", mcpwmSym_CHANNEL_MENU)
+            mcpwmSym_IOCON_PENH.setLabel(IOCON__PENH_Node.getAttribute('caption'))
+            mcpwmSym_IOCON_PENH.setOutputMode("Value")
+            mcpwmSym_IOCON_PENH.setDisplayMode("Description")
+            IOCON__PENH_Values = IOCON__PENH_ValGroup.getChildren()
+            for id in range(len(IOCON__PENH_Values)):
+                key = PENx_NameList[id]
+                value = PENx_ValueList[id]
+                description = IOCON__PENH_Values[id].getAttribute("caption")
+                mcpwmSym_IOCON_PENH.addKey(key, value, description)
+                if value == "0x1":
+                    mcpwmSym_IOCON_PENH.setDefaultValue(id)
+        ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__PENH")
+
+        IOCON__PENL_Node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="' + Module + '"]/register-group@[name="' + Module + '"]/register@[name="' + "IOCON"+str(channelID) + '"]/bitfield@[name="' + "PENL" +'"]')
+        IOCON__PENL_ValGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="' + Module + '"]/value-group@[name="' + "IOCON"+str(channelID) + "__PENL" '"]')
+        if IOCON__PENL_Node != None and IOCON__PENL_ValGroup != None:
+            IOCON__PENL_Node.getAttribute("caption")
+            mcpwmSym_IOCON_PENL = mcpwmComponent.createKeyValueSetSymbol("IOCON"+ str(channelID) + "__PENL", mcpwmSym_CHANNEL_MENU)
+            mcpwmSym_IOCON_PENL.setLabel(IOCON__PENL_Node.getAttribute('caption'))
+            mcpwmSym_IOCON_PENL.setOutputMode("Value")
+            mcpwmSym_IOCON_PENL.setDisplayMode("Description")
+            IOCON__PENL_Values = IOCON__PENL_ValGroup.getChildren()
+            for id in range(len(IOCON__PENL_Values)):
+                key = PENx_NameList[id]
+                value = PENx_ValueList[id]
+                description = IOCON__PENL_Values[id].getAttribute("caption")
+                mcpwmSym_IOCON_PENL.addKey(key, value, description)
+                if value == "0x1":
+                    mcpwmSym_IOCON_PENL.setDefaultValue(id)
+
+        ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__PENL")
 
         mcpwm_PHASE_PHASE = mcpwmComponent.createIntegerSymbol("PHASE"+str(channelID)+"__PHASE", mcpwmSym_CHANNEL_MENU)
         mcpwm_PHASE_PHASE.setLabel("Phase Shift")
