@@ -55,14 +55,14 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define DMA_CHANNELS_NUMBER        ${DMA_HIGHEST_CHANNEL}
+#define DMA_CHANNELS_NUMBER        (${DMA_HIGHEST_CHANNEL}U)
 
 /* DMA channels object configuration structure */
 typedef struct
 {
     DMA_CHANNEL_CALLBACK  callback;
-    uintptr_t              context;
-    uint8_t                busyStatus;
+    uintptr_t             context;
+    bool                  busyStatus;
 } DMA_CH_OBJECT ;
 
 /* DMA Channels object information structure */
@@ -80,13 +80,13 @@ This function initializes the DMA controller of the device.
 
 void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
-    uint32_t channel = 0;
+    uint32_t channel = 0U;
 
     /* Initialize DMA Channel objects */
-    for(channel = 0; channel < DMA_CHANNELS_NUMBER; channel++)
+    for(channel = 0U; channel < DMA_CHANNELS_NUMBER; channel++)
     {
         dmaChannelObj[channel].callback = NULL;
-        dmaChannelObj[channel].context = 0;
+        dmaChannelObj[channel].context = 0U;
         dmaChannelObj[channel].busyStatus = false;
     }
 
@@ -118,20 +118,20 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
         <#if (.vars[DMA_CHCTRLA_ENABLE] == true)>
 
         <#lt>   /***************** Configure DMA channel ${i} ********************/
-        <#lt>   <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->CHANNEL[${i}].DMA_CHCTRLB = DMA_CHCTRLB_TRIG(${.vars[DMA_CHCTRLB_TRIG]})
+        <#lt>   <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->CHANNEL[${i}].DMA_CHCTRLB = DMA_CHCTRLB_TRIG(${.vars[DMA_CHCTRLB_TRIG]}U)
         <#lt>                                                                                      | DMA_CHCTRLB_PRI(DMA_CHCTRLB_PRI_${.vars[DMA_CHCTRLB_PRI]}_Val)
         <#lt>                                                                                      | DMA_CHCTRLB_RAS(DMA_CHCTRLB_RAS_${.vars[DMA_CHCTRLB_RAS]}_Val)
         <#lt>                                                                                      | DMA_CHCTRLB_WAS(DMA_CHCTRLB_WAS_${.vars[DMA_CHCTRLB_WAS]}_Val)
-        <#lt>                                                                                      | DMA_CHCTRLB_CASTEN(${.vars[DMA_CHCTRLB_CASTEN]})
+        <#lt>                                                                                      | DMA_CHCTRLB_CASTEN(${.vars[DMA_CHCTRLB_CASTEN]}U)
         <#lt>                                                                                      <#if (.vars[DMA_CHCTRLB_PATEN] == true)>
         <#lt>                                                                                      | DMA_CHCTRLB_PATEN_Msk
-        <#lt>                                                                                      | DMA_CHCTRLB_PATLEN(${.vars[DMA_CHCTRLB_PATLEN]})
+        <#lt>                                                                                      | DMA_CHCTRLB_PATLEN(${.vars[DMA_CHCTRLB_PATLEN]}U)
         <#lt>                                                                                      ${(.vars[DMA_CHCTRLB_PIGNEN])?then('| DMA_CHCTRLB_PIGNEN_Msk', '')}
         <#lt>                                                                                      </#if>
         <#lt>                                                                                      ;
         <#lt>   </@compress>
         <#lt>   <#if (.vars[DMA_EVSYS_IN] == true) || (.vars[DMA_ENABLE_EVSYS_AUX_IN] == true) || (.vars[DMA_EVSYS_OUT] == true)>
-        <#lt>   <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->CHANNEL[${i}].DMA_CHEVCTRL = ${(.vars[DMA_EVSYS_IN])?then('DMA_CHEVCTRL_EVSTRIE(1)', 'DMA_CHEVCTRL_EVSTRIE(0)')}
+        <#lt>   <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->CHANNEL[${i}].DMA_CHEVCTRL = ${(.vars[DMA_EVSYS_IN])?then('DMA_CHEVCTRL_EVSTRIE(1U)', 'DMA_CHEVCTRL_EVSTRIE(0U)')}
         <#lt>                                                                                       <#if (.vars[DMA_EVSYS_OUT] == true)>
         <#lt>                                                                                       | DMA_CHEVCTRL_EVOE_Msk
         <#lt>                                                                                       | DMA_CHEVCTRL_EVOMODE(DMA_CHEVCTRL_EVOMODE_${.vars[DMA_EVSYS_EVOMODE]}_Val)
@@ -144,16 +144,16 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
         <#lt>   </@compress>
         <#lt>   </#if>
 
-        <#lt>   <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->CHANNEL[${i}].DMA_CHXSIZ = DMA_CHXSIZ_CSZ(${.vars[DMA_CHXSIZ_CSZ]}); </@compress>
+        <#lt>   <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->CHANNEL[${i}].DMA_CHXSIZ = DMA_CHXSIZ_CSZ(${.vars[DMA_CHXSIZ_CSZ]}U); </@compress>
 
         <#lt>   <#if (.vars[DMA_CHCTRLB_PATEN] == true) || (.vars[DMA_CHCTRLB_PIGNEN] == true)>
         <#lt>   <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->CHANNEL[${i}].DMA_CHPDAT =   <#if (.vars[DMA_CHCTRLB_PATEN] == true) && (.vars[DMA_CHCTRLB_PIGNEN] == true)>
-        <#lt>                                                                                       DMA_CHPDAT_PDAT(0x${.vars[DMA_CHPDAT_PDAT]?upper_case}) |
-        <#lt>                                                                                       DMA_CHPDAT_PIGN(0x${.vars[DMA_CHPDAT_PIGN]?upper_case})
+        <#lt>                                                                                       DMA_CHPDAT_PDAT(0x${.vars[DMA_CHPDAT_PDAT]?upper_case}U) |
+        <#lt>                                                                                       DMA_CHPDAT_PIGN(0x${.vars[DMA_CHPDAT_PIGN]?upper_case}U)
         <#lt>                                                                                       <#elseif (.vars[DMA_CHCTRLB_PATEN] == true)>
-        <#lt>                                                                                       DMA_CHPDAT_PDAT(0x${.vars[DMA_CHPDAT_PDAT]?upper_case})
+        <#lt>                                                                                       DMA_CHPDAT_PDAT(0x${.vars[DMA_CHPDAT_PDAT]?upper_case}U)
         <#lt>                                                                                       <#else>
-        <#lt>                                                                                       DMA_CHPDAT_PIGN(0x${.vars[DMA_CHPDAT_PIGN]?upper_case})
+        <#lt>                                                                                       DMA_CHPDAT_PIGN(0x${.vars[DMA_CHPDAT_PIGN]?upper_case}U)
         <#lt>                                                                                       </#if>
         <#lt>                                                                                       ;
         <#lt>   </@compress>
@@ -182,15 +182,18 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
 {
     bool returnStatus = false;
 
+    const uint32_t *XsrcAddr  = (const uint32_t *)srcAddr;
+    const uint32_t *XdestAddr = (const uint32_t *)destAddr;
+
     if (dmaChannelObj[channel].busyStatus == false)
     {
         dmaChannelObj[channel].busyStatus = true;
 
         /*Set source address */
-        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHSSA = (uint32_t) srcAddr;
+        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHSSA = (uint32_t) XsrcAddr;
 
         /*Set destination address */
-        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHDSA = (uint32_t) destAddr;
+        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHDSA = (uint32_t) XdestAddr;
 
         /* Set the block transfer size in bytes */
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHXSIZ = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHXSIZ & ~DMA_CHXSIZ_BLKSZ_Msk) | (blockSize << DMA_CHXSIZ_BLKSZ_Pos);
@@ -199,7 +202,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA |= DMA_CHCTRLA_ENABLE_Msk;
 
         /* Verify if Trigger source is Software Trigger */
-        if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLB & DMA_CHCTRLB_TRIG_Msk) >> DMA_CHCTRLB_TRIG_Pos) == 0x00)
+        if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLB & DMA_CHCTRLB_TRIG_Msk) >> DMA_CHCTRLB_TRIG_Pos) == 0x00U)
         {
             /* Trigger the DMA transfer */
             ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA |= DMA_CHCTRLA_SWFRC_Msk;
@@ -251,7 +254,7 @@ void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister( DMA_CHANNEL channel, const DM
 
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMA_CHANNEL channel )
 {
-    return (bool)dmaChannelObj[channel].busyStatus;
+    return (dmaChannelObj[channel].busyStatus);
 }
 
 /*******************************************************************************
@@ -260,7 +263,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMA_CHANNEL channel )
 void ${DMA_INSTANCE_NAME}_ChannelEnable ( DMA_CHANNEL channel )
 {
     /* Enable the DMA channel */
-    ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA |= DMA_CHCTRLA_ENABLE_Msk;    
+    ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA |= DMA_CHCTRLA_ENABLE_Msk;
 
     dmaChannelObj[channel].busyStatus=true;
 
@@ -271,7 +274,11 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMA_CHANNEL channel )
     /* Disable the DMA channel */
     ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA &= (~DMA_CHCTRLA_ENABLE_Msk);
 
-    while((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk) != 0);
+    while((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk) != 0U)
+    {
+        /* Do nothing */
+
+    }
 
     dmaChannelObj[channel].busyStatus=false;
 
@@ -301,10 +308,10 @@ DMA_INT ${DMA_INSTANCE_NAME}_ChannelInterruptFlagsGet ( DMA_CHANNEL channel )
 void ${DMA_INSTANCE_NAME}_ChannelPatternMatchSetup ( DMA_CHANNEL channel, DMA_PATTERN_MATCH_LEN patternLen, uint16_t matchData )
 {
     // CHCTRLBk is CHCTRLAk.ENABLE=1 write protected
-    if (!(${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk))
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk)) == 0U)
     {
-		${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHPDAT = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHPDAT & ~DMA_CHPDAT_PDAT_Msk) | (matchData << DMA_CHPDAT_PDAT_Pos);
-		
+        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHPDAT = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHPDAT & ~DMA_CHPDAT_PDAT_Msk) | (matchData << DMA_CHPDAT_PDAT_Pos);
+
         if (patternLen == DMA_PATTERN_MATCH_LEN_1BYTE)
         {
             ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLB &= ~DMA_CHCTRLB_PATLEN_Msk;
@@ -313,15 +320,15 @@ void ${DMA_INSTANCE_NAME}_ChannelPatternMatchSetup ( DMA_CHANNEL channel, DMA_PA
         {
             ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLB |= DMA_CHCTRLB_PATLEN_Msk;
         }
-						
-		${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLB |= DMA_CHCTRLB_PATEN_Msk;
+
+        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLB |= DMA_CHCTRLB_PATEN_Msk;
     }
 }
 
 void ${DMA_INSTANCE_NAME}_ChannelPatternMatchEnable ( DMA_CHANNEL channel )
 {
     // CHCTRLBk is CHCTRLAk.ENABLE=1 write protected
-    if (!(${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk))
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk)) == 0U)
     {
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLB |= DMA_CHCTRLB_PATEN_Msk;
     }
@@ -330,7 +337,7 @@ void ${DMA_INSTANCE_NAME}_ChannelPatternMatchEnable ( DMA_CHANNEL channel )
 void ${DMA_INSTANCE_NAME}_ChannelPatternMatchDisable ( DMA_CHANNEL channel )
 {
     // CHCTRLBk is CHCTRLAk.ENABLE=1 write protected
-    if (!(${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk))
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk)) == 0U)
     {
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLB &= ~DMA_CHCTRLB_PATEN_Msk;
     }
@@ -339,7 +346,7 @@ void ${DMA_INSTANCE_NAME}_ChannelPatternMatchDisable ( DMA_CHANNEL channel )
 void ${DMA_INSTANCE_NAME}_ChannelPatternIgnoreByteEnable ( DMA_CHANNEL channel )
 {
     // CHCTRLBk is CHCTRLAk.ENABLE=1 write protected
-    if (!(${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk))
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk)) == 0U)
     {
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLB |= DMA_CHCTRLB_PIGNEN_Msk;
     }
@@ -348,7 +355,7 @@ void ${DMA_INSTANCE_NAME}_ChannelPatternIgnoreByteEnable ( DMA_CHANNEL channel )
 void ${DMA_INSTANCE_NAME}_ChannelPatternIgnoreByteDisable ( DMA_CHANNEL channel )
 {
     // CHCTRLBk is CHCTRLAk.ENABLE=1 write protected
-    if (!(${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk))
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk)) == 0U)
     {
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLB &= ~DMA_CHCTRLB_PIGNEN_Msk;
     }
@@ -357,7 +364,7 @@ void ${DMA_INSTANCE_NAME}_ChannelPatternIgnoreByteDisable ( DMA_CHANNEL channel 
 void ${DMA_INSTANCE_NAME}_ChannelPatternIgnoreValue ( DMA_CHANNEL channel, uint8_t ignoreValue )
 {
     // CHCTRLBk is CHCTRLAk.ENABLE=1 write protected
-    if (!(${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk))
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk)) == 0U)
     {
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHPDAT = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHPDAT & ~DMA_CHPDAT_PIGN_Msk) | (ignoreValue << DMA_CHPDAT_PIGN_Pos);
     }
@@ -380,27 +387,28 @@ DMA_CHANNEL_CONFIG ${DMA_INSTANCE_NAME}_ChannelSettingsGet (DMA_CHANNEL channel)
 
 bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMA_CHANNEL channel, DMA_CHANNEL_CONFIG setting)
 {
+    bool ChannelSettingsSet = false;
     // CHCTRLBk is CHCTRLAk.ENABLE=1 write protected
-    if (!(${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk))
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk)) == 0U)
     {
         /* Set the new settings */
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLB = setting;
-        return true;
+        ChannelSettingsSet = true;
     }
 
-    return false;
+    return ChannelSettingsSet;
 }
 
 //*******************************************************************************
 //    Functions to handle DMA interrupt events.
 //*******************************************************************************
-static void _DMA_interruptHandler(uint32_t channel)
+static void DMA_interruptHandler(uint32_t channel)
 {
     DMA_CH_OBJECT  *dmacChObj = NULL;
-    volatile uint32_t chIntFlagStatus = 0;
-    volatile uint32_t chIntFlagsEnabled = 0;
+    volatile uint32_t chIntFlagStatus = 0U;
+    volatile uint32_t chIntFlagsEnabled = 0U;
 
-    DMA_TRANSFER_EVENT event = 0;
+    DMA_TRANSFER_EVENT event = 0U;
 
     dmacChObj = (DMA_CH_OBJECT *)&dmaChannelObj[channel];
 
@@ -411,48 +419,48 @@ static void _DMA_interruptHandler(uint32_t channel)
     chIntFlagsEnabled = chIntFlagStatus & (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHINTENSET | (DMA_CHINTF_WRE_Msk | DMA_CHINTF_RDE_Msk));
 
     /* An start trigger event has been detected and the block transfer has started */
-    if (chIntFlagsEnabled & DMA_CHINTF_SD_Msk)
+    if ((chIntFlagsEnabled & DMA_CHINTF_SD_Msk) != 0U)
     {
         event |= DMA_TRANSFER_EVENT_START_DETECTED;
     }
 
     /* An abort trigger event has been detected and the DMA transfer has been aborted */
-    if (chIntFlagsEnabled & DMA_CHINTF_TA_Msk)
+    if ((chIntFlagsEnabled & DMA_CHINTF_TA_Msk) != 0U)
     {
         event |= DMA_TRANSFER_EVENT_TRANSFER_ABORTED;
     }
 
     /* A cell transfer has been completed (CSZ bytes has been transferred) */
-    if (chIntFlagsEnabled & DMA_CHINTF_CC_Msk)
+    if ((chIntFlagsEnabled & DMA_CHINTF_CC_Msk) != 0U)
     {
         event |= DMA_TRANSFER_EVENT_CELL_TRANSFER_COMPLETE;
     }
 
     /* A block transfer has been completed */
-    if (chIntFlagsEnabled & DMA_CHINTF_BC_Msk)
+    if ((chIntFlagsEnabled & DMA_CHINTF_BC_Msk) != 0U)
     {
         event |= DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE;
     }
 
     /* A half block transfer has been completed */
-    if (chIntFlagsEnabled & DMA_CHINTF_BH_Msk)
+    if ((chIntFlagsEnabled & DMA_CHINTF_BH_Msk) != 0U)
     {
         event |= DMA_TRANSFER_EVENT_HALF_BLOCK_TRANSFER_COMPLETE;
     }
 
     /* A link list done event has been completed */
-    if (chIntFlagsEnabled & DMA_CHINTF_LL_Msk)
+    if ((chIntFlagsEnabled & DMA_CHINTF_LL_Msk) != 0U)
     {
         event |= DMA_TRANSFER_EVENT_LINKED_LIST_TRANSFER_COMPLETE;
     }
-	
-	/* A write error or read error event has been detected */
-    if (chIntFlagsEnabled & (DMA_CHINTF_WRE_Msk | DMA_CHINTF_RDE_Msk))
+
+    /* A write error or read error event has been detected */
+    if ((chIntFlagsEnabled & (DMA_CHINTF_WRE_Msk | DMA_CHINTF_RDE_Msk)) != 0U)
     {
         event |= DMA_TRANSFER_EVENT_ERROR;
     }
 
-    if (chIntFlagStatus & (DMA_CHINTF_WRE_Msk | DMA_CHINTF_RDE_Msk | DMA_CHINTF_LL_Msk | DMA_CHINTF_BC_Msk | DMA_CHINTF_TA_Msk))
+    if ((chIntFlagStatus & (DMA_CHINTF_WRE_Msk | DMA_CHINTF_RDE_Msk | DMA_CHINTF_LL_Msk | DMA_CHINTF_BC_Msk | DMA_CHINTF_TA_Msk)) != 0U)
     {
         dmacChObj->busyStatus = false;
     }
@@ -461,7 +469,7 @@ static void _DMA_interruptHandler(uint32_t channel)
     ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHINTF = chIntFlagStatus;
 
     /* Execute the callback function */
-    if ((dmacChObj->callback != NULL) && (event != 0))
+    if ((dmacChObj->callback != NULL) && (event != 0U))
     {
         dmacChObj->callback (event, dmacChObj->context);
     }
@@ -470,17 +478,17 @@ static void _DMA_interruptHandler(uint32_t channel)
 <#list 1..DMA_NUM_INT_PRIO as i>
 void DMA_PRI${i-1}_InterruptHandler( void )
 {
-    volatile uint32_t dmaIntPriority${i}Status = 0;
-    uint32_t channel = 0;
+    volatile uint32_t dmaIntPriority${i}Status = 0U;
+    uint32_t channel = 0U;
 
     /* Get the DMA channel interrupt status */
     dmaIntPriority${i}Status = ${DMA_INSTANCE_NAME}_REGS->DMA_INTSTAT${i};
 
-    for (channel = 0; channel < ${DMA_HIGHEST_CHANNEL}; channel++)
+    for (channel = 0U; channel < ${DMA_HIGHEST_CHANNEL}U; channel++)
     {
-        if (dmaIntPriority${i}Status & (1 << channel))
+        if ((dmaIntPriority${i}Status & ((uint32_t)1U << channel)) != (uint32_t)0U)
         {
-            _DMA_interruptHandler(channel);
+            DMA_interruptHandler(channel);
         }
     }
 }

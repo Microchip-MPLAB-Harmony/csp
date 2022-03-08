@@ -89,25 +89,25 @@ typedef enum
 typedef uint32_t DMA_TRANSFER_EVENT;
 
 /* Block was transferred successfully. */
-#define DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE          0x01
+#define DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE          (0x01U)
 
 /* Error while processing the request */
-#define DMA_TRANSFER_EVENT_ERROR                            0x02
+#define DMA_TRANSFER_EVENT_ERROR                            (0x02U)
 
 /* An start trigger event has been detected and the block transfer has started */
-#define DMA_TRANSFER_EVENT_START_DETECTED                   0x04
+#define DMA_TRANSFER_EVENT_START_DETECTED                   (0x04U)
 
 /* An abort trigger event has been detected and the DMA transfer has been aborted */
-#define DMA_TRANSFER_EVENT_TRANSFER_ABORTED                 0x08
+#define DMA_TRANSFER_EVENT_TRANSFER_ABORTED                 (0x08U)
 
 /* A cell transfer has been completed (CSZ bytes has been transferred) */
-#define DMA_TRANSFER_EVENT_CELL_TRANSFER_COMPLETE           0x10
+#define DMA_TRANSFER_EVENT_CELL_TRANSFER_COMPLETE           (0x10U)
 
 /* A half block transfer has been completed */
-#define DMA_TRANSFER_EVENT_HALF_BLOCK_TRANSFER_COMPLETE     0x20
+#define DMA_TRANSFER_EVENT_HALF_BLOCK_TRANSFER_COMPLETE     (0x20U)
 
 /* A link list done event has been completed */
-#define DMA_TRANSFER_EVENT_LINKED_LIST_TRANSFER_COMPLETE    0x40
+#define DMA_TRANSFER_EVENT_LINKED_LIST_TRANSFER_COMPLETE    (0x40U)
 
 typedef uint32_t DMA_INT;
 
@@ -136,53 +136,53 @@ typedef union
 {
     struct
     {
-        uint32_t CTRLB      :1;
-        uint32_t EVCTRL     :1;
-        uint32_t SSA        :1;
-        uint32_t DSA        :1;
-        uint32_t SSTRD      :1;
-        uint32_t DSTRD      :1;
-        uint32_t XSIZ       :1;
-        uint32_t PDAT       :1;
-        uint32_t CTRLCRC    :1;
-        uint32_t CTRLDAT    :1;
-        uint32_t            :14;
-        uint32_t ENABLE     :1;
-        uint32_t LLEN       :1;
-        uint32_t SWFRC      :1;
-        uint32_t RUNSTDBY   :1;
-        uint32_t            :4;
+        unsigned int CTRLB      :1;
+        unsigned int EVCTRL     :1;
+        unsigned int SSA        :1;
+        unsigned int DSA        :1;
+        unsigned int SSTRD      :1;
+        unsigned int DSTRD      :1;
+        unsigned int XSIZ       :1;
+        unsigned int PDAT       :1;
+        unsigned int CTRLCRC    :1;
+        unsigned int CTRLDAT    :1;
+        unsigned int            :14;
+        unsigned int ENABLE     :1;
+        unsigned int LLEN       :1;
+        unsigned int SWFRC      :1;
+        unsigned int RUNSTDBY   :1;
+        unsigned int            :4;
     };
     struct
     {
-        uint32_t w          :32;
+        unsigned int w          :32;
     };
 } DMA_BDCFGbits_t;
 
 typedef union
 {
-    struct
+  struct
     {
-        uint32_t WAS        :3;
-        uint32_t            :1;
-        uint32_t RAS        :3;
-        uint32_t            :1;
-        uint32_t PRI        :2;
-        uint32_t            :3;
-        uint32_t WBOEN      :1;
-        uint32_t BYTORD     :2;
-        uint32_t TRIG       :8;
-        uint32_t PIGNEN     :1;
-        uint32_t PATLEN     :1;
-        uint32_t PATEN      :1;
-        uint32_t            :2;
-        uint32_t CASTEN     :1;
-        uint32_t            :1;
-        uint32_t CRCEN      :1;
+        unsigned int WAS        :3;
+        unsigned int            :1;
+        unsigned int RAS        :3;
+        unsigned int            :1;
+        unsigned int PRI        :2;
+        unsigned int            :3;
+        unsigned int WBOEN      :1;
+        unsigned int BYTORD     :2;
+        unsigned int TRIG       :8;
+        unsigned int PIGNEN     :1;
+        unsigned int PATLEN     :1;
+        unsigned int PATEN      :1;
+        unsigned int            :2;
+        unsigned int CASTEN     :1;
+        unsigned int            :1;
+        unsigned int CRCEN      :1;
     };
     struct
     {
-        uint32_t w          :32;
+        unsigned int w          :32;
     };
 } DMA_BDCTRLBbits_t;
 
@@ -226,13 +226,13 @@ typedef union
 {
     struct
     {
-        uint32_t CSZ        :10;
-        uint32_t            :6;
-        uint32_t BLKSZ      :16;
+        unsigned int CSZ        :10;
+        unsigned int            :6;
+        unsigned int BLKSZ      :16;
     };
     struct
     {
-        uint32_t w          :32;
+        unsigned int w          :32;
     };
 } DMA_BDXSIZbits_t;
 
@@ -240,13 +240,13 @@ typedef union
 {
     struct
     {
-        uint32_t PDAT       :16;
-        uint32_t            :8;
-        uint32_t PIGN       :8;
+        unsigned int PDAT       :16;
+        unsigned int            :8;
+        unsigned int PIGN       :8;
     };
     struct
     {
-        uint32_t w          :32;
+        unsigned int w          :32;
     };
 } DMA_BDPDATbits_t;
 
