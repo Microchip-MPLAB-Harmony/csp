@@ -302,7 +302,145 @@
 			<function name="QSPI_DATA1 (out)"	direction="out" value="26"/>
 			<function name="QSPI_DATA0 (out)"	direction="out" value="27"/>
 			<function name="CCL_OUT1"	direction="out" value="28"/>
-		</group>		
+		</group>
+		
+		<!-- groups for QSPI pins with in-out functionalities -->
+		<group id="9">
+			<pin name="RPA3" value="1"/>
+			<pin name="RPA7" value="2"/>
+			<pin name="RPB0" value="4"/>
+			<pin name="RPB4" value="5"/>
+			<pin name="RPB8" value="6"/>
+			<pin name="RPB12" value="7"/>
+			<pin name="RPA2" value="8"/>
+			<pin name="RPA6" value="9"/>
+			<pin name="RPA10" value="10"/>
+			<pin name="RPA14" value="11"/>
+			<pin name="RPB3" value="12"/>
+			<pin name="RPB7" value="13"/>
+			<pin name="RPB11" value="14"/>
+			<pin name="RPA9" value="15"/>
+			<function name="QSPI_DATA1 (in/out)" direction="in/out" register-name = "QD1R"/>
+		</group>
+		<group id="10">
+			<pin name="RPA2" register-name = "RPA2G1R"/>
+			<pin name="RPA3" register-name = "RPA3G1R"/>
+			<pin name="RPA6" register-name = "RPA6G1R"/>
+			<pin name="RPA7" register-name = "RPA7G1R"/>
+			<pin name="RPA9" register-name = "RPA9G1R"/>
+			<pin name="RPA10" register-name = "RPA10G1R"/>
+			<pin name="RPA14" register-name = "RPA14G1R"/>
+			<pin name="RPB0" register-name = "RPB0G1R"/>
+			<pin name="RPB3" register-name = "RPB3G1R"/>
+			<pin name="RPB4" register-name = "RPB4G1R"/>
+			<pin name="RPB7" register-name = "RPB7G1R"/>
+			<pin name="RPB8" register-name = "RPB8G1R"/>
+			<pin name="RPB11" register-name = "RPB11G1R"/>
+			<pin name="RPB12" register-name = "RPB12G1R"/>
+			<function name="QSPI_DATA1 (in/out)" direction="in/out" value="27"/>
+		</group>
+		<group id="11">
+			<pin name="RPA4" value="1"/>
+			<pin name="RPA8" value="2"/>
+			<pin name="RPB1" value="4"/>
+			<pin name="RPB5" value="5"/>
+			<pin name="RPB9" value="6"/>
+			<pin name="RPB13" value="7"/>
+			<pin name="RPA3" value="8"/>
+			<pin name="RPA7" value="9"/>
+			<pin name="RPB0" value="11"/>
+			<pin name="RPB4" value="12"/>
+			<pin name="RPB8" value="13"/>
+			<pin name="RPB12" value="14"/>
+			<pin name="RPA0" value="15"/>
+			<function name="QSPI_DATA2 (in/out)" direction="in/out" register-name = "QD2R"/>			
+		</group>	
+		<group id="12">
+			<pin name="RPA0" register-name = "RPA0G2R"/>
+			<pin name="RPA3" register-name = "RPA3G2R"/>
+			<pin name="RPA4" register-name = "RPA4G2R"/>
+			<pin name="RPA7" register-name = "RPA7G2R"/>
+			<pin name="RPA8" register-name = "RPA8G2R"/>
+			<pin name="RPB0" register-name = "RPB0G2R"/>
+			<pin name="RPB1" register-name = "RPB1G2R"/>
+			<pin name="RPB4" register-name = "RPB4G2R"/>
+			<pin name="RPB5" register-name = "RPB5G2R"/>
+			<pin name="RPB8" register-name = "RPB8G2R"/>
+			<pin name="RPB9" register-name = "RPB9G2R"/>
+			<pin name="RPB12" register-name = "RPB12G2R"/>
+			<pin name="RPB13" register-name = "RPB13G2R"/>
+			<function name="QSPI_DATA2 (in/out)"	direction="in/out" value="27"/>
+		</group>
+		<group id="13">
+			<pin name="RPA5" value="1"/>
+			<pin name="RPA9" value="2"/>
+			<pin name="RPA13" value="3"/>
+			<pin name="RPB2" value="4"/>
+			<pin name="RPB6" value="5"/>
+			<pin name="RPB10" value="6"/>
+			<pin name="RPA0" value="7"/>
+			<pin name="RPA4" value="8"/>
+			<pin name="RPA8" value="9"/>
+			<pin name="RPB1" value="11"/>
+			<pin name="RPB5" value="12"/>
+			<pin name="RPB9" value="13"/>
+			<pin name="RPB13" value="14"/>
+			<pin name="RPA1" value="15"/>
+			<function name="QSPI_DATA3 (in/out)" direction="in/out" register-name = "QD3R"/>
+		</group>
+		<group id="14">
+			<pin name="RPA0" register-name = "RPA0G3R"/>
+			<pin name="RPA1" register-name = "RPA1G3R"/>
+			<pin name="RPA4" register-name = "RPA4G3R"/>
+			<pin name="RPA5" register-name = "RPA5G3R"/>
+			<pin name="RPA8" register-name = "RPA8G3R"/>
+			<pin name="RPA9" register-name = "RPA9G3R"/>
+			<pin name="RPA13" register-name = "RPA13G3R"/>
+			<pin name="RPB1" register-name = "RPB1G3R"/>
+			<pin name="RPB2" register-name = "RPB2G3R"/>
+			<pin name="RPB5" register-name = "RPB5G3R"/>
+			<pin name="RPB6" register-name = "RPB6G3R"/>
+			<pin name="RPB9" register-name = "RPB9G3R"/>
+			<pin name="RPB10" register-name = "RPB10G3R"/>
+			<pin name="RPB13" register-name = "RPB13G3R"/>
+			<function name="QSPI_DATA3 (in/out)"	direction="in/out" value="27"/>
+		</group>
+		<group id="15">
+			<pin name="RPA6" value="1"/>
+			<pin name="RPA10" value="2"/>
+			<pin name="RPA14" value="3"/>
+			<pin name="RPB3" value="4"/>
+			<pin name="RPB7" value="5"/>
+			<pin name="RPB11" value="6"/>
+			<pin name="RPA1" value="7"/>
+			<pin name="RPA5" value="8"/>
+			<pin name="RPA9" value="9"/>
+			<pin name="RPA13" value="10"/>
+			<pin name="RPB2" value="11"/>
+			<pin name="RPB6" value="12"/>
+			<pin name="RPB10" value="13"/>
+			<pin name="RPA8" value="14"/>
+			<pin name="RPA2" value="15"/>
+			<function name="QSPI_DATA0 (in/out)" direction="in/out" register-name = "QD0R"/>
+		</group>
+		<group id="16">
+			<pin name="RPA1" register-name = "RPA1G4R"/>
+			<pin name="RPA2" register-name = "RPA2G4R"/>
+			<pin name="RPA5" register-name = "RPA5G4R"/>
+			<pin name="RPA6" register-name = "RPA6G4R"/>
+			<pin name="RPA8" register-name = "RPA8G4R"/>
+			<pin name="RPA9" register-name = "RPA9G4R"/>
+			<pin name="RPA10" register-name = "RPA10G4R"/>
+			<pin name="RPA13" register-name = "RPA13G4R"/>
+			<pin name="RPA14" register-name = "RPA14G4R"/>
+			<pin name="RPB2" register-name = "RPB2G4R"/>
+			<pin name="RPB3" register-name = "RPB3G4R"/>
+			<pin name="RPB6" register-name = "RPB6G4R"/>
+			<pin name="RPB7" register-name = "RPB7G4R"/>		
+			<pin name="RPB10" register-name = "RPB10G4R"/>
+			<pin name="RPB11" register-name = "RPB11G4R"/>		
+			<function name="QSPI_DATA0 (in/out)"	direction="in/out" value="27"/>
+		</group>										
 	</groups>
 	
 	<modules>
@@ -628,7 +766,12 @@
 			<function name="QSPI_DATA0 (out)"/>
 			<function name="QSPI_DATA1 (out)"/>
 			<function name="QSPI_DATA2 (out)"/>
-			<function name="QSPI_DATA3 (out)"/>			
+			<function name="QSPI_DATA3 (out)"/>
+
+			<function name="QSPI_DATA0 (in/out)"/>
+			<function name="QSPI_DATA1 (in/out)"/>
+			<function name="QSPI_DATA2 (in/out)"/>
+			<function name="QSPI_DATA3 (in/out)"/>						
 		</module>
 		<module name="CCL">
 			<function name="CCLIN0"/>

@@ -1,3 +1,3 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated component data file created: 22:17:29 05/22/20 -->
-<component device="PIC32CX1012BZ24032" families="CX_32_BZ24" pins="CX_32_BZ24" />
+<!-- This is an auto-generated component data file created: 23:41:13 03/07/22 -->
+<component device="PIC32CX1012BZ24032" families="CX_BZ_48" pins="CX_32_BZ24" />
