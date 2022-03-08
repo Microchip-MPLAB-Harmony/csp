@@ -68,8 +68,8 @@ void MPU_Initialize(void)
     <#if .vars[MPU_ENABLE]?has_content>
     <#if (.vars[MPU_ENABLE] != false)>
     /* Region ${i} Name: ${.vars[MPU_NAME]}, Base Address: 0x${.vars[MPU_ADDRESS]}, Size: ${.vars[MPU_LENGTH]}  */
-    MPU->RBAR = MPU_REGION(${i}, 0x${.vars[MPU_ADDRESS]});
-    MPU->RASR = MPU_REGION_SIZE(${.vars[MPU_SIZE]}) | MPU_RASR_AP(${.vars[MPU_ACCESS]}) | ${.vars[MPU_TYPE]} \
+    MPU->RBAR = MPU_REGION(${i}U, 0x${.vars[MPU_ADDRESS]}U);
+    MPU->RASR = MPU_REGION_SIZE(${.vars[MPU_SIZE]}U) | MPU_RASR_AP(${.vars[MPU_ACCESS]}) | ${.vars[MPU_TYPE]} \
                 | MPU_ATTR_ENABLE ${.vars[MPU_EXECUTE]?then('', '| MPU_ATTR_EXECUTE_NEVER')} ${.vars[MPU_SHARE]?then('| MPU_ATTR_SHAREABLE', '')};
     </#if>
     </#if>

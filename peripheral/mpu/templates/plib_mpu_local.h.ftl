@@ -84,12 +84,12 @@
 /* --- Memory Types Attributes --- */
 #define MPU_RASR_TEX(value)                (MPU_RASR_TEX_Msk & ((value) << MPU_RASR_TEX_Pos))
 
-#define MPU_ATTR_STRONGLY_ORDERED (MPU_RASR_TEX(0))                                      /* Strongly-Ordered Shareable */
-#define MPU_ATTR_DEVICE           (MPU_RASR_TEX(0) | MPU_RASR_B_Msk)                     /* Device Shareable */
-#define MPU_ATTR_NORMAL_WT        (MPU_RASR_TEX(0) | MPU_RASR_C_Msk)                     /* Normal, Write-Through Read Allocate */
-#define MPU_ATTR_NORMAL_WB        (MPU_RASR_TEX(0) | MPU_RASR_C_Msk | MPU_RASR_B_Msk)    /* Normal, Write-Back Read Allocate */
-#define MPU_ATTR_NORMAL_WB_WA     (MPU_RASR_TEX(1) | MPU_RASR_C_Msk | MPU_RASR_B_Msk)    /* Normal, Write-Back Read/Write Allocate */
-#define MPU_ATTR_NORMAL           (MPU_RASR_TEX(1))                                      /* Normal, Non-cacheable */
+#define MPU_ATTR_STRONGLY_ORDERED (MPU_RASR_TEX(0U))                                      /* Strongly-Ordered Shareable */
+#define MPU_ATTR_DEVICE           (MPU_RASR_TEX(0U) | MPU_RASR_B_Msk)                     /* Device Shareable */
+#define MPU_ATTR_NORMAL_WT        (MPU_RASR_TEX(0U) | MPU_RASR_C_Msk)                     /* Normal, Write-Through Read Allocate */
+#define MPU_ATTR_NORMAL_WB        (MPU_RASR_TEX(0U) | MPU_RASR_C_Msk | MPU_RASR_B_Msk)    /* Normal, Write-Back Read Allocate */
+#define MPU_ATTR_NORMAL_WB_WA     (MPU_RASR_TEX(1U) | MPU_RASR_C_Msk | MPU_RASR_B_Msk)    /* Normal, Write-Back Read/Write Allocate */
+#define MPU_ATTR_NORMAL           (MPU_RASR_TEX(1U))                                      /* Normal, Non-cacheable */
 
 /* Other Attributes */
 #define MPU_ATTR_SHAREABLE     (MPU_RASR_S_Msk)
