@@ -41,7 +41,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "interrupts.h"
 </#if>
 
-NMIC_OBJECT nmic;
+static NMIC_OBJECT nmic;
 
 void ${NMIC_INSTANCE_NAME}_Initialize( void )
 {
@@ -56,7 +56,7 @@ void ${NMIC_INSTANCE_NAME}_Initialize( void )
 	<#if (.vars[NMIC_ENABLE] != false)>
 	<#if i == 0>
 	<#lt>	NMIC_REGS->NMIC_SCFG${i}R = NMIC_SCFG${i}R_EN_Msk ${(.vars[NMIC_LVL] == '1')?then('| NMIC_SCFG${i}R_LVL_Msk', '')} ${.vars[NMIC_FZ]?then('| NMIC_SCFG${i}R_FRZ_Msk', '')}\
-							 ${(.vars[NMIC_POL] == '1')?then('| NMIC_SCFG${i}R_POL_Msk', '')} ${.vars[NMIC_GF_EN]?then('| NMIC_SCFG${i}R_GFEN_Msk | NMIC_SCFG${i}R_GFSEL(${.vars[NMIC_GFSEL]})', '')};
+							 ${(.vars[NMIC_POL] == '1')?then('| NMIC_SCFG${i}R_POL_Msk', '')} ${.vars[NMIC_GF_EN]?then('| NMIC_SCFG${i}R_GFEN_Msk | NMIC_SCFG${i}R_GFSEL(${.vars[NMIC_GFSEL]}U)', '')};
 	<#elseif i == 4>
 	<#lt>	NMIC_REGS->NMIC_SCFG${i}R = NMIC_SCFG${i}R_EN_Msk | (NMIC_REGS->NMIC_SCFG${i}R & (~NMIC_SCFG${i}R_POL_Msk));
 	<#else>
@@ -65,7 +65,7 @@ void ${NMIC_INSTANCE_NAME}_Initialize( void )
 	</#if>
 	</#if>
 </#list>
-<#lt>	NMIC_REGS->NMIC_IER = 0x${NMIC_INTERRUPT};
+<#lt>	NMIC_REGS->NMIC_IER = 0x${NMIC_INTERRUPT}U;
 }
 
 
