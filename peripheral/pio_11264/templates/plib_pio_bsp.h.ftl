@@ -1,22 +1,14 @@
 <#--  =====================
       MACRO mhc_process_leds
       ===================== -->
-
-#define PIOA_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[0])))
-#define PIOB_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[1])))
-#define PIOC_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[2])))
-#define PIOD_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[3])))
-<#if PIO_PORT_E_ENBALE>
-#define PIOE_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[4])))
+<#list ["A", "B", "C", "D", "E", "F", "G", "H"] as GROUP_NAME>
+<#if .vars["PIO" + GROUP_NAME +"_BASE_INDEX"]??>
+<#assign PIO_BASE = .vars["PIO" + GROUP_NAME +"_BASE_INDEX"]?split(":")[0]>
+<#assign PIO_GROUP = .vars["PIO" + GROUP_NAME +"_BASE_INDEX"]?split(":")[1]>
+/*PIO${GROUP_NAME} base address */
+#define PIO${GROUP_NAME}_REGS   ((pio_group_registers_t*)(&(${PIO_BASE}_REGS->PIO_GROUP[${PIO_GROUP}])))
 </#if>
-
-<#if PIO_PORT_F_ENBALE>
-#define PIOF_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[5])))
-</#if>
-
-<#if PIO_PORT_G_ENBALE>
-#define PIOG_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[6])))
-</#if>
+</#list>
 
 <#compress>
 <#macro mhc_process_leds>

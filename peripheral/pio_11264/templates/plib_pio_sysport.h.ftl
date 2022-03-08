@@ -12,7 +12,7 @@
 
   Description:
     Define datatypes needed by Harmony Core SYS_PORT layer.
-    
+
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -121,27 +121,15 @@
 
 typedef enum
 {
-    <#if PORTA_Pin_List?has_content>
-    SYS_PORT_A = (uint32_t)&(PIO_REGS->PIO_GROUP[0]),
-    </#if>
-    <#if PORTB_Pin_List?has_content>
-    SYS_PORT_B = (uint32_t)&(PIO_REGS->PIO_GROUP[1]),
-    </#if>
-    <#if PORTC_Pin_List?has_content>
-    SYS_PORT_C = (uint32_t)&(PIO_REGS->PIO_GROUP[2]),
-    </#if>
-    <#if PORTD_Pin_List?has_content>
-    SYS_PORT_D = (uint32_t)&(PIO_REGS->PIO_GROUP[3]),
-    </#if>
-    <#if PORTE_Pin_List?has_content>
-    SYS_PORT_E = (uint32_t)&(PIO_REGS->PIO_GROUP[4]),
-    </#if>
-<#if PIO_PORT_F_ENBALE>
-    SYS_PORT_F = (uint32_t)&(PIO_REGS->PIO_GROUP[5]),
+<#list ["A", "B", "C", "D", "E", "F", "G", "H"]>
+<#items as GROUP>
+<#if .vars["PORT" + GROUP +"_Pin_List"]?has_content>
+<#assign PIO_BASE = .vars["PIO" + GROUP +"_BASE_INDEX"]?split(":")[0]>
+<#assign PIO_GROUP = .vars["PIO" + GROUP +"_BASE_INDEX"]?split(":")[1]>
+    SYS_PORT_${GROUP} = (uint32_t)&(${PIO_BASE}_REGS->PIO_GROUP[${PIO_GROUP}]),
 </#if>
-<#if PIO_PORT_G_ENBALE>
-    SYS_PORT_G = (uint32_t)&(PIO_REGS->PIO_GROUP[6])
-</#if>
+</#items>
+</#list>
 } SYS_PORT;
 
 

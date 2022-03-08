@@ -99,6 +99,33 @@
 
 </#if>
 
+<#compress>
+<#if PIO_MULTI_INSTANCE>
+<#list ["A", "B", "C", "D", "E", "F", "G", "H"]>
+<#assign PIO_BASE_MAP = "{">
+<#assign PIO_INDEX_MAP = "{">
+<#items as PIO_GROUP>
+<#if .vars["PIO" + PIO_GROUP +"_BASE_INDEX"]??>
+<#if PIO_GROUP?index != 0>
+<#assign PIO_BASE_MAP = PIO_BASE_MAP +",">
+<#assign PIO_INDEX_MAP = PIO_INDEX_MAP +",">
+</#if>
+<#assign PIO_BASE_MAP  =  PIO_BASE_MAP + " " +.vars["PIO" + PIO_GROUP +"_BASE_INDEX"]?split(":")[0] +"_REGS">
+<#assign PIO_INDEX_MAP = PIO_INDEX_MAP + " " +.vars["PIO" + PIO_GROUP +"_BASE_INDEX"]?split(":")[1] +"U">
+</#if>
+</#items>
+<#assign PIO_BASE_MAP = PIO_BASE_MAP + " };">
+<#assign PIO_INDEX_MAP = PIO_INDEX_MAP + " };">
+/* PIO base address for each port group */
+static pio_registers_t* const PIO_REGS[PIO_PORT_MAX] = ${PIO_BASE_MAP}
+
+/* Index of each port group */
+static const uint32_t PIO_INDEX[PIO_PORT_MAX] = ${PIO_INDEX_MAP}
+</#list>
+</#if>
+</#compress>
+
+
 /******************************************************************************
   Function:
     PIO_Initialize ( void )
@@ -116,23 +143,23 @@ void PIO_Initialize ( void )
 <#list PORT as port>
 	<#list PERFUNC as func>
 	<#assign PORT_MSKR = "PORT_" + port + "_MSKR_Value" + func >
-	<#assign PORT_CFGR = "FUNC_" + func + "_CFGR_Value">  
+	<#assign PORT_CFGR = "FUNC_" + func + "_CFGR_Value">
 	<#if .vars[PORT_MSKR] != '0x0' && .vars[PORT_MSKR] != '0x0L'>
 	<#lt> /* Port ${port} Peripheral function ${func} configuration */
 	<#lt>	PIO${port}_REGS->PIO_MSKR = ${.vars[PORT_MSKR]}U;
 	<#lt>	PIO${port}_REGS->PIO_CFGR = ${.vars[PORT_CFGR]}U;
-	
-	</#if>   
+
+	</#if>
 	</#list>
 	<#list 0..31 as pin>
 	<#assign PORT_MSKR = "PORT_" + port + "_MSKR_Value" + pin >
-	<#assign PORT_CFGR = "PORT_" + port + "_CFGR_Value" + pin > 
+	<#assign PORT_CFGR = "PORT_" + port + "_CFGR_Value" + pin >
 	<#if .vars[PORT_CFGR] != '0x0'>
 	<#lt> /* Port ${port} Pin ${pin} configuration */
 	<#lt>	PIO${port}_REGS->PIO_MSKR = ${.vars[PORT_MSKR]}U;
 	<#lt>	PIO${port}_REGS->PIO_CFGR = (PIO${port}_REGS->PIO_CFGR & (PIO_CFGR_FUNC_Msk)) | ${.vars[PORT_CFGR]}U;
-	
-	</#if>   
+
+	</#if>
 	</#list>
     <#assign PORT_MSKR_GPIO = "PORT_" + port + "_MSKR_ValueGPIO">
     <#if .vars[PORT_MSKR_GPIO] != '0x0'>
@@ -148,9 +175,9 @@ void PIO_Initialize ( void )
 
 	<#assign PORT_ISR = "PORT_" + port + "_NUM_INT_PINS" >
 	<#if .vars[PORT_ISR] != 0>
-    /* Clear the ISR register */ 
+    /* Clear the ISR register */
 	<#lt>	(uint32_t)PIO${port}_REGS->PIO_ISR;
-  </#if>	
+  </#if>
 </#list>
 <#if PORT_SCLK_DIV?? && PORT_SCLK_DIV != 0>
 <#lt> /* Slow Clock Divider Selection for Debouncing */
@@ -215,8 +242,13 @@ void PIO_Initialize ( void )
 */
 uint32_t PIO_PortRead(PIO_PORT port)
 {
+<#if PIO_MULTI_INSTANCE>
+    return PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_PDSR;
+<#else>
     return PIO_REGS->PIO_GROUP[port].PIO_PDSR;
+</#if>
 }
+
 
 // *****************************************************************************
 /* Function:
@@ -230,9 +262,15 @@ uint32_t PIO_PortRead(PIO_PORT port)
 */
 void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 {
+<#if PIO_MULTI_INSTANCE>
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_MSKR = mask;
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_ODSR = value;
+<#else>
     PIO_REGS->PIO_GROUP[port].PIO_MSKR = mask;
     PIO_REGS->PIO_GROUP[port].PIO_ODSR = value;
+</#if>
 }
+
 
 // *****************************************************************************
 /* Function:
@@ -246,8 +284,13 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 */
 uint32_t PIO_PortLatchRead(PIO_PORT port)
 {
+<#if PIO_MULTI_INSTANCE>
+    return PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_ODSR;
+<#else>
     return PIO_REGS->PIO_GROUP[port].PIO_ODSR;
+</#if>
 }
+
 
 // *****************************************************************************
 /* Function:
@@ -261,7 +304,11 @@ uint32_t PIO_PortLatchRead(PIO_PORT port)
 */
 void PIO_PortSet(PIO_PORT port, uint32_t mask)
 {
+<#if PIO_MULTI_INSTANCE>
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_SODR = mask;
+<#else>
     PIO_REGS->PIO_GROUP[port].PIO_SODR = mask;
+</#if>
 }
 
 // *****************************************************************************
@@ -276,7 +323,11 @@ void PIO_PortSet(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortClear(PIO_PORT port, uint32_t mask)
 {
+<#if PIO_MULTI_INSTANCE>
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_CODR = mask;
+<#else>
     PIO_REGS->PIO_GROUP[port].PIO_CODR = mask;
+</#if>
 }
 
 // *****************************************************************************
@@ -292,8 +343,13 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask)
 void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 {
     /* Write into Clr and Set registers */
+<#if PIO_MULTI_INSTANCE>
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_MSKR = mask;
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_ODSR ^= mask;
+<#else>
     PIO_REGS->PIO_GROUP[port].PIO_MSKR = mask;
     PIO_REGS->PIO_GROUP[port].PIO_ODSR ^= mask;
+</#if>
 }
 
 // *****************************************************************************
@@ -308,8 +364,13 @@ void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 {
+<#if PIO_MULTI_INSTANCE>
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_MSKR = mask;
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_CFGR &= ~PIO_CFGR_DIR_Msk;
+<#else>
     PIO_REGS->PIO_GROUP[port].PIO_MSKR = mask;
-    PIO_REGS->PIO_GROUP[port].PIO_CFGR &= ~PIO_CFGR_DIR_Msk;	
+    PIO_REGS->PIO_GROUP[port].PIO_CFGR &= ~PIO_CFGR_DIR_Msk;
+</#if>
 }
 
 // *****************************************************************************
@@ -324,8 +385,13 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 {
+<#if PIO_MULTI_INSTANCE>
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_MSKR = mask;
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_CFGR |= PIO_CFGR_DIR_Msk;
+<#else>
     PIO_REGS->PIO_GROUP[port].PIO_MSKR = mask;
     PIO_REGS->PIO_GROUP[port].PIO_CFGR |= PIO_CFGR_DIR_Msk;
+</#if>
 }
 <#if PORT_A_INTERRUPT_USED == true ||
      PORT_B_INTERRUPT_USED == true ||
@@ -346,7 +412,11 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
 {
+<#if PIO_MULTI_INSTANCE>
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_IER = mask;
+<#else>
     PIO_REGS->PIO_GROUP[port].PIO_IER = mask;
+</#if>
 }
 
 // *****************************************************************************
@@ -361,7 +431,11 @@ void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 {
+<#if PIO_MULTI_INSTANCE>
+    PIO_REGS[port]->PIO_GROUP[PIO_INDEX[port]].PIO_IDR = mask;
+<#else>
     PIO_REGS->PIO_GROUP[port].PIO_IDR = mask;
+</#if>
 }
 
 // *****************************************************************************
@@ -439,14 +513,14 @@ void PIO${.vars[channel]}_InterruptHandler(void)
 
     status  = PIO${.vars[channel]}_REGS->PIO_ISR;
     status &= PIO${.vars[channel]}_REGS->PIO_IMR;
-	
+
 	for( j = ${portNumCbList[i]}; j < ${portNumCbList[i+1]}; j++ )
 	{
 		if((status & ( 1 << (portPinCbObj[j].pin & 0x1F) ) ) && (portPinCbObj[j].callback != NULL))
 		{
 			portPinCbObj[j].callback ( portPinCbObj[j].pin, portPinCbObj[j].context );
 		}
-	}   
+	}
 }
         </#if>
     </#if>

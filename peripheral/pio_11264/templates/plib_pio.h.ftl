@@ -61,25 +61,25 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define PIOA_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[0])))
-#define PIOB_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[1])))
-#define PIOC_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[2])))
-#define PIOD_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[3])))
-<#if PIO_PORT_E_ENBALE>
-#define PIOE_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[4])))
+/*******************Base address and group index of PIO groups ****************/
+<#assign PIO_GROUP_LIST = ["A", "B", "C", "D", "E", "F", "G", "H"]>
+<#assign GROUP_ID = 0>
+<#list PIO_GROUP_LIST as GROUP_NAME>
+<#if .vars["PIO" + GROUP_NAME +"_BASE_INDEX"]??>
+<#assign PIO_BASE = .vars["PIO" + GROUP_NAME +"_BASE_INDEX"]?split(":")[0]>
+<#assign PIO_GROUP = .vars["PIO" + GROUP_NAME +"_BASE_INDEX"]?split(":")[1]>
+/*PIO${GROUP_NAME} base address */
+#define PIO${GROUP_NAME}_REGS ((pio_group_registers_t*)(&(${PIO_BASE}_REGS->PIO_GROUP[${PIO_GROUP}])))
+
+/*PIO${GROUP_NAME} index */
+#define PIO_PORT_${GROUP_NAME} ${GROUP_ID}U
+
+<#assign GROUP_ID = GROUP_ID + 1>
 </#if>
-
-<#if PIO_PORT_F_ENBALE>
-#define PIOF_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[5])))
-</#if>
-
-<#if PIO_PORT_G_ENBALE>
-#define PIOG_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[6])))
-</#if>
-
-
+</#list>
+/*PIO max index */
+#define PIO_PORT_MAX    ${GROUP_ID}U
 <#compress> <#-- To remove unwanted new lines -->
-
 <#macro mhc_process_pin>
     <#assign PORTA_Pin_List = []>
     <#assign PORTB_Pin_List = []>
@@ -176,54 +176,14 @@
         </#if>
     </#if>
 </#list>
-
-
-
 // *****************************************************************************
-/* PIO Port
+/* PIO Ports
 
   Summary:
-    Identifies the available PIO Ports.
-
-  Description:
-    This enumeration identifies the available PIO Ports.
-
-  Remarks:
-    The caller should not rely on the specific numbers assigned to any of
-    these values as they may change from one processor to the next.
-
-    Not all ports are available on all devices.  Refer to the specific
-    device data sheet to determine which ports are supported.
+    Datatype for PIO ports
 */
-
-/* Port A Pins */
-#define PIO_PORT_A 0U
-
-/* Port B Pins */
-#define PIO_PORT_B 1U
-
-    /* Port C Pins */
-#define PIO_PORT_C 2U
-
-/* Port D Pins */
-#define PIO_PORT_D 3U
-
-<#if PIO_PORT_E_ENBALE>
-/* Port E Pins */
-#define PIO_PORT_E 4U
-</#if>
-
-<#if PIO_PORT_F_ENBALE>
-/* Port F Pins */
-#define PIO_PORT_F 5U
-</#if>
-
-<#if PIO_PORT_G_ENBALE>
-/* Port G Pins */
-#define PIO_PORT_G 6U
-</#if>
-
 typedef uint32_t PIO_PORT;
+
 
 // *****************************************************************************
 /* PIO Port Pins
@@ -840,7 +800,7 @@ typedef struct {
 static inline void PIO_PinWrite(PIO_PIN pin, bool value)
 {
     uint32_t port = (uint32_t)pin >> 5U;
-    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);
     PIO_PortWrite(port, mask, value ? mask : 0U);
 }
 
@@ -882,7 +842,7 @@ static inline void PIO_PinWrite(PIO_PIN pin, bool value)
 static inline bool PIO_PinRead(PIO_PIN pin)
 {
     uint32_t port = (uint32_t)pin >> 5U;
-    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);
     return (((PIO_PortRead(port) & mask) != 0U) ? true : false);
 }
 
@@ -922,7 +882,7 @@ static inline bool PIO_PinRead(PIO_PIN pin)
 static inline bool PIO_PinLatchRead(PIO_PIN pin)
 {
     uint32_t port = (uint32_t)pin >> 5U;
-    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);
     return (((PIO_PortLatchRead(port) & mask) != 0U) ? true : false);
 }
 
@@ -958,7 +918,7 @@ static inline bool PIO_PinLatchRead(PIO_PIN pin)
 static inline void PIO_PinToggle(PIO_PIN pin)
 {
     uint32_t port = (uint32_t)pin >> 5U;
-    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);
     PIO_PortToggle(port, mask);
 }
 
@@ -994,7 +954,7 @@ static inline void PIO_PinToggle(PIO_PIN pin)
 static inline void PIO_PinSet(PIO_PIN pin)
 {
     uint32_t port = (uint32_t)pin >> 5U;
-    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);
     PIO_PortSet(port, mask);
 }
 
@@ -1030,7 +990,7 @@ static inline void PIO_PinSet(PIO_PIN pin)
 static inline void PIO_PinClear(PIO_PIN pin)
 {
     uint32_t port = (uint32_t)pin >> 5U;
-    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);
     PIO_PortClear(port, mask);
 }
 
@@ -1064,9 +1024,9 @@ static inline void PIO_PinClear(PIO_PIN pin)
     None.
 */
 static inline void PIO_PinInputEnable(PIO_PIN pin)
-{   
+{
     uint32_t port = (uint32_t)pin >> 5U;
-    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);
     PIO_PortInputEnable(port, mask);
 }
 
@@ -1102,7 +1062,7 @@ static inline void PIO_PinInputEnable(PIO_PIN pin)
 static inline void PIO_PinOutputEnable(PIO_PIN pin)
 {
     uint32_t port = (uint32_t)pin >> 5U;
-    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);   
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);
     PIO_PortOutputEnable(port, mask);
 }
 
@@ -1145,7 +1105,7 @@ static inline void PIO_PinOutputEnable(PIO_PIN pin)
 static inline void PIO_PinInterruptEnable(PIO_PIN pin)
 {
     uint32_t port = (uint32_t)pin >> 5U;
-    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);     
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);
     PIO_PortInterruptEnable(port, mask);
 }
 
@@ -1182,7 +1142,7 @@ static inline void PIO_PinInterruptEnable(PIO_PIN pin)
 static inline void PIO_PinInterruptDisable(PIO_PIN pin)
 {
     uint32_t port = (uint32_t)pin >> 5U;
-    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);     
+    uint32_t mask = 1UL << ((uint32_t)pin & 0x1FU);
     PIO_PortInterruptDisable(port, mask);
 }
 

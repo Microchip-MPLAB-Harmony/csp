@@ -23,7 +23,7 @@
 
 print("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 import re
-
+import string
 
 ###############################################Global Variables #############################################
 global pinChannel
@@ -149,8 +149,19 @@ pinBitPosition = []
 
 pincfgrValue = []
 
+pioDrvStrSupport = coreComponent.createBooleanSymbol("PIO_DRIVER_PRESENT", None)
+pioDrvStrSupport.setVisible(False)
 driveStrBit =  ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/register-group@[name="PIO_GROUP"]/register@[name="PIO_CFGR"]/bitfield@[name="DRVSTR"]')
-drvSTRVal = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/value-group@[name="{0}"]'.format(driveStrBit.getAttribute("values")))
+if driveStrBit is not None:
+    drvSTRVal = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/value-group@[name="{0}"]'.format(driveStrBit.getAttribute("values")))
+    pioDrvStrSupport.setDefaultValue(True)
+
+pioSlewRateSupport = coreComponent.createBooleanSymbol("PIO_SLEWR_PRESENT", None)
+pioSlewRateSupport.setVisible(False)
+slewRateBits =  ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/register-group@[name="PIO_GROUP"]/register@[name="PIO_CFGR"]/bitfield@[name="SLEWRATE"]')
+if slewRateBits is not None:
+    slewRateVal = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/value-group@[name="{0}"]'.format(slewRateBits.getAttribute("values")))
+    pioSlewRateSupport.setDefaultValue(True)
 
 node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PIO\"]/instance@[name=\"PIO\"]/parameters/param@[name=\"DEBOUNCE_GLITCH_ACTIVE\"]")
 pioDebounceConf = coreComponent.createBooleanSymbol("PIO_DEBOUNCE_NOT_CONFIGURABLE", None)
@@ -295,6 +306,7 @@ def pinCFGR (pin, cfgr_reg):
         filterMask = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFEN")
         filterclock = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFSCEN")
     driver = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_DRV")
+    slew = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_SLEW")
     if port:
         if pullup:
             cfgr |= 1 << 9
@@ -312,6 +324,8 @@ def pinCFGR (pin, cfgr_reg):
             cfgr |= 1 << 31
         if driver:
             cfgr |= driver << 16
+        if slew:
+            cfgr |= slew << 16
         if debounceFilterEnabledByDefault == False:
             if filterMask:
                 cfgr |= 1 << 12
@@ -371,24 +385,44 @@ pioMenu = coreComponent.createMenuSymbol("PIO_MENU", None)
 pioMenu.setLabel("Ports (PIO)")
 pioMenu.setDescription("Configuration for PIO PLIB")
 
-pioPortEEnable = coreComponent.createBooleanSymbol("PIO_PORT_E_ENBALE", pioMenu)
-pioPortEEnable.setVisible(False)
-pioPortEEnable.setDefaultValue(Peripheral.instanceExists("PIO", "PIOE"))
+pioGroupList = []
+pioInstanceList = []
+pioInstanceNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PIO\"]")
+for instanceNode in pioInstanceNode.getChildren():
+    pioInstance = instanceNode.getAttribute("name").split("PIO")[1]
+    if pioInstance != "":
+        if pioInstance in string.ascii_uppercase:
+            pioGroupList.append(pioInstance)
+        if pioInstance in string.digits:
+            pioInstanceList.append(pioInstance)
+pioGroupList.sort()
+for index, group in enumerate(pioGroupList):
+    pioGroupStr = coreComponent.createStringSymbol("PIO{0}_BASE_INDEX".format(group), pioMenu)
+    pioGroupStr.setVisible(False)
+    if len(pioInstanceList) > 0:
+        base = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PIO\"]"
+                            "/instance@[name=\"PIO{0}\"]/parameters/param@[name=\"PIO_BASE\"]".format(group)).getAttribute("value")
+        group_index = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PIO\"]"
+                            "/instance@[name=\"PIO{0}\"]/parameters/param@[name=\"PIO_GROUP_INDEX\"]".format(group)).getAttribute("value")
+    else:
+        base = "PIO"
+        group_index = str(index)
+    pioGroupStr.setDefaultValue("{0}:{1}".format(base, group_index))
 
-pioPortFEnable = coreComponent.createBooleanSymbol("PIO_PORT_F_ENBALE", pioMenu)
-pioPortFEnable.setVisible(False)
-pioPortFEnable.setDefaultValue(Peripheral.instanceExists("PIO", "PIOF"))
+pioMultiInstance = coreComponent.createBooleanSymbol("PIO_MULTI_INSTANCE", pioMenu)
+pioMultiInstance.setVisible(False)
+pioMultiInstance.setValue(len(pioInstanceList) > 0)
 
-pioPortGEnable = coreComponent.createBooleanSymbol("PIO_PORT_G_ENBALE", pioMenu)
-pioPortGEnable.setVisible(False)
-pioPortGEnable.setDefaultValue(Peripheral.instanceExists("PIO", "PIOG"))
+if len(pioInstanceList) > 0:
+    for instance in pioInstanceList:
+        Database.setSymbolValue("core",  "PIO{0}_CLOCK_ENABLE".format(instance), True)
+else:
+    Database.setSymbolValue("core",  "PIO_CLOCK_ENABLE", True)
 
 pioEnable = coreComponent.createBooleanSymbol("PIO_ENABLE", pioMenu)
 pioEnable.setLabel("Use PIO PLIB?")
 pioEnable.setDefaultValue(True)
 pioEnable.setReadOnly(True)
-
-Database.setSymbolValue("core",  "PIO_CLOCK_ENABLE", True)
 
 # Build package pinout map
 packageNode = ATDF.getNode("/avr-tools-device-file/variants")
@@ -518,12 +552,24 @@ for pinNumber in range(1, packagePinCount + 1):
     pinTrigger = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_TAMPER", pin[pinNumber-1])
     pinTrigger.setLabel("Tamper Enable")
 
-    pinDRV = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_DRV", pin[pinNumber-1])
-    pinDRV.setLabel("Driver Strength")
-    pinDRV.setOutputMode("Value")
-    pinDRV.setDisplayMode("Description")
-    for id in range(0,len(drvSTRVal.getChildren())):
-        pinDRV.addKey(drvSTRVal.getChildren()[id].getAttribute("name"), str(drvSTRVal.getChildren()[id].getAttribute("value")) , drvSTRVal.getChildren()[id].getAttribute("caption") )
+    if driveStrBit:
+        pinDRV = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_DRV", pin[pinNumber-1])
+        pinDRV.setLabel("Driver Strength")
+        pinDRV.setOutputMode("Value")
+        pinDRV.setDisplayMode("Description")
+        for id in range(0,len(drvSTRVal.getChildren())):
+            pinDRV.addKey(drvSTRVal.getChildren()[id].getAttribute("name"), str(drvSTRVal.getChildren()[id].getAttribute("value")) , drvSTRVal.getChildren()[id].getAttribute("caption") )
+
+    if slewRateBits:
+        pinSlew = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_SLEW", pin[pinNumber-1])
+        pinSlew.setLabel("Slew Rate")
+        pinSlew.setOutputMode("Value")
+        pinSlew.setDisplayMode("Description")
+        for id in range(0,len(slewRateVal.getChildren())):
+            pinSlew.addKey(slewRateVal.getChildren()[id].getAttribute("name"),
+                        slewRateVal.getChildren()[id].getAttribute("value") ,
+                        slewRateVal.getChildren()[id].getAttribute("caption") )
+
 
     # This symbol is used to map the UI manager selection to the corresponding symbol in the tree view. Will not be
     # displayed in the tree view
@@ -560,7 +606,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pincfgrValue[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_CFGR_Value", pin[pinNumber-1])
     pincfgrValue[pinNumber-1].setReadOnly(True)
     pincfgrValue[pinNumber-1].setVisible(False)
-    pincfgrValue[pinNumber-1].setDependencies(pinCFGR, ["PIN_" + str(pinNumber) + "_PD", "PIN_" + str(pinNumber) + "_PU", "PIN_" + str(pinNumber) + "_OD", "PIN_" + str(pinNumber) + "_DIR", "PIN_" + str(pinNumber) + "_PIO_INTERRUPT", "PIN_" + str(pinNumber) + "_IFSCEN", "PIN_" + str(pinNumber) + "_IFEN", "PIN_" + str(pinNumber) + "_DRV", "PIN_" + str(pinNumber) + "_TAMPER", "PIN_" + str(pinNumber) + "_ST" ])
+    pincfgrValue[pinNumber-1].setDependencies(pinCFGR, ["PIN_" + str(pinNumber) + "_PD", "PIN_" + str(pinNumber) + "_PU", "PIN_" + str(pinNumber) + "_OD", "PIN_" + str(pinNumber) + "_DIR", "PIN_" + str(pinNumber) + "_PIO_INTERRUPT", "PIN_" + str(pinNumber) + "_IFSCEN", "PIN_" + str(pinNumber) + "_IFEN", "PIN_" + str(pinNumber) + "_DRV", "PIN_" + str(pinNumber) + "_SLEW", "PIN_" + str(pinNumber) + "_TAMPER", "PIN_" + str(pinNumber) + "_ST" ])
 
 packageUpdate = coreComponent.createBooleanSymbol("PACKAGE_UPDATE_DUMMY", None)
 packageUpdate.setVisible(False)
