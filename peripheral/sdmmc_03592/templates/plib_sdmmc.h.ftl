@@ -75,7 +75,7 @@ bool ${SDMMC_INSTANCE_NAME}_IsWriteProtected ( void );
 bool ${SDMMC_INSTANCE_NAME}_IsCardAttached ( void );
 </#if>
 
-bool ${SDMMC_INSTANCE_NAME}_ClockSet ( uint32_t clock);
+bool ${SDMMC_INSTANCE_NAME}_ClockSet ( uint32_t speed);
 
 void ${SDMMC_INSTANCE_NAME}_ClockEnable ( void );
 
@@ -84,6 +84,8 @@ void ${SDMMC_INSTANCE_NAME}_ClockDisable ( void );
 uint16_t ${SDMMC_INSTANCE_NAME}_CommandErrorGet (void);
 
 uint16_t ${SDMMC_INSTANCE_NAME}_DataErrorGet (void);
+
+uint16_t ${SDMMC_INSTANCE_NAME}_GetError(void);
 
 void ${SDMMC_INSTANCE_NAME}_ErrorReset ( SDMMC_RESET_TYPE resetType );
 
