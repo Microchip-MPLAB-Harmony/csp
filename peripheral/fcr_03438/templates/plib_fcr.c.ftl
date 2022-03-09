@@ -65,13 +65,14 @@ void ${FCR_INSTANCE_NAME}_Initialize( void )
                   <#else>
 <#lt>                     ((${FCR_INSTANCE_NAME}_REGS->FCR_CTRLA) & (FCR_CTRLA_ARB_Msk | FCR_CTRLA_RDBUFWS_Msk | FCR_CTRLA_FWS_Msk)) | \
                   </#if>
-<#lt>                     FCR_CTRLA_ADRWS(${FCR_ADRWS?then('1', '0')}) | \
-<#lt>                     FCR_CTRLA_AUTOWS(${FCR_AUTOWS?then('1', '0')});
+<#lt>                     FCR_CTRLA_ADRWS(${FCR_ADRWS?then('1U', '0U')}) | \
+<#lt>                     FCR_CTRLA_AUTOWS(${FCR_AUTOWS?then('1U', '0U')});
 }
 
 bool ${FCR_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    memcpy((void *)data, (void *)(address), length);
+    uint32_t *pAddress = (uint32_t *)address;
+   (void)memcpy(data,pAddress,length);
 
     return true;
 }
