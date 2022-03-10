@@ -71,14 +71,11 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum
-{
 <#list 0..(RCON_CAUSE_COUNT - 1) as i>
     <#assign RCON_CAUSE = "RCON_CAUSE_" + i>
-    RCON_RESET_CAUSE_${.vars[RCON_CAUSE]} = RCON_RCON_${.vars[RCON_CAUSE]}_Msk,
-
+    #define    RCON_RESET_CAUSE_${.vars[RCON_CAUSE]}   RCON_RCON_${.vars[RCON_CAUSE]}_Msk
 </#list>
-} RCON_RESET_CAUSE;
+typedef uint32_t RCON_RESET_CAUSE;
 
 // *****************************************************************************
 // *****************************************************************************

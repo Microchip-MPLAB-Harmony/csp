@@ -66,14 +66,14 @@ RCON_RESET_CAUSE ${RCON_INSTANCE_NAME}_ResetCauseGet( void )
 void ${RCON_INSTANCE_NAME}_ResetCauseClear( RCON_RESET_CAUSE cause )
 {
     /* Clear reset cause status flag */
-    RCON_REGS->RCON_RCONCLR = cause;
+    RCON_REGS->RCON_RCONCLR = (uint32_t)cause;
 }
 
 void __attribute__((noreturn)) ${RCON_INSTANCE_NAME}_SoftwareReset( void )
-{   
+{
     /* Unlock System */
     CFG_REGS->CFG_SYSKEY = 0x00000000;
-    CFG_REGS->CFG_SYSKEY = 0xAA996655;
+    CFG_REGS->CFG_SYSKEY = 0xAA996655U;
     CFG_REGS->CFG_SYSKEY = 0x556699AA;
 
     RCON_REGS->RCON_RSWRSTSET = RCON_RSWRST_SWRST_Msk;
@@ -82,5 +82,8 @@ void __attribute__((noreturn)) ${RCON_INSTANCE_NAME}_SoftwareReset( void )
     RCON_REGS->RCON_RSWRST;
 
     /* Prevent any unwanted code execution until reset occurs */
-    while(1);
+    while(true)
+    {
+
+    }
 }
