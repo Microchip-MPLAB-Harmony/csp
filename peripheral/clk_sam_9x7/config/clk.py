@@ -866,6 +866,7 @@ generic_clocks = ["FLEXCOM", "SDMMC", "TC", "ADC", "XLCDC", "MCAN", "I2SMCC", "P
 generic_clocks_map = coreComponent.createKeyValueSetSymbol("GCLK_INSTANCE_PID", gclk_menu)
 generic_clocks_map.setVisible(False)
 
+peripheral_clock_config = []
 peripherals_node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
 for module_node in peripherals_node.getChildren():
     for instance_node in module_node.getChildren():
@@ -876,6 +877,7 @@ for module_node in peripherals_node.getChildren():
         instance_name = instance_node.getAttribute("name")
         pcr_en = coreComponent.createBooleanSymbol(instance_name + "_CLOCK_ENABLE", pcr_menu)
         pcr_en.setLabel(instance_name)
+        peripheral_clock_config.append(instance_name + "_CLOCK_ENABLE")
 
         id_name_map = coreComponent.createStringSymbol("CLK_ID_NAME_"+clock_id_node.getAttribute("value"), pcr_menu)
         id_name_map.setVisible(False)
@@ -981,17 +983,21 @@ for module_node in peripherals_node.getChildren():
                                          ['MCK_FREQUENCY', instance_name + '_GCLK_FREQUENCY',
                                           instance_name.lower() + "." + gclk_dependency_map[instance_name], instance_name + "_CLOCK_ENABLE"])
 
-
 #Memory controllers (MPDDRC, SMC) all share one clock id 49
 memory_controllers = ['SMC']
 for instance_name in memory_controllers:
     pcr_en = coreComponent.createBooleanSymbol(instance_name + "_CLOCK_ENABLE", pcr_menu)
     pcr_en.setLabel(instance_name)
+    peripheral_clock_config.append(instance_name + "_CLOCK_ENABLE")
 
     pcr_freq = coreComponent.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", pcr_menu)
     pcr_freq.setVisible(False)
     pcr_freq.setDefaultValue(mck.getValue())
     pcr_freq.setDependencies(lambda symbol, event: symbol.setValue(event['source'].getSymbolValue("MCK_FREQUENCY"),0), ['MCK_FREQUENCY'])
+
+# PERIPHERAL_CLOCK_CONFIG symbol used in Clock Configuration (UI)
+peripheralClockConfig = coreComponent.createComboSymbol("PERIPHERAL_CLOCK_CONFIG", None, peripheral_clock_config)
+peripheralClockConfig.setVisible(False)
 
 pcr_en = coreComponent.createBooleanSymbol("EXT_MEMORY_CLOCK_ENABLE", pcr_menu)
 pcr_en.setVisible(False)
