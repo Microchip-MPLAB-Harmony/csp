@@ -166,6 +166,8 @@ for i in range(0,mpuRegions):
 
     coreMPURegAddress = coreComponent.createHexSymbol(("MPU_Region_" + str(i) + "_Address"), coreMPURegMenu)
     coreMPURegAddress.setLabel("Base Address")
+    coreMPURegAddress.setMin(0x0)
+    coreMPURegAddress.setMax(0xFFFFFFFF)
     coreMPURegAddress.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
     coreMPURegSize = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Size"), coreMPURegMenu)
