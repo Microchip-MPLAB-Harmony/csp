@@ -242,6 +242,7 @@ if TenBitAddrSupported == True:
 # Slave Address
 i2csSym_ADDR = sercomComponent.createHexSymbol("I2CS_SLAVE_ADDDRESS", sercomSym_OperationMode)
 i2csSym_ADDR.setLabel("I2C Slave Address (7-bit)")
+i2csSym_ADDR.setMin(0)
 i2csSym_ADDR.setMax(1023)
 i2csSym_ADDR.setVisible(False)
 i2csSym_ADDR.setDefaultValue(0x54)
