@@ -41,16 +41,16 @@
 #include "device.h"
 #include "plib_dwt.h"
 
-#define CPU_CLOCK_FREQ    ${CPU_CLOCK_FREQUENCY}
+#define CPU_CLOCK_FREQ    ${CPU_CLOCK_FREQUENCY}U
 
 void DWT_Initialize(void)
 {
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
 
 <#if CoreArchitecture == "CORTEX-M7">
-    DWT->LAR = 0xC5ACCE55;
+    DWT->LAR = 0xC5ACCE55U;
 </#if>
-    DWT->CYCCNT = 0;
+    DWT->CYCCNT = 0U;
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 }
 
@@ -59,10 +59,13 @@ void DWT_DelayUs(uint32_t delay_us)
     uint32_t startCount, endCount;
 
     /* Calculate the end count for the given delay */
-    endCount = (CPU_CLOCK_FREQ / 1000000) * delay_us;
+    endCount = (CPU_CLOCK_FREQ / 1000000U) * delay_us;
 
     startCount = DWT->CYCCNT;
-    while((DWT->CYCCNT - startCount) < endCount);
+    while((DWT->CYCCNT - startCount) < endCount)
+	{
+		/* Do Nothing */
+	}
 }
 
 void DWT_DelayMs(uint32_t delay_ms)
@@ -70,15 +73,18 @@ void DWT_DelayMs(uint32_t delay_ms)
     uint32_t startCount, endCount;
 
     /* Calculate the end count for the given delay */
-    endCount = (CPU_CLOCK_FREQ / 1000) * delay_ms;
+    endCount = (CPU_CLOCK_FREQ / 1000U) * delay_ms;
 
     startCount = DWT->CYCCNT;
-    while((DWT->CYCCNT - startCount) < endCount);
+    while((DWT->CYCCNT - startCount) < endCount)
+	{
+		/* Do Nothing */
+	}
 }
 
 void DWT_CounterReset(void)
 {
-    DWT->CYCCNT = 0;
+    DWT->CYCCNT = 0U; 
 }
 
 void DWT_CounterEnable(void)
