@@ -245,7 +245,7 @@ void ${SUPC_INSTANCE_NAME}_SetOutputPin( SUPC_OUTPIN pin )
 
 void ${SUPC_INSTANCE_NAME}_SelectVoltageRegulator(SUPC_VREGSEL regsel)
 {
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG |= ((uint32_t)regsel << SUPC_VREG_SEL_Pos);
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG = (${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG & ~(SUPC_VREG_SEL_Msk)) | ((uint32_t)regsel << SUPC_VREG_SEL_Pos);
     while((${SUPC_INSTANCE_NAME}_REGS->SUPC_STATUS & SUPC_STATUS_VREGRDY_Msk) == 0U)
     {
         /* do nothing */
