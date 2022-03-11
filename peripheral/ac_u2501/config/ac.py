@@ -432,7 +432,7 @@ def instantiateComponent(acComponent):
             for id in range(len(acSym_COMPCTRL_HYST_Values)):
                 acSym_COMPCTRL_HYST_Key_Name = acSym_COMPCTRL_HYST_Values[id].getAttribute("name")
 
-                if(acSym_COMPCTRL_HYST_Key_Name == "HYST50"):
+                if(int(acSym_COMPCTRL_HYST_Values[id].getAttribute("value")) == 0):
                     acSym_COMPCTRL_HYST_Default_Val = id
 
                 acSym_COMPCTRL_HYST_Key_Description = acSym_COMPCTRL_HYST_Values[id].getAttribute("caption")
