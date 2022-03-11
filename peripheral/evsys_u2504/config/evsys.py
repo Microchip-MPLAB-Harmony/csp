@@ -25,6 +25,10 @@
 ################################################################################
 ##########            EVSYS DATABASE COMPONENTS           #####################
 ################################################################################
+global createEVSYSChannelVectorList
+global evsysChannelVectorList
+evsysChannelVectorList = []
+
 global user
 global generator
 global path
@@ -101,40 +105,42 @@ def eventInterrupt(interrupt, event):
 
 def evsysIntset(interrupt, val):
     global InterruptVector
-    global InterruptHandler
-    global InterruptHandlerLock
     global numsyncChannels
+    global evsysChannelVectorList
 
-    channel = int(interrupt.getID().split("EVSYS_INTERRUPT_MODE")[1])
-    event = Database.getSymbolValue(
-        val["namespace"], "EVSYS_CHANNEL_" + str(channel) + "_EVENT")
-    overflow = Database.getSymbolValue(
-        val["namespace"], "EVSYS_CHANNEL_" + str(channel) + "_OVERRUN")
-    result = event or overflow
-    interrupt.setValue(result, 2)
+    channelID = int(interrupt.getID().split("EVSYS_INTERRUPT_MODE")[1])
+
+    # First clear all the interrupt related symbols
     Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MODE_OTHER", False, 2)
     Database.setSymbolValue(val["namespace"], "INTERRUPT_ACTIVE", False, 2)
 
-    for id in range(0 , numsyncChannels):
-        if (Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_EVENT")
-            or Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_OVERRUN")):
-            Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MAX_CHANNEL", id, 2)
+    vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+    # First disable all the EVSYS channel interrupt lines, unlock them and set the default handler
+    for id in range(0, len(vectorValues)):
+        if vectorValues[id].getAttribute("module-instance") == "EVSYS":
+            vectorName = vectorValues[id].getAttribute("name")
+            Database.setSymbolValue("core", vectorName + "_INTERRUPT_ENABLE", False, 2)
+            Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER_LOCK", False, 2)
+            Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER", vectorName + "_Handler", 2)
+
+    for channel in range(0 , numsyncChannels + 1):
+        event = Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(channel) + "_EVENT")
+        overflow = Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(channel) + "_OVERRUN")
+        path = interrupt.getComponent().getSymbolByID("EVSYS_CHANNEL_" + str(channel) + "_PATH").getSelectedKey()
+        result = (event or overflow) and (path != "ASYNCHRONOUS")
+
+        if channel == channelID:
+            interrupt.setValue(result, 2)
+        if result:
+            # Get the vector name to use for the given EVSYS channel
+            vectorName = evsysChannelVectorList[channel].get(str(channel))
+            Database.setSymbolValue("core", vectorName + "_INTERRUPT_ENABLE", True, 2)
+            Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER_LOCK", True, 2)
+            Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER", vectorName + "_InterruptHandler", 2)
+            Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MAX_CHANNEL", channel, 2)
             Database.setSymbolValue(val["namespace"], "INTERRUPT_ACTIVE", True, 2)
-            if (id >= len(InterruptVector) - 1):
+            if "OTHER" in vectorName:
                 Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MODE_OTHER", True, 2)
-
-
-    if channel > len(InterruptVector) - 1:
-        channel = len(InterruptVector) - 1
-
-    Database.setSymbolValue("core", InterruptVector[channel], result, 2)
-    Database.setSymbolValue("core", InterruptHandlerLock[channel], result, 2)
-    if result:
-        Database.setSymbolValue("core", InterruptHandler[channel], str(
-            InterruptHandler[channel].split("_INTERRUPT_HANDLER")[0]) + "_InterruptHandler", 2)
-    else:
-        Database.setSymbolValue("core", InterruptHandler[channel], InterruptHandler[channel].split(
-            "_INTERRUPT_HANDLER")[0] + "_Handler", 2)
 
 
 def updateEVSYSInterruptWarringStatus(symbol, event):
@@ -143,6 +149,7 @@ def updateEVSYSInterruptWarringStatus(symbol, event):
 
 def evsysNonSecCalculation(symbol, event):
     global numsyncChannels
+    global evsysChannelVectorList
     nonSecure = False
     channel = int(event["id"].split("_")[2])
     if Database.getSymbolValue(event["namespace"], "EVSYS_CHANNEL_" + str(channel)):
@@ -165,7 +172,7 @@ def evsysNonSecCalculation(symbol, event):
         nonSecure = False
 
     if channel < numsyncChannels:
-        Database.setSymbolValue("core", InterruptVectorSecurity[channel], nonSecure)
+        Database.setSymbolValue("core", evsysChannelVectorList[channel].get(str(channel)) + "_SET_NON_SECURE", nonSecure)
 
 def evsysUserNonSecCalculation(symbol, event):
     user = int(event["id"].split("_")[3])
@@ -200,6 +207,40 @@ def fileGenLogic(symbol, event):
         EVSYSfilesArray[0].setEnabled(False)
         EVSYSfilesArray[1].setEnabled(False)
         EVSYSfilesArray[2].setEnabled(False)
+
+def createEVSYSChannelVectorList(evsysChannelCount, localComponent):
+    # Returns a list containing dictionary {channel_number : vector_name}, where vector_name is read from ATDF
+    # The list index corelates to EVSYS channel and contains a dictionary with channel number and the vector name to use for that channel
+    # Total size of the list will be equal to EVSYS_CHANNEL_NUMBER (read from ATDF)
+    # Example: evsysChannelVectorList = [{0 : EVSYS_0}, {1 : EVSYS_1}, {2 : EVSYS_2}, {3 : EVSYS_3}, ... {31 : EVSYS_31}]
+    global evsysChannelVectorList
+    evsysVectorNameList = []
+
+    vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+
+    for id in range(0, len(vectorValues)):
+        if vectorValues[id].getAttribute("module-instance") == "EVSYS":
+            evsysVectorNameList.append(vectorValues[id].getAttribute("name"))
+
+    for n in evsysVectorNameList:
+        if "OTHER" in n:
+            for y in range(len(evsysChannelVectorList), evsysChannelCount):
+                evsysChannelVectorList.append({str(y): n})
+
+            evsysIntOther = localComponent.createBooleanSymbol("EVSYS_INTERRUPT_MODE_OTHER", None)
+            evsysIntOther.setVisible(False)
+
+        else:
+            channelList = n[6:].split("_")
+            if len(channelList) == 1:
+                evsysChannelVectorList.append({channelList[0]: n})
+            else:
+                startCh = channelList[0]
+                endCh = channelList[1]
+                for x in range(int(startCh), int(endCh) + 1):
+                    evsysChannelVectorList.append({str(x): n})
+
+    return evsysChannelVectorList
 
 def instantiateComponent(evsysComponent):
     global evsysInstanceName
@@ -296,6 +337,8 @@ def instantiateComponent(evsysComponent):
     evsysPriority.addKey(
         "ROUND-ROBIN", "1", "Round-robin scheduling scheme for channels with level priority")
     evsysPriority.setOutputMode("Value")
+
+    createEVSYSChannelVectorList(int(channel), evsysComponent)
 
     for id in range(0, channel):
         evsysChannel=evsysComponent.createBooleanSymbol(
@@ -416,7 +459,7 @@ def instantiateComponent(evsysComponent):
             evsysInterrupt.setVisible(False)
             evsysInterrupt.setDefaultValue(False)
             evsysInterrupt.setDependencies(evsysIntset, [
-                                           "EVSYS_CHANNEL_" + str(id) + "_OVERRUN", "EVSYS_CHANNEL_" + str(id) + "_EVENT"])
+                                           "EVSYS_CHANNEL_" + str(id) + "_OVERRUN", "EVSYS_CHANNEL_" + str(id) + "_EVENT", "EVSYS_CHANNEL_" + str(id) + "_PATH"])
 
     evsysUserMenu=evsysComponent.createMenuSymbol(
         "EVSYS_USER_MENU", evsysSym_Menu)
@@ -506,13 +549,9 @@ def instantiateComponent(evsysComponent):
     evsysInterruptMode.setDefaultValue(False)
     evsysInterruptMode.setVisible(False)
 
-    if numsyncChannels > len(InterruptVector):
-        evsysIntOther = evsysComponent.createBooleanSymbol("EVSYS_INTERRUPT_MODE_OTHER", evsysSym_Menu)
-        evsysIntOther.setVisible(False)
-
-        evsysIntEnableForMaxChannel = evsysComponent.createIntegerSymbol("EVSYS_INTERRUPT_MAX_CHANNEL", evsysSym_Menu)
-        evsysIntEnableForMaxChannel.setVisible(False)
-        evsysIntEnableForMaxChannel.setDefaultValue(0)
+    evsysIntEnableForMaxChannel = evsysComponent.createIntegerSymbol("EVSYS_INTERRUPT_MAX_CHANNEL", evsysSym_Menu)
+    evsysIntEnableForMaxChannel.setVisible(False)
+    evsysIntEnableForMaxChannel.setDefaultValue(0)
     # ################################################################################
     # ##########             CODE GENERATION             #############################
     # ################################################################################
