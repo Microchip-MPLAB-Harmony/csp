@@ -56,10 +56,13 @@ int _mon_getc(int canblock);
 void _mon_putc(char c);
 #endif //__arm__
 
+<#if stdio??>
+<#if stdio.DEBUG_PERIPHERAL?has_content>
 <#assign USART_PLIB = "stdio.DEBUG_PERIPHERAL">
 <#assign USART_PLIB_RX_ENABLED = USART_PLIB?eval + ".USART_RX_ENABLE">
 <#assign USART_PLIB_TX_ENABLED = USART_PLIB?eval + ".USART_TX_ENABLE">
-
+</#if>
+</#if>
 
 int _mon_getc(int canblock)
 {
