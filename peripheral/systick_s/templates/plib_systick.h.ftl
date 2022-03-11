@@ -56,14 +56,14 @@
 // *****************************************************************************
 
 <#if SYSTICK_SECURE_CLOCK == "0">
-    <#lt>#define SYSTICK_FREQ       ${SYSTICK_CLOCK_FREQUENCY}
+    <#lt>#define SYSTICK_FREQ       ${SYSTICK_CLOCK_FREQUENCY}U
 </#if>
 <#if SYSTICK_CLOCK == "1">
-    <#lt>#define SYSTICK_FREQ   ${CPU_CLOCK_FREQUENCY}
+    <#lt>#define SYSTICK_FREQ   ${CPU_CLOCK_FREQUENCY}U
 </#if>
 
 <#if USE_SYSTICK_SECURE_INTERRUPT == true>
-    <#lt>#define SYSTICK_INTERRUPT_PERIOD_IN_US  (${SYSTICK_SECURE_PERIOD_US})
+    <#lt>#define SYSTICK_INTERRUPT_PERIOD_IN_US  (${SYSTICK_SECURE_PERIOD_US}U)
 
     <#lt>typedef void (*SYSTICK_CALLBACK)(uintptr_t context);
 </#if>
