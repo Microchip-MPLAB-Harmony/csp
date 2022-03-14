@@ -213,6 +213,10 @@ for module in range (0, len(modules)):
                     for csregister in ebiRegGroup:
                         if("EBICS" in csregister.getAttribute("name")):
                             ebiChipSelCount += 1
+                    if ebiChipSelCount == 0:
+                        ebiRegGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EBI\"]/register-group@[name=\"EBI\"]/register-group@[name=\"CS_X\"]")
+                        if ebiRegGroup != None:
+                            ebiChipSelCount = int(ebiRegGroup.getAttribute("count"))
                     for ebiChipSel in range(0, ebiChipSelCount):
                         periphComponent.addCapability("ebi_cs"  + str(ebiChipSel), "EBI_CS", "EBI_CS"  + str(ebiChipSel), False)
     else:
