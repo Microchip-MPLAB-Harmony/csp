@@ -167,13 +167,14 @@ static void DFLL_Initialize(void)
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLVAL = OSCCTRL_DFLLVAL_COARSE((uint32_t)calibCoarse) | OSCCTRL_DFLLVAL_FINE(512U);</@compress>
 
     <#if CONFIG_CLOCK_DFLL_OPMODE == "1">
+    <#if CONFIG_CLOCK_DFLL_USB == false>
     GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_0_INDEX}] = GCLK_PCHCTRL_GEN(${GCLK_ID_0_GENSEL}U)${GCLK_ID_0_WRITELOCK?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')} | GCLK_PCHCTRL_CHEN_Msk;
 
     while ((GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_0_INDEX}] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
     {
         /* Wait for synchronization */
     }
-
+    </#if>
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
         /* Waiting for the Ready state */
@@ -199,7 +200,7 @@ static void DFLL_Initialize(void)
     <#lt>                               ${CONFIG_CLOCK_DFLL_STABLE?then('| OSCCTRL_DFLLCTRL_STABLE_Msk ', ' ')}
     <#lt>                               ;</@compress>
 
-    <#if CONFIG_CLOCK_DFLL_OPMODE == "1">
+    <#if CONFIG_CLOCK_DFLL_OPMODE == "1" && CONFIG_CLOCK_DFLL_USB == false>
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLLCKF_Msk) != OSCCTRL_STATUS_DFLLLCKF_Msk)
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
