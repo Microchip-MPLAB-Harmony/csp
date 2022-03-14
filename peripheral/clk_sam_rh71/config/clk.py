@@ -499,6 +499,10 @@ def __main_clock_menu(clk_comp, clk_menu):
     mainck_rc_en.setDescription("The Main RC oscillator is enabled.")
     mainck_rc_en.setDefaultValue(True)
 
+    mainck_rc_trim_from_gpnvm_en = clk_comp.createBooleanSymbol("CLK_MAINCK_RC_TRIM_FROM_GPNVM", mainck_rc_en)
+    mainck_rc_trim_from_gpnvm_en.setLabel("Apply RC trim values from GPNVM words")
+    mainck_rc_trim_from_gpnvm_en.setDefaultValue(True)
+
     # Main Clock RC Frequency Selection
     mainck_rc_freq_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="CKGR_MOR__MOSCRCF"]')
     mainck_rc_freq = clk_comp.createKeyValueSetSymbol("CLK_MAINCK_MOSCRCF", mainck_menu)
@@ -567,6 +571,10 @@ def __rc2_clock_menu(clk_comp, clk_menu):
     rc2ck_en.setLabel("Enable RC2 Oscillator")
     rc2ck_en.setDescription("Enables the 2nd fast oscillator")
     rc2ck_en.setDefaultValue(True)
+
+    rc2ck_trim_from_gpnvm_en = clk_comp.createBooleanSymbol("CLK_RC2_TRIM_FROM_GPNVM", rc2ck_en)
+    rc2ck_trim_from_gpnvm_en.setLabel("Apply RC2 trim values from GPNVM words")
+    rc2ck_trim_from_gpnvm_en.setDefaultValue(True)
 
     # RC2 Frequency Selection
     rc2ck_sel_freq_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_OSC2__OSCRCF"]')
