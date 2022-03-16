@@ -219,7 +219,7 @@ DBGU_ERROR ${DBGU_INSTANCE_NAME}_ErrorGet(void)
 bool ${DBGU_INSTANCE_NAME}_SerialSetup(DBGU_SERIAL_SETUP *setup, uint32_t srcClkFreq)
 {
     bool status = false;
-    uint32_t baud = setup->baudRate;
+    uint32_t baud;
     uint32_t brgVal = 0;
     uint32_t dbguMode;
 
@@ -232,6 +232,8 @@ bool ${DBGU_INSTANCE_NAME}_SerialSetup(DBGU_SERIAL_SETUP *setup, uint32_t srcClk
 </#if>
     if (setup != NULL)
     {
+        baud = setup->baudRate;
+
         if (srcClkFreq == 0)
         {
             srcClkFreq = ${DBGU_INSTANCE_NAME}_FrequencyGet();
