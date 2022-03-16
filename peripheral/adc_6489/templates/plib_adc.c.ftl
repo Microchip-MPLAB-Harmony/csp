@@ -211,7 +211,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
                                                                     ${(ADC_CONV_MODE == "2")?then('| ADC_MR_TRGEN_Msk | ADC_MR_${ADC_MR_TRGSEL_VALUE}', '')};</@compress>
 
     /* resolution and sign mode of result */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR = ${ADC_RES} ${ADC_STM}<#if ADC_CLK_SRC??> | ADC_EMR_${ADC_CLK_SRC}</#if> | ADC_EMR_TAG_Msk | ADC_EMR_CMPFILTER(${ADC_EMR_CMPFILTER}) <#if ADC_EMR_CMPALL == true> | ADC_EMR_CMPALL_Msk <#else> | ADC_EMR_CMPSEL(${ADC_EMR_CMPSEL}) </#if> | ADC_EMR_CMPTYPE(${ADC_EMR_CMPTYPE}_Val) | ADC_EMR_CMPMODE(ADC_EMR_CMPMODE_${ADC_EMR_CMPMODE});
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR = ${ADC_RES} ${ADC_STM}<#if ADC_CLK_SRC??> | ADC_EMR_${ADC_CLK_SRC}</#if> | ADC_EMR_TAG_Msk | ADC_EMR_CMPFILTER(${ADC_EMR_CMPFILTER}U) <#if ADC_EMR_CMPALL == true> | ADC_EMR_CMPALL_Msk <#else> | ADC_EMR_CMPSEL(${ADC_EMR_CMPSEL}U) </#if> | ADC_EMR_CMPTYPE(${ADC_EMR_CMPTYPE}_Val) | ADC_EMR_CMPMODE(ADC_EMR_CMPMODE_${ADC_EMR_CMPMODE});
 
 <#if ADC_CWR_HIGHTHRES != 0 || ADC_CWR_LOWTHRES != 0>
     ${ADC_INSTANCE_NAME}_REGS->ADC_CWR = (${ADC_CWR_HIGHTHRES} << ADC_CWR_HIGHTHRES_Pos) | ${ADC_CWR_LOWTHRES};
@@ -251,25 +251,25 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 /* Enable ADC channels */
 void ${ADC_INSTANCE_NAME}_ChannelsEnable( ADC_CHANNEL_MASK channelsMask )
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CHER |= channelsMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CHER |= (uint32_t)channelsMask;
 }
 
 /* Disable ADC channels */
 void ${ADC_INSTANCE_NAME}_ChannelsDisable( ADC_CHANNEL_MASK channelsMask )
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CHDR |= channelsMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CHDR |= (uint32_t)channelsMask;
 }
 
 /* Enable channel end of conversion interrupt */
 void ${ADC_INSTANCE_NAME}_ChannelsInterruptEnable( ADC_INTERRUPT_MASK channelsInterruptMask )
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_IER |= channelsInterruptMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_IER |= (uint32_t)channelsInterruptMask;
 }
 
 /* Disable channel end of conversion interrupt */
 void ${ADC_INSTANCE_NAME}_ChannelsInterruptDisable( ADC_INTERRUPT_MASK channelsInterruptMask )
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_IDR |= channelsInterruptMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_IDR |= (uint32_t)channelsInterruptMask;
 }
 
 /* Start the conversion with software trigger */
@@ -281,25 +281,26 @@ void ${ADC_INSTANCE_NAME}_ConversionStart( void )
 /* Check if conversion result is available */
 bool ${ADC_INSTANCE_NAME}_ChannelResultIsReady( ADC_CHANNEL_NUM channel )
 {
-    return (${ADC_INSTANCE_NAME}_REGS->ADC_ISR >> channel) & 0x1U;
+    return (((${ADC_INSTANCE_NAME}_REGS->ADC_ISR >> (uint32_t)channel) & 0x1U) != 0U);
 }
 
 /* Read the conversion result */
 uint16_t ${ADC_INSTANCE_NAME}_ChannelResultGet( ADC_CHANNEL_NUM channel )
 {
-    return (${ADC_INSTANCE_NAME}_REGS->ADC_CDR[channel]);
+    return (uint16_t)(${ADC_INSTANCE_NAME}_REGS->ADC_CDR[channel]);
 }
 
 /* Configure the user defined conversion sequence */
 void ${ADC_INSTANCE_NAME}_ConversionSequenceSet( ADC_CHANNEL_NUM *channelList, uint8_t numChannel )
 {
     uint8_t channelIndex;
+    (void)numChannel;
 
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 = 0U;
 
     for (channelIndex = 0U; channelIndex < ADC_SEQ1_CHANNEL_NUM; channelIndex++)
     {
-        ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 |= channelList[channelIndex] << (channelIndex * 4U);
+        ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 |= (uint32_t)channelList[channelIndex] << (channelIndex * 4U);
     }
 }
 
@@ -307,7 +308,7 @@ void ${ADC_INSTANCE_NAME}_ConversionSequenceSet( ADC_CHANNEL_NUM *channelList, u
 void ${ADC_INSTANCE_NAME}_ComparatorChannelSet(ADC_CHANNEL_NUM channel)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_EMR &= ~(ADC_EMR_CMPSEL_Msk | ADC_EMR_CMPALL_Msk);
-    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR |= (channel << ADC_EMR_CMPSEL_Pos);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR |= ((uint32_t)channel << ADC_EMR_CMPSEL_Pos);
 }
 
 /* Enable compare on all channels */
@@ -332,7 +333,7 @@ void ${ADC_INSTANCE_NAME}_CompareRestart(void)
 void ${ADC_INSTANCE_NAME}_ComparatorModeSet(ADC_COMPARATOR_MODE cmpMode)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_EMR &= ~(ADC_EMR_CMPMODE_Msk);
-    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR |= ((cmpMode) << ADC_EMR_CMPMODE_Pos);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR |= ((uint32_t)cmpMode << ADC_EMR_CMPMODE_Pos);
 }
 
 <#if ADC_INTERRUPT == true>
