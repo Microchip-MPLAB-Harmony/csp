@@ -267,7 +267,7 @@ UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void )
 bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
 {
     bool status = false;
-    uint32_t baud = setup->baudRate;
+    uint32_t baud;
     uint32_t brgVal = 0;
     uint32_t uartMode;
 
@@ -280,6 +280,7 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
 </#if>
     if (setup != NULL)
     {
+        baud = setup->baudRate;
         if(srcClkFreq == 0)
         {
             srcClkFreq = ${UART_INSTANCE_NAME}_FrequencyGet();
