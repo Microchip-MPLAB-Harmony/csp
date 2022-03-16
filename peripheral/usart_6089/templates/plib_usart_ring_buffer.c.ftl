@@ -119,7 +119,7 @@ void ${USART_INSTANCE_NAME}_Initialize( void )
 
 bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
 {
-    uint32_t baud = setup->baudRate;
+    uint32_t baud;
     uint32_t brgVal = 0;
     uint32_t overSampVal = 0;
     uint32_t usartMode;
@@ -128,6 +128,7 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
     if (setup != NULL)
     {
         baud = setup->baudRate;
+
         if(srcClkFreq == 0)
         {
             srcClkFreq = ${USART_INSTANCE_NAME}_FrequencyGet();
