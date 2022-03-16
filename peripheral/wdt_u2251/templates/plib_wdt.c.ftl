@@ -114,7 +114,7 @@ void ${WDT_INSTANCE_NAME}_EnableWindowMode( void )
     }
 	
     /* Window mode can be changed only if peripheral is disabled or ALWAYS ON bit is set */
-    if((!(${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk)) || (${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk))
+    if(((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk) == 0U) || ((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != 0U))
     {
         /* Enable window mode */
         ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA |= (uint8_t)WDT_CTRLA_WEN_Msk;
@@ -134,7 +134,7 @@ void ${WDT_INSTANCE_NAME}_DisableWindowMode( void )
     }
 	
     /* Window mode can be changed only if peripheral is disabled or ALWAYS ON bit is set */
-    if((!(${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk)) || (${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk))
+    if(((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk) == 0U) || ((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != 0U))
     {
         /* Disable window mode */
         ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA &= (uint8_t)(~WDT_CTRLA_WEN_Msk);
@@ -148,17 +148,17 @@ void ${WDT_INSTANCE_NAME}_DisableWindowMode( void )
 
 bool ${WDT_INSTANCE_NAME}_IsEnabled(void)
 {
-    return (${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & (WDT_CTRLA_ALWAYSON_Msk | WDT_CTRLA_ENABLE_Msk))? true : false;
+    return ((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & (WDT_CTRLA_ALWAYSON_Msk | WDT_CTRLA_ENABLE_Msk)) != 0U);
 }
 
 bool ${WDT_INSTANCE_NAME}_IsAlwaysOn(void)
 {
-    return (${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk)? true : false;
+    return ((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != 0U);
 }
 
 bool ${WDT_INSTANCE_NAME}_IsWindowModeEnabled(void)
 {
-    return (${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_WEN_Msk)? true : false;
+    return ((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_WEN_Msk) != 0U);
 }
 
 
