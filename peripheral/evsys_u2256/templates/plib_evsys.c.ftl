@@ -91,7 +91,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 <#if EVSYS_INTERRUPT_MODE>
 
     /*Interrupt setting for Event System*/
-    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = ${EVSYS_INTERRUPT_VALUE};
+    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = ${EVSYS_INTERRUPT_VALUE}U;
 </#if>
 }
 
@@ -110,12 +110,12 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_UserEnable(EVSYS_CHANNEL channel, uint8_t user)
     <#lt>{
-    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER[user] = EVSYS_USER_CHANNEL((channel + 1));
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER[user] = EVSYS_USER_CHANNEL((channel + 1U));
     <#lt>}
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user)
     <#lt>{
-    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER[user] = 0x0;
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER[user] = 0x0U;
     <#lt>}
     <#break>
     </#if>
@@ -143,9 +143,9 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 <#if EVSYS_INTERRUPT_MODE == true>
 <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptHandler( void )
 <#lt>{
-     <#lt>    uint8_t currentChannel = 0;
-     <#lt>    uint32_t eventIntFlagStatus = 0;
-     <#lt>    uint32_t overrunIntFlagStatus = 0;
+     <#lt>    uint8_t currentChannel = 0U;
+     <#lt>    uint32_t eventIntFlagStatus = 0U;
+     <#lt>    uint32_t overrunIntFlagStatus = 0U;
 
      <#lt>    /* Find any triggered channels, run associated callback handlers */
      <#lt>    for (currentChannel = 0U; currentChannel < ${CONFIGURED_CHANNEL}U; currentChannel++)
