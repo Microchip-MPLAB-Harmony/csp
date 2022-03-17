@@ -215,7 +215,7 @@ uint32_t SYSTICK_GetTickCounter(void)
 void SYSTICK_StartTimeOut (SYSTICK_TIMEOUT* timeout, uint32_t delay_ms)
 { 
 	timeout->start = SYSTICK_GetTickCounter();
-	timeout->count = (delay_ms*1000)/SYSTICK_INTERRUPT_PERIOD_IN_US; 
+	timeout->count = (delay_ms*1000U)/SYSTICK_INTERRUPT_PERIOD_IN_US; 
 }
 
 void SYSTICK_ResetTimeOut (SYSTICK_TIMEOUT* timeout)
@@ -225,14 +225,14 @@ void SYSTICK_ResetTimeOut (SYSTICK_TIMEOUT* timeout)
 
 bool SYSTICK_IsTimeoutReached (SYSTICK_TIMEOUT* timeout)
 { 
+    bool valTimeout  = true;
 	if ((SYSTICK_GetTickCounter() - timeout->start) < timeout->count)
 	{
-		return false;
+		valTimeout = false;
 	}
-	else
-	{
-		return true;
-	}
+	
+	return valTimeout;
+	
 }
     <#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
     <#lt>{
