@@ -44,24 +44,6 @@
 #include "plib_${DIVAS_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 
-<#if DIVAS_DIV_OVERLOAD>
-/* Provide forward declaration for overloaded division operators */
-extern int32_t __aeabi_idiv(int32_t numerator, int32_t denominator);
-extern uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator);
-extern uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator);
-extern uint64_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator);
-</#if>
-
-void ${DIVAS_INSTANCE_NAME}_Initialize(void)
-{
-    <#if DIVAS_DLZ == false>
-    /* Disable Leading Zero optimization*/
-    DIVAS_REGS->DIVAS_CTRLA = DIVAS_CTRLA_DLZ_Msk;
-    <#else>
-    /* Leading Zero optimization is by default enabled*/
-    </#if>
-}
-
 #define DIVAS_CRITICAL_ENTER()                        \
     do {                                               \
         volatile uint32_t globalInterruptState;        \
@@ -71,6 +53,7 @@ void ${DIVAS_INSTANCE_NAME}_Initialize(void)
         __set_PRIMASK(globalInterruptState);           \
     }                                                  \
     while (false)
+
 
 /* Return 32 bit result, the result only. */
 static inline uint32_t divas_result32(void)
@@ -96,6 +79,30 @@ static inline void divas_div(const uint8_t sign, const uint32_t dividend, const 
     {
         /* Wait for the square root to complete */
     }
+}
+<#if DIVAS_DLZ == false>
+
+void ${DIVAS_INSTANCE_NAME}_Initialize(void)
+{
+    /* Disable Leading Zero optimization*/
+    DIVAS_REGS->DIVAS_CTRLA = DIVAS_CTRLA_DLZ_Msk;
+
+}
+</#if>
+
+uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot(uint32_t number)
+{
+    uint32_t res = 0U;
+
+    DIVAS_CRITICAL_ENTER();
+    DIVAS_REGS->DIVAS_SQRNUM = number;
+    while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
+    {
+        /* Wait for the square root to complete */
+    }
+    res = DIVAS_REGS->DIVAS_RESULT;
+    DIVAS_CRITICAL_LEAVE();
+    return res;
 }
 
 <#if DIVAS_DIV_OVERLOAD == false>
@@ -143,7 +150,18 @@ uint64_t ${DIVAS_INSTANCE_NAME}_DivmodUnsigned(uint32_t numerator, uint32_t deno
     return res;
 }
 <#else>
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 21.2 deviated 8 times in this file.  Deviation record ID -  H3_MISRAC_2012_R_21_2_DR_1 */
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate:8 "MISRA C-2012 Rule 21.2" "H3_MISRAC_2012_R_21_2_DR_1"
+</#if>
+
 /* Do signed division, return result */
+extern int32_t __aeabi_idiv(int32_t numerator, int32_t denominator);
 int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
 {
     int32_t res;
@@ -155,6 +173,7 @@ int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
 }
 
 /* Do unsigned division, return result */
+extern uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator);
 uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
 {
     uint32_t res;
@@ -166,6 +185,7 @@ uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
 }
 
 /* Do signed division, return result and remainder */
+extern uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator);
 uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator)
 {
     uint64_t res;
@@ -177,6 +197,7 @@ uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator)
 }
 
 /* Do unsigned division, return result and remainder */
+extern uint64_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator);
 uint64_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
 {
     uint64_t res;
@@ -186,21 +207,11 @@ uint64_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
     DIVAS_CRITICAL_LEAVE();
     return res;
 }
+
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.2"
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
 </#if>
-
-uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot(uint32_t number)
-{
-    uint32_t res = 0U;
-
-    DIVAS_CRITICAL_ENTER();
-    DIVAS_REGS->DIVAS_SQRNUM = number;
-    while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
-    {
-        /* Wait for the square root to complete */
-    }
-    res = DIVAS_REGS->DIVAS_RESULT;
-    DIVAS_CRITICAL_LEAVE();
-
-
-    return res;
-}
+</#if>
+</#if>

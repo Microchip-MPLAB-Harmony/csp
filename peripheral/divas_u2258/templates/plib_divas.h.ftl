@@ -67,10 +67,14 @@ extern "C"
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-
+<#if DIVAS_DLZ == false>
 void ${DIVAS_INSTANCE_NAME}_Initialize(void);
 
+</#if>
+/* 32-bit Square Root */
+uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot (uint32_t number);
 <#if DIVAS_DIV_OVERLOAD == false>
+
 /* 32-bit Signed division, return quotient */
 int32_t ${DIVAS_INSTANCE_NAME}_DivSigned(int32_t numerator, int32_t denominator);
 
@@ -83,10 +87,6 @@ uint64_t ${DIVAS_INSTANCE_NAME}_DivmodSigned(int32_t numerator, int32_t denomina
 /* 32-bit Unsigned division, return quotient and remainder as 64-bit result */
 uint64_t ${DIVAS_INSTANCE_NAME}_DivmodUnsigned(uint32_t numerator, uint32_t denominator);
 </#if>
-
-/* 32-bit Square Root */
-uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot (uint32_t number);
-
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif
