@@ -181,24 +181,24 @@ static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 <#if ADC_LOAD_CALIB? has_content>
     <#if ADC_LOAD_CALIB == true >
         <#if ADC_INSTANCE_NAME = "ADC0">
-            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0)
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0U)
             <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
 
-            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3)
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3U)
             <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
 
         <#elseif ADC_INSTANCE_NAME = "ADC1">
-            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (6)
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (6U)
             <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
 
-            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (9)
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (9U)
             <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
 
         <#elseif ADC_INSTANCE_NAME = "ADC">
-            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0)
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0U)
             <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
 
-            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3)
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3U)
             <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
         </#if>
     </#if>
@@ -248,7 +248,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 <#else>
     <#if ADC_CTRLC_DIFFMODE == true>
     /* Positive and negative input pins */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint16_t) (ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG});
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL =  ((uint16_t)ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | (uint16_t)ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG});
     <#else>
     /* Input pin */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint16_t) ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS};
