@@ -713,7 +713,8 @@ bool ${SERCOM_INSTANCE_NAME}_USART_ReadAbort(void)
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;
 
         /* If required application should read the num bytes processed prior to calling the read abort API */
-        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = 0U;
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0U;
+		${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = 0U;
     }
 
     return true;

@@ -686,7 +686,8 @@ static inline bool ${SERCOM_INSTANCE_NAME}_USART_TxPushByte(uint16_t wrByte)
         {
             wrInIdx = wrInIndex << 1U;
 
-            ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrInIdx++] = (uint8_t)wrByte;
+            ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrInIdx] = (uint8_t)wrByte;
+			wrInIdx++;
             ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrInIdx] = (uint8_t)(wrByte >> 8U);
         }
 
