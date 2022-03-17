@@ -152,13 +152,19 @@ static void CLK_MainClockInitialize(void)
     PMC_REGS->CKGR_MOR|= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN_Msk;
 
     /* Wait until the RC oscillator clock is ready. */
-    while( (PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
+    while( (PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk)
+    {
+
+    }
 
     /* Configure the RC Oscillator frequency */
     PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCF${CKGR_MOR_MOSCRCF};
 
     /* Wait until the RC oscillator clock is ready */
-    while( (PMC_REGS->PMC_SR& PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
+    while( (PMC_REGS->PMC_SR& PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk)
+    {
+
+    }
 
     <#if CKGR_MOR_MOSCSEL == "0">
     /* Main RC Oscillator is selected as the Main Clock (MAINCK) source.
@@ -181,10 +187,13 @@ Initialize PLLA (PLLACK)
 static void CLK_PLLAInitialize(void)
 {
     /* Configure and Enable PLLA */
-    PMC_REGS->CKGR_PLLAR = CKGR_PLLAR_ZERO(0) | CKGR_PLLAR_PLLACOUNT(0x3f) |
-                              CKGR_PLLAR_MULA(${CKGR_PLLAR_MULA}) | CKGR_PLLAR_PLLAEN(1) ;
+    PMC_REGS->CKGR_PLLAR = CKGR_PLLAR_ZERO(0U) | CKGR_PLLAR_PLLACOUNT(0x3fU) |
+                              CKGR_PLLAR_MULA(${CKGR_PLLAR_MULA}U) | CKGR_PLLAR_PLLAEN(1U) ;
 
-    while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKA_Msk) != PMC_SR_LOCKA_Msk);
+    while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKA_Msk) != PMC_SR_LOCKA_Msk)
+    {
+
+    }
 
 }
 </#if>
@@ -215,11 +224,17 @@ static void CLK_MasterClockInitialize(void)
 <#if PMC_MCKR_CSS == "PLLA_CLK" || PMC_MCKR_CSS == "PLLB_CLK">
     /* Program PMC_MCKR.PRES and wait for PMC_SR.MCKRDY to be set   */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_PRES_Msk) | PMC_MCKR_PRES_${PMC_MCKR_PRES}${PMC_MCKR_PLLADIV2?then('| PMC_MCKR_PLLADIV2_Msk', '')}${PMC_MCKR_PLLBDIV2?then('| PMC_MCKR_PLLBDIV2_Msk', '')};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+
+    }
 
     /* Program PMC_MCKR.CSS and Wait for PMC_SR.MCKRDY to be set    */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_${PMC_MCKR_CSS};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+
+    }
 </#if>
 
 <#if PMC_MCKR_CSS == "SLOW_CLK" || PMC_MCKR_CSS == "MAIN_CLK">
