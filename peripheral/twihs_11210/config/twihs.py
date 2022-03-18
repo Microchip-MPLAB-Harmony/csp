@@ -198,6 +198,11 @@ def onCapabilityConnected(event):
 
 def updateI2CBaudHz(symbol, event):
     symbol.setValue(event["value"])
+
+def updateTimeoutCount(symbol, event):
+    # Counter value obtained by dividing CPU clock frequency with 5000 gives a delay of 200usec (enough to transmit 10 bits of I2C running at 50 kHz).
+    # 200usec delay assumes each instruction takes 1 CPU clock to execute. In practice the delay will be ~10 times higher, roughly 2-3 msec.
+    symbol.setValue(int(event["value"])/5000)
 ################################################################################
 #### Component ####
 ################################################################################
@@ -341,6 +346,13 @@ def instantiateComponent(twihsComponent):
     twihsSymAPIPrefix = twihsComponent.createStringSymbol("I2C_PLIB_API_PREFIX", None)
     twihsSymAPIPrefix.setDefaultValue(twihsInstanceName.getValue())
     twihsSymAPIPrefix.setVisible(False)
+
+    cpu_clock = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+
+    twihsSym_TimeoutCountVal = twihsComponent.createIntegerSymbol("TWIHS_TIMEOUT_COUNT_VAL", None)
+    twihsSym_TimeoutCountVal.setVisible(False)
+    twihsSym_TimeoutCountVal.setDefaultValue(cpu_clock/5000)
+    twihsSym_TimeoutCountVal.setDependencies(updateTimeoutCount, ["core.CPU_CLOCK_FREQUENCY"])
 
     ############################################################################
     #### Code Generation ####

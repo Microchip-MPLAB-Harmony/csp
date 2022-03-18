@@ -91,6 +91,9 @@ typedef enum
     /* Slave returned Nack */
     TWIHS_ERROR_NACK,
 
+    /* Bus error / Aribitration lost error */
+    TWIHS_BUS_ERROR
+
 } TWIHS_ERROR;
 
 // *****************************************************************************

@@ -84,6 +84,9 @@ void ${TWIHS_INSTANCE_NAME}_Initialize( void )
     ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_CR = TWIHS_CR_THRCLR_Msk;
 
 </#if>
+    // Disable TXRDY, TXCOMP and RXRDY interrupts
+    ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk | TWIHS_IDR_TXRDY_Msk | TWIHS_IDR_RXRDY_Msk;
+
     // Enables interrupt on nack and arbitration lost
     ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_IER = TWIHS_IER_NACK_Msk | TWIHS_IER_ARBLST_Msk;
 
@@ -118,8 +121,10 @@ static void ${TWIHS_INSTANCE_NAME}_InitiateRead( void )
     ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_IER = TWIHS_IER_RXRDY_Msk | TWIHS_IER_TXCOMP_Msk;
 }
 
-static void ${TWIHS_INSTANCE_NAME}_InitiateTransfer( uint16_t address, bool type )
+static bool ${TWIHS_INSTANCE_NAME}_InitiateTransfer( uint16_t address, bool type )
 {
+    uint32_t timeoutCntr = ${TWIHS_TIMEOUT_COUNT_VAL};
+
     // 10-bit Slave Address
     if( address > 0x007F )
     {
@@ -165,7 +170,15 @@ static void ${TWIHS_INSTANCE_NAME}_InitiateTransfer( uint16_t address, bool type
                 // Wait for control byte to be transferred before initiating repeat start for read
                 while((${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR & (TWIHS_SR_TXCOMP_Msk | TWIHS_SR_TXRDY_Msk)) != 0);
 
-                while((${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR & (TWIHS_SR_TXRDY_Msk)) == 0);
+                while((${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR & (TWIHS_SR_TXRDY_Msk)) == 0)
+                {
+                    if (--timeoutCntr == 0)
+                    {
+                        ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_BUS_ERROR;
+                        __enable_irq();
+                        return false;
+                    }
+                }
 
                 type = true;
             }
@@ -185,6 +198,7 @@ static void ${TWIHS_INSTANCE_NAME}_InitiateTransfer( uint16_t address, bool type
     {
         ${TWIHS_INSTANCE_NAME}_InitiateRead();
     }
+    return true;
 }
 
 void ${TWIHS_INSTANCE_NAME}_CallbackRegister( TWIHS_CALLBACK callback, uintptr_t contextHandle )
@@ -210,11 +224,29 @@ bool ${TWIHS_INSTANCE_NAME}_IsBusy( void )
     }
 }
 
+void ${TWIHS_INSTANCE_NAME}_TransferAbort( void )
+{
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_ERROR_NONE;
+
+    // Reset the PLib objects and Interrupts
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_IDLE;
+    ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk | TWIHS_IDR_TXRDY_Msk | TWIHS_IDR_RXRDY_Msk;
+
+    // Disable and Enable I2C Master
+    ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_CR = TWIHS_CR_MSDIS_Msk;
+    ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_CR = TWIHS_CR_MSEN_Msk;
+}
+
 bool ${TWIHS_INSTANCE_NAME}_Read( uint16_t address, uint8_t *pdata, size_t length )
 {
     // Check for ongoing transfer
     if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.state != TWIHS_STATE_IDLE )
     {
+        return false;
+    }
+    if ((${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR & (TWIHS_SR_SDA_Msk | TWIHS_SR_SCL_Msk)) != (TWIHS_SR_SDA_Msk | TWIHS_SR_SCL_Msk))
+    {
+        ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_BUS_ERROR;
         return false;
     }
 
@@ -225,9 +257,7 @@ bool ${TWIHS_INSTANCE_NAME}_Read( uint16_t address, uint8_t *pdata, size_t lengt
     ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeSize = 0;
     ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_ERROR_NONE;
 
-    ${TWIHS_INSTANCE_NAME}_InitiateTransfer(address, true);
-
-    return true;
+    return ${TWIHS_INSTANCE_NAME}_InitiateTransfer(address, true);
 }
 
 bool ${TWIHS_INSTANCE_NAME}_Write( uint16_t address, uint8_t *pdata, size_t length )
@@ -235,6 +265,11 @@ bool ${TWIHS_INSTANCE_NAME}_Write( uint16_t address, uint8_t *pdata, size_t leng
     // Check for ongoing transfer
     if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.state != TWIHS_STATE_IDLE )
     {
+        return false;
+    }
+    if ((${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR & (TWIHS_SR_SDA_Msk | TWIHS_SR_SCL_Msk)) != (TWIHS_SR_SDA_Msk | TWIHS_SR_SCL_Msk))
+    {
+        ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_BUS_ERROR;
         return false;
     }
 
@@ -245,9 +280,7 @@ bool ${TWIHS_INSTANCE_NAME}_Write( uint16_t address, uint8_t *pdata, size_t leng
     ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeSize = length;
     ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_ERROR_NONE;
 
-    ${TWIHS_INSTANCE_NAME}_InitiateTransfer(address, false);
-
-    return true;
+    return ${TWIHS_INSTANCE_NAME}_InitiateTransfer(address, false);
 }
 
 bool ${TWIHS_INSTANCE_NAME}_WriteRead( uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength )
@@ -258,6 +291,11 @@ bool ${TWIHS_INSTANCE_NAME}_WriteRead( uint16_t address, uint8_t *wdata, size_t 
     {
         return false;
     }
+    if ((${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR & (TWIHS_SR_SDA_Msk | TWIHS_SR_SCL_Msk)) != (TWIHS_SR_SDA_Msk | TWIHS_SR_SCL_Msk))
+    {
+        ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_BUS_ERROR;
+        return false;
+    }
 
     ${TWIHS_INSTANCE_NAME?lower_case}Obj.address = address;
     ${TWIHS_INSTANCE_NAME?lower_case}Obj.readBuffer = rdata;
@@ -266,9 +304,7 @@ bool ${TWIHS_INSTANCE_NAME}_WriteRead( uint16_t address, uint8_t *wdata, size_t 
     ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeSize = wlength;
     ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_ERROR_NONE;
 
-    ${TWIHS_INSTANCE_NAME}_InitiateTransfer(address, false);
-
-    return true;
+    return ${TWIHS_INSTANCE_NAME}_InitiateTransfer(address, false);
 }
 
 TWIHS_ERROR ${TWIHS_INSTANCE_NAME}_ErrorGet( void )
