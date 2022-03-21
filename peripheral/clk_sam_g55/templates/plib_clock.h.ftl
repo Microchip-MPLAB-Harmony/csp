@@ -50,14 +50,37 @@
 /* This section lists the other files that are included in this file.
 */
 #include <stdint.h>
+<#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT) || ((SUPC_MR_OSCBYPASS == false) && (SUPC_CR_MDXTALSEL == "1") && SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE == true)>
+#include "device.h"
+#include <stddef.h>
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 extern "C" {
 #endif
+<#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT)>
+#define PMC_STATUS_CFDEV    PMC_SR_CFDEV_Msk
+</#if>
+<#if ((SUPC_MR_OSCBYPASS == false) && (SUPC_CR_MDXTALSEL == "1") && SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE == true)>
+#define PMC_STATUS_XT32KERR PMC_SR_XT32KERR_Msk
+</#if>
+<#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT) || ((SUPC_MR_OSCBYPASS == false) && (SUPC_CR_MDXTALSEL == "1") && SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE == true)>
+typedef uint32_t PMC_STATUS;
+
+typedef void (*PMC_CALLBACK)(PMC_STATUS status, uintptr_t context);
+
+typedef struct
+{
+    PMC_CALLBACK    callback;
+    uintptr_t       context;
+} PMC_CALLBACK_OBJECT;
+</#if>
 
 void CLOCK_Initialize (void);
-
+<#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT) || ((SUPC_MR_OSCBYPASS == false) && (SUPC_CR_MDXTALSEL == "1") && SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE == true)>
+void PMC_CallbackRegister(PMC_CALLBACK callback, uintptr_t context);
+</#if>
 
 #ifdef __cplusplus // Provide C++ Compatibility
 }

@@ -66,6 +66,20 @@ calculatedclkMenu = coreComponent.createMenuSymbol("Cal_FREQ_MENU", clkMenu)
 calculatedclkMenu.setLabel("Calculated Frequencies")
 
 # /////////////////////////////callback///////////////////////////////////////#
+def interruptControl(symbol, event):
+    InterruptVector = "PMC_INTERRUPT_ENABLE"
+    InterruptHandler = "PMC_INTERRUPT_HANDLER"
+    InterruptHandlerLock = "PMC_INTERRUPT_HANDLER_LOCK"
+
+    if (Database.getSymbolValue("core", "CLOCK_FAILURE_DETECT") == True) or (Database.getSymbolValue("core", "SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE") == True):
+        Database.setSymbolValue("core", InterruptVector, True)
+        Database.setSymbolValue("core", InterruptHandler, "PMC_InterruptHandler")
+        Database.setSymbolValue("core", InterruptHandlerLock, True)
+    else :
+        Database.setSymbolValue("core", InterruptVector, False)
+        Database.setSymbolValue("core", InterruptHandler, "PMC_Handler")
+        Database.setSymbolValue("core", InterruptHandlerLock, False)
+
 def slckFreq(symbol, event):
     xtalSel = int(Database.getSymbolValue("core","SUPC_CR_MDXTALSEL"))
     if xtalSel == 1:
@@ -91,6 +105,11 @@ externalClockVal.setDefaultValue(32768)
 xtalBypass32K = coreComponent.createBooleanSymbol("SUPC_MR_OSCBYPASS", slowclkMenu)
 xtalBypass32K.setLabel("Bypass Crystal Oscillator")
 xtalBypass32K.setDefaultValue(False)
+
+xtalFreqMonitoringEnable = coreComponent.createBooleanSymbol("SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE", slowclkMenu)
+xtalFreqMonitoringEnable.setLabel("Enable 32768 Hz Crystal Oscillator Frequency Monitoring")
+xtalFreqMonitoringEnable.setDefaultValue(False)
+xtalFreqMonitoringEnable.setDependencies(interruptControl, ["SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE"])
 
 slckFreqVal = coreComponent.createIntegerSymbol("SLCK_CLOCK_FREQUENCY", slowclkMenu)
 slckFreqVal.setLabel("Monitoring Domain Clock Frequency")
@@ -159,6 +178,7 @@ xtalBypass.setDefaultValue(False)
 mainclkFailure = coreComponent.createBooleanSymbol("CLOCK_FAILURE_DETECT", mainclkMenu)
 mainclkFailure.setLabel("Enable Clock Failure Detection")
 mainclkFailure.setDefaultValue(False)
+mainclkFailure.setDependencies(interruptControl, ["CLOCK_FAILURE_DETECT"])
 
 mainclksrc = coreComponent.createKeyValueSetSymbol("CKGR_MOR_MOSCSEL", mainclkMenu)
 mainclksrc.setLabel("Main Clock Source")

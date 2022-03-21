@@ -23,7 +23,14 @@
 
 #include "device.h"
 #include "plib_clock.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
+<#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT) || ((SUPC_MR_OSCBYPASS == false) && (SUPC_CR_MDXTALSEL == "1") && SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE == true)>
+static PMC_CALLBACK_OBJECT PMC_CallbackObj;
+
+</#if>
 
 <#compress>
 <#assign PMC_SCDR_PCKX_MSK = "">
@@ -100,6 +107,11 @@ static void CLK_SlowClockInitialize(void)
     while (!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk))
     {
     }
+    <#if SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE>
+    PMC_REGS->CKGR_MOR |= CKGR_MOR_XT32KFME_Msk | CKGR_MOR_KEY_PASSWD;
+    PMC_REGS->PMC_IER = PMC_IER_XT32KERR_Msk;
+    </#if>
+
 <#else>
     SUPC_REGS->SUPC_CR = SUPC_CR_KEY_PASSWD | (SUPC_REGS->SUPC_CR & ~(SUPC_CR_XTALSEL_CRYSTAL_SEL));
     while ((SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk))
@@ -131,7 +143,7 @@ static void CLK_MainClockInitialize(void)
 
 <#elseif CKGR_MOR_MOSCXTEN>
     /* Enable Main Crystal Oscillator */
-    PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCXTST_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTST(${CKGR_MOSCXTST}) | CKGR_MOR_MOSCXTEN_Msk;
+    PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCXTST_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTST(${CKGR_MOSCXTST})<#if CLOCK_FAILURE_DETECT> | CKGR_MOR_CFDEN_Msk</#if> | CKGR_MOR_MOSCXTEN_Msk;
 
     /* Wait until the main oscillator clock is ready */
     while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCXTS_Msk) != PMC_SR_MOSCXTS_Msk);
@@ -144,6 +156,9 @@ static void CLK_MainClockInitialize(void)
     /* Wait until MAINCK is switched to Main Crystal Oscillator */
     while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk);
 
+    </#if>
+    <#if CLOCK_FAILURE_DETECT>
+    PMC_REGS->PMC_IER = PMC_IER_CFDEV_Msk;
     </#if>
 </#if>
 
@@ -350,3 +365,35 @@ void CLOCK_Initialize( void )
 </#if>
 }
 
+<#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT) || ((SUPC_MR_OSCBYPASS == false) && (SUPC_CR_MDXTALSEL == "1") && SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE == true)>
+void PMC_CallbackRegister(PMC_CALLBACK callback, uintptr_t context)
+{
+    PMC_CallbackObj.callback = callback;
+    PMC_CallbackObj.context = context;
+}
+
+void PMC_InterruptHandler(void)
+{
+    uint32_t pmc_status = PMC_REGS->PMC_SR;
+
+<#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT)>
+    if ((pmc_status & PMC_SR_CFDEV_Msk) == PMC_SR_CFDEV_Msk)
+    {
+        if (PMC_CallbackObj.callback != NULL)
+        {
+            PMC_CallbackObj.callback(PMC_SR_CFDEV_Msk, PMC_CallbackObj.context);
+        }
+    }
+</#if>
+<#if ((SUPC_MR_OSCBYPASS == false) && (SUPC_CR_MDXTALSEL == "1") && SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE == true)>
+    if ((pmc_status & PMC_SR_XT32KERR_Msk) == PMC_SR_XT32KERR_Msk)
+    {
+        PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & (~CKGR_MOR_XT32KFME_Msk)) | CKGR_MOR_KEY_PASSWD;
+        if (PMC_CallbackObj.callback != NULL)
+        {
+            PMC_CallbackObj.callback(PMC_SR_XT32KERR_Msk, PMC_CallbackObj.context);
+        }
+    }
+</#if>
+}
+</#if>
