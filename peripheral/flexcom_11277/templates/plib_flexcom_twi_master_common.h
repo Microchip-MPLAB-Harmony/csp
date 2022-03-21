@@ -91,6 +91,9 @@ typedef enum
     /* Slave returned Nack */
     FLEXCOM_TWI_ERROR_NACK,
 
+    /* Bus error / Aribitration lost error */
+    FLEXCOM_TWI_BUS_ERROR
+
 } FLEXCOM_TWI_ERROR;
 
 // *****************************************************************************
