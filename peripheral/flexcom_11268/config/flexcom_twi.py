@@ -94,6 +94,11 @@ def twihsSlaveModeFileGeneration(symbol, event):
 
 def updateI2CBaudHz(symbol, event):
     symbol.setValue(event["value"])
+
+def updateTimeoutCount(symbol, event):
+    # Counter value obtained by dividing CPU clock frequency with 5000 gives a delay of 200usec (enough to transmit 10 bits of I2C running at 50 kHz).
+    # 200usec delay assumes each instruction takes 1 CPU clock to execute. In practice the delay will be ~10 times higher, roughly 2-3 msec.
+    symbol.setValue(int(event["value"])/5000)
 ###################################################################################################
 ############################################# FLEXCOM TWI #########################################
 ###################################################################################################
@@ -185,3 +190,10 @@ flexcomSym_Twi_CLK_SRC_FREQ.setDependencies(setFlexcomTwiClockSourceFreq, ["core
 flexcomSym_Twi_API_Prefix = flexcomComponent.createStringSymbol("I2C_PLIB_API_PREFIX", flexcomSym_OperatingMode)
 flexcomSym_Twi_API_Prefix.setDefaultValue(flexcomInstanceName.getValue()  + "_TWI")
 flexcomSym_Twi_API_Prefix.setVisible(False)
+
+cpu_clock = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+
+flexcomSym_Twi_TimeoutCountVal = flexcomComponent.createIntegerSymbol("FLEXCOM_TWI_TIMEOUT_COUNT_VAL", None)
+flexcomSym_Twi_TimeoutCountVal.setVisible(False)
+flexcomSym_Twi_TimeoutCountVal.setDefaultValue(cpu_clock/5000)
+flexcomSym_Twi_TimeoutCountVal.setDependencies(updateTimeoutCount, ["core.CPU_CLOCK_FREQUENCY"])

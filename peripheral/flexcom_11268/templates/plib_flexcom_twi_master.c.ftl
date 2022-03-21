@@ -123,6 +123,9 @@ void ${FLEXCOM_INSTANCE_NAME}_TWI_Initialize(void)
     // Starts the transfer by clearing the transmit hold register
     ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_CR = FLEX_TWI_CR_THRCLR_Msk;
 
+    // Disable TXRDY, TXCOMP and RXRDY interrupts
+    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IDR = FLEX_TWI_IDR_TXCOMP_Msk | FLEX_TWI_IDR_TXRDY_Msk | FLEX_TWI_IDR_RXRDY_Msk;
+
     // Enables interrupt on nack and arbitration lost
     ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IER = FLEX_TWI_IER_NACK_Msk |
                                            FLEX_TWI_IER_ARBLST_Msk;
@@ -165,8 +168,10 @@ static void ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateRead(void)
 
 
 
-static void ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(uint16_t address, bool type)
+static bool ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(uint16_t address, bool type)
 {
+    uint32_t timeoutCntr = ${FLEXCOM_TWI_TIMEOUT_COUNT_VAL};
+
     // 10-bit Slave Address
     if( address > 0x007F )
     {
@@ -210,7 +215,15 @@ static void ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(uint16_t address, bool
                 ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_THR = FLEX_TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++]);
                 // Wait for control byte to be transferred before initiating repeat start for read
                 while((${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SR & (FLEX_TWI_SR_TXCOMP_Msk | FLEX_TWI_SR_TXRDY_Msk)) != 0);
-                while((${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SR & (FLEX_TWI_SR_TXRDY_Msk)) ==0);
+                while((${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SR & (FLEX_TWI_SR_TXRDY_Msk)) ==0)
+                {
+                    if (--timeoutCntr == 0)
+                    {
+                        ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_BUS_ERROR;
+                        __enable_irq();
+                        return false;
+                    }
+                }
                 type=true;
             }
         }
@@ -228,6 +241,8 @@ static void ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(uint16_t address, bool
     {
         ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateRead();
     }
+
+    return true;
 }
 
 // *****************************************************************************
@@ -323,6 +338,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Read(uint16_t address, uint8_t *pdata, size_t 
     {
         return false;
     }
+    if ((${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SR & (FLEX_TWI_SR_SDA_Msk | FLEX_TWI_SR_SCL_Msk)) != (FLEX_TWI_SR_SDA_Msk | FLEX_TWI_SR_SCL_Msk))
+    {
+        ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_BUS_ERROR;
+        return false;
+    }
 
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address=address;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readBuffer=pdata;
@@ -331,9 +351,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Read(uint16_t address, uint8_t *pdata, size_t 
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize=0;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
 
-    ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(address, true);
-
-    return true;
+    return ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(address, true);
 }
 
 // *****************************************************************************
@@ -364,6 +382,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Write(uint16_t address, uint8_t *pdata, size_t
     {
         return false;
     }
+    if ((${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SR & (FLEX_TWI_SR_SDA_Msk | FLEX_TWI_SR_SCL_Msk)) != (FLEX_TWI_SR_SDA_Msk | FLEX_TWI_SR_SCL_Msk))
+    {
+        ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_BUS_ERROR;
+        return false;
+    }
 
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address=address;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readBuffer=NULL;
@@ -372,9 +395,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Write(uint16_t address, uint8_t *pdata, size_t
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize=length;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
 
-    ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(address, false);
-
-    return true;
+    return ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(address, false);
 }
 
 // *****************************************************************************
@@ -408,6 +429,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_WriteRead(uint16_t address, uint8_t *wdata, si
     {
         return false;
     }
+    if ((${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SR & (FLEX_TWI_SR_SDA_Msk | FLEX_TWI_SR_SCL_Msk)) != (FLEX_TWI_SR_SDA_Msk | FLEX_TWI_SR_SCL_Msk))
+    {
+        ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_BUS_ERROR;
+        return false;
+    }
 
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address=address;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readBuffer=rdata;
@@ -416,9 +442,20 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_WriteRead(uint16_t address, uint8_t *wdata, si
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize=wlength;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
 
-    ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(address, false);
+    return ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(address, false);
+}
 
-    return true;
+void ${FLEXCOM_INSTANCE_NAME}_TWI_TransferAbort( void )
+{
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
+
+    // Reset the PLib objects and Interrupts
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state = FLEXCOM_TWI_STATE_IDLE;
+    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IDR = FLEX_TWI_IDR_TXCOMP_Msk | FLEX_TWI_IDR_TXRDY_Msk | FLEX_TWI_IDR_RXRDY_Msk;
+
+    // Disable and Enable I2C Master
+    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_CR = FLEX_TWI_CR_MSDIS_Msk;
+    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_CR = FLEX_TWI_CR_MSEN_Msk;
 }
 
 // *****************************************************************************

@@ -398,6 +398,34 @@ FLEXCOM_TWI_ERROR ${FLEXCOM_INSTANCE_NAME}_TWI_ErrorGet(void);
 
 bool ${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setup, uint32_t srcClkFreq );
 
+// *****************************************************************************
+/* Function:
+    void ${FLEXCOM_INSTANCE_NAME}_TWI_TransferAbort( void )
+
+   Summary:
+    Aborts the ongoing TWI transfer.
+
+   Precondition:
+    ${FLEXCOM_INSTANCE_NAME}_Initialize must have been called for the associated TWI instance.
+
+   Parameters:
+    None
+
+   Returns:
+    None
+
+   Example:
+    <code>
+
+    ${FLEXCOM_INSTANCE_NAME}_TWI_TransferAbort();
+
+    </code>
+
+   Remarks:
+    None
+*/
+void ${FLEXCOM_INSTANCE_NAME}_TWI_TransferAbort( void );
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
