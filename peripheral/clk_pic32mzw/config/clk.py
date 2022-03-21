@@ -1395,11 +1395,11 @@ def scan_atdf_for_spllcon_fields(component, parentMenu, regNode):
     spllcon_symbols = [
                         {'name':'SPLLBSWSEL', 'symmaskname':'spllcon_spllbswsel_mask', 'symvaluename':'spllcon_spllbswsel_val', 'keyvalbuf':'spllbwsel', 'visible':'True', 'readonly':True},
                         {'name':'SPLLPWDN', 'symmaskname':'spllcon_spllpwdn_mask', 'symvaluename':'spllcon_spllpwdn_val', 'keyvalbuf':'spllpwdn', 'visible':'False'},
-                        {'name':'SPLLPOSTDIV1', 'symmaskname':'spllcon_spllpostdiv1_mask', 'symvaluename':'spllcon_spllpostdiv1_val', 'keyvalbuf':'spllpostdiv1', 'visible':'True', 'min':'1', 'max':'63'}, # no fuse for it - option made available to user here
+                        {'name':'SPLLPOSTDIV1', 'symmaskname':'spllcon_spllpostdiv1_mask', 'symvaluename':'spllcon_spllpostdiv1_val', 'keyvalbuf':'spllpostdiv1', 'visible':'True', 'min':'6', 'max':'63'}, # no fuse for it - option made available to user here
                         {'name':'SPLLFLOCK', 'symmaskname':'spllcon_spllflock_mask', 'symvaluename':'spllcon_spllflock_val', 'keyvalbuf':'spllflock', 'visible':'False'},
                         {'name':'SPLLRST', 'symmaskname':'spllcon_spllrst_mask', 'symvaluename':'spllcon_spllrst_val', 'keyvalbuf':'spllrst', 'visible':'False'},
-                        {'name':'SPLLFBDIV', 'symmaskname':'spllcon_spllfbdiv_mask', 'symvaluename':'spllcon_spllfbdiv_val', 'keyvalbuf':'spllfbdiv', 'visible':'True', 'min':'16', 'max':'1023'}, # no fuse for it - option made available to user here
-                        {'name':'SPLLREFDIV', 'symmaskname':'spllcon_spllrefdiv_mask', 'symvaluename':'spllcon_spllrefdiv_val', 'keyvalbuf':'spllrefdiv', 'visible':'True', 'min':'1', 'max':'63'}, # no fuse for it - option made available to user here
+                        {'name':'SPLLFBDIV', 'symmaskname':'spllcon_spllfbdiv_mask', 'symvaluename':'spllcon_spllfbdiv_val', 'keyvalbuf':'spllfbdiv', 'visible':'True', 'min':'16', 'max':'1023', 'readonly':True}, # no fuse for it - option made available to user here
+                        {'name':'SPLLREFDIV', 'symmaskname':'spllcon_spllrefdiv_mask', 'symvaluename':'spllcon_spllrefdiv_val', 'keyvalbuf':'spllrefdiv', 'visible':'True', 'min':'1', 'max':'63', 'readonly':True}, # no fuse for it - option made available to user here
                         {'name':'SPLLICLK', 'symmaskname':'spllcon_splliclk_mask', 'symvaluename':'spllcon_splliclk_val', 'keyvalbuf':'splliclk', 'visible':'True'}, # no fuse for it - option made available to user here
                         {'name':'SPLL_BYP', 'symmaskname':'spllcon_spllbyp_mask', 'symvaluename':'spllcon_spllbyp_val', 'keyvalbuf':'spllbyp', 'visible':'True'}, # no fuse for it - option made available to user here
                       ]
@@ -1441,10 +1441,13 @@ def scan_atdf_for_spllcon_fields(component, parentMenu, regNode):
     spllWarningItem = component.createMenuSymbol('SPLL_OUT_OF_RANGE', parentMenu)
     spllWarningItem.setLabel("****REFDIV, FBDIV, source frequency combination not in usable range.  Please adjust values.****")
     spllWarningItem.setVisible(False)
+
+    # Do not change SPLLBSWSEL dynamically for now 
+    '''
     # after have gone through all bitfields, add callback dependency for update of one of them:  BWSEL
     for ii in spllcon_symbols:
         if(ii['name'] == 'SPLLBSWSEL'):
-            ii['symvaluename'].setDependencies(bwselCB, bwselDependencyList)
+            ii['symvaluename'].setDependencies(bwselCB, bwselDependencyList)'''
 
     # get initial value of SPLLCON register from 'initval' field in atdf file
     symbolSpllconValue = component.createHexSymbol("SPLLCON_VALUE", parentMenu)
