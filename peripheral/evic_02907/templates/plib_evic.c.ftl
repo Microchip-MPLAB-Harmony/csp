@@ -110,6 +110,11 @@ void EVIC_Initialize( void )
 
     /* Configure Shadow Register Set */
     PRISS = 0x${EVIC_PRISS_VALUE};
+
+    while (PRISS != 0x${EVIC_PRISS_VALUE})
+    {
+        /* Wait for PRISS value to take effect */
+    }
 </#if>
 }
 
