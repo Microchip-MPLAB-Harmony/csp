@@ -57,6 +57,10 @@
 // Section: Power Implementation
 // *****************************************************************************
 // *****************************************************************************
+<#if (core.PRODUCT_FAMILY == "PIC32CX_BZ3")>
+#define Power_Down_Control_register_ll (*((volatile uint32_t *)(0x41012430)))
+</#if>
+
 <#if DEEP_SLEEP_MODE_EXIST??>
 void POWER_Initialize( void )
 {
@@ -86,10 +90,20 @@ void POWER_LowPowerModeEnter (POWER_LOW_POWER_MODE mode)
                         break;
         case LOW_POWER_SLEEP_MODE:
                         CRU_REGS->CRU_OSCCONSET = CRU_OSCCON_SLPEN_Msk;
+<#if (core.PRODUCT_FAMILY == "PIC32CX_BZ3")>
+                        // Set BT to enter in low power mode
+                        Power_Down_Control_register_ll |= 0x20;
+                        Power_Down_Control_register_ll |= 0x80;
+</#if>
                         break;
 <#if DREAM_MODE_EXIST??>               
         case LOW_POWER_DREAM_MODE:
                         CRU_REGS->CRU_OSCCONSET = CRU_OSCCON_SLPEN_Msk | CRU_OSCCON_DRMEN_Msk;
+<#if (core.PRODUCT_FAMILY == "PIC32CX_BZ3")>
+                        // Set BT to enter in low power mode
+                        Power_Down_Control_register_ll |= 0x20;
+                        Power_Down_Control_register_ll |= 0x80;
+</#if>
                         break;
 </#if>                        
 <#if DEEP_SLEEP_MODE_EXIST??>                        
