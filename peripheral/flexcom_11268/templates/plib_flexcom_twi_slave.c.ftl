@@ -64,7 +64,6 @@
 <#if TWI_INTERRUPT_MODE == true>
 static FLEXCOM_TWI_SLAVE_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj;
 </#if>
-static flexcom_registers_t *${FLEXCOM_INSTANCE_NAME}_TWI_Module = ${FLEXCOM_INSTANCE_NAME}_REGS;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -78,20 +77,20 @@ void ${FLEXCOM_INSTANCE_NAME}_TWI_Initialize(void)
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_MR = FLEX_MR_OPMODE_TWI;
 
     // Reset the i2c Module
-    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_CR = FLEX_TWI_CR_SWRST_Msk;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_CR = FLEX_TWI_CR_SWRST_Msk;
 
     // Disable the I2C Master/Slave Mode
-    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_CR = FLEX_TWI_CR_MSDIS_Msk | FLEX_TWI_CR_SVDIS_Msk;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_CR = FLEX_TWI_CR_MSDIS_Msk | FLEX_TWI_CR_SVDIS_Msk;
 
     /* Configure slave address */
-    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SMR = FLEX_TWI_SMR_SADR(0x${FLEXCOM_TWI_SLAVE_ADDRESS});
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_SMR = FLEX_TWI_SMR_SADR(0x${FLEXCOM_TWI_SLAVE_ADDRESS}U);
 
     /* Clear the Transmit Holding Register and set TXRDY, TXCOMP flags */
-    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_CR = FLEX_TWI_CR_THRCLR_Msk;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_CR = FLEX_TWI_CR_THRCLR_Msk;
 
 <#if TWI_INTERRUPT_MODE == true>
     /* Enable interrupt for Slave Access and End of Slave Access */
-    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IER = FLEX_TWI_IER_SVACC_Msk | FLEX_TWI_IER_EOSACC_Msk;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_IER = FLEX_TWI_IER_SVACC_Msk | FLEX_TWI_IER_EOSACC_Msk;
 
     /* Initialize the TWI PLIB Object */
     ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback = NULL;
@@ -101,38 +100,38 @@ void ${FLEXCOM_INSTANCE_NAME}_TWI_Initialize(void)
 </#if>
 
     /* Enable Slave Mode */
-    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_CR = FLEX_TWI_CR_SVEN_Msk;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_CR = FLEX_TWI_CR_SVEN_Msk;
 }
 
 uint8_t ${FLEXCOM_INSTANCE_NAME}_TWI_ReadByte(void)
 {
-    return (uint8_t)(${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_RHR & FLEX_TWI_RHR_RXDATA_Msk);
+    return (uint8_t)(${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_RHR & FLEX_TWI_RHR_RXDATA_Msk);
 }
 
 void ${FLEXCOM_INSTANCE_NAME}_TWI_WriteByte(uint8_t wrByte)
 {
-    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_THR = FLEX_TWI_THR_TXDATA(wrByte);
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_THR = FLEX_TWI_THR_TXDATA((uint32_t)wrByte);
 }
 
 FLEXCOM_TWI_SLAVE_TRANSFER_DIR ${FLEXCOM_INSTANCE_NAME}_TWI_TransferDirGet(void)
 {
-    return (${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SR & FLEX_TWI_SR_SVREAD_Msk)? FLEXCOM_TWI_SLAVE_TRANSFER_DIR_READ: FLEXCOM_TWI_SLAVE_TRANSFER_DIR_WRITE;
+    return ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_SR & FLEX_TWI_SR_SVREAD_Msk) != 0U)? FLEXCOM_TWI_SLAVE_TRANSFER_DIR_READ: FLEXCOM_TWI_SLAVE_TRANSFER_DIR_WRITE;
 }
 
 FLEXCOM_TWI_SLAVE_ACK_STATUS ${FLEXCOM_INSTANCE_NAME}_TWI_LastByteAckStatusGet(void)
 {
-    return (${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SR & FLEX_TWI_SR_NACK_Msk)? FLEXCOM_TWI_SLAVE_ACK_STATUS_RECEIVED_NAK : FLEXCOM_TWI_SLAVE_ACK_STATUS_RECEIVED_ACK;
+    return ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_SR & FLEX_TWI_SR_NACK_Msk) != 0U)? FLEXCOM_TWI_SLAVE_ACK_STATUS_RECEIVED_NAK : FLEXCOM_TWI_SLAVE_ACK_STATUS_RECEIVED_ACK;
 }
 
 void ${FLEXCOM_INSTANCE_NAME}_TWI_NACKDataPhase(bool isNACKEnable)
 {
     if (isNACKEnable == true)
     {
-        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SMR = (${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SMR & ~FLEX_TWI_SMR_NACKEN_Msk) | FLEX_TWI_SMR_NACKEN_Msk;
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_SMR = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_SMR & ~FLEX_TWI_SMR_NACKEN_Msk) | FLEX_TWI_SMR_NACKEN_Msk;
     }
     else
     {
-        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SMR = (${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SMR & ~FLEX_TWI_SMR_NACKEN_Msk);
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_SMR = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_SMR & ~FLEX_TWI_SMR_NACKEN_Msk);
     }
 }
 
@@ -152,33 +151,33 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_IsBusy(void)
 
 void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 {
-    uint32_t status = ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SR;
+    uint32_t status = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_SR;
 
-    if (status & ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IMR)
+    if ((status & ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_IMR) != 0U)
     {
-        if(status & FLEX_TWI_SR_SVACC_Msk)
+        if((status & FLEX_TWI_SR_SVACC_Msk) != 0U)
         {
             if (${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.isAddrMatchEventNotified == false)
             {
-                ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IDR = FLEX_TWI_IDR_SVACC_Msk;
+                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_IDR = FLEX_TWI_IDR_SVACC_Msk;
 
                 if (${FLEXCOM_INSTANCE_NAME}_TWI_TransferDirGet() == FLEXCOM_TWI_SLAVE_TRANSFER_DIR_READ)
                 {
-                    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IER = FLEX_TWI_IER_TXRDY_Msk | FLEX_TWI_IER_TXCOMP_Msk;
+                    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_IER = FLEX_TWI_IER_TXRDY_Msk | FLEX_TWI_IER_TXCOMP_Msk;
 
                     /* Set flag so that we do not check for NAK from master before transmitting the first byte */
                     ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.isFirstTxPending = true;
                 }
                 else
                 {
-                    ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IER = FLEX_TWI_IER_RXRDY_Msk | FLEX_TWI_IER_TXCOMP_Msk;
+                    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_IER = FLEX_TWI_IER_RXRDY_Msk | FLEX_TWI_IER_TXCOMP_Msk;
                 }
 
                 ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.isBusy = true;
 
                 if (${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback != NULL)
                 {
-                    ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
+                    (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
                 }
 
                 ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.isAddrMatchEventNotified = true;
@@ -187,45 +186,45 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
             /* I2C Master reads from slave */
             if (${FLEXCOM_INSTANCE_NAME}_TWI_TransferDirGet() == FLEXCOM_TWI_SLAVE_TRANSFER_DIR_READ)
             {
-                if (status & FLEX_TWI_SR_TXRDY_Msk)
+                if ((status & FLEX_TWI_SR_TXRDY_Msk) != 0U)
                 {
-                    if ((${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.isFirstTxPending == true) || (!(status & FLEX_TWI_SR_NACK_Msk)))
+                    if ((${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.isFirstTxPending == true) || ((status & FLEX_TWI_SR_NACK_Msk) == 0U))
                     {
                         if (${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback != NULL)
                         {
-                            ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TX_READY, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
+                           (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TX_READY, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
                         }
                         ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.isFirstTxPending = false;
                     }
                     else
                     {
                         /* NAK received. Turn off TXRDY interrupt. */
-                        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IDR = FLEX_TWI_IDR_TXRDY_Msk;
+                        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_IDR = FLEX_TWI_IDR_TXRDY_Msk;
                     }
                 }
             }
             else
             {
                 /* I2C Master writes to slave */
-                if (status & FLEX_TWI_SR_RXRDY_Msk)
+                if ((status & FLEX_TWI_SR_RXRDY_Msk) != 0U)
                 {
                     if (${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback != NULL)
                     {
-                        ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_RX_READY, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
+                       (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_RX_READY, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
                     }
                 }
             }
         }
-        else if (status & FLEX_TWI_SR_EOSACC_Msk)
+        else if ((status & FLEX_TWI_SR_EOSACC_Msk) != 0U)
         {
             /* Either Repeated Start or Stop condition received */
 
             ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.isAddrMatchEventNotified = false;
 
-            ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IDR = FLEX_TWI_IDR_TXRDY_Msk | FLEX_TWI_IDR_RXRDY_Msk;
-            ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IER = FLEX_TWI_IER_SVACC_Msk;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_IDR = FLEX_TWI_IDR_TXRDY_Msk | FLEX_TWI_IDR_RXRDY_Msk;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_IER = FLEX_TWI_IER_SVACC_Msk;
 
-            if (status & FLEX_TWI_SR_TXCOMP_Msk)
+            if ((status & FLEX_TWI_SR_TXCOMP_Msk) != 0U)
             {
                 /* Stop condition received OR start condition with other slave address detected */
 
@@ -233,17 +232,21 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 
                 if (${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback != NULL)
                 {
-                    ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
+                   (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
                 }
 
-                ${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_IDR = FLEX_TWI_IDR_TXCOMP_Msk;
+                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_IDR = FLEX_TWI_IDR_TXCOMP_Msk;
             }
+        }
+        else
+        {
+
         }
     }
 }
 <#else>
 FLEXCOM_TWI_SLAVE_STATUS_FLAG ${FLEXCOM_INSTANCE_NAME}_TWI_StatusGet(void)
 {
-    return (${FLEXCOM_INSTANCE_NAME}_TWI_Module->FLEX_TWI_SR & (FLEX_TWI_SR_SVACC_Msk | FLEX_TWI_SR_EOSACC_Msk | FLEX_TWI_SR_SVREAD_Msk | FLEX_TWI_SR_TXRDY_Msk | FLEX_TWI_SR_RXRDY_Msk | FLEX_TWI_SR_NACK_Msk | FLEX_TWI_SR_TXCOMP_Msk));
+    return (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_SR & (FLEX_TWI_SR_SVACC_Msk | FLEX_TWI_SR_EOSACC_Msk | FLEX_TWI_SR_SVREAD_Msk | FLEX_TWI_SR_TXRDY_Msk | FLEX_TWI_SR_RXRDY_Msk | FLEX_TWI_SR_NACK_Msk | FLEX_TWI_SR_TXCOMP_Msk));
 }
 </#if>
