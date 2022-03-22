@@ -86,9 +86,11 @@ def updateTCCaptureInterruptValue(symbol, event):
     ovfInt = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC_CAPTURE_OVF_INTERRUPT_MODE")
     mc0Int = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC_CAPTURE_INTSET_MC0")
     mc1Int = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC_CAPTURE_INTSET_MC1")
+    cap0En = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC_CAPTURE_CTRLA_CAPTEN0")
+    cap1En = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC_CAPTURE_CTRLA_CAPTEN1")
 
     symbol.clearValue()
-    if errInt or ovfInt or mc0Int or mc1Int:
+    if ((cap0En or cap1En) and (errInt or ovfInt)) or (cap0En and mc0Int) or (cap1En and mc1Int):
         symbol.setValue(True, 2)
     else:
         symbol.setValue(False, 2)
@@ -126,7 +128,7 @@ def tcCaptureEvsys(symbol, event):
                 Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", True, 2)
             else:
                 Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", False, 2)
-    
+
 ###################################################################################################
 ######################################## Capture Mode #############################################
 ###################################################################################################
@@ -216,7 +218,7 @@ tcSym_Capture_INTENSET_OVF.setLabel("Enable Capture Overflow Interrupt")
 global tcSym_Capture_InterruptMode
 tcSym_Capture_InterruptMode = tcComponent.createBooleanSymbol("TC_CAPTURE_INTERRUPT", tcSym_CaptureMenu)
 tcSym_Capture_InterruptMode.setVisible(False)
-tcSym_Capture_InterruptMode.setDependencies(updateTCCaptureInterruptValue, ["TC_CAPTURE_ERR_INTERRUPT_MODE", "TC_CAPTURE_OVF_INTERRUPT_MODE", "TC_CAPTURE_INTSET_MC0", "TC_CAPTURE_INTSET_MC1"])
+tcSym_Capture_InterruptMode.setDependencies(updateTCCaptureInterruptValue, ["TC_CAPTURE_ERR_INTERRUPT_MODE", "TC_CAPTURE_OVF_INTERRUPT_MODE", "TC_CAPTURE_INTSET_MC0", "TC_CAPTURE_INTSET_MC1", "TC_CAPTURE_CTRLA_CAPTEN0", "TC_CAPTURE_CTRLA_CAPTEN1"])
 
 tcSym_Capture_EVSYS_CONFIGURE = tcComponent.createIntegerSymbol("TC_CAPTURE_EVSYS_CONFIGURE", tcSym_CaptureMenu)
 tcSym_Capture_EVSYS_CONFIGURE.setVisible(False)

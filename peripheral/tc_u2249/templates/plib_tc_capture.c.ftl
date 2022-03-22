@@ -159,6 +159,8 @@
 </#if>
 
 
+<#assign TC_CAPTURE_CHANNEL_ENABLE = false>
+
 <#list 0..(TC_NUM_CHANNELS - 1) as i>
 <#assign TC_CAPTURE_ENABLE = "TC_CAPTURE_CTRLA_CAPTEN"+i>
 <#assign TC_CAPTURE_TRIGGER = "TC_CAPTURE_CTRLA_COPEN"+i>
@@ -167,6 +169,7 @@
 <#assign TC_CAPTURE_INTERRUPT = "TC_CAPTURE_INTSET_MC"+i>
 
 <#if .vars[TC_CAPTURE_ENABLE] == true>
+    <#assign TC_CAPTURE_CHANNEL_ENABLE = true>
     <#if .vars[TC_CAPTURE_EVENT_OUT] == true>
         <#if TC_EVCTRL_VAL != "">
             <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_MCEO"+i+"_Msk">
@@ -184,6 +187,7 @@
 </#if>   <#-- CAPTURE_ENABLE -->
 </#list>
 
+<#if TC_CAPTURE_CHANNEL_ENABLE == true>
 <#if TC_CAPTURE_ERR_INTERRUPT_MODE == true>
     <#if TC_INTSET_VAL != "">
         <#assign TC_INTSET_VAL = TC_INTSET_VAL + " | TC_INTENSET_ERR_Msk">
@@ -198,6 +202,7 @@
     <#else>
         <#assign TC_INTSET_VAL = "TC_INTENSET_OVF_Msk">
     </#if>
+</#if>
 </#if>
 
 </#compress>
@@ -280,7 +285,7 @@ void ${TC_INSTANCE_NAME}_CaptureCommandSet(TC_COMMAND command)
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
 }
 
 <#if TC_CTRLA_MODE = "COUNT8">
