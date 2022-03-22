@@ -524,7 +524,8 @@ dmaPLIBIp.setVisible(False)
 # DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
 dmaEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmaMenu)
 dmaEnable.setLabel("Use DMA Service ?")
-dmaEnable.setVisible(True)
+dmaEnable.setVisible(False)
+dmaEnable.setDefaultValue(False)
 
 # Needed to generate Linked list APIs
 dmaChannelLinkedList = coreComponent.createBooleanSymbol("DMA_LL_ENABLE", dmaMenu)
