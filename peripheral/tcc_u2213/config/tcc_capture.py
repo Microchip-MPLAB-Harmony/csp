@@ -38,7 +38,7 @@ def updateCaptureMenuVisibleProperty(symbol, event):
 def updateTCCCaptureInterruptValue(symbol, event):
     component = symbol.getComponent()
     interrupt = False
-    for intr in range (0, len(compareInterruptDep)-1):
+    for intr in range (0, len(captureInterruptDep)-1):
         if(component.getSymbolValue(captureInterruptDep[intr]) == True):
             interrupt = True
     symbol.setValue(interrupt)
