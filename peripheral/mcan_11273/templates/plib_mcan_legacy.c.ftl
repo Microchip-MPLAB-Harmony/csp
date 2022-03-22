@@ -66,9 +66,9 @@
 <#assign MCAN_DBTP_DTSEG1  = DBTP_DTSEG1 - 1>
 <#assign MCAN_DBTP_DTSEG2  = DBTP_DTSEG2 - 1>
 <#assign MCAN_DBTP_DSJW    = DBTP_DSJW - 1>
-#define MCAN_STD_ID_Msk        0x7FF
+#define MCAN_STD_ID_Msk        (0x7FFU)
 <#if INTERRUPT_MODE == true>
-#define MCAN_CALLBACK_TX_INDEX 3
+#define MCAN_CALLBACK_TX_INDEX (3U)
 
 <#assign NUM_OF_FIFO = 2>
 <#assign NUM_OF_ELEMENTS = 1>
@@ -126,37 +126,37 @@ Local Functions
 <#if MCAN_OPMODE != "NORMAL">
 static void MCANLengthToDlcGet(uint8_t length, uint8_t *dlc)
 {
-    if (length <= 8)
+    if (length <= 8U)
     {
         *dlc = length;
     }
-    else if (length <= 12)
+    else if (length <= 12U)
     {
-        *dlc = 0x9;
+        *dlc = 0x9U;
     }
-    else if (length <= 16)
+    else if (length <= 16U)
     {
-        *dlc = 0xA;
+        *dlc = 0xAU;
     }
-    else if (length <= 20)
+    else if (length <= 20U)
     {
-        *dlc = 0xB;
+        *dlc = 0xBU;
     }
-    else if (length <= 24)
+    else if (length <= 24U)
     {
-        *dlc = 0xC;
+        *dlc = 0xCU;
     }
-    else if (length <= 32)
+    else if (length <= 32U)
     {
-        *dlc = 0xD;
+        *dlc = 0xDU;
     }
-    else if (length <= 48)
+    else if (length <= 48U)
     {
-        *dlc = 0xE;
+        *dlc = 0xEU;
     }
     else
     {
-        *dlc = 0xF;
+        *dlc = 0xFU;
     }
 }
 </#if>
@@ -191,7 +191,10 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
 {
     /* Start MCAN initialization */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_ENABLED;
-    while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) != MCAN_CCCR_INIT_Msk);
+    while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) != MCAN_CCCR_INIT_Msk)
+	{
+		/* DO Nothing */
+	}
 
     /* Set CCE to unlock the configuration registers */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
@@ -199,26 +202,26 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
 <#if MCAN_OPMODE != "NORMAL">
 <#if MCAN_REVISION_A_ENABLE == true>
     /* Set Fast Bit Timing and Prescaler Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_FBTP = MCAN_FBTP_FTSEG2(${MCAN_DBTP_DTSEG2}) | MCAN_FBTP_FTSEG1(${MCAN_DBTP_DTSEG1}) | MCAN_FBTP_FBRP(${DBTP_DBRP}) | MCAN_FBTP_FSJW(${MCAN_DBTP_DSJW});
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_FBTP = MCAN_FBTP_FTSEG2(${MCAN_DBTP_DTSEG2}U) | MCAN_FBTP_FTSEG1(${MCAN_DBTP_DTSEG1}U) | MCAN_FBTP_FBRP(${DBTP_DBRP}U) | MCAN_FBTP_FSJW(${MCAN_DBTP_DSJW}U);
 
 <#else>
     /* Set Data Bit Timing and Prescaler Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_DBTP = MCAN_DBTP_DTSEG2(${MCAN_DBTP_DTSEG2}) | MCAN_DBTP_DTSEG1(${MCAN_DBTP_DTSEG1}) | MCAN_DBTP_DBRP(${DBTP_DBRP}) | MCAN_DBTP_DSJW(${MCAN_DBTP_DSJW});
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_DBTP = MCAN_DBTP_DTSEG2(${MCAN_DBTP_DTSEG2}U) | MCAN_DBTP_DTSEG1(${MCAN_DBTP_DTSEG1}U) | MCAN_DBTP_DBRP(${DBTP_DBRP}U) | MCAN_DBTP_DSJW(${MCAN_DBTP_DSJW}U);
 
 </#if>
 </#if>
 <#if MCAN_REVISION_A_ENABLE == true>
     /* Set Bit timing and Prescaler Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_BTP  = MCAN_BTP_TSEG2(${MCAN_NBTP_NTSEG2}) | MCAN_BTP_TSEG1(${MCAN_NBTP_NTSEG1}) | MCAN_BTP_BRP(${NBTP_NBRP}) | MCAN_BTP_SJW(${MCAN_NBTP_NSJW});
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_BTP  = MCAN_BTP_TSEG2(${MCAN_NBTP_NTSEG2}U) | MCAN_BTP_TSEG1(${MCAN_NBTP_NTSEG1}U) | MCAN_BTP_BRP(${NBTP_NBRP}U) | MCAN_BTP_SJW(${MCAN_NBTP_NSJW}U);
 <#else>
     /* Set Nominal Bit timing and Prescaler Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_NBTP  = MCAN_NBTP_NTSEG2(${MCAN_NBTP_NTSEG2}) | MCAN_NBTP_NTSEG1(${MCAN_NBTP_NTSEG1}) | MCAN_NBTP_NBRP(${NBTP_NBRP}) | MCAN_NBTP_NSJW(${MCAN_NBTP_NSJW});
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_NBTP  = MCAN_NBTP_NTSEG2(${MCAN_NBTP_NTSEG2}U) | MCAN_NBTP_NTSEG1(${MCAN_NBTP_NTSEG1}U) | MCAN_NBTP_NBRP(${NBTP_NBRP}U) | MCAN_NBTP_NSJW(${MCAN_NBTP_NSJW}U);
 </#if>
 
 <#if RXF0_USE || RXF1_USE || RXBUF_USE>
   <#if MCAN_OPMODE != "NORMAL">
     /* Receive Buffer / FIFO Element Size Configuration Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXESC = 0 <#if RXF0_USE> | MCAN_RXESC_F0DS(${RXF0_BYTES_CFG!0})</#if><#if RXF1_USE> | MCAN_RXESC_F1DS(${RXF1_BYTES_CFG!0})</#if><#if RXBUF_USE> | MCAN_RXESC_RBDS(${RX_BUFFER_BYTES_CFG!0})</#if>;
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXESC = 0U <#if RXF0_USE> | MCAN_RXESC_F0DS(${RXF0_BYTES_CFG!0}U)</#if><#if RXF1_USE> | MCAN_RXESC_F1DS(${RXF1_BYTES_CFG!0}U)</#if><#if RXBUF_USE> | MCAN_RXESC_RBDS(${RX_BUFFER_BYTES_CFG!0}U)</#if>;
   </#if>
 </#if>
 <#if RXBUF_USE>
@@ -229,7 +232,7 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
 <#if TX_USE || TXBUF_USE>
   <#if MCAN_OPMODE != "NORMAL">
     /* Transmit Buffer/FIFO Element Size Configuration Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXESC = MCAN_TXESC_TBDS(${TX_FIFO_BYTES_CFG});
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXESC = MCAN_TXESC_TBDS(${TX_FIFO_BYTES_CFG}U);
   </#if>
 </#if>
 
@@ -248,7 +251,7 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
 <#if MCAN_TIMEOUT>
 
     /* Timeout Counter Configuration Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TOCC = ${TIMEOUT_SELECT} | MCAN_TOCC_ETOC_TOS_CONTROLLED | MCAN_TOCC_TOP(${TIMEOUT_COUNT});
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TOCC = ${TIMEOUT_SELECT} | MCAN_TOCC_ETOC_TOS_CONTROLLED | MCAN_TOCC_TOP(${TIMEOUT_COUNT}U);
 </#if>
 
     /* Set the operation mode */
@@ -278,11 +281,14 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
     </#if>
 
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR &= ~MCAN_CCCR_INIT_Msk;
-    while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk);
+    while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
+	{
+		/* Do Nothing */
+	}
 <#if INTERRUPT_MODE == true>
 
     /* Select interrupt line */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_ILS = 0x0;
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_ILS = 0x0U;
 
     /* Enable interrupt line */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_ILE = MCAN_ILE_EINT0_Msk;
@@ -291,12 +297,12 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE = MCAN_IE_BOE_Msk;
 
     // Initialize the MCAN PLib Object
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex = 0;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 = 0;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 = 0;
-    memset((void *)${MCAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${MCAN_INSTANCE_NAME?lower_case}RxMsg));
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex = 0U;
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 = 0U;
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 = 0U;
+   (void) memset((void *)${MCAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${MCAN_INSTANCE_NAME?lower_case}RxMsg));
 </#if>
-    memset((void*)&${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(MCAN_MSG_RAM_CONFIG));
+   (void) memset((void*)&${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(MCAN_MSG_RAM_CONFIG));
 }
 
 // *****************************************************************************
@@ -324,131 +330,151 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
 bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE mode, MCAN_MSG_TX_ATTRIBUTE msgAttr)
 {
 <#if MCAN_OPMODE != "NORMAL">
-    uint8_t dlc = 0;
+    uint8_t dlc = 0U;
 </#if>
 <#if TXBUF_USE>
-    uint8_t bufferIndex = 0;
+    uint8_t bufferIndex = 0U;
 </#if>
-    uint8_t tfqpi = 0;
+    uint8_t tfqpi = 0U;
 <#if TX_USE || TXBUF_USE>
     mcan_txbe_registers_t *fifo = NULL;
 </#if>
-    static uint8_t messageMarker = 0;
+    static uint8_t messageMarker = 0U;
+	bool status = true;
 
     switch (msgAttr)
     {
 <#if TXBUF_USE>
         case MCAN_MSG_ATTR_TX_BUFFER_DATA_FRAME:
         case MCAN_MSG_ATTR_TX_BUFFER_RTR_FRAME:
-            for (bufferIndex = 0; bufferIndex < ${TX_BUFFER_ELEMENTS}; bufferIndex++)
+            for (bufferIndex = 0U; bufferIndex < ${TX_BUFFER_ELEMENTS}U; bufferIndex++)
             {
-                if ((${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1 << (bufferIndex & 0x1F))) == 0)
+                if ((${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (uint32_t)((uint32_t)1U << (bufferIndex & 0x1FU))) == 0U)
                 {
-                    ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex |= (1 << (bufferIndex & 0x1F));
+                    ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex |= (uint32_t)((uint32_t)1U << (bufferIndex & 0x1FU));
                     tfqpi = bufferIndex;
                     break;
                 }
             }
-            if(bufferIndex == ${TX_BUFFER_ELEMENTS})
+            if(bufferIndex == ${TX_BUFFER_ELEMENTS}U)
             {
                 /* The Tx buffers are full */
                 return false;
             }
-            fifo = (mcan_txbe_registers_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + tfqpi * ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
+            fifo = (mcan_txbe_registers_t *) (${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + tfqpi * ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
             break;
 </#if>
 <#if TX_USE>
         case MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME:
         case MCAN_MSG_ATTR_TX_FIFO_RTR_FRAME:
-            if (${MCAN_INSTANCE_NAME}_REGS->MCAN_TXFQS & MCAN_TXFQS_TFQF_Msk)
+            if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXFQS & MCAN_TXFQS_TFQF_Msk) != 0U)
             {
                 /* The FIFO is full */
                 return false;
             }
             tfqpi = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXFQS & MCAN_TXFQS_TFQPI_Msk) >> MCAN_TXFQS_TFQPI_Pos);
 <#if TXBUF_USE>
-            ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex |= (1 << ((tfqpi + ${TX_BUFFER_ELEMENTS}) & 0x1F));
+            ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex |= (uint32_t)((uint32_t)1U << ((tfqpi + ${TX_BUFFER_ELEMENTS}U) & 0x1FU));
 </#if>
-            fifo = (mcan_txbe_registers_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + tfqpi * ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
+            fifo = (mcan_txbe_registers_t *) (${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + tfqpi * ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
             break;
 </#if>
         default:
             /* Invalid Message Attribute */
-            return false;
+            status = false;
+			break;
     }
-
-    /* If the id is longer than 11 bits, it is considered as extended identifier */
-    if (id > MCAN_STD_ID_Msk)
-    {
-        /* An extended identifier is stored into ID */
-        fifo->MCAN_TXBE_0 = (id & MCAN_TXBE_0_ID_Msk) | MCAN_TXBE_0_XTD_Msk;
-    }
-    else
-    {
-        /* A standard identifier is stored into ID[28:18] */
-        fifo->MCAN_TXBE_0 = id << 18;
-    }
+     
+	if( status)
+	{
+		/* If the id is longer than 11 bits, it is considered as extended identifier */
+		if (id > (uint32_t)MCAN_STD_ID_Msk)
+		{
+			/* An extended identifier is stored into ID */
+			fifo->MCAN_TXBE_0 = (id & MCAN_TXBE_0_ID_Msk) | MCAN_TXBE_0_XTD_Msk;
+		}
+		else
+		{
+			/* A standard identifier is stored into ID[28:18] */
+			fifo->MCAN_TXBE_0 = id << 18U;
+		}
 <#if MCAN_OPMODE != "NORMAL">
-    if (length > 64)
-        length = 64;
+		if (length > 64U)
+		{
+			length = 64U;
+			
+		}
 
-    MCANLengthToDlcGet(length, &dlc);
+		MCANLengthToDlcGet(length, &dlc);
 
-    fifo->MCAN_TXBE_1 = MCAN_TXBE_1_DLC(dlc);
+		fifo->MCAN_TXBE_1 = MCAN_TXBE_1_DLC(dlc);
 
 <#if MCAN_REVISION_A_ENABLE == false>
-    if(mode == MCAN_MODE_FD_WITH_BRS)
-    {
-        fifo->MCAN_TXBE_1 |= MCAN_TXBE_1_FDF_Msk | MCAN_TXBE_1_BRS_Msk;
-    }
-    else if (mode == MCAN_MODE_FD_WITHOUT_BRS)
-    {
-        fifo->MCAN_TXBE_1 |= MCAN_TXBE_1_FDF_Msk;
-    }
+		if(mode == MCAN_MODE_FD_WITH_BRS)
+		{
+			fifo->MCAN_TXBE_1 |= MCAN_TXBE_1_FDF_Msk | MCAN_TXBE_1_BRS_Msk;
+		}
+		else if (mode == MCAN_MODE_FD_WITHOUT_BRS)
+		{
+			fifo->MCAN_TXBE_1 |= MCAN_TXBE_1_FDF_Msk;
+		}
+		else
+		{
+			/* Do Nothing */
+		}
 </#if>
 <#else>
 
-    /* Limit length */
-    if (length > 8)
-        length = 8;
-    fifo->MCAN_TXBE_1 = MCAN_TXBE_1_DLC(length);
+		/* Limit length */
+		if (length > 8U)
+		{
+			length = 8U;
+			
+		}
+		fifo->MCAN_TXBE_1 = MCAN_TXBE_1_DLC(length);
 </#if>
 
-    if (msgAttr == MCAN_MSG_ATTR_TX_BUFFER_DATA_FRAME || msgAttr == MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME)
-    {
-        /* copy the data into the payload */
-        memcpy((uint8_t *)&fifo->MCAN_TXBE_DATA, data, length);
-    }
-    else if (msgAttr == MCAN_MSG_ATTR_TX_BUFFER_RTR_FRAME || msgAttr == MCAN_MSG_ATTR_TX_FIFO_RTR_FRAME)
-    {
-        fifo->MCAN_TXBE_0 |= MCAN_TXBE_0_RTR_Msk;
-    }
+		if (msgAttr == MCAN_MSG_ATTR_TX_BUFFER_DATA_FRAME || msgAttr == MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME)
+		{
+			/* copy the data into the payload */
+		   (void) memcpy((uint8_t *)&fifo->MCAN_TXBE_DATA, data, length);
+		}
+		else if (msgAttr == MCAN_MSG_ATTR_TX_BUFFER_RTR_FRAME || msgAttr == MCAN_MSG_ATTR_TX_FIFO_RTR_FRAME)
+		{
+			fifo->MCAN_TXBE_0 |= MCAN_TXBE_0_RTR_Msk;
+		}
+		else
+		{
+			/* Do Nothing */
+		}
 
-    fifo->MCAN_TXBE_1 |= ((++messageMarker << MCAN_TXBE_1_MM_Pos) & MCAN_TXBE_1_MM_Msk) | MCAN_TXBE_1_EFC_Msk;
+        fifo->MCAN_TXBE_1 |= (((uint32_t)++messageMarker << MCAN_TXBE_1_MM_Pos) & MCAN_TXBE_1_MM_Msk) | MCAN_TXBE_1_EFC_Msk;
 <#if INTERRUPT_MODE == true>
 
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE = 1U << tfqpi;
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE = (uint32_t)1U << tfqpi;
 </#if>
 
-    /* request the transmit */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBAR = 1U << tfqpi;
+         /* request the transmit */
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBAR = (uint32_t)1U << tfqpi;
 
 <#if INTERRUPT_MODE == true>
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE |= MCAN_IE_TCE_Msk;
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE |= MCAN_IE_TCE_Msk;
 </#if>
 <#if TXBUF_USE && INTERRUPT_MODE == false>
-    for (bufferIndex = 0; bufferIndex < (${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
-    {
-        if (${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTO & (1 << (bufferIndex & 0x1F)))
-        {
-            if (0 != (${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1 << (bufferIndex & 0x1F))))
-            {
-                ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1 << (bufferIndex & 0x1F)));
-            }
-        }
-    }
-</#if>
-    return true;
+		for (bufferIndex = 0U; bufferIndex < (${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
+		{
+			if (${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTO & (1U << (bufferIndex & 0x1FU)))
+			{
+				if (0U != (${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1U << (bufferIndex & (uint32_t)0x1FU))))
+				{
+					${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1 << (bufferIndex & (uint32_t)0x1FU)));
+				}
+			}
+		}
+	</#if>
+		return true;
+	}
+	return status;
 }
 
 // *****************************************************************************
@@ -479,8 +505,8 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
                                           MCAN_MSG_RX_ATTRIBUTE msgAttr, MCAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr)
 {
 <#if INTERRUPT_MODE == false>
-    uint8_t msgLength = 0;
-    uint8_t rxgi = 0;
+    uint8_t msgLength = 0U;
+    uint8_t rxgi = 0U;
 <#if RXBUF_USE>
     mcan_rxbe_registers_t *rxbeFifo = NULL;
 </#if>
@@ -491,7 +517,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
     mcan_rxf1e_registers_t *rxf1eFifo = NULL;
 </#if>
 <#else>
-    uint8_t bufferIndex = 0;
+    uint8_t bufferIndex = 0U;
 </#if>
     bool status = false;
 
@@ -501,28 +527,32 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
         case MCAN_MSG_ATTR_RX_BUFFER:
 <#if INTERRUPT_MODE == false>
             /* Check and return false if nothing to be read */
-            if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 == 0) && (${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 == 0))
+            if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 == 0U) && (${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 == 0U))
             {
                 return status;
             }
             /* Read data from the Rx Buffer */
-            if (${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 != 0)
+            if (${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 != 0U)
             {
-                for (rxgi = 0; rxgi <= 0x1F; rxgi++)
+                for (rxgi = 0U; rxgi <= 0x1FU; rxgi++)
                 {
-                    if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 & (1 << rxgi)) == (1 << rxgi))
+                    if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 & (1UL << rxgi)) == (uint32_t)(1UL << rxgi))
+					{
                         break;
+					}
                 }
             }
             else
             {
-                for (rxgi = 0; rxgi <= 0x1F; rxgi++)
+                rxgi = 0U; 
+				while(rxgi <= 0x1FU)
                 {
-                    if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 & (1 << rxgi)) == (1 << rxgi))
+                    if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 & (1UL << rxgi)) == (uint32_t)(1UL << rxgi))
                     {
-                        rxgi = rxgi + 32;
+                        rxgi = rxgi + 32U;
                         break;
                     }
+					rxgi++;
                 }
             }
             rxbeFifo = (mcan_rxbe_registers_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + rxgi * ${MCAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
@@ -534,11 +564,11 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             }
             else
             {
-                *id = (rxbeFifo->MCAN_RXBE_0 >> 18) & MCAN_STD_ID_Msk;
+                *id = (rxbeFifo->MCAN_RXBE_0 >> 18U) & MCAN_STD_ID_Msk;
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
-            if ((rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_RTR_Msk) && ((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_FDF_Msk) == 0))
+            if (((rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_RTR_Msk) != 0U) && ((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_FDF_Msk) == 0U))
             {
                 *msgFrameAttr = MCAN_MSG_RX_REMOTE_FRAME;
             }
@@ -548,10 +578,10 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             }
 
             /* Get received data length */
-            msgLength = MCANDlcToLengthGet(((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_DLC_Msk) >> MCAN_RXBE_1_DLC_Pos));
+            msgLength = MCANDlcToLengthGet((uint8_t)((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_DLC_Msk) >> MCAN_RXBE_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(data, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, msgLength);
+            (void) memcpy(data, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, msgLength);
             *length = msgLength;
 
 <#if TIMESTAMP_ENABLE>
@@ -563,32 +593,36 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
 
 </#if>
             /* Clear new data flag */
-            if (rxgi < 32)
+            if (rxgi < 32U)
             {
-                ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 = (1 << rxgi);
+                ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 = (uint32_t)(1UL << rxgi);
             }
             else
             {
-                ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 = (1 << (rxgi - 32));
+                ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 = (uint32_t)(1UL << (rxgi - 32U));
             }
 <#else>
-            for (bufferIndex = 0; bufferIndex < ${RX_BUFFER_ELEMENTS}; bufferIndex++)
+            for (bufferIndex = 0U; bufferIndex < ${RX_BUFFER_ELEMENTS}U; bufferIndex++)
             {
-                if (bufferIndex < 32)
+                if (bufferIndex < 32U)
                 {
-                    if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (bufferIndex & 0x1F))) == 0)
+                    if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (uint32_t)((uint32_t)1U << (bufferIndex & 0x1FU))) == 0U)
                     {
-                        ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 |= (1 << (bufferIndex & 0x1F));
+                        ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 |= (uint32_t)((uint32_t)1U << (bufferIndex & 0x1FU));
                         break;
                     }
                 }
-                else if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((bufferIndex - 32) & 0x1F))) == 0)
+                else if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & ((uint32_t)1U << ((bufferIndex - 32U) & 0x1FU))) == 0U)
                 {
-                    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 |= (1 << ((bufferIndex - 32) & 0x1F));
+                    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 |= (uint32_t)((uint32_t)1U << ((bufferIndex - 32U) & 0x1FU));
                     break;
                 }
+				else
+				{
+					
+				}
             }
-            if(bufferIndex == ${RX_BUFFER_ELEMENTS})
+            if(bufferIndex == ${RX_BUFFER_ELEMENTS}U)
             {
                 /* The Rx buffers are full */
                 return false;
@@ -607,7 +641,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
         case MCAN_MSG_ATTR_RX_FIFO0:
 <#if INTERRUPT_MODE == false>
             /* Check and return false if nothing to be read */
-            if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0S & MCAN_RXF0S_F0FL_Msk) == 0)
+            if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0S & MCAN_RXF0S_F0FL_Msk) == 0U)
             {
                 return status;
             }
@@ -616,17 +650,17 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             rxf0eFifo = (mcan_rxf0e_registers_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address + rxgi * ${MCAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE);
 
             /* Get received identifier */
-            if (rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_XTD_Msk)
+            if ((rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_XTD_Msk) != 0U)
             {
                 *id = rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_ID_Msk;
             }
             else
             {
-                *id = (rxf0eFifo->MCAN_RXF0E_0 >> 18) & MCAN_STD_ID_Msk;
+                *id = (rxf0eFifo->MCAN_RXF0E_0 >> 18U) & MCAN_STD_ID_Msk;
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
-            if ((rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_RTR_Msk) && ((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_FDF_Msk) == 0))
+            if ((rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_RTR_Msk) != 0U) && ((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_FDF_Msk) == 0U))
             {
                 *msgFrameAttr = MCAN_MSG_RX_REMOTE_FRAME;
             }
@@ -636,10 +670,10 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             }
 
             /* Get received data length */
-            msgLength = MCANDlcToLengthGet(((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_DLC_Msk) >> MCAN_RXF0E_1_DLC_Pos));
+            msgLength = MCANDlcToLengthGet((uint8_t)((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_DLC_Msk) >> MCAN_RXF0E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(data, (uint8_t *)&rxf0eFifo->MCAN_RXF0E_DATA, msgLength);
+            (void) memcpy(data, (uint8_t *)&rxf0eFifo->MCAN_RXF0E_DATA, msgLength);
             *length = msgLength;
 
 <#if TIMESTAMP_ENABLE>
@@ -668,7 +702,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
         case MCAN_MSG_ATTR_RX_FIFO1:
 <#if INTERRUPT_MODE == false>
             /* Check and return false if nothing to be read */
-            if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1S & MCAN_RXF1S_F1FL_Msk) == 0)
+            if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1S & MCAN_RXF1S_F1FL_Msk) == 0U)
             {
                 return status;
             }
@@ -677,17 +711,17 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             rxf1eFifo = (mcan_rxf1e_registers_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address + rxgi * ${MCAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE);
 
             /* Get received identifier */
-            if (rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_XTD_Msk)
+            if ((rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_XTD_Msk) != 0U)
             {
                 *id = rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_ID_Msk;
             }
             else
             {
-                *id = (rxf1eFifo->MCAN_RXF1E_0 >> 18) & MCAN_STD_ID_Msk;
+                *id = (rxf1eFifo->MCAN_RXF1E_0 >> 18U) & MCAN_STD_ID_Msk;
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
-            if ((rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_RTR_Msk) && ((rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_FDF_Msk) == 0))
+            if (((rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_RTR_Msk) != 0U) && ((rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_FDF_Msk) == 0U))
             {
                 *msgFrameAttr = MCAN_MSG_RX_REMOTE_FRAME;
             }
@@ -700,7 +734,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             msgLength = MCANDlcToLengthGet(((rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_DLC_Msk) >> MCAN_RXF1E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(data, (uint8_t *)&rxf1eFifo->MCAN_RXF1E_DATA, msgLength);
+            (void) memcpy(data, (uint8_t *)&rxf1eFifo->MCAN_RXF1E_DATA, msgLength);
             *length = msgLength;
 
 <#if TIMESTAMP_ENABLE>
@@ -726,7 +760,8 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             break;
 </#if>
         default:
-            return status;
+		           /* Do Nothing */
+            break;
     }
     return status;
 }
@@ -758,23 +793,23 @@ bool ${MCAN_INSTANCE_NAME}_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *me
     bool status = false;
 
     /* Check if Tx Event FIFO Element available */
-    if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFS & MCAN_TXEFS_EFFL_Msk) != 0)
+    if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFS & MCAN_TXEFS_EFFL_Msk) != 0U)
     {
         /* Get a pointer to Tx Event FIFO Element */
         txefgi = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFS & MCAN_TXEFS_EFGI_Msk) >> MCAN_TXEFS_EFGI_Pos);
-        txEventFIFOElement = (mcan_txefe_registers_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress + txefgi * sizeof(mcan_txefe_registers_t));
+        txEventFIFOElement = (mcan_txefe_registers_t *) (${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress + txefgi * sizeof(mcan_txefe_registers_t));
 
         /* Check if it's a extended message type */
-        if (txEventFIFOElement->MCAN_TXEFE_0 & MCAN_TXEFE_0_XTD_Msk)
+        if ((txEventFIFOElement->MCAN_TXEFE_0 & MCAN_TXEFE_0_XTD_Msk) != 0U)
         {
             *id = txEventFIFOElement->MCAN_TXEFE_0 & MCAN_TXEFE_0_ID_Msk;
         }
         else
         {
-            *id = (txEventFIFOElement->MCAN_TXEFE_0 >> 18) & MCAN_STD_ID_Msk;
+            *id = (txEventFIFOElement->MCAN_TXEFE_0 >> 18U) & MCAN_STD_ID_Msk;
         }
 
-        *messageMarker = ((txEventFIFOElement->MCAN_TXEFE_1 & MCAN_TXEFE_1_MM_Msk) >> MCAN_TXEFE_1_MM_Pos);
+        *messageMarker = (uint8_t)((txEventFIFOElement->MCAN_TXEFE_1 & MCAN_TXEFE_1_MM_Msk) >> MCAN_TXEFE_1_MM_Pos);
 
         /* Get timestamp from transmitted message */
         if (timestamp != NULL)
@@ -818,7 +853,10 @@ MCAN_ERROR ${MCAN_INSTANCE_NAME}_ErrorGet(void)
     if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR &= ~MCAN_CCCR_INIT_Msk;
-        while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk);
+        while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
+		{
+			/* Do Nothing */
+		}
     }
 
     return error;
@@ -866,7 +904,7 @@ void ${MCAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxError
 */
 bool ${MCAN_INSTANCE_NAME}_InterruptGet(MCAN_INTERRUPT_MASK interruptMask)
 {
-    return ((${MCAN_INSTANCE_NAME}_REGS->MCAN_IR & interruptMask) != 0x0);
+    return ((${MCAN_INSTANCE_NAME}_REGS->MCAN_IR & (uint32_t)interruptMask) != 0x0U);
 }
 
 // *****************************************************************************
@@ -887,7 +925,7 @@ bool ${MCAN_INSTANCE_NAME}_InterruptGet(MCAN_INTERRUPT_MASK interruptMask)
 */
 void ${MCAN_INSTANCE_NAME}_InterruptClear(MCAN_INTERRUPT_MASK interruptMask)
 {
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = interruptMask;
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = (uint32_t)interruptMask;
 }
 
 // *****************************************************************************
@@ -909,7 +947,7 @@ void ${MCAN_INSTANCE_NAME}_InterruptClear(MCAN_INTERRUPT_MASK interruptMask)
 */
 bool ${MCAN_INSTANCE_NAME}_TxFIFOIsFull(void)
 {
-    return (${MCAN_INSTANCE_NAME}_REGS->MCAN_TXFQS & MCAN_TXFQS_TFQF_Msk);
+    return ((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXFQS & MCAN_TXFQS_TFQF_Msk) != 0U);
 }
 
 // *****************************************************************************
@@ -933,13 +971,16 @@ bool ${MCAN_INSTANCE_NAME}_TxFIFOIsFull(void)
 */
 void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 {
-    uint32_t offset = 0;
+    uint32_t offset = 0U;
 
-    memset((void*)msgRAMConfigBaseAddress, 0x00, ${MCAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
+    (void) memset((void*)msgRAMConfigBaseAddress, 0x00, ${MCAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
 
     /* Set MCAN CCCR Init for Message RAM Configuration */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_INIT_ENABLED;
-    while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) != MCAN_CCCR_INIT_Msk);
+    while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) != MCAN_CCCR_INIT_Msk)
+	{
+		/* Do Nothing */
+	}
 
     /* Set CCE to unlock the configuration registers */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
@@ -948,67 +989,67 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address = (mcan_rxf0e_registers_t *)msgRAMConfigBaseAddress;
     offset = ${MCAN_INSTANCE_NAME}_RX_FIFO0_SIZE;
     /* Receive FIFO 0 Configuration Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0C = MCAN_RXF0C_F0S(${RXF0_ELEMENTS}) | MCAN_RXF0C_F0WM(${RXF0_WATERMARK})<#if RXF0_OVERWRITE> | MCAN_RXF0C_F0OM_Msk</#if> |
-            MCAN_RXF0C_F0SA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address >> 2));
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0C = MCAN_RXF0C_F0S(${RXF0_ELEMENTS}U) | MCAN_RXF0C_F0WM(${RXF0_WATERMARK}U)<#if RXF0_OVERWRITE> | MCAN_RXF0C_F0OM_Msk</#if> |
+            MCAN_RXF0C_F0SA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address >> 2U));
 
 </#if>
 <#if RXF1_USE>
     ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address = (mcan_rxf1e_registers_t *)(msgRAMConfigBaseAddress + offset);
     offset += ${MCAN_INSTANCE_NAME}_RX_FIFO1_SIZE;
     /* Receive FIFO 1 Configuration Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1C = MCAN_RXF1C_F1S(${RXF1_ELEMENTS}) | MCAN_RXF1C_F1WM(${RXF1_WATERMARK})<#if RXF1_OVERWRITE> | MCAN_RXF1C_F1OM_Msk</#if> |
-            MCAN_RXF1C_F1SA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address >> 2));
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1C = MCAN_RXF1C_F1S(${RXF1_ELEMENTS}U) | MCAN_RXF1C_F1WM(${RXF1_WATERMARK}U)<#if RXF1_OVERWRITE> | MCAN_RXF1C_F1OM_Msk</#if> |
+            MCAN_RXF1C_F1SA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address >> 2U));
 
 </#if>
 <#if RXBUF_USE>
     ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress = (mcan_rxbe_registers_t *)(msgRAMConfigBaseAddress + offset);
     offset += ${MCAN_INSTANCE_NAME}_RX_BUFFER_SIZE;
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXBC = MCAN_RXBC_RBSA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress >> 2));
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXBC = MCAN_RXBC_RBSA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress >> 2U));
 
 </#if>
 <#if TX_USE || TXBUF_USE>
     ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress = (mcan_txbe_registers_t *)(msgRAMConfigBaseAddress + offset);
     offset += ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE;
     /* Transmit Buffer/FIFO Configuration Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBC = MCAN_TXBC_TFQS(${TX_FIFO_ELEMENTS})<#if TXBUF_USE> | MCAN_TXBC_NDTB(${TX_BUFFER_ELEMENTS})</#if> |
-            MCAN_TXBC_TBSA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress >> 2));
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBC = MCAN_TXBC_TFQS(${TX_FIFO_ELEMENTS}U)<#if TXBUF_USE> | MCAN_TXBC_NDTB(${TX_BUFFER_ELEMENTS}U)</#if> |
+            MCAN_TXBC_TBSA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress >> 2U));
 
     ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress =  (mcan_txefe_registers_t *)(msgRAMConfigBaseAddress + offset);
     offset += ${MCAN_INSTANCE_NAME}_TX_EVENT_FIFO_SIZE;
     /* Transmit Event FIFO Configuration Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFC = MCAN_TXEFC_EFWM(${TX_FIFO_WATERMARK}) | MCAN_TXEFC_EFS(${TX_FIFO_ELEMENTS}) |
-            MCAN_TXEFC_EFSA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress >> 2));
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFC = MCAN_TXEFC_EFWM(${TX_FIFO_WATERMARK}U) | MCAN_TXEFC_EFS(${TX_FIFO_ELEMENTS}U) |
+            MCAN_TXEFC_EFSA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress >> 2U));
 
 </#if>
 <#if FILTERS_STD?number gt 0>
     ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (mcan_sidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    memcpy((void *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
+    (void) memcpy((void *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
            (const void *)${MCAN_INSTANCE_NAME?lower_case}StdFilter,
            ${MCAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE);
     offset += ${MCAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE;
     /* Standard ID Filter Configuration Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_SIDFC = MCAN_SIDFC_LSS(${FILTERS_STD}) |
-            MCAN_SIDFC_FLSSA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress >> 2));
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_SIDFC = MCAN_SIDFC_LSS(${FILTERS_STD}U) |
+            MCAN_SIDFC_FLSSA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress >> 2U));
 
 </#if>
 <#if FILTERS_EXT?number gt 0>
     ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (mcan_xidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    memcpy((void *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
+    (void) memcpy((void *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
            (const void *)${MCAN_INSTANCE_NAME?lower_case}ExtFilter,
            ${MCAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE);
     /* Extended ID Filter Configuration Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_XIDFC = MCAN_XIDFC_LSE(${FILTERS_EXT}) |
-            MCAN_XIDFC_FLESA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress >> 2));
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_XIDFC = MCAN_XIDFC_LSE(${FILTERS_EXT}U) |
+            MCAN_XIDFC_FLESA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress >> 2U));
 
 </#if>
     /* Set 16-bit MSB of ${MCAN_INSTANCE_NAME?lower_case} base address */
 <#if MCAN_SFR_CAN_ENABLE_VALUE == 1>
   <#if MCAN_INSTANCE_NAME?lower_case == "mcan0">
     SFR_REGS->SFR_CAN = (SFR_REGS->SFR_CAN & ~SFR_CAN_EXT_MEM_CAN0_ADDR_Msk)
-                       | SFR_CAN_EXT_MEM_CAN0_ADDR(((uint32_t)msgRAMConfigBaseAddress >> 16));
+                       | SFR_CAN_EXT_MEM_CAN0_ADDR(((uint32_t)msgRAMConfigBaseAddress >> 16U));
   <#else>
     SFR_REGS->SFR_CAN = (SFR_REGS->SFR_CAN & ~SFR_CAN_EXT_MEM_CAN1_ADDR_Msk)
-                       | SFR_CAN_EXT_MEM_CAN1_ADDR(((uint32_t)msgRAMConfigBaseAddress >> 16));
+                       | SFR_CAN_EXT_MEM_CAN1_ADDR(((uint32_t)msgRAMConfigBaseAddress >> 16U));
   </#if>
 <#elseif MCAN_SFR_CAN_ENABLE_VALUE == 3>
     SFR_REGS->SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")} =
@@ -1017,7 +1058,7 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 <#elseif MCAN_MATRIX_CAN_ENABLE == true>
   <#if MCAN_INSTANCE_NAME?lower_case == "mcan0">
     MATRIX_REGS->CCFG_CAN0 = (MATRIX_REGS->CCFG_CAN0 & ~CCFG_CAN0_Msk)
-                            | CCFG_CAN0_CAN0DMABA(((uint32_t)msgRAMConfigBaseAddress >> 16));
+                            | CCFG_CAN0_CAN0DMABA(((uint32_t)msgRAMConfigBaseAddress >> 16U));
   <#else>
     MATRIX_REGS->CCFG_SYSIO = (MATRIX_REGS->CCFG_SYSIO & ~CCFG_SYSIO_CAN1DMABA_Msk)
                             | CCFG_SYSIO_CAN1DMABA(((uint32_t)msgRAMConfigBaseAddress >> 16));
@@ -1026,7 +1067,10 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
     /* Complete Message RAM Configuration by clearing MCAN CCCR Init */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR &= ~MCAN_CCCR_INIT_Msk;
-    while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk);
+    while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
+	{
+		/* Do Nothing */
+	}
 }
 
 <#if FILTERS_STD?number gt 0>
@@ -1052,11 +1096,11 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 */
 bool ${MCAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, mcan_sidfe_registers_t *stdMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_STD}) || (stdMsgIDFilterElement == NULL))
+    if ((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL))
     {
         return false;
     }
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1].MCAN_SIDFE_0 = stdMsgIDFilterElement->MCAN_SIDFE_0;
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].MCAN_SIDFE_0 = stdMsgIDFilterElement->MCAN_SIDFE_0;
 
     return true;
 }
@@ -1083,11 +1127,11 @@ bool ${MCAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, mcan_s
 */
 bool ${MCAN_INSTANCE_NAME}_StandardFilterElementGet(uint8_t filterNumber, mcan_sidfe_registers_t *stdMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_STD}) || (stdMsgIDFilterElement == NULL))
+    if ((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL))
     {
         return false;
     }
-    stdMsgIDFilterElement->MCAN_SIDFE_0 = ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1].MCAN_SIDFE_0;
+    stdMsgIDFilterElement->MCAN_SIDFE_0 = ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].MCAN_SIDFE_0;
 
     return true;
 }
@@ -1116,12 +1160,12 @@ bool ${MCAN_INSTANCE_NAME}_StandardFilterElementGet(uint8_t filterNumber, mcan_s
 */
 bool ${MCAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, mcan_xidfe_registers_t *extMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_EXT}) || (extMsgIDFilterElement == NULL))
+    if ((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL))
     {
         return false;
     }
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].MCAN_XIDFE_0 = extMsgIDFilterElement->MCAN_XIDFE_0;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].MCAN_XIDFE_1 = extMsgIDFilterElement->MCAN_XIDFE_1;
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].MCAN_XIDFE_0 = extMsgIDFilterElement->MCAN_XIDFE_0;
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].MCAN_XIDFE_1 = extMsgIDFilterElement->MCAN_XIDFE_1;
 
     return true;
 }
@@ -1148,12 +1192,12 @@ bool ${MCAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, mcan_x
 */
 bool ${MCAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, mcan_xidfe_registers_t *extMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_EXT}) || (extMsgIDFilterElement == NULL))
+    if ((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL))
     {
         return false;
     }
-    extMsgIDFilterElement->MCAN_XIDFE_0 = ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].MCAN_XIDFE_0;
-    extMsgIDFilterElement->MCAN_XIDFE_1 = ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].MCAN_XIDFE_1;
+    extMsgIDFilterElement->MCAN_XIDFE_0 = ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].MCAN_XIDFE_0;
+    extMsgIDFilterElement->MCAN_XIDFE_1 = ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].MCAN_XIDFE_1;
 
     return true;
 }
@@ -1276,9 +1320,9 @@ void ${MCAN_INSTANCE_NAME}_RxCallbackRegister(MCAN_CALLBACK callback, uintptr_t 
 */
 void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
 {
-    uint8_t length = 0;
-    uint8_t rxgi = 0;
-    uint8_t bufferIndex = 0;
+    uint8_t length = 0U;
+    uint8_t rxgi = 0U;
+    uint8_t bufferIndex = 0U;
 <#if RXBUF_USE>
     mcan_rxbe_registers_t *rxbeFifo = NULL;
 </#if>
@@ -1291,35 +1335,35 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
     uint32_t ir = ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR;
 
     /* Check if error occurred */
-    if (ir & MCAN_IR_BO_Msk)
+    if ((ir & MCAN_IR_BO_Msk) != 0U)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_BO_Msk;
     }
 <#if RXF0_USE>
     /* New Message in Rx FIFO 0 */
-    if (ir & MCAN_IR_RF0N_Msk)
+    if ((ir & MCAN_IR_RF0N_Msk) != 0U)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_RF0N_Msk;
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE &= (~MCAN_IE_RF0NE_Msk);
 
-        if (${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0S & MCAN_RXF0S_F0FL_Msk)
+        if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0S & MCAN_RXF0S_F0FL_Msk) != 0U)
         {
             /* Read data from the Rx FIFO0 */
             rxgi = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0S & MCAN_RXF0S_F0GI_Msk) >> MCAN_RXF0S_F0GI_Pos);
             rxf0eFifo = (mcan_rxf0e_registers_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address + rxgi * ${MCAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE);
 
             /* Get received identifier */
-            if (rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_XTD_Msk)
+            if ((rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_XTD_Msk) != 0U)
             {
                 *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_ID_Msk;
             }
             else
             {
-                *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = (rxf0eFifo->MCAN_RXF0E_0 >> 18) & MCAN_STD_ID_Msk;
+                *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = (rxf0eFifo->MCAN_RXF0E_0 >> 18U) & MCAN_STD_ID_Msk;
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
-            if ((rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_RTR_Msk) && ((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_FDF_Msk) == 0))
+            if (((rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_RTR_Msk) != 0U) && ((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_FDF_Msk) == 0U))
             {
                 *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].msgFrameAttr = MCAN_MSG_RX_REMOTE_FRAME;
             }
@@ -1329,10 +1373,10 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
             }
 
             /* Get received data length */
-            length = MCANDlcToLengthGet(((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_DLC_Msk) >> MCAN_RXF0E_1_DLC_Pos));
+            length = MCANDlcToLengthGet((uint8_t)((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_DLC_Msk) >> MCAN_RXF0E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxBuffer, (uint8_t *)&rxf0eFifo->MCAN_RXF0E_DATA, length);
+           (void) memcpy(${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxBuffer, (uint8_t *)&rxf0eFifo->MCAN_RXF0E_DATA, length);
             *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxsize = length;
 
             <#if TIMESTAMP_ENABLE>
@@ -1355,29 +1399,29 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
 </#if>
 <#if RXF1_USE>
     /* New Message in Rx FIFO 1 */
-    if (ir & MCAN_IR_RF1N_Msk)
+    if ((ir & MCAN_IR_RF1N_Msk) != 0U)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_RF1N_Msk;
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE &= (~MCAN_IE_RF1NE_Msk);
 
-        if (${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1S & MCAN_RXF1S_F1FL_Msk)
+        if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1S & MCAN_RXF1S_F1FL_Msk) != 0U)
         {
             /* Read data from the Rx FIFO1 */
             rxgi = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1S & MCAN_RXF1S_F1GI_Msk) >> MCAN_RXF1S_F1GI_Pos);
             rxf1eFifo = (mcan_rxf1e_registers_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address + rxgi * ${MCAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE);
 
             /* Get received identifier */
-            if (rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_XTD_Msk)
+            if ((rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_XTD_Msk) != 0U)
             {
                 *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_ID_Msk;
             }
             else
             {
-                *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = (rxf1eFifo->MCAN_RXF1E_0 >> 18) & MCAN_STD_ID_Msk;
+                *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = (rxf1eFifo->MCAN_RXF1E_0 >> 18U) & MCAN_STD_ID_Msk;
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
-            if ((rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_RTR_Msk) && ((rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_FDF_Msk) == 0))
+            if (((rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_RTR_Msk) != 0U) && ((rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_FDF_Msk) == 0U))
             {
                 *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].msgFrameAttr = MCAN_MSG_RX_REMOTE_FRAME;
             }
@@ -1387,10 +1431,10 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
             }
 
             /* Get received data length */
-            length = MCANDlcToLengthGet(((rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_DLC_Msk) >> MCAN_RXF1E_1_DLC_Pos));
+            length = MCANDlcToLengthGet((uint8_t)((rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_DLC_Msk) >> MCAN_RXF1E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxBuffer, (uint8_t *)&rxf1eFifo->MCAN_RXF1E_DATA, length);
+            (void) memcpy(${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxBuffer, (uint8_t *)&rxf1eFifo->MCAN_RXF1E_DATA, length);
             *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxsize = length;
 
             <#if TIMESTAMP_ENABLE>
@@ -1413,62 +1457,70 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
 </#if>
 <#if RXBUF_USE>
     /* New Message in Dedicated Rx Buffer */
-    if (ir & MCAN_IR_DRX_Msk)
+    if ((ir & MCAN_IR_DRX_Msk) != 0U)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_DRX_Msk;
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE &= (~MCAN_IE_DRXE_Msk);
 
         /* Read data from the Rx Buffer */
-        if (${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 != 0)
+        if (${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 != 0U)
         {
-            for (rxgi = 0; rxgi <= 0x1F; rxgi++)
+            for (rxgi = 0U; rxgi <= 0x1FU; rxgi++)
             {
-                if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 & (1 << rxgi)) == (1 << rxgi))
+                if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 & (1UL << rxgi)) == (uint32_t)(1UL << rxgi))
+				{
                     break;
+				}
             }
         }
         else
         {
-            for (rxgi = 0; rxgi <= 0x1F; rxgi++)
+            rxgi = 0U;
+			while(rxgi <= 0x1FU)
             {
-                if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 & (1 << rxgi)) == (1 << rxgi))
+                if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 & (1UL << rxgi)) == (uint32_t)(1UL << rxgi))
                 {
-                    rxgi = rxgi + 32;
+                    rxgi = rxgi + 32U;
                     break;
                 }
+				rxgi++;
             }
         }
         rxbeFifo = (mcan_rxbe_registers_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + rxgi * ${MCAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
 
-        for (bufferIndex = 0; bufferIndex < ${RX_BUFFER_ELEMENTS}; bufferIndex++)
+        for (bufferIndex = 0U; bufferIndex < ${RX_BUFFER_ELEMENTS}U; bufferIndex++)
         {
-            if (bufferIndex < 32)
+            if (bufferIndex < 32U)
             {
-                if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (bufferIndex & 0x1F))) == (1 << (bufferIndex & 0x1F)))
+                if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (uint32_t)((uint32_t)1U << (bufferIndex & 0x1FU))) == (uint32_t)((uint32_t)1U << (bufferIndex & 0x1FU)))
                 {
-                    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 &= ~(1 << (bufferIndex & 0x1F));
+                    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 &= (uint32_t)(~((uint32_t)1U << (bufferIndex & 0x1FU)));
                     break;
                 }
             }
-            else if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((bufferIndex - 32) & 0x1F))) == (1 << ((bufferIndex - 32) & 0x1F)))
+            else if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & ((uint32_t)1U << ((bufferIndex - 32U) & 0x1FU))) == (uint32_t)((uint32_t)1U << ((bufferIndex -32U) & 0x1FU)))
             {
-                ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 &= ~(1 << ((bufferIndex - 32) & 0x1F));
+                ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 &= (uint32_t)(~((uint32_t)1U << ((bufferIndex - 32U) & 0x1FU)));
                 break;
             }
+			else
+			{
+				/* Do Nothing */
+			}
         }
 
         /* Get received identifier */
-        if (rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_XTD_Msk)
+        if ((rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_XTD_Msk) != 0U)
         {
             *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_ID_Msk;
         }
         else
         {
-            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = (rxbeFifo->MCAN_RXBE_0 >> 18) & MCAN_STD_ID_Msk;
+            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = (rxbeFifo->MCAN_RXBE_0 >> 18U) & MCAN_STD_ID_Msk;
         }
 
         /* Check RTR and FDF bits for Remote/Data Frame */
-        if ((rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_RTR_Msk) && ((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_FDF_Msk) == 0))
+        if (((rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_RTR_Msk) != 0U) && ((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_FDF_Msk) == 0U))
         {
             *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].msgFrameAttr = MCAN_MSG_RX_REMOTE_FRAME;
         }
@@ -1478,10 +1530,10 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
         }
 
         /* Get received data length */
-        length = MCANDlcToLengthGet(((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_DLC_Msk) >> MCAN_RXBE_1_DLC_Pos));
+        length = MCANDlcToLengthGet((uint8_t)((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_DLC_Msk) >> MCAN_RXBE_1_DLC_Pos));
 
         /* Copy data to user buffer */
-        memcpy(${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxBuffer, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, length);
+       (void) memcpy(${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxBuffer, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, length);
         *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxsize = length;
 
         <#if TIMESTAMP_ENABLE>
@@ -1493,13 +1545,13 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
 
         </#if>
         /* Clear new data flag */
-        if (rxgi < 32)
+        if (rxgi < 32U)
         {
-            ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 = (1 << rxgi);
+            ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 = (uint32_t)((uint32_t)1UL << rxgi);
         }
         else
         {
-            ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 = (1 << (rxgi - 32));
+            ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 = (uint32_t)((uint32_t)1UL << (rxgi - 32U));
         }
         if (${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_MSG_ATTR_RX_BUFFER].callback != NULL)
         {
@@ -1510,20 +1562,20 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
 
 <#if TX_USE || TXBUF_USE >
     /* TX Completed */
-    if (ir & MCAN_IR_TC_Msk)
+    if ((ir & MCAN_IR_TC_Msk) != 0U)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_TC_Msk;
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE &= (~MCAN_IE_TCE_Msk);
-        for (bufferIndex = 0; bufferIndex < (${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
+        for (bufferIndex = 0U; bufferIndex < (${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
         {
-            if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTO & (1 << (bufferIndex & 0x1F))) &&
-                (${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE & (1 << (bufferIndex & 0x1F))))
+            if (((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTO & (uint32_t)((uint32_t)1U << (bufferIndex & (uint32_t)0x1FU))) != 0U) &&
+                ((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE & (uint32_t)((uint32_t)1U << (bufferIndex & (uint32_t)0x1FU))) != 0U))
             {
-                ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE &= ~(1 << (bufferIndex & 0x1F));
+                ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE &= (uint32_t)(~((uint32_t)1U << (bufferIndex & (uint32_t)0x1FU)));
                 <#if TXBUF_USE>
-                if (0 != (${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1 << (bufferIndex & 0x1F))))
+                if (0U != (${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (uint32_t)((uint32_t)1U << (bufferIndex & (uint32_t)0x1FU))))
                 {
-                    ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1 << (bufferIndex & 0x1F)));
+                    ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (uint32_t)(~((uint32_t)1U << (bufferIndex & (uint32_t)0x1FU)));
                 }
                 </#if>
             }
@@ -1535,17 +1587,18 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
     }
 
     /* TX FIFO is empty */
-    if (ir & MCAN_IR_TFE_Msk)
+    if ((ir & MCAN_IR_TFE_Msk) != 0U)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_TFE_Msk;
         uint8_t getIndex = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXFQS & MCAN_TXFQS_TFGI_Msk) >> MCAN_TXFQS_TFGI_Pos);
         uint8_t putIndex = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXFQS & MCAN_TXFQS_TFQPI_Msk) >> MCAN_TXFQS_TFQPI_Pos);
-        for (uint8_t fifoIndex = getIndex; ; fifoIndex++)
+		uint8_t fifoIndex = getIndex;
+        while ( true )
         {
             <#if TXBUF_USE>
-            if (fifoIndex >= (${TX_BUFFER_ELEMENTS} + ${TX_FIFO_ELEMENTS}))
+            if (fifoIndex >= (${TX_BUFFER_ELEMENTS}U + ${TX_FIFO_ELEMENTS}U))
             {
-                fifoIndex = ${TX_BUFFER_ELEMENTS};
+                fifoIndex = ${TX_BUFFER_ELEMENTS}U;
             }
             </#if>
             if (fifoIndex >= putIndex)
@@ -1553,11 +1606,12 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
                 break;
             }
             <#if TXBUF_USE>
-            if (0 != (${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1 << ((fifoIndex + ${TX_BUFFER_ELEMENTS}) & 0x1F))))
+            if (0U != (${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (uint32_t)((uint32_t)1U << ((fifoIndex + ${TX_BUFFER_ELEMENTS}U) & 0x1FU))))
             {
-                ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1 << ((fifoIndex + ${TX_BUFFER_ELEMENTS}) & 0x1F)));
+                ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (uint32_t)(~((uint32_t)1U << ((fifoIndex + ${TX_BUFFER_ELEMENTS}U) & 0x1FU)));
             }
             </#if>
+			fifoIndex++;
         }
     }
 </#if>

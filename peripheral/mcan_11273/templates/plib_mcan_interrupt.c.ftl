@@ -304,7 +304,7 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
                                       <#if RXBUF_USE> | MCAN_IE_DRXE_Msk</#if>
                                       | MCAN_IE_MRAFE_Msk;
 
-    memset(&${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(MCAN_MSG_RAM_CONFIG));
+  (void) memset(&${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(MCAN_MSG_RAM_CONFIG));
 }
 
 <#if TXBUF_USE>
@@ -338,7 +338,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint8_t bufferNumber, MCAN_TX_BUFFER 
 
     txBuf = (uint8_t *)((uint8_t*)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)bufferNumber * ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
 
-    memcpy(txBuf, (uint8_t *)txBuffer, ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
+    (void) memcpy(txBuf, (uint8_t *)txBuffer, ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
 
     /* Enable Transmission Interrupt */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE = 1UL << bufferNumber;
@@ -389,7 +389,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmitFifo(uint8_t numberOfMessage, MCAN_TX_
     {
         txFifo = (uint8_t *)((uint8_t*)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)tfqpi * ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
 
-        memcpy(txFifo, txBuf, ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
+        (void) memcpy(txFifo, txBuf, ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
 
         txBuf += ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE;
         bufferNumber |= (1UL << tfqpi);
@@ -491,13 +491,13 @@ bool ${MCAN_INSTANCE_NAME}_TxEventFifoRead(uint8_t numberOfTxEvent, MCAN_TX_EVEN
 
     /* Read data from the Rx FIFO0 */
     txefgi = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFS & MCAN_TXEFS_EFGI_Msk) >> MCAN_TXEFS_EFGI_Pos);
-    for (count = 0; count < numberOfTxEvent; count++)
+    for (count = 0U; count < numberOfTxEvent; count++)
     {
         txEvent = (uint8_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress + ((uint32_t)txefgi * sizeof(MCAN_TX_EVENT_FIFO)));
 
-        memcpy(txEvtFifo, txEvent, sizeof(MCAN_TX_EVENT_FIFO));
+        (void) memcpy(txEvtFifo, txEvent, sizeof(MCAN_TX_EVENT_FIFO));
 
-        if ((count + 1) == numberOfTxEvent)
+        if ((count + 1U) == numberOfTxEvent)
         {
             break;
         }
@@ -547,7 +547,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, MCAN_RX_BUFFER *
 
     rxBuf = (uint8_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + ((uint32_t)bufferNumber * ${MCAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE));
 
-    memcpy((uint8_t *)rxBuffer, rxBuf, ${MCAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
+    (void) memcpy((uint8_t *)rxBuffer, rxBuf, ${MCAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
 
     /* Clear new data flag */
     if (bufferNumber < 32U)
@@ -603,13 +603,13 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceiveFifo(MCAN_RX_FIFO_NUM rxFifoNum, uint8_
         case MCAN_RX_FIFO_0:
             /* Read data from the Rx FIFO0 */
             rxgi = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0S & MCAN_RXF0S_F0GI_Msk) >> MCAN_RXF0S_F0GI_Pos);
-            for (count = 0; count < numberOfMessage; count++)
+            for (count = 0U; count < numberOfMessage; count++)
             {
                 rxFifo = (uint8_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address + ((uint32_t)rxgi * ${MCAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE));
 
-                memcpy(rxBuf, rxFifo, ${MCAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE);
+                (void) memcpy(rxBuf, rxFifo, ${MCAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE);
 
-                if ((count + 1) == numberOfMessage)
+                if ((count + 1U) == numberOfMessage)
                 {
                     break;
                 }
@@ -631,13 +631,13 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceiveFifo(MCAN_RX_FIFO_NUM rxFifoNum, uint8_
         case MCAN_RX_FIFO_1:
             /* Read data from the Rx FIFO1 */
             rxgi = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1S & MCAN_RXF1S_F1GI_Msk) >> MCAN_RXF1S_F1GI_Pos);
-            for (count = 0; count < numberOfMessage; count++)
+            for (count = 0U; count < numberOfMessage; count++)
             {
                 rxFifo = (uint8_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address + ((uint32_t)rxgi * ${MCAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE));
 
-                memcpy(rxBuf, rxFifo, ${MCAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE);
+                (void) memcpy(rxBuf, rxFifo, ${MCAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE);
 
-                if ((count + 1) == numberOfMessage)
+                if ((count + 1U) == numberOfMessage)
                 {
                     break;
                 }
@@ -744,7 +744,7 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 {
     uint32_t offset = 0U;
 
-    memset((void*)msgRAMConfigBaseAddress, 0x00, ${MCAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
+   (void) memset((void*)msgRAMConfigBaseAddress, 0x00, ${MCAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
 
     /* Set MCAN CCCR Init for Message RAM Configuration */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_INIT_ENABLED;
@@ -794,7 +794,7 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 </#if>
 <#if FILTERS_STD?number gt 0>
     ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (mcan_sidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    memcpy((void *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
+    (void) memcpy((void *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
            (const void *)${MCAN_INSTANCE_NAME?lower_case}StdFilter,
            ${MCAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE);
     offset += ${MCAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE;
@@ -805,7 +805,7 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 </#if>
 <#if FILTERS_EXT?number gt 0>
     ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (mcan_xidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    memcpy((void *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
+    (void) memcpy((void *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
            (const void *)${MCAN_INSTANCE_NAME?lower_case}ExtFilter,
            ${MCAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE);
     /* Extended ID Filter Configuration Register */
@@ -1242,10 +1242,10 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
     bool testCondition = false;
 </#if>
 <#if RXF0_USE || RXF1_USE>
-    uint8_t numberOfMessage = 0;
+    uint8_t numberOfMessage = 0U;
 </#if>
 <#if TX_USE || TXBUF_USE>
-    uint8_t numberOfTxEvent = 0;
+    uint8_t numberOfTxEvent = 0U;
 </#if>
 
     uint32_t ir = ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR;
