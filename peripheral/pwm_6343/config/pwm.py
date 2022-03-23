@@ -977,6 +977,7 @@ def instantiateComponent(pwmComponent):
     pwmCompareMenu = pwmComponent.createMenuSymbol("PWM_COMPARE", None)
     pwmCompareMenu.setLabel("Compare Unit Configurations")
     pwmCompareMenu.setDependencies(pwmCompMenuVisible, ["PWM_CH_0_ENABLE"])
+    pwmCompareMenu.setVisible(pwmSym_CH_Enable[0].getValue())
 
     for compareID in range(0, 8):
 
