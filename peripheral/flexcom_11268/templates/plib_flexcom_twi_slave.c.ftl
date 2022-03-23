@@ -50,7 +50,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "device.h"
 #include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_twi_slave.h"
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
