@@ -75,9 +75,12 @@ const SummaryPage = () => {
         {GetLabelAndValue("PCLK CSS", "CLK_PCK" + index + "_CSS")}
         {GetLabelAndValue("PCLK PRES", "CLK_PCK" + index + "_PRES")}
         {GetLabelAndValue("PCLK Enable", "CLK_SCER_PCK" + index)}
-        {index === 0 && GetLabelAndValue("PCLK0 Frequency", "PCK0_FREQUENCY", " Hz")}
-        {index === 1 && GetLabelAndValue("PCLK1 Frequency", "PCK1_FREQUENCY", " Hz")}
-        {index === 2 && GetLabelAndValue("PCLK2 Frequency", "PCK2_FREQUENCY", " Hz")}
+        {index === 0 &&
+          GetLabelAndValue("PCLK0 Frequency", "PCK0_FREQUENCY", " Hz")}
+        {index === 1 &&
+          GetLabelAndValue("PCLK1 Frequency", "PCK1_FREQUENCY", " Hz")}
+        {index === 2 &&
+          GetLabelAndValue("PCLK2 Frequency", "PCK2_FREQUENCY", " Hz")}
       </div>
     );
   }
@@ -97,8 +100,8 @@ const SummaryPage = () => {
         {GetLabelAndValue("NSTEP", "CLK_PLL" + letter + "_NSTEP")}
         {GetLabelAndValue("ENPLLO0", "CLK_PLL" + letter + "_ENPLLO0")}
         {GetLabelAndValue("DIVPMC0", "CLK_PLL" + letter + "_DIVPMC0")}
-        {GetLabelAndValue("ENPLLO1", "CLK_PLL" + letter + "_ENPLLO1")}
-        {GetLabelAndValue("DIVPMC1", "CLK_PLL" + letter + "_DIVPMC1")}
+        {letter === "A" && GetLabelAndValue("ENPLLO1", "CLK_PLL" + letter + "_ENPLLO1")}
+        {letter === "A" && GetLabelAndValue("DIVPMC1", "CLK_PLL" + letter + "_DIVPMC1")}
         {GetLabelAndValue(
           "PLL" + letter + " Ref clock Freqency",
           "PLL" + letter + "_REFCLK_FREQUENCY",
@@ -167,11 +170,18 @@ const SummaryPage = () => {
                 Processor Clock Single Core Controller{" "}
               </span>
             </div>
-            <div className="p-field">{}</div>
+            <div className="p-field">{SingleCoreSettings()}</div>
           </div>
         </div>
       </div>
     );
+  }
+
+  function SingleCoreSettings() {
+    return (<div className="p-d-flex p-flex-column">
+        {Core0Controller()}
+        {Core1Controller()}
+    </div>);
   }
 
   function Core0Controller() {
@@ -182,7 +192,7 @@ const SummaryPage = () => {
         {GetLabelAndValue("MCK0DIV Enable", "CLK_CPU_CKR_RATIO_MCK0DIV")}
         {GetLabelAndValue("MCK0DIV2 Enable", "CLK_CPU_CKR_RATIO_MCK0DIV2")}
         {GetLabelAndValue("CPU clock frequency", "CPU_CLOCK_FREQUENCY", " Hz")}
-        {GetLabelAndValue("MCX0 frequency", "MCK0_FREQUENCY", " Hz")}
+        {GetLabelAndValue("MCK0 frequency", "MCK0_FREQUENCY", " Hz")}
         {GetLabelAndValue(
           "MCK0DIV Clock Frequency",
           "MCK0DIV_FREQUENCY",
@@ -203,9 +213,9 @@ const SummaryPage = () => {
         {GetLabelAndValue("CSS", "CLK_CPU_CKR_CPCSS")}
         {GetLabelAndValue("PRES", "CLK_CPU_CKR_CPPRES")}
         {GetLabelAndValue("CPBMCK Enable", "CLK_SCER_CPBMCK")}
-        {GetLabelAndValue("CPCK Enable", "CLK_SCER_CPCK")}
+        {GetCoreStatus() === dualCoreString && GetLabelAndValue("CPCK Enable", "CLK_SCER_CPCK")}
         {GetLabelAndValue("MCK1DIV Enable", "CLK_CPU_CKR_RATIO_MCK1DIV")}
-        {GetLabelAndValue(
+        {GetCoreStatus() === dualCoreString && GetLabelAndValue(
           "CPU Clock 1 frequency",
           "CPU1_CLOCK_FREQUENCY",
           " Hz"

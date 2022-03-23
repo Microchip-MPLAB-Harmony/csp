@@ -15,6 +15,8 @@ import {
   GetSymbolMinValue,
   GetSymbolValue,
 } from "./SymbolAccess";
+import { InputNumber } from "primereact/inputnumber";
+import { Checkbox } from 'primereact/checkbox';
 
 function GetColoredStyleObject(id: string, isValidFreq: boolean) {
   try {
@@ -244,4 +246,20 @@ export function AddDivioType(id: string, text: string) {
     let newvalue = "(" + text + "+1)";
     return <div>{AddLabel(id, "/ " + newvalue)}</div>;
   } catch (err) {}
+}
+
+export function AddDummyInputNumber(styleId : string){
+  return(
+    <div>
+      <InputNumber value={0} disabled style={GetStyle(styleId)}/>
+    </div>
+  )
+}
+
+export function AddDummyCheckBox(styleId : string){
+  return(
+    <div>
+      <Checkbox value={false} disabled style={GetStyle(styleId)}/>
+    </div>
+  )
 }

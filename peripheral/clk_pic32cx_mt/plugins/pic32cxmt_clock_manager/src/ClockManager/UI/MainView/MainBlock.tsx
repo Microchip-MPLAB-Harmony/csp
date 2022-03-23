@@ -1,6 +1,7 @@
 import DualCoreClockSVG from "../../../Resources/Svgs/cleaned_PIC32CXMT_clock_dual_core.svg";
-import DualCoreJsonData from "../../../Resources/Json/symbol.json";
-import SingleCoreJsonData from "../../../Resources/Json/symbol.json";
+import SingleCoreClockSVG from "../../../Resources/Svgs/cleaned_PIC32CXMT_clock_single_core_new.svg";
+import DualCoreJsonData from "../../../Resources/Json/dualCore_symbol.json";
+import SingleCoreJsonData from "../../../Resources/Json/singleCore_symbol.json";
 import useForceUpdate from "use-force-update";
 import {
   GetUIComponentWithOutLabel,
@@ -16,7 +17,7 @@ import { GetSymbolValue } from "../../Common/SymbolAccess";
 import PCKxController from "./Tabs/ProgrammableClockController";
 import PLLController from "./Tabs/PLLController";
 import { AddCustomButtons } from "./CustomButtons";
-import { AddDualCoreCustomLabels } from "./DualCore/DualCoreCustomLabels";
+import { AddCoreCustomLabels } from "./CoreCustomLabels";
 import SummaryPage from './Summary';
 
 let symbolsStyle = new Map<any, any>();
@@ -49,7 +50,7 @@ const MainBlock = () => {
     return new Promise((res) => setTimeout(res, delay));
   }
   async function UpdateScreen() {
-    await timeout(200);
+    await timeout(150);
     update();
   }
 
@@ -85,15 +86,14 @@ const MainBlock = () => {
     } catch (err) {}
   }
 
-  function LoadDualCoreSVG() {
+  function LoadCoreSVG(svg : any) {
     return (
       <div>
         <img
-          src={DualCoreClockSVG}
+          src={svg}
           alt="icon"
           style={{ width: "1764px", height: "1548px", top: "0px", left: "0px" }}
         />
-        {AddDualCoreCustomLabels()}
       </div>
     );
   }
@@ -104,7 +104,9 @@ const MainBlock = () => {
         <Headder />
       </div>
       <div className="card"  id="motor">
-        {GetCoreStatus() === dualCoreString && LoadDualCoreSVG()}
+        {GetCoreStatus() === dualCoreString && LoadCoreSVG(DualCoreClockSVG)}
+        {GetCoreStatus() === singleCoreString && LoadCoreSVG(SingleCoreClockSVG)}
+        {AddCoreCustomLabels()}
         {AddDynamicSymbolLinkedUIComponents()}
         {AddDynamicNonSymbolLinkedLabels()}
         {AddCustomButtons()}

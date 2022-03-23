@@ -28,7 +28,7 @@ const Headder = () => {
     <React.Fragment>
       <Button
         label="HOME"
-        tooltip="View MC Plant Home Screen"
+        tooltip="View Clock Home Screen"
         tooltipOptions={{ position: "bottom" }}
         icon="pi pi-home"
         iconPos="left"
@@ -46,7 +46,7 @@ const Headder = () => {
       />
       <Button
         label="HELP"
-        tooltip="View MC Plant help"
+        tooltip="View Clock help"
         tooltipOptions={{ position: "bottom" }}
         // icon="pi pi-search"
         className="p-button p-button-text  p-mr-2"

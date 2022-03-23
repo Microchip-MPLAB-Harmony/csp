@@ -1,11 +1,11 @@
-import { GetSymbolValue } from "../../../Common/SymbolAccess";
-import { component_id } from "../MainBlock";
+import { GetSymbolValue } from "../../Common/SymbolAccess";
+import { component_id } from "./MainBlock";
 import {
   AddFrequencyLabelWithBold,
   AddLabel,
-} from "../../../Common/ClockCommonUtils";
+} from "../../Common/ClockCommonUtils";
 
-export function AddDualCoreCustomLabels() {
+export function AddCoreCustomLabels() {
   try {
     return (
       <div>
@@ -52,6 +52,11 @@ export function AddDualCoreCustomLabels() {
           "MAINCK_FREQUENCY",
           "label_core1MainClkFrequency",
           CheckSelectedSymbolValue("CLK_CPU_CKR_CPCSS", "MAINCK")
+        )}
+         {AddFrequencyLabelWithBold(
+          "MCK0_FREQUENCY",
+          "label_core1MCK0",
+          CheckSelectedSymbolValue("CLK_CPU_CKR_CPCSS", "MCK0")
         )}
         {AddFrequencyLabelWithBold(
           "PLLACK1_FREQUENCY",

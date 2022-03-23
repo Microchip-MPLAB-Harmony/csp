@@ -3,10 +3,14 @@ import { ListBox } from "primereact/listbox";
 import { GetStyle } from "../../../Common/UIComponent";
 import { component_id } from "../MainBlock";
 import { GetSymbolValue } from "../../../Common/SymbolAccess";
-import { AddColoredFrequencyLabelWithTooltip } from "../../../Common/ClockCommonUtils";
+import { AddDummyCheckBox } from "../../../Common/ClockCommonUtils";
+import {
+  AddColoredFrequencyLabelWithTooltip,
+  AddDummyInputNumber,
+  AddLabel,
+} from "../../../Common/ClockCommonUtils";
 import {
   AddCheckBox,
-  AddColoredFrequencyLabel,
   AddCombobox,
   AddDivioType,
   AddFrequencyLabel,
@@ -32,8 +36,8 @@ const PLLController = (props: { parentUpdate: () => void }) => {
         "PLL" + letter + "_CORECLK_FREQUENCY"
       );
       let coreClockFreqstatus =
-        (currentCoreClockValue >= minCoreClockValue &&
-          currentCoreClockValue <= maxCoreClockValue) === true
+        Number(currentCoreClockValue) >= Number(minCoreClockValue) &&
+        Number(currentCoreClockValue) <= Number(maxCoreClockValue)
           ? true
           : false;
       return (
@@ -48,10 +52,18 @@ const PLLController = (props: { parentUpdate: () => void }) => {
             "tab_PLLA_spinner_mul",
             props.parentUpdate
           )}
+          {AddLabel(
+            "tab_label_mulValue",
+            GetSymbolValue(component_id, "CLK_PLL" + letter + "_MUL")
+          )}
           {AddInputNumber(
             "CLK_PLL" + letter + "_FRACR",
             "tab_PLLA_spinner_fracr",
             props.parentUpdate
+          )}
+          {AddLabel(
+            "tab_label_fracrValue",
+            GetSymbolValue(component_id, "CLK_PLL" + letter + "_FRACR")
           )}
           {AddInputNumber(
             "CLK_PLL" + letter + "_STEP",
@@ -68,11 +80,7 @@ const PLLController = (props: { parentUpdate: () => void }) => {
             "tab_PLLA_spinner_divpmc0",
             props.parentUpdate
           )}
-          {AddInputNumber(
-            "CLK_PLL" + letter + "_DIVPMC1",
-            "tab_PLLA_spinner_divpmc1",
-            props.parentUpdate
-          )}
+
           {AddCheckBox(
             "CLK_PLL" + letter + "_ENPLL",
             "tab_PLLA_checkBox_enable",
@@ -88,11 +96,6 @@ const PLLController = (props: { parentUpdate: () => void }) => {
             "tab_PLLA_checkBox_enpllo0",
             props.parentUpdate
           )}
-          {AddCheckBox(
-            "CLK_PLL" + letter + "_ENPLLO1",
-            "tab_PLLA_checkBox_enpllo1",
-            props.parentUpdate
-          )}
 
           {AddFrequencyLabel(
             "PLL" + letter + "_REFCLK_FREQUENCY",
@@ -103,7 +106,9 @@ const PLLController = (props: { parentUpdate: () => void }) => {
             "PLL" + letter + "_CORECLK_FREQUENCY",
             "tab_label_PLLA_coRefFrequency",
             coreClockFreqstatus,
-            "The core clock frequency value should be between " +
+            "The core PLL" +
+              letter +
+              " clock frequency value should be between " +
               minCoreClockValue +
               " and " +
               maxCoreClockValue +
@@ -114,15 +119,44 @@ const PLLController = (props: { parentUpdate: () => void }) => {
             "tab_PLLA_label_PLLDivPmc0",
             GetSymbolValue(component_id, "CLK_PLL" + letter + "_DIVPMC0")
           )}
-          {AddDivioType(
-            "tab_label_PLLA_PLLDivpmc1",
-            GetSymbolValue(component_id, "CLK_PLL" + letter + "_DIVPMC1")
-          )}
+
+          {letter === "A" && PLLAUnique(letter)}
+          {(letter === "B" || letter === "C") && CommonPLLBandPLLC(letter)}
         </div>
       );
     } catch (err) {
       alert(err);
     }
+  }
+
+  function PLLAUnique(letter: string) {
+    return (
+      <div>
+        {AddInputNumber(
+          "CLK_PLL" + letter + "_DIVPMC1",
+          "tab_PLLA_spinner_divpmc1",
+          props.parentUpdate
+        )}
+        {AddCheckBox(
+          "CLK_PLL" + letter + "_ENPLLO1",
+          "tab_PLLA_checkBox_enpllo1",
+          props.parentUpdate
+        )}
+        {AddDivioType(
+          "tab_label_PLLA_PLLDivpmc1",
+          GetSymbolValue(component_id, "CLK_PLL" + letter + "_DIVPMC1")
+        )}
+      </div>
+    );
+  }
+  function CommonPLLBandPLLC(letter: string) {
+    return (
+      <div>
+        {AddDummyInputNumber("tab_PLLA_spinner_divpmc1")}
+        {AddDummyCheckBox("tab_PLLA_checkBox_enpllo1")}
+        {AddLabel("tab_label_PLLA_PLLDivpmc1", "NA")}
+      </div>
+    );
   }
 
   function NullSelected() {

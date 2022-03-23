@@ -7,7 +7,7 @@ import { component_id } from "../MainBlock";
 import {
   GetSymbolValue,
 } from "../../../Common/SymbolAccess";
-import { CheckSelectedSymbolValue } from "../DualCore/DualCoreCustomLabels";
+import { CheckSelectedSymbolValue } from "../CoreCustomLabels";
 import { AddBoldLabel, AddCheckBox, AddCombobox, AddDivioType, AddFrequencyLabel, AddInputNumber } from "../../../Common/ClockCommonUtils";
 
 const ProgrammableClockController = (props: { parentUpdate: () => void }) => {
