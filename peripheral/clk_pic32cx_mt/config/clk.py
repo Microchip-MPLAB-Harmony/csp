@@ -620,7 +620,8 @@ if __name__ == "__main__":
     gclk_ui_map.setVisible(True)
 
     max_clock_id = 0
-    peripheral_clock_list = []
+    
+    peripheral_clock_config = []
 
     gclkcss_vg_node = get_valuegroup_node(pmc_node, "PMC", "PMC_PCR", "GCLKCSS")
 
@@ -640,7 +641,7 @@ if __name__ == "__main__":
                     pcr_en = clk_component.createBooleanSymbol(
                                 clock_id_suffix + "_CLOCK_ENABLE", pcr_menu)
                     pcr_en.setLabel(clock_id_suffix)
-                    peripheral_clock_list.append(clock_id_suffix + "_CLOCK_ENABLE")
+                    peripheral_clock_config.append(clock_id_suffix + "_CLOCK_ENABLE")
 
                     if int(clock_id) > max_clock_id:
                         max_clock_id = int(clock_id)
@@ -714,6 +715,11 @@ if __name__ == "__main__":
                                             "CLK_MAX_PERIPHERAL_ID", pcr_menu)
     max_clock_id_sym.setVisible(False)
     max_clock_id_sym.setDefaultValue(max_clock_id)
+    
+    # PERIPHERAL_CLOCK_CONFIG symbol used in Clock Configuration (UI)
+    peripheralClockConfig = coreComponent.createComboSymbol("PERIPHERAL_CLOCK_CONFIG", None, peripheral_clock_config)
+    peripheralClockConfig.setVisible(False)
+
     ######################## Programmable clocks ##############################
     pck_menu = clk_component.createMenuSymbol("CLK_PCK_MENU", menu)
     pck_menu.setLabel("Programmable Clocks")
