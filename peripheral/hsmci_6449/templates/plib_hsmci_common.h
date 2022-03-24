@@ -61,6 +61,36 @@
 #define HSMCI_CLOCK_FREQ_HS_26_MHZ         (26000000)
 #define HSMCI_CLOCK_FREQ_HS_52_MHZ         (52000000)
 
+#define    HSMCI_CMD_TIMEOUT_ERROR          (0x0001U)
+#define    HSMCI_CMD_CRC_ERROR              (0x0002U)
+#define    HSMCI_CMD_END_BIT_ERROR          (0x0004U)
+#define    HSMCI_CMD_INDEX_ERROR            (0x0008U)
+#define    HSMCI_DATA_TIMEOUT_ERROR         (0x0010U)
+#define    HSMCI_DATA_CRC_ERROR             (0x0020U)
+#define    HSMCI_DATA_UNDERRUN_ERROR        (0x0040U)
+#define    HSMCI_DATA_OVERRUN_ERROR         (0x0080U)
+
+typedef uint32_t HSMCI_ERROR_FLAGS;
+
+
+#define    HSMCI_XFER_STATUS_CMD_COMPLETED   (0x01U)
+#define    HSMCI_XFER_STATUS_DATA_COMPLETED  (0x02U)
+
+typedef uint32_t HSMCI_XFER_STATUS;
+
+
+#define    HSMCI_CMD_RESP_NONE   (0U)   /*!< no response type */
+#define    HSMCI_CMD_RESP_R1     (1U)   /*!< normal response command */
+#define    HSMCI_CMD_RESP_R1B    (2U)/*!< normal with busy signal */
+#define    HSMCI_CMD_RESP_R2     (3U) /*!< CID, CSD register */
+#define    HSMCI_CMD_RESP_R3     (4U)/*!< OCR register */
+#define    HSMCI_CMD_RESP_R4     (5U)/*!< */
+#define    HSMCI_CMD_RESP_R5     (6U)/*!< */
+#define    HSMCI_CMD_RESP_R6     (7U)/*!< Published RCA response  */
+#define    HSMCI_CMD_RESP_R7     (8U)/*!< Card interface condition  */
+
+typedef uint8_t HSMCI_CMD_RESP_TYPE;
+
 typedef enum
 {
     HSMCI_DATA_TRANSFER_TYPE_SINGLE = 0,
@@ -83,18 +113,7 @@ typedef struct
 
 }HSMCI_DataTransferFlags;
 
-typedef enum
-{
-    HSMCI_CMD_TIMEOUT_ERROR         = 0x0001,
-    HSMCI_CMD_CRC_ERROR             = 0x0002,
-    HSMCI_CMD_END_BIT_ERROR         = 0x0004,
-    HSMCI_CMD_INDEX_ERROR           = 0x0008,
-    HSMCI_DATA_TIMEOUT_ERROR        = 0x0010,
-    HSMCI_DATA_CRC_ERROR            = 0x0020,
-    HSMCI_DATA_UNDERRUN_ERROR       = 0x0040,
-    HSMCI_DATA_OVERRUN_ERROR        = 0x0080,
 
-}HSMCI_ERROR_FLAGS;
 
 typedef enum
 {
@@ -120,26 +139,6 @@ typedef enum
 
 } HSMCI_READ_RESPONSE_REG;
 
-typedef enum
-{
-    HSMCI_CMD_RESP_NONE,   /*!< no response type */
-    HSMCI_CMD_RESP_R1,     /*!< normal response command */
-    HSMCI_CMD_RESP_R1B,    /*!< normal with busy signal */
-    HSMCI_CMD_RESP_R2,     /*!< CID, CSD register */
-    HSMCI_CMD_RESP_R3,     /*!< OCR register */
-    HSMCI_CMD_RESP_R4,     /*!< */
-    HSMCI_CMD_RESP_R5,     /*!< */
-    HSMCI_CMD_RESP_R6,     /*!< Published RCA response  */
-    HSMCI_CMD_RESP_R7      /*!< Card interface condition  */
-
-} HSMCI_CMD_RESP_TYPE;
-
-typedef enum
-{
-    HSMCI_XFER_STATUS_CMD_COMPLETED  = 0x01,
-    HSMCI_XFER_STATUS_DATA_COMPLETED = 0x02
-
-}HSMCI_XFER_STATUS;
 
 typedef void (*HSMCI_CALLBACK) (HSMCI_XFER_STATUS xferStatus, uintptr_t context);
 

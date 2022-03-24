@@ -92,7 +92,7 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup
 (
     uint8_t* buffer,
     uint32_t numBytes,
-    HSMCI_DATA_TRANSFER_DIR direction
+    HSMCI_DATA_TRANSFER_DIR operation
 );
 
 // DOM-IGNORE-BEGIN

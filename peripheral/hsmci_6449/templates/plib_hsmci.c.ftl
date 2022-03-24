@@ -45,7 +45,7 @@
 #include "interrupts.h"
 </#if>
 
-#define ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL      ${HSMCI_DMA}
+#define ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL      ${HSMCI_DMA}U
 
 // *****************************************************************************
 // *****************************************************************************
@@ -56,49 +56,49 @@ static HSMCI_OBJECT ${HSMCI_INSTANCE_NAME?lower_case}Obj;
 
 static void ${HSMCI_INSTANCE_NAME}_VariablesInit ( void )
 {
-    ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus = (HSMCI_ERROR_FLAGS) 0;
+    ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus = (HSMCI_ERROR_FLAGS) 0U;
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.isCmdInProgress = false;
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
-    ${HSMCI_INSTANCE_NAME?lower_case}Obj.callback = false;
+    ${HSMCI_INSTANCE_NAME?lower_case}Obj.callback = NULL;
 }
 
 void ${HSMCI_INSTANCE_NAME}_InterruptHandler(void)
 {
-    uint32_t intMask = 0;
-    uint32_t intFlags = 0;
+    uint32_t intMask = 0U;
+    uint32_t intFlags = 0U;
     HSMCI_XFER_STATUS xferStatus = (HSMCI_XFER_STATUS) 0;
 
     intMask = ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_IMR;
     intFlags = ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR;
 
-    if ((intMask & intFlags) == 0)
+    if ((intMask & intFlags) == 0U)
     {
         return;
     }
 
     if (${HSMCI_INSTANCE_NAME?lower_case}Obj.isCmdInProgress == true)
     {
-        if (intFlags & (HSMCI_SR_CMDRDY_Msk | HSMCI_CMD_ERROR))
+        if ((intFlags & (HSMCI_SR_CMDRDY_Msk | HSMCI_CMD_ERROR)) != 0U)
         {
-            if (intFlags & HSMCI_CMD_ERROR)
+            if ((intFlags & HSMCI_CMD_ERROR) != 0U)
             {
-                if ((intFlags & HSMCI_SR_RTOE_Msk) && (intMask & HSMCI_SR_RTOE_Msk))
+                if (((intFlags & HSMCI_SR_RTOE_Msk) != 0U) && ((intMask & HSMCI_SR_RTOE_Msk)!= 0U))
                 {
                     /* Response Timeout Error */
                     ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus |= HSMCI_CMD_TIMEOUT_ERROR;
                 }
-                if ((intFlags & HSMCI_SR_RCRCE_Msk) && (intMask & HSMCI_SR_RCRCE_Msk))
+                if (((intFlags & HSMCI_SR_RCRCE_Msk) != 0U) && ((intMask & HSMCI_SR_RCRCE_Msk) != 0U))
                 {
                     /* Response CRC Error */
                     ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus |= HSMCI_CMD_CRC_ERROR;
                 }
-                if ((intFlags & HSMCI_SR_RINDE_Msk) && (intMask & HSMCI_SR_RINDE_Msk))
+                if (((intFlags & HSMCI_SR_RINDE_Msk) != 0U) && ((intMask & HSMCI_SR_RINDE_Msk) != 0U))
                 {
                     /* Response Index Error */
                     ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus |= HSMCI_CMD_INDEX_ERROR;
                 }
-                if ((intFlags & (HSMCI_SR_RENDE_Msk | HSMCI_SR_RDIRE_Msk)) && \
-                        (intMask & (HSMCI_SR_RENDE_Msk | HSMCI_SR_RDIRE_Msk)))
+                if (((intFlags & (HSMCI_SR_RENDE_Msk | HSMCI_SR_RDIRE_Msk)) != 0U) && \
+                        ((intMask & (HSMCI_SR_RENDE_Msk | HSMCI_SR_RDIRE_Msk)) != 0U))
                 {
                     /* Response End bit Error/Response direction bit error */
                     ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus |= HSMCI_CMD_END_BIT_ERROR;
@@ -113,23 +113,23 @@ void ${HSMCI_INSTANCE_NAME}_InterruptHandler(void)
 
     if (${HSMCI_INSTANCE_NAME?lower_case}Obj.isDataInProgress == true)
     {
-        if (intFlags & (HSMCI_SR_XFRDONE_Msk | HSMCI_DATA_ERROR))
+        if ((intFlags & (HSMCI_SR_XFRDONE_Msk | HSMCI_DATA_ERROR)) != 0U)
         {
-            if (intFlags & HSMCI_DATA_ERROR)
+            if ((intFlags & HSMCI_DATA_ERROR) != 0U)
             {
-                if (intFlags & HSMCI_SR_UNRE_Msk)
+                if ((intFlags & HSMCI_SR_UNRE_Msk) != 0U)
                 {
                     ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus |= HSMCI_DATA_UNDERRUN_ERROR;
                 }
-                if (intFlags & HSMCI_SR_OVRE_Msk)
+                if ((intFlags & HSMCI_SR_OVRE_Msk) != 0U)
                 {
                     ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus |= HSMCI_DATA_OVERRUN_ERROR;
                 }
-                if (intFlags & HSMCI_SR_DTOE_Msk)
+                if ((intFlags & HSMCI_SR_DTOE_Msk) != 0U)
                 {
                     ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus |= HSMCI_DATA_TIMEOUT_ERROR;
                 }
-                if (intFlags & HSMCI_SR_DCRCE_Msk)
+                if ((intFlags & HSMCI_SR_DCRCE_Msk) != 0U)
                 {
                     ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus |= HSMCI_DATA_CRC_ERROR;
                 }
@@ -141,7 +141,7 @@ void ${HSMCI_INSTANCE_NAME}_InterruptHandler(void)
         }
     }
 
-    if (${HSMCI_INSTANCE_NAME?lower_case}Obj.callback)
+    if ((${HSMCI_INSTANCE_NAME?lower_case}Obj.callback) != NULL)
     {
         ${HSMCI_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, ${HSMCI_INSTANCE_NAME?lower_case}Obj.context);
     }
@@ -163,19 +163,19 @@ uint16_t ${HSMCI_INSTANCE_NAME}_DataErrorGet(void)
 
 bool ${HSMCI_INSTANCE_NAME}_IsCmdLineBusy ( void )
 {
-    return (!(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_CMDRDY_Msk));
+    return (((${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_CMDRDY_Msk)) == 0U);
 }
 
 bool ${HSMCI_INSTANCE_NAME}_IsDatLineBusy ( void )
 {
-    if ((!(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_XFRDONE_Msk)) || (!(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_TXRDY_Msk)))
+	bool xDatLineBusy = false;
+    if (((${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_XFRDONE_Msk) == 0U) || ((${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_TXRDY_Msk) == 0U))
     {
-        return true;
+        xDatLineBusy = true;
     }
-    else
-    {
-        return false;
-    }
+   
+    return xDatLineBusy;
+    
 }
 
 void ${HSMCI_INSTANCE_NAME}_BusWidthSet ( HSMCI_BUS_WIDTH busWidth )
@@ -216,7 +216,7 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
 
     if (operation == HSMCI_DATA_TRANSFER_DIR_READ)
     {
-        ${XDMAC_INSTANCE_NAME}_ChannelSettingsSet((XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
+        (void) ${XDMAC_INSTANCE_NAME}_ChannelSettingsSet((XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
                             XDMAC_CC_TYPE_PER_TRAN
                             | XDMAC_CC_MBSIZE_SINGLE
                             | XDMAC_CC_DSYNC_PER2MEM
@@ -226,19 +226,19 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
                             | XDMAC_CC_DIF_AHB_IF0
                             | XDMAC_CC_SAM_FIXED_AM
                             | XDMAC_CC_DAM_INCREMENTED_AM
-                            | XDMAC_CC_PERID(0)
+                            | XDMAC_CC_PERID(0U)
         );
 
-        ${XDMAC_INSTANCE_NAME}_ChannelTransfer(
+       (void) ${XDMAC_INSTANCE_NAME}_ChannelTransfer(
             (XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
             (const void *)&(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_FIFO[0]),
             (const void *)buffer,
-            (numBytes/4)
+            (numBytes/4U)
         );
     }
     else
     {
-        ${XDMAC_INSTANCE_NAME}_ChannelSettingsSet((XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
+       (void) ${XDMAC_INSTANCE_NAME}_ChannelSettingsSet((XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
                     XDMAC_CC_TYPE_PER_TRAN
                     | XDMAC_CC_MBSIZE_SINGLE
                     | XDMAC_CC_DSYNC_MEM2PER
@@ -248,58 +248,59 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
                     | XDMAC_CC_DIF_AHB_IF1
                     | XDMAC_CC_SAM_INCREMENTED_AM
                     | XDMAC_CC_DAM_FIXED_AM
-                    | XDMAC_CC_PERID(0)
+                    | XDMAC_CC_PERID(0U)
         );
 
-        ${XDMAC_INSTANCE_NAME}_ChannelTransfer(
+       (void) ${XDMAC_INSTANCE_NAME}_ChannelTransfer(
             (XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
             (const void *)buffer,
             (const void *)&(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_FIFO[0]),
-            (numBytes/4)
+            (numBytes/4U)
         );
    }
 }
 
 void ${HSMCI_INSTANCE_NAME}_BlockSizeSet ( uint16_t blockSize )
 {
-    ${HSMCI_INSTANCE_NAME?lower_case}Obj.blockSize = blockSize;
+	uint32_t xblocksize = blockSize;
+    ${HSMCI_INSTANCE_NAME?lower_case}Obj.blockSize = xblocksize;
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR &= ~(HSMCI_BLKR_BLKLEN_Msk);
-    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR |= (blockSize << HSMCI_BLKR_BLKLEN_Pos);
+    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR |= (uint32_t)(xblocksize << HSMCI_BLKR_BLKLEN_Pos);
 }
 
 void ${HSMCI_INSTANCE_NAME}_BlockCountSet ( uint16_t numBlocks )
 {
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR &= ~(HSMCI_BLKR_BCNT_Msk);
-    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR |= (numBlocks << HSMCI_BLKR_BCNT_Pos);
+    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR |= ((uint32_t)numBlocks << HSMCI_BLKR_BCNT_Pos);
 }
 
 bool ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clock )
 {
     uint32_t mck = ${HSMCI_CLK};
-    uint32_t clkdiv = 0;
-    uint32_t rest = 0;
+    uint32_t clkdiv = 0U;
+    uint32_t rest = 0U;
 
     /* Speed = MCK clock / (2 * (CLKDIV + 1)) */
 
-    if ((clock * 2) < mck)
+    if ((clock * 2U) < mck)
     {
-        clkdiv = mck / (2 * clock);
-        rest = mck - (2*clock)*clkdiv;
+        clkdiv = mck / (2U * clock);
+        rest = mck - (2U*clock)*clkdiv;
 
-        if (rest > 0)
+        if (rest > 0U)
         {
              /* Ensure that the card speed not be higher than expected */
             clkdiv++;
         }
 
-        if (clkdiv > 0)
+        if (clkdiv > 0U)
         {
-            clkdiv -= 1;
+            clkdiv -= 1U;
         }
     }
     else
     {
-        clkdiv = 0;
+        clkdiv = 0U;
     }
 
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_MR &= ~HSMCI_MR_CLKDIV_Msk;
@@ -348,11 +349,12 @@ void ${HSMCI_INSTANCE_NAME}_ResponseRead (
 			 /* Note: The memcpy function copies n characters from the object pointed to by s2 into the object pointed to by s1. 
 			  * If copying takes place between objects that overlap, the behavior is undefined. Hence, using memmove.
 			 */
-            memmove((void*)response, (void*)((char*)response + 1),31);
+           (void)  memmove((void*)response, (void*)((char*)response + 1U),31U);
 
             break;
 
         default:
+		        /* Do nothing*/
             break;
     }
 }
@@ -364,13 +366,13 @@ void ${HSMCI_INSTANCE_NAME}_CommandSend (
     HSMCI_DataTransferFlags transferFlags
 )
 {
-    uint32_t ier_reg = 0;
-    uint32_t cmd_reg = 0;
+    uint32_t ier_reg = 0U;
+    uint32_t cmd_reg = 0U;
 
     /* Clear the flags */
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.isCmdInProgress = false;
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
-    ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus = (HSMCI_ERROR_FLAGS) 0;
+    ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus = (HSMCI_ERROR_FLAGS) 0U;
 
     switch (respType)
     {
@@ -396,7 +398,7 @@ void ${HSMCI_INSTANCE_NAME}_CommandSend (
              * defined in EXT_CSD register. This timeout may exceed the 64 cycle timeout
              * set through the MAXLAT register.
             */
-            if (opCode != 0x05)
+            if (opCode != 0x05U)
             {
                 ier_reg |= (HSMCI_IER_RCRCE_Msk | HSMCI_IER_RINDE_Msk | \
                     HSMCI_IER_RTOE_Msk | HSMCI_IER_RENDE_Msk | HSMCI_IER_RDIRE_Msk);
@@ -451,7 +453,7 @@ void ${HSMCI_INSTANCE_NAME}_CommandSend (
 
         ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_MR |= HSMCI_MR_WRPROOF_Msk | HSMCI_MR_RDPROOF_Msk;
 
-        if (${HSMCI_INSTANCE_NAME?lower_case}Obj.blockSize & 0x03)
+        if ((${HSMCI_INSTANCE_NAME?lower_case}Obj.blockSize & 0x03U) != 0U)
         {
             /* Block length is not a multiple of 4 bytes, set the FBYTE bit */
             ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_MR |= HSMCI_MR_FBYTE_Msk;
@@ -469,7 +471,7 @@ void ${HSMCI_INSTANCE_NAME}_CommandSend (
     }
     else
     {
-        ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_DMA = 0;
+        ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_DMA = 0U;
         ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_MR &= ~(HSMCI_MR_WRPROOF_Msk | HSMCI_MR_RDPROOF_Msk | HSMCI_MR_FBYTE_Msk);
     }
 
@@ -491,13 +493,13 @@ void ${HSMCI_INSTANCE_NAME}_CommandSend (
 void ${HSMCI_INSTANCE_NAME}_ModuleInit ( void )
 {
     /* Disable write protection */
-    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_WPMR = 0x4D434900;
+    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_WPMR = 0x4D434900U;
 
     /* Set the Data Timeout Register to 2 Mega Cycles */
-    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_DTOR = HSMCI_DTOR_DTOMUL_1048576 | HSMCI_DTOR_DTOCYC(2);
+    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_DTOR = HSMCI_DTOR_DTOMUL_1048576 | HSMCI_DTOR_DTOCYC(2U);
 
     /* Set Completion Signal Timeout to 2 Mega Cycles */
-    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_CSTOR = HSMCI_CSTOR_CSTOMUL_1048576 | HSMCI_CSTOR_CSTOCYC(2);
+    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_CSTOR = HSMCI_CSTOR_CSTOMUL_1048576 | HSMCI_CSTOR_CSTOCYC(2U);
 
     /* Set Configuration Register */
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_CFG = HSMCI_CFG_FIFOMODE_Msk | HSMCI_CFG_FERRCTRL_Msk;
@@ -515,13 +517,13 @@ void ${HSMCI_INSTANCE_NAME}_ModuleInit ( void )
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SDCR &= ~HSMCI_SDCR_SDCBUS_Msk;
 
     /* Set clock to 400 KHz */
-    ${HSMCI_INSTANCE_NAME}_ClockSet (HSMCI_CLOCK_FREQ_400_KHZ);
+    (void) ${HSMCI_INSTANCE_NAME}_ClockSet (HSMCI_CLOCK_FREQ_400_KHZ);
 
     /* Configure command */
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_MR &= ~(HSMCI_MR_WRPROOF_Msk | HSMCI_MR_RDPROOF_Msk | HSMCI_MR_FBYTE_Msk);
 
     /* Write argument */
-    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_ARGR = 0;
+    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_ARGR = 0U;
 
     /* Write and start initialization command */
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_CMDR = HSMCI_CMDR_RSPTYP_NORESP
@@ -529,7 +531,10 @@ void ${HSMCI_INSTANCE_NAME}_ModuleInit ( void )
             | HSMCI_CMDR_OPDCMD_OPENDRAIN;
 
     /* Wait end of initialization command */
-    while (!(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_CMDRDY_Msk));
+    while (((${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_CMDRDY_Msk)) == 0U)
+	{
+			
+	}
 }
 
 void ${HSMCI_INSTANCE_NAME}_Initialize( void )
