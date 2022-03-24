@@ -110,7 +110,10 @@ static void CLK_SlowClockInitialize( void )
 
     /* Wait until the external clock signal is ready and
        Slow Clock (SLCK) is switched to external clock signal */
-    while(!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk));
+    while((SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk) == 0U)
+	{
+		/* Do Nothing */
+	}
 <#elseif (SUPC_CR_MDXTALSEL == "1")>
     /* 32KHz Crystal Oscillator is selected as the Slow Clock (SLCK) source.
        Enable 32KHz Crystal Oscillator  */
@@ -118,11 +121,17 @@ static void CLK_SlowClockInitialize( void )
 
     /* Wait until the 32K Crystal oscillator clock is ready and
        Slow Clock (SLCK) is switched to 32KHz Oscillator */
-    while(!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk));
+    while((SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk) == 0U)
+	{
+		/* Do Nothing */
+	}
 <#else>
     SUPC_REGS->SUPC_CR = SUPC_CR_KEY_PASSWD | (SUPC_REGS->SUPC_CR & ~(SUPC_CR_XTALSEL_CRYSTAL_SEL));
 
-    while((SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk));
+    while((SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk) != 0U)
+	{
+		/* Do Nothing */
+	}
 </#if>
 }
 </#if>
@@ -143,7 +152,10 @@ static void CLK_MainClockInitialize( void )
     PMC_REGS->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
 
     /* Wait until MAINCK is switched to External Clock Signal (XIN pin) */
-    while((PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk);
+    while((PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk)
+	{
+		/* Do Nothing */
+	}
     </#if>
 
 <#elseif CKGR_MOR_MOSCXTEN>
@@ -151,7 +163,10 @@ static void CLK_MainClockInitialize( void )
     PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCXTST_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTST(${CKGR_MOSCXTST}) | CKGR_MOR_MOSCXTEN_Msk;
 
     /* Wait until the main oscillator clock is ready */
-    while((PMC_REGS->PMC_SR & PMC_SR_MOSCXTS_Msk) != PMC_SR_MOSCXTS_Msk);
+    while((PMC_REGS->PMC_SR & PMC_SR_MOSCXTS_Msk) != PMC_SR_MOSCXTS_Msk)
+	{
+		/* Do Nothing */
+	}
 
     <#if CKGR_MOR_MOSCSEL == "1">
     /* Main Crystal Oscillator is selected as the Main Clock (MAINCK) source.
@@ -159,7 +174,10 @@ static void CLK_MainClockInitialize( void )
     PMC_REGS->CKGR_MOR|= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
 
     /* Wait until MAINCK is switched to Main Crystal Oscillator */
-    while((PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk);
+    while((PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk)
+	{
+		/* Do Nothing */
+	}
     </#if>
 
 </#if>
@@ -168,13 +186,19 @@ static void CLK_MainClockInitialize( void )
     PMC_REGS->CKGR_MOR|= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN_Msk;
 
     /* Wait until the RC oscillator clock is ready. */
-    while((PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
+    while((PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk)
+	{
+		/* Do Nothing */
+	}
 
     /* Configure the RC Oscillator frequency */
     PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCF${CKGR_MOR_MOSCRCF};
 
     /* Wait until the RC oscillator clock is ready */
-    while((PMC_REGS->PMC_SR& PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
+    while((PMC_REGS->PMC_SR& PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk)
+	{
+		/* Do Nothing */
+	}
 
     <#if CKGR_MOR_MOSCSEL == "0">
     /* Main RC Oscillator is selected as the Main Clock (MAINCK) source.
@@ -196,9 +220,12 @@ Initialize PLLA (PLLACK)
 static void CLK_PLLAInitialize( void )
 {
     /* Configure and Enable PLLA */
-    PMC_REGS->CKGR_PLLAR = CKGR_PLLAR_ZERO(0) | CKGR_PLLAR_PLLACOUNT(0x3f) | CKGR_PLLAR_MULA(${CKGR_PLLAR_MULA}) | CKGR_PLLAR_PLLAEN(1) ;
+    PMC_REGS->CKGR_PLLAR = CKGR_PLLAR_ZERO(0U) | CKGR_PLLAR_PLLACOUNT(0x3fU) | CKGR_PLLAR_MULA(${CKGR_PLLAR_MULA}U) | CKGR_PLLAR_PLLAEN(1U) ;
 
-    while((PMC_REGS->PMC_SR & PMC_SR_LOCKA_Msk) != PMC_SR_LOCKA_Msk);
+    while((PMC_REGS->PMC_SR & PMC_SR_LOCKA_Msk) != PMC_SR_LOCKA_Msk)
+	{
+		/* Do Nothing */
+	}
 }
 </#if>
 
@@ -213,24 +240,36 @@ static void CLK_MasterClockInitialize( void )
     /* Program PMC_MCKR.PRES and wait for PMC_SR.MCKRDY to be set */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_PRES_Msk) | PMC_MCKR_PRES_${PMC_MCKR_PRES}${PMC_MCKR_PLLADIV2?then('| PMC_MCKR_PLLADIV2_Msk', '')};
 
-    while((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+	{
+		/* Do Nothing */
+	}
 
     /* Program PMC_MCKR.CSS and Wait for PMC_SR.MCKRDY to be set */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_${PMC_MCKR_CSS};
 
-    while((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+	{
+		/* Do Nothing */
+	}
 </#if>
 
 <#if PMC_MCKR_CSS == "SLOW_CLK" || PMC_MCKR_CSS == "MAIN_CLK">
     /* Program PMC_MCKR.CSS and Wait for PMC_SR.MCKRDY to be set */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_${PMC_MCKR_CSS}${PMC_MCKR_PLLADIV2?then('| PMC_MCKR_PLLADIV2_Msk', '')};
 
-    while((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+	{
+		/* Do Nothing */
+	}
 
     /* Program PMC_MCKR.PRES and wait for PMC_SR.MCKRDY to be set */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_PRES_Msk) | PMC_MCKR_PRES_${PMC_MCKR_PRES};
 
-    while((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+	{
+		/* Do Nothing */
+	}
 </#if>
 }
 </#if>
@@ -254,7 +293,10 @@ static void CLK_ProgrammableClockInitialize( void )
     PMC_REGS->PMC_SCER = ${PMC_SCER_PCKX_MSK};
 
     /* Wait for clock to be ready */
-    while((PMC_REGS->PMC_SR & (${PMC_SR_PCKRDYX_MSK})) != (${PMC_SR_PCKRDYX_MSK}));
+    while((PMC_REGS->PMC_SR & (${PMC_SR_PCKRDYX_MSK})) != (${PMC_SR_PCKRDYX_MSK}))
+	{
+		/* Do Nothing */
+	}
 }
 </#if>
 
@@ -291,10 +333,10 @@ void CLOCK_Initialize( void )
 </#if>
     /* Enable Peripheral Clock */
 <#if (PMC_PCER0 != "0")>
-    PMC_REGS->PMC_PCER0 = 0x${PMC_PCER0};
+    PMC_REGS->PMC_PCER0 = 0x${PMC_PCER0}U;
 
 </#if>
 <#if (PMC_PCER1 != "0")>
-    PMC_REGS->PMC_PCER1 = 0x${PMC_PCER1};
+    PMC_REGS->PMC_PCER1 = 0x${PMC_PCER1}U;
 </#if>
 }
