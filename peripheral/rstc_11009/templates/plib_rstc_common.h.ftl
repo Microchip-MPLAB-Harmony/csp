@@ -78,20 +78,17 @@ Data Type definition of Reset Controller (RSTC) Peripheral Library (PLIB).
   Remarks:
     Refer to the specific device data sheet to determine availability.
 */
-
-typedef enum
-{
 <#assign RSTTYP_ENUM_LIST = RSTC_RSTTYP_ENUM?eval>
 <#assign RSTTYP_DESC_LIST = RSTC_RSTTYP_DESC?eval>
 <#assign RSTTYP_SIZE = RSTTYP_ENUM_LIST?size>
 <#if RSTTYP_SIZE != 0>
     <#list 0..(RSTTYP_SIZE-1) as i>
     /* ${RSTTYP_DESC_LIST[i]} */
-    ${RSTTYP_ENUM_LIST[i]}<#if i<(RSTTYP_SIZE-1)>,</#if>
+#define    ${RSTTYP_ENUM_LIST[i]}<#if i<(RSTTYP_SIZE-1)> </#if>
 
     </#list>
 </#if>
-} RSTC_RESET_CAUSE;
+typedef uint32_t RSTC_RESET_CAUSE;
 
 typedef void (*RSTC_CALLBACK) (uintptr_t context);
 
@@ -103,9 +100,9 @@ typedef void (*RSTC_CALLBACK) (uintptr_t context);
 
 typedef struct
 {
-    RSTC_CALLBACK callback; 
+    RSTC_CALLBACK callback;
     uintptr_t     context;
-    
+
 } RSTC_OBJECT ;
 
 

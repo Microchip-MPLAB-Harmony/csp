@@ -72,32 +72,31 @@
     Refer to the specific device data sheet to determine availability.
 */
 
-typedef enum
-{
-    /* Processor reset */
-    RSTC_RESET_PROC = RSTC_CR_PROCRST_Msk,
 
-    /* External reset */
-    RSTC_RESET_EXT = RSTC_CR_EXTRST_Msk,
+/* Processor reset */
+#define    RSTC_RESET_PROC           (RSTC_CR_PROCRST_Msk)
 
-    /* Processor and External reset */
-    RSTC_RESET_EXT_PROC = (RSTC_CR_PROCRST_Msk | RSTC_CR_EXTRST_Msk),
+/* External reset */
+#define    RSTC_RESET_EXT            (RSTC_CR_EXTRST_Msk)
 
-    <#if PERRST_SUPPORTED??>
-    /* Peripheral reset */
-    RSTC_RESET_PER = RSTC_CR_PERRST_Msk,
+/* Processor and External reset */
+#define    RSTC_RESET_EXT_PROC       (RSTC_CR_PROCRST_Msk | RSTC_CR_EXTRST_Msk)
 
-    /* External reset and Peripheral reset */
-    RSTC_RESET_EXT_PER = (RSTC_CR_EXTRST_Msk | RSTC_CR_PERRST_Msk),
+<#if PERRST_SUPPORTED??>
+/* Peripheral reset */
+#define    RSTC_RESET_PER            (RSTC_CR_PERRST_Msk)
 
-    /* Processor and Peripheral reset */
-    RSTC_RESET_PER_PROC = (RSTC_CR_PROCRST_Msk | RSTC_CR_PERRST_Msk),
+/* External reset and Peripheral reset */
+#define    RSTC_RESET_EXT_PER        (RSTC_CR_EXTRST_Msk | RSTC_CR_PERRST_Msk)
 
-    /* Processor, Peripheral and External reset */
-    RSTC_RESET_PER_PROC_EXT = (RSTC_CR_PROCRST_Msk | RSTC_CR_PERRST_Msk | RSTC_CR_EXTRST_Msk) 
-    </#if>
+/* Processor and Peripheral reset */
+#define    RSTC_RESET_PER_PROC       (RSTC_CR_PROCRST_Msk | RSTC_CR_PERRST_Msk)
 
-} RSTC_RESET_TYPE;
+/* Processor, Peripheral and External reset */
+#define    RSTC_RESET_PER_PROC_EXT   (RSTC_CR_PROCRST_Msk | RSTC_CR_PERRST_Msk | RSTC_CR_EXTRST_Msk)
+</#if>
+
+typedef uint32_t RSTC_RESET_TYPE;
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines

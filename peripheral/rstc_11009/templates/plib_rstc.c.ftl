@@ -39,6 +39,9 @@
 *******************************************************************************/
 
 #include "plib_${RSTC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#--Implementation-->
 // *****************************************************************************
@@ -52,7 +55,7 @@ void ${RSTC_INSTANCE_NAME}_Initialize (void)
 <#if RSTC_MR_URSTEN_PRESENT == true>
     ${RSTC_INSTANCE_NAME}_REGS->RSTC_MR = (<#rt>
 <#t><#if RSTC_MR_URSTEN == "RESET">RSTC_MR_URSTEN_Msk<#else>RSTC_MR_URSTIEN_Msk</#if>
-<#t><#if RSTC_MR_ERSTL??> | RSTC_MR_ERSTL(${RSTC_MR_ERSTL})</#if>
+<#t><#if RSTC_MR_ERSTL??> | RSTC_MR_ERSTL(${RSTC_MR_ERSTL}U)</#if>
 <#t><#if ENABLE_32K_FAIL_DETECT?? && ENABLE_32K_FAIL_DETECT> | RSTC_MR_SCKSW_Msk</#if>
 <#t><#if RSTC_MR_CPUFEN?? && RSTC_MR_CPUFEN> | RSTC_MR_CPUFEN_Msk</#if>
 <#rt> | RSTC_MR_KEY_PASSWD);
@@ -69,8 +72,10 @@ void ${RSTC_INSTANCE_NAME}_Reset (RSTC_RESET_TYPE type)
     /* Issue reset command              */
     ${RSTC_INSTANCE_NAME}_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | type;
 
-    /*Wait for processing reset command */
-    while (${RSTC_INSTANCE_NAME}_REGS->RSTC_SR& (uint32_t) RSTC_SR_SRCMP_Msk);
+    while ((${RSTC_INSTANCE_NAME}_REGS->RSTC_SR& (uint32_t) RSTC_SR_SRCMP_Msk) != 0U)
+    {
+        /*Wait for processing reset command */
+    }
 }
 
 RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void)
@@ -81,12 +86,12 @@ RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void)
 <#if RSTC_MR_URSTEN == "GPIO">
 bool ${RSTC_INSTANCE_NAME}_NRSTPinRead (void)
 {
-    return  (bool) (${RSTC_INSTANCE_NAME}_REGS->RSTC_SR& RSTC_SR_NRSTL_Msk);
+    return  ((${RSTC_INSTANCE_NAME}_REGS->RSTC_SR& RSTC_SR_NRSTL_Msk) != 0U);
 }
 </#if>
 
 <#if RSTC_MR_URSTEN == "INTERRUPT">
-RSTC_OBJECT rstcObj;
+static RSTC_OBJECT rstcObj;
 
 void ${RSTC_INSTANCE_NAME}_CallbackRegister (RSTC_CALLBACK callback, uintptr_t context)
 {

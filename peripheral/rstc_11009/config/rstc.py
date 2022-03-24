@@ -142,7 +142,7 @@ def instantiateComponent(rstcComponent):
             rstcRSTTYP_enum_str += ","
             rstcRSTTYP_desc_str += ","
         rstcRSTTYP_enum_str += '"RSTC_' + value.getAttribute("name").replace("_RST", "_RESET").replace("WDT_", "WATCHDOG_").replace("WKUP_", "WAKEUP_").replace("SOFT_", "SOFTWARE_") \
-            + ' = ' + 'RSTC_SR_RSTTYP_' + value.getAttribute("name") + '"'
+            + '  ' + 'RSTC_SR_RSTTYP_' + value.getAttribute("name") + '"'
         rstcRSTTYP_desc_str += '"' + value.getAttribute("caption") + '"'
     rstcRSTTYP_enum.setValue("["+rstcRSTTYP_enum_str+"]")
     rstcRSTTYP_desc.setValue("["+rstcRSTTYP_desc_str+"]")
