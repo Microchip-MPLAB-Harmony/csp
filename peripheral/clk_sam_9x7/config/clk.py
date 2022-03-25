@@ -78,7 +78,16 @@ def update_plla_freq(symbol, event):
         symbol.setValue(0)
 
 def update_plladiv2ck_freq(symbol, event):
-    symbol.setValue((event['value'] / 2))
+    mainckf = event['source'].getSymbolValue("MAINCK_FREQUENCY")
+    mul = event['source'].getSymbolValue("CLK_PLLA_MUL")
+    fracr = event['source'].getSymbolValue("CLK_PLLA_FRACR")
+    divpmc = event['source'].getSymbolValue("CLK_PLLA_DIVPMC")
+    enable = event['source'].getSymbolValue("CLK_PLLADIV2_EN")
+    if enable == True:
+        pllcore_clk = (mainckf * (mul + 1 + (float(fracr) / pow(2, 22))))
+        symbol.setValue(int((pllcore_clk / (divpmc + 1)) / 2))
+    else:
+        symbol.setValue(0)
 
 def update_pll_freq(symbol, event):
     pll = symbol.getID().split("_FREQUENCY")[0]
@@ -101,10 +110,11 @@ def update_audio_iopllck_freq(symbol, event):
     mul = event['source'].getSymbolValue("CLK_AUDIOPLL_MUL")
     fracr = event['source'].getSymbolValue("CLK_AUDIOPLL_FRACR")
     enable = event['source'].getSymbolValue("CLK_AUDIOPLL_EN")
-    divio = event['source'].getSymbolByID("CLK_AUDIO_IOPLLCK_DIVIO")
-    iopllckEnable = event['source'].getSymbolByID("CLK_AUDIO_IOPLLCK_EN")
-    if enable == True and iopllckEnable == True:
-        symbol.setValue(int((mainckf * (mul + 1 + (float(fracr) / pow(2,22)))) / (divio + 1)))
+    divio = event['source'].getSymbolValue("CLK_AUDIO_IOPLLCK_DIVIO")
+    iopllckEnable = event['source'].getSymbolValue("CLK_AUDIO_IOPLLCK_EN")
+    if (enable == True) and (iopllckEnable == True):
+        pllcore_clk = (mainckf * (mul + 1 + (float(fracr) / pow(2, 22))))
+        symbol.setValue(int(pllcore_clk / (divio + 1)))
     else:
         symbol.setValue(0)
 
@@ -587,7 +597,7 @@ plladiv2_en.setReadOnly(True)
 plladiv2ck = coreComponent.createIntegerSymbol("PLLADIV2CLK_FREQUENCY", plladiv2_en)
 plladiv2ck.setVisible(False)
 plladiv2ck.setDefaultValue((pllack.getValue() / 2))
-plladiv2ck.setDependencies(update_plladiv2ck_freq, ['PLLA_FREQUENCY'])
+plladiv2ck.setDependencies(update_plladiv2ck_freq, ['CLK_PLLADIV2_EN', 'MAINCK_FREQUENCY', 'CLK_PLLA_MUL', 'CLK_PLLA_FRACR', 'CLK_PLLA_DIVPMC'])
 
 #UPLL
 upll_menu = coreComponent.createMenuSymbol("CLK_UPLL_MENU", menu)
@@ -648,7 +658,7 @@ if audiopll_en.getValue() == True:
     audiopllck.setDefaultValue(int(moscxt_freq.getValue() * (audiopll_mul.getValue() + 1 + (float(audiopll_fracr.getValue()) / pow(2,22))) / (audiopll_divpmc.getValue() + 1)))
 else:
     audiopllck.setDefaultValue(0)
-audiopllck.setDependencies(update_pll_freq, ['CLK_AUDIOPLL_EN', 'CLK_MOSCXT_FREQ', 'CLK_AUDIOPLL_MUL', 'CLK_AUDIOPLL_FRACR'])
+audiopllck.setDependencies(update_pll_freq, ['CLK_AUDIOPLL_EN', 'CLK_MOSCXT_FREQ', 'CLK_AUDIOPLL_MUL', 'CLK_AUDIOPLL_FRACR', 'CLK_AUDIOPLL_DIVPMC'])
 
 audioIopllck_en = coreComponent.createBooleanSymbol("CLK_AUDIO_IOPLLCK_EN", audiopll_en)
 audioIopllck_en.setLabel("Enable AUDIO IOPLLCK")
