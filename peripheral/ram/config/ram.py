@@ -20,6 +20,8 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+global plibId
+plibId = None
 
 RamNames = ["HSRAM", "HRAMC0", "HMCRAMC0", "IRAM", "EBI_MPDDR", "FlexRAM", "FLEXRAM", "DRAM", "SDRAM_CS", "DDR_CS", "kseg0_data_mem", "kseg1_data_mem", "RAM_SYSTEM_RAM"]
 
@@ -52,9 +54,19 @@ def ramSetMemoryDependency(symbol, event):
 
 def instantiateComponent(ramComponent):
 
+    global plibId
+
     ramInstanceName = ramComponent.createStringSymbol("RAM_INSTANCE_NAME", None)
     ramInstanceName.setVisible(False)
     ramInstanceName.setDefaultValue("RAM")
+
+    mcramcPlib = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"MCRAMC\"]")
+    if mcramcPlib != None:
+        mcramcPlibId = mcramcPlib.getAttribute("id")
+        plibId = "mcramc_" + mcramcPlibId
+
+    if plibId == "mcramc_03727":
+        execfile(Module.getPath() + "../../csp/peripheral/ram/config/" + "mcramc_03727.py")
 
     ##### Do not modify below symbol names as they are used by Memory Driver #####
 
@@ -112,29 +124,30 @@ def instantiateComponent(ramComponent):
 ########                      Code Generation                      #############
 ################################################################################
 
-    configName = Variables.get("__CONFIGURATION_NAME")
+    if plibId == None:
+        configName = Variables.get("__CONFIGURATION_NAME")
 
-    # Instance Header File
-    ramHeaderFile = ramComponent.createFileSymbol("RAM_INSTANCE_HEADER", None)
-    ramHeaderFile.setSourcePath("../peripheral/ram/templates/plib_ram.h.ftl")
-    ramHeaderFile.setOutputName("plib_" + ramInstanceName.getValue().lower() + ".h")
-    ramHeaderFile.setDestPath("/peripheral/ram/")
-    ramHeaderFile.setProjectPath("config/" + configName + "/peripheral/ram/")
-    ramHeaderFile.setType("HEADER")
-    ramHeaderFile.setMarkup(True)
+        # Instance Header File
+        ramHeaderFile = ramComponent.createFileSymbol("RAM_INSTANCE_HEADER", None)
+        ramHeaderFile.setSourcePath("../peripheral/ram/templates/plib_ram.h.ftl")
+        ramHeaderFile.setOutputName("plib_" + ramInstanceName.getValue().lower() + ".h")
+        ramHeaderFile.setDestPath("/peripheral/ram/")
+        ramHeaderFile.setProjectPath("config/" + configName + "/peripheral/ram/")
+        ramHeaderFile.setType("HEADER")
+        ramHeaderFile.setMarkup(True)
 
-    # Source File
-    ramSourceFile = ramComponent.createFileSymbol("RAM_SOURCE", None)
-    ramSourceFile.setSourcePath("../peripheral/ram/templates/plib_ram.c.ftl")
-    ramSourceFile.setOutputName("plib_" + ramInstanceName.getValue().lower() + ".c")
-    ramSourceFile.setDestPath("/peripheral/ram/")
-    ramSourceFile.setProjectPath("config/" + configName + "/peripheral/ram/")
-    ramSourceFile.setType("SOURCE")
-    ramSourceFile.setMarkup(True)
+        # Source File
+        ramSourceFile = ramComponent.createFileSymbol("RAM_SOURCE", None)
+        ramSourceFile.setSourcePath("../peripheral/ram/templates/plib_ram.c.ftl")
+        ramSourceFile.setOutputName("plib_" + ramInstanceName.getValue().lower() + ".c")
+        ramSourceFile.setDestPath("/peripheral/ram/")
+        ramSourceFile.setProjectPath("config/" + configName + "/peripheral/ram/")
+        ramSourceFile.setType("SOURCE")
+        ramSourceFile.setMarkup(True)
 
-    # System Definition
-    ramSystemDefFile = ramComponent.createFileSymbol("RAM_SYS_DEF", None)
-    ramSystemDefFile.setType("STRING")
-    ramSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    ramSystemDefFile.setSourcePath("../peripheral/ram/templates/system/definitions.h.ftl")
-    ramSystemDefFile.setMarkup(True)
+        # System Definition
+        ramSystemDefFile = ramComponent.createFileSymbol("RAM_SYS_DEF", None)
+        ramSystemDefFile.setType("STRING")
+        ramSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        ramSystemDefFile.setSourcePath("../peripheral/ram/templates/system/definitions.h.ftl")
+        ramSystemDefFile.setMarkup(True)

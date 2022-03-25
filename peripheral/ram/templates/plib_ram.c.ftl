@@ -48,7 +48,7 @@ bool ${RAM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t 
 {
      uint32_t *xaddress_r = (uint32_t *)address;
     (void) memcpy(data, xaddress_r, length);
-    
+
     return true;
 }
 
@@ -56,7 +56,7 @@ bool ${RAM_INSTANCE_NAME}_Write( uint32_t *data, uint32_t length, uint32_t addre
 {
      uint32_t *xaddress_w = (uint32_t *)address;
     (void) memcpy(xaddress_w, data, length);
-    
+
     return true;
 }
 
