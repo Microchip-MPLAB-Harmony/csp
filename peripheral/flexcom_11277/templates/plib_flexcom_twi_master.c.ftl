@@ -106,20 +106,20 @@ void ${FLEXCOM_INSTANCE_NAME}_TWI_Initialize(void)
     /* Set FLEXCOM TWI operating mode */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEXCOM_MR = FLEXCOM_MR_OPMODE_TWI;
 
-    // Reset the i2c Module
+    /* Reset the i2c Module */
     ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_SWRST_Msk;
 
-    // Disable the I2C Master/Slave Mode
+    /* Disable the I2C Master/Slave Mode */
     ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_MSDIS_Msk | TWI_CR_SVDIS_Msk;
 
-    // Set Baud rate
+    /* Set Baud rate */
     ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CWGR = ( TWI_CWGR_HOLD_Msk & ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CWGR) |
                                               TWI_CWGR_BRSRCCLK_${FLEXCOM_TWI_CWGR_BRSRCCLK} |
                                             ( TWI_CWGR_CLDIV(${FLEXCOM_TWI_CWGR_CLDIV}) |
                                               TWI_CWGR_CHDIV(${FLEXCOM_TWI_CWGR_CHDIV}) |
                                               TWI_CWGR_CKDIV(${FLEXCOM_TWI_CWGR_CKDIV}) );
 
-    // Starts the transfer by clearing the transmit hold register
+    /* Starts the transfer by clearing the transmit hold register */
     ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_THRCLR_Msk;
 
      // Disable TXRDY, TXCOMP and RXRDY interrupts
@@ -128,10 +128,10 @@ void ${FLEXCOM_INSTANCE_NAME}_TWI_Initialize(void)
     // Enables interrupt on nack and arbitration lost
     ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_IER = TWI_IER_NACK_Msk | TWI_IER_ARBLST_Msk;
 
-    // Enable Master Mode
+    /*  Enable Master Mode */
     ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_MSEN_Msk;
 
-    // Initialize the flexcom twi PLib Object
+    /*  Initialize the flexcom twi PLib Object */
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state = FLEXCOM_TWI_STATE_IDLE;
 }
@@ -147,8 +147,9 @@ static void ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateRead(void)
     ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_MMR |= TWI_MMR_MREAD_Msk;
 
     /* When a single data byte read is performed,
-    the START and STOP bits must be set at the same time */
-    if(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize == 1)
+     * the START and STOP bits must be set at the same time.
+     */
+    if(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize == 1U)
     {
         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_START_Msk | TWI_CR_STOP_Msk;
     }
@@ -167,73 +168,83 @@ static bool ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(uint16_t address, bool
     uint32_t timeoutCntr = ${FLEXCOM_TWI_TIMEOUT_COUNT_VAL};
 
     // 10-bit Slave Address
-    if( address > 0x007F )
+    if(address > 0x007FU)
     {
-        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_MMR = TWI_MMR_DADR((address & 0x00007F00) >> 8) | TWI_MMR_IADRSZ(1);
+        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_MMR = TWI_MMR_DADR(((uint32_t)address & 0x00007F00U) >> 8U) | TWI_MMR_IADRSZ(1U);
 
-        // Set internal address
-        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_IADR = TWI_IADR_IADR(address & 0x000000FF );
+        /*  Set internal address */
+        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_IADR = TWI_IADR_IADR((uint32_t)address & 0x000000FFU );
     }
-    // 7-bit Slave Address
+    /*  7-bit Slave Address */
     else
     {
-        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_MMR = TWI_MMR_DADR(address) | TWI_MMR_IADRSZ(0);
+        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_MMR = TWI_MMR_DADR(address) | TWI_MMR_IADRSZ(0U);
     }
 
-    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount = 0;
-    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readCount = 0;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount = 0U;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readCount = 0U;
 
-    // Write transfer
+     /*  Write transfer */
     if(type == false)
     {
-        // Single Byte Write
-        if( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize == 1 )
+        /* Single Byte Write */
+        if( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize == 1U )
         {
-            // Single Byte write only
-            if(  ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize == 0  )
+            /* Single Byte write only */
+            if(  ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize == 0U  )
             {
-                // Load last byte in transmit register, issue stop condition
-                // Generate TXCOMP interrupt after STOP condition has been sent
+                /* Load last byte in transmit register, issue stop condition
+                 * Generate TXCOMP interrupt after STOP condition has been sent.
+                 * */
                 ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state = FLEXCOM_TWI_STATE_WAIT_FOR_TXCOMP;
 
-                ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++]);
+                ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount]);
+                ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++;
                 ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_STOP_Msk;
                 ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_IER = TWI_IER_TXCOMP_Msk;
             }
-            // Single Byte write and than read transfer
+            /*  Single Byte write and than read transfer */
             else
             {
-                // START bit must be set before the byte is shifted out. Hence disabled interrupt
+                /*  START bit must be set before the byte is shifted out. Hence disabled interrupt */
                 __disable_irq();
 
-                ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++]);
+                ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount]);
+                ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++;
 
-                // Wait for control byte to be transferred before initiating repeat start for read
-                while((${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_SR & (TWI_SR_TXCOMP_Msk | TWI_SR_TXRDY_Msk)) != 0);
-
-                while((${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_SR & (TWI_SR_TXRDY_Msk)) == 0)
+                /*  Wait for control byte to be transferred before initiating repeat start for read */
+                while((${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_SR & (TWI_SR_TXCOMP_Msk | TWI_SR_TXRDY_Msk)) != 0U)
                 {
-                    if (--timeoutCntr == 0)
+                    /* Do Nothing */
+                }
+
+
+
+                while((${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_SR & (TWI_SR_TXRDY_Msk)) == 0U)
+                {
+                    if (timeoutCntr == 0U)
                     {
                         ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_BUS_ERROR;
                         __enable_irq();
                         return false;
                     }
+                    timeoutCntr--;
                 }
 
                 type = true;
             }
         }
-        // Multi-Byte Write
+        /*  Multi-Byte Write */
         else
         {
             ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state = FLEXCOM_TWI_STATE_TRANSFER_WRITE;
 
-            ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++]);
+            ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount]);
+            ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++;
             ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_IER = TWI_IDR_TXRDY_Msk | TWI_IER_TXCOMP_Msk;
         }
     }
-    // Read transfer
+    /*  Read transfer */
     if(type)
     {
         ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateRead();
@@ -326,7 +337,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_IsBusy(void)
 
 bool ${FLEXCOM_INSTANCE_NAME}_TWI_Read(uint16_t address, uint8_t *pdata, size_t length)
 {
-    // Check for ongoing transfer
+     /*  Check for ongoing transfer */
     if( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state != FLEXCOM_TWI_STATE_IDLE )
     {
         return false;
@@ -341,7 +352,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Read(uint16_t address, uint8_t *pdata, size_t 
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readBuffer=pdata;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize=length;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer=NULL;
-    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize=0;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize=0U;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
 
     return ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(address, true);
@@ -370,7 +381,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Read(uint16_t address, uint8_t *pdata, size_t 
 
 bool ${FLEXCOM_INSTANCE_NAME}_TWI_Write(uint16_t address, uint8_t *pdata, size_t length)
 {
-    // Check for ongoing transfer
+    /*  Check for ongoing transfer */
     if( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state != FLEXCOM_TWI_STATE_IDLE )
     {
         return false;
@@ -383,7 +394,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Write(uint16_t address, uint8_t *pdata, size_t
 
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address=address;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readBuffer=NULL;
-    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize=0;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize=0U;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer=pdata;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize=length;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
@@ -417,7 +428,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Write(uint16_t address, uint8_t *pdata, size_t
 bool ${FLEXCOM_INSTANCE_NAME}_TWI_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
 {
 
-    // Check for ongoing transfer
+    /*  Check for ongoing transfer */
     if( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state != FLEXCOM_TWI_STATE_IDLE )
     {
         return false;
@@ -483,7 +494,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setu
 {
     uint32_t i2cClkSpeed;
     uint32_t cldiv;
-    uint8_t ckdiv = 0;
+    uint8_t ckdiv = 0U;
 
     if (setup == NULL)
     {
@@ -493,12 +504,12 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setu
     i2cClkSpeed = setup->clkSpeed;
 
     /* Maximum I2C clock speed in Master mode cannot be greater than 400 KHz */
-    if (i2cClkSpeed > 4000000)
+    if (i2cClkSpeed > 4000000U)
     {
         return false;
     }
 
-    if( srcClkFreq == 0)
+    if( srcClkFreq == 0U)
     {
         srcClkFreq = ${FLEXCOM_TWI_CLK_SRC_FREQ};
     }
@@ -508,26 +519,26 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setu
 
 <#if FLEXCOM_TWI_CWGR_BRSRCCLK == "PERIPH_CLK">
     /* Calculate CLDIV with CKDIV set to 0 */
-    cldiv = (srcClkFreq /(2 * i2cClkSpeed)) - 3;
+    cldiv = (srcClkFreq /(2U * i2cClkSpeed)) - 3U;
 <#else>
     /* Calculate CLDIV with CKDIV set to 0 */
-    cldiv = (srcClkFreq /(2 * i2cClkSpeed));
+    cldiv = (srcClkFreq /(2U * i2cClkSpeed));
 </#if>
 
     /* CLDIV must fit within 8-bits and CKDIV must fit within 3-bits */
-    while ((cldiv > 255) && (ckdiv < 7))
+    while ((cldiv > 255U) && (ckdiv < 7U))
     {
         ckdiv++;
-        cldiv /= 2;
+        cldiv /= 2U;
     }
 
-    if (cldiv > 255)
+    if (cldiv > 255U)
     {
         /* Could not generate CLDIV and CKDIV register values for the requested baud rate */
         return false;
     }
 
-    // Set Baud rate
+    /*  Set Baud rate */
     ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CWGR = ( TWI_CWGR_HOLD_Msk & ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CWGR) |
                                               TWI_CWGR_BRSRCCLK_${FLEXCOM_TWI_CWGR_BRSRCCLK} |
                                             ( TWI_CWGR_CLDIV(cldiv) |
@@ -565,19 +576,19 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setu
 
 void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 {
-    uint32_t status = 0;
+    uint32_t status = 0U;
 
-    // Read the peripheral status
+    /*  Read the peripheral status */
     status = ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_SR;
 
     /* checks if Slave has Nacked */
-    if( status & TWI_SR_NACK_Msk )
+    if(( status & TWI_SR_NACK_Msk ) != 0U)
     {
         ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state = FLEXCOM_TWI_STATE_ERROR;
         ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NACK;
     }
 
-    if( status & TWI_SR_TXCOMP_Msk )
+    if(( status & TWI_SR_TXCOMP_Msk ) != 0U)
     {
         /* Disable and Enable I2C Master */
         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_MSDIS_Msk;
@@ -588,7 +599,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     }
 
     /* checks if the arbitration is lost in multi-master scenario */
-    if( status & TWI_SR_ARBLST_Msk )
+    if(( status & TWI_SR_ARBLST_Msk ) != 0U)
     {
         /* Re-initiate the transfer if arbitration is lost in
          * between of the transfer
@@ -602,15 +613,15 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
         {
             case FLEXCOM_TWI_STATE_ADDR_SEND:
             {
-                if (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize != 0 )
+                if (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize != 0U )
                 {
-                    // Initiate Write transfer
-                    ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address, false);
+                    /*  Initiate Write transfer */
+                    (void)${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address, false);
                 }
                 else
                 {
-                    // Initiate Read transfer
-                    ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address, true);
+                    /*  Initiate Read transfer */
+                    (void)${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address, true);
                 }
 
                 break;
@@ -619,31 +630,34 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
             case FLEXCOM_TWI_STATE_TRANSFER_WRITE:
             {
                 /* checks if master is ready to transmit */
-                if( status & TWI_SR_TXRDY_Msk )
+                if(( status & TWI_SR_TXRDY_Msk ) != 0U)
                 {
-                    // Write Last Byte and then initiate read transfer
-                    if( ( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount == (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize -1) ) && ( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize != 0 ))
+                    /*  Write Last Byte and then initiate read transfer */
+                    if( ( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount == (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize -1U) ) && ( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize != 0U ))
                     {
-                        // START bit must be set before the last byte is shifted out to generate repeat start. Hence disabled interrupt
+                        /*  START bit must be set before the last byte is shifted out to generate repeat start. Hence disabled interrupt */
                         __disable_irq();
 
                         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_IDR = TWI_IDR_TXRDY_Msk;
-                        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++]);
+                        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount]);
+                        ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++;
                         ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateRead();
                     }
-                    // Write Last byte and then issue STOP condition
-                    else if ( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount == (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize -1))
+                    /*  Write Last byte and then issue STOP condition */
+                    else if ( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount == (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize -1U))
                     {
-                        // Load last byte in transmit register, issue stop condition
-                        // Generate TXCOMP interrupt after STOP condition has been sent
-                        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++]);
+                        /* Load last byte in transmit register, issue stop condition
+                         * Generate TXCOMP interrupt after STOP condition has been sent.
+                         * */
+                        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount]);
+                        ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++;
                         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_STOP_Msk;
                         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_IDR = TWI_IDR_TXRDY_Msk;
 
                         /* Check TXCOMP to confirm if STOP condition has been sent, otherwise wait for TXCOMP interrupt */
                         status = ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_SR;
 
-                        if( status & TWI_SR_TXCOMP_Msk )
+                        if(( status & TWI_SR_TXCOMP_Msk ) != 0U)
                         {
                             ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state = FLEXCOM_TWI_STATE_TRANSFER_DONE;
                         }
@@ -652,14 +666,15 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
                             ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state = FLEXCOM_TWI_STATE_WAIT_FOR_TXCOMP;
                         }
                     }
-                    // Write next byte
+                    /*  Write next byte */
                     else
                     {
-                        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++]);
+                        ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_THR = TWI_THR_TXDATA(${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount]);
+                        ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeCount++;
                     }
 
-                    // Dummy read to ensure that TXRDY bit is cleared
-                    status = ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_SR;
+                    /*  Dummy read to ensure that TXRDY bit is cleared */
+                    (void)${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_SR;
                 }
 
                 break;
@@ -668,17 +683,17 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
             case FLEXCOM_TWI_STATE_TRANSFER_READ:
             {
                 /* checks if master has received the data */
-                if( status & TWI_SR_RXRDY_Msk )
+                if(( status & TWI_SR_RXRDY_Msk ) != 0U)
                 {
-                    // Set the STOP (or START) bit before reading the TWI_RHR on the next-to-last access
-                    if(  ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readCount == (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize - 2) )
+                    /*  Set the STOP (or START) bit before reading the TWI_RHR on the next-to-last access */
+                    if(  ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readCount == (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize - 2U) )
                     {
                         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_STOP_Msk;
                     }
 
                     /* read the received data */
-                    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readCount++] = (uint8_t)(${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_RHR & TWI_RHR_RXDATA_Msk);
-
+                    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readCount] = (uint8_t)(${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_RHR & TWI_RHR_RXDATA_Msk);
+                    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readCount++;
                     /* checks if transmission has reached at the end */
                     if( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readCount == ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize )
                     {
@@ -688,7 +703,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
                         /* Check TXCOMP to confirm if STOP condition has been sent, otherwise wait for TXCOMP interrupt */
                         status = ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_SR;
 
-                        if( status & TWI_SR_TXCOMP_Msk )
+                        if(( status & TWI_SR_TXCOMP_Msk ) != 0U)
                         {
                             ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state = FLEXCOM_TWI_STATE_TRANSFER_DONE;
                         }
@@ -704,7 +719,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 
             case FLEXCOM_TWI_STATE_WAIT_FOR_TXCOMP:
             {
-                if( status & TWI_SR_TXCOMP_Msk )
+                if(( status & TWI_SR_TXCOMP_Msk ) != 0U)
                 {
                     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state = FLEXCOM_TWI_STATE_TRANSFER_DONE;
                 }
@@ -714,6 +729,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 
             default:
             {
+                /* Do Nothing */
                 break;
             }
         }
@@ -721,11 +737,11 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 
     if (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state == FLEXCOM_TWI_STATE_ERROR)
     {
-        // NACK is received,
+        /*  NACK is received */
         ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state = FLEXCOM_TWI_STATE_IDLE;
         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_IDR = TWI_IDR_TXCOMP_Msk | TWI_IDR_TXRDY_Msk | TWI_IDR_RXRDY_Msk;
 
-        // Disable and Enable I2C Master
+        /* Disable and Enable I2C Master */
         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_MSDIS_Msk;
         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_MSEN_Msk;
 
@@ -735,16 +751,16 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
         }
     }
 
-    // check for completion of transfer
+    /*  check for completion of transfer */
     if( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state == FLEXCOM_TWI_STATE_TRANSFER_DONE )
     {
         ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
 
-        // Reset the PLib objects and Interrupts
+        /*  Reset the PLib objects and Interrupts */
         ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state = FLEXCOM_TWI_STATE_IDLE;
         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_IDR = TWI_IDR_TXCOMP_Msk | TWI_IDR_TXRDY_Msk  | TWI_IDR_RXRDY_Msk;
 
-        // Disable and Enable I2C Master
+        /* Disable and Enable I2C Master */
         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_MSDIS_Msk;
         ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CR = TWI_CR_MSEN_Msk;
 

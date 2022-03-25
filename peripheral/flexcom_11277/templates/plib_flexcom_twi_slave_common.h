@@ -89,7 +89,7 @@ typedef enum
     FLEXCOM_TWI_SLAVE_TRANSFER_DIR_WRITE = 0,
 
     /* FLEXCOM TWI Master is reading from slave */
-    FLEXCOM_TWI_SLAVE_TRANSFER_DIR_READ  = 1,
+    FLEXCOM_TWI_SLAVE_TRANSFER_DIR_READ  = 1
 }FLEXCOM_TWI_SLAVE_TRANSFER_DIR;
 
 // *****************************************************************************
@@ -126,7 +126,7 @@ typedef enum
 	FLEXCOM_TWI_SLAVE_STATUS_FLAG_NACK    	= TWI_SR_NACK_Msk,
 	
 	/* Stop condtion or start condition with other slave address detected */
-    FLEXCOM_TWI_SLAVE_STATUS_FLAG_TXCOMP    = TWI_SR_TXCOMP_Msk,
+    FLEXCOM_TWI_SLAVE_STATUS_FLAG_TXCOMP    = TWI_SR_TXCOMP_Msk
 }FLEXCOM_TWI_SLAVE_STATUS_FLAG;
 
 // *****************************************************************************
@@ -148,7 +148,7 @@ typedef enum
     FLEXCOM_TWI_SLAVE_ACK_STATUS_RECEIVED_ACK = 0,
 	
 	/* Received NACK from I2C master */
-    FLEXCOM_TWI_SLAVE_ACK_STATUS_RECEIVED_NAK,
+    FLEXCOM_TWI_SLAVE_ACK_STATUS_RECEIVED_NAK
 }FLEXCOM_TWI_SLAVE_ACK_STATUS;
 
 // *****************************************************************************
@@ -178,7 +178,7 @@ typedef enum
     FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TX_READY,
 
 	/* I2C stop condition received or start condtion with other slave address detected */
-    FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE,
+    FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE
 
 }FLEXCOM_TWI_SLAVE_TRANSFER_EVENT;
 

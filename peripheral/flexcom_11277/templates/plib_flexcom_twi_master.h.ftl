@@ -167,13 +167,10 @@ void ${FLEXCOM_INSTANCE_NAME}_TWI_CallbackRegister(FLEXCOM_TWI_CALLBACK callback
     <code>
         uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
 
-        // wait for the current transfer to complete
         while(${FLEXCOM_INSTANCE_NAME}_TWI_IsBusy( ));
 
-        // perform the next transfer
         if(!${FLEXCOM_INSTANCE_NAME}_TWI_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
         {
-            // error handling
         }
 
     </code>
@@ -215,7 +212,6 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_IsBusy(void);
 
         if(!${FLEXCOM_INSTANCE_NAME}_TWI_Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
         {
-            // error handling
         }
     </code>
 
@@ -256,7 +252,6 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Read(uint16_t address, uint8_t *pdata, size_t 
 
         if(!${FLEXCOM_INSTANCE_NAME}_TWI_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
         {
-            // error handling
         }
     </code>
 
@@ -302,7 +297,6 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Write(uint16_t address, uint8_t *pdata, size_t
 
         if(!${FLEXCOM_INSTANCE_NAME}_TWI_WriteRead( SLAVE_ADDR, &myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
         {
-            // error handling
         }
     </code>
 
@@ -336,7 +330,6 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_WriteRead(uint16_t address, uint8_t *wdata, si
     <code>
     if(FLEXCOM_TWI_ERROR_NONE == ${FLEXCOM_INSTANCE_NAME}_TWI_ErrorGet())
     {
-        //FLEXCOM TWI transfer is completed, go to next state.
     }
     </code>
 
@@ -372,12 +365,11 @@ FLEXCOM_TWI_ERROR ${FLEXCOM_INSTANCE_NAME}_TWI_ErrorGet(void);
 
     setup.clkSpeed = 400000;
 
-    // Make sure that the I2C is not busy before changing the I2C clock frequency
     if (${FLEXCOM_INSTANCE_NAME}_TWI_IsBusy() == false)
     {
         if (${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup( &setup, 0 ) == true)
         {
-            // Transfer Setup updated successfully
+
         }
     }
     </code>
