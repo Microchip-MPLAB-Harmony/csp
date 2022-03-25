@@ -163,7 +163,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
          <#lt>    /* Find any triggered channels, run associated callback handlers */
          <#lt>    for (currentChannel = 0U; currentChannel < ${CONFIGURED_CHANNEL}U; currentChannel++)
          <#lt>    {
-		 <#lt> <#if CONFIGURED_CHANNEL &gt; 7 >
+<#if CONFIGURED_CHANNEL gt 7 >
          <#lt>        if (currentChannel > 7U)
          <#lt>        {
          <#lt>            channel = currentChannel + 8U;
@@ -172,7 +172,9 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
          <#lt>        {
          <#lt>            channel = currentChannel;
          <#lt>        }
-         <#lt> </#if>
+<#else>
+         <#lt>        channel = currentChannel;
+</#if>
          <#lt>        /* Read the interrupt flag status */
          <#lt>        overrunIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & ((uint32_t)EVSYS_INT_OVERRUN << channel);
          <#lt>        eventIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & ((uint32_t)EVSYS_INT_EVENT_DETECT << channel);
