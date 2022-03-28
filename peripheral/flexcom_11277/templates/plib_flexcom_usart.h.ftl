@@ -79,9 +79,9 @@ FLEXCOM_USART_ERROR ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet( void );
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
-bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size );
+bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *pBuffer, const size_t size );
 
-bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size );
+bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *pBuffer, const size_t size );
 
 <#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == false>
 uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadByte( void );

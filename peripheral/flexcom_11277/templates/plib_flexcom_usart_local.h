@@ -71,17 +71,16 @@
 // *****************************************************************************
 
 /* FLEXCOM USART Errors */
-typedef enum
-{
-    FLEXCOM_USART_ERROR_NONE = 0,
-    FLEXCOM_USART_ERROR_OVERRUN = US_CSR_OVRE_Msk,
-    FLEXCOM_USART_ERROR_PARITY = US_CSR_PARE_Msk,
-    FLEXCOM_USART_ERROR_FRAMING = US_CSR_FRAME_Msk,
 
-    /* Force the compiler to reserve 32-bit memory for each enum */
-    FLEXCOM_USART_ERROR_INVALID = 0xFFFFFFFF
+#define    FLEXCOM_USART_ERROR_NONE           (0U)
+#define    FLEXCOM_USART_ERROR_OVERRUN        (US_CSR_OVRE_Msk)
+#define    FLEXCOM_USART_ERROR_PARITY         (US_CSR_PARE_Msk)
+#define    FLEXCOM_USART_ERROR_FRAMING        (US_CSR_FRAME_Msk)
 
-} FLEXCOM_USART_ERROR;
+/* Force the compiler to reserve 32-bit memory for each enum */
+#define    FLEXCOM_USART_ERROR_INVALID        (0xFFFFFFFFU)
+
+typedef uint32_t FLEXCOM_USART_ERROR;
 
 /* FLEXCOM USART Data Width */
 typedef enum
@@ -140,14 +139,13 @@ typedef void (*FLEXCOM_USART_CALLBACK)( uintptr_t context );
 /* FLEXCOM USART Object */
 typedef struct
 {
-    uint8_t *               txBuffer;
+    void *                  txBuffer;
     size_t                  txSize;
     volatile size_t         txProcessedSize;
     FLEXCOM_USART_CALLBACK  txCallback;
     uintptr_t               txContext;
     bool                    txBusyStatus;
-
-    uint8_t *               rxBuffer;
+    void *                  rxBuffer;
     size_t                  rxSize;
     volatile size_t         rxProcessedSize;
     FLEXCOM_USART_CALLBACK  rxCallback;
