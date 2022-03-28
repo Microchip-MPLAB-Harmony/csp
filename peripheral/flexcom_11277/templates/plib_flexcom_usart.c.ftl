@@ -521,7 +521,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *pBuffer, const size_t size )
         {
             status = true;
 
-            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBuffer = pBuffer;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBuffer = (uint8_t*)pBuffer;
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize = size;
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize = 0;
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus = true;
