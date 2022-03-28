@@ -99,6 +99,12 @@ typedef uint16_t NVMCTRL_ERROR;
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_ERASE_BUFFER_SIZE          ${ERASE_BUFFER_SIZE}
 </#if>
 
+<#if NVMCTRL_ECC_TESTING_ENABLE?? && NVMCTRL_ECC_TESTING_ENABLE == true>
+#define ${NVMCTRL_INSTANCE_NAME}_ECC_FLT_MODE_ON_READ 0
+#define ${NVMCTRL_INSTANCE_NAME}_ECC_FLT_MODE_ON_WRITE 0
+
+typedef uint32_t ${NVMCTRL_INSTANCE_NAME}_ECC_FLT_MODE;
+</#if>
 
 
 <#if INTERRUPT_ENABLE == true>
@@ -146,6 +152,30 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (uint32_t address);
 </#if>
 
 void ${NVMCTRL_INSTANCE_NAME}_CacheInvalidate ( void );
+
+uint32_t ${NVMCTRL_INSTANCE_NAME}_InterruptFlagGet(void);
+
+<#if NVMCTRL_ECC_TESTING_ENABLE?? && NVMCTRL_ECC_TESTING_ENABLE == true>
+void ${NVMCTRL_INSTANCE_NAME}_ECC_SingleBitFaultInject(uint32_t fltaddr, uint8_t fltBitPtr, NVMCTRL_ECC_FLT_MODE fltOnReadOrWrite);
+
+void ${NVMCTRL_INSTANCE_NAME}_ECC_DoubleBitFaultInject(uint32_t fltaddr, uint8_t flt1BitPtr, uint8_t flt2BitPtr, NVMCTRL_ECC_FLT_MODE fltOnReadOrWrite);
+
+void ${NVMCTRL_INSTANCE_NAME}_ECC_MainArrayDisable(void);
+
+void ${NVMCTRL_INSTANCE_NAME}_ECC_DataFlashDisable(void);
+
+uint32_t ${NVMCTRL_INSTANCE_NAME}_ECC_FaultCaptureAddrGet(void);
+
+uint8_t ${NVMCTRL_INSTANCE_NAME}_ECC_FaultSyndromeGet(void);
+
+uint8_t ${NVMCTRL_INSTANCE_NAME}_ECC_SECIN_FaultParityGet(void);
+
+uint8_t ${NVMCTRL_INSTANCE_NAME}_ECC_SECOUT_FaultParityGet(void);
+
+void ${NVMCTRL_INSTANCE_NAME}_ECC_SECErrorCountSet(uint8_t errorCount);
+
+void ${NVMCTRL_INSTANCE_NAME}_ECC_FaultLogicReset(void);
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility

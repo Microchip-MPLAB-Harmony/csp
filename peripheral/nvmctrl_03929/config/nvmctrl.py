@@ -61,6 +61,9 @@ def waitStateUpdate(symbol, event):
         if int(cpuFreq) <= int(key):
             symbol.setValue(waitStates.get(key), 2)
             break
+
+def updateVisibility (symbol, event):
+    symbol.setVisible(event["value"])
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -138,12 +141,12 @@ def instantiateComponent(nvmctrlComponent):
         nvmctrlSym_USERROW_SIZE = nvmctrlComponent.createStringSymbol("FLASH_USERROW_SIZE", None)
         nvmctrlSym_USERROW_SIZE.setVisible(False)
         nvmctrlSym_USERROW_SIZE.setDefaultValue(nvmctrlUSERPAGENode.getAttribute("size"))
-        
+
         # NVM user row Page size
         nvmctrlSym_USERROW_PROGRAM_SIZE = nvmctrlComponent.createStringSymbol("FLASH_USERROW_PROGRAM_SIZE", None)
         nvmctrlSym_USERROW_PROGRAM_SIZE.setVisible(False)
         nvmctrlSym_USERROW_PROGRAM_SIZE.setDefaultValue(nvmctrlUSERPAGENode.getAttribute("pagesize"))
-    
+
 
     # Configures NVM read mode
     nvmctrlSym_CTRLB_READMODE = nvmctrlComponent.createKeyValueSetSymbol("NVMCTRL_CTRLB_READMODE_SELECTION", None)
@@ -314,12 +317,12 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlEraseApiName.setVisible(False)
     nvmctrlEraseApiName.setReadOnly(True)
     nvmctrlEraseApiName.setDefaultValue(eraseApiName)
-    
+
     nvmctrlUserRowEraseApiName = nvmctrlComponent.createStringSymbol("USER_ROW_ERASE_API_NAME", None)
     nvmctrlUserRowEraseApiName.setVisible(False)
     nvmctrlUserRowEraseApiName.setReadOnly(True)
     nvmctrlUserRowEraseApiName.setDefaultValue(userRowEraseApiName)
-    
+
     nvmctrlUserRowWriteApiName = nvmctrlComponent.createStringSymbol("USER_ROW_WRITE_API_NAME", None)
     nvmctrlUserRowWriteApiName.setVisible(False)
     nvmctrlUserRowWriteApiName.setReadOnly(True)
@@ -345,6 +348,35 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_IntEnComment.setLabel("Warning!!! NVMCTRL Interrupt is Disabled in Interrupt Manager")
     nvmctrlSym_IntEnComment.setDependencies(updateNVMCTRLInterruptWarringStatus, ["core." + InterruptVectorUpdate])
 
+    isEccPresent = False
+    eccPresentParam = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]/instance@[name=\"NVMCTRL\"]/parameters/param@[name=\"ECC_PRESENT\"]")
+    if eccPresentParam != None:
+        isEccPresent = True if eccPresentParam.getAttribute("value") == "1" else False
+
+    if isEccPresent == True:
+        nvmctrlSym_ECCTestingEnable = nvmctrlComponent.createBooleanSymbol("NVMCTRL_ECC_TESTING_ENABLE", None)
+        nvmctrlSym_ECCTestingEnable.setLabel("ECC Testing Enable")
+        nvmctrlSym_ECCTestingEnable.setDefaultValue(False)
+
+        nvmctrlSym_MainArrECCDisable = nvmctrlComponent.createBooleanSymbol("NVMCTRL_ECC_MAIN_ARR_DIS", nvmctrlSym_ECCTestingEnable)
+        nvmctrlSym_MainArrECCDisable.setLabel("Main Array ECC Disable")
+        nvmctrlSym_MainArrECCDisable.setDefaultValue(False)
+        nvmctrlSym_MainArrECCDisable.setVisible(False)
+        nvmctrlSym_MainArrECCDisable.setDependencies(updateVisibility, ["NVMCTRL_ECC_TESTING_ENABLE"])
+
+        nvmctrlSym_DataFlashECCDisable = nvmctrlComponent.createBooleanSymbol("NVMCTRL_ECC_DATA_FLASH_DIS", nvmctrlSym_ECCTestingEnable)
+        nvmctrlSym_DataFlashECCDisable.setLabel("Data Flash ECC Disable")
+        nvmctrlSym_DataFlashECCDisable.setDefaultValue(False)
+        nvmctrlSym_DataFlashECCDisable.setVisible(False)
+        nvmctrlSym_DataFlashECCDisable.setDependencies(updateVisibility, ["NVMCTRL_ECC_TESTING_ENABLE"])
+
+        nvmctrlSym_InitECCCnt = nvmctrlComponent.createIntegerSymbol("NVMCTRL_ECC_ERR_INIT_COUNT", nvmctrlSym_ECCTestingEnable)
+        nvmctrlSym_InitECCCnt.setLabel("ECC Error Counter Initial Value")
+        nvmctrlSym_InitECCCnt.setMin(0)
+        nvmctrlSym_InitECCCnt.setMax(255)
+        nvmctrlSym_InitECCCnt.setDefaultValue(0)
+        nvmctrlSym_InitECCCnt.setVisible(False)
+        nvmctrlSym_InitECCCnt.setDependencies(updateVisibility, ["NVMCTRL_ECC_TESTING_ENABLE"])
 ###################################################################################################
 ####################################### Code Generation  ##########################################
 ###################################################################################################

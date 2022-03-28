@@ -88,6 +88,14 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
     <#lt>                       NVMCTRL_CTRLB_READMODE_${NVMCTRL_CTRLB_READMODE_SELECTION} |
     <#lt>                       NVMCTRL_CTRLB_SLEEPPRM_${NVMCTRL_CTRLB_POWER_REDUCTION_MODE} | NVMCTRL_CTRLB_RWS(${NVM_RWS}U)
     <#lt>                       ${(NVMCTRL_WRITE_POLICY == "MANUAL")?then('| NVMCTRL_CTRLB_MANW_Msk', ' ')};</@compress>
+
+    <#if NVMCTRL_ECC_TESTING_ENABLE?? && NVMCTRL_ECC_TESTING_ENABLE == true>
+    <#lt>   ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ECCCTRL = (uint32_t)(NVMCTRL_ECCCTRL_SECCNT (${NVMCTRL_ECC_ERR_INIT_COUNT}) <#if NVMCTRL_ECC_MAIN_ARR_DIS == true> | NVMCTRL_ECCCTRL_ECCDIS_Msk </#if> <#if NVMCTRL_ECC_DATA_FLASH_DIS == true> | NVMCTRL_ECCCTRL_ECCDFDIS_Msk </#if>);
+
+    <#if INTERRUPT_ENABLE == true>
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_SERR_Msk | NVMCTRL_INTENSET_DERR_Msk;
+    </#if>
+    </#if>
 }
 
 void ${NVMCTRL_INSTANCE_NAME}_CacheInvalidate(void)
@@ -98,7 +106,7 @@ void ${NVMCTRL_INSTANCE_NAME}_CacheInvalidate(void)
 <#if FLASH_DATAFLASH_START_ADDRESS??>
 bool ${NVMCTRL_INSTANCE_NAME}_DATA_FLASH_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-	uint32_t *paddress = (uint32_t *)address;
+    uint32_t *paddress = (uint32_t *)address;
     (void) memcpy(data, paddress, length);
     return true;
 }
@@ -112,7 +120,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_DATA_FLASH_PageWrite ( uint32_t *data, const uint3
     for ( i = 0U; i < (${NVMCTRL_INSTANCE_NAME}_DATAFLASH_PAGESIZE/4U); i++)
     {
         *paddress = data[i];
-		 paddress++;
+         paddress++;
     }
 
 <#if NVMCTRL_WRITE_POLICY == "MANUAL">
@@ -143,7 +151,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_DATA_FLASH_RowErase( uint32_t address )
 </#if>
 bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-	uint32_t *paddress_read = (uint32_t *)address;
+    uint32_t *paddress_read = (uint32_t *)address;
     (void) memcpy(data, paddress_read, length);
     return true;
 }
@@ -158,7 +166,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t ad
     for (i = 0U; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4U); i++)
     {
         *paddress = data[i];
-		 paddress++;
+         paddress++;
     }
 
     return true;
@@ -197,7 +205,7 @@ bool ${WRITE_API_NAME}( uint32_t *data, const uint32_t address )
     for (i = 0U; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4U); i++)
     {
         *paddress = data[i];
-		 paddress++;
+         paddress++;
     }
 
 <#if NVMCTRL_WRITE_POLICY == "MANUAL">
@@ -231,7 +239,7 @@ bool ${ERASE_API_NAME}( uint32_t address )
     <#lt>{
     <#lt>    uint32_t i = 0U;
     <#lt>    uint32_t * paddress = (uint32_t *)address;
-	<#lt>    bool pagewrite_val = false;
+    <#lt>    bool pagewrite_val = false;
 
     <#lt>    if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= ((${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE) - ${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE)))
     <#lt>    {
@@ -239,7 +247,7 @@ bool ${ERASE_API_NAME}( uint32_t address )
     <#lt>        for (i = 0U; i < (${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE/4U); i++)
     <#lt>        {
     <#lt>            *paddress = data[i];
-	                  paddress++;
+                      paddress++;
     <#lt>        }
 
     <#lt>        /* Set address and command */
@@ -259,7 +267,7 @@ bool ${ERASE_API_NAME}( uint32_t address )
 
     <#lt>bool ${USER_ROW_ERASE_API_NAME}( uint32_t address )
     <#lt>{
-	<#lt>     bool rowerase = false;
+    <#lt>     bool rowerase = false;
     <#lt>    if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= (${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE)))
     <#lt>    {
     <#lt>        /* Set address and command */
@@ -313,3 +321,115 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock(uint32_t address)
 
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_UR_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 }
+
+uint32_t ${NVMCTRL_INSTANCE_NAME}_InterruptFlagGet(void)
+{
+    uint32_t intFlag =  ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_Msk;
+    /* Clear interrupt falg */
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = intFlag;
+    return intFlag;
+}
+
+<#if NVMCTRL_ECC_TESTING_ENABLE?? && NVMCTRL_ECC_TESTING_ENABLE == true>
+void ${NVMCTRL_INSTANCE_NAME}_ECC_SingleBitFaultInject(uint32_t fltaddr, uint8_t fltBitPtr, NVMCTRL_ECC_FLT_MODE fltOnReadOrWrite)
+{
+    /* Disable fault injection */
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL &= ~NVMCTRL_FLTCTRL_FLTEN_En;
+
+    /* Dummy Read back for synchronization purpose */
+    while  (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL & NVMCTRL_FLTCTRL_FLTEN_En);
+
+    /* Set the fault address */
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FFLTADR = (uint32_t)(NVMCTRL_FFLTADR_FLTADR (fltaddr));
+
+    /* Set the fault bit position */
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FFLTPTR = NVMCTRL_FFLTPTR_FLT1PTR (fltBitPtr);
+
+    if (fltOnReadOrWrite == NVMCTRL_ECC_FLT_MODE_ON_READ)
+    {
+        /* Set the single bit fault mode and enable fault injection */
+        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL = NVMCTRL_FLTCTRL_FLTMD (0x4) | NVMCTRL_FLTCTRL_FLTEN_En;
+
+        /* Dummy Read back for synchronization purpose */
+        while  (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL != (NVMCTRL_FLTCTRL_FLTMD (0x4) | NVMCTRL_FLTCTRL_FLTEN_En));
+    }
+    else
+    {
+        /* Set the single bit fault mode and enable fault injection */
+        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL = NVMCTRL_FLTCTRL_FLTMD (0x6) | NVMCTRL_FLTCTRL_FLTEN_En;
+
+        while  (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL != (NVMCTRL_FLTCTRL_FLTMD (0x6) | NVMCTRL_FLTCTRL_FLTEN_En));
+    }
+}
+
+void ${NVMCTRL_INSTANCE_NAME}_ECC_DoubleBitFaultInject(uint32_t fltaddr, uint8_t flt1BitPtr, uint8_t flt2BitPtr, NVMCTRL_ECC_FLT_MODE fltOnReadOrWrite)
+{
+    /* Disable fault injection */
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL &= ~NVMCTRL_FLTCTRL_FLTEN_En;
+
+    /* Dummy Read back for synchronization purpose */
+    while  (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL & NVMCTRL_FLTCTRL_FLTEN_En);
+
+    /* Set the fault address */
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FFLTADR = (uint32_t)(NVMCTRL_FFLTADR_FLTADR (fltaddr));
+
+    /* Set the fault bit position */
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FFLTPTR = NVMCTRL_FFLTPTR_FLT1PTR (flt1BitPtr) | NVMCTRL_FFLTPTR_FLT2PTR (flt2BitPtr);
+
+    if (fltOnReadOrWrite == NVMCTRL_ECC_FLT_MODE_ON_READ)
+    {
+        /* Set the single bit fault mode and enable fault injection */
+        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL = NVMCTRL_FLTCTRL_FLTMD (0x5) | NVMCTRL_FLTCTRL_FLTEN_En;
+        /* Dummy Read back for synchronization purpose */
+        while  (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL != (NVMCTRL_FLTCTRL_FLTMD (0x5) | NVMCTRL_FLTCTRL_FLTEN_En));
+    }
+    else
+    {
+        /* Set the single bit fault mode and enable fault injection */
+        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL = NVMCTRL_FLTCTRL_FLTMD (0x7) | NVMCTRL_FLTCTRL_FLTEN_En;
+        /* Dummy Read back for synchronization purpose */
+        while  (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL != (NVMCTRL_FLTCTRL_FLTMD (0x7) | NVMCTRL_FLTCTRL_FLTEN_En));
+    }
+}
+
+void ${NVMCTRL_INSTANCE_NAME}_ECC_MainArrayDisable(void)
+{
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ECCCTRL |= NVMCTRL_ECCCTRL_ECCDIS_Msk;
+}
+
+void ${NVMCTRL_INSTANCE_NAME}_ECC_DataFlashDisable(void)
+{
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ECCCTRL |= NVMCTRL_ECCCTRL_ECCDFDIS_Msk;
+}
+
+uint32_t ${NVMCTRL_INSTANCE_NAME}_ECC_FaultCaptureAddrGet(void)
+{
+    return ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FFLTCAP;
+}
+
+uint8_t ${NVMCTRL_INSTANCE_NAME}_ECC_FaultSyndromeGet(void)
+{
+    return (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FFLTSYN & NVMCTRL_FFLTSYN_SECSYN_Msk);
+}
+
+uint8_t ${NVMCTRL_INSTANCE_NAME}_ECC_SECIN_FaultParityGet(void)
+{
+    return (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FFLTPAR & NVMCTRL_FFLTPAR_SECIN_Msk);
+}
+
+uint8_t ${NVMCTRL_INSTANCE_NAME}_ECC_SECOUT_FaultParityGet(void)
+{
+    return ((${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FFLTPAR & NVMCTRL_FFLTPAR_SECOUT_Msk) >> NVMCTRL_FFLTPAR_SECOUT_Pos);
+}
+
+void ${NVMCTRL_INSTANCE_NAME}_ECC_SECErrorCountSet(uint8_t errorCount)
+{
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ECCCTRL = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ECCCTRL & ~NVMCTRL_ECCCTRL_SECCNT_Msk) | ((uint32_t)errorCount << NVMCTRL_ECCCTRL_SECCNT_Pos);
+}
+
+void ${NVMCTRL_INSTANCE_NAME}_ECC_FaultLogicReset(void)
+{
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL |= NVMCTRL_FLTCTRL_FLTRST_Msk;
+}
+
+</#if>
