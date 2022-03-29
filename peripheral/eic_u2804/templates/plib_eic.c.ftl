@@ -274,6 +274,7 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 
                 /* Clear interrupt flag */
                 ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << currentChannel);
+                (void)${EIC_REG_NAME}_REGS->EIC_INTFLAG;
             }
         }
     }
@@ -287,6 +288,7 @@ void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
 {
     /* Clear interrupt flag */
     ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << ${x});
+    (void)${EIC_REG_NAME}_REGS->EIC_INTFLAG;
     /* Find any associated callback entries in the callback table */
     if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback != NULL))
     {
@@ -322,6 +324,7 @@ void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
 
                 /* Clear interrupt flag */
                 ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << currentChannel);
+                (void)${EIC_REG_NAME}_REGS->EIC_INTFLAG;
             }
         }
     }
@@ -358,6 +361,7 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 
                 /* Clear interrupt flag */
                 ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << currentChannel);
+                (void)${EIC_REG_NAME}_REGS->EIC_INTFLAG;
             }
         }
     }
@@ -370,6 +374,7 @@ void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
 {
     /* Clear interrupt flag */
     ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << ${x});
+    (void)${EIC_REG_NAME}_REGS->EIC_INTFLAG;
     /* Find any associated callback entries in the callback table */
     if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback != NULL))
     {
@@ -405,6 +410,7 @@ void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
 
                 /* Clear interrupt flag */
                 ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << currentChannel);
+                (void)${EIC_REG_NAME}_REGS->EIC_INTFLAG;
             }
         }
     }
