@@ -134,14 +134,14 @@
 <#assign PWM_ELMR0_CSEL = "PWM_COMP_"+i+"_ELMR0_CSEL">
 <#assign PWM_ELMR1_CSEL = "PWM_COMP_"+i+"_ELMR1_CSEL">
 <#if .vars[PWM_CMPM_CEN] == true>
-    <#if .vars[PWM_ELMR0_CSEL] == true>
+    <#if .vars[PWM_ELMR0_CSEL]?? && .vars[PWM_ELMR0_CSEL] == true>
         <#if PWM_ELMR0_VAL != "">
             <#assign PWM_ELMR0_VAL = PWM_ELMR0_VAL + " | PWM_ELMR_CSEL${COMPARE_ID}_Msk">
         <#else>
             <#assign PWM_ELMR0_VAL = "PWM_ELMR_CSEL${COMPARE_ID}_Msk">
         </#if>
     </#if>
-    <#if .vars[PWM_ELMR1_CSEL] == true>
+    <#if .vars[PWM_ELMR1_CSEL]?? && .vars[PWM_ELMR1_CSEL] == true>
         <#if PWM_ELMR1_VAL != "">
             <#assign PWM_ELMR1_VAL = PWM_ELMR1_VAL + " | PWM_ELMR_CSEL${COMPARE_ID}_Msk">
         <#else>
