@@ -116,34 +116,34 @@
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PDR = 0x${PIO_PDR};
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PER = ~0x${PIO_PDR};
     <#else>
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PER = 0xFFFFFFFF;
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PER = 0xFFFFFFFFU;
     </#if>
     <#if PIO_OD != "0">
         <#lt>    /* PORT${PIO_PORT} Multi Drive or Open Drain Enable */
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = 0x${PIO_OD};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDDR = ~0x${PIO_OD};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDDR = ~0x${PIO_OD}U;
     <#else>
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDDR = 0xFFFFFFFF;
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDDR = 0xFFFFFFFFU;
     </#if>
     <#lt>    /* PORT${PIO_PORT} Pull Up Enable/Disable as per MHC selection */
     <#if PIO_PUEN != "0">
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~0x${PIO_PUEN};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~0x${PIO_PUEN}U;
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = 0x${PIO_PUEN};
     <#else>
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = 0xFFFFFFFF;
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = 0xFFFFFFFFU;
     </#if>
     <#lt>    /* PORT${PIO_PORT} Pull Down Enable/Disable as per MHC selection */
     <#if PIO_PDEN != "0">
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~0x${PIO_PDEN};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~0x${PIO_PDEN}U;
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = 0x${PIO_PDEN};
     <#else>
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = 0xFFFFFFFF;
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = 0xFFFFFFFFU;
     </#if>
     <#lt>    /* PORT${PIO_PORT} Output Write Enable */
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
     <#lt>    /* PORT${PIO_PORT} Output Direction Enable */
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = 0x${PIO_DIR};
-    <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ODR = ~0x${PIO_DIR};
+    <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ODR = ~0x${PIO_DIR}U;
     <#lt>    /* Initialize PORT${PIO_PORT} pin state */
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ODSR = 0x${PIO_LAT_HIGH};
     <#if PIO_INTERRUPT == true>
@@ -191,7 +191,7 @@
 </#macro>
 
 <#if INTERRUPT_ACTIVE == true >
-#define PIO_MAX_NUM_OF_CHANNELS     5
+#define PIO_MAX_NUM_OF_CHANNELS     5U
     <#assign numOfIntInA = PIO_A_NUM_INT_PINS>
     <#assign numOfIntInAB = PIO_A_NUM_INT_PINS + PIO_B_NUM_INT_PINS>
     <#assign numOfIntInABC = PIO_A_NUM_INT_PINS + PIO_B_NUM_INT_PINS + PIO_C_NUM_INT_PINS>
@@ -199,10 +199,11 @@
     <#assign numOfIntInABCDE = PIO_A_NUM_INT_PINS + PIO_B_NUM_INT_PINS + PIO_C_NUM_INT_PINS + PIO_D_NUM_INT_PINS + PIO_E_NUM_INT_PINS>
 
    <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>PIO_PIN_CALLBACK_OBJ portPinCbObj[${PIO_A_NUM_INT_PINS} + ${PIO_B_NUM_INT_PINS} + ${PIO_C_NUM_INT_PINS} + ${PIO_D_NUM_INT_PINS} + ${PIO_E_NUM_INT_PINS}];
+    <#lt>static PIO_PIN_CALLBACK_OBJ portPinCbObj[${PIO_A_NUM_INT_PINS} + ${PIO_B_NUM_INT_PINS} + ${PIO_C_NUM_INT_PINS} + ${PIO_D_NUM_INT_PINS} + ${PIO_E_NUM_INT_PINS}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
-    <#lt>uint8_t portNumCb[PIO_MAX_NUM_OF_CHANNELS + 1] = {0, ${numOfIntInA}, ${numOfIntInAB}, ${numOfIntInABC}, ${numOfIntInABCD}, ${numOfIntInABCDE}};
+    <#lt>static uint8_t portNumCb[PIO_MAX_NUM_OF_CHANNELS + 1] = {0U, ${numOfIntInA}U, ${numOfIntInAB}U, ${numOfIntInABC}U, ${numOfIntInABCD}U, ${numOfIntInABCDE}U};
+    <#lt> void PIO_Interrupt_Handler ( PIO_PORT port );
 </#if>
 
 /******************************************************************************
@@ -368,7 +369,7 @@ void PIO_Initialize ( void )
                 </#if>
             </#if>
         </#list>
-        <#lt>    for(i=0; i<${numOfIntInABCDE}; i++)
+        <#lt>    for(i=0U; i<${numOfIntInABCDE}U; i++)
         <#lt>    {
         <#lt>        portPinCbObj[i].callback = NULL;
         <#lt>    }
@@ -435,7 +436,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 */
 uint32_t PIO_PortLatchRead(PIO_PORT port)
 {
-    return ((pio_registers_t*)port)->PIO_ODSR;
+    return (((pio_registers_t*)port)->PIO_ODSR);
 }
 
 // *****************************************************************************
@@ -574,9 +575,9 @@ bool PIO_PinInterruptCallbackRegister(
     uint8_t i;
     uint8_t portIndex;
 
-    portIndex = pin >> 5;
+    portIndex = (uint8_t)pin >> 5U;
 
-    for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
+    for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1U]; i++)
     {
         if (portPinCbObj[i].pin == pin)
         {
@@ -596,7 +597,7 @@ bool PIO_PinInterruptCallbackRegister(
 
 // *****************************************************************************
 /* Function:
-    void _PIO_Interrupt_Handler ( PIO_PORT port )
+    void PIO_Interrupt_Handler ( PIO_PORT port )
 
   Summary:
     Interrupt handler for a selected port.
@@ -607,7 +608,7 @@ bool PIO_PinInterruptCallbackRegister(
   Remarks:
 	It is an internal function used by the library, user should not call it.
 */
-void _PIO_Interrupt_Handler ( PIO_PORT port )
+void PIO_Interrupt_Handler ( PIO_PORT port )
 {
     uint32_t status;
     uint32_t i, portIndex;
@@ -616,12 +617,12 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
     status &= ((pio_registers_t*)port)->PIO_IMR;
 
     /* get the index of the port channel: PIO_PORT_A--> 0, PIO_PORT_B--> 1 ... */
-    portIndex = (port - PIOA_BASE_ADDRESS) >> 9;
+    portIndex = (port - PIOA_BASE_ADDRESS) >> 9U;
 
     /* Check pending events and call callback if registered */
-    for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
+    for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1U]; i++)
     {
-        if((status & (1 << (portPinCbObj[i].pin & 0x1F))) && (portPinCbObj[i].callback != NULL))
+        if(((status & (1UL << (portPinCbObj[i].pin & 0x1FU))) != 0U) && (portPinCbObj[i].callback != NULL))
         {
             portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
         }
@@ -693,7 +694,7 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
 void PIO${PIO_CHANNEL}_InterruptHandler(void)
 {
     /* Local PIO Interrupt Handler */
-    _PIO_Interrupt_Handler(PIO_PORT_${PIO_CHANNEL});
+    PIO_Interrupt_Handler(PIO_PORT_${PIO_CHANNEL});
 }
 </#macro>
 

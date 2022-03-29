@@ -149,24 +149,23 @@
     device data sheet to determine which ports are supported.
 */
 
-typedef enum
-{
+
     <#if PORTA_Pin_List?has_content>
-    PIO_PORT_A = PIOA_BASE_ADDRESS,
+#define    PIO_PORT_A       (PIOA_BASE_ADDRESS)
     </#if>
     <#if PORTB_Pin_List?has_content>
-    PIO_PORT_B = PIOB_BASE_ADDRESS,
+#define    PIO_PORT_B       (PIOB_BASE_ADDRESS)
     </#if>
     <#if PORTC_Pin_List?has_content>
-    PIO_PORT_C = PIOC_BASE_ADDRESS,
+#define     PIO_PORT_C      (PIOC_BASE_ADDRESS)
     </#if>
     <#if PORTD_Pin_List?has_content>
-    PIO_PORT_D = PIOD_BASE_ADDRESS,
+#define     PIO_PORT_D      (PIOD_BASE_ADDRESS)
     </#if>
     <#if PORTE_Pin_List?has_content>
-    PIO_PORT_E = PIOE_BASE_ADDRESS
+#define     PIO_PORT_E      (PIOE_BASE_ADDRESS)
     </#if>
-} PIO_PORT;
+typedef uint32_t PIO_PORT;
 
 // *****************************************************************************
 /* PIO Port Pins
@@ -185,34 +184,32 @@ typedef enum
     device data sheet to determine which pins are supported.
 */
 
-typedef enum
-{
     <#assign PORTA_Pin_List =  PORTA_Pin_List?sort>
     <#list PORTA_Pin_List as pin>
-    PIO_PIN_PA${pin} = ${pin},
+#define    PIO_PIN_PA${pin}     (${pin}U)
     </#list>
     <#assign PORTB_Pin_List =  PORTB_Pin_List?sort>
     <#list PORTB_Pin_List as pin>
-    PIO_PIN_PB${pin} = ${pin+32},
+#define    PIO_PIN_PB${pin}     (${pin+32}U)
     </#list>
     <#assign PORTC_Pin_List =  PORTC_Pin_List?sort>
     <#list PORTC_Pin_List as pin>
-    PIO_PIN_PC${pin} = ${pin+64},
+#define    PIO_PIN_PC${pin}     (${pin+64}U)
     </#list>
     <#assign PORTD_Pin_List =  PORTD_Pin_List?sort>
     <#list PORTD_Pin_List as pin>
-    PIO_PIN_PD${pin} = ${pin+96},
+#define    PIO_PIN_PD${pin}     (${pin+96}U)
     </#list>
     <#assign PORTE_Pin_List =  PORTE_Pin_List?sort>
     <#list PORTE_Pin_List as pin>
-    PIO_PIN_PE${pin} = ${pin+128},
+#define    PIO_PIN_PE${pin}     (${pin+128}U)
     </#list>
 
     /* This element should not be used in any of the PIO APIs.
        It will be used by other modules or application to denote that none of the PIO Pin is used */
-    PIO_PIN_NONE = -1
+#define    PIO_PIN_NONE         ( -1)
 
-} PIO_PIN;
+typedef uint32_t PIO_PIN;
 
 <#if INTERRUPT_ACTIVE >
 typedef  void (*PIO_PIN_CALLBACK) ( PIO_PIN pin, uintptr_t context);
@@ -275,58 +272,58 @@ typedef struct {
 
 static inline void PIO_PinWrite(PIO_PIN pin, bool value)
 {
-    PIO_PortWrite((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f));
+    PIO_PortWrite((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200U * (pin>>5U))), (uint32_t)(0x1) << (pin & 0x1fU), (uint32_t)(value) << (pin & 0x1fU));
 }
 
 static inline bool PIO_PinRead(PIO_PIN pin)
 {
-    return (bool)((PIO_PortRead((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
+    return (bool)((PIO_PortRead((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200U * (pin>>5U)))) >> (pin & 0x1FU)) & 0x1U);
 }
 
 static inline bool PIO_PinLatchRead(PIO_PIN pin)
 {
-    return (bool)((PIO_PortLatchRead((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
+    return (bool)((PIO_PortLatchRead((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200U * (pin>>5U)))) >> (pin & 0x1FU)) & 0x1U);
 }
 
 static inline void PIO_PinToggle(PIO_PIN pin)
 {
-    PIO_PortToggle((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortToggle((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200U * (pin>>5U))), 0x1UL << (pin & 0x1FU));
 }
 
 static inline void PIO_PinSet(PIO_PIN pin)
 {
-    PIO_PortSet((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortSet((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200U * (pin>>5))), 0x1UL << (pin & 0x1FU));
 }
 
 static inline void PIO_PinClear(PIO_PIN pin)
 {
-    PIO_PortClear((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortClear((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200U * (pin>>5U))), 0x1UL << (pin & 0x1FU));
 }
 
 static inline void PIO_PinInputEnable(PIO_PIN pin)
 {
-    PIO_PortInputEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortInputEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200U * (pin>>5U))), 0x1UL << (pin & 0x1FU));
 }
 
 static inline void PIO_PinOutputEnable(PIO_PIN pin)
 {
-    PIO_PortOutputEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortOutputEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200U * (pin>>5U))), 0x1UL << (pin & 0x1FU));
 }
 
 <#if INTERRUPT_ACTIVE >
 static inline void PIO_PinInterruptEnable(PIO_PIN pin)
 {
-    PIO_PortInterruptEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortInterruptEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200U * (pin>>5U))), 0x1UL << (pin & 0x1FU));
 }
 
 static inline void PIO_PinInterruptDisable(PIO_PIN pin)
 {
-    PIO_PortInterruptDisable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortInterruptDisable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200U * (pin>>5U))), 0x1UL << (pin & 0x1FU));
 }
 
 bool PIO_PinInterruptCallbackRegister(
     PIO_PIN pin,
-    const   PIO_PIN_CALLBACK callBack,
+    const PIO_PIN_CALLBACK callback,
     uintptr_t context
 );
 </#if>
