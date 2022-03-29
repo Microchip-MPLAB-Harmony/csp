@@ -51,11 +51,6 @@
 #pragma coverity compliance block deviate:4 "MISRA C-2012 Rule 21.2" "H3_MISRAC_2012_R_21_2_DR_1"
 </#if>
 
-#ifdef __arm__
-int _mon_getc(int canblock);
-void _mon_putc(char c);
-#endif //__arm__
-
 <#if stdio??>
 <#if stdio.DEBUG_PERIPHERAL?has_content>
 <#assign USART_PLIB = "stdio.DEBUG_PERIPHERAL">
@@ -64,64 +59,83 @@ void _mon_putc(char c);
 </#if>
 </#if>
 
-int _mon_getc(int canblock)
+int read(int handle, void *buffer, unsigned int len)
 {
     <#if stdio??>
         <#if stdio.DEBUG_PERIPHERAL?has_content>
             <#if USART_PLIB_RX_ENABLED?eval??>
                 <#if USART_PLIB_RX_ENABLED?eval>
-                    <#lt>   int c = 0;
-                    <#lt>   bool success = false;
-                    <#lt>   (void)canblock;
-                    <#lt>   do
-                    <#lt>   {
-                    <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read(&c, 1);
-                    <#lt>   }while( !success);
-                    <#lt>   return c;
+                    <#lt>    int nChars = 0;
+                    <#lt>    bool success = false;
+                    <#lt>    (void)len;
+                    <#lt>    if ((handle == 0)  && (len > 0))
+                    <#lt>    {
+                    <#lt>        do
+                    <#lt>        {
+                    <#lt>            success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read(buffer, 1);
+                    <#lt>        }while( !success);
+                    <#lt>        nChars = 1;
+                    <#lt>    }
+                    <#lt>    return nChars;
                 <#else>
-                    <#lt>   return 0;
+                    <#lt>    return -1;
                 </#if>
             <#else>
-                <#lt>   int c = 0;
-                <#lt>   bool success = false;
-                <#lt>   (void)canblock;
-                <#lt>   do
-                <#lt>   {
-                <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read(&c, 1);
-                <#lt>   }while( !success);
-                <#lt>   return c;
+                <#lt>    int nChars = 0;
+                <#lt>    bool success = false;
+                <#lt>    (void)len;
+                <#lt>    if ((handle == 0)  && (len > 0))
+                <#lt>    {
+                <#lt>        do
+                <#lt>        {
+                <#lt>            success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read(buffer, 1);
+                <#lt>        }while( !success);
+                <#lt>        nChars = 1;
+                <#lt>    }
+                <#lt>    return nChars;
             </#if>
         <#else>
-            <#lt>   return 0;
+            <#lt>   return -1;
         </#if>
     <#else>
-        <#lt>   (void)canblock;
-        <#lt>   return 0;
+        <#lt>   return -1;
     </#if>
 }
 
-void _mon_putc(char c)
+int write(int handle, void * buffer, size_t count)
 {
     <#if stdio??>
         <#if stdio.DEBUG_PERIPHERAL?has_content>
             <#if USART_PLIB_TX_ENABLED?eval??>
                 <#if USART_PLIB_TX_ENABLED?eval>
                     <#lt>   bool success = false;
-                    <#lt>   do
+                    <#lt>   if (handle == 1)
                     <#lt>   {
-                    <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write(&c, 1);
-                    <#lt>   }while (!success);
+                    <#lt>       do
+                    <#lt>       {
+                    <#lt>           success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write(buffer, count);
+                    <#lt>       }while( !success);
+                    <#lt>   }
+                    <#lt>   return count;
+                <#else>
+                    <#lt>   return -1;
                 </#if>
             <#else>
                 <#lt>   bool success = false;
-                <#lt>   do
+                <#lt>   if (handle == 1)
                 <#lt>   {
-                <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write(&c, 1);
-                <#lt>   }while (!success);
+                <#lt>       do
+                <#lt>       {
+                <#lt>           success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write(buffer, count);
+                <#lt>       }while( !success);
+                <#lt>   }
+                <#lt>   return count;
             </#if>
+        <#else>
+            <#lt>   return -1;
         </#if>
     <#else>
-        <#lt>   (void)c;
+        <#lt>   return -1;
     </#if>
 }
 
