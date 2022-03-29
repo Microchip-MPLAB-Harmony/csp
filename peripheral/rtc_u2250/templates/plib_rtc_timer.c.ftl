@@ -633,6 +633,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#if RTC_MODULE_SELECTION = "MODE0">
         <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause = (RTC_TIMER32_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG;
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = (uint16_t)RTC_MODE0_INTFLAG_Msk;
+        <#lt>    (void)${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG;
 
         <#lt>    /* Invoke registered Callback function */
         <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback != NULL)
@@ -643,6 +644,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>    /* Update the event in RTC Peripheral Callback object */
         <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause = (RTC_TIMER16_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG;
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = (uint16_t)RTC_MODE1_INTFLAG_Msk;
+        <#lt>    (void)${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG;
 
         <#lt>    /* Invoke registered Callback function */
         <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.timer16BitCallback != NULL)
