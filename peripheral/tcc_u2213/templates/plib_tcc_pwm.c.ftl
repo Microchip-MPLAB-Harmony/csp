@@ -517,6 +517,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
             <#lt>    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
             <#lt>    /* Clear interrupt flags */
             <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;
+            <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
             <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
             <#lt>    {
             <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
@@ -535,6 +536,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
                 <#lt>    status = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    /* Clear interrupt flags */
                 <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC${i}_Msk;
+                <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
                 <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
                 <#lt>    {
                 <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
@@ -552,6 +554,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
         <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
         <#lt>    /* Clear interrupt flags */
         <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
+        <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
         <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
         <#lt>    {
         <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
@@ -568,6 +571,7 @@ uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet(void)
     interrupt_status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     /* Clear interrupt flags */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = interrupt_status;
+    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     return interrupt_status;
 }
 </#if>

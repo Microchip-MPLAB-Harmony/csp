@@ -542,6 +542,7 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
     status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     /* clear period interrupt */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
+    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     if(${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
     {
         ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
@@ -558,6 +559,7 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
             <#lt>    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
             <#lt>    /* Clear interrupt flags */
             <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;
+            <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
             <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
             <#lt>    {
             <#lt>        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
@@ -576,6 +578,7 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
                 <#lt>    status = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    /* Clear interrupt flags */
                 <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC${i}_Msk;
+                <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
                 <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
                 <#lt>    {
                 <#lt>        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
