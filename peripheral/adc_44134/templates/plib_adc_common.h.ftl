@@ -80,9 +80,11 @@ typedef enum
 <#list 0..(ADC_NUM_CHANNELS - 1) as i>
     ADC_CH${i}_MASK = (1U << ${i}U),
 </#list>
+<#if ADC_CH30_CH31_PRESENT>
 <#list 30..31 as i>
     ADC_CH${i}_MASK = (1U << ${i}U),
 </#list>
+</#if>
 }ADC_CHANNEL_MASK;
 
 /* Analog channel numbers */
@@ -91,9 +93,11 @@ typedef enum
 <#list 0..(ADC_NUM_CHANNELS - 1) as i>
     ADC_CH${i} = ${i}U,
 </#list>
+<#if ADC_CH30_CH31_PRESENT>
 <#list 30..31 as i>
     ADC_CH${i} = ${i}U,
 </#list>
+</#if>
 }ADC_CHANNEL_NUM;
 
 /* EOC Interrupt sources number */
@@ -102,9 +106,11 @@ typedef enum
 <#list 0..(ADC_NUM_CHANNELS - 1) as i>
     ADC_INTERRUPT_EOC_${i}_MASK = (1U << ${i}U),
 </#list>
+<#if ADC_CH30_CH31_PRESENT>
 <#list 30..31 as i>
     ADC_INTERRUPT_EOC_${i}_MASK = (1U << ${i}U),
 </#list>
+</#if>
 }ADC_INTERRUPT_EOC_MASK;
 
 /* Interrupt sources number */

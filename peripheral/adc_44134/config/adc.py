@@ -468,9 +468,16 @@ def instantiateComponent(adcComponent):
     adcUserSeq = adcComponent.createMenuSymbol("ADC_USER_SEQ", None)
     adcUserSeq.setLabel("User Channel Sequence Configuration")
 
+    adc_ChannelSeqNum = 0
+    adc_seq1 = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_SEQR1\"]")
+    if adc_seq1 != None:
+        adc_ChannelSeqNum = len(adc_seq1.getChildren())
+    adc_seq2 = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_SEQR2\"]")
+    if adc_seq2 != None:
+        adc_ChannelSeqNum += len(adc_seq2.getChildren())
     adcSym_ChannelSeqNum = adcComponent.createIntegerSymbol("ADC_CHANNEL_SEQ_NUM", adcUserSeq)
     adcSym_ChannelSeqNum.setLabel("Total number of User Channel Sequence")
-    adcSym_ChannelSeqNum.setDefaultValue(len(ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_SEQR2\"]").getChildren()) + 8)
+    adcSym_ChannelSeqNum.setDefaultValue(adc_ChannelSeqNum)
     adcSym_ChannelSeqNum.setVisible(False)
 
     #user sequence comment
@@ -541,7 +548,7 @@ def instantiateComponent(adcComponent):
             adcSym_CH_NegativeInput[channelID].setReadOnly(True)
         else:
             adcSym_CH_NegativeInput[channelID] = adcComponent.createComboSymbol("ADC_"+str(channelID)+"_NEG_INP", adcSym_CH_CHER[channelID], adc_EvenChNegInput)
-            if (channel[channelID + 1] == "False"):
+            if (channelID < (len(channel) - 1)) and (channel[channelID + 1] == "False"):
                 adcSym_CH_NegativeInput[channelID].setReadOnly(True)
         adcSym_CH_NegativeInput[channelID].setLabel("Negative Input")
         adcSym_CH_NegativeInput[channelID].setDefaultValue("GND")
@@ -559,81 +566,85 @@ def instantiateComponent(adcComponent):
     adcInterruptList = [str("ADC_" + str(channelID) + "_IER_EOC") for channelID in range(adcSym_NUM_CHANNELS.getValue())]
     adcInterruptList.append("ADC_IER_COMPE")
 
-    # Loop runs for ADC CH30 and CH31
-    for channelID in range(30, 32):
-        adcChannelMenu = adcComponent.createMenuSymbol("CH"+str(channelID), adcCHConfMenu)
-        adcChannelMenu.setLabel("Channel "+str(channelID))
+    adcSym_Ch30Ch31Present = adcComponent.createBooleanSymbol("ADC_CH30_CH31_PRESENT", None)
+    adcSym_Ch30Ch31Present.setDefaultValue((ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_CHER\"]/bitfield@[name=\"CH30\"]") != None))
+    adcSym_Ch30Ch31Present.setVisible(False)
+    if adcSym_Ch30Ch31Present.getValue() == True:
+        # Loop runs for ADC CH30 and CH31
+        for channelID in range(30, 32):
+            adcChannelMenu = adcComponent.createMenuSymbol("CH"+str(channelID), adcCHConfMenu)
+            adcChannelMenu.setLabel("Channel "+str(channelID))
 
-        #Channel enable
-        adcSym_Channel_CHER = adcComponent.createBooleanSymbol("ADC_"+str(channelID)+"_CHER", adcChannelMenu)
-        adcSym_Channel_CHER.setLabel("Enable Channel " + str(channelID))
-        adcSym_Channel_CHER.setDefaultValue(False)
+            #Channel enable
+            adcSym_Channel_CHER = adcComponent.createBooleanSymbol("ADC_"+str(channelID)+"_CHER", adcChannelMenu)
+            adcSym_Channel_CHER.setLabel("Enable Channel " + str(channelID))
+            adcSym_Channel_CHER.setDefaultValue(False)
 
-        #Channel name
-        adcSym_Channel_NAME = adcComponent.createStringSymbol("ADC_"+str(channelID)+"_NAME", adcSym_Channel_CHER)
-        adcSym_Channel_NAME.setLabel("Name")
-        adcSym_Channel_NAME.setDefaultValue("CHANNEL_"+str(channelID))
-        adcSym_Channel_NAME.setVisible(False)
-        adcSym_Channel_NAME.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
+            #Channel name
+            adcSym_Channel_NAME = adcComponent.createStringSymbol("ADC_"+str(channelID)+"_NAME", adcSym_Channel_CHER)
+            adcSym_Channel_NAME.setLabel("Name")
+            adcSym_Channel_NAME.setDefaultValue("CHANNEL_"+str(channelID))
+            adcSym_Channel_NAME.setVisible(False)
+            adcSym_Channel_NAME.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
 
-        if channelID == 31:
-            adcSym_ACR_SRCLCH_VALUE = adcComponent.createKeyValueSetSymbol("ADC_ACR_SRCLCH_VALUE", adcSym_Channel_CHER)
-            adcSym_ACR_SRCLCH_VALUE.setLabel("Source Last Channel")
-            adcSym_ACR_SRCLCH_VALUE.setVisible(False)
-            adcSym_ACR_SRCLCH_VALUE.setDefaultValue(0)
-            adcSym_ACR_SRCLCH_VALUE.setOutputMode("Key")
-            adcSym_ACR_SRCLCH_VALUE.setDisplayMode("Description")
-            valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_ACR__SRCLCH\"]")
-            if valueGroup is not None:
-                srclchValues = valueGroup.getChildren()
-                for index in range(len(srclchValues)):
-                    adcSym_ACR_SRCLCH_VALUE.addKey(srclchValues[index].getAttribute("name"), srclchValues[index].getAttribute("value"), srclchValues[index].getAttribute("caption"))
-            adcSym_ACR_SRCLCH_VALUE.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
+            if channelID == 31:
+                adcSym_ACR_SRCLCH_VALUE = adcComponent.createKeyValueSetSymbol("ADC_ACR_SRCLCH_VALUE", adcSym_Channel_CHER)
+                adcSym_ACR_SRCLCH_VALUE.setLabel("Source Last Channel")
+                adcSym_ACR_SRCLCH_VALUE.setVisible(False)
+                adcSym_ACR_SRCLCH_VALUE.setDefaultValue(0)
+                adcSym_ACR_SRCLCH_VALUE.setOutputMode("Key")
+                adcSym_ACR_SRCLCH_VALUE.setDisplayMode("Description")
+                valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_ACR__SRCLCH\"]")
+                if valueGroup is not None:
+                    srclchValues = valueGroup.getChildren()
+                    for index in range(len(srclchValues)):
+                        adcSym_ACR_SRCLCH_VALUE.addKey(srclchValues[index].getAttribute("name"), srclchValues[index].getAttribute("value"), srclchValues[index].getAttribute("caption"))
+                adcSym_ACR_SRCLCH_VALUE.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
 
-            adcSym_TEMPMR_TEMPCMPMOD_VALUE = adcComponent.createKeyValueSetSymbol("ADC_TEMPMR_TEMPCMPMOD_VALUE", adcSym_Channel_CHER)
-            adcSym_TEMPMR_TEMPCMPMOD_VALUE.setLabel("Temperature Comparison Mode")
-            adcSym_TEMPMR_TEMPCMPMOD_VALUE.setVisible(False)
-            adcSym_TEMPMR_TEMPCMPMOD_VALUE.setDefaultValue(0)
-            adcSym_TEMPMR_TEMPCMPMOD_VALUE.setOutputMode("Key")
-            adcSym_TEMPMR_TEMPCMPMOD_VALUE.setDisplayMode("Description")
-            valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_TEMPMR__TEMPCMPMOD\"]")
-            if valueGroup is not None:
-                tempcmpmodValues = valueGroup.getChildren()
-                for index in range(len(tempcmpmodValues)):
-                    adcSym_TEMPMR_TEMPCMPMOD_VALUE.addKey(tempcmpmodValues[index].getAttribute("name"), tempcmpmodValues[index].getAttribute("value"), tempcmpmodValues[index].getAttribute("caption"))
-            adcSym_TEMPMR_TEMPCMPMOD_VALUE.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
+                adcSym_TEMPMR_TEMPCMPMOD_VALUE = adcComponent.createKeyValueSetSymbol("ADC_TEMPMR_TEMPCMPMOD_VALUE", adcSym_Channel_CHER)
+                adcSym_TEMPMR_TEMPCMPMOD_VALUE.setLabel("Temperature Comparison Mode")
+                adcSym_TEMPMR_TEMPCMPMOD_VALUE.setVisible(False)
+                adcSym_TEMPMR_TEMPCMPMOD_VALUE.setDefaultValue(0)
+                adcSym_TEMPMR_TEMPCMPMOD_VALUE.setOutputMode("Key")
+                adcSym_TEMPMR_TEMPCMPMOD_VALUE.setDisplayMode("Description")
+                valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_TEMPMR__TEMPCMPMOD\"]")
+                if valueGroup is not None:
+                    tempcmpmodValues = valueGroup.getChildren()
+                    for index in range(len(tempcmpmodValues)):
+                        adcSym_TEMPMR_TEMPCMPMOD_VALUE.addKey(tempcmpmodValues[index].getAttribute("name"), tempcmpmodValues[index].getAttribute("value"), tempcmpmodValues[index].getAttribute("caption"))
+                adcSym_TEMPMR_TEMPCMPMOD_VALUE.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
 
-            adcSym_TEMPCWR_TLOWTHRES = adcComponent.createIntegerSymbol("ADC_TEMPCWR_TLOWTHRES_VALUE", adcSym_Channel_CHER)
-            adcSym_TEMPCWR_TLOWTHRES.setLabel("Temperature Low Threshold")
-            adcSym_TEMPCWR_TLOWTHRES.setDefaultValue(0)
-            adcSym_TEMPCWR_TLOWTHRES.setVisible(False)
-            adcSym_TEMPCWR_TLOWTHRES.setMin(0)
-            maxThreshold = int(ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_TEMPCWR\"]/bitfield@[name=\"TLOWTHRES\"]").getAttribute("mask"), 16)
-            adcSym_TEMPCWR_TLOWTHRES.setMax(maxThreshold)
-            adcSym_TEMPCWR_TLOWTHRES.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
+                adcSym_TEMPCWR_TLOWTHRES = adcComponent.createIntegerSymbol("ADC_TEMPCWR_TLOWTHRES_VALUE", adcSym_Channel_CHER)
+                adcSym_TEMPCWR_TLOWTHRES.setLabel("Temperature Low Threshold")
+                adcSym_TEMPCWR_TLOWTHRES.setDefaultValue(0)
+                adcSym_TEMPCWR_TLOWTHRES.setVisible(False)
+                adcSym_TEMPCWR_TLOWTHRES.setMin(0)
+                maxThreshold = int(ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_TEMPCWR\"]/bitfield@[name=\"TLOWTHRES\"]").getAttribute("mask"), 16)
+                adcSym_TEMPCWR_TLOWTHRES.setMax(maxThreshold)
+                adcSym_TEMPCWR_TLOWTHRES.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
 
-            adcSym_TEMPCWR_THIGHTHRES = adcComponent.createIntegerSymbol("ADC_TEMPCWR_THIGHTHRES_VALUE", adcSym_Channel_CHER)
-            adcSym_TEMPCWR_THIGHTHRES.setLabel("Temperature High Threshold")
-            adcSym_TEMPCWR_THIGHTHRES.setDefaultValue(0)
-            adcSym_TEMPCWR_THIGHTHRES.setVisible(False)
-            adcSym_TEMPCWR_THIGHTHRES.setMin(0)
-            adcSym_TEMPCWR_THIGHTHRES.setMax(maxThreshold)
-            adcSym_TEMPCWR_THIGHTHRES.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
+                adcSym_TEMPCWR_THIGHTHRES = adcComponent.createIntegerSymbol("ADC_TEMPCWR_THIGHTHRES_VALUE", adcSym_Channel_CHER)
+                adcSym_TEMPCWR_THIGHTHRES.setLabel("Temperature High Threshold")
+                adcSym_TEMPCWR_THIGHTHRES.setDefaultValue(0)
+                adcSym_TEMPCWR_THIGHTHRES.setVisible(False)
+                adcSym_TEMPCWR_THIGHTHRES.setMin(0)
+                adcSym_TEMPCWR_THIGHTHRES.setMax(maxThreshold)
+                adcSym_TEMPCWR_THIGHTHRES.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
 
-            adcSym_IER_TEMPCHG = adcComponent.createBooleanSymbol("ADC_IER_TEMPCHG", adcSym_Channel_CHER)
-            adcSym_IER_TEMPCHG.setLabel("Temperature Change Interrupt")
-            adcSym_IER_TEMPCHG.setDefaultValue(False)
-            adcSym_IER_TEMPCHG.setVisible(False)
-            adcSym_IER_TEMPCHG.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
-            adcInterruptList.append("ADC_IER_TEMPCHG")
+                adcSym_IER_TEMPCHG = adcComponent.createBooleanSymbol("ADC_IER_TEMPCHG", adcSym_Channel_CHER)
+                adcSym_IER_TEMPCHG.setLabel("Temperature Change Interrupt")
+                adcSym_IER_TEMPCHG.setDefaultValue(False)
+                adcSym_IER_TEMPCHG.setVisible(False)
+                adcSym_IER_TEMPCHG.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
+                adcInterruptList.append("ADC_IER_TEMPCHG")
 
-        #Channel interrupt
-        adcSym_Channel_IER_EOC = adcComponent.createBooleanSymbol("ADC_"+str(channelID)+"_IER_EOC", adcSym_Channel_CHER)
-        adcSym_Channel_IER_EOC.setLabel("End of conversion interrupt")
-        adcSym_Channel_IER_EOC.setDefaultValue(False)
-        adcSym_Channel_IER_EOC.setVisible(False)
-        adcSym_Channel_IER_EOC.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
-        adcInterruptList.append("ADC_" + str(channelID) + "_IER_EOC")
+            #Channel interrupt
+            adcSym_Channel_IER_EOC = adcComponent.createBooleanSymbol("ADC_"+str(channelID)+"_IER_EOC", adcSym_Channel_CHER)
+            adcSym_Channel_IER_EOC.setLabel("End of conversion interrupt")
+            adcSym_Channel_IER_EOC.setDefaultValue(False)
+            adcSym_Channel_IER_EOC.setVisible(False)
+            adcSym_Channel_IER_EOC.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
+            adcInterruptList.append("ADC_" + str(channelID) + "_IER_EOC")
 
     # Interrupt Dynamic settings
     adcSym_InterruptControl = adcComponent.createBooleanSymbol("ADC_INTERRUPT_ENABLE", None)

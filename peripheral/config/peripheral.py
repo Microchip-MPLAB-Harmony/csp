@@ -82,6 +82,7 @@ peripherals = {
                 "ADC_U2500"     : ["ADC"],
                 "ADC_U2247"     : ["ADC"],
                 "ADC_U2204"     : ["ADC"],
+                "ADC_44134"     : ["ADC"],
                 "MCPWM_01477"   : ["PWM"],
                 "PWM_6343"      : ["PWM"],
                 "TCC_U2213"     : ["PWM"],

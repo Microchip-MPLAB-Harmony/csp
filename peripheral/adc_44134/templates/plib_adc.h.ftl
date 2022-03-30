@@ -175,6 +175,7 @@ extern "C" {
     </#if>
 </#if> <#-- CH ENABLE -->
 </#list>
+<#if ADC_CH30_CH31_PRESENT>
 <#list 30..31 as i>
   <#assign CH_NUM = i>
   <#assign ADC_CH_NAME = "ADC_"+i+"_NAME">
@@ -187,6 +188,7 @@ extern "C" {
 #define ${.vars[ADC_CH_NAME]} (${CH_NUM}U)
   </#if>
 </#list>
+</#if>
 </#compress>
 
 // *****************************************************************************
