@@ -48,19 +48,22 @@
 <#if SPIS_USE_BUSY_PIN == true>
 #include "peripheral/${PLIB_NAME_LC}/plib_${PLIB_NAME_LC}.h"
 </#if>
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 #include <string.h>
 
 <#if SPI_CSR0_BITS = "_8_BIT">
-#define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE}
-#define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE}
+#define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE}U
+#define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE}U
 
 static uint8_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
 static uint8_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 <#else>
 
-#define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE/2}
-#define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE/2}
+#define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE/2}U
+#define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE/2}U
 
 static uint16_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
 static uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
@@ -125,9 +128,9 @@ size_t ${SPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size)
         rdSize = rdInIndex;
     }
 <#if SPI_CSR0_BITS = "_8_BIT">
-    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
+    (void) memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
 <#else>
-    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
+    (void) memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
 </#if>
 
     return rdSize;
@@ -147,20 +150,22 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
     }
 
 <#if SPI_CSR0_BITS = "_8_BIT">
-    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
+   (void) memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
 <#else>
-    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
+    (void) memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
 </#if>
 
     ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes = wrSize;
     ${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
 
-    while ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TDRE_Msk) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
+    while (((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TDRE_Msk) != 0U) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
     {
 <#if SPI_CSR0_BITS = "_8_BIT">
-        *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+        *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+		${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 <#else>
-        *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+        *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+		${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 </#if>
         asm("nop");
     }
@@ -233,7 +238,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
 
     volatile uint32_t statusFlags = ${SPI_INSTANCE_NAME}_REGS->SPI_SR;
 
-    if (statusFlags & SPI_SR_OVRES_Msk)
+    if ((statusFlags & SPI_SR_OVRES_Msk)  != 0U)
     {
         /*OVRES flag is cleared on reading SPI SR*/
 
@@ -241,7 +246,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
         ${SPI_INSTANCE_NAME?lower_case}Obj.errorStatus = SPI_SR_OVRES_Msk;
     }
 
-    if(statusFlags & SPI_SR_RDRF_Msk)
+    if((statusFlags & SPI_SR_RDRF_Msk) != 0U)
     {
         if (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false)
         {
@@ -258,7 +263,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
          * is cleared on SPI_SR read. If statusFlags is not updated, there is a possibility of missing
          * NSSR event flag.
          */
-        while ((statusFlags |= ${SPI_INSTANCE_NAME}_REGS->SPI_SR) & SPI_SR_RDRF_Msk)
+        while (((statusFlags |= ${SPI_INSTANCE_NAME}_REGS->SPI_SR)  & SPI_SR_RDRF_Msk) != 0U)
         {
 <#if SPI_CSR0_BITS = "_8_BIT">
             /* Reading DATA register will also clear the RDRF flag */
@@ -270,7 +275,8 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
 
             if (${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex < ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE)
             {
-                ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex++] = txRxData;
+                ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex] = txRxData;
+				${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex++;
             }
 
             /* Only clear RDRF flag so as not to clear NSSR flag which may have been set */
@@ -278,14 +284,16 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
         }
     }
 
-    if(statusFlags & SPI_SR_TDRE_Msk)
+    if((statusFlags & SPI_SR_TDRE_Msk) != 0U)
     {
-        while (((statusFlags |= ${SPI_INSTANCE_NAME}_REGS->SPI_SR) & SPI_SR_TDRE_Msk) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
+        while ((((statusFlags |= ${SPI_INSTANCE_NAME}_REGS->SPI_SR) & SPI_SR_TDRE_Msk) != 0U) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
         {
 <#if SPI_CSR0_BITS = "_8_BIT">
-            *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+            *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+			${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 <#else>
-            *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+            *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+			${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 </#if>
             /* Only clear TDRE flag so as not to clear NSSR flag which may have been set */
             statusFlags &= ~SPI_SR_TDRE_Msk;
@@ -298,7 +306,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
         }
     }
 
-    if(statusFlags & SPI_SR_NSSR_Msk)
+    if((statusFlags & SPI_SR_NSSR_Msk) != 0U)
     {
         /* NSSR flag is cleared on reading SPI SR */
 

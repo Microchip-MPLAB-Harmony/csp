@@ -66,15 +66,14 @@
     None
 */
 
-typedef enum
-{
-    /* Error status when no error has occurred */
-    SPI_SLAVE_ERROR_NONE,
 
-    /* Buffer overflow error has occured */
-    SPI_SLAVE_ERROR_BUFOVF = SPI_SR_OVRES_Msk,
+/* Error status when no error has occurred */
+#define    SPI_SLAVE_ERROR_NONE     (0U)
 
-} SPI_SLAVE_ERROR;
+/* Buffer overflow error has occured */
+#define    SPI_SLAVE_ERROR_BUFOVF   (SPI_SR_OVRES_Msk)
+
+typedef uint32_t SPI_SLAVE_ERROR;
 
 /****************************** SPI${SPI_INDEX?string} Interface *********************************/
 

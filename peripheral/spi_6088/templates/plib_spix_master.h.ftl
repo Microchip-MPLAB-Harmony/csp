@@ -40,7 +40,7 @@
 *******************************************************************************/
 
 #ifndef PLIB_${SPI_INSTANCE_NAME}_MASTER_H
-#define PLIB_${SPI_INSTANCE_NAME}_MASTER__H
+#define PLIB_${SPI_INSTANCE_NAME}_MASTER_H
 
 #include "device.h"
 #include "plib_spi_master_common.h"
@@ -73,7 +73,7 @@ void ${SPI_INSTANCE_NAME}_ChipSelectSetup(SPI_CHIP_SELECT chipSelect);
 <#if SPI_INTERRUPT_MODE == true>
 bool ${SPI_INSTANCE_NAME}_IsBusy( void );
 
-void ${SPI_INSTANCE_NAME}_CallbackRegister( const SPI_CALLBACK callback, uintptr_t context );
+void ${SPI_INSTANCE_NAME}_CallbackRegister( SPI_CALLBACK callback, uintptr_t context );
 
 </#if>
 
