@@ -65,7 +65,7 @@ void ${DACC_INSTANCE_NAME}_Initialize(void)
     /* Reset DACC Peripheral */
     ${DACC_INSTANCE_NAME}_REGS->DACC_CR = DACC_CR_SWRST_Msk;
 
-    ${DACC_INSTANCE_NAME}_REGS->DACC_MR = DACC_MR_STARTUP(${DACC_MR_STARTUP})<#rt>
+    ${DACC_INSTANCE_NAME}_REGS->DACC_MR = DACC_MR_STARTUP(${DACC_MR_STARTUP}U)<#rt>
     <#lt><#if CONVERSION_MODE_CH == "MAX_SPEED_MODE"> | DACC_MR_MAXS_Msk</#if><#rt>
     <#lt><#if CONVERSION_MODE_CH == "TRIGGER_MODE"> | DACC_MR_TRGSEL_${DACC_TRIGR_TRGSEL} | DACC_MR_TRGEN_Msk</#if><#rt>
     <#lt><#if DACC_MR_TAG_ENABLE == true> | DACC_MR_TAG_Msk</#if><#rt>
@@ -91,7 +91,7 @@ void ${DACC_INSTANCE_NAME}_ChannelDataWrite(DACC_CHANNEL_NUM channel, uint16_t d
 <#else>
 void ${DACC_INSTANCE_NAME}_ChannelSelect(DACC_CHANNEL_NUM channel)
 {
-    ${DACC_INSTANCE_NAME}_REGS->DACC_MR = (${DACC_INSTANCE_NAME}_REGS->DACC_MR & ~DACC_MR_USER_SEL_Msk) | DACC_MR_USER_SEL(channel);
+    ${DACC_INSTANCE_NAME}_REGS->DACC_MR = (${DACC_INSTANCE_NAME}_REGS->DACC_MR & ~DACC_MR_USER_SEL_Msk) | DACC_MR_USER_SEL((uint32_t)channel);
 }
 
 void ${DACC_INSTANCE_NAME}_DataWrite(uint16_t data)
