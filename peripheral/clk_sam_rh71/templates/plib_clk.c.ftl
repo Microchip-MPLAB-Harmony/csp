@@ -261,7 +261,10 @@ static void CLK_MainClockInitialize(void)
     PMC_REGS->CKGR_MOR|= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN_Msk;
 
     /* Wait until the RC oscillator clock is ready. */
-    while( (PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
+    while( (PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk)
+    {
+
+    }
 
 <#if CLK_MAINCK_RC_TRIM_FROM_GPNVM>
     if (checkGpnvmWordCrc())
@@ -273,7 +276,10 @@ static void CLK_MainClockInitialize(void)
     PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCF${CLK_MAINCK_MOSCRCF};
 
     /* Wait until the RC oscillator clock is ready */
-    while( (PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
+    while( (PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk)
+    {
+
+    }
 
     <#if CLK_MAINCK_MOSCSEL == "0">
     /* Main RC Oscillator is selected as the Main Clock (MAINCK) source.
@@ -287,7 +293,10 @@ static void CLK_MainClockInitialize(void)
 
 </#if>
 
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+
+    }
 }
 
 
@@ -335,11 +344,14 @@ static void CLK_PLLxClockInitialize(void)
     /* Configure and Enable PLLA */
     PMC_REGS->CKGR_PLLAR =  CKGR_PLLAR_ONE_Msk |
                             CKGR_PLLAR_FREQ_VCO_${CLK_PLLACK_FREQ_VCO} |
-                            CKGR_PLLAR_PLLACOUNT(0x3f) |
-                            CKGR_PLLAR_MULA(${CLK_PLLACK_MULA}) |
-                            CKGR_PLLAR_DIVA(${CLK_PLLACK_DIVA});
+                            CKGR_PLLAR_PLLACOUNT(0x3fU) |
+                            CKGR_PLLAR_MULA(${CLK_PLLACK_MULA}U) |
+                            CKGR_PLLAR_DIVA(${CLK_PLLACK_DIVA}U);
 
-    while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKA_Msk) != PMC_SR_LOCKA_Msk);
+    while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKA_Msk) != PMC_SR_LOCKA_Msk)
+    {
+
+    }
 
     </#if>
     <#if CLK_PLLBCK_DIVB!=0 && CLK_PLLBCK_MULB!=0>
@@ -364,15 +376,24 @@ static void CLK_MasterClockInitialize(void)
 <#if CLK_MCK_CSS == "PLLA_CLK">
     /* Program PMC_MCKR.PRES and wait for PMC_SR.MCKRDY to be set   */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_PRES_Msk) | PMC_MCKR_PRES_${CLK_MCK_PRES};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+
+    }
 
     /* Program PMC_MCKR.MDIV and Wait for PMC_SR.MCKRDY to be set   */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_MDIV_Msk) | PMC_MCKR_MDIV_${CLK_MCK_MDIV};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+
+    }
 
     /* Program PMC_MCKR.CSS and Wait for PMC_SR.MCKRDY to be set    */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_${CLK_MCK_CSS};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+
+    }
 
 </#if>
 <#if CLK_MCK_CSS == "SLOW_CLK" || CLK_MCK_CSS == "MAIN_CLK">
@@ -436,7 +457,7 @@ static void CLK_PeripheralClockInitialize(void)
     PMC_REGS->PMC_PCR = PMC_PCR_EN_Msk | PMC_PCR_CMD_Msk | PMC_PCR_PID(${i})  /* ${INST_NAME} */
         | PMC_PCR_GCLKEN_Msk | PMC_PCR_GCLKCSS_${GCLK_CSS} | PMC_PCR_GCLKDIV(${GCLK_DIV});
     <#elseif .vars[INST_NAME+"_CLOCK_ENABLE"]?has_content && .vars[INST_NAME+"_CLOCK_ENABLE"]>
-    PMC_REGS->PMC_PCR = PMC_PCR_EN_Msk | PMC_PCR_CMD_Msk | PMC_PCR_PID(${i}); /* ${INST_NAME} */
+    PMC_REGS->PMC_PCR = PMC_PCR_EN_Msk | PMC_PCR_CMD_Msk | PMC_PCR_PID(${i}U); /* ${INST_NAME} */
     </#if>
 </#if>
 </#list>
