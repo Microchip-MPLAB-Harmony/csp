@@ -86,7 +86,7 @@
     </#compress>
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
 /* Callback object for channel 0 */
-TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
+static TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize channel in quadrature mode */
@@ -253,7 +253,7 @@ TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 
 <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Callback object for channel ${CH_NUM} */
-TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
+static TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in timer mode */
@@ -335,13 +335,13 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCompareSet (${TC_UNSIGNED_INT_TYPE} co
 /* Read timer period */
 ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodGet (void)
 {
-    return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC;
+    return (${TC_UNSIGNED_INT_TYPE})${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC;
 }
 
 /* Read timer counter value */
 ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCounterGet (void)
 {
-    return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CV;
+    return (${TC_UNSIGNED_INT_TYPE})${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CV;
 }
 
 <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
@@ -375,7 +375,7 @@ bool ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodHasExpired(void)
 <#if .vars[TC_CH_OPERATINGMODE] == "CAPTURE">
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 /* Callback object for channel ${CH_NUM} */
-TC_CAPTURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
+static TC_CAPTURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in capture mode */
@@ -454,13 +454,13 @@ uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureFrequencyGet( void )
 /* Read last captured value of Capture A */
 ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureAGet (void)
 {
-    return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA;
+    return (${TC_UNSIGNED_INT_TYPE})${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA;
 }
 
 /* Read last captured value of Capture B */
 ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureBGet (void)
 {
-    return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB;
+    return (${TC_UNSIGNED_INT_TYPE})${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB;
 }
 
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
@@ -492,7 +492,7 @@ TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStatusGet(void)
 <#if .vars[TC_CH_OPERATINGMODE] == "COMPARE">
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
 /* Callback object for channel ${CH_NUM} */
-TC_COMPARE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
+static TC_COMPARE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in compare mode */
@@ -565,7 +565,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodSet (${TC_UNSIGNED_INT_TYPE} p
 /* Read the period value */
 ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodGet (void)
 {
-    return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC;
+    return (${TC_UNSIGNED_INT_TYPE})${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC;
 }
 
 /* Set the compare A value */
