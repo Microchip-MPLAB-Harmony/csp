@@ -104,7 +104,9 @@ void PORT_Initialize(void)
                 <#list 0..15 as i>
                     <#assign PORT_PINMUX = "PORT_GROUP_" + n + "_PMUX"+ i>
                     <#assign PORT_INDEX = i>
-                    <#if "${.vars[PORT_PINMUX]}" != "0x0">
+                    <#assign PORT_PMUX_PMUXE_USED = "PORT_GROUP_" + n + "_PIN_" + (i * 2) + "_USED">
+                    <#assign PORT_PMUX_PMUXO_USED = "PORT_GROUP_" + n + "_PIN_" + ((i * 2) + 1) + "_USED">
+                    <#if (.vars[PORT_PMUX_PMUXE_USED] == true || .vars[PORT_PMUX_PMUXO_USED] == true)>
                         <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_PMUX[${PORT_INDEX}] = ${.vars[PORT_PINMUX]};
                     </#if>
                 </#list>
