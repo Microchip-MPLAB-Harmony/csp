@@ -146,6 +146,8 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (uint32_t address);
 
 uint32_t ${NVMCTRL_INSTANCE_NAME}_RegionLockStatusGet (void);
 
+void ${NVMCTRL_INSTANCE_NAME}_SecurityBitSet(void);
+
 bool ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_IsBusy(void);
 
 uint32_t ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMStatusGet( void );
