@@ -61,6 +61,18 @@
 extern "C" {
 #endif
 
+
+/* BYTE Transfer*/
+#define    CRCCU_TWIDTH_BYTE      (0UL)
+
+/* Halfword Transfer */
+#define    CRCCU_TWIDTH_HALFWORD  (1UL)
+
+/* Word Transfer */
+#define    CRCCU_TWIDTH_WORD      (2UL)
+    
+typedef uint32_t CRCCU_TWIDTH;
+
 typedef enum
 {
     /* CCITT8023 Polynom 0x04C11DB7*/
@@ -73,19 +85,6 @@ typedef enum
     CRCCU_POLYNOMIAL_CCITT16 = CRCCU_MR_PTYPE_CCITT16
 
 } CRCCU_POLYNOMIAL;
-
-typedef enum
-{
-    /* BYTE Transfer*/
-    CRCCU_TWIDTH_BYTE,
-
-    /* Halfword Transfer */
-    CRCCU_TWIDTH_HALFWORD,
-
-    /* Word Transfer */
-    CRCCU_TWIDTH_WORD
-    
-} CRCCU_TWIDTH;
 
 /** CRCCU descriptor type */
 typedef struct crccu_dscr_type {

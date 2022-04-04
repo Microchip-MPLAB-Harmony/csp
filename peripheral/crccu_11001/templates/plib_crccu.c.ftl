@@ -43,11 +43,11 @@
 
 #include "plib_${CRCCU_INSTANCE_NAME?lower_case}.h"
 
-crccu_dscr_type_t crc_dscr __ALIGNED(512);
+static crccu_dscr_type_t crc_dscr __ALIGNED(512);
 void ${CRCCU_INSTANCE_NAME}_Initialize (void)
 {
     ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_MR = CRCCU_MR_PTYPE_${CRCCU_POLYNOMIAL} | CRCCU_MR_DIVIDER(${CRCCU_DIVIDER}) | CRCCU_MR_BITORDER(${CRCCU_BITORDER});
-    crc_dscr.ul_tr_ctrl = ${CRCCU_TWIDTH} << 24;
+    crc_dscr.ul_tr_ctrl = ${CRCCU_TWIDTH}UL << 24U;
     ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_DSCR = (uint32_t) &crc_dscr;
 }
 
@@ -55,7 +55,7 @@ bool ${CRCCU_INSTANCE_NAME}_CRCCalculate(uint32_t startAddress, uint16_t length,
 {
     bool statusValue = false;
 
-    if( (length != 0) && (crc != NULL) )
+    if( (length != 0U) && (crc != NULL) )
     {
         crc_dscr.ul_tr_addr = startAddress;
 
@@ -64,7 +64,7 @@ bool ${CRCCU_INSTANCE_NAME}_CRCCalculate(uint32_t startAddress, uint16_t length,
             ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_CR = CRCCU_CR_RESET_Msk;
         }
 
-        crc_dscr.ul_tr_ctrl = crc_dscr.ul_tr_ctrl & (0xffff0000);
+        crc_dscr.ul_tr_ctrl = crc_dscr.ul_tr_ctrl & (0xffff0000U);
         crc_dscr.ul_tr_ctrl |= length;
 
         ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_MR |= CRCCU_MR_ENABLE_Msk;
@@ -89,5 +89,5 @@ void ${CRCCU_INSTANCE_NAME}_Setup (CRCCU_POLYNOMIAL polynomial, CRCCU_TWIDTH wid
 {
     crc_dscr.ul_tr_ctrl = width << 24;
     ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_MR &= ~(CRCCU_MR_PTYPE_Msk);
-    ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_MR |= polynomial;
+    ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_MR |= (uint32_t)polynomial;
 }
