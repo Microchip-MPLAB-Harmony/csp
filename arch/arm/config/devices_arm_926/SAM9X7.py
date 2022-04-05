@@ -216,18 +216,6 @@ armSysStartSourceFile.setType("SOURCE")
 armSysStartSourceFile.setEnabled(compiler_choice.getSelectedKey() == "XC32")
 armSysStartSourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["symbol"].getSelectedKey() == "XC32"), ["COMPILER_CHOICE"])
 
-#default exception handlers.
-faultSourceFile = coreComponent.createFileSymbol(None, None)
-faultSourceFile.setSourcePath("arm/templates/xc32/arm_926/SAM9/vectortrap.s")
-faultSourceFile.setOutputName("vectortrap.s")
-faultSourceFile.setMarkup(False)
-faultSourceFile.setOverwrite(True)
-faultSourceFile.setDestPath("")
-faultSourceFile.setProjectPath("config/" + configName + "/")
-faultSourceFile.setType("SOURCE")
-faultSourceFile.setEnabled(compiler_choice.getSelectedKey() == "XC32")
-faultSourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["symbol"].getSelectedKey() == "XC32"), ["COMPILER_CHOICE"])
-
 #linker file
 linkerFile = coreComponent.createFileSymbol(None, None)
 linkerFile.setSourcePath("arm/templates/xc32/arm_926/SAM9/ddram.ld.ftl")
@@ -252,16 +240,14 @@ armSysStartSourceFile.setEnabled(compiler_choice.getSelectedKey() == "IAR")
 armSysStartSourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["symbol"].getSelectedKey() == "IAR"), ["COMPILER_CHOICE"])
 
 #default exception handlers.
-faultSourceFile = coreComponent.createFileSymbol(None, None)
-faultSourceFile.setSourcePath("arm/templates/iar/arm_926/SAM9/vectortrap.s")
-faultSourceFile.setOutputName("vectortrap.s")
-faultSourceFile.setMarkup(False)
+faultSourceFile = coreComponent.createFileSymbol("DFLT_FAULT_HANDLER_C", None)
+faultSourceFile.setSourcePath("arm/templates/common/mpu_handlers/fault_handlers.c.ftl")
+faultSourceFile.setOutputName("fault_handlers.c")
+faultSourceFile.setMarkup(True)
 faultSourceFile.setOverwrite(True)
 faultSourceFile.setDestPath("")
 faultSourceFile.setProjectPath("config/" + configName + "/")
 faultSourceFile.setType("SOURCE")
-faultSourceFile.setEnabled(compiler_choice.getSelectedKey() == "IAR")
-faultSourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["symbol"].getSelectedKey() == "IAR"), ["COMPILER_CHOICE"])
 
 #linker file
 linkerFile = coreComponent.createFileSymbol(None, None)

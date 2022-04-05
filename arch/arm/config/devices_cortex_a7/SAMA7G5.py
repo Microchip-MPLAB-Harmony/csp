@@ -297,7 +297,7 @@ elif compiler_choice.getSelectedKey() == "IAR":
 
 #default exception handlers.
 faultSourceFile = coreComponent.createFileSymbol("DFLT_FAULT_HANDLER_C", None)
-faultSourceFile.setSourcePath("arm/templates/common/mpu_handlers/fault_handlers.c")
+faultSourceFile.setSourcePath("arm/templates/common/mpu_handlers/fault_handlers.c.ftl")
 faultSourceFile.setOutputName("fault_handlers.c")
 faultSourceFile.setMarkup(True)
 faultSourceFile.setOverwrite(True)
