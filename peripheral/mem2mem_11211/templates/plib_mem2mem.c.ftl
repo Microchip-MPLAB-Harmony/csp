@@ -58,7 +58,7 @@ Description:
 // *****************************************************************************
 // *****************************************************************************
 
-MEM2MEM_OBJECT mem2mem;
+static MEM2MEM_OBJECT mem2mem;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -69,15 +69,17 @@ MEM2MEM_OBJECT mem2mem;
 bool ${MEM2MEM_INSTANCE_NAME}_ChannelTransfer( const void *srcAddr, const void *destAddr, size_t blockSize, MEM2MEM_TRANSFER_WIDTH twidth )
 {
     bool status = false;
+	const uint32_t *xdestAddr = (const uint32_t *) destAddr;
+	const uint32_t *xsrcAddr = (const uint32_t *) srcAddr;
 
     if ((${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_ISR & MEM2MEM_ISR_RXEND_Msk) ==  MEM2MEM_ISR_RXEND_Msk)
     {
-        uint16_t count = blockSize / (1 << twidth);
+        uint16_t count = (uint16_t)(blockSize / (1UL << twidth));
 
-        ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_MR = twidth;
-        ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_TPR = (uint32_t) srcAddr;
+        ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_MR = (uint32_t)twidth;
+        ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_TPR = (uint32_t) xsrcAddr;
         ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_TCR = count;
-        ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_RPR = (uint32_t) destAddr;
+        ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_RPR = (uint32_t) xdestAddr;
         ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_RCR = count;
         ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_IER = MEM2MEM_IER_RXEND_Msk;
         ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_PTCR = MEM2MEM_PTCR_RXTEN_Msk | MEM2MEM_PTCR_TXTEN_Msk;
@@ -97,12 +99,12 @@ void ${MEM2MEM_INSTANCE_NAME}_CallbackRegister( MEM2MEM_CALLBACK callback, uintp
 
 void ${MEM2MEM_INSTANCE_NAME}_InterruptHandler( void )
 {
-    uint8_t error = MEM2MEM_TRANSFER_EVENT_COMPLETE;
+    uint8_t error = (uint8_t)MEM2MEM_TRANSFER_EVENT_COMPLETE;
 
     ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_IDR = MEM2MEM_IDR_RXEND_Msk;
 
 <#if MEM2MEM_PTSR_ERR>
-    error = ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_PTSR & MEM2MEM_PTSR_ERR_Msk;
+    error = (uint8_t)(${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_PTSR & MEM2MEM_PTSR_ERR_Msk);
 
     ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_PTCR = MEM2MEM_PTCR_ERRCLR_Msk;
 
