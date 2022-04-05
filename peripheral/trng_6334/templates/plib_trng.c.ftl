@@ -46,7 +46,7 @@
 </#if>
 
 <#if trngEnableInterrupt == true>
-	<#lt>TRNG_OBJECT trng;
+	<#lt>static TRNG_OBJECT trng;
 	
 	<#lt>void ${TRNG_INSTANCE_NAME}_RandomNumberGenerate( void )
 	<#lt>{
@@ -65,7 +65,11 @@
 	<#lt>uint32_t ${TRNG_INSTANCE_NAME}_ReadData( void )
 	<#lt>{
 	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_${CRKEYNAME} | TRNG_CR_ENABLE_Msk;
-	<#lt>	while(((${TRNG_INSTANCE_NAME}_REGS->TRNG_ISR) & (TRNG_ISR_DATRDY_Msk)) != TRNG_ISR_DATRDY_Msk);			
+	<#lt>	while(((${TRNG_INSTANCE_NAME}_REGS->TRNG_ISR) & (TRNG_ISR_DATRDY_Msk)) != TRNG_ISR_DATRDY_Msk)
+    <#lt>   {
+		
+                 /* Do Nothing*/		
+    <#lt>   }
 	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_${CRKEYNAME};
 	<#lt>	return (${TRNG_INSTANCE_NAME}_REGS->TRNG_ODATA);
 	<#lt>}
