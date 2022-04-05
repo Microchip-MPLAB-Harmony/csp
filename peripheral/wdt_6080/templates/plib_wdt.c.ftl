@@ -69,7 +69,7 @@ void ${WDT_INSTANCE_NAME}_Initialize( void )
     }
 </#if>
 
-    ${WDT_INSTANCE_NAME}_REGS->WDT_MR = WDT_MR_WDD (${wdtWDD}) | WDT_MR_WDV(${wdtWDV}) \
+    ${WDT_INSTANCE_NAME}_REGS->WDT_MR = WDT_MR_WDD (${wdtWDD}U) | WDT_MR_WDV(${wdtWDV}U) \
               ${wdtdebugHalt?then(' | WDT_MR_WDDBGHLT_Msk','')}${wdtidleHalt?then(' | WDT_MR_WDIDLEHLT_Msk','')}<#if WDT_MR_WDRPROC??>${(WDT_MR_WDRPROC != "0")?then(' | WDT_MR_WDRPROC_Msk','')}</#if>${wdtEnableReset?then(' | WDT_MR_WDRSTEN_Msk','')}${wdtinterruptMode?then(' | WDT_MR_WDFIEN_Msk','')};
 <#if WDT_CR_LOCKMR??>
 <#if WDT_CR_LOCKMR == true>
