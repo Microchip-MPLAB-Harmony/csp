@@ -44,6 +44,7 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
+<#assign M4_M7_EXCEPTIONS = (CoreArchitecture == "CORTEX-M4") || (CoreArchitecture == "CORTEX-M7")>
 <#if HarmonyCore??>
     <#if HarmonyCore.ENABLE_DRV_COMMON == true ||
          HarmonyCore.ENABLE_SYS_COMMON == true ||
@@ -88,7 +89,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>   uint32_t stacked_lr;
     <#lt>   uint32_t stacked_pc;
     <#lt>   uint32_t stacked_psr;
-    <#if CoreArchitecture != "CORTEX-M0PLUS">
+    <#if M4_M7_EXCEPTIONS>
     <#lt>   uint32_t cfsr;
     <#lt>   uint32_t bus_fault_address;
     <#lt>   uint32_t memmanage_fault_address;
@@ -119,7 +120,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
     <#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
-    <#if CoreArchitecture != "CORTEX-M0PLUS">
+    <#if M4_M7_EXCEPTIONS>
     <#lt>   printf("- FSR/FAR:\r\n");
     <#lt>   printf(" CFSR = 0x%08lX\r\n", cfsr);
     <#lt>   printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
@@ -142,7 +143,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>   }
     <#lt>}
 
-    <#if CoreArchitecture != "CORTEX-M0PLUS">
+    <#if M4_M7_EXCEPTIONS>
     <#lt>void __attribute__((noreturn)) DebugMonitor_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
     <#lt>{
     <#lt>   uint32_t stacked_r0;
@@ -384,7 +385,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>   }
     <#lt>}
 
-    <#if CoreArchitecture != "CORTEX-M0PLUS">
+    <#if M4_M7_EXCEPTIONS>
     <#lt>void __attribute__((noreturn)) DebugMonitor_Handler(void)
     <#lt>{
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
@@ -429,4 +430,3 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
 /*******************************************************************************
  End of File
  */
-
