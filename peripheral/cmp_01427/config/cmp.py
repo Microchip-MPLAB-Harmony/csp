@@ -224,8 +224,14 @@ def combineCMxCONConfigValues(MySymbol, event):
     cfselValue   = cmpSym_CMx_CON_CFSEL[cmp_id].getValue() << 20
     hysselValue  = cmpSym_CMx_CON_HYSSEL[cmp_id].getValue() << 24
     hyspolValue  = cmpSym_CMx_CON_HYSPOL[cmp_id].getValue() << 28
-    enpgaValue   = cmpSym_CMx_CON_ENPGA[cmp_id].getValue() << 30
-    opaonValue   = cmpSym_CMx_CON_OPAON[cmp_id].getValue() << 31
+    if cmpSym_CMx_CON_ENPGA_present[cmp_id] == True:
+        enpgaValue   = cmpSym_CMx_CON_ENPGA[cmp_id].getValue() << 30
+    else:
+        enpgaValue   = 0
+    if cmpSym_CMx_CON_OPAON_present[cmp_id] == True:
+        opaonValue   = cmpSym_CMx_CON_OPAON[cmp_id].getValue() << 31
+    else:
+        opaonValue   = 0
 
     cmconValue = crefValue + cchValue + evpolValue + ampmodValue + oaoValue + cpolValue + coeValue + cfdivValue + cfltrenValue + cfselValue + hysselValue + hyspolValue + enpgaValue + opaonValue
     MySymbol.setValue(cmconValue, 2)
@@ -285,7 +291,7 @@ def updateOPAMPxClockData(symbol, event):
     #Use 'cmp_id - 1' when accessing config value arrays
     status = cmpSym_CMx_CON_AMPMOD[int(index) - 1].getValue()
 
-    if "_CON_AMPMOD" in event["id"]:
+    if "_CON_AMPMOD" in event["id"] or "_CON_OPAON" in event["id"]:
         Database.setSymbolValue("core", opampId + "_CLOCK_ENABLE", event["value"], 1)
 
     if Database.getSymbolValue("core", opampId + "_CLOCK_ENABLE") == False and status == True:
@@ -462,10 +468,10 @@ def instantiateComponent(cmpComponent):
     for id in range(0, numOfCMPInstances):
         # generate list of all bitfields present in CMxCON register - varies from family to family, and within certain families as well
         CMxCON_list = []
-        _survey_bitfields("CM"+str(id+1)+"CON", CMxCON_list)  # CMxCON_list is used below, to prevent accessing (absent) elements in the atdf file   
+        _survey_bitfields("CM"+str(id+1)+"CON", CMxCON_list)  # CMxCON_list is used below, to prevent accessing (absent) elements in the atdf file
         cmpSym_CMx_CON_STRING.append(id)
         cmpSym_CMx_CON_STRING[id] = cmpComponent.createCommentSymbol("cmp_x_STRING_" + str(id + 1), None)
-        if(("OPAON" in CMxCON_list) or (("AMPMOD" in CMxCON_list) and (id != 3))):
+        if((("OPAON" in CMxCON_list) and (id != 3)) or (("AMPMOD" in CMxCON_list) and (id != 3))):
             cmpSym_CMx_CON_STRING[id].setLabel("Op amp / Comparator " + str(id + 1))
         else:
             cmpSym_CMx_CON_STRING[id].setLabel("Comparator " + str(id + 1))
@@ -567,28 +573,32 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_COE[id].setDefaultValue(False)
 
         #Op amp enable - bitfield not present in all devices
+        #Not available on Op Amp Comparator 4 (CM4)
         cmpSym_CMx_CON_OPAON.append(id)
         cmpSym_CMx_CON_OPAON_present.append(id)
-        cmpSym_CMx_CON_OPAON[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OPAON", cmpSym_CMx_CON_STRING[id])
-        if("OPAON" in CMxCON_list):
-            cmpSym_CMx_CON_OPAON[id].setLabel(cmpBitFld_CMx_CON_OPAON.getAttribute("caption"))
-            cmpSym_CMx_CON_OPAON_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OPAON_PRESENT", cmpSym_CMx_CON_STRING[id])
-            cmpSym_CMx_CON_OPAON_present[id].setVisible(False)
-        else:
-            cmpSym_CMx_CON_OPAON[id].setVisible(False)
-        cmpSym_CMx_CON_OPAON[id].setDefaultValue(False)
+        if (id != 3):
+            cmpSym_CMx_CON_OPAON[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OPAON", cmpSym_CMx_CON_STRING[id])
+            if("OPAON" in CMxCON_list):
+                cmpSym_CMx_CON_OPAON[id].setLabel(cmpBitFld_CMx_CON_OPAON.getAttribute("caption"))
+                cmpSym_CMx_CON_OPAON_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OPAON_PRESENT", cmpSym_CMx_CON_STRING[id])
+                cmpSym_CMx_CON_OPAON_present[id].setVisible(False)
+            else:
+                cmpSym_CMx_CON_OPAON[id].setVisible(False)
+            cmpSym_CMx_CON_OPAON[id].setDefaultValue(False)
 
         #Op amp fixed gain enable - bitfield not present in all devices
+        #Not available on Op Amp Comparator 4 (CM4)
         cmpSym_CMx_CON_ENPGA.append(id)
         cmpSym_CMx_CON_ENPGA_present.append(id)
-        cmpSym_CMx_CON_ENPGA[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_ENPGA", cmpSym_CMx_CON_STRING[id])
-        if("ENPGA" in CMxCON_list):
-            cmpSym_CMx_CON_ENPGA[id].setLabel("Opamp 1X Gain Mode Enable bit")
-            cmpSym_CMx_CON_ENPGA_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_ENPGA_PRESENT", cmpSym_CMx_CON_STRING[id])
-            cmpSym_CMx_CON_ENPGA_present[id].setVisible(False)
-        else:
-            cmpSym_CMx_CON_ENPGA[id].setVisible(False)
-        cmpSym_CMx_CON_ENPGA[id].setDefaultValue(False)
+        if (id != 3):
+            cmpSym_CMx_CON_ENPGA[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_ENPGA", cmpSym_CMx_CON_STRING[id])
+            if("ENPGA" in CMxCON_list):
+                cmpSym_CMx_CON_ENPGA[id].setLabel("Opamp 1X Gain Mode Enable bit")
+                cmpSym_CMx_CON_ENPGA_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_ENPGA_PRESENT", cmpSym_CMx_CON_STRING[id])
+                cmpSym_CMx_CON_ENPGA_present[id].setVisible(False)
+            else:
+                cmpSym_CMx_CON_ENPGA[id].setVisible(False)
+            cmpSym_CMx_CON_ENPGA[id].setDefaultValue(False)
 
         #Op amp Hysteresis Polarity Selection - bitfield not present in all devices
         cmp_x_HYSPOL_names = []
@@ -601,7 +611,7 @@ def instantiateComponent(cmpComponent):
             cmpSym_CMx_CON_HYSPOL[id].setOutputMode("Value")
             cmpSym_CMx_CON_HYSPOL[id].setDisplayMode("Description")
             for ii in cmp_x_HYSPOL_names:
-                cmpSym_CMx_CON_HYSPOL[id].addKey( ii['desc'], ii['value'], ii['key'] )            
+                cmpSym_CMx_CON_HYSPOL[id].addKey( ii['desc'], ii['value'], ii['key'] )
             cmpSym_CMx_CON_HYSPOL_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_HYSPOL_PRESENT", cmpSym_CMx_CON_STRING[id])
             cmpSym_CMx_CON_HYSPOL_present[id].setVisible(False)
         else:
@@ -864,7 +874,7 @@ def instantiateComponent(cmpComponent):
             opampSym_ClkxEnComment = cmpComponent.createCommentSymbol("OPAMP" + str(id + 1) + "_CLOCK_ENABLE_COMMENT", cmpSym_CMx_CON_STRING[id])
             opampSym_ClkxEnComment.setLabel("Warning!!! OPAMP" + str(id + 1) + " Peripheral Clock is Disabled in Clock Manager")
             opampSym_ClkxEnComment.setVisible(False)
-            opampSym_ClkxEnComment.setDependencies(updateOPAMPxClockData, ["core.OPAMP" + str(id + 1) + "_CLOCK_ENABLE", "CMP_" + str(id + 1) + "_CON_AMPMOD"])
+            opampSym_ClkxEnComment.setDependencies(updateOPAMPxClockData, ["core.OPAMP" + str(id + 1) + "_CLOCK_ENABLE", "CMP_" + str(id + 1) + "_CON_AMPMOD", "CMP_"+str(id+1)+"_CON_OPAON"])
 
     ############################################################################
     #### Code Generation ####
