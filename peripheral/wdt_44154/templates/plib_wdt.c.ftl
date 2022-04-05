@@ -50,12 +50,12 @@
     <#lt>// private structure type
     <#lt>typedef struct
     <#lt>{
-    <#lt>    WDT_CALLBACK    callback; 
+    <#lt>    WDT_CALLBACK    callback;
     <#lt>    uintptr_t       context;
     <#lt>} WDT_CALLBACK_OBJECT;
-    
+
     <#lt>WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
-        
+
     <#lt>void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
     <#lt>{
     <#lt>    ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback = callback;
@@ -83,24 +83,24 @@ void ${WDT_INSTANCE_NAME}_Initialize( void )
     //    WDT_WLR_RPTH =   ${WDT_EARLY_RESET_THRESHOLD_MILLISECONDS} (mSecs) = ${WDT_EARLY_RESET_THRESHOLD_COUNT} (counts)
     //    WDT_WLR_PERIOD = ${WDT_PERIOD_MILLISECONDS} (mSecs) = ${WDT_PERIOD_COUNT} (counts)
     //    WDT_ILR_LVLTH =  ${WDT_LEVEL_THRESHOLD_MILLISECONDS} (mSecs) = ${WDT_LEVEL_THRESHOLD_COUNT} (counts)
-    ${WDT_INSTANCE_NAME}_REGS->WDT_WLR = WDT_WLR_RPTH( ${WDT_EARLY_RESET_THRESHOLD_COUNT} ) | WDT_WLR_PERIOD( ${WDT_PERIOD_COUNT} );
-    ${WDT_INSTANCE_NAME}_REGS->WDT_ILR = WDT_ILR_LVLTH( ${WDT_LEVEL_THRESHOLD_COUNT} );
+    ${WDT_INSTANCE_NAME}_REGS->WDT_WLR = WDT_WLR_RPTH( ${WDT_EARLY_RESET_THRESHOLD_COUNT}U ) | WDT_WLR_PERIOD( ${WDT_PERIOD_COUNT}U );
+    ${WDT_INSTANCE_NAME}_REGS->WDT_ILR = WDT_ILR_LVLTH( ${WDT_LEVEL_THRESHOLD_COUNT}U );
     // clear interrupt status
     (void) ${WDT_INSTANCE_NAME}_REGS->WDT_ISR;
     // enable appropriate interrupts
     ${WDT_INSTANCE_NAME}_REGS->WDT_IER = 0${(WDT_LEVEL_EXPIRATION=='Interrupt')?then(' | WDT_IER_LVLINT_Msk','')}${(WDT_EARLY_RESET_ACTION=='Interrupt')?then(' | WDT_IER_RPTHINT_Msk','')}${(WDT_PERIOD_EXPIRATION=='Interrupt')?then(' | WDT_IER_PERINT_Msk','')};
-    // enable WDT and set other mode bits desired 
-    ${WDT_INSTANCE_NAME}_REGS->WDT_MR =  0${WDT_STOP_WHEN_IDLE?then(' | WDT_MR_WDIDLEHLT_Msk','')}${WDT_STOP_WHEN_DEBUGGING?then(' | WDT_MR_WDDBGHLT_Msk','')}${(WDT_EARLY_RESET_ACTION=='Reset')?then(' | WDT_MR_RPTHRST_Msk','')}${(WDT_PERIOD_EXPIRATION=='Reset')?then(' | WDT_MR_PERIODRST_Msk','')};
+    // enable WDT and set other mode bits desired
+    ${WDT_INSTANCE_NAME}_REGS->WDT_MR =  0U${WDT_STOP_WHEN_IDLE?then(' | WDT_MR_WDIDLEHLT_Msk','')}${WDT_STOP_WHEN_DEBUGGING?then(' | WDT_MR_WDDBGHLT_Msk','')}${(WDT_EARLY_RESET_ACTION=='Reset')?then(' | WDT_MR_RPTHRST_Msk','')}${(WDT_PERIOD_EXPIRATION=='Reset')?then(' | WDT_MR_PERIODRST_Msk','')};
 }
 
 void ${WDT_INSTANCE_NAME}_Clear( void )
 {
-    // When WDT is enabled, clear and reset the watch dog timer before the period 
+    // When WDT is enabled, clear and reset the watch dog timer before the period
     // counter reaches its floor.  But, not within three clock cycles of last restart, or before the
     // repeat threshold, currently ${WDT_EARLY_RESET_THRESHOLD_COUNT} counts, has expired.
     // Note: Due to the asynchronous operation of the WDT with respect to the rest of the chip
-    //    a minimum of two, possibly three, value register reads must be performed. 
-    if( !(WDT_MR_WDDIS_Msk & ${WDT_INSTANCE_NAME}_REGS->WDT_MR) )
+    //    a minimum of two, possibly three, value register reads must be performed.
+    if( (WDT_MR_WDDIS_Msk & ${WDT_INSTANCE_NAME}_REGS->WDT_MR) == 0U )
     {
         <#if (3 < WDT_EARLY_RESET_THRESHOLD_COUNT)>
         const uint32_t  minWait = ${WDT_EARLY_RESET_THRESHOLD_COUNT};
@@ -109,10 +109,12 @@ void ${WDT_INSTANCE_NAME}_Clear( void )
         </#if>
         uint32_t        countDownValue = WDT_VR_COUNTER( WDT_REGS->WDT_VR );
         if( countDownValue != WDT_VR_COUNTER( WDT_REGS->WDT_VR ) )
+        {
             countDownValue = WDT_VR_COUNTER( WDT_REGS->WDT_VR );
-    
+        }
+
         // initial WDT_WLR_PERIOD = ${WDT_PERIOD_COUNT} (counts)
-        if( ${WDT_PERIOD_COUNT} > (minWait + countDownValue) )
+        if( ${WDT_PERIOD_COUNT}U > (minWait + countDownValue) )
         {
             ${WDT_INSTANCE_NAME}_REGS->WDT_CR = WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT_Msk;
         }
