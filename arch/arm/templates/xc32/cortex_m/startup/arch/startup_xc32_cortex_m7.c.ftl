@@ -1,43 +1,30 @@
-<#if TCM_ENABLE>
-__STATIC_INLINE void TCM_Enable(void);
-<#else>
-__STATIC_INLINE void TCM_Disable(void);
-</#if>
-<#if !(TCM_FIXED_SIZE??)>
-__STATIC_INLINE void TCM_Configure(uint32_t tcmSize);
-</#if>
-__STATIC_INLINE void ICache_Enable(void);
-__STATIC_INLINE void DCache_Enable(void);
-__STATIC_INLINE void FPU_Enable(void);
+<#assign SCB_ICACHE_ENABLE = INSTRUCTION_CACHE_ENABLE>
+<#assign SCB_DCACHE_ENABLE = DATA_CACHE_ENABLE>
+<#assign SCB_TCM_ENABLE = TCM_ENABLE>
+<#if SCB_TCM_ENABLE>
 
-/* Enable Instruction Cache */
-__STATIC_INLINE void ICache_Enable(void)
+
+/** Enable TCM memory */
+__STATIC_INLINE void <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Enable(void)
 {
-    SCB_EnableICache();
-}
-
-/* Enable Data Cache */
-__STATIC_INLINE void DCache_Enable(void)
-{
-    SCB_EnableDCache();
-}
-
-#if (__ARM_FP==14) || (__ARM_FP==4)
-
-/* Enable FPU */
-__STATIC_INLINE void FPU_Enable(void)
-{
-uint32_t prim;
-    prim = __get_PRIMASK();
-    __disable_irq();
-
-     SCB->CPACR |= (0xFu << 20);
     __DSB();
     __ISB();
-
-    if (!prim)
-    {
-        __enable_irq();
-    }
+    SCB->ITCMCR = (SCB_ITCMCR_EN_Msk  | SCB_ITCMCR_RMW_Msk | SCB_ITCMCR_RETEN_Msk);
+    SCB->DTCMCR = (SCB_DTCMCR_EN_Msk | SCB_DTCMCR_RMW_Msk | SCB_DTCMCR_RETEN_Msk);
+    __DSB();
+    __ISB();
 }
-#endif /* (__ARM_FP==14) || (__ARM_FP==4) */
+<#else>
+
+
+/* Disable TCM memory */
+__STATIC_INLINE void <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Disable(void)
+{
+    __DSB();
+    __ISB();
+    SCB->ITCMCR &= ~(uint32_t)SCB_ITCMCR_EN_Msk;
+    SCB->DTCMCR &= ~(uint32_t)SCB_ITCMCR_EN_Msk;
+    __DSB();
+    __ISB();
+}
+</#if>

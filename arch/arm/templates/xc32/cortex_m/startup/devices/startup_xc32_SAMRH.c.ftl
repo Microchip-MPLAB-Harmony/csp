@@ -1,6 +1,6 @@
 // helper routines to read and write regions of memory in 128 byte chunks
 
-#define TRANSFER_CHUNK_SIZE 0x80
+#define TRANSFER_CHUNK_SIZE 0x80U
 
 __STATIC_INLINE void Read_Chunk(uint32_t address)
 {
@@ -29,13 +29,13 @@ static void  __attribute__((optimize("-O1")))  TCM_EccInitOne(uint32_t addr, uin
     for (pTcm = addr; pTcm < (addr + size); pTcm += TRANSFER_CHUNK_SIZE)
     {
         //read ECC OFF
-        TCMECC_REGS->TCMECC_CR = 0x0;
+        TCMECC_REGS->TCMECC_CR = 0x0U;
         __DSB();
         __ISB();
         Read_Chunk(pTcm);
 
         //Write ECC ON
-        TCMECC_REGS->TCMECC_CR = 0x1;
+        TCMECC_REGS->TCMECC_CR = 0x1U;
         __DSB();
         __ISB();
         Write_Chunk(pTcm);
@@ -51,7 +51,7 @@ __STATIC_INLINE void  __attribute__((optimize("-O1"))) TCM_EccInitialize(void)
     __DSB();
     __ISB();
 
-    TCMECC_REGS->TCMECC_CR = 0x0;
+    TCMECC_REGS->TCMECC_CR = 0x0U;
     __DSB();
     __ISB();
     SCB->ITCMCR = (SCB_ITCMCR_EN_Msk);
@@ -76,7 +76,7 @@ __STATIC_INLINE void  __attribute__((optimize("-O1"))) TCM_EccInitialize(void)
     __DSB();
     __ISB();
 
-    TCMECC_REGS->TCMECC_CR = 0x0;
+    TCMECC_REGS->TCMECC_CR = 0x0U;
 
     //----------------------------------------------------------------------
     // ITCM/DTCM enable with RMW and RETEN + TCMECC ON
@@ -86,7 +86,7 @@ __STATIC_INLINE void  __attribute__((optimize("-O1"))) TCM_EccInitialize(void)
     __ISB();
 
 <#if TCM_ECC_ENABLE>
-    TCMECC_REGS->TCMECC_CR = 0x1;
+    TCMECC_REGS->TCMECC_CR = 0x1U;
     __DSB();
     __ISB();
 </#if>
@@ -115,28 +115,3 @@ __STATIC_INLINE void  __attribute__((optimize("-O1"))) FlexRAM_EccInitialize(voi
     __DSB();
     __ISB();
 }
-
-<#if TCM_ENABLE>
-/** Enable TCM memory */
-__STATIC_INLINE void <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Enable(void)
-{
-    __DSB();
-    __ISB();
-    SCB->ITCMCR = (SCB_ITCMCR_EN_Msk  | SCB_ITCMCR_RMW_Msk | SCB_ITCMCR_RETEN_Msk);
-    SCB->DTCMCR = (SCB_DTCMCR_EN_Msk | SCB_DTCMCR_RMW_Msk | SCB_DTCMCR_RETEN_Msk);
-    __DSB();
-    __ISB();
-}
-
-<#else>
-/* Disable TCM memory */
-__STATIC_INLINE void <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Disable(void)
-{
-    __DSB();
-    __ISB();
-    SCB->ITCMCR &= ~(uint32_t)SCB_ITCMCR_EN_Msk;
-    SCB->DTCMCR &= ~(uint32_t)SCB_ITCMCR_EN_Msk;
-    __DSB();
-    __ISB();
-}
-</#if>
