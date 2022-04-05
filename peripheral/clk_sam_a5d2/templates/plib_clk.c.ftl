@@ -155,7 +155,12 @@ static void CLK_ProgrammableClockInitialize(void)
 	PMC_REGS->PMC_SCER = ${PMC_SCER_PCKX_MSK};
 
 	/* Wait for clock to be ready	*/
-	while((PMC_REGS->PMC_SR & (${PMC_SR_PCKRDYX_MSK}) ) != (${PMC_SR_PCKRDYX_MSK}));
+	while((PMC_REGS->PMC_SR & (${PMC_SR_PCKRDYX_MSK}) ) != (${PMC_SR_PCKRDYX_MSK}))
+	{
+			
+			/* Do Nothing */
+			
+	}
 }
 </#if>
 
@@ -169,9 +174,9 @@ static void CLK_PeripheralClockInitialize(void)
     /* Enable clock for the selected peripherals, since the rom boot will turn on
      * certain clocks turn off all clocks not expressly enabled */
    	PMC_REGS->PMC_PCER0=0x${PMC_PCER0};
-    PMC_REGS->PMC_PCDR0=~0x${PMC_PCER0};
+    PMC_REGS->PMC_PCDR0=~0x${PMC_PCER0}U;
     PMC_REGS->PMC_PCER1=0x${PMC_PCER1};
-    PMC_REGS->PMC_PCDR1=~0x${PMC_PCER1};
+    PMC_REGS->PMC_PCDR1=~0x${PMC_PCER1}U;
 }
 
 <#if PMC_SCER_LCDCK>
