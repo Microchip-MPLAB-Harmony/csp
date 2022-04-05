@@ -71,6 +71,12 @@ vectorSettings = {
                     "SysTick"         : [False,  True,    False,    "0",     False,   True,     True],
                     "Peripheral"      : [False,  False,   True,     str(max(nvicPriorityGroup)),     False,   True,     False]
                 }
+if Database.getSymbolValue("core","CoreArchitecture") in ["CORTEX-M4", "CORTEX-M7"] :
+    vectorSettings["MemoryManagement"] = [True,   True,    False,    "-1",    True,    False,    True]
+    vectorSettings["BusFault"] = [True,   True,    False,    "-1",    True,    False,    True]
+    vectorSettings["UsageFault"] = [True,   True,    False,    "-1",    True,    False,    True]
+    vectorSettings["DebugMonitor"] = [True,   True,    False,    "-1",    True,    False,    True]
+
 
 nvicVectorNumber = []
 nvicVectorName = []
