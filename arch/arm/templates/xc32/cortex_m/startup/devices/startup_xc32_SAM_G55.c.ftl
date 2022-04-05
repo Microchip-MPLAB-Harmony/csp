@@ -1,69 +1,20 @@
-__STATIC_INLINE void TCM_Disable(void);
-__STATIC_INLINE void TCM_Enable(void);
-__STATIC_INLINE void TCM_Configure(uint32_t tcmSize);
-__STATIC_INLINE void ICache_Enable(void);
-__STATIC_INLINE void DCache_Enable(void);
-
-/** Program CMCC PRGCSIZE bits for TCM and cache configuration */
-__STATIC_INLINE void TCM_Configure(uint32_t tcmSize)
+<#assign CMCC_CONFIGURE = true>
+__STATIC_INLINE void CMCC_Configure(void)
 {
-<#if DEVICE_TCM_SIZE != "0">
-    CMCC_REGS->CMCC_CFG = CMCC_CFG_PRGCSIZE(tcmSize);
+    CMCC_REGS->CMCC_CTRL &= ~(CMCC_CTRL_CEN_Msk);
+    while((CMCC_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+    {
+        /*Wait for the operation to complete*/
+    }
+<#if DEVICE_TCM_SIZE != "3">
+    <#assign CMCC_CFG_VAL = "CMCC_CFG_CSIZESW(" + DEVICE_TCM_SIZE + "U)">
+    <#if !INSTRUCTION_CACHE_ENABLE>
+    <#assign CMCC_CFG_VAL = CMCC_CFG_VAL + "| CMCC_CFG_ICDIS_Msk">
+    </#if>
+    <#if !DATA_CACHE_ENABLE>
+    <#assign CMCC_CFG_VAL = CMCC_CFG_VAL + "| CMCC_CFG_DCDIS_Msk">
+    </#if>
+    CMCC_REGS->CMCC_CFG = ${CMCC_CFG_VAL};
+    CMCC_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
 </#if>
-}
-
-/** Enable TCM memory */
-__STATIC_INLINE void  <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Enable(void)
-{
-    /* TCM cannot be enabled or disabled in SAMG55 family*/
-}
-
-/* Disable TCM memory */
-__STATIC_INLINE void  <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Disable(void)
-{
-    /* TCM cannot be enabled or disabled in SAMG55 family*/
-}
-
-__STATIC_INLINE void ICache_Enable(void)
-{
-    <#if DEVICE_TCM_SIZE != "0">
-        <#if (INSTRUCTION_CACHE_ENABLE)??>
-            <#if (INSTRUCTION_CACHE_ENABLE)>
-                <#if DATA_CACHE_ENABLE??>
-                    <#if (DATA_CACHE_ENABLE)>
-                    <#else>
-                    <#lt>    CMCC_REGS->CMCC_CTRL &= ~(CMCC_CTRL_CEN_Msk);
-                    <#lt>    while((CMCC_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
-                    <#lt>    {
-                    <#lt>        /*Wait for the operation to complete*/
-                    <#lt>    }
-                    <#lt>    CMCC_REGS->CMCC_CFG |= (CMCC_CFG_DCDIS_Msk);
-                    </#if>
-                </#if>
-                <#lt>    CMCC_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
-            </#if>
-        </#if>
-    </#if>
-}
-
-__STATIC_INLINE void DCache_Enable(void)
-{
-    <#if DEVICE_TCM_SIZE != "0">
-        <#if (DATA_CACHE_ENABLE)??>
-            <#if (DATA_CACHE_ENABLE)>
-                <#if INSTRUCTION_CACHE_ENABLE??>
-                    <#if (INSTRUCTION_CACHE_ENABLE)>
-                    <#else>
-                    <#lt>    CMCC_REGS->CMCC_CTRL &= ~(CMCC_CTRL_CEN_Msk);
-                    <#lt>    while((CMCC_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
-                    <#lt>    {
-                    <#lt>        /*Wait for the operation to complete*/
-                    <#lt>    }
-                    <#lt>    CMCC_REGS->CMCC_CFG |= (CMCC_CFG_ICDIS_Msk);
-                    <#lt>    CMCC_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
-                    </#if>
-                </#if>
-            </#if>
-        </#if>
-    </#if>
 }

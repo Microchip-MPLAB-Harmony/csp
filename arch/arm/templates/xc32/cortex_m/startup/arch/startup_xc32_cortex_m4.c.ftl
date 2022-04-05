@@ -5,15 +5,13 @@ __STATIC_INLINE void FPU_Enable(void);
 /* Enable FPU */
 __STATIC_INLINE void FPU_Enable(void)
 {
-    uint32_t prim;
-    prim = __get_PRIMASK();
+    uint32_t primask = __get_PRIMASK();
     __disable_irq();
-
-     SCB->CPACR |= (0xFu << 20);
+     SCB->CPACR |= (((uint32_t)0xFU) << 20);
     __DSB();
     __ISB();
 
-    if (!prim)
+    if (primask == 0U)
     {
         __enable_irq();
     }

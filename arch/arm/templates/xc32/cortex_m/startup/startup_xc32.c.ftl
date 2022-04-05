@@ -93,24 +93,34 @@ extern uint32_t __svectors;
 
 extern int main(void);
 
-/* Device Vector information is available in interrupt.c file */
 <#if CoreArchitecture == "CORTEX-M7">
-<#include "arch/startup_xc32_cortex_m7.c.ftl">
-<#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
+    <#include "arch/startup_xc32_cortex_m7.c.ftl">
+    <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
+<#elseif CoreArchitecture == "CORTEX-M4" || RAM_INIT??>
+    <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
 </#if>
-<#if CoreArchitecture == "CORTEX-M4">
 <#if FPU_Available>
-<#include "arch/startup_xc32_cortex_m4.c.ftl">
+
+
+#if (__ARM_FP==14) || (__ARM_FP==4)
+
+/* Enable FPU */
+__STATIC_INLINE void FPU_Enable(void)
+{
+    uint32_t primask = __get_PRIMASK();
+    __disable_irq();
+     SCB->CPACR |= (((uint32_t)0xFU) << 20);
+    __DSB();
+    __ISB();
+
+    if (primask == 0U)
+    {
+        __enable_irq();
+    }
+}
+#endif /* (__ARM_FP==14) || (__ARM_FP==4) */
 </#if>
-<#if DATA_CACHE_ENABLE??>
-<#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
-</#if>
-</#if>
-<#if CoreArchitecture == "CORTEX-M0PLUS">
-<#if RAM_INIT??>
-<#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
-</#if>
-</#if>
+
 
 /* Brief default application function used as a weak reference */
 extern void Dummy_App_Func(void);
@@ -128,11 +138,11 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
 {
 <#if RAM_INIT??>
     RAM_Initialize();
+
 </#if>
 #ifdef SCB_VTOR_TBLOFF_Msk
     uint32_t *pSrc;
 #endif
-
 
 #if defined (__REINIT_STACK_POINTER)
     /* Initialize SP from linker-defined _stack symbol. */
@@ -145,7 +155,6 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
     __asm__ volatile ("add r7, sp, #0" : : : "r7");
 #endif
 
-
     /* Call the optional application-provided _on_reset() function. */
     _on_reset();
 
@@ -157,27 +166,34 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
     /* Enable the FPU if the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
     FPU_Enable();
 #endif
-</#if>
 
+</#if>
 <#if ECC_SUPPORTED??>
+    /* Do this after the fpu is enabled so we can use fp regs */
     TCM_EccInitialize();
     FlexRAM_EccInitialize();
-</#if>
 
-<#if TCM_ENABLE??>
-<#if !(TCM_FIXED_SIZE??)>
-    TCM_Configure(${DEVICE_TCM_SIZE});
 </#if>
+<#if STARTUP_TCM_SIZE_CONFIGURE??>
+    TCM_Configure(${DEVICE_TCM_SIZE}U);
 
-<#if TCM_ENABLE>
+</#if>
+<#if SCB_TCM_ENABLE??>
+    <#if SCB_TCM_ENABLE>
     /* Enable TCM   */
     TCM_Enable();
-<#else>
+
+    <#else>
     /* Disable TCM  */
     TCM_Disable();
-</#if>
-</#if>
 
+    </#if>
+</#if>
+<#if CMCC_CONFIGURE??>
+    /* Configure CMCC */
+    CMCC_Configure();
+
+</#if>
     /* Initialize data after TCM is enabled.
      * Data initialization from the XC32 .dinit template */
     __pic32c_data_initialization();
@@ -202,36 +218,34 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
 <#if CoreUseMPU>
     /* Initialize MPU */
     MPU_Initialize();
-</#if>
-</#if>
 
-<#if (INSTRUCTION_CACHE_ENABLE)??>
-<#if (INSTRUCTION_CACHE_ENABLE)>
-    /* Enable Instruction Cache */
-    ICache_Enable();
 </#if>
 </#if>
+<#if SCB_ICACHE_ENABLE?? && SCB_ICACHE_ENABLE>
+    /* Enable ICache (CMSIS-Core API) */
+    SCB_EnableICache();
 
-<#if DATA_CACHE_ENABLE??>
-<#if (DATA_CACHE_ENABLE)>
-    /* Enable Data Cache    */
-    DCache_Enable();
 </#if>
-</#if>
+<#if SCB_DCACHE_ENABLE?? && SCB_DCACHE_ENABLE>
+    /* Enable DCache (CMSIS-Core API)*/
+    SCB_EnableDCache();
 
+</#if>
     /* Call the optional application-provided _on_bootstrap() function. */
     _on_bootstrap();
-    
+
     /* Reserved for use by MPLAB XC32. */
     __xc32_on_bootstrap();
 
     /* Branch to application's main function */
-    int retval = main();
-    (void)retval;
+    (void)main();
 
 #if (defined(__DEBUG) || defined(__DEBUG_D)) && defined(__XC32)
     __builtin_software_breakpoint();
 #endif
-    /* Infinite loop */
-    while (true) {}
+
+    while (true)
+    {
+        /* Infinite loop */
+    }
 }
