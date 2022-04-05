@@ -93,6 +93,7 @@ bool ${EFC_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t addres
     {
         *((uint32_t *)( ${MEM_SEGMENT_NAME}_ADDR + ( page_number * ${MEM_SEGMENT_NAME}_PAGE_SIZE ) + i )) = *data ;
         data++;
+        __DMB();
     }
 
     __DSB();
@@ -134,6 +135,7 @@ bool ${EFC_INSTANCE_NAME}_PageWrite( uint32_t *data, uint32_t address )
     {
         *((uint32_t *)( ${MEM_SEGMENT_NAME}_ADDR + ( page_number * ${MEM_SEGMENT_NAME}_PAGE_SIZE ) + i )) = *data;
         data++;
+        __DMB();
     }
 
     __DSB();
