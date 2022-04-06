@@ -229,7 +229,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
 
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
-    volatile uint16_t nvm_error = 0;
+    uint16_t nvm_error = 0;
 
     /* Get the error bits set */
     nvm_error = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_STATUS & (NVMCTRL_STATUS_NVME_Msk | NVMCTRL_STATUS_LOCKE_Msk | NVMCTRL_STATUS_PROGE_Msk));
