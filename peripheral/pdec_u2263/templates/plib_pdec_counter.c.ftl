@@ -71,7 +71,7 @@
 <#if PDEC_INTENSET_OVF >
 <#assign PDEC_MAIN_INTERRUPT = true>
 </#if>
-<#if PDEC_INTENSET != "0x0">
+<#if PDEC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
    static <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
 </#if>
