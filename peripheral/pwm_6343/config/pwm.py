@@ -503,8 +503,6 @@ def instantiateComponent(pwmComponent):
             padSignal = pwm_signals[pad].getAttribute("pad")
             if padSignal in availablePins:
                 channel[int(pwm_signals[pad].getAttribute("index"))] = True
-            else:
-                channel[int(pwm_signals[pad].getAttribute("index"))] = False
     #-----------------------------------------------------------------------------------------------------------
 
     pwmStartApi = pwmComponent.createStringSymbol("PWM_START_API", None)
