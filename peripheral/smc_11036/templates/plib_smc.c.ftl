@@ -227,7 +227,7 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
         <#lt>   // ------------------------------------------------------------------------
         <#lt>   // Off Chip Memory Scrambling
         <#lt>   // Note: corresponding OCMS bit in HSMC_TIMINGS register is required
-        <#lt>   ${SMC_REGS}->HSMC_OCMS = 0
+        <#lt>   ${SMC_REGS}->HSMC_OCMS = 0U
         <#lt><#if SMC_OCMS_SCRAMBLING_ENABLE>
             <#lt>                           | HSMC_OCMS_SMSE_Msk        // SMC off chip scrambling
         <#lt></#if>

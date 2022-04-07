@@ -51,8 +51,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_${SMC_INSTANCE_NAME}_H
-#define _PLIB_${SMC_INSTANCE_NAME}_H
+#ifndef PLIB_${SMC_INSTANCE_NAME}_H
+#define PLIB_${SMC_INSTANCE_NAME}_H
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
