@@ -28,9 +28,8 @@ print("Loading System Services for " + Variables.get("__PROCESSOR"))
 if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
     trustZoneSupported = coreComponent.createBooleanSymbol("TRUSTZONE_SUPPORTED", devCfgMenu)
     trustZoneSupported.setVisible(False)
-    registerGroup = ["USER_FUSES", "BOCOR_FUSES"]
-else:
-    registerGroup = ["USER_FUSES"]
+
+registerGroup = ["USER_FUSES", "BOCOR_FUSES"]
 
 # load device specific configurations (fuses), temporary, to be removed once XC32 updated
 devCfgComment = coreComponent.createCommentSymbol("CoreCfgComment1", devCfgMenu)
