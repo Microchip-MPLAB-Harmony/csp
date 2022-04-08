@@ -202,42 +202,41 @@ typedef uint32_t PIO_PORT;
     device data sheet to determine which pins are supported.
 */
 
-typedef enum
-{
-    <#assign PORTA_Pin_List =  PORTA_Pin_List?sort>
-    <#list PORTA_Pin_List as pin>
-    PIO_PIN_PA${pin} = ${pin},
-    </#list>
-    <#assign PORTB_Pin_List =  PORTB_Pin_List?sort>
-    <#list PORTB_Pin_List as pin>
-    PIO_PIN_PB${pin} = ${pin+32},
-    </#list>
-    <#assign PORTC_Pin_List =  PORTC_Pin_List?sort>
-    <#list PORTC_Pin_List as pin>
-    PIO_PIN_PC${pin} = ${pin+64},
-    </#list>
-    <#assign PORTD_Pin_List =  PORTD_Pin_List?sort>
-    <#list PORTD_Pin_List as pin>
-    PIO_PIN_PD${pin} = ${pin+96},
-    </#list>
-    <#assign PORTE_Pin_List =  PORTE_Pin_List?sort>
-    <#list PORTE_Pin_List as pin>
-    PIO_PIN_PE${pin} = ${pin+128},
-    </#list>
-    <#assign PORTF_Pin_List =  PORTF_Pin_List?sort>
-    <#list PORTF_Pin_List as pin>
-    PIO_PIN_PF${pin} = ${pin+160},
-    </#list>
-    <#assign PORTG_Pin_List =  PORTG_Pin_List?sort>
-    <#list PORTG_Pin_List as pin>
-    PIO_PIN_PG${pin} = ${pin+192},
-    </#list>
 
-    /* This element should not be used in any of the PIO APIs.
-       It will be used by other modules or application to denote that none of the PIO Pin is used */
-    PIO_PIN_NONE = -1
+<#assign PORTA_Pin_List =  PORTA_Pin_List?sort>
+<#list PORTA_Pin_List as pin>
+#define    PIO_PIN_PA${pin}    (${pin}U)
+</#list>
+<#assign PORTB_Pin_List =  PORTB_Pin_List?sort>
+<#list PORTB_Pin_List as pin>
+#define    PIO_PIN_PB${pin}   (${pin+32}U)
+</#list>
+<#assign PORTC_Pin_List =  PORTC_Pin_List?sort>
+<#list PORTC_Pin_List as pin>
+#define    PIO_PIN_PC${pin}   (${pin+64}U)
+</#list>
+<#assign PORTD_Pin_List =  PORTD_Pin_List?sort>
+<#list PORTD_Pin_List as pin>
+#define    PIO_PIN_PD${pin}   (${pin+96}U)
+</#list>
+<#assign PORTE_Pin_List =  PORTE_Pin_List?sort>
+<#list PORTE_Pin_List as pin>
+#define    PIO_PIN_PE${pin}    (${pin+128}U)
+</#list>
+<#assign PORTF_Pin_List =  PORTF_Pin_List?sort>
+<#list PORTF_Pin_List as pin>
+#define    PIO_PIN_PF${pin}    (${pin+160}U)
+</#list>
+<#assign PORTG_Pin_List =  PORTG_Pin_List?sort>
+<#list PORTG_Pin_List as pin>
+#define     PIO_PIN_PG${pin}   (${pin+192}U)
+</#list>
 
-} PIO_PIN;
+/* This element should not be used in any of the PIO APIs.
+   It will be used by other modules or application to denote that none of the PIO Pin is used */
+#define     PIO_PIN_NONE        (-1)
+
+typedef uint8_t PIO_PIN;
 
 <#if PORT_A_INTERRUPT_USED == true ||
      PORT_B_INTERRUPT_USED == true ||
@@ -304,6 +303,8 @@ typedef  void (*PIO_PIN_CALLBACK) ( PIO_PIN pin, uintptr_t context);
 // *****************************************************************************
 // *****************************************************************************
 
+<#include "system/plib_pio_initialize.c.ftl">
+<#if NEED_PIO_INIT>
 // *****************************************************************************
 /* Function:
     void PIO_Initialize(void)
@@ -336,6 +337,7 @@ typedef  void (*PIO_PIN_CALLBACK) ( PIO_PIN pin, uintptr_t context);
 */
 void PIO_Initialize(void);
 
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: PIO Functions which operates on multiple pins of a port
@@ -562,6 +564,10 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask);
   Example:
     <code>
 
+<<<<<<< HEAD
+=======
+     Toggles PC5 and PC7 pins
+>>>>>>> d3342b368 ([PIO] pio_11264 MISRAC 2012 required rule violation fix)
     PIO_PortToggle(PIO_PORT_C, 0x00A0);
 
     </code>
@@ -1195,7 +1201,7 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
 */
 bool PIO_PinInterruptCallbackRegister(
     PIO_PIN pin,
-    const   PIO_PIN_CALLBACK callBack,
+    const PIO_PIN_CALLBACK callback,
     uintptr_t context
 );
 </#if>
