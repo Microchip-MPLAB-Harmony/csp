@@ -57,7 +57,7 @@ static void initMainClk(void)
 
 <#if CLK_PLL_EN>
 /*********************************************************************************
-Initialize PLLA 
+Initialize PLLA
 *********************************************************************************/
 static void initPLLAClk(void)
 {
@@ -80,7 +80,7 @@ static void initPLLAClk(void)
 </#if>
 
 /*********************************************************************************
-Initialize CPU clock 
+Initialize CPU clock
 *********************************************************************************/
 static void initCPUClk(void)
 {
@@ -105,10 +105,10 @@ static void initCPUClk(void)
 <#-- If UPLL is initialized after CPU clock is setup, then use whatever cpu clock is configured in MHC -->
 <#else>
     <#assign DELAY_SRC_CLK_FREQUENCY = CPU_CLOCK_FREQUENCY>
-</#if>    
+</#if>
 
 /*********************************************************************************
-Generate Software delay (in multiples of microsecond units) 
+Generate Software delay (in multiples of microsecond units)
 *********************************************************************************/
 static void swDelayUs(uint32_t delay)
 {
@@ -141,16 +141,16 @@ static void initUPLLCLK(void)
     PMC_REGS->PMC_PLL_CTRL1 = PMC_PLL_CTRL1_MUL(${CLK_UPLL_MUL}) |\
                               PMC_PLL_CTRL1_FRACR(${CLK_UPLL_FRACR});
 
-    /* STEP 4: Enable UTMI Bandgap */ 
+    /* STEP 4: Enable UTMI Bandgap */
     PMC_REGS->PMC_PLL_ACR |= PMC_PLL_ACR_UTMIBG_Msk;
 
-    /* STEP 5: Wait 10 us */        
+    /* STEP 5: Wait 10 us */
     swDelayUs(10);
 
     /* STEP 6: Enable UTMI Internal Regulator */
     PMC_REGS->PMC_PLL_ACR |= PMC_PLL_ACR_UTMIVR_Msk;
 
-    /* STEP 7: Wait 10 us */        
+    /* STEP 7: Wait 10 us */
     swDelayUs(10);
 
     /* STEP 8: Update the PLL controls */
@@ -160,14 +160,14 @@ static void initUPLLCLK(void)
     PMC_REGS->PMC_PLL_CTRL0 = PMC_PLL_CTRL0_ENLOCK_Msk |\
                               PMC_PLL_CTRL0_ENPLL_Msk |\
                               PMC_PLL_CTRL0_ENPLLCK_Msk;
-    
+
     /* STEP 10: Wait for the lock bit to rise by polling the PMC_PLL_ISR0 */
     while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_LOCKU_Msk) != PMC_PLL_ISR0_LOCKU_Msk);
 }
 </#if>
 
 /*********************************************************************************
-Initialize Programmable clocks 
+Initialize Programmable clocks
 *********************************************************************************/
 static void initProgrammableClk(void)
 {
@@ -194,7 +194,7 @@ static void initPeriphClk(void)
         uint8_t clken;
         uint8_t gclken;
         uint8_t css;
-        uint8_t div;
+        uint8_t divv;
     } periphList[] =
     {
         <#list 0..50 as i>
@@ -222,37 +222,37 @@ static void initPeriphClk(void)
                 </#if>
             </#if>
         </#list>
-        { ID_PERIPH_MAX + 1, 0, 0, 0, 0}//end of list marker
+        { ID_PERIPH_MAX + 1U, 0, 0, 0, 0}//end of list marker
     };
 
-    int count = sizeof(periphList)/sizeof(periphList[0]);
-    for (int i = 0; i < count; i++)
+    uint32_t count = sizeof(periphList)/sizeof(periphList[0]);
+    for (uint32_t i = 0; i < count; i++)
     {
-        if (periphList[i].id == (ID_PERIPH_MAX + 1))
+        if (periphList[i].id == (ID_PERIPH_MAX + 1U))
         {
             break;
         }
 
         PMC_REGS->PMC_PCR = PMC_PCR_CMD_Msk |\
-                            PMC_PCR_GCLKEN(periphList[i].gclken) |\
-                            PMC_PCR_EN(periphList[i].clken) |\
-                            PMC_PCR_GCLKDIV(periphList[i].div) |\
-                            PMC_PCR_GCLKCSS(periphList[i].css) |\
-                            PMC_PCR_PID(periphList[i].id);                
+                            PMC_PCR_GCLKEN((uint32_t)periphList[i].gclken) |\
+                            PMC_PCR_EN((uint32_t)periphList[i].clken) |\
+                            PMC_PCR_GCLKDIV((uint32_t)periphList[i].divv) |\
+                            PMC_PCR_GCLKCSS((uint32_t)periphList[i].css) |\
+                            PMC_PCR_PID((uint32_t)periphList[i].id);
     }
 
 }
 <#if CLK_USB_EN>
 
 /*********************************************************************************
-Initialize USB OHCI clocks 
+Initialize USB OHCI clocks
 *********************************************************************************/
 static void initUSBClk ( void )
-{    	
+{
     /* Configure USB OHCI clock source and divider */
-	PMC_REGS->PMC_USB = PMC_USB_USBDIV(${CLK_USB_USBDIV}) | PMC_USB_USBS_${CLK_USB_USBS};
-	
-	/* Enable UHP48M and UHP12M OHCI clocks */
+    PMC_REGS->PMC_USB = PMC_USB_USBDIV(${CLK_USB_USBDIV}) | PMC_USB_USBS_${CLK_USB_USBS};
+
+    /* Enable UHP48M and UHP12M OHCI clocks */
     PMC_REGS->PMC_SCER |= PMC_SCER_UHP_Msk;
 }
 </#if>
@@ -308,7 +308,7 @@ void CLK_Initialize( void )
     /* Initialize UPLLA clock generator */
     initUPLLCLK();
     </#if>
-    
+
     /* Initialize Programmable clock */
     initProgrammableClk();
 
@@ -329,5 +329,5 @@ void CLK_Initialize( void )
     /* Initialize USB Clock */
     initUSBClk();
     </#if>
- 
+
 }
