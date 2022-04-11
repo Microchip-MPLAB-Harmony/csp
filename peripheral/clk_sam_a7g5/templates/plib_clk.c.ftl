@@ -96,7 +96,7 @@ typedef struct
 static pmc_pll_cfg_t ${PLL_NAME?lower_case}_cfg = {
     .mul = ${.vars["CLK_" + PLL_NAME + "_MUL"]}U,
     .div = ${.vars["CLK_" + PLL_NAME + "_DIVPMC"]}U,
-<#if .vars["CLK_" + PLL_NAME + "_DIVIO"]?? && .vars["CLK_" + PLL_NAME + "_DIVIO"]>
+<#if .vars["CLK_" + PLL_NAME + "_ENIOPLLCK"]?? && .vars["CLK_" + PLL_NAME + "_ENIOPLLCK"]>
     .eniopllck = true,
     .divio = ${.vars["CLK_" + PLL_NAME + "_DIVIO"]}U,
 <#else>
