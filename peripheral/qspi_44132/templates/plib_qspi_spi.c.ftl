@@ -257,6 +257,11 @@ bool ${QSPI_INSTANCE_NAME}_IsBusy(void)
     return ((qspiObj.transferIsBusy) || ((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_TXEMPTY_Msk ) == 0));
 }
 
+bool ${QSPI_INSTANCE_NAME}_IsTransmitterBusy(void)
+{
+    return ((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_TXEMPTY_Msk) == 0U)? true : false;
+}
+
 void ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t dataBits ;
