@@ -102,12 +102,12 @@ qspiLOOPEN.setDependencies(symbolVisible, ["QSPI_SMM"])
 
 #SPI Transmit data register
 transmitRegister = qspiComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
-transmitRegister.setDefaultValue("&("+qspiInstanceName.getValue()+"_REGS->TXDATA)")
+transmitRegister.setDefaultValue("&("+qspiInstanceName.getValue()+"_REGS->QSPI_TXDATA)")
 transmitRegister.setVisible(False)
 
 #SPI Receive data register
 receiveRegister = qspiComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
-receiveRegister.setDefaultValue("&("+qspiInstanceName.getValue()+"_REGS->RXDATA)")
+receiveRegister.setDefaultValue("&("+qspiInstanceName.getValue()+"_REGS->QSPI_RXDATA)")
 receiveRegister.setVisible(False)
 
 #SPI 8-bit Character size Mask
