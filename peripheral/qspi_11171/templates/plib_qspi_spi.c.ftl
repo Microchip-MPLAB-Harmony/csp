@@ -205,6 +205,11 @@ bool ${QSPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize)
     return(${QSPI_INSTANCE_NAME}_WriteRead(NULL, 0, pReceiveData, rxSize));
 }
 
+bool ${QSPI_INSTANCE_NAME}_IsTransmitterBusy(void)
+{
+    return ((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_TXEMPTY_Msk) == 0U)? true : false;
+}
+
 bool ${QSPI_INSTANCE_NAME}_TransferSetup (QSPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
