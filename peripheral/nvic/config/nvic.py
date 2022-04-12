@@ -74,6 +74,7 @@ vectorSettings = {
 
 nvicVectorNumber = []
 nvicVectorName = []
+nvicVectorNameUI = []
 nvicVectorEnable = []
 nvicVectorEnableLock = []
 nvicVectorEnableGenerate = []
@@ -83,6 +84,9 @@ nvicVectorPriorityGenerate = []
 nvicVectorHandler = []
 nvicVectorHandlerLock = []
 nvicVectorGenericHandler = []
+nvicVectorCaption = []
+nvicVectorNum = []
+nvicVectorNumInterrupts = []
 
 global nvicVectorDataStructure
 nvicVectorDataStructure = []
@@ -90,6 +94,8 @@ nvicVectorDataStructure = []
 ################################################################################
 #### Business Logic ####
 ################################################################################
+global ecia_module
+ecia_module = ATDF.getNode('/avr-tools-device-file/modules/module@[name="ECIA"]"')
 
 def generateNVICVectorDataStructure():
 
@@ -121,7 +127,12 @@ def generateNVICVectorDataStructure():
         vectorDict["index"] = vIndex
         vectorDict["name"] = vName
         vectorDict["caption"] = vCaption
-        vectorDict["module-instance"] = list(vModuleInstance.split(" "))
+        if ecia_module != None:
+            arg_list = {"int_source": vName}
+            # Send a message to ECIA to get module instance list. ECIA returns a dictionary with vName as the key and list of module-instances as the value
+            vectorDict["module-instance"] = Database.sendMessage("core", "NVIC_GET_MODULE_INSTANCE_LIST", arg_list)[vName]
+        else:
+            vectorDict["module-instance"] = list(vModuleInstance.split(" "))
 
         nvicVectorDataStructure.append(vectorDict)
 
@@ -130,7 +141,6 @@ def updateNVICVectorPeriEnableValue(symbol, event):
     symbol.setValue(not event["value"], 2)
 
 def updateNVICVectorParametersValue(symbol, event):
-
     symbol.setValue(event["value"], 2)
 
 def updateSecurity(symbol, event):
@@ -139,6 +149,28 @@ def updateSecurity(symbol, event):
     else:
         symbol.setValue(0)
 
+def NVIC_InterruptUpdate(symbol, event):
+    vName = ""
+    is_enabled = event["value"]
+    if "_INTERRUPT_ENABLE" in event["id"]:
+        vName = event["id"][:-len("_INTERRUPT_ENABLE")]
+    else:
+        index = int(event["id"].split("_")[1])
+        listIndex = int(event["id"].split("_")[2])
+        for vectorDict in nvicVectorDataStructure:
+            if vectorDict.get("index") == index:
+                handlerList = vectorDict.get("module-instance")
+                if len(handlerList) == 1:
+                    vName = vectorDict.get("name")
+                else:
+                    vName = handlerList[listIndex]
+                break
+
+    if vName.endswith("_GRP"):
+        vName = vName[:-(len("_GRP"))]
+
+    arg_list = {"int_source": vName, "isEnabled": is_enabled}
+    Database.sendMessage("core", "NVIC_INT_UPDATE", arg_list)
 ################################################################################
 #### Component ####
 ################################################################################
@@ -169,6 +201,15 @@ nvicVectorMax.setLabel("Vector Max Multiple Hanler For Vector")
 nvicVectorMax.setDefaultValue(maxPeriAtVector)
 nvicVectorMax.setVisible(False)
 
+nvicTotalVectors = coreComponent.createIntegerSymbol("NVIC_NUM_VECTORS", nvicMenu)
+nvicTotalVectors.setLabel("Total NVIC Vector Lines")
+nvicTotalVectors.setDefaultValue(len(nvicVectorDataStructure))
+
+global nvicIntUpdateDepList
+nvicIntUpdateDepList = []
+
+nvicIntUpdate = coreComponent.createBooleanSymbol("NVIC_INT_UPDATE", nvicMenu)
+
 index = 0
 priorityList = []
 
@@ -176,6 +217,7 @@ for vectorDict in nvicVectorDataStructure:
 
     nvicVectorNumber.append([])
     nvicVectorName.append([])
+    nvicVectorNameUI.append([])
     nvicVectorEnableLock.append([])
     nvicVectorEnableGenerate.append([])
     nvicVectorEnable.append([])
@@ -185,10 +227,23 @@ for vectorDict in nvicVectorDataStructure:
     nvicVectorHandler.append([])
     nvicVectorHandlerLock.append([])
     nvicVectorGenericHandler.append([])
+    nvicVectorCaption.append([])
+    nvicVectorNum.append([])
+    nvicVectorNumInterrupts.append([])
 
     handlerList = vectorDict.get("module-instance")
     vIndex = vectorDict.get("index")
     genericName = vectorDict.get("name")
+
+    # Below symbol is only used by NVIC UI to know the NVIC vector number
+    nvicVectorNum[index] = coreComponent.createStringSymbol("NVIC_VECTOR_NUM_" + str(index), nvicMenu)
+    nvicVectorNum[index].setLabel("Vector Number")
+    nvicVectorNum[index].setDefaultValue(str(vIndex))
+
+    # Below symbol is only used by NVIC UI to know the number of interrupts on a given NVIC vector number
+    nvicVectorNumInterrupts[index] = coreComponent.createIntegerSymbol("NVIC_NUM_INTERRUPTS_" + str(index), nvicMenu)
+    nvicVectorNumInterrupts[index].setLabel("Number of Interrupts on the NVIC vector line")
+    nvicVectorNumInterrupts[index].setDefaultValue(len(handlerList))
 
     for listIndex in range(0, len(handlerList)):
 
@@ -213,6 +268,7 @@ for vectorDict in nvicVectorDataStructure:
         nvicVectorPeriEnableList = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE", nvicMenu)
         nvicVectorPeriEnableList.setLabel("Vector Peripheral Enable")
         nvicVectorPeriEnableList.setVisible(False)
+        nvicIntUpdateDepList.append(vName + "_INTERRUPT_ENABLE")
 
         nvicVectorPeriHandlerList = coreComponent.createStringSymbol(vName + "_INTERRUPT_HANDLER", nvicMenu)
         nvicVectorPeriHandlerList.setLabel("Vector Peripheral Handler")
@@ -228,11 +284,19 @@ for vectorDict in nvicVectorDataStructure:
             nvicSecureSetup.setLabel("Peripheral Interrupt Security Setup")
             nvicSecureSetup.setVisible(False)
 
+        nvicVectorCaption[index].append(listIndex)
+        nvicVectorCaption[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_CAPTION", nvicMenu)
+        nvicVectorCaption[index][listIndex].setLabel("Caption")
+        nvicVectorCaption[index][listIndex].setDefaultValue(vectorDict.get("caption"))
+        nvicVectorCaption[index][listIndex].setVisible(False)
+
         nvicVectorEnable[index].append(listIndex)
         nvicVectorEnable[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE", nvicMenu)
         nvicVectorEnable[index][listIndex].setLabel("Enable " + vDescription + " Interrupt")
         nvicVectorEnable[index][listIndex].setDefaultValue(vectorSettings[vector][0])
         nvicVectorEnable[index][listIndex].setDependencies(updateNVICVectorParametersValue, [vName + "_INTERRUPT_ENABLE"])
+
+        nvicIntUpdateDepList.append("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE")
 
         nvicVectorNumber[index].append(listIndex)
         nvicVectorNumber[index][listIndex] = coreComponent.createIntegerSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_NUMBER", nvicVectorEnable[index][listIndex])
@@ -240,11 +304,22 @@ for vectorDict in nvicVectorDataStructure:
         nvicVectorNumber[index][listIndex].setDefaultValue(int(vIndex))
         nvicVectorNumber[index][listIndex].setVisible(False)
 
+        # Following symbol is used in plib_nvic.c to generate the vector name to be passed into the NVIC APIs
         nvicVectorName[index].append(listIndex)
         nvicVectorName[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_VECTOR", nvicVectorEnable[index][listIndex])
         nvicVectorName[index][listIndex].setLabel("Vector Name")
         nvicVectorName[index][listIndex].setVisible(False)
-        nvicVectorName[index][listIndex].setDefaultValue(vName)
+        if ecia_module == None:
+            nvicVectorName[index][listIndex].setDefaultValue(vName)
+        else:
+            nvicVectorName[index][listIndex].setDefaultValue(vectorDict.get("name"))
+
+        # Following symbol is used in NVIC UI to populate the vector name column
+        nvicVectorNameUI[index].append(listIndex)
+        nvicVectorNameUI[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_VECTOR_NAME", nvicVectorEnable[index][listIndex])
+        nvicVectorNameUI[index][listIndex].setLabel("Vector Name UI")
+        nvicVectorNameUI[index][listIndex].setVisible(False)
+        nvicVectorNameUI[index][listIndex].setDefaultValue(vName)
 
         nvicVectorEnableLock[index].append(listIndex)
         nvicVectorEnableLock[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE_LOCK", nvicVectorEnable[index][listIndex])
@@ -312,6 +387,9 @@ for vectorDict in nvicVectorDataStructure:
         nvicVectorPeriEnableUpdate.setDependencies(updateNVICVectorPeriEnableValue, ["NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE"])
 
     index += 1
+
+if ecia_module != None:
+    nvicIntUpdate.setDependencies(NVIC_InterruptUpdate, nvicIntUpdateDepList)
 
 if Database.getSymbolValue("core", "PERIPHERAL_MULTI_VECTOR") != None:
 
@@ -414,7 +492,7 @@ if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_E
     secnvicSystemIntMultipleHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_SECURE_MULTIPLE_HANDLERS")
     secnvicSystemIntMultipleHandleFile.setSourcePath("../peripheral/nvic/templates/system/trustZone/interrupts_multiple_handlers_secure.h.ftl")
     secnvicSystemIntMultipleHandleFile.setMarkup(True)
-    
+
     secnvicSystemIntHandlerDeclsFile = coreComponent.createFileSymbol("SEC_NVIC_HANDLER_DECLS", None)
     secnvicSystemIntHandlerDeclsFile.setType("STRING")
     secnvicSystemIntHandlerDeclsFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_SECURE_HANDLER_DECLS")
