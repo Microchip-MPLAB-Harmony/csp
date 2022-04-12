@@ -58,7 +58,7 @@ Description:
 // *****************************************************************************
 // *****************************************************************************
 
-static MEM2MEM_OBJECT mem2mem;
+static MEM2MEM_OBJECT ${MEM2MEM_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -92,9 +92,9 @@ bool ${MEM2MEM_INSTANCE_NAME}_ChannelTransfer( const void *srcAddr, const void *
 
 void ${MEM2MEM_INSTANCE_NAME}_CallbackRegister( MEM2MEM_CALLBACK callback, uintptr_t context )
 {
-    mem2mem.callback = callback;
+    ${MEM2MEM_INSTANCE_NAME?lower_case}Obj.callback = callback;
 
-    mem2mem.context = context;
+    ${MEM2MEM_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
 void ${MEM2MEM_INSTANCE_NAME}_InterruptHandler( void )
@@ -109,8 +109,8 @@ void ${MEM2MEM_INSTANCE_NAME}_InterruptHandler( void )
     ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_PTCR = MEM2MEM_PTCR_ERRCLR_Msk;
 
 </#if>
-    if (mem2mem.callback != NULL)
+    if (${MEM2MEM_INSTANCE_NAME?lower_case}Obj.callback != NULL)
     {
-        mem2mem.callback((MEM2MEM_TRANSFER_EVENT)error, mem2mem.context);
+        ${MEM2MEM_INSTANCE_NAME?lower_case}Obj.callback((MEM2MEM_TRANSFER_EVENT)error, ${MEM2MEM_INSTANCE_NAME?lower_case}Obj.context);
     }
 }

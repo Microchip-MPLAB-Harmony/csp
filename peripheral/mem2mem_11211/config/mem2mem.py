@@ -66,6 +66,14 @@ def instantiateComponent(mem2memComponent):
     mem2memHeader1File.setProjectPath("config/" + configName + "/peripheral/mem2mem/")
     mem2memHeader1File.setType("HEADER")
 
+    mem2memCommonHeader1File = mem2memComponent.createFileSymbol("MEM2MEM_FILE_2", None)
+    mem2memCommonHeader1File.setSourcePath("../peripheral/mem2mem_11211/templates/plib_mem2mem_common.h")
+    mem2memCommonHeader1File.setMarkup(False)
+    mem2memCommonHeader1File.setOutputName("plib_mem2mem_common.h")
+    mem2memCommonHeader1File.setDestPath("/peripheral/mem2mem/")
+    mem2memCommonHeader1File.setProjectPath("config/" + configName + "/peripheral/mem2mem/")
+    mem2memCommonHeader1File.setType("HEADER")
+
     mem2memSource1File = mem2memComponent.createFileSymbol("MEM2MEM_FILE_1", None)
     mem2memSource1File.setSourcePath("../peripheral/mem2mem_11211/templates/plib_mem2mem.c.ftl")
     mem2memSource1File.setMarkup(True)

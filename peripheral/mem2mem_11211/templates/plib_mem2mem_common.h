@@ -1,23 +1,25 @@
 /*******************************************************************************
-Interface definition of MEM2MEM PLIB.
+  PWM Peripheral Library Interface Header File
 
-Company:
+  Company
     Microchip Technology Inc.
 
-File Name:
-    plib_mem2mem.h
+  File Name
+    plib_mem2mem_common.h
 
-Summary:
-    Interface definition of MEM2MEM Plib.
+  Summary
+    MEM2MEM peripheral library interface.
 
-Description:
-    This file defines the interface for the MEM2MEM Plib.
-    It allows user to transfer data from one memory to another.
+  Description
+    This file defines the interface to the PWM peripheral library.  This
+    library provides access to and control of the associated peripheral
+    instance.
+
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2022 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -40,34 +42,61 @@ Description:
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef ${MEM2MEM_INSTANCE_NAME}_H    // Guards against multiple inclusion
-#define ${MEM2MEM_INSTANCE_NAME}_H
+#ifndef PLIB_MEM2MEM_COMMON_H    // Guards against multiple inclusion
+#define PLIB_MEM2MEM_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
-// Included Files
+// Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
 
-#include <stdbool.h>
-#include "plib_mem2mem_common.h"
+#include <stdint.h>
+#include <stddef.h>
 
-#ifdef __cplusplus // Provide C++ Compatibility
+#ifdef __cplusplus  // Provide C++ Compatibility
 extern "C" {
 #endif
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Interface Routines
+// Section: Preprocessor macros
 // *****************************************************************************
 // *****************************************************************************
+#define    MEM2MEM_TRANSFER_WIDTH_BYTE      (0U)
 
-bool ${MEM2MEM_INSTANCE_NAME}_ChannelTransfer( const void *srcAddr, const void *destAddr, size_t blockSize, MEM2MEM_TRANSFER_WIDTH twidth );
+#define    MEM2MEM_TRANSFER_WIDTH_HALFWORD  (1U)
 
-void ${MEM2MEM_INSTANCE_NAME}_CallbackRegister( MEM2MEM_CALLBACK callback, uintptr_t context );
+#define    MEM2MEM_TRANSFER_WIDTH_WORD      (2U)
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
+// *****************************************************************************
+typedef uint32_t MEM2MEM_TRANSFER_WIDTH;
+
+typedef enum
+{
+    /* Data was transferred successfully. */
+    MEM2MEM_TRANSFER_EVENT_COMPLETE,
+
+    /* Error while processing the request */
+    MEM2MEM_TRANSFER_EVENT_ERROR
+
+} MEM2MEM_TRANSFER_EVENT;
+
+typedef void (*MEM2MEM_CALLBACK)( MEM2MEM_TRANSFER_EVENT event, uintptr_t context );
+
+typedef struct
+{
+    MEM2MEM_CALLBACK    callback;
+    uintptr_t           context;
+
+} MEM2MEM_OBJECT;
 
 #ifdef __cplusplus // Provide C++ Compatibility
     }
 #endif
 
-#endif    //PLIB_${MEM2MEM_INSTANCE_NAME}_H
+#endif //PLIB_MEM2MEM_COMMON_H
