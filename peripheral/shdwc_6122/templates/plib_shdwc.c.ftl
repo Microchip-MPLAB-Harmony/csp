@@ -54,13 +54,13 @@ void ${SHDWC_INSTANCE_NAME}_Initialize(void)
     ${SHDWC_INSTANCE_NAME}_REGS->SHDW_MR = <#list EVENT_LIST?word_list as event> SHDW_MR_${event}_Msk | </#list>
         SHDW_MR_WKUPDBC(${WKUPDBC});
 
-    ${SHDWC_INSTANCE_NAME}_REGS->SHDW_WUIR = 0 <#list PINS_LIST?word_list as pin> | SHDW_WUIR_${pin}_ENABLE <#assign type=.vars[pin?replace("EN", "T")]> | SHDW_WUIR_${pin?replace("EN", "T")}_${type} </#list>;
+    ${SHDWC_INSTANCE_NAME}_REGS->SHDW_WUIR = 0U <#list PINS_LIST?word_list as pin> | SHDW_WUIR_${pin}_ENABLE <#assign type=.vars[pin?replace("EN", "T")]> | SHDW_WUIR_${pin?replace("EN", "T")}_${type} </#list>;
 }
 
 void ${SHDWC_INSTANCE_NAME}_Shutdown(void)
 {
     /* Clear previous wake-up event before shutdown */
-    ${SHDWC_INSTANCE_NAME}_GetWakeup();
+    (void) ${SHDWC_INSTANCE_NAME}_GetWakeup();
     ${SHDWC_INSTANCE_NAME}_REGS->SHDW_CR = SHDW_CR_KEY_PASSWD | SHDW_CR_SHDW_Msk;
 }
 
