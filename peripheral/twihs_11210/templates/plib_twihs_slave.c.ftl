@@ -109,12 +109,12 @@ void ${TWIHS_INSTANCE_NAME}_WriteByte(uint8_t wrByte)
 
 TWIHS_SLAVE_TRANSFER_DIR ${TWIHS_INSTANCE_NAME}_TransferDirGet(void)
 {
-    return (${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR & TWIHS_SR_SVREAD_Msk)? TWIHS_SLAVE_TRANSFER_DIR_READ: TWIHS_SLAVE_TRANSFER_DIR_WRITE;
+    return ((${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR & TWIHS_SR_SVREAD_Msk) != 0U)? TWIHS_SLAVE_TRANSFER_DIR_READ: TWIHS_SLAVE_TRANSFER_DIR_WRITE;
 }
 
 TWIHS_SLAVE_ACK_STATUS ${TWIHS_INSTANCE_NAME}_LastByteAckStatusGet(void)
 {
-    return (${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR & TWIHS_SR_NACK_Msk)? TWIHS_SLAVE_ACK_STATUS_RECEIVED_NAK : TWIHS_SLAVE_ACK_STATUS_RECEIVED_ACK;
+    return ((${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR & TWIHS_SR_NACK_Msk) != 0U)? TWIHS_SLAVE_ACK_STATUS_RECEIVED_NAK : TWIHS_SLAVE_ACK_STATUS_RECEIVED_ACK;
 }
 
 <#if TWIHS_SMR_NACKEN == true>
@@ -149,9 +149,9 @@ void ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status = ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR;
 
-    if (status & ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_IMR)
+    if ((status & ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_IMR) != 0U)
     {
-        if(status & TWIHS_SR_SVACC_Msk)
+        if((status & TWIHS_SR_SVACC_Msk) != 0U)
         {
             if (${TWIHS_INSTANCE_NAME?lower_case}Obj.isAddrMatchEventNotified == false)
             {
@@ -173,7 +173,7 @@ void ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
 
                 if (${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                 {
-                    ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
+                    (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
                 }
 
                 ${TWIHS_INSTANCE_NAME?lower_case}Obj.isAddrMatchEventNotified = true;
@@ -182,13 +182,13 @@ void ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
             /* I2C Master reads from slave */
             if (${TWIHS_INSTANCE_NAME}_TransferDirGet() == TWIHS_SLAVE_TRANSFER_DIR_READ)
             {
-                if (status & TWIHS_SR_TXRDY_Msk)
+                if ((status & TWIHS_SR_TXRDY_Msk) != 0U)
                 {
-                    if ((${TWIHS_INSTANCE_NAME?lower_case}Obj.isFirstTxPending == true) || (!(status & TWIHS_SR_NACK_Msk)))
+                    if ((${TWIHS_INSTANCE_NAME?lower_case}Obj.isFirstTxPending == true) || ((status & TWIHS_SR_NACK_Msk) == 0U))
                     {
                         if (${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                         {
-                            ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_TX_READY, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
+                            (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_TX_READY, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
                         }
                         ${TWIHS_INSTANCE_NAME?lower_case}Obj.isFirstTxPending = false;
                     }
@@ -202,17 +202,17 @@ void ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
             else
             {
                 /* I2C Master writes to slave */
-                if (status & TWIHS_SR_RXRDY_Msk)
+                if ((status & TWIHS_SR_RXRDY_Msk) != 0U)
                 {
                     if (${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                     {
-                        ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_RX_READY, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
+                        (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_RX_READY, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
                     }
                 }
             }
         }
-        else if (status & TWIHS_SR_EOSACC_Msk)
-        {
+        else if ((status & TWIHS_SR_EOSACC_Msk) != 0U)
+        { 
             /* Either Repeated Start or Stop condition received */
 
             ${TWIHS_INSTANCE_NAME?lower_case}Obj.isAddrMatchEventNotified = false;
@@ -220,7 +220,7 @@ void ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
             ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_IDR = TWIHS_IDR_TXRDY_Msk | TWIHS_IDR_RXRDY_Msk;
             ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_IER = TWIHS_IER_SVACC_Msk;
 
-            if (status & TWIHS_SR_TXCOMP_Msk)
+            if ((status & TWIHS_SR_TXCOMP_Msk) != 0U)
             {
                 /* Stop condition received OR start condition with other slave address detected */
 
@@ -228,12 +228,16 @@ void ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
 
                 if (${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                 {
-                    ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
+                    (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
                 }
 
                 ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk;
             }
         }
+		else
+		{
+			/* Do Nothing*/
+		}
     }
 }
 <#else>
