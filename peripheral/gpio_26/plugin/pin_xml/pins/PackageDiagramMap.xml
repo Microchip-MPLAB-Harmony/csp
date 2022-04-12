@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<pinfile>
+    <packages>
+        <package diagram="WFBGA84" id="26" name="WFBGA84" />
+        <package diagram="WFBGA84" id="26" name="VFBGA64" />
+    </packages>
+</pinfile>
