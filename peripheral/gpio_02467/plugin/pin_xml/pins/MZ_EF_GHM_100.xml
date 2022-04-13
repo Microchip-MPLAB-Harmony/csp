@@ -1,23 +1,27 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 03:25:19 07/17/20 -->
+<!-- This is an auto-generated pin data file created: 17:25:20 04/13/22 -->
 <pinfile family="MZ_EF">
    <packages>
      <package diagram="JEDEC_MS_026D_BED_LQFP100" id="1" name="TQFP" />
+    <package diagram="JEDEC_MO_275A_DDAC_1_TFBGA100" id="2" name="TFBGA" />
   </packages>
   <pins>
      <pin name="RG15">
        <number package="1" pin="1" />
+      <number package="2" pin="A9 " />
       <function name="AN23" />
       <function name="AERXERR" />
     </pin>
     <pin name="RA5">
        <number package="1" pin="2" />
+      <number package="2" pin="A8 " />
       <function name="EBIA5" />
       <function name="AN34" />
       <function name="PMA5" />
     </pin>
     <pin name="RE5">
        <number package="1" pin="3" />
+      <number package="2" pin="B8 " />
       <function name="EBID5" />
       <function name="AN17" />
       <function name="RPE5" />
@@ -25,18 +29,21 @@
     </pin>
     <pin name="RE6">
        <number package="1" pin="4" />
+      <number package="2" pin="C8 " />
       <function name="EBID6" />
       <function name="AN16" />
       <function name="PMD6" />
     </pin>
     <pin name="RE7">
        <number package="1" pin="5" />
+      <number package="2" pin="C7 " />
       <function name="EBID7" />
       <function name="AN15" />
       <function name="PMD7" />
     </pin>
     <pin name="RC1">
        <number package="1" pin="6" />
+      <number package="2" pin="B7 " />
       <function name="EBIA6" />
       <function name="AN22" />
       <function name="RPC1" />
@@ -44,6 +51,7 @@
     </pin>
     <pin name="RC2">
        <number package="1" pin="7" />
+      <number package="2" pin="A7 " />
       <function name="EBIA12" />
       <function name="AN21" />
       <function name="RPC2" />
@@ -51,6 +59,7 @@
     </pin>
     <pin name="RC3">
        <number package="1" pin="8" />
+      <number package="2" pin="A6" />
       <function name="EBIWE" />
       <function name="AN20" />
       <function name="RPC3" />
@@ -58,6 +67,7 @@
     </pin>
     <pin name="RC4">
        <number package="1" pin="9" />
+      <number package="2" pin="B6 " />
       <function name="EBIOE" />
       <function name="AN19" />
       <function name="RPC4" />
@@ -65,6 +75,7 @@
     </pin>
     <pin name="RG6">
        <number package="1" pin="10" />
+      <number package="2" pin="C6 " />
       <function name="AN14" />
       <function name="C1IND" />
       <function name="ECOL" />
@@ -73,6 +84,7 @@
     </pin>
     <pin name="RG7">
        <number package="1" pin="11" />
+      <number package="2" pin="D6 " />
       <function name="EBIA4" />
       <function name="AN13" />
       <function name="C1INC" />
@@ -83,6 +95,7 @@
     </pin>
     <pin name="RG8">
        <number package="1" pin="12" />
+      <number package="2" pin="C5 " />
       <function name="EBIA3" />
       <function name="AN12" />
       <function name="C2IND" />
@@ -96,18 +109,22 @@
     </pin>
     <pin name="VSS">
        <number package="1" pin="13" />
+      <number package="2" pin="D7 " />
     </pin>
     <pin name="VDD">
        <number package="1" pin="14" />
+      <number package="2" pin="A5" />
     </pin>
     <pin name="MCLR">
        <modifiers>
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="15" />
+      <number package="2" pin="B5 " />
     </pin>
     <pin name="RG9">
        <number package="1" pin="16" />
+      <number package="2" pin="D4 " />
       <function name="EBIA2" />
       <function name="AN11" />
       <function name="C2INC" />
@@ -120,89 +137,105 @@
     </pin>
     <pin name="RA0">
        <number package="1" pin="17" />
+      <number package="2" pin="C4 " />
       <function name="TMS" />
       <function name="EBIA16" />
       <function name="AN24" />
     </pin>
     <pin name="RE8">
        <number package="1" pin="18" />
+      <number package="2" pin="A3" />
       <function name="AN25" />
       <function name="AERXD0" />
       <function name="RPE8" />
     </pin>
     <pin name="RE9">
        <number package="1" pin="19" />
+      <number package="2" pin="A4" />
       <function name="AN26" />
       <function name="AERXD1" />
       <function name="RPE9" />
     </pin>
     <pin name="RB5">
        <number package="1" pin="20" />
+      <number package="2" pin="B4 " />
       <function name="AN45" />
       <function name="C1INA" />
       <function name="RPB5" />
     </pin>
     <pin name="RB4">
        <number package="1" pin="21" />
+      <number package="2" pin="B3 " />
       <function name="AN4" />
       <function name="C1INB" />
     </pin>
     <pin name="RB3">
        <number package="1" pin="22" />
+      <number package="2" pin="C3 " />
       <function name="AN3" />
       <function name="C2INA" />
       <function name="RPB3" />
     </pin>
     <pin name="RB2">
        <number package="1" pin="23" />
+      <number package="2" pin="B2" />
       <function name="AN2" />
       <function name="C2INB" />
       <function name="RPB2" />
     </pin>
     <pin name="RB1">
        <number package="1" pin="24" />
+      <number package="2" pin="A2" />
       <function name="PGEC1" />
       <function name="AN1" />
       <function name="RPB1" />
     </pin>
     <pin name="RB0">
        <number package="1" pin="25" />
+      <number package="2" pin="A1" />
       <function name="PGED1" />
       <function name="AN0" />
       <function name="RPB0" />
     </pin>
     <pin name="RB6">
        <number package="1" pin="26" />
+      <number package="2" pin="B1" />
       <function name="PGEC2" />
       <function name="AN46" />
       <function name="RPB6" />
     </pin>
     <pin name="RB7">
        <number package="1" pin="27" />
+      <number package="2" pin="C1" />
       <function name="PGED2" />
       <function name="AN47" />
       <function name="RPB7" />
     </pin>
     <pin name="RA9">
        <number package="1" pin="28" />
+      <number package="2" pin="C2" />
       <function name="VREF-" />
       <function name="AN27" />
       <function name="AERXD2" />
     </pin>
     <pin name="RA10">
        <number package="1" pin="29" />
+      <number package="2" pin="D2 " />
       <function name="VREF+" />
       <function name="AN28" />
       <function name="AERXD3" />
     </pin>
     <pin name="AVDD">
        <number package="1" pin="30" />
+      <number package="2" pin="D1" />
     </pin>
     <pin name="AVSS">
        <number package="1" pin="31" />
+      <number package="2" pin="D3" />
     </pin>
     <pin name="RB8">
        <number package="1" pin="32" />
+      <number package="2" pin="E3 " />
       <function name="EBIA10" />
       <function name="AN48" />
       <function name="RPB8" />
@@ -210,6 +243,7 @@
     </pin>
     <pin name="RB9">
        <number package="1" pin="33" />
+      <number package="2" pin="E2 " />
       <function name="EBIA7" />
       <function name="AN49" />
       <function name="RPB9" />
@@ -217,6 +251,7 @@
     </pin>
     <pin name="RB10">
        <number package="1" pin="34" />
+      <number package="2" pin="E1" />
       <function name="EBIA13" />
       <function name="CVREFOUT" />
       <function name="AN5" />
@@ -225,24 +260,29 @@
     </pin>
     <pin name="RB11">
        <number package="1" pin="35" />
+      <number package="2" pin="F3 " />
       <function name="AN6" />
       <function name="ERXERR" />
       <function name="AETXERR" />
     </pin>
     <pin name="VSS">
        <number package="1" pin="36" />
+      <number package="2" pin="E4" />
     </pin>
     <pin name="VDD">
        <number package="1" pin="37" />
+      <number package="2" pin="D10" />
     </pin>
     <pin name="RA1">
        <number package="1" pin="38" />
+      <number package="2" pin="E5 " />
       <function name="TCK" />
       <function name="EBIA19" />
       <function name="AN29" />
     </pin>
     <pin name="RF13">
        <number package="1" pin="39" />
+      <number package="2" pin="F2 " />
       <function name="TDI" />
       <function name="EBIA18" />
       <function name="AN30" />
@@ -251,6 +291,7 @@
     </pin>
     <pin name="RF12">
        <number package="1" pin="40" />
+      <number package="2" pin="G1" />
       <function name="TDO" />
       <function name="EBIA17" />
       <function name="AN31" />
@@ -258,6 +299,7 @@
     </pin>
     <pin name="RB12">
        <number package="1" pin="41" />
+      <number package="2" pin="G2 " />
       <function name="EBIA11" />
       <function name="AN7" />
       <function name="ERXD0" />
@@ -266,12 +308,14 @@
     </pin>
     <pin name="RB13">
        <number package="1" pin="42" />
+      <number package="2" pin="H2 " />
       <function name="AN8" />
       <function name="ERXD1" />
       <function name="AECOL" />
     </pin>
     <pin name="RB14">
        <number package="1" pin="43" />
+      <number package="2" pin="G3 " />
       <function name="EBIA1" />
       <function name="AN9" />
       <function name="ERXD2" />
@@ -282,6 +326,7 @@
     </pin>
     <pin name="RB15">
        <number package="1" pin="44" />
+      <number package="2" pin="F4 " />
       <function name="EBIA0" />
       <function name="AN10" />
       <function name="ERXD3" />
@@ -292,18 +337,22 @@
     </pin>
     <pin name="VSS">
        <number package="1" pin="45" />
+      <number package="2" pin="E6 " />
     </pin>
     <pin name="VDD">
        <number package="1" pin="46" />
+      <number package="2" pin="F1" />
     </pin>
     <pin name="RD14">
        <number package="1" pin="47" />
+      <number package="2" pin="J2 " />
       <function name="AN32" />
       <function name="AETXD0" />
       <function name="RPD14" />
     </pin>
     <pin name="RD15">
        <number package="1" pin="48" />
+      <number package="2" pin="J1" />
       <function name="AN33" />
       <function name="AETXD1" />
       <function name="RPD15" />
@@ -311,11 +360,13 @@
     </pin>
     <pin name="RC12">
        <number package="1" pin="49" />
+      <number package="2" pin="K1" />
       <function name="OSC1" />
       <function name="CLKI" />
     </pin>
     <pin name="RC15">
        <number package="1" pin="50" />
+      <number package="2" pin="K2 " />
       <function name="OSC2" />
       <function name="CLKO" />
     </pin>
@@ -324,24 +375,30 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="51" />
+      <number package="2" pin="H3 " />
     </pin>
     <pin name="VUSB3V3">
        <number package="1" pin="52" />
+      <number package="2" pin="J3 " />
     </pin>
     <pin name="VSS">
        <number package="1" pin="53" />
+      <number package="2" pin="F7" />
     </pin>
     <pin name="D-">
        <number package="1" pin="54" />
+      <number package="2" pin="K3 " />
     </pin>
     <pin name="D+">
        <number package="1" pin="55" />
+      <number package="2" pin="K4 " />
     </pin>
     <pin name="RF3">
        <modifiers>
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="56" />
+      <number package="2" pin="J4 " />
       <function name="USBID" />
       <function name="RPF3" />
     </pin>
@@ -350,6 +407,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="57" />
+      <number package="2" pin="F5" />
       <function name="EBIRDY3" />
       <function name="RPF2" />
       <function name="SDA3" />
@@ -359,6 +417,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="58" />
+      <number package="2" pin="G5 " />
       <function name="EBIRDY2" />
       <function name="RPF8" />
       <function name="SCL3" />
@@ -368,6 +427,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="59" />
+      <number package="2" pin="H5 " />
       <function name="EBICS0" />
       <function name="SCL2" />
     </pin>
@@ -376,6 +436,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="60" />
+      <number package="2" pin="J5 " />
       <function name="EBIRDY1" />
       <function name="SDA2" />
     </pin>
@@ -384,21 +445,25 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="61" />
+      <number package="2" pin="H6 " />
       <function name="EBIA14" />
       <function name="PMCS1" />
       <function name="PMA14" />
     </pin>
     <pin name="VDD">
        <number package="1" pin="62" />
+      <number package="2" pin="H1" />
     </pin>
     <pin name="VSS">
        <number package="1" pin="63" />
+      <number package="2" pin="G4" />
     </pin>
     <pin name="RF4">
        <modifiers>
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="64" />
+      <number package="2" pin="F6" />
       <function name="EBIA9" />
       <function name="RPF4" />
       <function name="SDA5" />
@@ -409,6 +474,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="65" />
+      <number package="2" pin="G6 " />
       <function name="EBIA8" />
       <function name="RPF5" />
       <function name="SCL5" />
@@ -419,6 +485,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="66" />
+      <number package="2" pin="K6 " />
       <function name="AETXCLK" />
       <function name="RPA14" />
       <function name="SCL1" />
@@ -428,6 +495,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="67" />
+      <number package="2" pin="J6 " />
       <function name="AETXEN" />
       <function name="RPA15" />
       <function name="SDA1" />
@@ -437,6 +505,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="68" />
+      <number package="2" pin="K7 " />
       <function name="EBIA15" />
       <function name="RPD9" />
       <function name="PMCS2" />
@@ -447,6 +516,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="69" />
+      <number package="2" pin="J7 " />
       <function name="RPD10" />
       <function name="SCK4" />
     </pin>
@@ -455,6 +525,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="70" />
+      <number package="2" pin="K8 " />
       <function name="EMDC" />
       <function name="AEMDC" />
       <function name="RPD11" />
@@ -464,6 +535,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="71" />
+      <number package="2" pin="J8 " />
       <function name="EMDIO" />
       <function name="AEMDIO" />
       <function name="RPD0" />
@@ -472,26 +544,31 @@
     </pin>
     <pin name="RC13">
        <number package="1" pin="72" />
+      <number package="2" pin="K9 " />
       <function name="SOSCI" />
       <function name="RPC13" />
     </pin>
     <pin name="RC14">
        <number package="1" pin="73" />
+      <number package="2" pin="K10" />
       <function name="SOSCO" />
       <function name="RPC14" />
       <function name="T1CK" />
     </pin>
     <pin name="VDD">
        <number package="1" pin="74" />
+      <number package="2" pin="G10" />
     </pin>
     <pin name="VSS">
        <number package="1" pin="75" />
+      <number package="2" pin="D5" />
     </pin>
     <pin name="RD1">
        <modifiers>
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="76" />
+      <number package="2" pin="H10" />
       <function name="RPD1" />
       <function name="SCK1" />
     </pin>
@@ -500,6 +577,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="77" />
+      <number package="2" pin="H9 " />
       <function name="EBID14" />
       <function name="ETXEN" />
       <function name="RPD2" />
@@ -510,6 +588,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="78" />
+      <number package="2" pin="H8" />
       <function name="EBID15" />
       <function name="ETXCLK" />
       <function name="RPD3" />
@@ -520,6 +599,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="79" />
+      <number package="2" pin="H7" />
       <function name="EBID12" />
       <function name="ETXD2" />
       <function name="RPD12" />
@@ -530,6 +610,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="80" />
+      <number package="2" pin="G7" />
       <function name="EBID13" />
       <function name="ETXD3" />
       <function name="PMD13" />
@@ -539,6 +620,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="81" />
+      <number package="2" pin="G8" />
       <function name="SQICS0" />
       <function name="RPD4" />
     </pin>
@@ -547,20 +629,24 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="82" />
+      <number package="2" pin="G9" />
       <function name="SQICS1" />
       <function name="RPD5" />
     </pin>
     <pin name="VDD">
        <number package="1" pin="83" />
+      <number package="2" pin="J10" />
     </pin>
     <pin name="VSS">
        <number package="1" pin="84" />
+      <number package="2" pin="H4" />
     </pin>
     <pin name="RF0">
        <modifiers>
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="85" />
+      <number package="2" pin="F8" />
       <function name="EBID11" />
       <function name="ETXD1" />
       <function name="RPF0" />
@@ -571,6 +657,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="86" />
+      <number package="2" pin="F9" />
       <function name="EBID10" />
       <function name="ETXD0" />
       <function name="RPF1" />
@@ -581,6 +668,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="87" />
+      <number package="2" pin="F10" />
       <function name="EBID9" />
       <function name="ETXERR" />
       <function name="RPG1" />
@@ -591,6 +679,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="88" />
+      <number package="2" pin="E8" />
       <function name="EBID8" />
       <function name="RPG0" />
       <function name="PMD8" />
@@ -600,6 +689,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="89" />
+      <number package="2" pin="E9" />
       <function name="TRCLK" />
       <function name="SQICLK" />
     </pin>
@@ -608,6 +698,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="90" />
+      <number package="2" pin="E10" />
       <function name="TRD3" />
       <function name="SQID3" />
     </pin>
@@ -616,20 +707,24 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="91" />
+      <number package="2" pin="E7" />
       <function name="EBID0" />
       <function name="PMD0" />
     </pin>
     <pin name="VSS">
        <number package="1" pin="92" />
+      <number package="2" pin="J9" />
     </pin>
     <pin name="VDD">
        <number package="1" pin="93" />
+      <number package="2" pin="K5" />
     </pin>
     <pin name="RE1">
        <modifiers>
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="94" />
+      <number package="2" pin="D8" />
       <function name="EBID1" />
       <function name="PMD1" />
     </pin>
@@ -638,6 +733,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="95" />
+      <number package="2" pin="D9" />
       <function name="TRD2" />
       <function name="SQID2" />
     </pin>
@@ -646,6 +742,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="96" />
+      <number package="2" pin="C9" />
       <function name="TRD1" />
       <function name="SQID1" />
     </pin>
@@ -654,6 +751,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="97" />
+      <number package="2" pin="C10" />
       <function name="TRD0" />
       <function name="SQID0" />
     </pin>
@@ -662,6 +760,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="98" />
+      <number package="2" pin="B10" />
       <function name="EBID2" />
       <function name="PMD2" />
     </pin>
@@ -670,12 +769,14 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="99" />
+      <number package="2" pin="A10" />
       <function name="EBID3" />
       <function name="RPE3" />
       <function name="PMD3" />
     </pin>
     <pin name="RE4">
        <number package="1" pin="100" />
+      <number package="2" pin="B9" />
       <function name="EBID4" />
       <function name="AN18" />
       <function name="PMD4" />
