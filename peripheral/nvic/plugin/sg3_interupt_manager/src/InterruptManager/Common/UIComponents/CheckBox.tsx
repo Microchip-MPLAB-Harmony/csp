@@ -1,31 +1,63 @@
 import { Checkbox } from "primereact/checkbox";
-import { useState } from "react";
-import { UpdateSymbolValue } from "../SymbolAccess";
+import React from "react";
+import {
+  AddSymbolListner,
+  GetSymbolValue,
+  UpdateSymbolValue,
+} from "../SymbolAccess";
 import { convertToBoolean } from "../Utils";
+import { globalSymbolSStateData } from "./UIComponentCommonUtils";
 
-const GetCheckBox = (props: {
+interface IProps {
   componentId: any;
   symbolId: any;
   symbolValue: string;
   styleObject: any;
   editable: boolean;
   onChange: (arg0: any) => void;
-}) => {
-  const [value, setValue] = useState(convertToBoolean(props.symbolValue));
-  function updateValue(checked: boolean) {
-    UpdateSymbolValue(props.componentId, props.symbolId, checked);
-    props.onChange(checked);
-    setValue(checked);
+}
+
+interface IState {
+  checkBoxstatus?: any;
+}
+
+class GetCheckBox extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = {
+      checkBoxstatus: convertToBoolean(
+        GetSymbolValue(this.props.componentId, this.props.symbolId)
+      ),
+    };
+    globalSymbolSStateData.set(props.symbolId, this);
+    AddSymbolListner(props.symbolId);
   }
-  return (
-    <Checkbox
-      id={props.symbolId}
-      inputId="binary"
-      style={props.styleObject}
-      checked={value}
-      disabled={!props.editable}
-      onChange={(e) => updateValue(e.checked)}
-    />
-  );
-};
+
+  updateValue(checked: boolean) {
+    UpdateSymbolValue(this.props.componentId, this.props.symbolId, checked);
+    this.props.onChange(checked);
+    this.changeValue(checked);
+  }
+
+  changeValue(checked: any) {
+    this.setState({
+      checkBoxstatus: convertToBoolean(checked),
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <Checkbox
+          id={this.props.symbolId}
+          inputId="binary"
+          style={this.props.styleObject}
+          checked={this.state.checkBoxstatus}
+          disabled={!this.props.editable}
+          onChange={(e) => this.updateValue(e.checked)}
+        />
+      </div>
+    );
+  }
+}
 export default GetCheckBox;

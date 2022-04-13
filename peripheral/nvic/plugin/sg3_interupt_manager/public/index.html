@@ -3,12 +3,10 @@
 
 <head>
   <script>
-    function hai(){
-
-    }
-
-    function hellow(){
-      window.hai();
+    function SymbolValueChanged(val){
+        document.getElementById("symbolChangeListner").setAttribute("symbolChange", val);
+        document.getElementById("symbolChangeListner").click();
+        return "done";
     }
   </script>
   <title>React App</title>

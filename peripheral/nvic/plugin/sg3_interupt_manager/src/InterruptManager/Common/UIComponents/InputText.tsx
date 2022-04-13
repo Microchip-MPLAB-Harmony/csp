@@ -1,29 +1,66 @@
 import { InputText } from "primereact/inputtext";
-import { useState } from "react";
-import { GetSymbolValue, UpdateSymbolValue } from "../SymbolAccess";
+import React from "react";
+import {
+  AddSymbolListner,
+  GetSymbolValue,
+  UpdateSymbolValue,
+} from "../SymbolAccess";
+import { globalSymbolSStateData } from "./UIComponentCommonUtils";
 
-const GetInputText = (props: {
-    component_id: string;
-    symbolId: string;
-    width : string;
-    onChange: (arg0: any) => void;
-    editable : boolean;
-  }) => {
-    const [value, setValue] = useState(GetSymbolValue(props.component_id, props.symbolId));
-    function updateValue(event: { value: any }) {
-      UpdateSymbolValue(props.component_id, props.symbolId, event.value);
-      props.onChange(event);
-      setValue(event.value);
-    }
+interface IProps {
+  component_id: string;
+  symbolId: string;
+  width: string;
+  onChange: (arg0: any) => void;
+  editable: boolean;
+}
+
+interface IState {
+  inputTextSelectedValue?: any;
+}
+
+class GetInputText extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = {
+      inputTextSelectedValue: GetSymbolValue(
+        this.props.component_id,
+        this.props.symbolId
+      ),
+    };
+    globalSymbolSStateData.set(props.symbolId, this);
+    AddSymbolListner(props.symbolId);
+  }
+
+  updateValue(event: { value: any }) {
+    UpdateSymbolValue(
+      this.props.component_id,
+      this.props.symbolId,
+      event.value
+    );
+    this.props.onChange(event);
+    this.changeValue(event.value);
+  }
+
+  changeValue(value: any) {
+    this.setState({
+      inputTextSelectedValue: value,
+    });
+  }
+
+  render() {
     return (
-      <InputText
-        id={props.symbolId}
-        style={{width : props.width}}
-        tooltip={value}
-        value={value}
-        disabled = {!props.editable}
-        onChange={(e) => updateValue(e.target)}
-      />
+      <div>
+        <InputText
+          id={this.props.symbolId}
+          style={{ width: this.props.width }}
+          tooltip={this.state.inputTextSelectedValue}
+          value={this.state.inputTextSelectedValue}
+          disabled={!this.props.editable}
+          onChange={(e) => this.updateValue(e.target)}
+        />
+      </div>
     );
   }
+}
 export default GetInputText;

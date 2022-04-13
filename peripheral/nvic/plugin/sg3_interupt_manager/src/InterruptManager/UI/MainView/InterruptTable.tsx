@@ -7,9 +7,7 @@ import { component_id } from "../MainView/MainBlock";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { convertToBoolean } from "../../Common/Utils";
-import {
-  globalSymbolSStateData,
-} from "../../Common/UIComponents/UIComponentCommonUtils";
+import { globalSymbolSStateData } from "../../Common/UIComponents/UIComponentCommonUtils";
 import GetDropDown from "../../Common/UIComponents/DropDown";
 import GetInputText from "../../Common/UIComponents/InputText";
 import { GetLabelWithCustomDisplayWithTooltip } from "../../Common/UIComponents/Label";
@@ -96,21 +94,8 @@ const InterruptTable = (props: { parentUpdate: () => void }) => {
 
   const PriorityColumn = (rowData: any) => {
     function PriorityBoxChanged(event: { value: any }) {
-      let symbolID = RowAndVectorInterruptMap.get(rowData.id);
-      let szCheckString = symbolID.split("_")[0] + "_";
-      for (let i = 0; i < RowAndVectorInterruptMap.size; i++) {
-        let value = RowAndVectorInterruptMap.get(i);
-        if (value.startsWith(szCheckString)) {
-          UpdateSymbolValue(
-            component_id,
-            "NVIC_" + value + "_PRIORITY",
-            event.value
-          );
-          globalSymbolSStateData.get("NVIC_" + value + "_PRIORITY")(
-            event.value
-          );
-        }
-      }
+      let nvicId = RowAndVectorInterruptMap.get(rowData.id);
+      PriorityChanged(event.value, nvicId);
     }
     let symbolID =
       "NVIC_" + RowAndVectorInterruptMap.get(rowData.id) + "_PRIORITY";
@@ -204,3 +189,24 @@ const InterruptTable = (props: { parentUpdate: () => void }) => {
   );
 };
 export default InterruptTable;
+
+export function PriorityChanged(symbolValue: any, nvicId: any) {
+  try {
+    let szCheckString = nvicId.split("_")[0] + "_";
+    for (let i = 0; i < RowAndVectorInterruptMap.size; i++) {
+      let value = RowAndVectorInterruptMap.get(i);
+      if (value.startsWith(szCheckString)) {
+        globalSymbolSStateData
+          .get("NVIC_" + value + "_PRIORITY")
+          .changeValue(symbolValue);
+        UpdateSymbolValue(
+          component_id,
+          "NVIC_" + value + "_PRIORITY",
+          symbolValue
+        );
+      }
+    }
+  } catch (err) {
+    alert(err);
+  }
+}

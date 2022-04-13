@@ -269,7 +269,7 @@ export function StoreSymbolStyle(symbolId: string, styleMap: Map<any, any>) {
   globalSymbolStyleData.set(symbolId, map);
 }
 
-export function symbolListnerSymbolChanged(symbolid :string){
-  alert(symbolid + " changed.......................")
+export function symbolListnerSymbolChanged(){
+  alert("React API  called.......................")
 }
 
