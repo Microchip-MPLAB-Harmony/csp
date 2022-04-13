@@ -78,18 +78,18 @@ void ${USART_INSTANCE_NAME}_SPI_Initialize( void )
     ${USART_INSTANCE_NAME}_REGS->US_CR = (US_CR_SPI_RSTRX_Msk | US_CR_SPI_RSTTX_Msk | US_CR_SPI_RSTSTA_Msk);
 
     /* Configure clock source, clock phase, clock polarity and CKO = 1 */
-    ${USART_INSTANCE_NAME}_REGS->US_MR |= (US_MR_USART_USCLKS_${USART_CLK_SRC} | US_MR_SPI_CHRL(US_MR_SPI_CHRL_8_BIT_Val) | US_MR_SPI_CPHA(${USART_SPI_CLOCK_PHASE}) | US_MR_SPI_CPOL(${USART_SPI_CLOCK_POLARITY}) | US_MR_SPI_CLKO(1));
+    ${USART_INSTANCE_NAME}_REGS->US_MR |= (US_MR_USART_USCLKS_${USART_CLK_SRC} | US_MR_SPI_CHRL(US_MR_SPI_CHRL_8_BIT_Val) | US_MR_SPI_CPHA(${USART_SPI_CLOCK_PHASE}U) | US_MR_SPI_CPOL(${USART_SPI_CLOCK_POLARITY}U) | US_MR_SPI_CLKO(1U));
 
     /* Enable TX and RX */
     ${USART_INSTANCE_NAME}_REGS->US_CR = (US_CR_SPI_RXEN_Msk | US_CR_SPI_TXEN_Msk);
 
     /* Configure ${USART_INSTANCE_NAME} Baud Rate */
-    ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(${USART_SPI_BRG_VALUE});
+    ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(${USART_SPI_BRG_VALUE}U);
 
     /* Initialize instance object */
 <#if USART_SPI_INTERRUPT_MODE == true >
     ${USART_INSTANCE_NAME?lower_case}SPIObj.callback = NULL;
-    ${USART_INSTANCE_NAME?lower_case}SPIObj.context = (uintptr_t)0;
+    ${USART_INSTANCE_NAME?lower_case}SPIObj.context = 0U;
     ${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = false;
 </#if>
 }
@@ -97,36 +97,39 @@ void ${USART_INSTANCE_NAME}_SPI_Initialize( void )
 bool ${USART_INSTANCE_NAME}_SPI_TransferSetup( USART_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t clockDivider = 0;
+    bool setupStatus = false;
 
-    if ((setup == NULL) || (setup->clockFrequency == 0))
+    if ((setup != NULL) && (setup->clockFrequency != 0U))
     {
-        return false;
+        if(spiSourceClock == 0U)
+        {
+            // Fetch Master Clock Frequency directly
+            spiSourceClock = ${USART_CLOCK_FREQ}UL;
+        }
+
+        clockDivider = spiSourceClock/setup->clockFrequency;
+
+        if(clockDivider < 6U)
+        {
+            clockDivider = 6U;
+        }
+        else if(clockDivider > 65535U)
+        {
+            clockDivider = 65535U;
+        }
+        else
+        {
+           /* Clock divider is valid */
+        }
+
+        ${USART_INSTANCE_NAME}_REGS->US_MR = ((${USART_INSTANCE_NAME}_REGS->US_MR & ~US_MR_SPI_CPOL_Msk) | (uint32_t)setup->clockPolarity);
+        ${USART_INSTANCE_NAME}_REGS->US_MR = ((${USART_INSTANCE_NAME}_REGS->US_MR & ~US_MR_SPI_CPHA_Msk) | (uint32_t)setup->clockPhase);
+        ${USART_INSTANCE_NAME}_REGS->US_MR = ((${USART_INSTANCE_NAME}_REGS->US_MR & ~US_MR_SPI_CHRL_Msk) | (uint32_t)setup->dataBits);
+
+        ${USART_INSTANCE_NAME}_REGS->US_BRGR = ((${USART_INSTANCE_NAME}_REGS->US_BRGR & ~US_BRGR_CD_Msk) | US_BRGR_CD(clockDivider));
+        setupStatus = true;
     }
-
-    if(spiSourceClock == 0)
-    {
-        // Fetch Master Clock Frequency directly
-        spiSourceClock = ${USART_CLOCK_FREQ}UL;
-    }
-
-    clockDivider = spiSourceClock/setup->clockFrequency;
-
-    if(clockDivider < 6)
-    {
-        clockDivider = 6;
-    }
-    else if(clockDivider > 65535)
-    {
-        clockDivider = 65535;
-    }
-
-    ${USART_INSTANCE_NAME}_REGS->US_MR = ((${USART_INSTANCE_NAME}_REGS->US_MR & ~US_MR_SPI_CPOL_Msk) | (uint32_t)setup->clockPolarity);
-    ${USART_INSTANCE_NAME}_REGS->US_MR = ((${USART_INSTANCE_NAME}_REGS->US_MR & ~US_MR_SPI_CPHA_Msk) | (uint32_t)setup->clockPhase);
-    ${USART_INSTANCE_NAME}_REGS->US_MR = ((${USART_INSTANCE_NAME}_REGS->US_MR & ~US_MR_SPI_CHRL_Msk) | (uint32_t)setup->dataBits);
-
-    ${USART_INSTANCE_NAME}_REGS->US_BRGR = ((${USART_INSTANCE_NAME}_REGS->US_BRGR & ~US_BRGR_CD_Msk) | US_BRGR_CD(clockDivider));
-
-    return true;
+    return setupStatus;
 }
 
 <#if USART_SPI_INTERRUPT_MODE == false >
@@ -140,7 +143,7 @@ bool ${USART_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, v
     bool isSuccess = false;
 
     /* Verify the request */
-    if (((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL)))
+    if (((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL)))
     {
         if (pTransmitData == NULL)
         {
@@ -155,7 +158,7 @@ bool ${USART_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, v
         ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_SPI_RSTSTA_Msk;
 
         /* Flush out any unread data in SPI read buffer */
-        if (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_RXRDY_Msk)
+        if ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_RXRDY_Msk) != 0U)
         {
             dummyData = ${USART_INSTANCE_NAME}_REGS->US_RHR;
             (void)dummyData;
@@ -166,35 +169,47 @@ bool ${USART_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, v
             dummySize = rxSize - txSize;
         }
 
-        /* Make sure TXRDY is set */
-        while(!(${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXRDY_Msk));
+        while((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXRDY_Msk) == 0U)
+        {
+            /* Make sure TXRDY is set */
+        }
 
         <#if USART_SPI_CHIP_SELECT != "GPIO">
         /* Force Chip Select */
         ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_SPI_FCS_Msk;
         </#if>
 
-        while ((txCount != txSize) || (dummySize != 0))
+        while ((txCount != txSize) || (dummySize != 0U))
         {
             if (txCount != txSize)
             {
-                ${USART_INSTANCE_NAME}_REGS->US_THR = ((uint8_t*)pTransmitData)[txCount++];
+                ${USART_INSTANCE_NAME}_REGS->US_THR = ((uint8_t*)pTransmitData)[txCount];
+                txCount++;
             }
-            else if (dummySize > 0)
+            else if (dummySize > 0U)
             {
                 ${USART_INSTANCE_NAME}_REGS->US_THR = 0x${USART_SPI_DUMMY_DATA};
                 dummySize--;
             }
+            else
+            {
+                /* Do nothing */
+            }
 
             if (rxCount == rxSize)
             {
-                /* For transmit only request (or all data received), wait for TXRDY to set */
-                while(!(${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXRDY_Msk));
+                while((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXRDY_Msk) == 0U)
+                {
+                    /* For transmit only request (or all data received), wait for TXRDY to set */
+                }
             }
             else
             {
-                /* If data pending to be read, wait for RXRDY to set */
-                while(!(${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_RXRDY_Msk));
+
+                while((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_RXRDY_Msk) == 0U)
+                {
+                    /* If data pending to be read, wait for RXRDY to set */
+                }
 
                 receivedData = (uint8_t)${USART_INSTANCE_NAME}_REGS->US_RHR;
 
@@ -205,8 +220,10 @@ bool ${USART_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, v
             }
         }
 
-        /* Make sure no data is pending in the shift register */
-        while (!(${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXEMPTY_Msk));
+        while ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXEMPTY_Msk) == 0U)
+        {
+            /* Make sure no data is pending in the shift register */
+        }
 
         <#if USART_SPI_CHIP_SELECT != "GPIO">
         /* Release Chip Select */
@@ -236,7 +253,7 @@ bool ${USART_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, v
         ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount = txSize;
         ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount = rxSize;
 
-        if ((txSize > 0) && (rxSize > 0))
+        if ((txSize > 0U) && (rxSize > 0U))
         {
             /* Find the lower value among txSize and rxSize */
             (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
@@ -287,7 +304,7 @@ bool ${USART_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, v
     uint32_t dummyData;
 
     /* Verify the request */
-    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == false))
+    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == false))
     {
         isRequestAccepted = true;
 
@@ -320,7 +337,7 @@ bool ${USART_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, v
         ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_SPI_RSTSTA_Msk;
 
         /* Flush out any unread data in SPI read buffer */
-        if (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_RXRDY_Msk)
+        if ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_RXRDY_Msk) != 0U)
         {
             dummyData = ${USART_INSTANCE_NAME}_REGS->US_RHR;
             (void)dummyData;
@@ -344,14 +361,18 @@ bool ${USART_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, v
                 ${USART_INSTANCE_NAME}_REGS->US_THR = *((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.txBuffer);
                 ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount++;
             }
-            else if (${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0)
+            else if (${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0U)
             {
                 ${USART_INSTANCE_NAME}_REGS->US_THR = (uint8_t)(0x${USART_SPI_DUMMY_DATA});
                 ${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize--;
             }
+            else
+            {
+                /* Do nothing */
+            }
         }
 
-        if (rxSize > 0)
+        if (rxSize > 0U)
         {
             /* Enable receive interrupt to complete the transfer in ISR context */
             ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_SPI_RXRDY_Msk;
@@ -370,18 +391,18 @@ bool ${USART_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, v
 
 bool ${USART_INSTANCE_NAME}_SPI_Write( void* pTransmitData, size_t txSize )
 {
-    return(${USART_INSTANCE_NAME}_SPI_WriteRead(pTransmitData, txSize, NULL, 0));
+    return(${USART_INSTANCE_NAME}_SPI_WriteRead(pTransmitData, txSize, NULL, 0U));
 }
 
 bool ${USART_INSTANCE_NAME}_SPI_Read( void* pReceiveData, size_t rxSize )
 {
-    return(${USART_INSTANCE_NAME}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize));
+    return(${USART_INSTANCE_NAME}_SPI_WriteRead(NULL, 0U, pReceiveData, rxSize));
 }
 
 <#if USART_SPI_INTERRUPT_MODE == true >
 bool ${USART_INSTANCE_NAME}_SPI_IsBusy( void )
 {
-    return ((${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy) || ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXEMPTY_Msk) == 0));
+    return ((${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy) || ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXEMPTY_Msk) == 0U));
 }
 
 void ${USART_INSTANCE_NAME}_SPI_CallbackRegister( USART_SPI_CALLBACK callback, uintptr_t context )
@@ -400,7 +421,7 @@ void ${USART_INSTANCE_NAME}_InterruptHandler( void )
 </#if>
 
     <#if USE_USART_SPI_DMA?? && USE_USART_SPI_DMA == true>
-    if(${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount > 0)
+    if(${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount > 0U)
     {
         /* txPending is 0. Need to use the dummy data buffer for transmission.
          * Find out the max data that can be received, given the limited size of the dummy data buffer.
@@ -416,7 +437,7 @@ void ${USART_INSTANCE_NAME}_InterruptHandler( void )
 
         ${USART_INSTANCE_NAME}_SPI_SetupDMA(${USART_INSTANCE_NAME}_SPI_DummyDataBuffer,(void *)&((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.rxBuffer)[index], size);
     }
-    else if(${USART_INSTANCE_NAME?lower_case}SPIObj.txCount > 0)
+    else if(${USART_INSTANCE_NAME?lower_case}SPIObj.txCount > 0U)
     {
         /* rxSize is 0. Need to use the dummy data buffer for reception.
          * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
@@ -452,17 +473,18 @@ void ${USART_INSTANCE_NAME}_InterruptHandler( void )
 
     <#else>
 
-    if (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_RXRDY_Msk)
+    if ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_RXRDY_Msk) != 0U)
     {
         receivedData = ${USART_INSTANCE_NAME}_REGS->US_RHR;
 
         if (${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount < ${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize)
         {
-            ((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.rxBuffer)[${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount++] = receivedData;
+            ((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.rxBuffer)[${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount] = (uint8_t)receivedData;
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount++;
         }
     }
 
-    if(${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXRDY_Msk)
+    if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXRDY_Msk) != 0U)
     {
         /* Disable the TXRDY interrupt. This will be enabled back if one or more
          * bytes are pending transmission */
@@ -471,17 +493,22 @@ void ${USART_INSTANCE_NAME}_InterruptHandler( void )
 
         if (${USART_INSTANCE_NAME?lower_case}SPIObj.txCount < ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize)
         {
-            ${USART_INSTANCE_NAME}_REGS->US_THR = ((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.txBuffer)[${USART_INSTANCE_NAME?lower_case}SPIObj.txCount++];
+            ${USART_INSTANCE_NAME}_REGS->US_THR = ((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.txBuffer)[${USART_INSTANCE_NAME?lower_case}SPIObj.txCount];
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount++;
         }
-        else if (${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0)
+        else if (${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0U)
         {
             ${USART_INSTANCE_NAME}_REGS->US_THR = (uint8_t)(0x${USART_SPI_DUMMY_DATA});
             ${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize--;
         }
-
-        if ((${USART_INSTANCE_NAME?lower_case}SPIObj.txCount == ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize) && (${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize == 0))
+        else
         {
-            if (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXEMPTY_Msk)
+            /* Do nothing */
+        }
+
+        if ((${USART_INSTANCE_NAME?lower_case}SPIObj.txCount == ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize) && (${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize == 0U))
+        {
+            if ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXEMPTY_Msk) != 0U)
             {
                 /* Disable all interrupt sources - RXRDY, TXRDY and TXEMPTY */
                 ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_SPI_RXRDY_Msk | US_IDR_SPI_TXRDY_Msk | US_IDR_SPI_TXEMPTY_Msk);
@@ -512,6 +539,10 @@ void ${USART_INSTANCE_NAME}_InterruptHandler( void )
              */
             ${USART_INSTANCE_NAME}_REGS->US_IDR = US_IDR_SPI_RXRDY_Msk;
             ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_SPI_TXRDY_Msk;
+        }
+        else
+        {
+            /* Do nothing */
         }
     }
     </#if>
