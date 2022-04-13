@@ -60,7 +60,7 @@
 <#assign useUARTTxDMA = USE_UART_TRANSMIT_DMA>
 </#if>
 
-UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+static UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 
 <#if useUARTRxDMA == false>
 static void ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
@@ -69,8 +69,9 @@ static void ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
     {
         while((UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_RXRDY_Msk)) && (${UART_INSTANCE_NAME?lower_case}Obj.rxSize > ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize) )
         {
-            ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = (${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
-        }
+            ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize] = (uint8_t)(${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
+            ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++;
+		}
 
         /* Check if the buffer is done */
         if(${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.rxSize)
@@ -101,7 +102,8 @@ static void ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
     {
         while((UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
         {
-            ${UART_INSTANCE_NAME}_REGS->UART_THR|= ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
+            ${UART_INSTANCE_NAME}_REGS->UART_THR|= ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
+			${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
         }
 
         /* Check if the buffer is done */
@@ -127,9 +129,9 @@ static void ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
 void ${UART_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Error status */
-    uint32_t errorStatus = (${UART_INSTANCE_NAME}_REGS->UART_SR & (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));
+    uint32_t errorStatusx = (${UART_INSTANCE_NAME}_REGS->UART_SR & (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));
 
-    if(errorStatus != 0)
+    if(errorStatusx != 0U)
     {
         /* Client must call UARTx_ErrorGet() function to clear the errors */
 
@@ -208,7 +210,7 @@ static void ${UART_INSTANCE_NAME}_ErrorClear( void )
     /* Flush existing error bytes from the RX FIFO */
     while( UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_RXRDY_Msk) )
     {
-        dummyData = (${UART_INSTANCE_NAME}_REGS->UART_RHR & UART_RHR_RXCHR_Msk);
+        dummyData = (uint8_t)(${UART_INSTANCE_NAME}_REGS->UART_RHR & UART_RHR_RXCHR_Msk);
     }
 
     /* Ignore the warning */
@@ -225,9 +227,9 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
 
     /* Configure ${UART_INSTANCE_NAME} mode */
     <#if UART_CLK_SRC??>
-    ${UART_INSTANCE_NAME}_REGS->UART_MR = ((UART_MR_BRSRCCK_${UART_CLK_SRC}) | (UART_MR_PAR_${UART_MR_PAR}) | (${UART_MR_FILTER?then(1,0)} << UART_MR_FILTER_Pos));
+    ${UART_INSTANCE_NAME}_REGS->UART_MR = ((UART_MR_BRSRCCK_${UART_CLK_SRC}) | (UART_MR_PAR_${UART_MR_PAR}) | (${UART_MR_FILTER?then(1,0)}U << UART_MR_FILTER_Pos));
     <#else>
-    ${UART_INSTANCE_NAME}_REGS->UART_MR = ((UART_MR_PAR_${UART_MR_PAR}) | (${UART_MR_FILTER?then(1,0)} << UART_MR_FILTER_Pos));
+    ${UART_INSTANCE_NAME}_REGS->UART_MR = ((UART_MR_PAR_${UART_MR_PAR}) | (${UART_MR_FILTER?then(1,0)}U << UART_MR_FILTER_Pos));
     </#if>
 
     /* Configure ${UART_INSTANCE_NAME} Baud Rate */
@@ -281,16 +283,16 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
     if (setup != NULL)
     {
         baud = setup->baudRate;
-        if(srcClkFreq == 0)
+        if(srcClkFreq == 0U)
         {
             srcClkFreq = ${UART_INSTANCE_NAME}_FrequencyGet();
         }
 
         /* Calculate BRG value */
-        brgVal = srcClkFreq / (16 * baud);
+        brgVal = srcClkFreq / (16U * baud);
 
         /* If the target baud rate is acheivable using this clock */
-        if (brgVal <= 65535)
+        if (brgVal <= 65535U)
         {
             /* Configure ${UART_INSTANCE_NAME} mode */
             uartMode = ${UART_INSTANCE_NAME}_REGS->UART_MR;
@@ -321,7 +323,7 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
     {
         /* Clear errors before submitting the request.
          * ErrorGet clears errors internally. */
-        ${UART_INSTANCE_NAME}_ErrorGet();
+         (void) ${UART_INSTANCE_NAME}_ErrorGet();
 
 <#if UART_INTERRUPT_MODE_ENABLE == false>
         while( size > processedSize )
@@ -329,14 +331,14 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
             /* Error status */
             errorStatus = (${UART_INSTANCE_NAME}_REGS->UART_SR & (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));
 
-            if(errorStatus != 0)
+            if(errorStatus != 0U)
             {
                 break;
             }
 
             if(UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_RXRDY_Msk))
             {
-                *lBuffer++ = (${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
+                *lBuffer++ = (uint8_t)(${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
                 processedSize++;
             }
         }
@@ -483,7 +485,8 @@ bool ${UART_INSTANCE_NAME}_ReadAbort(void)
         ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
         /* If required application should read the num bytes processed prior to calling the read abort API */
-        ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
+        ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
+		${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
     }
 
     return true;
@@ -493,12 +496,16 @@ bool ${UART_INSTANCE_NAME}_ReadAbort(void)
 <#if UART_INTERRUPT_MODE_ENABLE == false>
 int ${UART_INSTANCE_NAME}_ReadByte(void)
 {
-    return(${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
+	uint32_t readbyte = (${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
+    return (int)readbyte;
 }
 
 void ${UART_INSTANCE_NAME}_WriteByte( int data )
 {
-    while ((UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk)) == 0);
+    while (UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk))
+	{
+		/* Do Nothing */	
+	}
 
     ${UART_INSTANCE_NAME}_REGS->UART_THR = (UART_THR_TXCHR(data) & UART_THR_TXCHR_Msk);
 }
