@@ -60,8 +60,9 @@
 // Global Data
 // *****************************************************************************
 // *****************************************************************************
-
+<#if TWI_INTERRUPT_MODE == true>
 static FLEXCOM_TWI_SLAVE_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj;
+</#if>
 static twi_registers_t *${FLEXCOM_INSTANCE_NAME}_TWI_Module = TWI${FLEXCOM_INSTANCE_NUMBER}_REGS;
 
 // *****************************************************************************
