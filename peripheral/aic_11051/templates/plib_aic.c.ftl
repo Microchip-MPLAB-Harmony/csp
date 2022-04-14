@@ -70,7 +70,7 @@ static inline unsigned int __get_CPSR( void )
 // Section: AIC Implementation
 // *****************************************************************************
 // *****************************************************************************
-extern IrqData  irqData[2];
+extern IrqData  irqData[];
 extern uint32_t irqDataEntryCount;
 <#lt><#if AIC_CODE_GENERATION != "NONE" >
 void DefaultInterruptHandlerForSpurious( void );
@@ -82,7 +82,7 @@ AIC_INT_Initialize( void )
 <#lt><#if AIC_CODE_GENERATION == "AIC" || AIC_CODE_GENERATION == "SAIC" || AIC_CODE_GENERATION == "AICandSAIC" >
     <#lt><#assign MaxNumPeripherals = AIC_VECTOR_MAX + 1>
     <#lt><#if __PROCESSOR?matches("ATSAMA5.*")>
-        <#lt>    const uint32_t      keyGuard = 0xb6d81c4d;
+        <#lt>    const uint32_t      keyGuard = 0xb6d81c4dU;
     <#lt></#if>
     <#lt>    const unsigned      MaxNumPeripherals = ${MaxNumPeripherals};
     const unsigned      MaxInterruptDepth = 8;
@@ -165,7 +165,7 @@ void AIC_INT_IrqEnable( void )
 bool AIC_INT_IrqDisable( void )
 {
     /* Add a volatile qualifier to the return value to prevent the compiler from optimizing out this function */
-    volatile bool previousValue = (CPSR_I_Msk & __get_CPSR())? false:true;
+    volatile bool previousValue = ((CPSR_I_Msk & __get_CPSR()) != 0U)? false:true;
     __disable_irq();
     __DMB();
     return( previousValue );
