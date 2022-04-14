@@ -61,7 +61,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
+<#if TWI_INTERRUPT_MODE == true>
 static FLEXCOM_TWI_SLAVE_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj;
+</#if>
 static flexcom_registers_t *${FLEXCOM_INSTANCE_NAME}_TWI_Module = ${FLEXCOM_INSTANCE_NAME}_REGS;
 
 // *****************************************************************************
