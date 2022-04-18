@@ -60,14 +60,13 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum
-{
-    DBGU_ERROR_NONE = 0,
-    DBGU_ERROR_OVERRUN = DBGU_SR_OVRE_Msk,
-    DBGU_ERROR_PARITY = DBGU_SR_PARE_Msk,
-    DBGU_ERROR_FRAMING = DBGU_SR_FRAME_Msk
+#define  DBGU_ERROR_NONE     0U
+#define  DBGU_ERROR_OVERRUN  DBGU_SR_OVRE_Msk
+#define  DBGU_ERROR_PARITY   DBGU_SR_PARE_Msk
+#define  DBGU_ERROR_FRAMING  DBGU_SR_FRAME_Msk
 
-} DBGU_ERROR;
+typedef uint32_t DBGU_ERROR;
+
 
 typedef enum
 {
