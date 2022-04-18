@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 03:25:19 07/17/20 -->
+<!-- This is an auto-generated pin data file created: 12:59:11 04/18/22 -->
 <pinfile family="MZ_EF">
    <packages>
      <package diagram="MX_64_QFN" id="1" name="QFN" />
@@ -304,6 +304,7 @@
       </modifiers>
       <number package="1" pin="44" />
       <number package="2" pin="44" />
+      <function name="AECRSDV" />
       <function name="ECOL" />
       <function name="RPD10" />
       <function name="SCL1" />
@@ -470,7 +471,6 @@
       <function name="SQID2" />
       <function name="ERXDV" />
       <function name="ECRSDV" />
-      <function name="AECRSDV" />
       <function name="PMD2" />
     </pin>
     <pin name="RE3">
