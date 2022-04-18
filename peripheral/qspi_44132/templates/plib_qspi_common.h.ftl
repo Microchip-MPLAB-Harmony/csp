@@ -86,9 +86,11 @@ typedef enum
     QUAD_IO = QSPI_IFR_WIDTH_QUAD_IO,
     DUAL_CMD = QSPI_IFR_WIDTH_DUAL_CMD,
     QUAD_CMD = QSPI_IFR_WIDTH_QUAD_CMD,
+<#if QSPI_IFR_OCTAFLASH?? && QSPI_IFR_OCTAFLASH == true>
     OCT_OUTPUT = QSPI_IFR_WIDTH_OCT_OUTPUT,
     OCT_IO = QSPI_IFR_WIDTH_OCT_IO,
     OCT_CMD = QSPI_IFR_WIDTH_OCT_CMD
+</#if>
 } QSPI_LANE_WIDTH;
 
 typedef enum
@@ -110,9 +112,11 @@ typedef enum
 typedef enum
 {
     STD_SPI = QSPI_IFR_PROTTYP_STD_SPI,
+<#if QSPI_IFR_OCTAFLASH?? && QSPI_IFR_OCTAFLASH == true>
     TWIN_QUAD = QSPI_IFR_PROTTYP_TWIN_QUAD,
     OCTAFLASH = QSPI_IFR_PROTTYP_OCTAFLASH,
     HYPERFLASH = QSPI_IFR_PROTTYP_HYPERFLASH
+</#if>
 } QSPI_PROTOCOL_TYPE;
 
 typedef enum
@@ -190,14 +194,18 @@ typedef struct {
     uint8_t dummy_cycles;
     /* DDR mode enable */
     bool ddr_en;
+<#if QSPI_IFR_END?? && QSPI_IFR_END == true>
     /* Little-endian:0, Big-endian:1 */
     bool endian;
+</#if>
     /* DQS Sampling Enable */
     bool dqs_en;
     /* DDR Mode Command Enable */
     bool ddr_cmd_en;
+<#if QSPI_IFR_HFWBEN?? && QSPI_IFR_HFWBEN == true>
     /* HyperFlash Write Buffer Enable */
     bool hyperFlash_wb_en;
+</#if>
     /* Protocol Type */
     QSPI_PROTOCOL_TYPE protocol_type;
 } qspi_memory_xfer_t;

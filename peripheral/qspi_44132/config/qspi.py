@@ -253,6 +253,21 @@ def instantiateComponent(qspiComponent):
         qspiMemoryAddress = "QSPI_MEM_ADDR"
     qspiMemAddr.setDefaultValue(qspiMemoryAddress)
 
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="QSPI"]/value-group@[name="QSPI_IFR__PROTTYP"]/value@[name="OCTAFLASH"]') != None:
+        qspiIfrOctaFlash = qspiComponent.createBooleanSymbol("QSPI_IFR_OCTAFLASH", None)
+        qspiIfrOctaFlash.setDefaultValue(True)
+        qspiIfrOctaFlash.setVisible(False)
+
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="QSPI"]/register-group@[name="QSPI"]/register@[name="QSPI_IFR"]/bitfield@[name="END"]') != None:
+        qspiIfrEndian = qspiComponent.createBooleanSymbol("QSPI_IFR_END", None)
+        qspiIfrEndian.setDefaultValue(True)
+        qspiIfrEndian.setVisible(False)
+
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="QSPI"]/register-group@[name="QSPI"]/register@[name="QSPI_IFR"]/bitfield@[name="HFWBEN"]') != None:
+        qspiIfrHfwben = qspiComponent.createBooleanSymbol("QSPI_IFR_HFWBEN", None)
+        qspiIfrHfwben.setDefaultValue(True)
+        qspiIfrHfwben.setVisible(False)
+
     ###################################################################################################
     ######################################### QSPI-SPI MODE ###########################################
     ###################################################################################################
@@ -261,11 +276,12 @@ def instantiateComponent(qspiComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     qspiHeader1File = qspiComponent.createFileSymbol("QSPI_HEADER1", None)
-    qspiHeader1File.setSourcePath("../peripheral/qspi_44132/templates/plib_qspi_common.h")
+    qspiHeader1File.setSourcePath("../peripheral/qspi_44132/templates/plib_qspi_common.h.ftl")
     qspiHeader1File.setOutputName("plib_qspi_common.h")
     qspiHeader1File.setDestPath("/peripheral/qspi/")
     qspiHeader1File.setProjectPath("config/" + configName + "/peripheral/qspi/")
     qspiHeader1File.setType("HEADER")
+    qspiHeader1File.setMarkup(True)
 
     qspiHeader2File = qspiComponent.createFileSymbol("QSPI_HEADER2", None)
     qspiHeader2File.setSourcePath("../peripheral/qspi_44132/templates/plib_qspi.h.ftl")

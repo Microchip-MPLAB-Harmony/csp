@@ -199,10 +199,12 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
     {
         mask |= QSPI_IFR_DDREN_Msk;
     }
+<#if QSPI_IFR_END?? && QSPI_IFR_END == true>
     if (qspi_memory_xfer->endian)
     {
         mask |= QSPI_IFR_END_Msk;
     }
+</#if>
     if (qspi_memory_xfer->dqs_en)
     {
         mask |= QSPI_IFR_DQSEN_Msk;
@@ -211,10 +213,12 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
     {
         mask |= QSPI_IFR_DDRCMDEN_Msk;
     }
+<#if QSPI_IFR_HFWBEN?? && QSPI_IFR_HFWBEN == true>
     if (qspi_memory_xfer->hyperFlash_wb_en)
     {
         mask |= QSPI_IFR_HFWBEN_Msk;
     }
+</#if>
 
     mask |= qspi_memory_xfer->protocol_type;
 
