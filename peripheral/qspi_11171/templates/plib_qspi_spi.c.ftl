@@ -64,18 +64,21 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     /* DLYBCT = 0x0 */
     <#if (QSPI_NBBITS?has_content)>
     /* NBBITS = ${QSPI_NBBITS} */
-    /* LLB    = ${QSPI_LLBBITS} */
     <#else>
     /* NBBITS = 0x0 */
+    </#if>
+    <#if (QSPI_LLBBITS?has_content)>
+    /* LLB    = ${QSPI_LLBBITS} */
+    <#else>
     /* LLB    = 0 */
     </#if>
     /* CSMODE = 0x0 */
     /* WDRBT  = 0 */
     /* SMM    = ${QSPI_SMM} */
     <#if (QSPI_NBBITS?has_content)>
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} | QSPI_MR_NBBITS(${QSPI_NBBITS}U) | QSPI_MR_LLB(${QSPI_LLBBITS}U));
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} | QSPI_MR_NBBITS(${QSPI_NBBITS}U) <#if (QSPI_LLBBITS?has_content)> | QSPI_MR_LLB(${QSPI_LLBBITS}U) </#if>);
     <#else>
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} );
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} <#if (QSPI_LLBBITS?has_content)> | QSPI_MR_LLB(${QSPI_LLBBITS}U) </#if> );
     </#if>
 
     /* CPOL = <#if QSPI_CPOL=="HIGH">1 <#else>0 </#if>*/
