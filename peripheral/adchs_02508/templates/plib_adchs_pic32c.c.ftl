@@ -60,6 +60,36 @@
     <#lt>ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
 </#if>
 
+<#compress> <#-- To remove unwanted new lines -->
+<#assign ADCHS_MAX_FILTER_NUM = 0>
+
+<#list 1..(ADCHS_NUM_FILTERS) as i>
+<#assign ADCFLTR_AFEN = "ADCFLTR" + i + "__AFEN">
+<#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
+<#if .vars[ADCFLTR_AFEN] == true && .vars[ADCHS_DFx_INT_ENABLED] == true>
+<#assign ADCHS_MAX_FILTER_NUM = i>
+</#if>
+</#list>
+
+<#if ADCHS_MAX_FILTER_NUM gt 0>
+ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
+</#if>
+
+<#assign ADCHS_MAX_COMPARATOR_NUM = 0>
+
+<#list 1..(ADCHS_NUM_COMPARATORS) as i>
+<#assign ADCHS_ADCCMPCON_ENDCMP = "ADCCMPCON" + i + "__ENDCMP">
+<#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
+<#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true && .vars[ADCHS_DCx_INT_ENABLED] == true>
+<#assign ADCHS_MAX_COMPARATOR_NUM = i>
+</#if>
+</#list>
+
+<#if ADCHS_MAX_COMPARATOR_NUM gt 0>
+ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
+</#if>
+</#compress>
+
 void ${ADCHS_INSTANCE_NAME}_Initialize(void)
 {
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON1 = 0;
@@ -86,6 +116,36 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
     /* Input scan */
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCSS1 = 0x${ADCHS_ADCCSS1};
     <#if ADCHS_NUM_SIGNALS gt 31>${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCSS2 = 0x${ADCHS_ADCCSS2}; </#if>
+
+<#compress> <#-- To remove unwanted new lines -->
+<#list 1..(ADCHS_NUM_COMPARATORS) as i>
+<#assign ADCHS_ADCCMPEN = "ADCHS_ADCCMPEN" + i>
+<#assign ADCHS_ADCCMP = "ADCHS_ADCCMP" + i>
+<#assign ADCHS_ADCCMPCON = "ADCHS_ADCCMPCON" + i>
+
+<#if .vars[ADCHS_ADCCMPEN] != "0">
+    ADCHS_REGS->ADCHS_ADCCMPEN${i} = 0x${.vars[ADCHS_ADCCMPEN]?upper_case};
+</#if>
+
+<#if .vars[ADCHS_ADCCMP] != "0">
+    ADCHS_REGS->ADCHS_ADCCMP${i} = 0x${.vars[ADCHS_ADCCMP]?upper_case};
+</#if>
+
+<#if .vars[ADCHS_ADCCMPCON] != "0">
+    ADCHS_REGS->ADCHS_ADCCMPCON${i} = 0x${.vars[ADCHS_ADCCMPCON]?upper_case};
+</#if>
+</#list>
+</#compress>
+
+<#compress> <#-- To remove unwanted new lines -->
+<#list 1..(ADCHS_NUM_FILTERS) as i>
+<#assign ADCHS_ADCFLTR = "ADCHS_ADCFLTR" + i>
+<#if .vars[ADCHS_ADCFLTR] != "0">
+    ADCHS_REGS->ADCHS_ADCFLTR${i} = 0x${.vars[ADCHS_ADCFLTR]?upper_case};
+</#if>
+
+</#list>
+</#compress>
 
 <#if ADCHS_INTERRUPT == true>
     /* Result interrupt enable */
@@ -221,6 +281,72 @@ void ${ADCHS_INSTANCE_NAME}_CallbackRegister(ADCHS_CHANNEL_NUM channel, ADCHS_CA
 }
 </#if>
 
+<#list 1..(ADCHS_NUM_COMPARATORS) as i>
+<#assign ADCHS_ADCCMPCON_ENDCMP = "ADCCMPCON" + i + "__ENDCMP">
+<#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
+<#assign ADCHS_DCx_IFS_REG = "ADCHS_DC" + i + "_IFS_REG">
+<#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true>
+void ${ADCHS_INSTANCE_NAME}_Comparator${i}Enable(void)
+{
+    ADCHS_REGS->ADCHS_ADCCMPCON${i} |= ADCHS_ADCCMPCON${i}_ENDCMP_Msk;
+}
+void ${ADCHS_INSTANCE_NAME}_Comparator${i}Disable(void)
+{
+    ADCHS_REGS->ADCHS_ADCCMPCON${i} &= ~ADCHS_ADCCMPCON${i}_ENDCMP_Msk;
+}
+void ${ADCHS_INSTANCE_NAME}_Comparator${i}LimitSet(uint16_t low_threshold, uint16_t high_threshold)
+{
+    ADCHS_REGS->ADCHS_ADCCMP${i} = ADCHS_ADCCMP${i}_ADCMPHI(high_threshold) | ADCHS_ADCCMP${i}_ADCMPLO(low_threshold);
+}
+void ${ADCHS_INSTANCE_NAME}_Comparator${i}EventModeSet(ADCHS_CMP_EVENT_MODE eventMode)
+{
+    ADCHS_REGS->ADCHS_ADCCMPCON${i} = (ADCHS_REGS->ADCHS_ADCCMPCON${i} & ~(ADCHS_CMP_EVENT_MODE_IEBTWN | ADCHS_CMP_EVENT_MODE_IEHIHI | ADCHS_CMP_EVENT_MODE_IEHILO | ADCHS_CMP_EVENT_MODE_IELOHI | ADCHS_CMP_EVENT_MODE_IELOLO)) | (eventMode);
+}
+uint8_t ${ADCHS_INSTANCE_NAME}_Comparator${i}AnalogInputIDGet(void)
+{
+    return (ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON1_CMPINID0_Msk) >> ADCHS_ADCCMPCON1_CMPINID0_Pos;
+}
+
+<#if .vars[ADCHS_DCx_INT_ENABLED] == true>
+void ${ADCHS_INSTANCE_NAME}_Comparator${i}CallbackRegister(ADCHS_DC_CALLBACK callback, uintptr_t context)
+{
+    ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].callback_fn = callback;
+    ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].context = context;
+}
+<#else>
+bool ${ADCHS_INSTANCE_NAME}_Comparator${i}StatusGet(void)
+{
+    return (ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON${i}_DCMPED_Msk);
+}
+</#if>
+
+</#if>
+</#list>
+
+<#list 1..(ADCHS_NUM_FILTERS) as i>
+<#assign ADCFLTR_AFEN = "ADCFLTR" + i + "__AFEN">
+<#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
+<#assign ADCHS_DFx_IFS_REG = "ADCHS_DF" + i + "_IFS_REG">
+<#if .vars[ADCFLTR_AFEN] == true>
+uint16_t ${ADCHS_INSTANCE_NAME}_Filter${i}DataGet(void)
+{
+    return ADCHS_REGS->ADCHS_ADCFLTR${i} & ADCHS_ADCFLTR${i}_FLT_DATA${i-1}_Msk;
+}
+<#if .vars[ADCHS_DFx_INT_ENABLED] == true>
+void ${ADCHS_INSTANCE_NAME}_Filter${i}CallbackRegister(ADCHS_DF_CALLBACK callback, uintptr_t context)
+{
+    ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn = callback;
+    ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].context = context;
+}
+<#else>
+bool ${ADCHS_INSTANCE_NAME}_Filter${i}IsReady(void)
+{
+    return ADCHS_REGS->ADCHS_ADCFLTR${i} & ADCHS_ADCFLTR${i}_AFIF_Msk;
+}
+</#if>
+</#if>
+</#list>
+
 <#if ADCCON2__EOSIEN == true>
 void ${ADCHS_INSTANCE_NAME}_EOSCallbackRegister(ADCHS_EOS_CALLBACK callback, uintptr_t context)
 {
@@ -246,6 +372,10 @@ void ADCHS_InterruptHandler( void )
     status  = ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCDSTAT1;
     status &= ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCGIRQEN1;
     </#if>
+	
+	<#if ADCHS_MAX_COMPARATOR_NUM gt 0>
+	ADCHS_CHANNEL_NUM channelId;
+	</#if>
 
     <#if ADCCON2__EOSIEN == true>
     if ((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSIEN_Msk) &&
@@ -268,5 +398,33 @@ void ADCHS_InterruptHandler( void )
         }
     }
     </#if>
+	
+	<#list 1..(ADCHS_NUM_COMPARATORS) as i>
+	<#assign ADCHS_ADCCMPCON_ENDCMP = "ADCCMPCON" + i + "__ENDCMP">
+	<#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
+	<#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true && .vars[ADCHS_DCx_INT_ENABLED] == true>
+	
+	if (ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON${i}_DCMPED_Msk)
+	{
+		channelId = (ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON1_CMPINID0_Msk) >> ADCHS_ADCCMPCON1_CMPINID0_Pos;
+
+		if (${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].callback_fn != NULL)
+		{
+		  ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].callback_fn(channelId, ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].context);
+		}
+	}	
+	</#if>
+	</#list>
+	
+	<#list 1..(ADCHS_NUM_FILTERS) as i>
+	<#assign ADCFLTR_AFEN = "ADCFLTR" + i + "__AFEN">
+	<#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
+	<#if .vars[ADCFLTR_AFEN] == true && .vars[ADCHS_DFx_INT_ENABLED] == true>
+	if (${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn != NULL)
+    {
+		${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn(${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].context);
+    }
+	</#if>
+	</#list>
 }
 </#if>
