@@ -1,14 +1,14 @@
 /*******************************************************************************
-   Cortex M Cache Controller (${CMCC_INSTANCE_NAME}) Peripheral Library
+   Cortex M Cache Controller (CMCC) Peripheral Library
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_${CMCC_INSTANCE_NAME?lower_case}.c
+    plib_cmcc.c
 
   Summary:
-    ${CMCC_INSTANCE_NAME} Source File
+    CMCC Source File
 
   Description:
    This file defines the interface to the CMCC peripheral library. This
@@ -46,71 +46,121 @@
 #include "interrupts.h"
 </#if>
 
-void ${CMCC_INSTANCE_NAME}_Disable (void )
-{
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CTRL &=(~CMCC_CTRL_CEN_Msk);
+<#if CMCC_INSTANCE_COUNT gt 1>
+<#assign CMCCI = CMCC_ICACHE_INSTANCE>
+<#else>
+<#assign CMCCI = "CMCC">
+</#if>
+<#if CMCC_INSTANCE_COUNT gt 1>
+<#assign CMCCD = CMCC_DCACHE_INSTANCE>
+<#else>
+<#assign CMCCD = "CMCC">
+</#if>
 
-    while((${CMCC_INSTANCE_NAME}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+void CMCC_Disable (void )
+{
+<#if CMCC_INSTANCE_COUNT == 1>
+    CMCC_REGS->CMCC_CTRL &=(~CMCC_CTRL_CEN_Msk);
+    while((CMCC_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
     {
         /*Wait for the operation to complete*/
     }
+<#else>
+    /* Disable ICache controller */
+    ${CMCCI}_REGS->CMCC_CTRL &=(~CMCC_CTRL_CEN_Msk);
+    while((${CMCCI}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+    {
+        /* Wait for the operation to complete */
+    }
+
+    /* Disable DCache controller */
+    ${CMCCD}_REGS->CMCC_CTRL &=(~CMCC_CTRL_CEN_Msk);
+    while((${CMCCD}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+    {
+        /* Wait for the operation to complete */
+    }
+</#if>
 }
 
 <#if CMCC_CCFG_EXISTS>
-void ${CMCC_INSTANCE_NAME}_EnableICache (void )
+void CMCC_EnableICache (void )
 {
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
-    while((${CMCC_INSTANCE_NAME}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+    ${CMCCI}_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
+    while((${CMCCI}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
     {
         /*Wait for the operation to complete*/
     }
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CFG &= (~CMCC_CFG_ICDIS_Msk);
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
+    ${CMCCI}_REGS->CMCC_CFG &= (~CMCC_CFG_ICDIS_Msk);
+    ${CMCCI}_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
 }
 
-void ${CMCC_INSTANCE_NAME}_DisableICache (void )
+void CMCC_DisableICache (void )
 {
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
-    while((${CMCC_INSTANCE_NAME}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+    ${CMCCI}_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
+    while((${CMCCI}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
     {
         /*Wait for the operation to complete*/
     }
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CFG |= (CMCC_CFG_ICDIS_Msk);
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
+    ${CMCCI}_REGS->CMCC_CFG |= (CMCC_CFG_ICDIS_Msk);
+    ${CMCCI}_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
 }
 
-void ${CMCC_INSTANCE_NAME}_EnableDCache (void )
+void CMCC_EnableDCache (void )
 {
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
-    while((${CMCC_INSTANCE_NAME}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+    ${CMCCD}_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
+    while((${CMCCD}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
     {
         /*Wait for the operation to complete*/
     }
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CFG &= (~CMCC_CFG_DCDIS_Msk);
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
+    ${CMCCD}_REGS->CMCC_CFG &= (~CMCC_CFG_DCDIS_Msk);
+    ${CMCCD}_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
 }
 
-void ${CMCC_INSTANCE_NAME}_DisableDCache (void )
+void CMCC_DisableDCache (void )
 {
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
-    while((${CMCC_INSTANCE_NAME}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+    ${CMCCD}_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
+    while((${CMCCD}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
     {
         /*Wait for the operation to complete*/
     }
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CFG |= (CMCC_CFG_DCDIS_Msk);
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
+    ${CMCCD}_REGS->CMCC_CFG |= (CMCC_CFG_DCDIS_Msk);
+    ${CMCCD}_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
 }
 
 </#if>
-void ${CMCC_INSTANCE_NAME}_InvalidateAll (void )
+<#if CMCC_INSTANCE_COUNT == 1>
+
+void CMCC_InvalidateAll (void )
 {
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
-    while((${CMCC_INSTANCE_NAME}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+    CMCC_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
+    while((CMCC_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
     {
         /*Wait for the operation to complete*/
     }
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_MAINT0 = CMCC_MAINT0_INVALL_Msk;
-    ${CMCC_INSTANCE_NAME}_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
+    CMCC_REGS->CMCC_MAINT0 = CMCC_MAINT0_INVALL_Msk;
+    CMCC_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
+}
+<#else>
+
+void CMCC_ICacheInvalidateAll (void )
+{
+    ${CMCCI}_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
+    while((${CMCCI}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+    {
+        /*Wait for the operation to complete*/
+    }
+    ${CMCCI}_REGS->CMCC_MAINT0 = CMCC_MAINT0_INVALL_Msk;
+    ${CMCCI}_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
 }
 
-
+void CMCC_DCacheInvalidateAll (void )
+{
+    ${CMCCD}_REGS->CMCC_CTRL &= (~CMCC_CTRL_CEN_Msk);
+    while((${CMCCD}_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+    {
+        /*Wait for the operation to complete*/
+    }
+    ${CMCCD}_REGS->CMCC_MAINT0 = CMCC_MAINT0_INVALL_Msk;
+    ${CMCCD}_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
+}
+</#if>

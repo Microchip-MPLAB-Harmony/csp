@@ -25,23 +25,34 @@ global  cmccSourceFile
 global  cmccSystemDefFile
 
 
-# CMCC 11008 is also implemented on masks which has multiple cores. In such 
-# cases, we only generate cache controller code for the core for which this
-# project is created (i.e. the core that is relevant for the current project)
-cmccID = Database.getSymbolValue("core", "CMCC_ID")
-
-# Multicore mask, append the core ID to the module name to create instance name
-cmccInstanceName  = cmccID if cmccID is not None else "CMCC"
-
-symCMCCInstance = coreComponent.createStringSymbol("CMCC_INSTANCE_NAME", None)
-symCMCCInstance.setValue(cmccInstanceName)
-symCMCCInstance.setVisible(False)
-
 symCCFGNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CMCC\"]/register-group@[name=\"CMCC\"]/register@[name=\"CMCC_CFG\"]")
 symCCFGExists = coreComponent.createBooleanSymbol("CMCC_CCFG_EXISTS", None)
 symCCFGExists.setDefaultValue(symCCFGNode is not None)
 symCCFGExists.setVisible(False)
 
+symNumInstance = coreComponent.createIntegerSymbol("CMCC_INSTANCE_COUNT", None)
+symNumInstance.setVisible(False)
+
+cmccModuleNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"CMCC\"]")
+numInstance = len(cmccModuleNode.getChildren())
+symNumInstance.setDefaultValue(numInstance)
+
+#Multiinstance cache controller
+if numInstance > 1:
+    symCMCCIInstance = coreComponent.createStringSymbol("CMCC_ICACHE_INSTANCE", None)
+    symCMCCIInstance.setVisible(False)
+    symCMCCDInstance = coreComponent.createStringSymbol("CMCC_DCACHE_INSTANCE", None)
+    symCMCCDInstance.setVisible(False)
+
+    for instanceIndex in range (0,numInstance):
+        paramsNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"CMCC\"]/instance@[name=\"CMCC{0}\"]/parameters".format(instanceIndex)).getChildren()
+        for paramIndex in range (0, len(paramsNode)):
+            if (paramsNode[paramIndex].getAttribute("name") == "ICACHE_PRESENT" and
+                paramsNode[paramIndex].getAttribute("value") == "1"):
+                symCMCCIInstance.setDefaultValue("CMCC{0}".format(instanceIndex))
+            if (paramsNode[paramIndex].getAttribute("name") == "DCACHE_PRESENT" and
+                paramsNode[paramIndex].getAttribute("value") == "1"):
+                symCMCCDInstance.setDefaultValue("CMCC{0}".format(instanceIndex))
 
 
 ############################################################################
@@ -51,7 +62,7 @@ configName = Variables.get("__CONFIGURATION_NAME")
 
 cmccHeaderFile = coreComponent.createFileSymbol("CMCC_HEADER_FILE", None)
 cmccHeaderFile.setSourcePath("../peripheral/cmcc_11108/templates/plib_cmcc.h.ftl")
-cmccHeaderFile.setOutputName("plib_" + cmccInstanceName.lower() + ".h")
+cmccHeaderFile.setOutputName("plib_cmcc.h")
 cmccHeaderFile.setDestPath("/peripheral/cmcc/")
 cmccHeaderFile.setProjectPath("config/" + configName + "/peripheral/cmcc/")
 cmccHeaderFile.setType("HEADER")
@@ -61,7 +72,7 @@ cmccHeaderFile.setMarkup(True)
 
 cmccSourceFile = coreComponent.createFileSymbol("CMCC_SOURCE_FILE", None)
 cmccSourceFile.setSourcePath("../peripheral/cmcc_11108/templates/plib_cmcc.c.ftl")
-cmccSourceFile.setOutputName("plib_" + cmccInstanceName.lower() + ".c")
+cmccSourceFile.setOutputName("plib_cmcc.c")
 cmccSourceFile.setDestPath("/peripheral/cmcc/")
 cmccSourceFile.setProjectPath("config/" + configName + "/peripheral/cmcc/")
 cmccSourceFile.setType("SOURCE")

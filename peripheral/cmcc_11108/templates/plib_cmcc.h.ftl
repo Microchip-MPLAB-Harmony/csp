@@ -1,17 +1,17 @@
 /*******************************************************************************
-  Interface definition of ${CMCC_INSTANCE_NAME} PLIB.
+  Interface definition of CMCC PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_${CMCC_INSTANCE_NAME?lower_case}.h
+    plib_cmcc.h
 
   Summary:
-    Interface definition of the ${CMCC_INSTANCE_NAME}(Cortex M Cache Controller) Peripheral Library
+    Interface definition of the CMCC(Cortex M Cache Controller) Peripheral Library
 
   Description:
-    This file defines the interface for the ${CMCC_INSTANCE_NAME} Plib.
+    This file defines the interface for the CMCC Plib.
 *******************************************************************************/
 
 /*******************************************************************************
@@ -52,22 +52,25 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define ${CMCC_INSTANCE_NAME}_NO_OF_WAYS     4
-#define ${CMCC_INSTANCE_NAME}_LINE_PER_WAY   64
-#define ${CMCC_INSTANCE_NAME}_LINE_SIZE      16
-#define ${CMCC_INSTANCE_NAME}_WAY_SIZE       1024
+#define CMCC_NO_OF_WAYS     4
+#define CMCC_LINE_PER_WAY   64
+#define CMCC_LINE_SIZE      16
+#define CMCC_WAY_SIZE       1024
 
 /***************************** CMCC API *******************************/
-void ${CMCC_INSTANCE_NAME}_Disable (void );
+void CMCC_Disable (void );
 <#if CMCC_CCFG_EXISTS>
-void ${CMCC_INSTANCE_NAME}_EnableDCache (void );
-void ${CMCC_INSTANCE_NAME}_DisableDCache (void );
-void ${CMCC_INSTANCE_NAME}_EnableICache (void );
-void ${CMCC_INSTANCE_NAME}_DisableICache (void );
+void CMCC_EnableDCache (void );
+void CMCC_DisableDCache (void );
+void CMCC_EnableICache (void );
+void CMCC_DisableICache (void );
 </#if>
-
-void ${CMCC_INSTANCE_NAME}_InvalidateAll (void );
-
+<#if CMCC_INSTANCE_COUNT == 1>
+void CMCC_InvalidateAll (void );
+<#else>
+void CMCC_ICacheInvalidateAll (void);
+void CMCC_DCacheInvalidateAll (void);
+</#if>
 #ifdef __cplusplus  // Provide C++ Compatibility
     }
 #endif
