@@ -40,8 +40,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_L2CC_H
-#define _PLIB_L2CC_H
+#ifndef PLIB_L2CC_H
+#define PLIB_L2CC_H
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 
