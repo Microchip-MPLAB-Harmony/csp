@@ -41,8 +41,8 @@
 
 // DOM-IGNORE-END
 
-#ifndef _PLIB_${LCDC_INSTANCE_NAME}_H    // Guards against multiple inclusion
-#define _PLIB_${LCDC_INSTANCE_NAME}_H
+#ifndef PLIB_${LCDC_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define PLIB_${LCDC_INSTANCE_NAME}_H
 
 #include "device.h"
 #include <stdint.h>
@@ -922,7 +922,7 @@ void ${LCDC_INSTANCE_NAME}_SetDisplayGuardTime(uint16_t frames);
    Remarks:
     None
 */
-void ${LCDC_INSTANCE_NAME}_SetPWMPrescaler(uint8_t div);
+void ${LCDC_INSTANCE_NAME}_SetPWMPrescaler(uint8_t prescaler);
 
 // *****************************************************************************
 /* Function:
