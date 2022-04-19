@@ -39,8 +39,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_${PIT_INSTANCE_NAME}_H
-#define _PLIB_${PIT_INSTANCE_NAME}_H
+#ifndef PLIB_${PIT_INSTANCE_NAME}_H
+#define PLIB_${PIT_INSTANCE_NAME}_H
 
 
 // *****************************************************************************
