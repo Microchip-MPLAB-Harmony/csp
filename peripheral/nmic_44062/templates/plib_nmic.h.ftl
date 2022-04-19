@@ -63,15 +63,15 @@ typedef void (*NMIC_CALLBACK)(uintptr_t context, uint32_t int_cause);
 typedef enum
 {
 <#list 0..NUM_NMIC_SOURCE-1 as i>
-	<#assign NMIC_ENUM_CAPTION = "NMIC_SOURCE_" + i >
-	${.vars[NMIC_ENUM_CAPTION]} = NMIC_ISR_NMI${i}_Msk,
+    <#assign NMIC_ENUM_CAPTION = "NMIC_SOURCE_" + i >
+    ${.vars[NMIC_ENUM_CAPTION]?replace("SOURCE", "SRC")} = NMIC_ISR_NMI${i}_Msk,
 </#list>
 } NMIC_SOURCE;
 
 typedef struct
 {
-	NMIC_CALLBACK          callback;
-	uintptr_t               context;
+    NMIC_CALLBACK          callback;
+    uintptr_t              context;
 } NMIC_OBJECT ;
 /***************************** NMIC API *******************************/
 void ${NMIC_INSTANCE_NAME}_Initialize( void );
