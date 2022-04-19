@@ -45,12 +45,6 @@
 
 <#assign SFR_CCFG_EBICSA_EBI_CS = "SFR_CCFG_EBICSA_EBI_CS" + SMC_NAND_CS_NUM + "A">
 <#assign SMC_CS_ENABLE = "SMC_CS_ENABLE_" + SMC_NAND_CS_NUM>
-<#if .vars[SFR_CCFG_EBICSA_EBI_CS] == true>
-/* Address for transferring command bytes, CLE A22 */
-#define COMMAND_ADDR    0x400000
-/* Address for transferring address bytes, ALE A21 */
-#define ADDRESS_ADDR    0x200000
-</#if>
 
 <#if SMC_SRIER_SRIE == true>
     <#lt>typedef struct
@@ -150,20 +144,20 @@ void ${SMC_INSTANCE_NAME}_Initialize( void )
             <#lt><#if (.vars[SMC_CS_ENABLE] != false)>
                 <#lt>    // Chip Select ${ii} --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
                 <#lt>    // Configure SETUP register
-                <#lt>    ${SMC_INSTANCE_NAME}_REGS->SMC_CS_NUMBER[ ${ii} ].SMC_SETUP = SMC_SETUP_NWE_SETUP( ${.vars[SMC_NWE_SETUP]} )
-                <#lt>    ${INDENT}| SMC_SETUP_NCS_WR_SETUP( ${.vars[SMC_NCS_WR_SETUP]} )
-                <#lt>    ${INDENT}| SMC_SETUP_NRD_SETUP( ${.vars[SMC_NRD_SETUP]} )
-                <#lt>    ${INDENT}| SMC_SETUP_NCS_RD_SETUP( ${.vars[SMC_NCS_RD_SETUP]} )
+                <#lt>    ${SMC_INSTANCE_NAME}_REGS->SMC_CS_NUMBER[ ${ii} ].SMC_SETUP = SMC_SETUP_NWE_SETUP( ${.vars[SMC_NWE_SETUP]}U )
+                <#lt>    ${INDENT}| SMC_SETUP_NCS_WR_SETUP( ${.vars[SMC_NCS_WR_SETUP]}U )
+                <#lt>    ${INDENT}| SMC_SETUP_NRD_SETUP( ${.vars[SMC_NRD_SETUP]}U )
+                <#lt>    ${INDENT}| SMC_SETUP_NCS_RD_SETUP( ${.vars[SMC_NCS_RD_SETUP]}U )
                 <#lt>    ${INDENT};
                 <#lt>    // Configure CYCLE register
-                <#lt>    ${SMC_INSTANCE_NAME}_REGS->SMC_CS_NUMBER[ ${ii} ].SMC_CYCLE = SMC_CYCLE_NWE_CYCLE( ${.vars[SMC_NWE_CYCLE]} )
-                <#lt>    ${INDENT}| SMC_CYCLE_NRD_CYCLE( ${.vars[SMC_NRD_CYCLE]} )
+                <#lt>    ${SMC_INSTANCE_NAME}_REGS->SMC_CS_NUMBER[ ${ii} ].SMC_CYCLE = SMC_CYCLE_NWE_CYCLE( ${.vars[SMC_NWE_CYCLE]}U )
+                <#lt>    ${INDENT}| SMC_CYCLE_NRD_CYCLE( ${.vars[SMC_NRD_CYCLE]}U )
                 <#lt>    ${INDENT};
                 <#lt>    // Configure PULSE register
-                <#lt>    ${SMC_INSTANCE_NAME}_REGS->SMC_CS_NUMBER[ ${ii} ].SMC_PULSE = SMC_PULSE_NWE_PULSE( ${.vars[SMC_NWE_PULSE]} )
-                <#lt>    ${INDENT}| SMC_PULSE_NCS_WR_PULSE( ${.vars[SMC_NCS_WR_PULSE]} )
-                <#lt>    ${INDENT}| SMC_PULSE_NRD_PULSE( ${.vars[SMC_NRD_PULSE]} )
-                <#lt>    ${INDENT}| SMC_PULSE_NCS_RD_PULSE( ${.vars[SMC_NCS_RD_PULSE]} )
+                <#lt>    ${SMC_INSTANCE_NAME}_REGS->SMC_CS_NUMBER[ ${ii} ].SMC_PULSE = SMC_PULSE_NWE_PULSE( ${.vars[SMC_NWE_PULSE]}U )
+                <#lt>    ${INDENT}| SMC_PULSE_NCS_WR_PULSE( ${.vars[SMC_NCS_WR_PULSE]}U )
+                <#lt>    ${INDENT}| SMC_PULSE_NRD_PULSE( ${.vars[SMC_NRD_PULSE]}U )
+                <#lt>    ${INDENT}| SMC_PULSE_NCS_RD_PULSE( ${.vars[SMC_NCS_RD_PULSE]}U )
                 <#lt>    ${INDENT};
                 <#lt>    // Configure MODE register
                 <#lt>    ${SMC_INSTANCE_NAME}_REGS->SMC_CS_NUMBER[ ${ii} ].SMC_MODE = ${.vars[SMC_MODE_EXNW_MODE]}
@@ -173,7 +167,7 @@ void ${SMC_INSTANCE_NAME}_Initialize( void )
                 <#lt></#if>
                 <#lt><#if .vars[SMC_MODE_TDF_MODE] == true>
                     <#lt>    ${INDENT}| SMC_MODE_TDF_MODE_Msk
-                    <#lt>    ${INDENT}| SMC_MODE_TDF_CYCLES( ${.vars[SMC_MODE_TDF_CYCLES]} )
+                    <#lt>    ${INDENT}| SMC_MODE_TDF_CYCLES( ${.vars[SMC_MODE_TDF_CYCLES]}U )
                 <#lt></#if>
                 <#lt>    ${INDENT}| ${.vars[SMC_MODE_DBW]}
                 <#lt>    ${INDENT}| ${.vars[SMC_MODE_BAT]}
@@ -246,54 +240,12 @@ uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect)
 
         </#list>
         default:
+            /*default*/
             break;
     }
     return dataAddress;
 }
 
-inline void ${SMC_INSTANCE_NAME}_CommandWrite(uint32_t dataAddress, uint8_t command)
-{
-    /* Send command */
-    *((volatile uint8_t *)(dataAddress | COMMAND_ADDR)) = command;
-}
-
-inline void ${SMC_INSTANCE_NAME}_CommandWrite16(uint32_t dataAddress, uint16_t command)
-{
-    /* Send command */
-    *((volatile uint16_t *)(dataAddress | COMMAND_ADDR)) = command;
-}
-
-inline void ${SMC_INSTANCE_NAME}_AddressWrite(uint32_t dataAddress, uint8_t address)
-{
-    /* Send address */
-    *((volatile uint8_t *)(dataAddress | ADDRESS_ADDR)) = address;
-}
-
-inline void ${SMC_INSTANCE_NAME}_AddressWrite16(uint32_t dataAddress, uint16_t address)
-{
-    /* Send address */
-    *((volatile uint16_t *)(dataAddress | ADDRESS_ADDR)) = address;
-}
-
-inline void ${SMC_INSTANCE_NAME}_DataWrite(uint32_t dataAddress, uint8_t data)
-{
-    *((volatile uint8_t *)dataAddress) = data;
-}
-
-inline void ${SMC_INSTANCE_NAME}_DataWrite16(uint32_t dataAddress, uint16_t data)
-{
-    *((volatile uint16_t *)dataAddress) = data;
-}
-
-inline uint8_t ${SMC_INSTANCE_NAME}_DataRead(uint32_t dataAddress)
-{
-    return *((volatile uint8_t *)dataAddress);
-}
-
-inline uint16_t ${SMC_INSTANCE_NAME}_DataRead16(uint32_t dataAddress)
-{
-    return *((volatile uint16_t *)dataAddress);
-}
 </#if>
 
 // PMECC =======================================================================
@@ -318,7 +270,7 @@ inline uint16_t ${SMC_INSTANCE_NAME}_DataRead16(uint32_t dataAddress)
     <#lt>}
 
 </#if>
-void ${PMECC_INSTANCE_NAME}_Initialize( void )
+static void ${PMECC_INSTANCE_NAME}_Initialize( void )
 {
     <#assign INDENT = ""?right_pad(20)>
     <#lt>    // Disable then configure the PMECC module
@@ -328,8 +280,8 @@ void ${PMECC_INSTANCE_NAME}_Initialize( void )
     <#lt>    // PMECC interrupt disable
     <#lt>    ${PMECC_INSTANCE_NAME}_REGS->PMECC_IDR = PMECC_IDR_ERRID_Msk;
     <#lt>    // Configuration register
-    <#lt>    ${PMECC_INSTANCE_NAME}_REGS->PMECC_CFG = PMECC_CFG_PAGESIZE(${PMECC_CFG_PAGESIZE})
-    <#lt>    ${INDENT}| PMECC_CFG_BCH_ERR(${PMECC_CFG_BCH_ERR})
+    <#lt>    ${PMECC_INSTANCE_NAME}_REGS->PMECC_CFG = PMECC_CFG_PAGESIZE(${PMECC_CFG_PAGESIZE}U)
+    <#lt>    ${INDENT}| PMECC_CFG_BCH_ERR(${PMECC_CFG_BCH_ERR}U)
     <#lt><#if PMECC_CFG_AUTO>
         <#lt>    ${INDENT}| PMECC_CFG_AUTO_Msk
     <#lt></#if>
@@ -345,7 +297,7 @@ void ${PMECC_INSTANCE_NAME}_Initialize( void )
     <#lt>    ${INDENT};
     <#lt>    // Spare area size register
     <#assign SAREA_SZ_VALUE = PMECC_SAREA_SPARESIZE + 1>
-    <#lt>    ${PMECC_INSTANCE_NAME}_REGS->PMECC_SAREA = PMECC_SAREA_SPARESIZE( ${SAREA_SZ_VALUE} ); // ${PMECC_SAREA_SPARESIZE} bytes
+    <#lt>    ${PMECC_INSTANCE_NAME}_REGS->PMECC_SAREA = PMECC_SAREA_SPARESIZE( ${SAREA_SZ_VALUE}U ); // ${PMECC_SAREA_SPARESIZE} bytes
     <#lt>    // Start address register
     <#lt>    ${PMECC_INSTANCE_NAME}_REGS->PMECC_SADDR = ${PMECC_SADDR_STARTADDR};
     <#lt>    // End address register
@@ -462,7 +414,7 @@ uint32_t ${PMERRLOC_INSTANCE_NAME}_ErrorLocationFindNumOfRoots(uint32_t sectorSi
 }
 </#if>
 
-void ${PMERRLOC_INSTANCE_NAME}_Initialize( void )
+static void ${PMERRLOC_INSTANCE_NAME}_Initialize( void )
 {
     <#assign INDENT = ""?right_pad(20)>
     <#lt>    // Disable then configure the PMERRLOC module

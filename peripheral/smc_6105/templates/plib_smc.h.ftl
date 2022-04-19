@@ -64,6 +64,12 @@
 // DOM-IGNORE-END
 
 <#assign SFR_CCFG_EBICSA_EBI_CS = "SFR_CCFG_EBICSA_EBI_CS" + SMC_NAND_CS_NUM + "A">
+<#if .vars[SFR_CCFG_EBICSA_EBI_CS] == true>
+/* Address for transferring command bytes, CLE A22 */
+#define COMMAND_ADDR    0x400000U
+/* Address for transferring address bytes, ALE A21 */
+#define ADDRESS_ADDR    0x200000U
+</#if>
 
 <#if SMC_SRIER_SRIE == true>
     <#lt>typedef void (* SMC_CALLBACK)( uintptr_t context, uint32_t interruptStatus );
@@ -81,14 +87,50 @@
 void ${SMC_INSTANCE_NAME}_Initialize( void );
 <#if .vars[SFR_CCFG_EBICSA_EBI_CS] == true>
 uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect);
-void ${SMC_INSTANCE_NAME}_CommandWrite(uint32_t dataAddress, uint8_t command);
-void ${SMC_INSTANCE_NAME}_CommandWrite16(uint32_t dataAddress, uint16_t command);
-void ${SMC_INSTANCE_NAME}_AddressWrite(uint32_t dataAddress, uint8_t address);
-void ${SMC_INSTANCE_NAME}_AddressWrite16(uint32_t dataAddress, uint16_t address);
-void ${SMC_INSTANCE_NAME}_DataWrite(uint32_t dataAddress, uint8_t data);
-void ${SMC_INSTANCE_NAME}_DataWrite16(uint32_t dataAddress, uint16_t data);
-uint8_t ${SMC_INSTANCE_NAME}_DataRead(uint32_t dataAddress);
-uint16_t ${SMC_INSTANCE_NAME}_DataRead16(uint32_t dataAddress);
+
+static inline void ${SMC_INSTANCE_NAME}_CommandWrite(uint32_t dataAddress, uint8_t command)
+{
+    /* Send command */
+    *((volatile uint8_t *)(dataAddress | COMMAND_ADDR)) = command;
+}
+
+static inline void ${SMC_INSTANCE_NAME}_CommandWrite16(uint32_t dataAddress, uint16_t command)
+{
+    /* Send command */
+    *((volatile uint16_t *)(dataAddress | COMMAND_ADDR)) = command;
+}
+
+static inline void ${SMC_INSTANCE_NAME}_AddressWrite(uint32_t dataAddress, uint8_t address)
+{
+    /* Send address */
+    *((volatile uint8_t *)(dataAddress | ADDRESS_ADDR)) = address;
+}
+
+static inline void ${SMC_INSTANCE_NAME}_AddressWrite16(uint32_t dataAddress, uint16_t address)
+{
+    /* Send address */
+    *((volatile uint16_t *)(dataAddress | ADDRESS_ADDR)) = address;
+}
+
+static inline void ${SMC_INSTANCE_NAME}_DataWrite(uint32_t dataAddress, uint8_t data)
+{
+    *((volatile uint8_t *)dataAddress) = data;
+}
+
+static inline void ${SMC_INSTANCE_NAME}_DataWrite16(uint32_t dataAddress, uint16_t data)
+{
+    *((volatile uint16_t *)dataAddress) = data;
+}
+
+static inline uint8_t ${SMC_INSTANCE_NAME}_DataRead(uint32_t dataAddress)
+{
+    return *((volatile uint8_t *)dataAddress);
+}
+
+static inline uint16_t ${SMC_INSTANCE_NAME}_DataRead16(uint32_t dataAddress)
+{
+    return *((volatile uint16_t *)dataAddress);
+}
 </#if>
 
 <#if PMECC_CTRL_ENABLE == true>
