@@ -237,13 +237,13 @@ pllclkEnable.setDefaultValue(True)
 
 pllclkMultiplier = coreComponent.createIntegerSymbol("CKGR_PLLAR_MULA", pllclkMenu)
 pllclkMultiplier.setLabel("PLLA Multiplier")
-pllclkMultiplier.setDefaultValue(3661)
+pllclkMultiplier.setDefaultValue(3051)
 pllclkMultiplier.setMin(8)
 pllclkMultiplier.setMax(7500)
 
 pllClkFreq = coreComponent.createIntegerSymbol("PLLA_CLOCK_FREQUENCY", pllclkMenu)
 pllClkFreq.setLabel("PLLA Clock Frequency")
-pllClkFreq.setDefaultValue(119996416)
+pllClkFreq.setDefaultValue(100007936)
 pllClkFreq.setDependencies(pllaFreq, ["CKGR_PLLAR_MULA", "PLLA_ENABLE", "SLCK_CLOCK_FREQUENCY", "PMC_MCKR_PLLADIV2"])
 pllClkFreq.setReadOnly(True)
 
@@ -578,12 +578,12 @@ def usbfsFreqCal(symbol, event):
 ###############################################################################
 systickFreq = coreComponent.createIntegerSymbol("SYSTICK_CLOCK_FREQUENCY", calculatedclkMenu)
 systickFreq.setLabel("SysTick Frequency")
-systickFreq.setDefaultValue(14999552)
+systickFreq.setDefaultValue(12500992)
 systickFreq.setReadOnly(True)
 
 processorFreq = coreComponent.createIntegerSymbol("CPU_CLOCK_FREQUENCY", calculatedclkMenu)
 processorFreq.setLabel("Processor Frequency")
-processorFreq.setDefaultValue(119996416)
+processorFreq.setDefaultValue(100007936)
 processorFreq.setReadOnly(True)
 
 usbSRC = coreComponent.createKeyValueSetSymbol("PMC_USB_USBS", usbclkMenu)
@@ -619,7 +619,7 @@ for index in range(0, 2):
 
 masterFreqVal = coreComponent.createIntegerSymbol("MASTER_CLOCK_FREQUENCY", calculatedclkMenu)
 masterFreqVal.setLabel("Master Clock Frequency (Hz)")
-masterFreqVal.setDefaultValue(119996416)
+masterFreqVal.setDefaultValue(100007936)
 masterFreqVal.setReadOnly(True)
 masterFreqVal.setDependencies(masterFreq, ["PMC_MCKR_CSS",
                                         "PMC_MCKR_PRES",
