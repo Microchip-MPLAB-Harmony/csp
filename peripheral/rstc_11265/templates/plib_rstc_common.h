@@ -68,6 +68,22 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
+/* Reset type
+
+  Summary:
+    Identifiers for the type of reset.
+
+  Description:
+    This enumeration provides identifiers for use with the reset command.
+
+  Remarks:
+    Currently processor reset is the sole stimulus.
+*/
+ 
+/* Processor reset */
+#define    RSTC_RESET_PROC      (RSTC_CR_PROCRST_Msk)
+
+typedef uint32_t RSTC_RESET_TYPE;
 
 /* Reset cause
 
@@ -81,36 +97,19 @@
   Remarks:
     Refer to the specific device data sheet to determine availability.
 */
-typedef enum
-{
-    /* First power reset */
-    RSTC_GENERAL_RESET =    RSTC_SR_RSTTYP_GENERAL_RST,
-    /* Reset after wake up mode */
-    RSTC_WAKEUP_RESET =     RSTC_SR_RSTTYP_WKUP_RST,
-    /* Reset when Watchdog fault occurred */
-    RSTC_WATCHDOG_RESET =   RSTC_SR_RSTTYP_WDT_RST,
-    /* Reset caused by dedicated software instruction */
-    RSTC_SOFTWARE_RESET =   RSTC_SR_RSTTYP_SOFT_RST,
-    /* Reset occurs when NRST pin is detected low */
-    RSTC_USER_RESET =       RSTC_SR_RSTTYP_USER_RST
-} RSTC_RESET_CAUSE;
 
-/* Reset type
+/* First power reset */
+#define    RSTC_GENERAL_RESET     (RSTC_SR_RSTTYP_GENERAL_RST)
+/* Reset after wake up mode */
+#define    RSTC_WAKEUP_RESET      (RSTC_SR_RSTTYP_WKUP_RST)
+/* Reset when Watchdog fault occurred */
+#define    RSTC_WATCHDOG_RESET    (RSTC_SR_RSTTYP_WDT_RST)
+/* Reset caused by dedicated software instruction */
+#define    RSTC_SOFTWARE_RESET    (RSTC_SR_RSTTYP_SOFT_RST)
+/* Reset occurs when NRST pin is detected low */
+#define    RSTC_USER_RESET        (RSTC_SR_RSTTYP_USER_RST)
 
-  Summary:
-    Identifiers for the type of reset.
-
-  Description:
-    This enumeration provides identifiers for use with the reset command.
-
-  Remarks:
-    Currently processor reset is the sole stimulus.
-*/
-typedef enum
-{
-    /* Processor reset */
-    RSTC_RESET_PROC = 		RSTC_CR_PROCRST_Msk
-} RSTC_RESET_TYPE;
+typedef uint32_t RSTC_RESET_CAUSE;
 
 typedef void (* RSTC_CALLBACK)(uintptr_t context);
 
