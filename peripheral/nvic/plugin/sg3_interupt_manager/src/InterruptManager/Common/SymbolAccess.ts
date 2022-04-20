@@ -7,13 +7,13 @@ export function GetSymbolValue(componentId: any, value: any) {
     );
     return symValue;
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("GetSymbolValue", value, err);
   }
 }
 
-function ErrorMessage(err: any) {
+function ErrorMessage(message : any, symbolId : any,err: any) {
   alert(
-    "Please update latest harmony-services pacakge. Unable to access symbol editable status:  " +
+    "Please update latest harmony-services pacakge. Unable to access generic plugin API :  "+ message +  " and symbol Id : "+ symbolId+" ->"+
       err
   );
 }
@@ -31,7 +31,7 @@ export function GetSymbolArray(componentId: any, value: any) {
     let array = symbolArray.split("M*C");
     return array;
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("GetSymbolArray",value, err);
   }
 }
 
@@ -43,7 +43,7 @@ export function GetSymbolLabelName(componentId: any, value: any) {
     );
     return labelName;
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("GetSymbolLabelName", value,err);
   }
 }
 
@@ -55,7 +55,7 @@ export function GetSymbolMinValue(componentId: any, value: any) {
     );
     return minValue;
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("GetSymbolMinValue", value,  err);
   }
 }
 
@@ -67,7 +67,7 @@ export function GetSymbolMaxValue(componentId: any, value: any) {
     );
     return maxValue;
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("GetSymbolMaxValue", value, err);
   }
 }
 
@@ -79,7 +79,7 @@ export function GetSymbolType(componentId: any, value: any) {
     );
     return symbolType;
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("GetSymbolType", value, err);
   }
 }
 
@@ -90,7 +90,7 @@ export function GetSymbolVisibleStatus(componentId: any, value: any) {
     ).javaConnector.getSymbolVisibleStatus(componentId, value);
     return symbolVisibleStatus;
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("GetSymbolVisibleStatus", value, err);
   }
 }
 
@@ -101,7 +101,7 @@ export function GetSymbolEnableStatus(componentId: any, value: any) {
     ).javaConnector.getSymbolEnableStatus(componentId, value);
     return symbolEnableStatus;
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("GetSymbolEnableStatus", value, err);
   }
 }
 
@@ -117,7 +117,7 @@ export function UpdateSymbolValue(
       symbolValue
     );
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("UpdateSymbolValue", symbolId, err);
   }
 }
 
@@ -125,7 +125,7 @@ export function SetComponentId(component_id: any): void {
   try {
     (window as any).javaConnector.setComponentId(component_id);
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage(SetComponentId, component_id, err);
   }
 }
 
@@ -133,7 +133,7 @@ export function AddSymbolListner(symbolId: any): void {
   try {
     (window as any).javaConnector.addSymbolListener(symbolId);
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("AddSymbolListner", symbolId, err);
   }
 }
 
@@ -141,7 +141,7 @@ export function clearSymbol(componentId: any, symbolId: any): void {
   try {
     (window as any).javaConnector.clearSymbol(componentId, symbolId);
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("clearSymbol",symbolId, err);
   }
 }
 
@@ -149,7 +149,7 @@ export function ZoomInReact() {
   try {
     (window as any).javaConnector.ZoomInReactCall();
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("ZoomInReact", "", err);
   }
 }
 
@@ -157,6 +157,6 @@ export function ZoomOutReact() {
   try {
     (window as any).javaConnector.ZoomOutReactCall();
   } catch (err) {
-    ErrorMessage(err);
+    ErrorMessage("ZoomOutReact", "", err);
   }
 }

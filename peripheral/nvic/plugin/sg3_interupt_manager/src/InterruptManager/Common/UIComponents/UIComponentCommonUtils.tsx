@@ -29,6 +29,7 @@ export enum SymbolType {
 function Component(props: {
   componentId: any;
   symbolId: any;
+  symbolListeners : any
   onChange: (arg0: any) => void;
 }) {
   let component = null;
@@ -57,10 +58,12 @@ function Component(props: {
         <GetDropDown
           componentId={props.componentId}
           symbolId={props.symbolId}
+          symbolListners={props.symbolListeners}
           symbolValue={value}
           symbolArray={GetSymbolArray(props.componentId, props.symbolId)}
           styleObject={GetDropDownStyle(props.symbolId)}
           editable={GetSymbolEnableStatus(props.componentId, props.symbolId)}
+          visible={symbolVisibleStatus}
           onChange={(target) => props.onChange(target.target)}
         />
       );
@@ -88,9 +91,11 @@ function Component(props: {
         <GetCheckBox
           componentId={props.componentId}
           symbolId={props.symbolId}
+          symbolListners={props.symbolListeners}
           symbolValue={value}
           styleObject={GetStyle(props.symbolId)}
           editable={GetSymbolEnableStatus(props.componentId, props.symbolId)}
+          visible={symbolVisibleStatus}
           onChange={(target) => props.onChange(target.target)}
         />
       );
@@ -111,6 +116,7 @@ function Component(props: {
 function ComponentWithLabel(props: {
   componentId: any;
   symbolId: any;
+  symbolListeners : any
   onChange: (arg0: any) => void;
 }) {
   let component = Component(props);
@@ -132,6 +138,7 @@ function ComponentWithLabel(props: {
 function ComponentWithOutLabel(props: {
   componentId: any;
   symbolId: any;
+  symbolListeners : any
   onChange: (arg0: any) => void;
 }) {
   return (
@@ -139,6 +146,7 @@ function ComponentWithOutLabel(props: {
       <Component
         componentId={props.componentId}
         symbolId={props.symbolId}
+        symbolListeners={props.symbolListeners}
         onChange={props.onChange}
       />
     </div>
@@ -186,6 +194,7 @@ function GetComponentType(props: { componentId: any; symbolID: any }) {
 export function GetUIComponentWithLabel(props: {
   componentId: any;
   symbolId: any;
+  symbolListeners : any
   onChange: (arg0: any) => void;
 }) {
   return (
@@ -193,6 +202,7 @@ export function GetUIComponentWithLabel(props: {
       <ComponentWithLabel
         componentId={props.componentId}
         symbolId={props.symbolId}
+        symbolListeners={props.symbolListeners}
         onChange={props.onChange}
       />
     </div>
@@ -202,6 +212,7 @@ export function GetUIComponentWithLabel(props: {
 export function GetUIComponentWithOutLabel(props: {
   componentId: any;
   symbolId: any;
+  symbolListeners : any
   onChange: (arg0: any) => void;
 }) {
   return (
@@ -209,6 +220,7 @@ export function GetUIComponentWithOutLabel(props: {
       <ComponentWithOutLabel
         componentId={props.componentId}
         symbolId={props.symbolId}
+        symbolListeners={props.symbolListeners}
         onChange={props.onChange}
       />
     </div>
@@ -267,9 +279,5 @@ export function StoreSymbolStyle(symbolId: string, styleMap: Map<any, any>) {
     }
   });
   globalSymbolStyleData.set(symbolId, map);
-}
-
-export function symbolListnerSymbolChanged(){
-  alert("React API  called.......................")
 }
 

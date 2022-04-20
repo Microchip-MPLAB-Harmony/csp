@@ -1,4 +1,5 @@
 import {
+  AddSymbolListner,
   GetSymbolArray,
   GetSymbolValue,
   UpdateSymbolValue,
@@ -74,19 +75,18 @@ const InterruptTable = (props: { parentUpdate: () => void }) => {
     }
     let symbolId =
       "NVIC_" + RowAndVectorInterruptMap.get(rowData.id) + "_ENABLE";
-    let enableLock = GetSymbolValue(
-      component_id,
-      "NVIC_" + RowAndVectorInterruptMap.get(rowData.id) + "_ENABLE_LOCK"
-    );
+    let enableLockId =  "NVIC_" + RowAndVectorInterruptMap.get(rowData.id) + "_ENABLE_LOCK";
     return (
       <div>
         <GetCheckBox
           componentId={component_id}
           symbolId={symbolId}
+          symbolListners={[symbolId,enableLockId]}
           onChange={EnabledChangeListner}
           symbolValue={GetSymbolValue(component_id, symbolId)}
           styleObject={{ width: "20px", height: "20px" }}
-          editable={!convertToBoolean(enableLock)}
+          editable={!convertToBoolean(GetSymbolValue(component_id, enableLockId))}
+          visible={true}
         />
       </div>
     );
@@ -99,20 +99,19 @@ const InterruptTable = (props: { parentUpdate: () => void }) => {
     }
     let symbolID =
       "NVIC_" + RowAndVectorInterruptMap.get(rowData.id) + "_PRIORITY";
-    let priorityLock = GetSymbolValue(
-      component_id,
-      "NVIC_" + RowAndVectorInterruptMap.get(rowData.id) + "_PRIORITY_LOCK"
-    );
+    let priorityLockId = "NVIC_" + RowAndVectorInterruptMap.get(rowData.id) + "_PRIORITY_LOCK";
     return (
       <div>
         <GetDropDown
           componentId={component_id}
           symbolId={symbolID}
+          symbolListners={[symbolID, priorityLockId]}
           onChange={PriorityBoxChanged}
           symbolValue={GetSymbolValue(component_id, symbolID)}
           symbolArray={GetSymbolArray(component_id, symbolID)}
-          editable={!convertToBoolean(priorityLock)}
+          editable={!convertToBoolean(GetSymbolValue(component_id, priorityLockId))}
           styleObject={{ width: "100px", height: "35px" }}
+          visible={true}
         />
       </div>
     );
@@ -122,20 +121,18 @@ const InterruptTable = (props: { parentUpdate: () => void }) => {
     function HandlerChanged() {
       //
     }
-    let handlerLock = GetSymbolValue(
-      component_id,
-      "NVIC_" + RowAndVectorInterruptMap.get(rowData.id) + "_HANDLER_LOCK"
-    );
+    let symbolId = "NVIC_" + RowAndVectorInterruptMap.get(rowData.id) + "_HANDLER";
+    let handlerLockId = "NVIC_" + RowAndVectorInterruptMap.get(rowData.id) + "_HANDLER_LOCK";
     return (
       <div className="p-d-flex">
         <GetInputText
           component_id={component_id}
-          symbolId={
-            "NVIC_" + RowAndVectorInterruptMap.get(rowData.id) + "_HANDLER"
-          }
+          symbolId={symbolId}
+          symbolListners={[symbolId, handlerLockId]}
           width="250px"
           onChange={HandlerChanged}
-          editable={!convertToBoolean(handlerLock)}
+          editable={!convertToBoolean(GetSymbolValue(component_id, handlerLockId))}
+          visible={true}
         />
       </div>
     );
@@ -207,6 +204,6 @@ export function PriorityChanged(symbolValue: any, nvicId: any) {
       }
     }
   } catch (err) {
-    alert(err);
+    alert("PriorityChange Error : "+err);
   }
 }

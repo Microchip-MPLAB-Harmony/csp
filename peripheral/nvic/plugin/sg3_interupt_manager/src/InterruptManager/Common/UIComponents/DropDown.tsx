@@ -10,17 +10,21 @@ import { globalSymbolSStateData } from "./UIComponentCommonUtils";
 interface IProps {
   componentId: any;
   symbolId: any;
+  symbolListners: any;
   symbolValue: any;
   symbolArray: any;
   styleObject: any;
   editable: boolean;
+  visible: boolean;
   onChange: (arg0: any) => void;
 }
 
 interface IState {
   comboSelectedValue?: any;
+  comboEditableStatue?: any;
+  comboVisibleState?: any;
 }
-
+let obj: GetDropDown | null = null;
 class GetDropDown extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
@@ -29,9 +33,16 @@ class GetDropDown extends React.Component<IProps, IState> {
         this.props.componentId,
         this.props.symbolId
       ),
+      comboEditableStatue: this.props.editable,
+      comboVisibleState: this.props.visible,
     };
-    globalSymbolSStateData.set(props.symbolId, this);
-    AddSymbolListner(props.symbolId);
+    obj = this;
+    this.props.symbolListners.forEach(this.Addlistner);
+  }
+
+  Addlistner(value: any) {
+    globalSymbolSStateData.set(value, obj);
+    AddSymbolListner(value);
   }
 
   updateValue(event: { value: any }) {
@@ -46,17 +57,33 @@ class GetDropDown extends React.Component<IProps, IState> {
     });
   }
 
+  changeEditableStatus(value: boolean) {
+    this.setState({
+      comboSelectedValue: value,
+    });
+  }
+
+  changeComponentState(value: any, editable: boolean, visible: boolean) {
+    this.setState({
+      comboSelectedValue: value,
+      comboEditableStatue: editable,
+      comboVisibleState: visible,
+    });
+  }
+
   render() {
     return (
       <div>
-        <Dropdown
-          id={this.props.symbolId}
-          style={this.props.styleObject}
-          value={this.state.comboSelectedValue}
-          options={this.props.symbolArray}
-          disabled={!this.props.editable}
-          onChange={(e) => this.updateValue(e)}
-        />
+        {this.state.comboVisibleState && (
+          <Dropdown
+            id={this.props.symbolId}
+            style={this.props.styleObject}
+            value={this.state.comboSelectedValue}
+            options={this.props.symbolArray}
+            disabled={!this.state.comboEditableStatue}
+            onChange={(e) => this.updateValue(e)}
+          />
+        )}
       </div>
     );
   }

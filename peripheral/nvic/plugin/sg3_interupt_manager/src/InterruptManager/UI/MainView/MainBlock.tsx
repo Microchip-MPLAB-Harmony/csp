@@ -1,12 +1,13 @@
 import useForceUpdate from "use-force-update";
 import Headder from "./ToolBar";
-import { SetComponentId, GetSymbolValue } from '../../Common/SymbolAccess';
+import { SetComponentId, GetSymbolValue } from "../../Common/SymbolAccess";
 import InterruptTable, { PriorityChanged } from "./InterruptTable";
-import { DisaableProgress } from './Progress';
+import { DisaableProgress } from "./Progress";
 import { InputText } from "primereact/inputtext";
-import { HideDiv } from '../../Common/NodeUtils';
+import { HideDiv } from "../../Common/NodeUtils";
 import { globalSymbolSStateData } from "../../Common/UIComponents/UIComponentCommonUtils";
 import { Button } from "primereact/button";
+import { convertToBoolean } from "../../Common/Utils";
 
 export let progressStatus = true;
 
@@ -26,18 +27,32 @@ const MainBlock = () => {
     update();
   }
 
-  function symbolValueChanged(){
-    let symbolChange = document.getElementById("symbolChangeListner")?.getAttribute("symbolChange");
-    if(symbolChange!== null && symbolChange !== undefined){
+  function symbolValueChanged() {
+    let symbolChange = document
+      .getElementById("symbolChangeListner")
+      ?.getAttribute("symbolChange");
+    if (symbolChange !== null && symbolChange !== undefined) {
       let symbolData = symbolChange.split("M*C");
       let symbolId = symbolData[0];
-      let symbolValue = symbolData[1]; 
-      globalSymbolSStateData.get(symbolId).changeValue(symbolValue);
+      let symbolValue = symbolData[1];
+      // let editable = convertToBoolean(symbolData[2]);
+      // let visible = convertToBoolean(symbolData[3]);
      
-      if(symbolId.endsWith("_PRIORITY")){
-        let nvicID = symbolId.split("_")[1]+"_";
-        PriorityChanged(symbolValue, nvicID);
-        
+      if (symbolId.endsWith("_LOCK")) {
+        if (globalSymbolSStateData.get(symbolId) != null) {
+          globalSymbolSStateData.get(symbolId).changeEditableStatus(!convertToBoolean(symbolValue));
+        }
+        return;
+      }
+
+      if (globalSymbolSStateData.get(symbolId) != null) {
+        globalSymbolSStateData
+          .get(symbolId)
+          .changeValue(symbolValue);
+        if (symbolId.endsWith("_PRIORITY")) {
+          let nvicID = symbolId.split("_")[1] + "_";
+          PriorityChanged(symbolValue, nvicID);
+        }
       }
     }
   }
@@ -48,14 +63,15 @@ const MainBlock = () => {
         <Headder />
       </div>
       <div className="card">
-      <div  id="motor">
-        <InterruptTable parentUpdate={UpdateScreen} />
-      </div>
-      <div id="symbolChangeButtonid" style={{display : "none"}}>
-         <Button id="symbolChangeListner" onClick={(e) => symbolValueChanged()}/>
-      </div>
-      {/* {HideDiv(document.getElementById("symbolChangeButtonid"))} */}
-      {/* {DisaableProgress()} */}
+        <div id="motor">
+          <InterruptTable parentUpdate={UpdateScreen} />
+        </div>
+        <div id="symbolChangeButtonid" style={{ display: "none" }}>
+          <Button
+            id="symbolChangeListner"
+            onClick={(e) => symbolValueChanged()}
+          />
+        </div>
       </div>
     </div>
   );

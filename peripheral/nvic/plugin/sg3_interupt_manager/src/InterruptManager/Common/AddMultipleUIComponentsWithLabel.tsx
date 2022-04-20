@@ -1,4 +1,4 @@
-import { GetUIComponentWithLabel } from './UIComponents/UIComponentCommonUtils';
+import { GetUIComponentWithLabel } from "./UIComponents/UIComponentCommonUtils";
 
 const AddMultipleFields = (props: {
   componentId: any;
@@ -16,6 +16,7 @@ const AddMultipleFields = (props: {
           <GetUIComponentWithLabel
             componentId={props.componentId}
             symbolId={object}
+            symbolListeners={[object]}
             onChange={updateValue}
           />
         ))}

@@ -11,12 +11,15 @@ import {
   GetSymbolValue,
 } from "./SymbolAccess";
 import { InputNumber } from "primereact/inputnumber";
-import { Checkbox } from 'primereact/checkbox';
-import { GetSymbolEnableStatus } from './SymbolAccess';
+import { Checkbox } from "primereact/checkbox";
+import { GetSymbolEnableStatus } from "./SymbolAccess";
 import GetCheckBox from "./UIComponents/CheckBox";
 import GetDropDown from "./UIComponents/DropDown";
 import GetInputNumber from "./UIComponents/InputNumber";
-import { GetLabelWithCustomDisplay, GetLabelWithCustomDisplayWithTooltip } from "./UIComponents/Label";
+import {
+  GetLabelWithCustomDisplay,
+  GetLabelWithCustomDisplayWithTooltip,
+} from "./UIComponents/Label";
 
 function GetColoredStyleObject(id: string, isValidFreq: boolean) {
   try {
@@ -29,8 +32,7 @@ function GetColoredStyleObject(id: string, isValidFreq: boolean) {
       }
     }
     return Object.fromEntries(style);
-  } catch (err) {
-  }
+  } catch (err) {}
 }
 
 export function AddBoldLabel(
@@ -81,7 +83,11 @@ export function AddFrequencyLabel(symbolId: string, styleId: string) {
   }
 }
 
-export function AddFrequencyLabelWithBold(symbolId: string, styleId: string, symbolSelectionStatus : boolean ) {
+export function AddFrequencyLabelWithBold(
+  symbolId: string,
+  styleId: string,
+  symbolSelectionStatus: boolean
+) {
   try {
     let style: any = globalSymbolStyleData.get(styleId);
     if (style !== undefined) {
@@ -129,7 +135,7 @@ export function AddColoredFrequencyLabelWithTooltip(
   symbolId: string,
   styleId: string,
   isValidFrequency: boolean,
-  tooltip : string
+  tooltip: string
 ) {
   try {
     return (
@@ -163,6 +169,8 @@ export function AddCombobox(
           symbolArray={GetSymbolArray(component_id, symbolId)}
           editable={GetSymbolEnableStatus(component_id, symbolId)}
           styleObject={GetStyle(styleId)}
+          symbolListners={[styleId]}
+          visible={true}
         />
       </div>
     );
@@ -186,6 +194,8 @@ export function AddCheckBox(
           symbolValue={GetSymbolValue(component_id, symbolId)}
           editable={GetSymbolEnableStatus(component_id, symbolId)}
           styleObject={GetStyle(styleId)}
+          symbolListners={[symbolId]}
+          visible={true}
         />
       </div>
     );
@@ -251,18 +261,18 @@ export function AddDivioType(id: string, text: string) {
   } catch (err) {}
 }
 
-export function AddDummyInputNumber(styleId : string){
-  return(
+export function AddDummyInputNumber(styleId: string) {
+  return (
     <div>
-      <InputNumber value={0} disabled style={GetStyle(styleId)}/>
+      <InputNumber value={0} disabled style={GetStyle(styleId)} />
     </div>
-  )
+  );
 }
 
-export function AddDummyCheckBox(styleId : string){
-  return(
+export function AddDummyCheckBox(styleId: string) {
+  return (
     <div>
-      <Checkbox value={false} disabled style={GetStyle(styleId)}/>
+      <Checkbox value={false} disabled style={GetStyle(styleId)} />
     </div>
-  )
+  );
 }

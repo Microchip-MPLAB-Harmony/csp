@@ -2,7 +2,6 @@ import { Checkbox } from "primereact/checkbox";
 import React from "react";
 import {
   AddSymbolListner,
-  GetSymbolValue,
   UpdateSymbolValue,
 } from "../SymbolAccess";
 import { convertToBoolean } from "../Utils";
@@ -11,26 +10,36 @@ import { globalSymbolSStateData } from "./UIComponentCommonUtils";
 interface IProps {
   componentId: any;
   symbolId: any;
+  symbolListners: any;
   symbolValue: string;
   styleObject: any;
   editable: boolean;
+  visible: boolean;
   onChange: (arg0: any) => void;
 }
 
 interface IState {
   checkBoxstatus?: any;
+  checkBoxEditableState?: boolean;
+  checkBoxVisibleState?: boolean;
 }
+let obj: GetCheckBox | null = null;
 
 class GetCheckBox extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      checkBoxstatus: convertToBoolean(
-        GetSymbolValue(this.props.componentId, this.props.symbolId)
-      ),
+      checkBoxstatus: convertToBoolean(this.props.symbolValue),
+      checkBoxEditableState: this.props.editable,
+      checkBoxVisibleState: this.props.visible,
     };
-    globalSymbolSStateData.set(props.symbolId, this);
-    AddSymbolListner(props.symbolId);
+    obj = this;
+    this.props.symbolListners.forEach(this.Addlistner);
+  }
+
+  Addlistner(value: any) {
+    globalSymbolSStateData.set(value, obj);
+    AddSymbolListner(value);
   }
 
   updateValue(checked: boolean) {
@@ -45,17 +54,33 @@ class GetCheckBox extends React.Component<IProps, IState> {
     });
   }
 
+  changeEditableStatus(value: any) {
+    this.setState({
+      checkBoxEditableState: value,
+    });
+  }
+
+  changeComponentState(value: any, editable: boolean, visible: boolean) {
+    this.setState({
+      checkBoxstatus: convertToBoolean(value),
+      checkBoxEditableState: editable,
+      checkBoxVisibleState: visible,
+    });
+  }
+
   render() {
     return (
       <div>
-        <Checkbox
-          id={this.props.symbolId}
-          inputId="binary"
-          style={this.props.styleObject}
-          checked={this.state.checkBoxstatus}
-          disabled={!this.props.editable}
-          onChange={(e) => this.updateValue(e.checked)}
-        />
+        {this.state.checkBoxVisibleState && (
+          <Checkbox
+            id={this.props.symbolId}
+            inputId="binary"
+            style={this.props.styleObject}
+            checked={this.state.checkBoxstatus}
+            disabled={!this.state.checkBoxEditableState}
+            onChange={(e) => this.updateValue(e.checked)}
+          />
+        )}
       </div>
     );
   }
