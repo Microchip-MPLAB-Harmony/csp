@@ -3,6 +3,41 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.12.0
+
+### New Features
+
+- **New part support** - This release adds basic support (clock, pin, interrupts and UART Peripheral library) for [CEC173x family of devices](https://www.microchip.com/en-us/product/)
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+- **New Features and Enhancements**
+  - None
+
+### Known Issues
+
+  - Same as v3.11.0
+
+### Development Tools
+
+For CEC173x family of devices:
+  - [MPLAB® X IDE v6.00](https://www.microchip.com/mplab/mplab-x-ide)
+  - [MPLAB® XC32 C/C++ Compiler v4.00](https://www.microchip.com/mplab/compilers)
+  - MPLAB® X IDE plug-ins:
+    - MPLAB® Code Configurator 5.1.2
+
+For LAN9255:
+  - Same as v3.11.0
+
+For all other parts:
+  - Same as v3.10.0
+
+
+### Notes
+
+-  None
+
 ## CSP Release v3.11.0
 
 ### New Features
