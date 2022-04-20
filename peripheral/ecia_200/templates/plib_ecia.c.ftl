@@ -56,12 +56,12 @@ void ECIA_Initialize(void)
 }
 void ECIA_GIRQBlockEnable(ECIA_GIRQ_BLOCK_NUM block)
 {
-    ECIA_REGS->ECIA_BLK_EN_SET = (1U << (uint32_t)block);
+    ECIA_REGS->ECIA_BLK_EN_SET = (1UL << (uint32_t)block);
 }
 
 void ECIA_GIRQBlockDisable(ECIA_GIRQ_BLOCK_NUM block)
 {
-    ECIA_REGS->ECIA_BLK_EN_CLR = (1U << (uint32_t)block);
+    ECIA_REGS->ECIA_BLK_EN_CLR = (1UL << (uint32_t)block);
 }
 
 void ECIA_GIRQBlockDisableAll(void)
@@ -71,48 +71,47 @@ void ECIA_GIRQBlockDisableAll(void)
 
 uint32_t ECIA_GIRQBlockStatusGet(ECIA_GIRQ_BLOCK_NUM block)
 {
-    return ECIA_REGS->ECIA_BLK_IRQ_VTOR & (1U << (uint32_t)block);
+    return ECIA_REGS->ECIA_BLK_IRQ_VTOR & (1UL << (uint32_t)block);
 }
 
 /* Enables the given interrupt source */
 void ECIA_GIRQSourceEnable(ECIA_INT_SOURCE int_src)
 {
-    uint32_t* ecia_enset_ptr = (uint32_t*)&ECIA_REGS->ECIA_EN_SET8;
-    ecia_enset_ptr += 5U * GIRQ_REG_GET(int_src);
-    *ecia_enset_ptr = (1U << GIRQ_BIT_POS_GET(int_src));
+    uint32_t ecia_enset_addr = ECIA_BASE_ADDRESS + ECIA_EN_SET8_REG_OFST + (20U * GIRQ_REG_GET(int_src));
+    uint32_t* ecia_enset_ptr = (uint32_t*)ecia_enset_addr;
+    *ecia_enset_ptr = (1UL << GIRQ_BIT_POS_GET(int_src));
 }
 
 /* Disables the given interrupt source */
 void ECIA_GIRQSourceDisable(ECIA_INT_SOURCE int_src)
 {
-    uint32_t* ecia_enclr_ptr = (uint32_t*)&ECIA_REGS->ECIA_EN_CLR8;
-    ecia_enclr_ptr += 5U * GIRQ_REG_GET(int_src);
-    *ecia_enclr_ptr = (1U << GIRQ_BIT_POS_GET(int_src));
+    uint32_t ecia_enclr_addr = ECIA_BASE_ADDRESS + ECIA_EN_CLR8_REG_OFST + (20U * GIRQ_REG_GET(int_src));
+    uint32_t* ecia_enclr_ptr = (uint32_t*)(ecia_enclr_addr);
+    *ecia_enclr_ptr = (1UL << GIRQ_BIT_POS_GET(int_src));
 }
 
 /* Returns true if interrupt for the given interrupt source is enabled, false otherwise */
 bool ECIA_GIRQIsInterruptEnabled(ECIA_INT_SOURCE int_src)
 {
-    uint32_t* ecia_enset_ptr = (uint32_t*)&ECIA_REGS->ECIA_EN_SET8;
-    ecia_enset_ptr += 5U * GIRQ_REG_GET(int_src);
-    return *ecia_enset_ptr & (1U << GIRQ_BIT_POS_GET(int_src)) ? true : false;
+    uint32_t ecia_enset_addr = ECIA_BASE_ADDRESS + ECIA_EN_SET8_REG_OFST + (20U * GIRQ_REG_GET(int_src));
+    uint32_t* ecia_enset_ptr = (uint32_t*)(ecia_enset_addr);
+    return ((*ecia_enset_ptr & (1UL << GIRQ_BIT_POS_GET(int_src))) > 0U) ? true : false;
 }
 
 /* Clears the given interrupt source */
 void ECIA_GIRQSourceClear(ECIA_INT_SOURCE int_src)
 {
-    uint32_t* ecia_src_ptr = (uint32_t*)&ECIA_REGS->ECIA_SRC8;
-    ecia_src_ptr += 5U * GIRQ_REG_GET(int_src);
-    *ecia_src_ptr |= (1U << GIRQ_BIT_POS_GET(int_src));
+    uint32_t ecia_src_addr = ECIA_BASE_ADDRESS + ECIA_SRC8_REG_OFST + (20U * GIRQ_REG_GET(int_src));
+    uint32_t* ecia_src_ptr = (uint32_t*)ecia_src_addr;
+    *ecia_src_ptr |= (1UL << GIRQ_BIT_POS_GET(int_src));
 }
 
 /* Clear all interrupt sources in all the ECIA blocks */
 void ECIA_GIRQSourceClearAll(void)
 {
     uint32_t i;
+    uint32_t* ecia_src_ptr = (uint32_t*)(ECIA_BASE_ADDRESS + ECIA_SRC8_REG_OFST);
 
-    uint32_t* ecia_src_ptr = (uint32_t*)&ECIA_REGS->ECIA_SRC8;
-    
     for (i = (uint32_t)ECIA_GIRQ_BLOCK_NUM8; i < (uint32_t)ECIA_GIRQ_BLOCK_NUM_MAX; i++)
     {
         *ecia_src_ptr = 0xFFFFFFFFUL;
@@ -124,9 +123,8 @@ void ECIA_GIRQSourceClearAll(void)
 void ECIA_GIRQSourceDisableAll(void)
 {
     uint32_t i;
+    uint32_t* ecia_enclr_ptr = (uint32_t*)(ECIA_BASE_ADDRESS + ECIA_EN_CLR8_REG_OFST);
 
-    uint32_t* ecia_enclr_ptr = (uint32_t*)&ECIA_REGS->ECIA_EN_CLR8;
-    
     for (i = (uint32_t)ECIA_GIRQ_BLOCK_NUM8; i < (uint32_t)ECIA_GIRQ_BLOCK_NUM_MAX; i++)
     {
         *ecia_enclr_ptr = 0xFFFFFFFFUL;
@@ -137,24 +135,27 @@ void ECIA_GIRQSourceDisableAll(void)
 /* Returns the Result bit of the given ECIA_INT_SOURCE. This API may be used to know if interrupt is active */
 uint8_t ECIA_GIRQResultGet(ECIA_INT_SOURCE int_src)
 {
-    uint32_t* ecia_result_ptr = (uint32_t*)&ECIA_REGS->ECIA_RESULT8;
-    ecia_result_ptr += 5U * GIRQ_REG_GET(int_src);
-    return *ecia_result_ptr & (1U << GIRQ_BIT_POS_GET(int_src)) ? 1: 0;
+    uint32_t ecia_result_addr = ECIA_BASE_ADDRESS + ECIA_RESULT8_REG_OFST + (20U * GIRQ_REG_GET(int_src));
+    uint32_t* ecia_result_ptr = (uint32_t*)ecia_result_addr;
+    return ((*ecia_result_ptr & (1UL << GIRQ_BIT_POS_GET(int_src))) > 0U) ? 1U: 0U;
 }
 
 /* Enables both ECIA and NVIC interrupt */
 void ECIA_InterruptEnable(ECIA_INT_SOURCE int_src)
 {
+    uint32_t nvic_int_num;
+    uint32_t girq_block_num = (1UL << (GIRQ_REG_GET(int_src) + 8U));
     ECIA_GIRQSourceEnable(int_src);
-    ECIA_GIRQBlockEnable(1U << (GIRQ_REG_GET(int_src) + 8U));
+    ECIA_GIRQBlockEnable((ECIA_GIRQ_BLOCK_NUM)girq_block_num);
     if (IS_INT_SRC_AGG_OR_DIR(int_src) == INT_SRC_IS_AGGREGATE)
     {
-        NVIC_EnableIRQ(GIRQ_AGG_INT_NUM_GET(int_src));
+        nvic_int_num = GIRQ_AGG_INT_NUM_GET(int_src);
     }
     else
     {
-        NVIC_EnableIRQ(GIRQ_DIR_INT_NUM_GET(int_src));
+        nvic_int_num = GIRQ_DIR_INT_NUM_GET(int_src);
     }
+    NVIC_EnableIRQ((IRQn_Type)nvic_int_num);
 }
 
 void ECIA_InterruptDisable(ECIA_INT_SOURCE int_src)
