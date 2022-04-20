@@ -46,6 +46,9 @@
 // *****************************************************************************
 
 #include "plib_gpio.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -66,8 +69,8 @@
 static GPIO_PIN_CALLBACK_OBJ pinCallbackObj[TOTAL_NUM_OF_INT_USED];
 </#if>
 
-#define GET_PINCTRL_REG_ADDR(pin)   (&GPIO_REGS->GPIO_CTRL0[0] + (pin))
-#define GET_PINCTRL2_REG_ADDR(pin)   (&GPIO_REGS->GPIO_CTRL2P0[0] + (pin))
+#define GET_PINCTRL_REG_ADDR(pin)   (&GPIO_REGS->GPIO_CTRL0[0] + (uint32_t)(pin))
+#define GET_PINCTRL2_REG_ADDR(pin)   (&GPIO_REGS->GPIO_CTRL2P0[0] + (uint32_t)(pin))
 
 
 void GPIO_Initialize(void)
@@ -98,68 +101,68 @@ void GPIO_Initialize(void)
 
 void GPIO_PinDirConfig(GPIO_PIN pin, GPIO_DIR dir)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_GPIO_DIR_Msk)) | ((uint32_t)dir);
 }
 
 void GPIO_PinInputEnable(GPIO_PIN pin)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg &= ~GPIO_CTRL0_INP_DIS_Msk;
 }
 
 void GPIO_PinInputDisable(GPIO_PIN pin)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg |= GPIO_CTRL0_INP_DIS_Msk;
 }
 
 void GPIO_PinInputConfig(GPIO_PIN pin, GPIO_INP_READ inpEn)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_INP_DIS_Msk)) | (uint32_t)inpEn;
 }
 
 void GPIO_PinGroupOutputEnable(GPIO_PIN pin)
 {
-     uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
-     *pin_ctrl_reg |= GPIO_CTRL0_GPIO_OUT_SEL_Msk;
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
+    *pin_ctrl_reg |= GPIO_CTRL0_GPIO_OUT_SEL_Msk;
 }
 
 void GPIO_PinGroupOutputDisable(GPIO_PIN pin)
 {
-     uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
-     *pin_ctrl_reg &= ~GPIO_CTRL0_GPIO_OUT_SEL_Msk;
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
+    *pin_ctrl_reg &= ~GPIO_CTRL0_GPIO_OUT_SEL_Msk;
 }
 
 void GPIO_PinGroupOutputConfig(GPIO_PIN pin, GPIO_ALT_OUT altOutputEn)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_GPIO_OUT_SEL_Msk)) | (uint32_t)altOutputEn;
 }
 
 void GPIO_PinSet(GPIO_PIN pin)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg |= GPIO_CTRL0_ALT_GPIO_DATA_Msk;
 }
 
 void GPIO_PinClear(GPIO_PIN pin)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg &= ~(GPIO_CTRL0_ALT_GPIO_DATA_Msk);
 }
 
 void GPIO_PinToggle(GPIO_PIN pin)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg ^= GPIO_CTRL0_ALT_GPIO_DATA_Msk;
 }
 
 uint8_t GPIO_PinRead(GPIO_PIN pin)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
-    return ((*pin_ctrl_reg) & (GPIO_CTRL0_GPIO_INP_Msk))? 1 : 0;
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
+    return (((*pin_ctrl_reg) & (GPIO_CTRL0_GPIO_INP_Msk)) > 0U)? 1U : 0U;
 }
 
 void GPIO_GroupSet(GPIO_GROUP group, uint32_t mask)
@@ -187,7 +190,7 @@ void GPIO_GroupPinSet(GPIO_PIN pin)
     uint32_t index = ((uint32_t)pin >> 5U);
     uint32_t bit_pos = (uint32_t)pin - (index << 5U);
 
-    GPIO_REGS->GPIO_PAROUT[index] |= (1U << bit_pos);
+    GPIO_REGS->GPIO_PAROUT[index] |= (1UL << bit_pos);
 }
 
 void GPIO_GroupPinClear(GPIO_PIN pin)
@@ -195,7 +198,7 @@ void GPIO_GroupPinClear(GPIO_PIN pin)
     uint32_t index = ((uint32_t)pin >> 5U);
     uint32_t bit_pos = (uint32_t)pin - (index << 5U);
 
-    GPIO_REGS->GPIO_PAROUT[index] &= ~(1U << bit_pos);
+    GPIO_REGS->GPIO_PAROUT[index] &= ~(1UL << bit_pos);
 }
 
 void GPIO_GroupPinToggle(GPIO_PIN pin)
@@ -203,7 +206,7 @@ void GPIO_GroupPinToggle(GPIO_PIN pin)
     uint32_t index = ((uint32_t)pin >> 5U);
     uint32_t bit_pos = (uint32_t)pin - (index << 5U);
 
-    GPIO_REGS->GPIO_PAROUT[index] ^= (1U << bit_pos);
+    GPIO_REGS->GPIO_PAROUT[index] ^= (1UL << bit_pos);
 }
 
 uint32_t GPIO_GroupPinRead(GPIO_PIN pin)
@@ -211,54 +214,54 @@ uint32_t GPIO_GroupPinRead(GPIO_PIN pin)
     uint32_t index = ((uint32_t)pin >> 5U);
     uint32_t bit_pos = (uint32_t)pin - (index << 5U);
 
-    return GPIO_REGS->GPIO_PARIN[index] & (1U << bit_pos);
+    return GPIO_REGS->GPIO_PARIN[index] & (1UL << bit_pos);
 }
 
 void GPIO_PinMUXConfig(GPIO_PIN pin, GPIO_FUNCTION function)
 {
-     uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
-     *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_MUX_CTRL_Msk)) | ((uint32_t)function);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
+    *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_MUX_CTRL_Msk)) | ((uint32_t)function);
 }
 
 void GPIO_PinPolarityConfig(GPIO_PIN pin, GPIO_POLARITY polarity)
 {
-     uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
-     *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_POL_Msk)) | (uint32_t)polarity;
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
+    *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_POL_Msk)) | (uint32_t)polarity;
 }
 
 void GPIO_PinOuputBufferTypeConfig(GPIO_PIN pin, GPIO_OUTPUT_BUFFER_TYPE bufferType)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_OUT_BUFF_TYPE_Msk)) | (uint32_t)bufferType;
 }
 
 void GPIO_PinPullUpPullDownConfig(GPIO_PIN pin, GPIO_PULL_TYPE pullType)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_PU_PD_Msk)) | (uint32_t)pullType;
 }
 
 void GPIO_PinSlewRateConfig(GPIO_PIN pin, GPIO_SLEW_RATE slewRate)
 {
-    uint32_t* pin_ctrl2_reg = (uint32_t*)GET_PINCTRL2_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl2_reg = GET_PINCTRL2_REG_ADDR(pin);
     *pin_ctrl2_reg = ((*pin_ctrl2_reg) & ~(GPIO_CTRL2P0_SLEW_CTRL_Msk)) | (uint32_t)slewRate;
 }
 
 void GPIO_PinIntDetectConfig(GPIO_PIN pin, GPIO_INTDET_TYPE intDet)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_INTR_DET_Msk | GPIO_CTRL0_EDGE_EN_Msk)) | (uint32_t)intDet;
 }
 
 void GPIO_PinPwrGateConfig(GPIO_PIN pin, GPIO_PWRGATE pwrGate)
 {
-    uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_PWR_GATING_Msk)) | (uint32_t)pwrGate;
 }
 
 void GPIO_DrvStrConfig(GPIO_PIN pin, GPIO_DRV drvStrn)
 {
-    uint32_t* pin_ctrl2_reg = (uint32_t*)GET_PINCTRL2_REG_ADDR(pin);
+    volatile uint32_t* pin_ctrl2_reg = GET_PINCTRL2_REG_ADDR(pin);
     *pin_ctrl2_reg = ((*pin_ctrl2_reg) & ~(GPIO_CTRL2P0_DRIV_STREN_Msk)) | (uint32_t)drvStrn;
 }
 
@@ -304,12 +307,13 @@ void GPIO_PropertySet( GPIO_PIN pin, GPIO_PROPERTY gpioProp, const uint32_t prop
 
         case GPIO_PROP_ALL:
         {
-            uint32_t* pin_ctrl_reg = (uint32_t*)GET_PINCTRL_REG_ADDR(pin);
+            volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
             *pin_ctrl_reg = propMask;
             break;
         }
 
         default:
+            /* Do nothing */
             break;
     }
 }
@@ -345,7 +349,7 @@ bool GPIO_PinInterruptCallbackRegister(
 <#assign GIRQ_BITPOS = "PIN_" + i + "_GIRQBITPOS">
 void ${.vars[PIN_NAME]}_GRP_InterruptHandler(void)
 {
-    if ((ECIA_REGS->ECIA_RESULT${.vars[GIRQ_NUM]} & ((uint32_t)1U << ${.vars[GIRQ_BITPOS]})) != 0)
+    if ((ECIA_REGS->ECIA_RESULT${.vars[GIRQ_NUM]} & ((uint32_t)1U << ${.vars[GIRQ_BITPOS]})) != 0U)
     {
         ECIA_REGS->ECIA_SRC${.vars[GIRQ_NUM]} |= ((uint32_t)1U << ${.vars[GIRQ_BITPOS]});
         if (pinCallbackObj[${ARR_INDEX}].callback != NULL)

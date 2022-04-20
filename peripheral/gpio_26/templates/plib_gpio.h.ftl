@@ -207,7 +207,7 @@ typedef enum {
 } GPIO_PWRGATE;
 
 typedef enum {
-    GPIO_PROP_PU_PD = 0ul,
+    GPIO_PROP_PU_PD = 0UL,
     GPIO_PROP_PWR_GATE,
     GPIO_PROP_INT_DET,
     GPIO_PROP_OBUFF_TYPE,
