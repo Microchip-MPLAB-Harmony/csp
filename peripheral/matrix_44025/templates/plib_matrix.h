@@ -39,8 +39,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_MATRIX_H    // Guards against multiple inclusion
-#define _PLIB_MATRIX_H
+#ifndef PLIB_MATRIX_H    // Guards against multiple inclusion
+#define PLIB_MATRIX_H
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 

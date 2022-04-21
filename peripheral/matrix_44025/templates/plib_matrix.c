@@ -46,6 +46,7 @@
 // *****************************************************************************
 // *****************************************************************************
 #include <device.h>
+#include "plib_matrix.h"
 
 // *****************************************************************************
 /* Function:
@@ -70,8 +71,8 @@ void Matrix_Initialize(void)
         MATRIX1_REGS->MATRIX_SPSELR[i] = MATRIX_SPSELR_Msk;
     }
 
-    key = 0xb6d81c4d ^ SFR_REGS->SFR_SN1;
-    key &= 0xfffffffe;
+    key = 0xb6d81c4dU ^ SFR_REGS->SFR_SN1;
+    key &= 0xfffffffeU;
 
     SFR_REGS->SFR_AICREDIR = key | SFR_AICREDIR_NSAIC_Msk;
 }
