@@ -41,8 +41,8 @@
 #include "plib_pcr.h"
 #include "device.h"
 
-#define PCR_PERIPH_RESET_LOCK                     (0xA6382D4Dul)
-#define PCR_PERIPH_RESET_UNLOCK                   (0xA6382D4Cul)
+#define PCR_PERIPH_RESET_LOCK                     (0xA6382D4DUL)
+#define PCR_PERIPH_RESET_UNLOCK                   (0xA6382D4CUL)
 
 void PCR_Initialize (void)
 {
@@ -54,7 +54,7 @@ void PCR_Initialize (void)
 
     /* Configure Processor Clock divide */
     PCR_REGS->PCR_PROC_CLK_CTRL = PCR_PROC_CLK_CTRL_DIV(${PROCESSOR_CLK_DIV});
-    
+
     /* Select slow clock divide */
     PCR_REGS->PCR_SLOW_CLK_CTRL = PCR_SLOW_CLK_CTRL_DIV(${SLOW_CLK_DIVIDE});
 
@@ -97,13 +97,13 @@ void PCR_PrivilegeEnUnLock (void)
 
 void PCR_SleepEnable${.vars[PCR_SLEEP_EN]} (PCR_SLEEP_EN${.vars[PCR_SLEEP_EN]} blockId)
 {
-    uint32_t blockIdMsk = blockId & PCR_SLP_EN_${.vars[PCR_SLEEP_EN]}_Msk;
+    uint32_t blockIdMsk = (uint32_t)blockId & PCR_SLP_EN_${.vars[PCR_SLEEP_EN]}_Msk;
     PCR_REGS->PCR_SLP_EN_${.vars[PCR_SLEEP_EN]} |= blockIdMsk;
 }
 
 void PCR_SleepDisable${.vars[PCR_SLEEP_EN]} (PCR_SLEEP_EN${.vars[PCR_SLEEP_EN]} blockId)
 {
-    uint32_t blockIdMsk = blockId & PCR_SLP_EN_${.vars[PCR_SLEEP_EN]}_Msk;
+    uint32_t blockIdMsk = (uint32_t)blockId & PCR_SLP_EN_${.vars[PCR_SLEEP_EN]}_Msk;
     PCR_REGS->PCR_SLP_EN_${.vars[PCR_SLEEP_EN]} &= ~blockIdMsk;
 }
 
@@ -114,13 +114,13 @@ void PCR_SleepDisable${.vars[PCR_SLEEP_EN]} (PCR_SLEEP_EN${.vars[PCR_SLEEP_EN]} 
 
 void PCR_PrivilegeEnable${.vars[PCR_PRIV_EN]} (PCR_PRIV_EN${.vars[PCR_PRIV_EN]} blockId)
 {
-    uint32_t blockIdMsk = blockId & PCR_EC_PRIV_EN${.vars[PCR_PRIV_EN]}_Msk;
+    uint32_t blockIdMsk = (uint32_t)blockId & PCR_EC_PRIV_EN${.vars[PCR_PRIV_EN]}_Msk;
     PCR_REGS->PCR_EC_PRIV_EN${.vars[PCR_PRIV_EN]} |= blockIdMsk;
 }
 
 void PCR_PrivilegeDisable${.vars[PCR_PRIV_EN]} (PCR_PRIV_EN${.vars[PCR_PRIV_EN]} blockId)
 {
-    uint32_t blockIdMsk = blockId & PCR_EC_PRIV_EN${.vars[PCR_PRIV_EN]}_Msk;
+    uint32_t blockIdMsk = (uint32_t)blockId & PCR_EC_PRIV_EN${.vars[PCR_PRIV_EN]}_Msk;
     PCR_REGS->PCR_EC_PRIV_EN${.vars[PCR_PRIV_EN]} &= ~blockIdMsk;
 }
 
@@ -131,13 +131,13 @@ void PCR_PrivilegeDisable${.vars[PCR_PRIV_EN]} (PCR_PRIV_EN${.vars[PCR_PRIV_EN]}
 
 void PCR_ResetEnable${.vars[PCR_RESET_EN]} (PCR_RESET_EN${.vars[PCR_RESET_EN]} blockId)
 {
-    uint32_t blockIdMsk = blockId & PCR_RST_EN_${.vars[PCR_RESET_EN]}_Msk;
+    uint32_t blockIdMsk = (uint32_t)blockId & PCR_RST_EN_${.vars[PCR_RESET_EN]}_Msk;
     PCR_REGS->PCR_RST_EN_${.vars[PCR_RESET_EN]} |= blockIdMsk;
 }
 
 void PCR_ResetDisable${.vars[PCR_RESET_EN]} (PCR_RESET_EN${.vars[PCR_RESET_EN]} blockId)
 {
-    uint32_t blockIdMsk = blockId & PCR_RST_EN_${.vars[PCR_RESET_EN]}_Msk;
+    uint32_t blockIdMsk = (uint32_t)blockId & PCR_RST_EN_${.vars[PCR_RESET_EN]}_Msk;
     PCR_REGS->PCR_RST_EN_${.vars[PCR_RESET_EN]} &= ~blockIdMsk;
 }
 
