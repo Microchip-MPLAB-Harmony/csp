@@ -203,15 +203,15 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
 <#if (.vars[HEMC_NCS0_WRITE_CONF] == false) >
     /* Read NCS0 Pin configuration for HECC */
 <#if HEMC_HECC_CR0_REG == true>
-    uint8_t eccEnableDefault = ( (${HEMC_INSTANCE_NAME}_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ENABLE_Msk) >> HEMC_HECC_CR0_ENABLE_Pos);
-    uint8_t eccAlgoDefault = ( (${HEMC_INSTANCE_NAME}_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ECC12_ENABLE_Msk) >> HEMC_HECC_CR0_ECC12_ENABLE_Pos);
+    uint8_t eccEnableDefault =(uint8_t)( (${HEMC_INSTANCE_NAME}_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ENABLE_Msk) >> HEMC_HECC_CR0_ENABLE_Pos);
+    uint8_t eccAlgoDefault = (uint8_t)( (${HEMC_INSTANCE_NAME}_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ECC12_ENABLE_Msk) >> HEMC_HECC_CR0_ECC12_ENABLE_Pos);
 <#else>
     uint8_t eccEnableDefault = ( (${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS0 & HEMC_CR_NCS0_ECC_ENABLE_Msk) >> HEMC_CR_NCS0_ECC_ENABLE_Pos);
 </#if>
 </#if>
 
     /* Enable NCS0 configuration modification through registers */
-    ${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS0 |= HEMC_CR_NCS0_WRITE_ECC_CONF(1);
+    ${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS0 |= HEMC_CR_NCS0_WRITE_ECC_CONF(1U);
 
   <#list 0..(HSMC_CHIP_SELECT_COUNT - 1) as i>
   <#assign HEMC_TYPE = "CS_" + i + "_MEMORY_TYPE" >
@@ -221,12 +221,12 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
   <#assign HEMC_ECC_BCH = "CS_" + i + "_HECC_BCH_ENABLE" >
   <#assign NUM_SPACE_MULTILINE = "${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS${i}"?length >
     <#if (i == 0) && (.vars[HEMC_NCS0_WRITE_CONF] == false)>
-    ${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS${i} = HEMC_CR_NCS${i}_TYPE(${.vars[HEMC_TYPE]}) |
-    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ADDBASE(0x${.vars[HEMC_ADDRESS]}) |
-    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_BANKSIZE(${.vars[HEMC_BANK]}) |
-    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_WRITE_ECC_CONF(1) |
-    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC_ENABLE(eccEnableDefault)<#if HEMC_HECC_CR0_REG == true> |
-    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC12_ENABLE(eccAlgoDefault)</#if>;
+    ${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS${i} = HEMC_CR_NCS${i}_TYPE(${.vars[HEMC_TYPE]}U) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ADDBASE(0x${.vars[HEMC_ADDRESS]}U) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_BANKSIZE(${.vars[HEMC_BANK]}U) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_WRITE_ECC_CONF(1U) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC_ENABLE((uint32_t)eccEnableDefault)<#if HEMC_HECC_CR0_REG == true> |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC12_ENABLE((uint32_t)eccAlgoDefault)</#if>;
 
     <#else>
     <#if (.vars[HEMC_ADDRESS] != "3ffff") || (i == 0) >

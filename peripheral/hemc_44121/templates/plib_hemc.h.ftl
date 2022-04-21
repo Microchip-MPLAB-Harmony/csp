@@ -79,19 +79,19 @@ typedef enum
    Description:
     This data type identifies the HEMC HECC status
 */
-typedef enum
-{
-    HEMC_HECC_STATUS_MEM_FIX = HEMC_HECC_SR_MEM_FIX_Msk,
-    HEMC_HECC_STATUS_CPT_FIX_MASK = HEMC_HECC_SR_CPT_FIX_Msk,
-    HEMC_HECC_STATUS_OVER_FIX = HEMC_HECC_SR_OVER_FIX_Msk,
-    HEMC_HECC_STATUS_MEM_NOFIX = HEMC_HECC_SR_MEM_NOFIX_Msk,
-    HEMC_HECC_STATUS_CPT_NOFIX_MASK = HEMC_HECC_SR_CPT_NOFIX_Msk,
-    HEMC_HECC_STATUS_OVER_NOFIX = HEMC_HECC_SR_OVER_NOFIX_Msk,
-    HEMC_HECC_STATUS_HES_MASK = HEMC_HECC_SR_HES_Msk,
-    HEMC_HECC_STATUS_TYPE = HEMC_HECC_SR_TYPE_Msk,
-    /* Force the compiler to reserve 32-bit memory for enum */
-    HEMC_HECC_STATUS_INVALID = 0xFFFFFFFF
-} HEMC_HECC_STATUS;
+
+#define    HEMC_HECC_STATUS_MEM_FIX  HEMC_HECC_SR_MEM_FIX_Msk,
+#define    HEMC_HECC_STATUS_CPT_FIX_MASK   HEMC_HECC_SR_CPT_FIX_Msk,
+#define    HEMC_HECC_STATUS_OVER_FIX   HEMC_HECC_SR_OVER_FIX_Msk,
+#define    HEMC_HECC_STATUS_MEM_NOFIX   HEMC_HECC_SR_MEM_NOFIX_Msk,
+#define    HEMC_HECC_STATUS_CPT_NOFIX_MASK   HEMC_HECC_SR_CPT_NOFIX_Msk,
+#define    HEMC_HECC_STATUS_OVER_NOFIX   HEMC_HECC_SR_OVER_NOFIX_Msk,
+#define    HEMC_HECC_STATUS_HES_MASK   HEMC_HECC_SR_HES_Msk,
+#define    HEMC_HECC_STATUS_TYPE   HEMC_HECC_SR_TYPE_Msk,
+/* Force the compiler to reserve 32-bit memory for enum */
+#define    HEMC_HECC_STATUS_INVALID   0xFFFFFFFF
+
+typedef uint32_t HEMC_HECC_STATUS;
 
 // *****************************************************************************
 
