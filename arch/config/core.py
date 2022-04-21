@@ -104,11 +104,11 @@ def handleMessage(messageID, args):
 
     elif ("CLOCK_ENABLE" in messageID):
         Database.setSymbolValue("core", messageID, args["isEnabled"])
-        
+
     elif ((messageID == "SysTick_INTERRUPT_ENABLE") or (messageID == "SysTick_INTERRUPT_HANDLER_LOCK") or
           (messageID == "PendSV_INTERRUPT_ENABLE") or (messageID == "PendSV_INTERRUPT_HANDLER_LOCK") or
           (messageID == "SVCall_INTERRUPT_ENABLE") or (messageID == "SVCall_INTERRUPT_HANDLER_LOCK") or
-          (messageID == "TIMER_1_INTERRUPT_ENABLE") or (messageID == "CORE_SOFTWARE_0_INTERRUPT_ENABLE")):          
+          (messageID == "TIMER_1_INTERRUPT_ENABLE") or (messageID == "CORE_SOFTWARE_0_INTERRUPT_ENABLE")):
         Database.setSymbolValue("core", messageID, args["isEnabled"])
     elif ((messageID == "SysTick_INTERRUPT_HANDLER") or (messageID == "PendSV_INTERRUPT_HANDLER") or
           (messageID == "SVCall_INTERRUPT_HANDLER")):
@@ -135,6 +135,8 @@ def handleMessage(messageID, args):
     return symbolDict
 
 def genExceptionAsmSourceFile(symbol, event):
+    global compilers
+
     coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
     coreSysExceptionFileEnabled = Database.getSymbolValue("core", "CoreSysExceptionFile")
     coreSysAdvancedExceptionFileEnabled = Database.getSymbolValue("core", "ADVANCED_EXCEPTION")
@@ -145,6 +147,13 @@ def genExceptionAsmSourceFile(symbol, event):
         symbol.setEnabled(True)
     else:
         symbol.setEnabled(False)
+
+    if (compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
+        symbol.setSourcePath("templates/exceptionsHandler_iar.s.ftl")
+        symbol.setOutputName("exceptionsHandler.s")
+    else:
+        symbol.setSourcePath("templates/exceptionsHandler.s.ftl")
+        symbol.setOutputName("exceptionsHandler.S")
 
 def setFileVisibility (symbol, event):
     symbol.setVisible(event["value"])
@@ -761,7 +770,7 @@ def instantiateComponent( coreComponent ):
             sizeInt = int(nodeIRAM.getAttribute("size"), 16)
             endAddressInt = startAddressInt + sizeInt - 1
             endAddressIRAM1.setDefaultValue("0x%08X" % endAddressInt)
-    
+
 
     ############################# MISRAC Menu #################################
     misracMenu = coreComponent.createMenuSymbol("MISRAC_MENU", projMenu)
@@ -937,7 +946,10 @@ def instantiateComponent( coreComponent ):
         if "MIPS" in coreArch.getValue():
             exceptionAsmSourceFile.setSourcePath("templates/general-exception-context_mips.S.ftl")
         else:
-            exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler.s.ftl")
+            if (compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
+                exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler_iar.s.ftl")
+            else:
+                exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler.s.ftl")
         exceptionAsmSourceFile.setOutputName("exceptionsHandler.S")
         exceptionAsmSourceFile.setMarkup(True)
         exceptionAsmSourceFile.setOverwrite(True)
