@@ -38,7 +38,9 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "device.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 #include "plib_${UART_INSTANCE_NAME?lower_case}.h"
 #include "../ecia/plib_ecia.h"
 
@@ -108,7 +110,7 @@ bool ${UART_INSTANCE_NAME}_SerialSetup(UART_SERIAL_SETUP* setup, uint32_t srcClk
         /* Set DLAB = 1 */
         UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LCR |= UART_DATA_LCR_DLAB_Msk;
 
-        if ((UART${UART_INSTANCE_NUM}_REGS->DLAB.UART_BAUDRT_MSB & 0x80) != 0U)
+        if ((UART${UART_INSTANCE_NUM}_REGS->DLAB.UART_BAUDRT_MSB & 0x80U) != 0U)
         {
             baud_clk_src = 48000000;
         }
@@ -167,10 +169,11 @@ bool ${UART_INSTANCE_NAME}_Read(void* buffer, const size_t size )
             do
             {
                 lsr = UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR;
-            }while ((lsr & (UART_DATA_LSR_DATA_READY_Msk | UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk)) == 0);
+            }while ((lsr & (UART_DATA_LSR_DATA_READY_Msk | UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk)) == 0U);
 
             /* Check for overrun, parity and framing errors */
-            errorStatus = (lsr & (UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk));
+            lsr = (lsr & (UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk));
+            errorStatus = lsr;
 
             if ((uint32_t)errorStatus != 0U)
             {
@@ -227,7 +230,7 @@ bool ${UART_INSTANCE_NAME}_Write( void* buffer, const size_t size )
         while( size > processedSize )
         {
             /* Wait for transmitter to become ready */
-            while ((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_EMPTY_Msk) == 0)
+            while ((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_EMPTY_Msk) == 0U)
             {
             }
             UART${UART_INSTANCE_NUM}_REGS->DATA.UART_TX_DAT = pTxBuffer[processedSize];
@@ -246,7 +249,7 @@ bool ${UART_INSTANCE_NAME}_Write( void* buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by writing as many bytes as we can */
-            while((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_EMPTY_Msk) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
+            while(((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_EMPTY_Msk) != 0U) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
             {
                 UART${UART_INSTANCE_NUM}_REGS->DATA.UART_TX_DAT = pTxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
                 ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
@@ -288,7 +291,7 @@ bool ${UART_INSTANCE_NAME}_TransmitComplete( void )
 {
     bool transmitComplete = false;
 
-    if ((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_ERR_Msk) != 0)
+    if ((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_ERR_Msk) != 0U)
     {
         transmitComplete = true;
     }
@@ -354,7 +357,8 @@ static void ${UART_INSTANCE_NAME}_ERROR_InterruptHandler (void)
     lsr = UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR;
 
     /* Check for overrun, parity and framing errors */
-    ${UART_INSTANCE_NAME?lower_case}Obj.errors = (lsr & (UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk));
+    lsr = (lsr & (UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk));
+    ${UART_INSTANCE_NAME?lower_case}Obj.errors = lsr;
 
     if ((${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true) && ((uint32_t)${UART_INSTANCE_NAME?lower_case}Obj.errors != 0U))
     {
@@ -379,16 +383,17 @@ static void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
         do
         {
             lsr = UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR;
+            lsr = (lsr & (UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk));
 
             /* Check for overrun, parity and framing errors */
-            ${UART_INSTANCE_NAME?lower_case}Obj.errors = (lsr & (UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk));
+            ${UART_INSTANCE_NAME?lower_case}Obj.errors = lsr;
 
-            if ((lsr & UART_DATA_LSR_DATA_READY_Msk) && ((uint32_t)${UART_INSTANCE_NAME?lower_case}Obj.errors == 0U))
+            if (((lsr & UART_DATA_LSR_DATA_READY_Msk) != 0U) && ((uint32_t)${UART_INSTANCE_NAME?lower_case}Obj.errors == 0U))
             {
                 ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize] = UART${UART_INSTANCE_NUM}_REGS->DATA.UART_RX_DAT;
                 ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++;
             }
-        }while((lsr & UART_DATA_LSR_DATA_READY_Msk) && ((uint32_t)${UART_INSTANCE_NAME?lower_case}Obj.errors == 0U) && (${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize < ${UART_INSTANCE_NAME?lower_case}Obj.rxSize));
+        }while(((lsr & UART_DATA_LSR_DATA_READY_Msk) != 0U) && ((uint32_t)${UART_INSTANCE_NAME?lower_case}Obj.errors == 0U) && (${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize < ${UART_INSTANCE_NAME?lower_case}Obj.rxSize));
 
         /* Check if the buffer is done */
         if((${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.rxSize) || ((uint32_t)${UART_INSTANCE_NAME?lower_case}Obj.errors != 0U))
@@ -465,9 +470,9 @@ void ${UART_NVIC_INTERRUPT_NAME}_InterruptHandler (void)
 <#else>
 void ${UART_INSTANCE_NAME}_WriteByte(int data)
 {
-    while ((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_EMPTY_Msk) == 0)
+    while ((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_EMPTY_Msk) == 0U)
     {
-
+        /* Do nothing */
     }
 
     UART${UART_INSTANCE_NUM}_REGS->DATA.UART_TX_DAT = (uint8_t)data;
@@ -477,7 +482,7 @@ bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void )
 {
     bool transmitterReady = false;
 
-    if ((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_EMPTY_Msk) != 0)
+    if ((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_EMPTY_Msk) != 0U)
     {
         transmitterReady = true;
     }

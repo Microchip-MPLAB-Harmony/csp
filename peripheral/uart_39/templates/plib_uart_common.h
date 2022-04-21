@@ -56,6 +56,17 @@
 
 #define UART_RXFIFO_DEPTH       9
 
+// *****************************************************************************
+/* UART Errors
+*/
+
+#define UART_ERROR_NONE     0U
+#define UART_ERROR_OVERRUN  0x00000002U
+#define UART_ERROR_PARITY   0x00000004U
+#define UART_ERROR_FRAMING  0x00000008U
+
+typedef uint32_t UART_ERROR;
+
 typedef enum
 {
     UART_PARITY_NONE = 0x00,
@@ -74,9 +85,9 @@ typedef enum
     UART_DATA_5_BIT = 0x00,
 
     UART_DATA_6_BIT = 0x01,
-    
+
     UART_DATA_7_BIT = 0x02,
-    
+
     UART_DATA_8_BIT = 0x03,
 
     /* Force the compiler to reserve 32-bit memory for each enum */
@@ -109,18 +120,7 @@ typedef struct
 
 } UART_SERIAL_SETUP;
 
-// *****************************************************************************
-/* UART Errors
-*/
 
-typedef enum
-{
-    UART_ERROR_NONE = 0,
-    UART_ERROR_OVERRUN = 0x00000002,
-    UART_ERROR_PARITY = 0x00000004,
-    UART_ERROR_FRAMING  = 0x00000008
-
-} UART_ERROR;
 
 typedef void (* UART_CALLBACK)( uintptr_t context );
 

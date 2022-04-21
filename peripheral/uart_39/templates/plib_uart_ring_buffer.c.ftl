@@ -38,7 +38,9 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "device.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 #include "plib_${UART_INSTANCE_NAME?lower_case}.h"
 #include "../ecia/plib_ecia.h"
 
@@ -118,13 +120,13 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
         /* Set DLAB = 1 */
         UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LCR |= UART_DATA_LCR_DLAB_Msk;
 
-        if ((UART${UART_INSTANCE_NUM}_REGS->DLAB.UART_BAUDRT_MSB & 0x80) != 0)
+        if ((UART${UART_INSTANCE_NUM}_REGS->DLAB.UART_BAUDRT_MSB & 0x80U) != 0U)
         {
             baud_clk_src = 48000000;
         }
-        
+
         baud_div = (baud_clk_src >> 4)/baud;
-        
+
         if ((baud_div < 1U) || (baud_div > 32767U))
         {
             /* Set DLAB = 0 */
@@ -138,7 +140,7 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
 
         /* Set DLAB = 0 */
         UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LCR &= ~UART_DATA_LCR_DLAB_Msk;
-        
+
         UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LCR = (UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LCR & ~(UART_DATA_LCR_PAR_SEL_Msk | UART_DATA_LCR_STOP_BITS_Msk | UART_DATA_LCR_WORD_LEN_Msk)) | ((uint8_t)setup->parity | (uint8_t)setup->stopBits | (uint8_t)setup->dataWidth);
 
         if (setup->parity == UART_PARITY_NONE)
@@ -477,10 +479,10 @@ size_t ${UART_INSTANCE_NAME}_WriteBufferSizeGet(void)
 }
 
 bool ${UART_INSTANCE_NAME}_TransmitComplete( void )
-{    
+{
     bool transmitComplete = false;
 
-    if ((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_ERR_Msk) != 0)
+    if ((UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR & UART_DATA_LSR_TRANS_ERR_Msk) != 0U)
     {
         transmitComplete = true;
     }
@@ -529,10 +531,11 @@ static void ${UART_INSTANCE_NAME}_ERROR_InterruptHandler (void)
     uint8_t lsr;
 
     lsr = UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR;
+    lsr = (lsr & (UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk));
 
     /* Check for overrun, parity and framing errors */
-    ${UART_INSTANCE_NAME?lower_case}Obj.errors = (lsr & (UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk));
-    
+    ${UART_INSTANCE_NAME?lower_case}Obj.errors = lsr;
+
     /* Client must call UARTx_ErrorGet() function to clear the errors */
     if( ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback != NULL )
     {
