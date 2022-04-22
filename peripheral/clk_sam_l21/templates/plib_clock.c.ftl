@@ -41,14 +41,17 @@
 #include "plib_clock.h"
 #include "device.h"
 
-<#if CONFIG_CLOCK_OSC16M_ENABLE == true>
 static void OSCCTRL_Initialize(void)
 {
+<#if (CONFIG_CLOCK_OSC16M_FREQSEL != "0x0") || (CONFIG_CLOCK_OSC16M_RUNSTDBY != false) || (CONFIG_CLOCK_OSC16M_ONDEMAND != "ENABLE")>
+    <#if (CONFIG_CLOCK_OSC16M_FREQSEL != "0x0")>
     /**************** OSC16M IniTialization *************/
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_OSC16MCTRL = OSCCTRL_OSC16MCTRL_FSEL(${CONFIG_CLOCK_OSC16M_FREQSEL}U)
                                                          ${CONFIG_CLOCK_OSC16M_RUNSTDBY?then('| OSCCTRL_OSC16MCTRL_RUNSTDBY_Msk',' ')}
                                                          ${(CONFIG_CLOCK_OSC16M_ONDEMAND == "ENABLE")?then('| OSCCTRL_OSC16MCTRL_ONDEMAND_Msk',' ')}
-                                                         ${CONFIG_CLOCK_OSC16M_ENABLE?then('| OSCCTRL_OSC16MCTRL_ENABLE_Msk',' ')};</@compress>
+                                                         | OSCCTRL_OSC16MCTRL_ENABLE_Msk;</@compress>
+    </#if>
+</#if>
 <#if CONFIG_CLOCK_XOSC_ENABLE == true>
     /****************** XOSC Initialization   ********************************/
     /* Configure External Oscillator */
@@ -70,7 +73,6 @@ static void OSCCTRL_Initialize(void)
     </#if>
 </#if>
 }
-</#if>
 
 static void OSC32KCTRL_Initialize(void)
 {
@@ -288,11 +290,9 @@ static void GCLK${i}_Initialize(void)
 </#list>
 void CLOCK_Initialize (void)
 {
-<#if CONFIG_CLOCK_OSC16M_ENABLE == true>
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
 
-</#if>
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
 
