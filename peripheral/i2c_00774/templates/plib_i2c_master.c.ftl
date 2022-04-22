@@ -531,6 +531,21 @@ bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcC
     return true;
 }
 
+void ${I2C_INSTANCE_NAME}_TransferAbort( void )
+{
+    ${I2C_INSTANCE_NAME?lower_case}Obj.error = I2C_ERROR_NONE;
+
+    // Reset the PLib objects and Interrupts
+    ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_IDLE;
+    ${I2C_MASTER_IEC_REG}CLR = _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK;
+    ${I2C_BUS_IEC_REG}CLR = _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK;
+
+    // Disable and Enable I2C Master
+    ${I2C_INSTANCE_NAME}CONCLR = _${I2C_INSTANCE_NAME}CON_ON_MASK;
+    asm("nop");asm("nop");
+    ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_ON_MASK;
+}
+
 static void ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
 {
     /* Clear the bus collision error status bit */
