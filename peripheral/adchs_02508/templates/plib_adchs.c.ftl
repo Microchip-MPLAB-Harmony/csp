@@ -180,7 +180,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 <#list 1..(ADCHS_NUM_FILTERS) as i>
 <#assign ADCHS_ADCFLTR = "ADCHS_ADCFLTR" + i>
 <#if .vars[ADCHS_ADCFLTR] != "0">
-    ADCFLTR${i} = 0x${.vars[ADCHS_ADCFLTR]?upper_case};
+    ADCFLTR${i} = 0x${.vars[ADCHS_ADCFLTR]?upper_case}U;
 </#if>
 
 </#list>
@@ -527,7 +527,7 @@ bool ${ADCHS_INSTANCE_NAME}_Comparator${i}StatusGet(void)
 <#if .vars[ADCFLTR_AFEN] == true>
 uint16_t ${ADCHS_INSTANCE_NAME}_Filter${i}DataGet(void)
 {
-    return ADCFLTR${i}bits.FLTRDATA;
+    return (uint16_t)(ADCFLTR${i}bits.FLTRDATA);
 }
 <#if .vars[ADCHS_DFx_INT_ENABLED] == true>
 void ${ADCHS_INSTANCE_NAME}_Filter${i}CallbackRegister(ADCHS_DF_CALLBACK callback, uintptr_t context)

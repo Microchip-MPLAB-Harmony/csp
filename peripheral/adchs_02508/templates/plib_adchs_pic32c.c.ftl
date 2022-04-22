@@ -52,7 +52,7 @@
 
 <#if ADCHS_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
+    <#lt>static ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
 </#if>
 
 <#if ADCCON2__EOSIEN == true>
@@ -72,7 +72,7 @@
 </#list>
 
 <#if ADCHS_MAX_FILTER_NUM gt 0>
-ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
+static ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
 </#if>
 
 <#assign ADCHS_MAX_COMPARATOR_NUM = 0>
@@ -86,7 +86,7 @@ ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER
 </#list>
 
 <#if ADCHS_MAX_COMPARATOR_NUM gt 0>
-ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
+static ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
 </#if>
 </#compress>
 
@@ -141,7 +141,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
 <#list 1..(ADCHS_NUM_FILTERS) as i>
 <#assign ADCHS_ADCFLTR = "ADCHS_ADCFLTR" + i>
 <#if .vars[ADCHS_ADCFLTR] != "0">
-    ADCHS_REGS->ADCHS_ADCFLTR${i} = 0x${.vars[ADCHS_ADCFLTR]?upper_case};
+    ADCHS_REGS->ADCHS_ADCFLTR${i} = 0x${.vars[ADCHS_ADCFLTR]?upper_case}U;
 </#if>
 
 </#list>
@@ -270,7 +270,8 @@ bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 /* Read the conversion result */
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
 {
-    return (uint16_t) (*((&${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCDATA0) + ((uint32_t)channel << 2U)));
+    uint32_t channel_addr = ADCHS_BASE_ADDRESS + ADCHS_ADCDATA0_REG_OFST + ((uint32_t)channel << 4U);
+	return (uint16_t)(*(uint32_t*)channel_addr);   
 }
 
 <#if ADCHS_INTERRUPT == true>
@@ -296,7 +297,7 @@ void ${ADCHS_INSTANCE_NAME}_Comparator${i}Disable(void)
 }
 void ${ADCHS_INSTANCE_NAME}_Comparator${i}LimitSet(uint16_t low_threshold, uint16_t high_threshold)
 {
-    ADCHS_REGS->ADCHS_ADCCMP${i} = ADCHS_ADCCMP${i}_ADCMPHI(high_threshold) | ADCHS_ADCCMP${i}_ADCMPLO(low_threshold);
+    ADCHS_REGS->ADCHS_ADCCMP${i} = (ADCHS_ADCCMP${i}_ADCMPHI((uint32_t)high_threshold) | ADCHS_ADCCMP${i}_ADCMPLO(low_threshold));
 }
 void ${ADCHS_INSTANCE_NAME}_Comparator${i}EventModeSet(ADCHS_CMP_EVENT_MODE eventMode)
 {
@@ -304,7 +305,7 @@ void ${ADCHS_INSTANCE_NAME}_Comparator${i}EventModeSet(ADCHS_CMP_EVENT_MODE even
 }
 uint8_t ${ADCHS_INSTANCE_NAME}_Comparator${i}AnalogInputIDGet(void)
 {
-    return (ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON1_CMPINID0_Msk) >> ADCHS_ADCCMPCON1_CMPINID0_Pos;
+    return (uint8_t)((ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON1_CMPINID0_Msk) >> ADCHS_ADCCMPCON1_CMPINID0_Pos);
 }
 
 <#if .vars[ADCHS_DCx_INT_ENABLED] == true>
@@ -330,7 +331,7 @@ bool ${ADCHS_INSTANCE_NAME}_Comparator${i}StatusGet(void)
 <#if .vars[ADCFLTR_AFEN] == true>
 uint16_t ${ADCHS_INSTANCE_NAME}_Filter${i}DataGet(void)
 {
-    return ADCHS_REGS->ADCHS_ADCFLTR${i} & ADCHS_ADCFLTR${i}_FLT_DATA${i-1}_Msk;
+    return (uint16_t)(ADCHS_REGS->ADCHS_ADCFLTR${i} & ADCHS_ADCFLTR${i}_FLT_DATA${i-1}_Msk);
 }
 <#if .vars[ADCHS_DFx_INT_ENABLED] == true>
 void ${ADCHS_INSTANCE_NAME}_Filter${i}CallbackRegister(ADCHS_DF_CALLBACK callback, uintptr_t context)
