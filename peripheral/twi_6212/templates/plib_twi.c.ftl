@@ -465,6 +465,19 @@ bool ${TWI_INSTANCE_NAME}_TransferSetup( TWI_TRANSFER_SETUP* setup, uint32_t src
     return true;
 }
 
+void ${TWI_INSTANCE_NAME}_TransferAbort( void )
+{
+    ${TWI_INSTANCE_NAME?lower_case}Obj.error = TWI_ERROR_NONE;
+
+    // Reset the PLib objects and Interrupts
+    ${TWI_INSTANCE_NAME?lower_case}Obj.state = TWI_STATE_IDLE;
+    ${TWI_INSTANCE_NAME}_REGS->TWI_IDR = TWI_IDR_TXCOMP_Msk | TWI_IDR_TXRDY_Msk | TWI_IDR_RXRDY_Msk;
+
+    /* Disable and Enable I2C Master */
+    ${TWI_INSTANCE_NAME}_REGS->TWI_CR = TWI_CR_MSDIS_Msk;
+    ${TWI_INSTANCE_NAME}_REGS->TWI_CR = TWI_CR_MSEN_Msk;
+}
+
 // *****************************************************************************
 /* Function:
     void ${TWI_INSTANCE_NAME}_InterruptHandler(void)

@@ -358,6 +358,8 @@ TWI_ERROR ${TWI_INSTANCE_NAME}_ErrorGet(void);
 
 bool ${TWI_INSTANCE_NAME}_TransferSetup( TWI_TRANSFER_SETUP* setup, uint32_t srcClkFreq );
 
+void ${TWI_INSTANCE_NAME}_TransferAbort( void );
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
