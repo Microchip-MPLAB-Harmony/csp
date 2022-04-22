@@ -83,7 +83,7 @@
     </#compress>
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
 /* Callback object for channel 0 */
-TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
+static TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize channel in quadrature mode */
@@ -192,7 +192,7 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
     <#lt>}
 
 <#else>
-TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
+static TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 {
     return (TC_QUADRATURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK);
 }
@@ -250,7 +250,7 @@ TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 
 <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Callback object for channel ${CH_NUM} */
-TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
+static TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in timer mode */
@@ -352,9 +352,9 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK cal
 /* Interrupt handler for Channel ${CH_NUM} */
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
-    TC_TIMER_STATUS timer_status = (TC_TIMER_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK);
+    TC_TIMER_STATUS timer_status = (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK);
     /* Call registered callback function */
-    if ((TC_TIMER_NONE != timer_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((TC_TIMER_NONE != timer_status) && (${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL))
     {
         ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
@@ -472,9 +472,9 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK
 /* Interrupt handler for Channel ${CH_NUM} */
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
-    TC_CAPTURE_STATUS capture_status = (TC_CAPTURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK);
+    TC_CAPTURE_STATUS capture_status = (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK);
     /* Call registered callback function */
-    if ((TC_CAPTURE_NONE != capture_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((TC_CAPTURE_NONE != capture_status) && (${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL))
     {
         ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(capture_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
@@ -492,7 +492,7 @@ TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStatusGet(void)
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
 
 /* Callback object for channel ${CH_NUM} */
-TC_COMPARE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
+static TC_COMPARE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in compare mode */
@@ -593,7 +593,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_COMPARE_STATUS compare_status = (TC_COMPARE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK);
     /* Call registered callback function */
-    if ((TC_COMPARE_NONE != compare_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((TC_COMPARE_NONE != compare_status) && (${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL))
     {
         ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(compare_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
