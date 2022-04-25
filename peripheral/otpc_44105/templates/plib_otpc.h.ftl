@@ -72,47 +72,46 @@
 // *
 
 typedef enum {
-	OTP_PCKT_REGULAR,
-	OTP_PCKT_KEY,
-	OTP_PCKT_BOOT_CONFIGURATION,
-	OTP_PCKT_SECURE_BOOT_CONFIGURATION,
-	OTP_PCKT_HARDWARE_CONFIGURATION,
-	OTP_PCKT_CUSTOM,
+    OTP_PCKT_REGULAR,
+    OTP_PCKT_KEY,
+    OTP_PCKT_BOOT_CONFIGURATION,
+    OTP_PCKT_SECURE_BOOT_CONFIGURATION,
+    OTP_PCKT_HARDWARE_CONFIGURATION,
+    OTP_PCKT_CUSTOM,
 
-	OTP_PCKT_MAX_TYPE
+    OTP_PCKT_MAX_TYPE
 }OTPC_PACKET_TYPE;
 
 typedef struct {
-	OTPC_PACKET_TYPE   type;
-	uint32_t                size; 
+    OTPC_PACKET_TYPE   type;
+    uint32_t                size;
 }OTPC_NEW_PACKET;
 
-typedef enum
-{
-    /* definitions of error code */
-    OTPC_NO_ERROR                           =    0x00,
-    OTPC_ERROR_HW_WRITE_DISABLED            =    0x01,
-    OTPC_ERROR_PACKET_OVERLAPPED            =    0x02,
-    OTPC_ERROR_CANNOT_ACTIVATE_EMULATION    =    0x03,
-    OTPC_ERROR_PACKET_NOT_FOUND             =    0x04,
-    OTPC_ERROR_BUFFER_OVERFLOW              =    0x05,
-    OTPC_ERROR_PACKET_INVALIDATED           =    0x06,
-    OTPC_CANNOT_START_PROGRAMMING           =    0x09,
-    OTPC_CANNOT_START_READING               =    0x0A,
-    OTPC_PACKET_TOO_BIG                     =    0x0B,
-    OTPC_FLUSHING_DID_NOT_END               =    0x0C,
-    OTPC_READING_DID_NOT_START              =    0x0D,
-    OTPC_READING_DID_NOT_STOP               =    0x0E,
-    OTPC_CANNOT_LOCK                        =    0x0F,
-    OTPC_CANNOT_INVALIDATE                  =    0x10,
-    OTPC_CANNOT_REFRESH                     =    0x11,
-    OTPC_CANNOT_TRANSFER_KEY                =    0x12,
-    OTPC_CANNOT_START_HIDING                =    0x13,
-    OTPC_CANNOT_PERFORM_HIDING              =    0x14,
-    OTPC_ERROR_PACKET_IS_INVALID            =    0x15,
-    OTPC_ERROR_BAD_HEADER                   =    0x16
-}otpc_error_code_t;
 
+           /* definitions of error code */
+#define    OTPC_NO_ERROR                                0x00U
+#define    OTPC_ERROR_HW_WRITE_DISABLED                 0x01U
+#define    OTPC_ERROR_PACKET_OVERLAPPED                 0x02U
+#define    OTPC_ERROR_CANNOT_ACTIVATE_EMULATION         0x03U
+#define    OTPC_ERROR_PACKET_NOT_FOUND                  0x04U
+#define    OTPC_ERROR_BUFFER_OVERFLOW                   0x05U
+#define    OTPC_ERROR_PACKET_INVALIDATED                0x06U
+#define    OTPC_CANNOT_START_PROGRAMMING                0x09U
+#define    OTPC_CANNOT_START_READING                    0x0AU
+#define    OTPC_PACKET_TOO_BIG                          0x0BU
+#define    OTPC_FLUSHING_DID_NOT_END                    0x0CU
+#define    OTPC_READING_DID_NOT_START                   0x0DU
+#define    OTPC_READING_DID_NOT_STOP                    0x0EU
+#define    OTPC_CANNOT_LOCK                             0x0FU
+#define    OTPC_CANNOT_INVALIDATE                       0x10U
+#define    OTPC_CANNOT_REFRESH                          0x11U
+#define    OTPC_CANNOT_TRANSFER_KEY                     0x12U
+#define    OTPC_CANNOT_START_HIDING                     0x13U
+#define    OTPC_CANNOT_PERFORM_HIDING                   0x14U
+#define    OTPC_ERROR_PACKET_IS_INVALID                 0x15U
+#define    OTPC_ERROR_BAD_HEADER                        0x16U
+
+typedef uint32_t otpc_error_code_t;
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
