@@ -80,13 +80,13 @@ extern "C" {
 typedef void (*PWM_CALLBACK)(uint32_t status, uintptr_t context );
 // *****************************************************************************
 
-typedef enum
-{
-    PWM_CHANNEL_0,
-    PWM_CHANNEL_1,
-    PWM_CHANNEL_2,
-    PWM_CHANNEL_3
-}PWM_CHANNEL_NUM;
+
+#define     PWM_CHANNEL_0    (0U)
+#define     PWM_CHANNEL_1    (1U)
+#define     PWM_CHANNEL_2    (2U)
+#define     PWM_CHANNEL_3    (3U)
+
+typedef uint32_t PWM_CHANNEL_NUM;
 // *****************************************************************************
 
 typedef enum

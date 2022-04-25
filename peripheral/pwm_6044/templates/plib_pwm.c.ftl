@@ -68,7 +68,7 @@
 
 <#if PWM_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>PWM_CALLBACK_OBJECT ${PWM_INSTANCE_NAME}_CallbackObj;
+    <#lt>static PWM_CALLBACK_OBJECT ${PWM_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize enabled PWM channels */
@@ -124,17 +124,17 @@ void ${PWM_INSTANCE_NAME}_Initialize (void)
 
 void ${PWM_INSTANCE_NAME}_ChannelsStart (PWM_CHANNEL_MASK channelMask)
 {
-    ${PWM_INSTANCE_NAME}_REGS->PWM_ENA = channelMask;
+    ${PWM_INSTANCE_NAME}_REGS->PWM_ENA = (uint32_t)channelMask;
 }
 
 void ${PWM_INSTANCE_NAME}_ChannelsStop (PWM_CHANNEL_MASK channelMask)
 {
-    ${PWM_INSTANCE_NAME}_REGS->PWM_DIS = channelMask;
+    ${PWM_INSTANCE_NAME}_REGS->PWM_DIS = (uint32_t)channelMask;
 }
 
 void ${PWM_INSTANCE_NAME}_ChannelPeriodSet (PWM_CHANNEL_NUM channel, uint32_t period)
 {
-    if(0 != ((${PWM_INSTANCE_NAME}_REGS->PWM_SR >> channel) & 0x1U))
+    if(0U != ((${PWM_INSTANCE_NAME}_REGS->PWM_SR >> channel) & 0x1U))
     {
         ${PWM_INSTANCE_NAME}_REGS->PWM_CH_NUM[channel].PWM_CMR |= PWM_CMR_CPD_Msk;
         ${PWM_INSTANCE_NAME}_REGS->PWM_CH_NUM[channel].PWM_CUPD = period;
@@ -152,7 +152,7 @@ uint32_t ${PWM_INSTANCE_NAME}_ChannelPeriodGet (PWM_CHANNEL_NUM channel)
 
 void ${PWM_INSTANCE_NAME}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint32_t duty)
 {
-    if(0 != ((${PWM_INSTANCE_NAME}_REGS->PWM_SR >> channel) & 0x1U))
+    if(0U != ((${PWM_INSTANCE_NAME}_REGS->PWM_SR >> channel) & 0x1U))
     {
         ${PWM_INSTANCE_NAME}_REGS->PWM_CH_NUM[channel].PWM_CMR &= ~PWM_CMR_CPD_Msk;
         ${PWM_INSTANCE_NAME}_REGS->PWM_CH_NUM[channel].PWM_CUPD = duty;
@@ -165,12 +165,12 @@ void ${PWM_INSTANCE_NAME}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint32_t duty)
 
 void ${PWM_INSTANCE_NAME}_ChannelCounterEventEnable (PWM_CHANNEL_MASK channelMask)
 {
-    ${PWM_INSTANCE_NAME}_REGS->PWM_IER = channelMask;
+    ${PWM_INSTANCE_NAME}_REGS->PWM_IER = (uint32_t)channelMask;
 }
 
 void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMask)
 {
-    ${PWM_INSTANCE_NAME}_REGS->PWM_IDR = channelMask;
+    ${PWM_INSTANCE_NAME}_REGS->PWM_IDR = (uint32_t)channelMask;
 }
 
 <#if PWM_INTERRUPT == true>
