@@ -190,6 +190,8 @@ coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_44154/config/wdt.py")
 
+# load ADC manager information
+coreComponent.addPlugin("../peripheral/adc_44073/plugin/adc_44073.jar")
 
 syscSharedInterruptFile = coreComponent.createFileSymbol("SYSC_INITIALIZE_DEF", None)
 syscSharedInterruptFile.setType("STRING")
