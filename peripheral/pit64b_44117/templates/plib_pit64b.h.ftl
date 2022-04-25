@@ -39,8 +39,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_${PIT64B_INSTANCE_NAME}_H
-#define _PLIB_${PIT64B_INSTANCE_NAME}_H
+#ifndef PLIB_${PIT64B_INSTANCE_NAME}_H
+#define PLIB_${PIT64B_INSTANCE_NAME}_H
 
 
 // *****************************************************************************
@@ -275,7 +275,7 @@ uint32_t ${PIT64B_INSTANCE_NAME}_TimerFrequencyGet(void);
   Returns:
     None.
 */
-void ${PIT64B_INSTANCE_NAME}_DelayMs(uint32_t delay_us);
+void ${PIT64B_INSTANCE_NAME}_DelayMs(uint32_t delay_ms);
 
 // *****************************************************************************
 /* Function:
