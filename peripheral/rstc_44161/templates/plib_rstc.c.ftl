@@ -91,7 +91,7 @@ void RSTC${INSTANCE?string}_Reset( RSTC_RESET_TYPE type )
 {
     // Issue reset command and wait for command processing
     RSTC_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | type; 
-    while( RSTC_REGS->RSTC_SR & (uint32_t)RSTC_SR_SRCMP_Msk )
+    while(( RSTC_REGS->RSTC_SR & (uint32_t)RSTC_SR_SRCMP_Msk ) != 0U)
     {
         ;   // busy wait
     }
@@ -108,7 +108,7 @@ bool RSTC${INSTANCE?string}_NRSTPinRead( void )
 }
 
 <#if RSTC_MR_EXTERNAL_RESET_ACTION == "INTERRUPT">
-    <#lt>RSTC_OBJECT rstcObj;
+    <#lt>static RSTC_OBJECT rstcObj;
 
     <#lt>void RSTC${INSTANCE?string}_CallbackRegister( RSTC_CALLBACK callback, uintptr_t context )
     <#lt>{

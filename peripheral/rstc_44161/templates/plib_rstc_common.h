@@ -68,6 +68,19 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
+/* Reset type
+
+  Summary:
+    Identifiers for the type of reset to perform.
+
+  Description:
+    This enumeration provides identifiers for use with the reset command.
+*/
+
+#define     RSTC_PROC_RESET           (RSTC_CR_PROCRST_Msk)                // Processor reset
+#define     RSTC_EXTERNAL_RESET       (RSTC_CR_EXTRST_Msk)                // External reset
+
+typedef uint32_t RSTC_RESET_TYPE;
 
 /* Reset cause
 
@@ -81,30 +94,17 @@
   Remarks:
     Refer to the specific device data sheet to determine availability.
 */
-typedef enum
-{
-    RSTC_GENERAL_RESET =    RSTC_SR_RSTTYP_GENERAL_RST,         // First power reset
-    RSTC_WAKEUP_RESET =     RSTC_SR_RSTTYP_BACKUP_RST,          // Return from backup
-    RSTC_WATCHDOG_RESET =   RSTC_SR_RSTTYP_WDT_RST,             // Watch dog fault occurred
-    RSTC_SOFTWARE_RESET =   RSTC_SR_RSTTYP_SOFT_RST,            // Dedicated software instruction
-    RSTC_USER_RESET =       RSTC_SR_RSTTYP_USER_RST,            // User reset, NRST pin detected low
-    RSTC_SLCK_XTAL_RESET =  RSTC_SR_RSTTYP_SLCK_XTAL_RST,       // 32.768 kHz crystal failure detection
-} RSTC_RESET_CAUSE;
+
+#define    RSTC_GENERAL_RESET      (RSTC_SR_RSTTYP_GENERAL_RST)         // First power reset
+#define    RSTC_WAKEUP_RESET       (RSTC_SR_RSTTYP_BACKUP_RST)          // Return from backup
+#define    RSTC_WATCHDOG_RESET     (RSTC_SR_RSTTYP_WDT_RST)             // Watch dog fault occurred
+#define    RSTC_SOFTWARE_RESET     (RSTC_SR_RSTTYP_SOFT_RST)            // Dedicated software instruction
+#define    RSTC_USER_RESET         (RSTC_SR_RSTTYP_USER_RST)            // User reset, NRST pin detected low
+#define    RSTC_SLCK_XTAL_RESET    (RSTC_SR_RSTTYP_SLCK_XTAL_RST)       // 32.768 kHz crystal failure detection
+typedef uint32_t RSTC_RESET_CAUSE;
 
 
-/* Reset type
 
-  Summary:
-    Identifiers for the type of reset to perform.
-
-  Description:
-    This enumeration provides identifiers for use with the reset command.
-*/
-typedef enum
-{
-    RSTC_PROC_RESET =       RSTC_CR_PROCRST_Msk,                // Processor reset
-    RSTC_EXTERNAL_RESET =   RSTC_CR_EXTRST_Msk,                 // External reset
-} RSTC_RESET_TYPE;
 
 typedef void (* RSTC_CALLBACK)(uintptr_t context);
 
