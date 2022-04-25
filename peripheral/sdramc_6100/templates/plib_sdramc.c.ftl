@@ -48,11 +48,13 @@ void SW_DelayUs(uint32_t delay)
     uint32_t i, count;
 
     /* delay * (CPU_FREQ/1000000) / 6 */
-    count = delay *  (${SDRAMC_CPU_CLK_FREQ}/1000000)/6;
+    count = delay *  (${SDRAMC_CPU_CLK_FREQ}U/1000000U)/6U;
 
     /* 6 CPU cycles per iteration */
-    for (i = 0; i < count; i++)
+    for (i = 0U; i < count; i++)
+	{
         __NOP();
+	}
 }
 
 void ${SDRAMC_INSTANCE_NAME}_Initialize( void )
@@ -118,7 +120,7 @@ void ${SDRAMC_INSTANCE_NAME}_Initialize( void )
     ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR = SDRAMC_MR_MODE_AUTO_REFRESH;
     ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR;
     __DMB();
-    for (i = 0; i < 8; i++)
+    for (i = 0U; i < 8U; i++)
     {
         *pSdramBaseAddress = i;
     }

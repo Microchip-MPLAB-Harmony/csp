@@ -34,8 +34,8 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-#ifndef _PLIB_${SDRAMC_INSTANCE_NAME}_H
-#define _PLIB_${SDRAMC_INSTANCE_NAME}_H
+#ifndef PLIB_${SDRAMC_INSTANCE_NAME}_H
+#define PLIB_${SDRAMC_INSTANCE_NAME}_H
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
