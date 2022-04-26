@@ -68,7 +68,9 @@ typedef struct
 </#if>
     uintptr_t              context;
     uint8_t                busyStatus;
-
+<#if SECURE_INTERRUPT_AVAILABLE>
+    bool isSecure;
+</#if>
 } XDMAC_CH_OBJECT ;
 
 XDMAC_CH_OBJECT xdmacChannelObj[XDMAC_ACTIVE_CHANNELS_MAX];
@@ -90,7 +92,50 @@ void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
     for (channel = 0U; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
     {
         /* Process events only channels that are active and has global interrupt enabled */
-        if ((1 == xdmacChObj->inUse) && (${DMA_INSTANCE_NAME}_REGS->XDMAC_GIM & (XDMAC_GIM_IM0_Msk << channel)) )
+        if ((1 == xdmacChObj->inUse)${SECURE_INTERRUPT_AVAILABLE?string("&& !xdmacChObj->isSecure", "")} && (${DMA_INSTANCE_NAME}_REGS->XDMAC_GIM & (XDMAC_GIM_IM0_Msk << channel)) )
+        {
+            /* Read the interrupt status for the active DMA channel */
+            chanIntStatus = ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[channel].XDMAC_CIS;
+
+            if (chanIntStatus & ( XDMAC_CIS_RBEIS_Msk | XDMAC_CIS_WBEIS_Msk | XDMAC_CIS_ROIS_Msk))
+            {
+                xdmacChObj->busyStatus = false;
+
+                /* It's an error interrupt */
+                if (NULL != xdmacChObj->callback)
+                {
+                    xdmacChObj->callback(XDMAC_TRANSFER_ERROR, xdmacChObj->context);
+                }
+            }
+            else if (chanIntStatus & XDMAC_CIS_BIS_Msk)
+            {
+                xdmacChObj->busyStatus = false;
+
+                /* It's a block transfer complete interrupt */
+                if (NULL != xdmacChObj->callback)
+                {
+                    xdmacChObj->callback(XDMAC_TRANSFER_COMPLETE, xdmacChObj->context);
+                }
+            }
+        }
+
+        /* Point to next channel object */
+        xdmacChObj += 1U;
+    }
+}
+<#if SECURE_INTERRUPT_AVAILABLE>
+
+void ${DMA_INSTANCE_NAME}_SINT_InterruptHandler( void )
+{
+    XDMAC_CH_OBJECT *xdmacChObj = (XDMAC_CH_OBJECT *)&xdmacChannelObj[0];
+    uint8_t channel = 0U;
+    volatile uint32_t chanIntStatus = 0U;
+
+    /* Iterate all channels */
+    for (channel = 0U; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
+    {
+        /* Process events only channels that are active and has global interrupt enabled */
+        if ((1 == xdmacChObj->inUse) && xdmacChObj->isSecure && (${DMA_INSTANCE_NAME}_REGS->XDMAC_GIM & (XDMAC_GIM_IM0_Msk << channel)))
         {
             /* Read the interrupt status for the active DMA channel */
             chanIntStatus = ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[channel].XDMAC_CIS;
@@ -122,6 +167,7 @@ void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
     }
 }
 </#if>
+</#if>
 
 void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
@@ -137,7 +183,6 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
 </#if>
         xdmacChObj->context = 0U;
         xdmacChObj->busyStatus = false;
-
         /* Point to next channel object */
         xdmacChObj += 1U;
     }
@@ -195,17 +240,19 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
 </#if>
                                             XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} |
                                             XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
-                    </#if>
-                </#if>
-                ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[${i}].XDMAC_CIE= (XDMAC_CIE_BIE_Msk | XDMAC_CIE_RBIE_Msk | XDMAC_CIE_WBIE_Msk | XDMAC_CIE_ROIE_Msk);
-                <#if .vars[XDMAC_INT_ENABLE] == true>
-                    ${DMA_INSTANCE_NAME}_REGS->XDMAC_GIE= (XDMAC_GIE_IE0_Msk << ${i});
-                </#if>
-                xdmacChannelObj[${i}].inUse = 1U;
-
-            </#if>
-        </#if>
-    </#list>
+</#if>
+</#if>
+    ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[${i}].XDMAC_CIE= (XDMAC_CIE_BIE_Msk | XDMAC_CIE_RBIE_Msk | XDMAC_CIE_WBIE_Msk | XDMAC_CIE_ROIE_Msk);
+<#if .vars[XDMAC_INT_ENABLE] == true>
+    ${DMA_INSTANCE_NAME}_REGS->XDMAC_GIE= (XDMAC_GIE_IE0_Msk << ${i});
+</#if>
+    xdmacChannelObj[${i}].inUse = 1U;
+<#if SECURE_INTERRUPT_AVAILABLE>
+    xdmacChannelObj[${i}].isSecure = ${(.vars[XDMAC_CC_PROT] == "SEC")?string("true", "false")};
+</#if>
+</#if>
+</#if>
+</#list>
     return;
 }
 

@@ -227,6 +227,43 @@ def updateInterruptLogic(xdmacFileGen, event):
     else:
         Database.setSymbolValue("core", interruptHandler, xdmacInstanceName.getValue() + "_Handler", 2)
 
+
+def updateSecureInterruptLogic(symbol, event):
+    comp = event["source"]
+    instance = comp.getSymbolValue("DMA_INSTANCE_NAME")
+    normal_interrupt_prefix = instance
+    sec_interrupt_prefix = instance + "_SINT"
+    normal_int_enabled =False
+    sec_int_enabled = False
+
+    for channel in range (0, comp.getSymbolValue("DMA_CHANNEL_COUNT")):
+        dma_channel_enable = comp.getSymbolValue("XDMAC_CH{0}_ENABLE".format(channel))
+        dma_channel_int_enable = comp.getSymbolValue("XDMAC_CH{0}_ENABLE_INTERRUPT".format(channel))
+        dma_channel_security = comp.getSymbolByID("XDMAC_CC{0}_PROT".format(channel)).getSelectedValue()
+        if dma_channel_enable and dma_channel_int_enable:
+            if dma_channel_security == "0":
+                sec_int_enabled = True
+            else:
+                normal_int_enabled = True
+
+    if sec_int_enabled:
+        comp.setSymbolValue(sec_interrupt_prefix + "_INTERRUPT_ENABLE", True)
+        comp.setSymbolValue(sec_interrupt_prefix + "_INTERRUPT_HANDLER_LOCK", True)
+        comp.setSymbolValue(sec_interrupt_prefix + "_INTERRUPT_HANDLER", sec_interrupt_prefix + "_InterruptHandler")
+    else:
+        comp.setSymbolValue(sec_interrupt_prefix + "_INTERRUPT_ENABLE", False)
+        comp.setSymbolValue(sec_interrupt_prefix + "_INTERRUPT_HANDLER_LOCK", False)
+        comp.setSymbolValue(sec_interrupt_prefix + "_INTERRUPT_HANDLER", sec_interrupt_prefix + "_Handler")
+
+    if normal_int_enabled:
+        comp.setSymbolValue(normal_interrupt_prefix + "_INTERRUPT_ENABLE", True)
+        comp.setSymbolValue(normal_interrupt_prefix + "_INTERRUPT_HANDLER_LOCK", True)
+        comp.setSymbolValue(normal_interrupt_prefix + "_INTERRUPT_HANDLER", normal_interrupt_prefix + "_InterruptHandler")
+    else:
+        comp.setSymbolValue(normal_interrupt_prefix + "_INTERRUPT_ENABLE", False)
+        comp.setSymbolValue(normal_interrupt_prefix + "_INTERRUPT_HANDLER_LOCK", False)
+        comp.setSymbolValue(normal_interrupt_prefix + "_INTERRUPT_HANDLER", normal_interrupt_prefix + "_Handler")
+
 def xdmacTriggerCalc(xdmacPERIDVal, event):
     global per_instance
     xdmacPERIDVal.clearValue()
@@ -323,7 +360,14 @@ countNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="XDMAC"]/r
 xdmacChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", xdmacEnable)
 xdmacChCount.setLabel("DMA (XDMAC) Channels Count")
 xdmacChCount.setDefaultValue(int(countNode.getAttribute("count")))
-# xdmacChCount.setVisible(False)
+
+secureIntParam  = "/avr-tools-device-file/devices/device/peripherals/module@[name=\"XDMAC\"]/instance@[name=\"" + xdmacInstanceName.getValue() + "\"]/parameters/param@[name=\"INSTANCE_ID_SINT\"]"
+secureIntNode = ATDF.getNode(secureIntParam)
+secureIntSym = coreComponent.createBooleanSymbol("SECURE_INTERRUPT_AVAILABLE", None)
+secureIntSym.setVisible(False)
+if secureIntNode is not None:
+    secureIntSym.setDefaultValue(True)
+
 
 xdmacHighestCh = coreComponent.createIntegerSymbol("XDMAC_HIGHEST_CHANNEL", xdmacEnable)
 xdmacHighestCh.setLabel("DMA (XDMAC) Highest Active Channel")
@@ -481,7 +525,10 @@ for channelID in range(0, xdmacChCount.getValue()):
 
 xdmacEnable.setDependencies(xdmacGlobalLogic, xdmacChannelIds)
 xdmacHighestCh.setDependencies(xdmacGlobalLogic, xdmacChannelIds)
-xdmacIntEnable.setDependencies(updateInterruptLogic, xdmacChannelIds + dmacChannelInt)
+if secureIntSym.getValue():
+    xdmacIntEnable.setDependencies(updateSecureInterruptLogic, xdmacChannelIds + dmacChannelInt)
+else:
+    xdmacIntEnable.setDependencies(updateInterruptLogic, xdmacChannelIds + dmacChannelInt)
 
 # DMA - Source AM Mask
 xdmacSym_CC_SAM_MASK = coreComponent.createStringSymbol("DMA_SRC_AM_MASK", xdmacChannelMenu)
