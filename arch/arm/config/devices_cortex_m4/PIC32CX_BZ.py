@@ -160,11 +160,23 @@ def populate_config_items(basenode, baseLabel, moduleNode, component, parentMenu
 global getWaitStates
 def getWaitStates():
     sysclk = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
-    if sysclk <= 33000000:
-        ws = 0
+    if productFamily.getValue() == "PIC32CX_BZ3":
+        if sysclk <= 32000000:
+            ws = 1
+        else:
+            ws = 2
     else:
-        ws = 1
+        if sysclk <= 33000000:
+            ws = 0
+        else:
+            ws = 1
     return ws
+
+def getMaxWaitStateVal():
+    if productFamily.getValue() == "PIC32CX_BZ3":
+        return (1,2)
+    else:
+        return (0,1)
 
 def calcWaitStates(symbol, event):
     symbol.setValue(getWaitStates(), 2)
@@ -306,8 +318,8 @@ coreComponent.addPlugin("../peripheral/clk_pic32cx_bz/plugin/clockmanager.jar")
 SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_CHECON_PFMWS", prefetchMenu)
 SYM_PFMWS.setLabel("Program Flash memory Wait states")
 SYM_PFMWS.setDefaultValue(getWaitStates())
-SYM_PFMWS.setMin(0)
-SYM_PFMWS.setMax(1)
+SYM_PFMWS.setMin(getMaxWaitStateVal()[0])
+SYM_PFMWS.setMax(getMaxWaitStateVal()[1])
 SYM_PFMWS.setReadOnly(False)
 SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY"])
 
