@@ -45,36 +45,36 @@
 </#if>
 
 <#if rswdtinterruptMode == true>
-	<#lt>RSWDT_OBJECT rswdt;
+    <#lt>RSWDT_OBJECT rswdt;
 </#if>
 
 void ${RSWDT_INSTANCE_NAME}_Initialize( void )
 {
-	${RSWDT_INSTANCE_NAME}_REGS->RSWDT_MR = RSWDT_MR_ALLONES_Msk | RSWDT_MR_WDV(${rswdtWDV}) \
-							${rswdtdebugHalt?then(' | RSWDT_MR_WDDBGHLT_Msk','')}${rswdtidleHalt?then(' | RSWDT_MR_WDIDLEHLT_Msk','')}${rswdtEnableReset?then(' | RSWDT_MR_WDRSTEN_Msk','')}${rswdtinterruptMode?then(' | RSWDT_MR_WDFIEN_Msk','')};
-							
+    ${RSWDT_INSTANCE_NAME}_REGS->RSWDT_MR = RSWDT_MR_ALLONES_Msk | RSWDT_MR_WDV(${rswdtWDV}U) \
+                            ${rswdtdebugHalt?then(' | RSWDT_MR_WDDBGHLT_Msk','')}${rswdtidleHalt?then(' | RSWDT_MR_WDIDLEHLT_Msk','')}${rswdtEnableReset?then(' | RSWDT_MR_WDRSTEN_Msk','')}${rswdtinterruptMode?then(' | RSWDT_MR_WDFIEN_Msk','')};
+
 }
 
 void ${RSWDT_INSTANCE_NAME}_Clear(void)
 {
-	${RSWDT_INSTANCE_NAME}_REGS->RSWDT_CR = (RSWDT_CR_KEY_PASSWD|RSWDT_CR_WDRSTT_Msk);
+    ${RSWDT_INSTANCE_NAME}_REGS->RSWDT_CR = (RSWDT_CR_KEY_PASSWD|RSWDT_CR_WDRSTT_Msk);
 }
 
 <#if rswdtinterruptMode == true>
-	<#lt>void ${RSWDT_INSTANCE_NAME}_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context )
-	<#lt>{
-	<#lt>	rswdt.callback = callback;
-	<#lt>	rswdt.context = context;
-	<#lt>}
+    <#lt>void ${RSWDT_INSTANCE_NAME}_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context )
+    <#lt>{
+    <#lt>   rswdt.callback = callback;
+    <#lt>   rswdt.context = context;
+    <#lt>}
 </#if>
 
 <#if rswdtinterruptMode == true>
-	<#lt>void ${RSWDT_INSTANCE_NAME}_InterruptHandler( void )
-	<#lt>{
-	<#lt>   ${RSWDT_INSTANCE_NAME}_REGS->RSWDT_SR;	
-	<#lt>	if(rswdt.callback != NULL)
+    <#lt>void ${RSWDT_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>{
+    <#lt>   ${RSWDT_INSTANCE_NAME}_REGS->RSWDT_SR;
+    <#lt>   if(rswdt.callback != NULL)
     <#lt>        {
     <#lt>            rswdt.callback(rswdt.context);
     <#lt>        }
-	<#lt>}
-</#if>	
+    <#lt>}
+</#if>
