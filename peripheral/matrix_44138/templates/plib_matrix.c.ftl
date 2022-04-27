@@ -71,7 +71,7 @@ void MATRIX_Initialize(void)
     MATRIX0_REGS->MATRIX_PRTSR[2] = 0x5;
 
     /* Enable Master Remap Control for ICM to access address 0 */
-    MATRIX0_REGS->MATRIX_MRCR |= (1 << 11);
+    MATRIX0_REGS->MATRIX_MRCR |= (1U << 11U);
 <#else>
     MATRIX0_REGS->MATRIX_PASSR[0]= 0x00000FFF;
     MATRIX0_REGS->MATRIX_PSR[0]= 0x07070707;
