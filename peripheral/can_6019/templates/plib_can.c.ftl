@@ -61,10 +61,11 @@
 <#assign CAN_PHASE1 = PHASE1 - 1>
 <#assign CAN_PHASE2 = PHASE2 - 1>
 <#assign CAN_SJW    = SJW - 1>
-#define BYTE_MASK 0xFF
+#define BYTE_MASK  (0xFFU)
 <#if INTERRUPT_MODE == true>
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 </#if>
+static const uint32_t can_mb_number = CAN_MB_NUMBER; 
 
 // *****************************************************************************
 // *****************************************************************************
@@ -118,8 +119,8 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
                                          CAN_IER_BERR_Msk;
 
     // Initialize the CAN PLib Object
-    memset((void *)${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg));
-    memset((void *)${CAN_INSTANCE_NAME?lower_case}Obj.mbState, CAN_MAILBOX_READY, sizeof(${CAN_INSTANCE_NAME?lower_case}Obj.mbState));
+   (void)  memset((void *)${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg));
+   (void)  memset((void *)${CAN_INSTANCE_NAME?lower_case}Obj.mbState, CAN_MAILBOX_READY, sizeof(${CAN_INSTANCE_NAME?lower_case}Obj.mbState));
 </#if>
 
 <#if TIMESTAMP_ENABLE>
@@ -159,7 +160,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
     uint8_t dataIndex = 0;
     bool status = false;
 
-    for (mailbox = 0; mailbox < CAN_MB_NUMBER; mailbox++)
+    for (mailbox = 0U; mailbox < can_mb_number; mailbox++)
     {
         switch (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MMR & CAN_MMR_MOT_Msk)
         {
@@ -184,14 +185,19 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
                 }
                 break;
             default:
+			         /* Do Nothing */
                 break;
         }
         if (mbIsReady)
+		{
             break;
+		}
     }
 
     if (!mbIsReady)
+	{
         return status;
+	}
 
     /* If the id is longer than 11 bits, it is considered as extended identifier */
     if (id > (CAN_MID_MIDvA_Msk >> CAN_MID_MIDvA_Pos))
@@ -206,9 +212,9 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
     }
 
     /* Limit length */
-    if (length > 8)
+    if (length > 8U)
     {
-        length = 8;
+        length = 8U;
     }
     ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MCR = CAN_MCR_MDLC(length);
 
@@ -219,21 +225,21 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
             /* Copy the data into the payload */
             for (; dataIndex < length; dataIndex++)
             {
-                if (dataIndex == 0)
+                if (dataIndex == 0U)
                 {
                     ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL = data[dataIndex];
                 }
-                else if (dataIndex < 4)
+                else if (dataIndex < 4U)
                 {
-                    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL |= (data[dataIndex] << (8 * dataIndex));
+                    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL |= (uint8_t)(data[dataIndex] << (8U * dataIndex));
                 }
-                else if (dataIndex == 4)
+                else if (dataIndex == 4U)
                 {
                     ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH = data[dataIndex];
                 }
                 else
                 {
-                    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH |= (data[dataIndex] << (8 * (dataIndex - 4)));
+                    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH |= (uint8_t)(data[dataIndex] << (8U * (dataIndex - 4U)));
                 }
             }
             status = true;
@@ -246,9 +252,9 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
     }
 
     /* Request the transmit */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TCR = 1U << mailbox;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_TCR = 1UL << mailbox;
 <#if INTERRUPT_MODE == true>
-    ${CAN_INSTANCE_NAME}_REGS->CAN_IER = 1U << mailbox;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_IER = 1UL << mailbox;
 </#if>
     return status;
 }
@@ -286,11 +292,13 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
     uint8_t dataIndex = 0;
 </#if>
     bool status = false;
-    for (mailbox = 0; mailbox < CAN_MB_NUMBER; mailbox++)
+    for (mailbox = 0U; mailbox < can_mb_number; mailbox++)
     {
 <#if INTERRUPT_MODE == false>
         if ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRDY_Msk) != CAN_MSR_MRDY_Msk)
+		{
             continue;
+		}
 </#if>
 
         switch (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MMR & CAN_MMR_MOT_Msk)
@@ -329,14 +337,19 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                 }
                 break;
             default:
+			          /* Do Nothing */
                 break;
         }
         if (mbIsReady)
+		{
             break;
+		}
     }
 
     if (!mbIsReady)
+	{
         return status;
+	}
 
     switch (mailboxAttr)
     {
@@ -353,7 +366,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                 *id = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvA_Msk) >> CAN_MID_MIDvA_Pos;
             }
 
-            if ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRTR_Msk) &&
+            if (((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRTR_Msk) != 0U) &&
                (mailboxAttr != CAN_MAILBOX_DATA_FRAME_CONSUMER))
             {
                 *msgAttr = CAN_MSG_RX_REMOTE_FRAME;
@@ -363,25 +376,25 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                 *msgAttr = CAN_MSG_RX_DATA_FRAME;
             }
 
-            *length = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
+            *length = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
             /* Copy the data into the payload */
             for (; dataIndex < *length; dataIndex++)
             {
-                if (dataIndex == 0)
+                if (dataIndex == 0U)
                 {
-                    data[dataIndex] = ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL & BYTE_MASK;
+                    data[dataIndex] = (uint8_t)${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL & BYTE_MASK;
                 }
-                else if (dataIndex < 4)
+                else if (dataIndex < 4U)
                 {
-                    data[dataIndex] = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL >> (8 * dataIndex)) & BYTE_MASK;
+                    data[dataIndex] = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL >> (8U * dataIndex)) & BYTE_MASK;
                 }
-                else if (dataIndex == 4)
+                else if (dataIndex == 4U)
                 {
-                    data[dataIndex] = ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH & BYTE_MASK;
+                    data[dataIndex] = (uint8_t)${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH & BYTE_MASK;
                 }
                 else
                 {
-                    data[dataIndex] = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH >> (8 * (dataIndex - 4))) & BYTE_MASK;
+                    data[dataIndex] = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH >> (8U * (dataIndex - 4U))) & BYTE_MASK;
                 }
             }
 
@@ -395,6 +408,8 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 </#if>
             ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MCR = CAN_MCR_MTCR_Msk;
             status = true;
+<#else>
+            /* To satisfy the MISRA C 2012*/
 </#if>
             break;
         default:
@@ -408,7 +423,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size = length;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].timestamp = timestamp;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].msgAttr = msgAttr;
-    ${CAN_INSTANCE_NAME}_REGS->CAN_IER = 1U << mailbox;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_IER = 1UL << mailbox;
 </#if>
     return status;
 }
@@ -483,7 +498,7 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageIDGet(CAN_MAILBOX_NUM mailbox)
 {
     uint32_t id = 0;
 
-    if ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvB_Msk) != 0)
+    if ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvB_Msk) != 0U)
     {
         id = ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID & CAN_MFID_Msk;
     }
@@ -572,7 +587,7 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceMaskGet(CAN_MAILBOX_NUM mailbox)
 */
 uint16_t ${CAN_INSTANCE_NAME}_MessageTimestampGet(CAN_MAILBOX_NUM mailbox)
 {
-    return (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MTIMESTAMP_Msk);
+    return (uint16_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MTIMESTAMP_Msk);
 }
 
 // *****************************************************************************
@@ -666,7 +681,7 @@ void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint16_t *txErrorCount, uint8_t *rxError
 */
 bool ${CAN_INSTANCE_NAME}_InterruptGet(CAN_INTERRUPT_MASK interruptMask)
 {
-    return ((${CAN_INSTANCE_NAME}_REGS->CAN_SR & interruptMask) != 0x0);
+    return ((${CAN_INSTANCE_NAME}_REGS->CAN_SR & interruptMask) != 0x0U);
 }
 
 // *****************************************************************************
@@ -769,7 +784,7 @@ bool ${CAN_INSTANCE_NAME}_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t co
         return false;
     }
 
-    for (mailbox = 0; mailbox < CAN_MB_NUMBER; mailbox++)
+    for (mailbox = 0; mailbox < can_mb_number; mailbox++)
     {
         switch (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MMR & CAN_MMR_MOT_Msk)
         {
@@ -794,14 +809,20 @@ bool ${CAN_INSTANCE_NAME}_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t co
                 }
                 break;
             default:
+			         /* Do Nothing */
                 break;
         }
-        if (mbIsReady)
+        if (mbIsReady) 
+		{       
+		  
             break;
+		}
     }
 
     if (!mbIsReady)
+	{
         return false;
+	}
 
     ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback = callback;
     ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].context = contextHandle;
@@ -841,7 +862,7 @@ bool ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t co
         return false;
     }
 
-    for (mailbox = 0; mailbox < CAN_MB_NUMBER; mailbox++)
+    for (mailbox = 0U; mailbox < can_mb_number; mailbox++)
     {
         switch (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MMR & CAN_MMR_MOT_Msk)
         {
@@ -867,14 +888,19 @@ bool ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t co
                 }
                 break;
             default:
+			          /* Do Nothing */
                 break;
         }
         if (mbIsReady)
+		{
             break;
+		}
     }
 
     if (!mbIsReady)
+	{
         return false;
+	}
 
     ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback = callback;
     ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].context = contextHandle;
@@ -911,9 +937,9 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
     uint32_t interruptStatus = ${CAN_INSTANCE_NAME}_REGS->CAN_SR;
 
     /* Check if error occurred */
-    if (interruptStatus &
+    if ((interruptStatus &
        (CAN_SR_BOFF_Msk | CAN_SR_CERR_Msk | CAN_SR_SERR_Msk |
-        CAN_SR_AERR_Msk | CAN_SR_FERR_Msk | CAN_SR_BERR_Msk))
+        CAN_SR_AERR_Msk | CAN_SR_FERR_Msk | CAN_SR_BERR_Msk)) != 0U)
     {
         /* App must call ${CAN_INSTANCE_NAME}_ErrorGet function to get errors */
         ${CAN_INSTANCE_NAME?lower_case}Obj.errorStatus = ((interruptStatus & CAN_SR_BOFF_Msk) |
@@ -926,7 +952,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
     else
     {
         ${CAN_INSTANCE_NAME?lower_case}Obj.errorStatus = 0;
-        for (uint8_t mailbox = 0; mailbox < CAN_MB_NUMBER; mailbox++)
+        for (uint8_t mailbox = 0U; mailbox < can_mb_number; mailbox++)
         {
             if ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRDY_Msk) == CAN_MSR_MRDY_Msk)
             {
@@ -935,7 +961,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                     case CAN_MMR_MOT_MB_RX:
                     case CAN_MMR_MOT_MB_RX_OVERWRITE:
                     case CAN_MMR_MOT_MB_CONSUMER:
-                        ${CAN_INSTANCE_NAME}_REGS->CAN_IDR = 1U << mailbox;
+                        ${CAN_INSTANCE_NAME}_REGS->CAN_IDR = 1UL << mailbox;
                         if (${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer != NULL)
                         {
                             if ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDE_Msk) == CAN_MID_MIDE_Msk)
@@ -947,7 +973,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                                 *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].id = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvA_Msk) >> CAN_MID_MIDvA_Pos;
                             }
 
-                            if ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRTR_Msk) &&
+                            if (((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRTR_Msk) != 0U) &&
                                ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MMR & CAN_MMR_MOT_Msk) != CAN_MMR_MOT_MB_CONSUMER))
                             {
                                 *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].msgAttr = CAN_MSG_RX_REMOTE_FRAME;
@@ -957,25 +983,25 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                                 *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].msgAttr = CAN_MSG_RX_DATA_FRAME;
                             }
 
-                            *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
+                            *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
                             /* Copy the data into the payload */
-                            for (uint8_t dataIndex = 0; dataIndex < *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size; dataIndex++)
+                            for (uint8_t dataIndex = 0U; dataIndex < *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size; dataIndex++)
                             {
-                                if (dataIndex == 0)
+                                if (dataIndex == 0U)
                                 {
-                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL & BYTE_MASK;
+                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = (uint8_t)${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL & BYTE_MASK;
                                 }
-                                else if (dataIndex < 4)
+                                else if (dataIndex < 4U)
                                 {
-                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL >> (8 * dataIndex)) & BYTE_MASK;
+                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] =(uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL >> (8U * dataIndex)) & BYTE_MASK;
                                 }
-                                else if (dataIndex == 4)
+                                else if (dataIndex == 4U)
                                 {
-                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH & BYTE_MASK;
+                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = (uint8_t)${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH & BYTE_MASK;
                                 }
                                 else
                                 {
-                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH >> (8 * (dataIndex - 4))) & BYTE_MASK;
+                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH >> (8U * (dataIndex - 4U)) & BYTE_MASK);
                                 }
                             }
                             <#if TIMESTAMP_ENABLE>
@@ -995,13 +1021,14 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                         break;
                     case CAN_MMR_MOT_MB_TX:
                     case CAN_MMR_MOT_MB_PRODUCER:
-                        ${CAN_INSTANCE_NAME}_REGS->CAN_IDR = 1U << mailbox;
+                        ${CAN_INSTANCE_NAME}_REGS->CAN_IDR = 1UL << mailbox;
                         if (${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback != NULL)
                         {
                             ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback(${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].context);
                         }
                         break;
                     default:
+					         /* Do Nothing */
                         break;
                 }
             }
