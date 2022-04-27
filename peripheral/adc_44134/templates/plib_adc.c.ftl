@@ -199,11 +199,11 @@
 // *****************************************************************************
 <#if ADC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
+    <#lt>static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize ADC peripheral */
-void ${ADC_INSTANCE_NAME}_Initialize()
+void ${ADC_INSTANCE_NAME}_Initialize(void)
 {
     /* Software reset */
     ${ADC_INSTANCE_NAME}_REGS->ADC_CR = ADC_CR_SWRST_Msk;
@@ -241,7 +241,7 @@ void ${ADC_INSTANCE_NAME}_Initialize()
 
 </#if>
 <#if ADC_FMR_ENFIFO == true>
-    ADC_REGS->ADC_FMR = ADC_FMR_ENFIFO_Msk | ADC_FMR_ENLEVEL_${ADC_FMR_ENLEVEL_VALUE} | ADC_FMR_CHUNK(${ADC_FMR_CHUNK_VALUE});
+    ADC_REGS->ADC_FMR = ADC_FMR_ENFIFO_Msk | ADC_FMR_ENLEVEL_${ADC_FMR_ENLEVEL_VALUE} | ADC_FMR_CHUNK(${ADC_FMR_CHUNK_VALUE}U);
 
 </#if>
 <#if ADC_CCR_DIFF?has_content>
@@ -273,43 +273,43 @@ void ${ADC_INSTANCE_NAME}_Initialize()
 /* Enable ADC channels */
 void ${ADC_INSTANCE_NAME}_ChannelsEnable (ADC_CHANNEL_MASK channelsMask)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CHER = channelsMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CHER = (uint32_t)channelsMask;
 }
 
 /* Disable ADC channels */
 void ${ADC_INSTANCE_NAME}_ChannelsDisable (ADC_CHANNEL_MASK channelsMask)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CHDR = channelsMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CHDR = (uint32_t)channelsMask;
 }
 
 /* Enable channel end of conversion interrupt */
 void ${ADC_INSTANCE_NAME}_ChannelsInterruptEnable (ADC_INTERRUPT_EOC_MASK channelsInterruptMask)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_EOC_IER = channelsInterruptMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EOC_IER = (uint32_t)channelsInterruptMask;
 }
 
 /* Disable channel end of conversion interrupt */
 void ${ADC_INSTANCE_NAME}_ChannelsInterruptDisable (ADC_INTERRUPT_EOC_MASK channelsInterruptMask)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_EOC_IDR = channelsInterruptMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EOC_IDR = (uint32_t)channelsInterruptMask;
 }
 
 /* Enable interrupt */
 void ${ADC_INSTANCE_NAME}_InterruptEnable (ADC_INTERRUPT_MASK interruptMask)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_IER = interruptMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_IER = (uint32_t)interruptMask;
 }
 
 /* Disable interrupt */
 void ${ADC_INSTANCE_NAME}_InterruptDisable (ADC_INTERRUPT_MASK interruptMask)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_IDR = interruptMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_IDR = (uint32_t)interruptMask;
 }
 
 /* Get interrupt status */
 bool ${ADC_INSTANCE_NAME}_InterruptStatusGet(ADC_INTERRUPT_MASK interruptMask)
 {
-    return ((${ADC_INSTANCE_NAME}_REGS->ADC_ISR & interruptMask) != 0);
+    return ((${ADC_INSTANCE_NAME}_REGS->ADC_ISR & (uint32_t)interruptMask) != 0U);
 }
 
 /* Start the conversion with software trigger */
@@ -321,13 +321,13 @@ void ${ADC_INSTANCE_NAME}_ConversionStart(void)
 /* Check if conversion result is available */
 bool ${ADC_INSTANCE_NAME}_ChannelResultIsReady(ADC_CHANNEL_NUM channel)
 {
-    return (${ADC_INSTANCE_NAME}_REGS->ADC_EOC_ISR >> channel) & 0x1U;
+    return (((${ADC_INSTANCE_NAME}_REGS->ADC_EOC_ISR >> channel) & 0x1U) != 0U);
 }
 
 /* Read the conversion result */
 uint16_t ${ADC_INSTANCE_NAME}_ChannelResultGet(ADC_CHANNEL_NUM channel)
 {
-    return ${ADC_INSTANCE_NAME}_REGS->ADC_CDR[channel];
+    return (uint16_t)${ADC_INSTANCE_NAME}_REGS->ADC_CDR[channel];
 }
 
 /* Configure the user defined conversion sequence */
@@ -339,7 +339,7 @@ void ${ADC_INSTANCE_NAME}_ConversionSequenceSet(ADC_CHANNEL_NUM *channelList, ui
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 = 0U;
     </#if>
 
-    if (numChannel > ${ADC_CHANNEL_SEQ_NUM})
+    if (numChannel > ${ADC_CHANNEL_SEQ_NUM}U)
     {
         return;
     }
@@ -362,13 +362,13 @@ void ${ADC_INSTANCE_NAME}_ConversionSequenceSet(ADC_CHANNEL_NUM *channelList, ui
 /* Sets Low threshold and High threshold in comparison window */
 void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t lowThreshold, uint16_t highThreshold)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CWR = ADC_CWR_LOWTHRES(lowThreshold) | ADC_CWR_HIGHTHRES(highThreshold);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CWR = ADC_CWR_LOWTHRES((uint32_t)lowThreshold) | ADC_CWR_HIGHTHRES((uint32_t)highThreshold);
 }
 
 /* Check if Comparison event result is available */
 bool ${ADC_INSTANCE_NAME}_ComparisonEventResultIsReady(void)
 {
-    return (${ADC_INSTANCE_NAME}_REGS->ADC_ISR >> ADC_ISR_COMPE_Pos) & 0x1U;
+    return (((${ADC_INSTANCE_NAME}_REGS->ADC_ISR >> ADC_ISR_COMPE_Pos) & 0x1U) != 0U);
 }
 
 /* Restart the comparison function */

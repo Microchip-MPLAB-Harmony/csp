@@ -88,17 +88,16 @@ typedef enum
 }ADC_CHANNEL_MASK;
 
 /* Analog channel numbers */
-typedef enum
-{
+
 <#list 0..(ADC_NUM_CHANNELS - 1) as i>
-    ADC_CH${i} = ${i}U,
+#define     ADC_CH${i}   (${i}U)
 </#list>
 <#if ADC_CH30_CH31_PRESENT>
 <#list 30..31 as i>
-    ADC_CH${i} = ${i}U,
+#define     ADC_CH${i}  (${i}U)
 </#list>
 </#if>
-}ADC_CHANNEL_NUM;
+typedef uint32_t ADC_CHANNEL_NUM;
 
 /* EOC Interrupt sources number */
 typedef enum
