@@ -59,7 +59,7 @@
 
   Example:
     <code>
-    //Example 1: Do not alter the configuration bit settings
+
     CLOCK_Initialize ( );
 
     </code>

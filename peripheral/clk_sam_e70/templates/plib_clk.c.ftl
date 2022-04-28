@@ -177,12 +177,12 @@ static void CLK_MainClockInitialize(void)
 /*********************************************************************************
 Initialize PLLA (PLLACK)
 *********************************************************************************/
-
+<#assign PMC_CKGR_PLLAR_MULA_VAL = PMC_CKGR_PLLAR_MULA - 1>
 static void CLK_PLLAInitialize(void)
 {
     /* Configure and Enable PLLA */
     PMC_REGS->CKGR_PLLAR = CKGR_PLLAR_ONE_Msk | CKGR_PLLAR_PLLACOUNT(0x3fU) |
-                              CKGR_PLLAR_MULA(${PMC_CKGR_PLLAR_MULA}U - 1U) |
+                              CKGR_PLLAR_MULA(${PMC_CKGR_PLLAR_MULA_VAL}) |
                               CKGR_PLLAR_DIVA(${PMC_CKGR_PLLAR_DIVA}U);
 
     while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKA_Msk) != PMC_SR_LOCKA_Msk)
