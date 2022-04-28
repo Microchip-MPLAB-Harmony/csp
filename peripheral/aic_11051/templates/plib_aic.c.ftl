@@ -41,11 +41,11 @@
 *******************************************************************************/
 //DOM-IGNORE-END
 #include "definitions.h"
-<#lt><#if __PROCESSOR?matches("SAM9X60.*")>
+<#lt><#if __PROCESSOR?matches("SAM9X.*")>
     <#lt>#include "toolchain_specifics.h"    // __disable_irq, __enable_irq
 <#lt></#if>
 
-<#if CoreArchitecture == "ARM926EJS">
+<#if CoreArchitecture?matches("ARM926.*")>
 #ifndef CPSR_I_Msk
 #define CPSR_I_Msk      (1UL << 7U)
 #endif
@@ -56,7 +56,7 @@
 // Section: Local Functions
 // *****************************************************************************
 // *****************************************************************************
-<#if CoreArchitecture == "ARM926EJS">
+<#if CoreArchitecture?matches("ARM926.*")>
 static inline unsigned int __get_CPSR( void )
 {
     unsigned int value = 0;
@@ -108,7 +108,7 @@ AIC_INT_Initialize( void )
     {
         aicPtr->AIC_SSR = AIC_SSR_INTSEL( ii );
         aicPtr->AIC_IDCR = AIC_IDCR_Msk;
-        <#lt><#if __PROCESSOR?matches("SAM9X60.*")>
+        <#lt><#if __PROCESSOR?matches("SAM9X.*")>
             <#lt>        aicPtr->AIC_FFDR = AIC_FFDR_Msk;
             <#lt>        aicPtr->AIC_SVRRDR = AIC_SVRRDR_Msk;
         <#lt></#if>
