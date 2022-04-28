@@ -28,7 +28,7 @@ def nvmSetMemoryDependency(symbol, event):
 
 def setNVMInterruptData(status):
     global NVM_nameInATDF
-    
+
     Database.setSymbolValue("core", nvmInterruptVector, status, 1)
     Database.setSymbolValue("core", nvmInterruptHandlerLock, status, 1)
 
@@ -72,6 +72,7 @@ def _get_statReg_parms(vectorNumber):
 def getIRQnumber(string):
 
     interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+    irq_index = 0
 
     for param in interruptsChildren:
         modInst = param.getAttribute("name")
