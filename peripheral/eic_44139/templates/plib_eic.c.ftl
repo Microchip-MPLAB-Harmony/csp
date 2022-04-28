@@ -103,7 +103,7 @@ void ${EIC_INSTANCE_NAME}_Initialize(void)
 <#if .vars["EIC_SRCx_GLITCH_FILTER_ENABLE"?replace("x", index)]>
 <#assign COMMENT = COMMENT + " and glitch filter">
 <#assign GLITCH_VAL = .vars["EIC_SRCx_GLITCH_FILTER_VALUE"?replace("x", index)]>
-<#assign REG_VAL = REG_VAL + "EIC_SCFGxR_GFEN_Msk | EIC_SCFGxR_GFSEL("?replace("x", index) + GLITCH_VAL + ")">
+<#assign REG_VAL = REG_VAL + "EIC_SCFGxR_GFEN_Msk | EIC_SCFGxR_GFSEL("?replace("x", index) + GLITCH_VAL + "U)">
 </#if>
 <#if REG_VAL == "">
 <#assign REG_VAL = "0U">
@@ -125,7 +125,10 @@ void ${EIC_INSTANCE_NAME}_Initialize(void)
 <#if .vars["EIC_SRCx_GLITCH_FILTER_ENABLE"?replace("x", index)]>
 
     /* Wait for Glitch filter to be ready */
-    while((${EIC_INSTANCE_NAME}_REGS->EIC_GFCS & EIC_GFCS_RDY${index}_Msk) == 0U);
+    while((${EIC_INSTANCE_NAME}_REGS->EIC_GFCS & EIC_GFCS_RDY${index}_Msk) == 0U)
+	{
+		/* Do Nothing */
+	}
 </#if>
 
     /* Enable Interrupt */
@@ -259,7 +262,7 @@ bool ${EIC_INSTANCE_NAME}_FreezeConfiguration(EIC_PIN pin)
 
 <#list 0..EIC_NUM_INTERRUPTS - 1 as index>
 <#if  .vars["EIC_SRCx_ACTIVATE"?replace("x", index)]>
-void EIC_EXT_IRQ${index}_InterruptHandler()
+void EIC_EXT_IRQ${index}_InterruptHandler(void)
 {
     if (eicData[${index}].callback != NULL)
     {
