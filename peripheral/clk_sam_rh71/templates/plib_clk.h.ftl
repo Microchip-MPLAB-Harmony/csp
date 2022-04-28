@@ -31,7 +31,7 @@
     extern "C" {
 
 #endif
- 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: CLOCK Module System Interface Routines
@@ -44,7 +44,7 @@
 
   Summary:
     Initializes hardware of the System Clock and Peripheral Clock.
-    
+
   Description:
     This function initializes the hardware of System Clock and Peripheral Clocks.
 
@@ -59,7 +59,7 @@
 
   Example:
     <code>
-    //Example 1: Do not alter the configuration bit settings
+
     CLOCK_Initialize ( );
 
     </code>
