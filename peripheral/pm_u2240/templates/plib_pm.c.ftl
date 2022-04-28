@@ -282,13 +282,13 @@ bool ${PM_INSTANCE_NAME}_ConfigurePerformanceLevel(PLCFG_PLSEL plsel)
     /* Write the value only if Performance Level Disable is not set */
     if ((${PM_INSTANCE_NAME}_REGS->PM_PLCFG & PM_PLCFG_PLDIS_Msk) == 0U)
     {
-        if((${PM_INSTANCE_NAME}_REGS->PM_PLCFG & PM_PLCFG_PLSEL_Msk) != plsel)
+        if((${PM_INSTANCE_NAME}_REGS->PM_PLCFG & PM_PLCFG_PLSEL_Msk) != (uint8_t)plsel)
         {
             /* Clear INTFLAG.PLRDY */
             ${PM_INSTANCE_NAME}_REGS->PM_INTFLAG |= (uint8_t)PM_INTENCLR_PLRDY_Msk;
 
             /* Write PLSEL bits */
-            ${PM_INSTANCE_NAME}_REGS->PM_PLCFG  = plsel;
+            ${PM_INSTANCE_NAME}_REGS->PM_PLCFG  = (uint8_t)plsel;
 
             while((${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk) == 0U)
             {
