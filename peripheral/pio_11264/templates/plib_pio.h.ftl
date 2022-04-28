@@ -562,7 +562,6 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask);
   Example:
     <code>
 
-    // Toggles PC5 and PC7 pins
     PIO_PortToggle(PIO_PORT_C, 0x00A0);
 
     </code>
