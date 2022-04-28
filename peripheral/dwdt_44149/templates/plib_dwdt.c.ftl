@@ -146,11 +146,11 @@ typedef struct
 }dwdtCallbackObjType;
 <#if DWDT_PS_INTERRUPT_ENABLE>
 
-dwdtCallbackObjType dwdtPSCallbackObj;
+static dwdtCallbackObjType dwdtPSCallbackObj;
 </#if>
 <#if DWDT_NS_INTERRUPT_ENABLE>
 
-dwdtCallbackObjType dwdtNSCallbackObj;
+static dwdtCallbackObjType dwdtNSCallbackObj;
 </#if>
 </#if>
 
