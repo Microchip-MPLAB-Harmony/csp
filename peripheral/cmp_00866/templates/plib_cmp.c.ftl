@@ -104,7 +104,7 @@ void ${CMP_INSTANCE_NAME}_Initialize(void)
 
 bool ${CMP_INSTANCE_NAME}_StatusGet(CMP_STATUS_SOURCE ch_status)
 {
-    return ((CMSTAT & ch_status)?true:false);
+    return ((CMSTAT & ch_status) != 0U);
 }
 
 <#list 1..CMP_COUNT as i>

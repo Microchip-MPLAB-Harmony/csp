@@ -68,14 +68,15 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum
-{
+
 <#list 1..CMP_COUNT as i>
     /* CMP${i} Output */
-    CMP${i}_OUTPUT_STATUS = _CMSTAT_C${i}OUT_MASK,
+    #define CMP${i}_OUTPUT_STATUS  _CMSTAT_C${i}OUT_MASK
 
 </#list>
-} CMP_STATUS_SOURCE;
+
+
+typedef uint32_t CMP_STATUS_SOURCE;
 
 <#assign INTERRUPT_MODE = false>
 <#list 1..CMP_COUNT as i>
@@ -105,7 +106,7 @@ typedef struct
 
 void ${CMP_INSTANCE_NAME}_Initialize(void);
 
-bool ${CMP_INSTANCE_NAME}_StatusGet(CMP_STATUS_SOURCE source);
+bool ${CMP_INSTANCE_NAME}_StatusGet(CMP_STATUS_SOURCE ch_status);
 
 <#list 1..CMP_COUNT as i>
 <#assign CMP_CMxCON_EVPOL = "CMP_CM" + i + "CON_EVPOL">
