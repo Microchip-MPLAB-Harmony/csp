@@ -190,3 +190,4 @@ xc32StackInTCMSym.setKey("mstacktcm")
 xc32StackInTCMSym.setValue("false")
 xc32StackInTCMSym.setDependencies(lambda symbol, event: symbol.setValue(
                                         event["value"]), ["STACK_IN_TCM"])
+coreComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar")
