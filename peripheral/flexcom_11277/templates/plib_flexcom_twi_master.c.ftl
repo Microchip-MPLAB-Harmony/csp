@@ -238,6 +238,8 @@ static bool ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(uint16_t address, bool
     {
         ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateRead();
     }
+
+    return true;
 }
 
 // *****************************************************************************

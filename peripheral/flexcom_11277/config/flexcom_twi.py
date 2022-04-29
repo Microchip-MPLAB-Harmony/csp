@@ -197,6 +197,8 @@ flexcomSym_Twi_CLK_SRC_FREQ.setVisible(False)
 flexcomSym_Twi_CLK_SRC_FREQ.setDefaultValue(int(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY")))
 flexcomSym_Twi_CLK_SRC_FREQ.setDependencies(setFlexcomTwiClockSourceFreq, ["core." + flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
+cpu_clock = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+
 flexcomSym_Twi_TimeoutCountVal = flexcomComponent.createIntegerSymbol("FLEXCOM_TWI_TIMEOUT_COUNT_VAL", None)
 flexcomSym_Twi_TimeoutCountVal.setVisible(False)
 flexcomSym_Twi_TimeoutCountVal.setDefaultValue(cpu_clock/5000)
