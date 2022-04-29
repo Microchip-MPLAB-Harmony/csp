@@ -7,7 +7,7 @@
 
 ### New Features
 
-- **New part support** - This release adds basic support (clock, pin, interrupts and UART Peripheral library) for [CEC173x family of devices](https://www.microchip.com/en-us/product/)
+- **New part support** - This release adds basic support (clock, pin, interrupts and UART Peripheral library) for CEC173x family of devices
 
 - **Applications**
   - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).

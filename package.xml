@@ -2,5 +2,6 @@
 <Package name="csp" required="true">
     <Dependencies>
         <Dependency name="dev_packs" version="v3.12.0"/>
+        <Dependency name="harmony-services" version="v1.1.0"/>
     </Dependencies>
 </Package>
