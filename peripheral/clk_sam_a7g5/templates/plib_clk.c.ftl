@@ -149,8 +149,10 @@ static void initPLL(uint32_t pll_id, pmc_pll_cfg_t *pll_cfg)
 
     /* STEP 7: Wait for the lock bit to rise by polling the PMC_PLL_ISR0 */
     uint32_t pll_lock_mask = 1U << pll_id;
-    while ((PMC_REGS->PMC_PLL_ISR0 & pll_lock_mask) != pll_lock_mask);
-
+    while ((PMC_REGS->PMC_PLL_ISR0 & pll_lock_mask) != pll_lock_mask)
+	{
+		
+	}
     /* Setup spread spectrum, if is enabled */
     if (pll_cfg->ss)
     {
@@ -173,9 +175,12 @@ static void initProgrammableClocks(void)
 <#assign css = .vars["CLK_PCK"+i+"_CSS"]>
 <#assign pres = .vars["CLK_PCK"+i+"_PRES"]>
     PMC_REGS->PMC_PCK[${i}] = PMC_PCK_CSS_${css} |\
-                                PMC_PCK_PRES(${pres});
+                                PMC_PCK_PRES(${pres}UL);
     PMC_REGS->PMC_SCER |= PMC_SCDR_PCK${i}_Msk;
-    while ((PMC_REGS->PMC_SR & PMC_SR_PCKRDY${i}_Msk) != PMC_SR_PCKRDY${i}_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_PCKRDY${i}_Msk) != PMC_SR_PCKRDY${i}_Msk)
+	{
+			
+	}
 </#if>
 </#list>
 }
@@ -190,7 +195,7 @@ static void initPeripheralClocks(void)
         uint8_t clken;
         uint8_t gclken;
         uint8_t css;
-        uint8_t div;
+        uint8_t divs;
     } periphList[] =
     {
         <#list 0..CLK_MAX_PERIPHERAL_ID as i>
@@ -215,20 +220,20 @@ static void initPeripheralClocks(void)
                 </#if>
                 <#if clken || gclken>
                     <#if name == "EXT_MEMORY">
-                        <#lt>        { ID_SDRAMC, 1, 0, 0, 0},
+                        <#lt>        { ID_SDRAMC, 1U, 0U, 0U, 0U},
                     <#else>
-                        <#lt>        { ID_${(name == "PIO")?string("PIOA", name)}, ${clken?then("1", "0")}, ${gclken?then("1", "0")}, ${gclkcss}, ${gclkdiv}},
+                        <#lt>        { ID_${(name == "PIO")?string("PIOA", name)}, ${clken?then("1U", "0U")}, ${gclken?then("1U", "0U")}, ${gclkcss}U, ${gclkdiv}U},
                     </#if>
                 </#if>
             </#if>
         </#list>
-        { ID_PERIPH_MAX + 1, 0, 0, 0, 0}//end of list marker
+        { ID_PERIPH_MAX + 1, 0U, 0U, 0U, 0U}//end of list marker
     };
 
-    int count = sizeof(periphList)/sizeof(periphList[0]);
-    for (int i = 0; i < count; i++)
+    uint32_t count = sizeof(periphList)/sizeof(periphList[0]);
+    for (uint32_t i = 0U; i < count; i++)
     {
-        if (periphList[i].id == (ID_PERIPH_MAX + 1))
+        if (periphList[i].id == (ID_PERIPH_MAX + 1U))
         {
             break;
         }
@@ -236,7 +241,7 @@ static void initPeripheralClocks(void)
         PMC_REGS->PMC_PCR = PMC_PCR_CMD_Msk |\
                             PMC_PCR_GCLKEN(periphList[i].gclken) |\
                             PMC_PCR_EN(periphList[i].clken) |\
-                            PMC_PCR_GCLKDIV(periphList[i].div) |\
+                            PMC_PCR_GCLKDIV(periphList[i].divs) |\
                             PMC_PCR_GCLKCSS(periphList[i].css) |\
                             PMC_PCR_PID(periphList[i].id);                
     }
@@ -258,7 +263,10 @@ static void initSystemCounter(void)
                             PMC_PCR_GCLKDIV(0U) |\
                             PMC_PCR_GCLKCSS_MAINCK |\
                             PMC_PCR_PID(29U);   
-        while((PMC_REGS->PMC_GCSR0 & PMC_GCSR0_GPID29_Msk) == 0U);
+        while((PMC_REGS->PMC_GCSR0 & PMC_GCSR0_GPID29_Msk) == 0U)
+		{
+			
+		}
     }
     
     /* Set timestamp count frequency */
