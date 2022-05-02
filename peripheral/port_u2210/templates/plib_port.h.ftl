@@ -234,7 +234,8 @@ typedef enum
 // Section: Generated API based on pin configurations done in Pin Manager
 // *****************************************************************************
 // *****************************************************************************
-
+<#include "plib_port_initialize.c.ftl">
+<#if NEED_PORT_INIT>
 // *****************************************************************************
 /* Function:
     void PORT_Initialize(void)
@@ -269,6 +270,7 @@ typedef enum
 
 void PORT_Initialize(void);
 
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: PORT APIs which operates on multiple pins of a group
