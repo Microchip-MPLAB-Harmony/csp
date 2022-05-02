@@ -177,7 +177,7 @@ void ${NVM_INSTANCE_NAME}_Initialize( void )
 
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-	const uint32_t *paddress = (uint32_t *)address;
+    const uint32_t *paddress = (uint32_t *)address;
     (void) memcpy(data, paddress, length);
 
     return true;
@@ -241,10 +241,10 @@ void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t laddress, uint32_t 
     __disable_irq();
 
     ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
-	
-	// Unlock the Program flash Write protect register
+
+    // Unlock the Program flash Write protect register
     NVM_REGS->NVM_NVMPWPLT = NVM_NVMPWPLT_ULOCK_Msk;
-	NVM_REGS->NVM_NVMPWPGTESET = NVM_NVMPWPGTE_ULOCK_Msk;
+    NVM_REGS->NVM_NVMPWPGTESET = NVM_NVMPWPGTE_ULOCK_Msk;
 
     /* Program the address range */
     NVM_REGS->NVM_NVMPWPLT = (laddress & NVM_NVMPWPLT_PWPLT_Msk) | NVM_NVMPWPLT_ULOCK_Msk;
@@ -262,7 +262,33 @@ void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectLock( void )
 
     // Lock the Program flash Write protect register
     NVM_REGS->NVM_NVMPWPLTCLR = NVM_NVMPWPLT_ULOCK_Msk;
-	NVM_REGS->NVM_NVMPWPGTECLR = NVM_NVMPWPGTE_ULOCK_Msk;
+    NVM_REGS->NVM_NVMPWPGTECLR = NVM_NVMPWPGTE_ULOCK_Msk;
+
+    __set_PRIMASK( old_primask );
+}
+
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectUnlock( uint32_t bootFlashPagesMsk )
+{
+    uint32_t old_primask = __get_PRIMASK();
+    __disable_irq();
+
+    ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
+
+    // Disable erase and write protection on the specified pages in bootFlashPagesMsk
+    NVM_REGS->NVM_NVMLBWPCLR = (bootFlashPagesMsk & (NVM_NVMLBWP_Msk & ~(0x80000000)));
+
+    __set_PRIMASK( old_primask );
+}
+
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectLock( uint32_t bootFlashPagesMsk )
+{
+    uint32_t old_primask = __get_PRIMASK();
+    __disable_irq();
+
+    ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
+
+    // Enable erase and write protection on the specified pages in bootFlashPagesMsk
+    NVM_REGS->NVM_NVMLBWPSET = (bootFlashPagesMsk & (NVM_NVMLBWP_Msk & ~(0x80000000)));
 
     __set_PRIMASK( old_primask );
 }

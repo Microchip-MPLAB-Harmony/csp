@@ -63,7 +63,7 @@
 // DOM-IGNORE-END
 
 #define ${NVM_INSTANCE_NAME}_FLASH_START_ADDRESS    (${.vars["FLASH_START_ADDRESS"]}U)
-#ifndef ${NVM_INSTANCE_NAME}_FLASH_SIZE 
+#ifndef ${NVM_INSTANCE_NAME}_FLASH_SIZE
 #define ${NVM_INSTANCE_NAME}_FLASH_SIZE             (${FLASH_SIZE}U)
 #endif
 #define ${NVM_INSTANCE_NAME}_FLASH_ROWSIZE          (${FLASH_PROGRAM_SIZE}U)
@@ -111,6 +111,10 @@ bool ${NVM_INSTANCE_NAME}_IsBusy( void );
 void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t laddress, uint32_t haddress);
 
 void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectLock( void );
+
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectUnlock( uint32_t bootFlashPagesMsk );
+
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectLock( uint32_t bootFlashPagesMsk );
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister( NVM_CALLBACK callback, uintptr_t context );
