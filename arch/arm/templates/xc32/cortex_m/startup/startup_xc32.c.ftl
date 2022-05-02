@@ -97,7 +97,9 @@ extern int main(void);
     <#include "arch/startup_xc32_cortex_m7.c.ftl">
     <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
 <#elseif CoreArchitecture == "CORTEX-M4" || RAM_INIT??>
-    <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
+    <#if DeviceFamily != "CEC_173X">
+        <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
+    </#if>
 </#if>
 <#if FPU_Available>
 
