@@ -86,8 +86,11 @@ void GENERIC_TIMER_DelayUs(uint32_t delay_us)
 {
     /* System counter is not expected to roll-over between two resets */
     uint64_t finalCount = GENERIC_TIMER_CounterValueGet() +
-      (uint64_t)((GENERIC_TIMER_FREQUENCY /1000000U) * delay_us);
-    while(GENERIC_TIMER_CounterValueGet() < finalCount);
+      (uint64_t)((GENERIC_TIMER_FREQUENCY /1000000UL) * (uint64_t)delay_us);
+    while(GENERIC_TIMER_CounterValueGet() < finalCount)
+	{
+		
+	}
 }
 
 
@@ -95,8 +98,11 @@ void GENERIC_TIMER_DelayMs(uint32_t delay_ms)
 {
     /* System counter is not expected to roll-over between two resets */
     uint64_t finalCount = GENERIC_TIMER_CounterValueGet() +
-      (uint64_t)((GENERIC_TIMER_FREQUENCY /1000U) * delay_ms);
-    while(GENERIC_TIMER_CounterValueGet() < finalCount);
+      (uint64_t)((GENERIC_TIMER_FREQUENCY /1000UL) * (uint64_t)delay_ms);
+    while(GENERIC_TIMER_CounterValueGet() < finalCount)
+	{
+		
+	}
 }
 <#if GENERIC_TIMER_INTERRUPT>
 
