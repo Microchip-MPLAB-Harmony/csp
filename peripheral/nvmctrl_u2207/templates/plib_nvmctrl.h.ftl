@@ -78,6 +78,11 @@
 #define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_ROWSIZE          (${FLASH_RWWEEPROM_ERASE_SIZE}U)
 </#if>
 
+<#if FLASH_USERROW_START_ADDRESS??>
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS     (${.vars["FLASH_USERROW_START_ADDRESS"]}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE              (${FLASH_USERROW_SIZE}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE          (${FLASH_USERROW_PROGRAM_SIZE}U)
+</#if>
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}U
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_MEDIA_SIZE                 ${MEMORY_MEDIA_SIZE}U
@@ -131,6 +136,12 @@ void ${NVMCTRL_INSTANCE_NAME}_SecurityBitSet(void);
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister ( NVMCTRL_CALLBACK callback, uintptr_t context );
+</#if>
+
+<#if FLASH_USERROW_START_ADDRESS??>
+    <#lt>bool ${USER_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address );
+
+    <#lt>bool ${USER_ROW_ERASE_API_NAME}( uint32_t address );
 </#if>
 
 <#if NVMCTRL_CACHE_ENABLE == true>
