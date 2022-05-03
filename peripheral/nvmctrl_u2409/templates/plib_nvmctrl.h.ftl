@@ -75,6 +75,12 @@
 
 typedef uint16_t NVMCTRL_WRITEMODE;
 
+<#if FLASH_USERROW_START_ADDRESS??>
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS     (${.vars["FLASH_USERROW_START_ADDRESS"]}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE              (${FLASH_USERROW_SIZE}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE          (${FLASH_USERROW_PROGRAM_SIZE}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_USERROW_WQW_SIZE          (16U)
+</#if>
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_MEDIA_SIZE                 ${MEMORY_MEDIA_SIZE}
@@ -169,6 +175,12 @@ void ${NVMCTRL_INSTANCE_NAME}_BankSwap(void);
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMCallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context );
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_EnableSmartEEPROMInterruptSource(NVMCTRL_INTERRUPT1_SOURCE int_source);
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUPT1_SOURCE int_source);
+</#if>
+
+<#if FLASH_USERROW_START_ADDRESS??>
+    <#lt>bool ${USER_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address );
+
+    <#lt>bool ${USER_ROW_ERASE_API_NAME}( uint32_t address );
 </#if>
 
 // DOM-IGNORE-BEGIN

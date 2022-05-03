@@ -309,6 +309,69 @@ bool ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address )
     return true;
 }
 
+<#if FLASH_USERROW_START_ADDRESS??>
+    <#lt>bool ${USER_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address )
+    <#lt>{
+    <#lt>    uint32_t i = 0U;
+    <#lt>    uint32_t wr_count = 0U;
+    <#lt>    uint32_t * paddress = (uint32_t *)address;
+    <#lt>    uint32_t * pdata = data;
+    <#lt>    bool rowwrite = false;
+
+    <#lt>    if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= ((${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE) - ${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE)))
+    <#lt>    {
+    <#lt>        /* Clear global error flag */
+    <#lt>        nvm_error = 0U;
+
+    <#lt>        for (wr_count = 0U; wr_count < (${NVMCTRL_INSTANCE_NAME}_USERROW_PAGESIZE / ${NVMCTRL_INSTANCE_NAME}_USERROW_WQW_SIZE); wr_count++)
+    <#lt>        {
+    <#lt>            /* writing 32-bit data into the given address */
+    <#lt>            for (i = 0U; i < (${NVMCTRL_INSTANCE_NAME}_USERROW_WQW_SIZE / 4U); i++)
+    <#lt>            {
+    <#lt>                *paddress = *pdata;
+    <#lt>                paddress++;
+    <#lt>                pdata++;
+    <#lt>            }
+
+    <#lt>            /* Set address */
+    <#lt>            ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = (address + (wr_count * ${NVMCTRL_INSTANCE_NAME}_USERROW_WQW_SIZE));
+
+    <#lt>            /* Set command */
+    <#lt>            ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_WQW | NVMCTRL_CTRLB_CMDEX_KEY;
+
+    <#lt>            while (${NVMCTRL_INSTANCE_NAME}_IsBusy() == true)
+    <#lt>            {
+    <#lt>                // Wait for write complete
+    <#lt>            }
+    <#lt>        }
+
+    <#lt>        rowwrite = true;
+    <#lt>    }
+
+    <#lt>    return rowwrite;
+    <#lt>}
+
+    <#lt>bool ${USER_ROW_ERASE_API_NAME}( uint32_t address )
+    <#lt>{
+    <#lt>    bool rowerase = false;
+
+    <#lt>    if ((address >= ${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS) && (address <= (${NVMCTRL_INSTANCE_NAME}_USERROW_START_ADDRESS + ${NVMCTRL_INSTANCE_NAME}_USERROW_SIZE)))
+    <#lt>    {
+    <#lt>        /* Clear global error flag */
+    <#lt>        nvm_error = 0U;
+
+    <#lt>        /* Set address and command */
+    <#lt>        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address;
+
+    <#lt>        ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_EP | NVMCTRL_CTRLB_CMDEX_KEY;
+
+    <#lt>        rowerase = true;
+    <#lt>    }
+
+    <#lt>    return rowerase;
+    <#lt>}
+</#if>
+
 uint16_t ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
     uint16_t temp;

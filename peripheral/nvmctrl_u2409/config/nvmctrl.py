@@ -121,6 +121,23 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_FLASH_ERASE_SIZE.setVisible(False)
     nvmctrlSym_FLASH_ERASE_SIZE.setDefaultValue(nvmBlockSize)
 
+    # NVM USER row Address
+    nvmctrlUSERPAGENode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"USER_PAGE\"]")
+    if nvmctrlUSERPAGENode != None:
+        nvmctrlSym_USERROW_START_ADDRESS = nvmctrlComponent.createStringSymbol("FLASH_USERROW_START_ADDRESS", None)
+        nvmctrlSym_USERROW_START_ADDRESS.setVisible(False)
+        nvmctrlSym_USERROW_START_ADDRESS.setDefaultValue(nvmctrlUSERPAGENode.getAttribute("start"))
+
+        # NVM user row size
+        nvmctrlSym_USERROW_SIZE = nvmctrlComponent.createStringSymbol("FLASH_USERROW_SIZE", None)
+        nvmctrlSym_USERROW_SIZE.setVisible(False)
+        nvmctrlSym_USERROW_SIZE.setDefaultValue(nvmctrlUSERPAGENode.getAttribute("size"))
+
+        # NVM user row Page size
+        nvmctrlSym_USERROW_PROGRAM_SIZE = nvmctrlComponent.createStringSymbol("FLASH_USERROW_PROGRAM_SIZE", None)
+        nvmctrlSym_USERROW_PROGRAM_SIZE.setVisible(False)
+        nvmctrlSym_USERROW_PROGRAM_SIZE.setDefaultValue(nvmctrlUSERPAGENode.getAttribute("pagesize"))
+
     #Configures AUTOWS
     nvmctrlSym_CTRLA_AUTOWS = nvmctrlComponent.createBooleanSymbol("NVMCTRL_AUTOWS_ENABLE", None)
     nvmctrlSym_CTRLA_AUTOWS.setLabel("Enable Automatic Read-Wait-State for Flash")
@@ -191,9 +208,9 @@ def instantiateComponent(nvmctrlComponent):
 
     #Enable Buffered mode for SmartEEPROM (if supported)
     bufferedWriteModeSupported = False
-    
+
     bufferedWriteModeSupported = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"NVMCTRL\"]/value-group@[name=\"NVMCTRL_SEECFG__WMODE\"]/value@[name=\"BUFFERED\"]") is not None
-    
+
     if bufferedWriteModeSupported == True:
         nvmctrlSym_WMODE = nvmctrlComponent.createBooleanSymbol("NVM_WMODE_ENABLE", nvmctrlSymSEEP)
         nvmctrlSym_WMODE.setLabel("Enable Buffered Mode")
@@ -255,6 +272,8 @@ def instantiateComponent(nvmctrlComponent):
 
     writeApiName = nvmctrlComponent.getID().upper() + "_PageWrite"
     eraseApiName = nvmctrlComponent.getID().upper() + "_BlockErase"
+    userRowEraseApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_RowErase"
+    userRowWriteApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_PageWrite"
 
     nvmctrlWriteApiName = nvmctrlComponent.createStringSymbol("WRITE_API_NAME", None)
     nvmctrlWriteApiName.setVisible(False)
@@ -265,6 +284,16 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlEraseApiName.setVisible(False)
     nvmctrlEraseApiName.setReadOnly(True)
     nvmctrlEraseApiName.setDefaultValue(eraseApiName)
+
+    nvmctrlUserRowEraseApiName = nvmctrlComponent.createStringSymbol("USER_ROW_ERASE_API_NAME", None)
+    nvmctrlUserRowEraseApiName.setVisible(False)
+    nvmctrlUserRowEraseApiName.setReadOnly(True)
+    nvmctrlUserRowEraseApiName.setDefaultValue(userRowEraseApiName)
+
+    nvmctrlUserRowWriteApiName = nvmctrlComponent.createStringSymbol("USER_ROW_WRITE_API_NAME", None)
+    nvmctrlUserRowWriteApiName.setVisible(False)
+    nvmctrlUserRowWriteApiName.setReadOnly(True)
+    nvmctrlUserRowWriteApiName.setDefaultValue(userRowWriteApiName)
 
     ############################################################################
     #### Dependency ####
