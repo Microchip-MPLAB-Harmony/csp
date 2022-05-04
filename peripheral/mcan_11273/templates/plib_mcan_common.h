@@ -234,6 +234,20 @@ typedef void (*MCAN_TX_EVENT_FIFO_CALLBACK) (uint8_t numberOfTxEvent, uintptr_t 
 typedef void (*MCAN_RX_FIFO_CALLBACK) (uint8_t numberOfMessage, uintptr_t contextHandle);
 
 // *****************************************************************************
+/* MCAN Callback
+
+   Summary:
+    MCAN Callback Function Pointer.
+
+   Description:
+    This data type defines the MCAN Callback Function Pointer.
+
+   Remarks:
+    None.
+*/
+typedef void (*MCAN_CALLBACK) (uint32_t interruptStatus, uintptr_t contextHandle);
+
+// *****************************************************************************
 /* MCAN Message RAM Configuration
 
    Summary:
@@ -478,6 +492,27 @@ typedef struct
     /* Transfer Event Callback Context */
     uintptr_t context;
 } MCAN_RX_FIFO_CALLBACK_OBJ;
+
+// *****************************************************************************
+/* MCAN Callback Object
+
+   Summary:
+    MCAN interrupt status callback structure.
+
+   Description:
+    This data structure stores interrupt status callback and it's context.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* MCAN Interrupt Status Callback */
+    MCAN_CALLBACK callback;
+
+    /* MCAN Interrupt Status Callback Context */
+    uintptr_t context;
+} MCAN_CALLBACK_OBJ;
 
 // *****************************************************************************
 /* MCAN PLib Instance Object

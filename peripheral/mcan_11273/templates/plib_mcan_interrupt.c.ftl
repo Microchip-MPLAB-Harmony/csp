@@ -55,6 +55,51 @@
 </#if>
 #include "plib_${MCAN_INSTANCE_NAME?lower_case}.h"
 
+<#compress>
+<#assign MCAN_INTERRUPT = "">
+<#if RXF0_USE>
+    <#if MCAN_INTERRUPT != "">
+        <#assign MCAN_INTERRUPT = MCAN_INTERRUPT + " | " + "MCAN_IR_RF0N_Msk">
+    <#else>
+        <#assign MCAN_INTERRUPT = "MCAN_IR_RF0N_Msk">
+    </#if>
+</#if>
+<#if RXF1_USE>
+    <#if MCAN_INTERRUPT != "">
+        <#assign MCAN_INTERRUPT = MCAN_INTERRUPT + " | " + "MCAN_IR_RF1N_Msk">
+    <#else>
+        <#assign MCAN_INTERRUPT = "MCAN_IR_RF1N_Msk">
+    </#if>
+</#if>
+<#if RXBUF_USE>
+    <#if MCAN_INTERRUPT != "">
+        <#assign MCAN_INTERRUPT = MCAN_INTERRUPT + " | " + "MCAN_IR_DRX_Msk">
+    <#else>
+        <#assign MCAN_INTERRUPT = "MCAN_IR_DRX_Msk">
+    </#if>
+</#if>
+<#if TXBUF_USE>
+    <#if MCAN_INTERRUPT != "">
+        <#assign MCAN_INTERRUPT = MCAN_INTERRUPT + " | " + "MCAN_IR_TC_Msk">
+    <#else>
+        <#assign MCAN_INTERRUPT = "MCAN_IR_TC_Msk">
+    </#if>
+</#if>
+<#if TX_USE>
+    <#if MCAN_INTERRUPT != "">
+        <#assign MCAN_INTERRUPT = MCAN_INTERRUPT + " | " + "MCAN_IR_TFE_Msk">
+    <#else>
+        <#assign MCAN_INTERRUPT = "MCAN_IR_TFE_Msk">
+    </#if>
+</#if>
+<#if TX_USE || TXBUF_USE>
+    <#if MCAN_INTERRUPT != "">
+        <#assign MCAN_INTERRUPT = MCAN_INTERRUPT + " | " + "MCAN_IR_TEFN_Msk">
+    <#else>
+        <#assign MCAN_INTERRUPT = "MCAN_IR_TEFN_Msk">
+    </#if>
+</#if>
+</#compress>
 // *****************************************************************************
 // *****************************************************************************
 // Global Data
@@ -87,6 +132,7 @@ static MCAN_TXRX_BUFFERS_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxBufferCa
 <#if RXF0_USE || RXF1_USE>
 static MCAN_RX_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[2];
 </#if>
+static MCAN_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}CallbackObj;
 static MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
@@ -246,13 +292,17 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_ILE = MCAN_ILE_EINT0_Msk;
 
     /* Enable MCAN interrupts */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE = MCAN_IE_BOE_Msk<#rt>
-                                        <#lt><#if TX_USE> | MCAN_IE_TFEE_Msk</#if><#rt>
-                                        <#lt><#if TXBUF_USE> | MCAN_IE_TCE_Msk</#if><#rt>
-                                        <#lt><#if TX_USE || TXBUF_USE> | MCAN_IE_TEFNE_Msk</#if><#rt>
-                                        <#lt><#if RXF0_USE> | MCAN_IE_RF0NE_Msk</#if><#rt>
-                                        <#lt><#if RXF1_USE> | MCAN_IE_RF1NE_Msk</#if><#rt>
-                                        <#lt><#if RXBUF_USE> | MCAN_IE_DRXE_Msk</#if>;
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE = MCAN_IE_BOE_Msk | MCAN_IE_ARAE_Msk | MCAN_IE_PEDE_Msk | MCAN_IE_PEAE_Msk | MCAN_IE_WDIE_Msk
+                                      | MCAN_IE_EWE_Msk | MCAN_IE_EPE_Msk | MCAN_IE_ELOE_Msk
+                                      <#if TIMESTAMP_ENABLE> | MCAN_IE_TSWE_Msk</#if><#rt>
+                                      <#lt><#if MCAN_TIMEOUT> | MCAN_IE_TOOE_Msk</#if><#rt>
+                                      <#lt><#if TX_USE> | MCAN_IE_TFEE_Msk</#if><#rt>
+                                      <#lt><#if TXBUF_USE> | MCAN_IE_TCE_Msk</#if>
+                                      <#if TX_USE || TXBUF_USE> | MCAN_IE_TEFNE_Msk | MCAN_IE_TEFLE_Msk | MCAN_IE_TEFFE_Msk | MCAN_IE_TCFE_Msk | MCAN_IE_HPME_Msk<#if TX_FIFO_WATERMARK != 0> | MCAN_IE_TEFWE_Msk</#if></#if>
+                                      <#if RXF0_USE> | MCAN_IE_RF0NE_Msk | MCAN_IE_RF0LE_Msk | MCAN_IE_RF0FE_Msk<#if RXF0_WATERMARK != 0> | MCAN_IE_RF0WE_Msk</#if></#if>
+                                      <#if RXF1_USE> | MCAN_IE_RF1NE_Msk | MCAN_IE_RF1LE_Msk | MCAN_IE_RF1FE_Msk<#if RXF1_WATERMARK != 0> | MCAN_IE_RF1WE_Msk</#if></#if>
+                                      <#if RXBUF_USE> | MCAN_IE_DRXE_Msk</#if>
+                                      | MCAN_IE_MRAFE_Msk;
 
     memset(&${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(MCAN_MSG_RAM_CONFIG));
 }
@@ -1124,6 +1174,36 @@ void ${MCAN_INSTANCE_NAME}_RxFifoCallbackRegister(MCAN_RX_FIFO_NUM rxFifoNum, MC
 
 // *****************************************************************************
 /* Function:
+    void ${MCAN_INSTANCE_NAME}_CallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given MCAN's transfer events occur.
+
+   Precondition:
+    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    callback  - A pointer to a function with a calling signature defined
+    by the MCAN_CALLBACK data type.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+   Returns:
+    None.
+*/
+void ${MCAN_INSTANCE_NAME}_CallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback != NULL)
+    {
+        ${MCAN_INSTANCE_NAME?lower_case}CallbackObj.callback = callback;
+        ${MCAN_INSTANCE_NAME?lower_case}CallbackObj.context = contextHandle;
+    }
+}
+
+// *****************************************************************************
+/* Function:
     void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
 
    Summary:
@@ -1170,10 +1250,13 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
 
     uint32_t ir = ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR;
 
-    /* Check if error occurred */
-    if ((ir & MCAN_IR_BO_Msk) != 0U)
+    if ((ir & (~(${MCAN_INTERRUPT}))) != 0U)
     {
-        ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_BO_Msk;
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = (ir & (~(${MCAN_INTERRUPT})));
+        if (${MCAN_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL)
+        {
+            ${MCAN_INSTANCE_NAME?lower_case}CallbackObj.callback(ir, ${MCAN_INSTANCE_NAME?lower_case}CallbackObj.context);
+        }
     }
 <#if RXF0_USE>
     /* New Message in Rx FIFO 0 */

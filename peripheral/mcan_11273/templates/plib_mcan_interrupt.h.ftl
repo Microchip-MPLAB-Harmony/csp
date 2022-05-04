@@ -196,6 +196,7 @@ void ${MCAN_INSTANCE_NAME}_RxBuffersCallbackRegister(MCAN_TXRX_BUFFERS_CALLBACK 
 <#if RXF0_USE || RXF1_USE>
 void ${MCAN_INSTANCE_NAME}_RxFifoCallbackRegister(MCAN_RX_FIFO_NUM rxFifoNum, MCAN_RX_FIFO_CALLBACK callback, uintptr_t contextHandle);
 </#if>
+void ${MCAN_INSTANCE_NAME}_CallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle);
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }
