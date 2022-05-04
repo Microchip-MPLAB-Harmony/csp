@@ -196,6 +196,7 @@ void ${CAN_INSTANCE_NAME}_RxBuffersCallbackRegister(CAN_TXRX_BUFFERS_CALLBACK ca
 <#if RXF0_USE || RXF1_USE>
 void ${CAN_INSTANCE_NAME}_RxFifoCallbackRegister(CAN_RX_FIFO_NUM rxFifoNum, CAN_RX_FIFO_CALLBACK callback, uintptr_t contextHandle);
 </#if>
+void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle);
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }

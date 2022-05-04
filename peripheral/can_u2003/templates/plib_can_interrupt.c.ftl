@@ -55,6 +55,51 @@
 </#if>
 #include "plib_${CAN_INSTANCE_NAME?lower_case}.h"
 
+<#compress>
+<#assign CAN_INTERRUPT = "">
+<#if RXF0_USE>
+    <#if CAN_INTERRUPT != "">
+        <#assign CAN_INTERRUPT = CAN_INTERRUPT + " | " + "CAN_IR_RF0N_Msk">
+    <#else>
+        <#assign CAN_INTERRUPT = "CAN_IR_RF0N_Msk">
+    </#if>
+</#if>
+<#if RXF1_USE>
+    <#if CAN_INTERRUPT != "">
+        <#assign CAN_INTERRUPT = CAN_INTERRUPT + " | " + "CAN_IR_RF1N_Msk">
+    <#else>
+        <#assign CAN_INTERRUPT = "CAN_IR_RF1N_Msk">
+    </#if>
+</#if>
+<#if RXBUF_USE>
+    <#if CAN_INTERRUPT != "">
+        <#assign CAN_INTERRUPT = CAN_INTERRUPT + " | " + "CAN_IR_DRX_Msk">
+    <#else>
+        <#assign CAN_INTERRUPT = "CAN_IR_DRX_Msk">
+    </#if>
+</#if>
+<#if TXBUF_USE>
+    <#if CAN_INTERRUPT != "">
+        <#assign CAN_INTERRUPT = CAN_INTERRUPT + " | " + "CAN_IR_TC_Msk">
+    <#else>
+        <#assign CAN_INTERRUPT = "CAN_IR_TC_Msk">
+    </#if>
+</#if>
+<#if TX_USE>
+    <#if CAN_INTERRUPT != "">
+        <#assign CAN_INTERRUPT = CAN_INTERRUPT + " | " + "CAN_IR_TFE_Msk">
+    <#else>
+        <#assign CAN_INTERRUPT = "CAN_IR_TFE_Msk">
+    </#if>
+</#if>
+<#if TX_USE || TXBUF_USE>
+    <#if CAN_INTERRUPT != "">
+        <#assign CAN_INTERRUPT = CAN_INTERRUPT + " | " + "CAN_IR_TEFN_Msk">
+    <#else>
+        <#assign CAN_INTERRUPT = "CAN_IR_TEFN_Msk">
+    </#if>
+</#if>
+</#compress>
 // *****************************************************************************
 // *****************************************************************************
 // Global Data
@@ -87,6 +132,7 @@ static CAN_TXRX_BUFFERS_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}RxBufferCall
 <#if RXF0_USE || RXF1_USE>
 static CAN_RX_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[2];
 </#if>
+static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj;
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
@@ -225,13 +271,17 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     ${CAN_INSTANCE_NAME}_REGS->CAN_ILE = CAN_ILE_EINT0_Msk;
 
     /* Enable CAN interrupts */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_IE = CAN_IE_BOE_Msk<#rt>
-                                        <#lt><#if TX_USE> | CAN_IE_TFEE_Msk</#if><#rt>
-                                        <#lt><#if TXBUF_USE> | CAN_IE_TCE_Msk</#if><#rt>
-                                        <#lt><#if TX_USE || TXBUF_USE> | CAN_IE_TEFNE_Msk</#if><#rt>
-                                        <#lt><#if RXF0_USE> | CAN_IE_RF0NE_Msk</#if><#rt>
-                                        <#lt><#if RXF1_USE> | CAN_IE_RF1NE_Msk</#if><#rt>
-                                        <#lt><#if RXBUF_USE> | CAN_IE_DRXE_Msk</#if>;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_IE = CAN_IE_BOE_Msk | CAN_IE_ARAE_Msk | CAN_IE_PEDE_Msk | CAN_IE_PEAE_Msk | CAN_IE_WDIE_Msk
+                                      | CAN_IE_EWE_Msk | CAN_IE_EPE_Msk | CAN_IE_ELOE_Msk | CAN_IE_BEUE_Msk | CAN_IE_BECE_Msk
+                                      <#if TIMESTAMP_ENABLE> | CAN_IE_TSWE_Msk</#if><#rt>
+                                      <#lt><#if CAN_TIMEOUT> | CAN_IE_TOOE_Msk</#if><#rt>
+                                      <#lt><#if TX_USE> | CAN_IE_TFEE_Msk</#if><#rt>
+                                      <#lt><#if TXBUF_USE> | CAN_IE_TCE_Msk</#if>
+                                      <#if TX_USE || TXBUF_USE> | CAN_IE_TEFNE_Msk | CAN_IE_TEFLE_Msk | CAN_IE_TEFFE_Msk | CAN_IE_TCFE_Msk | CAN_IE_HPME_Msk<#if TX_FIFO_WATERMARK != 0> | CAN_IE_TEFWE_Msk</#if></#if>
+                                      <#if RXF0_USE> | CAN_IE_RF0NE_Msk | CAN_IE_RF0LE_Msk | CAN_IE_RF0FE_Msk<#if RXF0_WATERMARK != 0> | CAN_IE_RF0WE_Msk</#if></#if>
+                                      <#if RXF1_USE> | CAN_IE_RF1NE_Msk | CAN_IE_RF1LE_Msk | CAN_IE_RF1FE_Msk<#if RXF1_WATERMARK != 0> | CAN_IE_RF1WE_Msk</#if></#if>
+                                      <#if RXBUF_USE> | CAN_IE_DRXE_Msk</#if>
+                                      | CAN_IE_MRAFE_Msk;
 
     (void) memset(&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(CAN_MSG_RAM_CONFIG));
 }
@@ -470,7 +520,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, CAN_RX_BUFFER *rx
     uint8_t *rxBuf = NULL;
     bool message_receive_event = false;
 
-    if ((bufferNumber >= ${RX_BUFFER_ELEMENTS}U) || (rxBuffer == NULL))
+    if (!((bufferNumber >= ${RX_BUFFER_ELEMENTS}U) || (rxBuffer == NULL)))
     {
         rxBuf = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + ((uint32_t)bufferNumber * ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE));
 
@@ -1074,6 +1124,36 @@ void ${CAN_INSTANCE_NAME}_RxFifoCallbackRegister(CAN_RX_FIFO_NUM rxFifoNum, CAN_
 
 // *****************************************************************************
 /* Function:
+    void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given CAN's transfer events occur.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    callback  - A pointer to a function with a calling signature defined
+    by the CAN_CALLBACK data type.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+   Returns:
+    None.
+*/
+void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback != NULL)
+    {
+        ${CAN_INSTANCE_NAME?lower_case}CallbackObj.callback = callback;
+        ${CAN_INSTANCE_NAME?lower_case}CallbackObj.context = contextHandle;
+    }
+}
+
+// *****************************************************************************
+/* Function:
     void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
    Summary:
@@ -1120,10 +1200,13 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
     uint32_t ir = ${CAN_INSTANCE_NAME}_REGS->CAN_IR;
 
-    /* Check if error occurred */
-    if ((ir & CAN_IR_BO_Msk) != 0U)
+    if ((ir & (~(${CAN_INTERRUPT}))) != 0U)
     {
-        ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_BO_Msk;
+        ${CAN_INSTANCE_NAME}_REGS->CAN_IR = (ir & (~(${CAN_INTERRUPT})));
+        if (${CAN_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL)
+        {
+            ${CAN_INSTANCE_NAME?lower_case}CallbackObj.callback(ir, ${CAN_INSTANCE_NAME?lower_case}CallbackObj.context);
+        }
     }
 <#if RXF0_USE>
     /* New Message in Rx FIFO 0 */

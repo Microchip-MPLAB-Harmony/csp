@@ -234,6 +234,20 @@ typedef void (*CAN_TX_EVENT_FIFO_CALLBACK) (uint8_t numberOfTxEvent, uintptr_t c
 typedef void (*CAN_RX_FIFO_CALLBACK) (uint8_t numberOfMessage, uintptr_t contextHandle);
 
 // *****************************************************************************
+/* CAN Callback
+
+   Summary:
+    CAN Callback Function Pointer.
+
+   Description:
+    This data type defines the CAN Callback Function Pointer.
+
+   Remarks:
+    None.
+*/
+typedef void (*CAN_CALLBACK) (uint32_t interruptStatus, uintptr_t contextHandle);
+
+// *****************************************************************************
 /* CAN Message RAM Configuration
 
    Summary:
@@ -478,6 +492,27 @@ typedef struct
     /* Transfer Event Callback Context */
     uintptr_t context;
 } CAN_RX_FIFO_CALLBACK_OBJ;
+
+// *****************************************************************************
+/* CAN Callback Object
+
+   Summary:
+    CAN interrupt status callback structure.
+
+   Description:
+    This data structure stores interrupt status callback and it's context.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* CAN Interrupt Status Callback */
+    CAN_CALLBACK callback;
+
+    /* CAN Interrupt Status Callback Context */
+    uintptr_t context;
+} CAN_CALLBACK_OBJ;
 
 // *****************************************************************************
 /* CAN PLib Instance Object
