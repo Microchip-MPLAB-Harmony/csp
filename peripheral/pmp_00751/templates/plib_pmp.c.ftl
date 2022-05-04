@@ -135,7 +135,7 @@ uint32_t ${PMP_INSTANCE_NAME}_MasterReceive( void )
 
 bool ${PMP_INSTANCE_NAME}_PortIsBusy( void )
 {
-    return (bool) (PMMODE & _PMMODE_BUSY_MASK);
+    return ((PMMODE & _PMMODE_BUSY_MASK) != 0U);
 }
 
 void ${PMP_INSTANCE_NAME}_AddressPortEnable( uint32_t portfunctions )
@@ -145,5 +145,5 @@ void ${PMP_INSTANCE_NAME}_AddressPortEnable( uint32_t portfunctions )
 
 void ${PMP_INSTANCE_NAME}_AddressPortDisable( uint32_t portfunctions )
 {
-    PMAENCLR = (((uint32_t)(portfunctions)) << (_PMAEN_PTEN_POSITION)) & _PMAEN_PTEN_MASK;
+    PMAENCLR = ((((uint32_t)(portfunctions)) << (_PMAEN_PTEN_POSITION)) & _PMAEN_PTEN_MASK);
 }
