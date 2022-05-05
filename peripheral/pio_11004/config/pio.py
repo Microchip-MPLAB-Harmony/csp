@@ -389,6 +389,7 @@ def packageChange(pinoutSymbol, pinout):
             pin[pinNumber].setLabel("Pin " + str(pin_position[pinNumber]))
             pinBitPosition[pinNumber].setValue(-1, 2)
             pinChannel[pinNumber].setValue("", 2)
+            pinExportName[pinNumber].setValue(str(pin_position[pinNumber]) + ":" + str(pin_map[pin_position[pinNumber]]))
             if pin_map.get(pin_position[pinNumber]).startswith("P"):
                 pinBitPosition[pinNumber].setValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber]))[0]), 2)
                 pinChannel[pinNumber].setValue(pin_map.get(pin_position[pinNumber])[1], 2)
@@ -398,7 +399,7 @@ def sysIOConfigChange(symbol, event):
     global pin_map
     global sysIOConfigdict
 
-    # Find the pin number  whose type has changed 
+    # Find the pin number  whose type has changed
     pin = int(event["id"].split("_")[1])
 
     # Find the pad associated with the pin
@@ -414,10 +415,10 @@ def sysIOConfigChange(symbol, event):
         # If pin has function which is not sys_io, override the sysio behavior
         if (event["value"] and (event["value"] != sysioFunction)):
             sysioNewVal = (sysioNewVal | sysioMask)
-        # else leave the sysio function intact    
+        # else leave the sysio function intact
         else:
             sysioNewVal =  (sysioNewVal & ~sysioMask)
-        
+
         if sysioNewVal != symbol.getValue():
             symbol.setValue(sysioNewVal)
 
@@ -445,6 +446,14 @@ pioEnable.setLabel("Use PIO PLIB?")
 pioEnable.setDefaultValue(True)
 pioEnable.setReadOnly(True)
 
+pioExport = coreComponent.createBooleanSymbol("PIO_EXPORT", pioEnable)
+pioExport.setLabel("Export PIO configuration")
+pioExport.setDefaultValue(True)
+pioExport.setVisible(False)
+
+pioExportAs = coreComponent.createComboSymbol("PIO_EXPORT_AS", pioExport, ["CSV File"])
+pioExportAs.setLabel("Export PIO configuration as ")
+pioExportAs.setVisible(False)
 
 # Needed to map port system APIs to PLIB APIs
 pioSymAPI_Prefix = coreComponent.createStringSymbol("PORT_API_PREFIX", None)
@@ -458,6 +467,7 @@ pioSymAPI_Prefix.setVisible(False)
 
 global pin
 pin = []
+pinExportName = []
 pinName = []
 pinType = []
 pinPeripheralFunction = []
@@ -528,6 +538,11 @@ for pinNumber in range(1, packagePinCount + 1):
     pin[pinNumber-1]= coreComponent.createMenuSymbol("PIO_PIN_CONFIGURATION" + str(pinNumber - 1), pinConfiguration)
     pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
     pin[pinNumber-1].setDescription("Configuration for Pin " + str(pin_position[pinNumber-1]))
+
+    pinExportName.append(pinNumber)
+    pinExportName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_EXPORT_NAME", pin[pinNumber-1])
+    pinExportName[pinNumber-1].setDefaultValue(str(pin_position[pinNumber - 1]) + ":" + str(pin_map[pin_position[pinNumber - 1]]))
+    pinExportName[pinNumber-1].setReadOnly(True)
 
     pinName.append(pinNumber)
     pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
@@ -881,7 +896,7 @@ for portNumber in range(0, len(pioSymChannel)):
         pioSymIntEnComment.append(portNumber)
         # Dependency Status for clock
         pioSymClkEnComment.append(portNumber)
- 
+
 interruptActive = coreComponent.createBooleanSymbol("INTERRUPT_ACTIVE", portConfiguration)
 interruptActive.setDefaultValue(False)
 interruptActive.setVisible(False)
@@ -896,7 +911,7 @@ pioSymInterruptControl.setVisible(False)
 ################################# SYS IO related code  ############################################
 ###################################################################################################
 global sysIOConfigdict
-matrixName, sysioRegName, sysIOConfigdict = getArchSYSIOInformation()  
+matrixName, sysioRegName, sysIOConfigdict = getArchSYSIOInformation()
 if matrixName is not None:
     pioSymMatrixName = coreComponent.createStringSymbol("MATRIX_NAME", None)
     pioSymMatrixName.setVisible(False)
@@ -967,3 +982,12 @@ sysPortIncludeFile.setType("STRING")
 sysPortIncludeFile.setOutputName("core.LIST_SYS_PORT_INCLUDES")
 sysPortIncludeFile.setSourcePath("../peripheral/pio_11004/templates/plib_pio_sysport.h.ftl")
 sysPortIncludeFile.setMarkup(True)
+
+pioExportFile = coreComponent.createFileSymbol("PIO_EXPORT_FILE", None)
+pioExportFile.setSourcePath("../peripheral/pio_11004/templates/export/plib_pio_export.ftl")
+pioExportFile.setOutputName("pin_configurations.csv")
+pioExportFile.setType("IMPORTANT")
+pioExportFile.setMarkup(True)
+pioExportFile.setEnabled(pioExport.getValue())
+pioExportFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["PIO_EXPORT"])
+
