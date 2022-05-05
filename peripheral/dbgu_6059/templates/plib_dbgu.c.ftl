@@ -95,7 +95,7 @@ void static ${DBGU_INSTANCE_NAME}_ISR_TX_Handler(void)
         if (${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= ${DBGU_INSTANCE_NAME?lower_case}Obj.txSize)
         {
             ${DBGU_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
-            ${DBGU_INSTANCE_NAME}_REGS->DBGU_IDR = DBGU_IDR_TXEMPTY_Msk;
+            ${DBGU_INSTANCE_NAME}_REGS->DBGU_IDR = DBGU_IDR_TXRDY_Msk;
 
             if (${DBGU_INSTANCE_NAME?lower_case}Obj.txCallback != NULL)
             {
