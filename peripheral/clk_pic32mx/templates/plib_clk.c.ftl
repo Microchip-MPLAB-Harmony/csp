@@ -128,7 +128,7 @@ void CLK_Initialize( void )
         </#if>
         <#if (CONFIG_SYS_CLK_OE?has_content) && (CONFIG_SYS_CLK_OE == true)>
             <#lt>    /* Enable Reference Oscillator (ON bit) and Enable its Output (OE bit) */
-            <#lt>    ${REFOCONreg}SET = ${OE_MASK} | ${ON_MASK};
+            <#lt>    ${REFOCONreg}SET = ${OE_MASK}U | ${ON_MASK}U;
         <#else>
             <#lt>    /* Enable Reference Oscillator (ON bit) */
             <#lt>    ${REFOCONreg}SET = ${ON_MASK};
@@ -150,7 +150,10 @@ void CLK_Initialize( void )
 <#if PLL_LOCK_STATUS_OPTION?has_content && CONFIG_FNOSC?contains("PLL")>
     <#lt>    /* Wait for PLL to be locked */
     <#if PLL_LOCK_STATUS_OPTION == "SLOCK">
-        <#lt>    while(!OSCCONbits.SLOCK);
+        <#lt>    while(OSCCONbits.SLOCK == 0U)
+                 {
+                      /* Nothing to do */
+                 }
     <#else>
         <#lt>    while(!OSCCONbits.LOCK);
     </#if>
