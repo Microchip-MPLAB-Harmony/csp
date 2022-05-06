@@ -143,6 +143,7 @@ pinPullDown = []
 pinLatchValue = []
 pin = []
 pinName = []
+pinExportName = []
 pinType = []
 pinPeripheralFunction = []
 pinBitPosition = []
@@ -220,6 +221,7 @@ def packageChange(symbol, pinout):
                 if not pin[index - 1].getVisible():
                     pin[index - 1].setVisible(True)
                 pin[index - 1].setLabel("Pin " + str(pin_position[index - 1]))
+                pinExportName[index - 1].setValue(str(pin_position[index - 1]) + ":" + str(pin_map[pin_position[index - 1]]))
                 if pin_map.get(pin_position[index-1]).startswith("P"):
                     Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_PIN", int(re.findall('\d+', pin_map.get(pin_position[index - 1]))[0]), 2)
                     Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_GROUP", pin_map.get(pin_position[index - 1])[1], 2)
@@ -424,6 +426,15 @@ pioEnable.setLabel("Use PIO PLIB?")
 pioEnable.setDefaultValue(True)
 pioEnable.setReadOnly(True)
 
+pioExport = coreComponent.createBooleanSymbol("PIO_EXPORT", pioEnable)
+pioExport.setLabel("Export PIO configuration")
+pioExport.setDefaultValue(True)
+pioExport.setVisible(False)
+
+pioExportAs = coreComponent.createComboSymbol("PIO_EXPORT_AS", pioExport, ["CSV File"])
+pioExportAs.setLabel("Export PIO configuration as ")
+pioExportAs.setVisible(False)
+
 # Build package pinout map
 packageNode = ATDF.getNode("/avr-tools-device-file/variants")
 for id in range(0,len(packageNode.getChildren())):
@@ -476,6 +487,11 @@ for pinNumber in range(1, packagePinCount + 1):
     pin[pinNumber-1]= coreComponent.createMenuSymbol("PIO_PIN_CONFIGURATION" + str(pinNumber), pinConfiguration)
     pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
     pin[pinNumber-1].setDescription("Configuration for Pin " + str(pin_position[pinNumber-1]))
+
+    pinExportName.append(pinNumber)
+    pinExportName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_EXPORT_NAME", pin[pinNumber-1])
+    pinExportName[pinNumber-1].setDefaultValue(str(pin_position[pinNumber - 1]) + ":" + str(pin_map[pin_position[pinNumber - 1]]))
+    pinExportName[pinNumber-1].setReadOnly(True)
 
     pinName.append(pinNumber)
     pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
@@ -721,3 +737,11 @@ bspIncludeFile.setType("STRING")
 bspIncludeFile.setOutputName("core.LIST_BSP_INITIALIZATION")
 bspIncludeFile.setSourcePath("../peripheral/pio_11264/templates/plib_pio_bsp.c.ftl")
 bspIncludeFile.setMarkup(True)
+
+pioExportFile = coreComponent.createFileSymbol("PIO_EXPORT_FILE", None)
+pioExportFile.setSourcePath("../peripheral/pio_11264/templates/export/plib_pio_export.ftl")
+pioExportFile.setOutputName("pin_configurations.csv")
+pioExportFile.setType("IMPORTANT")
+pioExportFile.setMarkup(True)
+pioExportFile.setEnabled(pioExport.getValue())
+pioExportFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["PIO_EXPORT"])
