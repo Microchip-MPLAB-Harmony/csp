@@ -65,12 +65,15 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     // Reset and Disable the qspi Module
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_SWRST_Msk | QSPI_CR_QSPIDIS_Msk;
 
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
 <#if QSPI_PCALCFG_CLKDIV??>
     // Pad Calibration Configuration
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG = (${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG & ~QSPI_PCALCFG_CLKDIV_Msk) |
-                                                QSPI_PCALCFG_CLKDIV(${QSPI_PCALCFG_CLKDIV});
+                                                QSPI_PCALCFG_CLKDIV(${QSPI_PCALCFG_CLKDIV}U);
 
     <#if QSPI_DLLCFG_RANGE>
     /* DLL Range */
@@ -83,10 +86,16 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_STPCAL_Msk;
 
     /* Wait for DLL lock */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_DLOCK_Msk));
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_DLOCK_Msk) == 0U)
+    {
+        /* Do Nothing */
+    }
 
     /* Wait for Pad Calibration complete */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_CALBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_CALBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 </#if>
 
     /* DLYCS  = 0x0 */
@@ -100,7 +109,7 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     /* WDRBT  = 0 */
     /* SMM    = ${QSPI_SMM} */
     <#if (QSPI_NBBITS?has_content)>
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} | QSPI_MR_NBBITS(${QSPI_NBBITS}));
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} | QSPI_MR_NBBITS(${QSPI_NBBITS}U));
     <#else>
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} );
     </#if>
@@ -113,31 +122,48 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     </#if>
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
     /* Update Configuration */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_UPDCFG_Msk;
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
     // Enable the qspi Module
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_QSPIEN_Msk;
 
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk));
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk) == 0U)
+    {
+        /* Do Nothing */
+    }
 }
 
 static void ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(uint32_t* dst, uint32_t* src, uint32_t count)
 {
-    while (count--) {
-        *dst++ = *src++;
+    while (count != 0U)
+    {
+        *dst = *src;
+        src++;
+        dst++;
+        count--;
     }
 }
 
 static void ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit(uint8_t* dst, uint8_t* src, uint32_t count)
 {
-    while (count--) {
-        *dst++ = *src++;
+    while (count != 0U)
+    {
+        *dst = *src;
+        src++;
+        dst++;
+        count--;
     }
 }
 
@@ -149,22 +175,22 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IAR = QSPI_IAR_ADDR(address);
 
     /* Set Instruction code register */
-    if (tfr_type == QSPI_REG_READ || tfr_type == QSPI_MEM_READ)
+    if ((tfr_type == QSPI_REG_READ) || (tfr_type == QSPI_MEM_READ))
     {
-        ${QSPI_INSTANCE_NAME}_REGS->QSPI_RICR = (QSPI_RICR_RDINST(qspi_memory_xfer->instruction)) | (QSPI_RICR_RDOPT(qspi_memory_xfer->option));
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_RICR = (QSPI_RICR_RDINST((uint32_t)qspi_memory_xfer->instruction)) | (QSPI_RICR_RDOPT((uint32_t)qspi_memory_xfer->option));
     } else
     {
-        ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = (QSPI_WICR_WRINST(qspi_memory_xfer->instruction)) | (QSPI_WICR_WROPT(qspi_memory_xfer->option));
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = (QSPI_WICR_WRINST((uint32_t)qspi_memory_xfer->instruction)) | (QSPI_WICR_WROPT((uint32_t)qspi_memory_xfer->option));
     }
 
     /* Set Instruction Frame register*/
 
-    mask |= qspi_memory_xfer->width;
-    mask |= qspi_memory_xfer->addr_len;
+    mask |= (uint32_t)qspi_memory_xfer->width;
+    mask |= (uint32_t)qspi_memory_xfer->addr_len;
 
     if (qspi_memory_xfer->option_en)
     {
-        mask |= qspi_memory_xfer->option_len;
+        mask |= (uint32_t)qspi_memory_xfer->option_len;
         mask |= QSPI_IFR_OPTEN_Msk;
     }
 
@@ -173,25 +199,28 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
         mask |= QSPI_IFR_CRM_Msk;
     }
 
-    mask |= QSPI_IFR_NBDUM(qspi_memory_xfer->dummy_cycles);
+    mask |= QSPI_IFR_NBDUM((uint32_t)qspi_memory_xfer->dummy_cycles);
 
     mask |= QSPI_IFR_INSTEN_Msk | QSPI_IFR_ADDREN_Msk | QSPI_IFR_DATAEN_Msk;
 
     switch (tfr_type){
         case QSPI_REG_READ:
             mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_REGISTER_Val);
-            mask |= QSPI_IFR_SMRM(1);
-            mask |= QSPI_IFR_APBTFRTYP(1);
+            mask |= QSPI_IFR_SMRM(1U);
+            mask |= QSPI_IFR_APBTFRTYP(1U);
             break;
         case QSPI_REG_WRITE:
             mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_REGISTER_Val);
-            mask |= QSPI_IFR_SMRM(1);
+            mask |= QSPI_IFR_SMRM(1U);
             break;
         case QSPI_MEM_READ:
             mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_MEMORY_Val);
             break;
         case QSPI_MEM_WRITE:
             mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_MEMORY_Val);
+            break;
+        default :
+                 /* Do Nothing */
             break;
     };
 
@@ -220,18 +249,24 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
     }
 </#if>
 
-    mask |= qspi_memory_xfer->protocol_type;
+    mask |= (uint32_t)qspi_memory_xfer->protocol_type;
 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
     /* Update Configuration */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_UPDCFG_Msk;
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
     return true;
 }
@@ -246,21 +281,22 @@ bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer,
     uint32_t mask = 0;
 
     /* Configure address */
-    if(qspi_command_xfer->addr_en) {
+    if(qspi_command_xfer->addr_en)
+    {
         ${QSPI_INSTANCE_NAME}_REGS->QSPI_IAR = QSPI_IAR_ADDR(address);
 
         mask |= QSPI_IFR_ADDREN_Msk;
-        mask |= qspi_command_xfer->addr_len;
+        mask |= (uint32_t)qspi_command_xfer->addr_len;
     }
 
     /* Configure instruction */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = QSPI_WICR_WRINST(qspi_command_xfer->instruction);
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = QSPI_WICR_WRINST((uint32_t)qspi_command_xfer->instruction);
 
     /* Configure instruction frame */
-    mask |= qspi_command_xfer->width;
+    mask |= (uint32_t)qspi_command_xfer->width;
     mask |= QSPI_IFR_INSTEN_Msk;
     /* TFRTYP:0, SMRM:1, APBTFRTYP:0 */
-    mask |= QSPI_IFR_SMRM(1);
+    mask |= QSPI_IFR_SMRM(1U);
     if (qspi_command_xfer->ddr_en)
     {
         mask |= QSPI_IFR_DDREN_Msk;
@@ -269,24 +305,33 @@ bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer,
     {
         mask |= QSPI_IFR_DDRCMDEN_Msk;
     }
-    mask |= qspi_command_xfer->protocol_type;
+    mask |= (uint32_t)qspi_command_xfer->protocol_type;
 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
     /* Update Configuration */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_UPDCFG_Msk;
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
     /* Start Transfer */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_STTFR_Msk;
 
     /* Wait for chip select rise */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk));
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk) == 0U)
+    {
+        /* Do Nothing */
+    }
 
     return true;
 }
@@ -298,26 +343,27 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     uint8_t *ptr_rx_data = (uint8_t *)rx_data;
 
     /* Configure address */
-    if(qspi_register_xfer->addr_en) {
+    if(qspi_register_xfer->addr_en)
+    {
         ${QSPI_INSTANCE_NAME}_REGS->QSPI_IAR = QSPI_IAR_ADDR(qspi_register_xfer->address);
 
         mask |= QSPI_IFR_ADDREN_Msk;
-        mask |= qspi_register_xfer->addr_len;
+        mask |= (uint32_t)qspi_register_xfer->addr_len;
     }
 
     /* Configure Instruction */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_RICR = QSPI_RICR_RDINST(qspi_register_xfer->instruction);
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_RICR = QSPI_RICR_RDINST((uint32_t)qspi_register_xfer->instruction);
 
     /* Configure Instruction Frame */
-    mask |= qspi_register_xfer->width;
+    mask |= (uint32_t)qspi_register_xfer->width;
 
-    mask |= QSPI_IFR_NBDUM(qspi_register_xfer->dummy_cycles);
+    mask |= QSPI_IFR_NBDUM((uint32_t)qspi_register_xfer->dummy_cycles);
 
     mask |= QSPI_IFR_INSTEN_Msk | QSPI_IFR_DATAEN_Msk;
 
     /* TFRTYP:0, SMRM:1, APBTFRTYP:1 */
-    mask |= QSPI_IFR_SMRM(1);
-    mask |= QSPI_IFR_APBTFRTYP(1);
+    mask |= QSPI_IFR_SMRM(1U);
+    mask |= QSPI_IFR_APBTFRTYP(1U);
     if (qspi_register_xfer->ddr_en)
     {
         mask |= QSPI_IFR_DDREN_Msk;
@@ -326,38 +372,53 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     {
         mask |= QSPI_IFR_DDRCMDEN_Msk;
     }
-    mask |= qspi_register_xfer->protocol_type;
+    mask |= (uint32_t)qspi_register_xfer->protocol_type;
 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
     /* Update Configuration */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_UPDCFG_Msk;
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
     /* Start Transfer */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_STTFR_Msk;
 
-    while (rx_data_len)
+    while (rx_data_len > 0U)
     {
         /* Wait for Receive Data Register Full Flag */
-        while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_RDRF_Msk));
+        while((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_RDRF_Msk) == 0U)
+        {
+            /* Do Nothing */
+        }
 
         if (rx_data_len == 1U)
         {
             /* Wait for synchronization */
-            while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+            while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+            {
+                /* Do Nothing */
+            }
 
             /* Last Transfer */
             ${QSPI_INSTANCE_NAME}_EndTransfer();
         }
 
         /* Wait for synchronization */
-        while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+        while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+        {
+            /* Do Nothing */
+        }
 
         /* Read the register content */
         *ptr_rx_data = (uint8_t)${QSPI_INSTANCE_NAME}_REGS->QSPI_RDR;
@@ -366,7 +427,10 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     }
 
     /* Wait for chip select rise */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk));
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk) == 0U)
+    {
+        /* Do Nothing */
+    }
 
     return true;
 }
@@ -378,21 +442,22 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     uint8_t *ptr_tx_data = (uint8_t *)tx_data;
 
     /* Configure address */
-    if(qspi_register_xfer->addr_en) {
+    if(qspi_register_xfer->addr_en)
+    {
         ${QSPI_INSTANCE_NAME}_REGS->QSPI_IAR = QSPI_IAR_ADDR(qspi_register_xfer->address);
 
         mask |= QSPI_IFR_ADDREN_Msk;
-        mask |= qspi_register_xfer->addr_len;
+        mask |= (uint32_t)qspi_register_xfer->addr_len;
     }
 
     /* Configure Instruction */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = QSPI_WICR_WRINST(qspi_register_xfer->instruction);
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = QSPI_WICR_WRINST((uint32_t)qspi_register_xfer->instruction);
 
     /* Number of Write Access */
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_WRACNT = QSPI_WRACNT_NBWRA(tx_data_length);
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_WRACNT = QSPI_WRACNT_NBWRA((uint32_t)tx_data_length);
 
     /* Configure Instruction Frame */
-    mask |= qspi_register_xfer->width;
+    mask |= (uint32_t)qspi_register_xfer->width;
 
     mask |= QSPI_IFR_INSTEN_Msk | QSPI_IFR_DATAEN_Msk;
     if (qspi_register_xfer->ddr_en)
@@ -403,25 +468,34 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     {
         mask |= QSPI_IFR_DDRCMDEN_Msk;
     }
-    mask |= qspi_register_xfer->protocol_type;
+    mask |= (uint32_t)qspi_register_xfer->protocol_type;
 
     /* TFRTYP:0, SMRM:1, APBTFRTYP:0 */
     mask |= QSPI_IFR_SMRM(1);
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
     /* Update Configuration */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_UPDCFG_Msk;
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
-    while (tx_data_len)
+    while (tx_data_len > 0U)
     {
         /* Wait for Transmit Data Register Empty Flag */
-        while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_TDRE_Msk));
+        while((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_TDRE_Msk) == 0U)
+        {
+            /* Do nothing */
+        }
 
         /* Write the content to register */
         ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = *ptr_tx_data;
@@ -431,17 +505,26 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
         if (tx_data_len == 0U)
         {
             /* Wait for Transmission Registers Empty */
-            while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_TXEMPTY_Msk));
+            while((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_TXEMPTY_Msk) == 0U)
+            {
+                /* Do nothing */
+            }
 
             /* Wait for synchronization */
-            while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+            while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+            {
+                /* Do nothing */
+            }
 
             ${QSPI_INSTANCE_NAME}_EndTransfer();
         }
     }
 
     /* Wait for chip select rise */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk));
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk) == 0U)
+    {
+        /* Do Nothing */
+    }
 
     return true;
 }
@@ -473,7 +556,7 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
     uint32_t    numDstPostWordBytes = 0;
     uint32_t    numSrcPostWordBytes = 0;
     uint32_t    numWordTransferBytes = 0;
-    int32_t     shiftBytes = 0;             // gt(0)=>right, lt(0)=>left shift
+    uint32_t     shiftBytes = 0;             // gt(0)=>right, lt(0)=>left shift
     uint8_t     tmpBuffer[ sizeof( uint32_t) ];
 
     ///// device preliminaries
@@ -485,22 +568,27 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
     }
 
     ///// dst and src buffer characterization
-    numDstPreWordBytes =  0x03 & (uint32_t) pRxBuffer;
-    if( numDstPreWordBytes ) {
+    numDstPreWordBytes =  0x03U & (uint32_t) pRxBuffer;
+    if(( numDstPreWordBytes ) != 0U)
+    {
         numDstPreWordBytes =  sizeof( uint32_t ) - numDstPreWordBytes;
     }
-    if( rx_data_length >= numDstPreWordBytes ) {
-        numDstPostWordBytes = 0x03 & (uint32_t) (pRxBuffer + rx_data_length);
+    if( rx_data_length >= numDstPreWordBytes )
+    {
+        numDstPostWordBytes = 0x03U & (uint32_t) (pRxBuffer + rx_data_length);
     }
     //
-    numSrcPreWordBytes =  0x03 & (uint32_t) qspi_mem;
-    if( numSrcPreWordBytes ) {
+    numSrcPreWordBytes =  0x03U & (uint32_t) qspi_mem;
+    if(( numSrcPreWordBytes ) != 0U)
+    {
         numSrcPreWordBytes =  sizeof( uint32_t ) - numSrcPreWordBytes;
     }
-    if( rx_data_length >= numSrcPreWordBytes ) {
-        numSrcPostWordBytes = 0x03 & (uint32_t) (qspi_mem + rx_data_length);
+    if( rx_data_length >= numSrcPreWordBytes )
+    {
+        numSrcPostWordBytes = 0x03U & (uint32_t) (qspi_mem + rx_data_length);
     }
-    else {
+    else
+    {
         numSrcPreWordBytes = rx_data_length;
     }
 
@@ -519,7 +607,7 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
             numSrcPostWordBytes += sizeof( uint32_t );
         }
         else {
-            numWordTransferBytes = 0;
+            numWordTransferBytes = 0U;
         }
     }
 
@@ -527,7 +615,8 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
 
     ///// Transfer of data from src device to dst buffer
     // Perform single byte transfers necessary before word alignment begins
-    if( numSrcPreWordBytes ) {
+    if(( numSrcPreWordBytes ) != 0U)
+    {
         // get these now so we don't have to backup the device access later
         ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit( tmpBuffer, qspi_mem, numSrcPreWordBytes );
         qspi_mem += numSrcPreWordBytes;     // word alignment point for the src
@@ -535,19 +624,20 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
     pRxBuffer += numDstPreWordBytes;        // word alignment point for the dst
 
     // Perform word aligned transfers
-    if( numWordTransferBytes / 4 ) {
+    if(( numWordTransferBytes / 4U ) != 0U)
+    {
         ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit( (uint32_t *) pRxBuffer,
                 (uint32_t *) qspi_mem,
-                numWordTransferBytes / 4
+                numWordTransferBytes / 4U
             );
         qspi_mem += numWordTransferBytes;
         pRxBuffer += numWordTransferBytes;
     }
 
-    if( 0 >= shiftBytes ) {                 // left, or no, shift
-        if( shiftBytes ) {
+    if( 0U >= shiftBytes ) {                 // left, or no, shift
+        if(( shiftBytes )!= 0U) {
             // Shift the data left to its final destination buffer location
-            memmove( ((uint8_t *) rx_data) + numDstPreWordBytes + shiftBytes,
+           (void) memmove( ((uint8_t *) rx_data) + numDstPreWordBytes + shiftBytes,
                     ((uint8_t *) rx_data) + numDstPreWordBytes,
                     numWordTransferBytes
                 );
@@ -555,38 +645,50 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
         }
         // Now we have room at the end, perform the single byte transfers
         // necessary after word alignment ends
-        if( numSrcPostWordBytes ) {
+        if(( numSrcPostWordBytes ) != 0U)
+        {
             ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit( pRxBuffer, qspi_mem, numSrcPostWordBytes );
         }
     }
     else {                                  // right shift
         // Perform the single byte transfers necessary after word alignment ends
-        if( numSrcPostWordBytes ) {
+        if(( numSrcPostWordBytes ) != 0U)
+        {
             ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit( pRxBuffer, qspi_mem, numSrcPostWordBytes );
         }
         // Shift the data to right to its final destination buffer location
-        memmove( ((uint8_t *) rx_data) + numDstPreWordBytes + shiftBytes,
+       (void) memmove( ((uint8_t *) rx_data) + numDstPreWordBytes + shiftBytes,
                 ((uint8_t *) rx_data) + numDstPreWordBytes,
                 numWordTransferBytes + numSrcPostWordBytes
             );
     }
 
-    if( numSrcPreWordBytes ) {
+    if(( numSrcPreWordBytes ) != 0U)
+    {
         // Now we have room at the beginning;
         // place the previously saved pre-word aligned bytes
-        memmove( rx_data, tmpBuffer, numSrcPreWordBytes );
+       (void) memmove( rx_data, tmpBuffer, numSrcPreWordBytes );
     }
 
     /* Wait if Read Busy */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_RBUSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_RBUSY_Msk)  != 0U)
+    {
+        /* Do Nothing */
+    }
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk)  != 0U)
+    {
+        /* Do Nothing */
+    }
 
     ${QSPI_INSTANCE_NAME}_EndTransfer();
 
     /* Wait for chip select rise */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk));
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk) == 0U)
+    {
+        /* Do Nothing */
+    }
 
     return true;
 }
@@ -600,31 +702,47 @@ bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, ui
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_WRACNT = QSPI_WRACNT_NBWRA(tx_data_length);
 
     if (false == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_MEM_WRITE, address))
+    {
         return false;
+    }
 
     /* Write to serial flash memory */
-    length_32bit = tx_data_length / 4;
-    length_8bit= tx_data_length & 0x03;
+    length_32bit = tx_data_length / 4U;
+    length_8bit= tx_data_length & 0x03U;
 
-    if(length_32bit)
+    if(length_32bit != 0U)
+    {
         ${QSPI_INSTANCE_NAME?lower_case}_memcpy_32bit(qspi_mem, tx_data, length_32bit);
+    }
 
     tx_data = tx_data + length_32bit;
     qspi_mem = qspi_mem + length_32bit;
 
-    if(length_8bit)
+    if(length_8bit != 0U)
+    {
         ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)qspi_mem, (uint8_t *)tx_data, length_8bit);
+    }
 
     /* Wait for Last Write Access */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_LWRA_Msk));
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_LWRA_Msk) == 0U)
+    {
+        /* Do Nothing */
+    }
+
 
     /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
     ${QSPI_INSTANCE_NAME}_EndTransfer();
 
     /* Wait for chip select rise */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk));
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk) == 0U)
+    {
+        /* Do Nothing */
+    }
 
     return true;
 }

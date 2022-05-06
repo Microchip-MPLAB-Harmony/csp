@@ -47,7 +47,7 @@
 #include "interrupts.h"
 </#if>
 
-qspi_spi_obj qspiObj;
+static qspi_spi_obj qspiObj;
 
 <#assign QSPI_SCR_VALUES = "">
 <#if QSPI_CPOL=="HIGH">
@@ -70,12 +70,15 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     // Reset and Disable the qspi Module
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_SWRST_Msk | QSPI_CR_QSPIDIS_Msk;
 
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk) != 0U)
+	{
+		/* Do Nothing */
+	}
 
 <#if QSPI_PCALCFG_CLKDIV??>
     // Pad Calibration Configuration
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG = (${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG & ~QSPI_PCALCFG_CLKDIV_Msk) |
-                                                QSPI_PCALCFG_CLKDIV(${QSPI_PCALCFG_CLKDIV});
+                                                QSPI_PCALCFG_CLKDIV(${QSPI_PCALCFG_CLKDIV}U);
 
     <#if QSPI_DLLCFG_RANGE>
     /* DLL Range */
@@ -88,10 +91,16 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_STPCAL_Msk;
 
     /* Wait for DLL lock */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_DLOCK_Msk));
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_DLOCK_Msk) == 0U)
+	{
+		/* Do Nothing */
+	}
 
     /* Wait for Pad Calibration complete */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_CALBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_CALBSY_Msk) != 0U)
+	{
+		/* Do Nothing */
+	}
 </#if>
 
     /* DLYCS  = 0x0 */
@@ -105,7 +114,7 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     /* WDRBT  = 0 */
     /* SMM    = ${QSPI_SMM} */
     <#if (QSPI_NBBITS?has_content)>
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} | QSPI_MR_NBBITS(${QSPI_NBBITS}) );
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} | QSPI_MR_NBBITS(${QSPI_NBBITS}U) );
     <#else>
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} );
     </#if>
@@ -118,18 +127,27 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     </#if>
 
     /* Wait for synchronization Busy */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+	{
+		/* Do Nothing */
+	}
 
     /* Update Configuration */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_UPDCFG_Msk;
 
     /* Wait for synchronization Busy */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk) != 0U)
+	{
+		/* Do Nothing */
+	}
 
     // Enable the qspi Module
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_QSPIEN_Msk;
 
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk));
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk) != 0U)
+	{
+		/* Do Nothing */
+	}
 }
 
 bool ${QSPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
@@ -138,7 +156,7 @@ bool ${QSPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* 
     uint32_t dummyData;
 
     /* Verify the request */
-    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (qspiObj.transferIsBusy == false))
+    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (qspiObj.transferIsBusy == false))
     {
         isRequestAccepted = true;
         qspiObj.txBuffer = pTransmitData;
@@ -183,11 +201,15 @@ bool ${QSPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* 
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = *((uint8_t*)qspiObj.txBuffer);
                 qspiObj.txCount++;
             }
-            else if (qspiObj.dummySize > 0)
+            else if (qspiObj.dummySize > 0U)
             {
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = (uint8_t)(0xff);
                 qspiObj.dummySize--;
             }
+			else
+			{
+				/* Do Nothing */
+			}
         }
         else if((${QSPI_INSTANCE_NAME}_REGS->QSPI_MR & QSPI_MR_NBBITS_Msk) == QSPI_MR_NBBITS_16_BIT)
         {
@@ -200,12 +222,20 @@ bool ${QSPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* 
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = *((uint16_t*)qspiObj.txBuffer);
                 qspiObj.txCount++;
             }
-            else if (qspiObj.dummySize > 0)
+            else if (qspiObj.dummySize > 0U)
             {
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = (uint16_t)(0xff);
                 qspiObj.dummySize--;
             }
+			else
+			{
+				/* Do Nothing */
+			}
         }
+		else
+		{
+			/* Do Nothing */
+		}
 
         if ((int)rxSize > 0)
         {
@@ -234,16 +264,16 @@ bool ${QSPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize)
 
 bool ${QSPI_INSTANCE_NAME}_TransferSetup (QSPI_TRANSFER_SETUP * setup )
 {
-    if (setup == NULL)
+	bool transfercheck = false;
+    if (setup != NULL)
     {
-        return false;
+		${QSPI_INSTANCE_NAME}_REGS->QSPI_SCR= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase;
+
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = (${QSPI_INSTANCE_NAME}_REGS->QSPI_MR & ~QSPI_MR_NBBITS_Msk) | (uint32_t)setup->dataBits;
+
+        transfercheck = true;
     }
-
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_SCR= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase;
-
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = (${QSPI_INSTANCE_NAME}_REGS->QSPI_MR & ~QSPI_MR_NBBITS_Msk) | (uint32_t)setup->dataBits;
-
-    return true;
+    return transfercheck;
 }
 
 void ${QSPI_INSTANCE_NAME}_CallbackRegister (QSPI_CALLBACK callback, uintptr_t context)
@@ -254,7 +284,7 @@ void ${QSPI_INSTANCE_NAME}_CallbackRegister (QSPI_CALLBACK callback, uintptr_t c
 
 bool ${QSPI_INSTANCE_NAME}_IsBusy(void)
 {
-    return ((qspiObj.transferIsBusy) || ((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_TXEMPTY_Msk ) == 0));
+    return ((qspiObj.transferIsBusy) || ((${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_TXEMPTY_Msk ) == 0U));
 }
 
 bool ${QSPI_INSTANCE_NAME}_IsTransmitterBusy(void)
@@ -279,11 +309,13 @@ void ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
         {
             if(dataBits == QSPI_MR_NBBITS_8_BIT)
             {
-                ((uint8_t*)qspiObj.rxBuffer)[qspiObj.rxCount++] = receivedData;
+                ((uint8_t*)qspiObj.rxBuffer)[qspiObj.rxCount] = (uint8_t)receivedData;
+				qspiObj.rxCount++;
             }
             else
             {
-                ((uint16_t*)qspiObj.rxBuffer)[qspiObj.rxCount++] = receivedData;
+                ((uint16_t*)qspiObj.rxBuffer)[qspiObj.rxCount] = (uint16_t)receivedData;
+				qspiObj.rxCount++;
             }
         }
     }
@@ -299,27 +331,37 @@ void ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
         {
             if (qspiObj.txCount < qspiObj.txSize)
             {
-                ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = ((uint8_t*)qspiObj.txBuffer)[qspiObj.txCount++];
+                ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = ((uint8_t*)qspiObj.txBuffer)[qspiObj.txCount];
+				qspiObj.txCount++;
             }
-            else if (qspiObj.dummySize > 0)
+            else if (qspiObj.dummySize > 0U)
             {
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = (uint8_t)(0xff);
                 qspiObj.dummySize--;
             }
+			else
+			{
+				/* Do Nothing */
+			}
         }
         else
         {
             if (qspiObj.txCount < qspiObj.txSize)
             {
-                ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = ((uint16_t*)qspiObj.txBuffer)[qspiObj.txCount++];
+                ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = ((uint16_t*)qspiObj.txBuffer)[qspiObj.txCount];
+				qspiObj.txCount++;
             }
-            else if (qspiObj.dummySize > 0)
+            else if (qspiObj.dummySize > 0U)
             {
                 ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = (uint16_t)(0xff);
                 qspiObj.dummySize--;
             }
+			else
+			{
+				/* Do Nothing */
+			}
         }
-        if ((qspiObj.txCount == qspiObj.txSize) && (qspiObj.dummySize == 0))
+        if ((qspiObj.txCount == qspiObj.txSize) && (qspiObj.dummySize == 0U))
         {
             /* At higher baud rates, the data in the shift register can be
              * shifted out and TXEMPTY flag can get set resulting in a
@@ -342,6 +384,10 @@ void ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
             ${QSPI_INSTANCE_NAME}_REGS->QSPI_IDR = QSPI_IDR_RDRF_Msk;
             ${QSPI_INSTANCE_NAME}_REGS->QSPI_IER = QSPI_IER_TDRE_Msk;
         }
+		else
+		{
+			/* Do Nothing */
+		}
     }
 
     /* See if Exchange is complete */
