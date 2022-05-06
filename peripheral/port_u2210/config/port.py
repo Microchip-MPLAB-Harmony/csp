@@ -88,6 +88,7 @@ def packageChange(symbol, pinout):
                     pin[index - 1].setVisible(True)
                 pin[index - 1].setLabel("Pin " + str(pin_position[index - 1]))
                 pinGroupNum[index-1].setValue(portGroupName.index(str(pin_map.get(pin_position[index-1]))[1]), 2)
+                pinExportName[index - 1].setValue(str(pin_position[index - 1]) + ":" + str(pin_map[pin_position[index - 1]]))
                 if (pin_map.get(pin_position[index-1]).startswith("P")) and (pin_map.get(pin_position[index-1])[-1].isdigit()):
                     Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_PIN", int(re.findall('\d+', pin_map.get(pin_position[index - 1]))[0]), 2)
                     Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_GROUP", pin_map.get(pin_position[index - 1])[1], 2)
@@ -288,6 +289,15 @@ portEnable.setLabel("Use PORT PLIB ?")
 portEnable.setDefaultValue(True)
 portEnable.setReadOnly(True)
 
+portExport = coreComponent.createBooleanSymbol("PORT_EXPORT", portEnable)
+portExport.setLabel("Export PORT configuration")
+portExport.setDefaultValue(True)
+portExport.setVisible(False)
+
+portExportAs = coreComponent.createComboSymbol("PORT_EXPORT_AS", portExport, ["CSV File"])
+portExportAs.setLabel("Export PORT configuration as ")
+portExportAs.setVisible(False)
+
 # Build package pinout map
 packageNode = ATDF.getNode("/avr-tools-device-file/variants")
 for id in range(0,len(packageNode.getChildren())):
@@ -325,6 +335,7 @@ pin_position = []
 pin_position_internal = []
 global pin
 pin = []
+pinExportName = []
 pinName = []
 pinType = []
 pinPeripheralFunction = []
@@ -408,11 +419,21 @@ for pinNumber in range(1, internalPincount + 1):
         pin[pinNumber-1] = coreComponent.createMenuSymbol("PORT_PIN" + str(pinNumber), pinConfiguration)
         pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
         pin[pinNumber-1].setDescription("Configuraiton for Pin " + str(pin_position[pinNumber-1]) )
+
+        pinExportName.append(pinNumber)
+        pinExportName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_EXPORT_NAME", pin[pinNumber-1])
+        pinExportName[pinNumber-1].setDefaultValue(str(pin_position[pinNumber - 1]) + ":" + str(pin_map[pin_position[pinNumber - 1]]))
+        pinExportName[pinNumber-1].setReadOnly(True)
     else:
         pin.append(pinNumber)
         pin[pinNumber-1] = coreComponent.createMenuSymbol("PORT_PIN" + str(pinNumber), pinConfiguration)
         pin[pinNumber-1].setLabel("Pin " +  str(pin_position_internal[pinNumber - pincount - 1]))
         pin[pinNumber-1].setDescription("Configuraiton for Pin " + str(pin_position_internal[pinNumber - pincount - 1]))
+
+        pinExportName.append(pinNumber)
+        pinExportName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_EXPORT_NAME", pin[pinNumber-1])
+        pinExportName[pinNumber-1].setDefaultValue(str(pin_position_internal[pinNumber - pincount - 1])) + ":" + str(pin_map_internal[pin_position_internal[pinNumber - pincount - 1]])
+        pinExportName[pinNumber-1].setReadOnly(True)
 
     pinBitPosition.append(pinNumber)
     pinBitPosition[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PORT_PIN", pin[pinNumber-1])
@@ -716,6 +737,14 @@ portSym_SourceFile.setDestPath("/peripheral/port/")
 portSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/port/")
 portSym_SourceFile.setType("SOURCE")
 portSym_SourceFile.setMarkup(True)
+
+portExportFile = coreComponent.createFileSymbol("PORT_EXPORT_FILE", None)
+portExportFile.setSourcePath("../peripheral/port_u2210/templates/export/plib_port_export.ftl")
+portExportFile.setOutputName("pin_configurations.csv")
+portExportFile.setType("IMPORTANT")
+portExportFile.setMarkup(True)
+portExportFile.setEnabled(portExport.getValue())
+portExportFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["PORT_EXPORT"])
 
 bspIncludeFile = coreComponent.createFileSymbol("PORT_BSP_HEADER", None)
 bspIncludeFile.setType("STRING")
