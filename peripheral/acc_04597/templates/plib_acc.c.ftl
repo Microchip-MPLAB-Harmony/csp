@@ -67,11 +67,13 @@
 
 
 <#if ACC_INTERRUPT_ENABLE>
-struct
+typedef struct
 {
     ACC_CALLBACK pCallback;
     uintptr_t context;
-}accCallbackObj;
+}ACC_CALLBACK_OBJ;
+
+static ACC_CALLBACK_OBJ accCallbackObj;
 
 
 </#if>
