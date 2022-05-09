@@ -109,7 +109,7 @@ uint16_t ${TMR1_INSTANCE_NAME}_PeriodGet(void)
 
 uint16_t ${TMR1_INSTANCE_NAME}_CounterGet(void)
 {
-    return(TMR1);
+    return((uint16_t)TMR1);
 }
 
 uint32_t ${TMR1_INSTANCE_NAME}_FrequencyGet(void)
