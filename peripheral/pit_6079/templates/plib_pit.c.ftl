@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Periodic Interval Timer (PIT) 
+  Periodic Interval Timer (PIT)
 
   Company:
     Microchip Technology Inc.
@@ -44,8 +44,9 @@
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
-#include "plib_${PIT_INSTANCE_NAME?lower_case}.h"
+#include <stddef.h>
 #include "device.h"
+#include "plib_${PIT_INSTANCE_NAME?lower_case}.h"
 
 #define PIT_COUNTER_FREQUENCY       (${core.PIT_CLOCK_FREQUENCY}U / 16U)
 
