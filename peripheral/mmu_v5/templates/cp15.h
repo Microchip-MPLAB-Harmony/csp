@@ -34,31 +34,31 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  * 0 = I-cache disabled
  * 1 = I-cache enabled
  */
-#define CP15_SCTLR_I (1u << 12)
+#define CP15_SCTLR_I (1UL << 12U)
 
 /* SCTLR: C - D-cache enable/disable
  * 0 = D-cache disabled
  * 1 = D-cache enabled
  */
-#define CP15_SCTLR_C (1u << 2)
+#define CP15_SCTLR_C (1UL << 2U)
 
 /* SCTLR: A - Alignment fault enable/disable
  * 0 = Data address alignment fault checking disabled
  * 1 = Data address alignment fault checking enabled
  */
-#define CP15_SCTLR_A (1u << 1)
+#define CP15_SCTLR_A (1UL << 1U)
 
 /* SCTLR: M - MMU enable/disable
  * 0 = disabled
  * 1 = enabled
  */
-#define CP15_SCTLR_M (1u << 0)
+#define CP15_SCTLR_M (1UL << 0U)
 
 /* ACTLR: EXCL - Exclusive L1/L2 cache control.
  * 0 = non-exclusive
  * 1 = exclusive
  */
-#define CP15_ACTLR_EXCL (1u << 7)
+#define CP15_ACTLR_EXCL (1UL << 7U)
 
 /* No access: Any access generates a domain fault. */
 #define CP15_DACR_NO_ACCESS(x) (0u << (2 * ((x) & 15)))

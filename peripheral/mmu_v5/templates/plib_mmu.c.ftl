@@ -43,15 +43,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "peripheral/mmu/cp15.h"
 
 /* TTB descriptor type for Section descriptor */
-#define TTB_TYPE_SECT              (2 << 0)
+#define TTB_TYPE_SECT              (2UL << 0U)
 
 /* TTB Section Descriptor: Buffered/Non-Buffered (B) */
-#define TTB_SECT_WRITE_THROUGH     (0 << 2)
-#define TTB_SECT_WRITE_BACK        (1 << 2)
+#define TTB_SECT_WRITE_THROUGH     (0UL << 2U)
+#define TTB_SECT_WRITE_BACK        (1UL << 2U)
 
 /* TTB Section Descriptor: Cacheable/Non-Cacheable (C) */
-#define TTB_SECT_NON_CACHEABLE     (0 << 3)
-#define TTB_SECT_CACHEABLE         (1 << 3)
+#define TTB_SECT_NON_CACHEABLE     (0UL << 3U)
+#define TTB_SECT_CACHEABLE         (1UL << 3U)
 
 #define TTB_SECT_STRONGLY_ORDERED  (TTB_SECT_NON_CACHEABLE | TTB_SECT_WRITE_THROUGH)
 #define TTB_SECT_SHAREABLE_DEVICE  (TTB_SECT_NON_CACHEABLE | TTB_SECT_WRITE_BACK)
@@ -59,18 +59,18 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define TTB_SECT_CACHEABLE_WB      (TTB_SECT_CACHEABLE | TTB_SECT_WRITE_BACK)
 
 /* TTB Section Descriptor: Domain */
-#define TTB_SECT_DOMAIN(x)         (((x) & 15) << 5)
+#define TTB_SECT_DOMAIN(x)         (((x) & 15U) << 5U)
 
 /* TTB Section Descriptor: Should-Be-One (SBO) */
-#define TTB_SECT_SBO               (1 << 4)
+#define TTB_SECT_SBO               (1UL << 4U)
 
 /* TTB Section Descriptor: Access Privilege (AP) */
-#define TTB_SECT_AP_PRIV_ONLY      (1 << 10)
-#define TTB_SECT_AP_NO_USER_WRITE  (2 << 10)
-#define TTB_SECT_AP_FULL_ACCESS    (3 << 10)
+#define TTB_SECT_AP_PRIV_ONLY      (1UL << 10U)
+#define TTB_SECT_AP_NO_USER_WRITE  (2UL << 10U)
+#define TTB_SECT_AP_FULL_ACCESS    (3UL << 10U)
 
 /* TTB Section Descriptor: Section Base Address */
-#define TTB_SECT_ADDR(x)           ((x) & 0xFFF00000)
+#define TTB_SECT_ADDR(x)           ((x) & 0xFFF00000U)
 <#if DATA_CACHE_ENABLE>
 /* L1 data cache line size, Number of ways and Number of sets */
 #define L1_DATA_CACHE_BYTES        32U
@@ -92,11 +92,11 @@ __ALIGNED(16384) static uint32_t trns_tbl[4096];
 static void mmu_configure(void *p_trns_tbl)
 {
     /* Translation Table Base Register 0 */
-    cp15_write_ttbr0((uint32_t)p_trns_tbl);
+    cp15_write_ttbr0((uint32_t)((uint8_t*)p_trns_tbl));
 
     /* Domain Access Register */
     /* only domain 15: access are not checked */
-    cp15_write_dacr(0xC0000000);
+    cp15_write_dacr(0xC0000000U);
 
     __DSB();
     __ISB();
@@ -115,8 +115,10 @@ static void mmu_enable(void)
     uint32_t control;
 
     control = cp15_read_sctlr();
-    if ((control & CP15_SCTLR_M) == 0)
+    if ((control & CP15_SCTLR_M) == 0U)
+    {
         cp15_write_sctlr(control | CP15_SCTLR_M);
+    }
 }
 
 <#if INSTRUCTION_CACHE_ENABLE>
@@ -129,7 +131,7 @@ void icache_InvalidateAll(void)
 void icache_Enable(void)
 {
     uint32_t sctlr = cp15_read_sctlr();
-    if ((sctlr & CP15_SCTLR_I) == 0)
+    if ((sctlr & CP15_SCTLR_I) == 0U)
     {
         icache_InvalidateAll();
         cp15_write_sctlr(sctlr | CP15_SCTLR_I);
@@ -139,7 +141,7 @@ void icache_Enable(void)
 void icache_Disable(void)
 {
     uint32_t sctlr = cp15_read_sctlr();
-    if (sctlr & CP15_SCTLR_I)
+    if ((sctlr & CP15_SCTLR_I) != 0U)
     {
         cp15_write_sctlr(sctlr & ~CP15_SCTLR_I);
         icache_InvalidateAll();
@@ -152,9 +154,9 @@ void dcache_InvalidateAll(void)
 {
     uint32_t set, way;
 
-    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
+    for (way = 0U; way < L1_DATA_CACHE_WAYS; way++)
     {
-        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
+        for (set = 0U; set < L1_DATA_CACHE_SETS; set++)
         {
             cp15_dcache_invalidate_setway(L1_DATA_CACHE_SETWAY(set, way));
         }
@@ -166,9 +168,9 @@ void dcache_CleanAll(void)
 {
     uint32_t set, way;
 
-    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
+    for (way = 0U; way < L1_DATA_CACHE_WAYS; way++)
     {
-        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
+        for (set = 0U; set < L1_DATA_CACHE_SETS; set++)
         {
             cp15_dcache_clean_setway(L1_DATA_CACHE_SETWAY(set, way));
         }
@@ -180,9 +182,9 @@ void dcache_CleanInvalidateAll(void)
 {
     uint32_t set, way;
 
-    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
+    for (way = 0U; way < L1_DATA_CACHE_WAYS; way++)
     {
-        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
+        for (set = 0U; set < L1_DATA_CACHE_SETS; set++)
         {
             cp15_dcache_clean_invalidate_setway(L1_DATA_CACHE_SETWAY(set, way));
         }
@@ -192,7 +194,7 @@ void dcache_CleanInvalidateAll(void)
 
 void dcache_InvalidateByAddr (uint32_t *addr, uint32_t size)
 {
-    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1);
+    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1U);
 
     for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
     {
@@ -204,7 +206,7 @@ void dcache_InvalidateByAddr (uint32_t *addr, uint32_t size)
 
 void dcache_CleanByAddr (uint32_t *addr, uint32_t size)
 {
-    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1);
+    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1U);
 
     for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
     {
@@ -216,7 +218,7 @@ void dcache_CleanByAddr (uint32_t *addr, uint32_t size)
 
 void dcache_CleanInvalidateByAddr (uint32_t *addr, uint32_t size)
 {
-    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1);
+    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1U);
 
     for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
     {
@@ -229,7 +231,7 @@ void dcache_CleanInvalidateByAddr (uint32_t *addr, uint32_t size)
 void dcache_Enable(void)
 {
     uint32_t sctlr = cp15_read_sctlr();
-    if ((sctlr & CP15_SCTLR_C) == 0)
+    if ((sctlr & CP15_SCTLR_C) == 0U)
     {
         dcache_InvalidateAll();
         cp15_write_sctlr(sctlr | CP15_SCTLR_C);
@@ -239,7 +241,7 @@ void dcache_Enable(void)
 void dcache_Disable(void)
 {
     uint32_t sctlr = cp15_read_sctlr();
-    if (sctlr & CP15_SCTLR_C)
+    if ((sctlr & CP15_SCTLR_C) != 0U)
     {
         dcache_CleanAll();
         cp15_write_sctlr(sctlr & ~CP15_SCTLR_C);
@@ -274,7 +276,7 @@ void MMU_Initialize(void)
     uint32_t addr;
 
     /* Reset table entries */
-    for (addr = 0; addr < 4096; addr++) {
+    for (addr = 0U; addr < 4096U; addr++) {
         trns_tbl[addr] = 0;
     }
 
@@ -293,11 +295,11 @@ void MMU_Initialize(void)
 <#if SEG_LOOP>
 
     /* ${SEG_START_ADDR}00000: ${SEG_DESC} */
-    for (addr = ${SEG_START_ADDR}; addr < ${SEG_END_ADDR}; addr++)
+    for (addr = ${SEG_START_ADDR}U; addr < ${SEG_END_ADDR}U; addr++)
     {
         trns_tbl[addr] = TTB_SECT_ADDR(addr << 20U)
                     | TTB_SECT_AP_FULL_ACCESS
-                    | TTB_SECT_DOMAIN(0xF)
+                    | TTB_SECT_DOMAIN(0xFU)
                     | ${TYPE_FLAG}
                     | TTB_SECT_SBO
                     | TTB_TYPE_SECT;
@@ -305,9 +307,9 @@ void MMU_Initialize(void)
 <#else>
 
     /* ${SEG_START_ADDR}00000: ${SEG_DESC} */
-    trns_tbl[${SEG_START_ADDR}] = TTB_SECT_ADDR(${SEG_START_ADDR}00000)
+    trns_tbl[${SEG_START_ADDR}] = TTB_SECT_ADDR(${SEG_START_ADDR}00000U)
                   | TTB_SECT_AP_FULL_ACCESS
-                  | TTB_SECT_DOMAIN(0xF)
+                  | TTB_SECT_DOMAIN(0xFU)
                   | ${TYPE_FLAG}
                   | TTB_SECT_SBO
                   | TTB_TYPE_SECT;
@@ -316,22 +318,26 @@ void MMU_Initialize(void)
 
     /* ${DDRAM_NO_CACHE_START_ADDR}: DDR Chip Select */
     /* (${DRAM_COHERENT_REGION_SIZE}MB strongly ordered) */
-    for (addr = ${DDRAM_NO_CACHE_START_ADDR?remove_ending("00000")}; addr < ${DDRAM_CACHE_START_ADDR?remove_ending("00000")}; addr++)
-        trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
+    for (addr = ${DDRAM_NO_CACHE_START_ADDR?remove_ending("00000")}U; addr < ${DDRAM_CACHE_START_ADDR?remove_ending("00000")}U; addr++)
+    {
+            trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
                       | TTB_SECT_AP_FULL_ACCESS
-                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_DOMAIN(0xfu)
                       | TTB_SECT_STRONGLY_ORDERED
                       | TTB_SECT_SBO
                       | TTB_TYPE_SECT;
+    }
 
     /* Remainder of the DRAM is configured as cacheable */
-    for (addr = ${DDRAM_CACHE_START_ADDR?remove_ending("00000")}; addr < ${DDRAM_BOUNDARY_ADDR?remove_ending("00000")}; addr++)
-        trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
+    for (addr = ${DDRAM_CACHE_START_ADDR?remove_ending("00000")}U; addr < ${DDRAM_BOUNDARY_ADDR?remove_ending("00000")}U; addr++)
+    {
+            trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
                       | TTB_SECT_AP_FULL_ACCESS
-                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_DOMAIN(0xfu)
                       | TTB_SECT_CACHEABLE_WB
                       | TTB_SECT_SBO
                       | TTB_TYPE_SECT;
+    }
 
     /* Enable MMU, I-Cache and D-Cache */
     mmu_configure(trns_tbl);
@@ -345,6 +351,6 @@ void MMU_Initialize(void)
 
     // disable the processor alignment fault testing
     uint32_t sctlrValue = cp15_read_sctlr();
-    sctlrValue &= ~0x00000002;
+    sctlrValue &= ~0x00000002U;
     cp15_write_sctlr( sctlrValue );
 }

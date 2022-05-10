@@ -41,8 +41,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_MMU_H    // Guards against multiple inclusion
-#define _PLIB_MMU_H
+#ifndef PLIB_MMU_H    // Guards against multiple inclusion
+#define PLIB_MMU_H
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 
