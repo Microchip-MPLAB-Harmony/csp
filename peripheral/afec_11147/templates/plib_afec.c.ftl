@@ -221,6 +221,8 @@
     <#assign AFEC_IER = "AFEC_IER_COMPE_Msk">
 </#if>
     <#assign AFEC_INTERRUPT = true>
+<#else>
+    <#assign AFEC_IER = AFEC_IER_EOC>
 </#if>
 
 </#compress>
@@ -367,9 +369,9 @@ void ${AFEC_INSTANCE_NAME}_ConversionSequenceSet(AFEC_CHANNEL_NUM *channelList, 
     for (channelIndex = 0U; channelIndex < AFEC_SEQ1_CHANNEL_NUM; channelIndex++)
     {
         if (channelIndex >= numChannel)
-		{
+        {
             break;
-		}
+        }
         ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ1R |= (uint32_t)channelList[channelIndex] << (channelIndex * 4U);
     }
     if (numChannel > AFEC_SEQ1_CHANNEL_NUM)
