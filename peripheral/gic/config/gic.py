@@ -63,7 +63,7 @@ if __name__ == "__main__":
             max_interrupt_index = index
 
         if index > 15:
-            
+
             interrupt_menu = interrupt_menus[0 if index < 32 else 1]
 
             interrupt_sym = coreComponent.createStringSymbol("INTERRUPT_ID_{0}".format(index), interrupt_menu)
@@ -72,7 +72,7 @@ if __name__ == "__main__":
             sym_enable = coreComponent.createBooleanSymbol ("{0}_INTERRUPT_ENABLE".format(name), interrupt_menu)
             sym_enable.setLabel("Enable {0} interrupt".format(name))
             sym_enable.setDescription(caption)
-            
+
             sym_handler = coreComponent.createStringSymbol("{0}_INTERRUPT_HANDLER".format(name), sym_enable)
             sym_handler.setLabel("{0} Handler".format(name))
             sym_handler.setDefaultValue("{0}_Handler".format(name))
@@ -97,17 +97,17 @@ if __name__ == "__main__":
                     sym_sub_enable = coreComponent.createBooleanSymbol ("{0}_INTERRUPT_ENABLE".format(instance), sym_enable)
                     sym_sub_enable.setLabel("Enable {0}".format(instance))
                     sym_sub_list.append(sym_sub_enable.getID())
-                    
+
                     sym_sub_handler = coreComponent.createStringSymbol("{0}_INTERRUPT_HANDLER".format(instance), sym_enable)
                     sym_sub_handler.setLabel("{0} Handler".format(instance))
                     sym_sub_handler.setDefaultValue("{0}_Handler".format(instance))
 
                 interrupt_sym.setDefaultValue (name + " " + " ".join(module_instances))
                 interrupt_sym.setDependencies(update_shared_interrupt, sym_sub_list)
-            
+
             else:
                 interrupt_sym.setDefaultValue(name)
-    
+
     sym_interrupt_max_index = coreComponent.createIntegerSymbol("GIC_INTERRUPT_MAX_INDEX", menu)
     sym_interrupt_max_index.setVisible(False)
     sym_interrupt_max_index.setDefaultValue(max_interrupt_index)
@@ -136,7 +136,6 @@ if __name__ == "__main__":
     sys_def_file.setOutputName( "core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES" )
     sys_def_file.setMarkup( True )
 
-
     sys_init_file = coreComponent.createFileSymbol( "GIC_SYS_INIT", None )
     sys_init_file.setType( "STRING" )
     sys_init_file.setSourcePath( "../peripheral/gic/templates/system/initialization.c.ftl" )
@@ -149,20 +148,14 @@ if __name__ == "__main__":
     interruptsHeaderFile.setOutputName( "core.LIST_SYSTEM_INTERRUPT_HANDLER_DECLS" )
     interruptsHeaderFile.setMarkup( True )
 
-    weakHandleFile = coreComponent.createFileSymbol( "GIC_WEAK_HANDLERS", None )
-    weakHandleFile.setType( "STRING" )
-    weakHandleFile.setSourcePath( "../peripheral/gic/templates/system/interrupt_weak_handlers.c.ftl" )
-    weakHandleFile.setOutputName( "core.LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS" )
-    weakHandleFile.setMarkup( True )
-
     sharedHandleFile = coreComponent.createFileSymbol( "GIC_SHARED_HANDLERS", None )
     sharedHandleFile.setType( "STRING" )
     sharedHandleFile.setSourcePath( "../peripheral/gic/templates/system/interrupt_shared_handlers.c.ftl" )
     sharedHandleFile.setOutputName( "core.LIST_SYSTEM_INTERRUPT_SHARED_HANDLERS" )
     sharedHandleFile.setMarkup( True )
 
-            
-            
+
+
 
 
 
