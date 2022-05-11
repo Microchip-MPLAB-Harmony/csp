@@ -143,6 +143,7 @@ pinPullDown = []
 pinLatchValue = []
 pin = []
 pinName = []
+global pinExportName
 pinExportName = []
 pinType = []
 pinPeripheralFunction = []
