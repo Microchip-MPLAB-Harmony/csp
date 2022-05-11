@@ -467,6 +467,7 @@ pioSymAPI_Prefix.setVisible(False)
 
 global pin
 pin = []
+global pinExportName
 pinExportName = []
 pinName = []
 pinType = []
