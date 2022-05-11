@@ -49,6 +49,45 @@ print("Loading System Services for " + Variables.get("__PROCESSOR"))
 global productFamily
 productFamily.setDefaultValue("PIC32CX_MT")
 
+fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
+fuseSettings.setLabel("Generate Fuse Settings")
+fuseSettings.setDefaultValue(True)
+
+# Device Configuration
+deviceSecurity = coreComponent.createKeyValueSetSymbol(
+    "DEVICE_SECURITY", fuseSettings)
+deviceSecurity.setLabel("Security")
+deviceSecurity.setOutputMode("Key")
+deviceSecurity.setDisplayMode("Description")
+deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)")
+deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
+
+deviceBoot = coreComponent.createKeyValueSetSymbol("DEVICE_BOOT", fuseSettings)
+deviceBoot.setLabel("Boot Mode")
+deviceBoot.setOutputMode("Key")
+deviceBoot.setDisplayMode("Description")
+deviceBoot.addKey("0x0", "0", "Standard SAM-BA monitor")
+deviceBoot.addKey("0x3", "1", "Standard boot from Flash")
+deviceBoot.addKey("0x9", "2", "Secure SAM-BA monitor")
+deviceBoot.addKey("0xA", "3", "Secure Boot (Fallback to Secure SAM-BA monitor)")
+deviceBoot.addKey("0xC", "4", "Secure Boot (Secure SAM-BA monitor disabled)")
+deviceBoot.setDefaultValue(1)
+
+memoryPlaneSelection = coreComponent.createKeyValueSetSymbol("MEMORY_PLANE_SELECTION", fuseSettings)
+memoryPlaneSelection.setLabel("Memory Plane Selection")
+memoryPlaneSelection.setOutputMode("Key")
+memoryPlaneSelection.setDisplayMode("Description")
+memoryPlaneSelection.addKey("CLEAR" , "0", "Plane 0")
+memoryPlaneSelection.addKey("SET" , "1", "Plane 1")
+
+eraseFunctionLock = coreComponent.createKeyValueSetSymbol("ERASE_FUNCTION_LOCK", fuseSettings)
+eraseFunctionLock.setLabel("Erase Function Lock")
+eraseFunctionLock.setOutputMode("Key")
+eraseFunctionLock.setDisplayMode("Description")
+eraseFunctionLock.addKey("0x0", "0", "Not Locked")
+eraseFunctionLock.addKey("0x6", "1", "Disabled(EFL bits are read only)")
+eraseFunctionLock.addKey("0x7", "2", "Disabled(EFL bits are programmable)")
+
 # SysTick External Clock Source
 systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK",
                                                                     devCfgMenu)
@@ -156,6 +195,9 @@ for sefc_instance in range (0, len(modules)):
     components.append(str(modules[sefc_instance].getAttribute("name")).lower())
 Database.activateComponents(components)
 
+#Load ADC plugin
+coreComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar")
+
 compilerSelected = compilerChoice.getSelectedKey().lower()
 
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
@@ -190,4 +232,9 @@ xc32StackInTCMSym.setKey("mstacktcm")
 xc32StackInTCMSym.setValue("false")
 xc32StackInTCMSym.setDependencies(lambda symbol, event: symbol.setValue(
                                         event["value"]), ["STACK_IN_TCM"])
-coreComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar")
+
+devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
+devconSystemInitFile.setType("STRING")
+devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION")
+devconSystemInitFile.setSourcePath("arm/templates/common/fuses/PIC32CX_MT.c.ftl")
+devconSystemInitFile.setMarkup(True)
