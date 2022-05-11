@@ -50,7 +50,7 @@
 
 <#if ADC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
+    <#lt>static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 void ${ADC_INSTANCE_NAME}_Initialize(void)
@@ -113,13 +113,13 @@ void ${ADC_INSTANCE_NAME}_InputSelect(${ADC_INSTANCE_NAME}_MUX muxType, ${ADC_IN
 {
 	if (muxType == ADC_MUX_B)
 	{
-    	AD1CHSbits.CH0SB = positiveInput;
-        AD1CHSbits.CH0NB = negativeInput;
+    	AD1CHSbits.CH0SB = (uint8_t)positiveInput;
+        AD1CHSbits.CH0NB = (uint8_t)negativeInput;
 	}
 	else
 	{
-    	AD1CHSbits.CH0SA = positiveInput;
-        AD1CHSbits.CH0NA = negativeInput;
+    	AD1CHSbits.CH0SA = (uint8_t)positiveInput;
+        AD1CHSbits.CH0NA = (uint8_t)negativeInput;
 	}
 }
 
@@ -131,14 +131,14 @@ void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanI
     AD1CSSL2 = (uint32_t)(scanInputs >> 32);
     </#if>
 <#else>
-    AD1CSSL = scanInputs;
+    AD1CSSL = (uint32_t)scanInputs;
 </#if>
 }
 
 /*Check if conversion result is available */
 bool ${ADC_INSTANCE_NAME}_ResultIsReady(void)
 {
-    return AD1CON1bits.DONE;
+    return ((AD1CON1bits.DONE) != 0U);
 }
 
 
