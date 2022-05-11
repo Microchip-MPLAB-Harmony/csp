@@ -335,6 +335,7 @@ pin_position = []
 pin_position_internal = []
 global pin
 pin = []
+global pinExportName
 pinExportName = []
 pinName = []
 pinType = []
