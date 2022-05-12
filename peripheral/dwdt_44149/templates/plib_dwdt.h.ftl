@@ -65,7 +65,7 @@ extern "C" {
 
 #include <stdbool.h>
 
-typedef void (*DWDT_CALLBACK) (uint32_t interruptStatus, void* context);
+typedef void (*DWDT_CALLBACK) (uint32_t interruptStatus, uintptr_t context);
 
 void DWDT_Initialize(void);
 <#if DWDT_PS_ENABLE>
@@ -75,7 +75,7 @@ void DWDT_PS_Disable(void);
 </#if>
 </#if>
 <#if DWDT_PS_INTERRUPT_ENABLE>
-void DWDT_PS_RegisterCallback(DWDT_CALLBACK pCallback, void* pContext);
+void DWDT_PS_CallbackRegister(DWDT_CALLBACK pCallback, uintptr_t context);
 </#if>
 <#if DWDT_NS_ENABLE>
 void DWDT_NS_Clear(void);
@@ -84,7 +84,7 @@ void DWDT_NS_Disable(void);
 </#if>
 </#if>
 <#if DWDT_NS_INTERRUPT_ENABLE>
-void DWDT_NS_RegisterCallback(DWDT_CALLBACK pCallback, void* pContext);
+void DWDT_NS_CallbackRegister(DWDT_CALLBACK pCallback, uintptr_t context);
 </#if>
 #ifdef __cplusplus // Provide C++ Compatibility
 }

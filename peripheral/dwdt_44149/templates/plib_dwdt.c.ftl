@@ -142,7 +142,7 @@
 typedef struct
 {
     DWDT_CALLBACK pCallback;
-    void* pContext;
+    uintptr_t context;
 }dwdtCallbackObjType;
 <#if DWDT_PS_INTERRUPT_ENABLE>
 
@@ -182,7 +182,7 @@ static void DWDT_PS_Initialize(void)
     DWDT_REGS->DWDT_PS_WDT_CR = DWDT_PS_WDT_CR_KEY_PASSWD | DWDT_PS_WDT_CR_LOCKMR_Msk;
 </#if>
 <#if PS_INTERRUPT?has_content>
-    
+
     /* Enable selected PS WDT interrupts */
     DWDT_REGS->DWDT_PS_WDT_IER = (${PS_INTERRUPT?remove_ending(" | ")});
 </#if>
@@ -190,7 +190,7 @@ static void DWDT_PS_Initialize(void)
 
     /* Disable PS WDT interrupts */
     DWDT_REGS->DWDT_PS_WDT_IDR = (${PS_INTERRUPT_DIS?remove_ending(" | ")});
-</#if>    
+</#if>
 <#if (DWDT_PS_NS_LEVEL_MAX < 4095) || (DWDT_PS_NS_LEVEL_MIN > 0)>
 
     /* Configure level limit for NS WDT */
@@ -235,7 +235,7 @@ static void DWDT_NS_Initialize(void)
     DWDT_REGS->DWDT_NS_WDT_CR = DWDT_NS_WDT_CR_KEY_PASSWD | DWDT_NS_WDT_CR_LOCKMR_Msk;
 </#if>
 <#if NS_INTERRUPT?has_content>
-    
+
     /* Enable selected NS WDT interrupts*/
     DWDT_REGS->DWDT_NS_WDT_IER = (${NS_INTERRUPT?remove_ending(" | ")});
 </#if>
@@ -243,7 +243,7 @@ static void DWDT_NS_Initialize(void)
 
     /* Disable NS WDT interrupts */
     DWDT_REGS->DWDT_NS_WDT_IDR = (${NS_INTERRUPT_DIS?remove_ending(" | ")});
-</#if>   
+</#if>
 }
 
 
@@ -273,10 +273,10 @@ void DWDT_PS_Disable(void)
 <#if DWDT_PS_INTERRUPT_ENABLE>
 
 
-void DWDT_PS_RegisterCallback(DWDT_CALLBACK pCallback, void* pContext)
+void DWDT_PS_CallbackRegister(DWDT_CALLBACK pCallback, uintptr_t context)
 {
     dwdtPSCallbackObj.pCallback = pCallback;
-    dwdtPSCallbackObj.pContext = pContext;
+    dwdtPSCallbackObj.context = context;
 }
 
 
@@ -285,7 +285,7 @@ void DWDT_SW_InterruptHandler(void)
     uint32_t interruptStatus = DWDT_REGS->DWDT_PS_WDT_ISR;
     if (dwdtPSCallbackObj.pCallback != NULL)
     {
-        dwdtPSCallbackObj.pCallback(interruptStatus, dwdtPSCallbackObj.pContext);
+        dwdtPSCallbackObj.pCallback(interruptStatus, dwdtPSCallbackObj.context);
     }
 }
 </#if>
@@ -310,10 +310,10 @@ void DWDT_NS_Disable(void)
 <#if DWDT_NS_INTERRUPT_ENABLE>
 
 
-void DWDT_NS_RegisterCallback(DWDT_CALLBACK pCallback, void* pContext)
+void DWDT_NS_CallbackRegister(DWDT_CALLBACK pCallback, uintptr_t context)
 {
     dwdtNSCallbackObj.pCallback = pCallback;
-    dwdtNSCallbackObj.pContext = pContext;
+    dwdtNSCallbackObj.context = context;
 }
 
 
@@ -322,7 +322,7 @@ void DWDT_NSW_InterruptHandler(void)
     uint32_t interruptStatus = DWDT_REGS->DWDT_NS_WDT_ISR;
     if (dwdtNSCallbackObj.pCallback != NULL)
     {
-        dwdtNSCallbackObj.pCallback(interruptStatus, dwdtNSCallbackObj.pContext);
+        dwdtNSCallbackObj.pCallback(interruptStatus, dwdtNSCallbackObj.context);
     }
 }
 </#if>
