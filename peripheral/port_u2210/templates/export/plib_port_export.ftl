@@ -1,4 +1,4 @@
-<#list 1..PORT_PIN_MAX_INDEX>
+<#list 1..PORT_PIN_COUNT>
 "Pin Number","Pin ID","Custom Name","Function","Mode", "Direction","Latch","Pull Up","Pull Down","Drive Strength"
     <#items as INDEX>
         <#assign PORT_GROUP = .vars["PIN_" + INDEX + "_PORT_GROUP"]>
