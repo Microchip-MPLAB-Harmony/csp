@@ -180,6 +180,8 @@
     <#assign ADC_IER = "ADC_IER_COMPE_Msk">
 </#if>
     <#assign ADC_INTERRUPT = true>
+<#else>
+    <#assign ADC_IER = ADC_IER_EOC>
 </#if>
 
 </#compress>
