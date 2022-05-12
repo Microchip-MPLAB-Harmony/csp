@@ -49,17 +49,17 @@
 
 <#if SPI_INTERRUPT_MODE == true>
 /* Global object to save SPI Exchange related data */
-SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
+static SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
-#define ${SPI_INSTANCE_NAME}_CON_MSTEN                      (${SPI_MSTR_MODE_EN} << _${SPI_INSTANCE_NAME}CON_MSTEN_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_CKP                        (${SPI_SPICON_CLK_POL} << _${SPI_INSTANCE_NAME}CON_CKP_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_CKE                        (${SPI_SPICON_CLK_PH} << _${SPI_INSTANCE_NAME}CON_CKE_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16            (${SPI_SPICON_MODE} << _${SPI_INSTANCE_NAME}CON_MODE16_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_ENHBUF                     (1 << _${SPI_INSTANCE_NAME}CON_ENHBUF_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_MCLKSEL                    (${SPI_MASTER_CLOCK} << _${SPI_INSTANCE_NAME}CON_MCLKSEL_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_MSSEN                      (${SPI_SPICON_MSSEN} << _${SPI_INSTANCE_NAME}CON_MSSEN_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_SMP                        (${SPI_SPICON_SMP} << _${SPI_INSTANCE_NAME}CON_SMP_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_MSTEN                      (${SPI_MSTR_MODE_EN}UL << _${SPI_INSTANCE_NAME}CON_MSTEN_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_CKP                        (${SPI_SPICON_CLK_POL}UL << _${SPI_INSTANCE_NAME}CON_CKP_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_CKE                        (${SPI_SPICON_CLK_PH}UL << _${SPI_INSTANCE_NAME}CON_CKE_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16            (${SPI_SPICON_MODE}UL << _${SPI_INSTANCE_NAME}CON_MODE16_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_ENHBUF                     (1UL << _${SPI_INSTANCE_NAME}CON_ENHBUF_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_MCLKSEL                    (${SPI_MASTER_CLOCK}UL << _${SPI_INSTANCE_NAME}CON_MCLKSEL_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_MSSEN                      (${SPI_SPICON_MSSEN}UL << _${SPI_INSTANCE_NAME}CON_MSSEN_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_SMP                        (${SPI_SPICON_SMP}UL << _${SPI_INSTANCE_NAME}CON_SMP_POSITION)
 
 void ${SPI_INSTANCE_NAME}_Initialize ( void )
 {
@@ -399,9 +399,13 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             }
             else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
             {
-                ${SPI_INSTANCE_NAME}BUF = (uint32_t)(0x${SPI_DUMMY_DATA});
+                ${SPI_INSTANCE_NAME}BUF = (uint32_t)(0x${SPI_DUMMY_DATA}U);
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
             }
+			else
+			{
+				/* Do Nothing */
+			}
         }
         else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
         {
@@ -416,9 +420,13 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             }
             else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
             {
-                ${SPI_INSTANCE_NAME}BUF = (uint16_t)(0x${SPI_DUMMY_DATA});
+                ${SPI_INSTANCE_NAME}BUF = (uint16_t)(0x${SPI_DUMMY_DATA}U);
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
             }
+			else
+			{
+				/* Do Nothing */
+			}
         }
         else
         {
@@ -429,9 +437,13 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             }
             else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
             {
-                ${SPI_INSTANCE_NAME}BUF = (uint8_t)(0x${SPI_DUMMY_DATA});
+                ${SPI_INSTANCE_NAME}BUF = (uint8_t)(0x${SPI_DUMMY_DATA}U);
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
             }
+			else
+			{
+				/* Do Nothing */
+			}
         }
 
         if (rxSize > 0)
@@ -460,7 +472,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 
 bool ${SPI_INSTANCE_NAME}_IsBusy (void)
 {
-    return ( (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) || ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == 0));
+    return (((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) != 0U) || ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == 0U));
 }
 
 void ${SPI_INSTANCE_NAME}_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
@@ -489,15 +501,18 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
             /* Copy the received data to the user buffer */
             if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
             {
-                ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++] = receivedData;
+                ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount] = receivedData;
+				${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
             }
             else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
             {
-                ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++] = receivedData;
+                ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount] = (uint16_t)receivedData;
+				${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
             }
             else
             {
-                ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++] = receivedData;
+                ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount] = (uint8_t)receivedData;
+				${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
             }
             if ((${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize) && (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize))
             {
@@ -524,37 +539,52 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
             {
                 if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                    ${SPI_INSTANCE_NAME}BUF = ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount];
+					${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
                 }
                 else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = (uint32_t)(0x${SPI_DUMMY_DATA});
+                    ${SPI_INSTANCE_NAME}BUF = (uint32_t)(0x${SPI_DUMMY_DATA}U);
                     ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
                 }
+				else
+				{
+					/* Do Nothing */
+				}
             }
             else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
             {
                 if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                    ${SPI_INSTANCE_NAME}BUF = ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount];
+					${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
                 }
                 else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = (uint16_t)(0x${SPI_DUMMY_DATA});
+                    ${SPI_INSTANCE_NAME}BUF = (uint16_t)(0x${SPI_DUMMY_DATA}U);
                     ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
                 }
+				else
+				{
+					/* Do Nothing */
+				}
             }
             else
             {
                 if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                    ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount];
+					${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
                 }
                 else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = (uint8_t)(0x${SPI_DUMMY_DATA});
+                    ${SPI_INSTANCE_NAME}BUF = (uint8_t)(0x${SPI_DUMMY_DATA}U);
                     ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
                 }
+				else
+				{
+					/* Do Nothing */
+				}
             }
         }
         else
@@ -596,15 +626,18 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
         {
             if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
             {
-                ${SPI_INSTANCE_NAME}BUF = ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                ${SPI_INSTANCE_NAME}BUF = ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount];
+				${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
             }
             else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
             {
-                ${SPI_INSTANCE_NAME}BUF = ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
-            }
+                ${SPI_INSTANCE_NAME}BUF = ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount];
+                ${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
+			}
             else
             {
-                ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount];
+				${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
             }
 
             if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
@@ -614,7 +647,7 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
                 ${SPI_INSTANCE_NAME}CONCLR = _${SPI_INSTANCE_NAME}CON_STXISEL_MASK;
             }
         }
-        else if ((${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize) && (${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK))
+        else if ((${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize) && ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) != 0U))
         {
             /* This part of code is executed when the shift register is empty. */
 
@@ -632,6 +665,10 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
                 ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
             }
         }
+		else
+		{
+			/* Do Nothing */
+		}
     }
     /* Clear the transmit interrupt flag */
     ${SPI_TX_IFS_REG}CLR = ${SPI_TX_IFS_REG_MASK};
@@ -640,12 +677,12 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#if SPI_INTERRUPT_COUNT == 1>
 void SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
 {
-    if ((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) && (${SPI_RX_IEC_REG} & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK))
+    if (((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) != 0U) && ((${SPI_RX_IEC_REG} & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK) != 0U))
     {
         /* RX interrupt is enabled and RX buffer is not empty */
         ${SPI_INSTANCE_NAME}_RX_InterruptHandler();
     }
-    if ((${SPI_TX_IFS_REG} & _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK) && (${SPI_TX_IEC_REG} & _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK))
+    if (((${SPI_TX_IFS_REG} & _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK) != 0U) && ((${SPI_TX_IEC_REG} & _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK) != 0U))
     {
         /* TX interrupt is enabled and TX buffer is empty */
         ${SPI_INSTANCE_NAME}_TX_InterruptHandler();

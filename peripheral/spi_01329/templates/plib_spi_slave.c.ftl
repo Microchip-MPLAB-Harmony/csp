@@ -86,15 +86,15 @@ static uint32_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFF
 </#if>
 
 /* Global object to save SPI Exchange related data */
-SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
+static SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 
-#define ${SPI_INSTANCE_NAME}_CON_CKP                        (${SPI_SPICON_CLK_POL} << _${SPI_INSTANCE_NAME}CON_CKP_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_CKE                        (${SPI_SPICON_CLK_PH} << _${SPI_INSTANCE_NAME}CON_CKE_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16            (${SPI_SPICON_MODE} << _${SPI_INSTANCE_NAME}CON_MODE16_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_ENHBUF                     (1 << _${SPI_INSTANCE_NAME}CON_ENHBUF_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_STXISEL                    (3 << _${SPI_INSTANCE_NAME}CON_STXISEL_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_SRXISEL                    (1 << _${SPI_INSTANCE_NAME}CON_SRXISEL_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_SSEN                       (1 << _${SPI_INSTANCE_NAME}CON_SSEN_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_CKP                        (${SPI_SPICON_CLK_POL}UL << _${SPI_INSTANCE_NAME}CON_CKP_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_CKE                        (${SPI_SPICON_CLK_PH}UL << _${SPI_INSTANCE_NAME}CON_CKE_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16            (${SPI_SPICON_MODE}UL << _${SPI_INSTANCE_NAME}CON_MODE16_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_ENHBUF                     (1UL << _${SPI_INSTANCE_NAME}CON_ENHBUF_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_STXISEL                    (3UL << _${SPI_INSTANCE_NAME}CON_STXISEL_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_SRXISEL                    (1UL << _${SPI_INSTANCE_NAME}CON_SRXISEL_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_SSEN                       (1UL << _${SPI_INSTANCE_NAME}CON_SSEN_POSITION)
 
 #define ${SPI_INSTANCE_NAME}_ENABLE_RX_INT()                ${SPI_RX_IEC_REG}SET = ${SPI_RX_IEC_REG_MASK}
 #define ${SPI_INSTANCE_NAME}_CLEAR_RX_INT_FLAG()            ${SPI_RX_IFS_REG}CLR = ${SPI_RX_IFS_REG_MASK}
@@ -186,11 +186,11 @@ size_t ${SPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size)
     }
 
 <#if SPI_SPICON_MODE == "0">
-    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
+   (void) memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
 <#elseif SPI_SPICON_MODE == "1">
-    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
+   (void) memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
 <#else>
-    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 2));
+   (void) memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 2));
 </#if>
 
     return rdSize;
@@ -209,11 +209,11 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
     }
 
 <#if SPI_SPICON_MODE == "0">
-    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
+    (void) memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
 <#elseif SPI_SPICON_MODE == "1">
-    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
+    (void) memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
 <#else>
-    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 2));
+    (void) memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 2));
 </#if>
 
     ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes = wrSize;
@@ -222,7 +222,8 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
     /* Fill up the FIFO as long as there are empty elements */
     while ((!(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBF_MASK)) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
     {
-        ${SPI_INSTANCE_NAME}BUF = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+        ${SPI_INSTANCE_NAME}BUF = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+		${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
     }
 
     /* Enable TX interrupt */
@@ -286,9 +287,9 @@ SPI_SLAVE_ERROR ${SPI_INSTANCE_NAME}_ErrorGet(void)
 static void ${SPI_INSTANCE_NAME}_CS_Handler(GPIO_PIN pin, uintptr_t context)
 {
     <#if SPIS_CS_PIN_LOGIC_LEVEL == "ACTIVE_LOW">
-    bool activeState = 0;
+    bool activeState = false;
     <#else>
-    bool activeState = 1;
+    bool activeState = true;
     </#if>
 
     if (${PLIB_NAME}_PinRead((${PLIB_NAME}_PIN)${SPI_INSTANCE_NAME}_CS_PIN) == activeState)
@@ -340,7 +341,7 @@ static void ${SPI_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 void ${SPI_INSTANCE_NAME}${SPI_ERROR_NAME}_InterruptHandler (void)
 </#if>
 {
-    ${SPI_INSTANCE_NAME?lower_case}Obj.errorStatus = (${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK);
+    ${SPI_INSTANCE_NAME?lower_case}Obj.errorStatus =(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK);
 
     /* Clear the receive overflow flag */
     ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
@@ -357,7 +358,8 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
     /* Fill up the FIFO as long as there are empty elements */
     while ((!(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBF_MASK)) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
     {
-        ${SPI_INSTANCE_NAME}BUF = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+        ${SPI_INSTANCE_NAME}BUF = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+		${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
     }
 
     /* Clear the transmit interrupt flag */
@@ -387,7 +389,8 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 
         if (${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex < ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE)
         {
-            ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex++] = receivedData;
+            ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex] = (uint8_t)receivedData;
+			${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex++;
         }
     }
 

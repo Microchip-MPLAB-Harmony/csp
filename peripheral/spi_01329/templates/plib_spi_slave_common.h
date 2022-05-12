@@ -68,15 +68,14 @@
     None
 */
 
-typedef enum
-{
-    /* Error status when no error has occurred */
-    SPI_SLAVE_ERROR_NONE,
 
-    /* Buffer overflow error has occured */
-    SPI_SLAVE_ERROR_BUFOVF = 0x00000040,
+/* Error status when no error has occurred */
+#define    SPI_SLAVE_ERROR_NONE     (0U)
 
-} SPI_SLAVE_ERROR;
+/* Buffer overflow error has occured */
+#define    SPI_SLAVE_ERROR_BUFOVF  (0x00000040U)
+
+typedef uint32_t SPI_SLAVE_ERROR;
 
 // *****************************************************************************
 /* SPI Slave Mode CallBack Function Pointer
@@ -110,7 +109,7 @@ typedef enum
         {
             if( SPI1_ErrorGet() == SPI_SLAVE_ERROR_NONE )
             {
-                //Exchange was completed without error
+                
             }
         }
     </code>
