@@ -42,14 +42,14 @@
 <#assign INDEX = ICAP_INSTANCE_NUM>
 <#if ICAP_NUM_INT_LINES == 1>
     <#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true" || ICAP_INTERRUPT_ENABLE?c == "true">
-        <#lt>ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
+        <#lt>static ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
     </#if>
 <#else>
     <#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
-        <#lt>ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}errObj;
+        <#lt>static ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}errObj;
     </#if>
     <#if ICAP_INTERRUPT_ENABLE?c == "true">
-        <#lt>ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
+        <#lt>static ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
     </#if>
 </#if>
 <#--Implementation-->
@@ -190,7 +190,7 @@ void INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
 bool ${ICAP_INSTANCE_NAME}_CaptureStatusGet (void)
 {
     bool status = false;
-    status = ((IC${INDEX}CON >> ICAP_STATUS_BUFNOTEMPTY) & 0x1);
+    status = (((IC${INDEX}CON >> ICAP_STATUS_BUFNOTEMPTY) & 0x1U) != 0U);
     return status;
 }
 </#if>
@@ -216,7 +216,7 @@ void INPUT_CAPTURE_${INDEX}_ERROR_InterruptHandler(void)
 bool ${ICAP_INSTANCE_NAME}_ErrorStatusGet (void)
 {
     bool status = false;
-    status = ((IC${INDEX}CON >> ICAP_STATUS_OVERFLOW) & 0x1);
+    status = (((IC${INDEX}CON >> ICAP_STATUS_OVERFLOW) & 0x1U) != 0U);
     return status;
 }
 </#if>
