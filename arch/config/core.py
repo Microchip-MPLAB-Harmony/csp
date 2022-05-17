@@ -136,6 +136,7 @@ def handleMessage(messageID, args):
 
 def genExceptionAsmSourceFile(symbol, event):
     global compilers
+    global coreArch
 
     coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
     coreSysExceptionFileEnabled = Database.getSymbolValue("core", "CoreSysExceptionFile")
@@ -148,7 +149,10 @@ def genExceptionAsmSourceFile(symbol, event):
     else:
         symbol.setEnabled(False)
 
-    if (compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
+    if "MIPS" in coreArch.getValue():
+        symbol.setSourcePath("templates/general-exception-context_mips.S.ftl")
+        symbol.setOutputName("exceptionsHandler.S")
+    elif (compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
         symbol.setSourcePath("templates/exceptionsHandler_iar.s.ftl")
         symbol.setOutputName("exceptionsHandler.s")
     else:
@@ -342,6 +346,7 @@ def instantiateComponent( coreComponent ):
     global processor
     global keilMenu
     global keilAvailable
+    global coreArch
 
     compilerSpecifics =     None
     armLibCSourceFile =     None
@@ -945,11 +950,10 @@ def instantiateComponent( coreComponent ):
         exceptionAsmSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_ASM", None)
         if "MIPS" in coreArch.getValue():
             exceptionAsmSourceFile.setSourcePath("templates/general-exception-context_mips.S.ftl")
+        elif (compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
+            exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler_iar.s.ftl")
         else:
-            if (compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
-                exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler_iar.s.ftl")
-            else:
-                exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler.s.ftl")
+            exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler.s.ftl")
         exceptionAsmSourceFile.setOutputName("exceptionsHandler.S")
         exceptionAsmSourceFile.setMarkup(True)
         exceptionAsmSourceFile.setOverwrite(True)
