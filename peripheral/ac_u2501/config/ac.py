@@ -187,7 +187,7 @@ def instantiateComponent(acComponent):
     acSym_LOAD_CALIB = acComponent.createIntegerSymbol("AC_LOAD_CALIB", None)
     acSym_LOAD_CALIB.setVisible(False)
     acSym_LOAD_CALIB.setDefaultValue(calibRequired)
-    
+
     isDACPresent = acComponent.createBooleanSymbol("AC_IS_DAC_PRESENT", None)
     isDACPresent.setValue(dacctrl_reg_present)
     isDACPresent.setVisible(False)
@@ -420,9 +420,15 @@ def instantiateComponent(acComponent):
 
         if (ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__HYST\"]") != None):
             #Hysteresis selection
-            acSym_COMPCTRL_HYST = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_HYST_VAL", acSym_COMPCTRL_HYSTEN)
+            if acSym_COMPCTRL_HYSTEN_Node != None:
+                acSym_COMPCTRL_HYST = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_HYST_VAL", acSym_COMPCTRL_HYSTEN)
+            else:
+                acSym_COMPCTRL_HYST = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_HYST_VAL", acSym_AdvConf)
             acSym_COMPCTRL_HYST.setLabel("Hysteresis Selection")
-            acSym_COMPCTRL_HYST.setVisible(False)
+            if acSym_COMPCTRL_HYSTEN_Node != None:
+                acSym_COMPCTRL_HYST.setVisible(False)
+            else:
+                acSym_COMPCTRL_HYST.setVisible(True)
             acSym_COMPCTRL_HYST_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__HYST\"]")
             acSym_COMPCTRL_HYST_Values = []
             acSym_COMPCTRL_HYST_Values = acSym_COMPCTRL_HYST_node.getChildren()
@@ -442,7 +448,10 @@ def instantiateComponent(acComponent):
             acSym_COMPCTRL_HYST.setDefaultValue(acSym_COMPCTRL_HYST_Default_Val)
             acSym_COMPCTRL_HYST.setOutputMode("Value")
             acSym_COMPCTRL_HYST.setDisplayMode("Description")
-            acSym_COMPCTRL_HYST.setDependencies(setacSymbolVisibility,["AC" + str(comparatorID) + "_HYSTEN"])
+            if acSym_COMPCTRL_HYSTEN_Node != None:
+                acSym_COMPCTRL_HYST.setDependencies(setacSymbolVisibility,["AC" + str(comparatorID) + "_HYSTEN"])
+            else:
+                acSym_COMPCTRL_HYST.setDependencies(setacHystVisibility,["AC_COMPCTRL_" + str(comparatorID) +"SINGLE_MODE"])
 
         #Filter Length selection
         acSym_COMPCTRL_FLEN = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_FLEN_VAL", acSym_AdvConf)
