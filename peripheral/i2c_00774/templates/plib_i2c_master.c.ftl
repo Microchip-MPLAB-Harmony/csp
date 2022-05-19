@@ -60,6 +60,8 @@
 <#assign I2C_PLIB = "I2C_INSTANCE_NAME">
 <#assign I2C_PLIB_CLOCK_FREQUENCY = "core." + I2C_PLIB?eval + "_CLOCK_FREQUENCY">
 
+#define nop()  asm("nop")
+
 static I2C_OBJ ${I2C_INSTANCE_NAME?lower_case}Obj;
 
 void ${I2C_INSTANCE_NAME}_Initialize(void)
@@ -118,19 +120,19 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 
         case I2C_STATE_ADDR_BYTE_1_SEND:
             /* Is transmit buffer full? */
-            if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK))
+            if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U)
             {
-                if (${I2C_INSTANCE_NAME?lower_case}Obj.address > 0x007F)
+                if (${I2C_INSTANCE_NAME?lower_case}Obj.address > 0x007FU)
                 {
                     /* Transmit the MSB 2 bits of the 10-bit slave address, with R/W = 0 */
-                    ${I2C_INSTANCE_NAME}TRN = ( 0xF0 | (((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1));
+                    ${I2C_INSTANCE_NAME}TRN = ( 0xF0U | (((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1));
 
                     ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_ADDR_BYTE_2_SEND;
                 }
                 else
                 {
                     /* 8-bit addressing mode */
-                    ${I2C_INSTANCE_NAME}TRN = ((${I2C_INSTANCE_NAME?lower_case}Obj.address << 1) | ${I2C_INSTANCE_NAME?lower_case}Obj.transferType);
+                    ${I2C_INSTANCE_NAME}TRN = (((uint32_t)${I2C_INSTANCE_NAME?lower_case}Obj.address << 1) | ${I2C_INSTANCE_NAME?lower_case}Obj.transferType);
 
                     if (${I2C_INSTANCE_NAME?lower_case}Obj.transferType == I2C_TRANSFER_TYPE_WRITE)
                     {
@@ -147,12 +149,12 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
         case I2C_STATE_ADDR_BYTE_2_SEND:
             /* Transmit the 2nd byte of the 10-bit slave address */
             <#if I2C_INCLUDE_FORCED_WRITE_API == true>
-            if ((!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK)) || (${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite == true))
+            if (((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U) || (${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite == true))
             <#else>
-            if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK))
+            if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U)
             </#if>
             {
-                if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK))
+                if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U)
                 {
                     /* Transmit the remaining 8-bits of the 10-bit address */
                     ${I2C_INSTANCE_NAME}TRN = ${I2C_INSTANCE_NAME?lower_case}Obj.address;
@@ -177,7 +179,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             break;
 
         case I2C_STATE_READ_10BIT_MODE:
-            if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK))
+            if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U)
             {
                 /* Generate repeated start condition */
                 ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_RSEN_MASK;
@@ -194,10 +196,10 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 
         case I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY:
             /* Is transmit buffer full? */
-            if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK))
+            if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U)
             {
                 /* Transmit the first byte of the 10-bit slave address, with R/W = 1 */
-                ${I2C_INSTANCE_NAME}TRN = ( 0xF1 | ((((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1)));
+                ${I2C_INSTANCE_NAME}TRN = ( 0xF1U | ((((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1)));
                 ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_READ;
             }
             else
@@ -211,18 +213,19 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 
         case I2C_STATE_WRITE:
             <#if I2C_INCLUDE_FORCED_WRITE_API == true>
-            if ((!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK)) || (${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite == true))
+            if (((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U) || (${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite == true))
             <#else>
-            if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK))
+            if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U)
             </#if>
             {
                 /* ACK received */
                 if (${I2C_INSTANCE_NAME?lower_case}Obj.writeCount < ${I2C_INSTANCE_NAME?lower_case}Obj.writeSize)
                 {
-                    if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK))
+                    if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U)
                     {
                         /* Transmit the data from writeBuffer[] */
-                        ${I2C_INSTANCE_NAME}TRN = ${I2C_INSTANCE_NAME?lower_case}Obj.writeBuffer[${I2C_INSTANCE_NAME?lower_case}Obj.writeCount++];
+                        ${I2C_INSTANCE_NAME}TRN = ${I2C_INSTANCE_NAME?lower_case}Obj.writeBuffer[${I2C_INSTANCE_NAME?lower_case}Obj.writeCount];
+						${I2C_INSTANCE_NAME?lower_case}Obj.writeCount++;
                     }
                 }
                 else
@@ -234,7 +237,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 
                         ${I2C_INSTANCE_NAME?lower_case}Obj.transferType = I2C_TRANSFER_TYPE_READ;
 
-                        if (${I2C_INSTANCE_NAME?lower_case}Obj.address > 0x007F)
+                        if (${I2C_INSTANCE_NAME?lower_case}Obj.address > 0x007FU)
                         {
                             /* Send the I2C slave address with R/W = 1 */
                             ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY;
@@ -264,7 +267,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             break;
 
         case I2C_STATE_READ:
-            if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK))
+            if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U)
             {
                 /* Slave ACK'd the device address. Enable receiver. */
                 ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_RCEN_MASK;
@@ -281,9 +284,10 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 
         case I2C_STATE_READ_BYTE:
             /* Data received from the slave */
-            if (${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_RBF_MASK)
+            if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_RBF_MASK) != 0U)
             {
-                ${I2C_INSTANCE_NAME?lower_case}Obj.readBuffer[${I2C_INSTANCE_NAME?lower_case}Obj.readCount++] = ${I2C_INSTANCE_NAME}RCV;
+                ${I2C_INSTANCE_NAME?lower_case}Obj.readBuffer[${I2C_INSTANCE_NAME?lower_case}Obj.readCount] = (uint8_t)${I2C_INSTANCE_NAME}RCV;
+				${I2C_INSTANCE_NAME?lower_case}Obj.readCount++;
                 if (${I2C_INSTANCE_NAME?lower_case}Obj.readCount == ${I2C_INSTANCE_NAME?lower_case}Obj.readSize)
                 {
                     /* Send NAK */
@@ -327,6 +331,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             break;
 
         default:
+		         /* Do Nothing */
             break;
     }
 
@@ -346,8 +351,8 @@ void ${I2C_INSTANCE_NAME}_CallbackRegister(I2C_CALLBACK callback, uintptr_t cont
 
 bool ${I2C_INSTANCE_NAME}_IsBusy(void)
 {
-    if( (${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE ) || (${I2C_INSTANCE_NAME}CON & 0x0000001F) ||
-        (${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TRSTAT_MASK) || (${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK) )
+    if( (${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE ) || ((${I2C_INSTANCE_NAME}CON & 0x0000001FU) != 0U) ||
+        ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TRSTAT_MASK) != 0U) || ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U) )
     {
         return true;
     }
@@ -360,7 +365,7 @@ bool ${I2C_INSTANCE_NAME}_IsBusy(void)
 bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t* rdata, size_t rlength)
 {
     /* State machine must be idle and I2C module should not have detected a start bit on the bus */
-    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || (${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK))
+    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
     {
         return false;
     }
@@ -390,7 +395,7 @@ bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t* rdata, size_t rlength)
 bool ${I2C_INSTANCE_NAME}_Write(uint16_t address, uint8_t* wdata, size_t wlength)
 {
     /* State machine must be idle and I2C module should not have detected a start bit on the bus */
-    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || (${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK))
+    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
     {
         return false;
     }
@@ -420,7 +425,7 @@ bool ${I2C_INSTANCE_NAME}_Write(uint16_t address, uint8_t* wdata, size_t wlength
 bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t wlength)
 {
     /* State machine must be idle and I2C module should not have detected a start bit on the bus */
-    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || (${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK))
+    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
     {
         return false;
     }
@@ -448,7 +453,7 @@ bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t w
 bool ${I2C_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t* wdata, size_t wlength, uint8_t* rdata, size_t rlength)
 {
     /* State machine must be idle and I2C module should not have detected a start bit on the bus */
-    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || (${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK))
+    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
     {
         return false;
     }
@@ -497,20 +502,20 @@ bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcC
     i2cClkSpeed = setup->clkSpeed;
 
     /* Maximum I2C clock speed cannot be greater than 1 MHz */
-    if (i2cClkSpeed > 1000000)
+    if (i2cClkSpeed > 1000000U)
     {
         return false;
     }
 
-    if( srcClkFreq == 0)
+    if( srcClkFreq == 0U)
     {
         srcClkFreq = ${I2C_PLIB_CLOCK_FREQUENCY?eval}UL;
     }
 
-    baudValue = ((float)((float)srcClkFreq/2.0) * (1/(float)i2cClkSpeed - 0.000000130)) - 1;
+    baudValue = ((float)((float)srcClkFreq/2.0) * ((1/((float)i2cClkSpeed)) - 0.000000130)) - 1;
 
     /* I2CxBRG value cannot be from 0 to 3 or more than the size of the baud rate register */
-    if ((baudValue < 4) || (baudValue > ${I2C_MAX_BRG}))
+    if ((baudValue < 4U) || (baudValue > ${I2C_MAX_BRG}U))
     {
         return false;
     }
@@ -519,7 +524,7 @@ bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcC
 
     /* Enable slew rate for 400 kHz clock speed; disable for all other speeds */
 
-    if (i2cClkSpeed == 400000)
+    if (i2cClkSpeed == 400000U)
     {
         ${I2C_INSTANCE_NAME}CONCLR = _${I2C_INSTANCE_NAME}CON_DISSLW_MASK;;
     }
@@ -542,7 +547,7 @@ void ${I2C_INSTANCE_NAME}_TransferAbort( void )
 
     // Disable and Enable I2C Master
     ${I2C_INSTANCE_NAME}CONCLR = _${I2C_INSTANCE_NAME}CON_ON_MASK;
-    asm("nop");asm("nop");
+    nop();nop();
     ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_ON_MASK;
 }
 
@@ -571,12 +576,16 @@ static void ${I2C_INSTANCE_NAME}_MASTER_InterruptHandler(void)
 
 void I2C_${I2C_INSTANCE_NUM}_InterruptHandler(void)
 {
-    if ((${I2C_BUS_IFS_REG} & _${I2C_BUS_IFS_REG}_${I2C_INSTANCE_NAME}BIF_MASK) && (${I2C_BUS_IEC_REG} & _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK))
+    if (((${I2C_BUS_IFS_REG} & _${I2C_BUS_IFS_REG}_${I2C_INSTANCE_NAME}BIF_MASK) != 0U) && ((${I2C_BUS_IEC_REG} & _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK) != 0U))
     {
         ${I2C_INSTANCE_NAME}_BUS_InterruptHandler();
     }
-    else if ((${I2C_MASTER_IFS_REG} & _${I2C_MASTER_IFS_REG}_${I2C_INSTANCE_NAME}MIF_MASK) && (${I2C_MASTER_IEC_REG} & _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK))
+    else if (((${I2C_MASTER_IFS_REG} & _${I2C_MASTER_IFS_REG}_${I2C_INSTANCE_NAME}MIF_MASK) != 0U) && ((${I2C_MASTER_IEC_REG} & _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK) != 0U))
     {
         ${I2C_INSTANCE_NAME}_MASTER_InterruptHandler();
     }
+	else
+	{
+		/* Do Nothing */
+	}
 }
