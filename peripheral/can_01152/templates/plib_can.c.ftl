@@ -957,6 +957,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             {
                 *(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOINT0CLR + (fifoNum * CAN_FIFO_OFFSET)) = _C${CAN_INSTANCE_NUM}FIFOINT0_TXEMPTYIE_MASK;
             }
+            C${CAN_INSTANCE_NUM}INTCLR = _C${CAN_INSTANCE_NUM}INT_TBIE_MASK;
             ${CAN_IFS_REG}CLR = _${CAN_IFS_REG}_CAN${CAN_INSTANCE_NUM}IF_MASK;
 
             if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback != NULL)
