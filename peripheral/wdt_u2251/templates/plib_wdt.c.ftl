@@ -165,7 +165,7 @@ bool ${WDT_INSTANCE_NAME}_IsWindowModeEnabled(void)
 void ${WDT_INSTANCE_NAME}_TimeoutPeriodSet(uint8_t TimeoutPeriod)
 {
     /* Set WDT timeout period */
-    ${WDT_INSTANCE_NAME}_REGS->WDT_CONFIG = (${WDT_INSTANCE_NAME}_REGS->WDT_CONFIG & ~WDT_CONFIG_PER_Msk) | (TimeoutPeriod & WDT_CONFIG_PER_Msk);
+    ${WDT_INSTANCE_NAME}_REGS->WDT_CONFIG = (${WDT_INSTANCE_NAME}_REGS->WDT_CONFIG & (uint8_t)~WDT_CONFIG_PER_Msk) | (TimeoutPeriod & (uint8_t)WDT_CONFIG_PER_Msk);
 }
 
 /* If application intends to stay in active mode after clearing WDT, then use WDT_Clear API to clear the WDT. This avoids CPU from waiting or stalling for Synchronization.
