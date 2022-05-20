@@ -437,7 +437,7 @@ void OSC32KCTRL_InterruptHandler(void)
 
 <#if MCLK_INTENSET_CKRDY == true >
 
-void MCLK_CallbackRegister (OSC32KCTRL_CFD_CALLBACK callback, uintptr_t context)
+void MCLK_CallbackRegister (MCLK_CKRDY_CALLBACK callback, uintptr_t context)
 {
     mclkObj.callback = callback;
     mclkObj.context = context;
