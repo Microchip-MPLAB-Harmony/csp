@@ -7,9 +7,9 @@ __STATIC_INLINE void  __attribute__((optimize("-O1")))  RAM_Initialize(void)
     // MCRAMC initialization loop (to handle ECC properly)
     // Write to entire RAM to initialize ECC checksum
 
-    if ((WDT_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) || (WDT_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk))
+    if (((WDT_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != 0U) || ((WDT_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk) != 0U))
     {
-        if (WDT_REGS->WDT_CTRLA & WDT_CTRLA_WEN_Msk)
+        if ((WDT_REGS->WDT_CTRLA & WDT_CTRLA_WEN_Msk) != 0U)
         {
             for (pRam = (uint32_t*)${RAM_START}U ; pRam < ((uint32_t*)(${RAM_START}U + ${RAM_LENGTH}U)) ; pRam++)
             {
@@ -17,7 +17,7 @@ __STATIC_INLINE void  __attribute__((optimize("-O1")))  RAM_Initialize(void)
 
                 if ((WDT_REGS->WDT_INTFLAG & WDT_INTFLAG_EW_Msk) == WDT_INTFLAG_EW_Msk)
                 {
-                    if (!(WDT_REGS->WDT_SYNCBUSY & WDT_SYNCBUSY_CLEAR_Msk))
+                    if ((WDT_REGS->WDT_SYNCBUSY & WDT_SYNCBUSY_CLEAR_Msk) == 0U)
                     {
 
                         /* Clear WDT and reset the WDT timer before the
@@ -35,7 +35,7 @@ __STATIC_INLINE void  __attribute__((optimize("-O1")))  RAM_Initialize(void)
             {
                 *pRam = 0U;
 
-                if (!(WDT_REGS->WDT_SYNCBUSY & WDT_SYNCBUSY_CLEAR_Msk))
+                if ((WDT_REGS->WDT_SYNCBUSY & WDT_SYNCBUSY_CLEAR_Msk) == 0U)
                 {
 
                     /* Clear WDT and reset the WDT timer before the timeout occurs */
