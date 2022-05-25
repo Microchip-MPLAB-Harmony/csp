@@ -110,20 +110,20 @@ SECTIONS
 	.region_cache_aligned_const :
 	{
 		. = ALIGN(32);
-		*(.region_cache_aligned_const)
+		*(.region_cache_aligned_const .region_cache_aligned_const.*)
 		. = ALIGN(32);
 	} >ram
 
 	.region_sram (NOLOAD) :
 	{
 		. = ALIGN(4);
-		*(.region_sram)
+		*(.region_sram .region_sram.*)
 	} >sram
 
 	.region_ram (NOLOAD) :
 	{
 		. = ALIGN(4);
-		*(.region_ram)
+		*(.region_ram .region_ram.*)
 	} >ram
 
 	.region_nocache (NOLOAD) :
@@ -151,7 +151,7 @@ SECTIONS
 	.region_cache_aligned (NOLOAD) :
 	{
 		. = ALIGN(32);
-		*(.region_cache_aligned)
+		*(.region_cache_aligned .region_cache_aligned.*)
 		. = ALIGN(32);
 	} >ram
 
@@ -187,12 +187,12 @@ SECTIONS
 	.ramcode :
 	AT ( _ramcode_lma )
 	{
-		_sramcode = .; *(.ramcode_section); _eramcode = .;
+		_sramcode = .; *(.ramcode_section .ramcode_section.*); _eramcode = .;
 	} > sram
 	_ramdata_lma = _end + _eramcode - _sramcode;
 	.ramdata :
 	AT ( _ramdata_lma )
 	{
-		_sramdata = .; *(.ramdata_section); _eramdata = .;
+		_sramdata = .; *(.ramdata_section .ramdata_section.*); _eramdata = .;
 	} > sram
 }
