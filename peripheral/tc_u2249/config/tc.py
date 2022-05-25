@@ -349,10 +349,10 @@ def destroyComponent(tcComponent):
     instance = int(tcInstanceName.getValue()[-1])
 
     if tySym_Slave_Mode.getValue() == False:
-        # Disable the clock only if master is getting destroyed.
+        # Disable the clock only if master is getting destroyed. 
         Database.sendMessage("core", "TC"+str(instance)+"_CLOCK_ENABLE", {"isEnabled":False})
 
-    # If master is getting destroyed, then disable slave's clock if the slave tc instance is not active.
+    # If master is getting destroyed, then disable slave's clock if the slave tc instance is not active. 
     # If the slave tc is active, then send a message to slave indicating that master is destroyed, thereby allowing slave to work as a normal timer (8/16 bit mode)
     if tcComponent.getSymbolByID("TC_CTRLA_MODE").getSelectedKey() == "COUNT32":
         activeComponentList = Database.getActiveComponentIDs()
@@ -445,8 +445,7 @@ def instantiateComponent(tcComponent):
 
     tcSym_SLAVE_CLOCK_ENABLE = tcComponent.createIntegerSymbol("TC_SLAVE_CLOCK_ENABLE", None)
     tcSym_SLAVE_CLOCK_ENABLE.setVisible(False)
-    if (tcInstanceMasterValue == 2):
-        tcSym_SLAVE_CLOCK_ENABLE.setDependencies(tcSlaveClockEnable, ["TC_CTRLA_MODE"])
+    tcSym_SLAVE_CLOCK_ENABLE.setDependencies(tcSlaveClockEnable, ["TC_CTRLA_MODE"])
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
@@ -539,7 +538,7 @@ def instantiateComponent(tcComponent):
 
     #clock resolution display
     tcSym_Resolution = tcComponent.createCommentSymbol("TC_Resolution", None)
-    if int(Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")) != 0:
+    if int(Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")) != 0: 
         resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
         tcSym_Resolution.setLabel("****Timer resolution is " + str(resolution) + " nS****")
     else:
