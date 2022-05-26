@@ -77,7 +77,7 @@ void ${TMR1_INSTANCE_NAME}_Start(void);
 
 void ${TMR1_INSTANCE_NAME}_Stop(void);
 
-void ${TMR1_INSTANCE_NAME}_PeriodSet(uint16_t);
+void ${TMR1_INSTANCE_NAME}_PeriodSet(uint16_t period);
 
 uint16_t ${TMR1_INSTANCE_NAME}_PeriodGet(void);
 
