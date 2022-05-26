@@ -85,7 +85,7 @@ static const pmc_pll_cfg_t ${PLL_NAME?lower_case}_cfg = {
 </#list>
 <#if CLK_TDXTALSEL == "XTAL">
 /*********************************************************************************
-Initialize Slow Clock (SLCK)
+                            Initialize Slow Clock (SLCK)
 *********************************************************************************/
 static void SlowClockInitialize(void)
 {
@@ -108,9 +108,9 @@ static void SlowClockInitialize(void)
 
 
 </#if>
-<#if (CLK_MOSCXTBY || CLK_MOSCXTEN || (!CLK_MOSCRCEN))>
+<#if (CLK_MOSCXTBY || CLK_MOSCXTEN)>
 /*********************************************************************************
-Initialize Main Clock (MAINCK)
+                            Initialize Main Clock (MAINCK)
 *********************************************************************************/
 static void MainClockInitialize(void)
 {
@@ -136,17 +136,25 @@ static void MainClockInitialize(void)
         /* Wait until MAINCK is switched to Main Crystal Oscillator */
     }
 </#if>
+}
+
+
+</#if>
 <#if !CLK_MOSCRCEN>
+/*********************************************************************************
+                                Disable Main RC Oscillator
+*********************************************************************************/
+static void DisableMainRCOscillator(void)
+{
     /* Disable the RC Oscillator */
     PMC_REGS->CKGR_MOR = CKGR_MOR_KEY_PASSWD | (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCRCEN_Msk);
-</#if>
 }
 
 
 </#if>
 <#if PLL_USED>
 /*********************************************************************************
-Initialize PLL
+                                    Initialize PLL
 *********************************************************************************/
 static void PLLInitialize(uint32_t pll_id, const pmc_pll_cfg_t *pll_cfg)
 {
@@ -187,7 +195,6 @@ static void PLLInitialize(uint32_t pll_id, const pmc_pll_cfg_t *pll_cfg)
         reg |= pll_cfg->ssr;
         PMC_REGS->PMC_PLL_SSR = reg;
     }
-
 }
 
 
@@ -198,7 +205,7 @@ static void PLLInitialize(uint32_t pll_id, const pmc_pll_cfg_t *pll_cfg)
 </#compress>
 <#if GEN_CPU_CLK>
 /*********************************************************************************
-Initialize CPU clock
+                                Initialize CPU clock
 *********************************************************************************/
 static void CPUClockInitialize(void)
 {
@@ -360,6 +367,24 @@ static void PeripheralClockInitialize(void)
     }
 }
 
+
+/*********************************************************************************
+                    Enable/Disable flash patch based on core frequency
+*********************************************************************************/
+static void ApplyFlashPatch(void)
+{
+    SFR_REGS->SFR_WPMR = SFR_WPMR_WPKEY_PASSWD;
+<#if CPU_CLOCK_FREQUENCY gte 160000000>
+    /*Enable Flash high speed patch */
+    SFR_REGS->SFR_FLASH = 0x0U;
+<#else>
+    /*Disable Flash high speed patch */;
+    SFR_REGS->SFR_FLASH = SFR_FLASH_Msk;
+</#if>
+    SFR_REGS->SFR_WPMR = (SFR_WPMR_WPKEY_PASSWD | SFR_WPMR_WPEN_Msk);
+}
+
+
 /*********************************************************************************
                                 Clock Initialize
 *********************************************************************************/
@@ -370,7 +395,7 @@ void CLK_Initialize( void )
     SlowClockInitialize();
 
 </#if>
-<#if (CLK_MOSCXTBY || CLK_MOSCXTEN || (!CLK_MOSCRCEN))>
+<#if (CLK_MOSCXTBY || CLK_MOSCXTEN)>
     /* Initialize MAINCK */
     MainClockInitialize();
 
@@ -384,19 +409,9 @@ void CLK_Initialize( void )
 </#if>
 </#list>
 </#if>
-<#if CPU_CLOCK_FREQUENCY gte 160000000>
-    /*Enable Flash high speed patch */
-    SFR_REGS->SFR_WPMR = SFR_WPMR_WPKEY_PASSWD;
-    SFR_REGS->SFR_FLASH = 0x0U;
-    SFR_REGS->SFR_WPMR = (SFR_WPMR_WPKEY_PASSWD | SFR_WPMR_WPEN_Msk);
+    /* Apply flash patch */
+    ApplyFlashPatch();
 
-<#else>
-    /*Disable Flash high speed patch */
-    SFR_REGS->SFR_WPMR = SFR_WPMR_WPKEY_PASSWD;
-    SFR_REGS->SFR_FLASH = SFR_FLASH_Msk;
-    SFR_REGS->SFR_WPMR = (SFR_WPMR_WPKEY_PASSWD | SFR_WPMR_WPEN_Msk);
-
-</#if>
 <#if GEN_CPU_CLK>
     /* Initialize CPU clock */
     CPUClockInitialize();
@@ -409,4 +424,9 @@ void CLK_Initialize( void )
 </#if>
     /* Initialize Peripheral clock */
     PeripheralClockInitialize();
+<#if !CLK_MOSCRCEN>
+
+    /* Disable Main RC Oscillator */
+    DisableMainRCOscillator();
+</#if>
 }
