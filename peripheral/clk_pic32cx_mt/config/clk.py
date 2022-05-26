@@ -239,7 +239,23 @@ def setup_gclk_module_freq(lcomp, rcomp, module, instance):
     mckid = get_peripheral_mck_id(instance)
     pcr_freq.setDefaultValue(rcomp.getSymbolValue(mckid +"_FREQUENCY"))
     pcr_freq.setDependencies(lambda symbol, event:
-                         symbol.setValue(event["value"]), ["MCK1_FREQUENCY"])
+                         symbol.setValue(event["value"]), [mckid +"_FREQUENCY"])
+
+
+def setup_flexcom_module_frequency(lcomp, rcomp, module, instance):
+    pcr_menu = rcomp.getSymbolByID("CLK_PCR_MENU")
+    pcr_freq = lcomp.createIntegerSymbol(instance + "_CLOCK_FREQUENCY",
+                                                                     pcr_menu)
+    pcr_freq.setReadOnly(True)
+    pcr_freq.setVisible(show_frequency_sym)
+    pcr_freq.setDefaultValue(rcomp.getSymbolValue("MCK0DIV_FREQUENCY"))
+    pcr_freq.setDependencies(update_flexcom_clock_frequency,
+                [  "MCK0DIV_FREQUENCY",
+                    instance + "_GCLK_FREQUENCY",
+                    instance.lower() + ".FLEXCOM_MODE",
+                    instance.lower() + ".FLEXCOM_USART_MR_USCLKS",
+                    instance.lower() + ".FLEXCOM_SPI_MR_BRSRCCLK",
+                    instance.lower() + ".FLEXCOM_TWI_CWGR_BRSRCCLK"])
 
 
 def setup_tc_clock_frequency(lcomp, rcomp, module, instance):
@@ -295,6 +311,35 @@ def update_tc_clock_frequency(symbol, event):
         else:
             clk_frequency = mck0div_freq
         symbol.setValue(clk_frequency)
+
+
+global update_flexcom_clock_frequency
+def update_flexcom_clock_frequency(symbol,event):
+    frequency = -1
+    clk_sym_map = { "USART": "FLEXCOM_USART_MR_USCLKS",
+                    "SPI": "FLEXCOM_SPI_MR_BRSRCCLK",
+                    "TWI": "FLEXCOM_TWI_CWGR_BRSRCCLK"
+                  }
+    instance_name = symbol.getID().split("_CLOCK_FREQUENCY")[0]
+    flexcom_comp = Database.getComponentByID(instance_name.lower())
+    if flexcom_comp is not None:
+        clk_sym = clk_sym_map[flexcom_comp.getSymbolByID("FLEXCOM_MODE").getSelectedKey()]
+        source_clock = flexcom_comp.getSymbolByID(clk_sym).getSelectedKey()
+        mck0div_freq = event["source"].getSymbolValue("MCK0DIV_FREQUENCY")
+        # Source clock is bus clock
+        if source_clock == "MCK" or source_clock == "PERIPH_CLK":
+            frequency = mck0div_freq
+        # Source clock is bus clock / 8
+        elif source_clock == "DIV":
+            frequency = mck0div_freq / 8
+        # Source clock is GCLK
+        elif source_clock == "GCLK":
+            frequency = event["source"].getSymbolValue(instance_name + "_GCLK_FREQUENCY")
+        # Source clock is external, set the internal frequency to zero
+        else:
+            frequency = 0
+
+        symbol.setValue(frequency)
 
 
 def update_pck_freq(symbol, event):
@@ -598,8 +643,7 @@ if __name__ == "__main__":
                 event:symbol.setValue(event["value"]/8), ["MCK1_FREQUENCY"])
 
     ################### Peripheral and Generic clocks #########################
-
-    gclk_dict = {"FLEXCOM":[range(0,8), setup_gclk_module_freq],
+    gclk_dict = {"FLEXCOM":[range(0,8), setup_flexcom_module_frequency],
                 "QSPI":[range(0,8), setup_gclk_module_freq],
                 "ADC":[range(0,8), setup_gclk_module_freq],
                 "TC":[range(0,8), setup_tc_clock_frequency],
@@ -617,14 +661,11 @@ if __name__ == "__main__":
     #Key value set symbol for UI to identify peripherals with GCLK support */
     gclk_ui_map = clk_component.createKeyValueSetSymbol("GCLK_INSTANCE_PID",
                                                                      gclk_menu)
-    gclk_ui_map.setVisible(True)
+    gclk_ui_map.setVisible(False)
 
     max_clock_id = 0
-
     peripheral_clock_list = []
-
     gclkcss_vg_node = get_valuegroup_node(pmc_node, "PMC", "PMC_PCR", "GCLKCSS")
-
     for module_node in atdf_root.find("devices/device/peripherals"):
         module_name = module_node.get("name")
         for instance_node in module_node:
