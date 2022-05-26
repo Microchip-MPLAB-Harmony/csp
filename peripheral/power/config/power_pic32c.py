@@ -30,13 +30,13 @@ def updateDSCON(symbol, event):
         if event["value"] == False:
             DSCON_Value |= 1 << bitPos
         else:
-            DSCON_Value &= ~(1 << bitPos)        
+            DSCON_Value &= ~(1 << bitPos)
     elif event["id"] == "DS_RTCC_WAKEUP_DISABLE":
         bitPos = 8
         if event["value"] == False:
             DSCON_Value |= 1 << bitPos
         else:
-            DSCON_Value &= ~(1 << bitPos)         
+            DSCON_Value &= ~(1 << bitPos)
     elif event["id"] == "DS_EXTENDED_REG_ENABLE":
         bitPos = 13
         if event["value"] == True:
@@ -51,37 +51,44 @@ def updateDSCON(symbol, event):
 ###################################################################################################
 ########################################## Component ##############################################
 ###################################################################################################
+if (ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCTRL"]') != None) or (ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCON"]') is not None):
+    deepSleepSymMenu = powerComponent.createMenuSymbol("DEEP_SLEEP_MODE_MENU", None)
+    deepSleepSymMenu.setLabel("Deep Sleep Mode Configuration")
 
-deepSleepSym_RTCDIS = powerComponent.createBooleanSymbol("DS_RTCC_ENABLE", deepSleepSymMenu)
-deepSleepSym_RTCDIS.setLabel("Enable Power to RTCC during Deep Sleep")
-deepSleepSym_RTCDIS.setDefaultValue(True)
+    deepSleepSymExist = powerComponent.createBooleanSymbol("DEEP_SLEEP_MODE_EXIST", deepSleepSymMenu)
+    deepSleepSymExist.setVisible(False)
+    deepSleepSymExist.setDefaultValue(True)
 
-deepSleepSym_RTCCWDIS = powerComponent.createBooleanSymbol("DS_RTCC_WAKEUP_DISABLE", deepSleepSymMenu)
-deepSleepSym_RTCCWDIS.setLabel("Enable Deep Sleep Wakeup from RTCC")
-deepSleepSym_RTCCWDIS.setDefaultValue(True)
+    deepSleepSym_RTCDIS = powerComponent.createBooleanSymbol("DS_RTCC_ENABLE", deepSleepSymMenu)
+    deepSleepSym_RTCDIS.setLabel("Enable Power to RTCC during Deep Sleep")
+    deepSleepSym_RTCDIS.setDefaultValue(True)
 
-deepSleepSym_DSGPREN = powerComponent.createBooleanSymbol("DS_EXTENDED_REG_ENABLE", deepSleepSymMenu)
-deepSleepSym_DSGPREN.setLabel("Enable Extended Semaphore Register")
-deepSleepSym_DSGPREN.setDefaultValue(False)
+    deepSleepSym_RTCCWDIS = powerComponent.createBooleanSymbol("DS_RTCC_WAKEUP_DISABLE", deepSleepSymMenu)
+    deepSleepSym_RTCCWDIS.setLabel("Enable Deep Sleep Wakeup from RTCC")
+    deepSleepSym_RTCCWDIS.setDefaultValue(True)
 
-deepSleepSym_DSCON_RegValue = powerComponent.createHexSymbol("DSCON_VALUE", deepSleepSymMenu)
-deepSleepSym_DSCON_RegValue.setDefaultValue(0x00000000)
-deepSleepSym_DSCON_RegValue.setVisible(False)
-deepSleepSym_DSCON_RegValue.setDependencies(updateDSCON, ["DS_EXTENDED_REG_ENABLE", "DS_RTCC_WAKEUP_DISABLE", "DS_RTCC_ENABLE"])
+    deepSleepSym_DSGPREN = powerComponent.createBooleanSymbol("DS_EXTENDED_REG_ENABLE", deepSleepSymMenu)
+    deepSleepSym_DSGPREN.setLabel("Enable Extended Semaphore Register")
+    deepSleepSym_DSGPREN.setDefaultValue(False)
 
-dswakeRegister = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCON"]/register-group@[name="DSCON"]/register@[name="DSWAKE"]')
+    deepSleepSym_DSCON_RegValue = powerComponent.createHexSymbol("DSCON_VALUE", deepSleepSymMenu)
+    deepSleepSym_DSCON_RegValue.setDefaultValue(0x00000000)
+    deepSleepSym_DSCON_RegValue.setVisible(False)
+    deepSleepSym_DSCON_RegValue.setDependencies(updateDSCON, ["DS_EXTENDED_REG_ENABLE", "DS_RTCC_WAKEUP_DISABLE", "DS_RTCC_ENABLE"])
 
-deepSleepSym_ResetCount = powerComponent.createIntegerSymbol("DS_WAKEUP_CAUSE_COUNT", deepSleepSymMenu)
-deepSleepSym_ResetCount.setDefaultValue(len(dswakeRegister.getChildren()))
-deepSleepSym_ResetCount.setVisible(False)
+    dswakeRegister = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCON"]/register-group@[name="DSCON"]/register@[name="DSWAKE"]')
 
-for id in range(len(dswakeRegister.getChildren())):
-    deepSleepSym_Cause = powerComponent.createKeyValueSetSymbol("DS_WAKEUP_CAUSE_" + str(id), deepSleepSymMenu)
-    deepSleepSym_Cause.setLabel(str(dswakeRegister.getChildren()[id].getAttribute("name")))
-    deepSleepSym_Cause.addKey(dswakeRegister.getChildren()[id].getAttribute("name"), str(id), dswakeRegister.getChildren()[id].getAttribute("caption"))
-    deepSleepSym_Cause.setOutputMode("Key")
-    deepSleepSym_Cause.setDisplayMode("Description")
-    deepSleepSym_Cause.setVisible(False)
+    deepSleepSym_ResetCount = powerComponent.createIntegerSymbol("DS_WAKEUP_CAUSE_COUNT", deepSleepSymMenu)
+    deepSleepSym_ResetCount.setDefaultValue(len(dswakeRegister.getChildren()))
+    deepSleepSym_ResetCount.setVisible(False)
+
+    for id in range(len(dswakeRegister.getChildren())):
+        deepSleepSym_Cause = powerComponent.createKeyValueSetSymbol("DS_WAKEUP_CAUSE_" + str(id), deepSleepSymMenu)
+        deepSleepSym_Cause.setLabel(str(dswakeRegister.getChildren()[id].getAttribute("name")))
+        deepSleepSym_Cause.addKey(dswakeRegister.getChildren()[id].getAttribute("name"), str(id), dswakeRegister.getChildren()[id].getAttribute("caption"))
+        deepSleepSym_Cause.setOutputMode("Key")
+        deepSleepSym_Cause.setDisplayMode("Description")
+        deepSleepSym_Cause.setVisible(False)
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################

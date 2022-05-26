@@ -31,7 +31,7 @@ def instantiateComponent(powerComponent):
     clkValGrp_OSCCON__DRMEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="OSCCON__DRMEN"]')
     if clkValGrp_OSCCON__DRMEN is None:
         clkValGrp_OSCCON__DRMEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="OSCCON__DRMEN"]')
-    
+
     if clkValGrp_OSCCON__DRMEN is not None:
         dreamModeExist = powerComponent.createBooleanSymbol("DREAM_MODE_EXIST", None)
         dreamModeExist.setDefaultValue(True)
@@ -39,15 +39,7 @@ def instantiateComponent(powerComponent):
 
     coreArch = Database.getSymbolValue("core", "CoreArchitecture")
 
-    if (ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCTRL"]') != None) or (ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCON"]') is not None):
-        deepSleepSymMenu = powerComponent.createMenuSymbol("DEEP_SLEEP_MODE_MENU", None)
-        deepSleepSymMenu.setLabel("Deep Sleep Mode Configuration")
-
-        deepSleepSymExist = powerComponent.createBooleanSymbol("DEEP_SLEEP_MODE_EXIST", deepSleepSymMenu)
-        deepSleepSymExist.setVisible(False)
-        deepSleepSymExist.setDefaultValue(True)
-
-        if coreArch == "MIPS":
-            execfile(Variables.get("__CORE_DIR") + "/../peripheral/power/config/power_pic32m.py")
-        else:
-            execfile(Variables.get("__CORE_DIR") + "/../peripheral/power/config/power_pic32c.py")
+    if coreArch == "MIPS":
+        execfile(Variables.get("__CORE_DIR") + "/../peripheral/power/config/power_pic32m.py")
+    else:
+        execfile(Variables.get("__CORE_DIR") + "/../peripheral/power/config/power_pic32c.py")

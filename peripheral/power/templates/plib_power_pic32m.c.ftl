@@ -81,25 +81,25 @@ void POWER_LowPowerModeEnter (POWER_LOW_POWER_MODE mode)
 
     switch(mode)
     {
-        case LOW_POWER_IDLE_MODE: 
+        case LOW_POWER_IDLE_MODE:
                         OSCCONCLR = _OSCCON_SLPEN_MASK;
                         break;
         case LOW_POWER_SLEEP_MODE:
                         OSCCONSET = _OSCCON_SLPEN_MASK;
                         break;
-<#if DREAM_MODE_EXIST??>               
+<#if DREAM_MODE_EXIST??>
         case LOW_POWER_DREAM_MODE:
                         OSCCONSET = _OSCCON_SLPEN_MASK | _OSCCON_DRMEN_MASK;
                         break;
-</#if>                        
-<#if DEEP_SLEEP_MODE_EXIST??>                        
+</#if>
+<#if DEEP_SLEEP_MODE_EXIST??>
         case LOW_POWER_DEEP_SLEEP_MODE:
                         OSCCONSET = _OSCCON_SLPEN_MASK;
                         DSCONbits.DSEN = 1;
                         DSCONbits.DSEN = 1;
                         break;
 </#if>
-<#if EXTREME_DEEP_SLEEP_MODE_EXIST??>                        
+<#if EXTREME_DEEP_SLEEP_MODE_EXIST?? && EXTREME_DEEP_SLEEP_MODE_EXIST == true>
         case LOW_POWER_EXTREME_DEEP_SLEEP_MODE:
                         DSCONbits.DSGPREN = 0; // Disable DSGPR 1-32
                         DSCONbits.DSGPREN = 0;
@@ -107,7 +107,7 @@ void POWER_LowPowerModeEnter (POWER_LOW_POWER_MODE mode)
                         DSCONbits.RTCDIS = 1;
                         DSCONbits.RTCCWDIS = 1; // Disable wake up from RTCC
                         DSCONbits.RTCCWDIS = 1;
-                        
+
                         CFGCON4bits.DSWDTEN = 0; // Disable DSWDT
 
                         OSCCONSET = _OSCCON_SLPEN_MASK;
@@ -115,7 +115,7 @@ void POWER_LowPowerModeEnter (POWER_LOW_POWER_MODE mode)
                         DSCONbits.DSEN = 1;
                         break;
 </#if>
-        default: 
+        default:
                         return;
     }
 
