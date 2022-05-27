@@ -53,7 +53,7 @@
 </#if>
 
 <#if INTERRUPT_MODE == true>
-QEI_CH_OBJECT ${QEI_INSTANCE_NAME?lower_case}Obj;
+static QEI_CH_OBJECT ${QEI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${QEI_INSTANCE_NAME}_Initialize (void)
@@ -131,13 +131,13 @@ void ${QEI_INSTANCE_NAME}_Initialize (void)
 void ${QEI_INSTANCE_NAME}_Start(void)
 {
     /* Enable QEI channel */
-    QEI${QEI_INSTANCE_NUM}CON |= _QEI${QEI_INSTANCE_NUM}CON_QEIEN_MASK;
+    QEI${QEI_INSTANCE_NUM}CON |= (uint32_t)_QEI${QEI_INSTANCE_NUM}CON_QEIEN_MASK;
 }
 
 void ${QEI_INSTANCE_NAME}_Stop(void)
 {
     /* Disable QEI channel */
-    QEI${QEI_INSTANCE_NUM}CON &= ~_QEI${QEI_INSTANCE_NUM}CON_QEIEN_MASK;
+    QEI${QEI_INSTANCE_NUM}CON &= ~(uint32_t)_QEI${QEI_INSTANCE_NUM}CON_QEIEN_MASK;
 }
 
 uint32_t ${QEI_INSTANCE_NAME}_PulseIntervalGet(void)
@@ -173,7 +173,7 @@ void ${QEI_INSTANCE_NAME}_CallbackRegister(QEI_CALLBACK callback, uintptr_t cont
 <#if INTERRUPT_MODE == true>
 void QEI${QEI_INSTANCE_NUM}_InterruptHandler(void)
 {
-    QEI_STATUS status = (QEI_STATUS)(QEI${QEI_INSTANCE_NUM}STAT & QEI_STATUS_MASK);
+    QEI_STATUS status = (QEI${QEI_INSTANCE_NUM}STAT & (uint32_t)QEI_STATUS_MASK);
     ${QEI_IFS_REG}CLR = _${QEI_IFS_REG}_QEI${QEI_INSTANCE_NUM}IF_MASK;
     if( (${QEI_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
