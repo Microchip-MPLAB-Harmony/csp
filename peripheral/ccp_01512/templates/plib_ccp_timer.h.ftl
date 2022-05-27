@@ -77,13 +77,13 @@ void ${CCP_INSTANCE_NAME}_TimerStart(void);
 void ${CCP_INSTANCE_NAME}_TimerStop(void);
 
 <#if CCP_CCPCON1_T32 == false>
-void ${CCP_INSTANCE_NAME}_Timer16bitPeriodSet(uint16_t);
+void ${CCP_INSTANCE_NAME}_Timer16bitPeriodSet(uint16_t period);
 
 uint16_t ${CCP_INSTANCE_NAME}_Timer16bitPeriodGet(void);
 
 uint16_t ${CCP_INSTANCE_NAME}_Timer16bitCounterGet(void);
 <#else>
-void ${CCP_INSTANCE_NAME}_Timer32bitPeriodSet(uint32_t);
+void ${CCP_INSTANCE_NAME}_Timer32bitPeriodSet(uint32_t period);
 
 uint32_t ${CCP_INSTANCE_NAME}_Timer32bitPeriodGet(void);
 
