@@ -52,6 +52,7 @@
 
 #include "plib_power.h"
 
+#define WAIT asm volatile("wait")
 // *****************************************************************************
 // *****************************************************************************
 // Section: Power Implementation
@@ -74,6 +75,7 @@ void POWER_Initialize( void )
 </#if>
 void POWER_LowPowerModeEnter (POWER_LOW_POWER_MODE mode)
 {
+    bool check = false;
     /* Unlock system */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
@@ -116,14 +118,20 @@ void POWER_LowPowerModeEnter (POWER_LOW_POWER_MODE mode)
                         break;
 </#if>
         default:
-                        return;
+                        check = true;
+                        break;
+    }
+    
+    if(check == true)
+    {
+        return;
     }
 
     /* Lock system */
     SYSKEY = 0x0;
 
     /* enter into selected low power mode */
-    asm volatile("wait");
+    WAIT;
 }
 
 <#if DEEP_SLEEP_MODE_EXIST??>
