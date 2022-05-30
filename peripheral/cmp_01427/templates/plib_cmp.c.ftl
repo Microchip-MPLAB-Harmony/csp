@@ -49,7 +49,7 @@
 <#list 1..CMP_NUM_OF_INSTANCES as i>
     <#assign CMP_CMxCON_EVPOL = "CMP_" + i + "_CON_EVPOL">
     <#if .vars[CMP_CMxCON_EVPOL] != "0">
-        <#lt>CMP_OBJECT cmp${i}Obj;
+        <#lt>static CMP_OBJECT cmp${i}Obj;
     </#if>
 </#list>
 // *****************************************************************************
@@ -168,7 +168,7 @@ void ${CMP_INSTANCE_NAME}_${i}_CompareDisable (void)
 
 bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE ch_status)
 {
-    return ((CMSTAT & ch_status)?true:false);
+    return ((CMSTAT & ch_status) != 0U);
 }
 
 <#list 1..CMP_NUM_OF_INSTANCES as i>

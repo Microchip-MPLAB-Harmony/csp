@@ -38,8 +38,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef _PLIB_${CMP_INSTANCE_NAME}_H
-#define _PLIB_${CMP_INSTANCE_NAME}_H
+#ifndef PLIB_${CMP_INSTANCE_NAME}_H
+#define PLIB_${CMP_INSTANCE_NAME}_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -58,13 +58,12 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum
-{
+
     /*CMP Output*/
   <#list 1..CMP_NUM_OF_INSTANCES as i>
-    CMP${i}_OUTPUT_STATUS = _CMSTAT_C${i}OUT_MASK,
+    #define CMP${i}_OUTPUT_STATUS    (_CMSTAT_C${i}OUT_MASK),
   </#list>
-} CMP_STATUS_SOURCE;
+typedef uint32_t CMP_STATUS_SOURCE;
 
 typedef void (*CMP_CALLBACK) (uintptr_t context);
 
@@ -82,7 +81,7 @@ typedef struct
 
 void ${CMP_INSTANCE_NAME}_Initialize (void);
 
-bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE source);
+bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE ch_status);
 <#list 1..CMP_NUM_OF_INSTANCES as i>
 <#assign CMP_CMxCON_EVPOL = "CMP_" + i + "_CON_EVPOL">
 void ${CMP_INSTANCE_NAME}_${i}_CompareEnable (void);
