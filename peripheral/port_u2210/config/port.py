@@ -433,7 +433,7 @@ for pinNumber in range(1, internalPincount + 1):
 
         pinExportName.append(pinNumber)
         pinExportName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_EXPORT_NAME", pin[pinNumber-1])
-        pinExportName[pinNumber-1].setDefaultValue(str(pin_position_internal[pinNumber - pincount - 1])) + ":" + str(pin_map_internal[pin_position_internal[pinNumber - pincount - 1]])
+        pinExportName[pinNumber-1].setDefaultValue(str(pin_position_internal[pinNumber - pincount - 1]) + ":" + str(pin_map_internal[pin_position_internal[pinNumber - pincount - 1]]))
         pinExportName[pinNumber-1].setReadOnly(True)
 
     pinBitPosition.append(pinNumber)
