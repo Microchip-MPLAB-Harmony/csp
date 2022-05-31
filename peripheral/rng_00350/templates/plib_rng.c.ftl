@@ -49,14 +49,14 @@
 
 void ${RNG_INSTANCE_NAME}_Initialize (void)
 {
-	/* Setup ${RNG_INSTANCE_NAME}CON		*/
-	/* PLEN 	= ${RNGCON_PLEN}	*/
-	/* TRNGEN	= ${RNGCON_TRNGEN}		*/
-	/* PRNGEN	= ${RNGCON_PRNGEN}		*/
-	/* CONT 	= ${RNGCON_CONT}		*/
-	/* TRNGMODE	= ${RNGCON_TRNGMODE} 	*/
-	
-	${RNG_INSTANCE_NAME}CON = 0x${RNGCON_VALUE};
+    /* Setup ${RNG_INSTANCE_NAME}CON        */
+    /* PLEN     = ${RNGCON_PLEN}    */
+    /* TRNGEN   = ${RNGCON_TRNGEN}      */
+    /* PRNGEN   = ${RNGCON_PRNGEN}      */
+    /* CONT     = ${RNGCON_CONT}        */
+    /* TRNGMODE = ${RNGCON_TRNGMODE}    */
+
+    ${RNG_INSTANCE_NAME}CON = 0x${RNGCON_VALUE};
 }
 
 void ${RNG_INSTANCE_NAME}_TrngEnable(void)
@@ -72,21 +72,25 @@ void ${RNG_INSTANCE_NAME}_TrngDisable(void)
 void ${RNG_INSTANCE_NAME}_WaitForTrngCnt(void)
 {
     /* Random number is ready when RNGCNT value reaches PRNG Polynomial Length */
-    while (RNGCNT < ${RNGCON_PLEN});
+    while (RNGCNT < ${RNGCON_PLEN}U)
+    {
+          /* Nothing to do */
+     }
+
 }
 
 uint32_t ${RNG_INSTANCE_NAME}_Seed1Get (void)
 {
-	uint32_t seed = ${RNG_INSTANCE_NAME}SEED1;
-	
-	return seed;
+    uint32_t seed = ${RNG_INSTANCE_NAME}SEED1;
+
+    return seed;
 }
 
 uint32_t ${RNG_INSTANCE_NAME}_Seed2Get (void)
 {
-	uint32_t seed = ${RNG_INSTANCE_NAME}SEED2;
-	
-	return seed;
+    uint32_t seed = ${RNG_INSTANCE_NAME}SEED2;
+
+    return seed;
 }
 
 void ${RNG_INSTANCE_NAME}_PrngEnable(void)
@@ -101,48 +105,48 @@ void ${RNG_INSTANCE_NAME}_PrngDisable(void)
 
 void ${RNG_INSTANCE_NAME}_LoadSet (void)
 {
-	${RNG_INSTANCE_NAME}CON |= _${RNG_INSTANCE_NAME}CON_LOAD_MASK;
+    ${RNG_INSTANCE_NAME}CON |= _${RNG_INSTANCE_NAME}CON_LOAD_MASK;
 }
 
 bool ${RNG_INSTANCE_NAME}_LoadGet (void)
 {
-	bool load = (${RNG_INSTANCE_NAME}CON & _${RNG_INSTANCE_NAME}CON_LOAD_MASK) >> _RNGCON_LOAD_POSITION;
-	
-	return load;
+    bool load = (((${RNG_INSTANCE_NAME}CON & _${RNG_INSTANCE_NAME}CON_LOAD_MASK) >> _RNGCON_LOAD_POSITION) != 0U);
+
+    return load;
 }
 
 void ${RNG_INSTANCE_NAME}_Poly1Set (uint32_t poly)
 {
-	${RNG_INSTANCE_NAME}POLY1 = poly;
+    ${RNG_INSTANCE_NAME}POLY1 = poly;
 }
 
 void ${RNG_INSTANCE_NAME}_Poly2Set (uint32_t poly)
 {
-	${RNG_INSTANCE_NAME}POLY2 = poly;
+    ${RNG_INSTANCE_NAME}POLY2 = poly;
 }
 
 uint32_t ${RNG_INSTANCE_NAME}_Poly1Get (void)
 {
-	uint32_t poly = ${RNG_INSTANCE_NAME}POLY1;
-	
-	return poly;
+    uint32_t poly = ${RNG_INSTANCE_NAME}POLY1;
+
+    return poly;
 }
 
 uint32_t ${RNG_INSTANCE_NAME}_Poly2Get (void)
 {
-	uint32_t poly = ${RNG_INSTANCE_NAME}POLY2;
-	
-	return poly;
+    uint32_t poly = ${RNG_INSTANCE_NAME}POLY2;
+
+    return poly;
 }
 
 void ${RNG_INSTANCE_NAME}_NumGen1Set (uint32_t numgen)
 {
-	${RNG_INSTANCE_NAME}NUMGEN1 = numgen;
+    ${RNG_INSTANCE_NAME}NUMGEN1 = numgen;
 }
 
-void ${RNG_INSTANCE_NAME}_NumGen2Set (uint32_t numgen)
+void ${RNG_INSTANCE_NAME}_NumGen2Set (uint32_t poly)
 {
-	${RNG_INSTANCE_NAME}NUMGEN2 = numgen;
+    ${RNG_INSTANCE_NAME}NUMGEN2 = poly;
 }
 
 /* Ensure to wait for ${RNGCON_PLEN} cycles (Polynomial length) after
@@ -151,9 +155,9 @@ void ${RNG_INSTANCE_NAME}_NumGen2Set (uint32_t numgen)
  */
 uint32_t ${RNG_INSTANCE_NAME}_NumGen1Get (void)
 {
-	uint32_t numgen = ${RNG_INSTANCE_NAME}NUMGEN1;
-	
-	return numgen;
+    uint32_t numgen = ${RNG_INSTANCE_NAME}NUMGEN1;
+
+    return numgen;
 }
 
 /* Ensure to wait for ${RNGCON_PLEN} cycles (Polynomial length) after
@@ -162,7 +166,7 @@ uint32_t ${RNG_INSTANCE_NAME}_NumGen1Get (void)
  */
 uint32_t ${RNG_INSTANCE_NAME}_NumGen2Get (void)
 {
-	uint32_t numgen = ${RNG_INSTANCE_NAME}NUMGEN2;
-	
-	return numgen;
+    uint32_t numgen = ${RNG_INSTANCE_NAME}NUMGEN2;
+
+    return numgen;
 }
