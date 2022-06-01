@@ -39,7 +39,7 @@
 *******************************************************************************/
 #include "plib_${EEPROM_INSTANCE_NAME?lower_case}.h"
 
-#define EEPROM_32BIT_BOUNDRY    0xFFC
+#define EEPROM_32BIT_BOUNDRY    (0xFFCU)
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -107,14 +107,19 @@ static void ${EEPROM_INSTANCE_NAME}_WriteExecute( bool waitForDone )
 
     processorStatus = __builtin_disable_interrupts();
 
-    EEKEY    = EEPROM_UNLOCK_KEY1;
-    EEKEY    = EEPROM_UNLOCK_KEY2;
+    EEKEY    = (uint32_t)EEPROM_UNLOCK_KEY1;
+    EEKEY    = (uint32_t)EEPROM_UNLOCK_KEY2;
     EECONSET = _EECON_RW_MASK;
 
     __builtin_mtc0(12, 0, processorStatus);
 
     if ( waitForDone == true )
-        while ( EECONbits.RW == EEPROM_READ_WRITE_START );
+    {
+        while ( EECONbits.RW == (uint32_t)EEPROM_READ_WRITE_START )
+        {
+             /* Nothing to do */
+        }
+    }
 }
 
 void ${EEPROM_INSTANCE_NAME}_Initialize (void)
@@ -122,13 +127,16 @@ void ${EEPROM_INSTANCE_NAME}_Initialize (void)
     /* Before accessing the Data EEPROM, configure the number of Wait states */
     CFGCON2bits.EEWS = ${EEPROM_CFGCON_EEWS};
 
-    EECONbits.ON = EEPROM_ENABLE;                       // Turn on the EEPROM
+    EECONbits.ON = (uint8_t)EEPROM_ENABLE;                       // Turn on the EEPROM
 
-    while ( EECONbits.RDY == EEPROM_STATE_NOT_READY );  // Wait until EEPROM is ready (~125 us)
+    while ( EECONbits.RDY == (uint32_t)EEPROM_STATE_NOT_READY )  // Wait until EEPROM is ready (~125 us)
+    {
+        /* Nothing to do */
+    }
 
     EECONSET = _EECON_WREN_MASK;                        // Enable writing to the EEPROM
 
-    EECONbits.CMD = EEPROM_CONFIG_WRITE_OPERATION;      // Set the command to Configuration Write
+    EECONbits.CMD = (uint8_t)EEPROM_CONFIG_WRITE_OPERATION;      // Set the command to Configuration Write
 
     EEADDR = 0x00;                                      // Addr 0x00 = DEVEE0;
     EEDATA = DEVEE0;
@@ -157,12 +165,15 @@ bool ${EEPROM_INSTANCE_NAME}_WordRead( uint32_t addr, uint32_t *data )
     if (EEPROM_IsBusy() == false)
     {
         EEADDR          = addr & EEPROM_32BIT_BOUNDRY;
-        EECONbits.CMD   = EEPROM_WORD_READ_OPERATION;
+        EECONbits.CMD   = (uint8_t)EEPROM_WORD_READ_OPERATION;
 
         EECONCLR = _EECON_WREN_MASK;
         EECONSET = _EECON_RW_MASK;
 
-        while ( EECONbits.RW == EEPROM_READ_WRITE_START );
+        while ( EECONbits.RW == (uint32_t)EEPROM_READ_WRITE_START )
+        {
+              /* Nothing to do */
+        }
         *data = EEDATA;
 
         result = true;
@@ -178,7 +189,7 @@ bool ${EEPROM_INSTANCE_NAME}_WordWrite(uint32_t addr, uint32_t data)
     if (${EEPROM_INSTANCE_NAME}_IsBusy() == false)
     {
         EEADDR          = addr & EEPROM_32BIT_BOUNDRY;
-        EECONbits.CMD   = EEPROM_WORD_WRITE_OPERATION;
+        EECONbits.CMD   = (uint8_t)EEPROM_WORD_WRITE_OPERATION;
         EECONSET = _EECON_WREN_MASK;
         EEDATA   = data;
 
@@ -197,7 +208,7 @@ bool ${EEPROM_INSTANCE_NAME}_PageErase(uint32_t addr)
     if (${EEPROM_INSTANCE_NAME}_IsBusy() == false)
     {
         EEADDR          = addr;
-        EECONbits.CMD   = EEPROM_PAGE_ERASE_OPERATION;
+        EECONbits.CMD   = (uint8_t)EEPROM_PAGE_ERASE_OPERATION;
         EECONSET        = _EECON_WREN_MASK;
 
         ${EEPROM_INSTANCE_NAME}_WriteExecute( true );
@@ -214,7 +225,7 @@ bool ${EEPROM_INSTANCE_NAME}_BulkErase(void)
 
     if (${EEPROM_INSTANCE_NAME}_IsBusy() == false)
     {
-        EECONbits.CMD   = EEPROM_BULK_ERASE_OPERATION;
+        EECONbits.CMD   = (uint8_t)EEPROM_BULK_ERASE_OPERATION;
         EECONSET        = _EECON_WREN_MASK;
 
         ${EEPROM_INSTANCE_NAME}_WriteExecute( true );
@@ -232,8 +243,6 @@ EEPROM_ERROR ${EEPROM_INSTANCE_NAME}_ErrorGet( void )
 
 bool ${EEPROM_INSTANCE_NAME}_IsBusy( void )
 {
-    if ( EECONbits.RW == EEPROM_READ_WRITE_COMPLETED)
-        return false;
+    return !( EECONbits.RW == (uint32_t)EEPROM_READ_WRITE_COMPLETED);
 
-    return true;
 }

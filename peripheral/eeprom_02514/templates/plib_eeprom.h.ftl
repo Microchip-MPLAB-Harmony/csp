@@ -38,8 +38,8 @@
 
 *******************************************************************************/
 
-#ifndef _PLIB_EEPROM_H
-#define _PLIB_EEPROM_H
+#ifndef PLIB_EEPROM_H
+#define PLIB_EEPROM_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -52,18 +52,17 @@
 #endif
 // DOM-IGNORE-END
 
-typedef enum
-{
-    /* No error */
-    EEPROM_ERROR_NONE = 0x0,
 
-    /* 11 = A BOR event has occurred
-     * 10 = An attempted execution of a read or write operation with an invalid write OR command with a misaligned address (EEADDR<1:0> != 00)
-     * 01 = A Bulk or Page Erase or a Word Program verify error has occurred
-     * 00 = No error condition */
-    EEPROM_ERROR_STATUS = _EECON_ERR_MASK,
+/* No error */
+#define    EEPROM_ERROR_NONE   (0x0U)
 
-} EEPROM_ERROR;
+/* 11 = A BOR event has occurred
+ * 10 = An attempted execution of a read or write operation with an invalid write OR command with a misaligned address (EEADDR<1:0> != 00)
+ * 01 = A Bulk or Page Erase or a Word Program verify error has occurred
+  * 00 = No error condition */
+#define    EEPROM_ERROR_STATUS (_EECON_ERR_MASK)
+
+typedef uint32_t EEPROM_ERROR;
 
 // *****************************************************************************
 // Section: Interface
@@ -93,4 +92,4 @@ EEPROM_ERROR ${EEPROM_INSTANCE_NAME}_ErrorGet( void );
 #endif
 
 // DOM-IGNORE-END
-#endif // _PLIB_EEPROM_H
+#endif // PLIB_EEPROM_H
