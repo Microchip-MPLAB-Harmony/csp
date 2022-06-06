@@ -95,7 +95,7 @@ void CLK_Initialize( void )
 </#if>
 <#if CONFIG_FNOSC?contains("PLL")>
     /* Even though SPLL is selected in FNOSC, Harmony generates #pragma code as FRCDIV, not as SPLL, in "initilization.c".
-    * Switching to SPLL is done here after appropriate setting of SPLLCON register. 
+    * Switching to SPLL is done here after appropriate setting of SPLLCON register.
     * This is done to ensure we don't end-up changing PLL setting when it is ON. */
 
     /* Configure SPLL */
@@ -103,10 +103,13 @@ void CLK_Initialize( void )
     ${SPLLCON_REG} = 0x${SPLLCON_REG_VALUE};
 
     /* Now switch to the PLL source */
-    OSCCON = OSCCON | 0x00000101;    //NOSC = SPLL, initiate clock switch (OSWEN = 1)
-    
+    OSCCON = OSCCON | 0x00000101U;    //NOSC = SPLL, initiate clock switch (OSWEN = 1)
+
     /* Wait for PLL to be ready and clock switching operation to complete */
-    while(!CLKSTATbits.SPLLRDY || !CLKSTATbits.SPDIVRDY || OSCCONbits.OSWEN);
+    while(((CLKSTATbits.SPLLRDY == 0U) || (CLKSTATbits.SPDIVRDY == 0U) || (OSCCONbits.OSWEN != 0U)))
+    {
+        /* Nothing to do */        
+    }
 <#else>
     /* Configure SPLL */
     /* ${PLLODIV_VAL}, ${PLLMULT_VAL}, PLLSRC= ${CONFIG_PLLSRC} */
