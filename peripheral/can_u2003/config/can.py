@@ -993,6 +993,16 @@ def instantiateComponent(canComponent):
     canIntEnComment.setLabel("Warning!!! " + canInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     canIntEnComment.setDependencies(InterruptStatusWarning, ["core." + interruptVectorUpdate])
 
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="CAN"]/register-group@[name="CAN"]/register@[name="IE"]/bitfield@[name="BEUE"]') != None:
+        canIEBEUERegSym = canComponent.createBooleanSymbol("CAN_IE_BEUE_ENABLE", None)
+        canIEBEUERegSym.setDefaultValue(True)
+        canIEBEUERegSym.setVisible(False)
+
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="CAN"]/register-group@[name="CAN"]/register@[name="IE"]/bitfield@[name="BECE"]') != None:
+        canIEBECERegSym = canComponent.createBooleanSymbol("CAN_IE_BECE_ENABLE", None)
+        canIEBECERegSym.setDefaultValue(True)
+        canIEBECERegSym.setVisible(False)
+
     REG_MODULE_CAN = Register.getRegisterModule("CAN")
     configName = Variables.get("__CONFIGURATION_NAME")
 

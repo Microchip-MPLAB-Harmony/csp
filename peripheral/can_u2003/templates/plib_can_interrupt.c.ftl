@@ -272,7 +272,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 
     /* Enable CAN interrupts */
     ${CAN_INSTANCE_NAME}_REGS->CAN_IE = CAN_IE_BOE_Msk | CAN_IE_ARAE_Msk | CAN_IE_PEDE_Msk | CAN_IE_PEAE_Msk | CAN_IE_WDIE_Msk
-                                      | CAN_IE_EWE_Msk | CAN_IE_EPE_Msk | CAN_IE_ELOE_Msk | CAN_IE_BEUE_Msk | CAN_IE_BECE_Msk
+                                      | CAN_IE_EWE_Msk | CAN_IE_EPE_Msk | CAN_IE_ELOE_Msk<#if CAN_IE_BEUE_ENABLE??> | CAN_IE_BEUE_Msk</#if><#if CAN_IE_BECE_ENABLE??> | CAN_IE_BECE_Msk</#if>
                                       <#if TIMESTAMP_ENABLE> | CAN_IE_TSWE_Msk</#if><#rt>
                                       <#lt><#if CAN_TIMEOUT> | CAN_IE_TOOE_Msk</#if><#rt>
                                       <#lt><#if TX_USE> | CAN_IE_TFEE_Msk</#if><#rt>
