@@ -200,7 +200,8 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect ( int8_t correction );
 </#if>
 <#if RTC_MODE0_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE0" ||
-     RTC_MODE1_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE1" >
+     RTC_MODE1_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE1" ||
+	 RTC_MODE2_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE2">
     <#lt>bool ${RTC_INSTANCE_NAME}_PeriodicIntervalHasCompleted ( RTC_PERIODIC_INT_MASK period );
 </#if>
 <#if RTC_MODULE_SELECTION = "MODE0">

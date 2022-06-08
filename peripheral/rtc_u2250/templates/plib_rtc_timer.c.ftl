@@ -218,20 +218,20 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>{
     <#lt>   bool periodIntervalComplete = false;
         <#if RTC_MODULE_SELECTION = "MODE0" >
-    <#lt>   if( (${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG & period) == period)
+    <#lt>   if( (${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG & (uint16_t)period) == (uint16_t)period)
     <#lt>   {
     <#lt>       periodIntervalComplete = true;
 
     <#lt>       /* Clear Periodic Interval Interrupt */
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = period;
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = (uint16_t)period;
     <#lt>   }
         <#elseif RTC_MODULE_SELECTION = "MODE1" >
-    <#lt>   if( (${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG & period) == period)
+    <#lt>   if( (${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG & (uint16_t)period) == (uint16_t)period)
     <#lt>   {
     <#lt>       periodIntervalComplete = true;
 
     <#lt>       /* Clear Periodic Interval Interrupt */
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = period;
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = (uint16_t)period;
     <#lt>   }
         </#if>
 
