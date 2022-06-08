@@ -94,7 +94,7 @@ void ${PAC_INSTANCE_NAME}_Initialize( void )
 bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected( PAC_PERIPHERAL peripheral )
 {
     bool status = false;
-    const volatile uint32_t *statusRegBaseAddr = (const volatile uint32_t*) &(${PAC_REG_NAME}_REGS->PAC_STATUSA);
+    const volatile uint32_t *statusRegBaseAddr = (const volatile uint32_t*)( ${PAC_INSTANCE_NAME}_BASE_ADDRESS + PAC_STATUSA_REG_OFST);
 
     /* Verify if the peripheral is protected or not */
     status = (((*(statusRegBaseAddr + ((uint32_t)peripheral / 32U))) & (1UL << ((uint32_t)peripheral % 32U))) != 0U);
