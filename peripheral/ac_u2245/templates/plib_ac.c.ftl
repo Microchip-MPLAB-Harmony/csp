@@ -184,7 +184,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     {
         /* Wait for Synchronization */
     }
-     
+
     <#list 0..4 as i>
     <#assign ANALOG_COMPARATOR_ENABLE = "ANALOG_COMPARATOR_ENABLE_" + i>
     <#assign AC_COMPCTRL_SINGLE_MODE = "AC_COMPCTRL_" + i +"SINGLE_MODE">
@@ -291,7 +291,7 @@ void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT posi
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_Msk) == AC_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization */
-    }   
+    }
 
 }
 
@@ -319,6 +319,7 @@ void ${AC_INSTANCE_NAME}_CallbackRegister (AC_CALLBACK callback, uintptr_t conte
     ${AC_INSTANCE_NAME?lower_case}Obj.callback = callback;
     ${AC_INSTANCE_NAME?lower_case}Obj.context = context;
 }
+<#if AC_INTENSET_VAL?has_content>
 
 void ${AC_INSTANCE_NAME}_InterruptHandler( void )
 {
@@ -333,3 +334,4 @@ void ${AC_INSTANCE_NAME}_InterruptHandler( void )
         ${AC_INSTANCE_NAME?lower_case}Obj.callback(${AC_INSTANCE_NAME?lower_case}Obj.int_flags, ${AC_INSTANCE_NAME?lower_case}Obj.context);
     }
 }
+</#if>
