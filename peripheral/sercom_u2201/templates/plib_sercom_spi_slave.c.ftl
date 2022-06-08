@@ -175,6 +175,7 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
 {
     uint8_t intState = ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET;
     size_t rdSize = size;
+    ${TXRX_DATA_T}* pDstBuffer = (${TXRX_DATA_T}*)pRdBuffer;
 
     ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENCLR = intState;
 
@@ -184,9 +185,9 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
     }
 
 <#if SPIS_CHARSIZE_BITS == "8_BIT">
-    (void) memcpy(pRdBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, rdSize);
+    (void) memcpy(pDstBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, rdSize);
 <#else>
-    (void) memcpy(pRdBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, (rdSize << 1U));
+    (void) memcpy(pDstBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, (rdSize << 1U));
 </#if>
 
     ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET = intState;
@@ -200,6 +201,7 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
     uint8_t intState = ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET;
     size_t wrSize = size;
     bool writeReady = false;
+    ${TXRX_DATA_T}* pSrcBuffer = (${TXRX_DATA_T}*)pWrBuffer;
 
     ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENCLR = intState;
 
@@ -209,9 +211,9 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
     }
 
 <#if SPIS_CHARSIZE_BITS == "8_BIT">
-   (void) memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pWrBuffer, wrSize);
+   (void) memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pSrcBuffer, wrSize);
 <#else>
-   (void) memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pWrBuffer, (wrSize << 1U));
+   (void) memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pSrcBuffer, (wrSize << 1U));
 </#if>
 
     ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes = wrSize;
@@ -338,7 +340,7 @@ void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
 </#if>
 </#if>
         /* Reading DATA register will also clear the RXC flag */
-        txRxData = (${TXRX_DATA_T})${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA;     
+        txRxData = (${TXRX_DATA_T})${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA;
 
         if (${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex < ${SERCOM_INSTANCE_NAME}_SPI_READ_BUFFER_SIZE)
         {
