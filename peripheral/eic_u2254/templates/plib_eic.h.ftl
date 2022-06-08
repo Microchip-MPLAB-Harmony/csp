@@ -96,21 +96,20 @@
     None.
 */
 
-typedef enum
-{
+
 <#list 0..EIC_INT_COUNT as i>
     <#assign EIC_INT_CHANNEL = "EIC_CHAN_" + i>
         <#if .vars[EIC_INT_CHANNEL]?has_content>
             <#if (.vars[EIC_INT_CHANNEL] != false)>
     <#lt>    /* External Interrupt Controller Pin ${i} */
-    <#lt>    EIC_PIN_${i} = ${i},
+    <#lt>#define    EIC_PIN_${i}   (${i}U)
 
             </#if>
         </#if>
 </#list>
-    EIC_PIN_MAX = 16
+#define    EIC_PIN_MAX  (16U)
 
-} EIC_PIN;
+typedef uint16_t EIC_PIN;
 
 <#if EIC_INT != "0">
 // *****************************************************************************

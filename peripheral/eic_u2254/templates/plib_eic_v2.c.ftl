@@ -54,6 +54,9 @@
 */
 
 #include "plib_${EIC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -63,12 +66,12 @@
 
 <#if EIC_INT != "0">
 /* EIC Channel Callback object */
-EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
+static EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
 </#if>
 
 <#if NMI_CTRL == true>
 /* EIC NMI Callback object */
-EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
+static EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
 
 </#if>
 
@@ -213,7 +216,7 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
             /* Read the interrupt flag status */
             eicIntFlagStatus = ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG & (1UL << currentChannel);
 
-            if (eicIntFlagStatus)
+            if (eicIntFlagStatus != 0U)
             {
                 /* Find any associated callback entries in the callback table */
                 if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback != NULL))
