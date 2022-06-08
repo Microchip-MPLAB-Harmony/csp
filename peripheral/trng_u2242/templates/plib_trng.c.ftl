@@ -76,7 +76,10 @@ void ${TRNG_INSTANCE_NAME}_Initialize( void )
 	<#lt>uint32_t ${TRNG_INSTANCE_NAME}_ReadData( void )
 	<#lt>{
 	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA |= TRNG_CTRLA_ENABLE_Msk;
-	<#lt>	while(((${TRNG_INSTANCE_NAME}_REGS->TRNG_INTFLAG) & (TRNG_INTFLAG_DATARDY_Msk)) != TRNG_INTFLAG_DATARDY_Msk);			
+	<#lt>	while(((${TRNG_INSTANCE_NAME}_REGS->TRNG_INTFLAG) & (TRNG_INTFLAG_DATARDY_Msk)) != TRNG_INTFLAG_DATARDY_Msk)
+	<#lt>	{
+    <#lt>       /* Do Nothing */
+	<#lt>	}				
 	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA &= ~(TRNG_CTRLA_ENABLE_Msk);
 	<#lt>	return (${TRNG_INSTANCE_NAME}_REGS->TRNG_DATA);
 	<#lt>}
