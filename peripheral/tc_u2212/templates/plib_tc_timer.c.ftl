@@ -192,7 +192,7 @@ void ${TC_INSTANCE_NAME}_TimerCommandSet(TC_COMMAND command)
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
 }
 
 <#if TC_CTRLA_MODE = "COUNT8">
@@ -407,9 +407,8 @@ void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
 /* Polling method to check if timer period interrupt flag is set */
 bool ${TC_INSTANCE_NAME}_TimerPeriodHasExpired( void )
 {
-    bool timer_status;
-    timer_status = (((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk)!=0U);
+    uint8_t timer_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = timer_status;
-    return timer_status;
+    return (timer_status != 0U);
 }
 </#if>
