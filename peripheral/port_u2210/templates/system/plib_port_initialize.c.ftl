@@ -46,7 +46,7 @@
                 </#list>
                 <#if .vars[PORT_GROUP_EVCTRL]??>
                 <#if "${.vars[PORT_GROUP_EVCTRL]}" != "0x0">
-                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_EVCTRL = ${.vars[PORT_GROUP_EVCTRL]};
+                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_EVCTRL = ${.vars[PORT_GROUP_EVCTRL]}U;
                     <#assign NEED_PORT_INIT = true>
                 </#if>
                 </#if>
