@@ -352,7 +352,7 @@ void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
 TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CaptureStatusGet(void)
 {
     TC_CAPTURE_STATUS capture_status;
-    capture_status = (TC_CAPTURE_STATUS) ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_CAPTURE_STATUS_MSK);
+    capture_status =  ((TC_CAPTURE_STATUS)(${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & (TC_CAPTURE_STATUS)TC_CAPTURE_STATUS_MSK);
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)capture_status;
     return capture_status;
 }
