@@ -92,6 +92,12 @@ def get_NVM_name():
             NVM_name = param.getAttribute("name")
             break
 
+    if NVM_name == "":
+        for param in interruptsChildren:
+            if "FLASH_CONTROL" == param.getAttribute("name"):
+                NVM_name = param.getAttribute("name")
+                break
+
     return NVM_name
 ###################################################################################################
 ########################################## Component  #############################################
