@@ -74,37 +74,48 @@ static DMAC_CRC_SETUP gCRCSetup;
 
 static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses(DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr)
 {
-    uint32_t sourceAddress = (uint32_t)srcAddr;
-    uint32_t destAddress = (uint32_t)destAddr;
+    const uint32_t *xsrcAddr = (const uint32_t *)srcAddr;
+    const uint32_t *xdestAddr = (const uint32_t *)destAddr;
+
+    uint32_t sourceAddress = (uint32_t)xsrcAddr;
+    uint32_t destAddress = (uint32_t)xdestAddr;
     volatile uint32_t * regs;
 
     /* Set the source address */
     /* Check if the address lies in the KSEG2 for MZ devices */
-    if ((sourceAddress >> 29) == 0x6)
+    if ((sourceAddress >> 29) == 0x6U)
     {
-        if ((sourceAddress >> 28)== 0xc)
+        if ((sourceAddress >> 28)== 0xcU)
         {
             // EBI Address translation
-            sourceAddress = ((sourceAddress | 0x20000000) & 0x2FFFFFFF);
+            sourceAddress = ((sourceAddress | 0x20000000U) & 0x2FFFFFFFU);
         }
-        else if((sourceAddress >> 28)== 0xD)
+        else if((sourceAddress >> 28)== 0xDU)
         {
             //SQI Address translation
-            sourceAddress = ((sourceAddress | 0x30000000) & 0x3FFFFFFF);
+            sourceAddress = ((sourceAddress | 0x30000000U) & 0x3FFFFFFFU);
         }
+		else
+		{
+			/* Do Nothing */
+		}
     }
-    else if ((sourceAddress >> 29) == 0x7)
+    else if ((sourceAddress >> 29) == 0x7U)
     {
-        if ((sourceAddress >> 28)== 0xE)
+        if ((sourceAddress >> 28)== 0xEU)
         {
             // EBI Address translation
-            sourceAddress = ((sourceAddress | 0x20000000) & 0x2FFFFFFF);
+            sourceAddress = ((sourceAddress | 0x20000000U) & 0x2FFFFFFFU);
         }
-        else if ((sourceAddress >> 28)== 0xF)
+        else if ((sourceAddress >> 28)== 0xFU)
         {
             // SQI Address translation
-            sourceAddress = ((sourceAddress | 0x30000000) & 0x3FFFFFFF);
+            sourceAddress = ((sourceAddress | 0x30000000U) & 0x3FFFFFFFU);
         }
+		else
+		{
+			/* Do Nothing */
+		}
     }
     else
     {
@@ -113,36 +124,44 @@ static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses(DMAC_CHANNEL channel, const
     }
 
     /* Set the source address, DCHxSSA */
-    regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_SSA_OFST});
+    regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_SSA_OFST}U);
     *(volatile uint32_t *)(regs) = sourceAddress;
 
     /* Set the destination address */
     /* Check if the address lies in the KSEG2 for MZ devices */
-    if ((destAddress >> 29) == 0x6)
+    if ((destAddress >> 29) == 0x6U)
     {
         // EBI Address translation
-        if ((destAddress >> 28)== 0xc)
+        if ((destAddress >> 28)== 0xcU)
         {
-            destAddress = ((destAddress | 0x20000000) & 0x2FFFFFFF);
+            destAddress = ((destAddress | 0x20000000U) & 0x2FFFFFFFU);
         }
         //SQI Address translation
-        else if ((destAddress >> 28)== 0xd)
+        else if ((destAddress >> 28)== 0xdU)
         {
-            destAddress = ((destAddress | 0x30000000) & 0x3FFFFFFF);
+            destAddress = ((destAddress | 0x30000000U) & 0x3FFFFFFFU);
         }
+		else
+		{
+			/* Do Nothing */
+		}
     }
-    else if ((destAddress >> 29) == 0x7)
+    else if ((destAddress >> 29) == 0x7U)
     {   /* Check if the address lies in the KSEG3 for MZ devices */
         // EBI Address translation
-        if ((destAddress >> 28)== 0xe)
+        if ((destAddress >> 28)== 0xeU)
         {
-            destAddress = ((destAddress | 0x20000000) & 0x2FFFFFFF);
+            destAddress = ((destAddress | 0x20000000U) & 0x2FFFFFFFU);
         }
         //SQI Address translation
-        else if ((destAddress >> 28)== 0xf)
+        else if ((destAddress >> 28)== 0xfU)
         {
-            destAddress = ((destAddress | 0x30000000) & 0x3FFFFFFF);
+            destAddress = ((destAddress | 0x30000000U) & 0x3FFFFFFFU);
         }
+		else
+		{
+			/* Do Nothing */
+		}
     }
     else
     {
@@ -151,7 +170,7 @@ static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses(DMAC_CHANNEL channel, const
     }
 
     /* Set destination address, DCHxDSA */
-    regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_DSA_OFST});
+    regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_DSA_OFST}U);
     *(volatile uint32_t *)(regs) = destAddress;
 }
 
@@ -180,13 +199,13 @@ static uint32_t ${DMA_INSTANCE_NAME}_BitReverse( uint32_t num, uint32_t bits)
     uint32_t out = 0;
     uint32_t i;
 
-    for( i = 0; i < bits; i++ )
+    for( i = 0U; i < bits; i++ )
     {
         out <<= 1;
 
-        if( num & 1 )
+        if(( num & 1U ) != 0U)
         {
-            out |= 1;
+            out |= 1U;
         }
 
         num >>= 1;
@@ -212,7 +231,7 @@ void ${DMA_INSTANCE_NAME}_Initialize(void)
     /* Initialize the available channel objects */
     chanObj = (DMAC_CHANNEL_OBJECT *)&gDMAChannelObj[0];
 
-    for(chanIndex = 0; chanIndex < ${NUM_DMA_CHANS}; chanIndex++)
+    for(chanIndex = 0U; chanIndex < ${NUM_DMA_CHANS}U; chanIndex++)
     {
         chanObj->inUse          =    false;
 <#if DMA_INTERRUPT_ENABLED == true>
@@ -220,7 +239,7 @@ void ${DMA_INSTANCE_NAME}_Initialize(void)
         chanObj->hClientArg     =    0;
 </#if>
         chanObj->errorInfo      =    DMAC_ERROR_NONE;
-        chanObj                 =    chanObj + 1;  /* linked list 'next' */
+        chanObj++; /* linked list 'next' */
     }
 
     /* DMACON register */
@@ -260,13 +279,13 @@ void ${DMA_INSTANCE_NAME}_Initialize(void)
 </#list>
 <#lt>    /* Enable DMA channel interrupts */
 <#lt>    <@compress single_line=true>
-<#lt>    IEC${.vars[STATCLRREG]}SET = 0
+<#lt>    IEC${.vars[STATCLRREG]}SET = 0U
 <#list 0..NUM_DMA_CHANS - 1 as i>
     <#assign CHANENABLE = "DMAC_CHAN" + i + "_ENBL">
     <#assign CHANINTENABLE = "DMAC_" + i + "_ENABLE_INTERRUPT">
     <#if .vars[CHANENABLE] == true && .vars[CHANINTENABLE] == true>
         <#assign STATREGMASK = "DMA" + i + "_STATREG_MASK">
-         | ${.vars[STATREGMASK]}
+         | ${.vars[STATREGMASK]}U
     </#if>
 </#list>
 ;
@@ -289,13 +308,13 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer(DMAC_CHANNEL channel, const void *srcA
     volatile uint32_t *regs;
     uint32_t DCHxINT_Flags;
 
-    regs = ((volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST}));
+    regs = ((volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_INT_OFST}U));
     DCHxINT_Flags = *(volatile uint32_t *)(regs) & (_DCH0INT_CHERIF_MASK | _DCH0INT_CHTAIF_MASK | _DCH0INT_CHBCIF_MASK);
 
-    if((gDMAChannelObj[channel].inUse == false) || (DCHxINT_Flags != 0))
+    if((gDMAChannelObj[channel].inUse == false) || (DCHxINT_Flags != 0U))
     {
         /* Clear all the interrupt flags */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST}) + 1;
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_INT_OFST}U) + 1U;
         *(volatile uint32_t *)(regs) = (_DCH0INT_CHSHIF_MASK |_DCH0INT_CHDHIF_MASK | _DCH0INT_CHBCIF_MASK | _DCH0INT_CHTAIF_MASK| _DCH0INT_CHERIF_MASK);
 
         gDMAChannelObj[channel].inUse = true;
@@ -305,30 +324,30 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer(DMAC_CHANNEL channel, const void *srcA
         ${DMA_INSTANCE_NAME}_ChannelSetAddresses(channel, srcAddr, destAddr);
 
         /* Set the source size, DCHxSSIZ */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_SSIZ_OFST});
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_SSIZ_OFST}U);
         *(volatile uint32_t *)(regs) = srcSize;
 
         /* Set the destination size, DCHxDSIZ */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_DSIZ_OFST});
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_DSIZ_OFST}U);
         *(volatile uint32_t *)(regs) = destSize;
 
         /* Set the cell size, DCHxCSIZ */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CSIZ_OFST});
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_CSIZ_OFST}U);
         *(volatile uint32_t *)(regs) = cellSize;
 
         /* Enable the channel */
         /* CHEN = 1 */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CON_OFST})+2;
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_CON_OFST}U)+2U;
         *(volatile uint32_t *)(regs) = _DCH0CON_CHEN_MASK;
 
         /* Check Channel Start IRQ Enable bit - SIRQEN */
-         regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_ECON_OFST});
+         regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_ECON_OFST}U);
 
         /* Initiate transfer if user did not set up channel for interrupt-initiated transfer. */
-        if((*(volatile uint32_t *)(regs) & _DCH1ECON_SIRQEN_MASK) == 0)
+        if((*(volatile uint32_t *)(regs) & _DCH1ECON_SIRQEN_MASK) == 0U)
         {
             /* CFORCE = 1 */
-            regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_ECON_OFST})+2;
+            regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_ECON_OFST}U)+2U;
             *(volatile uint32_t *)(regs) = _DCH0ECON_CFORCE_MASK;
         }
     }
@@ -342,13 +361,13 @@ bool ${DMA_INSTANCE_NAME}_ChainTransferSetup( DMAC_CHANNEL channel, const void *
     volatile uint32_t *regs;
     uint32_t DCHxINT_Flags;
 
-    regs = ((volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST}));
+    regs = ((volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_INT_OFST}U));
     DCHxINT_Flags = *(volatile uint32_t *)(regs) & (_DCH0INT_CHERIF_MASK | _DCH0INT_CHTAIF_MASK | _DCH0INT_CHBCIF_MASK);
 
-    if((gDMAChannelObj[channel].inUse == false) || (DCHxINT_Flags != 0))
+    if((gDMAChannelObj[channel].inUse == false) || (DCHxINT_Flags != 0U))
     {
         /* Clear all the interrupt flags */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST}) + 1;
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_INT_OFST}U) + 1U;
         *(volatile uint32_t *)(regs) = (_DCH0INT_CHSHIF_MASK |_DCH0INT_CHDHIF_MASK | _DCH0INT_CHBCIF_MASK | _DCH0INT_CHTAIF_MASK| _DCH0INT_CHERIF_MASK);
 
         gDMAChannelObj[channel].inUse = true;
@@ -358,15 +377,15 @@ bool ${DMA_INSTANCE_NAME}_ChainTransferSetup( DMAC_CHANNEL channel, const void *
         ${DMA_INSTANCE_NAME}_ChannelSetAddresses(channel, srcAddr, destAddr);
 
         /* Set the source size, DCHxSSIZ */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_SSIZ_OFST});
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_SSIZ_OFST}U);
         *(volatile uint32_t *)(regs) = srcSize;
 
         /* Set the destination size, DCHxDSIZ */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_DSIZ_OFST});
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_DSIZ_OFST}U);
         *(volatile uint32_t *)(regs) = destSize;
 
         /* Set the cell size, DCHxCSIZ */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CSIZ_OFST});
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_CSIZ_OFST}U);
         *(volatile uint32_t *)(regs) = cellSize;
     }
 
@@ -376,30 +395,30 @@ bool ${DMA_INSTANCE_NAME}_ChainTransferSetup( DMAC_CHANNEL channel, const void *
 void ${DMA_INSTANCE_NAME}_ChannelPatternMatchSetup(DMAC_CHANNEL channel, uint8_t patternMatchData)
 {
     volatile uint32_t * patternRegs;
-    patternRegs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_PATTERN_DATA_OFST});
+    patternRegs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_PATTERN_DATA_OFST}U);
     *(volatile uint32_t *)(patternRegs) = patternMatchData;
 
     /* Enable Pattern Match */
     volatile uint32_t * eventConRegs;
-    eventConRegs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_ECON_OFST})+2;
+    eventConRegs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_ECON_OFST}U)+2U;
     *(volatile uint32_t *)(eventConRegs) = _DCH0ECON_PATEN_MASK;
 }
 
 void ${DMA_INSTANCE_NAME}_ChannelPatternMatchDisable(DMAC_CHANNEL channel)
 {
     volatile uint32_t * eventConRegs;
-    eventConRegs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_ECON_OFST})+1;
+    eventConRegs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_ECON_OFST}U)+1U;
     *(volatile uint32_t *)(eventConRegs) = _DCH0ECON_PATEN_MASK;
 }
 void ${DMA_INSTANCE_NAME}_ChannelDisable(DMAC_CHANNEL channel)
 {
     volatile uint32_t * regs;
 
-    if(channel < ${NUM_DMA_CHANS})
+    if(channel < ${NUM_DMA_CHANS}U)
     {
         /* Disable channel in register DCHxCON */
         /* CHEN = 0 */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CON_OFST})+1;
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_CON_OFST}U)+1U;
         *(volatile uint32_t *)(regs) = _DCH0CON_CHEN_MASK;
 
         gDMAChannelObj[channel].inUse = false;
@@ -409,18 +428,17 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable(DMAC_CHANNEL channel)
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy(DMAC_CHANNEL channel)
 {
     uint32_t DCHxINT_Flags;
+	bool channelstatus = false;
 
-    DCHxINT_Flags = *(volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST});
+    DCHxINT_Flags = *(volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_INT_OFST}U);
     DCHxINT_Flags = DCHxINT_Flags & (_DCH0INT_CHERIF_MASK | _DCH0INT_CHTAIF_MASK | _DCH0INT_CHBCIF_MASK);
 
-    if ((gDMAChannelObj[channel].inUse == true) && (DCHxINT_Flags == 0))
+    if ((gDMAChannelObj[channel].inUse == true) && (DCHxINT_Flags == 0U))
     {
-        return true;
+        channelstatus = true;
     }
-    else
-    {
-        return false;
-    }
+
+    return channelstatus;
 }
 
 DMAC_TRANSFER_EVENT ${DMA_INSTANCE_NAME}_ChannelTransferStatusGet(DMAC_CHANNEL channel)
@@ -429,17 +447,17 @@ DMAC_TRANSFER_EVENT ${DMA_INSTANCE_NAME}_ChannelTransferStatusGet(DMAC_CHANNEL c
 
     DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;
 
-    DCHxINT_Flags = *(volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_INT_OFST});
+    DCHxINT_Flags = *(volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_INT_OFST}U);
 
-    if (DCHxINT_Flags & (_DCH0INT_CHSHIF_MASK | _DCH0INT_CHDHIF_MASK))  /* Dest Half-full or Src Half-empty flags */
+    if ((DCHxINT_Flags & (_DCH0INT_CHSHIF_MASK | _DCH0INT_CHDHIF_MASK)) != 0U)  /* Dest Half-full or Src Half-empty flags */
     {
         dmaEvent = DMAC_TRANSFER_EVENT_HALF_COMPLETE;
     }
-    if (DCHxINT_Flags & (_DCH0INT_CHTAIF_MASK | _DCH0INT_CHERIF_MASK))  /* Abort or Error flags*/
+    if ((DCHxINT_Flags & (_DCH0INT_CHTAIF_MASK | _DCH0INT_CHERIF_MASK)) != 0U)  /* Abort or Error flags*/
     {
         dmaEvent = DMAC_TRANSFER_EVENT_ERROR;
     }
-    if (DCHxINT_Flags & _DCH0INT_CHBCIF_MASK)   /* Block Transfer complete flag */
+    if ((DCHxINT_Flags & _DCH0INT_CHBCIF_MASK) != 0U)   /* Block Transfer complete flag */
     {
         dmaEvent = DMAC_TRANSFER_EVENT_COMPLETE;
     }
@@ -469,7 +487,7 @@ void ${DMA_INSTANCE_NAME}_ChannelCRCSetup( DMAC_CHANNEL channel, DMAC_CRC_SETUP 
         mask |= _DCRCCON_BITO_MASK;
     }
 
-    mask |= (channel | _DCRCCON_CRCEN_MASK | ((gCRCSetup.polynomial_length - 1) << _DCRCCON_PLEN_POSITION));
+    mask |= (channel | _DCRCCON_CRCEN_MASK | ((gCRCSetup.polynomial_length - 1U) << _DCRCCON_PLEN_POSITION));
 
     /* Setup the DMA CRCCON register */
     DCRCCON = mask;
@@ -516,7 +534,7 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void )
         <#assign STATREGMASK = "DMA" + i + "_STATREG_MASK">
 <#if PRODUCT_FAMILY?contains("PIC32MM")>
 void DMA${i}_InterruptHandler(void)
-<#else>     
+<#else>
 void DMA_${i}_InterruptHandler(void)
 </#if>
 {
@@ -528,7 +546,7 @@ void DMA_${i}_InterruptHandler(void)
 
     /* Check whether the active DMA channel event has occurred */
 
-    if((${.vars[INTBITSREG]}.CHSHIF == true) || (${.vars[INTBITSREG]}.CHDHIF == true))/* irq due to half complete */
+    if((${.vars[INTBITSREG]}.CHSHIF == 1U) || (${.vars[INTBITSREG]}.CHDHIF == 1U))/* irq due to half complete */
     {
         /* Do not clear the flag here, it should be cleared with block transfer complete flag*/
 
@@ -537,7 +555,7 @@ void DMA_${i}_InterruptHandler(void)
         dmaEvent = DMAC_TRANSFER_EVENT_HALF_COMPLETE;
         /* Since transfer is only half done yet, do not make inUse flag false */
     }
-    if(${.vars[INTBITSREG]}.CHTAIF == true) /* irq due to transfer abort */
+    if(${.vars[INTBITSREG]}.CHTAIF == 1U) /* irq due to transfer abort */
     {
         /* Channel is by default disabled on Transfer Abortion */
         /* Clear the Abort transfer complete flag */
@@ -548,7 +566,7 @@ void DMA_${i}_InterruptHandler(void)
         dmaEvent = DMAC_TRANSFER_EVENT_ERROR;
         chanObj->inUse = false;
     }
-    if(${.vars[INTBITSREG]}.CHBCIF == true) /* irq due to transfer complete */
+    if(${.vars[INTBITSREG]}.CHBCIF == 1U) /* irq due to transfer complete */
     {
         /* Channel is by default disabled on completion of a block transfer */
         /* Clear the Block transfer complete, half empty and half full interrupt flag */
@@ -559,7 +577,7 @@ void DMA_${i}_InterruptHandler(void)
         dmaEvent = DMAC_TRANSFER_EVENT_COMPLETE;
         chanObj->inUse = false;
     }
-    if(${.vars[INTBITSREG]}.CHERIF == true) /* irq due to address error */
+    if(${.vars[INTBITSREG]}.CHERIF == 1U) /* irq due to address error */
     {
         /* Clear the address error flag */
         ${.vars[INTREG]}CLR = _DCH${i}INT_CHERIF_MASK;
