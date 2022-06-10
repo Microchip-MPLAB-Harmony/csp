@@ -98,9 +98,9 @@ typedef enum
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
+    <#lt>static NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
 
-    <#lt>uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
+    <#lt>static uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
 
     <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister( NVM_CALLBACK callback, uintptr_t context )
     <#lt>{
@@ -187,7 +187,7 @@ void ${NVM_INSTANCE_NAME}_Initialize( void )
 
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
+    (void)memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
 
     return true;
 }
@@ -203,10 +203,14 @@ bool ${NVM_INSTANCE_NAME}_WordWrite( uint32_t data, uint32_t address )
 
 bool ${NVM_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address )
 {
-   NVMDATA0 = *(data++);
-   NVMDATA1 = *(data++);
-   NVMDATA2 = *(data++);
-   NVMDATA3 = *(data++);
+   NVMDATA0 = *data;
+   data++;
+   NVMDATA1 = *data;
+   data++;
+   NVMDATA2 = *data;
+   data++;
+   NVMDATA3 = *data;
+   data++;
 
    ${NVM_INSTANCE_NAME}_StartOperationAtAddress( address,  QUAD_WORD_PROGRAM_OPERATION);
 
