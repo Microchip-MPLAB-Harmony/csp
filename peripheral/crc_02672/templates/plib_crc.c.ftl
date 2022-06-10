@@ -70,16 +70,16 @@ static uint32_t ${CRC_INSTANCE_NAME}_BitReverse( uint32_t num, uint32_t bits)
     uint32_t out = 0;
     uint32_t i;
 
-    for( i = 0; i < bits; i++ )
+    for( i = 0U; i < bits; i++ )
     {
-        out <<= 1;
+        out <<= 1U;
 
-        if( num & 1 )
+        if(( num & 1U ) != 0U)
         {
-            out |= 1;
+            out |= 1U;
         }
 
-        num >>= 1;
+        num >>= 1U;
     }
 
     return out;
@@ -87,6 +87,7 @@ static uint32_t ${CRC_INSTANCE_NAME}_BitReverse( uint32_t num, uint32_t bits)
 
 void ${CRC_INSTANCE_NAME}_CRCSetup(CRC_SETUP CRCSetup)
 {
+	uint8_t temp = (gCRCSetup.polynomial_length - 1U);
     gCRCSetup.reverse_crc_input     = CRCSetup.reverse_crc_input;
     gCRCSetup.polynomial_length     = CRCSetup.polynomial_length;
     gCRCSetup.polynomial            = CRCSetup.polynomial;
@@ -104,7 +105,7 @@ void ${CRC_INSTANCE_NAME}_CRCSetup(CRC_SETUP CRCSetup)
         CRCCONbits.LENDIAN = 1;
     }
 
-    CRCCONbits.PLEN = (gCRCSetup.polynomial_length - 1);
+    CRCCONbits.PLEN = temp;
 
     CRCCONbits.ON = 1;
 
@@ -133,7 +134,7 @@ uint32_t ${CRC_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, uint32
     CRCCONbits.CRCGO = 0;
 
     /* Configuring Data Width to 8-Bit */
-    CRCCONbits.DWIDTH = (CRC_DATA_WIDTH_BYTE - 1);
+    CRCCONbits.DWIDTH = (CRC_DATA_WIDTH_BYTE - 1U);
 
     /* Set the Initial Seed value */
     CRCWDAT = seed;
@@ -144,10 +145,10 @@ uint32_t ${CRC_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, uint32
     /* Start CRC Calculation */
     CRCCONbits.CRCGO = 1;
 
-    while(length > 1)
+    while(length > 1U)
     {
         /* Wait if FIFO is full */
-        while(CRCCONbits.CRCFUL)
+        while((CRCCONbits.CRCFUL) != 0U)
         {
         }
 
@@ -171,7 +172,7 @@ uint32_t ${CRC_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, uint32
     CRCCONbits.CRCGO = 1;
 
     /* Wait until CRC Calculation is completed */
-    while(IFS0bits.CRCIF == 0)
+    while(IFS0bits.CRCIF == 0U)
     {
     }
 
