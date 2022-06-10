@@ -110,10 +110,10 @@ static CLC_CALLBACK_OBJECT ${CLC_INSTANCE_NAME?lower_case}CallbackObject;
 void ${CLC_INSTANCE_NAME}_Initialize( void )
 {
     /* Configure data sources */
-    ${CLC_INSTANCE_NAME}SEL =  (((${CLC_DS1_OUTPUT} << _${CLC_INSTANCE_NAME}SEL_DS1_POSITION) & _${CLC_INSTANCE_NAME}SEL_DS1_MASK) |
-                ((${CLC_DS2_OUTPUT} << _${CLC_INSTANCE_NAME}SEL_DS2_POSITION) & _${CLC_INSTANCE_NAME}SEL_DS2_MASK) |
-                ((${CLC_DS3_OUTPUT} << _${CLC_INSTANCE_NAME}SEL_DS3_POSITION) & _${CLC_INSTANCE_NAME}SEL_DS3_MASK) |
-                ((${CLC_DS4_OUTPUT} << _${CLC_INSTANCE_NAME}SEL_DS4_POSITION) & _${CLC_INSTANCE_NAME}SEL_DS4_MASK));
+    ${CLC_INSTANCE_NAME}SEL =  (((${CLC_DS1_OUTPUT}UL << _${CLC_INSTANCE_NAME}SEL_DS1_POSITION) & _${CLC_INSTANCE_NAME}SEL_DS1_MASK) |
+                ((${CLC_DS2_OUTPUT}UL << _${CLC_INSTANCE_NAME}SEL_DS2_POSITION) & _${CLC_INSTANCE_NAME}SEL_DS2_MASK) |
+                ((${CLC_DS3_OUTPUT}UL << _${CLC_INSTANCE_NAME}SEL_DS3_POSITION) & _${CLC_INSTANCE_NAME}SEL_DS3_MASK) |
+                ((${CLC_DS4_OUTPUT}UL << _${CLC_INSTANCE_NAME}SEL_DS4_POSITION) & _${CLC_INSTANCE_NAME}SEL_DS4_MASK));
 
     /* Configure gates */
     <#if CLCxGLS?has_content>
@@ -130,12 +130,12 @@ void ${CLC_INSTANCE_NAME}_Initialize( void )
 
     /* Configure logic cell */
     <#if CLCxCON?has_content>
-      <#lt>    ${CLC_INSTANCE_NAME}CON = (((${CLC_LOGIC_CELL_MODE} << _${CLC_INSTANCE_NAME}CON_MODE_POSITION) & _${CLC_INSTANCE_NAME}CON_MODE_MASK)
+      <#lt>    ${CLC_INSTANCE_NAME}CON = (((${CLC_LOGIC_CELL_MODE}UL << _${CLC_INSTANCE_NAME}CON_MODE_POSITION) & _${CLC_INSTANCE_NAME}CON_MODE_MASK)
       <#list CLCxCON?remove_ending(",")?split(",") as CLCxCONVAL>
           <#lt>               | ${CLCxCONVAL} <#if CLCxCONVAL?is_last>);</#if>
       </#list>
     <#else>
-      <#lt>    ${CLC_INSTANCE_NAME}CON = ((${CLC_LOGIC_CELL_MODE} << _${CLC_INSTANCE_NAME}CON_MODE_POSITION) & _${CLC_INSTANCE_NAME}CON_MODE_MASK);
+      <#lt>    ${CLC_INSTANCE_NAME}CON = ((${CLC_LOGIC_CELL_MODE}UL << _${CLC_INSTANCE_NAME}CON_MODE_POSITION) & _${CLC_INSTANCE_NAME}CON_MODE_MASK);
     </#if>
 
 }
