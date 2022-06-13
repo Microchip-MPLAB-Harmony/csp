@@ -202,16 +202,14 @@ typedef struct
   Remarks:
     None
 */
-typedef enum
-{
 <#list 0..NUM_DMA_CHANS - 1 as i>
 <#assign CHAN = "DMA_" + i + "_CHANNEL_NUMBER">
-    DMAC_CHANNEL_${i} = 0x${.vars[CHAN]},
+#define    DMAC_CHANNEL_${i}             (0x${.vars[CHAN]}U)
 
 </#list>
-    DMAC_NUMBER_OF_CHANNELS = 0x${NUM_DMA_CHANS}
+#define    DMAC_NUMBER_OF_CHANNELS    (0x${NUM_DMA_CHANS}U)
 
-} DMAC_CHANNEL;
+typedef uint32_t DMAC_CHANNEL;
 
 // *****************************************************************************
 /* DMA CRC Setup
