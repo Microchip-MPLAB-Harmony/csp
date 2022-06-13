@@ -49,7 +49,7 @@
     <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
     <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
         <#assign NumOfEnabledExtInt = NumOfEnabledExtInt + 1>
-        <#lt>EXT_INT_PIN_CALLBACK_OBJ extInt${i}CbObj;
+        <#lt>static EXT_INT_PIN_CALLBACK_OBJ extInt${i}CbObj;
     </#if>
 </#list>
 // *****************************************************************************
@@ -76,7 +76,7 @@ void EVIC_Initialize( void )
         <#assign INT_NAME = "EVIC_" + i + "_NAME">
         <#if .vars[ENABLE]?? && .vars[ENABLE] == true>
             <#if !((.vars[INT_PRIORITY_GENERATE]??) && (.vars[INT_PRIORITY_GENERATE] == false))>
-                <#lt>    ${.vars[IPCREG]}SET = 0x${.vars[PRIOVALUE_SHIFTED]} | 0x${.vars[SUBPRIOVALUE_SHIFTED]};  /* ${.vars[INT_NAME]}:  Priority ${.vars[PRIOVALUE]} / Subpriority ${.vars[SUBPRIOVALUE]} */
+                <#lt>    ${.vars[IPCREG]}SET = 0x${.vars[PRIOVALUE_SHIFTED]}U | 0x${.vars[SUBPRIOVALUE_SHIFTED]}U;  /* ${.vars[INT_NAME]}:  Priority ${.vars[PRIOVALUE]} / Subpriority ${.vars[SUBPRIOVALUE]} */
             </#if>
         </#if>
     </#list>
@@ -120,53 +120,53 @@ void EVIC_Initialize( void )
 
 void EVIC_SourceEnable( INT_SOURCE source )
 {
-    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
-    volatile uint32_t *IECxSET = (volatile uint32_t *)(IECx + 2);
+    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10U * (source / 32U)) / 4U));
+    volatile uint32_t *IECxSET = (volatile uint32_t *)(IECx + 2U);
 
-    *IECxSET = 1 << (source & 0x1f);
+    *IECxSET = 1UL << (source & 0x1fU);
 }
 
 void EVIC_SourceDisable( INT_SOURCE source )
 {
-    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
-    volatile uint32_t *IECxCLR = (volatile uint32_t *)(IECx + 1);
+    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10U * (source / 32U)) / 4U));
+    volatile uint32_t *IECxCLR = (volatile uint32_t *)(IECx + 1U);
 
-    *IECxCLR = 1 << (source & 0x1f);
+    *IECxCLR = 1UL << (source & 0x1fU);
 }
 
 bool EVIC_SourceIsEnabled( INT_SOURCE source )
 {
-    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
+    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10U * (source / 32U)) / 4U));
 
-    return (bool)((*IECx >> (source & 0x1f)) & 0x01);
+    return (((*IECx >> (source & 0x1fU)) & 0x01U) != 0U);
 }
 
 bool EVIC_SourceStatusGet( INT_SOURCE source )
 {
-    volatile uint32_t *IFSx = (volatile uint32_t *)(&IFS0 + ((0x10 * (source / 32)) / 4));
+    volatile uint32_t *IFSx = (volatile uint32_t *)(&IFS0 + ((0x10U * (source / 32U)) / 4U));
 
-    return (bool)((*IFSx >> (source & 0x1f)) & 0x1);
+    return (((*IFSx >> (source & 0x1fU)) & 0x1U) != 0U);
 }
 
 void EVIC_SourceStatusSet( INT_SOURCE source )
 {
-    volatile uint32_t *IFSx = (volatile uint32_t *) (&IFS0 + ((0x10 * (source / 32)) / 4));
-    volatile uint32_t *IFSxSET = (volatile uint32_t *)(IFSx + 2);
+    volatile uint32_t *IFSx = (volatile uint32_t *) (&IFS0 + ((0x10U * (source / 32U)) / 4U));
+    volatile uint32_t *IFSxSET = (volatile uint32_t *)(IFSx + 2U);
 
-    *IFSxSET = 1 << (source & 0x1f);
+    *IFSxSET = 1UL << (source & 0x1fU);
 }
 
 void EVIC_SourceStatusClear( INT_SOURCE source )
 {
-    volatile uint32_t *IFSx = (volatile uint32_t *) (&IFS0 + ((0x10 * (source / 32)) / 4));
-    volatile uint32_t *IFSxCLR = (volatile uint32_t *)(IFSx + 1);
+    volatile uint32_t *IFSx = (volatile uint32_t *) (&IFS0 + ((0x10U * (source / 32U)) / 4U));
+    volatile uint32_t *IFSxCLR = (volatile uint32_t *)(IFSx + 1U);
 
-    *IFSxCLR = 1 << (source & 0x1f);
+    *IFSxCLR = 1UL << (source & 0x1fU);
 }
 
 void EVIC_INT_Enable( void )
 {
-    __builtin_enable_interrupts();
+   (void) __builtin_enable_interrupts();
 }
 
 bool EVIC_INT_Disable( void )
@@ -177,7 +177,7 @@ bool EVIC_INT_Disable( void )
     processorStatus = ( uint32_t )__builtin_disable_interrupts();
 
     /* return the interrupt status */
-    return (bool)(processorStatus & 0x01);
+    return ((processorStatus & 0x01U) != 0U);
 }
 
 void EVIC_INT_Restore( bool state )
@@ -185,19 +185,19 @@ void EVIC_INT_Restore( bool state )
     if (state)
     {
         /* restore the state of CP0 Status register before the disable occurred */
-        __builtin_enable_interrupts();
+       (void) __builtin_enable_interrupts();
     }
 }
 
 <#if 0 < NumOfEnabledExtInt>
 void EVIC_ExternalInterruptEnable( EXTERNAL_INT_PIN extIntPin )
 {
-    IEC0SET = extIntPin;
+    IEC0SET = (uint32_t)extIntPin;
 }
 
 void EVIC_ExternalInterruptDisable( EXTERNAL_INT_PIN extIntPin )
 {
-    IEC0CLR = extIntPin;
+    IEC0CLR = (uint32_t)extIntPin;
 }
 
 bool EVIC_ExternalInterruptCallbackRegister(
