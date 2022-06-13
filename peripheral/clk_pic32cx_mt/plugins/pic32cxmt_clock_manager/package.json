@@ -1,6 +1,6 @@
 {
-  "name": "my-app",
-  "version": "0.1.0",
+  "name": "pic32cxmt_clock_manager",
+  "version": "3.13.0",
   "private": true,
   "homepage": ".",
   "headers": {
@@ -22,13 +22,14 @@
     "primereact": "^7.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "^5.0.0",
-    "react-svg": "^14.1.5",
     "react-transition-group": "^4.4.2",
     "typescript": "^4.5.4",
     "use-force-update": "^1.0.7",
     "web-vitals": "^2.1.2",
     "yarn-upgrade-all": "^0.5.4"
+  },
+  "resolutions": {
+    "nth-check": "2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -41,24 +42,14 @@
       "react-app/jest"
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
   "devDependencies": {
     "@types/react-native": "^0.66.9",
-    "@types/react-svg-pan-zoom": "^3.3.4",
-    "@types/react-svg-pan-zoom-loader": "^1.4.1",
     "@types/react-test-renderer": "^17.0.1",
-    "react-native-svg-transformer": "^0.14.3",
-    "svgo-loader": "^3.0.0"
+    "react-scripts": "^5.0.1"
   }
 }
