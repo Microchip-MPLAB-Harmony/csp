@@ -257,7 +257,7 @@ void GPIO_Initialize ( void )
 */
 uint32_t GPIO_PortRead(GPIO_PORT port)
 {
-    return (*(volatile uint32_t *)(&PORT${GPIO_CHANNEL_0_NAME} + (port * 0x40)));
+    return (*(volatile uint32_t *)(&PORT${GPIO_CHANNEL_0_NAME} + (port * 0x40U)));
 }
 
 // *****************************************************************************
@@ -272,7 +272,7 @@ uint32_t GPIO_PortRead(GPIO_PORT port)
 */
 void GPIO_PortWrite(GPIO_PORT port, uint32_t mask, uint32_t value)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40)) & (~mask)) | (mask & value);
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40U)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40U)) & (~mask)) | (mask & value);
 }
 
 // *****************************************************************************
@@ -287,7 +287,7 @@ void GPIO_PortWrite(GPIO_PORT port, uint32_t mask, uint32_t value)
 */
 uint32_t GPIO_PortLatchRead(GPIO_PORT port)
 {
-    return (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40)));
+    return (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x40U)));
 }
 
 // *****************************************************************************
@@ -302,7 +302,7 @@ uint32_t GPIO_PortLatchRead(GPIO_PORT port)
 */
 void GPIO_PortSet(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
 }
 
 // *****************************************************************************
@@ -317,7 +317,7 @@ void GPIO_PortSet(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortClear(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
 }
 
 // *****************************************************************************
@@ -332,7 +332,7 @@ void GPIO_PortClear(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortToggle(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}INV + (port * 0x40))= mask;
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}INV + (port * 0x40U))= mask;
 }
 
 // *****************************************************************************
@@ -347,7 +347,7 @@ void GPIO_PortToggle(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortInputEnable(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
 }
 
 // *****************************************************************************
@@ -362,7 +362,7 @@ void GPIO_PortInputEnable(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
 }
 
 <#if TOTAL_NUM_OF_INT_USED gt 0>
@@ -378,7 +378,7 @@ void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortInterruptEnable(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
 }
 
 // *****************************************************************************
@@ -393,7 +393,7 @@ void GPIO_PortInterruptEnable(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortInterruptDisable(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
 }
 
 // *****************************************************************************
@@ -422,22 +422,22 @@ void GPIO_PinIntEnable(GPIO_PIN pin, GPIO_INTERRUPT_STYLE style)
 
     if (style == GPIO_INTERRUPT_ON_MISMATCH)
     {
-        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
     }
     else if (style == GPIO_INTERRUPT_ON_RISING_EDGE)
     {
-        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
-        *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
+        *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
     }
     else if (style == GPIO_INTERRUPT_ON_FALLING_EDGE)
     {
-        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
-        *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
+        *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
     }
     else if (style == GPIO_INTERRUPT_ON_BOTH_EDGES)
     {
-        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
-        *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}SET + (port * 0x40)) = mask;
+        *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
+        *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
     }
 }
 
@@ -457,10 +457,10 @@ void GPIO_PinIntDisable(GPIO_PIN pin)
     uint32_t mask;
     
     port = (GPIO_PORT)(pin>>4);
-    mask =  0x1 << (pin & 0xF);
+    mask =  0x1UL << (pin & 0xFU);
 
-    *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
-    *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
+    *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
+    *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
 }
 // *****************************************************************************
 /* Function:
@@ -536,7 +536,7 @@ void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
     /* Check pending events and call callback if registered */
     for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}; i++)
     {
-        if((status & (1 << (portPinCbObj[i].pin & 0xF))) && (portPinCbObj[i].callback != NULL))
+        if((status & (1 << (portPinCbObj[i].pin & 0xFU))) && (portPinCbObj[i].callback != NULL))
         {
             portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
         }
@@ -557,7 +557,7 @@ void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
     /* Check pending events and call callback if registered */
     for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}; i++)
     {
-        if((status & (1 << (portPinCbObj[i].pin & 0xF))) && (portPinCbObj[i].callback != NULL))
+        if((status & (1UL << (portPinCbObj[i].pin & 0xFU))) && (portPinCbObj[i].callback != NULL))
         {
             portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
         }
