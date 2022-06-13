@@ -73,18 +73,16 @@
     <#lt>#define ${NVM_INSTANCE_NAME}_ERASE_BUFFER_SIZE          ${ERASE_BUFFER_SIZE}
 </#if>
 
-typedef enum
-{
-    /* No error */
-    NVM_ERROR_NONE = 0x0,
+/* No error */
+#define    NVM_ERROR_NONE         (0x0U)
 
-    /* NVM write error */
-    NVM_ERROR_WRITE = _NVMCON_WRERR_MASK,
+/* NVM write error */
+#define    NVM_ERROR_WRITE        (_NVMCON_WRERR_MASK)
 
-    /* NVM Low Voltage Detect error */
-    NVM_ERROR_LOWVOLTAGE = _NVMCON_LVDERR_MASK,
+/* NVM Low Voltage Detect error */
+#define    NVM_ERROR_LOWVOLTAGE   (_NVMCON_LVDERR_MASK)
 
-} NVM_ERROR;
+typedef uint32_t NVM_ERROR;
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>typedef void (*NVM_CALLBACK)( uintptr_t context );

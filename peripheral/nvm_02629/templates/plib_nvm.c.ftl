@@ -79,8 +79,8 @@ typedef enum
     NVM_UNLOCK_KEY2 = 0x556699AA
 } NVM_UNLOCK_KEYS;
 
-#define ${NVM_INSTANCE_NAME}_INTERRUPT_ENABLE_MASK   ${NVM_IEC_REG_VALUE}
-#define ${NVM_INSTANCE_NAME}_INTERRUPT_FLAG_MASK     ${NVM_IFS_REG_VALUE}
+#define ${NVM_INSTANCE_NAME}_INTERRUPT_ENABLE_MASK   ${NVM_IEC_REG_VALUE}U
+#define ${NVM_INSTANCE_NAME}_INTERRUPT_FLAG_MASK     ${NVM_IFS_REG_VALUE}U
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -95,9 +95,9 @@ typedef enum
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
+    <#lt>static NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
 
-    <#lt>uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
+    <#lt>static uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
 
     <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister( NVM_CALLBACK callback, uintptr_t context )
     <#lt>{
@@ -136,9 +136,9 @@ static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM
     NVMCONSET = _NVMCON_WREN_MASK;
 
     // Write the unlock key sequence
-    NVMKEY = 0x0;
-    NVMKEY = NVM_UNLOCK_KEY1;
-    NVMKEY = NVM_UNLOCK_KEY2;
+    NVMKEY = 0x0U;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY1;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY2;
 
     // Start the operation
     NVMCONSET = _NVMCON_WR_MASK;
@@ -163,7 +163,7 @@ void ${NVM_INSTANCE_NAME}_Initialize( void )
 
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
+    (void) memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
 
     return true;
 }
