@@ -76,8 +76,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum
-{
 <#if EVIC_IRQ_MIN != -1 && EVIC_IRQ_MAX != -1>
 <#list EVIC_IRQ_MIN..EVIC_IRQ_MAX as i>
     <#assign SUB_IRQ_COUNT = "EVIC_" + i + "_SUB_IRQ_COUNT">
@@ -86,7 +84,7 @@ typedef enum
             <#assign INT_NAME = "EVIC_" + i + "_" + j + "_IRQ_NAME">
             <#assign IRQ_NAME = "EVIC_" + i + "_" + j + "_IRQ">
             <#if .vars[INT_NAME]?? && .vars[IRQ_NAME]?? && .vars[INT_NAME] != "None" && .vars[IRQ_NAME] != "None">
-                <#lt>    INT_SOURCE_${.vars[INT_NAME]} = ${.vars[IRQ_NAME]},
+                <#lt>#define    INT_SOURCE_${.vars[INT_NAME]}        (${.vars[IRQ_NAME]})
 
             </#if>
         </#list>
@@ -94,7 +92,7 @@ typedef enum
         <#assign INT_NAME = "EVIC_" + i + "_IRQ_NAME">
         <#assign IRQ_NAME = "EVIC_" + i + "_IRQ">
         <#if .vars[INT_NAME]?? && .vars[IRQ_NAME]?? && .vars[INT_NAME] != "None" && .vars[IRQ_NAME] != "None">
-            <#lt>    INT_SOURCE_${.vars[INT_NAME]} = ${.vars[IRQ_NAME]},
+            <#lt>#define    INT_SOURCE_${.vars[INT_NAME]}         (${.vars[IRQ_NAME]})
 
         </#if>
     </#if>
@@ -104,12 +102,12 @@ typedef enum
     <#assign INT_NAME = "EVIC_" + i + "_NAME">
     <#assign VECT_NAME = "EVIC_" + i + "_VECTOR">
     <#if .vars[INT_NAME]?? && .vars[VECT_NAME]?? && .vars[INT_NAME] != "None" && .vars[VECT_NAME] != "None">
-        <#lt>    INT_SOURCE_${.vars[INT_NAME]} = ${.vars[VECT_NAME]},
+        <#lt>#define    INT_SOURCE_${.vars[INT_NAME]}   (${.vars[VECT_NAME]})
 
     </#if>
 </#list>
 </#if>
-} INT_SOURCE;
+typedef uint32_t INT_SOURCE;
 
 <#if 0 < NumOfEnabledExtInt>
 typedef enum
