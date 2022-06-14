@@ -157,7 +157,7 @@ void EBI_Initialize (void)
 	EBISMCON = 0x${EBISMCON_VALUE};
 	
 	/* Setup CFGEBIA	*/
-	CFGEBIA = ${CFGEBIA_EBIADD};
+	CFGEBIA = ${CFGEBIA_EBIADD}U;
 
 	/* Setup CFGEBIC	*/
 	/* EBIRDYINV3 = ${CFGEBIC_EBIRDYINV3?then('true', 'false')}	*/
