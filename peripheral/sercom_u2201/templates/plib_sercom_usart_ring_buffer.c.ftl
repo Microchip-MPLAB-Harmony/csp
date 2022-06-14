@@ -188,13 +188,21 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
 </#if>
     if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
     {
+<#if USART_RX_ENABLE == true>
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdBufferSize = ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE;
+</#if>
+<#if USART_TX_ENABLE == true>
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrBufferSize = ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE;
+</#if>
     }
     else
     {
+<#if USART_RX_ENABLE == true>
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdBufferSize = ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_9BIT_SIZE;
+</#if>
+<#if USART_TX_ENABLE == true>
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrBufferSize = ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_9BIT_SIZE;
+</#if>
     }
 <#if USART_RX_ENABLE = true>
 <#if USART_INTENSET_ERROR = true>
@@ -361,13 +369,21 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
 
         if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
         {
+<#if USART_RX_ENABLE == true>
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdBufferSize = ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE;
+</#if>
+<#if USART_TX_ENABLE == true>
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrBufferSize = ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE;
+</#if>
         }
         else
         {
+<#if USART_RX_ENABLE == true>
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdBufferSize = ${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_9BIT_SIZE;
+</#if>
+<#if USART_TX_ENABLE == true>
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrBufferSize = ${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_9BIT_SIZE;
+</#if>
         }
 
         setupStatus = true;
@@ -687,7 +703,7 @@ static inline bool ${SERCOM_INSTANCE_NAME}_USART_TxPushByte(uint16_t wrByte)
             wrInIdx = wrInIndex << 1U;
 
             ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrInIdx] = (uint8_t)wrByte;
-			wrInIdx++;
+            wrInIdx++;
             ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[wrInIdx] = (uint8_t)(wrByte >> 8U);
         }
 
