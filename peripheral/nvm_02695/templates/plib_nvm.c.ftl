@@ -95,9 +95,9 @@ typedef enum
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
+    <#lt>static NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
 
-    <#lt>uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
+    <#lt>static uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
 
     <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister( NVM_CALLBACK callback, uintptr_t context )
     <#lt>{
@@ -120,9 +120,9 @@ typedef enum
 static void ${NVM_INSTANCE_NAME}_WriteUnlockSequence( void )
 {
     // Write the unlock key sequence
-    NVMKEY = 0x0;
-    NVMKEY = NVM_UNLOCK_KEY1;
-    NVMKEY = NVM_UNLOCK_KEY2;
+    NVMKEY = 0x0U;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY1;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY2;
 }
 
 static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation )
@@ -182,16 +182,17 @@ void ${NVM_INSTANCE_NAME}_Initialize( void )
 
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
+    (void) memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
 
     return true;
 }
 
 bool ${NVM_INSTANCE_NAME}_DoubleWordWrite( uint32_t *data, uint32_t address )
 {
-   NVMDATA0 = *(data++);
-   NVMDATA1 = *(data++);
-
+   NVMDATA0 = *data;
+   data++;
+   NVMDATA1 = *data;
+   data++;
    ${NVM_INSTANCE_NAME}_StartOperationAtAddress( address,  DOUBLE_WORD_PROGRAM_OPERATION);
 
    return true;
@@ -221,7 +222,7 @@ NVM_ERROR ${NVM_INSTANCE_NAME}_ErrorGet( void )
 
 bool ${NVM_INSTANCE_NAME}_IsBusy( void )
 {
-    return (bool)NVMCONbits.WR;
+    return (NVMCONbits.WR != 0U);
 }
 
 void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t address )

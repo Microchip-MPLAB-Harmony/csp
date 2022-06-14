@@ -73,31 +73,28 @@
     <#lt>#define ${NVM_INSTANCE_NAME}_ERASE_BUFFER_SIZE          ${ERASE_BUFFER_SIZE}
 </#if>
 
-typedef enum
-{
-    /* No error */
-    NVM_ERROR_NONE = 0x0,
+/* No error */
+#define     NVM_ERROR_NONE         (0x0U)
 
     /* NVM write error */
-    NVM_ERROR_WRITE = _NVMCON_WRERR_MASK,
+#define     NVM_ERROR_WRITE        (_NVMCON_WRERR_MASK)
 
     /* NVM Low Voltage Detect error */
-    NVM_ERROR_LOWVOLTAGE = _NVMCON_LVDERR_MASK,
+#define     NVM_ERROR_LOWVOLTAGE   (_NVMCON_LVDERR_MASK)
 
-} NVM_ERROR;
+typedef uint32_t NVM_ERROR;
 
-typedef enum
-{
-    /* Boot Flash Page 0 Write Protect */
-    NVM_BOOT_WRITE_PROTECT_0 = _NVMBWP_BWP0_MASK,
 
-    /* Boot Flash Page 1 Write Protect */
-    NVM_BOOT_WRITE_PROTECT_1 = _NVMBWP_BWP1_MASK,
+/* Boot Flash Page 0 Write Protect */
+#define    NVM_BOOT_WRITE_PROTECT_0   _NVMBWP_BWP0_MASK
 
-    /* Boot Flash Page 2 Write Protect */
-    NVM_BOOT_WRITE_PROTECT_2 = _NVMBWP_BWP2_MASK,
+/* Boot Flash Page 1 Write Protect */
+#define    NVM_BOOT_WRITE_PROTECT_1   _NVMBWP_BWP1_MASK
 
-} NVM_BOOT_FLASH_WRITE_PROTECT;
+/* Boot Flash Page 2 Write Protect */
+#define    NVM_BOOT_WRITE_PROTECT_2   _NVMBWP_BWP2_MASK
+
+typedef uint32_t NVM_BOOT_FLASH_WRITE_PROTECT;
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>typedef void (*NVM_CALLBACK)( uintptr_t context );
