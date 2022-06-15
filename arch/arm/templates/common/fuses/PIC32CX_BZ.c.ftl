@@ -5,7 +5,7 @@
 <#if FUSE_CONFIG_ENABLE>
 /*** FUSERID ***/
 <#if CONFIG_USER_ID?has_content>
-#pragma config USER_ID =      0x${CONFIG_USER_ID}
+#pragma config USER_ID =      0x${CONFIG_USER_ID}U
 </#if>
 
 /*** DEVCFG0 ***/
@@ -231,7 +231,7 @@
 
 /*** DEVCFG4 ***/
 <#if CONFIG_SOSCCFG?has_content>
-#pragma config SOSCCFG =    0x${CONFIG_SOSCCFG}
+#pragma config SOSCCFG =    0x${CONFIG_SOSCCFG}U
 </#if>
 <#if CONFIG_RTCEVENT_SEL?has_content>
 #pragma config RTCEVENT_SEL =      ${CONFIG_RTCEVENT_SEL}

@@ -29,7 +29,7 @@
 <#assign name = "FUSE_SYMBOL_NAME" + i>
 <#assign value = "FUSE_SYMBOL_VALUE" + i>
 <#if .vars[value]?matches("[a-f0-9]*") && .vars[name] != "NVMCTRL_BOOTPROT">
-#pragma config ${.vars[name]} = 0x${.vars[value]}
+#pragma config ${.vars[name]} = 0x${.vars[value]}U
 <#else>
 #pragma config ${.vars[name]} = ${.vars[value]}
 </#if>
