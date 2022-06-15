@@ -45,8 +45,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 //DOM-IGNORE-END
 
-#ifndef _PLIB_DDR_H
-#define _PLIB_DDR_H
+#ifndef PLIB_DDR_H
+#define PLIB_DDR_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -67,25 +67,25 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define DRV_DDR_IDLE_NOP                0x00FFFFFF
 #define DRV_DDR_PRECH_ALL_CMD           0x00FFF401
 #define DRV_DDR_REF_CMD                 0x00FFF801
-#define DRV_DDR_LOAD_MODE_CMD           0x00FFF001
+#define DRV_DDR_LOAD_MODE_CMD          (0x00FFF001U)
 #define DRV_DDR_CKE_LOW                 0x00FFEFFE
 
 /* DDR address decoding */
-#define COL_HI_RSHFT            0
-#define COL_HI_MASK             0
-#define COL_LO_MASK             ((1 << ${DDR_COL_BITS}) - 1)
+#define COL_HI_RSHFT            (0U)
+#define COL_HI_MASK             (0U)
+#define COL_LO_MASK             ((1UL << ${DDR_COL_BITS}) - 1U)
 
 #define BA_RSHFT                ${DDR_COL_BITS}
-#define BANK_ADDR_MASK          ((1 << ${DDR_BANK_BITS}) - 1)
+#define BANK_ADDR_MASK          ((1UL << ${DDR_BANK_BITS}) - 1U)
 
 #define ROW_ADDR_RSHIFT         (BA_RSHFT + ${DDR_BANK_BITS})
-#define ROW_ADDR_MASK           ((1 << ${DDR_ROW_BITS}) - 1)
+#define ROW_ADDR_MASK           ((1UL << ${DDR_ROW_BITS}) - 1U)
 
 //#define CS_ADDR_RSHIFT        (ROW_ADDR_RSHIFT + ${DDR_ROW_BITS})
 #define CS_ADDR_RSHIFT          0
 #define CS_ADDR_MASK            0
 
-#define CTRL_CLK_PERIOD         (${DDR_CLK_PER} * 2)
+#define CTRL_CLK_PERIOD         (${DDR_CLK_PER}U * 2U)
 
 // *****************************************************************************
 // *****************************************************************************
@@ -139,42 +139,41 @@ typedef enum {
 
 } DDR_PHY_DDR_TYPE;
 
-typedef enum {
 
-    DDR_HOST_CMD_REG_10 = 0x00,
-    DDR_HOST_CMD_REG_11 = 0x01,
-    DDR_HOST_CMD_REG_12 = 0x02,
-    DDR_HOST_CMD_REG_13 = 0x03,
-    DDR_HOST_CMD_REG_14 = 0x04,
-    DDR_HOST_CMD_REG_15 = 0x05,
-    DDR_HOST_CMD_REG_16 = 0x06,
-    DDR_HOST_CMD_REG_17 = 0x07,
-    DDR_HOST_CMD_REG_18 = 0x08,
-    DDR_HOST_CMD_REG_19 = 0x09,
-    DDR_HOST_CMD_REG_110 = 0x0A,
-    DDR_HOST_CMD_REG_111 = 0x0B,
-    DDR_HOST_CMD_REG_112 = 0x0C,
-    DDR_HOST_CMD_REG_113 = 0x0D,
-    DDR_HOST_CMD_REG_114 = 0x0E,
-    DDR_HOST_CMD_REG_115 = 0x0F,
-    DDR_HOST_CMD_REG_20 = 0x10,
-    DDR_HOST_CMD_REG_21 = 0x11,
-    DDR_HOST_CMD_REG_22 = 0x12,
-    DDR_HOST_CMD_REG_23 = 0x13,
-    DDR_HOST_CMD_REG_24 = 0x14,
-    DDR_HOST_CMD_REG_25 = 0x15,
-    DDR_HOST_CMD_REG_26 = 0x16,
-    DDR_HOST_CMD_REG_27 = 0x17,
-    DDR_HOST_CMD_REG_28 = 0x18,
-    DDR_HOST_CMD_REG_29 = 0x19,
-    DDR_HOST_CMD_REG_210 = 0x1A,
-    DDR_HOST_CMD_REG_211 = 0x1B,
-    DDR_HOST_CMD_REG_212 = 0x1C,
-    DDR_HOST_CMD_REG_213 = 0x1D,
-    DDR_HOST_CMD_REG_214 = 0x1E,
-    DDR_HOST_CMD_REG_215 = 0x1F
+#define     DDR_HOST_CMD_REG_10   (0x00U)
+#define     DDR_HOST_CMD_REG_11   (0x01U)
+#define     DDR_HOST_CMD_REG_12   (0x02U)
+#define     DDR_HOST_CMD_REG_13   (0x03U)
+#define     DDR_HOST_CMD_REG_14   (0x04U)
+#define     DDR_HOST_CMD_REG_15   (0x05U)
+#define     DDR_HOST_CMD_REG_16   (0x06U)
+#define     DDR_HOST_CMD_REG_17   (0x07U)
+#define     DDR_HOST_CMD_REG_18   (0x08U)
+#define     DDR_HOST_CMD_REG_19   (0x09U)
+#define     DDR_HOST_CMD_REG_110  (0x0AU)
+#define     DDR_HOST_CMD_REG_111  (0x0BU)
+#define     DDR_HOST_CMD_REG_112  (0x0CU)
+#define     DDR_HOST_CMD_REG_113  (0x0DU)
+#define     DDR_HOST_CMD_REG_114  (0x0EU)
+#define     DDR_HOST_CMD_REG_115  (0x0FU)
+#define     DDR_HOST_CMD_REG_20   (0x10U)
+#define     DDR_HOST_CMD_REG_21   (0x11U)
+#define     DDR_HOST_CMD_REG_22   (0x12U)
+#define     DDR_HOST_CMD_REG_23   (0x13U)
+#define     DDR_HOST_CMD_REG_24   (0x14U)
+#define     DDR_HOST_CMD_REG_25   (0x15U)
+#define     DDR_HOST_CMD_REG_26   (0x16U)
+#define     DDR_HOST_CMD_REG_27   (0x17)
+#define     DDR_HOST_CMD_REG_28   (0x18U)
+#define     DDR_HOST_CMD_REG_29   (0x19U)
+#define     DDR_HOST_CMD_REG_210  (0x1AU)
+#define     DDR_HOST_CMD_REG_211  (0x1BU)
+#define     DDR_HOST_CMD_REG_212  (0x1CU)
+#define     DDR_HOST_CMD_REG_213  (0x1DU)
+#define     DDR_HOST_CMD_REG_214  (0x1EU)
+#define     DDR_HOST_CMD_REG_215  (0x1FU)
 
-} DDR_HOST_CMD_REG;
+typedef uint32_t DDR_HOST_CMD_REG;
 
 //******************************************************************************
 /* Function:
@@ -208,7 +207,7 @@ typedef enum {
     DDR memory.
 
     Not all features are available on all devices. Refer to the specific
-	device data sheet to determine availability.
+    device data sheet to determine availability.
 */
 void DDR_Initialize(void);
 
