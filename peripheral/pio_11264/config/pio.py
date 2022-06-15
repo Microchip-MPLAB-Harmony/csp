@@ -414,7 +414,7 @@ for index, group in enumerate(pioGroupList):
 
 pioMultiInstance = coreComponent.createBooleanSymbol("PIO_MULTI_INSTANCE", pioMenu)
 pioMultiInstance.setVisible(False)
-pioMultiInstance.setValue(len(pioInstanceList) > 0)
+pioMultiInstance.setDefaultValue(len(pioInstanceList) > 0)
 
 if len(pioInstanceList) > 0:
     for instance in pioInstanceList:
