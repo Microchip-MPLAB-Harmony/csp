@@ -127,6 +127,16 @@ ${LIST_SYSTEM_INIT_C_INITIALIZER_STATIC_FUNCTIONS}
 
 void SYS_Initialize ( void* data )
 {
+    /* MISRAC 2012 deviation block start */
+    /* MISRA C-2012 Rule 2.2 deviated in this file.  Deviation record ID -  H3_MISRAC_2012_R_2_2_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+    <#if COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+    #pragma coverity compliance block deviate "MISRA C-2012 Rule 2.2" "H3_MISRAC_2012_R_2_2_DR_1"
+
+</#if>
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START1}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START}  <#-- global disable of interrupts before initializing anything -->
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE}
@@ -142,6 +152,14 @@ void SYS_Initialize ( void* data )
         <#lt></#if>
     </#if>
     <#lt>${LIST_SYSTEM_INIT_INTERRUPTS}
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+
+    #pragma coverity compliance end_block "MISRA C-2012 Rule 2.2"
+    <#if COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic pop
+    </#if>
+</#if>
+    /* MISRAC 2012 deviation block end */
 }
 
 
