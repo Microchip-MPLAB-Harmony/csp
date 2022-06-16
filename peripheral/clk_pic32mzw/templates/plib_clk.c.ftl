@@ -82,6 +82,9 @@
     function of the 'configuration bits' to configure the system oscillators.
 */
 
+#define EWPLLCON_MSK 0x0438080c
+#define EWPLL_PWRON 0x808
+
 static void DelayMs ( uint32_t delay_ms)
 {
     uint32_t startCount, endCount;
@@ -159,9 +162,7 @@ unsigned int wifi_spi_read(unsigned int spi_addr)
 
 void CLK_Initialize( void )
 {
-<#if EWPLL_ENABLE == true>
     volatile unsigned int *PLLDBG = (unsigned int*) 0xBF8000E0;
-</#if>
     volatile unsigned int *PMDRCLR = (unsigned int *) 0xBF8000B4;
 	volatile unsigned int *RFSPICTL = (unsigned int *) 0xBF8C8028;
 
@@ -170,55 +171,129 @@ void CLK_Initialize( void )
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
 
+	EWPLLCON = 0x808; // Start with PWR-OFF PLL
+    SPLLCON  = 0x808; // Start with PWR-OFF PLL
+    DelayMs(5);
+
     if(((DEVID & 0x0FF00000) >> 20) == PIC32MZW1_B0)
     {
 		CFGCON2  |= 0x300; // Start with POSC Turned OFF
 		/* if POSC was on give some time for POSC to shut off */
-		DelayMs(2);
-		// Read counter part is there only for debug and testing, or else not needed, so use ifdef as needed
-		wifi_spi_write(0x85, 0x00F0); /* MBIAS filter and A31 analog_test */ //if (wifi_spi_read (0x85) != 0xF0) {Error, Stop};
-		wifi_spi_write(0x84, 0x0001); /* A31 Analog test */// if (wifi_spi_read (0x84) != 0x1) {Error, Stop};
-		wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */ //if (wifi_spi_read (0x1e) != 0x510) {Error, Stop};
-		wifi_spi_write(0x82, 0x6400); /* XTAL LDO feedback divider (1.3+v) */ //if (wifi_spi_read (0x82) != 0x6000) {Error, Stop};
+		DelayMs(5);
+		/* make sure we properly reset SPI to a known state */
+		*RFSPICTL = 0x80000022;
+		/* make sure we properly take out of reset */
+		*RFSPICTL = 0x80000002;
 
-		/* Enable POSC */
-		CFGCON2  &= 0xFFFFFCFF; // enable POSC
+		if(1 == DEVIDbits.VER)
+		{
+			// Read counter used only for debug and testing
+			wifi_spi_write(0x85, 0x00F2); /* MBIAS filter and A31 analog_test */ //if (wifi_spi_read (0x85) != 0xF0) {Error, Stop};
+			wifi_spi_write(0x84, 0x0001); /* A31 Analog test */// if (wifi_spi_read (0x84) != 0x1) {Error, Stop};
+			wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */ //if (wifi_spi_read (0x1e) != 0x510) {Error, Stop};
+			wifi_spi_write(0x82, 0x6000); /* XTAL LDO feedback divider (1.3+v) */ //if (wifi_spi_read (0x82) != 0x6000) {Error, Stop};
 
-		/* Wait for POSC ready */
-		while(!(CLKSTAT & 0x00000004)) ;
+			DelayMs(2);
+			/* Enable POSC */
+			CFGCON2  &= 0xFFFFFCFF; // enable POSC
+			DelayMs(5);
 
-		/*Configure SPLL*/
-		${CFGCON3_NAME} = ${CFGCON3_VALUE};
-		CFGCON0bits.SPLLHWMD = 1;
+			/*Configure SPLL*/
+			${CFGCON3_NAME} = ${CFGCON3_VALUE};
+			CFGCON0bits.SPLLHWMD = 1;
 
-		/* SPLLCON = 0x01496869 */
-		/* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
-		/* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
-		/* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
-		/* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
-		/* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
-		/* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
-		/* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
-		/* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
-		/* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
-		${SPLLCON_REG} = 0x${SPLLCON_VALUE};
+			/* SPLLCON = 0x01496869 */
+			/* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
+			/* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
+			/* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
+			/* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
+			/* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
+			/* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
+			/* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
+			/* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
+			/* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
+			${SPLLCON_REG} = 0x${SPLLCON_VALUE};
 
-        /* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
-		/* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
-		/* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
-		/* CF       = ${OSCCON_CF_VALUE}       */
-		/* SLPEN    = ${OSCCON_SLPEN_VALUE}    */
-		/* CLKLOCK  = ${OSCCON_CLKLOCK_VALUE}  */
-		/* NOSC     = ${OSCCON_NOSC_VALUE}     */
-		/* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
-		/* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
-		/* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
-		${OSCCON_REG} = 0x${OSCCON_VALUE};
+			/* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
+			/* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
+			/* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
+			/* CF       = ${OSCCON_CF_VALUE}       */
+			/* SLPEN    = ${OSCCON_SLPEN_VALUE}    */
+			/* CLKLOCK  = ${OSCCON_CLKLOCK_VALUE}  */
+			/* NOSC     = ${OSCCON_NOSC_VALUE}     */
+			/* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
+			/* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
+			/* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
+			${OSCCON_REG} = 0x${OSCCON_VALUE};
 
-		OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
+			OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
 
-		while( OSCCONbits.OSWEN );
-        DelayMs(5);
+			while( OSCCONbits.OSWEN );
+			/****************************************************************
+			* check to see if PLL locked; indicates POSC must have started
+			*****************************************************************/
+			if(0 == (*PLLDBG & 0x1))
+			{
+				/*POSC failed to start!*/
+				while(1);
+			}
+			/*Disabling internal schmitt-trigger to increase noise immunity */
+			wifi_spi_write(0x85, 0x00F4);
+		}
+		else
+		{
+			// Read counter part is there only for debug and testing, or else not needed, so use ifdef as needed
+			wifi_spi_write(0x85, 0x00F0); /* MBIAS filter and A31 analog_test */ //if (wifi_spi_read (0x85) != 0xF0) {Error, Stop};
+			wifi_spi_write(0x84, 0x0001); /* A31 Analog test */// if (wifi_spi_read (0x84) != 0x1) {Error, Stop};
+			wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */ //if (wifi_spi_read (0x1e) != 0x510) {Error, Stop};
+			wifi_spi_write(0x82, 0x6400); /* XTAL LDO feedback divider (1.3+v) */ //if (wifi_spi_read (0x82) != 0x6000) {Error, Stop};
+
+			DelayMs(2);
+			/* Enable POSC */
+			CFGCON2  &= 0xFFFFFCFF; // enable POSC
+
+			DelayMs(5);
+			/*Configure SPLL*/
+			${CFGCON3_NAME} = ${CFGCON3_VALUE};
+			CFGCON0bits.SPLLHWMD = 1;
+
+			/* SPLLCON = 0x01496869 */
+			/* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
+			/* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
+			/* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
+			/* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
+			/* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
+			/* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
+			/* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
+			/* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
+			/* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
+			${SPLLCON_REG} = 0x${SPLLCON_VALUE};
+			DelayMs(1);
+
+			/* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
+			/* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
+			/* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
+			/* CF       = ${OSCCON_CF_VALUE}       */
+			/* SLPEN    = ${OSCCON_SLPEN_VALUE}    */
+			/* CLKLOCK  = ${OSCCON_CLKLOCK_VALUE}  */
+			/* NOSC     = ${OSCCON_NOSC_VALUE}     */
+			/* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
+			/* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
+			/* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
+			${OSCCON_REG} = 0x${OSCCON_VALUE};
+
+			OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
+
+			while( OSCCONbits.OSWEN );
+			/****************************************************************
+			* check to see if PLL locked; indicates POSC must have started
+			*****************************************************************/
+			if(0 == (*PLLDBG & 0x1))
+			{
+				/*POSC failed to start!*/
+				while(1);
+			}
+		}
 
 <#if EWPLL_ENABLE == true>
 		/* Configure EWPLL */
@@ -232,9 +307,17 @@ void CLK_Initialize( void )
 		/* EWPLLICLK     = ${EWPLLCON_EWPLLICLK_VALUE} */
 		/* ETHCLKOUTEN   = ${EWPLLCON_ETHCLKOUTEN_VALUE} */
 		/* EWPLL_BYP     = ${EWPLLCON_EWPLL_BYP_VALUE} */
-		${EWPLLCON_REG} = 0x${EWPLLCON_VALUE} ^ 0x0438080c;
-		CFGCON0bits.ETHPLLHWMD = 1;
-		while(!((*PLLDBG) & 0x4));
+		${EWPLLCON_REG} = 0x${EWPLLCON_VALUE} ^ EWPLLCON_MSK;
+		DelayMs(1);
+		${EWPLLCON_REG} &= ~EWPLL_PWRON;
+		/****************************************************************
+		* check to see if PLL locked; indicates POSC must have started
+		*****************************************************************/
+		if(0 == (*PLLDBG & 0x5))
+		{
+			/*POSC failed to start!*/
+			while(1);
+		}
 <#else>
 		/* Power down the EWPLL */
 		EWPLLCONbits.EWPLLPWDN = 1;
