@@ -641,9 +641,9 @@ void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
 {
     uint8_t channel = 0U;
 
-    for(channel = 4U; channel <= ${DMAC_HIGHEST_CHANNEL}; channel++)
+    for(channel = 4U; channel <= ${DMAC_HIGHEST_CHANNEL}U; channel++)
     {
-        if ((${DMA_INSTANCE_NAME}_REGS->DMAC_INTSTATUS >> channel) & 0x1U)
+        if (((${DMA_INSTANCE_NAME}_REGS->DMAC_INTSTATUS >> channel) & 0x1U) != 0U)
         {
             DMAC_channel_interruptHandler(channel);
         }
@@ -655,9 +655,9 @@ void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
 {
     uint8_t channel = 0U;
 
-    for(channel = ${res2?groups[1]}; channel <= ${res2?groups[2]}; channel++)
+    for(channel = ${res2?groups[1]}U; channel <= ${res2?groups[2]}U; channel++)
     {
-        if ((${DMA_INSTANCE_NAME}_REGS->DMAC_INTSTATUS >> channel) & 0x1U)
+        if (((${DMA_INSTANCE_NAME}_REGS->DMAC_INTSTATUS >> channel) & 0x1U) != 0U)
         {
            DMAC_channel_interruptHandler(channel);
         }
