@@ -152,8 +152,8 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
 
 bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    (void)memcpy((void *)data, (void *)address, length);
-
+    uint32_t* paddress = (uint32_t*)address;
+    (void)memcpy(data, paddress, length);
     return true;
 }
 
