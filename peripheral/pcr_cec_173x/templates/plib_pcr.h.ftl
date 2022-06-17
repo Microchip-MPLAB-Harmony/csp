@@ -163,7 +163,6 @@ void PCR_PrivilegeDisable${.vars[PCR_PRIV_EN]} (PCR_PRIV_EN${.vars[PCR_PRIV_EN]}
 <#list 0..(NUM_RESET_EN_REGS-1) as n>
 <#assign PCR_RESET_EN         = "PCR_RESET_ENABLE" + n + "_REG_INDEX">
 void PCR_ResetEnable${.vars[PCR_RESET_EN]} (PCR_RESET_EN${.vars[PCR_RESET_EN]} blockId);
-void PCR_ResetDisable${.vars[PCR_RESET_EN]} (PCR_RESET_EN${.vars[PCR_RESET_EN]} blockId);
 </#list>
 
 

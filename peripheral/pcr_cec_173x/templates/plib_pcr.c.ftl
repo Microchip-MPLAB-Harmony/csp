@@ -135,10 +135,4 @@ void PCR_ResetEnable${.vars[PCR_RESET_EN]} (PCR_RESET_EN${.vars[PCR_RESET_EN]} b
     PCR_REGS->PCR_RST_EN_${.vars[PCR_RESET_EN]} |= blockIdMsk;
 }
 
-void PCR_ResetDisable${.vars[PCR_RESET_EN]} (PCR_RESET_EN${.vars[PCR_RESET_EN]} blockId)
-{
-    uint32_t blockIdMsk = (uint32_t)blockId & PCR_RST_EN_${.vars[PCR_RESET_EN]}_Msk;
-    PCR_REGS->PCR_RST_EN_${.vars[PCR_RESET_EN]} &= ~blockIdMsk;
-}
-
 </#list>
