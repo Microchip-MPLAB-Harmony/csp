@@ -200,7 +200,7 @@ pmdDict_bz3 =  {
 }
 
 global defaultEnablePeripheralsList
-defaultEnablePeripheralsList = ["PLVD","REFO1", "REFO2", "REFO3", "REFO4", "REFO5", "REFO6", "DGISPI"]
+defaultEnablePeripheralsList = ["PLVD","REFO1", "REFO2", "REFO3", "REFO4", "REFO5", "REFO6"]
 
 global item_update
 
