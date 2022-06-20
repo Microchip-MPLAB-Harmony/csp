@@ -44,10 +44,10 @@
 #include <stdbool.h>
 
 #ifdef __cplusplus // Provide C++ Compatibility
-	extern "C" {
+    extern "C" {
 #endif
 
-#define CORE_TIMER_FREQUENCY    ${CORE_TIMER_FREQUENCY}
+#define CORE_TIMER_FREQUENCY    (${CORE_TIMER_FREQUENCY}U)
 
 <#if CORE_TIMER_INTERRUPT_MODE == true && CORE_TIMER_PERIODIC_INTERRUPT == true>
     <#lt>#define CORE_TIMER_INTERRUPT_PERIOD_VALUE    ${CORE_TIMER_PERIOD_VALUE}

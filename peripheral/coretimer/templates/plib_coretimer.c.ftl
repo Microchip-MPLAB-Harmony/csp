@@ -42,9 +42,9 @@
 #include "peripheral/coretimer/plib_coretimer.h"
 
 <#if CORE_TIMER_INTERRUPT_MODE == true && CORE_TIMER_PERIODIC_INTERRUPT == true>
-    <#lt>CORETIMER_OBJECT coreTmr;
+    <#lt>static CORETIMER_OBJECT coreTmr;
     <#lt>
-    <#lt>void CORETIMER_Initialize()
+    <#lt>void CORETIMER_Initialize(void)
     <#lt>{
     <#lt>    // Disable Timer by setting Disable Count (DC) bit
     <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() | _CP0_CAUSE_DC_MASK);
@@ -70,7 +70,7 @@
     <#lt>
     <#lt>}
     <#lt>
-    <#lt>void CORETIMER_Start()
+    <#lt>void CORETIMER_Start(void)
     <#lt>{
     <#lt>    // Disable Timer by setting Disable Count (DC) bit
     <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() | _CP0_CAUSE_DC_MASK);
@@ -114,18 +114,22 @@
     <#lt>    ${CORE_TIMER_IFS_REG}CLR = ${CORE_TIMER_IFS_REG_VALUE};
     <#lt>
     <#lt>    // Start Critical Section
-    <#lt>    __builtin_disable_interrupts();
+    <#lt>    (void) __builtin_disable_interrupts();
     <#lt>
     <#lt>    count=_CP0_GET_COUNT();
     <#lt>
     <#lt>    newCompare=_CP0_GET_COMPARE() + coreTmr.period;
     <#lt>
-    <#lt>    if (count<newCompare-50)
+    <#lt>    if (count<newCompare-50U)
+    <#lt>    {
     <#lt>        _CP0_SET_COMPARE(newCompare);
+    <#lt>    }    
     <#lt>    else
-    <#lt>        _CP0_SET_COMPARE(count+50);
+    <#lt>    {
+    <#lt>        _CP0_SET_COMPARE(count+50U);
+    <#lt>    }
     <#lt>    // End Critical Section
-    <#lt>    __builtin_enable_interrupts();
+    <#lt>    (void) __builtin_enable_interrupts();
     <#lt>
     <#lt>    coreTmr.tickCounter++;
     <#lt>    if(coreTmr.callback != NULL)
@@ -174,7 +178,7 @@
     <#lt>    ${CORE_TIMER_IEC_REG}SET=${CORE_TIMER_IEC_REG_VALUE};
     <#lt>}
 
-    <#lt>void CORETIMER_Stop()
+    <#lt>void CORETIMER_Stop( void )
     <#lt>{
     <#lt>    // Disable Timer by setting Disable Count (DC) bit
     <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() | _CP0_CAUSE_DC_MASK);
@@ -215,7 +219,7 @@
 <#if CORE_TIMER_INTERRUPT_MODE == false >
     <#lt>static uint32_t compareValue = CORE_TIMER_COMPARE_VALUE;
 
-    <#lt>void CORETIMER_Initialize()
+    <#lt>void CORETIMER_Initialize( void )
     <#lt>{
     <#lt><#if CORE_TIMER_STOP_IN_DEBUG == true>
     <#lt>    _CP0_SET_DEBUG(_CP0_GET_DEBUG() & ~_CP0_DEBUG_COUNTDM_MASK);
@@ -274,15 +278,14 @@
 
     <#lt>bool CORETIMER_CompareHasExpired( void )
     <#lt>{
-    <#lt>    if (${CORE_TIMER_IFS_REG}bits.CTIF != 0)
+    <#lt>    bool flagStatus = false;
+    <#lt>    if (${CORE_TIMER_IFS_REG}bits.CTIF != 0U)
     <#lt>    {
-    <#lt>        // Clear Compare Timer Interrupt Flag
-    <#lt>        ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};
-
-    <#lt>        return true;
-    <#lt>    }
-
-    <#lt>    return false;
+    <#lt>       // Clear Compare Timer Interrupt Flag
+    <#lt>       ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};
+    <#lt>       flagStatus = true;
+    <#lt>    }   
+    <#lt>    return flagStatus;
     <#lt>}
 </#if>
 
@@ -291,10 +294,13 @@ void CORETIMER_DelayMs ( uint32_t delay_ms)
     uint32_t startCount, endCount;
 
     /* Calculate the end count for the given delay */
-    endCount=(CORE_TIMER_FREQUENCY/1000)*delay_ms;
+    endCount=(CORE_TIMER_FREQUENCY/1000U)*delay_ms;
 
     startCount=_CP0_GET_COUNT();
-    while((_CP0_GET_COUNT()-startCount)<endCount);
+    while((_CP0_GET_COUNT()-startCount)<endCount)
+    {
+        /* Nothing to do */
+    }
 
 }
 
@@ -303,10 +309,13 @@ void CORETIMER_DelayUs ( uint32_t delay_us)
     uint32_t startCount, endCount;
 
     /* Calculate the end count for the given delay */
-    endCount=(CORE_TIMER_FREQUENCY/1000000)*delay_us;
+    endCount=(CORE_TIMER_FREQUENCY/1000000U)*delay_us;
 
     startCount=_CP0_GET_COUNT();
-    while((_CP0_GET_COUNT()-startCount)<endCount);
+    while((_CP0_GET_COUNT()-startCount)<endCount)
+    {
+        /* Nothing to do */
+    }
 
 }
 
