@@ -98,7 +98,7 @@ void ${RSTC_INSTANCE_NAME}_CoProcessorPeripheralEnable(bool enable);
 </#if>
 <#if INTERRUPT_ENABLE>
 
-void ${RSTC_INSTANCE_NAME}_RegisterCallback(RSTC_CALLBACK pCallback, uintptr_t context);
+void ${RSTC_INSTANCE_NAME}_CallbackRegister(RSTC_CALLBACK pCallback, uintptr_t context);
 </#if>
 
 
