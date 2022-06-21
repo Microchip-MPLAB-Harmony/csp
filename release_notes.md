@@ -3,6 +3,47 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.13.0
+
+### New Features
+
+- **New part support** - This release introduces support for
+PIC32CM-JH,
+PIC32MK-MCA,
+PIC32CX-BZ2 family of wireless microcontrollers (MCUs) and WBZ451 modules,
+[ATSAMA5D29](https://www.microchip.com/en-us/product/ATSAMA5D29),
+[SAMA7G54](https://www.microchip.com/en-us/product/sama7g54)
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+- **New Features and Enhancements**
+  - MISRA-C 2012 required rules compliance for all M0+, M4F, M23 based MCUs
+  - Added ADC comparision mode in SAM E70/S70/V70/V71 and SAM G51/G53/G54/G55 Family of devices
+  - Added support for non-blocking delay in Systick Plib  
+  - Added pin export feature to export pin configurations to a CSV file for all SAM devices
+  
+### Known Issues
+
+The current known issues are as follows:
+- The default/max clock for ATSAMG55 devices is changed from 120MHz to 100MHz. Some of the clock dependent peripheral configuration may need to be verified/updated.
+- The following product families specifically requires the below mentioned DFP versions to be [installed](https://microchipdeveloper.com/mplabx:projects-packs)  with MPLABX v6.00. It is always recommended to use the latest version of DFPs for all products provided by Microchip.
+     -  **CEC173x Family**: CEC DFP v1.5.142 or higher
+     -  **PIC32CX-BZ2 family of wireless microcontrollers (MCUs) and WBZ451 modules**: PIC32CX-BZ DFP 1.0.107 or higher
+
+### Development Tools
+
+- [MPLAB® X IDE v6.00](https://www.microchip.com/mplab/mplab-x-ide)
+- [MPLAB® XC32 C/C++ Compiler v4.10](https://www.microchip.com/mplab/compilers)
+- [IAR EWARM v9.10 or above](https://www.iar.com/iar-embedded-workbench/#!?architecture=Arm)
+- [KEIL MDK v5.35 or above](https://www2.keil.com/mdk5)
+- MPLAB® X IDE plug-ins:
+    - MPLAB® Code Configurator 5.1.9
+
+### Notes
+
+-  None
+
 ## CSP Release v3.12.0
 
 ### New Features
