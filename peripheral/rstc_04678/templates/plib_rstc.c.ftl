@@ -99,7 +99,7 @@ void ${RSTC_INSTANCE_NAME}_Reset (RSTC_RESET_TYPE type)
 }
 
 
-uint32_t ${RSTC_INSTANCE_NAME}_ResetCauseGet (void)
+RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void)
 {
     return (${RSTC_INSTANCE_NAME}_REGS->RSTC_SR & RSTC_SR_RSTTYP_Msk);
 }

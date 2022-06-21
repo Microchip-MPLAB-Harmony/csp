@@ -72,6 +72,32 @@ typedef enum
 
 } RSTC_RESET_TYPE;
 
+/* Reset cause
+
+  Summary:
+    Identifiers for the cause of reset.
+
+  Description:
+    This enumeration provides identifiers for General, Backup, Watchdog,
+    Software or User reset causes.
+
+  Remarks:
+    Refer to the specific device data sheet to determine availability.
+*/
+
+#define    RSTC_GENERAL_RESET      (RSTC_SR_RSTTYP_GENERAL_RST_Val)         // First power reset
+#define    RSTC_BACKUP_RESET       (RSTC_SR_RSTTYP_BACKUP_RST_Val)          // VDD Core reset. Wakeup from Backup mode
+#define    RSTC_WDT0_RESET         (RSTC_SR_RSTTYP_WDT0_RST_Val)            // Watchdog 0 fault occurred
+#define    RSTC_SOFTWARE_RESET     (RSTC_SR_RSTTYP_SOFT_RST_Val)            // Processor reset requested by the software
+#define    RSTC_USER_RESET         (RSTC_SR_RSTTYP_USER_RST_Val)            // NRST pin detected low 
+#define    RSTC_CORE_SM_RESET      (RSTC_SR_RSTTYP_CORE_SM_RST_Val)         // Core Supply Monitor reset
+#define    RSTC_CPU_FAIL_RESET     (RSTC_SR_RSTTYP_CPU_FAIL_RST_Val)        // CPU clock failure detection occurred
+#define    RSTC_SLCK_XTAL_RESET    (RSTC_SR_RSTTYP_SLCK_XTAL_RST_Val)       // 32.768 kHz crystal failure detection fault
+#define    RSTC_WDT1_RESET         (RSTC_SR_RSTTYP_WDT1_RST_Val)            // Watchdog 1 fault occurred
+#define    RSTC_PORVDD3V3_RESET    (RSTC_SR_RSTTYP_PORVDD3V3_RST_Val)       // VDD3V3 PORVDD3V3 reset occurred
+
+typedef uint32_t RSTC_RESET_CAUSE;
+
 typedef void (*RSTC_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************
@@ -83,7 +109,7 @@ void ${RSTC_INSTANCE_NAME}_Initialize (void);
 
 void ${RSTC_INSTANCE_NAME}_Reset (RSTC_RESET_TYPE type);
 
-uint32_t ${RSTC_INSTANCE_NAME}_ResetCauseGet (void);
+RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void);
 <#if RSTC_MR_URSTEN == "No action">
 
 bool ${RSTC_INSTANCE_NAME}_NRSTPinRead (void);
