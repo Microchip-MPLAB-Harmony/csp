@@ -79,22 +79,23 @@ typedef enum
 
   Description:
     This enumeration provides identifiers for General, Backup, Watchdog,
-    Software or User reset causes.
+    Software or User reset among other causes.
 
   Remarks:
     Refer to the specific device data sheet to determine availability.
 */
 
-#define    RSTC_GENERAL_RESET      (RSTC_SR_RSTTYP_GENERAL_RST_Val)         // First power reset
-#define    RSTC_BACKUP_RESET       (RSTC_SR_RSTTYP_BACKUP_RST_Val)          // VDD Core reset. Wakeup from Backup mode
-#define    RSTC_WDT0_RESET         (RSTC_SR_RSTTYP_WDT0_RST_Val)            // Watchdog 0 fault occurred
-#define    RSTC_SOFTWARE_RESET     (RSTC_SR_RSTTYP_SOFT_RST_Val)            // Processor reset requested by the software
-#define    RSTC_USER_RESET         (RSTC_SR_RSTTYP_USER_RST_Val)            // NRST pin detected low 
-#define    RSTC_CORE_SM_RESET      (RSTC_SR_RSTTYP_CORE_SM_RST_Val)         // Core Supply Monitor reset
-#define    RSTC_CPU_FAIL_RESET     (RSTC_SR_RSTTYP_CPU_FAIL_RST_Val)        // CPU clock failure detection occurred
-#define    RSTC_SLCK_XTAL_RESET    (RSTC_SR_RSTTYP_SLCK_XTAL_RST_Val)       // 32.768 kHz crystal failure detection fault
-#define    RSTC_WDT1_RESET         (RSTC_SR_RSTTYP_WDT1_RST_Val)            // Watchdog 1 fault occurred
-#define    RSTC_PORVDD3V3_RESET    (RSTC_SR_RSTTYP_PORVDD3V3_RST_Val)       // VDD3V3 PORVDD3V3 reset occurred
+#define    RSTC_RESET_CAUSE_GENERAL      (RSTC_SR_RSTTYP_GENERAL_RST_Val)         // First power reset
+#define    RSTC_RESET_CAUSE_BACKUP       (RSTC_SR_RSTTYP_BACKUP_RST_Val)          // VDD Core reset. Wakeup from Backup mode
+#define    RSTC_RESET_CAUSE_WDT0         (RSTC_SR_RSTTYP_WDT0_RST_Val)            // Watchdog 0 fault occurred
+#define    RSTC_RESET_CAUSE_SOFTWARE     (RSTC_SR_RSTTYP_SOFT_RST_Val)            // Processor reset requested by the software
+#define    RSTC_RESET_CAUSE_USER         (RSTC_SR_RSTTYP_USER_RST_Val)            // NRST pin detected low 
+#define    RSTC_RESET_CAUSE_CORE_SM      (RSTC_SR_RSTTYP_CORE_SM_RST_Val)         // Core Supply Monitor reset
+#define    RSTC_RESET_CAUSE_CPU_FAIL     (RSTC_SR_RSTTYP_CPU_FAIL_RST_Val)        // CPU clock failure detection occurred
+#define    RSTC_RESET_CAUSE_SLCK_XTAL    (RSTC_SR_RSTTYP_SLCK_XTAL_RST_Val)       // 32.768 kHz crystal failure detection fault
+#define    RSTC_RESET_CAUSE_WDT1         (RSTC_SR_RSTTYP_WDT1_RST_Val)            // Watchdog 1 fault occurred
+#define    RSTC_RESET_CAUSE_PORVDD3V3    (RSTC_SR_RSTTYP_PORVDD3V3_RST_Val)       // VDD3V3 PORVDD3V3 reset occurred
+
 
 typedef uint32_t RSTC_RESET_CAUSE;
 
