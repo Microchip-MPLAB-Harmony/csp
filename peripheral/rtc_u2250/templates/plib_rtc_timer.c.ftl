@@ -101,7 +101,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         </#if>
         <#if RTC_MODE0_NUM_COMP == 1>
         <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_${RTC_MODE0_COMPARE_REGISTER_NAME} = 0x${RTC_MODE0_TIMER_COMPARE}U;
-		<#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
+        <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
         <#lt>    {
         <#lt>        /* Wait for Synchronization after writing Compare Value */
         <#lt>    }
@@ -190,13 +190,13 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction)
     <#lt>{
     <#lt>    uint32_t newCorrectionValue = 0;
-	
-	<#lt>    int32_t temp_val = correction;
-	
-	<#lt>    if(temp_val > INT_MIN)
-	<#lt>    {
-    <#lt>        newCorrectionValue = (uint32_t)abs(temp_val);	
-	<#lt>    }
+
+    <#lt>    int32_t temp_val = correction;
+
+    <#lt>    if(temp_val > INT_MIN)
+    <#lt>    {
+    <#lt>        newCorrectionValue = (uint32_t)abs(temp_val);
+    <#lt>    }
 
     <#lt>    /* Convert to positive value and adjust register sign bit. */
     <#lt>    if (correction < 0)
@@ -331,7 +331,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 </#if>
 <#if RTC_MODULE_SELECTION = "MODE0">
 
-	<#lt>void ${RTC_INSTANCE_NAME}_Timer32CountSyncEnable ( void )
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer32CountSyncEnable ( void )
     <#lt>{
     <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA |= RTC_MODE0_CTRLA_COUNTSYNC_Msk;
 
@@ -340,8 +340,8 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>        /* Wait for Synchronization */
     <#lt>    }
     <#lt>}
-	
-	<#lt>void ${RTC_INSTANCE_NAME}_Timer32CountSyncDisable ( void )
+
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer32CountSyncDisable ( void )
     <#lt>{
     <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA &= (uint16_t)(~RTC_MODE0_CTRLA_COUNTSYNC_Msk);
 
@@ -350,7 +350,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>        /* Wait for Synchronization */
     <#lt>    }
     <#lt>}
-	
+
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32Start ( void )
     <#lt>{
     <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA |= RTC_MODE0_CTRLA_ENABLE_Msk;
@@ -454,7 +454,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     </#if>
 <#else>
 
-	<#lt>void ${RTC_INSTANCE_NAME}_Timer16CountSyncEnable ( void )
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer16CountSyncEnable ( void )
     <#lt>{
     <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA |= RTC_MODE1_CTRLA_COUNTSYNC_Msk;
 
@@ -463,8 +463,8 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>        /* Wait for Synchronization */
     <#lt>    }
     <#lt>}
-	
-	<#lt>void ${RTC_INSTANCE_NAME}_Timer16CountSyncDisable ( void )
+
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer16CountSyncDisable ( void )
     <#lt>{
     <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA &= (uint16_t)(~RTC_MODE1_CTRLA_COUNTSYNC_Msk);
 
@@ -473,7 +473,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>        /* Wait for Synchronization */
     <#lt>    }
     <#lt>}
-	
+
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16Start ( void )
     <#lt>{
     <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA |= (uint16_t)RTC_MODE1_CTRLA_ENABLE_Msk;
@@ -518,7 +518,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>uint16_t ${RTC_INSTANCE_NAME}_Timer16CounterGet ( void )
     <#lt>{
-    <#lt>    if (!(${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA & RTC_MODE1_CTRLA_COUNTSYNC_Msk))
+    <#lt>    if ((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA & RTC_MODE1_CTRLA_COUNTSYNC_Msk) == 0U)
     <#lt>    {
     <#lt>        ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA |= RTC_MODE1_CTRLA_COUNTSYNC_Msk;
 
@@ -605,7 +605,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#else>
             <#lt>uint16_t ${RTC_INSTANCE_NAME}_Timer16TimeStampGet( void )
             <#lt>{
-            <#lt>    return(${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_TIMESTAMP);
+            <#lt>    return((uint16_t)${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_TIMESTAMP);
             <#lt>}
         </#if>
     </#if>
