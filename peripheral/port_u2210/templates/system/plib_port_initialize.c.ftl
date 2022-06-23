@@ -13,15 +13,15 @@
               <#assign PORT_NONSEC = "PORT_GROUP_" + n + "_NONSEC">
             </#if>
                 <#if "${.vars[PORT_DIR]}" != "0x0">
-                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIR = ${.vars[PORT_DIR]};
+                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIR = ${.vars[PORT_DIR]}U;
                     <#assign NEED_PORT_INIT = true>
                 </#if>
                 <#if "${.vars[PORT_OUT]}" != "0x0">
-                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUT = ${.vars[PORT_OUT]};
+                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUT = ${.vars[PORT_OUT]}U;
                     <#assign NEED_PORT_INIT = true>
                 </#if>
                 <#if "${.vars[PORT_CTRL]}" != "0x0">
-                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_CTRL = ${.vars[PORT_CTRL]};
+                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_CTRL = ${.vars[PORT_CTRL]}U;
                     <#assign NEED_PORT_INIT = true>
                 </#if>
                 <#list 0..31 as i>
@@ -29,7 +29,7 @@
                     <#assign PORT_PIN_USED = "PORT_GROUP_" + n + "_PIN_" + i  + "_USED">
                     <#assign PORT_GROUP_PINCFG_INDEX = i>
                     <#if "${.vars[PORT_PIN_USED]?c}" == "true">
-                        <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_PINCFG[${PORT_GROUP_PINCFG_INDEX}] = ${.vars[PORT_PINCONFIG]};
+                        <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_PINCFG[${PORT_GROUP_PINCFG_INDEX}] = ${.vars[PORT_PINCONFIG]}U;
                         <#assign NEED_PORT_INIT = true>
                     </#if>
                 </#list>
@@ -40,7 +40,7 @@
                     <#assign PORT_PMUX_PMUXE_USED = "PORT_GROUP_" + n + "_PIN_" + (i * 2) + "_USED">
                     <#assign PORT_PMUX_PMUXO_USED = "PORT_GROUP_" + n + "_PIN_" + ((i * 2) + 1) + "_USED">
                     <#if (.vars[PORT_PMUX_PMUXE_USED] == true || .vars[PORT_PMUX_PMUXO_USED] == true)>
-                        <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_PMUX[${PORT_INDEX}] = ${.vars[PORT_PINMUX]};
+                        <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_PMUX[${PORT_INDEX}] = ${.vars[PORT_PINMUX]}U;
                         <#assign NEED_PORT_INIT = true>
                     </#if>
                 </#list>
@@ -53,7 +53,7 @@
 
                 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
                   <#if "${.vars[PORT_NONSEC]}" != "0x0">
-                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_NONSEC = 0x${.vars[PORT_NONSEC]};
+                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_NONSEC = 0x${.vars[PORT_NONSEC]}U;
                     <#assign NEED_PORT_INIT = true>
                   </#if>
                 </#if>
