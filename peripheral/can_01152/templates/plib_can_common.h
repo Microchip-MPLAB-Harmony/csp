@@ -54,6 +54,27 @@
 
 #endif
 // DOM-IGNORE-END
+// *****************************************************************************
+/* CAN FIFO Interrupt Status Flag Mask
+
+   Summary:
+    CAN FIFO Interrupt Status Flag Mask.
+
+   Description:
+    This data type defines the CAN FIFO Interrupt Status Flag Mask.
+
+   Remarks:
+    None.
+*/
+
+#define    CAN_FIFO_INTERRUPT_RXNEMPTYIF_MASK   (0x1U)
+#define    CAN_FIFO_INTERRUPT_RXHALFIF_MASK     (0x2U)
+#define    CAN_FIFO_INTERRUPT_RXFULLIF_MASK     (0x4U)
+#define    CAN_FIFO_INTERRUPT_RXOVFLIF_MASK     (0x8U)
+#define    CAN_FIFO_INTERRUPT_TXEMPTYIF_MASK    (0x100U)
+#define    CAN_FIFO_INTERRUPT_TXHALFIF_MASK     (0x200U)
+#define    CAN_FIFO_INTERRUPT_TXNFULLIF_MASK    (0x400U)
+typedef uint32_t CAN_FIFO_INTERRUPT_FLAG_MASK;
 
 // *****************************************************************************
 /* CAN Message Object Type TX Attribute
@@ -92,30 +113,6 @@ typedef enum
     CAN_MSG_RX_DATA_FRAME = 0,
     CAN_MSG_RX_REMOTE_FRAME
 } CAN_MSG_RX_ATTRIBUTE;
-
-// *****************************************************************************
-/* CAN FIFO Interrupt Status Flag Mask
-
-   Summary:
-    CAN FIFO Interrupt Status Flag Mask.
-
-   Description:
-    This data type defines the CAN FIFO Interrupt Status Flag Mask.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    CAN_FIFO_INTERRUPT_RXNEMPTYIF_MASK = 0x1,
-    CAN_FIFO_INTERRUPT_RXHALFIF_MASK = 0x2,
-    CAN_FIFO_INTERRUPT_RXFULLIF_MASK = 0x4,
-    CAN_FIFO_INTERRUPT_RXOVFLIF_MASK = 0x8,
-    CAN_FIFO_INTERRUPT_TXEMPTYIF_MASK = 0x100,
-    CAN_FIFO_INTERRUPT_TXHALFIF_MASK = 0x200,
-    CAN_FIFO_INTERRUPT_TXNFULLIF_MASK = 0x400
-} CAN_FIFO_INTERRUPT_FLAG_MASK;
-
 // *****************************************************************************
 /* CAN Transfer Error
 
