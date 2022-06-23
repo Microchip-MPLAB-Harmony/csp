@@ -557,7 +557,6 @@ void ${SERCOM_INSTANCE_NAME}_USART_WriteByte( int data )
     ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = (uint16_t)data;
 }
 </#if>
-</#if>
 
 bool ${SERCOM_INSTANCE_NAME}_USART_TransmitComplete( void )
 {
@@ -570,6 +569,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_TransmitComplete( void )
 
     return transmitComplete;
 }
+</#if>
 
 <#if USART_RX_ENABLE = true>
 void ${SERCOM_INSTANCE_NAME}_USART_ReceiverEnable( void )
