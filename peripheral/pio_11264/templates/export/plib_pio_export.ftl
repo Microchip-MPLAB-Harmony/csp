@@ -1,5 +1,5 @@
 <#list 1..PIO_PIN_TOTAL>
-"Pin Number","Pin ID","Custom Name","Function","Direction","Latch","Open Drain","PIO Interrupt","Pull Up","Pull Down","Glitch/Debounce Filter"${PIO_SLEWR_PRESENT?string(",Slew Rate Control","")},${PIO_DRIVER_PRESENT?string("Drive Strength", "")}
+Pin Number,Pin ID,Custom Name,Function,Direction,Latch,Open Drain,PIO Interrupt,Pull Up,Pull Down,Glitch/Debounce Filter${PIO_SLEWR_PRESENT?string(",Slew Rate Control","")}${PIO_DRIVER_PRESENT?string(",Drive Strength", "")}
     <#items as INDEX>
         <#assign PIN_CHANNEL = .vars["PIN_" + INDEX + "_PIO_CHANNEL"]>
         <#if PIN_CHANNEL !="">
@@ -54,7 +54,7 @@
                     </#if>
                 </#if>
                 <#if PIO_SLEWR_PRESENT>
-                    <#assign SLEW_RATE = (.vars["PIN_" + INDEX + "_SLEW_RATE"] != "")?string("Yes", "No")>
+                    <#assign SLEW_RATE = .vars["PIN_" + INDEX + "_SLEW"]>
                 <#else>
                     <#assign SLEW_RATE = "">
                 </#if>
