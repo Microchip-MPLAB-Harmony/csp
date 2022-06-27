@@ -1,0 +1,76 @@
+# FLEXCOMx\_USART\_WriteThresholdSet Function
+
+**Parent topic:**[Flexible Serial Communication Controller \(FLEXCOM\)](GUID-137968B9-4089-44C6-9B5A-2F30929F6852.md)
+
+**Parent topic:**[Flexible Serial Communication Controller \(FLEXCOM\)](GUID-1F0CC449-4122-4C77-A199-A7874C524FDD.md)
+
+## C
+
+```c
+/* x = FLEXCOM instance number */
+
+/* Ring buffer mode */
+
+void FLEXCOMx_USART_WriteThresholdSet(uint32_t nBytesThreshold)
+```
+
+## Summary
+
+This API allows the application to set a threshold level on the number of free space available in the transmit buffer
+
+## Description
+
+This API allows the application to set a threshold level on the number of free space available in the transmit buffer. Once the threshold is reached a notification is given to the application if it is enabled.
+
+## Precondition
+
+FLEXCOMx\_USART\_Initialize must have been called for the associated FLEXCOM\_USART instance.
+
+## Parameters
+
+|Param|Description|
+|-----|-----------|
+|nBytesThreshold|Threshold value for free space in the transmit buffer after which a notification must be given|
+
+## Returns
+
+None
+
+## Example
+
+```c
+uint8_t txBuffer[10];
+
+volatile bool txThresholdEventReceived = false;
+
+void usartWriteEventHandler(FLEXCOM_USART_EVENT event, uintptr_t context )
+{
+    txThresholdEventReceived = true;
+}
+
+//----------------------------------------------------------//
+
+// Register a callback for write events
+FLEXCOM0_USART_WriteCallbackRegister(usartWriteEventHandler, (uintptr_t) NULL);
+
+// Set TX threshold - 10 or more bytes of free space in the transmit buffer
+FLEXCOM0_USART_WriteThresholdSet(10);
+
+// Enable notifications. Disable persistent notifications.
+FLEXCOM0_USART_WriteNotificationEnable(true, false);
+
+// First time transmit 5 bytes
+FLEXCOM0_USART_Write((uint8_t*)txBuffer, 5);
+
+if (txThresholdEventReceived == true)
+{
+    // Transmit buffer has space for 10 or more characters
+    FLEXCOM0_USART_Write((uint8_t*)txBuffer, 10);
+}
+
+```
+
+## Remarks
+
+None
+

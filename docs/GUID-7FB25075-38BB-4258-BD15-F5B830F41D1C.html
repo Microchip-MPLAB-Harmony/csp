@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="TrustRAM (TRAM)" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="trustram-tram" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>TrustRAM (TRAM)</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-trustram-tram" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-7FB25075-38BB-4258-BD15-F5B830F41D1C"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="trustram-tram">
+<h1 class="title topictitle1" id="ariaid-title1">TrustRAM (TRAM)</h1><div class="body"><p class="p">The TrustRAM (TRAM) is the controller interface for a 256-byte security RAM. This RAM is intended for volatile secret data.</p>
+<p class="p">The TRAM is capable of performing address map scrambling as well as data scrambling for both write and read access to the security RAM.The TRAM can perform silent access of the data stream to improve side-channel attacks resistance.</p>
+<p class="p">The TRAM can execute two automated tasks that are triggered by external events</p>
+<ul class="ul"><li class="li"><p class="p">Remanence prevention and erase.</p>
+<ul class="ul"><li class="li"><p class="p">When a remanence periodic event occurs, the physical data stored in the RAM is inverted in order to prevent physical “burn-in” signatures.</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">Tamper Event</p>
+<ul class="ul"><li class="li"><p class="p">When a tamper event occurs, the TRAM executes a full erase of the control signals as well as the data in the security RAM.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p class="p">Both automated tasks do not require CPU interaction and can be performed in all sleep modes.</p>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p">TRAM Peripheral library allows user to configure the following options of the TRAM peripheral which are part of the initialization routine in MHC</p>
+<ul class="ul"><li class="li"><p class="p">Enable silent access</p>
+</li>
+<li class="li"><p class="p">Enable data remanence prevention</p>
+</li>
+<li class="li"><p class="p">Enable data erasure on tamper detection</p>
+</li>
+</ul>
+<p class="p">The example code below demonstrates how to Write and read Data from TRAM.</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d845155e50', this);">Copy</button><code id="d845155e50" content="int main( void )&#xA;{&#xA;    uint32_t rData = 0;&#xA;    uint32_t wData = 0;&#xA;&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;&#xA;    for(uint8_t i = 0; i &lt; 10; i++)&#xA;    {&#xA;        wData = ~(1 &lt;&lt; i);&#xA;&#xA;        TRAM_RAMSet(i, wData);&#xA;&#xA;        TRAM_RAMGet(i, &amp;rData);&#xA;&#xA;        if(rData != wData)&#xA;        {&#xA;            printf(&#34;\n\rTRAM register RAM[%d] value mismatch&#34;, i);&#xA;            break;&#xA;        }&#xA;    }&#xA;}"><span class="ph token keyword">int</span> <span class="ph token function">main</span><span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint32_t rData <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    uint32_t wData <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">for</span><span class="ph token punctuation">(</span>uint8_t i <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> i <span class="ph token operator">&lt;</span> <span class="ph token number">10</span><span class="ph token punctuation">;</span> i<span class="ph token operator">++</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        wData <span class="ph token operator">=</span> <span class="ph token operator">~</span><span class="ph token punctuation">(</span><span class="ph token number">1</span> <span class="ph token operator">&lt;&lt;</span> i<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token function">TRAM_RAMSet</span><span class="ph token punctuation">(</span>i<span class="ph token punctuation">,</span> wData<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token function">TRAM_RAMGet</span><span class="ph token punctuation">(</span>i<span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>rData<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token keyword">if</span><span class="ph token punctuation">(</span>rData <span class="ph token operator">!=</span> wData<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\rTRAM register RAM[%d] value mismatch"</span><span class="ph token punctuation">,</span> i<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">TrustRAM peripheral library provides the following interfaces:</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d845155e238"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d845155e240"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d845155e238 "><span>TRAM_Initialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d845155e240 "><span>Initializes the TrustRam</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d845155e238 "><span>TRAM_DataScrambleEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d845155e240 "><span>Enable or Disable data scrambling of the TrustRAM</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d845155e238 "><span>TRAM_DataScrambleKeySet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d845155e240 "><span>Sets the key for data scrambling of the TrustRAM</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d845155e238 "><span>TRAM_RAMGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d845155e240 "><span>Reads data from the TrustRAM RAMx register</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d845155e238 "><span>TRAM_RAMSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d845155e240 "><span>Write data into the TrustRAM RAMx register</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

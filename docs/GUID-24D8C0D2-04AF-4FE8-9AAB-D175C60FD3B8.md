@@ -1,0 +1,121 @@
+# General Purpose I/O \(GPIO\)
+
+General purpose I/O pins are the simplest of peripherals. They allow<br />the PIC32MX family device to monitor and control other devices. To add<br />flexibility and functionality, some pins are multiplexed with alternate<br />\\function\(s\). These functions depend on which peripheral features are<br />on the device. In general, when a peripheral is functioning, that pin<br />may not be used as a general purpose I/O pin.
+
+Some of the key features of the I/O ports are:
+
+-   Individual output pin open-drain enable/disable
+
+-   Individual input pin weak pull-up and pull-down
+
+-   Monitor selective inputs and generate interrupt when change in pin<br />state is detected
+
+-   Operation during Sleep and Idle modes
+
+-   Fast bit manipulation using CLR, SET and INV registers
+
+
+**Using The Library**
+
+The GPIO peripheral library provides two kinds of functions which can<br />be used to control GPIO Pins:
+
+1.  Pin Functions.
+
+2.  Port Functions.
+
+
+Pin functions take a particular pin as input and operates only on that<br />pin without affecting any other pins. Whereas port functions can<br />operate on multiple pins of the same port together.
+
+The GPIO peripheral library can generate a callback on a pin interrupt<br />if the pin interrupt is enabled in the MHC.
+
+**Library Interface**
+
+General Purpose I/O peripheral library provides the following interfaces:
+
+**Functions**
+
+|Name|Description|
+|----|-----------|
+|GPIO\_Initialize|Initialize the GPIO library|
+|GPIO\_PortRead|Read all the I/O lines of the selected port port|
+|GPIO\_PortWrite|Write the value on the masked I/O lines of the selected port|
+|GPIO\_PortLatchRead|Read the latch register value of the selected I/O port|
+|GPIO\_PortSet|Set the selected IO pins of a port|
+|GPIO\_PortClear|Clear the selected IO pins of a port|
+|GPIO\_PortToggle|Toggles the selected IO pins of a port|
+|GPIO\_PortInputEnable|Enables selected IO pins of a port as input|
+|GPIO\_PortOutputEnable|Enables selected IO pins of a port as output\(s\)|
+|GPIO\_PinInterruptEnable|Enables CN interrupt on selected change notice pins|
+|GPIO\_PinInterruptDisable|Disables CN interrupt on selected change notice pins|
+|GPIO\_PinWrite|Set the logic level of the selected pin|
+|GPIO\_PinRead|Read the selected pin value|
+|GPIO\_PinLatchRead|Read the value driven on the selected pin|
+|GPIO\_PinToggle|Toggles the selected pin|
+|GPIO\_PinSet|Sets the selected pin|
+|GPIO\_PinClear|Clears the selected pin|
+|GPIO\_PinInputEnable|Enables selected IO pin as Digital input|
+|GPIO\_PinOutputEnable|Enables selected IO pin as Digital output|
+|GPIO\_PinInterruptCallbackRegister|Allows application to register callback for every pin|
+
+**Data types and constants**
+
+|Name|Type|Description|
+|----|----|-----------|
+|GPIO\_PORT|Enum|Identifies the available GPIO Ports|
+|GPIO\_PIN|Enum|Identifies the available GPIO port pins|
+|CN\_PIN|Enum|Identifies the available Change Notice pins|
+|GPIO\_PIN\_CALLBACK|Typedef|Pointer to a GPIO Pin-Event handler function|
+
+-   **[GPIO\_Initialize Function](GUID-36CA12D3-316A-4B40-8D48-2217D714FE00.md)**  
+
+-   **[GPIO\_PortRead Function](GUID-F86D5964-2F46-4FF6-83A6-16F69EB5A2A9.md)**  
+
+-   **[GPIO\_PortWrite Function](GUID-D0339821-11BB-4A5C-B38B-E878FE60CFED.md)**  
+
+-   **[GPIO\_PortLatchRead Function](GUID-53EA5B12-0336-49D0-9473-7F08C3EB9A72.md)**  
+
+-   **[GPIO\_PortSet Function](GUID-06A5ABEF-E22D-491E-9D9C-F38CE2FC3E21.md)**  
+
+-   **[GPIO\_PortClear Function](GUID-414D0B8F-F20A-4655-9E24-911E1ECE8CBF.md)**  
+
+-   **[GPIO\_PortToggle Function](GUID-0488A24B-A088-4750-B029-C4588E32AE98.md)**  
+
+-   **[GPIO\_PortInputEnable Function](GUID-C84600A4-1EE4-4C62-8342-6E4A53E1E03F.md)**  
+
+-   **[GPIO\_PortOutputEnable Function](GUID-B95F8AA4-E0D9-460B-AF99-3114A0A7D05A.md)**  
+
+-   **[GPIO\_PinInterruptEnable Function](GUID-FE51BA00-F976-45E9-A695-B8F8D7924E30.md)**  
+
+-   **[GPIO\_PinInterruptDisable Function](GUID-A5A122A2-9D57-4C80-9723-AB74180245C3.md)**  
+
+-   **[GPIO\_PinWrite Function](GUID-3B1BD281-DFDD-4706-BB1A-A260537927A3.md)**  
+
+-   **[GPIO\_PinRead Function](GUID-81F0E663-8566-4F6A-98EF-FCACF9C61FE2.md)**  
+
+-   **[GPIO\_PinLatchRead Function](GUID-1F9BBDE3-D777-4D18-A895-49665D79794A.md)**  
+
+-   **[GPIO\_PinToggle Function](GUID-38D620C8-8BD5-4C4D-A862-57800CBDF24B.md)**  
+
+-   **[GPIO\_PinSet Function](GUID-48C9F223-8B16-4B52-B744-8C6E481B3565.md)**  
+
+-   **[GPIO\_PinClear Function](GUID-B5A72CD3-EAAA-49B0-92B2-96F0E1F8553F.md)**  
+
+-   **[GPIO\_PinInputEnable Function](GUID-15E3D643-E169-4661-A95B-4302F8412BAD.md)**  
+
+-   **[GPIO\_PinOutputEnable Function](GUID-7C0463F3-1B86-4A47-99FA-AA392FE60596.md)**  
+
+-   **[GPIO\_PinInterruptCallbackRegister Function](GUID-E02B1194-2DA9-4EE3-8709-44B2E3DE8E75.md)**  
+
+-   **[GPIO\_PORT Enum](GUID-0B4C0FA5-4FF7-4ACC-9D19-F1ED156F2B14.md)**  
+
+-   **[GPIO\_PIN Enum](GUID-AC6973C5-69A5-4DB8-8869-91860E3F0F54.md)**  
+
+-   **[CN\_PIN Enum](GUID-EB4310A9-1906-4A8F-9EC5-E1FAC1975A8B.md)**  
+
+-   **[GPIO\_PIN\_CALLBACK Typedef](GUID-812D7E0B-BA6B-490E-AAE0-A3CF53E8A656.md)**  
+
+
+**Parent topic:**[PIC32MX 3XX 4XX Peripheral Libraries](GUID-2C79235F-A27F-4622-BBDA-943C35FD7940.md)
+
+**Parent topic:**[PIC32MX 5XX 6XX 7XX Peripheral Libraries](GUID-91DC3697-58A9-4E5B-95DE-F4B08BA9C8DD.md)
+

@@ -1,0 +1,43 @@
+# TCCx\_Timer24bitCompareSet Function
+
+**Parent topic:**[Timer Counter for Control Applications \(TCC\)](GUID-CCA150A8-2C66-40B2-9C35-D7F3473720AE.md)
+
+## C
+
+```c
+void TCCx_Timer24bitCompareSet ( uint32_t compare );
+```
+
+## Summary
+
+Sets the compare value of a given timer channel.
+
+## Description
+
+This function writes the compare value. When timer counter matches compare<br />value, interrupt can be generated.
+
+## Precondition
+
+TCCx\_TimerInitialize function must have been called first for the given channel.
+
+## Parameters
+
+|Param|Description|
+|-----|-----------|
+|compare|compare value of the timer|
+
+## Returns
+
+None.
+
+## Example
+
+```c
+TCC0_TimerInitialize();
+TCC0_Timer24bitCompareSet(0xFul);
+```
+
+## Remarks
+
+This function is available only when TCC timer mode is used by SYS\_TIME module. SYS\_TIME uses compare match interrupt to generate dynamic delay.
+

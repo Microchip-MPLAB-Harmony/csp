@@ -1,0 +1,47 @@
+# DWDT\_CALLBACK Typedef
+
+**Parent topic:**[Dual Watchdog Timer \(DWDT\)](GUID-C76BC264-297E-4CE2-8858-572783ACBDB6.md)
+
+## C
+
+```c
+typedef void (*DWDT_CALLBACK) (uint32_t interruptStatus, void* context);
+```
+
+## Summary
+
+Pointer to a DWDT callback function
+
+## Description
+
+This data type defines the required function signature for the DWDT callback<br />function. Application must register a pointer to a callback function whose<br />function signature \(parameter and return value types\) match the types<br />specified by this function pointer in order to receive callback from the<br />PLIB.
+
+The parameters and return values are described here and a partial example<br />implementation is provided.
+
+## Parameters
+
+|Param|Description|
+|-----|-----------|
+|interruptStatus|Current status of the comparator|
+|context|Pointer to the context that will be returned to the application when callback is invoked|
+
+## Returns
+
+None.
+
+## Example
+
+```c
+    DWDT_WDT0_CallbackRegister (&APP_DWDT_CallbackFunction, NULL);
+    void APP_DWDT_CallbackFunction(bool interruptStatus, void* context)
+    {
+        //Application related tasks
+    }
+```
+
+## Remarks
+
+The context parameter contains the a handle to the client context,<br />provided at the time the callback function was registered using the<br />DWDT\_PS\_CallbackRegister function. This context handle value is<br />passed back to the client as the "context" parameter. It can be any value<br />\(such as a pointer to the client's data\) necessary to identify the client<br />context or instance of the client that made the data transfer<br />request.
+
+The callback function executes in the PLIB's interrupt context. It is<br />recommended of the application to not perform process intensive or blocking<br />operations with in this function.
+

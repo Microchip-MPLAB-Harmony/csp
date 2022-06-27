@@ -1,0 +1,44 @@
+# TCCx\_PWM24bitCounterSet Function
+
+**Parent topic:**[Timer Counter for Control Applications \(TCC\)](GUID-CCA150A8-2C66-40B2-9C35-D7F3473720AE.md)
+
+## C
+
+```c
+/* x = TCC instance number */
+void TCCx_PWM24bitCounterSet(uint32_t count);
+```
+
+## Summary
+
+Sets the counter value of a given TCC instance
+
+## Description
+
+This function updates the counter value.
+
+## Precondition
+
+TCCx\_PWMInitialize function must have been called first for the given channel.
+
+## Parameters
+
+|Param|Description|
+|-----|-----------|
+|count|counter value|
+
+## Returns
+
+None
+
+## Example
+
+```c
+TCC0_PWMInitialize();
+TCC0_PWM24bitCounterSet(0x100U);
+```
+
+## Remarks
+
+This function waits till sync operation is complete.
+

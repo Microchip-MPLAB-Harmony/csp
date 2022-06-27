@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="SQIx_DMATransfer Function" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="sqix-dmatransfer-function" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>SQIx_DMATransfer Function</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-sqix-dmatransfer-function" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-3EF25DC9-3A60-471F-93DA-C1AD3FEB6068"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="sqix-dmatransfer-function">
+<h1 class="title topictitle1" id="ariaid-title1">SQIx_DMATransfer Function</h1><div class="body"></div>
+<div class="topic nested1" aria-labelledby="ariaid-title2" id="c"><h2 class="title topictitle2" id="ariaid-title2">C</h2><div class="body"><pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d893945e14', this);">Copy</button><code id="d893945e14" content="void SQIx_DMATransfer( sqi_dma_desc_t *sqiDmaDesc ); // x - Instance of the SQI peripheral"><span class="ph token keyword">void</span> <span class="ph token function">SQIx_DMATransfer</span><span class="ph token punctuation">(</span> sqi_dma_desc_t <span class="ph token operator">*</span>sqiDmaDesc <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span> <span class="ph token comment">// x - Instance of the SQI peripheral</span></code></pre></div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title3" id="summary"><h2 class="title topictitle2" id="ariaid-title3">Summary</h2><div class="body"><p class="p">Starts a DMA transfer to the SQI slave device.</p>
+</div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title4" id="description"><h2 class="title topictitle2" id="ariaid-title4">Description</h2><div class="body"><p class="p">This function can be used to trigger a DMA transfer to the SQI slave device. The sqiDmaDesc can be a single descriptor or a chain of descriptors doing multiple operations.</p>
+<p class="p">A callback will be given to the client once the DMA transfer is completed if the SQI_BDCTRL_PKTINTEN or SQI_BDCTRL_BDDONEINTIEN is set in sqiDmaDesc-&gt;bd_ctrl register.</p>
+</div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title5" id="precondition"><h2 class="title topictitle2" id="ariaid-title5">Precondition</h2><div class="body"><p class="p">SQIx_Initialize must have been called for the associated SQI instance. The DMA Descriptor address passed should be from the non-cachable region.</p>
+</div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title6" id="parameters"><h2 class="title topictitle2" id="ariaid-title6">Parameters</h2><div class="body">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d893945e63"><span>Param</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d893945e65"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d893945e63 "><span>*sqiDmaDesc</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d893945e65 "><span>Pointer to SQI DMA descriptor buffer start address.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title7" id="returns"><h2 class="title topictitle2" id="ariaid-title7">Returns</h2><div class="body"><p class="p">None</p>
+</div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title8" id="example"><h2 class="title topictitle2" id="ariaid-title8">Example</h2><div class="body"><p class="p"><strong class="ph b">The Macros used to populate DMA Descriptors vary based on device family. Refer to the peripheral header file for actual macros to be used.</strong></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d893945e86', this);">Copy</button><code id="d893945e86" content="#define PAGE_SIZE                   (256U)&#xA;#define SECTOR_SIZE                 (4096U)&#xA;&#xA;//Erase, Write and Read 80KBytes of memory&#xA;#define SECTORS_TO_EWR              (20U)&#xA;#define BUFFER_SIZE                 (SECTOR_SIZE * SECTORS_TO_EWR)&#xA;&#xA;#define MIN_DMA_BUFFER_LEN          (CACHE_LINE_SIZE)&#xA;#define CMD_DESC_NUMBER             5&#xA;#define BUFF_DESC_NUMBER            (BUFFER_SIZE / PAGE_SIZE)&#xA;#define MEM_START_ADDRESS           (0x0U)&#xA;&#xA;#define SST26VF_HS_READ             0x0B&#xA;&#xA;volatile bool xfer_done = false;&#xA;&#xA;uint8_t CACHE_ALIGN readData[BUFFER_SIZE];&#xA;&#xA;uint8_t CACHE_ALIGN sqi_cmd_hsr[MIN_DMA_BUFFER_LEN];&#xA;uint8_t CACHE_ALIGN sqi_cmd_dummy[MIN_DMA_BUFFER_LEN];&#xA;&#xA;sqi_dma_desc_t CACHE_ALIGN sqiCmdDesc[CMD_DESC_NUMBER];&#xA;sqi_dma_desc_t CACHE_ALIGN sqiBufDesc[BUFF_DESC_NUMBER];&#xA;&#xA;static void APP_EventHandler(uintptr_t context)&#xA;{&#xA;    xfer_done = true;&#xA;}"><span class="ph token macro property">#<span class="ph token directive keyword">define</span> PAGE_SIZE                   (256U)</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> SECTOR_SIZE                 (4096U)</span>
+
+<span class="ph token comment">//Erase, Write and Read 80KBytes of memory</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> SECTORS_TO_EWR              (20U)</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> BUFFER_SIZE                 (SECTOR_SIZE * SECTORS_TO_EWR)</span>
+
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> MIN_DMA_BUFFER_LEN          (CACHE_LINE_SIZE)</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> CMD_DESC_NUMBER             5</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> BUFF_DESC_NUMBER            (BUFFER_SIZE / PAGE_SIZE)</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> MEM_START_ADDRESS           (0x0U)</span>
+
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> SST26VF_HS_READ             0x0B</span>
+
+<span class="ph token keyword">volatile</span> bool xfer_done <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+uint8_t CACHE_ALIGN readData<span class="ph token punctuation">[</span>BUFFER_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+uint8_t CACHE_ALIGN sqi_cmd_hsr<span class="ph token punctuation">[</span>MIN_DMA_BUFFER_LEN<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+uint8_t CACHE_ALIGN sqi_cmd_dummy<span class="ph token punctuation">[</span>MIN_DMA_BUFFER_LEN<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+sqi_dma_desc_t CACHE_ALIGN sqiCmdDesc<span class="ph token punctuation">[</span>CMD_DESC_NUMBER<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+sqi_dma_desc_t CACHE_ALIGN sqiBufDesc<span class="ph token punctuation">[</span>BUFF_DESC_NUMBER<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">static</span> <span class="ph token keyword">void</span> <span class="ph token function">APP_EventHandler</span><span class="ph token punctuation">(</span>uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    xfer_done <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d893945e223', this);">Copy</button><code id="d893945e223" content="void APP_Read( void *rx_data, uint32_t rx_data_length, uint32_t address )&#xA;{&#xA;    uint32_t pendingBytes   = rx_data_length;&#xA;    uint8_t *readBuffer     = (uint8_t *)rx_data;&#xA;    uint32_t numBytes       = 0;&#xA;    uint32_t i              = 0;&#xA;&#xA;    xfer_done = false;&#xA;&#xA;    // Construct parameters to issue SST26 high speed read command&#xA;    sqi_cmd_hsr[0] = SST26VF_HS_READ;&#xA;    sqi_cmd_hsr[1] = (0xff &amp; (address&gt;&gt;16));&#xA;    sqi_cmd_hsr[2] = (0xff &amp; (address&gt;&gt;8));&#xA;    sqi_cmd_hsr[3] = (0xff &amp; (address&gt;&gt;0));&#xA;    sqi_cmd_hsr[4] = 0;&#xA;&#xA;    // SQI Read: High Speed Read command (0x0B), 3 byte address, and 1 byte mode &#xA;    // Chip Select remains asserted after the transfer&#xA;&#xA;    sqiCmdDesc[0].bd_ctrl       = ( SQI_BDCTRL_BUFFLEN_VAL(5) | SQI_BDCTRL_MODE_QUAD_LANE |&#xA;                                    SQI_BDCTRL_SQICS_CS1 | SQI_BDCTRL_DESCEN);&#xA;&#xA;    sqiCmdDesc[0].bd_bufaddr    = (uint32_t *)KVA_TO_PA(&amp;sqi_cmd_hsr);&#xA;    sqiCmdDesc[0].bd_stat       = 0;&#xA;    sqiCmdDesc[0].bd_nxtptr     = (sqi_dma_desc_t *)KVA_TO_PA(&amp;sqiCmdDesc[1]);  &#xA;&#xA;    // SQI Read: 2 byte dummy read &#xA;    // Chip Select remains asserted after the transfer&#xA;&#xA;    sqiCmdDesc[1].bd_ctrl       = ( SQI_BDCTRL_BUFFLEN_VAL(2) | SQI_BDCTRL_MODE_QUAD_LANE |&#xA;                                    SQI_BDCTRL_SQICS_CS1 | SQI_BDCTRL_DESCEN);&#xA;&#xA;    sqiCmdDesc[1].bd_bufaddr    = (uint32_t *)KVA_TO_PA(&amp;sqi_cmd_dummy);&#xA;    sqiCmdDesc[1].bd_stat       = 0;&#xA;    sqiCmdDesc[1].bd_nxtptr     = (sqi_dma_desc_t *)KVA_TO_PA(&amp;sqiBufDesc[0]); &#xA;&#xA;    // SQI Read: Reads the values from the memory &#xA;    // Create Descriptor chain. Enable packet interrupt.&#xA;    // Chip Select is de-asserted after the transfer&#xA;&#xA;    for (i = 0; (i &lt; BUFF_DESC_NUMBER) &amp;&amp; (pendingBytes &gt; 0); i++)&#xA;    {&#xA;        if (pendingBytes &gt; PAGE_SIZE)&#xA;        {&#xA;            numBytes = PAGE_SIZE;&#xA;        }&#xA;        else&#xA;        {&#xA;            numBytes = pendingBytes;&#xA;        }&#xA;&#xA;        sqiBufDesc[i].bd_ctrl       = ( SQI_BDCTRL_BUFFLEN_VAL(numBytes) | SQI_BDCTRL_PKTINTEN |&#xA;                                        SQI_BDCTRL_MODE_QUAD_LANE | SQI_BDCTRL_DIR_READ |&#xA;                                        SQI_BDCTRL_SQICS_CS1 | SQI_BDCTRL_DESCEN);&#xA;&#xA;        sqiBufDesc[i].bd_bufaddr    = (uint32_t *)KVA_TO_PA(readBuffer);&#xA;        sqiBufDesc[i].bd_stat       = 0;&#xA;        sqiBufDesc[i].bd_nxtptr     = (sqi_dma_desc_t *)KVA_TO_PA(&amp;sqiBufDesc[i+1]);&#xA;&#xA;        pendingBytes    -= numBytes;&#xA;        readBuffer      += numBytes;&#xA;    }&#xA;&#xA;    // The last descriptor must indicate the end of the descriptor list and last packaet&#xA;    sqiBufDesc[i-1].bd_ctrl         |= (SQI_BDCTRL_LASTPKT | SQI_BDCTRL_LASTBD |&#xA;                                        SQI_BDCTRL_DEASSERT);&#xA;&#xA;    sqiBufDesc[i-1].bd_nxtptr       = 0x00000000;&#xA;&#xA;    // Initialize the root buffer descriptor &#xA;    SQI1_DMA_Transfer((sqi_dma_desc_t *)KVA_TO_PA(&amp;sqiBufDesc[0]));&#xA;&#xA;    // Wait for transfer to complete&#xA;    while(xferDone == false);&#xA;}&#xA;&#xA;void main()&#xA;{&#xA;    // Other calls ..&#xA;    SQI1_RegisterCallback(APP_EventHandler, (uintptr_t)NULL);&#xA;&#xA;    APP_Read((uint32_t *)readBuffer, BUFFER_SIZE, MEM_START_ADDRESS);&#xA;}&#xA;"><span class="ph token keyword">void</span> <span class="ph token function">APP_Read</span><span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span>rx_data<span class="ph token punctuation">,</span> uint32_t rx_data_length<span class="ph token punctuation">,</span> uint32_t address <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint32_t pendingBytes   <span class="ph token operator">=</span> rx_data_length<span class="ph token punctuation">;</span>
+    uint8_t <span class="ph token operator">*</span>readBuffer     <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint8_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rx_data<span class="ph token punctuation">;</span>
+    uint32_t numBytes       <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    uint32_t i              <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+    xfer_done <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">// Construct parameters to issue SST26 high speed read command</span>
+    sqi_cmd_hsr<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> SST26VF_HS_READ<span class="ph token punctuation">;</span>
+    sqi_cmd_hsr<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token number">0xff</span> <span class="ph token operator">&amp;</span> <span class="ph token punctuation">(</span>address<span class="ph token operator">&gt;&gt;</span><span class="ph token number">16</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    sqi_cmd_hsr<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token number">0xff</span> <span class="ph token operator">&amp;</span> <span class="ph token punctuation">(</span>address<span class="ph token operator">&gt;&gt;</span><span class="ph token number">8</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    sqi_cmd_hsr<span class="ph token punctuation">[</span><span class="ph token number">3</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token number">0xff</span> <span class="ph token operator">&amp;</span> <span class="ph token punctuation">(</span>address<span class="ph token operator">&gt;&gt;</span><span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    sqi_cmd_hsr<span class="ph token punctuation">[</span><span class="ph token number">4</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">// SQI Read: High Speed Read command (0x0B), 3 byte address, and 1 byte mode </span>
+    <span class="ph token comment">// Chip Select remains asserted after the transfer</span>
+
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_ctrl       <span class="ph token operator">=</span> <span class="ph token punctuation">(</span> <span class="ph token function">SQI_BDCTRL_BUFFLEN_VAL</span><span class="ph token punctuation">(</span><span class="ph token number">5</span><span class="ph token punctuation">)</span> <span class="ph token operator">|</span> SQI_BDCTRL_MODE_QUAD_LANE <span class="ph token operator">|</span>
+                                    SQI_BDCTRL_SQICS_CS1 <span class="ph token operator">|</span> SQI_BDCTRL_DESCEN<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_bufaddr    <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token function">KVA_TO_PA</span><span class="ph token punctuation">(</span><span class="ph token operator">&amp;</span>sqi_cmd_hsr<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_stat       <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_nxtptr     <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>sqi_dma_desc_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token function">KVA_TO_PA</span><span class="ph token punctuation">(</span><span class="ph token operator">&amp;</span>sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>  
+
+    <span class="ph token comment">// SQI Read: 2 byte dummy read </span>
+    <span class="ph token comment">// Chip Select remains asserted after the transfer</span>
+
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_ctrl       <span class="ph token operator">=</span> <span class="ph token punctuation">(</span> <span class="ph token function">SQI_BDCTRL_BUFFLEN_VAL</span><span class="ph token punctuation">(</span><span class="ph token number">2</span><span class="ph token punctuation">)</span> <span class="ph token operator">|</span> SQI_BDCTRL_MODE_QUAD_LANE <span class="ph token operator">|</span>
+                                    SQI_BDCTRL_SQICS_CS1 <span class="ph token operator">|</span> SQI_BDCTRL_DESCEN<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_bufaddr    <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token function">KVA_TO_PA</span><span class="ph token punctuation">(</span><span class="ph token operator">&amp;</span>sqi_cmd_dummy<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_stat       <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_nxtptr     <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>sqi_dma_desc_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token function">KVA_TO_PA</span><span class="ph token punctuation">(</span><span class="ph token operator">&amp;</span>sqiBufDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span> 
+
+    <span class="ph token comment">// SQI Read: Reads the values from the memory </span>
+    <span class="ph token comment">// Create Descriptor chain. Enable packet interrupt.</span>
+    <span class="ph token comment">// Chip Select is de-asserted after the transfer</span>
+
+    <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>i <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> <span class="ph token punctuation">(</span>i <span class="ph token operator">&lt;</span> BUFF_DESC_NUMBER<span class="ph token punctuation">)</span> <span class="ph token operator">&amp;&amp;</span> <span class="ph token punctuation">(</span>pendingBytes <span class="ph token operator">&gt;</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span> i<span class="ph token operator">++</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>pendingBytes <span class="ph token operator">&gt;</span> PAGE_SIZE<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            numBytes <span class="ph token operator">=</span> PAGE_SIZE<span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        <span class="ph token keyword">else</span>
+        <span class="ph token punctuation">{</span>
+            numBytes <span class="ph token operator">=</span> pendingBytes<span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+
+        sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_ctrl       <span class="ph token operator">=</span> <span class="ph token punctuation">(</span> <span class="ph token function">SQI_BDCTRL_BUFFLEN_VAL</span><span class="ph token punctuation">(</span>numBytes<span class="ph token punctuation">)</span> <span class="ph token operator">|</span> SQI_BDCTRL_PKTINTEN <span class="ph token operator">|</span>
+                                        SQI_BDCTRL_MODE_QUAD_LANE <span class="ph token operator">|</span> SQI_BDCTRL_DIR_READ <span class="ph token operator">|</span>
+                                        SQI_BDCTRL_SQICS_CS1 <span class="ph token operator">|</span> SQI_BDCTRL_DESCEN<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+        sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_bufaddr    <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token function">KVA_TO_PA</span><span class="ph token punctuation">(</span>readBuffer<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_stat       <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+        sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_nxtptr     <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>sqi_dma_desc_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token function">KVA_TO_PA</span><span class="ph token punctuation">(</span><span class="ph token operator">&amp;</span>sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token operator">+</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+        pendingBytes    <span class="ph token operator">-=</span> numBytes<span class="ph token punctuation">;</span>
+        readBuffer      <span class="ph token operator">+=</span> numBytes<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">// The last descriptor must indicate the end of the descriptor list and last packaet</span>
+    sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token operator">-</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_ctrl         <span class="ph token operator">|=</span> <span class="ph token punctuation">(</span>SQI_BDCTRL_LASTPKT <span class="ph token operator">|</span> SQI_BDCTRL_LASTBD <span class="ph token operator">|</span>
+                                        SQI_BDCTRL_DEASSERT<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token operator">-</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_nxtptr       <span class="ph token operator">=</span> <span class="ph token number">0x00000000</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">// Initialize the root buffer descriptor </span>
+    <span class="ph token function">SQI1_DMA_Transfer</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>sqi_dma_desc_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token function">KVA_TO_PA</span><span class="ph token punctuation">(</span><span class="ph token operator">&amp;</span>sqiBufDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">// Wait for transfer to complete</span>
+    <span class="ph token keyword">while</span><span class="ph token punctuation">(</span>xferDone <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">main</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">// Other calls ..</span>
+    <span class="ph token function">SQI1_RegisterCallback</span><span class="ph token punctuation">(</span>APP_EventHandler<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span><span class="ph token constant">NULL</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">APP_Read</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>readBuffer<span class="ph token punctuation">,</span> BUFFER_SIZE<span class="ph token punctuation">,</span> MEM_START_ADDRESS<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+</code></pre><pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d893945e1127', this);">Copy</button><code id="d893945e1127" content="void APP_Read( void *rx_data, uint32_t rx_data_length, uint32_t address )&#xA;{&#xA;    uint32_t pendingBytes   = rx_data_length;&#xA;    uint8_t *readBuffer     = (uint8_t *)rx_data;&#xA;    uint32_t numBytes       = 0;&#xA;    uint32_t i              = 0;&#xA;&#xA;    xfer_done = false;&#xA;&#xA;    // Construct parameters to issue SST26 high speed read command&#xA;    sqi_cmd_hsr[0] = SST26VF_HS_READ;&#xA;    sqi_cmd_hsr[1] = (0xff &amp; (address&gt;&gt;16));&#xA;    sqi_cmd_hsr[2] = (0xff &amp; (address&gt;&gt;8));&#xA;    sqi_cmd_hsr[3] = (0xff &amp; (address&gt;&gt;0));&#xA;    sqi_cmd_hsr[4] = 0;&#xA;&#xA;    // SQI Read: High Speed Read command (0x0B), 3 byte address, and 1 byte mode &#xA;    // Chip Select remains asserted after the transfer&#xA;&#xA;    sqiCmdDesc[0].bd_ctrl       = ( SQI_BDCTRL_BD_BUFLEN(5) | SQI_BDCTRL_MODE(QUAD_MODE) |&#xA;                                    SQI_BDCTRL_SPI_DEV_SEL10(0x00) | SQI_BDCTRL_DESC_EN_Msk);&#xA;&#xA;    sqiCmdDesc[0].bd_bufaddr    = (uint32_t *)&amp;sqi_cmd_hsr;&#xA;    sqiCmdDesc[0].bd_stat       = 0;&#xA;    sqiCmdDesc[0].bd_nxtptr     = (sqi_dma_desc_t *)&amp;sqiCmdDesc[1];  &#xA;&#xA;    DCACHE_CLEAN_BY_ADDR((uint32_t *)&amp;sqiCmdDesc[0], sizeof(sqiCmdDesc[0]));&#xA;&#xA;    // SQI Read: 2 byte dummy read &#xA;    // Chip Select remains asserted after the transfer&#xA;&#xA;    sqiCmdDesc[1].bd_ctrl       = ( SQI_BDCTRL_BD_BUFLEN(2) | SQI_BDCTRL_MODE(QUAD_MODE) |&#xA;                                    SQI_BDCTRL_SPI_DEV_SEL10(0x00) | SQI_BDCTRL_DESC_EN_Msk);&#xA;&#xA;    sqiCmdDesc[1].bd_bufaddr    = (uint32_t *)&amp;sqi_cmd_dummy;&#xA;    sqiCmdDesc[1].bd_stat       = 0;&#xA;    sqiCmdDesc[1].bd_nxtptr     = (sqi_dma_desc_t *)&amp;sqiBufDesc[0]; &#xA;&#xA;    DCACHE_CLEAN_BY_ADDR((uint32_t *)sqi_cmd_hsr, sizeof(sqi_cmd_hsr));&#xA;    DCACHE_CLEAN_BY_ADDR((uint32_t *)&amp;sqiCmdDesc[0], 2 * sizeof(sqi_dma_desc_t));&#xA;&#xA;    // SQI Read: Reads the values from the memory &#xA;    // Create Descriptor chain. Enable packet interrupt.&#xA;    // Chip Select is de-asserted after the transfer&#xA;&#xA;    for (i = 0; (i &lt; BUFF_DESC_NUMBER) &amp;&amp; (pendingBytes &gt; 0); i++)&#xA;    {&#xA;        if (pendingBytes &gt; PAGE_SIZE)&#xA;        {&#xA;            numBytes = PAGE_SIZE;&#xA;        }&#xA;        else&#xA;        {&#xA;            numBytes = pendingBytes;&#xA;        }&#xA;&#xA;        sqiBufDesc[i].bd_ctrl       = ( SQI_BDCTRL_BD_BUFLEN(numBytes) | SQI_BDCTRL_PKT_INT_EN_Msk |&#xA;                                        SQI_BDCTRL_MODE(QUAD_MODE) | SQI_BDCTRL_DIR_Msk |&#xA;                                        SQI_BDCTRL_SPI_DEV_SEL10(0x00) | SQI_BDCTRL_DESC_EN_Msk);&#xA;&#xA;        sqiBufDesc[i].bd_bufaddr    = (uint32_t *)readBuffer;&#xA;        sqiBufDesc[i].bd_stat       = 0;&#xA;        sqiBufDesc[i].bd_nxtptr     = (sqi_dma_desc_t *)&amp;sqiBufDesc[i+1];&#xA;&#xA;        pendingBytes    -= numBytes;&#xA;        readBuffer      += numBytes;&#xA;    }&#xA;&#xA;    // The last descriptor must indicate the end of the descriptor list&#xA;    sqiBufDesc[i-1].bd_ctrl         |= (SQI_BDCTRL_LIFM_Msk | SQI_BDCTRL_LAST_BD_Msk |&#xA;                                        SQI_BDCTRL_CS_ASSERT_Msk);&#xA;&#xA;    sqiBufDesc[i-1].bd_nxtptr       = 0x00000000;&#xA;&#xA;    DCACHE_CLEAN_BY_ADDR((uint32_t *)&amp;sqiBufDesc[0], (i * sizeof(sqi_dma_desc_t)));&#xA;&#xA;    // Initialize the root buffer descriptor&#xA;    SQI1_DMATransfer((sqi_dma_desc_t *)&amp;sqiCmdDesc[0]);&#xA;&#xA;    // Wait for transfer to complete&#xA;    while(xferDone == false);&#xA;}&#xA;&#xA;void main()&#xA;{&#xA;    // Other calls ..&#xA;    SQI1_RegisterCallback(APP_EventHandler, (uintptr_t)NULL);&#xA;&#xA;    DCACHE_INVALIDATE_BY_ADDR((uint32_t *)readBuffer, BUFFER_SIZE);&#xA;&#xA;    APP_Read((uint32_t *)readData, BUFFER_SIZE, MEM_START_ADDRESS);&#xA;}"><span class="ph token keyword">void</span> <span class="ph token function">APP_Read</span><span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span>rx_data<span class="ph token punctuation">,</span> uint32_t rx_data_length<span class="ph token punctuation">,</span> uint32_t address <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint32_t pendingBytes   <span class="ph token operator">=</span> rx_data_length<span class="ph token punctuation">;</span>
+    uint8_t <span class="ph token operator">*</span>readBuffer     <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint8_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rx_data<span class="ph token punctuation">;</span>
+    uint32_t numBytes       <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    uint32_t i              <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+    xfer_done <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">// Construct parameters to issue SST26 high speed read command</span>
+    sqi_cmd_hsr<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> SST26VF_HS_READ<span class="ph token punctuation">;</span>
+    sqi_cmd_hsr<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token number">0xff</span> <span class="ph token operator">&amp;</span> <span class="ph token punctuation">(</span>address<span class="ph token operator">&gt;&gt;</span><span class="ph token number">16</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    sqi_cmd_hsr<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token number">0xff</span> <span class="ph token operator">&amp;</span> <span class="ph token punctuation">(</span>address<span class="ph token operator">&gt;&gt;</span><span class="ph token number">8</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    sqi_cmd_hsr<span class="ph token punctuation">[</span><span class="ph token number">3</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token number">0xff</span> <span class="ph token operator">&amp;</span> <span class="ph token punctuation">(</span>address<span class="ph token operator">&gt;&gt;</span><span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    sqi_cmd_hsr<span class="ph token punctuation">[</span><span class="ph token number">4</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">// SQI Read: High Speed Read command (0x0B), 3 byte address, and 1 byte mode </span>
+    <span class="ph token comment">// Chip Select remains asserted after the transfer</span>
+
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_ctrl       <span class="ph token operator">=</span> <span class="ph token punctuation">(</span> <span class="ph token function">SQI_BDCTRL_BD_BUFLEN</span><span class="ph token punctuation">(</span><span class="ph token number">5</span><span class="ph token punctuation">)</span> <span class="ph token operator">|</span> <span class="ph token function">SQI_BDCTRL_MODE</span><span class="ph token punctuation">(</span>QUAD_MODE<span class="ph token punctuation">)</span> <span class="ph token operator">|</span>
+                                    <span class="ph token function">SQI_BDCTRL_SPI_DEV_SEL10</span><span class="ph token punctuation">(</span><span class="ph token number">0x00</span><span class="ph token punctuation">)</span> <span class="ph token operator">|</span> SQI_BDCTRL_DESC_EN_Msk<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_bufaddr    <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>sqi_cmd_hsr<span class="ph token punctuation">;</span>
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_stat       <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_nxtptr     <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>sqi_dma_desc_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>  
+
+    <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">// SQI Read: 2 byte dummy read </span>
+    <span class="ph token comment">// Chip Select remains asserted after the transfer</span>
+
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_ctrl       <span class="ph token operator">=</span> <span class="ph token punctuation">(</span> <span class="ph token function">SQI_BDCTRL_BD_BUFLEN</span><span class="ph token punctuation">(</span><span class="ph token number">2</span><span class="ph token punctuation">)</span> <span class="ph token operator">|</span> <span class="ph token function">SQI_BDCTRL_MODE</span><span class="ph token punctuation">(</span>QUAD_MODE<span class="ph token punctuation">)</span> <span class="ph token operator">|</span>
+                                    <span class="ph token function">SQI_BDCTRL_SPI_DEV_SEL10</span><span class="ph token punctuation">(</span><span class="ph token number">0x00</span><span class="ph token punctuation">)</span> <span class="ph token operator">|</span> SQI_BDCTRL_DESC_EN_Msk<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_bufaddr    <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>sqi_cmd_dummy<span class="ph token punctuation">;</span>
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_stat       <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_nxtptr     <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>sqi_dma_desc_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>sqiBufDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">;</span> 
+
+    <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>sqi_cmd_hsr<span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>sqi_cmd_hsr<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> <span class="ph token number">2</span> <span class="ph token operator">*</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>sqi_dma_desc_t<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">// SQI Read: Reads the values from the memory </span>
+    <span class="ph token comment">// Create Descriptor chain. Enable packet interrupt.</span>
+    <span class="ph token comment">// Chip Select is de-asserted after the transfer</span>
+
+    <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>i <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> <span class="ph token punctuation">(</span>i <span class="ph token operator">&lt;</span> BUFF_DESC_NUMBER<span class="ph token punctuation">)</span> <span class="ph token operator">&amp;&amp;</span> <span class="ph token punctuation">(</span>pendingBytes <span class="ph token operator">&gt;</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span> i<span class="ph token operator">++</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>pendingBytes <span class="ph token operator">&gt;</span> PAGE_SIZE<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            numBytes <span class="ph token operator">=</span> PAGE_SIZE<span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        <span class="ph token keyword">else</span>
+        <span class="ph token punctuation">{</span>
+            numBytes <span class="ph token operator">=</span> pendingBytes<span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+
+        sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_ctrl       <span class="ph token operator">=</span> <span class="ph token punctuation">(</span> <span class="ph token function">SQI_BDCTRL_BD_BUFLEN</span><span class="ph token punctuation">(</span>numBytes<span class="ph token punctuation">)</span> <span class="ph token operator">|</span> SQI_BDCTRL_PKT_INT_EN_Msk <span class="ph token operator">|</span>
+                                        <span class="ph token function">SQI_BDCTRL_MODE</span><span class="ph token punctuation">(</span>QUAD_MODE<span class="ph token punctuation">)</span> <span class="ph token operator">|</span> SQI_BDCTRL_DIR_Msk <span class="ph token operator">|</span>
+                                        <span class="ph token function">SQI_BDCTRL_SPI_DEV_SEL10</span><span class="ph token punctuation">(</span><span class="ph token number">0x00</span><span class="ph token punctuation">)</span> <span class="ph token operator">|</span> SQI_BDCTRL_DESC_EN_Msk<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+        sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_bufaddr    <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>readBuffer<span class="ph token punctuation">;</span>
+        sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_stat       <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+        sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_nxtptr     <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>sqi_dma_desc_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token operator">+</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+        pendingBytes    <span class="ph token operator">-=</span> numBytes<span class="ph token punctuation">;</span>
+        readBuffer      <span class="ph token operator">+=</span> numBytes<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">// The last descriptor must indicate the end of the descriptor list</span>
+    sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token operator">-</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_ctrl         <span class="ph token operator">|=</span> <span class="ph token punctuation">(</span>SQI_BDCTRL_LIFM_Msk <span class="ph token operator">|</span> SQI_BDCTRL_LAST_BD_Msk <span class="ph token operator">|</span>
+                                        SQI_BDCTRL_CS_ASSERT_Msk<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    sqiBufDesc<span class="ph token punctuation">[</span>i<span class="ph token operator">-</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>bd_nxtptr       <span class="ph token operator">=</span> <span class="ph token number">0x00000000</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>sqiBufDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>i <span class="ph token operator">*</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>sqi_dma_desc_t<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">// Initialize the root buffer descriptor</span>
+    <span class="ph token function">SQI1_DMATransfer</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>sqi_dma_desc_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>sqiCmdDesc<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">// Wait for transfer to complete</span>
+    <span class="ph token keyword">while</span><span class="ph token punctuation">(</span>xferDone <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">main</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">// Other calls ..</span>
+    <span class="ph token function">SQI1_RegisterCallback</span><span class="ph token punctuation">(</span>APP_EventHandler<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span><span class="ph token constant">NULL</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DCACHE_INVALIDATE_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>readBuffer<span class="ph token punctuation">,</span> BUFFER_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">APP_Read</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>readData<span class="ph token punctuation">,</span> BUFFER_SIZE<span class="ph token punctuation">,</span> MEM_START_ADDRESS<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre></div>
+</div>
+</body>
+</html>

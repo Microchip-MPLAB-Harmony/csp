@@ -1,0 +1,43 @@
+# TCCx\_CompareFrequencyGet Function
+
+**Parent topic:**[Timer Counter for Control Applications \(TCC\)](GUID-CCA150A8-2C66-40B2-9C35-D7F3473720AE.md)
+
+## C
+
+```c
+/* x = TCC instance number */
+uint32_t TCCx_CompareFrequencyGet( void );
+```
+
+## Summary
+
+Provides the given timer's counter-increment frequency.
+
+## Description
+
+This function provides the frequency at which the given counter<br />increments. It can be used to convert differences between counter values<br />to real time or real-time intervals to timer period values.
+
+## Precondition
+
+TCCx\_CompareInitialize\(\) function must have been called first.
+
+## Parameters
+
+None.
+
+## Returns
+
+Frequency \(in Hz\) at which the timer's counter increments.
+
+## Example
+
+```c
+uint32_t frequency = 0;
+TCC0_CompareInitialize();
+frequency = TCC0_CompareFrequencyGet();
+```
+
+## Remarks
+
+None.
+

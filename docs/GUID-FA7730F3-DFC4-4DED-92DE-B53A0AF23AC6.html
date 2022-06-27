@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Cache Controller (Cache)" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="cache-controller-cache" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Cache Controller (Cache)</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-cache-controller-cache" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-FA7730F3-DFC4-4DED-92DE-B53A0AF23AC6"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="cache-controller-cache">
+<h1 class="title topictitle1" id="ariaid-title1">Cache Controller (Cache)</h1><div class="body"><p class="p">This library provides a brief overview of the L1 Cache peripheral in the PIC32MZ family of devices.</p>
+<p class="p">The L1 cache is divided into two parts, a Data Cache (D-cache) and an Instruction Cache (I-cache). These blocks of high-speed memory both serve to compensate for the lengthy access time of main memory, by fetching instructions and data for the CPU ahead of time. The CPU can then access the information directly through the cache in a single clock cycle, rather than having to wait multiple clock cycles for accesses to main memory. The L1 cache provides a drastic increase in performance, but the user must be aware of hazards that exist when using the cache.</p>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p">Cache Coherency</p>
+<p class="p">Cache coherency is the discipline of ensuring that the data stored in main memory matches the corresponding data in the cache. The majority of the cache-related APIs deal with cache coherency. These functions allow the user to flush, clean and invalidate entire cache(s), or just a range of addresses within the cache.</p>
+<p class="p">Caches most often lose coherency when a bus master other than the CPU modifies memory. This happens frequently with DMA. Two examples are provided in the following section.</p>
+<p class="p">Example 1:</p>
+<p class="p">Imagine a situation where you would like to transfer data from a source buffer to a destination buffer using DMA. You would write data to the source buffer, start the DMA transfer, and then expect that the same data now appears in the destination buffer. With the cache in write-back mode (the default mode for the PIC32MZ family), this will not be the case. When transferring data out of memory using DMA, it is possible that the desired data is held in the D-cache, but has never been written back to main memory. Therefore, in this case, you write data to the source buffer and it gets stored in cache. When the DMA transfer executes, it will pull the data from the source buffer out of RAM and then transfer it to the destination buffer in RAM. The problem is that the fresh data was stored in the cache but never written back to RAM, so what has happened is that stale data was copied over rather than the intended data. What is needed is a way to force the cache to write its data back to main memory before the DMA transfer. This is known as a write-back operation and would be performed with the use of the function:</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d382821e27', this);">Copy</button><code id="d382821e27" content="CACHE_DataCacheClean(uint32_t addr, size_t len)"><span class="ph token function">CACHE_DataCacheClean</span><span class="ph token punctuation">(</span>uint32_t addr<span class="ph token punctuation">,</span> size_t len<span class="ph token punctuation">)</span></code></pre><p class="p">Example 2:</p>
+<p class="p">The second situation involves writing data into memory using DMA. Imagine that the cache is holding a chunk of data known as destination_buffer. You then execute a DMA transfer to copy some new data from a source buffer into destination_buffer. The issue here is that main memory now contains the correct data, but the cache holds a copy of stale data for destination_buffer. The CPU cannot see this problem and it will keep pulling the data out of the cache, not even realizing that it’s stale. What is needed is a way to tell the cache to pull the fresh data out of main memory, to replace the stale data that the cache contains. This is known as an invalidate operation. It is performed with the use of the function:</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d382821e43', this);">Copy</button><code id="d382821e43" content="CACHE_DataCacheInvalidate(uint32_t addr, size_t len)"><span class="ph token function">CACHE_DataCacheInvalidate</span><span class="ph token punctuation">(</span>uint32_t addr<span class="ph token punctuation">,</span> size_t len<span class="ph token punctuation">)</span></code></pre><p class="p">The below example application shows how to use the cache maintenance APIs to avoid issues related to cache coherency when the data cache is enabled.</p>
+<p class="p">The application uses the USART and the DMA PLIBs to demonstrate the cache maintenance APIs provided by the Cache peripheral library. It registers a callback with the DMA transmit and receive channels. The application first transmits a message using the DMA transmit channel and then schedules a read of ten characters using the DMA receive channel. Once the DMA read is complete, it reads the received data and echoes the same on the terminal using the DMA transmit channel.</p>
+<p class="p">The application calls the DCACHE_CLEAN_BY_ADDR API on the write buffer before transmitting it. Calling this API copies the data from the cache memory to the main memory, thereby ensuring that the DMA peripheral uses the updated values in the write buffer.</p>
+<p class="p">The application calls the DCACHE_INVALIDATE_BY_ADDR API on the read buffer after reception of data is complete by the DMA receive channel. Calling this API invalidates the cache region corresponding to the read buffer, thereby ensuring that the CPU reads the updated values in the read buffer from the main memory and into the cache.</p>
+<p class="p">The cache maintenance operations are always performed on a cache line (1 cache line = 32 bytes), the read and write buffers must be aligned to a 32 byte boundary and must be a multiple of 32 bytes. For the same reason, the number of received and echoed back bytes is 10, the size of the receive and echo buffers is 32 bytes.</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d382821e64', this);">Copy</button><code id="d382821e64" content="#define READ_SIZE               10&#xA;#define BUFFER_SIZE             (2*CACHE_LINE_SIZE)     // Buffer size in terms of cache lines&#xA;&#xA;char __attribute__ ((aligned (16))) messageStart[] = &#34;**** CACHE maintenance demo with UART ****\r\n\&#xA;**** Type a buffer of 10 characters and observe it echo back ****\r\n\&#xA;**** LED toggles on each time the buffer is echoed ****\r\n&#34;;&#xA;char __attribute__ ((aligned (16))) receiveBuffer[BUFFER_SIZE] = {};&#xA;char __attribute__ ((aligned (16))) echoBuffer[BUFFER_SIZE] = {};&#xA;&#xA;bool writeStatus  = false;&#xA;bool readStatus   = false;&#xA;&#xA;void TX_DMAC_Callback(DMAC_TRANSFER_EVENT status, uintptr_t contextHandle)&#xA;{&#xA;    writeStatus = true;&#xA;}&#xA;&#xA;void RX_DMAC_Callback(DMAC_TRANSFER_EVENT status, uintptr_t contextHandle)&#xA;{&#xA;    readStatus = true;&#xA;}&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;&#xA;    /* Register callback functions for both write and read contexts */&#xA;    DMAC_ChannelCallbackRegister(DMAC_CHANNEL_0, TX_DMAC_Callback, 0);&#xA;    DMAC_ChannelCallbackRegister(DMAC_CHANNEL_1, RX_DMAC_Callback, 1);&#xA;&#xA;    DCACHE_CLEAN_BY_ADDR((uint32_t)messageStart, sizeof(messageStart));&#xA;&#xA;    DMAC_ChannelTransfer(DMAC_CHANNEL_0, &amp;messageStart, sizeof(messageStart), (const void *)&amp;U2TXREG, 1, 1);&#xA;&#xA;    while(1)&#xA;    {&#xA;        if(readStatus == true)&#xA;        {&#xA;            readStatus = false;&#xA;&#xA;            memcpy(echoBuffer, receiveBuffer, READ_SIZE);&#xA;            echoBuffer[READ_SIZE] = '\r';&#xA;            echoBuffer[(READ_SIZE + 1)] = '\n';&#xA;&#xA;            DCACHE_CLEAN_BY_ADDR((uint32_t)echoBuffer, sizeof(echoBuffer));&#xA;&#xA;            DMAC_ChannelTransfer(DMAC_CHANNEL_0, echoBuffer, READ_SIZE+2, (const void *)&amp;U2TXREG, 1, 1);&#xA;        }&#xA;        else if(writeStatus == true)&#xA;        {&#xA;            writeStatus = false;&#xA;&#xA;            /* Invalidate cache lines having received buffer before using it&#xA;             * to load the latest data in the actual memory to the cache */&#xA;            DCACHE_INVALIDATE_BY_ADDR((uint32_t)receiveBuffer, sizeof(receiveBuffer));&#xA;&#xA;            DMAC_ChannelTransfer(DMAC_CHANNEL_1, (const void *)&amp;U2RXREG, 1, receiveBuffer, READ_SIZE, 1);&#xA;        }&#xA;    }&#xA;&#xA;      /* Execution should not come here during normal operation */&#xA;&#xA;    return ( EXIT_FAILURE );&#xA;}"><span class="ph token macro property">#<span class="ph token directive keyword">define</span> READ_SIZE               10</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> BUFFER_SIZE             (2*CACHE_LINE_SIZE)     </span><span class="ph token comment">// Buffer size in terms of cache lines</span>
+
+<span class="ph token keyword">char</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">16</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> messageStart<span class="ph token punctuation">[</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token string">"**** CACHE maintenance demo with UART ****\r\n\
+**** Type a buffer of 10 characters and observe it echo back ****\r\n\
+**** LED toggles on each time the buffer is echoed ****\r\n"</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">char</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">16</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> receiveBuffer<span class="ph token punctuation">[</span>BUFFER_SIZE<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">char</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">16</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> echoBuffer<span class="ph token punctuation">[</span>BUFFER_SIZE<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+
+bool writeStatus  <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+bool readStatus   <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">TX_DMAC_Callback</span><span class="ph token punctuation">(</span>DMAC_TRANSFER_EVENT status<span class="ph token punctuation">,</span> uintptr_t contextHandle<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    writeStatus <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">RX_DMAC_Callback</span><span class="ph token punctuation">(</span>DMAC_TRANSFER_EVENT status<span class="ph token punctuation">,</span> uintptr_t contextHandle<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    readStatus <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Register callback functions for both write and read contexts */</span>
+    <span class="ph token function">DMAC_ChannelCallbackRegister</span><span class="ph token punctuation">(</span>DMAC_CHANNEL_0<span class="ph token punctuation">,</span> TX_DMAC_Callback<span class="ph token punctuation">,</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">DMAC_ChannelCallbackRegister</span><span class="ph token punctuation">(</span>DMAC_CHANNEL_1<span class="ph token punctuation">,</span> RX_DMAC_Callback<span class="ph token punctuation">,</span> <span class="ph token number">1</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t<span class="ph token punctuation">)</span>messageStart<span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>messageStart<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DMAC_ChannelTransfer</span><span class="ph token punctuation">(</span>DMAC_CHANNEL_0<span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>messageStart<span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>messageStart<span class="ph token punctuation">)</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>U2TXREG<span class="ph token punctuation">,</span> <span class="ph token number">1</span><span class="ph token punctuation">,</span> <span class="ph token number">1</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">while</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">if</span><span class="ph token punctuation">(</span>readStatus <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            readStatus <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+            <span class="ph token function">memcpy</span><span class="ph token punctuation">(</span>echoBuffer<span class="ph token punctuation">,</span> receiveBuffer<span class="ph token punctuation">,</span> READ_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            echoBuffer<span class="ph token punctuation">[</span>READ_SIZE<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token string">'\r'</span><span class="ph token punctuation">;</span>
+            echoBuffer<span class="ph token punctuation">[</span><span class="ph token punctuation">(</span>READ_SIZE <span class="ph token operator">+</span> <span class="ph token number">1</span><span class="ph token punctuation">)</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token string">'\n'</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t<span class="ph token punctuation">)</span>echoBuffer<span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>echoBuffer<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token function">DMAC_ChannelTransfer</span><span class="ph token punctuation">(</span>DMAC_CHANNEL_0<span class="ph token punctuation">,</span> echoBuffer<span class="ph token punctuation">,</span> READ_SIZE<span class="ph token operator">+</span><span class="ph token number">2</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>U2TXREG<span class="ph token punctuation">,</span> <span class="ph token number">1</span><span class="ph token punctuation">,</span> <span class="ph token number">1</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        <span class="ph token keyword">else</span> <span class="ph token keyword">if</span><span class="ph token punctuation">(</span>writeStatus <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            writeStatus <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+            <span class="ph token comment">/* Invalidate cache lines having received buffer before using it
+             * to load the latest data in the actual memory to the cache */</span>
+            <span class="ph token function">DCACHE_INVALIDATE_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t<span class="ph token punctuation">)</span>receiveBuffer<span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>receiveBuffer<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token function">DMAC_ChannelTransfer</span><span class="ph token punctuation">(</span>DMAC_CHANNEL_1<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>U2RXREG<span class="ph token punctuation">,</span> <span class="ph token number">1</span><span class="ph token punctuation">,</span> receiveBuffer<span class="ph token punctuation">,</span> READ_SIZE<span class="ph token punctuation">,</span> <span class="ph token number">1</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+
+      <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    <span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">Cache Controller peripheral library provides the following interfaces:</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d382821e716"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d382821e718"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_CacheInit</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Initialize the L1 cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_CacheFlush</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Flushes the L1 cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_DataCacheFlush</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Flushes the L1 data cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_InstructionCacheFlush</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Flushes (invalidates) the L1 instruction cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_CacheClean</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Write back and invalidate an address range in either cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_DataCacheClean</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Write back and invalidate an address range in the data cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_DataCacheInvalidate</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Invalidate an address range in the data cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_InstructionCacheInvalidate</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Invalidate an address range in the instruction cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_InstructionCacheLock</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Fetch and lock a block of instructions in the instruction cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_DataCacheLock</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Fetch and lock a block of data in the data cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_CacheSync</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Synchronize the instruction and data caches</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_CacheCoherencySet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Set the cache coherency attribute for kseg0</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_CacheCoherencyGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Returns the current cache coherency attribute for kseg0</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_DataCacheAssociativityGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Returns the number of ways in the data cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_InstructionCacheAssociativityGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Returns the number of ways in the instruction cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_DataCacheLineSizeGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Returns the data cache line size</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_InstructionCacheLineSizeGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Returns the instruction cache line size</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_DataCacheLinesPerWayGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Returns the number of lines per way in the data cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_InstructionCacheLinesPerWayGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Returns the number of lines per way in the instruction cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_DataCacheSizeGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Returns the total number of bytes in the data cache</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e716 "><span>CACHE_InstructionCacheSizeGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e718 "><span>Returns the total number of bytes in the instruction cache</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d382821e838"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d382821e840"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d382821e842"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e838 "><span>CACHE_COHERENCY</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e840 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d382821e842 "><span>L1 cache coherency settings</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

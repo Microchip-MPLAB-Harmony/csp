@@ -1,0 +1,19 @@
+# CCP\_CAPTURE\_CALLBACK Typedef
+
+**Parent topic:**[Capture/Compare/PWM \(CCP\)](GUID-615BEA57-7216-4351-87D8-94C8B0BF6E7D.md)
+
+## C
+
+```c
+typedef void (*CCP_CAPTURE_CALLBACK) (uintptr_t context)
+
+```
+
+## Summary
+
+Defines the function pointer data type and function signature for the ccp channel callback function.
+
+## Description
+
+This data type defines the function pointer and function signature for the<br />ccp channel callback function. The library will call back the client's<br />function with this signature from the interrupt routine.
+

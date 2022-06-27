@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Timer Counter (TC)" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="timer-counter-tc" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Timer Counter (TC)</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-timer-counter-tc" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-B7C79854-BBCD-49B3-9EA3-C379E6A5FCE0"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="timer-counter-tc">
+<h1 class="title topictitle1" id="ariaid-title1">Timer Counter (TC)</h1><div class="body"><p class="p">A Timer Counter (TC) module includes three identical TC channels. All channels of the Timer Counter are independent and identical in operation except when the quadrature encode mode is enabled. Timer counter module can be configured to operate in one of the following modes:</p>
+<ul class="ul"><li class="li"><p class="p">Timer mode used for periodic interrupt generation</p>
+</li>
+<li class="li"><p class="p">Compare mode used for generating PWM signals</p>
+</li>
+<li class="li"><p class="p">Capture mode used to perform measurements such as pulse timing, frequency, period, duty cycle and phase</p>
+</li>
+<li class="li"><p class="p">Quadrature encoder mode used to measure the position and speed of the motor</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">Timer mode</strong></p>
+<p class="p">The TC channel in timer mode is used for periodic interrupt generation.</p>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p">When the timer is enabled, it increments by one on every rising edge of the input clock, and generates an interrupt on a period match (Timer expiry period). Timer mode is used for periodic interrupt generation.</p>
+<p class="p">It provides both polling and callback methods to indicate period match has occurred.</p>
+<ul class="ul"><li class="li"><p class="p">With polling, the application will need to continuously poll to check if the timer has expired.</p>
+</li>
+<li class="li"><p class="p">With callback, the registered callback function will be called when the timer expires. This means the application do not have to poll continuously.</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">Callback method</strong></p>
+<p class="p">This example demonstrates how to use TC channel in timer mode to
+generate periodic callback.</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d930354e49', this);">Copy</button><code id="d930354e49" content="/* This function is called after period expires */&#xA;void TC0_CH0_TimerInterruptHandler(TC_TIMER_STATUS status, uintptr_t context)&#xA;{&#xA;    /* Toggle LED */&#xA;    LED_Toggle();&#xA;}&#xA;&#xA;int main(void)&#xA;{&#xA;&#xA;    /* Register callback function for CH0 period interrupt */&#xA;    TC0_CH0_TimerCallbackRegister(TC0_CH0_TimerInterruptHandler, (uintptr_t)NULL);&#xA;&#xA;    /* Start the timer channel 0*/&#xA;    TC0_CH0_TimerStart();&#xA;}"><span class="ph token comment">/* This function is called after period expires */</span>
+<span class="ph token keyword">void</span> <span class="ph token function">TC0_CH0_TimerInterruptHandler</span><span class="ph token punctuation">(</span>TC_TIMER_STATUS status<span class="ph token punctuation">,</span> uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Toggle LED */</span>
+    <span class="ph token function">LED_Toggle</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> <span class="ph token function">main</span><span class="ph token punctuation">(</span><span class="ph token keyword">void</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+
+    <span class="ph token comment">/* Register callback function for CH0 period interrupt */</span>
+    <span class="ph token function">TC0_CH0_TimerCallbackRegister</span><span class="ph token punctuation">(</span>TC0_CH0_TimerInterruptHandler<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span><span class="ph token constant">NULL</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Start the timer channel 0*/</span>
+    <span class="ph token function">TC0_CH0_TimerStart</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">Timer Counter peripheral library operating in timer mode provides the following interfaces:</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e156"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e158"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e156 "><span>TCx_CHy_TimerInitialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e158 "><span>Initializes given instance of TC channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e156 "><span>TCx_CHy_TimerStart</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e158 "><span>Starts the given TC channel counter</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e156 "><span>TCx_CHy_TimerStop</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e158 "><span>Stops the given TC channel counter</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e156 "><span>TCx_CHy_TimerCompareSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e158 "><span>Sets the compare value of a given timer channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e156 "><span>TCx_CHy_TimerPeriodSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e158 "><span>Sets the period value of a given timer channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e156 "><span>TCx_CHy_TimerPeriodGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e158 "><span>Reads the period value of given timer channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e156 "><span>TCx_CHy_TimerCounterGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e158 "><span>Reads the timer channel counter value</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e156 "><span>TCx_CHy_TimerFrequencyGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e158 "><span>Provides the given timer's counter-increment frequency</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e156 "><span>TCx_CHy_TimerPeriodHasExpired</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e158 "><span>Checks whether timer period is elapsed</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e156 "><span>TCx_CHy_TimerCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e158 "><span>Registers the function to be called from interrupt</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e221"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e223"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e225"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e221 "><span>TC_TIMER_STATUS</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e223 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e225 "><span>Identifies channel interrupt source mask</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e221 "><span>TC_TIMER_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e223 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e225 "><span>Defines the function pointer data type and function signature for the tc channel callback function</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Compare mode</strong></p>
+<p class="p">The TC channel in compare mode generates one or two PWM signals with the same frequency and independently programmable duty cycles, or generates different types of one-shot or repetitive pulses.</p>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p">In this mode, TIOAx is configured as an output. TIOBx is configured as an output, if it is not used as an external event.</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e262"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e264"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e262 "><span>TCx_CHy_CompareInitialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e264 "><span>Initializes given TC channel in compare mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e262 "><span>TCx_CHy_CompareStart</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e264 "><span>Starts the given TC channel compare counter</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e262 "><span>TCx_CHy_CompareStop</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e264 "><span>Stops the given TC channel counter in compare mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e262 "><span>TCx_CHy_ComparePeriodSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e264 "><span>Sets the period value of a given TC channel in compare mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e262 "><span>TCx_CHy_ComparePeriodGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e264 "><span>Gets the period value of given timer channel in compare mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e262 "><span>TCx_CHy_CompareFrequencyGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e264 "><span>Provides the given timer's counter-increment frequency in compare mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e262 "><span>TCx_CHy_CompareCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e264 "><span>Registers the function to be called from interrupt</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e262 "><span>TCx_CHy_CompareASet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e264 "><span>Sets the Compare-A value of the given timer channel in compare mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e262 "><span>TCx_CHy_CompareBSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e264 "><span>Sets the Compare-B value of the given timer channel in compare mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e262 "><span>TCx_CHy_CompareStatusGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e264 "><span>Identifies status of the compare events</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e327"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e329"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e331"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e327 "><span>TC_COMPARE_STATUS</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e329 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e331 "><span>Identifies channel interrupt source mask</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e327 "><span>TC_COMPARE_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e329 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e331 "><span>Defines the function pointer data type and function signature for the tc channel callback function</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Capture mode</strong></p>
+<p class="p">The TC channel in capture mode is used to measure pulse time, frequency, period and duty cycle.</p>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p">In Capture mode, TIOAx and TIOBx are configured as inputs. The counter value is captured in the buffer on the selected input edge and it is used as a timestamp for the event. The user can select up to two input events and the respective timestamp is captured in Capture A and Capture B buffers, it can be used to measure pulse, period, frequency and duty cycle of the external input.</p>
+<p class="p">It provides both polling and callback methods to indicate capture event has occurred.</p>
+<ul class="ul"><li class="li"><p class="p">With polling, the application will need to continuously poll to check if the capture event has occurred</p>
+</li>
+<li class="li"><p class="p">With callback, the registered callback function will be called when the capture event occurs. This means the application do not have to poll continuously</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">Callback method</strong></p>
+<p class="p">This example demonstrates how to use the TC channel in capture mode to
+measure off time and period. The rising edge is captured in Capture A
+and Falling edge is captured in Capture B register, and then the timer
+is reset.</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d930354e373', this);">Copy</button><code id="d930354e373" content="/* This function is called after Capture B */&#xA;void TC0_CH0_CaptureInterruptHandler(TC_CAPTURE_STATUS status, uintptr_t context)&#xA;{&#xA;    /* Read Captured values */&#xA;    off_time = TC0_CH0_CaptureAGet();&#xA;    period = TC0_CH0_CaptureBGet();&#xA;}&#xA;&#xA;int main(void)&#xA;{&#xA;&#xA;    /* Register callback function for CH0 period interrupt */&#xA;    TC0_CH0_CaptureCallbackRegister(TC0_CH0_CaptureInterruptHandler, (uintptr_t)NULL);&#xA;&#xA;    /* Start the Capture channel 0*/&#xA;    TC0_CH0_CaptureStart();&#xA;}"><span class="ph token comment">/* This function is called after Capture B */</span>
+<span class="ph token keyword">void</span> <span class="ph token function">TC0_CH0_CaptureInterruptHandler</span><span class="ph token punctuation">(</span>TC_CAPTURE_STATUS status<span class="ph token punctuation">,</span> uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Read Captured values */</span>
+    off_time <span class="ph token operator">=</span> <span class="ph token function">TC0_CH0_CaptureAGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    period <span class="ph token operator">=</span> <span class="ph token function">TC0_CH0_CaptureBGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> <span class="ph token function">main</span><span class="ph token punctuation">(</span><span class="ph token keyword">void</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+
+    <span class="ph token comment">/* Register callback function for CH0 period interrupt */</span>
+    <span class="ph token function">TC0_CH0_CaptureCallbackRegister</span><span class="ph token punctuation">(</span>TC0_CH0_CaptureInterruptHandler<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span><span class="ph token constant">NULL</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Start the Capture channel 0*/</span>
+    <span class="ph token function">TC0_CH0_CaptureStart</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e490"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e492"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e490 "><span>TCx_CHy_CaptureInitialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e492 "><span>Initializes given instance of TC channel to capture mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e490 "><span>TCx_CHy_CaptureStart</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e492 "><span>Starts the given TC channel capture counter</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e490 "><span>TCx_CHy_CaptureStop</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e492 "><span>Stops the given TC channel counter</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e490 "><span>TCx_CHy_CaptureCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e492 "><span>Registers the function to be called from the capture-event</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e490 "><span>TCx_CHy_CaptureAGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e492 "><span>Returns the Capture-A value</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e490 "><span>TCx_CHy_CaptureBGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e492 "><span>Returns the Capture-B value</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e490 "><span>TCx_CHy_CaptureStatusGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e492 "><span>Identifies status of the capture events</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e540"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e542"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e544"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e540 "><span>TC_CAPTURE_STATUS</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e542 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e544 "><span>Identifies channel interrupt source mask</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e540 "><span>TC_CAPTURE_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e542 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e544 "><span>Defines the function pointer data type and function signature for the tc channel callback function</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Quadrature decoder mode</strong></p>
+<p class="p">The quadrature decoder (QDEC) mode is used to measure the position and speed of the motor</p>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p">The TC embeds a Quadrature Decoder (QDEC) connected in front of the timers and driven by TIOA0, TIOB0 and TIOB1 inputs. When enabled, the QDEC performs the input lines filtering, decoding of quadrature signals and connects to the timers and counters in order to read the position and speed of the motor through the user interface.</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e580"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e582"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e580 "><span>TCx_QuadratureInitialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e582 "><span>Initializes given instance of TC channel in quadrature mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e580 "><span>TCx_QuadratureStart</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e582 "><span>Starts the given TC channel counter in quadrature mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e580 "><span>TCx_QuadratureStop</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e582 "><span>Stops the given TC channel counter in quadrature mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e580 "><span>TCx_QuadraturePositionGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e582 "><span>Reads the angular position from the quadrature encoder</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e580 "><span>TCx_QuadratureRevolutionsGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e582 "><span>Reads the number of revolutions from the quadrature encoder</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e580 "><span>TCx_QuadratureSpeedGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e582 "><span>Reads the quadrature index change speed</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e580 "><span>TCx_CHy_QuadratureStatusGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e582 "><span>Identifies status of the quadrature events</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e580 "><span>TCx_QuadratureCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e582 "><span>Registers the function to be called from interrupt</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e636"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e638"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d930354e640"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e636 "><span>TC_QUADRATURE_STATUS</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e638 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e640 "><span>Identifies channel interrupt source mask</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e636 "><span>TC_QUADRATURE_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e638 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d930354e640 "><span>Defines the function pointer data type and function signature for the tc channel callback function</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

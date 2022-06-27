@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Hardened External Memory Controller (HEMC)" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="hardened-external-memory-controller-hemc" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Hardened External Memory Controller (HEMC)</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-hardened-external-memory-controller-hemc" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-1503BB87-D5B3-4C8C-A91F-2AA286252046"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="hardened-external-memory-controller-hemc">
+<h1 class="title topictitle1" id="ariaid-title1">Hardened External Memory Controller (HEMC)</h1><div class="body"><p class="p">The HEMC System Memory interface provides a simple interface to manage
+the externally connected SDRAM, PROM and SRAM device.</p>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p">The HEMC controller is initialized as configured in the MHC as part of
+System Initialization.</p>
+<p class="p">If interrupts are used, the callback function should be set for
+expected interrupts types:</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d564661e19', this);">Copy</button><code id="d564661e19" content="    /* Register Fixable errors Callback */&#xA;    HEMC_FixCallbackRegister(HEMC_FixCallback_Function, (uintptr_t)NULL);&#xA;    /* Register UnFixable errors Callback */&#xA;    HEMC_NoFixCallbackRegister(HEMC_NoFixCallback_Function, (uintptr_t)NULL);">    <span class="ph token comment">/* Register Fixable errors Callback */</span>
+    <span class="ph token function">HEMC_FixCallbackRegister</span><span class="ph token punctuation">(</span>HEMC_FixCallback_Function<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span><span class="ph token constant">NULL</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token comment">/* Register UnFixable errors Callback */</span>
+    <span class="ph token function">HEMC_NoFixCallbackRegister</span><span class="ph token punctuation">(</span>HEMC_NoFixCallback_Function<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span><span class="ph token constant">NULL</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span></code></pre><p class="p">When an ECC error is detected and an interrupt occurs, the fail address
+must be read before the status in order to avoid multiple interrupts:</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d564661e70', this);">Copy</button><code id="d564661e70" content="    /* Read the fault address before clearing the interrupt*/&#xA;    uint32_t* fault_pointer = (uint32_t*)HEMC_HeccGetFailAddress();&#xA;&#xA;    /* Only for Fixable error handler : Read corrected data on the Fly */&#xA;    uint32_t fault_data = *fault_pointer;&#xA;&#xA;    /* Read HEMC HECC Status */&#xA;    HEMC_HECC_STATUS value = HEMC_HeccGetStatus();">    <span class="ph token comment">/* Read the fault address before clearing the interrupt*/</span>
+    uint32_t<span class="ph token operator">*</span> fault_pointer <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t<span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token function">HEMC_HeccGetFailAddress</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Only for Fixable error handler : Read corrected data on the Fly */</span>
+    uint32_t fault_data <span class="ph token operator">=</span> <span class="ph token operator">*</span>fault_pointer<span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Read HEMC HECC Status */</span>
+    HEMC_HECC_STATUS value <span class="ph token operator">=</span> <span class="ph token function">HEMC_HeccGetStatus</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span></code></pre><p class="p">The faulty address may then be fixed by the application if applicable.</p>
+<p class="p"><strong class="ph b"><u class="ph u">Error injection test mode</u></strong></p>
+<p class="p"><strong class="ph b">ECC Check bit read</strong></p>
+<p class="p">The ECC check bit value can be get when the read test mode is
+activated. Once this mode is activated, the check bit value for each
+read of data on HSMC or HSDRAMC memories is stored in corresponding
+registers. It is possible to get the last check bit value using the
+\function HEMC_TestModeGetCbValue.</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d564661e137', this);">Copy</button><code id="d564661e137" content="    /* Enable HEMC HECC Test mode Read in HSDRAMC memory */&#xA;    HEMC_TestModeReadEnable(HEMC_HEMC_CH_HSDRAMC);&#xA;    __DSB();&#xA;    __ISB();&#xA;&#xA;    /* Read data in external memory */&#xA;    data = buffer;&#xA;    __DSB();&#xA;    __ISB();&#xA;&#xA;    /* Get the Check Bit for last data read in HSDRAMC memory */&#xA;    tcb = HEMC_TestModeGetCbValue(HEMC_HEMC_CH_HSDRAMC);&#xA;    __DSB();&#xA;    __ISB();&#xA;&#xA;    /* Disable HEMC HECC Test mode Read in HSDRAMC memory */&#xA;    HEMC_TestModeReadDisable(HEMC_HEMC_CH_HSDRAMC);">    <span class="ph token comment">/* Enable HEMC HECC Test mode Read in HSDRAMC memory */</span>
+    <span class="ph token function">HEMC_TestModeReadEnable</span><span class="ph token punctuation">(</span>HEMC_HEMC_CH_HSDRAMC<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">__DSB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">__ISB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Read data in external memory */</span>
+    data <span class="ph token operator">=</span> buffer<span class="ph token punctuation">;</span>
+    <span class="ph token function">__DSB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">__ISB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Get the Check Bit for last data read in HSDRAMC memory */</span>
+    tcb <span class="ph token operator">=</span> <span class="ph token function">HEMC_TestModeGetCbValue</span><span class="ph token punctuation">(</span>HEMC_HEMC_CH_HSDRAMC<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">__DSB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">__ISB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Disable HEMC HECC Test mode Read in HSDRAMC memory */</span>
+    <span class="ph token function">HEMC_TestModeReadDisable</span><span class="ph token punctuation">(</span>HEMC_HEMC_CH_HSDRAMC<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span></code></pre><p class="p"><em class="ph i">Note</em>: It is recommended to use memory barriers on Cortex-M
+core-based products where instructions can be executed out of
+programmed order, or to ensure that all memory transfers or
+instructions are completed before any new instruction is executed. In
+our application, we must ensure that register modification and memory
+transfers are completed before executing the next step.</p>
+<p class="p"><strong class="ph b">ECC Check bit write</strong></p>
+<p class="p">The ECC check bit value can be override when the write test mode is
+activated. Once this mode is activated, the check bit value for each
+write of data on HSMC or HSDRAMC memories is override by the given
+value instead of being calculated automatically. The check bit value
+used should be set using the function HEMC_TestModeSetCbValue.</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d564661e257', this);">Copy</button><code id="d564661e257" content="    /* Enable HEMC HECC Test mode Write in HSDRAMC memory */&#xA;    HEMC_TestModeWriteEnable(HEMC_HEMC_CH_HSDRAMC);&#xA;    __DSB();&#xA;    __ISB();&#xA;&#xA;    /* Set the Check Bit for override when data will be write in external HSDRAMC memory */&#xA;    HEMC_TestModeSetCbValue(HEMC_HEMC_CH_HSDRAMC, tcb);&#xA;    __DSB();&#xA;    __ISB();&#xA;&#xA;    /* Write data in external memory */&#xA;    buffer = data;&#xA;    __DSB();&#xA;    __ISB();&#xA;&#xA;    /* Disable HEMC HECC Test mode Write in HSDRAMC memory */&#xA;    HEMC_TestModeWriteDisable(HEMC_HEMC_CH_HSDRAMC);">    <span class="ph token comment">/* Enable HEMC HECC Test mode Write in HSDRAMC memory */</span>
+    <span class="ph token function">HEMC_TestModeWriteEnable</span><span class="ph token punctuation">(</span>HEMC_HEMC_CH_HSDRAMC<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">__DSB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">__ISB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Set the Check Bit for override when data will be write in external HSDRAMC memory */</span>
+    <span class="ph token function">HEMC_TestModeSetCbValue</span><span class="ph token punctuation">(</span>HEMC_HEMC_CH_HSDRAMC<span class="ph token punctuation">,</span> tcb<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">__DSB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">__ISB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Write data in external memory */</span>
+    buffer <span class="ph token operator">=</span> data<span class="ph token punctuation">;</span>
+    <span class="ph token function">__DSB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">__ISB</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Disable HEMC HECC Test mode Write in HSDRAMC memory */</span>
+    <span class="ph token function">HEMC_TestModeWriteDisable</span><span class="ph token punctuation">(</span>HEMC_HEMC_CH_HSDRAMC<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span></code></pre><p class="p"><em class="ph i">Note</em>: It is recommended to use memory barriers on Cortex-M
+core-based products where instructions can be executed out of
+programmed order, or to ensure that all memory transfers or
+instructions are completed before any new instruction is executed. In
+our application, we must ensure that register modification and memory
+transfers are completed before executing the next step.</p>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">HEMC peripheral library provides the following interfaces:</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d564661e386"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d564661e388"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_Initialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Initializes and Enables the HSDRAM and HSMC Controller</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_HeccGetStatus</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Get the HECC status of the HEMC peripheral</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_HeccGetFailAddress</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Get the last fail address were ECC error occurs in a HEMC memory</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_HeccResetCounters</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Reset Fix and NoFix error counters of the HEMC peripheral</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_FixCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Sets the pointer to the function (and it's context) to be called when the given HEMC's ECC Fixable Error interrupt events occur</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_NoFixCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Sets the pointer to the function (and it's context) to be called when the given HEMC's ECC Not Fixable Error interrupt events occur</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_TestModeReadEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Enable the HEMC peripheral HECC test mode Read</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_TestModeReadDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Disable the HEMC peripheral HECC test mode Read</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_TestModeWriteEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Enable the HEMC peripheral HECC test mode Write</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_TestModeWriteDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Disable the HEMC peripheral HECC test mode Write</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_TestModeGetCbValue</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Get the HEMC peripheral HECC test mode check bit values</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e386 "><span>HEMC_TestModeSetCbValue</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e388 "><span>Set the HEMC peripheral HECC test mode check bit values</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d564661e463"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d564661e465"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d564661e467"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e463 "><span>HEMC_HEMC_CHANNEL</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e465 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e467 "><span>Identifies the HEMC HECC channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e463 "><span>HEMC_HECC_STATUS</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e465 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e467 "><span>Identifies the HEMC HECC current status</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e463 "><span>HEMC_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e465 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d564661e467 "><span>HEMC Callback Function Pointer</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

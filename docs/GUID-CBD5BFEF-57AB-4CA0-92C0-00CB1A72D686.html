@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Serial Peripheral Interface (SPI)" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="serial-peripheral-interface-spi" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Serial Peripheral Interface (SPI)</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-serial-peripheral-interface-spi" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-CBD5BFEF-57AB-4CA0-92C0-00CB1A72D686"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="serial-peripheral-interface-spi">
+<h1 class="title topictitle1" id="ariaid-title1">Serial Peripheral Interface (SPI)</h1><div class="body"><p class="p">The SPI PLIB can be configured in master or slave mode.</p>
+<p class="p"><strong class="ph b">SPI master mode</strong></p>
+<p class="p">In SPI master mode, the PLIB can be configured to run in blocking mode or non-blocking mode. In blocking mode the peripheral interrupt is disabled and the transfer API blocks until the transfer is complete. In non-blocking mode, the peripheral interrupt is enabled. The transfer API initiates the transfer and returns immediately. The transfer is completed from the peripheral interrupt. Application can either use a callback to get notified when the transfer is complete or can use the IsBusy API to check the completion status.</p>
+<p class="p"><strong class="ph b">SPI slave mode</strong></p>
+<p class="p">SPI slave mode enables peripheral interrupt for data transfers. The PLIB uses internal receive and transmit buffers. The receive buffer is used to hold the data received from the SPI master while the application data to be transmitted out is copied into the transmit buffer. The size of the transmit and receive buffers is configurable in MHC. Application must register a callback with the PLIB to receive event notifications. A callback is given when the chip select is de-asserted by the SPI master. The application must read out the received data in the callback, thereby clearing the PLIB's internal RX buffer.</p>
+<p class="p">The PLIB optionally supports busy signalling from SPI slave to SPI master. This option can be enabled to provide an indication to the SPI master on when the SPI slave will be ready to respond. In a typical implementation, to read data from SPI slave, the SPI master asserts the chip select line and then sends a SPI packet informing the slave about the memory address to read from and the number of bytes to read and then de-asserts the chip select line. The SPI master must then wait for the SPI slave to frame the response by waiting on the busy line. Once the SPI slave drives the busy signal to ready state, the SPI master can start reading the actual data by asserting the chip select line and sending dummy writes for the number of bytes to read. Finally, after the intended bytes are read, the chip select must be de-asserted by the SPI master.</p>
+<p class="p">If the busy signalling is not enabled, the SPI master must wait for sufficient duration to allow the SPI slave to become ready with the response.</p>
+<p class="p"><em class="ph i">SPI Master in blocking (peripheral interrupt disabled) mode</em></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d877936e29', this);">Copy</button><code id="d877936e29" content="// Following code demonstrates SPI self loopback with the PLIB configured in blocking mode&#xA;uint8_t txData[]  = &#34;SELF LOOPBACK FOR SPI!&#34;;&#xA;uint8_t rxData[sizeof(txData)];&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;               &#xA;    /* SPI Write Read */&#xA;    SPI1_WriteRead(&amp;txData[0], sizeof(txData), &amp;rxData[0], sizeof(rxData));&#xA;&#xA;    /* Compare received data with the transmitted data */&#xA;    if ((memcmp(txData, rxData, sizeof(txData)) == 0))&#xA;    {&#xA;        /* Pass: Received data is same as transmitted data */        &#xA;    }&#xA;    else&#xA;    {       &#xA;        /* Fail: Received data is not same as transmitted data */&#xA;    }&#xA;&#xA;    while ( true )&#xA;    { &#x9;&#xA;    }&#xA;&#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    return ( EXIT_FAILURE );&#xA;}&#xA;"><span class="ph token comment">// Following code demonstrates SPI self loopback with the PLIB configured in blocking mode</span>
+uint8_t txData<span class="ph token punctuation">[</span><span class="ph token punctuation">]</span>  <span class="ph token operator">=</span> <span class="ph token string">"SELF LOOPBACK FOR SPI!"</span><span class="ph token punctuation">;</span>
+uint8_t rxData<span class="ph token punctuation">[</span><span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>txData<span class="ph token punctuation">)</span><span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+               
+    <span class="ph token comment">/* SPI Write Read */</span>
+    <span class="ph token function">SPI1_WriteRead</span><span class="ph token punctuation">(</span><span class="ph token operator">&amp;</span>txData<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>txData<span class="ph token punctuation">)</span><span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>rxData<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>rxData<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Compare received data with the transmitted data */</span>
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span><span class="ph token function">memcmp</span><span class="ph token punctuation">(</span>txData<span class="ph token punctuation">,</span> rxData<span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>txData<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> <span class="ph token operator">==</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">/* Pass: Received data is same as transmitted data */</span>        
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span>
+    <span class="ph token punctuation">{</span>       
+        <span class="ph token comment">/* Fail: Received data is not same as transmitted data */</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span> true <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span> 	
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    <span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+</code></pre><p class="p"><em class="ph i">SPI Master in non-blocking (peripheral interrupt enabled) mode</em></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d877936e250', this);">Copy</button><code id="d877936e250" content="// Following code demonstrates SPI self loopback with the PLIB configured in non-blocking mode&#xA;&#xA;uint8_t txData[]  = &#34;SELF LOOPBACK FOR SPI!&#34;;&#xA;uint8_t rxData[sizeof(txData)];&#xA;volatile bool transferStatus = false;&#xA;&#xA;/* This function will be called by SPI PLIB when transfer is completed */&#xA;void APP_SPI_Callback(uintptr_t context )&#xA;{&#xA;    transferStatus = true;&#xA;}&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;&#xA;    /* Register callback function   */&#xA;    SPI1_CallbackRegister(APP_SPI_Callback, 0);&#xA;   &#xA;    /* SPI Write Read */&#xA;    SPI1_WriteRead(&amp;txData[0], sizeof(txData), &amp;rxData[0], sizeof(rxData));&#xA;&#x9;&#xA;&#x9;while (1)&#xA;&#x9;{&#xA;&#x9;&#x9;/* Perform other tasks here ...*/&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;/* Check if transfer has completed */&#xA;&#x9;&#x9;if(transferStatus == true)&#xA;&#x9;&#x9;{&#xA;&#x9;&#x9;&#x9;/* Compare received data with the transmitted data */&#xA;&#x9;&#x9;&#x9;if(memcmp(txData, rxData, sizeof(txData)) == 0)&#xA;&#x9;&#x9;&#x9;{&#xA;&#x9;&#x9;&#x9;&#x9;/* Pass: Received data is same as transmitted data */&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;else&#xA;&#x9;&#x9;&#x9;{   &#xA;&#x9;&#x9;&#x9;&#x9;/* Fail: Received data is not same as transmitted data */&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;}   &#xA;&#x9;&#x9;}&#x9;&#x9;        &#xA;&#x9;}&#xA;    &#xA;}&#xA;"><span class="ph token comment">// Following code demonstrates SPI self loopback with the PLIB configured in non-blocking mode</span>
+
+uint8_t txData<span class="ph token punctuation">[</span><span class="ph token punctuation">]</span>  <span class="ph token operator">=</span> <span class="ph token string">"SELF LOOPBACK FOR SPI!"</span><span class="ph token punctuation">;</span>
+uint8_t rxData<span class="ph token punctuation">[</span><span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>txData<span class="ph token punctuation">)</span><span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">volatile</span> bool transferStatus <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+<span class="ph token comment">/* This function will be called by SPI PLIB when transfer is completed */</span>
+<span class="ph token keyword">void</span> <span class="ph token function">APP_SPI_Callback</span><span class="ph token punctuation">(</span>uintptr_t context <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    transferStatus <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Register callback function   */</span>
+    <span class="ph token function">SPI1_CallbackRegister</span><span class="ph token punctuation">(</span>APP_SPI_Callback<span class="ph token punctuation">,</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+   
+    <span class="ph token comment">/* SPI Write Read */</span>
+    <span class="ph token function">SPI1_WriteRead</span><span class="ph token punctuation">(</span><span class="ph token operator">&amp;</span>txData<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>txData<span class="ph token punctuation">)</span><span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>rxData<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>rxData<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+	
+	<span class="ph token keyword">while</span> <span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">)</span>
+	<span class="ph token punctuation">{</span>
+		<span class="ph token comment">/* Perform other tasks here ...*/</span>
+		
+		<span class="ph token comment">/* Check if transfer has completed */</span>
+		<span class="ph token keyword">if</span><span class="ph token punctuation">(</span>transferStatus <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+		<span class="ph token punctuation">{</span>
+			<span class="ph token comment">/* Compare received data with the transmitted data */</span>
+			<span class="ph token keyword">if</span><span class="ph token punctuation">(</span><span class="ph token function">memcmp</span><span class="ph token punctuation">(</span>txData<span class="ph token punctuation">,</span> rxData<span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>txData<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> <span class="ph token operator">==</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span>
+			<span class="ph token punctuation">{</span>
+				<span class="ph token comment">/* Pass: Received data is same as transmitted data */</span>		
+			<span class="ph token punctuation">}</span>
+			<span class="ph token keyword">else</span>
+			<span class="ph token punctuation">{</span>   
+				<span class="ph token comment">/* Fail: Received data is not same as transmitted data */</span>		
+			<span class="ph token punctuation">}</span>   
+		<span class="ph token punctuation">}</span>		        
+	<span class="ph token punctuation">}</span>
+    
+<span class="ph token punctuation">}</span>
+</code></pre><p class="p"><em class="ph i">SPI slave mode</em></p>
+<p class="p">This example uses the SPI peripheral library in slave mode and allows reading and writing data from/to its internal buffer by a SPI master.
+The SPI master writes data by sending a write command followed by two bytes of memory address followed by the data to be written.</p>
+<p class="p">&lt; WR_CMD &gt; &lt; ADDR_MSB &gt; &lt; ADDR_LSB &gt; &lt; DATA0 &gt; ... &lt; DATA n &gt;</p>
+<p class="p">The SPI slave asserts the Busy line to indicate to the SPI master that it is busy. Once ready, the SPI slave de-asserts the Busy line. Once the SPI
+slave is ready, the SPI master reads the data by sending read command followed by two bytes of memory address and the number of bytes to read.</p>
+<p class="p">&lt; RD_CMD &gt; &lt; ADDR_MSB &gt; &lt; ADDR_LSB &gt; &lt; NUM_BYTES &gt;</p>
+<p class="p">The SPI slave responds by sending the data at the requested memory address.</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d877936e543', this);">Copy</button><code id="d877936e543" content="&#xA;/*&#xA; * Protocol:&#xA; * Master:     [WR_CMD ADDR1 ADDR0 DATA0 DATA1 .. DATAN] ... ... ... ... ... ... [RD_CMD ADDR1 ADDR0] [DUMMY DUMMY .. DUMMY]&#xA; * Slave:      [DUMMY  DUMMY DUMMY DUMMY DUMMY .. DUMMY] ... ... ... ... ... ... [DUMMY  DUMMY DUMMY] [DATA0 DATA1 .. DATAN] &#xA; * BUSY PIN:    ----------------------------------------------------------------&#xA; * ____________|                                                                |____________________________________________&#xA; * &#xA; * WR_CMD = 0x02&#xA; * RD_CMD = 0x03&#xA; * BUSY   = 0x01&#xA; * READY  = 0x00&#xA; */ &#xA;&#xA;typedef enum&#xA;{&#xA;&#x9;APP_STATE_INITIALIZE,&#xA;    APP_STATE_READ,&#xA;    APP_STATE_WRITE,&#xA;    APP_STATE_IDLE,&#xA;&#xA;} APP_STATES;&#xA;&#xA;/* Commands */&#xA;#define APP_CMD_WRITE                       0x02&#xA;#define APP_CMD_READ                        0x03&#xA;&#xA;#define APP_MEM_BUFFER_SIZE                 512&#xA;#define APP_RX_BUFFER_SIZE                  256&#xA;#define APP_TX_BUFFER_SIZE                  256&#xA;&#xA;&#xA;typedef struct&#xA;{    &#xA;    uint8_t busy        :1;    &#xA;    uint8_t reserved    :7;&#xA;}STATUS;&#xA;&#xA;typedef struct&#xA;{&#xA;    volatile APP_STATES          state;&#xA;    volatile STATUS              status;&#xA;    volatile uint8_t             nBytesRead;&#xA;    volatile uint8_t             nBytesToWrite;&#xA;    volatile uint8_t             nBytesReadRequest;    &#xA;    volatile uint16_t            memAddr;        &#xA;}APP_DATA;&#xA;&#xA;APP_DATA appData;&#xA;&#xA;uint8_t APP_MemoryBuffer[APP_MEM_BUFFER_SIZE] =&#xA;{&#xA;    0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f,&#xA;    0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e,0x1f,&#xA;    0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2a,0x2b,0x2c,0x2d,0x2e,0x2f,&#xA;    0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3a,0x3b,0x3c,0x3d,0x3e,0x3f,&#xA;    0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4a,0x4b,0x4c,0x4d,0x4e,0x4f,&#xA;    0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5a,0x5b,0x5c,0x5d,0x5e,0x5f,&#xA;    0x60,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6a,0x6b,0x6c,0x6d,0x6e,0x6f,&#xA;    0x70,0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7a,0x7b,0x7c,0x7d,0x7e,0x7f,&#xA;    0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,&#xA;    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9a,0x9b,0x9c,0x9d,0x9e,0x9f,&#xA;    0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,&#xA;    0xb0,0xb1,0xb2,0xb3,0xb4,0xb5,0xb6,0xb7,0xb8,0xb9,0xba,0xbb,0xbc,0xbd,0xbe,0xbf,&#xA;    0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,&#xA;    0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,0xd8,0xd9,0xda,0xdb,0xdc,0xdd,0xde,0xdf,&#xA;    0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,0xe8,0xe9,0xea,0xeb,0xec,0xed,0xee,0xef,&#xA;    0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,0xf9,0xfa,0xfb,0xfc,0xfd,0xfe,0xff,&#xA;&#xA;    0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f,&#xA;    0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e,0x1f,&#xA;    0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2a,0x2b,0x2c,0x2d,0x2e,0x2f,&#xA;    0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3a,0x3b,0x3c,0x3d,0x3e,0x3f,&#xA;    0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4a,0x4b,0x4c,0x4d,0x4e,0x4f,&#xA;    0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5a,0x5b,0x5c,0x5d,0x5e,0x5f,&#xA;    0x60,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6a,0x6b,0x6c,0x6d,0x6e,0x6f,&#xA;    0x70,0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7a,0x7b,0x7c,0x7d,0x7e,0x7f,&#xA;    0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,&#xA;    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9a,0x9b,0x9c,0x9d,0x9e,0x9f,&#xA;    0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,&#xA;    0xb0,0xb1,0xb2,0xb3,0xb4,0xb5,0xb6,0xb7,0xb8,0xb9,0xba,0xbb,0xbc,0xbd,0xbe,0xbf,&#xA;    0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,&#xA;    0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,0xd8,0xd9,0xda,0xdb,0xdc,0xdd,0xde,0xdf,&#xA;    0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,0xe8,0xe9,0xea,0xeb,0xec,0xed,0xee,0xef,&#xA;    0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,0xf9,0xfa,0xfb,0xfc,0xfd,0xfe,0xff&#xA;};&#xA;&#xA;uint8_t APP_RxData[APP_RX_BUFFER_SIZE];&#xA;uint8_t APP_TxData[APP_TX_BUFFER_SIZE];&#xA;&#xA;void delay(uint32_t count)&#xA;{&#xA;    uint32_t i;&#xA;    &#xA;    // 1 loop roughly provides 1us delay at 32MHz CPU frequency&#xA;    for (i = 0; i &lt; count; i++)&#xA;    {&#xA;        asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);&#xA;        asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);&#xA;        asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);&#xA;        asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);        &#xA;    }&#xA;}&#xA;&#xA;void SPIEventHandler(uintptr_t context )&#xA;{&#xA;    if (SPI1_ErrorGet() == SPI_SLAVE_ERROR_NONE)&#xA;    {&#xA;        appData.nBytesRead = SPI1_Read(APP_RxData, SPI1_ReadCountGet()); &#xA;&#xA;        switch(APP_RxData[0])&#xA;        {            &#xA;            case APP_CMD_WRITE:&#xA;                if (appData.status.busy == 0)&#xA;                {                &#xA;                    appData.status.busy = 1;&#xA;                    appData.memAddr = ((APP_RxData[1] &lt;&lt; 8) | (APP_RxData[2]));&#xA;                    appData.nBytesToWrite = (appData.nBytesRead - 3);                &#xA;                    appData.state = APP_STATE_WRITE;                &#xA;                }                &#xA;                break;&#xA;&#xA;            case APP_CMD_READ:&#xA;&#xA;                appData.memAddr = ((APP_RxData[1] &lt;&lt; 8) | (APP_RxData[2]));&#xA;                appData.nBytesReadRequest = APP_RxData[3];&#xA;&#xA;                if ((appData.memAddr + appData.nBytesReadRequest) &lt;= APP_TX_BUFFER_SIZE)&#xA;                {&#xA;                    memcpy(APP_TxData, &amp;APP_MemoryBuffer[appData.memAddr], appData.nBytesReadRequest);&#xA;                    SPI1_Write(APP_TxData, appData.nBytesReadRequest);&#xA;                }            &#xA;                break;&#xA;        } &#xA;&#xA;        if (appData.status.busy == 0)&#xA;        {&#xA;            /* Indicate to SPI Master that slave is ready for data transfer */&#xA;            SPI1_Ready();&#xA;        }&#xA;    }       &#xA;}&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );    &#xA;    &#xA;    appData.state = APP_STATE_INITIALIZE;&#xA;    &#xA;    while(1)&#xA;    {&#xA;        /* Check the application's current state. */&#xA;        switch (appData.state)&#xA;        {&#xA;            case APP_STATE_INITIALIZE:&#xA;                  &#xA;                SPI1_CallbackRegister(SPIEventHandler, (uintptr_t) 0);  &#xA;                &#xA;                /* Wait for instructions from SPI master */&#xA;                appData.state = APP_STATE_IDLE;   &#xA;                &#xA;                break;&#xA;                &#xA;            case APP_STATE_WRITE: &#xA;                &#xA;                /* Adding delay to simulate busy condition */&#xA;                delay(1000);&#xA;                &#xA;                /* Copy received data into Application memory buffer */                                &#xA;                if ((appData.memAddr + appData.nBytesToWrite) &lt;= APP_MEM_BUFFER_SIZE)&#xA;                {&#xA;                    memcpy(&amp;APP_MemoryBuffer[appData.memAddr], &amp;APP_RxData[3], appData.nBytesToWrite);&#xA;                }&#xA;                &#xA;                appData.status.busy = 0;&#xA;                &#xA;                /* Indicate to SPI Master that slave is ready for data transfer */&#xA;                SPI1_Ready();&#xA;                &#xA;                appData.state = APP_STATE_IDLE; &#xA;                                &#xA;                break;&#xA;                            &#xA;            case APP_STATE_IDLE: &#xA;                break;&#xA;                &#xA;            default:&#xA;                break;&#xA;        }&#xA;    }&#xA;}">
+<span class="ph token comment">/*
+ * Protocol:
+ * Master:     [WR_CMD ADDR1 ADDR0 DATA0 DATA1 .. DATAN] ... ... ... ... ... ... [RD_CMD ADDR1 ADDR0] [DUMMY DUMMY .. DUMMY]
+ * Slave:      [DUMMY  DUMMY DUMMY DUMMY DUMMY .. DUMMY] ... ... ... ... ... ... [DUMMY  DUMMY DUMMY] [DATA0 DATA1 .. DATAN] 
+ * BUSY PIN:    ----------------------------------------------------------------
+ * ____________|                                                                |____________________________________________
+ * 
+ * WR_CMD = 0x02
+ * RD_CMD = 0x03
+ * BUSY   = 0x01
+ * READY  = 0x00
+ */</span> 
+
+<span class="ph token keyword">typedef</span> <span class="ph token keyword">enum</span>
+<span class="ph token punctuation">{</span>
+	APP_STATE_INITIALIZE<span class="ph token punctuation">,</span>
+    APP_STATE_READ<span class="ph token punctuation">,</span>
+    APP_STATE_WRITE<span class="ph token punctuation">,</span>
+    APP_STATE_IDLE<span class="ph token punctuation">,</span>
+
+<span class="ph token punctuation">}</span> APP_STATES<span class="ph token punctuation">;</span>
+
+<span class="ph token comment">/* Commands */</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> APP_CMD_WRITE                       0x02</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> APP_CMD_READ                        0x03</span>
+
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> APP_MEM_BUFFER_SIZE                 512</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> APP_RX_BUFFER_SIZE                  256</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> APP_TX_BUFFER_SIZE                  256</span>
+
+
+<span class="ph token keyword">typedef</span> <span class="ph token keyword">struct</span>
+<span class="ph token punctuation">{</span>    
+    uint8_t busy        <span class="ph token operator">:</span><span class="ph token number">1</span><span class="ph token punctuation">;</span>    
+    uint8_t reserved    <span class="ph token operator">:</span><span class="ph token number">7</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>STATUS<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">typedef</span> <span class="ph token keyword">struct</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token keyword">volatile</span> APP_STATES          state<span class="ph token punctuation">;</span>
+    <span class="ph token keyword">volatile</span> STATUS              status<span class="ph token punctuation">;</span>
+    <span class="ph token keyword">volatile</span> uint8_t             nBytesRead<span class="ph token punctuation">;</span>
+    <span class="ph token keyword">volatile</span> uint8_t             nBytesToWrite<span class="ph token punctuation">;</span>
+    <span class="ph token keyword">volatile</span> uint8_t             nBytesReadRequest<span class="ph token punctuation">;</span>    
+    <span class="ph token keyword">volatile</span> uint16_t            memAddr<span class="ph token punctuation">;</span>        
+<span class="ph token punctuation">}</span>APP_DATA<span class="ph token punctuation">;</span>
+
+APP_DATA appData<span class="ph token punctuation">;</span>
+
+uint8_t APP_MemoryBuffer<span class="ph token punctuation">[</span>APP_MEM_BUFFER_SIZE<span class="ph token punctuation">]</span> <span class="ph token operator">=</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token number">0x00</span><span class="ph token punctuation">,</span><span class="ph token number">0x01</span><span class="ph token punctuation">,</span><span class="ph token number">0x02</span><span class="ph token punctuation">,</span><span class="ph token number">0x03</span><span class="ph token punctuation">,</span><span class="ph token number">0x04</span><span class="ph token punctuation">,</span><span class="ph token number">0x05</span><span class="ph token punctuation">,</span><span class="ph token number">0x06</span><span class="ph token punctuation">,</span><span class="ph token number">0x07</span><span class="ph token punctuation">,</span><span class="ph token number">0x08</span><span class="ph token punctuation">,</span><span class="ph token number">0x09</span><span class="ph token punctuation">,</span><span class="ph token number">0x0a</span><span class="ph token punctuation">,</span><span class="ph token number">0x0b</span><span class="ph token punctuation">,</span><span class="ph token number">0x0c</span><span class="ph token punctuation">,</span><span class="ph token number">0x0d</span><span class="ph token punctuation">,</span><span class="ph token number">0x0e</span><span class="ph token punctuation">,</span><span class="ph token number">0x0f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x10</span><span class="ph token punctuation">,</span><span class="ph token number">0x11</span><span class="ph token punctuation">,</span><span class="ph token number">0x12</span><span class="ph token punctuation">,</span><span class="ph token number">0x13</span><span class="ph token punctuation">,</span><span class="ph token number">0x14</span><span class="ph token punctuation">,</span><span class="ph token number">0x15</span><span class="ph token punctuation">,</span><span class="ph token number">0x16</span><span class="ph token punctuation">,</span><span class="ph token number">0x17</span><span class="ph token punctuation">,</span><span class="ph token number">0x18</span><span class="ph token punctuation">,</span><span class="ph token number">0x19</span><span class="ph token punctuation">,</span><span class="ph token number">0x1a</span><span class="ph token punctuation">,</span><span class="ph token number">0x1b</span><span class="ph token punctuation">,</span><span class="ph token number">0x1c</span><span class="ph token punctuation">,</span><span class="ph token number">0x1d</span><span class="ph token punctuation">,</span><span class="ph token number">0x1e</span><span class="ph token punctuation">,</span><span class="ph token number">0x1f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x20</span><span class="ph token punctuation">,</span><span class="ph token number">0x21</span><span class="ph token punctuation">,</span><span class="ph token number">0x22</span><span class="ph token punctuation">,</span><span class="ph token number">0x23</span><span class="ph token punctuation">,</span><span class="ph token number">0x24</span><span class="ph token punctuation">,</span><span class="ph token number">0x25</span><span class="ph token punctuation">,</span><span class="ph token number">0x26</span><span class="ph token punctuation">,</span><span class="ph token number">0x27</span><span class="ph token punctuation">,</span><span class="ph token number">0x28</span><span class="ph token punctuation">,</span><span class="ph token number">0x29</span><span class="ph token punctuation">,</span><span class="ph token number">0x2a</span><span class="ph token punctuation">,</span><span class="ph token number">0x2b</span><span class="ph token punctuation">,</span><span class="ph token number">0x2c</span><span class="ph token punctuation">,</span><span class="ph token number">0x2d</span><span class="ph token punctuation">,</span><span class="ph token number">0x2e</span><span class="ph token punctuation">,</span><span class="ph token number">0x2f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x30</span><span class="ph token punctuation">,</span><span class="ph token number">0x31</span><span class="ph token punctuation">,</span><span class="ph token number">0x32</span><span class="ph token punctuation">,</span><span class="ph token number">0x33</span><span class="ph token punctuation">,</span><span class="ph token number">0x34</span><span class="ph token punctuation">,</span><span class="ph token number">0x35</span><span class="ph token punctuation">,</span><span class="ph token number">0x36</span><span class="ph token punctuation">,</span><span class="ph token number">0x37</span><span class="ph token punctuation">,</span><span class="ph token number">0x38</span><span class="ph token punctuation">,</span><span class="ph token number">0x39</span><span class="ph token punctuation">,</span><span class="ph token number">0x3a</span><span class="ph token punctuation">,</span><span class="ph token number">0x3b</span><span class="ph token punctuation">,</span><span class="ph token number">0x3c</span><span class="ph token punctuation">,</span><span class="ph token number">0x3d</span><span class="ph token punctuation">,</span><span class="ph token number">0x3e</span><span class="ph token punctuation">,</span><span class="ph token number">0x3f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x40</span><span class="ph token punctuation">,</span><span class="ph token number">0x41</span><span class="ph token punctuation">,</span><span class="ph token number">0x42</span><span class="ph token punctuation">,</span><span class="ph token number">0x43</span><span class="ph token punctuation">,</span><span class="ph token number">0x44</span><span class="ph token punctuation">,</span><span class="ph token number">0x45</span><span class="ph token punctuation">,</span><span class="ph token number">0x46</span><span class="ph token punctuation">,</span><span class="ph token number">0x47</span><span class="ph token punctuation">,</span><span class="ph token number">0x48</span><span class="ph token punctuation">,</span><span class="ph token number">0x49</span><span class="ph token punctuation">,</span><span class="ph token number">0x4a</span><span class="ph token punctuation">,</span><span class="ph token number">0x4b</span><span class="ph token punctuation">,</span><span class="ph token number">0x4c</span><span class="ph token punctuation">,</span><span class="ph token number">0x4d</span><span class="ph token punctuation">,</span><span class="ph token number">0x4e</span><span class="ph token punctuation">,</span><span class="ph token number">0x4f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x50</span><span class="ph token punctuation">,</span><span class="ph token number">0x51</span><span class="ph token punctuation">,</span><span class="ph token number">0x52</span><span class="ph token punctuation">,</span><span class="ph token number">0x53</span><span class="ph token punctuation">,</span><span class="ph token number">0x54</span><span class="ph token punctuation">,</span><span class="ph token number">0x55</span><span class="ph token punctuation">,</span><span class="ph token number">0x56</span><span class="ph token punctuation">,</span><span class="ph token number">0x57</span><span class="ph token punctuation">,</span><span class="ph token number">0x58</span><span class="ph token punctuation">,</span><span class="ph token number">0x59</span><span class="ph token punctuation">,</span><span class="ph token number">0x5a</span><span class="ph token punctuation">,</span><span class="ph token number">0x5b</span><span class="ph token punctuation">,</span><span class="ph token number">0x5c</span><span class="ph token punctuation">,</span><span class="ph token number">0x5d</span><span class="ph token punctuation">,</span><span class="ph token number">0x5e</span><span class="ph token punctuation">,</span><span class="ph token number">0x5f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x60</span><span class="ph token punctuation">,</span><span class="ph token number">0x61</span><span class="ph token punctuation">,</span><span class="ph token number">0x62</span><span class="ph token punctuation">,</span><span class="ph token number">0x63</span><span class="ph token punctuation">,</span><span class="ph token number">0x64</span><span class="ph token punctuation">,</span><span class="ph token number">0x65</span><span class="ph token punctuation">,</span><span class="ph token number">0x66</span><span class="ph token punctuation">,</span><span class="ph token number">0x67</span><span class="ph token punctuation">,</span><span class="ph token number">0x68</span><span class="ph token punctuation">,</span><span class="ph token number">0x69</span><span class="ph token punctuation">,</span><span class="ph token number">0x6a</span><span class="ph token punctuation">,</span><span class="ph token number">0x6b</span><span class="ph token punctuation">,</span><span class="ph token number">0x6c</span><span class="ph token punctuation">,</span><span class="ph token number">0x6d</span><span class="ph token punctuation">,</span><span class="ph token number">0x6e</span><span class="ph token punctuation">,</span><span class="ph token number">0x6f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x70</span><span class="ph token punctuation">,</span><span class="ph token number">0x71</span><span class="ph token punctuation">,</span><span class="ph token number">0x72</span><span class="ph token punctuation">,</span><span class="ph token number">0x73</span><span class="ph token punctuation">,</span><span class="ph token number">0x74</span><span class="ph token punctuation">,</span><span class="ph token number">0x75</span><span class="ph token punctuation">,</span><span class="ph token number">0x76</span><span class="ph token punctuation">,</span><span class="ph token number">0x77</span><span class="ph token punctuation">,</span><span class="ph token number">0x78</span><span class="ph token punctuation">,</span><span class="ph token number">0x79</span><span class="ph token punctuation">,</span><span class="ph token number">0x7a</span><span class="ph token punctuation">,</span><span class="ph token number">0x7b</span><span class="ph token punctuation">,</span><span class="ph token number">0x7c</span><span class="ph token punctuation">,</span><span class="ph token number">0x7d</span><span class="ph token punctuation">,</span><span class="ph token number">0x7e</span><span class="ph token punctuation">,</span><span class="ph token number">0x7f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x80</span><span class="ph token punctuation">,</span><span class="ph token number">0x81</span><span class="ph token punctuation">,</span><span class="ph token number">0x82</span><span class="ph token punctuation">,</span><span class="ph token number">0x83</span><span class="ph token punctuation">,</span><span class="ph token number">0x84</span><span class="ph token punctuation">,</span><span class="ph token number">0x85</span><span class="ph token punctuation">,</span><span class="ph token number">0x86</span><span class="ph token punctuation">,</span><span class="ph token number">0x87</span><span class="ph token punctuation">,</span><span class="ph token number">0x88</span><span class="ph token punctuation">,</span><span class="ph token number">0x89</span><span class="ph token punctuation">,</span><span class="ph token number">0x8a</span><span class="ph token punctuation">,</span><span class="ph token number">0x8b</span><span class="ph token punctuation">,</span><span class="ph token number">0x8c</span><span class="ph token punctuation">,</span><span class="ph token number">0x8d</span><span class="ph token punctuation">,</span><span class="ph token number">0x8e</span><span class="ph token punctuation">,</span><span class="ph token number">0x8f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x90</span><span class="ph token punctuation">,</span><span class="ph token number">0x91</span><span class="ph token punctuation">,</span><span class="ph token number">0x92</span><span class="ph token punctuation">,</span><span class="ph token number">0x93</span><span class="ph token punctuation">,</span><span class="ph token number">0x94</span><span class="ph token punctuation">,</span><span class="ph token number">0x95</span><span class="ph token punctuation">,</span><span class="ph token number">0x96</span><span class="ph token punctuation">,</span><span class="ph token number">0x97</span><span class="ph token punctuation">,</span><span class="ph token number">0x98</span><span class="ph token punctuation">,</span><span class="ph token number">0x99</span><span class="ph token punctuation">,</span><span class="ph token number">0x9a</span><span class="ph token punctuation">,</span><span class="ph token number">0x9b</span><span class="ph token punctuation">,</span><span class="ph token number">0x9c</span><span class="ph token punctuation">,</span><span class="ph token number">0x9d</span><span class="ph token punctuation">,</span><span class="ph token number">0x9e</span><span class="ph token punctuation">,</span><span class="ph token number">0x9f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xa0</span><span class="ph token punctuation">,</span><span class="ph token number">0xa1</span><span class="ph token punctuation">,</span><span class="ph token number">0xa2</span><span class="ph token punctuation">,</span><span class="ph token number">0xa3</span><span class="ph token punctuation">,</span><span class="ph token number">0xa4</span><span class="ph token punctuation">,</span><span class="ph token number">0xa5</span><span class="ph token punctuation">,</span><span class="ph token number">0xa6</span><span class="ph token punctuation">,</span><span class="ph token number">0xa7</span><span class="ph token punctuation">,</span><span class="ph token number">0xa8</span><span class="ph token punctuation">,</span><span class="ph token number">0xa9</span><span class="ph token punctuation">,</span><span class="ph token number">0xaa</span><span class="ph token punctuation">,</span><span class="ph token number">0xab</span><span class="ph token punctuation">,</span><span class="ph token number">0xac</span><span class="ph token punctuation">,</span><span class="ph token number">0xad</span><span class="ph token punctuation">,</span><span class="ph token number">0xae</span><span class="ph token punctuation">,</span><span class="ph token number">0xaf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xb0</span><span class="ph token punctuation">,</span><span class="ph token number">0xb1</span><span class="ph token punctuation">,</span><span class="ph token number">0xb2</span><span class="ph token punctuation">,</span><span class="ph token number">0xb3</span><span class="ph token punctuation">,</span><span class="ph token number">0xb4</span><span class="ph token punctuation">,</span><span class="ph token number">0xb5</span><span class="ph token punctuation">,</span><span class="ph token number">0xb6</span><span class="ph token punctuation">,</span><span class="ph token number">0xb7</span><span class="ph token punctuation">,</span><span class="ph token number">0xb8</span><span class="ph token punctuation">,</span><span class="ph token number">0xb9</span><span class="ph token punctuation">,</span><span class="ph token number">0xba</span><span class="ph token punctuation">,</span><span class="ph token number">0xbb</span><span class="ph token punctuation">,</span><span class="ph token number">0xbc</span><span class="ph token punctuation">,</span><span class="ph token number">0xbd</span><span class="ph token punctuation">,</span><span class="ph token number">0xbe</span><span class="ph token punctuation">,</span><span class="ph token number">0xbf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xc0</span><span class="ph token punctuation">,</span><span class="ph token number">0xc1</span><span class="ph token punctuation">,</span><span class="ph token number">0xc2</span><span class="ph token punctuation">,</span><span class="ph token number">0xc3</span><span class="ph token punctuation">,</span><span class="ph token number">0xc4</span><span class="ph token punctuation">,</span><span class="ph token number">0xc5</span><span class="ph token punctuation">,</span><span class="ph token number">0xc6</span><span class="ph token punctuation">,</span><span class="ph token number">0xc7</span><span class="ph token punctuation">,</span><span class="ph token number">0xc8</span><span class="ph token punctuation">,</span><span class="ph token number">0xc9</span><span class="ph token punctuation">,</span><span class="ph token number">0xca</span><span class="ph token punctuation">,</span><span class="ph token number">0xcb</span><span class="ph token punctuation">,</span><span class="ph token number">0xcc</span><span class="ph token punctuation">,</span><span class="ph token number">0xcd</span><span class="ph token punctuation">,</span><span class="ph token number">0xce</span><span class="ph token punctuation">,</span><span class="ph token number">0xcf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xd0</span><span class="ph token punctuation">,</span><span class="ph token number">0xd1</span><span class="ph token punctuation">,</span><span class="ph token number">0xd2</span><span class="ph token punctuation">,</span><span class="ph token number">0xd3</span><span class="ph token punctuation">,</span><span class="ph token number">0xd4</span><span class="ph token punctuation">,</span><span class="ph token number">0xd5</span><span class="ph token punctuation">,</span><span class="ph token number">0xd6</span><span class="ph token punctuation">,</span><span class="ph token number">0xd7</span><span class="ph token punctuation">,</span><span class="ph token number">0xd8</span><span class="ph token punctuation">,</span><span class="ph token number">0xd9</span><span class="ph token punctuation">,</span><span class="ph token number">0xda</span><span class="ph token punctuation">,</span><span class="ph token number">0xdb</span><span class="ph token punctuation">,</span><span class="ph token number">0xdc</span><span class="ph token punctuation">,</span><span class="ph token number">0xdd</span><span class="ph token punctuation">,</span><span class="ph token number">0xde</span><span class="ph token punctuation">,</span><span class="ph token number">0xdf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xe0</span><span class="ph token punctuation">,</span><span class="ph token number">0xe1</span><span class="ph token punctuation">,</span><span class="ph token number">0xe2</span><span class="ph token punctuation">,</span><span class="ph token number">0xe3</span><span class="ph token punctuation">,</span><span class="ph token number">0xe4</span><span class="ph token punctuation">,</span><span class="ph token number">0xe5</span><span class="ph token punctuation">,</span><span class="ph token number">0xe6</span><span class="ph token punctuation">,</span><span class="ph token number">0xe7</span><span class="ph token punctuation">,</span><span class="ph token number">0xe8</span><span class="ph token punctuation">,</span><span class="ph token number">0xe9</span><span class="ph token punctuation">,</span><span class="ph token number">0xea</span><span class="ph token punctuation">,</span><span class="ph token number">0xeb</span><span class="ph token punctuation">,</span><span class="ph token number">0xec</span><span class="ph token punctuation">,</span><span class="ph token number">0xed</span><span class="ph token punctuation">,</span><span class="ph token number">0xee</span><span class="ph token punctuation">,</span><span class="ph token number">0xef</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xf0</span><span class="ph token punctuation">,</span><span class="ph token number">0xf1</span><span class="ph token punctuation">,</span><span class="ph token number">0xf2</span><span class="ph token punctuation">,</span><span class="ph token number">0xf3</span><span class="ph token punctuation">,</span><span class="ph token number">0xf4</span><span class="ph token punctuation">,</span><span class="ph token number">0xf5</span><span class="ph token punctuation">,</span><span class="ph token number">0xf6</span><span class="ph token punctuation">,</span><span class="ph token number">0xf7</span><span class="ph token punctuation">,</span><span class="ph token number">0xf8</span><span class="ph token punctuation">,</span><span class="ph token number">0xf9</span><span class="ph token punctuation">,</span><span class="ph token number">0xfa</span><span class="ph token punctuation">,</span><span class="ph token number">0xfb</span><span class="ph token punctuation">,</span><span class="ph token number">0xfc</span><span class="ph token punctuation">,</span><span class="ph token number">0xfd</span><span class="ph token punctuation">,</span><span class="ph token number">0xfe</span><span class="ph token punctuation">,</span><span class="ph token number">0xff</span><span class="ph token punctuation">,</span>
+
+    <span class="ph token number">0x00</span><span class="ph token punctuation">,</span><span class="ph token number">0x01</span><span class="ph token punctuation">,</span><span class="ph token number">0x02</span><span class="ph token punctuation">,</span><span class="ph token number">0x03</span><span class="ph token punctuation">,</span><span class="ph token number">0x04</span><span class="ph token punctuation">,</span><span class="ph token number">0x05</span><span class="ph token punctuation">,</span><span class="ph token number">0x06</span><span class="ph token punctuation">,</span><span class="ph token number">0x07</span><span class="ph token punctuation">,</span><span class="ph token number">0x08</span><span class="ph token punctuation">,</span><span class="ph token number">0x09</span><span class="ph token punctuation">,</span><span class="ph token number">0x0a</span><span class="ph token punctuation">,</span><span class="ph token number">0x0b</span><span class="ph token punctuation">,</span><span class="ph token number">0x0c</span><span class="ph token punctuation">,</span><span class="ph token number">0x0d</span><span class="ph token punctuation">,</span><span class="ph token number">0x0e</span><span class="ph token punctuation">,</span><span class="ph token number">0x0f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x10</span><span class="ph token punctuation">,</span><span class="ph token number">0x11</span><span class="ph token punctuation">,</span><span class="ph token number">0x12</span><span class="ph token punctuation">,</span><span class="ph token number">0x13</span><span class="ph token punctuation">,</span><span class="ph token number">0x14</span><span class="ph token punctuation">,</span><span class="ph token number">0x15</span><span class="ph token punctuation">,</span><span class="ph token number">0x16</span><span class="ph token punctuation">,</span><span class="ph token number">0x17</span><span class="ph token punctuation">,</span><span class="ph token number">0x18</span><span class="ph token punctuation">,</span><span class="ph token number">0x19</span><span class="ph token punctuation">,</span><span class="ph token number">0x1a</span><span class="ph token punctuation">,</span><span class="ph token number">0x1b</span><span class="ph token punctuation">,</span><span class="ph token number">0x1c</span><span class="ph token punctuation">,</span><span class="ph token number">0x1d</span><span class="ph token punctuation">,</span><span class="ph token number">0x1e</span><span class="ph token punctuation">,</span><span class="ph token number">0x1f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x20</span><span class="ph token punctuation">,</span><span class="ph token number">0x21</span><span class="ph token punctuation">,</span><span class="ph token number">0x22</span><span class="ph token punctuation">,</span><span class="ph token number">0x23</span><span class="ph token punctuation">,</span><span class="ph token number">0x24</span><span class="ph token punctuation">,</span><span class="ph token number">0x25</span><span class="ph token punctuation">,</span><span class="ph token number">0x26</span><span class="ph token punctuation">,</span><span class="ph token number">0x27</span><span class="ph token punctuation">,</span><span class="ph token number">0x28</span><span class="ph token punctuation">,</span><span class="ph token number">0x29</span><span class="ph token punctuation">,</span><span class="ph token number">0x2a</span><span class="ph token punctuation">,</span><span class="ph token number">0x2b</span><span class="ph token punctuation">,</span><span class="ph token number">0x2c</span><span class="ph token punctuation">,</span><span class="ph token number">0x2d</span><span class="ph token punctuation">,</span><span class="ph token number">0x2e</span><span class="ph token punctuation">,</span><span class="ph token number">0x2f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x30</span><span class="ph token punctuation">,</span><span class="ph token number">0x31</span><span class="ph token punctuation">,</span><span class="ph token number">0x32</span><span class="ph token punctuation">,</span><span class="ph token number">0x33</span><span class="ph token punctuation">,</span><span class="ph token number">0x34</span><span class="ph token punctuation">,</span><span class="ph token number">0x35</span><span class="ph token punctuation">,</span><span class="ph token number">0x36</span><span class="ph token punctuation">,</span><span class="ph token number">0x37</span><span class="ph token punctuation">,</span><span class="ph token number">0x38</span><span class="ph token punctuation">,</span><span class="ph token number">0x39</span><span class="ph token punctuation">,</span><span class="ph token number">0x3a</span><span class="ph token punctuation">,</span><span class="ph token number">0x3b</span><span class="ph token punctuation">,</span><span class="ph token number">0x3c</span><span class="ph token punctuation">,</span><span class="ph token number">0x3d</span><span class="ph token punctuation">,</span><span class="ph token number">0x3e</span><span class="ph token punctuation">,</span><span class="ph token number">0x3f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x40</span><span class="ph token punctuation">,</span><span class="ph token number">0x41</span><span class="ph token punctuation">,</span><span class="ph token number">0x42</span><span class="ph token punctuation">,</span><span class="ph token number">0x43</span><span class="ph token punctuation">,</span><span class="ph token number">0x44</span><span class="ph token punctuation">,</span><span class="ph token number">0x45</span><span class="ph token punctuation">,</span><span class="ph token number">0x46</span><span class="ph token punctuation">,</span><span class="ph token number">0x47</span><span class="ph token punctuation">,</span><span class="ph token number">0x48</span><span class="ph token punctuation">,</span><span class="ph token number">0x49</span><span class="ph token punctuation">,</span><span class="ph token number">0x4a</span><span class="ph token punctuation">,</span><span class="ph token number">0x4b</span><span class="ph token punctuation">,</span><span class="ph token number">0x4c</span><span class="ph token punctuation">,</span><span class="ph token number">0x4d</span><span class="ph token punctuation">,</span><span class="ph token number">0x4e</span><span class="ph token punctuation">,</span><span class="ph token number">0x4f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x50</span><span class="ph token punctuation">,</span><span class="ph token number">0x51</span><span class="ph token punctuation">,</span><span class="ph token number">0x52</span><span class="ph token punctuation">,</span><span class="ph token number">0x53</span><span class="ph token punctuation">,</span><span class="ph token number">0x54</span><span class="ph token punctuation">,</span><span class="ph token number">0x55</span><span class="ph token punctuation">,</span><span class="ph token number">0x56</span><span class="ph token punctuation">,</span><span class="ph token number">0x57</span><span class="ph token punctuation">,</span><span class="ph token number">0x58</span><span class="ph token punctuation">,</span><span class="ph token number">0x59</span><span class="ph token punctuation">,</span><span class="ph token number">0x5a</span><span class="ph token punctuation">,</span><span class="ph token number">0x5b</span><span class="ph token punctuation">,</span><span class="ph token number">0x5c</span><span class="ph token punctuation">,</span><span class="ph token number">0x5d</span><span class="ph token punctuation">,</span><span class="ph token number">0x5e</span><span class="ph token punctuation">,</span><span class="ph token number">0x5f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x60</span><span class="ph token punctuation">,</span><span class="ph token number">0x61</span><span class="ph token punctuation">,</span><span class="ph token number">0x62</span><span class="ph token punctuation">,</span><span class="ph token number">0x63</span><span class="ph token punctuation">,</span><span class="ph token number">0x64</span><span class="ph token punctuation">,</span><span class="ph token number">0x65</span><span class="ph token punctuation">,</span><span class="ph token number">0x66</span><span class="ph token punctuation">,</span><span class="ph token number">0x67</span><span class="ph token punctuation">,</span><span class="ph token number">0x68</span><span class="ph token punctuation">,</span><span class="ph token number">0x69</span><span class="ph token punctuation">,</span><span class="ph token number">0x6a</span><span class="ph token punctuation">,</span><span class="ph token number">0x6b</span><span class="ph token punctuation">,</span><span class="ph token number">0x6c</span><span class="ph token punctuation">,</span><span class="ph token number">0x6d</span><span class="ph token punctuation">,</span><span class="ph token number">0x6e</span><span class="ph token punctuation">,</span><span class="ph token number">0x6f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x70</span><span class="ph token punctuation">,</span><span class="ph token number">0x71</span><span class="ph token punctuation">,</span><span class="ph token number">0x72</span><span class="ph token punctuation">,</span><span class="ph token number">0x73</span><span class="ph token punctuation">,</span><span class="ph token number">0x74</span><span class="ph token punctuation">,</span><span class="ph token number">0x75</span><span class="ph token punctuation">,</span><span class="ph token number">0x76</span><span class="ph token punctuation">,</span><span class="ph token number">0x77</span><span class="ph token punctuation">,</span><span class="ph token number">0x78</span><span class="ph token punctuation">,</span><span class="ph token number">0x79</span><span class="ph token punctuation">,</span><span class="ph token number">0x7a</span><span class="ph token punctuation">,</span><span class="ph token number">0x7b</span><span class="ph token punctuation">,</span><span class="ph token number">0x7c</span><span class="ph token punctuation">,</span><span class="ph token number">0x7d</span><span class="ph token punctuation">,</span><span class="ph token number">0x7e</span><span class="ph token punctuation">,</span><span class="ph token number">0x7f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x80</span><span class="ph token punctuation">,</span><span class="ph token number">0x81</span><span class="ph token punctuation">,</span><span class="ph token number">0x82</span><span class="ph token punctuation">,</span><span class="ph token number">0x83</span><span class="ph token punctuation">,</span><span class="ph token number">0x84</span><span class="ph token punctuation">,</span><span class="ph token number">0x85</span><span class="ph token punctuation">,</span><span class="ph token number">0x86</span><span class="ph token punctuation">,</span><span class="ph token number">0x87</span><span class="ph token punctuation">,</span><span class="ph token number">0x88</span><span class="ph token punctuation">,</span><span class="ph token number">0x89</span><span class="ph token punctuation">,</span><span class="ph token number">0x8a</span><span class="ph token punctuation">,</span><span class="ph token number">0x8b</span><span class="ph token punctuation">,</span><span class="ph token number">0x8c</span><span class="ph token punctuation">,</span><span class="ph token number">0x8d</span><span class="ph token punctuation">,</span><span class="ph token number">0x8e</span><span class="ph token punctuation">,</span><span class="ph token number">0x8f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x90</span><span class="ph token punctuation">,</span><span class="ph token number">0x91</span><span class="ph token punctuation">,</span><span class="ph token number">0x92</span><span class="ph token punctuation">,</span><span class="ph token number">0x93</span><span class="ph token punctuation">,</span><span class="ph token number">0x94</span><span class="ph token punctuation">,</span><span class="ph token number">0x95</span><span class="ph token punctuation">,</span><span class="ph token number">0x96</span><span class="ph token punctuation">,</span><span class="ph token number">0x97</span><span class="ph token punctuation">,</span><span class="ph token number">0x98</span><span class="ph token punctuation">,</span><span class="ph token number">0x99</span><span class="ph token punctuation">,</span><span class="ph token number">0x9a</span><span class="ph token punctuation">,</span><span class="ph token number">0x9b</span><span class="ph token punctuation">,</span><span class="ph token number">0x9c</span><span class="ph token punctuation">,</span><span class="ph token number">0x9d</span><span class="ph token punctuation">,</span><span class="ph token number">0x9e</span><span class="ph token punctuation">,</span><span class="ph token number">0x9f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xa0</span><span class="ph token punctuation">,</span><span class="ph token number">0xa1</span><span class="ph token punctuation">,</span><span class="ph token number">0xa2</span><span class="ph token punctuation">,</span><span class="ph token number">0xa3</span><span class="ph token punctuation">,</span><span class="ph token number">0xa4</span><span class="ph token punctuation">,</span><span class="ph token number">0xa5</span><span class="ph token punctuation">,</span><span class="ph token number">0xa6</span><span class="ph token punctuation">,</span><span class="ph token number">0xa7</span><span class="ph token punctuation">,</span><span class="ph token number">0xa8</span><span class="ph token punctuation">,</span><span class="ph token number">0xa9</span><span class="ph token punctuation">,</span><span class="ph token number">0xaa</span><span class="ph token punctuation">,</span><span class="ph token number">0xab</span><span class="ph token punctuation">,</span><span class="ph token number">0xac</span><span class="ph token punctuation">,</span><span class="ph token number">0xad</span><span class="ph token punctuation">,</span><span class="ph token number">0xae</span><span class="ph token punctuation">,</span><span class="ph token number">0xaf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xb0</span><span class="ph token punctuation">,</span><span class="ph token number">0xb1</span><span class="ph token punctuation">,</span><span class="ph token number">0xb2</span><span class="ph token punctuation">,</span><span class="ph token number">0xb3</span><span class="ph token punctuation">,</span><span class="ph token number">0xb4</span><span class="ph token punctuation">,</span><span class="ph token number">0xb5</span><span class="ph token punctuation">,</span><span class="ph token number">0xb6</span><span class="ph token punctuation">,</span><span class="ph token number">0xb7</span><span class="ph token punctuation">,</span><span class="ph token number">0xb8</span><span class="ph token punctuation">,</span><span class="ph token number">0xb9</span><span class="ph token punctuation">,</span><span class="ph token number">0xba</span><span class="ph token punctuation">,</span><span class="ph token number">0xbb</span><span class="ph token punctuation">,</span><span class="ph token number">0xbc</span><span class="ph token punctuation">,</span><span class="ph token number">0xbd</span><span class="ph token punctuation">,</span><span class="ph token number">0xbe</span><span class="ph token punctuation">,</span><span class="ph token number">0xbf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xc0</span><span class="ph token punctuation">,</span><span class="ph token number">0xc1</span><span class="ph token punctuation">,</span><span class="ph token number">0xc2</span><span class="ph token punctuation">,</span><span class="ph token number">0xc3</span><span class="ph token punctuation">,</span><span class="ph token number">0xc4</span><span class="ph token punctuation">,</span><span class="ph token number">0xc5</span><span class="ph token punctuation">,</span><span class="ph token number">0xc6</span><span class="ph token punctuation">,</span><span class="ph token number">0xc7</span><span class="ph token punctuation">,</span><span class="ph token number">0xc8</span><span class="ph token punctuation">,</span><span class="ph token number">0xc9</span><span class="ph token punctuation">,</span><span class="ph token number">0xca</span><span class="ph token punctuation">,</span><span class="ph token number">0xcb</span><span class="ph token punctuation">,</span><span class="ph token number">0xcc</span><span class="ph token punctuation">,</span><span class="ph token number">0xcd</span><span class="ph token punctuation">,</span><span class="ph token number">0xce</span><span class="ph token punctuation">,</span><span class="ph token number">0xcf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xd0</span><span class="ph token punctuation">,</span><span class="ph token number">0xd1</span><span class="ph token punctuation">,</span><span class="ph token number">0xd2</span><span class="ph token punctuation">,</span><span class="ph token number">0xd3</span><span class="ph token punctuation">,</span><span class="ph token number">0xd4</span><span class="ph token punctuation">,</span><span class="ph token number">0xd5</span><span class="ph token punctuation">,</span><span class="ph token number">0xd6</span><span class="ph token punctuation">,</span><span class="ph token number">0xd7</span><span class="ph token punctuation">,</span><span class="ph token number">0xd8</span><span class="ph token punctuation">,</span><span class="ph token number">0xd9</span><span class="ph token punctuation">,</span><span class="ph token number">0xda</span><span class="ph token punctuation">,</span><span class="ph token number">0xdb</span><span class="ph token punctuation">,</span><span class="ph token number">0xdc</span><span class="ph token punctuation">,</span><span class="ph token number">0xdd</span><span class="ph token punctuation">,</span><span class="ph token number">0xde</span><span class="ph token punctuation">,</span><span class="ph token number">0xdf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xe0</span><span class="ph token punctuation">,</span><span class="ph token number">0xe1</span><span class="ph token punctuation">,</span><span class="ph token number">0xe2</span><span class="ph token punctuation">,</span><span class="ph token number">0xe3</span><span class="ph token punctuation">,</span><span class="ph token number">0xe4</span><span class="ph token punctuation">,</span><span class="ph token number">0xe5</span><span class="ph token punctuation">,</span><span class="ph token number">0xe6</span><span class="ph token punctuation">,</span><span class="ph token number">0xe7</span><span class="ph token punctuation">,</span><span class="ph token number">0xe8</span><span class="ph token punctuation">,</span><span class="ph token number">0xe9</span><span class="ph token punctuation">,</span><span class="ph token number">0xea</span><span class="ph token punctuation">,</span><span class="ph token number">0xeb</span><span class="ph token punctuation">,</span><span class="ph token number">0xec</span><span class="ph token punctuation">,</span><span class="ph token number">0xed</span><span class="ph token punctuation">,</span><span class="ph token number">0xee</span><span class="ph token punctuation">,</span><span class="ph token number">0xef</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xf0</span><span class="ph token punctuation">,</span><span class="ph token number">0xf1</span><span class="ph token punctuation">,</span><span class="ph token number">0xf2</span><span class="ph token punctuation">,</span><span class="ph token number">0xf3</span><span class="ph token punctuation">,</span><span class="ph token number">0xf4</span><span class="ph token punctuation">,</span><span class="ph token number">0xf5</span><span class="ph token punctuation">,</span><span class="ph token number">0xf6</span><span class="ph token punctuation">,</span><span class="ph token number">0xf7</span><span class="ph token punctuation">,</span><span class="ph token number">0xf8</span><span class="ph token punctuation">,</span><span class="ph token number">0xf9</span><span class="ph token punctuation">,</span><span class="ph token number">0xfa</span><span class="ph token punctuation">,</span><span class="ph token number">0xfb</span><span class="ph token punctuation">,</span><span class="ph token number">0xfc</span><span class="ph token punctuation">,</span><span class="ph token number">0xfd</span><span class="ph token punctuation">,</span><span class="ph token number">0xfe</span><span class="ph token punctuation">,</span><span class="ph token number">0xff</span>
+<span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+
+uint8_t APP_RxData<span class="ph token punctuation">[</span>APP_RX_BUFFER_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+uint8_t APP_TxData<span class="ph token punctuation">[</span>APP_TX_BUFFER_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">delay</span><span class="ph token punctuation">(</span>uint32_t count<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint32_t i<span class="ph token punctuation">;</span>
+    
+    <span class="ph token comment">// 1 loop roughly provides 1us delay at 32MHz CPU frequency</span>
+    <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>i <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> i <span class="ph token operator">&lt;</span> count<span class="ph token punctuation">;</span> i<span class="ph token operator">++</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>        
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">SPIEventHandler</span><span class="ph token punctuation">(</span>uintptr_t context <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">SPI1_ErrorGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span> <span class="ph token operator">==</span> SPI_SLAVE_ERROR_NONE<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        appData<span class="ph token punctuation">.</span>nBytesRead <span class="ph token operator">=</span> <span class="ph token function">SPI1_Read</span><span class="ph token punctuation">(</span>APP_RxData<span class="ph token punctuation">,</span> <span class="ph token function">SPI1_ReadCountGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span> 
+
+        <span class="ph token keyword">switch</span><span class="ph token punctuation">(</span>APP_RxData<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>            
+            <span class="ph token keyword">case</span> APP_CMD_WRITE<span class="ph token operator">:</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>appData<span class="ph token punctuation">.</span>status<span class="ph token punctuation">.</span>busy <span class="ph token operator">==</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>                
+                    appData<span class="ph token punctuation">.</span>status<span class="ph token punctuation">.</span>busy <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                    appData<span class="ph token punctuation">.</span>memAddr <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>APP_RxData<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span> <span class="ph token operator">&lt;&lt;</span> <span class="ph token number">8</span><span class="ph token punctuation">)</span> <span class="ph token operator">|</span> <span class="ph token punctuation">(</span>APP_RxData<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    appData<span class="ph token punctuation">.</span>nBytesToWrite <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>appData<span class="ph token punctuation">.</span>nBytesRead <span class="ph token operator">-</span> <span class="ph token number">3</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>                
+                    appData<span class="ph token punctuation">.</span>state <span class="ph token operator">=</span> APP_STATE_WRITE<span class="ph token punctuation">;</span>                
+                <span class="ph token punctuation">}</span>                
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token keyword">case</span> APP_CMD_READ<span class="ph token operator">:</span>
+
+                appData<span class="ph token punctuation">.</span>memAddr <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>APP_RxData<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span> <span class="ph token operator">&lt;&lt;</span> <span class="ph token number">8</span><span class="ph token punctuation">)</span> <span class="ph token operator">|</span> <span class="ph token punctuation">(</span>APP_RxData<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                appData<span class="ph token punctuation">.</span>nBytesReadRequest <span class="ph token operator">=</span> APP_RxData<span class="ph token punctuation">[</span><span class="ph token number">3</span><span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>appData<span class="ph token punctuation">.</span>memAddr <span class="ph token operator">+</span> appData<span class="ph token punctuation">.</span>nBytesReadRequest<span class="ph token punctuation">)</span> <span class="ph token operator">&lt;=</span> APP_TX_BUFFER_SIZE<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">memcpy</span><span class="ph token punctuation">(</span>APP_TxData<span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>APP_MemoryBuffer<span class="ph token punctuation">[</span>appData<span class="ph token punctuation">.</span>memAddr<span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> appData<span class="ph token punctuation">.</span>nBytesReadRequest<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token function">SPI1_Write</span><span class="ph token punctuation">(</span>APP_TxData<span class="ph token punctuation">,</span> appData<span class="ph token punctuation">.</span>nBytesReadRequest<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>            
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span> 
+
+        <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>appData<span class="ph token punctuation">.</span>status<span class="ph token punctuation">.</span>busy <span class="ph token operator">==</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token comment">/* Indicate to SPI Master that slave is ready for data transfer */</span>
+            <span class="ph token function">SPI1_Ready</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>       
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>    
+    
+    appData<span class="ph token punctuation">.</span>state <span class="ph token operator">=</span> APP_STATE_INITIALIZE<span class="ph token punctuation">;</span>
+    
+    <span class="ph token keyword">while</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">/* Check the application's current state. */</span>
+        <span class="ph token keyword">switch</span> <span class="ph token punctuation">(</span>appData<span class="ph token punctuation">.</span>state<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token keyword">case</span> APP_STATE_INITIALIZE<span class="ph token operator">:</span>
+                  
+                <span class="ph token function">SPI1_CallbackRegister</span><span class="ph token punctuation">(</span>SPIEventHandler<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>  
+                
+                <span class="ph token comment">/* Wait for instructions from SPI master */</span>
+                appData<span class="ph token punctuation">.</span>state <span class="ph token operator">=</span> APP_STATE_IDLE<span class="ph token punctuation">;</span>   
+                
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+                
+            <span class="ph token keyword">case</span> APP_STATE_WRITE<span class="ph token operator">:</span> 
+                
+                <span class="ph token comment">/* Adding delay to simulate busy condition */</span>
+                <span class="ph token function">delay</span><span class="ph token punctuation">(</span><span class="ph token number">1000</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                
+                <span class="ph token comment">/* Copy received data into Application memory buffer */</span>                                
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>appData<span class="ph token punctuation">.</span>memAddr <span class="ph token operator">+</span> appData<span class="ph token punctuation">.</span>nBytesToWrite<span class="ph token punctuation">)</span> <span class="ph token operator">&lt;=</span> APP_MEM_BUFFER_SIZE<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">memcpy</span><span class="ph token punctuation">(</span><span class="ph token operator">&amp;</span>APP_MemoryBuffer<span class="ph token punctuation">[</span>appData<span class="ph token punctuation">.</span>memAddr<span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>APP_RxData<span class="ph token punctuation">[</span><span class="ph token number">3</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> appData<span class="ph token punctuation">.</span>nBytesToWrite<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                
+                appData<span class="ph token punctuation">.</span>status<span class="ph token punctuation">.</span>busy <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+                
+                <span class="ph token comment">/* Indicate to SPI Master that slave is ready for data transfer */</span>
+                <span class="ph token function">SPI1_Ready</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                
+                appData<span class="ph token punctuation">.</span>state <span class="ph token operator">=</span> APP_STATE_IDLE<span class="ph token punctuation">;</span> 
+                                
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+                            
+            <span class="ph token keyword">case</span> APP_STATE_IDLE<span class="ph token operator">:</span> 
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+                
+            <span class="ph token keyword">default</span><span class="ph token operator">:</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">SPI peripheral library provides the following interfaces:</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d877936e3947"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d877936e3949"><span>Description</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d877936e3951"><span>Master (blocking/interrupt disabled) mode</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d877936e3953"><span>Master (non-blocking/interrupt enabled) mode</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d877936e3955"><span>Slave mode</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_Initialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Initializes SPI module of the device</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_TransferSetup</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Configure SPI operational parameters at run time</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>No</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_WriteRead</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Write and Read data on SPI peripheral</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>No</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_Write</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Writes data to SPI peripheral</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_Read</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Reads data on the SPI peripheral in master mode. Reads data from the PLIB's internal buffer to the application buffer in SPI slave mode</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_CallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Allows application to register a callback with the PLIB</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_IsBusy</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Returns transfer status of SPI</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_ReadCountGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Returns the number of bytes pending to be read out from the PLIB's internal buffer</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_ReadBufferSizeGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Returns the size of the PLIB's internal receive buffer</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_WriteBufferSizeGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Returns the size of the PLIB's internal transmit buffer</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_ErrorGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Returns the error status of SPI transfer</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3947 "><span>SPIx_Ready</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3949 "><span>Drives the SPI slave busy line to ready (not busy) state</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3951 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3953 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e3955 "><span>Yes</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d877936e4104"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d877936e4106"><span>Description</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d877936e4108"><span>Master (blocking/interrupt disabled) mode</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d877936e4110"><span>Master (non-blocking/interrupt enabled) mode</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d877936e4112"><span>Slave mode</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4104 "><span>SPI_CLOCK_PHASE</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4106 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4108 "><span>Identifies SPI Clock Phase Options</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4110 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4112 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4104 "><span>SPI_CLOCK_POLARITY</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4106 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4108 "><span>Identifies SPI Clock Polarity Options</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4110 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4112 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4104 "><span>SPI_DATA_BITS</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4106 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4108 "><span>Identifies SPI bits per transfer</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4110 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4112 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4104 "><span>SPI_TRANSFER_SETUP</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4106 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4108 "><span>Data structure containing the SPI parameters which can be changed at run time</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4110 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4112 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4104 "><span>SPI_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4106 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4108 "><span>Defines the data type and function signature for the SPI peripheral callback function</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4110 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4112 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4104 "><span>SPI_SLAVE_ERROR</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4106 "><span>Macros and Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4108 "><span>Defines the macros and typedef associated with SPI slave mode errors</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4110 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4112 "><span>No</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4104 "><span>SPI_SLAVE_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4106 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4108 "><span>Pointer to a SPI Call back function when SPI is configued in slave mode</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4110 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d877936e4112 "><span>No</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

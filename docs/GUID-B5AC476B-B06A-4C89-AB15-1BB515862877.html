@@ -1,0 +1,1191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Control Area Network (CAN)" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="control-area-network-can" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Control Area Network (CAN)</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-control-area-network-can" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-B5AC476B-B06A-4C89-AB15-1BB515862877"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="control-area-network-can">
+<h1 class="title topictitle1" id="ariaid-title1">Control Area Network (CAN)</h1><div class="body"><p class="p">The Controller Area Network (CAN) performs communication according to
+ISO 11898-1:2015 and to Bosch CAN-FD specification. Additional
+transceiver hardware is required for connection to the physical layer.</p>
+<p class="p">All functions concerning the handling of messages are implemented by
+the Rx Handler and the Tx Handler. The Rx Handler manages message
+acceptance filtering, the transfer of received messages from the CAN
+core to the Message RAM, as well as providing receive message status
+information. The Tx Handler is responsible for the transfer of transmit
+messages from the Message RAM to the CAN core, as well as providing
+transmit status information. Acceptance filtering is implemented by a
+combination of up to 128 filter elements, where each element can be
+configured as a range, as a bit mask, or as a dedicated ID filter.</p>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p">The CAN library supports the Normal and CAN-FD modes. The CAN Normal or
+CAN-FD mode can transfer message in a polling or an interrupt mode.</p>
+<p class="p"><strong class="ph b">CAN Message RAM Configuration</strong></p>
+<p class="p">Allocate CAN Message RAM Configuration in contiguous non-cacheable
+buffer as uint8_t Can1MessageRAM<span class="xref"></span>
+<strong class="ph b">attribute</strong>((aligned (32))), here additional attribute such as
+<strong class="ph b">attribute</strong>((<strong class="ph b">section</strong>(".region_nocache"))) or
+<strong class="ph b">attribute</strong>((space(data), section (".ram_nocache"))) should be added
+if cache is enabled and non-cacheable section should be created in
+linker script.</p>
+<p class="p"><strong class="ph b">CAN polling mode:</strong></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d402646e42', this);">Copy</button><code id="d402646e42" content="#include &lt;stddef.h&gt;                     // Defines NULL&#xA;#include &lt;stdbool.h&gt;                    // Defines true&#xA;#include &lt;stdlib.h&gt;                     // Defines EXIT_FAILURE&#xA;#include &#34;definitions.h&#34;                // SYS function prototypes&#xA;&#xA;uint8_t Can1MessageRAM[CAN1_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32)));&#xA;&#xA;/* Standard identifier id[28:18]*/&#xA;#define WRITE_ID(id) (id &lt;&lt; 18)&#xA;#define READ_ID(id)  (id &gt;&gt; 18)&#xA;&#xA;static uint32_t status = 0;&#xA;static uint8_t loop_count = 0;&#xA;static uint8_t user_input = 0;&#xA;&#xA;static uint8_t txFiFo[CAN1_TX_FIFO_BUFFER_SIZE];&#xA;static uint8_t rxFiFo0[CAN1_RX_FIFO0_SIZE];&#xA;static uint8_t rxFiFo1[CAN1_RX_FIFO1_SIZE];&#xA;static uint8_t rxBuffer[CAN1_RX_BUFFER_SIZE];&#xA;&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;// Section: Local functions&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;&#xA;/* Message Length to Data length code */&#xA;static uint8_t CANLengthToDlcGet(uint8_t length)&#xA;{&#xA;    uint8_t dlc = 0;&#xA;&#xA;    if (length &lt;= 8U)&#xA;    {&#xA;        dlc = length;&#xA;    }&#xA;    else if (length &lt;= 12U)&#xA;    {&#xA;        dlc = 0x9U;&#xA;    }&#xA;    else if (length &lt;= 16U)&#xA;    {&#xA;        dlc = 0xAU;&#xA;    }&#xA;    else if (length &lt;= 20U)&#xA;    {&#xA;        dlc = 0xBU;&#xA;    }&#xA;    else if (length &lt;= 24U)&#xA;    {&#xA;        dlc = 0xCU;&#xA;    }&#xA;    else if (length &lt;= 32U)&#xA;    {&#xA;        dlc = 0xDU;&#xA;    }&#xA;    else if (length &lt;= 48U)&#xA;    {&#xA;        dlc = 0xEU;&#xA;    }&#xA;    else&#xA;    {&#xA;        dlc = 0xFU;&#xA;    }&#xA;    return dlc;&#xA;}&#xA;&#xA;/* Data length code to Message Length */&#xA;static uint8_t CANDlcToLengthGet(uint8_t dlc)&#xA;{&#xA;    uint8_t msgLength[] = {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 12U, 16U, 20U, 24U, 32U, 48U, 64U};&#xA;    return msgLength[dlc];&#xA;}&#xA;&#xA;/* Menu */&#xA;static void display_menu(void)&#xA;{&#xA;&#x9;printf(&#34;Menu :\r\n&#34;&#xA;&#x9;       &#34;  -- Select the action:\r\n&#34;&#xA;&#x9;       &#34;  0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63. \r\n&#34;&#xA;&#x9;       &#34;  1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191. \r\n&#34;&#xA;&#x9;       &#34;  2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63. \r\n&#34;&#xA;&#x9;       &#34;  3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191. \r\n&#34;&#xA;&#x9;       &#34;  4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n&#34;&#xA;&#x9;       &#34;  m: Display menu \r\n\r\n&#34;);&#xA;}&#xA;&#xA;/* Print Rx Message */&#xA;static void print_message(uint8_t numberOfMessage, CAN_RX_BUFFER *rxBuf, uint8_t rxBufLen, uint8_t rxFifoBuf)&#xA;{&#xA;    uint8_t length = 0;&#xA;    uint8_t msgLength = 0;&#xA;    uint32_t id = 0;&#xA;&#xA;    if (rxFifoBuf == 0)&#xA;        printf(&#34; Rx FIFO0 :&#34;);&#xA;    else if (rxFifoBuf == 1)&#xA;        printf(&#34; Rx FIFO1 :&#34;);&#xA;    else if (rxFifoBuf == 2)&#xA;        printf(&#34; Rx Buffer :&#34;);&#xA;&#xA;    for (uint8_t count = 0; count &lt; numberOfMessage; count++)&#xA;    {&#xA;        /* Print message to Console */&#xA;        printf(&#34; New Message Received\r\n&#34;);&#xA;        id = rxBuf-&gt;xtd ? rxBuf-&gt;id : READ_ID(rxBuf-&gt;id);&#xA;        msgLength = CANDlcToLengthGet(rxBuf-&gt;dlc);&#xA;        length = msgLength;&#xA;        printf(&#34; Message - ID : 0x%x Length : 0x%x &#34;, (unsigned int)id, (unsigned int)msgLength);&#xA;        printf(&#34;Message : &#34;);&#xA;        while(length)&#xA;        {&#xA;            printf(&#34;0x%x &#34;, rxBuf-&gt;data[msgLength - length--]);&#xA;        }&#xA;        printf(&#34;\r\n&#34;);&#xA;        rxBuf += rxBufLen;&#xA;    }&#xA;}&#xA;&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;// Section: Main Entry Point&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;&#xA;int main ( void )&#xA;{&#xA;    CAN_TX_BUFFER *txBuffer = NULL;&#xA;    uint8_t        bufferNumber = 0;&#xA;    uint8_t        numberOfMessage = 0;&#xA;&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;&#xA;    printf(&#34; ------------------------------ \r\n&#34;);&#xA;    printf(&#34;            CAN FD Demo          \r\n&#34;);&#xA;    printf(&#34; ------------------------------ \r\n&#34;);&#xA;    &#xA;    /* Set Message RAM Configuration */&#xA;    CAN1_MessageRAMConfigSet(Can1MessageRAM);&#xA;&#xA;    display_menu();&#xA;     &#xA;    while ( true )&#xA;    {&#xA;        /* Rx Buffers */&#xA;        if (CAN1_InterruptGet(CAN_INTERRUPT_DRX_MASK))&#xA;        {    &#xA;            CAN1_InterruptClear(CAN_INTERRUPT_DRX_MASK);&#xA;&#xA;            /* Check CAN Status */&#xA;            status = CAN1_ErrorGet();&#xA;&#xA;            if (((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_NONE) || ((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_LEC_NC))&#xA;            {&#xA;                if (CAN1_RxBufferNumberGet(&amp;bufferNumber))&#xA;                {&#xA;                    memset(rxBuffer, 0x00, CAN1_RX_BUFFER_ELEMENT_SIZE);&#xA;                    if (CAN1_MessageReceive(bufferNumber, (CAN_RX_BUFFER *)rxBuffer) == true)&#xA;                    {&#xA;                        print_message(1, (CAN_RX_BUFFER *)rxBuffer, CAN1_RX_BUFFER_ELEMENT_SIZE, 2);&#xA;                    }&#xA;                    else&#xA;                    {&#xA;                        printf(&#34; Error in received message\r\n&#34;);&#xA;                    }&#xA;                }&#xA;            }&#xA;            else&#xA;            {&#xA;                printf(&#34; Error in received message\r\n&#34;);&#xA;            }&#xA;        }&#xA;&#xA;        /* Rx FIFO0 */&#xA;        if (CAN1_InterruptGet(CAN_INTERRUPT_RF0N_MASK))&#xA;        {    &#xA;            CAN1_InterruptClear(CAN_INTERRUPT_RF0N_MASK);&#xA;&#xA;            /* Check CAN Status */&#xA;            status = CAN1_ErrorGet();&#xA;&#xA;            if (((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_NONE) || ((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_LEC_NC))&#xA;            {&#xA;                numberOfMessage = CAN1_RxFifoFillLevelGet(CAN_RX_FIFO_0);&#xA;                if (numberOfMessage != 0)&#xA;                {&#xA;                    memset(rxFiFo0, 0x00, (numberOfMessage * CAN1_RX_FIFO0_ELEMENT_SIZE));&#xA;                    if (CAN1_MessageReceiveFifo(CAN_RX_FIFO_0, numberOfMessage, (CAN_RX_BUFFER *)rxFiFo0) == true)&#xA;                    {&#xA;                        print_message(numberOfMessage, (CAN_RX_BUFFER *)rxFiFo0, CAN1_RX_FIFO0_ELEMENT_SIZE, 0);&#xA;                    }&#xA;                    else&#xA;                    {&#xA;                        printf(&#34; Error in received message\r\n&#34;);&#xA;                    }&#xA;                }&#xA;            }&#xA;            else&#xA;            {&#xA;                printf(&#34; Error in received message\r\n&#34;);&#xA;            }&#xA;        }&#xA;&#xA;        /* Rx FIFO1 */&#xA;        if (CAN1_InterruptGet(CAN_INTERRUPT_RF1N_MASK))&#xA;        {    &#xA;            CAN1_InterruptClear(CAN_INTERRUPT_RF1N_MASK);&#xA;&#xA;            /* Check CAN Status */&#xA;            status = CAN1_ErrorGet();&#xA;&#xA;            if (((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_NONE) || ((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_LEC_NC))&#xA;            {&#xA;                numberOfMessage = CAN1_RxFifoFillLevelGet(CAN_RX_FIFO_1);&#xA;                if (numberOfMessage != 0)&#xA;                {&#xA;                    memset(rxFiFo1, 0x00, (numberOfMessage * CAN1_RX_FIFO1_ELEMENT_SIZE));&#xA;                    if (CAN1_MessageReceiveFifo(CAN_RX_FIFO_1, numberOfMessage, (CAN_RX_BUFFER *)rxFiFo1) == true)&#xA;                    {&#xA;                        print_message(numberOfMessage, (CAN_RX_BUFFER *)rxFiFo1, CAN1_RX_FIFO1_ELEMENT_SIZE, 1);&#xA;                    }&#xA;                    else&#xA;                    {&#xA;                        printf(&#34; Error in received message\r\n&#34;);&#xA;                    }&#xA;                }&#xA;            }&#xA;            else&#xA;            {&#xA;                printf(&#34; Error in received message\r\n&#34;);&#xA;            }&#xA;        }&#xA;&#xA;        /* User input */&#xA;        if (SERCOM4_USART_ReceiverIsReady() == false)&#xA;        {&#xA;            continue;&#xA;        }&#xA;        user_input = (uint8_t)SERCOM4_USART_ReadByte();&#xA;&#xA;        switch (user_input)&#xA;        {&#xA;            case '0':&#xA;                memset(txFiFo, 0x00, CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&#xA;                txBuffer = (CAN_TX_BUFFER *)txFiFo;&#xA;                txBuffer-&gt;id = WRITE_ID(0x45A);&#xA;                txBuffer-&gt;dlc = CANLengthToDlcGet(64);&#xA;                txBuffer-&gt;fdf = 1;&#xA;                txBuffer-&gt;brs = 1;&#xA;                for (loop_count = 0; loop_count &lt; 64; loop_count++){&#xA;                    txBuffer-&gt;data[loop_count] = loop_count;&#xA;                }                &#xA;                printf(&#34;  0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63.\r\n&#34;);&#xA;                if (CAN1_MessageTransmitFifo(1, txBuffer) == true)&#xA;                {    &#xA;                    printf(&#34; Success \r\n&#34;);&#xA;                }&#xA;                else&#xA;                {&#xA;                    printf(&#34; Failed \r\n&#34;);&#xA;                }             &#xA;                break;  &#xA;            case '1':&#xA;                memset(txFiFo, 0x00, CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&#xA;                txBuffer = (CAN_TX_BUFFER *)txFiFo;&#xA;                txBuffer-&gt;id = WRITE_ID(0x469);&#xA;                txBuffer-&gt;dlc = CANLengthToDlcGet(64);&#xA;                txBuffer-&gt;fdf = 1;&#xA;                txBuffer-&gt;brs = 1;&#xA;                for (loop_count = 128; loop_count &lt; 192; loop_count++){&#xA;                    txBuffer-&gt;data[loop_count - 128] = loop_count;&#xA;                }                &#xA;                printf(&#34;  1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191.\r\n&#34;);&#xA;                if (CAN1_MessageTransmitFifo(1, txBuffer) == true)&#xA;                {    &#xA;                    printf(&#34; Success \r\n&#34;);&#xA;                }&#xA;                else&#xA;                {&#xA;                    printf(&#34; Failed \r\n&#34;);&#xA;                }    &#xA;                break;&#xA;            case '2': &#xA;                memset(txFiFo, 0x00, CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&#xA;                txBuffer = (CAN_TX_BUFFER *)txFiFo;&#xA;                txBuffer-&gt;id = 0x100000A5;&#xA;                txBuffer-&gt;dlc = CANLengthToDlcGet(64);&#xA;                txBuffer-&gt;xtd = 1;&#xA;                txBuffer-&gt;fdf = 1;&#xA;                txBuffer-&gt;brs = 1;&#xA;                for (loop_count = 0; loop_count &lt; 64; loop_count++){&#xA;                    txBuffer-&gt;data[loop_count] = loop_count;&#xA;                }&#xA;                printf(&#34;  2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63.\r\n&#34;);&#xA;                if (CAN1_MessageTransmitFifo(1, txBuffer) == true)&#xA;                {    &#xA;                    printf(&#34; Success \r\n&#34;);&#xA;                }&#xA;                else&#xA;                {&#xA;                    printf(&#34; Failed \r\n&#34;);&#xA;                }             &#xA;                break;&#xA;            case '3':&#xA;                memset(txFiFo, 0x00, CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&#xA;                txBuffer = (CAN_TX_BUFFER *)txFiFo;&#xA;                txBuffer-&gt;id = 0x10000096;&#xA;                txBuffer-&gt;dlc = CANLengthToDlcGet(64);&#xA;                txBuffer-&gt;xtd = 1;&#xA;                txBuffer-&gt;fdf = 1;&#xA;                txBuffer-&gt;brs = 1;&#xA;                for (loop_count = 128; loop_count &lt; 192; loop_count++){&#xA;                    txBuffer-&gt;data[loop_count - 128] = loop_count;&#xA;                }&#xA;                printf(&#34;  3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191.\r\n&#34;);&#xA;                if (CAN1_MessageTransmitFifo(1, txBuffer) == true)&#xA;                {    &#xA;                    printf(&#34; Success \r\n&#34;);&#xA;                }&#xA;                else&#xA;                {&#xA;                    printf(&#34; Failed \r\n&#34;);&#xA;                }             &#xA;                break;&#xA;            &#xA;            case '4':&#xA;                memset(txFiFo, 0x00, CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&#xA;                txBuffer = (CAN_TX_BUFFER *)txFiFo;&#xA;                txBuffer-&gt;id = WRITE_ID(0x469);&#xA;                txBuffer-&gt;dlc = 8;&#xA;                for (loop_count = 0; loop_count &lt; 8; loop_count++){&#xA;                    txBuffer-&gt;data[loop_count] = loop_count;&#xA;                }                &#xA;                printf(&#34;  4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7.\r\n&#34;);&#xA;                if (CAN1_MessageTransmitFifo(1, txBuffer) == true)&#xA;                {    &#xA;                    printf(&#34; Success \r\n&#34;);&#xA;                }&#xA;                else&#xA;                {&#xA;                    printf(&#34; Failed \r\n&#34;);&#xA;                }             &#xA;                break;                 &#xA;&#xA;            case 'm':&#xA;            case 'M':&#xA;                display_menu();&#xA;                break;&#xA;                &#xA;            default:&#xA;                printf(&#34; Invalid Input \r\n&#34;);&#xA;                break;&#xA;        }  &#xA;    }&#xA;&#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    return ( EXIT_FAILURE );&#xA;}&#xA;"><span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stddef.h&gt;</span>                     </span><span class="ph token comment">// Defines NULL</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdbool.h&gt;</span>                    </span><span class="ph token comment">// Defines true</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdlib.h&gt;</span>                     </span><span class="ph token comment">// Defines EXIT_FAILURE</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">"definitions.h"</span>                </span><span class="ph token comment">// SYS function prototypes</span>
+
+uint8_t Can1MessageRAM<span class="ph token punctuation">[</span>CAN1_MESSAGE_RAM_CONFIG_SIZE<span class="ph token punctuation">]</span> <span class="ph token function">__attribute__</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+<span class="ph token comment">/* Standard identifier id[28:18]*/</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> WRITE_ID(id) (id &lt;&lt; 18)</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> READ_ID(id)  (id &gt;&gt; 18)</span>
+
+<span class="ph token keyword">static</span> uint32_t status <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> uint8_t loop_count <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> uint8_t user_input <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">static</span> uint8_t txFiFo<span class="ph token punctuation">[</span>CAN1_TX_FIFO_BUFFER_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> uint8_t rxFiFo0<span class="ph token punctuation">[</span>CAN1_RX_FIFO0_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> uint8_t rxFiFo1<span class="ph token punctuation">[</span>CAN1_RX_FIFO1_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> uint8_t rxBuffer<span class="ph token punctuation">[</span>CAN1_RX_BUFFER_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// Section: Local functions</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+
+<span class="ph token comment">/* Message Length to Data length code */</span>
+<span class="ph token keyword">static</span> uint8_t <span class="ph token function">CANLengthToDlcGet</span><span class="ph token punctuation">(</span>uint8_t length<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint8_t dlc <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">8U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> length<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">12U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0x9U</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">16U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xAU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">20U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xBU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">24U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xCU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">32U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xDU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">48U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xEU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xFU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">return</span> dlc<span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">/* Data length code to Message Length */</span>
+<span class="ph token keyword">static</span> uint8_t <span class="ph token function">CANDlcToLengthGet</span><span class="ph token punctuation">(</span>uint8_t dlc<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint8_t msgLength<span class="ph token punctuation">[</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token number">0U</span><span class="ph token punctuation">,</span> <span class="ph token number">1U</span><span class="ph token punctuation">,</span> <span class="ph token number">2U</span><span class="ph token punctuation">,</span> <span class="ph token number">3U</span><span class="ph token punctuation">,</span> <span class="ph token number">4U</span><span class="ph token punctuation">,</span> <span class="ph token number">5U</span><span class="ph token punctuation">,</span> <span class="ph token number">6U</span><span class="ph token punctuation">,</span> <span class="ph token number">7U</span><span class="ph token punctuation">,</span> <span class="ph token number">8U</span><span class="ph token punctuation">,</span> <span class="ph token number">12U</span><span class="ph token punctuation">,</span> <span class="ph token number">16U</span><span class="ph token punctuation">,</span> <span class="ph token number">20U</span><span class="ph token punctuation">,</span> <span class="ph token number">24U</span><span class="ph token punctuation">,</span> <span class="ph token number">32U</span><span class="ph token punctuation">,</span> <span class="ph token number">48U</span><span class="ph token punctuation">,</span> <span class="ph token number">64U</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+    <span class="ph token keyword">return</span> msgLength<span class="ph token punctuation">[</span>dlc<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">/* Menu */</span>
+<span class="ph token keyword">static</span> <span class="ph token keyword">void</span> <span class="ph token function">display_menu</span><span class="ph token punctuation">(</span><span class="ph token keyword">void</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+	<span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"Menu :\r\n"</span>
+	       <span class="ph token string">"  -- Select the action:\r\n"</span>
+	       <span class="ph token string">"  0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63. \r\n"</span>
+	       <span class="ph token string">"  1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191. \r\n"</span>
+	       <span class="ph token string">"  2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63. \r\n"</span>
+	       <span class="ph token string">"  3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191. \r\n"</span>
+	       <span class="ph token string">"  4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n"</span>
+	       <span class="ph token string">"  m: Display menu \r\n\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">/* Print Rx Message */</span>
+<span class="ph token keyword">static</span> <span class="ph token keyword">void</span> <span class="ph token function">print_message</span><span class="ph token punctuation">(</span>uint8_t numberOfMessage<span class="ph token punctuation">,</span> CAN_RX_BUFFER <span class="ph token operator">*</span>rxBuf<span class="ph token punctuation">,</span> uint8_t rxBufLen<span class="ph token punctuation">,</span> uint8_t rxFifoBuf<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint8_t length <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    uint8_t msgLength <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    uint32_t id <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>rxFifoBuf <span class="ph token operator">==</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Rx FIFO0 :"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>rxFifoBuf <span class="ph token operator">==</span> <span class="ph token number">1</span><span class="ph token punctuation">)</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Rx FIFO1 :"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>rxFifoBuf <span class="ph token operator">==</span> <span class="ph token number">2</span><span class="ph token punctuation">)</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Rx Buffer :"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>uint8_t count <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> count <span class="ph token operator">&lt;</span> numberOfMessage<span class="ph token punctuation">;</span> count<span class="ph token operator">++</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">/* Print message to Console */</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" New Message Received\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        id <span class="ph token operator">=</span> rxBuf<span class="ph token operator">-&gt;</span>xtd <span class="ph token operator">?</span> rxBuf<span class="ph token operator">-&gt;</span>id <span class="ph token operator">:</span> <span class="ph token function">READ_ID</span><span class="ph token punctuation">(</span>rxBuf<span class="ph token operator">-&gt;</span>id<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        msgLength <span class="ph token operator">=</span> <span class="ph token function">CANDlcToLengthGet</span><span class="ph token punctuation">(</span>rxBuf<span class="ph token operator">-&gt;</span>dlc<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        length <span class="ph token operator">=</span> msgLength<span class="ph token punctuation">;</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Message - ID : 0x%x Length : 0x%x "</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">unsigned</span> <span class="ph token keyword">int</span><span class="ph token punctuation">)</span>id<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">unsigned</span> <span class="ph token keyword">int</span><span class="ph token punctuation">)</span>msgLength<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"Message : "</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token keyword">while</span><span class="ph token punctuation">(</span>length<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"0x%x "</span><span class="ph token punctuation">,</span> rxBuf<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>msgLength <span class="ph token operator">-</span> length<span class="ph token operator">--</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        rxBuf <span class="ph token operator">+=</span> rxBufLen<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// Section: Main Entry Point</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    CAN_TX_BUFFER <span class="ph token operator">*</span>txBuffer <span class="ph token operator">=</span> <span class="ph token constant">NULL</span><span class="ph token punctuation">;</span>
+    uint8_t        bufferNumber <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    uint8_t        numberOfMessage <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" ------------------------------ \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"            CAN FD Demo          \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" ------------------------------ \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token comment">/* Set Message RAM Configuration */</span>
+    <span class="ph token function">CAN1_MessageRAMConfigSet</span><span class="ph token punctuation">(</span>Can1MessageRAM<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">display_menu</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+     
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span> true <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">/* Rx Buffers */</span>
+        <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_InterruptGet</span><span class="ph token punctuation">(</span>CAN_INTERRUPT_DRX_MASK<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>    
+            <span class="ph token function">CAN1_InterruptClear</span><span class="ph token punctuation">(</span>CAN_INTERRUPT_DRX_MASK<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token comment">/* Check CAN Status */</span>
+            status <span class="ph token operator">=</span> <span class="ph token function">CAN1_ErrorGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_NONE<span class="ph token punctuation">)</span> <span class="ph token operator">||</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_LEC_NC<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_RxBufferNumberGet</span><span class="ph token punctuation">(</span><span class="ph token operator">&amp;</span>bufferNumber<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">memset</span><span class="ph token punctuation">(</span>rxBuffer<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_RX_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageReceive</span><span class="ph token punctuation">(</span>bufferNumber<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+                    <span class="ph token punctuation">{</span>
+                        <span class="ph token function">print_message</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxBuffer<span class="ph token punctuation">,</span> CAN1_RX_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">,</span> <span class="ph token number">2</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token punctuation">}</span>
+                    <span class="ph token keyword">else</span>
+                    <span class="ph token punctuation">{</span>
+                        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Error in received message\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token punctuation">}</span>
+                <span class="ph token punctuation">}</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">else</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Error in received message\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+        <span class="ph token punctuation">}</span>
+
+        <span class="ph token comment">/* Rx FIFO0 */</span>
+        <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_InterruptGet</span><span class="ph token punctuation">(</span>CAN_INTERRUPT_RF0N_MASK<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>    
+            <span class="ph token function">CAN1_InterruptClear</span><span class="ph token punctuation">(</span>CAN_INTERRUPT_RF0N_MASK<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token comment">/* Check CAN Status */</span>
+            status <span class="ph token operator">=</span> <span class="ph token function">CAN1_ErrorGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_NONE<span class="ph token punctuation">)</span> <span class="ph token operator">||</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_LEC_NC<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+            <span class="ph token punctuation">{</span>
+                numberOfMessage <span class="ph token operator">=</span> <span class="ph token function">CAN1_RxFifoFillLevelGet</span><span class="ph token punctuation">(</span>CAN_RX_FIFO_0<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>numberOfMessage <span class="ph token operator">!=</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">memset</span><span class="ph token punctuation">(</span>rxFiFo0<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>numberOfMessage <span class="ph token operator">*</span> CAN1_RX_FIFO0_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageReceiveFifo</span><span class="ph token punctuation">(</span>CAN_RX_FIFO_0<span class="ph token punctuation">,</span> numberOfMessage<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxFiFo0<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+                    <span class="ph token punctuation">{</span>
+                        <span class="ph token function">print_message</span><span class="ph token punctuation">(</span>numberOfMessage<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxFiFo0<span class="ph token punctuation">,</span> CAN1_RX_FIFO0_ELEMENT_SIZE<span class="ph token punctuation">,</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token punctuation">}</span>
+                    <span class="ph token keyword">else</span>
+                    <span class="ph token punctuation">{</span>
+                        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Error in received message\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token punctuation">}</span>
+                <span class="ph token punctuation">}</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">else</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Error in received message\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+        <span class="ph token punctuation">}</span>
+
+        <span class="ph token comment">/* Rx FIFO1 */</span>
+        <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_InterruptGet</span><span class="ph token punctuation">(</span>CAN_INTERRUPT_RF1N_MASK<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>    
+            <span class="ph token function">CAN1_InterruptClear</span><span class="ph token punctuation">(</span>CAN_INTERRUPT_RF1N_MASK<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token comment">/* Check CAN Status */</span>
+            status <span class="ph token operator">=</span> <span class="ph token function">CAN1_ErrorGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_NONE<span class="ph token punctuation">)</span> <span class="ph token operator">||</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_LEC_NC<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+            <span class="ph token punctuation">{</span>
+                numberOfMessage <span class="ph token operator">=</span> <span class="ph token function">CAN1_RxFifoFillLevelGet</span><span class="ph token punctuation">(</span>CAN_RX_FIFO_1<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>numberOfMessage <span class="ph token operator">!=</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">memset</span><span class="ph token punctuation">(</span>rxFiFo1<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>numberOfMessage <span class="ph token operator">*</span> CAN1_RX_FIFO1_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageReceiveFifo</span><span class="ph token punctuation">(</span>CAN_RX_FIFO_1<span class="ph token punctuation">,</span> numberOfMessage<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxFiFo1<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+                    <span class="ph token punctuation">{</span>
+                        <span class="ph token function">print_message</span><span class="ph token punctuation">(</span>numberOfMessage<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxFiFo1<span class="ph token punctuation">,</span> CAN1_RX_FIFO1_ELEMENT_SIZE<span class="ph token punctuation">,</span> <span class="ph token number">1</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token punctuation">}</span>
+                    <span class="ph token keyword">else</span>
+                    <span class="ph token punctuation">{</span>
+                        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Error in received message\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token punctuation">}</span>
+                <span class="ph token punctuation">}</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">else</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Error in received message\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+        <span class="ph token punctuation">}</span>
+
+        <span class="ph token comment">/* User input */</span>
+        <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">SERCOM4_USART_ReceiverIsReady</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span> <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token keyword">continue</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        user_input <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint8_t<span class="ph token punctuation">)</span><span class="ph token function">SERCOM4_USART_ReadByte</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token keyword">switch</span> <span class="ph token punctuation">(</span>user_input<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token keyword">case</span> <span class="ph token string">'0'</span><span class="ph token operator">:</span>
+                <span class="ph token function">memset</span><span class="ph token punctuation">(</span>txFiFo<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>CAN_TX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>txFiFo<span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>id <span class="ph token operator">=</span> <span class="ph token function">WRITE_ID</span><span class="ph token punctuation">(</span><span class="ph token number">0x45A</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>dlc <span class="ph token operator">=</span> <span class="ph token function">CANLengthToDlcGet</span><span class="ph token punctuation">(</span><span class="ph token number">64</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>fdf <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>brs <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>loop_count <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> loop_count <span class="ph token operator">&lt;</span> <span class="ph token number">64</span><span class="ph token punctuation">;</span> loop_count<span class="ph token operator">++</span><span class="ph token punctuation">)</span><span class="ph token punctuation">{</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>loop_count<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> loop_count<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>                
+                <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"  0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63.\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageTransmitFifo</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> txBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>    
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Success \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">else</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Failed \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>             
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>  
+            <span class="ph token keyword">case</span> <span class="ph token string">'1'</span><span class="ph token operator">:</span>
+                <span class="ph token function">memset</span><span class="ph token punctuation">(</span>txFiFo<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>CAN_TX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>txFiFo<span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>id <span class="ph token operator">=</span> <span class="ph token function">WRITE_ID</span><span class="ph token punctuation">(</span><span class="ph token number">0x469</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>dlc <span class="ph token operator">=</span> <span class="ph token function">CANLengthToDlcGet</span><span class="ph token punctuation">(</span><span class="ph token number">64</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>fdf <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>brs <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>loop_count <span class="ph token operator">=</span> <span class="ph token number">128</span><span class="ph token punctuation">;</span> loop_count <span class="ph token operator">&lt;</span> <span class="ph token number">192</span><span class="ph token punctuation">;</span> loop_count<span class="ph token operator">++</span><span class="ph token punctuation">)</span><span class="ph token punctuation">{</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>loop_count <span class="ph token operator">-</span> <span class="ph token number">128</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> loop_count<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>                
+                <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"  1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191.\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageTransmitFifo</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> txBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>    
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Success \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">else</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Failed \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>    
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            <span class="ph token keyword">case</span> <span class="ph token string">'2'</span><span class="ph token operator">:</span> 
+                <span class="ph token function">memset</span><span class="ph token punctuation">(</span>txFiFo<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>CAN_TX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>txFiFo<span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>id <span class="ph token operator">=</span> <span class="ph token number">0x100000A5</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>dlc <span class="ph token operator">=</span> <span class="ph token function">CANLengthToDlcGet</span><span class="ph token punctuation">(</span><span class="ph token number">64</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>xtd <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>fdf <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>brs <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>loop_count <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> loop_count <span class="ph token operator">&lt;</span> <span class="ph token number">64</span><span class="ph token punctuation">;</span> loop_count<span class="ph token operator">++</span><span class="ph token punctuation">)</span><span class="ph token punctuation">{</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>loop_count<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> loop_count<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"  2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63.\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageTransmitFifo</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> txBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>    
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Success \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">else</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Failed \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>             
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            <span class="ph token keyword">case</span> <span class="ph token string">'3'</span><span class="ph token operator">:</span>
+                <span class="ph token function">memset</span><span class="ph token punctuation">(</span>txFiFo<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>CAN_TX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>txFiFo<span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>id <span class="ph token operator">=</span> <span class="ph token number">0x10000096</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>dlc <span class="ph token operator">=</span> <span class="ph token function">CANLengthToDlcGet</span><span class="ph token punctuation">(</span><span class="ph token number">64</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>xtd <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>fdf <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>brs <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>loop_count <span class="ph token operator">=</span> <span class="ph token number">128</span><span class="ph token punctuation">;</span> loop_count <span class="ph token operator">&lt;</span> <span class="ph token number">192</span><span class="ph token punctuation">;</span> loop_count<span class="ph token operator">++</span><span class="ph token punctuation">)</span><span class="ph token punctuation">{</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>loop_count <span class="ph token operator">-</span> <span class="ph token number">128</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> loop_count<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"  3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191.\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageTransmitFifo</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> txBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>    
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Success \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">else</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Failed \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>             
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            
+            <span class="ph token keyword">case</span> <span class="ph token string">'4'</span><span class="ph token operator">:</span>
+                <span class="ph token function">memset</span><span class="ph token punctuation">(</span>txFiFo<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>CAN_TX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>txFiFo<span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>id <span class="ph token operator">=</span> <span class="ph token function">WRITE_ID</span><span class="ph token punctuation">(</span><span class="ph token number">0x469</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                txBuffer<span class="ph token operator">-&gt;</span>dlc <span class="ph token operator">=</span> <span class="ph token number">8</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>loop_count <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> loop_count <span class="ph token operator">&lt;</span> <span class="ph token number">8</span><span class="ph token punctuation">;</span> loop_count<span class="ph token operator">++</span><span class="ph token punctuation">)</span><span class="ph token punctuation">{</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>loop_count<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> loop_count<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>                
+                <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"  4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7.\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageTransmitFifo</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> txBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>    
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Success \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">else</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Failed \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>             
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>                 
+
+            <span class="ph token keyword">case</span> <span class="ph token string">'m'</span><span class="ph token operator">:</span>
+            <span class="ph token keyword">case</span> <span class="ph token string">'M'</span><span class="ph token operator">:</span>
+                <span class="ph token function">display_menu</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+                
+            <span class="ph token keyword">default</span><span class="ph token operator">:</span>
+                <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Invalid Input \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>  
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    <span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+</code></pre><p class="p"><strong class="ph b">CAN interrupt mode:</strong></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d402646e3309', this);">Copy</button><code id="d402646e3309" content="#include &lt;stddef.h&gt;                     // Defines NULL&#xA;#include &lt;stdbool.h&gt;                    // Defines true&#xA;#include &lt;stdlib.h&gt;                     // Defines EXIT_FAILURE&#xA;#include &#34;definitions.h&#34;                // SYS function prototypes&#xA;&#xA;uint8_t Can1MessageRAM[CAN1_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32)));&#xA;&#xA;/* Standard identifier id[28:18]*/&#xA;#define WRITE_ID(id) (id &lt;&lt; 18)&#xA;#define READ_ID(id)  (id &gt;&gt; 18)&#xA;&#xA;/* Application's state machine enum */&#xA;typedef enum&#xA;{&#xA;    APP_STATE_CAN_RECEIVE,&#xA;    APP_STATE_CAN_TRANSMIT,&#xA;    APP_STATE_CAN_IDLE,&#xA;    APP_STATE_CAN_XFER_SUCCESSFUL,&#xA;    APP_STATE_CAN_XFER_ERROR,&#xA;    APP_STATE_CAN_USER_INPUT&#xA;} APP_STATES;&#xA;&#xA;/* Variable to save Tx/Rx transfer status and context */&#xA;static uint32_t status = 0;&#xA;static uint32_t xferContext = 0;&#xA;/* Variable to save Tx/Rx message */&#xA;static uint8_t loop_count = 0;&#xA;static uint8_t user_input = 0;&#xA;/* Variable to save application state */&#xA;volatile static APP_STATES state = APP_STATE_CAN_USER_INPUT;&#xA;&#xA;static uint8_t txFiFo[CAN1_TX_FIFO_BUFFER_SIZE];&#xA;static uint8_t rxFiFo0[CAN1_RX_FIFO0_SIZE];&#xA;static uint8_t rxFiFo1[CAN1_RX_FIFO1_SIZE];&#xA;static uint8_t rxBuffer[CAN1_RX_BUFFER_SIZE];&#xA;&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;// Section: Local functions&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;&#xA;/* Message Length to Data length code */&#xA;static uint8_t CANLengthToDlcGet(uint8_t length)&#xA;{&#xA;    uint8_t dlc = 0;&#xA;&#xA;    if (length &lt;= 8U)&#xA;    {&#xA;        dlc = length;&#xA;    }&#xA;    else if (length &lt;= 12U)&#xA;    {&#xA;        dlc = 0x9U;&#xA;    }&#xA;    else if (length &lt;= 16U)&#xA;    {&#xA;        dlc = 0xAU;&#xA;    }&#xA;    else if (length &lt;= 20U)&#xA;    {&#xA;        dlc = 0xBU;&#xA;    }&#xA;    else if (length &lt;= 24U)&#xA;    {&#xA;        dlc = 0xCU;&#xA;    }&#xA;    else if (length &lt;= 32U)&#xA;    {&#xA;        dlc = 0xDU;&#xA;    }&#xA;    else if (length &lt;= 48U)&#xA;    {&#xA;        dlc = 0xEU;&#xA;    }&#xA;    else&#xA;    {&#xA;        dlc = 0xFU;&#xA;    }&#xA;    return dlc;&#xA;}&#xA;&#xA;/* Data length code to Message Length */&#xA;static uint8_t CANDlcToLengthGet(uint8_t dlc)&#xA;{&#xA;    uint8_t msgLength[] = {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 12U, 16U, 20U, 24U, 32U, 48U, 64U};&#xA;    return msgLength[dlc];&#xA;}&#xA;&#xA;/* Menu */&#xA;static void display_menu(void)&#xA;{&#xA;&#x9;printf(&#34;Menu :\r\n&#34;&#xA;&#x9;       &#34;  -- Select the action:\r\n&#34;&#xA;&#x9;       &#34;  0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63. \r\n&#34;&#xA;&#x9;       &#34;  1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191. \r\n&#34;&#xA;&#x9;       &#34;  2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63. \r\n&#34;&#xA;&#x9;       &#34;  3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191. \r\n&#34;&#xA;&#x9;       &#34;  4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n&#34;&#xA;&#x9;       &#34;  m: Display menu \r\n\r\n&#34;);&#xA;}&#xA;&#xA;/* Print Rx Message */&#xA;static void print_message(uint8_t numberOfMessage, CAN_RX_BUFFER *rxBuf, uint8_t rxBufLen, uint8_t rxFifoBuf)&#xA;{&#xA;    uint8_t length = 0;&#xA;    uint8_t msgLength = 0;&#xA;    uint32_t id = 0;&#xA;&#xA;    if (rxFifoBuf == 0)&#xA;        printf(&#34; Rx FIFO0 :&#34;);&#xA;    else if (rxFifoBuf == 1)&#xA;        printf(&#34; Rx FIFO1 :&#34;);&#xA;    else if (rxFifoBuf == 2)&#xA;        printf(&#34; Rx Buffer :&#34;);&#xA;&#xA;    for (uint8_t count = 0; count &lt; numberOfMessage; count++)&#xA;    {&#xA;        /* Print message to Console */&#xA;        printf(&#34; New Message Received\r\n&#34;);&#xA;        id = rxBuf-&gt;xtd ? rxBuf-&gt;id : READ_ID(rxBuf-&gt;id);&#xA;        msgLength = CANDlcToLengthGet(rxBuf-&gt;dlc);&#xA;        length = msgLength;&#xA;        printf(&#34; Message - Timestamp : 0x%x ID : 0x%x Length : 0x%x &#34;, (unsigned int)rxBuf-&gt;rxts, (unsigned int)id, (unsigned int)msgLength);&#xA;        printf(&#34;Message : &#34;);&#xA;        while(length)&#xA;        {&#xA;            printf(&#34;0x%x &#34;, rxBuf-&gt;data[msgLength - length--]);&#xA;        }&#xA;        printf(&#34;\r\n&#34;);&#xA;        rxBuf += rxBufLen;&#xA;    }&#xA;}&#xA;&#xA;/* This function will be called by CAN PLIB when transfer is completed from Tx FIFO */&#xA;void APP_CAN_TxFifoCallback(uintptr_t context)&#xA;{&#xA;    xferContext = context;&#xA;&#xA;    /* Check CAN Status */&#xA;    status = CAN1_ErrorGet();&#xA;&#xA;    if (((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_NONE) || ((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_LEC_NC))&#xA;    {&#xA;        switch ((APP_STATES)context)&#xA;        {&#xA;            case APP_STATE_CAN_TRANSMIT:&#xA;            {&#xA;                state = APP_STATE_CAN_XFER_SUCCESSFUL;&#xA;                break;&#xA;            }&#xA;            default:&#xA;                break;&#xA;        }&#xA;    }&#xA;    else&#xA;    {&#xA;        state = APP_STATE_CAN_XFER_ERROR;&#xA;    }&#xA;}&#xA;&#xA;/* This function will be called by CAN PLIB when Message received in Rx Buffer */&#xA;void APP_CAN_RxBufferCallback(uint8_t bufferNumber, uintptr_t context)&#xA;{&#xA;    xferContext = context;&#xA;&#xA;    /* Check CAN Status */&#xA;    status = CAN1_ErrorGet();&#xA;&#xA;    if (((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_NONE) || ((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_LEC_NC))&#xA;    {&#xA;        switch ((APP_STATES)context)&#xA;        {&#xA;            case APP_STATE_CAN_RECEIVE:&#xA;            {&#xA;                memset(rxBuffer, 0x00, CAN1_RX_BUFFER_ELEMENT_SIZE);&#xA;                if (CAN1_MessageReceive(bufferNumber, (CAN_RX_BUFFER *)rxBuffer) == true)&#xA;                {&#xA;                    print_message(1, (CAN_RX_BUFFER *)rxBuffer, CAN1_RX_BUFFER_ELEMENT_SIZE, 2);&#xA;                    state = APP_STATE_CAN_XFER_SUCCESSFUL;&#xA;                }&#xA;                else&#xA;                {&#xA;                    state = APP_STATE_CAN_XFER_ERROR;&#xA;                }&#xA;                break;&#xA;            }&#xA;            default:&#xA;                break;&#xA;        }&#xA;    }&#xA;    else&#xA;    {&#xA;        state = APP_STATE_CAN_XFER_ERROR;&#xA;    }&#xA;}&#xA;&#xA;/* This function will be called by CAN PLIB when Message received in Rx FIFO0 */&#xA;void APP_CAN_RxFifo0Callback(uint8_t numberOfMessage, uintptr_t context)&#xA;{&#xA;    xferContext = context;&#xA;&#xA;    /* Check CAN Status */&#xA;    status = CAN1_ErrorGet();&#xA;&#xA;    if (((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_NONE) || ((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_LEC_NC))&#xA;    {&#xA;        switch ((APP_STATES)context)&#xA;        {&#xA;            case APP_STATE_CAN_RECEIVE:&#xA;            {&#xA;                memset(rxFiFo0, 0x00, (numberOfMessage * CAN1_RX_FIFO0_ELEMENT_SIZE));&#xA;                if (CAN1_MessageReceiveFifo(CAN_RX_FIFO_0, numberOfMessage, (CAN_RX_BUFFER *)rxFiFo0) == true)&#xA;                {&#xA;                    print_message(numberOfMessage, (CAN_RX_BUFFER *)rxFiFo0, CAN1_RX_FIFO0_ELEMENT_SIZE, 0);&#xA;                    state = APP_STATE_CAN_XFER_SUCCESSFUL;&#xA;                }&#xA;                else&#xA;                {&#xA;                    state = APP_STATE_CAN_XFER_ERROR;&#xA;                }&#xA;                break;&#xA;            }&#xA;            default:&#xA;                break;&#xA;        }&#xA;    }&#xA;    else&#xA;    {&#xA;        state = APP_STATE_CAN_XFER_ERROR;&#xA;    }&#xA;}&#xA;&#xA;/* This function will be called by CAN PLIB when Message received in Rx FIFO1 */&#xA;void APP_CAN_RxFifo1Callback(uint8_t numberOfMessage, uintptr_t context)&#xA;{&#xA;    xferContext = context;&#xA;&#xA;    /* Check CAN Status */&#xA;    status = CAN1_ErrorGet();&#xA;&#xA;    if (((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_NONE) || ((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_LEC_NC))&#xA;    {&#xA;        switch ((APP_STATES)context)&#xA;        {&#xA;            case APP_STATE_CAN_RECEIVE:&#xA;            {&#xA;                memset(rxFiFo1, 0x00, (numberOfMessage * CAN1_RX_FIFO1_ELEMENT_SIZE));&#xA;                if (CAN1_MessageReceiveFifo(CAN_RX_FIFO_1, numberOfMessage, (CAN_RX_BUFFER *)rxFiFo1) == true)&#xA;                {&#xA;                    print_message(numberOfMessage, (CAN_RX_BUFFER *)rxFiFo1, CAN1_RX_FIFO1_ELEMENT_SIZE, 1);&#xA;                    state = APP_STATE_CAN_XFER_SUCCESSFUL;&#xA;                }&#xA;                else&#xA;                {&#xA;                    state = APP_STATE_CAN_XFER_ERROR;&#xA;                }&#xA;                break;&#xA;            }&#xA;            default:&#xA;                break;&#xA;        }&#xA;    }&#xA;    else&#xA;    {&#xA;        state = APP_STATE_CAN_XFER_ERROR;&#xA;    }&#xA;}&#xA;&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;// Section: Main Entry Point&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;&#xA;int main ( void )&#xA;{&#xA;    CAN_TX_BUFFER *txBuffer = NULL;&#xA;&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;&#xA;    printf(&#34; ------------------------------ \r\n&#34;);&#xA;    printf(&#34;        CAN FD Demo            \r\n&#34;);&#xA;    printf(&#34; ------------------------------ \r\n&#34;);&#xA;    &#xA;    /* Set Message RAM Configuration */&#xA;    CAN1_MessageRAMConfigSet(Can1MessageRAM);&#xA;&#xA;    CAN1_RxFifoCallbackRegister(CAN_RX_FIFO_0, APP_CAN_RxFifo0Callback, APP_STATE_CAN_RECEIVE);&#xA;    CAN1_RxFifoCallbackRegister(CAN_RX_FIFO_1, APP_CAN_RxFifo1Callback, APP_STATE_CAN_RECEIVE);&#xA;    CAN1_RxBuffersCallbackRegister(APP_CAN_RxBufferCallback, APP_STATE_CAN_RECEIVE);&#xA;&#xA;    display_menu();&#xA;    &#xA;    while ( true )&#xA;    {&#xA;        if (state == APP_STATE_CAN_USER_INPUT)&#xA;        {&#xA;            /* Read user input */&#xA;            scanf(&#34;%c&#34;, (char *) &amp;user_input);&#xA;            &#xA;            switch (user_input)&#xA;            {&#xA;&#x9;&#x9;&#x9;&#x9;case '0':&#xA;                    memset(txFiFo, 0x00, CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&#xA;                    txBuffer = (CAN_TX_BUFFER *)txFiFo;&#xA;                    txBuffer-&gt;id = WRITE_ID(0x45A);&#xA;                    txBuffer-&gt;dlc = CANLengthToDlcGet(64);&#xA;                    txBuffer-&gt;fdf = 1;&#xA;                    txBuffer-&gt;brs = 1;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;for (loop_count = 0; loop_count &lt; 64; loop_count++){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;txBuffer-&gt;data[loop_count] = loop_count;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}                &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;printf(&#34;  0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63.\r\n&#34;);&#xA;                    CAN1_TxFifoCallbackRegister( APP_CAN_TxFifoCallback, (uintptr_t)APP_STATE_CAN_TRANSMIT );&#xA;                    state = APP_STATE_CAN_IDLE;&#xA;                    if (CAN1_MessageTransmitFifo(1, txBuffer) == false)&#xA;                    {&#xA;                        printf(&#34; Failed \r\n&#34;);&#xA;                    }             &#xA;                    break;&#xA;&#x9;&#x9;&#x9;&#x9;case '1':&#xA;                    memset(txFiFo, 0x00, CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&#xA;                    txBuffer = (CAN_TX_BUFFER *)txFiFo;&#xA;                    txBuffer-&gt;id = WRITE_ID(0x469);&#xA;                    txBuffer-&gt;dlc = CANLengthToDlcGet(64);&#xA;                    txBuffer-&gt;fdf = 1;&#xA;                    txBuffer-&gt;brs = 1;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;for (loop_count = 128; loop_count &lt; 192; loop_count++){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;txBuffer-&gt;data[loop_count - 128] = loop_count;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}                &#xA; &#x9;&#x9;&#x9;&#x9;&#x9;printf(&#34;  1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191.\r\n&#34;);&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;CAN1_TxFifoCallbackRegister( APP_CAN_TxFifoCallback, (uintptr_t)APP_STATE_CAN_TRANSMIT );&#xA;                    state = APP_STATE_CAN_IDLE;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if (CAN1_MessageTransmitFifo(1, txBuffer) == false)&#xA;                    {&#xA;                        printf(&#34; Failed \r\n&#34;);&#xA;                    }             &#xA;                    break;&#xA;&#x9;&#x9;&#x9;&#x9;case '2':&#xA;                    memset(txFiFo, 0x00, CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&#xA;                    txBuffer = (CAN_TX_BUFFER *)txFiFo;&#xA;                    txBuffer-&gt;id = 0x100000A5;&#xA;                    txBuffer-&gt;dlc = CANLengthToDlcGet(64);&#xA;                    txBuffer-&gt;xtd = 1;&#xA;                    txBuffer-&gt;fdf = 1;&#xA;                    txBuffer-&gt;brs = 1;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;for (loop_count = 0; loop_count &lt; 64; loop_count++){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;txBuffer-&gt;data[loop_count] = loop_count;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;printf(&#34;  2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63.\r\n&#34;);&#xA;                    CAN1_TxFifoCallbackRegister( APP_CAN_TxFifoCallback, (uintptr_t)APP_STATE_CAN_TRANSMIT );&#xA;                    state = APP_STATE_CAN_IDLE;&#xA;                    if (CAN1_MessageTransmitFifo(1, txBuffer) == false)&#xA;                    {&#xA;                        printf(&#34; Failed \r\n&#34;);&#xA;                    }&#xA;                    break;&#xA;&#x9;&#x9;&#x9;&#x9;case '3':&#xA;                    memset(txFiFo, 0x00, CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&#xA;                    txBuffer = (CAN_TX_BUFFER *)txFiFo;&#xA;                    txBuffer-&gt;id = 0x10000096;&#xA;                    txBuffer-&gt;dlc = CANLengthToDlcGet(64);&#xA;                    txBuffer-&gt;xtd = 1;&#xA;                    txBuffer-&gt;fdf = 1;&#xA;                    txBuffer-&gt;brs = 1;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;for (loop_count = 128; loop_count &lt; 192; loop_count++){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;txBuffer-&gt;data[loop_count - 128] = loop_count;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;printf(&#34;  3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191.\r\n&#34;);&#xA;                    CAN1_TxFifoCallbackRegister( APP_CAN_TxFifoCallback, (uintptr_t)APP_STATE_CAN_TRANSMIT );&#xA;                    state = APP_STATE_CAN_IDLE;&#xA;                    if (CAN1_MessageTransmitFifo(1, txBuffer) == false)&#xA;                    {&#xA;                        printf(&#34; Failed \r\n&#34;);&#xA;                    }&#xA;                    break;&#xA;&#x9;&#x9;&#x9;&#x9;case '4':&#xA;                    memset(txFiFo, 0x00, CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE);&#xA;                    txBuffer = (CAN_TX_BUFFER *)txFiFo;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;txBuffer-&gt;id = WRITE_ID(0x469);&#xA;                    txBuffer-&gt;dlc = 8;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;for (loop_count = 0; loop_count &lt; 8; loop_count++){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;txBuffer-&gt;data[loop_count] = loop_count;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}                &#xA; &#x9;&#x9;&#x9;&#x9;&#x9;printf(&#34;  4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7.\r\n&#34;);&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;CAN1_TxFifoCallbackRegister( APP_CAN_TxFifoCallback, (uintptr_t)APP_STATE_CAN_TRANSMIT );&#xA;                    state = APP_STATE_CAN_IDLE;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if (CAN1_MessageTransmitFifo(1, txBuffer) == false)&#xA;                    {&#xA;                        printf(&#34; Failed \r\n&#34;);&#xA;                    }             &#xA;                    break;&#xA;&#x9;&#x9;&#x9;&#x9;case 'm':&#xA;&#x9;&#x9;&#x9;&#x9;case 'M':&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;display_menu();&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;&#x9;default:&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;printf(&#34; Invalid Input \r\n&#34;);&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;break;&#xA;            }&#xA;        }&#xA;&#xA;        /* Check the application's current state. */&#xA;        switch (state)&#xA;        {&#xA;            case APP_STATE_CAN_IDLE:&#xA;            {&#xA;                /* Application can do other task here */&#xA;                break;&#xA;            }&#xA;            case APP_STATE_CAN_XFER_SUCCESSFUL:&#xA;            {&#xA;                if ((APP_STATES)xferContext == APP_STATE_CAN_TRANSMIT)&#xA;                {&#xA;                    printf(&#34; Success\r\n&#34;);&#xA;                }                &#xA;                state = APP_STATE_CAN_USER_INPUT;&#xA;                break;&#xA;            }&#xA;            case APP_STATE_CAN_XFER_ERROR:&#xA;            {&#xA;                if ((APP_STATES)xferContext == APP_STATE_CAN_RECEIVE)&#xA;                {&#xA;                    printf(&#34; Error in received message\r\n&#34;);&#xA;                }&#xA;                else&#xA;                {&#xA;                    printf(&#34; Failed\r\n&#34;);&#xA;                }&#xA;                state = APP_STATE_CAN_USER_INPUT;&#xA;                break;&#xA;            }&#xA;            default:&#xA;            {&#xA;                break;&#xA;            }&#xA;        }&#xA;    }&#xA;&#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    return ( EXIT_FAILURE );&#xA;}&#xA;"><span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stddef.h&gt;</span>                     </span><span class="ph token comment">// Defines NULL</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdbool.h&gt;</span>                    </span><span class="ph token comment">// Defines true</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdlib.h&gt;</span>                     </span><span class="ph token comment">// Defines EXIT_FAILURE</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">"definitions.h"</span>                </span><span class="ph token comment">// SYS function prototypes</span>
+
+uint8_t Can1MessageRAM<span class="ph token punctuation">[</span>CAN1_MESSAGE_RAM_CONFIG_SIZE<span class="ph token punctuation">]</span> <span class="ph token function">__attribute__</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+<span class="ph token comment">/* Standard identifier id[28:18]*/</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> WRITE_ID(id) (id &lt;&lt; 18)</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> READ_ID(id)  (id &gt;&gt; 18)</span>
+
+<span class="ph token comment">/* Application's state machine enum */</span>
+<span class="ph token keyword">typedef</span> <span class="ph token keyword">enum</span>
+<span class="ph token punctuation">{</span>
+    APP_STATE_CAN_RECEIVE<span class="ph token punctuation">,</span>
+    APP_STATE_CAN_TRANSMIT<span class="ph token punctuation">,</span>
+    APP_STATE_CAN_IDLE<span class="ph token punctuation">,</span>
+    APP_STATE_CAN_XFER_SUCCESSFUL<span class="ph token punctuation">,</span>
+    APP_STATE_CAN_XFER_ERROR<span class="ph token punctuation">,</span>
+    APP_STATE_CAN_USER_INPUT
+<span class="ph token punctuation">}</span> APP_STATES<span class="ph token punctuation">;</span>
+
+<span class="ph token comment">/* Variable to save Tx/Rx transfer status and context */</span>
+<span class="ph token keyword">static</span> uint32_t status <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> uint32_t xferContext <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+<span class="ph token comment">/* Variable to save Tx/Rx message */</span>
+<span class="ph token keyword">static</span> uint8_t loop_count <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> uint8_t user_input <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+<span class="ph token comment">/* Variable to save application state */</span>
+<span class="ph token keyword">volatile</span> <span class="ph token keyword">static</span> APP_STATES state <span class="ph token operator">=</span> APP_STATE_CAN_USER_INPUT<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">static</span> uint8_t txFiFo<span class="ph token punctuation">[</span>CAN1_TX_FIFO_BUFFER_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> uint8_t rxFiFo0<span class="ph token punctuation">[</span>CAN1_RX_FIFO0_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> uint8_t rxFiFo1<span class="ph token punctuation">[</span>CAN1_RX_FIFO1_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> uint8_t rxBuffer<span class="ph token punctuation">[</span>CAN1_RX_BUFFER_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// Section: Local functions</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+
+<span class="ph token comment">/* Message Length to Data length code */</span>
+<span class="ph token keyword">static</span> uint8_t <span class="ph token function">CANLengthToDlcGet</span><span class="ph token punctuation">(</span>uint8_t length<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint8_t dlc <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">8U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> length<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">12U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0x9U</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">16U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xAU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">20U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xBU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">24U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xCU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">32U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xDU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>length <span class="ph token operator">&lt;=</span> <span class="ph token number">48U</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xEU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span>
+    <span class="ph token punctuation">{</span>
+        dlc <span class="ph token operator">=</span> <span class="ph token number">0xFU</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">return</span> dlc<span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">/* Data length code to Message Length */</span>
+<span class="ph token keyword">static</span> uint8_t <span class="ph token function">CANDlcToLengthGet</span><span class="ph token punctuation">(</span>uint8_t dlc<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint8_t msgLength<span class="ph token punctuation">[</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token number">0U</span><span class="ph token punctuation">,</span> <span class="ph token number">1U</span><span class="ph token punctuation">,</span> <span class="ph token number">2U</span><span class="ph token punctuation">,</span> <span class="ph token number">3U</span><span class="ph token punctuation">,</span> <span class="ph token number">4U</span><span class="ph token punctuation">,</span> <span class="ph token number">5U</span><span class="ph token punctuation">,</span> <span class="ph token number">6U</span><span class="ph token punctuation">,</span> <span class="ph token number">7U</span><span class="ph token punctuation">,</span> <span class="ph token number">8U</span><span class="ph token punctuation">,</span> <span class="ph token number">12U</span><span class="ph token punctuation">,</span> <span class="ph token number">16U</span><span class="ph token punctuation">,</span> <span class="ph token number">20U</span><span class="ph token punctuation">,</span> <span class="ph token number">24U</span><span class="ph token punctuation">,</span> <span class="ph token number">32U</span><span class="ph token punctuation">,</span> <span class="ph token number">48U</span><span class="ph token punctuation">,</span> <span class="ph token number">64U</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+    <span class="ph token keyword">return</span> msgLength<span class="ph token punctuation">[</span>dlc<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">/* Menu */</span>
+<span class="ph token keyword">static</span> <span class="ph token keyword">void</span> <span class="ph token function">display_menu</span><span class="ph token punctuation">(</span><span class="ph token keyword">void</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+	<span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"Menu :\r\n"</span>
+	       <span class="ph token string">"  -- Select the action:\r\n"</span>
+	       <span class="ph token string">"  0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63. \r\n"</span>
+	       <span class="ph token string">"  1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191. \r\n"</span>
+	       <span class="ph token string">"  2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63. \r\n"</span>
+	       <span class="ph token string">"  3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191. \r\n"</span>
+	       <span class="ph token string">"  4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n"</span>
+	       <span class="ph token string">"  m: Display menu \r\n\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">/* Print Rx Message */</span>
+<span class="ph token keyword">static</span> <span class="ph token keyword">void</span> <span class="ph token function">print_message</span><span class="ph token punctuation">(</span>uint8_t numberOfMessage<span class="ph token punctuation">,</span> CAN_RX_BUFFER <span class="ph token operator">*</span>rxBuf<span class="ph token punctuation">,</span> uint8_t rxBufLen<span class="ph token punctuation">,</span> uint8_t rxFifoBuf<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint8_t length <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    uint8_t msgLength <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    uint32_t id <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>rxFifoBuf <span class="ph token operator">==</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Rx FIFO0 :"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>rxFifoBuf <span class="ph token operator">==</span> <span class="ph token number">1</span><span class="ph token punctuation">)</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Rx FIFO1 :"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>rxFifoBuf <span class="ph token operator">==</span> <span class="ph token number">2</span><span class="ph token punctuation">)</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Rx Buffer :"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>uint8_t count <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> count <span class="ph token operator">&lt;</span> numberOfMessage<span class="ph token punctuation">;</span> count<span class="ph token operator">++</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">/* Print message to Console */</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" New Message Received\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        id <span class="ph token operator">=</span> rxBuf<span class="ph token operator">-&gt;</span>xtd <span class="ph token operator">?</span> rxBuf<span class="ph token operator">-&gt;</span>id <span class="ph token operator">:</span> <span class="ph token function">READ_ID</span><span class="ph token punctuation">(</span>rxBuf<span class="ph token operator">-&gt;</span>id<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        msgLength <span class="ph token operator">=</span> <span class="ph token function">CANDlcToLengthGet</span><span class="ph token punctuation">(</span>rxBuf<span class="ph token operator">-&gt;</span>dlc<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        length <span class="ph token operator">=</span> msgLength<span class="ph token punctuation">;</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Message - Timestamp : 0x%x ID : 0x%x Length : 0x%x "</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">unsigned</span> <span class="ph token keyword">int</span><span class="ph token punctuation">)</span>rxBuf<span class="ph token operator">-&gt;</span>rxts<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">unsigned</span> <span class="ph token keyword">int</span><span class="ph token punctuation">)</span>id<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">unsigned</span> <span class="ph token keyword">int</span><span class="ph token punctuation">)</span>msgLength<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"Message : "</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token keyword">while</span><span class="ph token punctuation">(</span>length<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"0x%x "</span><span class="ph token punctuation">,</span> rxBuf<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>msgLength <span class="ph token operator">-</span> length<span class="ph token operator">--</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        rxBuf <span class="ph token operator">+=</span> rxBufLen<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">/* This function will be called by CAN PLIB when transfer is completed from Tx FIFO */</span>
+<span class="ph token keyword">void</span> <span class="ph token function">APP_CAN_TxFifoCallback</span><span class="ph token punctuation">(</span>uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    xferContext <span class="ph token operator">=</span> context<span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Check CAN Status */</span>
+    status <span class="ph token operator">=</span> <span class="ph token function">CAN1_ErrorGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_NONE<span class="ph token punctuation">)</span> <span class="ph token operator">||</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_LEC_NC<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">switch</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>APP_STATES<span class="ph token punctuation">)</span>context<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token keyword">case</span> APP_STATE_CAN_TRANSMIT<span class="ph token operator">:</span>
+            <span class="ph token punctuation">{</span>
+                state <span class="ph token operator">=</span> APP_STATE_CAN_XFER_SUCCESSFUL<span class="ph token punctuation">;</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">default</span><span class="ph token operator">:</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span>
+    <span class="ph token punctuation">{</span>
+        state <span class="ph token operator">=</span> APP_STATE_CAN_XFER_ERROR<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">/* This function will be called by CAN PLIB when Message received in Rx Buffer */</span>
+<span class="ph token keyword">void</span> <span class="ph token function">APP_CAN_RxBufferCallback</span><span class="ph token punctuation">(</span>uint8_t bufferNumber<span class="ph token punctuation">,</span> uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    xferContext <span class="ph token operator">=</span> context<span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Check CAN Status */</span>
+    status <span class="ph token operator">=</span> <span class="ph token function">CAN1_ErrorGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_NONE<span class="ph token punctuation">)</span> <span class="ph token operator">||</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_LEC_NC<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">switch</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>APP_STATES<span class="ph token punctuation">)</span>context<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token keyword">case</span> APP_STATE_CAN_RECEIVE<span class="ph token operator">:</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token function">memset</span><span class="ph token punctuation">(</span>rxBuffer<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_RX_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageReceive</span><span class="ph token punctuation">(</span>bufferNumber<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">print_message</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxBuffer<span class="ph token punctuation">,</span> CAN1_RX_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">,</span> <span class="ph token number">2</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    state <span class="ph token operator">=</span> APP_STATE_CAN_XFER_SUCCESSFUL<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">else</span>
+                <span class="ph token punctuation">{</span>
+                    state <span class="ph token operator">=</span> APP_STATE_CAN_XFER_ERROR<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">default</span><span class="ph token operator">:</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span>
+    <span class="ph token punctuation">{</span>
+        state <span class="ph token operator">=</span> APP_STATE_CAN_XFER_ERROR<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">/* This function will be called by CAN PLIB when Message received in Rx FIFO0 */</span>
+<span class="ph token keyword">void</span> <span class="ph token function">APP_CAN_RxFifo0Callback</span><span class="ph token punctuation">(</span>uint8_t numberOfMessage<span class="ph token punctuation">,</span> uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    xferContext <span class="ph token operator">=</span> context<span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Check CAN Status */</span>
+    status <span class="ph token operator">=</span> <span class="ph token function">CAN1_ErrorGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_NONE<span class="ph token punctuation">)</span> <span class="ph token operator">||</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_LEC_NC<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">switch</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>APP_STATES<span class="ph token punctuation">)</span>context<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token keyword">case</span> APP_STATE_CAN_RECEIVE<span class="ph token operator">:</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token function">memset</span><span class="ph token punctuation">(</span>rxFiFo0<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>numberOfMessage <span class="ph token operator">*</span> CAN1_RX_FIFO0_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageReceiveFifo</span><span class="ph token punctuation">(</span>CAN_RX_FIFO_0<span class="ph token punctuation">,</span> numberOfMessage<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxFiFo0<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">print_message</span><span class="ph token punctuation">(</span>numberOfMessage<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxFiFo0<span class="ph token punctuation">,</span> CAN1_RX_FIFO0_ELEMENT_SIZE<span class="ph token punctuation">,</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    state <span class="ph token operator">=</span> APP_STATE_CAN_XFER_SUCCESSFUL<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">else</span>
+                <span class="ph token punctuation">{</span>
+                    state <span class="ph token operator">=</span> APP_STATE_CAN_XFER_ERROR<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">default</span><span class="ph token operator">:</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span>
+    <span class="ph token punctuation">{</span>
+        state <span class="ph token operator">=</span> APP_STATE_CAN_XFER_ERROR<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">/* This function will be called by CAN PLIB when Message received in Rx FIFO1 */</span>
+<span class="ph token keyword">void</span> <span class="ph token function">APP_CAN_RxFifo1Callback</span><span class="ph token punctuation">(</span>uint8_t numberOfMessage<span class="ph token punctuation">,</span> uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    xferContext <span class="ph token operator">=</span> context<span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Check CAN Status */</span>
+    status <span class="ph token operator">=</span> <span class="ph token function">CAN1_ErrorGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_NONE<span class="ph token punctuation">)</span> <span class="ph token operator">||</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> CAN_PSR_LEC_Msk<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> CAN_ERROR_LEC_NC<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">switch</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>APP_STATES<span class="ph token punctuation">)</span>context<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token keyword">case</span> APP_STATE_CAN_RECEIVE<span class="ph token operator">:</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token function">memset</span><span class="ph token punctuation">(</span>rxFiFo1<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>numberOfMessage <span class="ph token operator">*</span> CAN1_RX_FIFO1_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageReceiveFifo</span><span class="ph token punctuation">(</span>CAN_RX_FIFO_1<span class="ph token punctuation">,</span> numberOfMessage<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxFiFo1<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">print_message</span><span class="ph token punctuation">(</span>numberOfMessage<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>CAN_RX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>rxFiFo1<span class="ph token punctuation">,</span> CAN1_RX_FIFO1_ELEMENT_SIZE<span class="ph token punctuation">,</span> <span class="ph token number">1</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    state <span class="ph token operator">=</span> APP_STATE_CAN_XFER_SUCCESSFUL<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">else</span>
+                <span class="ph token punctuation">{</span>
+                    state <span class="ph token operator">=</span> APP_STATE_CAN_XFER_ERROR<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">default</span><span class="ph token operator">:</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span>
+    <span class="ph token punctuation">{</span>
+        state <span class="ph token operator">=</span> APP_STATE_CAN_XFER_ERROR<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// Section: Main Entry Point</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    CAN_TX_BUFFER <span class="ph token operator">*</span>txBuffer <span class="ph token operator">=</span> <span class="ph token constant">NULL</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" ------------------------------ \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"        CAN FD Demo            \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" ------------------------------ \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token comment">/* Set Message RAM Configuration */</span>
+    <span class="ph token function">CAN1_MessageRAMConfigSet</span><span class="ph token punctuation">(</span>Can1MessageRAM<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">CAN1_RxFifoCallbackRegister</span><span class="ph token punctuation">(</span>CAN_RX_FIFO_0<span class="ph token punctuation">,</span> APP_CAN_RxFifo0Callback<span class="ph token punctuation">,</span> APP_STATE_CAN_RECEIVE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">CAN1_RxFifoCallbackRegister</span><span class="ph token punctuation">(</span>CAN_RX_FIFO_1<span class="ph token punctuation">,</span> APP_CAN_RxFifo1Callback<span class="ph token punctuation">,</span> APP_STATE_CAN_RECEIVE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">CAN1_RxBuffersCallbackRegister</span><span class="ph token punctuation">(</span>APP_CAN_RxBufferCallback<span class="ph token punctuation">,</span> APP_STATE_CAN_RECEIVE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">display_menu</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span> true <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>state <span class="ph token operator">==</span> APP_STATE_CAN_USER_INPUT<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token comment">/* Read user input */</span>
+            <span class="ph token function">scanf</span><span class="ph token punctuation">(</span><span class="ph token string">"%c"</span><span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">char</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span> <span class="ph token operator">&amp;</span>user_input<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            
+            <span class="ph token keyword">switch</span> <span class="ph token punctuation">(</span>user_input<span class="ph token punctuation">)</span>
+            <span class="ph token punctuation">{</span>
+				<span class="ph token keyword">case</span> <span class="ph token string">'0'</span><span class="ph token operator">:</span>
+                    <span class="ph token function">memset</span><span class="ph token punctuation">(</span>txFiFo<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>CAN_TX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>txFiFo<span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>id <span class="ph token operator">=</span> <span class="ph token function">WRITE_ID</span><span class="ph token punctuation">(</span><span class="ph token number">0x45A</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>dlc <span class="ph token operator">=</span> <span class="ph token function">CANLengthToDlcGet</span><span class="ph token punctuation">(</span><span class="ph token number">64</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>fdf <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>brs <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+					<span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>loop_count <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> loop_count <span class="ph token operator">&lt;</span> <span class="ph token number">64</span><span class="ph token punctuation">;</span> loop_count<span class="ph token operator">++</span><span class="ph token punctuation">)</span><span class="ph token punctuation">{</span>
+						txBuffer<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>loop_count<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> loop_count<span class="ph token punctuation">;</span>
+					<span class="ph token punctuation">}</span>                
+					<span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"  0: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63.\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token function">CAN1_TxFifoCallbackRegister</span><span class="ph token punctuation">(</span> APP_CAN_TxFifoCallback<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span>APP_STATE_CAN_TRANSMIT <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    state <span class="ph token operator">=</span> APP_STATE_CAN_IDLE<span class="ph token punctuation">;</span>
+                    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageTransmitFifo</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> txBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span>
+                    <span class="ph token punctuation">{</span>
+                        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Failed \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token punctuation">}</span>             
+                    <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+				<span class="ph token keyword">case</span> <span class="ph token string">'1'</span><span class="ph token operator">:</span>
+                    <span class="ph token function">memset</span><span class="ph token punctuation">(</span>txFiFo<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>CAN_TX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>txFiFo<span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>id <span class="ph token operator">=</span> <span class="ph token function">WRITE_ID</span><span class="ph token punctuation">(</span><span class="ph token number">0x469</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>dlc <span class="ph token operator">=</span> <span class="ph token function">CANLengthToDlcGet</span><span class="ph token punctuation">(</span><span class="ph token number">64</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>fdf <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>brs <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+					<span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>loop_count <span class="ph token operator">=</span> <span class="ph token number">128</span><span class="ph token punctuation">;</span> loop_count <span class="ph token operator">&lt;</span> <span class="ph token number">192</span><span class="ph token punctuation">;</span> loop_count<span class="ph token operator">++</span><span class="ph token punctuation">)</span><span class="ph token punctuation">{</span>
+						txBuffer<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>loop_count <span class="ph token operator">-</span> <span class="ph token number">128</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> loop_count<span class="ph token punctuation">;</span>
+					<span class="ph token punctuation">}</span>                
+ 					<span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"  1: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191.\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+					<span class="ph token function">CAN1_TxFifoCallbackRegister</span><span class="ph token punctuation">(</span> APP_CAN_TxFifoCallback<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span>APP_STATE_CAN_TRANSMIT <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    state <span class="ph token operator">=</span> APP_STATE_CAN_IDLE<span class="ph token punctuation">;</span>
+					<span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageTransmitFifo</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> txBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span>
+                    <span class="ph token punctuation">{</span>
+                        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Failed \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token punctuation">}</span>             
+                    <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+				<span class="ph token keyword">case</span> <span class="ph token string">'2'</span><span class="ph token operator">:</span>
+                    <span class="ph token function">memset</span><span class="ph token punctuation">(</span>txFiFo<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>CAN_TX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>txFiFo<span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>id <span class="ph token operator">=</span> <span class="ph token number">0x100000A5</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>dlc <span class="ph token operator">=</span> <span class="ph token function">CANLengthToDlcGet</span><span class="ph token punctuation">(</span><span class="ph token number">64</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>xtd <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>fdf <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>brs <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+					<span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>loop_count <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> loop_count <span class="ph token operator">&lt;</span> <span class="ph token number">64</span><span class="ph token punctuation">;</span> loop_count<span class="ph token operator">++</span><span class="ph token punctuation">)</span><span class="ph token punctuation">{</span>
+						txBuffer<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>loop_count<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> loop_count<span class="ph token punctuation">;</span>
+					<span class="ph token punctuation">}</span>
+					<span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"  2: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63.\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token function">CAN1_TxFifoCallbackRegister</span><span class="ph token punctuation">(</span> APP_CAN_TxFifoCallback<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span>APP_STATE_CAN_TRANSMIT <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    state <span class="ph token operator">=</span> APP_STATE_CAN_IDLE<span class="ph token punctuation">;</span>
+                    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageTransmitFifo</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> txBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span>
+                    <span class="ph token punctuation">{</span>
+                        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Failed \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token punctuation">}</span>
+                    <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+				<span class="ph token keyword">case</span> <span class="ph token string">'3'</span><span class="ph token operator">:</span>
+                    <span class="ph token function">memset</span><span class="ph token punctuation">(</span>txFiFo<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>CAN_TX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>txFiFo<span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>id <span class="ph token operator">=</span> <span class="ph token number">0x10000096</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>dlc <span class="ph token operator">=</span> <span class="ph token function">CANLengthToDlcGet</span><span class="ph token punctuation">(</span><span class="ph token number">64</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>xtd <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>fdf <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>brs <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+					<span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>loop_count <span class="ph token operator">=</span> <span class="ph token number">128</span><span class="ph token punctuation">;</span> loop_count <span class="ph token operator">&lt;</span> <span class="ph token number">192</span><span class="ph token punctuation">;</span> loop_count<span class="ph token operator">++</span><span class="ph token punctuation">)</span><span class="ph token punctuation">{</span>
+						txBuffer<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>loop_count <span class="ph token operator">-</span> <span class="ph token number">128</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> loop_count<span class="ph token punctuation">;</span>
+					<span class="ph token punctuation">}</span>
+					<span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"  3: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191.\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token function">CAN1_TxFifoCallbackRegister</span><span class="ph token punctuation">(</span> APP_CAN_TxFifoCallback<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span>APP_STATE_CAN_TRANSMIT <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    state <span class="ph token operator">=</span> APP_STATE_CAN_IDLE<span class="ph token punctuation">;</span>
+                    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageTransmitFifo</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> txBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span>
+                    <span class="ph token punctuation">{</span>
+                        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Failed \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token punctuation">}</span>
+                    <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+				<span class="ph token keyword">case</span> <span class="ph token string">'4'</span><span class="ph token operator">:</span>
+                    <span class="ph token function">memset</span><span class="ph token punctuation">(</span>txFiFo<span class="ph token punctuation">,</span> <span class="ph token number">0x00</span><span class="ph token punctuation">,</span> CAN1_TX_FIFO_BUFFER_ELEMENT_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>CAN_TX_BUFFER <span class="ph token operator">*</span><span class="ph token punctuation">)</span>txFiFo<span class="ph token punctuation">;</span>
+					txBuffer<span class="ph token operator">-&gt;</span>id <span class="ph token operator">=</span> <span class="ph token function">WRITE_ID</span><span class="ph token punctuation">(</span><span class="ph token number">0x469</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    txBuffer<span class="ph token operator">-&gt;</span>dlc <span class="ph token operator">=</span> <span class="ph token number">8</span><span class="ph token punctuation">;</span>
+					<span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>loop_count <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> loop_count <span class="ph token operator">&lt;</span> <span class="ph token number">8</span><span class="ph token punctuation">;</span> loop_count<span class="ph token operator">++</span><span class="ph token punctuation">)</span><span class="ph token punctuation">{</span>
+						txBuffer<span class="ph token operator">-&gt;</span>data<span class="ph token punctuation">[</span>loop_count<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> loop_count<span class="ph token punctuation">;</span>
+					<span class="ph token punctuation">}</span>                
+ 					<span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"  4: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7.\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+					<span class="ph token function">CAN1_TxFifoCallbackRegister</span><span class="ph token punctuation">(</span> APP_CAN_TxFifoCallback<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span>APP_STATE_CAN_TRANSMIT <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    state <span class="ph token operator">=</span> APP_STATE_CAN_IDLE<span class="ph token punctuation">;</span>
+					<span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token function">CAN1_MessageTransmitFifo</span><span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">,</span> txBuffer<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span>
+                    <span class="ph token punctuation">{</span>
+                        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Failed \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                    <span class="ph token punctuation">}</span>             
+                    <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+				<span class="ph token keyword">case</span> <span class="ph token string">'m'</span><span class="ph token operator">:</span>
+				<span class="ph token keyword">case</span> <span class="ph token string">'M'</span><span class="ph token operator">:</span>
+					<span class="ph token function">display_menu</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+					<span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+					
+				<span class="ph token keyword">default</span><span class="ph token operator">:</span>
+					<span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Invalid Input \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+					<span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+        <span class="ph token punctuation">}</span>
+
+        <span class="ph token comment">/* Check the application's current state. */</span>
+        <span class="ph token keyword">switch</span> <span class="ph token punctuation">(</span>state<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token keyword">case</span> APP_STATE_CAN_IDLE<span class="ph token operator">:</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token comment">/* Application can do other task here */</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">case</span> APP_STATE_CAN_XFER_SUCCESSFUL<span class="ph token operator">:</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>APP_STATES<span class="ph token punctuation">)</span>xferContext <span class="ph token operator">==</span> APP_STATE_CAN_TRANSMIT<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Success\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>                
+                state <span class="ph token operator">=</span> APP_STATE_CAN_USER_INPUT<span class="ph token punctuation">;</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">case</span> APP_STATE_CAN_XFER_ERROR<span class="ph token operator">:</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>APP_STATES<span class="ph token punctuation">)</span>xferContext <span class="ph token operator">==</span> APP_STATE_CAN_RECEIVE<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Error in received message\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">else</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">" Failed\r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                state <span class="ph token operator">=</span> APP_STATE_CAN_USER_INPUT<span class="ph token punctuation">;</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">default</span><span class="ph token operator">:</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    <span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+</code></pre><p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">Control Area Network peripheral library provides the following interfaces:</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d402646e7124"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d402646e7126"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_Initialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Initializes given instance of the CAN peripheral</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_MessageTransmit</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Transmits a message into CAN bus from the specific Tx buffer</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_MessageTransmitFifo</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Transmit multiple messages into CAN bus from Tx FIFO</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_TxFifoFreeLevelGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Returns Tx FIFO Free Level</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_TxBufferIsBusy</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Check if Transmission request is pending for the specific Tx buffer</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_TxEventFifoRead</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Read Tx Event FIFO for the transmitted messages</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_TxEventFifoFillLevelGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Returns Tx Event FIFO Fill Level</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_MessageReceive</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Read a message from the specific Rx Buffer</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_RxBufferNumberGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Get Rx Buffer Number</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_MessageReceiveFifo</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Read messages from Rx FIFO0/FIFO1</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_RxFifoFillLevelGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Returns Rx FIFO0/FIFO1 Fill Level</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_ErrorGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Returns the error during transfer</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_ErrorCountGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Returns the transmit and receive error count during transfer</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_InterruptGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Returns the Interrupt status</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_InterruptClear</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Clears Interrupt status</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_MessageRAMConfigSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Set the Message RAM Configuration</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_StandardFilterElementSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Set a standard filter element configuration</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_StandardFilterElementGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Get a standard filter element configuration</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_ExtendedFilterElementSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Set a Extended filter element configuration</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_ExtendedFilterElementGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Get a Extended filter element configuration</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_SleepModeEnter</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Puts the CAN Peripheral in sleep mode (clock stop request)</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_SleepModeExit</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Exits CAN peripheral from sleep mode (clock stop request)</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_TxBuffersCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Sets the pointer to the function (and it's contextHandle) to be called when the given CAN's Tx transfer events occur</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_TxFifoCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Sets the pointer to the function (and it's contextHandle) to be called when the given CAN's Tx transfer events occur</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_TxEventFifoCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Sets the pointer to the function (and it's contextHandle) to be called when the given CAN's Tx transfer events occur</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_RxBuffersCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Sets the pointer to the function (and it's contextHandle) to be called when the given CAN's Rx transfer events occur</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7124 "><span>CANx_RxFifoCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7126 "><span>Sets the pointer to the function (and it's contextHandle) to be called when the given CAN's Rx transfer events occur</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d402646e7276"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d402646e7278"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d402646e7280"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_RX_FIFO_NUM</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN Rx FIFO Number</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_INTERRUPT_MASK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN Interrupt Mask</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_ERROR</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN Transfer Error data type</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_TX_FIFO_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN Callback Function Pointer for Tx FIFO</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_TXRX_BUFFERS_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN Callback Function Pointer for TX/RX Buffers</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_TX_EVENT_FIFO_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN Callback Function Pointer for Tx Event FIFO</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_RX_FIFO_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN Callback Function Pointer for Rx FIFO0/FIFO1</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_MSG_RAM_CONFIG</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN Message RAM Configuration structure</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_RX_BUFFER</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN Rx Buffer and FIFO Element Structure</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_TX_BUFFER</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN Tx Buffer Element Structure</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_TX_EVENT_FIFO</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN Tx Event FIFO Element Structure</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_TX_FIFO_CALLBACK_OBJ</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN transfer event callback structure for Tx FIFO</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_TXRX_BUFFERS_CALLBACK_OBJ</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN transfer event callback structure for Tx/Rx Buffers</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_TX_EVENT_FIFO_CALLBACK_OBJ</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN transfer event callback structure for Tx Event FIFO</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7276 "><span>CAN_RX_FIFO_CALLBACK_OBJ</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7278 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d402646e7280 "><span>CAN transfer event callback structure for Rx FIFO0/FIFO1</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

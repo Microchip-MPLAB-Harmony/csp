@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Analog-to-Digital Converter (ADC)" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="analog-to-digital-converter-adc" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Analog-to-Digital Converter (ADC)</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-analog-to-digital-converter-adc" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-056D5DD2-57C5-445D-95F9-F4FCAA2DFDE1"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="analog-to-digital-converter-adc">
+<h1 class="title topictitle1" id="ariaid-title1">Analog-to-Digital Converter (ADC)</h1><div class="body"><ul class="ul"><li class="li"><p class="p">12-bit Resolution with Enhanced Mode up to 16 bits</p>
+</li>
+<li class="li"><p class="p">1 Msps Conversion Rate</p>
+</li>
+<li class="li"><p class="p">Digital Averaging Function providing Enhanced Resolution Mode up to 16 bits</p>
+</li>
+<li class="li"><p class="p">On-chip Temperature Sensor Management</p>
+</li>
+<li class="li"><p class="p">Selectable Single-Ended or Differential Input Voltage</p>
+</li>
+<li class="li"><p class="p">Digital Correction of Offset and Gain Errors</p>
+</li>
+<li class="li"><p class="p">Individual Enable and Disable of Each Channel</p>
+</li>
+<li class="li"><p class="p">Hardware or Software Trigger</p>
+</li>
+<li class="li"><p class="p">Drive of PWM Fault Input</p>
+</li>
+<li class="li"><p class="p">DMA Support</p>
+</li>
+<li class="li"><p class="p">Two Sleep Modes</p>
+</li>
+<li class="li"><p class="p">Channel Sequence Customizing</p>
+</li>
+<li class="li"><p class="p">Automatic Window Comparison of Converted Values</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p"><strong class="ph b">Interrupt mode:</strong></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d337231e57', this);">Copy</button><code id="d337231e57" content="#include &lt;stddef.h&gt;                     // Defines NULL&#xA;#include &lt;stdbool.h&gt;                    // Defines true&#xA;#include &lt;stdlib.h&gt;                     // Defines EXIT_FAILURE&#xA;#include &#34;definitions.h&#34;                // SYS function prototypes&#xA;&#xA;#define ADC_VREF               (3.3f)&#xA;&#xA;uint16_t adc_ch5_count, adc_ch6_count, adc_ch7_count;&#xA;&#xA;float adc_ch5_voltage, adc_ch6_voltage, adc_ch7_voltage;&#xA;&#xA;volatile bool result_ready = false;&#xA;&#xA;/* This function is called after conversion of last channel in the user sequence */&#xA;void ADC_EventHandler(uint32_t interruptStatus, uint32_t eocInterruptStatus, uintptr_t context)&#xA;{&#xA;    /* Read the result of 3 channels*/&#xA;    adc_ch6_count = ADC_ChannelResultGet(ADC_CH6);&#xA;    adc_ch7_count = ADC_ChannelResultGet(ADC_CH7);&#xA;    adc_ch5_count = ADC_ChannelResultGet(ADC_CH5);&#xA;       &#xA;    result_ready = true;&#xA;&#xA;}&#xA;&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;// Section: Main Entry Point&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;    &#xA;    /* Register callback function for ADC end of conversion interrupt*/&#xA;    ADC_CallbackRegister(ADC_EventHandler, (uintptr_t)NULL);&#xA;    &#xA;    printf(&#34;\n\r---------------------------------------------------------&#34;);&#xA;    printf(&#34;\n\r                    ADC User Sequence Demo                 &#34;);&#xA;    printf(&#34;\n\r---------------------------------------------------------\n\r&#34;);&#xA;    printf(&#34;CH5 Count  CH5 Voltage  CH6 Count  CH6 Voltage  CH7 Count  CH7 Voltage \n\r&#34;);           &#xA;&#xA;    TC0_CH0_CompareStart();&#xA;&#xA;    while ( true )&#xA;    {&#xA;        /* Check if result is ready to be transmitted to console */&#xA;        if (result_ready == true)&#xA;        {&#xA;            adc_ch6_voltage = (float)adc_ch6_count * ADC_VREF/4095U;&#xA;            adc_ch7_voltage = (float)adc_ch7_count * ADC_VREF/4095U;&#xA;            adc_ch5_voltage = (float)adc_ch5_count * ADC_VREF/4095U;&#xA;            printf(&#34;0x%03x      %0.2f V       0x%03x      %0.2f V       0x%03x      %0.2f V \t\r&#34;,&#xA;                    adc_ch5_count, adc_ch5_voltage, adc_ch6_count, adc_ch6_voltage, adc_ch7_count, adc_ch7_voltage);&#xA;                           &#xA;                &#xA;            result_ready = false;&#xA;        }&#xA;    }&#xA;&#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    return ( EXIT_FAILURE );&#xA;}"><span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stddef.h&gt;</span>                     </span><span class="ph token comment">// Defines NULL</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdbool.h&gt;</span>                    </span><span class="ph token comment">// Defines true</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdlib.h&gt;</span>                     </span><span class="ph token comment">// Defines EXIT_FAILURE</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">"definitions.h"</span>                </span><span class="ph token comment">// SYS function prototypes</span>
+
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> ADC_VREF               (3.3f)</span>
+
+uint16_t adc_ch5_count<span class="ph token punctuation">,</span> adc_ch6_count<span class="ph token punctuation">,</span> adc_ch7_count<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">float</span> adc_ch5_voltage<span class="ph token punctuation">,</span> adc_ch6_voltage<span class="ph token punctuation">,</span> adc_ch7_voltage<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">volatile</span> bool result_ready <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+<span class="ph token comment">/* This function is called after conversion of last channel in the user sequence */</span>
+<span class="ph token keyword">void</span> <span class="ph token function">ADC_EventHandler</span><span class="ph token punctuation">(</span>uint32_t interruptStatus<span class="ph token punctuation">,</span> uint32_t eocInterruptStatus<span class="ph token punctuation">,</span> uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Read the result of 3 channels*/</span>
+    adc_ch6_count <span class="ph token operator">=</span> <span class="ph token function">ADC_ChannelResultGet</span><span class="ph token punctuation">(</span>ADC_CH6<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    adc_ch7_count <span class="ph token operator">=</span> <span class="ph token function">ADC_ChannelResultGet</span><span class="ph token punctuation">(</span>ADC_CH7<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    adc_ch5_count <span class="ph token operator">=</span> <span class="ph token function">ADC_ChannelResultGet</span><span class="ph token punctuation">(</span>ADC_CH5<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+       
+    result_ready <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// Section: Main Entry Point</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token comment">/* Register callback function for ADC end of conversion interrupt*/</span>
+    <span class="ph token function">ADC_CallbackRegister</span><span class="ph token punctuation">(</span>ADC_EventHandler<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span><span class="ph token constant">NULL</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r---------------------------------------------------------"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r                    ADC User Sequence Demo                 "</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r---------------------------------------------------------\n\r"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"CH5 Count  CH5 Voltage  CH6 Count  CH6 Voltage  CH7 Count  CH7 Voltage \n\r"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>           
+
+    <span class="ph token function">TC0_CH0_CompareStart</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span> true <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">/* Check if result is ready to be transmitted to console */</span>
+        <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>result_ready <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            adc_ch6_voltage <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token keyword">float</span><span class="ph token punctuation">)</span>adc_ch6_count <span class="ph token operator">*</span> ADC_VREF<span class="ph token operator">/</span><span class="ph token number">4095U</span><span class="ph token punctuation">;</span>
+            adc_ch7_voltage <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token keyword">float</span><span class="ph token punctuation">)</span>adc_ch7_count <span class="ph token operator">*</span> ADC_VREF<span class="ph token operator">/</span><span class="ph token number">4095U</span><span class="ph token punctuation">;</span>
+            adc_ch5_voltage <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token keyword">float</span><span class="ph token punctuation">)</span>adc_ch5_count <span class="ph token operator">*</span> ADC_VREF<span class="ph token operator">/</span><span class="ph token number">4095U</span><span class="ph token punctuation">;</span>
+            <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"0x%03x      %0.2f V       0x%03x      %0.2f V       0x%03x      %0.2f V \t\r"</span><span class="ph token punctuation">,</span>
+                    adc_ch5_count<span class="ph token punctuation">,</span> adc_ch5_voltage<span class="ph token punctuation">,</span> adc_ch6_count<span class="ph token punctuation">,</span> adc_ch6_voltage<span class="ph token punctuation">,</span> adc_ch7_count<span class="ph token punctuation">,</span> adc_ch7_voltage<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                           
+                
+            result_ready <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    <span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Polling mode:</strong></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d337231e503', this);">Copy</button><code id="d337231e503" content="#include &lt;stddef.h&gt;                     // Defines NULL&#xA;#include &lt;stdbool.h&gt;                    // Defines true&#xA;#include &lt;stdlib.h&gt;                     // Defines EXIT_FAILURE&#xA;#include &lt;stdio.h&gt;&#xA;#include &#34;definitions.h&#34;                // SYS function prototypes&#xA;&#xA;/*****************************************************&#xA; ADC CH0 - PD19 - Connect to Vcc or GND&#xA; *****************************************************/&#xA;&#xA;#define ADC_VREF               (3.3f)&#xA;&#xA;uint16_t adc_count;&#xA;float input_voltage;&#xA;&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;// Section: Main Entry Point&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;    &#xA;    printf(&#34;\n\r---------------------------------------------------------&#34;);&#xA;    printf(&#34;\n\r                    ADC Demo                 &#34;);&#xA;    printf(&#34;\n\r---------------------------------------------------------\n\r&#34;);&#xA;    &#xA;    PIT64B0_TimerStart();&#xA;&#xA;    while (1)&#xA;    {&#xA;        /* Start ADC conversion */&#xA;        ADC_ConversionStart();&#xA;&#xA;        /* Wait till ADC conversion result is available */&#xA;        while(!ADC_ChannelResultIsReady(ADC_CH5))&#xA;        {&#xA;&#xA;        };&#xA;&#xA;        /* Read the ADC result */&#xA;        adc_count = ADC_ChannelResultGet(ADC_CH5);&#xA;        input_voltage = (float)adc_count * ADC_VREF / 4095U;&#xA;&#xA;        printf(&#34;ADC Count = 0x%03x, ADC Input Voltage = %0.2f V \r&#34;,adc_count, input_voltage);    &#xA;        &#xA;        PIT64B0_DelayMs(500);&#xA;    }&#xA;    &#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    return ( EXIT_FAILURE );&#xA;}"><span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stddef.h&gt;</span>                     </span><span class="ph token comment">// Defines NULL</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdbool.h&gt;</span>                    </span><span class="ph token comment">// Defines true</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdlib.h&gt;</span>                     </span><span class="ph token comment">// Defines EXIT_FAILURE</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdio.h&gt;</span></span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">"definitions.h"</span>                </span><span class="ph token comment">// SYS function prototypes</span>
+
+<span class="ph token comment">/*****************************************************
+ ADC CH0 - PD19 - Connect to Vcc or GND
+ *****************************************************/</span>
+
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> ADC_VREF               (3.3f)</span>
+
+uint16_t adc_count<span class="ph token punctuation">;</span>
+<span class="ph token keyword">float</span> input_voltage<span class="ph token punctuation">;</span>
+
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// Section: Main Entry Point</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r---------------------------------------------------------"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r                    ADC Demo                 "</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r---------------------------------------------------------\n\r"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token function">PIT64B0_TimerStart</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">/* Start ADC conversion */</span>
+        <span class="ph token function">ADC_ConversionStart</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token comment">/* Wait till ADC conversion result is available */</span>
+        <span class="ph token keyword">while</span><span class="ph token punctuation">(</span><span class="ph token operator">!</span><span class="ph token function">ADC_ChannelResultIsReady</span><span class="ph token punctuation">(</span>ADC_CH5<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+
+        <span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token comment">/* Read the ADC result */</span>
+        adc_count <span class="ph token operator">=</span> <span class="ph token function">ADC_ChannelResultGet</span><span class="ph token punctuation">(</span>ADC_CH5<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        input_voltage <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token keyword">float</span><span class="ph token punctuation">)</span>adc_count <span class="ph token operator">*</span> ADC_VREF <span class="ph token operator">/</span> <span class="ph token number">4095U</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"ADC Count = 0x%03x, ADC Input Voltage = %0.2f V \r"</span><span class="ph token punctuation">,</span>adc_count<span class="ph token punctuation">,</span> input_voltage<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>    
+        
+        <span class="ph token function">PIT64B0_DelayMs</span><span class="ph token punctuation">(</span><span class="ph token number">500</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    <span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">Analog-to-Digital Converter peripheral library provides the following interfaces:</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d337231e823"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d337231e825"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADCx_Initialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Initializes given instance of ADC peripheral</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_ChannelsEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Enables the ADC channels</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_ChannelsDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Disables the ADC channels</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_ChannelsInterruptEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Enables the ADC interrupt sources</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_ChannelsInterruptDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Disables the ADC interrupt sources</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_InterruptEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>This function enables the interrupts</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_InterruptDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>This function disables the interrupts</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_InterruptStatusGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Returns the status of ADC interrupt</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADCx_ConversionStart</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Starts the ADC conversion of all the enabled channels with the software trigger</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_ChannelResultIsReady</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Returns the status of the channel conversion</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_ChannelResultGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Reads the conversion result of the channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_ConversionSequenceSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Sets the user sequence of the channel conversion</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADCx_ComparisonWindowSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Sets Low threshold and High threshold in comparison window</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_ComparisonEventResultIsReady</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Returns the status of the Comparison event</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_ComparisonRestart</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Restart the comparison function</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_SleepModeEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>This function enables ADC sleep mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_SleepModeDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>This function disables ADC sleep mode</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_FastWakeupEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>This function enables ADC Fast Wakeup</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADC_FastWakeupDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>This function disables ADC Fast Wakeup</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e823 "><span>ADCx_CallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e825 "><span>Registers the function to be called from interrupt</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d337231e940"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d337231e942"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d337231e944"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e940 "><span>ADC_CHANNEL_MASK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e942 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e944 "><span>Identifies ADC channel mask</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e940 "><span>ADC_CHANNEL_NUM</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e942 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e944 "><span>Identifies ADC channel number</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e940 "><span>ADC_INTERRUPT_EOC_MASK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e942 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e944 "><span>Identifies EOC interrupt sources number</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e940 "><span>ADC_INTERRUPT_MASK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e942 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e944 "><span>Identifies interrupt sources number</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e940 "><span>ADC_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e942 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e944 "><span>Defines the data type and function signature for the ADC peripheral callback function</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e940 "><span>ADC_CALLBACK_OBJECT</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e942 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d337231e944 "><span>ADC Callback structure</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

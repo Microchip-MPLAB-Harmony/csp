@@ -1,0 +1,77 @@
+# Analog Comparators \(AC\)
+
+The Analog Comparator peripheral \(AC\) supports four individual comparators. Each comparator \(COMP\) compares the voltage levels on two inputs \('+' and '-' input pins of the comparator\), and provides a digital output based on this comparison. Each comparator may be configured to generate interrupt requests and/or peripheral events upon several different combinations of input change.
+
+The AC peripheral implements one pair of comparators. Each pair can be set in window mode to compare a signal to a voltage range instead of a single voltage level.
+
+**Using The Library**
+
+AC Peripheral library provides non-Blocking API's and they can be used to perform below functionalities on the AC peripheral.
+
+-   Initialize the AC
+
+-   Start comparison on a given comparator
+
+-   Swap inputs of a comparator
+
+-   Get status of a comparison operation
+
+-   Register a callback
+
+
+**Library Interface**
+
+Analog Comparators peripheral library provides the following interfaces:
+
+**Functions**
+
+|Name|Description|
+|----|-----------|
+|AC\_Initialize|Initializes AC module of the device|
+|AC\_Start|Triggers a comparator to start comparison|
+|AC\_SwapInputs|Swap inputs of a comparator|
+|AC\_ChannelSelect|Selects the positive and negative inputs of a channel|
+|AC\_SetVddScalar|Sets VDDSCALER value of a comparator|
+|AC\_StatusGet|Returns comparison status of the AC|
+|AC\_CallbackRegister|Allows application to register callback with PLIB|
+
+**Data types and constants**
+
+|Name|Type|Description|
+|----|----|-----------|
+|AC\_CHANNEL|Enum|Identifies the AC output channel number|
+|AC\_POSINPUT|Enum|Identifies the positive inputs of a comparator channel|
+|AC\_NEGINPUT|Enum|Identifies negative inputs of a comparator channel|
+|AC\_CALLBACK|Typedef|Analog comparator callback function pointer|
+
+-   **[AC\_Initialize Function](GUID-D6F9F8D1-05FB-4153-B106-38CCB69389AC.md)**  
+
+-   **[AC\_CallbackRegister Function](GUID-C928D52A-1011-47A1-8642-BA7E27CA6E59.md)**  
+
+-   **[AC\_ChannelSelect Function](GUID-B3EF5584-FA5A-4FC4-945D-25EDA672F9CA.md)**  
+
+-   **[AC\_SetVddScalar Function](GUID-0C0BFD1E-3861-4639-B49E-1D62ADDDB27C.md)**  
+
+-   **[AC\_Start Function](GUID-6348432D-F98E-4259-B0D5-5C4C4D2372DB.md)**  
+
+-   **[AC\_StatusGet Function](GUID-84FA3618-3F33-4646-A2CF-41F39DD6A1A3.md)**  
+
+-   **[AC\_SwapInputs Function](GUID-F6B06D4B-8ADF-4FB6-949E-AD3FF9E3CC39.md)**  
+
+-   **[AC\_CALLBACK Typedef](GUID-749DFBE6-440F-4F74-84D9-5AA323911289.md)**  
+
+-   **[AC\_CHANNEL Enum](GUID-A2C55EA8-1477-4C62-BF71-A2A68CCF192C.md)**  
+
+-   **[AC\_NEGINPUT Enum](GUID-7567F900-A08F-4443-B1C4-AD59951F226E.md)**  
+
+-   **[AC\_POSINPUT Enum](GUID-04263665-05FA-416F-9B5E-01E57A6A1440.md)**  
+
+
+**Parent topic:**[SAM D09 D10 D11 Peripheral Libraries](GUID-F4788319-C5F3-4EB3-8CC7-05770A2EBD32.md)
+
+**Parent topic:**[SAM D20 D21 Peripheral Libraries](GUID-86A69A90-EDAB-465F-A03A-57CD8BF54AE8.md)
+
+**Parent topic:**[SAM DA1 Peripheral Libraries](GUID-0CDE5F35-9BE3-4484-8299-98161C496C00.md)
+
+**Parent topic:**[SAM HA1 Peripheral Libraries](GUID-7E583BB3-CBFA-4862-8ED5-40D747167457.md)
+

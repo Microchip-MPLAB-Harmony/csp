@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Two-wire Interface - TWIHS" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="two-wire-interface---twihs" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Two-wire Interface - TWIHS</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-two-wire-interface---twihs" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-C8012FE8-F7B4-4CE6-84B4-61EAAFAB03B0"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="two-wire-interface---twihs">
+<h1 class="title topictitle1" id="ariaid-title1">Two-wire Interface - TWIHS</h1><div class="body"><p class="p">The TWIHS PLIB can be configured in master or slave mode.</p>
+<p class="p"><strong class="ph b">TWIHS master mode</strong></p>
+<p class="p">The TWIHS peripheral library supports the following TWIHS transfers:</p>
+<p class="p">Master Write: The master writes a block of data to the slave
+Master Read: The master reads a block of data from the slave
+Master Write/Read: The master writes and then reads back a block of data from slave.</p>
+<p class="p">The block of data is transferred in a non-blocking manner using a peripheral interrupt. Application can either use a callback or IsBusy API to check for completion of data transfer.</p>
+<p class="p"><strong class="ph b">TWIHS slave mode</strong></p>
+<p class="p">TWIHS slave PLIB can be configured with peripheral interrupt enabled or disabled. When peripheral interrupt is enabled, application must register a callback, to get notified of the TWIHS events such as address match, transmitter ready, receiver ready etc. When peripheral interrupt is disabled, PLIB provides APIs to read the interrupt status flags. Application can call this API to determine the TWIHS event and then use the ReadByte/WriteByte APIs to read/write over the TWIHS bus</p>
+<p class="p"><em class="ph i">TWIHS Master mode</em></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d918195e29', this);">Copy</button><code id="d918195e29" content="// Following code demonstrates TWIHS write operation using polling method&#xA;&#xA;#define APP_SLAVE_ADDR 0x0057&#xA;#define NUM_BYTES      10&#xA;&#xA;uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};&#xA;&#xA;int main(void)&#xA;{&#xA;&#x9;/* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;&#x9;&#xA;    /* Write data to the TWIHS Slave */&#xA;    TWIHS1_Write(APP_SLAVE_ADDR, &amp;myWriteData[0], NUM_BYTES);&#xA;&#xA;    /* Poll and wait for the transfer to complete */&#xA;    while(TWIHS1_IsBusy());&#xA;&#xA;    /* Check if any error occurred */&#xA;    if(TWIHS1_ErrorGet() == TWIHS_ERROR_NONE)&#xA;    {&#xA;        //Transfer is completed successfully&#xA;    }&#xA;    else&#xA;    {&#xA;        //Error occurred during transfer.&#xA;    }&#xA;&#x9;...&#xA;}"><span class="ph token comment">// Following code demonstrates TWIHS write operation using polling method</span>
+
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> APP_SLAVE_ADDR 0x0057</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> NUM_BYTES      10</span>
+
+uint8_t myWriteData <span class="ph token punctuation">[</span>NUM_BYTES<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token string">'1'</span><span class="ph token punctuation">,</span> <span class="ph token string">'0'</span><span class="ph token punctuation">,</span> <span class="ph token string">' '</span><span class="ph token punctuation">,</span> <span class="ph token string">'B'</span><span class="ph token punctuation">,</span> <span class="ph token string">'Y'</span><span class="ph token punctuation">,</span> <span class="ph token string">'T'</span><span class="ph token punctuation">,</span> <span class="ph token string">'E'</span><span class="ph token punctuation">,</span> <span class="ph token string">'S'</span><span class="ph token punctuation">,</span> <span class="ph token string">'!'</span><span class="ph token punctuation">,</span> <span class="ph token string">'!'</span><span class="ph token punctuation">,</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">int</span> <span class="ph token function">main</span><span class="ph token punctuation">(</span><span class="ph token keyword">void</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+	<span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+	
+    <span class="ph token comment">/* Write data to the TWIHS Slave */</span>
+    <span class="ph token function">TWIHS1_Write</span><span class="ph token punctuation">(</span>APP_SLAVE_ADDR<span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>myWriteData<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> NUM_BYTES<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Poll and wait for the transfer to complete */</span>
+    <span class="ph token keyword">while</span><span class="ph token punctuation">(</span><span class="ph token function">TWIHS1_IsBusy</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Check if any error occurred */</span>
+    <span class="ph token keyword">if</span><span class="ph token punctuation">(</span><span class="ph token function">TWIHS1_ErrorGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span> <span class="ph token operator">==</span> TWIHS_ERROR_NONE<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">//Transfer is completed successfully</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">//Error occurred during transfer.</span>
+    <span class="ph token punctuation">}</span>
+	<span class="ph token punctuation">.</span><span class="ph token punctuation">.</span><span class="ph token punctuation">.</span>
+<span class="ph token punctuation">}</span></code></pre><pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d918195e245', this);">Copy</button><code id="d918195e245" content="// Following code demonstrates TWIHS write operation using callback method&#xA;&#xA;#define APP_SLAVE_ADDR 0x0057&#xA;#define NUM_BYTES      10&#xA;&#xA;uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};&#xA;&#xA;void TWIHS1_Callback(uintptr_t context)&#xA;{&#xA;    if(TWIHS1_ErrorGet() == TWIHS_ERROR_NONE)&#xA;    {&#xA;        //Transfer is completed successfully&#xA;    }&#xA;    else&#xA;    {&#xA;        //Error occurred during transfer.&#xA;    }&#xA;}&#xA;&#xA;int main(void)&#xA;{&#xA;&#x9;/* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;&#x9;&#xA;    /* Register Callback function */&#xA;    TWIHS1_CallbackRegister(TWIHS1_Callback, (uintptr_t)NULL);&#xA;&#xA;    /* Submit Write Request */&#xA;    TWIHS1_Write(APP_SLAVE_ADDR, &amp;myWriteData[0], NUM_BYTES);&#xA;&#x9;&#xA;&#x9;...&#xA;}"><span class="ph token comment">// Following code demonstrates TWIHS write operation using callback method</span>
+
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> APP_SLAVE_ADDR 0x0057</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> NUM_BYTES      10</span>
+
+uint8_t myWriteData <span class="ph token punctuation">[</span>NUM_BYTES<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token string">'1'</span><span class="ph token punctuation">,</span> <span class="ph token string">'0'</span><span class="ph token punctuation">,</span> <span class="ph token string">' '</span><span class="ph token punctuation">,</span> <span class="ph token string">'B'</span><span class="ph token punctuation">,</span> <span class="ph token string">'Y'</span><span class="ph token punctuation">,</span> <span class="ph token string">'T'</span><span class="ph token punctuation">,</span> <span class="ph token string">'E'</span><span class="ph token punctuation">,</span> <span class="ph token string">'S'</span><span class="ph token punctuation">,</span> <span class="ph token string">'!'</span><span class="ph token punctuation">,</span> <span class="ph token string">'!'</span><span class="ph token punctuation">,</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">TWIHS1_Callback</span><span class="ph token punctuation">(</span>uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token keyword">if</span><span class="ph token punctuation">(</span><span class="ph token function">TWIHS1_ErrorGet</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span> <span class="ph token operator">==</span> TWIHS_ERROR_NONE<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">//Transfer is completed successfully</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">//Error occurred during transfer.</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> <span class="ph token function">main</span><span class="ph token punctuation">(</span><span class="ph token keyword">void</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+	<span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+	
+    <span class="ph token comment">/* Register Callback function */</span>
+    <span class="ph token function">TWIHS1_CallbackRegister</span><span class="ph token punctuation">(</span>TWIHS1_Callback<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span><span class="ph token constant">NULL</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Submit Write Request */</span>
+    <span class="ph token function">TWIHS1_Write</span><span class="ph token punctuation">(</span>APP_SLAVE_ADDR<span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>myWriteData<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> NUM_BYTES<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+	
+	<span class="ph token punctuation">.</span><span class="ph token punctuation">.</span><span class="ph token punctuation">.</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><em class="ph i">TWIHS Slave mode</em></p>
+<p class="p">This example uses the TWIHS peripheral library in slave mode and emulates an EEPROM of 512 bytes. There are two pages each of size 256 bytes. TWIHS slave expects two bytes of memory address from the TWIHS master and the memory address can range from 0x00 to 0x1FF.</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d918195e487', this);">Copy</button><code id="d918195e487" content="#define EEPROM_PAGE_SIZE_BYTES                  256&#xA;#define EEPROM_PAGE_SIZE_MASK                   0xFF&#xA;#define EEPROM_SIZE_BYTES                       512&#xA;&#xA;typedef enum&#xA;{&#xA;    EEPROM_CMD_WRITE,&#xA;    EEPROM_CMD_IDLE,&#xA;}EEPROM_CMD;&#xA;&#xA;typedef struct&#xA;{&#xA;    /* currentAddrPtr - to allow for sequential read (from the current address) */&#xA;    uint16_t                    currentAddrPtr;&#xA;    /* addrIndex - used to copy 2 bytes of EEPROM memory address */&#xA;    uint8_t                     addrIndex;&#xA;    /* wrBuffer - holds the incoming data from the I2C master */&#xA;    uint8_t                     wrBuffer[EEPROM_PAGE_SIZE_BYTES];&#xA;    /* wrBufferIndex - Index into the wrBuffer[] */&#xA;    uint16_t                    wrBufferIndex;&#xA;    /* wrAddr - indicates the starting address of the EEPROM emulation memory to write to */&#xA;    volatile uint16_t           wrAddr;&#xA;    /* nWrBytes - indicates the number of bytes to write to EEPROM emulation buffer */&#xA;    volatile uint8_t            nWrBytes;&#xA;    /* internalWriteInProgress - indicates that EEPROM is busy with internal writes */&#xA;    bool                        internalWriteInProgress;&#xA;    /* eepromCommand - used to trigger write to the EEPROM emulation buffer */&#xA;    EEPROM_CMD                  eepromCommand;&#xA;}EEPROM_DATA;&#xA;&#xA;EEPROM_DATA         eepromData;&#xA;&#xA;uint8_t EEPROM_EmulationBuffer[EEPROM_SIZE_BYTES] =&#xA;{&#xA;    0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f,&#xA;    0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e,0x1f,&#xA;    0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2a,0x2b,0x2c,0x2d,0x2e,0x2f,&#xA;    0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3a,0x3b,0x3c,0x3d,0x3e,0x3f,&#xA;    0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4a,0x4b,0x4c,0x4d,0x4e,0x4f,&#xA;    0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5a,0x5b,0x5c,0x5d,0x5e,0x5f,&#xA;    0x60,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6a,0x6b,0x6c,0x6d,0x6e,0x6f,&#xA;    0x70,0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7a,0x7b,0x7c,0x7d,0x7e,0x7f,&#xA;    0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,&#xA;    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9a,0x9b,0x9c,0x9d,0x9e,0x9f,&#xA;    0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,&#xA;    0xb0,0xb1,0xb2,0xb3,0xb4,0xb5,0xb6,0xb7,0xb8,0xb9,0xba,0xbb,0xbc,0xbd,0xbe,0xbf,&#xA;    0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,&#xA;    0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,0xd8,0xd9,0xda,0xdb,0xdc,0xdd,0xde,0xdf,&#xA;    0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,0xe8,0xe9,0xea,0xeb,0xec,0xed,0xee,0xef,&#xA;    0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,0xf9,0xfa,0xfb,0xfc,0xfd,0xfe,0xff,&#xA;&#xA;    0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f,&#xA;    0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e,0x1f,&#xA;    0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2a,0x2b,0x2c,0x2d,0x2e,0x2f,&#xA;    0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3a,0x3b,0x3c,0x3d,0x3e,0x3f,&#xA;    0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4a,0x4b,0x4c,0x4d,0x4e,0x4f,&#xA;    0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5a,0x5b,0x5c,0x5d,0x5e,0x5f,&#xA;    0x60,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6a,0x6b,0x6c,0x6d,0x6e,0x6f,&#xA;    0x70,0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7a,0x7b,0x7c,0x7d,0x7e,0x7f,&#xA;    0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,&#xA;    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9a,0x9b,0x9c,0x9d,0x9e,0x9f,&#xA;    0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,&#xA;    0xb0,0xb1,0xb2,0xb3,0xb4,0xb5,0xb6,0xb7,0xb8,0xb9,0xba,0xbb,0xbc,0xbd,0xbe,0xbf,&#xA;    0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,&#xA;    0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,0xd8,0xd9,0xda,0xdb,0xdc,0xdd,0xde,0xdf,&#xA;    0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,0xe8,0xe9,0xea,0xeb,0xec,0xed,0xee,0xef,&#xA;    0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,0xf9,0xfa,0xfb,0xfc,0xfd,0xfe,0xff&#xA;};&#xA;&#xA;void delay(uint32_t count)&#xA;{&#xA;    uint32_t i;&#xA;        &#xA;    for (i = 0; i &lt; count; i++)&#xA;    {&#xA;        asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);&#xA;        asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);&#xA;        asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);&#xA;        asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);asm(&#34;NOP&#34;);        &#xA;    }&#xA;}&#xA;&#xA;bool APP_TWIHS_Callback ( TWIHS_SLAVE_TRANSFER_EVENT event, uintptr_t contextHandle )&#xA;{&#xA;    uint8_t rxByte;&#xA;    &#xA;    switch(event)&#xA;    {&#xA;        case TWIHS_SLAVE_TRANSFER_EVENT_ADDR_MATCH:&#xA;            if (eepromData.internalWriteInProgress == false)&#xA;            {                              &#xA;                /* Reset the indexes */&#xA;                eepromData.addrIndex = 0;&#xA;                eepromData.wrBufferIndex = 0;                &#xA;            }&#xA;            break;&#xA;&#xA;        case TWIHS_SLAVE_TRANSFER_EVENT_RX_READY:&#xA;            &#xA;            rxByte = TWIHS0_ReadByte();&#xA;            &#xA;            if (eepromData.internalWriteInProgress == false)&#xA;            {&#xA;                /* Read the data sent by I2C Master */&#xA;                if (eepromData.addrIndex &lt; 2)&#xA;                {&#xA;                    ((uint8_t*)&amp;eepromData.currentAddrPtr)[eepromData.addrIndex++] = rxByte;&#xA;                }&#xA;                else&#xA;                {&#xA;                    eepromData.wrBuffer[(eepromData.wrBufferIndex &amp; EEPROM_PAGE_SIZE_MASK)] = rxByte;&#xA;                    eepromData.wrBufferIndex++;&#xA;                }&#xA;            }&#xA;            break;&#xA;&#xA;        case TWIHS_SLAVE_TRANSFER_EVENT_TX_READY:&#xA;            /* Provide the EEPROM data requested by the I2C Master */&#xA;            TWIHS0_WriteByte(EEPROM_EmulationBuffer[eepromData.currentAddrPtr++]);&#xA;            if (eepromData.currentAddrPtr &gt;= EEPROM_SIZE_BYTES)&#xA;            {&#xA;                eepromData.currentAddrPtr = 0;&#xA;            }&#xA;            break;&#xA;&#xA;        case TWIHS_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE:&#xA;            if (eepromData.wrBufferIndex &gt; 0)&#xA;            {&#xA;                if (eepromData.wrBufferIndex &gt; EEPROM_PAGE_SIZE_BYTES)&#xA;                {&#xA;                    eepromData.wrBufferIndex = EEPROM_PAGE_SIZE_BYTES;&#xA;                }&#xA;                eepromData.wrAddr = eepromData.currentAddrPtr;&#xA;                eepromData.nWrBytes = eepromData.wrBufferIndex;&#xA;&#xA;                /* Update the current address pointer to allow for sequential read */&#xA;                eepromData.currentAddrPtr += eepromData.wrBufferIndex;&#xA;&#xA;                /* Reset the indexes */&#xA;                eepromData.addrIndex = 0;&#xA;                eepromData.wrBufferIndex = 0;&#xA;&#xA;                /* Set busy flag to send NAK for any write requests */&#xA;                eepromData.internalWriteInProgress = true;&#xA;                &#xA;                /* Send NACK for next data packets from I2C master */&#xA;                TWIHS0_NACKDataPhase(true);&#xA;                &#xA;                eepromData.eepromCommand = EEPROM_CMD_WRITE;&#xA;            }&#xA;            break;&#xA;        default:&#xA;            break;&#xA;    }&#xA;&#xA;    return true;&#xA;}&#xA;&#xA;void EEPROM_StateMachine(void)&#xA;{&#xA;    switch(eepromData.eepromCommand)&#xA;    {&#xA;        case EEPROM_CMD_WRITE:&#xA;            memcpy(&amp;EEPROM_EmulationBuffer[eepromData.wrAddr], &amp;eepromData.wrBuffer[0], eepromData.nWrBytes);&#xA;            &#xA;            /* Simulate busy condition. NACK will be sent while application loops through the delay. */&#xA;            delay(10000);&#xA;            &#xA;            eepromData.internalWriteInProgress = false;&#xA;            eepromData.eepromCommand = EEPROM_CMD_IDLE;&#xA;            &#xA;            /* Internal write is not in progress. ACK the data packets. */&#xA;            TWIHS0_NACKDataPhase(false);&#xA;            &#xA;            break;&#xA;        case EEPROM_CMD_IDLE:&#xA;            /* Do nothing */&#xA;            break;&#xA;    }&#xA;}&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;&#xA;    eepromData.eepromCommand = EEPROM_CMD_IDLE;&#xA;&#xA;    TWIHS0_CallbackRegister(APP_TWIHS_Callback, 0);&#xA;&#xA;    while ( true )&#xA;    {&#xA;        EEPROM_StateMachine();&#xA;    }&#xA;&#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    return ( EXIT_FAILURE );&#xA;}"><span class="ph token macro property">#<span class="ph token directive keyword">define</span> EEPROM_PAGE_SIZE_BYTES                  256</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> EEPROM_PAGE_SIZE_MASK                   0xFF</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> EEPROM_SIZE_BYTES                       512</span>
+
+<span class="ph token keyword">typedef</span> <span class="ph token keyword">enum</span>
+<span class="ph token punctuation">{</span>
+    EEPROM_CMD_WRITE<span class="ph token punctuation">,</span>
+    EEPROM_CMD_IDLE<span class="ph token punctuation">,</span>
+<span class="ph token punctuation">}</span>EEPROM_CMD<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">typedef</span> <span class="ph token keyword">struct</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* currentAddrPtr - to allow for sequential read (from the current address) */</span>
+    uint16_t                    currentAddrPtr<span class="ph token punctuation">;</span>
+    <span class="ph token comment">/* addrIndex - used to copy 2 bytes of EEPROM memory address */</span>
+    uint8_t                     addrIndex<span class="ph token punctuation">;</span>
+    <span class="ph token comment">/* wrBuffer - holds the incoming data from the I2C master */</span>
+    uint8_t                     wrBuffer<span class="ph token punctuation">[</span>EEPROM_PAGE_SIZE_BYTES<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+    <span class="ph token comment">/* wrBufferIndex - Index into the wrBuffer[] */</span>
+    uint16_t                    wrBufferIndex<span class="ph token punctuation">;</span>
+    <span class="ph token comment">/* wrAddr - indicates the starting address of the EEPROM emulation memory to write to */</span>
+    <span class="ph token keyword">volatile</span> uint16_t           wrAddr<span class="ph token punctuation">;</span>
+    <span class="ph token comment">/* nWrBytes - indicates the number of bytes to write to EEPROM emulation buffer */</span>
+    <span class="ph token keyword">volatile</span> uint8_t            nWrBytes<span class="ph token punctuation">;</span>
+    <span class="ph token comment">/* internalWriteInProgress - indicates that EEPROM is busy with internal writes */</span>
+    bool                        internalWriteInProgress<span class="ph token punctuation">;</span>
+    <span class="ph token comment">/* eepromCommand - used to trigger write to the EEPROM emulation buffer */</span>
+    EEPROM_CMD                  eepromCommand<span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>EEPROM_DATA<span class="ph token punctuation">;</span>
+
+EEPROM_DATA         eepromData<span class="ph token punctuation">;</span>
+
+uint8_t EEPROM_EmulationBuffer<span class="ph token punctuation">[</span>EEPROM_SIZE_BYTES<span class="ph token punctuation">]</span> <span class="ph token operator">=</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token number">0x00</span><span class="ph token punctuation">,</span><span class="ph token number">0x01</span><span class="ph token punctuation">,</span><span class="ph token number">0x02</span><span class="ph token punctuation">,</span><span class="ph token number">0x03</span><span class="ph token punctuation">,</span><span class="ph token number">0x04</span><span class="ph token punctuation">,</span><span class="ph token number">0x05</span><span class="ph token punctuation">,</span><span class="ph token number">0x06</span><span class="ph token punctuation">,</span><span class="ph token number">0x07</span><span class="ph token punctuation">,</span><span class="ph token number">0x08</span><span class="ph token punctuation">,</span><span class="ph token number">0x09</span><span class="ph token punctuation">,</span><span class="ph token number">0x0a</span><span class="ph token punctuation">,</span><span class="ph token number">0x0b</span><span class="ph token punctuation">,</span><span class="ph token number">0x0c</span><span class="ph token punctuation">,</span><span class="ph token number">0x0d</span><span class="ph token punctuation">,</span><span class="ph token number">0x0e</span><span class="ph token punctuation">,</span><span class="ph token number">0x0f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x10</span><span class="ph token punctuation">,</span><span class="ph token number">0x11</span><span class="ph token punctuation">,</span><span class="ph token number">0x12</span><span class="ph token punctuation">,</span><span class="ph token number">0x13</span><span class="ph token punctuation">,</span><span class="ph token number">0x14</span><span class="ph token punctuation">,</span><span class="ph token number">0x15</span><span class="ph token punctuation">,</span><span class="ph token number">0x16</span><span class="ph token punctuation">,</span><span class="ph token number">0x17</span><span class="ph token punctuation">,</span><span class="ph token number">0x18</span><span class="ph token punctuation">,</span><span class="ph token number">0x19</span><span class="ph token punctuation">,</span><span class="ph token number">0x1a</span><span class="ph token punctuation">,</span><span class="ph token number">0x1b</span><span class="ph token punctuation">,</span><span class="ph token number">0x1c</span><span class="ph token punctuation">,</span><span class="ph token number">0x1d</span><span class="ph token punctuation">,</span><span class="ph token number">0x1e</span><span class="ph token punctuation">,</span><span class="ph token number">0x1f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x20</span><span class="ph token punctuation">,</span><span class="ph token number">0x21</span><span class="ph token punctuation">,</span><span class="ph token number">0x22</span><span class="ph token punctuation">,</span><span class="ph token number">0x23</span><span class="ph token punctuation">,</span><span class="ph token number">0x24</span><span class="ph token punctuation">,</span><span class="ph token number">0x25</span><span class="ph token punctuation">,</span><span class="ph token number">0x26</span><span class="ph token punctuation">,</span><span class="ph token number">0x27</span><span class="ph token punctuation">,</span><span class="ph token number">0x28</span><span class="ph token punctuation">,</span><span class="ph token number">0x29</span><span class="ph token punctuation">,</span><span class="ph token number">0x2a</span><span class="ph token punctuation">,</span><span class="ph token number">0x2b</span><span class="ph token punctuation">,</span><span class="ph token number">0x2c</span><span class="ph token punctuation">,</span><span class="ph token number">0x2d</span><span class="ph token punctuation">,</span><span class="ph token number">0x2e</span><span class="ph token punctuation">,</span><span class="ph token number">0x2f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x30</span><span class="ph token punctuation">,</span><span class="ph token number">0x31</span><span class="ph token punctuation">,</span><span class="ph token number">0x32</span><span class="ph token punctuation">,</span><span class="ph token number">0x33</span><span class="ph token punctuation">,</span><span class="ph token number">0x34</span><span class="ph token punctuation">,</span><span class="ph token number">0x35</span><span class="ph token punctuation">,</span><span class="ph token number">0x36</span><span class="ph token punctuation">,</span><span class="ph token number">0x37</span><span class="ph token punctuation">,</span><span class="ph token number">0x38</span><span class="ph token punctuation">,</span><span class="ph token number">0x39</span><span class="ph token punctuation">,</span><span class="ph token number">0x3a</span><span class="ph token punctuation">,</span><span class="ph token number">0x3b</span><span class="ph token punctuation">,</span><span class="ph token number">0x3c</span><span class="ph token punctuation">,</span><span class="ph token number">0x3d</span><span class="ph token punctuation">,</span><span class="ph token number">0x3e</span><span class="ph token punctuation">,</span><span class="ph token number">0x3f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x40</span><span class="ph token punctuation">,</span><span class="ph token number">0x41</span><span class="ph token punctuation">,</span><span class="ph token number">0x42</span><span class="ph token punctuation">,</span><span class="ph token number">0x43</span><span class="ph token punctuation">,</span><span class="ph token number">0x44</span><span class="ph token punctuation">,</span><span class="ph token number">0x45</span><span class="ph token punctuation">,</span><span class="ph token number">0x46</span><span class="ph token punctuation">,</span><span class="ph token number">0x47</span><span class="ph token punctuation">,</span><span class="ph token number">0x48</span><span class="ph token punctuation">,</span><span class="ph token number">0x49</span><span class="ph token punctuation">,</span><span class="ph token number">0x4a</span><span class="ph token punctuation">,</span><span class="ph token number">0x4b</span><span class="ph token punctuation">,</span><span class="ph token number">0x4c</span><span class="ph token punctuation">,</span><span class="ph token number">0x4d</span><span class="ph token punctuation">,</span><span class="ph token number">0x4e</span><span class="ph token punctuation">,</span><span class="ph token number">0x4f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x50</span><span class="ph token punctuation">,</span><span class="ph token number">0x51</span><span class="ph token punctuation">,</span><span class="ph token number">0x52</span><span class="ph token punctuation">,</span><span class="ph token number">0x53</span><span class="ph token punctuation">,</span><span class="ph token number">0x54</span><span class="ph token punctuation">,</span><span class="ph token number">0x55</span><span class="ph token punctuation">,</span><span class="ph token number">0x56</span><span class="ph token punctuation">,</span><span class="ph token number">0x57</span><span class="ph token punctuation">,</span><span class="ph token number">0x58</span><span class="ph token punctuation">,</span><span class="ph token number">0x59</span><span class="ph token punctuation">,</span><span class="ph token number">0x5a</span><span class="ph token punctuation">,</span><span class="ph token number">0x5b</span><span class="ph token punctuation">,</span><span class="ph token number">0x5c</span><span class="ph token punctuation">,</span><span class="ph token number">0x5d</span><span class="ph token punctuation">,</span><span class="ph token number">0x5e</span><span class="ph token punctuation">,</span><span class="ph token number">0x5f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x60</span><span class="ph token punctuation">,</span><span class="ph token number">0x61</span><span class="ph token punctuation">,</span><span class="ph token number">0x62</span><span class="ph token punctuation">,</span><span class="ph token number">0x63</span><span class="ph token punctuation">,</span><span class="ph token number">0x64</span><span class="ph token punctuation">,</span><span class="ph token number">0x65</span><span class="ph token punctuation">,</span><span class="ph token number">0x66</span><span class="ph token punctuation">,</span><span class="ph token number">0x67</span><span class="ph token punctuation">,</span><span class="ph token number">0x68</span><span class="ph token punctuation">,</span><span class="ph token number">0x69</span><span class="ph token punctuation">,</span><span class="ph token number">0x6a</span><span class="ph token punctuation">,</span><span class="ph token number">0x6b</span><span class="ph token punctuation">,</span><span class="ph token number">0x6c</span><span class="ph token punctuation">,</span><span class="ph token number">0x6d</span><span class="ph token punctuation">,</span><span class="ph token number">0x6e</span><span class="ph token punctuation">,</span><span class="ph token number">0x6f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x70</span><span class="ph token punctuation">,</span><span class="ph token number">0x71</span><span class="ph token punctuation">,</span><span class="ph token number">0x72</span><span class="ph token punctuation">,</span><span class="ph token number">0x73</span><span class="ph token punctuation">,</span><span class="ph token number">0x74</span><span class="ph token punctuation">,</span><span class="ph token number">0x75</span><span class="ph token punctuation">,</span><span class="ph token number">0x76</span><span class="ph token punctuation">,</span><span class="ph token number">0x77</span><span class="ph token punctuation">,</span><span class="ph token number">0x78</span><span class="ph token punctuation">,</span><span class="ph token number">0x79</span><span class="ph token punctuation">,</span><span class="ph token number">0x7a</span><span class="ph token punctuation">,</span><span class="ph token number">0x7b</span><span class="ph token punctuation">,</span><span class="ph token number">0x7c</span><span class="ph token punctuation">,</span><span class="ph token number">0x7d</span><span class="ph token punctuation">,</span><span class="ph token number">0x7e</span><span class="ph token punctuation">,</span><span class="ph token number">0x7f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x80</span><span class="ph token punctuation">,</span><span class="ph token number">0x81</span><span class="ph token punctuation">,</span><span class="ph token number">0x82</span><span class="ph token punctuation">,</span><span class="ph token number">0x83</span><span class="ph token punctuation">,</span><span class="ph token number">0x84</span><span class="ph token punctuation">,</span><span class="ph token number">0x85</span><span class="ph token punctuation">,</span><span class="ph token number">0x86</span><span class="ph token punctuation">,</span><span class="ph token number">0x87</span><span class="ph token punctuation">,</span><span class="ph token number">0x88</span><span class="ph token punctuation">,</span><span class="ph token number">0x89</span><span class="ph token punctuation">,</span><span class="ph token number">0x8a</span><span class="ph token punctuation">,</span><span class="ph token number">0x8b</span><span class="ph token punctuation">,</span><span class="ph token number">0x8c</span><span class="ph token punctuation">,</span><span class="ph token number">0x8d</span><span class="ph token punctuation">,</span><span class="ph token number">0x8e</span><span class="ph token punctuation">,</span><span class="ph token number">0x8f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x90</span><span class="ph token punctuation">,</span><span class="ph token number">0x91</span><span class="ph token punctuation">,</span><span class="ph token number">0x92</span><span class="ph token punctuation">,</span><span class="ph token number">0x93</span><span class="ph token punctuation">,</span><span class="ph token number">0x94</span><span class="ph token punctuation">,</span><span class="ph token number">0x95</span><span class="ph token punctuation">,</span><span class="ph token number">0x96</span><span class="ph token punctuation">,</span><span class="ph token number">0x97</span><span class="ph token punctuation">,</span><span class="ph token number">0x98</span><span class="ph token punctuation">,</span><span class="ph token number">0x99</span><span class="ph token punctuation">,</span><span class="ph token number">0x9a</span><span class="ph token punctuation">,</span><span class="ph token number">0x9b</span><span class="ph token punctuation">,</span><span class="ph token number">0x9c</span><span class="ph token punctuation">,</span><span class="ph token number">0x9d</span><span class="ph token punctuation">,</span><span class="ph token number">0x9e</span><span class="ph token punctuation">,</span><span class="ph token number">0x9f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xa0</span><span class="ph token punctuation">,</span><span class="ph token number">0xa1</span><span class="ph token punctuation">,</span><span class="ph token number">0xa2</span><span class="ph token punctuation">,</span><span class="ph token number">0xa3</span><span class="ph token punctuation">,</span><span class="ph token number">0xa4</span><span class="ph token punctuation">,</span><span class="ph token number">0xa5</span><span class="ph token punctuation">,</span><span class="ph token number">0xa6</span><span class="ph token punctuation">,</span><span class="ph token number">0xa7</span><span class="ph token punctuation">,</span><span class="ph token number">0xa8</span><span class="ph token punctuation">,</span><span class="ph token number">0xa9</span><span class="ph token punctuation">,</span><span class="ph token number">0xaa</span><span class="ph token punctuation">,</span><span class="ph token number">0xab</span><span class="ph token punctuation">,</span><span class="ph token number">0xac</span><span class="ph token punctuation">,</span><span class="ph token number">0xad</span><span class="ph token punctuation">,</span><span class="ph token number">0xae</span><span class="ph token punctuation">,</span><span class="ph token number">0xaf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xb0</span><span class="ph token punctuation">,</span><span class="ph token number">0xb1</span><span class="ph token punctuation">,</span><span class="ph token number">0xb2</span><span class="ph token punctuation">,</span><span class="ph token number">0xb3</span><span class="ph token punctuation">,</span><span class="ph token number">0xb4</span><span class="ph token punctuation">,</span><span class="ph token number">0xb5</span><span class="ph token punctuation">,</span><span class="ph token number">0xb6</span><span class="ph token punctuation">,</span><span class="ph token number">0xb7</span><span class="ph token punctuation">,</span><span class="ph token number">0xb8</span><span class="ph token punctuation">,</span><span class="ph token number">0xb9</span><span class="ph token punctuation">,</span><span class="ph token number">0xba</span><span class="ph token punctuation">,</span><span class="ph token number">0xbb</span><span class="ph token punctuation">,</span><span class="ph token number">0xbc</span><span class="ph token punctuation">,</span><span class="ph token number">0xbd</span><span class="ph token punctuation">,</span><span class="ph token number">0xbe</span><span class="ph token punctuation">,</span><span class="ph token number">0xbf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xc0</span><span class="ph token punctuation">,</span><span class="ph token number">0xc1</span><span class="ph token punctuation">,</span><span class="ph token number">0xc2</span><span class="ph token punctuation">,</span><span class="ph token number">0xc3</span><span class="ph token punctuation">,</span><span class="ph token number">0xc4</span><span class="ph token punctuation">,</span><span class="ph token number">0xc5</span><span class="ph token punctuation">,</span><span class="ph token number">0xc6</span><span class="ph token punctuation">,</span><span class="ph token number">0xc7</span><span class="ph token punctuation">,</span><span class="ph token number">0xc8</span><span class="ph token punctuation">,</span><span class="ph token number">0xc9</span><span class="ph token punctuation">,</span><span class="ph token number">0xca</span><span class="ph token punctuation">,</span><span class="ph token number">0xcb</span><span class="ph token punctuation">,</span><span class="ph token number">0xcc</span><span class="ph token punctuation">,</span><span class="ph token number">0xcd</span><span class="ph token punctuation">,</span><span class="ph token number">0xce</span><span class="ph token punctuation">,</span><span class="ph token number">0xcf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xd0</span><span class="ph token punctuation">,</span><span class="ph token number">0xd1</span><span class="ph token punctuation">,</span><span class="ph token number">0xd2</span><span class="ph token punctuation">,</span><span class="ph token number">0xd3</span><span class="ph token punctuation">,</span><span class="ph token number">0xd4</span><span class="ph token punctuation">,</span><span class="ph token number">0xd5</span><span class="ph token punctuation">,</span><span class="ph token number">0xd6</span><span class="ph token punctuation">,</span><span class="ph token number">0xd7</span><span class="ph token punctuation">,</span><span class="ph token number">0xd8</span><span class="ph token punctuation">,</span><span class="ph token number">0xd9</span><span class="ph token punctuation">,</span><span class="ph token number">0xda</span><span class="ph token punctuation">,</span><span class="ph token number">0xdb</span><span class="ph token punctuation">,</span><span class="ph token number">0xdc</span><span class="ph token punctuation">,</span><span class="ph token number">0xdd</span><span class="ph token punctuation">,</span><span class="ph token number">0xde</span><span class="ph token punctuation">,</span><span class="ph token number">0xdf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xe0</span><span class="ph token punctuation">,</span><span class="ph token number">0xe1</span><span class="ph token punctuation">,</span><span class="ph token number">0xe2</span><span class="ph token punctuation">,</span><span class="ph token number">0xe3</span><span class="ph token punctuation">,</span><span class="ph token number">0xe4</span><span class="ph token punctuation">,</span><span class="ph token number">0xe5</span><span class="ph token punctuation">,</span><span class="ph token number">0xe6</span><span class="ph token punctuation">,</span><span class="ph token number">0xe7</span><span class="ph token punctuation">,</span><span class="ph token number">0xe8</span><span class="ph token punctuation">,</span><span class="ph token number">0xe9</span><span class="ph token punctuation">,</span><span class="ph token number">0xea</span><span class="ph token punctuation">,</span><span class="ph token number">0xeb</span><span class="ph token punctuation">,</span><span class="ph token number">0xec</span><span class="ph token punctuation">,</span><span class="ph token number">0xed</span><span class="ph token punctuation">,</span><span class="ph token number">0xee</span><span class="ph token punctuation">,</span><span class="ph token number">0xef</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xf0</span><span class="ph token punctuation">,</span><span class="ph token number">0xf1</span><span class="ph token punctuation">,</span><span class="ph token number">0xf2</span><span class="ph token punctuation">,</span><span class="ph token number">0xf3</span><span class="ph token punctuation">,</span><span class="ph token number">0xf4</span><span class="ph token punctuation">,</span><span class="ph token number">0xf5</span><span class="ph token punctuation">,</span><span class="ph token number">0xf6</span><span class="ph token punctuation">,</span><span class="ph token number">0xf7</span><span class="ph token punctuation">,</span><span class="ph token number">0xf8</span><span class="ph token punctuation">,</span><span class="ph token number">0xf9</span><span class="ph token punctuation">,</span><span class="ph token number">0xfa</span><span class="ph token punctuation">,</span><span class="ph token number">0xfb</span><span class="ph token punctuation">,</span><span class="ph token number">0xfc</span><span class="ph token punctuation">,</span><span class="ph token number">0xfd</span><span class="ph token punctuation">,</span><span class="ph token number">0xfe</span><span class="ph token punctuation">,</span><span class="ph token number">0xff</span><span class="ph token punctuation">,</span>
+
+    <span class="ph token number">0x00</span><span class="ph token punctuation">,</span><span class="ph token number">0x01</span><span class="ph token punctuation">,</span><span class="ph token number">0x02</span><span class="ph token punctuation">,</span><span class="ph token number">0x03</span><span class="ph token punctuation">,</span><span class="ph token number">0x04</span><span class="ph token punctuation">,</span><span class="ph token number">0x05</span><span class="ph token punctuation">,</span><span class="ph token number">0x06</span><span class="ph token punctuation">,</span><span class="ph token number">0x07</span><span class="ph token punctuation">,</span><span class="ph token number">0x08</span><span class="ph token punctuation">,</span><span class="ph token number">0x09</span><span class="ph token punctuation">,</span><span class="ph token number">0x0a</span><span class="ph token punctuation">,</span><span class="ph token number">0x0b</span><span class="ph token punctuation">,</span><span class="ph token number">0x0c</span><span class="ph token punctuation">,</span><span class="ph token number">0x0d</span><span class="ph token punctuation">,</span><span class="ph token number">0x0e</span><span class="ph token punctuation">,</span><span class="ph token number">0x0f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x10</span><span class="ph token punctuation">,</span><span class="ph token number">0x11</span><span class="ph token punctuation">,</span><span class="ph token number">0x12</span><span class="ph token punctuation">,</span><span class="ph token number">0x13</span><span class="ph token punctuation">,</span><span class="ph token number">0x14</span><span class="ph token punctuation">,</span><span class="ph token number">0x15</span><span class="ph token punctuation">,</span><span class="ph token number">0x16</span><span class="ph token punctuation">,</span><span class="ph token number">0x17</span><span class="ph token punctuation">,</span><span class="ph token number">0x18</span><span class="ph token punctuation">,</span><span class="ph token number">0x19</span><span class="ph token punctuation">,</span><span class="ph token number">0x1a</span><span class="ph token punctuation">,</span><span class="ph token number">0x1b</span><span class="ph token punctuation">,</span><span class="ph token number">0x1c</span><span class="ph token punctuation">,</span><span class="ph token number">0x1d</span><span class="ph token punctuation">,</span><span class="ph token number">0x1e</span><span class="ph token punctuation">,</span><span class="ph token number">0x1f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x20</span><span class="ph token punctuation">,</span><span class="ph token number">0x21</span><span class="ph token punctuation">,</span><span class="ph token number">0x22</span><span class="ph token punctuation">,</span><span class="ph token number">0x23</span><span class="ph token punctuation">,</span><span class="ph token number">0x24</span><span class="ph token punctuation">,</span><span class="ph token number">0x25</span><span class="ph token punctuation">,</span><span class="ph token number">0x26</span><span class="ph token punctuation">,</span><span class="ph token number">0x27</span><span class="ph token punctuation">,</span><span class="ph token number">0x28</span><span class="ph token punctuation">,</span><span class="ph token number">0x29</span><span class="ph token punctuation">,</span><span class="ph token number">0x2a</span><span class="ph token punctuation">,</span><span class="ph token number">0x2b</span><span class="ph token punctuation">,</span><span class="ph token number">0x2c</span><span class="ph token punctuation">,</span><span class="ph token number">0x2d</span><span class="ph token punctuation">,</span><span class="ph token number">0x2e</span><span class="ph token punctuation">,</span><span class="ph token number">0x2f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x30</span><span class="ph token punctuation">,</span><span class="ph token number">0x31</span><span class="ph token punctuation">,</span><span class="ph token number">0x32</span><span class="ph token punctuation">,</span><span class="ph token number">0x33</span><span class="ph token punctuation">,</span><span class="ph token number">0x34</span><span class="ph token punctuation">,</span><span class="ph token number">0x35</span><span class="ph token punctuation">,</span><span class="ph token number">0x36</span><span class="ph token punctuation">,</span><span class="ph token number">0x37</span><span class="ph token punctuation">,</span><span class="ph token number">0x38</span><span class="ph token punctuation">,</span><span class="ph token number">0x39</span><span class="ph token punctuation">,</span><span class="ph token number">0x3a</span><span class="ph token punctuation">,</span><span class="ph token number">0x3b</span><span class="ph token punctuation">,</span><span class="ph token number">0x3c</span><span class="ph token punctuation">,</span><span class="ph token number">0x3d</span><span class="ph token punctuation">,</span><span class="ph token number">0x3e</span><span class="ph token punctuation">,</span><span class="ph token number">0x3f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x40</span><span class="ph token punctuation">,</span><span class="ph token number">0x41</span><span class="ph token punctuation">,</span><span class="ph token number">0x42</span><span class="ph token punctuation">,</span><span class="ph token number">0x43</span><span class="ph token punctuation">,</span><span class="ph token number">0x44</span><span class="ph token punctuation">,</span><span class="ph token number">0x45</span><span class="ph token punctuation">,</span><span class="ph token number">0x46</span><span class="ph token punctuation">,</span><span class="ph token number">0x47</span><span class="ph token punctuation">,</span><span class="ph token number">0x48</span><span class="ph token punctuation">,</span><span class="ph token number">0x49</span><span class="ph token punctuation">,</span><span class="ph token number">0x4a</span><span class="ph token punctuation">,</span><span class="ph token number">0x4b</span><span class="ph token punctuation">,</span><span class="ph token number">0x4c</span><span class="ph token punctuation">,</span><span class="ph token number">0x4d</span><span class="ph token punctuation">,</span><span class="ph token number">0x4e</span><span class="ph token punctuation">,</span><span class="ph token number">0x4f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x50</span><span class="ph token punctuation">,</span><span class="ph token number">0x51</span><span class="ph token punctuation">,</span><span class="ph token number">0x52</span><span class="ph token punctuation">,</span><span class="ph token number">0x53</span><span class="ph token punctuation">,</span><span class="ph token number">0x54</span><span class="ph token punctuation">,</span><span class="ph token number">0x55</span><span class="ph token punctuation">,</span><span class="ph token number">0x56</span><span class="ph token punctuation">,</span><span class="ph token number">0x57</span><span class="ph token punctuation">,</span><span class="ph token number">0x58</span><span class="ph token punctuation">,</span><span class="ph token number">0x59</span><span class="ph token punctuation">,</span><span class="ph token number">0x5a</span><span class="ph token punctuation">,</span><span class="ph token number">0x5b</span><span class="ph token punctuation">,</span><span class="ph token number">0x5c</span><span class="ph token punctuation">,</span><span class="ph token number">0x5d</span><span class="ph token punctuation">,</span><span class="ph token number">0x5e</span><span class="ph token punctuation">,</span><span class="ph token number">0x5f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x60</span><span class="ph token punctuation">,</span><span class="ph token number">0x61</span><span class="ph token punctuation">,</span><span class="ph token number">0x62</span><span class="ph token punctuation">,</span><span class="ph token number">0x63</span><span class="ph token punctuation">,</span><span class="ph token number">0x64</span><span class="ph token punctuation">,</span><span class="ph token number">0x65</span><span class="ph token punctuation">,</span><span class="ph token number">0x66</span><span class="ph token punctuation">,</span><span class="ph token number">0x67</span><span class="ph token punctuation">,</span><span class="ph token number">0x68</span><span class="ph token punctuation">,</span><span class="ph token number">0x69</span><span class="ph token punctuation">,</span><span class="ph token number">0x6a</span><span class="ph token punctuation">,</span><span class="ph token number">0x6b</span><span class="ph token punctuation">,</span><span class="ph token number">0x6c</span><span class="ph token punctuation">,</span><span class="ph token number">0x6d</span><span class="ph token punctuation">,</span><span class="ph token number">0x6e</span><span class="ph token punctuation">,</span><span class="ph token number">0x6f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x70</span><span class="ph token punctuation">,</span><span class="ph token number">0x71</span><span class="ph token punctuation">,</span><span class="ph token number">0x72</span><span class="ph token punctuation">,</span><span class="ph token number">0x73</span><span class="ph token punctuation">,</span><span class="ph token number">0x74</span><span class="ph token punctuation">,</span><span class="ph token number">0x75</span><span class="ph token punctuation">,</span><span class="ph token number">0x76</span><span class="ph token punctuation">,</span><span class="ph token number">0x77</span><span class="ph token punctuation">,</span><span class="ph token number">0x78</span><span class="ph token punctuation">,</span><span class="ph token number">0x79</span><span class="ph token punctuation">,</span><span class="ph token number">0x7a</span><span class="ph token punctuation">,</span><span class="ph token number">0x7b</span><span class="ph token punctuation">,</span><span class="ph token number">0x7c</span><span class="ph token punctuation">,</span><span class="ph token number">0x7d</span><span class="ph token punctuation">,</span><span class="ph token number">0x7e</span><span class="ph token punctuation">,</span><span class="ph token number">0x7f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x80</span><span class="ph token punctuation">,</span><span class="ph token number">0x81</span><span class="ph token punctuation">,</span><span class="ph token number">0x82</span><span class="ph token punctuation">,</span><span class="ph token number">0x83</span><span class="ph token punctuation">,</span><span class="ph token number">0x84</span><span class="ph token punctuation">,</span><span class="ph token number">0x85</span><span class="ph token punctuation">,</span><span class="ph token number">0x86</span><span class="ph token punctuation">,</span><span class="ph token number">0x87</span><span class="ph token punctuation">,</span><span class="ph token number">0x88</span><span class="ph token punctuation">,</span><span class="ph token number">0x89</span><span class="ph token punctuation">,</span><span class="ph token number">0x8a</span><span class="ph token punctuation">,</span><span class="ph token number">0x8b</span><span class="ph token punctuation">,</span><span class="ph token number">0x8c</span><span class="ph token punctuation">,</span><span class="ph token number">0x8d</span><span class="ph token punctuation">,</span><span class="ph token number">0x8e</span><span class="ph token punctuation">,</span><span class="ph token number">0x8f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0x90</span><span class="ph token punctuation">,</span><span class="ph token number">0x91</span><span class="ph token punctuation">,</span><span class="ph token number">0x92</span><span class="ph token punctuation">,</span><span class="ph token number">0x93</span><span class="ph token punctuation">,</span><span class="ph token number">0x94</span><span class="ph token punctuation">,</span><span class="ph token number">0x95</span><span class="ph token punctuation">,</span><span class="ph token number">0x96</span><span class="ph token punctuation">,</span><span class="ph token number">0x97</span><span class="ph token punctuation">,</span><span class="ph token number">0x98</span><span class="ph token punctuation">,</span><span class="ph token number">0x99</span><span class="ph token punctuation">,</span><span class="ph token number">0x9a</span><span class="ph token punctuation">,</span><span class="ph token number">0x9b</span><span class="ph token punctuation">,</span><span class="ph token number">0x9c</span><span class="ph token punctuation">,</span><span class="ph token number">0x9d</span><span class="ph token punctuation">,</span><span class="ph token number">0x9e</span><span class="ph token punctuation">,</span><span class="ph token number">0x9f</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xa0</span><span class="ph token punctuation">,</span><span class="ph token number">0xa1</span><span class="ph token punctuation">,</span><span class="ph token number">0xa2</span><span class="ph token punctuation">,</span><span class="ph token number">0xa3</span><span class="ph token punctuation">,</span><span class="ph token number">0xa4</span><span class="ph token punctuation">,</span><span class="ph token number">0xa5</span><span class="ph token punctuation">,</span><span class="ph token number">0xa6</span><span class="ph token punctuation">,</span><span class="ph token number">0xa7</span><span class="ph token punctuation">,</span><span class="ph token number">0xa8</span><span class="ph token punctuation">,</span><span class="ph token number">0xa9</span><span class="ph token punctuation">,</span><span class="ph token number">0xaa</span><span class="ph token punctuation">,</span><span class="ph token number">0xab</span><span class="ph token punctuation">,</span><span class="ph token number">0xac</span><span class="ph token punctuation">,</span><span class="ph token number">0xad</span><span class="ph token punctuation">,</span><span class="ph token number">0xae</span><span class="ph token punctuation">,</span><span class="ph token number">0xaf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xb0</span><span class="ph token punctuation">,</span><span class="ph token number">0xb1</span><span class="ph token punctuation">,</span><span class="ph token number">0xb2</span><span class="ph token punctuation">,</span><span class="ph token number">0xb3</span><span class="ph token punctuation">,</span><span class="ph token number">0xb4</span><span class="ph token punctuation">,</span><span class="ph token number">0xb5</span><span class="ph token punctuation">,</span><span class="ph token number">0xb6</span><span class="ph token punctuation">,</span><span class="ph token number">0xb7</span><span class="ph token punctuation">,</span><span class="ph token number">0xb8</span><span class="ph token punctuation">,</span><span class="ph token number">0xb9</span><span class="ph token punctuation">,</span><span class="ph token number">0xba</span><span class="ph token punctuation">,</span><span class="ph token number">0xbb</span><span class="ph token punctuation">,</span><span class="ph token number">0xbc</span><span class="ph token punctuation">,</span><span class="ph token number">0xbd</span><span class="ph token punctuation">,</span><span class="ph token number">0xbe</span><span class="ph token punctuation">,</span><span class="ph token number">0xbf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xc0</span><span class="ph token punctuation">,</span><span class="ph token number">0xc1</span><span class="ph token punctuation">,</span><span class="ph token number">0xc2</span><span class="ph token punctuation">,</span><span class="ph token number">0xc3</span><span class="ph token punctuation">,</span><span class="ph token number">0xc4</span><span class="ph token punctuation">,</span><span class="ph token number">0xc5</span><span class="ph token punctuation">,</span><span class="ph token number">0xc6</span><span class="ph token punctuation">,</span><span class="ph token number">0xc7</span><span class="ph token punctuation">,</span><span class="ph token number">0xc8</span><span class="ph token punctuation">,</span><span class="ph token number">0xc9</span><span class="ph token punctuation">,</span><span class="ph token number">0xca</span><span class="ph token punctuation">,</span><span class="ph token number">0xcb</span><span class="ph token punctuation">,</span><span class="ph token number">0xcc</span><span class="ph token punctuation">,</span><span class="ph token number">0xcd</span><span class="ph token punctuation">,</span><span class="ph token number">0xce</span><span class="ph token punctuation">,</span><span class="ph token number">0xcf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xd0</span><span class="ph token punctuation">,</span><span class="ph token number">0xd1</span><span class="ph token punctuation">,</span><span class="ph token number">0xd2</span><span class="ph token punctuation">,</span><span class="ph token number">0xd3</span><span class="ph token punctuation">,</span><span class="ph token number">0xd4</span><span class="ph token punctuation">,</span><span class="ph token number">0xd5</span><span class="ph token punctuation">,</span><span class="ph token number">0xd6</span><span class="ph token punctuation">,</span><span class="ph token number">0xd7</span><span class="ph token punctuation">,</span><span class="ph token number">0xd8</span><span class="ph token punctuation">,</span><span class="ph token number">0xd9</span><span class="ph token punctuation">,</span><span class="ph token number">0xda</span><span class="ph token punctuation">,</span><span class="ph token number">0xdb</span><span class="ph token punctuation">,</span><span class="ph token number">0xdc</span><span class="ph token punctuation">,</span><span class="ph token number">0xdd</span><span class="ph token punctuation">,</span><span class="ph token number">0xde</span><span class="ph token punctuation">,</span><span class="ph token number">0xdf</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xe0</span><span class="ph token punctuation">,</span><span class="ph token number">0xe1</span><span class="ph token punctuation">,</span><span class="ph token number">0xe2</span><span class="ph token punctuation">,</span><span class="ph token number">0xe3</span><span class="ph token punctuation">,</span><span class="ph token number">0xe4</span><span class="ph token punctuation">,</span><span class="ph token number">0xe5</span><span class="ph token punctuation">,</span><span class="ph token number">0xe6</span><span class="ph token punctuation">,</span><span class="ph token number">0xe7</span><span class="ph token punctuation">,</span><span class="ph token number">0xe8</span><span class="ph token punctuation">,</span><span class="ph token number">0xe9</span><span class="ph token punctuation">,</span><span class="ph token number">0xea</span><span class="ph token punctuation">,</span><span class="ph token number">0xeb</span><span class="ph token punctuation">,</span><span class="ph token number">0xec</span><span class="ph token punctuation">,</span><span class="ph token number">0xed</span><span class="ph token punctuation">,</span><span class="ph token number">0xee</span><span class="ph token punctuation">,</span><span class="ph token number">0xef</span><span class="ph token punctuation">,</span>
+    <span class="ph token number">0xf0</span><span class="ph token punctuation">,</span><span class="ph token number">0xf1</span><span class="ph token punctuation">,</span><span class="ph token number">0xf2</span><span class="ph token punctuation">,</span><span class="ph token number">0xf3</span><span class="ph token punctuation">,</span><span class="ph token number">0xf4</span><span class="ph token punctuation">,</span><span class="ph token number">0xf5</span><span class="ph token punctuation">,</span><span class="ph token number">0xf6</span><span class="ph token punctuation">,</span><span class="ph token number">0xf7</span><span class="ph token punctuation">,</span><span class="ph token number">0xf8</span><span class="ph token punctuation">,</span><span class="ph token number">0xf9</span><span class="ph token punctuation">,</span><span class="ph token number">0xfa</span><span class="ph token punctuation">,</span><span class="ph token number">0xfb</span><span class="ph token punctuation">,</span><span class="ph token number">0xfc</span><span class="ph token punctuation">,</span><span class="ph token number">0xfd</span><span class="ph token punctuation">,</span><span class="ph token number">0xfe</span><span class="ph token punctuation">,</span><span class="ph token number">0xff</span>
+<span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">delay</span><span class="ph token punctuation">(</span>uint32_t count<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint32_t i<span class="ph token punctuation">;</span>
+        
+    <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>i <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> i <span class="ph token operator">&lt;</span> count<span class="ph token punctuation">;</span> i<span class="ph token operator">++</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span><span class="ph token keyword">asm</span><span class="ph token punctuation">(</span><span class="ph token string">"NOP"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>        
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+bool APP_TWIHS_Callback <span class="ph token punctuation">(</span> TWIHS_SLAVE_TRANSFER_EVENT event<span class="ph token punctuation">,</span> uintptr_t contextHandle <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint8_t rxByte<span class="ph token punctuation">;</span>
+    
+    <span class="ph token keyword">switch</span><span class="ph token punctuation">(</span>event<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">case</span> TWIHS_SLAVE_TRANSFER_EVENT_ADDR_MATCH<span class="ph token operator">:</span>
+            <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>eepromData<span class="ph token punctuation">.</span>internalWriteInProgress <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span>
+            <span class="ph token punctuation">{</span>                              
+                <span class="ph token comment">/* Reset the indexes */</span>
+                eepromData<span class="ph token punctuation">.</span>addrIndex <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+                eepromData<span class="ph token punctuation">.</span>wrBufferIndex <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>                
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token keyword">case</span> TWIHS_SLAVE_TRANSFER_EVENT_RX_READY<span class="ph token operator">:</span>
+            
+            rxByte <span class="ph token operator">=</span> <span class="ph token function">TWIHS0_ReadByte</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            
+            <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>eepromData<span class="ph token punctuation">.</span>internalWriteInProgress <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token comment">/* Read the data sent by I2C Master */</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>eepromData<span class="ph token punctuation">.</span>addrIndex <span class="ph token operator">&lt;</span> <span class="ph token number">2</span><span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint8_t<span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>eepromData<span class="ph token punctuation">.</span>currentAddrPtr<span class="ph token punctuation">)</span><span class="ph token punctuation">[</span>eepromData<span class="ph token punctuation">.</span>addrIndex<span class="ph token operator">++</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> rxByte<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                <span class="ph token keyword">else</span>
+                <span class="ph token punctuation">{</span>
+                    eepromData<span class="ph token punctuation">.</span>wrBuffer<span class="ph token punctuation">[</span><span class="ph token punctuation">(</span>eepromData<span class="ph token punctuation">.</span>wrBufferIndex <span class="ph token operator">&amp;</span> EEPROM_PAGE_SIZE_MASK<span class="ph token punctuation">)</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> rxByte<span class="ph token punctuation">;</span>
+                    eepromData<span class="ph token punctuation">.</span>wrBufferIndex<span class="ph token operator">++</span><span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token keyword">case</span> TWIHS_SLAVE_TRANSFER_EVENT_TX_READY<span class="ph token operator">:</span>
+            <span class="ph token comment">/* Provide the EEPROM data requested by the I2C Master */</span>
+            <span class="ph token function">TWIHS0_WriteByte</span><span class="ph token punctuation">(</span>EEPROM_EmulationBuffer<span class="ph token punctuation">[</span>eepromData<span class="ph token punctuation">.</span>currentAddrPtr<span class="ph token operator">++</span><span class="ph token punctuation">]</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>eepromData<span class="ph token punctuation">.</span>currentAddrPtr <span class="ph token operator">&gt;=</span> EEPROM_SIZE_BYTES<span class="ph token punctuation">)</span>
+            <span class="ph token punctuation">{</span>
+                eepromData<span class="ph token punctuation">.</span>currentAddrPtr <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token keyword">case</span> TWIHS_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE<span class="ph token operator">:</span>
+            <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>eepromData<span class="ph token punctuation">.</span>wrBufferIndex <span class="ph token operator">&gt;</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span>
+            <span class="ph token punctuation">{</span>
+                <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>eepromData<span class="ph token punctuation">.</span>wrBufferIndex <span class="ph token operator">&gt;</span> EEPROM_PAGE_SIZE_BYTES<span class="ph token punctuation">)</span>
+                <span class="ph token punctuation">{</span>
+                    eepromData<span class="ph token punctuation">.</span>wrBufferIndex <span class="ph token operator">=</span> EEPROM_PAGE_SIZE_BYTES<span class="ph token punctuation">;</span>
+                <span class="ph token punctuation">}</span>
+                eepromData<span class="ph token punctuation">.</span>wrAddr <span class="ph token operator">=</span> eepromData<span class="ph token punctuation">.</span>currentAddrPtr<span class="ph token punctuation">;</span>
+                eepromData<span class="ph token punctuation">.</span>nWrBytes <span class="ph token operator">=</span> eepromData<span class="ph token punctuation">.</span>wrBufferIndex<span class="ph token punctuation">;</span>
+
+                <span class="ph token comment">/* Update the current address pointer to allow for sequential read */</span>
+                eepromData<span class="ph token punctuation">.</span>currentAddrPtr <span class="ph token operator">+=</span> eepromData<span class="ph token punctuation">.</span>wrBufferIndex<span class="ph token punctuation">;</span>
+
+                <span class="ph token comment">/* Reset the indexes */</span>
+                eepromData<span class="ph token punctuation">.</span>addrIndex <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+                eepromData<span class="ph token punctuation">.</span>wrBufferIndex <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+                <span class="ph token comment">/* Set busy flag to send NAK for any write requests */</span>
+                eepromData<span class="ph token punctuation">.</span>internalWriteInProgress <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+                
+                <span class="ph token comment">/* Send NACK for next data packets from I2C master */</span>
+                <span class="ph token function">TWIHS0_NACKDataPhase</span><span class="ph token punctuation">(</span>true<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                
+                eepromData<span class="ph token punctuation">.</span>eepromCommand <span class="ph token operator">=</span> EEPROM_CMD_WRITE<span class="ph token punctuation">;</span>
+            <span class="ph token punctuation">}</span>
+            <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+        <span class="ph token keyword">default</span><span class="ph token operator">:</span>
+            <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token keyword">return</span> true<span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">EEPROM_StateMachine</span><span class="ph token punctuation">(</span><span class="ph token keyword">void</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token keyword">switch</span><span class="ph token punctuation">(</span>eepromData<span class="ph token punctuation">.</span>eepromCommand<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">case</span> EEPROM_CMD_WRITE<span class="ph token operator">:</span>
+            <span class="ph token function">memcpy</span><span class="ph token punctuation">(</span><span class="ph token operator">&amp;</span>EEPROM_EmulationBuffer<span class="ph token punctuation">[</span>eepromData<span class="ph token punctuation">.</span>wrAddr<span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>eepromData<span class="ph token punctuation">.</span>wrBuffer<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> eepromData<span class="ph token punctuation">.</span>nWrBytes<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            
+            <span class="ph token comment">/* Simulate busy condition. NACK will be sent while application loops through the delay. */</span>
+            <span class="ph token function">delay</span><span class="ph token punctuation">(</span><span class="ph token number">10000</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            
+            eepromData<span class="ph token punctuation">.</span>internalWriteInProgress <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+            eepromData<span class="ph token punctuation">.</span>eepromCommand <span class="ph token operator">=</span> EEPROM_CMD_IDLE<span class="ph token punctuation">;</span>
+            
+            <span class="ph token comment">/* Internal write is not in progress. ACK the data packets. */</span>
+            <span class="ph token function">TWIHS0_NACKDataPhase</span><span class="ph token punctuation">(</span>false<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            
+            <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+        <span class="ph token keyword">case</span> EEPROM_CMD_IDLE<span class="ph token operator">:</span>
+            <span class="ph token comment">/* Do nothing */</span>
+            <span class="ph token keyword">break</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    eepromData<span class="ph token punctuation">.</span>eepromCommand <span class="ph token operator">=</span> EEPROM_CMD_IDLE<span class="ph token punctuation">;</span>
+
+    <span class="ph token function">TWIHS0_CallbackRegister</span><span class="ph token punctuation">(</span>APP_TWIHS_Callback<span class="ph token punctuation">,</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span> true <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token function">EEPROM_StateMachine</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    <span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d918195e3884"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d918195e3886"><span>Description</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d918195e3888"><span>Master mode</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d918195e3890"><span>Slave mode (interrupt disabled)</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d918195e3892"><span>Slave mode (interrupt enabled)</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_Initialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Initializes the instance of the TWIHS peripheral in either master or slave mode</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_Read</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Reads data from the TWIHS slave</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>No</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_Write</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Writes data to the TWIHS slave</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>No</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_WriteRead</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Write and Read data from Slave</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>No</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_IsBusy</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Returns the peripheral busy status</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_ErrorGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Returns the TWIHS error that occurred on the bus</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>No</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_TransferSetup</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Dynamic setup of TWIHS Peripheral</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>No</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_CallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Sets the pointer to the function (and it's context) to be called when the given TWIHS's transfer events occur</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_ReadByte</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Read the received TWIHS byte</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_WriteByte</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Write a data byte to TWIHS master</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_TransferDirGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Returns the TWIHS transfer direction</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_LastByteAckStatusGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Returns the ACK status of the last byte written to the TWIHS master</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_NACKDataPhase</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Configures the hardware to send NAK for the next data phase</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3884 "><span>TWIHSx_StatusGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3886 "><span>Returns the TWIHS hardware status flags</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3888 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3890 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e3892 "><span>No</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d918195e4063"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d918195e4065"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d918195e4067"><span>Description</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d918195e4069"><span>Master mode</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d918195e4071"><span>Slave mode (interrupt disabled)</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d918195e4073"><span>Slave mode (interrupt enabled)</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4063 "><span>TWIHS_ERROR</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4065 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4067 "><span>Defines the possible errors that the TWIHS peripheral can generate in TWIHS master mode</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4069 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4071 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4073 "><span>No</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4063 "><span>TWIHS_TRANSFER_SETUP</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4065 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4067 "><span>TWIHS transfer setup data structure</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4069 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4071 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4073 "><span>No</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4063 "><span>TWIHS_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4065 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4067 "><span>Defines the data type and function signature for the TWIHS peripheral callback function in master mode</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4069 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4071 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4073 "><span>No</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4063 "><span>TWIHS_SLAVE_TRANSFER_DIR</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4065 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4067 "><span>Defines the enum for TWIHS data transfer direction</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4069 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4071 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4073 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4063 "><span>TWIHS_SLAVE_ACK_STATUS</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4065 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4067 "><span>Defines the enum for the TWIHS acknowledgement</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4069 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4071 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4073 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4063 "><span>TWIHS_SLAVE_TRANSFER_EVENT</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4065 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4067 "><span>Defines the enum for the TWIHS slave transfer event</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4069 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4071 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4073 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4063 "><span>TWIHS_SLAVE_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4065 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4067 "><span>Defines the data type and function signature for the TWIHS Slave callback function</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4069 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4071 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4073 "><span>Yes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4063 "><span>TWIHS_SLAVE_STATUS_FLAG</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4065 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4067 "><span>Defines the list of possible TWIHS slave events</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4069 "><span>No</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4071 "><span>Yes</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d918195e4073 "><span>No</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

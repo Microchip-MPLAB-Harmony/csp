@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Timer(TMR)" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="timertmr" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Timer(TMR)</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-timertmr" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-4FD9BFDE-4887-4C40-B254-C39D2B1DE0F5"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="timertmr">
+<h1 class="title topictitle1" id="ariaid-title1">Timer(TMR)</h1><div class="body"><p class="p">Depending on the specific variant, the PIC32M device family offers several 16-bit timers. These timers are designated as Timer1, Timer2, Timer3, ..., etc.
+Timers are useful for generating accurate time-based periodic interrupt events for software applications or real-time operating systems. Other uses include counting external pulses or accurate timing measurement of external events by using the timer's gate feature. With certain exceptions, all of the timers have the same functional circuitry.</p>
+<p class="p">The PIC32 has two kinds of timers:</p>
+<p class="p"><strong class="ph b">Timer1</strong></p>
+<p class="p">All timers can run when the Central Processing Unit (CPU) is in idle mode, but only Timer1's asynchronous external clock mode enables it to run while the CPU is in sleep. This, combined with its ability to be driven by a secondary oscillator, allows the timer to function as a real-time clock (RTC).</p>
+<p class="p"><strong class="ph b">Timer2, 3, 4, etc ... </strong></p>
+<p class="p"><em class="ph i">This peripheral library covers timers of this category.</em></p>
+<p class="p">Each timer has its own 16-bit counter and period registers. A 32-bit timer can be created by combining two timers (e.g. Timer2 &amp; Timer3). In this case, the 32-bit timer is controlled by the even number timer control registers (e.g. Timer2). When an interrupt event occurs, the odd number timer generates the event (e.g. Timer3). The timer supports the following features.
+16-bit and 32-bit modes
+Synchronous Internal Timer
+Synchronous Internal Gated Timer
+Synchronous External Timer</p>
+<p class="p"><strong class="ph b">Timer Operation (non-gate mode)</strong>
+When a timer is not in gate mode, it will generate an interrupt event when the value in the counter matches the value in the period register. When this match occurs, the counter is reset to zero, and the timer starts counting again. Note that if interrupts are disabled, the timer interrupt flag, TxIF, will still be set.</p>
+<p class="p"><strong class="ph b">Timer Operation (Gate mode)</strong>
+You can use the timer's gate feature to accurately measure the time for an external event. When the timers are in gate mode, the counters (driven by an internal clock) only increment when the TxCK pin is high. When this pin goes low, the timer stops incrementing and the timer interrupt flag, TxIF, is set. Note that in this mode, an interrupt event is not generated when the timer value matches the period register.</p>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p">Timer mode is used for periodic interrupt generation. When the timer is enabled, it increments by one on every rising edge of the input clock, and generates an interrupt on a period match and the registered callback function will be called.</p>
+<p class="p"><strong class="ph b">Callback method</strong>
+This example demonstrates how to use the timer to generate periodic callback.</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d593356e45', this);">Copy</button><code id="d593356e45" content="/* This function is called after period expires */&#xA;void TIMER2_EventHandler(uint32_t status, uintptr_t context)&#xA;{&#xA;    /* Toggle LED */&#xA;    LED_Toggle();&#xA;}&#xA;&#xA;int main(void)&#xA;{&#xA;    /* Register callback function Timer interrupt */&#xA;    TMR2_CallbackRegister(TIMER2_EventHandler,(uintptr_t)NULL);&#xA;&#xA;    /* Start the timer channel 0*/&#xA;    TMR2_Start();&#xA;}"><span class="ph token comment">/* This function is called after period expires */</span>
+<span class="ph token keyword">void</span> <span class="ph token function">TIMER2_EventHandler</span><span class="ph token punctuation">(</span>uint32_t status<span class="ph token punctuation">,</span> uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Toggle LED */</span>
+    <span class="ph token function">LED_Toggle</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> <span class="ph token function">main</span><span class="ph token punctuation">(</span><span class="ph token keyword">void</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Register callback function Timer interrupt */</span>
+    <span class="ph token function">TMR2_CallbackRegister</span><span class="ph token punctuation">(</span>TIMER2_EventHandler<span class="ph token punctuation">,</span><span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span><span class="ph token constant">NULL</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Start the timer channel 0*/</span>
+    <span class="ph token function">TMR2_Start</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">peripheral library provides the following interfaces:</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d593356e150"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d593356e152"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e150 "><span>void</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e152 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e150 "><span>TMRx_Initialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e152 "><span>Initializes given instance of TMR</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e150 "><span>TMRx_Start</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e152 "><span>Starts the given Timer</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e150 "><span>TMRx_Stop</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e152 "><span>Stops the given Timer counter</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e150 "><span>TMRx_PeriodSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e152 "><span>Sets the period value of a given timer</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e150 "><span>TMRx_PeriodGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e152 "><span>Reads the period value of given timer</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e150 "><span>TMRx_CounterGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e152 "><span>Reads the timer counter value</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e150 "><span>TMRx_FrequencyGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e152 "><span>Provides the given timer's counter-increment frequency</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e150 "><span>TMRx_InterruptEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e152 "><span>Enable TMR overflow interrupt</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e150 "><span>TMRx_InterruptDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e152 "><span>Disable TMR overflow interrupt</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e150 "><span>TMRx_CallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e152 "><span>Sets the callback_fn function for an match</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d593356e220"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d593356e222"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d593356e224"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e220 "><span>TMR_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e222 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d593356e224 "><span>Defines the function pointer data type and function signature for the TMRx callback function</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

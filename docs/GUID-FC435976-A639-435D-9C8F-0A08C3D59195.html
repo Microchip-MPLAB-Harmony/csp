@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Direct Memory Access Controller (DMA)" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="direct-memory-access-controller-dma" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Direct Memory Access Controller (DMA)</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-direct-memory-access-controller-dma" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-FC435976-A639-435D-9C8F-0A08C3D59195"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="direct-memory-access-controller-dma">
+<h1 class="title topictitle1" id="ariaid-title1">Direct Memory Access Controller (DMA)</h1><div class="body"><p class="p">The DMA Controller (DMAC) can transfer data between memories and
+peripherals, and thus off-load these tasks from the CPU. It enables
+high data transfer rates with minimum CPU intervention, and frees up
+CPU time. With access to all peripherals, the DMAC can handle automatic
+transfer of data between communication modules. DMAC has several DMA
+channels and each channel is fully programmable and provides both
+peripheral or memory-to-memory transfers.</p>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p"><u class="ph u">DMA Memory to Peripheral and Peripheral to Memory transfer:</u></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d604713e18', this);">Copy</button><code id="d604713e18" content="\#define MINIMUM_DMA_BUFFER_SIZE                 (32)&#xA;\#define NUM_BYTES_TO_READ                       (10)&#xA;\#define LED_ON                                  LED0_Clear&#xA;\#define LED_OFF                                 LED0_Set&#xA;&#xA;static __attribute__ ((aligned (32))) char startMessage[192] =&#xA;&#34;**** DMAC USART echo demo ****\\r\\n\\&#xA;\**** Type a buffer of 10 characters and observe it echo back using DMA ****\\r\\n\\&#xA;\**** LED toggles each time the buffer is echoed ****\\r\\n&#34;;&#xA;&#xA;static __attribute__ ((aligned (32))) char receiveBuffer[MINIMUM_DMA_BUFFER_SIZE] = {0};&#xA;static __attribute__ ((aligned (32))) char echoBuffer[MINIMUM_DMA_BUFFER_SIZE] = {0};&#xA;&#xA;&#xA;static volatile bool writeComplete = false;&#xA;static volatile bool readComplete = false;&#xA;&#xA;static void TransmitCompleteCallback(DMA_TRANSFER_EVENT event, uintptr_t contextHandle)&#xA;{&#xA;    if (event &amp; DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE)&#xA;    {&#xA;        writeComplete = true;&#xA;    }&#xA;}&#xA;&#xA;static void ReceiveCompleteCallback(DMA_TRANSFER_EVENT event, uintptr_t contextHandle)&#xA;{&#xA;    if (event &amp; DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE)&#xA;    {&#xA;        readComplete = true;&#xA;    }&#xA;}&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;&#xA;    DMA_ChannelCallbackRegister(DMA_CHANNEL_0, TransmitCompleteCallback, 0);&#xA;    DMA_ChannelCallbackRegister(DMA_CHANNEL_1, ReceiveCompleteCallback, 0);&#xA;&#xA;    /* Clean cache before submitting DMA request, to move data from data cache to main memory */&#xA;    DCACHE_CLEAN_BY_ADDR((uint32_t *)startMessage, strlen(startMessage));&#xA;    DMA_ChannelTransfer(DMA_CHANNEL_0, startMessage, (const void *)&amp;SERCOM5_REGS-\&gt;USART_INT.SERCOM_DATA, strlen(startMessage));&#xA;&#xA;    while ( true )&#xA;    {&#xA;        if(readComplete == true)&#xA;        {&#xA;            /* Echo back received buffer and Toggle LED */&#xA;            readComplete = false;&#xA;&#xA;            memcpy(echoBuffer, receiveBuffer, NUM_BYTES_TO_READ);&#xA;            echoBuffer[NUM_BYTES_TO_READ] = '\\r';&#xA;            echoBuffer[NUM_BYTES_TO_READ + 1] ='\\n';&#xA;&#xA;            /* Clean cache before submitting DMA request, to move data from data cache to main memory */&#xA;            DCACHE_CLEAN_BY_ADDR((uint32_t *)echoBuffer, (NUM_BYTES_TO_READ + 2));&#xA;&#xA;            DMA_ChannelTransfer(DMA_CHANNEL_0, echoBuffer, (const void *)&amp;SERCOM5_REGS-\&gt;USART_INT.SERCOM_DATA, (NUM_BYTES_TO_READ + 2));&#xA;            LED0_Toggle();&#xA;        }&#xA;        else if(writeComplete == true)&#xA;        {&#xA;            /* Now, submit DMA request to read user data */&#xA;            writeComplete = false;&#xA;&#xA;            /* Invalidate cache lines before submitting DMA read request */&#xA;            DCACHE_INVALIDATE_BY_ADDR((uint32_t *)receiveBuffer, NUM_BYTES_TO_READ);&#xA;&#xA;            DMA_ChannelTransfer(DMA_CHANNEL_1, (const void *)&amp;SERCOM5_REGS-\&gt;USART_INT.SERCOM_DATA, receiveBuffer, NUM_BYTES_TO_READ);&#xA;        }&#xA;        else&#xA;        {&#xA;            /* Repeat the loop */&#xA;            ;&#xA;        }&#xA;    }&#xA;&#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    \return ( EXIT_FAILURE );&#xA;}">\#define MINIMUM_DMA_BUFFER_SIZE                 <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span>
+\#define NUM_BYTES_TO_READ                       <span class="ph token punctuation">(</span><span class="ph token number">10</span><span class="ph token punctuation">)</span>
+\#define LED_ON                                  LED0_Clear
+\#define LED_OFF                                 LED0_Set
+
+<span class="ph token keyword">static</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> <span class="ph token keyword">char</span> startMessage<span class="ph token punctuation">[</span><span class="ph token number">192</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span>
+"<span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span> DMAC USART echo demo <span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span>\\r\\n\\
+\<span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span> Type a buffer of <span class="ph token number">10</span> characters and observe it echo back using DMA <span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span>\\r\\n\\
+\<span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span> LED toggles each time the buffer is echoed <span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span>\\r\\n"<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">static</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> <span class="ph token keyword">char</span> receiveBuffer<span class="ph token punctuation">[</span>MINIMUM_DMA_BUFFER_SIZE<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token number">0</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> <span class="ph token keyword">char</span> echoBuffer<span class="ph token punctuation">[</span>MINIMUM_DMA_BUFFER_SIZE<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token number">0</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+
+
+<span class="ph token keyword">static</span> <span class="ph token keyword">volatile</span> bool writeComplete <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> <span class="ph token keyword">volatile</span> bool readComplete <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">static</span> <span class="ph token keyword">void</span> <span class="ph token function">TransmitCompleteCallback</span><span class="ph token punctuation">(</span>DMA_TRANSFER_EVENT event<span class="ph token punctuation">,</span> uintptr_t contextHandle<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>event <span class="ph token operator">&amp;</span> DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        writeComplete <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">static</span> <span class="ph token keyword">void</span> <span class="ph token function">ReceiveCompleteCallback</span><span class="ph token punctuation">(</span>DMA_TRANSFER_EVENT event<span class="ph token punctuation">,</span> uintptr_t contextHandle<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>event <span class="ph token operator">&amp;</span> DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        readComplete <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DMA_ChannelCallbackRegister</span><span class="ph token punctuation">(</span>DMA_CHANNEL_0<span class="ph token punctuation">,</span> TransmitCompleteCallback<span class="ph token punctuation">,</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">DMA_ChannelCallbackRegister</span><span class="ph token punctuation">(</span>DMA_CHANNEL_1<span class="ph token punctuation">,</span> ReceiveCompleteCallback<span class="ph token punctuation">,</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Clean cache before submitting DMA request, to move data from data cache to main memory */</span>
+    <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>startMessage<span class="ph token punctuation">,</span> <span class="ph token function">strlen</span><span class="ph token punctuation">(</span>startMessage<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">DMA_ChannelTransfer</span><span class="ph token punctuation">(</span>DMA_CHANNEL_0<span class="ph token punctuation">,</span> startMessage<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>SERCOM5_REGS<span class="ph token operator">-</span>\<span class="ph token operator">&gt;</span>USART_INT<span class="ph token punctuation">.</span>SERCOM_DATA<span class="ph token punctuation">,</span> <span class="ph token function">strlen</span><span class="ph token punctuation">(</span>startMessage<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span> true <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">if</span><span class="ph token punctuation">(</span>readComplete <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token comment">/* Echo back received buffer and Toggle LED */</span>
+            readComplete <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+            <span class="ph token function">memcpy</span><span class="ph token punctuation">(</span>echoBuffer<span class="ph token punctuation">,</span> receiveBuffer<span class="ph token punctuation">,</span> NUM_BYTES_TO_READ<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            echoBuffer<span class="ph token punctuation">[</span>NUM_BYTES_TO_READ<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token string">'\\r'</span><span class="ph token punctuation">;</span>
+            echoBuffer<span class="ph token punctuation">[</span>NUM_BYTES_TO_READ <span class="ph token operator">+</span> <span class="ph token number">1</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span><span class="ph token string">'\\n'</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token comment">/* Clean cache before submitting DMA request, to move data from data cache to main memory */</span>
+            <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>echoBuffer<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>NUM_BYTES_TO_READ <span class="ph token operator">+</span> <span class="ph token number">2</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token function">DMA_ChannelTransfer</span><span class="ph token punctuation">(</span>DMA_CHANNEL_0<span class="ph token punctuation">,</span> echoBuffer<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>SERCOM5_REGS<span class="ph token operator">-</span>\<span class="ph token operator">&gt;</span>USART_INT<span class="ph token punctuation">.</span>SERCOM_DATA<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>NUM_BYTES_TO_READ <span class="ph token operator">+</span> <span class="ph token number">2</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            <span class="ph token function">LED0_Toggle</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        <span class="ph token keyword">else</span> <span class="ph token keyword">if</span><span class="ph token punctuation">(</span>writeComplete <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token comment">/* Now, submit DMA request to read user data */</span>
+            writeComplete <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+            <span class="ph token comment">/* Invalidate cache lines before submitting DMA read request */</span>
+            <span class="ph token function">DCACHE_INVALIDATE_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>receiveBuffer<span class="ph token punctuation">,</span> NUM_BYTES_TO_READ<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token function">DMA_ChannelTransfer</span><span class="ph token punctuation">(</span>DMA_CHANNEL_1<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>SERCOM5_REGS<span class="ph token operator">-</span>\<span class="ph token operator">&gt;</span>USART_INT<span class="ph token punctuation">.</span>SERCOM_DATA<span class="ph token punctuation">,</span> receiveBuffer<span class="ph token punctuation">,</span> NUM_BYTES_TO_READ<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        <span class="ph token keyword">else</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token comment">/* Repeat the loop */</span>
+            <span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    \<span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><u class="ph u">DMA Memory to Memory transfer:</u></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d604713e823', this);">Copy</button><code id="d604713e823" content="\#define LED_On      LED0_Clear&#xA;\#define LED_Off     LED0_Set&#xA;&#xA;\#define TRANSFER_SIZE 1024&#xA;&#xA;__attribute__ ((aligned (32))) uint8_t srcBuffer[TRANSFER_SIZE] = {0};&#xA;__attribute__ ((aligned (32))) uint8_t dstBuffer[TRANSFER_SIZE] = {0};&#xA;&#xA;volatile bool dmaXferDone = false;&#xA;volatile bool dmaXferError = false;&#xA;&#xA;void DMA_EventHandler(DMA_TRANSFER_EVENT status, uintptr_t context)&#xA;{&#xA;    if(status &amp; DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE)&#xA;    {&#xA;        dmaXferDone = true;&#xA;    }&#xA;    else if (status &amp; DMA_TRANSFER_EVENT_ERROR)&#xA;    {&#xA;        dmaXferError = true;&#xA;    }&#xA;}&#xA;&#xA;int main ( void )&#xA;{&#xA;    uint32_t i = 0;&#xA;&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;    LED_Off();&#xA;&#xA;    /* Build the srcBuffer */&#xA;    for (i = 0; i \&lt; TRANSFER_SIZE; i++)&#xA;    {&#xA;        srcBuffer[i] = i;&#xA;    }&#xA;&#xA;    printf(&#34;\\n\\r-------------------------------------------------------------&#34;);&#xA;    printf(&#34;\\n\\r\\t\\t DMA Memory Transfer DEMO\\t\\t&#34;);&#xA;    printf(&#34;\\n\\r-------------------------------------------------------------&#34;);&#xA;&#xA;    /* Register a callback with DMA PLIB to get transfer complete and error events. */&#xA;    DMA_ChannelCallbackRegister(DMA_CHANNEL_0, DMA_EventHandler, 0);&#xA;&#xA;    /* Clean cache lines having source buffer before submitting a transfer&#xA;     \* request to DMA to load the latest data in the cache to the actual&#xA;     \* memory */&#xA;    DCACHE_CLEAN_BY_ADDR((uint32_t *)srcBuffer, TRANSFER_SIZE);&#xA;&#xA;    /* Invalidate cache lines before submitting DMA request */&#xA;    DCACHE_INVALIDATE_BY_ADDR((uint32_t *)dstBuffer, TRANSFER_SIZE);&#xA;&#xA;    DMA_ChannelTransfer(DMA_CHANNEL_0, srcBuffer, dstBuffer, TRANSFER_SIZE);&#xA;&#xA;    while (dmaXferDone == false &amp;&amp; dmaXferError == false);&#xA;&#xA;    if(dmaXferDone == true)&#xA;    {&#xA;        dmaXferDone = false;&#xA;&#xA;        if(memcmp(srcBuffer, dstBuffer, TRANSFER_SIZE) == 0)&#xA;        {&#xA;            /* Successfully transferred the data using DMAC */&#xA;            printf(&#34;\\n\\r DMA Memory Transfer Successful with Data Match\\n\\r&#34;);&#xA;            LED_On();&#xA;        }&#xA;        else&#xA;        {&#xA;            /* Data transfers done, but data mismatch occurred */&#xA;            printf(&#34;\\n\\r DMA Memory Transfer Successful with Data Mismatch !!!\\n\\r&#34;);&#xA;            LED_Off();&#xA;        }&#xA;    }&#xA;    else if(dmaXferError == true)&#xA;    {&#xA;        /* Error occurred during the transfers */&#xA;        dmaXferError = false;&#xA;        printf(&#34;\\n\\r DMA Memory Transfer Error !!!\\n\\r&#34;);&#xA;        LED_Off();&#xA;    }&#xA;    else&#xA;    {&#xA;        /* Nothing to do, loop */&#xA;        ;&#xA;    }&#xA;&#xA;    while (1)&#xA;    {&#xA;&#xA;    }&#xA;&#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    \return ( EXIT_FAILURE );&#xA;}">\#define LED_On      LED0_Clear
+\#define LED_Off     LED0_Set
+
+\#define TRANSFER_SIZE <span class="ph token number">1024</span>
+
+__attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> uint8_t srcBuffer<span class="ph token punctuation">[</span>TRANSFER_SIZE<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token number">0</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+__attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> uint8_t dstBuffer<span class="ph token punctuation">[</span>TRANSFER_SIZE<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token number">0</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">volatile</span> bool dmaXferDone <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+<span class="ph token keyword">volatile</span> bool dmaXferError <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">DMA_EventHandler</span><span class="ph token punctuation">(</span>DMA_TRANSFER_EVENT status<span class="ph token punctuation">,</span> uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token keyword">if</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dmaXferDone <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> DMA_TRANSFER_EVENT_ERROR<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dmaXferError <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint32_t i <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">LED_Off</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Build the srcBuffer */</span>
+    <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>i <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> i \<span class="ph token operator">&lt;</span> TRANSFER_SIZE<span class="ph token punctuation">;</span> i<span class="ph token operator">++</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        srcBuffer<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> i<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r-------------------------------------------------------------"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r\\t\\t DMA Memory Transfer DEMO\\t\\t"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r-------------------------------------------------------------"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Register a callback with DMA PLIB to get transfer complete and error events. */</span>
+    <span class="ph token function">DMA_ChannelCallbackRegister</span><span class="ph token punctuation">(</span>DMA_CHANNEL_0<span class="ph token punctuation">,</span> DMA_EventHandler<span class="ph token punctuation">,</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Clean cache lines having source buffer before submitting a transfer
+     \* request to DMA to load the latest data in the cache to the actual
+     \* memory */</span>
+    <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>srcBuffer<span class="ph token punctuation">,</span> TRANSFER_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Invalidate cache lines before submitting DMA request */</span>
+    <span class="ph token function">DCACHE_INVALIDATE_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>dstBuffer<span class="ph token punctuation">,</span> TRANSFER_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DMA_ChannelTransfer</span><span class="ph token punctuation">(</span>DMA_CHANNEL_0<span class="ph token punctuation">,</span> srcBuffer<span class="ph token punctuation">,</span> dstBuffer<span class="ph token punctuation">,</span> TRANSFER_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span>dmaXferDone <span class="ph token operator">==</span> false <span class="ph token operator">&amp;&amp;</span> dmaXferError <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">if</span><span class="ph token punctuation">(</span>dmaXferDone <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dmaXferDone <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+        <span class="ph token keyword">if</span><span class="ph token punctuation">(</span><span class="ph token function">memcmp</span><span class="ph token punctuation">(</span>srcBuffer<span class="ph token punctuation">,</span> dstBuffer<span class="ph token punctuation">,</span> TRANSFER_SIZE<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token comment">/* Successfully transferred the data using DMAC */</span>
+            <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r DMA Memory Transfer Successful with Data Match\\n\\r"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            <span class="ph token function">LED_On</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        <span class="ph token keyword">else</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token comment">/* Data transfers done, but data mismatch occurred */</span>
+            <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r DMA Memory Transfer Successful with Data Mismatch !!!\\n\\r"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            <span class="ph token function">LED_Off</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span><span class="ph token punctuation">(</span>dmaXferError <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">/* Error occurred during the transfers */</span>
+        dmaXferError <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r DMA Memory Transfer Error !!!\\n\\r"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token function">LED_Off</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">/* Nothing to do, loop */</span>
+        <span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    \<span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><u class="ph u">DMA Linked List transfer:</u></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d604713e1456', this);">Copy</button><code id="d604713e1456" content="\#define SRC_BUFF1_SIZE                  32&#xA;\#define SRC_BUFF2_SIZE                  128&#xA;\#define SRC_BUFF3_SIZE                  256&#xA;&#xA;\#define DST_BUFF_SIZE                   (SRC_BUFF1_SIZE + SRC_BUFF2_SIZE + SRC_BUFF3_SIZE)&#xA;&#xA;&#xA;static DMA_DESCRIPTOR_REGS dmaDescRegs[3] = {0};&#xA;static volatile bool dmaLLXferDone = false;&#xA;static volatile bool dmaXferError = false;&#xA;&#xA;static __attribute__ ((aligned (32))) uint8_t srcBuffer1[SRC_BUFF1_SIZE];&#xA;static __attribute__ ((aligned (32))) uint8_t srcBuffer2[SRC_BUFF2_SIZE];&#xA;static __attribute__ ((aligned (32))) uint8_t srcBuffer3[SRC_BUFF3_SIZE];&#xA;&#xA;static __attribute__ ((aligned (32))) uint8_t dstBuffer[DST_BUFF_SIZE];&#xA;&#xA;void DMA_EventHandler(DMA_TRANSFER_EVENT status, uintptr_t context)&#xA;{&#xA;    if(status &amp; DMA_TRANSFER_EVENT_LINKED_LIST_TRANSFER_COMPLETE)&#xA;    {&#xA;        dmaLLXferDone = true;&#xA;    }&#xA;    else if (status &amp; DMA_TRANSFER_EVENT_ERROR)&#xA;    {&#xA;        dmaXferError = true;&#xA;    }&#xA;}&#xA;&#xA;void DMA_LinkedListDescSetup(void)&#xA;{&#xA;    dmaDescRegs[0].DMA_BDNXT = (uint32_t)&amp;dmaDescRegs[1];&#xA;&#xA;    dmaDescRegs[0].DMA_BDCFG.SSA = 1;&#xA;    dmaDescRegs[0].DMA_BDCFG.DSA = 1;&#xA;    dmaDescRegs[0].DMA_BDCFG.XSIZ = 1;&#xA;    dmaDescRegs[0].DMA_BDCFG.ENABLE = 1;&#xA;    dmaDescRegs[0].DMA_BDCFG.LLEN = 1;&#xA;    dmaDescRegs[0].DMA_BDCFG.SWFRC = 1;&#xA;    dmaDescRegs[0].DMA_BDSSA = (uint32_t)srcBuffer1;&#xA;    dmaDescRegs[0].DMA_BDDSA = (uint32_t)&amp;dstBuffer[0];&#xA;    dmaDescRegs[0].DMA_BDXSIZ.CSZ = 1;&#xA;    dmaDescRegs[0].DMA_BDXSIZ.BLKSZ = SRC_BUFF1_SIZE;&#xA;&#xA;    /*------------------------------------------------------*/&#xA;    dmaDescRegs[1].DMA_BDNXT = (uint32_t)&amp;dmaDescRegs[2];&#xA;&#xA;    dmaDescRegs[1].DMA_BDCFG.SSA = 1;&#xA;    dmaDescRegs[1].DMA_BDCFG.DSA = 1;&#xA;    dmaDescRegs[1].DMA_BDCFG.XSIZ = 1;&#xA;    dmaDescRegs[1].DMA_BDCFG.ENABLE = 1;&#xA;    dmaDescRegs[1].DMA_BDCFG.LLEN = 1;&#xA;    dmaDescRegs[1].DMA_BDCFG.SWFRC = 1;&#xA;    dmaDescRegs[1].DMA_BDSSA = (uint32_t)srcBuffer2;&#xA;    dmaDescRegs[1].DMA_BDDSA = (uint32_t)&amp;dstBuffer[SRC_BUFF1_SIZE];&#xA;    dmaDescRegs[1].DMA_BDXSIZ.CSZ = 1;&#xA;    dmaDescRegs[1].DMA_BDXSIZ.BLKSZ = SRC_BUFF2_SIZE;&#xA;&#xA;    /*------------------------------------------------------*/&#xA;    dmaDescRegs[2].DMA_BDNXT = 0xFFFFFFFF;&#xA;&#xA;    dmaDescRegs[2].DMA_BDCFG.SSA = 1;&#xA;    dmaDescRegs[2].DMA_BDCFG.DSA = 1;&#xA;    dmaDescRegs[2].DMA_BDCFG.XSIZ = 1;&#xA;    dmaDescRegs[2].DMA_BDCFG.ENABLE = 1;&#xA;    dmaDescRegs[2].DMA_BDCFG.LLEN = 0;&#xA;    dmaDescRegs[2].DMA_BDCFG.SWFRC = 1;&#xA;    dmaDescRegs[2].DMA_BDSSA = (uint32_t)srcBuffer3;&#xA;    dmaDescRegs[2].DMA_BDDSA = (uint32_t)&amp;dstBuffer[SRC_BUFF1_SIZE + SRC_BUFF2_SIZE];&#xA;    dmaDescRegs[2].DMA_BDXSIZ.CSZ = 1;&#xA;    dmaDescRegs[2].DMA_BDXSIZ.BLKSZ = SRC_BUFF3_SIZE;&#xA;}&#xA;&#xA;void initSourceBuffers(void)&#xA;{&#xA;    uint32_t i;&#xA;&#xA;    for (i = 0; i \&lt; SRC_BUFF1_SIZE; i++ )&#xA;    {&#xA;        srcBuffer1[i] = i;&#xA;    }&#xA;    for (i = 0; i \&lt; SRC_BUFF2_SIZE; i++ )&#xA;    {&#xA;        srcBuffer2[i] = i;&#xA;    }&#xA;    for (i = 0; i \&lt; SRC_BUFF3_SIZE; i++ )&#xA;    {&#xA;        srcBuffer3[i] = i;&#xA;    }&#xA;}&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;&#xA;    printf(&#34;\\n\\r-------------------------------------------------------------&#34;);&#xA;    printf(&#34;\\n\\r\\t DMA Memory Transfer Using Linked Lists \\t\\t&#34;);&#xA;    printf(&#34;\\n\\r-------------------------------------------------------------&#34;);&#xA;&#xA;    DMA_ChannelCallbackRegister(DMA_CHANNEL_0, DMA_EventHandler, 0);&#xA;&#xA;    initSourceBuffers();&#xA;&#xA;    /* Clean cache lines to push data into the main memory */&#xA;    DCACHE_CLEAN_BY_ADDR((uint32_t *)srcBuffer1, SRC_BUFF1_SIZE);&#xA;&#xA;    DCACHE_CLEAN_BY_ADDR((uint32_t *)srcBuffer2, SRC_BUFF2_SIZE);&#xA;&#xA;    DCACHE_CLEAN_BY_ADDR((uint32_t *)srcBuffer3, SRC_BUFF3_SIZE);&#xA;&#xA;    /* Invalidate cache lines before submitting DMA request */&#xA;    DCACHE_INVALIDATE_BY_ADDR((uint32_t *)dstBuffer, DST_BUFF_SIZE);&#xA;&#xA;    DMA_LinkedListDescSetup();&#xA;&#xA;    DMA_ChannelLinkedListTransfer(DMA_CHANNEL_0, dmaDescRegs);&#xA;&#xA;    while (dmaLLXferDone == false &amp;&amp; dmaXferError == false);&#xA;&#xA;    if (dmaLLXferDone == true)&#xA;    {&#xA;        if ( (memcmp(srcBuffer1, &amp;dstBuffer[0], SRC_BUFF1_SIZE) == 0) &amp;&amp;&#xA;             (memcmp(srcBuffer2, &amp;dstBuffer[SRC_BUFF1_SIZE], SRC_BUFF2_SIZE) == 0) &amp;&amp;&#xA;             (memcmp(srcBuffer3, &amp;dstBuffer[SRC_BUFF1_SIZE + SRC_BUFF2_SIZE], SRC_BUFF3_SIZE) == 0)&#xA;        )&#xA;        {&#xA;            printf(&#34;\\n\\r DMA linked list transfer successful with data match\\r\\n&#34;);&#xA;        }&#xA;        else&#xA;        {&#xA;            printf(&#34;\\n\\r DMA linked list error - data mismatch\\r\\n&#34;);&#xA;        }&#xA;    }&#xA;    else&#xA;    {&#xA;        printf(&#34;\\n\\r DMA linked list transfer error\\r\\n&#34;);&#xA;    }&#xA;&#xA;    while ( true )&#xA;    {&#xA;&#xA;    }&#xA;&#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    \return ( EXIT_FAILURE );&#xA;}">\#define SRC_BUFF1_SIZE                  <span class="ph token number">32</span>
+\#define SRC_BUFF2_SIZE                  <span class="ph token number">128</span>
+\#define SRC_BUFF3_SIZE                  <span class="ph token number">256</span>
+
+\#define DST_BUFF_SIZE                   <span class="ph token punctuation">(</span>SRC_BUFF1_SIZE <span class="ph token operator">+</span> SRC_BUFF2_SIZE <span class="ph token operator">+</span> SRC_BUFF3_SIZE<span class="ph token punctuation">)</span>
+
+
+<span class="ph token keyword">static</span> DMA_DESCRIPTOR_REGS dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">3</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token number">0</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> <span class="ph token keyword">volatile</span> bool dmaLLXferDone <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> <span class="ph token keyword">volatile</span> bool dmaXferError <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">static</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> uint8_t srcBuffer1<span class="ph token punctuation">[</span>SRC_BUFF1_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> uint8_t srcBuffer2<span class="ph token punctuation">[</span>SRC_BUFF2_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> uint8_t srcBuffer3<span class="ph token punctuation">[</span>SRC_BUFF3_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">static</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> uint8_t dstBuffer<span class="ph token punctuation">[</span>DST_BUFF_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">DMA_EventHandler</span><span class="ph token punctuation">(</span>DMA_TRANSFER_EVENT status<span class="ph token punctuation">,</span> uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token keyword">if</span><span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> DMA_TRANSFER_EVENT_LINKED_LIST_TRANSFER_COMPLETE<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dmaLLXferDone <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span> <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>status <span class="ph token operator">&amp;</span> DMA_TRANSFER_EVENT_ERROR<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        dmaXferError <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">DMA_LinkedListDescSetup</span><span class="ph token punctuation">(</span><span class="ph token keyword">void</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDNXT <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t<span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>SSA <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>DSA <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>XSIZ <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>ENABLE <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>LLEN <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>SWFRC <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDSSA <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t<span class="ph token punctuation">)</span>srcBuffer1<span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDDSA <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t<span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>dstBuffer<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDXSIZ<span class="ph token punctuation">.</span>CSZ <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDXSIZ<span class="ph token punctuation">.</span>BLKSZ <span class="ph token operator">=</span> SRC_BUFF1_SIZE<span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/*------------------------------------------------------*/</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDNXT <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t<span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>SSA <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>DSA <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>XSIZ <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>ENABLE <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>LLEN <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>SWFRC <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDSSA <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t<span class="ph token punctuation">)</span>srcBuffer2<span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDDSA <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t<span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>dstBuffer<span class="ph token punctuation">[</span>SRC_BUFF1_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDXSIZ<span class="ph token punctuation">.</span>CSZ <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">1</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDXSIZ<span class="ph token punctuation">.</span>BLKSZ <span class="ph token operator">=</span> SRC_BUFF2_SIZE<span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/*------------------------------------------------------*/</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDNXT <span class="ph token operator">=</span> <span class="ph token number">0xFFFFFFFF</span><span class="ph token punctuation">;</span>
+
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>SSA <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>DSA <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>XSIZ <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>ENABLE <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>LLEN <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDCFG<span class="ph token punctuation">.</span>SWFRC <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDSSA <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t<span class="ph token punctuation">)</span>srcBuffer3<span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDDSA <span class="ph token operator">=</span> <span class="ph token punctuation">(</span>uint32_t<span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>dstBuffer<span class="ph token punctuation">[</span>SRC_BUFF1_SIZE <span class="ph token operator">+</span> SRC_BUFF2_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDXSIZ<span class="ph token punctuation">.</span>CSZ <span class="ph token operator">=</span> <span class="ph token number">1</span><span class="ph token punctuation">;</span>
+    dmaDescRegs<span class="ph token punctuation">[</span><span class="ph token number">2</span><span class="ph token punctuation">]</span><span class="ph token punctuation">.</span>DMA_BDXSIZ<span class="ph token punctuation">.</span>BLKSZ <span class="ph token operator">=</span> SRC_BUFF3_SIZE<span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">void</span> <span class="ph token function">initSourceBuffers</span><span class="ph token punctuation">(</span><span class="ph token keyword">void</span><span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    uint32_t i<span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>i <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> i \<span class="ph token operator">&lt;</span> SRC_BUFF1_SIZE<span class="ph token punctuation">;</span> i<span class="ph token operator">++</span> <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        srcBuffer1<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> i<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>i <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> i \<span class="ph token operator">&lt;</span> SRC_BUFF2_SIZE<span class="ph token punctuation">;</span> i<span class="ph token operator">++</span> <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        srcBuffer2<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> i<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">for</span> <span class="ph token punctuation">(</span>i <span class="ph token operator">=</span> <span class="ph token number">0</span><span class="ph token punctuation">;</span> i \<span class="ph token operator">&lt;</span> SRC_BUFF3_SIZE<span class="ph token punctuation">;</span> i<span class="ph token operator">++</span> <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        srcBuffer3<span class="ph token punctuation">[</span>i<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> i<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r-------------------------------------------------------------"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r\\t DMA Memory Transfer Using Linked Lists \\t\\t"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r-------------------------------------------------------------"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DMA_ChannelCallbackRegister</span><span class="ph token punctuation">(</span>DMA_CHANNEL_0<span class="ph token punctuation">,</span> DMA_EventHandler<span class="ph token punctuation">,</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">initSourceBuffers</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Clean cache lines to push data into the main memory */</span>
+    <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>srcBuffer1<span class="ph token punctuation">,</span> SRC_BUFF1_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>srcBuffer2<span class="ph token punctuation">,</span> SRC_BUFF2_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>srcBuffer3<span class="ph token punctuation">,</span> SRC_BUFF3_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Invalidate cache lines before submitting DMA request */</span>
+    <span class="ph token function">DCACHE_INVALIDATE_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>dstBuffer<span class="ph token punctuation">,</span> DST_BUFF_SIZE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DMA_LinkedListDescSetup</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DMA_ChannelLinkedListTransfer</span><span class="ph token punctuation">(</span>DMA_CHANNEL_0<span class="ph token punctuation">,</span> dmaDescRegs<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span>dmaLLXferDone <span class="ph token operator">==</span> false <span class="ph token operator">&amp;&amp;</span> dmaXferError <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>dmaLLXferDone <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span> <span class="ph token punctuation">(</span><span class="ph token function">memcmp</span><span class="ph token punctuation">(</span>srcBuffer1<span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>dstBuffer<span class="ph token punctuation">[</span><span class="ph token number">0</span><span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> SRC_BUFF1_SIZE<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span> <span class="ph token operator">&amp;&amp;</span>
+             <span class="ph token punctuation">(</span><span class="ph token function">memcmp</span><span class="ph token punctuation">(</span>srcBuffer2<span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>dstBuffer<span class="ph token punctuation">[</span>SRC_BUFF1_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> SRC_BUFF2_SIZE<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span> <span class="ph token operator">&amp;&amp;</span>
+             <span class="ph token punctuation">(</span><span class="ph token function">memcmp</span><span class="ph token punctuation">(</span>srcBuffer3<span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>dstBuffer<span class="ph token punctuation">[</span>SRC_BUFF1_SIZE <span class="ph token operator">+</span> SRC_BUFF2_SIZE<span class="ph token punctuation">]</span><span class="ph token punctuation">,</span> SRC_BUFF3_SIZE<span class="ph token punctuation">)</span> <span class="ph token operator">==</span> <span class="ph token number">0</span><span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r DMA linked list transfer successful with data match\\r\\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        <span class="ph token keyword">else</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r DMA linked list error - data mismatch\\r\\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+    <span class="ph token keyword">else</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\\n\\r DMA linked list transfer error\\r\\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span> true <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    \<span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><u class="ph u">DMA Abort on Pattern Match:</u></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d604713e3104', this);">Copy</button><code id="d604713e3104" content="\#define LED_ON                                  LED0_Clear&#xA;\#define LED_OFF                                 LED0_Set&#xA;&#xA;\#define USART_RECEIVE_CHANNEL                   DMA_CHANNEL_0&#xA;\#define USART_TRANSMIT_CHANNEL                  DMA_CHANNEL_1&#xA;&#xA;\#define MINIMUM_DMA_BUFFER_SIZE                 (32)&#xA;\#define NUM_BYTES_TO_READ                       (20)&#xA;&#xA;static __attribute__ ((aligned (32))) char startMessage[192] =&#xA;&#34;*** DMA USART echo demo ***\\r\\n\\&#xA;\*** Press Enter key to terminate the DMA transfer ***\\r\\n\\&#xA;\*** Maximum number of characters entered must be less than 20 ***\\r\\n&#34;;&#xA;&#xA;static __attribute__ ((aligned (32))) char receiveBuffer[MINIMUM_DMA_BUFFER_SIZE] = {0};&#xA;static __attribute__ ((aligned (32))) char echoBuffer[MINIMUM_DMA_BUFFER_SIZE] = {0};&#xA;&#xA;volatile bool writeComplete = false;&#xA;volatile bool readComplete = false;&#xA;&#xA;const uint8_t new_line_ch = 0x0A;&#xA;&#xA;static void TransmitCompleteCallback(DMA_TRANSFER_EVENT event, uintptr_t contextHandle)&#xA;{&#xA;    if (event &amp; DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE)&#xA;    {&#xA;        writeComplete = true;&#xA;    }&#xA;}&#xA;&#xA;static void ReceiveCompleteCallback(DMA_TRANSFER_EVENT event, uintptr_t contextHandle)&#xA;{&#xA;    if (event &amp; DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE)&#xA;    {&#xA;        readComplete = true;&#xA;    }&#xA;}&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;&#xA;    /* Clean cache before submitting DMA request, to move data from data cache to main memory */&#xA;    DCACHE_CLEAN_BY_ADDR((uint32_t *)startMessage, strlen(startMessage));&#xA;&#xA;    /* Transmit the startMessage before turning on the pattern match */&#xA;    DMA_ChannelTransfer(USART_TRANSMIT_CHANNEL, (const void *)startMessage, (const void *)&amp;SERCOM5_REGS-\&gt;USART_INT.SERCOM_DATA, sizeof(startMessage));&#xA;&#xA;    while (DMA_ChannelIsBusy(USART_TRANSMIT_CHANNEL));&#xA;&#xA;    DMA_ChannelCallbackRegister(USART_TRANSMIT_CHANNEL, TransmitCompleteCallback,0);&#xA;    DMA_ChannelCallbackRegister(USART_RECEIVE_CHANNEL, ReceiveCompleteCallback,0);&#xA;&#xA;    /* data reception from user will stop as soon as &#34;Enter&#34; key is pressed (pattern is matched) */&#xA;    DMA_ChannelPatternMatchSetup(USART_RECEIVE_CHANNEL, DMA_PATTERN_MATCH_LEN_1BYTE, (uint16_t)(0x0D));&#xA;&#xA;    DMA_ChannelPatternMatchSetup(USART_TRANSMIT_CHANNEL, DMA_PATTERN_MATCH_LEN_1BYTE, (uint16_t)(0x0D));&#xA;&#xA;    /* Submit buffer to read user data */&#xA;    DMA_ChannelTransfer(USART_RECEIVE_CHANNEL, (const void *)&amp;SERCOM5_REGS-\&gt;USART_INT.SERCOM_DATA, (const void *)receiveBuffer, NUM_BYTES_TO_READ);&#xA;&#xA;    while ( true )&#xA;    {&#xA;        if(readComplete == true)&#xA;        {&#xA;            /* Echo back received buffer and Toggle LED */&#xA;            readComplete = false;&#xA;&#xA;            memcpy(echoBuffer, receiveBuffer, NUM_BYTES_TO_READ);&#xA;&#xA;            /* Clean cache before submitting DMA request, to move data from data cache to main memory */&#xA;            DCACHE_CLEAN_BY_ADDR((uint32_t *)echoBuffer, NUM_BYTES_TO_READ);&#xA;&#xA;            /* Since pattern matching is enabled on DMA USART TX channel, this should terminate transfer when 0x0D is found */&#xA;            DMA_ChannelTransfer(USART_TRANSMIT_CHANNEL, (const void *)echoBuffer, (const void *)&amp;SERCOM5_REGS-\&gt;USART_INT.SERCOM_DATA, NUM_BYTES_TO_READ);&#xA;            LED0_Toggle();&#xA;        }&#xA;        else if(writeComplete == true)&#xA;        {&#xA;            writeComplete = false;&#xA;&#xA;            /* Ensure to add new line character on the console before receiving the next data from user */&#xA;            DMA_ChannelTransfer(USART_TRANSMIT_CHANNEL, (const void *)&amp;new_line_ch, (const void *)&amp;SERCOM5_REGS-\&gt;USART_INT.SERCOM_DATA, 1);&#xA;            while(writeComplete == false);&#xA;&#xA;            writeComplete = false;&#xA;&#xA;            /* Invalidate cache lines before submitting DMA read request */&#xA;            DCACHE_INVALIDATE_BY_ADDR((uint32_t *)receiveBuffer, NUM_BYTES_TO_READ);&#xA;&#xA;            /* Submit buffer to read user data */&#xA;            DMA_ChannelTransfer(USART_RECEIVE_CHANNEL, (const void *)&amp;SERCOM5_REGS-\&gt;USART_INT.SERCOM_DATA, (const void *)receiveBuffer, NUM_BYTES_TO_READ);&#xA;        }&#xA;        else&#xA;        {&#xA;            /* Repeat the loop */&#xA;            ;&#xA;        }&#xA;    }&#xA;&#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    \return ( EXIT_FAILURE );&#xA;}">\#define LED_ON                                  LED0_Clear
+\#define LED_OFF                                 LED0_Set
+
+\#define USART_RECEIVE_CHANNEL                   DMA_CHANNEL_0
+\#define USART_TRANSMIT_CHANNEL                  DMA_CHANNEL_1
+
+\#define MINIMUM_DMA_BUFFER_SIZE                 <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span>
+\#define NUM_BYTES_TO_READ                       <span class="ph token punctuation">(</span><span class="ph token number">20</span><span class="ph token punctuation">)</span>
+
+<span class="ph token keyword">static</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> <span class="ph token keyword">char</span> startMessage<span class="ph token punctuation">[</span><span class="ph token number">192</span><span class="ph token punctuation">]</span> <span class="ph token operator">=</span>
+"<span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span> DMA USART echo demo <span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span>\\r\\n\\
+\<span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span> Press Enter key to terminate the DMA transfer <span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span>\\r\\n\\
+\<span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span> Maximum number of characters entered must be less than <span class="ph token number">20</span> <span class="ph token operator">*</span><span class="ph token operator">*</span><span class="ph token operator">*</span>\\r\\n"<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">static</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> <span class="ph token keyword">char</span> receiveBuffer<span class="ph token punctuation">[</span>MINIMUM_DMA_BUFFER_SIZE<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token number">0</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+<span class="ph token keyword">static</span> __attribute__ <span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>aligned <span class="ph token punctuation">(</span><span class="ph token number">32</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span> <span class="ph token keyword">char</span> echoBuffer<span class="ph token punctuation">[</span>MINIMUM_DMA_BUFFER_SIZE<span class="ph token punctuation">]</span> <span class="ph token operator">=</span> <span class="ph token punctuation">{</span><span class="ph token number">0</span><span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">volatile</span> bool writeComplete <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+<span class="ph token keyword">volatile</span> bool readComplete <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">const</span> uint8_t new_line_ch <span class="ph token operator">=</span> <span class="ph token number">0x0A</span><span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">static</span> <span class="ph token keyword">void</span> <span class="ph token function">TransmitCompleteCallback</span><span class="ph token punctuation">(</span>DMA_TRANSFER_EVENT event<span class="ph token punctuation">,</span> uintptr_t contextHandle<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>event <span class="ph token operator">&amp;</span> DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        writeComplete <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">static</span> <span class="ph token keyword">void</span> <span class="ph token function">ReceiveCompleteCallback</span><span class="ph token punctuation">(</span>DMA_TRANSFER_EVENT event<span class="ph token punctuation">,</span> uintptr_t contextHandle<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>event <span class="ph token operator">&amp;</span> DMA_TRANSFER_EVENT_BLOCK_TRANSFER_COMPLETE<span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        readComplete <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Clean cache before submitting DMA request, to move data from data cache to main memory */</span>
+    <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>startMessage<span class="ph token punctuation">,</span> <span class="ph token function">strlen</span><span class="ph token punctuation">(</span>startMessage<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Transmit the startMessage before turning on the pattern match */</span>
+    <span class="ph token function">DMA_ChannelTransfer</span><span class="ph token punctuation">(</span>USART_TRANSMIT_CHANNEL<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span>startMessage<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>SERCOM5_REGS<span class="ph token operator">-</span>\<span class="ph token operator">&gt;</span>USART_INT<span class="ph token punctuation">.</span>SERCOM_DATA<span class="ph token punctuation">,</span> <span class="ph token keyword">sizeof</span><span class="ph token punctuation">(</span>startMessage<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span><span class="ph token function">DMA_ChannelIsBusy</span><span class="ph token punctuation">(</span>USART_TRANSMIT_CHANNEL<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DMA_ChannelCallbackRegister</span><span class="ph token punctuation">(</span>USART_TRANSMIT_CHANNEL<span class="ph token punctuation">,</span> TransmitCompleteCallback<span class="ph token punctuation">,</span><span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">DMA_ChannelCallbackRegister</span><span class="ph token punctuation">(</span>USART_RECEIVE_CHANNEL<span class="ph token punctuation">,</span> ReceiveCompleteCallback<span class="ph token punctuation">,</span><span class="ph token number">0</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* data reception from user will stop as soon as "Enter" key is pressed (pattern is matched) */</span>
+    <span class="ph token function">DMA_ChannelPatternMatchSetup</span><span class="ph token punctuation">(</span>USART_RECEIVE_CHANNEL<span class="ph token punctuation">,</span> DMA_PATTERN_MATCH_LEN_1BYTE<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uint16_t<span class="ph token punctuation">)</span><span class="ph token punctuation">(</span><span class="ph token number">0x0D</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DMA_ChannelPatternMatchSetup</span><span class="ph token punctuation">(</span>USART_TRANSMIT_CHANNEL<span class="ph token punctuation">,</span> DMA_PATTERN_MATCH_LEN_1BYTE<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uint16_t<span class="ph token punctuation">)</span><span class="ph token punctuation">(</span><span class="ph token number">0x0D</span><span class="ph token punctuation">)</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Submit buffer to read user data */</span>
+    <span class="ph token function">DMA_ChannelTransfer</span><span class="ph token punctuation">(</span>USART_RECEIVE_CHANNEL<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>SERCOM5_REGS<span class="ph token operator">-</span>\<span class="ph token operator">&gt;</span>USART_INT<span class="ph token punctuation">.</span>SERCOM_DATA<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span>receiveBuffer<span class="ph token punctuation">,</span> NUM_BYTES_TO_READ<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span> true <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token keyword">if</span><span class="ph token punctuation">(</span>readComplete <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token comment">/* Echo back received buffer and Toggle LED */</span>
+            readComplete <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+            <span class="ph token function">memcpy</span><span class="ph token punctuation">(</span>echoBuffer<span class="ph token punctuation">,</span> receiveBuffer<span class="ph token punctuation">,</span> NUM_BYTES_TO_READ<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token comment">/* Clean cache before submitting DMA request, to move data from data cache to main memory */</span>
+            <span class="ph token function">DCACHE_CLEAN_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>echoBuffer<span class="ph token punctuation">,</span> NUM_BYTES_TO_READ<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token comment">/* Since pattern matching is enabled on DMA USART TX channel, this should terminate transfer when 0x0D is found */</span>
+            <span class="ph token function">DMA_ChannelTransfer</span><span class="ph token punctuation">(</span>USART_TRANSMIT_CHANNEL<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span>echoBuffer<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>SERCOM5_REGS<span class="ph token operator">-</span>\<span class="ph token operator">&gt;</span>USART_INT<span class="ph token punctuation">.</span>SERCOM_DATA<span class="ph token punctuation">,</span> NUM_BYTES_TO_READ<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            <span class="ph token function">LED0_Toggle</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        <span class="ph token keyword">else</span> <span class="ph token keyword">if</span><span class="ph token punctuation">(</span>writeComplete <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            writeComplete <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+            <span class="ph token comment">/* Ensure to add new line character on the console before receiving the next data from user */</span>
+            <span class="ph token function">DMA_ChannelTransfer</span><span class="ph token punctuation">(</span>USART_TRANSMIT_CHANNEL<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>new_line_ch<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>SERCOM5_REGS<span class="ph token operator">-</span>\<span class="ph token operator">&gt;</span>USART_INT<span class="ph token punctuation">.</span>SERCOM_DATA<span class="ph token punctuation">,</span> <span class="ph token number">1</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+            <span class="ph token keyword">while</span><span class="ph token punctuation">(</span>writeComplete <span class="ph token operator">==</span> false<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            writeComplete <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+
+            <span class="ph token comment">/* Invalidate cache lines before submitting DMA read request */</span>
+            <span class="ph token function">DCACHE_INVALIDATE_BY_ADDR</span><span class="ph token punctuation">(</span><span class="ph token punctuation">(</span>uint32_t <span class="ph token operator">*</span><span class="ph token punctuation">)</span>receiveBuffer<span class="ph token punctuation">,</span> NUM_BYTES_TO_READ<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+            <span class="ph token comment">/* Submit buffer to read user data */</span>
+            <span class="ph token function">DMA_ChannelTransfer</span><span class="ph token punctuation">(</span>USART_RECEIVE_CHANNEL<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span><span class="ph token operator">&amp;</span>SERCOM5_REGS<span class="ph token operator">-</span>\<span class="ph token operator">&gt;</span>USART_INT<span class="ph token punctuation">.</span>SERCOM_DATA<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span><span class="ph token keyword">const</span> <span class="ph token keyword">void</span> <span class="ph token operator">*</span><span class="ph token punctuation">)</span>receiveBuffer<span class="ph token punctuation">,</span> NUM_BYTES_TO_READ<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+        <span class="ph token keyword">else</span>
+        <span class="ph token punctuation">{</span>
+            <span class="ph token comment">/* Repeat the loop */</span>
+            <span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    \<span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">Direct Memory Access Controller peripheral library provides the following interfaces:</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d604713e4131"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d604713e4133"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_Initialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>Initializes the DMA controller of the device</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelCallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>This function allows a DMA PLIB client to set an event handler</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelTransfer</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>Schedules a DMA transfer on the specified DMA channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelIsBusy</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>The function returns the busy status of the channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>The function disables the specified DMA channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>The function enables the specified DMA channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelGetTransferredCount</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>Returns transfer count of the ongoing DMA transfer</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelInterruptEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>This API is used to enable DMA channel interrupt</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelInterruptDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>This API is used to disable DMA channel interrupt</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelInterruptFlagsGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>This API is used to get the DMA channel interrupt flags</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelPatternMatchSetup</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>This API is used to setup DMA pattern matching</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelPatternMatchEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>Enable DMA channel pattern matching</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelPatternMatchDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>Disable DMA channel pattern matching</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelPatternIgnoreByteEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>Enable DMA channel pattern ignore byte</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelPatternIgnoreByteDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>Disable DMA channel pattern ignore byte</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelPatternIgnoreValue</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>Configures the byte to be ignored for pattern matching when it is enabled</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelSettingsGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>Returns the current channel settings for the specified DMA Channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelSettingsSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>Changes the current transfer settings of the specified DMA channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4131 "><span>DMA_ChannelLinkedListTransfer</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4133 "><span>The function submits a list of DMA transfers</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d604713e4242"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d604713e4244"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d604713e4246"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4242 "><span>DMA_CHANNEL</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4244 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4246 "><span>Lists the set of channels available for data transfer using DMA</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4242 "><span>DMA_CHANNEL_CONFIG</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4244 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4246 "><span>Defines the data type for DMA channel configuration</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4242 "><span>DMA_TRANSFER_EVENT</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4244 "><span>Typedef and Macros</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4246 "><span>Defines the data type and macros for DMA_TRANSFER_EVENT</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4242 "><span>DMA_INT</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4244 "><span>Typedef and Macros</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4246 "><span>Defines the data type and macros for DMA_INT</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4242 "><span>DMA_PATTERN_MATCH_LEN</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4244 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4246 "><span>Enumeration for DMA pattern match length type</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4242 "><span>DMA_DESCRIPTOR_REGS</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4244 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4246 "><span>DMA linked list descriptor</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4242 "><span>DMA_CHANNEL_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4244 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d604713e4246 "><span>Pointer to a DMA Transfer Event handler function</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

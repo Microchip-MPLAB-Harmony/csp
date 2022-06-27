@@ -1,0 +1,42 @@
+# void GPIO\_PinGroupOutputDisable\(GPIO\_PIN pin\) Function
+
+**Parent topic:**[General Purpose I/O \(GPIO\)](GUID-ED544C7D-3D20-4AEC-99CF-5926C66E9EC7.md)
+
+## C
+
+```c
+void GPIO_PinGroupOutputDisable(GPIO_PIN pin)
+```
+
+## Summary
+
+Disables the group output of the given GPIO pin
+
+## Description
+
+Every GPIO has two mechanisms to set a GPIO data output - either using the grouped GPIO output register or using the single GPIO output data bit located in the Pin Control register. This API disables control of the GPIO pin using the grouped GPIO output register \(and hence enables control using the Pin Control register\)
+
+## Precondition
+
+None.
+
+## Parameters
+
+|Param|Description|
+|-----|-----------|
+|pin|One of the GPIO pins from the enum GPIO\_PIN|
+
+## Returns
+
+None
+
+## Example
+
+```c
+GPIO_PinGroupOutputDisable(GPIO_PIN_GPIO012);
+```
+
+## Remarks
+
+None
+

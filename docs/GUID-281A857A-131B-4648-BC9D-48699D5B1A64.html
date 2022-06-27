@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Pulse Width Modulation Controller (PWM)" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="pulse-width-modulation-controller-pwm" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Pulse Width Modulation Controller (PWM)</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-pulse-width-modulation-controller-pwm" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-281A857A-131B-4648-BC9D-48699D5B1A64"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="pulse-width-modulation-controller-pwm">
+<h1 class="title topictitle1" id="ariaid-title1">Pulse Width Modulation Controller (PWM)</h1><div class="body"><p class="p">The Pulse Width Modulation Controller (PWM) controls several channels independently. Each channel controls one square output waveform. Characteristics of the output waveform such as period, duty-cycle and polarity are configurable through the user interface. Each channel selects and uses one of the clocks provided by the clock generator. The clock generator provides several clocks resulting from the division of the PWM macrocell master clock. Channels can be synchronized, to generate non overlapped waveforms. All channels integrate a double buffering system in order to prevent an unexpected output waveform while modifying the period or the duty-cycle.</p>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p">This example shows how to configure the PWM to generate three PWM waveform signals. The duty cycle of the PWM is updated in the interrupt handler.</p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d806608e17', this);">Copy</button><code id="d806608e17" content="/* Duty cycle increment value */&#xA;#define DUTY_INCREMENT (10U)&#xA;&#xA;/* Save PWM period */&#xA;uint32_t period;&#xA;&#xA;/* This function is called after PWM0 counter event */&#xA;void PWM_CounterEventHandler(uintptr_t context)&#xA;{&#xA;    static uint32_t duty0 = 0U;&#xA;    static uint32_t duty1 = 2500U;&#xA;    static uint32_t duty2 = 5000U;&#xA;&#xA;    PWM0_ChannelDutySet(PWM_CHANNEL_0, duty0);&#xA;    PWM0_ChannelDutySet(PWM_CHANNEL_1, duty1);&#xA;    PWM0_ChannelDutySet(PWM_CHANNEL_2, duty2);&#xA;&#xA;    /* Increment duty cycle values */&#xA;    duty0 += DUTY_INCREMENT;&#xA;    duty1 += DUTY_INCREMENT;&#xA;    duty2 += DUTY_INCREMENT;&#xA;&#xA;    if (duty0 &gt; period)&#xA;        duty0 = 0U;&#xA;    if (duty1 &gt; period)&#xA;        duty1 = 0U;&#xA;    if (duty2 &gt; period)&#xA;        duty2 = 0U;&#xA;}&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Register callback function for Channel 0 counter event */&#xA;    PWM0_CallbackRegister(PWM_CounterEventHandler, (uintptr_t)NULL);&#xA;&#xA;    /* Read the period */&#xA;    period = PWM0_ChannelPeriodGet(PWM_CHANNEL_0);&#xA;&#xA;    /* Start all channels synchronously */&#xA;    PWM0_ChannelsStart(PWM_CHANNEL_0_MASK | PWM_CHANNEL_1_MASK | PWM_CHANNEL_2_MASK);&#xA;}"><span class="ph token comment">/* Duty cycle increment value */</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> DUTY_INCREMENT (10U)</span>
+
+<span class="ph token comment">/* Save PWM period */</span>
+uint32_t period<span class="ph token punctuation">;</span>
+
+<span class="ph token comment">/* This function is called after PWM0 counter event */</span>
+<span class="ph token keyword">void</span> <span class="ph token function">PWM_CounterEventHandler</span><span class="ph token punctuation">(</span>uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token keyword">static</span> uint32_t duty0 <span class="ph token operator">=</span> <span class="ph token number">0U</span><span class="ph token punctuation">;</span>
+    <span class="ph token keyword">static</span> uint32_t duty1 <span class="ph token operator">=</span> <span class="ph token number">2500U</span><span class="ph token punctuation">;</span>
+    <span class="ph token keyword">static</span> uint32_t duty2 <span class="ph token operator">=</span> <span class="ph token number">5000U</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">PWM0_ChannelDutySet</span><span class="ph token punctuation">(</span>PWM_CHANNEL_0<span class="ph token punctuation">,</span> duty0<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">PWM0_ChannelDutySet</span><span class="ph token punctuation">(</span>PWM_CHANNEL_1<span class="ph token punctuation">,</span> duty1<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">PWM0_ChannelDutySet</span><span class="ph token punctuation">(</span>PWM_CHANNEL_2<span class="ph token punctuation">,</span> duty2<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Increment duty cycle values */</span>
+    duty0 <span class="ph token operator">+=</span> DUTY_INCREMENT<span class="ph token punctuation">;</span>
+    duty1 <span class="ph token operator">+=</span> DUTY_INCREMENT<span class="ph token punctuation">;</span>
+    duty2 <span class="ph token operator">+=</span> DUTY_INCREMENT<span class="ph token punctuation">;</span>
+
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>duty0 <span class="ph token operator">&gt;</span> period<span class="ph token punctuation">)</span>
+        duty0 <span class="ph token operator">=</span> <span class="ph token number">0U</span><span class="ph token punctuation">;</span>
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>duty1 <span class="ph token operator">&gt;</span> period<span class="ph token punctuation">)</span>
+        duty1 <span class="ph token operator">=</span> <span class="ph token number">0U</span><span class="ph token punctuation">;</span>
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>duty2 <span class="ph token operator">&gt;</span> period<span class="ph token punctuation">)</span>
+        duty2 <span class="ph token operator">=</span> <span class="ph token number">0U</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Register callback function for Channel 0 counter event */</span>
+    <span class="ph token function">PWM0_CallbackRegister</span><span class="ph token punctuation">(</span>PWM_CounterEventHandler<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span><span class="ph token constant">NULL</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Read the period */</span>
+    period <span class="ph token operator">=</span> <span class="ph token function">PWM0_ChannelPeriodGet</span><span class="ph token punctuation">(</span>PWM_CHANNEL_0<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Start all channels synchronously */</span>
+    <span class="ph token function">PWM0_ChannelsStart</span><span class="ph token punctuation">(</span>PWM_CHANNEL_0_MASK <span class="ph token operator">|</span> PWM_CHANNEL_1_MASK <span class="ph token operator">|</span> PWM_CHANNEL_2_MASK<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">Pulse Width Modulation Controller peripheral library provides the following interfaces:</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d806608e309"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d806608e311"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e309 "><span>PWMx_Initialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e311 "><span>Initializes given instance of PWM peripheral</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e309 "><span>PWMx_ChannelsStart</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e311 "><span>Starts the given PWM channels</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e309 "><span>PWMx_ChannelsStop</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e311 "><span>Stops the given PWM channels</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e309 "><span>PWMx_ChannelPeriodSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e311 "><span>Sets the period value of given PWM channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e309 "><span>PWMx_ChannelPeriodGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e311 "><span>Reads the period value of given PWM channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e309 "><span>PWMx_ChannelDutySet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e311 "><span>Writes the duty cycle value of given PWM channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e309 "><span>PWMx_ChannelCounterEventEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e311 "><span>Enables counter event of given channels</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e309 "><span>PWMx_ChannelCounterEventDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e311 "><span>Disables counter event of given channels</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e309 "><span>PWMx_ChannelCounterEventStatusGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e311 "><span>Disables counter event of given channels</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e309 "><span>PWMx_CallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e311 "><span>Registers the function to be called from interrupt</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d806608e374"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d806608e376"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d806608e378"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e374 "><span>PWM_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e376 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e378 "><span>Defines the data type and function signature for the PWM peripheral callback function</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e374 "><span>PWM_CHANNEL_NUM</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e376 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e378 "><span>Identifies PWM channel number in a PWM peripheral</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e374 "><span>PWM_CHANNEL_MASK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e376 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d806608e378 "><span>Identifies PWM channel mask</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

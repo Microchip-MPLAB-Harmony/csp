@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Analog Front-End Controller (AFEC)" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="analog-front-end-controller-afec" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Analog Front-End Controller (AFEC)</title>
+<meta name="Microsoft.Help.Id" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8-analog-front-end-controller-afec" />
+<meta name="Microsoft.Help.TocParent" content="GUID-1EA9B250-D935-443A-9FA9-C48E50D229E8" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony Peripheral Libraries Reference A 09/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-89A24A8B-C8CE-48B6-9F65-764983A80D78"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="analog-front-end-controller-afec">
+<h1 class="title topictitle1" id="ariaid-title1">Analog Front-End Controller (AFEC)</h1><div class="body"><ul class="ul"><li class="li"><p class="p">12-bit Resolution up to 16-bit Resolution by Digital Averaging</p>
+</li>
+<li class="li"><p class="p">Wide Range of Power Supply Operation</p>
+</li>
+<li class="li"><p class="p">Selectable Single-ended or Differential Input Voltage</p>
+</li>
+<li class="li"><p class="p">Selectable Single or Dual Sample-and-Hold Mode</p>
+</li>
+<li class="li"><p class="p">Programmable Gain for Maximum Full-Scale Input Range 0–VDD</p>
+</li>
+<li class="li"><p class="p">Programmable Offset Per Channel</p>
+</li>
+<li class="li"><p class="p">Automatic Correction of Offset and Gain Errors</p>
+</li>
+<li class="li"><p class="p">Integrated Multiplexers Offering Up to 12 Independent Analog Inputs</p>
+</li>
+<li class="li"><p class="p">Individual Enable and Disable of Each Channel</p>
+</li>
+<li class="li"><p class="p">Hardware or Software Trigger (External trigger pin, Timer counter outputs (corresponding TIOA trigger), PWM event line)</p>
+</li>
+<li class="li"><p class="p">Drive of PWM Fault Input</p>
+</li>
+<li class="li"><p class="p">DMA Support</p>
+</li>
+<li class="li"><p class="p">Possibility of AFE Timings Configuration</p>
+</li>
+<li class="li"><p class="p">Two Sleep Modes and Conversion Sequencer (Automatic wakeup on trigger and back to sleep mode after conversions of all enabled channels, Possibility of customized channel sequence)</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">Using The Library</strong></p>
+<p class="p"><strong class="ph b">Interrupt mode:</strong></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d426553e60', this);">Copy</button><code id="d426553e60" content="#include &lt;stddef.h&gt;                     // Defines NULL&#xA;#include &lt;stdbool.h&gt;                    // Defines true&#xA;#include &lt;stdlib.h&gt;                     // Defines EXIT_FAILURE&#xA;#include &#34;definitions.h&#34;                // SYS function prototypes&#xA;&#xA;/*****************************************************&#xA; AFEC CH0 - PB01 - Connect to DACC output PB13&#xA; AFEC CH5 - PC30 - connect to Vcc&#xA; AFEC_CH6 - PC31 - Connect to GND&#xA; *****************************************************/&#xA;&#xA;#define AFEC_VREF               (3.3f)&#xA;#define DAC_COUNT_INCREMENT     (124U)  // Equivalent to 0.1V &#xA;#define DAC_COUNT_MAX           (4095U)&#xA;&#xA;&#xA;volatile uint16_t adc_ch0_count, adc_ch5_count, adc_ch6_count;&#xA;&#xA;float adc_ch0_voltage, adc_ch5_voltage, adc_ch6_voltage;&#xA;&#xA;volatile bool result_ready;&#xA;/* Initial DAC count which is midpoint = 1.65V*/&#xA;uint16_t dac_count=0x800; &#xA;&#xA;&#xA;void switch_handler( PIO_PIN pin, uintptr_t context )&#xA;{&#xA;    /* Write next data sample */&#xA;    dac_count = dac_count + DAC_COUNT_INCREMENT;&#xA;    &#xA;    if (dac_count &gt; DAC_COUNT_MAX)&#xA;            dac_count=0;    &#xA;    &#xA;    DACC_DataWrite(DACC_CHANNEL_0, dac_count);&#xA;}&#xA;&#xA;/* This function is called after conversion of last channel in the user sequence */&#xA;void AFEC_EventHandler(uint32_t status, uintptr_t context)&#xA;{&#xA;    /* Read the result of 3 channels*/&#xA;    adc_ch5_count = AFEC1_ChannelResultGet(CH5_VDD);&#xA;    adc_ch6_count = AFEC1_ChannelResultGet(CH6_GND);&#xA;    adc_ch0_count = AFEC1_ChannelResultGet(CH0_SINE_WAVE);&#xA;       &#xA;    result_ready = true;&#xA;&#xA;}&#xA;&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;// Section: Main Entry Point&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;    &#xA;    PIO_PinInterruptCallbackRegister(SWITCH_PIN, &amp;switch_handler, (uintptr_t) NULL );&#xA;    PIO_PinInterruptEnable(SWITCH_PIN);&#xA;&#xA;    /* Register callback function for AFEC end of conversion interrupt*/&#xA;    AFEC1_CallbackRegister(AFEC_EventHandler, (uintptr_t)NULL);&#xA;    &#xA;    /* Write first data sample in DAC channel 0 and channel 1*/&#xA;    DACC_DataWrite(DACC_CHANNEL_0, dac_count);&#xA;    &#xA;    /* Start the timer to trigger ADC conversion every 50 ms*/&#xA;    TC1_CH0_CompareStart();&#xA;&#xA;    printf(&#34;\n\r---------------------------------------------------------&#34;);&#xA;    printf(&#34;\n\r                    AFEC User Sequence Demo                 &#34;);&#xA;    printf(&#34;\n\r---------------------------------------------------------\n\r&#34;);&#xA;    printf(&#34;CH0 Count  CH0 Voltage  CH5 Count  CH5 Voltage  CH6 Count  CH6 Voltage \n\r&#34;);           &#xA;&#xA;    while ( true )&#xA;    {&#xA;        /* Check if result is ready to be transmitted to console */&#xA;        if (result_ready == true)&#xA;        {&#xA;            adc_ch5_voltage = (float)adc_ch5_count * AFEC_VREF/4095U;&#xA;            adc_ch6_voltage = (float)adc_ch6_count * AFEC_VREF/4095U;&#xA;            adc_ch0_voltage = (float)adc_ch0_count * AFEC_VREF/4095U;&#xA;            printf(&#34;0x%03x      %0.2f V       0x%03x      %0.2f V       0x%03x      %0.2f V \t\r&#34;, \&#xA;                    adc_ch0_count, adc_ch0_voltage, adc_ch5_count, adc_ch5_voltage, adc_ch6_count, adc_ch6_voltage);&#xA;                           &#xA;                &#xA;            result_ready = false;&#xA;        }&#xA;    }&#xA;&#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    return ( EXIT_FAILURE );&#xA;}"><span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stddef.h&gt;</span>                     </span><span class="ph token comment">// Defines NULL</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdbool.h&gt;</span>                    </span><span class="ph token comment">// Defines true</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdlib.h&gt;</span>                     </span><span class="ph token comment">// Defines EXIT_FAILURE</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">"definitions.h"</span>                </span><span class="ph token comment">// SYS function prototypes</span>
+
+<span class="ph token comment">/*****************************************************
+ AFEC CH0 - PB01 - Connect to DACC output PB13
+ AFEC CH5 - PC30 - connect to Vcc
+ AFEC_CH6 - PC31 - Connect to GND
+ *****************************************************/</span>
+
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> AFEC_VREF               (3.3f)</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> DAC_COUNT_INCREMENT     (124U)  </span><span class="ph token comment">// Equivalent to 0.1V </span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> DAC_COUNT_MAX           (4095U)</span>
+
+
+<span class="ph token keyword">volatile</span> uint16_t adc_ch0_count<span class="ph token punctuation">,</span> adc_ch5_count<span class="ph token punctuation">,</span> adc_ch6_count<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">float</span> adc_ch0_voltage<span class="ph token punctuation">,</span> adc_ch5_voltage<span class="ph token punctuation">,</span> adc_ch6_voltage<span class="ph token punctuation">;</span>
+
+<span class="ph token keyword">volatile</span> bool result_ready<span class="ph token punctuation">;</span>
+<span class="ph token comment">/* Initial DAC count which is midpoint = 1.65V*/</span>
+uint16_t dac_count<span class="ph token operator">=</span><span class="ph token number">0x800</span><span class="ph token punctuation">;</span> 
+
+
+<span class="ph token keyword">void</span> <span class="ph token function">switch_handler</span><span class="ph token punctuation">(</span> PIO_PIN pin<span class="ph token punctuation">,</span> uintptr_t context <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Write next data sample */</span>
+    dac_count <span class="ph token operator">=</span> dac_count <span class="ph token operator">+</span> DAC_COUNT_INCREMENT<span class="ph token punctuation">;</span>
+    
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>dac_count <span class="ph token operator">&gt;</span> DAC_COUNT_MAX<span class="ph token punctuation">)</span>
+            dac_count<span class="ph token operator">=</span><span class="ph token number">0</span><span class="ph token punctuation">;</span>    
+    
+    <span class="ph token function">DACC_DataWrite</span><span class="ph token punctuation">(</span>DACC_CHANNEL_0<span class="ph token punctuation">,</span> dac_count<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">/* This function is called after conversion of last channel in the user sequence */</span>
+<span class="ph token keyword">void</span> <span class="ph token function">AFEC_EventHandler</span><span class="ph token punctuation">(</span>uint32_t status<span class="ph token punctuation">,</span> uintptr_t context<span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Read the result of 3 channels*/</span>
+    adc_ch5_count <span class="ph token operator">=</span> <span class="ph token function">AFEC1_ChannelResultGet</span><span class="ph token punctuation">(</span>CH5_VDD<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    adc_ch6_count <span class="ph token operator">=</span> <span class="ph token function">AFEC1_ChannelResultGet</span><span class="ph token punctuation">(</span>CH6_GND<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    adc_ch0_count <span class="ph token operator">=</span> <span class="ph token function">AFEC1_ChannelResultGet</span><span class="ph token punctuation">(</span>CH0_SINE_WAVE<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+       
+    result_ready <span class="ph token operator">=</span> true<span class="ph token punctuation">;</span>
+
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// Section: Main Entry Point</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token function">PIO_PinInterruptCallbackRegister</span><span class="ph token punctuation">(</span>SWITCH_PIN<span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>switch_handler<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">PIO_PinInterruptEnable</span><span class="ph token punctuation">(</span>SWITCH_PIN<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token comment">/* Register callback function for AFEC end of conversion interrupt*/</span>
+    <span class="ph token function">AFEC1_CallbackRegister</span><span class="ph token punctuation">(</span>AFEC_EventHandler<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span><span class="ph token constant">NULL</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token comment">/* Write first data sample in DAC channel 0 and channel 1*/</span>
+    <span class="ph token function">DACC_DataWrite</span><span class="ph token punctuation">(</span>DACC_CHANNEL_0<span class="ph token punctuation">,</span> dac_count<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token comment">/* Start the timer to trigger ADC conversion every 50 ms*/</span>
+    <span class="ph token function">TC1_CH0_CompareStart</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r---------------------------------------------------------"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r                    AFEC User Sequence Demo                 "</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r---------------------------------------------------------\n\r"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"CH0 Count  CH0 Voltage  CH5 Count  CH5 Voltage  CH6 Count  CH6 Voltage \n\r"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>           
+
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span> true <span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">/* Check if result is ready to be transmitted to console */</span>
+        <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>result_ready <span class="ph token operator">==</span> true<span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+            adc_ch5_voltage <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token keyword">float</span><span class="ph token punctuation">)</span>adc_ch5_count <span class="ph token operator">*</span> AFEC_VREF<span class="ph token operator">/</span><span class="ph token number">4095U</span><span class="ph token punctuation">;</span>
+            adc_ch6_voltage <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token keyword">float</span><span class="ph token punctuation">)</span>adc_ch6_count <span class="ph token operator">*</span> AFEC_VREF<span class="ph token operator">/</span><span class="ph token number">4095U</span><span class="ph token punctuation">;</span>
+            adc_ch0_voltage <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token keyword">float</span><span class="ph token punctuation">)</span>adc_ch0_count <span class="ph token operator">*</span> AFEC_VREF<span class="ph token operator">/</span><span class="ph token number">4095U</span><span class="ph token punctuation">;</span>
+            <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"0x%03x      %0.2f V       0x%03x      %0.2f V       0x%03x      %0.2f V \t\r"</span><span class="ph token punctuation">,</span> \
+                    adc_ch0_count<span class="ph token punctuation">,</span> adc_ch0_voltage<span class="ph token punctuation">,</span> adc_ch5_count<span class="ph token punctuation">,</span> adc_ch5_voltage<span class="ph token punctuation">,</span> adc_ch6_count<span class="ph token punctuation">,</span> adc_ch6_voltage<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+                           
+                
+            result_ready <span class="ph token operator">=</span> false<span class="ph token punctuation">;</span>
+        <span class="ph token punctuation">}</span>
+    <span class="ph token punctuation">}</span>
+
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    <span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Polling mode:</strong></p>
+<pre class="pre codeblock language-c"><button title="Copy Code" class="copy-code" onclick="cpy('d426553e659', this);">Copy</button><code id="d426553e659" content="#include &lt;stddef.h&gt;                     // Defines NULL&#xA;#include &lt;stdbool.h&gt;                    // Defines true&#xA;#include &lt;stdlib.h&gt;                     // Defines EXIT_FAILURE&#xA;#include &lt;stdio.h&gt;&#xA;#include &#34;definitions.h&#34;                // SYS function prototypes&#xA;&#xA;#define AFEC_VREF               (3.3f)&#xA;#define DAC_COUNT_INCREMENT     (124U)  // equivalent to 0.1V &#xA;#define DAC_COUNT_MAX           (4095U)&#xA;&#xA;uint16_t adc_count;&#xA;float input_voltage;&#xA;/* Initial value of dac count which is midpoint = 1.65 V*/&#xA;uint16_t dac_count = 0x800;   &#xA;&#xA;&#xA;void switch_handler( PIO_PIN pin, uintptr_t context )&#xA;{&#xA;    /* Write next data sample */&#xA;    dac_count = dac_count + DAC_COUNT_INCREMENT;&#xA;    &#xA;    if (dac_count &gt; DAC_COUNT_MAX)&#xA;            dac_count=0;    &#xA;    &#xA;    DACC_DataWrite(DACC_CHANNEL_0, dac_count);&#xA;}&#xA;&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;// Section: Main Entry Point&#xA;// *****************************************************************************&#xA;// *****************************************************************************&#xA;&#xA;int main ( void )&#xA;{&#xA;    /* Initialize all modules */&#xA;    SYS_Initialize ( NULL );&#xA;    &#xA;    PIO_PinInterruptCallbackRegister(SWITCH_PIN, &amp;switch_handler, (uintptr_t) NULL );&#xA;    PIO_PinInterruptEnable(SWITCH_PIN);&#xA;    &#xA;    printf(&#34;\n\r---------------------------------------------------------&#34;);&#xA;    printf(&#34;\n\r                    AFEC Demo                 &#34;);&#xA;    printf(&#34;\n\r---------------------------------------------------------\n\r&#34;);&#xA;    printf(&#34;Press switch to change the DAC output. \r\n&#34;);&#xA;    &#xA;    SYSTICK_TimerStart();&#xA;&#xA;    DACC_DataWrite(DACC_CHANNEL_0, dac_count);&#xA;        &#xA;    while (1)&#xA;    {&#xA;        /* Start ADC conversion */&#xA;        AFEC1_ConversionStart();&#xA;&#xA;        /* Wait till ADC conversion result is available */&#xA;        while(!AFEC1_ChannelResultIsReady(AFEC_CH0))&#xA;        {&#xA;&#xA;        };&#xA;&#xA;        /* Read the ADC result */&#xA;        adc_count = AFEC1_ChannelResultGet(AFEC_CH0);&#xA;        input_voltage = (float)adc_count * AFEC_VREF / 4095U;&#xA;&#xA;        printf(&#34;ADC Count = 0x%03x, ADC Input Voltage = %0.2f V \r&#34;,adc_count, input_voltage);    &#xA;        &#xA;        SYSTICK_DelayMs(500);&#xA;    }&#xA;    &#xA;    /* Execution should not come here during normal operation */&#xA;&#xA;    return ( EXIT_FAILURE );&#xA;}"><span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stddef.h&gt;</span>                     </span><span class="ph token comment">// Defines NULL</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdbool.h&gt;</span>                    </span><span class="ph token comment">// Defines true</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdlib.h&gt;</span>                     </span><span class="ph token comment">// Defines EXIT_FAILURE</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">&lt;stdio.h&gt;</span></span>
+<span class="ph token macro property">#<span class="ph token directive keyword">include</span> <span class="ph token string">"definitions.h"</span>                </span><span class="ph token comment">// SYS function prototypes</span>
+
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> AFEC_VREF               (3.3f)</span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> DAC_COUNT_INCREMENT     (124U)  </span><span class="ph token comment">// equivalent to 0.1V </span>
+<span class="ph token macro property">#<span class="ph token directive keyword">define</span> DAC_COUNT_MAX           (4095U)</span>
+
+uint16_t adc_count<span class="ph token punctuation">;</span>
+<span class="ph token keyword">float</span> input_voltage<span class="ph token punctuation">;</span>
+<span class="ph token comment">/* Initial value of dac count which is midpoint = 1.65 V*/</span>
+uint16_t dac_count <span class="ph token operator">=</span> <span class="ph token number">0x800</span><span class="ph token punctuation">;</span>   
+
+
+<span class="ph token keyword">void</span> <span class="ph token function">switch_handler</span><span class="ph token punctuation">(</span> PIO_PIN pin<span class="ph token punctuation">,</span> uintptr_t context <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Write next data sample */</span>
+    dac_count <span class="ph token operator">=</span> dac_count <span class="ph token operator">+</span> DAC_COUNT_INCREMENT<span class="ph token punctuation">;</span>
+    
+    <span class="ph token keyword">if</span> <span class="ph token punctuation">(</span>dac_count <span class="ph token operator">&gt;</span> DAC_COUNT_MAX<span class="ph token punctuation">)</span>
+            dac_count<span class="ph token operator">=</span><span class="ph token number">0</span><span class="ph token punctuation">;</span>    
+    
+    <span class="ph token function">DACC_DataWrite</span><span class="ph token punctuation">(</span>DACC_CHANNEL_0<span class="ph token punctuation">,</span> dac_count<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span>
+
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// Section: Main Entry Point</span>
+<span class="ph token comment">// *****************************************************************************</span>
+<span class="ph token comment">// *****************************************************************************</span>
+
+<span class="ph token keyword">int</span> main <span class="ph token punctuation">(</span> <span class="ph token keyword">void</span> <span class="ph token punctuation">)</span>
+<span class="ph token punctuation">{</span>
+    <span class="ph token comment">/* Initialize all modules */</span>
+    SYS_Initialize <span class="ph token punctuation">(</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token function">PIO_PinInterruptCallbackRegister</span><span class="ph token punctuation">(</span>SWITCH_PIN<span class="ph token punctuation">,</span> <span class="ph token operator">&amp;</span>switch_handler<span class="ph token punctuation">,</span> <span class="ph token punctuation">(</span>uintptr_t<span class="ph token punctuation">)</span> <span class="ph token constant">NULL</span> <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">PIO_PinInterruptEnable</span><span class="ph token punctuation">(</span>SWITCH_PIN<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r---------------------------------------------------------"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r                    AFEC Demo                 "</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"\n\r---------------------------------------------------------\n\r"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"Press switch to change the DAC output. \r\n"</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    
+    <span class="ph token function">SYSTICK_TimerStart</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+    <span class="ph token function">DACC_DataWrite</span><span class="ph token punctuation">(</span>DACC_CHANNEL_0<span class="ph token punctuation">,</span> dac_count<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        
+    <span class="ph token keyword">while</span> <span class="ph token punctuation">(</span><span class="ph token number">1</span><span class="ph token punctuation">)</span>
+    <span class="ph token punctuation">{</span>
+        <span class="ph token comment">/* Start ADC conversion */</span>
+        <span class="ph token function">AFEC1_ConversionStart</span><span class="ph token punctuation">(</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token comment">/* Wait till ADC conversion result is available */</span>
+        <span class="ph token keyword">while</span><span class="ph token punctuation">(</span><span class="ph token operator">!</span><span class="ph token function">AFEC1_ChannelResultIsReady</span><span class="ph token punctuation">(</span>AFEC_CH0<span class="ph token punctuation">)</span><span class="ph token punctuation">)</span>
+        <span class="ph token punctuation">{</span>
+
+        <span class="ph token punctuation">}</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token comment">/* Read the ADC result */</span>
+        adc_count <span class="ph token operator">=</span> <span class="ph token function">AFEC1_ChannelResultGet</span><span class="ph token punctuation">(</span>AFEC_CH0<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+        input_voltage <span class="ph token operator">=</span> <span class="ph token punctuation">(</span><span class="ph token keyword">float</span><span class="ph token punctuation">)</span>adc_count <span class="ph token operator">*</span> AFEC_VREF <span class="ph token operator">/</span> <span class="ph token number">4095U</span><span class="ph token punctuation">;</span>
+
+        <span class="ph token function">printf</span><span class="ph token punctuation">(</span><span class="ph token string">"ADC Count = 0x%03x, ADC Input Voltage = %0.2f V \r"</span><span class="ph token punctuation">,</span>adc_count<span class="ph token punctuation">,</span> input_voltage<span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>    
+        
+        <span class="ph token function">SYSTICK_DelayMs</span><span class="ph token punctuation">(</span><span class="ph token number">500</span><span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+    <span class="ph token punctuation">}</span>
+    
+    <span class="ph token comment">/* Execution should not come here during normal operation */</span>
+
+    <span class="ph token keyword">return</span> <span class="ph token punctuation">(</span> EXIT_FAILURE <span class="ph token punctuation">)</span><span class="ph token punctuation">;</span>
+<span class="ph token punctuation">}</span></code></pre><p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">Analog Front-End Controller peripheral library provides the following interfaces:</p>
+<p class="p"><strong class="ph b">Functions</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d426553e1135"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d426553e1137"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_Initialize</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Initializes given instance of AFEC peripheral</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_ChannelsEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Enables the ADC channels</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_ChannelsDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Disables the ADC channels</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_ChannelsInterruptEnable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Enables the ADC interrupt sources</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_ChannelsInterruptDisable</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Disables the ADC interrupt sources</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_ConversionStart</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Starts the ADC conversion of all the enabled channels with the software trigger</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_ChannelResultIsReady</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Returns the status of the channel conversion</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_ChannelResultGet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Reads the conversion result of the channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_ConversionSequenceSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Sets the user sequence of the channel conversion</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_ChannelGainSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Writes the gain of the channel</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_ChannelOffsetSet</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Writes the channel offset</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1135 "><span>AFECx_CallbackRegister</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1137 "><span>Registers the function to be called from interrupt</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Data types and constants</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d426553e1212"><span>Name</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d426553e1214"><span>Type</span></th>
+<th class="entry cellrowborder" style="text-align:left;vertical-align:middle;" id="d426553e1216"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1212 "><span>AFEC_CHANNEL_NUM</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1214 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1216 "><span>Identifies AFEC channel number</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1212 "><span>AFEC_INTERRUPT_MASK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1214 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1216 "><span>Identifies channel interrupt sources mask</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1212 "><span>AFEC_CHANNEL_MASK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1214 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1216 "><span>Identifies AFEC channel mask</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1212 "><span>AFEC_CHANNEL_GAIN</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1214 "><span>Enum</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1216 "><span>Identifies programmable gain setting</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1212 "><span>AFEC_CALLBACK</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1214 "><span>Typedef</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1216 "><span>Defines the function pointer data type and function signature for the afec peripheral callback function</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1212 "><span>AFEC_CALLBACK_OBJECT</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1214 "><span>Struct</span></td>
+<td class="entry cellrowborder" style="text-align:left;vertical-align:middle;" headers="d426553e1216 "><span>AFEC Callback structure</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>
