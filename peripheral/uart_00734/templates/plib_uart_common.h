@@ -54,42 +54,39 @@
 
 #endif
 
-#define UART_RXFIFO_DEPTH       9
+#define UART_RXFIFO_DEPTH       (9U)
 
-typedef enum
-{
-    UART_PARITY_NONE = 0x00,
 
-    UART_PARITY_EVEN = 0x02,
+#define    UART_PARITY_NONE   (0x00U)
 
-    UART_PARITY_ODD =  0x04,
+#define    UART_PARITY_EVEN   (0x02U)
 
-      /* Force the compiler to reserve 32-bit space for each enum */
-    UART_PARITY_INVALID = 0xFFFFFFFF
+#define    UART_PARITY_ODD    (0x04U)
 
-} UART_PARITY;
+/* Force the compiler to reserve 32-bit space for each enum */
+#define    UART_PARITY_INVALID  (0xFFFFFFFFU)
 
-typedef enum
-{
-    UART_DATA_8_BIT = 0x00,
+typedef uint32_t UART_PARITY;
 
-    UART_DATA_9_BIT = 0x06,
 
-    /* Force the compiler to reserve 32-bit memory for each enum */
-    UART_DATA_INVALID = 0xFFFFFFFF
+#define    UART_DATA_8_BIT    (0x00U)
 
-} UART_DATA;
+#define    UART_DATA_9_BIT    (0x06U)
 
-typedef enum
-{
-    UART_STOP_1_BIT = 0x00,
+/* Force the compiler to reserve 32-bit memory for each enum */
+#define    UART_DATA_INVALID  (0xFFFFFFFFU)
 
-    UART_STOP_2_BIT = 0x01,
+typedef uint32_t UART_DATA;
+
+
+#define    UART_STOP_1_BIT   (0x00U)
+
+#define    UART_STOP_2_BIT   (0x01U)
 
     /* Force the compiler to reserve 32-bit memory for each enum */
-    UART_STOP_INVALID = 0xFFFFFFFF
+#define    UART_STOP_INVALID  (0xFFFFFFFFU)
 
-} UART_STOP;
+typedef uint32_t UART_STOP;
 
 typedef struct
 {
@@ -107,14 +104,12 @@ typedef struct
 /* UART Errors
 */
 
-typedef enum
-{
-    UART_ERROR_NONE = 0,
-    UART_ERROR_OVERRUN = 0x00000002,
-    UART_ERROR_FRAMING = 0x00000004,
-    UART_ERROR_PARITY  = 0x00000008
+#define    UART_ERROR_NONE      (0U)
+#define    UART_ERROR_OVERRUN   (0x00000002U)
+#define    UART_ERROR_FRAMING   (0x00000004U)
+#define    UART_ERROR_PARITY    (0x00000008U)
 
-} UART_ERROR;
+typedef uint32_t UART_ERROR;
 
 typedef void (* UART_CALLBACK)( uintptr_t context );
 
