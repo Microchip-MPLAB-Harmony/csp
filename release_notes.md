@@ -21,7 +21,7 @@ PIC32CX-BZ2 family of wireless microcontrollers (MCUs) and WBZ451 modules,
   - MISRA-C 2012 required rules compliance for all M0+, M4F, M23 based MCUs
   - Added ADC comparision mode in SAM E70/S70/V70/V71 and SAM G51/G53/G54/G55 Family of devices
   - Added support for non-blocking delay in Systick Plib  
-  - Added pin export feature to export pin configurations to a CSV file for all SAM devices
+  - Added pin export feature to export pin configurations to a CSV file for all devices except PIC32M devices
   
 ### Known Issues
 
@@ -35,10 +35,8 @@ The current known issues are as follows:
 
 - [MPLAB® X IDE v6.00](https://www.microchip.com/mplab/mplab-x-ide)
 - [MPLAB® XC32 C/C++ Compiler v4.10](https://www.microchip.com/mplab/compilers)
-- [IAR EWARM v9.10 or above](https://www.iar.com/iar-embedded-workbench/#!?architecture=Arm)
-- [KEIL MDK v5.35 or above](https://www2.keil.com/mdk5)
 - MPLAB® X IDE plug-ins:
-    - MPLAB® Code Configurator 5.1.9
+    - MPLAB® Code Configurator 5.1.9 or higher
 
 ### Notes
 
