@@ -549,10 +549,6 @@ dmaInstanceName = coreComponent.createStringSymbol("DMA_INSTANCE_NAME", None)
 dmaInstanceName.setDefaultValue(instances[0].getAttribute("name"))
 dmaInstanceName.setVisible(False)
 
-dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
-dmaManagerSelect.setVisible(False)
-dmaManagerSelect.setDefaultValue("dma_03639:PIC32CZDMAModel")
-
 dmaMenu = coreComponent.createMenuSymbol("DMA_MENU", None)
 dmaMenu.setLabel("DMA (DMAC)")
 dmaMenu.setDescription("DMA (DMAC) Configuration")

@@ -2,7 +2,8 @@
   "private": true,
   "workspaces": [
     "apps/dma-configurators/dma*",
-    "apps/interrupt_configurators/*"
+    "apps/interrupt_configurators/*",
+    "harmony_plugin_sdk/*"
   ],
   "scripts": {
     "build": "lerna run build"
