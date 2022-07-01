@@ -305,7 +305,15 @@ def instantiateComponent(evsysComponent):
             "EVSYS_USER_" + str(usersNode.getChildren()[id].getAttribute("index")))
         channelUserDependency.append(
             "USER_" + str(usersNode.getChildren()[id].getAttribute("name")) + "_READY")
-
+    
+    users_list = []
+    user_node_children = usersNode.getChildren()
+    for id in range(0,len(user_node_children)):
+        users_list.append(user_node_children[id].getAttribute("name")+"-"+user_node_children[id].getAttribute("index"))    
+    symEvsysUsersList = evsysComponent.createComboSymbol("EVSYS_USERS", evsysSym_Menu, users_list)    
+    symEvsysUsersList.setLabel("User list")
+    symEvsysUsersList.setVisible(False)
+    
     channelNode=ATDF.getNode(
         '/avr-tools-device-file/devices/device/peripherals/module@[name="EVSYS"]/instance@[name="' + evsysInstanceName.getValue() + '"]/parameters')
     for id in range(0, len(channelNode.getChildren())):
@@ -595,9 +603,9 @@ def instantiateComponent(evsysComponent):
     evsysSystemDefFile.setSourcePath(
         "../peripheral/evsys_u2504/templates/system/definitions.h.ftl")
     evsysSystemDefFile.setMarkup(True)
-
-    evsysComponent.addPlugin(
-        "../peripheral/evsys_u2504/plugin/eventsystem.jar")
+    
+    evsysComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "EVE_SYS_MGR", {"plugin_name": "Event Configurator", "main_html_path": "../csp/plugins/apps/event-configurators/event-configurator/build/index.html"})
+    
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         nonSecevsysSym_HeaderFile=evsysComponent.createFileSymbol("EVSYS_HEADER_NON_SEC", None)

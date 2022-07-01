@@ -1,0 +1,34 @@
+
+.channel_group_config {
+    display : flex;
+    flex-direction: row;
+    gap: 3rem;
+    /* background-color: rgba(0, 0, 255, 0.584); */
+}
+
+.channel_configuration {
+    display : flex;
+    flex-direction: column;    
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    /* background-color: aqua; */
+    /* width: 60%; */
+    margin-left: 2rem;
+}
+
+.channel_configuration__title {
+    font-size: x-large;
+    font-weight: bold;   
+    text-align:center;    
+
+}
+
+.secure-combo .secure .p-dropdown-label {
+    color: #4cbb17;
+  }
+  
+.secure-combo .nonsecure .p-dropdown-label {
+    color: red;
+  }
+  

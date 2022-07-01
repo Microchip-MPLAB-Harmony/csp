@@ -1,0 +1,29 @@
+.user_configuration_group {
+    display: flex;
+    margin-left: 3rem;
+
+}
+
+.user_configuration {
+    display : flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items:center;
+    gap: 1rem;
+    
+}
+
+.user_configuration__title {
+    font-size: x-large;
+    font-weight: bold;   
+    /* align-self: center; */
+}
+
+.secure-combo .secure .p-dropdown-label {
+    color: #4cbb17;
+  }
+  
+.secure-combo .nonsecure .p-dropdown-label {
+    color: red;
+  }
+  

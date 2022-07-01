@@ -3,10 +3,13 @@
   "workspaces": [
     "apps/dma-configurators/dma*",
     "apps/interrupt_configurators/*",
+    "apps/event-configurators/event-configurator",
     "harmony_plugin_sdk/*"
   ],
   "scripts": {
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "start:event": "lerna run start --scope='event-configurator'",
+    "build:event": "lerna run build --scope='event-configurator'"
   },
   "devDependencies": {
     "lerna": "^5.5.0"

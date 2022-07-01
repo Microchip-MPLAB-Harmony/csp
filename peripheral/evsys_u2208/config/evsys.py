@@ -164,7 +164,15 @@ def instantiateComponent(evsysComponent):
         channelUserMap["EVSYS_USER_" + str(usersNode.getChildren()[id].getAttribute("index"))] = -1
         channelUserDependency.append("EVSYS_USER_" + str(usersNode.getChildren()[id].getAttribute("index")))
         channelUserDependency.append("USER_" + str(usersNode.getChildren()[id].getAttribute("name")) + "_READY")
-
+    
+    users_list = []
+    user_node_children = usersNode.getChildren()
+    for id in range(0,len(user_node_children)):
+        users_list.append(user_node_children[id].getAttribute("name")+"-"+user_node_children[id].getAttribute("index"))    
+    symEvsysUsersList = evsysComponent.createComboSymbol("EVSYS_USERS", evsysSym_Menu, users_list)    
+    symEvsysUsersList.setLabel("User list")
+    symEvsysUsersList.setVisible(True)
+    
     channelNode = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="EVSYS"]/instance@[name="'+evsysInstanceName.getValue()+'"]/parameters')
     for id in range(0,len(channelNode.getChildren())):
         if channelNode.getChildren()[id].getAttribute("name") == "CHANNELS":
@@ -318,5 +326,5 @@ def instantiateComponent(evsysComponent):
     evsysSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     evsysSystemDefFile.setSourcePath("../peripheral/evsys_u2208/templates/system/definitions.h.ftl")
     evsysSystemDefFile.setMarkup(True)
-
-    evsysComponent.addPlugin("../peripheral/evsys_u2208/plugin/eventsystem.jar")
+    evsysComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "EVE_SYS_MGR", {"plugin_name": "Event Configurator", "main_html_path": "../csp/plugins/apps/event-configurators/event-configurator/build/index.html"})
+    #evsysComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "EVE_SYS_MGR", {"plugin_name": "Event Configurator", "main_html_path": "../csp/peripheral/evsys_u2208/plugin/event_configurator/build/index.html"})
