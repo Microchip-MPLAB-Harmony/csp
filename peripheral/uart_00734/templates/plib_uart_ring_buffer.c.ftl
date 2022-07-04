@@ -169,6 +169,7 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
 {
     bool status = false;
     uint32_t baud;
+    uint32_t status_ctrl;
     uint8_t brgh = ${UART_BRGH};
     int32_t uxbrg = 0;
 
@@ -202,7 +203,10 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
             return status;
         }
 
-        /* Turn OFF ${UART_INSTANCE_NAME} */
+        /* Turn OFF ${UART_INSTANCE_NAME}. Save UTXEN, URXEN and UTXBRK bits as these are cleared upon disabling UART */
+
+        status_ctrl = U${UART_INSTANCE_NUM}STA & (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK | _U${UART_INSTANCE_NUM}STA_UTXBRK_MASK);
+
         U${UART_INSTANCE_NUM}MODECLR = _U${UART_INSTANCE_NUM}MODE_ON_MASK;
 
         if(setup->dataWidth == UART_DATA_9_BIT)
@@ -236,6 +240,9 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
 </#if>
 
         U${UART_INSTANCE_NUM}MODESET = _U${UART_INSTANCE_NUM}MODE_ON_MASK;
+
+        /* Restore UTXEN, URXEN and UTXBRK bits. */
+        U${UART_INSTANCE_NUM}STASET = status_ctrl;
 
         status = true;
     }
@@ -613,15 +620,15 @@ size_t ${UART_INSTANCE_NAME}_WriteBufferSizeGet(void)
 }
 
 bool ${UART_INSTANCE_NAME}_TransmitComplete( void )
-{    
+{
     if((U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK))
     {
         return true;
     }
-	else
-	{
-		return false;
-	}
+    else
+    {
+        return false;
+    }
 }
 
 bool ${UART_INSTANCE_NAME}_WriteNotificationEnable(bool isEnabled, bool isPersistent)
