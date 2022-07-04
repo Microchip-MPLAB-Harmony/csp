@@ -293,8 +293,9 @@ bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer,
 
 bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length )
 {
-    uint32_t *qspi_buffer = (uint32_t *)${QSPI_MEM_ADDR};
     uint32_t mask = 0;
+    uint8_t rx_data_len = rx_data_length;
+    uint8_t *ptr_rx_data = (uint8_t *)rx_data;
 
     /* Configure address */
     if(qspi_register_xfer->addr_en) {
@@ -314,7 +315,8 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
 
     mask |= QSPI_IFR_INSTEN_Msk | QSPI_IFR_DATAEN_Msk;
 
-    /* TFRTYP:0, SMRM:0, APBTFRTYP:1 */
+    /* TFRTYP:0, SMRM:1, APBTFRTYP:1 */
+    mask |= QSPI_IFR_SMRM(1);
     mask |= QSPI_IFR_APBTFRTYP(1);
     if (qspi_register_xfer->ddr_en)
     {
@@ -337,13 +339,31 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     /* Wait for synchronization */
     while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
 
-    /* Read the register content */
-    ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_buffer,  rx_data_length);
+    /* Start Transfer */
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_STTFR_Msk;
 
-    /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+    while (rx_data_len)
+    {
+        /* Wait for Receive Data Register Full Flag */
+        while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_RDRF_Msk));
 
-    ${QSPI_INSTANCE_NAME}_EndTransfer();
+        if (rx_data_len == 1U)
+        {
+            /* Wait for synchronization */
+            while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+
+            /* Last Transfer */
+            ${QSPI_INSTANCE_NAME}_EndTransfer();
+        }
+
+        /* Wait for synchronization */
+        while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+
+        /* Read the register content */
+        *ptr_rx_data = (uint8_t)${QSPI_INSTANCE_NAME}_REGS->QSPI_RDR;
+        ptr_rx_data++;
+        rx_data_len--;
+    }
 
     /* Wait for chip select rise */
     while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk));
@@ -353,8 +373,9 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
 
 bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length )
 {
-    uint32_t *qspi_buffer = (uint32_t *)${QSPI_MEM_ADDR};
     uint32_t mask = 0;
+    uint8_t tx_data_len = tx_data_length;
+    uint8_t *ptr_tx_data = (uint8_t *)tx_data;
 
     /* Configure address */
     if(qspi_register_xfer->addr_en) {
@@ -384,7 +405,8 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     }
     mask |= qspi_register_xfer->protocol_type;
 
-    /* TFRTYP:0, SMRM:0, APBTFRTYP:0 */
+    /* TFRTYP:0, SMRM:1, APBTFRTYP:0 */
+    mask |= QSPI_IFR_SMRM(1);
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
     /* Wait for synchronization */
@@ -396,16 +418,27 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     /* Wait for synchronization */
     while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
 
-    /* Write the content to register */
-    ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)qspi_buffer, (uint8_t *)tx_data, tx_data_length);
+    while (tx_data_len)
+    {
+        /* Wait for Transmit Data Register Empty Flag */
+        while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_TDRE_Msk));
 
-    /* Wait for Last Write Access */
-    while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_LWRA_Msk));
+        /* Write the content to register */
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_TDR = *ptr_tx_data;
+        ptr_tx_data++;
+        tx_data_len--;
 
-    /* Wait for synchronization */
-    while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+        if (tx_data_len == 0U)
+        {
+            /* Wait for Transmission Registers Empty */
+            while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_TXEMPTY_Msk));
 
-    ${QSPI_INSTANCE_NAME}_EndTransfer();
+            /* Wait for synchronization */
+            while(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_SYNCBSY_Msk);
+
+            ${QSPI_INSTANCE_NAME}_EndTransfer();
+        }
+    }
 
     /* Wait for chip select rise */
     while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_ISR & QSPI_ISR_CSRA_Msk));
