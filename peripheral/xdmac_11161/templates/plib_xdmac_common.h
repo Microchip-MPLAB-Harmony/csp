@@ -93,7 +93,13 @@ typedef enum
     XDMAC_TRANSFER_COMPLETE = 1,
 
     /* Error while processing the request */
-    XDMAC_TRANSFER_ERROR = 2
+    XDMAC_TRANSFER_ERROR = 2, 
+    
+    /* Reached end of linked list */
+    XDMAC_TRANSFER_LINKED_LIST_END = 3, 
+
+    /* Requested flush operation has ended */
+    XDMAC_TRANSFER_FLUSH_END = 4
 
 } XDMAC_TRANSFER_EVENT;
 
