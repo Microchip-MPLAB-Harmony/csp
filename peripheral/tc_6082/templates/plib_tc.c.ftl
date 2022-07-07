@@ -367,7 +367,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 /* Check if timer period status is set */
 bool ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodHasExpired(void)
 {
-    return (((${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_SR_CPCS_Msk) >> TC_SR_CPCS_Pos);
+    return (((${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_SR_CPCS_Msk) != 0U);
 }
 </#if>
 </#if> <#-- TIMER -->
