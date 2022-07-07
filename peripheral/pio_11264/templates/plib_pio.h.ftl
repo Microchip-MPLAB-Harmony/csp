@@ -303,8 +303,6 @@ typedef  void (*PIO_PIN_CALLBACK) ( PIO_PIN pin, uintptr_t context);
 // *****************************************************************************
 // *****************************************************************************
 
-<#include "system/plib_pio_initialize.c.ftl">
-<#if NEED_PIO_INIT>
 // *****************************************************************************
 /* Function:
     void PIO_Initialize(void)
@@ -337,7 +335,6 @@ typedef  void (*PIO_PIN_CALLBACK) ( PIO_PIN pin, uintptr_t context);
 */
 void PIO_Initialize(void);
 
-</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: PIO Functions which operates on multiple pins of a port
