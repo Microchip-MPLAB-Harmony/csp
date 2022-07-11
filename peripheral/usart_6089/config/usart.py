@@ -143,24 +143,23 @@ def handleMessage(messageID, args):
     return result_dict
 
 def interruptControl(usartNVIC, event):
+    usart_mode = event["source"].getSymbolByID("USART_MODE").getSelectedKey()
+    if usart_mode == "USART" and event["source"].getSymbolValue("USART_INTERRUPT_MODE_ENABLE"):
+        enable_interrupt = True
+    elif usart_mode == "SPI_MASTER" and event["source"].getSymbolValue("USART_SPI_INTERRUPT_MODE"):
+        enable_interrupt = True
+    else:
+        enable_interrupt = False
 
-    Database.clearSymbolValue("core", interruptVector)
-    Database.clearSymbolValue("core", interruptHandler)
-    Database.clearSymbolValue("core", interruptHandlerLock)
-
-    if (event["value"] == True):
-        Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, usartInstanceName.getValue() + "_InterruptHandler", 2)
-        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+    if (enable_interrupt):
+        Database.setSymbolValue("core", interruptVector, True)
+        Database.setSymbolValue("core", interruptHandler, usartInstanceName.getValue() + "_InterruptHandler")
+        Database.setSymbolValue("core", interruptHandlerLock, True)
     else :
-        Database.setSymbolValue("core", interruptVector, False, 2)
-        Database.setSymbolValue("core", interruptHandler, usartInstanceName.getValue() + "_Handler", 2)
-        Database.setSymbolValue("core", interruptHandlerLock, False, 2)
+        Database.clearSymbolValue("core", interruptVector)
+        Database.clearSymbolValue("core", interruptHandler)
+        Database.clearSymbolValue("core", interruptHandlerLock)
 
-def dependencyStatus(symbol, event):
-
-    if (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE_ENABLE") == True):
-        symbol.setVisible(event["value"])
 
 def clockWarningCb(symbol, event):
 
@@ -872,14 +871,8 @@ def instantiateComponent(usartComponent):
 
     # NVIC Dynamic settings
     usartinterruptControl = usartComponent.createBooleanSymbol("NVIC_USART_ENABLE", None)
-    usartinterruptControl.setDependencies(interruptControl, ["USART_INTERRUPT_MODE_ENABLE"])
+    usartinterruptControl.setDependencies(interruptControl, ["USART_MODE", "USART_INTERRUPT_MODE_ENABLE", "USART_SPI_INTERRUPT_MODE"])
     usartinterruptControl.setVisible(False)
-
-    # Dependency Status
-    usartSymIntEnComment = usartComponent.createCommentSymbol("USART_NVIC_ENABLE_COMMENT", None)
-    usartSymIntEnComment.setVisible(False)
-    usartSymIntEnComment.setLabel("Warning!!! USART Interrupt is Disabled in Interrupt Manager")
-    usartSymIntEnComment.setDependencies(dependencyStatus, ["core." + interruptVectorUpdate])
 
     ############################################################################
     #### Code Generation ####
