@@ -143,7 +143,7 @@ for girqn_reg in range(0, len(girqn_reg_list)):
             sourceDict["girqn_bitpos"] = int_source_girqn_map[int_source]["girqn_bitpos"]
             # If ECIA reg has only one bitfield, then the group NVIC name is GIRQxx where xx is the ECIA register index. Else it is same as the bit-field name.
             if len(reg_bitfield_list) > 1:
-                sourceDict["group_nvic_name"] = int_source
+                sourceDict["group_nvic_name"] = int_source + "_GRP"
             else:
                 sourceDict["group_nvic_name"] = "GIRQ" + "{:02d}".format(int(girqn_reg_num))
             interrupt_sources_list.append(sourceDict)                       # Add source dictionary to the list of interrupt sources

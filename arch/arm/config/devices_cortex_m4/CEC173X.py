@@ -100,6 +100,10 @@ coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NV
 # #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
+# # load dma manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/dma_85/config/dma.py")
+#coreComponent.addPlugin("../peripheral/dma_85/plugin/dmamanager.jar")
+
 global armLibCSourceFile
 global compilerSpecifics
 compilerSelected = compilerChoice.getSelectedKey().lower()
