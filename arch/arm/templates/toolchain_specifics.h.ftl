@@ -29,6 +29,18 @@ extern "C" {
 #endif
 
 <#if CoreArchitecture?contains("ARM926")>
+    <#lt>/* MISRAC 2012 deviation block start */
+    <#lt>/* MISRA C-2012 Rule 21.1 deviated 7 times. Deviation record ID - H3_MISRAC_2012_R_21_1_DR_2 */
+    <#lt>/* MISRA C-2012 Rule 21.2 deviated 14 times.  Deviation record ID - H3_MISRAC_2012_R_21_2_DR_2 */
+    <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+        <#if COMPILER_CHOICE == "XC32">
+            <#lt>#pragma GCC diagnostic push
+            <#lt>#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+        </#if>
+        <#lt>#pragma coverity compliance block \
+        <#lt>(deviate:7 "MISRA C-2012 Rule 21.1" "H3_MISRAC_2012_R_21_1_DR_2")\
+        <#lt>(deviate:14 "MISRA C-2012 Rule 21.2" "H3_MISRAC_2012_R_21_2_DR_2")
+    </#if>
 
     <#lt>#ifndef __NOP
     <#lt>#define __NOP __arm926_nop
@@ -76,6 +88,17 @@ extern "C" {
     <#lt>}
     <#lt>#endif //__ISB
 
+    <#lt>#ifndef CPSR_I_Msk
+    <#lt>#define CPSR_I_Msk      (1UL << 7U)
+    <#lt>#endif
+
+    <#lt>static inline unsigned int __get_CPSR( void )
+    <#lt>{
+    <#lt>    unsigned int value = 0;
+    <#lt>    asm volatile( "MRS %0, cpsr" : "=r"(value) );
+    <#lt>    return value;
+    <#lt>}
+
     <#if COMPILER_CHOICE == "IAR" || CoreArchitecture?contains("ARM926")>
         <#lt>#define __ALIGNED(x) __attribute__((aligned(x)))
     </#if>
@@ -87,6 +110,15 @@ extern "C" {
     <#lt>#ifndef   __WEAK
     <#lt>#define __WEAK __attribute__((weak))
     <#lt>#endif // __WEAK
+    <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+
+        <#lt>#pragma coverity compliance end_block "MISRA C-2012 Rule 21.1"
+        <#lt>#pragma coverity compliance end_block "MISRA C-2012 Rule 21.2"
+        <#if COMPILER_CHOICE == "XC32">
+            <#lt>#pragma GCC diagnostic pop
+        </#if>
+    </#if>
+    <#lt>/* MISRAC 2012 deviation block end */
 </#if>
 <#if "XC32" == COMPILER_CHOICE>
     <#if CoreArchitecture?contains("ARM926") == false >
@@ -116,7 +148,7 @@ extern "C" {
     </#if>
 
 	<#lt>#define CACHE_ALIGNED_SIZE_GET(size)     (size + ((size % CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (size % CACHE_LINE_SIZE)) : 0))
-	
+
     <#lt>#ifndef FORMAT_ATTRIBUTE
     <#lt>   #define FORMAT_ATTRIBUTE(archetype, string_index, first_to_check)  __attribute__ ((format (archetype, string_index, first_to_check)))
     <#lt>#endif
@@ -162,7 +194,7 @@ extern "C" {
     </#if>
 
 	<#lt>#define CACHE_ALIGNED_SIZE_GET(size)     (size + ((size % CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (size % CACHE_LINE_SIZE)) : 0))
-	
+
     <#lt>#ifndef FORMAT_ATTRIBUTE
     <#lt>   #define FORMAT_ATTRIBUTE(archetype, string_index, first_to_check)
     <#lt>#endif
