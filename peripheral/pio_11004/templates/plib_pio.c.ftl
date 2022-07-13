@@ -108,19 +108,19 @@
     <#lt>    /************************ PIO ${PIO_PORT} Initialization ************************/
     <#if (PIO_ABCD1 != "0" ) || (PIO_ABCD2 != "0")>
         <#lt>    /* PORT${PIO_PORT} Peripheral Function Selection */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[0]= 0x${PIO_ABCD1};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[1]= 0x${PIO_ABCD2};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[0]= 0x${PIO_ABCD1}U;
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[1]= 0x${PIO_ABCD2}U;
     </#if>
     <#if PIO_PDR != "0">
         <#lt>    /* PORT${PIO_PORT} PIO Disable and Peripheral Enable*/
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PDR = 0x${PIO_PDR};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PER = ~0x${PIO_PDR};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PDR = 0x${PIO_PDR}U;
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PER = ~0x${PIO_PDR}U;
     <#else>
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PER = 0xFFFFFFFFU;
     </#if>
     <#if PIO_OD != "0">
         <#lt>    /* PORT${PIO_PORT} Multi Drive or Open Drain Enable */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = 0x${PIO_OD};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = 0x${PIO_OD}U;
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDDR = ~0x${PIO_OD}U;
     <#else>
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDDR = 0xFFFFFFFFU;
@@ -128,39 +128,39 @@
     <#lt>    /* PORT${PIO_PORT} Pull Up Enable/Disable as per MHC selection */
     <#if PIO_PUEN != "0">
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~0x${PIO_PUEN}U;
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = 0x${PIO_PUEN};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = 0x${PIO_PUEN}U;
     <#else>
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = 0xFFFFFFFFU;
     </#if>
     <#lt>    /* PORT${PIO_PORT} Pull Down Enable/Disable as per MHC selection */
     <#if PIO_PDEN != "0">
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~0x${PIO_PDEN}U;
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = 0x${PIO_PDEN};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = 0x${PIO_PDEN}U;
     <#else>
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = 0xFFFFFFFFU;
     </#if>
     <#lt>    /* PORT${PIO_PORT} Output Write Enable */
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
     <#lt>    /* PORT${PIO_PORT} Output Direction Enable */
-    <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = 0x${PIO_DIR};
+    <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = 0x${PIO_DIR}U;
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ODR = ~0x${PIO_DIR}U;
     <#lt>    /* Initialize PORT${PIO_PORT} pin state */
-    <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ODSR = 0x${PIO_LAT_HIGH};
+    <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ODSR = 0x${PIO_LAT_HIGH}U;
     <#if PIO_INTERRUPT == true>
         <#if PIO_INT_TYPE != "0">
             <#lt>    /* PORT${PIO_PORT} Additional interrupt mode Enable */
-            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_AIMER = 0x${PIO_INT_TYPE};
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_AIMER = 0x${PIO_INT_TYPE}U;
         <#else>
             <#lt>    /* If PIO Interrupt is selected for both edge, it doesn't need any register
             <#lt>       configuration */
         </#if>
         <#if PIO_INT_LEVEL != "0">
             <#lt>    /* PORT${PIO_PORT} Level type interrupt Enable */
-            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_LSR = 0x${PIO_INT_LEVEL};
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_LSR = 0x${PIO_INT_LEVEL}U;
         </#if>
         <#if PIO_INT_RE_HL != "0">
             <#lt>    /* PORT${PIO_PORT} Rising Edge or High Level Interrupt Enable */
-            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_REHLSR = 0x${PIO_INT_RE_HL};
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_REHLSR = 0x${PIO_INT_RE_HL}U;
         </#if>
         <#lt>    /* PORT${PIO_PORT} Interrupt Status Clear */
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ISR;
@@ -170,22 +170,22 @@
     </#if>
     <#if PIO_IFER != "0">
         <#lt>    /* PORT${PIO_PORT} Glitch/Debounce Filter Enable */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_IFER = 0x${PIO_IFER};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_IFER = 0x${PIO_IFER}U;
     </#if>
     <#if PIO_IFSCER != "0">
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_IFSCER = 0x${PIO_IFSCER};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_IFSCER = 0x${PIO_IFSCER}U;
         <#if PIO_SCDR != "0">
             <#lt>    /* PORT${PIO_PORT} Slow Clock Divider */
-            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SCDR = 0x${PIO_SCDR};
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SCDR = 0x${PIO_SCDR}U;
         </#if>
     </#if>
     <#if PIO_SLEWR?has_content>
         <#lt>    /* PORT${PIO_PORT} Slew rate control */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SLEWR = 0x${PIO_SLEWR};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SLEWR = 0x${PIO_SLEWR}U;
     </#if>
     <#if PIO_DRIVER?has_content>
         <#lt>    /* PORT${PIO_PORT} drive control */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_DRIVER = 0x${PIO_DRIVER};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_DRIVER = 0x${PIO_DRIVER}U;
     </#if>
 
 </#macro>
