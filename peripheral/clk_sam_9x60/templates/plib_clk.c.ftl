@@ -48,11 +48,11 @@ Initialize Main clock
 *********************************************************************************/
 static void initMainClk(void)
 {
-    PMC_REGS->CKGR_MOR = CKGR_MOR_MOSCSEL(${CLK_MOSCSEL}) |\
+    PMC_REGS->CKGR_MOR = CKGR_MOR_MOSCSEL(${CLK_MOSCSEL}U) |\
                          CKGR_MOR_KEY_PASSWD |\
-                         CKGR_MOR_MOSCXTST(${CLK_MOSCXTST}) |\
-                         CKGR_MOR_MOSCRCEN(${CLK_MOSCRCEN?then('1','0')}) |\
-                         CKGR_MOR_MOSCXTEN(${CLK_MOSCXTEN?then('1','0')});
+                         CKGR_MOR_MOSCXTST(${CLK_MOSCXTST}U) |\
+                         CKGR_MOR_MOSCRCEN(${CLK_MOSCRCEN?then('1U','0U')}) |\
+                         CKGR_MOR_MOSCXTEN(${CLK_MOSCXTEN?then('1U','0U')});
 }
 
 <#if CLK_PLL_EN>
@@ -62,19 +62,22 @@ Initialize PLLA
 static void initPLLAClk(void)
 {
     PMC_REGS->PMC_PLL_UPDT = PMC_PLL_UPDT_ID(PLL_ID_PLLA);
-    PMC_REGS->PMC_PLL_ACR = PMC_PLL_ACR_LOOP_FILTER(0x9);
-    PMC_REGS->PMC_PLL_CTRL1 = PMC_PLL_CTRL1_MUL(${CLK_PLL_MUL}) |\
-                              PMC_PLL_CTRL1_FRACR(${CLK_PLL_FRACR});
+    PMC_REGS->PMC_PLL_ACR = PMC_PLL_ACR_LOOP_FILTER(0x9U);
+    PMC_REGS->PMC_PLL_CTRL1 = PMC_PLL_CTRL1_MUL(${CLK_PLL_MUL}U) |\
+                              PMC_PLL_CTRL1_FRACR(${CLK_PLL_FRACR}U);
     PMC_REGS->PMC_PLL_UPDT = PMC_PLL_UPDT_UPDATE_Msk | PMC_PLL_UPDT_ID(PLL_ID_PLLA);
     PMC_REGS->PMC_PLL_CTRL0 = PMC_PLL_CTRL0_ENLOCK_Msk |\
                               PMC_PLL_CTRL0_ENPLL_Msk |\
-                              PMC_PLL_CTRL0_DIVPMC(${CLK_PLL_DIVPMC}) |\
+                              PMC_PLL_CTRL0_DIVPMC(${CLK_PLL_DIVPMC}U) |\
                               PMC_PLL_CTRL0_ENPLLCK_Msk;
-    PMC_REGS->PMC_PLL_UPDT = PMC_PLL_UPDT_UPDATE_Msk | 0;
-    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_LOCKA_Msk) != PMC_PLL_ISR0_LOCKA_Msk);
+    PMC_REGS->PMC_PLL_UPDT = PMC_PLL_UPDT_UPDATE_Msk;
+    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_LOCKA_Msk) != PMC_PLL_ISR0_LOCKA_Msk)
+    {
+        /* Wait for PLL lock to rise */
+    }
 
     <#if CLK_PLLA_SS>
-    PMC_REGS->PMC_PLL_SSR = PMC_PLL_SSR_ENSPREAD_Msk | PMC_PLL_SSR_STEP(${CLK_PLLA_SS_STEP}) | PMC_PLL_SSR_NSTEP(${CLK_PLLA_SS_NSTEP});
+    PMC_REGS->PMC_PLL_SSR = PMC_PLL_SSR_ENSPREAD_Msk | PMC_PLL_SSR_STEP(${CLK_PLLA_SS_STEP}U) | PMC_PLL_SSR_NSTEP(${CLK_PLLA_SS_NSTEP}U);
     </#if>
 }
 </#if>
@@ -85,16 +88,28 @@ Initialize CPU clock
 static void initCPUClk(void)
 {
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_CSS_Msk) | PMC_CPU_CKR_CSS_SLOW_CLK;
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait for MCKRDY */
+    }
 
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_MDIV_Msk) | PMC_CPU_CKR_MDIV_${CLK_CPU_CKR_MDIV};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait for MCKRDY */
+    }
 
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_PRES_Msk) | PMC_CPU_CKR_PRES_${CLK_CPU_CKR_PRES};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait for MCKRDY */
+    }
 
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_CSS_Msk) | PMC_CPU_CKR_CSS_${CLK_CPU_CKR_CSS};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait for MCKRDY */
+    }
 }
 </#if>
 <#if CLK_UPLL_EN>
@@ -113,13 +128,13 @@ Generate Software delay (in multiples of microsecond units)
 static void swDelayUs(uint32_t delay)
 {
     uint32_t i, count;
-
     /* delay * (CPU_FREQ/1000000) / 6 */
-    count = delay *  (${DELAY_SRC_CLK_FREQUENCY}/1000000)/6;
-
-    /* 6 CPU cycles per iteration */
+    count = delay *  (${DELAY_SRC_CLK_FREQUENCY}U/1000000U)/6U;
     for (i = 0; i < count; i++)
+    {
+        /* 6 CPU cycles per iteration */
         __NOP();
+    }
 }
 
 /*********************************************************************************
@@ -128,18 +143,18 @@ Initialize UPLL
 static void initUPLLCLK(void)
 {
     /* STEP 1: PMC_PLL_UPDT to target UPLL, startup time of 150us and update disabled */
-    PMC_REGS->PMC_PLL_UPDT = PMC_PLL_UPDT_STUPTIM(0x6) |\
-                             PMC_PLL_UPDT_UPDATE(0x0) |\
+    PMC_REGS->PMC_PLL_UPDT = PMC_PLL_UPDT_STUPTIM(0x6U) |\
+                             PMC_PLL_UPDT_UPDATE(0x0U) |\
                              PMC_PLL_UPDT_ID(PLL_ID_UPLL);
 
     /* STEP 2: Set the Analog controls to the values recommended by data sheet */
-    PMC_REGS->PMC_PLL_ACR = PMC_PLL_ACR_LOOP_FILTER(0x1B) |\
-                            PMC_PLL_ACR_LOCK_THR(0x4) |\
-                            PMC_PLL_ACR_CONTROL(0x10);
+    PMC_REGS->PMC_PLL_ACR = PMC_PLL_ACR_LOOP_FILTER(0x1BU) |\
+                            PMC_PLL_ACR_LOCK_THR(0x4U) |\
+                            PMC_PLL_ACR_CONTROL(0x10U);
 
     /* STEP 3: Set loop paramaters for the fractional PLL */
-    PMC_REGS->PMC_PLL_CTRL1 = PMC_PLL_CTRL1_MUL(${CLK_UPLL_MUL}) |\
-                              PMC_PLL_CTRL1_FRACR(${CLK_UPLL_FRACR});
+    PMC_REGS->PMC_PLL_CTRL1 = PMC_PLL_CTRL1_MUL(${CLK_UPLL_MUL}U) |\
+                              PMC_PLL_CTRL1_FRACR(${CLK_UPLL_FRACR}U);
 
     /* STEP 4: Enable UTMI Bandgap */
     PMC_REGS->PMC_PLL_ACR |= PMC_PLL_ACR_UTMIBG_Msk;
@@ -162,7 +177,10 @@ static void initUPLLCLK(void)
                               PMC_PLL_CTRL0_ENPLLCK_Msk;
 
     /* STEP 10: Wait for the lock bit to rise by polling the PMC_PLL_ISR0 */
-    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_LOCKU_Msk) != PMC_PLL_ISR0_LOCKU_Msk);
+    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_LOCKU_Msk) != PMC_PLL_ISR0_LOCKU_Msk)
+    {
+        /* Wait for PLL lock to rise */
+    }
 }
 </#if>
 
@@ -177,9 +195,12 @@ static void initProgrammableClk(void)
 <#assign css = .vars["CLK_PCK"+i+"_CSS"]>
 <#assign pres = .vars["CLK_PCK"+i+"_PRES"]>
     PMC_REGS->PMC_PCK[${i}] = PMC_PCK_CSS_${css} |\
-                                PMC_PCK_PRES(${pres});
+                                PMC_PCK_PRES(${pres}U);
     PMC_REGS->PMC_SCER |= PMC_SCDR_PCK${i}_Msk;
-    while ((PMC_REGS->PMC_SR & PMC_SR_PCKRDY${i}_Msk) != PMC_SR_PCKRDY${i}_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_PCKRDY${i}_Msk) != PMC_SR_PCKRDY${i}_Msk)
+    {
+        /* Wait for PCKRDY */
+    }
 </#if>
 </#list>
 }
@@ -189,6 +210,7 @@ Initialize Peripheral clocks
 *********************************************************************************/
 static void initPeriphClk(void)
 {
+    const uint8_t EOL_MARKER = ((uint8_t)ID_PERIPH_MAX + 1U);
     struct {
         uint8_t id;
         uint8_t clken;
@@ -222,13 +244,13 @@ static void initPeriphClk(void)
                 </#if>
             </#if>
         </#list>
-        { ID_PERIPH_MAX + 1U, 0, 0, 0, 0}//end of list marker
+        { EOL_MARKER, 0, 0, 0, 0}//end of list marker
     };
 
     uint32_t count = sizeof(periphList)/sizeof(periphList[0]);
     for (uint32_t i = 0; i < count; i++)
     {
-        if (periphList[i].id == (ID_PERIPH_MAX + 1U))
+        if (periphList[i].id == EOL_MARKER)
         {
             break;
         }
@@ -250,7 +272,7 @@ Initialize USB OHCI clocks
 static void initUSBClk ( void )
 {
     /* Configure USB OHCI clock source and divider */
-    PMC_REGS->PMC_USB = PMC_USB_USBDIV(${CLK_USB_USBDIV}) | PMC_USB_USBS_${CLK_USB_USBS};
+    PMC_REGS->PMC_USB = PMC_USB_USBDIV(${CLK_USB_USBDIV}U) | PMC_USB_USBS_${CLK_USB_USBS};
 
     /* Enable UHP48M and UHP12M OHCI clocks */
     PMC_REGS->PMC_SCER |= PMC_SCER_UHP_Msk;
@@ -329,5 +351,4 @@ void CLK_Initialize( void )
     /* Initialize USB Clock */
     initUSBClk();
     </#if>
-
 }
