@@ -261,7 +261,7 @@ static void cleanWay(uint8_t way)
     }
 }
 
-void cleanInvalidateWay(uint8_t way)
+static void cleanInvalidateWay(uint8_t way)
 {
     L2CC_REGS->L2CC_CIWR = way;
     while ((L2CC_REGS->L2CC_CIWR & way) != 0U)
@@ -269,38 +269,6 @@ void cleanInvalidateWay(uint8_t way)
         /* Do Nothing */
     }
 }
-
-/*
-void l2cc_clean_index(uint32_t phys_addr, uint8_t way)
-{
-    uint32_t index;
-
-    index = (phys_addr >> L2CC_OFFSET_BIT) & ((1 << L2CC_INDEX_BIT) - 1);
-    L2CC_REGS->L2CC_CIR = L2CC_CIR_IDX(index) | L2CC_CIR_WAY(way) | L2CC_CIR_C_Msk;
-    while (L2CC_REGS->L2CC_CIR & L2CC_CIR_C_Msk);
-}
-
-void l2cc_clean_invalidate_index(uint32_t phys_addr, uint8_t way)
-{
-    uint32_t index;
-
-    index = (phys_addr >> L2CC_OFFSET_BIT) & ((1 << L2CC_INDEX_BIT) - 1);
-    L2CC_REGS->L2CC_CIIR = L2CC_CIIR_IDX(index) | L2CC_CIIR_WAY(way) | L2CC_CIIR_C_Msk;
-    while (L2CC_REGS->L2CC_CIIR & L2CC_CIIR_C_Msk);
-}
-
-void l2cc_data_lockdown(uint8_t way)
-{
-    L2CC_REGS->L2CC_DLKR = way;
-    while (L2CC_REGS->L2CC_CSR & L2CC_CSR_C_Msk);
-}
-
-void l2cc_instruction_lockdown(uint8_t way)
-{
-    L2CC_REGS->L2CC_ILKR = way;
-    while (L2CC_REGS->L2CC_CSR & L2CC_CSR_C_Msk);
-}
-*/
 
 // *****************************************************************************
 /* Function:
@@ -440,7 +408,7 @@ void PLIB_L2CC_InvalidateCacheByAddr(uint32_t *addr, uint32_t size)
 {
     uint32_t start = (uint32_t)addr;
     uint32_t end = start + size;
-    uint32_t current = start & ~0x1fU;
+    uint32_t current = start & ~0x1FU;
     if (l2cacheIsEnabled()) {
         while (current <= end) {
             invalidatePAL(current);
@@ -482,7 +450,7 @@ void PLIB_L2CC_CleanCacheByAddr(uint32_t *addr, uint32_t size)
 {
     uint32_t start = (uint32_t)addr;
     uint32_t end = start + size;
-    uint32_t current = start & ~0x1fU;
+    uint32_t current = start & ~0x1FU;
     if (l2cacheIsEnabled()) {
         while (current <= end) {
             cleanPAL(current);
@@ -561,24 +529,24 @@ void PLIB_L2CC_CleanInvalidateCacheByAddr(uint32_t *addr, uint32_t size)
 */
 void PLIB_L2CC_Initialize(void)
 {
-    <#if L2CC_ECR_EVCEN>
+<#if L2CC_ECR_EVCEN>
     eventConfig(0, ${L2CC_ECFGR0_ESRC},
                       ${L2CC_ECFGR0_EIGEN});
     eventConfig(1, ${L2CC_ECFGR1_ESRC},
                       ${L2CC_ECFGR1_EIGEN});
-    enableEventCounter(0);
-    enableEventCounter(1);
-    </#if>
+    enableEventCounter(0U);
+    enableEventCounter(1U);
 
+</#if>
     /* Set configuration */
     setConfig();
-
     <#if L2CC_TRCR>
+
     /* Set tag latency */
     setTagRamLatency();
     </#if>
-
     <#if L2CC_DRCR>
+
     /* Set data latency */
     setDataRamLatency();
     </#if>
@@ -588,18 +556,19 @@ void PLIB_L2CC_Initialize(void)
     dataPrefetchEnable();
 
     /* Invalidate whole L2CC */
-    invalidateWay(0xFF);
+    invalidateWay(0xFFU);
 
     /* Disable all L2CC Interrupt */
-    disableInt(0x1FF);
+    disableInt(0x1FFU);
 
     /* Clear all L2CC Interrupt */
-    clearInt(0x1FF);
-
+    clearInt(0x1FFU);
     <#if L2CC_ACR_EXCC>
+
     /* Set exclusive mode */
     l2cacheSetExclusive();
     <#else>
+
     /* Set non-exclusive mode */
     l2cacheSetNonExclusive();
     </#if>
