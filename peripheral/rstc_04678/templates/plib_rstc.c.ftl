@@ -157,6 +157,9 @@ void ${RSTC_INSTANCE_NAME}_CallbackRegister(RSTC_CALLBACK pCallback, uintptr_t c
 
 void ${RSTC_INSTANCE_NAME}_InterruptHandler(void)
 {
+    // Clear the interrupt flag
+    ${RSTC_INSTANCE_NAME}_REGS->RSTC_SR;
+
     if (rstcCallbackObj.pCallback != NULL)
     {
         rstcCallbackObj.pCallback(rstcCallbackObj.context);
