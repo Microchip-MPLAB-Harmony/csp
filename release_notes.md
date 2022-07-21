@@ -3,6 +3,23 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.13.1
+
+### New Features
+- N/A
+
+### Bug fixes
+- Fixed issue in serial setup API of UART Peripheral library for PIC32M devices whereby transmit and receive gets disabled after the API is called
+- Fixed issue in PIO peripheral library when interrupt generation is enabled on multiple pins of the same port
+- Fixed issue related to context save and restore in Azure RTOS ThreadX for PIC32M devices
+- Fixed MISRA-C violations in a few peripheral libraries
+
+### Known Issues
+- Same as v3.13.0
+
+### Development Tools
+- Same as v3.13.0
+
 ## CSP Release v3.13.0
 
 ### New Features
