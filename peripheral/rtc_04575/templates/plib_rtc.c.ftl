@@ -116,12 +116,12 @@ void ${RTC_INSTANCE_NAME}_Initialize( void )
 bool ${RTC_INSTANCE_NAME}_TimeSet( struct tm * sysTime )
 {
     bool retval = true;
-    sysTime->tm_year += 1900;
+    uint32_t year = (uint32_t)sysTime->tm_year + 1900U;
     uint32_t data_cal = (decimaltobcd((uint32_t)sysTime->tm_mday ) << RTC_CALR_DATE_Pos)
                         | (decimaltobcd(((uint32_t)sysTime->tm_wday + 1U )) << RTC_CALR_DAY_Pos)
                         | (decimaltobcd(((uint32_t)sysTime->tm_mon + 1U )) << RTC_CALR_MONTH_Pos)
-                        | (decimaltobcd(((uint32_t)sysTime->tm_year - (((uint32_t)sysTime->tm_year/100U) * 100U ))) << RTC_CALR_YEAR_Pos)
-                        | (decimaltobcd(((uint32_t)sysTime->tm_year/100U) ) << RTC_CALR_CENT_Pos);
+                        | (decimaltobcd(year - ((year/100U) * 100U )) << RTC_CALR_YEAR_Pos)
+                        | (decimaltobcd((year/100U)) << RTC_CALR_CENT_Pos);
 
     uint32_t data_time = (decimaltobcd((uint32_t)sysTime->tm_hour) << RTC_TIMR_HOUR_Pos )
                         | (decimaltobcd((uint32_t)sysTime->tm_min) << RTC_TIMR_MIN_Pos)
