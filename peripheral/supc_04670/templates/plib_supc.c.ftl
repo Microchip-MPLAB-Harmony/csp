@@ -100,6 +100,7 @@
 static void WaitEntryClockSetup(bool xtal_disable)
 {
     uint8_t count = 0U;
+    uint32_t reg = 0U;
 
     /* Enable the RC Oscillator */
     PMC_REGS->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN_Msk;
@@ -112,6 +113,20 @@ static void WaitEntryClockSetup(bool xtal_disable)
 
     /* Wait for Main Clock Selection Status */
     while((PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk);
+
+    /* Program PMC_CPU_CKR.CSS and MCK dividers and Wait for PMC_SR.MCKRDY to be set    */
+    reg = (PMC_REGS->PMC_CPU_CKR & ~(PMC_CPU_CKR_CSS_Msk |
+                                     PMC_CPU_CKR_RATIO_MCK0DIV_Msk |
+                                     PMC_CPU_CKR_RATIO_MCK0DIV2_Msk));
+
+    <@compress single_line=true>reg |= (PMC_CPU_CKR_CSS_MAINCK
+        ${core.CLK_CPU_CKR_RATIO_MCK0DIV?string(" | PMC_CPU_CKR_RATIO_MCK0DIV_Msk","")}
+        ${core.CLK_CPU_CKR_RATIO_MCK0DIV2?string(" | PMC_CPU_CKR_RATIO_MCK0DIV2_Msk", "")});</@compress>
+    PMC_REGS->PMC_CPU_CKR = reg;
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait for status MCKRDY */
+    }
 
     /* Disable PLL Clock */
     for (count = 0U; count < 3U; count++)
@@ -158,7 +173,7 @@ void ${SUPC_INSTANCE_NAME}_Initialize(void)
 
 </#if>
 <#if SUPC_BMR_RTTWKEN || SUPC_BMR_RTCWKEN || SUPC_BMR_VBATWKEN || SUPC_BMR_FWUPEN || SUPC_BMR_CORPORWKEN || SUPC_BMR_VDD3V3SMWKEN || SUPC_BMR_VBATREN || SUPC_BMR_MRTCOUT || SUPC_BMR_BADXTWKEN>
-    <@compress single_line=true>${SUPC_INSTANCE_NAME}_REGS->SUPC_BMR = (${SUPC_INSTANCE_NAME}_REGS->SUPC_BMR & ~SUPC_BMR_Msk)
+    <@compress single_line=true>${SUPC_INSTANCE_NAME}_REGS->SUPC_BMR = (${SUPC_INSTANCE_NAME}_REGS->SUPC_BMR & ~SUPC_BMR_Msk) | SUPC_BMR_KEY_PASSWD
                                                                       ${SUPC_BMR_RTTWKEN?then('| SUPC_BMR_RTTWKEN_Msk', '')}
                                                                       ${SUPC_BMR_RTCWKEN?then('| SUPC_BMR_RTCWKEN_Msk', '')}
                                                                       ${SUPC_BMR_VBATWKEN?then('| SUPC_BMR_VBATWKEN_Msk', '')}
