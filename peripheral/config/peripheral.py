@@ -95,7 +95,8 @@ peripherals = {
                 "SUPC_U2117"    : ["SUPC"],
                 "SUPC_U2407"    : ["SUPC"],
                 "CAN_U2003"     : ["CAN"],
-                "MCAN_11273"    : ["CAN"]
+                "MCAN_11273"    : ["CAN"],
+                "SEFC_04463"    : ["MEMORY"]
 }
 
 # a dictionary to translate the new id mentioned in ATDF to old id used in csp
