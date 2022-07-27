@@ -288,7 +288,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_02674/config/wdt.py")
 
 # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_01500/config/dmac.py")
-coreComponent.addPlugin("../peripheral/dmac_01500/plugin/dmamanager.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_PIC32MZW",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/apps/dma-configurators/dma-configurator-2/build/index.html",
+                            "symbol_config": "csp/peripheral/dmac_01500/plugin/symbol-config.json"
+                        }
+                        )
 
 CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
 

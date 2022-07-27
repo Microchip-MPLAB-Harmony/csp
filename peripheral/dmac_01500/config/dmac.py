@@ -576,11 +576,6 @@ symbol = coreComponent.createStringSymbol(SymId, None)
 symbol.setDefaultValue("0xB0")
 symbol.setVisible(False)
 
-# for DMA manager to work
-dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
-dmaManagerSelect.setVisible(False)
-dmaManagerSelect.setDefaultValue("dmac_01500:DMAC01500Model")
-
 # start of menu-related items
 dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
 dmacMenu.setLabel("DMA (DMAC)")
