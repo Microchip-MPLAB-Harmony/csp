@@ -38,8 +38,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef _PLIB_${CVR_INSTANCE_NAME}_H
-#define _PLIB_${CVR_INSTANCE_NAME}_H
+#ifndef PLIB_${CVR_INSTANCE_NAME}_H
+#define PLIB_${CVR_INSTANCE_NAME}_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -74,4 +74,4 @@ void ${CVR_INSTANCE_NAME}_UpdateValue (uint8_t value);
 #endif
 
 // DOM-IGNORE-END
-#endif // _PLIB_${CVR_INSTANCE_NAME}_H
+#endif // PLIB_${CVR_INSTANCE_NAME}_H
