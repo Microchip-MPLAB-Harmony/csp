@@ -211,7 +211,7 @@ void CLK_Initialize( void )
     </#if>
     <#if (.vars[REFCLKOE]?has_content) && (.vars[REFCLKOE] == true)>
         <#lt>    /* Enable oscillator (ON bit) and Enable Output (OE bit) */
-        <#lt>    ${.vars[REFCONREG]}SET = ${.vars[OEMASK]} | ${.vars[ONMASK]};
+        <#lt>    ${.vars[REFCONREG]}SET = ${.vars[OEMASK]}U | ${.vars[ONMASK]}U;
 
     <#else>
         <#lt>    /* Enable oscillator (ON bit) */
