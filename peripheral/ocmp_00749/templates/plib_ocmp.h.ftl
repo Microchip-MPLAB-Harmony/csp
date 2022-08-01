@@ -38,8 +38,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef _PLIB_${OCMP_INSTANCE_NAME}_H
-#define _PLIB_${OCMP_INSTANCE_NAME}_H
+#ifndef PLIB_${OCMP_INSTANCE_NAME}_H
+#define PLIB_${OCMP_INSTANCE_NAME}_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -194,4 +194,4 @@ void ${OCMP_INSTANCE_NAME}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t co
 #endif
 
 // DOM-IGNORE-END
-#endif // _PLIB_${OCMP_INSTANCE_NAME}_H
+#endif // PLIB_${OCMP_INSTANCE_NAME}_H

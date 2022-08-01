@@ -53,7 +53,7 @@
 
 <#if OCMP_INTERRUPT_ENABLE == true>
 
-OCMP_OBJECT ${OCMP_INSTANCE_NAME?lower_case}Obj;
+static OCMP_OBJECT ${OCMP_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${OCMP_INSTANCE_NAME}_Initialize (void)
@@ -75,7 +75,7 @@ void ${OCMP_INSTANCE_NAME}_Initialize (void)
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;  
-    ${OCMP_CFG_REG_NAME} |= ${OCMP_CFGCON_OCACLK_MASK};
+    ${OCMP_CFG_REG_NAME} |= ${OCMP_CFGCON_OCACLK_MASK}U;
     /* Lock system since done with configuration */
     SYSKEY = 0x33333333;    
   </#if>
