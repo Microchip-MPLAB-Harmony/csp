@@ -80,7 +80,7 @@ void ${SDHC_INSTANCE_NAME}_CardDetectEnable( void );
 void ${SDHC_INSTANCE_NAME}_CardDetectDisable( void );
 </#if>
 
-bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t clock);
+bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t speed);
 
 void ${SDHC_INSTANCE_NAME}_ClockEnable ( void );
 

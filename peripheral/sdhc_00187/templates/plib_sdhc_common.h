@@ -61,7 +61,7 @@
 #define SDHC_DESC_TABLE_ATTR_LINK_DESC      (0x03 << 4)
 
 #define SDHC_DESC_TABLE_ATTR_VALID          (1 << 0)
-#define SDHC_DESC_TABLE_ATTR_END            (1 << 1)
+#define SDHC_DESC_TABLE_ATTR_END            (1UL << 1)
 #define SDHC_DESC_TABLE_ATTR_INTR           (1 << 2)
 
 #define SDHC_CLOCK_FREQ_400_KHZ             (400000)
