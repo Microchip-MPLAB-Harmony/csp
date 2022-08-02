@@ -71,7 +71,7 @@ void ${WDT_INSTANCE_NAME}_Disable(void)
 </#if>
 bool ${WDT_INSTANCE_NAME}_IsEnabled( void )
 {
-    return((bool)WDTCONbits.ON);
+    return((WDTCONbits.ON) != 0U);
 }
 
 <#if CONFIG_WINDIS == "OFF">
@@ -90,7 +90,7 @@ void ${WDT_INSTANCE_NAME}_WindowDisable( void )
 </#if>
 bool ${WDT_INSTANCE_NAME}_IsWindowEnabled( void )
 {
-    return((bool)WDTCONbits.WDTWINEN);
+    return((WDTCONbits.WDTWINEN) != 0U);
 }
 
 void ${WDT_INSTANCE_NAME}_Clear( void )
