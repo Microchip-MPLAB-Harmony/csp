@@ -69,8 +69,10 @@ extern "C" {
 #endif
 // DOM-IGNORE-END
 
+<#if CPU_CLOCK_FREQUENCY??>
 /* CPU clock frequency */
 #define CPU_CLOCK_FREQUENCY ${CPU_CLOCK_FREQUENCY}
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************

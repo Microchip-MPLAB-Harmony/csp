@@ -589,6 +589,11 @@ def instantiateComponent( coreComponent ):
     xc32HeapSize.setLabel("Heap Size (bytes)")
     xc32HeapSize.setDefaultValue( 512 )
 
+    xc32DataInit = coreComponent.createBooleanSymbol("XC32_DATA_INIT", xc32LdGeneralMenu)
+    xc32DataInit.setLabel("Initialize Data")
+    xc32DataInit.setDefaultValue(True)
+    xc32DataInit.setReadOnly(True)
+
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         xc32SecureHeapSize = coreComponent.createIntegerSymbol("XC32_SECURE_HEAP_SIZE", xc32LdGeneralMenu)
         xc32SecureHeapSize.setLabel("Secure Heap Size (bytes)")

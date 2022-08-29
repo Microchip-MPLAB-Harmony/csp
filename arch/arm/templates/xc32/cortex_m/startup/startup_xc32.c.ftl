@@ -210,9 +210,13 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
     CMCC_Configure();
 
 </#if>
+<#if XC32_DATA_INIT??>
+    <#if XC32_DATA_INIT>
     /* Initialize data after TCM is enabled.
      * Data initialization from the XC32 .dinit template */
     __pic32c_data_initialization();
+    </#if>
+</#if>
 
 <#if STACK_IN_TCM??>
 <#if (STACK_IN_TCM)>
