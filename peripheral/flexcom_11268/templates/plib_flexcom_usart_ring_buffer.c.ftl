@@ -813,11 +813,11 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
         {
             if ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk) != 0U)
             {
-                FLEXCOM_USART_RHR_9BIT_REG = wrByte & (uint16_t)FLEX_US_THR_TXCHR_Msk;
+                FLEXCOM_USART_THR_9BIT_REG = wrByte & (uint16_t)FLEX_US_THR_TXCHR_Msk;
             }
             else
             {
-                FLEXCOM_USART_RHR_8BIT_REG = (uint8_t)wrByte;
+                FLEXCOM_USART_THR_8BIT_REG = (uint8_t)wrByte;
             }
 
             /* Send notification */
