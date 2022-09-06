@@ -154,12 +154,13 @@ def DMAInterruptConfig(coreComponent,dmaMenu):
     global dmaVectorNameList
     global enableAllDMAPriorityInterrupts
     global updateDMAInterruptWarringStatus
+    global dmaInstanceName
     InterruptVectorUpdate = []
 
     vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
     for id in range(0, len(vectorValues)):
-        if vectorValues[id].getAttribute("module-instance") == "DMA":
+        if vectorValues[id].getAttribute("module-instance") == dmaInstanceName.getValue():
             dmaVectorName = vectorValues[id].getAttribute("name")
             dmaVectorNameList.append(dmaVectorName)
 
@@ -418,6 +419,7 @@ def DMA_ATDF_Read(coreComponent, dmaEnable):
     global numGenerators
     global numUsers
     global createPeripheralTrigger_IDMap
+    global dmaInstanceName
 
     dmaChannelNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMA\"]/register-group@[name=\"DMA\"]").getChildren()
     for id in range(0, len(dmaChannelNode)):
@@ -426,12 +428,12 @@ def DMA_ATDF_Read(coreComponent, dmaEnable):
 
     generatorValues = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators").getChildren()
     for id in range(0, len(generatorValues)):
-        if generatorValues[id].getAttribute("module-instance") == "DMA":
+        if generatorValues[id].getAttribute("module-instance") == dmaInstanceName.getValue():
             numGenerators = numGenerators + 1
 
     usersValues = ATDF.getNode("/avr-tools-device-file/devices/device/events/users").getChildren()
     for id in range(0, len(usersValues)):
-        if usersValues[id].getAttribute("module-instance") == "DMA":
+        if usersValues[id].getAttribute("module-instance") == dmaInstanceName.getValue():
             numUsers = numUsers + 1
 
     #Two types of actions DMA can take upon receiving an event. Either start transfer or take action defined in EVAUXACT. Hence divide by 2.

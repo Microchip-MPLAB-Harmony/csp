@@ -130,7 +130,7 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
         <#lt>                                                                                      </#if>
         <#lt>                                                                                      ;
         <#lt>   </@compress>
-        <#lt>   <#if (.vars[DMA_EVSYS_IN] == true) || (.vars[DMA_ENABLE_EVSYS_AUX_IN] == true) || (.vars[DMA_EVSYS_OUT] == true)>
+        <#lt>   <#if ((.vars[DMA_EVSYS_IN])?? && (.vars[DMA_EVSYS_IN] == true)) || ((.vars[DMA_ENABLE_EVSYS_AUX_IN])?? && (.vars[DMA_ENABLE_EVSYS_AUX_IN] == true)) || ((.vars[DMA_EVSYS_OUT])?? && (.vars[DMA_EVSYS_OUT] == true))>
         <#lt>   <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->CHANNEL[${i}].DMA_CHEVCTRL = ${(.vars[DMA_EVSYS_IN])?then('DMA_CHEVCTRL_EVSTRIE(1U)', 'DMA_CHEVCTRL_EVSTRIE(0U)')}
         <#lt>                                                                                       <#if (.vars[DMA_EVSYS_OUT] == true)>
         <#lt>                                                                                       | DMA_CHEVCTRL_EVOE_Msk
@@ -476,7 +476,11 @@ static void DMA_interruptHandler(uint32_t channel)
 }
 
 <#list 1..DMA_NUM_INT_PRIO as i>
+<#if DMA_INSTANCE_NAME == "DMA">
 void DMA_PRI${i-1}_InterruptHandler( void )
+<#else>
+void ${DMA_INSTANCE_NAME}_${i-1}_InterruptHandler( void )
+</#if>
 {
     volatile uint32_t dmaIntPriority${i}Status = 0U;
     uint32_t channel = 0U;
