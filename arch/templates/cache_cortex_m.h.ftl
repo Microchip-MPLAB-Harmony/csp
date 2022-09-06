@@ -76,7 +76,7 @@ extern "C" {
 #define INSTRUCTION_CACHE_IS_ENABLED()     			   (SCB->CCR & (uint32_t)SCB_CCR_IC_Msk)
 </#if>
 
-<#if CoreArchitecture != "CORTEX-M4" && INSTRUCTION_CACHE_ENABLE?? && INSTRUCTION_CACHE_ENABLE == true>
+<#if CoreArchitecture != "CORTEX-M4" && CoreArchitecture != "CORTEX-M33" && INSTRUCTION_CACHE_ENABLE?? && INSTRUCTION_CACHE_ENABLE == true>
     <#lt>#define ICACHE_ENABLE()                                SCB_EnableICache()
     <#lt>#define ICACHE_DISABLE()                               SCB_DisableICache()
     <#lt>#define ICACHE_INVALIDATE()                            SCB_InvalidateICache()
@@ -86,7 +86,7 @@ extern "C" {
     <#lt>#define ICACHE_INVALIDATE()
 </#if>
 
-<#if CoreArchitecture != "CORTEX-M4" && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
+<#if CoreArchitecture != "CORTEX-M4" && CoreArchitecture != "CORTEX-M33" && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
     <#lt>#define DCACHE_ENABLE()                                SCB_EnableDCache()
     <#lt>#define DCACHE_DISABLE()                               SCB_DisableDCache()
     <#lt>#define DCACHE_INVALIDATE()                            SCB_InvalidateDCache()
