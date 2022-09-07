@@ -476,11 +476,7 @@ static void DMA_interruptHandler(uint32_t channel)
 }
 
 <#list 1..DMA_NUM_INT_PRIO as i>
-<#if DMA_INSTANCE_NAME == "DMA">
-void DMA_PRI${i-1}_InterruptHandler( void )
-<#else>
-void ${DMA_INSTANCE_NAME}_${i-1}_InterruptHandler( void )
-</#if>
+void ${DMA_INSTANCE_NAME}_PRI${i-1}_InterruptHandler( void )
 {
     volatile uint32_t dmaIntPriority${i}Status = 0U;
     uint32_t channel = 0U;
