@@ -108,16 +108,43 @@ static inline void ${ADC_INSTANCE_NAME}_Disable( void )
     }
 }
 
+<#if ADC_NUM_SAR_CORES != 1>
 void ${ADC_INSTANCE_NAME}_CompareEnable(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel);
 void ${ADC_INSTANCE_NAME}_CompareDisable(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel);
 void ${ADC_INSTANCE_NAME}_CompareWinThresholdSet(ADC_CORE_NUM core, uint16_t low_threshold, uint16_t high_threshold);
 void ${ADC_INSTANCE_NAME}_CompareWinModeSet(ADC_CORE_NUM core, ADC_CMPCTRL mode);
 
-ADC_GLOBAL_INT ${ADC_INSTANCE_NAME}_GlobalInterruptsStatusGet(void);
 void ${ADC_INSTANCE_NAME}_CoreInterruptsEnable(ADC_CORE_NUM core, ADC_CORE_INT interruptMask);
 void ${ADC_INSTANCE_NAME}_CoreInterruptsDisable(ADC_CORE_NUM core, ADC_CORE_INT interruptMask);
 ADC_CORE_INT ${ADC_INSTANCE_NAME}_CoreInterruptsStatusGet(ADC_CORE_NUM core);
 void ${ADC_INSTANCE_NAME}_CoreInterruptsStatusClear(ADC_CORE_NUM core, ADC_CORE_INT interruptMask);
+
+void ${ADC_INSTANCE_NAME}_SoftwareControlledConversionEnable(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel);
+
+bool ${ADC_INSTANCE_NAME}_ChannelResultIsReady(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel);
+bool ${ADC_INSTANCE_NAME}_EOSStatusGet(ADC_CORE_NUM core);
+uint32_t ${ADC_INSTANCE_NAME}_ResultGet( ADC_CORE_NUM core, ADC_CHANNEL_NUM channel);
+</#if>
+
+<#if ADC_NUM_SAR_CORES == 1>
+void ${ADC_INSTANCE_NAME}_CompareEnable(ADC_CHANNEL_NUM channel);
+void ${ADC_INSTANCE_NAME}_CompareDisable(ADC_CHANNEL_NUM channel);
+void ${ADC_INSTANCE_NAME}_CompareWinThresholdSet(uint16_t low_threshold, uint16_t high_threshold);
+void ${ADC_INSTANCE_NAME}_CompareWinModeSet(ADC_CMPCTRL mode);
+
+void ${ADC_INSTANCE_NAME}_CoreInterruptsEnable(ADC_CORE_INT interruptMask);
+void ${ADC_INSTANCE_NAME}_CoreInterruptsDisable(ADC_CORE_INT interruptMask);
+ADC_CORE_INT ${ADC_INSTANCE_NAME}_CoreInterruptsStatusGet(void);
+void ${ADC_INSTANCE_NAME}_CoreInterruptsStatusClear(ADC_CORE_INT interruptMask);
+
+void ${ADC_INSTANCE_NAME}_SoftwareControlledConversionEnable(ADC_CHANNEL_NUM channel);
+
+bool ${ADC_INSTANCE_NAME}_ChannelResultIsReady(ADC_CHANNEL_NUM channel);
+bool ${ADC_INSTANCE_NAME}_EOSStatusGet(void);
+uint32_t ${ADC_INSTANCE_NAME}_ResultGet(ADC_CHANNEL_NUM channel);
+</#if>
+
+ADC_GLOBAL_INT ${ADC_INSTANCE_NAME}_GlobalInterruptsStatusGet(void);
 
 void ${ADC_INSTANCE_NAME}_GlobalEdgeConversionStart(void);
 void ${ADC_INSTANCE_NAME}_GlobalLevelConversionStart(void);
@@ -127,14 +154,12 @@ void ${ADC_INSTANCE_NAME}_SyncTriggerEnable(void);
 void ${ADC_INSTANCE_NAME}_SyncTriggerDisable(void);
 void ${ADC_INSTANCE_NAME}_SyncTriggerCounterSet(uint16_t counterVal);
 
-void ${ADC_INSTANCE_NAME}_SoftwareControlledConversionEnable(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel);
+
 void ${ADC_INSTANCE_NAME}_ChannelSamplingStart(void);
 void ${ADC_INSTANCE_NAME}_ChannelSamplingStop(void);
 void ${ADC_INSTANCE_NAME}_ChannelConversionStart(void);
 
-bool ${ADC_INSTANCE_NAME}_ChannelResultIsReady(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel);
-bool ${ADC_INSTANCE_NAME}_EOSStatusGet(ADC_CORE_NUM core);
-uint32_t ${ADC_INSTANCE_NAME}_ResultGet( ADC_CORE_NUM core, ADC_CHANNEL_NUM channel);
+
 
 <#if ADC_PFFCTRL != "0">
 uint32_t ${ADC_INSTANCE_NAME}_FIFORead( void );

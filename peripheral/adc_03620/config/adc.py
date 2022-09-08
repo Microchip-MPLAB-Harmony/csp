@@ -691,12 +691,13 @@ def ADC_CTRLC_REG_Update (symbol, event):
 
     ctrlc_val = 0
 
-    coreinterleaved = int(localComponent.getSymbolByID("ADC_GLOBAL_CTRLC_COREINTERLEAVED").getSelectedValue(), 16)
-    cnt = localComponent.getSymbolValue("ADC_GLOBAL_CTRLC_CNT")
+    if (localComponent.getSymbolValue("ADC_GLOBAL_CTRLC_COREINTERLEAVED") != None):
+        coreinterleaved = int(localComponent.getSymbolByID("ADC_GLOBAL_CTRLC_COREINTERLEAVED").getSelectedValue(), 16)
+        cnt = localComponent.getSymbolValue("ADC_GLOBAL_CTRLC_CNT")
 
-    ctrlc_val = (coreinterleaved << 28) | cnt
+        ctrlc_val = (coreinterleaved << 28) | cnt
 
-    symbol.setValue(ctrlc_val)
+        symbol.setValue(ctrlc_val)
 
 def ADC_CTRLA_REG_Update (symbol, event):
     localComponent = symbol.getComponent()
@@ -779,7 +780,7 @@ def readATDF(adcInstanceName, adcComponent):
 
 def globalConfig(adcComponent):
     global nSARCore
-
+       
     # Global interrupt config depends on ADC Core n symbols. Assume these symbols will be created and them to the dependency list.
     for n in range(0, nSARCore):
         adcGlobalFIFOIntDepList.append("ADC_CORE_" + str(n) + "_ENABLE")
@@ -852,22 +853,23 @@ def globalConfig(adcComponent):
     ADC_CTRLD_REG_DepList.append("ADC_GLOBAL_CTRLD_VREFSEL")
 
     # CTRLC.COREINTERLEAVED
-    adc_core_interleaved_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CTRLC__COREINTERLEAVED\"]").getChildren()
+    
+    if (ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CTRLC__COREINTERLEAVED\"]") != None):
+        adc_core_interleaved_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CTRLC__COREINTERLEAVED\"]").getChildren()
+        CTRLC_COREINTERLEAVED_Config = adcComponent.createKeyValueSetSymbol("ADC_GLOBAL_CTRLC_COREINTERLEAVED", None)
+        CTRLC_COREINTERLEAVED_Config.setLabel("ADC Core Interleaving")
 
-    CTRLC_COREINTERLEAVED_Config = adcComponent.createKeyValueSetSymbol("ADC_GLOBAL_CTRLC_COREINTERLEAVED", None)
-    CTRLC_COREINTERLEAVED_Config.setLabel("ADC Core Interleaving")
-
-    for id in range(len(adc_core_interleaved_values)):
-        key = adc_core_interleaved_values[id].getAttribute("name")
-        value = adc_core_interleaved_values[id].getAttribute("value")
-        description = adc_core_interleaved_values[id].getAttribute("caption")
-        CTRLC_COREINTERLEAVED_Config.addKey(key, value, description)
-        if value == "0x0":
-            CTRLC_COREINTERLEAVED_Config.setDefaultValue(id)
-    CTRLC_COREINTERLEAVED_Config.setOutputMode("Key")
-    CTRLC_COREINTERLEAVED_Config.setDisplayMode("Description")
-    ADC_CTRLC_REG_DepList.append("ADC_GLOBAL_CTRLC_COREINTERLEAVED")
-
+        for id in range(len(adc_core_interleaved_values)):
+            key = adc_core_interleaved_values[id].getAttribute("name")
+            value = adc_core_interleaved_values[id].getAttribute("value")
+            description = adc_core_interleaved_values[id].getAttribute("caption")
+            CTRLC_COREINTERLEAVED_Config.addKey(key, value, description)
+            if value == "0x0":
+                CTRLC_COREINTERLEAVED_Config.setDefaultValue(id)
+        CTRLC_COREINTERLEAVED_Config.setOutputMode("Key")
+        CTRLC_COREINTERLEAVED_Config.setDisplayMode("Description")
+        ADC_CTRLC_REG_DepList.append("ADC_GLOBAL_CTRLC_COREINTERLEAVED")
+        
     # CTRLC.CNT
     CTRLC_CNT_Config = adcComponent.createIntegerSymbol("ADC_GLOBAL_CTRLC_CNT", None)
     CTRLC_CNT_Config.setLabel("Delay Counter (TQ based) for STRIG Sync Trigger")
@@ -1677,7 +1679,7 @@ def instantiateComponent(adcComponent):
     global nSARCore
     global nSARChannel
     global adcInstanceName
-
+    
     adcInstanceName = adcComponent.createStringSymbol("ADC_INSTANCE_NAME", None)
     adcInstanceName.setVisible(False)
     adcInstanceName.setDefaultValue(adcComponent.getID().upper())
