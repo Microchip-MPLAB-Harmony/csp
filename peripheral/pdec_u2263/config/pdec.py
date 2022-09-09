@@ -122,9 +122,9 @@ def pdecIndex(symbol, event):
 
 def updatePDECInterruptStatus(symbol, event):
     component = symbol.getComponent()
-    if (event["id"] == "PDEC_INTENSET_OVF") or (event["id"] == "PDEC_INTENSET_VLC") or (event["id"] == "PDEC_INTENSET_DIR"):
+    if (event["id"] == "PDEC_INTENSET_OVF") or (event["id"] == "PDEC_INTENSET_VLC") or (event["id"] == "PDEC_INTENSET_DIR") or (component.getSymbolValue("PDEC_NUM_INT_LINES") == 0):
         if (component.getSymbolValue("PDEC_INTENSET_OVF") or component.getSymbolValue("PDEC_INTENSET_VLC") or
-            component.getSymbolValue("PDEC_INTENSET_DIR")):
+            component.getSymbolValue("PDEC_INTENSET_DIR") or component.getSymbolValue("PDEC_INTENSET_MC_0") or component.getSymbolValue("PDEC_INTENSET_MC_1")):
             Database.setSymbolValue("core", InterruptVector[0], True, 2)
             Database.setSymbolValue("core", InterruptHandlerLock[0], True, 2)
             Database.setSymbolValue("core", InterruptHandler[0], pdecInstanceName.getValue() + "_InterruptHandler", 2)
