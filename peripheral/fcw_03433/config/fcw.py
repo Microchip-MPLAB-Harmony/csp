@@ -65,6 +65,8 @@ def instantiateComponent(fcwComponent):
     Log.writeInfoMessage("Running " + fcwInstanceName.getValue())
 
     fcwFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FCR_PFM\"]")
+    if fcwFlashNode == None:
+        fcwFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FLASH_PFM\"]")
 
     ##### Do not modify below symbol names as they are used by Memory Driver #####
 
