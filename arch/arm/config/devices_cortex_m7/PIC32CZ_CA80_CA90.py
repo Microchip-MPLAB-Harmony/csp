@@ -68,52 +68,86 @@ print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
 fuseSettings.setLabel("Generate Fuse Settings")
-fuseSettings.setDefaultValue(False)
+fuseSettings.setDefaultValue(True)
 
-default = [0x1, 0xFFFE, 0xFFFF , 0xFFFF, 0, 1 , 1, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF, 1, 0x3, 1, 0x3, 1, 0x3, 1, 0xF, 0xF, 0xF, 0xF, 0x3, 1, 1, 0, 0, 0, 0, 1, 1, 0xFFFFFFFF, 0xFFFFFFFF]
+registerGroup = ["FUSES_USERCFG1", "FUSES_BOOTCFG1", "FUSES_DALCFG", "FUSES_USERCFG2", "FUSES_BOOTCFG2"]
+default = [0x1, 0xFFFE, 0xFFFF , 0xFFFF, 0, 0 , 0, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF, 1, 0x3, 1, 0x3, 1, 0x3, 1, 0xF, 0xF, 0xF, 0xF, 0x3, 1, 1, 0, 0, 0, 0, 1, 1, 0xFFFFFFFF, 0xFFFFFFFF, #FUSES_USERCFG1
+           0, 0, 0, 0, 1, 1, 0x1, 0xFFFE, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,  #FUSES_BOOTCFG1
+           0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 1, 1, 0x7, 1, 0xF, 1, 1, 0xF,
+           0x2, 1, 0x1, 0x1, 0x7, 1, 1, 0x3, 0x7, 1, 1, 1, 1, 2, 7, 0x3FF, 0x3F, 0x3F, 1, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+           2, 2,                                                                                                                                                                           #FUSES_DALCFG
+           0x0, 0xFFFF, 0xFFFF , 0xFFFF, 0, 1 , 1, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF, 1, 0x3, 1, 0x3, 1, 0x3, 1, 0xF, 0xF, 0xF, 0xF, 0x3, 1, 1, 0, 0, 0, 0, 1, 1, 0xFFFFFFFF, 0xFFFFFFFF, #FUSES_USERCFG2
+           0, 0, 0, 0, 1, 1, 0x0, 0xFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,  #FUSES_BOOTCFG2
+           0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 1, 1, 0x7, 1, 0xF, 1, 1, 0xF,
+           0x2, 1, 0x1, 0x1, 0x7, 1, 1, 0x3, 0x7, 1, 1, 1, 1, 2, 7, 0x3FF, 0x3F, 0x3F, 1, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF]
 numfuses = 0
-fuseRegisterGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/register-group@[name=\"" + "FUSES_USERCFG1" + "\"]")
-registerNames = fuseRegisterGroup.getChildren()
-for i in range(0, len(registerNames)):
-    fuseNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSES\"]/register-group@[name=\"FUSES_USERCFG1\"]/register@[name=\"" + registerNames[i].getAttribute("name") + "\"]")
-    fuseNodeValues = fuseNode.getChildren()
-    for index in range(0, len(fuseNodeValues)):
-        key = fuseNodeValues[index].getAttribute("name")
-        caption=fuseNodeValues[index].getAttribute("caption")
-        valueGroup = fuseNodeValues[index].getAttribute("values")
-        stringSymbol = coreComponent.createStringSymbol("FUSE_SYMBOL_NAME" + str(numfuses), fuseSettings)
-        stringSymbol.setDefaultValue(key)
-        stringSymbol.setVisible(False)
-        if valueGroup == None:
-            mask = fuseNodeValues[index].getAttribute("mask")
-            count = bin((int(mask, 16))).count("1")
-            if count == 1:
-                keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
-                keyValueSymbol.setLabel(caption)
-                keyValueSymbol.addKey("CLEAR", "0", "CLEAR")
-                keyValueSymbol.addKey("SET", "1", "SET")
-                keyValueSymbol.setDefaultValue(default[numfuses])
-                keyValueSymbol.setOutputMode("Key")
-                keyValueSymbol.setDisplayMode("Description")
-            else:
-                hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
-                hexSymbol.setLabel(caption)
-                hexSymbol.setDefaultValue(default[numfuses])
+for group in range(0, len(registerGroup)):
+    regGroupName = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"" + "FUSES" + "\"]/instance@[name=\"" + "FUSES" + "\"]/register-group@[name=\"" + registerGroup[group] + "\"]").getAttribute("name-in-module")
+    fuseRegisterGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/register-group@[name=\"" + regGroupName + "\"]")
+    registerNames = fuseRegisterGroup.getChildren()
+    for i in range(0, len(registerNames)):
+        fuseNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSES\"]/register-group@[name=\"" + regGroupName + "\"]/register@[name=\"" + registerNames[i].getAttribute("name") + "\"]")
+        fuseNodeValues = fuseNode.getChildren()
+        if len(fuseNodeValues) != 0:
+            for index in range(0, len(fuseNodeValues)):
+                key = fuseNodeValues[index].getAttribute("name")
+                caption = registerGroup[group].replace("FUSES_", "") + " " + fuseNodeValues[index].getAttribute("caption")
+                valueGroup = fuseNodeValues[index].getAttribute("values")
+                stringSymbol = coreComponent.createStringSymbol("FUSE_SYMBOL_NAME" + str(numfuses), fuseSettings)
+                stringSymbol.setDefaultValue(registerGroup[group] + "_" + registerNames[i].getAttribute("name") + "_" + key)
+                stringSymbol.setVisible(False)
+                if valueGroup == None:
+                    mask = fuseNodeValues[index].getAttribute("mask")
+                    count = bin((int(mask, 16))).count("1")
+                    if count == 1:
+                        keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
+                        keyValueSymbol.setLabel(caption)
+                        keyValueSymbol.addKey("CLEAR", "0", "CLEAR")
+                        keyValueSymbol.addKey("SET", "1", "SET")
+                        keyValueSymbol.setDefaultValue(default[numfuses % len(default)])
+                        keyValueSymbol.setOutputMode("Key")
+                        keyValueSymbol.setDisplayMode("Description")
+                    else:
+                        hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
+                        hexSymbol.setLabel(caption)
+                        hexSymbol.setDefaultValue(default[numfuses % len(default)])
+                else:
+                    valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/value-group@[name=\"" + valueGroup + "\"]"
+                    valueGroupNode = ATDF.getNode(valueGroupPath)
+                    valueGroupChildren = valueGroupNode.getChildren()
+                    keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
+                    keyValueSymbol.setLabel(caption)
+                    for j in range(0, len(valueGroupChildren)):
+                        name = valueGroupChildren[j].getAttribute("name")
+                        value = valueGroupChildren[j].getAttribute("value")
+                        caption = valueGroupChildren[j].getAttribute("caption")
+                        keyValueSymbol.addKey(name, str(value), caption)
+                    keyValueSymbol.setDefaultValue(default[numfuses % len(default)])
+                    if valueGroup == "RPMU_VREGCTRL__VREGOUT" or valueGroup == "RPMU_VREGCTRL__LVSTDBY" or valueGroup == "RPMU_VREGCTRL__LVHIB" or valueGroup == "RPMU_VREGCTRL__ULDOLEVEL":
+                        keyValueSymbol.setOutputMode("Value")
+                    else:
+                        keyValueSymbol.setOutputMode("Key")
+                    keyValueSymbol.setDisplayMode("Description")
+                numfuses = numfuses + 1
         else:
-            valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/value-group@[name=\"" + valueGroup + "\"]"
-            valueGroupNode = ATDF.getNode(valueGroupPath)
-            valueGroupChildren = valueGroupNode.getChildren()
-            keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
-            keyValueSymbol.setLabel(caption)
-            for j in range(0, len(valueGroupChildren)):
-                name = valueGroupChildren[j].getAttribute("name")
-                value = valueGroupChildren[j].getAttribute("value")
-                caption = valueGroupChildren[j].getAttribute("caption")
-                keyValueSymbol.addKey(name, str(value), caption)
-            keyValueSymbol.setDefaultValue(default[numfuses])
-            keyValueSymbol.setOutputMode("Key")
-            keyValueSymbol.setDisplayMode("Description")
-        numfuses = numfuses + 1
+            if fuseNode.getAttribute("count") == None:
+                stringSymbol = coreComponent.createStringSymbol("FUSE_SYMBOL_NAME" + str(numfuses), fuseSettings)
+                stringSymbol.setDefaultValue(registerGroup[group] + "_" + registerNames[i].getAttribute("name") + "_" + registerNames[i].getAttribute("name"))
+                stringSymbol.setVisible(False)
+                hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
+                hexSymbol.setLabel(registerGroup[group].replace("FUSES_", "") + " " + registerNames[i].getAttribute("caption"))
+                hexSymbol.setDefaultValue(default[numfuses % len(default)])
+                numfuses = numfuses + 1
+            else:
+                count =  int(fuseNode.getAttribute("count"))
+                for index in range(0, count):
+                    stringSymbol = coreComponent.createStringSymbol("FUSE_SYMBOL_NAME" + str(numfuses), fuseSettings)
+                    stringSymbol.setDefaultValue(registerGroup[group] + "_" + registerNames[i].getAttribute("name") + str(index) + "_" + registerNames[i].getAttribute("name"))
+                    stringSymbol.setVisible(False)
+                    hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
+                    hexSymbol.setLabel(registerGroup[group].replace("FUSES_", "") + " " + registerNames[i].getAttribute("caption") + str(index))
+                    hexSymbol.setDefaultValue(default[numfuses % len(default)])
+                    numfuses = numfuses + 1
 
 fuse = coreComponent.createIntegerSymbol("NUMBER_OF_FUSES", fuseSettings)
 fuse.setDefaultValue(numfuses)
