@@ -297,6 +297,37 @@ def emcBaseCalculation(symbol, event):
 def updateHemcClockComment(symbol, event):
     symbol.setLabel("**** HEMC is running at " + str(event["value"]) + " Hz ****")
 
+def SendUpdateToComponents(symbol, event):
+    import re
+    chipSelectId = int(re.search(r'\d+', symbol.getID()).group())
+    startAddress = Database.getSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_START_ADDRESS")
+
+    csConnectedComponent = Database.getSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_CONNECTED_COMPONENT")
+
+    if ( csConnectedComponent != "None"):
+        argDict = {"address" : startAddress }
+        argDict = Database.sendMessage(csConnectedComponent, "BASE_ADDRESS_UPDATE", argDict)
+
+def onAttachmentConnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+    selectedCS = int(connectID.replace('hemc_cs', ''))
+    localComponent.getSymbolByID("CS_" + str(selectedCS) + "_CONNECTED_COMPONENT").setValue(remoteID)
+
+def onAttachmentDisconnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+    selectedCS = int(connectID.replace('hemc_cs', ''))
+    localComponent.getSymbolByID("CS_" + str(selectedCS) + "_CONNECTED_COMPONENT").clearValue()
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -464,6 +495,11 @@ def instantiateComponent(hemcComponent):
         csheccRamCheckBitInitSize.setDefaultValue(0)
         csheccRamCheckBitInitSize.setVisible(False)
         csheccRamCheckBitInitSize.setDependencies(checkAndupdateInitSize, ["CS_" + str(id) + "_RAM_CHECK_BIT_INIT", "CS_" + str(id) + "_MEMORY_BANK_SIZE"])
+
+        csConnectedComponent = hemcComponent.createStringSymbol("CS_" + str(id) + "_CONNECTED_COMPONENT", csMenu)
+        csConnectedComponent.setDefaultValue("None")
+        csConnectedComponent.setDependencies(SendUpdateToComponents, ["CS_" + str(id) + "_START_ADDRESS"])
+        csConnectedComponent.setVisible(False)
 
     # HEMC HECC interrupt and test mode menu
     memHeccInterruptMode = hemcComponent.createBooleanSymbol("HECC_INTERRUPT_MODE", memMemu)

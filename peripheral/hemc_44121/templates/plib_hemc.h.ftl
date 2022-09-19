@@ -37,6 +37,8 @@
 #ifndef _PLIB_${HEMC_INSTANCE_NAME}_H
 #define _PLIB_${HEMC_INSTANCE_NAME}_H
 
+#include <stdbool.h>
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -142,6 +144,10 @@ typedef struct
 // *****************************************************************************
 // *****************************************************************************
 void ${HEMC_INSTANCE_NAME}_Initialize( void );
+
+bool ${HEMC_INSTANCE_NAME}_DisableECC(uint8_t chipSelect);
+
+bool ${HEMC_INSTANCE_NAME}_EnableECC(uint8_t chipSelect);
 
 HEMC_HECC_STATUS ${HEMC_INSTANCE_NAME}_HeccGetStatus(void);
 
@@ -398,6 +404,135 @@ static inline void ${HEMC_INSTANCE_NAME}_TestModeSetCbValue(HEMC_HEMC_CHANNEL ch
 </#if>
 }
 </#if>
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_Write8(uint32_t dataAddress, uint8_t data)
+
+   Summary:
+    Writes 8 bit data at given address.
+
+   Precondition:
+    None.
+
+   Parameters:
+    dataAddress - Address were data is written.
+    data - data written.
+
+   Returns:
+    None
+*/
+static inline void ${HEMC_INSTANCE_NAME}_Write8(uint32_t dataAddress, uint8_t data)
+{
+    *((volatile uint8_t *)dataAddress) = data;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_Write16(uint32_t dataAddress, uint16_t data)
+
+   Summary:
+    Writes 16 bit data at given address.
+
+   Precondition:
+    None.
+
+   Parameters:
+    dataAddress - Address were data is written.
+    data - data written.
+
+   Returns:
+    None
+*/
+static inline void ${HEMC_INSTANCE_NAME}_Write16(uint32_t dataAddress, uint16_t data)
+{
+    *((volatile uint16_t *)dataAddress) = data;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_Write32(uint32_t dataAddress, uint32_t data)
+
+   Summary:
+    Writes 32 bit data at given address.
+
+   Precondition:
+    None.
+
+   Parameters:
+    dataAddress - Address were data is written.
+    data - data written.
+
+   Returns:
+    None
+*/
+static inline void ${HEMC_INSTANCE_NAME}_Write32(uint32_t dataAddress, uint32_t data)
+{
+    *((volatile uint32_t *)dataAddress) = data;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_Read8(uint32_t dataAddress)
+
+   Summary:
+    Read 8 bit data at given address.
+
+   Precondition:
+    None.
+
+   Parameters:
+    dataAddress - Address were data is written.
+
+   Returns:
+    Read data.
+*/
+static inline uint8_t ${HEMC_INSTANCE_NAME}_Read8(uint32_t dataAddress)
+{
+    return *((volatile uint8_t *)dataAddress);
+}
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_Read16(uint32_t dataAddress)
+
+   Summary:
+    Read 16 bit data at given address.
+
+   Precondition:
+    None.
+
+   Parameters:
+    dataAddress - Address were data is written.
+
+   Returns:
+    Read data.
+*/
+static inline uint16_t ${HEMC_INSTANCE_NAME}_Read16(uint32_t dataAddress)
+{
+    return *((volatile uint16_t *)dataAddress);
+}
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_Read32(uint32_t dataAddress)
+
+   Summary:
+    Read 32 bit data at given address.
+
+   Precondition:
+    None.
+
+   Parameters:
+    dataAddress - Address were data is written.
+
+   Returns:
+    Read data.
+*/
+static inline uint32_t ${HEMC_INSTANCE_NAME}_Read32(uint32_t dataAddress)
+{
+    return *((volatile uint32_t *)dataAddress);
+}
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
