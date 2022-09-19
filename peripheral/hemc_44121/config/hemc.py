@@ -187,6 +187,33 @@ def InterruptStatusWarning(symbol, event):
 def setVisibleIfEventTrue(symbol, event):
     symbol.setVisible(event["value"])
 
+def updateBchVisibility(symbol, event):
+    if ("_WRITE_ECC_CONF" in event['id']): # Write ECC conf event on CS0
+        memType = Database.getSymbolValue(hemcInstanceName.getValue().lower(), "CS_0_MEMORY_TYPE")
+        # BCH option visible only for HSMC (value=0)
+        if ( memType == 0):
+            symbol.setReadOnly(False)
+            symbol.setVisible(event["value"])
+    else:
+        # BCH option visible only for HSMC (value=0)
+        if (event["value"] == 0):
+            # if CS0, Check if option "WRITE_ECC_CONF" is enabled to update BCH visibility
+            chipSelectId = int(event['id'].split("_")[1])
+            if (chipSelectId == 0):
+                writeEccConf = Database.getSymbolValue(hemcInstanceName.getValue().lower(), "CS_" + str(chipSelectId) + "_WRITE_ECC_CONF")
+                if (writeEccConf):
+                    symbol.setReadOnly(False)
+                    symbol.setVisible(True)
+                else:
+                    symbol.setReadOnly(True)
+                    symbol.setVisible(False)
+            else:
+                symbol.setReadOnly(False)
+                symbol.setVisible(True)
+        else:
+            symbol.setReadOnly(True)
+            symbol.setVisible(False)
+
 def checkAndupdateInitSize(symbol, event):
     if ('_RAM_CHECK_BIT_INIT' in event['id']):
         symbol.setVisible(event["value"])
@@ -478,8 +505,10 @@ def instantiateComponent(hemcComponent):
         csheccEnableBCH.setDefaultValue(False)
         if (hemcHeccCr0Reg.getValue() == True):
             if (id == 0):
-                csheccEnableBCH.setDependencies(setVisibleIfEventTrue, ["CS_" + str(id) + "_WRITE_ECC_CONF"])
+                csheccEnableBCH.setDependencies(updateBchVisibility, ["CS_" + str(id) + "_MEMORY_TYPE", "CS_" + str(id) + "_WRITE_ECC_CONF"])
                 csheccEnableBCH.setVisible(False)
+            else:
+                csheccEnableBCH.setDependencies(updateBchVisibility, ["CS_" + str(id) + "_MEMORY_TYPE"])
         else:
             csheccEnableBCH.setVisible(False)
 
