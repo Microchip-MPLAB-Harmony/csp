@@ -100,7 +100,7 @@ typedef enum
 
 } DMA_TRANSFER_EVENT;
 
-typedef uint32_t DMA_INT;
+typedef uint8_t DMA_INT;
 
 #define DMA_INT_BUS_ERROR                                   (DMA_CHAN00_ISTS_BUS_ERR_Msk)
 #define DMA_INT_HW_FLOW_CONTROL                             (DMA_CHAN00_ISTS_FLOW_CTRL_Msk)

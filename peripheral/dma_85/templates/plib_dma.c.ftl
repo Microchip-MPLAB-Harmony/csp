@@ -59,6 +59,7 @@
 // *****************************************************************************
 
 #define DMA_CHANNELS_NUMBER        (${DMA_HIGHEST_CHANNEL}U)
+#define NOP()    asm("NOP")
 
 /* DMA channels object configuration structure */
 typedef struct
@@ -75,7 +76,7 @@ static DMA_CH_OBJECT dmaChannelObj[DMA_CHANNELS_NUMBER];
 
 static dma_chan00_registers_t* ${DMA_INSTANCE_NAME}_ChannelBaseAddrGet(DMA_CHANNEL ch)
 {
-    return (dma_chan00_registers_t*)((uint8_t*)DMA_CHAN00_REGS + (ch * 64));
+    return (dma_chan00_registers_t*)(DMA_CHAN00_BASE_ADDRESS + ((uint32_t)ch * 64U));
 }
 
 void ${DMA_INSTANCE_NAME}_Initialize( void )
@@ -129,7 +130,10 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
     bool returnStatus = false;
     dma_chan00_registers_t* dmaChRegs = ${DMA_INSTANCE_NAME}_ChannelBaseAddrGet(channel);
 
-    bool transferDir = (uint32_t)srcAddr & EC_DEVICE_REGISTERS_ADDR? 0:1;
+    uint32_t src_addr = (uint32_t)((const uint32_t*)srcAddr);
+    uint32_t dst_addr = (uint32_t)((const uint32_t*)destAddr);
+    uint32_t transferDir = ((src_addr & EC_DEVICE_REGISTERS_ADDR) != 0U)? 0U:1U;
+
 
     if (dmaChannelObj[channel].busyStatus == false)
     {
@@ -138,19 +142,19 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
         /* Activate channel */
         dmaChRegs->DMA_CHAN00_ACTIVATE |= DMA_CHAN00_ACTIVATE_CHN_Msk;
 
-        if (transferDir == 0)
+        if (transferDir == 0U)
         {
             /* Peripheral to memory transfer */
-            dmaChRegs->DMA_CHAN00_DSTART = (uint32_t)srcAddr;
-            dmaChRegs->DMA_CHAN00_MSTART = (uint32_t)destAddr;
-            dmaChRegs->DMA_CHAN00_MEND = (uint32_t)(destAddr + blockSize);
+            dmaChRegs->DMA_CHAN00_DSTART = src_addr;
+            dmaChRegs->DMA_CHAN00_MSTART = dst_addr;
+            dmaChRegs->DMA_CHAN00_MEND = (uint32_t)(dst_addr + blockSize);
         }
         else
         {
             /* Memory to peripheral transfer */
-            dmaChRegs->DMA_CHAN00_DSTART = (uint32_t)destAddr;
-            dmaChRegs->DMA_CHAN00_MSTART = (uint32_t)srcAddr;
-            dmaChRegs->DMA_CHAN00_MEND = (uint32_t)(srcAddr + blockSize);
+            dmaChRegs->DMA_CHAN00_DSTART = dst_addr;
+            dmaChRegs->DMA_CHAN00_MSTART = src_addr;
+            dmaChRegs->DMA_CHAN00_MEND = (uint32_t)(src_addr + blockSize);
         }
 
         dmaChannelObj[channel].mstartAddr = dmaChRegs->DMA_CHAN00_MSTART;
@@ -158,12 +162,12 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
         /* Set the transfer direction */
         dmaChRegs->DMA_CHAN00_CTRL = (dmaChRegs->DMA_CHAN00_CTRL & ~DMA_CHAN00_CTRL_TX_DIR_Msk) | (transferDir << DMA_CHAN00_CTRL_TX_DIR_Pos);
 
-        if (channel == 0)
+        if ((uint32_t)channel == 0U)
         {
             /* If CRC is enabled, initialize the CRC generator */
-            if (dmaChRegs->DMA_CHAN00_CRC_EN & DMA_CHAN00_CRC_EN_MODE_Msk)
+            if ((dmaChRegs->DMA_CHAN00_CRC_EN & DMA_CHAN00_CRC_EN_MODE_Msk) != 0U)
             {
-                dmaChRegs->DMA_CHAN00_CRC_DATA = 0xFFFFFFFF;
+                dmaChRegs->DMA_CHAN00_CRC_DATA = 0xFFFFFFFFU;
             }
         }
 
@@ -171,7 +175,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
         dmaChRegs->DMA_CHAN00_IEN = (DMA_CHAN00_IEN_STS_EN_DONE_Msk | DMA_CHAN00_IEN_STS_EN_BUS_ERR_Msk);
 
         /* Start the transfer, check if device is the DMA host or firmware is the DMA host */
-        if (dmaChRegs->DMA_CHAN00_CTRL & DMA_CHAN00_CTRL_DIS_HW_FLOW_CTRL_Msk)
+        if ((dmaChRegs->DMA_CHAN00_CTRL & DMA_CHAN00_CTRL_DIS_HW_FLOW_CTRL_Msk) != 0U)
         {
             /* DMA controller is under the control of firmware (not the device host) */
             dmaChRegs->DMA_CHAN00_CTRL |= DMA_CHAN00_CTRL_TRANS_GO_Msk;
@@ -222,7 +226,7 @@ void ${DMA_INSTANCE_NAME}_ChannelTransferAbort ( DMA_CHANNEL channel )
 
     dmaChRegs->DMA_CHAN00_CTRL |= DMA_CHAN00_CTRL_TRANS_ABORT_Msk;
 
-    asm("NOP");asm("NOP");asm("NOP");asm("NOP");asm("NOP");asm("NOP");
+    NOP();NOP();NOP();NOP();NOP();NOP();
 
     dmaChRegs->DMA_CHAN00_CTRL &= ~DMA_CHAN00_CTRL_TRANS_ABORT_Msk;
 
@@ -310,7 +314,7 @@ void ${DMA_INSTANCE_NAME}_FillDataSet( uint32_t fillData )
 static void DMA_interruptHandler(DMA_CHANNEL channel)
 {
     DMA_CH_OBJECT  *dmacChObj = NULL;
-    volatile uint32_t chIntFlagStatus = 0U;
+    volatile uint8_t chIntFlagStatus = 0U;
 
     DMA_TRANSFER_EVENT event = 0U;
 
@@ -321,13 +325,17 @@ static void DMA_interruptHandler(DMA_CHANNEL channel)
     /* Get the DMA channel interrupt flag status */
     chIntFlagStatus = dmaChRegs->DMA_CHAN00_ISTS;
 
-    if ((chIntFlagStatus & DMA_CHAN00_ISTS_DONE_Msk) && (dmaChRegs->DMA_CHAN00_IEN & DMA_CHAN00_IEN_STS_EN_DONE_Msk))
+    if (((chIntFlagStatus & DMA_CHAN00_ISTS_DONE_Msk) != 0U) && ((dmaChRegs->DMA_CHAN00_IEN & DMA_CHAN00_IEN_STS_EN_DONE_Msk) != 0U))
     {
         event = DMA_TRANSFER_EVENT_COMPLETE;
     }
-    else if ((chIntFlagStatus & DMA_CHAN00_ISTS_BUS_ERR_Msk) && (dmaChRegs->DMA_CHAN00_IEN & DMA_CHAN00_IEN_STS_EN_BUS_ERR_Msk))
+    else if (((chIntFlagStatus & DMA_CHAN00_ISTS_BUS_ERR_Msk) != 0U) && ((dmaChRegs->DMA_CHAN00_IEN & DMA_CHAN00_IEN_STS_EN_BUS_ERR_Msk) != 0U))
     {
         event = DMA_TRANSFER_EVENT_ERROR;
+    }
+    else
+    {
+        /* Do nothing */
     }
 
     /* Clear the interrupt status flags (Write 1 to clear) */
@@ -336,7 +344,7 @@ static void DMA_interruptHandler(DMA_CHANNEL channel)
     dmaChannelObj[channel].busyStatus=false;
 
     /* Execute the callback function */
-    if ((dmacChObj->callback != NULL) && (event != 0U))
+    if ((dmacChObj->callback != NULL) && ((uint32_t)event != 0U))
     {
         dmacChObj->callback (event, dmacChObj->context);
     }
@@ -375,7 +383,7 @@ void ${DMA_INSTANCE_NAME}_ChannelAbort(DMA_CHANNEL channel)
 
     dmaChRegs->DMA_CHAN00_CTRL |= DMA_CHAN00_CTRL_TRANS_ABORT_Msk;
 
-    asm("NOP");asm("NOP");asm("NOP");asm("NOP");asm("NOP");asm("NOP");
+    NOP();NOP();NOP();NOP();NOP();NOP();
 
     dmaChRegs->DMA_CHAN00_CTRL &= ~DMA_CHAN00_CTRL_TRANS_ABORT_Msk;
 }
