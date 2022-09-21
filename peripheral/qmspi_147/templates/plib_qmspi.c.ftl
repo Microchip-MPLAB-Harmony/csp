@@ -40,7 +40,9 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
-
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 #include "plib_${QMSPI_INSTANCE_NAME?lower_case}.h"
 <#if QMSPI_INTERRUPT_MODE == true>
 #include "../ecia/plib_ecia.h"
@@ -87,7 +89,7 @@
 
 #define QMSPI_SOURCE_CLOCK_FREQUENCY (${QMSPI_SRC_CLK_FREQ}U)
 #define QMSPI_MAX_DESCR              (${QMSPI_NUM_OF_DESC}U)
-#define SWAP32(x)                    ((((x) & 0xff) << 24) | (((x) & 0xff00) << 8) | (((x) & 0xff0000) >> 8) | (((x) & 0xff000000) >> 24))
+#define SWAP32(x)                    ((((x) & 0xffU) << 24U) | (((x) & 0xff00U) << 8U) | (((x) & 0xff0000U) >> 8U) | (((x) & 0xff000000U) >> 24U))
 <#if QMSPI_INTERRUPT_MODE == true>
 static QMSPI_OBJECT ${QMSPI_INSTANCE_NAME?lower_case}Obj;
 </#if>
@@ -215,7 +217,7 @@ bool ${QMSPI_INSTANCE_NAME}_Write(QMSPI_XFER_T *qmspiXfer, void* pTransmitData, 
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_EXE = QMSPI_EXE_CLR_DAT_BUFF_Msk;
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS = QMSPI_STS_Msk;
 
-            *(uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = qmspiXfer->command;
+            *(volatile uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = qmspiXfer->command;
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL = QMSPI_CTRL_TX_MODE(qmspiIoMode[qmspiXfer->qmspi_ifc_mode][0]) | QMSPI_CTRL_TX_TRANS_EN(1U) | QMSPI_CTRL_TRANS_UNITS(1U) | QMSPI_CTRL_TRANS_LEN(1U);
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_EXE = QMSPI_EXE_START_Msk;
             while ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TX_BUFF_EMP_Msk) == 0U)
@@ -238,7 +240,7 @@ bool ${QMSPI_INSTANCE_NAME}_Write(QMSPI_XFER_T *qmspiXfer, void* pTransmitData, 
                     while(count < xferLength)
                     {
                         shift -= 8U;
-                        *(uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = ((qmspiXfer->address >> shift) & 0xFFU);
+                        *(volatile uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = (uint8_t)((qmspiXfer->address >> shift) & 0xFFU);
                         count++;
                     }
                 }
@@ -251,7 +253,7 @@ bool ${QMSPI_INSTANCE_NAME}_Write(QMSPI_XFER_T *qmspiXfer, void* pTransmitData, 
                 }
             }
 
-            while (txSize)
+            while (txSize > 0U)
             {
                 if (txSize >= (QMSPI_CTRL_TRANS_LEN_Msk >> QMSPI_CTRL_TRANS_LEN_Pos))
                 {
@@ -271,7 +273,7 @@ bool ${QMSPI_INSTANCE_NAME}_Write(QMSPI_XFER_T *qmspiXfer, void* pTransmitData, 
                     {
                         // wait if transmit buffer is full
                     }
-                    *(uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = ((uint8_t *)pTransmitData)[count];
+                    *(volatile uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = ((uint8_t *)pTransmitData)[count];
                     count++;
                 }
                 while ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TX_BUFF_EMP_Msk) == 0U)
@@ -296,14 +298,14 @@ bool ${QMSPI_INSTANCE_NAME}_Read(QMSPI_XFER_T *qmspiXfer, void* pReceiveData, si
     size_t count = 0U;
     bool   status = false;
 
-    if ((qmspiXfer != NULL) && (rxSize > 0) && (pReceiveData != NULL))
+    if ((qmspiXfer != NULL) && (rxSize > 0U) && (pReceiveData != NULL))
     {
         if ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TRANS_ACTIV_Msk) == 0U)
         {
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_EXE = QMSPI_EXE_CLR_DAT_BUFF_Msk;
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS = QMSPI_STS_Msk;
 
-            *(uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = qmspiXfer->command;
+            *(volatile uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = qmspiXfer->command;
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL = QMSPI_CTRL_TX_MODE(qmspiIoMode[qmspiXfer->qmspi_ifc_mode][0]) | QMSPI_CTRL_TX_TRANS_EN(1U) | QMSPI_CTRL_TRANS_UNITS(1U) | QMSPI_CTRL_TRANS_LEN(1U);
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_EXE = QMSPI_EXE_START_Msk;
             while ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TX_BUFF_EMP_Msk) == 0U)
@@ -326,7 +328,7 @@ bool ${QMSPI_INSTANCE_NAME}_Read(QMSPI_XFER_T *qmspiXfer, void* pReceiveData, si
                     while(count < xferLength)
                     {
                         shift -= 8U;
-                        *(uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = ((qmspiXfer->address >> shift) & 0xFFU);
+                        *(volatile uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = (uint8_t)((qmspiXfer->address >> shift) & 0xFFU);
                         count++;
                     }
                 }
@@ -339,7 +341,7 @@ bool ${QMSPI_INSTANCE_NAME}_Read(QMSPI_XFER_T *qmspiXfer, void* pReceiveData, si
                 }
             }
 
-            if (qmspiXfer->num_of_dummy_byte)
+            if (qmspiXfer->num_of_dummy_byte > 0U)
             {
                 ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL = QMSPI_CTRL_TX_MODE(qmspiIoMode[qmspiXfer->qmspi_ifc_mode][2]) | QMSPI_CTRL_TRANS_UNITS(1U) | QMSPI_CTRL_TRANS_LEN(qmspiXfer->num_of_dummy_byte);
                 ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_EXE = QMSPI_EXE_START_Msk;
@@ -349,7 +351,7 @@ bool ${QMSPI_INSTANCE_NAME}_Read(QMSPI_XFER_T *qmspiXfer, void* pReceiveData, si
                 }
             }
 
-            while (rxSize)
+            while (rxSize > 0U)
             {
                 if (rxSize >= (QMSPI_CTRL_TRANS_LEN_Msk >> QMSPI_CTRL_TRANS_LEN_Pos))
                 {
@@ -369,7 +371,7 @@ bool ${QMSPI_INSTANCE_NAME}_Read(QMSPI_XFER_T *qmspiXfer, void* pReceiveData, si
                     {
                         // wait if receive buffer is empty
                     }
-                    ((uint8_t *)pReceiveData)[count] = *(uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_RX_FIFO[0]);
+                    ((uint8_t *)pReceiveData)[count] = *(volatile uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_RX_FIFO[0]);
                     count++;
                 }
                 rxSize -= xferLength;
@@ -395,7 +397,7 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferWrite(QMSPI_DESCRIPTOR_XFER_T *qmspiD
     uint32_t txBytes = 0U;
     uint8_t len, xferUnitLen, xferUnitShift;
 
-    if ((qmspiDescXfer != NULL) && (txSize > 0))
+    if ((qmspiDescXfer != NULL) && (txSize > 0U))
     {
 
         if ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TRANS_ACTIV_Msk) == 0U)
@@ -404,13 +406,13 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferWrite(QMSPI_DESCRIPTOR_XFER_T *qmspiD
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_EXE = QMSPI_EXE_CLR_DAT_BUFF_Msk;
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS = QMSPI_STS_Msk;
 
-            *(uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = qmspiDescXfer->command;
+            *(volatile uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = qmspiDescXfer->command;
             desc_id = 0;
             /* Descriptor 0 - Command */
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_DESCR[desc_id] = QMSPI_DESCR_INFACE_MOD(qmspiIoMode[qmspiDescXfer->qmspi_ifc_mode][0])
                                                               | QMSPI_DESCR_TX_TRANS_EN(1U)
                                                               | QMSPI_DESCR_TRANS_LEN(1U)
-                                                              | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1))
+                                                              | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1U))
                                                               | QMSPI_DESCR_TX_LEN(1U);
             desc_id++;
 
@@ -427,7 +429,7 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferWrite(QMSPI_DESCRIPTOR_XFER_T *qmspiD
                 while(txBytes < xferLength)
                 {
                     shift -= 8U;
-                    *(uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = ((qmspiDescXfer->address >> shift) & 0xFFU);
+                    *(volatile uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = (uint8_t)((qmspiDescXfer->address >> shift) & 0xFFU);
                     txBytes++;
                 }
             }
@@ -436,11 +438,11 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferWrite(QMSPI_DESCRIPTOR_XFER_T *qmspiD
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_DESCR[desc_id] = QMSPI_DESCR_INFACE_MOD(qmspiIoMode[qmspiDescXfer->qmspi_ifc_mode][1])
                                                               | QMSPI_DESCR_TX_TRANS_EN(1U)
                                                               | QMSPI_DESCR_TRANS_LEN(1U)
-                                                              | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1))
+                                                              | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1U))
                                                               | QMSPI_DESCR_TX_LEN(xferLength);
             desc_id++;
 
-            len = ${QMSPI_INSTANCE_NAME}_DMALenGet((uint32_t)pTransmitData, txSize);
+            len = ${QMSPI_INSTANCE_NAME}_DMALenGet((uint32_t)((uint32_t*)pTransmitData), txSize);
 
             if (qmspiDescXfer->ldma_enable)
             {
@@ -449,7 +451,7 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferWrite(QMSPI_DESCRIPTOR_XFER_T *qmspiD
                 ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_DESCR[desc_id] = QMSPI_DESCR_INFACE_MOD(qmspiIoMode[qmspiDescXfer->qmspi_ifc_mode][2])
                                                               | QMSPI_DESCR_TX_DMA_EN((qmspiDescXfer->ldma_channel_num + 1U))
                                                               | QMSPI_DESCR_TX_TRANS_EN(1U)
-                                                              | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1))
+                                                              | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1U))
                                                               | QMSPI_DESCR_DESCR_BUF_LAST_Msk
                                                               | QMSPI_DESCR_CLOSE_TRANS_EN_Msk;
 
@@ -462,7 +464,7 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferWrite(QMSPI_DESCRIPTOR_XFER_T *qmspiD
                 {
                     ${QMSPI_INSTANCE_NAME}_REGS->LDMA_TX[qmspiDescXfer->ldma_channel_num].QMSPI_LDMA_TXCTRL |= QMSPI_LDMA_TXCTRL_INC_ADDR_EN_Msk;
                 }
-                ${QMSPI_INSTANCE_NAME}_REGS->LDMA_TX[qmspiDescXfer->ldma_channel_num].QMSPI_LDMA_TXSTRT_ADDR = (uint32_t)pTransmitData;
+                ${QMSPI_INSTANCE_NAME}_REGS->LDMA_TX[qmspiDescXfer->ldma_channel_num].QMSPI_LDMA_TXSTRT_ADDR = (uint32_t)((uint32_t*)pTransmitData);
                 ${QMSPI_INSTANCE_NAME}_REGS->LDMA_TX[qmspiDescXfer->ldma_channel_num].QMSPI_LDMA_TX_LEN = txSize;
                 txBytes = txSize;
             }
@@ -472,7 +474,7 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferWrite(QMSPI_DESCRIPTOR_XFER_T *qmspiD
                 xferUnitLen = ${QMSPI_INSTANCE_NAME}_XferUnitLenGet(txSize);
                 xferUnitShift = ${QMSPI_INSTANCE_NAME}_XferUnitShiftGet(txSize);
                 size = txSize >> xferUnitShift;
-                while (size)
+                while (size > 0U)
                 {
                     xferLength = size;
                     if (size > (QMSPI_DESCR_TX_LEN_Msk >> QMSPI_DESCR_TX_LEN_Pos))
@@ -481,8 +483,8 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferWrite(QMSPI_DESCRIPTOR_XFER_T *qmspiD
                     }
 
                     ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_DESCR[desc_id] = QMSPI_DESCR_INFACE_MOD(qmspiIoMode[qmspiDescXfer->qmspi_ifc_mode][2]) | QMSPI_DESCR_TX_TRANS_EN(1U)
-                                                                | QMSPI_DESCR_TRANS_LEN(xferUnitLen) | QMSPI_DESCR_TX_DMA_EN((len + 1U))
-                                                                | QMSPI_DESCR_TX_LEN(xferLength) | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1));
+                                                                | QMSPI_DESCR_TRANS_LEN(xferUnitLen) | QMSPI_DESCR_TX_DMA_EN(((uint32_t)len + 1U))
+                                                                | QMSPI_DESCR_TX_LEN(xferLength) | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1U));
                     size -= xferLength;
 
                     desc_id++;
@@ -520,19 +522,19 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferRead(QMSPI_DESCRIPTOR_XFER_T *qmspiDe
     uint32_t size = 0U;
     uint8_t len, xferUnitLen, xferUnitShift;
 
-    if ((qmspiDescXfer != NULL) && (rxSize > 0) && (pReceiveData != NULL))
+    if ((qmspiDescXfer != NULL) && (rxSize > 0U) && (pReceiveData != NULL))
     {
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL = QMSPI_CTRL_DESCR_BUFF_EN_Msk;
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_EXE = QMSPI_EXE_CLR_DAT_BUFF_Msk;
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS = QMSPI_STS_Msk;
 
-        *(uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = qmspiDescXfer->command;
+        *(volatile uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = qmspiDescXfer->command;
         desc_id = 0;
         /* Descriptor 0 - Command */
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_DESCR[desc_id] = QMSPI_DESCR_INFACE_MOD(qmspiIoMode[qmspiDescXfer->qmspi_ifc_mode][0])
                                                           | QMSPI_DESCR_TX_TRANS_EN(1U)
                                                           | QMSPI_DESCR_TRANS_LEN(1U)
-                                                          | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1))
+                                                          | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1U))
                                                           | QMSPI_DESCR_TX_LEN(1U);
         desc_id++;
 
@@ -549,7 +551,7 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferRead(QMSPI_DESCRIPTOR_XFER_T *qmspiDe
             while(count < xferLength)
             {
                 shift -= 8U;
-                *(uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = ((qmspiDescXfer->address >> shift) & 0xFFU);
+                *(volatile uint8_t *)(&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = (uint8_t)((qmspiDescXfer->address >> shift) & 0xFFU);
                 count++;
             }
         }
@@ -558,21 +560,21 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferRead(QMSPI_DESCRIPTOR_XFER_T *qmspiDe
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_DESCR[desc_id] = QMSPI_DESCR_INFACE_MOD(qmspiIoMode[qmspiDescXfer->qmspi_ifc_mode][1])
                                                           | QMSPI_DESCR_TX_TRANS_EN(1U)
                                                           | QMSPI_DESCR_TRANS_LEN(1U)
-                                                          | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1))
+                                                          | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1U))
                                                           | QMSPI_DESCR_TX_LEN(xferLength);
         desc_id++;
 
         /* Dummy Bytes */
-        if (qmspiDescXfer->num_of_dummy_byte)
+        if (qmspiDescXfer->num_of_dummy_byte > 0U)
         {
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_DESCR[desc_id] = QMSPI_DESCR_INFACE_MOD(qmspiIoMode[qmspiDescXfer->qmspi_ifc_mode][2])
                                                           | QMSPI_DESCR_TRANS_LEN(1U)
-                                                          | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1))
+                                                          | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1U))
                                                           | QMSPI_DESCR_TX_LEN(qmspiDescXfer->num_of_dummy_byte);
             desc_id++;
         }
 
-        len = ${QMSPI_INSTANCE_NAME}_DMALenGet((uint32_t)pReceiveData, rxSize);
+        len = ${QMSPI_INSTANCE_NAME}_DMALenGet((uint32_t)((uint32_t*)pReceiveData), rxSize);
 
         if (qmspiDescXfer->ldma_enable)
         {
@@ -581,7 +583,7 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferRead(QMSPI_DESCRIPTOR_XFER_T *qmspiDe
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_DESCR[desc_id] = QMSPI_DESCR_INFACE_MOD(qmspiIoMode[qmspiDescXfer->qmspi_ifc_mode][2])
                                                           | QMSPI_DESCR_RX_DMA_EN((qmspiDescXfer->ldma_channel_num + 1U))
                                                           | QMSPI_DESCR_RX_TRANS_EN_Msk
-                                                          | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1))
+                                                          | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1U))
                                                           | QMSPI_DESCR_DESCR_BUF_LAST_Msk
                                                           | QMSPI_DESCR_CLOSE_TRANS_EN_Msk;
 
@@ -594,7 +596,7 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferRead(QMSPI_DESCRIPTOR_XFER_T *qmspiDe
             {
                 ${QMSPI_INSTANCE_NAME}_REGS->LDMA_RX[qmspiDescXfer->ldma_channel_num].QMSPI_LDMA_RXCTRL |= QMSPI_LDMA_RXCTRL_INC_ADDR_EN_Msk;
             }
-            ${QMSPI_INSTANCE_NAME}_REGS->LDMA_RX[qmspiDescXfer->ldma_channel_num].QMSPI_LDMA_RXSTRT_ADDR = (uint32_t)pReceiveData;
+            ${QMSPI_INSTANCE_NAME}_REGS->LDMA_RX[qmspiDescXfer->ldma_channel_num].QMSPI_LDMA_RXSTRT_ADDR = (uint32_t)((uint32_t*)pReceiveData);
             ${QMSPI_INSTANCE_NAME}_REGS->LDMA_RX[qmspiDescXfer->ldma_channel_num].QMSPI_LDMA_RX_LEN = rxSize;
             size = rxSize;
         }
@@ -616,8 +618,8 @@ uint32_t ${QMSPI_INSTANCE_NAME}_DMATransferRead(QMSPI_DESCRIPTOR_XFER_T *qmspiDe
                 count += xferLength;
 
                 ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_DESCR[desc_id] = QMSPI_DESCR_INFACE_MOD(qmspiIoMode[qmspiDescXfer->qmspi_ifc_mode][2]) | QMSPI_DESCR_RX_TRANS_EN_Msk
-                                                                | QMSPI_DESCR_TRANS_LEN(xferUnitLen) | QMSPI_DESCR_RX_DMA_EN((len + 1U))
-                                                                | QMSPI_DESCR_TX_LEN(xferLength) | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1));
+                                                                | QMSPI_DESCR_TRANS_LEN(xferUnitLen) | QMSPI_DESCR_RX_DMA_EN(((uint32_t)len + 1U))
+                                                                | QMSPI_DESCR_TX_LEN(xferLength) | QMSPI_DESCR_DESCR_BUF_NXT_PTR((desc_id + 1U));
 
                 desc_id++;
                 if (desc_id >= QMSPI_MAX_DESCR)
@@ -663,7 +665,7 @@ void ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
     ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM});
     </#if>
 
-    if (${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TRANS_COMPL_Msk)
+    if ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TRANS_COMPL_Msk) != 0U)
     {
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS |= QMSPI_STS_TRANS_COMPL_Msk;
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_IEN &= ~QMSPI_IEN_TRANS_COMPL_EN_Msk;

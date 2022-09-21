@@ -84,12 +84,11 @@ typedef enum
     QUAD_CMD             /* Command(4):Address(4):Data(4) */
 } QMSPI_INTERFACE_MODE;
 
-typedef enum
-{
-    QMSPI_LDMA_CHANNEL_0 = 0U,
-    QMSPI_LDMA_CHANNEL_1,
-    QMSPI_LDMA_CHANNEL_2
-} QMSPI_LDMA_CHANNEL_NUM;
+#define QMSPI_LDMA_CHANNEL_0 0U
+#define QMSPI_LDMA_CHANNEL_1 1U
+#define QMSPI_LDMA_CHANNEL_2 2U
+
+typedef uint32_t QMSPI_LDMA_CHANNEL_NUM;
 
 typedef enum
 {
