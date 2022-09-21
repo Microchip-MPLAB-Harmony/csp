@@ -72,8 +72,11 @@
  * The following functions make up the methods (set of possible operations) of
  * this interface.
  */
-
+<#if I2C_OPERATING_MODE == "Slave">
 void I2C${I2C_INSTANCE_NAME}_Initialize(void);
+<#else>
+void I2C${I2C_INSTANCE_NAME}_TargetInitialize(void);
+</#if>
 <#if I2C_SMBUS_LOW_LEVEL_API_ONLY == false>
 void I2C${I2C_INSTANCE_NAME}_TargetCallbackRegister(I2C_SMB_TARGET_CALLBACK callback, uintptr_t contextHandle);
 bool I2C${I2C_INSTANCE_NAME}_TargetIsBusy(void);
@@ -82,6 +85,7 @@ I2C_SMB_TARGET_ERROR I2C${I2C_INSTANCE_NAME}_TargetErrorGet(void);
 void I2C${I2C_INSTANCE_NAME}_TargetStart(void);
 uint32_t I2C${I2C_INSTANCE_NAME}_TargetBufferRead(void* pBuffer);
 void I2C${I2C_INSTANCE_NAME}_TargetBufferWrite(void* pBuffer, uint32_t nBytes);
+void I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32_t completion_reg);
 </#if>
 
 // DOM-IGNORE-BEGIN

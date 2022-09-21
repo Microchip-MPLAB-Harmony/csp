@@ -223,6 +223,10 @@ def smbusProtocolUpdate (symbol, event):
 def smbusLowLevelAPIGenUpdate (symbol, event):
     opMode = event["value"]
     symbol.setVisible(opMode == "Master and Slave")
+    if opMode != "Master and Slave":
+        symbol.setReadOnly(True)
+        symbol.setValue(False)
+        symbol.setReadOnly(False)
 
 def smbusPECUpdate (symbol, event):
     symbol.setVisible(event["value"])

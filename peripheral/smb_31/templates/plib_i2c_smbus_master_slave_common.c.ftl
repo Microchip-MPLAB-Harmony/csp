@@ -52,6 +52,9 @@
 #include "interrupts.h"
 </#if>
 #include "plib_i2c_smb_common.h"
+#include "plib_${I2C_INSTANCE_NAME?lower_case}_master_slave_common.h"
+#include "master/plib_${I2C_INSTANCE_NAME?lower_case}_master.h"
+#include "slave/plib_${I2C_INSTANCE_NAME?lower_case}_slave.h"
 <#if I2C_SMBUS_LOW_LEVEL_API_ONLY == false>
 #include "../ecia/plib_ecia.h"
 </#if>
@@ -60,13 +63,7 @@
 // Section: Global Data
 // *****************************************************************************
 // *****************************************************************************
-
-void I2C${I2C_INSTANCE_NAME}_HostInitialize(void);
-void I2C${I2C_INSTANCE_NAME}_TargetInitialize(void);
-<#if I2C_SMBUS_LOW_LEVEL_API_ONLY == false>
-void I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg);
-void I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32_t completion_reg);
-</#if>
+#define NOP()    asm("NOP")
 
 void I2C${I2C_INSTANCE_NAME}_Initialize(void)
 {
@@ -74,7 +71,7 @@ void I2C${I2C_INSTANCE_NAME}_Initialize(void)
     ${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] = SMB_CFG_RST_Msk;
 
     /* Reset bit must remain asserted for at-least 1 Baud clock period */
-    asm("nop");asm("nop");asm("nop");asm("nop");asm("nop");
+    NOP();NOP();NOP();NOP();NOP();
 
     ${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] &= ~SMB_CFG_RST_Msk;
 

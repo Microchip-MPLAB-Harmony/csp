@@ -50,9 +50,11 @@
 #include "device.h"
 #include "plib_i2c_smbus_lowlevel_intf.h"
 
-static smb_registers_t* smbInstanceGet(uint32_t instanceNum)
+#define NOP() asm("nop")
+
+static smb_registers_t* smbInstanceGet(SMB_INSTANCE instanceNum)
 {
-    return (smb_registers_t*)((uint8_t*)SMB0_REGS + (instanceNum*0x400));
+    return (smb_registers_t*)(SMB0_BASE_ADDRESS + (((uint32_t)instanceNum) * 0x400U));
 }
 
 /******************************************************************************/
@@ -66,7 +68,7 @@ void I2CSMBx_Reset(SMB_INSTANCE smbInstance)
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
     smb_regs->SMB_CFG[0] |= SMB_CFG_RST_Msk;
-    asm("nop");asm("nop");asm("nop");asm("nop");
+    NOP();NOP();NOP();NOP();
     smb_regs->SMB_CFG[0] &= ~SMB_CFG_RST_Msk;
 }
 
@@ -148,47 +150,47 @@ void I2CSMBx_TimingInit(SMB_INSTANCE smbInstance, const uint8_t speed, const boo
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    if (I2CSMB_BUS_SPEED_400KHZ == speed)
+    if ((uint8_t)I2CSMB_BUS_SPEED_400KHZ == speed)
     {
         /* For 8MHz baud clock, set the high & low period to 10,
          * therefore 8M/(10+10) = 400khz */
 
-        smb_regs->SMB_BUSCLK = I2CSMB_SPEED_400KHZ_BUS_CLOCK;
-        smb_regs->SMB_DATATM = I2CSMB_SPEED_400KHZ_DATA_TIMING;
-        smb_regs->SMB_TMOUTSC = I2CSMB_SPEED_400KHZ_TIMEOUT_SCALING;
-        smb_regs->SMB_RSHTM = I2CSMB_SPEED_400KHZ_DATA_TIMING_2;
+        smb_regs->SMB_BUSCLK = SPD_400KHZ_BUS_CLOCK;
+        smb_regs->SMB_DATATM = SPD_400KHZ_DATA_TIMING;
+        smb_regs->SMB_TMOUTSC = SPD_400KHZ_TIMEOUT_SCALING;
+        smb_regs->SMB_RSHTM = SPD_400KHZ_DATA_TIMING_2;
         if (fairnessEnable)
         {
             smb_regs->SMB_CFG[0] |= SMB_CFG_FAIR_Msk;
-            smb_regs->SMB_IDLSC = I2CSMB_SPEED_400KHZ_IDLE_SCALING;
+            smb_regs->SMB_IDLSC = SPD_400KHZ_IDLE_SCALING;
         }
     }
     else
     {
-        if (I2CSMB_BUS_SPEED_100KHZ == speed)
+        if ((uint8_t)I2CSMB_BUS_SPEED_100KHZ == speed)
         {
             /* For 8MHz baud clock, set the high & low period to 40,
              * therefore 8M/(40+40) = 100khz */
-            smb_regs->SMB_BUSCLK = I2CSMB_SPEED_100KHZ_BUS_CLOCK;
-            smb_regs->SMB_DATATM = I2CSMB_SPEED_100KHZ_DATA_TIMING;
-            smb_regs->SMB_TMOUTSC = I2CSMB_SPEED_100KHZ_TIMEOUT_SCALING;
-            smb_regs->SMB_RSHTM = I2CSMB_SPEED_100KHZ_DATA_TIMING_2;
+            smb_regs->SMB_BUSCLK = SPD_100KHZ_BUS_CLOCK;
+            smb_regs->SMB_DATATM = SPD_100KHZ_DATA_TIMING;
+            smb_regs->SMB_TMOUTSC = SPD_100KHZ_TIMEOUT_SCALING;
+            smb_regs->SMB_RSHTM = SPD_100KHZ_DATA_TIMING_2;
             if (fairnessEnable)
             {
                 smb_regs->SMB_CFG[0] |= SMB_CFG_FAIR_Msk;
-                smb_regs->SMB_IDLSC = I2CSMB_SPEED_100KHZ_IDLE_SCALING;
+                smb_regs->SMB_IDLSC = SPD_100KHZ_IDLE_SCALING;
             }
         }
-        else if (I2CSMB_BUS_SPEED_1MHZ == speed)
+        else if ((uint8_t)I2CSMB_BUS_SPEED_1MHZ == speed)
         {
-            smb_regs->SMB_BUSCLK = I2CSMB_SPEED_1MHZ_BUS_CLOCK;
-            smb_regs->SMB_DATATM = I2CSMB_SPEED_1MHZ_DATA_TIMING;
-            smb_regs->SMB_TMOUTSC = I2CSMB_SPEED_1MHZ_TIMEOUT_SCALING;
-            smb_regs->SMB_RSHTM = I2CSMB_SPEED_1MHZ_DATA_TIMING_2;
+            smb_regs->SMB_BUSCLK = SPD_1MHZ_BUS_CLOCK;
+            smb_regs->SMB_DATATM = SPD_1MHZ_DATA_TIMING;
+            smb_regs->SMB_TMOUTSC = SPD_1MHZ_TIMEOUT_SCALING;
+            smb_regs->SMB_RSHTM = SPD_1MHZ_DATA_TIMING_2;
             if (fairnessEnable)
             {
                 smb_regs->SMB_CFG[0] |= SMB_CFG_FAIR_Msk;
-                smb_regs->SMB_IDLSC = I2CSMB_SPEED_1MHZ_IDLE_SCALING;
+                smb_regs->SMB_IDLSC = SPD_1MHZ_IDLE_SCALING;
             }
         }
 
@@ -413,7 +415,7 @@ void I2CSMBx_TimeoutsEnable(SMB_INSTANCE smbInstance, const uint8_t timeoutsFlag
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    smb_regs->SMB_COMPL[0] = (smb_regs->SMB_COMPL[0] & 0xFFFFFF00) | timeoutsFlag;
+    smb_regs->SMB_COMPL[0] = (smb_regs->SMB_COMPL[0] & 0xFFFFFF00U) | timeoutsFlag;
     smb_regs->SMB_CFG[0] |= SMB_CFG_TCEN_Msk;
 }
 
@@ -455,7 +457,7 @@ bool I2CSMBx_IsBusErrorSet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_BER_Msk) > 0);
+    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_BER_Msk) > 0U);
 
 }/* I2CSMBx_IsBusErrorSet */
 
@@ -469,7 +471,7 @@ bool I2CSMBx_IsMdoneSet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return (((smb_regs->SMB_CFG[0] & SMB_CFG_ENMI_Msk) && (smb_regs->SMB_COMPL[0] & SMB_COMPL_MDONE_Msk)) > 0);
+    return (((smb_regs->SMB_CFG[0] & SMB_CFG_ENMI_Msk) != 0U) && ((smb_regs->SMB_COMPL[0] & SMB_COMPL_MDONE_Msk) != 0U));
 
 }/* I2CSMBx_IsMdoneSet */
 
@@ -483,7 +485,7 @@ bool I2CSMBx_IsSdoneSet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return (((smb_regs->SMB_CFG[0] & SMB_CFG_ENSI_Msk) && (smb_regs->SMB_COMPL[0] & SMB_COMPL_SDONE_Msk)) > 0);
+    return (((smb_regs->SMB_CFG[0] & SMB_CFG_ENSI_Msk) != 0U) && ((smb_regs->SMB_COMPL[0] & SMB_COMPL_SDONE_Msk) != 0U));
 
 }/* I2CSMBx_IsSdoneSet  */
 
@@ -497,7 +499,7 @@ bool I2CSMBx_IsLABSet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_LAB_Msk) > 0);
+    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_LAB_Msk) > 0U);
 }/* I2CSMBx_IsLABSet */
 
 /******************************************************************************/
@@ -510,7 +512,7 @@ bool I2CSMBx_IsMNAKXSet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_MNAKX_Msk) > 0);
+    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_MNAKX_Msk) > 0U);
 }/* I2CSMBx_IsMNAKXSet */
 
 /******************************************************************************/
@@ -523,7 +525,7 @@ bool I2CSMBx_IsSNAKRSet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_SNAKR_Msk) > 0);
+    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_SNAKR_Msk) > 0U);
 
 }/* I2CSMBx_IsSNAKRSet */
 
@@ -537,7 +539,7 @@ bool I2CSMBx_IsSTRSet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_STR_Msk) > 0);
+    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_STR_Msk) > 0U);
 
 }/* I2CSMBx_IsSTRSet */
 
@@ -551,7 +553,7 @@ bool I2CSMBx_IsRepeatWriteSet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_REP_WR_Msk) > 0);
+    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_REP_WR_Msk) > 0U);
 
 }/* I2CSMBx_IsRepeatWriteSet */
 
@@ -565,7 +567,7 @@ bool I2CSMBx_IsRepeatReadSet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_REP_RD_Msk) > 0);
+    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_REP_RD_Msk) > 0U);
 
 }/* I2CSMBx_IsRepeatReadSet */
 
@@ -579,7 +581,7 @@ bool I2CSMBx_IsMTRSet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_MTR_Msk) > 0);
+    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_MTR_Msk) > 0U);
 
 }/* I2CSMBx_IsMTRSet */
 
@@ -593,7 +595,7 @@ bool I2CSMBx_IsTimerErrorSet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_TIMERR_Msk) > 0);
+    return ((smb_regs->SMB_COMPL[0] & SMB_COMPL_TIMERR_Msk) > 0U);
 
 }/* I2CSMBx_IsTimerErrorSet */
 
@@ -784,7 +786,7 @@ uint8_t I2CSMBx_SlaveReadCountGet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_SCMD[0] & SMB_SCMD_RD_CNT_Msk) >> SMB_SCMD_RD_CNT_Pos);
+    return (uint8_t)((smb_regs->SMB_SCMD[0] & SMB_SCMD_RD_CNT_Msk) >> SMB_SCMD_RD_CNT_Pos);
 }/* I2CSMBx_SlaveReadCountGet */
 
 /******************************************************************************/
@@ -797,7 +799,7 @@ uint8_t I2CSMBx_MasterWriteCountGet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_MCMD[0] & SMB_MCMD_WR_CNT_Msk) >> SMB_MCMD_WR_CNT_Pos);
+    return (uint8_t)((smb_regs->SMB_MCMD[0] & SMB_MCMD_WR_CNT_Msk) >> SMB_MCMD_WR_CNT_Pos);
 }/* I2CSMBx_MasterWriteCountGet */
 
 /******************************************************************************/
@@ -810,7 +812,7 @@ uint8_t I2CSMBx_MasterReadCountGet(SMB_INSTANCE smbInstance)
 {
     smb_registers_t* smb_regs = smbInstanceGet(smbInstance);
 
-    return ((smb_regs->SMB_MCMD[0] & SMB_MCMD_RD_CNT_Msk) >> SMB_MCMD_RD_CNT_Pos);
+    return (uint8_t)((smb_regs->SMB_MCMD[0] & SMB_MCMD_RD_CNT_Msk) >> SMB_MCMD_RD_CNT_Pos);
 }/* I2CSMBx_MasterReadCountGet  */
 
 /******************************************************************************/

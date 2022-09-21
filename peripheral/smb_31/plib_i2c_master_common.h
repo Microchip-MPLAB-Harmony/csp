@@ -101,25 +101,11 @@ typedef enum
 
 } I2C_ERROR;
 
-// *****************************************************************************
-/* I2C Transfer Type
+#define I2C_TRANSFER_TYPE_WRITE 0U
 
-   Summary:
-    I2C Transfer Type.
+#define I2C_TRANSFER_TYPE_READ 1U
 
-   Description:
-    This data type defines the I2C Transfer Type.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    I2C_TRANSFER_TYPE_WRITE = 0,
-
-    I2C_TRANSFER_TYPE_READ
-
-}I2C_TRANSFER_TYPE;
+typedef uint32_t I2C_TRANSFER_TYPE;
 
 // *****************************************************************************
 /* I2C State.

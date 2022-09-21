@@ -71,8 +71,8 @@
 
 
 void I2C${I2C_INSTANCE_NUM}_Initialize(void);
-bool I2C${I2C_INSTANCE_NUM}_Read(uint16_t address, uint8_t *pdata, size_t length);
-bool I2C${I2C_INSTANCE_NUM}_Write(uint16_t address, uint8_t *pdata, size_t length);
+bool I2C${I2C_INSTANCE_NUM}_Read(uint16_t address, uint8_t* rdata, size_t rlength);
+bool I2C${I2C_INSTANCE_NUM}_Write(uint16_t address, uint8_t* wdata, size_t wlength);
 bool I2C${I2C_INSTANCE_NUM}_WriteRead(uint16_t address, uint8_t* wdata, size_t wlength, uint8_t* rdata, size_t rlength);
 void I2C${I2C_INSTANCE_NUM}_CallbackRegister(I2C_CALLBACK callback, uintptr_t contextHandle);
 bool I2C${I2C_INSTANCE_NUM}_IsBusy(void);

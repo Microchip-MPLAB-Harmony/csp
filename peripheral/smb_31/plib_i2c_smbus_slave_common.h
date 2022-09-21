@@ -71,24 +71,23 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-typedef enum
-{
-    /* No Error */
-    I2C_SMB_TARGET_ERROR_NONE = 0,
 
-    /* Bus Collision Error */
-    I2C_SMB_TARGET_ERROR_BUS_COLLISION = 1,
+/* No Error */
+#define I2C_SMB_TARGET_ERROR_NONE 0U
 
-    /* PEC Error */
-    I2C_SMB_TARGET_ERROR_PEC = 2,
+/* Bus Collision Error */
+#define I2C_SMB_TARGET_ERROR_BUS_COLLISION 1U
 
-    /* TX underflow */
-    I2C_SMB_TARGET_ERROR_SPROT = 4,
+/* PEC Error */
+#define I2C_SMB_TARGET_ERROR_PEC 2U
 
-    /* Timeout Error */
-    I2C_SMB_TARGET_ERROR_TIMEOUT = 8,
+/* TX underflow */
+#define I2C_SMB_TARGET_ERROR_SPROT 4U
 
-} I2C_SMB_TARGET_ERROR;
+/* Timeout Error */
+#define I2C_SMB_TARGET_ERROR_TIMEOUT 8U
+
+typedef uint32_t I2C_SMB_TARGET_ERROR;
 
 typedef enum
 {
@@ -120,7 +119,7 @@ typedef enum
 
     I2C_SMB_TARGET_TRANSFER_EVENT_ERROR,
 
-    I2C_SMB_TARGET_TRANSFER_EVENT_TRANSFER_DONE,
+    I2C_SMB_TARGET_TRANSFER_EVENT_DONE,
 
 }I2C_SMB_TARGET_TRANSFER_EVENT;
 

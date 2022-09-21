@@ -68,13 +68,12 @@
 // *****************************************************************************
 // *****************************************************************************
 //----------------------------------------------------------------------
-/* Speed Enums */
-typedef enum
-{
-    I2CSMB_BUS_SPEED_100KHZ,
-    I2CSMB_BUS_SPEED_400KHZ,
-    I2CSMB_BUS_SPEED_1MHZ
-}I2CSMB_BUS_SPEED;
+
+#define I2CSMB_BUS_SPEED_100KHZ 0
+#define I2CSMB_BUS_SPEED_400KHZ 1
+#define I2CSMB_BUS_SPEED_1MHZ 2
+
+typedef uint32_t I2CSMB_BUS_SPEED;
 
 // SMBUS TIMING Values
 //-----------------------------------------------------------------------------------------
@@ -95,62 +94,62 @@ typedef enum
 
 #if (I2CSMB_BAUD_CLK == I2CSMB_BAUD_CLK_16MHZ)
     /* SMBus Timing values for 1MHz Speed */
-    #define I2CSMB_SPEED_1MHZ_BUS_CLOCK 0x0509
-    #define I2CSMB_SPEED_1MHZ_DATA_TIMING 0x06060601     //As per 16 MHz Baud Clock
-    #define I2CSMB_SPEED_1MHZ_DATA_TIMING_2 0x06
-    #define I2CSMB_SPEED_1MHZ_IDLE_SCALING 0x01000050    //As per 16 MHz Baud Clock
-    #define I2CSMB_SPEED_1MHZ_TIMEOUT_SCALING 0x149CC2C7
+    #define SPD_1MHZ_BUS_CLOCK 0x0509
+    #define SPD_1MHZ_DATA_TIMING 0x06060601     //As per 16 MHz Baud Clock
+    #define SPD_1MHZ_DATA_TIMING_2 0x06
+    #define SPD_1MHZ_IDLE_SCALING 0x01000050    //As per 16 MHz Baud Clock
+    #define SPD_1MHZ_TIMEOUT_SCALING 0x149CC2C7
 
     //Add Values for 100Khz and 400Khz as per 16Mhz baud clock
-    #define I2CSMB_SPEED_400KHZ_BUS_CLOCK 0x0F17
-    #define I2CSMB_SPEED_400KHZ_DATA_TIMING 0x040A0A06     //As per 16 MHz Baud Clock
-    #define I2CSMB_SPEED_400KHZ_DATA_TIMING_2 0x0A
-    #define I2CSMB_SPEED_400KHZ_IDLE_SCALING 0x01000050    //As per 16 MHz Baud Clock
-    #define I2CSMB_SPEED_400KHZ_TIMEOUT_SCALING 0x159CC2C7
+    #define SPD_400KHZ_BUS_CLOCK 0x0F17
+    #define SPD_400KHZ_DATA_TIMING 0x040A0A06     //As per 16 MHz Baud Clock
+    #define SPD_400KHZ_DATA_TIMING_2 0x0A
+    #define SPD_400KHZ_IDLE_SCALING 0x01000050    //As per 16 MHz Baud Clock
+    #define SPD_400KHZ_TIMEOUT_SCALING 0x159CC2C7
 
-    #define I2CSMB_SPEED_100KHZ_BUS_CLOCK 0x4F4F
-    #define I2CSMB_SPEED_100KHZ_DATA_TIMING 0x0C4D5006     //As per 16 MHz Baud Clock
-    #define I2CSMB_SPEED_100KHZ_DATA_TIMING_2 0x4D
-    #define I2CSMB_SPEED_100KHZ_IDLE_SCALING 0x01FC01ED    //As per 16 MHz Baud Clock
-    #define I2CSMB_SPEED_100KHZ_TIMEOUT_SCALING 0x4B9CC2C7
+    #define SPD_100KHZ_BUS_CLOCK 0x4F4F
+    #define SPD_100KHZ_DATA_TIMING 0x0C4D5006     //As per 16 MHz Baud Clock
+    #define SPD_100KHZ_DATA_TIMING_2 0x4D
+    #define SPD_100KHZ_IDLE_SCALING 0x01FC01ED    //As per 16 MHz Baud Clock
+    #define SPD_100KHZ_TIMEOUT_SCALING 0x4B9CC2C7
 
 #elif (I2CSMB_BAUD_CLK == SMB_BAUD_CLK_10MHZ)
 
-    #define I2CSMB_SPEED_400KHZ_BUS_CLOCK 0x0A0D
-    #define I2CSMB_SPEED_400KHZ_DATA_TIMING 0x03080804     //As per 10 MHz Baud Clock
-    #define I2CSMB_SPEED_400KHZ_IDLE_SCALING 0x00A00032    //As per 10 MHz Baud Clock
-    #define I2CSMB_SPEED_400KHZ_TIMEOUT_SCALING 0x0A9DC4C8
-    #define I2CSMB_SPEED_400KHZ_DATA_TIMING_2 0x07
+    #define SPD_400KHZ_BUS_CLOCK 0x0A0D
+    #define SPD_400KHZ_DATA_TIMING 0x03080804     //As per 10 MHz Baud Clock
+    #define SPD_400KHZ_IDLE_SCALING 0x00A00032    //As per 10 MHz Baud Clock
+    #define SPD_400KHZ_TIMEOUT_SCALING 0x0A9DC4C8
+    #define SPD_400KHZ_DATA_TIMING_2 0x07
 
-    #define I2CSMB_SPEED_100KHZ_BUS_CLOCK 0x3131
-    #define I2CSMB_SPEED_100KHZ_DATA_TIMING 0x072A3104      //As per 10 MHz Baud Clock
-    #define I2CSMB_SPEED_100KHZ_IDLE_SCALING 0x01400136     //As per 10 MHz Baud Clock
-    #define I2CSMB_SPEED_100KHZ_TIMEOUT_SCALING 0x30C6F5FB
-    #define I2CSMB_SPEED_100KHZ_DATA_TIMING_2 0x2B
+    #define SPD_100KHZ_BUS_CLOCK 0x3131
+    #define SPD_100KHZ_DATA_TIMING 0x072A3104      //As per 10 MHz Baud Clock
+    #define SPD_100KHZ_IDLE_SCALING 0x01400136     //As per 10 MHz Baud Clock
+    #define SPD_100KHZ_TIMEOUT_SCALING 0x30C6F5FB
+    #define SPD_100KHZ_DATA_TIMING_2 0x2B
 
 #else //(I2CSMB_BAUD_CLK == SMB_BAUD_CLK_8MHZ)
     /* For 8MHz baud clock, set the high & low period to 10,
      * therefore 8M/(10+10) = 400khz */
-    #define I2CSMB_SPEED_400KHZ_BUS_CLOCK 0x080a
-    #define I2CSMB_SPEED_400KHZ_DATA_TIMING 0x02060603      //As per 8 MHz Baud Clock
+    #define SPD_400KHZ_BUS_CLOCK 0x080a
+    #define SPD_400KHZ_DATA_TIMING 0x02060603      //As per 8 MHz Baud Clock
     /* T_Idle_Delay = 17us, T_Idle_Window = 6us */
-    #define I2CSMB_SPEED_400KHZ_IDLE_SCALING 0x0084002A     //As per 8 MHz Baud Clock
-    #define I2CSMB_SPEED_400KHZ_TIMEOUT_SCALING 0x0A9DC4C8
-    #define I2CSMB_SPEED_400KHZ_DATA_TIMING_2 0x05
+    #define SPD_400KHZ_IDLE_SCALING 0x0084002A     //As per 8 MHz Baud Clock
+    #define SPD_400KHZ_TIMEOUT_SCALING 0x0A9DC4C8
+    #define SPD_400KHZ_DATA_TIMING_2 0x05
 
     /* For 8MHz baud clock, set the high & low period to 40,
      * therefore 8M/(40+40) = 100khz */
-    #define I2CSMB_SPEED_100KHZ_BUS_CLOCK 0x2727
-    #define I2CSMB_SPEED_100KHZ_DATA_TIMING 0x05222703      //As per 8 MHz Baud Clock
+    #define SPD_100KHZ_BUS_CLOCK 0x2727
+    #define SPD_100KHZ_DATA_TIMING 0x05222703      //As per 8 MHz Baud Clock
     /* T_Idle_Delay = 32us, T_Idle_Window = 31us */
-    #define I2CSMB_SPEED_100KHZ_IDLE_SCALING 0x010000F8     //As per 8 MHz Baud Clock
+    #define SPD_100KHZ_IDLE_SCALING 0x010000F8     //As per 8 MHz Baud Clock
 
     /* Bus Idle Min(Byte3 of Time-Out Scaling Register) = 4.7us
      * Master Cum Time Out(Byte2 of Time-Out Scaling Register) = 10ms
      * Slave Cum Time Out(Byte1 of Time-Out Scaling Register) = 25ms
      * Clock High Time Out(Byte 0 of Time-Out Scaling Register) = 50us
      */
-    #define I2CSMB_SPEED_100KHZ_TIMEOUT_SCALING 0x269DC4C8
+    #define SPD_100KHZ_TIMEOUT_SCALING 0x269DC4C8
 #endif
 
 typedef enum

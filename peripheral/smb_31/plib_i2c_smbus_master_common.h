@@ -72,35 +72,31 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum
-{
-    /* No Error */
-    I2C_SMB_HOST_ERROR_NONE = 0,
+/* No Error */
+#define I2C_SMB_HOST_ERROR_NONE 0U
 
-    /* Slave returned Nack */
-    I2C_SMB_HOST_ERROR_NACK = 1,
+/* Slave returned Nack */
+#define I2C_SMB_HOST_ERROR_NACK 1U
 
-    /* Bus Collision Error */
-    I2C_SMB_HOST_ERROR_BUS_COLLISION = 2,
+/* Bus Collision Error */
+#define I2C_SMB_HOST_ERROR_BUS_COLLISION 2U
 
-    /* Bus Arbitration lost Error */
-    I2C_SMB_HOST_ERROR_ARBITRATION_LOST = 4,
+/* Bus Arbitration lost Error */
+#define I2C_SMB_HOST_ERROR_ARBITRATION_LOST 4U
 
-    /* Timeout related Error */
-    I2C_SMB_HOST_ERROR_TIMEOUT = 8,
+/* Timeout related Error */
+#define I2C_SMB_HOST_ERROR_TIMEOUT 8U
 
-    /* PEC Error */
-    I2C_SMB_HOST_ERROR_PEC = 16,
+/* PEC Error */
+#define I2C_SMB_HOST_ERROR_PEC 16U
 
-} I2C_SMB_HOST_ERROR;
+typedef uint32_t I2C_SMB_HOST_ERROR;
 
-typedef enum
-{
-    I2C_SMB_HOST_TRANSFER_TYPE_WRITE = 0,
+#define I2C_SMB_HOST_TRANSFER_TYPE_WRITE 0U
 
-    I2C_SMB_HOST_TRANSFER_TYPE_READ
+#define I2C_SMB_HOST_TRANSFER_TYPE_READ 1U
 
-}I2C_SMB_HOST_TRANSFER_TYPE;
+typedef uint32_t I2C_SMB_HOST_TRANSFER_TYPE;
 
 typedef enum
 {
@@ -140,7 +136,7 @@ typedef enum
 
     I2C_SMB_HOST_TRANSFER_EVENT_ERROR,
 
-    I2C_SMB_HOST_TRANSFER_EVENT_TRANSFER_DONE,
+    I2C_SMB_HOST_TRANSFER_EVENT_DONE,
 
 }I2C_SMB_HOST_TRANSFER_EVENT;
 

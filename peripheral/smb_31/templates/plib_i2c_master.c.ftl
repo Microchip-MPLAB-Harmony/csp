@@ -109,11 +109,11 @@ void I2C${I2C_INSTANCE_NUM}_Initialize(void)
 static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
 {
     /* check for bus error or arbitration lost error */
-    if (${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_BER_Msk)
+    if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_BER_Msk) != 0U)
     {
         i2c${I2C_INSTANCE_NUM}Obj.error = I2C_ERROR_BUS_COLLISION;
     }
-    if (${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LAB_Msk)
+    if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LAB_Msk) != 0U)
     {
         i2c${I2C_INSTANCE_NUM}Obj.error = I2C_ERROR_ARBITRATION_LOST;
     }
@@ -136,7 +136,7 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
         case I2C_MASTER_STATE_TRANSMIT:
             /* Enter here for write, write-read transfers */
             /* if last received bit is 0 (ack from slave), then transmit more bytes */
-            if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LRB_AD0_Msk) == 0)
+            if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LRB_AD0_Msk) == 0U)
             {
                 if (i2c${I2C_INSTANCE_NUM}Obj.writeCount < i2c${I2C_INSTANCE_NUM}Obj.writeSize)
                 {
@@ -181,9 +181,9 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
             break;
 
         case I2C_MASTER_STATE_REPEATED_START:
-            if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LRB_AD0_Msk) == 0)
+            if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LRB_AD0_Msk) == 0U)
             {
-                ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA = (uint8_t)((i2c${I2C_INSTANCE_NUM}Obj.address << 1) | I2C_TRANSFER_TYPE_READ);
+                ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA = (uint8_t)((i2c${I2C_INSTANCE_NUM}Obj.address << 1U) | I2C_TRANSFER_TYPE_READ);
                 ${I2C_INSTANCE_NAME}_REGS->SMB_WCTRL = I2C${I2C_INSTANCE_NUM}_REPEATED_START_CONDITION;
                 i2c${I2C_INSTANCE_NUM}Obj.state = I2C_MASTER_STATE_ADDR_ACK;
             }
@@ -206,10 +206,10 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
         case I2C_MASTER_STATE_ADDR_ACK:
             /* Enter here for read only transfers*/
             /* Repeated start + Slave addr sent. Check if slave ack'd the address byte. */
-            if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LRB_AD0_Msk) == 0)
+            if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LRB_AD0_Msk) == 0U)
             {
                 /* If only one byte needs to be read, then de-assert ACK bit in preparation for the last byte */
-                if ((i2c${I2C_INSTANCE_NUM}Obj.readSize - i2c${I2C_INSTANCE_NUM}Obj.readCount) == 1)
+                if ((i2c${I2C_INSTANCE_NUM}Obj.readSize - i2c${I2C_INSTANCE_NUM}Obj.readCount) == 1U)
                 {
                     ${I2C_INSTANCE_NAME}_REGS->SMB_WCTRL = I2C${I2C_INSTANCE_NUM}_NAK;
                 }
@@ -235,19 +235,19 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
 
         case I2C_MASTER_STATE_RECEIVE:
 
-            if ((i2c${I2C_INSTANCE_NUM}Obj.readSize - i2c${I2C_INSTANCE_NUM}Obj.readCount) > 2)
+            if ((i2c${I2C_INSTANCE_NUM}Obj.readSize - i2c${I2C_INSTANCE_NUM}Obj.readCount) > 2U)
             {
                 i2c${I2C_INSTANCE_NUM}Obj.readBuffer[i2c${I2C_INSTANCE_NUM}Obj.readCount] = ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA;
                 i2c${I2C_INSTANCE_NUM}Obj.readCount++;
             }
-            else if ((i2c${I2C_INSTANCE_NUM}Obj.readSize - i2c${I2C_INSTANCE_NUM}Obj.readCount) == 2)
+            else if ((i2c${I2C_INSTANCE_NUM}Obj.readSize - i2c${I2C_INSTANCE_NUM}Obj.readCount) == 2U)
             {
                 /* De-assert ACK bit in preparation for the last byte */
                 ${I2C_INSTANCE_NAME}_REGS->SMB_WCTRL = I2C${I2C_INSTANCE_NUM}_NAK;
                 i2c${I2C_INSTANCE_NUM}Obj.readBuffer[i2c${I2C_INSTANCE_NUM}Obj.readCount] = ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA;
                 i2c${I2C_INSTANCE_NUM}Obj.readCount++;
             }
-            else if ((i2c${I2C_INSTANCE_NUM}Obj.readSize - i2c${I2C_INSTANCE_NUM}Obj.readCount) == 1)
+            else if ((i2c${I2C_INSTANCE_NUM}Obj.readSize - i2c${I2C_INSTANCE_NUM}Obj.readCount) == 1U)
             {
                 ${I2C_INSTANCE_NAME}_REGS->SMB_WCTRL = I2C${I2C_INSTANCE_NUM}_STOP_CONDITION;
                 i2c${I2C_INSTANCE_NUM}Obj.readBuffer[i2c${I2C_INSTANCE_NUM}Obj.readCount] = ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA;
@@ -258,10 +258,15 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
                     i2c${I2C_INSTANCE_NUM}Obj.callback(i2c${I2C_INSTANCE_NUM}Obj.context);
                 }
             }
+            else
+            {
+                /* Do nothing */
+            }
             break;
+
         case I2C_MASTER_STATE_TRANSFER_ABORT:
             /* If read is in progress, then read one more byte and generate a NAK. Then generate a STOP condition. */
-            if ((i2c${I2C_INSTANCE_NUM}Obj.writeCount == i2c${I2C_INSTANCE_NUM}Obj.writeSize) && ((i2c${I2C_INSTANCE_NUM}Obj.readSize - i2c${I2C_INSTANCE_NUM}Obj.readCount) >= 2))
+            if ((i2c${I2C_INSTANCE_NUM}Obj.writeCount == i2c${I2C_INSTANCE_NUM}Obj.writeSize) && ((i2c${I2C_INSTANCE_NUM}Obj.readSize - i2c${I2C_INSTANCE_NUM}Obj.readCount) >= 2U))
             {
                 /* De-assert ACK bit to 0 in preparation for the last byte */
                 ${I2C_INSTANCE_NAME}_REGS->SMB_WCTRL = I2C${I2C_INSTANCE_NUM}_NAK;
@@ -281,7 +286,10 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
                     i2c${I2C_INSTANCE_NUM}Obj.callback(i2c${I2C_INSTANCE_NUM}Obj.context);
                 }
             }
+            break;
+
         default:
+            /* Do nothing */
             break;
     }
 
@@ -292,23 +300,25 @@ bool I2C${I2C_INSTANCE_NUM}_Read(uint16_t address, uint8_t* rdata, size_t rlengt
     /* State machine must be idle and I2C module should not have detected a start bit on the bus */
     if(i2c${I2C_INSTANCE_NUM}Obj.state == I2C_MASTER_STATE_IDLE)
     {
-        /* Wait for the bus to become idle */
-        while((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_NBB_Msk) == 0);
+        while((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_NBB_Msk) == 0U)
+        {
+            /* Wait for the bus to become idle */
+        }
 
         i2c${I2C_INSTANCE_NUM}Obj.address             = address;
         i2c${I2C_INSTANCE_NUM}Obj.readBuffer          = rdata;
         i2c${I2C_INSTANCE_NUM}Obj.readSize            = rlength;
         i2c${I2C_INSTANCE_NUM}Obj.writeBuffer         = NULL;
-        i2c${I2C_INSTANCE_NUM}Obj.writeSize           = 0;
-        i2c${I2C_INSTANCE_NUM}Obj.writeCount          = 0;
-        i2c${I2C_INSTANCE_NUM}Obj.readCount           = 0;
+        i2c${I2C_INSTANCE_NUM}Obj.writeSize           = 0U;
+        i2c${I2C_INSTANCE_NUM}Obj.writeCount          = 0U;
+        i2c${I2C_INSTANCE_NUM}Obj.readCount           = 0U;
         i2c${I2C_INSTANCE_NUM}Obj.error               = I2C_ERROR_NONE;
         i2c${I2C_INSTANCE_NUM}Obj.state               = I2C_MASTER_STATE_ADDR_ACK;
 
         /* Disable MDONE interrupt */
         ${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0]                 &= ~SMB_CFG_ENMI_Msk;
 
-        ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA                 = (uint8_t)((address << 1) | I2C_TRANSFER_TYPE_READ);
+        ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA                 = (uint8_t)((address << 1U) | I2C_TRANSFER_TYPE_READ);
         ${I2C_INSTANCE_NAME}_REGS->SMB_WCTRL                   = I2C${I2C_INSTANCE_NUM}_START_CONDITION;
         return true;
     }
@@ -324,24 +334,26 @@ bool I2C${I2C_INSTANCE_NUM}_Write(uint16_t address, uint8_t* wdata, size_t wleng
     /* State machine must be idle and I2C module should not have detected a start bit on the bus */
     if(i2c${I2C_INSTANCE_NUM}Obj.state == I2C_MASTER_STATE_IDLE)
     {
-        /* Wait for the bus to become idle */
-        while((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_NBB_Msk) == 0);
+        while((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_NBB_Msk) == 0U)
+        {
+            /* Wait for the bus to become idle */
+        }
 
 
         i2c${I2C_INSTANCE_NUM}Obj.address             = address;
         i2c${I2C_INSTANCE_NUM}Obj.readBuffer          = NULL;
-        i2c${I2C_INSTANCE_NUM}Obj.readSize            = 0;
+        i2c${I2C_INSTANCE_NUM}Obj.readSize            = 0U;
         i2c${I2C_INSTANCE_NUM}Obj.writeBuffer         = wdata;
         i2c${I2C_INSTANCE_NUM}Obj.writeSize           = wlength;
-        i2c${I2C_INSTANCE_NUM}Obj.writeCount          = 0;
-        i2c${I2C_INSTANCE_NUM}Obj.readCount           = 0;
+        i2c${I2C_INSTANCE_NUM}Obj.writeCount          = 0U;
+        i2c${I2C_INSTANCE_NUM}Obj.readCount           = 0U;
         i2c${I2C_INSTANCE_NUM}Obj.error               = I2C_ERROR_NONE;
         i2c${I2C_INSTANCE_NUM}Obj.state               = I2C_MASTER_STATE_TRANSMIT;
 
         /* Disable MDONE interrupt */
         ${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0]                 &= ~SMB_CFG_ENMI_Msk;
 
-        ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA                 = (uint8_t)((address << 1) | I2C_TRANSFER_TYPE_WRITE);
+        ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA                 = (uint8_t)((address << 1U) | I2C_TRANSFER_TYPE_WRITE);
         ${I2C_INSTANCE_NAME}_REGS->SMB_WCTRL                   = I2C${I2C_INSTANCE_NUM}_START_CONDITION;
         return true;
     }
@@ -355,23 +367,25 @@ bool I2C${I2C_INSTANCE_NUM}_WriteRead(uint16_t address, uint8_t* wdata, size_t w
 {
     if(i2c${I2C_INSTANCE_NUM}Obj.state == I2C_MASTER_STATE_IDLE)
     {
-        /* Wait for the bus to become idle */
-        while((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_NBB_Msk) == 0);
+        while((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_NBB_Msk) == 0U)
+        {
+            /* Wait for the bus to become idle */
+        }
 
         i2c${I2C_INSTANCE_NUM}Obj.address             = address;
         i2c${I2C_INSTANCE_NUM}Obj.readBuffer          = rdata;
         i2c${I2C_INSTANCE_NUM}Obj.readSize            = rlength;
         i2c${I2C_INSTANCE_NUM}Obj.writeBuffer         = wdata;
         i2c${I2C_INSTANCE_NUM}Obj.writeSize           = wlength;
-        i2c${I2C_INSTANCE_NUM}Obj.writeCount          = 0;
-        i2c${I2C_INSTANCE_NUM}Obj.readCount           = 0;
+        i2c${I2C_INSTANCE_NUM}Obj.writeCount          = 0U;
+        i2c${I2C_INSTANCE_NUM}Obj.readCount           = 0U;
         i2c${I2C_INSTANCE_NUM}Obj.error               = I2C_ERROR_NONE;
         i2c${I2C_INSTANCE_NUM}Obj.state               = I2C_MASTER_STATE_TRANSMIT;
 
         /* Disable MDONE interrupt */
         ${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0]                 &= ~SMB_CFG_ENMI_Msk;
 
-        ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA                 = (uint8_t)((address << 1) | I2C_TRANSFER_TYPE_WRITE);
+        ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA                 = (uint8_t)((address << 1U) | I2C_TRANSFER_TYPE_WRITE);
         ${I2C_INSTANCE_NAME}_REGS->SMB_WCTRL                   = I2C${I2C_INSTANCE_NUM}_START_CONDITION;
         return true;
     }
@@ -394,7 +408,7 @@ void I2C${I2C_INSTANCE_NUM}_CallbackRegister(I2C_CALLBACK callback, uintptr_t co
 
 bool I2C${I2C_INSTANCE_NUM}_IsBusy(void)
 {
-    if((i2c${I2C_INSTANCE_NUM}Obj.state != I2C_MASTER_STATE_IDLE) || (${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_NBB_Msk) == 0)
+    if((i2c${I2C_INSTANCE_NUM}Obj.state != I2C_MASTER_STATE_IDLE) || (${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_NBB_Msk) == 0U)
     {
         return true;
     }
@@ -418,7 +432,8 @@ bool I2C${I2C_INSTANCE_NUM}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t sr
 {
     uint32_t high_low_period;
     uint32_t i2cBusFreq;
-    uint32_t timingValuesIndex = 0;
+    uint32_t timingValuesIndex = 0U;
+    float temp;
 
     if ((setup == NULL) || (i2c${I2C_INSTANCE_NUM}Obj.state != I2C_MASTER_STATE_IDLE))
     {
@@ -428,22 +443,24 @@ bool I2C${I2C_INSTANCE_NUM}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t sr
     i2cBusFreq = setup->clkSpeed;
 
     /* Maximum I2C clock speed cannot be greater than 1 MHz */
-    if (i2cBusFreq > 1000000)
+    if (i2cBusFreq > 1000000U)
     {
         return false;
     }
 
-    if( srcClkFreq == 0)
+    if( srcClkFreq == 0U)
     {
         srcClkFreq = ${I2C_INPUT_CLOCK_FREQ}UL;
     }
 
-    high_low_period = (((float)srcClkFreq/i2cBusFreq)/2) - 1;
+    temp = ((((float)srcClkFreq/(float)i2cBusFreq)/2.0f) - 1.0f);
+
+    high_low_period = (uint32_t)temp;
 
     /* high/low baud period value cannot be greater than 255 */
-    if (high_low_period > 255)
+    if (high_low_period > 255U)
     {
-        high_low_period = 255;
+        high_low_period = 255U;
     }
 
     /* Clear the ESO bit(Serial output) before changing the baud value */
@@ -451,17 +468,17 @@ bool I2C${I2C_INSTANCE_NUM}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t sr
 
     ${I2C_INSTANCE_NAME}_REGS->SMB_BUSCLK = SMB_BUSCLK_HIGH_PER(high_low_period) | SMB_BUSCLK_LOW_PER(high_low_period);
 
-    if (i2cBusFreq < 250000)
+    if (i2cBusFreq < 250000U)
     {
-        timingValuesIndex = 0;
+        timingValuesIndex = 0U;
     }
-    else if (i2cBusFreq < 750000)
+    else if (i2cBusFreq < 750000U)
     {
-        timingValuesIndex = 1;
+        timingValuesIndex = 1U;
     }
     else
     {
-        timingValuesIndex  = 2;
+        timingValuesIndex  = 2U;
     }
 
     /* Repeated start hold time setup */

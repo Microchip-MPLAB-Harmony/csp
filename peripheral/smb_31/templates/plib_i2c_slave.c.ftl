@@ -63,6 +63,8 @@
 // Section: Global Data
 // *****************************************************************************
 // *****************************************************************************
+#define NOP()    asm("NOP")
+
 static I2C_SLAVE_OBJ i2c${I2C_INSTANCE_NUM}Obj;
 
 void I2C${I2C_INSTANCE_NUM}_Initialize(void)
@@ -71,10 +73,10 @@ void I2C${I2C_INSTANCE_NUM}_Initialize(void)
     ${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] = SMB_CFG_RST_Msk;
 
     /* Reset bit must remain asserted for at-least 1 Baud clock period */
-    asm("nop");asm("nop");asm("nop");asm("nop");asm("nop");
-    asm("nop");asm("nop");asm("nop");asm("nop");asm("nop");
-    asm("nop");asm("nop");asm("nop");asm("nop");asm("nop");
-    asm("nop");asm("nop");asm("nop");asm("nop");asm("nop");
+    NOP();NOP();NOP();NOP();NOP();
+    NOP();NOP();NOP();NOP();NOP();
+    NOP();NOP();NOP();NOP();NOP();
+    NOP();NOP();NOP();NOP();NOP();
 
     /* Set the port associated with this instance of I2C peripheral */
     ${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] = SMB_CFG_PORT_SEL(${I2C_PORT_SEL});
@@ -104,7 +106,7 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
     uint32_t i2c_addr;
     uint8_t dummy;
 
-    if (${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_BER_Msk)
+    if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_BER_Msk) != 0U)
     {
         i2c${I2C_INSTANCE_NUM}Obj.error = I2C_SLAVE_ERROR_BUS_COLLISION;
 
@@ -117,11 +119,11 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
         return;
     }
     /* Check if addressed as slave (AAS) bit is set */
-    if (${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_AAS_Msk)
+    if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_AAS_Msk) != 0U)
     {
         i2c_addr = ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA;
 
-        i2c${I2C_INSTANCE_NUM}Obj.transferDir = (i2c_addr & 0x01)? I2C_SLAVE_TRANSFER_DIR_READ : I2C_SLAVE_TRANSFER_DIR_WRITE;
+        i2c${I2C_INSTANCE_NUM}Obj.transferDir = ((i2c_addr & 0x01U) != 0U)? I2C_SLAVE_TRANSFER_DIR_READ : I2C_SLAVE_TRANSFER_DIR_WRITE;
 
         if (i2c${I2C_INSTANCE_NUM}Obj.callback != NULL)
         {
@@ -139,7 +141,7 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
     else if (i2c${I2C_INSTANCE_NUM}Obj.transferDir == I2C_SLAVE_TRANSFER_DIR_READ)
     {
         /* I2C master reading from slave */
-        if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LRB_AD0_Msk) == 0)
+        if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LRB_AD0_Msk) == 0U)
         {
             /* ACK received, continue transmitting */
             if (i2c${I2C_INSTANCE_NUM}Obj.callback != NULL)
@@ -151,7 +153,7 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
         else
         {
             /* NAK received, stop transmission. Dummy write to clear the PIN status bit */
-            ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA = 0xFF;
+            ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA = 0xFFU;
 
             if (i2c${I2C_INSTANCE_NUM}Obj.callback != NULL)
             {
@@ -163,7 +165,7 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
     else
     {
         /* I2C master writing to slave */
-        if (${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_STS_Msk)
+        if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_STS_Msk) != 0U)
         {
             /* Stop received, do a dummy read to clear the PIN status bit */
             dummy = ${I2C_INSTANCE_NAME}_REGS->SMB_I2CDATA;
@@ -207,7 +209,7 @@ void I2C${I2C_INSTANCE_NUM}_StatusFlagsReset(void)
 
 I2C_SLAVE_ACK_STATUS I2C${I2C_INSTANCE_NUM}_LastByteAckStatusGet(void)
 {
-    return (${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LRB_AD0_Msk) ? I2C_SLAVE_ACK_STATUS_RECEIVED_NAK : I2C_SLAVE_ACK_STATUS_RECEIVED_ACK;
+    return ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_LRB_AD0_Msk) != 0U) ? I2C_SLAVE_ACK_STATUS_RECEIVED_NAK : I2C_SLAVE_ACK_STATUS_RECEIVED_ACK;
 }
 
 void I2C${I2C_INSTANCE_NUM}_CallbackRegister(I2C_SLAVE_CALLBACK callback, uintptr_t contextHandle)
@@ -223,7 +225,7 @@ void I2C${I2C_INSTANCE_NUM}_CallbackRegister(I2C_SLAVE_CALLBACK callback, uintpt
 
 bool I2C${I2C_INSTANCE_NUM}_IsBusy(void)
 {
-    if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_NBB_Msk) == 0)
+    if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_NBB_Msk) == 0U)
     {
         return true;
     }

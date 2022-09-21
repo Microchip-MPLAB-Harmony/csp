@@ -82,15 +82,13 @@ typedef enum
 
 } I2C_SLAVE_ERROR;
 
-typedef enum
-{
-    /* I2C Master is writing to slave */
-    I2C_SLAVE_TRANSFER_DIR_WRITE = 0,
+/* I2C Master is writing to slave */
+#define I2C_SLAVE_TRANSFER_DIR_WRITE 0U
 
-    /* I2C Master is reading from slave */
-    I2C_SLAVE_TRANSFER_DIR_READ  = 1,
+/* I2C Master is reading from slave */
+#define I2C_SLAVE_TRANSFER_DIR_READ  1U
 
-}I2C_SLAVE_TRANSFER_DIR;
+typedef uint32_t I2C_SLAVE_TRANSFER_DIR;
 
 typedef enum
 {

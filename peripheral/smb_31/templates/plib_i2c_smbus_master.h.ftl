@@ -69,22 +69,26 @@
 // *****************************************************************************
 
 
-
+<#if I2C_OPERATING_MODE == "Master">
 void I2C${I2C_INSTANCE_NAME}_Initialize(void);
+<#else>
+void I2C${I2C_INSTANCE_NAME}_HostInitialize(void);
+</#if>
 <#if I2C_SMBUS_LOW_LEVEL_API_ONLY == false>
-bool I2C${I2C_INSTANCE_NAME}_IsBusy(void);
+bool I2C${I2C_INSTANCE_NAME}_HostIsBusy(void);
 void I2C${I2C_INSTANCE_NAME}_HostCallbackRegister(I2C_SMB_HOST_CALLBACK callback, uintptr_t contextHandle);
 I2C_SMB_HOST_ERROR I2C${I2C_INSTANCE_NAME}_HostErrorGet(void);
 bool I2C${I2C_INSTANCE_NAME}_HostTransferSetup(I2C_SMB_HOST_TRANSFER_SETUP* setup, uint32_t srcClkFreq );
-void I2C${I2C_INSTANCE_NAME}_HostWriteByte(uint16_t address, uint8_t cmd, void* pWrdata);
-void I2C${I2C_INSTANCE_NAME}_HostWriteWord(uint16_t address, uint8_t cmd, void* pWrdata);
-void I2C${I2C_INSTANCE_NAME}_HostWriteBlock(uint16_t address, uint8_t cmd, void* pWrdata, uint8_t nWrBytes);
-void I2C${I2C_INSTANCE_NAME}_HostReadByte(uint16_t address, uint8_t cmd);
-void I2C${I2C_INSTANCE_NAME}_HostReadWord(uint16_t address, uint8_t cmd);
-void I2C${I2C_INSTANCE_NAME}_HostReadBlock(uint16_t address, uint8_t cmd);
-void I2C${I2C_INSTANCE_NAME}_HostWriteReadBlock(uint16_t address, uint8_t cmd, void* pWrdata, uint8_t nWrBytes);
+void I2C${I2C_INSTANCE_NAME}_HostWriteByte(uint8_t address, uint8_t cmd, void* pWrdata);
+void I2C${I2C_INSTANCE_NAME}_HostWriteWord(uint8_t address, uint8_t cmd, void* pWrdata);
+void I2C${I2C_INSTANCE_NAME}_HostWriteBlock(uint8_t address, uint8_t cmd, void* pWrdata, uint32_t nWrBytes);
+void I2C${I2C_INSTANCE_NAME}_HostReadByte(uint8_t address, uint8_t cmd);
+void I2C${I2C_INSTANCE_NAME}_HostReadWord(uint8_t address, uint8_t cmd);
+void I2C${I2C_INSTANCE_NAME}_HostReadBlock(uint8_t address, uint8_t cmd);
+void I2C${I2C_INSTANCE_NAME}_HostWriteReadBlock(uint8_t address, uint8_t cmd, void* pWrdata, uint32_t nWrBytes);
 uint32_t I2C${I2C_INSTANCE_NAME}_HostTransferCountGet(void);
 uint32_t I2C${I2C_INSTANCE_NAME}_HostBufferRead(void* pBuffer);
+void I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg);
 </#if>
 
 // DOM-IGNORE-BEGIN

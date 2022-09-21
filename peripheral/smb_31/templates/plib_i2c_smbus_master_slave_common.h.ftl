@@ -42,8 +42,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_SMB_MASTER_SLAVE_COMMON_H
-#define PLIB_SMB_MASTER_SLAVE_COMMON_H
+#ifndef PLIB_SMB${I2C_INSTANCE_NAME}_MASTER_SLAVE_COMMON_H
+#define PLIB_SMB${I2C_INSTANCE_NAME}_MASTER_SLAVE_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -82,4 +82,4 @@ void I2C${I2C_INSTANCE_NAME}_Initialize(void);
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_SMB_MASTER_SLAVE_COMMON_H */
+#endif /* PLIB_SMB${I2C_INSTANCE_NAME}_MASTER_SLAVE_COMMON_H */
