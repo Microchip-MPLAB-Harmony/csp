@@ -77,6 +77,7 @@ Interface definition of ${QMSPI_INSTANCE_NAME} PLIB.
 void ${QMSPI_INSTANCE_NAME}_Initialize(void);
 void ${QMSPI_INSTANCE_NAME}_ChipSelectSetup(QMSPI_CHIP_SELECT chipSelect);
 bool ${QMSPI_INSTANCE_NAME}_TransferSetup (QMSPI_TRANSFER_SETUP *setup);
+void ${QMSPI_INSTANCE_NAME}_TapControlSet(uint16_t tap_vl, uint32_t tap_ctrl);
 bool ${QMSPI_INSTANCE_NAME}_Write(QMSPI_XFER_T *qmspiXfer, void* pTransmitData, size_t txSize);
 bool ${QMSPI_INSTANCE_NAME}_Read(QMSPI_XFER_T *qmspiXfer, void* pReceiveData, size_t rxSize);
 bool ${QMSPI_INSTANCE_NAME}_IsTransmitterBusy(void);

@@ -203,6 +203,12 @@ bool ${QMSPI_INSTANCE_NAME}_TransferSetup (QMSPI_TRANSFER_SETUP *setup)
     return setupStatus;
 }
 
+void ${QMSPI_INSTANCE_NAME}_TapControlSet(uint16_t tap_vl, uint32_t tap_ctrl)
+{
+    ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TAPS = tap_vl;
+    ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TAP_CTRL = (tap_ctrl & QMSPI_TAP_CTRL_Msk);
+}
+
 /* Manual mode - command, register and memory write */
 bool ${QMSPI_INSTANCE_NAME}_Write(QMSPI_XFER_T *qmspiXfer, void* pTransmitData, size_t txSize)
 {
