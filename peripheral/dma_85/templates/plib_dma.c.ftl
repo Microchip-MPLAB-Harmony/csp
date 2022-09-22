@@ -59,7 +59,7 @@
 // *****************************************************************************
 
 #define DMA_CHANNELS_NUMBER        (${DMA_HIGHEST_CHANNEL}U)
-#define NOP()    asm("NOP")
+
 
 /* DMA channels object configuration structure */
 typedef struct
@@ -73,6 +73,8 @@ typedef struct
 /* DMA Channels object information structure */
 static DMA_CH_OBJECT dmaChannelObj[DMA_CHANNELS_NUMBER];
 </#if>
+
+#define NOP()    asm("NOP")
 
 static dma_chan00_registers_t* ${DMA_INSTANCE_NAME}_ChannelBaseAddrGet(DMA_CHANNEL ch)
 {
@@ -455,14 +457,14 @@ void ${DMA_INSTANCE_NAME}_Start(DMA_CHANNEL channel)
 uint8_t ${DMA_INSTANCE_NAME}_WaitTillFree(DMA_CHANNEL channel)
 {
     uint32_t timeoutCounter=0;
-    uint8_t retVal = true;
+    uint8_t retVal = 1;
     dma_chan00_registers_t* dmaChRegs = ${DMA_INSTANCE_NAME}_ChannelBaseAddrGet(channel);
 
-    while(dmaChRegs->DMA_CHAN00_CTRL & DMA_CHAN00_CTRL_BUSY_Msk)
+    while((dmaChRegs->DMA_CHAN00_CTRL & DMA_CHAN00_CTRL_BUSY_Msk) != 0U)
     {
         if (timeoutCounter++ >= BUSY_TIMEOUT_COUNTER)
         {
-            retVal = false;
+            retVal = 0;
             break;
         }
     }
@@ -485,7 +487,7 @@ void ${DMA_INSTANCE_NAME}_SetupTx(DMA_CHANNEL channel, const uint8_t device, con
     /* Stop the Tx DMA before configuring it*/
     ${DMA_INSTANCE_NAME}_Stop(channel);
 
-    if (false == ${DMA_INSTANCE_NAME}_WaitTillFree(channel))
+    if (0U == ${DMA_INSTANCE_NAME}_WaitTillFree(channel))
     {
         /* This should never happen, the trace here
          * will help to detect this condition during testing */
@@ -514,7 +516,7 @@ void ${DMA_INSTANCE_NAME}_SetupRx(DMA_CHANNEL channel, const uint8_t device, con
     /* Stop the Rx DMA before configuring it*/
     ${DMA_INSTANCE_NAME}_Stop(channel);
 
-    if (false == ${DMA_INSTANCE_NAME}_WaitTillFree(channel))
+    if (0U == ${DMA_INSTANCE_NAME}_WaitTillFree(channel))
     {
         /* This should never happen, the trace here
          * will help to detect this condition during testing */
@@ -547,7 +549,7 @@ void ${DMA_INSTANCE_NAME}_SwitchTxToRx(DMA_CHANNEL channel, const uint8_t device
     /* Stop the Rx DMA before configuring it*/
     ${DMA_INSTANCE_NAME}_Stop(channel);
 
-    if (false == ${DMA_INSTANCE_NAME}_WaitTillFree(channel))
+    if (0U == ${DMA_INSTANCE_NAME}_WaitTillFree(channel))
     {
         /* This should never happen, the trace here
          * will help to detect this condition during testing */
@@ -573,15 +575,15 @@ uint8_t ${DMA_INSTANCE_NAME}_GetDeviceId(const uint8_t device_name, const uint8_
     switch (device_name)
     {
         case 0:
-            device_id = (uint8_t)(2*device_instance);
+            device_id = (uint8_t)(2U * device_instance);
             break;
 
         case 1:
-            device_id = 1 + (uint8_t)(2*device_instance);
+            device_id = 1U + (uint8_t)(2U * device_instance);
             break;
 
         case 2:
-            device_id = 4;
+            device_id = 4U;
             break;
 
         default:

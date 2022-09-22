@@ -110,7 +110,7 @@ typedef uint32_t DMA_CHANNEL_CONFIG;
 
 typedef void (*DMA_CHANNEL_CALLBACK) (DMA_TRANSFER_EVENT event, uintptr_t contextHandle);
 <#else>
-#define BUSY_TIMEOUT_COUNTER    8000
+#define BUSY_TIMEOUT_COUNTER    8000U
 </#if>
 
 void ${DMA_INSTANCE_NAME}_Initialize( void );
