@@ -128,8 +128,8 @@ def update_mainck(symbol, event):
     symbol.setValue(value)
 
 
-def update_pll_ref_clock(symbol, event):
-    pll = symbol.getID().split("_")[0]
+def update_pll_src_clock(symbol, event):
+    pll = symbol.getID().split("SRC_")[0]
     pllms = int(event['source'].getSymbolValue("CLK_{0}_PLLMS".format(pll)))
     source_freq = event['source'].getSymbolValue(
                                 pll_dict[pll]["source"][pllms][0]+"_FREQUENCY")
@@ -141,7 +141,7 @@ def update_pll_core_freq(symbol, event):
     pll = symbol.getID().split("_")[0]
     enpll =  comp.getSymbolValue("CLK_{0}_ENPLL".format(pll))
     if enpll:
-        source_freq = comp.getSymbolValue("{0}_REFCLK_FREQUENCY".format(pll))
+        source_freq = comp.getSymbolValue("{0}SRC_FREQUENCY".format(pll))
         mul = comp.getSymbolValue("CLK_{0}_MUL".format(pll))
         fracr = comp.getSymbolValue("CLK_{0}_FRACR".format(pll))
         symbol.setValue(int((source_freq * (mul + 1 + (float(fracr)/2**22)))))
@@ -484,11 +484,11 @@ if __name__ == "__main__":
         nstep.setMax(2**8 -1)
 
         pllrefclk =  clk_component.createIntegerSymbol(
-                                "{0}_REFCLK_FREQUENCY".format(pll),pll_menu)
+                                "{0}SRC_FREQUENCY".format(pll),pll_menu)
         pllrefclk.setVisible(show_frequency_sym)
         pllrefclk.setDefaultValue(clk_remote_component.getSymbolValue(
                                 pll_dict[pll]["source"][0][0]+"_FREQUENCY"))
-        pllrefclk.setDependencies(update_pll_ref_clock,
+        pllrefclk.setDependencies(update_pll_src_clock,
                                 [pll_dict[pll]["source"][0][0]+"_FREQUENCY",
                                  pll_dict[pll]["source"][1][0]+"_FREQUENCY",
                                  "CLK_{0}_PLLMS".format(pll)])
@@ -502,7 +502,7 @@ if __name__ == "__main__":
                                 "{0}_CORECLK_FREQUENCY".format(pll),pll_menu)
         corepllck.setVisible(show_frequency_sym)
         corepllck.setDependencies(update_pll_core_freq,
-                                 ["{0}_REFCLK_FREQUENCY".format(pll),
+                                 ["{0}SRC_FREQUENCY".format(pll),
                                   "CLK_{0}_ENPLL".format(pll),
                                   "CLK_{0}_MUL".format(pll),
                                   "CLK_{0}_FRACR".format(pll)])
