@@ -62,16 +62,16 @@ void MATRIX_Initialize(void)
     MATRIX0_REGS->MATRIX_PSR[7]= 0x00030303;
 
     /* Set AHB Slave in user mode */
-    MATRIX0_REGS->MATRIX_PSR[6] = 0xF;
-    MATRIX0_REGS->MATRIX_PASSR[6] = 0x00070707;
+    MATRIX0_REGS->MATRIX_PSR[6] = 0x00070707;
+    MATRIX0_REGS->MATRIX_PASSR[6] = 0x00000444;
 
     /* Set HEFC TOP value and set memory in user mode */
     MATRIX0_REGS->MATRIX_PASSR[2] = 0x5;
     MATRIX0_REGS->MATRIX_PSR[2] = 0x00010101;
     MATRIX0_REGS->MATRIX_PRTSR[2] = 0x5;
 
-    /* Enable Master Remap Control for ICM to access address 0 */
-    MATRIX0_REGS->MATRIX_MRCR |= (1U << 11U);
+    /* Enable Master Remap Control for SPW, IP1553, ICM and CRCCU to access address 0 */
+    MATRIX0_REGS->MATRIX_MRCR |= (1U << 9U) | (1U << 10U) | (1U << 11U) | (1U << 12U);
 <#else>
     MATRIX0_REGS->MATRIX_PASSR[0]= 0x00000FFF;
     MATRIX0_REGS->MATRIX_PSR[0]= 0x07070707;
