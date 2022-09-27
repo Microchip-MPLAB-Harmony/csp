@@ -77,7 +77,7 @@ def instantiateComponent(accComponent):
     accInstanceName.setDefaultValue(accComponent.getID().upper())
     print("Running " + accInstanceName.getValue())
 
-    parameters = [];
+    parameters = []
     parametersNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ACC\"]/instance@[name=\""+accInstanceName.getValue()+"\"]/parameters")
     for parameter in parametersNode.getChildren():
         if "HAS_" in parameter.getAttribute("name"):
@@ -123,20 +123,19 @@ def instantiateComponent(accComponent):
         accSym_MR_EDGETYP = accComponent.createKeyValueSetSymbol("ACC_MR_EDGETYPE", None)
         accSym_MR_EDGETYP.setLabel("Select Comparison Edge")
         accSym_MR_EDGETYP.setDefaultValue(0)
-        accSym_MR_EDGETYP.setOutputMode("Value")
+        accSym_MR_EDGETYP.setOutputMode("Key")
         accSym_MR_EDGETYP.setDisplayMode("Description")
         accSym_MR_EDGETYP.setVisible(True)
+        count = accValGrp_MR_EDGETYP.getValueCount()
+        for id in range(0, count):
+            valueName = accValGrp_MR_EDGETYP.getValueNames()[id]
+            accSym_MR_EDGETYP.addKey(valueName, accValGrp_MR_EDGETYP.getValue(valueName).getValue(), accValGrp_MR_EDGETYP.getValue(valueName).getDescription())
 
 
     if "HAS_INTERRUPTS" in parameters:
         accInterrupt = accComponent.createBooleanSymbol("INTERRUPT_MODE", None)
         accInterrupt.setLabel("Enable Comparison Edge Interrupt")
         accInterrupt.setDefaultValue(False)
-
-        count = accValGrp_MR_EDGETYP.getValueCount()
-        for id in range(0, count):
-            valueName = accValGrp_MR_EDGETYP.getValueNames()[id]
-            accSym_MR_EDGETYP.addKey(valueName, accValGrp_MR_EDGETYP.getValue(valueName).getValue(), accValGrp_MR_EDGETYP.getValue(valueName).getDescription())
 
     if "HAS_CURRENT_SELECTION" in parameters:
         accSym_ACR_ISEL = accComponent.createKeyValueSetSymbol("ACC_ACR_ISEL", None)

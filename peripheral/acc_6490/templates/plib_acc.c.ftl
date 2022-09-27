@@ -61,8 +61,8 @@ void ${ACC_INSTANCE_NAME}_Initialize (void)
     <#if HAS_PLUS_COMPARATOR_SELECTION??>
     regValue |= ACC_MR_SELPLUS(${ACC_MR_SELPLUS}U);
     </#if>
-    <#if HAS_EDGETYPE??>
-    regValue |= ACC_MR_EDGETYP(${ACC_MR_EDGETYP}U);
+    <#if HAS_EDGETYPE_SELECTION??>
+    regValue |= ACC_MR_EDGETYP_${ACC_MR_EDGETYPE};
     </#if>
     <#if HAS_INVERTED_COMPARATOR??>
     regValue |= ${ACC_ACR_INV?then('ACC_MR_INV_Msk', '0U')};
