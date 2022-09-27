@@ -38,6 +38,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
+#include <stddef.h>
 #include "plib_clock.h"
 #include "device.h"
 <#if CoreSysIntFile == true>
