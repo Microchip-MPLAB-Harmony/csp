@@ -197,10 +197,8 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   | AC_COMPCTRL_SPEED(${.vars[AC_COMPCTRL_SPEED]}U)
                                   | AC_COMPCTRL_FLEN_${.vars[AC_COMPCTRL_FLEN]}
                                   ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')};</@compress>
-    <#if AC_COMPCTRL_SINGLE_MODE?has_content>
-        <#if (.vars[AC_COMPCTRL_SINGLE_MODE] == false)>
+    <#if (.vars[AC_COMPCTRL_HYSTEN]) && (!.vars[AC_COMPCTRL_SINGLE_MODE])>
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYST_Msk;
-        </#if>
     </#if>
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;
                 <#if .vars[AC_SCALERn]?has_content >
