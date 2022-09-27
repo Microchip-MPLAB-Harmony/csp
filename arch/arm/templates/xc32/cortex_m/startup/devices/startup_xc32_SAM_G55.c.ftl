@@ -6,7 +6,6 @@ __STATIC_INLINE void CMCC_Configure(void)
     {
         /*Wait for the operation to complete*/
     }
-<#if DEVICE_TCM_SIZE != "3">
     <#assign CMCC_CFG_VAL = "CMCC_CFG_PRGCSIZE(" + DEVICE_TCM_SIZE + "U)">
     <#if !INSTRUCTION_CACHE_ENABLE>
     <#assign CMCC_CFG_VAL = CMCC_CFG_VAL + "| CMCC_CFG_ICDIS_Msk">
@@ -16,5 +15,4 @@ __STATIC_INLINE void CMCC_Configure(void)
     </#if>
     CMCC_REGS->CMCC_CFG = ${CMCC_CFG_VAL};
     CMCC_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
-</#if>
 }
