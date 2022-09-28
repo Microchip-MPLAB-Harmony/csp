@@ -343,7 +343,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
 
 # # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_u2503/config/dmac.py")
-coreComponent.addPlugin("../peripheral/dmac_u2503/plugin/dmamanager.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_PIC32CX_BZ",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/apps/dma-configurators/dma-configurator-1/build/index.html",
+                            "symbol_config": "csp/peripheral/dmac_u2503/plugin/symbol-config.json"
+                        }
+                        )
 
 # # load wdt
 periphNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"WDT\"]")
