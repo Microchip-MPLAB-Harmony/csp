@@ -3,6 +3,27 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.14.0
+
+### New Features
+
+- This release adds support for QMSPI, SMBUS and DMA peripheral libraries for CEC173x family of devices
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+### Known Issues
+
+  - Same as v3.13.0
+
+### Development Tools
+
+  - Same as v3.13.0
+
+### Notes
+
+-  None
+
 ## CSP Release v3.13.1
 
 ### New Features
