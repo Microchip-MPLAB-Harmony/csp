@@ -125,7 +125,8 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
     <#if I2CM_MODE??> | SERCOM_I2CM_CTRLA_SPEED_${I2CM_MODE}  </#if>
     <#if I2C_SCLSM??> | SERCOM_I2CM_CTRLA_SCLSM(${I2C_SCLSM}UL) </#if>
     | SERCOM_I2CM_CTRLA_ENABLE_Msk
-    ${I2C_RUNSTDBY?then(' | SERCOM_I2CM_CTRLA_RUNSTDBY_Msk','')};</@compress>
+    ${I2C_RUNSTDBY?then(' | SERCOM_I2CM_CTRLA_RUNSTDBY_Msk','')}
+	<#if I2C_SLEWRATE??> | SERCOM_I2CM_CTRLA_SLEWRATE(SERCOM_I2CM_CTRLA_SLEWRATE_${I2C_SLEWRATE}_Val)</#if>;</@compress>
 
     /* Wait for synchronization */
 <#if SERCOM_SYNCBUSY = false>
