@@ -93,8 +93,8 @@ void ${EBI_INSTANCE_NAME}_Initialize( void )
     ${EBI_INSTANCE_NAME}_REGS->CS_X[${i}].EBI_SMC_PULSE = EBI_SMC_PULSE_NWE_PULSE(${.vars[EBI_SMC_NWE_PULSE_CS]}) | EBI_SMC_PULSE_NCS_WR_PULSE(${.vars[EBI_SMC_NCS_WR_PULSE_CS]}) | EBI_SMC_PULSE_NRD_PULSE(${.vars[EBI_SMC_NRD_PULSE_CS]}) | EBI_SMC_PULSE_NCS_RD_PULSE(${.vars[EBI_SMC_NCS_RD_PULSE_CS]});
 
     /* Setup EBI SMC MODE register */
-    ${EBI_INSTANCE_NAME}_REGS->CS_X[${i}].EBI_SMC_MODE = ${.vars[EBI_SMC_NWAIT_MODE_CS]} <#if (.vars[EBI_SMC_PMEN_CS] == true)>| EBI_SMC_MODE_PMEN_Msk | ${.vars[EBI_SMC_PS_CS]}</#if> <#if (.vars[EBI_SMC_TDF_MODE_CS] == true)>| EBI_SMC_MODE_TDF_MODE_Msk | EBI_SMC_MODE_TDF_CYCLES(${.vars[EBI_SMC_TDF_CYCLES_CS]})</#if>  \
-                                          <#if (.vars[EBI_SMC_WRITE_MODE_CS] == true)>| EBI_SMC_MODE_WRITE_MODE_Msk</#if> <#if (.vars[EBI_SMC_READ_MODE_CS] == true)>| EBI_SMC_MODE_READ_MODE_Msk</#if>  | ${.vars[EBI_SMC_DATA_BUS_CS]} | ${.vars[EBI_SMC_BAT_CS]};
+    ${EBI_INSTANCE_NAME}_REGS->CS_X[${i}].EBI_SMC_MODE = EBI_SMC_MODE_EXNW_MODE(${.vars[EBI_SMC_NWAIT_MODE_CS]}) <#if (.vars[EBI_SMC_PMEN_CS] == true)>| EBI_SMC_MODE_PMEN_Msk | ${.vars[EBI_SMC_PS_CS]}</#if> <#if (.vars[EBI_SMC_TDF_MODE_CS] == true)>| EBI_SMC_MODE_TDF_CYCLES(${.vars[EBI_SMC_TDF_CYCLES_CS]})</#if>  \
+                                          | EBI_SMC_MODE_WRITE_MODE(<#if (.vars[EBI_SMC_WRITE_MODE_CS] == true)>1<#else>0)</#if> | EBI_SMC_MODE_READ_MODE(<#if (.vars[EBI_SMC_READ_MODE_CS] == true)>1<#else>0</#if>) | EBI_SMC_MODE_DBW(${.vars[EBI_SMC_DATA_BUS_CS]}_Val) | ${.vars[EBI_SMC_BAT_CS]};
     </#if>
     </#if>
 </#list>
