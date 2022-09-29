@@ -184,7 +184,7 @@ void ${SDADC_INSTANCE_NAME}_Initialize( void )
     ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLC = (uint8_t)SDADC_CTRLC_FREERUN_Msk;
     </#if>
     <#if SDADC_SEQCTRL_VAL?has_content>
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_SEQCTRL = ${SDADC_SEQCTRL_VAL}U;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_SEQCTRL = ${SDADC_SEQCTRL_VAL};
     </#if>
     <#if SDADC_AUTO_SEQUENCE == false>
     /* Configure positive and negative input pins */
@@ -230,7 +230,7 @@ void ${SDADC_INSTANCE_NAME}_Enable( void )
     while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_ENABLE_Msk) == SDADC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for synchronization */
-    }    
+    }
 }
 
 void ${SDADC_INSTANCE_NAME}_Disable( void )
@@ -239,7 +239,7 @@ void ${SDADC_INSTANCE_NAME}_Disable( void )
     while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_ENABLE_Msk) == SDADC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for synchronization */
-    }    
+    }
 }
 
 <#if SDADC_TRIGGER == "1"> <#-- SW trigger -->
