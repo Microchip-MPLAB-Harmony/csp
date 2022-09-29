@@ -164,7 +164,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
 
 # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
-coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_SAM_RH707",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/apps/dma-configurators/dma-configurator-1/build/index.html",
+                            "symbol_config": "csp/peripheral/xdmac_11161/plugin/symbol-config.json"
+                        }
+                        )
 
 # load rswdt
 execfile(Variables.get("__CORE_DIR")

@@ -261,7 +261,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/generic_timer/config/gene
 
 # load dma and its manager
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
-coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_SAMA7G5",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/apps/dma-configurators/dma-configurator-1/build/index.html",
+                            "symbol_config": "csp/peripheral/xdmac_11161/plugin/symbol-config.json"
+                        }
+                        )
 
 compiler_choice = deviceFamily.getComponent().getSymbolByID("COMPILER_CHOICE")
 if compiler_choice.getSelectedKey() == "XC32":

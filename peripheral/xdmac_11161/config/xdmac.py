@@ -303,8 +303,8 @@ def xdmacChannelAllocLogic(Sym, event):
                 break
 
         if channelAllocated == False:
-            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
             Log.writeWarningMessage("Warning!!! Couldn't Allocate any DMA Channel. Check DMA manager.")
+            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
 
     # Client requested to deallocate channel
     else:
@@ -324,10 +324,6 @@ def xdmacChannelAllocLogic(Sym, event):
 ###############################################################################
 # Component ####
 ###############################################################################
-dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
-dmaManagerSelect.setVisible(False)
-dmaManagerSelect.setDefaultValue("xdmac_11161:SAME70DMAModel")
-
 xdmacBitFieldString = "/avr-tools-device-file/modules/module@[name=\"XDMAC\"]/register-group@[name=\"{0}\"]/register@[name=\"{1}\"]/bitfield@[name=\"{2}\"]"
 xdmacValueGrpString = "/avr-tools-device-file/modules/module@[name=\"XDMAC\"]/value-group@[name=\"{0}\"]"
 
