@@ -1,3 +1,26 @@
+<#assign FREERTOS_ENABLED = ((HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "FreeRTOS") || ((FreeRTOS.SET_RTOS)?? && FreeRTOS.SET_RTOS == "FreeRTOS")>
+// *****************************************************************************
+// *****************************************************************************
+// Section: System Interrupt Vector declarations
+// *****************************************************************************
+// *****************************************************************************
+<#list EVIC_VECTOR_MIN..EVIC_VECTOR_MAX as i>
+    <#assign INT_ENABLE = "EVIC_" + i + "_ENABLE">
+    <#if .vars[INT_ENABLE]?? && .vars[INT_ENABLE]>
+        <#assign INT_ENABLE_GENERATE = "EVIC_" + i + "_ENABLE_GENERATE">
+        <#assign INT_HANDLER  = "EVIC_" + i + "_HANDLER">
+        <#if (!FREERTOS_ENABLED) || !((.vars[INT_ENABLE_GENERATE]??) && (!.vars[INT_ENABLE_GENERATE]))>
+void ${.vars[INT_HANDLER]} (void);
+        </#if>
+    </#if>
+</#list>
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: System Interrupt Vector definitions
+// *****************************************************************************
+// *****************************************************************************
 <#list EVIC_VECTOR_MIN..EVIC_VECTOR_MAX as i>
     <#assign INT_VECTOR = "EVIC_" + i + "_VECTOR">
     <#assign INTERRUT_HANDLER = "EVIC_" + i + "_INTERRUPT_HANDLER">

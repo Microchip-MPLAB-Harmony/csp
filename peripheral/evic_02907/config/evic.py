@@ -630,8 +630,8 @@ evicSystemInitStartFile.setMarkup(True)
 
 evicSystemIntWeakHandleFile = coreComponent.createFileSymbol("EVIC_INT_HANDLER", None)
 evicSystemIntWeakHandleFile.setType("STRING")
-evicSystemIntWeakHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS")
-evicSystemIntWeakHandleFile.setSourcePath("../peripheral/evic_02907/templates/system/interrupts_weak_handlers.h.ftl")
+evicSystemIntWeakHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_HANDLER_DECLS")
+evicSystemIntWeakHandleFile.setSourcePath("../peripheral/evic_02907/templates/system/interrupts_handlers_decls.h.ftl")
 evicSystemIntWeakHandleFile.setMarkup(True)
 
 evicSystemIntTableFile = coreComponent.createFileSymbol("EVIC_INT_TABLE", None)
