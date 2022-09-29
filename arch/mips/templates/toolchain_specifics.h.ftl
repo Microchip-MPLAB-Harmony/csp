@@ -30,6 +30,17 @@
     <#lt>#define NO_INIT                        __attribute__((section(".no_init")))
     <#lt>#define SECTION(a)                     __attribute__((__section__(a)))
 
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 21.1 deviated 13 times. Deviation record ID -  H3_MISRAC_2012_R_21_1_DR_3 */
+/* MISRA C-2012 Rule 21.2 deviated 26 times. Deviation record ID -  H3_MISRAC_2012_R_21_2_DR_3 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block \
+   (deviate:13 "MISRA C-2012 Rule 21.1" "H3_MISRAC_2012_R_21_1_DR_3")\
+   (deviate:26 "MISRA C-2012 Rule 21.2" "H3_MISRAC_2012_R_21_2_DR_3")
+</#if>
     <#lt>#ifndef   __ASM
     <#lt>    #define __ASM                      __asm__
     <#lt>#endif
@@ -83,6 +94,11 @@
     <#lt>#ifndef FORMAT_ATTRIBUTE
     <#lt>   #define FORMAT_ATTRIBUTE(archetype, string_index, first_to_check)  __attribute__ ((format (archetype, string_index, first_to_check)))
     <#lt>#endif
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.1" "MISRA C-2012 Rule 21.2"
+#pragma GCC diagnostic pop
+</#if>
 </#if>
 
 #endif // end of header

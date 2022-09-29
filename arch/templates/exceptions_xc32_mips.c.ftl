@@ -11,9 +11,9 @@
   Description:
     This file redefines the default _weak_  exception handler with a more debug
     friendly one. If an unexpected exception occurs the code will stop in a
-    while(1) loop.  The debugger can be halted and two variables _excep_code and
-    _except_addr can be examined to determine the cause and address where the
-    exception occurred.
+    while(1) loop.  The debugger can be halted and two variables exception_code 
+    and exception_address can be examined to determine the cause and address
+    where the exception occurred.
  *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -40,7 +40,11 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
-
+<#if PRODUCT_FAMILY?contains("PIC32MZ")>
+<#assign DEVIATION_COUNT = 8>
+<#else>
+<#assign DEVIATION_COUNT = 4>
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
@@ -57,6 +61,25 @@
 #include "definitions.h"
 #include <stdio.h>
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Forward declaration of the handler functions
+// *****************************************************************************
+// *****************************************************************************
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 21.2 deviated ${DEVIATION_COUNT} times. Deviation record ID -  H3_MISRAC_2012_R_21_2_DR_4 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:${DEVIATION_COUNT} "MISRA C-2012 Rule 21.2" "H3_MISRAC_2012_R_21_2_DR_4"
+</#if>
+void _general_exception_handler(void);
+void _bootstrap_exception_handler(void);
+<#if PRODUCT_FAMILY?contains("PIC32MZ")>
+void _cache_err_exception_handler (void);
+void _simple_tlb_refill_exception_handler(void);
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -75,29 +98,27 @@
     if an exception has occured.
 */
 
-/* Address of instruction that caused the exception. */
-static unsigned int _excep_addr;
+/* Exception codes */
+#define EXCEP_IRQ       0U // interrupt
+#define EXCEP_AdEL      4U // address error exception (load or ifetch)
+#define EXCEP_AdES      5U // address error exception (store)
+#define EXCEP_IBE       6U // bus error (ifetch)
+#define EXCEP_DBE       7U // bus error (load/store)
+#define EXCEP_Sys       8U // syscall
+#define EXCEP_Bp        9U // breakpoint
+#define EXCEP_RI        10U // reserved instruction
+#define EXCEP_CpU       11U // coprocessor unusable
+#define EXCEP_Overflow  12U // arithmetic overflow
+#define EXCEP_Trap      13U // trap (possible divide by zero)
+#define EXCEP_IS1       16U // implementation specfic 1
+#define EXCEP_CEU       17U // CorExtend Unuseable
+#define EXCEP_C2E       18U // coprocessor 2
 
-/* Enum identifying the cause */
-typedef enum {
-    EXCEP_IRQ      =  0, // interrupt
-    EXCEP_AdEL     =  4, // address error exception (load or ifetch)
-    EXCEP_AdES     =  5, // address error exception (store)
-    EXCEP_IBE      =  6, // bus error (ifetch)
-    EXCEP_DBE      =  7, // bus error (load/store)
-    EXCEP_Sys      =  8, // syscall
-    EXCEP_Bp       =  9, // breakpoint
-    EXCEP_RI       = 10, // reserved instruction
-    EXCEP_CpU      = 11, // coprocessor unusable
-    EXCEP_Overflow = 12, // arithmetic overflow
-    EXCEP_Trap     = 13, // trap (possible divide by zero)
-    EXCEP_IS1      = 16, // implementation specfic 1
-    EXCEP_CEU      = 17, // CorExtend Unuseable
-    EXCEP_C2E      = 18, // coprocessor 2
-} excep_code;
+/* Address of instruction that caused the exception. */
+static unsigned int exception_address;
 
 /* Code identifying the cause of the exception (CP0 Cause register). */
-static excep_code _excep_code;
+static uint32_t  exception_code;
 
 // </editor-fold>
 
@@ -117,10 +138,10 @@ void __attribute__((noreturn)) _general_exception_handler ( void )
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
-    _excep_code = (_CP0_GET_CAUSE() & 0x0000007C) >> 2;
-    _excep_addr = _CP0_GET_EPC();
+    exception_code = ((_CP0_GET_CAUSE() & 0x0000007CU) >> 2U);
+    exception_address = _CP0_GET_EPC();
 
-    while (1)
+    while (true)
     {
         #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
             __builtin_software_breakpoint();
@@ -144,10 +165,10 @@ void __attribute__((noreturn)) _bootstrap_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
-    _excep_code = (_CP0_GET_CAUSE() & 0x0000007C) >> 2;
-    _excep_addr = _CP0_GET_EPC();
+    exception_code = (_CP0_GET_CAUSE() & 0x0000007CU) >> 2U;
+    exception_address = _CP0_GET_EPC();
 
-    while (1)
+    while (true)
     {
         #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
             __builtin_software_breakpoint();
@@ -173,10 +194,10 @@ void __attribute__((noreturn)) _cache_err_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
-    _excep_code = (_CP0_GET_CAUSE() & 0x0000007C) >> 2;
-    _excep_addr = _CP0_GET_EPC();
+    exception_code = (_CP0_GET_CAUSE() & 0x0000007CU) >> 2U;
+    exception_address = _CP0_GET_EPC();
 
-    while (1)
+    while (true)
     {
         #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
             __builtin_software_breakpoint();
@@ -203,16 +224,21 @@ void __attribute__((noreturn)) _simple_tlb_refill_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
-    _excep_code = (_CP0_GET_CAUSE() & 0x0000007C) >> 2;
-    _excep_addr = _CP0_GET_EPC();
+    exception_code = (_CP0_GET_CAUSE() & 0x0000007CU) >> 2U;
+    exception_address = _CP0_GET_EPC();
 
-    while (1)
+    while (true)
     {
         #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
             __builtin_software_breakpoint();
         #endif
     }
 }
+</#if>
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.2"
+#pragma GCC diagnostic pop
 </#if>
 /*******************************************************************************
  End of File
