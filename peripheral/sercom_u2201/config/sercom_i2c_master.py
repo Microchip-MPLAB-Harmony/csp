@@ -312,6 +312,34 @@ i2cmSym_BaudError_Comment.setLabel("********** value is not suitable for the des
 i2cmSym_BaudError_Comment.setVisible(False)
 i2cmSym_BaudError_Comment.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
+slewRateSupported = False
+
+for index in range(len(ctrlaValue)):
+    bitFieldName = str(ctrlaValue[index].getAttribute("name"))
+    if bitFieldName == "SLEWRATE":
+        slewRateSupported = True
+        break
+
+# SLEW RATE Control
+if slewRateSupported == True:
+    i2cmSym_CTRLA_SLEWRATE = sercomComponent.createKeyValueSetSymbol("I2C_SLEWRATE", sercomSym_OperationMode)
+    i2cmSym_CTRLA_SLEWRATE.setLabel("I2C Slew Rate Control")
+
+    i2cmSlewRateReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_I2CM_CTRLA__SLEWRATE\"]")
+    i2cmSlewRateReferenceValues = i2cmSlewRateReferenceNode.getChildren()
+
+    for index in range(len(i2cmSlewRateReferenceValues)):
+        i2cmSlewRateReferenceKeyName = i2cmSlewRateReferenceValues[index].getAttribute("name")
+        i2cmSlewRateReferenceKeyDescription = i2cmSlewRateReferenceValues[index].getAttribute("caption")
+        i2cmSlewRateReferenceKeyValue = i2cmSlewRateReferenceValues[index].getAttribute("value")
+        i2cmSym_CTRLA_SLEWRATE.addKey(i2cmSlewRateReferenceKeyName, i2cmSlewRateReferenceKeyValue, i2cmSlewRateReferenceKeyDescription)
+
+    i2cmSym_CTRLA_SLEWRATE.setDefaultValue(1)
+    i2cmSym_CTRLA_SLEWRATE.setOutputMode("Key")
+    i2cmSym_CTRLA_SLEWRATE.setDisplayMode("Description")
+    i2cmSym_CTRLA_SLEWRATE.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
+    i2cmSym_CTRLA_SLEWRATE.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
+
 tenBitAddrSupported = False
 
 addrNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="I2CM",name="ADDR"]')
@@ -322,26 +350,6 @@ for index in range(len(addrValue)):
     if bitFieldName == "TENBITEN":
         tenBitAddrSupported = True
         break
-
-# SLEW RATE Control
-i2cmSym_CTRLA_SLEWRATE = sercomComponent.createKeyValueSetSymbol("I2C_SLEWRATE", sercomSym_OperationMode)
-i2cmSym_CTRLA_SLEWRATE.setLabel("I2C Slew Rate Control")
-
-i2cmSlewRateReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_I2CM_CTRLA__SLEWRATE\"]")
-i2cmSlewRateReferenceValues = i2cmSlewRateReferenceNode.getChildren()
-
-for index in range(len(i2cmSlewRateReferenceValues)):
-    i2cmSlewRateReferenceKeyName = i2cmSlewRateReferenceValues[index].getAttribute("name")
-    i2cmSlewRateReferenceKeyDescription = i2cmSlewRateReferenceValues[index].getAttribute("caption")
-    i2cmSlewRateReferenceKeyValue = i2cmSlewRateReferenceValues[index].getAttribute("value")
-    i2cmSym_CTRLA_SLEWRATE.addKey(i2cmSlewRateReferenceKeyName, i2cmSlewRateReferenceKeyValue, i2cmSlewRateReferenceKeyDescription)
-
-i2cmSym_CTRLA_SLEWRATE.setDefaultValue(1)
-i2cmSym_CTRLA_SLEWRATE.setOutputMode("Key")
-i2cmSym_CTRLA_SLEWRATE.setDisplayMode("Description")
-i2cmSym_CTRLA_SLEWRATE.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
-i2cmSym_CTRLA_SLEWRATE.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
-
 
 #I2C 10-bit Address support
 if tenBitAddrSupported == True:
