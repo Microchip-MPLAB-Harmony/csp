@@ -61,6 +61,8 @@ def coreFreqCalc(symbol, event):
     coretimerPeriodMS.setMax(float(max))
 
     defaultPeriod = int(timerFrequency * (periodMS/1000))
+    if defaultPeriod > 2**32 - 1:
+        defaultPeriod = 2**32 - 1
     coretimerPeriodValue.setValue(str(hex(defaultPeriod)),2)
 
     coretimerPeriodUS.setValue(int(round(periodMS * 1000)),2)
