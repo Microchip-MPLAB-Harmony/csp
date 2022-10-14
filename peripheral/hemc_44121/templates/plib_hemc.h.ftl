@@ -34,8 +34,8 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-#ifndef _PLIB_${HEMC_INSTANCE_NAME}_H
-#define _PLIB_${HEMC_INSTANCE_NAME}_H
+#ifndef PLIB_${HEMC_INSTANCE_NAME}_H
+#define PLIB_${HEMC_INSTANCE_NAME}_H
 
 #include <stdbool.h>
 
@@ -91,7 +91,7 @@ typedef enum
 #define    HEMC_HECC_STATUS_HES_MASK   HEMC_HECC_SR_HES_Msk
 #define    HEMC_HECC_STATUS_TYPE   HEMC_HECC_SR_TYPE_Msk
 /* Force the compiler to reserve 32-bit memory for enum */
-#define    HEMC_HECC_STATUS_INVALID   0xFFFFFFFF
+#define    HEMC_HECC_STATUS_INVALID   0xFFFFFFFFU
 
 typedef uint32_t HEMC_HECC_STATUS;
 
@@ -542,7 +542,7 @@ static inline uint32_t ${HEMC_INSTANCE_NAME}_Read32(uint32_t dataAddress)
 #endif
 // DOM-IGNORE-END
 
-#endif // _PLIB_${HEMC_INSTANCE_NAME}_H
+#endif // PLIB_${HEMC_INSTANCE_NAME}_H
 /*******************************************************************************
  End of File
 */
