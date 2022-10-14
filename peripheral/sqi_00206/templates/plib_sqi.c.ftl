@@ -42,6 +42,9 @@
 // DOM-IGNORE-END
 
 #include "plib_${SQI_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define ${SQI_INSTANCE_NAME}_INTERRUPT_ENABLE_MASK   ${SQI_IEC_REG_VALUE}
 #define ${SQI_INSTANCE_NAME}_INTERRUPT_FLAG_MASK     ${SQI_IFS_REG_VALUE}
@@ -159,9 +162,11 @@ void ${SQI_INSTANCE_NAME}_RegisterCallback(SQI_EVENT_HANDLER event_handler, uint
 
 void ${SQI_INSTANCE_NAME}_InterruptHandler(void)
 {
+    uint32_t temp = 0;
     ${SQI_IFS_REG}CLR  = ${SQI_INSTANCE_NAME}_INTERRUPT_FLAG_MASK;
 
-    if (((${SQI_INSTANCE_NAME}INTSTATbits.PKTCOMPIF) != 0U) || ((${SQI_INSTANCE_NAME}INTSTATbits.BDDONEIF) != 0U))
+    temp = ${SQI_INSTANCE_NAME}INTSTATbits.BDDONEIF;
+    if (((${SQI_INSTANCE_NAME}INTSTATbits.PKTCOMPIF) != 0U) || ( temp != 0U))
     {
         ${SQI_INSTANCE_NAME}INTSTATbits.PKTCOMPIF   = 0;
         ${SQI_INSTANCE_NAME}INTENbits.PKTCOMPIE     = 0;
