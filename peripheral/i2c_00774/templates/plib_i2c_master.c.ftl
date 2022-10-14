@@ -50,6 +50,9 @@
 
 #include "device.h"
 #include "plib_${I2C_INSTANCE_NAME?lower_case}_master.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -106,6 +109,7 @@ void ${I2C_INSTANCE_NAME}_Initialize(void)
 /* I2C state machine */
 static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 {
+    uint8_t tempVar = 0;
     ${I2C_MASTER_IFS_REG}CLR = _${I2C_MASTER_IFS_REG}_${I2C_INSTANCE_NAME}MIF_MASK;
 
     switch (${I2C_INSTANCE_NAME?lower_case}Obj.state)
@@ -124,8 +128,9 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             {
                 if (${I2C_INSTANCE_NAME?lower_case}Obj.address > 0x007FU)
                 {
+                    tempVar = (((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1);
                     /* Transmit the MSB 2 bits of the 10-bit slave address, with R/W = 0 */
-                    ${I2C_INSTANCE_NAME}TRN = ( 0xF0U | (((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1));
+                    ${I2C_INSTANCE_NAME}TRN = ( 0xF0U | (uint32_t)tempVar);
 
                     ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_ADDR_BYTE_2_SEND;
                 }
@@ -198,8 +203,9 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             /* Is transmit buffer full? */
             if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U)
             {
+                tempVar = (((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1);
                 /* Transmit the first byte of the 10-bit slave address, with R/W = 1 */
-                ${I2C_INSTANCE_NAME}TRN = ( 0xF1U | ((((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1)));
+                ${I2C_INSTANCE_NAME}TRN = ( 0xF1U | (uint32_t)tempVar );
                 ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_READ;
             }
             else
@@ -351,8 +357,10 @@ void ${I2C_INSTANCE_NAME}_CallbackRegister(I2C_CALLBACK callback, uintptr_t cont
 
 bool ${I2C_INSTANCE_NAME}_IsBusy(void)
 {
-    if( (${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE ) || ((${I2C_INSTANCE_NAME}CON & 0x0000001FU) != 0U) ||
-        ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TRSTAT_MASK) != 0U) || ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U) )
+    uint32_t tempVar = ${I2C_INSTANCE_NAME}CON;
+    uint32_t tempVar1 = ${I2C_INSTANCE_NAME}STAT;
+    if( (${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE ) || (( tempVar & 0x0000001FU) != 0U) ||
+        ((tempVar1 & _${I2C_INSTANCE_NAME}STAT_TRSTAT_MASK) != 0U) || (( tempVar1 & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U) )
     {
         return true;
     }
@@ -364,8 +372,9 @@ bool ${I2C_INSTANCE_NAME}_IsBusy(void)
 
 bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t* rdata, size_t rlength)
 {
+    uint32_t tempVar = ${I2C_INSTANCE_NAME}STAT;
     /* State machine must be idle and I2C module should not have detected a start bit on the bus */
-    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
+    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || (( tempVar & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
     {
         return false;
     }
@@ -394,8 +403,9 @@ bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t* rdata, size_t rlength)
 
 bool ${I2C_INSTANCE_NAME}_Write(uint16_t address, uint8_t* wdata, size_t wlength)
 {
+    uint32_t tempVar = ${I2C_INSTANCE_NAME}STAT;
     /* State machine must be idle and I2C module should not have detected a start bit on the bus */
-    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
+    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || (( tempVar & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
     {
         return false;
     }
@@ -424,8 +434,9 @@ bool ${I2C_INSTANCE_NAME}_Write(uint16_t address, uint8_t* wdata, size_t wlength
 <#if I2C_INCLUDE_FORCED_WRITE_API == true>
 bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t wlength)
 {
+    uint32_t tempVar = ${I2C_INSTANCE_NAME}STAT;
     /* State machine must be idle and I2C module should not have detected a start bit on the bus */
-    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
+    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || (( tempVar & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
     {
         return false;
     }
@@ -452,8 +463,9 @@ bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t w
 
 bool ${I2C_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t* wdata, size_t wlength, uint8_t* rdata, size_t rlength)
 {
+    uint32_t tempVar = ${I2C_INSTANCE_NAME}STAT;
     /* State machine must be idle and I2C module should not have detected a start bit on the bus */
-    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
+    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || (( tempVar & _${I2C_INSTANCE_NAME}STAT_S_MASK) != 0U))
     {
         return false;
     }
@@ -576,11 +588,15 @@ static void ${I2C_INSTANCE_NAME}_MASTER_InterruptHandler(void)
 
 void I2C_${I2C_INSTANCE_NUM}_InterruptHandler(void)
 {
-    if (((${I2C_BUS_IFS_REG} & _${I2C_BUS_IFS_REG}_${I2C_INSTANCE_NAME}BIF_MASK) != 0U) && ((${I2C_BUS_IEC_REG} & _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK) != 0U))
+    uint32_t iec_bus_reg_read = ${I2C_BUS_IEC_REG};
+    uint32_t iec_master_reg_read = ${I2C_MASTER_IEC_REG};
+    if (((${I2C_BUS_IFS_REG} & _${I2C_BUS_IFS_REG}_${I2C_INSTANCE_NAME}BIF_MASK) != 0U) &&
+         ((iec_bus_reg_read & _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK) != 0U))
     {
         ${I2C_INSTANCE_NAME}_BUS_InterruptHandler();
     }
-    else if (((${I2C_MASTER_IFS_REG} & _${I2C_MASTER_IFS_REG}_${I2C_INSTANCE_NAME}MIF_MASK) != 0U) && ((${I2C_MASTER_IEC_REG} & _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK) != 0U))
+    else if (((${I2C_MASTER_IFS_REG} & _${I2C_MASTER_IFS_REG}_${I2C_INSTANCE_NAME}MIF_MASK) != 0U) &&
+             ((iec_master_reg_read & _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK) != 0U))
     {
         ${I2C_INSTANCE_NAME}_MASTER_InterruptHandler();
     }

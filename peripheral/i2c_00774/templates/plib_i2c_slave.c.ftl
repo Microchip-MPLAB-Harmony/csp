@@ -383,11 +383,15 @@ static void ${I2C_INSTANCE_NAME}_SLAVE_InterruptHandler(void)
 
 void I2C_${I2C_INSTANCE_NUM}_InterruptHandler(void)
 {
-    if (((${I2C_BUS_IFS_REG} & _${I2C_BUS_IFS_REG}_${I2C_INSTANCE_NAME}BIF_MASK) != 0U) && ((${I2C_BUS_IEC_REG} & _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK) != 0U))
+    uint32_t iec_bus_reg_read = ${I2C_BUS_IEC_REG};
+    uint32_t iec_slave_reg_read = ${I2C_SLAVE_IEC_REG};
+    if (((${I2C_BUS_IFS_REG} & _${I2C_BUS_IFS_REG}_${I2C_INSTANCE_NAME}BIF_MASK) != 0U) &&
+        ((iec_bus_reg_read & _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK) != 0U))
     {
         ${I2C_INSTANCE_NAME}_BUS_InterruptHandler();
     }
-    else if (((${I2C_SLAVE_IFS_REG} & _${I2C_SLAVE_IFS_REG}_${I2C_INSTANCE_NAME}SIF_MASK) != 0U) && ((${I2C_SLAVE_IEC_REG} & _${I2C_SLAVE_IEC_REG}_${I2C_INSTANCE_NAME}SIE_MASK) != 0U))
+    else if (((${I2C_SLAVE_IFS_REG} & _${I2C_SLAVE_IFS_REG}_${I2C_INSTANCE_NAME}SIF_MASK) != 0U) &&
+             ((iec_slave_reg_read & _${I2C_SLAVE_IEC_REG}_${I2C_INSTANCE_NAME}SIE_MASK) != 0U))
     {
         ${I2C_INSTANCE_NAME}_SLAVE_InterruptHandler();
     }
