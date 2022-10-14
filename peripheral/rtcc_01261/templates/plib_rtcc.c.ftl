@@ -49,6 +49,9 @@
 // *****************************************************************************
 
 #include "plib_${RTCC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -56,8 +59,8 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define decimaltobcd(x)                 ((((x) / (10UL)) << 4) + (((x) - (((x) / (10U)) * (10U)))))
-#define bcdtodecimal(x)                 ((((x) & (0xF0UL)) >> 4) * (10U) + ((x) & (0x0FU)))
+#define decimaltobcd(x)                 (((((uint32_t)x) / (10UL)) << 4) + ((((uint32_t)x) - ((((uint32_t)x) / (10U)) * (10U)))))
+#define bcdtodecimal(x)                 (((((uint32_t)x) & (0xF0UL)) >> 4) * (10U) + (((uint32_t)x) & (0x0FU)))
 
 <#if RTCC_INTERRUPT_MODE == true>
 /* Real Time Clock System Service Object */
@@ -174,7 +177,7 @@ bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time )
     RTCTIME = timeField;
 
     dateField = (decimaltobcd(Time->tm_year % 100) << _RTCDATE_YEAR01_POSITION) & (_RTCDATE_YEAR01_MASK | _RTCDATE_YEAR10_MASK);
-    dateField |= (decimaltobcd((Time->tm_mon + 1)) << _RTCDATE_MONTH01_POSITION)&(_RTCDATE_MONTH01_MASK | _RTCDATE_MONTH10_MASK);
+    dateField |= (decimaltobcd((Time->tm_mon + 1U)) << _RTCDATE_MONTH01_POSITION)&(_RTCDATE_MONTH01_MASK | _RTCDATE_MONTH10_MASK);
     dateField |= (decimaltobcd(Time->tm_mday) << _RTCDATE_DAY01_POSITION) & (_RTCDATE_DAY01_MASK | _RTCDATE_DAY10_MASK);
     dateField |= decimaltobcd(Time->tm_wday) & _RTCDATE_WDAY01_MASK;
 
@@ -193,6 +196,7 @@ bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time )
 void ${RTCC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
 {
     uint32_t dataTime, dataDate;
+    uint32_t tempHour,tempMin, tempSec, tempYear, tempMon, tempMday, tempWday;
 
     while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0U)
     {
@@ -201,12 +205,17 @@ void ${RTCC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
 
     dataTime = RTCTIME;  /* read the time from the RTC */
 
-    Time->tm_hour = (10 * (bcdtodecimal((dataTime & _RTCTIME_HR10_MASK) >> _RTCTIME_HR10_POSITION)) +
+    tempHour =   (10U * (bcdtodecimal((dataTime & _RTCTIME_HR10_MASK) >> _RTCTIME_HR10_POSITION)) +
                          (bcdtodecimal((dataTime & _RTCTIME_HR01_MASK) >> _RTCTIME_HR01_POSITION)));
-    Time->tm_min =  (10 * (bcdtodecimal((dataTime & _RTCTIME_MIN10_MASK) >> _RTCTIME_MIN10_POSITION)) +
+    Time->tm_hour = (int)tempHour;
+    
+    tempMin =   (10U * (bcdtodecimal((dataTime & _RTCTIME_MIN10_MASK) >> _RTCTIME_MIN10_POSITION)) +
                          (bcdtodecimal((dataTime & _RTCTIME_MIN01_MASK) >> _RTCTIME_MIN01_POSITION)));
-    Time->tm_sec =  (10 * (bcdtodecimal((dataTime & _RTCTIME_SEC10_MASK) >> _RTCTIME_SEC10_POSITION)) +
+    Time->tm_min =  (int)tempMin;
+    
+    tempSec =   (10U * (bcdtodecimal((dataTime & _RTCTIME_SEC10_MASK) >> _RTCTIME_SEC10_POSITION)) +
                          (bcdtodecimal((dataTime & _RTCTIME_SEC01_MASK) >> _RTCTIME_SEC01_POSITION)));
+    Time->tm_sec =  (int)tempSec;
 
     while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0U)
     {
@@ -215,15 +224,23 @@ void ${RTCC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
 
     dataDate = RTCDATE;  /* read the date from the RTC */
 
-    Time->tm_year = (10 * (bcdtodecimal((dataDate & _RTCDATE_YEAR10_MASK) >> _RTCDATE_YEAR10_POSITION)) +
+    tempYear =   (10U * (bcdtodecimal((dataDate & _RTCDATE_YEAR10_MASK) >> _RTCDATE_YEAR10_POSITION)) +
                          (bcdtodecimal((dataDate & _RTCDATE_YEAR01_MASK) >> _RTCDATE_YEAR01_POSITION)));
+    Time->tm_year =  (int)tempYear;
+    
     Time->tm_year += 2000;  /* This RTC designed for 0-99 year range.  Need to add 2000 to that. */
-    Time->tm_mon = (10 * (bcdtodecimal((dataDate & _RTCDATE_MONTH10_MASK) >> _RTCDATE_MONTH10_POSITION)) +
-                         (bcdtodecimal((dataDate & _RTCDATE_MONTH01_MASK) >> _RTCDATE_MONTH01_POSITION))) - 1;
-    Time->tm_mday = (10 * (bcdtodecimal((dataDate & _RTCDATE_DAY10_MASK) >> _RTCDATE_DAY10_POSITION)) +
+    
+    tempMon =   (10U * (bcdtodecimal((dataDate & _RTCDATE_MONTH10_MASK) >> _RTCDATE_MONTH10_POSITION)) +
+                         (bcdtodecimal((dataDate & _RTCDATE_MONTH01_MASK) >> _RTCDATE_MONTH01_POSITION))) - 1U;
+    Time->tm_mon =  (int)tempMon;
+    
+    tempMday =   (10U * (bcdtodecimal((dataDate & _RTCDATE_DAY10_MASK) >> _RTCDATE_DAY10_POSITION)) +
                          (bcdtodecimal((dataDate & _RTCDATE_DAY01_MASK) >> _RTCDATE_DAY01_POSITION)));
+    Time->tm_mday = (int)tempMday;
 
-    Time->tm_wday = bcdtodecimal((dataDate & _RTCDATE_WDAY01_MASK) >> _RTCDATE_WDAY01_POSITION);
+    tempWday =    bcdtodecimal((dataDate & _RTCDATE_WDAY01_MASK) >> _RTCDATE_WDAY01_POSITION);
+    Time->tm_wday = (int)tempWday;
+    
     Time->tm_yday = 0;  /* not used */
     Time->tm_isdst = 0;    /* not used */
 }
@@ -245,7 +262,7 @@ bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarm
 
     if(RTCC_ALARM_MASK_OFF != alarmFreq)
     {
-        dataDate  = (decimaltobcd((alarmTime->tm_mon + 1)) << _RTCDATE_MONTH01_POSITION) & (_RTCDATE_MONTH01_MASK | _RTCDATE_MONTH10_MASK);
+        dataDate  = (decimaltobcd((alarmTime->tm_mon + 1U)) << _RTCDATE_MONTH01_POSITION) & (_RTCDATE_MONTH01_MASK | _RTCDATE_MONTH10_MASK);
         dataDate |= (decimaltobcd(alarmTime->tm_mday) << _RTCDATE_DAY01_POSITION) & (_RTCDATE_DAY01_MASK | _RTCDATE_DAY10_MASK);
         dataDate |= decimaltobcd(alarmTime->tm_wday) & _RTCDATE_WDAY01_MASK;
 
