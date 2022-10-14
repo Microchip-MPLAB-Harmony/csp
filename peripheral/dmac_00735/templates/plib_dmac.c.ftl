@@ -45,6 +45,10 @@
 // DOM-IGNORE-END
 
 #include "plib_${DMA_INSTANCE_NAME?lower_case}.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
+
 
 <#assign DMA_INTERRUPT_ENABLED = false>
 <#list 0..NUM_DMA_CHANS - 1 as i>
@@ -487,7 +491,7 @@ void ${DMA_INSTANCE_NAME}_ChannelCRCSetup( DMAC_CHANNEL channel, DMAC_CRC_SETUP 
         mask |= _DCRCCON_BITO_MASK;
     }
 
-    mask |= (channel | _DCRCCON_CRCEN_MASK | ((gCRCSetup.polynomial_length - 1U) << _DCRCCON_PLEN_POSITION));
+    mask |= (channel | _DCRCCON_CRCEN_MASK | (((uint32_t)gCRCSetup.polynomial_length - 1U) << _DCRCCON_PLEN_POSITION));
 
     /* Setup the DMA CRCCON register */
     DCRCCON = mask;
@@ -540,13 +544,14 @@ void DMA_${i}_InterruptHandler(void)
 {
     DMAC_CHANNEL_OBJECT *chanObj;
     DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;
+    uint32_t VarRead = 0;
 
     /* Find out the channel object */
     chanObj = (DMAC_CHANNEL_OBJECT *) &gDMAChannelObj[${i}];
 
     /* Check whether the active DMA channel event has occurred */
-
-    if((${.vars[INTBITSREG]}.CHSHIF == 1U) || (${.vars[INTBITSREG]}.CHDHIF == 1U))/* irq due to half complete */
+    VarRead = ${.vars[INTBITSREG]}.CHDHIF;
+    if((${.vars[INTBITSREG]}.CHSHIF == 1U) || ( VarRead == 1U))/* irq due to half complete */
     {
         /* Do not clear the flag here, it should be cleared with block transfer complete flag*/
 
