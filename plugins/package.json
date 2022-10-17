@@ -1,7 +1,8 @@
 {
   "private": true,
   "workspaces": [
-    "apps/dma-configurators/dma*"
+    "apps/dma-configurators/dma*",
+    "apps/interrupt_configurators/*"
   ],
   "scripts": {
     "build": "lerna run build"

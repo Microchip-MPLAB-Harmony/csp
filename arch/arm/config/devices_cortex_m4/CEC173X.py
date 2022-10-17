@@ -91,7 +91,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/ecia_200/config/ecia.py")
 
 # # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER_SG3", {"plugin_name": "NVIC Configuration", "main_html_path": "../csp/peripheral/nvic/plugin/sg3_interupt_manager/build/index.html"})
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER_SG3", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/apps/interrupt_configurators/sg3_interrupt_configurator/build/index.html"})
 
 # #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
