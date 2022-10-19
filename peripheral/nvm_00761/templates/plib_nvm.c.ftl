@@ -50,6 +50,9 @@
 #include <string.h>
 #include "sys/kmem.h"
 #include "plib_${NVM_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -95,7 +98,7 @@ typedef enum
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
+    <#lt>static NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
 
     <#lt>static uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
 
@@ -121,6 +124,7 @@ static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM
 {
     volatile uint32_t processorStatus;
     uint32_t mTime;
+    const uint32_t delta = ((${core.CPU_CLOCK_FREQUENCY}U / 2U / 1000000U) * 6U);
 
     processorStatus = __builtin_disable_interrupts();
 
@@ -137,16 +141,15 @@ static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM
     NVMCONSET = _NVMCON_WREN_MASK;
 
     mTime = _CP0_GET_COUNT();
-    mTime += ((${core.CPU_CLOCK_FREQUENCY}U / 2U / 1000000U) * 6U);
-    while ((int32_t)(mTime - _CP0_GET_COUNT()) > 0)
+    while (( _CP0_GET_COUNT() - mTime) < delta)
     {
         Nop();
     }
 
     // Write the unlock key sequence
     NVMKEY = 0x0;
-    NVMKEY = NVM_UNLOCK_KEY1;
-    NVMKEY = NVM_UNLOCK_KEY2;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY1;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY2;
 
     // Start the operation
     NVMCONSET = _NVMCON_WR_MASK;
@@ -203,8 +206,9 @@ bool ${NVM_INSTANCE_NAME}_PageErase( uint32_t address )
 
 NVM_ERROR ${NVM_INSTANCE_NAME}_ErrorGet( void )
 {
+    uint32_t varErrorGet = NVMCON & (_NVMCON_LVDERR_MASK | _NVMCON_WRERR_MASK);
     // mask for WRERR and LVDERR bits
-    return (NVMCON & (_NVMCON_LVDERR_MASK | _NVMCON_WRERR_MASK));
+    return (NVM_ERROR)(varErrorGet);
 }
 
 bool ${NVM_INSTANCE_NAME}_IsBusy( void )
