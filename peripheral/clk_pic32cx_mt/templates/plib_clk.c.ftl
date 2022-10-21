@@ -345,7 +345,7 @@ static void PeripheralClockInitialize(void)
         uint8_t clken;
         uint8_t gclken;
         uint8_t css;
-        uint8_t div;
+        uint8_t divs;
     } periphList[] =
     {
         <#list 0..CLK_MAX_PERIPHERAL_ID as i>
@@ -375,12 +375,12 @@ static void PeripheralClockInitialize(void)
     uint32_t count = sizeof(periphList)/sizeof(periphList[0]);
     uint32_t i = 0U;
 
-    while((i < count) && (periphList[i].id != (ID_PERIPH_MAX + 1U)))
+    while((i < count) && (periphList[i].id != ((uint32_t)ID_PERIPH_MAX + 1U)))
     {
         PMC_REGS->PMC_PCR = PMC_PCR_CMD_Msk |\
                             PMC_PCR_GCLKEN(periphList[i].gclken) |\
                             PMC_PCR_EN(periphList[i].clken) |\
-                            PMC_PCR_GCLKDIV(periphList[i].div) |\
+                            PMC_PCR_GCLKDIV(periphList[i].divs) |\
                             PMC_PCR_GCLKCSS(periphList[i].css) |\
                             PMC_PCR_PID(periphList[i].id);
         i++;
@@ -409,7 +409,7 @@ void CLK_Initialize( void )
 <#list PLL_LIST as PLL_NAME>
 <#if .vars["CLK_" + PLL_NAME + "_ENPLL"]>
     /* Initialize ${PLL_NAME} */
-    PLLInitialize(${PLL_NAME}, &${PLL_NAME?lower_case}_cfg);
+    PLLInitialize((uint32_t)${PLL_NAME}, &${PLL_NAME?lower_case}_cfg);
 
 </#if>
 </#list>
