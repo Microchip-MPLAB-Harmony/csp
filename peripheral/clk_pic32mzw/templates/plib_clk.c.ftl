@@ -171,29 +171,39 @@ void CLK_Initialize( void )
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
 
-	EWPLLCON = 0x808; // Start with PWR-OFF PLL
-    SPLLCON  = 0x808; // Start with PWR-OFF PLL
-    DelayMs(5);
-
     if(((DEVID & 0x0FF00000) >> 20) == PIC32MZW1_B0)
     {
-		CFGCON2  |= 0x300; // Start with POSC Turned OFF
-		/* if POSC was on give some time for POSC to shut off */
-		DelayMs(5);
-		/* make sure we properly reset SPI to a known state */
-		*RFSPICTL = 0x80000022;
-		/* make sure we properly take out of reset */
-		*RFSPICTL = 0x80000002;
-
-		if(1 == DEVIDbits.VER)
+        if((!CLKSTATbits.SPLLRDY && RCONbits.POR == 1 && RCONbits.EXTR == 1)
+            || (1 == CLKSTATbits.SPLLRDY && 0 == RCONbits.POR &&
+            ((1 == RCONbits.EXTR) || (1 == RCONbits.SWR))))
 		{
-			// Read counter used only for debug and testing
-			wifi_spi_write(0x85, 0x00F2); /* MBIAS filter and A31 analog_test */ //if (wifi_spi_read (0x85) != 0xF0) {Error, Stop};
-			wifi_spi_write(0x84, 0x0001); /* A31 Analog test */// if (wifi_spi_read (0x84) != 0x1) {Error, Stop};
-			wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */ //if (wifi_spi_read (0x1e) != 0x510) {Error, Stop};
-			wifi_spi_write(0x82, 0x6000); /* XTAL LDO feedback divider (1.3+v) */ //if (wifi_spi_read (0x82) != 0x6000) {Error, Stop};
+			EWPLLCON = 0x808; // Start with PWR-OFF PLL
+			SPLLCON  = 0x808; // Start with PWR-OFF PLL
+			DelayMs(5);
 
-			DelayMs(2);
+			CFGCON2  |= 0x300; // Start with POSC Turned OFF
+			/* if POSC was on give some time for POSC to shut off */
+			DelayMs(5);
+			/* make sure we properly reset SPI to a known state */
+			*RFSPICTL = 0x80000022;
+			/* make sure we properly take out of reset */
+			*RFSPICTL = 0x80000002;
+
+			if(1 == DEVIDbits.VER)
+			{
+                wifi_spi_write(0x85, 0x00F2); /* MBIAS filter and A31 analog_test */
+                wifi_spi_write(0x84, 0x0001); /* A31 Analog test */
+                wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */
+                wifi_spi_write(0x82, 0x6000); /* XTAL LDO feedback divider (1.3+v) */
+			}
+			else
+            {
+                wifi_spi_write(0x85, 0x00F0); /* MBIAS filter and A31 analog_test */
+                wifi_spi_write(0x84, 0x0001); /* A31 Analog test */
+                wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */
+                wifi_spi_write(0x82, 0x6400); /* XTAL LDO feedback divider (1.3+v) */
+			}
+            DelayMs(2);
 			/* Enable POSC */
 			CFGCON2  &= 0xFFFFFCFF; // enable POSC
 			DelayMs(5);
@@ -202,7 +212,6 @@ void CLK_Initialize( void )
 			${CFGCON3_NAME} = ${CFGCON3_VALUE};
 			CFGCON0bits.SPLLHWMD = 1;
 
-			/* SPLLCON = 0x01496869 */
 			/* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
 			/* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
 			/* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
@@ -237,27 +246,26 @@ void CLK_Initialize( void )
 				/*POSC failed to start!*/
 				while(1);
 			}
-			/*Disabling internal schmitt-trigger to increase noise immunity */
-			wifi_spi_write(0x85, 0x00F4);
-		}
-		else
-		{
-			// Read counter part is there only for debug and testing, or else not needed, so use ifdef as needed
-			wifi_spi_write(0x85, 0x00F0); /* MBIAS filter and A31 analog_test */ //if (wifi_spi_read (0x85) != 0xF0) {Error, Stop};
-			wifi_spi_write(0x84, 0x0001); /* A31 Analog test */// if (wifi_spi_read (0x84) != 0x1) {Error, Stop};
-			wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */ //if (wifi_spi_read (0x1e) != 0x510) {Error, Stop};
-			wifi_spi_write(0x82, 0x6400); /* XTAL LDO feedback divider (1.3+v) */ //if (wifi_spi_read (0x82) != 0x6000) {Error, Stop};
+			if(1 == DEVIDbits.VER)
+			{
+				/*Disabling internal schmitt-trigger to increase noise immunity */
+				wifi_spi_write(0x85, 0x00F4);
+			}
+<#if APP_RECONFIG_SPLL??>
+/* Leaving this disabled as there is no absolute use-case as yet.
+ * Placeholder for cases where a bootloader uses a different frequency
+ * compared to the application code.
+*/
+            OSCCONbits.NOSC = 0; //Select FRC as SYS_CLK source
+            OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
+            while( OSCCONbits.OSWEN );
 
-			DelayMs(2);
-			/* Enable POSC */
-			CFGCON2  &= 0xFFFFFCFF; // enable POSC
+            SPLLCON  = 0x808; // Start with PWR-OFF PLL
 
-			DelayMs(5);
-			/*Configure SPLL*/
+            /*Configure SPLL*/
 			${CFGCON3_NAME} = ${CFGCON3_VALUE};
 			CFGCON0bits.SPLLHWMD = 1;
 
-			/* SPLLCON = 0x01496869 */
 			/* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
 			/* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
 			/* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
@@ -268,7 +276,6 @@ void CLK_Initialize( void )
 			/* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
 			/* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
 			${SPLLCON_REG} = 0x${SPLLCON_VALUE};
-			DelayMs(1);
 
 			/* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
 			/* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
@@ -281,20 +288,19 @@ void CLK_Initialize( void )
 			/* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
 			/* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
 			${OSCCON_REG} = 0x${OSCCON_VALUE};
-
-			OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
-
+            OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
 			while( OSCCONbits.OSWEN );
-			/****************************************************************
+
+            /****************************************************************
 			* check to see if PLL locked; indicates POSC must have started
 			*****************************************************************/
-			if(0 == (*PLLDBG & 0x1))
+            if(0 == (*PLLDBG & 0x1))
 			{
 				/*POSC failed to start!*/
 				while(1);
 			}
+</#if>
 		}
-
 <#if EWPLL_ENABLE == true>
 		/* Configure EWPLL */
 		/* EWPLLBSWSEL   = ${EWPLLCON_EWPLLBSWSEL_VALUE} */
@@ -601,6 +607,12 @@ void CLK_Initialize( void )
 <#if PMDLOCK_ENABLE?? && PMDLOCK_ENABLE == true>
     CFGCON0bits.PMDLOCK = 1;
 </#if>
+	if(1 == RCONbits.POR)
+		RCONbits.POR = 0;
+	if(1 == RCONbits.EXTR)
+		RCONbits.EXTR = 0;
+    if(1 == RCONbits.SWR)
+        RCONbits.SWR = 0;
 
     /* Lock system since done with clock configuration */
     SYSKEY = 0x33333333;
