@@ -53,17 +53,23 @@
 #include "interrupts.h"
 </#if>
 
+#define MCSPI_TDR_8BIT_REG      (*(volatile uint8_t* const)((${MCSPI_INSTANCE_NAME}_BASE_ADDRESS + MCSPI_TDR_REG_OFST)))
+#define MCSPI_TDR_16BIT_REG     (*(volatile uint16_t* const)((${MCSPI_INSTANCE_NAME}_BASE_ADDRESS + MCSPI_TDR_REG_OFST)))
+
+#define MCSPI_RDR_8BIT_REG      (*(volatile uint8_t* const)((${MCSPI_INSTANCE_NAME}_BASE_ADDRESS + MCSPI_RDR_REG_OFST)))
+#define MCSPI_RDR_16BIT_REG     (*(volatile uint16_t* const)((${MCSPI_INSTANCE_NAME}_BASE_ADDRESS + MCSPI_RDR_REG_OFST)))
+
 <#if MCSPI_CSR0_BITS = "_8_BIT">
-#define ${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${MCSPIS_RX_BUFFER_SIZE}
-#define ${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${MCSPIS_TX_BUFFER_SIZE}
+#define ${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE            (${MCSPIS_RX_BUFFER_SIZE}U)
+#define ${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           (${MCSPIS_TX_BUFFER_SIZE}U)
 
 static uint8_t ${MCSPI_INSTANCE_NAME}_ReadBuffer[${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
 static uint8_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 <#else>
 
-#define ${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${MCSPIS_RX_BUFFER_SIZE/2}
-#define ${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${MCSPIS_TX_BUFFER_SIZE/2}
+#define ${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE            (${MCSPIS_RX_BUFFER_SIZE/2}U)
+#define ${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           (${MCSPIS_TX_BUFFER_SIZE/2}U)
 
 static uint16_t ${MCSPI_INSTANCE_NAME}_ReadBuffer[${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
 static uint16_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
@@ -128,9 +134,9 @@ size_t ${MCSPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size)
         rdSize = rdInIndex;
     }
 <#if MCSPI_CSR0_BITS = "_8_BIT">
-    memcpy(pRdBuffer, ${MCSPI_INSTANCE_NAME}_ReadBuffer, rdSize);
+    (void) memcpy(pRdBuffer, (void *)${MCSPI_INSTANCE_NAME}_ReadBuffer, rdSize);
 <#else>
-    memcpy(pRdBuffer, ${MCSPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
+    (void) memcpy(pRdBuffer, (void *)${MCSPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
 </#if>
 
     return rdSize;
@@ -150,20 +156,22 @@ size_t ${MCSPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
     }
 
 <#if MCSPI_CSR0_BITS = "_8_BIT">
-    memcpy(${MCSPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
+    (void) memcpy((void *)${MCSPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
 <#else>
-    memcpy(${MCSPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
+    (void) memcpy((void *)${MCSPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
 </#if>
 
     ${MCSPI_INSTANCE_NAME?lower_case}Obj.nWrBytes = wrSize;
     ${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
 
-    while ((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR & MCSPI_SR_TDRE_Msk) && (${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${MCSPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
+    while (((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR & MCSPI_SR_TDRE_Msk) != 0U) && (${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${MCSPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
     {
 <#if MCSPI_CSR0_BITS = "_8_BIT">
-        *((uint8_t*)&${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR) = ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+        MCSPI_TDR_8BIT_REG = ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+        ${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 <#else>
-        *((uint16_t*)&${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR) = ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+        MCSPI_TDR_16BIT_REG = ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+        ${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 </#if>
     }
 
@@ -235,15 +243,15 @@ void ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
 
     uint32_t statusFlags = ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR;
 
-    if (statusFlags & MCSPI_SR_OVRES_Msk)
+    if ((statusFlags & MCSPI_SR_OVRES_Msk) != 0U)
     {
         /*OVRES flag is cleared on reading MCSPI SR*/
 
         /* Save the error to report it to application later */
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.errorStatus = MCSPI_SR_OVRES_Msk;
+        ${MCSPI_INSTANCE_NAME?lower_case}Obj.errorStatus = (MCSPI_SLAVE_ERROR)MCSPI_SR_OVRES_Msk;
     }
 
-    if(statusFlags & MCSPI_SR_RDRF_Msk)
+    if ((statusFlags & MCSPI_SR_RDRF_Msk) != 0U)
     {
         if (${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false)
         {
@@ -260,14 +268,14 @@ void ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
          * is cleared on MCSPI_SR read. If statusFlags is not updated, there is a possibility of missing
          * NSSR event flag.
          */
-        while ((statusFlags |= ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR) & MCSPI_SR_RDRF_Msk)
+        while (((statusFlags |= ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR) & MCSPI_SR_RDRF_Msk) != 0U)
         {
 <#if MCSPI_CSR0_BITS = "_8_BIT">
             /* Reading DATA register will also clear the RDRF flag */
-            txRxData = *((uint8_t*)&${MCSPI_INSTANCE_NAME}_REGS->MCSPI_RDR);
+            txRxData = MCSPI_TDR_8BIT_REG;
 <#else>
             /* Reading DATA register will also clear the RDRF flag */
-            txRxData = *((uint16_t*)&${MCSPI_INSTANCE_NAME}_REGS->MCSPI_RDR);
+            txRxData = MCSPI_RDR_16BIT_REG;
 </#if>
 
             if (${MCSPI_INSTANCE_NAME?lower_case}Obj.rdInIndex < ${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE)
@@ -280,14 +288,14 @@ void ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
         }
     }
 
-    if(statusFlags & MCSPI_SR_TDRE_Msk)
+    if((statusFlags & MCSPI_SR_TDRE_Msk) != 0U)
     {
-        while (((statusFlags |= ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR) & MCSPI_SR_TDRE_Msk) && (${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${MCSPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
+        while ((((statusFlags |= ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR) & MCSPI_SR_TDRE_Msk) != 0U) && (${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${MCSPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
         {
 <#if MCSPI_CSR0_BITS = "_8_BIT">
-            *((uint8_t*)&${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR) = ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+            MCSPI_TDR_8BIT_REG = ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
 <#else>
-            *((uint16_t*)&${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR) = ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+            MCSPI_TDR_16BIT_REG = ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
 </#if>
             /* Only clear TDRE flag so as not to clear NSSR flag which may have been set */
             statusFlags &= ~MCSPI_SR_TDRE_Msk;
@@ -300,7 +308,7 @@ void ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
         }
     }
 
-    if(statusFlags & MCSPI_SR_NSSR_Msk)
+    if((statusFlags & MCSPI_SR_NSSR_Msk) != 0U)
     {
         /* NSSR flag is cleared on reading MCSPI SR */
 
