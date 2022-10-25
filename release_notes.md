@@ -12,6 +12,10 @@
 - **Applications**
   - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
 
+### Bug fixes
+- Updated the clock initialization routine in PIC32MZ-W1 devices
+- Fixed SPI slave write issue on E70/S70/V70/V71 devices
+
 ### Known Issues
 
   - Same as v3.13.0
