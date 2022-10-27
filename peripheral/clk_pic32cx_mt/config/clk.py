@@ -556,15 +556,20 @@ if __name__ == "__main__":
     mck0freq.setReadOnly(True)
     mck0freq.setDefaultValue(mainck.getValue())
 
-    cpufreq = clk_component.createIntegerSymbol("CPU_CLOCK_FREQUENCY",
-                                                                    cpu_menu)
+    if clk_remote_component.getSymbolValue("CPU_CORE_ID") == 1:
+        cpu0_freq_name = "CPU0_CLOCK_FREQUENCY"
+        systick0_freq_name = "SYSTICK0_CLOCK_FREQUENCY"
+    else:
+        cpu0_freq_name = "CPU_CLOCK_FREQUENCY"
+        systick0_freq_name = "SYSTICK_CLOCK_FREQUENCY"
+
+    cpufreq = clk_component.createIntegerSymbol(cpu0_freq_name, cpu_menu)
     cpufreq.setDependencies(lambda symbol,
                 event:symbol.setValue(event["value"]), ["MCK0_FREQUENCY"])
     cpufreq.setReadOnly(True)
     cpufreq.setDefaultValue(mck0freq.getValue())
 
-    systick_ext_freq = clk_component.createIntegerSymbol(
-                                        "SYSTICK_CLOCK_FREQUENCY", cpu_menu)
+    systick_ext_freq = clk_component.createIntegerSymbol(systick0_freq_name, cpu_menu)
     systick_ext_freq.setDependencies(lambda symbol,
                 event:symbol.setValue(event["value"]/8), ["MCK0_FREQUENCY"])
     systick_ext_freq.setReadOnly(True)
@@ -631,14 +636,20 @@ if __name__ == "__main__":
         cpck = clk_component.createBooleanSymbol("CLK_SCER_CPCK", cpu_menu)
         set_symbol_attributes(cpck, pmc_node,"PMC", "PMC_SCER", "CPCK")
 
-        cpu1freq = clk_component.createIntegerSymbol("CPU1_CLOCK_FREQUENCY",
-                                                                    cpu_menu)
+        if clk_remote_component.getSymbolValue("CPU_CORE_ID") == 1:
+            cpck.setDefaultValue(True)
+            cpu1_freq_name = "CPU_CLOCK_FREQUENCY"
+            systick1_freq_name = "SYSTICK_CLOCK_FREQUENCY"
+        else:
+            cpu1_freq_name = "CPU1_CLOCK_FREQUENCY"
+            systick1_freq_name = "SYSTICK1_CLOCK_FREQUENCY"
+
+        cpu1freq = clk_component.createIntegerSymbol(cpu1_freq_name, cpu_menu)
         cpu1freq.setDependencies(update_cpu1_freq, ["CLK_SCER_CPCK",
                                                     "MCK1_FREQUENCY"])
         cpu1freq.setReadOnly(True)
 
-        systick1_ext_freq = clk_component.createIntegerSymbol(
-                                        "SYSTICK1_CLOCK_FREQUENCY", cpu_menu)
+        systick1_ext_freq = clk_component.createIntegerSymbol(systick1_freq_name, cpu_menu)
         systick1_ext_freq.setDependencies(lambda symbol,
                 event:symbol.setValue(event["value"]/8), ["MCK1_FREQUENCY"])
 
