@@ -117,8 +117,10 @@ global pioSymChannel
 pioSymChannel = ["A", "B", "C", "D", "E", "F", "G"]
 global pin_map
 pin_map = {}
+pin_map_internal = {}
 global pin_position
 pin_position = []
+pin_position_internal = []
 ##packagepinout map
 global package
 package = {}
@@ -134,20 +136,9 @@ global availablePinDictionary
 availablePinDictionary = {}
 
 ##########################################################################################################################
-pinMode = []
-pinDirection = []
-pinLatch = []
-pinOpenDrain = []
-pinPullUp = []
-pinPullDown = []
-pinLatchValue = []
 pin = []
-pinName = []
 global pinExportName
 pinExportName = []
-pinType = []
-pinPeripheralFunction = []
-pinBitPosition = []
 
 pincfgrValue = []
 
@@ -183,8 +174,8 @@ global getAvailablePins
 
 # API used by core to return available pins to sender component
 def getAvailablePins():
-
     return availablePinDictionary
+
 
 def packageChange(symbol, pinout):
     global uniquePinout
@@ -202,20 +193,26 @@ def packageChange(symbol, pinout):
 
         ### No need to generate Pin map again for same pinout
         if cur_package != prev_package:
-            pin_map = {}
-            pin_position = []
+            pin_map.clear()
+            pin_position.clear()
+            pin_position_internal.clear()
             portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(pinout["value"])) + "\"]")
             for id in range(0,len(portBitPositionNode.getChildren())):
-                if "BGA" in pinout["value"]:
-                    pin_map[portBitPositionNode.getChildren()[id].getAttribute("position")] = portBitPositionNode.getChildren()[id].getAttribute("pad")
+                if portBitPositionNode.getChildren()[id].getAttribute("type") == None:
+                    if "BGA" in pinout["value"]:
+                        pin_map[portBitPositionNode.getChildren()[id].getAttribute("position")] = portBitPositionNode.getChildren()[id].getAttribute("pad")
+                    else:
+                        pin_map[int(portBitPositionNode.getChildren()[id].getAttribute("position"))] = portBitPositionNode.getChildren()[id].getAttribute("pad")
                 else:
-                    pin_map[int(portBitPositionNode.getChildren()[id].getAttribute("position"))] = portBitPositionNode.getChildren()[id].getAttribute("pad")
+                    pin_map_internal[portBitPositionNode.getChildren()[id].getAttribute("type").split("INTERNAL_")[1]] = portBitPositionNode.getChildren()[id].getAttribute("pad")
 
             if "BGA" in pinout["value"]:
                 ## BGA package ID's are alphanumeric unlike TQFP special sorting required
                 pin_position = sort_alphanumeric(pin_map.keys())
+                pin_position_internal = sort_alphanumeric(pin_map_internal.keys())
             else:
                 pin_position = sorted(pin_map.keys())
+                pin_position_internal = sorted(pin_position_internal.keys())
 
         for index in range(1, len(pin) + 1):
             if index <= len(pin_position):
@@ -232,6 +229,7 @@ def packageChange(symbol, pinout):
             else:
                 pin[index - 1].setVisible(False)
         prev_package = cur_package
+
 
 def sort_alphanumeric(l):
     import re
@@ -285,8 +283,6 @@ def portFunc(pin, func):
 
         for id in per_func:
             Database.setSymbolValue("core", "PORT_" + str(port) + "_MSKR_Value" + str(id), str(hex(port_mskr[port + "_" + id])), 2)
-
-
 
 
 def pinCFGR (pin, cfgr_reg):
@@ -417,8 +413,9 @@ pioMultiInstance.setVisible(False)
 pioMultiInstance.setDefaultValue(len(pioInstanceList) > 0)
 
 if len(pioInstanceList) > 0:
-    for instance in pioInstanceList:
-        Database.setSymbolValue("core",  "PIO{0}_CLOCK_ENABLE".format(instance), True)
+    if Database.getSymbolValue("core", "CPU_CORE_ID") == 0:
+        for instance in pioInstanceList:
+            Database.setSymbolValue("core",  "PIO{0}_CLOCK_ENABLE".format(instance), True)
 else:
     Database.setSymbolValue("core",  "PIO_CLOCK_ENABLE", True)
 
@@ -459,10 +456,6 @@ pinConfiguration = coreComponent.createMenuSymbol("PIO_PIN_CONFIGURATION", pioEn
 pinConfiguration.setLabel("Pin Configuration")
 pinConfiguration.setDescription("Configuration for PIO Pins")
 
-pinTotalPins = coreComponent.createIntegerSymbol("PIO_PIN_TOTAL" , pinConfiguration)
-pinTotalPins.setVisible(False)
-pinTotalPins.setDefaultValue(packagePinCount)
-
 # Needed to map port system APIs to PLIB APIs
 pioSymAPI_Prefix = coreComponent.createStringSymbol("PORT_API_PREFIX", None)
 pioSymAPI_Prefix.setDefaultValue("PIO")
@@ -470,107 +463,117 @@ pioSymAPI_Prefix.setVisible(False)
 
 portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(pioPackage.getValue()) + "\"]")
 for id in range(0,len(portBitPositionNode.getChildren())):
-    if "BGA" in pioPackage.getValue():
-        pin_map[portBitPositionNode.getChildren()[id].getAttribute("position")] = portBitPositionNode.getChildren()[id].getAttribute("pad")
+    if portBitPositionNode.getChildren()[id].getAttribute("type") == None:
+        if "BGA" in pioPackage.getValue():
+            pin_map[portBitPositionNode.getChildren()[id].getAttribute("position")] = portBitPositionNode.getChildren()[id].getAttribute("pad")
+        else:
+            pin_map[int(portBitPositionNode.getChildren()[id].getAttribute("position"))] = portBitPositionNode.getChildren()[id].getAttribute("pad")
     else:
-        pin_map[int(portBitPositionNode.getChildren()[id].getAttribute("position"))] = portBitPositionNode.getChildren()[id].getAttribute("pad")
+        pin_map_internal[portBitPositionNode.getChildren()[id].getAttribute("type").split("INTERNAL_")[1]] = portBitPositionNode.getChildren()[id].getAttribute("pad")
 
 if "BGA" in pioPackage.getValue():
     pin_position = sort_alphanumeric(pin_map.keys())
+    pin_position_internal = sort_alphanumeric(pin_map_internal.keys())
 else:
     pin_position = sorted(pin_map.keys())
+    pin_position_internal = sorted(pin_map_internal.keys())
 
-# Note that all the lists below starts from 0th index and goes till "packagePinCount-1"
-# But actual pin numbers on the device starts from 1 (not from 0) and goes till "packagePinCount"
+internalpackagePinCount = packagePinCount + len(pin_map_internal.keys())
+
+pinTotalPins = coreComponent.createIntegerSymbol("PIO_PIN_TOTAL" , pinConfiguration)
+pinTotalPins.setVisible(False)
+pinTotalPins.setDefaultValue(internalpackagePinCount)
+
+
+# Note that all the lists below starts from 0th index and goes till "internalpackagePinCount-1"
+# But actual pin numbers on the device starts from 1 (not from 0) and goes till "internalpackagePinCount"
 # that is why "pinNumber-1" is used to index the lists wherever applicable.
-for pinNumber in range(1, packagePinCount + 1):
-    pin.append(pinNumber)
-    pin[pinNumber-1]= coreComponent.createMenuSymbol("PIO_PIN_CONFIGURATION" + str(pinNumber), pinConfiguration)
-    pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
-    pin[pinNumber-1].setDescription("Configuration for Pin " + str(pin_position[pinNumber-1]))
+for pinNumber in range(1, internalpackagePinCount + 1):
+    pinIndex = pinNumber - 1
 
-    pinExportName.append(pinNumber)
-    pinExportName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_EXPORT_NAME", pin[pinNumber-1])
-    pinExportName[pinNumber-1].setDefaultValue(str(pin_position[pinNumber - 1]) + ":" + str(pin_map[pin_position[pinNumber - 1]]))
-    pinExportName[pinNumber-1].setReadOnly(True)
+    if pinNumber < packagePinCount + 1:
+        currPinPosition = pin_position[pinNumber - 1]
+        currPinPad = pin_map[currPinPosition]
+    else:
+        currPinPosition = pin_position_internal[pinNumber - packagePinCount - 1]
+        currPinPad = pin_map_internal[currPinPosition]
 
-    pinName.append(pinNumber)
-    pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
-    pinName[pinNumber-1].setLabel("Name")
-    pinName[pinNumber-1].setDefaultValue("")
-    pinName[pinNumber-1].setReadOnly(True)
+    pinSym = coreComponent.createMenuSymbol("PIO_PIN_CONFIGURATION" + str(pinNumber), pinConfiguration)
+    pinSym.setLabel("Pin " + str(currPinPosition))
+    pinSym.setDescription("Configuration for Pin " + str(currPinPosition))
+    pin.append(pinSym)
 
-    pinType.append(pinNumber)
-    pinType[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_TYPE", pin[pinNumber-1])
-    pinType[pinNumber-1].setLabel("Type")
-    #pinType[pinNumber-1].setReadOnly(True)
+    pinExportSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_EXPORT_NAME", pinSym)
+    pinExportSym.setDefaultValue(str(currPinPosition) + ":" + currPinPad)
+    pinExportSym.setReadOnly(True)
+    pinExportName.append(pinExportSym)
 
-    pinPeripheralFunction.append(pinNumber)
-    pinPeripheralFunction[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pin[pinNumber-1])
-    pinPeripheralFunction[pinNumber-1].setLabel("Peripheral Selection")
-    pinPeripheralFunction[pinNumber-1].setReadOnly(True)
+    pinNameSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pinSym)
+    pinNameSym.setLabel("Name")
+    pinNameSym.setDefaultValue("")
+    pinNameSym.setReadOnly(True)
 
-    pinBitPosition.append(pinNumber)
-    pinBitPosition[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PIO_PIN", pin[pinNumber-1])
-    pinBitPosition[pinNumber-1].setLabel("Bit Position")
-    pinBitPosition[pinNumber-1].setReadOnly(True)
-    pinBitPosition[pinNumber-1].setDependencies(portFunc, ["PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION"])
+    pinTypeSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_TYPE", pinSym)
+    pinTypeSym.setLabel("Type")
 
-    pinChannel.append(pinNumber)
-    pinChannel[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_CHANNEL", pin[pinNumber-1])
-    pinChannel[pinNumber-1].setLabel("Channel")
+    pinPeriphFuncSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pinSym)
+    pinPeriphFuncSym.setLabel("Peripheral Selection")
+    pinPeriphFuncSym.setReadOnly(True)
 
-    if pin_map.get(pin_position[pinNumber-1]).startswith("P"):
-        pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber-1]))[0]))
-        pinChannel[pinNumber-1].setDefaultValue(pin_map.get(pin_position[pinNumber-1])[1])
+    pinBitPosSym = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PIO_PIN", pinSym)
+    pinBitPosSym.setLabel("Bit Position")
+    pinBitPosSym.setReadOnly(True)
+    pinBitPosSym.setDependencies(portFunc, ["PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION"])
 
-        availablePinDictionary[str(pinNumber)] = "P" + str(pinChannel[pinNumber-1].getValue()) + str(pinBitPosition[pinNumber-1].getValue())
-    pinChannel[pinNumber-1].setReadOnly(True)
+    pinChannelSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_CHANNEL", pinSym)
+    pinChannelSym.setLabel("Channel")
+    pinChannelSym.setReadOnly(True)
+    pinChannel.append(pinChannelSym)
 
-    pinMode.append(pinNumber)
-    pinMode[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_MODE", pin[pinNumber-1])
-    pinMode[pinNumber-1].setLabel("Mode")
-    pinMode[pinNumber-1].setReadOnly(True)
+    if currPinPad.startswith("P"):
+        pinBitPosSym.setDefaultValue(int(re.findall('\d+', currPinPad)[0]))
+        pinChannelSym.setDefaultValue(currPinPad[1])
+        availablePinDictionary[str(pinNumber)] = currPinPad
 
-    pinDirection.append(pinNumber)
-    pinDirection[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pin[pinNumber-1])
-    pinDirection[pinNumber-1].setLabel("Direction")
-    pinDirection[pinNumber-1].setReadOnly(True)
+    pinModeSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_MODE", pinSym)
+    pinModeSym.setLabel("Mode")
+    pinModeSym.setReadOnly(True)
 
-    pinLatch.append(pinNumber)
-    pinLatch[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pin[pinNumber-1])
-    pinLatch[pinNumber-1].setLabel("Initial Latch Value")
-    pinLatch[pinNumber-1].setReadOnly(True)
+    pinDirectionSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pinSym)
+    pinDirectionSym.setLabel("Direction")
+    pinDirectionSym.setReadOnly(True)
 
-    pinLatchValue.append(pinNumber)
-    pinLatchValue[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT_Value", pin[pinNumber-1])
-    pinLatchValue[pinNumber-1].setReadOnly(True)
-    pinLatchValue[pinNumber-1].setVisible(False)
-    pinLatchValue[pinNumber-1].setDependencies(portLatch, ["PIN_" + str(pinNumber) + "_LAT"])
+    pinLatchSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pinSym)
+    pinLatchSym.setLabel("Initial Latch Value")
+    pinLatchSym.setReadOnly(True)
 
-    pinOpenDrain.append(pinNumber)
-    pinOpenDrain[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_OD", pin[pinNumber-1])
-    pinOpenDrain[pinNumber-1].setLabel("Open Drain")
-    pinOpenDrain[pinNumber-1].setReadOnly(True)
+    pinLatchValueSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT_Value", pinSym)
+    pinLatchValueSym.setReadOnly(True)
+    pinLatchValueSym.setVisible(False)
+    pinLatchValueSym.setDependencies(portLatch, ["PIN_" + str(pinNumber) + "_LAT"])
 
-    pinPullUp.append(pinNumber)
-    pinPullUp[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PU", pin[pinNumber-1])
-    pinPullUp[pinNumber-1].setLabel("Pull Up")
-    pinPullUp[pinNumber-1].setReadOnly(True)
+    pinOpenDrainSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_OD", pinSym)
+    pinOpenDrainSym.setLabel("Open Drain")
+    pinOpenDrainSym.setReadOnly(True)
 
-    pinPullDown.append(pinNumber)
-    pinPullDown[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PD", pin[pinNumber-1])
-    pinPullDown[pinNumber-1].setLabel("Pull Down")
-    pinPullDown[pinNumber-1].setReadOnly(True)
+    pinPullUpSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PU", pinSym)
+    pinPullUpSym.setLabel("Pull Up")
+    pinPullUpSym.setReadOnly(True)
 
-    pinSchmitt = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_ST", pin[pinNumber-1])
+    pinPullDownSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PD", pinSym)
+    pinPullDownSym.setLabel("Pull Down")
+    pinPullDownSym.setReadOnly(True)
+
+    pinSchmitt = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_ST", pinSym)
     pinSchmitt.setLabel("Schmitt Trigger")
+    pinSchmitt.setReadOnly(True)
 
-    pinTrigger = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_TAMPER", pin[pinNumber-1])
+    pinTrigger = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_TAMPER", pinSym)
     pinTrigger.setLabel("Tamper Enable")
+    pinTrigger.setReadOnly(True)
 
     if driveStrBit:
-        pinDRV = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_DRV", pin[pinNumber-1])
+        pinDRV = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_DRV", pinSym)
         pinDRV.setLabel("Driver Strength")
         pinDRV.setOutputMode("Value")
         pinDRV.setDisplayMode("Description")
@@ -578,7 +581,7 @@ for pinNumber in range(1, packagePinCount + 1):
             pinDRV.addKey(drvSTRVal.getChildren()[id].getAttribute("name"), str(drvSTRVal.getChildren()[id].getAttribute("value")) , drvSTRVal.getChildren()[id].getAttribute("caption") )
 
     if slewRateBits:
-        pinSlew = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_SLEW", pin[pinNumber-1])
+        pinSlew = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_SLEW", pinSym)
         pinSlew.setLabel("Slew Rate")
         pinSlew.setOutputMode("Value")
         pinSlew.setDisplayMode("Description")
@@ -590,17 +593,17 @@ for pinNumber in range(1, packagePinCount + 1):
 
     # This symbol is used to map the UI manager selection to the corresponding symbol in the tree view. Will not be
     # displayed in the tree view
-    pinFilterTypeString = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_FILTER", pin[pinNumber-1])
+    pinFilterTypeString = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_FILTER", pinSym)
     pinFilterTypeString.setVisible(False)
     pinFilterTypeString.setReadOnly(True)
 
-    pinFilter = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_IFEN", pin[pinNumber-1])
+    pinFilter = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_IFEN", pinSym)
     pinFilter.setLabel("Glitch Filter Enable")
     pinFilter.setDependencies(updateInputFilter, ["PIN_" + str(pinNumber) + "_PIO_FILTER"])
     if debounceFilterEnabledByDefault:
         pinFilter.setVisible(False)
 
-    pinFilterClock = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_IFSCEN", pin[pinNumber-1])
+    pinFilterClock = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_IFSCEN", pinSym)
     pinFilterClock.setLabel("Glitch filter Clock Source ")
     pinFilterClock.addKey("MCK", str(0) , "The glitch filter is able to filter glitches with a duration < tmck/2" )
     pinFilterClock.addKey("SLCK", str(1) , "The debouncing filter is able to filter pulses with a duration < tdiv_slck/2" )
@@ -609,18 +612,18 @@ for pinNumber in range(1, packagePinCount + 1):
 
     # This symbol ID name is split and pin number is extracted and used inside "setupInterrupt" function. so be careful while changing the name of this ID.
     pinInterrupt.append(pinNumber)
-    pinInterrupt[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_INTERRUPT", pin[pinNumber-1])
+    pinInterrupt[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_INTERRUPT", pinSym)
     pinInterrupt[pinNumber-1].setLabel("PIO Interrupt")
     pinInterrupt[pinNumber-1].setReadOnly(True)
 
     # This symbol ID name is split and pin number is extracted and used inside "setupInterrupt" function. so be careful while changing the name of this ID.
-    pinInterruptValue = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_INTERRUPT_VAL", pin[pinNumber-1])
+    pinInterruptValue = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_INTERRUPT_VAL", pinSym)
     pinInterruptValue.setReadOnly(True)
     pinInterruptValue.setVisible(False)
     pinInterruptValue.setDependencies(portInterrupt, ["PIN_" + str(pinNumber) + "_PIO_INTERRUPT"])
 
     pincfgrValue.append(pinNumber)
-    pincfgrValue[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_CFGR_Value", pin[pinNumber-1])
+    pincfgrValue[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_CFGR_Value", pinSym)
     pincfgrValue[pinNumber-1].setReadOnly(True)
     pincfgrValue[pinNumber-1].setVisible(False)
     pincfgrValue[pinNumber-1].setDependencies(pinCFGR, ["PIN_" + str(pinNumber) + "_PD", "PIN_" + str(pinNumber) + "_PU", "PIN_" + str(pinNumber) + "_OD", "PIN_" + str(pinNumber) + "_DIR", "PIN_" + str(pinNumber) + "_PIO_INTERRUPT", "PIN_" + str(pinNumber) + "_IFSCEN", "PIN_" + str(pinNumber) + "_IFEN", "PIN_" + str(pinNumber) + "_DRV", "PIN_" + str(pinNumber) + "_SLEW", "PIN_" + str(pinNumber) + "_TAMPER", "PIN_" + str(pinNumber) + "_ST" ])
