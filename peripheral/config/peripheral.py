@@ -134,9 +134,9 @@ peripheral_ID_map = {
 
 system_components = ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "DMA", "OSCILLATOR", "PMC", "WDT", "DMT", "PAC", "MATRIX", "L2CC", "CMCC", "ECIA"]
 
-#RSTC is loaded as a system component for PIC32CXMT devices
+#RSTC, SUPC is loaded as a system component for PIC32CXMT devices
 if ATDF.getNode("/avr-tools-device-file/devices/device").getAttribute("family") == "PIC32CXMT":
-    system_components.append("RSTC")
+    system_components.extend(["RSTC", "SUPC"])
 
 if("MIPS" in coreArch):
     coreTimerComponent = Module.CreateComponent("core_timer", "CORE TIMER", "/Peripherals/CORE TIMER/", "../peripheral/coretimer/config/coretimer.py")

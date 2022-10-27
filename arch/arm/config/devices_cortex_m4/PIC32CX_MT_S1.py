@@ -49,47 +49,8 @@ print("Loading System Services for " + Variables.get("__PROCESSOR"))
 global productFamily
 productFamily.setDefaultValue("PIC32CX_MT")
 
-fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
-fuseSettings.setLabel("Generate Fuse Settings")
-fuseSettings.setDefaultValue(True)
-
-# Device Configuration
-deviceSecurity = coreComponent.createKeyValueSetSymbol(
-    "DEVICE_SECURITY", fuseSettings)
-deviceSecurity.setLabel("Security")
-deviceSecurity.setOutputMode("Key")
-deviceSecurity.setDisplayMode("Description")
-deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)")
-deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
-
-deviceBoot = coreComponent.createKeyValueSetSymbol("DEVICE_BOOT", fuseSettings)
-deviceBoot.setLabel("Boot Mode")
-deviceBoot.setOutputMode("Key")
-deviceBoot.setDisplayMode("Description")
-deviceBoot.addKey("0x0", "0", "Standard SAM-BA monitor")
-deviceBoot.addKey("0x3", "1", "Standard boot from Flash")
-deviceBoot.addKey("0x9", "2", "Secure SAM-BA monitor")
-deviceBoot.addKey("0xA", "3", "Secure Boot (Fallback to Secure SAM-BA monitor)")
-deviceBoot.addKey("0xC", "4", "Secure Boot (Secure SAM-BA monitor disabled)")
-deviceBoot.setDefaultValue(1)
-
-memoryPlaneSelection = coreComponent.createKeyValueSetSymbol("MEMORY_PLANE_SELECTION", fuseSettings)
-memoryPlaneSelection.setLabel("Memory Plane Selection")
-memoryPlaneSelection.setOutputMode("Key")
-memoryPlaneSelection.setDisplayMode("Description")
-memoryPlaneSelection.addKey("CLEAR" , "0", "Plane 0")
-memoryPlaneSelection.addKey("SET" , "1", "Plane 1")
-
-eraseFunctionLock = coreComponent.createKeyValueSetSymbol("ERASE_FUNCTION_LOCK", fuseSettings)
-eraseFunctionLock.setLabel("Erase Function Lock")
-eraseFunctionLock.setOutputMode("Key")
-eraseFunctionLock.setDisplayMode("Description")
-eraseFunctionLock.addKey("0x0", "0", "Not Locked")
-eraseFunctionLock.addKey("0x6", "1", "Disabled(EFL bits are read only)")
-eraseFunctionLock.addKey("0x7", "2", "Disabled(EFL bits are programmable)")
-
 cpuCoreID = coreComponent.createIntegerSymbol("CPU_CORE_ID", None)
-cpuCoreID.setDefaultValue(0)
+cpuCoreID.setDefaultValue(1)
 cpuCoreID.setVisible(False)
 
 # SysTick External Clock Source
@@ -115,45 +76,6 @@ cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M4 Configuration")
 cortexMenu.setDescription("Configuration for Cortex M4")
 
-cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", None)
-cacheMenu.setLabel("CMCC Configuration")
-cacheMenu.setDescription("CACHE Configuration")
-
-deviceITCMsize = coreComponent.createKeyValueSetSymbol("DEVICE_ITCM_SIZE", cacheMenu)
-deviceITCMsize.setLabel("ITCM and ICache Size")
-deviceITCMsize.setOutputMode("Value")
-deviceITCMsize.setDisplayMode("Description")
-deviceITCMsize.addKey("16KB", "0", "TCM: 16 KB, Cache: 0 KB")
-deviceITCMsize.addKey("14KB", "1", "TCM: 14 KB, Cache: 2 KB")
-deviceITCMsize.addKey("12KB", "2", "TCM: 12 KB, Cache: 4 KB")
-deviceITCMsize.addKey("8KB", "3", "TCM: 8 KB, Cache: 8 KB")
-deviceITCMsize.addKey("0KB", "4", "TCM: 0 KB, Cache: 16 KB")
-deviceITCMsize.setDefaultValue(4)
-
-icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cacheMenu)
-icacheEnable.setLabel("Enable Instruction Cache")
-icacheEnable.setDependencies(update_cache, ["DEVICE_ITCM_SIZE"])
-icacheEnable.setDefaultValue(True)
-
-deviceDTCMsize = coreComponent.createKeyValueSetSymbol("DEVICE_DTCM_SIZE", cacheMenu)
-deviceDTCMsize.setLabel("DTCM and DCache Size")
-deviceDTCMsize.setOutputMode("Value")
-deviceDTCMsize.setDisplayMode("Description")
-deviceDTCMsize.addKey("8KB", "0", "TCM: 8 KB, Cache: 0 KB")
-deviceDTCMsize.addKey("14KB", "1", "TCM: 6 KB, Cache: 2 KB")
-deviceDTCMsize.addKey("12KB", "2", "TCM: 4 KB, Cache: 4 KB")
-deviceDTCMsize.addKey("0KB", "3", "TCM: 0 KB, Cache: 8 KB")
-
-dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)
-dcacheEnable.setLabel("Enable Data Cache")
-dcacheEnable.setReadOnly(True)
-dcacheEnable.setDependencies(update_cache, ["DEVICE_DTCM_SIZE"])
-
-stackTCM = coreComponent.createBooleanSymbol("STACK_IN_TCM", cacheMenu)
-stackTCM.setLabel("Locate Stack in TCM")
-stackTCM.setDefaultValue(False)
-stackTCM.setVisible(False)
-
 def setMPUDefaultSettings():
     mpuRegions = 8
     mpuSettings = {"FLASH"         : ["MPU_ATTR_NORMAL_WT",        "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x01000000",   "2MB"   ],
@@ -164,14 +86,11 @@ def setMPUDefaultSettings():
     mpuSetUpLogicList = ["FLASH", "SRAM", "PERIPHERALS", "SYSTEM", "QSPI"]
     return mpuRegions, mpuSettings, mpuSetUpLogicList
 
-#Load DWDT
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwdt_04686/config/dwdt.py")
-
 # Load Clock
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32cx_mt/config/clk.py")
 coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_UI_MANAGER_ID_PIC32CX_MT", {"plugin_name": "Clock Manager", "main_html_path": "../csp/peripheral/clk_pic32cx_mt/plugins/pic32cxmt_clock_manager/build/index.html"})
 
-# load NVIC
+# # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
 coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
 
@@ -182,25 +101,9 @@ coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
 # #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
-# #  load CMCC
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/cmcc_11108/config/cmcc.py")
-
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11264/plugin/pio_11264.jar")
-
-#Load SUPC
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/supc_04670/config/supc.py")
-
-#Load RSTC
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/rstc_04678/config/rstc.py")
-
-periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SEFC\"]")
-modules = periphNode.getChildren()
-components = []
-for sefc_instance in range (0, len(modules)):
-    components.append(str(modules[sefc_instance].getAttribute("name")).lower())
-Database.activateComponents(components)
 
 #Load ADC plugin
 coreComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar")
@@ -231,17 +134,3 @@ armLibCSourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(
         event["symbol"].getSelectedKey()=="XC32"), [compilerChoice.getID()])
 armLibCSourceFile.setEnabled(compilerSelected == "xc32")
 
-# set XC32 Stack in TCM: True or False
-xc32StackInTCMSym = coreComponent.createSettingSymbol(
-    "XC32_STACK_IN_TCM", None)
-xc32StackInTCMSym.setCategory("C32Global")
-xc32StackInTCMSym.setKey("mstacktcm")
-xc32StackInTCMSym.setValue("false")
-xc32StackInTCMSym.setDependencies(lambda symbol, event: symbol.setValue(
-                                        event["value"]), ["STACK_IN_TCM"])
-
-devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
-devconSystemInitFile.setType("STRING")
-devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION")
-devconSystemInitFile.setSourcePath("arm/templates/common/fuses/PIC32CX_MT.c.ftl")
-devconSystemInitFile.setMarkup(True)
