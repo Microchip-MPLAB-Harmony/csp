@@ -69,16 +69,16 @@ cortexMenu.setDescription("Configuration for Cortex M4")
     # return triggerSettings
 
 
-# def setMPUDefaultSettings():
-    # mpuRegions = 8
-    # mpuSettings = {"FLASH"              : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00000000",   "4MB"   ],
-                    # "SRAM"              : ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20000000",   "8MB"],
-                    # "PERIPHERALS"       : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
-                    # "SYSTEM"            : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"   ],
-                    # "QSPI"              : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x04000000",   "256MB"],}
-    # mpuSetUpLogicList = ["FLASH", "SRAM", "PERIPHERALS", "SYSTEM", "QSPI"]
+def setMPUDefaultSettings():
+    mpuRegions = 8
+    mpuSettings = {"FLASH"              : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00000000",   "4MB"   ],
+                    "SRAM"              : ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20000000",   "8MB"],
+                    "PERIPHERALS"       : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
+                    "SYSTEM"            : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"   ],
+                    "QSPI"              : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x04000000",   "256MB"],}
+    mpuSetUpLogicList = ["FLASH", "SRAM", "PERIPHERALS", "SYSTEM", "QSPI"]
 
-    # return mpuRegions, mpuSettings, mpuSetUpLogicList
+    return mpuRegions, mpuSettings, mpuSetUpLogicList
 
 # # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_26/config/gpio.py")
@@ -93,12 +93,13 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/ecia_200/config/ecia.py")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
 coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER_SG3", {"plugin_name": "NVIC Configuration", "main_html_path": "../csp/peripheral/nvic/plugin/sg3_interupt_manager/build/index.html"})
 
-# # #load mpu
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
-# coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
+# #load mpu
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
+coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
 
 # #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
+
 
 # # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dma_85/config/dma.py")
