@@ -45,6 +45,7 @@
 // DOM-IGNORE-END
 
 #include "plib_${DMA_INSTANCE_NAME?lower_case}.h"
+#include "interrupts.h"
 
 <#assign DMA_INTERRUPT_ENABLED = false>
 <#list 0..NUM_DMA_CHANS - 1 as i>
@@ -325,7 +326,7 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     </#if>
 </#list>
 <#assign STATCLRREG0 = "DMA0_STATREG_RD">
-<#assign STATREGMASK1 = "0U">
+<#assign STATREGMASK1 = "0">
 <#assign STATREGMASK2 = "0">
 
 <#lt>    /* Enable DMA channel interrupts */
@@ -335,9 +336,9 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     <#if .vars[CHANENABLE] == true && .vars[CHANINTENABLE] == true>
         <#assign STATCLRREGi = "DMA" + i + "_STATREG_RD">
         <#if .vars[STATCLRREGi] == .vars[STATCLRREG0] >
-          <#assign STATREGMASK1 = STATREGMASK1 + " | " + .vars["DMA" + i + "_STATREG_MASK"]>
+          <#assign STATREGMASK1 = STATREGMASK1 + "U | " + .vars["DMA" + i + "_STATREG_MASK"]>
         <#else>
-          <#assign STATREGMASK2 = STATREGMASK2 + " | " + .vars["DMA" + i + "_STATREG_MASK"]>
+          <#assign STATREGMASK2 = STATREGMASK2 + "U | " + .vars["DMA" + i + "_STATREG_MASK"]>
         </#if>
     </#if>
 </#list>
@@ -560,19 +561,16 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable (DMAC_CHANNEL channel)
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel)
 {
     uint32_t DCHxINT_Flags;
+    bool flagcheck = false;
 
     DCHxINT_Flags = *(volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST}U + (channel * ${DMAC_CH_SPACING}U) + ${DMAC_INT_OFST}U);
     DCHxINT_Flags = DCHxINT_Flags & (_DCH0INT_CHERIF_MASK | _DCH0INT_CHTAIF_MASK | _DCH0INT_CHBCIF_MASK);
 
     if ((gDMAChannelObj[channel].inUse == true) && (DCHxINT_Flags == 0U))
     {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-
+        flagcheck = true;
+    }    
+    return flagcheck;
 }
 
 DMAC_TRANSFER_EVENT ${DMA_INSTANCE_NAME}_ChannelTransferStatusGet(DMAC_CHANNEL channel)
@@ -652,7 +650,7 @@ void ${DMA_INSTANCE_NAME}_ChannelCRCSetup( DMAC_CHANNEL channel, DMAC_CRC_SETUP 
         mask |= (uint32_t)_DCRCCON_BITO_MASK;
     }
 
-    mask |= (channel | _DCRCCON_CRCEN_MASK | ((gCRCSetup.polynomial_length - 1U) << _DCRCCON_PLEN_POSITION));
+    mask |= (channel | _DCRCCON_CRCEN_MASK | (((uint32_t)gCRCSetup.polynomial_length - 1U) << _DCRCCON_PLEN_POSITION));
 
     /* Setup the DMA CRCCON register */
     DCRCCON = mask;
@@ -753,13 +751,16 @@ void DMA${i}_InterruptHandler (void)
 {
     DMAC_CHANNEL_OBJECT *chanObj;
     DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;
+    
+    uint32_t var = 0;
 
     /* Find out the channel object */
     chanObj = (DMAC_CHANNEL_OBJECT *) &gDMAChannelObj[${i}];
 
+    var = ${.vars[INTBITSREG]}.CHDHIF;
     /* Check whether the active DMA channel event has occurred */
 
-    if((${.vars[INTBITSREG]}.CHSHIF == 1U) || (${.vars[INTBITSREG]}.CHDHIF == 1U))/* irq due to half complete */
+    if((${.vars[INTBITSREG]}.CHSHIF == 1U) || (var == 1U))/* irq due to half complete */
     {
         /* Do not clear the flag here, it should be cleared with block transfer complete flag*/
 
