@@ -72,6 +72,11 @@ def instantiateComponent(fcrComponent):
     nvm_adrws.setLabel("Address Wait State Enable")
     nvm_adrws.setDescription("Enabling address wait state allows to use higher clock frequencies, whereas disabling it allow for higher performance at lower clock frequencies")
     nvm_adrws.setDefaultValue(False)
+    
+    nvm_crc = fcrComponent.createBooleanSymbol("FCR_CRC", None)
+    nvm_crc.setLabel("CRC Enable")
+    nvm_crc.setDescription("Enabling CRC allows CRC calculation")
+    nvm_crc.setDefaultValue(True)
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################
