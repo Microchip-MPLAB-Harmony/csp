@@ -48,6 +48,8 @@ if __name__ == "__main__":
 
     interrupt_types = [("PPI", "Private Peripheral Interrupts"), ("SPI", "Shared Peripheral Interrupts")]
     interrupt_menus =  []
+    indexArray = []
+    nameArray = []
     for interrupt_type in interrupt_types:
             interrupt_menu = coreComponent.createMenuSymbol("{0}_MENU".format(interrupt_type[0]), menu)
             interrupt_menu.setLabel("{0} Interrupts".format(interrupt_type[0]))
@@ -63,6 +65,9 @@ if __name__ == "__main__":
             max_interrupt_index = index
 
         if index > 15:
+            
+            indexArray.append(str(index))
+            nameArray.append(name)
 
             interrupt_menu = interrupt_menus[0 if index < 32 else 1]
 
@@ -111,6 +116,14 @@ if __name__ == "__main__":
     sym_interrupt_max_index = coreComponent.createIntegerSymbol("GIC_INTERRUPT_MAX_INDEX", menu)
     sym_interrupt_max_index.setVisible(False)
     sym_interrupt_max_index.setDefaultValue(max_interrupt_index)
+
+    # Below symbol is only used by GIC UI to know the GIC Name
+    sym_interrupt_gic_name = coreComponent.createComboSymbol("GIC_COLUMN_NAME", menu, nameArray)
+    sym_interrupt_gic_name.setVisible(False)
+
+    # Below symbol is only used by GIC UI to know the GIC Id number
+    sym_interrupt_gic_id = coreComponent.createComboSymbol("GIC_COLUMN_ID", menu, indexArray)
+    sym_interrupt_gic_id.setVisible(False)
 
     config = Variables.get("__CONFIGURATION_NAME")
 
