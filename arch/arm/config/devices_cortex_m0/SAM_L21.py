@@ -204,7 +204,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_l21/config/clk.py
 
 # # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/apps/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
 
 #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")

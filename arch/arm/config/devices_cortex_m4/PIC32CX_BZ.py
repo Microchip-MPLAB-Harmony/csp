@@ -329,7 +329,7 @@ coreComponent.addPlugin("../peripheral/gpio_02467/plugin/gpio_02467.jar")
 
 # # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/apps/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
 
 # #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
