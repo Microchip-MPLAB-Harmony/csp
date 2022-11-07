@@ -50,6 +50,15 @@
 #include "interrupts.h"
 </#if>
 
+#define FLEXCOM_SPI_TDR_8BIT_REG      (*(volatile uint8_t* const)((${FLEXCOM_INSTANCE_NAME}_BASE_ADDRESS + FLEX_SPI_TDR_REG_OFST)))
+
+#define FLEXCOM_SPI_TDR_9BIT_REG      (*(volatile uint16_t* const)((${FLEXCOM_INSTANCE_NAME}_BASE_ADDRESS + FLEX_SPI_TDR_REG_OFST)))
+
+
+
+#define FLEXCOM_SPI_RDR_8BIT_REG      (*(volatile uint8_t* const)((${FLEXCOM_INSTANCE_NAME}_BASE_ADDRESS + FLEX_SPI_RDR_REG_OFST)))
+
+#define FLEXCOM_SPI_RDR_9BIT_REG      (*(volatile uint16_t* const)((${FLEXCOM_INSTANCE_NAME}_BASE_ADDRESS + FLEX_SPI_RDR_REG_OFST)))
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${FLEXCOM_INSTANCE_NAME} SPI Implementation
@@ -174,7 +183,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
     bool isSuccess = false;
 
     /* Verify the request */
-    if (((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL)))
+    if (((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL)))
     {
         if (pTransmitData == NULL)
         {
@@ -220,7 +229,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
                     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = ((uint16_t*)pTransmitData)[txCount++];
                 }
             }
-            else if (dummySize > 0)
+            else if (dummySize > 0U)
             {
                 if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
                 {
@@ -233,7 +242,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
                 dummySize--;
             }
 
-            if (rxSize == 0)
+            if (rxSize == 0U)
             {
                 /* For transmit only request, wait for TDR to become empty */
                 while((bool)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk) >> FLEX_SPI_SR_TDRE_Pos) == false);
@@ -450,17 +459,17 @@ static uint8_t ${FLEXCOM_INSTANCE_NAME}_SPI_FIFO_Fill(void)
     uint32_t dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & FLEX_SPI_CSR_BITS_Msk;
 </#if>
 
-    while ((nDataCopiedToFIFO < ${FLEXCOM_SPI_FIFO_SIZE}) && (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk))
+    while ((nDataCopiedToFIFO < ${FLEXCOM_SPI_FIFO_SIZE}U) && ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk) != 0U))
     {
         if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
         {
             if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize)
             {
-                *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) =  ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount++];
+                FLEXCOM_SPI_TDR_8BIT_REG =  ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount++];
             }
-            else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize > 0)
+            else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize > 0U)
             {
-                *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) = (uint8_t)(0x${FLEXCOM_SPI_DUMMY_DATA});
+                FLEXCOM_SPI_TDR_8BIT_REG = (uint8_t)(0x${FLEXCOM_SPI_DUMMY_DATA});
                 ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize--;
             }
             else
@@ -472,11 +481,11 @@ static uint8_t ${FLEXCOM_INSTANCE_NAME}_SPI_FIFO_Fill(void)
         {
             if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize)
             {
-                *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) =  ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount++];
+                FLEXCOM_SPI_TDR_9BIT_REG =  ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount++];
             }
-            else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize > 0)
+            else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize > 0U)
             {
-                *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) = (uint16_t)(0x${FLEXCOM_SPI_DUMMY_DATA}${FLEXCOM_SPI_DUMMY_DATA});
+                FLEXCOM_SPI_TDR_9BIT_REG = (uint16_t)(0x${FLEXCOM_SPI_DUMMY_DATA}${FLEXCOM_SPI_DUMMY_DATA});
                 ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize--;
             }
             else
@@ -503,7 +512,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
     uint32_t size = 0;
 
     /* Verify the request */
-    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
+    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
     {
         isRequestAccepted = true;
 
@@ -612,9 +621,9 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
 
         nTxPending = (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize - ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount) + ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize;
 
-        if (nTxPending < ${FLEXCOM_SPI_FIFO_SIZE})
+        if (nTxPending < ${FLEXCOM_SPI_FIFO_SIZE}U)
         {
-            rxThreshold = nTxPending;
+            rxThreshold = (uint8_t)nTxPending;
         }
         else
         {
@@ -976,11 +985,11 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     {
         if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
         {
-            ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount++] = *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_RDR);
+            ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount++] = FLEXCOM_SPI_RDR_8BIT_REG;
         }
         else
         {
-            ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount++] = *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_RDR);
+            ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount++] = FLEXCOM_SPI_RDR_9BIT_REG;
         }
     }
 
@@ -989,11 +998,11 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 
     nTxPending = (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize - ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount) + ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize;
 
-    if (nTxPending > 0)
+    if (nTxPending > 0U)
     {
-        if (nTxPending < ${FLEXCOM_SPI_FIFO_SIZE})
+        if (nTxPending < ${FLEXCOM_SPI_FIFO_SIZE}U)
         {
-            rxThreshold = nTxPending;
+            rxThreshold = (uint8_t)nTxPending;
         }
         else
         {

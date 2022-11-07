@@ -79,6 +79,16 @@ typedef enum
 
 }FLEXCOM_SPI_CLOCK_PHASE;
 
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 5.2 deviated twice.  Deviation record ID -  H3_MISRAC_2012_R_5_2_DR_1 */
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+    <#if core.COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+    #pragma coverity compliance block deviate "MISRA C-2012 Rule 5.2" "H3_MISRAC_2012_R_5_2_DR_1"
+</#if>
+
 typedef enum
 {
     FLEXCOM_SPI_CLOCK_POLARITY_IDLE_LOW = 0 << FLEX_SPI_CSR_CPOL_Pos,
@@ -89,6 +99,15 @@ typedef enum
 
 }FLEXCOM_SPI_CLOCK_POLARITY;
 
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+
+    #pragma coverity compliance end_block "MISRA C-2012 Rule 5.2"
+    <#if core.COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic pop
+    </#if>
+</#if>
+  /* MISRAC 2012 deviation block end */
+
 typedef enum
 {
     FLEXCOM_SPI_CHIP_SELECT_NPCS0 = ${FLEXCOM_SPI_MR_PCS_NPCS0},
@@ -96,10 +115,10 @@ typedef enum
     FLEXCOM_SPI_CHIP_SELECT_NPCS1 = ${FLEXCOM_SPI_MR_PCS_NPCS1},
 </#if>
 <#if FLEXCOM_SPI_EN_NPCS2?? >
-	FLEXCOM_SPI_CHIP_SELECT_NPCS2 = ${FLEXCOM_SPI_MR_PCS_NPCS2},
+    FLEXCOM_SPI_CHIP_SELECT_NPCS2 = ${FLEXCOM_SPI_MR_PCS_NPCS2},
 </#if>
 <#if FLEXCOM_SPI_EN_NPCS3?? >
-	FLEXCOM_SPI_CHIP_SELECT_NPCS3 = ${FLEXCOM_SPI_MR_PCS_NPCS3},
+    FLEXCOM_SPI_CHIP_SELECT_NPCS3 = ${FLEXCOM_SPI_MR_PCS_NPCS3},
 </#if>
 }FLEXCOM_SPI_CHIP_SELECT;
 
