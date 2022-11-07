@@ -100,9 +100,9 @@ void CLK_Initialize( void )
      ((PRODUCT_FAMILY == "PIC32MX1404") && (UPLLCON_VALUE != UPLLCON_DEFAULT_VALUE))>
 
     /* unlock system for clock configuration */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     <#if CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT>
     OSCCONbits.FRCDIV = ${CONFIG_SYS_CLK_FRCDIV};
@@ -144,7 +144,7 @@ void CLK_Initialize( void )
 </#if>
 
     /* Lock system since done with clock configuration */
-    SYSKEY = 0x33333333;
+    SYSKEY = 0x33333333U;
 </#if>
 
 <#if PLL_LOCK_STATUS_OPTION?has_content && CONFIG_FNOSC?contains("PLL")>
@@ -155,7 +155,10 @@ void CLK_Initialize( void )
                       /* Nothing to do */
                  }
     <#else>
-        <#lt>    while(!OSCCONbits.LOCK);
+        <#lt>    while(OSCCONbits.LOCK == 0U)
+        <#lt>    {
+        <#lt>        /* Nothing to do */
+        <#lt>    }
     </#if>
 </#if>
 
