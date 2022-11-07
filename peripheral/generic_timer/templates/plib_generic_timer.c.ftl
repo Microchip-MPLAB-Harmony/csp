@@ -48,6 +48,9 @@
 #include <stddef.h>
 #include "device.h"
 #include "plib_generic_timer.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define GENERIC_TIMER_FREQUENCY ${SYSTEM_COUNTER_FREQUENCY}U
 <#if GENERIC_TIMER_INTERRUPT>
