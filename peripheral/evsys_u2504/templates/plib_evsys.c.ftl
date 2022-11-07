@@ -66,7 +66,7 @@
         </#if>
     </#list>
     <#if CONFIGURED_SYNC_CHANNEL != 0>
-        <#lt>EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
+        <#lt>static EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
     </#if>
 </#if>
 <#else>
@@ -81,7 +81,7 @@
         </#if>
     </#list>
     <#if CONFIGURED_SYNC_CHANNEL != 0>
-        <#lt>EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
+        <#lt>static EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
     </#if>
 </#if>
 </#if>
@@ -244,12 +244,12 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     <#else>
         <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
         <#lt>{
-        <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENSET = interruptMask;
+        <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENSET = (uint8_t)interruptMask;
         <#lt>}
 
         <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
         <#lt>{
-        <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = interruptMask;
+        <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = (uint8_t)interruptMask;
         <#lt>}
 
         <#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context )
@@ -312,9 +312,9 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
                     <#lt>{
                     <#lt>    uint8_t channel = 0;
 
-                    <#lt>    for(channel = ${res2?groups[1]}; channel <= ${res2?groups[2]}; channel++)
+                    <#lt>    for(channel = ${res2?groups[1]}; channel <= ${res2?groups[2]}U; channel++)
                     <#lt>    {
-                    <#lt>        if ((${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTSTATUS >> channel) & 0x1)
+                    <#lt>        if (((${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTSTATUS >> channel) & 0x1U) != 0U)
                     <#lt>        {
                     <#lt>           volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
                     <#lt>           if(evsys[channel].callback != NULL)
@@ -332,9 +332,9 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
                         <#lt>void ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
                         <#lt>{
                         <#lt>   uint8_t channel;
-                        <#lt>   for(channel = 4; channel <= ${EVSYS_INTERRUPT_MAX_CHANNEL}; channel++)
+                        <#lt>   for(channel = 4; channel <= ${EVSYS_INTERRUPT_MAX_CHANNEL}U; channel++)
                         <#lt>   {
-                        <#lt>       if ((${EVSYS_REG_NAME}_REGS->EVSYS_INTSTATUS >> channel) & 0x1)
+                        <#lt>       if (((${EVSYS_REG_NAME}_REGS->EVSYS_INTSTATUS >> channel) & 0x1U) != 0U)
                         <#lt>       {
                         <#lt>           volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
                         <#lt>           if(evsys[channel].callback != NULL)
