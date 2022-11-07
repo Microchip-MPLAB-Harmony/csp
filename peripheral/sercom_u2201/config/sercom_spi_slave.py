@@ -225,7 +225,7 @@ if ssdeSupported == True:
 
 spisSym_TXBuffer_Size = sercomComponent.createIntegerSymbol("SPIS_TX_BUFFER_SIZE", sercomSym_OperationMode)
 spisSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
-spisSym_TXBuffer_Size.setMin(0)
+spisSym_TXBuffer_Size.setMin(1)
 spisSym_TXBuffer_Size.setMax(65535)
 spisSym_TXBuffer_Size.setDefaultValue(256)
 spisSym_TXBuffer_Size.setVisible(False)
@@ -233,7 +233,7 @@ spisSym_TXBuffer_Size.setDependencies(updateSPISlaveConfigurationVisibleProperty
 
 spisSym_RXBuffer_Size = sercomComponent.createIntegerSymbol("SPIS_RX_BUFFER_SIZE", sercomSym_OperationMode)
 spisSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
-spisSym_RXBuffer_Size.setMin(0)
+spisSym_RXBuffer_Size.setMin(1)
 spisSym_RXBuffer_Size.setMax(65535)
 spisSym_RXBuffer_Size.setDefaultValue(256)
 spisSym_RXBuffer_Size.setVisible(False)
