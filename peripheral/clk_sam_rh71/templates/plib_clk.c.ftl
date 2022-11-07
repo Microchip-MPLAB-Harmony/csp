@@ -215,7 +215,10 @@ static void CLK_SlowClockInitialize(void)
     <#if !CLK_SLCK_OSCBYPASS>
         <#if CLK_SLCK_TDXTALSEL != "0">
     /* Wait for xtal selection to become effective for TD_SLCK */
-    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_TDOSCSEL_Msk));
+    while ((SUPC_REGS->SUPC_SR & SUPC_SR_TDOSCSEL_Msk) == 0U)
+    {
+        /* Nothing to do */
+    }
         </#if>
     </#if>
 }
