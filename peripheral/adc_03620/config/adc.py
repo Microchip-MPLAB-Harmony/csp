@@ -32,11 +32,15 @@ global nSARChannel
 global SARCoreChannels
 global earlyInterruptPresent
 global numTriggers
+global InterruptVectorSecurity
+global ADCfilesArray
 
 nSARCore = 0
 earlyInterruptPresent = False
 numTriggers = 0
 nSARChannel = []
+InterruptVectorSecurity = []
+ADCfilesArray = []
 coreCompartorEnableDepList = []
 coreStartConvOnEventInputDepList = []
 coreResultReadyEventOutputDepList = []
@@ -1594,6 +1598,7 @@ def commonRegisterConfig(adcComponent):
 
 def adcInterruptHandlerConfig(adcComponent):
     global nSARCore
+    global InterruptVectorSecurity
 
     # Dummy symbol to update ADC GLOBAL NVIC Interrupt
     adcGlobalNVICInt = adcComponent.createBooleanSymbol("ADC_GLOBAL_NVIC_INT", None)
@@ -1610,6 +1615,22 @@ def adcInterruptHandlerConfig(adcComponent):
     adcCoreIntEnabled = adcComponent.createBooleanSymbol("ADC_CORE_CORE_INT_ENABLED", None)
     adcCoreIntEnabled.setVisible(False)
     adcCoreIntEnabled.setDependencies(updateCoreIntEnabled, adcCoreIntEnabledDepList)
+
+    vectorNode=ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
+    vectorValues = vectorNode.getChildren()
+    for id in range(0, len(vectorNode.getChildren())):
+        if vectorValues[id].getAttribute("module-instance") == adcInstanceName.getValue():
+            name = vectorValues[id].getAttribute("name")
+            InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
+
+    # Confiure secure/non-secure interrupt
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        adcIsNonSecure = Database.getSymbolValue("core", adcComponent.getID().upper() + "_IS_NON_SECURE")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, adcIsNonSecure)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, adcIsNonSecure)       
 
 def adcEvsysConfig(adcComponent):
     global nSARCore
@@ -1630,7 +1651,31 @@ def adcEvsysConfig(adcComponent):
         adcCoreEVSYSGenCmpUpdate.setVisible(False)
         adcCoreEVSYSGenCmpUpdate.setDependencies(updateEvsysCmpGeneratorSymbols, adcEvsysGenCMPDepList[n])
 
-
+def fileUpdate(symbol, event):
+    global ADCfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        ADCfilesArray[0].setSecurity("SECURE")
+        ADCfilesArray[1].setSecurity("SECURE")
+        ADCfilesArray[2].setSecurity("SECURE")
+        ADCfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        ADCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, False)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        ADCfilesArray[0].setSecurity("NON_SECURE")
+        ADCfilesArray[1].setSecurity("NON_SECURE")
+        ADCfilesArray[2].setSecurity("NON_SECURE")
+        ADCfilesArray[3].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        ADCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, True)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 def codeGenerationConfig (adcComponent, Module):
 
@@ -1671,6 +1716,25 @@ def codeGenerationConfig (adcComponent, Module):
     adcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     adcSystemDefFile.setSourcePath("../peripheral/adc_03620/templates/system/definitions.h.ftl")
     adcSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global ADCfilesArray
+        adcIsNonSecure = Database.getSymbolValue("core", adcComponent.getID().upper() + "_IS_NON_SECURE")
+        ADCfilesArray.append(adcHeaderFile)
+        ADCfilesArray.append(adcGlobalHeaderFile)
+        ADCfilesArray.append(adcSourceFile)
+        ADCfilesArray.append(adcSystemInitFile)
+        ADCfilesArray.append(adcSystemDefFile)
+
+        if adcIsNonSecure == False:
+            adcHeaderFile.setSecurity("SECURE")
+            adcGlobalHeaderFile.setSecurity("SECURE")
+            adcSourceFile.setSecurity("SECURE")
+            adcSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            adcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+        adcSystemDefFile.setDependencies(fileUpdate, ["core." + adcComponent.getID().upper() + "_IS_NON_SECURE"])
+
 
     adcComponent.addPlugin("../peripheral/adc_03620/plugin/adc_03620.jar")
 
