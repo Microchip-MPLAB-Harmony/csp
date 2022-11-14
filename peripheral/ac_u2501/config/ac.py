@@ -28,10 +28,27 @@ global InterruptHandler
 global InterruptHandlerLock
 global acInstanceName
 global acSym_SCALERn
-
+global ACfilesArray
+ACfilesArray = []
 #######################################################################################################################################
 #####################################        Callback Funtions ----START      #########################################################
 #######################################################################################################################################
+# Trustzone secure/non-secure file generation logic
+def fileUpdate(symbol, event):
+    global ACfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        ACfilesArray[0].setSecurity("SECURE")
+        ACfilesArray[1].setSecurity("SECURE")
+        ACfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        ACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        ACfilesArray[0].setSecurity("NON_SECURE")
+        ACfilesArray[1].setSecurity("NON_SECURE")
+        ACfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        ACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 #Control VDD Scaler value visibility
 def setacScalerVisibility(MySymbol, event):
@@ -136,6 +153,7 @@ def instantiateComponent(acComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
+    global InterruptVectorSecurity
     evsysDep = []
     global nvicDep
     nvicDep = []
@@ -598,6 +616,9 @@ def instantiateComponent(acComponent):
     InterruptVectorUpdate = acInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
     nvicDep.append("core." + InterruptVectorUpdate)
 
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        InterruptVectorSecurity = acInstanceName.getValue() + "_SET_NON_SECURE"    
+
     # Interrupt Dynamic settings
     acSym_UpdateInterruptStatus = acComponent.createBooleanSymbol("AC_INTERRUPT_STATUS", None)
     acSym_UpdateInterruptStatus.setDependencies(updateACInterruptStatus, nvicDep)
@@ -624,6 +645,10 @@ def instantiateComponent(acComponent):
     ###################################################################################################
 
     configName = Variables.get("__CONFIGURATION_NAME")
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global ACfilesArray
+        acIsNonSecure = Database.getSymbolValue("core", acComponent.getID().upper() + "_IS_NON_SECURE")
+        Database.setSymbolValue("core", InterruptVectorSecurity, acIsNonSecure)
 
     acHeader1File = acComponent.createFileSymbol("AC_HEADER", None)
     acHeader1File.setSourcePath("../peripheral/ac_u2501/templates/plib_ac.h.ftl")
@@ -653,3 +678,17 @@ def instantiateComponent(acComponent):
     acSystemDefFile.setSourcePath("../peripheral/ac_u2501/templates/system/definitions.h.ftl")
     acSystemDefFile.setMarkup(True)
 
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        ACfilesArray.append(acHeader1File)
+        ACfilesArray.append(acSource1File)
+        ACfilesArray.append(acSystemInitFile)
+        ACfilesArray.append(acSystemDefFile)
+
+        if acIsNonSecure == False:
+            acHeader1File.setSecurity("SECURE")
+            acSource1File.setSecurity("SECURE")
+            acSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            acSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+        #callback function to check if peripheral is secure
+        acSystemDefFile.setDependencies(fileUpdate, ["core." + acComponent.getID().upper() + "_IS_NON_SECURE"])
