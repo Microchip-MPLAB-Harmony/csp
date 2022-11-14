@@ -117,3 +117,10 @@ def instantiateComponent(fcrComponent):
     fcrSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     fcrSystemInitFile.setType("STRING")
     fcrSystemInitFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        fcrSym_HeaderFile.setSecurity("SECURE")
+        fcrSym_SourceFile.setSecurity("SECURE")
+        #fcrSym_SystemInitFile1.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        fcrSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+        fcrSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
