@@ -28,6 +28,19 @@
 #                               Dependency Functions
 #------------------------------------------------------------------------------
 
+def fileUpdate(symbol, event):
+    global EBIfilesArray
+    if event["value"] == False:
+        EBIfilesArray[0].setSecurity("SECURE")
+        EBIfilesArray[1].setSecurity("SECURE")
+        EBIfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        EBIfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+    else:
+        EBIfilesArray[0].setSecurity("NON_SECURE")
+        EBIfilesArray[1].setSecurity("NON_SECURE")
+        EBIfilesArray[3].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        EBIfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+
 # Function to convert Bitfield mask string to Integer
 def ebiSmcConvertMaskToInt( aRegMask ):
     """ function to convert bit field mask string to integer -- assumes mask is contiguous bits"""
@@ -114,7 +127,8 @@ ebiSmcSym_MODE_TDF_CYCLES = []
 
 # Get the Chip Select Count from ATDF config file
 global ebiChipSelCount
-
+global EBIfilesArray
+EBIfilesArray = []
 #------------------------------------------------------------------------------
 #                                   Constatns
 #------------------------------------------------------------------------------
@@ -351,3 +365,19 @@ def instantiateComponent(ebiComponent):
     ebiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     ebiSystemInitFile.setSourcePath("../peripheral/ebi_03591/templates/system/initialization.c.ftl")
     ebiSystemInitFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global EBIfilesArray
+        ebiIsNonSecure = Database.getSymbolValue("core", ebiComponent.getID().upper() + "_IS_NON_SECURE")
+        EBIfilesArray.append(ebiHeader1File)
+        EBIfilesArray.append(ebiSource1File)
+        EBIfilesArray.append(ebiHeader1FileEntry)
+        EBIfilesArray.append(ebiSystemInitFile)
+
+        if ebiIsNonSecure == False:
+            ebiHeader1File.setSecurity("SECURE")
+            ebiSource1File.setSecurity("SECURE")
+            ebiHeader1FileEntry.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            ebiSystemInitFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+        ebiSystemInitFile.setDependencies(fileUpdate, ["core." + ebiComponent.getID().upper() + "_IS_NON_SECURE"])
