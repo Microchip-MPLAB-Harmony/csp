@@ -25,12 +25,41 @@
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
+global InterruptVectorSecurity
+global canfilesArray
+canfilesArray = []
 
 canElementSizes = ["8 bytes", "12 bytes", "16 bytes", "20 bytes", "24 bytes", "32 bytes", "48 bytes", "64 bytes"]
 opModeValues = ["NORMAL", "CAN FD", "Restricted Operation Mode", "Bus Monitoring Mode", "External Loop Back Mode", "Internal Loop Back Mode"]
 
 stdFilterList = []
 extFilterList = []
+
+def fileUpdate(symbol, event):
+    global canfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        canfilesArray[0].setSecurity("SECURE")
+        canfilesArray[1].setSecurity("SECURE")
+        canfilesArray[2].setSecurity("SECURE")
+        canfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        canfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, False)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        canfilesArray[0].setSecurity("NON_SECURE")
+        canfilesArray[1].setSecurity("NON_SECURE")
+        canfilesArray[2].setSecurity("NON_SECURE")
+        canfilesArray[3].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        canfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, True)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 # if the mode is changed to FD, then show options for more bytes
 def showWhenFD(element, event):
@@ -446,6 +475,7 @@ def instantiateComponent(canComponent):
     global interruptHandler
     global interruptHandlerLock
     global interruptVectorUpdate
+    global InterruptVectorSecurity
     global canCoreClockInvalidSym
     global canTimeQuantaInvalidSym
     global NBTPprescale
@@ -499,6 +529,7 @@ def instantiateComponent(canComponent):
     interruptHandler = canInstanceName.getValue() + "_INTERRUPT_HANDLER"
     interruptHandlerLock = canInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     interruptVectorUpdate = canInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptVectorSecurity = canInstanceName.getValue() + "_SET_NON_SECURE"
 
     if ATDF.getNode('/avr-tools-device-file/modules/module@[name="CAN"]/register-group@[name="CAN"]/register@[name="MRCFG"]/bitfield@[name="OFFSET"]') != None:
         canMRCFGOffsetRegSym = canComponent.createBooleanSymbol("CAN_MRCFG_OFFSET_ENABLE", None)
@@ -1048,3 +1079,21 @@ def instantiateComponent(canComponent):
     canSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     canSystemDefFile.setSourcePath("../peripheral/can_u2003/templates/system/definitions.h.ftl")
     canSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global canfilesArray
+        canIsNonSecure = Database.getSymbolValue("core", canComponent.getID().upper() + "_IS_NON_SECURE")
+        canfilesArray.append(canMasterHeaderFile)
+        canfilesArray.append(canMainSourceFile)
+        canfilesArray.append(canInstHeaderFile)
+        canfilesArray.append(canSystemInitFile)
+        canfilesArray.append(canSystemDefFile)
+
+        if canIsNonSecure == False:
+            canMasterHeaderFile.setSecurity("SECURE")
+            canMainSourceFile.setSecurity("SECURE")
+            canInstHeaderFile.setSecurity("SECURE")
+            canSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            canSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+        canSystemDefFile.setDependencies(fileUpdate, ["core." + canComponent.getID().upper() + "_IS_NON_SECURE"])
