@@ -325,7 +325,7 @@ cacheMenu.setLabel("(no additional MIPS configuration)")
 
 if productFamily.getValue() in ["PIC32MX1156", "PIC32MX1143"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_01166/config/evic.py")
-    coreComponent.addPlugin("../peripheral/evic_01166/plugin/evic_01166.jar")
+    coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_EVIC_01166_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/apps/interrupt_configurators/evic_01166_interrupt_configuration/build/index.html"})
 else:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py")
     coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
