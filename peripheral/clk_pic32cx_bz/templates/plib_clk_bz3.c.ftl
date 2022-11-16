@@ -93,27 +93,32 @@
 void CLK_Initialize( void )
 {
     //check CLDO ready
-    while ((CFG_REGS->CFG_MISCSTAT & CFG_MISCSTAT_CLDORDY_Msk) == 0);    
+    while ((CFG_REGS->CFG_MISCSTAT & CFG_MISCSTAT_CLDORDY_Msk) == 0U)
+    {
+        /* Nothing to do */
+    }        
     
     //programming 4ms delay -  programming subsys_xtal_ready_delay
     //check xtal spec for delay required
     BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 = ((BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 & ~BTZBSYS_SUBSYS_CNTRL_REG1_subsys_xtal_ready_delay_Msk)
-                                                | ((0x02) << BTZBSYS_SUBSYS_CNTRL_REG1_subsys_xtal_ready_delay_Pos)); 
+                                                | ((0x02UL) << BTZBSYS_SUBSYS_CNTRL_REG1_subsys_xtal_ready_delay_Pos)); 
     //wait for crystal ready
-    while((BTZBSYS_REGS->BTZBSYS_SUBSYS_STATUS_REG1 & BTZBSYS_SUBSYS_STATUS_REG1_xtal_ready_out_Msk) != BTZBSYS_SUBSYS_STATUS_REG1_xtal_ready_out_Msk);
-
+    while((BTZBSYS_REGS->BTZBSYS_SUBSYS_STATUS_REG1 & BTZBSYS_SUBSYS_STATUS_REG1_xtal_ready_out_Msk) != BTZBSYS_SUBSYS_STATUS_REG1_xtal_ready_out_Msk)
+    {
+        /* Nothing to do */
+    }
     // set PLL_enable
-    BLE_REGS->BLE_DPLL_RG2 &= ~(0x02);
+    BLE_REGS->BLE_DPLL_RG2 &= ~((uint16_t)0x02U);
 
     //programming delay for pll lock - 500 us
     //32 us steps - check pll spec for final value 
     BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG3 = ((BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG3 & ~BTZBSYS_SUBSYS_CNTRL_REG3_subsys_pll_ready_delay_Msk )
-                                                   | ((0x10) << BTZBSYS_SUBSYS_CNTRL_REG3_subsys_pll_ready_delay_Pos));
+                                                   | ((0x10UL) << BTZBSYS_SUBSYS_CNTRL_REG3_subsys_pll_ready_delay_Pos));
 
     /* Unlock system for clock configuration */
-    CFG_REGS->CFG_SYSKEY = 0x00000000;
-    CFG_REGS->CFG_SYSKEY = 0xAA996655;
-    CFG_REGS->CFG_SYSKEY = 0x556699AA;
+    CFG_REGS->CFG_SYSKEY = 0x00000000U;
+    CFG_REGS->CFG_SYSKEY = 0xAA996655U;
+    CFG_REGS->CFG_SYSKEY = 0x556699AAU;
 
 
     /* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
@@ -122,10 +127,13 @@ void CLK_Initialize( void )
     /* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
     /* SPLLPOSTDIV2 = ${SPLLCON_SPLLPOSTDIV2_VALUE} */    
     /* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
-    CRU_REGS->CRU_${SPLLCON_REG} = 0x${SPLLCON_VALUE};
+    CRU_REGS->CRU_${SPLLCON_REG} = 0x${SPLLCON_VALUE}U;
 
     //wait for PLL Lock
-    while((BTZBSYS_REGS -> BTZBSYS_SUBSYS_STATUS_REG1 & 0x03) != 0x03);
+    while((BTZBSYS_REGS -> BTZBSYS_SUBSYS_STATUS_REG1 & 0x03U) != 0x03U)
+    {
+        /* Nothing to do */
+    }
 
     /* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
     /* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
@@ -140,8 +148,10 @@ void CLK_Initialize( void )
 
     CRU_REGS->CRU_OSCCONSET = CRU_OSCCON_OSWEN_Msk;  /* request oscillator switch to occur */
 
-    while(CRU_REGS->CRU_OSCCON & CRU_OSCCON_OSWEN_Msk);        /* wait for indication of successful clock change before proceeding */
-
+    while((CRU_REGS->CRU_OSCCON & CRU_OSCCON_OSWEN_Msk) != 0U)       /* wait for indication of successful clock change before proceeding */
+    {
+        /* Nothing to do */
+    }
 <#if CONFIG_SYS_CLK_PBDIV1 != 1>
     <#lt>    /* Peripheral Bus 1 is by default enabled, set its divisor */
     <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV1} */
@@ -240,19 +250,19 @@ void CLK_Initialize( void )
 </#if>
 
     /* Lock system since done with clock configuration */
-    CFG_REGS->CFG_SYSKEY = 0x33333333;
+    CFG_REGS->CFG_SYSKEY = 0x33333333U;
 
     // Change src_clk source to PLL CLK
-    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |= 0x00000010;
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |= 0x00000010U;
 
 <#if ZIGBEE_CLOCK_ENABLE == true>
     // set aclb_reset_n[24], bt_en_main_clk[20] zb_en_main_clk[4]
-    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 |= 0x01100010;
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 |= 0x01100010U;
 <#elseif BLE_CLOCK_ENABLE == true>
     // set aclb_reset_n[24], bt_en_main_clk[20]
-    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 |= 0x01100000;
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 |= 0x01100000U;
 <#else>
     // set aclb_reset_n[24]
-    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 |= 0x01000000;
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 |= 0x01000000U;
 </#if>
 }
