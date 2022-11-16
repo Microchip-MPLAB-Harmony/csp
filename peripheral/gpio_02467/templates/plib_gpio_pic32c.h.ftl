@@ -305,7 +305,7 @@ void GPIO_PinIntDisable(GPIO_PIN pin);
 
 bool GPIO_PinInterruptCallbackRegister(
     GPIO_PIN pin,
-    const   GPIO_PIN_CALLBACK callBack,
+    const GPIO_PIN_CALLBACK callback,
     uintptr_t context
 );
 </#if>

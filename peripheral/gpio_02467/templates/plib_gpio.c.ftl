@@ -448,7 +448,7 @@ void GPIO_PinIntEnable(GPIO_PIN pin, GPIO_INTERRUPT_STYLE style)
     uint32_t mask;
 
     port = (GPIO_PORT)(pin>>4U);
-    mask =  0x1U << (pin & 0xFU);
+    mask =  0x1UL << (pin & 0xFU);
 
     if (style == GPIO_INTERRUPT_ON_MISMATCH)
     {
@@ -487,7 +487,7 @@ void GPIO_PinIntDisable(GPIO_PIN pin)
     uint32_t mask;
     
     port = (GPIO_PORT)(pin>>4U);
-    mask =  0x1U << (pin & 0xFU);
+    mask =  0x1UL << (pin & 0xFU);
 
     *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
     *(volatile uint32_t *)(&CNNE${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;

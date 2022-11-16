@@ -42,6 +42,9 @@
 //DOM-IGNORE-END
 
 #include "plib_gpio.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 <#compress> <#-- To remove unwanted new lines -->
 
 <#-- Initialize variables -->
@@ -83,11 +86,11 @@
     <#assign portNumCbList = portNumCbList + [TOTAL_NUM_OF_INT_USED] >
 
     <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
+    <#lt>static GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <@compress single_line=true>
-        <#lt>uint8_t portNumCb[${GPIO_CHANNEL_TOTAL} + 1] = {
+        <#lt>static uint8_t portNumCb[${GPIO_CHANNEL_TOTAL} + 1] = {
                                                                 <#list portNumCbList as i>
                                                                     ${i},
                                                                 </#list>
@@ -258,7 +261,7 @@ void GPIO_Initialize ( void )
             </#if>
         </#if>
     </#list>
-    <#lt>    for(i=0U; i<${TOTAL_NUM_OF_INT_USED}; i++)
+    <#lt>    for(i=0U; i<${TOTAL_NUM_OF_INT_USED}U; i++)
     <#lt>    {
     <#lt>        portPinCbObj[i].callback = NULL;
     <#lt>    }
@@ -455,8 +458,8 @@ void GPIO_PinIntEnable(GPIO_PIN pin, GPIO_INTERRUPT_STYLE style)
     GPIO_PORT port;
     uint32_t mask;
 
-    port = (GPIO_PORT)(GPIOA_BASE_ADDRESS + (0x100 * (pin>>4)));
-    mask =  0x1 << (pin & 0xF);
+    port = (GPIO_PORT)(GPIOA_BASE_ADDRESS + (0x100U * (pin>>4)));
+    mask =  0x1UL << (pin & 0xFU);
 
     if (style == GPIO_INTERRUPT_ON_MISMATCH)
     {
@@ -477,6 +480,10 @@ void GPIO_PinIntEnable(GPIO_PIN pin, GPIO_INTERRUPT_STYLE style)
         ((gpio_registers_t*)port)->GPIO_CNENSET = mask;
         ((gpio_registers_t*)port)->GPIO_CNNESET = mask;
     }
+    else
+    {
+        /* Nothing to do */
+    }
 }
 
 // *****************************************************************************
@@ -494,8 +501,8 @@ void GPIO_PinIntDisable(GPIO_PIN pin)
     GPIO_PORT port;
     uint32_t mask;
     
-    port = (GPIO_PORT)(GPIOA_BASE_ADDRESS + (0x100 * (pin>>4)));
-    mask =  0x1 << (pin & 0xF);
+    port = (GPIO_PORT)(GPIOA_BASE_ADDRESS + (0x100U * (pin>>4)));
+    mask =  0x1UL << (pin & 0xFU);
 
     ((gpio_registers_t*)port)->GPIO_CNENCLR = mask;
     ((gpio_registers_t*)port)->GPIO_CNNECLR = mask;
@@ -523,9 +530,9 @@ bool GPIO_PinInterruptCallbackRegister(
     uint8_t i;
     uint8_t portIndex;
 
-    portIndex = pin >> 4;
+    portIndex = (uint8_t)(pin >> 4);
 
-    for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
+    for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1U]; i++)
     {
         if (portPinCbObj[i].pin == pin)
         {
@@ -570,9 +577,9 @@ void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
     GPIO${.vars[channel]}_REGS->GPIO_CNF = 0;
 
     /* Check pending events and call callback if registered */
-    for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}; i++)
+    for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}U; i++)
     {
-        if((status & (1 << (portPinCbObj[i].pin & 0xF))) && (portPinCbObj[i].callback != NULL))
+        if(((status & (1UL << (portPinCbObj[i].pin & 0xFU))) != 0U) && (portPinCbObj[i].callback != NULL))
         {
             portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
         }
@@ -591,9 +598,9 @@ void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
     GPIO${.vars[channel]}_REGS->GPIO_PORT;
 
     /* Check pending events and call callback if registered */
-    for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}; i++)
+    for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}U; i++)
     {
-        if((status & (1 << (portPinCbObj[i].pin & 0xF))) && (portPinCbObj[i].callback != NULL))
+        if((status & (1UL << (portPinCbObj[i].pin & 0xFU))) && (portPinCbObj[i].callback != NULL))
         {
             portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
         }
