@@ -240,7 +240,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
         if (id > CAN_MSG_SID_MASK)
         {
             txMessage->msgSID = (id & CAN_MSG_EID_MASK) >> 18;
-            txMessage->msgEID = ((id & 0x3FFFFUL) << 10) | CAN_MSG_IDE_MASK;
+            txMessage->msgEID = ((id & 0x3FFFFUL) << 10) | CAN_MSG_IDE_MASK | CAN_MSG_SRR_MASK;
         }
         else
         {
@@ -730,7 +730,7 @@ bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_
         if (id > CAN_MSG_SID_MASK) 
         {
             txMessage->msgSID = (id & CAN_MSG_EID_MASK) >> 18;
-            txMessage->msgEID = ((id & 0x3FFFFUL) << 10) | CAN_MSG_IDE_MASK;
+            txMessage->msgEID = ((id & 0x3FFFFUL) << 10) | CAN_MSG_IDE_MASK | CAN_MSG_SRR_MASK;
         }
         else
         {
