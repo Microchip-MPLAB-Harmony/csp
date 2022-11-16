@@ -140,12 +140,12 @@ void ${DMA_INSTANCE_NAME}_SINT_InterruptHandler( void )
     for (channel = 0U; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
     {
         /* Process events only channels that are active and has global interrupt enabled */
-        if ((1 == xdmacChObj->inUse) && xdmacChObj->isSecure && (${DMA_INSTANCE_NAME}_REGS->XDMAC_GIM & (XDMAC_GIM_IM0_Msk << channel)))
+        if ((1U == xdmacChObj->inUse) && (xdmacChObj->isSecure != false) && ((${DMA_INSTANCE_NAME}_REGS->XDMAC_GIM & (XDMAC_GIM_IM0_Msk << channel)) != 0U))
         {
             /* Read the interrupt status for the active DMA channel */
             chanIntStatus = ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[channel].XDMAC_CIS;
 
-            if (chanIntStatus & ( XDMAC_CIS_RBEIS_Msk | XDMAC_CIS_WBEIS_Msk | XDMAC_CIS_ROIS_Msk))
+            if ((chanIntStatus & ( XDMAC_CIS_RBEIS_Msk | XDMAC_CIS_WBEIS_Msk | XDMAC_CIS_ROIS_Msk)) != 0U)
             {
                 xdmacChObj->busyStatus = false;
 
@@ -155,7 +155,7 @@ void ${DMA_INSTANCE_NAME}_SINT_InterruptHandler( void )
                     xdmacChObj->callback(XDMAC_TRANSFER_ERROR, xdmacChObj->context);
                 }
             }
-            else if (chanIntStatus & XDMAC_CIS_BIS_Msk)
+            else if ((chanIntStatus & XDMAC_CIS_BIS_Msk) != 0U)
             {
                 xdmacChObj->busyStatus = false;
 
@@ -164,6 +164,10 @@ void ${DMA_INSTANCE_NAME}_SINT_InterruptHandler( void )
                 {
                     xdmacChObj->callback(XDMAC_TRANSFER_COMPLETE, xdmacChObj->context);
                 }
+            }
+            else
+            {
+                /* Nothing to do */
             }
         }
 
