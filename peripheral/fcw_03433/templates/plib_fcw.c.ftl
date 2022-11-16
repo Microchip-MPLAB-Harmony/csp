@@ -52,6 +52,7 @@
 #include "interrupts.h"
 </#if>
 #include "plib_${FCW_INSTANCE_NAME?lower_case}.h"
+#include "device_cache.h"
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -231,6 +232,13 @@ bool ${FCW_INSTANCE_NAME}_RowWrite( uint32_t *data, uint32_t address )
 	{
         /* Do Nothing */        
     }
+
+<#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >    
+    if (DATA_CACHE_IS_ENABLED())
+    {
+        DCACHE_CLEAN_BY_ADDR(data, ${FCW_INSTANCE_NAME}_FLASH_ROWSIZE);
+    }
+</#if>
 
     ${FCW_INSTANCE_NAME}_REGS->FCW_SRCADDR = (uint32_t )(data);
  
