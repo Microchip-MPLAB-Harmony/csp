@@ -275,7 +275,7 @@ void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectUnlock( uint32_t bootFlashPagesMs
     ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
 
     // Disable erase and write protection on the specified pages in bootFlashPagesMsk
-    NVM_REGS->NVM_NVMLBWPCLR = (bootFlashPagesMsk & (NVM_NVMLBWP_Msk & ~(0x80000000)));
+    NVM_REGS->NVM_NVMLBWPCLR = (bootFlashPagesMsk & (NVM_NVMLBWP_Msk & ~(0x80000000U)));
 
     __set_PRIMASK( old_primask );
 }
@@ -288,7 +288,7 @@ void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectLock( uint32_t bootFlashPagesMsk 
     ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
 
     // Enable erase and write protection on the specified pages in bootFlashPagesMsk
-    NVM_REGS->NVM_NVMLBWPSET = (bootFlashPagesMsk & (NVM_NVMLBWP_Msk & ~(0x80000000)));
+    NVM_REGS->NVM_NVMLBWPSET = (bootFlashPagesMsk & (NVM_NVMLBWP_Msk & ~(0x80000000U)));
 
     __set_PRIMASK( old_primask );
 }
