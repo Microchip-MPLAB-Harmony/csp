@@ -45,7 +45,9 @@
 // DOM-IGNORE-END
 
 #include "plib_${DMA_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
 #include "interrupts.h"
+</#if>
 
 <#assign DMA_INTERRUPT_ENABLED = false>
 <#list 0..NUM_DMA_CHANS - 1 as i>
