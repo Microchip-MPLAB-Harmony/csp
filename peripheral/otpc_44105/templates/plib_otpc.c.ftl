@@ -76,7 +76,7 @@
 #define OTPC_TDES_MODULE   3
 
 <#if ENABLE_OTPC_EMULATION>
-#define EMULATION_START     ${OTPC_EMULATION_ADDRESS}
+#define EMULATION_START     ${OTPC_EMULATION_ADDRESS}U
 #define EMULATION_SIZE      ${OTPC_EMULATION_SIZE}
 </#if>
 
@@ -103,17 +103,27 @@ static void otpc_fixup()
 
     timeout = TIMEOUT;
     *reg0 = 0x43910001;
-    while (!(${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_UNLOCK_Msk) && --timeout > 0);
+    while (((${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_UNLOCK_Msk) == 0U) && (--timeout > 0U))
+    {
+            /* Nothing to do */
+    }
 
     for (i = 0; i < ARRAY_SIZE(fixup_reg1); i++)
+    {
       reg1[i] = fixup_reg1[i];
+    }
 
     for (i = 0; i < ARRAY_SIZE(fixup_reg2); i++)
+    {
       reg2[i] = fixup_reg2[i];
+    }
 
     timeout = TIMEOUT;
     *reg0 = 0x43910000;
-    while ((${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_UNLOCK_Msk) && --timeout > 0);
+    while (((${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_UNLOCK_Msk) != 0U) && (--timeout > 0U))
+    {
+            /* Nothing to do */
+    }
 }
 
 </#if>
@@ -166,11 +176,15 @@ static otpc_error_code_t otp_trigger_packet_read(uint16_t hdr_addr, uint32_t *pc
     /* Wait for EOR bit in OTPC_ISR to be 1 (packet was transfered )*/
     isr_reg = otp_wait_isr(OTPC_ISR_EOR_Msk);
     if ((isr_reg & OTPC_ISR_EOR_Msk) == 0U)
+    {
         return OTPC_READING_DID_NOT_STOP;
+    }
 
     /* Read the header value from OTPC_HR */
     if (pckt_hdr != NULL)
+    {
         *pckt_hdr = ${OTPC_INSTANCE_NAME}_REGS->OTPC_HR;
+    }
 
     return OTPC_NO_ERROR;
 }
@@ -206,8 +220,8 @@ static otpc_error_code_t otp_set_type(OTPC_PACKET_TYPE type, uint32_t *pckt_hdr)
         break;
 
     default:
-        return OTPC_ERROR_BAD_HEADER;
-        break;
+        return OTPC_ERROR_BAD_HEADER; 
+        break;        
     }
 
     return OTPC_NO_ERROR;
@@ -216,7 +230,9 @@ static otpc_error_code_t otp_set_type(OTPC_PACKET_TYPE type, uint32_t *pckt_hdr)
 static otpc_error_code_t otp_set_payload_size(uint32_t size, uint32_t *pckt_hdr)
 {
     if ((size == 0U) || ((size & 3U)!= 0U))
+    {
         return OTPC_ERROR_BAD_HEADER;
+    }
 
     *pckt_hdr &= ~OTPC_HR_SIZE_Msk;
     *pckt_hdr |= OTPC_HR_SIZE((size >> 2U) - 1U);
@@ -229,7 +245,9 @@ static uint16_t otp_get_payload_size(uint32_t pckt_hdr)
     uint16_t pckt_size;
 
     pckt_size = (uint16_t)((pckt_hdr & OTPC_HR_SIZE_Msk) >> OTPC_HR_SIZE_Pos);
-    return (uint16_t)((uint32_t)(pckt_size + 1U) * sizeof(uint32_t));
+    
+    uint32_t temp_pck_size = (uint32_t)pckt_size + 1U;
+    return (uint16_t)(temp_pck_size * sizeof(uint32_t));
 }
 
 static otpc_error_code_t otp_set_new_packet_header(const OTPC_NEW_PACKET *pckt,
@@ -261,8 +279,8 @@ static otpc_error_code_t otp_trans_key(uint32_t key_bus_dest)
             break;
 
         default:
-            return OTPC_CANNOT_TRANSFER_KEY;
-            break;
+            return OTPC_CANNOT_TRANSFER_KEY;   
+            break;            
     }
     ${OTPC_INSTANCE_NAME}_REGS->OTPC_MR = (${OTPC_INSTANCE_NAME}_REGS->OTPC_MR & ~OTPC_MR_KBDST_Msk) | value;
 
@@ -272,7 +290,9 @@ static otpc_error_code_t otp_trans_key(uint32_t key_bus_dest)
     ${OTPC_INSTANCE_NAME}_REGS->OTPC_CR = OTPC_CR_KEY(OTPC_KEY_FOR_WRITING) | OTPC_CR_KBSTART_Msk;
     isr_reg = otp_wait_isr(OTPC_ISR_EOKT_Msk | isr_err);
     if (((isr_reg & OTPC_ISR_EOKT_Msk) == 0U) || ((isr_reg & isr_err) != 0U))
+    {
         return OTPC_CANNOT_TRANSFER_KEY;
+    }
     return OTPC_NO_ERROR;
 }
 
@@ -294,11 +314,15 @@ static otpc_error_code_t otp_emulation_mode(bool on_off)
     /* Wait for refreshing data */
     reg = otp_wait_isr(OTPC_ISR_EORF_Msk | isr_err);
     if (((reg & OTPC_ISR_EORF_Msk) == 0U) || ((reg & isr_err)!= 0U))
+    {
         return OTPC_CANNOT_REFRESH;
+    }
 
     /* Check if the Emulation mode state */
-    if ((!!(${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_EMUL_Msk)) ^ (!!on_off))
+    if (((!!(${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_EMUL_Msk)) ^ (!!on_off)) != 0)
+    {
         return OTPC_ERROR_CANNOT_ACTIVATE_EMULATION;
+    }
 
     return OTPC_NO_ERROR;
 }
@@ -327,10 +351,14 @@ otpc_error_code_t OTPC_LockPacket(uint16_t headerAddress)
 
     error = otp_trigger_packet_read(headerAddress, &hdr_value);
     if (error != OTPC_NO_ERROR)
+    {
         return error;
+    }
 
     if ((hdr_value & OTPC_HR_INVLD_Msk) == OTPC_HR_INVLD_Msk)
+    {
         return OTPC_ERROR_PACKET_IS_INVALID;
+    }
 
     /* dummy read on OTPC_ISR to clear pending interrupts */
     (void)${OTPC_INSTANCE_NAME}_REGS->OTPC_ISR;
@@ -341,7 +369,9 @@ otpc_error_code_t OTPC_LockPacket(uint16_t headerAddress)
     /* Wait for locking the packet */
     reg = otp_wait_isr(OTPC_ISR_EOL_Msk | isr_err);
     if (((reg & OTPC_ISR_EOL_Msk) == 0U) || ((reg & isr_err)!= 0U))
+    {
         return OTPC_CANNOT_LOCK;
+    }
 
     return OTPC_NO_ERROR;
 }
@@ -366,7 +396,9 @@ otpc_error_code_t OTPC_InvalidatePacket(uint16_t headerAddress)
     /* Wait for invalidating the packet */
     reg = otp_wait_isr(OTPC_ISR_EOI_Msk | isr_err);
     if ((0U == (reg & OTPC_ISR_EOI_Msk)) || (0U != (reg & isr_err)))
+    {
         return OTPC_CANNOT_INVALIDATE;
+    }
 
     return OTPC_NO_ERROR;
 }
@@ -389,7 +421,9 @@ otpc_error_code_t OTPC_HidePacket(uint16_t headerAddress)
 
     reg = otp_wait_isr(OTPC_ISR_EOH_Msk | isr_err);
     if (((reg & OTPC_ISR_EOH_Msk)== 0U) || ((reg & isr_err)!= 0U))
+    {
         return OTPC_CANNOT_PERFORM_HIDING;
+    }
 
     return OTPC_NO_ERROR;
 }
@@ -406,17 +440,25 @@ otpc_error_code_t OTPC_ReadPacket(  uint16_t headerAddress,
     uint32_t ar_reg;
 
     if ((${OTPC_INSTANCE_NAME}_REGS->OTPC_MR & OTPC_MR_RDDIS_Msk) != 0U)
+    {
         return  OTPC_CANNOT_START_READING;
+    }
 
     error = otp_trigger_packet_read(headerAddress, &hdr_value);
     if (error != OTPC_NO_ERROR)
+    {
         return error;
+    }
 
     if ((hdr_value & OTPC_HR_INVLD_Msk) == OTPC_HR_INVLD_Msk)
+    {
         return OTPC_ERROR_PACKET_IS_INVALID;
+    }
 
     if ((hdr_value & OTPC_HR_PACKET_Msk) == OTPC_HR_PACKET_KEY)
+    {
         return otp_trans_key(*readBuffer);
+    }
 
     /*
      * Read packet payload from offset 0:
@@ -433,7 +475,9 @@ otpc_error_code_t OTPC_ReadPacket(  uint16_t headerAddress,
     payload_size = otp_get_payload_size(hdr_value);
 
     if (payload_size > bufferSize)
+    {
         return OTPC_ERROR_BUFFER_OVERFLOW;
+    }
 
     *sizeRead = payload_size;
 
@@ -473,18 +517,24 @@ otpc_error_code_t OTPC_WritePacket(const OTPC_NEW_PACKET *packet,
 
     otpc_error_code_t error = otp_set_new_packet_header(packet, &hdr_value);
     if (error != OTPC_NO_ERROR)
+    {
         return error;
+    }
 
     backup_header_value = hdr_value;
     payload_size = otp_get_payload_size(hdr_value);
     backup_size = payload_size;
 
     if (payload_size > OTPC_MAX_PAYLOAD_ALLOWED)
+    {
         return OTPC_PACKET_TOO_BIG;
+    }
 
     /* Check against the hardware write disable */
     if ((${OTPC_INSTANCE_NAME}_REGS->OTPC_MR & OTPC_MR_WRDIS_Msk) != 0U)
+    {
         return OTPC_ERROR_HW_WRITE_DISABLED;
+    }
 
     if ((hdr_value & OTPC_HR_PACKET_Msk) == OTPC_HR_PACKET_KEY) {
         is_key = true;
@@ -493,9 +543,11 @@ otpc_error_code_t OTPC_WritePacket(const OTPC_NEW_PACKET *packet,
     }
 
     /* Set MR_ADDR to its maximum value then read packet */
-    error = otp_trigger_packet_read(~0, NULL);
+    error = otp_trigger_packet_read(~((uint16_t)0), NULL);
     if (error != OTPC_NO_ERROR)
+    {
         return error;
+    }
 
     /* There is "1" */
     if ((${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_ONEF_Msk) != 0U)
@@ -640,10 +692,14 @@ otpc_error_code_t OTPC_UpdatePayload(uint16_t headerAddress, const uint32_t * pa
 
     error = otp_trigger_packet_read(headerAddress, &hdr_value);
     if (error != OTPC_NO_ERROR)
+    {
         return error;
+    }
 
     if ((hdr_value & OTPC_HR_INVLD_Msk) == OTPC_HR_INVLD_Msk)
+    {
         return OTPC_ERROR_PACKET_IS_INVALID;
+    }
 
     /*
      * Write packet payload from offset 0:
@@ -675,7 +731,9 @@ otpc_error_code_t OTPC_UpdatePayload(uint16_t headerAddress, const uint32_t * pa
     /* Programming without errors */
     reg = otp_wait_isr(OTPC_ISR_EOP_Msk | isr_err);
     if (((reg & OTPC_ISR_EOP_Msk) == 0U) || ((reg & isr_err) != 0U))
+    {
         return OTPC_CANNOT_START_PROGRAMMING;
+    }
 
     return OTPC_NO_ERROR;
 }
