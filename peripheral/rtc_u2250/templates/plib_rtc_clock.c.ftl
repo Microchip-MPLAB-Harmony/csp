@@ -55,7 +55,6 @@
 #include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
 #include <stdlib.h>
 
-
 /* Reference Year */
 #define REFERENCE_YEAR              (${RTC_MODE2_REFERENCE_YEAR}U)
 
@@ -148,17 +147,16 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction)
     <#lt>{
-    <#lt>    uint32_t newCorrectionValue = 0U;
-    <#lt>
-    <#lt>    newCorrectionValue = (uint32_t)abs(correction);
-    <#lt>
+    <#lt>    uint8_t abs_correction  = (((uint8_t)correction & 0x80U) != 0U) ? \
+    <#lt>            ((0xFFU - (uint8_t)correction) + 0x1U) : (uint8_t)correction;
+
     <#lt>    /* Convert to positive value and adjust Register sign bit. */
     <#lt>    if (correction < 0)
     <#lt>    {
-    <#lt>        newCorrectionValue |= RTC_FREQCORR_SIGN_Msk;
+    <#lt>        abs_correction |= RTC_FREQCORR_SIGN_Msk;
     <#lt>    }
 
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_FREQCORR = (uint8_t)newCorrectionValue;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_FREQCORR = abs_correction;
 
     <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_FREQCORR_Msk) == RTC_MODE2_SYNCBUSY_FREQCORR_Msk)
     <#lt>    {
@@ -225,7 +223,7 @@ void ${RTC_INSTANCE_NAME}_RTCCClockSyncDisable ( void )
 		/* Wait for Synchronization */
 	}
 }
-	
+
 void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 {
     uint32_t dataClockCalendar = 0U;
@@ -234,13 +232,13 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 	if ((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA & RTC_MODE2_CTRLA_CLOCKSYNC_Msk) == 0U)
 	{
 		${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_CLOCKSYNC_Msk;
-	
+
 		while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
 		{
 			/* Wait for Synchronization */
 		}
 	}
-			
+
     while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCK_Msk) == RTC_MODE2_SYNCBUSY_CLOCK_Msk)
     {
         /* Synchronization before reading value from CLOCK Register */
@@ -256,11 +254,11 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
     currentTime->tm_sec = (int)timeMask;
 
     timeMask = ADJUST_TM_STRUCT_MONTH(((dataClockCalendar & RTC_MODE2_CLOCK_MONTH_Msk) >> RTC_MODE2_CLOCK_MONTH_Pos));
-    currentTime->tm_mon  = (int)timeMask; 
+    currentTime->tm_mon  = (int)timeMask;
     timeMask = (((dataClockCalendar & RTC_MODE2_CLOCK_YEAR_Msk)>> RTC_MODE2_CLOCK_YEAR_Pos) + REFERENCE_YEAR) - TM_STRUCT_REFERENCE_YEAR;
-    currentTime->tm_year = (int)timeMask; 
+    currentTime->tm_year = (int)timeMask;
     timeMask = (dataClockCalendar & RTC_MODE2_CLOCK_DAY_Msk) >> RTC_MODE2_CLOCK_DAY_Pos;
-    currentTime->tm_mday = (int)timeMask; 
+    currentTime->tm_mday = (int)timeMask;
 }
 <#if TAMP_DETECTION_SUPPORTED??>
     <#if TAMP_DETECTION_SUPPORTED>
@@ -296,9 +294,9 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
         <#lt>   timeMask = ADJUST_TM_STRUCT_MONTH(((dataClockCalendar & RTC_MODE2_TIMESTAMP_MONTH_Msk) >> RTC_MODE2_TIMESTAMP_MONTH_Pos));
         <#lt>   timeStamp->tm_mon  = (int)timeMask;
         <#lt>   timeMask = (((dataClockCalendar & RTC_MODE2_TIMESTAMP_YEAR_Msk)>> RTC_MODE2_TIMESTAMP_YEAR_Pos) + REFERENCE_YEAR) - TM_STRUCT_REFERENCE_YEAR;
-        <#lt>   timeStamp->tm_year = (int)timeMask; 
+        <#lt>   timeStamp->tm_year = (int)timeMask;
         <#lt>   timeMask = (dataClockCalendar & RTC_MODE2_TIMESTAMP_DAY_Msk) >> RTC_MODE2_TIMESTAMP_DAY_Pos;
-        <#lt>   timeStamp->tm_mday = (int)timeMask; 
+        <#lt>   timeStamp->tm_mday = (int)timeMask;
         <#lt>}
     </#if>
 </#if>

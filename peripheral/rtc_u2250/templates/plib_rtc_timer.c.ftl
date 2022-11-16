@@ -46,7 +46,6 @@
 </#if>
 #include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
 #include <stdlib.h>
-#include <limits.h>
 
 <#if ( RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0" ) ||
      ( RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ) >
@@ -189,22 +188,16 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 <#if RTC_FREQCORR >
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction)
     <#lt>{
-    <#lt>    uint32_t newCorrectionValue = 0;
+    <#lt>    uint8_t abs_correction  = (((uint8_t)correction & 0x80U) != 0U) ? \
+    <#lt>            ((0xFFU - (uint8_t)correction) + 0x1U) : (uint8_t)correction;
 
-    <#lt>    int32_t temp_val = correction;
-
-    <#lt>    if(temp_val > INT_MIN)
-    <#lt>    {
-    <#lt>        newCorrectionValue = (uint32_t)abs(temp_val);
-    <#lt>    }
-
-    <#lt>    /* Convert to positive value and adjust register sign bit. */
+    <#lt>    /* Convert to positive value and adjust Register sign bit. */
     <#lt>    if (correction < 0)
     <#lt>    {
-    <#lt>        newCorrectionValue |= RTC_FREQCORR_SIGN_Msk;
+    <#lt>        abs_correction |= RTC_FREQCORR_SIGN_Msk;
     <#lt>    }
 
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_FREQCORR = (uint8_t)newCorrectionValue;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_FREQCORR = abs_correction;
     <#lt>    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_SYNCBUSY & RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_FREQCORR_Msk) == RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_FREQCORR_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after writing Value to FREQCORR */
