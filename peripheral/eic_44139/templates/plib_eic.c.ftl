@@ -52,16 +52,16 @@
 #include "plib_${EIC_INSTANCE_NAME?lower_case}.h"
 
 #define EIC_SCFGR_POL_Pos                    8U                                             
-#define EIC_SCFGR_POL_Msk                    (1U << EIC_SCFGR_POL_Pos) 
+#define EIC_SCFGR_POL_Msk                    (1UL << EIC_SCFGR_POL_Pos) 
 
 #define EIC_SCFGR_LVL_Pos                    9U                                  
-#define EIC_SCFGR_LVL_Msk                    (1U << EIC_SCFG0R_LVL_Pos) 
+#define EIC_SCFGR_LVL_Msk                    (1UL << EIC_SCFG0R_LVL_Pos) 
 
 #define EIC_SCFGR_EN_Pos                     16U                                              
-#define EIC_SCFGR_EN_Msk                     (1U << EIC_SCFGR_EN_Pos)
+#define EIC_SCFGR_EN_Msk                     (1UL << EIC_SCFGR_EN_Pos)
 
 #define EIC_SCFGR_FRZ_Pos                    31U                                              
-#define EIC_SCFGR_FRZ_Msk                    (1U << EIC_SCFGR_FRZ_Pos)
+#define EIC_SCFGR_FRZ_Msk                    (1UL << EIC_SCFGR_FRZ_Pos)
 
 
 static struct
