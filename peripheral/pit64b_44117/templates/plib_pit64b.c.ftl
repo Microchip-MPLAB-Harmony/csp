@@ -41,6 +41,9 @@
 
 #include <stddef.h>
 #include "plib_${PIT64B_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define ${PIT64B_INSTANCE_NAME}_COUNTER_FREQUENCY (${SRC_FREQ}U / ${PRESCALER + 1}U)
 
