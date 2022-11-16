@@ -418,7 +418,7 @@ flexcomSym_SPI_FIFOEnable.setDependencies(fifoModeVisible, ["FLEXCOM_MODE", "SPI
 # Slave mode TX Buffer Size
 flexcomSym_TXBuffer_Size = flexcomComponent.createIntegerSymbol("FLEXCOM_SPIS_TX_BUFFER_SIZE", flexcomSym_OperatingMode)
 flexcomSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
-flexcomSym_TXBuffer_Size.setMin(0)
+flexcomSym_TXBuffer_Size.setMin(1)
 flexcomSym_TXBuffer_Size.setMax(65535)
 flexcomSym_TXBuffer_Size.setDefaultValue(256)
 flexcomSym_TXBuffer_Size.setVisible(False)
@@ -427,7 +427,7 @@ flexcomSym_TXBuffer_Size.setDependencies(showSlaveDependencies, ["FLEXCOM_MODE",
 # Slave mode RX Buffer Size
 flexcomSym_RXBuffer_Size = flexcomComponent.createIntegerSymbol("FLEXCOM_SPIS_RX_BUFFER_SIZE", flexcomSym_OperatingMode)
 flexcomSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
-flexcomSym_RXBuffer_Size.setMin(0)
+flexcomSym_RXBuffer_Size.setMin(1)
 flexcomSym_RXBuffer_Size.setMax(65535)
 flexcomSym_RXBuffer_Size.setDefaultValue(256)
 flexcomSym_RXBuffer_Size.setVisible(False)

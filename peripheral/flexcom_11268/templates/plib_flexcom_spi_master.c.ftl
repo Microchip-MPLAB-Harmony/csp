@@ -214,19 +214,24 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
         }
 
         /* Make sure TDR is empty */
-        while((bool)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk) >> FLEX_SPI_SR_TDRE_Pos) == false);
+        while((bool)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk) >> FLEX_SPI_SR_TDRE_Pos) == false)
+        {
+            /* Nothing to do */
+        }
 
-        while ((txCount != txSize) || (dummySize != 0))
+        while ((txCount != txSize) || (dummySize != 0U))
         {
             if (txCount != txSize)
             {
                 if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
                 {
-                    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = ((uint8_t*)pTransmitData)[txCount++];
+                    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = ((uint8_t*)pTransmitData)[txCount];
+                    txCount++;
                 }
                 else
                 {
-                    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = ((uint16_t*)pTransmitData)[txCount++];
+                    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = ((uint16_t*)pTransmitData)[txCount];
+                    txCount++;
                 }
             }
             else if (dummySize > 0U)
@@ -241,17 +246,25 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
                 }
                 dummySize--;
             }
+            else
+            {
+                /* Nothing to do */
+            }
 
             if (rxSize == 0U)
             {
                 /* For transmit only request, wait for TDR to become empty */
-                while((bool)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk) >> FLEX_SPI_SR_TDRE_Pos) == false);
+                while((bool)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk) >> FLEX_SPI_SR_TDRE_Pos) == false)
+                {
+                    /* Nothing to do */
+                }
             }
             else
             {
                 /* If data is read, wait for the Receiver Data Register to become full*/
                 while((bool)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_RDRF_Msk) >> FLEX_SPI_SR_RDRF_Pos) == false)
                 {
+                    /* Nothing to do */
                 }
 
                 receivedData = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_RDR & FLEX_SPI_RDR_RD_Msk) >> FLEX_SPI_RDR_RD_Pos;
@@ -260,18 +273,23 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
                 {
                     if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
                     {
-                        ((uint8_t*)pReceiveData)[rxCount++] = receivedData;
+                        ((uint8_t*)pReceiveData)[rxCount] = (uint8_t)receivedData;
+                        rxCount++;
                     }
                     else
                     {
-                        ((uint16_t*)pReceiveData)[rxCount++] = receivedData;
+                        ((uint16_t*)pReceiveData)[rxCount] = (uint16_t)receivedData;
+                        rxCount++;
                     }
                 }
             }
         }
 
         /* Make sure no data is pending in the shift register */
-        while ((bool)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TXEMPTY_Msk) >> FLEX_SPI_SR_TXEMPTY_Pos) == false);
+        while ((bool)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TXEMPTY_Msk) >> FLEX_SPI_SR_TXEMPTY_Pos) == false)
+        {
+            /* Nothing to do */
+        }
 
         /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
         ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_LASTXFER_Msk;
@@ -465,7 +483,8 @@ static uint8_t ${FLEXCOM_INSTANCE_NAME}_SPI_FIFO_Fill(void)
         {
             if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize)
             {
-                FLEXCOM_SPI_TDR_8BIT_REG =  ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount++];
+                FLEXCOM_SPI_TDR_8BIT_REG =  ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount];
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount++;
             }
             else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize > 0U)
             {
@@ -481,7 +500,8 @@ static uint8_t ${FLEXCOM_INSTANCE_NAME}_SPI_FIFO_Fill(void)
         {
             if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize)
             {
-                FLEXCOM_SPI_TDR_9BIT_REG =  ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount++];
+                FLEXCOM_SPI_TDR_9BIT_REG =  ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount];
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount++;
             }
             else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize > 0U)
             {
@@ -985,11 +1005,13 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     {
         if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
         {
-            ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount++] = FLEXCOM_SPI_RDR_8BIT_REG;
+            ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount] = FLEXCOM_SPI_RDR_8BIT_REG;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount++;
         }
         else
         {
-            ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount++] = FLEXCOM_SPI_RDR_9BIT_REG;
+            ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount] = FLEXCOM_SPI_RDR_9BIT_REG;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount++;
         }
     }
 

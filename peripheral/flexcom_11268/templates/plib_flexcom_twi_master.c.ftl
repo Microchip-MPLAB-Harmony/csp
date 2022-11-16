@@ -115,9 +115,9 @@ void ${FLEXCOM_INSTANCE_NAME}_TWI_Initialize(void)
     // Set Baud rate
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_CWGR = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_CWGR & FLEX_TWI_CWGR_HOLD_Msk)  |
                                                     FLEX_TWI_CWGR_BRSRCCLK_${FLEXCOM_TWI_CWGR_BRSRCCLK} |
-                                                    (FLEX_TWI_CWGR_CLDIV(${FLEXCOM_TWI_CWGR_CLDIV}U) |
-                                                     FLEX_TWI_CWGR_CHDIV(${FLEXCOM_TWI_CWGR_CHDIV}U) |
-                                                     FLEX_TWI_CWGR_CKDIV(${FLEXCOM_TWI_CWGR_CKDIV}U));
+                                                    (FLEX_TWI_CWGR_CLDIV(${FLEXCOM_TWI_CWGR_CLDIV}) |
+                                                     FLEX_TWI_CWGR_CHDIV(${FLEXCOM_TWI_CWGR_CHDIV}) |
+                                                     FLEX_TWI_CWGR_CKDIV(${FLEXCOM_TWI_CWGR_CKDIV}));
 
     // Starts the transfer by clearing the transmit hold register
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_CR = FLEX_TWI_CR_THRCLR_Msk;
@@ -508,7 +508,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setu
             cldiv = (srcClkFreq /(2U * i2cClkSpeed)) - 3U;
             <#else>
             /* Calculate CLDIV with CKDIV set to 0 */
-            cldiv = (srcClkFreq /(2 * i2cClkSpeed));
+            cldiv = (srcClkFreq /(2U * i2cClkSpeed));
             </#if>
 
             /* CLDIV must fit within 8-bits and CKDIV must fit within 3-bits */
