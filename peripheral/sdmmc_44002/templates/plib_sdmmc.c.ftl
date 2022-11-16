@@ -54,6 +54,7 @@
 #include "device.h"
 #include "plib_${SDMMC_INSTANCE_NAME?lower_case}.h"
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Include Files
@@ -61,6 +62,9 @@
 // *****************************************************************************
 
 #include "plib_sdmmc_common.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define ${SDMMC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES              ${SDMMC_NUM_DESCRIPTOR_LINES}U
 #define ${SDMMC_INSTANCE_NAME}_HCLOCK_FREQUENCY                 ${SDMMC_HCLOCK_FREQ}U
