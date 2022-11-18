@@ -117,6 +117,7 @@ peripheral_ID_map = {
     "FREQM_03707"  : "FREQM_U2257",
     "FREQM_04703"  : "FREQM_U2257",
     "PAC_04701"    : "PAC_U2120",
+    "PAC_03585"    : "PAC_U2120",
     "PDEC_03604"   : "PDEC_U2263",
     "PTC_03721"    : "PTC_U2215",
     "QSPI_04708"   : "QSPI_U2008",

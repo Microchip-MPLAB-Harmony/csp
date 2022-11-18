@@ -33,6 +33,8 @@ global InterruptVectorUpdate
 global pdecInstanceName
 global interruptDepList
 interruptDepList = []
+global InterruptVectorSecurity
+InterruptVectorSecurity = []
 global eventDepList     #List to calculate EVCTRL value for QDEC mode
 eventDepList = []
 global eventHallDepList  #List to calculate EVCTRL value for HALL mode
@@ -41,6 +43,8 @@ global eventCounterDepList  #List to calculate EVCTRL value for COUNTER mode
 eventCounterDepList = []
 global eventConfigureList  #List to update EVSYS PLIB symbols
 eventConfigureList = []
+global PDECfilesArray
+PDECfilesArray = []
 interrupt_val = 0x0
 evsys_val = 0x0
 pin_val = 0x7
@@ -49,6 +53,40 @@ pin_inv_val = 0x00
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+def fileUpdate(symbol, event):
+    global PDECfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        PDECfilesArray[0].setSecurity("SECURE")
+        PDECfilesArray[1].setSecurity("SECURE")
+        PDECfilesArray[2].setSecurity("SECURE")
+        PDECfilesArray[3].setSecurity("SECURE")
+        PDECfilesArray[4].setSecurity("SECURE")
+        PDECfilesArray[5].setSecurity("SECURE")
+        PDECfilesArray[6].setSecurity("SECURE")
+        PDECfilesArray[7].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        PDECfilesArray[8].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, False)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        PDECfilesArray[0].setSecurity("NON_SECURE")
+        PDECfilesArray[1].setSecurity("NON_SECURE")
+        PDECfilesArray[2].setSecurity("NON_SECURE")
+        PDECfilesArray[3].setSecurity("NON_SECURE")
+        PDECfilesArray[4].setSecurity("NON_SECURE")
+        PDECfilesArray[5].setSecurity("NON_SECURE")
+        PDECfilesArray[6].setSecurity("NON_SECURE")                
+        PDECfilesArray[7].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        PDECfilesArray[8].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, True)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, True)
+
 def updateCodeGenerationProperty(symbol, event):
     component = symbol.getComponent()
 
@@ -417,6 +455,7 @@ def instantiateComponent(pdecComponent):
     global InterruptHandler
     global InterruptHandlerLock
     global InterruptVectorUpdate
+    global InterruptVectorSecurity
     InterruptVectorUpdate = []
     global eventDepList
     global eventHallDepList
@@ -853,6 +892,17 @@ def instantiateComponent(pdecComponent):
             InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
             InterruptVectorUpdate.append(
                 "core." + name + "_INTERRUPT_ENABLE_UPDATE")
+            InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
+
+    # Confiure secure/non-secure interrupt
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        pdecIsNonSecure = Database.getSymbolValue("core", pdecComponent.getID().upper() + "_IS_NON_SECURE")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, pdecIsNonSecure)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity[0], pdecIsNonSecure)  
+
 
     pdecSym_IntLines = pdecComponent.createIntegerSymbol("PDEC_NUM_INT_LINES", None)
     pdecSym_IntLines.setVisible(False)
@@ -967,3 +1017,29 @@ def instantiateComponent(pdecComponent):
     pdecSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     pdecSym_SystemDefFile.setSourcePath("../peripheral/pdec_u2263/templates/system/definitions.h.ftl")
     pdecSym_SystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global PDECfilesArray
+        pdecIsNonSecure = Database.getSymbolValue("core", pdecComponent.getID().upper() + "_IS_NON_SECURE")
+        PDECfilesArray.append(pdecSym_CommonHeaderFile)
+        PDECfilesArray.append(pdecSym_QdecHeaderFile)
+        PDECfilesArray.append(pdecSym_QdecSourceFile)
+        PDECfilesArray.append(pdecSym_HallHeaderFile)
+        PDECfilesArray.append(pdecSym_HallSourceFile)
+        PDECfilesArray.append(pdecSym_CounterHeaderFile)
+        PDECfilesArray.append(pdecSym_CounterSourceFile)
+        PDECfilesArray.append(pdecSym_SystemInitFile)
+        PDECfilesArray.append(pdecSym_SystemDefFile)        
+
+        if pdecIsNonSecure == False:
+            pdecSym_CommonHeaderFile.setSecurity("SECURE")
+            pdecSym_QdecHeaderFile.setSecurity("SECURE")
+            pdecSym_QdecSourceFile.setSecurity("SECURE")
+            pdecSym_HallHeaderFile.setSecurity("SECURE")
+            pdecSym_HallSourceFile.setSecurity("SECURE")
+            pdecSym_CounterHeaderFile.setSecurity("SECURE")
+            pdecSym_CounterSourceFile.setSecurity("SECURE")
+            pdecSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            pdecSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+        pdecSym_SystemDefFile.setDependencies(fileUpdate, ["core." + pdecComponent.getID().upper() + "_IS_NON_SECURE"])
