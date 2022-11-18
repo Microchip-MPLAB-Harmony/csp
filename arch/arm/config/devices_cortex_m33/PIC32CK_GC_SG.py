@@ -116,19 +116,19 @@ fuseSettings.setDefaultValue(True)
 
 global fuseMapSymbol
 fuseMapSymbol = {}
-default = [0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, #FUSES_USERCFG1
+default = [0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0x1, 0xFFFE, 0xFFFF             , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF ,             0xFFFF, 0xFFFF , 0xFFFF,#FUSES_USERCFG1
            0, 0, 0, 0, 0, 0, 0, 0xFFFFFFFF, 1, 0x3, 1, 0x3, 1, 0x3, 1, 0x3, 1, 0xF, 0xF, 0x3, 1, 0x0, 1, 0, 0, 0, 0, 0x202, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xFFFFFFFF, 0xFFFFFFFF,
            0, 0, 0, 0, 1, 1, 0x1, 0xFFFE, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,                                                      #FUSES_BOOTCFG1
            0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
            0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
            0xFFFFFFFF, 0x706, 0xFCF04, 0x707F736, 0x3A86, 0x3FF, 0x3F, 0xBF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-           2, 2,                                                                                                                                                                                                                                           #FUSES_DALCFG
+           2, 2,              #FUSES_DALCFG
            0x0, 0xFFFF, 0x0, 0xFFFF, 0x0, 0xFFFF, 0x0, 0xFFFF, 0x0, 0xFFFF, 0x0, 0xFFFF, 0x0, 0xFFFF, 0x0, 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, 0xFFFF , 0xFFFF, #FUSES_USERCFG2
            0, 1, 1, 0, 0, 0, 0, 0xFFFFFFFF, 1, 0x3, 1, 0x3, 1, 0x3, 1, 0x3, 1, 0xF, 0xF, 0x3, 1, 0x0, 1, 0, 0, 0, 0, 0x202, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xFFFFFFFF, 0xFFFFFFFF,
            0, 0, 0, 0, 1, 1, 0x0, 0xFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,                                                      #FUSES_BOOTCFG2
            0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
            0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-           0xFFFFFFFF, 0x706, 0xFCF04, 0x707F736, 0x3A86, 0x3FF, 0x3F, 0xBF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,]
+           0xFFFFFFFF, 0x706, 0xFCF04, 0x707F736, 0x3A86, 0x3FF, 0x3F, 0xBF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,]    
 numfuses = 0
 
 global memoryFuseMaxValue
@@ -170,12 +170,19 @@ for group in range(0, len(registerGroup)):
                             keyValueSymbol.setDefaultValue(default[numfuses])
                             keyValueSymbol.setOutputMode("Key")
                             keyValueSymbol.setDisplayMode("Description")
+                            if ("ANSC" in key) or ("BNSC" in key):
+                                memoryFuseMaxValue[key] = [int(getMaxValue(mask)), getDefaultVal(str(default[numfuses]), mask), caption]
+                                hexSymbol.setVisible(False)
                         else:
                             hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
                             hexSymbol.setLabel(caption)
                             hexSymbol.setMin(0)
                             hexSymbol.setMax(getMaxValue(mask))
                             hexSymbol.setDefaultValue(default[numfuses])
+                            # we will handle memory assignment and peripheral assignment using trustzone manager creating  abstraction over fuses
+                            if ("ANS" in key) or ("RNS" in key):
+                                memoryFuseMaxValue[key] = [int(getMaxValue(mask)), getDefaultVal(str(default[numfuses]), mask), caption]
+                                hexSymbol.setVisible(False)
                     else:
                         valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/value-group@[name=\"" + valueGroup + "\"]"
                         valueGroupNode = ATDF.getNode(valueGroupPath)
@@ -222,9 +229,9 @@ fuse.setVisible(False)
 
 if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
     systemResourcesList = ["GCLK", "OSC32KCTRL", "OSCCTRL", "MCLK", "IDAU"]
-    mixSecurePeripheralList = ["EIC", "EVSYS", "NVMCTRL", "PAC", "PORT"]
+    mixSecurePeripheralList = ["EIC", "EVSYS", "FCR", "FCW", "PAC", "PORT"]
     # Setup TrustZone Manager
-    execfile(Variables.get("__CORE_DIR") + "/config/trustZoneManager.py")
+    execfile(Variables.get("__CORE_DIR") + "/config/trustZone/trustZoneManager.py")
 
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")

@@ -162,7 +162,7 @@ if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_E
     systemResourcesList = ["GCLK", "OSC32KCTRL", "OSCCTRL", "MCLK", "IDAU"]
     mixSecurePeripheralList = ["EIC", "EVSYS", "NVMCTRL", "PAC", "PORT"]
     # Setup TrustZone Manager
-    execfile(Variables.get("__CORE_DIR") + "/config/trustZoneManager.py")
+    execfile(Variables.get("__CORE_DIR") + "/config/trustZone/trustZoneManager.py")
 
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")

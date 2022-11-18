@@ -21,38 +21,53 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
-
+#Fuse settings for memory attributes
 def setUpMemFuse(symbol, event):
     global fuseMapSymbol
-    Database.setSymbolValue("core", fuseMapSymbol[event["id"].split("_SIZE")[0]], long(event["value"]))
+    fuseKey = event["id"].split("_")[1]   #extract region name
 
+    for key in fuseMapSymbol.keys():
+        if '_' in key and key.split("_")[-1] == fuseKey:
+            value = Database.getSymbolValue("core", fuseMapSymbol[key])
+            value = (event["value"])
+            if fuseKey == "ANSC" or fuseKey == "BNSC":
+                Database.setSymbolValue("core", fuseMapSymbol[key], int(value))
+            else:
+                Database.setSymbolValue("core", fuseMapSymbol[key], long(value))
+
+# Fuse settings for peripheral attributes
 def setUpFuse(symbol, event):
     global fuseMapSymbol
+    global family
+    global nonsecPeriphrals
+
+    bitPos = int(nonsecPeriphrals[event["id"].split("_IS_NON_SECURE")[0]])
+    if bitPos < 32:
+        fuseKey = "NONSECA" 
+    elif bitPos < 64:
+        fuseKey = "NONSECB"
+    elif bitPos < 96:
+        fuseKey = "NONSECC"
+    else:
+        fuseKey = "NONSECAHB"
     for key in fuseMapSymbol.keys():
-        if '_' in key and key.split("_")[1] == event["id"].split("_IS_NON_SECURE")[0]:
-            if event["value"]:
-                Database.setSymbolValue("core", fuseMapSymbol[key], 1)
-            else:
-                Database.setSymbolValue("core", fuseMapSymbol[key], 0)
+        if fuseKey in key:
+            if '_' in key and key.split("_")[-1] == fuseKey:
+                value = (Database.getSymbolValue("core", fuseMapSymbol[key]))
+                if event["value"] == True:
+                    value = value | (1 << (bitPos%32))
+                else:
+                    value = value & ~(1 << (bitPos%32))
+                Database.setSymbolValue("core", fuseMapSymbol[key], long(value))
+
 
 def nonSecStartAddressCalculate(symbol, value):
     global memoryGranularity
     asSize = int(Database.getSymbolValue("core", "IDAU_AS_SIZE"))
-    bootProtSize = int(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE"))
-
-    symbol.setValue( (asSize * memoryGranularity["IDAU_AS"] ) + (bootProtSize * memoryGranularity["IDAU_BOOTPROT"]))
-
-def secStartAddressCalculate(symbol, value):
-    global memoryGranularity
-    bootProtSize = int(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE"))
-
-    symbol.setValue(bootProtSize * memoryGranularity["IDAU_BOOTPROT"])
-
-def updateGenSecureBootsymbol(symbol, event):
-    if event["value"] == 0:
-        symbol.setVisible(False)
-    else:
-        symbol.setVisible(True)
+    anscSize = int(Database.getSymbolValue("core", "IDAU_ANSC_SIZE"))
+    start = int(Database.getSymbolValue("core", "SEC_START_ADDRESS"))
+    symbol.setValue( start + (asSize * memoryGranularity["IDAU_AS"] ) 
+                        + (anscSize * memoryGranularity["IDAU_ANSC"] ))
 
 def updateSecureEnabledState(symbol, event):
     symbol.setEnabled(not event["value"])
@@ -90,6 +105,41 @@ def updateSecureBootSettings(symbol, event):
     elif id == "XC32_LINKER_LIBRARY_":
         symbol.setValue( "-l:" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + SecureBoot + "_sg_veneer.lib")
 
+def calculateANSSize(symbol, event):
+    symbol.setValue("ANS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_ANS_SIZE") * int(memoryGranularity["IDAU_ANS"]))).replace("L", ""))
+def calculateANSCSize(symbol, event):
+    symbol.setValue("ANSC_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_ANSC_SIZE") * int(memoryGranularity["IDAU_ANSC"]))).replace("L", ""))
+def calculateRNSSize(symbol, event):
+    symbol.setValue("RNS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_RNS_SIZE") * int(memoryGranularity["IDAU_RNS"]))).replace("L", ""))
+def calculateBootProtSize(symbol, event):
+    symbol.setValue("BOOTPROT_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE") * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
+def calculateBNSCSize(symbol, event):
+    symbol.setValue("BNSC_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_BNSC_SIZE") * int(memoryGranularity["IDAU_BNSC"]))).replace("L", ""))
+def calculateBSSize(symbol, event):
+    symbol.setValue("BS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_BS_SIZE") * int(memoryGranularity["IDAU_BS"]))).replace("L", ""))
+
+def asSizeCalculate(symbol, event):
+    global maxFlashSize
+    value = maxFlashSize.getValue() \
+    - (Database.getSymbolValue("core", "IDAU_ANS_SIZE") * int(memoryGranularity["IDAU_ANS"])) \
+    - (Database.getSymbolValue("core", "IDAU_ANSC_SIZE") * int(memoryGranularity["IDAU_ANSC"]))
+    symbol.setValue((value / int(memoryGranularity["IDAU_AS"])) - 1)
+
+def rsSizeCalculate(symbol, event):
+    global maxRamSize
+    value = maxRamSize.getValue() \
+        - (Database.getSymbolValue("core", "IDAU_RNS_SIZE") * int(memoryGranularity["IDAU_RNS"]))
+    symbol.setValue((value / int(memoryGranularity["IDAU_RS"])) - 1)
+
+def bsSizeCalculate(symbol, event):
+    global bootprot_size
+    value = bootprot_size.getValue() \
+        - (Database.getSymbolValue("core", "IDAU_BNSC_SIZE") * int(memoryGranularity["IDAU_BNSC"]))
+    symbol.setValue((value / int(memoryGranularity["IDAU_BS"])) - 1)    
+###################################################################################################
+########################################## Configurations  #############################################
+###################################################################################################
+
 global fuseMapSymbol
 global fusedependencyList
 fusedependencyList = []
@@ -98,9 +148,13 @@ memoryfusedependencyList = []
 global memoryFuseMaxValue
 global memoryGranularity
 memoryGranularity = {}
+global family
+global nonsecPeriphrals
+global maxFlashSize
+global maxRamSize
+global bootprot_size
+#################################### Peripheral configuration menu #######################################
 
-trustZoneMenu = coreComponent.createMenuSymbol("TRUSTZONE_MENU", devCfgMenu)
-trustZoneMenu.setLabel('Arm\xae TrustZone\xae for Armv8-M') #Arm® TrustZone® for Armv8-M
 trustZonePeripheralMenu = coreComponent.createMenuSymbol("TZ_PERIPHERAL_MENU", trustZoneMenu)
 trustZonePeripheralMenu.setLabel("Peripherals")
 trustZoneMixSecurePeripheralMenu = coreComponent.createMenuSymbol("TZ_MIX_SECURE_PERIPHERAL_MENU", trustZoneMenu)
@@ -111,50 +165,67 @@ trustZoneSystemResourcesMenu.setLabel("System Resources")
 dummyList = coreComponent.createListSymbol( "NULL_LIST",       None )
 peripheralList = coreComponent.createListEntrySymbol("TRUSTZONE_PERIPHERAL_LIST", None)
 peripheralList.setVisible(False)
-#Sort peripheral list in alphabetical order
-for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_")[1] if '_' in arg[0] else arg[0]):
+
+nonsecPeriphrals = {}
+
+# create peripheral list from PAC_ID
+node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
+peripherals = node.getChildren()
+for peripheral in range(0,len(peripherals)):
+    instances = peripherals[peripheral].getChildren()
+    for instance in range (0, len(instances)):
+        options = instances[instance].getChildren()
+        for option in range (0, len(options)):
+            if "parameters" == options[option].getName():
+                parameters = options[option].getChildren()
+                for parameter in range(0, len(parameters)):
+                    if "name" in parameters[parameter].getAttributeList():  
+                        if "PAC_ID" in parameters[parameter].getAttribute("name"):
+                            nonsecPeriphrals[instances[instance].getAttribute("name")] = parameters[parameter].getAttribute("value")
+for key, value in sorted(nonsecPeriphrals.items()):
     trustZonePeripheralSubmenu = trustZonePeripheralMenu
-    if key.startswith("NONSEC") and key.split("_")[1] in mixSecurePeripheralList:
+    if key in mixSecurePeripheralList:
         trustZonePeripheralSubmenu = trustZoneMixSecurePeripheralMenu
-    elif key.startswith("NONSEC") and key.split("_")[1] in systemResourcesList:
+    elif key in systemResourcesList:
         trustZonePeripheralSubmenu = trustZoneSystemResourcesMenu
-    if key.startswith("NONSEC") and key.split("_")[1]:
-        peripheralIsNonSecure = coreComponent.createBooleanSymbol(key.split("_")[1] + "_IS_NON_SECURE", trustZonePeripheralSubmenu)
-        peripheralIsNonSecure.setLabel(key.split("_")[1] + " is Non-Secure")
-        peripheralList.addValue(key.split("_")[1])
-        fusedependencyList.append(key.split("_")[1] + "_IS_NON_SECURE")
-        if ((key.startswith("NONSEC") and key.split("_")[1] in mixSecurePeripheralList) or
-            (key.startswith("NONSEC") and key.split("_")[1] in systemResourcesList)):
-            peripheralIsNonSecure.setReadOnly(True)
-        if key.startswith("NONSEC") and key.split("_")[1] == "DSU":
-            peripheralIsNonSecure.setDefaultValue(True)
-            peripheralIsNonSecure.setReadOnly(True)
-            Database.setSymbolValue("core", fuseMapSymbol[key], 1)
+    peripheralIsNonSecure = coreComponent.createBooleanSymbol(key + "_IS_NON_SECURE", trustZonePeripheralSubmenu)
+    peripheralIsNonSecure.setLabel(key + " is Non-Secure")
+    peripheralList.addValue(key)
+    fusedependencyList.append(key + "_IS_NON_SECURE")
+    if ((key in mixSecurePeripheralList) or (key in systemResourcesList)):
+        peripheralIsNonSecure.setReadOnly(True)
+    if key == "DSU":
+        peripheralIsNonSecure.setValue(True)
+        peripheralIsNonSecure.setReadOnly(True)
+        #Database.setSymbolValue("core", fuseMapSymbol[key], 1)
 peripheralList.setTarget("core.NULL_LIST")
 
 fuseUpdateCallback = coreComponent.createBooleanSymbol("DUMMY_SYMBOL_CALLBACK", None)
 fuseUpdateCallback.setVisible(False)
 fuseUpdateCallback.setDependencies(setUpFuse, fusedependencyList)
 
-memoryMenu = coreComponent.createMenuSymbol("MEMORY_MENU", devCfgMenu)
-memoryMenu.setLabel("Memory Configuration")
+
+####################################### Memory Configuration menu ################################################
 
 idauNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"IDAU\"]/instance@[name=\"IDAU\"]/parameters")
 for parameter in idauNode.getChildren():
     if "GRANULARITY_AS" in parameter.getAttribute("name"):
         memoryGranularity["IDAU_AS"] = int(parameter.getAttribute("value"), 16)
-    elif "GRANULARITY_ANSC" in parameter.getAttribute("name"):
+    if "GRANULARITY_ANS" in parameter.getAttribute("name"):
+        memoryGranularity["IDAU_ANS"] = int(parameter.getAttribute("value"), 16) 
+    if "GRANULARITY_ANSC" in parameter.getAttribute("name"):
         memoryGranularity["IDAU_ANSC"] = int(parameter.getAttribute("value"), 16)
-    elif "GRANULARITY_RS" in parameter.getAttribute("name"):
+    if "GRANULARITY_RS" in parameter.getAttribute("name"):
         memoryGranularity["IDAU_RS"] = int(parameter.getAttribute("value"), 16)
-    elif "GRANULARITY_BS" in parameter.getAttribute("name"):
+    if "GRANULARITY_RNS" in parameter.getAttribute("name"):
+        memoryGranularity["IDAU_RNS"] = int(parameter.getAttribute("value"), 16)            
+    if "GRANULARITY_BS" in parameter.getAttribute("name"):
         memoryGranularity["IDAU_BS"] = int(parameter.getAttribute("value"), 16)
-    elif "GRANULARITY_BNSC" in parameter.getAttribute("name"):
+    if "GRANULARITY_BNSC" in parameter.getAttribute("name"):
         memoryGranularity["IDAU_BNSC"] = int(parameter.getAttribute("value"), 16)
-    elif "GRANULARITY_DS" in parameter.getAttribute("name"):
-        memoryGranularity["IDAU_DS"] = int(parameter.getAttribute("value"), 16)
-    elif "GRANULARITY_BOOTPROT" in parameter.getAttribute("name"):
+    if "GRANULARITY_BOOTPROT" in parameter.getAttribute("name"):
         memoryGranularity["IDAU_BOOTPROT"] = int(parameter.getAttribute("value"), 16)
+
 
 addr_space          = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space")
 addr_space_children = addr_space.getChildren()
@@ -162,82 +233,134 @@ addr_space_children = addr_space.getChildren()
 for mem_idx in range(0, len(addr_space_children)):
     mem_seg     = addr_space_children[mem_idx].getAttribute("name")
 
-    if (mem_seg == "FLASH"):
+    if (mem_seg == "FLASH_PFM"):
         maxFlashSize = coreComponent.createIntegerSymbol("DEVICE_FLASH_SIZE", None)
         maxFlashSize.setVisible(False)
         maxFlashSize.setDefaultValue(int(addr_space_children[mem_idx].getAttribute("size"), 16))
+        sec_start_address = int(addr_space_children[mem_idx].getAttribute("start"), 16)
 
-    if (mem_seg == "HSRAM"):
+    if (mem_seg == "HSRAM_RET"):
         maxRamSize = coreComponent.createIntegerSymbol("DEVICE_RAM_SIZE", None)
         maxRamSize.setVisible(False)
         maxRamSize.setDefaultValue(int(addr_space_children[mem_idx].getAttribute("size"), 16))
 
-    if (mem_seg == "DATAFLASH"):
-        maxDataflashSize = coreComponent.createIntegerSymbol("DEVICE_DATAFLASH_SIZE", None)
-        maxDataflashSize.setVisible(False)
-        maxDataflashSize.setDefaultValue(int(addr_space_children[mem_idx].getAttribute("size"), 16))
+    if (mem_seg == "FLASH_BFM"):
+        bootprot_size = coreComponent.createIntegerSymbol("DEVICE_BOOTPROT_SIZE", None)
+        bootprot_size.setVisible(False)
+        bootprot_size.setDefaultValue(int(addr_space_children[mem_idx].getAttribute("size"), 16))
+        bootprot_sec_start_address = int(addr_space_children[mem_idx].getAttribute("start"), 16)
+
+maxDataflashSize = coreComponent.createIntegerSymbol("DEVICE_DATAFLASH_SIZE", None)
+maxDataflashSize.setVisible(False)
+maxDataflashSize.setDefaultValue(0)    
 
 for key in memoryFuseMaxValue.keys():
-    asSizeSymbol = coreComponent.createKeyValueSetSymbol( str(key) + "_SIZE", memoryMenu)
-    asSizeSymbol.setLabel(memoryFuseMaxValue[key][2] + " size")
-    for val in range(0, (memoryFuseMaxValue[key][0] + 1)):
-        size = val * memoryGranularity[key]
-        if key == "IDAU_DS" and size > maxDataflashSize.getValue():
-            break
+    asSizeSymbol = coreComponent.createKeyValueSetSymbol( "IDAU_" + str(key) + "_SIZE", memoryMenu)
+    asSizeSymbol.setLabel("IDAU " + str(key) + " SIZE" )
+    for val in range(0, int(memoryFuseMaxValue[key][0]) + 1):
+        size = val * memoryGranularity["IDAU_" + key]
         sizeString = str(size) + " Bytes"
         asSizeSymbol.addKey(sizeString, str(hex(int(size))), '{:,}'.format(size) + " Bytes")
-    asSizeSymbol.setDefaultValue(memoryFuseMaxValue[key][1])
+    asSizeSymbol.setDefaultValue((int(memoryFuseMaxValue[key][1])))  #initval
     asSizeSymbol.setOutputMode("Key")
     asSizeSymbol.setDisplayMode("Description")
-    memoryfusedependencyList.append(str(key) + "_SIZE")
-    if key == "IDAU_BOOTPROT":
-        generateSecureBootMainFile = coreComponent.createBooleanSymbol("GENERATE_SECURE_BOOT_MAIN_FILE", asSizeSymbol)
-        generateSecureBootMainFile.setLabel("Generate Secure Boot Main Source File")
-        generateSecureBootMainFile.setDefaultValue(False)
-        generateSecureBootMainFile.setVisible(False)
-        generateSecureBootMainFile.setDependencies(updateGenSecureBootsymbol, [str(key) + "_SIZE"])
+    asSizeSymbol.setVisible(True)
+    memoryfusedependencyList.append("IDAU_" + str(key) + "_SIZE")
 
     asGranularitySymbol =  coreComponent.createIntegerSymbol( str(key) + "_GRANULARITY", memoryMenu)
     asGranularitySymbol.setVisible(False)
-    asGranularitySymbol.setDefaultValue(memoryGranularity[key])
+    asGranularitySymbol.setDefaultValue(memoryGranularity["IDAU_" + key])
+
+# AS Size
+asSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_AS_SIZE", memoryMenu)
+asSizeSymbol.setLabel("IDAU AS size") 
+key = 0
+for val in range(0, (int(memoryFuseMaxValue["ANS"][0]) + 1)):
+    size = val * memoryGranularity["IDAU_ANS"]
+    sizeString = str(size) + " Bytes"
+    asSizeSymbol.addKey(sizeString, str(hex(int(size))), '{:,}'.format(size) + " Bytes")
+    key = key + 1
+asSizeSymbol.setDefaultValue(key - int(memoryFuseMaxValue["ANS"][1]) - int(memoryFuseMaxValue["ANSC"][1]) - 1)
+asSizeSymbol.setOutputMode("Key")
+asSizeSymbol.setDisplayMode("Description")
+asSizeSymbol.setReadOnly(True)   
+asSizeSymbol.setDependencies(asSizeCalculate, ["IDAU_ANSC_SIZE", "IDAU_ANS_SIZE"])
+
+#RS Size
+rsSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_RS_SIZE", memoryMenu)
+rsSizeSymbol.setLabel("IDAU RS size")
+key = 0 
+for val in range(0, int(memoryFuseMaxValue["RNS"][0]) + 1):
+    size = val * memoryGranularity["IDAU_RNS"]
+    sizeString = str(size) + " Bytes"
+    rsSizeSymbol.addKey(sizeString, str(hex(int(size))), '{:,}'.format(size) + " Bytes")
+    key = key + 1
+rsSizeSymbol.setDefaultValue(key - int(memoryFuseMaxValue["RNS"][1]) - 1)
+rsSizeSymbol.setOutputMode("Key")
+rsSizeSymbol.setDisplayMode("Description")
+rsSizeSymbol.setReadOnly(True)
+rsSizeSymbol.setDependencies(rsSizeCalculate, ["IDAU_RNS_SIZE"])
+
+#BNSC
+#TODO This symbol will get generated from ATDF when fuse is updated
+bnscSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_BNSC_SIZE", memoryMenu)
+bnscSizeSymbol.setLabel("IDAU BNSC size")       
+for val in range(0, 2):
+    size = val * memoryGranularity["IDAU_BOOTPROT"]
+    sizeString = str(size) + " Bytes"
+    bnscSizeSymbol.addKey(sizeString, str(hex(int(size))), '{:,}'.format(size) + " Bytes")
+bnscSizeSymbol.setDefaultValue(0)
+bnscSizeSymbol.setOutputMode("Key")
+bnscSizeSymbol.setDisplayMode("Description")
+
+#BS
+bsSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_BS_SIZE", memoryMenu)
+bsSizeSymbol.setLabel("IDAU BS size")       
+for val in range(0, (int(bootprot_size.getValue()) / memoryGranularity["IDAU_BOOTPROT"] )):
+    size = val * memoryGranularity["IDAU_BOOTPROT"]
+    sizeString = str(size) + " Bytes"
+    bsSizeSymbol.addKey(sizeString, str(hex(int(size))), '{:,}'.format(size) + " Bytes")
+bsSizeSymbol.setDefaultValue(int(bootprot_size.getValue()) / memoryGranularity["IDAU_BOOTPROT"] - 1)
+bsSizeSymbol.setOutputMode("Key")
+bsSizeSymbol.setDisplayMode("Description")
+bsSizeSymbol.setReadOnly(True)
+bsSizeSymbol.setDependencies(bsSizeCalculate, ["IDAU_BNSC_SIZE"])
+
+#BOORPROT 
+bootSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_BOOTPROT_SIZE", memoryMenu)
+bootSizeSymbol.setLabel("IDAU BOOTPROT size")       
+bootSizeSymbol.addKey(str(bootprot_size.getValue()), str(hex(int(bootprot_size.getValue()))), str(bootprot_size.getValue()) + " Bytes")
+bootSizeSymbol.setDefaultValue(0)
+bootSizeSymbol.setOutputMode("Key")
+bootSizeSymbol.setDisplayMode("Description")
+bootSizeSymbol.setReadOnly(True)  
+bootSizeSymbol.setVisible(False)
+
+generateSecureBootMainFile = coreComponent.createBooleanSymbol("GENERATE_SECURE_BOOT_MAIN_FILE", memoryMenu)
+generateSecureBootMainFile.setLabel("Generate Secure Boot Main Source File")
+generateSecureBootMainFile.setDefaultValue(False)
+generateSecureBootMainFile.setVisible(True)
 
 memfuseUpdateCallback = coreComponent.createBooleanSymbol("DUMMY_MEM_SYMBOL_CALLBACK", None)
 memfuseUpdateCallback.setVisible(False)
 memfuseUpdateCallback.setDependencies(setUpMemFuse, memoryfusedependencyList)
 
-Database.setSymbolValue("core", "IDAU_AS_SIZE", maxFlashSize.getValue() / (memoryGranularity["IDAU_AS"] * 2) )
-Database.setSymbolValue("core", "IDAU_RS_SIZE", maxRamSize.getValue() / (memoryGranularity["IDAU_RS"] * 2) )
-Database.setSymbolValue("core", "IDAU_ANSC_SIZE", 512 / (memoryGranularity["IDAU_ANSC"]) )
-
 nonSecStartAddress = coreComponent.createHexSymbol("NON_SEC_START_ADDRESS", None)
 nonSecStartAddress.setVisible(False)
-nonSecStartAddress.setDefaultValue((int(Database.getSymbolValue("core", "IDAU_AS_SIZE")) * memoryGranularity["IDAU_AS"])
-                                 + (int(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE")) * memoryGranularity["IDAU_BOOTPROT"]))
-nonSecStartAddress.setDependencies(nonSecStartAddressCalculate, ["IDAU_AS_SIZE", "IDAU_BOOTPROT_SIZE"])
+nonSecStartAddress.setDefaultValue(int(sec_start_address) 
+            + (int(Database.getSymbolValue("core", "IDAU_AS_SIZE")) * memoryGranularity["IDAU_AS"])
+            + (int(Database.getSymbolValue("core", "IDAU_ANSC_SIZE")) * memoryGranularity["IDAU_ANSC"]))
+nonSecStartAddress.setDependencies(nonSecStartAddressCalculate, ["IDAU_AS_SIZE", "IDAU_ANSC_SIZE"])
 
 secStartAddress = coreComponent.createHexSymbol("SEC_START_ADDRESS", None)
 secStartAddress.setVisible(False)
-secStartAddress.setDefaultValue(int(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE")) * memoryGranularity["IDAU_BOOTPROT"])
-secStartAddress.setDependencies(secStartAddressCalculate, ["IDAU_BOOTPROT_SIZE"])
+secStartAddress.setDefaultValue(sec_start_address)
 
-secSystemDefinitionsHeadersList =      coreComponent.createListSymbol( "LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES",       None )
-secsystemIntHandlerdeclsList =         coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_SECURE_HANDLER_DECLS",       None)
-secsystemIntVectorsMultipleHandlesList =   coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_MULTIPLE_HANDLERS",  None )
-secsystemIntVectorsWeakHandlesList =       coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_WEAK_HANDLERS",      None )
-secsystemIntVectorsHandlesList =           coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_HANDLERS",           None )
-secSystemInitStaticFuncList =          coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_INITIALIZER_STATIC_FUNCTIONS",  None )
+bootprotStartAddress = coreComponent.createHexSymbol("BOOTPROT_SEC_START_ADDRESS", None)
+bootprotStartAddress.setVisible(False)
+bootprotStartAddress.setDefaultValue(bootprot_sec_start_address)
 
-secsystemInitFuseList =        coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_CONFIG_BITS_INITIALIZATION",    None )
-secsystemInitStart1List =      coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START1",         None )
-secsystemInitStartList =       coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START",          None )
-secsystemInitCoreList =        coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_CORE",           None )
-secsystemInitPeripheral1List = coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS1",   None )
-secsystemInitCore1List =       coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_CORE1",          None )
-secsystemInitPeripheralList =  coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS",    None )
-secsystemInterruptEnableList = coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_INTERRUPTS",    None )
-
-BspSecureHeaderIncludeList   = coreComponent.createListSymbol( "LIST_BSP_MACRO_SECURE_INCLUDES",    None )
-BspSecureInitList            = coreComponent.createListSymbol( "LIST_BSP_SECURE_INITIALIZATION",    None )
+########################## Code Generation and Linker #################################################
 
 secdefHeaderFile = coreComponent.createFileSymbol("SECURE_DEFINITIONS_H", None)
 secdefHeaderFile.setSourcePath("templates/trustZone/definitions_secure.h.ftl")
@@ -338,18 +461,6 @@ nonsecureEntryHeaderFile.setProjectPath("trustZone/")
 nonsecureEntryHeaderFile.setType("HEADER")
 nonsecureEntryHeaderFile.setDependencies(updateSecureBootSettings, ["GENERATE_SECURE_BOOT_MAIN_FILE", "IDAU_ANSC_SIZE", "IDAU_BNSC_SIZE"])
 
-def calculateASSize(symbol, event):
-    symbol.setValue("AS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
-def calculateANSCSize(symbol, event):
-    symbol.setValue("ANSC_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_ANSC"]) * int(memoryGranularity["IDAU_ANSC"]))).replace("L", ""))
-def calculateRSSize(symbol, event):
-    symbol.setValue("RS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
-def calculateBootProtSize(symbol, event):
-    symbol.setValue("BOOTPROT_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
-def calculateBNSCSize(symbol, event):
-    symbol.setValue("BNSC_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BNSC"]) * int(memoryGranularity["IDAU_BNSC"]))).replace("L", ""))
-def calculateBSSize(symbol, event):
-    symbol.setValue("BS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BS"]) * int(memoryGranularity["IDAU_BS"]))).replace("L", ""))
 
 # for Secure Project
 # set Linker Macros required for XC32
@@ -362,48 +473,48 @@ xc32LinkerMacroSecure.setSecurity("SECURE")
 xc32LinkerMacroSecure.setDependencies(updateSecureEnabledState, ["GENERATE_SECURE_BOOT_MAIN_FILE"])
 
 # set Linker Macros required for XC32
-xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_AS_SIZE", None)
+xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_ANS_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("AS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
+xc32LinkerMacro.setValue("ANS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_ANS_SIZE") * int(memoryGranularity["IDAU_ANS"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";=")
-xc32LinkerMacro.setDependencies(calculateASSize, [fuseMapSymbol["IDAU_AS"]])
+xc32LinkerMacro.setDependencies(calculateANSSize, ["IDAU_ANS_SIZE"])
 xc32LinkerMacro.setSecurity("SECURE")
 
 # set Linker Macros required for XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_ANSC_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("ANSC_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_ANSC"]) * int(memoryGranularity["IDAU_ANSC"]))).replace("L", ""))
+xc32LinkerMacro.setValue("ANSC_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_ANSC_SIZE") * int(memoryGranularity["IDAU_ANSC"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";=")
-xc32LinkerMacro.setDependencies(calculateANSCSize, [fuseMapSymbol["IDAU_ANSC"]])
+xc32LinkerMacro.setDependencies(calculateANSCSize, ["IDAU_ANSC_SIZE"])
 xc32LinkerMacro.setSecurity("SECURE")
 
 # set Linker Macros required for XC32
-xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RS_SIZE", None)
+xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RNS_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("RS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
+xc32LinkerMacro.setValue("RNS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_RNS_SIZE") * int(memoryGranularity["IDAU_RNS"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";=")
-xc32LinkerMacro.setDependencies(calculateRSSize, [fuseMapSymbol["IDAU_RS"]])
+xc32LinkerMacro.setDependencies(calculateRNSSize, ["IDAU_RNS_SIZE"])
 xc32LinkerMacro.setSecurity("SECURE")
 
 # set Linker Macros required for XC32
-xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_BOOTPROT_SIZE", None)
+""" xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_BOOTPROT_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("BOOTPROT_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
+xc32LinkerMacro.setValue("BOOTPROT_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE") * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";=")
-xc32LinkerMacro.setDependencies(calculateBootProtSize, [fuseMapSymbol["IDAU_BOOTPROT"]])
-xc32LinkerMacro.setSecurity("SECURE")
+xc32LinkerMacro.setDependencies(calculateBootProtSize, ["IDAU_BOOTPROT_SIZE"])
+xc32LinkerMacro.setSecurity("SECURE") """
 
 # set Linker Macros required for XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_BNSC_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("BNSC_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BNSC"]) * int(memoryGranularity["IDAU_BNSC"]))).replace("L", ""))
+xc32LinkerMacro.setValue("BNSC_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_BNSC_SIZE") * int(memoryGranularity["IDAU_BNSC"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";=")
-xc32LinkerMacro.setDependencies(calculateBNSCSize, [fuseMapSymbol["IDAU_BNSC"]])
+xc32LinkerMacro.setDependencies(calculateBNSCSize, ["IDAU_BNSC_SIZE"])
 xc32LinkerMacro.setSecurity("SECURE")
 
 # set Linker Macros required for BS (Boot Secure) Size
@@ -412,9 +523,9 @@ for key in memoryFuseMaxValue.keys():
         xc32LinkerMacroSecureBootSize = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_SECURE_BS", None)
         xc32LinkerMacroSecureBootSize.setCategory("C32-LD")
         xc32LinkerMacroSecureBootSize.setKey("preprocessor-macros")
-        xc32LinkerMacroSecureBootSize.setValue("BS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BS"]) * int(memoryGranularity["IDAU_BS"]))).replace("L", ""))
+        xc32LinkerMacroSecureBootSize.setValue("BS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_BS_SIZE") * int(memoryGranularity["IDAU_BS"]))).replace("L", ""))
         xc32LinkerMacroSecureBootSize.setAppend(True, ";=")
-        xc32LinkerMacroSecureBootSize.setDependencies(calculateBSSize, [fuseMapSymbol["IDAU_BS"]])
+        xc32LinkerMacroSecureBootSize.setDependencies(calculateBSSize, ["IDAU_BS_SIZE"])
         xc32LinkerMacroSecureBootSize.setSecurity("SECURE")
         break
 
@@ -430,28 +541,28 @@ xc32LinkerMacroSecureBootloader.setSecurity("SECURE")
 
 #For Non Secure
 # set Linker Macros required for XC32
-xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_AS_SIZE_NON_SECURE", None)
+xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_ANS_SIZE_NON_SECURE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("AS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
+xc32LinkerMacro.setValue("ANS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_ANS_SIZE") * int(memoryGranularity["IDAU_ANS"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";=")
-xc32LinkerMacro.setDependencies(calculateASSize, [fuseMapSymbol["IDAU_AS"]])
+xc32LinkerMacro.setDependencies(calculateANSSize, ["IDAU_ANS_SIZE"])
 
 # set Linker Macros required for XC32
-xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RS_SIZE_NON_SECURE", None)
+xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RNS_SIZE_NON_SECURE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("RS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
+xc32LinkerMacro.setValue("RNS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_RNS_SIZE") * int(memoryGranularity["IDAU_RNS"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";=")
-xc32LinkerMacro.setDependencies(calculateRSSize, [fuseMapSymbol["IDAU_RS"]])
+xc32LinkerMacro.setDependencies(calculateRNSSize, ["IDAU_RNS_SIZE"])
 
 # set Linker Macros required for XC32
-xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_BOOTPROT_SIZE_NON_SECURE", None)
+""" xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_BOOTPROT_SIZE_NON_SECURE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("BOOTPROT_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
+xc32LinkerMacro.setValue("BOOTPROT_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE") * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";=")
-xc32LinkerMacro.setDependencies(calculateBootProtSize, [fuseMapSymbol["IDAU_BOOTPROT"]])
+xc32LinkerMacro.setDependencies(calculateBootProtSize, ["IDAU_BOOTPROT_SIZE"]) """
 
 # set Linker Macros required for XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_NON_SECURE", None)
@@ -552,5 +663,3 @@ secexceptSourceFile.setProjectPath("config/" + configName + "/")
 secexceptSourceFile.setType("SOURCE")
 secexceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "ADVANCED_EXCEPTION" ] )
 secexceptSourceFile.setSecurity("SECURE")
-
-coreComponent.addPlugin("../arch/config/plugin/trustzone_manager.jar")
