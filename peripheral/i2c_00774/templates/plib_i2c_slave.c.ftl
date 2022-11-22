@@ -49,6 +49,9 @@
 // *****************************************************************************
 #include "device.h"
 #include "plib_${I2C_INSTANCE_NAME?lower_case}_slave.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -130,6 +133,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 {
     uint32_t i2c_addr;
     uint8_t sdaValue = 0U;
+    uint32_t i2c_stat_read = 0u;
 
     /* ACK the slave interrupt */
     ${I2C_SLAVE_IFS_REG}CLR = _${I2C_SLAVE_IFS_REG}_${I2C_INSTANCE_NAME}SIF_MASK;
@@ -253,7 +257,8 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
         /* Master reads from slave, slave transmits */
         if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_R_W_MASK) != 0U)
         {
-            if (((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U) && ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U))
+            i2c_stat_read = ${I2C_INSTANCE_NAME}STAT;
+            if (((i2c_stat_read & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U) && ((i2c_stat_read & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U))
             {
                 if (${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                 {
