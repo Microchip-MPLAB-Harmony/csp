@@ -64,7 +64,6 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-
 typedef enum
 {
 <#list 0..(SYS_GPBR_REGISTER - 1) as i>
@@ -72,6 +71,7 @@ typedef enum
 
 </#list>
 } GPBR_REGS_INDEX;
+<#if CPU_CORE_ID?? && CPU_CORE_ID == 0>
 
 typedef enum
 {
@@ -99,11 +99,13 @@ typedef struct
 } SUPC_OBJECT;
 
 </#if>
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
+<#if CPU_CORE_ID?? && CPU_CORE_ID == 0>
 
 void ${SUPC_INSTANCE_NAME}_Initialize(void);
 
@@ -113,13 +115,16 @@ void ${SUPC_INSTANCE_NAME}_WaitModeEnter(WAITMODE_FLASH_STATE flash_lpm, WAITMOD
 
 void ${SUPC_INSTANCE_NAME}_BackupModeEnter(void);
 
+<#if SUPC_IER_VDD3V3SMEV || SUPC_IER_VBATSMEV || SUPC_IER_LPDBC0 || SUPC_IER_LPDBC1 || SUPC_IER_LPDBC2 || SUPC_IER_LPDBC3 || SUPC_IER_LPDBC4>
+void ${SUPC_INSTANCE_NAME}_CallbackRegister(SUPC_CALLBACK callback, uintptr_t context);
+
+</#if>
+</#if>
 uint32_t ${SUPC_INSTANCE_NAME}_GPBRRead(GPBR_REGS_INDEX reg);
 
 void ${SUPC_INSTANCE_NAME}_GPBRWrite(GPBR_REGS_INDEX reg, uint32_t data);
 
-<#if SUPC_IER_VDD3V3SMEV || SUPC_IER_VBATSMEV || SUPC_IER_LPDBC0 || SUPC_IER_LPDBC1 || SUPC_IER_LPDBC2 || SUPC_IER_LPDBC3 || SUPC_IER_LPDBC4>
-void ${SUPC_INSTANCE_NAME}_CallbackRegister(SUPC_CALLBACK callback, uintptr_t context);
-</#if>
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
