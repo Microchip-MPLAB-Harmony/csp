@@ -40,6 +40,9 @@
 
 #include "device.h"
 #include "plib_${SDHC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 
 // *****************************************************************************
@@ -143,11 +146,11 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
 
     if ((nistr & _SDHCINTSTAT_CARDIIF_MASK) != 0U)
     {
-        xferStatus |= (SDHC_XFER_STATUS)SDHC_XFER_STATUS_CARD_INSERTED;
+        xferStatus |= SDHC_XFER_STATUS_CARD_INSERTED;
     }
     if ((nistr & _SDHCINTSTAT_CARDRIF_MASK) != 0U)
     {
-        xferStatus |= (SDHC_XFER_STATUS)SDHC_XFER_STATUS_CARD_REMOVED;
+        xferStatus |= SDHC_XFER_STATUS_CARD_REMOVED;
     }
     </#if>
 
@@ -166,7 +169,7 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
                 }
             }
             ${SDHC_INSTANCE_NAME?lower_case}Obj.isCmdInProgress = false;
-            xferStatus |= (SDHC_XFER_STATUS)SDHC_XFER_STATUS_CMD_COMPLETED;
+            xferStatus |= SDHC_XFER_STATUS_CMD_COMPLETED;
         }
     }
 
@@ -189,14 +192,14 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
                 ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus &= ~_SDHCINTSTAT_DTOEIF_MASK;
             }
             ${SDHC_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
-            xferStatus |= (SDHC_XFER_STATUS)SDHC_XFER_STATUS_DATA_COMPLETED;
+            xferStatus |= SDHC_XFER_STATUS_DATA_COMPLETED;
         }
     }
 
     /* Clear normal interrupt and error status bits that have been processed */
     ${SDHC_INSTANCE_NAME}INTSTAT = (nistr | eistr);
 
-    if ((${SDHC_INSTANCE_NAME?lower_case}Obj.callback != NULL) && ((uint32_t)xferStatus > 0))
+    if ((${SDHC_INSTANCE_NAME?lower_case}Obj.callback != NULL) && (xferStatus > 0U))
     {
         ${SDHC_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, ${SDHC_INSTANCE_NAME?lower_case}Obj.context);
     }
@@ -432,7 +435,7 @@ bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t speed)
     ${SDHC_INSTANCE_NAME}CON2 = ((${SDHC_INSTANCE_NAME}CON2 & ~_SDHCCON2_SDCLKDIV_MASK) | ((divs & 0xFFU) << 8));
 
     /* Bits 7-6 Upper bits of sdclock frequency select */
-    ${SDHC_INSTANCE_NAME}CON2 = ((${SDHC_INSTANCE_NAME}CON2 & ~(0x000000C0)) | (((divs & 0x3FFU) >> 8) << 6));
+    ${SDHC_INSTANCE_NAME}CON2 = ((${SDHC_INSTANCE_NAME}CON2 & ~(0x000000C0U)) | (((divs & 0x3FFU) >> 8) << 6));
 
     /* Enable internal clock */
     ${SDHC_INSTANCE_NAME}CON2 |= _SDHCCON2_ICLKEN_MASK;
