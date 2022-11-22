@@ -220,7 +220,7 @@ void ${PWM_INSTANCE_NAME}_Initialize (void)
                 <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_CMR = PWM_CMR_DTE_Msk;
             </#if>
             <#lt>    /* Dead time */
-            <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_DT = (${.vars[PWM_DT_DTL]}U << PWM_DT_DTL_Pos) | (${.vars[PWM_DT_DTH]}U);
+            <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_DT = (${.vars[PWM_DT_DTL]}UL << PWM_DT_DTL_Pos) | (${.vars[PWM_DT_DTH]}U);
         </#if> <#-- PWM_CMR_DTE -->
         <#if PWM_INTERRUPT == true>
         <#lt>    /* Enable counter event */
