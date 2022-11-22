@@ -74,7 +74,7 @@ bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected( PAC_PERIPHERAL peripheral )
 {
     bool status = false;
     uint32_t pacAddress = PAC0_BASE_ADDRESS + (PAC_INSTANCE_OFFSET * ((uint32_t)peripheral >> 5U));
-    uint32_t periMask = PAC_WPSET_WP_Pos << ((uint32_t)peripheral & 0x1fU);
+    uint32_t periMask = ((uint32_t)PAC_WPSET_WP_Pos << ((uint32_t)peripheral & 0x1fU));
 
     /* Check if peripheral is protected or not */
     if((((pac_registers_t *)pacAddress)->PAC_WPSET & periMask) == periMask)
@@ -88,7 +88,7 @@ bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected( PAC_PERIPHERAL peripheral )
 void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation )
 {
     uint32_t pacAddress = PAC0_BASE_ADDRESS + (PAC_INSTANCE_OFFSET * ((uint32_t)peripheral >> 5U));
-    uint32_t periMask = PAC_WPSET_WP_Pos << ((uint32_t)peripheral & 0x1fU);
+    uint32_t periMask = ((uint32_t)PAC_WPSET_WP_Pos << ((uint32_t)peripheral & 0x1fU));
 
     if(operation == PAC_PROTECTION_SET)
     {
@@ -105,3 +105,4 @@ void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC
         /* No action required */
     }
 }
+
