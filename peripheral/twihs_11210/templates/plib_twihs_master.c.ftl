@@ -49,6 +49,9 @@
 
 #include "device.h"
 #include "plib_${TWIHS_INSTANCE_NAME?lower_case}_master.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -175,7 +178,7 @@ static bool ${TWIHS_INSTANCE_NAME}_InitiateTransfer( uint16_t address, bool type
 
                 while((${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR & (TWIHS_SR_TXRDY_Msk)) == 0U)
                 {
-                    if (timeoutCntr == 0)
+                    if (timeoutCntr == 0U)
                     {
                         ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_BUS_ERROR;
                         __enable_irq();
@@ -416,12 +419,12 @@ void ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
                 if (${TWIHS_INSTANCE_NAME?lower_case}Obj.writeSize != 0U )
                 {
                     // Initiate Write transfer
-                    ${TWIHS_INSTANCE_NAME}_InitiateTransfer(${TWIHS_INSTANCE_NAME?lower_case}Obj.address, false);
+                    (void) ${TWIHS_INSTANCE_NAME}_InitiateTransfer(${TWIHS_INSTANCE_NAME?lower_case}Obj.address, false);
                 }
                 else
                 {
                     // Initiate Read transfer
-                    ${TWIHS_INSTANCE_NAME}_InitiateTransfer(${TWIHS_INSTANCE_NAME?lower_case}Obj.address, true);
+                     (void) ${TWIHS_INSTANCE_NAME}_InitiateTransfer(${TWIHS_INSTANCE_NAME?lower_case}Obj.address, true);
                 }
             }
             break;
