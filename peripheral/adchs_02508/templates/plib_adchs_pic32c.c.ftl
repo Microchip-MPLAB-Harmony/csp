@@ -41,6 +41,9 @@
 // DOM-IGNORE-END
 #include "device.h"
 #include "plib_${ADCHS_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define ADCHS_CHANNEL_32  (32U)
 
@@ -57,7 +60,7 @@
 
 <#if ADCCON2__EOSIEN == true>
     <#lt>/* Object to hold callback function and context for end of scan interrupt*/
-    <#lt>ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
+    <#lt>static ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
 </#if>
 
 <#compress> <#-- To remove unwanted new lines -->
@@ -171,7 +174,10 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
     <#if .vars[ADCHS_CH_ENABLE] == true>
     /* ADC ${i} */
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON |= ADCHS_ADCANCON_ANEN${i}_Msk;      // Enable the clock to analog bias
-    while(!((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON & ADCHS_ADCANCON_WKRDY${i}_Msk)); // Wait until ADC is ready
+    while(((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON & ADCHS_ADCANCON_WKRDY${i}_Msk) == 0U) // Wait until ADC is ready
+    {
+        /* Nothing to do */    
+    }
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON3 |= ADCHS_ADCCON3_DIGEN${i}_Msk;       // Enable ADC
 
     </#if>
@@ -180,7 +186,10 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
 <#if ADCHS_7_ENABLE == true>
     /* ADC 7 */
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON |= ADCHS_ADCANCON_ANEN7_Msk;      // Enable the clock to analog bias
-    while(!((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON & ADCHS_ADCANCON_WKRDY7_Msk))); // Wait until ADC is ready
+    while(((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON & ADCHS_ADCANCON_WKRDY7_Msk)) == 0U) // Wait until ADC is ready
+    {
+        /* Nothing to do */    
+    }
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON3 |= ADCHS_ADCCON3_DIGEN7_Msk;       // Enable ADC
 </#if>
 }
@@ -379,8 +388,8 @@ void ADCHS_InterruptHandler( void )
 	</#if>
 
     <#if ADCCON2__EOSIEN == true>
-    if ((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSIEN_Msk) &&
-        ((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSRDY_Msk)))
+    if (((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSIEN_Msk) != 0U) &&
+        (((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSRDY_Msk))!= 0U))
     {
         if (${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn != NULL)
         {
@@ -391,9 +400,9 @@ void ADCHS_InterruptHandler( void )
 
     <#if ADCHS_INTERRUPT == true>
     /* Check pending events and call callback if registered */
-    for(i = 0; i < ${ADCHS_NUM_SIGNALS}; i++)
+    for(i = 0U; i < ${ADCHS_NUM_SIGNALS - 1}U; i++)
     {
-        if((status & (1 << i)) && (${ADCHS_INSTANCE_NAME}_CallbackObj[i].callback_fn != NULL))
+        if(((status & (1UL << i)) != 0U) && (${ADCHS_INSTANCE_NAME}_CallbackObj[i].callback_fn != NULL))
         {
             ${ADCHS_INSTANCE_NAME}_CallbackObj[i].callback_fn((ADCHS_CHANNEL_NUM)i, ${ADCHS_INSTANCE_NAME}_CallbackObj[i].context);
         }
@@ -405,7 +414,7 @@ void ADCHS_InterruptHandler( void )
 	<#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
 	<#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true && .vars[ADCHS_DCx_INT_ENABLED] == true>
 	
-	if (ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON${i}_DCMPED_Msk)
+	if ((ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON${i}_DCMPED_Msk) != 0U)
 	{
 		channelId = (ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON1_CMPINID0_Msk) >> ADCHS_ADCCMPCON1_CMPINID0_Pos;
 

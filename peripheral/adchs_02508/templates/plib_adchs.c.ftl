@@ -41,6 +41,9 @@
 // DOM-IGNORE-END
 #include "device.h"
 #include "plib_${ADCHS_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define ADCHS_CHANNEL_32  (32U)
 
@@ -52,17 +55,17 @@
 
 <#if ADCHS_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
+    <#lt>static ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
 </#if>
 
 <#if ADCCON2__EOSIEN == true>
     <#lt>/* Object to hold callback function and context for end of scan interrupt*/
-    <#lt>ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
+    <#lt>static ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
 </#if>
 <#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true)>
 <#if ADC_DMA_INT_ENABLED?? && ADC_DMA_INT_ENABLED == true>
     <#lt>/* Object to hold callback function and context for ADC DMA interrupt*/
-    <#lt>ADCHS_DMA_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DMACallbackObj;
+    <#lt>static ADCHS_DMA_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DMACallbackObj;
 </#if>
 </#if>
 
@@ -78,7 +81,7 @@
 </#list>
 
 <#if ADCHS_MAX_FILTER_NUM gt 0>
-ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
+static ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
 </#if>
 
 <#assign ADCHS_MAX_COMPARATOR_NUM = 0>
@@ -92,11 +95,11 @@ ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER
 </#list>
 
 <#if ADCHS_MAX_COMPARATOR_NUM gt 0>
-ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
+static ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
 </#if>
 </#compress>
 
-void ${ADCHS_INSTANCE_NAME}_Initialize()
+void ${ADCHS_INSTANCE_NAME}_Initialize(void)
 {
     ADCCON1bits.ON = 0;
 <#compress> <#-- To remove unwanted new lines -->
@@ -258,8 +261,14 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 
     /* Turn ON ADC */
     ADCCON1bits.ON = 1;
-    while(!ADCCON2bits.BGVRRDY); // Wait until the reference voltage is ready
-    while(ADCCON2bits.REFFLT); // Wait if there is a fault with the reference voltage
+    while(ADCCON2bits.BGVRRDY == 0U) // Wait until the reference voltage is ready
+    {
+        /* Nothing to do */
+    }
+    while(ADCCON2bits.REFFLT != 0U) // Wait if there is a fault with the reference voltage
+    {
+        /* Nothing to do */
+    }
 
 <#if ADCHS_NUM_CLASS1_SIGNALS != 0>
 <#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
@@ -267,7 +276,10 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     <#if .vars[ADCHS_CH_ENABLE] == true>
     /* ADC ${i} */
     ADCANCONbits.ANEN${i} = 1;      // Enable the clock to analog bias
-    while(!ADCANCONbits.WKRDY${i}); // Wait until ADC is ready
+    while(ADCANCONbits.WKRDY${i} == 0U) // Wait until ADC is ready
+    {
+        /* Nothing to do */
+    }
     ADCCON3bits.DIGEN${i} = 1;      // Enable ADC
 
     </#if>
@@ -276,7 +288,10 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 <#if ADCHS_7_ENABLE == true>
     /* ADC 7 */
     ADCANCONbits.ANEN7 = 1;      // Enable the clock to analog bias
-    while(!ADCANCONbits.WKRDY7); // Wait until ADC is ready
+    while(ADCANCONbits.WKRDY7 == 0U) // Wait until ADC is ready
+    {
+        /* Nothing to do */
+    }
     ADCCON3bits.DIGEN7 = 1;      // Enable ADC
 </#if>
 
@@ -287,13 +302,13 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 /* Enable ADCHS channels */
 void ${ADCHS_INSTANCE_NAME}_ModulesEnable (ADCHS_MODULE_MASK moduleMask)
 {
-    ADCCON3 |= (moduleMask << 16);
+    ADCCON3 |= ((uint32_t)moduleMask << 16);
 }
 
 /* Disable ADCHS channels */
 void ${ADCHS_INSTANCE_NAME}_ModulesDisable (ADCHS_MODULE_MASK moduleMask)
 {
-    ADCCON3 &= ~(moduleMask << 16);
+    ADCCON3 &= ~(((uint32_t)moduleMask << 16));
 }
 
 
@@ -301,12 +316,12 @@ void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptEnable (ADCHS_CHANNEL_NUM chan
 {
     if (channel < ADCHS_CHANNEL_32)
     {
-        ADCGIRQEN1 |= 0x01 << channel;
+        ADCGIRQEN1 |= 0x01UL << channel;
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
-        ADCGIRQEN2 |= 0x01 << (channel - 32);
+        ADCGIRQEN2 |= 0x01UL << (channel - 32U);
     }
     </#if>
 }
@@ -315,12 +330,12 @@ void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptDisable (ADCHS_CHANNEL_NUM cha
 {
     if (channel < ADCHS_CHANNEL_32)
     {
-        ADCGIRQEN1 &= ~(0x01 << channel);
+        ADCGIRQEN1 &= ~(0x01UL << channel);
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
-        ADCGIRQEN2 &= ~(0x01 << (channel - 32));
+        ADCGIRQEN2 &= ~(0x01UL << (channel - 32U));
     }
     </#if>
 }
@@ -331,12 +346,12 @@ void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptEnable (ADCHS_CHANNEL_NUM chann
 {
     if (channel < ADCHS_CHANNEL_32)
     {
-        ADCEIEN1 |= (0x01 << channel);
+        ADCEIEN1 |= (0x01UL << channel);
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
-        ADCEIEN2 |= (0x01 << (channel - 32));
+        ADCEIEN2 |= (0x01UL << (channel - 32U));
     }
     </#if>
 }
@@ -345,12 +360,12 @@ void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptDisable (ADCHS_CHANNEL_NUM chan
 {
     if (channel < ADCHS_CHANNEL_32)
     {
-        ADCEIEN1 &= ~(0x01 << channel);
+        ADCEIEN1 &= ~(0x01UL << channel);
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
-        ADCEIEN2 &= ~(0x01 << (channel - 32));
+        ADCEIEN2 &= ~(0x01UL << (channel - 32U));
     }
     </#if>
 }
@@ -373,7 +388,7 @@ void ADCHS_GlobalLevelConversionStop(void)
 
 void ADCHS_ChannelConversionStart(ADCHS_CHANNEL_NUM channel)
 {
-    ADCCON3bits.ADINSEL = channel;
+    ADCCON3bits.ADINSEL = (uint8_t)channel;
     ADCCON3bits.RQCNVRT = 1;
 }
 
@@ -384,12 +399,12 @@ bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
     bool status = false;
     if (channel < ADCHS_CHANNEL_32)
     {
-        status = (ADCDSTAT1 >> channel) & 0x01;
+        status = (((ADCDSTAT1 >> channel) & 0x01U) != 0U);
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
-        status = (ADCDSTAT2 >> (channel - 32)) & 0x01;
+        status = (((ADCDSTAT2 >> (channel - 32U)) & 0x01U) != 0U);
     }
     </#if>
     return status;
@@ -399,9 +414,9 @@ bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
 {
 <#if (core.PRODUCT_FAMILY?contains("PIC32MK")) || (core.PRODUCT_FAMILY == "PIC32MZW")>
-    return (uint16_t) (*((&ADCDATA0) + (channel << 2)));
+    return (uint16_t)(*((&ADCDATA0) + (channel << 2)));
 <#elseif core.PRODUCT_FAMILY?contains("PIC32MZ")>
-    return (*((&ADCDATA0) + channel));
+    return (uint16_t)(*((&ADCDATA0) + channel));
 </#if>
 
 }
