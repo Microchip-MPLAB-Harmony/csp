@@ -312,6 +312,7 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
 bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
 {
     bool status = false;
+    UART_ERROR errorinfo;
 <#if UART_INTERRUPT_MODE_ENABLE == false>
     uint32_t errorStatus = 0;
     size_t processedSize = 0;
@@ -323,7 +324,12 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
     {
         /* Clear errors before submitting the request.
          * ErrorGet clears errors internally. */
-         (void) ${UART_INSTANCE_NAME}_ErrorGet();
+         errorinfo = ${UART_INSTANCE_NAME}_ErrorGet();
+         
+         if(errorinfo != 0U)
+         {
+             /* Nothing to do */
+         }
 
 <#if UART_INTERRUPT_MODE_ENABLE == false>
         while( size > processedSize )
