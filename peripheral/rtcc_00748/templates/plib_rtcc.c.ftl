@@ -49,6 +49,9 @@
 // *****************************************************************************
 
 #include "plib_${RTCC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -84,7 +87,7 @@ void ${RTCC_INSTANCE_NAME}_Initialize( void )
 {
     /* Unlock System */
     SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
+    SYSKEY = 0xAA996655U;
     SYSKEY = 0x556699AA;
 
     RTCCONSET = _RTCCON_RTCWREN_MASK;  /* Enable writes to RTCC */
@@ -268,7 +271,7 @@ bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarm
         ALRMTIME = dataTime;
 
         /* Configure alarm repetition */
-        RTCALRMbits.AMASK = (uint32_t)alarmFreq;
+        RTCALRMbits.AMASK = (uint8_t)alarmFreq;
 
         /* ALRMEN = 1 */
         RTCALRMSET = _RTCALRM_ALRMEN_MASK;  /* Enable the alarm */
