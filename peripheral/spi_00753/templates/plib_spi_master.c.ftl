@@ -40,6 +40,9 @@
 *******************************************************************************/
 
 #include "plib_${SPI_INSTANCE_NAME?lower_case}_master.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -284,7 +287,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                 while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK)
 				{
 				  /* Do Nothing */
-			    }	
+			    }
 
                 /* We have data waiting in the SPI buffer */
                 receivedData = ${SPI_INSTANCE_NAME}BUF;
@@ -703,12 +706,14 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#if SPI_INTERRUPT_COUNT == 1>
 void SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
 {
-    if (((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) != 0U) && ((${SPI_RX_IEC_REG} & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK)!= 0U))
+    uint32_t iec_reg_read = ${SPI_RX_IEC_REG};
+    if (((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) != 0U) && (( iec_reg_read & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK)!= 0U))
     {
         /* RX interrupt is enabled and RX buffer is not empty */
         ${SPI_INSTANCE_NAME}_RX_InterruptHandler();
     }
-    if (((${SPI_TX_IFS_REG} & _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK) != 0U) && ((${SPI_TX_IEC_REG} & _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK) != 0U))
+    iec_reg_read = ${SPI_TX_IEC_REG};
+    if (((${SPI_TX_IFS_REG} & _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK) != 0U) && ((iec_reg_read & _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK) != 0U))
     {
         /* TX interrupt is enabled and TX buffer is empty */
         ${SPI_INSTANCE_NAME}_TX_InterruptHandler();
