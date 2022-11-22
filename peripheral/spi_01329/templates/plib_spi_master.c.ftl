@@ -226,9 +226,11 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         }
 
         /* Make sure transmit buffer is empty */
-        while((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == false);
-
-        while ((txCount != txSize) || (dummySize != 0))
+        while((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == false)
+        {
+            /* Nothing to do */
+        }
+        while ((txCount != txSize) || (dummySize != 0U))
         {
             if (txCount != txSize)
             {
@@ -245,7 +247,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                     ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)pTransmitData)[txCount++];
                 }
             }
-            else if (dummySize > 0)
+            else if (dummySize > 0U)
             {
                 ${SPI_INSTANCE_NAME}BUF = 0x${SPI_DUMMY_DATA};
                 dummySize--;
@@ -256,8 +258,10 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                 /* If inside this if condition, then it means that txSize > rxSize and all RX bytes are received */
 
                 /* For transmit only request, wait for buffer to become empty */
-                while((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == false);
-
+                while((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == false)
+                {
+                    /* Nothing to do */
+                }
                 /* Read until the receive buffer is not empty */
                 while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == false)
                 {
@@ -268,7 +272,10 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
             else
             {
                 /* If data is read, wait for the Receiver Data the data to become available */
-                while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK);
+                while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK)
+                {
+                    /* Nothing to do */
+                }
 
                 /* We have data waiting in the SPI buffer */
                 receivedData = ${SPI_INSTANCE_NAME}BUF;
@@ -292,8 +299,10 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         }
 
         /* Make sure no data is pending in the shift register */
-        while ((bool)((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == false));
-
+        while ((bool)((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == false))
+        {
+            /* Nothing to do */
+        }
         /* Make sure for every character transmitted a character is also received back.
          * If this is not done, we may prematurely exit this routine with the last bit still being
          * transmitted out. As a result, the application may prematurely deselect the CS line and also
@@ -681,12 +690,14 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#if SPI_INTERRUPT_COUNT == 1>
 void SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
 {
-    if (((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) != 0U) && ((${SPI_RX_IEC_REG} & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK) != 0U))
+    uint32_t iec_reg_read = ${SPI_RX_IEC_REG};
+    if (((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) != 0U) && (( iec_reg_read & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK) != 0U))
     {
         /* RX interrupt is enabled and RX buffer is not empty */
         ${SPI_INSTANCE_NAME}_RX_InterruptHandler();
     }
-    if (((${SPI_TX_IFS_REG} & _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK) != 0U) && ((${SPI_TX_IEC_REG} & _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK) != 0U))
+    iec_reg_read = ${SPI_TX_IEC_REG};
+    if (((${SPI_TX_IFS_REG} & _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK) != 0U) && (( iec_reg_read & _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK) != 0U))
     {
         /* TX interrupt is enabled and TX buffer is empty */
         ${SPI_INSTANCE_NAME}_TX_InterruptHandler();
