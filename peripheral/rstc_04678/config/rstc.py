@@ -83,8 +83,8 @@ def handle_rstc_interrupt(symbol, event):
 
 if __name__ == "__main__":
     rstc_component = coreComponent
-    all_mode_bits = ["BADXTRST", "CPEREN", "CORSMIEN", "WDTPMC1", "URSTASYNC"
-                 "WDTPMC0", "SFTPMCRS", "CPUFEN", "SCKSW"]
+    all_mode_bits = ["BADXTRST", "CPEREN", "CORSMIEN", "URSTASYNC",
+                  "SFTPMCRS","WDTPMC0","WDTPMC1", "CPUFEN", "SCKSW"]
     available_mode_bits = ""
     interrupt_src_bits = ["CORSMIEN"]
     interrupt_enabled = False

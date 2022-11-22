@@ -63,30 +63,33 @@ typedef struct
 
 static rstcCallback_t rstcCallbackObj;
 </#if>
-
+<#if CPU_CORE_ID?? && CPU_CORE_ID == 0>
 
 void ${RSTC_INSTANCE_NAME}_Initialize (void)
 {
-    ${RSTC_INSTANCE_NAME}_REGS->RSTC_MR = ( RSTC_MR_KEY_PASSWD<#if RSTC_MR_ERSTL??> | RSTC_MR_ERSTL(${RSTC_MR_ERSTL}U)</#if><#if RSTC_MR_PWRSW??> | RSTC_MR_PWRSW(${RSTC_MR_PWRSW}U)</#if>
+    if(RSTC_PMCResetStatusGet())
+    {
+        ${RSTC_INSTANCE_NAME}_REGS->RSTC_MR = ( RSTC_MR_KEY_PASSWD<#if RSTC_MR_ERSTL??> | RSTC_MR_ERSTL(${RSTC_MR_ERSTL}U)</#if><#if RSTC_MR_PWRSW??> | RSTC_MR_PWRSW(${RSTC_MR_PWRSW}U)</#if>
 <#list RSTC_MODE_BITS?split(":") as MODE>
 <#if .vars["RSTC_MR_" + MODE]>
-                          | RSTC_MR_${MODE}_Msk
+                                | RSTC_MR_${MODE}_Msk
 </#if>
 </#list>
 <#if RSTC_MR_URSTEN == "Reset">
-                          | RSTC_MR_URSTEN_Msk
+                                | RSTC_MR_URSTEN_Msk
 <#elseif  RSTC_MR_URSTEN == "Interrupt">
-                          | RSTC_MR_URSTIEN_Msk
+                                | RSTC_MR_URSTIEN_Msk
 </#if>
-                          );
+                            );
 <#if RSTC_MR_CPEREN?? && RSTC_MR_CPEREN>
-    for(uint32_t i = 0U; i < RESET_WAIT_COUNT; i++)
-    {
-        /* Wait for ${RESET_MD_SLCK_CYCLES} MD_SLCK cycles after deasserting reset */
-    }
+        for(uint32_t i = 0U; i < RESET_WAIT_COUNT; i++)
+        {
+            /* Wait for ${RESET_MD_SLCK_CYCLES} MD_SLCK cycles after deasserting reset */
+        }
 </#if>
+    }
 }
-
+</#if>
 
 void ${RSTC_INSTANCE_NAME}_Reset (RSTC_RESET_TYPE type)
 {
@@ -145,6 +148,27 @@ void ${RSTC_INSTANCE_NAME}_CoProcessorPeripheralEnable(bool enable)
     }
 }
 </#if>
+
+bool ${RSTC_INSTANCE_NAME}_PMCResetStatusGet(void)
+{
+    bool pmc_reset = true;
+        /* Reset cause is WDT0 and WDT0 do not reset PMC */
+    if ((((${RSTC_INSTANCE_NAME}_REGS->RSTC_SR & RSTC_SR_RSTTYP_Msk) == RSTC_SR_RSTTYP_WDT0_RST) &&
+         ((${RSTC_INSTANCE_NAME}_REGS->RSTC_MR & RSTC_MR_WDTPMC0_Msk) == 0U)) ||
+
+        /* Reset cause is WDT1 and WDT1 do not reset PMC */
+        (((${RSTC_INSTANCE_NAME}_REGS->RSTC_SR & RSTC_SR_RSTTYP_Msk) == RSTC_SR_RSTTYP_WDT1_RST) &&
+         ((${RSTC_INSTANCE_NAME}_REGS->RSTC_MR & RSTC_MR_WDTPMC1_Msk) == 0U)) ||
+
+        /* Reset cause is SW and SW reset do not reset PMC */
+        (((${RSTC_INSTANCE_NAME}_REGS->RSTC_SR & RSTC_SR_RSTTYP_Msk) == RSTC_SR_RSTTYP_SOFT_RST) &&
+         ((${RSTC_INSTANCE_NAME}_REGS->RSTC_MR & RSTC_MR_SFTPMCRS_Msk) == 0U)))
+    {
+        pmc_reset = false;
+    }
+    return pmc_reset;
+}
+
 <#if INTERRUPT_ENABLE>
 
 
