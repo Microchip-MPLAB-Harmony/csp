@@ -40,6 +40,9 @@
 
 #include "device.h"
 #include "peripheral/coretimer/plib_coretimer.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if CORE_TIMER_INTERRUPT_MODE == true && CORE_TIMER_PERIODIC_INTERRUPT == true>
     <#lt>static CORETIMER_OBJECT coreTmr;
