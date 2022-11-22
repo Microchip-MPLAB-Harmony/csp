@@ -42,6 +42,9 @@
 
 #include "device.h"
 #include "plib_evic.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#assign NumOfEnabledExtInt = 0>
 
@@ -111,7 +114,7 @@ void EVIC_Initialize( void )
     /* Configure Shadow Register Set */
     PRISS = 0x${EVIC_PRISS_VALUE};
 
-    while (PRISS != 0x${EVIC_PRISS_VALUE})
+    while (PRISS != 0x${EVIC_PRISS_VALUE}U)
     {
         /* Wait for PRISS value to take effect */
     }
