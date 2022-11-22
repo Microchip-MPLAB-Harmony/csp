@@ -50,7 +50,7 @@
 
 void ${RSWDT_INSTANCE_NAME}_Initialize( void )
 {
-    ${RSWDT_INSTANCE_NAME}_REGS->RSWDT_MR = RSWDT_MR_ALLONES_Msk | RSWDT_MR_WDV(${rswdtWDV}U) \
+    ${RSWDT_INSTANCE_NAME}_REGS->RSWDT_MR = RSWDT_MR_ALLONES_Msk | RSWDT_MR_WDV(${rswdtWDV}) \
                             ${rswdtdebugHalt?then(' | RSWDT_MR_WDDBGHLT_Msk','')}${rswdtidleHalt?then(' | RSWDT_MR_WDIDLEHLT_Msk','')}${rswdtEnableReset?then(' | RSWDT_MR_WDRSTEN_Msk','')}${rswdtinterruptMode?then(' | RSWDT_MR_WDFIEN_Msk','')};
 
 }
