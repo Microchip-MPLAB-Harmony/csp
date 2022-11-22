@@ -50,6 +50,9 @@
 #include <string.h>
 #include "sys/kmem.h"
 #include "plib_${NVM_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -82,8 +85,8 @@ typedef enum
     NVM_UNLOCK_KEY2 = 0x556699AA
 } NVM_UNLOCK_KEYS;
 
-#define ${NVM_INSTANCE_NAME}_INTERRUPT_ENABLE_MASK   ${NVM_IEC_REG_VALUE}
-#define ${NVM_INSTANCE_NAME}_INTERRUPT_FLAG_MASK     ${NVM_IFS_REG_VALUE}
+#define ${NVM_INSTANCE_NAME}_INTERRUPT_ENABLE_MASK   ${NVM_IEC_REG_VALUE}U
+#define ${NVM_INSTANCE_NAME}_INTERRUPT_FLAG_MASK     ${NVM_IFS_REG_VALUE}U
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -124,8 +127,8 @@ static void ${NVM_INSTANCE_NAME}_WriteUnlockSequence( void )
 {
     // Write the unlock key sequence
     NVMKEY = 0x0;
-    NVMKEY = NVM_UNLOCK_KEY1;
-    NVMKEY = NVM_UNLOCK_KEY2;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY1;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY2;
 }
 
 static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation )
