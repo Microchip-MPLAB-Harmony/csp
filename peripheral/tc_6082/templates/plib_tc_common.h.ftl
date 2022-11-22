@@ -108,16 +108,14 @@ typedef uint32_t TC_COMPARE_STATUS;
 
 
 <#if TC_QDEC_PRESENT == true>
-typedef enum
-{
-    TC_QUADRATURE_NONE = 0U,
-    TC_QUADRATURE_INDEX = TC_QISR_IDX_Msk,
-    TC_QUADRATURE_DIR_CHANGE = TC_QISR_DIRCHG_Msk,
-    TC_QUADRATURE_ERROR = TC_QISR_QERR_Msk,
-    TC_QUADRATURE_STATUS_MSK = TC_QISR_IDX_Msk | TC_QISR_DIRCHG_Msk | TC_QISR_QERR_Msk,
-    /* Force the compiler to reserve 32-bit memory for enum */
-    TC_QUADRATURE_STATUS_INVALID = 0xFFFFFFFF
-}TC_QUADRATURE_STATUS;
+#define    TC_QUADRATURE_NONE       (0U)
+#define    TC_QUADRATURE_INDEX      (TC_QISR_IDX_Msk)
+#define    TC_QUADRATURE_DIR_CHANGE (TC_QISR_DIRCHG_Msk)
+#define    TC_QUADRATURE_ERROR      (TC_QISR_QERR_Msk)
+#define    TC_QUADRATURE_STATUS_MSK (TC_QISR_IDX_Msk | TC_QISR_DIRCHG_Msk | TC_QISR_QERR_Msk)
+/* Force the compiler to reserve 32-bit memory for enum */
+#define    TC_QUADRATURE_STATUS_INVALID = 0xFFFFFFFFU
+typedef uint32_t TC_QUADRATURE_STATUS;
 </#if>
 
 // *****************************************************************************
