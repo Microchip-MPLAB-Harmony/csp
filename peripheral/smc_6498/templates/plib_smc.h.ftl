@@ -51,8 +51,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_${SMC_INSTANCE_NAME}_H
-#define _PLIB_${SMC_INSTANCE_NAME}_H
+#ifndef PLIB_${SMC_INSTANCE_NAME}_H
+#define PLIB_${SMC_INSTANCE_NAME}_H
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -79,7 +79,7 @@ void ${SMC_INSTANCE_NAME}_Initialize( void );
 }
 #endif
 
-#endif // _PLIB_${SMC_INSTANCE_NAME}_H
+#endif // PLIB_${SMC_INSTANCE_NAME}_H
 
 /*******************************************************************************
  End of File
