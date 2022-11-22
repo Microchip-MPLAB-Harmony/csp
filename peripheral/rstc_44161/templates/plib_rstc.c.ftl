@@ -45,6 +45,9 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 #include "plib_rstc${INSTANCE?string}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#--Implementation-->
 // *****************************************************************************
