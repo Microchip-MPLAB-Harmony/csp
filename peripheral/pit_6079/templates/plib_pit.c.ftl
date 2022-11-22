@@ -47,6 +47,9 @@
 #include <stddef.h>
 #include "device.h"
 #include "plib_${PIT_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define PIT_COUNTER_FREQUENCY       (${core.PIT_CLOCK_FREQUENCY}U / 16U)
 
