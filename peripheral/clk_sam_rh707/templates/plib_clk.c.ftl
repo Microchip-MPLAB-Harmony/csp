@@ -103,7 +103,7 @@ static bool checkGpnvmWordCrc(void)
 
     crc_dscr.ul_tr_addr = (uint32_t) &gpnvm_table[1];
     /* Transfer width: word, interrupt enable, 1 word size */
-    crc_dscr.ul_tr_ctrl = (2U << 24) | 1U;
+    crc_dscr.ul_tr_ctrl = (2UL << 24) | 1U;
 
     __DSB();
     __ISB();
