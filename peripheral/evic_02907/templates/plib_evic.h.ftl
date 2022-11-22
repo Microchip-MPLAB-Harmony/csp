@@ -76,6 +76,15 @@
 // *****************************************************************************
 // *****************************************************************************
 
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 5.4 deviated: 5  Deviation record ID -  H3_MISRAC_2012_R_5_4_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+    <#if COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+    #pragma coverity compliance block deviate "MISRA C-2012 Rule 5.4" "H3_MISRAC_2012_R_5_4_DR_1"
+</#if>
 <#if EVIC_IRQ_MIN != -1 && EVIC_IRQ_MAX != -1>
 <#list EVIC_IRQ_MIN..EVIC_IRQ_MAX as i>
     <#assign INT_NAME = "EVIC_" + i + "_IRQ_NAME">
@@ -95,6 +104,14 @@
     </#if>
 </#list>
 </#if>
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+
+    #pragma coverity compliance end_block "MISRA C-2012 Rule 5.4"
+    <#if COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic pop
+    </#if>
+</#if>
+  /* MISRAC 2012 deviation block end */
 typedef uint32_t INT_SOURCE;
 
 <#if 0 < NumOfEnabledExtInt>
