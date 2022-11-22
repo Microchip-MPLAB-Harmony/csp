@@ -62,12 +62,12 @@
 void POWER_Initialize( void )
 {
     /* Unlock system */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
-    DSCON = 0x${DSCON_VALUE};
-    DSCON = 0x${DSCON_VALUE};
+    DSCON = 0x${DSCON_VALUE}U;
+    DSCON = 0x${DSCON_VALUE}U;
 
     /* Lock system */
     SYSKEY = 0;
@@ -77,9 +77,9 @@ void POWER_LowPowerModeEnter (POWER_LOW_POWER_MODE mode)
 {
     bool check = false;
     /* Unlock system */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     switch(mode)
     {
@@ -143,9 +143,9 @@ POWER_DS_WAKEUP_SOURCE POWER_DS_WakeupSourceGet( void )
 void POWER_DS_ReleaseGPIO(void)
 {
     /* Unlock system */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     DSCONbits.RELEASE = 0;
     DSCONbits.RELEASE = 0;
@@ -156,15 +156,15 @@ void POWER_DS_ReleaseGPIO(void)
 
 void POWER_DS_WakeupSourceClear( POWER_DS_WAKEUP_SOURCE wakeupSource )
 {
-    DSWAKE &= ~wakeupSource;
+    DSWAKE &= ~(uint32_t)wakeupSource;
 }
 
 void POWER_DS_GPR_Enable(void)
 {
     /* Unlock system */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     DSCONbits.DSGPREN = 1;
     DSCONbits.DSGPREN = 1;
@@ -175,9 +175,9 @@ void POWER_DS_GPR_Enable(void)
 void POWER_DS_GPR_Disable(void)
 {
     /* Unlock system */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     DSCONbits.DSGPREN = 0;
     DSCONbits.DSGPREN = 0;
@@ -188,9 +188,9 @@ void POWER_DS_GPR_Disable(void)
 void POWER_DS_RTCC_Enable(void)
 {
     /* Unlock system */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     DSCONbits.RTCDIS = 0;
     DSCONbits.RTCDIS = 0;
@@ -201,9 +201,9 @@ void POWER_DS_RTCC_Enable(void)
 void POWER_DS_RTCC_Disable(void)
 {
     /* Unlock system */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     DSCONbits.RTCDIS = 1;
     DSCONbits.RTCDIS = 1;
@@ -214,9 +214,9 @@ void POWER_DS_RTCC_Disable(void)
 void POWER_DS_RTCC_WakeupEnable(void)
 {
     /* Unlock system */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     DSCONbits.RTCCWDIS = 0;
     DSCONbits.RTCCWDIS = 0;
@@ -227,9 +227,9 @@ void POWER_DS_RTCC_WakeupEnable(void)
 void POWER_DS_RTCC_WakeupDisable(void)
 {
     /* Unlock system */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     DSCONbits.RTCCWDIS = 1;
     DSCONbits.RTCCWDIS = 1;
@@ -241,9 +241,9 @@ void POWER_DS_RTCC_WakeupDisable(void)
 void POWER_DS_GPR_Write(POWER_DS_GPR gprNumb, uint32_t gprValue)
 {
     /* Unlock system */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     if (gprNumb == POWER_DS_GPR0)
     {
@@ -252,8 +252,8 @@ void POWER_DS_GPR_Write(POWER_DS_GPR gprNumb, uint32_t gprValue)
     }
     else
     {
-        *((volatile uint32_t *)(&DSGPR1)+ gprNumb-1) = gprValue;
-        *((volatile uint32_t *)(&DSGPR1)+ gprNumb-1) = gprValue;
+        *((volatile uint32_t *)(&DSGPR1)+ (uint32_t)gprNumb-1) = gprValue;
+        *((volatile uint32_t *)(&DSGPR1)+ (uint32_t)gprNumb-1) = gprValue;
     }
 
     /* Lock system */
@@ -268,7 +268,7 @@ uint32_t POWER_DS_GPR_Read(POWER_DS_GPR gprNumb)
     }
     else
     {
-        return (*((volatile uint32_t *)(&DSGPR1)+ gprNumb-1));
+        return (*((volatile uint32_t *)(&DSGPR1)+ (uint32_t)gprNumb-1));
     }
 }
 </#if>
