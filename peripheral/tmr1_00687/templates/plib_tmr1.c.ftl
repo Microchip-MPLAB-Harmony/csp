@@ -50,6 +50,9 @@
 
 #include "device.h"
 #include "plib_${TMR1_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if TMR1_INTERRUPT_MODE == true>
 static TMR1_TIMER_OBJECT ${TMR1_INSTANCE_NAME?lower_case}Obj;
