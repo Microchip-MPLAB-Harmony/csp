@@ -41,6 +41,9 @@
 // DOM-IGNORE-END
 #include "device.h"
 #include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -128,7 +131,7 @@ void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanI
 <#if core.PRODUCT_FAMILY == "PIC32MX1290">
     AD1CSSL = (uint32_t)(scanInputs);
     <#if AD1CSSL__CSSL_COUNT gt 31> 
-    AD1CSSL2 = (uint32_t)(scanInputs >> 32);
+    AD1CSSL2 = ((uint64_t)scanInputs >> 32);
     </#if>
 <#else>
     AD1CSSL = (uint32_t)scanInputs;
