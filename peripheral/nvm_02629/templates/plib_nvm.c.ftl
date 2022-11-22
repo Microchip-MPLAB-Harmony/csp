@@ -50,6 +50,9 @@
 #include <string.h>
 #include "sys/kmem.h"
 #include "plib_${NVM_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 /* ************************************************************************** */
 /* ************************************************************************** */
