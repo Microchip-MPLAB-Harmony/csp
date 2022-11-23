@@ -325,10 +325,10 @@ cacheMenu.setLabel("(no additional MIPS configuration)")
 
 if productFamily.getValue() in ["PIC32MX1156", "PIC32MX1143"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_01166/config/evic.py")
-    coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_EVIC_01166_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/apps/interrupt_configurators/evic_01166_interrupt_configuration/build/index.html"})
+    coreComponent.addPlugin("../peripheral/evic_01166/plugin/evic_01166.jar")
 else:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py")
-    coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_EVIC_02907_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/apps/interrupt_configurators/evic_02907_interrupt_configuration/build/index.html"})
+    coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
 
 # load wdt
 if productFamily.getValue() in ["PIC32MX1156", "PIC32MX1143"]:
@@ -343,7 +343,14 @@ dmaNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]')
 
 if dmaNode != None:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_00735/config/dmac.py")
-    coreComponent.addPlugin("../peripheral/dmac_00735/plugin/dmamanager.jar")
+    coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_PIC32MX",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/apps/dma-configurators/dma-configurator-2/build/index.html",
+                            "symbol_config": "csp/peripheral/dmac_00735/plugin/symbol-config.json"
+                        }
+                        )
 
 devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
 devconSystemInitFile.setType("STRING")

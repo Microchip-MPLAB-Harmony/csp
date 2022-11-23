@@ -1,0 +1,8 @@
+{
+  "totalChannelsCount": "NUM_DMA_CHANS",
+  "enableChannel": "DMAC_CHAN{DMA_CHANNEL_NUMBER}_ENBL",
+  "triggerSource": "DMAC_REQUEST_{DMA_CHANNEL_NUMBER}_SOURCE",
+  "priority": "DMAC_{DMA_CHANNEL_NUMBER}_PRIORITY",
+  "enableInterrupt": "DMAC_{DMA_CHANNEL_NUMBER}_ENABLE_INTERRUPT",
+  "triggerSourceLock": "DMAC_REQUEST_{DMA_CHANNEL_NUMBER}_PERID_LOCK"
+}
