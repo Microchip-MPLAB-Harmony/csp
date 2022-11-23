@@ -100,8 +100,7 @@ void PMU_Initialize(void);
     None.
 
   Example:
-    <code>
-    //Example 1: Do not alter the configuration bit settings
+    <code>    
     CLK_Initialize ( );
 
     </code>
