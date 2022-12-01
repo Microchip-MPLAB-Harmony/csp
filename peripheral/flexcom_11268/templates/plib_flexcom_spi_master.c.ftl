@@ -58,6 +58,22 @@
 <#if SPI_INTERRUPT_MODE == true>
 /* Global object to save FLEXCOM SPI Exchange related data */
 static FLEXCOM_SPI_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
+
+<#if USE_SPI_DMA?? && USE_SPI_DMA == true>
+static uint8_t dummyDataBuffer[512];
+
+static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
+{
+    /* Always set up the rx channel first */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_RPR = (uint32_t) pReceiveData;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_RCR = (uint32_t) size;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TPR = (uint32_t) pTransmitData;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TCR = (uint32_t) size;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_RXTEN_Msk | FLEX_PTCR_TXTEN_Msk;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_IER = FLEX_SPI_IER_ENDRX_Msk;
+}
+
+</#if>
 </#if>
 
 void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize ( void )
@@ -261,6 +277,68 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
 {
     bool isRequestAccepted = false;
+<#if USE_SPI_DMA?? && USE_SPI_DMA == true>
+    uint32_t size = 0;
+
+    /* Verify the request */
+    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
+    {
+        isRequestAccepted = true;
+
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = true;
+
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer = pTransmitData;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer = pReceiveData;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount = txSize;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount = rxSize;
+
+        if ((txSize > 0) && (rxSize > 0))
+        {
+            /* Find the lower value among txSize and rxSize */
+            (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
+
+            /* Calculate the remaining tx/rx bytes and total bytes transferred */
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount -= size;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount -= size;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred = size;
+
+            setupDMA(pTransmitData, pReceiveData, size);
+        }
+        else
+        {
+            if (rxSize > 0)
+            {
+                /* txSize is 0. Need to use the dummy data buffer for transmission.
+                 * Find out the max data that can be received, given the limited size of the dummy data buffer.
+                 */
+                (rxSize > sizeof(dummyDataBuffer)) ?
+                    (size = sizeof(dummyDataBuffer)): (size = rxSize);
+
+                /* Calculate the remaining rx bytes and total bytes transferred */
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount -= size;
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred = size;
+
+                setupDMA(dummyDataBuffer, pReceiveData, size);
+            }
+            else
+            {
+                /* rxSize is 0. Need to use the dummy data buffer for reception.
+                 * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+                 */
+                (txSize > sizeof(dummyDataBuffer)) ?
+                    (size = sizeof(dummyDataBuffer)): (size = txSize);
+
+                /* Calculate the remaining tx bytes and total bytes transferred */
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount -= size;
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred = size;
+
+                setupDMA(pTransmitData, dummyDataBuffer, size);
+            }
+        }
+    }
+
+    return isRequestAccepted;
+<#else>
     uint32_t dummyData;
 
     /* Verify the request */
@@ -358,9 +436,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
     }
 
     return isRequestAccepted;
+</#if>
 }
 <#else>
 
+<#if !(USE_SPI_DMA?? && USE_SPI_DMA == true)>
 static uint8_t ${FLEXCOM_INSTANCE_NAME}_SPI_FIFO_Fill(void)
 {
     uint8_t nDataCopiedToFIFO = 0;
@@ -410,13 +490,77 @@ static uint8_t ${FLEXCOM_INSTANCE_NAME}_SPI_FIFO_Fill(void)
 
     return nDataCopiedToFIFO;
 }
+</#if>
 
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
 {
     bool isRequestAccepted = false;
+<#if !(USE_SPI_DMA?? && USE_SPI_DMA == true)>
     uint32_t nTxPending = 0;
     uint8_t rxThreshold = 0;
+</#if>
+<#if USE_SPI_DMA?? && USE_SPI_DMA == true>
+    uint32_t size = 0;
 
+    /* Verify the request */
+    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
+    {
+        isRequestAccepted = true;
+
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = true;
+
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer = pTransmitData;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer = pReceiveData;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount = txSize;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount = rxSize;
+
+        if ((txSize > 0) && (rxSize > 0))
+        {
+            /* Find the lower value among txSize and rxSize */
+            (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
+
+            /* Calculate the remaining tx/rx bytes and total bytes transferred */
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount -= size;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount -= size;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred = size;
+
+            setupDMA(pTransmitData, pReceiveData, size);
+        }
+        else
+        {
+            if (rxSize > 0)
+            {
+                /* txSize is 0. Need to use the dummy data buffer for transmission.
+                 * Find out the max data that can be received, given the limited size of the dummy data buffer.
+                 */
+                (rxSize > sizeof(dummyDataBuffer)) ?
+                    (size = sizeof(dummyDataBuffer)): (size = rxSize);
+
+                /* Calculate the remaining rx bytes and total bytes transferred */
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount -= size;
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred = size;
+
+                setupDMA(dummyDataBuffer, pReceiveData, size);
+            }
+            else
+            {
+                /* rxSize is 0. Need to use the dummy data buffer for reception.
+                 * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+                 */
+                (txSize > sizeof(dummyDataBuffer)) ?
+                    (size = sizeof(dummyDataBuffer)): (size = txSize);
+
+                /* Calculate the remaining tx bytes and total bytes transferred */
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount -= size;
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred = size;
+
+                setupDMA(pTransmitData, dummyDataBuffer, size);
+            }
+        }
+    }
+    return isRequestAccepted;
+
+    <#else>
     /* Verify the request */
     if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
     {
@@ -488,6 +632,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
     }
 
     return isRequestAccepted;
+    </#if>
 }
 </#if>
 </#if>
@@ -561,6 +706,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy(void)
 <#if FLEXCOM_SPI_FIFO_ENABLE == false>
 void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 {
+<#if !(USE_SPI_DMA?? && USE_SPI_DMA == true)>
     uint32_t dataBits ;
     uint32_t receivedData;
 <#if FLEXCOM_SPI_NUM_CSR == 1>
@@ -570,9 +716,67 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 </#if>
 
     static bool isLastByteTransferInProgress = false;
+<#else>
+    uint32_t size;
+    uint32_t index;
+</#if>
 
     /* save the status in global object before it gets cleared */
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.status = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR;
+
+    <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_ERRCLR_Msk;
+
+    if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount > 0)
+    {
+        /* txPending is 0. Need to use the dummy data buffer for transmission.
+         * Find out the max data that can be received, given the limited size of the dummy data buffer.
+         */
+        (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount > sizeof(dummyDataBuffer)) ?
+            (size = sizeof(dummyDataBuffer)): (size = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount);
+
+        index = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred;
+
+        /* Calculate the remaining rx bytes and total bytes transferred */
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount -= size;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred += size;
+
+        setupDMA(dummyDataBuffer,(void *)&((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[index],size);
+    }
+    else if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount > 0)
+    {
+        /* rxSize is 0. Need to use the dummy data buffer for reception.
+         * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+         */
+        (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount > sizeof(dummyDataBuffer)) ?
+            (size = sizeof(dummyDataBuffer)): (size = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount);
+
+        index = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred;
+
+        /* Calculate the remaining rx bytes and total bytes transferred */
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount -= size;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred += size;
+
+        setupDMA((void *)&((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[index], dummyDataBuffer, size);
+    }
+    else
+    {
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = false;
+
+        <#if FLEXCOM_SPI_MR_PCS != "GPIO">
+        /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_LASTXFER_Msk;
+
+        </#if>
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_RXTDIS_Msk | FLEX_PTCR_TXTDIS_Msk;
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_IDR = FLEX_SPI_IDR_ENDRX_Msk; 
+
+        if( ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback != NULL )
+        {
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.context);
+        }
+    }
+    <#else>
 
     if ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_RDRF_Msk ) == FLEX_SPI_SR_RDRF_Msk)
     {
@@ -696,10 +900,12 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
         ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_IER = FLEX_SPI_IER_TXEMPTY_Msk;
     }
 
+    </#if>
 }
 <#else>
 void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 {
+<#if !(USE_SPI_DMA?? && USE_SPI_DMA == true)>
 <#if FLEXCOM_SPI_NUM_CSR == 1>
     uint32_t dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & FLEX_SPI_CSR_BITS_Msk;
 <#else>
@@ -707,7 +913,65 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 </#if>
     uint32_t nTxPending = 0;
     uint8_t rxThreshold = 0;
+<#else>
+    uint32_t size;
+    uint32_t index;
+</#if>
 
+    <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_ERRCLR_Msk;
+
+    if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount > 0)
+    {
+        /* txPending is 0. Need to use the dummy data buffer for transmission.
+         * Find out the max data that can be received, given the limited size of the dummy data buffer.
+         */
+        (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount > sizeof(dummyDataBuffer)) ?
+            (size = sizeof(dummyDataBuffer)): (size = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount);
+
+        index = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred;
+
+        /* Calculate the remaining rx bytes and total bytes transferred */
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount -= size;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred += size;
+
+        setupDMA(dummyDataBuffer,(void *)&((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[index],size);
+    }
+    else if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount > 0)
+    {
+        /* rxSize is 0. Need to use the dummy data buffer for reception.
+         * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+         */
+        (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount > sizeof(dummyDataBuffer)) ?
+            (size = sizeof(dummyDataBuffer)): (size = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount);
+
+        index = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred;
+
+        /* Calculate the remaining rx bytes and total bytes transferred */
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount -= size;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred += size;
+
+        setupDMA((void *)&((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[index], dummyDataBuffer, size);
+    }
+    else
+    {
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = false;
+
+        <#if FLEXCOM_SPI_MR_PCS != "GPIO">
+        /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_LASTXFER_Msk;
+
+        </#if>
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_RXTDIS_Msk | FLEX_PTCR_TXTDIS_Msk;
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_IDR = FLEX_SPI_IDR_ENDRX_Msk;
+
+        if( ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback != NULL )
+        {
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.context);
+        }
+    }
+
+    <#else>
     while ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_RDRF_Msk ) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize))
     {
         if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
@@ -757,6 +1021,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
             ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.context);
         }
     }
+    </#if>
 }
 </#if>
 </#if>

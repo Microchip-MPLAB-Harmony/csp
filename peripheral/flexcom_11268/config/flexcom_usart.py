@@ -172,8 +172,11 @@ def symbolVisible(symbol, event):
         symbol.setVisible(False)
 
 def fifoOptionsVisible(symbol, event):
+   usartMode = flexcomSym_UsartMode.getSelectedKey()
    fifoEnable = event["source"].getSymbolByID("FLEXCOM_USART_FIFO_ENABLE").getValue()
-   symbol.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART" and fifoEnable == True)
+   txDMAEnable = event["source"].getSymbolByID("USE_USART_TRANSMIT_DMA").getValue()
+   rxDMAEnable = event["source"].getSymbolByID("USE_USART_RECEIVE_DMA").getValue()
+   symbol.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART" and fifoEnable == True and txDMAEnable == False and rxDMAEnable == False)
 
 def rxFifo2OptionVisible(symbol, event):
     uartMode = event["source"].getSymbolByID("FLEXCOM_USART_MR_USART_MODE").getSelectedKey()
@@ -211,24 +214,51 @@ def updateOperatingMode (symbol, event):
         interruptModeSym = event["source"].getSymbolByID("FLEXCOM_USART_INTERRUPT_MODE_ENABLE")
         ringBufferModeSym = event["source"].getSymbolByID("FLEXCOM_USART_RING_BUFFER_MODE_ENABLE")
         fifoModeSym = event["source"].getSymbolByID("FLEXCOM_USART_FIFO_ENABLE")
+        txDMASym = event["source"].getSymbolByID("USE_USART_TRANSMIT_DMA")
+        rxDMASym = event["source"].getSymbolByID("USE_USART_RECEIVE_DMA")
 
         if symbol.getSelectedKey() == "BLOCKING" or symbol.getSelectedKey() == "BLOCKING_FIFO":
             interruptModeSym.setValue(False)
             ringBufferModeSym.setValue(False)
+            txDMASym.setValue(False)
+            rxDMASym.setValue(False)
             fifoModeSym.setValue(symbol.getSelectedKey() == "BLOCKING_FIFO")
         elif symbol.getSelectedKey() == "NON_BLOCKING" or symbol.getSelectedKey() == "NON_BLOCKING_FIFO":
             interruptModeSym.setValue(True)
             ringBufferModeSym.setValue(False)
+            txDMASym.setValue(False)
+            rxDMASym.setValue(False)
             fifoModeSym.setValue(symbol.getSelectedKey() == "NON_BLOCKING_FIFO")
+        elif symbol.getSelectedKey() == "NON_BLOCKING_FIFO_DMA_TX":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            txDMASym.setValue(True)
+            rxDMASym.setValue(False)
+            fifoModeSym.setValue(symbol.getSelectedKey() == "NON_BLOCKING_FIFO_DMA_TX")
+        elif symbol.getSelectedKey() == "NON_BLOCKING_FIFO_DMA_RX":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            txDMASym.setValue(False)
+            rxDMASym.setValue(True)
+            fifoModeSym.setValue(symbol.getSelectedKey() == "NON_BLOCKING_FIFO_DMA_RX")
+        elif symbol.getSelectedKey() == "NON_BLOCKING_FIFO_DMA_TX_RX":
+            interruptModeSym.setValue(True)
+            ringBufferModeSym.setValue(False)
+            txDMASym.setValue(True)
+            rxDMASym.setValue(True)
+            fifoModeSym.setValue(symbol.getSelectedKey() == "NON_BLOCKING_FIFO_DMA_TX_RX")
         elif symbol.getSelectedKey() == "RING_BUFFER" or symbol.getSelectedKey() == "RING_BUFFER_FIFO":
             interruptModeSym.setValue(True)
             ringBufferModeSym.setValue(True)
+            txDMASym.setValue(False)
+            rxDMASym.setValue(False)
             fifoModeSym.setValue(symbol.getSelectedKey() == "RING_BUFFER_FIFO")
     else:
         symbol.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART")
 
 def updateHWHandshakingComment (symbol, event):
     nonFifoOperatingMode = False
+
     flexcomMode = flexcomSym_OperatingMode.getSelectedKey()
     mode = flexcomSym_UsartMode.getSelectedKey()
     if "FIFO" not in flexcomSym_UsartOperatingMode.getSelectedKey():
@@ -308,6 +338,10 @@ flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING", "2", "Non-blocking mode")
 flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO", "3", "Non-blocking mode with FIFO")
 flexcomSym_UsartOperatingMode.addKey("RING_BUFFER", "4", "Ring buffer mode")
 flexcomSym_UsartOperatingMode.addKey("RING_BUFFER_FIFO", "5", "Ring buffer mode with FIFO")
+flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO_DMA_TX", "6", "Non-blocking mode with FIFO and DMA for transmit")
+flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO_DMA_RX", "7", "Non-blocking mode with FIFO and DMA for receive")
+flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO_DMA_TX_RX", "8", "Non-blocking mode with FIFO and DMA for transmit and receive")
+
 flexcomSym_UsartOperatingMode.setDefaultValue(2)
 flexcomSym_UsartOperatingMode.setDisplayMode("Description")
 flexcomSym_UsartOperatingMode.setOutputMode("Key")
@@ -339,6 +373,16 @@ flexcomSym_RXRingBuffer_Size.setMax(65535)
 flexcomSym_RXRingBuffer_Size.setDefaultValue(128)
 flexcomSym_RXRingBuffer_Size.setVisible(False)
 flexcomSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "FLEXCOM_USART_RING_BUFFER_MODE_ENABLE"])
+
+flexcomSym_UsartReceiveDMAEnable = flexcomComponent.createBooleanSymbol("USE_USART_RECEIVE_DMA", flexcomSym_OperatingMode)
+flexcomSym_UsartReceiveDMAEnable.setLabel("Enable DMA for Receive")
+flexcomSym_UsartReceiveDMAEnable.setVisible(False)
+flexcomSym_UsartReceiveDMAEnable.setReadOnly(True)
+
+flexcomSym_UsartTransmitDMAEnable = flexcomComponent.createBooleanSymbol("USE_USART_TRANSMIT_DMA", flexcomSym_OperatingMode)
+flexcomSym_UsartTransmitDMAEnable.setLabel("Enable DMA for Transmit")
+flexcomSym_UsartTransmitDMAEnable.setVisible(False)
+flexcomSym_UsartTransmitDMAEnable.setReadOnly(True)
 
 flexcomSym_UsartFIFOEnable = flexcomComponent.createBooleanSymbol("FLEXCOM_USART_FIFO_ENABLE", flexcomSym_OperatingMode)
 flexcomSym_UsartFIFOEnable.setLabel("Enable FIFO")

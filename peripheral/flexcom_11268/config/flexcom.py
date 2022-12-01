@@ -119,6 +119,27 @@ def handleMessage(messageID, args):
             if args["isEnabled"] == True:
                 flexcomSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING_FIFO")
 
+    elif (messageID == "UART_NON_BLOCKING_DMA_TX_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                flexcomSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING_DMA_TX")
+
+    elif (messageID == "UART_NON_BLOCKING_DMA_RX_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                flexcomSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING_DMA_RX")
+
+    elif (messageID == "UART_NON_BLOCKING_DMA_TX_RX_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == True:
+                flexcomSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING_DMA_TX_RX")
+
     elif (messageID == "UART_RING_BUFFER_MODE"):
         if args.get("isReadOnly") != None:
             flexcomSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
