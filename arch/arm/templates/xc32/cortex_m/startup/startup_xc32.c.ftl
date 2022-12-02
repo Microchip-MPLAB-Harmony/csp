@@ -43,6 +43,8 @@
  /* MISRAC 2012 deviation block start */
 /* MISRA C-2012 Rule 21.1 deviated 1 time. Deviation record ID -  H3_MISRAC_2012_R_21_1_DR_1 */
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 21.1" "H3_MISRAC_2012_R_21_1_DR_1"
 </#if>
 #ifdef __MPLAB_DEBUGGER_SIMULATOR
@@ -50,6 +52,7 @@
 #endif
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
 #pragma coverity compliance end_block "MISRA C-2012 Rule 21.1"
+#pragma GCC diagnostic pop
 </#if>
 /* MISRAC 2012 deviation block end */
 
@@ -65,6 +68,8 @@
 /* MISRA C-2012 Rule 21.2 deviated 5 times. Deviation record ID -  H3_MISRAC_2012_R_21_2_DR_1 */
 /* MISRA C-2012 Rule 8.6 deviated 6 times.  Deviation record ID -  H3_MISRAC_2012_R_8_6_DR_1 */
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma coverity compliance block \
 (deviate:5 "MISRA C-2012 Rule 21.2" "H3_MISRAC_2012_R_21_2_DR_1")\
 (deviate:6 "MISRA C-2012 Rule 8.6" "H3_MISRAC_2012_R_8_6_DR_1")
@@ -87,6 +92,7 @@ extern uint32_t __svectors;
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
 #pragma coverity compliance end_block "MISRA C-2012 Rule 8.6"
 #pragma coverity compliance end_block "MISRA C-2012 Rule 21.2"
+#pragma GCC diagnostic pop
 </#if>
 /* MISRAC 2012 deviation block end */
 

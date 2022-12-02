@@ -3,7 +3,10 @@
 <#if COMPILER_CHOICE == "XC32">
 /* MISRA C-2012 Rule 8.6 deviated below. Deviation record ID -  H3_MISRAC_2012_R_8_6_DR_1 */
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma coverity compliance deviate "MISRA C-2012 Rule 8.6" "H3_MISRAC_2012_R_8_6_DR_1"
+#pragma GCC diagnostic pop
 </#if>
 extern uint32_t _stack;
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
@@ -57,12 +60,15 @@ void Dummy_Handler( void )
 /* MISRAC 2012 deviation block start */
 /* MISRA C-2012 Rule 8.6 deviated ${WEAK_HANDLER_COUNT} times.  Deviation record ID -  H3_MISRAC_2012_R_8_6_DR_1 */
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma coverity compliance block deviate:${WEAK_HANDLER_COUNT} "MISRA C-2012 Rule 8.6" "H3_MISRAC_2012_R_8_6_DR_1"
 </#if>
 /* Device vectors list dummy definition*/
 ${LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS}
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
 #pragma coverity compliance end_block "MISRA C-2012 Rule 8.6"
+#pragma GCC diagnostic pop
 </#if>
 /* MISRAC 2012 deviation block end */
 
