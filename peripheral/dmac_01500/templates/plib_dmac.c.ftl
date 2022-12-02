@@ -45,7 +45,7 @@
 // DOM-IGNORE-END
 
 #include "plib_${DMA_INSTANCE_NAME?lower_case}.h"
-<#if core.CoreSysIntFile == true>
+<#if CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
 
