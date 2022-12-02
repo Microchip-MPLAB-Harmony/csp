@@ -69,6 +69,18 @@ static uint16_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER
 static uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 </#if>
 
+#define NOP asm("nop")
+
+
+#define SPI_TDR_8BIT_REG      (*(volatile uint8_t* const)((${SPI_INSTANCE_NAME}_BASE_ADDRESS + SPI_TDR_REG_OFST)))
+
+#define SPI_TDR_9BIT_REG      (*(volatile uint16_t* const)((${SPI_INSTANCE_NAME}_BASE_ADDRESS + SPI_TDR_REG_OFST)))
+
+
+
+#define SPI_RDR_8BIT_REG      (*(volatile uint8_t* const)((${SPI_INSTANCE_NAME}_BASE_ADDRESS + SPI_RDR_REG_OFST)))
+
+#define SPI_RDR_9BIT_REG      (*(volatile uint16_t* const)((${SPI_INSTANCE_NAME}_BASE_ADDRESS + SPI_RDR_REG_OFST)))
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${SPI_INSTANCE_NAME} Implementation
@@ -128,9 +140,9 @@ size_t ${SPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size)
         rdSize = rdInIndex;
     }
 <#if SPI_CSR0_BITS = "_8_BIT">
-    (void) memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
+    (void) memcpy(pRdBuffer, (void*)${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
 <#else>
-    (void) memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
+    (void) memcpy(pRdBuffer, (void*)${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
 </#if>
 
     return rdSize;
@@ -150,9 +162,9 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
     }
 
 <#if SPI_CSR0_BITS = "_8_BIT">
-   (void) memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
+   (void) memcpy((void*)${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
 <#else>
-    (void) memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
+    (void) memcpy((void*)${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
 </#if>
 
     ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes = wrSize;
@@ -161,13 +173,13 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
     while (((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TDRE_Msk) != 0U) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
     {
 <#if SPI_CSR0_BITS = "_8_BIT">
-        *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+        SPI_TDR_8BIT_REG = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
 		${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 <#else>
-        *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+        SPI_TDR_9BIT_REG = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
 		${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 </#if>
-        asm("nop");
+        NOP;
     }
 
     /* Restore interrupt enable state and also enable TDRE interrupt */
@@ -267,10 +279,10 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
         {
 <#if SPI_CSR0_BITS = "_8_BIT">
             /* Reading DATA register will also clear the RDRF flag */
-            txRxData = *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_RDR);
+            txRxData = SPI_RDR_8BIT_REG;
 <#else>
             /* Reading DATA register will also clear the RDRF flag */
-            txRxData = *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_RDR);
+            txRxData = SPI_RDR_9BIT_REG;
 </#if>
 
             if (${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex < ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE)
@@ -289,10 +301,10 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
         while ((((statusFlags |= ${SPI_INSTANCE_NAME}_REGS->SPI_SR) & SPI_SR_TDRE_Msk) != 0U) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
         {
 <#if SPI_CSR0_BITS = "_8_BIT">
-            *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+            SPI_TDR_8BIT_REG = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
 			${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 <#else>
-            *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+            SPI_TDR_9BIT_REG = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
 			${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 </#if>
             /* Only clear TDRE flag so as not to clear NSSR flag which may have been set */

@@ -812,7 +812,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
         }
 		else
 		{
-			/ Do Nothing */
+			/* Do Nothing */
 		}
     }
 
