@@ -43,6 +43,7 @@
 
 <#assign NVIC_USAGE_FAULT_ENABLE = "NVIC_-10_0_ENABLE">
 <#assign NVIC_BUS_FAULT_ENABLE = "NVIC_-11_0_ENABLE">
+<#assign NVIC_MEM_MANAGEMENT_FAULT_ENABLE = "NVIC_-12_0_ENABLE">
 
 // *****************************************************************************
 // *****************************************************************************
@@ -112,6 +113,11 @@ void NVIC_Initialize( void )
 <#if .vars[NVIC_BUS_FAULT_ENABLE]?has_content && (.vars[NVIC_BUS_FAULT_ENABLE]==true)>
     /* Enable Bus fault */
     SCB->SHCSR |= (SCB_SHCSR_BUSFAULTENA_Msk);
+</#if>
+
+<#if .vars[NVIC_MEM_MANAGEMENT_FAULT_ENABLE]?has_content && (.vars[NVIC_MEM_MANAGEMENT_FAULT_ENABLE]==true)>
+    /* Enable memory management fault */
+    SCB->SHCSR |= (SCB_SHCSR_MEMFAULTENA_Msk);
 </#if>
 
 }
