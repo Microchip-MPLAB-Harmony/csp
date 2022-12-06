@@ -264,7 +264,8 @@ bool ${UART_INSTANCE_NAME}_Read(void* buffer, const size_t size )
             }
 <#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == true>
             /* 8-bit mode */
-            *lBuffer++ = (uint8_t)(U${UART_INSTANCE_NUM}RXREG );
+            *lBuffer = (uint8_t)(U${UART_INSTANCE_NUM}RXREG );
+            lBuffer++;
 <#else>
             if (( U${UART_INSTANCE_NUM}MODE & (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK)) == (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK))
             {
@@ -275,7 +276,8 @@ bool ${UART_INSTANCE_NAME}_Read(void* buffer, const size_t size )
             else
             {
                 /* 8-bit mode */
-                *lBuffer++ = (uint8_t)(U${UART_INSTANCE_NUM}RXREG );
+                *lBuffer = (uint8_t)(U${UART_INSTANCE_NUM}RXREG );
+                lBuffer++;
             }
 </#if>
 
@@ -341,7 +343,8 @@ bool ${UART_INSTANCE_NAME}_Write( void* buffer, const size_t size )
             else
             {
                 /* 8-bit mode */
-                U${UART_INSTANCE_NUM}TXREG = *lBuffer++;
+                U${UART_INSTANCE_NUM}TXREG = *lBuffer;
+                lBuffer++;
             }
 
             processedSize++;
@@ -364,12 +367,14 @@ bool ${UART_INSTANCE_NAME}_Write( void* buffer, const size_t size )
                 if (( U${UART_INSTANCE_NUM}MODE & (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK)) == (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK))
                 {
                     /* 9-bit mode */
-                    U${UART_INSTANCE_NUM}TXREG = ((uint16_t*)${UART_INSTANCE_NAME?lower_case}Obj.txBuffer)[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
+                    U${UART_INSTANCE_NUM}TXREG = ((uint16_t*)${UART_INSTANCE_NAME?lower_case}Obj.txBuffer)[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
+                    ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
                 }
                 else
                 {
                     /* 8-bit mode */
-                    U${UART_INSTANCE_NUM}TXREG = ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
+                    U${UART_INSTANCE_NUM}TXREG = ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
+                    ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
                 }
             }
 
@@ -501,17 +506,20 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
         {
 <#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == true>
             /* 8-bit mode */
-            ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = (uint8_t )(U${UART_INSTANCE_NUM}RXREG);
+            ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize] = (uint8_t )(U${UART_INSTANCE_NUM}RXREG);
+            ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++;
 <#else>
             if (( U${UART_INSTANCE_NUM}MODE & (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK)) == (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK))
             {
                 /* 9-bit mode */
-                ((uint16_t*)${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = (uint16_t )(U${UART_INSTANCE_NUM}RXREG);
+                ((uint16_t*)${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize] = (uint16_t )(U${UART_INSTANCE_NUM}RXREG);
+                ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++;
             }
             else
             {
                 /* 8-bit mode */
-                ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = (uint8_t )(U${UART_INSTANCE_NUM}RXREG);
+                ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize] = (uint8_t )(U${UART_INSTANCE_NUM}RXREG);
+                ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++;
             }
 </#if>
         }
@@ -557,12 +565,14 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
             if (( U${UART_INSTANCE_NUM}MODE & (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK)) == (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK))
             {
                 /* 9-bit mode */
-                U${UART_INSTANCE_NUM}TXREG = ((uint16_t*)${UART_INSTANCE_NAME?lower_case}Obj.txBuffer)[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
+                U${UART_INSTANCE_NUM}TXREG = ((uint16_t*)${UART_INSTANCE_NAME?lower_case}Obj.txBuffer)[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
+                ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
             }
             else
             {
                 /* 8-bit mode */
-                U${UART_INSTANCE_NUM}TXREG = ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
+                U${UART_INSTANCE_NUM}TXREG = ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
+                ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
             }
         }
 
@@ -625,7 +635,7 @@ void ${UART_INSTANCE_NAME}_WriteByte(int data)
 		/* Do Nothing */
 	}
 
-    U${UART_INSTANCE_NUM}TXREG = data;
+    U${UART_INSTANCE_NUM}TXREG = (uint32_t)data;
 }
 
 bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void )
@@ -642,7 +652,7 @@ bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void )
 
 int ${UART_INSTANCE_NAME}_ReadByte( void )
 {
-    return (U${UART_INSTANCE_NUM}RXREG);
+    return (int)(U${UART_INSTANCE_NUM}RXREG);
 }
 
 bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void )
