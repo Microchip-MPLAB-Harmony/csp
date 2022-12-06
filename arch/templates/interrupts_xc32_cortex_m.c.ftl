@@ -6,6 +6,10 @@
 #pragma coverity compliance deviate "MISRA C-2012 Rule 8.6" "H3_MISRAC_2012_R_8_6_DR_1"
 </#if>
 extern uint32_t _stack;
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma GCC diagnostic pop
+
+</#if>
 extern const H3DeviceVectors exception_table;
 
 extern void Dummy_Handler(void);

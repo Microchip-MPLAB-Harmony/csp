@@ -63,8 +63,7 @@ int read(int handle, void *buffer, unsigned int len)
                 <#if USART_PLIB_RX_ENABLED?eval>
                     <#lt>    int nChars = 0;
                     <#lt>    bool success = false;
-                    <#lt>    (void)len;
-                    <#lt>    if ((handle == 0)  && (len > 0))
+                    <#lt>    if ((handle == 0)  && (len > 0U))
                     <#lt>    {
                     <#lt>        do
                     <#lt>        {
@@ -79,8 +78,7 @@ int read(int handle, void *buffer, unsigned int len)
             <#else>
                 <#lt>    int nChars = 0;
                 <#lt>    bool success = false;
-                <#lt>    (void)len;
-                <#lt>    if ((handle == 0)  && (len > 0))
+                <#lt>    if ((handle == 0)  && (len > 0U))
                 <#lt>    {
                 <#lt>        do
                 <#lt>        {
@@ -112,7 +110,7 @@ int write(int handle, void * buffer, size_t count)
                     <#lt>           success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write(buffer, count);
                     <#lt>       }while( !success);
                     <#lt>   }
-                    <#lt>   return count;
+                    <#lt>   return (int)count;
                 <#else>
                     <#lt>   return -1;
                 </#if>
@@ -125,7 +123,7 @@ int write(int handle, void * buffer, size_t count)
                 <#lt>           success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write(buffer, count);
                 <#lt>       }while( !success);
                 <#lt>   }
-                <#lt>   return count;
+                <#lt>   return (int)count;
             </#if>
         <#else>
             <#lt>   return -1;
