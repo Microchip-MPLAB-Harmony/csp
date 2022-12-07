@@ -40,6 +40,9 @@
 
 #include "device.h"
 #include "plib_${UART_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#--Implementation-->
 // *****************************************************************************
@@ -106,7 +109,7 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
 
 <#if UART_INTERRUPT_MODE_ENABLE == true>
     /* Enable ${UART_INSTANCE_NAME} Receiver, Transmitter and TX Interrupt selection */
-    U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK | _U${UART_INSTANCE_NUM}STA_UTXISEL1_MASK <#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == true> | _U${UART_INSTANCE_NUM}STA_ADDEN_MASK | (0x${UART_9BIT_MODE_ADDR} << _U${UART_INSTANCE_NUM}STA_ADDR_POSITION) | (0x${UART_9BIT_MODE_ADDR_MASK} << _U${UART_INSTANCE_NUM}STA_MASK_POSITION) </#if>);
+    U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK | _U${UART_INSTANCE_NUM}STA_UTXISEL1_MASK <#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == true> | _U${UART_INSTANCE_NUM}STA_ADDEN_MASK | (0x${UART_9BIT_MODE_ADDR}UL << _U${UART_INSTANCE_NUM}STA_ADDR_POSITION) | (0x${UART_9BIT_MODE_ADDR_MASK}UL << _U${UART_INSTANCE_NUM}STA_MASK_POSITION) </#if>);
 <#else>
     /* Enable ${UART_INSTANCE_NAME} Receiver and Transmitter */
     U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK <#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == true> | _U${UART_INSTANCE_NUM}STA_ADDEN_MASK | (0x${UART_9BIT_MODE_ADDR}UL << _U${UART_INSTANCE_NUM}STA_ADDR_POSITION) | (0x${UART_9BIT_MODE_ADDR_MASK}UL << _U${UART_INSTANCE_NUM}STA_MASK_POSITION) </#if>);
@@ -253,7 +256,8 @@ bool ${UART_INSTANCE_NAME}_Read(void* buffer, const size_t size )
             }
 <#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == true>
             /* 8-bit mode */
-            *lBuffer++ = (uint8_t)(U${UART_INSTANCE_NUM}RXREG );
+            *lBuffer = (uint8_t)(U${UART_INSTANCE_NUM}RXREG );
+            lBuffer++;
 <#else>
             if (( U${UART_INSTANCE_NUM}MODE & (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK)) == (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK))
             {
@@ -264,7 +268,8 @@ bool ${UART_INSTANCE_NAME}_Read(void* buffer, const size_t size )
             else
             {
                 /* 8-bit mode */
-                *lBuffer++ = (uint8_t)(U${UART_INSTANCE_NUM}RXREG );
+                *lBuffer = (uint8_t)(U${UART_INSTANCE_NUM}RXREG );
+                lBuffer++;
             }
 </#if>
 
@@ -329,7 +334,8 @@ bool ${UART_INSTANCE_NAME}_Write( void* buffer, const size_t size )
             else
             {
                 /* 8-bit mode */
-                U${UART_INSTANCE_NUM}TXREG = *lBuffer++;
+                U${UART_INSTANCE_NUM}TXREG = *lBuffer;
+                lBuffer++;
             }
 
             processedSize++;
@@ -403,9 +409,9 @@ bool ${UART_INSTANCE_NAME}_AutoBaudQuery( void )
 	bool autobaudcheck = false;
     if((U${UART_INSTANCE_NUM}MODE & _U${UART_INSTANCE_NUM}MODE_ABAUD_MASK) != 0U)
 	{
-		
+
 	  autobaudcheck = true;
-	
+
 	}
     return autobaudcheck;
 }
@@ -617,7 +623,7 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
         }
 
 <#else>
-        while((!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
+        while(((U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK) == 0U) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
         {
             if (( U${UART_INSTANCE_NUM}MODE & (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK)) == (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK))
             {
@@ -661,20 +667,21 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#if UART_INTERRUPT_COUNT == 1>
 void UART_${UART_INSTANCE_NUM}_InterruptHandler (void)
 {
+    uint32_t temp = ${UART_FAULT_IEC_REG};
     /* Call Error handler if Error interrupt flag is set */
-    if (((${UART_FAULT_IFS_REG} & _${UART_FAULT_IFS_REG}_U${UART_INSTANCE_NUM}EIF_MASK) != 0U) && ((${UART_FAULT_IEC_REG} & _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK) != 0U))
+    if (((${UART_FAULT_IFS_REG} & _${UART_FAULT_IFS_REG}_U${UART_INSTANCE_NUM}EIF_MASK) != 0U) && ((temp & _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK) != 0U))
     {
         ${UART_INSTANCE_NAME}_FAULT_InterruptHandler();
     }
-
+    temp = ${UART_RX_IEC_REG};
     /* Call RX handler if RX interrupt flag is set */
-    if (((${UART_RX_IFS_REG} & _${UART_RX_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK) != 0U) && ((${UART_RX_IEC_REG} & _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK) != 0U))
+    if (((${UART_RX_IFS_REG} & _${UART_RX_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK) != 0U) && ((temp & _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK) != 0U))
     {
         ${UART_INSTANCE_NAME}_RX_InterruptHandler();
     }
-
+    temp = ${UART_TX_IEC_REG};
     /* Call TX handler if TX interrupt flag is set */
-    if (((${UART_TX_IFS_REG} & _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK) != 0U) && ((${UART_TX_IEC_REG} & _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK) != 0U))
+    if (((${UART_TX_IFS_REG} & _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK) != 0U) && ((temp & _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK) != 0U))
     {
         ${UART_INSTANCE_NAME}_TX_InterruptHandler();
     }

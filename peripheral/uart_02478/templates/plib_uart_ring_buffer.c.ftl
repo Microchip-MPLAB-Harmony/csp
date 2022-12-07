@@ -40,6 +40,9 @@
 
 #include "device.h"
 #include "plib_${UART_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#--Implementation-->
 // *****************************************************************************
@@ -117,7 +120,7 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     U${UART_INSTANCE_NUM}MODE = 0x${UMODE_VALUE};
 
     /* Enable ${UART_INSTANCE_NAME} Receiver, Transmitter and TX Interrupt selection */
-    U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK | _U${UART_INSTANCE_NUM}STA_UTXISEL1_MASK <#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == true> | _U${UART_INSTANCE_NUM}STA_ADDEN_MASK | (0x${UART_9BIT_MODE_ADDR} << _U${UART_INSTANCE_NUM}STA_ADDR_POSITION) | (0x${UART_9BIT_MODE_ADDR_MASK} << _U${UART_INSTANCE_NUM}STA_MASK_POSITION) </#if>);
+    U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK | _U${UART_INSTANCE_NUM}STA_UTXISEL1_MASK <#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == true> | _U${UART_INSTANCE_NUM}STA_ADDEN_MASK | (0x${UART_9BIT_MODE_ADDR}UL << _U${UART_INSTANCE_NUM}STA_ADDR_POSITION) | (0x${UART_9BIT_MODE_ADDR_MASK}UL << _U${UART_INSTANCE_NUM}STA_MASK_POSITION) </#if>);
 
     /* BAUD Rate register Setup */
     U${UART_INSTANCE_NUM}BRG = ${BRG_VALUE};
@@ -355,17 +358,20 @@ size_t ${UART_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
         if (rdOutIndex != rdInIndex)
         {
 <#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == true>
-            pRdBuffer[nBytesRead++] = ${UART_INSTANCE_NAME}_ReadBuffer[rdOutIndex];
+            pRdBuffer[nBytesRead] = ${UART_INSTANCE_NAME}_ReadBuffer[rdOutIndex];
+            nBytesRead++;
 			rdOutIndex++;
 <#else>
             if (${UART_INSTANCE_NAME}_IS_9BIT_MODE_ENABLED())
             {
-                ((uint16_t*)pRdBuffer)[nBytesRead++] = ((uint16_t*)&${UART_INSTANCE_NAME}_ReadBuffer)[rdOutIndex];
+                ((uint16_t*)pRdBuffer)[nBytesRead] = ((uint16_t*)&${UART_INSTANCE_NAME}_ReadBuffer)[rdOutIndex];
+                nBytesRead++;
 				rdOutIndex++;
             }
             else
             {
-                pRdBuffer[nBytesRead++] = ${UART_INSTANCE_NAME}_ReadBuffer[rdOutIndex];
+                pRdBuffer[nBytesRead] = ${UART_INSTANCE_NAME}_ReadBuffer[rdOutIndex];
+                nBytesRead++;
 				rdOutIndex++;
             }
 </#if>
@@ -628,14 +634,14 @@ size_t ${UART_INSTANCE_NAME}_WriteBufferSizeGet(void)
 }
 
 bool ${UART_INSTANCE_NAME}_TransmitComplete(void)
-{   
+{
     bool status = false;
-	
+
     if((U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK) != 0U)
     {
         status = true;
-    }	
-	return status;	
+    }
+	return status;
 }
 
 bool ${UART_INSTANCE_NAME}_WriteNotificationEnable(bool isEnabled, bool isPersistent)
@@ -677,12 +683,12 @@ UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void )
 bool ${UART_INSTANCE_NAME}_AutoBaudQuery( void )
 {
 	bool autobaudcheck = false;
-	
+
     if((U${UART_INSTANCE_NUM}MODE & _U${UART_INSTANCE_NUM}MODE_ABAUD_MASK) != 0U)
 	{
-		
+
 	    autobaudcheck = true;
-	
+
 	}
     return autobaudcheck;
 }
@@ -837,18 +843,21 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#if UART_INTERRUPT_COUNT == 1>
 void UART_${UART_INSTANCE_NUM}_InterruptHandler (void)
 {
+    uint32_t temp = ${UART_FAULT_IEC_REG};
     /* Call Error handler if Error interrupt flag is set */
-    if (((${UART_FAULT_IFS_REG} & _${UART_FAULT_IFS_REG}_U${UART_INSTANCE_NUM}EIF_MASK) != 0U) && ((${UART_FAULT_IEC_REG} & _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK) != 0U))
+    if (((${UART_FAULT_IFS_REG} & _${UART_FAULT_IFS_REG}_U${UART_INSTANCE_NUM}EIF_MASK) != 0U) && ((temp & _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK) != 0U))
     {
         ${UART_INSTANCE_NAME}_FAULT_InterruptHandler();
     }
+    temp = ${UART_RX_IEC_REG};
     /* Call RX handler if RX interrupt flag is set */
-    if (((${UART_RX_IFS_REG} & _${UART_RX_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK) != 0U) && ((${UART_RX_IEC_REG} & _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK) != 0U))
+    if (((${UART_RX_IFS_REG} & _${UART_RX_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK) != 0U) && ((temp & _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK) != 0U))
     {
         ${UART_INSTANCE_NAME}_RX_InterruptHandler();
     }
+    temp = ${UART_TX_IEC_REG};
     /* Call TX handler if TX interrupt flag is set */
-    if (((${UART_TX_IFS_REG} & _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK) != 0U) && ((${UART_TX_IEC_REG} & _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK) != 0U))
+    if (((${UART_TX_IFS_REG} & _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK) != 0U) && ((temp & _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK) != 0U))
     {
         ${UART_INSTANCE_NAME}_TX_InterruptHandler();
     }
