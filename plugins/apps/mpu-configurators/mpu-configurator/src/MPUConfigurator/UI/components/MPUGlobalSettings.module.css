@@ -1,0 +1,12 @@
+.grid-container {
+    display: grid;
+    column-gap: 1rem;
+    row-gap: 1rem;
+    grid-template-columns: max-content max-content;
+    padding: 10px;
+  }
+
+
+.grid-container div {
+  font-size: 1rem;
+}

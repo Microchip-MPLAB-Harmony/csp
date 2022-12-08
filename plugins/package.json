@@ -3,13 +3,16 @@
   "workspaces": [
     "apps/dma-configurators/dma*",
     "apps/interrupt_configurators/*",
-    "apps/event-configurators/event-configurator",
+    "apps/event-configurators/*",
+    "apps/mpu-configurators/*",
     "harmony_plugin_sdk/*"
   ],
   "scripts": {
     "build": "lerna run build",
     "start:event": "lerna run start --scope='event-configurator'",
-    "build:event": "lerna run build --scope='event-configurator'"
+    "build:event": "lerna run build --scope='event-configurator'",
+    "start:mpu": "lerna run start --scope='mpu-configurator'",
+    "build:mpu": "lerna run build --scope='mpu-configurator'"
   },
   "devDependencies": {
     "lerna": "^5.5.0"
