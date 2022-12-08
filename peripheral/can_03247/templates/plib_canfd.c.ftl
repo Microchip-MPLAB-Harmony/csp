@@ -50,6 +50,9 @@
 // *****************************************************************************
 #include <sys/kmem.h>
 #include "plib_canfd${CAN_INSTANCE_NUM}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#assign CAN_NBT_TSEG1  = NBT_TSEG1 - 1>
 <#assign CAN_NBT_TSEG2  = NBT_TSEG2 - 1>
@@ -123,8 +126,8 @@
 /* FIFO Offset in word (4 bytes) */
 #define CANFD_FIFO_OFFSET             ${FIFO_OFFSET}U
 /* Filter Offset in word (4 bytes) */
-#define CANFD_FILTER_OFFSET           ${FILTER_OFFSET}
-#define CANFD_FILTER_OBJ_OFFSET       ${FILTER_OBJ_MASK_OFFSET}
+#define CANFD_FILTER_OFFSET           ${FILTER_OFFSET}U
+#define CANFD_FILTER_OBJ_OFFSET       ${FILTER_OBJ_MASK_OFFSET}U
 /* Acceptance Mask Offset in word (4 bytes) */
 #define CANFD_ACCEPTANCE_MASK_OFFSET  ${FILTER_OBJ_MASK_OFFSET}U
 #define CANFD_MSG_SID_MASK            (0x7FFU)
@@ -395,7 +398,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
             txMessage->t1 = 0;
         }
 <#if CAN_OPMODE != "0x6">
-        if (length > 64)
+        if (length > 64U)
         {
             length = 64;
         }
@@ -418,7 +421,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
         }
 <#else>
         /* Limit length */
-        if (length > 8)
+        if (length > 8U)
             length = 8;
         txMessage->t1 |= length;
 </#if>
@@ -441,7 +444,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
         txMessage->t1 |= ((sequence << 9) & CANFD_MSG_SEQ_MASK);        
 
 </#if>
-        if (fifoQueueNum == 0)
+        if (fifoQueueNum == 0U)
         {
 <#if TX_QUEUE_USE == true>
 <#if CAN_INTERRUPT_MODE == true>
