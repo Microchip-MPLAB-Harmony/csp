@@ -123,7 +123,7 @@ for group in range(0, len(registerGroup)):
                         caption = valueGroupChildren[j].getAttribute("caption")
                         keyValueSymbol.addKey(name, str(value), caption)
                     keyValueSymbol.setDefaultValue(default[numfuses % len(default)])
-                    if valueGroup == "RPMU_VREGCTRL__VREGOUT" or valueGroup == "RPMU_VREGCTRL__LVSTDBY" or valueGroup == "RPMU_VREGCTRL__LVHIB" or valueGroup == "RPMU_VREGCTRL__ULDOLEVEL":
+                    if valueGroup == "RPMU_VREGCTRL__VREGOUT" or valueGroup == "RPMU_VREGCTRL__LVSTDBY" or valueGroup == "RPMU_VREGCTRL__LVHIB" or valueGroup == "RPMU_VREGCTRL__ULDOLEVEL" or valueGroup == "DAL__CPU0" or valueGroup == "DAL__CPU1":
                         keyValueSymbol.setOutputMode("Value")
                     else:
                         keyValueSymbol.setOutputMode("Key")
