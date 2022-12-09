@@ -3,6 +3,32 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.15.0-eng.1
+
+### New Features
+
+- This engineering release adds support for the following features in PIC32CZ-CA family of devices:
+   -  CRC support in FCR Peripheral library
+   -  Support for programming fuse bits
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+### Bug fixes
+  - None
+
+### Known Issues
+
+  - Same as v3.14.0
+
+### Development Tools
+
+  - Same as v3.14.0
+
+### Notes
+
+-  None
+
 ## CSP Release v3.14.0
 
 ### New Features
@@ -62,9 +88,9 @@ PIC32CX-BZ2 family of wireless microcontrollers (MCUs) and WBZ451 modules,
 - **New Features and Enhancements**
   - MISRA-C 2012 required rules compliance for all M0+, M4F, M23 based MCUs
   - Added ADC comparision mode in SAM E70/S70/V70/V71 and SAM G51/G53/G54/G55 Family of devices
-  - Added support for non-blocking delay in Systick Plib  
+  - Added support for non-blocking delay in Systick Plib
   - Added pin export feature to export pin configurations to a CSV file for all devices except PIC32M devices
-  
+
 ### Known Issues
 
 The current known issues are as follows:
@@ -178,7 +204,7 @@ For all other parts:
 ### Known Issues
 
 The current known issues are as follows:
-- Simplified the API for CAN and MCAN peripheral library used in MCU and MPU products based on ARM Cortex-M and Cortex-A series processor. Configuration option is provided to generate older version of API and the old APIs will be deprecated in the future release. 
+- Simplified the API for CAN and MCAN peripheral library used in MCU and MPU products based on ARM Cortex-M and Cortex-A series processor. Configuration option is provided to generate older version of API and the old APIs will be deprecated in the future release.
 - The following product families specifically requires the below mentioned DFP versions to be [installed](https://microchipdeveloper.com/mplabx:projects-packs)  with MPLABX v5.50. It is always recommended to use the latest version of DFPs for all products provided by Microchip.
      -  **SAM L11 Family**: SAML11 DFP v4.3.139 or higher
      -  **SAM RH707 Family**: SAMRH707 DFP 1.0.28 or higher
@@ -251,7 +277,7 @@ The current known issues are as follows:
      -  **SAM E51 Family**: SAME51 DFP v3.4.98 or higher
      -  **SAM E53 Family**: SAME53 DFP v3.4.79 or higher
      -  **SAM E54 Family**: SAME54 DFP v3.5.87 or higher
-     -  **PIC32MZ-W Family**: PIC32MZ-W DFP v1.4.193 or higher 
+     -  **PIC32MZ-W Family**: PIC32MZ-W DFP v1.4.193 or higher
 - CANFD peripheral library data types are updated to support co-existence of CAN and CANFD peripheral in the same MCU. Applications that use CANFD peripheral in PIC32M devices should be updated to use the new data types.
 
 ### Development Tools
