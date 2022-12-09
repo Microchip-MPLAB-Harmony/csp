@@ -4,12 +4,12 @@ package:
   type: "api"
   status: "production"
   required: true
-  version: "3.15.0-eng.1"
+  version: "3.15.0-E1"
 
   dependencies:
     - name: "dev_packs"
       type: "package"
-      version: "3.15.0-eng.1"
+      version: "3.15.0-E1"
     - name: "harmony-services"
       type: "package"
       version: "1.1.0"

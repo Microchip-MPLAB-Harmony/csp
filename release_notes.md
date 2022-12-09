@@ -3,7 +3,7 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
-## CSP Release v3.15.0-eng.1
+## CSP Release v3.15.0-E1
 
 ### New Features
 
