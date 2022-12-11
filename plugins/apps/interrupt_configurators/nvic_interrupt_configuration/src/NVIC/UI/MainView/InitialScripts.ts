@@ -21,6 +21,7 @@
  * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  */
 import { GetSymbolValue } from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess';
+import { log } from '@mplab_harmony/harmony-plugin-core-service/build/log/CustomConsole';
 import { component_id } from './MainBlock';
 
 export let RowAndVectorInterruptMap = new Map();
@@ -46,7 +47,7 @@ function UpdateRowAndVectorInterruptMap() {
       totalRowLength++;
     }
     if (interruptNumbers === 0) {
-      alert('For vector number: ' + vectorNum + ' , Interrupt length is zero.');
+      log('For vector number: ' + vectorNum + ' , Interrupt length is zero.');
     }
   }
 }
