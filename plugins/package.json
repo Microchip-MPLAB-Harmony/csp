@@ -6,7 +6,7 @@
     "apps/event-configurators/*",
     "apps/mpu-configurators/*",
     "apps/memory-configurators/*",
-    "harmony_plugin_sdk/*"
+	"apps/trustzone_configurators/*"
   ],
   "scripts": {
     "build": "lerna run build",
