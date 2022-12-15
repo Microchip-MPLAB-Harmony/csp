@@ -3,6 +3,30 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.15.0-E2
+
+### New Features
+
+- This engineering release adds support for the PIC32CK-GC/SG family of devices
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+### Bug fixes
+  - None
+
+### Known Issues
+
+  - Same as v3.14.0
+
+### Development Tools
+
+  - Same as v3.14.0
+
+### Notes
+
+-  None
+
 ## CSP Release v3.15.0-E1
 
 ### New Features
