@@ -147,7 +147,7 @@ extern "C" {
         <#lt>#define CACHE_ALIGN
     </#if>
 
-	<#lt>#define CACHE_ALIGNED_SIZE_GET(size)     (size + ((size % CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (size % CACHE_LINE_SIZE)) : 0))
+	<#lt>#define CACHE_ALIGNED_SIZE_GET(size)     ((size) + ((((size) % (CACHE_LINE_SIZE))!= 0U)? ((CACHE_LINE_SIZE) - ((size) % (CACHE_LINE_SIZE))) : (0U)))
 
     <#lt>#ifndef FORMAT_ATTRIBUTE
     <#lt>   #define FORMAT_ATTRIBUTE(archetype, string_index, first_to_check)  __attribute__ ((format (archetype, string_index, first_to_check)))
