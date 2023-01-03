@@ -53,6 +53,10 @@
 */
 #include "device.h"
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
+
 <#compress>
 <#assign TC_UNSIGNED_INT_TYPE = "uint16_t">
 <#assign TC_SIGNED_INT_TYPE = "int16_t">
@@ -183,7 +187,8 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
 
     <#lt>void ${TC_INSTANCE_NAME}_CH0_InterruptHandler(void)
     <#lt>{
-    <#lt>    TC_QUADRATURE_STATUS quadrature_status = (TC_QUADRATURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK);
+    <#lt>    uint32_t tc_quad_stat = (${TC_INSTANCE_NAME}_REGS->TC_QISR & (uint32_t)TC_QUADRATURE_STATUS_MSK);
+    <#lt>    TC_QUADRATURE_STATUS quadrature_status = (TC_QUADRATURE_STATUS)tc_quad_stat;
     <#lt>    /* Call registered callback function */
     <#lt>    if (${TC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
