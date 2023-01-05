@@ -133,8 +133,10 @@ def slaveModeVisibility(symbol, event):
     if event["id"] == "I2CS_A10M_SUPPORT":
         if i2csSym_A10M.getValue() == True:
             symbol.setLabel("I2C Slave Address (10-bit)")
+            symbol.setMax(1023)
         else:
             symbol.setLabel("I2C Slave Address (7-bit)")
+            symbol.setMax(127)
 
     elif event["id"] == "I2C_OPERATING_MODE":
         if i2cSym_OperatingMode.getValue() == "Slave":
@@ -281,7 +283,8 @@ def instantiateComponent(i2cComponent):
     #Slave Address
     i2csSym_ADDR = i2cComponent.createHexSymbol("I2C_SLAVE_ADDDRESS", None)
     i2csSym_ADDR.setLabel("I2C Slave Address (7-bit)")
-    i2csSym_ADDR.setMax(1023)
+    i2csSym_ADDR.setMin(0)
+    i2csSym_ADDR.setMax(127)
     i2csSym_ADDR.setVisible(False)
     i2csSym_ADDR.setDefaultValue(0x54)
     i2csSym_ADDR.setDependencies(slaveModeVisibility, ["I2C_OPERATING_MODE", "I2CS_A10M_SUPPORT"])
