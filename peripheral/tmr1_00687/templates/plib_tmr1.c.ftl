@@ -151,4 +151,13 @@ void ${TMR1_INSTANCE_NAME}_CallbackRegister( TMR1_CALLBACK callback_fn, uintptr_
     ${TMR1_INSTANCE_NAME?lower_case}Obj.callback_fn = callback_fn;
     ${TMR1_INSTANCE_NAME?lower_case}Obj.context = context;
 }
+<#else>
+
+bool ${TMR1_INSTANCE_NAME}_PeriodHasExpired(void)
+{
+    bool status = ${TMR1_IFS_REG}bits.T1IF;
+    ${TMR1_IFS_REG}CLR = _${TMR1_IFS_REG}_T1IF_MASK;
+
+    return status;
+}
 </#if>
