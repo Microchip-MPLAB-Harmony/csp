@@ -188,7 +188,7 @@ def updateSPISlaveBusyPinVisibility(symbol, event):
     symbol.setVisible(spiMode == "SLAVE" and busyPinEnabled == True)
 
 def updateCSR_SCBR_Value(symbol, baudVal, clockVal):
-    SCBR = clockVal/baudVal
+    SCBR = int(round(float(clockVal)/baudVal, 0))
     spiSymInvalidClock.setVisible(SCBR < 1 or SCBR > 255)
 
     if SCBR == 0:
@@ -593,7 +593,7 @@ def instantiateComponent(spiComponent):
     spiSymCSRIndex.setDependencies(updateCSRIndex, ["SPI_EN_NPCS0", "SPI_EN_NPCS1", "SPI_EN_NPCS2", "SPI_EN_NPCS3"])
 
     defaultbaudRate = 1000000
-    defaultSCBR = int(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))/defaultbaudRate
+    defaultSCBR = int(round((float(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))/defaultbaudRate), 0))
 
 ## Deprecated symbols ----------------------------------------------##
 
