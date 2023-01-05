@@ -206,4 +206,19 @@ void ${TMR_INSTANCE_NAME}_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t 
     ${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn = callback_fn;
     ${TMR_INSTANCE_NAME?lower_case}Obj.context = context;
 }
+<#else>
+
+bool ${TMR_INSTANCE_NAME}_PeriodHasExpired(void)
+{
+    bool status;
+    <#if TIMER_32BIT_MODE_SEL =="0">
+        status = ${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM}IF;
+        ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
+    <#else>
+        status = ${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM?number + 1}IF;
+        ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM?number + 1}IF_MASK;
+    </#if>
+
+    return status;
+}
 </#if>
