@@ -123,7 +123,7 @@
     <#lt>
     <#lt>    newCompare=_CP0_GET_COMPARE() + coreTmr.period;
     <#lt>
-    <#lt>    if (count<newCompare-50U)
+    <#lt>    if (50U < newCompare-count)
     <#lt>    {
     <#lt>        _CP0_SET_COMPARE(newCompare);
     <#lt>    }    
