@@ -293,6 +293,7 @@ callbackApiName = "SYSTICK_TimerCallbackSet"
 periodSetApiName = "SYSTICK_TimerPeriodSet"
 interruptEnableApiName = "SYSTICK_TimerInterruptEnable"
 interruptDisableApiName = "SYSTICK_TimerInterruptDisable"
+interruptRestoreApiName = "SYSTICK_TimerInterruptRestore"
 
 timerWidth_Sym = coreComponent.createIntegerSymbol("TIMER_WIDTH", None)
 timerWidth_Sym.setVisible(False)
@@ -325,6 +326,10 @@ interruptEnableApiName_Sym.setDefaultValue(interruptEnableApiName);
 interruptDisableApiName_Sym = coreComponent.createStringSymbol("INTERRUPT_DISABLE_API_NAME", None)
 interruptDisableApiName_Sym.setVisible(False)
 interruptDisableApiName_Sym.setDefaultValue(interruptDisableApiName);
+
+interruptRestoreApiName_Sym = coreComponent.createStringSymbol("INTERRUPT_RESTORE_API_NAME", None)
+interruptRestoreApiName_Sym.setVisible(False)
+interruptRestoreApiName_Sym.setDefaultValue(interruptRestoreApiName);
 
 irqEnumName_Sym = coreComponent.createStringSymbol("IRQ_ENUM_NAME", None)
 irqEnumName_Sym.setVisible(False)

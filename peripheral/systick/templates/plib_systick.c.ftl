@@ -170,13 +170,21 @@ void SYSTICK_DelayUs ( uint32_t delay_us)
    }
 }
 <#if SYSTICK_USED_BY_SYS_TIME == true>
-void SYSTICK_TimerInterruptDisable ( void )
+bool SYSTICK_TimerInterruptDisable ( void )
 {
+    bool interruptStatus = false;
+
+    if (SysTick->CTRL & SysTick_CTRL_TICKINT_Msk)
+    {
+        interruptStatus = true;
+    }
 <#if SYSTICK_CLOCK == "1">
     SysTick->CTRL = 0x05U;
 <#else>
     SysTick->CTRL = 0x01U;
 </#if>
+
+    return interruptStatus;
 }
 
 void SYSTICK_TimerInterruptEnable ( void )
@@ -196,6 +204,14 @@ void SYSTICK_TimerInterruptEnable ( void )
 
     NVIC_INT_Restore(interruptState);
 }
+
+void SYSTICK_TimerInterruptRestore ( bool interruptStatus )
+{
+    if (interruptStatus == true)
+    {
+        SYSTICK_TimerInterruptEnable();
+    }
+}
 </#if>
 
 
@@ -208,31 +224,31 @@ void SYSTICK_TimerInterruptEnable ( void )
 
 <#if USE_SYSTICK_INTERRUPT == true>
 uint32_t SYSTICK_GetTickCounter(void)
-{ 
-	return systick.tickCounter; 
+{
+    return systick.tickCounter;
 }
 
 void SYSTICK_StartTimeOut (SYSTICK_TIMEOUT* timeout, uint32_t delay_ms)
-{ 
-	timeout->start = SYSTICK_GetTickCounter();
-	timeout->count = (delay_ms*1000U)/SYSTICK_INTERRUPT_PERIOD_IN_US; 
+{
+    timeout->start = SYSTICK_GetTickCounter();
+    timeout->count = (delay_ms*1000U)/SYSTICK_INTERRUPT_PERIOD_IN_US;
 }
 
 void SYSTICK_ResetTimeOut (SYSTICK_TIMEOUT* timeout)
-{ 
-	timeout->start = SYSTICK_GetTickCounter(); 
+{
+    timeout->start = SYSTICK_GetTickCounter();
 }
 
 bool SYSTICK_IsTimeoutReached (SYSTICK_TIMEOUT* timeout)
-{ 
+{
     bool valTimeout  = true;
-	if ((SYSTICK_GetTickCounter() - timeout->start) < timeout->count)
-	{
-		valTimeout = false;
-	}
-	
-	return valTimeout;
-	
+    if ((SYSTICK_GetTickCounter() - timeout->start) < timeout->count)
+    {
+        valTimeout = false;
+    }
+
+    return valTimeout;
+
 }
     <#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
     <#lt>{

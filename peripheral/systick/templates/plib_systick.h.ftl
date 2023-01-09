@@ -107,7 +107,8 @@ void SYSTICK_DelayUs ( uint32_t delay_us );
 </#if>
 <#if SYSTICK_USED_BY_SYS_TIME == true>
 void SYSTICK_TimerInterruptEnable ( void );
-void SYSTICK_TimerInterruptDisable ( void );
+bool SYSTICK_TimerInterruptDisable ( void );
+void SYSTICK_TimerInterruptRestore ( bool interruptStatus );
 </#if>
 #ifdef __cplusplus // Provide C++ Compatibility
  }
