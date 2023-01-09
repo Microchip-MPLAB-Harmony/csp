@@ -252,8 +252,6 @@ coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
-# load ADC manager information
-coreComponent.addPlugin("../peripheral/adc_44073/plugin/adc_44073.jar")
 # load AIC manager information
 coreComponent.addPlugin("../peripheral/aic_11051/plugin/aic_11051.jar")
 

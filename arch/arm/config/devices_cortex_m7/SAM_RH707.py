@@ -173,9 +173,6 @@ execfile(Variables.get("__CORE_DIR")
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
-# load ADC manager information
-coreComponent.addPlugin("../peripheral/adc_44073/plugin/adc_44073.jar")
-
 global armLibCSourceFile
 global devconSystemInitFile
 global compilerSpecifics

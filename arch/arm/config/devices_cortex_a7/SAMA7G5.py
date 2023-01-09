@@ -263,10 +263,6 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/generic_timer/config/gene
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
 coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 
-# load ADC manager information
-coreComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar") 
-
-
 compiler_choice = deviceFamily.getComponent().getSymbolByID("COMPILER_CHOICE")
 if compiler_choice.getSelectedKey() == "XC32":
     armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)

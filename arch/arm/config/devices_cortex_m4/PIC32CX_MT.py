@@ -204,9 +204,6 @@ for sefc_instance in range (0, len(modules)):
     components.append(str(modules[sefc_instance].getAttribute("name")).lower())
 Database.activateComponents(components)
 
-#Load ADC plugin
-coreComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar")
-
 compilerSelected = compilerChoice.getSelectedKey().lower()
 
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
