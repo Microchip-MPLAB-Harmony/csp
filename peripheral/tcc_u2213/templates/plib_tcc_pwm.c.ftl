@@ -67,6 +67,11 @@
 <#assign TCC_CTRLB_DIR = "">
 <#assign TCC_WAVE_VAL = "TCC_WAVE_WAVEGEN_" + TCC_WAVE_WAVEGEN>
 
+<#if (TCC_WAVE_WAVEGEN == "NPWM")>
+    <#-- Ramp -->
+    <#assign TCC_WAVE_VAL = TCC_WAVE_VAL + " | TCC_WAVE_RAMP_" + TCC_WAVE_RAMP>
+</#if>
+
 <#list 0..(TCC_NUM_CHANNELS-1) as i>
 <#assign CH_NUM = i >
 <#assign TCC_POLARITY = "TCC_"+i+"_WAVE_POL">
@@ -97,6 +102,7 @@
         </#if>
     </#if>
 </#if> <#-- Swap End -->
+
 <#-- polarity -->
 <#if (TCC_WAVE_WAVEGEN == "DSBOTTOM") || (TCC_WAVE_WAVEGEN == "DSBOTH") || (TCC_WAVE_WAVEGEN == "DSTOP") >
     <#if .vars[TCC_POLARITY] == "1">
@@ -113,6 +119,7 @@
     <#else>
         <#assign TCC_WAVE_VAL = "TCC_WAVE_POL"+i+"_Msk">
     </#if>
+   
 </#if>
 </#if>
 <#-- polarity end -->
@@ -300,6 +307,15 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 
 <#if TCC_WAVE_VAL?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE = ${TCC_WAVE_VAL};
+</#if>
+
+<#if (TCC_WAVE_WAVEGEN == "NPWM")>
+    <#if (TCC_WAVE_RAMP == "RAMP2" || TCC_WAVE_RAMP == "RAMP2A") && TCC_WAVE_CIPEREN == true>
+    ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE |= TCC_WAVE_CIPEREN_Msk;
+    </#if>
+    <#if TCC_WAVE_RAMP == "RAMP2A">
+    ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE |= TCC_WAVE_CICCEN0_Msk;
+    </#if>    
 </#if>
 
     /* Configure duty cycle values */
