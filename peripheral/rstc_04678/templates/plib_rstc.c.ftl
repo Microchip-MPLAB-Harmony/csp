@@ -114,7 +114,7 @@ bool ${RSTC_INSTANCE_NAME}_NRSTPinRead (void)
     return  (bool) (${RSTC_INSTANCE_NAME}_REGS->RSTC_SR& RSTC_SR_NRSTL_Msk);
 }
 </#if>
-<#if RSTC_MR_CPROCEN??>
+<#if RSTC_MR_CPROCEN>
 
 
 void ${RSTC_INSTANCE_NAME}_CoProcessorEnable(bool enable)
