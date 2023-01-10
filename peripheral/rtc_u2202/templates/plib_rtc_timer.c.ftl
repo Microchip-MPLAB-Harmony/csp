@@ -305,8 +305,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32PeriodGet ( void )
     <#lt>{
+    <#lt>   <#if RTC_MODE0_MATCHCLR == true>
+    <#lt>   return ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COMP;
+    <#lt>   <#else>
     <#lt>   /* Get 32Bit Compare Value */
     <#lt>   return (RTC_MODE0_COUNT_COUNT_Msk);
+    <#lt>   </#if>
     <#lt>}
 
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32FrequencyGet ( void )
