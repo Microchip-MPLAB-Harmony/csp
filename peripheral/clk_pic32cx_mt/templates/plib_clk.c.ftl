@@ -285,8 +285,8 @@ static void CPUClockInitialize(void)
         /* Wait for status CPMCKRDY */
     }
 
-    /* Enable co-processor bus clock ${CLK_SCER_CPCK?string(" and co-processor clock", "")} */
-    PMC_REGS->PMC_SCER = (PMC_SCER_CPKEY_PASSWD | PMC_SCER_CPBMCK_Msk${CLK_SCER_CPCK?string(" | PMC_SCER_CPCK_Msk", "")});
+    /* Enable co-processor bus clock <#if CLK_SCER_CPCK??>${CLK_SCER_CPCK?string(" and co-processor clock", "")}</#if> */
+    PMC_REGS->PMC_SCER = (PMC_SCER_CPKEY_PASSWD | PMC_SCER_CPBMCK_Msk<#if CLK_SCER_CPCK?? && CLK_SCER_CPCK == true> | PMC_SCER_CPCK_Msk</#if>);
 </#if><#-- CLK_SCER_CPBMCK -->
 }
 
