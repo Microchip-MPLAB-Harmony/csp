@@ -362,7 +362,7 @@ void ${SDHC_INSTANCE_NAME}_DmaSetup (
     if (numBytes <= 65536U)
     {
         ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0].address = (uint32_t)KVA_TO_PA(buffer);
-        ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0].length = (uint16_t)nBytes;
+        ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0].length = (uint16_t)numBytes;
         ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0].attribute = \
             (SDHC_DESC_TABLE_ATTR_XFER_DATA | SDHC_DESC_TABLE_ATTR_VALID | SDHC_DESC_TABLE_ATTR_INTR);
             
