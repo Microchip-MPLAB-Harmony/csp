@@ -314,7 +314,7 @@ void CLOCK_Initialize (void)
 
 ${CLK_INIT_LIST}
 
-<#list 1..GCLK_MAX_ID as i>
+<#list 0..GCLK_MAX_ID as i>
     <#assign GCLK_ID_CHEN = "GCLK_ID_" + i + "_CHEN">
     <#assign GCLK_ID_INDEX = "GCLK_ID_" + i + "_INDEX">
     <#assign GCLK_ID_NAME = "GCLK_ID_" + i + "_NAME">

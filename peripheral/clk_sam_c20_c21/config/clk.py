@@ -239,7 +239,7 @@ oscctrlSym_XOSCCTRL_ONDEMAND.setOutputMode("Key")
 oscctrlSym_XOSCCTRL_ONDEMAND.setDisplayMode("Description")
 oscctrlSym_XOSCCTRL_ONDEMAND.addKey("DISABLE",str(0),"Always Enable")
 oscctrlSym_XOSCCTRL_ONDEMAND.addKey("ENABLE",str(1),"Only on Peripheral Request")
-oscctrlSym_XOSCCTRL_ONDEMAND.setDefaultValue(0)
+oscctrlSym_XOSCCTRL_ONDEMAND.setDefaultValue(1)
 
 #XOSC Oscillator Startup Time
 oscctrlSym_XOSCCTRL_STARTUP = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_XOSC_STARTUP",oscctrlXosc_Menu)
@@ -404,7 +404,7 @@ oscctrlSym_DPLLCTRLA_ONDEMAND.setOutputMode("Value")
 oscctrlSym_DPLLCTRLA_ONDEMAND.setDisplayMode("Description")
 oscctrlSym_DPLLCTRLA_ONDEMAND.addKey("Disable",str(0),"Always Enable")
 oscctrlSym_DPLLCTRLA_ONDEMAND.addKey("Enable",str(1),"Only on Peripheral Request")
-oscctrlSym_DPLLCTRLA_ONDEMAND.setDefaultValue(0)
+oscctrlSym_DPLLCTRLA_ONDEMAND.setDefaultValue(1)
 
 #Digital Phase Locked Loop(DPLL) Run StandBy Control
 oscctrlSym_DPLLCTRLA_RUNSTDBY = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DPLL_RUNSTDY", dpll96_Menu)
@@ -663,7 +663,7 @@ osc32kctrlSym_XOSC32K_ONDEMAND.setOutputMode("Key")
 osc32kctrlSym_XOSC32K_ONDEMAND.setDisplayMode("Description")
 osc32kctrlSym_XOSC32K_ONDEMAND.addKey("DISABLE",str(0),"Always Enable")
 osc32kctrlSym_XOSC32K_ONDEMAND.addKey("ENABLE",str(1),"Only on Peripheral Request")
-osc32kctrlSym_XOSC32K_ONDEMAND.setDefaultValue(0)
+osc32kctrlSym_XOSC32K_ONDEMAND.setDefaultValue(1)
 
 #XOSC32K External Oscillator 1KHz Output Enable Mode
 osc32kctrlSym_XOSC32K_EN1K = coreComponent.createBooleanSymbol("XOSC32K_EN1K", xosc32k_Menu)
@@ -753,7 +753,7 @@ osc32kctrlSym_OSC32K_ONDEMAND.setOutputMode("Key")
 osc32kctrlSym_OSC32K_ONDEMAND.setDisplayMode("Description")
 osc32kctrlSym_OSC32K_ONDEMAND.addKey("DISABLE",str(0),"Always Enable")
 osc32kctrlSym_OSC32K_ONDEMAND.addKey("ENABLE",str(1),"Only on Peripheral Request")
-osc32kctrlSym_OSC32K_ONDEMAND.setDefaultValue(0)
+osc32kctrlSym_OSC32K_ONDEMAND.setDefaultValue(1)
 
 #OSC32K Oscillator 1KHz Output Enable Mode
 osc32kctrlSym_OSC32K_EN1K = coreComponent.createBooleanSymbol("OSC32K_EN1K", osc32k_Menu)
