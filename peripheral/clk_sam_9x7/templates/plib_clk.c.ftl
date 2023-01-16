@@ -291,10 +291,14 @@ static void initPeriphClk(void)
         uint8_t div;
     } periphList[] =
     {
-        <#list 0..50 as i>
+        <#list 0..67 as i>
             <#if .vars["CLK_ID_NAME_"+i]?has_content>
                 <#assign name = .vars["CLK_ID_NAME_"+i]>
+                <#if .vars[name+"_CLOCK_ENABLE"]??>
                 <#assign clken = .vars[name+"_CLOCK_ENABLE"]>
+                <#else>
+                <#assign clken = false>
+                </#if>
                 <#if .vars["CLK_"+name+"_GCLKEN"]?has_content && .vars["CLK_"+name+"_GCLKEN"]>
                     <#assign gclken = true>
                 <#else>
