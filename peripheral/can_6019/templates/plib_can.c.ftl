@@ -50,6 +50,9 @@
 // *****************************************************************************
 
 #include "plib_${CAN_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -153,6 +156,20 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     true  - Request was successful.
     false - Request has failed.
 */
+
+/* MISRA C-2012 Rule 16.1, 16.3 and 16.6 deviated below. Deviation record ID -  
+   H3_MISRAC_2012_R_16_1_DR_1, H3_MISRAC_2012_R_16_3_DR_1 & H3_MISRAC_2012_R_16_6_DR_1*/
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block \
+(deviate:2 "MISRA C-2012 Rule 16.1" "H3_MISRAC_2012_R_16_1_DR_1" )\
+(deviate:2 "MISRA C-2012 Rule 16.3" "H3_MISRAC_2012_R_16_3_DR_1" )\
+(deviate:1 "MISRA C-2012 Rule 16.6" "H3_MISRAC_2012_R_16_6_DR_1" ) 
+</#if>
+
 bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBOX_TX_ATTRIBUTE mailboxAttr)
 {
     uint8_t mailbox = 0;
@@ -231,7 +248,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
                 }
                 else if (dataIndex < 4U)
                 {
-                    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL |= (uint8_t)(data[dataIndex] << (8U * dataIndex));
+                    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL |= ((uint32_t)data[dataIndex] << (8U * dataIndex));
                 }
                 else if (dataIndex == 4U)
                 {
@@ -239,7 +256,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
                 }
                 else
                 {
-                    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH |= (uint8_t)(data[dataIndex] << (8U * (dataIndex - 4U)));
+                    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH |= ((uint32_t)data[dataIndex] << (8U * (dataIndex - 4U)));
                 }
             }
             status = true;
@@ -376,25 +393,25 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                 *msgAttr = CAN_MSG_RX_DATA_FRAME;
             }
 
-            *length = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
+            *length = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos);
             /* Copy the data into the payload */
             for (; dataIndex < *length; dataIndex++)
             {
                 if (dataIndex == 0U)
                 {
-                    data[dataIndex] = (uint8_t)${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL & BYTE_MASK;
+                    data[dataIndex] = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL & BYTE_MASK);
                 }
                 else if (dataIndex < 4U)
                 {
-                    data[dataIndex] = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL >> (8U * dataIndex)) & BYTE_MASK;
+                    data[dataIndex] = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL >> (8U * dataIndex)) & BYTE_MASK);
                 }
                 else if (dataIndex == 4U)
                 {
-                    data[dataIndex] = (uint8_t)${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH & BYTE_MASK;
+                    data[dataIndex] = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH & BYTE_MASK);
                 }
                 else
                 {
-                    data[dataIndex] = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH >> (8U * (dataIndex - 4U))) & BYTE_MASK;
+                    data[dataIndex] = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH >> (8U * (dataIndex - 4U))) & BYTE_MASK);
                 }
             }
 
@@ -427,6 +444,16 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 </#if>
     return status;
 }
+
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 16.1"
+#pragma coverity compliance end_block "MISRA C-2012 Rule 16.3"
+#pragma coverity compliance end_block "MISRA C-2012 Rule 16.6"
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>    
+</#if> 
+/* MISRAC 2012 deviation block end */
 
 // *****************************************************************************
 /* Function:
@@ -983,21 +1010,21 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                                 *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].msgAttr = CAN_MSG_RX_DATA_FRAME;
                             }
 
-                            *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
+                            *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos);
                             /* Copy the data into the payload */
                             for (uint8_t dataIndex = 0U; dataIndex < *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size; dataIndex++)
                             {
                                 if (dataIndex == 0U)
                                 {
-                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = (uint8_t)${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL & BYTE_MASK;
+                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL & BYTE_MASK);
                                 }
                                 else if (dataIndex < 4U)
                                 {
-                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] =(uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL >> (8U * dataIndex)) & BYTE_MASK;
+                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] =(uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDL >> (8U * dataIndex)) & BYTE_MASK);
                                 }
                                 else if (dataIndex == 4U)
                                 {
-                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = (uint8_t)${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH & BYTE_MASK;
+                                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH & BYTE_MASK);
                                 }
                                 else
                                 {
