@@ -122,7 +122,7 @@ void ${ADC_INSTANCE_NAME}_InputSelect(${ADC_INSTANCE_NAME}_MUX muxType, ${ADC_IN
 
 void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanInputs)
 {
-    AD1CSSL = (uint8_t)scanInputs;
+    AD1CSSL = (uint32_t)scanInputs;
 }
 
 /*Check if conversion result is available */
