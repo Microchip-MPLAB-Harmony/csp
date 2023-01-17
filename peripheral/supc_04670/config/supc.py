@@ -294,6 +294,10 @@ if __name__ == "__main__":
                     if padSignal in availablePins:
                         signal[int(wakeup_signals[pad].getAttribute("index"))] = True
 
+            for pad in range(0, len(availablePins)):
+                if availablePins[pad].startswith("WKUP"):
+                    signal[int(availablePins[pad].split("_")[0].split("WKUP")[1])] = True
+
             for id in range (0, len(signal)):
                 supcSym_WUIR_WKUPEN.append(id)
                 supcSym_WUIR_WKUPEN[id] = supcComponent.createBooleanSymbol("SUPC_WUIR_WKUPEN" + str(id), supcWKUPMenu)
