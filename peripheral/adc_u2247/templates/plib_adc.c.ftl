@@ -245,6 +245,9 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 <#if ADC_SEQCTRL_VAL?has_content>
     /*lint -e{9048} false positive about a missing 'U' literal */
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQCTRL = ${ADC_SEQCTRL_VAL};
+    <#if ADC_CTRLC_DIFFMODE == true>
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL =  ((uint16_t)ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG});
+    </#if>
 <#else>
     <#if ADC_CTRLC_DIFFMODE == true>
     /* Positive and negative input pins */
