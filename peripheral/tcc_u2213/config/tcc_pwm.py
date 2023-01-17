@@ -28,6 +28,7 @@ tccSym_Channel_CC = []
 tccSym_Channel_Polarity = []
 tccSym_Channel_Polarity_NPWM = []
 tccSym_Channel_WAVE_SWAP = []
+tccSym_Channel_WAVE_CICCEN = []
 tccSym_Channel_WEXCTRL_DTIEN = []
 tccSym_Channel_INTENSET_MC = []
 tccSym_Channel_EVCTRL_MCEO = []
@@ -412,6 +413,15 @@ for channelID in range(0, int(numOfChannels)):
         tccSym_Channel_WAVE_SWAP[channelID] = tccComponent.createBooleanSymbol("TCC_"+str(channelID)+"_WAVE_SWAP", tccSym_Channel_Menu[channelID])
         tccSym_Channel_WAVE_SWAP[channelID].setLabel("Swap Outputs")
         tccSym_Channel_WAVE_SWAP[channelID].setDefaultValue(False)
+
+    if ((channelID < (numOfOutputs/2))):
+        #circular buffer
+        tccSym_Channel_WAVE_CICCEN.append(channelID)
+        tccSym_Channel_WAVE_CICCEN[channelID] = tccComponent.createBooleanSymbol("TCC_"+str(channelID)+"_WAVE_CICCEN", tccSym_Channel_Menu[channelID])
+        tccSym_Channel_WAVE_CICCEN[channelID].setLabel("Enable Circular Buffer")
+        tccSym_Channel_WAVE_CICCEN[channelID].setDefaultValue(False)   
+        tccSym_Channel_WAVE_CICCEN[channelID].setVisible(False) 
+        tccSym_Channel_WAVE_CICCEN[channelID].setDependencies(tccCircularBufferVisible, ["TCC_WAVE_WAVEGEN"])
 
     #compare match event out
     tccSym_Channel_INTENSET_MC.append(channelID)

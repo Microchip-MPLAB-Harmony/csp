@@ -102,7 +102,17 @@
         </#if>
     </#if>
 </#if> <#-- Swap End -->
-
+<#-- circular buffer -->
+<#if TCC_WAVE_WAVEGEN == "DSBOTH" && i < TCC_NUM_OUTPUTS/2>
+    <#assign TCC_CICC_ENABLE = "TCC_"+i+"_WAVE_CICCEN">
+    <#if .vars[TCC_CICC_ENABLE] == true>
+        <#if TCC_WAVE_VAL != "">
+            <#assign TCC_WAVE_VAL = TCC_WAVE_VAL + " \n \t \t | TCC_WAVE_CICCEN"+i+"_Msk">
+        <#else>
+            <#assign TCC_WAVE_VAL = "TCC_WAVE_CICCEN"+i+"_Msk">
+        </#if>
+    </#if>
+</#if> <#-- circular buffer End -->
 <#-- polarity -->
 <#if (TCC_WAVE_WAVEGEN == "DSBOTTOM") || (TCC_WAVE_WAVEGEN == "DSBOTH") || (TCC_WAVE_WAVEGEN == "DSTOP") >
     <#if .vars[TCC_POLARITY] == "1">
