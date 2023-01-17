@@ -29,6 +29,7 @@ tccSym_Channel_Polarity = []
 tccSym_Channel_Polarity_NPWM = []
 tccSym_Channel_WAVE_SWAP = []
 tccSym_Channel_WAVE_CICCEN = []
+global tccSym_Channel_WEXCTRL_DTIEN
 tccSym_Channel_WEXCTRL_DTIEN = []
 tccSym_Channel_INTENSET_MC = []
 tccSym_Channel_EVCTRL_MCEO = []
@@ -138,7 +139,7 @@ def tccFaultVisible(symbol, event):
             symbol.setVisible(False)
 
 def tccDeadTimeVisible(symbol, event):
-
+    global tccSym_Channel_WEXCTRL_DTIEN
     if (tccSym_Channel_WEXCTRL_DTIEN[0].getValue() == True or tccSym_Channel_WEXCTRL_DTIEN[1].getValue() == True or
         tccSym_Channel_WEXCTRL_DTIEN[2].getValue() == True or tccSym_Channel_WEXCTRL_DTIEN[3].getValue() == True):
         symbol.setVisible(True)
