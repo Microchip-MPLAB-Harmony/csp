@@ -272,7 +272,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     /* Enable interrupts */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTENSET = ${ADC_INTENSET_VAL};
 </#if>
-<#if ADC_EVCTRL_VAL?has_content && ADC_CTRLA_SLAVEEN == false>
+<#if ADC_EVCTRL_VAL?has_content >
     /* Events configuration  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_EVCTRL = ${ADC_EVCTRL_VAL};
 </#if>
