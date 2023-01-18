@@ -343,6 +343,8 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint8_t bufferNumber, MCAN_TX_BUFFER 
     /* Enable Transmission Interrupt */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE = 1UL << bufferNumber;
 
+    __DSB();
+
     /* Set Transmission request */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBAR = 1UL << bufferNumber;
 
@@ -406,6 +408,8 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmitFifo(uint8_t numberOfMessage, MCAN_TX_
         }
         </#if>
     }
+
+    __DSB();
 
     /* Set Transmission request */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBAR = bufferNumber;

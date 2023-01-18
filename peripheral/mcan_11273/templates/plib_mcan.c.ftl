@@ -260,6 +260,8 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint8_t bufferNumber, MCAN_TX_BUFFER 
 
     (void) memcpy(txBuf, (uint8_t *)txBuffer, ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
 
+    __DSB();
+
     /* Set Transmission request */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBAR = 1UL << bufferNumber;
 
@@ -323,6 +325,8 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmitFifo(uint8_t numberOfMessage, MCAN_TX_
         }
         </#if>
     }
+
+    __DSB();
 
     /* Set Transmission request */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBAR = bufferNumber;
