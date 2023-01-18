@@ -164,20 +164,6 @@
         <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_OFFSTDBY_Msk">
     </#if>
 </#if>
-<#if SUPC_VREGCTRL_LVSTDBY == true>
-    <#if SUPC_VREG_VAL != "">
-        <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_LVSTDBY_Msk">
-    <#else>
-        <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_LVSTDBY_Msk">
-    </#if>
-</#if>
-<#if SUPC_VREGCTRL_LVHIB == true>
-    <#if SUPC_VREG_VAL != "">
-        <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_LVHIB_Msk">
-    <#else>
-        <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_LVHIB_Msk">
-    </#if>
-</#if>
 <#if SUPC_VREGCTRL_CPEN == true>
     <#if SUPC_VREG_VAL != "">
         <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_CPEN_Msk">
