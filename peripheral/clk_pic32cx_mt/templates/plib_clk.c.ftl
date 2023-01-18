@@ -26,9 +26,9 @@
 <#if CPU_CORE_ID == 0>
 #include "peripheral/rstc/plib_rstc.h"
 
-#define PLLA_RECOMMENDED_ACR    0x0F000038U
-#define PLLB_RECOMMENDED_ACR    0x28000058U
-#define PLLC_RECOMMENDED_ACR    0x28000058U
+#define PLLA_RECOMMENDED_ACR    0x0F020038U
+#define PLLB_RECOMMENDED_ACR    0x28020038U
+#define PLLC_RECOMMENDED_ACR    0x28020038U
 
 #define PLLA_UPDT_STUPTIM_VAL   0x02U
 #define PLLB_UPDT_STUPTIM_VAL   0x00U
@@ -258,6 +258,15 @@ static void CPUClockInitialize(void)
 
 </#if>
 <#if CLK_SCER_CPBMCK>
+<#assign DUMMY_CPPRES = "CLK_2">
+<#if CLK_CPU_CKR_CPPRES == DUMMY_CPPRES>
+<#assign DUMMY_CPPRES = "CLK_3">
+</#if>
+    /* Set coprocessor clock dummy prescaler */
+    reg = (PMC_REGS->PMC_CPU_CKR & ~(PMC_CPU_CKR_CPPRES_Msk | PMC_CPU_CKR_RATIO_MCK1DIV_Msk));
+    reg |= (PMC_CPU_CKR_CPPRES_${DUMMY_CPPRES} | PMC_CPU_CKR_RATIO_MCK1DIV_Msk);
+    PMC_REGS->PMC_CPU_CKR = reg;
+
     /* Program PMC_CPU_CKR.CPCSS and Wait for PMC_SR.CPMCKRDY to be set    */
     reg = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_CPCSS_Msk);
     PMC_REGS->PMC_CPU_CKR = (reg | PMC_CPU_CKR_CPCSS_${CLK_CPU_CKR_CPCSS});
@@ -336,6 +345,29 @@ static void PCKInitialize(void)
 
 </#if><#-- PCK_USED -->
 /*********************************************************************************
+                        Check Peripheral clock status
+*********************************************************************************/
+static bool PeripheralClockStatus(uint32_t periph_id)
+{
+    bool retval = false;
+    uint32_t status = 0U;
+    const uint32_t csr_offset[] = { PMC_CSR0_REG_OFST,
+                                    PMC_CSR1_REG_OFST,
+                                    PMC_CSR2_REG_OFST,
+                                    PMC_CSR3_REG_OFST
+                                    };
+    uint32_t index = periph_id / 32U;
+    if (index < (sizeof(csr_offset)/sizeof(csr_offset[0])))
+    {
+        status = (*(volatile uint32_t* const)((PMC_BASE_ADDRESS +
+                                                        csr_offset[index])));
+        retval = ((status & (1 << (periph_id % 32U))) != 0U);
+    }
+    return retval;
+}
+
+
+/*********************************************************************************
                         Initialize Peripheral clocks
 *********************************************************************************/
 static void PeripheralClockInitialize(void)
@@ -383,6 +415,10 @@ static void PeripheralClockInitialize(void)
                             PMC_PCR_GCLKDIV(periphList[i].divs) |\
                             PMC_PCR_GCLKCSS(periphList[i].css) |\
                             PMC_PCR_PID(periphList[i].id);
+        while(PeripheralClockStatus(periphList[i].id) == false)
+        {
+            /* Wait for clock to be initialized */
+        }
         i++;
     }
 }
@@ -408,8 +444,8 @@ void CLK_Initialize( void )
 <#if PLL_USED>
 <#list PLL_LIST as PLL_NAME>
 <#if .vars["CLK_" + PLL_NAME + "_ENPLL"]>
-    /* Initialize ${PLL_NAME} */
-    PLLInitialize((uint32_t)${PLL_NAME}, &${PLL_NAME?lower_case}_cfg);
+        /* Initialize ${PLL_NAME} */
+        PLLInitialize((uint32_t)${PLL_NAME}, &${PLL_NAME?lower_case}_cfg);
 
 </#if>
 </#list>
