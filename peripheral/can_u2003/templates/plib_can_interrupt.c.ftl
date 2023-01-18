@@ -320,6 +320,8 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint8_t bufferNumber, CAN_TX_BUFFER *t
         /* Enable Transmission Interrupt */
         ${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE = 1UL << bufferNumber;
 
+        __DSB();
+
         /* Set Transmission request */
         ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = 1UL << bufferNumber;
 
@@ -383,6 +385,8 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmitFifo(uint8_t numberOfMessage, CAN_TX_BU
             }
             </#if>
         }
+
+        __DSB();
 
         /* Set Transmission request */
         ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = bufferNumber;
