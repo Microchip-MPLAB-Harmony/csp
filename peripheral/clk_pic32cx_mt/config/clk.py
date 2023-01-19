@@ -266,7 +266,7 @@ def setup_tc_clock_frequency(lcomp, rcomp, module, instance):
         tc_ch_freq.setReadOnly(True)
         tc_ch_freq.setVisible(show_frequency_sym)
         tc_ch_freq.setDependencies(update_tc_clock_frequency,
-                    ["MCK0DIV_FREQUENCY",
+                    ["MCK0_FREQUENCY",
                     "MD_SLOW_CLK_FREQUENCY",
                     "{0}_GCLK_FREQUENCY".format(instance),
                     "{0}.TC{1}_CMR_TCCLKS".format(instance.lower(), channel),
@@ -285,6 +285,7 @@ def update_tc_clock_frequency(symbol, event):
     tc_comp = Database.getComponentByID("tc{0}".format(instance_num))
     clk_comp = Database.getComponentByID("core")
     mck0div_freq = clk_comp.getSymbolValue("MCK0DIV_FREQUENCY")
+    mck0_freq = clk_comp.getSymbolValue("MCK0_FREQUENCY")
 
     # check if component exists and the relevant channel is enabled
     if tc_comp is not None and tc_comp.getSymbolValue("TC{0}_ENABLE".format(channel_num)):
@@ -296,14 +297,14 @@ def update_tc_clock_frequency(symbol, event):
         if (clk_src == "GCLK"):
             clk_frequency = clk_comp.getSymbolValue("TC{0}_GCLK_FREQUENCY".format(instance_num))
         # if clock  source is MCK/8
-        elif (clk_src == "MCK0DIV/8"):
-            clk_frequency = mck0div_freq / 8
+        elif (clk_src == "MCK0/8"):
+            clk_frequency = mck0_freq / 8
         # if clock  source is MCK/32
-        elif (clk_src == "MCK0DIV/32"):
-            clk_frequency = mck0div_freq / 32
+        elif (clk_src == "MCK0/32"):
+            clk_frequency = mck0_freq / 32
         # if clock  source is MCK/128
-        elif (clk_src == "MCK0DIV/128"):
-            clk_frequency = mck0div_freq / 128
+        elif (clk_src == "MCK0/128"):
+            clk_frequency = mck0_freq / 128
         # if clock  source is SLOW CLOCK
         elif (clk_src == "TD_SLCK"):
             clk_frequency = clk_comp.getSymbolValue("MD_SLOW_CLK_FREQUENCY")
