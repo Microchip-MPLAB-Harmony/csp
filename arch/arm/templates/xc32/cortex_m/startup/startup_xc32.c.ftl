@@ -88,6 +88,7 @@ extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) __xc32_on_b
 
 /* Linker defined variables */
 extern uint32_t __svectors;
+extern uint32_t _stack;
 
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
 #pragma coverity compliance end_block "MISRA C-2012 Rule 8.6"
@@ -162,7 +163,7 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
 
 #if defined (__REINIT_STACK_POINTER)
     /* Initialize SP from linker-defined _stack symbol. */
-    __asm__ volatile ("ldr sp, =_stack" : : : "sp");
+    __set_MSP((uint32_t)&_stack);
 
 #ifdef SCB_VTOR_TBLOFF_Msk
     /* Buy stack for locals */
