@@ -118,9 +118,9 @@ static void OSCCTRL_Initialize(void)
     uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020UL) >> 41 ) & 0x3fffffUL);
     </#if>
     OSCCTRL_REGS->OSCCTRL_CAL48M = calibValue;
-    <#if (CONFIG_CLOCK_OSC48M_RUNSTDY == true) || (CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE")>
+    <#if (CONFIG_CLOCK_OSC48M_RUNSTDY == true) || (CONFIG_CLOCK_OSC48M_ONDEMAND == "DISABLE")>
     /* Configure 48MHz Oscillator */
-    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_OSC48MCTRL = (uint8_t)(OSCCTRL_REGS->OSCCTRL_OSC48MCTRL
+    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_OSC48MCTRL = (uint8_t)(OSCCTRL_OSC48MCTRL_ENABLE_Msk
                                                              ${CONFIG_CLOCK_OSC48M_RUNSTDY?then('| OSCCTRL_OSC48MCTRL_RUNSTDBY_Msk',' ')}
                                                              ${(CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE")?then('| OSCCTRL_OSC48MCTRL_ONDEMAND_Msk',' ')});</@compress>
     </#if>
@@ -133,19 +133,17 @@ static void OSCCTRL_Initialize(void)
     <#if CONFIG_CLOCK_OSC48M_DIV != "11">
     /* Selection of the Division Value */
     OSCCTRL_REGS->OSCCTRL_OSC48MDIV = (uint8_t)OSCCTRL_OSC48MDIV_DIV(${CONFIG_CLOCK_OSC48M_DIV}UL);
-    <#if CONFIG_CLOCK_OSC48M_ONDEMAND != "ENABLE">
 
     while((OSCCTRL_REGS->OSCCTRL_OSC48MSYNCBUSY & OSCCTRL_OSC48MSYNCBUSY_OSC48MDIV_Msk) == OSCCTRL_OSC48MSYNCBUSY_OSC48MDIV_Msk)
     {
         /* Waiting for the synchronization */
     }
 
+    </#if>
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_OSC48MRDY_Msk) != OSCCTRL_STATUS_OSC48MRDY_Msk)
     {
         /* Waiting for the OSC48M Ready state */
     }
-    </#if>
-    </#if>
 </#if>
 }
 

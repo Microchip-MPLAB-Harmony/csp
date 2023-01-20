@@ -315,7 +315,7 @@ oscctrlSym_OSC48MCTRL_ONDEMAND.setDisplayMode("Description")
 oscctrlSym_OSC48MCTRL_ONDEMAND.setDescription("Configures the osc48m on Demand Behavior")
 oscctrlSym_OSC48MCTRL_ONDEMAND.addKey("DISABLE",str(0),"Always Enable")
 oscctrlSym_OSC48MCTRL_ONDEMAND.addKey("ENABLE",str(1),"Only on Peripheral Request")
-oscctrlSym_OSC48MCTRL_ONDEMAND.setDefaultValue(0)
+oscctrlSym_OSC48MCTRL_ONDEMAND.setDefaultValue(1)
 
 #OSC48M Internal Oscillator  Run StandBy Control
 oscctrlSym_OSC48MCTRL_RUNSTDBY = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC48M_RUNSTDY", oscctrlosc48_Menu)
