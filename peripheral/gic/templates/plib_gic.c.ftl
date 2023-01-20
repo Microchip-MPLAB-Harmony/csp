@@ -207,7 +207,7 @@ void GIC_INT_IrqEnable(void)
 bool GIC_INT_IrqDisable(void)
 {
     /* Add a volatile qualifier to the return value to prevent the compiler from optimizing out this function */
-    volatile bool previousValue = ((CPSR_I_Msk & __get_CPSR()) != 0U);
+    volatile bool previousValue = ((CPSR_I_Msk & __get_CPSR()) == 0U);
     __disable_irq();
     __DMB();
     return previousValue;
