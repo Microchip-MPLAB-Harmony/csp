@@ -271,7 +271,7 @@ void ${TC_INSTANCE_NAME}_Compare8bitCounterSet( uint8_t count )
 void ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
 {
     /* Configure period value */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER = period;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = period;
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
@@ -282,20 +282,38 @@ void ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
 uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
 {
     /* Write command to force PER register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_CC_REG_OFST;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_CC0_REG_OFST;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
     }
     /* Get period value */
-    return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER;
+    return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
 }
 
 <#else>
+/* Configure period value */
+void ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
+{
+    /* Configure period value */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER = period;
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+
 uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
 {
-    return 0xFF;
+    /* Write command to force PER register read synchronization */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | (uint16_t)TC_${TC_CTRLA_MODE}_PER_REG_OFST;
+
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
+    {
+        /* Wait for Write Synchronization */
+    }    
+    return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER;
 }
 </#if>
 

@@ -95,9 +95,8 @@ void ${TC_INSTANCE_NAME}_CompareStop( void );
 uint32_t ${TC_INSTANCE_NAME}_CompareFrequencyGet( void );
 
 <#if TC_CTRLA_MODE = "COUNT8">
-<#if TC_COMPARE_CTRLA_WAVEGEN == "MFRQ" || TC_COMPARE_CTRLA_WAVEGEN == "MPWM">
+
 void ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period );
-</#if>
 
 uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void );
 

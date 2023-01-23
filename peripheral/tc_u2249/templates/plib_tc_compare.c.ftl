@@ -289,6 +289,36 @@ bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
 {
     bool status = false;
     <#if TC_COMPARE_CTRLBSET_LUPD == true>
+    if((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_CCBUFV0_Msk) == 0U)
+    {
+        /* Configure period value */
+        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CCBUF[0] = period;
+        status = true;
+    }
+    <#else>
+    /* Configure period value */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = period;
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }     
+    status = true;
+    </#if>
+    return status;
+}
+
+/* Read period value */
+uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
+{
+    /* Get period value */
+    return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
+}
+<#else>
+/* Configure period value */
+bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
+{
+    bool status = false;
+    <#if TC_COMPARE_CTRLBSET_LUPD == true>
     if((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_PERBUFV_Msk) == 0U)
     {
         /* Configure period value */
@@ -301,7 +331,7 @@ bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }     
     status = true;
     </#if>
     return status;
@@ -310,14 +340,7 @@ bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
 /* Read period value */
 uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
 {
-    /* Get period value */
     return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER;
-}
-<#else>
-/* Read period value */
-uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
-{
-    return 0xFFU;
 }
 </#if>
 
