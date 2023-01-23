@@ -303,6 +303,8 @@ def instantiateComponent(rtccComponent):
     rtccSym_RTCDATE_WEEKDAY = rtccComponent.createIntegerSymbol("RTCTIME_WEEKDAY",rtccSym_RTCCON_TIMEDATE)
     rtccSym_RTCDATE_WEEKDAY.setLabel("Weekday (0-6)")
     rtccSym_RTCDATE_WEEKDAY.setDefaultValue(0)
+    rtccSym_RTCDATE_WEEKDAY.setMin(0)
+    rtccSym_RTCDATE_WEEKDAY.setMax(6)
     rtccSym_RTCDATE_WEEKDAY.setVisible(False)
     rtccSym_RTCDATE_WEEKDAY.setDependencies(updateSymbolVisblity, ["RTC_TIMEANDDATE"])
 
