@@ -225,6 +225,15 @@
     <#assign AFEC_IER = AFEC_IER_EOC>
 </#if>
 
+<#if AFEC_11_CHER == true && (AFEC_IER_TEMPCHG?? && AFEC_IER_TEMPCHG == true)>
+<#if AFEC_IER != "">
+    <#assign AFEC_IER = AFEC_IER + " | " + "AFEC_IER_TEMPCHG_Msk">
+<#else>
+    <#assign AFEC_IER = "AFEC_IER_TEMPCHG_Msk">
+</#if>
+    <#assign AFEC_INTERRUPT = true>
+</#if>
+
 </#compress>
 
 <#-- *********************************************************************************************** -->
@@ -301,6 +310,29 @@ void ${AFEC_INSTANCE_NAME}_Initialize(void)
     </#if>
     <#if AFEC_SEQ2R_USCH?has_content>
     <#lt>   ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ2R = ${AFEC_SEQ2R_USCH};
+    </#if>
+</#if>
+
+<#if AFEC_11_CHER == true>
+    <#assign afec_tempr_val = "">
+    <#if AFEC_TEMPMR_RTCT?? && AFEC_TEMPMR_RTCT == true>
+    <#assign afec_tempr_val = "AFEC_TEMPMR_RTCT_Msk">
+    </#if>
+
+    <#if AFEC_TEMP_CMP_MODE_EN?? && AFEC_TEMP_CMP_MODE_EN == true>
+
+    <#if afec_tempr_val == "">
+    <#assign afec_tempr_val = "AFEC_TEMPMR_TEMPCMPMOD_" + .vars["AFEC_TEMPMR_TEMPCMPMOD"]>
+    <#else>
+    <#assign afec_tempr_val = afec_tempr_val + " | " + "AFEC_TEMPMR_TEMPCMPMOD_" + .vars["AFEC_TEMPMR_TEMPCMPMOD"]>
+    </#if>
+
+    <#if afec_tempr_val != "">
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_TEMPMR = ${afec_tempr_val};
+    </#if>
+
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_TEMPCWR = AFEC_TEMPCWR_THIGHTHRES(${AFEC_TEMPCWR_THIGHTHRES}) | AFEC_TEMPCWR_TLOWTHRES(${AFEC_TEMPCWR_TLOWTHRES});
+
     </#if>
 </#if>
 
