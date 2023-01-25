@@ -185,7 +185,6 @@ static void DFLL48M_Initialize(void)
 
     /* Configure DFLL    */
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRL = OSCCTRL_DFLLCTRL_ENABLE_Msk ${(CONFIG_CLOCK_DFLL48M_OPMODE == "1")?then('| OSCCTRL_DFLLCTRL_MODE_Msk ', ' ')}
-    <#lt>                               ${(CONFIG_CLOCK_DFLL48M_ONDEMAND == "1")?then("| OSCCTRL_DFLLCTRL_ONDEMAND_Msk ", "")}
     <#lt>                               ${CONFIG_CLOCK_DFLL48M_RUNSTDY?then('| OSCCTRL_DFLLCTRL_RUNSTDBY_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL48M_USB?then('| OSCCTRL_DFLLCTRL_USBCRM_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL48M_WAIT_LOCK?then('| OSCCTRL_DFLLCTRL_WAITLOCK_Msk ', ' ')}
@@ -206,6 +205,10 @@ static void DFLL48M_Initialize(void)
     {
         /* Waiting for DFLL to be ready */
     }
+    </#if>
+    
+    <#if CONFIG_CLOCK_DFLL48M_ONDEMAND == "1">
+    OSCCTRL_REGS->OSCCTRL_DFLLCTRL |= OSCCTRL_DFLLCTRL_ONDEMAND_Msk;
     </#if>
 }
 </#if>
