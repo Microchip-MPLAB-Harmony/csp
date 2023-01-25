@@ -254,9 +254,7 @@ static void DFLL_Initialize(void)
         /* Waiting for the DFLLCTRLB synchronization */
     }
 
-    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk
-    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "1")?then("| OSCCTRL_DFLLCTRLA_ONDEMAND_Msk ", "")}
-    <#lt>                               ;</@compress>
+    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk;</@compress>
 
     while((OSCCTRL_REGS->OSCCTRL_SYNCBUSY & OSCCTRL_SYNCBUSY_DFLLENABLE_Msk) == OSCCTRL_SYNCBUSY_DFLLENABLE_Msk )
     {
@@ -268,6 +266,11 @@ static void DFLL_Initialize(void)
     {
         /* Waiting for the DFLL Ready state */
     }
+    
+    <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
+    OSCCTRL_REGS->OSCCTRL_DFLLCTRLA |= OSCCTRL_DFLLCTRLA_ONDEMAND_Msk;
+    </#if>
+    
     </#if>
 <#else>
     <#if (CONFIG_CLOCK_DFLL_ONDEMAND == "0")>
