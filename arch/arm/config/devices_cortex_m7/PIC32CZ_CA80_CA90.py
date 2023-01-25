@@ -75,7 +75,6 @@ default = [0x1, 0xFFFE, 0xFFFF , 0xFFFF, 0, 0 , 0, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF,
            0, 0, 0, 0, 1, 1, 0x1, 0xFFFE, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,  #FUSES_BOOTCFG1
            0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 1, 1, 0x7, 1, 0xF, 1, 1, 0xF,
            0x2, 1, 0x1, 0x1, 0x7, 1, 1, 0x3, 0x7, 1, 1, 1, 1, 2, 7, 0x3FF, 0x3F, 0x3F, 1, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-           2, 2,                                                                                                                                                                           #FUSES_DALCFG
            0x0, 0xFFFF, 0xFFFF , 0xFFFF, 0, 1 , 1, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF, 1, 0x3, 1, 0x3, 1, 0x3, 1, 0xF, 0xF, 0xF, 0xF, 0x3, 1, 1, 0, 0, 0, 0, 1, 1, 0xFFFFFFFF, 0xFFFFFFFF, #FUSES_USERCFG2
            0, 0, 0, 0, 1, 1, 0x0, 0xFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,  #FUSES_BOOTCFG2
            0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 1, 1, 0x7, 1, 0xF, 1, 1, 0xF,
@@ -93,6 +92,8 @@ for group in range(0, len(registerGroup)):
                 key = fuseNodeValues[index].getAttribute("name")
                 caption = registerGroup[group].replace("FUSES_", "") + " " + fuseNodeValues[index].getAttribute("caption")
                 valueGroup = fuseNodeValues[index].getAttribute("values")
+                if valueGroup == "DAL__CPU0" or valueGroup == "DAL__CPU1":
+                    continue
                 stringSymbol = coreComponent.createStringSymbol("FUSE_SYMBOL_NAME" + str(numfuses), fuseSettings)
                 stringSymbol.setDefaultValue(registerGroup[group] + "_" + registerNames[i].getAttribute("name") + "_" + key)
                 stringSymbol.setVisible(False)
@@ -123,7 +124,7 @@ for group in range(0, len(registerGroup)):
                         caption = valueGroupChildren[j].getAttribute("caption")
                         keyValueSymbol.addKey(name, str(value), caption)
                     keyValueSymbol.setDefaultValue(default[numfuses % len(default)])
-                    if valueGroup == "RPMU_VREGCTRL__VREGOUT" or valueGroup == "RPMU_VREGCTRL__LVSTDBY" or valueGroup == "RPMU_VREGCTRL__LVHIB" or valueGroup == "RPMU_VREGCTRL__ULDOLEVEL" or valueGroup == "DAL__CPU0" or valueGroup == "DAL__CPU1":
+                    if valueGroup == "RPMU_VREGCTRL__VREGOUT" or valueGroup == "RPMU_VREGCTRL__LVSTDBY" or valueGroup == "RPMU_VREGCTRL__LVHIB" or valueGroup == "RPMU_VREGCTRL__ULDOLEVEL":
                         keyValueSymbol.setOutputMode("Value")
                     else:
                         keyValueSymbol.setOutputMode("Key")
