@@ -191,7 +191,6 @@ static void DFLL_Initialize(void)
 
     /* Configure DFLL    */
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_DFLLCTRL = SYSCTRL_DFLLCTRL_ENABLE_Msk ${(CONFIG_CLOCK_DFLL_OPMODE == "1")?then('| SYSCTRL_DFLLCTRL_MODE_Msk ', ' ')}
-    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "1")?then("| SYSCTRL_DFLLCTRL_ONDEMAND_Msk ", "")}
     <#lt>                               ${CONFIG_CLOCK_DFLL_USB?then('| SYSCTRL_DFLLCTRL_USBCRM_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_WAIT_LOCK?then('| SYSCTRL_DFLLCTRL_WAITLOCK_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_BYPASS_COARSE?then('| SYSCTRL_DFLLCTRL_BPLCKC_Msk ', ' ')}
@@ -211,6 +210,10 @@ static void DFLL_Initialize(void)
     {
         /* Waiting for DFLL to be ready */
     }
+    </#if>
+    
+    <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
+    SYSCTRL_REGS->SYSCTRL_DFLLCTRL |= SYSCTRL_DFLLCTRL_ONDEMAND_Msk;
     </#if>
 }
 </#if>
