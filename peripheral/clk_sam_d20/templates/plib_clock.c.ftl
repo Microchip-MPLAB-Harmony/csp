@@ -172,7 +172,7 @@ static void DFLL_Initialize(void)
         /* Waiting for DFLL to be ready */
     }
     </#if>
-    
+
     <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
     SYSCTRL_REGS->SYSCTRL_DFLLCTRL |= SYSCTRL_DFLLCTRL_ONDEMAND_Msk;
     </#if>
@@ -224,6 +224,38 @@ static void GCLK${i}_Initialize(void)
             </#if>
         </#if>
 </#list>
+
+static void BOD33_Initialize( void )
+{
+<#if SUPC_BOD33_RUNSTDBY == true || SUPC_BOD33_MODE == "1" || (SUPC_BOD33_MODE == "1" && SUPC_BOD33_PSEL != "0x0")>
+
+    uint32_t bodEnable = SYSCTRL_REGS->SYSCTRL_BOD33 & SYSCTRL_BOD33_ENABLE_Msk;
+
+    /* Configure BOD33. Mask the values loaded from NVM during reset. */
+    SYSCTRL_REGS->SYSCTRL_BOD33 &= ~SYSCTRL_BOD33_ENABLE_Msk;
+
+    <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_BOD33 = (SYSCTRL_REGS->SYSCTRL_BOD33 & (SYSCTRL_BOD33_ENABLE_Msk | SYSCTRL_BOD33_HYST_Msk | SYSCTRL_BOD33_ACTION_Msk | SYSCTRL_BOD33_LEVEL_Msk))<#if SUPC_BOD33_RUNSTDBY == true > | SYSCTRL_BOD33_RUNSTDBY_Msk </#if> <#if SUPC_BOD33_MODE == "1" > | SYSCTRL_BOD33_MODE_Msk | SYSCTRL_BOD33_CEN_Msk <#if SUPC_BOD33_PSEL != "0" > | SYSCTRL_BOD33_PSEL(${SUPC_BOD33_PSEL}) </#if></#if>;</@compress>
+
+    if (bodEnable != 0U)
+    {
+        SYSCTRL_REGS->SYSCTRL_BOD33 |= SYSCTRL_BOD33_ENABLE_Msk;
+
+        /* Wait for BOD33 Synchronization Ready */
+        while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_B33SRDY_Msk) == 0U)
+        {
+        }
+
+        /* If BOD33 in continuous mode then wait for BOD33 Ready */
+        if((SYSCTRL_REGS->SYSCTRL_BOD33 & SYSCTRL_BOD33_MODE_Msk) == 0U)
+        {
+            while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_BOD33RDY_Msk) == 0U)
+            {
+            }
+        }
+    }
+</#if>
+}
+
 void CLOCK_Initialize (void)
 {
     /* Function to Initialize the Oscillators */
@@ -297,6 +329,9 @@ ${CLK_INIT_LIST}
     /*Disable RC oscillator*/
     SYSCTRL_REGS->SYSCTRL_OSC8M = 0x0U;
 </#if>
+
+    BOD33_Initialize();
+
 <#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
 
     SYSCTRL_REGS->SYSCTRL_INTENSET = ${SYSCTRL_INTERRUPT_ENABLE_VAL}U;
@@ -466,8 +501,8 @@ void SYSCTRL_InterruptHandler(void)
     }
 </#if>
     else
-	{
-		
-	}
+    {
+
+    }
 }
 </#if>
