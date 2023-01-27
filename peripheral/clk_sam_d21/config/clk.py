@@ -197,8 +197,10 @@ def calcDpllMultiplier(symbol, event):
 def calcDpllXoscDivider(symbol, event):
     divisor = int(Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_DIVIDER"))
     div_value = (2 * (divisor + 1))
-    symbol.setValue(div_value,2)
+    symbol.setValue(div_value,2)  
 
+def updateBODVisibleProperty(symbol, event):
+    symbol.setVisible(event["value"] == 1)
 ################################################################################
 #######          SYSCTRL Database Components      ##############################
 ################################################################################
@@ -1485,6 +1487,46 @@ for index in range(0, len(sysctrlInterruptValues)):
 sysctrlInterruptEnableValue = coreComponent.createStringSymbol("SYSCTRL_INTERRUPT_ENABLE_VAL", sysctrlInterrupt_Menu)
 sysctrlInterruptEnableValue.setDefaultValue("0x0")
 sysctrlInterruptEnableValue.setVisible(False)
+
+sysctrlBODVDD_Menu= coreComponent.createMenuSymbol("BOD_MENU", None)
+sysctrlBODVDD_Menu.setLabel("VDD Brown-Out Detector (BOD33) Configuration")
+    
+#BODVDD ACTCFG mode
+sysctrlBODVDD_ACTCFG = coreComponent.createKeyValueSetSymbol("SUPC_BOD33_MODE", sysctrlBODVDD_Menu)
+sysctrlBODVDD_ACTCFG.setLabel("Operation mode")
+sysctrlBODVDD_ACTCFG.setDescription("Configures whether BODVDD should operate in continuous or sampling mode in Active mode")
+sysctrlBODVDD_ACTCFG.addKey("CONT_MODE", "0", "Continuous Mode")
+sysctrlBODVDD_ACTCFG.addKey("SAMP_MODE", "1", "Sampling Mode")
+sysctrlBODVDD_ACTCFG.setDefaultValue(0)
+sysctrlBODVDD_ACTCFG.setOutputMode("Value")
+sysctrlBODVDD_ACTCFG.setDisplayMode("Description")
+
+#BODVDD RUNSTDBY enable
+sysctrlBODVDD_RUNSTDBY = coreComponent.createBooleanSymbol("SUPC_BOD33_RUNSTDBY", sysctrlBODVDD_Menu)
+sysctrlBODVDD_RUNSTDBY.setLabel("Run in Standby mode")
+sysctrlBODVDD_RUNSTDBY.setDescription("Configures BODVDD operation in Standby Sleep Mode")
+
+#BODVDD PSEL
+sysctrlBODVDD_PSEL = coreComponent.createKeyValueSetSymbol("SUPC_BOD33_PSEL", sysctrlBODVDD_Menu)
+sysctrlBODVDD_PSEL.setLabel("Select Prescaler for Sampling Clock")
+sysctrlBODVDD_PSEL.setDescription("Configures the sampling clock prescaler when BODVDD is operating in sampling mode")
+sysctrlBODVDD_PSEL.setVisible(False)
+
+supcBODVDDPselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SYSCTRL\"]/value-group@[name=\"SYSCTRL_BOD33__PSEL\"]")
+supcBODVDDPselValues = []
+supcBODVDDPselValues = supcBODVDDPselNode.getChildren()
+
+for index in range (0, len(supcBODVDDPselValues)):
+    supcBODVDDPselKeyName = supcBODVDDPselValues[index].getAttribute("name")
+    supcBODVDDPselKeyDescription = supcBODVDDPselValues[index].getAttribute("caption")
+    supcBODVDDPselKeyValue =  supcBODVDDPselValues[index].getAttribute("value")
+    sysctrlBODVDD_PSEL.addKey(supcBODVDDPselKeyName, supcBODVDDPselKeyValue, supcBODVDDPselKeyDescription)
+
+sysctrlBODVDD_PSEL.setDefaultValue(0)
+sysctrlBODVDD_PSEL.setOutputMode("Value")
+sysctrlBODVDD_PSEL.setDisplayMode("Description")
+sysctrlBODVDD_PSEL.setDependencies(updateBODVisibleProperty, ["SUPC_BOD33_MODE"])
+
 
 ################################################################################
 ###########             CODE GENERATION                     ####################
