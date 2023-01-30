@@ -666,18 +666,25 @@ void ${QMSPI_INSTANCE_NAME}_CallbackRegister(QMSPI_CALLBACK callback, uintptr_t 
 void ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     <#if QMSPI_INTERRUPT_TYPE == "AGGREGATE">
-    ECIA_GIRQSourceClear(ECIA_AGG_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM});
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM}))
     <#else>
-    ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM});
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM}))
     </#if>
-
-    if ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TRANS_COMPL_Msk) != 0U)
     {
-        ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS |= QMSPI_STS_TRANS_COMPL_Msk;
-        ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_IEN &= ~QMSPI_IEN_TRANS_COMPL_EN_Msk;
-        if(${QMSPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+        <#if QMSPI_INTERRUPT_TYPE == "AGGREGATE">
+        ECIA_GIRQSourceClear(ECIA_AGG_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM});
+        <#else>
+        ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM});
+        </#if>
+
+        if ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TRANS_COMPL_Msk) != 0U)
         {
-            ${QMSPI_INSTANCE_NAME?lower_case}Obj.callback(${QMSPI_INSTANCE_NAME?lower_case}Obj.context);
+            ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS |= QMSPI_STS_TRANS_COMPL_Msk;
+            ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_IEN &= ~QMSPI_IEN_TRANS_COMPL_EN_Msk;
+            if(${QMSPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+            {
+                ${QMSPI_INSTANCE_NAME?lower_case}Obj.callback(${QMSPI_INSTANCE_NAME?lower_case}Obj.context);
+            }
         }
     }
 }
