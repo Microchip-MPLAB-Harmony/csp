@@ -105,6 +105,9 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dma_85/config/dma.py")
 #coreComponent.addPlugin("../peripheral/dma_85/plugin/dmamanager.jar")
 
+# # load wdt
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_88/config/wdt.py")
+
 global armLibCSourceFile
 global compilerSpecifics
 compilerSelected = compilerChoice.getSelectedKey().lower()
