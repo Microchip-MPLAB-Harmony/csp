@@ -255,6 +255,7 @@ typedef struct {
 
 void GPIO_Initialize(void);
 void GPIO_PinDirConfig(GPIO_PIN pin, GPIO_DIR dir);
+void GPIO_PinOutputEnable(GPIO_PIN pin);
 void GPIO_PinInputEnable(GPIO_PIN pin);
 void GPIO_PinInputDisable(GPIO_PIN pin);
 void GPIO_PinInputConfig(GPIO_PIN pin, GPIO_INP_READ inpEn);
@@ -265,6 +266,8 @@ void GPIO_PinSet(GPIO_PIN pin);
 void GPIO_PinClear(GPIO_PIN pin);
 void GPIO_PinToggle(GPIO_PIN pin);
 uint8_t GPIO_PinRead(GPIO_PIN pin);
+void GPIO_PinWrite(GPIO_PIN pin, bool value);
+uint8_t GPIO_PinLatchRead(GPIO_PIN pin);
 void GPIO_GroupSet(GPIO_GROUP group, uint32_t mask);
 void GPIO_GroupClear(GPIO_GROUP group, uint32_t mask);
 void GPIO_GroupToggle(GPIO_GROUP group, uint32_t mask);

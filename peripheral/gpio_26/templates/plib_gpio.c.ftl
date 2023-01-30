@@ -105,6 +105,12 @@ void GPIO_PinDirConfig(GPIO_PIN pin, GPIO_DIR dir)
     *pin_ctrl_reg = ((*pin_ctrl_reg) & ~(GPIO_CTRL0_GPIO_DIR_Msk)) | ((uint32_t)dir);
 }
 
+void GPIO_PinOutputEnable(GPIO_PIN pin)
+{
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
+    *pin_ctrl_reg = (*pin_ctrl_reg) | GPIO_DIR_OUTPUT;
+}
+
 void GPIO_PinInputEnable(GPIO_PIN pin)
 {
     volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
@@ -163,6 +169,18 @@ uint8_t GPIO_PinRead(GPIO_PIN pin)
 {
     volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
     return (((*pin_ctrl_reg) & (GPIO_CTRL0_GPIO_INP_Msk)) > 0U)? 1U : 0U;
+}
+
+void GPIO_PinWrite(GPIO_PIN pin, bool value)
+{
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
+    *pin_ctrl_reg = (*pin_ctrl_reg & ~GPIO_CTRL0_ALT_GPIO_DATA_Msk) | (value << GPIO_CTRL0_ALT_GPIO_DATA_Pos);
+}
+
+uint8_t GPIO_PinLatchRead(GPIO_PIN pin)
+{
+    volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
+    return (((*pin_ctrl_reg) & (GPIO_CTRL0_ALT_GPIO_DATA_Msk)) > 0U)? 1U : 0U;
 }
 
 void GPIO_GroupSet(GPIO_GROUP group, uint32_t mask)

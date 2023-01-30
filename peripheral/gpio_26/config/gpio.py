@@ -453,6 +453,10 @@ packageUpdate = coreComponent.createBooleanSymbol("PACKAGE_UPDATE_DUMMY", None)
 packageUpdate.setVisible(False)
 packageUpdate.setDependencies(packageChange, ["COMPONENT_PACKAGE"])
 
+# Needed to map port system APIs to PLIB APIs
+gpioSymAPI_Prefix = coreComponent.createStringSymbol("PORT_API_PREFIX", None)
+gpioSymAPI_Prefix.setDefaultValue("GPIO")
+gpioSymAPI_Prefix.setVisible(False)
 ###################################################################################################
 ####################################### Code Generation  ##########################################
 ###################################################################################################
@@ -490,11 +494,11 @@ bspSourceFile.setOutputName("core.LIST_BSP_INITIALIZATION")
 bspSourceFile.setSourcePath("../peripheral/gpio_26/templates/plib_gpio_bsp.c.ftl")
 bspSourceFile.setMarkup(True)
 
-# sysPortIncludeFile = coreComponent.createFileSymbol("PIO_SYSPORT_H", None)
-# sysPortIncludeFile.setType("STRING")
-# sysPortIncludeFile.setOutputName("core.LIST_SYS_PORT_INCLUDES")
-# sysPortIncludeFile.setSourcePath("../peripheral/gpio_26/templates/plib_port_sysport.h.ftl")
-# sysPortIncludeFile.setMarkup(True)
+sysPortIncludeFile = coreComponent.createFileSymbol("GPIO_SYSPORT_H", None)
+sysPortIncludeFile.setType("STRING")
+sysPortIncludeFile.setOutputName("core.LIST_SYS_PORT_INCLUDES")
+sysPortIncludeFile.setSourcePath("../peripheral/gpio_26/templates/plib_gpio_sysport.h.ftl")
+sysPortIncludeFile.setMarkup(True)
 
 gpioSym_SystemInitFile = coreComponent.createFileSymbol("GPIO_SYS_INIT", None)
 gpioSym_SystemInitFile.setSourcePath("../peripheral/gpio_26/templates/system/initialization.c.ftl")
