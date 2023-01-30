@@ -108,6 +108,9 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dma_85/config/dma.py")
 # # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_88/config/wdt.py")
 
+# # load EC Register Bank module
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/ec_reg_bank_95/config/ec_reg_bank.py")
+
 global armLibCSourceFile
 global compilerSpecifics
 compilerSelected = compilerChoice.getSelectedKey().lower()

@@ -133,7 +133,7 @@ peripheral_ID_map = {
     "TRNG_03597"   : "TRNG_U2242"
 }
 
-system_components = ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "DMA", "OSCILLATOR", "PMC", "WDT", "DMT", "PAC", "MATRIX", "L2CC", "CMCC", "ECIA"]
+system_components = ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "DMA", "OSCILLATOR", "PMC", "WDT", "DMT", "PAC", "MATRIX", "L2CC", "CMCC", "ECIA", "EC_REG_BANK"]
 
 #RSTC, SUPC is loaded as a system component for PIC32CXMT devices
 if ATDF.getNode("/avr-tools-device-file/devices/device").getAttribute("family") == "PIC32CXMT":
