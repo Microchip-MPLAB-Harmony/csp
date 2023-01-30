@@ -552,17 +552,24 @@ void ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
     uint32_t completion_reg;
 
     <#if I2C_INTERRUPT_TYPE == "AGGREGATE">
-    ECIA_GIRQSourceClear(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM});
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}))
     <#else>
-    ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_I2CSMB${I2C_INSTANCE_NUM});
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}))
     </#if>
+    {
+        completion_reg = ${I2C_INSTANCE_NAME}_REGS->SMB_COMPL[0];
 
-    completion_reg = ${I2C_INSTANCE_NAME}_REGS->SMB_COMPL[0];
+        /* Clear the status bits */
+        ${I2C_INSTANCE_NAME}_REGS->SMB_COMPL[0] = completion_reg;
 
-    /* Clear the status bits */
-    ${I2C_INSTANCE_NAME}_REGS->SMB_COMPL[0] = completion_reg;
-
-    I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(completion_reg);
+        I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(completion_reg);
+        
+        <#if I2C_INTERRUPT_TYPE == "AGGREGATE">
+        ECIA_GIRQSourceClear(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM});
+        <#else>
+        ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_I2CSMB${I2C_INSTANCE_NUM});
+        </#if>
+    }
 }
 </#if>
 </#if>
