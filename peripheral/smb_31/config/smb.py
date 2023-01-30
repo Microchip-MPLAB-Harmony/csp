@@ -360,6 +360,21 @@ def destroyComponent(i2cComponent):
         dmaRequestID = "DMA_CH_NEEDED_FOR_" + i2cInstanceName.getValue() + "_" + "TARGET"
         dummyDict = Database.sendMessage("core", "DMA_CHANNEL_DISABLE", {"dma_channel":dmaRequestID})
 
+def updateI2CBaud(symbol, event):
+    symbol.setValue(event["value"])
+    
+def irqn_update(symbol, event):
+    interruptType = event["source"].getSymbolByID("I2C_INTERRUPT_TYPE").getSelectedKey()
+    instanceNum = event["source"].getSymbolByID("I2C_INSTANCE_NUM").getValue()
+    
+    if (interruptType == "AGGREGATE"):
+        nvic_int_num = {}
+        nvic_int_num = Database.sendMessage("core", "ECIA_GET_INT_SRC_DICT", {"int_source": "I2CSMB" + instanceNum})
+        irqn_name = "GIRQ" + str(nvic_int_num["girqn_reg_num"] + 8) + "_IRQn"
+        symbol.setValue(irqn_name)
+    else:
+        symbol.setValue("I2CSMB" + instanceNum + "_IRQn")
+    
 def instantiateComponent(i2cComponent):
 
     global i2cInstanceName
@@ -460,6 +475,11 @@ def instantiateComponent(i2cComponent):
     i2cBAUD_HZ.setMax(1000000)
     i2cBAUD_HZ.setDefaultValue(400000)
     i2cBAUD_HZ.setDependencies(masterModeVisibility, ["I2C_OPERATING_MODE"])
+    
+    i2cSym_BAUD = i2cComponent.createIntegerSymbol("I2C_CLOCK_SPEED", None)
+    i2cSym_BAUD.setDefaultValue(i2cBAUD_HZ.getValue())
+    i2cSym_BAUD.setVisible(False)
+    i2cSym_BAUD.setDependencies(updateI2CBaud, ["I2C_CLOCK_SPEED_HZ"])
 
     #I2C Baud Rate not supported comment
     i2cBaudErrorComment = i2cComponent.createCommentSymbol("I2C_BAUD_ERROR_COMMENT", None)
@@ -539,9 +559,14 @@ def instantiateComponent(i2cComponent):
 
     #I2C API Prefix
     i2cAPIPrefix = i2cComponent.createStringSymbol("I2C_PLIB_API_PREFIX", None)
-    i2cAPIPrefix.setDefaultValue(i2cInstanceName.getValue())
+    i2cAPIPrefix.setDefaultValue("I2C" + i2cInstanceNum.getValue())
     i2cAPIPrefix.setVisible(False)
-
+    
+    i2cIRQName = i2cComponent.createStringSymbol("SINGLE_IRQn", None)
+    i2cIRQName.setDefaultValue("I2CSMB" + i2cInstanceNum.getValue() + "_IRQn")
+    i2cIRQName.setVisible(False)
+    i2cIRQName.setDependencies(irqn_update, ["I2C_INTERRUPT_TYPE"])
+    
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################

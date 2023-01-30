@@ -39,6 +39,7 @@ peripherals = {
                 "TWIHS_11210"   : ["I2C"],
                 "I2C_01441"     : ["I2C"],
                 "I2C_00774"     : ["I2C"],
+                "SMB_31"        : ["I2C"],
                 "UART_02478"    : ["UART"],
                 "UART_6418"     : ["UART"],
                 "USART_6089"    : ["UART", "SPI"],
