@@ -57,6 +57,7 @@ peripherals = {
                 "RTC_U2202"     : ["TMR"],
                 "TMR_02815"     : ["TMR"],
                 "TMR_00745"     : ["TMR"],
+                "CCT_12"        : ["TMR"],
                 "LCDC_11062"    : ["LCDC"],
                 "SPI_01329"     : ["SPI"],
                 "SPI_00753"     : ["SPI"],
