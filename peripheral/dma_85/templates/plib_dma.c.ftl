@@ -364,8 +364,11 @@ static void DMA_interruptHandler(DMA_CHANNEL channel)
 </#if>
 void ${DMA_CHX_INTERRUPT_NAME}_InterruptHandler( void )
 {
-    ECIA_GIRQSourceClear(${DMA_CHX_INT_SRC_NAME});
-    DMA_interruptHandler(DMA_CHANNEL_${i});
+    if (ECIA_GIRQResultGet(${DMA_CHX_INT_SRC_NAME}))
+    {
+        ECIA_GIRQSourceClear(${DMA_CHX_INT_SRC_NAME});
+        DMA_interruptHandler(DMA_CHANNEL_${i});
+    }
 }
 </#if>
 </#list>
