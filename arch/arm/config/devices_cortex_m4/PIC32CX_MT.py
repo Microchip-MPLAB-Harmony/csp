@@ -169,7 +169,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwdt_04686/config/dwdt.py
 
 # Load Clock
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32cx_mt/config/clk.py")
-coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_UI_MANAGER_ID_PIC32CX_MT", {"plugin_name": "Clock Manager", "main_html_path": "../csp/plugins/apps/clock-configurators/pic32cxmt_clock_configurator/build/index.html"})
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_UI_MANAGER_ID_PIC32CX_MT", {"plugin_name": "Clock Manager", "main_html_path": "../csp/plugins/configurators/clock-configurators/pic32cxmt_clock_configurator/build/index.html"})
 
 #Load RSTC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/rstc_04678/config/rstc.py")
