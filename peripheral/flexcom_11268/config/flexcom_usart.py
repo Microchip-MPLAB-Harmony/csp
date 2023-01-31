@@ -330,6 +330,9 @@ flexcomSym_UsartMode.setDefaultValue(0)
 flexcomSym_UsartMode.setVisible(False)
 flexcomSym_UsartMode.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
+ptcr_register = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/register-group@[name=\"FLEXCOM\"]/register@[name=\"FLEX_PTCR\"]")
+
+
 flexcomSym_UsartOperatingMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_OPERATING_MODE", flexcomSym_OperatingMode)
 flexcomSym_UsartOperatingMode.setLabel("Operating Mode")
 flexcomSym_UsartOperatingMode.addKey("BLOCKING", "0", "Blocking mode")
@@ -338,9 +341,10 @@ flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING", "2", "Non-blocking mode")
 flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO", "3", "Non-blocking mode with FIFO")
 flexcomSym_UsartOperatingMode.addKey("RING_BUFFER", "4", "Ring buffer mode")
 flexcomSym_UsartOperatingMode.addKey("RING_BUFFER_FIFO", "5", "Ring buffer mode with FIFO")
-flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO_DMA_TX", "6", "Non-blocking mode with FIFO and DMA for transmit")
-flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO_DMA_RX", "7", "Non-blocking mode with FIFO and DMA for receive")
-flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO_DMA_TX_RX", "8", "Non-blocking mode with FIFO and DMA for transmit and receive")
+if ptcr_register is not None:
+    flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO_DMA_TX", "6", "Non-blocking mode with FIFO and DMA for transmit")
+    flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO_DMA_RX", "7", "Non-blocking mode with FIFO and DMA for receive")
+    flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING_FIFO_DMA_TX_RX", "8", "Non-blocking mode with FIFO and DMA for transmit and receive")
 
 flexcomSym_UsartOperatingMode.setDefaultValue(2)
 flexcomSym_UsartOperatingMode.setDisplayMode("Description")
