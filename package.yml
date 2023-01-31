@@ -4,12 +4,12 @@ package:
   type: "api"
   status: "production"
   required: true
-  version: "3.15.0-E2"
+  version: "3.15.0"
 
   dependencies:
     - name: "dev_packs"
       type: "package"
-      version: "3.15.0-E2"
+      version: "3.15.0"
     - name: "harmony-services"
       type: "package"
       version: "1.1.0"
@@ -81,7 +81,7 @@ package:
       version: "1.7.91"
     - name: "SAMA7G5_DFP"
       type: "dfp"
-      version: "1.0.56" 
+      version: "1.1.173" 
     - name: "SAMC20_DFP"
       type: "dfp"
       version: "3.5.93"
@@ -172,3 +172,9 @@ package:
     - name: "WLR089_DFP"
       type: "dfp"
       version: "1.0.18"
+    - name: "PIC32CX-MT_DFP"
+      type: "dfp"
+      version: "1.1.115"
+    - name: "SAM9X7_DFP"
+      type: "dfp"
+      version: "1.1.120"

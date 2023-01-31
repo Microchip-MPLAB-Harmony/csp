@@ -8,6 +8,7 @@ Microchip MPLAB Harmony provides several application examples for most supported
 | [csp_apps_pic32cm_le_ls](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cm_le_ls) | Application examples for PIC32CM LE/LS family |
 | [csp_apps_pic32cm_mc00](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cm_mc00) | Application examples for PIC32CM MC00 family |
 | [csp_apps_pic32cxbz2_wbz45](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz2_wbz45) | Application examples for PIC32CX-BZ2 family of wireless microcontrollers (MCUs) and WBZ451 modules |
+| [csp_apps_pic32cx_mt](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cx_mt) | Application examples for PIC32CX MT family |
 | [csp_apps_pic32cz_ca](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cz_ca) | Application examples for PIC32CZ-CA family |
 | [csp_apps_pic32mk](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mk) | Application examples for: <br> PIC32MK GENERAL PURPOSE AND MOTOR CONTROL (GP/MC) family <br> PIC32MK GENERAL PURPOSE AND MOTOR CONTROL (GPG/MCJ) WITH CAN FD family <br> PIC32MK GENERAL PURPOSE AND MOTOR CONTROL (GPK/MCM) WITH CAN FD family |
 | [csp_apps_pic32mm](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mm) | Application examples for PIC32MM family |
@@ -32,3 +33,4 @@ Microchip MPLAB Harmony provides several application examples for most supported
 | [csp_apps_sam_l22](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_l22) | Application examples for SAM L22 family |
 | [csp_apps_sam_rh707](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_rh707) | Application examples for SAMRH707 family |
 | [csp_apps_sam_rh71](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_rh71) | Application examples for SAMRH71 family |
+

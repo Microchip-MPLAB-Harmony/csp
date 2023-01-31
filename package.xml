@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Package name="csp" required="true">
     <Dependencies>
-        <Dependency name="dev_packs" version="v3.15.0-E2"/>
+        <Dependency name="dev_packs" version="v3.15.0"/>
         <Dependency name="harmony-services" version="v1.1.0"/>
     </Dependencies>
 </Package>
