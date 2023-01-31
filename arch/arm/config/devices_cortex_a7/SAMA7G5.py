@@ -102,7 +102,7 @@ deviceFamily.setVisible(False)
 
 cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-A7 Configuration")
-cortexMenu.setDescription("Configuration for Cortex A5")
+cortexMenu.setDescription("Configuration for Cortex A7")
 
 freeRTOSVectors = coreComponent.createBooleanSymbol("USE_FREERTOS_VECTORS", None)
 freeRTOSVectors.setVisible(False)
@@ -159,6 +159,21 @@ ddr_start = int(ddr_node.getAttribute("start"), 0)
 ddr_size = int(ddr_node.getAttribute("size"), 0)
 #Set 16MB as non-cacheable region and rest as cacheable region
 non_cacheable_size = 16 * pow(2, 20)
+
+if processor.endswith("1G"):
+    # 1 Gbit memory
+    ddr_size = (1 * pow(2,30)) / 8
+elif processor.endswith("2G"):
+    # 2 Gbit memory
+    ddr_size = (2 * pow(2,30)) / 8
+elif processor.endswith("4G"):
+    # 4 Gbit memory
+    ddr_size = (4 * pow(2,30)) / 8
+    #increase the non cacheable region to 32 MB
+    non_cacheable_size = 32 * pow(2, 20)
+else:
+    #Non SiP variants, use entire DRAM region
+    ddr_size = int(ddr_node.getAttribute("size"), 0)
 
 #DRAM coherent region
 dram_coherent_region = coreComponent.createIntegerSymbol("DRAM_COHERENT_REGION_SIZE", cortexMenu)
