@@ -144,7 +144,7 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     // Enable the qspi Module
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_QSPIEN_Msk;
 
-    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk) != 0U)
+    while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_QSPIENS_Msk) == 0U)
 	{
 		/* Do Nothing */
 	}

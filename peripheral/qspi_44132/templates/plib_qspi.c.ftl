@@ -529,6 +529,15 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     return true;
 }
 
+/* MISRA C-2012 Rule 11.3 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_11_3_DR_1 */
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 11.3" "H3_MISRAC_2012_R_11_3_DR_1"    
+</#if>
+
 bool
 ${QSPI_INSTANCE_NAME}_MemoryRead(
     qspi_memory_xfer_t *    qspi_memory_xfer,
@@ -556,8 +565,9 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
     uint32_t    numDstPostWordBytes = 0;
     uint32_t    numSrcPostWordBytes = 0;
     uint32_t    numWordTransferBytes = 0;
-    uint32_t     shiftBytes = 0;             // gt(0)=>right, lt(0)=>left shift
+    int32_t     shiftBytes = 0;             // gt(0)=>right, lt(0)=>left shift
     uint8_t     tmpBuffer[ sizeof( uint32_t) ];
+    uint32_t    temp;
 
     ///// device preliminaries
     if( false == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer,
@@ -611,7 +621,8 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
         }
     }
 
-    shiftBytes = numSrcPreWordBytes - numDstPreWordBytes;
+    temp = numSrcPreWordBytes - numDstPreWordBytes;
+    shiftBytes = (int32_t)temp;
 
     ///// Transfer of data from src device to dst buffer
     // Perform single byte transfers necessary before word alignment begins
@@ -634,8 +645,8 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
         pRxBuffer += numWordTransferBytes;
     }
 
-    if( 0U >= shiftBytes ) {                 // left, or no, shift
-        if(( shiftBytes )!= 0U) {
+    if( 0 >= shiftBytes ) {                 // left, or no, shift
+        if(( shiftBytes )!= 0) {
             // Shift the data left to its final destination buffer location
            (void) memmove( ((uint8_t *) rx_data) + numDstPreWordBytes + shiftBytes,
                     ((uint8_t *) rx_data) + numDstPreWordBytes,
@@ -656,18 +667,22 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
         {
             ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit( pRxBuffer, qspi_mem, numSrcPostWordBytes );
         }
-        // Shift the data to right to its final destination buffer location
-       (void) memmove( ((uint8_t *) rx_data) + numDstPreWordBytes + shiftBytes,
+        
+        if((numWordTransferBytes + numSrcPostWordBytes) > 0U)
+        {
+            // Shift the data to right to its final destination buffer location
+            (void) memmove( ((uint8_t *) rx_data) + numDstPreWordBytes + shiftBytes,
                 ((uint8_t *) rx_data) + numDstPreWordBytes,
                 numWordTransferBytes + numSrcPostWordBytes
             );
+        }
     }
 
     if(( numSrcPreWordBytes ) != 0U)
     {
         // Now we have room at the beginning;
         // place the previously saved pre-word aligned bytes
-       (void) memmove( rx_data, tmpBuffer, numSrcPreWordBytes );
+       (void) memmove( (uint8_t *)rx_data, tmpBuffer, numSrcPreWordBytes );
     }
 
     /* Wait if Read Busy */
@@ -692,6 +707,14 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
 
     return true;
 }
+
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 11.3"
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>    
+</#if>
+/* MISRAC 2012 deviation block end */
 
 bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
 {
