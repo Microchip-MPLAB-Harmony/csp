@@ -529,6 +529,18 @@ def instantiateComponent(tccComponent):
         values[index].getAttribute("caption"))
     #tccSym_CTRLA_PRESCALER.setDependencies(tccSlaveModeVisibility, ["TCC_SLAVE_MODE"])
 
+    tccSym_CTRLA_PRESCYNC = tccComponent.createKeyValueSetSymbol("TCC_CTRLA_PRESCYNC", None)
+    tccSym_CTRLA_PRESCYNC.setLabel("Prescaler and Counter Synchronization")
+    tccSym_CTRLA_PRESCYNC.setDefaultValue(1)
+    tccSym_CTRLA_PRESCYNC.setOutputMode("Key")
+    tccSym_CTRLA_PRESCYNC.setDisplayMode("Description")
+    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TCC\"]/value-group@[name=\"TCC_CTRLA__PRESCSYNC\"]")
+    values = []
+    values = node.getChildren()
+    for index in range(0, len(values)):
+        tccSym_CTRLA_PRESCYNC.addKey(values[index].getAttribute("name"), values[index].getAttribute("value"),
+        values[index].getAttribute("caption"))    
+
     tccSym_Frequency = tccComponent.createIntegerSymbol("TCC_MODULE_FREQUENCY", None)
     tccSym_Frequency.setVisible(False)
     tccSym_Frequency.setDefaultValue(int(Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY")))

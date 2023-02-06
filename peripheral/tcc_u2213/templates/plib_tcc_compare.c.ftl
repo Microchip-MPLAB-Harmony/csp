@@ -175,11 +175,11 @@ void ${TCC_INSTANCE_NAME}_CompareInitialize( void )
     /* Configure counter mode & prescaler */
 <#if TCC_SLAVE_MODE == true>
     <@compress single_line=true>${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER}
-                                | TCC_CTRLA_PRESCSYNC_PRESC | TCC_CTRLA_MSYNC_Msk
+                                | TCC_CTRLA_PRESCSYNC_${TCC_CTRLA_PRESCYNC} | TCC_CTRLA_MSYNC_Msk
                                 ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 <#else>
     <@compress single_line=true>${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER}
-                                | TCC_CTRLA_PRESCSYNC_PRESC
+                                | TCC_CTRLA_PRESCSYNC_${TCC_CTRLA_PRESCYNC}
                                 ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 </#if>
     /* Configure waveform generation mode */

@@ -166,11 +166,10 @@ void ${TCC_INSTANCE_NAME}_CaptureInitialize( void )
 
     /* Configure prescaler, standby & capture mode */
     <#if TCC_CTRLA_VAL?has_content>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} | TCC_CTRLA_PRESCSYNC_PRESC
-                                  | ${TCC_CTRLA_VAL}
-                                  ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} | TCC_CTRLA_PRESCSYNC_${TCC_CTRLA_PRESCYNC}
+                                  | ${TCC_CTRLA_VAL} ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};
     <#else>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} | TCC_CTRLA_PRESCSYNC_PRESC
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} | TCC_CTRLA_PRESCSYNC_${TCC_CTRLA_PRESCYNC}
                                   ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};
     </#if>                                      
 
