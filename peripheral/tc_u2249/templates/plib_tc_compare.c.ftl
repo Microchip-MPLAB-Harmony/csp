@@ -167,7 +167,7 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
     /* Configure counter mode & prescaler */
     <@compress single_line=true>${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_MODE_${TC_CTRLA_MODE}
                                 | TC_CTRLA_PRESCALER_${TC_CTRLA_PRESCALER}
-                                | TC_CTRLA_PRESCSYNC_PRESC
+                                | TC_CTRLA_PRESCSYNC_${TC_CTRLA_PRESCYNC}
                                 ${TC_CTRLA_RUNSTDBY?then('| TC_CTRLA_RUNSTDBY_Msk', '')}
                                 ${TC_CTRLA_ONDEMAND?then('| TC_CTRLA_ONDEMAND_Msk', '')};</@compress>
 

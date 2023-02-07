@@ -228,7 +228,7 @@ void ${TC_INSTANCE_NAME}_CaptureInitialize( void )
     }
 
     /* Configure counter mode, prescaler, standby & on demand mode */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_MODE_${TC_CTRLA_MODE} | TC_CTRLA_PRESCALER_${TC_CTRLA_PRESCALER} | TC_CTRLA_PRESCSYNC_PRESC
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_MODE_${TC_CTRLA_MODE} | TC_CTRLA_PRESCALER_${TC_CTRLA_PRESCALER} | TC_CTRLA_PRESCSYNC_${TC_CTRLA_PRESCYNC}
                                   <#if TC_CTRLA_VAL?has_content>| ${TC_CTRLA_VAL}</#if> <#rt>
                                   <#lt>${TC_CTRLA_RUNSTDBY?then('| TC_CTRLA_RUNSTDBY_Msk', '')} <#rt>
                                   <#lt>${TC_CTRLA_ONDEMAND?then('| TC_CTRLA_ONDEMAND_Msk', '')};

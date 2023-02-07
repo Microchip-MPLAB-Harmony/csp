@@ -534,7 +534,7 @@ def instantiateComponent(tcComponent):
     if isMasterSlaveModeEnable == True:
         tcSym_CTRLA_PRESCALER.setVisible(False)
     if (tcInstanceMasterValue == 2):
-        tcSym_CTRLA_PRESCALER.setDependencies(tcSlaveModeVisible, ["TC_SLAVE_MODE"])
+        tcSym_CTRLA_PRESCALER.setDependencies(tcSlaveModeVisible, ["TC_SLAVE_MODE"])        
 
     #clock resolution display
     tcSym_Resolution = tcComponent.createCommentSymbol("TC_Resolution", None)
@@ -547,6 +547,23 @@ def instantiateComponent(tcComponent):
         tcSym_Resolution.setVisible(False)
     tcSym_Resolution.setDependencies(tcResolutionCalc, ["TC_SLAVE_MODE", "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
         "TC_CTRLA_PRESCALER"])
+
+    #prescaler synchronization
+    tcSym_CTRLA_PRESCYNC = tcComponent.createKeyValueSetSymbol("TC_CTRLA_PRESCYNC", None)
+    tcSym_CTRLA_PRESCYNC.setLabel("Prescaler and Counter Synchronization")
+    tcSym_CTRLA_PRESCYNC.setDefaultValue(1)
+    tcSym_CTRLA_PRESCYNC.setOutputMode("Key")
+    tcSym_CTRLA_PRESCYNC.setDisplayMode("Description")
+    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CTRLA__PRESCSYNC\"]")
+    values = []
+    values = node.getChildren()
+    for index in range(0, len(values)):
+        tcSym_CTRLA_PRESCYNC.addKey(values[index].getAttribute("name"), values[index].getAttribute("value"),
+        values[index].getAttribute("caption"))  
+    if isMasterSlaveModeEnable == True:
+        tcSym_CTRLA_PRESCYNC.setVisible(False)
+    if (tcInstanceMasterValue == 2):
+        tcSym_CTRLA_PRESCYNC.setDependencies(tcSlaveModeVisible, ["TC_SLAVE_MODE"])   
 
     #TC clock frequency
     tcSym_Frequency = tcComponent.createIntegerSymbol("TC_FREQUENCY", None)
