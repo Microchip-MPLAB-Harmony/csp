@@ -25,7 +25,6 @@
 def setUpMemFuse(symbol, event):
     global fuseMapSymbol
     fuseKey = event["id"].split("_")[1]   #extract region name
-
     for key in fuseMapSymbol.keys():
         if '_' in key and key.split("_")[-1] == fuseKey:
             value = Database.getSymbolValue("core", fuseMapSymbol[key])
@@ -35,39 +34,23 @@ def setUpMemFuse(symbol, event):
             else:
                 Database.setSymbolValue("core", fuseMapSymbol[key], long(value))
 
-# Fuse settings for peripheral attributes
 def setUpFuse(symbol, event):
     global fuseMapSymbol
-    global family
-    global nonsecPeriphrals
-
-    bitPos = int(nonsecPeriphrals[event["id"].split("_IS_NON_SECURE")[0]])
-    if bitPos < 32:
-        fuseKey = "NONSECA" 
-    elif bitPos < 64:
-        fuseKey = "NONSECB"
-    elif bitPos < 96:
-        fuseKey = "NONSECC"
-    else:
-        fuseKey = "NONSECAHB"
     for key in fuseMapSymbol.keys():
-        if fuseKey in key:
-            if '_' in key and key.split("_")[-1] == fuseKey:
-                value = (Database.getSymbolValue("core", fuseMapSymbol[key]))
-                if event["value"] == True:
-                    value = value | (1 << (bitPos%32))
-                else:
-                    value = value & ~(1 << (bitPos%32))
-                Database.setSymbolValue("core", fuseMapSymbol[key], long(value))
-
+        if '_' in key and key.split("_")[-1] == event["id"].split("_IS_NON_SECURE")[0]:
+            if event["value"]:
+                Database.setSymbolValue("core", fuseMapSymbol[key], 1)
+            else:
+                Database.setSymbolValue("core", fuseMapSymbol[key], 0)
 
 def nonSecStartAddressCalculate(symbol, value):
     global memoryGranularity
-    asSize = int(Database.getSymbolValue("core", "IDAU_AS_SIZE"))
+    global maxFlashSize
+    ansSize = int(Database.getSymbolValue("core", "IDAU_ANS_SIZE"))
     anscSize = int(Database.getSymbolValue("core", "IDAU_ANSC_SIZE"))
+    size = maxFlashSize.getValue()
     start = int(Database.getSymbolValue("core", "SEC_START_ADDRESS"))
-    symbol.setValue( start + (asSize * memoryGranularity["IDAU_AS"] ) 
-                        + (anscSize * memoryGranularity["IDAU_ANSC"] ))
+    symbol.setValue( start + size - (ansSize * memoryGranularity["IDAU_ANS"] ) )
 
 def updateSecureEnabledState(symbol, event):
     symbol.setEnabled(not event["value"])
@@ -123,19 +106,19 @@ def asSizeCalculate(symbol, event):
     value = maxFlashSize.getValue() \
     - (Database.getSymbolValue("core", "IDAU_ANS_SIZE") * int(memoryGranularity["IDAU_ANS"])) \
     - (Database.getSymbolValue("core", "IDAU_ANSC_SIZE") * int(memoryGranularity["IDAU_ANSC"]))
-    symbol.setValue((value / int(memoryGranularity["IDAU_AS"])) - 1)
+    symbol.setValue((value / int(memoryGranularity["IDAU_AS"])))
 
 def rsSizeCalculate(symbol, event):
     global maxRamSize
     value = maxRamSize.getValue() \
         - (Database.getSymbolValue("core", "IDAU_RNS_SIZE") * int(memoryGranularity["IDAU_RNS"]))
-    symbol.setValue((value / int(memoryGranularity["IDAU_RS"])) - 1)
+    symbol.setValue((value / int(memoryGranularity["IDAU_RS"])))
 
 def bsSizeCalculate(symbol, event):
     global bootprot_size
     value = bootprot_size.getValue() \
         - (Database.getSymbolValue("core", "IDAU_BNSC_SIZE") * int(memoryGranularity["IDAU_BNSC"]))
-    symbol.setValue((value / int(memoryGranularity["IDAU_BS"])) - 1)    
+    symbol.setValue((value / int(memoryGranularity["IDAU_BS"])))    
 ###################################################################################################
 ########################################## Configurations  #############################################
 ###################################################################################################
@@ -165,39 +148,31 @@ trustZoneSystemResourcesMenu.setLabel("System Resources")
 dummyList = coreComponent.createListSymbol( "NULL_LIST",       None )
 peripheralList = coreComponent.createListEntrySymbol("TRUSTZONE_PERIPHERAL_LIST", None)
 peripheralList.setVisible(False)
-
-nonsecPeriphrals = {}
-
-# create peripheral list from PAC_ID
-node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
-peripherals = node.getChildren()
-for peripheral in range(0,len(peripherals)):
-    instances = peripherals[peripheral].getChildren()
-    for instance in range (0, len(instances)):
-        options = instances[instance].getChildren()
-        for option in range (0, len(options)):
-            if "parameters" == options[option].getName():
-                parameters = options[option].getChildren()
-                for parameter in range(0, len(parameters)):
-                    if "name" in parameters[parameter].getAttributeList():  
-                        if "PAC_ID" in parameters[parameter].getAttribute("name"):
-                            nonsecPeriphrals[instances[instance].getAttribute("name")] = parameters[parameter].getAttribute("value")
-for key, value in sorted(nonsecPeriphrals.items()):
+nonsecPeriphrals = []
+#Sort peripheral list in alphabetical order
+for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_")[-1] if '_' in arg[0] else arg[0]):
     trustZonePeripheralSubmenu = trustZonePeripheralMenu
-    if key in mixSecurePeripheralList:
+    if ("NONSEC" in key):
+        if (key.split("_")[-1] not in nonsecPeriphrals):
+            nonsecPeriphrals.append(key.split("_")[-1])
+        else:   # Do not generate symbols from USERCFG2
+            continue
+    if ("NONSEC" in key) and key.split("_")[-1] in mixSecurePeripheralList:
         trustZonePeripheralSubmenu = trustZoneMixSecurePeripheralMenu
-    elif key in systemResourcesList:
+    elif ("NONSEC" in key) and key.split("_")[-1]  in systemResourcesList:
         trustZonePeripheralSubmenu = trustZoneSystemResourcesMenu
-    peripheralIsNonSecure = coreComponent.createBooleanSymbol(key + "_IS_NON_SECURE", trustZonePeripheralSubmenu)
-    peripheralIsNonSecure.setLabel(key + " is Non-Secure")
-    peripheralList.addValue(key)
-    fusedependencyList.append(key + "_IS_NON_SECURE")
-    if ((key in mixSecurePeripheralList) or (key in systemResourcesList)):
-        peripheralIsNonSecure.setReadOnly(True)
-    if key == "DSU":
-        peripheralIsNonSecure.setValue(True)
-        peripheralIsNonSecure.setReadOnly(True)
-        #Database.setSymbolValue("core", fuseMapSymbol[key], 1)
+    if ("NONSEC" in key) and key.split("_")[-1] :
+        peripheralIsNonSecure = coreComponent.createBooleanSymbol(key.split("_")[-1] + "_IS_NON_SECURE", trustZonePeripheralSubmenu)
+        peripheralIsNonSecure.setLabel(key.split("_")[-1] + " is Non-Secure")
+        peripheralList.addValue(key.split("_")[-1])
+        fusedependencyList.append(key.split("_")[-1] + "_IS_NON_SECURE")
+        if ((("NONSEC" in key) and key.split("_")[-1]  in mixSecurePeripheralList) or
+            (("NONSEC" in key) and key.split("_")[-1]  in systemResourcesList)):
+            peripheralIsNonSecure.setReadOnly(True)
+        if ("NONSEC" in key) and key.split("_")[-1] == "DSU":
+            peripheralIsNonSecure.setDefaultValue(True)
+            peripheralIsNonSecure.setReadOnly(True)
+            Database.setSymbolValue("core", fuseMapSymbol[key], 1)
 peripheralList.setTarget("core.NULL_LIST")
 
 fuseUpdateCallback = coreComponent.createBooleanSymbol("DUMMY_SYMBOL_CALLBACK", None)
@@ -239,6 +214,10 @@ for mem_idx in range(0, len(addr_space_children)):
         maxFlashSize.setDefaultValue(int(addr_space_children[mem_idx].getAttribute("size"), 16))
         sec_start_address = int(addr_space_children[mem_idx].getAttribute("start"), 16)
 
+        totalCodeSize = coreComponent.createIntegerSymbol("DEVICE_TOTAL_CODE_SIZE", None)
+        totalCodeSize.setVisible(False)
+        totalCodeSize.setDefaultValue(sec_start_address + maxFlashSize.getValue())
+
     if (mem_seg == "HSRAM_RET"):
         maxRamSize = coreComponent.createIntegerSymbol("DEVICE_RAM_SIZE", None)
         maxRamSize.setVisible(False)
@@ -255,32 +234,36 @@ maxDataflashSize.setVisible(False)
 maxDataflashSize.setDefaultValue(0)    
 
 for key in memoryFuseMaxValue.keys():
-    asSizeSymbol = coreComponent.createKeyValueSetSymbol( "IDAU_" + str(key) + "_SIZE", memoryMenu)
-    asSizeSymbol.setLabel("IDAU " + str(key) + " SIZE" )
-    for val in range(0, int(memoryFuseMaxValue[key][0]) + 1):
-        size = val * memoryGranularity["IDAU_" + key]
+    asSizeSymbol = coreComponent.createKeyValueSetSymbol( str(key) + "_SIZE", memoryMenu)
+    asSizeSymbol.setLabel(str(key) + " SIZE" )
+    if "ANSC" in key:
+        end = int(memoryFuseMaxValue[key][0]) + 1
+    else:
+        end = int(memoryFuseMaxValue[key][0]) + 2
+    for val in range(0, end):
+        size = val * memoryGranularity[ key]
         sizeString = str(size) + " Bytes"
         asSizeSymbol.addKey(sizeString, str(hex(int(size))), '{:,}'.format(size) + " Bytes")
-    asSizeSymbol.setDefaultValue((int(memoryFuseMaxValue[key][1])))  #initval
+    asSizeSymbol.setDefaultValue(1)  #initval
     asSizeSymbol.setOutputMode("Key")
     asSizeSymbol.setDisplayMode("Description")
     asSizeSymbol.setVisible(True)
-    memoryfusedependencyList.append("IDAU_" + str(key) + "_SIZE")
+    memoryfusedependencyList.append(str(key) + "_SIZE")
 
     asGranularitySymbol =  coreComponent.createIntegerSymbol( str(key) + "_GRANULARITY", memoryMenu)
     asGranularitySymbol.setVisible(False)
-    asGranularitySymbol.setDefaultValue(memoryGranularity["IDAU_" + key])
+    asGranularitySymbol.setDefaultValue(memoryGranularity[key])
 
 # AS Size
 asSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_AS_SIZE", memoryMenu)
 asSizeSymbol.setLabel("IDAU AS size") 
 key = 0
-for val in range(0, (int(memoryFuseMaxValue["ANS"][0]) + 1)):
+for val in range(0, (int(memoryFuseMaxValue["IDAU_ANS"][0]) + 2)):
     size = val * memoryGranularity["IDAU_ANS"]
     sizeString = str(size) + " Bytes"
     asSizeSymbol.addKey(sizeString, str(hex(int(size))), '{:,}'.format(size) + " Bytes")
     key = key + 1
-asSizeSymbol.setDefaultValue(key - int(memoryFuseMaxValue["ANS"][1]) - int(memoryFuseMaxValue["ANSC"][1]) - 1)
+asSizeSymbol.setDefaultValue(key - int(memoryFuseMaxValue["IDAU_ANS"][1]) - int(memoryFuseMaxValue["IDAU_ANSC"][1]))
 asSizeSymbol.setOutputMode("Key")
 asSizeSymbol.setDisplayMode("Description")
 asSizeSymbol.setReadOnly(True)   
@@ -290,12 +273,12 @@ asSizeSymbol.setDependencies(asSizeCalculate, ["IDAU_ANSC_SIZE", "IDAU_ANS_SIZE"
 rsSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_RS_SIZE", memoryMenu)
 rsSizeSymbol.setLabel("IDAU RS size")
 key = 0 
-for val in range(0, int(memoryFuseMaxValue["RNS"][0]) + 1):
+for val in range(0, int(memoryFuseMaxValue["IDAU_RNS"][0]) + 2):
     size = val * memoryGranularity["IDAU_RNS"]
     sizeString = str(size) + " Bytes"
     rsSizeSymbol.addKey(sizeString, str(hex(int(size))), '{:,}'.format(size) + " Bytes")
     key = key + 1
-rsSizeSymbol.setDefaultValue(key - int(memoryFuseMaxValue["RNS"][1]) - 1)
+rsSizeSymbol.setDefaultValue(key - int(memoryFuseMaxValue["IDAU_RNS"][1]))
 rsSizeSymbol.setOutputMode("Key")
 rsSizeSymbol.setDisplayMode("Description")
 rsSizeSymbol.setReadOnly(True)
@@ -316,11 +299,11 @@ bnscSizeSymbol.setDisplayMode("Description")
 #BS
 bsSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_BS_SIZE", memoryMenu)
 bsSizeSymbol.setLabel("IDAU BS size")       
-for val in range(0, (int(bootprot_size.getValue()) / memoryGranularity["IDAU_BOOTPROT"] )):
+for val in range(0, (int(bootprot_size.getValue()) / memoryGranularity["IDAU_BOOTPROT"] ) + 1):
     size = val * memoryGranularity["IDAU_BOOTPROT"]
     sizeString = str(size) + " Bytes"
     bsSizeSymbol.addKey(sizeString, str(hex(int(size))), '{:,}'.format(size) + " Bytes")
-bsSizeSymbol.setDefaultValue(int(bootprot_size.getValue()) / memoryGranularity["IDAU_BOOTPROT"] - 1)
+bsSizeSymbol.setDefaultValue(int(bootprot_size.getValue()) / memoryGranularity["IDAU_BOOTPROT"])
 bsSizeSymbol.setOutputMode("Key")
 bsSizeSymbol.setDisplayMode("Description")
 bsSizeSymbol.setReadOnly(True)
@@ -345,12 +328,15 @@ memfuseUpdateCallback = coreComponent.createBooleanSymbol("DUMMY_MEM_SYMBOL_CALL
 memfuseUpdateCallback.setVisible(False)
 memfuseUpdateCallback.setDependencies(setUpMemFuse, memoryfusedependencyList)
 
+Database.setSymbolValue("core", "IDAU_ANSC_SIZE", 1)
+Database.setSymbolValue("core", "IDAU_ANS_SIZE", maxFlashSize.getValue() / (memoryGranularity["IDAU_ANS"] * 2) )
+Database.setSymbolValue("core", "IDAU_RNS_SIZE", maxRamSize.getValue() / (memoryGranularity["IDAU_RNS"] * 2) )
+
 nonSecStartAddress = coreComponent.createHexSymbol("NON_SEC_START_ADDRESS", None)
 nonSecStartAddress.setVisible(False)
-nonSecStartAddress.setDefaultValue(int(sec_start_address) 
-            + (int(Database.getSymbolValue("core", "IDAU_AS_SIZE")) * memoryGranularity["IDAU_AS"])
-            + (int(Database.getSymbolValue("core", "IDAU_ANSC_SIZE")) * memoryGranularity["IDAU_ANSC"]))
-nonSecStartAddress.setDependencies(nonSecStartAddressCalculate, ["IDAU_AS_SIZE", "IDAU_ANSC_SIZE"])
+nonSecStartAddress.setDefaultValue(int(sec_start_address) + maxFlashSize.getValue()
+            - (int(Database.getSymbolValue("core", "IDAU_ANS_SIZE")) * memoryGranularity["IDAU_ANS"]))
+nonSecStartAddress.setDependencies(nonSecStartAddressCalculate, ["IDAU_ANS_SIZE", "IDAU_ANSC_SIZE"])
 
 secStartAddress = coreComponent.createHexSymbol("SEC_START_ADDRESS", None)
 secStartAddress.setVisible(False)
