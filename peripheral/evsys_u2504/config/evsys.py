@@ -604,8 +604,7 @@ def instantiateComponent(evsysComponent):
         "../peripheral/evsys_u2504/templates/system/definitions.h.ftl")
     evsysSystemDefFile.setMarkup(True)
     
-    evsysComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "EVE_SYS_MGR", {"plugin_name": "Event Configurator", "main_html_path": "../csp/plugins/apps/event-configurators/event-configurator/build/index.html"})
-    
+    evsysComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "EVE_SYS_MGR", {"plugin_name": "Event Configurator", "main_html_path": "csp/plugins/configurators/event-configurators/event-configurator/build/index.html"})
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         nonSecevsysSym_HeaderFile=evsysComponent.createFileSymbol("EVSYS_HEADER_NON_SEC", None)

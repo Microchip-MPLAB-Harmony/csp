@@ -30,7 +30,7 @@ print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
 
 # disable data_initialze in startup_xc32
 Database.setSymbolValue("core", "XC32_DATA_INIT", False)

@@ -176,7 +176,7 @@ coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
                         "DMA_UI_MANAGER_ID_SAM9X60",
                         {
                             "plugin_name": "DMA Configuration",
-                            "main_html_path": "csp/plugins/apps/dma-configurators/dma-configurator-1/build/index.html",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-1/build/index.html",
                             "symbol_config": "csp/peripheral/xdmac_11161/plugin/symbol-config.json"
                         }
                         )

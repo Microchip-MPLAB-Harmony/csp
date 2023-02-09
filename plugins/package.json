@@ -1,12 +1,13 @@
 {
   "private": true,
   "workspaces": [
-    "apps/dma-configurators/dma*",
-    "apps/interrupt_configurators/*",
-    "apps/event-configurators/*",
-    "apps/mpu-configurators/*",
-    "apps/memory-configurators/*",
-	"apps/trustzone_configurators/*"
+    "configurators/clock-configurators/*",
+    "configurators/dma-configurators/dma*",
+    "configurators/interrupt_configurators/*",
+    "configurators/event-configurators/*",
+    "configurators/mpu-configurators/*",
+    "configurators/memory-configurators/*",
+	"configurators/trustzone_configurators/*"
   ],
   "scripts": {
     "build": "lerna run build",

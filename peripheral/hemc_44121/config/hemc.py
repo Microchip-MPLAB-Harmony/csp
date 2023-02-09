@@ -965,4 +965,4 @@ def instantiateComponent(hemcComponent):
     hemcSystemInitFile.setSourcePath("../peripheral/hemc_44121/templates/system/initialization.c.ftl")
     hemcSystemInitFile.setMarkup(True)
 
-    hemcComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "HEMC_CONFIGURATOR", {"plugin_name": "HEMC Memory Configurator", "main_html_path": "../csp/plugins/apps/memory-configurators/hemc-configurator/build/index.html"})
+    hemcComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "HEMC_CONFIGURATOR", {"plugin_name": "HEMC Memory Configurator", "main_html_path": "csp/plugins/configurators/memory-configurators/hemc-configurator/build/index.html"})

@@ -200,7 +200,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02922/config/gpio.py
 coreComponent.addPlugin("../peripheral/gpio_02922/plugin/gpio_02922.jar")
 
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py")
-coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_EVIC_02907_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/evic_02907_interrupt_configuration/build/index.html"})
 
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_02674/config/wdt.py")
@@ -212,7 +212,7 @@ if ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]") is not 
                         "DMA_UI_MANAGER_ID_PIC32MM",
                         {
                             "plugin_name": "DMA Configuration",
-                            "main_html_path": "csp/plugins/apps/dma-configurators/dma-configurator-2/build/index.html",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-2/build/index.html",
                             "symbol_config": "csp/peripheral/dmac_00735/plugin/symbol-config.json"
                         }
                         )

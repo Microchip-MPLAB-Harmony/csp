@@ -283,7 +283,7 @@ cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", mipsMenu)
 cacheMenu.setLabel("(no additional MIPS configuration)")
 
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py")
-coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_EVIC_02907_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/apps/interrupt_configurators/evic_02907_interrupt_configuration/build/index.html"})
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_EVIC_02907_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/evic_02907_interrupt_configuration/build/index.html"})
 
 # load dmt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmt_01520/config/dmt.py")
@@ -297,7 +297,7 @@ coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
                         "DMA_UI_MANAGER_ID_PIC32MK",
                         {
                             "plugin_name": "DMA Configuration",
-                            "main_html_path": "csp/plugins/apps/dma-configurators/dma-configurator-2/build/index.html",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-2/build/index.html",
                             "symbol_config": "csp/peripheral/dmac_01500/plugin/symbol-config.json"
                         }
                         )

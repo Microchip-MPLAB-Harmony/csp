@@ -244,7 +244,7 @@ coreComponent.addPlugin("../peripheral/clk_sam_a7g5/plugin/clk_sam_a7g5.jar")
 
 # load GIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gic/config/gic.py")
-coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_GIC_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/apps/interrupt_configurators/gic_interrupt_configuration/build/index.html"})
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_GIC_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/gic_interrupt_configuration/build/index.html"})
 
 #load MMU with default 1:1 mapping so we can use cache
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
@@ -265,7 +265,7 @@ coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
                         "DMA_UI_MANAGER_ID_SAMA7G5",
                         {
                             "plugin_name": "DMA Configuration",
-                            "main_html_path": "csp/plugins/apps/dma-configurators/dma-configurator-1/build/index.html",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-1/build/index.html",
                             "symbol_config": "csp/peripheral/xdmac_11161/plugin/symbol-config.json"
                         }
                         )

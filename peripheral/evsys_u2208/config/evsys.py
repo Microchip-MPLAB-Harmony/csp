@@ -326,5 +326,4 @@ def instantiateComponent(evsysComponent):
     evsysSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     evsysSystemDefFile.setSourcePath("../peripheral/evsys_u2208/templates/system/definitions.h.ftl")
     evsysSystemDefFile.setMarkup(True)
-    evsysComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "EVE_SYS_MGR", {"plugin_name": "Event Configurator", "main_html_path": "../csp/plugins/apps/event-configurators/event-configurator/build/index.html"})
-    #evsysComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "EVE_SYS_MGR", {"plugin_name": "Event Configurator", "main_html_path": "../csp/peripheral/evsys_u2208/plugin/event_configurator/build/index.html"})
+    evsysComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "EVE_SYS_MGR", {"plugin_name": "Event Configurator", "main_html_path": "csp/plugins/configurators/event-configurators/event-configurator/build/index.html"})

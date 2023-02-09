@@ -329,7 +329,7 @@ coreComponent.addPlugin("../peripheral/clk_sam_d21/plugin/clk_sam_d21.jar")
 
 # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/apps/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
 
 #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
@@ -340,7 +340,7 @@ coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
                         "DMA_UI_MANAGER_ID_PIC32CM_SAM_D21_DA1",
                         {
                             "plugin_name": "DMA Configuration",
-                            "main_html_path": "csp/plugins/apps/dma-configurators/dma-configurator-1/build/index.html",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-1/build/index.html",
                             "symbol_config": "csp/peripheral/dmac_u2223/plugin/symbol-config.json"
                         }
                         )

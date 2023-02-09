@@ -403,11 +403,11 @@ coreComponent.addPlugin("../peripheral/clk_pic32ck_gc_sg/plugin/clk_pic32ck_gc_s
 
 # load mpu
 #execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
-#coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
+#coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "MPU_CONFIGURATOR", {"plugin_name": "MPU Configurator", "main_html_path": "csp/plugins/configurators/mpu-configurators/mpu-configurator/build/index.html"})
 
 # # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
 
 #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")

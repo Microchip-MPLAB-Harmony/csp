@@ -547,4 +547,4 @@ secexceptSourceFile.setType("SOURCE")
 secexceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "ADVANCED_EXCEPTION" ] )
 secexceptSourceFile.setSecurity("SECURE")
 
-coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "TRUSTZONE_MANAGER_ARM", {"plugin_name": "Arm TrustZone for Armv8-M", "main_html_path": "csp/plugins/apps/trustzone_configurators/trustzone_configurator/build/index.html"})
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "TRUSTZONE_MANAGER_ARM", {"plugin_name": "Arm TrustZone for Armv8-M", "main_html_path": "csp/plugins/configurators/trustzone_configurators/trustzone_configurator/build/index.html"})
