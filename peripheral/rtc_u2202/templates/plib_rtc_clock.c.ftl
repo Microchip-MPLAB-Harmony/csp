@@ -131,26 +131,21 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 <#if RTC_FREQCORR = true >
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction)
     <#lt>{
-    <#lt>   uint32_t newCorrectionValue = 0U;
-    <#lt>   int32_t temp_correct = correction;
-	<#lt>
-	<#lt>   if(temp_correct > INT_MIN)
-	<#lt>	{
-    <#lt>      newCorrectionValue = (uint32_t)abs(temp_correct);
-	<#lt>   }
-    <#lt>
-    <#lt>   /* Convert to positive value and adjust Register sign bit. */
-    <#lt>   if (temp_correct < 0)
-    <#lt>   {
-    <#lt>       newCorrectionValue |= RTC_FREQCORR_SIGN_Msk;
-    <#lt>   }
+    <#lt>    uint8_t abs_correction  = (((uint8_t)correction & 0x80U) != 0U) ? \
+    <#lt>            ((0xFFU - (uint8_t)correction) + 0x1U) : (uint8_t)correction;
 
-    <#lt>   /* Writing to FREQCORR register will trigger write-synchronization */
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_FREQCORR = (uint8_t)newCorrectionValue;
-    <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
-    <#lt>   {
-    <#lt>       /* Wait for Write-Synchronization */
-    <#lt>   }
+    <#lt>    /* Convert to positive value and adjust Register sign bit. */
+    <#lt>    if (correction < 0)
+    <#lt>    {
+    <#lt>        abs_correction |= RTC_FREQCORR_SIGN_Msk;
+    <#lt>    }
+
+    <#lt>    /* Writing to FREQCORR register will trigger write-synchronization */
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_FREQCORR = abs_correction;
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Write-Synchronization */
+    <#lt>    }
     <#lt>}
 </#if>
 
@@ -173,15 +168,15 @@ bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
 void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 {
     uint32_t dataClockCalendar = 0U;
-	
-	/* Added temp variable for suppressing MISRA C 2012 Rule : 10.x. 
+
+	/* Added temp variable for suppressing MISRA C 2012 Rule : 10.x.
 	   Please don't ignore this variable for any future modifications */
 	uint32_t temp;
 
     /* Enable read-synchronization for CLOCK register to avoid CPU stall */
     ${RTC_INSTANCE_NAME}_ClockReadSynchronization();
     dataClockCalendar = ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CLOCK;
-    
+
 	temp = ((dataClockCalendar & RTC_MODE2_CLOCK_HOUR_Msk) >> RTC_MODE2_CLOCK_HOUR_Pos);
     currentTime->tm_hour = (int)temp;
 	temp = ((dataClockCalendar & RTC_MODE2_CLOCK_MINUTE_Msk) >> RTC_MODE2_CLOCK_MINUTE_Pos);

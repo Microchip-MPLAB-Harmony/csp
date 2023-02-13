@@ -44,7 +44,6 @@
 #include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 #include <stdlib.h>
-#include <limits.h>
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
@@ -153,25 +152,20 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 <#if RTC_FREQCORR >
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction)
     <#lt>{
-    <#lt>   uint32_t newCorrectionValue = 0U;
-	<#lt>   int32_t freq_correct_val = correction;
-	<#lt>   if(freq_correct_val > INT_MIN)
-	<#lt>   {
-    <#lt>       newCorrectionValue = (uint32_t)abs(freq_correct_val);
-	<#lt>   }
+    <#lt>    uint8_t abs_correction  = (((uint8_t)correction & 0x80U) != 0U) ? \
+    <#lt>                ((0xFFU - (uint8_t)correction) + 0x1U) : (uint8_t)correction;
 
-    <#lt>   /* Convert to positive value and adjust register sign bit. */
-    <#lt>   if (freq_correct_val < 0)
-    <#lt>   {
-    <#lt>       newCorrectionValue |= RTC_FREQCORR_SIGN_Msk;
-    <#lt>   }
+    <#lt>    /* Convert to positive value and adjust Register sign bit. */
+    <#lt>    if (correction < 0)
+    <#lt>    {
+    <#lt>        abs_correction |= RTC_FREQCORR_SIGN_Msk;
+    <#lt>    }
 
-    <#lt>   /* Writing to FREQCORR register will trigger write-synchronization */
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_FREQCORR = (uint8_t)newCorrectionValue;
-    <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
-    <#lt>   {
-    <#lt>       /* Wait for Write-Synchronization */
-    <#lt>   }
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_FREQCORR = abs_correction;
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Write-Synchronization */
+    <#lt>    }
     <#lt>}
 </#if>
 <#if RTC_MODE0_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE0" ||
