@@ -181,7 +181,7 @@ coreComponent.addPlugin("../peripheral/pio_11004/plugin/pio_11004.jar")
 
 # load AIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/aic_11051/config/aic.py")
-coreComponent.addPlugin("../peripheral/aic_11051/plugin/aic_11051.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_AIC_MANAGER", {"plugin_name": "AIC Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/aic_11051_interrupt_configuration/build/index.html"})
 
 # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")

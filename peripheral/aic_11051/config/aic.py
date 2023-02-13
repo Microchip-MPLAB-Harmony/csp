@@ -218,7 +218,7 @@ def aicVectorEnableCallback(aicVectorEnable, eventDictionary):
             aicVectorEnable.setValue(False)
 
 
-def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHandler ):
+def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHandler , anAicNumber, anInterruptDescription, anVectorUniqueIdGUI, anVectorNamesGUI, anNameAndDescriptionGUI):
     global sharedVectors
 
     enableDependencies = []
@@ -231,6 +231,8 @@ def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHan
         aicVectorHandler.setReadOnly( False )
         sharedVectors[ interruptName ] = moduleInstance
         aicVectorHandler.setVisible( False )
+
+        counter = 1
 
         for elem in moduleInstance:
             subVectorToSharedVector[ elem ] = interruptName
@@ -246,6 +248,11 @@ def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHan
             subVectorHandler = component.createStringSymbol( elem + interruptLastNameHandler, subVectorEnable )
             subVectorHandler.setLabel( elem + " Handler" )
             subVectorHandler.setDefaultValue( elem + "_Handler" )
+
+            anVectorUniqueIdGUI.append(str(anAicNumber)+"_"+str(counter))
+            anVectorNamesGUI.append(elem)
+            anNameAndDescriptionGUI.append(str(anAicNumber)+") "+elem + "_IRQn - "+ anInterruptDescription)
+            counter = counter + 1
 
         aicVectorEnable.setDependencies( aicVectorEnableCallback, enableDependencies )
 
@@ -366,6 +373,10 @@ aicVectorMax = coreComponent.createIntegerSymbol( "AIC_VECTOR_MIN", aicMenu )
 aicVectorMax.setDefaultValue( Interrupt.getMinInterruptID() )
 aicVectorMax.setVisible( False )
 
+NameAndDescriptionGUI = []
+vectorNamesGUI = []
+vectorUniqueIdGUI = []
+
 for interrupt in interruptsChildren:
     interruptName = getInterruptName( interrupt )
     aicNumber = str( interrupt.getAttribute( "index" ) )
@@ -397,6 +408,12 @@ for interrupt in interruptsChildren:
     aicVectorSource = coreComponent.createStringSymbol( interruptName + interruptLastNameVector, aicVectorEnable )
     aicVectorSource.setDefaultValue( interruptName + "_IRQn" )
     aicVectorSource.setVisible( False )
+
+    #This is added for GUI purpose
+    vectorUniqueIdGUI.append(str(aicNumber)+"_0")
+    vectorNamesGUI.append(interruptName)
+    NameAndDescriptionGUI.append(str(aicNumber)+") "+interruptName + "_IRQn - "+ getInterruptDescription( interrupt ))
+
     ###
     aicVectorLock = coreComponent.createBooleanSymbol( interruptName + interruptLastNameLock, aicVectorEnable )
     aicVectorLock.setDefaultValue( False )
@@ -406,7 +423,7 @@ for interrupt in interruptsChildren:
     aicVectorHandler.setLabel( "Handler" )
     aicVectorHandler.setDefaultValue( interruptName + "_Handler" )
     ###
-    setupEnableAndHandler( coreComponent, interrupt, aicVectorEnable, aicVectorHandler )
+    setupEnableAndHandler( coreComponent, interrupt, aicVectorEnable, aicVectorHandler , aicNumber, getInterruptDescription(interrupt), vectorUniqueIdGUI, vectorNamesGUI, NameAndDescriptionGUI)
     setupSharedVectorFtlSymbols( coreComponent, interrupt, aicVectorEnable )
     #
     aicMapType = coreComponent.createStringSymbol( interruptName + interruptLastNameMapType, aicVectorEnable )
@@ -457,6 +474,18 @@ aicCodeGeneration.setVisible( False )
 ###
 aicRedirection.setValue( True, 0 )  # stimulate a aicMapTypeRedirectionCallback() by setting the aicRedirection value
 aicRedirection.setReadOnly( True )
+
+######## GUI Changes ##########
+# Below symbol is only used by AIC UI to know the all AIC  vector unique ids
+aicGUIAllVectorUniqueIds = coreComponent.createComboSymbol("AIC_GUI_VECTOR_IDS", aicMenu, vectorUniqueIdGUI)
+aicGUIAllVectorUniqueIds.setVisible(False)
+# Below symbol is only used by AIC UI to know the all AIC  vector names
+aicGUIAllVectorNames = coreComponent.createComboSymbol("AIC_GUI_VECTOR_NAMES", aicMenu, vectorNamesGUI)
+aicGUIAllVectorNames.setVisible(False)
+# Below symbol is only used by AIC UI to know the AIC Column Name and Description
+aicGUIColumNameAndDescription = coreComponent.createComboSymbol("AIC_GUI_COLUMN_VECTOR_NAME_AND_DESCRIPTION", aicMenu, NameAndDescriptionGUI)
+aicGUIColumNameAndDescription.setVisible(False)
+######################
 
 ############################################################################
 #### Code Generation
