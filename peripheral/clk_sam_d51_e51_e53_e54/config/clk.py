@@ -213,7 +213,8 @@ def setIptat(symbol, event):
     else:
         symbol.setValue(3, 2)
 
-
+def dfllModeConfigVisibility(symbol, event):
+    symbol.setVisible(event["value"] == 1)
 ################################################################################
 #######          OSCCTRL Database Components      ##############################
 ################################################################################
@@ -652,6 +653,7 @@ dfllUsb = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_USB", dfll_Menu)
 dfllUsb.setLabel("USB Clock Recovery Mode")
 dfllUsb.setDescription("Enable or Disable USB Clock Recovery Mode")
 dfllUsb.setDefaultValue(False)
+dfllUsb.setDependencies(dfllModeConfigVisibility, ["CONFIG_CLOCK_DFLL_OPMODE"])
 
 dfllWaitLock = coreComponent.createBooleanSymbol(
     "CONFIG_CLOCK_DFLL_WAIT_LOCK", dfll_Menu)
@@ -659,30 +661,35 @@ dfllWaitLock.setLabel("Wait for DFLL lock")
 dfllWaitLock.setDescription(
     "Controls the DFLL output clock, depending on lock status")
 dfllWaitLock.setDefaultValue(False)
+dfllWaitLock.setDependencies(dfllModeConfigVisibility, ["CONFIG_CLOCK_DFLL_OPMODE"])
 
 dfllBypassCoarse = coreComponent.createBooleanSymbol(
     "CONFIG_CLOCK_DFLL_BYPASS_COARSE", dfll_Menu)
 dfllBypassCoarse.setLabel("Bypass Coarse Lock")
 dfllBypassCoarse.setDescription("Controls the coarse lock procedure")
 dfllBypassCoarse.setDefaultValue(False)
+dfllBypassCoarse.setDependencies(dfllModeConfigVisibility, ["CONFIG_CLOCK_DFLL_OPMODE"])
 
 dfllQuickLock = coreComponent.createBooleanSymbol(
     "CONFIG_CLOCK_DFLL_QUICK_LOCK", dfll_Menu)
 dfllQuickLock.setLabel("Quick lock disable")
 dfllQuickLock.setDescription("Diable quick lock")
 dfllQuickLock.setDefaultValue(False)
+dfllQuickLock.setDependencies(dfllModeConfigVisibility, ["CONFIG_CLOCK_DFLL_OPMODE"])
 
 dfllChillCycle = coreComponent.createBooleanSymbol(
     "CONFIG_CLOCK_DFLL_CHILL_CYCLE", dfll_Menu)
 dfllChillCycle.setLabel("Chill Cycle Disable")
 dfllChillCycle.setDescription("Disable Chill Cycle")
 dfllChillCycle.setDefaultValue(False)
+dfllChillCycle.setDependencies(dfllModeConfigVisibility, ["CONFIG_CLOCK_DFLL_OPMODE"])
 
 dfllLLAW = coreComponent.createBooleanSymbol(
     "CONFIG_CLOCK_DFLL_LLAW", dfll_Menu)
 dfllLLAW.setLabel("Lose Lock After Wake")
 dfllLLAW.setDescription("Lose Lock After Wake")
 dfllLLAW.setDefaultValue(False)
+dfllLLAW.setDependencies(dfllModeConfigVisibility, ["CONFIG_CLOCK_DFLL_OPMODE"])
 
 dfllStable = coreComponent.createBooleanSymbol(
     "CONFIG_CLOCK_DFLL_STABLE", dfll_Menu)
@@ -690,6 +697,7 @@ dfllStable.setLabel("Stable DFLL Frequency")
 dfllStable.setDescription(
     "FINE calibration tracks changes in output frequency")
 dfllStable.setDefaultValue(False)
+dfllStable.setDependencies(dfllModeConfigVisibility, ["CONFIG_CLOCK_DFLL_OPMODE"])
 
 dfllCoarse = coreComponent.createIntegerSymbol(
     "CONFIG_CLOCK_DFLL_COARSE", dfll_Menu)
@@ -697,6 +705,7 @@ dfllCoarse.setDefaultValue(1)
 dfllCoarse.setMin(0)
 dfllCoarse.setMax(31)
 dfllCoarse.setLabel("Coarse Maximum Step")
+dfllCoarse.setDependencies(dfllModeConfigVisibility, ["CONFIG_CLOCK_DFLL_OPMODE"])
 
 dfllFine = coreComponent.createIntegerSymbol(
     "CONFIG_CLOCK_DFLL_FINE", dfll_Menu)
@@ -704,12 +713,14 @@ dfllFine.setDefaultValue(1)
 dfllFine.setMin(0)
 dfllFine.setMax(255)
 dfllFine.setLabel("Fine Maximum Step")
+dfllFine.setDependencies(dfllModeConfigVisibility, ["CONFIG_CLOCK_DFLL_OPMODE"])
 
 dfllMul = coreComponent.createIntegerSymbol("CONFIG_CLOCK_DFLL_MUL", dfll_Menu)
 dfllMul.setDefaultValue(1)
 dfllMul.setMin(0)
 dfllMul.setMax(65535)
 dfllMul.setLabel("DFLL Multiply Factor")
+dfllMul.setDependencies(dfllModeConfigVisibility, ["CONFIG_CLOCK_DFLL_OPMODE"])
 
 dfllFreq = coreComponent.createIntegerSymbol(
     "DFLL_CLOCK_FREQ", calculatedFreq_Menu)
