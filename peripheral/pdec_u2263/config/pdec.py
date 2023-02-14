@@ -70,7 +70,7 @@ def fileUpdate(symbol, event):
             for vector in InterruptVectorSecurity:
                 Database.setSymbolValue("core", vector, False)
         else:
-            Database.setSymbolValue("core", InterruptVectorSecurity, False)
+            Database.setSymbolValue("core", InterruptVectorSecurity[0], False)
     else:
         PDECfilesArray[0].setSecurity("NON_SECURE")
         PDECfilesArray[1].setSecurity("NON_SECURE")
@@ -85,7 +85,7 @@ def fileUpdate(symbol, event):
             for vector in InterruptVectorSecurity:
                 Database.setSymbolValue("core", vector, True)
         else:
-            Database.setSymbolValue("core", InterruptVectorSecurity, True)
+            Database.setSymbolValue("core", InterruptVectorSecurity[0], True)
 
 def updateCodeGenerationProperty(symbol, event):
     component = symbol.getComponent()
