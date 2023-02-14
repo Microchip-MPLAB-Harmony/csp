@@ -304,11 +304,14 @@ def emcBaseCalculation(symbol, event):
 
     if bankSize == 17:
         csBase[chipSelectId].setValue(0x3ffff)
+        chipSelectComment[chipSelectId].setValue(False)
+        Database.setSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_END_ADDRESS", "0x60000000")
     else:
         value = (int(startAddress, 0) - int(0x60000000))
         csBase[chipSelectId].setValue(value >> 14)
         Database.setSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_END_ADDRESS", str(hex(int(startAddress, 0) + memSizeMap[bankSize] -1 )).replace("L", ""))
     for i in range(0, chipSelectCount):
+        chipSelectCommentFlag = False
         if Database.getSymbolValue(event["namespace"], "CS_" + str(i) + "_MEMORY_BANK_SIZE") != 17:
             for j in range(0, chipSelectCount):
                 if j != i and  Database.getSymbolValue(event["namespace"], "CS_" + str(j) + "_MEMORY_BANK_SIZE") != 17:
@@ -317,9 +320,8 @@ def emcBaseCalculation(symbol, event):
                     endA = int(Database.getSymbolValue(event["namespace"], "CS_" + str(j) + "_END_ADDRESS"), 0)
                     endB = int(Database.getSymbolValue(event["namespace"], "CS_" + str(i) + "_END_ADDRESS"), 0)
                     if (startA <= endB) and (startB <= endA):
-                        chipSelectComment[j].setValue(True)
-                    else:
-                        chipSelectComment[j].setValue(False)
+                        chipSelectCommentFlag = True
+            chipSelectComment[i].setValue(chipSelectCommentFlag)
 
 def updateHemcClockComment(symbol, event):
     symbol.setLabel("**** HEMC is running at " + str(event["value"]) + " Hz ****")
