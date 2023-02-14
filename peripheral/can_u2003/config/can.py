@@ -44,22 +44,14 @@ def fileUpdate(symbol, event):
         canfilesArray[2].setSecurity("SECURE")
         canfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         canfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
-        if len(InterruptVectorSecurity) != 1:
-            for vector in InterruptVectorSecurity:
-                Database.setSymbolValue("core", vector, False)
-        else:
-            Database.setSymbolValue("core", InterruptVectorSecurity, False)
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
     else:
         canfilesArray[0].setSecurity("NON_SECURE")
         canfilesArray[1].setSecurity("NON_SECURE")
         canfilesArray[2].setSecurity("NON_SECURE")
         canfilesArray[3].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         canfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-        if len(InterruptVectorSecurity) != 1:
-            for vector in InterruptVectorSecurity:
-                Database.setSymbolValue("core", vector, True)
-        else:
-            Database.setSymbolValue("core", InterruptVectorSecurity, True)
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 # if the mode is changed to FD, then show options for more bytes
 def showWhenFD(element, event):
@@ -1083,6 +1075,7 @@ def instantiateComponent(canComponent):
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         global canfilesArray
         canIsNonSecure = Database.getSymbolValue("core", canComponent.getID().upper() + "_IS_NON_SECURE")
+        Database.setSymbolValue("core", InterruptVectorSecurity, canIsNonSecure) 
         canfilesArray.append(canMasterHeaderFile)
         canfilesArray.append(canMainSourceFile)
         canfilesArray.append(canInstHeaderFile)
