@@ -34,7 +34,9 @@ global sdmmcInstanceName
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
-
+global InterruptVectorSecurity
+global sdmmcfilesArray
+sdmmcfilesArray = []
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -47,6 +49,25 @@ def updateSDWPENCommentVisibility(symbol, event):
 def updateSDMMCClkFreq(symbol, event):
     symbol.setValue(int(event["value"]), 2)
 
+
+def fileUpdate(symbol, event):
+    global sdmmcfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        sdmmcfilesArray[0].setSecurity("SECURE")
+        sdmmcfilesArray[1].setSecurity("SECURE")
+        sdmmcfilesArray[2].setSecurity("SECURE")
+        sdmmcfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        sdmmcfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        sdmmcfilesArray[0].setSecurity("NON_SECURE")
+        sdmmcfilesArray[1].setSecurity("NON_SECURE")
+        sdmmcfilesArray[2].setSecurity("NON_SECURE")
+        sdmmcfilesArray[3].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        sdmmcfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)    
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -55,6 +76,7 @@ def instantiateComponent(sdmmcComponent):
     global interruptHandler
     global interruptHandlerLock
     global sdmmcInstanceName
+    global InterruptVectorSecurity
 
     sdmmcInstanceName = sdmmcComponent.createStringSymbol("SDMMC_INSTANCE_NAME", None)
     sdmmcInstanceName.setVisible(False)
@@ -118,6 +140,7 @@ def instantiateComponent(sdmmcComponent):
     interruptHandler = sdmmcInstanceName.getValue() + "_INTERRUPT_HANDLER"
     interruptHandlerLock = sdmmcInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     interruptVectorUpdate = sdmmcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptVectorSecurity = sdmmcInstanceName.getValue() + "_SET_NON_SECURE"    
 
     # Initial settings for CLK and NVIC
     Database.setSymbolValue("core", sdmmcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
@@ -173,3 +196,24 @@ def instantiateComponent(sdmmcComponent):
     sdmmcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     sdmmcSystemDefFile.setSourcePath("../peripheral/sdmmc_03592/templates/system/definitions.h.ftl")
     sdmmcSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global sdmmcfilesArray
+        sdmmcIsNonSecure = Database.getSymbolValue("core", sdmmcComponent.getID().upper() + "_IS_NON_SECURE")
+        Database.setSymbolValue("core", InterruptVectorSecurity, sdmmcIsNonSecure) 
+        sdmmcfilesArray.append(sdmmcHeaderFile)
+        sdmmcfilesArray.append(sdmmcHeader1File)
+        sdmmcfilesArray.append(sdmmcSource1File)
+        sdmmcfilesArray.append(sdmmcSystemInitFile)
+        sdmmcfilesArray.append(sdmmcSystemDefFile)
+
+        if sdmmcIsNonSecure == False:
+            sdmmcHeaderFile.setSecurity("SECURE")
+            sdmmcHeader1File.setSecurity("SECURE")
+            sdmmcSource1File.setSecurity("SECURE")
+            sdmmcSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            sdmmcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+        sdmmcSystemDefFile.setDependencies(fileUpdate, ["core." + sdmmcComponent.getID().upper() + "_IS_NON_SECURE"])
+
+

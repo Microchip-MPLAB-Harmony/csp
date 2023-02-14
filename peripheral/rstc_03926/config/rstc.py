@@ -25,6 +25,22 @@
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
+global RSTCfilesArray
+RSTCfilesArray = []
+
+def fileUpdate(symbol, event):
+    global RSTCfilesArray
+
+    if event["value"] == False:
+        RSTCfilesArray[0].setSecurity("SECURE")
+        RSTCfilesArray[1].setSecurity("SECURE")
+        RSTCfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+    else:
+        RSTCfilesArray[0].setSecurity("NON_SECURE")
+        RSTCfilesArray[1].setSecurity("NON_SECURE")
+        RSTCfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+
+
 def instantiateComponent(rstcComponent):
     global rstcWakeupNum
     rstcWakeupNum = None
@@ -91,3 +107,15 @@ def instantiateComponent(rstcComponent):
     rstcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     rstcSym_SystemDefFile.setSourcePath("../peripheral/rstc_03926/templates/system/definitions.h.ftl")
     rstcSym_SystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global RSTCfilesArray
+        rstcIsNonSecure = Database.getSymbolValue("core", rstcComponent.getID().upper() + "_IS_NON_SECURE")
+        rstcSym_SystemDefFile.setDependencies(fileUpdate, ["core." + rstcComponent.getID().upper() + "_IS_NON_SECURE"])
+        RSTCfilesArray.append(rstcSym_HeaderFile)
+        RSTCfilesArray.append(rstcSym_SourceFile)
+        RSTCfilesArray.append(rstcSym_SystemDefFile)
+        if rstcIsNonSecure == False:
+            RSTCfilesArray[0].setSecurity("SECURE")
+            RSTCfilesArray[1].setSecurity("SECURE")
+            RSTCfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
