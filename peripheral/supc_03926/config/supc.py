@@ -21,10 +21,28 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+global InterruptVectorSecurity
+global supcfilesArray
+supcfilesArray = []
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+def fileUpdate(symbol, event):
+    global supcfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        supcfilesArray[0].setSecurity("SECURE")
+        supcfilesArray[1].setSecurity("SECURE")
+        supcfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        supcfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        supcfilesArray[0].setSecurity("NON_SECURE")
+        supcfilesArray[1].setSecurity("NON_SECURE")
+        supcfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        supcfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)   
 
 def interruptControl(symbol, event):
     Database.setSymbolValue("core", InterruptVector, event["value"])
@@ -47,6 +65,7 @@ def instantiateComponent(supcComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
+    global InterruptVectorSecurity    
     global supcSym_INTENSET
 
     supcInstanceName = supcComponent.createStringSymbol("SUPC_INSTANCE_NAME", None)
@@ -57,6 +76,7 @@ def instantiateComponent(supcComponent):
     InterruptHandler = supcInstanceName.getValue() + "_INTERRUPT_HANDLER"
     InterruptHandlerLock = supcInstanceName.getValue()+ "_INTERRUPT_HANDLER_LOCK"
     InterruptVectorUpdate = supcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptVectorSecurity = supcInstanceName.getValue() + "_SET_NON_SECURE"    
 
     #BORVDDUSB Interrupt Enable
     supcSym_INTENSET = supcComponent.createBooleanSymbol("SUPC_INTERRUPT_ENABLE", None)
@@ -308,3 +328,20 @@ def instantiateComponent(supcComponent):
     supcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     supcSym_SystemDefFile.setSourcePath("../peripheral/supc_03926/templates/system/definitions.h.ftl")
     supcSym_SystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global supcfilesArray
+        supcIsNonSecure = Database.getSymbolValue("core", supcComponent.getID().upper() + "_IS_NON_SECURE")
+        Database.setSymbolValue("core", InterruptVectorSecurity, supcIsNonSecure) 
+        supcfilesArray.append(supcSym_HeaderFile)
+        supcfilesArray.append(supcSym_SourceFile)
+        supcfilesArray.append(supcSym_SystemInitFile)
+        supcfilesArray.append(supcSym_SystemDefFile)
+
+        if supcIsNonSecure == False:
+            supcSym_HeaderFile.setSecurity("SECURE")
+            supcSym_SourceFile.setSecurity("SECURE")
+            supcSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            supcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+        supcSym_SystemDefFile.setDependencies(fileUpdate, ["core." + supcComponent.getID().upper() + "_IS_NON_SECURE"])
