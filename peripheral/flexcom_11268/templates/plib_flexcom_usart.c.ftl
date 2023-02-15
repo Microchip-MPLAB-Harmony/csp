@@ -250,7 +250,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
             }
         }
     }
-    <#else> 
+    <#else>
     /* Error status */
     uint32_t errorStatus = (channelStatus & (FLEX_US_CSR_OVRE_Msk | FLEX_US_CSR_FRAME_Msk | FLEX_US_CSR_PARE_Msk));
 
@@ -280,7 +280,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     }
 
     /* Receiver status */
-    if(channelStatus & FLEX_US_CSR_RXRDY_Msk)
+    if((channelStatus & FLEX_US_CSR_RXRDY_Msk) != 0U)
     {
         ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
     }
@@ -309,7 +309,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     }
     <#else>
     /* Transmitter status */
-    if(channelStatus & FLEX_US_CSR_TXRDY_Msk)
+    if((channelStatus & FLEX_US_CSR_TXRDY_Msk) != 0U)
     {
         ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
     }
@@ -679,7 +679,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
 <#else>
             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_TXRDY_Msk;
 </#if>
-</#if> 
+</#if>
         }
     }
 
