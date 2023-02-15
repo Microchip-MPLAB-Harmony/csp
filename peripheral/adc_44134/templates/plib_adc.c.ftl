@@ -342,23 +342,23 @@ void ${ADC_INSTANCE_NAME}_ConversionSequenceSet(ADC_CHANNEL_NUM *channelList, ui
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 = 0U;
     </#if>
 
-    if (numChannel > ${ADC_CHANNEL_SEQ_NUM}U)
+    if (numChannel < ${ADC_CHANNEL_SEQ_NUM}U)
     {
-        return;
-    }
-
-    for (channelIndex = 0U; channelIndex < numChannel; channelIndex++)
-    {
-        if (channelIndex < ADC_SEQ1_CHANNEL_NUM)
+        for (channelIndex = 0U; channelIndex < numChannel; channelIndex++)
         {
+            <#if ADC_NUM_CHANNELS gt 8>
+            if (channelIndex < ADC_SEQ1_CHANNEL_NUM)
+            {
+                ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 |= channelList[channelIndex] << (channelIndex * 4U);
+            }
+            else
+            {
+                ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 |= channelList[channelIndex] << ((channelIndex - ADC_SEQ1_CHANNEL_NUM) * 4U);
+            }
+            <#else>
             ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 |= channelList[channelIndex] << (channelIndex * 4U);
+            </#if>
         }
-        <#if ADC_NUM_CHANNELS gt 8>
-        else
-        {
-            ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 |= channelList[channelIndex] << ((channelIndex - ADC_SEQ1_CHANNEL_NUM) * 4U);
-        }
-        </#if>
     }
 }
 
