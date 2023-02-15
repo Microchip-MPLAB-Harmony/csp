@@ -397,6 +397,9 @@ for pinNumber in range(1, internalPincount + 1):
     else:
         pinPad = str(pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]))
 
+    portSym_PinIndexTz = coreComponent.createIntegerSymbol("PORT_PIN_INDEX_TZ_" + str(pinNumber), None)
+    portSym_PinIndexTz.setVisible(False)
+
     portSignalNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/signals/signal@[pad=\""+ pinPad +"\"]")
 
     if portSignalNode != None:
@@ -412,6 +415,9 @@ for pinNumber in range(1, internalPincount + 1):
             portSym_PinIndex = coreComponent.createIntegerSymbol("PORT_PIN_INDEX_" + str(signalIndex), None)
             portSym_PinIndex.setVisible(False)
             portSym_PinIndex.setDefaultValue(signalIndex)
+
+            portSym_PinIndexTz.setDefaultValue(signalIndex)
+
             if signalIndex > max_index:
                 max_index = signalIndex
 
