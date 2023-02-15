@@ -644,7 +644,7 @@ static bool PeripheralClockStatus(uint32_t periph_id)
     {
         status = (*(volatile uint32_t* const)((PMC_BASE_ADDRESS +
                                                         csr_offset[index])));
-        retval = ((status & (1 << (periph_id % 32U))) != 0U);
+        retval = ((status & ((uint32_t)1U << (periph_id % 32U))) != 0U);
     }
     return retval;
 }
