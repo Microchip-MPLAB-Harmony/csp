@@ -58,6 +58,7 @@
 // Section: ${ERB_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
+
 <#compress>
 <#assign pad_mon_ctrl_reg = "">
 <#assign pad_mon_int_en_reg = "">
@@ -67,10 +68,10 @@
     <#assign ERB_VTRx_INP_BUF_DIS           = "ERB_VTR" + n + "_INP_BUF_DIS">
     <#assign ERB_VTRx_PAD_MON_PROTECT_EN    = "ERB_VTR" + n + "_PAD_MON_PROTECT_EN">
     <#assign ERB_VTRx_CTRL                  = "ERB_VTR" + n + "_CTRL">
-    
+
     <#assign ERB_PAD_MON_VTRx_PU_INT_EN     = "ERB_PAD_MON_VTR" + n + "_PU_INT_EN">
     <#assign ERB_PAD_MON_VTRx_PD_INT_EN     = "ERB_PAD_MON_VTR" + n + "_PD_INT_EN">
-    
+
     <#if .vars[ERB_VTRx_PAD_MON_OVERRIDE_EN] == true>
         <#if pad_mon_ctrl_reg != "">
             <#assign pad_mon_ctrl_reg = pad_mon_ctrl_reg + " | EC_REG_BANK_PD_MON_CTRL_OVRD_VTR" + n + "_Msk">
@@ -78,7 +79,7 @@
             <#assign pad_mon_ctrl_reg = "EC_REG_BANK_PD_MON_CTRL_OVRD_VTR" + n + "_Msk">
         </#if>
     </#if>
-    
+
     <#if .vars[ERB_VTRx_INP_BUF_DIS] == true>
         <#if pad_mon_ctrl_reg != "">
             <#assign pad_mon_ctrl_reg = pad_mon_ctrl_reg + " | EC_REG_BANK_PD_MON_CTRL_VTR" + n + "_INPT_DIS_Msk">
@@ -86,7 +87,7 @@
             <#assign pad_mon_ctrl_reg = "EC_REG_BANK_PD_MON_CTRL_VTR" + n + "_INPT_DIS_Msk">
         </#if>
     </#if>
-    
+
     <#if .vars[ERB_VTRx_PAD_MON_PROTECT_EN] == false>
         <#if pad_mon_ctrl_reg != "">
             <#assign pad_mon_ctrl_reg = pad_mon_ctrl_reg + " | EC_REG_BANK_PD_MON_CTRL_VTR" + n + "_PROTECN_Msk">
@@ -94,7 +95,7 @@
             <#assign pad_mon_ctrl_reg = "EC_REG_BANK_PD_MON_CTRL_VTR" + n + "_PROTECN_Msk">
         </#if>
     </#if>
-    
+
     <#if .vars[ERB_VTRx_CTRL] != "0x0">
         <#if pad_mon_ctrl_reg != "">
             <#assign pad_mon_ctrl_reg = pad_mon_ctrl_reg + " | EC_REG_BANK_PD_MON_CTRL_CTRL_VTR" + n + "(" + .vars[ERB_VTRx_CTRL] + ")">
@@ -102,7 +103,7 @@
             <#assign pad_mon_ctrl_reg = "EC_REG_BANK_PD_MON_CTRL_CTRL_VTR" + n + "(" + .vars[ERB_VTRx_CTRL] + ")">
         </#if>
     </#if>
-    
+
     <#if .vars[ERB_PAD_MON_VTRx_PU_INT_EN] == true>
         <#if pad_mon_int_en_reg != "">
             <#assign pad_mon_int_en_reg = pad_mon_int_en_reg + " | EC_REG_BANK_PD_MON_INT_EN_VTR" + n + "_PU_INTEN_Msk">
@@ -110,37 +111,55 @@
             <#assign pad_mon_int_en_reg = "EC_REG_BANK_PD_MON_INT_EN_VTR" + n + "_PU_INTEN_Msk">
         </#if>
     </#if>
-    
+
     <#if .vars[ERB_PAD_MON_VTRx_PD_INT_EN] == true>
         <#if pad_mon_int_en_reg != "">
             <#assign pad_mon_int_en_reg = pad_mon_int_en_reg + " | EC_REG_BANK_PD_MON_INT_EN_VTR" + n + "_PD_INTEN_Msk">
         <#else>
             <#assign pad_mon_int_en_reg = "EC_REG_BANK_PD_MON_INT_EN_VTR" + n + "_PD_INTEN_Msk">
         </#if>
-    </#if>        
+    </#if>
 </#list>
 </#compress>
 
-EC_REG_BANK_OBJECT ec_reg_bank[2] = {0};
+/* MISRA C-2012 Rule 5.1 deviated:4 Deviation record ID -  H3_MISRAC_2012_R_5_1_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+<#if COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate:4 "MISRA C-2012 Rule 5.1" "H3_MISRAC_2012_R_5_1_DR_1"
+</#if>
+
+<#assign ec_reg_bank_int_en = false>
+<#list 1..2 as n>
+<#if .vars["ERB_PAD_MON_VTR" + n + "_PU_INT_EN"] == true || .vars["ERB_PAD_MON_VTR" + n + "_PD_INT_EN"] == true>
+    <#assign ec_reg_bank_int_en = true>
+</#if>
+</#list>
+
+<#if ec_reg_bank_int_en == true>
+static EC_REG_BANK_OBJECT ec_reg_bank[2] = {0};
+</#if>
 
 void ${ERB_INSTANCE_NAME}_Initialize( void )
 {
     <#if ERB_AHB_ERROR_CTRL == true>
     EC_REG_BANK_REGS->EC_REG_BANK_AHB_ERR_CTRL = 1;
     </#if>
-    
+
     <#if ERB_ALT_NVIC_INT_EN == false>
     EC_REG_BANK_REGS->EC_REG_BANK_AHB_ERR_CTRL = 0;
     </#if>
-    
+
     <#if pad_mon_ctrl_reg != "">
     EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_CTRL = ${pad_mon_ctrl_reg};
     </#if>
-    
+
     <#if pad_mon_int_en_reg != "">
     EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_INT_EN = ${pad_mon_int_en_reg};
     </#if>
-    
+
 }
 uint32_t ${ERB_INSTANCE_NAME}_AHBErrorAddrGet(void)
 {
@@ -159,7 +178,7 @@ void ${ERB_INSTANCE_NAME}_AHBErrorEnable(void)
 
 void ${ERB_INSTANCE_NAME}_AHBErrorDisable(void)
 {
-    EC_REG_BANK_REGS->EC_REG_BANK_AHB_ERR_CTRL = 0;
+    EC_REG_BANK_REGS->EC_REG_BANK_AHB_ERR_CTRL = 1;
 }
 
 void ${ERB_INSTANCE_NAME}_AltNVICVectorsEnable(void)
@@ -169,7 +188,7 @@ void ${ERB_INSTANCE_NAME}_AltNVICVectorsEnable(void)
 
 void ${ERB_INSTANCE_NAME}_VTR1PadMonDebounceCtrl(VTR_PAD_MON_DEB_CTRL ctrl)
 {
-    EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_CTRL = (ctrl << EC_REG_BANK_PD_MON_CTRL_CTRL_VTR1_Pos);
+    EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_CTRL = (EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_CTRL & ~EC_REG_BANK_PD_MON_CTRL_CTRL_VTR1_Msk) | ((uint32_t)ctrl << EC_REG_BANK_PD_MON_CTRL_CTRL_VTR1_Pos);
 }
 
 void ${ERB_INSTANCE_NAME}_VTR1PadMonOverrideEn(void)
@@ -224,7 +243,7 @@ void ${ERB_INSTANCE_NAME}_VTR1PadMonPDIntDis(void)
 
 void ${ERB_INSTANCE_NAME}_VTR2PadMonDebounceCtrl(VTR_PAD_MON_DEB_CTRL ctrl)
 {
-    EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_CTRL = (ctrl << EC_REG_BANK_PD_MON_CTRL_CTRL_VTR2_Pos);
+    EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_CTRL = (EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_CTRL & ~EC_REG_BANK_PD_MON_CTRL_CTRL_VTR2_Msk) | ((uint32_t)ctrl << EC_REG_BANK_PD_MON_CTRL_CTRL_VTR2_Pos);
 }
 
 void ${ERB_INSTANCE_NAME}_VTR2PadMonOverrideEn(void)
@@ -279,24 +298,25 @@ void ${ERB_INSTANCE_NAME}_VTR2PadMonPDIntDis(void)
 
 VTR1_PAD_MON_STS ${ERB_INSTANCE_NAME}_VTR1PadMonStatusGet(void)
 {
-    return EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_STS & (EC_REG_BANK_PD_MON_STS_VTR1_PD_STS_Msk | EC_REG_BANK_PD_MON_STS_VTR1_PU_STS_Msk | EC_REG_BANK_PD_MON_STS_VTR1_CS_STS_Msk);
+    uint32_t temp32_t = EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_STS & (EC_REG_BANK_PD_MON_STS_VTR1_PD_STS_Msk | EC_REG_BANK_PD_MON_STS_VTR1_PU_STS_Msk | EC_REG_BANK_PD_MON_STS_VTR1_CS_STS_Msk);
+    return (VTR1_PAD_MON_STS)temp32_t;
 }
 
 void ${ERB_INSTANCE_NAME}_VTR1PadMonStatusClr(VTR1_PAD_MON_STS statusBitMask)
 {
-    EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_STS = statusBitMask;
+    EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_STS = (uint32_t)statusBitMask;
 }
 
 VTR2_PAD_MON_STS ${ERB_INSTANCE_NAME}_VTR2PadMonStatusGet(void)
 {
-    return EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_STS & (EC_REG_BANK_PD_MON_STS_VTR2_PD_STS_Msk | EC_REG_BANK_PD_MON_STS_VTR2_PU_STS_Msk | EC_REG_BANK_PD_MON_STS_VTR2_CS_STS_Msk);
+    uint32_t temp32_t = EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_STS & (EC_REG_BANK_PD_MON_STS_VTR2_PD_STS_Msk | EC_REG_BANK_PD_MON_STS_VTR2_PU_STS_Msk | EC_REG_BANK_PD_MON_STS_VTR2_CS_STS_Msk);
+    return (VTR2_PAD_MON_STS)temp32_t;
 }
 
 void ${ERB_INSTANCE_NAME}_VTR2PadMonStatusClr(VTR2_PAD_MON_STS statusBitMask)
 {
-    EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_STS = statusBitMask;
+    EC_REG_BANK_REGS->EC_REG_BANK_PD_MON_STS = (uint32_t)statusBitMask;
 }
-
 <#compress>
 <#assign INT_HANDLER_NAME_PREFIX = "">
 <#if ERB_PAD_MON_INTERRUPT_TYPE == "AGGREGATE">
@@ -309,16 +329,16 @@ void ${ERB_INSTANCE_NAME}_VTR2PadMonStatusClr(VTR2_PAD_MON_STS statusBitMask)
 
 void ${ERB_INSTANCE_NAME}_VTR${n}_CallbackRegister( EC_REG_BANK_CALLBACK callback, uintptr_t context )
 {
-   ec_reg_bank[${n}].callback = callback;
-   ec_reg_bank[${n}].context = context;
+   ec_reg_bank[${n-1}].callback = callback;
+   ec_reg_bank[${n-1}].context = context;
 }
 
 void VTR${n}_PAD_MON${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if ERB_PAD_MON_INTERRUPT_TYPE == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_VTR${n}_PAD_MON))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_VTR${n}_PAD_MON) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_VTR${n}_PAD_MON))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_VTR${n}_PAD_MON) != 0U)
     </#if>
     {
         <#if ERB_PAD_MON_INTERRUPT_TYPE == "AGGREGATE">
@@ -326,11 +346,20 @@ void VTR${n}_PAD_MON${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
         <#else>
         ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_VTR${n}_PAD_MON);
         </#if>
-        if (ec_reg_bank[${n}].callback != NULL)
+        if (ec_reg_bank[${n-1}].callback != NULL)
         {
-            ec_reg_bank[${n}].callback(ec_reg_bank[${n}].context);
+            ec_reg_bank[${n-1}].callback(ec_reg_bank[${n-1}].context);
         }
     }
 }
 </#if>
 </#list>
+
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 5.1"
+<#if COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
+</#if>
+/* MISRAC 2012 deviation block end */
+
