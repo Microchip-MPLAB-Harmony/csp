@@ -393,6 +393,9 @@ nvmWaitStates = { #VDD > 2.7
 #    components.append(str(modules[nvmctrl_instance].getAttribute("name")).lower())
 #Database.activateComponents(components)
 
+global swdPin
+swdPin = {"PA03": "0x0d"}
+
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
 coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")

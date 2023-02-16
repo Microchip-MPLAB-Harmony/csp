@@ -214,6 +214,7 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
     global prevID
     global prevVal
     global portPackage
+
     component = event["source"]
     groupName = component.getSymbolValue("PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
     #This is a port pin (belongs to a port group)
@@ -232,12 +233,15 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
             component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(peripheralFuncVal)), 1)
         else :
             pinMuxVal = component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
+            initVal = int(component.getSymbolByID("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2)).getDefaultValue(),0)
             intPrePinMuxVal = int(pinMuxVal,0)
 
             if ((bitPosition%2) == 0):
                 intPrePinMuxVal &= 0xf0
+                intPrePinMuxVal |= (initVal & 0x0f)
             else :
                 intPrePinMuxVal &= 0x0f
+                intPrePinMuxVal |= (initVal & 0xf0)
 
             component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)))
 
@@ -274,6 +278,8 @@ global pincount
 pincount = 0
 ## Number of unique pinouts
 global uniquePinout
+global swdPin
+
 uniquePinout = 1
 portMenu = coreComponent.createMenuSymbol("PORT_MENU", None)
 portMenu.setLabel("Ports")
@@ -649,7 +655,18 @@ for portNumber in range(0, len(group)):
     for pinNum in range(0, 16):
         portSym_PORT_PMUX = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PMUX" + str(pinNum) , port[portNumber])
         portSym_PORT_PMUX.setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " PMUX" + str(pinNum))
-        portSym_PORT_PMUX.setDefaultValue(str(hex(0)))
+
+        defaultVal = str(hex(0))
+        portPinEven = "P" + chr(ord("A") + portNumber) + str(pinNum * 2)
+        portPinOdd = "P" + chr(ord("A") + portNumber) + str((pinNum * 2) + 1)
+
+        # Overwrite default value of 0 for pins whose init value is not zero at POR
+        if portPinEven in swdPin.keys():
+            defaultVal = swdPin[portPinEven]
+        if portPinOdd in swdPin.keys():
+            defaultVal = str((hex(int(defaultVal, 16) | (int(swdPin[portPinOdd], 16) << 4))))
+
+        portSym_PORT_PMUX.setDefaultValue(defaultVal)
         portSym_PORT_PMUX.setVisible(visibility)
         portSym_PORT_PMUX.setDependencies(setupPortPinMux, pinPinMuxList)
 

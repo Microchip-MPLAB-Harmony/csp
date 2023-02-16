@@ -186,6 +186,9 @@ for nvmctrl_instance in range (0, len(modules)):
     components.append(str(modules[nvmctrl_instance].getAttribute("name")).lower())
 Database.activateComponents(components)
 
+global swdPin
+swdPin = {"PA30": "0x06"}
+
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
 coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
