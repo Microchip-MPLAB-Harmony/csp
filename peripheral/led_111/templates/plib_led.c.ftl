@@ -61,11 +61,13 @@ static LED_WDT_CALLBACK_OBJ ${LED_INSTANCE_NAME}_CallbackObject;
 </#if>
 </#if>
 
+#define NOP  asm("nop")
+
 void ${LED_INSTANCE_NAME}_Initialize(void)
 {
     ${LED_INSTANCE_NAME}_REGS->LED_CFG |= LED_CFG_RST_Msk;
 
-    asm("nop");asm("nop");asm("nop");asm("nop");asm("nop");
+    NOP;NOP;NOP;NOP;NOP;
 
     <#if LED_MODE == "LED_BREATHING">
     ${LED_INSTANCE_NAME}_REGS->LED_CFG = LED_CFG_CTRL(1) | LED_CFG_SYMMETRY(${LED_SYMMETRY}) | LED_CFG_PWM_SIZE(${LED_PWM_SIZE});
@@ -92,12 +94,12 @@ void ${LED_INSTANCE_NAME}_Initialize(void)
 <#if LED_MODE == "LED_BREATHING">
 void ${LED_INSTANCE_NAME}_DutyCycleMinSet(uint8_t min)
 {
-    ${LED_INSTANCE_NAME}_REGS->LED_LIMIT = (${LED_INSTANCE_NAME}_REGS->LED_LIMIT & LED_LIMIT_MIN_Msk) | min;
+    ${LED_INSTANCE_NAME}_REGS->LED_LIMIT = (${LED_INSTANCE_NAME}_REGS->LED_LIMIT & ~LED_LIMIT_MIN_Msk) | min;
 }
 
 void ${LED_INSTANCE_NAME}_DutyCycleMaxSet(uint8_t max)
 {
-    ${LED_INSTANCE_NAME}_REGS->LED_LIMIT = (${LED_INSTANCE_NAME}_REGS->LED_LIMIT & ~LED_LIMIT_MAX_Msk) | (max << LED_LIMIT_MAX_Pos);
+    ${LED_INSTANCE_NAME}_REGS->LED_LIMIT = (${LED_INSTANCE_NAME}_REGS->LED_LIMIT & ~LED_LIMIT_MAX_Msk) | ((uint32_t)max << LED_LIMIT_MAX_Pos);
 }
 
 void ${LED_INSTANCE_NAME}_LowDelaySet(uint16_t ld)
@@ -112,7 +114,7 @@ void ${LED_INSTANCE_NAME}_HighDelaySet(uint16_t hd)
 
 void ${LED_INSTANCE_NAME}_SymmetrySet(LED_SYM sym)
 {
-    ${LED_INSTANCE_NAME}_REGS->LED_CFG = (${LED_INSTANCE_NAME}_REGS->LED_CFG & ~LED_CFG_SYMMETRY_Msk) | (sym << LED_CFG_SYMMETRY_Pos);
+    ${LED_INSTANCE_NAME}_REGS->LED_CFG = (${LED_INSTANCE_NAME}_REGS->LED_CFG & ~LED_CFG_SYMMETRY_Msk) | ((uint32_t)sym << LED_CFG_SYMMETRY_Pos);
 }
 
 void ${LED_INSTANCE_NAME}_SegmentsStepSizeSet(uint32_t stepSzVal)
