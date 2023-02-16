@@ -85,7 +85,7 @@ uint16_t ${HTM_TMR_INSTANCE_NAME}_CountGet (void)
 
 void ${HTM_TMR_INSTANCE_NAME}_ResolutionSet(HTM_TMR_RESOLUTION resolution)
 {
-    ${HTM_TMR_INSTANCE_NAME}_REGS->HTM_CTRL = (resolution << HTM_CTRL_CTRL_Pos);
+    ${HTM_TMR_INSTANCE_NAME}_REGS->HTM_CTRL = ((uint16_t)resolution << HTM_CTRL_CTRL_Pos);
 }
 
 void ${HTM_TMR_INSTANCE_NAME}_CallbackRegister( HTM_TMR_CALLBACK callback_fn, uintptr_t context )
@@ -99,9 +99,9 @@ void ${HTM_TMR_INSTANCE_NAME}_CallbackRegister( HTM_TMR_CALLBACK callback_fn, ui
 void ${HTM_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     <#if HTM_TMR_INTERRUPT_TYPE == "AGGREGATE">
-    if (ECIA_GIRQResultGet(${HTMR_AGG_INT_SRC}))
+    if (ECIA_GIRQResultGet(${HTMR_AGG_INT_SRC}) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(${HTMR_DIR_INT_SRC}))
+    if (ECIA_GIRQResultGet(${HTMR_DIR_INT_SRC}) != 0U)
     </#if>
     {
         <#if HTM_TMR_INTERRUPT_TYPE == "AGGREGATE">
