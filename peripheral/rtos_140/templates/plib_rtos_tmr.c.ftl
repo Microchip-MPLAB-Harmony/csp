@@ -122,9 +122,9 @@ void ${RTOS_TMR_INSTANCE_NAME}Timer_CallbackRegister( RTOS_TMR_CALLBACK callback
 void ${RTOS_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     <#if RTOS_TMR_INTERRUPT_TYPE == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_RTMR))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_RTMR) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_RTMR))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_RTMR) != 0U)
     </#if>
     {
         <#if RTOS_TMR_INTERRUPT_TYPE == "AGGREGATE">
