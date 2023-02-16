@@ -336,7 +336,7 @@ def instantiateComponent(pmpComponent):
     pmpINCM_names = []
     _get_bitfield_names(pmpValGrp_PMMODE_INCM, pmpINCM_names)
     pmpINCM = pmpComponent.createKeyValueSetSymbol("PMMODE_INCM", pmpSym_MasterModeMenu)
-    pmpINCM.setLabel("Transfer Size")
+    pmpINCM.setLabel("Address Incrment Mode")
     pmpINCM.setDefaultValue(0)
     pmpINCM.setOutputMode("Value")
     pmpINCM.setDisplayMode("Description")
