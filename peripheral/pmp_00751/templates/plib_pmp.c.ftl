@@ -94,6 +94,10 @@ void ${PMP_INSTANCE_NAME}_Initialize( void )
     PMCONbits.WRSP = ${PMCON_WRSP};
 </#if>
 
+<#if PMP_SIDL == true>
+    PMCONbits.SIDL = 0x1;
+</#if>
+
     PMMODEbits.WAITB = ${PMMODE_WAITB};
 
     PMMODEbits.WAITM = ${PMMODE_WAITM};
