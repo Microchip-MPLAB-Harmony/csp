@@ -97,7 +97,7 @@ void ${SPT_INSTANCE_NAME}_QuadModeDisable(void)
 
 void ${SPT_INSTANCE_NAME}_ECInterruptEnable(SPT_EC_INT int_en)
 {
-    ${SPT_INSTANCE_NAME}_REGS->SPT_EC_IEN = int_en;
+    ${SPT_INSTANCE_NAME}_REGS->SPT_EC_IEN = (uint32_t)int_en;
 }
 
 uint32_t ${SPT_INSTANCE_NAME}_MailBoxRead(void)
@@ -231,9 +231,9 @@ uint32_t ${SPT_INSTANCE_NAME}_ECToHostMBXRead(void)
 void ${SPT_INSTANCE_NAME}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if .vars["SPT_EC_INTERRUPT_TYPE"] == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_${SPT_INSTANCE_NAME}))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_${SPT_INSTANCE_NAME}) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_${SPT_INSTANCE_NAME}))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_${SPT_INSTANCE_NAME}) != 0U)
     </#if>
     {
         uint32_t status = ${SPT_INSTANCE_NAME}_REGS->SPT_SPI_EC_STS;
