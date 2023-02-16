@@ -78,12 +78,12 @@ void ${PWM_INSTANCE_NAME}_Stop (void)
 
 uint16_t ${PWM_INSTANCE_NAME}_OnCountGet (void)
 {
-    return ${PWM_INSTANCE_NAME}_REGS->PWM_CNT_ON;
+    return (uint16_t)${PWM_INSTANCE_NAME}_REGS->PWM_CNT_ON;
 }
 
 uint16_t ${PWM_INSTANCE_NAME}_OffCountGet (void)
 {
-    return ${PWM_INSTANCE_NAME}_REGS->PWM_CNT_OFF;
+    return (uint16_t)${PWM_INSTANCE_NAME}_REGS->PWM_CNT_OFF;
 }
 
 void ${PWM_INSTANCE_NAME}_OnCountSet (uint16_t onCount)
