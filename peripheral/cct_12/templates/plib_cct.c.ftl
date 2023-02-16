@@ -144,7 +144,10 @@ void ${CCT_INSTANCE_NAME}_Initialize(void)
 {
     CCT_REGS->CCT_CTRL |= CCT_CTRL_FREE_RST_Msk;
 
-    while (CCT_REGS->CCT_CTRL & CCT_CTRL_FREE_RST_Msk);
+    while ((CCT_REGS->CCT_CTRL & CCT_CTRL_FREE_RST_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 
     CCT_REGS->CCT_CTRL = ${cct_ctrl} | CCT_CTRL_TCLK(${CCT_FRT_CLK_SRC_DIV});
 
@@ -199,7 +202,10 @@ void ${CCT_INSTANCE_NAME}_FreeRunningTimerReset( void )
 {
     CCT_REGS->CCT_CTRL |= CCT_CTRL_FREE_RST_Msk;
 
-    while (CCT_REGS->CCT_CTRL & CCT_CTRL_FREE_RST_Msk);
+    while ((CCT_REGS->CCT_CTRL & CCT_CTRL_FREE_RST_Msk) != 0U)
+    {
+        /* Do Nothing */
+    }
 }
 
 uint32_t ${CCT_INSTANCE_NAME}_FreeRunningTimerGet( void )
@@ -221,15 +227,15 @@ void ${CCT_INSTANCE_NAME}_FreeRunningTimerSet( uint32_t count)
     CCT_REGS->CCT_CTRL |= cct_ctrl;
 }
 
-void ${CCT_INSTANCE_NAME}_FreqDivSet( uint32_t div )
+void ${CCT_INSTANCE_NAME}_FreqDivSet( uint32_t divs )
 {
-    CCT_REGS->CCT_CTRL = (CCT_REGS->CCT_CTRL & ~CCT_CTRL_TCLK_Msk) | (div << CCT_CTRL_TCLK_Pos);
+    CCT_REGS->CCT_CTRL = (CCT_REGS->CCT_CTRL & ~CCT_CTRL_TCLK_Msk) | (divs << CCT_CTRL_TCLK_Pos);
 }
 
 uint32_t ${CCT_INSTANCE_NAME}_FrequencyGet(void)
 {
     uint32_t freq_div = (CCT_REGS->CCT_CTRL & CCT_CTRL_TCLK_Msk) >> CCT_CTRL_TCLK_Pos;
-    uint32_t freq = 48000000/(freq_div + 1);
+    uint32_t freq = 48000000U/(freq_div + 1U);
     return freq;
 }
 
@@ -335,9 +341,9 @@ void ${CCT_INSTANCE_NAME}_CompareChannel${n}InterruptDisable( void )
 void CCT${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_CCT))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_CCT) != 0U)
     </#if>
     {
         <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">
@@ -359,9 +365,9 @@ void CCT${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 void CCT_CAP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT_CAP${n}))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT_CAP${n}) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_CCT_CAP${n}))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_CCT_CAP${n}) != 0U)
     </#if>
     {
         <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">
@@ -384,9 +390,9 @@ void CCT_CAP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 void CCT_CMP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT_CMP${n}))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT_CMP${n}) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_CCT_CMP${n}))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_CCT_CMP${n}) != 0U)
     </#if>
     {
         <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">

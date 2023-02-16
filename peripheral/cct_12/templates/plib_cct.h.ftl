@@ -88,7 +88,7 @@ uint32_t ${CCT_INSTANCE_NAME}_FreeRunningTimerGet( void );
 
 void ${CCT_INSTANCE_NAME}_FreeRunningTimerSet( uint32_t count);
 
-void ${CCT_INSTANCE_NAME}_FreqDivSet( uint32_t div );
+void ${CCT_INSTANCE_NAME}_FreqDivSet( uint32_t divs );
 
 uint32_t ${CCT_INSTANCE_NAME}_FrequencyGet(void);
 
