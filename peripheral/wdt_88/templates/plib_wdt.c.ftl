@@ -120,7 +120,7 @@ void ${WDT_INSTANCE_NAME}_Disable(void)
 
 bool ${WDT_INSTANCE_NAME}_IsEnabled( void )
 {
-    return ((bool)WDT_REGS->WDT_CTRL & WDT_CTRL_WDT_EN_Msk);
+    return ((WDT_REGS->WDT_CTRL & WDT_CTRL_WDT_EN_Msk) != 0U);
 }
 
 void ${WDT_INSTANCE_NAME}_Clear(void)
@@ -137,19 +137,19 @@ uint16_t ${WDT_INSTANCE_NAME}_CountGet(void)
 
 bool ${WDT_INSTANCE_NAME}_isPowerFailWDTEventSet(void)
 {
-    if ((VTR_REG_BANK_REGS->VTR_REG_BANK_PFRS & VTR_REG_BANK_PFRS_WDT_EVT_Msk) != 0)
+    bool check = false;
+    if ((VTR_REG_BANK_REGS->VTR_REG_BANK_PFRS & VTR_REG_BANK_PFRS_WDT_EVT_Msk) != 0U)
     {
-        return true;
+        check = true;
     }
-    else
-    {
-        return false;
-    }
+    
+    return check;
+    
 }
 
 void ${WDT_INSTANCE_NAME}_PowerFailWDTEventClear(void)
 {
-    if (VTR_REG_BANK_REGS->VTR_REG_BANK_PFRS & VTR_REG_BANK_PFRS_WDT_EVT_Msk)
+    if ((VTR_REG_BANK_REGS->VTR_REG_BANK_PFRS & VTR_REG_BANK_PFRS_WDT_EVT_Msk) != 0U)
     {
         /* Write 1 to clear this bit */
         VTR_REG_BANK_REGS->VTR_REG_BANK_PFRS |= VTR_REG_BANK_PFRS_WDT_EVT_Msk;
@@ -165,7 +165,7 @@ void ${WDT_INSTANCE_NAME}_PeriodLoad(uint16_t period)
 
 void ${WDT_INSTANCE_NAME}_TimeoutActionSet(WDT_TIMEOUT_ACTION action)
 {
-    WDT_REGS->WDT_CTRL = (WDT_REGS->WDT_CTRL & ~WDT_CTRL_WDT_RST_Msk) | (action << WDT_CTRL_WDT_RST_Pos);
+    WDT_REGS->WDT_CTRL = (uint16_t)((WDT_REGS->WDT_CTRL & ~WDT_CTRL_WDT_RST_Msk) | ((uint16_t)action << WDT_CTRL_WDT_RST_Pos));
 }
 
 void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
@@ -177,9 +177,9 @@ void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t con
 void ${WDT_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler( void )
 {
     <#if WDT_TMR_INTERRUPT_TYPE == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_WDT))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_WDT) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_WDT))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_WDT) != 0U)
     </#if>
     {
         WDT_REGS->WDT_STS = WDT_STS_WDT_EV_IRQ_Msk;
