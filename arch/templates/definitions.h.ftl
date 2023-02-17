@@ -69,6 +69,20 @@ extern "C" {
 #endif
 // DOM-IGNORE-END
 
+/* Device Information */
+<#if DEVICE_NAME??>
+#define DEVICE_NAME			 "${DEVICE_NAME?string}"
+</#if>
+<#if CoreArchitecture??>
+#define DEVICE_ARCH			 "${CoreArchitecture?string}"
+</#if>
+<#if PRODUCT_FAMILY??>
+#define DEVICE_FAMILY		 "${PRODUCT_FAMILY?string}"
+</#if>
+<#if CoreSeries??>
+#define DEVICE_SERIES		 "${CoreSeries?string}"
+</#if>
+
 <#if CPU_CLOCK_FREQUENCY??>
 /* CPU clock frequency */
 #define CPU_CLOCK_FREQUENCY ${CPU_CLOCK_FREQUENCY}

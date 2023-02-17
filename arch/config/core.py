@@ -741,14 +741,14 @@ def instantiateComponent( coreComponent ):
     keilHeapStackSize.setValue("0x%X" % (keilStackSize.getValue() + keilHeapSize.getValue()))
     keilHeapStackSize.setDependencies(setKeilHeapStackSize, ["KEIL_STACK_SIZE", "KEIL_HEAP_SIZE"])
 
+    # Device name symbol
+    deviceName = coreComponent.createStringSymbol("DEVICE_NAME", None)
+    deviceName.setVisible(False)
+    deviceName.setDefaultValue(Variables.get("__PROCESSOR"))
+
     if "CORTEX-M" in coreArch.getValue():
         #Generate device vector handler related string symbols
         generateDeviceVectorList(coreComponent)
-
-        #Symbols relevant to custom linker scripts
-        deviceName = coreComponent.createStringSymbol("DEVICE_NAME", None)
-        deviceName.setVisible(False)
-        deviceName.setDefaultValue(Variables.get("__PROCESSOR"))
 
         #ROM and RAM memory map
         nodeIFLASH = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[type=\"flash\"]")
