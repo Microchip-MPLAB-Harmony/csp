@@ -83,7 +83,7 @@ def getBitfieldNames(node, outputList):
     outputList as desc and keys.  It then adds the associated value attribute
     to the same index of the outputList.
     All together, it creates a set of 'desc', 'key', and 'value' strings suitable
-    for use in creating a KeyValueSet drop down box.    
+    for use in creating a KeyValueSet drop down box.
     '''
     valueNodes = node.getChildren()
     for ii in valueNodes:
@@ -124,14 +124,14 @@ def findDefaultValue(bitfieldNode, initialRegValue):
             shift = ii
             break
     return((registerValue & mask) >> shift)
-    
+
 def addKeyValueSetFromATDFInitValue(Parent, ModuleName, RegisterName, index, BitFieldName, Menu, Visibility):
     '''
     This creates a ValueKeySet symbol which results in a drop down box with a
     particular register's bitfield's caption and the key-value pairs from the
     associated value group.
     It assumes that the value-group is named [REGISTER]__[BITFIELD]
-    
+
     Parent is the parent component to the newly created component.  In this case
     it is always adchsComponent.
     ModuleName is the name of the IP module within the ATDF file.
@@ -140,23 +140,23 @@ def addKeyValueSetFromATDFInitValue(Parent, ModuleName, RegisterName, index, Bit
     BitFieldName is the name of the bitfield to create a drop down box for.
     Menu is the menu under which to create the new component.
     Visibility is wether or not to make the component visible.
-    
+
     Within the ATDF file, it fins the following bitfield:
     /modules/module@[name="'+ModuleName+'"]/register-group@[name="
     '+ModuleName+'"]/register@[name="'+RegisterName+'"]/bitfield@[name="
     '+BitFieldName+'"]')
     It uses the "caption" attribute of this bitfield as the label for the
     keyValueSet.
-    
-    Within the ATDF file, it finds the value-group for the RegisterName / BitFieldName 
-    given in the function call.  Within this value-group it uses the getBitfieldNames 
-    function to get the Key-Value pairs.    
+
+    Within the ATDF file, it finds the value-group for the RegisterName / BitFieldName
+    given in the function call.  Within this value-group it uses the getBitfieldNames
+    function to get the Key-Value pairs.
     '''
     Log.writeInfoMessage("Adding KeyValueSet " + ModuleName + " " + RegisterName
         + " " + BitFieldName)
     registerPath = cclATDFRegisterPath(ModuleName, RegisterName)
     registerNode = ATDF.getNode(registerPath)
-    
+
     if registerNode is not None:
         labelPath = cclATDFRegisterBitfieldPath(ModuleName, RegisterName, BitFieldName)
         labelNode = ATDF.getNode(labelPath)
@@ -196,7 +196,7 @@ def addKeyValueSetFromATDFInitValue(Parent, ModuleName, RegisterName, index, Bit
 def addMask(RegisterName, BitFieldName):
     # gathers information from atdf file for given bitfield for mask values, stores in shiftDict[] for later processing
     labelPath = cclATDFRegisterBitfieldPath('CCL', RegisterName, BitFieldName)
-    labelNode = ATDF.getNode(labelPath)  
+    labelNode = ATDF.getNode(labelPath)
     dict = { 'regname':RegisterName, 'bitfield':labelNode.getAttribute('name'), 'mask':labelNode.getAttribute('mask')}
     shiftDict.append(dict)
 
@@ -207,7 +207,7 @@ def setEnable(symbol, event):
         Database.setSymbolValue("core", 'CCL_CLOCK_ENABLE', True, 2)
     else:
         Database.setSymbolValue("core", 'CCL_CLOCK_ENABLE', False, 2)
-    
+
 global findLsb
 def findLsb(maskval):
     # finds the lsb of a mask value
@@ -218,10 +218,10 @@ def findLsb(maskval):
         maskval = maskval>>1
         ii += 1
     return ii
-    
+
 def findLimit(regBaseName):
     '''
-    Finds the highest with a given base name, and returns that value.  Goal is to find 
+    Finds the highest with a given base name, and returns that value.  Goal is to find
     upper limit, as that can vary from device to device.
     '''
     groupPath = cclATDFRegisterGroupPath('CCL')
@@ -234,18 +234,18 @@ def findLimit(regBaseName):
                 if(minValue < index):
                     minValue = index
     return minValue
-    
+
 def hideMenu_clearValues(menu, event):
     '''
-    This callback serves two purposes:  
+    This callback serves two purposes:
         Hide/reveal menu entry based on CCL enable or LUTCTRLx enable menu settings
-        
+
         Clear the LUTCTRLx register bitfield symbols when LUT enable for the block is set to False (this is for making the comments
         in the ftl file consistent with the register value in that case)
-   
+
     '''
     menu.setVisible(event["value"])
-    
+
     # Below is for when LUTCTRLx.ENABLE is cause for this callback.  See if set to disabled.
     if(('LUTCTRL' in event["id"]) and (event["value"]==0)):  # for sake of making ftl output clean, need to reset symbols to 0 if LUT block is disabled
         posn = event["id"].find("__")  # find which LUT block this callback was called for; we'll need it below
@@ -257,48 +257,48 @@ def hideMenu_clearValues(menu, event):
                 cclLuctrlInsel0[lutBlock].setValue(0)
                 cclLuctrlInsel0[lutBlock].clearValue()        # clearValue() removes the purple highlight indication from the menu
             if(int(cclLuctrlInsel1[lutBlock].getKeyValue(int(cclLuctrlInsel1[lutBlock].getValue())))!=0):
-                cclLuctrlInsel1[lutBlock].setReadOnly(True) 
+                cclLuctrlInsel1[lutBlock].setReadOnly(True)
                 cclLuctrlInsel1[lutBlock].setReadOnly(False)
                 cclLuctrlInsel1[lutBlock].setValue(0)
                 cclLuctrlInsel1[lutBlock].clearValue()
             if(int(cclLuctrlInsel2[lutBlock].getKeyValue(int(cclLuctrlInsel2[lutBlock].getValue())))!=0):
-                cclLuctrlInsel2[lutBlock].setReadOnly(True) 
+                cclLuctrlInsel2[lutBlock].setReadOnly(True)
                 cclLuctrlInsel2[lutBlock].setReadOnly(False)
                 cclLuctrlInsel2[lutBlock].setValue(0)
                 cclLuctrlInsel2[lutBlock].clearValue()
             if(int(cclLuctrlFiltsel[lutBlock].getKeyValue(int(cclLuctrlFiltsel[lutBlock].getValue())))!=0):
-                cclLuctrlFiltsel[lutBlock].setReadOnly(True) 
+                cclLuctrlFiltsel[lutBlock].setReadOnly(True)
                 cclLuctrlFiltsel[lutBlock].setReadOnly(False)
                 cclLuctrlFiltsel[lutBlock].setValue(0)
                 cclLuctrlFiltsel[lutBlock].clearValue()
             if(int(cclLuctrlLuteo[lutBlock].getKeyValue(int(cclLuctrlLuteo[lutBlock].getValue())))!=0):
-                cclLuctrlLuteo[lutBlock].setReadOnly(True) 
+                cclLuctrlLuteo[lutBlock].setReadOnly(True)
                 cclLuctrlLuteo[lutBlock].setReadOnly(False)
                 cclLuctrlLuteo[lutBlock].setValue(0)
                 cclLuctrlLuteo[lutBlock].clearValue()
             if(int(cclLuctrlLutei[lutBlock].getKeyValue(int(cclLuctrlLutei[lutBlock].getValue())))!=0):
-                cclLuctrlLutei[lutBlock].setReadOnly(True) 
+                cclLuctrlLutei[lutBlock].setReadOnly(True)
                 cclLuctrlLutei[lutBlock].setReadOnly(False)
                 cclLuctrlLutei[lutBlock].setValue(0)
                 cclLuctrlLutei[lutBlock].clearValue()
             if(int(cclLuctrlInvei[lutBlock].getKeyValue(int(cclLuctrlInvei[lutBlock].getValue())))!=0):
-                cclLuctrlInvei[lutBlock].setReadOnly(True) 
+                cclLuctrlInvei[lutBlock].setReadOnly(True)
                 cclLuctrlInvei[lutBlock].setReadOnly(False)
                 cclLuctrlInvei[lutBlock].setValue(0)
                 cclLuctrlInvei[lutBlock].clearValue()
             if(cclLuctrlTruth[lutBlock].getValue()!=0):
-                cclLuctrlTruth[lutBlock].setReadOnly(True) 
+                cclLuctrlTruth[lutBlock].setReadOnly(True)
                 cclLuctrlTruth[lutBlock].setReadOnly(False)
                 cclLuctrlTruth[lutBlock].setValue(0)
                 cclLuctrlTruth[lutBlock].clearValue()
             if(int(cclLuctrlEdgesel[lutBlock].getKeyValue(int(cclLuctrlEdgesel[lutBlock].getValue())))!=0):
-                cclLuctrlEdgesel[lutBlock].setReadOnly(True)   
+                cclLuctrlEdgesel[lutBlock].setReadOnly(True)
                 cclLuctrlEdgesel[lutBlock].setReadOnly(False)
                 cclLuctrlEdgesel[lutBlock].setValue(0)
                 cclLuctrlEdgesel[lutBlock].clearValue()
         else:
             Log.writeErrorMessage("hideMenu_clearValues: invalid event id encountered")
-    
+
 def hideSequentialSelection(menu, event):
     '''
     Helper function, used to make sequential control menu items visible if at least 1 LUT block is enabled.
@@ -306,13 +306,13 @@ def hideSequentialSelection(menu, event):
     '''
     component = menu.getComponent()
     menu.setVisible(False)
-    if(component.getSymbolValue("CCL_ENABLE")==True): 
+    if(component.getSymbolValue("CCL_ENABLE")==True):
         # Poll all the inidividual LUT enables.  If any of them are True, then make SEQCTRLx registers visible
         for ii in range(0,lutSize):
             if(component.getSymbolValue(symLutctrlEnableName[ii]) == True):
                 menu.setVisible(True)
                 break
-    
+
 def cclCalcLUTCTRL(symbol, event):
     # This callback calculates the register value for LUTCTRLx.
     regValue = cclSym_LUTCTRL[int(event["id"][7])].getValue()
@@ -354,7 +354,7 @@ def cclCalcLUTCTRL(symbol, event):
         regValue &= ~int(cclLuctrlTruth_mask,16)
         regValue += cclLuctrlTruth[lutBlock].getValue() << findLsb(int(cclLuctrlTruth_mask,16))
     cclSym_LUTCTRL[int(event["id"][7])].setValue(regValue, 2)
-    
+
 def cclCalcSEQCTRL(symbol, event):
     # Callback for setting SEQCTRLx register values
     seqBlock = int(event["id"][7],16)  # block number is at position 7
@@ -395,7 +395,7 @@ def showWarningMenu(symbol, event):
 
 def updateShiftValues():
     '''
-    Populates bitshift variables, for use with register value computations.  Bitshifts are taken from ATDF file, 
+    Populates bitshift variables, for use with register value computations.  Bitshifts are taken from ATDF file,
     since that's where they are defined.
     '''
     global cclLutctrlEnable_mask
@@ -473,7 +473,7 @@ def checkEdgeWarning(symbol, event):
     Generates a warning message for case when the filter is disabled but edge selection is enabled.  According to the datasheet
     for when the edge selector is enabled, "In order to avoid unpredictable behavior, either the filter or synchronizer must be
     enabled."
-    
+
     The warning message will be displayed when the error case occurs.
     '''
     if('ENABLE' in event["id"]):  # hide/visible for master enable checkbox in CCL menu
@@ -525,6 +525,14 @@ def computeRegValue(symbolList, maskList):
         value = value + (int(symbolList[ii].getValue()) << findLsb(int(maskList[ii],16)))
     return value
 
+def cclEvsysConfigure(symbol, event):
+    if ("LUTEO" in event["id"]):
+        instance = event["id"].split("LUTCTRL")[1].split("__LUTEO")[0]
+        Database.setSymbolValue("evsys", "GENERATOR_CCL_LUTOUT_" + str(instance) + "_ACTIVE", (event["value"] == 1))
+    elif ("LUTEI" in event["id"]):
+        instance = event["id"].split("LUTCTRL")[1].split("__LUTEI")[0]
+        Database.setSymbolValue("evsys", "USER_CCL_LUTIN_" + str(instance) + "_READY", (event["value"] == 1))
+
 def instantiateComponent(cclComponent):
     global cclInstanceName
     global interruptVector
@@ -566,7 +574,8 @@ def instantiateComponent(cclComponent):
     global cclSeqctrlSeqsel_mask
     global lutSize
     global seqSize
-    
+
+    cclEvsysDep = []
     shiftDict = []
 
     cclInstanceName = cclComponent.createStringSymbol("CCL_INSTANCE_NAME", None)
@@ -578,14 +587,14 @@ def instantiateComponent(cclComponent):
     cclEnSymId = cclInstanceName.getValue() + "_ENABLE"
     cclEnable = cclComponent.createBooleanSymbol(cclEnSymId, None)
     cclEnable.setLabel("Enable CCL Module?")
-    
+
     # CTRL register bitfields
     regName = "CTRL"
     fieldName = "ENABLE"
     cclCtrlEnable = addKeyValueSetFromATDFInitValue(cclComponent, 'CCL', regName, 0, fieldName, None, False)
     cclCtrlEnable.setDependencies(setEnable,[cclEnSymId])
     addMask(regName, fieldName)
-    
+
     fieldName = "RUNSTDBY"
     cclCtrlRunstdby = addKeyValueSetFromATDFInitValue(cclComponent, 'CCL', regName, 0, fieldName, cclEnable, True)
     cclCtrlRunstdby.setDependencies(setEnable,[cclEnSymId])
@@ -608,9 +617,9 @@ def instantiateComponent(cclComponent):
     cclWarningCclClk = cclComponent.createMenuSymbol('GCLK_CCL_WARNING', cclEnable)
     cclWarningCclClk.setLabel("*** Warning: GCLK_CCL clock needs to be enabled under Peripheral Clock Configuration of Clock menu ***")
     cclWarningCclClk.setVisible(False)
-    
-   
-    # LUTCTRLx register bitfields    
+
+
+    # LUTCTRLx register bitfields
     symLutctrlEnableName = []
     cclLutctrlEnable = []
     cclLuctrlInsel0 = []
@@ -634,13 +643,13 @@ def instantiateComponent(cclComponent):
     numLutsPresent.setVisible(False)
     numLutsPresent.setDefaultValue(lutSize)
     cclSeqctrlDeplist.append(cclEnSymId)
-        
+
     for lut in range(0,lutSize):  # scan over all LUTCTRLx registers available in device
         regName = "LUTCTRL"
         symLutctrlEnableName.append(lut)
         symLutctrlEnableName[lut] = "LUTCTRL"+str(lut)+"__ENABLE"
         cclSeqctrlDeplist.append(symLutctrlEnableName[lut])
-        
+
         fieldName = "ENABLE"
         cclLutctrlEnable.append(lut)
         cclLutctrlEnable[lut] = cclComponent.createBooleanSymbol(symLutctrlEnableName[lut], cclEnable)
@@ -648,61 +657,63 @@ def instantiateComponent(cclComponent):
         cclLutctrlEnable[lut].setVisible(False)
         cclLutctrlEnable[lut].setDependencies(hideMenu_clearValues, [cclEnSymId])
         addMask(regName, fieldName)
-        
+
         fieldName = "INSEL0"
         cclLuctrlInsel0.append(lut)
         cclLuctrlInsel0[lut] = addKeyValueSetFromATDFInitValue(cclComponent, 'CCL', regName, lut, fieldName, cclLutctrlEnable[lut], False)
         cclLuctrlInsel0[lut].setDependencies(hideMenu_clearValues, [symLutctrlEnableName[lut]])
         addMask(regName, fieldName)
         cclWarningCclClkDeplist.append(regName+'__'+fieldName)
-        
+
         fieldName = "INSEL1"
         cclLuctrlInsel1.append(lut)
         cclLuctrlInsel1[lut] = addKeyValueSetFromATDFInitValue(cclComponent, 'CCL', regName, lut, fieldName, cclLutctrlEnable[lut], False)
         cclLuctrlInsel1[lut].setDependencies(hideMenu_clearValues, [symLutctrlEnableName[lut]])
         addMask(regName, fieldName)
         cclWarningCclClkDeplist.append(regName+'__'+fieldName)
-        
+
         fieldName = "INSEL2"
         cclLuctrlInsel2.append(lut)
         cclLuctrlInsel2[lut] = addKeyValueSetFromATDFInitValue(cclComponent, 'CCL', regName, lut, fieldName, cclLutctrlEnable[lut], False)
         cclLuctrlInsel2[lut].setDependencies(hideMenu_clearValues, [symLutctrlEnableName[lut]])
         addMask(regName, fieldName)
         cclWarningCclClkDeplist.append(regName+'__'+fieldName)
-        
+
         fieldName = "EDGESEL"
         cclLuctrlEdgesel.append(lut)
         cclLuctrlEdgesel[lut] = addKeyValueSetFromATDFInitValue(cclComponent, 'CCL', regName, lut, fieldName, cclLutctrlEnable[lut], False)
         cclLuctrlEdgesel[lut].setDependencies(checkEdgeWarning, [regName+'__EDGESEL', symLutctrlEnableName[lut]])
         addMask(regName, fieldName)
         cclWarningCclClkDeplist.append(regName+'__'+fieldName)
-        
+
 
         # warning message if edge selection is enabled but filter selection is disabled
         cclLuctrlEdgeselWarning.append(lut)
         cclLuctrlEdgeselWarning[lut] = cclComponent.createMenuSymbol('EDGESEL_WARNING'+str(lut), cclEnable)
         cclLuctrlEdgeselWarning[lut].setVisible(False)
         cclLuctrlEdgeselWarning[lut].setLabel("***Warning: either the filter should be enabled or synchronizer on.  Unpredictable results may occur with filter off. ***")
-            
+
         fieldName = "FILTSEL"
         cclLuctrlFiltsel.append(lut)
         cclLuctrlFiltsel[lut] = addKeyValueSetFromATDFInitValue(cclComponent, 'CCL', regName, lut, fieldName, cclLutctrlEnable[lut], False)
         cclLuctrlFiltsel[lut].setDependencies(checkEdgeWarning, [regName+'__FILTSEL',symLutctrlEnableName[lut]])
         addMask(regName, fieldName)
         cclWarningCclClkDeplist.append(regName+'__'+fieldName)
-        
+
         fieldName = "LUTEO"
         cclLuctrlLuteo.append(lut)
         cclLuctrlLuteo[lut] = addKeyValueSetFromATDFInitValue(cclComponent, 'CCL', regName, lut, fieldName, cclLutctrlEnable[lut], False)
         cclLuctrlLuteo[lut].setDependencies(hideMenu_clearValues, [symLutctrlEnableName[lut]])
         addMask(regName, fieldName)
-        
+        cclEvsysDep.append(regName + str(lut) + '__' + fieldName)
+
         fieldName = "LUTEI"
         cclLuctrlLutei.append(lut)
         cclLuctrlLutei[lut] = addKeyValueSetFromATDFInitValue(cclComponent, 'CCL', regName, lut, fieldName, cclLutctrlEnable[lut], False)
         cclLuctrlLutei[lut].setDependencies(hideMenu_clearValues, [symLutctrlEnableName[lut]])
         addMask(regName, fieldName)
-        
+        cclEvsysDep.append(regName + str(lut) + '__' + fieldName)
+
         fieldName = "INVEI"
         cclLuctrlInvei.append(lut)
         cclLuctrlInvei[lut] = addKeyValueSetFromATDFInitValue(cclComponent, 'CCL', regName, lut, fieldName, cclLutctrlEnable[lut], False)
@@ -719,11 +730,11 @@ def instantiateComponent(cclComponent):
         cclLuctrlTruth[lut].setMax(255)
         cclLuctrlTruth[lut].setDependencies(hideMenu_clearValues, [symLutctrlEnableName[lut]])
         addMask(regName, fieldName)
-        
+
         # register LUTCTRLx value for ftl file
         clccon_LUTCTRL_deplist.append(lut)
         clccon_LUTCTRL_deplist[lut] = [ regName+str(lut)+"__ENABLE", regName+str(lut)+"__FILTSEL", regName+str(lut)+"__EDGESEL",
-                                regName+str(lut)+"__INSEL0", regName+str(lut)+"__INSEL1", regName+str(lut)+"__INSEL2", 
+                                regName+str(lut)+"__INSEL0", regName+str(lut)+"__INSEL1", regName+str(lut)+"__INSEL2",
                                 regName+str(lut)+"__INVEI", regName+str(lut)+"__LUTEI", regName+str(lut)+"__LUTEO",
                                 regName+str(lut)+"__TRUTH" ]
         cclSym_LUTCTRL.append(lut)
@@ -731,7 +742,7 @@ def instantiateComponent(cclComponent):
         cclSym_LUTCTRL[lut].setLabel("LUTCTRL"+str(lut)+" register value")
         cclSym_LUTCTRL[lut].setVisible(False)
         cclSym_LUTCTRL[lut].setDependencies(cclCalcLUTCTRL, clccon_LUTCTRL_deplist[lut])
-        
+
     # SEQCTRLx bitfield
     cclSeqctrlSeqsel = []
     cclsym_SEQCTRL = []
@@ -739,7 +750,7 @@ def instantiateComponent(cclComponent):
     numSeqsPresent = cclComponent.createIntegerSymbol("NUM_SEQUENTIAL_BLOCKS", None)
     numSeqsPresent.setVisible(False)
     numSeqsPresent.setDefaultValue(seqSize)
-    
+
     for ii in range(0,seqSize):  # scan over all SEQCTRLx registers in device
         regName = "SEQCTRL"
         fieldName = "SEQSEL"
@@ -748,7 +759,7 @@ def instantiateComponent(cclComponent):
         cclSeqctrlSeqsel[ii].setDependencies(hideSequentialSelection, cclSeqctrlDeplist)
         addMask(regName, fieldName)
         cclWarningCclClkDeplist.append(regName+'__'+fieldName)
-        
+
         # warning message for if sequential logic enabled AND not having both LUT outputs going into it enabled
         cclSeqctrlWarning.append(ii)
         cclSeqctrlWarning[ii] = cclComponent.createMenuSymbol(fieldName+str(ii)+'_WARNING', cclEnable)
@@ -763,6 +774,10 @@ def instantiateComponent(cclComponent):
         cclsym_SEQCTRL[ii].setLabel("SEQCTRL"+str(ii)+" register value")
         cclsym_SEQCTRL[ii].setDependencies(cclCalcSEQCTRL, ['SEQCTRL'+str(ii)+'__SEQSEL'])
 
+    cclsym_EVESYS_CONFIGURE = cclComponent.createIntegerSymbol("CCL_EVESYS_CONFIGURE", None)
+    cclsym_EVESYS_CONFIGURE.setVisible(False)
+    cclsym_EVESYS_CONFIGURE.setDependencies(cclEvsysConfigure, cclEvsysDep)
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
     # update bit shift values of individual bitfields - for use in register value computations that ftl file will use
@@ -771,8 +786,8 @@ def instantiateComponent(cclComponent):
     cclsym_CTRL.setDefaultValue(computeRegValue([cclCtrlEnable, cclCtrlRunstdby], [cclCtrlEnable_mask, cclCtrlRunstdby_mask]))
     for lut in range(0,lutSize):  # scan over all LUTCTRLx registers available in device
         cclSym_LUTCTRL[lut].setDefaultValue(computeRegValue([cclLutctrlEnable[lut], cclLuctrlInsel0[lut], cclLuctrlInsel1[lut], cclLuctrlInsel2[lut],
-                                                            cclLuctrlEdgesel[lut], cclLuctrlFiltsel[lut], cclLuctrlLuteo[lut], cclLuctrlLutei[lut], 
-                                                            cclLuctrlInvei[lut], cclLuctrlTruth[lut]], 
+                                                            cclLuctrlEdgesel[lut], cclLuctrlFiltsel[lut], cclLuctrlLuteo[lut], cclLuctrlLutei[lut],
+                                                            cclLuctrlInvei[lut], cclLuctrlTruth[lut]],
                                                             [cclLutctrlEnable_mask, cclLuctrlInsel0_mask, cclLuctrlInsel1_mask, cclLuctrlInsel2_mask,
                                                             cclLuctrlEdgesel_mask, cclLuctrlFiltsel_mask, cclLuctrlLuteo_mask, cclLuctrlLutei_mask,
                                                             cclLuctrlInvei_mask, cclLuctrlTruth_mask]))
@@ -782,7 +797,7 @@ def instantiateComponent(cclComponent):
     # dependencies are set so can link callback to them at this time
     cclWarningCclClkDeplist.append('core.CCL_CLOCK_ENABLE')
     cclWarningCclClk.setDependencies(cclWarning, cclWarningCclClkDeplist)
-    
+
     #Instance Source File
     cclMainSourceFile = cclComponent.createFileSymbol("sourceFile", None)
     cclMainSourceFile.setSourcePath("../peripheral/ccl_u2225/templates/plib_ccl.c.ftl")
