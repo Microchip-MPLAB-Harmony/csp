@@ -151,6 +151,8 @@ void ${NVM_INSTANCE_NAME}_ProgramFlashSwapBank( void );
 
 void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t address);
 
+void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectDisable( void );
+
 void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectLock( void );
 
 void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectEnable( NVM_BOOT_FLASH_WRITE_PROTECT writeProtectPage );

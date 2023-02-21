@@ -282,6 +282,25 @@ void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t address )
     __builtin_mtc0(12, 0, processorStatus);
 }
 
+void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectDisable( void )
+{
+    volatile uint32_t processorStatus;
+	uint32_t address = 0U;
+
+    processorStatus = __builtin_disable_interrupts();
+
+    ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
+
+    /* Program the 24-Bit address till where the memory has to be protected
+     * from start of flash memory.
+     * The Page in which the address falls and all the lower pages below it will
+     * be protected from writes
+     */
+    NVMPWPSET = (address & _NVMPWP_PWP_MASK);
+
+    __builtin_mtc0(12, 0, processorStatus);
+}
+
 void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectLock( void )
 {
     volatile uint32_t processorStatus;
