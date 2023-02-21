@@ -303,6 +303,67 @@ def setup_sdmmc_clock_frequency(local_comp, remote_comp, module_name, instance_n
 
     pcr_freq.setDependencies(update_sdmmc_clock_frequency, ['MCK1_FREQUENCY', instance_name + '_GCLK_FREQUENCY'])
 
+global update_flexcomm_clock_frequency
+def update_flexcomm_clock_frequency(symbol, event):
+    frequency = -1
+    instance_name = symbol.getID().split("_")[0]
+    mck = event['source'].getSymbolByID("MCK1_FREQUENCY")
+    gclk = event['source'].getSymbolByID(instance_name + "_GCLK_FREQUENCY")
+    op_mode = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_MODE")
+    # Flexcom is operating as USART
+    if op_mode == 1 :
+        # Get the USART mode source clock
+        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_USART_MR_USCLKS")
+        # Source clock is bus clock
+        if source_clock == 0:
+            frequency = mck.getValue()
+        # Source clock is bus clock / 8
+        elif source_clock == 1:
+            frequency = mck.getValue() / 8
+        # Source clock is GCLK
+        elif source_clock == 2:
+            frequency = gclk.getValue()
+        # Source clock is external, set the internal frequency to zero
+        else:
+            frequency = 0
+    #Flexcom is operating in SPI mode
+    elif op_mode == 2:
+        #Get the SPI mode source clock
+        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_SPI_MR_BRSRCCLK")
+        # Source clock is bus clock
+        if source_clock == 0:
+            frequency = mck.getValue()
+        # Source clock is GCLK
+        elif source_clock == 1:
+            frequency = gclk.getValue()
+    #Flexcom is operating in TWI mode
+    elif op_mode == 3:
+        #Get the SPI mode source clock
+        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_TWI_CWGR_BRSRCCLK")
+        # Source clock is bus clock
+        if source_clock == 0:
+            frequency = mck.getValue()
+        # Source clock is GCLK
+        elif source_clock == 1:
+            frequency = gclk.getValue()
+
+    # Update the frequency only if the clock selections are valid
+    if frequency >= 0:
+        symbol.setValue(frequency, 0)
+
+def setup_flexcom_clock_frequency(local_comp, remote_comp, module_name, instance_name):
+    pcr_menu = remote_comp.getSymbolByID("CLK_PCR_MENU")
+    pcr_freq = local_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", pcr_menu)
+    pcr_freq.setVisible(False)
+    pcr_freq.setReadOnly(True)
+    pcr_freq.setDefaultValue(remote_comp.getSymbolValue("MCK1_FREQUENCY"))
+    pcr_freq.setDependencies(update_flexcomm_clock_frequency,
+                            ['MCK1_FREQUENCY',
+                              instance_name + '_GCLK_FREQUENCY',
+                              instance_name.lower() + "." + "FLEXCOM_MODE",
+                              instance_name.lower() + "." + "FLEXCOM_USART_MR_USCLKS",
+                              instance_name.lower() + "." + "FLEXCOM_SPI_MR_BRSRCCLK",
+                              instance_name.lower() + "." + "FLEXCOM_TWI_CWGR_BRSRCCLK"])
 
 def setup_mcan_clock_frequency(local_comp, remote_comp, module_name, instance_name):
     pcr_menu = remote_comp.getSymbolByID("CLK_PCR_MENU")
@@ -815,7 +876,7 @@ if __name__ == "__main__":
                     "ARM": (["SYSPLL", "DDRPLL"], 50, setup_adc_arm_clock_frequency),
                     "ASRC": (["AUDIOPLL"], 200, setup_generic_gclk_module_clock_frequency),
                     "CSI": (["DDRPLL", "IMGPLL"], 27, setup_generic_gclk_module_clock_frequency),
-                    "FLEXCOM": (["SYSPLL", "BAUDPLL"], 200, setup_generic_gclk_module_clock_frequency),
+                    "FLEXCOM": (["SYSPLL", "BAUDPLL"], 200, setup_flexcom_clock_frequency),
                     "GMAC": (["ETHPLL"], 125, setup_generic_gclk_module_clock_frequency),
                     "I2SMCC": (["SYSPLL", "AUDIOPLL"], 100, setup_generic_gclk_module_clock_frequency),
                     "MCAN": (["SYSPLL", "BAUDPLL"], 200, setup_mcan_clock_frequency),
