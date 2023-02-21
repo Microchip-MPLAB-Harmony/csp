@@ -343,6 +343,9 @@ xosc32kOndemand.setDefaultValue(0)
 
 xosc32kAAMPEN = coreComponent.createBooleanSymbol("XOSC32K_AAMPEN", xosc32k_Menu)
 xosc32kAAMPEN.setLabel("Enable Automatic Amplitude Control For Crystal Oscillator")
+if ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SYSCTRL\"]/register-group@[name=\"SYSCTRL\"]/register@[name=\"XOSC32K\"]/bitfield@[name=\"AAMPEN\"]")is None:
+    xosc32kAAMPEN.setVisible(False)
+
 
 xoscEn32k = coreComponent.createBooleanSymbol("XOSC32K_EN32K", xosc32k_Menu)
 xoscEn32k.setLabel("Enable 32KHz Output")

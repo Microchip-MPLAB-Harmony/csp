@@ -90,6 +90,7 @@ static void SYSCTRL_Initialize(void)
                                                                ${XOSC32K_RUNSTDBY?then('| SYSCTRL_XOSC32K_RUNSTDBY_Msk',' ')}
                                                                ${XOSC32K_EN32K?then('| SYSCTRL_XOSC32K_EN32K_Msk',' ')}
                                                                ${(XOSC32K_ONDEMAND == "ENABLE")?then('| SYSCTRL_XOSC32K_ONDEMAND_Msk',' ')}
+															   ${XOSC32K_AAMPEN?then('| SYSCTRL_XOSC32K_AAMPEN_Msk',' ')}
                                                                ${(XOSC32K_OSCILLATOR_MODE == "1")?then('| SYSCTRL_XOSC32K_XTALEN_Msk',' ')};</@compress>
     <#if XOSC32K_ONDEMAND != "ENABLE">
     while(!((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_XOSC32KRDY_Msk) == SYSCTRL_PCLKSR_XOSC32KRDY_Msk))
