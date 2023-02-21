@@ -639,7 +639,7 @@ xdmacSourceFile.setEnabled(False)
 
 xdmacSystemInitFile = coreComponent.createFileSymbol("xdmacSystemInitFile", None)
 xdmacSystemInitFile.setType("STRING")
-xdmacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+xdmacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS1")
 xdmacSystemInitFile.setSourcePath("../peripheral/xdmac_11161/templates/system/initialization.c.ftl")
 xdmacSystemInitFile.setMarkup(True)
 xdmacSystemInitFile.setEnabled(False)
