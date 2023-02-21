@@ -117,7 +117,13 @@ __STATIC_INLINE void FPU_Enable(void)
 {
     uint32_t primask = __get_PRIMASK();
     __disable_irq();
-     SCB->CPACR |= (((uint32_t)0xFU) << 20);
+    SCB->CPACR |= (((uint32_t)0xFU) << 20);
+    <#if CoreArchitecture == "CORTEX-M33">
+    <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+    SCB->NSACR |= (((uint32_t)0x3U) << 10);   
+    FPU->FPCCR |= (uint32_t)0x${FPU_FPCCR}U;
+    </#if> 
+    </#if>
     __DSB();
     __ISB();
 

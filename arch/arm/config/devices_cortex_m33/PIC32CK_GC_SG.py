@@ -80,6 +80,17 @@ def setDMADefaultSettings():
 
     return triggerSettings
 
+def fpccrCalc(symbol, event):
+    fpccr = 0xc0000000
+    component = symbol.getComponent()
+    lsepens = int(component.getSymbolValue("FPU_FPCCR_LSEPENS")) << 29
+    clronret = int(component.getSymbolValue("FPU_FPCCR_CLRONRET")) << 28
+    clronrets = int(component.getSymbolValue("FPU_FPCCR_CLRONRETS")) << 27
+    ts = int(component.getSymbolValue("FPU_FPCCR_TS")) << 26
+    fpccr = fpccr + lsepens + clronret + clronrets + ts
+    symbol.setValue(fpccr)
+
+
 # Device Configuration
 deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", devCfgMenu)
 deviceSecurity.setLabel("Security")
@@ -251,17 +262,38 @@ fuse = coreComponent.createIntegerSymbol("NUMBER_OF_FUSES", fuseSettings)
 fuse.setDefaultValue(numfuses)
 fuse.setVisible(False)
 
+coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
+coreFPU.setLabel("FPU Available")
+coreFPU.setDefaultValue(True)
+coreFPU.setReadOnly(True)
+coreFPU.setVisible(True)
+
 if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
     systemResourcesList = ["GCLK", "OSC32KCTRL", "OSCCTRL", "MCLK", "IDAU"]
     mixSecurePeripheralList = ["EIC", "EVSYS", "FCR", "FCW", "PAC", "PORT"]
     # Setup TrustZone Manager
     execfile(Variables.get("__CORE_DIR") + "/config/trustZone/trustZoneManager.py")
 
-coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
-coreFPU.setLabel("FPU Available")
-coreFPU.setDefaultValue(True)
-coreFPU.setReadOnly(True)
-coreFPU.setVisible(False)
+    fpuFpccrLspens = coreComponent.createBooleanSymbol("FPU_FPCCR_LSEPENS", coreFPU)
+    fpuFpccrLspens.setLabel("Enable Secure Lazy State Preservation")
+    fpuFpccrLspens.setDefaultValue(True)
+
+    fpuFpccrClronret = coreComponent.createBooleanSymbol("FPU_FPCCR_CLRONRET", coreFPU)
+    fpuFpccrClronret.setLabel("Clear Floating Point Registers on Exception Return")
+    fpuFpccrClronret.setDefaultValue(True)
+
+    fpuFpccrClronrets = coreComponent.createBooleanSymbol("FPU_FPCCR_CLRONRETS", coreFPU)
+    fpuFpccrClronrets.setLabel("Treat CLRONRET as Secure")
+    fpuFpccrClronrets.setDefaultValue(True)
+
+    fpuFpccrTs = coreComponent.createBooleanSymbol("FPU_FPCCR_TS", coreFPU)
+    fpuFpccrTs.setLabel("Treat Floating Point Registers as Secure")
+    fpuFpccrTs.setDefaultValue(True)
+
+    fpuFpccrVal = coreComponent.createHexSymbol("FPU_FPCCR", coreFPU)
+    fpuFpccrVal.setDefaultValue(0xFC000000)
+    fpuFpccrVal.setVisible(False)
+    fpuFpccrVal.setDependencies(fpccrCalc, ["FPU_FPCCR_LSEPENS", "FPU_FPCCR_CLRONRET", "FPU_FPCCR_CLRONRETS", "FPU_FPCCR_TS"])
 
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
 deviceFamily.setLabel("Device Family")
