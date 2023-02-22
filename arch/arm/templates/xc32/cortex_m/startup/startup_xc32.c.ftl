@@ -106,6 +106,8 @@ extern int main(void);
     <#if DeviceFamily != "CEC_173X">
         <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
     </#if>
+<#elseif CoreArchitecture == "CORTEX-M33">
+    <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
 </#if>
 <#if FPU_Available>
 
