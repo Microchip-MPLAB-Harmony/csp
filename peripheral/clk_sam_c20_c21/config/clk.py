@@ -165,6 +165,12 @@ def calcDpllXoscDivider(symbol, event):
     div_value = (2 * (divisor + 1))
     symbol.setValue(div_value,2)
 
+def writeEnable(symbol, event):
+    if (event["value"] == True):
+       symbol.setReadOnly(True)
+    elif (event["value"] == False):
+       symbol.setReadOnly(False)
+        
 def interruptControl(symbol, event):
     if event["id"] == "CONFIG_CLOCK_XOSC_CFDEN":
         moduleInterruptName = "OSCCTRL"
@@ -1123,15 +1129,6 @@ for gclknumber in range(0,9):
     gclkSym_GENCTRL_RUNSTDBY[gclknumber] = coreComponent.createBooleanSymbol("GCLK_" + str(gclknumber) + "_RUNSTDBY", gclkSym_num[gclknumber])
     gclkSym_GENCTRL_RUNSTDBY[gclknumber].setLabel("GCLK should keep running in Standby mode")
 
-    #GCLK External Clock input frequency
-    if(gclk_io_signals[gclknumber]==True):
-        numPads = numPads + 1
-        gclkSym_GCLK_IO_FREQ.append(gclknumber)
-        gclkSym_GCLK_IO_FREQ[gclknumber] = coreComponent.createIntegerSymbol("GCLK_IO_" + str(gclknumber) +"_FREQ", gclkSym_num[gclknumber])
-        gclkSym_GCLK_IO_FREQ[gclknumber].setLabel("External Input (GCLK_IO[" + str(gclknumber) + "]) Frequency")
-        gclkSym_GCLK_IO_FREQ[gclknumber].setDefaultValue(0)
-        gclkSym_GCLK_IO_FREQ[gclknumber].setDependencies(setGCLKIOFreq, ["GCLK_" + str(gclknumber) + "_FREQ", "GCLK_" + str(gclknumber) + "_OUTPUTENABLE" ])
-
     #GCLK Generator Source Selection
     gclkSym_GENCTRL_SRC.append(gclknumber)
     gclkSym_GENCTRL_SRC[gclknumber] = coreComponent.createKeyValueSetSymbol("GCLK_" + str(gclknumber) + "_SRC", gclkSym_num[gclknumber])
@@ -1164,7 +1161,17 @@ for gclknumber in range(0,9):
         gclkSym_GENCTRL_OE.append(gclknumber)
         gclkSym_GENCTRL_OE[gclknumber] = coreComponent.createBooleanSymbol("GCLK_" + str(gclknumber) + "_OUTPUTENABLE", gclkSym_num[gclknumber])
         gclkSym_GENCTRL_OE[gclknumber].setLabel("Output GCLK clock signal on IO pin?")
-
+        
+    #GCLK External Clock Output frequency
+    if(gclk_io_signals[gclknumber]==True):
+        numPads = numPads + 1
+        gclkSym_GCLK_IO_FREQ.append(gclknumber)
+        gclkSym_GCLK_IO_FREQ[gclknumber] = coreComponent.createIntegerSymbol("GCLK_IO_" + str(gclknumber) +"_FREQ", gclkSym_GENCTRL_OE[gclknumber])
+        gclkSym_GCLK_IO_FREQ[gclknumber].setLabel("External Output (GCLK_IO[" + str(gclknumber) + "]) Frequency")
+        gclkSym_GCLK_IO_FREQ[gclknumber].setDefaultValue(0)
+        gclkSym_GCLK_IO_FREQ[gclknumber].setReadOnly(True)
+        gclkSym_GCLK_IO_FREQ[gclknumber].setDependencies(setGCLKIOFreq, ["GCLK_" + str(gclknumber) + "_FREQ", "GCLK_" + str(gclknumber) + "_OUTPUTENABLE" ])
+        
     #GCLK Generator Output Off Value
     if(gclk_io_signals[gclknumber]==True):
         gclkSym_GENCTRL_OOV.append(gclknumber)
@@ -1176,10 +1183,11 @@ for gclknumber in range(0,9):
         gclkSym_GENCTRL_OOV[gclknumber].setOutputMode("Key")
         gclkSym_GENCTRL_OOV[gclknumber].setDisplayMode("Description")
 
-        gclkInFreq = coreComponent.createIntegerSymbol("GCLK_IN_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
-        gclkInFreq.setLabel("Gclk Input Frequency")
-        gclkInFreq.setDefaultValue(0)
-
+    gclkInFreq = coreComponent.createIntegerSymbol("GCLK_IN_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
+    gclkInFreq.setLabel("Gclk Input Frequency")
+    gclkInFreq.setDefaultValue(0)
+    gclkInFreq.setDependencies(writeEnable, ["GCLK_" + str(gclknumber) + "_OUTPUTENABLE"])
+            
     #GCLK Generator Division Selection
     gclkSym_GENCTRL_DIVSEL.append(gclknumber)
     gclkSym_GENCTRL_DIVSEL[gclknumber] = coreComponent.createKeyValueSetSymbol("GCLK_" + str(gclknumber) + "_DIVSEL", gclkSym_num[gclknumber])
