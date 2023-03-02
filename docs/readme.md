@@ -1,0 +1,1 @@
+For documentation related to Harmony 3 peripheral libraries, refer [MPLAB® Harmony Peripheral Libraries](https://onlinedocs.microchip.com/g/GUID-450989FA-38E4-4D68-AB61-15ADB29AD718) publication at onlinedocs.microchip.com.

@@ -16,7 +16,7 @@
   - None
 
 ### Known Issues
-
+  - Offline documentation is not available for this release. For documenation refer to [MPLAB® Harmony Peripheral Libraries](https://onlinedocs.microchip.com/g/GUID-450989FA-38E4-4D68-AB61-15ADB29AD718) publication at onlinedocs.microchip.com
   - Same as v3.16.0-E1
 
 ### Development Tools
