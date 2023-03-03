@@ -43,6 +43,7 @@
 #ifndef ${SEFC_INSTANCE_NAME}_H    // Guards against multiple inclusion
 #define ${SEFC_INSTANCE_NAME}_H
 
+#include <sys/attribs.h>
 #include "plib_sefc_common.h"
 
 // DOM-IGNORE-BEGIN
@@ -87,6 +88,30 @@ bool ${SEFC_INSTANCE_NAME}_IsBusy(void);
 void ${SEFC_INSTANCE_NAME}_RegionLock(uint32_t address);
 
 void ${SEFC_INSTANCE_NAME}_RegionUnlock(uint32_t address);
+
+__longramfunc__ void ${SEFC_INSTANCE_NAME}_GpnvmBitSet(uint8_t GpnvmBitNumber);
+
+__longramfunc__ void ${SEFC_INSTANCE_NAME}_GpnvmBitClear(uint8_t GpnvmBitNumber);
+
+__longramfunc__ uint32_t ${SEFC_INSTANCE_NAME}_GpnvmBitRead(void);
+
+bool ${SEFC_INSTANCE_NAME}_UniqueIdentifierRead(uint32_t *data, uint32_t length);
+
+void ${SEFC_INSTANCE_NAME}_UserSignatureRightsSet(uint32_t userSignatureRights);
+
+uint32_t ${SEFC_INSTANCE_NAME}_UserSignatureRightsGet(void);
+
+bool ${SEFC_INSTANCE_NAME}_UserSignatureRead(uint32_t *data, uint32_t length, SEFC_USERSIGNATURE_BLOCK block, SEFC_USERSIGNATURE_PAGE page);
+
+bool ${SEFC_INSTANCE_NAME}_UserSignatureWrite(uint32_t *data, uint32_t length, SEFC_USERSIGNATURE_BLOCK block, SEFC_USERSIGNATURE_PAGE page);
+
+void ${SEFC_INSTANCE_NAME}_UserSignatureErase(SEFC_USERSIGNATURE_BLOCK block);
+
+void ${SEFC_INSTANCE_NAME}_CryptographicKeySend(uint16_t sckArg);
+
+void ${SEFC_INSTANCE_NAME}_WriteProtectionSet(uint32_t mode);
+
+uint32_t ${SEFC_INSTANCE_NAME}_WriteProtectionGet(void);
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>void ${SEFC_INSTANCE_NAME}_CallbackRegister( SEFC_CALLBACK callback, uintptr_t context );
