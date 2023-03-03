@@ -243,6 +243,8 @@ def instantiateComponent(adcComponent):
                 channel[int(adc_signals[pad].getAttribute("index"))] = "True"
                 adcChannelsValues.append("CH"+adc_signals[pad].getAttribute("index"))
 
+    Database.setSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
+
     adcMenu = adcComponent.createMenuSymbol("ADC_MENU", None)
     adcMenu.setLabel("ADC Configuration")
 
