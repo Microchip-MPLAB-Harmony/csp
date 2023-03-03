@@ -232,7 +232,7 @@ void ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
 void ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 {
     PDEC_QDEC_STATUS status;
-    status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
+    status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG & PDEC_INTFLAG_MC0_Msk;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC0_Msk;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
@@ -246,7 +246,7 @@ void ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 void ${PDEC_INSTANCE_NAME}_MC1_InterruptHandler( void )
 {
     PDEC_QDEC_STATUS status;
-    status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
+    status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG & PDEC_INTFLAG_MC1_Msk;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC1_Msk;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
