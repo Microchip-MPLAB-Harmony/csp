@@ -104,7 +104,7 @@ extern int main(void);
     <#include "arch/startup_xc32_cortex_m7.c.ftl">
     <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
 <#elseif CoreArchitecture == "CORTEX-M4" || RAM_INIT??>
-    <#if DeviceFamily != "CEC_173X">
+    <#if DeviceFamily != "CEC_173X" && DeviceFamily != "SAM_G51" && DeviceFamily != "SAM_G53" && DeviceFamily != "SAM_G54">
         <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
     </#if>
 <#elseif CoreArchitecture == "CORTEX-M33">
