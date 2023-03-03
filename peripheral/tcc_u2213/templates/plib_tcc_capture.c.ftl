@@ -76,7 +76,7 @@
         <#else>
             <#assign TCC_CTRLA_VAL = "TCC_CTRLA_CPTEN" + i + "_Msk">
         </#if>
-    </#if>        
+    </#if>
 </#list>
 <#if TCC_SLAVE_MODE == true>
     <#if TCC_CTRLA_VAL != "">
@@ -109,7 +109,7 @@
         <#else>
             <#assign TCC_INTENSET_VAL = "TCC_INTENSET_MC"+i+"_Msk">
         </#if>
-    </#if>        
+    </#if>
 </#list>
 
 <#-- Events -->
@@ -121,7 +121,7 @@
         <#else>
             <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_MCEO"+i+"_Msk">
         </#if>
-    </#if>        
+    </#if>
 </#list>
 <#if TCC_CAPTURE_EVCTRL_EVACT1 != "OFF">
     <#if TCC_EVCTRL_VAL != "">
@@ -141,7 +141,7 @@
         <#else>
             <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_MCEI" + i + "_Msk">
         </#if>
-    </#if>        
+    </#if>
 </#list>
 </#compress>
 
@@ -171,7 +171,7 @@ void ${TCC_INSTANCE_NAME}_CaptureInitialize( void )
     <#else>
     ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} | TCC_CTRLA_PRESCSYNC_${TCC_CTRLA_PRESCYNC}
                                   ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};
-    </#if>                                      
+    </#if>
 
 
     <#if TCC_EVCTRL_VAL?has_content>
@@ -221,13 +221,18 @@ void ${TCC_INSTANCE_NAME}_CaptureCommandSet(TCC_COMMAND command)
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
 }
 
 <#if TCC_SIZE = 16>
 
 uint16_t ${TCC_INSTANCE_NAME}_Capture16bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel )
 {
+    while(((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) & (1UL << (TCC_SYNCBUSY_CC0_Pos + (uint32_t)channel))) != 0U)
+    {
+        /* Wait for Write Synchronization */
+    }
+
     return (uint16_t)${TCC_INSTANCE_NAME}_REGS->TCC_CC[channel];
 }
 
@@ -235,6 +240,11 @@ uint16_t ${TCC_INSTANCE_NAME}_Capture16bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL
 
 uint32_t ${TCC_INSTANCE_NAME}_Capture24bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel )
 {
+    while(((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) & (1UL << (TCC_SYNCBUSY_CC0_Pos + (uint32_t)channel))) != 0U)
+    {
+        /* Wait for Write Synchronization */
+    }
+
     return (${TCC_INSTANCE_NAME}_REGS->TCC_CC[channel] & 0xFFFFFFU);
 }
 
@@ -242,6 +252,11 @@ uint32_t ${TCC_INSTANCE_NAME}_Capture24bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL
 
 uint32_t ${TCC_INSTANCE_NAME}_Capture32bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel )
 {
+    while(((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) & (1UL << (TCC_SYNCBUSY_CC0_Pos + (uint32_t)channel))) != 0U)
+    {
+        /* Wait for Write Synchronization */
+    }
+
     return (${TCC_INSTANCE_NAME}_REGS->TCC_CC[channel]);
 }
 </#if>
