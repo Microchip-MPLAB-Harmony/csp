@@ -49,7 +49,7 @@
 // *****************************************************************************
 
 /* Load ADC calibration constant */
-#define ADC_CALIB_FCCFG65           *((uint32_t*)0x0A007184)
+#define ADC_CALIB_FCCFG65           *((uint32_t*)${ADC_CALIB_ADDR})
 
 <#if ADC_CTLINTENSET != "0">
 ADC_GLOBAL_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_GlobalCallbackObj;

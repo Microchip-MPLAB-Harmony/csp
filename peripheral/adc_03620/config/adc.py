@@ -782,9 +782,18 @@ def readATDF(adcInstanceName, adcComponent):
     adcMaxChannels.setVisible(False)
     adcMaxChannels.setDependencies(updateADCMaxChannels, adcMaxChannelsDepList)
 
+    # Read calibration base address
+    calibBaseAddr = int(ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FCR_CFM_CALOTP\"]").getAttribute("start"), 16)
+    # Add offset to the base address
+    calibBaseAddr = calibBaseAddr + 0x184
+
+    adcCalibAddr = adcComponent.createStringSymbol("ADC_CALIB_ADDR", None)
+    adcCalibAddr.setDefaultValue(hex(calibBaseAddr))
+    adcCalibAddr.setVisible(False)
+
 def globalConfig(adcComponent):
     global nSARCore
-       
+
     # Global interrupt config depends on ADC Core n symbols. Assume these symbols will be created and them to the dependency list.
     for n in range(0, nSARCore):
         adcGlobalFIFOIntDepList.append("ADC_CORE_" + str(n) + "_ENABLE")
@@ -857,7 +866,7 @@ def globalConfig(adcComponent):
     ADC_CTRLD_REG_DepList.append("ADC_GLOBAL_CTRLD_VREFSEL")
 
     # CTRLC.COREINTERLEAVED
-    
+
     if (ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CTRLC__COREINTERLEAVED\"]") != None):
         adc_core_interleaved_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CTRLC__COREINTERLEAVED\"]").getChildren()
         CTRLC_COREINTERLEAVED_Config = adcComponent.createKeyValueSetSymbol("ADC_GLOBAL_CTRLC_COREINTERLEAVED", None)
@@ -873,7 +882,7 @@ def globalConfig(adcComponent):
         CTRLC_COREINTERLEAVED_Config.setOutputMode("Key")
         CTRLC_COREINTERLEAVED_Config.setDisplayMode("Description")
         ADC_CTRLC_REG_DepList.append("ADC_GLOBAL_CTRLC_COREINTERLEAVED")
-        
+
     # CTRLC.CNT
     CTRLC_CNT_Config = adcComponent.createIntegerSymbol("ADC_GLOBAL_CTRLC_CNT", None)
     CTRLC_CNT_Config.setLabel("Delay Counter (TQ based) for STRIG Sync Trigger")
@@ -1630,7 +1639,7 @@ def adcInterruptHandlerConfig(adcComponent):
             for vector in InterruptVectorSecurity:
                 Database.setSymbolValue("core", vector, adcIsNonSecure)
         else:
-            Database.setSymbolValue("core", InterruptVectorSecurity, adcIsNonSecure)       
+            Database.setSymbolValue("core", InterruptVectorSecurity, adcIsNonSecure)
 
 def adcEvsysConfig(adcComponent):
     global nSARCore
@@ -1743,7 +1752,7 @@ def instantiateComponent(adcComponent):
     global nSARCore
     global nSARChannel
     global adcInstanceName
-    
+
     adcInstanceName = adcComponent.createStringSymbol("ADC_INSTANCE_NAME", None)
     adcInstanceName.setVisible(False)
     adcInstanceName.setDefaultValue(adcComponent.getID().upper())
