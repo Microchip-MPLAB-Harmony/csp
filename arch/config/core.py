@@ -188,6 +188,8 @@ def genMainSourceFile(symbol, event):
     else:
         symbol.setEnabled(False)
 
+def updateDataCacheVisibility(symbol, event):
+    symbol.setVisible(event["value"] != 3)
 
 def genSysSourceFile(symbol, event):
     global processor

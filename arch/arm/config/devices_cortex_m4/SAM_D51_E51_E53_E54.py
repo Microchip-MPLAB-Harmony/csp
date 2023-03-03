@@ -209,6 +209,7 @@ deviceTCMsize.setSelectedKey("0KB")
 dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)
 dcacheEnable.setLabel("Enable Data Cache")
 dcacheEnable.setDefaultValue(False)
+dcacheEnable.setDependencies(updateDataCacheVisibility, ["DEVICE_TCM_SIZE"])
 
 icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cacheMenu)
 icacheEnable.setLabel("Enable Instruction Cache")
