@@ -50,6 +50,7 @@ peripherals = {
                 "QMSPI_147"     : ["SQI"],
                 "SQI_00206"     : ["SQI"],
                 "SQI_04044"     : ["SQI"],
+                "SQI_00307"     : ["SQI"],
                 "TC_U2212"      : ["TMR"],
                 "TC_U2249"      : ["TMR"],
                 "TC_44162"      : ["TMR"],
