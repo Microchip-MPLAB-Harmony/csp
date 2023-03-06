@@ -171,8 +171,8 @@ void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, u
 
 void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 {
-    uint8_t currentChannel = 0;
-    uint32_t eicIntFlagStatus = 0;
+    uint8_t currentChannel;
+    uint32_t eicIntFlagStatus;
 
     /* Find any triggered channels, run associated callback handlers */
     for (currentChannel = 0; currentChannel < EXTINT_COUNT; currentChannel++)
