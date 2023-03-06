@@ -113,7 +113,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_DATA_FLASH_Read( uint32_t *data, uint32_t length, 
 
 bool ${NVMCTRL_INSTANCE_NAME}_DATA_FLASH_PageWrite ( uint32_t *data, const uint32_t address )
 {
-    uint32_t i = 0U;
+    uint32_t i;
     uint32_t * paddress = (uint32_t *)address;
 
     /* Writing 32-bit words in the given address */
@@ -159,7 +159,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint3
 <#if NVMCTRL_WRITE_POLICY == "MANUAL">
 bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address)
 {
-    uint32_t i = 0U;
+    uint32_t i;
     uint32_t * paddress = (uint32_t *)address;
 
     /* writing 32-bit data into the given address */
@@ -198,7 +198,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address)
 
 bool ${WRITE_API_NAME}( uint32_t *data, const uint32_t address )
 {
-    uint32_t i = 0U;
+    uint32_t i;
     uint32_t * paddress = (uint32_t *)address;
 
     /* writing 32-bit data into the given address */
@@ -237,7 +237,7 @@ bool ${ERASE_API_NAME}( uint32_t address )
 <#if FLASH_USERROW_START_ADDRESS??>
     <#lt>bool ${USER_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address )
     <#lt>{
-    <#lt>    uint32_t i = 0U;
+    <#lt>    uint32_t i;
     <#lt>    uint32_t * paddress = (uint32_t *)address;
     <#lt>    bool pagewrite_val = false;
 
@@ -288,7 +288,7 @@ bool ${ERASE_API_NAME}( uint32_t address )
 
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
-    volatile uint16_t nvm_error = 0U;
+    volatile uint16_t nvm_error;
 
     /* Get the error bits set */
     nvm_error = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_STATUS & ((uint8_t)NVMCTRL_STATUS_NVME_Msk | NVMCTRL_STATUS_LOCKE_Msk | NVMCTRL_STATUS_PROGE_Msk));
