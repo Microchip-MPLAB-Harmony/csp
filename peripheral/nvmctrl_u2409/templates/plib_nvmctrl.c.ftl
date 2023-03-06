@@ -164,7 +164,7 @@ void ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_WRITEMODE mode)
 
 bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(const uint32_t *data, const uint32_t address)
 {
-    uint8_t i = 0U;
+    uint8_t i;
     bool wr_status = false;
     uint32_t * paddress = (uint32_t *)address;
     uint16_t wr_mode = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk);
@@ -197,7 +197,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(const uint32_t *data, const uint32_t
 
 bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(const uint32_t *data, const uint32_t address)
 {
-    uint8_t i = 0U;
+    uint8_t i;
     bool wr_status = false;
     uint32_t * paddress = (uint32_t *)address;
     uint16_t wr_mode = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk);
@@ -234,7 +234,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(const uint32_t *data, const uint32
  */
 bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( const uint32_t *data, const uint32_t address)
 {
-    uint32_t i = 0U;
+    uint32_t i;
     uint32_t * paddress = (uint32_t *)address;
 
     /* Clear global error flag */
@@ -274,7 +274,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit(  const uint32_t address )
  */
 bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( const uint32_t *data, const uint32_t address )
 {
-    uint32_t i = 0U;
+    uint32_t i;
     uint32_t * paddress = (uint32_t *)address;
 
     /* Clear global error flag */
@@ -312,8 +312,8 @@ bool ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address )
 <#if FLASH_USERROW_START_ADDRESS??>
     <#lt>bool ${USER_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address )
     <#lt>{
-    <#lt>    uint32_t i = 0U;
-    <#lt>    uint32_t wr_count = 0U;
+    <#lt>    uint32_t i;
+    <#lt>    uint32_t wr_count;
     <#lt>    uint32_t * paddress = (uint32_t *)address;
     <#lt>    uint32_t * pdata = data;
     <#lt>    bool rowwrite = false;
