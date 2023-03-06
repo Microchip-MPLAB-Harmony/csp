@@ -779,7 +779,7 @@ int ${SERCOM_INSTANCE_NAME}_USART_ReadByte( void )
 <#if USART_INTENSET_ERROR = true>
 void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 {
-    USART_ERROR errorStatus = USART_ERROR_NONE;
+    USART_ERROR errorStatus;
 
     errorStatus = (USART_ERROR) (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)(SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk));
 
@@ -905,8 +905,8 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 <#if USART_TX_ENABLE = true>
 void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
-    bool  dataRegisterEmpty= false;
-    bool  dataAvailable = false;
+    bool  dataRegisterEmpty;
+    bool  dataAvailable;
     if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus == true)
     {
         dataAvailable = (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize);
@@ -949,7 +949,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
 {
 <#if USART_INTENSET_ERROR || USART_TX_ENABLE || USART_RX_ENABLE>
-    bool testCondition = false;
+    bool testCondition;
 </#if>
     if(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET != 0U)
     {
