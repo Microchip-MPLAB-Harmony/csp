@@ -151,7 +151,10 @@ def updateBODVisibleProperty(symbol, event):
 ################################################################################
 #######          SYSCTRL Database Components      ##############################
 ################################################################################
-
+calibRowAddr = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"OTP4\"]").getAttribute("start")
+swCalibRowAddr = coreComponent.createStringSymbol("SW_CALIB_ROW_ADDR", None)
+swCalibRowAddr.setDefaultValue(calibRowAddr)
+swCalibRowAddr.setVisible(False)
 ##############################OSC8M#############################################
 
 osc8MEnable = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC8M_ENABLE", sysctrl_OSC8M)
