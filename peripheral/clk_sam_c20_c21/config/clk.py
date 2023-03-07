@@ -192,6 +192,11 @@ def interruptControl(symbol, event):
         Database.setSymbolValue("core", InterruptHandler, moduleInterruptName + "_Handler")
         Database.setSymbolValue("core", InterruptHandlerLock, False)
 
+def updateXINMaxFreq(symbol, event):
+    if event["source"].getSymbolByID("XOSC_OSCILLATOR_MODE").getSelectedKey() == "EXTERNAL_CLOCK":
+        symbol.setMax(48000000)
+    else:
+        symbol.setMax(32000000)
 ################################################################################
 #######          OSCCTRL Database Components      ##############################
 ################################################################################
@@ -227,6 +232,7 @@ oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setLabel("Frequency")
 oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setDescription("Setting the XOSC Frequency")
 oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setDefaultValue(12000000)
 oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setMax(32000000)
+oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setDependencies(updateXINMaxFreq, ["XOSC_OSCILLATOR_MODE"])
 
 #XOSC Oscillator Gain
 oscctrlSym_XOSCCTRL_OSCILLATOR_GAIN = coreComponent.createIntegerSymbol("CONFIG_CLOCK_XOSC_GAIN", oscctrlXosc_Menu)
