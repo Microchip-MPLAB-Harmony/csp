@@ -131,7 +131,7 @@ typedef struct
 
 <#list 0..NUM_DMA_CHANS - 1 as i>
 <#assign CHAN = "DMA_" + i + "_CHANNEL_NUMBER">
-#define     DMAC_CHANNEL_${i}            (0x${.vars[CHAN]}U),
+#define     DMAC_CHANNEL_${i}            (0x${.vars[CHAN]}U)
 
 </#list>
 #define     DMAC_NUMBER_OF_CHANNELS    (0x${NUM_DMA_CHANS}U)
