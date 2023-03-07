@@ -167,7 +167,7 @@ static void DFLL_Initialize(void)
     }
 
     /*Load Calibration Value*/
-    uint32_t calibCoarse = (((*(uint32_t*)0x806024U) >> 26U ) & 0x3FU);
+    uint32_t calibCoarse = (((*(uint32_t*)${SW_CALIB_ROW_ADDR}U + 1U) >> 26U ) & 0x3FU);
     calibCoarse = (((calibCoarse) == 0x3FU) ? 0x1FU : (calibCoarse));
 
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_DFLLVAL = SYSCTRL_DFLLVAL_COARSE(calibCoarse) |
