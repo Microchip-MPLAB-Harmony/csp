@@ -164,6 +164,7 @@ def instantiateComponent(acComponent):
 
     acSym_Enable = []
     acSym_SCALERn = []
+    calibBaseAddr = ""
     #Clock enable
     Database.setSymbolValue("core", acInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
@@ -182,6 +183,14 @@ def instantiateComponent(acComponent):
     # If LOAD_CALIB parameter is not present, it is assumed that CALIB register update is required to maintain backward compatibility
     if calibRequired == -1:
         calibRequired = 1
+
+    # If calibration is required then read the calibration data address 
+    if calibRequired == 1:
+        calibBaseAddr = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"SW0\"]").getAttribute("start")
+
+    acCalibAddr = acComponent.createStringSymbol("AC_CALIB_ADDR", None)
+    acCalibAddr.setDefaultValue(calibBaseAddr)
+    acCalibAddr.setVisible(False)
 
     ctrlc_reg_present = False
     acSym_CTRLC_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"CTRLC\"]")

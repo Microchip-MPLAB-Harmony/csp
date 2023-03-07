@@ -187,7 +187,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
 
     <#if AC_LOAD_CALIB == 1>
     /*Load Calibration Value*/
-    uint8_t calibVal = (uint8_t)((*(uint32_t*)0x00800080) & 0x3U);
+    uint8_t calibVal = (uint8_t)((*(uint32_t*)${AC_CALIB_ADDR}) & 0x3U);
     calibVal = (((calibVal) == 0x3U) ? 0x3U : (calibVal));
 
 
