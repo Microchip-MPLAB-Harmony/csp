@@ -158,7 +158,7 @@ static void DFLL48M_Initialize(void)
     }
 
     /*Load Calibration Value*/
-    uint8_t calibCoarse = (uint8_t)(((*(uint32_t*)0x806020U) >> 25U ) & 0x3fU);
+    uint8_t calibCoarse = (uint8_t)(((*(uint32_t*)${SW_CALIB_ROW_ADDR}U) >> 25U ) & 0x3fU);
 
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLVAL = OSCCTRL_DFLLVAL_COARSE((uint32_t)calibCoarse) | OSCCTRL_DFLLVAL_FINE((uint32_t)512U);</@compress>
 

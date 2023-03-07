@@ -1227,6 +1227,12 @@ gclk_io_signals = [False, False, False, False, False, False, False, False, False
 pinout = ""
 numPads = 0
 global cycleFormed
+
+calibRowAddr = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"SW_CALIB\"]").getAttribute("start")
+swCalibRowAddr = coreComponent.createStringSymbol("SW_CALIB_ROW_ADDR", None)
+swCalibRowAddr.setDefaultValue(calibRowAddr)
+swCalibRowAddr.setVisible(False)
+
 val = ATDF.getNode("/avr-tools-device-file/variants")
 children = val.getChildren()
 for index in range(0, len(children)):
