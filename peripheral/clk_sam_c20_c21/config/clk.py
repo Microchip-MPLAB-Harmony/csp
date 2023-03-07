@@ -196,6 +196,11 @@ def interruptControl(symbol, event):
 #######          OSCCTRL Database Components      ##############################
 ################################################################################
 
+calibRowAddr = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"OTP5\"]").getAttribute("start")
+swCalibRowAddr = coreComponent.createStringSymbol("SW_CALIB_ROW_ADDR", None)
+swCalibRowAddr.setDefaultValue(calibRowAddr)
+swCalibRowAddr.setVisible(False)
+
 ############################   XOSC Components    ##############################
 #XOSC Oscillator Enable
 oscctrlSym_XOSC_CONFIG_ENABLE = coreComponent.createBooleanSymbol("CONFIG_CLOCK_XOSC_ENABLE", oscctrlXosc_Menu)

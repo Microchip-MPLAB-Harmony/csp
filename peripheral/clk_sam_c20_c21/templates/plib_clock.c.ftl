@@ -113,9 +113,9 @@ static void OSCCTRL_Initialize(void)
 </#if>
 <#if CONFIG_CLOCK_OSC48M_ENABLE == true>
     <#if CALIBRATION_ROW == "0">
-    uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020UL) >> 19 ) & 0x3fffffUL);
+    uint32_t calibValue = (uint32_t)(((*(uint64_t*)${SW_CALIB_ROW_ADDR}UL) >> 19 ) & 0x3fffffUL);
     <#else>
-    uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020UL) >> 41 ) & 0x3fffffUL);
+    uint32_t calibValue = (uint32_t)(((*(uint64_t*)${SW_CALIB_ROW_ADDR}UL) >> 41 ) & 0x3fffffUL);
     </#if>
     OSCCTRL_REGS->OSCCTRL_CAL48M = calibValue;
     <#if (CONFIG_CLOCK_OSC48M_RUNSTDY == true) || (CONFIG_CLOCK_OSC48M_ONDEMAND == "DISABLE")>
@@ -176,7 +176,7 @@ static void OSC32KCTRL_Initialize(void)
 <#if CONF_CLOCK_OSC32K_ENABLE =true>
     /****************** OSC32K Initialization  ******************************/
 
-    uint32_t calibValue = (((*(uint32_t*)0x806020UL) >> 12 ) & 0x7FUL);
+    uint32_t calibValue = (((*(uint32_t*)${SW_CALIB_ROW_ADDR}UL) >> 12 ) & 0x7FUL);
 
     /* Configure 32K RC oscillator */
     <@compress single_line=true>OSC32KCTRL_REGS->OSC32KCTRL_OSC32K = OSC32KCTRL_OSC32K_CALIB(calibValue)
