@@ -116,6 +116,7 @@ def instantiateComponent(pmComponent):
         pmSym_STDBYCFG_BBIASHS = pmComponent.createBooleanSymbol("PM_STDBYCFG_BBIASHS", None)
         pmSym_STDBYCFG_BBIASHS.setLabel("Put RAM in low power during standby mode")
         pmSym_STDBYCFG_BBIASHS.setDescription("RAM is backbiased in standby mode to reduce power")
+        pmSym_STDBYCFG_BBIASHS.setDefaultValue(1)
 
     if "HAS_BBIASTR_BIT" in parameters:
         #PM standby back biasing is a single bit for few devices
