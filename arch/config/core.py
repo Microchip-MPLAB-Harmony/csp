@@ -42,7 +42,7 @@ def getFlashParams(app_start):
 
     arch = Database.getSymbolValue("core", "CoreArchitecture")
 
-    if (int(app_start,16) == flash_start) or ("CORTEX-A" in arch) or ("ARM926" in arch):
+    if ("CORTEX-A" in arch) or ("ARM926" in arch):
         return ("")
 
     app_offset  = (int(app_start,16) - flash_start)
@@ -652,7 +652,11 @@ def instantiateComponent( coreComponent ):
     xc32LdPreprocessroMacroSym = coreComponent.createSettingSymbol("XC32_LINKER_PREPROC_MARCOS", xc32LdSymbolsMacrosMenu)
     xc32LdPreprocessroMacroSym.setCategory("C32-LD")
     xc32LdPreprocessroMacroSym.setKey("preprocessor-macros")
-    xc32LdPreprocessroMacroSym.setValue(getFlashParams(xc32LdAppStartAddress.getValue()))
+    if (int(xc32LdAppStartAddress.getValue(), 16) == flash_start):
+        xc32LdMacorVal = ""
+    else:
+        xc32LdMacorVal = getFlashParams(xc32LdAppStartAddress.getValue())
+    xc32LdPreprocessroMacroSym.setValue(xc32LdMacorVal)
     xc32LdPreprocessroMacroSym.setAppend(True, ";=")
     xc32LdPreprocessroMacroSym.setDependencies(setFlashParams, ["APP_START_ADDRESS"])
 
