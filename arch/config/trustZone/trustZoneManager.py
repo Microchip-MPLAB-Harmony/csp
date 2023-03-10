@@ -55,5 +55,3 @@ if family == "PIC32CK":
     execfile(Variables.get("__CORE_DIR") + "/config/trustZone/trustZone_pic32ck.py")
 else:
     execfile(Variables.get("__CORE_DIR") + "/config/trustZone/trustZone_saml11_pic32cm.py")
-
-coreComponent.addPlugin("/config/trustZone/plugin/trustzone_manager.jar")

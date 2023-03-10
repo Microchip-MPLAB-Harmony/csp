@@ -149,9 +149,16 @@ dummyList = coreComponent.createListSymbol( "NULL_LIST",       None )
 peripheralList = coreComponent.createListEntrySymbol("TRUSTZONE_PERIPHERAL_LIST", None)
 peripheralList.setVisible(False)
 nonsecPeriphrals = []
+#GUI
+peripheralIndexListTempGUI = []
+peripheralIndexListGUI = []
+mixSecurePeripheralIndexListGUI = []
+systemPeripheralIndexListGUI = []
+####
 #Sort peripheral list in alphabetical order
 for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_")[-1] if '_' in arg[0] else arg[0]):
     trustZonePeripheralSubmenu = trustZonePeripheralMenu
+    peripheralIndexListTempGUI = peripheralIndexListGUI
     if ("NONSEC" in key):
         if (key.split("_")[-1] not in nonsecPeriphrals):
             nonsecPeriphrals.append(key.split("_")[-1])
@@ -159,9 +166,12 @@ for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_
             continue
     if ("NONSEC" in key) and key.split("_")[-1] in mixSecurePeripheralList:
         trustZonePeripheralSubmenu = trustZoneMixSecurePeripheralMenu
+        peripheralIndexListTempGUI = mixSecurePeripheralIndexListGUI
     elif ("NONSEC" in key) and key.split("_")[-1]  in systemResourcesList:
         trustZonePeripheralSubmenu = trustZoneSystemResourcesMenu
+        peripheralIndexListTempGUI = systemPeripheralIndexListGUI
     if ("NONSEC" in key) and key.split("_")[-1] :
+        peripheralIndexListTempGUI.append(key.split("_")[-1])
         peripheralIsNonSecure = coreComponent.createBooleanSymbol(key.split("_")[-1] + "_IS_NON_SECURE", trustZonePeripheralSubmenu)
         peripheralIsNonSecure.setLabel(key.split("_")[-1] + " is Non-Secure")
         peripheralList.addValue(key.split("_")[-1])
@@ -179,6 +189,15 @@ fuseUpdateCallback = coreComponent.createBooleanSymbol("DUMMY_SYMBOL_CALLBACK", 
 fuseUpdateCallback.setVisible(False)
 fuseUpdateCallback.setDependencies(setUpFuse, fusedependencyList)
 
+###################################################################################################
+# Below symbols is only used by TrustZone UI to know Peripherals data
+peripheralsListID = coreComponent.createComboSymbol("TZ_PERIPHERAL_MENU_GUI", trustZoneMenu, peripheralIndexListGUI)
+peripheralsListID.setVisible(False)
+mixSecurePeripheralsListID = coreComponent.createComboSymbol("TZ_MIX_SECURE_PERIPHERAL_MENU_GUI", trustZoneMenu, mixSecurePeripheralIndexListGUI)
+mixSecurePeripheralsListID.setVisible(False)
+systemPeripheralsListID = coreComponent.createComboSymbol("TZ_SYSTEM_RESOURCES_MENU_GUI", trustZoneMenu, systemPeripheralIndexListGUI)
+systemPeripheralsListID.setVisible(False)
+#####################################################
 
 ####################################### Memory Configuration menu ################################################
 
@@ -236,10 +255,7 @@ maxDataflashSize.setDefaultValue(0)
 for key in memoryFuseMaxValue.keys():
     asSizeSymbol = coreComponent.createKeyValueSetSymbol( str(key) + "_SIZE", memoryMenu)
     asSizeSymbol.setLabel(str(key) + " SIZE" )
-    if "ANSC" in key:
-        end = int(memoryFuseMaxValue[key][0]) + 1
-    else:
-        end = int(memoryFuseMaxValue[key][0]) + 2
+    end = int(memoryFuseMaxValue[key][0]) + 1
     for val in range(0, end):
         size = val * memoryGranularity[ key]
         sizeString = str(size) + " Bytes"
@@ -649,3 +665,5 @@ secexceptSourceFile.setProjectPath("config/" + configName + "/")
 secexceptSourceFile.setType("SOURCE")
 secexceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "ADVANCED_EXCEPTION" ] )
 secexceptSourceFile.setSecurity("SECURE")
+
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "TRUSTZONE_MANAGER_UNICORN", {"plugin_name": "Arm\xae TrustZone\xae for Armv8-M", "main_html_path": "csp/plugins/configurators/trustzone_configurators/pic32ck_trustzone_configurator/build/index.html"})
