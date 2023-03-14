@@ -271,11 +271,19 @@
        <number package="1" pin="45" />
       <function name="SOSCI" />
       <fixed-direction name="In" />
+      <fixed-pull-up name="Disable" />
+      <fixed-pull-down name="Disable" />
+      <fixed-change-notice name="Disable" />
+      <fixed-open-drain name="Disable" />
     </pin>
     <pin name="RA12">
        <number package="1" pin="46" />
       <function name="SOSCO" />
       <fixed-direction name="In" />
+      <fixed-pull-up name="Disable" />
+      <fixed-pull-down name="Disable" />
+      <fixed-change-notice name="Disable" />
+      <fixed-open-drain name="Disable" />
     </pin>
     <pin name="RA3">
        <number package="1" pin="47" />

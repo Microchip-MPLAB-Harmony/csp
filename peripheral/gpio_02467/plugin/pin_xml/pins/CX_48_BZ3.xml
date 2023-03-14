@@ -290,12 +290,20 @@
       <function name="SOSCI" />
       <function name="RPA11" />
       <fixed-direction name="In" />
+      <fixed-pull-up name="Disable" />
+      <fixed-pull-down name="Disable" />
+      <fixed-change-notice name="Disable" />
+      <fixed-open-drain name="Disable" />
     </pin>
     <pin name="RA12">
        <number package="1" pin="45" />
       <function name="SOSCO" />
       <function name="RPA12" />
       <fixed-direction name="In" />
+      <fixed-pull-up name="Disable" />
+      <fixed-pull-down name="Disable" />
+      <fixed-change-notice name="Disable" />
+      <fixed-open-drain name="Disable" />
     </pin>
     <pin name="PMU_MLDO_OUT">
        <number package="1" pin="46" />
