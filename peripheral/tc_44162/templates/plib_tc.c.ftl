@@ -197,7 +197,7 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
     <#lt>}
 
 <#else>
-static TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
+TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 {
     return (TC_QUADRATURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK);
 }
