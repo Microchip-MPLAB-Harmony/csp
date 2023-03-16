@@ -29,7 +29,7 @@
         <package diagram="SAM_20_WLCSP" id="21" name="WLCSP20" />
         <package diagram="SAM_45_WLCSP" id="22" name="WLCSP45" />
         <package diagram="SAM_35_WLCSP" id="23" name="WLCSP35" />
-        <package diagram="SAM_64_WLCSP" id="24" name="WLCSP64" />
+        <package diagram="SAM_64_WLCSPGBS" id="24" name="WLCSP64GBS" />
         <package diagram="SAM_49_WLCSP" id="25" name="WLCSP49" />
         <package diagram="BGA144" id="26" name="BGA144" />
         <package diagram="DRQFN144" id="27" name="DRQFN144" />
@@ -37,5 +37,6 @@
         <package diagram="DRQFN176" id="29" name="DRQFN176" />
         <package diagram="TQFP176" id="30" name="TQFP176" />
         <package diagram="TQFP208" id="31" name="TQFP208" />
+        <package diagram="SAM_64_WLCSPGLW" id="32" name="WLCSP64GLW" />
     </packages>
 </pinfile>
