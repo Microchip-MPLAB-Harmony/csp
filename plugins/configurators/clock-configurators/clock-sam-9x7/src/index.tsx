@@ -10,10 +10,5 @@ import 'primeflex/primeflex.css';
 
 import './Styles/index.css';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <MainBlock />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+ReactDOM.render(<MainBlock />, document.getElementById('root'));
 reportWebVitals();

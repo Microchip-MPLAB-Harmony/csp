@@ -1,122 +1,81 @@
-import { GetSymbolValue } from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess';
-import {
-  GetStyle,
-  globalSymbolStyleData
-} from '@mplab_harmony/harmony-plugin-ui/build/components/Components';
-import { GetLabelWithCustomDisplay } from '@mplab_harmony/harmony-plugin-ui/build/components/Label';
 import { component_id } from './MainBlock';
+import { AddPlainLabel, AddPrefixDivSymbolLabel } from 'clock-common/lib/utils/ClockLabelUtils';
+import CPUCLKCSSController from './BoldLabelController/CPUCLKCSSController';
+import CLKUSBUSBSController from './BoldLabelController/CLKUSBUSBSController';
 
 export function AddCustomLabels() {
   try {
     return (
       <div>
-        {AddLabel('label_enableGenerator', 'Enable Generator Initialization')}
+        {AddPlainLabel('label_enableGenerator', 'Enable Generator Initialization')}
 
-        {/* {AddLabel("label_externalClockFreq","/" )} */}
-        {/* {AddLabel("label_startupTime","Label" )} */}
-        {/* {AddLabel("label_externalClockXTALFreq","Label" )} */}
+        {AddPrefixDivSymbolLabel(
+          'label_pclkPres',
+          component_id,
+          'CLK_CPU_CKR_PRES',
+          GetDiVAddedText
+        )}
+        {AddPrefixDivSymbolLabel(
+          'label_pclkMdiv',
+          component_id,
+          'CLK_CPU_CKR_MDIV',
+          GetDiVAddedText
+        )}
+        {AddPrefixDivSymbolLabel('label_pclk_1', component_id, 'CLK_CPU_CKR_MDIV', AddMDivType)}
 
-        {AddDiv('label_pclkPres', GetSymbolValue(component_id, 'CLK_CPU_CKR_PRES'))}
-        {AddDiv('label_pclkMdiv', GetSymbolValue(component_id, 'CLK_CPU_CKR_MDIV'))}
+        {AddPrefixDivSymbolLabel('label_usbdivVal', component_id, 'CLK_USB_USBDIV', AddDivioType)}
 
-        {AddMDivType('label_pclk_1', GetSymbolValue(component_id, 'CLK_CPU_CKR_MDIV'))}
+        {AddPrefixDivSymbolLabel(
+          'label_pllaDivpmcVal',
+          component_id,
+          'CLK_PLLA_DIVPMC',
+          AddDivioType
+        )}
 
-        {AddDivioType('label_usbdivVal', GetSymbolValue(component_id, 'CLK_USB_USBDIV'))}
-
-        {AddDivpmcType('label_pllaDivpmcVal', GetSymbolValue(component_id, 'CLK_PLLA_DIVPMC'))}
-
-        {AddDivpmcType(
+        {AddPrefixDivSymbolLabel(
           'label_audioPllDivpmcVal',
-          GetSymbolValue(component_id, 'CLK_AUDIOPLL_DIVPMC')
+          component_id,
+          'CLK_AUDIOPLL_DIVPMC',
+          AddDivioType
         )}
-        {AddDivioType(
+        {AddPrefixDivSymbolLabel(
           'label_audiopllDivioVal',
-          GetSymbolValue(component_id, 'CLK_AUDIO_IOPLLCK_DIVIO')
+          component_id,
+          'CLK_AUDIO_IOPLLCK_DIVIO',
+          AddDivioType
         )}
 
-        {AddDivpmcType(
+        {AddPrefixDivSymbolLabel(
           'label_lvdspllDIVPMCVal',
-          GetSymbolValue(component_id, 'CLK_LVDSPLL_DIVPMC')
+          component_id,
+          'CLK_LVDSPLL_DIVPMC',
+          AddDivioType
         )}
 
-        {AddBoldLabel(
-          'label_MD_SLCK',
-          'MD_SLCK',
-          CheckSelectedSymbolValue('CLK_CPU_CKR_CSS', 'SLOW_CLK')
-        )}
-        {AddBoldLabel(
-          'label_MAINCK',
-          'MAINCK',
-          CheckSelectedSymbolValue('CLK_CPU_CKR_CSS', 'MAIN_CLK')
-        )}
-        {AddBoldLabel(
-          'label_PLLACK',
-          'PLLACK',
-          CheckSelectedSymbolValue('CLK_CPU_CKR_CSS', 'PLLACK')
-        )}
-        {AddBoldLabel(
-          'label_UPLLACK',
-          'UPLLCK',
-          CheckSelectedSymbolValue('CLK_CPU_CKR_CSS', 'UPLLCK')
-        )}
-
-        {AddBoldLabel(
-          'label_usb_PLLACK',
-          'PLLACK',
-          CheckSelectedSymbolValue('CLK_USB_USBS', 'PLLA')
-        )}
-        {AddBoldLabel(
-          'label_usb_UPLLCK',
-          'UPLLCK',
-          CheckSelectedSymbolValue('CLK_USB_USBS', 'UPLL')
-        )}
-        {AddBoldLabel(
-          'label_MAINXTLCK',
-          'MAINXTLCK',
-          CheckSelectedSymbolValue('CLK_USB_USBS', 'MAINXTAL')
-        )}
+        <CPUCLKCSSController symboListenerValue={'CLK_CPU_CKR_CSS'} />
+        <CLKUSBUSBSController symboListenerValue={'CLK_USB_USBS'} />
       </div>
     );
   } catch (err) {}
 }
 
-export function CheckSelectedSymbolValue(symbolId: string, checkValue: string) {
-  if (GetSymbolValue(component_id, symbolId) === checkValue) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-export function AddBoldLabel(id: string, text: string, symbolSelectionStatus: boolean) {
+function GetDiVAddedText(text: any) {
   try {
-    const style: Map<string, string> | undefined = globalSymbolStyleData.get(id);
-    if (style !== undefined) {
-      if (symbolSelectionStatus === true) {
-        style.set('fontWeight', 'bold');
-      } else {
-        style.set('fontWeight', 'normal');
-      }
-    }
-    return <div>{AddLabelWithCustomStyle(id, text, style)}</div>;
+    let divValue = RemoveDiv(text);
+    divValue = divValue.replace('CLK', '');
+    divValue = divValue.replace('DIV', '');
+    return '/ ' + divValue;
   } catch (err) {}
 }
 
-function AddDivpmcType(id: string, text: string) {
+export function AddDivioType(text: string) {
   try {
     const newvalue = '( ' + text + ' + 1 )';
-    return <div>{AddLabel(id, '/ ' + newvalue)}</div>;
+    return '/ ' + newvalue;
   } catch (err) {}
 }
 
-export function AddDivioType(id: string, text: string) {
-  try {
-    const newvalue = '( ' + text + ' + 1 )';
-    return <div>{AddLabel(id, '/ ' + newvalue)}</div>;
-  } catch (err) {}
-}
-
-export function AddMDivType(id: string, text: string) {
+function AddMDivType(text: string) {
   try {
     const newValue = text.replace(/^\D+/g, '');
     let val = 1;
@@ -125,43 +84,7 @@ export function AddMDivType(id: string, text: string) {
         val = +newValue / 2;
       }
     }
-    return <div>{AddLabel(id, '/ ' + val)}</div>;
-  } catch (err) {}
-}
-
-function AddDiv(id: string, text: string) {
-  try {
-    let divValue = RemoveDiv(text);
-    divValue = divValue.replace('DIV', '');
-    return <div>{AddLabel(id, '/ ' + divValue)}</div>;
-  } catch (err) {}
-}
-
-function AddLabel(id: string, text: string) {
-  try {
-    return (
-      <div>
-        <GetLabelWithCustomDisplay
-          labelId={id}
-          labelDisplayText={text}
-          labelStyle={GetStyle(id)}
-        />
-      </div>
-    );
-  } catch (err) {}
-}
-
-function AddLabelWithCustomStyle(id: string, text: string, styleMap: any) {
-  try {
-    return (
-      <div>
-        <GetLabelWithCustomDisplay
-          labelId={id}
-          labelDisplayText={text}
-          labelStyle={Object.fromEntries(styleMap)}
-        />
-      </div>
-    );
+    return '/ ' + val;
   } catch (err) {}
 }
 

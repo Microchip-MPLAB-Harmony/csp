@@ -7,7 +7,7 @@ import {
 } from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess';
 import { GetUIComponentWithOutLabel } from '@mplab_harmony/harmony-plugin-ui/build/components/Components';
 
-const PeripheralsConfiguration = (props: { parentUpdate: () => void }) => {
+const PeripheralsConfiguration = () => {
   const channelPeripipheralMap = GetSymbolArray(component_id, 'PERIPHERAL_CLOCK_CONFIG');
   const customLabelsArray = createCustomLengthArray();
 
@@ -23,13 +23,17 @@ const PeripheralsConfiguration = (props: { parentUpdate: () => void }) => {
     return <div>{GetSymbolLabelName(component_id, channelPeripipheralMap[rowData.id])}</div>;
   };
 
+  function ValueChange(onChangeData: Map<String, any>) {
+    // do nothing
+  }
+
   const EnableBodyTemplate = (rowData: any) => {
     return (
       <div>
         <GetUIComponentWithOutLabel
           componentId={component_id}
           symbolId={channelPeripipheralMap[rowData.id]}
-          onChange={props.parentUpdate}
+          onChange={ValueChange}
           symbolListeners={[channelPeripipheralMap[rowData.id]]}
         />
       </div>
@@ -38,13 +42,14 @@ const PeripheralsConfiguration = (props: { parentUpdate: () => void }) => {
 
   return (
     <div>
-      <div className='flex'>
+      <div className='p-d-flex'>
         <div className='card'>
           <DataTable
             value={customLabelsArray}
             stripedRows
             showGridlines
-            responsiveLayout='scroll'>
+            responsiveLayout='scroll'
+            style={{ width: '400px' }}>
             <Column
               field='Peripheral'
               header='Peripheral'
