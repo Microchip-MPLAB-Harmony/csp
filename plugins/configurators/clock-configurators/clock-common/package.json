@@ -13,11 +13,11 @@
     "lint": "eslint ./src/",
     "lint:fix:prefer-const": "eslint ./src/ --rule \"prefer-const:error\" --fix",
     "lint:fix:react-in-jsx-scope": "eslint ./src/ --rule \"react/react-in-jsx-scope:error\" --fix",
-    "format": "prettier --write \"./{src,public}/**/*.{js,jsx,ts,tsx,css,md,json,html}\" --config ./.prettierrc"
+    "format": "prettier --write \"./{src,public}/**/*.{js,jsx,ts,tsx,css,md,json,html,png,css}\" --config ./.prettierrc"
   },
   "dependencies": {
-    "@mplab_harmony/harmony-plugin-core-service": "^1.0.0",
-    "@mplab_harmony/harmony-plugin-ui": "^1.0.0",
+    "@mplab_harmony/harmony-plugin-core-service": "1.0.0",
+    "@mplab_harmony/harmony-plugin-ui": "2.0.0",
     "react": "^18.2.0"
   },
   "devDependencies": {

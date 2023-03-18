@@ -38,7 +38,7 @@ class PluginService {
         });
     }
     absolutePath(relativePath) {
-        return this.frameworkRoot() + '/' + relativePath;
+        return relativePath;
     }
     frameworkRoot() {
         const { protocol, host } = document.location;

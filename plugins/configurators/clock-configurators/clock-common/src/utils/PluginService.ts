@@ -56,7 +56,7 @@ export class PluginService {
   // e.g. 'csp/peripheral/dma_03639/plugin/symbol-config.json'
   // it should not start with . or ./ or / or ../
   public absolutePath(relativePath: string): string {
-    return this.frameworkRoot() + '/' + relativePath;
+    return relativePath;
   }
 
   public frameworkRoot(): string {

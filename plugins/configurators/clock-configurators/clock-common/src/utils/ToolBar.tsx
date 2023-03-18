@@ -1,40 +1,30 @@
 import React from 'react';
 import { Button } from 'primereact/button';
 import { Toolbar as PrimeToolbar } from 'primereact/toolbar';
-import icon from '../resources/images/microchip_icon.png';
 
-import './toolbar.css';
-import PrimeReact from 'primereact/api';
-
-import {
-  HideDiv,
-  LoadImage,
-  ShowDiv
-} from '@mplab_harmony/harmony-plugin-ui/build/utils/NodeUtils';
+import { HideDiv, ShowDiv } from '@mplab_harmony/harmony-plugin-ui/build/utils/NodeUtils';
 import {
   ZoomInReact,
   ZoomOutReact
 } from '@mplab_harmony/harmony-plugin-core-service/build/project-service/ProjectService';
-import { pluginService } from 'clock-common';
+import { pluginService } from './PluginService';
 
 interface IProps {
   title: string;
   helpUrl: string;
+  onClickSummary: () => void;
 }
 
 const Toolbar = (props: IProps) => {
-  PrimeReact.ripple = true;
-
   const leftContents = (
     <React.Fragment>
-      {LoadImage(icon)}
       <label style={{ fontSize: '18px', fontWeight: 'bolder' }}> {props.title} </label>
     </React.Fragment>
   );
 
   const rightContents = (
     <React.Fragment>
-      <Button
+      {/* <Button
         label='HOME'
         tooltip={`View ${props.title} Home Screen`}
         tooltipOptions={{ position: 'bottom' }}
@@ -43,7 +33,7 @@ const Toolbar = (props: IProps) => {
         className='p-button p-button-text mr-2'
         style={{ fontWeight: 'bold', color: 'black' }}
         onClick={() => LoadHome()}
-      />
+      /> */}
       <Button
         label='SUMMARY'
         tooltip='View Summary'
@@ -81,17 +71,14 @@ const Toolbar = (props: IProps) => {
 
   const HideAll = () => {
     HideDiv(document.getElementById('home'));
-    HideDiv(document.getElementById('summary'));
   };
 
   const LoadHome = () => {
-    HideAll();
     ShowDiv(document.getElementById('home'), null);
   };
 
   const LoadSummary = () => {
-    HideAll();
-    ShowDiv(document.getElementById('summary'), null);
+    props.onClickSummary();
   };
 
   function ZoomIn() {
