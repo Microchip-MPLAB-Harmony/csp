@@ -12,7 +12,7 @@ package:
       version: "3.16.0"
     - name: "harmony-services"
       type: "package"
-      version: "1.1.0"
+      version: "1.2.0"
     - name: "CEC_DFP"
       type: "dfp"
       version: "1.8.258"
