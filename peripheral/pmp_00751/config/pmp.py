@@ -1,4 +1,4 @@
-# coding: utf-8
+    # coding: utf-8
 """*****************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
@@ -26,12 +26,16 @@
 #################################### Global Variables #############################################
 ###################################################################################################
 
+global interruptsChildren
+interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+
 pmpValGrp_PMMODE_MODE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMP"]/value-group@[name="PMMODE__MODE"]')
 pmpValGrp_PMMODE_WAITB = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMP"]/value-group@[name="PMMODE__WAITB"]')
 pmpValGrp_PMMODE_WAITM = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMP"]/value-group@[name="PMMODE__WAITM"]')
 pmpValGrp_PMMODE_WAITE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMP"]/value-group@[name="PMMODE__WAITE"]')
 pmpValGrp_PMMODE_MODE16 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMP"]/value-group@[name="PMMODE__MODE16"]')
 pmpValGrp_PMMODE_INCM = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMP"]/value-group@[name="PMMODE__INCM"]')
+pmpValGrp_PMMODE_IRQM = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMP"]/value-group@[name="PMMODE__IRQM"]')
 pmpValGrp_PMCON_RDSP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMP"]/value-group@[name="PMCON__RDSP"]')
 pmpValGrp_PMCON_WRSP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMP"]/value-group@[name="PMCON__WRSP"]')
 pmpValGrp_PMCON_CS2P = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMP"]/value-group@[name="PMCON__CS2P"]')
@@ -69,11 +73,93 @@ def pmpAddressPortBitWidthVisiblity(symbol, event):
 
     symbol.setVisible(event["value"])
 
+def getIRQIndex(string):
+
+    irq_index = "-1"
+
+    for param in interruptsChildren:
+        if "irq-index" in param.getAttributeList():
+            name = str(param.getAttribute("irq-name"))
+            if string == name:
+                irq_index = str(param.getAttribute("irq-index"))
+                break
+        else:
+            break
+
+    return irq_index
+
+def getVectorIndex(string):
+
+    vector_index = "-1"
+
+    for param in interruptsChildren:
+        name = str(param.getAttribute("name"))
+        if string == name:
+            vector_index = str(param.getAttribute("index"))
+            break
+
+    return vector_index
+
+def _get_enblReg_parms(vectorNumber):
+
+    # This takes in vector index for interrupt, and returns the IECx register name as well as
+    # mask and bit location within it for given interrupt
+    index = int(vectorNumber / 32)
+    regName = "IEC" + str(index)
+    bitPosn = int(vectorNumber % 32)
+    bitMask = hex(1 << bitPosn)
+
+    return regName, str(bitPosn), str(bitMask)
+
+def _get_statReg_parms(vectorNumber):
+
+    # This takes in vector index for interrupt, and returns the IFSx register name as well as
+    # mask and bit location within it for given interrupt
+    index = int(vectorNumber / 32)
+    regName = "IFS" + str(index)
+    bitPosn = int(vectorNumber % 32)
+    bitMask = hex(1 << bitPosn)
+
+    return regName, str(bitPosn), str(bitMask)
+
+
+def setPMPInterruptStatus(status):
+    global InterruptVector
+    global InterruptHandler
+    global InterruptHandlerLock
+
+    Database.setSymbolValue("core", InterruptVector, status, 1)
+    Database.setSymbolValue("core", InterruptHandlerLock, status, 1)
+
+    if status == True:
+        Database.setSymbolValue("core", InterruptHandler, pmpInstanceName.getValue() + "_InterruptHandler", 1)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, pmpInstanceName.getValue() + "_Handler", 1)
+
+
+def updatePMPInterruptData(symbol, event):
+    global InterruptVectorUpdate
+
+    if event["id"] == "PMP_INTERRUPT_MODE":
+        setPMPInterruptStatus(event["value"])
+
+    if pmpSymInterruptMode.getValue() == True and Database.getSymbolValue("core", InterruptVectorUpdate) == True:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
 
 def instantiateComponent(pmpComponent):
+
+    global pmpInstanceName
+    global pmpSymInterruptMode
+    global InterruptVector
+    global InterruptHandler
+    global InterruptHandlerLock
+    global InterruptVectorUpdate
 
     pmpInstanceName = pmpComponent.createStringSymbol("PMP_INSTANCE_NAME", None)
     pmpInstanceName.setVisible(False)
@@ -101,6 +187,79 @@ def instantiateComponent(pmpComponent):
     #Master Modes Configuration
     pmpSym_MasterModeMenu = pmpComponent.createMenuSymbol("PMP_MASTER_CONFIG", pmpCommunicationMode)
     pmpSym_MasterModeMenu.setLabel("Master Mode Configuration")
+
+    pmpSymInterruptMode = pmpComponent.createBooleanSymbol("PMP_INTERRUPT_MODE", pmpSym_MasterModeMenu)
+    pmpSymInterruptMode.setLabel("Enable Interrrupts ?")
+
+    ## PMP IRQ
+    pmpIrqVectorNum = int(getIRQIndex("PMP"))
+
+    if pmpIrqVectorNum != -1:
+        InterruptVector = pmpInstanceName.getValue() + "_INTERRUPT_ENABLE"
+        InterruptHandler = pmpInstanceName.getValue() + "_INTERRUPT_HANDLER"
+        InterruptHandlerLock = pmpInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+        InterruptVectorUpdate = pmpInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+
+        ## PMP IRQ
+        pmpIrqNum = int(getIRQIndex("PMP"))
+
+        ## PMP Error IRQ
+        pmpErrIrqNum = int(getIRQIndex("PMP_ERROR"))
+    else:
+        ## PMP IRQ
+        pmpIrqNum = int(getVectorIndex("PMP"))
+        InterruptVector = pmpInstanceName.getValue() + "_INTERRUPT_ENABLE"
+        InterruptHandler = pmpInstanceName.getValue() + "_INTERRUPT_HANDLER"
+        InterruptHandlerLock = pmpInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+        InterruptVectorUpdate = pmpInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+
+        pmpErrIrqNum = int(getVectorIndex("PMP_ERROR"))
+
+    enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(pmpIrqNum)
+    statRegName, statBitPosn, statMask = _get_statReg_parms(pmpIrqNum)
+
+    ## IEC REG
+    pmpIEC = pmpComponent.createStringSymbol("PMP_IEC_REG", None)
+    pmpIEC.setDefaultValue(enblRegName)
+    pmpIEC.setVisible(False)
+
+    ## IEC REG MASK
+    pmpIECMask = pmpComponent.createStringSymbol("PMP_IEC_REG_MASK", None)
+    pmpIECMask.setDefaultValue(enblMask)
+    pmpIECMask.setVisible(False)
+
+    ## IFS REG
+    pmpIFS = pmpComponent.createStringSymbol("PMP_IFS_REG", None)
+    pmpIFS.setDefaultValue(statRegName)
+    pmpIFS.setVisible(False)
+
+    ## IFS REG MASK
+    pmpIFSMask = pmpComponent.createStringSymbol("PMP_IFS_REG_MASK", None)
+    pmpIFSMask.setDefaultValue(statMask)
+    pmpIFSMask.setVisible(False)
+
+    enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(pmpErrIrqNum)
+    statRegName, statBitPosn, statMask = _get_statReg_parms(pmpErrIrqNum)
+
+    ## IEC REG
+    pmpErrIEC = pmpComponent.createStringSymbol("PMP_ERR_IEC_REG", None)
+    pmpErrIEC.setDefaultValue(enblRegName)
+    pmpErrIEC.setVisible(False)
+
+    ## IEC REG MASK
+    pmpErrIECMask = pmpComponent.createStringSymbol("PMP_ERR_IEC_REG_MASK", None)
+    pmpErrIECMask.setDefaultValue(enblMask)
+    pmpErrIECMask.setVisible(False)
+
+    ## IFS REG
+    pmpErrIFS = pmpComponent.createStringSymbol("PMP_ERR_IFS_REG", None)
+    pmpErrIFS.setDefaultValue(statRegName)
+    pmpErrIFS.setVisible(False)
+
+    ## IFS REG MASK
+    pmpErrIFSMask = pmpComponent.createStringSymbol("PMP_ERR_IFS_REG_MASK", None)
+    pmpErrIFSMask.setDefaultValue(statMask)
+    pmpErrIFSMask.setVisible(False)
 
     pmpCSF_names = []
     _get_bitfield_names(pmpValGrp_PMCON_CSF, pmpCSF_names)
@@ -186,6 +345,18 @@ def instantiateComponent(pmpComponent):
         if int(ii['value'], 0) < 3:
             pmpINCM.addKey( ii['desc'], ii['value'], ii['key'] )
 
+    pmpIRQM_names = []
+    _get_bitfield_names(pmpValGrp_PMMODE_IRQM, pmpIRQM_names)
+    pmpIRQM = pmpComponent.createKeyValueSetSymbol("PMMODE_IRQM", pmpSym_MasterModeMenu)
+    pmpIRQM.setLabel("Interrupt Request Mode")
+    pmpIRQM.setVisible(False)
+    pmpIRQM.setDefaultValue(1)
+    pmpIRQM.setOutputMode("Value")
+    pmpIRQM.setDisplayMode("Description")
+    for ii in pmpIRQM_names:
+        if int(ii['value'], 0) < 3:
+            pmpIRQM.addKey( ii['desc'], ii['value'], ii['key'] )
+
     pmpReadStrobeEnable = pmpComponent.createBooleanSymbol("PMMODE_READ_STROBE", pmpSym_MasterModeMenu)
     pmpReadStrobeEnable.setLabel("Read Strobe Enable")
     pmpReadStrobeEnable.setDefaultValue(True)
@@ -226,6 +397,15 @@ def instantiateComponent(pmpComponent):
     pmpAddressPortBitWidth.setDefaultValue(16)
     pmpAddressPortBitWidth.setVisible(False)
     pmpAddressPortBitWidth.setDependencies(pmpAddressPortBitWidthVisiblity,["PMMODE_ADDRESSPORT_ENABLE"])
+
+    ############################################################################
+    #### Dependency ####
+    ############################################################################
+
+    pmpSymIntEnComment = pmpComponent.createCommentSymbol("PMP_INTRRUPT_ENABLE_COMMENT", None)
+    pmpSymIntEnComment.setLabel("Warning!!! " + pmpInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
+    pmpSymIntEnComment.setVisible(False)
+    pmpSymIntEnComment.setDependencies(updatePMPInterruptData, ["PMP_INTERRUPT_MODE", "core." + InterruptVectorUpdate])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################

@@ -54,6 +54,10 @@
 #include "device.h"
 #include "plib_${PMP_INSTANCE_NAME?lower_case}.h"
 
+<#if PMP_INTERRUPT_MODE == true>
+static PMP_CALLBACK_OBJ ${PMP_INSTANCE_NAME?lower_case}CallbackObject;
+</#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${PMP_INSTANCE_NAME} Interface Routines
@@ -64,6 +68,11 @@ void ${PMP_INSTANCE_NAME}_Initialize( void )
 {
     /* Stop PMP module and clear control register */
     PMCONCLR = _PMCON_ON_MASK;
+
+<#if PMP_INTERRUPT_MODE == true>
+    /* Disable ${PMP_INSTANCE_NAME} Interrupts */
+    ${PMP_IEC_REG}CLR = ${PMP_IEC_REG_MASK};
+</#if>
 
     /* Configure PMP operation mode */
     PMMODEbits.MODE = ${PMMODE_MODE};
@@ -107,8 +116,19 @@ void ${PMP_INSTANCE_NAME}_Initialize( void )
 
     /* Auto increment mode enable */
     PMMODEbits.INCM = ${PMMODE_INCM};
+</#if>
+<#if PMP_INTERRUPT_MODE == true>
+    /* Clear ${PMP_INSTANCE_NAME} Interrupt status flags */
+    ${PMP_IFS_REG}CLR = ${PMP_IFS_REG_MASK};
+
+    /* Enable ${PMP_INSTANCE_NAME} Interrupts */
+    ${PMP_IEC_REG}SET = ${PMP_IEC_REG_MASK};
 
 </#if>
+<#if PMP_INTERRUPT_MODE == true>
+    PMMODEbits.IRQM = ${PMMODE_IRQM};
+</#if>
+
     /* Enable PMP module */
     PMCONSET = _PMCON_ON_MASK;
 }
@@ -147,3 +167,32 @@ void ${PMP_INSTANCE_NAME}_AddressPortDisable( uint32_t portfunctions )
 {
     PMAENCLR = ((((uint32_t)(portfunctions)) << (_PMAEN_PTEN_POSITION)) & _PMAEN_PTEN_MASK);
 }
+
+<#if PMP_INTERRUPT_MODE == true>
+void ${PMP_INSTANCE_NAME}_CallbackRegister(PMP_CALLBACK callback, uintptr_t context)
+{
+    ${PMP_INSTANCE_NAME?lower_case}CallbackObject.callback = callback;
+
+    ${PMP_INSTANCE_NAME?lower_case}CallbackObject.context  = context;
+}
+
+void ${PMP_INSTANCE_NAME}_InterruptHandler (void)
+{
+    if (((${PMP_IFS_REG} & _${PMP_IFS_REG}_${PMP_INSTANCE_NAME}IF_MASK) != 0U) && (( ${PMP_IEC_REG} & _${PMP_IEC_REG}_${PMP_INSTANCE_NAME}IE_MASK) != 0U))
+    {
+        PMMODEbits.IRQM = 0;
+
+        PMDIN;
+
+        /* Clear ${PMP_INSTANCE_NAME} Interrupt flag */
+        ${PMP_IFS_REG}CLR = ${PMP_IFS_REG_MASK};
+
+        PMMODEbits.IRQM = ${PMMODE_IRQM};
+
+        if(${PMP_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
+        {
+            ${PMP_INSTANCE_NAME?lower_case}CallbackObject.callback(${PMP_INSTANCE_NAME?lower_case}CallbackObject.context);
+        }
+    }
+}
+</#if>
