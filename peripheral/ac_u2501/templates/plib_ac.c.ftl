@@ -252,11 +252,12 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
         </#if>
     </#list>
 <#if AC_WINCTRL_VAL?has_content>
+
+    ${AC_INSTANCE_NAME}_REGS->AC_WINCTRL = ${AC_WINCTRL_VAL};
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_WINCTRL_Msk) == AC_SYNCBUSY_WINCTRL_Msk)
     {
         /* Wait for Synchronization */
-    }
-    ${AC_INSTANCE_NAME}_REGS->AC_WINCTRL = ${AC_WINCTRL_VAL};
+    }    
 </#if>
 <#if AC_EVCTRL_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_EVCTRL = ${AC_EVCTRL_VAL};
@@ -327,21 +328,20 @@ void ${AC_INSTANCE_NAME}_SetDACOutput( AC_CHANNEL channel_id , uint8_t value)
 
 void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
 {
-    /* Check Synchronization */
-    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_Msk) == AC_SYNCBUSY_Msk)
-    {
-        /* Wait for Synchronization */
-    }
     /* Disable comparator before swapping */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
     /* Check Synchronization to ensure that the comparator is disabled */
-    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_Msk) == AC_SYNCBUSY_Msk)
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U)
     {
         /* Wait for Synchronization */
     }
     /* Swap inputs of the given comparator */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] = AC_COMPCTRL_SWAP_Msk;
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U)
+    {
+        /* Wait for Synchronization */
+    }    
 }
 
 void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT positiveInput, AC_NEGINPUT negativeInput)
@@ -349,7 +349,7 @@ void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT posi
     /* Disable comparator before swapping */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
     /* Check Synchronization to ensure that the comparator is disabled */
-    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_Msk) == AC_SYNCBUSY_Msk)
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U)
     {
         /* Wait for Synchronization */
     }
@@ -358,7 +358,7 @@ void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT posi
 
     /* Enable comparator channel */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
-    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_Msk) == AC_SYNCBUSY_Msk)
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U)
     {
         /* Wait for Synchronization */
     }

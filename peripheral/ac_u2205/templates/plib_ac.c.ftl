@@ -209,11 +209,12 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
         </#if>
     </#list>
 <#if AC_WINCTRL_VAL?has_content>
+
+    ${AC_INSTANCE_NAME}_REGS->AC_WINCTRL = ${AC_WINCTRL_VAL};
     while((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & AC_STATUSB_SYNCBUSY_Msk) == AC_STATUSB_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization */
-    }
-    ${AC_INSTANCE_NAME}_REGS->AC_WINCTRL = ${AC_WINCTRL_VAL};
+    }    
 </#if>
 <#if AC_EVCTRL_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_EVCTRL = ${AC_EVCTRL_VAL};
@@ -224,11 +225,12 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
 <#if AC_CTRLA_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_CTRLA = ${AC_CTRLA_VAL};
 </#if>
+
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA |= AC_CTRLA_ENABLE_Msk;
     while((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & AC_STATUSB_SYNCBUSY_Msk) == AC_STATUSB_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization */
-    }
-    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA |= AC_CTRLA_ENABLE_Msk;
+    }    
 }
 
 void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
@@ -244,11 +246,6 @@ void ${AC_INSTANCE_NAME}_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scala
 
 void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
 {
-    /* Check Synchronization */
-    while((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & AC_STATUSB_SYNCBUSY_Msk) == AC_STATUSB_SYNCBUSY_Msk)
-    {
-        /* Wait for Synchronization */
-    }
     /* Disable comparator before swapping */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
     /* Check Synchronization to ensure that the comparator is disabled */
@@ -259,6 +256,10 @@ void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
     /* Swap inputs of the given comparator */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] = AC_COMPCTRL_SWAP_Msk;
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
+    while((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & AC_STATUSB_SYNCBUSY_Msk) == AC_STATUSB_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }    
 }
 
 void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT positiveInput, AC_NEGINPUT negativeInput)
