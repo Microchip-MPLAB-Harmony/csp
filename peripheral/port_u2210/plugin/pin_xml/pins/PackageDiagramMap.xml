@@ -2,6 +2,7 @@
 <pinfile>
     <packages>
         <package diagram="JEDEC_MS_026D_BFB_LQFP144" id="1" name="LQFP144" />
+        <package diagram="JEDEC_MS_026D_BFB_LQFP144" id="1" name="TQFP144" />
         <package diagram="JEDEC_MS_026D_BCD_LQFP64" id="2" name="LQFP64" />
         <package diagram="JEDEC_MO_275A_EEAD_1_TFBGA144" id="3" name="TFBGA144" />
         <package diagram="JEDEC_MO_275A_EEAD_1_TFBGA144" id="3" name="UFBGA144" />
