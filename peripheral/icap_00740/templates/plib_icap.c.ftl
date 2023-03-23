@@ -166,8 +166,12 @@ void ${ICAP_INSTANCE_NAME}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t co
 
 void INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
 {
+<#if ICAP_NUM_INT_LINES == 1>    
     uint32_t iec_reg_read = ${ICAPx_IEC_REG};
+    <#if ERROR_IEC_REG??>
     uint32_t error_reg_read = ${ERROR_IEC_REG};
+    </#if>
+</#if>
     if( (${ICAP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
         ${ICAP_INSTANCE_NAME?lower_case}Obj.callback(${ICAP_INSTANCE_NAME?lower_case}Obj.context);
