@@ -331,14 +331,14 @@ void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
     /* Disable comparator before swapping */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
     /* Check Synchronization to ensure that the comparator is disabled */
-    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U)
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U))
     {
         /* Wait for Synchronization */
     }
     /* Swap inputs of the given comparator */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] = AC_COMPCTRL_SWAP_Msk;
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
-    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U)
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U))
     {
         /* Wait for Synchronization */
     }    
@@ -349,7 +349,7 @@ void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT posi
     /* Disable comparator before swapping */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
     /* Check Synchronization to ensure that the comparator is disabled */
-    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U)
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U))
     {
         /* Wait for Synchronization */
     }
@@ -358,7 +358,7 @@ void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT posi
 
     /* Enable comparator channel */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
-    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U)
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U))
     {
         /* Wait for Synchronization */
     }
