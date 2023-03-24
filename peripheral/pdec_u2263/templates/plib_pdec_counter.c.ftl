@@ -112,8 +112,11 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Initialize( void )
     ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback = NULL;
 </#if>
 
+<#if PDEC_EVCTRL_EVACT??>
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_EVCTRL = 0x${PDEC_COUNTER_EVCTRL}U | PDEC_EVCTRL_EVACT(PDEC_EVCTRL_EVACT_${PDEC_EVCTRL_EVACT}_Val);
-
+<#else>
+    ${PDEC_INSTANCE_NAME}_REGS->PDEC_EVCTRL = 0x${PDEC_COUNTER_EVCTRL}U;
+</#if>
     while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
     {
         /* Wait for Write Synchronization */
