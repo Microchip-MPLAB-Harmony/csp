@@ -294,7 +294,8 @@ __longramfunc__ uint32_t ${SEFC_INSTANCE_NAME}_GpnvmBitRead(void)
 
 bool ${SEFC_INSTANCE_NAME}_UniqueIdentifierRead(uint32_t *data, uint32_t length)
 {
-    if (length > 16)
+    /* Check Unique Identifier length (128 bits) */
+    if (length > 4)
     {
         return false;
     }
