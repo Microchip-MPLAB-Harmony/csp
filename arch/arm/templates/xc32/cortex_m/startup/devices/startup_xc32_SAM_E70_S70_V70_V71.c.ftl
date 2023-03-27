@@ -3,7 +3,7 @@
 #define GPNVM_TCM_SIZE_Msk        (0x3u << GPNVM_TCM_SIZE_Pos)
 
 /** Program GPNVM fuse for TCM configuration */
-__STATIC_INLINE void TCM_Configure(uint32_t neededGpnvmValue)
+__STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Configure(uint32_t neededGpnvmValue)
 {
     static uint32_t gpnvmReg;
     static uint32_t cmd;

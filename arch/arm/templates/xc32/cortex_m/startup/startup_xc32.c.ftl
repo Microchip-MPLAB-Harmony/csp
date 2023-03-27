@@ -118,7 +118,7 @@ extern int main(void);
 #if (__ARM_FP==14) || (__ARM_FP==4)
 
 /* Enable FPU */
-__STATIC_INLINE void FPU_Enable(void)
+__STATIC_INLINE void __attribute__((optimize("-O1"))) FPU_Enable(void)
 {
     uint32_t primask = __get_PRIMASK();
     __disable_irq();

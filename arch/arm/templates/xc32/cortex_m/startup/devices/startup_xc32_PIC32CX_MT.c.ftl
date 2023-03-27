@@ -1,6 +1,6 @@
 <#if CPU_CORE_ID == 0>
 <#assign CMCC_CONFIGURE = true>
-__STATIC_INLINE void CMCC_Configure(void)
+__STATIC_INLINE void __attribute__((optimize("-O1"))) CMCC_Configure(void)
 {
     /*Configure ICache and ITCM */
     CMCC0_REGS->CMCC_CTRL &= ~(CMCC_CTRL_CEN_Msk);

@@ -1,5 +1,5 @@
 <#assign CMCC_CONFIGURE = true>
-__STATIC_INLINE void CMCC_Configure(void)
+__STATIC_INLINE void __attribute__((optimize("-O1"))) CMCC_Configure(void)
 {
     CMCC_REGS->CMCC_CTRL &= ~(CMCC_CTRL_CEN_Msk);
     while((CMCC_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
