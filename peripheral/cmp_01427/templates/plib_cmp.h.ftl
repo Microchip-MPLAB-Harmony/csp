@@ -61,7 +61,7 @@
 
     /*CMP Output*/
   <#list 1..CMP_NUM_OF_INSTANCES as i>
-    #define CMP${i}_OUTPUT_STATUS    (_CMSTAT_C${i}OUT_MASK),
+    #define CMP${i}_OUTPUT_STATUS    (_CMSTAT_C${i}OUT_MASK)
   </#list>
 typedef uint32_t CMP_STATUS_SOURCE;
 
