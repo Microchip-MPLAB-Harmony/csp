@@ -279,11 +279,10 @@ static void GCLK${i}_Initialize( void )
             </#if>
         </#if>
 </#list>
-
+<#assign GEN_BOD33_INIT_CODE = (SUPC_BOD33_RUNSTDBY == true || SUPC_BOD33_MODE == "1" || (SUPC_BOD33_MODE == "1" && SUPC_BOD33_PSEL != "0x0"))>
+<#if GEN_BOD33_INIT_CODE>
 static void BOD33_Initialize( void )
 {
-<#if SUPC_BOD33_RUNSTDBY == true || SUPC_BOD33_MODE == "1" || (SUPC_BOD33_MODE == "1" && SUPC_BOD33_PSEL != "0x0")>
-
     uint32_t bodEnable = SYSCTRL_REGS->SYSCTRL_BOD33 & SYSCTRL_BOD33_ENABLE_Msk;
 
     /* Configure BOD33. Mask the values loaded from NVM during reset. */
@@ -308,8 +307,8 @@ static void BOD33_Initialize( void )
             }
         }
     }
-</#if>
 }
+</#if>
 
 void CLOCK_Initialize( void )
 {
@@ -371,8 +370,10 @@ ${CLK_INIT_LIST}
     /* Disable RC oscillator */
     SYSCTRL_REGS->SYSCTRL_OSC8M = 0x0U;
 </#if>
+<#if GEN_BOD33_INIT_CODE>
 
     BOD33_Initialize();
+</#if>
 <#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
 
     SYSCTRL_REGS->SYSCTRL_INTENSET = ${SYSCTRL_INTERRUPT_ENABLE_VAL}U;
