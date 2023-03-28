@@ -88,7 +88,9 @@ extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) __xc32_on_b
 
 /* Linker defined variables */
 extern uint32_t __svectors;
+#if defined (__REINIT_STACK_POINTER)
 extern uint32_t _stack;
+#endif
 
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
 #pragma coverity compliance end_block "MISRA C-2012 Rule 8.6"
@@ -123,9 +125,9 @@ __STATIC_INLINE void FPU_Enable(void)
     SCB->CPACR |= (((uint32_t)0xFU) << 20);
     <#if CoreArchitecture == "CORTEX-M33">
     <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-    SCB->NSACR |= (((uint32_t)0x3U) << 10);   
+    SCB->NSACR |= (((uint32_t)0x3U) << 10);
     FPU->FPCCR |= (uint32_t)0x${FPU_FPCCR}U;
-    </#if> 
+    </#if>
     </#if>
     __DSB();
     __ISB();
