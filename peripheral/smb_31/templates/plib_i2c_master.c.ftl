@@ -514,17 +514,17 @@ static void I2C${I2C_INSTANCE_NUM}_MASTER_InterruptHandler(void)
 void ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     <#if I2C_INTERRUPT_TYPE == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}) != 0U)
     </#if>
     {
          I2C${I2C_INSTANCE_NUM}_MASTER_InterruptHandler();
-         
+
         <#if I2C_INTERRUPT_TYPE == "AGGREGATE">
         ECIA_GIRQSourceClear(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM});
         <#else>
         ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_I2CSMB${I2C_INSTANCE_NUM});
-        </#if>       
+        </#if>
     }
 }

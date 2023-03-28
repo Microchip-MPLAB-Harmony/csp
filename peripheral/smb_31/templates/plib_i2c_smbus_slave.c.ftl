@@ -410,11 +410,11 @@ void I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32_t completion_reg)
 void ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     uint32_t completion_reg;
-    
+
     <#if I2C_INTERRUPT_TYPE == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}) != 0U)
     </#if>
     {
         completion_reg = ${I2C_INSTANCE_NAME}_REGS->SMB_COMPL[0];
@@ -423,7 +423,7 @@ void ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
         ${I2C_INSTANCE_NAME}_REGS->SMB_COMPL[0] = completion_reg;
 
         I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(completion_reg);
-        
+
         <#if I2C_INTERRUPT_TYPE == "AGGREGATE">
         ECIA_GIRQSourceClear(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM});
         <#else>
