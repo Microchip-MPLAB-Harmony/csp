@@ -318,7 +318,7 @@ static void DMA_interruptHandler(DMA_CHANNEL channel)
     DMA_CH_OBJECT  *dmacChObj = NULL;
     volatile uint8_t chIntFlagStatus = 0U;
 
-    DMA_TRANSFER_EVENT event = 0U;
+    DMA_TRANSFER_EVENT event = DMA_TRANSFER_EVENT_NONE;
 
     dmacChObj = (DMA_CH_OBJECT *)&dmaChannelObj[channel];
 
@@ -364,7 +364,7 @@ static void DMA_interruptHandler(DMA_CHANNEL channel)
 </#if>
 void ${DMA_CHX_INTERRUPT_NAME}_InterruptHandler( void )
 {
-    if (ECIA_GIRQResultGet(${DMA_CHX_INT_SRC_NAME}))
+    if (ECIA_GIRQResultGet(${DMA_CHX_INT_SRC_NAME}) != 0U)
     {
         ECIA_GIRQSourceClear(${DMA_CHX_INT_SRC_NAME});
         DMA_interruptHandler(DMA_CHANNEL_${i});
