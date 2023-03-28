@@ -4,7 +4,7 @@ import { component_id } from '../MainBlock';
 import { GetStyle } from '@mplab_harmony/harmony-plugin-ui/build/components/Components';
 import { AddCheckBox, AddCombobox, AddInputNumber } from 'clock-common/lib/utils/ClockCommonUtils';
 import {
-  AddPrefixDivSymbolLabel,
+  AddInputFormatSymbolLabel,
   AddSymboLabelWithSuffix
 } from 'clock-common/lib/utils/ClockLabelUtils';
 import { AddDivioType } from '../CustomLabels';
@@ -27,7 +27,7 @@ const ProgrammableClockController = () => {
           ' Hz'
         )}
 
-        {AddPrefixDivSymbolLabel(
+        {AddInputFormatSymbolLabel(
           'label_pclkPresVal',
           component_id,
           'CLK_PCK' + index + '_PRES',

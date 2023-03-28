@@ -9,7 +9,8 @@ import {
   ChangeValueState,
   SymbolChanged,
   ConfigSymbolEvent,
-  CheckForSymbolLinkedLabel
+  CheckForSymbolLinkedLabel,
+  ChangeComponentState
 } from '@mplab_harmony/harmony-plugin-ui/build/utils/ComponentStateChangeUtils';
 import { convertToBoolean } from '@mplab_harmony/harmony-plugin-ui/build/utils/CommonUtil';
 import { error } from '@mplab_harmony/harmony-plugin-core-service/build/log/CustomConsole';
@@ -52,7 +53,7 @@ const dynamicSymbolsIgnoreList = [
 
   SymbolChanged(symbol);
 
-  ChangeValueState(symbol.symbolID, symbol.value);
+  ChangeComponentState(symbol.symbolID, symbol.value, symbol.readOnly, symbol.visible);
   CheckForSymbolLinkedLabel(symbol.symbolID, symbol.value);
 };
 

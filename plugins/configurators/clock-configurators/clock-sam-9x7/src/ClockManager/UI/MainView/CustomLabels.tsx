@@ -1,5 +1,5 @@
 import { component_id } from './MainBlock';
-import { AddPlainLabel, AddPrefixDivSymbolLabel } from 'clock-common/lib/utils/ClockLabelUtils';
+import { AddPlainLabel, AddInputFormatSymbolLabel } from 'clock-common/lib/utils/ClockLabelUtils';
 import CPUCLKCSSController from './BoldLabelController/CPUCLKCSSController';
 import CLKUSBUSBSController from './BoldLabelController/CLKUSBUSBSController';
 
@@ -9,43 +9,43 @@ export function AddCustomLabels() {
       <div>
         {AddPlainLabel('label_enableGenerator', 'Enable Generator Initialization')}
 
-        {AddPrefixDivSymbolLabel(
+        {AddInputFormatSymbolLabel(
           'label_pclkPres',
           component_id,
           'CLK_CPU_CKR_PRES',
           GetDiVAddedText
         )}
-        {AddPrefixDivSymbolLabel(
+        {AddInputFormatSymbolLabel(
           'label_pclkMdiv',
           component_id,
           'CLK_CPU_CKR_MDIV',
           GetDiVAddedText
         )}
-        {AddPrefixDivSymbolLabel('label_pclk_1', component_id, 'CLK_CPU_CKR_MDIV', AddMDivType)}
+        {AddInputFormatSymbolLabel('label_pclk_1', component_id, 'CLK_CPU_CKR_MDIV', AddMDivType)}
 
-        {AddPrefixDivSymbolLabel('label_usbdivVal', component_id, 'CLK_USB_USBDIV', AddDivioType)}
+        {AddInputFormatSymbolLabel('label_usbdivVal', component_id, 'CLK_USB_USBDIV', AddDivioType)}
 
-        {AddPrefixDivSymbolLabel(
+        {AddInputFormatSymbolLabel(
           'label_pllaDivpmcVal',
           component_id,
           'CLK_PLLA_DIVPMC',
           AddDivioType
         )}
 
-        {AddPrefixDivSymbolLabel(
+        {AddInputFormatSymbolLabel(
           'label_audioPllDivpmcVal',
           component_id,
           'CLK_AUDIOPLL_DIVPMC',
           AddDivioType
         )}
-        {AddPrefixDivSymbolLabel(
+        {AddInputFormatSymbolLabel(
           'label_audiopllDivioVal',
           component_id,
           'CLK_AUDIO_IOPLLCK_DIVIO',
           AddDivioType
         )}
 
-        {AddPrefixDivSymbolLabel(
+        {AddInputFormatSymbolLabel(
           'label_lvdspllDIVPMCVal',
           component_id,
           'CLK_LVDSPLL_DIVPMC',

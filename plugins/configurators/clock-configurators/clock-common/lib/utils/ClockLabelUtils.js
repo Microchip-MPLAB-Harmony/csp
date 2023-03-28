@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AddPrefixDivSymbolLabel = exports.AddMinMaxSymboLabelWithSuffix = exports.AddSymboLabelWithSuffixWithBold = exports.AddSymboLabelWithSuffix = exports.AddPlainLabelWithBold = exports.AddPlainLabel = exports.GetBoldStyledObject = exports.GetColeredStyledObject = void 0;
+exports.AddInputFormatSymbolLabel = exports.AddMinMaxSymboLabelWithSuffix = exports.AddSymboLabelWithSuffixWithBold = exports.AddSymboLabelWithSuffix = exports.AddSymboLabel = exports.AddPlainLabelWithBold = exports.AddPlainLabel = exports.GetBoldStyledObject = exports.GetColeredStyledObject = void 0;
 const SymbolAccess_1 = require("@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess");
 const Components_1 = require("@mplab_harmony/harmony-plugin-ui/build/components/Components");
 const StateLabel_1 = __importDefault(require("@mplab_harmony/harmony-plugin-ui/build/components/StateLabel"));
@@ -62,6 +62,15 @@ function AddPlainLabelWithBold(labelId, text, boldStatus) {
     }
 }
 exports.AddPlainLabelWithBold = AddPlainLabelWithBold;
+function AddSymboLabel(labelId, component_id, symbolId) {
+    try {
+        return (react_1.default.createElement("div", null,
+            react_1.default.createElement(StateLabel_1.default, { labelId: labelId, labelDisplayText: (0, SymbolAccess_1.GetSymbolValue)(component_id, symbolId), labelStyle: (0, Components_1.GetStyle)(labelId), symbolListeners: [symbolId] })));
+    }
+    catch (err) {
+    }
+}
+exports.AddSymboLabel = AddSymboLabel;
 function AddSymboLabelWithSuffix(labelId, component_id, symbolId, suffix) {
     try {
         return (react_1.default.createElement("div", null,
@@ -97,7 +106,7 @@ function AddMinMaxSymboLabelWithSuffix(labelId, component_id, symbolId, suffix, 
     }
 }
 exports.AddMinMaxSymboLabelWithSuffix = AddMinMaxSymboLabelWithSuffix;
-function AddPrefixDivSymbolLabel(id, component_id, symbolId, InputFormat) {
+function AddInputFormatSymbolLabel(id, component_id, symbolId, InputFormat) {
     function customLabelConfigOnSymbolChange(symbolId, value) {
         (0, ComponentStateChangeUtils_1.ChangeCustomLabelComponentState)(symbolId, InputFormat(value), null, null, null);
     }
@@ -108,4 +117,4 @@ function AddPrefixDivSymbolLabel(id, component_id, symbolId, InputFormat) {
     catch (err) {
     }
 }
-exports.AddPrefixDivSymbolLabel = AddPrefixDivSymbolLabel;
+exports.AddInputFormatSymbolLabel = AddInputFormatSymbolLabel;

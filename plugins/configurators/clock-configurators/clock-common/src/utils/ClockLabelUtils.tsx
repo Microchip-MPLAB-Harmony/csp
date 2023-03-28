@@ -105,6 +105,23 @@ export function AddPlainLabelWithBold(labelId: string, text: any, boldStatus: bo
   }
 }
 
+export function AddSymboLabel(labelId: string, component_id: any, symbolId: any) {
+  try {
+    return (
+      <div>
+        <StateLabel
+          labelId={labelId}
+          labelDisplayText={GetSymbolValue(component_id, symbolId)}
+          labelStyle={GetStyle(labelId)}
+          symbolListeners={[symbolId]}
+        />
+      </div>
+    );
+  } catch (err) {
+    /* empty */
+  }
+}
+
 export function AddSymboLabelWithSuffix(
   labelId: string,
   component_id: any,
@@ -204,7 +221,7 @@ export function AddMinMaxSymboLabelWithSuffix(
   }
 }
 
-export function AddPrefixDivSymbolLabel(
+export function AddInputFormatSymbolLabel(
   id: string,
   component_id: string,
   symbolId: string,

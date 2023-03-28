@@ -1,13 +1,14 @@
 {
   "private": true,
   "workspaces": [
+    "harmony_plugin_sdk/packages/*",
     "configurators/clock-configurators/*",
     "configurators/dma-configurators/dma*",
     "configurators/interrupt_configurators/*",
     "configurators/event-configurators/*",
     "configurators/mpu-configurators/*",
     "configurators/memory-configurators/*",
-	"configurators/trustzone_configurators/*"
+	  "configurators/trustzone_configurators/*"
   ],
   "scripts": {
     "build": "lerna run build",

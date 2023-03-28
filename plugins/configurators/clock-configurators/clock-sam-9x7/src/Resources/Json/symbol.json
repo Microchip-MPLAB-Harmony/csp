@@ -83,7 +83,7 @@
       "top": "275px"
     }
   },
-  "sym_CLK_MOSCXTEN": {
+  "sym_CLK_MOSCRCEN": {
     "attr": {
       "position": "absolute",
       "width": "20px",
@@ -615,7 +615,7 @@
       "left": "1123px"
     }
   },
-  "sym_CLK_MOSCRCEN": {
+  "sym_CLK_MOSCXTEN": {
     "attr": {
       "position": "absolute",
       "width": "20px",
