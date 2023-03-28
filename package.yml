@@ -4,15 +4,15 @@ package:
   type: "api"
   status: "production"
   required: true
-  version: "3.16.0"
+  version: "dev"
 
   dependencies:
     - name: "dev_packs"
       type: "package"
-      version: "3.16.0"
+      version: "dev"
     - name: "harmony-services"
       type: "package"
-      version: "1.2.0"
+      version: "v1.2.0"
     - name: "CEC_DFP"
       type: "dfp"
       version: "1.8.258"
