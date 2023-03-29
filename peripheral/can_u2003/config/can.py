@@ -459,7 +459,7 @@ def updateSourceFileName(symbol, event):
         elif id == "instHeaderFile":
             symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can" + canInt + ".h.ftl")
         elif id == "headerFile":
-            symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can_common.h")
+            symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can_common.h.ftl")
 
 def instantiateComponent(canComponent):
     global canInstanceName
@@ -1033,11 +1033,12 @@ def instantiateComponent(canComponent):
 
     #Master Header
     canMasterHeaderFile = canComponent.createFileSymbol("headerFile", None)
-    canMasterHeaderFile.setSourcePath("../peripheral/can_u2003/templates/plib_can_common.h")
+    canMasterHeaderFile.setSourcePath("../peripheral/can_u2003/templates/plib_can_common.h.ftl")
     canMasterHeaderFile.setOutputName("plib_can_common.h")
     canMasterHeaderFile.setDestPath("/peripheral/can/")
     canMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/can/")
     canMasterHeaderFile.setType("HEADER")
+    canMasterHeaderFile.setMarkup(True)
     canMasterHeaderFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE", "CAN_GENERATE_LEGACY_APIS"])
 
     #Instance Source File

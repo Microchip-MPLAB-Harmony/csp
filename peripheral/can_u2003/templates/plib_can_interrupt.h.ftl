@@ -73,6 +73,8 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
+#define ${CAN_INSTANCE_NAME}_CLOCK_FREQUENCY    ${CAN_CORE_CLOCK_FREQ}U
+
 /* ${CAN_INSTANCE_NAME} Message RAM Configuration Size */
 <#assign CAN_MESSAGE_RAM_CONFIG_SIZE = 0>
 <#if RXF0_USE>
@@ -181,6 +183,8 @@ bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, can_xid
 </#if>
 void ${CAN_INSTANCE_NAME}_SleepModeEnter(void);
 void ${CAN_INSTANCE_NAME}_SleepModeExit(void);
+bool ${CAN_INSTANCE_NAME}_BitTimingCalculationGet(CAN_BIT_TIMING_SETUP *setup, CAN_BIT_TIMING *bitTiming);
+bool ${CAN_INSTANCE_NAME}_BitTimingSet(CAN_BIT_TIMING *bitTiming);
 <#if TXBUF_USE>
 void ${CAN_INSTANCE_NAME}_TxBuffersCallbackRegister(CAN_TXRX_BUFFERS_CALLBACK callback, uintptr_t contextHandle);
 </#if>
