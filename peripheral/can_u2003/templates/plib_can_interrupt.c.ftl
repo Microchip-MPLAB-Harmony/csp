@@ -524,13 +524,14 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, CAN_RX_BUFFER *rx
     uint8_t *rxBuf = NULL;
     bool message_receive_event = false;
 
-    if (!((bufferNumber >= ${RX_BUFFER_ELEMENTS}U) || (rxBuffer == NULL)))
+    if((rxBuffer != NULL) && (bufferNumber < ${RX_BUFFER_ELEMENTS}U))
     {
         rxBuf = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + ((uint32_t)bufferNumber * ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE));
 
-        (void) memcpy((uint8_t *)rxBuffer, rxBuf, ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
+        (void)memcpy((uint8_t *)rxBuffer, rxBuf, ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
 
         /* Clear new data flag */
+<#if RX_BUFFER_ELEMENTS gt 32>
         if (bufferNumber < 32U)
         {
             ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1UL << bufferNumber);
@@ -539,7 +540,9 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, CAN_RX_BUFFER *rx
         {
             ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1UL << (bufferNumber - 32U));
         }
-
+<#else>
+        ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1UL << bufferNumber);
+</#if>
         message_receive_event = true;
     }
     return message_receive_event;
@@ -721,6 +724,33 @@ void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorC
    Returns:
     None
 */
+<#assign DEV_COUNT_11_3 = 0>
+<#if RXF0_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if RXF1_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if RXBUF_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if TX_USE || TXBUF_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 2>
+</#if>
+<#if FILTERS_STD?number gt 0>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if FILTERS_EXT?number gt 0>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+/* MISRA C-2012 Rule 11.3 violated ${DEV_COUNT_11_3} times below. Deviation record ID - H3_MISRAC_2012_R_11_3_DR_1*/
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate:${DEV_COUNT_11_3} "MISRA C-2012 Rule 11.3" "H3_MISRAC_2012_R_11_3_DR_1"
+</#if>
 void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 {
     uint32_t offset = 0U;
@@ -781,7 +811,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 <#if FILTERS_STD?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (can_sidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
     (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
-           (const void *)${CAN_INSTANCE_NAME?lower_case}StdFilter,
+           ${CAN_INSTANCE_NAME?lower_case}StdFilter,
            ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE);
     offset += ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE;
     /* Standard ID Filter Configuration Register */
@@ -792,7 +822,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 <#if FILTERS_EXT?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (can_xidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
     (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
-           (const void *)${CAN_INSTANCE_NAME?lower_case}ExtFilter,
+           ${CAN_INSTANCE_NAME?lower_case}ExtFilter,
            ${CAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE);
     /* Extended ID Filter Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_XIDFC = CAN_XIDFC_LSE(${FILTERS_EXT}UL) |
@@ -809,6 +839,14 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
         /* Wait for configuration complete */
     }
 }
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 11.3"
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
+</#if>
+/* MISRAC 2012 deviation block end for Rule 11.3*/
+
 
 <#if FILTERS_STD?number gt 0>
 // *****************************************************************************
