@@ -312,7 +312,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 </#if>
     /* Switch the CAN module to CANFD_OPERATION_MODE. Wait until the switch is complete */
     <#if CAN_OPMODE == "0x1">
-    CFD${CAN_INSTANCE_NUM}CON = (CFD${CAN_INSTANCE_NUM}CON & ~_CFD${CAN_INSTANCE_NUM}CON_REQOP_MASK) | ((0UL << _CFD${CAN_INSTANCE_NUM}CON_REQOP_POSITION) & _CFD${CAN_INSTANCE_NUM}CON_REQOP_MASK);
+    CFD${CAN_INSTANCE_NUM}CON = (CFD${CAN_INSTANCE_NUM}CON & ~_CFD${CAN_INSTANCE_NUM}CON_REQOP_MASK);
     while(((CFD${CAN_INSTANCE_NUM}CON & _CFD${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _CFD${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != 0U)
     {
         /* Do Nothing */
@@ -441,7 +441,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
 
 <#if TX_EVENT_FIFO_USE == true>
         ++sequence;
-        txMessage->t1 |= ((sequence << 9) & CANFD_MSG_SEQ_MASK);        
+        txMessage->t1 |= ((sequence << 9) & CANFD_MSG_SEQ_MASK);
 
 </#if>
         if (fifoQueueNum == 0U)
@@ -735,7 +735,7 @@ void ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskSet(uint8_t acceptanceFilte
     while(((CFD${CAN_INSTANCE_NUM}CON & _CFD${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _CFD${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != CANFD_CONFIGURATION_MODE)
     {
         /* Do Nothing */
-        
+
     }
 
     if (id > CANFD_MSG_SID_MASK)
@@ -752,7 +752,7 @@ void ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskSet(uint8_t acceptanceFilte
     while(((CFD${CAN_INSTANCE_NUM}CON & _CFD${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _CFD${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != CANFD_OPERATION_MODE)
     {
         /* Do Nothing */
-        
+
     }
 }
 
@@ -1053,6 +1053,150 @@ bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_
     return status;
 }
 
+bool ${CAN_INSTANCE_NAME}_BitTimingCalculationGet(CAN_BIT_TIMING_SETUP *setup, CAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+    uint32_t numOfTimeQuanta;
+    uint8_t tseg1;
+    float temp1;
+    float temp2;
+
+    if ((setup != NULL) && (bitTiming != NULL))
+    {
+        if (setup->nominalBitTimingSet == true)
+        {
+            numOfTimeQuanta = ${CAN_INSTANCE_NAME}_CLOCK_FREQUENCY / (setup->nominalBitRate * ((uint32_t)setup->nominalPrescaler + 1U));
+            if ((numOfTimeQuanta >= 4U) && (numOfTimeQuanta <= 385U))
+            {
+                if (setup->nominalSamplePoint < 50.0f)
+                {
+                    setup->nominalSamplePoint = 50.0f;
+                }
+                temp1 = (float)numOfTimeQuanta;
+                temp2 = (temp1 * setup->nominalSamplePoint) / 100.0f;
+                tseg1 = (uint8_t)temp2;
+                bitTiming->nominalBitTiming.nominalTimeSegment2 = (uint8_t)(numOfTimeQuanta - tseg1 - 1U);
+                bitTiming->nominalBitTiming.nominalTimeSegment1 = tseg1 - 2U;
+                bitTiming->nominalBitTiming.nominalSJW = bitTiming->nominalBitTiming.nominalTimeSegment2;
+                bitTiming->nominalBitTiming.nominalPrescaler = setup->nominalPrescaler;
+                bitTiming->nominalBitTimingSet = true;
+                status = true;
+            }
+            else
+            {
+                bitTiming->nominalBitTimingSet = false;
+            }
+        }
+<#if CAN_OPMODE != "0x6">
+        if (setup->dataBitTimingSet == true)
+        {
+            numOfTimeQuanta = ${CAN_INSTANCE_NAME}_CLOCK_FREQUENCY / (setup->dataBitRate * ((uint32_t)setup->dataPrescaler + 1U));
+            if ((numOfTimeQuanta >= 4U) && (numOfTimeQuanta <= 49U))
+            {
+                if (setup->dataSamplePoint < 50.0f)
+                {
+                    setup->dataSamplePoint = 50.0f;
+                }
+                temp1 = (float)numOfTimeQuanta;
+                temp2 = (temp1 * setup->dataSamplePoint) / 100.0f;
+                tseg1 = (uint8_t)temp2;
+                bitTiming->dataBitTiming.dataTimeSegment2 = (uint8_t)(numOfTimeQuanta - tseg1 - 1U);
+                bitTiming->dataBitTiming.dataTimeSegment1 = tseg1 - 2U;
+                bitTiming->dataBitTiming.dataSJW = bitTiming->dataBitTiming.dataTimeSegment2;
+                bitTiming->dataBitTiming.dataPrescaler = setup->dataPrescaler;
+                bitTiming->dataBitTimingSet = true;
+                status = true;
+            }
+            else
+            {
+                bitTiming->dataBitTimingSet = false;
+                status = false;
+            }
+        }
+</#if>
+    }
+
+    return status;
+}
+
+bool ${CAN_INSTANCE_NAME}_BitTimingSet(CAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+    bool nominalBitTimingSet = false;
+<#if CAN_OPMODE != "0x6">
+    bool dataBitTimingSet = false;
+</#if>
+
+    if ((bitTiming->nominalBitTimingSet == true)
+    && (bitTiming->nominalBitTiming.nominalTimeSegment1 >= 0x1U)
+    && (bitTiming->nominalBitTiming.nominalTimeSegment2 <= 0x7FU)
+    && (bitTiming->nominalBitTiming.nominalSJW <= 0x7FU))
+    {
+        nominalBitTimingSet = true;
+    }
+
+<#if CAN_OPMODE != "0x6">
+    if  ((bitTiming->dataBitTimingSet == true)
+    &&  (bitTiming->dataBitTiming.dataTimeSegment1 <= 0x1FU)
+    &&  (bitTiming->dataBitTiming.dataTimeSegment2 <= 0xFU)
+    &&  (bitTiming->dataBitTiming.dataSJW <= 0xFU))
+    {
+        dataBitTimingSet = true;
+    }
+
+</#if>
+<#if CAN_OPMODE != "0x6">
+    if ((nominalBitTimingSet == true) || (dataBitTimingSet == true))
+<#else>
+    if (nominalBitTimingSet == true)
+</#if>
+    {
+        /* Switch the CAN module to Configuration mode. Wait until the switch is complete */
+        CFD${CAN_INSTANCE_NUM}CON = (CFD${CAN_INSTANCE_NUM}CON & ~_CFD${CAN_INSTANCE_NUM}CON_REQOP_MASK) | ((CANFD_CONFIGURATION_MODE << _CFD${CAN_INSTANCE_NUM}CON_REQOP_POSITION) & _CFD${CAN_INSTANCE_NUM}CON_REQOP_MASK);
+        while(((CFD${CAN_INSTANCE_NUM}CON & _CFD${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _CFD${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != CANFD_CONFIGURATION_MODE)
+        {
+            /* Do Nothing */
+        }
+
+<#if CAN_OPMODE != "0x6">
+        if (dataBitTimingSet == true)
+        {
+            /* Set the Data bitrate */
+            CFD${CAN_INSTANCE_NUM}DBTCFG = ((bitTiming->dataBitTiming.dataPrescaler << _CFD${CAN_INSTANCE_NUM}DBTCFG_BRP_POSITION) & _CFD${CAN_INSTANCE_NUM}DBTCFG_BRP_MASK)
+                       | ((bitTiming->dataBitTiming.dataTimeSegment1 << _CFD${CAN_INSTANCE_NUM}DBTCFG_TSEG1_POSITION) & _CFD${CAN_INSTANCE_NUM}DBTCFG_TSEG1_MASK)
+                       | ((bitTiming->dataBitTiming.dataTimeSegment2 << _CFD${CAN_INSTANCE_NUM}DBTCFG_TSEG2_POSITION) & _CFD${CAN_INSTANCE_NUM}DBTCFG_TSEG2_MASK)
+                       | ((bitTiming->dataBitTiming.dataSJW << _CFD${CAN_INSTANCE_NUM}DBTCFG_SJW_POSITION) & _CFD${CAN_INSTANCE_NUM}DBTCFG_SJW_MASK);
+        }
+
+</#if>
+        if (nominalBitTimingSet == true)
+        {
+            /* Set the Nominal bitrate */
+            CFD${CAN_INSTANCE_NUM}NBTCFG = ((bitTiming->nominalBitTiming.nominalPrescaler << _CFD${CAN_INSTANCE_NUM}NBTCFG_BRP_POSITION) & _CFD${CAN_INSTANCE_NUM}NBTCFG_BRP_MASK)
+                       | ((bitTiming->nominalBitTiming.nominalTimeSegment1 << _CFD${CAN_INSTANCE_NUM}NBTCFG_TSEG1_POSITION) & _CFD${CAN_INSTANCE_NUM}NBTCFG_TSEG1_MASK)
+                       | ((bitTiming->nominalBitTiming.nominalTimeSegment2 << _CFD${CAN_INSTANCE_NUM}NBTCFG_TSEG2_POSITION) & _CFD${CAN_INSTANCE_NUM}NBTCFG_TSEG2_MASK)
+                       | ((bitTiming->nominalBitTiming.nominalSJW << _CFD${CAN_INSTANCE_NUM}NBTCFG_SJW_POSITION) & _CFD${CAN_INSTANCE_NUM}NBTCFG_SJW_MASK);
+        }
+
+        /* Switch the CAN module to CANFD_OPERATION_MODE. Wait until the switch is complete */
+        <#if CAN_OPMODE == "0x1">
+        CFD${CAN_INSTANCE_NUM}CON = (CFD${CAN_INSTANCE_NUM}CON & ~_CFD${CAN_INSTANCE_NUM}CON_REQOP_MASK);
+        while(((CFD${CAN_INSTANCE_NUM}CON & _CFD${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _CFD${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != 0U)
+        {
+            /* Do Nothing */
+        }
+        </#if>
+        CFD${CAN_INSTANCE_NUM}CON = (CFD${CAN_INSTANCE_NUM}CON & ~_CFD${CAN_INSTANCE_NUM}CON_REQOP_MASK) | ((CANFD_OPERATION_MODE << _CFD${CAN_INSTANCE_NUM}CON_REQOP_POSITION) & _CFD${CAN_INSTANCE_NUM}CON_REQOP_MASK);
+        while(((CFD${CAN_INSTANCE_NUM}CON & _CFD${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _CFD${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != CANFD_OPERATION_MODE)
+        {
+            /* Do Nothing */
+        }
+
+        status = true;
+    }
+    return status;
+}
+
 <#if CAN_INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
@@ -1081,8 +1225,8 @@ void ${CAN_INSTANCE_NAME}_CallbackRegister(CANFD_CALLBACK callback, uintptr_t co
     if (callback != NULL)
     {
         ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoQueueNum].callback = callback;
-        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoQueueNum].context = contextHandle;      
-    }       
+        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoQueueNum].context = contextHandle;
+    }
 }
 
 // *****************************************************************************
@@ -1111,8 +1255,8 @@ void ${CAN_INSTANCE_NAME}_ErrorCallbackRegister(CANFD_CALLBACK callback, uintptr
     if (callback != NULL)
     {
         ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.callback = callback;
-        ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.context = contextHandle;        
-    }    
+        ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.context = contextHandle;
+    }
 }
 
 <#if CAN_INTERRUPT_COUNT == 1>
@@ -1215,7 +1359,7 @@ static void ${CAN_INSTANCE_NAME}_TX_InterruptHandler(void)
 void ${CAN_INSTANCE_NAME}_TX_InterruptHandler(void)
 </#if>
 {
-    uint8_t  fifoNum = 0;  
+    uint8_t  fifoNum = 0;
 
     fifoNum = ((uint8_t)CFD${CAN_INSTANCE_NUM}VEC & (uint8_t)_CFD${CAN_INSTANCE_NUM}VEC_ICODE_MASK);
     if (fifoNum <= CANFD_NUM_OF_FIFO)
