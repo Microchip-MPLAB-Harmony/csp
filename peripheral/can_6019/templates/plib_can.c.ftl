@@ -68,7 +68,7 @@
 <#if INTERRUPT_MODE == true>
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 </#if>
-static const uint32_t can_mb_number = CAN_MB_NUMBER; 
+static const uint32_t can_mb_number = CAN_MB_NUMBER;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -157,7 +157,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     false - Request has failed.
 */
 
-/* MISRA C-2012 Rule 16.1, 16.3 and 16.6 deviated below. Deviation record ID -  
+/* MISRA C-2012 Rule 16.1, 16.3 and 16.6 deviated below. Deviation record ID -
    H3_MISRAC_2012_R_16_1_DR_1, H3_MISRAC_2012_R_16_3_DR_1 & H3_MISRAC_2012_R_16_6_DR_1*/
 <#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
 <#if core.COMPILER_CHOICE == "XC32">
@@ -167,7 +167,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 #pragma coverity compliance block \
 (deviate:2 "MISRA C-2012 Rule 16.1" "H3_MISRAC_2012_R_16_1_DR_1" )\
 (deviate:2 "MISRA C-2012 Rule 16.3" "H3_MISRAC_2012_R_16_3_DR_1" )\
-(deviate:1 "MISRA C-2012 Rule 16.6" "H3_MISRAC_2012_R_16_6_DR_1" ) 
+(deviate:1 "MISRA C-2012 Rule 16.6" "H3_MISRAC_2012_R_16_6_DR_1" )
 </#if>
 
 bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBOX_TX_ATTRIBUTE mailboxAttr)
@@ -202,19 +202,19 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
                 }
                 break;
             default:
-			         /* Do Nothing */
+                     /* Do Nothing */
                 break;
         }
         if (mbIsReady)
-		{
+        {
             break;
-		}
+        }
     }
 
     if (!mbIsReady)
-	{
+    {
         return status;
-	}
+    }
 
     /* If the id is longer than 11 bits, it is considered as extended identifier */
     if (id > (CAN_MID_MIDvA_Msk >> CAN_MID_MIDvA_Pos))
@@ -313,9 +313,9 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
     {
 <#if INTERRUPT_MODE == false>
         if ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRDY_Msk) != CAN_MSR_MRDY_Msk)
-		{
+        {
             continue;
-		}
+        }
 </#if>
 
         switch (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MMR & CAN_MMR_MOT_Msk)
@@ -354,19 +354,19 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                 }
                 break;
             default:
-			          /* Do Nothing */
+                      /* Do Nothing */
                 break;
         }
         if (mbIsReady)
-		{
+        {
             break;
-		}
+        }
     }
 
     if (!mbIsReady)
-	{
+    {
         return status;
-	}
+    }
 
     switch (mailboxAttr)
     {
@@ -451,8 +451,8 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 #pragma coverity compliance end_block "MISRA C-2012 Rule 16.6"
 <#if core.COMPILER_CHOICE == "XC32">
 #pragma GCC diagnostic pop
-</#if>    
-</#if> 
+</#if>
+</#if>
 /* MISRAC 2012 deviation block end */
 
 // *****************************************************************************
@@ -775,6 +775,83 @@ bool ${CAN_INSTANCE_NAME}_MailboxIsReady(CAN_MAILBOX_NUM mailbox)
     return ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRDY_Msk) == CAN_MSR_MRDY_Msk);
 }
 
+bool ${CAN_INSTANCE_NAME}_BitTimingCalculationGet(CAN_BIT_TIMING_SETUP *setup, CAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+    uint32_t numOfTimeQuanta;
+    uint8_t phase1;
+    float temp1;
+    float temp2;
+
+    if ((setup != NULL) && (bitTiming != NULL))
+    {
+        if (setup->nominalBitTimingSet == true)
+        {
+            numOfTimeQuanta = ${CAN_INSTANCE_NAME}_CLOCK_FREQUENCY / (setup->nominalBitRate * ((uint32_t)setup->nominalPrescaler + 1U));
+            if ((numOfTimeQuanta >= 8U) && (numOfTimeQuanta <= 25U))
+            {
+                if (setup->nominalSamplePoint < 50.0f)
+                {
+                    setup->nominalSamplePoint = 50.0f;
+                }
+                temp1 = (float)numOfTimeQuanta;
+                temp2 = (temp1 * setup->nominalSamplePoint) / 100.0f;
+                phase1 = (uint8_t)temp2;
+                bitTiming->nominalBitTiming.phase2Segment = (uint8_t)(numOfTimeQuanta - phase1 - 1U);
+                /* The propagation segment time is equal to twice the sum of the signal's propagation time on the bus line,
+                   the receiver delay and the output driver delay */
+                temp2 = (((float)numOfTimeQuanta * ((float)setup->nominalBitRate / 1000.0f) * (float)setup->nominalPropagTime) / 1000000.0f);
+                bitTiming->nominalBitTiming.propagationSegment = ((uint8_t)temp2 - 1U);
+                bitTiming->nominalBitTiming.phase1Segment = phase1 - (bitTiming->nominalBitTiming.propagationSegment + 1U) - 2U;
+                if ((bitTiming->nominalBitTiming.phase2Segment + 1U) > 4U)
+                {
+                    bitTiming->nominalBitTiming.sjw = 3U;
+                }
+                else
+                {
+                    bitTiming->nominalBitTiming.sjw = bitTiming->nominalBitTiming.phase2Segment;
+                }
+                bitTiming->nominalBitTiming.Prescaler = setup->nominalPrescaler;
+                bitTiming->nominalBitTimingSet = true;
+                status = true;
+            }
+            else
+            {
+                bitTiming->nominalBitTimingSet = false;
+            }
+        }
+    }
+
+    return status;
+}
+
+bool ${CAN_INSTANCE_NAME}_BitTimingSet(CAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+
+    if ((bitTiming->nominalBitTimingSet == true)
+    && (bitTiming->nominalBitTiming.phase1Segment <= 0x7U)
+    && (bitTiming->nominalBitTiming.phase2Segment <= 0x7U)
+    && (bitTiming->nominalBitTiming.propagationSegment <= 0x7U)
+    && ((bitTiming->nominalBitTiming.Prescaler >= 0x1U) && (bitTiming->nominalBitTiming.Prescaler <= 0x7FU))
+    && (bitTiming->nominalBitTiming.sjw <= 0x3U))
+    {
+        /* Disable CAN Controller */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_MR &= ~CAN_MR_CANEN_Msk;
+
+        /* Set CAN Baudrate */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_BR  = CAN_BR_PHASE2(bitTiming->nominalBitTiming.phase2Segment) | CAN_BR_PHASE1(bitTiming->nominalBitTiming.phase1Segment) |
+                                             CAN_BR_PROPAG(bitTiming->nominalBitTiming.propagationSegment) | CAN_BR_BRP(bitTiming->nominalBitTiming.Prescaler) |
+                                             CAN_BR_SJW(bitTiming->nominalBitTiming.sjw)<#if CAN_CFG_SMP == "1"> | CAN_BR_SMP_Msk</#if>;
+
+        /* Enable CAN Controller */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_MR |= CAN_MR_CANEN_Msk;
+
+        status = true;
+    }
+    return status;
+}
+
 <#if INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
@@ -836,20 +913,20 @@ bool ${CAN_INSTANCE_NAME}_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t co
                 }
                 break;
             default:
-			         /* Do Nothing */
+                     /* Do Nothing */
                 break;
         }
-        if (mbIsReady) 
-		{       
-		  
+        if (mbIsReady)
+        {
+
             break;
-		}
+        }
     }
 
     if (!mbIsReady)
-	{
+    {
         return false;
-	}
+    }
 
     ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback = callback;
     ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].context = contextHandle;
@@ -915,19 +992,19 @@ bool ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t co
                 }
                 break;
             default:
-			          /* Do Nothing */
+                      /* Do Nothing */
                 break;
         }
         if (mbIsReady)
-		{
+        {
             break;
-		}
+        }
     }
 
     if (!mbIsReady)
-	{
+    {
         return false;
-	}
+    }
 
     ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback = callback;
     ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].context = contextHandle;
@@ -1055,7 +1132,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                         }
                         break;
                     default:
-					         /* Do Nothing */
+                             /* Do Nothing */
                         break;
                 }
             }
