@@ -126,9 +126,9 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     /* Switch the CAN module to Configuration mode. Wait until the switch is complete */
     C${CAN_INSTANCE_NUM}CON = (C${CAN_INSTANCE_NUM}CON & ~_C${CAN_INSTANCE_NUM}CON_REQOP_MASK) | ((CAN_CONFIGURATION_MODE << _C${CAN_INSTANCE_NUM}CON_REQOP_POSITION) & _C${CAN_INSTANCE_NUM}CON_REQOP_MASK);
     while(((C${CAN_INSTANCE_NUM}CON & _C${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _C${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != CAN_CONFIGURATION_MODE)
-	{
-		 /* Do Nothing */		 
-	}
+    {
+         /* Do Nothing */
+    }
 
     /* Set the Bitrate to ${NOMINAL_BITRATE} Kbps */
     C${CAN_INSTANCE_NUM}CFG = ((${BRP}UL << _C${CAN_INSTANCE_NUM}CFG_BRP_POSITION) & _C${CAN_INSTANCE_NUM}CFG_BRP_MASK)
@@ -185,17 +185,17 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 </#if>
     /* Switch the CAN module to CAN_OPERATION_MODE. Wait until the switch is complete */
     <#if CAN_OPMODE == "0x1">
-    C${CAN_INSTANCE_NUM}CON = (C${CAN_INSTANCE_NUM}CON & ~_C${CAN_INSTANCE_NUM}CON_REQOP_MASK) | ((0 << _C${CAN_INSTANCE_NUM}CON_REQOP_POSITION) & _C${CAN_INSTANCE_NUM}CON_REQOP_MASK);
+    C${CAN_INSTANCE_NUM}CON = (C${CAN_INSTANCE_NUM}CON & ~_C${CAN_INSTANCE_NUM}CON_REQOP_MASK);
     while(((C${CAN_INSTANCE_NUM}CON & _C${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _C${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != 0)
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
     </#if>
     C${CAN_INSTANCE_NUM}CON = (C${CAN_INSTANCE_NUM}CON & ~_C${CAN_INSTANCE_NUM}CON_REQOP_MASK) | ((CAN_OPERATION_MODE << _C${CAN_INSTANCE_NUM}CON_REQOP_POSITION) & _C${CAN_INSTANCE_NUM}CON_REQOP_MASK);
     while(((C${CAN_INSTANCE_NUM}CON & _C${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _C${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != CAN_OPERATION_MODE)
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
 }
 
 // *****************************************************************************
@@ -529,9 +529,9 @@ void ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskSet(uint8_t acceptanceFilte
     /* Switch the CAN module to Configuration mode. Wait until the switch is complete */
     C${CAN_INSTANCE_NUM}CON = (C${CAN_INSTANCE_NUM}CON & ~_C${CAN_INSTANCE_NUM}CON_REQOP_MASK) | ((CAN_CONFIGURATION_MODE << _C${CAN_INSTANCE_NUM}CON_REQOP_POSITION) & _C${CAN_INSTANCE_NUM}CON_REQOP_MASK);
     while(((C${CAN_INSTANCE_NUM}CON & _C${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _C${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != CAN_CONFIGURATION_MODE)
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
 
     if (id > CAN_MSG_SID_MASK)
     {
@@ -546,9 +546,9 @@ void ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskSet(uint8_t acceptanceFilte
     /* Switch the CAN module to CAN_OPERATION_MODE. Wait until the switch is complete */
     C${CAN_INSTANCE_NUM}CON = (C${CAN_INSTANCE_NUM}CON & ~_C${CAN_INSTANCE_NUM}CON_REQOP_MASK) | ((CAN_OPERATION_MODE << _C${CAN_INSTANCE_NUM}CON_REQOP_POSITION) & _C${CAN_INSTANCE_NUM}CON_REQOP_MASK);
     while(((C${CAN_INSTANCE_NUM}CON & _C${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _C${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != CAN_OPERATION_MODE)
-	{
-	   /* Do Nothing */
-	}
+    {
+       /* Do Nothing */
+    }
 }
 
 // *****************************************************************************
@@ -727,7 +727,7 @@ bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_
 
         /* Check the id whether it falls under SID or EID,
          * SID max limit is 0x7FF, so anything beyond that is EID */
-        if (id > CAN_MSG_SID_MASK) 
+        if (id > CAN_MSG_SID_MASK)
         {
             txMessage->msgSID = (id & CAN_MSG_EID_MASK) >> 18;
             txMessage->msgEID = ((id & 0x3FFFFUL) << 10) | CAN_MSG_IDE_MASK | CAN_MSG_SRR_MASK;
@@ -765,6 +765,100 @@ bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_
     return status;
 }
 
+bool ${CAN_INSTANCE_NAME}_BitTimingCalculationGet(CAN_BIT_TIMING_SETUP *setup, CAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+    uint32_t numOfTimeQuanta;
+    uint8_t phase1;
+    float temp1;
+    float temp2;
+
+    if ((setup != NULL) && (bitTiming != NULL))
+    {
+        if (setup->nominalBitTimingSet == true)
+        {
+            numOfTimeQuanta = ${CAN_INSTANCE_NAME}_CLOCK_FREQUENCY / (setup->nominalBitRate * (2U * ((uint32_t)setup->nominalPrescaler + 1U)));
+            if ((numOfTimeQuanta >= 8U) && (numOfTimeQuanta <= 25U))
+            {
+                if (setup->nominalSamplePoint < 50.0f)
+                {
+                    setup->nominalSamplePoint = 50.0f;
+                }
+                temp1 = (float)numOfTimeQuanta;
+                temp2 = (temp1 * setup->nominalSamplePoint) / 100.0f;
+                phase1 = (uint8_t)temp2;
+                bitTiming->nominalBitTiming.phase2Segment = (uint8_t)(numOfTimeQuanta - phase1 - 1U);
+                /* The propagation segment time is equal to twice the sum of the signal's propagation time on the bus line,
+                   the receiver delay and the output driver delay */
+                temp2 = (((float)numOfTimeQuanta * ((float)setup->nominalBitRate / 1000.0f) * (float)setup->nominalPropagTime) / 1000000.0f);
+                bitTiming->nominalBitTiming.propagationSegment = ((uint8_t)temp2 - 1U);
+                bitTiming->nominalBitTiming.phase1Segment = phase1 - (bitTiming->nominalBitTiming.propagationSegment + 1U) - 2U;
+                if ((bitTiming->nominalBitTiming.phase2Segment + 1U) > 4U)
+                {
+                    bitTiming->nominalBitTiming.sjw = 3U;
+                }
+                else
+                {
+                    bitTiming->nominalBitTiming.sjw = bitTiming->nominalBitTiming.phase2Segment;
+                }
+                bitTiming->nominalBitTiming.Prescaler = setup->nominalPrescaler;
+                bitTiming->nominalBitTimingSet = true;
+                status = true;
+            }
+            else
+            {
+                bitTiming->nominalBitTimingSet = false;
+            }
+        }
+    }
+
+    return status;
+}
+
+bool ${CAN_INSTANCE_NAME}_BitTimingSet(CAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+
+    if ((bitTiming->nominalBitTimingSet == true)
+    && (bitTiming->nominalBitTiming.phase1Segment <= 0x7U)
+    && (bitTiming->nominalBitTiming.phase2Segment <= 0x7U)
+    && (bitTiming->nominalBitTiming.propagationSegment <= 0x7U)
+    && ((bitTiming->nominalBitTiming.Prescaler >= 0x1U) && (bitTiming->nominalBitTiming.Prescaler <= 0x3FU))
+    && (bitTiming->nominalBitTiming.sjw <= 0x3U))
+    {
+        /* Switch the CAN module to Configuration mode. Wait until the switch is complete */
+        C${CAN_INSTANCE_NUM}CON = (C${CAN_INSTANCE_NUM}CON & ~_C${CAN_INSTANCE_NUM}CON_REQOP_MASK) | ((CAN_CONFIGURATION_MODE << _C${CAN_INSTANCE_NUM}CON_REQOP_POSITION) & _C${CAN_INSTANCE_NUM}CON_REQOP_MASK);
+        while(((C${CAN_INSTANCE_NUM}CON & _C${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _C${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != CAN_CONFIGURATION_MODE)
+        {
+             /* Do Nothing */
+        }
+
+        /* Set the Bitrate */
+        C${CAN_INSTANCE_NUM}CFG = ((bitTiming->nominalBitTiming.Prescaler << _C${CAN_INSTANCE_NUM}CFG_BRP_POSITION) & _C${CAN_INSTANCE_NUM}CFG_BRP_MASK)
+                                | ((bitTiming->nominalBitTiming.sjw << _C${CAN_INSTANCE_NUM}CFG_SJW_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SJW_MASK)
+                                | ((bitTiming->nominalBitTiming.phase2Segment << _C${CAN_INSTANCE_NUM}CFG_SEG2PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG2PH_MASK)
+                                | ((bitTiming->nominalBitTiming.phase1Segment << _C${CAN_INSTANCE_NUM}CFG_SEG1PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG1PH_MASK)
+                                | ((bitTiming->nominalBitTiming.propagationSegment << _C${CAN_INSTANCE_NUM}CFG_PRSEG_POSITION) & _C${CAN_INSTANCE_NUM}CFG_PRSEG_MASK)
+                                | _C${CAN_INSTANCE_NUM}CFG_SEG2PHTS_MASK<#if CAN_CFG_SAM == "0x1"> | _C${CAN_INSTANCE_NUM}CFG_SAM_MASK</#if>;
+
+        /* Switch the CAN module to CAN_OPERATION_MODE. Wait until the switch is complete */
+        <#if CAN_OPMODE == "0x1">
+        C${CAN_INSTANCE_NUM}CON = (C${CAN_INSTANCE_NUM}CON & ~_C${CAN_INSTANCE_NUM}CON_REQOP_MASK);
+        while(((C${CAN_INSTANCE_NUM}CON & _C${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _C${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != 0)
+        {
+            /* Do Nothing */
+        }
+        </#if>
+        C${CAN_INSTANCE_NUM}CON = (C${CAN_INSTANCE_NUM}CON & ~_C${CAN_INSTANCE_NUM}CON_REQOP_MASK) | ((CAN_OPERATION_MODE << _C${CAN_INSTANCE_NUM}CON_REQOP_POSITION) & _C${CAN_INSTANCE_NUM}CON_REQOP_MASK);
+        while(((C${CAN_INSTANCE_NUM}CON & _C${CAN_INSTANCE_NUM}CON_OPMOD_MASK) >> _C${CAN_INSTANCE_NUM}CON_OPMOD_POSITION) != CAN_OPERATION_MODE)
+        {
+            /* Do Nothing */
+        }
+        status = true;
+    }
+    return status;
+}
+
 <#if CAN_INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
@@ -794,9 +888,9 @@ void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t cont
     if (callback != NULL)
     {
         ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback = callback;
-        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context = contextHandle;        
+        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context = contextHandle;
     }
-    return;    
+    return;
 }
 
 // *****************************************************************************
@@ -825,9 +919,9 @@ void ${CAN_INSTANCE_NAME}_ErrorCallbackRegister(CAN_CALLBACK callback, uintptr_t
     if (callback != NULL)
     {
         ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.callback = callback;
-        ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.context = contextHandle;        
+        ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.context = contextHandle;
     }
-    return;    
+    return;
 }
 
 // *****************************************************************************
