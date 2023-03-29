@@ -150,8 +150,29 @@ void GPIO_Initialize ( void )
           <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
           <#lt>    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_JTAGEN_Msk;
 
-        </#if>                     
+        </#if>
       </#if>
+<#assign CFGCON2_SOSCSEL_VAL = false>
+<#list 1..GPIO_PIN_TOTAL as i>
+    <#assign functype = "BSP_PIN_" + i + "_FUNCTION_TYPE">
+    <#assign funcname = "BSP_PIN_" + i + "_FUNCTION_NAME">
+    <#assign pinPort = "BSP_PIN_" + i + "_PORT_PIN">
+    <#assign pinChannel = "BSP_PIN_" + i + "_PORT_CHANNEL">
+    <#if .vars[functype]?has_content && .vars[functype] == "GPIO">
+        <#if .vars[funcname]?has_content>
+            <#if .vars[pinPort]?has_content && (.vars[pinPort] == 11 || .vars[pinPort] == 12)>
+                <#if .vars[pinChannel]?has_content && (.vars[pinChannel] == "A")>
+                    <#assign CFGCON2_SOSCSEL_VAL = true>
+                </#if>
+            </#if>
+        </#if>
+    </#if>
+</#list>
+<#if CFGCON2_SOSCSEL_VAL == true>
+    <#lt>    /* SOSCSEL - Digital (SCLKI) mode is selected */
+    <#lt>    CFG_REGS->CFG_CFGCON2CLR = CFG_CFGCON2_SOSCSEL_Msk;
+
+</#if>
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
     <#if .vars[channel]?has_content>
@@ -500,7 +521,7 @@ void GPIO_PinIntDisable(GPIO_PIN pin)
 {
     GPIO_PORT port;
     uint32_t mask;
-    
+
     port = (GPIO_PORT)(GPIOA_BASE_ADDRESS + (0x100U * (pin>>4)));
     mask =  0x1UL << (pin & 0xFU);
 
@@ -564,7 +585,7 @@ bool GPIO_PinInterruptCallbackRegister(
     Interrupt Handler for change notice interrupt for channel ${.vars[channel]}.
 
   Remarks:
-	It is an internal function called from ISR, user should not call it directly.
+    It is an internal function called from ISR, user should not call it directly.
 */
 <#if .vars["SYS_PORT_${.vars[channel]}_CN_STYLE"] == true>
 <#-- ISR for edge type interrupt -->
