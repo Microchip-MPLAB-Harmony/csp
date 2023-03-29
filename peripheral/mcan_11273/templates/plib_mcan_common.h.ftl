@@ -410,6 +410,135 @@ typedef struct
 } MCAN_TX_EVENT_FIFO;
 
 // *****************************************************************************
+/* MCAN Nominal Bit Timing Parameters
+
+   Summary:
+    MCAN Nominal Bit Timing Parameter structure.
+
+   Description:
+    This data structure defines Nominal Bit Timing Parameters.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Nominal Time segment after sample point */
+    uint8_t nominalTimeSegment2;
+
+    /* Nominal Time segment before sample point */
+    uint8_t nominalTimeSegment1;
+
+    /* Nominal Baud Rate Prescaler */
+    uint16_t nominalPrescaler;
+
+    /* Nominal Syncronization Jump Width */
+    uint8_t nominalSJW;
+
+} MCAN_NOMINAL_BIT_TIMING;
+
+<#if MCAN_OPMODE != "NORMAL">
+// *****************************************************************************
+/* MCAN Data Bit Timing Parameters
+
+   Summary:
+    MCAN Data Bit Timing Parameter structure.
+
+   Description:
+    This data structure defines Data Bit Timing Parameters.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Data Time segment after sample point */
+    uint8_t dataTimeSegment2;
+
+    /* Data Time segment before sample point */
+    uint8_t dataTimeSegment1;
+
+    /* Data Baud Rate Prescaler */
+    uint8_t dataPrescaler;
+
+    /* Data Syncronization Jump Width */
+    uint8_t dataSJW;
+
+} MCAN_DATA_BIT_TIMING;
+
+</#if>
+// *****************************************************************************
+/* MCAN Bit Timing Parameters
+
+   Summary:
+    MCAN Bit Timing Parameter structure.
+
+   Description:
+    This data structure defines Bit Timing Parameters.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Nominal bit timing set flag */
+    bool nominalBitTimingSet;
+
+    /* Nominal bit timing parameters */
+    MCAN_NOMINAL_BIT_TIMING nominalBitTiming;
+
+<#if MCAN_OPMODE != "NORMAL">
+    /* Data bit timing set flag */
+    bool dataBitTimingSet;
+
+    /* Data bit timing parameters */
+    MCAN_DATA_BIT_TIMING dataBitTiming;
+</#if>
+} MCAN_BIT_TIMING;
+
+// *****************************************************************************
+/* MCAN Bit Timing Setup
+
+   Summary:
+    MCAN Bit Timing Setup structure.
+
+   Description:
+    This data structure defines Bit Timing Setup parameters.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Nominal bit timing set flag */
+    bool nominalBitTimingSet;
+
+    /* Nominal bit rate */
+    uint32_t nominalBitRate;
+
+    /* Nominal Sample Point */
+    float nominalSamplePoint;
+
+    /* Nominal Baud Rate Prescaler */
+    uint16_t nominalPrescaler;
+
+<#if MCAN_OPMODE != "NORMAL">
+    /* Data bit timing set flag */
+    bool dataBitTimingSet;
+
+    /* Data bit rate */
+    uint32_t dataBitRate;
+
+    /* Data Sample Point */
+    float dataSamplePoint;
+
+    /* Data Baud Rate Prescaler */
+    uint8_t dataPrescaler;
+
+</#if>
+} MCAN_BIT_TIMING_SETUP;
+
+// *****************************************************************************
 /* MCAN Tx FIFO Callback Object
 
    Summary:

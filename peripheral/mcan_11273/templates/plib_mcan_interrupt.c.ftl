@@ -1004,6 +1004,177 @@ void ${MCAN_INSTANCE_NAME}_SleepModeExit(void)
     }
 }
 
+bool ${MCAN_INSTANCE_NAME}_BitTimingCalculationGet(MCAN_BIT_TIMING_SETUP *setup, MCAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+    uint32_t numOfTimeQuanta;
+    uint8_t tseg1;
+    float temp1;
+    float temp2;
+
+    if ((setup != NULL) && (bitTiming != NULL))
+    {
+        if (setup->nominalBitTimingSet == true)
+        {
+            numOfTimeQuanta = ${MCAN_INSTANCE_NAME}_CLOCK_FREQUENCY / (setup->nominalBitRate * ((uint32_t)setup->nominalPrescaler + 1U));
+            if ((numOfTimeQuanta >= 4U) && (numOfTimeQuanta <= 385U))
+            {
+                if (setup->nominalSamplePoint < 50.0f)
+                {
+                    setup->nominalSamplePoint = 50.0f;
+                }
+                temp1 = (float)numOfTimeQuanta;
+                temp2 = (temp1 * setup->nominalSamplePoint) / 100.0f;
+                tseg1 = (uint8_t)temp2;
+                bitTiming->nominalBitTiming.nominalTimeSegment2 = (uint8_t)(numOfTimeQuanta - tseg1 - 1U);
+                bitTiming->nominalBitTiming.nominalTimeSegment1 = tseg1 - 2U;
+                bitTiming->nominalBitTiming.nominalSJW = bitTiming->nominalBitTiming.nominalTimeSegment2;
+                bitTiming->nominalBitTiming.nominalPrescaler = setup->nominalPrescaler;
+                bitTiming->nominalBitTimingSet = true;
+                status = true;
+            }
+            else
+            {
+                bitTiming->nominalBitTimingSet = false;
+            }
+        }
+<#if MCAN_OPMODE != "NORMAL">
+        if (setup->dataBitTimingSet == true)
+        {
+            numOfTimeQuanta = ${MCAN_INSTANCE_NAME}_CLOCK_FREQUENCY / (setup->dataBitRate * ((uint32_t)setup->dataPrescaler + 1U));
+            if ((numOfTimeQuanta >= 4U) && (numOfTimeQuanta <= 49U))
+            {
+                if (setup->dataSamplePoint < 50.0f)
+                {
+                    setup->dataSamplePoint = 50.0f;
+                }
+                temp1 = (float)numOfTimeQuanta;
+                temp2 = (temp1 * setup->dataSamplePoint) / 100.0f;
+                tseg1 = (uint8_t)temp2;
+                bitTiming->dataBitTiming.dataTimeSegment2 = (uint8_t)(numOfTimeQuanta - tseg1 - 1U);
+                bitTiming->dataBitTiming.dataTimeSegment1 = tseg1 - 2U;
+                bitTiming->dataBitTiming.dataSJW = bitTiming->dataBitTiming.dataTimeSegment2;
+                bitTiming->dataBitTiming.dataPrescaler = setup->dataPrescaler;
+                bitTiming->dataBitTimingSet = true;
+                status = true;
+            }
+            else
+            {
+                bitTiming->dataBitTimingSet = false;
+                status = false;
+            }
+        }
+</#if>
+    }
+
+    return status;
+}
+
+bool ${MCAN_INSTANCE_NAME}_BitTimingSet(MCAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+    bool nominalBitTimingSet = false;
+<#if MCAN_OPMODE != "NORMAL">
+    bool dataBitTimingSet = false;
+</#if>
+
+    if ((bitTiming->nominalBitTimingSet == true)
+    && (bitTiming->nominalBitTiming.nominalTimeSegment1 >= 0x1U)
+    && (bitTiming->nominalBitTiming.nominalTimeSegment2 <= 0x7FU)
+    && (bitTiming->nominalBitTiming.nominalPrescaler <= 0x1FFU)
+    && (bitTiming->nominalBitTiming.nominalSJW <= 0x7FU))
+    {
+        nominalBitTimingSet = true;
+    }
+
+<#if MCAN_OPMODE != "NORMAL">
+    if  ((bitTiming->dataBitTimingSet == true)
+    &&  ((bitTiming->dataBitTiming.dataTimeSegment1 >= 0x1U) && (bitTiming->dataBitTiming.dataTimeSegment1 <= 0x1FU))
+    &&  (bitTiming->dataBitTiming.dataTimeSegment2 <= 0xFU)
+    &&  (bitTiming->dataBitTiming.dataPrescaler <= 0x1FU)
+    &&  (bitTiming->dataBitTiming.dataSJW <= 0xFU))
+    {
+        dataBitTimingSet = true;
+    }
+
+</#if>
+<#if MCAN_OPMODE != "NORMAL">
+    if ((nominalBitTimingSet == true) || (dataBitTimingSet == true))
+<#else>
+    if (nominalBitTimingSet == true)
+</#if>
+    {
+        /* Start MCAN initialization */
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_Msk;
+        while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) != MCAN_CCCR_INIT_Msk)
+        {
+            /* Wait for initialization complete */
+        }
+
+        /* Set CCE to unlock the configuration registers */
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
+
+<#if MCAN_OPMODE != "NORMAL">
+        if (dataBitTimingSet == true)
+        {
+<#if MCAN_REVISION_A_ENABLE == true>
+            /* Set Fast Bit Timing and Prescaler Register */
+            ${MCAN_INSTANCE_NAME}_REGS->MCAN_FBTP = MCAN_FBTP_FTSEG2(bitTiming->dataBitTiming.dataTimeSegment2) | MCAN_FBTP_FTSEG1(bitTiming->dataBitTiming.dataTimeSegment1) | MCAN_FBTP_FBRP(bitTiming->dataBitTiming.dataPrescaler) | MCAN_FBTP_FSJW(bitTiming->dataBitTiming.dataSJW);
+
+<#else>
+            /* Set Data Bit Timing and Prescaler Register */
+            ${MCAN_INSTANCE_NAME}_REGS->MCAN_DBTP = MCAN_DBTP_DTSEG2(bitTiming->dataBitTiming.dataTimeSegment2) | MCAN_DBTP_DTSEG1(bitTiming->dataBitTiming.dataTimeSegment1) | MCAN_DBTP_DBRP(bitTiming->dataBitTiming.dataPrescaler) | MCAN_DBTP_DSJW(bitTiming->dataBitTiming.dataSJW);
+
+</#if>
+        }
+</#if>
+        if (nominalBitTimingSet == true)
+        {
+<#if MCAN_REVISION_A_ENABLE == true>
+            /* Set Bit timing and Prescaler Register */
+            ${MCAN_INSTANCE_NAME}_REGS->MCAN_BTP  = MCAN_BTP_TSEG2(bitTiming->nominalBitTiming.nominalTimeSegment2) | MCAN_BTP_TSEG1(bitTiming->nominalBitTiming.nominalTimeSegment1) | MCAN_BTP_BRP(bitTiming->nominalBitTiming.nominalPrescaler) | MCAN_BTP_SJW(bitTiming->nominalBitTiming.nominalSJW);
+<#else>
+            /* Set Nominal Bit timing and Prescaler Register */
+            ${MCAN_INSTANCE_NAME}_REGS->MCAN_NBTP  = MCAN_NBTP_NTSEG2(bitTiming->nominalBitTiming.nominalTimeSegment2) | MCAN_NBTP_NTSEG1(bitTiming->nominalBitTiming.nominalTimeSegment1) | MCAN_NBTP_NBRP(bitTiming->nominalBitTiming.nominalPrescaler) | MCAN_NBTP_NSJW(bitTiming->nominalBitTiming.nominalSJW);
+</#if>
+        }
+
+        /* Set the operation mode */
+    <#if MCAN_REVISION_A_ENABLE == true>
+        <#if MCAN_OPMODE != "NORMAL">
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_CME_FD | MCAN_CCCR_CMR_FD_BITRATE_SWITCH<#rt>
+                                               <#lt><#if MCAN_OPMODE == "Restricted Operation Mode"> | MCAN_CCCR_ASM_Msk</#if><#rt>
+                                               <#lt><#if MCAN_OPMODE == "Bus Monitoring Mode"> | MCAN_CCCR_MON_Msk</#if><#rt>
+                                               <#lt><#if MCAN_OPMODE == "External Loop Back Mode"> | MCAN_CCCR_TEST_Msk</#if><#rt>
+                                               <#lt><#if MCAN_OPMODE == "Internal Loop Back Mode"> | MCAN_CCCR_TEST_Msk | MCAN_CCCR_MON_Msk</#if>;
+        </#if>
+    <#else>
+        <#if MCAN_OPMODE != "NORMAL">
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_FDOE_ENABLED | MCAN_CCCR_BRSE_ENABLED<#rt>
+                                               <#lt><#if MCAN_OPMODE == "Restricted Operation Mode"> | MCAN_CCCR_ASM_Msk</#if><#rt>
+                                               <#lt><#if MCAN_OPMODE == "Bus Monitoring Mode"> | MCAN_CCCR_MON_Msk</#if><#rt>
+                                               <#lt><#if MCAN_OPMODE == "External Loop Back Mode"> | MCAN_CCCR_TEST_Msk</#if><#rt>
+                                               <#lt><#if MCAN_OPMODE == "Internal Loop Back Mode"> | MCAN_CCCR_TEST_Msk | MCAN_CCCR_MON_Msk</#if>;
+        </#if>
+    </#if>
+        <#if TX_PAUSE == true>
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_TXP_Msk;
+        </#if>
+
+        <#if MCAN_OPMODE == "External Loop Back Mode" || MCAN_OPMODE == "Internal Loop Back Mode">
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_TEST |= MCAN_TEST_LBCK_Msk;
+        </#if>
+
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR &= ~MCAN_CCCR_INIT_Msk;
+        while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
+        {
+            /* Wait for initialization complete */
+        }
+        status = true;
+    }
+    return status;
+}
+
 <#if TXBUF_USE>
 // *****************************************************************************
 /* Function:

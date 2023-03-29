@@ -438,7 +438,7 @@ def updateSourceFileName(symbol, event):
         elif id == "instHeaderFile":
             symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan" + mcanInt + ".h.ftl")
         elif id == "headerFile":
-            symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan_common.h")
+            symbol.setSourcePath("../peripheral/mcan_11273/templates/plib_mcan_common.h.ftl")
 
 def instantiateComponent(mcanComponent):
     global mcanInstanceName
@@ -1035,11 +1035,12 @@ def instantiateComponent(mcanComponent):
 
     #Master Header
     mcanMasterHeaderFile = mcanComponent.createFileSymbol("headerFile", None)
-    mcanMasterHeaderFile.setSourcePath("../peripheral/mcan_" + REG_MODULE_MCAN.getID() + "/templates/plib_mcan_common.h")
+    mcanMasterHeaderFile.setSourcePath("../peripheral/mcan_" + REG_MODULE_MCAN.getID() + "/templates/plib_mcan_common.h.ftl")
     mcanMasterHeaderFile.setOutputName("plib_mcan_common.h")
     mcanMasterHeaderFile.setDestPath("/peripheral/mcan/")
     mcanMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/mcan/")
     mcanMasterHeaderFile.setType("HEADER")
+    mcanMasterHeaderFile.setMarkup(True)
     mcanMasterHeaderFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE", "MCAN_GENERATE_LEGACY_APIS"])
 
     #Instance Source File
