@@ -72,7 +72,10 @@ void ${RAM_INSTANCE_NAME}_ECC_SingleBitFaultInject(uint32_t fltaddr, uint8_t flt
     MCRAMC_REGS->MCRAMC_FLTCTRL &= ~MCRAMC_FLTCTRL_FLTEN_Msk;
 
     // Dummy Read back for synchronization purpose
-    while  (MCRAMC_REGS->MCRAMC_FLTCTRL & MCRAMC_FLTCTRL_FLTEN_Msk);
+    while ((MCRAMC_REGS->MCRAMC_FLTCTRL & MCRAMC_FLTCTRL_FLTEN_Msk) != 0U)
+    {
+        /* Wait for read back to complete */
+    }
 
     /* Set the fault address */
     MCRAMC_REGS->MCRAMC_FLTADR = MCRAMC_FLTADR_FLTADR (fltaddr);
@@ -84,7 +87,10 @@ void ${RAM_INSTANCE_NAME}_ECC_SingleBitFaultInject(uint32_t fltaddr, uint8_t flt
     MCRAMC_REGS->MCRAMC_FLTCTRL = (MCRAMC_REGS->MCRAMC_FLTCTRL & ~MCRAMC_FLTCTRL_FLTMD_Msk) | MCRAMC_FLTCTRL_FLTMD(0x1) | MCRAMC_FLTCTRL_FLTEN_Msk;
 
     // Dummy Read back for synchronization purpose
-    while  (MCRAMC_REGS->MCRAMC_FLTCTRL != (MCRAMC_FLTCTRL_FLTMD(0x1) | MCRAMC_FLTCTRL_FLTEN_Msk));
+    while  (MCRAMC_REGS->MCRAMC_FLTCTRL != (MCRAMC_FLTCTRL_FLTMD(0x1) | MCRAMC_FLTCTRL_FLTEN_Msk))
+    {
+        /* Wait for read back to complete */
+    }
 }
 
 void ${RAM_INSTANCE_NAME}_ECC_DoubleBitFaultInject(uint32_t fltaddr, uint8_t flt1BitPtr, uint8_t flt2BitPtr)
@@ -93,7 +99,10 @@ void ${RAM_INSTANCE_NAME}_ECC_DoubleBitFaultInject(uint32_t fltaddr, uint8_t flt
     MCRAMC_REGS->MCRAMC_FLTCTRL &= ~MCRAMC_FLTCTRL_FLTEN_Msk;
 
     // Dummy Read back for synchronization purpose
-    while  (MCRAMC_REGS->MCRAMC_FLTCTRL & MCRAMC_FLTCTRL_FLTEN_Msk);
+    while ((MCRAMC_REGS->MCRAMC_FLTCTRL & MCRAMC_FLTCTRL_FLTEN_Msk) != 0U)
+    {
+        /* Wait for read back to complete */
+    }
 
     /* Set the fault address */
     MCRAMC_REGS->MCRAMC_FLTADR = MCRAMC_FLTADR_FLTADR (fltaddr);
@@ -105,7 +114,10 @@ void ${RAM_INSTANCE_NAME}_ECC_DoubleBitFaultInject(uint32_t fltaddr, uint8_t flt
     MCRAMC_REGS->MCRAMC_FLTCTRL = (MCRAMC_REGS->MCRAMC_FLTCTRL & ~MCRAMC_FLTCTRL_FLTMD_Msk) | MCRAMC_FLTCTRL_FLTMD(0x2) | MCRAMC_FLTCTRL_FLTEN_Msk;
 
     // Dummy Read back for synchronization purpose
-    while  (MCRAMC_REGS->MCRAMC_FLTCTRL != (MCRAMC_FLTCTRL_FLTMD(0x2) | MCRAMC_FLTCTRL_FLTEN_Msk));
+    while  (MCRAMC_REGS->MCRAMC_FLTCTRL != (MCRAMC_FLTCTRL_FLTMD(0x2) | MCRAMC_FLTCTRL_FLTEN_Msk))
+    {
+        /* Wait for read back to complete */
+    }
 }
 
 void ${RAM_INSTANCE_NAME}_ECC_Enable(void)
@@ -135,12 +147,12 @@ uint32_t ${RAM_INSTANCE_NAME}_ECC_FaultCaptureAddrGet(void)
 
 uint8_t ${RAM_INSTANCE_NAME}_ECC_FaultCaptureSyndromeGet(void)
 {
-    return (MCRAMC_REGS->MCRAMC_ERRCSYN & MCRAMC_ERRCSYN_ERCSYN_Msk);
+    return (uint8_t)(MCRAMC_REGS->MCRAMC_ERRCSYN & MCRAMC_ERRCSYN_ERCSYN_Msk);
 }
 
 uint8_t ${RAM_INSTANCE_NAME}_ECC_FaultCaptureParityGet(void)
 {
-    return (MCRAMC_REGS->MCRAMC_ERRCPAR & MCRAMC_ERRCPAR_ERCPAR_Msk);
+    return (uint8_t)(MCRAMC_REGS->MCRAMC_ERRCPAR & MCRAMC_ERRCPAR_ERCPAR_Msk);
 }
 
 <#if MCRAMC_ECC_SINGLE_BIT_ERR_INT_ENABLE == true || MCRAMC_ECC_DOUBLE_BIT_ERR_INT_ENABLE == true>
@@ -160,7 +172,7 @@ void ${RAM_INSTANCE_NAME}_ECC_InterruptHandler ( void )
 
         /* Clear interrupt */
         MCRAMC_REGS->MCRAMC_INTSTA = status;
-        while (MCRAMC_REGS->MCRAMC_INTSTA & status)
+        while ((MCRAMC_REGS->MCRAMC_INTSTA & status) != 0U)
         {
             /* Wait for the interrupt status to clear */
         }
@@ -173,22 +185,23 @@ void ${RAM_INSTANCE_NAME}_ECC_InterruptHandler ( void )
 <#else>
 ${RAM_INSTANCE_NAME}_ECC_STATUS ${RAM_INSTANCE_NAME}_ECC_StatusGet(void)
 {
-    return (MCRAMC_REGS->MCRAMC_INTSTA & MCRAMC_INTSTA_Msk);
+    uint32_t status = MCRAMC_REGS->MCRAMC_INTSTA & MCRAMC_INTSTA_Msk;
+    return ((${RAM_INSTANCE_NAME}_ECC_STATUS)status);
 }
 </#if>
 </#if>
 
-bool ${RAM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
+bool ${RAM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address )
 {
-    (void) memcpy((void *)data, (void *)address, length);
-
+    uint32_t *p_address = (uint32_t*)address;
+    (void) memcpy(data, p_address, length);
     return true;
 }
 
 bool ${RAM_INSTANCE_NAME}_Write( uint32_t *data, uint32_t length, uint32_t address )
 {
-    (void) memcpy((void *)address, (void *)data, length);
-
+    uint32_t *p_address = (uint32_t*)address;
+    (void) memcpy(p_address, data, length);
     return true;
 }
 

@@ -56,6 +56,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "device.h"
+#include "interrupts.h"
 
 #ifdef __cplusplus // Provide C++ Compatibility
 extern "C" {
@@ -107,9 +108,9 @@ ${RAM_INSTANCE_NAME}_ECC_STATUS ${RAM_INSTANCE_NAME}_ECC_StatusGet(void);
 
 </#if>
 
-bool ${RAM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address );
+bool ${RAM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address);
 
-bool ${RAM_INSTANCE_NAME}_Write( uint32_t *data, uint32_t length, uint32_t address );
+bool ${RAM_INSTANCE_NAME}_Write( uint32_t *data, uint32_t length, uint32_t address);
 
 bool ${RAM_INSTANCE_NAME}_IsBusy(void);
 
