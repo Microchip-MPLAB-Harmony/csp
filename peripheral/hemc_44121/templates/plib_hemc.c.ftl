@@ -47,7 +47,6 @@
 // Section: Global Data
 // *****************************************************************************
 // *****************************************************************************
-static void ${HSMC_INSTANCE_NAME}_Initialize( void );
 
 <#if HECC_INTERRUPT_MODE == true>
 static HEMC_OBJ ${HEMC_INSTANCE_NAME?lower_case}Obj;
@@ -60,7 +59,7 @@ static HEMC_OBJ ${HEMC_INSTANCE_NAME?lower_case}Obj;
 // *****************************************************************************
 
 <#if USE_HSDRAM?? && USE_HSDRAM>
-void SW_DelayUs(uint32_t delay)
+static void SW_DelayUs(uint32_t delay)
 {
     uint32_t i, count;
 
@@ -153,8 +152,8 @@ void ${HSDRAMC_INSTANCE_NAME}_Initialize( void )
 }
 </#if>
 
-static void ${HSMC_INSTANCE_NAME}_Initialize( void )
-{
+<#assign HSMC_INIT_GENERATED = false>
+
 <#list 0..(HSMC_CHIP_SELECT_COUNT - 1) as i>
     <#assign HSMC_IN_USE = "USE_HSMC_" + i>
     <#assign HSMC_CHIP_SELECT = "HSMC_CHIP_SELECT" + i>
@@ -177,7 +176,11 @@ static void ${HSMC_INSTANCE_NAME}_Initialize( void )
     <#if .vars[HSMC_CHIP_SELECT]?has_content>
 
     <#if (.vars[HSMC_CHIP_SELECT] != false)>
-
+    <#if HSMC_INIT_GENERATED == false>
+        <#lt>static void ${HSMC_INSTANCE_NAME}_Initialize( void )
+        <#lt>{
+        <#assign HSMC_INIT_GENERATED = true>
+    </#if>
     /* Chip Select CS${i} Timings */
     /* Setup HSMC SETUP register */
     ${HSMC_INSTANCE_NAME}_REGS->HSMC_CS[${i}].HSMC_SETUP = HSMC_SETUP_NWE_SETUP(${.vars[HSMC_NWE_SETUP_CS]}) | HSMC_SETUP_NCS_WR_SETUP(${.vars[HSMC_NCS_WR_SETUP_CS]}) | HSMC_SETUP_NRD_SETUP(${.vars[HSMC_NRD_SETUP_CS]}) | HSMC_SETUP_NCS_RD_SETUP(${.vars[HSMC_NCS_RD_SETUP_CS]});
@@ -209,7 +212,9 @@ static void ${HSMC_INSTANCE_NAME}_Initialize( void )
     /* Enable Write Protection */
     ${HSMC_INSTANCE_NAME}_REGS->HSMC_WPMR = (HSMC_WPMR_WPKEY_PASSWD | HSMC_WPMR_WPEN_Msk);
 </#if>
+<#if HSMC_INIT_GENERATED == true>
 }
+</#if>
 void ${HEMC_INSTANCE_NAME}_Initialize( void )
 {
 <#assign HEMC_NCS0_WRITE_CONF = "CS_0_WRITE_ECC_CONF" >
@@ -255,7 +260,9 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
   <#if USE_HSDRAM?? && USE_HSDRAM>
     ${HSDRAMC_INSTANCE_NAME}_Initialize();
   </#if>
+  <#if HSMC_INIT_GENERATED == true>
     ${HSMC_INSTANCE_NAME}_Initialize();
+  </#if>
 
 <#assign IS_RAM_INIT = false >
 <#list 0..(HSMC_CHIP_SELECT_COUNT - 1) as i>

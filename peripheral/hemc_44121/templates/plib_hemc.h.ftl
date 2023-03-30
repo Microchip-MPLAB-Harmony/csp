@@ -143,6 +143,10 @@ typedef struct
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
+<#if USE_HSDRAM?? && USE_HSDRAM>
+void ${HSDRAMC_INSTANCE_NAME}_Initialize( void );
+</#if>
+
 void ${HEMC_INSTANCE_NAME}_Initialize( void );
 
 bool ${HEMC_INSTANCE_NAME}_DisableECC(uint8_t chipSelect);
