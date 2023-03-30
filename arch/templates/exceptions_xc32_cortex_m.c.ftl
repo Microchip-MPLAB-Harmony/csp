@@ -68,7 +68,7 @@
 
 /* Brief default interrupt handlers for core IRQs.*/
 
-void __attribute__((noreturn)) NonMaskableInt_Handler(void)
+void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
 {
 #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     __builtin_software_breakpoint();
@@ -79,7 +79,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
 }
 
 <#if ADVANCED_EXCEPTION>
-    <#lt>void __attribute__((noreturn)) HardFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
+    <#lt>void __attribute__((noreturn, weak)) HardFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
     <#lt>{
     <#lt>   uint32_t stacked_r0;
     <#lt>   uint32_t stacked_r1;
@@ -144,7 +144,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>}
 
     <#if M4_M7_EXCEPTIONS>
-    <#lt>void __attribute__((noreturn)) DebugMonitor_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
+    <#lt>void __attribute__((noreturn, weak)) DebugMonitor_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
     <#lt>{
     <#lt>   uint32_t stacked_r0;
     <#lt>   uint32_t stacked_r1;
@@ -197,7 +197,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>   }
     <#lt>}
 
-    <#lt>void __attribute__((noreturn)) MemoryManagement_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
+    <#lt>void __attribute__((noreturn, weak)) MemoryManagement_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
     <#lt>{
     <#lt>   uint32_t stacked_r0;
     <#lt>   uint32_t stacked_r1;
@@ -256,7 +256,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>   }
     <#lt>}
 
-    <#lt>void __attribute__((noreturn)) BusFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
+    <#lt>void __attribute__((noreturn, weak)) BusFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
     <#lt>{
     <#lt>   uint32_t stacked_r0;
     <#lt>   uint32_t stacked_r1;
@@ -318,7 +318,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>   }
     <#lt>}
 
-    <#lt>void __attribute__((noreturn)) UsageFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
+    <#lt>void __attribute__((noreturn, weak)) UsageFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
     <#lt>{
     <#lt>   uint32_t stacked_r0;
     <#lt>   uint32_t stacked_r1;
@@ -375,7 +375,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>}
     </#if>
 <#else>
-    <#lt>void __attribute__((noreturn)) HardFault_Handler(void)
+    <#lt>void __attribute__((noreturn, weak)) HardFault_Handler(void)
     <#lt>{
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
@@ -386,7 +386,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>}
 
     <#if M4_M7_EXCEPTIONS>
-    <#lt>void __attribute__((noreturn)) DebugMonitor_Handler(void)
+    <#lt>void __attribute__((noreturn, weak)) DebugMonitor_Handler(void)
     <#lt>{
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
@@ -396,7 +396,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>   }
     <#lt>}
 
-    <#lt>void __attribute__((noreturn)) MemoryManagement_Handler(void)
+    <#lt>void __attribute__((noreturn, weak)) MemoryManagement_Handler(void)
     <#lt>{
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
@@ -406,7 +406,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>   }
     <#lt>}
 
-    <#lt>void __attribute__((noreturn)) BusFault_Handler(void)
+    <#lt>void __attribute__((noreturn, weak)) BusFault_Handler(void)
     <#lt>{
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
@@ -416,7 +416,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>   }
     <#lt>}
 
-    <#lt>void __attribute__((noreturn)) UsageFault_Handler(void)
+    <#lt>void __attribute__((noreturn, weak)) UsageFault_Handler(void)
     <#lt>{
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();

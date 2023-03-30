@@ -155,7 +155,7 @@ static uintptr_t return_address; // Return Address (ra)
     Refer to the XC32 User's Guide for additional information.
  */
 
-void __attribute__((nomips16)) _general_exception_handler (XCPT_FRAME* const pXFrame)
+void __attribute__((nomips16, weak)) _general_exception_handler (XCPT_FRAME* const pXFrame)
 {
     exception_address = pXFrame->epc;
     exception_code = pXFrame->cause;   // capture exception type
@@ -201,7 +201,7 @@ void __attribute__((nomips16)) _general_exception_handler (XCPT_FRAME* const pXF
     Refer to the XC32 User's Guide for additional information.
  */
 
-void  __attribute__((noreturn)) _bootstrap_exception_handler(void)
+void  __attribute__((noreturn, weak)) _bootstrap_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
@@ -230,7 +230,7 @@ void  __attribute__((noreturn)) _bootstrap_exception_handler(void)
     Refer to the XC32 User's Guide for additional information.
  */
 
-void  __attribute__((noreturn)) _cache_err_exception_handler(void)
+void  __attribute__((noreturn, weak)) _cache_err_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
@@ -260,7 +260,7 @@ void  __attribute__((noreturn)) _cache_err_exception_handler(void)
     Refer to the XC32 User's Guide for additional information.
  */
 
-void  __attribute__((noreturn)) _simple_tlb_refill_exception_handler(void)
+void  __attribute__((noreturn, weak)) _simple_tlb_refill_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
