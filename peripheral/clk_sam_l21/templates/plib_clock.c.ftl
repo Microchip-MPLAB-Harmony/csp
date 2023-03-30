@@ -41,6 +41,18 @@
 #include "plib_clock.h"
 #include "device.h"
 
+<#assign OSCCTRL_INIT_GENERATE = false>
+
+<#if (CONFIG_CLOCK_OSC16M_FREQSEL != "0x0") || (CONFIG_CLOCK_OSC16M_RUNSTDBY != false) || (CONFIG_CLOCK_OSC16M_ONDEMAND != "ENABLE")>
+    <#if (CONFIG_CLOCK_OSC16M_FREQSEL != "0x0")>
+        <#assign OSCCTRL_INIT_GENERATE = true>
+    </#if>
+</#if>
+<#if CONFIG_CLOCK_XOSC_ENABLE == true>
+    <#assign OSCCTRL_INIT_GENERATE = true>
+</#if>
+
+<#if OSCCTRL_INIT_GENERATE == true>
 static void OSCCTRL_Initialize(void)
 {
 <#if (CONFIG_CLOCK_OSC16M_FREQSEL != "0x0") || (CONFIG_CLOCK_OSC16M_RUNSTDBY != false) || (CONFIG_CLOCK_OSC16M_ONDEMAND != "ENABLE")>
@@ -73,6 +85,7 @@ static void OSCCTRL_Initialize(void)
     </#if>
 </#if>
 }
+</#if>
 
 static void OSC32KCTRL_Initialize(void)
 {
@@ -179,7 +192,7 @@ static void DFLL_Initialize(void)
         /* Waiting for DFLL to be ready */
     }
     </#if>
-    
+
     <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
     OSCCTRL_REGS->OSCCTRL_DFLLCTRL |= OSCCTRL_DFLLCTRL_ONDEMAND_Msk;
     </#if>
@@ -293,8 +306,10 @@ static void GCLK${i}_Initialize(void)
 </#list>
 void CLOCK_Initialize (void)
 {
+<#if OSCCTRL_INIT_GENERATE == true>
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
+</#if>
 
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
