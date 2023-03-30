@@ -92,14 +92,6 @@ typedef enum
 
 typedef void (*${AC_INSTANCE_NAME}_CALLBACK) (uint8_t int_flags, uintptr_t context);
 
-typedef struct
-{
-    uint8_t int_flags;
-    AC_CALLBACK callback;
-    uintptr_t    context;
-
-} AC_OBJECT ;
-
 <#assign AC_SCALER_REG_PRESENT = false>
 
 <#list 0..(AC_NUM_COMPARATORS-1) as i>

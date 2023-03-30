@@ -166,6 +166,14 @@
     <#assign AC_CTRLC_ENABLE = true>
 </#if>
 
+typedef struct
+{
+    uint8_t int_flags;
+    AC_CALLBACK callback;
+    uintptr_t    context;
+
+} AC_OBJECT ;
+
 static AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
@@ -243,7 +251,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
             </#if>
         </#if>
     </#if>
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;	
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;
                 <#if .vars[AC_SCALERn]?has_content >
     ${AC_INSTANCE_NAME}_REGS->AC_SCALER[${i}] = ${.vars[AC_SCALERn]}U;
                 </#if>
@@ -257,14 +265,14 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_WINCTRL_Msk) == AC_SYNCBUSY_WINCTRL_Msk)
     {
         /* Wait for Synchronization */
-    }    
+    }
 </#if>
 <#if AC_EVCTRL_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_EVCTRL = ${AC_EVCTRL_VAL};
 </#if>
 <#if AC_INTENSET_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_INTENSET = ${AC_INTENSET_VAL};
-</#if>    
+</#if>
     ${AC_INSTANCE_NAME}_REGS->AC_CTRLA = AC_CTRLA_ENABLE_Msk;
 	while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
     {
@@ -275,7 +283,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
 void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
 {
     /* Start Comparison */
-    ${AC_INSTANCE_NAME}_REGS->AC_CTRLB |= (1U << (uint8_t)channel_id);
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLB |= ((uint32_t)1U << (uint8_t)channel_id);
 }
 
 <#if AC_SCALER_REG_PRESENT == true>
@@ -307,7 +315,7 @@ void ${AC_INSTANCE_NAME}_SetDACOutput( AC_CHANNEL channel_id , uint8_t value)
     }
     else
     {
-        ${AC_INSTANCE_NAME}_REGS->AC_DACCTRL = (${AC_INSTANCE_NAME}_REGS->AC_DACCTRL & ~AC_DACCTRL_VALUE1_Msk) | (value << AC_DACCTRL_VALUE1_Pos);
+        ${AC_INSTANCE_NAME}_REGS->AC_DACCTRL = (${AC_INSTANCE_NAME}_REGS->AC_DACCTRL & ~AC_DACCTRL_VALUE1_Msk) | ((uint32_t)value << AC_DACCTRL_VALUE1_Pos);
     }
 
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
@@ -341,7 +349,7 @@ void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U))
     {
         /* Wait for Synchronization */
-    }    
+    }
 }
 
 void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT positiveInput, AC_NEGINPUT negativeInput)
@@ -393,7 +401,7 @@ void ${AC_INSTANCE_NAME}_CallbackRegister (AC_CALLBACK callback, uintptr_t conte
 void ${AC_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Copy the status to use inside the callback */
-    acObj.int_flags = ${AC_INSTANCE_NAME}_REGS->AC_STATUSA;
+    acObj.int_flags = (uint8_t)${AC_INSTANCE_NAME}_REGS->AC_STATUSA;
     /* Clear the interrupt flags*/
     ${AC_INSTANCE_NAME}_REGS->AC_INTFLAG = AC_INTFLAG_Msk;
 
