@@ -783,11 +783,9 @@ def readATDF(adcInstanceName, adcComponent):
     adcMaxChannels.setDependencies(updateADCMaxChannels, adcMaxChannelsDepList)
 
     # Read calibration base address
-    calibBaseAddrNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FCR_CFM_CALOTP\"]")
-    if calibBaseAddrNode == None:
-        calibBaseAddrNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FLASH_CFM_CALOTP\"]")
+    calibBaseAddrNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"FUSES\"]/instance@[name=\"FUSES\"]/register-group@[name=\"FUSES_CALOTP\"]")
 
-    calibBaseAddr = int(calibBaseAddrNode.getAttribute("start"), 16)
+    calibBaseAddr = int(calibBaseAddrNode.getAttribute("offset"), 16)
     # Add offset to the base address
     calibBaseAddr = calibBaseAddr + 0x184
 
