@@ -91,12 +91,16 @@ void ${DACC_INSTANCE_NAME}_Initialize (void)
     {
         /* Do nothing */
     }
-    <#elseif ((!DACC_CHER_CH0) && DACC_CHER_CH1)>
-    /* Wait until DAC Channel 1 is ready*/
-    while(!(${DACC_INSTANCE_NAME}_REGS->DACC_CHSR& DACC_CHSR_DACRDY1_Msk));
-    <#elseif (DACC_CHER_CH0 && DACC_CHER_CH1)>
-    /* Wait until DAC Channel 0 and Channel 1 is ready*/
-    while(!(${DACC_INSTANCE_NAME}_REGS->DACC_CHSR& (DACC_CHSR_DACRDY0_Msk | DACC_CHSR_DACRDY1_Msk)));
+    <#elseif ((!DACC_CHER_CH0) && DACC_CHER_CH1)>    
+    while((${DACC_INSTANCE_NAME}_REGS->DACC_CHSR& DACC_CHSR_DACRDY1_Msk) == 0U)
+    {
+        /* Wait until DAC Channel 1 is ready*/
+    }
+    <#elseif (DACC_CHER_CH0 && DACC_CHER_CH1)>    
+    while((${DACC_INSTANCE_NAME}_REGS->DACC_CHSR& (DACC_CHSR_DACRDY0_Msk | DACC_CHSR_DACRDY1_Msk)) == 0U)
+    {
+        /* Wait until DAC Channel 0 and Channel 1 is ready*/
+    }
     </#if>
     </#if>
 }
