@@ -183,7 +183,7 @@ bool ${QSPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* 
             ; /* No action required - ; is optional */
         }
 
-        if (rxSize > 0)
+        if (rxSize > 0U)
         {
             /* Enable receive interrupt to complete the transfer in ISR context */
             ${QSPI_INSTANCE_NAME}_REGS->QSPI_IER = QSPI_IER_RDRF_Msk;
