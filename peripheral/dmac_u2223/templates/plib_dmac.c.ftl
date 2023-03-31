@@ -659,16 +659,15 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_C
 */
 <#if DMAC_MULTIVECTOR_SUPPORTED??>
 <#list 0..3 as x>
+<#if .vars["DMAC_ENABLE_CH_" + x] == true>
 void ${DMA_INSTANCE_NAME}_${x}_InterruptHandler( void )
 {
     DMAC_CH_OBJECT  *dmacChObj = NULL;
-    uint8_t channel = 0U;
+    /* Get active channel number */
+    uint8_t channel = ${x}U;
     uint8_t channelId = 0U;
     volatile uint32_t chanIntFlagStatus = 0U;
     DMAC_TRANSFER_EVENT event = DMAC_TRANSFER_EVENT_ERROR;
-
-    /* Get active channel number */
-    channel = ${x}U;
 
     dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel];
 
@@ -712,8 +711,11 @@ void ${DMA_INSTANCE_NAME}_${x}_InterruptHandler( void )
     /* Restore channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
 }
+</#if>
 </#list>
 
+<#list 4..DMA_CHANNEL_COUNT - 1 as x>
+<#if .vars["DMAC_ENABLE_CH_" + x] == true>
 void ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
     DMAC_CH_OBJECT  *dmacChObj = NULL;
@@ -767,6 +769,9 @@ void ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     /* Restore channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
 }
+</#if>
+</#list>
+
 <#else>
 void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
 {
