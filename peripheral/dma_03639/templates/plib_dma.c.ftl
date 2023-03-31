@@ -366,7 +366,7 @@ void ${DMA_INSTANCE_NAME}_ChannelPatternIgnoreValue ( DMA_CHANNEL channel, uint8
     // CHCTRLBk is CHCTRLAk.ENABLE=1 write protected
     if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHCTRLA & DMA_CHCTRLA_ENABLE_Msk)) == 0U)
     {
-        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHPDAT = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHPDAT & ~DMA_CHPDAT_PIGN_Msk) | (ignoreValue << DMA_CHPDAT_PIGN_Pos);
+        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHPDAT = (${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHPDAT & ~DMA_CHPDAT_PIGN_Msk) | ((uint32_t)ignoreValue << DMA_CHPDAT_PIGN_Pos);
     }
 }
 
