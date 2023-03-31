@@ -395,12 +395,12 @@ void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
     for (currentChannel = ${NUM_INT_LINES}; currentChannel < EXTINT_COUNT; currentChannel++)
     {
         /* Verify if the EXTINT x Interrupt Pin is enabled */
-        if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].eicPinNo == currentChannel))
+        if (((uint8_t)${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].eicPinNo == currentChannel))
         {
             /* Read the interrupt flag status */
             eicIntFlagStatus = ${EIC_REG_NAME}_REGS->EIC_INTFLAG & (1UL << currentChannel);
 
-            if (eicIntFlagStatus)
+            if (eicIntFlagStatus != 0U)
             {
                 /* Find any associated callback entries in the callback table */
                 if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback != NULL))
