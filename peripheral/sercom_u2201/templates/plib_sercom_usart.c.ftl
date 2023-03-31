@@ -386,10 +386,17 @@ void ${SERCOM_INSTANCE_NAME}_USART_Enable( void )
         ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_ENABLE_Msk;
 
         /* Wait for sync */
+<#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
+        {
+            /* Do nothing */
+        }
+<#else>
         while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
         {
             /* Do nothing */
         }
+</#if>
     }
 }
 
@@ -400,10 +407,17 @@ void ${SERCOM_INSTANCE_NAME}_USART_Disable( void )
         ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA &= ~SERCOM_USART_INT_CTRLA_ENABLE_Msk;
 
         /* Wait for sync */
+<#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
+        {
+            /* Do nothing */
+        }
+<#else>
         while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
         {
             /* Do nothing */
         }
+</#if>
     }
 }
 
@@ -742,7 +756,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_ReadAbort(void)
 
         /* If required application should read the num bytes processed prior to calling the read abort API */
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0U;
-		${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = 0U;
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = 0U;
     }
 
     return true;
