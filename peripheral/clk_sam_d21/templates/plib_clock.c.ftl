@@ -90,7 +90,7 @@ static void SYSCTRL_Initialize(void)
                                                                ${XOSC32K_RUNSTDBY?then('| SYSCTRL_XOSC32K_RUNSTDBY_Msk',' ')}
                                                                ${XOSC32K_EN32K?then('| SYSCTRL_XOSC32K_EN32K_Msk',' ')}
                                                                ${(XOSC32K_ONDEMAND == "ENABLE")?then('| SYSCTRL_XOSC32K_ONDEMAND_Msk',' ')}
-															   ${XOSC32K_AAMPEN?then('| SYSCTRL_XOSC32K_AAMPEN_Msk',' ')}
+                                                               ${XOSC32K_AAMPEN?then('| SYSCTRL_XOSC32K_AAMPEN_Msk',' ')}
                                                                ${(XOSC32K_OSCILLATOR_MODE == "1")?then('| SYSCTRL_XOSC32K_XTALEN_Msk',' ')};</@compress>
     <#if XOSC32K_ONDEMAND != "ENABLE">
     while(!((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_XOSC32KRDY_Msk) == SYSCTRL_PCLKSR_XOSC32KRDY_Msk))
@@ -263,9 +263,14 @@ static void GCLK${i}_Initialize(void)
         </#if>
 </#list>
 
+<#assign BOD33_GEN = false>
+<#if SUPC_BOD33_RUNSTDBY == true || SUPC_BOD33_MODE == "1" || (SUPC_BOD33_MODE == "1" && SUPC_BOD33_PSEL != "0x0")>
+<#assign BOD33_GEN = true>
+</#if>
+
+<#if BOD33_GEN == true>
 static void BOD33_Initialize( void )
 {
-<#if SUPC_BOD33_RUNSTDBY == true || SUPC_BOD33_MODE == "1" || (SUPC_BOD33_MODE == "1" && SUPC_BOD33_PSEL != "0x0")>
 
     uint32_t bodEnable = SYSCTRL_REGS->SYSCTRL_BOD33 & SYSCTRL_BOD33_ENABLE_Msk;
 
@@ -291,8 +296,8 @@ static void BOD33_Initialize( void )
             }
         }
     }
-</#if>
 }
+</#if>
 
 
 void CLOCK_Initialize (void)
@@ -366,7 +371,9 @@ ${CLK_INIT_LIST}
     SYSCTRL_REGS->SYSCTRL_OSC8M = 0x0U;
 </#if>
 
+<#if BOD33_GEN == true>
     BOD33_Initialize();
+</#if>
 
 <#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
 
