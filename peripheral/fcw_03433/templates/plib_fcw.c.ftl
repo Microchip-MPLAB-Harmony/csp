@@ -234,9 +234,9 @@ bool ${FCW_INSTANCE_NAME}_RowWrite( uint32_t *data, uint32_t address )
     }
 
 <#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >    
-    if (DATA_CACHE_IS_ENABLED())
+    if (DATA_CACHE_IS_ENABLED() != 0U)
     {
-        DCACHE_CLEAN_BY_ADDR(data, ${FCW_INSTANCE_NAME}_FLASH_ROWSIZE);
+        DCACHE_CLEAN_BY_ADDR(data, (int32_t)${FCW_INSTANCE_NAME}_FLASH_ROWSIZE);
     }
 </#if>
 
