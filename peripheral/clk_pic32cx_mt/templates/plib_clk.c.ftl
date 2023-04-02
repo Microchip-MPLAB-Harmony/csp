@@ -33,6 +33,8 @@
 #define PLLB_UPDT_STUPTIM_VAL   0x00U
 #define PLLC_UPDT_STUPTIM_VAL   0x00U
 
+#define NOP()    asm("NOP")
+
 typedef struct pmc_pll_cfg_tag
 {
     uint32_t ctrl0;
@@ -245,7 +247,7 @@ static void spreadDisable(PLL_ID pllID)
 
         for (uint32_t i = 0; i < nstep; i++)
         {
-            asm("nop");asm("nop");asm("nop");asm("nop");asm("nop");
+            NOP();NOP();NOP();NOP();NOP();
         }
 
         isSpreadEn = true;
@@ -315,7 +317,7 @@ void CLK_PLLEnable(PLL_ID pllID)
 {
     PMC_REGS->PMC_PLL_UPDT |= (PMC_REGS->PMC_PLL_UPDT & ~(PMC_PLL_UPDT_UPDATE_Msk | PMC_PLL_UPDT_ID_Msk)) | PMC_PLL_UPDT_ID(pllID);
 
-    if (pllID == 0)
+    if (pllID == PLLA)
     {
         PMC_REGS->PMC_PLL_CTRL0 |= (PMC_PLL_CTRL0_ENPLL_Msk | PMC_PLL_CTRL0_ENPLLO0_Msk | PMC_PLL_CTRL0_ENPLLO1_Msk);
     }
@@ -340,7 +342,7 @@ void CLK_PLLDisable(PLL_ID pllID)
 
     spreadDisable(pllID);
 
-    if (pllID == 0)
+    if (pllID == PLLA)
     {
         PMC_REGS->PMC_PLL_CTRL0 = PMC_REGS->PMC_PLL_CTRL0 & ~(PMC_PLL_CTRL0_ENPLLO0_Msk | PMC_PLL_CTRL0_ENPLLO1_Msk);
     }
