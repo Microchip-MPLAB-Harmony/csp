@@ -192,6 +192,8 @@ static otpc_error_code_t otp_trigger_packet_read(uint16_t hdr_addr, uint32_t *pc
 
 static otpc_error_code_t otp_set_type(OTPC_PACKET_TYPE type, uint32_t *pckt_hdr)
 {
+    otpc_error_code_t status = OTPC_NO_ERROR;
+    
     *pckt_hdr &= ~OTPC_HR_PACKET_Msk;
 
     switch (type) {
@@ -220,11 +222,11 @@ static otpc_error_code_t otp_set_type(OTPC_PACKET_TYPE type, uint32_t *pckt_hdr)
         break;
 
     default:
-        return OTPC_ERROR_BAD_HEADER; 
-        break;        
+        status = OTPC_ERROR_BAD_HEADER;
+        break;
     }
 
-    return OTPC_NO_ERROR;
+    return status;
 }
 
 static otpc_error_code_t otp_set_payload_size(uint32_t size, uint32_t *pckt_hdr)
@@ -265,6 +267,7 @@ static otpc_error_code_t otp_set_new_packet_header(const OTPC_NEW_PACKET *pckt,
 static otpc_error_code_t otp_trans_key(uint32_t key_bus_dest)
 {
     static const uint32_t isr_err = OTPC_ISR_KBERR_Msk;
+    otpc_error_code_t status = OTPC_NO_ERROR;
     uint32_t isr_reg;
     uint32_t value;
 
@@ -279,21 +282,24 @@ static otpc_error_code_t otp_trans_key(uint32_t key_bus_dest)
             break;
 
         default:
-            return OTPC_CANNOT_TRANSFER_KEY;   
-            break;            
+            status = OTPC_CANNOT_TRANSFER_KEY;
+            break;
     }
-    ${OTPC_INSTANCE_NAME}_REGS->OTPC_MR = (${OTPC_INSTANCE_NAME}_REGS->OTPC_MR & ~OTPC_MR_KBDST_Msk) | value;
-
-    /* dummy read on OTPC_ISR to clear pending interrupts */
-    (void)${OTPC_INSTANCE_NAME}_REGS->OTPC_ISR;
-
-    ${OTPC_INSTANCE_NAME}_REGS->OTPC_CR = OTPC_CR_KEY(OTPC_KEY_FOR_WRITING) | OTPC_CR_KBSTART_Msk;
-    isr_reg = otp_wait_isr(OTPC_ISR_EOKT_Msk | isr_err);
-    if (((isr_reg & OTPC_ISR_EOKT_Msk) == 0U) || ((isr_reg & isr_err) != 0U))
+    if (status == OTPC_NO_ERROR)
     {
-        return OTPC_CANNOT_TRANSFER_KEY;
+        ${OTPC_INSTANCE_NAME}_REGS->OTPC_MR = (${OTPC_INSTANCE_NAME}_REGS->OTPC_MR & ~OTPC_MR_KBDST_Msk) | value;
+
+        /* dummy read on OTPC_ISR to clear pending interrupts */
+        (void)${OTPC_INSTANCE_NAME}_REGS->OTPC_ISR;
+
+        ${OTPC_INSTANCE_NAME}_REGS->OTPC_CR = OTPC_CR_KEY(OTPC_KEY_FOR_WRITING) | OTPC_CR_KBSTART_Msk;
+        isr_reg = otp_wait_isr(OTPC_ISR_EOKT_Msk | isr_err);
+        if (((isr_reg & OTPC_ISR_EOKT_Msk) == 0U) || ((isr_reg & isr_err) != 0U))
+        {
+            status = OTPC_CANNOT_TRANSFER_KEY;
+        }
     }
-    return OTPC_NO_ERROR;
+    return status;
 }
 
 
