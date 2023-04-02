@@ -308,7 +308,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
     uint32_t size = 0;
 
     /* Verify the request */
-    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
+    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
     {
         isRequestAccepted = true;
 
@@ -319,7 +319,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount = txSize;
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount = rxSize;
 
-        if ((txSize > 0) && (rxSize > 0))
+        if ((txSize > 0U) && (rxSize > 0U))
         {
             /* Find the lower value among txSize and rxSize */
             (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
@@ -543,7 +543,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount = txSize;
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount = rxSize;
 
-        if ((txSize > 0) && (rxSize > 0))
+        if ((txSize > 0U) && (rxSize > 0U))
         {
             /* Find the lower value among txSize and rxSize */
             (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
@@ -591,7 +591,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
 
     <#else>
     /* Verify the request */
-    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
+    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
     {
         isRequestAccepted = true;
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer = pTransmitData;
@@ -1001,7 +1001,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     }
 
     <#else>
-    while ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_RDRF_Msk ) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize))
+    while (((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_RDRF_Msk ) == FLEX_SPI_SR_RDRF_Msk) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize))
     {
         if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
         {
