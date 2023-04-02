@@ -53,6 +53,9 @@
 */
 #include "device.h"
 #include "plib_${PWM_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#compress>
 <#assign PWM_INTERRUPT = false>
@@ -198,7 +201,7 @@ void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMa
 bool ${PWM_INSTANCE_NAME}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel)
 {
     bool status;
-    status = (${PWM_INSTANCE_NAME}_REGS->PWM_ISR >> channel) & 0x1U;
+    status = (((${PWM_INSTANCE_NAME}_REGS->PWM_ISR >> channel) & 0x1U) != 0U);
     return status;
 }
 </#if>
