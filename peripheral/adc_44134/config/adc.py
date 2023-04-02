@@ -661,6 +661,12 @@ def instantiateComponent(adcComponent):
     adcSym_IntEnComment.setLabel("Warning!!! " + adcInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     adcSym_IntEnComment.setDependencies(dependencyIntStatus, adcInterruptEnCommentList)
 
+    always1BitNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_MR\"]/bitfield@[name=\"ALWAYS1\"]")
+
+    if always1BitNode != None:
+        adcADC_MR_ALWAYS1Bit = adcComponent.createBooleanSymbol("ADC_MR_ALWAYS1_BIT_PRESENT", None)
+        adcADC_MR_ALWAYS1Bit.setVisible(False)
+
     #--------------------------------------------------------------------------------------
     configName = Variables.get("__CONFIGURATION_NAME")
 
@@ -702,7 +708,7 @@ def instantiateComponent(adcComponent):
     adcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     adcSystemDefFile.setSourcePath("../peripheral/adc_44134/templates/system/definitions.h.ftl")
     adcSystemDefFile.setMarkup(True)
-    
+
     #Load ADC plugin
     adcComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar")
 
