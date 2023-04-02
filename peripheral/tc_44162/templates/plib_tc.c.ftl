@@ -185,7 +185,15 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
     <#lt>    ${TC_INSTANCE_NAME}_CallbackObj.context = context;
     <#lt>}
 
-    <#lt>void ${TC_INSTANCE_NAME}_CH0_InterruptHandler(void)
+<#if TC_COMMON_INTERRUPT_STATUS?? && TC_COMMON_INTERRUPT_STATUS == true>
+    <#if .vars[TC_INSTANCE_NAME + "_CH" + CH_NUM + "_INTERRUPT_ENABLE"] == true>
+        <#lt>/* Interrupt handler for Channel ${CH_NUM} */
+        <#lt>static void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+    </#if>
+<#else>
+    <#lt>/* Interrupt handler for Channel ${CH_NUM} */
+    <#lt>void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+</#if>
     <#lt>{
     <#lt>    uint32_t tc_quad_stat = (${TC_INSTANCE_NAME}_REGS->TC_QISR & (uint32_t)TC_QUADRATURE_STATUS_MSK);
     <#lt>    TC_QUADRATURE_STATUS quadrature_status = (TC_QUADRATURE_STATUS)tc_quad_stat;
@@ -354,8 +362,15 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK cal
     ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context = context;
 }
 
-/* Interrupt handler for Channel ${CH_NUM} */
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+<#if TC_COMMON_INTERRUPT_STATUS?? && TC_COMMON_INTERRUPT_STATUS == true>
+    <#if .vars[TC_INSTANCE_NAME + "_CH" + CH_NUM + "_INTERRUPT_ENABLE"] == true>
+        <#lt>/* Interrupt handler for Channel ${CH_NUM} */
+        <#lt>static void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+    </#if>
+<#else>
+    <#lt>/* Interrupt handler for Channel ${CH_NUM} */
+    <#lt>void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+</#if>
 {
     TC_TIMER_STATUS timer_status = (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK);
     /* Call registered callback function */
@@ -474,8 +489,15 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK
     ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context = context;
 }
 
-/* Interrupt handler for Channel ${CH_NUM} */
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+<#if TC_COMMON_INTERRUPT_STATUS?? && TC_COMMON_INTERRUPT_STATUS == true>
+    <#if .vars[TC_INSTANCE_NAME + "_CH" + CH_NUM + "_INTERRUPT_ENABLE"] == true>
+        <#lt>/* Interrupt handler for Channel ${CH_NUM} */
+        <#lt>static void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+    </#if>
+<#else>
+    <#lt>/* Interrupt handler for Channel ${CH_NUM} */
+    <#lt>void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+</#if>
 {
     TC_CAPTURE_STATUS capture_status = (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK);
     /* Call registered callback function */
