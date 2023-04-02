@@ -48,7 +48,7 @@
 #include <stddef.h>
 #include "device.h"
 #include "plib_generic_timer.h"
-<#if core.CoreSysIntFile == true>
+<#if CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
 
