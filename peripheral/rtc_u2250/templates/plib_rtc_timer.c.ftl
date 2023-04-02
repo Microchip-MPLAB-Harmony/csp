@@ -74,7 +74,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
                                                                         ${(TAMP_DEBOUNCE_MAJ != "0")?then("| RTC_MODE0_CTRLB_DEBMAJ_Msk", "")});</@compress>
                 </#if>
                 <#if RTC_TAMPCTRL_REG != "0">
-                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_TAMPCTRL = 0x${RTC_TAMPCTRL_REG};
+                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_TAMPCTRL = 0x${RTC_TAMPCTRL_REG}U;
                 </#if>
 
             </#if>
@@ -136,7 +136,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
                                                                         ${(TAMP_DEBOUNCE_MAJ != "0")?then("| RTC_MODE1_CTRLB_DEBMAJ_Msk", "")});</@compress>
                 </#if>
                 <#if RTC_TAMPCTRL_REG != "0">
-                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_TAMPCTRL = 0x${RTC_TAMPCTRL_REG};
+                    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_TAMPCTRL = 0x${RTC_TAMPCTRL_REG}U;
                 </#if>
             </#if>
         </#if>
