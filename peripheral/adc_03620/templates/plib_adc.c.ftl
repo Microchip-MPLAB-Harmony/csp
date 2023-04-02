@@ -406,7 +406,7 @@ void ${ADC_INSTANCE_NAME}_CompareWinThresholdSet(ADC_CORE_NUM core, uint16_t low
 {
 	${ADC_INSTANCE_NAME}_Disable();
 
-	${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] = (${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] & ~(ADC_CMPCTRL_ADCMPHI_Msk | ADC_CMPCTRL_ADCMPLO_Msk)) | ((low_threshold << ADC_CMPCTRL_ADCMPLO_Pos) | (high_threshold << ADC_CMPCTRL_ADCMPHI_Pos));
+	${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] = (${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] & ~(ADC_CMPCTRL_ADCMPHI_Msk | ADC_CMPCTRL_ADCMPLO_Msk)) | (((uint32_t)low_threshold << ADC_CMPCTRL_ADCMPLO_Pos) | ((uint32_t)high_threshold << ADC_CMPCTRL_ADCMPHI_Pos));
 
 	${ADC_INSTANCE_NAME}_Enable();
 }
