@@ -168,6 +168,9 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
             mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_MEMORY_Val);
             mask |= QSPI_IFR_APBTFRTYP(0);
             break;
+        default:
+            /*default*/
+            break;
     };
     <#else>
     switch (tfr_type){
