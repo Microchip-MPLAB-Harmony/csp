@@ -58,8 +58,8 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define ${SEFC_INSTANCE_NAME}_SECTORSIZE              ${FLASH_ERASE_SIZE}
-#define ${SEFC_INSTANCE_NAME}_PAGESIZE                ${FLASH_PROGRAM_SIZE}
+#define ${SEFC_INSTANCE_NAME}_SECTORSIZE              ${FLASH_ERASE_SIZE}U
+#define ${SEFC_INSTANCE_NAME}_PAGESIZE                ${FLASH_PROGRAM_SIZE}U
 #define ${SEFC_INSTANCE_NAME}_LOCKSIZE                0x4000
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>#define ${SEFC_INSTANCE_NAME}_START_ADDRESS           0x${START_ADDRESS}
@@ -103,7 +103,7 @@ uint32_t ${SEFC_INSTANCE_NAME}_UserSignatureRightsGet(void);
 
 bool ${SEFC_INSTANCE_NAME}_UserSignatureRead(uint32_t *data, uint32_t length, SEFC_USERSIGNATURE_BLOCK block, SEFC_USERSIGNATURE_PAGE page);
 
-bool ${SEFC_INSTANCE_NAME}_UserSignatureWrite(uint32_t *data, uint32_t length, SEFC_USERSIGNATURE_BLOCK block, SEFC_USERSIGNATURE_PAGE page);
+bool ${SEFC_INSTANCE_NAME}_UserSignatureWrite(void *data, uint32_t length, SEFC_USERSIGNATURE_BLOCK block, SEFC_USERSIGNATURE_PAGE page);
 
 void ${SEFC_INSTANCE_NAME}_UserSignatureErase(SEFC_USERSIGNATURE_BLOCK block);
 

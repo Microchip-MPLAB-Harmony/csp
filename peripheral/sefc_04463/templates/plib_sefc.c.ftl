@@ -295,7 +295,7 @@ __longramfunc__ uint32_t ${SEFC_INSTANCE_NAME}_GpnvmBitRead(void)
 bool ${SEFC_INSTANCE_NAME}_UniqueIdentifierRead(uint32_t *data, uint32_t length)
 {
     /* Check Unique Identifier length (128 bits) */
-    if (length > 4)
+    if (length > 4U)
     {
         return false;
     }
@@ -322,7 +322,7 @@ bool ${SEFC_INSTANCE_NAME}_UserSignatureRead(uint32_t *data, uint32_t length, SE
     return ${SEFC_INSTANCE_NAME}_sequenceRead(SEFC_EEFC_FCR_FCMD_STUS, SEFC_EEFC_FCR_FCMD_SPUS, data, length, address);
 }
 
-bool ${SEFC_INSTANCE_NAME}_UserSignatureWrite(uint32_t *data, uint32_t length, SEFC_USERSIGNATURE_BLOCK block, SEFC_USERSIGNATURE_PAGE page)
+bool ${SEFC_INSTANCE_NAME}_UserSignatureWrite(void *data, uint32_t length, SEFC_USERSIGNATURE_BLOCK block, SEFC_USERSIGNATURE_PAGE page)
 {
     uint32_t count = 0U;
     uint64_t *dest = NULL;
@@ -363,7 +363,7 @@ bool ${SEFC_INSTANCE_NAME}_UserSignatureWrite(uint32_t *data, uint32_t length, S
 
 void ${SEFC_INSTANCE_NAME}_UserSignatureErase(SEFC_USERSIGNATURE_BLOCK block)
 {
-    ${SEFC_INSTANCE_NAME}_REGS->SEFC_EEFC_FCR = (SEFC_EEFC_FCR_FCMD_EUS | SEFC_EEFC_FCR_FARG((uint32_t)(block << 3U)) | SEFC_EEFC_FCR_FKEY_PASSWD);
+    ${SEFC_INSTANCE_NAME}_REGS->SEFC_EEFC_FCR = (SEFC_EEFC_FCR_FCMD_EUS | SEFC_EEFC_FCR_FARG((uint32_t)((uint32_t)block << 3U)) | SEFC_EEFC_FCR_FKEY_PASSWD);
 
     sefc_status = 0;
 
