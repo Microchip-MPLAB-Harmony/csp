@@ -40,6 +40,7 @@
 // DOM-IGNORE-END
 
 #include "device.h"
+#include "plib_mmu.h"
 
 /* TTB descriptor type for Section descriptor */
 #define TTB_TYPE_SECT              (2UL << 0U)

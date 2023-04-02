@@ -41,6 +41,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "device.h"
 #include "peripheral/mmu/cp15.h"
+#include "plib_mmu.h"
 
 /* TTB descriptor type for Section descriptor */
 #define TTB_TYPE_SECT              (2UL << 0U)
