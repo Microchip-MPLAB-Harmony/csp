@@ -79,6 +79,15 @@ void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
 }
 
 <#if ADVANCED_EXCEPTION>
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 21.6 deviated 98 times.  Deviation record ID -  H3_MISRAC_2012_R_21_6_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+    <#if COMPILER_CHOICE == "XC32">
+        <#lt>#pragma GCC diagnostic push
+        <#lt>#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+        <#lt>#pragma coverity compliance block deviate:98 "MISRA C-2012 Rule 21.6" "H3_MISRAC_2012_R_21_6_DR_1"
+</#if>
     <#lt>void __attribute__((noreturn, weak)) HardFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
     <#lt>{
     <#lt>   uint32_t stacked_r0;
@@ -108,30 +117,36 @@ void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
     <#lt>   stacked_pc  = hardfault_args[6];  // Program Counter
     <#lt>   stacked_psr = hardfault_args[7];  // Program Status Register
 
-    <#lt>   printf("\r\n");
-    <#lt>   printf("[HardFault]\r\n");
-    <#lt>   printf("- Stack frame:\r\n");
-    <#lt>   printf(" R0  = 0x%08lX\r\n", stacked_r0);
-    <#lt>   printf(" R1  = 0x%08lX\r\n", stacked_r1);
-    <#lt>   printf(" R2  = 0x%08lX\r\n", stacked_r2);
-    <#lt>   printf(" R3  = 0x%08lX\r\n", stacked_r3);
-    <#lt>   printf(" R12 = 0x%08lX\r\n", stacked_r12);
-    <#lt>   printf(" LR  = 0x%08lX\r\n", stacked_lr);
-    <#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
-    <#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
+    <#lt>   (void)printf("\r\n");
+    <#lt>   (void)printf("[HardFault]\r\n");
+    <#lt>   (void)printf("- Stack frame:\r\n");
+    <#lt>   (void)printf(" R0  = 0x%08lX\r\n", stacked_r0);
+    <#lt>   (void)printf(" R1  = 0x%08lX\r\n", stacked_r1);
+    <#lt>   (void)printf(" R2  = 0x%08lX\r\n", stacked_r2);
+    <#lt>   (void)printf(" R3  = 0x%08lX\r\n", stacked_r3);
+    <#lt>   (void)printf(" R12 = 0x%08lX\r\n", stacked_r12);
+    <#lt>   (void)printf(" LR  = 0x%08lX\r\n", stacked_lr);
+    <#lt>   (void)printf(" PC  = 0x%08lX\r\n", stacked_pc);
+    <#lt>   (void)printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
     <#if M4_M7_EXCEPTIONS>
-    <#lt>   printf("- FSR/FAR:\r\n");
-    <#lt>   printf(" CFSR = 0x%08lX\r\n", cfsr);
-    <#lt>   printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
-    <#lt>   printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
-    <#lt>   printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
-    <#lt>   if (cfsr & 0x0080) printf(" MMFAR = 0x%08lX\r\n", memmanage_fault_address);
-    <#lt>   if (cfsr & 0x8000) printf(" BFAR = 0x%08lX\r\n", bus_fault_address);
+    <#lt>   (void)printf("- FSR/FAR:\r\n");
+    <#lt>   (void)printf(" CFSR = 0x%08lX\r\n", cfsr);
+    <#lt>   (void)printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
+    <#lt>   (void)printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
+    <#lt>   (void)printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
+    <#lt>   if ((cfsr & 0x0080U) != 0U)
+    <#lt>   {
+    <#lt>       (void)printf(" MMFAR = 0x%08lX\r\n", memmanage_fault_address);
+    <#lt>   }
+    <#lt>   if ((cfsr & 0x8000U) != 0U)
+    <#lt>   {
+    <#lt>       (void)printf(" BFAR = 0x%08lX\r\n", bus_fault_address);
+    <#lt>   }
     </#if>
 
-    <#lt>   printf("- Misc\r\n");
-    <#lt>   printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
+    <#lt>   (void)printf("- Misc\r\n");
+    <#lt>   (void)printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4U) >> 2);
 
     <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
@@ -167,26 +182,26 @@ void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
     <#lt>   stacked_pc  = hardfault_args[6];  // Program Counter
     <#lt>   stacked_psr = hardfault_args[7];  // Program Status Register
 
-    <#lt>   printf("\r\n");
-    <#lt>   printf("[DebugFault]\r\n");
-    <#lt>   printf("- Stack frame:\r\n");
-    <#lt>   printf(" R0  = 0x%08lX\r\n", stacked_r0);
-    <#lt>   printf(" R1  = 0x%08lX\r\n", stacked_r1);
-    <#lt>   printf(" R2  = 0x%08lX\r\n", stacked_r2);
-    <#lt>   printf(" R3  = 0x%08lX\r\n", stacked_r3);
-    <#lt>   printf(" R12 = 0x%08lX\r\n", stacked_r12);
-    <#lt>   printf(" LR  = 0x%08lX\r\n", stacked_lr);
-    <#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
-    <#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
+    <#lt>   (void)printf("\r\n");
+    <#lt>   (void)printf("[DebugFault]\r\n");
+    <#lt>   (void)printf("- Stack frame:\r\n");
+    <#lt>   (void)printf(" R0  = 0x%08lX\r\n", stacked_r0);
+    <#lt>   (void)printf(" R1  = 0x%08lX\r\n", stacked_r1);
+    <#lt>   (void)printf(" R2  = 0x%08lX\r\n", stacked_r2);
+    <#lt>   (void)printf(" R3  = 0x%08lX\r\n", stacked_r3);
+    <#lt>   (void)printf(" R12 = 0x%08lX\r\n", stacked_r12);
+    <#lt>   (void)printf(" LR  = 0x%08lX\r\n", stacked_lr);
+    <#lt>   (void)printf(" PC  = 0x%08lX\r\n", stacked_pc);
+    <#lt>   (void)printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
-    <#lt>   printf("- FSR/FAR:\r\n");
-    <#lt>   printf(" CFSR = 0x%08lX\r\n", cfsr);
-    <#lt>   printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
-    <#lt>   printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
-    <#lt>   printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
+    <#lt>   (void)printf("- FSR/FAR:\r\n");
+    <#lt>   (void)printf(" CFSR = 0x%08lX\r\n", cfsr);
+    <#lt>   (void)printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
+    <#lt>   (void)printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
+    <#lt>   (void)printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
 
-    <#lt>   printf("- Misc\r\n");
-    <#lt>   printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
+    <#lt>   (void)printf("- Misc\r\n");
+    <#lt>   (void)printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4U) >> 2);
 
     <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
@@ -208,12 +223,12 @@ void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
     <#lt>   uint32_t stacked_pc;
     <#lt>   uint32_t stacked_psr;
     <#lt>   uint32_t cfsr;
-    <#lt>   uint8_t  mmfsr;
+    <#lt>   uint32_t  mmfsr;
     <#lt>   uint32_t memmanage_fault_address;
 
     <#lt>   memmanage_fault_address = SCB->MMFAR;   // MemManage Fault Address Register
     <#lt>   cfsr                    = SCB->CFSR;    // Configurable Fault Status Register
-    <#lt>   mmfsr = cfsr & 0xFF;                    // MemManage Fault Status
+    <#lt>   mmfsr = cfsr & 0xFFU;                    // MemManage Fault Status
 
     <#lt>   stacked_r0  = hardfault_args[0];
     <#lt>   stacked_r1  = hardfault_args[1];
@@ -224,28 +239,30 @@ void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
     <#lt>   stacked_pc  = hardfault_args[6];  // Program Counter
     <#lt>   stacked_psr = hardfault_args[7];  // Program Status Register
 
-    <#lt>   printf("\r\n");
-    <#lt>   printf("[MemoryManagement]\r\n");
-    <#lt>   printf("- Stack frame:\r\n");
-    <#lt>   printf(" R0  = 0x%08lX\r\n", stacked_r0);
-    <#lt>   printf(" R1  = 0x%08lX\r\n", stacked_r1);
-    <#lt>   printf(" R2  = 0x%08lX\r\n", stacked_r2);
-    <#lt>   printf(" R3  = 0x%08lX\r\n", stacked_r3);
-    <#lt>   printf(" R12 = 0x%08lX\r\n", stacked_r12);
-    <#lt>   printf(" LR  = 0x%08lX\r\n", stacked_lr);
-    <#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
-    <#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
+    <#lt>   (void)printf("\r\n");
+    <#lt>   (void)printf("[MemoryManagement]\r\n");
+    <#lt>   (void)printf("- Stack frame:\r\n");
+    <#lt>   (void)printf(" R0  = 0x%08lX\r\n", stacked_r0);
+    <#lt>   (void)printf(" R1  = 0x%08lX\r\n", stacked_r1);
+    <#lt>   (void)printf(" R2  = 0x%08lX\r\n", stacked_r2);
+    <#lt>   (void)printf(" R3  = 0x%08lX\r\n", stacked_r3);
+    <#lt>   (void)printf(" R12 = 0x%08lX\r\n", stacked_r12);
+    <#lt>   (void)printf(" LR  = 0x%08lX\r\n", stacked_lr);
+    <#lt>   (void)printf(" PC  = 0x%08lX\r\n", stacked_pc);
+    <#lt>   (void)printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
-    <#lt>   printf("- FSR/FAR:\r\n");
-    <#lt>   printf(" CFSR  = 0x%08lX\r\n", cfsr);
-    <#lt>   printf(" MMFSR = 0x%02X\r\n", mmfsr);
-    <#lt>   printf(" HFSR  = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
-    <#lt>   printf(" DFSR  = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
-    <#lt>   printf(" AFSR  = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
-    <#lt>   if (cfsr & 0x0080) printf(" MMFAR = 0x%08lX\r\n", memmanage_fault_address);
-
-    <#lt>   printf("- Misc\r\n");
-    <#lt>   printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
+    <#lt>   (void)printf("- FSR/FAR:\r\n");
+    <#lt>   (void)printf(" CFSR  = 0x%08lX\r\n", cfsr);
+    <#lt>   (void)printf(" MMFSR = 0x%02lX\r\n", mmfsr);
+    <#lt>   (void)printf(" HFSR  = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
+    <#lt>   (void)printf(" DFSR  = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
+    <#lt>   (void)printf(" AFSR  = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
+    <#lt>   if ((cfsr & 0x0080U) != 0U)
+    <#lt>   {
+    <#lt>       (void)printf(" MMFAR = 0x%08lX\r\n", memmanage_fault_address);
+    <#lt>   }
+    <#lt>   (void)printf("- Misc\r\n");
+    <#lt>   (void)printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4U)>>2 );
 
     <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
@@ -267,12 +284,12 @@ void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
     <#lt>   uint32_t stacked_pc;
     <#lt>   uint32_t stacked_psr;
     <#lt>   uint32_t cfsr;
-    <#lt>   uint8_t  bfsr;
+    <#lt>   uint32_t  bfsr;
     <#lt>   uint32_t bus_fault_address;
 
     <#lt>   bus_fault_address = SCB->BFAR;  // BusFault Address Register
     <#lt>   cfsr              = SCB->CFSR;  // Configurable Fault Status Register
-    <#lt>   bfsr = ( cfsr & 0x0000FF00 ) >>8;  // Bus Fault Status
+    <#lt>   bfsr = (cfsr & 0x0000FF00U) >> 8;  // Bus Fault Status
 
     <#lt>   stacked_r0  = hardfault_args[0];
     <#lt>   stacked_r1  = hardfault_args[1];
@@ -283,31 +300,36 @@ void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
     <#lt>   stacked_pc  = hardfault_args[6];  // Program Counter
     <#lt>   stacked_psr = hardfault_args[7];  // Program Status Register
 
-    <#lt>   printf("\r\n");
-    <#lt>   printf("[BusFault]\r\n");
-    <#lt>   printf("- Stack frame:\r\n");
-    <#lt>   printf(" R0  = 0x%08lX\r\n", stacked_r0);
-    <#lt>   printf(" R1  = 0x%08lX\r\n", stacked_r1);
-    <#lt>   printf(" R2  = 0x%08lX\r\n", stacked_r2);
-    <#lt>   printf(" R3  = 0x%08lX\r\n", stacked_r3);
-    <#lt>   printf(" R12 = 0x%08lX\r\n", stacked_r12);
-    <#lt>   printf(" LR  = 0x%08lX\r\n", stacked_lr);
-    <#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
-    <#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
+    <#lt>   (void)printf("\r\n");
+    <#lt>   (void)printf("[BusFault]\r\n");
+    <#lt>   (void)printf("- Stack frame:\r\n");
+    <#lt>   (void)printf(" R0  = 0x%08lX\r\n", stacked_r0);
+    <#lt>   (void)printf(" R1  = 0x%08lX\r\n", stacked_r1);
+    <#lt>   (void)printf(" R2  = 0x%08lX\r\n", stacked_r2);
+    <#lt>   (void)printf(" R3  = 0x%08lX\r\n", stacked_r3);
+    <#lt>   (void)printf(" R12 = 0x%08lX\r\n", stacked_r12);
+    <#lt>   (void)printf(" LR  = 0x%08lX\r\n", stacked_lr);
+    <#lt>   (void)printf(" PC  = 0x%08lX\r\n", stacked_pc);
+    <#lt>   (void)printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
-    <#lt>   printf("- FSR/FAR:\r\n");
-    <#lt>   printf(" CFSR  = 0x%08lX\r\n", cfsr);
-    <#lt>   printf(" BFSR  = 0x%02X\r\n",  bfsr);
-    <#lt>   printf(" HFSR  = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
-    <#lt>   printf(" DFSR  = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
-    <#lt>   printf(" AFSR  = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
+    <#lt>   (void)printf("- FSR/FAR:\r\n");
+    <#lt>   (void)printf(" CFSR  = 0x%08lX\r\n", cfsr);
+    <#lt>   (void)printf(" BFSR  = 0x%02lX\r\n", bfsr);
+    <#lt>   (void)printf(" HFSR  = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
+    <#lt>   (void)printf(" DFSR  = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
+    <#lt>   (void)printf(" AFSR  = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
     <#if CoreArchitecture == "CORTEX-M7">
-        <#lt>   if (bfsr & 0x04) printf(" ABFSR = 0x%08lX\r\n", SCB->ABFSR);
+        <#lt>   if((bfsr & 0x04U) != 0U)
+        <#lt>   {
+        <#lt>       (void)printf(" ABFSR = 0x%08lX\r\n", SCB->ABFSR);
+        <#lt>   }
     </#if>
-    <#lt>   if (bfsr & 0x80) printf(" BFAR = 0x%08lX\r\n", bus_fault_address);
-
-    <#lt>   printf("- Misc\r\n");
-    <#lt>   printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
+    <#lt>   if((bfsr & 0x80U) != 0U)
+    <#lt>   {
+    <#lt>       (void)printf(" BFAR = 0x%08lX\r\n", bus_fault_address);
+    <#lt>   }
+    <#lt>   (void)printf("- Misc\r\n");
+    <#lt>   (void)printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4U) >> 2);
 
     <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
@@ -329,7 +351,7 @@ void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
     <#lt>   uint32_t stacked_pc;
     <#lt>   uint32_t stacked_psr;
     <#lt>   uint32_t cfsr;
-    <#lt>   uint16_t ufsr;
+    <#lt>   uint32_t ufsr;
 
     <#lt>   cfsr = SCB->CFSR;  // Configurable Fault Status Register
     <#lt>   ufsr = cfsr >> 16; // Usage Fault Status
@@ -343,27 +365,27 @@ void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
     <#lt>   stacked_pc  = hardfault_args[6];  // Program Counter
     <#lt>   stacked_psr = hardfault_args[7];  // Program Status Register
 
-    <#lt>   printf("\r\n");
-    <#lt>   printf("[UsageFault]\r\n");
-    <#lt>   printf("- Stack frame:\r\n");
-    <#lt>   printf(" R0  = 0x%08lX\r\n", stacked_r0);
-    <#lt>   printf(" R1  = 0x%08lX\r\n", stacked_r1);
-    <#lt>   printf(" R2  = 0x%08lX\r\n", stacked_r2);
-    <#lt>   printf(" R3  = 0x%08lX\r\n", stacked_r3);
-    <#lt>   printf(" R12 = 0x%08lX\r\n", stacked_r12);
-    <#lt>   printf(" LR  = 0x%08lX\r\n", stacked_lr);
-    <#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
-    <#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
+    <#lt>   (void)printf("\r\n");
+    <#lt>   (void)printf("[UsageFault]\r\n");
+    <#lt>   (void)printf("- Stack frame:\r\n");
+    <#lt>   (void)printf(" R0  = 0x%08lX\r\n", stacked_r0);
+    <#lt>   (void)printf(" R1  = 0x%08lX\r\n", stacked_r1);
+    <#lt>   (void)printf(" R2  = 0x%08lX\r\n", stacked_r2);
+    <#lt>   (void)printf(" R3  = 0x%08lX\r\n", stacked_r3);
+    <#lt>   (void)printf(" R12 = 0x%08lX\r\n", stacked_r12);
+    <#lt>   (void)printf(" LR  = 0x%08lX\r\n", stacked_lr);
+    <#lt>   (void)printf(" PC  = 0x%08lX\r\n", stacked_pc);
+    <#lt>   (void)printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
-    <#lt>   printf("- FSR/FAR:\r\n");
-    <#lt>   printf(" CFSR = 0x%08lX\r\n", cfsr);
-    <#lt>   printf(" UFSR = 0x%04X\r\n",  ufsr);
-    <#lt>   printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
-    <#lt>   printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
-    <#lt>   printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
+    <#lt>   (void)printf("- FSR/FAR:\r\n");
+    <#lt>   (void)printf(" CFSR = 0x%08lX\r\n", cfsr);
+    <#lt>   (void)printf(" UFSR = 0x%04lX\r\n",  ufsr);
+    <#lt>   (void)printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
+    <#lt>   (void)printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
+    <#lt>   (void)printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
 
-    <#lt>   printf("- Misc\r\n");
-    <#lt>   printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
+    <#lt>   (void)printf("- Misc\r\n");
+    <#lt>   (void)printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4U) >> 2);
 
     <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
@@ -373,6 +395,11 @@ void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
     <#lt>       // Do Nothing
     <#lt>   }
     <#lt>}
+    </#if>
+    <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+
+        <#lt>#pragma coverity compliance end_block "MISRA C-2012 Rule 21.2" "MISRA C-2012 Rule 21.6"
+        <#lt>#pragma GCC diagnostic pop
     </#if>
 <#else>
     <#lt>void __attribute__((noreturn, weak)) HardFault_Handler(void)
