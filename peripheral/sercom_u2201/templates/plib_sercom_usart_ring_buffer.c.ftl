@@ -399,10 +399,17 @@ void ${SERCOM_INSTANCE_NAME}_USART_Enable( void )
         ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_ENABLE_Msk;
 
         /* Wait for sync */
+        <#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
+        {
+            /* Do nothing */
+        }
+        <#else>
         while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
         {
             /* Do nothing */
         }
+        </#if>
     }
 }
 
@@ -413,10 +420,17 @@ void ${SERCOM_INSTANCE_NAME}_USART_Disable( void )
         ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA &= ~SERCOM_USART_INT_CTRLA_ENABLE_Msk;
 
         /* Wait for sync */
+        <#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
+        {
+            /* Do nothing */
+        }
+        <#else>
         while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
         {
             /* Do nothing */
         }
+        </#if>
     }
 }
 
