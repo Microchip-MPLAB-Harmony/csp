@@ -324,43 +324,14 @@ bool ${HEMC_INSTANCE_NAME}_DisableECC(uint8_t chipSelect)
 
     switch (chipSelect)
     {
-        case 0:
+<#list 0..(HSMC_CHIP_SELECT_COUNT - 1) as i>
+        case ${i}:
         {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS0);
-            hemcCrEnableMask = HEMC_CR_NCS0_ECC_ENABLE_Msk;
+            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS${i});
+            hemcCrEnableMask = HEMC_CR_NCS${i}_ECC_ENABLE_Msk;
             break;
         }
-            
-        case 1:
-        {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS1);
-            hemcCrEnableMask = HEMC_CR_NCS1_ECC_ENABLE_Msk;
-            break;
-        }            
-        case 2:
-        {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS2);
-            hemcCrEnableMask = HEMC_CR_NCS2_ECC_ENABLE_Msk;
-            break;
-        }           
-        case 3:
-        {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS3);
-            hemcCrEnableMask = HEMC_CR_NCS3_ECC_ENABLE_Msk;
-            break;
-        }            
-        case 4:
-        {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS4);
-            hemcCrEnableMask = HEMC_CR_NCS4_ECC_ENABLE_Msk;
-            break;
-        }            
-        case 5:
-        {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS5);
-            hemcCrEnableMask = HEMC_CR_NCS5_ECC_ENABLE_Msk;
-            break;
-        }            
+</#list>
         default:
             DisEccCheck = false;
             break;
@@ -403,51 +374,23 @@ bool ${HEMC_INSTANCE_NAME}_EnableECC(uint8_t chipSelect)
 {
     bool ret = false, EnEccCheck = true;
     volatile uint32_t* pHemcCrNcsReg = NULL;
-    uint32_t hemcCrEnableMask = 0;    
+    uint32_t hemcCrEnableMask = 0;
 
     switch (chipSelect)
     {
-        case 0:
+<#list 0..(HSMC_CHIP_SELECT_COUNT - 1) as i>
+        case ${i}:
         {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS0);
-            hemcCrEnableMask = HEMC_CR_NCS0_ECC_ENABLE_Msk;
+            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS${i});
+            hemcCrEnableMask = HEMC_CR_NCS${i}_ECC_ENABLE_Msk;
             break;
-        }            
-        case 1:
-        {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS1);
-            hemcCrEnableMask = HEMC_CR_NCS1_ECC_ENABLE_Msk;
-            break;
-        }            
-        case 2:
-        {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS2);
-            hemcCrEnableMask = HEMC_CR_NCS2_ECC_ENABLE_Msk;
-            break;
-        }            
-        case 3:
-        {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS3);
-            hemcCrEnableMask = HEMC_CR_NCS3_ECC_ENABLE_Msk;
-            break;
-        }            
-        case 4:
-        {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS4);
-            hemcCrEnableMask = HEMC_CR_NCS4_ECC_ENABLE_Msk;
-            break;
-        }            
-        case 5:
-        {
-            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS5);
-            hemcCrEnableMask = HEMC_CR_NCS5_ECC_ENABLE_Msk;
-            break;
-        }            
+        }
+</#list>
         default:
              EnEccCheck = false;
              break;
     }
-    
+
     if( EnEccCheck == false)
     {
         return EnEccCheck;
@@ -589,7 +532,7 @@ void ${HEMC_INSTANCE_NAME}_HeccResetCounters(void)
 
   Example:
     <code>
-        
+
     </code>
 
   Remarks:
@@ -639,7 +582,7 @@ void ${HEMC_INSTANCE_NAME}_FixCallbackRegister(HEMC_CALLBACK callback, uintptr_t
 
   Example:
     <code>
-       
+
     </code>
 
   Remarks:
