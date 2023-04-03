@@ -972,8 +972,9 @@ bool ${MCAN_INSTANCE_NAME}_TxFIFOIsFull(void)
 void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 {
     uint32_t offset = 0U;
+    uint32_t msgRAMConfigBaseAddr = (uint32_t)msgRAMConfigBaseAddress;
 
-    (void) memset((void*)msgRAMConfigBaseAddress, 0x00, ${MCAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
+    (void) memset(msgRAMConfigBaseAddress, 0x00, ${MCAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
 
     /* Set MCAN CCCR Init for Message RAM Configuration */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_INIT_ENABLED;
@@ -986,7 +987,7 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
 
 <#if RXF0_USE>
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address = (mcan_rxf0e_registers_t *)msgRAMConfigBaseAddress;
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address = (mcan_rxf0e_registers_t *)msgRAMConfigBaseAddr;
     offset = ${MCAN_INSTANCE_NAME}_RX_FIFO0_SIZE;
     /* Receive FIFO 0 Configuration Register */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0C = MCAN_RXF0C_F0S(${RXF0_ELEMENTS}U) | MCAN_RXF0C_F0WM(${RXF0_WATERMARK}U)<#if RXF0_OVERWRITE> | MCAN_RXF0C_F0OM_Msk</#if> |
@@ -994,7 +995,7 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
 </#if>
 <#if RXF1_USE>
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address = (mcan_rxf1e_registers_t *)(msgRAMConfigBaseAddress + offset);
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address = (mcan_rxf1e_registers_t *)(msgRAMConfigBaseAddr + offset);
     offset += ${MCAN_INSTANCE_NAME}_RX_FIFO1_SIZE;
     /* Receive FIFO 1 Configuration Register */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1C = MCAN_RXF1C_F1S(${RXF1_ELEMENTS}U) | MCAN_RXF1C_F1WM(${RXF1_WATERMARK}U)<#if RXF1_OVERWRITE> | MCAN_RXF1C_F1OM_Msk</#if> |
@@ -1002,19 +1003,19 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
 </#if>
 <#if RXBUF_USE>
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress = (mcan_rxbe_registers_t *)(msgRAMConfigBaseAddress + offset);
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress = (mcan_rxbe_registers_t *)(msgRAMConfigBaseAddr + offset);
     offset += ${MCAN_INSTANCE_NAME}_RX_BUFFER_SIZE;
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXBC = MCAN_RXBC_RBSA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress >> 2U));
 
 </#if>
 <#if TX_USE || TXBUF_USE>
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress = (mcan_txbe_registers_t *)(msgRAMConfigBaseAddress + offset);
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress = (mcan_txbe_registers_t *)(msgRAMConfigBaseAddr + offset);
     offset += ${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE;
     /* Transmit Buffer/FIFO Configuration Register */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBC = MCAN_TXBC_TFQS(${TX_FIFO_ELEMENTS}U)<#if TXBUF_USE> | MCAN_TXBC_NDTB(${TX_BUFFER_ELEMENTS}U)</#if> |
             MCAN_TXBC_TBSA(((uint32_t)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress >> 2U));
 
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress =  (mcan_txefe_registers_t *)(msgRAMConfigBaseAddress + offset);
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress =  (mcan_txefe_registers_t *)(msgRAMConfigBaseAddr + offset);
     offset += ${MCAN_INSTANCE_NAME}_TX_EVENT_FIFO_SIZE;
     /* Transmit Event FIFO Configuration Register */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFC = MCAN_TXEFC_EFWM(${TX_FIFO_WATERMARK}U) | MCAN_TXEFC_EFS(${TX_FIFO_ELEMENTS}U) |
@@ -1022,7 +1023,7 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
 </#if>
 <#if FILTERS_STD?number gt 0>
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (mcan_sidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (mcan_sidfe_registers_t *)(msgRAMConfigBaseAddr + offset);
     (void) memcpy((void *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
            (const void *)${MCAN_INSTANCE_NAME?lower_case}StdFilter,
            ${MCAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE);
@@ -1033,7 +1034,7 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
 </#if>
 <#if FILTERS_EXT?number gt 0>
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (mcan_xidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (mcan_xidfe_registers_t *)(msgRAMConfigBaseAddr + offset);
     (void) memcpy((void *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
            (const void *)${MCAN_INSTANCE_NAME?lower_case}ExtFilter,
            ${MCAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE);
@@ -1046,22 +1047,22 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 <#if MCAN_SFR_CAN_ENABLE_VALUE == 1>
   <#if MCAN_INSTANCE_NAME?lower_case == "mcan0">
     SFR_REGS->SFR_CAN = (SFR_REGS->SFR_CAN & ~SFR_CAN_EXT_MEM_CAN0_ADDR_Msk)
-                       | SFR_CAN_EXT_MEM_CAN0_ADDR(((uint32_t)msgRAMConfigBaseAddress >> 16U));
+                       | SFR_CAN_EXT_MEM_CAN0_ADDR(((uint32_t)msgRAMConfigBaseAddr >> 16U));
   <#else>
     SFR_REGS->SFR_CAN = (SFR_REGS->SFR_CAN & ~SFR_CAN_EXT_MEM_CAN1_ADDR_Msk)
-                       | SFR_CAN_EXT_MEM_CAN1_ADDR(((uint32_t)msgRAMConfigBaseAddress >> 16U));
+                       | SFR_CAN_EXT_MEM_CAN1_ADDR(((uint32_t)msgRAMConfigBaseAddr >> 16U));
   </#if>
 <#elseif MCAN_SFR_CAN_ENABLE_VALUE == 3>
     SFR_REGS->SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")} =
         (SFR_REGS->SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")} & ~SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")}_EXT_MEM_ADDR_Msk) |
-         SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")}_EXT_MEM_ADDR(((uint32_t)msgRAMConfigBaseAddress >> 16));
+         SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")}_EXT_MEM_ADDR(((uint32_t)msgRAMConfigBaseAddr >> 16));
 <#elseif MCAN_MATRIX_CAN_ENABLE == true>
   <#if MCAN_INSTANCE_NAME?lower_case == "mcan0">
     MATRIX_REGS->CCFG_CAN0 = (MATRIX_REGS->CCFG_CAN0 & ~CCFG_CAN0_Msk)
-                            | CCFG_CAN0_CAN0DMABA(((uint32_t)msgRAMConfigBaseAddress >> 16U));
+                            | CCFG_CAN0_CAN0DMABA(((uint32_t)msgRAMConfigBaseAddr >> 16U));
   <#else>
     MATRIX_REGS->CCFG_SYSIO = (MATRIX_REGS->CCFG_SYSIO & ~CCFG_SYSIO_CAN1DMABA_Msk)
-                            | CCFG_SYSIO_CAN1DMABA(((uint32_t)msgRAMConfigBaseAddress >> 16));
+                            | CCFG_SYSIO_CAN1DMABA(((uint32_t)msgRAMConfigBaseAddr >> 16));
   </#if>
 </#if>
 
