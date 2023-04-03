@@ -51,7 +51,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-static UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+volatile static UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 
 #define ${UART_INSTANCE_NAME}_READ_BUFFER_SIZE      ${UART_RX_RING_BUFFER_SIZE}U
 /* Disable Read, Overrun, Parity and Framing error interrupts */
@@ -59,13 +59,13 @@ static UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 /* Enable Read, Overrun, Parity and Framing error interrupts */
 #define ${UART_INSTANCE_NAME}_RX_INT_ENABLE()       ${UART_INSTANCE_NAME}_REGS->UART_IER = (UART_IER_RXRDY_Msk | UART_IER_FRAME_Msk | UART_IER_PARE_Msk | UART_IER_OVRE_Msk);
 
-static uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
 
 #define ${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE     ${UART_TX_RING_BUFFER_SIZE}U
 #define ${UART_INSTANCE_NAME}_TX_INT_DISABLE()      ${UART_INSTANCE_NAME}_REGS->UART_IDR = UART_IDR_TXEMPTY_Msk;
 #define ${UART_INSTANCE_NAME}_TX_INT_ENABLE()       ${UART_INSTANCE_NAME}_REGS->UART_IER = UART_IER_TXEMPTY_Msk;
 
-static uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 void ${UART_INSTANCE_NAME}_Initialize( void )
 {
@@ -521,7 +521,7 @@ void ${UART_INSTANCE_NAME}_WriteCallbackRegister( UART_RING_BUFFER_CALLBACK call
     ${UART_INSTANCE_NAME?lower_case}Obj.wrContext = context;
 }
 
-static void ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
 {
     /* Keep reading until there is a character availabe in the RX FIFO */
     while(UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_RXRDY_Msk))
@@ -537,7 +537,7 @@ static void ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
     }
 }
 
-static void ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
 {
     uint8_t wrByte;
 
@@ -560,7 +560,7 @@ static void ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
     }
 }
 
-void ${UART_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${UART_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Error status */
     uint32_t errorStatus = (${UART_INSTANCE_NAME}_REGS->UART_SR & (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));

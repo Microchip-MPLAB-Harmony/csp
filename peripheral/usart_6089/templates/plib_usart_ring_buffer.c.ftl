@@ -63,9 +63,9 @@
 #define ${USART_INSTANCE_NAME}_TX_INT_DISABLE()      ${USART_INSTANCE_NAME}_REGS->US_IDR = US_IDR_USART_TXRDY_Msk;
 #define ${USART_INSTANCE_NAME}_TX_INT_ENABLE()       ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_USART_TXRDY_Msk;
 
-static uint8_t ${USART_INSTANCE_NAME}_ReadBuffer[${USART_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static USART_RING_BUFFER_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
-static uint8_t ${USART_INSTANCE_NAME}_WriteBuffer[${USART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${USART_INSTANCE_NAME}_ReadBuffer[${USART_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static USART_RING_BUFFER_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
+volatile static uint8_t ${USART_INSTANCE_NAME}_WriteBuffer[${USART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 void ${USART_INSTANCE_NAME}_Initialize( void )
 {
@@ -608,7 +608,7 @@ void ${USART_INSTANCE_NAME}_WriteCallbackRegister( USART_RING_BUFFER_CALLBACK ca
     ${USART_INSTANCE_NAME?lower_case}Obj.wrContext = context;
 }
 
-static void ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
+static void __attribute__((used)) ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
 {
     uint32_t rdData = 0;
 
@@ -628,7 +628,7 @@ static void ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
     }
 }
 
-static void ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
+static void __attribute__((used)) ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
 {
     uint16_t wrByte = 0U;
 
@@ -658,7 +658,7 @@ static void ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
     }
 }
 
-void ${USART_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Error status */
     uint32_t errorStatus = (${USART_INSTANCE_NAME}_REGS->US_CSR & (US_CSR_USART_OVRE_Msk | US_CSR_USART_FRAME_Msk | US_CSR_USART_PARE_Msk));

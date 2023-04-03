@@ -68,9 +68,13 @@
     <#lt>#define ${SQI_INSTANCE_NAME}_MEMSTAT_STATPOS_VAL     (${SQI_STATPOS}UL << _${SQI_INSTANCE_NAME}MEMSTAT_STATPOS_POSITION)
 </#if>
 
-static SQI_EVENT_HANDLER ${SQI_INSTANCE_NAME}EventHandler = NULL;
+typedef struct
+{
+	SQI_EVENT_HANDLER EventHandler;
+	uintptr_t Context;
+}sqiCallbackObjType;
 
-static uintptr_t ${SQI_INSTANCE_NAME}Context = (uintptr_t)NULL;
+volatile static sqiCallbackObjType ${SQI_INSTANCE_NAME}CallbackObj;
 
 void ${SQI_INSTANCE_NAME}_Initialize(void)
 {
@@ -145,11 +149,11 @@ void ${SQI_INSTANCE_NAME}_DMATransfer(sqi_dma_desc_t *sqiDmaDesc)
 
 void ${SQI_INSTANCE_NAME}_RegisterCallback(SQI_EVENT_HANDLER event_handler, uintptr_t context)
 {
-    ${SQI_INSTANCE_NAME}EventHandler = event_handler;
-    ${SQI_INSTANCE_NAME}Context      = context;
+    ${SQI_INSTANCE_NAME}CallbackObj.EventHandler = event_handler;
+    ${SQI_INSTANCE_NAME}CallbackObj.Context      = context;
 }
 
-void ${SQI_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${SQI_INSTANCE_NAME}_InterruptHandler(void)
 {
     ${SQI_IFS_REG}CLR  = ${SQI_INSTANCE_NAME}_INTERRUPT_FLAG_MASK;
 
@@ -166,9 +170,9 @@ void ${SQI_INSTANCE_NAME}_InterruptHandler(void)
         // Disable DMA
         ${SQI_INSTANCE_NAME}BDCON                   = 0x0;
 
-        if (${SQI_INSTANCE_NAME}EventHandler != NULL)
+        if (${SQI_INSTANCE_NAME}CallbackObj.EventHandler != NULL)
         {
-            ${SQI_INSTANCE_NAME}EventHandler(${SQI_INSTANCE_NAME}Context);
+            ${SQI_INSTANCE_NAME}CallbackObj.EventHandler(${SQI_INSTANCE_NAME}CallbackObj.Context);
         }
     }
 }

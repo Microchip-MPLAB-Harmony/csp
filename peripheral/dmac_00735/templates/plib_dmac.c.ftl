@@ -64,7 +64,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-static DMAC_CHANNEL_OBJECT  gDMAChannelObj[${NUM_DMA_CHANS}];
+volatile static DMAC_CHANNEL_OBJECT  gDMAChannelObj[${NUM_DMA_CHANS}];
 static DMAC_CRC_SETUP gCRCSetup;
 
 #define ConvertToPhysicalAddress(a) ((uint32_t)KVA_TO_PA(a))
@@ -537,9 +537,9 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void )
         <#assign STATCLRREG = "DMA" + i + "_STATREG_RD">
         <#assign STATREGMASK = "DMA" + i + "_STATREG_MASK">
 <#if PRODUCT_FAMILY?contains("PIC32MM")>
-void DMA${i}_InterruptHandler(void)
+void __attribute__((used)) DMA${i}_InterruptHandler(void)
 <#else>
-void DMA_${i}_InterruptHandler(void)
+void __attribute__((used)) DMA_${i}_InterruptHandler(void)
 </#if>
 {
     DMAC_CHANNEL_OBJECT *chanObj;

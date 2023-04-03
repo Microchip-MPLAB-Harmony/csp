@@ -47,7 +47,7 @@
 <#if MCRAMC_ECC_TESTING_ENABLE == true>
 
 <#if MCRAMC_ECC_SINGLE_BIT_ERR_INT_ENABLE == true || MCRAMC_ECC_DOUBLE_BIT_ERR_INT_ENABLE == true>
-static ${RAM_INSTANCE_NAME}_ECC_CALLBACK_OBJ ${RAM_INSTANCE_NAME}_ECC_CallbackObject;
+volatile static ${RAM_INSTANCE_NAME}_ECC_CALLBACK_OBJ ${RAM_INSTANCE_NAME}_ECC_CallbackObject;
 </#if>
 
 
@@ -163,7 +163,7 @@ void ${RAM_INSTANCE_NAME}_ECC_CallbackRegister (${RAM_INSTANCE_NAME}_ECC_CALLBAC
     ${RAM_INSTANCE_NAME}_ECC_CallbackObject.context = context;
 }
 
-void ${RAM_INSTANCE_NAME}_ECC_InterruptHandler ( void )
+void __attribute__((used)) ${RAM_INSTANCE_NAME}_ECC_InterruptHandler ( void )
 {
     if (MCRAMC_REGS->MCRAMC_INTENSET != 0U)
     {

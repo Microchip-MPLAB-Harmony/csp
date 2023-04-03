@@ -64,7 +64,7 @@
 <#assign I2C_PLIB = "I2C_INSTANCE_NAME">
 <#assign I2C_PLIB_CLOCK_FREQUENCY = "core." + I2C_PLIB?eval + "_CLOCK_FREQUENCY">
 
-static I2C_OBJ ${I2C_INSTANCE_NAME?lower_case}Obj;
+volatile static I2C_OBJ ${I2C_INSTANCE_NAME?lower_case}Obj;
 
 void ${I2C_INSTANCE_NAME}_Initialize(void)
 {
@@ -559,7 +559,7 @@ void ${I2C_INSTANCE_NAME}_TransferAbort( void )
     ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_ON_MASK;
 }
 
-void ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
+void __attribute__((used)) ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
 {
     /* Clear the bus collision error status bit */
     ${I2C_INSTANCE_NAME}STATCLR = _${I2C_INSTANCE_NAME}STAT_BCL_MASK;
@@ -577,7 +577,7 @@ void ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
     }
 }
 
-void ${I2C_INSTANCE_NAME}_MASTER_InterruptHandler(void)
+void __attribute__((used)) ${I2C_INSTANCE_NAME}_MASTER_InterruptHandler(void)
 {
     ${I2C_INSTANCE_NAME}_TransferSM();
 }

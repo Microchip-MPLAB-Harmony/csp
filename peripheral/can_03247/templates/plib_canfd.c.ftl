@@ -146,11 +146,11 @@
 #define CANFD_MSG_FLT_EXT_EID_MASK    (0x0003FFFFU)
 
 <#if CAN_INTERRUPT_MODE == true>
-static CANFD_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
-static CANFD_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[CANFD_NUM_OF_FIFO][CANFD_FIFO_MESSAGE_BUFFER_MAX];
-static CANFD_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CANFD_NUM_OF_FIFO + 1];
-static CANFD_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj;
-static uint32_t ${CAN_INSTANCE_NAME?lower_case}MsgIndex[CANFD_NUM_OF_FIFO];
+volatile static CANFD_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
+volatile static CANFD_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[CANFD_NUM_OF_FIFO][CANFD_FIFO_MESSAGE_BUFFER_MAX];
+volatile static CANFD_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CANFD_NUM_OF_FIFO + 1];
+volatile static CANFD_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj;
+volatile static uint32_t ${CAN_INSTANCE_NAME?lower_case}MsgIndex[CANFD_NUM_OF_FIFO];
 </#if>
 static uint8_t __attribute__((coherent, aligned(16))) can_message_buffer[CANFD_MESSAGE_RAM_CONFIG_SIZE];
 static const uint8_t dlcToLength[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64};
@@ -1260,9 +1260,9 @@ void ${CAN_INSTANCE_NAME}_ErrorCallbackRegister(CANFD_CALLBACK callback, uintptr
 }
 
 <#if CAN_INTERRUPT_COUNT == 1>
-static void ${CAN_INSTANCE_NAME}_RX_InterruptHandler(void)
+static void __attribute__((used)) ${CAN_INSTANCE_NAME}_RX_InterruptHandler(void)
 <#else>
-void ${CAN_INSTANCE_NAME}_RX_InterruptHandler(void)
+void __attribute__((used)) ${CAN_INSTANCE_NAME}_RX_InterruptHandler(void)
 </#if>
 {
     uint8_t  msgIndex = 0;
@@ -1354,9 +1354,9 @@ void ${CAN_INSTANCE_NAME}_RX_InterruptHandler(void)
 }
 
 <#if CAN_INTERRUPT_COUNT == 1>
-static void ${CAN_INSTANCE_NAME}_TX_InterruptHandler(void)
+static void __attribute__((used)) ${CAN_INSTANCE_NAME}_TX_InterruptHandler(void)
 <#else>
-void ${CAN_INSTANCE_NAME}_TX_InterruptHandler(void)
+void __attribute__((used)) ${CAN_INSTANCE_NAME}_TX_InterruptHandler(void)
 </#if>
 {
     uint8_t  fifoNum = 0;
@@ -1389,9 +1389,9 @@ void ${CAN_INSTANCE_NAME}_TX_InterruptHandler(void)
 }
 
 <#if CAN_INTERRUPT_COUNT == 1>
-static void ${CAN_INSTANCE_NAME}_MISC_InterruptHandler(void)
+static void __attribute__((used)) ${CAN_INSTANCE_NAME}_MISC_InterruptHandler(void)
 <#else>
-void ${CAN_INSTANCE_NAME}_MISC_InterruptHandler(void)
+void __attribute__((used)) ${CAN_INSTANCE_NAME}_MISC_InterruptHandler(void)
 </#if>
 {
     uint32_t errorStatus = 0;
@@ -1441,7 +1441,7 @@ void ${CAN_INSTANCE_NAME}_MISC_InterruptHandler(void)
     instance interrupt is enabled. If peripheral instance's interrupt is not
     enabled user need to call it from the main while loop of the application.
 */
-void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 {
     /* Call CAN MISC interrupt handler if SERRIF/CERRIF/IVMIF interrupt flag is set */
     if ((CFD${CAN_INSTANCE_NUM}INT & (_CFD${CAN_INSTANCE_NUM}INT_SERRIF_MASK | _CFD${CAN_INSTANCE_NUM}INT_CERRIF_MASK | _CFD${CAN_INSTANCE_NUM}INT_IVMIF_MASK)) != 0U)

@@ -87,10 +87,10 @@
  </#if>
 #define NUM_RX_FIFOS ${NUM_OF_FIFO}U
 #define NUM_RX_BUFFER_ELEMENTS ${NUM_OF_ELEMENTS}U
-static CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[NUM_RX_FIFOS][NUM_RX_BUFFER_ELEMENTS];
-static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[4];
+volatile static CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[NUM_RX_FIFOS][NUM_RX_BUFFER_ELEMENTS];
+volatile static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[4];
 </#if>
-static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
+volatile static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
 
@@ -1278,7 +1278,7 @@ void ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t co
     instance interrupt is enabled. If peripheral instance's interrupt is not
     enabled user need to call it from the main while loop of the application.
 */
-void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint8_t length = 0U;
     uint8_t rxgi = 0U;

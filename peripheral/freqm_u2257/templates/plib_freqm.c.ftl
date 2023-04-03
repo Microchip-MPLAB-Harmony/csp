@@ -69,7 +69,7 @@ typedef struct
 
 } FREQM_OBJECT;
 
-static FREQM_OBJECT ${FREQM_INSTANCE_NAME?lower_case}Obj;
+volatile static FREQM_OBJECT ${FREQM_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 // *****************************************************************************
@@ -163,7 +163,7 @@ void ${FREQM_INSTANCE_NAME}_CallbackRegister(FREQM_CALLBACK freqmCallback, uintp
     ${FREQM_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
-void ${FREQM_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${FREQM_INSTANCE_NAME}_InterruptHandler(void)
 {
     ${FREQM_INSTANCE_NAME}_REGS->FREQM_INTFLAG = (uint8_t)FREQM_INTFLAG_DONE_Msk;
 

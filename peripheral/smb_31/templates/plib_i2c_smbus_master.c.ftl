@@ -66,9 +66,9 @@
 #define ${I2C_INSTANCE_NAME}_MTXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_MTR_TXB_REG_OFST)
 #define ${I2C_INSTANCE_NAME}_MRXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_MTR_RXB_REG_OFST)
 
-static I2C_SMB_HOST_OBJ ${I2C_INSTANCE_NAME?lower_case}HostObj;
+volatile static I2C_SMB_HOST_OBJ ${I2C_INSTANCE_NAME?lower_case}HostObj;
 static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostWrBuffer[64];
-static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer[64];
+volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer[64];
 </#if>
 
 <#if I2C_OPERATING_MODE == "Master">
@@ -442,7 +442,7 @@ uint32_t I2C${I2C_INSTANCE_NAME}_HostBufferRead(void* pBuffer)
     return numBytesAvailable;
 }
 
-void I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg)
+void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg)
 {
     uint8_t PECConfig = ((${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] & SMB_CFG_PECEN_Msk) != 0U)? 1U: 0U;
 
@@ -547,7 +547,7 @@ void I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg)
 }
 
 <#if I2C_OPERATING_MODE == "Master">
-void ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     uint32_t completion_reg;
 

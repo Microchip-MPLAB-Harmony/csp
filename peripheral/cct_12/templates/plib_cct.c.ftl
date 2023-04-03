@@ -125,18 +125,18 @@
 </#compress>
 
 <#if .vars["CCT_OVF_INTERRUPT_EN"] == true>
-static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_OVF_CallbackObject;
+volatile static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_OVF_CallbackObject;
 </#if>
 
 <#list 0..(CCT_NUM_CAP_CH-1) as n>
 <#if .vars["CCT_ENABLE_CAPTURE_" + n] == true && .vars["CCT_CAP_INTERRUPT_EN_" + n] == true>
-static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject;
+volatile static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject;
 </#if>
 </#list>
 
 <#list 0..(CCT_NUM_CMP_CH-1) as n>
 <#if .vars["CCT_ENABLE_COMPARE_" + n] == true && .vars["CCT_CMP_INTERRUPT_EN_" + n] == true>
-static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject;
+volatile static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject;
 </#if>
 </#list>
 
@@ -338,7 +338,7 @@ void ${CCT_INSTANCE_NAME}_CompareChannel${n}InterruptDisable( void )
 </#compress>
 
 <#if .vars["CCT_OVF_INTERRUPT_EN"] == true>
-void CCT${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
+void __attribute__((used)) CCT${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT) != 0U)
@@ -362,7 +362,7 @@ void CCT${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 
 <#list 0..(CCT_NUM_CAP_CH-1) as n>
 <#if .vars["CCT_ENABLE_CAPTURE_" + n] == true && .vars["CCT_CAP_INTERRUPT_EN_" + n] == true>
-void CCT_CAP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
+void __attribute__((used)) CCT_CAP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT_CAP${n}) != 0U)
@@ -387,7 +387,7 @@ void CCT_CAP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 
 <#list 0..(CCT_NUM_CMP_CH-1) as n>
 <#if .vars["CCT_ENABLE_COMPARE_" + n] == true && .vars["CCT_CMP_INTERRUPT_EN_" + n] == true>
-void CCT_CMP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
+void __attribute__((used)) CCT_CMP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT_CMP${n}) != 0U)

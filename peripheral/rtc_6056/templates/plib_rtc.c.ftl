@@ -45,7 +45,7 @@
 </#if>
 
 <#if rtcEnableInterrupt == true>
-static RTC_OBJECT rtc;
+volatile static RTC_OBJECT rtc;
 </#if>
 
 __STATIC_INLINE uint32_t decimaltobcd( uint32_t aDecValue )
@@ -212,7 +212,7 @@ void ${RTC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t con
     rtc.context = context;
 }
 
-void ${RTC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${RTC_INSTANCE_NAME}_InterruptHandler( void )
 {
     // This handler may be chained with other sys control interrupts. So
     // the user call back should only occur if an RTC stimulus is present.

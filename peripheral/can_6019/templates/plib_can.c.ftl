@@ -66,7 +66,7 @@
 <#assign CAN_SJW    = SJW - 1>
 #define BYTE_MASK  (0xFFU)
 <#if INTERRUPT_MODE == true>
-static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
+volatile static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 </#if>
 static const uint32_t can_mb_number = CAN_MB_NUMBER;
 
@@ -1036,7 +1036,7 @@ bool ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t co
     instance interrupt is enabled. If peripheral instance's interrupt is not
     enabled user need to call it from the main while loop of the application.
 */
-void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t interruptStatus = ${CAN_INSTANCE_NAME}_REGS->CAN_SR;
 

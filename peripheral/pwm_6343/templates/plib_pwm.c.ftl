@@ -355,7 +355,7 @@ void ${PWM_INSTANCE_NAME}_ChannelOverrideDisable(PWM_CHANNEL_NUM channel)
     <#lt>}
 
     <#lt>/* Interrupt Handler */
-    <#lt>void ${PWM_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${PWM_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#lt>    uint32_t status;
     <#lt>    status = ${PWM_INSTANCE_NAME}_REGS->PWM_ISR1;

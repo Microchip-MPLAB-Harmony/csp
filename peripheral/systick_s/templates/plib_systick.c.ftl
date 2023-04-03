@@ -45,7 +45,7 @@
 #include "plib_systick.h"
 
 <#if USE_SYSTICK_SECURE_INTERRUPT == true>
-    <#lt>static SYSTICK_OBJECT systick;
+    <#lt>volatile static SYSTICK_OBJECT systick;
 </#if>
 
 void SYSTICK_TimerInitialize ( void )
@@ -204,7 +204,7 @@ void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
    systick.context = context;
 }
 
-void SysTick_Handler(void)
+void __attribute__((used)) SysTick_Handler(void)
 {
    systick.tickCounter++;
    if(systick.callback != NULL)

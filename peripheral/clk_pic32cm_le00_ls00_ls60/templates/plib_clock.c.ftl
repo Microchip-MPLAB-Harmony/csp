@@ -53,7 +53,7 @@ typedef struct
 } OSCCTRL_OBJECT;
 
 /* Reference Object created for the OSCCTRL */
-static OSCCTRL_OBJECT oscctrlObj;
+volatile static OSCCTRL_OBJECT oscctrlObj;
 
 </#if>
 
@@ -66,7 +66,7 @@ typedef struct
 } OSC32KCTRL_OBJECT;
 
 /* Reference Object created for the OSCCTRL */
-static OSC32KCTRL_OBJECT osc32kctrlObj;
+volatile static OSC32KCTRL_OBJECT osc32kctrlObj;
 
 </#if>
 
@@ -79,7 +79,7 @@ typedef struct
 } MCLK_OBJECT;
 
 /* Reference Object created for the MCLK */
-static MCLK_OBJECT mclkObj;
+volatile static MCLK_OBJECT mclkObj;
 
 </#if>
 
@@ -452,7 +452,7 @@ void OSCCTRL_CallbackRegister(OSCCTRL_CFD_CALLBACK callback, uintptr_t context)
     oscctrlObj.context = context;
 }
 
-void OSCCTRL_InterruptHandler(void)
+void __attribute__((used)) OSCCTRL_InterruptHandler(void)
 {
     /* Checking for the Clock Fail status */
     if ((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_XOSCFAIL_Msk) == OSCCTRL_STATUS_XOSCFAIL_Msk)
@@ -477,7 +477,7 @@ void OSC32KCTRL_CallbackRegister (OSC32KCTRL_CFD_CALLBACK callback, uintptr_t co
     osc32kctrlObj.context = context;
 }
 
-void OSC32KCTRL_InterruptHandler(void)
+void __attribute__((used)) OSC32KCTRL_InterruptHandler(void)
 {
     /* Checking for the Clock Failure status */
     if ((OSC32KCTRL_REGS->OSC32KCTRL_STATUS & OSC32KCTRL_STATUS_CLKFAIL_Msk) == OSC32KCTRL_STATUS_CLKFAIL_Msk)
@@ -501,7 +501,7 @@ void MCLK_CallbackRegister (MCLK_CKRDY_CALLBACK callback, uintptr_t context)
     mclkObj.context = context;
 }
 
-void MCLK_InterruptHandler(void)
+void __attribute__((used)) MCLK_InterruptHandler(void)
 {
     /* Checking for the Clock Ready Interrupt */
     if ((MCLK_REGS->MCLK_INTFLAG & MCLK_INTFLAG_CKRDY_Msk) == MCLK_INTFLAG_CKRDY_Msk)

@@ -309,7 +309,7 @@ void ${SUPC_INSTANCE_NAME}_BackupModeEnter(void)
 }
 
 <#if SUPC_IER_VDD3V3SMEV || SUPC_IER_VBATSMEV || SUPC_IER_LPDBC0 || SUPC_IER_LPDBC1 || SUPC_IER_LPDBC2 || SUPC_IER_LPDBC3 || SUPC_IER_LPDBC4>
-static SUPC_OBJECT supcObj;
+volatile static SUPC_OBJECT supcObj;
 
 void ${SUPC_INSTANCE_NAME}_CallbackRegister(SUPC_CALLBACK callback, uintptr_t context)
 {
@@ -317,7 +317,7 @@ void ${SUPC_INSTANCE_NAME}_CallbackRegister(SUPC_CALLBACK callback, uintptr_t co
     supcObj.context = context;
 }
 
-void ${SUPC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${SUPC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t supc_status = ${SUPC_INSTANCE_NAME}_REGS->SUPC_ISR;
 

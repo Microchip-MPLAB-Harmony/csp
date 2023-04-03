@@ -108,7 +108,7 @@ static inline uint32_t ${SDMMC_INSTANCE_NAME}_MIN_U32 (uint32_t a, uint32_t b)
 
 static CACHE_ALIGN SDMMC_ADMA_DESCR ${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[(${SDMMC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE_CACHE_ALIGN/8)];
 
-static SDMMC_OBJECT ${SDMMC_INSTANCE_NAME?lower_case}Obj;
+volatile static SDMMC_OBJECT ${SDMMC_INSTANCE_NAME?lower_case}Obj;
 
 static void ${SDMMC_INSTANCE_NAME}_InitVariables ( void )
 {
@@ -157,7 +157,7 @@ static void ${SDMMC_INSTANCE_NAME}_SetTransferMode ( uint32_t opcode )
     ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_TMR = transferMode;
 }
 
-void ${SDMMC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${SDMMC_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint16_t nistr = 0;
     uint16_t eistr = 0;

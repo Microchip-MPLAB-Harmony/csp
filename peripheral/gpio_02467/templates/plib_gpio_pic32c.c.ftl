@@ -86,7 +86,7 @@
     <#assign portNumCbList = portNumCbList + [TOTAL_NUM_OF_INT_USED] >
 
     <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>static GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
+    <#lt>volatile static GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <@compress single_line=true>
@@ -589,7 +589,7 @@ bool GPIO_PinInterruptCallbackRegister(
 */
 <#if .vars["SYS_PORT_${.vars[channel]}_CN_STYLE"] == true>
 <#-- ISR for edge type interrupt -->
-void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
+void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
 {
     uint8_t i;
     uint32_t status;
@@ -608,7 +608,7 @@ void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
 }
 <#else>
 <#-- ISR for mismatch type interrupt -->
-void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
+void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
 {
     uint8_t i;
     uint32_t status;

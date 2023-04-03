@@ -84,6 +84,16 @@ typedef enum
     FCW_UNLOCK_CFGKEY = 0x91C32C04
 } FCW_UNLOCK_KEY;
 
+<#if INTERRUPT_ENABLE == true>
+typedef struct
+{
+	FCW_CALLBACK CallbackFunc;
+	uintptr_t Context;
+}fcwCallbackObjType;
+
+volatile static fcwCallbackObjType ${FCW_INSTANCE_NAME?lower_case}CallbackObj;
+</#if>
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 // Section: Local Functions                                                   */
@@ -97,24 +107,21 @@ typedef enum
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>static FCW_CALLBACK ${FCW_INSTANCE_NAME?lower_case}CallbackFunc;
-
-    <#lt>static uintptr_t ${FCW_INSTANCE_NAME?lower_case}Context;
 
     <#lt>void ${FCW_INSTANCE_NAME}_CallbackRegister( FCW_CALLBACK callback, uintptr_t context )
     <#lt>{
     <#lt>    /* Register callback function */
-    <#lt>    ${FCW_INSTANCE_NAME?lower_case}CallbackFunc    = callback;
-    <#lt>    ${FCW_INSTANCE_NAME?lower_case}Context         = context;
+    <#lt>    ${FCW_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc    = callback;
+    <#lt>    ${FCW_INSTANCE_NAME?lower_case}CallbackObj.Context         = context;
     <#lt>}
 
-    <#lt>void ${FCW_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${FCW_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#lt>    ${FCW_INSTANCE_NAME}_REGS->FCW_INTFLAG = FCW_INTFLAG_DONE_Msk;
 
-    <#lt>    if(${FCW_INSTANCE_NAME?lower_case}CallbackFunc != NULL)
+    <#lt>    if(${FCW_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc != NULL)
     <#lt>    {
-    <#lt>        ${FCW_INSTANCE_NAME?lower_case}CallbackFunc(${FCW_INSTANCE_NAME?lower_case}Context);
+    <#lt>        ${FCW_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc(${FCW_INSTANCE_NAME?lower_case}CallbackObj.Context);
     <#lt>    }
     <#lt>}
 </#if>

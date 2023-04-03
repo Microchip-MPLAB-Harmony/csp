@@ -48,10 +48,10 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if PTCON__SEIEN == true>
-static MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}PriEventObj;
+volatile static MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}PriEventObj;
 </#if>
 <#if STCON__SSEIEN == true>
-static MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj;
+volatile static MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj;
 </#if>
 <#assign interrupt_mode = false>
 <#list 1 .. MCPWM_NUM_CHANNELS as i>
@@ -61,7 +61,7 @@ static MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj;
 </#if>
 </#list>
 <#if  interrupt_mode == true>
-static MCPWM_CH_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}Obj[${MCPWM_NUM_CHANNELS}];
+volatile static MCPWM_CH_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}Obj[${MCPWM_NUM_CHANNELS}];
 </#if>
 
 void ${MCPWM_INSTANCE_NAME}_Initialize (void)
@@ -295,7 +295,7 @@ void ${MCPWM_INSTANCE_NAME}_ChannelPinsOwnershipDisable(MCPWM_CH_NUM channel)
 }
 
 <#if PTCON__SEIEN == true>
-void PWM_PRI_InterruptHandler(void)
+void __attribute__((used)) PWM_PRI_InterruptHandler(void)
 {
     PTCONbits.SEIEN = 0;
     ${MCPWM_IFS_PRI}CLR = _${MCPWM_IFS_PRI}_PWMPEVTIF_MASK;    //Clear IRQ flag
@@ -315,7 +315,7 @@ void ${MCPWM_INSTANCE_NAME}_PrimaryEventCallbackRegister(MCPWM_CALLBACK callback
 </#if>
 
 <#if STCON__SSEIEN == true>
-void PWM_SEC_InterruptHandler(void)
+void __attribute__((used)) PWM_SEC_InterruptHandler(void)
 {
     STCONbits.SSEIEN = 0;
     ${MCPWM_IFS_SEC}CLR = _${MCPWM_IFS_SEC}_PWMSEVTIF_MASK;    //Clear IRQ flag
@@ -340,7 +340,7 @@ void ${MCPWM_INSTANCE_NAME}_SecondaryEventCallbackRegister(MCPWM_CALLBACK callba
 <#assign fault_enable = "PWMCON" + i + "__FLTIEN">
 <#assign cl_enable = "PWMCON" + i + "__CLIEN">
 <#if .vars[interrupt] == 1>
-void PWM${i}_InterruptHandler(void)
+void __attribute__((used)) PWM${i}_InterruptHandler(void)
 {
     MCPWM_CH_STATUS status;
     status = (MCPWM_CH_STATUS)(PWMCON${i} & MCPWM_STATUS_MASK);

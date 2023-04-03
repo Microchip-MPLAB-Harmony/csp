@@ -57,16 +57,16 @@
 #define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE}U
 #define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE}U
 
-static uint8_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint8_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint8_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 <#else>
 
 #define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE/2}U
 #define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE/2}U
 
-static uint16_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint16_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 </#if>
 
 #define NOP asm("nop")
@@ -88,7 +88,7 @@ static uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFF
 // *****************************************************************************
 
 /* Global object to save SPI Exchange related data */
-static SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
+volatile static SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 
 void ${SPI_INSTANCE_NAME}_Initialize( void )
 {
@@ -240,7 +240,7 @@ SPI_SLAVE_ERROR ${SPI_INSTANCE_NAME}_ErrorGet(void)
     return errorStatus;
 }
 
-void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler(void)
 {
 <#if SPI_CSR0_BITS = "_8_BIT">
     uint8_t txRxData = 0;

@@ -57,7 +57,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if CLC_INTERRUPT_TYPE != "Disabled">
-static CLC_CALLBACK_OBJECT ${CLC_INSTANCE_NAME?lower_case}CallbackObject;
+volatile static CLC_CALLBACK_OBJECT ${CLC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -160,7 +160,7 @@ void ${CLC_INSTANCE_NAME}_RegisterCallback(CLC_CALLBACK callback, uintptr_t cont
     ${CLC_INSTANCE_NAME?lower_case}CallbackObject.context = context;
 }
 
-void  ${CLC_INSTANCE_NAME}_InterruptHandler(void)
+void  __attribute__((used)) ${CLC_INSTANCE_NAME}_InterruptHandler(void)
 {
     ${CLC_IFS_REG}CLR = _${CLC_IFS_REG}_${CLC_INSTANCE_NAME}IF_MASK;
     if((${CLC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL))

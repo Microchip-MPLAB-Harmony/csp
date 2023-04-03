@@ -61,9 +61,9 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if TWI_INTERRUPT_MODE == true>
-static FLEXCOM_TWI_SLAVE_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj;
+volatile static FLEXCOM_TWI_SLAVE_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj;
 </#if>
-static twi_registers_t *${FLEXCOM_INSTANCE_NAME}_TWI_Module = TWI${FLEXCOM_INSTANCE_NUMBER}_REGS;
+volatile static twi_registers_t *${FLEXCOM_INSTANCE_NAME}_TWI_Module = TWI${FLEXCOM_INSTANCE_NUMBER}_REGS;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -150,7 +150,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_IsBusy(void)
     return ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.isBusy;
 }
 
-void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status = ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_SR;
 

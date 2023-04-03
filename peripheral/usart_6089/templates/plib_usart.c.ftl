@@ -81,10 +81,10 @@ static void ${USART_INSTANCE_NAME}_ErrorClear( void )
 <#assign useUSARTTxDMA = USE_USART_TRANSMIT_DMA>
 </#if>
 
-static USART_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
+volatile static USART_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
 
 <#if useUSARTRxDMA == false>
-static void ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
+static void __attribute__((used)) ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
 {
     uint32_t rxData = 0U;
     uint8_t* pu8Data = (uint8_t *)${USART_INSTANCE_NAME?lower_case}Obj.rxBuffer;
@@ -130,7 +130,7 @@ static void ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
 
 </#if>
 <#if useUSARTTxDMA == false>
-static void ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
+static void __attribute__((used)) ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
 {
     uint32_t txData = 0U;
     uint8_t* pu8Data = (uint8_t *)${USART_INSTANCE_NAME?lower_case}Obj.txBuffer;
@@ -172,7 +172,7 @@ static void ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
 }
 
 </#if>
-void ${USART_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Error status */
     uint32_t errorStatus = (${USART_INSTANCE_NAME}_REGS->US_CSR & (US_CSR_USART_OVRE_Msk | US_CSR_USART_FRAME_Msk | US_CSR_USART_PARE_Msk));

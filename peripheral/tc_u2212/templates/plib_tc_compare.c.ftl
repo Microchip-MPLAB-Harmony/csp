@@ -137,7 +137,7 @@
 // *****************************************************************************
 
 <#if TC_COMPARE_INTERRUPT_MODE = true>
-static TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+volatile static TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -519,7 +519,7 @@ void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, 
 }
 
 /* Compare match interrupt handler */
-void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
+void __attribute__((used)) ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
 {
     TC_COMPARE_STATUS status;
     status = (TC_COMPARE_STATUS) (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG);

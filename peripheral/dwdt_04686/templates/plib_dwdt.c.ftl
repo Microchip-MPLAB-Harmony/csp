@@ -127,7 +127,7 @@ typedef struct
 </#compress>
 <#if .vars["WDT" + i + "_INTERRUPT_ENABLE"]>
 
-static dwdtCallback_t dwdt${i}CallbackObj;
+volatile static dwdtCallback_t dwdt${i}CallbackObj;
 </#if>
 
 
@@ -213,7 +213,7 @@ void DWDT_WDT${i}_RegisterCallback(DWDT_CALLBACK pCallback, uintptr_t context)
 }
 
 
-void DWDT${i}_InterruptHandler(void)
+void __attribute__((used)) DWDT${i}_InterruptHandler(void)
 {
     uint32_t interruptStatus = DWDT_REGS->DWDT_WDT${i}_ISR;
     if (dwdt${i}CallbackObj.pCallback != NULL)

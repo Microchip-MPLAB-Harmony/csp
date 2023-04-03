@@ -51,9 +51,9 @@
 // *****************************************************************************
 <#if DBGU_INTERRUPT_MODE_ENABLE == true>
 
-static DBGU_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
+volatile static DBGU_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
 
-void static ${DBGU_INSTANCE_NAME}_ISR_RX_Handler(void)
+void static __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_RX_Handler(void)
 {
     if (${DBGU_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
@@ -86,7 +86,7 @@ void static ${DBGU_INSTANCE_NAME}_ISR_RX_Handler(void)
     return;
 }
 
-void static ${DBGU_INSTANCE_NAME}_ISR_TX_Handler(void)
+void static __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_TX_Handler(void)
 {
     if (${DBGU_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
@@ -117,7 +117,7 @@ void static ${DBGU_INSTANCE_NAME}_ISR_TX_Handler(void)
     return;
 }
 
-void ${DBGU_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${DBGU_INSTANCE_NAME}_InterruptHandler(void)
 {
     /* Error status */
     uint32_t errorStatus = (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & (DBGU_SR_OVRE_Msk | DBGU_SR_FRAME_Msk | DBGU_SR_PARE_Msk));

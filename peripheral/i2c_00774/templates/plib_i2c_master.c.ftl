@@ -65,7 +65,7 @@
 
 #define nop()  asm("nop")
 
-static I2C_OBJ ${I2C_INSTANCE_NAME?lower_case}Obj;
+volatile static I2C_OBJ ${I2C_INSTANCE_NAME?lower_case}Obj;
 
 void ${I2C_INSTANCE_NAME}_Initialize(void)
 {
@@ -563,7 +563,7 @@ void ${I2C_INSTANCE_NAME}_TransferAbort( void )
     ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_ON_MASK;
 }
 
-static void ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
+static void __attribute__((used)) ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
 {
     /* Clear the bus collision error status bit */
     ${I2C_INSTANCE_NAME}STATCLR = _${I2C_INSTANCE_NAME}STAT_BCL_MASK;
@@ -581,12 +581,12 @@ static void ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
     }
 }
 
-static void ${I2C_INSTANCE_NAME}_MASTER_InterruptHandler(void)
+static void __attribute__((used)) ${I2C_INSTANCE_NAME}_MASTER_InterruptHandler(void)
 {
     ${I2C_INSTANCE_NAME}_TransferSM();
 }
 
-void I2C_${I2C_INSTANCE_NUM}_InterruptHandler(void)
+void __attribute__((used)) I2C_${I2C_INSTANCE_NUM}_InterruptHandler(void)
 {
     uint32_t iec_bus_reg_read = ${I2C_BUS_IEC_REG};
     uint32_t iec_master_reg_read = ${I2C_MASTER_IEC_REG};

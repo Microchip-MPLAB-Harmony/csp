@@ -101,7 +101,7 @@ bool ${ACC_INSTANCE_NAME}_StatusGet (ACC_STATUS_SOURCE status_var)
 
 <#if INTERRUPT_MODE == true>
 
-static ACC_OBJECT ${ACC_INSTANCE_NAME?lower_case}Obj;
+volatile static ACC_OBJECT ${ACC_INSTANCE_NAME?lower_case}Obj;
 
 void ${ACC_INSTANCE_NAME}_CallbackRegister (ACC_CALLBACK callback, uintptr_t context)
 {
@@ -109,7 +109,7 @@ void ${ACC_INSTANCE_NAME}_CallbackRegister (ACC_CALLBACK callback, uintptr_t con
     ${ACC_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
-void ${ACC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${ACC_INSTANCE_NAME}_InterruptHandler( void )
 {
     // Clear the interrupt
     ${ACC_INSTANCE_NAME}_REGS->ACC_ISR;

@@ -65,12 +65,12 @@
 // *****************************************************************************
 <#if EIC_INT != "0">
 /* EIC Channel Callback object */
-static EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
+volatile static EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
 
 </#if>
 <#if NMI_CTRL == true>
 /* EIC NMI Callback object */
-static EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
+volatile static EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
 
 </#if>
 
@@ -169,7 +169,7 @@ void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, u
     }
 }
 
-void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint8_t currentChannel;
     uint32_t eicIntFlagStatus;
@@ -207,7 +207,7 @@ void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr
     ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.context  = context;
 }
 
-void NMI_InterruptHandler(void)
+void __attribute__((used)) NMI_InterruptHandler(void)
 {
     /* Find the triggered, run associated callback handlers */
     if ((${EIC_INSTANCE_NAME}_REGS->EIC_NMIFLAG & EIC_NMIFLAG_NMI_Msk) == EIC_NMIFLAG_NMI_Msk)

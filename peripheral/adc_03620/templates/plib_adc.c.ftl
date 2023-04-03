@@ -57,7 +57,7 @@ static ADC_GLOBAL_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_GlobalCallbackObj;
 </#if>
 
 <#if ADC_CORE_CORE_INT_ENABLED == true>
-static ADC_CORE_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CoreCallbackObj[${ADC_NUM_SAR_CORES}];
+volatile static ADC_CORE_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CoreCallbackObj[${ADC_NUM_SAR_CORES}];
 </#if>
 
 void ${ADC_INSTANCE_NAME}_Initialize(void)
@@ -619,7 +619,7 @@ void ${ADC_INSTANCE_NAME}_GlobalCallbackRegister(ADC_GLOBAL_CALLBACK callback, u
 </#list>
 
 <#if ADC_CTLINTENSET != "0">
-void ${ADC_INSTANCE_NAME}_GLOBAL_InterruptHandler( void )
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_GLOBAL_InterruptHandler( void )
 {
     uint32_t status;
 
@@ -647,7 +647,7 @@ void ${ADC_INSTANCE_NAME}_GLOBAL_InterruptHandler( void )
 <#list 0..(ADC_NUM_SAR_CORES-1) as n>
         <#assign ADC_CORE_INT_ENABLED    = "ADC_CORE_" + n + "_ADC_INTENSET">
         <#if .vars[ADC_CORE_INT_ENABLED] != "0">
-        <#lt>void ${ADC_INSTANCE_NAME}_CORE${n+1}_InterruptHandler( void )
+        <#lt>void __attribute__((used)) ${ADC_INSTANCE_NAME}_CORE${n+1}_InterruptHandler( void )
         <#lt>{
         <#lt>   uint32_t status;
 

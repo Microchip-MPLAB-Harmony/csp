@@ -66,9 +66,9 @@
 #define ${I2C_INSTANCE_NAME}_STXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_SLV_TXB_REG_OFST)
 #define ${I2C_INSTANCE_NAME}_SRXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_SLV_RXB_REG_OFST)
 
-static I2C_SMB_TARGET_OBJ ${I2C_INSTANCE_NAME?lower_case}TargetObj;
-static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetWrBuffer[64];
-static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer[64];
+volatile static I2C_SMB_TARGET_OBJ ${I2C_INSTANCE_NAME?lower_case}TargetObj;
+volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetWrBuffer[64];
+volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer[64];
 </#if>
 
 <#if I2C_OPERATING_MODE == "Slave">
@@ -247,7 +247,7 @@ void I2C${I2C_INSTANCE_NAME}_TargetBufferWrite(void* pBuffer, uint32_t nBytes)
     ${I2C_INSTANCE_NAME?lower_case}TargetObj.txCount = nBytes;
 }
 
-void I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32_t completion_reg)
+void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32_t completion_reg)
 {
     uint8_t PECConfig = ((${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] & SMB_CFG_PECEN_Msk) != 0U)? 1U: 0U;
 
@@ -407,7 +407,7 @@ void I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32_t completion_reg)
 }
 
 <#if I2C_OPERATING_MODE == "Slave">
-void ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     uint32_t completion_reg;
 

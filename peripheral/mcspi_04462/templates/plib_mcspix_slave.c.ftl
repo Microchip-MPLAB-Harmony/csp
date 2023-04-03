@@ -63,16 +63,16 @@
 #define ${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE            (${MCSPIS_RX_BUFFER_SIZE}U)
 #define ${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           (${MCSPIS_TX_BUFFER_SIZE}U)
 
-static uint8_t ${MCSPI_INSTANCE_NAME}_ReadBuffer[${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint8_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${MCSPI_INSTANCE_NAME}_ReadBuffer[${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint8_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 <#else>
 
 #define ${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE            (${MCSPIS_RX_BUFFER_SIZE/2}U)
 #define ${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           (${MCSPIS_TX_BUFFER_SIZE/2}U)
 
-static uint16_t ${MCSPI_INSTANCE_NAME}_ReadBuffer[${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint16_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint16_t ${MCSPI_INSTANCE_NAME}_ReadBuffer[${MCSPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint16_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 </#if>
 
 // *****************************************************************************
@@ -82,7 +82,7 @@ static uint16_t ${MCSPI_INSTANCE_NAME}_WriteBuffer[${MCSPI_INSTANCE_NAME}_WRITE_
 // *****************************************************************************
 
 /* Global object to save MCSPI Exchange related data */
-static MCSPI_SLAVE_OBJECT ${MCSPI_INSTANCE_NAME?lower_case}Obj;
+volatile static MCSPI_SLAVE_OBJECT ${MCSPI_INSTANCE_NAME?lower_case}Obj;
 
 void ${MCSPI_INSTANCE_NAME}_Initialize( void )
 {
@@ -233,7 +233,7 @@ MCSPI_SLAVE_ERROR ${MCSPI_INSTANCE_NAME}_ErrorGet(void)
     return errorStatus;
 }
 
-void ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
 {
 <#if MCSPI_CSR0_BITS = "_8_BIT">
     uint8_t txRxData = 0;

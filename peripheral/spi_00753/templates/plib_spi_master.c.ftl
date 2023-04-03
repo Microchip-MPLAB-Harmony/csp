@@ -52,7 +52,7 @@
 
 <#if SPI_INTERRUPT_MODE == true>
 /* Global object to save SPI Exchange related data */
-static SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
+volatile static SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 #define ${SPI_INSTANCE_NAME}_CON_MSTEN                      (${SPI_MSTR_MODE_EN}UL << _${SPI_INSTANCE_NAME}CON_MSTEN_POSITION)
@@ -512,9 +512,9 @@ void ${SPI_INSTANCE_NAME}_CallbackRegister (SPI_CALLBACK callback, uintptr_t con
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 </#if>
 {
     uint32_t receivedData = 0;
@@ -643,9 +643,9 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 </#if>
 {
     /* If there are more words to be transmitted, then transmit them here and keep track of the count */
@@ -704,7 +704,7 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-void SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
 {
     uint32_t iec_reg_read = ${SPI_RX_IEC_REG};
     if (((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) != 0U) && (( iec_reg_read & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK)!= 0U))

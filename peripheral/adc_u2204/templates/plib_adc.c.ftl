@@ -133,7 +133,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if ADC_INTENSET_RESRDY = true || (ADC_WINCTRL_WINMODE != "DISABLE" && ADC_INTENSET_WINMON = true)>
-static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
+volatile static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 <#if ADC_CALIB??>
@@ -353,7 +353,7 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t con
 }
 
 
-void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler( void )
 {
     ADC_STATUS status;
     status = (ADC_STATUS) (${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG);

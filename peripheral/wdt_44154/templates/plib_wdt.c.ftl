@@ -65,7 +65,7 @@
     <#lt>    ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context =  context;
     <#lt>}
 
-    <#lt>void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${WDT_INSTANCE_NAME}_REGS->WDT_ISR;

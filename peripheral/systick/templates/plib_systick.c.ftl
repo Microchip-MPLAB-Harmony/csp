@@ -48,7 +48,7 @@
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>
-    <#lt>static SYSTICK_OBJECT systick;
+    <#lt>volatile static SYSTICK_OBJECT systick;
 </#if>
 
 void SYSTICK_TimerInitialize ( void )
@@ -256,7 +256,7 @@ bool SYSTICK_IsTimeoutReached (SYSTICK_TIMEOUT* timeout)
     <#lt>   systick.context = context;
     <#lt>}
 
-    <#lt>void SysTick_Handler(void)
+    <#lt>void __attribute__((used)) SysTick_Handler(void)
     <#lt>{
     <#lt>   /* Reading control register clears the count flag */
     <#lt>   uint32_t sysCtrl = SysTick->CTRL;

@@ -66,8 +66,8 @@
 #define ${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE            ${FLEXCOM_SPIS_RX_BUFFER_SIZE}U
 #define ${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${FLEXCOM_SPIS_TX_BUFFER_SIZE}U
 
-static uint8_t ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint8_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint8_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 <#else>
 #define FLEXCOM_SPI_RDR_REG      (*(volatile uint16_t* const)((SPI${FLEXCOM_INSTANCE_NUMBER}_BASE_ADDRESS + SPI_RDR_REG_OFST)))
 #define FLEXCOM_SPI_TDR_REG      (*(volatile uint16_t* const)((SPI${FLEXCOM_INSTANCE_NUMBER}_BASE_ADDRESS + SPI_TDR_REG_OFST)))
@@ -75,8 +75,8 @@ static uint8_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WRI
 #define ${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE            ${FLEXCOM_SPIS_RX_BUFFER_SIZE/2}U
 #define ${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${FLEXCOM_SPIS_TX_BUFFER_SIZE/2}U
 
-static uint16_t ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint16_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint16_t ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint16_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 </#if>
 
 // *****************************************************************************
@@ -86,7 +86,7 @@ static uint16_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WR
 // *****************************************************************************
 
 /* Global object to save FLEXCOM SPI Exchange related data */
-static FLEXCOM_SPI_SLAVE_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
+volatile static FLEXCOM_SPI_SLAVE_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
 
 void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void )
 {
@@ -231,7 +231,7 @@ FLEXCOM_SPI_SLAVE_ERROR ${FLEXCOM_INSTANCE_NAME}_SPI_ErrorGet(void)
     return errorStatus;
 }
 
-void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 {
 <#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
     uint8_t txRxData = 0U;

@@ -73,7 +73,7 @@ typedef struct
 </#if>
 } XDMAC_CH_OBJECT ;
 
-static XDMAC_CH_OBJECT xdmacChannelObj[XDMAC_ACTIVE_CHANNELS_MAX];
+volatile static XDMAC_CH_OBJECT xdmacChannelObj[XDMAC_ACTIVE_CHANNELS_MAX];
 
 <#--Implementation-->
 // *****************************************************************************
@@ -82,7 +82,7 @@ static XDMAC_CH_OBJECT xdmacChannelObj[XDMAC_ACTIVE_CHANNELS_MAX];
 // *****************************************************************************
 // *****************************************************************************
 <#if XDMAC_INTERRUPT_ENABLED == true>
-void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_InterruptHandler( void )
 {
     XDMAC_CH_OBJECT *xdmacChObj = (XDMAC_CH_OBJECT *)&xdmacChannelObj[0];
     uint8_t channel = 0U;
@@ -130,7 +130,7 @@ void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
 }
 <#if SECURE_INTERRUPT_AVAILABLE>
 
-void ${DMA_INSTANCE_NAME}_SINT_InterruptHandler( void )
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_SINT_InterruptHandler( void )
 {
     XDMAC_CH_OBJECT *xdmacChObj = (XDMAC_CH_OBJECT *)&xdmacChannelObj[0];
     uint8_t channel = 0U;

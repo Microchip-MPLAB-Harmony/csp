@@ -75,7 +75,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-static FLEXCOM_TWI_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj;
+volatile static FLEXCOM_TWI_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -559,7 +559,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setu
     enabled user need to call it from the main while loop of the application.
 */
 
-void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t status;
 

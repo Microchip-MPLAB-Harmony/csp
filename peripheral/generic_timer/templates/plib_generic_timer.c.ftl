@@ -55,14 +55,16 @@
 #define GENERIC_TIMER_FREQUENCY ${SYSTEM_COUNTER_FREQUENCY}U
 <#if GENERIC_TIMER_INTERRUPT>
 
-static uint64_t compareDelta = ${GENERIC_TIMER_COMPARE_DELTA}UL;
+volatile static uint64_t compareDelta = ${GENERIC_TIMER_COMPARE_DELTA}UL;
 <#if RTOS_INTERRUPT_HANDLER == "">
 
-static struct callbackObject
+volatile static struct callbackObject
 {
     GENERIC_TIMER_CALLBACK pCallback;
     uintptr_t context;
 }genericTimerCallbackObj;
+
+
 </#if>
 </#if>
 
@@ -147,7 +149,7 @@ void GENERIC_TIMER_CallbackRegister(GENERIC_TIMER_CALLBACK pCallback, uintptr_t 
 }
 
 
-void GENERIC_TIMER_InterruptHandler (void)
+void __attribute__((used)) GENERIC_TIMER_InterruptHandler (void)
 {
     uint64_t currentCompVal = PL1_GetPhysicalCompareValue();
     PL1_SetPhysicalCompareValue(currentCompVal + compareDelta);

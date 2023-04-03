@@ -64,29 +64,29 @@
 #define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE}
 #define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE}
 
-static uint8_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint8_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint8_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 <#elseif SPI_SPICON_MODE == "1">
 
 #define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE/2}
 #define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE/2}
 
-static uint16_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint16_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 <#else>
 
 #define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE/4}
 #define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE/4}
 
-static uint32_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint32_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint32_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint32_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 </#if>
 
 /* Global object to save SPI Exchange related data */
-static SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
+volatile static SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 
 #define ${SPI_INSTANCE_NAME}_CON_CKP                        (${SPI_SPICON_CLK_POL}UL << _${SPI_INSTANCE_NAME}CON_CKP_POSITION)
 #define ${SPI_INSTANCE_NAME}_CON_CKE                        (${SPI_SPICON_CLK_PH}UL << _${SPI_INSTANCE_NAME}CON_CKE_POSITION)
@@ -284,7 +284,7 @@ SPI_SLAVE_ERROR ${SPI_INSTANCE_NAME}_ErrorGet(void)
     return errorStatus;
 }
 
-static void ${SPI_INSTANCE_NAME}_CS_Handler(GPIO_PIN pin, uintptr_t context)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_CS_Handler(GPIO_PIN pin, uintptr_t context)
 {
     <#if SPIS_CS_PIN_LOGIC_LEVEL == "ACTIVE_LOW">
     bool activeState = false;
@@ -336,9 +336,9 @@ static void ${SPI_INSTANCE_NAME}_CS_Handler(GPIO_PIN pin, uintptr_t context)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_FAULT_InterruptHandler (void)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}${SPI_ERROR_NAME}_InterruptHandler (void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}${SPI_ERROR_NAME}_InterruptHandler (void)
 </#if>
 {
     ${SPI_INSTANCE_NAME?lower_case}Obj.errorStatus =(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK);
@@ -350,9 +350,9 @@ void ${SPI_INSTANCE_NAME}${SPI_ERROR_NAME}_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 </#if>
 {
     /* Fill up the FIFO as long as there are empty elements */
@@ -373,9 +373,9 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 </#if>
 {
     uint32_t receivedData = 0;
@@ -421,7 +421,7 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-void SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
 {
     if ((${SPI_FLT_IFS_REG} & _${SPI_FLT_IFS_REG}_${SPI_INSTANCE_NAME}EIF_MASK) && (${SPI_FLT_IEC_REG} & _${SPI_FLT_IEC_REG}_${SPI_INSTANCE_NAME}EIE_MASK))
     {

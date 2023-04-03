@@ -71,7 +71,7 @@
 
 <#if SPI_INTERRUPT_MODE = true>
 /*Global object to save SPI Exchange related data  */
-static SPI_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}SPIObj;
+volatile static SPI_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}SPIObj;
 </#if>
 
 // *****************************************************************************
@@ -670,11 +670,11 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pReceiveData, size_t rxSize)
     Refer plib_${SERCOM_INSTANCE_NAME?lower_case}_spi.h file for more information.
 */
 
-void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
+void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
 {
     uint32_t dataBits = 0U;
     uint32_t receivedData = 0U;
-    static bool isLastByteTransferInProgress = false;
+    volatile static bool isLastByteTransferInProgress = false;
 
     if(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET != 0U)
     {

@@ -175,7 +175,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if ADC_INTENSET_RESRDY = true || (ADC_CTRLC_WINMODE != "0" && ADC_INTENSET_WINMON = true)>
-static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
+volatile static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 <#if ADC_LOAD_CALIB? has_content>
@@ -400,7 +400,7 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t con
 }
 
 <#if ADC_INTENSET_RESRDY = true>
-void ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
 {
     volatile ADC_STATUS status;
     status = (ADC_STATUS)${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk;
@@ -425,7 +425,7 @@ bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 }
 </#if>
 <#if ADC_INTENSET_WINMON = true && ADC_CTRLC_WINMODE != "0">
-void ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
     ADC_STATUS status;
     status = (ADC_STATUS) (${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG);
@@ -489,7 +489,7 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t con
 }
 
 
-void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler( void )
 {
     ADC_STATUS status;
     status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG;

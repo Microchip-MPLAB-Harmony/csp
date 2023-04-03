@@ -52,7 +52,7 @@
 // *****************************************************************************
 
 <#if UART_INTERRUPT_MODE_ENABLE == true>
-static UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+volatile static UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void static ${UART_INSTANCE_NAME}_ErrorClear( void )
@@ -468,9 +468,9 @@ size_t ${UART_INSTANCE_NAME}_WriteCountGet( void )
 }
 
 <#if UART_INTERRUPT_COUNT == 1>
-static void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 <#else>
-void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
+void __attribute__((used)) ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 </#if>
 {
     /* Save the error to be reported later */
@@ -495,9 +495,9 @@ void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 }
 
 <#if UART_INTERRUPT_COUNT == 1>
-static void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 <#else>
-void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
+void __attribute__((used)) ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 </#if>
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
@@ -553,9 +553,9 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 }
 
 <#if UART_INTERRUPT_COUNT == 1>
-static void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#else>
-void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
+void __attribute__((used)) ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 </#if>
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
@@ -601,7 +601,7 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 }
 
 <#if UART_INTERRUPT_COUNT == 1>
-void UART_${UART_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) UART_${UART_INSTANCE_NUM}_InterruptHandler (void)
 {
     /* As per 13_5_violation using this temp variable */
     uint32_t temp = 0;

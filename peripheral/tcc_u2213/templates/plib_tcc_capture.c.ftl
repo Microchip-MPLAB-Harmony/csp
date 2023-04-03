@@ -146,7 +146,7 @@
 </#compress>
 
 <#if TCC_CAPTURE_INTERRUPT_MODE = true>
-static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
+volatile static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -342,7 +342,7 @@ void ${TCC_INSTANCE_NAME}_CaptureCallbackRegister( TCC_CALLBACK callback, uintpt
 <#-- Single interrupt line -->
 <#if TCC_NUM_INT_LINES == 0>
 /* Capture interrupt handler */
-void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status;
     status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
@@ -359,7 +359,7 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 <#else>
         <#if TCC_CAPTURE_OVF_INTERRUPT_MODE == true || TCC_CAPTURE_ERR_INTERRUPT_MODE == true>
             <#lt>/* Interrupt Handler */
-            <#lt>void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
+            <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
             <#lt>{
             <#lt>    uint32_t status;
             <#lt>    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
@@ -378,7 +378,7 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
         <#assign TCC_INT_MC = "TCC_CAPTURE_INTENSET_MC" + i>
             <#if .vars[TCC_INT_MC] == true>
                 <#lt>/* Interrupt Handler */
-                <#lt>void ${TCC_INSTANCE_NAME}_MC${i}_InterruptHandler(void)
+                <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_MC${i}_InterruptHandler(void)
                 <#lt>{
                 <#lt>    uint32_t status;
                 <#lt>    status = TCC_INTFLAG_MC${i}_Msk;

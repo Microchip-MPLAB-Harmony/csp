@@ -50,11 +50,11 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if USART_SPI_INTERRUPT_MODE == true >
-static USART_SPI_OBJECT ${USART_INSTANCE_NAME?lower_case}SPIObj;
+volatile static USART_SPI_OBJECT ${USART_INSTANCE_NAME?lower_case}SPIObj;
 
 <#if USE_USART_SPI_DMA?? && USE_USART_SPI_DMA == true>
 
-static uint8_t ${USART_INSTANCE_NAME}_SPI_DummyDataBuffer[512];
+volatile static uint8_t ${USART_INSTANCE_NAME}_SPI_DummyDataBuffer[512];
 
 static void ${USART_INSTANCE_NAME}_SPI_SetupDMA( void* pTransmitData, void* pReceiveData, size_t size )
 {
@@ -411,7 +411,7 @@ void ${USART_INSTANCE_NAME}_SPI_CallbackRegister( USART_SPI_CALLBACK callback, u
     ${USART_INSTANCE_NAME?lower_case}SPIObj.context = context;
 }
 
-void ${USART_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
 {
 <#if USE_USART_SPI_DMA?? && USE_USART_SPI_DMA == true>
     uint32_t size;

@@ -55,7 +55,7 @@
 #include "plib_${PMP_INSTANCE_NAME?lower_case}.h"
 
 <#if PMP_INTERRUPT_MODE == true>
-static PMP_CALLBACK_OBJ ${PMP_INSTANCE_NAME?lower_case}CallbackObject;
+volatile static PMP_CALLBACK_OBJ ${PMP_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -180,7 +180,7 @@ void ${PMP_INSTANCE_NAME}_CallbackRegister(PMP_CALLBACK callback, uintptr_t cont
     ${PMP_INSTANCE_NAME?lower_case}CallbackObject.context  = context;
 }
 
-void ${PMP_INSTANCE_NAME}_InterruptHandler (void)
+void __attribute__((used)) ${PMP_INSTANCE_NAME}_InterruptHandler (void)
 {
     if (((${PMP_IFS_REG} & _${PMP_IFS_REG}_${PMP_INSTANCE_NAME}IF_MASK) != 0U) && (( ${PMP_IEC_REG} & _${PMP_IEC_REG}_${PMP_INSTANCE_NAME}IE_MASK) != 0U))
     {

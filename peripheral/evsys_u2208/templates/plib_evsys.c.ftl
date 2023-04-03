@@ -55,7 +55,7 @@
         </#if>
     </#list>
     <#if CONFIGURED_CHANNEL != 0>
-        <#lt>static EVSYS_OBJECT evsys[${CONFIGURED_CHANNEL}];
+        <#lt>volatile static EVSYS_OBJECT evsys[${CONFIGURED_CHANNEL}];
     </#if>
 </#if>
 
@@ -153,7 +153,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 </#if>
 
 <#if EVSYS_INTERRUPT_MODE == true>
-    <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${EVSYS_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
          <#lt>    uint8_t currentChannel = 0U;
          <#lt>    uint8_t channel = 0U;

@@ -49,7 +49,7 @@
 // *****************************************************************************
 
 <#if HECC_INTERRUPT_MODE == true>
-static HEMC_OBJ ${HEMC_INSTANCE_NAME?lower_case}Obj;
+volatile static HEMC_OBJ ${HEMC_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 // *****************************************************************************
@@ -625,7 +625,7 @@ void ${HEMC_INSTANCE_NAME}_NoFixCallbackRegister(HEMC_CALLBACK callback, uintptr
     instance interrupt is enabled. If peripheral instance's interrupt is not
     enabled user need to call it from the main while loop of the application.
 */
-void ${HEMC_INSTANCE_NAME}_INTFIX_InterruptHandler(void)
+void __attribute__((used)) ${HEMC_INSTANCE_NAME}_INTFIX_InterruptHandler(void)
 {
 
     if (${HEMC_INSTANCE_NAME?lower_case}Obj.fix_callback != NULL)
@@ -659,7 +659,7 @@ void ${HEMC_INSTANCE_NAME}_INTFIX_InterruptHandler(void)
     instance interrupt is enabled. If peripheral instance's interrupt is not
     enabled user need to call it from the main while loop of the application.
 */
-void ${HEMC_INSTANCE_NAME}_INTNOFIX_InterruptHandler(void)
+void __attribute__((used)) ${HEMC_INSTANCE_NAME}_INTNOFIX_InterruptHandler(void)
 {
 
     if (${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_callback != NULL)

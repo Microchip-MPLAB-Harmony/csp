@@ -66,7 +66,7 @@
 #define ${SERCOM_INSTANCE_NAME}_USART_INT_BAUD_VALUE            (${USART_BAUD_VALUE}UL)
 
 <#if USART_INTERRUPT_MODE_ENABLE = true>
-static SERCOM_USART_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
+volatile static SERCOM_USART_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
 </#if>
 
 // *****************************************************************************
@@ -791,7 +791,7 @@ int ${SERCOM_INSTANCE_NAME}_USART_ReadByte( void )
 <#if USART_INTERRUPT_MODE_ENABLE = true>
 
 <#if USART_INTENSET_ERROR = true>
-void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
+void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 {
     USART_ERROR errorStatus;
 
@@ -820,7 +820,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 </#if>
 
 <#if USART_RX_ENABLE = true>
-void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
+void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
     uint16_t temp;
 
@@ -917,7 +917,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 </#if>
 
 <#if USART_TX_ENABLE = true>
-void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
+void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     bool  dataRegisterEmpty;
     bool  dataAvailable;
@@ -960,7 +960,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 }
 </#if>
 
-void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
+void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
 {
 <#if USART_INTENSET_ERROR || USART_TX_ENABLE || USART_RX_ENABLE>
     bool testCondition;

@@ -66,12 +66,12 @@
 
 <#if EIC_INT != "0">
 /* EIC Channel Callback object */
-static EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
+volatile static EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
 </#if>
 
 <#if NMI_CTRL == true>
 /* EIC NMI Callback object */
-static EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
+volatile static EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
 
 </#if>
 
@@ -202,7 +202,7 @@ void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr
 </#if>
 <#if EIC_INT != "0">
 <#if NUM_INT_LINES == 0>
-void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint8_t currentChannel = 0;
     uint32_t eicIntFlagStatus = 0;
@@ -234,7 +234,7 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 <#list 0..NUM_INT_LINES as x>
 <#assign Enable = "EIC_INT_" + x>
 <#if .vars[Enable]>
-void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
+void __attribute__((used)) ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
 {
     /* Clear interrupt flag */
     ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG = (1UL << ${x});
@@ -251,7 +251,7 @@ void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
 
 </#if>
 <#if NMI_CTRL == true>
-void NMI_InterruptHandler(void)
+void __attribute__((used)) NMI_InterruptHandler(void)
 {
     /* Find the triggered, run associated callback handlers */
     if ((${EIC_INSTANCE_NAME}_REGS->EIC_NMIFLAG & EIC_NMIFLAG_NMI_Msk) == EIC_NMIFLAG_NMI_Msk)

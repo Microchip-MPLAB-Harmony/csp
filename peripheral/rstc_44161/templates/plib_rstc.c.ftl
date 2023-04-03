@@ -111,7 +111,7 @@ bool RSTC${INSTANCE?string}_NRSTPinRead( void )
 }
 
 <#if RSTC_MR_EXTERNAL_RESET_ACTION == "INTERRUPT">
-    <#lt>static RSTC_OBJECT rstcObj;
+    <#lt>volatile static RSTC_OBJECT rstcObj;
 
     <#lt>void RSTC${INSTANCE?string}_CallbackRegister( RSTC_CALLBACK callback, uintptr_t context )
     <#lt>{
@@ -119,7 +119,7 @@ bool RSTC${INSTANCE?string}_NRSTPinRead( void )
     <#lt>    rstcObj.context = context;
     <#lt>}
 
-    <#lt>void RSTC${INSTANCE?string}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) RSTC${INSTANCE?string}_InterruptHandler( void )
     <#lt>{
     <#lt>    // Capture the status and clear interrupt.  The RSTC status always has
     <#lt>    // the last reset cause 

@@ -73,7 +73,7 @@
 #define I2C${I2C_INSTANCE_NUM}_NAK  (SMB_WCTRL_ESO_Msk | SMB_WCTRL_ENI_Msk)
 
 
-static I2C_OBJ i2c${I2C_INSTANCE_NUM}Obj;
+volatile static I2C_OBJ i2c${I2C_INSTANCE_NUM}Obj;
 
 void I2C${I2C_INSTANCE_NUM}_Initialize(void)
 {
@@ -506,12 +506,12 @@ void I2C${I2C_INSTANCE_NUM}_TransferAbort( void )
 
 
 
-static void I2C${I2C_INSTANCE_NUM}_MASTER_InterruptHandler(void)
+static void __attribute__((used)) I2C${I2C_INSTANCE_NUM}_MASTER_InterruptHandler(void)
 {
     I2C${I2C_INSTANCE_NUM}_TransferSM();
 }
 
-void ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     <#if I2C_INTERRUPT_TYPE == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}) != 0U)

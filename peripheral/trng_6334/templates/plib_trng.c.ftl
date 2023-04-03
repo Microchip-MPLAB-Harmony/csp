@@ -46,7 +46,7 @@
 </#if>
 
 <#if trngEnableInterrupt == true>
-	<#lt>static TRNG_OBJECT trng;
+	<#lt>volatile static TRNG_OBJECT trng;
 	
 	<#lt>void ${TRNG_INSTANCE_NAME}_RandomNumberGenerate( void )
 	<#lt>{
@@ -76,7 +76,7 @@
 </#if>
 
 <#if trngEnableInterrupt == true>
-	<#lt>void ${TRNG_INSTANCE_NAME}_InterruptHandler( void )
+	<#lt>void __attribute__((used)) ${TRNG_INSTANCE_NAME}_InterruptHandler( void )
 	<#lt>{
 	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_${CRKEYNAME};
 	<#lt>	trng.data = ${TRNG_INSTANCE_NAME}_REGS->TRNG_ODATA;

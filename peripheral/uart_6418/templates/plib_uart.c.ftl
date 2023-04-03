@@ -60,10 +60,10 @@
 <#assign useUARTTxDMA = USE_UART_TRANSMIT_DMA>
 </#if>
 
-static UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+volatile static UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 
 <#if useUARTRxDMA == false>
-static void ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
@@ -96,7 +96,7 @@ static void ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
 
 </#if>
 <#if useUARTTxDMA == false>
-static void ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
@@ -126,7 +126,7 @@ static void ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
 }
 
 </#if>
-void ${UART_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${UART_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Error status */
     uint32_t errorStatusx = (${UART_INSTANCE_NAME}_REGS->UART_SR & (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));

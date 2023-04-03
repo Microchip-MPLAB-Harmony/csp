@@ -60,7 +60,7 @@
 
 static CACHE_ALIGN SDHC_ADMA_DESCR ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[(${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE_CACHE_ALIGN/8U)];
 
-static SDHC_OBJECT ${SDHC_INSTANCE_NAME?lower_case}Obj;
+volatile static SDHC_OBJECT ${SDHC_INSTANCE_NAME?lower_case}Obj;
 
 static void ${SDHC_INSTANCE_NAME}_VariablesInit ( void )
 {
@@ -110,7 +110,7 @@ static void ${SDHC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode )
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_TMR = transferMode;
 }
 
-void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint16_t nistr = 0U;
     uint16_t eistr = 0U;

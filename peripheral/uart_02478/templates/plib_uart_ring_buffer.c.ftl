@@ -51,21 +51,21 @@
 // *****************************************************************************
 // *****************************************************************************
 
-static UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+volatile static UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 
 #define ${UART_INSTANCE_NAME}_READ_BUFFER_SIZE      ${UART_RX_RING_BUFFER_SIZE}
 #define ${UART_INSTANCE_NAME}_READ_BUFFER_SIZE_9BIT (${UART_RX_RING_BUFFER_SIZE} >> 1)
 #define ${UART_INSTANCE_NAME}_RX_INT_DISABLE()      ${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
 #define ${UART_INSTANCE_NAME}_RX_INT_ENABLE()       ${UART_RX_IEC_REG}SET = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
 
-static uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
 
 #define ${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE     ${UART_TX_RING_BUFFER_SIZE}
 #define ${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE_9BIT       (${UART_TX_RING_BUFFER_SIZE} >> 1)
 #define ${UART_INSTANCE_NAME}_TX_INT_DISABLE()      ${UART_TX_IEC_REG}CLR = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
 #define ${UART_INSTANCE_NAME}_TX_INT_ENABLE()       ${UART_TX_IEC_REG}SET = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
 
-static uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 #define ${UART_INSTANCE_NAME}_IS_9BIT_MODE_ENABLED()    ( U${UART_INSTANCE_NUM}MODE & (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK)) == (_U${UART_INSTANCE_NUM}MODE_PDSEL0_MASK | _U${UART_INSTANCE_NUM}MODE_PDSEL1_MASK) ? true:false
 
@@ -705,9 +705,9 @@ void ${UART_INSTANCE_NAME}_AutoBaudSet( bool enable )
 }
 
 <#if UART_INTERRUPT_COUNT == 1>
-static void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 <#else>
-void ${UART_INSTANCE_NAME}${UART_ERROR_NAME}_InterruptHandler (void)
+void __attribute__((used)) ${UART_INSTANCE_NAME}${UART_ERROR_NAME}_InterruptHandler (void)
 </#if>
 {
     /* Save the error to be reported later */
@@ -723,9 +723,9 @@ void ${UART_INSTANCE_NAME}${UART_ERROR_NAME}_InterruptHandler (void)
 }
 
 <#if UART_INTERRUPT_COUNT == 1>
-static void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 <#else>
-void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
+void __attribute__((used)) ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 </#if>
 {
 <#if (core.PRODUCT_FAMILY == "PIC32MK1402") || (core.PRODUCT_FAMILY == "PIC32MZW")>
@@ -764,9 +764,9 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 }
 
 <#if UART_INTERRUPT_COUNT == 1>
-static void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#else>
-void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
+void __attribute__((used)) ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 </#if>
 {
     uint16_t wrByte;
@@ -841,7 +841,7 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 }
 
 <#if UART_INTERRUPT_COUNT == 1>
-void UART_${UART_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) UART_${UART_INSTANCE_NUM}_InterruptHandler (void)
 {
     uint32_t temp = ${UART_FAULT_IEC_REG};
     /* Call Error handler if Error interrupt flag is set */

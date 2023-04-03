@@ -45,7 +45,7 @@
 </#if>
 
 <#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
-static SYSCTRL_CALLBACK_OBJECT SYSCTRL_CallbackObj;
+volatile static SYSCTRL_CALLBACK_OBJECT SYSCTRL_CallbackObj;
 
 </#if>
 static void SYSCTRL_Initialize(void)
@@ -388,7 +388,7 @@ void SYSCTRL_CallbackRegister(SYSCTRL_CALLBACK callback, uintptr_t context)
     SYSCTRL_CallbackObj.context = context;
 }
 
-void SYSCTRL_InterruptHandler(void)
+void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 {
 <#if SYSCTRL_INTERRUPT_XOSCRDY>
     if ((SYSCTRL_REGS->SYSCTRL_INTFLAG & SYSCTRL_INTFLAG_XOSCRDY_Msk) == SYSCTRL_INTFLAG_XOSCRDY_Msk)

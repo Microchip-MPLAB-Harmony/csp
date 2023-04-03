@@ -53,7 +53,7 @@
 #include "interrupts.h"
 </#if>
 
-static volatile uint16_t nvm_error;
+volatile static uint16_t nvm_error;
 
 <#assign NVMCTRL_CTRLA_VAL = "">
 <#assign NVMCTRL_SEECFG_VAL = "">
@@ -116,11 +116,11 @@ static volatile uint16_t nvm_error;
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true >
-    <#lt>static NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain;
+    <#lt>volatile static NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain;
 </#if>
 
 <#if NVM_INTERRUPT1_ENABLE == true >
-    <#lt>static NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE;
+    <#lt>volatile static NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE;
 </#if>
 
 void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
@@ -500,7 +500,7 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
     <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn = callback;
     <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.context = context;
     <#lt>}
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_Main_Interrupt_Handler(void)
+    <#lt>void __attribute__((used)) ${NVMCTRL_INSTANCE_NAME}_Main_Interrupt_Handler(void)
     <#lt>{
     <#lt>    uint16_t temp;
     <#lt>    /* Store previous and current error flags */
@@ -523,7 +523,7 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
     <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn = callback;
     <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.context = context;
     <#lt>}
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_Interrupt_Handler(void)
+    <#lt>void __attribute__((used)) ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_Interrupt_Handler(void)
     <#lt>{
     <#lt>    uint16_t temp;
     <#lt>    /* Store previous and current error flags */

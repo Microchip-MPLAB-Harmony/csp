@@ -65,7 +65,7 @@
 // *****************************************************************************
 #define NOP()    asm("NOP")
 
-static I2C_SLAVE_OBJ i2c${I2C_INSTANCE_NUM}Obj;
+volatile static I2C_SLAVE_OBJ i2c${I2C_INSTANCE_NUM}Obj;
 
 void I2C${I2C_INSTANCE_NUM}_Initialize(void)
 {
@@ -250,12 +250,12 @@ I2C_SLAVE_ERROR I2C${I2C_INSTANCE_NUM}_ErrorGet(void)
     return error;
 }
 
-static void I2C${I2C_INSTANCE_NUM}_SLAVE_InterruptHandler(void)
+static void __attribute__((used)) I2C${I2C_INSTANCE_NUM}_SLAVE_InterruptHandler(void)
 {
     I2C${I2C_INSTANCE_NUM}_TransferSM();
 }
 
-void ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     <#if I2C_INTERRUPT_TYPE == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}) != 0U)

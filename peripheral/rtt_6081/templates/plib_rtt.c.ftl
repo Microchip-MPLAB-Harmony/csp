@@ -47,7 +47,7 @@ Description:
 </#if>
 
 <#if rttINCIEN == true || rttALMIEN == true>
-    <#lt>static RTT_OBJECT rtt;
+    <#lt>volatile static RTT_OBJECT rtt;
 
 </#if>
 <#assign RTT_MR_VAL = "RTT_MR_RTPRES(" + rttRTPRES + "U) | RTT_MR_RTTDIS_Msk">
@@ -175,7 +175,7 @@ uint32_t ${RTT_INSTANCE_NAME}_FrequencyGet(void)
 }
 <#if rttINCIEN == true || rttALMIEN == true>
 
-    <#lt>void ${RTT_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${RTT_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#lt>	uint32_t rtt_status = ${RTT_INSTANCE_NAME}_REGS->RTT_SR;
     <#lt>	uint32_t flags = ${RTT_INSTANCE_NAME}_REGS->RTT_MR;

@@ -66,7 +66,7 @@
 #define FLEXCOM_USART_THR_9BIT_REG      (*(volatile uint16_t* const)((USART${FLEXCOM_INSTANCE_NUMBER}_BASE_ADDRESS + US_THR_REG_OFST)))
 
 <#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
-static FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
+volatile static FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
 </#if>
 
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
@@ -86,7 +86,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 <#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
 
 <#if !(USE_USART_RECEIVE_DMA??) || (USE_USART_RECEIVE_DMA == false)>
-void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
+void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
     {
@@ -125,7 +125,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 
 </#if>
 <#if !(USE_USART_TRANSMIT_DMA??) || (USE_USART_TRANSMIT_DMA == false)>
-void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
+void static __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true)
     {
@@ -162,7 +162,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 }
 </#if>
 
-void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Channel status */
     uint32_t channelStatus = USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR;

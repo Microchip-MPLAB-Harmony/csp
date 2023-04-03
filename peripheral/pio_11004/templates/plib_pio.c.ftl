@@ -199,10 +199,10 @@
     <#assign numOfIntInABCDE = PIO_A_NUM_INT_PINS + PIO_B_NUM_INT_PINS + PIO_C_NUM_INT_PINS + PIO_D_NUM_INT_PINS + PIO_E_NUM_INT_PINS>
 
    <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>static PIO_PIN_CALLBACK_OBJ portPinCbObj[${PIO_A_NUM_INT_PINS} + ${PIO_B_NUM_INT_PINS} + ${PIO_C_NUM_INT_PINS} + ${PIO_D_NUM_INT_PINS} + ${PIO_E_NUM_INT_PINS}];
+    <#lt>volatile static PIO_PIN_CALLBACK_OBJ portPinCbObj[${PIO_A_NUM_INT_PINS} + ${PIO_B_NUM_INT_PINS} + ${PIO_C_NUM_INT_PINS} + ${PIO_D_NUM_INT_PINS} + ${PIO_E_NUM_INT_PINS}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
-    <#lt>static uint8_t portNumCb[PIO_MAX_NUM_OF_CHANNELS + 1] = {0U, ${numOfIntInA}U, ${numOfIntInAB}U, ${numOfIntInABC}U, ${numOfIntInABCD}U, ${numOfIntInABCDE}U};
+    <#lt>volatile static uint8_t portNumCb[PIO_MAX_NUM_OF_CHANNELS + 1] = {0U, ${numOfIntInA}U, ${numOfIntInAB}U, ${numOfIntInABC}U, ${numOfIntInABCD}U, ${numOfIntInABCDE}U};
     <#lt> void PIO_Interrupt_Handler ( PIO_PORT port );
 </#if>
 
@@ -608,7 +608,7 @@ bool PIO_PinInterruptCallbackRegister(
   Remarks:
 	It is an internal function used by the library, user should not call it.
 */
-void PIO_Interrupt_Handler ( PIO_PORT port )
+void __attribute__((used)) PIO_Interrupt_Handler ( PIO_PORT port )
 {
     uint32_t status;
     uint32_t i, portIndex;
@@ -691,7 +691,7 @@ void PIO_Interrupt_Handler ( PIO_PORT port )
   Remarks:
     User should not call this function.
 */
-void PIO${PIO_CHANNEL}_InterruptHandler(void)
+void __attribute__((used)) PIO${PIO_CHANNEL}_InterruptHandler(void)
 {
     /* Local PIO Interrupt Handler */
     PIO_Interrupt_Handler(PIO_PORT_${PIO_CHANNEL});

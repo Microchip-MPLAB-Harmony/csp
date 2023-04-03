@@ -60,7 +60,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if I2CS_INTERRUPT_MODE = true>
-static SERCOM_I2C_SLAVE_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj;
+volatile static SERCOM_I2C_SLAVE_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj;
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -296,7 +296,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND command)
 
 <#if I2CS_INTERRUPT_MODE = true>
 <#if I2CS_SMEN == true>
-void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
+void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 {
     uint32_t intFlags = ${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_INTFLAG;
     SERCOM_I2C_SLAVE_TRANSFER_EVENT event = SERCOM_I2C_SLAVE_TRANSFER_EVENT_NONE;
@@ -355,7 +355,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
     ${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_INTFLAG = (uint8_t)intFlags;
 }
 <#else>
-void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
+void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 {
     uint32_t intFlags = ${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_INTFLAG;
 

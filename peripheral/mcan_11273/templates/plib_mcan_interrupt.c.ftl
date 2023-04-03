@@ -114,25 +114,25 @@
 #define MCAN_STD_ID_Msk        0x7FFU
 
 <#if TX_USE>
-static MCAN_TX_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj;
+volatile static MCAN_TX_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj;
 </#if>
 <#if TXBUF_USE>
-static MCAN_TXRX_BUFFERS_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj;
+volatile static MCAN_TXRX_BUFFERS_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj;
 </#if>
 <#if TX_USE || TXBUF_USE>
 <#assign TX_EVENT_FIFO_ELEMENTS = TX_FIFO_ELEMENTS>
 <#if TXBUF_USE>
 <#assign TX_EVENT_FIFO_ELEMENTS = TX_BUFFER_ELEMENTS + TX_FIFO_ELEMENTS>
 </#if>
-static MCAN_TX_EVENT_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj;
+volatile static MCAN_TX_EVENT_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj;
 </#if>
 <#if RXBUF_USE>
-static MCAN_TXRX_BUFFERS_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj;
+volatile static MCAN_TXRX_BUFFERS_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj;
 </#if>
 <#if RXF0_USE || RXF1_USE>
-static MCAN_RX_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[2];
+volatile static MCAN_RX_FIFO_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[2];
 </#if>
-static MCAN_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}CallbackObj;
+volatile static MCAN_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}CallbackObj;
 static MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
@@ -1402,7 +1402,7 @@ void ${MCAN_INSTANCE_NAME}_CallbackRegister(MCAN_CALLBACK callback, uintptr_t co
     instance interrupt is enabled. If peripheral instance's interrupt is not
     enabled user need to call it from the main while loop of the application.
 */
-void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
+void __attribute__((used)) ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
 {
 <#if RXBUF_USE>
     uint32_t newData1 = 0U;

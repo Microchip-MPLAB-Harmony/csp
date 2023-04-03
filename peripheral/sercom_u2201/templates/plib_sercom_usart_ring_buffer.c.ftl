@@ -65,7 +65,7 @@
 /* ${SERCOM_INSTANCE_NAME} USART baud value for ${USART_BAUD_RATE} Hz baud rate */
 #define ${SERCOM_INSTANCE_NAME}_USART_INT_BAUD_VALUE            (${USART_BAUD_VALUE}UL)
 
-static SERCOM_USART_RING_BUFFER_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
+volatile static SERCOM_USART_RING_BUFFER_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -79,7 +79,7 @@ static SERCOM_USART_RING_BUFFER_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTOb
 #define ${SERCOM_INSTANCE_NAME}_USART_RX_INT_DISABLE()      ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_RXC_Msk
 #define ${SERCOM_INSTANCE_NAME}_USART_RX_INT_ENABLE()       ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTENSET_RXC_Msk
 
-static uint8_t ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE];
+volatile static uint8_t ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE];
 </#if>
 
 <#if USART_TX_ENABLE = true>
@@ -88,7 +88,7 @@ static uint8_t ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[${SERCOM_INSTANCE_NAME}_
 #define ${SERCOM_INSTANCE_NAME}_USART_TX_INT_DISABLE()      ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_DRE_Msk
 #define ${SERCOM_INSTANCE_NAME}_USART_TX_INT_ENABLE()       ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTENSET_DRE_Msk
 
-static uint8_t ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE];
 </#if>
 
 void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
@@ -924,7 +924,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd)
 </#if>
 
 <#if USART_INTENSET_ERROR = true>
-void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
+void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 {
     USART_ERROR errorStatus = (USART_ERROR)(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk <#if USART_FORM == "0x4" || USART_FORM ==     "0x5">| SERCOM_USART_INT_STATUS_ISF_Msk </#if>));
 
@@ -945,7 +945,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 </#if>
 
 <#if USART_RX_ENABLE = true>
-void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
+void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
     <#if USART_INTENSET_ERROR = false>
 
@@ -1043,7 +1043,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 </#if>
 
 <#if USART_TX_ENABLE = true>
-void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
+void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     uint16_t wrByte;
 
@@ -1072,7 +1072,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 }
 </#if>
 
-void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
+void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
 {
 <#if USART_INTENSET_ERROR || USART_TX_ENABLE || USART_RX_ENABLE>
     bool testCondition = false;

@@ -86,7 +86,7 @@
     </#compress>
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
 /* Callback object for channel 0 */
-static TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
+volatile static TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize channel in quadrature mode */
@@ -184,7 +184,7 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
     <#lt>    ${TC_INSTANCE_NAME}_CallbackObj.context = context;
     <#lt>}
 
-    <#lt>void ${TC_INSTANCE_NAME}_CH0_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${TC_INSTANCE_NAME}_CH0_InterruptHandler(void)
     <#lt>{
     <#lt>    TC_QUADRATURE_STATUS quadrature_status = (TC_QUADRATURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK);
     <#lt>    /* Call registered callback function */
@@ -253,7 +253,7 @@ TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 
 <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Callback object for channel ${CH_NUM} */
-static TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
+volatile static TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in timer mode */
@@ -355,12 +355,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK cal
 <#if TC_COMMON_INTERRUPT_STATUS?? && TC_COMMON_INTERRUPT_STATUS == true>
 <#if .vars[TC_INSTANCE_NAME + "_CH" + CH_NUM + "_INTERRUPT_ENABLE"] == true>
 /* Interrupt handler for Channel ${CH_NUM} */
-static void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
-</#if>
-<#else>
-/* Interrupt handler for Channel ${CH_NUM} */
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
-</#if>
+static void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_TIMER_STATUS timer_status = (TC_TIMER_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK);
     /* Call registered callback function */
@@ -369,6 +364,19 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
         ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
 }
+</#if>
+<#else>
+/* Interrupt handler for Channel ${CH_NUM} */
+void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+{
+    TC_TIMER_STATUS timer_status = (TC_TIMER_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK);
+    /* Call registered callback function */
+    if ((TC_TIMER_NONE != timer_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    {
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
+    }
+}
+</#if>
 
 <#else>
 /* Check if timer period status is set */
@@ -382,7 +390,7 @@ bool ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodHasExpired(void)
 <#if .vars[TC_CH_OPERATINGMODE] == "CAPTURE">
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 /* Callback object for channel ${CH_NUM} */
-static TC_CAPTURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
+volatile static TC_CAPTURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in capture mode */
@@ -481,12 +489,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK
 <#if TC_COMMON_INTERRUPT_STATUS?? && TC_COMMON_INTERRUPT_STATUS == true>
 <#if .vars[TC_INSTANCE_NAME + "_CH" + CH_NUM + "_INTERRUPT_ENABLE"] == true>
 /* Interrupt handler for Channel ${CH_NUM} */
-static void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
-</#if>
-<#else>
-/* Interrupt handler for Channel ${CH_NUM} */
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
-</#if>
+static void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_CAPTURE_STATUS capture_status = (TC_CAPTURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK);
     /* Call registered callback function */
@@ -495,6 +498,20 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
         ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(capture_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
 }
+</#if>
+<#else>
+/* Interrupt handler for Channel ${CH_NUM} */
+void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+{
+    TC_CAPTURE_STATUS capture_status = (TC_CAPTURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK);
+    /* Call registered callback function */
+    if ((TC_CAPTURE_NONE != capture_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    {
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(capture_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
+    }
+}
+</#if>
+
 <#else>
 TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStatusGet(void)
 {
@@ -506,7 +523,7 @@ TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStatusGet(void)
 <#if .vars[TC_CH_OPERATINGMODE] == "COMPARE">
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
 /* Callback object for channel ${CH_NUM} */
-static TC_COMPARE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
+volatile static TC_COMPARE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in compare mode */
@@ -605,12 +622,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK
 <#if TC_COMMON_INTERRUPT_STATUS?? && TC_COMMON_INTERRUPT_STATUS == true>
 <#if .vars[TC_INSTANCE_NAME + "_CH" + CH_NUM + "_INTERRUPT_ENABLE"] == true>
 /* Interrupt handler for Channel ${CH_NUM} */
-static void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
-</#if>
-<#else>
-/* Interrupt handler for Channel ${CH_NUM} */
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
-</#if>
+static void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_COMPARE_STATUS compare_status = (TC_COMPARE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK);
     /* Call registered callback function */
@@ -619,6 +631,20 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
         ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(compare_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
 }
+</#if>
+<#else>
+/* Interrupt handler for Channel ${CH_NUM} */
+void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+{
+    TC_COMPARE_STATUS compare_status = (TC_COMPARE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK);
+    /* Call registered callback function */
+    if ((TC_COMPARE_NONE != compare_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    {
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(compare_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
+    }
+}
+</#if>
+
 <#else>
 TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStatusGet(void)
 {
@@ -635,7 +661,7 @@ TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStatusGet(void)
 <#--  If common interrupt is enabled -->
 <#if TC_COMMON_INTERRUPT_STATUS == true>
 /* Interrupt handler for ${TC_INSTANCE_NAME} */
-void ${TC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${TC_INSTANCE_NAME}_InterruptHandler(void)
 {
     <#if .vars[TC_INSTANCE_NAME + "_CH0_INTERRUPT_ENABLE"] == true>
     ${TC_INSTANCE_NAME}_CH0_InterruptHandler();

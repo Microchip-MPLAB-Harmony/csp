@@ -53,7 +53,7 @@
 #include "plib_${CCP_INSTANCE_NAME?lower_case}.h"
 
 <#if CCP_TIMER_INTERRUPT == true>
-static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}Obj;
+volatile static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 
@@ -132,7 +132,7 @@ uint32_t ${CCP_INSTANCE_NAME}_TimerFrequencyGet(void)
 }
 
 <#if CCP_TIMER_INTERRUPT == true>
-void CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
 {
     uint32_t status = ${CCP_IFS_REG}bits.CCT${CCP_INSTANCE_NUM}IF;
     ${CCP_IFS_REG}CLR = _${CCP_IFS_REG}_CCT${CCP_INSTANCE_NUM}IF_MASK;

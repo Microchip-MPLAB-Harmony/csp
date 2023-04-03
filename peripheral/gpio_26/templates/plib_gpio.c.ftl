@@ -66,7 +66,7 @@
 
 <#if TOTAL_NUM_OF_INT_USED gt 0 >
 <#lt>#define TOTAL_NUM_OF_INT_USED ${TOTAL_NUM_OF_INT_USED}U
-static GPIO_PIN_CALLBACK_OBJ pinCallbackObj[TOTAL_NUM_OF_INT_USED];
+volatile static GPIO_PIN_CALLBACK_OBJ pinCallbackObj[TOTAL_NUM_OF_INT_USED];
 </#if>
 
 #define GET_PINCTRL_REG_ADDR(pin)   (&GPIO_REGS->GPIO_CTRL0[0] + (uint32_t)(pin))
@@ -365,7 +365,7 @@ bool GPIO_PinInterruptCallbackRegister(
 <#assign PIN_NAME = "GPIO_PIN_NAME_" + i>
 <#assign GIRQ_NUM = "PIN_" + i + "_GIRQNUM">
 <#assign GIRQ_BITPOS = "PIN_" + i + "_GIRQBITPOS">
-void ${.vars[PIN_NAME]}_GRP_InterruptHandler(void)
+void __attribute__((used)) ${.vars[PIN_NAME]}_GRP_InterruptHandler(void)
 {
     if ((ECIA_REGS->ECIA_RESULT${.vars[GIRQ_NUM]} & ((uint32_t)1U << ${.vars[GIRQ_BITPOS]})) != 0U)
     {

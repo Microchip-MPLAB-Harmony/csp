@@ -49,7 +49,7 @@
     <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
     <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
         <#assign NumOfEnabledExtInt = NumOfEnabledExtInt + 1>
-        <#lt>static EXT_INT_PIN_CALLBACK_OBJ extInt${i}CbObj;
+        <#lt>volatile static EXT_INT_PIN_CALLBACK_OBJ extInt${i}CbObj;
     </#if>
 </#list>
 // *****************************************************************************
@@ -239,7 +239,7 @@ bool EVIC_ExternalInterruptCallbackRegister(
   Remarks:
     It is an internal function called from ISR, user should not call it directly.
 */
-void EXTERNAL_${i}_InterruptHandler(void)
+void __attribute__((used)) EXTERNAL_${i}_InterruptHandler(void)
 {
     IFS0CLR = _IFS0_INT${i}IF_MASK;
 

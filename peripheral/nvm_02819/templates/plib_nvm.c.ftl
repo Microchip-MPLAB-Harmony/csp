@@ -88,6 +88,15 @@ typedef enum
 #define ${NVM_INSTANCE_NAME}_INTERRUPT_ENABLE_MASK   ${NVM_IEC_REG_VALUE}U
 #define ${NVM_INSTANCE_NAME}_INTERRUPT_FLAG_MASK     ${NVM_IFS_REG_VALUE}U
 
+<#if INTERRUPT_ENABLE == true>
+typedef struct
+{
+    NVM_CALLBACK CallbackFunc;
+    uintptr_t Context;
+}nvmCallbackObjType;
+
+volatile static nvmCallbackObjType ${NVM_INSTANCE_NAME?lower_case}CallbackObj;
+</#if>
 /* ************************************************************************** */
 /* ************************************************************************** */
 // Section: Local Functions                                                   */
@@ -101,24 +110,20 @@ typedef enum
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>static NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
-
-    <#lt>static uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
-
     <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister( NVM_CALLBACK callback, uintptr_t context )
     <#lt>{
     <#lt>    /* Register callback function */
-    <#lt>    ${NVM_INSTANCE_NAME?lower_case}CallbackFunc    = callback;
-    <#lt>    ${NVM_INSTANCE_NAME?lower_case}Context         = context;
+    <#lt>    ${NVM_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc    = callback;
+    <#lt>    ${NVM_INSTANCE_NAME?lower_case}CallbackObj.Context         = context;
     <#lt>}
 
-    <#lt>void ${NVM_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${NVM_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#lt>    ${NVM_IFS_REG}CLR = ${NVM_INSTANCE_NAME}_INTERRUPT_FLAG_MASK;
 
-    <#lt>    if(${NVM_INSTANCE_NAME?lower_case}CallbackFunc != NULL)
+    <#lt>    if(${NVM_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc != NULL)
     <#lt>    {
-    <#lt>        ${NVM_INSTANCE_NAME?lower_case}CallbackFunc(${NVM_INSTANCE_NAME?lower_case}Context);
+    <#lt>        ${NVM_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc(${NVM_INSTANCE_NAME?lower_case}CallbackObj.Context);
     <#lt>    }
     <#lt>}
 </#if>

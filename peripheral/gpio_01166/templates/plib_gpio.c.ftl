@@ -62,7 +62,7 @@
 <#if TOTAL_NUM_OF_INT_USED gt 0 >
     <#lt>#define TOTAL_NUM_OF_INT_USED (${TOTAL_NUM_OF_INT_USED}U)
     <#lt>/* Array to store pin objects of each configured interrupt */
-    <#lt>static GPIO_PIN_CALLBACK_OBJ cnPinObj[TOTAL_NUM_OF_INT_USED] =
+    <#lt>volatile static GPIO_PIN_CALLBACK_OBJ cnPinObj[TOTAL_NUM_OF_INT_USED] =
                                 <#lt>    {
                                 <#list 0..CN_PIN_TOTAL-1 as i>
                                     <#assign intConfig = "BSP_PIN_" + i + "_CN">
@@ -324,7 +324,7 @@ bool GPIO_PinInterruptCallbackRegister(
   Remarks:
 	It is an internal function called from ISR, user should not call it directly.
 */
-void CHANGE_NOTICE_InterruptHandler(void)
+void __attribute__((used)) CHANGE_NOTICE_InterruptHandler(void)
 {
     uint8_t i, bitPosition;
     uint32_t latestPortValue, mask;

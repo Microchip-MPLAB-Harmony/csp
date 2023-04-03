@@ -50,7 +50,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-static DBGU_RING_BUFFER_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
+volatile static DBGU_RING_BUFFER_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
 
 #define ${DBGU_INSTANCE_NAME}_READ_BUFFER_SIZE      ${DBGU_RX_RING_BUFFER_SIZE}U
 /* Disable Read, Overrun, Parity and Framing error interrupts */
@@ -58,13 +58,13 @@ static DBGU_RING_BUFFER_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
 /* Enable Read, Overrun, Parity and Framing error interrupts */
 #define ${DBGU_INSTANCE_NAME}_RX_INT_ENABLE()       ${DBGU_INSTANCE_NAME}_REGS->DBGU_IER = (DBGU_IER_RXRDY_Msk | DBGU_IER_FRAME_Msk | DBGU_IER_PARE_Msk | DBGU_IER_OVRE_Msk);
 
-static uint8_t ${DBGU_INSTANCE_NAME}_ReadBuffer[${DBGU_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint8_t ${DBGU_INSTANCE_NAME}_ReadBuffer[${DBGU_INSTANCE_NAME}_READ_BUFFER_SIZE];
 
 #define ${DBGU_INSTANCE_NAME}_WRITE_BUFFER_SIZE     ${DBGU_TX_RING_BUFFER_SIZE}U
 #define ${DBGU_INSTANCE_NAME}_TX_INT_DISABLE()      ${DBGU_INSTANCE_NAME}_REGS->DBGU_IDR = DBGU_IDR_TXRDY_Msk;
 #define ${DBGU_INSTANCE_NAME}_TX_INT_ENABLE()       ${DBGU_INSTANCE_NAME}_REGS->DBGU_IER = DBGU_IER_TXRDY_Msk;
 
-static uint8_t ${DBGU_INSTANCE_NAME}_WriteBuffer[${DBGU_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${DBGU_INSTANCE_NAME}_WriteBuffer[${DBGU_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 void ${DBGU_INSTANCE_NAME}_Initialize( void )
 {
@@ -513,7 +513,7 @@ void ${DBGU_INSTANCE_NAME}_WriteCallbackRegister( DBGU_RING_BUFFER_CALLBACK call
     ${DBGU_INSTANCE_NAME?lower_case}Obj.wrContext = context;
 }
 
-static void ${DBGU_INSTANCE_NAME}_ISR_RX_Handler( void )
+static void __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_RX_Handler( void )
 {
     /* Keep reading until there is a character availabe in the RX FIFO */
     while(DBGU_SR_RXRDY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR& DBGU_SR_RXRDY_Msk))
@@ -529,7 +529,7 @@ static void ${DBGU_INSTANCE_NAME}_ISR_RX_Handler( void )
     }
 }
 
-static void ${DBGU_INSTANCE_NAME}_ISR_TX_Handler( void )
+static void __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_TX_Handler( void )
 {
     uint8_t wrByte;
 
@@ -552,7 +552,7 @@ static void ${DBGU_INSTANCE_NAME}_ISR_TX_Handler( void )
     }
 }
 
-void ${DBGU_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${DBGU_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Error status */
     uint32_t errorStatus = (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & (DBGU_SR_OVRE_Msk | DBGU_SR_FRAME_Msk | DBGU_SR_PARE_Msk));

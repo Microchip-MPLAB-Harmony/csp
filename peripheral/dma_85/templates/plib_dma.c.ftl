@@ -71,7 +71,7 @@ typedef struct
 } DMA_CH_OBJECT ;
 
 /* DMA Channels object information structure */
-static DMA_CH_OBJECT dmaChannelObj[DMA_CHANNELS_NUMBER];
+volatile static DMA_CH_OBJECT dmaChannelObj[DMA_CHANNELS_NUMBER];
 </#if>
 
 #define NOP()    asm("NOP")
@@ -313,7 +313,7 @@ void ${DMA_INSTANCE_NAME}_FillDataSet( uint32_t fillData )
 }
 </#if>
 
-static void DMA_interruptHandler(DMA_CHANNEL channel)
+static void __attribute__((used)) DMA_interruptHandler(DMA_CHANNEL channel)
 {
     DMA_CH_OBJECT  *dmacChObj = NULL;
     volatile uint8_t chIntFlagStatus = 0U;
@@ -362,7 +362,7 @@ static void DMA_interruptHandler(DMA_CHANNEL channel)
 <#assign DMA_CHX_INTERRUPT_NAME = "DMA_CH" + i?string["00"]>
 <#assign DMA_CHX_INT_SRC_NAME = "ECIA_DIR_INT_SRC_DMA_CH" + i?string["00"]>
 </#if>
-void ${DMA_CHX_INTERRUPT_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${DMA_CHX_INTERRUPT_NAME}_InterruptHandler( void )
 {
     if (ECIA_GIRQResultGet(${DMA_CHX_INT_SRC_NAME}) != 0U)
     {

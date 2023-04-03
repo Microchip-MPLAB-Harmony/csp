@@ -47,7 +47,7 @@
 #include "interrupts.h"
 </#if>
 
-static qspi_spi_obj qspiObj;
+volatile static qspi_spi_obj qspiObj;
 
 
 void ${QSPI_INSTANCE_NAME}_Initialize(void)
@@ -243,11 +243,11 @@ bool ${QSPI_INSTANCE_NAME}_IsTransmitterBusy(void)
     return ((${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG & QSPI_INTFLAG_TXC_Msk ) == 0U);
 }
 
-void ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t dataBits ;
     uint32_t receivedData;
-    static bool isLastByteTransferInProgress = false;
+    volatile static bool isLastByteTransferInProgress = false;
 
     dataBits = ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLB & QSPI_CTRLB_DATALEN_Msk;
 

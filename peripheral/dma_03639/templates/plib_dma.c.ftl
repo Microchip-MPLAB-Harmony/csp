@@ -66,7 +66,7 @@ typedef struct
 } DMA_CH_OBJECT ;
 
 /* DMA Channels object information structure */
-static DMA_CH_OBJECT dmaChannelObj[DMA_CHANNELS_NUMBER];
+volatile static DMA_CH_OBJECT dmaChannelObj[DMA_CHANNELS_NUMBER];
 
 // *****************************************************************************
 // *****************************************************************************
@@ -483,7 +483,7 @@ uint32_t ${DMA_INSTANCE_NAME}_ChannelCRCRead(DMA_CHANNEL channel)
 //*******************************************************************************
 //    Functions to handle DMA interrupt events.
 //*******************************************************************************
-static void DMA_interruptHandler(uint32_t channel)
+static void __attribute__((used)) DMA_interruptHandler(uint32_t channel)
 {
     DMA_CH_OBJECT  *dmacChObj = NULL;
     volatile uint32_t chIntFlagStatus = 0U;
@@ -557,7 +557,7 @@ static void DMA_interruptHandler(uint32_t channel)
 }
 
 <#list 1..DMA_NUM_INT_PRIO as i>
-void ${DMA_INSTANCE_NAME}_PRI${i-1}_InterruptHandler( void )
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_PRI${i-1}_InterruptHandler( void )
 {
     volatile uint32_t dmaIntPriority${i}Status = 0U;
     uint32_t channel = 0U;

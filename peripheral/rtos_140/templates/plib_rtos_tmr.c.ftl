@@ -55,7 +55,7 @@
 #include "plib_${RTOS_TMR_INSTANCE_NAME?lower_case}_tmr.h"
 #include "peripheral/ecia/plib_ecia.h"
 
-static RTOS_TMR_OBJECT ${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj;
+volatile static RTOS_TMR_OBJECT ${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj;
 
 void ${RTOS_TMR_INSTANCE_NAME}Timer_Initialize(void)
 {
@@ -119,7 +119,7 @@ void ${RTOS_TMR_INSTANCE_NAME}Timer_CallbackRegister( RTOS_TMR_CALLBACK callback
     ${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj.context = context;
 }
 
-void ${RTOS_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${RTOS_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     <#if RTOS_TMR_INTERRUPT_TYPE == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_RTMR) != 0U)

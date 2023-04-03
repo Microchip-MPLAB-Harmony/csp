@@ -45,7 +45,7 @@
 </#if>
 
 <#if rswdtinterruptMode == true>
-    <#lt>RSWDT_OBJECT rswdt;
+    <#lt>volatile static RSWDT_OBJECT rswdt;
 </#if>
 
 void ${RSWDT_INSTANCE_NAME}_Initialize( void )
@@ -69,7 +69,7 @@ void ${RSWDT_INSTANCE_NAME}_Clear(void)
 </#if>
 
 <#if rswdtinterruptMode == true>
-    <#lt>void ${RSWDT_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${RSWDT_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#lt>   ${RSWDT_INSTANCE_NAME}_REGS->RSWDT_SR;
     <#lt>   if(rswdt.callback != NULL)

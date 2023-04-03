@@ -62,10 +62,10 @@
 <#if SPI_INTERRUPT_MODE == true>
 
 /* Global object to save SPI Exchange related data */
-static SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
+volatile static SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
 
-static uint8_t dummyDataBuffer[512];
+volatile static uint8_t dummyDataBuffer[512];
 
 static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
 {
@@ -661,7 +661,7 @@ bool ${SPI_INSTANCE_NAME}_IsBusy( void )
     return ((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) || ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0U));
 }
 <#if SPI_FIFO_ENABLE == false>
-void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler( void )
 {
 <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
     uint32_t size;
@@ -669,7 +669,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
 <#else>
     uint32_t dataBits;
     uint32_t receivedData;
-    static bool isLastByteTransferInProgress = false;
+    volatile static bool isLastByteTransferInProgress = false;
 
 <#if SPI_NUM_CSR == 1>
     dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
@@ -848,7 +848,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
     </#if>
 }
 <#else>
-void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler(void)
 {
 <#if SPI_NUM_CSR == 1>
     uint32_t dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;

@@ -71,7 +71,7 @@
 #define ADJUST_TM_STRUCT_MONTH(mon) (mon - 1U)
 
 <#if RTC_MODE2_INTERRUPT = true >
-    <#lt>static RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
+    <#lt>volatile static RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${RTC_INSTANCE_NAME}_Initialize(void)
@@ -381,7 +381,7 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
     <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.context       = context;
     <#lt>}
 
-    <#lt>void ${RTC_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${RTC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.intCause = (RTC_CLOCK_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG;
 

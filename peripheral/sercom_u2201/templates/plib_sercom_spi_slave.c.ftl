@@ -74,12 +74,12 @@
 #define ${SERCOM_INSTANCE_NAME}_SPI_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE/2}U
 </#if>
 
-static ${TXRX_DATA_T} ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer[${SERCOM_INSTANCE_NAME}_SPI_READ_BUFFER_SIZE];
-static ${TXRX_DATA_T} ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[${SERCOM_INSTANCE_NAME}_SPI_WRITE_BUFFER_SIZE];
+volatile static ${TXRX_DATA_T} ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer[${SERCOM_INSTANCE_NAME}_SPI_READ_BUFFER_SIZE];
+volatile static ${TXRX_DATA_T} ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[${SERCOM_INSTANCE_NAME}_SPI_WRITE_BUFFER_SIZE];
 
 
 /* Global object to save SPI Exchange related data  */
-static SPI_SLAVE_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}SPISObj;
+volatile static SPI_SLAVE_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}SPISObj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -287,7 +287,7 @@ SPI_SLAVE_ERROR ${SERCOM_INSTANCE_NAME}_SPI_ErrorGet(void)
     return errorStatus;
 }
 
-void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
+void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
 {
     ${TXRX_DATA_T} txRxData;
     uint8_t intFlag = ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG;

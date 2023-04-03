@@ -55,7 +55,7 @@
 #include "plib_${HTM_TMR_INSTANCE_NAME?lower_case}.h"
 #include "peripheral/ecia/plib_ecia.h"
 
-static HTM_TMR_OBJECT ${HTM_TMR_INSTANCE_NAME?lower_case}Obj;
+volatile static HTM_TMR_OBJECT ${HTM_TMR_INSTANCE_NAME?lower_case}Obj;
 
 void ${HTM_TMR_INSTANCE_NAME}_Initialize(void)
 {
@@ -96,7 +96,7 @@ void ${HTM_TMR_INSTANCE_NAME}_CallbackRegister( HTM_TMR_CALLBACK callback_fn, ui
 <#assign HTMR_AGG_INT_SRC = "ECIA_AGG_INT_SRC_HTMR" + HTM_TMR_INSTANCE_NUM>
 <#assign HTMR_DIR_INT_SRC = "ECIA_DIR_INT_SRC_HTMR" + HTM_TMR_INSTANCE_NUM>
 
-void ${HTM_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${HTM_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     <#if HTM_TMR_INTERRUPT_TYPE == "AGGREGATE">
     if (ECIA_GIRQResultGet(${HTMR_AGG_INT_SRC}) != 0U)

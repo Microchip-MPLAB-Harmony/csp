@@ -71,7 +71,7 @@
 
 <#if PWM_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>static PWM_CALLBACK_OBJECT ${PWM_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static PWM_CALLBACK_OBJECT ${PWM_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize enabled PWM channels */
@@ -185,7 +185,7 @@ void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMa
     <#lt>}
 
     <#lt>/* Interrupt Handler */
-    <#lt>void ${PWM_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${PWM_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#lt>    uint32_t status;
     <#lt>    status = ${PWM_INSTANCE_NAME}_REGS->PWM_ISR;

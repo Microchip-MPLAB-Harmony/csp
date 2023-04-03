@@ -55,17 +55,17 @@
 
 <#if ADCHS_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>static ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
+    <#lt>volatile static ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
 </#if>
 
 <#if ADCCON2__EOSIEN == true>
     <#lt>/* Object to hold callback function and context for end of scan interrupt*/
-    <#lt>static ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
+    <#lt>volatile static ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
 </#if>
 <#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true)>
 <#if ADC_DMA_INT_ENABLED?? && ADC_DMA_INT_ENABLED == true>
     <#lt>/* Object to hold callback function and context for ADC DMA interrupt*/
-    <#lt>static ADCHS_DMA_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DMACallbackObj;
+    <#lt>volatile static ADCHS_DMA_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DMACallbackObj;
 </#if>
 </#if>
 
@@ -81,7 +81,7 @@
 </#list>
 
 <#if ADCHS_MAX_FILTER_NUM gt 0>
-static ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
+volatile static ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
 </#if>
 
 <#assign ADCHS_MAX_COMPARATOR_NUM = 0>
@@ -95,7 +95,7 @@ static ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX
 </#list>
 
 <#if ADCHS_MAX_COMPARATOR_NUM gt 0>
-static ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
+volatile static ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
 </#if>
 </#compress>
 
@@ -448,7 +448,7 @@ void ${ADCHS_INSTANCE_NAME}_DMACallbackRegister(ADCHS_DMA_CALLBACK callback, uin
     ${ADCHS_INSTANCE_NAME}_DMACallbackObj.context = context;
 }
 
-void ADC_DMA_InterruptHandler(void)
+void __attribute__((used)) ADC_DMA_InterruptHandler(void)
 {
     ADCHS_DMA_STATUS dmaStatus = ${ADCHS_DMA_STATUS_REG} & 0x${ADC_DMA_INT_FLAG_MASK?upper_case};
 
@@ -509,7 +509,7 @@ void ${ADCHS_INSTANCE_NAME}_Comparator${i}CallbackRegister(ADCHS_DC_CALLBACK cal
     ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].context = context;
 }
 
-void ADC_DC${i}_InterruptHandler(void)
+void __attribute__((used)) ADC_DC${i}_InterruptHandler(void)
 {
     ADCHS_CHANNEL_NUM channelId;
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
@@ -551,7 +551,7 @@ void ${ADCHS_INSTANCE_NAME}_Filter${i}CallbackRegister(ADCHS_DF_CALLBACK callbac
     ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].context = context;
 }
 
-void ADC_DF${i}_InterruptHandler(void)
+void __attribute__((used)) ADC_DF${i}_InterruptHandler(void)
 {
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
     ${.vars[ADCHS_DFx_IFS_REG]}CLR = _${.vars[ADCHS_DFx_IFS_REG]}_ADCDF${i}IF_MASK;
@@ -581,7 +581,7 @@ void ${ADCHS_INSTANCE_NAME}_EOSCallbackRegister(ADCHS_EOS_CALLBACK callback, uin
 }
 
 
-void ADC_EOS_InterruptHandler(void)
+void __attribute__((used)) ADC_EOS_InterruptHandler(void)
 {
     uint32_t status = ADCCON2;
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
@@ -607,7 +607,7 @@ bool ${ADCHS_INSTANCE_NAME}_EOSStatusGet(void)
 <#list 0..31 as i>
 <#assign ADCHS_DATA_INTERRUPT_ENABLE = "ADCGIRQEN1__AGIEN" + i>
 <#if .vars[ADCHS_DATA_INTERRUPT_ENABLE]?? && .vars[ADCHS_DATA_INTERRUPT_ENABLE] == true>
-void ADC_DATA${i}_InterruptHandler(void)
+void __attribute__((used)) ADC_DATA${i}_InterruptHandler(void)
 {
     if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
     {
@@ -636,7 +636,7 @@ void ADC_DATA${i}_InterruptHandler(void)
 <#list 32..((ADCHS_NUM_SIGNALS) - 1) as i>
 <#assign ADCHS_DATA_INTERRUPT_ENABLE = "ADCGIRQEN2__AGIEN" + i>
 <#if .vars[ADCHS_DATA_INTERRUPT_ENABLE]?? &&.vars[ADCHS_DATA_INTERRUPT_ENABLE] == true>
-void ADC_DATA${i}_InterruptHandler(void)
+void __attribute__((used)) ADC_DATA${i}_InterruptHandler(void)
 {
     if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
     {

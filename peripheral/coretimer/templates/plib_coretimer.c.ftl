@@ -45,7 +45,7 @@
 </#if>
 
 <#if CORE_TIMER_INTERRUPT_MODE == true && CORE_TIMER_PERIODIC_INTERRUPT == true>
-    <#lt>static CORETIMER_OBJECT coreTmr;
+    <#lt>volatile static CORETIMER_OBJECT coreTmr;
     <#lt>
     <#lt>void CORETIMER_Initialize(void)
     <#lt>{
@@ -110,7 +110,7 @@
     <#lt>
     <#lt>
     <#lt>
-    <#lt>void CORE_TIMER_InterruptHandler (void)
+    <#lt>void __attribute__((used)) CORE_TIMER_InterruptHandler (void)
     <#lt>{
     <#lt>    uint32_t count, newCompare;
     <#lt>    uint32_t status = ${CORE_TIMER_IFS_REG}bits.CTIF;
@@ -207,7 +207,7 @@
     <#lt>    return count;
     <#lt>}
 
-    <#lt>void CORE_TIMER_InterruptHandler (void)
+    <#lt>void __attribute__((used)) CORE_TIMER_InterruptHandler (void)
     <#lt>{
     <#lt>    uint32_t status = ${CORE_TIMER_IFS_REG}bits.CTIF;
     <#lt>    ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};

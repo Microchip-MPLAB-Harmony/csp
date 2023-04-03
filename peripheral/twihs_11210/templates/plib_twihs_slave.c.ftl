@@ -60,7 +60,7 @@
 // *****************************************************************************
 
 <#if TWIHS_INTERRUPT_MODE = true>
-static TWIHS_SLAVE_OBJ ${TWIHS_INSTANCE_NAME?lower_case}Obj;
+volatile static TWIHS_SLAVE_OBJ ${TWIHS_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 // *****************************************************************************
@@ -148,7 +148,7 @@ bool ${TWIHS_INSTANCE_NAME}_IsBusy(void)
     return ${TWIHS_INSTANCE_NAME?lower_case}Obj.isBusy;
 }
 
-void ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status = ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR;
 

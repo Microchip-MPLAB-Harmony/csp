@@ -90,7 +90,7 @@ void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user)
         </#if>
     </#list>
     <#if CONFIGURED_SYNC_CHANNEL != 0>
-        <#lt>EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
+        <#lt>volatile static EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
     </#if>
 </#if>
 
@@ -127,7 +127,7 @@ void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user)
         <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + x >
             <#if .vars[EVSYS_NONSEC]?has_content>
                 <#if .vars[EVSYS_NONSEC] == "NON-SECURE">
-                    <#lt>void ${EVSYS_INSTANCE_NAME}_${x}_InterruptHandler( void )
+                    <#lt>void __attribute__((used)) ${EVSYS_INSTANCE_NAME}_${x}_InterruptHandler( void )
                     <#lt>{
                     <#lt>   volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG;
                     <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
@@ -144,7 +144,7 @@ void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user)
 
 <#if EVSYS_INTERRUPT_MODE_OTHER??>
 <#if EVSYS_INTERRUPT_MODE_OTHER>
-void ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
+void __attribute__((used)) ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
     uint8_t channel = ${EVSYS_REG_NAME}_REGS->EVSYS_INTPEND & EVSYS_INTPEND_ID_Msk;
     volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;

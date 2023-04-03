@@ -52,10 +52,10 @@
 <#assign CCP_INSTANCE_NUM = CCP_INSTANCE_NUM>
 
 <#if CCP_TIMER_INTERRUPT == true>
-static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}TimerObj;
+volatile static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}TimerObj;
 </#if>
 <#if CCP_COMP_INTERRUPT == true>
-static CCP_COMPARE_OBJECT ${CCP_INSTANCE_NAME?lower_case}CompareObj;
+volatile static CCP_COMPARE_OBJECT ${CCP_INSTANCE_NAME?lower_case}CompareObj;
 </#if>
 void ${CCP_INSTANCE_NAME}_CompareInitialize (void)
 {
@@ -200,7 +200,7 @@ void ${CCP_INSTANCE_NAME}_TimerCallbackRegister(CCP_TIMER_CALLBACK callback, uin
     ${CCP_INSTANCE_NAME?lower_case}TimerObj.context = context;
 }
 
-void CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
 {
     uint32_t status = ${CCP_IFS_REG}bits.CCT${CCP_INSTANCE_NUM}IF;
     ${CCP_IFS_REG}CLR = _${CCP_IFS_REG}_CCT${CCP_INSTANCE_NUM}IF_MASK;    //Clear IRQ flag
@@ -219,7 +219,7 @@ void ${CCP_INSTANCE_NAME}_CompareCallbackRegister(CCP_COMPARE_CALLBACK callback,
     ${CCP_INSTANCE_NAME?lower_case}CompareObj.context = context;
 }
 
-void CCP${CCP_INSTANCE_NUM}_InterruptHandler(void)
+void __attribute__((used)) CCP${CCP_INSTANCE_NUM}_InterruptHandler(void)
 {
     ${CCP_CAP_COMP_IFS_REG}CLR = _${CCP_CAP_COMP_IFS_REG}_CCP${CCP_INSTANCE_NUM}IF_MASK;    //Clear IRQ flag
     if( (${CCP_INSTANCE_NAME?lower_case}CompareObj.callback_fn != NULL))

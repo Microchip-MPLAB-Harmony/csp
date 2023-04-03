@@ -151,7 +151,7 @@
 // *****************************************************************************
 
 <#if SDADC_INTERRUPT_MODE == true>
-static SDADC_CALLBACK_OBJECT ${SDADC_INSTANCE_NAME}_CallbackObj;
+volatile static SDADC_CALLBACK_OBJECT ${SDADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -296,7 +296,7 @@ void ${SDADC_INSTANCE_NAME}_CallbackRegister( SDADC_CALLBACK callback, uintptr_t
 }
 
 
-void ${SDADC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${SDADC_INSTANCE_NAME}_InterruptHandler( void )
 {
     SDADC_STATUS status;
     status = ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG;

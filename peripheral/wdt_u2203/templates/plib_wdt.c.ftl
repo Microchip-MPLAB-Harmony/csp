@@ -58,7 +58,7 @@
 // *****************************************************************************
 
 <#if WDT_EW_ENABLE = true>
-static WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
+volatile static WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
 </#if>
 
 // *****************************************************************************
@@ -156,7 +156,7 @@ void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t con
     ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context = context;
 }
 
-void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Clear Early Watchdog Interrupt */
     ${WDT_INSTANCE_NAME}_REGS->WDT_INTFLAG = WDT_INTFLAG_EW_Msk;

@@ -86,11 +86,11 @@
     <#assign portNumCbList = portNumCbList + [TOTAL_NUM_OF_INT_USED] >
 
     <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>static PIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
+    <#lt>volatile static PIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <@compress single_line=true>
-        <#lt>static uint8_t portNumCb[${PORT_CHANNEL_TOTAL} + 1] = {
+        <#lt>volatile static uint8_t portNumCb[${PORT_CHANNEL_TOTAL} + 1] = {
                                                                 <#list portNumCbList as i>
                                                                     ${i},
                                                                 </#list>
@@ -506,7 +506,7 @@ bool PIO_PinInterruptCallbackRegister(
   Remarks:
     User should not call this function.
 */
-void PIO${.vars[channel]}_InterruptHandler(void)
+void __attribute__((used)) PIO${.vars[channel]}_InterruptHandler(void)
 {
     uint32_t status = 0U;
     uint8_t j;

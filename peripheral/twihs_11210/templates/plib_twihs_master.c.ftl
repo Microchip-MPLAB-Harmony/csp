@@ -59,7 +59,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-static TWIHS_OBJ ${TWIHS_INSTANCE_NAME?lower_case}Obj;
+volatile static TWIHS_OBJ ${TWIHS_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -377,7 +377,7 @@ bool ${TWIHS_INSTANCE_NAME}_TransferSetup( TWIHS_TRANSFER_SETUP* setup, uint32_t
     return true;
 }
 
-void ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status;
 

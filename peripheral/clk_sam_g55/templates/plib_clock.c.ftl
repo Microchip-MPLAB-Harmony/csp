@@ -28,7 +28,7 @@
 </#if>
 
 <#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT) || ((SUPC_MR_OSCBYPASS == false) && (SUPC_CR_MDXTALSEL == "1") && SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE == true)>
-static PMC_CALLBACK_OBJECT PMC_CallbackObj;
+volatile static PMC_CALLBACK_OBJECT PMC_CallbackObj;
 
 </#if>
 
@@ -387,7 +387,7 @@ void PMC_CallbackRegister(PMC_CALLBACK callback, uintptr_t context)
     PMC_CallbackObj.context = context;
 }
 
-void PMC_InterruptHandler(void)
+void __attribute__((used)) PMC_InterruptHandler(void)
 {
     uint32_t pmc_status = PMC_REGS->PMC_SR;
 

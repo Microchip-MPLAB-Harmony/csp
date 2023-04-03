@@ -71,7 +71,7 @@ typedef struct SYS_RTCC_OBJ_STRUCT
 
 } RTCC_OBJECT;
 
-static RTCC_OBJECT rtcc;
+volatile static RTCC_OBJECT rtcc;
 
 </#if>
 // *****************************************************************************
@@ -285,7 +285,7 @@ void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTCC_CALLBACK callback, uintptr_t c
     rtcc.context = context;
 }
 
-void ${RTCC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${RTCC_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Clear the status flag */
     ${RTCC_IFS_REG}CLR = ${RTCC_STATREG_SHIFT_VALUE};

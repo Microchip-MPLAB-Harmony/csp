@@ -49,7 +49,7 @@
 </#if>
 <#if wdtinterruptMode == true>
 
-  <#lt>WDT_OBJECT wdt;
+  <#lt>volatile static WDT_OBJECT wdt;
 </#if>
 
 void ${WDT_INSTANCE_NAME}_Initialize( void )
@@ -98,7 +98,7 @@ void ${WDT_INSTANCE_NAME}_Clear(void)
 </#if>
 
 <#if wdtinterruptMode == true>
-   <#lt>void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
+   <#lt>void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
    <#lt>{
    <#lt>   ${WDT_INSTANCE_NAME}_REGS->WDT_SR;
    <#lt>    if(wdt.callback != NULL)

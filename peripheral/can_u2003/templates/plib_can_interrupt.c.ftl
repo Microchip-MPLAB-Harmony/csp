@@ -114,26 +114,26 @@
 #define CAN_STD_ID_Msk        0x7FFU
 
 <#if TX_USE>
-static CAN_TX_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj;
+volatile static CAN_TX_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj;
 </#if>
 <#if TXBUF_USE>
-static CAN_TXRX_BUFFERS_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj;
+volatile static CAN_TXRX_BUFFERS_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj;
 </#if>
 <#if TX_USE || TXBUF_USE>
 <#assign TX_EVENT_FIFO_ELEMENTS = TX_FIFO_ELEMENTS>
 <#if TXBUF_USE>
 <#assign TX_EVENT_FIFO_ELEMENTS = TX_BUFFER_ELEMENTS + TX_FIFO_ELEMENTS>
 </#if>
-static CAN_TX_EVENT_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj;
+volatile static CAN_TX_EVENT_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj;
 </#if>
 <#if RXBUF_USE>
-static CAN_TXRX_BUFFERS_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj;
+volatile static CAN_TXRX_BUFFERS_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj;
 </#if>
 <#if RXF0_USE || RXF1_USE>
-static CAN_RX_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[2];
+volatile static CAN_RX_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[2];
 </#if>
-static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj;
-static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
+volatile static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj;
+volatile static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
 
@@ -1368,7 +1368,7 @@ void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t cont
     instance interrupt is enabled. If peripheral instance's interrupt is not
     enabled user need to call it from the main while loop of the application.
 */
-void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 {
 <#if RXBUF_USE>
     uint32_t newData1 = 0U;

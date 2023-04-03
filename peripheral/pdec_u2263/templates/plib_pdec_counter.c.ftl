@@ -73,7 +73,7 @@
 </#if>
 <#if PDEC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-   static <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
+   volatile static <#lt>PDEC_${PDEC_CTRLA_MODE}_CALLBACK_OBJ ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj;
 </#if>
 
 // *****************************************************************************
@@ -208,7 +208,7 @@ PDEC_${PDEC_CTRLA_MODE}_STATUS ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}StatusGet
 </#if>
 
 <#if (PDEC_MAIN_INTERRUPT == true) || ((PDEC_NUM_INT_LINES == 0) && (PDEC_INTERRUPT == true))>
-void ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
 {
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
     status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
@@ -223,7 +223,7 @@ void ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
 </#if>
 
 <#if (PDEC_INTENSET_MC_0 == true) && (PDEC_NUM_INT_LINES != 0)>
-void ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
+void __attribute__((used)) ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 {
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
     status =  ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG & PDEC_INTFLAG_MC0_Msk;
@@ -237,7 +237,7 @@ void ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 </#if>
 
 <#if (PDEC_INTENSET_MC_1 == true) && (PDEC_NUM_INT_LINES != 0)>
-void ${PDEC_INSTANCE_NAME}_MC1_InterruptHandler( void )
+void __attribute__((used)) ${PDEC_INSTANCE_NAME}_MC1_InterruptHandler( void )
 {
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
     status =  ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG & PDEC_INTFLAG_MC1_Msk;

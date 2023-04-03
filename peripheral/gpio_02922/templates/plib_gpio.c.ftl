@@ -523,7 +523,7 @@ bool GPIO_PinInterruptCallbackRegister(
 */
 <#if .vars["SYS_PORT_${.vars[channel]}_CN_STYLE"] == true>
 <#-- ISR for edge type interrupt -->
-void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
+void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
 {
     uint8_t i;
     uint32_t status;
@@ -543,7 +543,7 @@ void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
     }
 }
 <#else>    <#-- ISR for mismatch type interrupt -->
-void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
+void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
 {
     uint8_t i;
     uint32_t status;

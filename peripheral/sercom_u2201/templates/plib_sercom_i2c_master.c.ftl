@@ -72,7 +72,7 @@
 #define RIGHT_ALIGNED (8U)
 </#if>
 
-static SERCOM_I2C_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CObj;
+volatile static SERCOM_I2C_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CObj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -905,7 +905,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_TransferAbort( void )
 </#if>
 }
 
-void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
+void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 {
     if(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTENSET != 0U)
     {

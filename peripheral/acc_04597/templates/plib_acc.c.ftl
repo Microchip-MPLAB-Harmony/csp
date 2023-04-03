@@ -73,7 +73,7 @@ typedef struct
     uintptr_t context;
 }ACC_CALLBACK_OBJ;
 
-static ACC_CALLBACK_OBJ accCallbackObj;
+volatile static ACC_CALLBACK_OBJ accCallbackObj;
 
 
 </#if>
@@ -138,7 +138,7 @@ void ${ACC_INSTANCE_NAME}_CallbackRegister(ACC_CALLBACK pCallback, uintptr_t con
 }
 
 
-void ${ACC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${ACC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t isr = ${ACC_INSTANCE_NAME}_REGS->ACC_ISR;
     if (((isr & ACC_ISR_MASK_Msk) == 0U) && 

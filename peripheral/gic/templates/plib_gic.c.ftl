@@ -74,8 +74,8 @@ void GIC_IRQHandler(uint32_t  iarRegVal);
 void GIC_FIQHandler(uint32_t  iarRegVal);
 
 
-static PPI_SPI_HANDLER gicPIVectorTable[${GIC_INTERRUPT_MAX_INDEX - 15}U];
-static SGI_HANDLER gicSGIHandler;
+volatile static PPI_SPI_HANDLER gicPIVectorTable[${GIC_INTERRUPT_MAX_INDEX - 15}U];
+volatile static SGI_HANDLER gicSGIHandler;
 <#if ACTIVE_INTERRUPTS>
 
 static const struct {
@@ -162,13 +162,13 @@ void GIC_FIQHandler(uint32_t  iarRegVal)
     }
 }
 
-void GIC_RegisterSGIInterruptHandler(SGI_HANDLER pHandler)
+void __attribute__((used)) GIC_RegisterSGIInterruptHandler(SGI_HANDLER pHandler)
 {
     gicSGIHandler = pHandler;
 }
 
 
-void GIC_RegisterPeripheralInterruptHandler(IRQn_Type irqID, PPI_SPI_HANDLER pHandler)
+void __attribute__((used)) GIC_RegisterPeripheralInterruptHandler(IRQn_Type irqID, PPI_SPI_HANDLER pHandler)
 {
     gicPIVectorTable[ (uint32_t)irqID - TOTAL_SGI_INTERRUPTS] = pHandler;
 }

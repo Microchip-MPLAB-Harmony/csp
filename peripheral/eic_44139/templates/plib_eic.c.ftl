@@ -64,7 +64,7 @@
 #define EIC_SCFGR_FRZ_Msk                    (1UL << EIC_SCFGR_FRZ_Pos)
 
 
-static struct
+volatile static struct
 {
     volatile uint32_t* const pSCFGR;
     bool active;
@@ -262,7 +262,7 @@ bool ${EIC_INSTANCE_NAME}_FreezeConfiguration(EIC_PIN pin)
 
 <#list 0..EIC_NUM_INTERRUPTS - 1 as index>
 <#if  .vars["EIC_SRCx_ACTIVATE"?replace("x", index)]>
-void EIC_EXT_IRQ${index}_InterruptHandler(void)
+void __attribute__((used)) EIC_EXT_IRQ${index}_InterruptHandler(void)
 {
     if (eicData[${index}].callback != NULL)
     {

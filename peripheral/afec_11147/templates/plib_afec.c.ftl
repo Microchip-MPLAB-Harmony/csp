@@ -244,7 +244,7 @@
 // *****************************************************************************
 <#if AFEC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>static AFEC_CALLBACK_OBJECT ${AFEC_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static AFEC_CALLBACK_OBJECT ${AFEC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize AFEC peripheral */
@@ -466,7 +466,7 @@ void ${AFEC_INSTANCE_NAME}_ComparatorModeSet(AFEC_COMPARATOR_MODE cmpMode)
 
 <#if AFEC_INTERRUPT == true>
     <#lt>/* Interrupt Handler */
-    <#lt>void ${AFEC_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${AFEC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#lt>    uint32_t var_status;
     <#lt>    var_status = ${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR;

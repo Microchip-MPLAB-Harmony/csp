@@ -52,7 +52,7 @@
 // *****************************************************************************
 
 <#if UART_OPERATING_MODE == "NON_BLOCKING">
-static UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+volatile static UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 <#else>
 static UART_ERROR errorStatus = 0;
 </#if>
@@ -350,7 +350,7 @@ size_t ${UART_INSTANCE_NAME}_WriteCountGet( void )
     return ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize;
 }
 
-static void ${UART_INSTANCE_NAME}_ERROR_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_ERROR_InterruptHandler (void)
 {
     uint8_t lsr;
 
@@ -374,7 +374,7 @@ static void ${UART_INSTANCE_NAME}_ERROR_InterruptHandler (void)
     }
 }
 
-static void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 {
     uint8_t lsr;
 
@@ -410,7 +410,7 @@ static void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
     }
 }
 
-static void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
@@ -433,7 +433,7 @@ static void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
     }
 }
 
-void ${UART_NVIC_INTERRUPT_NAME}_InterruptHandler (void)
+void __attribute__((used)) ${UART_NVIC_INTERRUPT_NAME}_InterruptHandler (void)
 {
     uint8_t int_id = 0;
 

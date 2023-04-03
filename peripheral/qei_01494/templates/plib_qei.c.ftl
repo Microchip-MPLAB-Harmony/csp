@@ -56,7 +56,7 @@
 </#if>
 
 <#if INTERRUPT_MODE == true>
-static QEI_CH_OBJECT ${QEI_INSTANCE_NAME?lower_case}Obj;
+volatile static QEI_CH_OBJECT ${QEI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${QEI_INSTANCE_NAME}_Initialize (void)
@@ -174,7 +174,7 @@ void ${QEI_INSTANCE_NAME}_CallbackRegister(QEI_CALLBACK callback, uintptr_t cont
 </#if>
 
 <#if INTERRUPT_MODE == true>
-void QEI${QEI_INSTANCE_NUM}_InterruptHandler(void)
+void __attribute__((used)) QEI${QEI_INSTANCE_NUM}_InterruptHandler(void)
 {
     QEI_STATUS status = (QEI${QEI_INSTANCE_NUM}STAT & (uint32_t)QEI_STATUS_MASK);
     ${QEI_IFS_REG}CLR = _${QEI_IFS_REG}_QEI${QEI_INSTANCE_NUM}IF_MASK;

@@ -56,7 +56,7 @@
 
 <#if OCMP_INTERRUPT_ENABLE == true>
 
-static OCMP_OBJECT ${OCMP_INSTANCE_NAME?lower_case}Obj;
+volatile static OCMP_OBJECT ${OCMP_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${OCMP_INSTANCE_NAME}_Initialize (void)
@@ -171,7 +171,7 @@ void ${OCMP_INSTANCE_NAME}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t co
     ${OCMP_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
-void OUTPUT_COMPARE_${INDEX}_InterruptHandler (void)
+void __attribute__((used)) OUTPUT_COMPARE_${INDEX}_InterruptHandler (void)
 {
     ${IFS_REG}CLR = _${IFS_REG}_OC${INDEX}IF_MASK;    //Clear IRQ flag
 

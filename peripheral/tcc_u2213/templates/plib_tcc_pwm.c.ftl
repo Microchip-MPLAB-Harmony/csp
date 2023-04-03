@@ -286,7 +286,7 @@
 
 <#if TCC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize TCC module */
@@ -539,7 +539,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
     <#if TCC_NUM_INT_LINES != 0>
         <#if TCC_INTENSET_OVF == true || TCC_INTENSET_FAULT0 == true || TCC_INTENSET_FAULT1 == true>
             <#lt>/* Interrupt Handler */
-            <#lt>void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
+            <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
             <#lt>{
             <#lt>    uint32_t status;
             <#lt>    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
@@ -558,7 +558,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
         <#assign TCC_INT_MC = "TCC_INTENSET_MC_" + i>
             <#if .vars[TCC_INT_MC] == true>
                 <#lt>/* Interrupt Handler */
-                <#lt>void ${TCC_INSTANCE_NAME}_MC${i}_InterruptHandler(void)
+                <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_MC${i}_InterruptHandler(void)
                 <#lt>{
                 <#lt>    uint32_t status;
                 <#lt>    status = TCC_INTFLAG_MC${i}_Msk;
@@ -576,7 +576,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
 
     <#else>  <#-- TCC_NUM_INT_LINES -->
         <#lt>/* Interrupt Handler */
-        <#lt>void ${TCC_INSTANCE_NAME}_InterruptHandler(void)
+        <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler(void)
         <#lt>{
         <#lt>    uint32_t status;
         <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;

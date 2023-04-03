@@ -108,7 +108,7 @@
 // *****************************************************************************
 
 <#if TCC_TIMER_INTENSET_OVF = true || TCC_TIMER_INTENSET_MC1 == true>
-static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
+volatile static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -345,7 +345,7 @@ void ${TCC_INSTANCE_NAME}_TimerCallbackRegister( TCC_CALLBACK callback, uintptr_
 <#-- Single interrupt line -->
 <#if TCC_NUM_INT_LINES == 0>
 /* Timer Interrupt handler */
-void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status;
     status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
@@ -361,7 +361,7 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 <#-- multiple interrupt lines -->
 <#else>
 <#if TCC_TIMER_INTENSET_OVF == true>
-void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
+void __attribute__((used)) ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
     uint32_t status;
     status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
@@ -376,7 +376,7 @@ void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 </#if>
 
 <#if TCC_TIMER_INTENSET_MC1 == true>
-        <#lt>void ${TCC_INSTANCE_NAME}_MC1_InterruptHandler(void)
+        <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_MC1_InterruptHandler(void)
         <#lt>{
         <#lt>    uint32_t status;
         <#lt>    status = TCC_INTFLAG_MC1_Msk;

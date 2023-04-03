@@ -63,7 +63,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-static DMAC_CHANNEL_OBJECT  gDMAChannelObj[${NUM_DMA_CHANS}];
+volatile static DMAC_CHANNEL_OBJECT  gDMAChannelObj[${NUM_DMA_CHANS}];
 static DMAC_CRC_SETUP gCRCSetup;
 
 #define ConvertToPhysicalAddress(a) ((uint32_t)KVA_TO_PA(a))
@@ -749,7 +749,7 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void )
   Returns:
     void
 */
-void DMA${i}_InterruptHandler (void)
+void __attribute__((used)) DMA${i}_InterruptHandler (void)
 {
     DMAC_CHANNEL_OBJECT *chanObj;
     DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;

@@ -58,7 +58,7 @@ Description:
 // *****************************************************************************
 // *****************************************************************************
 
-static MEM2MEM_OBJECT ${MEM2MEM_INSTANCE_NAME?lower_case}Obj;
+volatile static MEM2MEM_OBJECT ${MEM2MEM_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -97,7 +97,7 @@ void ${MEM2MEM_INSTANCE_NAME}_CallbackRegister( MEM2MEM_CALLBACK callback, uintp
     ${MEM2MEM_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
-void ${MEM2MEM_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${MEM2MEM_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint8_t error = (uint8_t)MEM2MEM_TRANSFER_EVENT_COMPLETE;
 

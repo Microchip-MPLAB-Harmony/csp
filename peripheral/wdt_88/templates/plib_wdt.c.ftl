@@ -59,7 +59,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if WDT_ACTION == "Generate Interrupt">
-static WDT_OBJECT wdt;
+volatile static WDT_OBJECT wdt;
 </#if>
 
 <#assign wdt_ctrl = "">
@@ -174,7 +174,7 @@ void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t con
    wdt.context = context;
 }
 
-void ${WDT_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${WDT_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler( void )
 {
     <#if WDT_TMR_INTERRUPT_TYPE == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_WDT) != 0U)

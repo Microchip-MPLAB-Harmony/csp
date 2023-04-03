@@ -50,7 +50,7 @@ It allows user to Program, Erase and lock the on-chip FLASH memory.
 static uint32_t sefc_status = 0;
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>static SEFC_OBJECT sefc;
+    <#lt>volatile static SEFC_OBJECT sefc;
 </#if>
 
 // *****************************************************************************
@@ -414,7 +414,7 @@ uint32_t ${SEFC_INSTANCE_NAME}_WriteProtectionGet(void)
 </#if>
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>void ${SEFC_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${SEFC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#lt>    uint32_t ul_fmr = ${SEFC_INSTANCE_NAME}_REGS->SEFC_EEFC_FMR;
     <#lt>    ${SEFC_INSTANCE_NAME}_REGS->SEFC_EEFC_FMR = ( ul_fmr & (~SEFC_EEFC_FMR_FRDY_Msk));

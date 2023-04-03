@@ -49,7 +49,7 @@
 
 <#if ( RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0" ) ||
      ( RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ) >
-    <#lt>static RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
+    <#lt>volatile static RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
 
 </#if>
 
@@ -621,7 +621,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>}
     </#if>
 
-    <#lt>void ${RTC_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${RTC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#if RTC_MODULE_SELECTION = "MODE0">
         <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause = (RTC_TIMER32_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG;

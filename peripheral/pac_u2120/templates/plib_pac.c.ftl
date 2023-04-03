@@ -69,7 +69,7 @@
 </#if>
 
 <#if PAC_INTERRRUPT_MODE = true>
-static PAC_CALLBACK_OBJ ${PAC_INSTANCE_NAME?lower_case}CallbackObject;
+volatile static PAC_CALLBACK_OBJ ${PAC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -116,7 +116,7 @@ void ${PAC_INSTANCE_NAME}_CallbackRegister( PAC_CALLBACK callback, uintptr_t con
     ${PAC_INSTANCE_NAME?lower_case}CallbackObject.context = context;
 }
 
-void ${PAC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${PAC_INSTANCE_NAME}_InterruptHandler( void )
 {
     if (${PAC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
     {

@@ -61,7 +61,7 @@
 #define ${I2C_INSTANCE_NAME}_SLAVE_DATA_SETUP_TIME_CORE_TIMER_CNTS          ${I2CS_SETUP_TIME_CORE_TIMER_CNTS}
 #define ${I2C_INSTANCE_NAME}_SLAVE_RISE_TIME_CORE_TIMER_CNTS                ${I2CS_RISE_TIME_CORE_TIMER_CNTS}
 
-static I2C_SLAVE_OBJ ${I2C_INSTANCE_NAME?lower_case}Obj;
+volatile static I2C_SLAVE_OBJ ${I2C_INSTANCE_NAME?lower_case}Obj;
 
 void ${I2C_INSTANCE_NAME}_Initialize(void)
 {
@@ -365,7 +365,7 @@ I2C_SLAVE_ERROR ${I2C_INSTANCE_NAME}_ErrorGet(void)
     return error;
 }
 
-static void ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
+static void __attribute__((used)) ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
 {
     /* Clear the bus collision error status bit */
     ${I2C_INSTANCE_NAME}STATCLR = _${I2C_INSTANCE_NAME}STAT_BCL_MASK;
@@ -381,12 +381,12 @@ static void ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
     }
 }
 
-static void ${I2C_INSTANCE_NAME}_SLAVE_InterruptHandler(void)
+static void __attribute__((used)) ${I2C_INSTANCE_NAME}_SLAVE_InterruptHandler(void)
 {
     ${I2C_INSTANCE_NAME}_TransferSM();
 }
 
-void I2C_${I2C_INSTANCE_NUM}_InterruptHandler(void)
+void __attribute__((used)) I2C_${I2C_INSTANCE_NUM}_InterruptHandler(void)
 {
     uint32_t iec_bus_reg_read = ${I2C_BUS_IEC_REG};
     uint32_t iec_slave_reg_read = ${I2C_SLAVE_IEC_REG};

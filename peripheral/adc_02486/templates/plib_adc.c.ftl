@@ -53,7 +53,7 @@
 
 <#if ADC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 void ${ADC_INSTANCE_NAME}_Initialize(void)
@@ -158,7 +158,7 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister(ADC_CALLBACK callback, uintptr_t cont
     ${ADC_INSTANCE_NAME}_CallbackObj.context = context;
 }
 
-void ${ADC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler(void)
 {
     IFS${ADC_IFS_REG_INDEX}CLR = _IFS0_AD1IF_MASK;
 

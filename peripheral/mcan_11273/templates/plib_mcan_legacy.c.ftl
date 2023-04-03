@@ -86,10 +86,10 @@
    <#assign NUM_OF_ELEMENTS = RX_BUFFER_ELEMENTS>
   </#if>
  </#if>
-static MCAN_RX_MSG ${MCAN_INSTANCE_NAME?lower_case}RxMsg[${NUM_OF_FIFO}][${NUM_OF_ELEMENTS}];
-static MCAN_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[4];
+volatile static MCAN_RX_MSG ${MCAN_INSTANCE_NAME?lower_case}RxMsg[${NUM_OF_FIFO}][${NUM_OF_ELEMENTS}];
+volatile static MCAN_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[4];
 </#if>
-static MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
+volatile static MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
 
@@ -1318,7 +1318,7 @@ void ${MCAN_INSTANCE_NAME}_RxCallbackRegister(MCAN_CALLBACK callback, uintptr_t 
     instance interrupt is enabled. If peripheral instance's interrupt is not
     enabled user need to call it from the main while loop of the application.
 */
-void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
+void __attribute__((used)) ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
 {
     uint8_t length = 0U;
     uint8_t rxgi = 0U;

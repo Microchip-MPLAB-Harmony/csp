@@ -86,7 +86,7 @@ static  dmac_descriptor_registers_t write_back_section[DMAC_CHANNELS_NUMBER]    
 static  dmac_descriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    __ALIGNED(8);
 
 /* DMAC Channels object information structure */
-static DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
+volatile static DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
 
 // *****************************************************************************
 // *****************************************************************************
@@ -588,7 +588,7 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_C
 //*******************************************************************************
 //    Functions to handle DMA interrupt events.
 //*******************************************************************************
-static void DMAC_channel_interruptHandler(uint8_t channel)
+static void __attribute__((used)) DMAC_channel_interruptHandler(uint8_t channel)
 {
     DMAC_CH_OBJECT  *dmacChObj = NULL;
     volatile uint32_t chanIntFlagStatus = 0U;
@@ -631,13 +631,13 @@ static void DMAC_channel_interruptHandler(uint8_t channel)
 <#assign res =.vars[DMAC_INT_NAME]?matches(r"(\d+)")>
 <#assign res2 =.vars[DMAC_INT_NAME]?matches(r"(\d+)_(\d+)")>
 <#if (res) && ((res?groups[1])?number <= DMAC_HIGHEST_CHANNEL)>
-void ${DMA_INSTANCE_NAME}_${res?groups[1]}_InterruptHandler( void )
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_${res?groups[1]}_InterruptHandler( void )
 {
    DMAC_channel_interruptHandler(${res?groups[1]}U);
 }
 
 <#elseif (.vars[DMAC_INT_NAME] == "OTHER") &&  (4 <= DMAC_HIGHEST_CHANNEL) >
-void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
 {
     uint8_t channel = 0U;
 
@@ -651,7 +651,7 @@ void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
 }
 
 <#elseif (res2) && ((res2?groups[1])?number <= DMAC_HIGHEST_CHANNEL) >
-void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
 {
     uint8_t channel = 0U;
 

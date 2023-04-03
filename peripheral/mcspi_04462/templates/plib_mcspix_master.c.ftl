@@ -58,11 +58,11 @@
 <#if MCSPI_INTERRUPT_MODE == true>
 
 /* Global object to save MCSPI Exchange related data */
-static MCSPI_OBJECT ${MCSPI_INSTANCE_NAME?lower_case}Obj;
+volatile static MCSPI_OBJECT ${MCSPI_INSTANCE_NAME?lower_case}Obj;
 <#if USE_MCSPI_DMA?? && USE_MCSPI_DMA == true>
 <#if MCSPI_FIFO_ENABLE == false>
 
-static uint8_t dummyDataBuffer[512];
+volatile static uint8_t dummyDataBuffer[512];
 
 static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
 {
@@ -639,7 +639,7 @@ bool ${MCSPI_INSTANCE_NAME}_IsBusy( void )
     return ((${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) || ((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR & MCSPI_SR_TXEMPTY_Msk) == 0U));
 }
 <#if MCSPI_FIFO_ENABLE == false>
-void ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
 {
 <#if USE_MCSPI_DMA?? && USE_MCSPI_DMA == true>
     uint32_t size;
@@ -647,7 +647,7 @@ void ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
 <#else>
     uint32_t dataBits;
     uint32_t receivedData;
-    static bool isLastByteTransferInProgress = false;
+    volatile static bool isLastByteTransferInProgress = false;
 
 <#if MCSPI_NUM_CSR == 1>
     dataBits = ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_CSR_INDEX}] & MCSPI_CSR_BITS_Msk;
@@ -825,7 +825,7 @@ void ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
     </#if>
 }
 <#else>
-void ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
 {
 <#if MCSPI_NUM_CSR == 1>
     uint32_t dataBits = ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_CSR_INDEX}] & MCSPI_CSR_BITS_Msk;

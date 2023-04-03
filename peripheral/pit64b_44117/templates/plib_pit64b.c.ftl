@@ -59,7 +59,7 @@ typedef struct
 } ${PIT64B_INSTANCE_NAME}_OBJECT;
 
 
-static ${PIT64B_INSTANCE_NAME}_OBJECT ${PIT64B_INSTANCE_NAME?lower_case} = 
+volatile static ${PIT64B_INSTANCE_NAME}_OBJECT ${PIT64B_INSTANCE_NAME?lower_case} = 
 {
     false,
     ${PERIOD_LSB}U,
@@ -207,7 +207,7 @@ void ${PIT64B_INSTANCE_NAME}_TimerCallbackSet(${PIT64B_INSTANCE_NAME}_CALLBACK c
 }
 
 
-void ${PIT64B_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${PIT64B_INSTANCE_NAME}_InterruptHandler(void)
 {
     volatile uint32_t reg = ${PIT64B_INSTANCE_NAME}_REGS->PIT64B_ISR;
     (void)reg;

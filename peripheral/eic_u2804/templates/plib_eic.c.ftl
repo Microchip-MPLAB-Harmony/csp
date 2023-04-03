@@ -70,7 +70,7 @@
 
 <#if EIC_INT != "0">
 /* EIC Channel Callback object */
-static EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
+volatile static EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
 </#if>
 
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
@@ -250,7 +250,7 @@ void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
     <#if EIC_INT != "0">
     <#if NUM_INT_LINES == 0>
-void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint8_t currentChannel;
     uint32_t eicIntFlagStatus;
@@ -284,7 +284,7 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
     <#assign Enable = "EIC_INT_" + x>
     <#assign EIC_NON_SEC = "EIC_NONSEC_" + x>
     <#if .vars[Enable] && (.vars[EIC_NON_SEC] == "SECURE")>
-void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
+void __attribute__((used)) ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
 {
     /* Clear interrupt flag */
     ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << ${x});
@@ -300,7 +300,7 @@ void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
     </#list>
     <#if EIC_OTHER_HANDLER_ACTIVE??>
     <#if EIC_OTHER_HANDLER_ACTIVE &&  (EIC_OTHER_HANDLER_IS_NON_SEC == false)>
-void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
+void __attribute__((used)) ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
 {
     uint8_t currentChannel = 0;
     uint32_t eicIntFlagStatus = 0;
@@ -337,7 +337,7 @@ void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
 <#else>
     <#if EIC_INT != "0">
     <#if NUM_INT_LINES == 0>
-void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint8_t currentChannel = 0;
     uint32_t eicIntFlagStatus = 0;
@@ -370,7 +370,7 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
     <#list 0..(NUM_INT_LINES-1) as x>
     <#assign Enable = "EIC_INT_" + x>
     <#if .vars[Enable]>
-void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
+void __attribute__((used)) ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
 {
     /* Clear interrupt flag */
     ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << ${x});
@@ -386,7 +386,7 @@ void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
     </#list>
     <#if EIC_OTHER_HANDLER_ACTIVE??>
     <#if EIC_OTHER_HANDLER_ACTIVE>
-void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
+void __attribute__((used)) ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
 {
     uint8_t currentChannel = 0;
     uint32_t eicIntFlagStatus = 0;
@@ -423,7 +423,7 @@ void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
 </#if>
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
 <#if (NMI_IS_NON_SECURE == "SECURE") && (NMI_CTRL == true)>
-void NMI_InterruptHandler(void)
+void __attribute__((used)) NMI_InterruptHandler(void)
 {
     /* Find the triggered, run associated callback handlers */
     if ((${EIC_REG_NAME}_REGS->EIC_NMIFLAG & EIC_NMIFLAG_NMI_Msk) == EIC_NMIFLAG_NMI_Msk)
@@ -441,7 +441,7 @@ void NMI_InterruptHandler(void)
 </#if>
 <#else>
 <#if NMI_CTRL == true>
-void NMI_InterruptHandler(void)
+void __attribute__((used)) NMI_InterruptHandler(void)
 {
     /* Find the triggered, run associated callback handlers */
     if ((${EIC_REG_NAME}_REGS->EIC_NMIFLAG & EIC_NMIFLAG_NMI_Msk) == EIC_NMIFLAG_NMI_Msk)

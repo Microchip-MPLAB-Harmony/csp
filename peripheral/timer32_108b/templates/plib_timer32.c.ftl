@@ -56,7 +56,7 @@
 #include "peripheral/ecia/plib_ecia.h"
 
 <#if TMR32_INTERRUPT_EN == true>
-static TMR32_OBJECT ${TMR32_INSTANCE_NAME?lower_case}Obj;
+volatile static TMR32_OBJECT ${TMR32_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${TMR32_INSTANCE_NAME}_Initialize(void)
@@ -139,13 +139,13 @@ void TIMER32_${TMR32_INSTANCE_NUMBER}_CallbackRegister(TMR32_CALLBACK callback_f
 }
 
 <#if TMR32_INTERRUPT_TYPE == "AGGREGATE">
-void ${TMR32_INSTANCE_NAME}_GRP_InterruptHandler(void)
+void __attribute__((used)) ${TMR32_INSTANCE_NAME}_GRP_InterruptHandler(void)
 {
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_TIMER32_${TMR32_INSTANCE_NUMBER}) != 0U)
     {
         ECIA_GIRQSourceClear(ECIA_AGG_INT_SRC_TIMER32_${TMR32_INSTANCE_NUMBER});
 <#else>
-void ${TMR32_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${TMR32_INSTANCE_NAME}_InterruptHandler(void)
 {
     if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_TIMER32_${TMR32_INSTANCE_NUMBER}) != 0U)
     {

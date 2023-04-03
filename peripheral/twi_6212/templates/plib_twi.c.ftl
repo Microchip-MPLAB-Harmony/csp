@@ -58,7 +58,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-static TWI_OBJ ${TWI_INSTANCE_NAME?lower_case}Obj;
+volatile static TWI_OBJ ${TWI_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -503,7 +503,7 @@ void ${TWI_INSTANCE_NAME}_TransferAbort( void )
     enabled user need to call it from the main while loop of the application.
 */
 
-void ${TWI_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${TWI_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t status;
 

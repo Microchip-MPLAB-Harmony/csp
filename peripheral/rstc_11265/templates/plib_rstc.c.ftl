@@ -91,7 +91,7 @@ bool RSTC${INSTANCE?string}_NRSTPinRead( void )
 }
 <#if RSTC_MR_URSTEN == "INTERRUPT">
 
-static RSTC_OBJECT rstcObj;
+volatile static RSTC_OBJECT rstcObj;
 
 void RSTC${INSTANCE?string}_CallbackRegister( RSTC_CALLBACK callback, uintptr_t context )
 {
@@ -99,7 +99,7 @@ void RSTC${INSTANCE?string}_CallbackRegister( RSTC_CALLBACK callback, uintptr_t 
     rstcObj.context = context;
 }
 
-void RSTC${INSTANCE?string}_InterruptHandler( void )
+void __attribute__((used)) RSTC${INSTANCE?string}_InterruptHandler( void )
 {
     // Clear the interrupt flag
     RSTC_REGS->RSTC_SR;

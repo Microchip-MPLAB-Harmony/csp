@@ -83,7 +83,7 @@ static void ${PMERRLOC_INSTANCE_NAME}_Initialize( void );
     <#lt>    ${SMC_INSTANCE_NAME?lower_case}CallbackObj.context =  context;
     <#lt>}
 
-    <#lt>void ${SMC_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${SMC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${SMC_INSTANCE_NAME}_REGS->SMC_WPSR;
@@ -258,7 +258,7 @@ uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect)
     <#lt>    ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.context =  context;
     <#lt>}
 
-    <#lt>void ${PMECC_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${PMECC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${PMECC_INSTANCE_NAME}_REGS->PMECC_ISR;
@@ -374,7 +374,7 @@ uint8_t ${PMECC_INSTANCE_NAME}_ECCGet(uint32_t sector, uint32_t byteIndex)
     <#lt>    pmerrlocCallbackObj.context =  context;
     <#lt>}
 
-    <#lt>void ${PMERRLOC_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${PMERRLOC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELISR;

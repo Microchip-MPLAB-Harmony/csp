@@ -72,7 +72,7 @@ typedef struct
 // Section: File Scope or Global Constants
 // *****************************************************************************
 // *****************************************************************************
-static PIT_OBJECT ${PIT_INSTANCE_NAME?lower_case};
+volatile static PIT_OBJECT ${PIT_INSTANCE_NAME?lower_case};
 </#if>
 
 
@@ -179,7 +179,7 @@ void ${PIT_INSTANCE_NAME}_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t cont
     ${PIT_INSTANCE_NAME?lower_case}.context = context;
 }
 
-void ${PIT_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${PIT_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t interruptStatus = ${PIT_INSTANCE_NAME}_REGS->PIT_SR;
     if(interruptStatus != 0U)

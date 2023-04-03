@@ -218,7 +218,7 @@
 // *****************************************************************************
 <#if ADC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize ADC peripheral */
@@ -401,7 +401,7 @@ void ${ADC_INSTANCE_NAME}_FastWakeupDisable(void)
 </#if>
 <#if ADC_INTERRUPT == true>
     <#lt>/* Interrupt Handler */
-    <#lt>void ${ADC_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#lt>    uint32_t status;
     <#lt>    status = ${ADC_INSTANCE_NAME}_REGS->ADC_ISR;

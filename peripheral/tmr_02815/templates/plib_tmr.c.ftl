@@ -56,7 +56,7 @@
 </#if>
 
 <#if TMR_INTERRUPT_MODE == true>
-static TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
+volatile static TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 
@@ -139,7 +139,7 @@ uint32_t ${TMR_INSTANCE_NAME}_FrequencyGet(void)
 }
 
 <#if TMR_INTERRUPT_MODE == true>
-void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
 {
     uint32_t status = ${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM}IF;
     ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;

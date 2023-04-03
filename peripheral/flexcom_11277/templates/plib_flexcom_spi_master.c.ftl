@@ -58,10 +58,10 @@
 
 <#if SPI_INTERRUPT_MODE == true>
 /* Global object to save FLEXCOM SPI Exchange related data */
-static FLEXCOM_SPI_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
+volatile static FLEXCOM_SPI_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
 
 <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
-static uint8_t dummyDataBuffer[512];
+volatile static uint8_t dummyDataBuffer[512];
 
 static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
 {
@@ -513,7 +513,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy( void )
     return ((${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy) || ((SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0U));
 }
 
-void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 {
 <#if !(USE_SPI_DMA?? && USE_SPI_DMA == true)>
     uint32_t dataBits;
@@ -524,7 +524,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     dataBits = SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & SPI_CSR_BITS_Msk;
 </#if>
 
-    static bool isLastByteTransferInProgress = false;
+    volatile static bool isLastByteTransferInProgress = false;
 <#else>
     uint32_t size;
     uint32_t index;

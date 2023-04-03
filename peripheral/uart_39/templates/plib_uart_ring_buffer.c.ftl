@@ -51,19 +51,19 @@
 // *****************************************************************************
 // *****************************************************************************
 
-static UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
+volatile static UART_RING_BUFFER_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 
 #define ${UART_INSTANCE_NAME}_READ_BUFFER_SIZE      ${UART_RX_RING_BUFFER_SIZE}
 #define ${UART_INSTANCE_NAME}_RX_INT_DISABLE()      UART${UART_INSTANCE_NUM}_REGS->DATA.UART_IEN &= ~(UART_DATA_IEN_ERDAI_Msk | UART_DATA_IEN_ELSI_Msk)
 #define ${UART_INSTANCE_NAME}_RX_INT_ENABLE()       UART${UART_INSTANCE_NUM}_REGS->DATA.UART_IEN |= (UART_DATA_IEN_ERDAI_Msk | UART_DATA_IEN_ELSI_Msk)
 
-static uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint8_t ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME}_READ_BUFFER_SIZE];
 
 #define ${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE     ${UART_TX_RING_BUFFER_SIZE}
 #define ${UART_INSTANCE_NAME}_TX_INT_DISABLE()      UART${UART_INSTANCE_NUM}_REGS->DATA.UART_IEN &= ~(UART_DATA_IEN_ETHREI_Msk)
 #define ${UART_INSTANCE_NAME}_TX_INT_ENABLE()       UART${UART_INSTANCE_NUM}_REGS->DATA.UART_IEN |= (UART_DATA_IEN_ETHREI_Msk)
 
-static uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 void ${UART_INSTANCE_NAME}_Initialize( void )
 {
@@ -526,7 +526,7 @@ UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void )
     return errors;
 }
 
-static void ${UART_INSTANCE_NAME}_ERROR_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_ERROR_InterruptHandler (void)
 {
     uint8_t lsr;
 
@@ -543,7 +543,7 @@ static void ${UART_INSTANCE_NAME}_ERROR_InterruptHandler (void)
     }
 }
 
-static void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 {
     if (${UART_INSTANCE_NAME}_RxPushByte( UART${UART_INSTANCE_NUM}_REGS->DATA.UART_RX_DAT ) == true)
     {
@@ -555,7 +555,7 @@ static void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
     }
 }
 
-static void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
+static void __attribute__((used)) ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 {
     uint8_t wrByte;
 
@@ -573,7 +573,7 @@ static void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
     }
 }
 
-void ${UART_NVIC_INTERRUPT_NAME}_InterruptHandler (void)
+void __attribute__((used)) ${UART_NVIC_INTERRUPT_NAME}_InterruptHandler (void)
 {
     uint8_t int_id = 0;
 

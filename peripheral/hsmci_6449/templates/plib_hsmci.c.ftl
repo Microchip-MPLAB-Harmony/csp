@@ -52,7 +52,7 @@
 // Section: Include Files
 // *****************************************************************************
 // *****************************************************************************
-static HSMCI_OBJECT ${HSMCI_INSTANCE_NAME?lower_case}Obj;
+volatile static HSMCI_OBJECT ${HSMCI_INSTANCE_NAME?lower_case}Obj;
 
 static void ${HSMCI_INSTANCE_NAME}_VariablesInit ( void )
 {
@@ -62,7 +62,7 @@ static void ${HSMCI_INSTANCE_NAME}_VariablesInit ( void )
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.callback = NULL;
 }
 
-void ${HSMCI_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${HSMCI_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t intMask = 0U;
     uint32_t intFlags = 0U;

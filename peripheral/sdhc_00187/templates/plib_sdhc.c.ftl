@@ -69,7 +69,7 @@ typedef unsigned long paddr_t; /* a physical address */
 
 static __attribute__((coherent, aligned(32))) SDHC_ADMA_DESCR ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES];
 
-static SDHC_OBJECT ${SDHC_INSTANCE_NAME?lower_case}Obj;
+volatile static SDHC_OBJECT ${SDHC_INSTANCE_NAME?lower_case}Obj;
 
 static void ${SDHC_INSTANCE_NAME}_VariablesInit ( void )
 {
@@ -128,7 +128,7 @@ static uint16_t ${SDHC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode )
     return transfer_mode_reg;
 }
 
-void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t nistr = 0;
     uint32_t eistr = 0;

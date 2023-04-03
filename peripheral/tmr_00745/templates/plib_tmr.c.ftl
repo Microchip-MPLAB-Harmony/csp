@@ -61,7 +61,7 @@
 </#if>
 
 <#if  interrupt == true>
-static TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
+volatile static TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 
@@ -150,7 +150,7 @@ uint32_t ${TMR_INSTANCE_NAME}_FrequencyGet(void)
 }
 
 <#if TIMER_32BIT_MODE_SEL =="1" && TMR_INTERRUPT_MODE == true>
-void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
 {
     /* In 32-bit mode, master interrupt handler is ignored */
     ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
@@ -159,9 +159,9 @@ void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
 
 <#if interrupt == true>
 <#if TIMER_32BIT_MODE_SEL =="0">
-void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
 <#else>
-void TIMER_${TMR_INSTANCE_NUM?number + 1}_InterruptHandler (void)
+void __attribute__((used)) TIMER_${TMR_INSTANCE_NUM?number + 1}_InterruptHandler (void)
 </#if>
 {
     uint32_t status  = 0U;

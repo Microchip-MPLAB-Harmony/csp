@@ -44,7 +44,7 @@
 
 #include "definitions.h"
 
-static ${LCDC_INSTANCE_NAME}_IRQ_CALLBACK_OBJECT ${LCDC_INSTANCE_NAME}_IRQ_CallbackObj;
+volatile static ${LCDC_INSTANCE_NAME}_IRQ_CALLBACK_OBJECT ${LCDC_INSTANCE_NAME}_IRQ_CallbackObj;
 
 void ${LCDC_INSTANCE_NAME}_SetPixelClockPolarity(${LCDC_INSTANCE_NAME}_SIGNAL_POLARITY polarity)
 {
@@ -1287,7 +1287,7 @@ uint32_t ${LCDC_INSTANCE_NAME}_LAYER_IRQ_Status(${LCDC_INSTANCE_NAME}_LAYER_ID l
 	return irq_stat;
 }
 
-void ${LCDC_INSTANCE_NAME}_Interrupt_Handler(void)
+void __attribute__((used)) ${LCDC_INSTANCE_NAME}_Interrupt_Handler(void)
 {
     if (${LCDC_INSTANCE_NAME}_IRQ_CallbackObj.callback_fn != NULL)
     {
