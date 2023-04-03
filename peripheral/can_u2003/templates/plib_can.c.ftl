@@ -885,8 +885,8 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 </#if>
 <#if FILTERS_STD?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (can_sidfe_registers_t *)(msgRAMConfigBaseAddr + offset);
-    (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
-           ${CAN_INSTANCE_NAME?lower_case}StdFilter,
+    (void) memcpy((void*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
+           (const void*)${CAN_INSTANCE_NAME?lower_case}StdFilter,
            ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE);
     offset += ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE;
     /* Standard ID Filter Configuration Register */
@@ -896,8 +896,8 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 </#if>
 <#if FILTERS_EXT?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (can_xidfe_registers_t *)(msgRAMConfigBaseAddr + offset);
-    (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
-           ${CAN_INSTANCE_NAME?lower_case}ExtFilter,
+    (void) memcpy((void*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
+           (const void*)${CAN_INSTANCE_NAME?lower_case}ExtFilter,
            ${CAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE);
     /* Extended ID Filter Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_XIDFC = CAN_XIDFC_LSE(${FILTERS_EXT}UL) |
@@ -1193,12 +1193,16 @@ bool ${CAN_INSTANCE_NAME}_BitTimingSet(CAN_BIT_TIMING *bitTiming)
             /* Set Data Bit Timing and Prescaler Register */
             ${CAN_INSTANCE_NAME}_REGS->CAN_DBTP = CAN_DBTP_DTSEG2(bitTiming->dataBitTiming.dataTimeSegment2) | CAN_DBTP_DTSEG1(bitTiming->dataBitTiming.dataTimeSegment1) | CAN_DBTP_DBRP(bitTiming->dataBitTiming.dataPrescaler) | CAN_DBTP_DSJW(bitTiming->dataBitTiming.dataSJW);
         }
-</#if>
+
         if (nominalBitTimingSet == true)
         {
             /* Set Nominal Bit timing and Prescaler Register */
             ${CAN_INSTANCE_NAME}_REGS->CAN_NBTP  = CAN_NBTP_NTSEG2(bitTiming->nominalBitTiming.nominalTimeSegment2) | CAN_NBTP_NTSEG1(bitTiming->nominalBitTiming.nominalTimeSegment1) | CAN_NBTP_NBRP(bitTiming->nominalBitTiming.nominalPrescaler) | CAN_NBTP_NSJW(bitTiming->nominalBitTiming.nominalSJW);
         }
+<#else>
+        /* Set Nominal Bit timing and Prescaler Register */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_NBTP  = CAN_NBTP_NTSEG2(bitTiming->nominalBitTiming.nominalTimeSegment2) | CAN_NBTP_NTSEG1(bitTiming->nominalBitTiming.nominalTimeSegment1) | CAN_NBTP_NBRP(bitTiming->nominalBitTiming.nominalPrescaler) | CAN_NBTP_NSJW(bitTiming->nominalBitTiming.nominalSJW);
+</#if>
 
         /* Set the operation mode */
         <#if CAN_OPMODE != "NORMAL">
