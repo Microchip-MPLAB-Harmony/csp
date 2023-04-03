@@ -362,7 +362,7 @@ secureIntNode = ATDF.getNode(secureIntParam)
 secureIntSym = coreComponent.createBooleanSymbol("SECURE_INTERRUPT_AVAILABLE", None)
 secureIntSym.setVisible(False)
 if secureIntNode is not None:
-    secureIntSym.setDefaultValue(True)
+    secureIntSym.setDefaultValue(False) # Currently not supported
 
 
 xdmacHighestCh = coreComponent.createIntegerSymbol("XDMAC_HIGHEST_CHANNEL", xdmacEnable)
