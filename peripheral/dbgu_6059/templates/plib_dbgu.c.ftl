@@ -272,14 +272,20 @@ bool ${DBGU_INSTANCE_NAME}_Read(void *buffer, const size_t size)
     uint32_t errorStatus = 0;
     size_t processedSize = 0;
 </#if>
+    DBGU_ERROR errors = DBGU_ERROR_NONE;
 
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if (NULL != lBuffer)
     {
-        /* Clear errors before submitting the request.
-         * ErrorGet clears errors internally. */
-       (void)${DBGU_INSTANCE_NAME}_ErrorGet();
+        /* Clear errors before submitting the request */
+
+        errors = (DBGU_ERROR)(${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & (DBGU_SR_OVRE_Msk | DBGU_SR_PARE_Msk | DBGU_SR_FRAME_Msk));
+
+        if (errors != DBGU_ERROR_NONE)
+        {
+            ${DBGU_INSTANCE_NAME}_ErrorClear();
+        }
 
 <#if DBGU_INTERRUPT_MODE_ENABLE == false>
         while (size > processedSize)
