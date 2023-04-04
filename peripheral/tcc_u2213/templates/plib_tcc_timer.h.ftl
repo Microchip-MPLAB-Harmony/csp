@@ -128,6 +128,21 @@ void ${TCC_INSTANCE_NAME}_Timer16bitCounterSet( uint16_t count );
 <#if TCC_SYS_TIME_CONNECTED == true>
 void ${TCC_INSTANCE_NAME}_Timer16bitCompareSet( uint16_t compare );
 </#if>
+
+<#elseif TCC_SIZE == 32>
+
+void ${TCC_INSTANCE_NAME}_Timer32bitPeriodSet( uint32_t period );
+
+uint32_t ${TCC_INSTANCE_NAME}_Timer32bitPeriodGet( void );
+
+uint32_t ${TCC_INSTANCE_NAME}_Timer32bitCounterGet( void );
+
+void ${TCC_INSTANCE_NAME}_Timer32bitCounterSet( uint32_t count );
+
+<#if TCC_SYS_TIME_CONNECTED == true>
+void ${TCC_INSTANCE_NAME}_Timer32bitCompareSet( uint32_t compare );
+</#if>
+
 </#if>
 
 <#if TCC_TIMER_INTENSET_OVF = true || TCC_TIMER_INTENSET_MC1 == true>

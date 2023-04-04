@@ -140,7 +140,7 @@ void ${TCC_INSTANCE_NAME}_TimerInitialize( void )
                                 ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 </#if>
     /* Configure in Match Frequency Mode */
-    ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE = TCC_WAVE_WAVEGEN_NPWM;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE = TCC_WAVE_WAVEGEN_NFRQ;
 
 <#if TCC_TIMER_CTRLBSET_ONESHOT == true>
     /* Configure timer one shot mode */
@@ -324,6 +324,65 @@ uint32_t ${TCC_INSTANCE_NAME}_Timer24bitPeriodGet( void )
 void ${TCC_INSTANCE_NAME}_Timer24bitCompareSet( uint32_t compare )
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_CC[1] = compare & 0xFFFFFFU;
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CC1_Msk) == TCC_SYNCBUSY_CC1_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+</#if>
+
+<#elseif TCC_SIZE == 32>
+/* Configure timer period */
+void ${TCC_INSTANCE_NAME}_Timer32bitPeriodSet( uint32_t period )
+{
+    ${TCC_INSTANCE_NAME}_REGS->TCC_PER = period;
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) == TCC_SYNCBUSY_PER_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+
+/* Read the timer period value */
+uint32_t ${TCC_INSTANCE_NAME}_Timer32bitPeriodGet( void )
+{
+    return ${TCC_INSTANCE_NAME}_REGS->TCC_PER;
+}
+
+/* Get the current timer counter value */
+uint32_t ${TCC_INSTANCE_NAME}_Timer32bitCounterGet( void )
+{
+    /* Write command to force COUNT register read synchronization */
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET |= (uint8_t)TCC_CTRLBSET_CMD_READSYNC;
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CTRLB_Msk) == TCC_SYNCBUSY_CTRLB_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET & TCC_CTRLBSET_CMD_Msk) != 0U)
+    {
+        /* Wait for CMD to become zero */
+    }
+    
+    /* Read current count value */
+    return ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT;
+}
+
+/* Configure timer counter value */
+void ${TCC_INSTANCE_NAME}_Timer32bitCounterSet( uint32_t count )
+{
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+
+<#if TCC_SYS_TIME_CONNECTED == true>
+void ${TCC_INSTANCE_NAME}_Timer32bitCompareSet( uint32_t compare )
+{
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CC[1] = compare;
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CC1_Msk) == TCC_SYNCBUSY_CC1_Msk)
     {
         /* Wait for Write Synchronization */
