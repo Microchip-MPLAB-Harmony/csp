@@ -133,6 +133,15 @@ typedef uint32_t XDMAC_CHANNEL_CONFIG;
     device data sheet to determine availability.
 */
 
+/* MISRA C-2012 Rule 6.1 deviated:5 Deviation record ID -  H3_MISRAC_2012_R_6_1_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+<#if COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate:5 "MISRA C-2012 Rule 6.1" "H3_MISRAC_2012_R_6_1_DR_1"
+</#if>
+
 typedef union
 {
     struct
@@ -161,6 +170,12 @@ typedef union
 
 }XDMAC_DESCRIPTOR_CONTROL;
 
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 6.1"
+<#if COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
+</#if>
 
 // *****************************************************************************
 /* DMA Micro Block Control

@@ -608,8 +608,8 @@ xdmacPERIDChannelUpdate.setDependencies(xdmacChannelAllocLogic, peridValueListSy
 configName = Variables.get("__CONFIGURATION_NAME")
 
 xdmacCommonHeaderFile = coreComponent.createFileSymbol("xdmacCommonHeaderFile", None)
-xdmacCommonHeaderFile.setMarkup(False)
-xdmacCommonHeaderFile.setSourcePath("../peripheral/xdmac_11161/templates/plib_xdmac_common.h")
+xdmacCommonHeaderFile.setMarkup(True)
+xdmacCommonHeaderFile.setSourcePath("../peripheral/xdmac_11161/templates/plib_xdmac_common.h.ftl")
 xdmacCommonHeaderFile.setOutputName("plib_xdmac_common.h")
 xdmacCommonHeaderFile.setDestPath("/peripheral/xdmac/")
 xdmacCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/xdmac/")
