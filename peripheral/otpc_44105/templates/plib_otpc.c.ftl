@@ -103,9 +103,9 @@ static void otpc_fixup()
 
     timeout = TIMEOUT;
     *reg0 = 0x43910001;
-    while (((${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_UNLOCK_Msk) == 0U) && (--timeout > 0U))
+    while (((${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_UNLOCK_Msk) == 0U) && (timeout > 0U))
     {
-            /* Nothing to do */
+            timeout--;
     }
 
     for (i = 0; i < ARRAY_SIZE(fixup_reg1); i++)
@@ -120,9 +120,9 @@ static void otpc_fixup()
 
     timeout = TIMEOUT;
     *reg0 = 0x43910000;
-    while (((${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_UNLOCK_Msk) != 0U) && (--timeout > 0U))
+    while (((${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_UNLOCK_Msk) != 0U) && (timeout > 0U))
     {
-            /* Nothing to do */
+            timeout--;
     }
 }
 
@@ -159,10 +159,8 @@ static uint32_t otp_wait_isr(uint32_t mask)
 
 static otpc_error_code_t otp_trigger_packet_read(uint16_t hdr_addr, uint32_t *pckt_hdr)
 {
-    uint32_t isr_reg, mr_reg;
-
     /* Write address of the header in OTPC_MR register (AADDR field)*/
-    mr_reg = ${OTPC_INSTANCE_NAME}_REGS->OTPC_MR;
+    uint32_t mr_reg = ${OTPC_INSTANCE_NAME}_REGS->OTPC_MR;
     mr_reg &= ~OTPC_MR_ALWAYS_RESET_Msk;
     mr_reg = (mr_reg & ~OTPC_MR_ADDR_Msk) | OTPC_MR_ADDR((uint32_t)hdr_addr);
     ${OTPC_INSTANCE_NAME}_REGS->OTPC_MR = mr_reg;
@@ -174,7 +172,7 @@ static otpc_error_code_t otp_trigger_packet_read(uint16_t hdr_addr, uint32_t *pc
     ${OTPC_INSTANCE_NAME}_REGS->OTPC_CR = OTPC_CR_READ_Msk;
 
     /* Wait for EOR bit in OTPC_ISR to be 1 (packet was transfered )*/
-    isr_reg = otp_wait_isr(OTPC_ISR_EOR_Msk);
+    uint32_t isr_reg = otp_wait_isr(OTPC_ISR_EOR_Msk);
     if ((isr_reg & OTPC_ISR_EOR_Msk) == 0U)
     {
         return OTPC_READING_DID_NOT_STOP;
@@ -193,7 +191,7 @@ static otpc_error_code_t otp_trigger_packet_read(uint16_t hdr_addr, uint32_t *pc
 static otpc_error_code_t otp_set_type(OTPC_PACKET_TYPE type, uint32_t *pckt_hdr)
 {
     otpc_error_code_t status = OTPC_NO_ERROR;
-    
+
     *pckt_hdr &= ~OTPC_HR_PACKET_Msk;
 
     switch (type) {
@@ -231,7 +229,7 @@ static otpc_error_code_t otp_set_type(OTPC_PACKET_TYPE type, uint32_t *pckt_hdr)
 
 static otpc_error_code_t otp_set_payload_size(uint32_t size, uint32_t *pckt_hdr)
 {
-    if ((size == 0U) || ((size & 3U)!= 0U))
+    if ((size == 0U) || ((size & 3U) != 0U))
     {
         return OTPC_ERROR_BAD_HEADER;
     }
@@ -247,7 +245,7 @@ static uint16_t otp_get_payload_size(uint32_t pckt_hdr)
     uint16_t pckt_size;
 
     pckt_size = (uint16_t)((pckt_hdr & OTPC_HR_SIZE_Msk) >> OTPC_HR_SIZE_Pos);
-    
+
     uint32_t temp_pck_size = (uint32_t)pckt_size + 1U;
     return (uint16_t)(temp_pck_size * sizeof(uint32_t));
 }
@@ -306,11 +304,10 @@ static otpc_error_code_t otp_trans_key(uint32_t key_bus_dest)
 static otpc_error_code_t otp_emulation_mode(bool on_off)
 {
     static const uint32_t isr_err = OTPC_ISR_COERR_Msk | OTPC_ISR_CKERR_Msk;
-    uint32_t reg;
-    uint32_t mr_emul_value;
+    uint32_t value = OTPC_MR_EMUL((on_off ? 1U : 0U));;
 
-    mr_emul_value = (((uint32_t)!!on_off) * (OTPC_MR_EMUL_Msk & ((~OTPC_MR_EMUL_Msk) << 1)));
-    ${OTPC_INSTANCE_NAME}_REGS->OTPC_MR = (${OTPC_INSTANCE_NAME}_REGS->OTPC_MR & (~OTPC_MR_EMUL_Msk)) | mr_emul_value;
+    /* Set value in control register */
+    ${OTPC_INSTANCE_NAME}_REGS->OTPC_MR = (${OTPC_INSTANCE_NAME}_REGS->OTPC_MR & (~OTPC_MR_EMUL_Msk)) | value;
 
     /* dummy read on OTPC_ISR to clear pending interrupts */
     (void)${OTPC_INSTANCE_NAME}_REGS->OTPC_ISR;
@@ -318,14 +315,15 @@ static otpc_error_code_t otp_emulation_mode(bool on_off)
     ${OTPC_INSTANCE_NAME}_REGS->OTPC_CR = OTPC_CR_REFRESH_Msk | OTPC_CR_KEY(OTPC_KEY_FOR_EMUL);
 
     /* Wait for refreshing data */
-    reg = otp_wait_isr(OTPC_ISR_EORF_Msk | isr_err);
+    uint32_t reg = otp_wait_isr(OTPC_ISR_EORF_Msk | isr_err);
     if (((reg & OTPC_ISR_EORF_Msk) == 0U) || ((reg & isr_err)!= 0U))
     {
         return OTPC_CANNOT_REFRESH;
     }
 
     /* Check if the Emulation mode state */
-    if (((!!(${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_EMUL_Msk)) ^ (!!on_off)) != 0)
+    value = on_off ? OTPC_SR_EMUL_Msk : 0U;
+    if((${OTPC_INSTANCE_NAME}_REGS->OTPC_SR & OTPC_SR_EMUL_Msk) != value)
     {
         return OTPC_ERROR_CANNOT_ACTIVATE_EMULATION;
     }
