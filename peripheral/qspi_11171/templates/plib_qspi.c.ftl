@@ -342,6 +342,15 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     return true;
 }
 
+/* MISRA C-2012 Rule 11.3 violated 2 times below. Deviation record ID - H3_MISRAC_2012_R_11_3_DR_1*/
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 11.3" "H3_MISRAC_2012_R_11_3_DR_1"
+</#if>
+
 bool
 ${QSPI_INSTANCE_NAME}_MemoryRead(
     qspi_memory_xfer_t *    qspi_memory_xfer,
@@ -449,6 +458,7 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
                     (uint32_t *) qspi_mem,
                     numWordTransferBytes / 4U
                 );
+
             qspi_mem += numWordTransferBytes;
             pRxBuffer += numWordTransferBytes;
         }
@@ -516,6 +526,14 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
     }
     return readStatus;
 }
+
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 11.3"
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
+</#if>
+/* MISRAC 2012 deviation block end */
 
 bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
 {
