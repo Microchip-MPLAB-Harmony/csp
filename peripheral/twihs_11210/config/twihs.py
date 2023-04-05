@@ -258,7 +258,7 @@ def instantiateComponent(twihsComponent):
     twihsSymClockSpeed.setDefaultValue(400000)
     twihsSymClockSpeed.setMax(400000)
     twihsSymClockSpeed.setDependencies(showMasterDependencies, ["TWIHS_OPMODE"])
-    
+
     # Clock speed (Hz)
     twihsSymClockSpeedHz = twihsComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", None)
     twihsSymClockSpeedHz.setLabel("Clock Speed (Hz)")
@@ -394,11 +394,12 @@ def instantiateComponent(twihsComponent):
 
     # TWIHS Slave Common Header
     twihsSlaveCommonHeaderFile = twihsComponent.createFileSymbol("TWIHS_SLAVE_COMMON_HEADER", None)
-    twihsSlaveCommonHeaderFile.setSourcePath("../peripheral/twihs_11210/plib_twihs_slave_common.h")
+    twihsSlaveCommonHeaderFile.setSourcePath("../peripheral/twihs_11210/plib_twihs_slave_common.h.ftl")
     twihsSlaveCommonHeaderFile.setOutputName("plib_twihs_slave_common.h")
     twihsSlaveCommonHeaderFile.setDestPath("/peripheral/twihs/slave/")
     twihsSlaveCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/twihs/slave/")
     twihsSlaveCommonHeaderFile.setType("HEADER")
+    twihsSlaveCommonHeaderFile.setMarkup(True)
     twihsSlaveCommonHeaderFile.setEnabled(twihsOpMode.getValue() == "SLAVE")
     twihsSlaveCommonHeaderFile.setDependencies(twihsSlaveModeFileGeneration, ["TWIHS_OPMODE"])
 
