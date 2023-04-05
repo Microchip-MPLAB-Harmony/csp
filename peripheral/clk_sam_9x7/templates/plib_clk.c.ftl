@@ -351,7 +351,7 @@ static void initPeriphClk(void)
     uint32_t count = sizeof(periphList)/sizeof(periphList[0]);
     for (uint32_t i = 0; i < count; i++)
     {
-        if (periphList[i].id == (uint8_t)(ID_PERIPH_MAX + 1U))
+        if (periphList[i].id == (uint8_t)((uint32_t)ID_PERIPH_MAX + 1U))
         {
             break;
         }
