@@ -283,9 +283,13 @@ void DWDT_PS_CallbackRegister(DWDT_CALLBACK pCallback, uintptr_t context)
 void __attribute__((used)) DWDT_SW_InterruptHandler(void)
 {
     uint32_t interruptStatus = DWDT_REGS->DWDT_PS_WDT_ISR;
+
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = dwdtPSCallbackObj.context;
+
     if (dwdtPSCallbackObj.pCallback != NULL)
     {
-        dwdtPSCallbackObj.pCallback(interruptStatus, dwdtPSCallbackObj.context);
+        dwdtPSCallbackObj.pCallback(interruptStatus, context);
     }
 }
 </#if>
@@ -320,9 +324,13 @@ void DWDT_NS_CallbackRegister(DWDT_CALLBACK pCallback, uintptr_t context)
 void __attribute__((used)) DWDT_NSW_InterruptHandler(void)
 {
     uint32_t interruptStatus = DWDT_REGS->DWDT_NS_WDT_ISR;
+
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = dwdtNSCallbackObj.context;
+
     if (dwdtNSCallbackObj.pCallback != NULL)
     {
-        dwdtNSCallbackObj.pCallback(interruptStatus, dwdtNSCallbackObj.context);
+        dwdtNSCallbackObj.pCallback(interruptStatus, context);
     }
 }
 </#if>
