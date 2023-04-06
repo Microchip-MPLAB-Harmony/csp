@@ -87,8 +87,8 @@ typedef enum
 <#if INTERRUPT_ENABLE == true>
 typedef struct
 {
-	FCW_CALLBACK CallbackFunc;
-	uintptr_t Context;
+    FCW_CALLBACK CallbackFunc;
+    uintptr_t Context;
 }fcwCallbackObjType;
 
 volatile static fcwCallbackObjType ${FCW_INSTANCE_NAME?lower_case}CallbackObj;
@@ -117,11 +117,13 @@ volatile static fcwCallbackObjType ${FCW_INSTANCE_NAME?lower_case}CallbackObj;
 
     <#lt>void __attribute__((used)) ${FCW_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
+    <#lt>    uintptr_t context_var;
     <#lt>    ${FCW_INSTANCE_NAME}_REGS->FCW_INTFLAG = FCW_INTFLAG_DONE_Msk;
 
     <#lt>    if(${FCW_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc != NULL)
     <#lt>    {
-    <#lt>        ${FCW_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc(${FCW_INSTANCE_NAME?lower_case}CallbackObj.Context);
+    <#lt>        context_var = ${FCW_INSTANCE_NAME?lower_case}CallbackObj.Context;
+    <#lt>        ${FCW_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc(context_var);
     <#lt>    }
     <#lt>}
 </#if>
@@ -171,8 +173,8 @@ static void ${FCW_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  FCW
 void ${FCW_INSTANCE_NAME}_Initialize( void )
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-        /* Do Nothing */        
+    {
+        /* Do Nothing */
     }
 
     ${FCW_INSTANCE_NAME}_StartOperationAtAddress( ${FCW_INSTANCE_NAME}_REGS->FCW_ADDR,  NO_OPERATION );
@@ -180,8 +182,8 @@ void ${FCW_INSTANCE_NAME}_Initialize( void )
 
 bool ${FCW_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-	/* Add this as per the misra rule 11.6 */
-	uint32_t *xaddress = (uint32_t *)address;
+    /* Add this as per the misra rule 11.6 */
+    uint32_t *xaddress = (uint32_t *)address;
     (void) memcpy(data, xaddress, length);
 
     return true;
@@ -190,14 +192,14 @@ bool ${FCW_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t 
 bool ${FCW_INSTANCE_NAME}_SingleDoubleWordWrite( uint32_t *data, uint32_t address )
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-        /* Do Nothing */        
+    {
+        /* Do Nothing */
     }
 
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[0] = *data;
-	data++;
+    data++;
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[1] = *data;
-	data++;
+    data++;
 
     ${FCW_INSTANCE_NAME}_StartOperationAtAddress( address,  SINGLE_DOUBLE_WORD_PROGRAM_OPERATION);
 
@@ -207,40 +209,40 @@ bool ${FCW_INSTANCE_NAME}_SingleDoubleWordWrite( uint32_t *data, uint32_t addres
 bool ${FCW_INSTANCE_NAME}_QuadDoubleWordWrite( uint32_t *data, uint32_t address )
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-        /* Do Nothing */        
+    {
+        /* Do Nothing */
     }
 
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[0] = *data;
-	data++;
+    data++;
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[1] = *data;
-	data++;
+    data++;
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[2] = *data;
-	data++;
+    data++;
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[3] = *data;
-	data++;
+    data++;
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[4] = *data;
-	data++;
+    data++;
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[5] = *data;
-	data++;
+    data++;
     ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[6] = *data;
-	data++;
-    ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[7] = *data; 
-    data++;	
- 
+    data++;
+    ${FCW_INSTANCE_NAME}_REGS->FCW_DATA[7] = *data;
+    data++;
+
     ${FCW_INSTANCE_NAME}_StartOperationAtAddress( address,  QUAD_DOUBLE_WORD_PROGRAM_OPERATION);
- 
+
     return true;
 }
 
 bool ${FCW_INSTANCE_NAME}_RowWrite( uint32_t *data, uint32_t address )
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-        /* Do Nothing */        
+    {
+        /* Do Nothing */
     }
 
-<#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >    
+<#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >
     if (DATA_CACHE_IS_ENABLED() != 0U)
     {
         DCACHE_CLEAN_BY_ADDR(data, (int32_t)${FCW_INSTANCE_NAME}_FLASH_ROWSIZE);
@@ -248,17 +250,17 @@ bool ${FCW_INSTANCE_NAME}_RowWrite( uint32_t *data, uint32_t address )
 </#if>
 
     ${FCW_INSTANCE_NAME}_REGS->FCW_SRCADDR = (uint32_t )(data);
- 
+
     ${FCW_INSTANCE_NAME}_StartOperationAtAddress( address,  ROW_PROGRAM_OPERATION);
- 
+
     return true;
 }
 
 bool ${FCW_INSTANCE_NAME}_PageErase( uint32_t address )
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-        /* Do Nothing */        
+    {
+        /* Do Nothing */
     }
 
     ${FCW_INSTANCE_NAME}_StartOperationAtAddress(address,  PAGE_ERASE_OPERATION);
@@ -279,8 +281,8 @@ bool ${FCW_INSTANCE_NAME}_IsBusy( void )
 void ${FCW_INSTANCE_NAME}_ProgramFlashBankSelect(PROGRAM_FLASH_BANK pfmBank)
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-        /* Do Nothing */        
+    {
+        /* Do Nothing */
     }
 
     ${FCW_INSTANCE_NAME}_UnlockSequence(FCW_UNLOCK_SWAPKEY);
@@ -303,10 +305,10 @@ PROGRAM_FLASH_BANK ${FCW_INSTANCE_NAME}_ProgramFlashBankGet(void)
 void ${FCW_INSTANCE_NAME}_PFM_WriteProtectRegionSetup( PFM_WP_REGION region, PFM_WP_REGION_SETUP setupStruct )
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-        /* Do Nothing */        
+    {
+        /* Do Nothing */
     }
-	
+
 
     ${FCW_INSTANCE_NAME}_UnlockSequence(FCW_UNLOCK_CFGKEY);
     ${FCW_INSTANCE_NAME}_REGS->FCW_PWP[region] = (FCW_PWP_PWPBASE(setupStruct.regionBaseAddress) | \
@@ -317,21 +319,21 @@ void ${FCW_INSTANCE_NAME}_PFM_WriteProtectRegionSetup( PFM_WP_REGION region, PFM
 void ${FCW_INSTANCE_NAME}_PFM_WriteProtectEnable(PFM_WP_REGION region)
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-        /* Do Nothing */        
+    {
+        /* Do Nothing */
     }
 
     ${FCW_INSTANCE_NAME}_UnlockSequence(FCW_UNLOCK_CFGKEY);
 
-    ${FCW_INSTANCE_NAME}_REGS->FCW_PWP[region] |= FCW_PWP_PWPEN_Msk; 
+    ${FCW_INSTANCE_NAME}_REGS->FCW_PWP[region] |= FCW_PWP_PWPEN_Msk;
 }
 
 void ${FCW_INSTANCE_NAME}_PFM_WriteProtectDisable(PFM_WP_REGION region)
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-		/* Do Nothing */	
-	}
+    {
+        /* Do Nothing */
+    }
 
     ${FCW_INSTANCE_NAME}_UnlockSequence(FCW_UNLOCK_CFGKEY);
 
@@ -341,8 +343,8 @@ void ${FCW_INSTANCE_NAME}_PFM_WriteProtectDisable(PFM_WP_REGION region)
 void ${FCW_INSTANCE_NAME}_PFM_WriteProtectLock(PFM_WP_REGION region)
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-        /* Do Nothing */        
+    {
+        /* Do Nothing */
     }
 
     ${FCW_INSTANCE_NAME}_UnlockSequence(FCW_UNLOCK_CFGKEY);
@@ -353,8 +355,8 @@ void ${FCW_INSTANCE_NAME}_PFM_WriteProtectLock(PFM_WP_REGION region)
 void ${FCW_INSTANCE_NAME}_BootFlashWriteProtectEnable( BOOT_FLASH_BANK bootBank, FCW_BOOT_FLASH_WRITE_PROTECT writeProtectPage )
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-        /* Do Nothing */        
+    {
+        /* Do Nothing */
     }
 
     ${FCW_INSTANCE_NAME}_UnlockSequence(FCW_UNLOCK_CFGKEY);
@@ -372,9 +374,9 @@ void ${FCW_INSTANCE_NAME}_BootFlashWriteProtectEnable( BOOT_FLASH_BANK bootBank,
 void ${FCW_INSTANCE_NAME}_BootFlashWriteProtectDisable(BOOT_FLASH_BANK bootBank, FCW_BOOT_FLASH_WRITE_PROTECT writeProtectPage )
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-		/* Do Nothing */	
-	}
+    {
+        /* Do Nothing */
+    }
 
     ${FCW_INSTANCE_NAME}_UnlockSequence(FCW_UNLOCK_CFGKEY);
 
@@ -391,10 +393,10 @@ void ${FCW_INSTANCE_NAME}_BootFlashWriteProtectDisable(BOOT_FLASH_BANK bootBank,
 void ${FCW_INSTANCE_NAME}_BootFlashWriteProtectLock(BOOT_FLASH_BANK bootBank)
 {
     while(((${FCW_INSTANCE_NAME}_REGS->FCW_STATUS & FCW_STATUS_BUSY_Msk)) != 0U)
-	{
-        /* Do Nothing */        
+    {
+        /* Do Nothing */
     }
-        
+
     ${FCW_INSTANCE_NAME}_UnlockSequence(FCW_UNLOCK_CFGKEY);
 
     if (bootBank == BOOT_FLASH_BANK_1)

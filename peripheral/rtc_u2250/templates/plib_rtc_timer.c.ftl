@@ -624,6 +624,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>void __attribute__((used)) ${RTC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#if RTC_MODULE_SELECTION = "MODE0">
+        <#lt>    uintptr_t context_var;
+        <#lt>    RTC_TIMER32_INT_MASK timer32intCause_var;
+
         <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause = (RTC_TIMER32_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG;
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = (uint16_t)RTC_MODE0_INTFLAG_Msk;
         <#lt>    (void)${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG;
@@ -631,9 +634,14 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>    /* Invoke registered Callback function */
         <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback != NULL)
         <#lt>    {
-        <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback( ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context );
+        <#lt>        timer32intCause_var = ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause;
+        <#lt>        context_var = ${RTC_INSTANCE_NAME?lower_case}Obj.context;
+        <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback(timer32intCause_var , context_var);
         <#lt>    }
     <#else>
+	    <#lt>    uintptr_t context_var;
+        <#lt>    RTC_TIMER16_INT_MASK timer16intCause_var;
+		
         <#lt>    /* Update the event in RTC Peripheral Callback object */
         <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause = (RTC_TIMER16_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG;
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = (uint16_t)RTC_MODE1_INTFLAG_Msk;
@@ -642,7 +650,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>    /* Invoke registered Callback function */
         <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.timer16BitCallback != NULL)
         <#lt>    {
-        <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.timer16BitCallback( ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context );
+        <#lt>        timer16intCause_var = ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause;
+        <#lt>        context_var = ${RTC_INSTANCE_NAME?lower_case}Obj.context;
+        <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.timer16BitCallback(timer16intCause_var , context_var);
         <#lt>    }
     </#if>
     <#lt>}

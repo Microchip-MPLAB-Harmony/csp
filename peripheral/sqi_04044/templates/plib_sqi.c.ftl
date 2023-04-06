@@ -49,8 +49,8 @@
 
 typedef struct
 {
-	SQI_EVENT_HANDLER EventHandler;
-	uintptr_t Context;
+    SQI_EVENT_HANDLER EventHandler;
+    uintptr_t Context;
 }sqiCallbackObjType;
 
 volatile static sqiCallbackObjType ${SQI_INSTANCE_NAME}CallbackObj;
@@ -145,6 +145,7 @@ void ${SQI_INSTANCE_NAME}_RegisterCallback(SQI_EVENT_HANDLER event_handler, uint
 
 void __attribute__((used)) ${SQI_INSTANCE_NAME}_InterruptHandler(void)
 {
+    <#lt>    uintptr_t context_var;
     ${SQI_INSTANCE_NAME}_REGS->SQI_INTFLAG          = SQI_INTFLAG_SQI_Msk;
 
     if (((${SQI_INSTANCE_NAME}_REGS->SQI_INTSTAT & SQI_INTSTAT_PKTCOMPIF_Msk) != 0U) || ((${SQI_INSTANCE_NAME}_REGS->SQI_INTSTAT & SQI_INTSTAT_BDDONEIF_Msk) != 0U))
@@ -162,7 +163,8 @@ void __attribute__((used)) ${SQI_INSTANCE_NAME}_InterruptHandler(void)
 
         if (${SQI_INSTANCE_NAME}CallbackObj.EventHandler != NULL)
         {
-            ${SQI_INSTANCE_NAME}CallbackObj.EventHandler(${SQI_INSTANCE_NAME}CallbackObj.Context);
+            context_var = ${SQI_INSTANCE_NAME}CallbackObj.Context;
+            ${SQI_INSTANCE_NAME}CallbackObj.EventHandler(context_var);
         }
     }
 }

@@ -70,8 +70,8 @@
 
 typedef struct
 {
-	SQI_EVENT_HANDLER EventHandler;
-	uintptr_t Context;
+    SQI_EVENT_HANDLER EventHandler;
+    uintptr_t Context;
 }sqiCallbackObjType;
 
 volatile static sqiCallbackObjType ${SQI_INSTANCE_NAME}CallbackObj;
@@ -90,7 +90,7 @@ void ${SQI_INSTANCE_NAME}_Initialize(void)
 
     while ((${SQI_INSTANCE_NAME}CLKCON & _${SQI_INSTANCE_NAME}CLKCON_STABLE_MASK) == 0U)    // Wait for clock to become stable
     {
-           /* Do Nothing */ 
+           /* Do Nothing */
     }
 
     ${SQI_INSTANCE_NAME}CLKCON      |= ${SQI_INSTANCE_NAME}_CLKCON_CLK_DIV;
@@ -155,6 +155,8 @@ void ${SQI_INSTANCE_NAME}_RegisterCallback(SQI_EVENT_HANDLER event_handler, uint
 
 void __attribute__((used)) ${SQI_INSTANCE_NAME}_InterruptHandler(void)
 {
+    uintptr_t context_var;
+
     ${SQI_IFS_REG}CLR  = ${SQI_INSTANCE_NAME}_INTERRUPT_FLAG_MASK;
 
     if (((${SQI_INSTANCE_NAME}INTSTATbits.PKTCOMPIF) != 0U) || ((${SQI_INSTANCE_NAME}INTSTATbits.BDDONEIF) != 0U))
@@ -172,7 +174,8 @@ void __attribute__((used)) ${SQI_INSTANCE_NAME}_InterruptHandler(void)
 
         if (${SQI_INSTANCE_NAME}CallbackObj.EventHandler != NULL)
         {
-            ${SQI_INSTANCE_NAME}CallbackObj.EventHandler(${SQI_INSTANCE_NAME}CallbackObj.Context);
+            context_var = ${SQI_INSTANCE_NAME}CallbackObj.Context;
+            ${SQI_INSTANCE_NAME}CallbackObj.EventHandler(context_var);
         }
     }
 }

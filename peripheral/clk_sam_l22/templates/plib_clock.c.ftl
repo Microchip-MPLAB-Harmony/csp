@@ -210,7 +210,7 @@ static void DFLL_Initialize(void)
         /* Waiting for DFLL to be ready */
     }
     </#if>
-    
+
     <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
     OSCCTRL_REGS->OSCCTRL_DFLLCTRL |= OSCCTRL_DFLLCTRL_ONDEMAND_Msk;
     </#if>
@@ -409,6 +409,8 @@ void OSCCTRL_CallbackRegister(OSCCTRL_CFD_CALLBACK callback, uintptr_t context)
 
 void __attribute__((used)) OSCCTRL_InterruptHandler(void)
 {
+    uintptr_t context_var;
+
     /* Checking for the Clock Fail status */
     if ((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_XOSCFAIL_Msk) == OSCCTRL_STATUS_XOSCFAIL_Msk)
     {
@@ -417,7 +419,8 @@ void __attribute__((used)) OSCCTRL_InterruptHandler(void)
 
         if (oscctrlObj.callback != NULL)
         {
-            oscctrlObj.callback(oscctrlObj.context);
+            context_var = oscctrlObj.context;
+            oscctrlObj.callback(context_var);
         }
     }
 }
@@ -434,6 +437,8 @@ void OSC32KCTRL_CallbackRegister (OSC32KCTRL_CFD_CALLBACK callback, uintptr_t co
 
 void __attribute__((used)) OSC32KCTRL_InterruptHandler(void)
 {
+    uintptr_t context_var;
+
     /* Checking for the Clock Failure status */
     if ((OSC32KCTRL_REGS->OSC32KCTRL_STATUS & OSC32KCTRL_STATUS_CLKFAIL_Msk) == OSC32KCTRL_STATUS_CLKFAIL_Msk)
     {
@@ -442,7 +447,8 @@ void __attribute__((used)) OSC32KCTRL_InterruptHandler(void)
 
         if(osc32kctrlObj.callback != NULL)
         {
-            osc32kctrlObj.callback(osc32kctrlObj.context);
+            context_var = osc32kctrlObj.context;
+            osc32kctrlObj.callback(context_var);
         }
     }
 }
@@ -458,6 +464,8 @@ void MCLK_CallbackRegister (MCLK_CKRDY_CALLBACK callback, uintptr_t context)
 
 void __attribute__((used)) MCLK_InterruptHandler(void)
 {
+    uintptr_t context_var;
+
     /* Checking for the Clock Ready Interrupt */
     if ((MCLK_REGS->MCLK_INTFLAG & MCLK_INTFLAG_CKRDY_Msk) == MCLK_INTFLAG_CKRDY_Msk)
     {
@@ -466,7 +474,8 @@ void __attribute__((used)) MCLK_InterruptHandler(void)
 
         if(mclkObj.callback != NULL)
         {
-            mclkObj.callback(mclkObj.context);
+            context_var = mclkObj.context;
+            mclkObj.callback(context_var);
         }
     }
 }

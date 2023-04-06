@@ -159,6 +159,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
          <#lt>    uint8_t channel = 0U;
          <#lt>    uint32_t eventIntFlagStatus = 0U;
          <#lt>    uint32_t overrunIntFlagStatus = 0U;
+         <#lt>    uintptr_t context_var;
 
          <#lt>    /* Find any triggered channels, run associated callback handlers */
          <#lt>    for (currentChannel = 0U; currentChannel < ${CONFIGURED_CHANNEL}U; currentChannel++)
@@ -184,7 +185,8 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
          <#lt>            /* Find any associated callback entries in the callback table */
          <#lt>            if (evsys[currentChannel].callback != NULL)
          <#lt>            {
-         <#lt>                evsys[currentChannel].callback((uint32_t)((eventIntFlagStatus | overrunIntFlagStatus) >> channel), evsys[currentChannel].context);
+         <#lt>                context_var = evsys[currentChannel].context;
+         <#lt>                evsys[currentChannel].callback((uint32_t)((eventIntFlagStatus | overrunIntFlagStatus) >> channel), context_var);
          <#lt>            }
 
          <#lt>            /* Clear interrupt flag */

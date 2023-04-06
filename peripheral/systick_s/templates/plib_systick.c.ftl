@@ -140,6 +140,7 @@ void SYSTICK_DelayMs ( uint32_t delay_ms)
 
 void SYSTICK_DelayUs ( uint32_t delay_us)
 {
+
    uint32_t elapsedCount=0U, delayCount;
    uint32_t deltaCount, oldCount, newCount, period;
 
@@ -206,10 +207,13 @@ void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
 
 void __attribute__((used)) SysTick_Handler(void)
 {
-   systick.tickCounter++;
-   if(systick.callback != NULL)
-   {
-       systick.callback(systick.context);
-   }
+    uintptr_t context_var;
+
+    systick.tickCounter++;
+    if(systick.callback != NULL)
+    {
+        context_var = systick.context;
+        systick.callback(context_var);
+    }
 }
 </#if>

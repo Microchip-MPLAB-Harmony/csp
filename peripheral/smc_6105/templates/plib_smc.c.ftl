@@ -85,12 +85,15 @@ static void ${PMERRLOC_INSTANCE_NAME}_Initialize( void );
 
     <#lt>void __attribute__((used)) ${SMC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
+    <#lt>    uintptr_t context_var;
+
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${SMC_INSTANCE_NAME}_REGS->SMC_WPSR;
 
     <#lt>    if( interruptStatus && (${SMC_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL) )
     <#lt>    {
-    <#lt>        ${SMC_INSTANCE_NAME?lower_case}CallbackObj.callback( ${SMC_INSTANCE_NAME?lower_case}CallbackObj.context, interruptStatus );
+    <#lt>        context_var = ${SMC_INSTANCE_NAME?lower_case}CallbackObj.context;
+    <#lt>        ${SMC_INSTANCE_NAME?lower_case}CallbackObj.callback(context_var, interruptStatus );
     <#lt>    }
     <#lt>}
 
@@ -260,12 +263,14 @@ uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect)
 
     <#lt>void __attribute__((used)) ${PMECC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
+    <#lt>    uintptr_t context_var;
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${PMECC_INSTANCE_NAME}_REGS->PMECC_ISR;
 
     <#lt>    if( interruptStatus && (${PMECC_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL) )
     <#lt>    {
-    <#lt>        ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.callback( ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.context, interruptStatus );
+    <#lt>        context_var = ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.context;
+    <#lt>        ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.callback(context_var , interruptStatus );
     <#lt>    }
     <#lt>}
 
@@ -376,12 +381,15 @@ uint8_t ${PMECC_INSTANCE_NAME}_ECCGet(uint32_t sector, uint32_t byteIndex)
 
     <#lt>void __attribute__((used)) ${PMERRLOC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
+    <#lt>    uintptr_t context_var;
+
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELISR;
 
     <#lt>    if( interruptStatus && (pmerrlocCallbackObj.callback != NULL) )
     <#lt>    {
-    <#lt>        pmerrlocCallbackObj.callback( pmerrlocCallbackObj.context, interruptStatus );
+    <#lt>        context_var = pmerrlocCallbackObj.context;
+    <#lt>        pmerrlocCallbackObj.callback(context_var , interruptStatus );
     <#lt>    }
     <#lt>}
 

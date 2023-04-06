@@ -353,6 +353,8 @@ void SYSCTRL_CallbackRegister(SYSCTRL_CALLBACK callback, uintptr_t context)
 
 void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 {
+    uintptr_t context_var;
+
 <#if SYSCTRL_INTERRUPT_XOSCRDY>
     if ((SYSCTRL_REGS->SYSCTRL_INTFLAG & SYSCTRL_INTFLAG_XOSCRDY_Msk) == SYSCTRL_INTFLAG_XOSCRDY_Msk)
     {
@@ -360,7 +362,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_XOSCRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_XOSCRDY_Msk, context_var);
         }
     }
 </#if>
@@ -372,7 +375,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_XOSC32KRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_XOSC32KRDY_Msk, context_var);
         }
     }
 </#if>
@@ -384,7 +388,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_OSC32KRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_OSC32KRDY_Msk, context_var);
         }
     }
 </#if>
@@ -396,7 +401,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_OSC8MRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_OSC8MRDY_Msk, context_var);
         }
     }
 </#if>
@@ -408,7 +414,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLRDY_Msk, context_var);
         }
     }
 </#if>
@@ -421,7 +428,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLOOB_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLOOB_Msk, context_var);
         }
     }
 </#if>
@@ -434,7 +442,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLLCKF_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLLCKF_Msk, context_var);
         }
     }
 </#if>
@@ -447,7 +456,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLLCKC_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLLCKC_Msk, context_var);
         }
     }
 </#if>
@@ -460,7 +470,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLRCS_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLRCS_Msk, context_var);
         }
     }
 </#if>
@@ -474,7 +485,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_BOD33RDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_BOD33RDY_Msk, context_var);
         }
     }
 </#if>
@@ -488,7 +500,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_BOD33DET_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_BOD33DET_Msk, context_var);
         }
     }
 </#if>
@@ -502,7 +515,8 @@ void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_B33SRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_B33SRDY_Msk, context_var);
         }
     }
 </#if>

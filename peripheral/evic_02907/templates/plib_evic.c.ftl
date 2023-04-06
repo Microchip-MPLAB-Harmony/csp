@@ -241,15 +241,18 @@ bool EVIC_ExternalInterruptCallbackRegister(
     Interrupt Handler for External Interrupt pin ${i}.
 
   Remarks:
-	It is an internal function called from ISR, user should not call it directly.
+    It is an internal function called from ISR, user should not call it directly.
 */
 void __attribute__((used)) EXTERNAL_${i}_InterruptHandler(void)
 {
+    uintptr_t context_var;
+
     IFS0CLR = _IFS0_INT${i}IF_MASK;
 
     if(extInt${i}CbObj.callback != NULL)
     {
-        extInt${i}CbObj.callback (EXTERNAL_INT_${i}, extInt${i}CbObj.context);
+        context_var = extInt${i}CbObj.context;
+        extInt${i}CbObj.callback (EXTERNAL_INT_${i}, context_var);
     }
 }
 

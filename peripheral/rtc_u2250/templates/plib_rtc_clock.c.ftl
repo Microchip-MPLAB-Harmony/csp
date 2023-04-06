@@ -127,12 +127,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
                                                                 </#if>
                                                             </#if>);</@compress>
 
-	<#if RTC_CLOCKSYNC_ENABLE == true>
-	while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
-	{
-		/* Wait for Synchronization */
-	}
-	</#if>
+    <#if RTC_CLOCKSYNC_ENABLE == true>
+    while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
+    {
+        /* Wait for Synchronization */
+    }
+    </#if>
     while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_ENABLE_Msk) == RTC_MODE2_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization after Enabling RTC */
@@ -206,22 +206,22 @@ bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
 
 void ${RTC_INSTANCE_NAME}_RTCCClockSyncEnable ( void )
 {
-	${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_CLOCKSYNC_Msk;
+    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_CLOCKSYNC_Msk;
 
-	while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_CTRLA_CLOCKSYNC_Msk) == RTC_MODE2_CTRLA_CLOCKSYNC_Msk)
-	{
-		/* Wait for Synchronization */
-	}
+    while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_CTRLA_CLOCKSYNC_Msk) == RTC_MODE2_CTRLA_CLOCKSYNC_Msk)
+    {
+        /* Wait for Synchronization */
+    }
 }
 
 void ${RTC_INSTANCE_NAME}_RTCCClockSyncDisable ( void )
 {
-	${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA &= (uint16_t)(~RTC_MODE2_CTRLA_CLOCKSYNC_Msk);
+    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA &= (uint16_t)(~RTC_MODE2_CTRLA_CLOCKSYNC_Msk);
 
-	while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_CTRLA_CLOCKSYNC_Msk) == RTC_MODE2_CTRLA_CLOCKSYNC_Msk)
-	{
-		/* Wait for Synchronization */
-	}
+    while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_CTRLA_CLOCKSYNC_Msk) == RTC_MODE2_CTRLA_CLOCKSYNC_Msk)
+    {
+        /* Wait for Synchronization */
+    }
 }
 
 void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
@@ -229,15 +229,15 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
     uint32_t dataClockCalendar = 0U;
     uint32_t timeMask = 0U;
 
-	if ((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA & RTC_MODE2_CTRLA_CLOCKSYNC_Msk) == 0U)
-	{
-		${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_CLOCKSYNC_Msk;
+    if ((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA & RTC_MODE2_CTRLA_CLOCKSYNC_Msk) == 0U)
+    {
+        ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_CLOCKSYNC_Msk;
 
-		while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
-		{
-			/* Wait for Synchronization */
-		}
-	}
+        while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
+        {
+            /* Wait for Synchronization */
+        }
+    }
 
     while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCK_Msk) == RTC_MODE2_SYNCBUSY_CLOCK_Msk)
     {
@@ -383,6 +383,9 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 
     <#lt>void __attribute__((used)) ${RTC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
+    <#lt>    uintptr_t context_var;
+    <#lt>    RTC_CLOCK_INT_MASK intCause_var;
+
     <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.intCause = (RTC_CLOCK_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG;
 
     <#lt>    /* Clear All Interrupts */
@@ -391,7 +394,10 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 
     <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback != NULL)
     <#lt>    {
-    <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback(${RTC_INSTANCE_NAME?lower_case}Obj.intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context);
+    <#lt>        intCause_var = ${RTC_INSTANCE_NAME?lower_case}Obj.intCause;
+    <#lt>        context_var =  ${RTC_INSTANCE_NAME?lower_case}Obj.context;
+	
+    <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback(intCause_var, context_var);
     <#lt>    }
     <#lt>}
 </#if>

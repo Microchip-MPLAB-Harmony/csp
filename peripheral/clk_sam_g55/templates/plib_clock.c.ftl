@@ -390,13 +390,15 @@ void PMC_CallbackRegister(PMC_CALLBACK callback, uintptr_t context)
 void __attribute__((used)) PMC_InterruptHandler(void)
 {
     uint32_t pmc_status = PMC_REGS->PMC_SR;
+    uintptr_t context_var;
 
 <#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT)>
     if ((pmc_status & PMC_SR_CFDEV_Msk) == PMC_SR_CFDEV_Msk)
     {
         if (PMC_CallbackObj.callback != NULL)
         {
-            PMC_CallbackObj.callback(PMC_SR_CFDEV_Msk, PMC_CallbackObj.context);
+            context_var = PMC_CallbackObj.context;
+            PMC_CallbackObj.callback(PMC_SR_CFDEV_Msk, context_var);
         }
     }
 </#if>
@@ -406,7 +408,8 @@ void __attribute__((used)) PMC_InterruptHandler(void)
         PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & (~CKGR_MOR_XT32KFME_Msk)) | CKGR_MOR_KEY_PASSWD;
         if (PMC_CallbackObj.callback != NULL)
         {
-            PMC_CallbackObj.callback(PMC_SR_XT32KERR_Msk, PMC_CallbackObj.context);
+            context_var = PMC_CallbackObj.context;
+            PMC_CallbackObj.callback(PMC_SR_XT32KERR_Msk, context_var);
         }
     }
 </#if>
