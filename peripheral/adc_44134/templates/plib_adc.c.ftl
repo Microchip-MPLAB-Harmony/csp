@@ -411,19 +411,19 @@ void ${ADC_INSTANCE_NAME}_FastWakeupDisable(void)
     <#lt>    ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn = callback;
     <#lt>    ${ADC_INSTANCE_NAME}_CallbackObj.context = context;
     <#lt>}
-</#if>
-<#if ADC_INTERRUPT == true>
+
     <#lt>/* Interrupt Handler */
     <#lt>void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>    uint32_t interruptStatus = 0;
-    <#lt>    uint32_t eocInterruptStatus = 0;
+    <#lt>    uint32_t interruptStatus = ${ADC_INSTANCE_NAME}_REGS->ADC_ISR;
+    <#lt>    uint32_t eocInterruptStatus = ${ADC_INSTANCE_NAME}_REGS->ADC_EOC_ISR;
 
-    <#lt>    interruptStatus = ${ADC_INSTANCE_NAME}_REGS->ADC_ISR;
-    <#lt>    eocInterruptStatus = ${ADC_INSTANCE_NAME}_REGS->ADC_EOC_ISR;
+    <#lt>    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    <#lt>    uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObj.context;
+
     <#lt>    if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(interruptStatus, eocInterruptStatus, ${ADC_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(interruptStatus, eocInterruptStatus, context);
     <#lt>    }
     <#lt>}
 </#if>
