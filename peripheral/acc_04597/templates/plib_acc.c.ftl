@@ -141,10 +141,11 @@ void ${ACC_INSTANCE_NAME}_CallbackRegister(ACC_CALLBACK pCallback, uintptr_t con
 void __attribute__((used)) ${ACC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t isr = ${ACC_INSTANCE_NAME}_REGS->ACC_ISR;
-    if (((isr & ACC_ISR_MASK_Msk) == 0U) && 
-         (accCallbackObj.pCallback != NULL))
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = accCallbackObj.context;
+    if ((accCallbackObj.pCallback != NULL) && ((isr & ACC_ISR_MASK_Msk) == 0U))
     {
-        accCallbackObj.pCallback(((isr & ACC_ISR_SCO_Msk) != 0U), accCallbackObj.context);
+        accCallbackObj.pCallback(((isr & ACC_ISR_SCO_Msk) != 0U), context);
     }
 }
 <#else>
