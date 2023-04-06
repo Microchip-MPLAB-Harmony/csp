@@ -72,7 +72,7 @@
 </#if>
 #define MCAN_STD_ID_Msk        0x7FFU
 
-volatile static MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
+static MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
 

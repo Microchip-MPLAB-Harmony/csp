@@ -163,6 +163,15 @@ static const mcan_xidfe_registers_t ${MCAN_INSTANCE_NAME?lower_case}ExtFilter[] 
 };
 </#if>
 
+static inline void ${MCAN_INSTANCE_NAME}_ZeroInitialize(volatile void* pData, size_t dataSize)
+{
+    volatile uint8_t* data = (volatile uint8_t*)pData;
+    for (uint32_t index = 0; index < dataSize; index++)
+    {
+        data[index] = 0U;
+    }
+}
+
 // *****************************************************************************
 // *****************************************************************************
 // ${MCAN_INSTANCE_NAME} PLib Interface Routines
@@ -304,7 +313,7 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
                                       <#if RXBUF_USE> | MCAN_IE_DRXE_Msk</#if>
                                       | MCAN_IE_MRAFE_Msk;
 
-  (void) memset(&${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(MCAN_MSG_RAM_CONFIG));
+  ${MCAN_INSTANCE_NAME}_ZeroInitialize(&${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, sizeof(MCAN_MSG_RAM_CONFIG));
 }
 
 <#if TXBUF_USE>
@@ -1438,13 +1447,16 @@ void __attribute__((used)) ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
 </#if>
 
     uint32_t ir = ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR;
+    /* Additional local variable to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context;
 
     if ((ir & (~(${MCAN_INTERRUPT}))) != 0U)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = (ir & (~(${MCAN_INTERRUPT})));
         if (${MCAN_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL)
         {
-            ${MCAN_INSTANCE_NAME?lower_case}CallbackObj.callback(ir, ${MCAN_INSTANCE_NAME?lower_case}CallbackObj.context);
+            context = ${MCAN_INSTANCE_NAME?lower_case}CallbackObj.context;
+            ${MCAN_INSTANCE_NAME?lower_case}CallbackObj.callback(ir, context);
         }
     }
 <#if RXF0_USE>
@@ -1457,7 +1469,8 @@ void __attribute__((used)) ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
 
         if (${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_0].callback != NULL)
         {
-            ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_0].callback(numberOfMessage, ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_0].context);
+            context = ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_0].context;
+            ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_0].callback(numberOfMessage, context);
         }
     }
 </#if>
@@ -1466,12 +1479,11 @@ void __attribute__((used)) ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
     if ((ir & MCAN_IR_RF1N_Msk) != 0U)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_RF1N_Msk;
-
         numberOfMessage = (uint8_t)(${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1S & MCAN_RXF1S_F1FL_Msk);
-
         if (${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_1].callback != NULL)
         {
-            ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_1].callback(numberOfMessage, ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_1].context);
+            context = ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_1].context;
+            ${MCAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[MCAN_RX_FIFO_1].callback(numberOfMessage, context);
         }
     }
 </#if>
@@ -1497,7 +1509,8 @@ void __attribute__((used)) ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
                 {
                     if (${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback != NULL)
                     {
-                        ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback(bufferNumber, ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context);
+                        context = ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context;
+                        ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback(bufferNumber, context);
                     }
                 }
             }
@@ -1511,7 +1524,8 @@ void __attribute__((used)) ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
                 {
                     if (${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback != NULL)
                     {
-                        ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback((bufferNumber + 32U), ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context);
+                        context = ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context;
+                        ${MCAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback((bufferNumber + 32U), context);
                     }
                 }
             }
@@ -1535,7 +1549,8 @@ void __attribute__((used)) ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
                 ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE &= ~txbufferMask;
                 if (${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback != NULL)
                 {
-                    ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback(bufferNumber, ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.context);
+                    context = ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.context;
+                    ${MCAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback(bufferNumber, context);
                 }
             }
         }
@@ -1548,7 +1563,8 @@ void __attribute__((used)) ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_TFE_Msk;
         if (${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback != NULL)
         {
-            ${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback(${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.context);
+            context = ${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.context;
+            ${MCAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback(context);
         }
     }
 </#if>
@@ -1559,10 +1575,10 @@ void __attribute__((used)) ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_TEFN_Msk;
 
         numberOfTxEvent = (uint8_t)(${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFS & MCAN_TXEFS_EFFL_Msk);
-
         if (${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback != NULL)
         {
-            ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback(numberOfTxEvent, ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.context);
+            context = ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.context;
+            ${MCAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback(numberOfTxEvent, context);
         }
     }
 </#if>
