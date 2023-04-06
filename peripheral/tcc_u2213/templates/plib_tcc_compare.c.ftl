@@ -288,9 +288,9 @@ uint16_t ${TCC_INSTANCE_NAME}_Compare16bitCounterGet( void )
 }
 
 /* Configure counter value */
-void ${TCC_INSTANCE_NAME}_Compare16bitCounterSet( uint16_t count )
+void ${TCC_INSTANCE_NAME}_Compare16bitCounterSet( uint16_t countVal )
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
 
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
     {
@@ -375,9 +375,9 @@ uint32_t ${TCC_INSTANCE_NAME}_Compare24bitCounterGet( void )
 }
 
 /* Configure counter value */
-void ${TCC_INSTANCE_NAME}_Compare24bitCounterSet( uint32_t count )
+void ${TCC_INSTANCE_NAME}_Compare24bitCounterSet( uint32_t countVal )
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
 
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
     {
@@ -460,9 +460,9 @@ uint32_t ${TCC_INSTANCE_NAME}_Compare32bitCounterGet( void )
 }
 
 /* Configure counter value */
-void ${TCC_INSTANCE_NAME}_Compare32bitCounterSet( uint32_t count )
+void ${TCC_INSTANCE_NAME}_Compare32bitCounterSet( uint32_t countVal )
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
 
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
     {
@@ -539,13 +539,16 @@ void ${TCC_INSTANCE_NAME}_CompareCallbackRegister( TCC_CALLBACK callback, uintpt
 void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status;
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context;
+    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;    
     status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     /* clear period interrupt */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
     (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     if(${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
     {
-        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
+        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, context);
     }
 }
 
@@ -556,13 +559,16 @@ void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
             <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
             <#lt>{
             <#lt>    uint32_t status;
+            <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+            <#lt>    uintptr_t context;
+            <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;            
             <#lt>    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
             <#lt>    /* Clear interrupt flags */
             <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;
             <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
             <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
-            <#lt>    {
-            <#lt>        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
+            <#lt>    { 
+            <#lt>        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, context);
             <#lt>    }
 
             <#lt>}
@@ -575,13 +581,16 @@ void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
                 <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_MC${i}_InterruptHandler(void)
                 <#lt>{
                 <#lt>    uint32_t status;
+                <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+                <#lt>    uintptr_t context;
+                <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;                
                 <#lt>    status = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    /* Clear interrupt flags */
                 <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
                 <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
                 <#lt>    {
-                <#lt>        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
+                <#lt>        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, context);
                 <#lt>    }
 
                 <#lt>}

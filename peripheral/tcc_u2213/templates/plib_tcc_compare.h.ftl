@@ -132,7 +132,7 @@ uint16_t ${TCC_INSTANCE_NAME}_Compare16bitPeriodGet( void );
 
 uint16_t ${TCC_INSTANCE_NAME}_Compare16bitCounterGet( void );
 
-void ${TCC_INSTANCE_NAME}_Compare16bitCounterSet( uint16_t count );
+void ${TCC_INSTANCE_NAME}_Compare16bitCounterSet( uint16_t countVal );
 
 bool ${TCC_INSTANCE_NAME}_Compare16bitMatchSet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t compareValue );
 
@@ -143,7 +143,7 @@ uint32_t ${TCC_INSTANCE_NAME}_Compare24bitPeriodGet( void );
 
 uint32_t ${TCC_INSTANCE_NAME}_Compare24bitCounterGet( void );
 
-void ${TCC_INSTANCE_NAME}_Compare24bitCounterSet( uint32_t count );
+void ${TCC_INSTANCE_NAME}_Compare24bitCounterSet( uint32_t countVal );
 
 bool ${TCC_INSTANCE_NAME}_Compare24bitMatchSet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t compareValue );
 
@@ -154,7 +154,7 @@ uint32_t ${TCC_INSTANCE_NAME}_Compare32bitPeriodGet( void );
 
 uint32_t ${TCC_INSTANCE_NAME}_Compare32bitCounterGet( void );
 
-void ${TCC_INSTANCE_NAME}_Compare32bitCounterSet( uint32_t count );
+void ${TCC_INSTANCE_NAME}_Compare32bitCounterSet( uint32_t countVal );
 
 bool ${TCC_INSTANCE_NAME}_Compare32bitMatchSet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t compareValue );
 </#if>

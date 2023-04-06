@@ -234,9 +234,9 @@ uint16_t ${TCC_INSTANCE_NAME}_Timer16bitCounterGet( void )
 }
 
 /* Configure timer counter value */
-void ${TCC_INSTANCE_NAME}_Timer16bitCounterSet( uint16_t count )
+void ${TCC_INSTANCE_NAME}_Timer16bitCounterSet( uint16_t countVal )
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
 
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
     {
@@ -294,9 +294,9 @@ uint32_t ${TCC_INSTANCE_NAME}_Timer24bitCounterGet( void )
 }
 
 /* Configure timer counter value */
-void ${TCC_INSTANCE_NAME}_Timer24bitCounterSet( uint32_t count )
+void ${TCC_INSTANCE_NAME}_Timer24bitCounterSet( uint32_t countVal )
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count & 0xFFFFFFU;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal & 0xFFFFFFU;
 
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
     {
@@ -369,9 +369,9 @@ uint32_t ${TCC_INSTANCE_NAME}_Timer32bitCounterGet( void )
 }
 
 /* Configure timer counter value */
-void ${TCC_INSTANCE_NAME}_Timer32bitCounterSet( uint32_t count )
+void ${TCC_INSTANCE_NAME}_Timer32bitCounterSet( uint32_t countVal )
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
 
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
     {
@@ -407,13 +407,16 @@ void ${TCC_INSTANCE_NAME}_TimerCallbackRegister( TCC_CALLBACK callback, uintptr_
 void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status;
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context;
+    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;
     status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     /* Clear interrupt flags */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
     (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     if( ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
     {
-        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
+        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, context);
     }
 
 }
@@ -423,13 +426,16 @@ void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 void __attribute__((used)) ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
     uint32_t status;
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context;
+    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;    
     status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
     /* Clear interrupt flags */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;
     (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     if( ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
     {
-        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
+        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, context);
     }
 }
 </#if>
@@ -438,13 +444,16 @@ void __attribute__((used)) ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
         <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_MC1_InterruptHandler(void)
         <#lt>{
         <#lt>    uint32_t status;
+        <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+        <#lt>    uintptr_t context;
+        <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;
         <#lt>    status = TCC_INTFLAG_MC1_Msk;
         <#lt>    /* Clear interrupt flags */
         <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC1_Msk;
         <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
         <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
         <#lt>    {
-        <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
+        <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, context);
         <#lt>    }
 </#if>
 </#if>  <#-- TCC_NUM_INT_LINES -->

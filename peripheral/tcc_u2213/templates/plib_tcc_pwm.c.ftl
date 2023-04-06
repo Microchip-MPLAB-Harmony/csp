@@ -478,27 +478,27 @@ bool ${TCC_INSTANCE_NAME}_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_
 
 /* Set the counter*/
 <#if TCC_SIZE == 24>
-void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet (uint32_t count)
+void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet (uint32_t countVal)
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count & 0xFFFFFFU;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal & 0xFFFFFFU;
     while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) != 0U)
     {
         /* Wait for sync */
     }
 }
 <#elseif TCC_SIZE == 16>
-void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet (uint16_t count)
+void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet (uint16_t countVal)
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
     while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) != 0U)
     {
         /* Wait for sync */
     }
 }
 <#elseif TCC_SIZE == 32>
-void ${TCC_INSTANCE_NAME}_PWM32bitCounterSet (uint32_t count)
+void ${TCC_INSTANCE_NAME}_PWM32bitCounterSet (uint32_t countVal)
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
     while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) != 0U)
     {
         /* Wait for sync */
@@ -542,13 +542,16 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
             <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
             <#lt>{
             <#lt>    uint32_t status;
+            <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+            <#lt>    uintptr_t context;
+            <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObj.context;            
             <#lt>    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
             <#lt>    /* Clear interrupt flags */
             <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;
             <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
             <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
             <#lt>    {
-            <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
+            <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, context);
             <#lt>    }
 
             <#lt>}
@@ -561,13 +564,16 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
                 <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_MC${i}_InterruptHandler(void)
                 <#lt>{
                 <#lt>    uint32_t status;
+                <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+                <#lt>    uintptr_t context;
+                <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObj.context;                
                 <#lt>    status = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    /* Clear interrupt flags */
                 <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
                 <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
                 <#lt>    {
-                <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
+                <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, context);
                 <#lt>    }
 
                 <#lt>}
@@ -579,13 +585,16 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
         <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler(void)
         <#lt>{
         <#lt>    uint32_t status;
+        <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+        <#lt>    uintptr_t context;
+        <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObj.context;        
         <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
         <#lt>    /* Clear interrupt flags */
         <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
         <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
         <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
         <#lt>    {
-        <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
+        <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, context);
         <#lt>    }
 
         <#lt>}

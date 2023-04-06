@@ -161,7 +161,7 @@ bool ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet(uint32_t period);
 
 uint32_t ${TCC_INSTANCE_NAME}_PWM24bitPeriodGet(void);
 
-void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet(uint32_t count);
+void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet(uint32_t countVal);
 
 __STATIC_INLINE bool ${TCC_INSTANCE_NAME}_PWM24bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
 {
@@ -179,7 +179,7 @@ bool ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet(uint16_t period);
 
 uint16_t ${TCC_INSTANCE_NAME}_PWM16bitPeriodGet(void);
 
-void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet(uint16_t count);
+void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet(uint16_t countVal);
 
 __STATIC_INLINE bool ${TCC_INSTANCE_NAME}_PWM16bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t duty)
 {
@@ -197,7 +197,7 @@ bool ${TCC_INSTANCE_NAME}_PWM32bitPeriodSet(uint32_t period);
 
 uint32_t ${TCC_INSTANCE_NAME}_PWM32bitPeriodGet(void);
 
-void ${TCC_INSTANCE_NAME}_PWM32bitCounterSet(uint32_t count);
+void ${TCC_INSTANCE_NAME}_PWM32bitCounterSet(uint32_t countVal);
 
 __STATIC_INLINE bool ${TCC_INSTANCE_NAME}_PWM32bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
 {

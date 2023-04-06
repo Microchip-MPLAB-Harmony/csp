@@ -109,7 +109,7 @@ uint32_t ${TCC_INSTANCE_NAME}_Timer24bitPeriodGet( void );
 
 uint32_t ${TCC_INSTANCE_NAME}_Timer24bitCounterGet( void );
 
-void ${TCC_INSTANCE_NAME}_Timer24bitCounterSet( uint32_t count );
+void ${TCC_INSTANCE_NAME}_Timer24bitCounterSet( uint32_t countVal );
 
 <#if TCC_SYS_TIME_CONNECTED == true>
 void ${TCC_INSTANCE_NAME}_Timer24bitCompareSet( uint32_t compare );
@@ -123,7 +123,7 @@ uint16_t ${TCC_INSTANCE_NAME}_Timer16bitPeriodGet( void );
 
 uint16_t ${TCC_INSTANCE_NAME}_Timer16bitCounterGet( void );
 
-void ${TCC_INSTANCE_NAME}_Timer16bitCounterSet( uint16_t count );
+void ${TCC_INSTANCE_NAME}_Timer16bitCounterSet( uint16_t countVal );
 
 <#if TCC_SYS_TIME_CONNECTED == true>
 void ${TCC_INSTANCE_NAME}_Timer16bitCompareSet( uint16_t compare );
@@ -137,7 +137,7 @@ uint32_t ${TCC_INSTANCE_NAME}_Timer32bitPeriodGet( void );
 
 uint32_t ${TCC_INSTANCE_NAME}_Timer32bitCounterGet( void );
 
-void ${TCC_INSTANCE_NAME}_Timer32bitCounterSet( uint32_t count );
+void ${TCC_INSTANCE_NAME}_Timer32bitCounterSet( uint32_t countVal );
 
 <#if TCC_SYS_TIME_CONNECTED == true>
 void ${TCC_INSTANCE_NAME}_Timer32bitCompareSet( uint32_t compare );
