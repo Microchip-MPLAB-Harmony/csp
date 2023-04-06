@@ -250,21 +250,24 @@ bool SYSTICK_IsTimeoutReached (SYSTICK_TIMEOUT* timeout)
     return valTimeout;
 
 }
-    <#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
-    <#lt>{
-    <#lt>   systick.callback = callback;
-    <#lt>   systick.context = context;
-    <#lt>}
+void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
+{
+   systick.callback = callback;
+   systick.context = context;
+}
 
-    <#lt>void __attribute__((used)) SysTick_Handler(void)
-    <#lt>{
-    <#lt>   /* Reading control register clears the count flag */
-    <#lt>   uint32_t sysCtrl = SysTick->CTRL;
-    <#lt>   systick.tickCounter++;
-    <#lt>   if(systick.callback != NULL)
-    <#lt>   {
-    <#lt>       systick.callback(systick.context);
-    <#lt>   }
-    <#lt>   (void)sysCtrl;
-    <#lt>}
+void __attribute__((used)) SysTick_Handler(void)
+{
+   /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+   uintptr_t context = systick.context;
+
+   /* Reading control register clears the count flag */
+   (void)SysTick->CTRL;
+
+   systick.tickCounter++;
+   if(systick.callback != NULL)
+   {
+       systick.callback(context);
+   }
+}
 </#if>
