@@ -508,17 +508,22 @@ bool PIO_PinInterruptCallbackRegister(
 */
 void __attribute__((used)) PIO${.vars[channel]}_InterruptHandler(void)
 {
-    uint32_t status = 0U;
+    uint32_t status;
     uint8_t j;
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    PIO_PIN pin;
+    uintptr_t context;
 
-    status  = PIO${.vars[channel]}_REGS->PIO_ISR;
+    status = PIO${.vars[channel]}_REGS->PIO_ISR;
     status &= PIO${.vars[channel]}_REGS->PIO_IMR;
 
     for( j = ${portNumCbList[i]}U; j < ${portNumCbList[i+1]}U; j++ )
     {
-        if(((status & (1UL << (portPinCbObj[j].pin & 0x1FU))) != 0U) && (portPinCbObj[j].callback != NULL))
+        pin = portPinCbObj[j].pin;
+        context = portPinCbObj[j].context;
+        if((portPinCbObj[j].callback != NULL) && ((status & (1UL << (pin & 0x1FU))) != 0U))
         {
-            portPinCbObj[j].callback ( portPinCbObj[j].pin, portPinCbObj[j].context );
+            portPinCbObj[j].callback ( portPinCbObj[j].pin, context);
         }
     }
 }
