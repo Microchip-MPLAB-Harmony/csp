@@ -92,7 +92,6 @@ volatile static TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
 /* Initialize channel in quadrature mode */
 void ${TC_INSTANCE_NAME}_QuadratureInitialize (void)
 {
-    uint32_t status;
 <#if TC_BMR_POSEN == "POSITION">
     <#if TC_CH0_RESET == "CPCTRG">
         <#lt>    /* clock selection and waveform selection */
@@ -148,10 +147,8 @@ void ${TC_INSTANCE_NAME}_QuadratureInitialize (void)
     <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
     <#lt>    ${TC_INSTANCE_NAME}_CallbackObj.callback_fn = NULL;
     </#if>
-    status = ${TC_INSTANCE_NAME}_REGS->TC_QISR;  /* Clear interrupt status */
-
-    /* Ignore warning */
-    (void)status;
+    /* Clear interrupt status */
+    (void)${TC_INSTANCE_NAME}_REGS->TC_QISR;
 }
 
 void ${TC_INSTANCE_NAME}_QuadratureStart (void)
@@ -187,10 +184,14 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
     <#lt>void __attribute__((used)) ${TC_INSTANCE_NAME}_CH0_InterruptHandler(void)
     <#lt>{
     <#lt>    TC_QUADRATURE_STATUS quadrature_status = (TC_QUADRATURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK);
+
+    <#lt>    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    <#lt>    uintptr_t context = ${TC_INSTANCE_NAME}_CallbackObj.context;
+
     <#lt>    /* Call registered callback function */
     <#lt>    if (${TC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${TC_INSTANCE_NAME}_CallbackObj.callback_fn(quadrature_status, ${TC_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        ${TC_INSTANCE_NAME}_CallbackObj.callback_fn(quadrature_status, context);
     <#lt>    }
     <#lt>}
 
@@ -358,10 +359,14 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK cal
 static void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_TIMER_STATUS timer_status = (TC_TIMER_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK);
+
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context;
+
     /* Call registered callback function */
-    if ((TC_TIMER_NONE != timer_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL) && (TC_TIMER_NONE != timer_status))
     {
-        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, context);
     }
 }
 </#if>
@@ -370,10 +375,14 @@ static void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandl
 void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_TIMER_STATUS timer_status = (TC_TIMER_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK);
+
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context;
+
     /* Call registered callback function */
-    if ((TC_TIMER_NONE != timer_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL) && (TC_TIMER_NONE != timer_status))
     {
-        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, context);
     }
 }
 </#if>
@@ -492,10 +501,14 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK
 static void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_CAPTURE_STATUS capture_status = (TC_CAPTURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK);
+
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context;
+
     /* Call registered callback function */
-    if ((TC_CAPTURE_NONE != capture_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL) && (TC_CAPTURE_NONE != capture_status))
     {
-        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(capture_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(capture_status, context);
     }
 }
 </#if>
@@ -504,10 +517,14 @@ static void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandl
 void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_CAPTURE_STATUS capture_status = (TC_CAPTURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK);
+
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context;
+
     /* Call registered callback function */
-    if ((TC_CAPTURE_NONE != capture_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL) && (TC_CAPTURE_NONE != capture_status))
     {
-        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(capture_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(capture_status, context);
     }
 }
 </#if>
@@ -625,10 +642,14 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK
 static void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_COMPARE_STATUS compare_status = (TC_COMPARE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK);
+
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context;
+
     /* Call registered callback function */
-    if ((TC_COMPARE_NONE != compare_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL) && (TC_COMPARE_NONE != compare_status))
     {
-        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(compare_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(compare_status, context);
     }
 }
 </#if>
@@ -637,10 +658,14 @@ static void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandl
 void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_COMPARE_STATUS compare_status = (TC_COMPARE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK);
+
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context;
+
     /* Call registered callback function */
-    if ((TC_COMPARE_NONE != compare_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL) && (TC_COMPARE_NONE != compare_status))
     {
-        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(compare_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(compare_status, context);
     }
 }
 </#if>
