@@ -92,18 +92,20 @@ void ${WDT_INSTANCE_NAME}_Clear(void)
 <#if wdtinterruptMode == true>
     <#lt>void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
     <#lt>{
-    <#lt>   wdt.callback = callback;
-    <#lt>   wdt.context = context;
+    <#lt>    wdt.callback = callback;
+    <#lt>    wdt.context = context;
     <#lt>}
 </#if>
 
 <#if wdtinterruptMode == true>
-   <#lt>void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
-   <#lt>{
-   <#lt>   ${WDT_INSTANCE_NAME}_REGS->WDT_SR;
-   <#lt>    if(wdt.callback != NULL)
-    <#lt>   {
-    <#lt>       wdt.callback(wdt.context);
-    <#lt>   }
-  <#lt>}
+    <#lt>void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>{
+    <#lt>    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    <#lt>    uintptr_t context = wdt.context;
+    <#lt>    (void)${WDT_INSTANCE_NAME}_REGS->WDT_SR;
+    <#lt>    if(wdt.callback != NULL)
+    <#lt>    {
+    <#lt>        wdt.callback(context);
+    <#lt>    }
+    <#lt>}
 </#if>
