@@ -182,14 +182,15 @@ void ${PIT_INSTANCE_NAME}_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t cont
 void __attribute__((used)) ${PIT_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t interruptStatus = ${PIT_INSTANCE_NAME}_REGS->PIT_SR;
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = ${PIT_INSTANCE_NAME?lower_case}.context;
     if(interruptStatus != 0U)
 	{
-        volatile uint32_t reg = ${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
-        (void)reg;
+        (void)${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
         ${PIT_INSTANCE_NAME?lower_case}.tickCounter++;
         if((${PIT_INSTANCE_NAME?lower_case}.callback) != NULL)
         {
-            ${PIT_INSTANCE_NAME?lower_case}.callback(${PIT_INSTANCE_NAME?lower_case}.context);
+            ${PIT_INSTANCE_NAME?lower_case}.callback(context);
         }
     }
 }
