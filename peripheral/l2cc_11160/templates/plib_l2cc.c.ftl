@@ -404,10 +404,10 @@ void PLIB_L2CC_CleanInvalidateCache(void)
     </code>
 
 */
-void PLIB_L2CC_InvalidateCacheByAddr(uint32_t *addr, uint32_t size)
+void PLIB_L2CC_InvalidateCacheByAddr(volatile void *pAddr, int32_t size)
 {
-    uint32_t start = (uint32_t)addr;
-    uint32_t end = start + size;
+    volatile uint32_t start = (volatile uint32_t)((volatile uint32_t*)pAddr);
+    uint32_t end = start + (uint32_t)size;
     uint32_t current = start & ~0x1FU;
     if (l2cacheIsEnabled()) {
         while (current <= end) {
@@ -446,10 +446,10 @@ void PLIB_L2CC_InvalidateCacheByAddr(uint32_t *addr, uint32_t size)
     </code>
 
 */
-void PLIB_L2CC_CleanCacheByAddr(uint32_t *addr, uint32_t size)
+void PLIB_L2CC_CleanCacheByAddr(volatile void *pAddr, int32_t size)
 {
-    uint32_t start = (uint32_t)addr;
-    uint32_t end = start + size;
+    volatile uint32_t start = (volatile uint32_t)((volatile uint32_t*)pAddr);
+    uint32_t end = start + (uint32_t)size;
     uint32_t current = start & ~0x1FU;
     if (l2cacheIsEnabled()) {
         while (current <= end) {
@@ -488,11 +488,11 @@ void PLIB_L2CC_CleanCacheByAddr(uint32_t *addr, uint32_t size)
     </code>
 
 */
-void PLIB_L2CC_CleanInvalidateCacheByAddr(uint32_t *addr, uint32_t size)
+void PLIB_L2CC_CleanInvalidateCacheByAddr(volatile void *pAddr, int32_t size)
 {
-    uint32_t start = (uint32_t)addr;
-    uint32_t end = start + size;
-    uint32_t current = start & ~0x1fU;
+    volatile uint32_t start = (volatile uint32_t)((volatile uint32_t*)pAddr);
+    uint32_t end = start + (uint32_t)size;
+    uint32_t current = start & ~0x1FU;
     if (l2cacheIsEnabled()) {
         while (current <= end) {
             cleanInvalidatePAL(current);
