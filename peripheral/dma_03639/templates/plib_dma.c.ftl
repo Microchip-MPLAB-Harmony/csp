@@ -485,7 +485,7 @@ uint32_t ${DMA_INSTANCE_NAME}_ChannelCRCRead(DMA_CHANNEL channel)
 //*******************************************************************************
 static void __attribute__((used)) DMA_interruptHandler(uint32_t channel)
 {
-    DMA_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMA_CH_OBJECT  *dmacChObj = NULL;
     volatile uint32_t chIntFlagStatus = 0U;
     volatile uint32_t chIntFlagsEnabled = 0U;
 
@@ -552,7 +552,9 @@ static void __attribute__((used)) DMA_interruptHandler(uint32_t channel)
     /* Execute the callback function */
     if ((dmacChObj->callback != NULL) && (event != 0U))
     {
-        dmacChObj->callback (event, dmacChObj->context);
+        uintptr_t context = dmacChObj->context;
+
+        dmacChObj->callback (event, context);
     }
 }
 
