@@ -63,18 +63,20 @@ void ${RSWDT_INSTANCE_NAME}_Clear(void)
 <#if rswdtinterruptMode == true>
     <#lt>void ${RSWDT_INSTANCE_NAME}_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context )
     <#lt>{
-    <#lt>   rswdt.callback = callback;
-    <#lt>   rswdt.context = context;
+    <#lt>    rswdt.callback = callback;
+    <#lt>    rswdt.context = context;
     <#lt>}
 </#if>
 
 <#if rswdtinterruptMode == true>
     <#lt>void __attribute__((used)) ${RSWDT_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
-    <#lt>   ${RSWDT_INSTANCE_NAME}_REGS->RSWDT_SR;
-    <#lt>   if(rswdt.callback != NULL)
-    <#lt>        {
-    <#lt>            rswdt.callback(rswdt.context);
-    <#lt>        }
+    <#lt>    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    <#lt>    uintptr_t context = rswdt.context;
+    <#lt>    (void)${RSWDT_INSTANCE_NAME}_REGS->RSWDT_SR;
+    <#lt>    if(rswdt.callback != NULL)
+    <#lt>    {
+    <#lt>        rswdt.callback(context);
+    <#lt>    }
     <#lt>}
 </#if>
