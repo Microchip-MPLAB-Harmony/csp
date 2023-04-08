@@ -110,6 +110,9 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 {
     uint8_t tempVar = 0;
     ${I2C_MASTER_IFS_REG}CLR = _${I2C_MASTER_IFS_REG}_${I2C_INSTANCE_NAME}MIF_MASK;
+    <#if I2C_INCLUDE_FORCED_WRITE_API == true>
+    bool forcedWrite = ${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite;
+    </#if>
 
     switch (${I2C_INSTANCE_NAME?lower_case}Obj.state)
     {
@@ -136,7 +139,9 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                 else
                 {
                     /* 8-bit addressing mode */
-                    ${I2C_INSTANCE_NAME}TRN = (((uint32_t)${I2C_INSTANCE_NAME?lower_case}Obj.address << 1) | (uint32_t)${I2C_INSTANCE_NAME?lower_case}Obj.transferType);
+                    I2C_TRANSFER_TYPE transferType = ${I2C_INSTANCE_NAME?lower_case}Obj.transferType;
+
+                    ${I2C_INSTANCE_NAME}TRN = (((uint32_t)${I2C_INSTANCE_NAME?lower_case}Obj.address << 1) | transferType);
 
                     if (${I2C_INSTANCE_NAME?lower_case}Obj.transferType == I2C_TRANSFER_TYPE_WRITE)
                     {
@@ -153,7 +158,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
         case I2C_STATE_ADDR_BYTE_2_SEND:
             /* Transmit the 2nd byte of the 10-bit slave address */
             <#if I2C_INCLUDE_FORCED_WRITE_API == true>
-            if (((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U) || (${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite == true))
+            if (((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U) || (forcedWrite == true))
             <#else>
             if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U)
             </#if>
@@ -218,25 +223,28 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 
         case I2C_STATE_WRITE:
             <#if I2C_INCLUDE_FORCED_WRITE_API == true>
-            if (((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U) || (${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite == true))
+            if (((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U) || (forcedWrite == true))
             <#else>
             if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) == 0U)
             </#if>
             {
+                size_t writeCount = ${I2C_INSTANCE_NAME?lower_case}Obj.writeCount;
+
                 /* ACK received */
-                if (${I2C_INSTANCE_NAME?lower_case}Obj.writeCount < ${I2C_INSTANCE_NAME?lower_case}Obj.writeSize)
+                if (writeCount < ${I2C_INSTANCE_NAME?lower_case}Obj.writeSize)
                 {
                     if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U)
                     {
                         /* Transmit the data from writeBuffer[] */
-                        ${I2C_INSTANCE_NAME}TRN = ${I2C_INSTANCE_NAME?lower_case}Obj.writeBuffer[${I2C_INSTANCE_NAME?lower_case}Obj.writeCount];
+                        ${I2C_INSTANCE_NAME}TRN = ${I2C_INSTANCE_NAME?lower_case}Obj.writeBuffer[writeCount];
                         ${I2C_INSTANCE_NAME?lower_case}Obj.writeCount++;
-
                     }
                 }
                 else
                 {
-                    if (${I2C_INSTANCE_NAME?lower_case}Obj.readCount < ${I2C_INSTANCE_NAME?lower_case}Obj.readSize)
+                    size_t readSize = ${I2C_INSTANCE_NAME?lower_case}Obj.readSize;
+
+                    if (${I2C_INSTANCE_NAME?lower_case}Obj.readCount < readSize)
                     {
                         /* Generate repeated start condition */
                         ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_RSEN_MASK;
@@ -292,9 +300,11 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             /* Data received from the slave */
             if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_RBF_MASK) != 0U)
             {
-                ${I2C_INSTANCE_NAME?lower_case}Obj.readBuffer[${I2C_INSTANCE_NAME?lower_case}Obj.readCount] = (uint8_t)${I2C_INSTANCE_NAME}RCV;
-                ${I2C_INSTANCE_NAME?lower_case}Obj.readCount++;
-                if (${I2C_INSTANCE_NAME?lower_case}Obj.readCount == ${I2C_INSTANCE_NAME?lower_case}Obj.readSize)
+                size_t readCount = ${I2C_INSTANCE_NAME?lower_case}Obj.readCount;
+
+                ${I2C_INSTANCE_NAME?lower_case}Obj.readBuffer[readCount] = (uint8_t)${I2C_INSTANCE_NAME}RCV;
+                readCount++;
+                if (readCount == ${I2C_INSTANCE_NAME?lower_case}Obj.readSize)
                 {
                     /* Send NAK */
                     ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_ACKDT_MASK;
@@ -306,13 +316,15 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                     ${I2C_INSTANCE_NAME}CONCLR = _${I2C_INSTANCE_NAME}CON_ACKDT_MASK;
                     ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_ACKEN_MASK;
                 }
+                ${I2C_INSTANCE_NAME?lower_case}Obj.readCount = readCount;
                 ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_WAIT_ACK_COMPLETE;
             }
             break;
 
         case I2C_STATE_WAIT_ACK_COMPLETE:
+            size_t readSize = ${I2C_INSTANCE_NAME?lower_case}Obj.readSize;
             /* ACK or NAK sent to the I2C slave */
-            if (${I2C_INSTANCE_NAME?lower_case}Obj.readCount < ${I2C_INSTANCE_NAME?lower_case}Obj.readSize)
+            if (${I2C_INSTANCE_NAME?lower_case}Obj.readCount < readSize)
             {
                 /* Enable receiver */
                 ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_RCEN_MASK;
@@ -332,7 +344,9 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             ${I2C_BUS_IEC_REG}CLR = _${I2C_BUS_IEC_REG}_${I2C_BUS_COLLISION_INT_ENABLE_BIT_NAME}_MASK;
             if (${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL)
             {
-                ${I2C_INSTANCE_NAME?lower_case}Obj.callback(${I2C_INSTANCE_NAME?lower_case}Obj.context);
+                uintptr_t context = ${I2C_INSTANCE_NAME?lower_case}Obj.context;
+
+                ${I2C_INSTANCE_NAME?lower_case}Obj.callback(context);
             }
             break;
 
@@ -573,7 +587,9 @@ void __attribute__((used)) ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
 
     if (${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL)
     {
-        ${I2C_INSTANCE_NAME?lower_case}Obj.callback(${I2C_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${I2C_INSTANCE_NAME?lower_case}Obj.context;
+
+        ${I2C_INSTANCE_NAME?lower_case}Obj.callback(context);
     }
 }
 

@@ -130,6 +130,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 {
     uint32_t i2c_addr;
     uint8_t sdaValue = 0;
+    uintptr_t context = ${I2C_INSTANCE_NAME?lower_case}Obj.context;
 
     /* ACK the slave interrupt */
     ${I2C_SLAVE_IFS_REG}CLR = _${I2C_SLAVE_IFS_REG}_${I2C_INSTANCE_NAME}SIF_MASK;
@@ -139,7 +140,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
     {
         if (${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL)
         {
-            (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_STOP_BIT_RECEIVED, ${I2C_INSTANCE_NAME?lower_case}Obj.context);
+            (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_STOP_BIT_RECEIVED, context);
         }
     }
     else if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_D_A_MASK) == 0U)
@@ -160,7 +161,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                 if (${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                 {
 <#if (I2CS_AHEN_DHEN_SUPPORT?? && I2CS_AHEN_DHEN_SUPPORT ==true) >
-                    if (${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${I2C_INSTANCE_NAME?lower_case}Obj.context) == true)
+                    if (${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, context) == true)
                     {
                         if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_R_W_MASK) != 0U)
                         {
@@ -168,7 +169,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                             if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U)
                             {
                                 /* In the callback, slave must write to transmit register by calling I2Cx_WriteByte() */
-                                (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, ${I2C_INSTANCE_NAME?lower_case}Obj.context);
+                                (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, context);
                             }
                         }
                         /* Send ACK */
@@ -182,7 +183,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                     }
                     ${I2C_INSTANCE_NAME}_RiseAndSetupTime(sdaValue);
 <#else>
-                    (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${I2C_INSTANCE_NAME?lower_case}Obj.context);
+                    (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, context);
 
                     if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_R_W_MASK) != 0U)
                     {
@@ -190,7 +191,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                         if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U)
                         {
                             /* In the callback, slave must write to transmit register by calling I2Cx_WriteByte() */
-                            (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, ${I2C_INSTANCE_NAME?lower_case}Obj.context);
+                            (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, context);
 
                             sdaValue = (${I2C_INSTANCE_NAME?lower_case}Obj.lastByteWritten & 0x80U);
                             ${I2C_INSTANCE_NAME}_RiseAndSetupTime(sdaValue);
@@ -204,7 +205,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             {
 <#if (I2CS_AHEN_DHEN_SUPPORT?? && I2CS_AHEN_DHEN_SUPPORT ==true) >
                 /* Notify that a address match event has occurred */
-                if (${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${I2C_INSTANCE_NAME?lower_case}Obj.context) == true)
+                if (${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, context) == true)
                 {
                     if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_R_W_MASK) != 0U)
                     {
@@ -212,7 +213,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                         if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK)  == 0U)
                         {
                             /* In the callback, slave must write to transmit register by calling I2Cx_WriteByte() */
-                            (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, ${I2C_INSTANCE_NAME?lower_case}Obj.context);
+                            (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, context);
                         }
                     }
                     /* Send ACK */
@@ -227,7 +228,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                 ${I2C_INSTANCE_NAME}_RiseAndSetupTime(sdaValue);
 <#else>
                 /* Notify that a address match event has occurred */
-                ${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${I2C_INSTANCE_NAME?lower_case}Obj.context);
+                ${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, context);
 
                 if (${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_R_W_MASK)
                 {
@@ -235,7 +236,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                     if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK)  == 0U)
                     {
                         /* In the callback, slave must write to transmit register by calling I2Cx_WriteByte() */
-                        (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, ${I2C_INSTANCE_NAME?lower_case}Obj.context);
+                        (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, context);
 
                         sdaValue = (${I2C_INSTANCE_NAME?lower_case}Obj.lastByteWritten & 0x80U);
                         ${I2C_INSTANCE_NAME}_RiseAndSetupTime(sdaValue);
@@ -258,7 +259,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                 if (${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                 {
                     /* I2C master wants to read. In the callback, slave must write to transmit register */
-                    (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, ${I2C_INSTANCE_NAME?lower_case}Obj.context);
+                    (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, context);
 
                     sdaValue = (${I2C_INSTANCE_NAME?lower_case}Obj.lastByteWritten & 0x80U);
                 }
@@ -278,7 +279,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                 {
 <#if (I2CS_AHEN_DHEN_SUPPORT?? && I2CS_AHEN_DHEN_SUPPORT ==true) >
                     /* I2C master wants to write. In the callback, slave must read data by calling I2Cx_ReadByte()  */
-                    if (${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_RX_READY, ${I2C_INSTANCE_NAME?lower_case}Obj.context) == true)
+                    if (${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_RX_READY, context) == true)
                     {
                         /* Send ACK */
                         ${I2C_INSTANCE_NAME}CONCLR = _${I2C_INSTANCE_NAME}CON_ACKDT_MASK;
@@ -293,7 +294,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                     ${I2C_INSTANCE_NAME}_RiseAndSetupTime(sdaValue);
 <#else>
                     /* I2C master wants to write. In the callback, slave must read data by calling I2Cx_ReadByte()  */
-                    (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_RX_READY, ${I2C_INSTANCE_NAME?lower_case}Obj.context);
+                    (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_RX_READY, context);
 </#if>
                 }
                 /* Data read by the application; release the clock stretch */
@@ -378,7 +379,9 @@ void __attribute__((used)) ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
 
     if (${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL)
     {
-        (void) ${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ERROR, ${I2C_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${I2C_INSTANCE_NAME?lower_case}Obj.context;
+
+        (void) ${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ERROR, context);
     }
 }
 
