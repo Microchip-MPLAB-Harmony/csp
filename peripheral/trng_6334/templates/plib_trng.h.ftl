@@ -60,15 +60,6 @@
 	<#lt>typedef void (*TRNG_CALLBACK)(uint32_t random, uintptr_t context);
 </#if>
 
-<#if trngEnableInterrupt == true>
-	<#lt>typedef struct
-	<#lt>{
-	<#lt>	TRNG_CALLBACK          callback; 
-	<#lt>	uintptr_t               context;
-	<#lt>	uint32_t				data;
-	<#lt>} TRNG_OBJECT ;
-</#if>
-
 /***************************** TRNG API *******************************/
 <#if trngEnableInterrupt == true>
 	<#lt>void ${TRNG_INSTANCE_NAME}_RandomNumberGenerate( void );
@@ -78,13 +69,13 @@
 </#if>
 <#if trngEnableInterrupt == true>
 	<#lt>void ${TRNG_INSTANCE_NAME}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context );
-</#if>	
+</#if>
 
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif
 
-#endif 
+#endif
 </#macro>
 
 <#if TRNG_Reserved == false>
