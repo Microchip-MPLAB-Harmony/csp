@@ -101,8 +101,8 @@ static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses( DMAC_CHANNEL channel, cons
 {
     const uint32_t *xsrcAddr = (const uint32_t *)srcAddr;
     const uint32_t *xdestAddr = (const uint32_t *)destAddr;
-    
-    
+
+
     uint32_t sourceAddress = (uint32_t)xsrcAddr;
     uint32_t destAddress = (uint32_t)xdestAddr;
     volatile uint32_t * regs;
@@ -121,10 +121,10 @@ static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses( DMAC_CHANNEL channel, cons
             //SQI Address translation
             sourceAddress = ((sourceAddress | 0x30000000U) & 0x3FFFFFFFU);
         }
-		else 
-		{
-			/* Do Nothing */
-		}
+        else
+        {
+            /* Do Nothing */
+        }
     }
     else if ((sourceAddress >> 29) == 0x7U)
     {
@@ -138,10 +138,10 @@ static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses( DMAC_CHANNEL channel, cons
             // SQI Address translation
             sourceAddress = ((sourceAddress | 0x30000000U) & 0x3FFFFFFFU);
         }
-		else
-		{
-			/* Do Nothing */
-		}
+        else
+        {
+            /* Do Nothing */
+        }
     }
     else
     {
@@ -175,10 +175,10 @@ static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses( DMAC_CHANNEL channel, cons
         {
             destAddress = ((destAddress | 0x30000000U) & 0x3FFFFFFFU);
         }
-		else
-		{
-			/* Do Nothing */
-		}
+        else
+        {
+            /* Do Nothing */
+        }
     }
     else if ((destAddress >> 29) == 0x7U)
     {   /* Check if the address lies in the KSEG3 for MZ devices */
@@ -192,10 +192,10 @@ static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses( DMAC_CHANNEL channel, cons
         {
             destAddress = ((destAddress | 0x30000000U) & 0x3FFFFFFFU);
         }
-		else
-		{
-			/* Do Nothing */
-		}
+        else
+        {
+            /* Do Nothing */
+        }
     }
     else
     {
@@ -273,7 +273,7 @@ static uint32_t ${DMA_INSTANCE_NAME}_BitReverse( uint32_t num, uint32_t bits)
 void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
     uint8_t chanIndex;
-    DMAC_CHANNEL_OBJECT *chanObj;
+    volatile DMAC_CHANNEL_OBJECT *chanObj;
 
     /* Enable the DMA module */
     DMACONSET = _DMACON_ON_MASK;
@@ -571,7 +571,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel)
     if ((gDMAChannelObj[channel].inUse == true) && (DCHxINT_Flags == 0U))
     {
         flagcheck = true;
-    }    
+    }
     return flagcheck;
 }
 
@@ -751,9 +751,9 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCRead( void )
 */
 void __attribute__((used)) DMA${i}_InterruptHandler (void)
 {
-    DMAC_CHANNEL_OBJECT *chanObj;
+    volatile DMAC_CHANNEL_OBJECT *chanObj;
     DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;
-    
+
     uint32_t var = 0;
 
     /* Find out the channel object */
@@ -809,7 +809,9 @@ void __attribute__((used)) DMA${i}_InterruptHandler (void)
 
     if((chanObj->pEventCallBack != NULL) && (dmaEvent != DMAC_TRANSFER_EVENT_NONE))
     {
-        chanObj->pEventCallBack(dmaEvent, chanObj->hClientArg);
+        uintptr_t hClientArg = chanObj->hClientArg;
+
+        chanObj->pEventCallBack(dmaEvent, hClientArg);
     }
 }
 </#if>
