@@ -193,39 +193,51 @@ void dcache_CleanInvalidateAll(void)
     __DSB();
 }
 
-void dcache_InvalidateByAddr (uint32_t *addr, uint32_t size)
+void dcache_InvalidateByAddr(volatile void *pAddr, int32_t size)
 {
-    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1U);
+    volatile uint32_t uAddr = (volatile uint32_t)((volatile uint32_t*)pAddr);
+    uint32_t uSize = (uint32_t)size;
+    uint32_t mva = uAddr & ~(L1_DATA_CACHE_BYTES - 1U);
 
-    for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
+    while(mva < (uAddr + uSize))
     {
         cp15_dcache_invalidate_mva(mva);
         __DMB();
+        mva += L1_DATA_CACHE_BYTES;
     }
+
     __DSB();
 }
 
-void dcache_CleanByAddr (uint32_t *addr, uint32_t size)
+void dcache_CleanByAddr (volatile void *pAddr, int32_t size)
 {
-    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1U);
+    volatile uint32_t uAddr = (volatile uint32_t)((volatile uint32_t*)pAddr);
+    uint32_t uSize = (uint32_t)size;
+    uint32_t mva = uAddr & ~(L1_DATA_CACHE_BYTES - 1U);
 
-    for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
+    while(mva < (uAddr + uSize))
     {
         cp15_dcache_clean_mva(mva);
         __DMB();
+        mva += L1_DATA_CACHE_BYTES;
     }
+
     __DSB();
 }
 
-void dcache_CleanInvalidateByAddr (uint32_t *addr, uint32_t size)
+void dcache_CleanInvalidateByAddr (volatile void *pAddr, int32_t size)
 {
-    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1U);
+    volatile uint32_t uAddr = (volatile uint32_t)((volatile uint32_t*)pAddr);
+    uint32_t uSize = (uint32_t)size;
+    uint32_t mva = uAddr & ~(L1_DATA_CACHE_BYTES - 1U);
 
-    for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
+    while(mva < (uAddr + uSize))
     {
         cp15_dcache_clean_invalidate_mva((uint32_t)mva);
         __DMB();
+        mva += L1_DATA_CACHE_BYTES;
     }
+
     __DSB();
 }
 
