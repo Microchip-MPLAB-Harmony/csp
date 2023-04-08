@@ -153,16 +153,16 @@ typedef struct
     uint32_t                        nWrBytes;
 
     /* Index to the number of bytes already written out from the transmit buffer */
-    volatile uint32_t               wrOutIndex;
+    uint32_t                        wrOutIndex;
 
     /* Index into the receive buffer where the next received byte will be copied */
-    volatile uint32_t               rdInIndex;
+    uint32_t                        rdInIndex;
 
     /* Flag to indicate that the RX interrupt is active (being serviced) */
-    volatile bool                   rxInterruptActive;
+    bool                            rxInterruptActive;
 
     /* Flag to indicate that CS interrupt has delegated callback responsibility to the SPI receive interrupt */
-    volatile bool                   csInterruptPending;
+    bool                            csInterruptPending;
 
 } SPI_SLAVE_OBJECT;
 
