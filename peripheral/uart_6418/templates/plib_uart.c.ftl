@@ -67,14 +67,19 @@ static void __attribute__((used)) ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
-        while((UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_RXRDY_Msk)) && (${UART_INSTANCE_NAME?lower_case}Obj.rxSize > ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize) )
+        size_t rxSize = ${UART_INSTANCE_NAME?lower_case}Obj.rxSize;
+        size_t rxProcessedSize = ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize;
+
+        while((UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_RXRDY_Msk)) && (rxSize > rxProcessedSize) )
         {
-            ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize] = (uint8_t)(${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
-            ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++;
-		}
+            ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[rxProcessedSize] = (uint8_t)(${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
+            rxProcessedSize++;
+        }
+
+        ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = rxProcessedSize;
 
         /* Check if the buffer is done */
-        if(${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.rxSize)
+        if(${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= rxSize)
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
@@ -83,7 +88,9 @@ static void __attribute__((used)) ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
 
             if(${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL)
             {
-                ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(${UART_INSTANCE_NAME?lower_case}Obj.rxContext);
+                uintptr_t rxContext = ${UART_INSTANCE_NAME?lower_case}Obj.rxContext;
+
+                ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(rxContext);
             }
         }
     }
@@ -100,21 +107,28 @@ static void __attribute__((used)) ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
-        while((UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
+        size_t txSize = ${UART_INSTANCE_NAME?lower_case}Obj.txSize;
+        size_t txProcessedSize = ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize;
+
+        while((UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk)) && (txSize > txProcessedSize) )
         {
-            ${UART_INSTANCE_NAME}_REGS->UART_THR|= ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
-			${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
+            ${UART_INSTANCE_NAME}_REGS->UART_THR|= ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[txProcessedSize];
+            txProcessedSize++;
         }
 
+        ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = txProcessedSize;
+
         /* Check if the buffer is done */
-        if(${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.txSize)
+        if(${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= txSize)
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
             ${UART_INSTANCE_NAME}_REGS->UART_IDR = UART_IDR_TXEMPTY_Msk;
 
             if(${UART_INSTANCE_NAME?lower_case}Obj.txCallback != NULL)
             {
-                ${UART_INSTANCE_NAME?lower_case}Obj.txCallback(${UART_INSTANCE_NAME?lower_case}Obj.txContext);
+                uintptr_t txContext = ${UART_INSTANCE_NAME?lower_case}Obj.txContext;
+
+                ${UART_INSTANCE_NAME?lower_case}Obj.txCallback(txContext);
             }
         }
     }
@@ -149,7 +163,9 @@ void __attribute__((used)) ${UART_INSTANCE_NAME}_InterruptHandler( void )
          * receiver callback */
         if( ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
         {
-            ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(${UART_INSTANCE_NAME?lower_case}Obj.rxContext);
+            uintptr_t rxContext = ${UART_INSTANCE_NAME?lower_case}Obj.rxContext;
+
+            ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(rxContext);
         }
     }
 
@@ -164,7 +180,9 @@ void __attribute__((used)) ${UART_INSTANCE_NAME}_InterruptHandler( void )
 
             if( ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
             {
-                ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(${UART_INSTANCE_NAME?lower_case}Obj.rxContext);
+                uintptr_t rxContext = ${UART_INSTANCE_NAME?lower_case}Obj.rxContext;
+
+                ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(rxContext);
             }
         }
     }
@@ -187,7 +205,9 @@ void __attribute__((used)) ${UART_INSTANCE_NAME}_InterruptHandler( void )
 
             if( ${UART_INSTANCE_NAME?lower_case}Obj.txCallback != NULL )
             {
-                ${UART_INSTANCE_NAME?lower_case}Obj.txCallback(${UART_INSTANCE_NAME?lower_case}Obj.txContext);
+                uintptr_t txContext = ${UART_INSTANCE_NAME?lower_case}Obj.txContext;
+
+                ${UART_INSTANCE_NAME?lower_case}Obj.txCallback(txContext);
             }
         }
     }
@@ -274,7 +294,12 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
     uint32_t uartMode;
 
 <#if UART_INTERRUPT_MODE_ENABLE == true>
-    if((${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true) || (${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true))
+    if(${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
+    {
+        /* Transaction is in progress, so return without updating settings */
+        return false;
+    }
+    if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
         /* Transaction is in progress, so return without updating settings */
         return false;
@@ -325,7 +350,7 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
         /* Clear errors before submitting the request.
          * ErrorGet clears errors internally. */
          errorinfo = ${UART_INSTANCE_NAME}_ErrorGet();
-         
+
          if(errorinfo != 0U)
          {
              /* Nothing to do */
@@ -492,7 +517,7 @@ bool ${UART_INSTANCE_NAME}_ReadAbort(void)
 
         /* If required application should read the num bytes processed prior to calling the read abort API */
         ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
-		${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
+        ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
     }
 
     return true;
@@ -502,16 +527,16 @@ bool ${UART_INSTANCE_NAME}_ReadAbort(void)
 <#if UART_INTERRUPT_MODE_ENABLE == false>
 int ${UART_INSTANCE_NAME}_ReadByte(void)
 {
-	uint32_t readbyte = (${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
+    uint32_t readbyte = (${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
     return (int)readbyte;
 }
 
 void ${UART_INSTANCE_NAME}_WriteByte( int data )
 {
     while (UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk))
-	{
-		/* Do Nothing */	
-	}
+    {
+        /* Do Nothing */
+    }
 
     ${UART_INSTANCE_NAME}_REGS->UART_THR = (UART_THR_TXCHR(data) & UART_THR_TXCHR_Msk);
 }

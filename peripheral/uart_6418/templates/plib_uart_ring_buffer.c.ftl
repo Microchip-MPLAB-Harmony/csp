@@ -88,13 +88,13 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     /* Initialize instance object */
     ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback = NULL;
     ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex = 0;
-	${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex = 0;
+    ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex = 0;
     ${UART_INSTANCE_NAME?lower_case}Obj.isRdNotificationEnabled = false;
     ${UART_INSTANCE_NAME?lower_case}Obj.isRdNotifyPersistently = false;
     ${UART_INSTANCE_NAME?lower_case}Obj.rdThreshold = 0;
     ${UART_INSTANCE_NAME?lower_case}Obj.wrCallback = NULL;
     ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex = 0;
-	${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
+    ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
     ${UART_INSTANCE_NAME?lower_case}Obj.isWrNotificationEnabled = false;
     ${UART_INSTANCE_NAME?lower_case}Obj.isWrNotifyPersistently = false;
     ${UART_INSTANCE_NAME?lower_case}Obj.wrThreshold = 0;
@@ -190,7 +190,9 @@ static inline bool ${UART_INSTANCE_NAME}_RxPushByte(uint8_t rdByte)
         /* Queue is full - Report it to the application. Application gets a chance to free up space by reading data out from the RX ring buffer */
         if(${UART_INSTANCE_NAME?lower_case}Obj.rdCallback != NULL)
         {
-            ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback(UART_EVENT_READ_BUFFER_FULL, ${UART_INSTANCE_NAME?lower_case}Obj.rdContext);
+            uintptr_t rdContext = ${UART_INSTANCE_NAME?lower_case}Obj.rdContext;
+
+            ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback(UART_EVENT_READ_BUFFER_FULL, rdContext);
         }
 
         /* Read the indices again in case application has freed up space in RX ring buffer */
@@ -205,7 +207,9 @@ static inline bool ${UART_INSTANCE_NAME}_RxPushByte(uint8_t rdByte)
 
     if (tempInIndex != ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex)
     {
-        ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex] = rdByte;
+        uint32_t rdInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+
+        ${UART_INSTANCE_NAME}_ReadBuffer[rdInIndex] = rdByte;
         ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex = tempInIndex;
         isSuccess = true;
     }
@@ -228,18 +232,20 @@ static void ${UART_INSTANCE_NAME}_ReadNotificationSend(void)
 
         if(${UART_INSTANCE_NAME?lower_case}Obj.rdCallback != NULL)
         {
+            uintptr_t rdContext = ${UART_INSTANCE_NAME?lower_case}Obj.rdContext;
+
             if (${UART_INSTANCE_NAME?lower_case}Obj.isRdNotifyPersistently == true)
             {
                 if (nUnreadBytesAvailable >= ${UART_INSTANCE_NAME?lower_case}Obj.rdThreshold)
                 {
-                    ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback(UART_EVENT_READ_THRESHOLD_REACHED, ${UART_INSTANCE_NAME?lower_case}Obj.rdContext);
+                    ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback(UART_EVENT_READ_THRESHOLD_REACHED, rdContext);
                 }
             }
             else
             {
                 if (nUnreadBytesAvailable == ${UART_INSTANCE_NAME?lower_case}Obj.rdThreshold)
                 {
-                    ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback(UART_EVENT_READ_THRESHOLD_REACHED, ${UART_INSTANCE_NAME?lower_case}Obj.rdContext);
+                    ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback(UART_EVENT_READ_THRESHOLD_REACHED, rdContext);
                 }
             }
         }
@@ -249,21 +255,21 @@ static void ${UART_INSTANCE_NAME}_ReadNotificationSend(void)
 size_t ${UART_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
-	uint32_t rdOutIndex;
-	uint32_t rdInIndex;
+    uint32_t rdOutIndex;
+    uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         ${UART_INSTANCE_NAME}_RX_INT_DISABLE();
-		
-		rdOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
-		rdInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+
+        rdOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
+        rdInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
 
         if (rdOutIndex != rdInIndex)
         {
-            pRdBuffer[nBytesRead] = ${UART_INSTANCE_NAME}_ReadBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex];
-			nBytesRead++;
-			${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex++;
+            pRdBuffer[nBytesRead] = ${UART_INSTANCE_NAME}_ReadBuffer[rdOutIndex];
+            nBytesRead++;
+            ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex++;
 
             if (${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex >= ${UART_INSTANCE_NAME}_READ_BUFFER_SIZE)
             {
@@ -284,12 +290,12 @@ size_t ${UART_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
 size_t ${UART_INSTANCE_NAME}_ReadCountGet(void)
 {
     size_t nUnreadBytesAvailable;
-	uint32_t rdInIndex;
-	uint32_t rdOutIndex;
-    
-	/* Take  snapshot of indices to avoid creation of critical section */
-	rdInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
-	rdOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
+    uint32_t rdInIndex;
+    uint32_t rdOutIndex;
+
+    /* Take  snapshot of indices to avoid creation of critical section */
+    rdInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+    rdOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
 
     if ( rdInIndex >=  rdOutIndex)
     {
@@ -299,7 +305,7 @@ size_t ${UART_INSTANCE_NAME}_ReadCountGet(void)
     {
         nUnreadBytesAvailable =  (${UART_INSTANCE_NAME}_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
-    
+
     return nUnreadBytesAvailable;
 }
 
@@ -343,13 +349,13 @@ void ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_RING_BUFFER_CALLBACK callb
 static bool ${UART_INSTANCE_NAME}_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
-	uint32_t wrOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
-	uint32_t wrInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
+    uint32_t wrOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
+    uint32_t wrInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
 
     if (wrOutIndex != wrInIndex)
     {
-        *pWrByte = ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
-		${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
+        *pWrByte = ${UART_INSTANCE_NAME}_WriteBuffer[wrOutIndex];
+        ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 
         if (${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex >= ${UART_INSTANCE_NAME}_WRITE_BUFFER_SIZE)
         {
@@ -374,7 +380,9 @@ static inline bool ${UART_INSTANCE_NAME}_TxPushByte(uint8_t wrByte)
     }
     if (tempInIndex != ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex)
     {
-        ${UART_INSTANCE_NAME}_WriteBuffer[${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex] = wrByte;
+        uint32_t wrInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
+
+        ${UART_INSTANCE_NAME}_WriteBuffer[wrInIndex] = wrByte;
         ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex = tempInIndex;
         isSuccess = true;
     }
@@ -397,18 +405,20 @@ static void ${UART_INSTANCE_NAME}_WriteNotificationSend(void)
 
         if(${UART_INSTANCE_NAME?lower_case}Obj.wrCallback != NULL)
         {
+            uintptr_t wrContext = ${UART_INSTANCE_NAME?lower_case}Obj.wrContext;
+
             if (${UART_INSTANCE_NAME?lower_case}Obj.isWrNotifyPersistently == true)
             {
                 if (nFreeWrBufferCount >= ${UART_INSTANCE_NAME?lower_case}Obj.wrThreshold)
                 {
-                    ${UART_INSTANCE_NAME?lower_case}Obj.wrCallback(UART_EVENT_WRITE_THRESHOLD_REACHED, ${UART_INSTANCE_NAME?lower_case}Obj.wrContext);
+                    ${UART_INSTANCE_NAME?lower_case}Obj.wrCallback(UART_EVENT_WRITE_THRESHOLD_REACHED, wrContext);
                 }
             }
             else
             {
                 if (nFreeWrBufferCount == ${UART_INSTANCE_NAME?lower_case}Obj.wrThreshold)
                 {
-                    ${UART_INSTANCE_NAME?lower_case}Obj.wrCallback(UART_EVENT_WRITE_THRESHOLD_REACHED, ${UART_INSTANCE_NAME?lower_case}Obj.wrContext);
+                    ${UART_INSTANCE_NAME?lower_case}Obj.wrCallback(UART_EVENT_WRITE_THRESHOLD_REACHED, wrContext);
                 }
             }
         }
@@ -418,10 +428,10 @@ static void ${UART_INSTANCE_NAME}_WriteNotificationSend(void)
 static size_t ${UART_INSTANCE_NAME}_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
-	
-	/* Take a snapshot of indices to avoid creation of critical section */
-	uint32_t wrOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
-	uint32_t wrInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
+
+    /* Take a snapshot of indices to avoid creation of critical section */
+    uint32_t wrOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
+    uint32_t wrInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
 
     if ( wrInIndex >=  wrOutIndex)
     {
@@ -437,7 +447,7 @@ static size_t ${UART_INSTANCE_NAME}_WritePendingBytesGet(void)
 
 size_t ${UART_INSTANCE_NAME}_WriteCountGet(void)
 {
-    size_t nPendingTxBytes;    
+    size_t nPendingTxBytes;
 
     nPendingTxBytes = ${UART_INSTANCE_NAME}_WritePendingBytesGet();
 
@@ -485,14 +495,14 @@ size_t ${UART_INSTANCE_NAME}_WriteBufferSizeGet(void)
 
 bool ${UART_INSTANCE_NAME}_TransmitComplete(void)
 {
-	bool TxC = false;
+    bool TxC = false;
     if(UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXEMPTY_Msk))
     {
         TxC = true;
     }
-	
-	return TxC;		
-	
+
+    return TxC;
+
 }
 
 bool ${UART_INSTANCE_NAME}_WriteNotificationEnable(bool isEnabled, bool isPersistent)
@@ -577,7 +587,8 @@ void __attribute__((used)) ${UART_INSTANCE_NAME}_InterruptHandler( void )
          * receiver callback */
         if( ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback != NULL )
         {
-            ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback(UART_EVENT_READ_ERROR, ${UART_INSTANCE_NAME?lower_case}Obj.rdContext);
+            uintptr_t rdContext = ${UART_INSTANCE_NAME?lower_case}Obj.rdContext;
+            ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback(UART_EVENT_READ_ERROR, rdContext);
         }
     }
 
