@@ -168,9 +168,9 @@ typedef struct
 
     uintptr_t                                           wrContext;
 
-    volatile uint32_t                                   wrInIndex;
+    uint32_t                                            wrInIndex;
 
-    volatile uint32_t                                   wrOutIndex;
+    uint32_t                                            wrOutIndex;
 
     uint32_t                                            wrThreshold;
 
@@ -184,9 +184,9 @@ typedef struct
 
     uintptr_t                                           rdContext;
 
-    volatile uint32_t                                   rdInIndex;
+    uint32_t                                            rdInIndex;
 
-    volatile uint32_t                                   rdOutIndex;
+    uint32_t                                            rdOutIndex;
 
     uint32_t                                            rdBufferSize;
 
@@ -196,7 +196,7 @@ typedef struct
 
     bool                                                isRdNotifyPersistently;
 
-    volatile UART_ERROR                                 errors;
+    UART_ERROR                                          errors;
 
 } UART_RING_BUFFER_OBJECT;
 
