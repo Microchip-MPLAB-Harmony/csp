@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Reset Controller Peripheral Library, RSTC PLIB 
+  Reset Controller Peripheral Library, RSTC PLIB
 
   Company:
     Microchip Technology Inc.
@@ -61,7 +61,7 @@ void RSTC${INSTANCE?string}_Initialize( void )
     // Enable Reset
     RSTC_REGS->RSTC_MR = (RSTC_MR_KEY_PASSWD | RSTC_MR_URSTEN_Msk);
     <#elseif RSTC_MR_URSTEN == "INTERRUPT">
-    // Enable Interrupt 
+    // Enable Interrupt
     RSTC_REGS->RSTC_MR = (RSTC_MR_KEY_PASSWD | RSTC_MR_URSTIEN_Msk);
     <#else>
     // NRST input pin is ignored
@@ -72,7 +72,7 @@ void RSTC${INSTANCE?string}_Initialize( void )
 void RSTC${INSTANCE?string}_Reset( RSTC_RESET_TYPE type )
 {
     /* Issue reset command */
-    RSTC_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | type; 
+    RSTC_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | type;
     /* Wait for command processing */
     while((RSTC_REGS->RSTC_SR & (uint32_t)RSTC_SR_SRCMP_Msk ) != 0U)
 	{
@@ -101,12 +101,16 @@ void RSTC${INSTANCE?string}_CallbackRegister( RSTC_CALLBACK callback, uintptr_t 
 
 void __attribute__((used)) RSTC${INSTANCE?string}_InterruptHandler( void )
 {
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = rstcObj.context;
+
     // Clear the interrupt flag
-    RSTC_REGS->RSTC_SR;
+    (void)RSTC_REGS->RSTC_SR;
 
     // Callback user function
-    if( rstcObj.callback != NULL ) {
-        rstcObj.callback( rstcObj.context );		
+    if(rstcObj.callback != NULL)
+    {
+        rstcObj.callback(context);
     }
 }
 </#if>
