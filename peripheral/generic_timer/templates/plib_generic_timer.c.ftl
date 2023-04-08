@@ -93,9 +93,9 @@ void GENERIC_TIMER_DelayUs(uint32_t delay_us)
     uint64_t finalCount = GENERIC_TIMER_CounterValueGet() +
       (uint64_t)((GENERIC_TIMER_FREQUENCY /1000000UL) * (uint64_t)delay_us);
     while(GENERIC_TIMER_CounterValueGet() < finalCount)
-	{
-		
-	}
+    {
+
+    }
 }
 
 
@@ -105,9 +105,9 @@ void GENERIC_TIMER_DelayMs(uint32_t delay_ms)
     uint64_t finalCount = GENERIC_TIMER_CounterValueGet() +
       (uint64_t)((GENERIC_TIMER_FREQUENCY /1000UL) * (uint64_t)delay_ms);
     while(GENERIC_TIMER_CounterValueGet() < finalCount)
-	{
-		
-	}
+    {
+
+    }
 }
 <#if GENERIC_TIMER_INTERRUPT>
 
@@ -152,11 +152,13 @@ void GENERIC_TIMER_CallbackRegister(GENERIC_TIMER_CALLBACK pCallback, uintptr_t 
 void __attribute__((used)) GENERIC_TIMER_InterruptHandler (void)
 {
     uint64_t currentCompVal = PL1_GetPhysicalCompareValue();
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = genericTimerCallbackObj.context;
     PL1_SetPhysicalCompareValue(currentCompVal + compareDelta);
     if(genericTimerCallbackObj.pCallback != NULL)
     {
-        genericTimerCallbackObj.pCallback(genericTimerCallbackObj.context);
+        genericTimerCallbackObj.pCallback(context);
     }
 }
 </#if>
-</#if> 
+</#if>
