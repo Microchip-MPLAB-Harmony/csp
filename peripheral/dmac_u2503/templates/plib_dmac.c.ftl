@@ -99,7 +99,7 @@ This function initializes the DMAC controller of the device.
 
 void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
-    DMAC_CH_OBJECT *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
+    volatile DMAC_CH_OBJECT *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
     uint32_t channel = 0U;
 
     /* Initialize DMAC Channel objects */
@@ -202,10 +202,11 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
 {
     uint8_t beat_size = 0U;
     bool returnStatus = false;
+    bool isBusy = dmacChannelObj[channel].isBusy;
     const uint32_t* pu32srcAddr = (const uint32_t*)srcAddr;
     const uint32_t* pu32dstAddr = (const uint32_t*)destAddr;
 
-    if ((!dmacChannelObj[channel].isBusy) || ((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) != 0U))
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) != 0U) || (!isBusy) )
     {
         /* Clear the transfer complete flag */
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk;
@@ -272,7 +273,9 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel )
 {
     bool busy_check = false;
-    if ((dmacChannelObj[channel].isBusy) && ((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) == 0U))
+    bool isBusy = dmacChannelObj[channel].isBusy;
+
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) == 0U) && (isBusy))
     {
         busy_check = true;
     }
@@ -380,8 +383,9 @@ void ${DMA_INSTANCE_NAME}_LinkedListDescriptorSetup (dmac_descriptor_registers_t
 bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_descriptor_registers_t* channelDesc)
 {
     bool returnStatus = false;
+    bool isBusy = dmacChannelObj[channel].isBusy;
 
-    if ((!dmacChannelObj[channel].isBusy) || ((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) != 0U))
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) != 0U) || (!isBusy))
     {
         /* Clear the transfer complete flag */
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk;
@@ -590,7 +594,7 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_C
 //*******************************************************************************
 static void __attribute__((used)) DMAC_channel_interruptHandler(uint8_t channel)
 {
-    DMAC_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMAC_CH_OBJECT  *dmacChObj = NULL;
     volatile uint32_t chanIntFlagStatus = 0U;
     DMAC_TRANSFER_EVENT event   = DMAC_TRANSFER_EVENT_ERROR;
 
@@ -622,7 +626,9 @@ static void __attribute__((used)) DMAC_channel_interruptHandler(uint8_t channel)
     /* Execute the callback function */
     if (dmacChObj->callback != NULL)
     {
-        dmacChObj->callback (event, dmacChObj->context);
+        uintptr_t context = dmacChObj->context;
+
+        dmacChObj->callback (event, context);
     }
 }
 
