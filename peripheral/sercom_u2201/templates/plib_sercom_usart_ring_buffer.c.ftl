@@ -486,7 +486,8 @@ static inline bool ${SERCOM_INSTANCE_NAME}_USART_RxPushByte(uint16_t rdByte)
         /* Queue is full - Report it to the application. Application gets a chance to free up space by reading data out from the RX ring buffer */
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback != NULL)
         {
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_BUFFER_FULL, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext);
+            uintptr_t rdContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext;
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_BUFFER_FULL, rdContext);
 
             /* Read the indices again in case application has freed up space in RX ring buffer */
             tempInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex + 1U;
@@ -504,7 +505,9 @@ static inline bool ${SERCOM_INSTANCE_NAME}_USART_RxPushByte(uint16_t rdByte)
         if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
         {
             /* 8-bit */
-            ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex] = (uint8_t)rdByte;
+            rdInIdx = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex;
+
+            ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[rdInIdx] = (uint8_t)rdByte;
         }
         else
         {
@@ -537,18 +540,20 @@ static void ${SERCOM_INSTANCE_NAME}_USART_ReadNotificationSend(void)
 
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback != NULL)
         {
+            uintptr_t rdContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext;
+
             if (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.isRdNotifyPersistently == true)
             {
                 if (nUnreadBytesAvailable >= ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdThreshold)
                 {
-                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_THRESHOLD_REACHED, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext);
+                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_THRESHOLD_REACHED, rdContext);
                 }
             }
             else
             {
                 if (nUnreadBytesAvailable == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdThreshold)
                 {
-                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_THRESHOLD_REACHED, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext);
+                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_THRESHOLD_REACHED, rdContext);
                 }
             }
         }
@@ -772,18 +777,20 @@ static void ${SERCOM_INSTANCE_NAME}_USART_SendWriteNotification(void)
 
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrCallback != NULL)
         {
+            uintptr_t wrContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrContext;
+
             if (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.isWrNotifyPersistently == true)
             {
                 if (nFreeWrBufferCount >= ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrThreshold)
                 {
-                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrCallback(SERCOM_USART_EVENT_WRITE_THRESHOLD_REACHED, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrContext);
+                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrCallback(SERCOM_USART_EVENT_WRITE_THRESHOLD_REACHED, wrContext);
                 }
             }
             else
             {
                 if (nFreeWrBufferCount == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrThreshold)
                 {
-                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrCallback(SERCOM_USART_EVENT_WRITE_THRESHOLD_REACHED, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrContext);
+                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrCallback(SERCOM_USART_EVENT_WRITE_THRESHOLD_REACHED, wrContext);
                 }
             }
         }
@@ -938,7 +945,9 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler(
 
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback != NULL)
         {
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_ERROR, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext);
+            uintptr_t rdContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext;
+
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_ERROR, rdContext);
         }
     }
 }
@@ -961,7 +970,9 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( 
 
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback != NULL)
         {
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_ERROR, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext);
+            uintptr_t rdContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext;
+
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_ERROR, rdContext);
         }
     }
     else
@@ -973,7 +984,9 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( 
             /* Clear the receive break interrupt flag */
             ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG = (uint8_t)SERCOM_USART_INT_INTFLAG_RXBRK_Msk;
 
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_BREAK_SIGNAL_DETECTED, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext);
+            uintptr_t rdContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext;
+
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_BREAK_SIGNAL_DETECTED, rdContext);
         }
         if ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) == SERCOM_USART_INT_INTFLAG_RXC_Msk)
         {
@@ -1011,7 +1024,9 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( 
         /* Clear the receive break interrupt flag */
         ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG = (uint8_t)SERCOM_USART_INT_INTFLAG_RXBRK_Msk;
 
-        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_BREAK_SIGNAL_DETECTED, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext);
+        uintptr_t rdContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext;
+
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_BREAK_SIGNAL_DETECTED, rdContext);
     }
     while ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) == SERCOM_USART_INT_INTFLAG_RXC_Msk)
     {

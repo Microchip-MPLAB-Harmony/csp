@@ -505,9 +505,11 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize = size;
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus = true;
 
+            size_t txSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize;
+
             /* Initiate the transfer by sending first byte */
             while (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk) &&
-                    (processedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize))
+                    (processedSize < txSize))
             {
                 if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
                 {
@@ -538,7 +540,10 @@ bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd)
     /* Command strobe bits cannot be set while transmitter is busy */
 
     <#if USART_INTERRUPT_MODE_ENABLE = true>
-    if((${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus == false) && ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_TXE_Msk)!= 0U))
+
+    bool txBusyStatus = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus;
+
+    if(((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_TXE_Msk)!= 0U) && (txBusyStatus == false))
     <#else>
     if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_TXE_Msk) != 0U)
     </#if>
@@ -813,7 +818,9 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler(
 
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
         {
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
+            uintptr_t rxContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext;
+
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(rxContext);
         }
     }
 }
@@ -832,6 +839,8 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( 
     {
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
         {
+            uintptr_t rxContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext;
+
             <#if USART_INTENSET_ERROR = false>
             if (errorStatus != USART_ERROR_NONE)
             {
@@ -848,28 +857,30 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( 
 
                 if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
                 {
-                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
+                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(rxContext);
                 }
             }
             else
             {
                 temp = (uint16_t)${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+                size_t rxProcessedSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize;
 
                 if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
                 {
                     /* 8-bit mode */
-                    ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize] = (uint8_t)(temp);
+                    ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[rxProcessedSize] = (uint8_t)(temp);
                 }
                 else
                 {
                     /* 9-bit mode */
-                    ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize] = temp;
+                    ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[rxProcessedSize] = temp;
                 }
 
                 /* Increment processed size */
-                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize++;
+                rxProcessedSize++;
+                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = rxProcessedSize;
 
-                if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
+                if(rxProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
                 {
                     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;
                     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0U;
@@ -877,28 +888,30 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( 
 
                     if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
                     {
-                        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
+                        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(rxContext);
                     }
                 }
             }
             <#else>
             temp = (uint16_t)${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+            size_t rxProcessedSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize;
 
             if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
             {
                 /* 8-bit mode */
-                ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize] = (uint8_t) (temp);
+                ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[rxProcessedSize] = (uint8_t) (temp);
             }
             else
             {
                 /* 9-bit mode */
-                ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize] = temp;
+                ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[rxProcessedSize] = temp;
             }
 
             /* Increment processed size */
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize++;
+            rxProcessedSize++;
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = rxProcessedSize;
 
-            if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
+            if(rxProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
             {
                 ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;
                 ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0U;
@@ -906,7 +919,7 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( 
 
                 if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
                 {
-                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
+                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(rxContext);
                 }
             }
             </#if>
@@ -923,7 +936,9 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( 
     bool  dataAvailable;
     if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus == true)
     {
-        dataAvailable = (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize);
+        size_t txProcessedSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize;
+
+        dataAvailable = (txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize);
         dataRegisterEmpty = ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk);
 
         while(dataRegisterEmpty && dataAvailable)
@@ -931,21 +946,23 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( 
             if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
             {
                 /* 8-bit mode */
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize];
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer)[txProcessedSize];
             }
             else
             {
                 /* 9-bit mode */
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize];
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer)[txProcessedSize];
             }
             /* Increment processed size */
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize++;
+            txProcessedSize++;
 
-            dataAvailable = (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize);
+            dataAvailable = (txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize);
             dataRegisterEmpty = ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk);
         }
 
-        if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize >= ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize)
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize = txProcessedSize;
+
+        if(txProcessedSize >= ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize)
         {
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus = false;
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize = 0U;
@@ -953,7 +970,8 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( 
 
             if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txCallback != NULL)
             {
-                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txContext);
+                uintptr_t txContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txContext;
+                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txCallback(txContext);
             }
         }
     }

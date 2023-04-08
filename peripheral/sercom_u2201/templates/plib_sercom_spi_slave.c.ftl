@@ -88,6 +88,17 @@ volatile static SPI_SLAVE_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}SPISObj;
 // *****************************************************************************
 // *****************************************************************************
 
+static void mem_copy(volatile void* pDst, volatile void* pSrc, uint32_t nBytes)
+{
+    volatile uint8_t* pSource = (volatile uint8_t*)pSrc;
+    volatile uint8_t* pDest = (volatile uint8_t*)pDst;
+
+    for (uint32_t i = 0U; i < nBytes; i++)
+    {
+        pDest[i] = pSource[i];
+    }
+}
+
 void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
 {
     /* CHSIZE - ${SPIS_CHARSIZE_BITS}
@@ -185,9 +196,9 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
     }
 
 <#if SPIS_CHARSIZE_BITS == "8_BIT">
-    (void) memcpy(pDstBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, rdSize);
+    (void) mem_copy(pDstBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, rdSize);
 <#else>
-    (void) memcpy(pDstBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, (rdSize << 1U));
+    (void) mem_copy(pDstBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, (rdSize << 1U));
 </#if>
 
     ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET = intState;
@@ -201,6 +212,7 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
     uint8_t intState = ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET;
     size_t wrSize = size;
     bool writeReady = false;
+    uint32_t wrOutIndex = 0;
     ${TXRX_DATA_T}* pSrcBuffer = (${TXRX_DATA_T}*)pWrBuffer;
 
     ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENCLR = intState;
@@ -211,23 +223,24 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
     }
 
 <#if SPIS_CHARSIZE_BITS == "8_BIT">
-   (void) memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pSrcBuffer, wrSize);
+   (void) mem_copy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pSrcBuffer, wrSize);
 <#else>
-   (void) memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pSrcBuffer, (wrSize << 1U));
+   (void) mem_copy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pSrcBuffer, (wrSize << 1U));
 </#if>
 
     ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes = wrSize;
-    ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex = 0U;
 
-    writeReady = (${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex < ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes);
+    writeReady = (wrOutIndex < ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes);
     writeReady = ((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_DRE_Msk) == SERCOM_SPIS_INTFLAG_DRE_Msk) && writeReady;
     while (writeReady)
     {
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA = ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex];
-		${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex++;
-        writeReady = (${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex < ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes);
+        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA = ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[wrOutIndex];
+        wrOutIndex++;
+        writeReady = (wrOutIndex < ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes);
         writeReady = ((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_DRE_Msk) == SERCOM_SPIS_INTFLAG_DRE_Msk) && writeReady;
     }
+
+    ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex = wrOutIndex;
 
     /* Restore interrupt enable state and also enable DRE interrupt to start pre-loading of DATA register */
     ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET = (intState | (uint8_t)SERCOM_SPIS_INTENSET_DRE_Msk);
@@ -344,17 +357,21 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
 
         if (${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex < ${SERCOM_INSTANCE_NAME}_SPI_READ_BUFFER_SIZE)
         {
-            ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer[${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex] = txRxData;
-			${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex++;
+            uint32_t rdInIndex = ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex;
+
+            ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer[rdInIndex] = txRxData;
+            ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex++;
         }
     }
 
     if((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_DRE_Msk) == SERCOM_SPIS_INTFLAG_DRE_Msk)
     {
-        if (${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex < ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes)
+        uint32_t wrOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex;
+
+        if (wrOutIndex < ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes)
         {
-            txRxData = ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex];
-			${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex++;
+            txRxData = ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[wrOutIndex];
+            wrOutIndex++;
 
             /* Before writing to DATA register (which clears TXC flag), check if TXC flag is set */
             if((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_TXC_Msk) == SERCOM_SPIS_INTFLAG_TXC_Msk)
@@ -368,6 +385,8 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
             /* Disable DRE interrupt. The last byte sent by the master will be shifted out automatically */
             ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENCLR = (uint8_t)SERCOM_SPIS_INTENCLR_DRE_Msk;
         }
+
+        ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex = wrOutIndex;
     }
 
     if((intFlag & SERCOM_SPIS_INTFLAG_TXC_Msk) == SERCOM_SPIS_INTFLAG_TXC_Msk)
@@ -382,7 +401,9 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
 
         if(${SERCOM_INSTANCE_NAME?lower_case}SPISObj.callback != NULL)
         {
-            ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.callback(${SERCOM_INSTANCE_NAME?lower_case}SPISObj.context);
+            uintptr_t context = ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.context;
+
+            ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.callback(context);
         }
         <#if !(SPIS_SSDE??) >
         ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex = 0U;

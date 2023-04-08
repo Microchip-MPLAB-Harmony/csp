@@ -216,10 +216,10 @@ typedef struct
     size_t                      readCount;
 
     /* State */
-    volatile SERCOM_I2C_STATE   state;
+    SERCOM_I2C_STATE            state;
 
     /* Transfer status */
-    volatile SERCOM_I2C_ERROR   error;
+    SERCOM_I2C_ERROR            error;
 
     /* Transfer Event Callback */
     SERCOM_I2C_CALLBACK         callback;

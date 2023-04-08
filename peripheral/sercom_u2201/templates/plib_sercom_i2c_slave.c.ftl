@@ -303,6 +303,8 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 
     if((intFlags & ${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_INTENSET) != 0U)
     {
+        uintptr_t context = ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context;
+
         <#if I2CS_INTENSET_ERROR = true>
         if ((intFlags & SERCOM_I2CS_INTFLAG_ERROR_Msk) != 0U)
         {
@@ -310,8 +312,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 
             if (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback != NULL)
             {
-                bool status = ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(event, ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context);
-                (void)status;
+                (void)${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(event, context);
             }
         }
         </#if>
@@ -348,8 +349,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 
         if (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback != NULL)
         {
-            bool status = ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(event, ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context);
-            (void)status;
+            (void)${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(event, context);
         }
     }
     ${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_INTFLAG = (uint8_t)intFlags;
@@ -361,6 +361,8 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 
     if((intFlags & ${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_INTENSET) != 0U)
     {
+        uintptr_t context = ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context;
+
         if ((intFlags & SERCOM_I2CS_INTFLAG_AMATCH_Msk) != 0U)
         {
             ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.isBusy = true;
@@ -371,7 +373,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 
             if (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback != NULL)
             {
-                if (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context) == true)
+                if (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, context) == true)
                 {
                     ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
                 }
@@ -387,7 +389,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
             {
                 if (${SERCOM_INSTANCE_NAME}_I2C_TransferDirGet() == SERCOM_I2C_SLAVE_TRANSFER_DIR_WRITE)
                 {
-                    if (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_RX_READY, ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context) == true)
+                    if (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_RX_READY, context) == true)
                     {
                         ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
                     }
@@ -400,8 +402,8 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                 {
                     if ((${SERCOM_INSTANCE_NAME}_I2C_LastByteAckStatusGet() == SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_ACK) || (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.isFirstRxAfterAddressPending == true))
                     {
-                        bool status = ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY, ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context);
-                        (void)status;
+                        (void)${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY, context);
+                        
                         ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.isFirstRxAfterAddressPending = false;
                         ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_RECEIVE_ACK_NAK);
                     }
@@ -418,8 +420,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 
             if (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback != NULL)
             {
-                bool status = ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_STOP_BIT_RECEIVED, ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context);
-                (void)status;
+                (void)${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_STOP_BIT_RECEIVED, context);
             }
 
             ${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_INTFLAG = (uint8_t)SERCOM_I2CS_INTFLAG_PREC_Msk;
@@ -429,8 +430,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
         {
             if (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback != NULL)
             {
-                bool status = ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_ERROR, ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context);
-                (void)status;
+                (void)${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_ERROR, context);
             }
 
             ${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_INTFLAG = (uint8_t)SERCOM_I2CS_INTFLAG_ERROR_Msk;
