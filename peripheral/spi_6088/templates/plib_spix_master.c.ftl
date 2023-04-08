@@ -69,9 +69,9 @@ volatile static uint8_t dummyDataBuffer[512];
 
 static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
 {
-	uint32_t *xpReceiveData = (uint32_t *)pReceiveData;
+    uint32_t *xpReceiveData = (uint32_t *)pReceiveData;
     uint32_t *xpTransmitData = (uint32_t *)pTransmitData;
-	
+
     /* Always set up the rx channel first */
     ${SPI_INSTANCE_NAME}_REGS->SPI_RPR = (uint32_t)xpReceiveData;
     ${SPI_INSTANCE_NAME}_REGS->SPI_RCR = (uint32_t) size;
@@ -210,9 +210,9 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
 
         /* Make sure TDR is empty */
         while((bool)((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TDRE_Msk) >> SPI_SR_TDRE_Pos) == false)
-		{
-				/* Do Nothing */
-		}
+        {
+                /* Do Nothing */
+        }
 
         while ((txCount != txSize) || (dummySize != 0U))
         {
@@ -221,12 +221,12 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
                 if(dataBits == SPI_CSR_BITS_8_BIT)
                 {
                     ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = ((uint8_t*)pTransmitData)[txCount];
-					txCount++;
+                    txCount++;
                 }
                 else
                 {
                     ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = ((uint16_t*)pTransmitData)[txCount];
-					txCount++;
+                    txCount++;
                 }
             }
             else if (dummySize > 0U)
@@ -241,19 +241,19 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
                 }
                 dummySize--;
             }
-			else
-			{
-				/* Do Nothing */
-				
-			}
+            else
+            {
+                /* Do Nothing */
+
+            }
 
             if (rxSize == 0U)
             {
                 /* For transmit only request, wait for TDR to become empty */
                 while((bool)((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TDRE_Msk) >> SPI_SR_TDRE_Pos) == false)
-				{
-				       /* Do Nothing */
-		        }
+                {
+                       /* Do Nothing */
+                }
             }
             else
             {
@@ -269,12 +269,12 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
                     if(dataBits == SPI_CSR_BITS_8_BIT)
                     {
                         ((uint8_t*)pReceiveData)[rxCount] = (uint8_t)receivedData;
-						rxCount++;
+                        rxCount++;
                     }
                     else
                     {
                         ((uint16_t*)pReceiveData)[rxCount] = (uint16_t)receivedData;
-						rxCount++;
+                        rxCount++;
                     }
                 }
             }
@@ -282,9 +282,9 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
 
         /* Make sure no data is pending in the shift register */
         while ((bool)((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) >> SPI_SR_TXEMPTY_Pos) == false)
-		{
-				/* Do Nothing */
-		}
+        {
+                /* Do Nothing */
+        }
 
         /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
         ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
@@ -397,9 +397,11 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
         dummyData = (${SPI_INSTANCE_NAME}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
         (void)dummyData;
 
-        if (${SPI_INSTANCE_NAME?lower_case}Obj.rxSize > ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+        size_t txSz = ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
+
+        if (${SPI_INSTANCE_NAME?lower_case}Obj.rxSize > txSz)
         {
-            ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize - ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
+            ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize - txSz;
         }
 
         /* Start the first write here itself, rest will happen in ISR context */
@@ -409,7 +411,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
         if((${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_INSTANCE_NAME}_ChipSelectGet()] & SPI_CSR_BITS_Msk) == SPI_CSR_BITS_8_BIT)
 </#if>
         {
-            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < txSz)
             {
                 ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = *((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer);
                 ${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
@@ -419,10 +421,10 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
                 ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = (uint8_t)(0x${SPI_DUMMY_DATA});
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
             }
-			else
-			{
-				/* Do Nothing */
-			}
+            else
+            {
+                /* Do Nothing */
+            }
         }
         else
         {
@@ -430,7 +432,9 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
             ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 1;
             ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize >>= 1;
 
-            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            txSz = ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
+
+            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < txSz)
             {
                 ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = *((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer);
                 ${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
@@ -440,11 +444,11 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
                 ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = (uint16_t)(0x${SPI_DUMMY_DATA}${SPI_DUMMY_DATA});
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
             }
-			else
-			{
-				/* Do Nothing */
-				
-			}
+            else
+            {
+                /* Do Nothing */
+
+            }
         }
 
         if (rxSize > 0U)
@@ -475,11 +479,14 @@ static uint8_t ${SPI_INSTANCE_NAME}_FIFO_Fill(void)
 
     while ((nDataCopiedToFIFO < 16U) && ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TDRE_Msk) != 0U))
     {
+        size_t txCount = ${SPI_INSTANCE_NAME?lower_case}Obj.txCount;
+
         if(dataBits == SPI_CSR_BITS_8_BIT)
         {
-            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
-                SPI_TDR_8BIT_REG =  ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                SPI_TDR_8BIT_REG =  ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                txCount++;
             }
             else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
             {
@@ -493,9 +500,10 @@ static uint8_t ${SPI_INSTANCE_NAME}_FIFO_Fill(void)
         }
         else
         {
-            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
-                SPI_TDR_9BIT_REG =  ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                SPI_TDR_9BIT_REG =  ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                txCount++;
             }
             else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
             {
@@ -507,6 +515,8 @@ static uint8_t ${SPI_INSTANCE_NAME}_FIFO_Fill(void)
                 break;
             }
         }
+
+        ${SPI_INSTANCE_NAME?lower_case}Obj.txCount = txCount;
 
         nDataCopiedToFIFO++;
     }
@@ -550,9 +560,11 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 
         ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = true;
 
-        if (${SPI_INSTANCE_NAME?lower_case}Obj.rxSize > ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+        size_t txSz = ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
+
+        if (${SPI_INSTANCE_NAME?lower_case}Obj.rxSize > txSz)
         {
-            ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize - ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
+            ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize - txSz;
         }
 
 <#if SPI_NUM_CSR == 1>
@@ -564,12 +576,15 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             ${SPI_INSTANCE_NAME?lower_case}Obj.txSize >>= 1;
             ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 1;
             ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize >>= 1;
+
+            txSz = ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
         }
 
         /* Clear TX and RX FIFO */
         ${SPI_INSTANCE_NAME}_REGS->SPI_CR = (SPI_CR_RXFCLR_Msk | SPI_CR_TXFCLR_Msk);
 
-        nTxPending = (${SPI_INSTANCE_NAME?lower_case}Obj.txSize - ${SPI_INSTANCE_NAME?lower_case}Obj.txCount) + ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize;
+        nTxPending = (txSz - ${SPI_INSTANCE_NAME?lower_case}Obj.txCount);
+        nTxPending += ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize;
 
         if (nTxPending < 16U)
         {
@@ -630,10 +645,10 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup( SPI_TRANSFER_SETUP * setup, uint32_t sp
     {
         scbr = 255U;
     }
-	else
-	{
-		/* Do Nothing */
-	}
+    else
+    {
+        /* Do Nothing */
+    }
 
 <#if SPI_NUM_CSR == 1>
     ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] = (${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & ~(SPI_CSR_CPOL_Msk | SPI_CSR_NCPHA_Msk | SPI_CSR_BITS_Msk | SPI_CSR_SCBR_Msk)) |((uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr));
@@ -658,7 +673,9 @@ void ${SPI_INSTANCE_NAME}_CallbackRegister( SPI_CALLBACK callback, uintptr_t con
 
 bool ${SPI_INSTANCE_NAME}_IsBusy( void )
 {
-    return ((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) || ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0U));
+    bool transferIsBusy = ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy;
+
+    return (((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0U) || (transferIsBusy));
 }
 <#if SPI_FIFO_ENABLE == false>
 void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler( void )
@@ -724,27 +741,33 @@ void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler( void )
 
         if( ${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL )
         {
-            ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+            uintptr_t context = ${SPI_INSTANCE_NAME?lower_case}Obj.context;
+
+            ${SPI_INSTANCE_NAME?lower_case}Obj.callback(context);
         }
     }
     <#else>
+    size_t rxCount = ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount;
+
     if ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_RDRF_Msk ) == SPI_SR_RDRF_Msk)
     {
         receivedData = (${SPI_INSTANCE_NAME}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
 
-        if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
+        if (rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
             if(dataBits == SPI_CSR_BITS_8_BIT)
             {
-                ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount] =(uint8_t)receivedData;
-                ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
-		    }
+                ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] =(uint8_t)receivedData;
+                rxCount++;
+            }
             else
             {
-                ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount] = (uint16_t)receivedData;
-                 ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
-			}
+                ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = (uint16_t)receivedData;
+                 rxCount++;
+            }
         }
+
+        ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount = rxCount;
     }
 
     /* If there are more words to be transmitted, then transmit them here and keep track of the count */
@@ -754,41 +777,45 @@ void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler( void )
          * one byte is pending to be transmitted */
         ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_TDRE_Msk;
 
+        size_t txCount = ${SPI_INSTANCE_NAME?lower_case}Obj.txCount;
+
         if(dataBits == SPI_CSR_BITS_8_BIT)
         {
-            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
-                ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount];
-				${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
+                ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                txCount++;
             }
             else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
             {
                 ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = (uint8_t)(0x${SPI_DUMMY_DATA});
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
             }
-			else
-			{
-				/* Do Nothing */
-			}
+            else
+            {
+                /* Do Nothing */
+            }
         }
         else
         {
-            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
-                ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount];
-				${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
+                ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                txCount++;
             }
             else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
             {
                 ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = (uint16_t)(0x${SPI_DUMMY_DATA}${SPI_DUMMY_DATA});
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
             }
-			else
-			{
-				/* Do Nothing */
-			}
+            else
+            {
+                /* Do Nothing */
+            }
         }
-        if ((${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize) && (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize == 0U))
+        size_t txSize = ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
+
+        if ((${SPI_INSTANCE_NAME?lower_case}Obj.dummySize == 0U) && (txCount == txSize))
         {
             /* At higher baud rates, the data in the shift register can be
              * shifted out and TXEMPTY flag can get set resulting in a
@@ -802,7 +829,7 @@ void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler( void )
             isLastByteTransferInProgress = true;
 
         }
-        else if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
+        else if (rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
             /* Enable TDRE interrupt as all the requested bytes are received
              * and can now make use of the internal transmit shift register.
@@ -810,16 +837,18 @@ void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler( void )
             ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_RDRF_Msk;
             ${SPI_INSTANCE_NAME}_REGS->SPI_IER = SPI_IDR_TDRE_Msk;
         }
-		else
-		{
-			/* Do Nothing */
-		}
+        else
+        {
+            /* Do Nothing */
+        }
+
+        ${SPI_INSTANCE_NAME?lower_case}Obj.txCount = txCount;
     }
 
     /* See if Exchange is complete */
     if ((isLastByteTransferInProgress == true) && ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == SPI_SR_TXEMPTY_Msk))
     {
-        if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
+        if (rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
             /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
             ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
@@ -833,7 +862,9 @@ void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler( void )
 
             if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
             {
-                ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+                uintptr_t context = ${SPI_INSTANCE_NAME?lower_case}Obj.context;
+
+                ${SPI_INSTANCE_NAME?lower_case}Obj.callback(context);
             }
         }
     }
@@ -858,24 +889,32 @@ void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler(void)
     uint32_t nTxPending = 0U;
     uint8_t rxThreshold = 0U;
 
-    while (((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_RDRF_Msk ) != 0U) && (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize))
+    size_t rxSize = ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize;
+    size_t rxCount = ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount;
+
+    while (((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_RDRF_Msk ) != 0U) && (rxCount < rxSize))
     {
         if(dataBits == SPI_CSR_BITS_8_BIT)
         {
-            ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount] = SPI_RDR_8BIT_REG;
-            ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
-		}
+            ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = SPI_RDR_8BIT_REG;
+            rxCount++;
+        }
         else
         {
-            ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount] = SPI_RDR_9BIT_REG;
-            ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
-		}
+            ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = SPI_RDR_9BIT_REG;
+            rxCount++;
+        }
     }
+
+    ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount = rxCount;
 
     /* Clear RX FIFO. This is done for the case where RX size is less than TX size and hence data is not read and copied into the application rx buffer. */
     ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_RXFCLR_Msk;
 
-    nTxPending = (${SPI_INSTANCE_NAME?lower_case}Obj.txSize - ${SPI_INSTANCE_NAME?lower_case}Obj.txCount) + ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize;
+    size_t txCount = ${SPI_INSTANCE_NAME?lower_case}Obj.txCount;
+
+    nTxPending = (${SPI_INSTANCE_NAME?lower_case}Obj.txSize - txCount);
+    nTxPending += ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize;
 
     if (nTxPending > 0U)
     {
@@ -906,7 +945,9 @@ void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler(void)
 
         if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
         {
-            ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+            uintptr_t context = ${SPI_INSTANCE_NAME?lower_case}Obj.context;
+
+            ${SPI_INSTANCE_NAME?lower_case}Obj.callback(context);
         }
     }
 }
