@@ -373,18 +373,20 @@ static void ${FLEXCOM_INSTANCE_NAME}_USART_SendWriteNotification(void)
 
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrCallback != NULL)
         {
+            uintptr_t wrContext = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrContext;
+
             if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isWrNotifyPersistently == true)
             {
                 if (nFreeWrBufferCount >= ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrThreshold)
                 {
-                    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrCallback(FLEXCOM_USART_EVENT_WRITE_THRESHOLD_REACHED, ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrContext);
+                    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrCallback(FLEXCOM_USART_EVENT_WRITE_THRESHOLD_REACHED, wrContext);
                 }
             }
             else
             {
                 if (nFreeWrBufferCount == ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrThreshold)
                 {
-                    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrCallback(FLEXCOM_USART_EVENT_WRITE_THRESHOLD_REACHED, ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrContext);
+                    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrCallback(FLEXCOM_USART_EVENT_WRITE_THRESHOLD_REACHED, wrContext);
                 }
             }
         }
@@ -532,7 +534,9 @@ static inline bool ${FLEXCOM_INSTANCE_NAME}_USART_RxPushByte(uint16_t rdByte)
         /* Queue is full - Report it to the application. Application gets a chance to free up space by reading data out from the RX ring buffer */
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback != NULL)
         {
-            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback(FLEXCOM_USART_EVENT_READ_BUFFER_FULL, ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdContext);
+            uintptr_t rdContext = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdContext;
+
+            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback(FLEXCOM_USART_EVENT_READ_BUFFER_FULL, rdContext);
 
             /* Read the indices again in case application has freed up space in RX ring buffer */
             tempInIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex + 1U;
@@ -547,15 +551,18 @@ static inline bool ${FLEXCOM_INSTANCE_NAME}_USART_RxPushByte(uint16_t rdByte)
     /* Attempt to push the data into the ring buffer */
     if (tempInIndex != ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex)
     {
+        uint32_t rdInIdx;
+
         if ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk) != 0U)
         {
-            uint32_t rdInIdx = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex << 1U;
+            rdInIdx = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex << 1U;
             ${FLEXCOM_INSTANCE_NAME}_USART_ReadBuffer[rdInIdx] = (uint8_t)rdByte;
             ${FLEXCOM_INSTANCE_NAME}_USART_ReadBuffer[rdInIdx + 1U] = (uint8_t)(rdByte >> 8U);
         }
         else
         {
-            ${FLEXCOM_INSTANCE_NAME}_USART_ReadBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex] = (uint8_t)rdByte;
+            rdInIdx = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex;
+            ${FLEXCOM_INSTANCE_NAME}_USART_ReadBuffer[rdInIdx] = (uint8_t)rdByte;
         }
 
         ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex = tempInIndex;
@@ -580,18 +587,20 @@ static void ${FLEXCOM_INSTANCE_NAME}_USART_SendReadNotification(void)
 
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback != NULL)
         {
+            uintptr_t rdContext = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdContext;
+
             if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isRdNotifyPersistently == true)
             {
                 if (nUnreadBytesAvailable >= ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdThreshold)
                 {
-                    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback(FLEXCOM_USART_EVENT_READ_THRESHOLD_REACHED, ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdContext);
+                    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback(FLEXCOM_USART_EVENT_READ_THRESHOLD_REACHED, rdContext);
                 }
             }
             else
             {
                 if (nUnreadBytesAvailable == ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdThreshold)
                 {
-                    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback(FLEXCOM_USART_EVENT_READ_THRESHOLD_REACHED, ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdContext);
+                    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback(FLEXCOM_USART_EVENT_READ_THRESHOLD_REACHED, rdContext);
                 }
             }
         }
@@ -605,14 +614,17 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_Read(uint8_t* pRdBuffer, const size_t size
     uint32_t rdInIndex = 0;
 
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
-    if ((${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isInterruptActive == false) && ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) != 0U))
+    if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isInterruptActive == false)
     {
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_RXRDY_Msk;
-        while ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) != 0U)
+        if ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) != 0U)
         {
-            /* Wait for RXRDY flag */
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_RXRDY_Msk;
+            while ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) != 0U)
+            {
+                /* Wait for RXRDY flag */
+            }
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_RXRDY_Msk;
         }
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_RXRDY_Msk;
     }
 </#if>
 
@@ -663,16 +675,19 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet(void)
     uint32_t rdInIndex;
 
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
-    if ((${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isInterruptActive == false) && ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) != 0U))
+    if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isInterruptActive == false)
     {
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_RXRDY_Msk;
-
-        while ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) != 0U)
+        if ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) != 0U)
         {
-            /* Wait for RXRDY flag */
-        }
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_RXRDY_Msk;
 
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_RXRDY_Msk;
+            while ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) != 0U)
+            {
+                /* Wait for RXRDY flag */
+            }
+
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_RXRDY_Msk;
+        }
     }
 </#if>
 
@@ -864,7 +879,9 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
         /* USART errors are normally associated with the receiver, hence calling receiver context */
         if( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback != NULL )
         {
-            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback(FLEXCOM_USART_EVENT_READ_ERROR, ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdContext);
+            uintptr_t rdContext = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdContext;
+
+            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback(FLEXCOM_USART_EVENT_READ_ERROR, rdContext);
         }
     }
 

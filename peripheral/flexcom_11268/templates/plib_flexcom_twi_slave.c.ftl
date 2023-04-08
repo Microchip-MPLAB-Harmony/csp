@@ -155,6 +155,8 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 
     if ((status & ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_IMR) != 0U)
     {
+        uintptr_t context = ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context;
+
         if((status & FLEX_TWI_SR_SVACC_Msk) != 0U)
         {
             if (${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.isAddrMatchEventNotified == false)
@@ -177,7 +179,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 
                 if (${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback != NULL)
                 {
-                    (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
+                    (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_ADDR_MATCH, context);
                 }
 
                 ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.isAddrMatchEventNotified = true;
@@ -192,7 +194,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
                     {
                         if (${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback != NULL)
                         {
-                           (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TX_READY, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
+                           (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TX_READY, context);
                         }
                         ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.isFirstTxPending = false;
                     }
@@ -210,7 +212,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
                 {
                     if (${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback != NULL)
                     {
-                       (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_RX_READY, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
+                       (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_RX_READY, context);
                     }
                 }
             }
@@ -232,7 +234,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 
                 if (${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback != NULL)
                 {
-                   (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE, ${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.context);
+                   (void)${FLEXCOM_INSTANCE_NAME?lower_case}TWIObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE, context);
                 }
 
                 ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TWI_IDR = FLEX_TWI_IDR_TXCOMP_Msk;
