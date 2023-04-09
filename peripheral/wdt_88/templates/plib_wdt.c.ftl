@@ -192,7 +192,9 @@ void __attribute__((used)) ${WDT_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler( void
 
         if(wdt.callback != NULL)
         {
-            wdt.callback(wdt.context);
+            uintptr_t context = wdt.context;
+            
+            wdt.callback(context);
         }
     }
 }
