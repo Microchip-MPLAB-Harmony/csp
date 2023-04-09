@@ -221,7 +221,9 @@ static inline bool ${USART_INSTANCE_NAME}_RxPushByte(uint16_t rdByte)
         /* Queue is full - Report it to the application. Application gets a chance to free up space by reading data out from the RX ring buffer */
         if(${USART_INSTANCE_NAME?lower_case}Obj.rdCallback != NULL)
         {
-            ${USART_INSTANCE_NAME?lower_case}Obj.rdCallback(USART_EVENT_READ_BUFFER_FULL, ${USART_INSTANCE_NAME?lower_case}Obj.rdContext);
+            uintptr_t rdContext = ${USART_INSTANCE_NAME?lower_case}Obj.rdContext;
+
+            ${USART_INSTANCE_NAME?lower_case}Obj.rdCallback(USART_EVENT_READ_BUFFER_FULL, rdContext);
 
             /* Read the indices again in case application has freed up space in RX ring buffer */
             tempInIndex = ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex + 1U;
@@ -243,7 +245,9 @@ static inline bool ${USART_INSTANCE_NAME}_RxPushByte(uint16_t rdByte)
         }
         else
         {
-            ${USART_INSTANCE_NAME}_ReadBuffer[${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex] = (uint8_t)rdByte;
+            uint32_t rdInIndex = ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+
+            ${USART_INSTANCE_NAME}_ReadBuffer[rdInIndex] = (uint8_t)rdByte;
         }
 
         ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex = tempInIndex;
@@ -268,18 +272,20 @@ static void ${USART_INSTANCE_NAME}_ReadNotificationSend(void)
 
         if(${USART_INSTANCE_NAME?lower_case}Obj.rdCallback != NULL)
         {
+            uintptr_t rdContext = ${USART_INSTANCE_NAME?lower_case}Obj.rdContext;
+
             if (${USART_INSTANCE_NAME?lower_case}Obj.isRdNotifyPersistently == true)
             {
                 if (nUnreadBytesAvailable >= ${USART_INSTANCE_NAME?lower_case}Obj.rdThreshold)
                 {
-                    ${USART_INSTANCE_NAME?lower_case}Obj.rdCallback(USART_EVENT_READ_THRESHOLD_REACHED, ${USART_INSTANCE_NAME?lower_case}Obj.rdContext);
+                    ${USART_INSTANCE_NAME?lower_case}Obj.rdCallback(USART_EVENT_READ_THRESHOLD_REACHED, rdContext);
                 }
             }
             else
             {
                 if (nUnreadBytesAvailable == ${USART_INSTANCE_NAME?lower_case}Obj.rdThreshold)
                 {
-                    ${USART_INSTANCE_NAME?lower_case}Obj.rdCallback(USART_EVENT_READ_THRESHOLD_REACHED, ${USART_INSTANCE_NAME?lower_case}Obj.rdContext);
+                    ${USART_INSTANCE_NAME?lower_case}Obj.rdCallback(USART_EVENT_READ_THRESHOLD_REACHED, rdContext);
                 }
             }
         }
@@ -475,18 +481,20 @@ static void ${USART_INSTANCE_NAME}_WriteNotificationSend(void)
 
         if(${USART_INSTANCE_NAME?lower_case}Obj.wrCallback != NULL)
         {
+            uintptr_t wrContext = ${USART_INSTANCE_NAME?lower_case}Obj.wrContext;
+
             if (${USART_INSTANCE_NAME?lower_case}Obj.isWrNotifyPersistently == true)
             {
                 if (nFreeWrBufferCount >= ${USART_INSTANCE_NAME?lower_case}Obj.wrThreshold)
                 {
-                    ${USART_INSTANCE_NAME?lower_case}Obj.wrCallback(USART_EVENT_WRITE_THRESHOLD_REACHED, ${USART_INSTANCE_NAME?lower_case}Obj.wrContext);
+                    ${USART_INSTANCE_NAME?lower_case}Obj.wrCallback(USART_EVENT_WRITE_THRESHOLD_REACHED, wrContext);
                 }
             }
             else
             {
                 if (nFreeWrBufferCount == ${USART_INSTANCE_NAME?lower_case}Obj.wrThreshold)
                 {
-                    ${USART_INSTANCE_NAME?lower_case}Obj.wrCallback(USART_EVENT_WRITE_THRESHOLD_REACHED, ${USART_INSTANCE_NAME?lower_case}Obj.wrContext);
+                    ${USART_INSTANCE_NAME?lower_case}Obj.wrCallback(USART_EVENT_WRITE_THRESHOLD_REACHED, wrContext);
                 }
             }
         }
@@ -674,7 +682,9 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
         /* USART errors are normally associated with the receiver, hence calling receiver callback */
         if( ${USART_INSTANCE_NAME?lower_case}Obj.rdCallback != NULL)
         {
-            ${USART_INSTANCE_NAME?lower_case}Obj.rdCallback(USART_EVENT_READ_ERROR, ${USART_INSTANCE_NAME?lower_case}Obj.rdContext);
+            uintptr_t rdContext = ${USART_INSTANCE_NAME?lower_case}Obj.rdContext;
+
+            ${USART_INSTANCE_NAME?lower_case}Obj.rdCallback(USART_EVENT_READ_ERROR, rdContext);
         }
     }
 

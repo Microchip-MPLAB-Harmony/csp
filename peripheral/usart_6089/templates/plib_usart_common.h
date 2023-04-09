@@ -126,19 +126,19 @@ typedef struct
 {
     void *                  txBuffer;
     size_t                  txSize;
-    volatile size_t         txProcessedSize;
+    size_t                  txProcessedSize;
     USART_CALLBACK          txCallback;
     uintptr_t               txContext;
     bool                    txBusyStatus;
 
     void *                  rxBuffer;
     size_t                  rxSize;
-    volatile size_t         rxProcessedSize;
+    size_t                  rxProcessedSize;
     USART_CALLBACK          rxCallback;
     uintptr_t               rxContext;
     bool                    rxBusyStatus;
 
-    volatile USART_ERROR    errorStatus;
+    USART_ERROR             errorStatus;
 
 } USART_OBJECT ;
 
@@ -172,9 +172,9 @@ typedef struct
 
     uintptr_t                                           wrContext;
 
-    volatile uint32_t                                   wrInIndex;
+    uint32_t                                            wrInIndex;
 
-    volatile uint32_t                                   wrOutIndex;
+    uint32_t                                            wrOutIndex;
 
     uint32_t                                            wrBufferSize;
 
@@ -188,9 +188,9 @@ typedef struct
 
     uintptr_t                                           rdContext;
 
-    volatile uint32_t                                   rdInIndex;
+    uint32_t                                            rdInIndex;
 
-    volatile uint32_t                                   rdOutIndex;
+    uint32_t                                            rdOutIndex;
 
     uint32_t                                            rdBufferSize;
 
@@ -200,7 +200,7 @@ typedef struct
 
     bool                                                isRdNotifyPersistently;
 
-    volatile USART_ERROR                                errorStatus;
+    USART_ERROR                                         errorStatus;
 
 } USART_RING_BUFFER_OBJECT;
 

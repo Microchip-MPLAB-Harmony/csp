@@ -242,58 +242,61 @@ bool ${USART_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, v
     uint32_t size = 0;
 
     /* Verify the request */
-    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == false))
+    if (${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == false)
     {
-        isRequestAccepted = true;
-
-        ${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = true;
-
-        ${USART_INSTANCE_NAME?lower_case}SPIObj.txBuffer = pTransmitData;
-        ${USART_INSTANCE_NAME?lower_case}SPIObj.rxBuffer = pReceiveData;
-        ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount = txSize;
-        ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount = rxSize;
-
-        if ((txSize > 0U) && (rxSize > 0U))
+        if(((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL)))
         {
-            /* Find the lower value among txSize and rxSize */
-            (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
+            isRequestAccepted = true;
 
-            /* Calculate the remaining tx/rx bytes and total bytes transferred */
-            ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount -= size;
-            ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount -= size;
-            ${USART_INSTANCE_NAME?lower_case}SPIObj.nBytesTransferred = size;
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = true;
 
-            ${USART_INSTANCE_NAME}_SPI_SetupDMA(pTransmitData, pReceiveData, size);
-        }
-        else
-        {
-            if (rxSize > 0)
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.txBuffer = pTransmitData;
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.rxBuffer = pReceiveData;
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount = txSize;
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount = rxSize;
+
+            if ((txSize > 0U) && (rxSize > 0U))
             {
-                /* txSize is 0. Need to use the dummy data buffer for transmission.
-                 * Find out the max data that can be received, given the limited size of the dummy data buffer.
-                 */
-                (rxSize > sizeof(${USART_INSTANCE_NAME}_SPI_DummyDataBuffer)) ?
-                    (size = sizeof(${USART_INSTANCE_NAME}_SPI_DummyDataBuffer)): (size = rxSize);
+                /* Find the lower value among txSize and rxSize */
+                (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
 
-                /* Calculate the remaining rx bytes and total bytes transferred */
+                /* Calculate the remaining tx/rx bytes and total bytes transferred */
                 ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount -= size;
-                ${USART_INSTANCE_NAME?lower_case}SPIObj.nBytesTransferred = size;
-
-                ${USART_INSTANCE_NAME}_SPI_SetupDMA(${USART_INSTANCE_NAME}_SPI_DummyDataBuffer, pReceiveData, size);
-            }
-            else
-            {
-                /* rxSize is 0. Need to use the dummy data buffer for reception.
-                 * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
-                 */
-                (txSize > sizeof(${USART_INSTANCE_NAME}_SPI_DummyDataBuffer)) ?
-                    (size = sizeof(${USART_INSTANCE_NAME}_SPI_DummyDataBuffer)): (size = txSize);
-
-                /* Calculate the remaining tx bytes and total bytes transferred */
                 ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount -= size;
                 ${USART_INSTANCE_NAME?lower_case}SPIObj.nBytesTransferred = size;
 
-                ${USART_INSTANCE_NAME}_SPI_SetupDMA(pTransmitData, ${USART_INSTANCE_NAME}_SPI_DummyDataBuffer, size);
+                ${USART_INSTANCE_NAME}_SPI_SetupDMA(pTransmitData, pReceiveData, size);
+            }
+            else
+            {
+                if (rxSize > 0)
+                {
+                    /* txSize is 0. Need to use the dummy data buffer for transmission.
+                     * Find out the max data that can be received, given the limited size of the dummy data buffer.
+                     */
+                    (rxSize > sizeof(${USART_INSTANCE_NAME}_SPI_DummyDataBuffer)) ?
+                        (size = sizeof(${USART_INSTANCE_NAME}_SPI_DummyDataBuffer)): (size = rxSize);
+
+                    /* Calculate the remaining rx bytes and total bytes transferred */
+                    ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount -= size;
+                    ${USART_INSTANCE_NAME?lower_case}SPIObj.nBytesTransferred = size;
+
+                    ${USART_INSTANCE_NAME}_SPI_SetupDMA(${USART_INSTANCE_NAME}_SPI_DummyDataBuffer, pReceiveData, size);
+                }
+                else
+                {
+                    /* rxSize is 0. Need to use the dummy data buffer for reception.
+                     * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+                     */
+                    (txSize > sizeof(${USART_INSTANCE_NAME}_SPI_DummyDataBuffer)) ?
+                        (size = sizeof(${USART_INSTANCE_NAME}_SPI_DummyDataBuffer)): (size = txSize);
+
+                    /* Calculate the remaining tx bytes and total bytes transferred */
+                    ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount -= size;
+                    ${USART_INSTANCE_NAME?lower_case}SPIObj.nBytesTransferred = size;
+
+                    ${USART_INSTANCE_NAME}_SPI_SetupDMA(pTransmitData, ${USART_INSTANCE_NAME}_SPI_DummyDataBuffer, size);
+                }
             }
         }
     }
@@ -303,84 +306,89 @@ bool ${USART_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, v
     bool isRequestAccepted = false;
     uint32_t dummyData;
 
-    /* Verify the request */
-    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == false))
+    if (${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == false)
     {
-        isRequestAccepted = true;
-
-        ${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = true;
-        ${USART_INSTANCE_NAME?lower_case}SPIObj.txBuffer = pTransmitData;
-        ${USART_INSTANCE_NAME?lower_case}SPIObj.rxBuffer = pReceiveData;
-        ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount = 0;
-        ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount = 0;
-        ${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize = 0;
-
-        if (pTransmitData != NULL)
+        /* Verify the request */
+        if(((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL)))
         {
-            ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize = txSize;
-        }
-        else
-        {
-            ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize = 0;
-        }
+            isRequestAccepted = true;
 
-        if (pReceiveData != NULL)
-        {
-            ${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize = rxSize;
-        }
-        else
-        {
-            ${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize = 0;
-        }
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = true;
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.txBuffer = pTransmitData;
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.rxBuffer = pReceiveData;
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount = 0;
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount = 0;
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize = 0;
 
-        /* Reset over-run error if any */
-        ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_SPI_RSTSTA_Msk;
-
-        /* Flush out any unread data in SPI read buffer */
-        if ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_RXRDY_Msk) != 0U)
-        {
-            dummyData = ${USART_INSTANCE_NAME}_REGS->US_RHR;
-            (void)dummyData;
-        }
-
-        if (${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize > ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize)
-        {
-            ${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize = ${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize - ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize;
-        }
-
-        /* Start the first write here itself, rest will happen in ISR context */
-        if ((${USART_INSTANCE_NAME}_REGS->US_MR & US_MR_SPI_CHRL_Msk) == US_MR_SPI_CHRL_8_BIT)
-        {
-            <#if USART_SPI_CHIP_SELECT != "GPIO">
-            /* Force Chip Select */
-            ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_SPI_FCS_Msk;
-            </#if>
-
-            if (${USART_INSTANCE_NAME?lower_case}SPIObj.txCount < ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize)
+            if (pTransmitData != NULL)
             {
-                ${USART_INSTANCE_NAME}_REGS->US_THR = *((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.txBuffer);
-                ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount++;
-            }
-            else if (${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0U)
-            {
-                ${USART_INSTANCE_NAME}_REGS->US_THR = (uint8_t)(0x${USART_SPI_DUMMY_DATA});
-                ${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize--;
+                ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize = txSize;
             }
             else
             {
-                /* Do nothing */
+                ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize = 0;
             }
-        }
 
-        if (rxSize > 0U)
-        {
-            /* Enable receive interrupt to complete the transfer in ISR context */
-            ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_SPI_RXRDY_Msk;
-        }
-        else
-        {
-            /* Enable transmit interrupt to complete the transfer in ISR context */
-            ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_SPI_TXRDY_Msk;
+            if (pReceiveData != NULL)
+            {
+                ${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize = rxSize;
+            }
+            else
+            {
+                ${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize = 0;
+            }
+
+            /* Reset over-run error if any */
+            ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_SPI_RSTSTA_Msk;
+
+            /* Flush out any unread data in SPI read buffer */
+            if ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_RXRDY_Msk) != 0U)
+            {
+                dummyData = ${USART_INSTANCE_NAME}_REGS->US_RHR;
+                (void)dummyData;
+            }
+
+            size_t txSz = ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize;
+
+            if (${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize > txSz)
+            {
+                ${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize = ${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize - txSz;
+            }
+
+            /* Start the first write here itself, rest will happen in ISR context */
+            if ((${USART_INSTANCE_NAME}_REGS->US_MR & US_MR_SPI_CHRL_Msk) == US_MR_SPI_CHRL_8_BIT)
+            {
+                <#if USART_SPI_CHIP_SELECT != "GPIO">
+                /* Force Chip Select */
+                ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_SPI_FCS_Msk;
+                </#if>
+
+                if (${USART_INSTANCE_NAME?lower_case}SPIObj.txCount < txSz)
+                {
+                    ${USART_INSTANCE_NAME}_REGS->US_THR = *((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.txBuffer);
+                    ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount++;
+                }
+                else if (${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0U)
+                {
+                    ${USART_INSTANCE_NAME}_REGS->US_THR = (uint8_t)(0x${USART_SPI_DUMMY_DATA});
+                    ${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize--;
+                }
+                else
+                {
+                    /* Do nothing */
+                }
+            }
+
+            if (rxSize > 0U)
+            {
+                /* Enable receive interrupt to complete the transfer in ISR context */
+                ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_SPI_RXRDY_Msk;
+            }
+            else
+            {
+                /* Enable transmit interrupt to complete the transfer in ISR context */
+                ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_SPI_TXRDY_Msk;
+            }
         }
     }
 
@@ -402,7 +410,9 @@ bool ${USART_INSTANCE_NAME}_SPI_Read( void* pReceiveData, size_t rxSize )
 <#if USART_SPI_INTERRUPT_MODE == true >
 bool ${USART_INSTANCE_NAME}_SPI_IsBusy( void )
 {
-    return ((${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy) || ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXEMPTY_Msk) == 0U));
+    bool transferIsBusy = ${USART_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy;
+
+    return (((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXEMPTY_Msk) == 0U) || (transferIsBusy));
 }
 
 void ${USART_INSTANCE_NAME}_SPI_CallbackRegister( USART_SPI_CALLBACK callback, uintptr_t context )
@@ -467,21 +477,27 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
 
         if(${USART_INSTANCE_NAME?lower_case}SPIObj.callback != NULL)
         {
-            ${USART_INSTANCE_NAME?lower_case}SPIObj.callback(${USART_INSTANCE_NAME?lower_case}SPIObj.context);
+            uintptr_t context = ${USART_INSTANCE_NAME?lower_case}SPIObj.context;
+
+            ${USART_INSTANCE_NAME?lower_case}SPIObj.callback(context);
         }
     }
 
     <#else>
 
+    size_t rxCount = ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount;
+
     if ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_RXRDY_Msk) != 0U)
     {
         receivedData = ${USART_INSTANCE_NAME}_REGS->US_RHR;
 
-        if (${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount < ${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize)
+        if (rxCount < ${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize)
         {
-            ((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.rxBuffer)[${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount] = (uint8_t)receivedData;
-            ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount++;
+            ((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.rxBuffer)[rxCount] = (uint8_t)receivedData;
+            rxCount++;
         }
+
+        ${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount = rxCount;
     }
 
     if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXRDY_Msk) != 0U)
@@ -491,10 +507,13 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
 
         ${USART_INSTANCE_NAME}_REGS->US_IDR = US_IDR_SPI_TXRDY_Msk;
 
-        if (${USART_INSTANCE_NAME?lower_case}SPIObj.txCount < ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize)
+        size_t txCount = ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount;
+        size_t txSize = ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize;
+
+        if (txCount < ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize)
         {
-            ${USART_INSTANCE_NAME}_REGS->US_THR = ((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.txBuffer)[${USART_INSTANCE_NAME?lower_case}SPIObj.txCount];
-            ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount++;
+            ${USART_INSTANCE_NAME}_REGS->US_THR = ((uint8_t*)${USART_INSTANCE_NAME?lower_case}SPIObj.txBuffer)[txCount];
+            txCount++;
         }
         else if (${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize > 0U)
         {
@@ -506,7 +525,9 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
             /* Do nothing */
         }
 
-        if ((${USART_INSTANCE_NAME?lower_case}SPIObj.txCount == ${USART_INSTANCE_NAME?lower_case}SPIObj.txSize) && (${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize == 0U))
+        ${USART_INSTANCE_NAME?lower_case}SPIObj.txCount = txCount;
+
+        if ((${USART_INSTANCE_NAME?lower_case}SPIObj.dummySize == 0U) && (txCount == txSize))
         {
             if ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXEMPTY_Msk) != 0U)
             {
@@ -523,7 +544,9 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
                 /* All characters are transmitted out and TX shift register is empty */
                 if(${USART_INSTANCE_NAME?lower_case}SPIObj.callback != NULL)
                 {
-                    ${USART_INSTANCE_NAME?lower_case}SPIObj.callback(${USART_INSTANCE_NAME?lower_case}SPIObj.context);
+                    uintptr_t context = ${USART_INSTANCE_NAME?lower_case}SPIObj.context;
+
+                    ${USART_INSTANCE_NAME?lower_case}SPIObj.callback(context);
                 }
             }
             else
@@ -532,7 +555,7 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
                 ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_SPI_TXEMPTY_Msk;
             }
         }
-        else if (${USART_INSTANCE_NAME?lower_case}SPIObj.rxCount == ${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize)
+        else if (rxCount == ${USART_INSTANCE_NAME?lower_case}SPIObj.rxSize)
         {
             /* Enable TXRDY interrupt as all the requested bytes are received
              * and can now make use of the internal transmit shift register.

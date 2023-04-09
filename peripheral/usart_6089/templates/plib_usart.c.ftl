@@ -92,24 +92,28 @@ static void __attribute__((used)) ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
 
     if(${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
-        while(((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_RXRDY_Msk) != 0U) &&
-              (${USART_INSTANCE_NAME?lower_case}Obj.rxSize > ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize))
+        size_t rxSize = ${USART_INSTANCE_NAME?lower_case}Obj.rxSize;
+        size_t rxProcessedSize = ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize;
+
+        while(((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_RXRDY_Msk) != 0U) && (rxSize > rxProcessedSize))
         {
             rxData = (${USART_INSTANCE_NAME}_REGS->US_RHR & US_RHR_RXCHR_Msk);
             if ((${USART_INSTANCE_NAME}_REGS->US_MR & US_MR_USART_MODE9_Msk) != 0U)
             {
-                pu16Data[${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize] = (uint16_t)rxData;
-                ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++;
+                pu16Data[rxProcessedSize] = (uint16_t)rxData;
+                rxProcessedSize++;
             }
             else
             {
-                pu8Data[${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize] = (uint8_t)rxData;
-                ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++;
+                pu8Data[rxProcessedSize] = (uint8_t)rxData;
+                rxProcessedSize++;
             }
         }
 
+        ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = rxProcessedSize;
+
         /* Check if the buffer is done */
-        if(${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${USART_INSTANCE_NAME?lower_case}Obj.rxSize)
+        if(${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= rxSize)
         {
             ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
@@ -118,7 +122,9 @@ static void __attribute__((used)) ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
 
             if(${USART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL)
             {
-                ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback(${USART_INSTANCE_NAME?lower_case}Obj.rxContext);
+                uintptr_t rxContext = ${USART_INSTANCE_NAME?lower_case}Obj.rxContext;
+
+                ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback(rxContext);
             }
         }
     }
@@ -138,22 +144,27 @@ static void __attribute__((used)) ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
 
     if(${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
-        while(((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXRDY_Msk) != 0U) && (${USART_INSTANCE_NAME?lower_case}Obj.txSize > ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize))
+        size_t txSize = ${USART_INSTANCE_NAME?lower_case}Obj.txSize;
+        size_t txProcessedSize = ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize;
+
+        while(((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXRDY_Msk) != 0U) && (txSize > txProcessedSize))
         {
             if ((${USART_INSTANCE_NAME}_REGS->US_MR & US_MR_USART_MODE9_Msk) != 0U)
             {
-                txData = pu16Data[${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
+                txData = pu16Data[txProcessedSize];
             }
             else
             {
-                txData = pu8Data[${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
+                txData = pu8Data[txProcessedSize];
             }
             ${USART_INSTANCE_NAME}_REGS->US_THR = txData & US_THR_TXCHR_Msk;
-            ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
+            txProcessedSize++;
         }
 
+        ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = txProcessedSize;
+
         /* Check if the buffer is done */
-        if(${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= ${USART_INSTANCE_NAME?lower_case}Obj.txSize)
+        if(${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= txSize)
         {
             ${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
 
@@ -161,7 +172,9 @@ static void __attribute__((used)) ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
 
             if(${USART_INSTANCE_NAME?lower_case}Obj.txCallback != NULL)
             {
-                ${USART_INSTANCE_NAME?lower_case}Obj.txCallback(${USART_INSTANCE_NAME?lower_case}Obj.txContext);
+                uintptr_t txContext = ${USART_INSTANCE_NAME?lower_case}Obj.txContext;
+
+                ${USART_INSTANCE_NAME?lower_case}Obj.txCallback(txContext);
             }
         }
     }
@@ -199,7 +212,9 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
          * receiver callback */
         if( ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
         {
-            ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback(${USART_INSTANCE_NAME?lower_case}Obj.rxContext);
+            uintptr_t rxContext = ${USART_INSTANCE_NAME?lower_case}Obj.rxContext;
+
+            ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback(rxContext);
         }
     }
 
@@ -214,7 +229,8 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
 
             if( ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
             {
-                ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback(${USART_INSTANCE_NAME?lower_case}Obj.rxContext);
+                uintptr_t rxContext = ${USART_INSTANCE_NAME?lower_case}Obj.rxContext;
+                ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback(rxContext);
             }
         }
     }
@@ -237,7 +253,9 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
 
             if( ${USART_INSTANCE_NAME?lower_case}Obj.txCallback != NULL )
             {
-                ${USART_INSTANCE_NAME?lower_case}Obj.txCallback(${USART_INSTANCE_NAME?lower_case}Obj.txContext);
+                uintptr_t txContext = ${USART_INSTANCE_NAME?lower_case}Obj.txContext;
+
+                ${USART_INSTANCE_NAME?lower_case}Obj.txCallback(txContext);
             }
         }
     }
@@ -323,7 +341,12 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
     bool status = false;
 
 <#if USART_INTERRUPT_MODE_ENABLE == true>
-    if((${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true) || (${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true))
+    if(${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
+    {
+        /* Transaction is in progress, so return without updating settings */
+        return false;
+    }
+    if(${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
         /* Transaction is in progress, so return without updating settings */
         return false;
@@ -500,21 +523,27 @@ bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
             ${USART_INSTANCE_NAME}_REGS->US_PTCR = US_PTCR_TXTEN_Msk;
             ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_USART_ENDTX_Msk;
             <#else>
+
+            size_t txSize = ${USART_INSTANCE_NAME?lower_case}Obj.txSize;
+            size_t txProcessedSize = ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize;
+
             /* Initiate the transfer by writing as many bytes as possible */
-            while (((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXRDY_Msk) != 0U) &&
-                   (${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize < ${USART_INSTANCE_NAME?lower_case}Obj.txSize))
+            while (((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXRDY_Msk) != 0U) && (txProcessedSize < txSize))
             {
                 if ((${USART_INSTANCE_NAME}_REGS->US_MR & US_MR_USART_MODE9_Msk) != 0U)
                 {
-                    txData = pu16Data[${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
+                    txData = pu16Data[txProcessedSize];
                 }
                 else
                 {
-                    txData = pu8Data[${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
+                    txData = pu8Data[txProcessedSize];
                 }
                 ${USART_INSTANCE_NAME}_REGS->US_THR = (txData & US_THR_TXCHR_Msk);
-                ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
+                txProcessedSize++;
             }
+
+            ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = txProcessedSize;
+
             ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_USART_TXRDY_Msk;
             </#if>
         }
@@ -588,9 +617,9 @@ bool ${USART_INSTANCE_NAME}_ReadAbort(void)
 
         ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
-        /* If required application should read the num bytes processed prior to calling the read abort API */
-        ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
-        ${USART_INSTANCE_NAME?lower_case}Obj.rxSize = ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize;
+        /* If required, application should read the num bytes processed prior to calling the read abort API */
+        ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0U;
+        ${USART_INSTANCE_NAME?lower_case}Obj.rxSize = 0U;
     }
 
     return true;
