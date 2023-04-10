@@ -107,7 +107,8 @@ void __attribute__((used)) ${RSTC_INSTANCE_NAME}_InterruptHandler( void )
     // Callback user function
     if(rstcObj.callback != NULL)
     {
-        rstcObj.callback(rstcObj.context);
+        uintptr_t context = rstcObj.context
+        rstcObj.callback(context);
     }
 }
 </#if>
