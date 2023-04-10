@@ -57,7 +57,7 @@
     <#lt>    uintptr_t       context;
     <#lt>} WDT_CALLBACK_OBJECT;
 
-    <#lt>static WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
+    <#lt>volatile static WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
 
     <#lt>void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
     <#lt>{
@@ -67,12 +67,14 @@
 
     <#lt>void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
-    <#lt>    // Capture and clear interrupt status
+    <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    <#lt>    uintptr_t context =  ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context;
+    <#lt>    // Capture and clear interrupt status    
     <#lt>    uint32_t interruptStatus = ${WDT_INSTANCE_NAME}_REGS->WDT_ISR;
 
     <#lt>    if( (interruptStatus != 0U) && (${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL) )
     <#lt>    {
-    <#lt>        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback( ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context, interruptStatus );
+    <#lt>        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback(context, interruptStatus );
     <#lt>    }
     <#lt>}
 </#if>
