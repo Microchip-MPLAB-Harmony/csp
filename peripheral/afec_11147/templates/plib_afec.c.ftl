@@ -472,7 +472,8 @@ void ${AFEC_INSTANCE_NAME}_ComparatorModeSet(AFEC_COMPARATOR_MODE cmpMode)
     <#lt>    var_status = ${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR;
     <#lt>    if (${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn(var_status, ${AFEC_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        uintptr_t context = ${AFEC_INSTANCE_NAME}_CallbackObj.context;
+    <#lt>        ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn(var_status, context);
     <#lt>    }
     <#lt>}
 <#else>
