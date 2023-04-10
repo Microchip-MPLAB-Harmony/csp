@@ -53,7 +53,7 @@
 #define ADC_CALIB_FCCFG65           *((uint32_t*)${ADC_CALIB_ADDR})
 
 <#if ADC_CTLINTENSET != "0">
-static ADC_GLOBAL_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_GlobalCallbackObj;
+volatile static ADC_GLOBAL_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_GlobalCallbackObj;
 </#if>
 
 <#if ADC_CORE_CORE_INT_ENABLED == true>
@@ -213,11 +213,11 @@ void ${ADC_INSTANCE_NAME}_Initialize(void)
             <#lt>       CMPEN = ${.vars[ADC_CMPCTRL_CMPEN]?c}
             <#lt>       ADCMPLO = ${.vars[ADC_CMPCTRL_ADCMPLO]}
             <#lt>    */
-					<#if ADC_NUM_SAR_CORES == 1 >
-						${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL = 0x${.vars[ADC_CMPCTRL]?upper_case};
-					<#else>
-						${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[${n}] = 0x${.vars[ADC_CMPCTRL]?upper_case};
-					</#if>
+                    <#if ADC_NUM_SAR_CORES == 1 >
+                        ${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL = 0x${.vars[ADC_CMPCTRL]?upper_case};
+                    <#else>
+                        ${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[${n}] = 0x${.vars[ADC_CMPCTRL]?upper_case};
+                    </#if>
             </#if>
 
             <#if .vars[ADC_FLTCTRL] != "0">
@@ -228,10 +228,10 @@ void ${ADC_INSTANCE_NAME}_Initialize(void)
             <#lt>       OVRSAM = ${.vars[ADC_FLTCTRL_OVRSAM]}
             <#lt>    */
                     <#if ADC_NUM_SAR_CORES == 1>
-						${ADC_INSTANCE_NAME}_REGS->ADC_FLTCTRL = 0x${.vars[ADC_FLTCTRL]?upper_case};
-					<#else>
-						${ADC_INSTANCE_NAME}_REGS->ADC_FLTCTRL[${n}] = 0x${.vars[ADC_FLTCTRL]?upper_case};
-					</#if>
+                        ${ADC_INSTANCE_NAME}_REGS->ADC_FLTCTRL = 0x${.vars[ADC_FLTCTRL]?upper_case};
+                    <#else>
+                        ${ADC_INSTANCE_NAME}_REGS->ADC_FLTCTRL[${n}] = 0x${.vars[ADC_FLTCTRL]?upper_case};
+                    </#if>
             </#if>
         </#if>
     </#list>
@@ -242,9 +242,9 @@ void ${ADC_INSTANCE_NAME}_Initialize(void)
 
     <#if ADC_CTRLC != "0">
     /*
-	<#if ADC_GLOBAL_CTRLC_COREINTERLEAVED?? >
+    <#if ADC_GLOBAL_CTRLC_COREINTERLEAVED?? >
     COREINTERLEAVED = ${ADC_GLOBAL_CTRLC_COREINTERLEAVED}
-	</#if>
+    </#if>
     CNT = ${ADC_GLOBAL_CTRLC_CNT}
     */
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC = 0x${ADC_CTRLC?upper_case};
@@ -282,45 +282,45 @@ void ${ADC_INSTANCE_NAME}_Initialize(void)
 /* Enable channel compare mode */
 void ${ADC_INSTANCE_NAME}_CompareEnable(ADC_CHANNEL_NUM channel)
 {
-	${ADC_INSTANCE_NAME}_Disable();
+    ${ADC_INSTANCE_NAME}_Disable();
 
-	${ADC_INSTANCE_NAME}_REGS->CONFIG[0].ADC_CHNCFG1 |= (1UL << (uint32_t)channel);
+    ${ADC_INSTANCE_NAME}_REGS->CONFIG[0].ADC_CHNCFG1 |= (1UL << (uint32_t)channel);
 
-	${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL |= ADC_CMPCTRL_CMPEN_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL |= ADC_CMPCTRL_CMPEN_Msk;
 
-	${ADC_INSTANCE_NAME}_Enable();
+    ${ADC_INSTANCE_NAME}_Enable();
 }
 
 /* Disable channel compare mode */
 void ${ADC_INSTANCE_NAME}_CompareDisable(ADC_CHANNEL_NUM channel)
 {
-	${ADC_INSTANCE_NAME}_Disable();
+    ${ADC_INSTANCE_NAME}_Disable();
 
-	${ADC_INSTANCE_NAME}_REGS->CONFIG[0].ADC_CHNCFG1 &= ~(1UL << (uint32_t)channel);
+    ${ADC_INSTANCE_NAME}_REGS->CONFIG[0].ADC_CHNCFG1 &= ~(1UL << (uint32_t)channel);
 
-	${ADC_INSTANCE_NAME}_Enable();
+    ${ADC_INSTANCE_NAME}_Enable();
 }
 
 /* Configure window comparison threshold values */
 void ${ADC_INSTANCE_NAME}_CompareWinThresholdSet(uint16_t low_threshold, uint16_t high_threshold)
 {
-	${ADC_INSTANCE_NAME}_Disable();
+    ${ADC_INSTANCE_NAME}_Disable();
 
-	${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL = (${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL & ~(ADC_CMPCTRL_ADCMPHI_Msk | ADC_CMPCTRL_ADCMPLO_Msk)) |\
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL = (${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL & ~(ADC_CMPCTRL_ADCMPHI_Msk | ADC_CMPCTRL_ADCMPLO_Msk)) |\
                             (((uint32_t)low_threshold << ADC_CMPCTRL_ADCMPLO_Pos) |\
                             ((uint32_t)high_threshold << ADC_CMPCTRL_ADCMPHI_Pos));
 
-	${ADC_INSTANCE_NAME}_Enable();
+    ${ADC_INSTANCE_NAME}_Enable();
 }
 
 /* Configure window comparison event mode */
 void ${ADC_INSTANCE_NAME}_CompareWinModeSet(ADC_CMPCTRL mode)
 {
-	${ADC_INSTANCE_NAME}_Disable();
+    ${ADC_INSTANCE_NAME}_Disable();
 
-	${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL = (${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL & ~(ADC_CMPCTRL_IELOLO_Msk | ADC_CMPCTRL_IELOHI_Msk | ADC_CMPCTRL_IEBTWN_Msk | ADC_CMPCTRL_IEHILO_Msk | ADC_CMPCTRL_IEHIHI_Msk)) | mode;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL = (${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL & ~(ADC_CMPCTRL_IELOLO_Msk | ADC_CMPCTRL_IELOHI_Msk | ADC_CMPCTRL_IEBTWN_Msk | ADC_CMPCTRL_IEHILO_Msk | ADC_CMPCTRL_IEHIHI_Msk)) | mode;
 
-	${ADC_INSTANCE_NAME}_Enable();
+    ${ADC_INSTANCE_NAME}_Enable();
 }
 
 void ${ADC_INSTANCE_NAME}_CoreInterruptsEnable(ADC_CORE_INT interruptMask)
@@ -381,44 +381,44 @@ uint32_t ${ADC_INSTANCE_NAME}_ResultGet(ADC_CHANNEL_NUM channel)
 /* Enable channel compare mode */
 void ${ADC_INSTANCE_NAME}_CompareEnable(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel)
 {
-	${ADC_INSTANCE_NAME}_Disable();
+    ${ADC_INSTANCE_NAME}_Disable();
 
-	${ADC_INSTANCE_NAME}_REGS->CONFIG[core].ADC_CHNCFG1 |= (1UL << (uint32_t)channel);
+    ${ADC_INSTANCE_NAME}_REGS->CONFIG[core].ADC_CHNCFG1 |= (1UL << (uint32_t)channel);
 
-	${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] |= ADC_CMPCTRL_CMPEN_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] |= ADC_CMPCTRL_CMPEN_Msk;
 
-	${ADC_INSTANCE_NAME}_Enable();
+    ${ADC_INSTANCE_NAME}_Enable();
 }
 
 
 /* Disable channel compare mode */
 void ${ADC_INSTANCE_NAME}_CompareDisable(ADC_CORE_NUM core, ADC_CHANNEL_NUM channel)
 {
-	${ADC_INSTANCE_NAME}_Disable();
+    ${ADC_INSTANCE_NAME}_Disable();
 
-	${ADC_INSTANCE_NAME}_REGS->CONFIG[core].ADC_CHNCFG1 &= ~(1UL << (uint32_t)channel);
+    ${ADC_INSTANCE_NAME}_REGS->CONFIG[core].ADC_CHNCFG1 &= ~(1UL << (uint32_t)channel);
 
-	${ADC_INSTANCE_NAME}_Enable();
+    ${ADC_INSTANCE_NAME}_Enable();
 }
 
 /* Configure window comparison threshold values */
 void ${ADC_INSTANCE_NAME}_CompareWinThresholdSet(ADC_CORE_NUM core, uint16_t low_threshold, uint16_t high_threshold)
 {
-	${ADC_INSTANCE_NAME}_Disable();
+    ${ADC_INSTANCE_NAME}_Disable();
 
-	${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] = (${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] & ~(ADC_CMPCTRL_ADCMPHI_Msk | ADC_CMPCTRL_ADCMPLO_Msk)) | (((uint32_t)low_threshold << ADC_CMPCTRL_ADCMPLO_Pos) | ((uint32_t)high_threshold << ADC_CMPCTRL_ADCMPHI_Pos));
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] = (${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] & ~(ADC_CMPCTRL_ADCMPHI_Msk | ADC_CMPCTRL_ADCMPLO_Msk)) | (((uint32_t)low_threshold << ADC_CMPCTRL_ADCMPLO_Pos) | ((uint32_t)high_threshold << ADC_CMPCTRL_ADCMPHI_Pos));
 
-	${ADC_INSTANCE_NAME}_Enable();
+    ${ADC_INSTANCE_NAME}_Enable();
 }
 
 /* Configure window comparison event mode */
 void ${ADC_INSTANCE_NAME}_CompareWinModeSet(ADC_CORE_NUM core, ADC_CMPCTRL mode)
 {
-	${ADC_INSTANCE_NAME}_Disable();
+    ${ADC_INSTANCE_NAME}_Disable();
 
-	${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] = (${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] & ~(ADC_CMPCTRL_IELOLO_Msk | ADC_CMPCTRL_IELOHI_Msk | ADC_CMPCTRL_IEBTWN_Msk | ADC_CMPCTRL_IEHILO_Msk | ADC_CMPCTRL_IEHIHI_Msk)) | mode;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] = (${ADC_INSTANCE_NAME}_REGS->ADC_CMPCTRL[core] & ~(ADC_CMPCTRL_IELOLO_Msk | ADC_CMPCTRL_IELOHI_Msk | ADC_CMPCTRL_IEBTWN_Msk | ADC_CMPCTRL_IEHILO_Msk | ADC_CMPCTRL_IEHIHI_Msk)) | mode;
 
-	${ADC_INSTANCE_NAME}_Enable();
+    ${ADC_INSTANCE_NAME}_Enable();
 }
 
 void ${ADC_INSTANCE_NAME}_CoreInterruptsEnable(ADC_CORE_NUM core, ADC_CORE_INT interruptMask)
@@ -639,7 +639,9 @@ void __attribute__((used)) ${ADC_INSTANCE_NAME}_GLOBAL_InterruptHandler( void )
 
     if (${ADC_INSTANCE_NAME}_GlobalCallbackObj.callback != NULL)
     {
-        ${ADC_INSTANCE_NAME}_GlobalCallbackObj.callback(status, ${ADC_INSTANCE_NAME}_GlobalCallbackObj.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_GlobalCallbackObj.context;
+
+        ${ADC_INSTANCE_NAME}_GlobalCallbackObj.callback(status, context);
     }
 }
 </#if>
@@ -658,7 +660,8 @@ void __attribute__((used)) ${ADC_INSTANCE_NAME}_GLOBAL_InterruptHandler( void )
 
         <#lt>   if (${ADC_INSTANCE_NAME}_CoreCallbackObj[${n}].callback != NULL)
         <#lt>   {
-        <#lt>       ${ADC_INSTANCE_NAME}_CoreCallbackObj[${n}].callback(status, ${ADC_INSTANCE_NAME}_CoreCallbackObj[${n}].context);
+        <#lt>       uintptr_t context = ${ADC_INSTANCE_NAME}_CoreCallbackObj[${n}].context;
+        <#lt>       ${ADC_INSTANCE_NAME}_CoreCallbackObj[${n}].callback(status, context);
         <#lt>   }
         <#lt>}
         </#if>
