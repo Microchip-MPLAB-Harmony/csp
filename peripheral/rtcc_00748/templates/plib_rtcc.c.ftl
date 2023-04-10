@@ -111,9 +111,9 @@ void ${RTCC_INSTANCE_NAME}_Initialize( void )
     <#if RTC_TIMEANDDATE == true>
         <#lt>    RTCCONbits.ON = 0;   /* Disable clock to RTCC */
         <#lt>    while((RTCCONbits.RTCCLKON) != 0U)  /* Wait for clock to stop */
-		<#lt>    { 
-		<#lt> 		 /* Do Nothing */
-		<#lt> 	 }
+        <#lt>    {
+        <#lt>        /* Do Nothing */
+        <#lt>    }
 
         <#lt>    RTCTIME = 0x${RTCTIME_TIME}00;   /* Set RTCC time */
         <#lt>    RTCDATE = 0x${RTCTIME_DATE}0${RTCTIME_WEEKDAY};  /* Set RTCC date */
@@ -130,18 +130,18 @@ void ${RTCC_INSTANCE_NAME}_Initialize( void )
     <#if RTC_ALARM == true>
         <#lt>    RTCALRMCLR = _RTCALRM_ALRMEN_MASK;  /* Disable alarm */
         <#lt>    while((RTCALRMbits.ALRMSYNC) != 0U)  /* Wait for disable */
-		<#lt>    { 
-		<#lt> 		 /* Do Nothing */
-		<#lt> 	 }
+        <#lt>    {
+        <#lt>        /* Do Nothing */
+        <#lt>    }
 
         <#lt>    ALRMTIME = 0x${RTCALRM_TIME}00;   /* Set alarm time */
         <#lt>    ALRMDATE = 0x00${RTCALRM_DATE}0${RTCALRM_DAY};   /* Set alarm date */
         <#lt>    RTCALRMbits.AMASK = ${RTCC_ALARM_MASK}; /* Set alarm frequency */
-    
+
         <#if RTCC_INTERRUPT_MODE == true>
             <#lt>    ${RTCC_IEC_REG}SET = (uint32_t)RTCC_INT_ALARM; /* Enable RTC Alarma interrupt */
         </#if>
-    
+
         <#lt>    RTCALRMSET = _RTCALRM_ALRMEN_MASK;  /* Enable the alarm */
     </#if>
 
@@ -170,9 +170,9 @@ bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time )
     timeField |= (decimaltobcd(Time->tm_sec) << _RTCTIME_SEC01_POSITION) & (_RTCTIME_SEC10_MASK | _RTCTIME_SEC01_MASK);
 
     while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0U)
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
 
     RTCTIME = timeField;
 
@@ -182,9 +182,9 @@ bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time )
     dateField |= decimaltobcd(Time->tm_wday) & _RTCDATE_WDAY01_MASK;
 
     while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0U)
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
 
     RTCDATE = dateField;
 
@@ -198,9 +198,9 @@ void ${RTCC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
     uint32_t dataTime, dataDate;
 
     while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0U)
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
 
     dataTime = RTCTIME;  /* read the time from the RTC */
 
@@ -212,9 +212,9 @@ void ${RTCC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
                          bcdtodecimal((dataTime & _RTCTIME_SEC01_MASK) >> _RTCTIME_SEC01_POSITION));
 
     while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0U)
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
 
     dataDate = RTCDATE;  /* read the date from the RTC */
 
@@ -242,9 +242,9 @@ bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarm
 
     RTCALRMCLR = _RTCALRM_ALRMEN_MASK;  /* Disable alarm */
     while((RTCALRMbits.ALRMSYNC) != 0U) /* Wait for disable */
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
 
     if(RTCC_ALARM_MASK_OFF != alarmFreq)
     {
@@ -257,16 +257,16 @@ bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarm
         dataTime |= (decimaltobcd(alarmTime->tm_sec) << _RTCTIME_SEC01_POSITION) & (_RTCTIME_SEC10_MASK | _RTCTIME_SEC01_MASK);
 
         while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0U)
-		{
-		   /* Do Nothing */
-	    }
+        {
+           /* Do Nothing */
+        }
 
         ALRMDATE = dataDate;
 
         while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0U)
-		{
-		    /* Do Nothing */
-	    }
+        {
+            /* Do Nothing */
+        }
 
         ALRMTIME = dataTime;
 
@@ -299,7 +299,8 @@ void __attribute__((used)) ${RTCC_INSTANCE_NAME}_InterruptHandler( void )
 
     if(rtcc.callback != NULL)
     {
-        rtcc.callback(rtcc.context);
+        uintptr_t context = rtcc.context;
+        rtcc.callback(context);
     }
 }
 
