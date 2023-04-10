@@ -225,7 +225,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     <#if ADC_LOAD_CALIB == true >
     <#lt>    /* Write linearity calibration in BIASREFBUF and bias calibration in BIASCOMP */
     <#lt>    uint32_t calib_low_word = (uint32_t)(*(uint64_t*)${ADC_NVM_CALIB_REG});
-    <#lt>    ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB = (uint16_t)((ADC_CALIB_BIASREFBUF((calib_low_word & ${ADC_INSTANCE_NAME}_LINEARITY_Msk) >> ${ADC_INSTANCE_NAME}_LINEARITY_POS)) | 
+    <#lt>    ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB = (uint16_t)((ADC_CALIB_BIASREFBUF((calib_low_word & ${ADC_INSTANCE_NAME}_LINEARITY_Msk) >> ${ADC_INSTANCE_NAME}_LINEARITY_POS)) |
     <#lt>                                      (ADC_CALIB_BIASCOMP((calib_low_word & ${ADC_INSTANCE_NAME}_BIASCAL_Msk) >> ${ADC_INSTANCE_NAME}_BIASCAL_POS)));
     </#if>
 </#if>
@@ -361,7 +361,7 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
 
 void ${ADC_INSTANCE_NAME}_WindowModeSet(ADC_WINMODE mode)
 {
-	${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC =  (${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC & (uint16_t)(~ADC_CTRLC_WINMODE_Msk)) | (uint16_t)((uint32_t)mode << ADC_CTRLC_WINMODE_Pos);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC =  (${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC & (uint16_t)(~ADC_CTRLC_WINMODE_Msk)) | (uint16_t)((uint32_t)mode << ADC_CTRLC_WINMODE_Pos);
     while(0U != (${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
     {
         /* Wait for Synchronization */
@@ -408,7 +408,8 @@ void __attribute__((used)) ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTFLAG_RESRDY_Msk;
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObject.context;
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 <#else>
@@ -433,7 +434,8 @@ void __attribute__((used)) ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)(ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk);
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObject.context;
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 <#else>
@@ -497,7 +499,8 @@ void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)(${ADC_INTENSET_VAL});
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObject.context;
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 </#if>
