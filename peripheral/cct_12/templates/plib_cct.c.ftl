@@ -162,13 +162,13 @@ void ${CCT_INSTANCE_NAME}_Initialize(void)
     <#if ict_mux_val != "">
     CCT_REGS->CCT_MUX_SEL = ${ict_mux_val};
     </#if>
-    
+
     <#list 0..(CCT_NUM_CMP_CH-1) as n>
     <#assign CCT_CMP_EN = "CCT_ENABLE_COMPARE_" + n>
     <#if .vars[CCT_CMP_EN]?? && .vars[CCT_CMP_EN] == true>
     <#assign CCT_CMP_VAL = "CCT_COMPARE_VALUE_" + n>
     CCT_REGS->CCT_COMP${n} = ${.vars[CCT_CMP_VAL]};
-    
+
     </#if>
     </#list>
 }
@@ -314,7 +314,7 @@ void ${CCT_INSTANCE_NAME}_CompareChannel${n}InterruptEnable( void )
     ECIA_GIRQSourceEnable(ECIA_AGG_INT_SRC_CCT_CMP${n});
     <#else>
     ECIA_GIRQSourceEnable(ECIA_DIR_INT_SRC_CCT_CMP${n});
-    </#if>        
+    </#if>
 }
 
 void ${CCT_INSTANCE_NAME}_CompareChannel${n}InterruptDisable( void )
@@ -323,7 +323,7 @@ void ${CCT_INSTANCE_NAME}_CompareChannel${n}InterruptDisable( void )
     ECIA_GIRQSourceEnable(ECIA_AGG_INT_SRC_CCT_CMP${n});
     <#else>
     ECIA_GIRQSourceEnable(ECIA_DIR_INT_SRC_CCT_CMP${n});
-    </#if>        
+    </#if>
 }
 
 </#if>
@@ -351,10 +351,11 @@ void __attribute__((used)) CCT${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
         <#else>
         ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_CCT);
         </#if>
-        
+
         if (${CCT_INSTANCE_NAME}_OVF_CallbackObject.callback != NULL)
         {
-            ${CCT_INSTANCE_NAME}_OVF_CallbackObject.callback(${CCT_INSTANCE_NAME}_OVF_CallbackObject.context);
+            uintptr_t context = ${CCT_INSTANCE_NAME}_OVF_CallbackObject.context;
+            ${CCT_INSTANCE_NAME}_OVF_CallbackObject.callback(context);
         }
     }
 }
@@ -375,10 +376,11 @@ void __attribute__((used)) CCT_CAP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandle
         <#else>
         ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_CCT_CAP${n});
         </#if>
-        
+
         if (${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject.callback != NULL)
         {
-            ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject.callback(${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject.context);
+            uintptr_t context = ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject.context;
+            ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject.callback(context);
         }
     }
 }
@@ -400,10 +402,11 @@ void __attribute__((used)) CCT_CMP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandle
         <#else>
         ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_CCT_CMP${n});
         </#if>
-        
+
         if (${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject.callback != NULL)
         {
-            ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject.callback(${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject.context);
+            uintptr_t context = ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject.context;
+            ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject.callback(context);
         }
     }
 }
