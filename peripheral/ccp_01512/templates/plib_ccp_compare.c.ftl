@@ -202,12 +202,14 @@ void ${CCP_INSTANCE_NAME}_TimerCallbackRegister(CCP_TIMER_CALLBACK callback, uin
 
 void __attribute__((used)) CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
 {
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context = ${CCP_INSTANCE_NAME?lower_case}TimerObj.context;      
     uint32_t status = ${CCP_IFS_REG}bits.CCT${CCP_INSTANCE_NUM}IF;
     ${CCP_IFS_REG}CLR = _${CCP_IFS_REG}_CCT${CCP_INSTANCE_NUM}IF_MASK;    //Clear IRQ flag
 
     if( (${CCP_INSTANCE_NAME?lower_case}TimerObj.callback_fn != NULL))
     {
-        ${CCP_INSTANCE_NAME?lower_case}TimerObj.callback_fn(status, ${CCP_INSTANCE_NAME?lower_case}TimerObj.context);
+        ${CCP_INSTANCE_NAME?lower_case}TimerObj.callback_fn(status, context);
     }
 }
 </#if>
@@ -221,10 +223,12 @@ void ${CCP_INSTANCE_NAME}_CompareCallbackRegister(CCP_COMPARE_CALLBACK callback,
 
 void __attribute__((used)) CCP${CCP_INSTANCE_NUM}_InterruptHandler(void)
 {
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context = ${CCP_INSTANCE_NAME?lower_case}CompareObj.context;     
     ${CCP_CAP_COMP_IFS_REG}CLR = _${CCP_CAP_COMP_IFS_REG}_CCP${CCP_INSTANCE_NUM}IF_MASK;    //Clear IRQ flag
     if( (${CCP_INSTANCE_NAME?lower_case}CompareObj.callback_fn != NULL))
     {
-        ${CCP_INSTANCE_NAME?lower_case}CompareObj.callback_fn(${CCP_INSTANCE_NAME?lower_case}CompareObj.context);
+        ${CCP_INSTANCE_NAME?lower_case}CompareObj.callback_fn(context);
     }
 }
 </#if>
