@@ -165,7 +165,7 @@ static void ${TWI_INSTANCE_NAME}_InitiateTransfer(uint16_t address, bool type)
                 // Generate TXCOMP interrupt after STOP condition has been sent
                 ${TWI_INSTANCE_NAME?lower_case}Obj.state = TWI_STATE_WAIT_FOR_TXCOMP;
 
-                ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWI_INSTANCE_NAME?lower_case}Obj.writeCount]);
+                ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[0]);
                 ${TWI_INSTANCE_NAME?lower_case}Obj.writeCount++;
                 ${TWI_INSTANCE_NAME}_REGS->TWI_CR =  TWI_CR_STOP_Msk;
                 ${TWI_INSTANCE_NAME}_REGS->TWI_IER = TWI_IER_TXCOMP_Msk;
@@ -175,7 +175,7 @@ static void ${TWI_INSTANCE_NAME}_InitiateTransfer(uint16_t address, bool type)
             {
                 // START bit must be set before the byte is shifted out. Hence disabled interrupt
                 __disable_irq();
-                ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWI_INSTANCE_NAME?lower_case}Obj.writeCount]);
+                ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[0]);
                 ${TWI_INSTANCE_NAME?lower_case}Obj.writeCount++;
 
                 // Wait for control byte to be transferred before initiating repeat start for read
@@ -195,7 +195,7 @@ static void ${TWI_INSTANCE_NAME}_InitiateTransfer(uint16_t address, bool type)
         {
             ${TWI_INSTANCE_NAME?lower_case}Obj.state = TWI_STATE_TRANSFER_WRITE;
 
-            ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWI_INSTANCE_NAME?lower_case}Obj.writeCount]);
+            ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[0]);
             ${TWI_INSTANCE_NAME?lower_case}Obj.writeCount++;
             ${TWI_INSTANCE_NAME}_REGS->TWI_IER = TWI_IDR_TXRDY_Msk | TWI_IER_TXCOMP_Msk;
         }
@@ -506,6 +506,7 @@ void ${TWI_INSTANCE_NAME}_TransferAbort( void )
 void __attribute__((used)) ${TWI_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t status;
+    uintptr_t context = ${TWI_INSTANCE_NAME?lower_case}Obj.context;
 
     // Read the peripheral status
     status = ${TWI_INSTANCE_NAME}_REGS->TWI_SR;
@@ -564,23 +565,27 @@ void __attribute__((used)) ${TWI_INSTANCE_NAME}_InterruptHandler(void)
                 /* checks if master is ready to transmit */
                 if( (status & TWI_SR_TXRDY_Msk) != 0U )
                 {
+                    size_t writeCount = ${TWI_INSTANCE_NAME?lower_case}Obj.writeCount;
+
                     // Write Last Byte and then initiate read transfer
-                    if( ( ${TWI_INSTANCE_NAME?lower_case}Obj.writeCount == (${TWI_INSTANCE_NAME?lower_case}Obj.writeSize -1U) ) && ( ${TWI_INSTANCE_NAME?lower_case}Obj.readSize != 0U ))
+                    bool lastByteWrPending = (writeCount == (${TWI_INSTANCE_NAME?lower_case}Obj.writeSize -1U));
+
+                    if(( ${TWI_INSTANCE_NAME?lower_case}Obj.readSize != 0U ) && (lastByteWrPending))
                     {
                         // START bit must be set before the last byte is shifted out to generate repeat start. Hence disabled interrupt
                         __disable_irq();
                         ${TWI_INSTANCE_NAME}_REGS->TWI_IDR = TWI_IDR_TXRDY_Msk;
-                        ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWI_INSTANCE_NAME?lower_case}Obj.writeCount]);
-                        ${TWI_INSTANCE_NAME?lower_case}Obj.writeCount++;
+                        ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[writeCount]);
+                        writeCount++;
                         ${TWI_INSTANCE_NAME}_InitiateRead();
                     }
                     // Write Last byte and then issue STOP condition
-                    else if ( ${TWI_INSTANCE_NAME?lower_case}Obj.writeCount == (${TWI_INSTANCE_NAME?lower_case}Obj.writeSize -1U))
+                    else if ( writeCount == (${TWI_INSTANCE_NAME?lower_case}Obj.writeSize -1U))
                     {
                         // Load last byte in transmit register, issue stop condition
                         // Generate TXCOMP interrupt after STOP condition has been sent
-                        ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWI_INSTANCE_NAME?lower_case}Obj.writeCount]);
-                        ${TWI_INSTANCE_NAME?lower_case}Obj.writeCount++;
+                        ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[writeCount]);
+                        writeCount++;
                         ${TWI_INSTANCE_NAME}_REGS->TWI_CR = TWI_CR_STOP_Msk;
                         ${TWI_INSTANCE_NAME}_REGS->TWI_IDR = TWI_IDR_TXRDY_Msk;
 
@@ -598,9 +603,11 @@ void __attribute__((used)) ${TWI_INSTANCE_NAME}_InterruptHandler(void)
                     // Write next byte
                     else
                     {
-                        ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWI_INSTANCE_NAME?lower_case}Obj.writeCount]);
-                        ${TWI_INSTANCE_NAME?lower_case}Obj.writeCount++;
+                        ${TWI_INSTANCE_NAME}_REGS->TWI_THR = TWI_THR_TXDATA((uint32_t)${TWI_INSTANCE_NAME?lower_case}Obj.writeBuffer[writeCount]);
+                        writeCount++;
                     }
+
+                    ${TWI_INSTANCE_NAME?lower_case}Obj.writeCount = writeCount;
 
                     // Dummy read to ensure that TXRDY bit is cleared
                     status = ${TWI_INSTANCE_NAME}_REGS->TWI_SR;
@@ -615,18 +622,20 @@ void __attribute__((used)) ${TWI_INSTANCE_NAME}_InterruptHandler(void)
                 /* checks if master has received the data */
                 if( (status & TWI_SR_RXRDY_Msk) != 0U )
                 {
+                    size_t readCount = ${TWI_INSTANCE_NAME?lower_case}Obj.readCount;
+
                     // Set the STOP (or START) bit before reading the TWI_RHR on the next-to-last access
-                    if(  ${TWI_INSTANCE_NAME?lower_case}Obj.readCount == (${TWI_INSTANCE_NAME?lower_case}Obj.readSize - 2U) )
+                    if(  readCount == (${TWI_INSTANCE_NAME?lower_case}Obj.readSize - 2U) )
                     {
                         ${TWI_INSTANCE_NAME}_REGS->TWI_CR = TWI_CR_STOP_Msk;
                     }
 
                     /* read the received data */
-                    ${TWI_INSTANCE_NAME?lower_case}Obj.readBuffer[${TWI_INSTANCE_NAME?lower_case}Obj.readCount] = (uint8_t)(${TWI_INSTANCE_NAME}_REGS->TWI_RHR & TWI_RHR_RXDATA_Msk);
-                    ${TWI_INSTANCE_NAME?lower_case}Obj.readCount++;
+                    ${TWI_INSTANCE_NAME?lower_case}Obj.readBuffer[readCount] = (uint8_t)(${TWI_INSTANCE_NAME}_REGS->TWI_RHR & TWI_RHR_RXDATA_Msk);
+                    readCount++;
 
                     /* checks if transmission has reached at the end */
-                    if( ${TWI_INSTANCE_NAME?lower_case}Obj.readCount == ${TWI_INSTANCE_NAME?lower_case}Obj.readSize )
+                    if( readCount == ${TWI_INSTANCE_NAME?lower_case}Obj.readSize )
                     {
                         /* Disable the RXRDY interrupt*/
                         ${TWI_INSTANCE_NAME}_REGS->TWI_IDR = TWI_IDR_RXRDY_Msk;
@@ -642,6 +651,8 @@ void __attribute__((used)) ${TWI_INSTANCE_NAME}_InterruptHandler(void)
                             ${TWI_INSTANCE_NAME?lower_case}Obj.state = TWI_STATE_WAIT_FOR_TXCOMP;
                         }
                     }
+
+                    ${TWI_INSTANCE_NAME?lower_case}Obj.readCount = readCount;
                 }
                 break;
             }
@@ -674,7 +685,7 @@ void __attribute__((used)) ${TWI_INSTANCE_NAME}_InterruptHandler(void)
 
         if ( ${TWI_INSTANCE_NAME?lower_case}Obj.callback != NULL )
         {
-            ${TWI_INSTANCE_NAME?lower_case}Obj.callback( ${TWI_INSTANCE_NAME?lower_case}Obj.context );
+            ${TWI_INSTANCE_NAME?lower_case}Obj.callback( context );
         }
     }
     // check for completion of transfer
@@ -695,7 +706,7 @@ void __attribute__((used)) ${TWI_INSTANCE_NAME}_InterruptHandler(void)
 
         if ( ${TWI_INSTANCE_NAME?lower_case}Obj.callback != NULL )
         {
-            ${TWI_INSTANCE_NAME?lower_case}Obj.callback( ${TWI_INSTANCE_NAME?lower_case}Obj.context );
+            ${TWI_INSTANCE_NAME?lower_case}Obj.callback( context );
         }
     }
 

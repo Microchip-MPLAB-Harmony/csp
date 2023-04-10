@@ -177,10 +177,10 @@ typedef struct
     size_t  readCount;
 
     /* State */
-    volatile TWI_STATE state;
+    TWI_STATE state;
 
     /* Transfer status */
-    volatile TWI_ERROR error;
+    TWI_ERROR error;
 
     /* Transfer Event Callback */
     TWI_CALLBACK callback;
