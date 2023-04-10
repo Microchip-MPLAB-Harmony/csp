@@ -105,6 +105,7 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
 {
     uint32_t i2c_addr;
     uint8_t dummy;
+    uintptr_t context = i2c${I2C_INSTANCE_NUM}Obj.context;
 
     if ((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_BER_Msk) != 0U)
     {
@@ -113,7 +114,7 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
         if (i2c${I2C_INSTANCE_NUM}Obj.callback != NULL)
         {
             /* In the callback, slave must read out the error by calling I2Cx_ErrorGet() */
-            (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ERROR, i2c${I2C_INSTANCE_NUM}Obj.context);
+            (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ERROR, context);
         }
 
         return;
@@ -127,13 +128,13 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
 
         if (i2c${I2C_INSTANCE_NUM}Obj.callback != NULL)
         {
-            (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, i2c${I2C_INSTANCE_NUM}Obj.context);
+            (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, context);
 
             if (i2c${I2C_INSTANCE_NUM}Obj.transferDir == I2C_SLAVE_TRANSFER_DIR_READ)
             {
                 /* I2C master wants to read (slave transmit) */
                 /* In the callback, slave must write to transmit register by calling I2Cx_WriteByte() */
-                (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, i2c${I2C_INSTANCE_NUM}Obj.context);
+                (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, context);
             }
         }
     }
@@ -147,7 +148,7 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
             if (i2c${I2C_INSTANCE_NUM}Obj.callback != NULL)
             {
                 /* In the callback, slave must write to transmit register by calling I2Cx_WriteByte() */
-                (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, i2c${I2C_INSTANCE_NUM}Obj.context);
+                (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, context);
             }
         }
         else
@@ -157,7 +158,7 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
 
             if (i2c${I2C_INSTANCE_NUM}Obj.callback != NULL)
             {
-                (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_NAK_RECEIVED, i2c${I2C_INSTANCE_NUM}Obj.context);
+                (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_NAK_RECEIVED, context);
             }
         }
     }
@@ -173,7 +174,7 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
 
             if (i2c${I2C_INSTANCE_NUM}Obj.callback != NULL)
             {
-                (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_STOP_BIT_RECEIVED, i2c${I2C_INSTANCE_NUM}Obj.context);
+                (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_STOP_BIT_RECEIVED, context);
             }
         }
         else
@@ -181,7 +182,7 @@ static void I2C${I2C_INSTANCE_NUM}_TransferSM(void)
             if (i2c${I2C_INSTANCE_NUM}Obj.callback != NULL)
             {
                 /* In the callback, slave must read data by calling I2Cx_ReadByte()  */
-                (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_RX_READY, i2c${I2C_INSTANCE_NUM}Obj.context);
+                (void)i2c${I2C_INSTANCE_NUM}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_RX_READY, context);
             }
         }
     }

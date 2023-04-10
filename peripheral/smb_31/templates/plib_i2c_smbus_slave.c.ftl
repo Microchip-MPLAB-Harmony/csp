@@ -250,6 +250,7 @@ void I2C${I2C_INSTANCE_NAME}_TargetBufferWrite(void* pBuffer, uint32_t nBytes)
 void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32_t completion_reg)
 {
     uint8_t PECConfig = ((${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] & SMB_CFG_PECEN_Msk) != 0U)? 1U: 0U;
+    uintptr_t context = ${I2C_INSTANCE_NAME?lower_case}TargetObj.context;
 
     if ((completion_reg & SMB_COMPL_SDONE_Msk) != 0U)
     {
@@ -263,7 +264,10 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
         {
             ${I2C_INSTANCE_NAME?lower_case}TargetObj.error |= I2C_SMB_TARGET_ERROR_TIMEOUT;
         }
-        if (((${I2C_INSTANCE_NAME}_REGS->SMB_SCMD[0] & SMB_SCMD_SRUN_Msk) != 0U) && (${I2C_INSTANCE_NAME?lower_case}TargetObj.error == I2C_SMB_TARGET_ERROR_NONE))
+
+        I2C_SMB_TARGET_ERROR error = ${I2C_INSTANCE_NAME?lower_case}TargetObj.error;
+
+        if (((${I2C_INSTANCE_NAME}_REGS->SMB_SCMD[0] & SMB_SCMD_SRUN_Msk) != 0U) && (error == I2C_SMB_TARGET_ERROR_NONE))
         {
             if ((${I2C_INSTANCE_NAME}_REGS->SMB_SCMD[0] & SMB_SCMD_SPROCEED_Msk) == 0U)
             {
@@ -276,7 +280,7 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
 
                         if (${I2C_INSTANCE_NAME?lower_case}TargetObj.callback != NULL)
                         {
-                            (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_RX_READY, ${I2C_INSTANCE_NAME?lower_case}TargetObj.context);
+                            (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_RX_READY, context);
                         }
                     }
                     else
@@ -285,7 +289,7 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
                         if ((completion_reg & SMB_COMPL_SPROT_Msk) != 0U)
                         {
                             ${I2C_INSTANCE_NAME?lower_case}TargetObj.error |= I2C_SMB_TARGET_ERROR_SPROT;
-                            (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_ERROR, ${I2C_INSTANCE_NAME?lower_case}TargetObj.context);
+                            (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_ERROR, context);
                         }
                     }
                     if ((completion_reg & SMB_COMPL_REP_RD_Msk) != 0U)
@@ -293,7 +297,7 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
                         if (${I2C_INSTANCE_NAME?lower_case}TargetObj.callback != NULL)
                         {
                             /* Application is expected to frame the response and make the response available by calling the I2C${I2C_INSTANCE_NAME}_TargetBufferWrite() API */
-                            (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_TX_READY, ${I2C_INSTANCE_NAME?lower_case}TargetObj.context);
+                            (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_TX_READY, context);
                         }
 
                         ${I2C_INSTANCE_NAME?lower_case}TargetObj.transferDir = I2C_SMB_TARGET_TRANSFER_DIR_READ;
@@ -306,7 +310,7 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
                 else if (((${I2C_INSTANCE_NAME}_REGS->SMB_RSTS & SMB_RSTS_AAS_Msk) != 0U) && ((${I2C_INSTANCE_NAME}_REGS->SMB_SHDW_DATA & 0x01U) != 0U))
                 {
                     /* This is executed when Host sends a Read request after a normal start bit (not repeated start). Application is expected to frame the response and make the response available by calling the I2C${I2C_INSTANCE_NAME}_SMBUSBufferWrite() API */
-                    (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_TX_READY, ${I2C_INSTANCE_NAME?lower_case}TargetObj.context);
+                    (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_TX_READY, context);
                     ${I2C_INSTANCE_NAME?lower_case}TargetObj.transferDir = I2C_SMB_TARGET_TRANSFER_DIR_READ;
                 }
                 else
@@ -361,7 +365,7 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
                     {
                         if (${I2C_INSTANCE_NAME?lower_case}TargetObj.error == I2C_SMB_TARGET_ERROR_NONE)
                         {
-                            (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_RX_READY, ${I2C_INSTANCE_NAME?lower_case}TargetObj.context);
+                            (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_RX_READY, context);
                         }
                     }
                 }
@@ -388,11 +392,11 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
             {
                 if (${I2C_INSTANCE_NAME?lower_case}TargetObj.error == I2C_SMB_TARGET_ERROR_NONE)
                 {
-                    (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_DONE, ${I2C_INSTANCE_NAME?lower_case}TargetObj.context);
+                    (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_DONE, context);
                 }
                 else
                 {
-                    (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_ERROR, ${I2C_INSTANCE_NAME?lower_case}TargetObj.context);
+                    (void)${I2C_INSTANCE_NAME?lower_case}TargetObj.callback(I2C_SMB_TARGET_TRANSFER_EVENT_ERROR, context);
                 }
             }
 
