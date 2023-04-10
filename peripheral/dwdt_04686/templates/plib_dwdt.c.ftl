@@ -218,7 +218,9 @@ void __attribute__((used)) DWDT${i}_InterruptHandler(void)
     uint32_t interruptStatus = DWDT_REGS->DWDT_WDT${i}_ISR;
     if (dwdt${i}CallbackObj.pCallback != NULL)
     {
-        dwdt${i}CallbackObj.pCallback(interruptStatus, dwdt${i}CallbackObj.context);
+        uintptr_t context = dwdt${i}CallbackObj.context;
+
+        dwdt${i}CallbackObj.pCallback(interruptStatus, context);
     }
 }
 </#if>
