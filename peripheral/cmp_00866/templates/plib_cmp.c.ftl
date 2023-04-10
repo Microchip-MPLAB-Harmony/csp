@@ -137,7 +137,8 @@ void __attribute__((used)) COMPARATOR_${i}_InterruptHandler(void)
 
     if(cmp${i}Obj.callback != NULL)
     {
-        cmp${i}Obj.callback(cmp${i}Obj.context);
+        uintptr_t context = cmp${i}Obj.context;
+        cmp${i}Obj.callback(context);
     }
 }
 
