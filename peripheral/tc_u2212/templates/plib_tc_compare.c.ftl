@@ -527,7 +527,8 @@ void __attribute__((used)) ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
     if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${TC_INSTANCE_NAME}_CallbackObject.context;
+        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 

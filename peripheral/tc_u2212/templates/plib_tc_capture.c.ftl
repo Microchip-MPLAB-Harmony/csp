@@ -227,7 +227,7 @@ void ${TC_INSTANCE_NAME}_CaptureCommandSet(TC_COMMAND command)
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
-    }   
+    }
 }
 
 <#if TC_CTRLA_MODE = "COUNT8">
@@ -324,7 +324,8 @@ void __attribute__((used)) ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
 
     if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${TC_INSTANCE_NAME}_CallbackObject.context;
+        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 
