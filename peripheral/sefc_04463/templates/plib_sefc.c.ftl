@@ -420,7 +420,8 @@ uint32_t ${SEFC_INSTANCE_NAME}_WriteProtectionGet(void)
     <#lt>    ${SEFC_INSTANCE_NAME}_REGS->SEFC_EEFC_FMR = ( ul_fmr & (~SEFC_EEFC_FMR_FRDY_Msk));
     <#lt>    if(sefc.callback != NULL)
     <#lt>    {
-        <#lt>        sefc.callback(sefc.context);
+    <#lt>        uintptr_t context = sefc.context;
+    <#lt>        sefc.callback(context);
     <#lt>    }
     <#lt>}
 </#if>
