@@ -158,7 +158,8 @@ void __attribute__((used)) ${TMR32_INSTANCE_NAME}_InterruptHandler(void)
         
         if (${TMR32_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL)
         {
-            ${TMR32_INSTANCE_NAME?lower_case}Obj.callback_fn(status, ${TMR32_INSTANCE_NAME?lower_case}Obj.context);
+            uintptr_t context = ${TMR32_INSTANCE_NAME?lower_case}Obj.context;
+            ${TMR32_INSTANCE_NAME?lower_case}Obj.callback_fn(status, context);
         }
     }
 }
