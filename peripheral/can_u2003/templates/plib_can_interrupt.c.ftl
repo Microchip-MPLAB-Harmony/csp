@@ -163,6 +163,15 @@ static const can_xidfe_registers_t ${CAN_INSTANCE_NAME?lower_case}ExtFilter[] =
 };
 </#if>
 
+static inline void ${CAN_INSTANCE_NAME}_ZeroInitialize(volatile void* pData, size_t dataSize)
+{
+    volatile uint8_t* data = (volatile uint8_t*)pData;
+    for (uint32_t index = 0; index < dataSize; index++)
+    {
+        data[index] = 0U;
+    }
+}
+
 // *****************************************************************************
 // *****************************************************************************
 // ${CAN_INSTANCE_NAME} PLib Interface Routines
@@ -283,7 +292,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
                                       <#if RXBUF_USE> | CAN_IE_DRXE_Msk</#if>
                                       | CAN_IE_MRAFE_Msk;
 
-    (void) memset(&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(CAN_MSG_RAM_CONFIG));
+    ${CAN_INSTANCE_NAME}_ZeroInitialize(&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, sizeof(CAN_MSG_RAM_CONFIG));
 }
 
 <#if TXBUF_USE>
@@ -1392,12 +1401,16 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
     uint32_t ir = ${CAN_INSTANCE_NAME}_REGS->CAN_IR;
 
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context;
+
     if ((ir & (~(${CAN_INTERRUPT}))) != 0U)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = (ir & (~(${CAN_INTERRUPT})));
         if (${CAN_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL)
         {
-            ${CAN_INSTANCE_NAME?lower_case}CallbackObj.callback(ir, ${CAN_INSTANCE_NAME?lower_case}CallbackObj.context);
+            context = ${CAN_INSTANCE_NAME?lower_case}CallbackObj.context;
+            ${CAN_INSTANCE_NAME?lower_case}CallbackObj.callback(ir, context);
         }
     }
 <#if RXF0_USE>
@@ -1410,7 +1423,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
         if (${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_0].callback != NULL)
         {
-            ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_0].callback(numberOfMessage, ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_0].context);
+            context = ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_0].context;
+            ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_0].callback(numberOfMessage, context);
         }
     }
 </#if>
@@ -1424,7 +1438,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
         if (${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_1].callback != NULL)
         {
-            ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_1].callback(numberOfMessage, ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_1].context);
+            context = ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_1].context;
+            ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_1].callback(numberOfMessage, context);
         }
     }
 </#if>
@@ -1450,7 +1465,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 {
                     if (${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback != NULL)
                     {
-                        ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback(bufferNumber, ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context);
+                        context = ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context;
+                        ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback(bufferNumber, context);
                     }
                 }
             }
@@ -1464,7 +1480,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 {
                     if (${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback != NULL)
                     {
-                        ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback((bufferNumber + 32U), ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context);
+                        context = ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context;
+                        ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback((bufferNumber + 32U), context);
                     }
                 }
             }
@@ -1488,7 +1505,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 ${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE &= ~txbufferMask;
                 if (${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback != NULL)
                 {
-                    ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback(bufferNumber, ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.context);
+                    context = ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.context;
+                    ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback(bufferNumber, context);
                 }
             }
         }
@@ -1501,7 +1519,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_TFE_Msk;
         if (${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback != NULL)
         {
-            ${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback(${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.context);
+            context = ${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.context;
+            ${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback(context);
         }
     }
 </#if>
@@ -1515,7 +1534,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
         if (${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback != NULL)
         {
-            ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback(numberOfTxEvent, ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.context);
+            context = ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.context;
+            ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback(numberOfTxEvent, context);
         }
     }
 </#if>
