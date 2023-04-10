@@ -187,11 +187,12 @@ void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMa
     <#lt>/* Interrupt Handler */
     <#lt>void __attribute__((used)) ${PWM_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>    uint32_t status;
-    <#lt>    status = ${PWM_INSTANCE_NAME}_REGS->PWM_ISR;
+    <#lt>    uint32_t status = ${PWM_INSTANCE_NAME}_REGS->PWM_ISR;
+    <#lt>    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    <#lt>    uintptr_t context = ${PWM_INSTANCE_NAME}_CallbackObj.context;
     <#lt>    if (${PWM_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${PWM_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${PWM_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        ${PWM_INSTANCE_NAME}_CallbackObj.callback_fn(status, context);
     <#lt>    }
     <#lt>}
 
