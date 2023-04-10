@@ -84,7 +84,8 @@ volatile static nvmCallbackObjType ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackOb
 
     <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc != NULL)
     <#lt>    {
-    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.Context);
+    <#lt>        uintptr_t context = ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.Context;
+    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc(context);
     <#lt>    }
     <#lt>}
 </#if>
