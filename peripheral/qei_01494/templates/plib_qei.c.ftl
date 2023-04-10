@@ -176,11 +176,13 @@ void ${QEI_INSTANCE_NAME}_CallbackRegister(QEI_CALLBACK callback, uintptr_t cont
 <#if INTERRUPT_MODE == true>
 void __attribute__((used)) QEI${QEI_INSTANCE_NUM}_InterruptHandler(void)
 {
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context = ${QEI_INSTANCE_NAME?lower_case}Obj.context;
     QEI_STATUS status = (QEI${QEI_INSTANCE_NUM}STAT & (uint32_t)QEI_STATUS_MASK);
     ${QEI_IFS_REG}CLR = _${QEI_IFS_REG}_QEI${QEI_INSTANCE_NUM}IF_MASK;
     if( (${QEI_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
-        ${QEI_INSTANCE_NAME?lower_case}Obj.callback(status, ${QEI_INSTANCE_NAME?lower_case}Obj.context);
+        ${QEI_INSTANCE_NAME?lower_case}Obj.callback(status, context);
     }
 }
 </#if>
