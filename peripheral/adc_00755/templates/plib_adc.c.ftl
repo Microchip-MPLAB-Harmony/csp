@@ -150,7 +150,9 @@ void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler(void)
 
     if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(${ADC_INSTANCE_NAME}_CallbackObj.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObj.context;
+
+        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(context);
     }
 }
 </#if>
