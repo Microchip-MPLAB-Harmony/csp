@@ -315,7 +315,7 @@ void ${DMA_INSTANCE_NAME}_FillDataSet( uint32_t fillData )
 
 static void __attribute__((used)) DMA_interruptHandler(DMA_CHANNEL channel)
 {
-    DMA_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMA_CH_OBJECT  *dmacChObj = NULL;
     volatile uint8_t chIntFlagStatus = 0U;
 
     DMA_TRANSFER_EVENT event = DMA_TRANSFER_EVENT_NONE;
@@ -348,7 +348,8 @@ static void __attribute__((used)) DMA_interruptHandler(DMA_CHANNEL channel)
     /* Execute the callback function */
     if ((dmacChObj->callback != NULL) && ((uint32_t)event != 0U))
     {
-        dmacChObj->callback (event, dmacChObj->context);
+        uintptr_t context = dmacChObj->context;
+        dmacChObj->callback (event, context);
     }
 }
 
