@@ -163,7 +163,8 @@ void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
 
     if(${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL)
     {
-        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback(${WDT_INSTANCE_NAME?lower_case}CallbackObj.context);
+        uintptr_t context = ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context;
+        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback(context);
     }
 }
 </#if>
