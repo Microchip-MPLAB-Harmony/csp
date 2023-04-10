@@ -126,7 +126,7 @@
     <#lt>    if (50U < newCompare-count)
     <#lt>    {
     <#lt>        _CP0_SET_COMPARE(newCompare);
-    <#lt>    }    
+    <#lt>    }
     <#lt>    else
     <#lt>    {
     <#lt>        _CP0_SET_COMPARE(count+50U);
@@ -137,7 +137,8 @@
     <#lt>    coreTmr.tickCounter++;
     <#lt>    if(coreTmr.callback != NULL)
     <#lt>    {
-    <#lt>        coreTmr.callback(status, coreTmr.context);
+    <#lt>        uintptr_t context = coreTmr.context;
+    <#lt>        coreTmr.callback(status, context);
     <#lt>    }
     <#lt>}
 </#if>
@@ -213,7 +214,8 @@
     <#lt>    ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};
     <#lt>    if(coreTmr.callback != NULL)
     <#lt>    {
-    <#lt>        coreTmr.callback(status, coreTmr.context);
+    <#lt>        uintptr_t context = coreTmr.context;
+    <#lt>        coreTmr.callback(status, context);
     <#lt>    }
     <#lt>}
 
@@ -287,7 +289,7 @@
     <#lt>       // Clear Compare Timer Interrupt Flag
     <#lt>       ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};
     <#lt>       flagStatus = true;
-    <#lt>    }   
+    <#lt>    }
     <#lt>    return flagStatus;
     <#lt>}
 </#if>

@@ -59,7 +59,7 @@
     <#lt>{
     <#lt>    CORETIMER_CALLBACK  callback;
     <#lt>    uintptr_t           context;
-    <#lt>    volatile uint32_t   tickCounter;
+    <#lt>    uint32_t            tickCounter;
     <#lt>    uint32_t            period;
     <#lt>} CORETIMER_OBJECT ;
 
