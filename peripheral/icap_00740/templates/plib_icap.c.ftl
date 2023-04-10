@@ -172,9 +172,10 @@ void __attribute__((used)) INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
     uint32_t error_reg_read = ${ERROR_IEC_REG};
     </#if>
 </#if>
+    uintptr_t context = ${ICAP_INSTANCE_NAME?lower_case}Obj.context; 
     if( (${ICAP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
-        ${ICAP_INSTANCE_NAME?lower_case}Obj.callback(${ICAP_INSTANCE_NAME?lower_case}Obj.context);
+        ${ICAP_INSTANCE_NAME?lower_case}Obj.callback(context);
     }
 <#if ICAP_NUM_INT_LINES == 1>
     if (((${ICAPx_IFS_REG} & _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK) != 0U) &&
