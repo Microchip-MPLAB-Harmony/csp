@@ -269,7 +269,8 @@ void __attribute__((used)) ${EIC_INSTANCE_NAME}_InterruptHandler(void)
                 /* Find any associated callback entries in the callback table */
                 if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback != NULL))
                 {
-                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context);
+                    uintptr_t context = ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context;
+                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(context);
                 }
 
                 /* Clear interrupt flag */
@@ -292,7 +293,8 @@ void __attribute__((used)) ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(voi
     /* Find any associated callback entries in the callback table */
     if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback != NULL))
     {
-        ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].context);
+        uintptr_t context = ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].context;
+        ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback(context);
     }
 
 }
@@ -319,7 +321,8 @@ void __attribute__((used)) ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
                 /* Find any associated callback entries in the callback table */
                 if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback != NULL))
                 {
-                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context);
+                    uintptr_t context = ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context;
+                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(context);
                 }
 
                 /* Clear interrupt flag */
@@ -356,7 +359,8 @@ void __attribute__((used)) ${EIC_INSTANCE_NAME}_InterruptHandler(void)
                 /* Find any associated callback entries in the callback table */
                 if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback != NULL))
                 {
-                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context);
+                    uintptr_t context = ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context;
+                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(context);
                 }
 
                 /* Clear interrupt flag */
@@ -378,7 +382,8 @@ void __attribute__((used)) ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(voi
     /* Find any associated callback entries in the callback table */
     if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback != NULL))
     {
-        ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].context);
+        uintptr_t context = ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].context;
+        ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback(context);
     }
 
 }
@@ -405,7 +410,8 @@ void __attribute__((used)) ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
                 /* Find any associated callback entries in the callback table */
                 if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback != NULL))
                 {
-                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context);
+                    uintptr_t context = ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context;
+                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(context);
                 }
 
                 /* Clear interrupt flag */
@@ -434,7 +440,8 @@ void __attribute__((used)) NMI_InterruptHandler(void)
         /* Find any associated callback entries in the callback table */
         if (${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback != NULL)
         {
-            ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback(${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.context);
+            uintptr_t context = ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.context;
+            ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback(context);
         }
     }
 }
@@ -452,7 +459,8 @@ void __attribute__((used)) NMI_InterruptHandler(void)
         /* Find any associated callback entries in the callback table */
         if (${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback != NULL)
         {
-            ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback(${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.context);
+            uintptr_t context = ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.context;
+            ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback(context);
         }
     }
 }
