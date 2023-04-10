@@ -57,14 +57,19 @@ void static __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_RX_Handler(void)
 {
     if (${DBGU_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
-        while ((DBGU_SR_RXRDY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_RXRDY_Msk)) && (${DBGU_INSTANCE_NAME?lower_case}Obj.rxSize > ${DBGU_INSTANCE_NAME?lower_case}Obj.rxProcessedSize) )
+        size_t rxProcessedSize = ${DBGU_INSTANCE_NAME?lower_case}Obj.rxProcessedSize;
+        size_t rxSize = ${DBGU_INSTANCE_NAME?lower_case}Obj.rxSize;
+
+        while ((DBGU_SR_RXRDY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_RXRDY_Msk)) && (rxSize > rxProcessedSize) )
         {
-            ${DBGU_INSTANCE_NAME?lower_case}Obj.rxBuffer[${DBGU_INSTANCE_NAME?lower_case}Obj.rxProcessedSize] = (uint8_t)(${DBGU_INSTANCE_NAME}_REGS->DBGU_RHR & DBGU_RHR_RXCHR_Msk);
-            ${DBGU_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++;
+            ${DBGU_INSTANCE_NAME?lower_case}Obj.rxBuffer[rxProcessedSize] = (uint8_t)(${DBGU_INSTANCE_NAME}_REGS->DBGU_RHR & DBGU_RHR_RXCHR_Msk);
+            rxProcessedSize++;
         }
 
+        ${DBGU_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = rxProcessedSize;
+
         /* Check if the buffer is done */
-        if (${DBGU_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${DBGU_INSTANCE_NAME?lower_case}Obj.rxSize)
+        if (${DBGU_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= rxSize)
         {
             ${DBGU_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
@@ -73,7 +78,9 @@ void static __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_RX_Handler(void)
 
             if (${DBGU_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL)
             {
-                ${DBGU_INSTANCE_NAME?lower_case}Obj.rxCallback(${DBGU_INSTANCE_NAME?lower_case}Obj.rxContext);
+                uintptr_t rxContext = ${DBGU_INSTANCE_NAME?lower_case}Obj.rxContext;
+
+                ${DBGU_INSTANCE_NAME?lower_case}Obj.rxCallback(rxContext);
             }
         }
     }
@@ -90,21 +97,28 @@ void static __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_TX_Handler(void)
 {
     if (${DBGU_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
-        while ((DBGU_SR_TXRDY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXRDY_Msk)) && (${DBGU_INSTANCE_NAME?lower_case}Obj.txSize > ${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
+        size_t txProcessedSize = ${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize;
+        size_t txSize = ${DBGU_INSTANCE_NAME?lower_case}Obj.txSize;
+
+        while ((DBGU_SR_TXRDY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXRDY_Msk)) && (txSize > txProcessedSize) )
         {
-            ${DBGU_INSTANCE_NAME}_REGS->DBGU_THR = ${DBGU_INSTANCE_NAME?lower_case}Obj.txBuffer[${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize];
-            ${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
+            ${DBGU_INSTANCE_NAME}_REGS->DBGU_THR = ${DBGU_INSTANCE_NAME?lower_case}Obj.txBuffer[txProcessedSize];
+            txProcessedSize++;
         }
 
+        ${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize = txProcessedSize;
+
         /* Check if the buffer is done */
-        if (${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= ${DBGU_INSTANCE_NAME?lower_case}Obj.txSize)
+        if (${DBGU_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= txSize)
         {
             ${DBGU_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
             ${DBGU_INSTANCE_NAME}_REGS->DBGU_IDR = DBGU_IDR_TXRDY_Msk;
 
             if (${DBGU_INSTANCE_NAME?lower_case}Obj.txCallback != NULL)
             {
-                ${DBGU_INSTANCE_NAME?lower_case}Obj.txCallback(${DBGU_INSTANCE_NAME?lower_case}Obj.txContext);
+                uintptr_t txContext = ${DBGU_INSTANCE_NAME?lower_case}Obj.txContext;
+
+                ${DBGU_INSTANCE_NAME?lower_case}Obj.txCallback(txContext);
             }
         }
     }
@@ -135,7 +149,8 @@ void __attribute__((used)) ${DBGU_INSTANCE_NAME}_InterruptHandler(void)
          * receiver callback */
         if (${DBGU_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL)
         {
-            ${DBGU_INSTANCE_NAME?lower_case}Obj.rxCallback(${DBGU_INSTANCE_NAME?lower_case}Obj.rxContext);
+            uintptr_t rxContext = ${DBGU_INSTANCE_NAME?lower_case}Obj.rxContext;
+            ${DBGU_INSTANCE_NAME?lower_case}Obj.rxCallback(rxContext);
         }
     }
 
@@ -229,7 +244,12 @@ bool ${DBGU_INSTANCE_NAME}_SerialSetup(DBGU_SERIAL_SETUP *setup, uint32_t srcClk
     uint32_t dbguMode;
 
 <#if DBGU_INTERRUPT_MODE_ENABLE == true>
-    if ((${DBGU_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true) || (${DBGU_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true))
+    if (${DBGU_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
+    {
+        /* Transaction is in progress, so return without updating settings */
+        return false;
+    }
+    if (${DBGU_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
         /* Transaction is in progress, so return without updating settings */
         return false;

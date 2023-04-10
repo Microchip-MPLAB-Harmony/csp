@@ -150,9 +150,9 @@ typedef struct
 
     uintptr_t                                           wrContext;
 
-    volatile uint32_t                                   wrInIndex;
+    uint32_t                                   wrInIndex;
 
-    volatile uint32_t                                   wrOutIndex;
+    uint32_t                                            wrOutIndex;
 
     bool                                                isWrNotificationEnabled;
 
@@ -164,9 +164,9 @@ typedef struct
 
     uintptr_t                                           rdContext;
 
-    volatile uint32_t                                   rdInIndex;
+    uint32_t                                            rdInIndex;
 
-    volatile uint32_t                                   rdOutIndex;
+    uint32_t                                            rdOutIndex;
 
     bool                                                isRdNotificationEnabled;
 
