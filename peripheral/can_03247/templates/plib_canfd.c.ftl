@@ -196,6 +196,15 @@ static void CANLengthToDlcGet(uint8_t length, uint8_t *dlc)
 }
 </#if>
 
+static inline void ${CAN_INSTANCE_NAME}_ZeroInitialize(volatile void* pData, size_t dataSize)
+{
+    volatile uint8_t* data = (volatile uint8_t*)pData;
+    for (uint32_t index = 0; index < dataSize; index++)
+    {
+        data[index] = 0U;
+    }
+}
+
 // *****************************************************************************
 // *****************************************************************************
 // ${CAN_INSTANCE_NAME} PLib Interface Routines
@@ -307,7 +316,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     CFD${CAN_INSTANCE_NUM}INT |= _CFD${CAN_INSTANCE_NUM}INT_SERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_CERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_IVMIE_MASK;
 
     /* Initialize the CAN PLib Object */
-   (void) memset((void *)${CAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
+   ${CAN_INSTANCE_NAME}_ZeroInitialize(${CAN_INSTANCE_NAME?lower_case}RxMsg, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
 
 </#if>
     /* Switch the CAN module to CANFD_OPERATION_MODE. Wait until the switch is complete */
@@ -699,8 +708,8 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterGet(uint8_t filterNum)
     {
         if ((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CANFD_FILTER_OBJ_OFFSET)) & _CFD${CAN_INSTANCE_NUM}FLTOBJ0_EXIDE_MASK) != 0U)
         {
-            id = (((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CANFD_FILTER_OBJ_OFFSET)) & CANFD_MSG_RX_EXT_SID_MASK) << 18)
-               | ((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CANFD_FILTER_OBJ_OFFSET)) & CANFD_MSG_RX_EXT_EID_MASK) >> 11))
+            id = (*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CANFD_FILTER_OBJ_OFFSET)) & CANFD_MSG_RX_EXT_SID_MASK) << 18;
+            id = (id | ((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CANFD_FILTER_OBJ_OFFSET)) & CANFD_MSG_RX_EXT_EID_MASK) >> 11))
                & CANFD_MSG_EID_MASK;
         }
         else
@@ -778,8 +787,8 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskGet(uint8_t acceptanceF
 
     if ((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}MASK0 + (acceptanceFilterMaskNum * CANFD_ACCEPTANCE_MASK_OFFSET)) & _CFD${CAN_INSTANCE_NUM}MASK0_MIDE_MASK) != 0U)
     {
-        id = (((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}MASK0 + (acceptanceFilterMaskNum * CANFD_ACCEPTANCE_MASK_OFFSET)) & CANFD_MSG_RX_EXT_SID_MASK) << 18)
-           | ((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}MASK0 + (acceptanceFilterMaskNum * CANFD_ACCEPTANCE_MASK_OFFSET)) & CANFD_MSG_RX_EXT_EID_MASK) >> 11))
+        id = (*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}MASK0 + (acceptanceFilterMaskNum * CANFD_ACCEPTANCE_MASK_OFFSET)) & CANFD_MSG_RX_EXT_SID_MASK) << 18;
+        id = (id | ((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}MASK0 + (acceptanceFilterMaskNum * CANFD_ACCEPTANCE_MASK_OFFSET)) & CANFD_MSG_RX_EXT_EID_MASK) >> 11))
            & CANFD_MSG_EID_MASK;
     }
     else
@@ -1273,6 +1282,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_RX_InterruptHandler(void)
 <#if CAN_TIMESTAMP_ENABLE == true>
     uint8_t dataIndex = 4;
 </#if>
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context;
 
     fifoNum = ((uint8_t)CFD${CAN_INSTANCE_NUM}VEC & (uint8_t)_CFD${CAN_INSTANCE_NUM}VEC_ICODE_MASK);
     if (fifoNum <= CANFD_NUM_OF_FIFO)
@@ -1349,7 +1360,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_RX_InterruptHandler(void)
 
     if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback != NULL)
     {
-        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context);
+        context = ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context;
+        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(context);
     }
 }
 
@@ -1360,6 +1372,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_TX_InterruptHandler(void)
 </#if>
 {
     uint8_t  fifoNum = 0;
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context;
 
     fifoNum = ((uint8_t)CFD${CAN_INSTANCE_NUM}VEC & (uint8_t)_CFD${CAN_INSTANCE_NUM}VEC_ICODE_MASK);
     if (fifoNum <= CANFD_NUM_OF_FIFO)
@@ -1384,7 +1398,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_TX_InterruptHandler(void)
 
     if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback != NULL)
     {
-        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context);
+        context = ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context;
+        ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(context);
     }
 }
 
@@ -1395,6 +1410,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_MISC_InterruptHandler(void)
 </#if>
 {
     uint32_t errorStatus = 0;
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context;
 
     CFD${CAN_INSTANCE_NUM}INT &= ~(_CFD${CAN_INSTANCE_NUM}INT_SERRIF_MASK | _CFD${CAN_INSTANCE_NUM}INT_CERRIF_MASK | _CFD${CAN_INSTANCE_NUM}INT_IVMIF_MASK);
     ${CAN_IFS_REG}CLR = _${CAN_IFS_REG}_CAN${CAN_INSTANCE_NUM}IF_MASK;
@@ -1411,7 +1428,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_MISC_InterruptHandler(void)
     /* Client must call ${CAN_INSTANCE_NAME}_ErrorGet and ${CAN_INSTANCE_NAME}_ErrorCountGet functions to get errors */
     if (${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.callback != NULL)
     {
-        ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.callback(${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.context);
+        context = ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.context;
+        ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.callback(context);
     }
 }
 
