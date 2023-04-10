@@ -211,12 +211,15 @@ PDEC_${PDEC_CTRLA_MODE}_STATUS ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}StatusGet
 void __attribute__((used)) ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
 {
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context;
+    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;    
     status = ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = 0xFF;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
     {
-        ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback(status, ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context);
+        ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback(status, context);
     }
 
 }
@@ -226,12 +229,15 @@ void __attribute__((used)) ${PDEC_INSTANCE_NAME}_InterruptHandler( void )
 void __attribute__((used)) ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 {
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context;
+    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;    
     status =  ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG & PDEC_INTFLAG_MC0_Msk;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC0_Msk;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
     {
-        ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback(status, ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context);
+        ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback(status, context);
     }
 }
 </#if>
@@ -240,12 +246,15 @@ void __attribute__((used)) ${PDEC_INSTANCE_NAME}_MC0_InterruptHandler( void )
 void __attribute__((used)) ${PDEC_INSTANCE_NAME}_MC1_InterruptHandler( void )
 {
     PDEC_${PDEC_CTRLA_MODE}_STATUS status;
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context;
+    context  =${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context;    
     status =  ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG & PDEC_INTFLAG_MC1_Msk;
     /* Clear interrupt flags */
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_INTFLAG = PDEC_INTFLAG_MC1_Msk;
     if (${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback != NULL)
     {
-        ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback(status, ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.context);
+        ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}_CallbackObj.callback(status, context);
     }
 }
 </#if>
