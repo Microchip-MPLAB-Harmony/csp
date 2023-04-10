@@ -151,6 +151,7 @@ bool ${TWIHS_INSTANCE_NAME}_IsBusy(void)
 void __attribute__((used)) ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status = ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_SR;
+    uintptr_t context = ${TWIHS_INSTANCE_NAME?lower_case}Obj.context;
 
     if ((status & ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_IMR) != 0U)
     {
@@ -176,7 +177,7 @@ void __attribute__((used)) ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
 
                 if (${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                 {
-                    (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
+                    (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_ADDR_MATCH, context);
                 }
 
                 ${TWIHS_INSTANCE_NAME?lower_case}Obj.isAddrMatchEventNotified = true;
@@ -191,7 +192,7 @@ void __attribute__((used)) ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
                     {
                         if (${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                         {
-                            (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_TX_READY, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
+                            (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_TX_READY, context);
                         }
                         ${TWIHS_INSTANCE_NAME?lower_case}Obj.isFirstTxPending = false;
                     }
@@ -209,13 +210,13 @@ void __attribute__((used)) ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
                 {
                     if (${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                     {
-                        (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_RX_READY, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
+                        (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_RX_READY, context);
                     }
                 }
             }
         }
         else if ((status & TWIHS_SR_EOSACC_Msk) != 0U)
-        { 
+        {
             /* Either Repeated Start or Stop condition received */
 
             ${TWIHS_INSTANCE_NAME?lower_case}Obj.isAddrMatchEventNotified = false;
@@ -231,16 +232,16 @@ void __attribute__((used)) ${TWIHS_INSTANCE_NAME}_InterruptHandler( void )
 
                 if (${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                 {
-                    (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE, ${TWIHS_INSTANCE_NAME?lower_case}Obj.context);
+                    (void) ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback(TWIHS_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE, context);
                 }
 
                 ${TWIHS_INSTANCE_NAME}_REGS->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk;
             }
         }
-		else
-		{
-			/* Do Nothing*/
-		}
+        else
+        {
+            /* Do Nothing*/
+        }
     }
 }
 <#else>
