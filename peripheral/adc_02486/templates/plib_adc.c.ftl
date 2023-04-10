@@ -114,23 +114,23 @@ void ${ADC_INSTANCE_NAME}_ConversionStart(void)
 
 void ${ADC_INSTANCE_NAME}_InputSelect(${ADC_INSTANCE_NAME}_MUX muxType, ${ADC_INSTANCE_NAME}_INPUT_POSITIVE positiveInput, ${ADC_INSTANCE_NAME}_INPUT_NEGATIVE negativeInput)
 {
-	if (muxType == ADC_MUX_B)
-	{
-    	AD1CHSbits.CH0SB = (uint8_t)positiveInput;
+    if (muxType == ADC_MUX_B)
+    {
+        AD1CHSbits.CH0SB = (uint8_t)positiveInput;
         AD1CHSbits.CH0NB = (uint8_t)negativeInput;
-	}
-	else
-	{
-    	AD1CHSbits.CH0SA = (uint8_t)positiveInput;
+    }
+    else
+    {
+        AD1CHSbits.CH0SA = (uint8_t)positiveInput;
         AD1CHSbits.CH0NA = (uint8_t)negativeInput;
-	}
+    }
 }
 
 void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanInputs)
 {
 <#if core.PRODUCT_FAMILY == "PIC32MX1290">
     AD1CSSL = (uint32_t)(scanInputs);
-    <#if AD1CSSL__CSSL_COUNT gt 31> 
+    <#if AD1CSSL__CSSL_COUNT gt 31>
     AD1CSSL2 = ((uint64_t)scanInputs >> 32);
     </#if>
 <#else>
@@ -164,7 +164,9 @@ void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler(void)
 
     if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(${ADC_INSTANCE_NAME}_CallbackObj.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObj.context;
+
+        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(context);
     }
 }
 </#if>
