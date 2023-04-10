@@ -305,7 +305,8 @@ void __attribute__((used)) ${SDADC_INSTANCE_NAME}_InterruptHandler( void )
 
     if (${SDADC_INSTANCE_NAME}_CallbackObj.callback != NULL)
     {
-        ${SDADC_INSTANCE_NAME}_CallbackObj.callback(status, ${SDADC_INSTANCE_NAME}_CallbackObj.context);
+        uintptr_t context = ${SDADC_INSTANCE_NAME}_CallbackObj.context;
+        ${SDADC_INSTANCE_NAME}_CallbackObj.callback(status, context);
     }
 
 }
