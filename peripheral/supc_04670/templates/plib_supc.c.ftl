@@ -320,11 +320,11 @@ void ${SUPC_INSTANCE_NAME}_CallbackRegister(SUPC_CALLBACK callback, uintptr_t co
 void __attribute__((used)) ${SUPC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t supc_status = ${SUPC_INSTANCE_NAME}_REGS->SUPC_ISR;
-
+    uintptr_t context = supcObj.context; 
     /* Callback user function */
     if(supcObj.callback != NULL)
     {
-        supcObj.callback(supc_status, supcObj.context);
+        supcObj.callback(supc_status, context);
     }
 }
 </#if>

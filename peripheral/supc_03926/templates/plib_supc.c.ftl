@@ -262,11 +262,12 @@ void ${SUPC_INSTANCE_NAME}_CallbackRegister(SUPC_CALLBACK callback, uintptr_t co
 
 void __attribute__((used)) ${SUPC_INSTANCE_NAME}_InterruptHandler(void)
 {
+    uintptr_t context = ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context;     
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_BORVDDUSB_Msk;
 
     if (${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
     {
-        ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback(${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context);
+        ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback(context);
     }
 }
 </#if>

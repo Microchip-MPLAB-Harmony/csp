@@ -234,10 +234,11 @@ void ${SUPC_INSTANCE_NAME}_CallbackRegister (SUPC_CALLBACK callback, uintptr_t c
 
 void __attribute__((used)) ${SUPC_INSTANCE_NAME}_InterruptHandler (void)
 {
-       // Callback user function
+    uintptr_t context = supcObj.context; 
+    // Callback user function
     if(supcObj.callback != NULL)
     {
-        supcObj.callback (supcObj.context);
+        supcObj.callback (context);
     }
 }
 </#if>

@@ -267,11 +267,12 @@ void ${SUPC_INSTANCE_NAME}_BOD33CallbackRegister( SUPC_BOD33_CALLBACK callback, 
 
 void __attribute__((used)) ${SUPC_INSTANCE_NAME}_BODDET_InterruptHandler( void )
 {
+    uintptr_t context = ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context; 
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_BOD33DET_Msk;
 
     if (${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
     {
-        ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback(${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context);
+        ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback(context);
     }
 }
 </#if>
