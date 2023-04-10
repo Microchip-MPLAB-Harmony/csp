@@ -311,7 +311,8 @@ void __attribute__((used)) ${RTC_INSTANCE_NAME}_InterruptHandler( void )
 
         if( rtc.callback != NULL )
         {
-            rtc.callback( rtc_status, rtc.context );
+            uintptr_t context = rtc.context;
+            rtc.callback( rtc_status, context );
         }
     }
 }
