@@ -111,13 +111,15 @@ void ${ACC_INSTANCE_NAME}_CallbackRegister (ACC_CALLBACK callback, uintptr_t con
 
 void __attribute__((used)) ${ACC_INSTANCE_NAME}_InterruptHandler( void )
 {
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context = ${ACC_INSTANCE_NAME?lower_case}Obj.context;      
     // Clear the interrupt
     ${ACC_INSTANCE_NAME}_REGS->ACC_ISR;
 
     // Callback user function
     if(${ACC_INSTANCE_NAME?lower_case}Obj.callback != NULL)
     {
-        ${ACC_INSTANCE_NAME?lower_case}Obj.callback(${ACC_INSTANCE_NAME?lower_case}Obj.context);
+        ${ACC_INSTANCE_NAME?lower_case}Obj.callback(context);
     }
 }
 </#if>
