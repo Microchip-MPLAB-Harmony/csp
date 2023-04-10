@@ -128,7 +128,8 @@ void __attribute__((used)) TIMER_1_InterruptHandler (void)
 
     if((${TMR1_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL))
     {
-        ${TMR1_INSTANCE_NAME?lower_case}Obj.callback_fn(status, ${TMR1_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${TMR1_INSTANCE_NAME?lower_case}Obj.context;
+        ${TMR1_INSTANCE_NAME?lower_case}Obj.callback_fn(status, context);
     }
 }
 
