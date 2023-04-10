@@ -108,19 +108,19 @@ void ${WDT_INSTANCE_NAME}_Disable( void )
 
 void ${WDT_INSTANCE_NAME}_EnableWindowMode( void )
 {
-	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+    while(WDT_REGS->WDT_SYNCBUSY != 0U)
     {
 
     }
-	
+
     /* Window mode can be changed only if peripheral is disabled or ALWAYS ON bit is set */
     if(((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk) == 0U) || ((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != 0U))
     {
         /* Enable window mode */
         ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA |= (uint8_t)WDT_CTRLA_WEN_Msk;
     }
-	
-	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+
+    while(WDT_REGS->WDT_SYNCBUSY != 0U)
     {
 
     }
@@ -128,19 +128,19 @@ void ${WDT_INSTANCE_NAME}_EnableWindowMode( void )
 
 void ${WDT_INSTANCE_NAME}_DisableWindowMode( void )
 {
-	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+    while(WDT_REGS->WDT_SYNCBUSY != 0U)
     {
 
     }
-	
+
     /* Window mode can be changed only if peripheral is disabled or ALWAYS ON bit is set */
     if(((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk) == 0U) || ((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != 0U))
     {
         /* Disable window mode */
         ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA &= (uint8_t)(~WDT_CTRLA_WEN_Msk);
     }
-	
-	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+
+    while(WDT_REGS->WDT_SYNCBUSY != 0U)
     {
 
     }
@@ -219,7 +219,8 @@ void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
 
     if( ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL )
     {
-        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback(${WDT_INSTANCE_NAME?lower_case}CallbackObj.context);
+        uintptr_t context = ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context;
+        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback(context);
     }
 }
 </#if>
