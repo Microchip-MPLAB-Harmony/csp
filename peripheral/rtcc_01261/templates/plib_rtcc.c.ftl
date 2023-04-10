@@ -137,11 +137,11 @@ void ${RTCC_INSTANCE_NAME}_Initialize( void )
         <#lt>    ALRMTIME = 0x${RTCALRM_TIME}00;   /* Set alarm time */
         <#lt>    ALRMDATE = 0x00${RTCALRM_DATE}0${RTCALRM_DAY};   /* Set alarm date */
         <#lt>    RTCALRMbits.AMASK = ${RTCC_ALARM_MASK}; /* Set alarm frequency */
-    
+
         <#if RTCC_INTERRUPT_MODE == true>
             <#lt>    ${RTCC_IEC_REG}SET = (uint32_t)RTCC_INT_ALARM; /* Enable RTC Alarma interrupt */
         </#if>
-    
+
         <#lt>    RTCALRMSET = _RTCALRM_ALRMEN_MASK;  /* Enable the alarm */
     </#if>
 
@@ -208,11 +208,11 @@ void ${RTCC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
     tempHour =   (10U * (bcdtodecimal((dataTime & _RTCTIME_HR10_MASK) >> _RTCTIME_HR10_POSITION)) +
                          (bcdtodecimal((dataTime & _RTCTIME_HR01_MASK) >> _RTCTIME_HR01_POSITION)));
     Time->tm_hour = (int)tempHour;
-    
+
     tempMin =   (10U * (bcdtodecimal((dataTime & _RTCTIME_MIN10_MASK) >> _RTCTIME_MIN10_POSITION)) +
                          (bcdtodecimal((dataTime & _RTCTIME_MIN01_MASK) >> _RTCTIME_MIN01_POSITION)));
     Time->tm_min =  (int)tempMin;
-    
+
     tempSec =   (10U * (bcdtodecimal((dataTime & _RTCTIME_SEC10_MASK) >> _RTCTIME_SEC10_POSITION)) +
                          (bcdtodecimal((dataTime & _RTCTIME_SEC01_MASK) >> _RTCTIME_SEC01_POSITION)));
     Time->tm_sec =  (int)tempSec;
@@ -227,20 +227,20 @@ void ${RTCC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
     tempYear =   (10U * (bcdtodecimal((dataDate & _RTCDATE_YEAR10_MASK) >> _RTCDATE_YEAR10_POSITION)) +
                          (bcdtodecimal((dataDate & _RTCDATE_YEAR01_MASK) >> _RTCDATE_YEAR01_POSITION)));
     Time->tm_year =  (int)tempYear;
-    
+
     Time->tm_year += 2000;  /* This RTC designed for 0-99 year range.  Need to add 2000 to that. */
-    
+
     tempMon =   (10U * (bcdtodecimal((dataDate & _RTCDATE_MONTH10_MASK) >> _RTCDATE_MONTH10_POSITION)) +
                          (bcdtodecimal((dataDate & _RTCDATE_MONTH01_MASK) >> _RTCDATE_MONTH01_POSITION))) - 1U;
     Time->tm_mon =  (int)tempMon;
-    
+
     tempMday =   (10U * (bcdtodecimal((dataDate & _RTCDATE_DAY10_MASK) >> _RTCDATE_DAY10_POSITION)) +
                          (bcdtodecimal((dataDate & _RTCDATE_DAY01_MASK) >> _RTCDATE_DAY01_POSITION)));
     Time->tm_mday = (int)tempMday;
 
     tempWday =    bcdtodecimal((dataDate & _RTCDATE_WDAY01_MASK) >> _RTCDATE_WDAY01_POSITION);
     Time->tm_wday = (int)tempWday;
-    
+
     Time->tm_yday = 0;  /* not used */
     Time->tm_isdst = 0;    /* not used */
 }
@@ -313,7 +313,8 @@ void __attribute__((used)) ${RTCC_INSTANCE_NAME}_InterruptHandler( void )
 
     if(rtcc.callback != NULL)
     {
-        rtcc.callback(rtcc.context);
+        uintptr_t context = rtcc.context;
+        rtcc.callback(context);
     }
 }
 
