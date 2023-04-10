@@ -400,7 +400,8 @@ void __attribute__((used)) ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObject.context;
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 <#else>
@@ -423,7 +424,8 @@ void __attribute__((used)) ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObject.context;
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 <#else>
