@@ -461,7 +461,8 @@ void __attribute__((used)) ADC_DMA_InterruptHandler(void)
 
     if (${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn != NULL)
     {
-      ${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn(dmaStatus, ${ADCHS_INSTANCE_NAME}_DMACallbackObj.context);
+        uintptr_t context = ${ADCHS_INSTANCE_NAME}_DMACallbackObj.context;
+        ${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn(dmaStatus, context);
     }
 }
 
@@ -592,7 +593,8 @@ void __attribute__((used)) ADC_EOS_InterruptHandler(void)
 </#if>
     if (${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn != NULL)
     {
-      ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn(${ADCHS_INSTANCE_NAME}_EOSCallbackObj.context);
+        uintptr_t context = ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.context;
+        ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn(context);
     }
     (void) status;
 }
@@ -611,7 +613,8 @@ void __attribute__((used)) ADC_DATA${i}_InterruptHandler(void)
 {
     if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
     {
-      ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
+        uintptr_t context = ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context;
+        ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, context);
     }
 
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
@@ -640,7 +643,8 @@ void __attribute__((used)) ADC_DATA${i}_InterruptHandler(void)
 {
     if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
     {
-        ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
+        uintptr_t context = ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context;
+        ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, context);
     }
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
 <#if i < ADCHS_IFS0_NUM_IRQ>

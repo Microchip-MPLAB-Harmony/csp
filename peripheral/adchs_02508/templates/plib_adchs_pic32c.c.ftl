@@ -158,12 +158,12 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
 
     /* Turn ON ADC */
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON1 |= ADCHS_ADCCON1_ON_Msk;
-    while((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_BGVRRDY_Msk) == ADCHS_ADCCON2_BGVRRDY_Msk) 
+    while((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_BGVRRDY_Msk) == ADCHS_ADCCON2_BGVRRDY_Msk)
     {
         // Wait until the reference voltage is ready
     }
-    
-    while((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_REFFLT_Msk) == ADCHS_ADCCON2_REFFLT_Msk) 
+
+    while((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_REFFLT_Msk) == ADCHS_ADCCON2_REFFLT_Msk)
     {
         // Wait if there is a fault with the reference voltage
     }
@@ -176,7 +176,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON |= ADCHS_ADCANCON_ANEN${i}_Msk;      // Enable the clock to analog bias
     while(((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON & ADCHS_ADCANCON_WKRDY${i}_Msk) == 0U) // Wait until ADC is ready
     {
-        /* Nothing to do */    
+        /* Nothing to do */
     }
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON3 |= ADCHS_ADCCON3_DIGEN${i}_Msk;       // Enable ADC
 
@@ -188,7 +188,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON |= ADCHS_ADCANCON_ANEN7_Msk;      // Enable the clock to analog bias
     while(((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON & ADCHS_ADCANCON_WKRDY7_Msk)) == 0U) // Wait until ADC is ready
     {
-        /* Nothing to do */    
+        /* Nothing to do */
     }
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON3 |= ADCHS_ADCCON3_DIGEN7_Msk;       // Enable ADC
 </#if>
@@ -280,7 +280,7 @@ bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
 {
     uint32_t channel_addr = ADCHS_BASE_ADDRESS + ADCHS_ADCDATA0_REG_OFST + ((uint32_t)channel << 4U);
-	return (uint16_t)(*(uint32_t*)channel_addr);   
+    return (uint16_t)(*(uint32_t*)channel_addr);
 }
 
 <#if ADCHS_INTERRUPT == true>
@@ -367,7 +367,7 @@ void ${ADCHS_INSTANCE_NAME}_EOSCallbackRegister(ADCHS_EOS_CALLBACK callback, uin
 <#else>
 bool ${ADCHS_INSTANCE_NAME}_EOSStatusGet(void)
 {
-    return (bool)(((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSRDY_Msk) 
+    return (bool)(((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSRDY_Msk)
                     >> ADCHS_ADCCON2_EOSRDY_Pos) != 0U);
 }
 </#if>
@@ -382,10 +382,12 @@ void __attribute__((used)) ADCHS_InterruptHandler( void )
     status  = ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCDSTAT1;
     status &= ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCGIRQEN1;
     </#if>
-	
-	<#if ADCHS_MAX_COMPARATOR_NUM gt 0>
-	ADCHS_CHANNEL_NUM channelId;
-	</#if>
+
+    <#if ADCHS_MAX_COMPARATOR_NUM gt 0>
+    ADCHS_CHANNEL_NUM channelId;
+    </#if>
+    
+    uintptr_t context;
 
     <#if ADCCON2__EOSIEN == true>
     if (((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSIEN_Msk) != 0U) &&
@@ -393,7 +395,8 @@ void __attribute__((used)) ADCHS_InterruptHandler( void )
     {
         if (${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn != NULL)
         {
-            ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn(${ADCHS_INSTANCE_NAME}_EOSCallbackObj.context);
+            context = ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.context;
+            ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn(context);
         }
     }
     </#if>
@@ -404,37 +407,40 @@ void __attribute__((used)) ADCHS_InterruptHandler( void )
     {
         if(((status & (1UL << i)) != 0U) && (${ADCHS_INSTANCE_NAME}_CallbackObj[i].callback_fn != NULL))
         {
-            ${ADCHS_INSTANCE_NAME}_CallbackObj[i].callback_fn((ADCHS_CHANNEL_NUM)i, ${ADCHS_INSTANCE_NAME}_CallbackObj[i].context);
+            context = ${ADCHS_INSTANCE_NAME}_CallbackObj[i].context;
+            ${ADCHS_INSTANCE_NAME}_CallbackObj[i].callback_fn((ADCHS_CHANNEL_NUM)i, context);
         }
     }
     </#if>
-	
-	<#list 1..(ADCHS_NUM_COMPARATORS) as i>
-	<#assign ADCHS_ADCCMPCON_ENDCMP = "ADCCMPCON" + i + "__ENDCMP">
-	<#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
-	<#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true && .vars[ADCHS_DCx_INT_ENABLED] == true>
-	
-	if ((ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON${i}_DCMPED_Msk) != 0U)
-	{
-		channelId = (ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON1_CMPINID0_Msk) >> ADCHS_ADCCMPCON1_CMPINID0_Pos;
 
-		if (${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].callback_fn != NULL)
-		{
-		  ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].callback_fn(channelId, ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].context);
-		}
-	}	
-	</#if>
-	</#list>
-	
-	<#list 1..(ADCHS_NUM_FILTERS) as i>
-	<#assign ADCFLTR_AFEN = "ADCFLTR" + i + "__AFEN">
-	<#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
-	<#if .vars[ADCFLTR_AFEN] == true && .vars[ADCHS_DFx_INT_ENABLED] == true>
-	if (${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn != NULL)
+    <#list 1..(ADCHS_NUM_COMPARATORS) as i>
+    <#assign ADCHS_ADCCMPCON_ENDCMP = "ADCCMPCON" + i + "__ENDCMP">
+    <#assign ADCHS_DCx_INT_ENABLED = "ADCHS_DC" + i + "_INT_ENABLED">
+    <#if .vars[ADCHS_ADCCMPCON_ENDCMP] == true && .vars[ADCHS_DCx_INT_ENABLED] == true>
+
+    if ((ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON${i}_DCMPED_Msk) != 0U)
     {
-		${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn(${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].context);
+        channelId = (ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON1_CMPINID0_Msk) >> ADCHS_ADCCMPCON1_CMPINID0_Pos;
+
+        if (${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].callback_fn != NULL)
+        {
+            context = ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].context;
+            ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].callback_fn(channelId, context);
+        }
     }
-	</#if>
-	</#list>
+    </#if>
+    </#list>
+
+    <#list 1..(ADCHS_NUM_FILTERS) as i>
+    <#assign ADCFLTR_AFEN = "ADCFLTR" + i + "__AFEN">
+    <#assign ADCHS_DFx_INT_ENABLED = "ADCHS_DF" + i + "_INT_ENABLED">
+    <#if .vars[ADCFLTR_AFEN] == true && .vars[ADCHS_DFx_INT_ENABLED] == true>
+    if (${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn != NULL)
+    {
+        context = ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].context;
+        ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].callback_fn(context);
+    }
+    </#if>
+    </#list>
 }
 </#if>
