@@ -201,7 +201,8 @@ void __attribute__((used)) ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
 
     if ((${SDHC_INSTANCE_NAME?lower_case}Obj.callback != NULL) && (xferStatus > 0U))
     {
-        ${SDHC_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, ${SDHC_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${SDHC_INSTANCE_NAME?lower_case}Obj.context;
+        ${SDHC_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, context);
     }
 }
 
@@ -212,7 +213,7 @@ void ${SDHC_INSTANCE_NAME}_ErrorReset ( SDHC_RESET_TYPE resetType )
     /* Wait until host resets the error status */
     while ((${SDHC_INSTANCE_NAME}CON2 & ((uint32_t)resetType << 24)) != 0U)
     {
-        /* Nothing to do */    
+        /* Nothing to do */
     }
 }
 
@@ -292,8 +293,8 @@ bool ${SDHC_INSTANCE_NAME}_IsWriteProtected ( void )
     {
         /* Write-protect status indication through the WPSLVL bit (SDHCSTAT1<19>) is inverted (See Errata) */
         writeProtechCheck = ((${SDHC_INSTANCE_NAME}STAT1 & _SDHCSTAT1_WPSLVL_MASK) != 0U);
-    }    
-    return writeProtechCheck;    
+    }
+    return writeProtechCheck;
 }
 
 void ${SDHC_INSTANCE_NAME}_CardDetectEnable(void)
@@ -365,19 +366,19 @@ void ${SDHC_INSTANCE_NAME}_DmaSetup (
         ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0].length = (uint16_t)numBytes;
         ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0].attribute = \
             (SDHC_DESC_TABLE_ATTR_XFER_DATA | SDHC_DESC_TABLE_ATTR_VALID | SDHC_DESC_TABLE_ATTR_INTR);
-            
+
             /* The last descriptor line must indicate the end of the descriptor list */
         ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0].attribute |= (uint16_t)(SDHC_DESC_TABLE_ATTR_END);
 
           /* Set the starting address of the descriptor table */
-        ${SDHC_INSTANCE_NAME}AADDR = (uint32_t)KVA_TO_PA(&${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0]);        
+        ${SDHC_INSTANCE_NAME}AADDR = (uint32_t)KVA_TO_PA(&${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0]);
     }
 <#else>
     uint32_t i = 0;
     uint32_t pendingBytes = numBytes;
     uint32_t nBytes = 0;
 
-    if ((pendingBytes > 0U) && (pendingBytes <= (65536U * ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES))) 
+    if ((pendingBytes > 0U) && (pendingBytes <= (65536U * ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES)))
     {
         do
         {
@@ -397,7 +398,7 @@ void ${SDHC_INSTANCE_NAME}_DmaSetup (
             pendingBytes = pendingBytes - nBytes;
             i++;
         }while((i < ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES) && (pendingBytes > 0U));
-    
+
 
         /* The last descriptor line must indicate the end of the descriptor list */
         ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[i-1U].attribute |= (uint16_t)(SDHC_DESC_TABLE_ATTR_END);
@@ -420,7 +421,7 @@ bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t speed)
     {
         while ((${SDHC_INSTANCE_NAME}STAT1 & (_SDHCSTAT1_CINHCMD_MASK | _SDHCSTAT1_CINHCMD_MASK)) != 0U)
         {
-            /* Nothing to do */    
+            /* Nothing to do */
         }
         ${SDHC_INSTANCE_NAME}CON2 &= ~(_SDHCCON2_SDCLKEN_MASK | _SDHCCON2_ICLKEN_MASK);
     }
@@ -468,7 +469,7 @@ void ${SDHC_INSTANCE_NAME}_ResponseRead (
             response[2] = ${SDHC_INSTANCE_NAME}RESP2;
             response[3] = ${SDHC_INSTANCE_NAME}RESP3;
             break;
-            
+
         case SDHC_READ_RESP_REG_0:
         default:
             *response = ${SDHC_INSTANCE_NAME}RESP0;
@@ -571,7 +572,7 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
     ${SDHC_INSTANCE_NAME}CON2 |= _SDHCCON2_SWRALL_MASK;
     while((${SDHC_INSTANCE_NAME}CON2 & _SDHCCON2_SWRALL_MASK) == _SDHCCON2_SWRALL_MASK)
     {
-        /* Nothing to do */    
+        /* Nothing to do */
     }
 
     /* Clear the normal and error interrupt status flags */
