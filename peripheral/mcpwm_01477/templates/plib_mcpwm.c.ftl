@@ -343,6 +343,7 @@ void ${MCPWM_INSTANCE_NAME}_SecondaryEventCallbackRegister(MCPWM_CALLBACK callba
 void __attribute__((used)) PWM${i}_InterruptHandler(void)
 {
     MCPWM_CH_STATUS status;
+    uintptr_t context = ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].context;     
     status = (MCPWM_CH_STATUS)(PWMCON${i} & MCPWM_STATUS_MASK);
     if (((PWMCON${i}bits.PWMHIEN) != 0U) && ((PWMCON${i}bits.PWMHIF) != 0U))
     {
@@ -378,7 +379,7 @@ void __attribute__((used)) PWM${i}_InterruptHandler(void)
 
     if( (${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].callback != NULL))
     {
-        ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].callback(status, ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].context);
+        ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].callback(status, context);
     }
 }
 
