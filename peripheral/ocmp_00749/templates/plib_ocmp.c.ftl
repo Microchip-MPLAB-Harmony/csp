@@ -173,11 +173,13 @@ void ${OCMP_INSTANCE_NAME}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t co
 
 void __attribute__((used)) OUTPUT_COMPARE_${INDEX}_InterruptHandler (void)
 {
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context = ${OCMP_INSTANCE_NAME?lower_case}Obj.context;      
     ${IFS_REG}CLR = _${IFS_REG}_OC${INDEX}IF_MASK;    //Clear IRQ flag
 
     if( (${OCMP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
-        ${OCMP_INSTANCE_NAME?lower_case}Obj.callback(${OCMP_INSTANCE_NAME?lower_case}Obj.context);
+        ${OCMP_INSTANCE_NAME?lower_case}Obj.callback(context);
     }
 }
 
