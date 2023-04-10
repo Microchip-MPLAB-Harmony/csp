@@ -145,12 +145,12 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
     /*  ENPGA   = ${.vars[CMP_CMxCON_ENPGA]?then('true', 'false')}    */
     </#if>
     CM${i}CON = 0x${.vars[CMP_CMxCON_VALUE]};
-    
+
     <#assign CMP_CMxMSKCON_VALUE = "CMP_" + i + "_CMxMSKCON_VALUE">
     <#if .vars[CMP_CMxMSKCON_VALUE]? has_content >
     /* Value loaded into CM${i}MSKCON is formed by combining configuration selected via MHC */
     CM${i}MSKCON = 0x${.vars[CMP_CMxMSKCON_VALUE]};
-    
+
     </#if>
     </#list>
 }
@@ -192,7 +192,9 @@ void __attribute__((used)) COMPARATOR_${i}_InterruptHandler(void)
 
     if(cmp${i}Obj.callback != NULL)
     {
-        cmp${i}Obj.callback(cmp${i}Obj.context);
+        uintptr_t context = cmp${i}Obj.context;
+
+        cmp${i}Obj.callback(context);
     }
 }
 </#if>
