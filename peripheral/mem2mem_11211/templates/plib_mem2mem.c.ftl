@@ -100,6 +100,7 @@ void ${MEM2MEM_INSTANCE_NAME}_CallbackRegister( MEM2MEM_CALLBACK callback, uintp
 void __attribute__((used)) ${MEM2MEM_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint8_t error = (uint8_t)MEM2MEM_TRANSFER_EVENT_COMPLETE;
+    uintptr_t context = ${MEM2MEM_INSTANCE_NAME?lower_case}Obj.context;
 
     ${MEM2MEM_INSTANCE_NAME}_REGS->MEM2MEM_IDR = MEM2MEM_IDR_RXEND_Msk;
 
@@ -111,6 +112,6 @@ void __attribute__((used)) ${MEM2MEM_INSTANCE_NAME}_InterruptHandler( void )
 </#if>
     if (${MEM2MEM_INSTANCE_NAME?lower_case}Obj.callback != NULL)
     {
-        ${MEM2MEM_INSTANCE_NAME?lower_case}Obj.callback((MEM2MEM_TRANSFER_EVENT)error, ${MEM2MEM_INSTANCE_NAME?lower_case}Obj.context);
+        ${MEM2MEM_INSTANCE_NAME?lower_case}Obj.callback((MEM2MEM_TRANSFER_EVENT)error, context);
     }
 }
