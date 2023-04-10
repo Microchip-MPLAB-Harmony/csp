@@ -180,7 +180,8 @@ void __attribute__((used)) ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
 
     if ((${SDHC_INSTANCE_NAME?lower_case}Obj.callback != NULL) && ((uint32_t)xferStatus > 0U))
     {
-        ${SDHC_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, ${SDHC_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${SDHC_INSTANCE_NAME?lower_case}Obj.context;
+        ${SDHC_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, context);
     }
 }
 
