@@ -348,7 +348,8 @@ void __attribute__((used)) VTR${n}_PAD_MON${INT_HANDLER_NAME_PREFIX}_InterruptHa
         </#if>
         if (ec_reg_bank[${n-1}].callback != NULL)
         {
-            ec_reg_bank[${n-1}].callback(ec_reg_bank[${n-1}].context);
+            uintptr_t context = ec_reg_bank[${n-1}].context;
+            ec_reg_bank[${n-1}].callback(context);
         }
     }
 }
