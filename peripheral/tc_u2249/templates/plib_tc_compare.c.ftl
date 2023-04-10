@@ -248,7 +248,7 @@ void ${TC_INSTANCE_NAME}_CompareCommandSet(TC_COMMAND command)
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
 }
 
 <#if TC_CTRLA_MODE = "COUNT8">
@@ -301,7 +301,7 @@ bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
-    }     
+    }
     status = true;
     </#if>
     return status;
@@ -331,7 +331,7 @@ bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
-    }     
+    }
     status = true;
     </#if>
     return status;
@@ -362,7 +362,7 @@ bool ${TC_INSTANCE_NAME}_Compare8bitMatch0Set( uint8_t compareValue )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
 </#if>
     return status;
@@ -384,7 +384,7 @@ bool ${TC_INSTANCE_NAME}_Compare8bitMatch1Set( uint8_t compareValue )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
 </#if>
     return status;
@@ -441,7 +441,7 @@ bool ${TC_INSTANCE_NAME}_Compare16bitPeriodSet( uint16_t period )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
     </#if>
     return status;
@@ -479,7 +479,7 @@ bool ${TC_INSTANCE_NAME}_Compare16bitMatch0Set( uint16_t compareValue )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
 </#if>
     return status;
@@ -502,8 +502,8 @@ bool ${TC_INSTANCE_NAME}_Compare16bitMatch1Set( uint16_t compareValue )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
     {
         /* Wait for Write Synchronization */
-    }  
-    status = true;  
+    }
+    status = true;
 </#if>
     return status;
 }
@@ -559,7 +559,7 @@ bool ${TC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
     </#if>
     return status;
@@ -587,7 +587,7 @@ bool ${TC_INSTANCE_NAME}_Compare32bitMatch0Set( uint32_t compareValue )
     bool status = false;
     <#if TC_COMPARE_CTRLBSET_LUPD == true>
     if((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_CCBUFV0_Msk) == 0U)
-    {  
+    {
         /* Set new compare value for compare channel 0 */
         ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CCBUF[0] = compareValue;
         status = true;
@@ -598,8 +598,8 @@ bool ${TC_INSTANCE_NAME}_Compare32bitMatch0Set( uint32_t compareValue )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
-    } 
-    status = true;   
+    }
+    status = true;
     </#if>
     return status;
 }
@@ -622,7 +622,7 @@ bool ${TC_INSTANCE_NAME}_Compare32bitMatch1Set( uint32_t compareValue )
     {
         /* Wait for Write Synchronization */
     }
-    status = true;    
+    status = true;
     </#if>
     return status;
 }
@@ -651,7 +651,8 @@ void __attribute__((used)) ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
         ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
         if((status != TC_COMPARE_STATUS_NONE) && (${TC_INSTANCE_NAME}_CallbackObject.callback != NULL))
         {
-            ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+            uintptr_t context = ${TC_INSTANCE_NAME}_CallbackObject.context;
+            ${TC_INSTANCE_NAME}_CallbackObject.callback(status, context);
         }
     }
 }
