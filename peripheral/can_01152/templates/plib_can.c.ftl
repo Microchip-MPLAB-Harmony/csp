@@ -97,6 +97,19 @@ volatile static uint32_t ${CAN_INSTANCE_NAME?lower_case}MsgIndex[CAN_NUM_OF_FIFO
 </#if>
 static CAN_TX_RX_MSG_BUFFER __attribute__((coherent, aligned(32))) can_message_buffer[CAN_MESSAGE_RAM_CONFIG_SIZE];
 
+/******************************************************************************
+Local Functions
+******************************************************************************/
+static inline void ${CAN_INSTANCE_NAME}_ZeroInitialize(volatile void* pData, size_t dataSize)
+{
+    volatile uint8_t* data = (volatile uint8_t*)pData;
+    for (uint32_t index = 0; index < dataSize; index++)
+    {
+        data[index] = 0U;
+    }
+}
+
+
 // *****************************************************************************
 // *****************************************************************************
 // ${CAN_INSTANCE_NAME} PLib Interface Routines
@@ -180,7 +193,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     C${CAN_INSTANCE_NUM}INTSET = _C${CAN_INSTANCE_NUM}INT_SERRIE_MASK | _C${CAN_INSTANCE_NUM}INT_CERRIE_MASK | _C${CAN_INSTANCE_NUM}INT_IVRIE_MASK;
 
     /* Initialize the CAN PLib Object */
-   (void) memset((void *)${CAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
+    ${CAN_INSTANCE_NAME}_ZeroInitialize((void *)${CAN_INSTANCE_NAME?lower_case}RxMsg, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
 
 </#if>
     /* Switch the CAN module to CAN_OPERATION_MODE. Wait until the switch is complete */
@@ -496,8 +509,8 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterGet(uint8_t filterNum)
     {
         if ((*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXF0 + (filterNum * CAN_FILTER_OFFSET)) & _C${CAN_INSTANCE_NUM}RXF0_EXID_MASK) != 0U)
         {
-            id = (*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXF0 + (filterNum * CAN_FILTER_OFFSET)) & _C${CAN_INSTANCE_NUM}RXF0_EID_MASK)
-               | ((*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXF0 + (filterNum * CAN_FILTER_OFFSET)) & _C${CAN_INSTANCE_NUM}RXF0_SID_MASK) >> 3);
+            id = (*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXF0 + (filterNum * CAN_FILTER_OFFSET)) & _C${CAN_INSTANCE_NUM}RXF0_EID_MASK);
+            id = id | ((*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXF0 + (filterNum * CAN_FILTER_OFFSET)) & _C${CAN_INSTANCE_NUM}RXF0_SID_MASK) >> 3);
         }
         else
         {
@@ -573,8 +586,8 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskGet(uint8_t acceptanceF
 
     if ((*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C${CAN_INSTANCE_NUM}RXM0_MIDE_MASK) != 0U)
     {
-        id = (*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C${CAN_INSTANCE_NUM}RXM0_EID_MASK)
-           | ((*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C${CAN_INSTANCE_NUM}RXM0_SID_MASK) >> 3);
+        id = (*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C${CAN_INSTANCE_NUM}RXM0_EID_MASK);
+        id = id | ((*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C${CAN_INSTANCE_NUM}RXM0_SID_MASK) >> 3);
     }
     else
     {
@@ -957,6 +970,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
     uint8_t  count = 0;
     CAN_TX_RX_MSG_BUFFER *rxMessage = NULL;
     uint32_t interruptStatus = 0;
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context;
 
     interruptStatus = C${CAN_INSTANCE_NUM}INT;
     /* Check if error occurred */
@@ -979,7 +994,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         /* Client must call ${CAN_INSTANCE_NAME}_ErrorGet and ${CAN_INSTANCE_NAME}_ErrorCountGet functions to get errors */
         if (${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.callback != NULL)
         {
-            ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.callback(${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.context);
+            context = ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.context;
+            ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.callback(context);
         }
     }
     else
@@ -1054,7 +1070,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
             if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback != NULL)
             {
-                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context);
+                context = ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context;
+                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(context);
             }
         }
         if ((C${CAN_INSTANCE_NUM}INT & _C${CAN_INSTANCE_NUM}INT_TBIF_MASK) != 0U)
@@ -1069,7 +1086,8 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
             if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback != NULL)
             {
-                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context);
+                context = ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context;
+                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(context);
             }
         }
     }
