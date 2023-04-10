@@ -186,7 +186,8 @@ void __attribute__((used)) ${RSTC_INSTANCE_NAME}_InterruptHandler(void)
 
     if (rstcCallbackObj.pCallback != NULL)
     {
-        rstcCallbackObj.pCallback(rstcCallbackObj.context);
+        uintptr_t context = rstcCallbackObj.context;
+        rstcCallbackObj.pCallback(context);
     }
 }
 </#if>
