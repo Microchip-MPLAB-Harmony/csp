@@ -511,7 +511,8 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
 
     <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.context);
+    <#lt>        uintptr_t context = ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.context;
+    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn(context);
     <#lt>    }
     <#lt>}
 </#if>
@@ -534,7 +535,8 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
 
     <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.context);
+    <#lt>        uintptr_t context = ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.context;
+    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn(context);
     <#lt>    }
     <#lt>}
 </#if>
