@@ -133,7 +133,8 @@ void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user)
                     <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
                     <#lt>   if(evsys[${x}].callback != NULL)
                     <#lt>   {
-                    <#lt>       evsys[${x}].callback(status, evsys[${x}].context);
+                    <#lt>       uintptr_t context = evsys[${x}].context;
+                    <#lt>       evsys[${x}].callback(status, context);
                     <#lt>   }
                     <#lt>}
                 </#if>
@@ -150,7 +151,8 @@ void __attribute__((used)) ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
     if(evsys[channel].callback != NULL)
     {
-        evsys[channel].callback(status, evsys[channel].context);
+        uintptr_t context = evsys[channel].context;
+        evsys[channel].callback(status, context);
     }
     ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
 }

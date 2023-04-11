@@ -272,7 +272,8 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
                             <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
                             <#lt>   if(evsys[${x}].callback != NULL)
                             <#lt>   {
-                            <#lt>       evsys[${x}].callback(status, evsys[${x}].context);
+                            <#lt>       uintptr_t context = evsys[${x}].context;
+                            <#lt>       evsys[${x}].callback(status, context);
                             <#lt>   }
                             <#lt>}
                         </#if>
@@ -294,7 +295,8 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
                     <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[${res?groups[1]}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
                     <#lt>   if(evsys[${res?groups[1]}].callback != NULL)
                     <#lt>   {
-                    <#lt>       evsys[${res?groups[1]}].callback(status, evsys[${res?groups[1]}].context);
+                    <#lt>       uintptr_t context = evsys[${res?groups[1]}].context;
+                    <#lt>       evsys[${res?groups[1]}].callback(status, context);
                     <#lt>   }
                     <#lt>}
                 </#if>
@@ -319,7 +321,8 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
                     <#lt>           volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
                     <#lt>           if(evsys[channel].callback != NULL)
                     <#lt>           {
-                    <#lt>               evsys[channel].callback(status, evsys[channel].context);
+                    <#lt>               uintptr_t context = evsys[channel].context;
+                    <#lt>               evsys[channel].callback(status, context);
                     <#lt>           }
                     <#lt>           ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
                     <#lt>        }
@@ -339,7 +342,8 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
                         <#lt>           volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
                         <#lt>           if(evsys[channel].callback != NULL)
                         <#lt>           {
-                        <#lt>               evsys[channel].callback(status, evsys[channel].context);
+                        <#lt>               uintptr_t context = evsys[channel].context;
+                        <#lt>               evsys[channel].callback(status, context);
                         <#lt>           }
                         <#lt>           ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
                         <#lt>       }
