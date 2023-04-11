@@ -120,7 +120,8 @@ void __attribute__((used)) ${PAC_INSTANCE_NAME}_InterruptHandler( void )
 {
     if (${PAC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
     {
-        ${PAC_INSTANCE_NAME?lower_case}CallbackObject.callback(${PAC_INSTANCE_NAME?lower_case}CallbackObject.context);
+        uintptr_t context = ${PAC_INSTANCE_NAME?lower_case}CallbackObject.context;
+        ${PAC_INSTANCE_NAME?lower_case}CallbackObject.callback(context);
     }
 
     /* Clear all interrupt flags to remove active interrupt requests */
