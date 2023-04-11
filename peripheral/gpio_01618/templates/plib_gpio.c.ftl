@@ -188,7 +188,7 @@ void GPIO_Initialize ( void )
     <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
         <#lt>    /* Lock back the system after PPS configuration */
         <#lt>    CFGCONbits.IOLOCK = 1;
-        <#lt>    SYSKEY = 0x00000000; 
+        <#lt>    SYSKEY = 0x00000000;
     </#if>
 </#if>
 
@@ -451,12 +451,15 @@ bool GPIO_PinInterruptCallbackRegister(
     Interrupt Handler for change notice interrupt for channel ${.vars[channel]}.
 
   Remarks:
-	It is an internal function, user should not call it directly.
+    It is an internal function, user should not call it directly.
 */
 void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
 {
     uint8_t i;
     uint32_t status;
+    GPIO_PIN pin;
+    uintptr_t context;
+
 
     status  = CNSTAT${.vars[channel]};
     status &= CNEN${.vars[channel]};
@@ -467,9 +470,12 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
     /* Check pending events and call callback if registered */
     for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}; i++)
     {
-        if((status & (1 << (portPinCbObj[i].pin & 0xFU))) && (portPinCbObj[i].callback != NULL))
+        pin = portPinCbObj[i].pin;
+        context = portPinCbObj[i].context;
+
+        if((portPinCbObj[i].callback != NULL) && (status & (1 << (pin & 0xFU))))
         {
-            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
+            portPinCbObj[i].callback (portPinCbObj[i].pin, context);
         }
     }
 }
@@ -485,7 +491,7 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
     Interrupt Handler for change notice interrupt.
 
   Remarks:
-	It is an internal function called from ISR, user should not call it directly.
+    It is an internal function called from ISR, user should not call it directly.
 */
 void __attribute__((used)) CHANGE_NOTICE_InterruptHandler(void)
 {
