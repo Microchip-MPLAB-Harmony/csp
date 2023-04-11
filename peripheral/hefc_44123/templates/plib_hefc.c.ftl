@@ -170,8 +170,9 @@ HEFC_ERROR ${HEFC_INSTANCE_NAME}_ErrorGet( void )
     <#lt>    uint32_t ul_fmr = ${HEFC_INSTANCE_NAME}_REGS->HEFC_FMR;
     <#lt>    ${HEFC_INSTANCE_NAME}_REGS->HEFC_FMR = ( ul_fmr & (~HEFC_FMR_FRDY_Msk));
     <#lt>    if(hefc.callback != NULL)
-    <#lt>        {
-        <#lt>            hefc.callback(hefc.context);
-    <#lt>        }
+    <#lt>    {
+    <#lt>       uintptr_t context = hefc.context;
+    <#lt>       hefc.callback(context);
+    <#lt>    }
     <#lt>}
 </#if>
