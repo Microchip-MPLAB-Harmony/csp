@@ -329,6 +329,9 @@ void __attribute__((used)) CHANGE_NOTICE_InterruptHandler(void)
     uint8_t i, bitPosition;
     uint32_t latestPortValue, mask;
     bool currPinValue;
+    bool prevPinValue;
+    uintptr_t context;
+    CN_PIN cnPin;
 
     /* Check which CN interrupt has occurred and call callback if registered */
     for(i = 0U; i < TOTAL_NUM_OF_INT_USED; i++)
@@ -337,10 +340,13 @@ void __attribute__((used)) CHANGE_NOTICE_InterruptHandler(void)
         bitPosition = (uint8_t)(cnPinObj[i].gpioPin % 16U);
         mask = 1UL << bitPosition;
         currPinValue = (bool)((latestPortValue & mask) >> bitPosition);
-        if((cnPinObj[i].prevPinValue != currPinValue) && (cnPinObj[i].callback != NULL))
+        prevPinValue = cnPinObj[i].prevPinValue;
+        if((cnPinObj[i].callback != NULL) && (prevPinValue != currPinValue))
         {
+            context = cnPinObj[i].context;
+            cnPin = cnPinObj[i].cnPin;
             cnPinObj[i].prevPinValue = currPinValue;
-            cnPinObj[i].callback (cnPinObj[i].cnPin, cnPinObj[i].context);
+            cnPinObj[i].callback (cnPin, context);
         }
     }
     IFS${SYS_PORT_IFS_REG_INDEX}CLR = _IFS${SYS_PORT_IFS_REG_INDEX}_CNIF_MASK;
