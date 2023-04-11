@@ -103,10 +103,10 @@ typedef struct
     uint32_t                        nWrBytes;
 
     /* Index to the number of bytes already written out from the transmit buffer */
-    volatile uint32_t               wrOutIndex;
+    uint32_t                        wrOutIndex;
 
     /* Index into the receive buffer where the next received byte will be copied */
-    volatile uint32_t               rdInIndex;
+    uint32_t                        rdInIndex;
 
 } MCSPI_SLAVE_OBJECT;
 

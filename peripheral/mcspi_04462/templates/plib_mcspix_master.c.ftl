@@ -64,12 +64,12 @@ volatile static MCSPI_OBJECT ${MCSPI_INSTANCE_NAME?lower_case}Obj;
 
 volatile static uint8_t dummyDataBuffer[512];
 
-static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
+static void setupDMA( volatile void* pTransmitData, volatile void* pReceiveData, size_t size )
 {
     /* Always set up the rx channel first */
-    ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_RPR = (uint32_t) (uint32_t*)pReceiveData;
+    ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_RPR = (volatile uint32_t) (volatile uint32_t*)pReceiveData;
     ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_RCR = (uint32_t) size;
-    ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TPR = (uint32_t) (uint32_t*)pTransmitData;
+    ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TPR = (volatile uint32_t) (volatile uint32_t*)pTransmitData;
     ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TCR = (uint32_t) size;
     ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_PTCR = MCSPI_PTCR_RXTEN_Msk | MCSPI_PTCR_TXTEN_Msk;
     ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_IER = MCSPI_IER_ENDRX_Msk;
@@ -279,59 +279,62 @@ bool ${MCSPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void*
 <#if USE_MCSPI_DMA?? && USE_MCSPI_DMA == true>
     uint32_t size = 0;
 
-    /* Verify the request */
-    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false))
+    if (${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false)
     {
-        isRequestAccepted = true;
-
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = true;
-
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer = pReceiveData;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount = txSize;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount = rxSize;
-
-        if ((txSize > 0U) && (rxSize > 0U))
+        /* Verify the request */
+        if(((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL)))
         {
-            /* Find the lower value among txSize and rxSize */
-            (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
+            isRequestAccepted = true;
 
-            /* Calculate the remaining tx/rx bytes and total bytes transferred */
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount -= size;
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount -= size;
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred = size;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = true;
 
-            setupDMA(pTransmitData, pReceiveData, size);
-        }
-        else
-        {
-            if (rxSize > 0U)
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer = pReceiveData;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount = txSize;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount = rxSize;
+
+            if ((txSize > 0U) && (rxSize > 0U))
             {
-                /* txSize is 0. Need to use the dummy data buffer for transmission.
-                 * Find out the max data that can be received, given the limited size of the dummy data buffer.
-                 */
-                (rxSize > sizeof(dummyDataBuffer)) ?
-                    (size = sizeof(dummyDataBuffer)): (size = rxSize);
+                /* Find the lower value among txSize and rxSize */
+                (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
 
-                /* Calculate the remaining rx bytes and total bytes transferred */
+                /* Calculate the remaining tx/rx bytes and total bytes transferred */
                 ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount -= size;
-                ${MCSPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred = size;
-
-                setupDMA(dummyDataBuffer, pReceiveData, size);
-            }
-            else
-            {
-                /* rxSize is 0. Need to use the dummy data buffer for reception.
-                 * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
-                 */
-                (txSize > sizeof(dummyDataBuffer)) ?
-                    (size = sizeof(dummyDataBuffer)): (size = txSize);
-
-                /* Calculate the remaining tx bytes and total bytes transferred */
                 ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount -= size;
                 ${MCSPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred = size;
 
-                setupDMA(pTransmitData, dummyDataBuffer, size);
+                setupDMA(pTransmitData, pReceiveData, size);
+            }
+            else
+            {
+                if (rxSize > 0U)
+                {
+                    /* txSize is 0. Need to use the dummy data buffer for transmission.
+                     * Find out the max data that can be received, given the limited size of the dummy data buffer.
+                     */
+                    (rxSize > sizeof(dummyDataBuffer)) ?
+                        (size = sizeof(dummyDataBuffer)): (size = rxSize);
+
+                    /* Calculate the remaining rx bytes and total bytes transferred */
+                    ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount -= size;
+                    ${MCSPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred = size;
+
+                    setupDMA(dummyDataBuffer, pReceiveData, size);
+                }
+                else
+                {
+                    /* rxSize is 0. Need to use the dummy data buffer for reception.
+                     * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+                     */
+                    (txSize > sizeof(dummyDataBuffer)) ?
+                        (size = sizeof(dummyDataBuffer)): (size = txSize);
+
+                    /* Calculate the remaining tx bytes and total bytes transferred */
+                    ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount -= size;
+                    ${MCSPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred = size;
+
+                    setupDMA(pTransmitData, dummyDataBuffer, size);
+                }
             }
         }
     }
@@ -340,98 +343,105 @@ bool ${MCSPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void*
 <#else>
     uint32_t dummyData;
 
-    /* Verify the request */
-    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false))
+    if (${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false)
     {
-        isRequestAccepted = true;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer = pReceiveData;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount = 0;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount = 0;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize = 0;
-
-        if (pTransmitData != NULL)
+        /* Verify the request */
+        if(((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL)))
         {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize = txSize;
-        }
-        else
-        {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize = 0;
-        }
+            isRequestAccepted = true;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer = pReceiveData;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount = 0;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount = 0;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize = 0;
 
-        if (pReceiveData != NULL)
-        {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize = rxSize;
-        }
-        else
-        {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
-        }
-
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = true;
-
-        /* Flush out any unread data in MCSPI read buffer */
-        dummyData = (${MCSPI_INSTANCE_NAME}_REGS->MCSPI_RDR & MCSPI_RDR_RD_Msk) >> MCSPI_RDR_RD_Pos;
-        (void)dummyData;
-
-        if (${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize > ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
-        {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize - ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize;
-        }
-
-        /* Start the first write here itself, rest will happen in ISR context */
-<#if MCSPI_NUM_CSR == 1>
-        if((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_CSR_INDEX}] & MCSPI_CSR_BITS_Msk) == MCSPI_CSR_BITS_8_BIT)
-<#else>
-        if((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_INSTANCE_NAME}_ChipSelectGet()] & MCSPI_CSR_BITS_Msk) == MCSPI_CSR_BITS_8_BIT)
-</#if>
-        {
-            if (${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (pTransmitData != NULL)
             {
-                ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = *((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer);
-                ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount++;
-            }
-            else if (${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
-            {
-                ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = (uint8_t)(0x${MCSPI_DUMMY_DATA});
-                ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize = txSize;
             }
             else
             {
-                /* Nothing to do */
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize = 0;
             }
-        }
-        else
-        {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize >>= 1;
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 1;
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize >>= 1;
 
-            if (${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (pReceiveData != NULL)
             {
-                ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = *((uint16_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer);
-                ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount++;
-            }
-            else if (${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
-            {
-                ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = (uint16_t)(0x${MCSPI_DUMMY_DATA}${MCSPI_DUMMY_DATA});
-                ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize = rxSize;
             }
             else
             {
-                /* Nothing to do */
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
             }
-        }
 
-        if (rxSize > 0U)
-        {
-            /* Enable receive interrupt to complete the transfer in ISR context */
-            ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_IER = MCSPI_IER_RDRF_Msk;
-        }
-        else
-        {
-            /* Enable transmit interrupt to complete the transfer in ISR context */
-            ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_IER = MCSPI_IER_TDRE_Msk;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = true;
+
+            /* Flush out any unread data in MCSPI read buffer */
+            dummyData = (${MCSPI_INSTANCE_NAME}_REGS->MCSPI_RDR & MCSPI_RDR_RD_Msk) >> MCSPI_RDR_RD_Pos;
+            (void)dummyData;
+
+            size_t txSz = ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize;
+
+            if (${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize > txSz)
+            {
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize - txSz;
+            }
+
+            /* Start the first write here itself, rest will happen in ISR context */
+    <#if MCSPI_NUM_CSR == 1>
+            if((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_CSR_INDEX}] & MCSPI_CSR_BITS_Msk) == MCSPI_CSR_BITS_8_BIT)
+    <#else>
+            if((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_INSTANCE_NAME}_ChipSelectGet()] & MCSPI_CSR_BITS_Msk) == MCSPI_CSR_BITS_8_BIT)
+    </#if>
+            {
+                if (${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount < txSz)
+                {
+                    ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = *((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer);
+                    ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount++;
+                }
+                else if (${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
+                {
+                    ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = (uint8_t)(0x${MCSPI_DUMMY_DATA});
+                    ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+                }
+                else
+                {
+                    /* Nothing to do */
+                }
+            }
+            else
+            {
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize >>= 1;
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 1;
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize >>= 1;
+
+                txSz = ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize;
+
+                if (${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount < txSz)
+                {
+                    ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = *((uint16_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer);
+                    ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount++;
+                }
+                else if (${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
+                {
+                    ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = (uint16_t)(0x${MCSPI_DUMMY_DATA}${MCSPI_DUMMY_DATA});
+                    ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+                }
+                else
+                {
+                    /* Nothing to do */
+                }
+            }
+
+            if (rxSize > 0U)
+            {
+                /* Enable receive interrupt to complete the transfer in ISR context */
+                ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_IER = MCSPI_IER_RDRF_Msk;
+            }
+            else
+            {
+                /* Enable transmit interrupt to complete the transfer in ISR context */
+                ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_IER = MCSPI_IER_TDRE_Msk;
+            }
         }
     }
 
@@ -449,14 +459,16 @@ static uint8_t ${MCSPI_INSTANCE_NAME}_FIFO_Fill(void)
     uint32_t dataBits = ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_INSTANCE_NAME}_ChipSelectGet()] & MCSPI_CSR_BITS_Msk;
 </#if>
 
+    size_t txCount = ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount;
+
     while ((nDataCopiedToFIFO < 16U) && ((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR & MCSPI_SR_TDRE_Msk) != 0U))
     {
         if(dataBits == MCSPI_CSR_BITS_8_BIT)
         {
-            if (${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (txCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
-                MCSPI_TDR_8BIT_REG =  ((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount];
-                ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount++;
+                MCSPI_TDR_8BIT_REG =  ((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                txCount++;
             }
             else if (${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
             {
@@ -470,10 +482,10 @@ static uint8_t ${MCSPI_INSTANCE_NAME}_FIFO_Fill(void)
         }
         else
         {
-            if (${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (txCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
-                MCSPI_TDR_16BIT_REG =  ((uint16_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount];
-                ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount++;
+                MCSPI_TDR_16BIT_REG =  ((uint16_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                txCount++;
             }
             else if (${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
             {
@@ -489,6 +501,8 @@ static uint8_t ${MCSPI_INSTANCE_NAME}_FIFO_Fill(void)
         nDataCopiedToFIFO++;
     }
 
+    ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount = txCount;
+
     return nDataCopiedToFIFO;
 }
 
@@ -498,74 +512,82 @@ bool ${MCSPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void*
     uint32_t nTxPending = 0;
     uint8_t rxThreshold = 0;
 
-    /* Verify the request */
-    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false))
+    if (${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false)
     {
-        isRequestAccepted = true;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer = pReceiveData;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount = 0;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount = 0;
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize = 0;
-
-        if (pTransmitData != NULL)
+        /* Verify the request */
+        if(((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL)))
         {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize = txSize;
+            isRequestAccepted = true;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer = pReceiveData;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount = 0;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount = 0;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize = 0;
+
+            if (pTransmitData != NULL)
+            {
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize = txSize;
+            }
+            else
+            {
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize = 0;
+            }
+
+            if (pReceiveData != NULL)
+            {
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize = rxSize;
+            }
+            else
+            {
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
+            }
+
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = true;
+
+            size_t txSz = ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize;
+
+            if (${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize > txSz)
+            {
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize - txSz;
+            }
+
+    <#if MCSPI_NUM_CSR == 1>
+        if((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_CSR_INDEX}] & MCSPI_CSR_BITS_Msk) != MCSPI_CSR_BITS_8_BIT)
+    <#else>
+        if((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_INSTANCE_NAME}_ChipSelectGet()] & MCSPI_CSR_BITS_Msk) != MCSPI_CSR_BITS_8_BIT)
+    </#if>
+            {
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize >>= 1;
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 1;
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize >>= 1;
+            }
+
+            txSz = ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize;
+
+            /* Clear TX and RX FIFO */
+            ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CR = (MCSPI_CR_RXFCLR_Msk | MCSPI_CR_TXFCLR_Msk);
+
+            nTxPending = (txSz - ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount);
+            nTxPending += ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize;
+
+            if (nTxPending < 16U)
+            {
+                rxThreshold = (uint8_t)nTxPending;
+            }
+            else
+            {
+                rxThreshold = 16;
+            }
+
+            /* Set RX FIFO level so as to generate interrupt after all bytes are transmitted and response from slave is received for all the bytes */
+            /* RX FIFO level must be set first or else FIFO may be filled before RX threshold is set and hardware may not recognize threshold crossover and not generate threshold interrupt */
+            ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_FMR = (${MCSPI_INSTANCE_NAME}_REGS->MCSPI_FMR & ~MCSPI_FMR_RXFTHRES_Msk) | MCSPI_FMR_RXFTHRES(rxThreshold);
+
+            (void) ${MCSPI_INSTANCE_NAME}_FIFO_Fill();
+
+            /* Enable RX FIFO Threshold interrupt */
+            ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_IER = MCSPI_IER_RXFTHF_Msk;
         }
-        else
-        {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize = 0;
-        }
-
-        if (pReceiveData != NULL)
-        {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize = rxSize;
-        }
-        else
-        {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
-        }
-
-        ${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = true;
-
-        if (${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize > ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
-        {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize - ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize;
-        }
-
-<#if MCSPI_NUM_CSR == 1>
-    if((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_CSR_INDEX}] & MCSPI_CSR_BITS_Msk) != MCSPI_CSR_BITS_8_BIT)
-<#else>
-    if((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_INSTANCE_NAME}_ChipSelectGet()] & MCSPI_CSR_BITS_Msk) != MCSPI_CSR_BITS_8_BIT)
-</#if>
-        {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize >>= 1;
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 1;
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize >>= 1;
-        }
-
-        /* Clear TX and RX FIFO */
-        ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CR = (MCSPI_CR_RXFCLR_Msk | MCSPI_CR_TXFCLR_Msk);
-
-        nTxPending = (${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize - ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount) + ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize;
-
-        if (nTxPending < 16U)
-        {
-            rxThreshold = (uint8_t)nTxPending;
-        }
-        else
-        {
-            rxThreshold = 16;
-        }
-
-        /* Set RX FIFO level so as to generate interrupt after all bytes are transmitted and response from slave is received for all the bytes */
-        /* RX FIFO level must be set first or else FIFO may be filled before RX threshold is set and hardware may not recognize threshold crossover and not generate threshold interrupt */
-        ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_FMR = (${MCSPI_INSTANCE_NAME}_REGS->MCSPI_FMR & ~MCSPI_FMR_RXFTHRES_Msk) | MCSPI_FMR_RXFTHRES(rxThreshold);
-
-        (void) ${MCSPI_INSTANCE_NAME}_FIFO_Fill();
-
-        /* Enable RX FIFO Threshold interrupt */
-        ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_IER = MCSPI_IER_RXFTHF_Msk;
     }
 
     return isRequestAccepted;
@@ -636,7 +658,9 @@ void ${MCSPI_INSTANCE_NAME}_CallbackRegister( MCSPI_CALLBACK callback, uintptr_t
 
 bool ${MCSPI_INSTANCE_NAME}_IsBusy( void )
 {
-    return ((${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) || ((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR & MCSPI_SR_TXEMPTY_Msk) == 0U));
+    bool transferIsBusy = ${MCSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy;
+
+    return (((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR & MCSPI_SR_TXEMPTY_Msk) == 0U) || (transferIsBusy));
 }
 <#if MCSPI_FIFO_ENABLE == false>
 void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
@@ -657,8 +681,10 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
 
 </#if>
 
+    uintptr_t context = ${MCSPI_INSTANCE_NAME?lower_case}Obj.context;
+
     <#if USE_MCSPI_DMA?? && USE_MCSPI_DMA == true>
-    if(${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount > 0)
+    if(${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount > 0U)
     {
         /* txPending is 0. Need to use the dummy data buffer for transmission.
          * Find out the max data that can be received, given the limited size of the dummy data buffer.
@@ -672,9 +698,9 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
         ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount -= size;
         ${MCSPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred += size;
 
-        setupDMA(dummyDataBuffer,(void *)&((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[index],size);
+        setupDMA(dummyDataBuffer, &((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[index],size);
     }
-    else if(${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount > 0)
+    else if(${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount > 0U)
     {
         /* rxSize is 0. Need to use the dummy data buffer for reception.
          * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
@@ -688,7 +714,7 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
         ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount -= size;
         ${MCSPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred += size;
 
-        setupDMA((void *)&((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[index], dummyDataBuffer, size);
+        setupDMA(&((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[index], dummyDataBuffer, size);
     }
     else
     {
@@ -702,27 +728,33 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
 
         if( ${MCSPI_INSTANCE_NAME?lower_case}Obj.callback != NULL )
         {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.callback(${MCSPI_INSTANCE_NAME?lower_case}Obj.context);
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.callback(context);
         }
     }
     <#else>
+    size_t rxSize = ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize;
+
     if ((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR & MCSPI_SR_RDRF_Msk ) == MCSPI_SR_RDRF_Msk)
     {
         receivedData = (${MCSPI_INSTANCE_NAME}_REGS->MCSPI_RDR & MCSPI_RDR_RD_Msk) >> MCSPI_RDR_RD_Pos;
 
-        if (${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize)
+        size_t rxCount = ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount;
+
+        if (rxCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
             if(dataBits == MCSPI_CSR_BITS_8_BIT)
             {
-                ((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount] = (uint8_t)receivedData;
-                ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
+                ((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = (uint8_t)receivedData;
+                rxCount++;
             }
             else
             {
-                ((uint16_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount] = (uint16_t)receivedData;
-                ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
+                ((uint16_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = (uint16_t)receivedData;
+                rxCount++;
             }
         }
+
+        ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount = rxCount;
     }
 
     /* If there are more words to be transmitted, then transmit them here and keep track of the count */
@@ -732,11 +764,14 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
          * one byte is pending to be transmitted */
         ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_IDR = MCSPI_IDR_TDRE_Msk;
 
+        size_t txCount = ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount;
+
         if(dataBits == MCSPI_CSR_BITS_8_BIT)
         {
-            if (${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (txCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
-                ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = ((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = ((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                txCount++;
             }
             else if (${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
             {
@@ -750,9 +785,10 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
         }
         else
         {
-            if (${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (txCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
-                ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = ((uint16_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_TDR = ((uint16_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                txCount++;
             }
             else if (${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
             {
@@ -763,9 +799,13 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
             {
                 /* Nothing to do */
             }
-              
+
         }
-        if ((${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount == ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize) && (${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize == 0U))
+
+        size_t dummySize = ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize;
+        ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount = txCount;
+
+        if ((txCount == ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize) && (dummySize == 0U))
         {
             /* At higher baud rates, the data in the shift register can be
              * shifted out and TXEMPTY flag can get set resulting in a
@@ -779,7 +819,7 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
             isLastByteTransferInProgress = true;
 
         }
-        else if (${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize)
+        else if (${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount == rxSize)
         {
             /* Enable TDRE interrupt as all the requested bytes are received
              * and can now make use of the internal transmit shift register.
@@ -796,7 +836,7 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
     /* See if Exchange is complete */
     if ((isLastByteTransferInProgress == true) && ((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR & MCSPI_SR_TXEMPTY_Msk) == MCSPI_SR_TXEMPTY_Msk))
     {
-        if (${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize)
+        if (${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount == rxSize)
         {
             /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
             ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CR = MCSPI_CR_LASTXFER_Msk;
@@ -810,7 +850,7 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
 
             if(${MCSPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
             {
-                ${MCSPI_INSTANCE_NAME?lower_case}Obj.callback(${MCSPI_INSTANCE_NAME?lower_case}Obj.context);
+                ${MCSPI_INSTANCE_NAME?lower_case}Obj.callback(context);
             }
         }
     }
@@ -834,25 +874,31 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
 </#if>
     uint32_t nTxPending = 0;
     uint8_t rxThreshold = 0;
+    size_t rxCount = ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount;
+    size_t rxSize = ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize;
+    size_t txSize = ${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize;
 
-    while (((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR & MCSPI_SR_RDRF_Msk ) != 0U) && (${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount < ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxSize))
+    while (((${MCSPI_INSTANCE_NAME}_REGS->MCSPI_SR & MCSPI_SR_RDRF_Msk ) != 0U) && (rxCount < rxSize))
     {
         if(dataBits == MCSPI_CSR_BITS_8_BIT)
         {
-            ((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount] = MCSPI_RDR_8BIT_REG;
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
+            ((uint8_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = MCSPI_RDR_8BIT_REG;
+            rxCount++;
         }
         else
         {
-            ((uint16_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount] = MCSPI_RDR_16BIT_REG;
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
+            ((uint16_t*)${MCSPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = MCSPI_RDR_16BIT_REG;
+            rxCount++;
         }
     }
+
+    ${MCSPI_INSTANCE_NAME?lower_case}Obj.rxCount = rxCount;
 
     /* Clear RX FIFO. This is done for the case where RX size is less than TX size and hence data is not read and copied into the application rx buffer. */
     ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CR = MCSPI_CR_RXFCLR_Msk;
 
-    nTxPending = (${MCSPI_INSTANCE_NAME?lower_case}Obj.txSize - ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount) + ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize;
+    nTxPending = (txSize - ${MCSPI_INSTANCE_NAME?lower_case}Obj.txCount);
+    nTxPending += ${MCSPI_INSTANCE_NAME?lower_case}Obj.dummySize;
 
     if (nTxPending > 0U)
     {
@@ -883,7 +929,8 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler(void)
 
         if(${MCSPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
         {
-            ${MCSPI_INSTANCE_NAME?lower_case}Obj.callback(${MCSPI_INSTANCE_NAME?lower_case}Obj.context);
+            uintptr_t context = ${MCSPI_INSTANCE_NAME?lower_case}Obj.context;
+            ${MCSPI_INSTANCE_NAME?lower_case}Obj.callback(context);
         }
     }
 }
