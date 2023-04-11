@@ -112,7 +112,8 @@ void __attribute__((used)) ${HTM_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 
         if(${HTM_TMR_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL)
         {
-            ${HTM_TMR_INSTANCE_NAME?lower_case}Obj.callback_fn(${HTM_TMR_INSTANCE_NAME?lower_case}Obj.context);
+            uintptr_t context = ${HTM_TMR_INSTANCE_NAME?lower_case}Obj.context;
+            ${HTM_TMR_INSTANCE_NAME?lower_case}Obj.callback_fn(context);
         }
     }
 }
