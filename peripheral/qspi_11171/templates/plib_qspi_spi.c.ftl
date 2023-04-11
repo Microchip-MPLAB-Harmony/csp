@@ -101,7 +101,7 @@ bool ${QSPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* 
     uint32_t dummyData;
 
     /* Verify the request */
-    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (qspiObj.transferIsBusy == false))
+    if((qspiObj.transferIsBusy == false) && (((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))))
     {
         isRequestAccepted = true;
         qspiObj.txBuffer = pTransmitData;
@@ -265,7 +265,7 @@ void __attribute__((used)) ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
     size_t txCount = qspiObj.txCount;
     size_t txSize = qspiObj.txSize;
 
-    volatile static bool isLastByteTransferInProgress = false;
+    static bool isLastByteTransferInProgress = false;
 
     dataBits = ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR & QSPI_MR_NBBITS_Msk;
 
@@ -380,7 +380,7 @@ void __attribute__((used)) ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
             {
                 uintptr_t context = qspiObj.context;
 
-                qspiObj.callback(qspiObj.context);
+                qspiObj.callback(context);
             }
         }
     }
