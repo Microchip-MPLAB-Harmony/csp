@@ -131,14 +131,14 @@
 						<#if ledName?counter == ledPinPos?counter>
 							<#if ledName?counter == ledActiveLevel?counter>
 								/*** LED Macros for ${ledName} ***/
-								#define ${ledName}_Toggle()     (LAT${ledChannel}INV = (1<<${ledPinPos}))
+								#define ${ledName}_Toggle()     (LAT${ledChannel}INV = (1UL<<${ledPinPos}))
 								#define ${ledName}_Get()        ((PORT${ledChannel} >> ${ledPinPos}) & 0x1)
 								<#if ledActiveLevel == "High">
-									#define ${ledName}_On()         (LAT${ledChannel}SET = (1<<${ledPinPos}))
-									#define ${ledName}_Off()        (LAT${ledChannel}CLR = (1<<${ledPinPos}))
+									#define ${ledName}_On()         (LAT${ledChannel}SET = (1UL<<${ledPinPos}))
+									#define ${ledName}_Off()        (LAT${ledChannel}CLR = (1UL<<${ledPinPos}))
 								<#else>
-									#define ${ledName}_On()         (LAT${ledChannel}CLR = (1<<${ledPinPos}))
-									#define ${ledName}_Off()        (LAT${ledChannel}SET = (1<<${ledPinPos}))
+									#define ${ledName}_On()         (LAT${ledChannel}CLR = (1UL<<${ledPinPos}))
+									#define ${ledName}_Off()        (LAT${ledChannel}SET = (1UL<<${ledPinPos}))
 								</#if>
 							</#if>
 						</#if>
@@ -189,11 +189,11 @@
 							<#if vbusChannel?counter == vbusActiveLevel?counter>
 								/*** VBUS Macros for ${vbusName} ***/
 								<#if vbusActiveLevel == "High">
-									#define ${vbusName}_PowerEnable()         (LAT${vbusChannel}SET = (1<<${vbusPinPos}))
-									#define ${vbusName}_PowerDisable()        (LAT${vbusChannel}CLR = (1<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (LAT${vbusChannel}SET = (1UL<<${vbusPinPos}))
+									#define ${vbusName}_PowerDisable()        (LAT${vbusChannel}CLR = (1UL<<${vbusPinPos}))
 								<#else>
-									#define ${vbusName}_PowerEnable()         (LAT${vbusChannel}CLR = (1<<${vbusPinPos}))
-									#define ${vbusName}_PowerDisable()        (LAT${vbusChannel}SET = (1<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (LAT${vbusChannel}CLR = (1UL<<${vbusPinPos}))
+									#define ${vbusName}_PowerDisable()        (LAT${vbusChannel}SET = (1UL<<${vbusPinPos}))
 								</#if>
 							</#if>
 						</#if>
