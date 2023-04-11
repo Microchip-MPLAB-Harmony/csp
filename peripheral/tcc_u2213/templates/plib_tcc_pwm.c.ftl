@@ -476,8 +476,29 @@ bool ${TCC_INSTANCE_NAME}_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_
 
 </#if>
 
-/* Set the counter*/
+
 <#if TCC_SIZE == 24>
+/* Get the current counter value */
+uint32_t ${TCC_INSTANCE_NAME}_PWM24bitCounterGet( void )
+{
+    /* Write command to force COUNT register read synchronization */
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET |= (uint8_t)TCC_CTRLBSET_CMD_READSYNC;
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CTRLB_Msk) == TCC_SYNCBUSY_CTRLB_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET & TCC_CTRLBSET_CMD_Msk) != 0U)
+    {
+        /* Wait for CMD to become zero */
+    }
+
+    /* Read current count value */
+    return ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT;
+}
+
+/* Set the counter*/
 void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet (uint32_t countVal)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal & 0xFFFFFFU;
@@ -487,6 +508,27 @@ void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet (uint32_t countVal)
     }
 }
 <#elseif TCC_SIZE == 16>
+/* Get the current counter value */
+uint16_t ${TCC_INSTANCE_NAME}_PWM16bitCounterGet( void )
+{
+    /* Write command to force COUNT register read synchronization */
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET |= (uint8_t)TCC_CTRLBSET_CMD_READSYNC;
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CTRLB_Msk) == TCC_SYNCBUSY_CTRLB_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET & TCC_CTRLBSET_CMD_Msk) != 0U)
+    {
+        /* Wait for CMD to become zero */
+    }
+
+    /* Read current count value */
+    return (uint16_t)${TCC_INSTANCE_NAME}_REGS->TCC_COUNT;
+}
+
+/* Set the counter*/
 void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet (uint16_t countVal)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
@@ -496,6 +538,27 @@ void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet (uint16_t countVal)
     }
 }
 <#elseif TCC_SIZE == 32>
+/* Get the current counter value */
+uint32_t ${TCC_INSTANCE_NAME}_PWM32bitCounterGet( void )
+{
+    /* Write command to force COUNT register read synchronization */
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET |= (uint8_t)TCC_CTRLBSET_CMD_READSYNC;
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CTRLB_Msk) == TCC_SYNCBUSY_CTRLB_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET & TCC_CTRLBSET_CMD_Msk) != 0U)
+    {
+        /* Wait for CMD to become zero */
+    }
+
+    /* Read current count value */
+    return ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT;
+}
+
+/* Set the counter*/
 void ${TCC_INSTANCE_NAME}_PWM32bitCounterSet (uint32_t countVal)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
