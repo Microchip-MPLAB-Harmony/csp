@@ -233,7 +233,7 @@ void ${DMA_INSTANCE_NAME}_Initialize(void)
     DMACONSET = _DMACON_ON_MASK;
 
     /* Initialize the available channel objects */
-    chanObj = (DMAC_CHANNEL_OBJECT *)&gDMAChannelObj[0];
+    chanObj = &gDMAChannelObj[0];
 
     for(chanIndex = 0U; chanIndex < ${NUM_DMA_CHANS}U; chanIndex++)
     {
@@ -547,7 +547,7 @@ void __attribute__((used)) DMA_${i}_InterruptHandler(void)
     uint32_t VarRead = 0;
 
     /* Find out the channel object */
-    chanObj = (DMAC_CHANNEL_OBJECT *) &gDMAChannelObj[${i}];
+    chanObj = &gDMAChannelObj[${i}];
 
     /* Check whether the active DMA channel event has occurred */
     VarRead = ${.vars[INTBITSREG]}.CHDHIF;
