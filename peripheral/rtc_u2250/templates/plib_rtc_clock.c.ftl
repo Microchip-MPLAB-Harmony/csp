@@ -383,9 +383,6 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 
     <#lt>void __attribute__((used)) ${RTC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>    uintptr_t context_var;
-    <#lt>    RTC_CLOCK_INT_MASK intCause_var;
-
     <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.intCause = (RTC_CLOCK_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG;
 
     <#lt>    /* Clear All Interrupts */
@@ -394,10 +391,9 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 
     <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback != NULL)
     <#lt>    {
-    <#lt>        intCause_var = ${RTC_INSTANCE_NAME?lower_case}Obj.intCause;
-    <#lt>        context_var =  ${RTC_INSTANCE_NAME?lower_case}Obj.context;
-	
-    <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback(intCause_var, context_var);
+    <#lt>        uintptr_t context = ${RTC_INSTANCE_NAME?lower_case}Obj.context;
+    <#lt>        RTC_CLOCK_INT_MASK intCause = ${RTC_INSTANCE_NAME?lower_case}Obj.intCause;
+    <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback(intCause, context);
     <#lt>    }
     <#lt>}
 </#if>
