@@ -630,7 +630,9 @@ void __attribute__((used)) ${HEMC_INSTANCE_NAME}_INTFIX_InterruptHandler(void)
 
     if (${HEMC_INSTANCE_NAME?lower_case}Obj.fix_callback != NULL)
     {
-        ${HEMC_INSTANCE_NAME?lower_case}Obj.fix_callback(${HEMC_INSTANCE_NAME?lower_case}Obj.fix_context);
+        uintptr_t fix_context = ${HEMC_INSTANCE_NAME?lower_case}Obj.fix_context;
+
+        ${HEMC_INSTANCE_NAME?lower_case}Obj.fix_callback(fix_context);
     }
 }
 
@@ -664,7 +666,9 @@ void __attribute__((used)) ${HEMC_INSTANCE_NAME}_INTNOFIX_InterruptHandler(void)
 
     if (${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_callback != NULL)
     {
-        ${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_callback(${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_context);
+        uintptr_t nofix_context = ${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_context;
+
+        ${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_callback(nofix_context);
     }
 }
 </#if>
