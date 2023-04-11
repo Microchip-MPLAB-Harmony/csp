@@ -537,7 +537,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     dataBits = SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & SPI_CSR_BITS_Msk;
 </#if>
 
-    volatile static bool isLastByteTransferInProgress = false;
+    static bool isLastByteTransferInProgress = false;
 <#else>
     uint32_t size;
     uint32_t index;
