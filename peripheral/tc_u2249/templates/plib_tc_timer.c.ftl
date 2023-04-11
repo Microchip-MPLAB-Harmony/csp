@@ -196,7 +196,7 @@ void ${TC_INSTANCE_NAME}_TimerCommandSet(TC_COMMAND command)
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
 }
 
 <#if TC_CTRLA_MODE = "COUNT8">
@@ -333,7 +333,7 @@ uint32_t ${TC_INSTANCE_NAME}_Timer32bitCounterGet( void )
     {
         /* Wait for CMD to become zero */
     }
-    
+
     /* Read current count value */
     return ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_COUNT;
 
@@ -397,7 +397,7 @@ void __attribute__((used)) ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
         status = (TC_TIMER_STATUS) ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
         /* Clear interrupt flags */
         ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
-        if((status != TC_TIMER_STATUS_NONE) && (${TC_INSTANCE_NAME}_CallbackObject.callback != NULL))
+        if((${TC_INSTANCE_NAME}_CallbackObject.callback != NULL) && (status != TC_TIMER_STATUS_NONE))
         {
             uintptr_t context = ${TC_INSTANCE_NAME}_CallbackObject.context;
             ${TC_INSTANCE_NAME}_CallbackObject.callback(status, context);
