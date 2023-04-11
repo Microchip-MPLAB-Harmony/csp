@@ -485,13 +485,13 @@ uint32_t ${DMA_INSTANCE_NAME}_ChannelCRCRead(DMA_CHANNEL channel)
 //*******************************************************************************
 static void __attribute__((used)) DMA_interruptHandler(uint32_t channel)
 {
-    volatile DMA_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMA_CH_OBJECT  *dmacChObj;
     volatile uint32_t chIntFlagStatus = 0U;
     volatile uint32_t chIntFlagsEnabled = 0U;
 
     DMA_TRANSFER_EVENT event = 0U;
 
-    dmacChObj = (DMA_CH_OBJECT *)&dmaChannelObj[channel];
+    dmacChObj = &dmaChannelObj[channel];
 
     /* Get the DMA channel interrupt flag status */
     chIntFlagStatus = ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMA_CHINTF;
