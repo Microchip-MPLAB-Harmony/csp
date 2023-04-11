@@ -195,7 +195,8 @@ void __attribute__((used)) ${PMP_INSTANCE_NAME}_InterruptHandler (void)
 
         if(${PMP_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
         {
-            ${PMP_INSTANCE_NAME?lower_case}CallbackObject.callback(${PMP_INSTANCE_NAME?lower_case}CallbackObject.context);
+            uintptr_t context = ${PMP_INSTANCE_NAME?lower_case}CallbackObject.context;
+            ${PMP_INSTANCE_NAME?lower_case}CallbackObject.callback(context);
         }
     }
 }
