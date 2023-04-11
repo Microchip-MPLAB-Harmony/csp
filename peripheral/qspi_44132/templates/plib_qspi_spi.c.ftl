@@ -289,7 +289,7 @@ void __attribute__((used)) ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t dataBits ;
     uint32_t receivedData;
-    volatile static bool isLastByteTransferInProgress = false;
+    static bool isLastByteTransferInProgress = false;
 
     /* Additional temporary variables used to prevent MISRA violations (Rule 13.x) */
     uintptr_t context = qspiObj.context;
