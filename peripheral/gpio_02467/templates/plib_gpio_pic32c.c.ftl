@@ -593,6 +593,8 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
 {
     uint8_t i;
     uint32_t status;
+    GPIO_PIN pin;
+    uintptr_t context;
 
     status  = GPIO${.vars[channel]}_REGS->GPIO_CNF;
     GPIO${.vars[channel]}_REGS->GPIO_CNF = 0;
@@ -600,9 +602,13 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
     /* Check pending events and call callback if registered */
     for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}U; i++)
     {
-        if(((status & (1UL << (portPinCbObj[i].pin & 0xFU))) != 0U) && (portPinCbObj[i].callback != NULL))
+        pin = portPinCbObj[i].pin;
+
+        if((portPinCbObj[i].callback != NULL) && ((status & (1UL << (pin & 0xFU))) != 0U))
         {
-            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
+            context = portPinCbObj[i].context;
+
+            portPinCbObj[i].callback (pin, context);
         }
     }
 }
@@ -612,6 +618,8 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
 {
     uint8_t i;
     uint32_t status;
+    GPIO_PIN pin;
+    uintptr_t context;
 
     status  = GPIO${.vars[channel]}_REGS->GPIO_CNSTAT;
     status &= GPIO${.vars[channel]}_REGS->GPIO_CNEN;
@@ -621,9 +629,13 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
     /* Check pending events and call callback if registered */
     for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}U; i++)
     {
-        if((status & (1UL << (portPinCbObj[i].pin & 0xFU))) && (portPinCbObj[i].callback != NULL))
+        pin = portPinCbObj[i].pin;
+
+        if((portPinCbObj[i].callback != NULL) && (status & (1UL << (pin & 0xFU))))
         {
-            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
+            context = portPinCbObj[i].context;
+
+            portPinCbObj[i].callback (pin, context);
         }
     }
 }
