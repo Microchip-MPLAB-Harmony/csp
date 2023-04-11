@@ -683,7 +683,8 @@ void __attribute__((used)) ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_IEN &= ~QMSPI_IEN_TRANS_COMPL_EN_Msk;
             if(${QMSPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
             {
-                ${QMSPI_INSTANCE_NAME?lower_case}Obj.callback(${QMSPI_INSTANCE_NAME?lower_case}Obj.context);
+                uintptr_t context = ${QMSPI_INSTANCE_NAME?lower_case}Obj.context;
+                ${QMSPI_INSTANCE_NAME?lower_case}Obj.callback(context);
             }
         }
     }
