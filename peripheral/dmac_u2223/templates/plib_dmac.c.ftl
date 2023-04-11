@@ -102,7 +102,7 @@ This function initializes the DMAC controller of the device.
 
 void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
-    volatile DMAC_CH_OBJECT *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
+    volatile DMAC_CH_OBJECT *dmacChObj = &dmacChannelObj[0];
     uint16_t channel = 0U;
 
     /* Initialize DMAC Channel objects */
@@ -665,14 +665,14 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_C
 <#if .vars["DMAC_ENABLE_CH_" + x] == true>
 void __attribute__((used)) ${DMA_INSTANCE_NAME}_${x}_InterruptHandler( void )
 {
-    volatile DMAC_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMAC_CH_OBJECT  *dmacChObj;
     /* Get active channel number */
     uint8_t channel = ${x}U;
     uint8_t channelId = 0U;
     volatile uint32_t chanIntFlagStatus = 0U;
     DMAC_TRANSFER_EVENT event = DMAC_TRANSFER_EVENT_ERROR;
 
-    dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel];
+    dmacChObj = &dmacChannelObj[channel];
 
     /* Save channel ID */
     channelId = ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
@@ -723,7 +723,7 @@ void __attribute__((used)) ${DMA_INSTANCE_NAME}_${x}_InterruptHandler( void )
 <#if .vars["DMAC_ENABLE_CH_" + x] == true>
 void __attribute__((used)) ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
-    volatile DMAC_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMAC_CH_OBJECT  *dmacChObj;
     uint8_t channel = 0U;
     uint8_t channelId = 0U;
     volatile uint32_t chanIntFlagStatus = 0U;
@@ -732,7 +732,7 @@ void __attribute__((used)) ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     /* Get active channel number */
     channel = (uint8_t)((uint32_t)${DMA_INSTANCE_NAME}_REGS->DMAC_INTPEND & DMAC_INTPEND_ID_Msk);
 
-    dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel];
+    dmacChObj = &dmacChannelObj[channel];
 
     /* Save channel ID */
     channelId = (uint8_t)${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
@@ -782,7 +782,7 @@ void __attribute__((used)) ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 <#else>
 void __attribute__((used)) ${DMA_INSTANCE_NAME}_InterruptHandler( void )
 {
-    volatile DMAC_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMAC_CH_OBJECT  *dmacChObj;
     uint8_t channel = 0U;
     uint8_t channelId = 0U;
     volatile uint32_t chanIntFlagStatus = 0U;
@@ -791,7 +791,7 @@ void __attribute__((used)) ${DMA_INSTANCE_NAME}_InterruptHandler( void )
     /* Get active channel number */
     channel = (uint8_t)((uint32_t)${DMA_INSTANCE_NAME}_REGS->DMAC_INTPEND & DMAC_INTPEND_ID_Msk);
 
-    dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel];
+    dmacChObj = &dmacChannelObj[channel];
 
     /* Save channel ID */
     channelId = (uint8_t)${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
