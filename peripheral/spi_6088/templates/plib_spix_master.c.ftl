@@ -303,7 +303,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
     uint32_t size = 0U;
 
     /* Verify the request */
-    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false))
+    if((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false) && (((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))))
     {
         isRequestAccepted = true;
 
@@ -364,7 +364,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
     uint32_t dummyData;
 
     /* Verify the request */
-    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false))
+    if((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false) && (((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))))
     {
         isRequestAccepted = true;
         ${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
@@ -531,7 +531,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
     uint8_t rxThreshold = 0U;
 
     /* Verify the request */
-    if((((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))) && (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false))
+    if((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false) && (((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))))
     {
         isRequestAccepted = true;
         ${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
@@ -686,7 +686,7 @@ void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler( void )
 <#else>
     uint32_t dataBits;
     uint32_t receivedData;
-    volatile static bool isLastByteTransferInProgress = false;
+    static bool isLastByteTransferInProgress = false;
 
 <#if SPI_NUM_CSR == 1>
     dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;

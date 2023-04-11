@@ -353,7 +353,7 @@ void __attribute__((used)) ${SPI_INSTANCE_NAME}_InterruptHandler(void)
         {
             uintptr_t context = ${SPI_INSTANCE_NAME?lower_case}Obj.context;
 
-            ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+            ${SPI_INSTANCE_NAME?lower_case}Obj.callback(context);
         }
 
         /* Clear the rdInIndex. Application must read the received data in the callback. */
