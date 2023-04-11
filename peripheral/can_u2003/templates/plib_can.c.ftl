@@ -72,7 +72,7 @@
 </#if>
 #define CAN_STD_ID_Msk        0x7FFU
 
-volatile static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
+static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
 
