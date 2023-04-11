@@ -315,12 +315,12 @@ void ${DMA_INSTANCE_NAME}_FillDataSet( uint32_t fillData )
 
 static void __attribute__((used)) DMA_interruptHandler(DMA_CHANNEL channel)
 {
-    volatile DMA_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMA_CH_OBJECT  *dmacChObj;
     volatile uint8_t chIntFlagStatus = 0U;
 
     DMA_TRANSFER_EVENT event = DMA_TRANSFER_EVENT_NONE;
 
-    dmacChObj = (DMA_CH_OBJECT *)&dmaChannelObj[channel];
+    dmacChObj = &dmaChannelObj[channel];
 
     dma_chan00_registers_t* dmaChRegs = ${DMA_INSTANCE_NAME}_ChannelBaseAddrGet(channel);
 
