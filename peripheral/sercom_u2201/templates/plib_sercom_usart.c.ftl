@@ -837,7 +837,9 @@ void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( 
 
     if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus == true)
     {
-        if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
+        size_t rxSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize;
+
+        if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize < rxSize)
         {
             uintptr_t rxContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext;
 

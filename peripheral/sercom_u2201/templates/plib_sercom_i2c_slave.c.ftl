@@ -334,7 +334,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
             }
             else
             {
-                if ((${SERCOM_INSTANCE_NAME}_I2C_LastByteAckStatusGet() == SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_ACK) || (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.isFirstRxAfterAddressPending == true))
+                if ((${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.isFirstRxAfterAddressPending == true) || (${SERCOM_INSTANCE_NAME}_I2C_LastByteAckStatusGet() == SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_ACK))
                 {
                     ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.isFirstRxAfterAddressPending = false;
                     event = SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY;
@@ -400,10 +400,10 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                 }
                 else
                 {
-                    if ((${SERCOM_INSTANCE_NAME}_I2C_LastByteAckStatusGet() == SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_ACK) || (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.isFirstRxAfterAddressPending == true))
+                    if ((${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.isFirstRxAfterAddressPending == true) || (${SERCOM_INSTANCE_NAME}_I2C_LastByteAckStatusGet() == SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_ACK))
                     {
                         (void)${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY, context);
-                        
+
                         ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.isFirstRxAfterAddressPending = false;
                         ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_RECEIVE_ACK_NAK);
                     }

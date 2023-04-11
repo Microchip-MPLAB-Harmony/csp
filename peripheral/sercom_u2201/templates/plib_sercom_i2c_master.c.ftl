@@ -1015,6 +1015,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                 </#if>
 
                 case SERCOM_I2C_STATE_TRANSFER_WRITE:
+                {
                     size_t writeCount = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount;
 
                     if (writeCount == (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize))
@@ -1139,10 +1140,12 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                         </#if>
                         ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount = writeCount;
                     }
+                }
 
                     break;
 
                 case SERCOM_I2C_STATE_TRANSFER_READ:
+                {
                     size_t readCount = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount;
 
                     <#if I2C_SCLSM?? && I2C_SCLSM = 1>
@@ -1244,6 +1247,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     </#if>
 
                     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount = readCount;
+                }
 
                     break;
 

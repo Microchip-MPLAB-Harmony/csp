@@ -328,7 +328,7 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_IsBusy(void)
     bool isBusy = false;
     size_t txSize = ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize;
     bool transferIsBusy = ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy;
-    
+
     if ((${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize == 0U) && (txSize == 0U))
     {
         /* This means no transfer has been requested yet; hence SPI is not busy. */
@@ -584,9 +584,9 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
             <#if SPI_INTENSET_ERROR = true>
             ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG |= (uint8_t)SERCOM_SPIM_INTFLAG_ERROR_Msk;
             </#if>
-            
+
             txSz = ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize;
-            
+
             if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize > txSz)
             {
                 ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize = ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize - txSz;
@@ -617,7 +617,7 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
                 ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize >>= 1U;
                 ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize >>= 1U;
                 ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize >>= 1U;
-                
+
                 txSz = ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize;
 
                 if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount < txSz)
@@ -685,13 +685,13 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
 {
     uint32_t dataBits = 0U;
     uint32_t receivedData = 0U;
-    volatile static bool isLastByteTransferInProgress = false;
+    static bool isLastByteTransferInProgress = false;
     uintptr_t context = ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.context;
 
     if(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTENSET != 0U)
     {
         dataBits = ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB & SERCOM_SPIM_CTRLB_CHSIZE_Msk;
-        
+
         size_t rxCount = ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxCount;
         size_t txCount = ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount;
         size_t txSize  = ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize;
@@ -783,7 +783,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
                 /* Do nothing */
             }
         }
-        
+
         ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxCount = rxCount;
         ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txCount = txCount;
 
