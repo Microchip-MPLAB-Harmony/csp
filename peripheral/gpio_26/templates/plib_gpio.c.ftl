@@ -372,7 +372,8 @@ void __attribute__((used)) ${.vars[PIN_NAME]}_GRP_InterruptHandler(void)
         ECIA_REGS->ECIA_SRC${.vars[GIRQ_NUM]} |= ((uint32_t)1U << ${.vars[GIRQ_BITPOS]});
         if (pinCallbackObj[${ARR_INDEX}].callback != NULL)
         {
-            pinCallbackObj[${ARR_INDEX}].callback(GPIO_PIN_${.vars[PIN_NAME]}, pinCallbackObj[${ARR_INDEX}].context);
+            uintptr_t context = pinCallbackObj[${ARR_INDEX}].context;
+            pinCallbackObj[${ARR_INDEX}].callback(GPIO_PIN_${.vars[PIN_NAME]}, context);
         }
     }
 }
