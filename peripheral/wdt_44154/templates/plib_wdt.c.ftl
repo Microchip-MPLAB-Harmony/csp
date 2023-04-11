@@ -69,10 +69,10 @@
     <#lt>{
     <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
     <#lt>    uintptr_t context =  ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context;
-    <#lt>    // Capture and clear interrupt status    
+    <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${WDT_INSTANCE_NAME}_REGS->WDT_ISR;
 
-    <#lt>    if( (interruptStatus != 0U) && (${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL) )
+    <#lt>    if((${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL) && (interruptStatus != 0U))
     <#lt>    {
     <#lt>        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback(context, interruptStatus );
     <#lt>    }
