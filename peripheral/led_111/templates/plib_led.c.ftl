@@ -175,7 +175,9 @@ void __attribute__((used)) ${LED_INSTANCE_NAME}${INT_HANDLER_NAME_PREFIX}_Interr
 
         if (${LED_INSTANCE_NAME}_CallbackObject.callback != NULL)
         {
-            ${LED_INSTANCE_NAME}_CallbackObject.callback(${LED_INSTANCE_NAME}_CallbackObject.context);
+            uintptr_t context = ${LED_INSTANCE_NAME}_CallbackObject.context;
+
+            ${LED_INSTANCE_NAME}_CallbackObject.callback(context);
         }
     }
 }
