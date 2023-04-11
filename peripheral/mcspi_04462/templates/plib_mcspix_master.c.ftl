@@ -671,7 +671,7 @@ void __attribute__((used)) ${MCSPI_INSTANCE_NAME}_InterruptHandler( void )
 <#else>
     uint32_t dataBits;
     uint32_t receivedData;
-    volatile static bool isLastByteTransferInProgress = false;
+    static bool isLastByteTransferInProgress = false;
 
 <#if MCSPI_NUM_CSR == 1>
     dataBits = ${MCSPI_INSTANCE_NAME}_REGS->MCSPI_CSR[${MCSPI_CSR_INDEX}] & MCSPI_CSR_BITS_Msk;
