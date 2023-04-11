@@ -83,7 +83,7 @@
     <#assign portNumCbList = portNumCbList + [TOTAL_NUM_OF_INT_USED] >
 
     <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
+    <#lt>volatile GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <@compress single_line=true>
@@ -455,7 +455,7 @@ void GPIO_PinIntDisable(GPIO_PIN pin)
 {
     GPIO_PORT port;
     uint32_t mask;
-    
+
     port = (GPIO_PORT)(pin>>4);
     mask =  0x1UL << (pin & 0xFU);
 
@@ -519,7 +519,7 @@ bool GPIO_PinInterruptCallbackRegister(
     Interrupt Handler for change notice interrupt for channel ${.vars[channel]}.
 
   Remarks:
-	It is an internal function called from ISR, user should not call it directly.
+    It is an internal function called from ISR, user should not call it directly.
 */
 <#if .vars["SYS_PORT_${.vars[channel]}_CN_STYLE"] == true>
 <#-- ISR for edge type interrupt -->
@@ -527,6 +527,8 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
 {
     uint8_t i;
     uint32_t status;
+    GPIO_PIN pin;
+    uintptr_t context;
 
     status  = CNF${.vars[channel]};
     CNF${.vars[channel]} = 0;
@@ -536,9 +538,13 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
     /* Check pending events and call callback if registered */
     for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}; i++)
     {
-        if((status & (1 << (portPinCbObj[i].pin & 0xFU))) && (portPinCbObj[i].callback != NULL))
+        pin = portPinCbObj[i].pin;
+
+        if((portPinCbObj[i].callback != NULL) && (status & (1 << (pin & 0xFU))))
         {
-            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
+            context = portPinCbObj[i].context;
+
+            portPinCbObj[i].callback (pin, context);
         }
     }
 }
@@ -547,6 +553,8 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
 {
     uint8_t i;
     uint32_t status;
+    GPIO_PIN pin;
+    uintptr_t context;
 
     status  = CNSTAT${.vars[channel]};
     status &= CNEN0${.vars[channel]};
@@ -557,9 +565,12 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
     /* Check pending events and call callback if registered */
     for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}; i++)
     {
-        if((status & (1UL << (portPinCbObj[i].pin & 0xFU))) && (portPinCbObj[i].callback != NULL))
+        pin = portPinCbObj[i].pin;
+
+        if((portPinCbObj[i].callback != NULL) && (status & (1UL << (pin & 0xFU))))
         {
-            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
+            context = portPinCbObj[i].context;
+            portPinCbObj[i].callback (pin, context);
         }
     }
 }
