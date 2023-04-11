@@ -143,7 +143,8 @@ void __attribute__((used)) ${HSMCI_INSTANCE_NAME}_InterruptHandler(void)
 
     if ((${HSMCI_INSTANCE_NAME?lower_case}Obj.callback) != NULL)
     {
-        ${HSMCI_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, ${HSMCI_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${HSMCI_INSTANCE_NAME?lower_case}Obj.context;
+        ${HSMCI_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, context);
     }
 }
 
@@ -168,14 +169,14 @@ bool ${HSMCI_INSTANCE_NAME}_IsCmdLineBusy ( void )
 
 bool ${HSMCI_INSTANCE_NAME}_IsDatLineBusy ( void )
 {
-	bool xDatLineBusy = false;
+    bool xDatLineBusy = false;
     if (((${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_XFRDONE_Msk) == 0U) || ((${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_TXRDY_Msk) == 0U))
     {
         xDatLineBusy = true;
     }
-   
+
     return xDatLineBusy;
-    
+
 }
 
 void ${HSMCI_INSTANCE_NAME}_BusWidthSet ( HSMCI_BUS_WIDTH busWidth )
@@ -262,7 +263,7 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
 
 void ${HSMCI_INSTANCE_NAME}_BlockSizeSet ( uint16_t blockSize )
 {
-	uint32_t xblocksize = blockSize;
+    uint32_t xblocksize = blockSize;
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.blockSize = xblocksize;
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR &= ~(HSMCI_BLKR_BLKLEN_Msk);
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR |= (uint32_t)(xblocksize << HSMCI_BLKR_BLKLEN_Pos);
@@ -346,15 +347,15 @@ void ${HSMCI_INSTANCE_NAME}_ResponseRead (
             /* Drop the CRC byte.
              * The CRC byte for the CID and CSD response is not copied.
              */
-			 /* Note: The memcpy function copies n characters from the object pointed to by s2 into the object pointed to by s1. 
-			  * If copying takes place between objects that overlap, the behavior is undefined. Hence, using memmove.
-			 */
+             /* Note: The memcpy function copies n characters from the object pointed to by s2 into the object pointed to by s1.
+              * If copying takes place between objects that overlap, the behavior is undefined. Hence, using memmove.
+             */
            (void)  memmove((void*)response, (void*)((char*)response + 1U),31U);
 
             break;
 
         default:
-		        /* Do nothing*/
+                /* Do nothing*/
             break;
     }
 }
@@ -532,9 +533,9 @@ void ${HSMCI_INSTANCE_NAME}_ModuleInit ( void )
 
     /* Wait end of initialization command */
     while (((${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_CMDRDY_Msk)) == 0U)
-	{
-			
-	}
+    {
+
+    }
 }
 
 void ${HSMCI_INSTANCE_NAME}_Initialize( void )
