@@ -446,7 +446,7 @@ bool I2C${I2C_INSTANCE_NUM}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t sr
     uint32_t timingValuesIndex = 0U;
     float temp;
 
-    if ((setup == NULL) || (i2c${I2C_INSTANCE_NUM}Obj.state != I2C_MASTER_STATE_IDLE))
+    if ((i2c${I2C_INSTANCE_NUM}Obj.state != I2C_MASTER_STATE_IDLE) || (setup == NULL))
     {
         return false;
     }

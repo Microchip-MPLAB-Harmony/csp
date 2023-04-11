@@ -211,7 +211,7 @@ void I2C${I2C_INSTANCE_NAME}_TargetStart(void)
     ${I2C_INSTANCE_NAME?lower_case}TargetObj.dmaDir = I2C_SMB_TARGET_DMA_DIR_PER_TO_MEM;
 
     /* Configure DMA for Slave RX */
-    (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_SLAVE_DMA_CHANNEL}, ${I2C_INSTANCE_NAME}_SRXB, (void*)i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer, sizeof(i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer));
+    (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_SLAVE_DMA_CHANNEL}, ${I2C_INSTANCE_NAME}_SRXB, i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer, sizeof(i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer));
 
     /* Enable SDONE (Slave Done) interrupt */
     ${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] |= SMB_CFG_ENSI_Msk;
@@ -323,7 +323,7 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
                 if (${I2C_INSTANCE_NAME?lower_case}TargetObj.transferDir == I2C_SMB_TARGET_TRANSFER_DIR_WRITE)
                 {
                     /* Enter here when a Repeated Write request is received. Configure DMA for Target RX (peripheral to memory). */
-                    (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_SLAVE_DMA_CHANNEL}, ${I2C_INSTANCE_NAME}_SRXB, (void*)i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer, sizeof(i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer));
+                    (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_SLAVE_DMA_CHANNEL}, ${I2C_INSTANCE_NAME}_SRXB, i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer, sizeof(i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer));
 
                     /* Set the target command and start the transfer */
                     ${I2C_INSTANCE_NAME}_REGS->SMB_SCMD[0] = SMB_SCMD_RD_CNT(sizeof(i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer)) | SMB_SCMD_SRUN_Msk | SMB_SCMD_SPROCEED_Msk | SMB_SCMD_PEC(PECConfig);
@@ -333,7 +333,7 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
                 else
                 {
                     /* Enter here when Repeated Read request is received. Configure DMA for Target TX (memory to peripheral) */
-                    (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_SLAVE_DMA_CHANNEL}, (void*)i2c${I2C_INSTANCE_NAME?lower_case}TargetWrBuffer, ${I2C_INSTANCE_NAME}_STXB, sizeof(i2c${I2C_INSTANCE_NAME?lower_case}TargetWrBuffer));
+                    (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_SLAVE_DMA_CHANNEL}, i2c${I2C_INSTANCE_NAME?lower_case}TargetWrBuffer, ${I2C_INSTANCE_NAME}_STXB, sizeof(i2c${I2C_INSTANCE_NAME?lower_case}TargetWrBuffer));
 
                     /* Set the target command and start the transfer */
                     ${I2C_INSTANCE_NAME}_REGS->SMB_SCMD[0] = SMB_SCMD_WR_CNT(${I2C_INSTANCE_NAME?lower_case}TargetObj.txCount) | SMB_SCMD_SRUN_Msk | SMB_SCMD_SPROCEED_Msk | SMB_SCMD_PEC(PECConfig);
@@ -403,7 +403,7 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
             ${I2C_INSTANCE_NAME?lower_case}TargetObj.error = I2C_SMB_TARGET_ERROR_NONE;
             ${I2C_INSTANCE_NAME?lower_case}TargetObj.dmaDir = I2C_SMB_TARGET_DMA_DIR_PER_TO_MEM;
 
-            (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_SLAVE_DMA_CHANNEL}, ${I2C_INSTANCE_NAME}_SRXB, (void*)i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer, sizeof(i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer));
+            (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_SLAVE_DMA_CHANNEL}, ${I2C_INSTANCE_NAME}_SRXB, i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer, sizeof(i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer));
             /* Set the target command and start the transfer */
             ${I2C_INSTANCE_NAME}_REGS->SMB_SCMD[0] = SMB_SCMD_RD_CNT(sizeof(i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer)) | SMB_SCMD_SRUN_Msk | SMB_SCMD_SPROCEED_Msk | SMB_SCMD_PEC(PECConfig);
         }

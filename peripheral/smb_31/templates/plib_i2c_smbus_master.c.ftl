@@ -209,7 +209,7 @@ bool I2C${I2C_INSTANCE_NAME}_HostTransferSetup(I2C_SMB_HOST_TRANSFER_SETUP* setu
     uint32_t timingValuesIndex = 0;
     float temp;
 
-    if ((setup == NULL) || (${I2C_INSTANCE_NAME?lower_case}HostObj.state != I2C_SMB_HOST_STATE_IDLE))
+    if ((${I2C_INSTANCE_NAME?lower_case}HostObj.state != I2C_SMB_HOST_STATE_IDLE) || (setup == NULL))
     {
         return false;
     }
@@ -324,7 +324,7 @@ static void I2C${I2C_INSTANCE_NAME}_HostWriteRead(I2C_SMB_HOST_PROTOCOL protocol
     ${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] |= SMB_CFG_FLUSH_MRBUF_Msk | SMB_CFG_FLUSH_MXBUF_Msk;
 
     /* Configure DMA transfer for the write part (memory to peripheral) of the transfer. DMA channel will be reconfigured for reading (Peripheral to memory ) in the I2CSMB interrupt, once the write part is complete. */
-    (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}, (void*)i2c${I2C_INSTANCE_NAME?lower_case}HostWrBuffer, ${I2C_INSTANCE_NAME}_MTXB, nWrBytes);
+    (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}, i2c${I2C_INSTANCE_NAME?lower_case}HostWrBuffer, ${I2C_INSTANCE_NAME}_MTXB, nWrBytes);
 
     ${I2C_INSTANCE_NAME?lower_case}HostObj.state = I2C_SMB_HOST_STATE_TRANSMIT;
 
@@ -478,7 +478,7 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t
 
                         ${I2C_INSTANCE_NAME?lower_case}HostObj.state = I2C_SMB_HOST_STATE_RECEIVE;
 
-                        (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}, ${I2C_INSTANCE_NAME}_MRXB, (void*)i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer, ${I2C_INSTANCE_NAME?lower_case}HostObj.dmaRdBytes);
+                        (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}, ${I2C_INSTANCE_NAME}_MRXB, i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer, ${I2C_INSTANCE_NAME?lower_case}HostObj.dmaRdBytes);
 
                         /* Re-start the paused host state machine */
                         ${I2C_INSTANCE_NAME}_REGS->SMB_MCMD[0] |= SMB_MCMD_MPROCEED_Msk;
@@ -490,7 +490,7 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t
                 /* Transfer completed without error. Abort the transfer on DMA channel for bulk read transfers. */
                 I2C_SMB_HOST_PROTOCOL protocol = ${I2C_INSTANCE_NAME?lower_case}HostObj.protocol;
 
-                if (((protocol == I2C_SMB_HOST_PROTOCOL_RD_BLK) || (protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK)) && (DMA_ChannelIsBusy(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL})))
+                if ((DMA_ChannelIsBusy(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL})) && ((protocol == I2C_SMB_HOST_PROTOCOL_RD_BLK) || (protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK)))
                 {
                     DMA_ChannelTransferAbort(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL});
                 }
