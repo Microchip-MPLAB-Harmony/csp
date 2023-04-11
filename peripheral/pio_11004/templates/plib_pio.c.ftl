@@ -219,7 +219,7 @@
 void PIO_Initialize ( void )
 {
     <#if MATRIX_NAME?? && SYSIO_REG_NAME?? && PIO_CCFG_SYSIO_VALUE??>
-	<#lt>    ${MATRIX_NAME}_REGS->${SYSIO_REG_NAME} = 0x0;
+    <#lt>    ${MATRIX_NAME}_REGS->${SYSIO_REG_NAME} = 0x0;
     <#if PIO_CCFG_SYSIO_VALUE != "0">
         <#lt>    /* Selected System IO pins are configured as GPIO */
         <#lt>    ${MATRIX_NAME}_REGS->${SYSIO_REG_NAME} |= 0x${PIO_CCFG_SYSIO_VALUE}UL;
@@ -606,12 +606,14 @@ bool PIO_PinInterruptCallbackRegister(
     This function defines the Interrupt handler for a selected port.
 
   Remarks:
-	It is an internal function used by the library, user should not call it.
+    It is an internal function used by the library, user should not call it.
 */
 void __attribute__((used)) PIO_Interrupt_Handler ( PIO_PORT port )
 {
     uint32_t status;
     uint32_t i, portIndex;
+    PIO_PIN pin;
+    uintptr_t context;
 
     status  = ((pio_registers_t*)port)->PIO_ISR;
     status &= ((pio_registers_t*)port)->PIO_IMR;
@@ -622,9 +624,12 @@ void __attribute__((used)) PIO_Interrupt_Handler ( PIO_PORT port )
     /* Check pending events and call callback if registered */
     for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1U]; i++)
     {
-        if(((status & (1UL << (portPinCbObj[i].pin & 0x1FU))) != 0U) && (portPinCbObj[i].callback != NULL))
+        pin = portPinCbObj[i].pin;
+
+        if((portPinCbObj[i].callback != NULL) && ((status & (1UL << (pin & 0x1FU))) != 0U))
         {
-            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
+            context = portPinCbObj[i].context;
+            portPinCbObj[i].callback (pin, context);
         }
     }
 
