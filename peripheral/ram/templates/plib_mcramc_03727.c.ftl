@@ -176,9 +176,10 @@ void __attribute__((used)) ${RAM_INSTANCE_NAME}_ECC_InterruptHandler ( void )
         {
             /* Wait for the interrupt status to clear */
         }
-        if ((status != ${RAM_INSTANCE_NAME}_ECC_STATUS_NONE) && (${RAM_INSTANCE_NAME}_ECC_CallbackObject.callback != NULL))
+        if ((${RAM_INSTANCE_NAME}_ECC_CallbackObject.callback != NULL) && (status != ${RAM_INSTANCE_NAME}_ECC_STATUS_NONE))
         {
-            ${RAM_INSTANCE_NAME}_ECC_CallbackObject.callback(status, ${RAM_INSTANCE_NAME}_ECC_CallbackObject.context);
+            uintptr_t context = ${RAM_INSTANCE_NAME}_ECC_CallbackObject.context;
+            ${RAM_INSTANCE_NAME}_ECC_CallbackObject.callback(status, context);
         }
     }
 }
