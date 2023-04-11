@@ -418,7 +418,7 @@ bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 <#if ADC_INTENSET_WINMON = true && ADC_CTRLB_WINMODE != "0">
 void __attribute__((used)) ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
-    volatile ADC_STATUS status;
+    ADC_STATUS status;
     status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG;
     /* Clear interrupt flag */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
