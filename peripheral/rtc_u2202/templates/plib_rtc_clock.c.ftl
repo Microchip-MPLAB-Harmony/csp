@@ -234,7 +234,8 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
     <#lt>   if(${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback != NULL)
     <#lt>   {
     <#lt>       uintptr_t context = ${RTC_INSTANCE_NAME?lower_case}Obj.context;
-    <#lt>       ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback(${RTC_INSTANCE_NAME?lower_case}Obj.intCause, context);
+    <#lt>       RTC_CLOCK_INT_MASK intCause = ${RTC_INSTANCE_NAME?lower_case}Obj.intCause;
+    <#lt>       ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback(intCause, context);
     <#lt>   }
     <#lt>}
 </#if>
