@@ -268,13 +268,13 @@
                         <#if ledName?counter == ledPinPos?counter>
                             <#if ledName?counter == ledActiveLevel?counter>
                                 <#lt>/*** LED Macros for ${ledName} ***/
-                                <#lt>#define ${ledName}_Toggle()     (PORT_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTTGL = 1 << ${ledPinPos})
+                                <#lt>#define ${ledName}_Toggle()     (PORT_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTTGL = 1UL << ${ledPinPos})
                                 <#if ledActiveLevel == "High">
-                                    <#lt>#define ${ledName}_On()         (PORT_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTSET = 1 << ${ledPinPos})
-                                    <#lt>#define ${ledName}_Off()        (PORT_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTCLR = 1 << ${ledPinPos})
+                                    <#lt>#define ${ledName}_On()         (PORT_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTSET = 1UL << ${ledPinPos})
+                                    <#lt>#define ${ledName}_Off()        (PORT_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTCLR = 1UL << ${ledPinPos})
                                 <#else>
-                                    <#lt>#define ${ledName}_On()         (PORT_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTCLR = 1 << ${ledPinPos})
-                                    <#lt>#define ${ledName}_Off()        (PORT_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTSET = 1 << ${ledPinPos})
+                                    <#lt>#define ${ledName}_On()         (PORT_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTCLR = 1UL << ${ledPinPos})
+                                    <#lt>#define ${ledName}_Off()        (PORT_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTSET = 1UL << ${ledPinPos})
                                 </#if>
                             </#if>
                         </#if>
@@ -321,11 +321,11 @@
                             <#if vbusName?counter == vbusActiveLevel?counter>
                                 <#lt>/*** VBUS Macros for ${vbusName} ***/
                                 <#if vbusActiveLevel == "High">
-                                    <#lt>#define ${vbusName}_PowerEnable()         (PORT_REGS->GROUP[${myHash[vbusGroup]}].PORT_OUTSET = 1 << ${vbusPinPos})
-                                    <#lt>#define ${vbusName}_PowerDisable()        (PORT_REGS->GROUP[${myHash[vbusGroup]}].PORT_OUTCLR = 1 << ${vbusPinPos})
+                                    <#lt>#define ${vbusName}_PowerEnable()         (PORT_REGS->GROUP[${myHash[vbusGroup]}].PORT_OUTSET = 1UL << ${vbusPinPos})
+                                    <#lt>#define ${vbusName}_PowerDisable()        (PORT_REGS->GROUP[${myHash[vbusGroup]}].PORT_OUTCLR = 1UL << ${vbusPinPos})
                                 <#else>
-                                    <#lt>#define ${vbusName}_PowerEnable()         (PORT_REGS->GROUP[${myHash[vbusGroup]}].PORT_OUTCLR = 1 << ${vbusPinPos})
-                                    <#lt>#define ${vbusName}_PowerDisable()        (PORT_REGS->GROUP[${myHash[vbusGroup]}].PORT_OUTSET = 1 << ${vbusPinPos})
+                                    <#lt>#define ${vbusName}_PowerEnable()         (PORT_REGS->GROUP[${myHash[vbusGroup]}].PORT_OUTCLR = 1UL << ${vbusPinPos})
+                                    <#lt>#define ${vbusName}_PowerDisable()        (PORT_REGS->GROUP[${myHash[vbusGroup]}].PORT_OUTSET = 1UL << ${vbusPinPos})
                                 </#if>
                             </#if>
                         </#if>
