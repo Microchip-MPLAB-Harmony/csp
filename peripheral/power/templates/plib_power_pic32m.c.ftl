@@ -156,7 +156,7 @@ void POWER_DS_ReleaseGPIO(void)
 
 void POWER_DS_WakeupSourceClear( POWER_DS_WAKEUP_SOURCE wakeupSource )
 {
-    DSWAKE &= ~(uint32_t)wakeupSource;
+    DSWAKE &= ~((uint32_t)wakeupSource);
 }
 
 void POWER_DS_GPR_Enable(void)
