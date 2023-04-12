@@ -239,6 +239,15 @@ typedef union
     };
 } DMA_BDCTRLBbits_t;
 
+/* MISRA C-2012 Rule 6.1 deviated:16 Deviation record ID -  H3_MISRAC_2012_R_6_1_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+<#if COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate:16 "MISRA C-2012 Rule 6.1" "H3_MISRAC_2012_R_6_1_DR_1"
+</#if>
+
 typedef union
 {
     struct
@@ -274,6 +283,14 @@ typedef union
         uint16_t w          :16;
     };
 } DMA_BDCTRLCRCbits_t;
+
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 6.1"
+<#if COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
+</#if>
+/* MISRAC 2012 deviation block end */
 
 typedef union
 {
