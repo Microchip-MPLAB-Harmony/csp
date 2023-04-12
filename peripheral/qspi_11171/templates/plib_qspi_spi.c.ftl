@@ -367,7 +367,7 @@ void __attribute__((used)) ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
     /* See if Exchange is complete */
     if ((isLastByteTransferInProgress == true) && ((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_TXEMPTY_Msk) == QSPI_SR_TXEMPTY_Msk))
     {
-        if (qspiObj.rxCount == qspiObj.rxSize)
+        if (rxCount == qspiObj.rxSize)
         {
             qspiObj.transferIsBusy = false;
 
