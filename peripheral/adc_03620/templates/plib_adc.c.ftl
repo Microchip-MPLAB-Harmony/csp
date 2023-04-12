@@ -264,11 +264,13 @@ void ${ADC_INSTANCE_NAME}_Initialize(void)
         /* Wait for Synchronization */
     }
 
+<#if ADC_CTLINTFLAG__CRDY != "0">
     /* Wait for WKUPEXP delay to expire after which ADC SAR Core n is Ready (CRDY) */
     while ((${ADC_INSTANCE_NAME}_REGS->ADC_CTLINTFLAG & 0x${ADC_CTLINTFLAG__CRDY?upper_case}U) == 0U)
     {
 
     }
+</#if>
 
     /* Wait for voltage reference to be stable */
     while ((${ADC_INSTANCE_NAME}_REGS->ADC_CTLINTFLAG & ADC_CTLINTFLAG_VREFRDY_Msk) == 0U)

@@ -35,6 +35,9 @@ global numTriggers
 global InterruptVectorSecurity
 global ADCfilesArray
 
+global defaultCore
+defaultCore = 0
+
 nSARCore = 0
 earlyInterruptPresent = False
 numTriggers = 0
@@ -1591,19 +1594,19 @@ def commonRegisterConfig(adcComponent):
 
     # ADC_CTRLD__ANLEN
     ADC_CTRLD__ANLEN_BITS_Config = adcComponent.createHexSymbol("ADC_CTRLD__ANLEN", None)
-    ADC_CTRLD__ANLEN_BITS_Config.setDefaultValue(0x00000000)
+    ADC_CTRLD__ANLEN_BITS_Config.setDefaultValue(1 << (20 + defaultCore))     # Core 0 is enabled by default
     ADC_CTRLD__ANLEN_BITS_Config.setVisible(False)
     ADC_CTRLD__ANLEN_BITS_Config.setDependencies(ADC_CTRLD__ANLEN_Update, ADC_CTRLD__ANLEN_DepList)
 
     # ADC_CTRLD__CHNEN
     ADC_CTRLD__CHNEN_BITS_Config = adcComponent.createHexSymbol("ADC_CTRLD__CHNEN", None)
-    ADC_CTRLD__CHNEN_BITS_Config.setDefaultValue(0x00000000)
+    ADC_CTRLD__CHNEN_BITS_Config.setDefaultValue(1 << (16 + defaultCore))     # Core 0 is enabled by default
     ADC_CTRLD__CHNEN_BITS_Config.setVisible(False)
     ADC_CTRLD__CHNEN_BITS_Config.setDependencies(ADC_CTRLD__ANLEN_Update, ADC_CTRLD__ANLEN_DepList)
 
     # ADC_CTLINTFLAG__CRDY
     ADC_CTLINTFLAG__CRDY_BITS_Config = adcComponent.createHexSymbol("ADC_CTLINTFLAG__CRDY", None)
-    ADC_CTLINTFLAG__CRDY_BITS_Config.setDefaultValue(0x00000000)
+    ADC_CTLINTFLAG__CRDY_BITS_Config.setDefaultValue(1 << defaultCore)        # Core 0 is enabled by default
     ADC_CTLINTFLAG__CRDY_BITS_Config.setVisible(False)
     ADC_CTLINTFLAG__CRDY_BITS_Config.setDependencies(ADC_CTRLD__ANLEN_Update, ADC_CTRLD__ANLEN_DepList)
 
@@ -1785,6 +1788,6 @@ def instantiateComponent(adcComponent):
     adcEvsysConfig(adcComponent)
 
     # Enable ADC Core 0 by default
-    enableCoreNSymbols(adcInstanceName.getComponent(), 0, True)
+    enableCoreNSymbols(adcInstanceName.getComponent(), defaultCore, True)
 
     codeGenerationConfig(adcComponent, Module)
