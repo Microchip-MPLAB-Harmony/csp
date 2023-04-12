@@ -311,7 +311,8 @@ static void __attribute__((used)) ${SPI_INSTANCE_NAME}_CS_Handler(CN_PIN pin, ui
 
             if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
             {
-                ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+                uintptr_t context_val = ${SPI_INSTANCE_NAME?lower_case}Obj.context;
+                ${SPI_INSTANCE_NAME?lower_case}Obj.callback(context_val);
             }
 
             /* Clear the read index. Application must read out the data by calling ${SPI_INSTANCE_NAME}_Read API in the callback */
