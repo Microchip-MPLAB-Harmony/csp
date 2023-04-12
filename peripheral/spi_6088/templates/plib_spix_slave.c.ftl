@@ -151,9 +151,9 @@ size_t ${SPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size)
         rdSize = rdInIndex;
     }
 <#if SPI_CSR0_BITS = "_8_BIT">
-    (void) mem_copy(pRdBuffer, (void*)${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
+    (void) mem_copy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
 <#else>
-    (void) mem_copy(pRdBuffer, (void*)${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
+    (void) mem_copy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
 </#if>
 
     return rdSize;
@@ -174,9 +174,9 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
     }
 
 <#if SPI_CSR0_BITS = "_8_BIT">
-   (void) mem_copy((void*)${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
+    (void) mem_copy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
 <#else>
-    (void) mem_copy((void*)${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
+    (void) mem_copy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
 </#if>
 
     ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes = wrSize;
