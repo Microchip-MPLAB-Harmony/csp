@@ -322,19 +322,21 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             break;
 
         case I2C_STATE_WAIT_ACK_COMPLETE:
-            size_t readSize = ${I2C_INSTANCE_NAME?lower_case}Obj.readSize;
-            /* ACK or NAK sent to the I2C slave */
-            if (${I2C_INSTANCE_NAME?lower_case}Obj.readCount < readSize)
             {
-                /* Enable receiver */
-                ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_RCEN_MASK;
-                ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_READ_BYTE;
-            }
-            else
-            {
-                /* Generate Stop Condition */
-                ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_PEN_MASK;
-                ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
+                size_t readSize = ${I2C_INSTANCE_NAME?lower_case}Obj.readSize;
+                /* ACK or NAK sent to the I2C slave */
+                if (${I2C_INSTANCE_NAME?lower_case}Obj.readCount < readSize)
+                {
+                    /* Enable receiver */
+                    ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_RCEN_MASK;
+                    ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_READ_BYTE;
+                }
+                else
+                {
+                    /* Generate Stop Condition */
+                    ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_PEN_MASK;
+                    ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
+                }
             }
             break;
 
