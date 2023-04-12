@@ -601,7 +601,7 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
         {
             context = portPinCbObj[i].context;
 
-            portPinCbObj[i].callback (portPinCbObj[i].pin, context);
+            portPinCbObj[i].callback (pin, context);
         }
     }
 }
