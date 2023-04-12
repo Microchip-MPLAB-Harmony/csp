@@ -302,7 +302,7 @@ void __attribute__((used)) ${RTC_INSTANCE_NAME}_InterruptHandler( void )
 {
     // This handler may be chained with other sys control interrupts. So
     // the user call back should only occur if an RTC stimulus is present.
-    volatile uint32_t rtc_status = ${RTC_INSTANCE_NAME}_REGS->RTC_SR;
+    uint32_t rtc_status = ${RTC_INSTANCE_NAME}_REGS->RTC_SR;
     uint32_t enabledInterrupts = ${RTC_INSTANCE_NAME}_REGS->RTC_IMR;
 
     if( (rtc_status & enabledInterrupts) != 0U )
