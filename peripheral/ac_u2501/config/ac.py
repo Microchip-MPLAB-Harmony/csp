@@ -184,7 +184,7 @@ def instantiateComponent(acComponent):
     if calibRequired == -1:
         calibRequired = 1
 
-    # If calibration is required then read the calibration data address 
+    # If calibration is required then read the calibration data address
     if calibRequired == 1:
         calibBaseAddr = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"SW0\"]").getAttribute("start")
 
@@ -626,7 +626,7 @@ def instantiateComponent(acComponent):
     nvicDep.append("core." + InterruptVectorUpdate)
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
-        InterruptVectorSecurity = acInstanceName.getValue() + "_SET_NON_SECURE"    
+        InterruptVectorSecurity = acInstanceName.getValue() + "_SET_NON_SECURE"
 
     # Interrupt Dynamic settings
     acSym_UpdateInterruptStatus = acComponent.createBooleanSymbol("AC_INTERRUPT_STATUS", None)
@@ -649,6 +649,9 @@ def instantiateComponent(acComponent):
     acSym_EVESYS_CONFIGURE.setVisible(False)
     acSym_EVESYS_CONFIGURE.setDependencies(acEvesysConfigure, evsysDep)
 
+    acSym_CTRLB_SIZE = acComponent.createIntegerSymbol("AC_CTRLB_SIZE", None)
+    acSym_CTRLB_SIZE.setDefaultValue(int(ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"CTRLB\"]").getAttribute("size")))
+    acSym_CTRLB_SIZE.setVisible(False)
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################

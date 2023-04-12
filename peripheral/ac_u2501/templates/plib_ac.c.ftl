@@ -283,7 +283,11 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
 void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
 {
     /* Start Comparison */
+    <#if AC_CTRLB_SIZE == 1>
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLB |= ((uint8_t)1U << (uint8_t)channel_id);
+    <#else>
     ${AC_INSTANCE_NAME}_REGS->AC_CTRLB |= ((uint32_t)1U << (uint32_t)channel_id);
+    </#if>
 }
 
 <#if AC_SCALER_REG_PRESENT == true>
