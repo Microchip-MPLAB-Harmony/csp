@@ -405,7 +405,7 @@ void __attribute__((used)) ADCHS_InterruptHandler( void )
     /* Check pending events and call callback if registered */
     for(i = 0U; i < ${ADCHS_NUM_SIGNALS - 1}U; i++)
     {
-        if(((status & (1UL << i)) != 0U) && (${ADCHS_INSTANCE_NAME}_CallbackObj[i].callback_fn != NULL))
+        if((${ADCHS_INSTANCE_NAME}_CallbackObj[i].callback_fn != NULL) && ((status & (1UL << i)) != 0U))
         {
             context = ${ADCHS_INSTANCE_NAME}_CallbackObj[i].context;
             ${ADCHS_INSTANCE_NAME}_CallbackObj[i].callback_fn((ADCHS_CHANNEL_NUM)i, context);
