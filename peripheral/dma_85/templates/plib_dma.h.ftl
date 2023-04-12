@@ -115,7 +115,7 @@ typedef void (*DMA_CHANNEL_CALLBACK) (DMA_TRANSFER_EVENT event, uintptr_t contex
 
 void ${DMA_INSTANCE_NAME}_Initialize( void );
 <#if DMA_LOW_LEVEL_API_ONLY == false>
-bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize );
+bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, volatile const void *srcAddr, volatile const void *destAddr, size_t blockSize );
 void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister( DMA_CHANNEL channel, const DMA_CHANNEL_CALLBACK callback, const uintptr_t context );
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMA_CHANNEL channel );
 void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMA_CHANNEL channel );

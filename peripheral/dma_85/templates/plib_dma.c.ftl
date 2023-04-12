@@ -127,15 +127,12 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
 }
 
 <#if DMA_LOW_LEVEL_API_ONLY == false>
-bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize )
+bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, volatile const void *srcAddr, volatile const void *destAddr, size_t blockSize )
 {
     bool returnStatus = false;
     dma_chan00_registers_t* dmaChRegs = ${DMA_INSTANCE_NAME}_ChannelBaseAddrGet(channel);
 
-    uint32_t src_addr = (uint32_t)((const uint32_t*)srcAddr);
-    uint32_t dst_addr = (uint32_t)((const uint32_t*)destAddr);
-    uint32_t transferDir = ((src_addr & EC_DEVICE_REGISTERS_ADDR) != 0U)? 0U:1U;
-
+    uint32_t transferDir = ((((volatile uint32_t)((volatile uint8_t*)srcAddr)) & EC_DEVICE_REGISTERS_ADDR) != 0U)? 0U:1U;
 
     if (dmaChannelObj[channel].busyStatus == false)
     {
@@ -147,16 +144,16 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
         if (transferDir == 0U)
         {
             /* Peripheral to memory transfer */
-            dmaChRegs->DMA_CHAN00_DSTART = src_addr;
-            dmaChRegs->DMA_CHAN00_MSTART = dst_addr;
-            dmaChRegs->DMA_CHAN00_MEND = (uint32_t)(dst_addr + blockSize);
+            dmaChRegs->DMA_CHAN00_DSTART = (volatile uint32_t)((volatile uint8_t*)srcAddr);
+            dmaChRegs->DMA_CHAN00_MSTART = (volatile uint32_t)((volatile uint8_t*)destAddr);
+            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)(((volatile uint8_t*)destAddr)[blockSize]);
         }
         else
         {
             /* Memory to peripheral transfer */
-            dmaChRegs->DMA_CHAN00_DSTART = dst_addr;
-            dmaChRegs->DMA_CHAN00_MSTART = src_addr;
-            dmaChRegs->DMA_CHAN00_MEND = (uint32_t)(src_addr + blockSize);
+            dmaChRegs->DMA_CHAN00_DSTART = (volatile uint32_t)((volatile uint8_t*)destAddr);
+            dmaChRegs->DMA_CHAN00_MSTART = (volatile uint32_t)((volatile uint8_t*)srcAddr);
+            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)(((volatile uint8_t*)srcAddr)[blockSize]);
         }
 
         dmaChannelObj[channel].mstartAddr = dmaChRegs->DMA_CHAN00_MSTART;
