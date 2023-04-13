@@ -132,7 +132,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, volatile const v
     bool returnStatus = false;
     dma_chan00_registers_t* dmaChRegs = ${DMA_INSTANCE_NAME}_ChannelBaseAddrGet(channel);
 
-    uint32_t transferDir = ((((volatile uint32_t)((volatile uint8_t*)srcAddr)) & EC_DEVICE_REGISTERS_ADDR) != 0U)? 0U:1U;
+    uint32_t transferDir = ((((volatile uint32_t)((const volatile uint8_t*)srcAddr)) & EC_DEVICE_REGISTERS_ADDR) != 0U)? 0U:1U;
 
     if (dmaChannelObj[channel].busyStatus == false)
     {
@@ -144,16 +144,16 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, volatile const v
         if (transferDir == 0U)
         {
             /* Peripheral to memory transfer */
-            dmaChRegs->DMA_CHAN00_DSTART = (volatile uint32_t)((volatile uint8_t*)srcAddr);
-            dmaChRegs->DMA_CHAN00_MSTART = (volatile uint32_t)((volatile uint8_t*)destAddr);
-            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)(((volatile uint8_t*)destAddr)[blockSize]);
+            dmaChRegs->DMA_CHAN00_DSTART = (volatile uint32_t)((const volatile uint8_t*)srcAddr);
+            dmaChRegs->DMA_CHAN00_MSTART = (volatile uint32_t)((const volatile uint8_t*)destAddr);
+            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)(((const volatile uint8_t*)destAddr)[blockSize]);
         }
         else
         {
             /* Memory to peripheral transfer */
-            dmaChRegs->DMA_CHAN00_DSTART = (volatile uint32_t)((volatile uint8_t*)destAddr);
-            dmaChRegs->DMA_CHAN00_MSTART = (volatile uint32_t)((volatile uint8_t*)srcAddr);
-            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)(((volatile uint8_t*)srcAddr)[blockSize]);
+            dmaChRegs->DMA_CHAN00_DSTART = (volatile uint32_t)((const volatile uint8_t*)destAddr);
+            dmaChRegs->DMA_CHAN00_MSTART = (volatile uint32_t)((const volatile uint8_t*)srcAddr);
+            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)(((const volatile uint8_t*)srcAddr)[blockSize]);
         }
 
         dmaChannelObj[channel].mstartAddr = dmaChRegs->DMA_CHAN00_MSTART;
