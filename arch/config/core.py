@@ -138,26 +138,27 @@ def genExceptionAsmSourceFile(symbol, event):
     global compilers
     global coreArch
 
-    coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
-    coreSysExceptionFileEnabled = Database.getSymbolValue("core", "CoreSysExceptionFile")
-    coreSysAdvancedExceptionFileEnabled = Database.getSymbolValue("core", "ADVANCED_EXCEPTION")
+    if ("MIPS" in coreArch.getValue() or compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
+        coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
+        coreSysExceptionFileEnabled = Database.getSymbolValue("core", "CoreSysExceptionFile")
+        coreSysAdvancedExceptionFileEnabled = Database.getSymbolValue("core", "ADVANCED_EXCEPTION")
 
-    if ((coreSysExceptionFileEnabled == True) and
-        (coreSysAdvancedExceptionFileEnabled == True) and
-        (coreSysFileEnabled == True)):
-        symbol.setEnabled(True)
-    else:
-        symbol.setEnabled(False)
+        if ((coreSysExceptionFileEnabled == True) and
+            (coreSysAdvancedExceptionFileEnabled == True) and
+            (coreSysFileEnabled == True)):
+            symbol.setEnabled(True)
+        else:
+            symbol.setEnabled(False)
 
-    if "MIPS" in coreArch.getValue():
-        symbol.setSourcePath("templates/general-exception-context_mips.S.ftl")
-        symbol.setOutputName("exceptionsHandler.S")
-    elif (compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
-        symbol.setSourcePath("templates/exceptionsHandler_iar.s.ftl")
-        symbol.setOutputName("exceptionsHandler.s")
-    else:
-        symbol.setSourcePath("templates/exceptionsHandler.s.ftl")
-        symbol.setOutputName("exceptionsHandler.S")
+        if "MIPS" in coreArch.getValue():
+            symbol.setSourcePath("templates/general-exception-context_mips.S.ftl")
+            symbol.setOutputName("exceptionsHandler.S")
+        elif (compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
+            symbol.setSourcePath("templates/exceptionsHandler_iar.s.ftl")
+            symbol.setOutputName("exceptionsHandler.s")
+        else:
+            symbol.setSourcePath("templates/exceptionsHandler.s.ftl")
+            symbol.setOutputName("exceptionsHandler.S")
 
 def setFileVisibility (symbol, event):
     symbol.setVisible(event["value"])
