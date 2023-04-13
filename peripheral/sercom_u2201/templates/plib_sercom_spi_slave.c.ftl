@@ -378,7 +378,11 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
             {
                 intFlag = (uint8_t)SERCOM_SPIS_INTFLAG_TXC_Msk;
             }
+            <#if SPIS_DATA_SIZE == 2>
+            ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA = (uint16_t)txRxData;
+            <#else>
             ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA = (uint32_t)txRxData;
+            </#if>
         }
         else
         {

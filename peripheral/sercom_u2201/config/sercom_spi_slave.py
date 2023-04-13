@@ -39,13 +39,13 @@ def sort_alphanumeric(l):
 def updateSPISlaveConfigurationVisibleProperty(symbol, event):
 
     symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "SPIS")
-    
+
 # SPI Components Visible Property
 def updateSPISlaveBusyPinVisibility(symbol, event):
 
     sercomMode = sercomSym_OperationMode.getSelectedKey()
     busyPinEnabled = event["source"].getSymbolByID("SPIS_USE_BUSY_PIN").getValue() == True
-    symbol.setVisible(sercomMode == "SPIS" and busyPinEnabled == True)       
+    symbol.setVisible(sercomMode == "SPIS" and busyPinEnabled == True)
 
 #SPI Transfer Mode Comment
 def setSPIClockModeInfo(symbol, event):
@@ -261,8 +261,8 @@ for pad in sort_alphanumeric(availablePinDictionary.values()):
     key = pad
     value = list(availablePinDictionary.keys())[list(availablePinDictionary.values()).index(pad)]
     description = pad
-    spisSymBusyPin.addKey(key, value, description)    
-    
+    spisSymBusyPin.addKey(key, value, description)
+
 #SPI Character Size
 spisSymBusyPinLogicLevel = sercomComponent.createKeyValueSetSymbol("SPIS_BUSY_PIN_LOGIC_LEVEL", spisSymUseBusyPin)
 spisSymBusyPinLogicLevel.setLabel("Slave Busy Pin Logic Level")
@@ -273,7 +273,7 @@ spisSymBusyPinLogicLevel.setDefaultValue(1)
 spisSymBusyPinLogicLevel.setOutputMode("Key")
 spisSymBusyPinLogicLevel.setDisplayMode("Description")
 spisSymBusyPinLogicLevel.setDependencies(updateSPISlaveBusyPinVisibility, ["SERCOM_MODE", "SPIS_USE_BUSY_PIN"])
-    
+
 spisSymBusyPinConfigComment = sercomComponent.createCommentSymbol("SPIS_SLAVE_BUSY_PIN_CONFIG_COMMENT", spisSymUseBusyPin)
 spisSymBusyPinConfigComment.setVisible(False)
 spisSymBusyPinConfigComment.setLabel("***Above selected pins must be configured as GPIO Output in Pin Manager***")
@@ -302,6 +302,9 @@ spisSym_ClockModeComment.setLabel("***SPI Transfer Mode 0 is Selected***")
 spisSym_ClockModeComment.setVisible(False)
 spisSym_ClockModeComment.setDependencies(setSPIClockModeInfo, ["SERCOM_MODE", "SPIS_CLOCK_PHASE", "SPIS_CLOCK_POLARITY"])
 
+spisSym_DATA_SIZE = sercomComponent.createIntegerSymbol("SPIS_DATA_SIZE", None)
+spisSym_DATA_SIZE.setDefaultValue(int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="SPIS",name="DATA"]').getAttribute("size")))
+spisSym_DATA_SIZE.setVisible(False)
 
 ###################################################################################################
 ####################################### Driver Symbols ############################################

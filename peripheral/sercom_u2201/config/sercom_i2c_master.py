@@ -362,6 +362,13 @@ if tenBitAddrSupported == True:
 #Use setValue instead of setDefaultValue to store symbol value in default.xml
 i2cmSym_BAUDREGVALUE.setValue(getI2CBaudValue(), 1)
 
+i2cmSym_BAUD_SIZE = sercomComponent.createIntegerSymbol("I2CM_BAUD_SIZE", None)
+i2cmSym_BAUD_SIZE.setDefaultValue(int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="I2CM",name="BAUD"]').getAttribute("size")))
+i2cmSym_BAUD_SIZE.setVisible(False)
+
+i2cmSym_ADDR_SIZE = sercomComponent.createIntegerSymbol("I2CM_ADDR_SIZE", None)
+i2cmSym_ADDR_SIZE.setDefaultValue(int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="I2CM",name="ADDR"]').getAttribute("size")))
+i2cmSym_ADDR_SIZE.setVisible(False)
 ###################################################################################################
 ####################################### Driver Symbols ############################################
 ###################################################################################################

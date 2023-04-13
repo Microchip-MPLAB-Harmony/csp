@@ -371,7 +371,11 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
 
 
     /* Baud rate - Master Baud Rate*/
+<#if I2CM_BAUD_SIZE == 2>
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = (uint16_t)baudValue;
+<#else>
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = baudValue;
+</#if>
 
 <#if I2CM_MODE??>
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA  = ((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA & ~SERCOM_I2CM_CTRLA_SPEED_Msk) | (SERCOM_I2CM_CTRLA_SPEED(i2cSpeedMode)));
@@ -700,7 +704,11 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(uint16_t address, bool dir)
     }
 
 
+<#if I2CM_ADDR_SIZE == 1>
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint8_t)address << 1U) | (dir ? 1U :0U);
+<#else>
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint32_t)address << 1U) | (dir ? 1UL :0UL);
+</#if>
 
     /* Wait for synchronization */
 <#if SERCOM_SYNCBUSY = false>
@@ -1080,7 +1088,11 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                             }
                             <#else>
                             /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
+                            <#if I2CM_ADDR_SIZE == 1>
+                            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR =  ((uint8_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1U) | (uint8_t)I2C_TRANSFER_READ;
+                            <#else>
                             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR =  ((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1U) | (uint32_t)I2C_TRANSFER_READ;
+                            </#if>
                             </#if>
                             </#if>
 
