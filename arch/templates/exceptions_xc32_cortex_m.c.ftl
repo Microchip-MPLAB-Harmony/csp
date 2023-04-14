@@ -424,6 +424,7 @@ static void __attribute__((noreturn)) ProcessUsageFaultException(uint32_t * faul
 // Section: Exception Handling Routine
 // *****************************************************************************
 // *****************************************************************************
+<#if .vars["NVIC_-14_0_ENABLE"] && .vars["NVIC_-14_0_HANDLER"] ==  "NonMaskableInt_Handler">
 
 /* Brief default interrupt handlers for core IRQs.*/
 void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
@@ -435,8 +436,9 @@ void __attribute__((noreturn, weak)) NonMaskableInt_Handler(void)
     {
     }
 }
-
+</#if>
 <#if ADVANCED_EXCEPTION>
+
 void __attribute__((used)) HardFault_Handler(void)
 {
     call_advanced_exception_handler(ProcessHardFaultException);
