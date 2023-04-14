@@ -221,13 +221,13 @@ static void DFLL_Initialize( void )
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
     }
-    <#elseif CONFIG_CLOCK_DFLL_ONDEMAND != "1">
+    <#else>
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_DFLLRDY_Msk) != SYSCTRL_PCLKSR_DFLLRDY_Msk)
     {
         /* Waiting for DFLL to be ready */
     }
     </#if>
-
+    
     <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
     SYSCTRL_REGS->SYSCTRL_DFLLCTRL |= SYSCTRL_DFLLCTRL_ONDEMAND_Msk;
     </#if>

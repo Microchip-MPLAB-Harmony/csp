@@ -122,7 +122,7 @@ static void OSCCTRL_Initialize(void)
     /* Configure 48MHz Oscillator */
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_OSC48MCTRL = (uint8_t)(OSCCTRL_OSC48MCTRL_ENABLE_Msk
                                                              ${CONFIG_CLOCK_OSC48M_RUNSTDY?then('| OSCCTRL_OSC48MCTRL_RUNSTDBY_Msk',' ')}
-                                                             ${(CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE")?then('| OSCCTRL_OSC48MCTRL_ONDEMAND_Msk',' ')});</@compress>
+                                                             );</@compress>
     </#if>
 
     <#if CONFIG_CLOCK_OSC48M_STARTUP != "7">
@@ -144,6 +144,10 @@ static void OSCCTRL_Initialize(void)
     {
         /* Waiting for the OSC48M Ready state */
     }
+    <#if CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE">
+    OSCCTRL_REGS->OSCCTRL_OSC48MCTRL |= OSCCTRL_OSC48MCTRL_ONDEMAND_Msk;
+    </#if>
+     
 </#if>
 }
 

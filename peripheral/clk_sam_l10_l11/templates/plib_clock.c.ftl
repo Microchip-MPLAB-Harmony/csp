@@ -173,8 +173,7 @@ static void DFLL_Initialize(void)
     <#lt>                               ${CONFIG_CLOCK_DFLL_BINSE?then('| OSCCTRL_DFLLULPCTRL_BINSE_Msk ', ' ')}
     <#lt>                               ${(CONFIG_CLOCK_DFLL_DIV != "0") ?then('| OSCCTRL_DFLLULPCTRL_DIV(${CONFIG_CLOCK_DFLL_DIV}U) ', ' ')}
     <#lt>                               ;</@compress>
-    <#if CONFIG_CLOCK_DFLL_ONDEMAND != "1">
-
+    
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLULPRDY_Msk) != OSCCTRL_STATUS_DFLLULPRDY_Msk)
     {
         /* Waiting for the Ready state */
@@ -184,8 +183,7 @@ static void DFLL_Initialize(void)
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
     }
-    </#if>
-
+    
     <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
     OSCCTRL_REGS->OSCCTRL_DFLLULPCTRL |= OSCCTRL_DFLLULPCTRL_ONDEMAND_Msk;
     </#if>

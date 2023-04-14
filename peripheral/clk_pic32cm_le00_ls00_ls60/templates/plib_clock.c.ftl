@@ -200,13 +200,12 @@ static void DFLL48M_Initialize(void)
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
     }
-    <#elseif CONFIG_CLOCK_DFLL48M_ONDEMAND != "1">
+    <#else>
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
         /* Waiting for DFLL to be ready */
     }
     </#if>
-
     <#if CONFIG_CLOCK_DFLL48M_ONDEMAND == "1">
     OSCCTRL_REGS->OSCCTRL_DFLLCTRL |= OSCCTRL_DFLLCTRL_ONDEMAND_Msk;
     </#if>

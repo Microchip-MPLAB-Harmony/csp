@@ -218,17 +218,14 @@ static void DFLL_Initialize(void)
     {
         /* Waiting for the DFLL48M enable synchronization */
     }
-    <#if CONFIG_CLOCK_DFLL_ONDEMAND != "1">
-
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
         /* Waiting for the DFLL Ready state */
     }
-
-    <#else>
+    <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
     OSCCTRL_REGS->OSCCTRL_DFLLCTRLA |= OSCCTRL_DFLLCTRLA_ONDEMAND_Msk;
-
     </#if>
+
 <#else>
     <#if (CONFIG_CLOCK_DFLL_ONDEMAND == "0")>
     <#lt>    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk
