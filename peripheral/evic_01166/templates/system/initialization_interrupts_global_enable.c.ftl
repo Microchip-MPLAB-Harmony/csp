@@ -21,5 +21,5 @@
 <#if ANY_INT_ENABLED == true>
     <#-- enable global interrupts -->
     /* Enable global interrupts */
-    __builtin_enable_interrupts();
+    (void)__builtin_enable_interrupts();
 </#if>
