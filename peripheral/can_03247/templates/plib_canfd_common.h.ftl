@@ -234,8 +234,9 @@ typedef struct
     uint32_t r1;
 
     /* CANFD Rx message - RXMSGTS and Receive Buffer Data Bytes */
-    uint8_t data[];
+    uint8_t data[64];
 } CANFD_RX_MSG_OBJECT;
+
 
 // *****************************************************************************
 /* CANFD Trasmit Message Object
@@ -259,7 +260,7 @@ typedef struct
     uint32_t t1;
 
     /* CANFD Tx message - Transmit Buffer Data Bytes */
-    uint8_t data[];
+    uint8_t data[64];
 } CANFD_TX_MSG_OBJECT;
 
 // *****************************************************************************
@@ -284,7 +285,7 @@ typedef struct
     uint32_t te1;
 
     /* CANFD Tx Event FIFO - Transmit Message Time Stamp */
-    uint8_t timestamp[];
+    uint8_t timestamp[4];
 } CANFD_TX_EVENT_FIFO_ELEMENT;
 
 // *****************************************************************************
