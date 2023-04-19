@@ -50,6 +50,7 @@
 // *****************************************************************************
 #include <sys/kmem.h>
 #include "plib_${CAN_INSTANCE_NAME?lower_case}.h"
+#include "interrupts.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -109,7 +110,17 @@ static inline void ${CAN_INSTANCE_NAME}_ZeroInitialize(volatile void* pData, siz
     }
 }
 
-
+<#assign COUNT_11_6_DEVIATION = 3>
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 11.6 deviated ${COUNT_11_6_DEVIATION} times. Deviation record ID -  H3_MISRAC_2012_R_11_6_DR_1 */
+/* MISRA C-2012 Rule 5.1 deviated 1 time. Deviation record ID -  H3_MISRAC_2012_R_5_1_DR_1 */
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block \
+(deviate:${COUNT_11_6_DEVIATION} "MISRA C-2012 Rule 11.6" "H3_MISRAC_2012_R_11_6_DR_1") \
+(deviate:1 "MISRA C-2012 Rule 5.1" "H3_MISRAC_2012_R_5_1_DR_1")
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // ${CAN_INSTANCE_NAME} PLib Interface Routines
@@ -369,7 +380,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             }
         }
 
-        *length = rxMessage->msgEID & CAN_MSG_DLC_MASK;
+        *length = (uint8_t)(rxMessage->msgEID & CAN_MSG_DLC_MASK);
 
         /* Copy the data into the payload */
         while (count < *length)
@@ -379,7 +390,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 
         if (timestamp != NULL)
         {
-            *timestamp = (rxMessage->msgSID & CAN_MSG_TIMESTAMP_MASK) >> 16;
+            *timestamp = (uint16_t)((rxMessage->msgSID & CAN_MSG_TIMESTAMP_MASK) >> 16);
         }
 
         /* Message processing is done, update the message buffer pointer. */
@@ -467,8 +478,11 @@ void ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterSet(uint8_t filterNum, uint32_t
     if (filterNum < CAN_NUM_OF_FILTER)
     {
         filterRegIndex = filterNum >> 2;
+<#if NUMBER_OF_FILTER gt 1>
         filterEnableBit = ((filterNum % 4U) == 0U)? _C${CAN_INSTANCE_NUM}FLTCON0_FLTEN0_MASK : (1UL << ((((filterNum % 4U) + 1U) * 8U) - 1U));
-
+<#else>
+        filterEnableBit = _C${CAN_INSTANCE_NUM}FLTCON0_FLTEN0_MASK;
+</#if>
         *(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FLTCON0CLR + (filterRegIndex * CAN_FILTER_OFFSET)) = filterEnableBit;
 
         if (id > CAN_MSG_SID_MASK)
@@ -615,20 +629,20 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskGet(uint8_t acceptanceF
 CAN_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void)
 {
 <#if CAN_INTERRUPT_MODE == false>
-    CAN_ERROR error = CAN_ERROR_NONE;
+    uint32_t error = (uint32_t)CAN_ERROR_NONE;
     uint32_t errorStatus = C${CAN_INSTANCE_NUM}TREC;
 
     /* Check if error occurred */
-    error = (CAN_ERROR)((errorStatus & _C${CAN_INSTANCE_NUM}TREC_EWARN_MASK) |
-                        (errorStatus & _C${CAN_INSTANCE_NUM}TREC_RXWARN_MASK) |
-                        (errorStatus & _C${CAN_INSTANCE_NUM}TREC_TXWARN_MASK) |
-                        (errorStatus & _C${CAN_INSTANCE_NUM}TREC_RXBP_MASK) |
-                        (errorStatus & _C${CAN_INSTANCE_NUM}TREC_TXBP_MASK) |
-                        (errorStatus & _C${CAN_INSTANCE_NUM}TREC_TXBO_MASK));
+    error = ((errorStatus & _C${CAN_INSTANCE_NUM}TREC_EWARN_MASK) |
+                (errorStatus & _C${CAN_INSTANCE_NUM}TREC_RXWARN_MASK) |
+                (errorStatus & _C${CAN_INSTANCE_NUM}TREC_TXWARN_MASK) |
+                (errorStatus & _C${CAN_INSTANCE_NUM}TREC_RXBP_MASK) |
+                (errorStatus & _C${CAN_INSTANCE_NUM}TREC_TXBP_MASK) |
+                (errorStatus & _C${CAN_INSTANCE_NUM}TREC_TXBO_MASK));
 
 </#if>
 <#if CAN_INTERRUPT_MODE == false>
-    return error;
+    return (CAN_ERROR)error;
 <#else>
     return (CAN_ERROR)${CAN_INSTANCE_NAME?lower_case}Obj.errorStatus;
 </#if>
@@ -847,11 +861,11 @@ bool ${CAN_INSTANCE_NAME}_BitTimingSet(CAN_BIT_TIMING *bitTiming)
         }
 
         /* Set the Bitrate */
-        C${CAN_INSTANCE_NUM}CFG = ((bitTiming->nominalBitTiming.Prescaler << _C${CAN_INSTANCE_NUM}CFG_BRP_POSITION) & _C${CAN_INSTANCE_NUM}CFG_BRP_MASK)
-                                | ((bitTiming->nominalBitTiming.sjw << _C${CAN_INSTANCE_NUM}CFG_SJW_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SJW_MASK)
-                                | ((bitTiming->nominalBitTiming.phase2Segment << _C${CAN_INSTANCE_NUM}CFG_SEG2PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG2PH_MASK)
-                                | ((bitTiming->nominalBitTiming.phase1Segment << _C${CAN_INSTANCE_NUM}CFG_SEG1PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG1PH_MASK)
-                                | ((bitTiming->nominalBitTiming.propagationSegment << _C${CAN_INSTANCE_NUM}CFG_PRSEG_POSITION) & _C${CAN_INSTANCE_NUM}CFG_PRSEG_MASK)
+        C${CAN_INSTANCE_NUM}CFG = (((uint32_t)bitTiming->nominalBitTiming.Prescaler << _C${CAN_INSTANCE_NUM}CFG_BRP_POSITION) & _C${CAN_INSTANCE_NUM}CFG_BRP_MASK)
+                                | (((uint32_t)bitTiming->nominalBitTiming.sjw << _C${CAN_INSTANCE_NUM}CFG_SJW_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SJW_MASK)
+                                | (((uint32_t)bitTiming->nominalBitTiming.phase2Segment << _C${CAN_INSTANCE_NUM}CFG_SEG2PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG2PH_MASK)
+                                | (((uint32_t)bitTiming->nominalBitTiming.phase1Segment << _C${CAN_INSTANCE_NUM}CFG_SEG1PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG1PH_MASK)
+                                | (((uint32_t)bitTiming->nominalBitTiming.propagationSegment << _C${CAN_INSTANCE_NUM}CFG_PRSEG_POSITION) & _C${CAN_INSTANCE_NUM}CFG_PRSEG_MASK)
                                 | _C${CAN_INSTANCE_NUM}CFG_SEG2PHTS_MASK<#if CAN_CFG_SAM == "0x1"> | _C${CAN_INSTANCE_NUM}CFG_SAM_MASK</#if>;
 
         /* Switch the CAN module to CAN_OPERATION_MODE. Wait until the switch is complete */
@@ -1054,7 +1068,7 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
                 if (${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].timestamp != NULL)
                 {
-                    *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].timestamp = (uint16_t)(rxMessage->msgSID & CAN_MSG_TIMESTAMP_MASK) >> 16;
+                    *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].timestamp = (uint16_t)((rxMessage->msgSID & CAN_MSG_TIMESTAMP_MASK) >> 16);
                 }
 
                 /* Message processing is done, update the message buffer pointer. */
@@ -1093,3 +1107,9 @@ void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
     }
 }
 </#if>
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 11.6"
+#pragma coverity compliance end_block "MISRA C-2012 Rule 5.1"
+#pragma GCC diagnostic pop
+</#if>
+/* MISRAC 2012 deviation block end */
