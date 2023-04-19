@@ -42,6 +42,8 @@
 //DOM-IGNORE-END
 
 #include "plib_gpio.h"
+#include "interrupts.h"
+
 <#compress> <#-- To remove unwanted new lines -->
 
 <#-- Initialize variables -->
@@ -83,11 +85,11 @@
     <#assign portNumCbList = portNumCbList + [TOTAL_NUM_OF_INT_USED] >
 
     <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>volatile GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
+    <#lt>static volatile GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <@compress single_line=true>
-        <#lt>uint8_t portNumCb[${GPIO_CHANNEL_TOTAL} + 1] = {
+        <#lt>static uint8_t portNumCb[${GPIO_CHANNEL_TOTAL} + 1] = {
                                                                 <#list portNumCbList as i>
                                                                     ${i},
                                                                 </#list>
@@ -469,6 +471,10 @@ void GPIO_PinIntEnable(GPIO_PIN pin, GPIO_INTERRUPT_STYLE style)
         *(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
         *(volatile uint32_t *)(&CNNE${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
     }
+    else
+    {
+        /* Nothing to process */
+    }
 }
 
 // *****************************************************************************
@@ -515,7 +521,7 @@ bool GPIO_PinInterruptCallbackRegister(
     uint8_t i;
     uint8_t portIndex;
 
-    portIndex = pin >> 4U;
+    portIndex = (uint8_t)(pin >> 4U);
 
     for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
     {
@@ -570,7 +576,7 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
     {
         pin = portPinCbObj[i].pin;
 
-        if((portPinCbObj[i].callback != NULL) && (status & (1U << (pin & 0xFU))))
+        if((portPinCbObj[i].callback != NULL) && ((status & ((uint32_t)1U << (pin & 0xFU))) != 0U))
         {
             context = portPinCbObj[i].context;
 
@@ -597,7 +603,7 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
     {
         pin = portPinCbObj[i].pin;
 
-        if((status & (1U << (portPinCbObj[i].pin & 0xFU))) && (portPinCbObj[i].callback != NULL))
+        if((portPinCbObj[i].callback != NULL) && ((status & ((uint32_t)1U << (pin & 0xFU))) != 0U))
         {
             context = portPinCbObj[i].context;
 
