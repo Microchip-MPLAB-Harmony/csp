@@ -176,7 +176,7 @@ void ${TMR_INSTANCE_NAME}_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t 
 
 bool ${TMR_INSTANCE_NAME}_PeriodHasExpired(void)
 {
-    bool status = ${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM}IF;
+    bool status = (${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM}IF != 0U);
     ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
 
     return status;
