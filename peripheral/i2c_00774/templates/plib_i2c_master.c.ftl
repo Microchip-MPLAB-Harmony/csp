@@ -131,7 +131,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             {
                 if (${I2C_INSTANCE_NAME?lower_case}Obj.address > 0x007FU)
                 {
-                    tempVar = (((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1);
+                    tempVar = (((volatile uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1);
                     /* Transmit the MSB 2 bits of the 10-bit slave address, with R/W = 0 */
                     ${I2C_INSTANCE_NAME}TRN = ( 0xF0U | (uint32_t)tempVar);
 
@@ -208,7 +208,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             /* Is transmit buffer full? */
             if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U)
             {
-                tempVar = (((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1);
+                tempVar = (((volatile uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1);
                 /* Transmit the first byte of the 10-bit slave address, with R/W = 1 */
                 ${I2C_INSTANCE_NAME}TRN = ( 0xF1U | (uint32_t)tempVar );
                 ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_READ;
@@ -526,6 +526,7 @@ bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcC
 {
     uint32_t baudValue;
     uint32_t i2cClkSpeed;
+    float fBaudValue;
 
     if (setup == NULL)
     {
@@ -545,7 +546,8 @@ bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcC
         srcClkFreq = ${I2C_PLIB_CLOCK_FREQUENCY?eval}UL;
     }
 
-    baudValue = ((float)((float)srcClkFreq/2.0) * ((1/((float)i2cClkSpeed)) - 0.000000130)) - 1;
+    fBaudValue = (((float)srcClkFreq / 2.0f) * ((1.0f / (float)i2cClkSpeed) - 0.000000130f)) - 1.0f;
+    baudValue = (uint32_t)fBaudValue;
 
     /* I2CxBRG value cannot be from 0 to 3 or more than the size of the baud rate register */
     if ((baudValue < 4U) || (baudValue > ${I2C_MAX_BRG}U))
