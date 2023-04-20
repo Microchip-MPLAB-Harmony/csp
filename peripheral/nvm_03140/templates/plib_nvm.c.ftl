@@ -192,10 +192,23 @@ void ${NVM_INSTANCE_NAME}_Initialize( void )
     NVM_StartOperationAtAddress( NVMADDR,  NO_OPERATION );
 }
 
+
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    const uint32_t *paddress_read = (uint32_t *)address;
-    (void) memcpy(data, KVA0_TO_KVA1(paddress_read), length);
+    /* MISRA C-2012 Rule 11.6 violated 1 time below. Deviation record ID - H3_MISRAC_2012_R_11_6_DR_1*/
+    <#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+    <#if core.COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+    #pragma coverity compliance deviate:1 "MISRA C-2012 Rule 11.6" "H3_MISRAC_2012_R_11_6_DR_1"
+    </#if>
+    (void) memcpy(data, (uint32_t*)KVA0_TO_KVA1(address), length);
+    <#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+    <#if core.COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic pop
+    </#if>
+    </#if>
     return true;
 }
 
