@@ -19,7 +19,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2ONE9 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -49,15 +49,15 @@
 // *****************************************************************************
 
 #include "plib_${RTCC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data
 // *****************************************************************************
 // *****************************************************************************
-
-#define decimaltobcd(x)                 ((((x) / (10UL)) << 4) + (((x) - (((x) / (10U)) * (10U)))))
-#define bcdtodecimal(x)                 ((((x) & (0xF0UL)) >> 4) * (10U) + ((x) & (0x0FU)))
 
 <#if RTCC_INTERRUPT_MODE == true>
 /* Real Time Clock System Service Object */
@@ -74,6 +74,24 @@ typedef struct SYS_RTCC_OBJ_STRUCT
 volatile static RTCC_OBJECT rtcc;
 
 </#if>
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local functions
+// *****************************************************************************
+// *****************************************************************************
+__STATIC_INLINE uint32_t decimaltobcd( uint32_t aDecValue )
+{
+    uint32_t  decValueDiv10 = aDecValue / 10U;
+
+    return( (decValueDiv10 << 4U) + ( aDecValue - (decValueDiv10 * 10U) ) );
+}
+
+__STATIC_INLINE uint32_t bcdtodecimal( uint32_t aBcdValue )
+{
+    return( (10U * ((aBcdValue & 0xF0U) >> 4U)) + (aBcdValue & 0x0FU) );
+}
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${RTCC_INSTANCE_NAME} Implementation
@@ -84,7 +102,7 @@ void ${RTCC_INSTANCE_NAME}_Initialize( void )
 {
     /* Unlock System */
     SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
+    SYSKEY = 0xAA996655U;
     SYSKEY = 0x556699AA;
     RTCCON1CLR = _RTCCON1_WRLOCK_MASK;  /* Enable writes to RTCC */
 
@@ -158,25 +176,25 @@ bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time )
 {
     uint32_t timeField = 0, dateField = 0;
 
-    timeField = (decimaltobcd(Time->tm_hour) << _RTCTIME_HRONE_POSITION) & (_RTCTIME_HRTEN_MASK | _RTCTIME_HRONE_MASK);
-    timeField |= (decimaltobcd(Time->tm_min) << _RTCTIME_MINONE_POSITION) & (_RTCTIME_MINTEN_MASK | _RTCTIME_MINONE_MASK);
-    timeField |= (decimaltobcd(Time->tm_sec) << _RTCTIME_SECONE_POSITION) & (_RTCTIME_SECTEN_MASK | _RTCTIME_SECONE_MASK);
+    timeField = (decimaltobcd((uint32_t)Time->tm_hour) << _RTCTIME_HRONE_POSITION) & (_RTCTIME_HRTEN_MASK | _RTCTIME_HRONE_MASK);
+    timeField |= (decimaltobcd((uint32_t)Time->tm_min) << _RTCTIME_MINONE_POSITION) & (_RTCTIME_MINTEN_MASK | _RTCTIME_MINONE_MASK);
+    timeField |= (decimaltobcd((uint32_t)Time->tm_sec) << _RTCTIME_SECONE_POSITION) & (_RTCTIME_SECTEN_MASK | _RTCTIME_SECONE_MASK);
 
     while((RTCSTAT & _RTCSTAT_SYNC_MASK) != 0U)
     {
-        /* Do Nothing */
+        /* Wait for synchronization */
     }
 
     RTCTIME = timeField;
 
-    dateField = (decimaltobcd(Time->tm_year % 100) << _RTCDATE_YRONE_POSITION) & (_RTCDATE_YRONE_MASK | _RTCDATE_YRTEN_MASK);
-    dateField |= (decimaltobcd((Time->tm_mon + 1)) << _RTCDATE_MTHONE_POSITION)&(_RTCDATE_MTHONE_MASK | _RTCDATE_MTHTEN_MASK);
-    dateField |= (decimaltobcd(Time->tm_mday) << _RTCDATE_DAYONE_POSITION) & (_RTCDATE_DAYONE_MASK | _RTCDATE_DAYTEN_MASK);
-    dateField |= decimaltobcd(Time->tm_wday) & _RTCDATE_WDAY_MASK;
+    dateField = (decimaltobcd((uint32_t)Time->tm_year % 100U) << _RTCDATE_YRONE_POSITION) & (_RTCDATE_YRONE_MASK | _RTCDATE_YRTEN_MASK);
+    dateField |= (decimaltobcd(((uint32_t)Time->tm_mon + 1U)) << _RTCDATE_MTHONE_POSITION)&(_RTCDATE_MTHONE_MASK | _RTCDATE_MTHTEN_MASK);
+    dateField |= (decimaltobcd((uint32_t)Time->tm_mday) << _RTCDATE_DAYONE_POSITION) & (_RTCDATE_DAYONE_MASK | _RTCDATE_DAYTEN_MASK);
+    dateField |= decimaltobcd((uint32_t)Time->tm_wday) & _RTCDATE_WDAY_MASK;
 
     while((RTCSTAT & _RTCSTAT_SYNC_MASK) != 0U)
     {
-        /* Do Nothing */
+        /* Wait for synchronization */
     }
 
     RTCDATE = dateField;
@@ -189,37 +207,46 @@ bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time )
 void ${RTCC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
 {
     uint32_t dataTime, dataDate;
+    uint32_t tmp;
 
     while((RTCSTAT & _RTCSTAT_SYNC_MASK) != 0U)
     {
-        /* Do Nothing */
+        /* Wait for synchronization */
     }
 
     dataTime = RTCTIME;  /* read the time from the RTC */
 
-    Time->tm_hour = (10 * (bcdtodecimal((dataTime & _RTCTIME_HRTEN_MASK) >> _RTCTIME_HRTEN_POSITION)) +
+    tmp = (10U * (bcdtodecimal((dataTime & _RTCTIME_HRTEN_MASK) >> _RTCTIME_HRTEN_POSITION)) +
                          (bcdtodecimal((dataTime & _RTCTIME_HRONE_MASK) >> _RTCTIME_HRONE_POSITION)));
-    Time->tm_min =  (10 * (bcdtodecimal((dataTime & _RTCTIME_MINTEN_MASK) >> _RTCTIME_MINTEN_POSITION)) +
+    Time->tm_hour = (int)tmp;
+    tmp = (10U * (bcdtodecimal((dataTime & _RTCTIME_MINTEN_MASK) >> _RTCTIME_MINTEN_POSITION)) +
                          (bcdtodecimal((dataTime & _RTCTIME_MINONE_MASK) >> _RTCTIME_MINONE_POSITION)));
-    Time->tm_sec =  (10 * (bcdtodecimal((dataTime & _RTCTIME_SECTEN_MASK) >> _RTCTIME_SECTEN_POSITION)) +
+    Time->tm_min = (int)tmp;
+    tmp = (10U * (bcdtodecimal((dataTime & _RTCTIME_SECTEN_MASK) >> _RTCTIME_SECTEN_POSITION)) +
                          (bcdtodecimal((dataTime & _RTCTIME_SECONE_MASK) >> _RTCTIME_SECONE_POSITION)));
+    Time->tm_sec = (int)tmp;
 
     while((RTCSTAT & _RTCSTAT_SYNC_MASK) != 0U)
     {
-        /* Do Nothing */
+        /* Wait for synchronization */
     }
 
     dataDate = RTCDATE;  /* read the date from the RTC */
 
-    Time->tm_year = (10 * (bcdtodecimal((dataDate & _RTCDATE_YRTEN_MASK) >> _RTCDATE_YRTEN_POSITION)) +
+    tmp = (10U * (bcdtodecimal((dataDate & _RTCDATE_YRTEN_MASK) >> _RTCDATE_YRTEN_POSITION)) +
                          (bcdtodecimal((dataDate & _RTCDATE_YRONE_MASK) >> _RTCDATE_YRONE_POSITION)));
-    Time->tm_year += 2000;  /* This RTC designed for 0-99 year range.  Need to add 2000 to that. */
-    Time->tm_mon = (10 * (bcdtodecimal((dataDate & _RTCDATE_MTHTEN_MASK) >> _RTCDATE_MTHTEN_POSITION)) +
-                         (bcdtodecimal((dataDate & _RTCDATE_MTHONE_MASK) >> _RTCDATE_MTHONE_POSITION))) - 1;
-    Time->tm_mday = (10 * (bcdtodecimal((dataDate & _RTCDATE_DAYTEN_MASK) >> _RTCDATE_DAYTEN_POSITION)) +
-                         (bcdtodecimal((dataDate & _RTCDATE_DAYONE_MASK) >> _RTCDATE_DAYONE_POSITION)));
+    tmp += 2000U; /* This RTC designed for 0-99 year range.  Need to add 2000 to that. */
+    Time->tm_year = (int)tmp;
 
-    Time->tm_wday = bcdtodecimal((dataDate & _RTCDATE_WDAY_MASK) >> _RTCDATE_WDAY_POSITION);
+    tmp = (10U * (bcdtodecimal((dataDate & _RTCDATE_MTHTEN_MASK) >> _RTCDATE_MTHTEN_POSITION)) +
+                         (bcdtodecimal((dataDate & _RTCDATE_MTHONE_MASK) >> _RTCDATE_MTHONE_POSITION))) - 1U;
+    Time->tm_mon = (int)tmp;
+    tmp = (10U * (bcdtodecimal((dataDate & _RTCDATE_DAYTEN_MASK) >> _RTCDATE_DAYTEN_POSITION)) +
+                         (bcdtodecimal((dataDate & _RTCDATE_DAYONE_MASK) >> _RTCDATE_DAYONE_POSITION)));
+    Time->tm_mday = (int)tmp;
+
+    tmp = bcdtodecimal((dataDate & _RTCDATE_WDAY_MASK) >> _RTCDATE_WDAY_POSITION);
+    Time->tm_wday = (int)tmp;
     Time->tm_yday = 0;  /* not used */
     Time->tm_isdst = 0;    /* not used */
 }
@@ -234,31 +261,31 @@ bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarm
     </#if>
 
     RTCCON1CLR = _RTCCON1_ALRMEN_MASK;  /* Disable alarm */
-    while((RTCSTATbits.ALMSYNC) != 0U)  /* Wait for disable */
+    while((RTCSTATbits.ALMSYNC) != 0U)  
     {
-        /* Do Nothing */
+        /* Wait for disable */
     }
 
     if(RTCC_ALARM_MASK_OFF != alarmFreq)
     {
-        dataDate  = (decimaltobcd((alarmTime->tm_mon + 1)) << _RTCDATE_MTHONE_POSITION) & (_RTCDATE_MTHONE_MASK | _RTCDATE_MTHTEN_MASK);
-        dataDate |= (decimaltobcd(alarmTime->tm_mday) << _RTCDATE_DAYONE_POSITION) & (_RTCDATE_DAYONE_MASK | _RTCDATE_DAYTEN_MASK);
-        dataDate |= decimaltobcd(alarmTime->tm_wday) & _RTCDATE_WDAY_MASK;
+        dataDate  = (decimaltobcd(((uint32_t)alarmTime->tm_mon + 1U)) << _RTCDATE_MTHONE_POSITION) & (_RTCDATE_MTHONE_MASK | _RTCDATE_MTHTEN_MASK);
+        dataDate |= (decimaltobcd((uint32_t)alarmTime->tm_mday) << _RTCDATE_DAYONE_POSITION) & (_RTCDATE_DAYONE_MASK | _RTCDATE_DAYTEN_MASK);
+        dataDate |= decimaltobcd((uint32_t)alarmTime->tm_wday) & _RTCDATE_WDAY_MASK;
 
-        dataTime  = (decimaltobcd(alarmTime->tm_hour) << _RTCTIME_HRONE_POSITION) & (_RTCTIME_HRTEN_MASK | _RTCTIME_HRONE_MASK);
-        dataTime |= (decimaltobcd(alarmTime->tm_min) << _RTCTIME_MINONE_POSITION) & (_RTCTIME_MINTEN_MASK | _RTCTIME_MINONE_MASK);
-        dataTime |= (decimaltobcd(alarmTime->tm_sec) << _RTCTIME_SECONE_POSITION) & (_RTCTIME_SECTEN_MASK | _RTCTIME_SECONE_MASK);
+        dataTime  = (decimaltobcd((uint32_t)alarmTime->tm_hour) << _RTCTIME_HRONE_POSITION) & (_RTCTIME_HRTEN_MASK | _RTCTIME_HRONE_MASK);
+        dataTime |= (decimaltobcd((uint32_t)alarmTime->tm_min) << _RTCTIME_MINONE_POSITION) & (_RTCTIME_MINTEN_MASK | _RTCTIME_MINONE_MASK);
+        dataTime |= (decimaltobcd((uint32_t)alarmTime->tm_sec) << _RTCTIME_SECONE_POSITION) & (_RTCTIME_SECTEN_MASK | _RTCTIME_SECONE_MASK);
 
         while((RTCSTAT & _RTCSTAT_SYNC_MASK) != 0U)
         {
-             /* Do Nothing */
+            /* Wait for synchronization */
         }
 
         ALMDATE = dataDate;
 
         while((RTCSTAT & _RTCSTAT_SYNC_MASK) != 0U)
         {
-             /* Do Nothing */
+            /* Wait for synchronization */
         }
 
         ALMTIME = dataTime;
