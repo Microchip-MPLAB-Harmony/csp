@@ -49,6 +49,9 @@
 #include "plib_${SPI_INSTANCE_NAME?lower_case}_slave.h"
 #include "peripheral/${PLIB_NAME_LC}/plib_${PLIB_NAME_LC}.h"
 #include <string.h>
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${SPI_INSTANCE_NAME} Slave Implementation
@@ -150,7 +153,7 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     MSTEN = ${SPI_MSTR_MODE_EN}
     CKP = ${SPI_SPICON_CLK_POL}
     CKE = ${SPI_SPICON_CLK_PH}
-    MODE<32,16> = ${SPI_SPICON_MODE}
+    MODE< 32,16 > = ${SPI_SPICON_MODE}
     ENHBUF = 1
     */
 
@@ -182,7 +185,7 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     </#if>
 <#if SPI_CS_CNX != "">
     /* Register callback and enable notifications on Chip Select logic level change */
-    GPIO_PinInterruptCallbackRegister(${SPI_CS_CNX}_PIN, ${SPI_INSTANCE_NAME}_CS_Handler, (uintptr_t)NULL);
+    (void)GPIO_PinInterruptCallbackRegister(${SPI_CS_CNX}_PIN, ${SPI_INSTANCE_NAME}_CS_Handler, (uintptr_t)NULL);
     GPIO_PinInterruptEnable(${SPI_CS_CNX}_PIN);
 </#if>
 

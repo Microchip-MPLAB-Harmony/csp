@@ -477,7 +477,7 @@ def instantiateComponent(spiComponent):
     Database.setSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     spiSymInterruptMode = spiComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", None)
-    spiSymInterruptMode.setLabel("Enable Interrrupts ?")
+    spiSymInterruptMode.setLabel("Enable Interrupts ?")
     spiSymInterruptMode.setDefaultValue(True)
     spiSymInterruptMode.setDependencies(updateIntReadOnlyAttr, ["SPI_MSTR_MODE_EN"])
 
