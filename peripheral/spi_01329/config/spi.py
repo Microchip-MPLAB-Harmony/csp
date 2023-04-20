@@ -52,13 +52,13 @@ def handleMessage(messageID, args):
             spiSym_SPICON_MSTEN.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None and args["isEnabled"] == True:
             spiSym_SPICON_MSTEN.setSelectedKey("Slave mode")
-            
+
     elif (messageID == "SPI_SLAVE_RX_BUFFER_SIZE"):
         if args.get("isReadOnly") != None:
             spisSym_RXBuffer_Size.setReadOnly(args["isReadOnly"])
         if args.get("size") != None:
             spisSym_RXBuffer_Size.setValue(args["size"], 2)
-            
+
     elif (messageID == "SPI_SLAVE_TX_BUFFER_SIZE"):
         if args.get("isReadOnly") != None:
             spisSym_TXBuffer_Size.setReadOnly(args["isReadOnly"])
@@ -493,7 +493,7 @@ def instantiateComponent(spiComponent):
     Database.setSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     spiSymInterruptMode = spiComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", None)
-    spiSymInterruptMode.setLabel("Enable Interrrupts ?")
+    spiSymInterruptMode.setLabel("Enable Interrupts ?")
     spiSymInterruptMode.setDefaultValue(True)
     spiSymInterruptMode.setDependencies(updateIntReadOnlyAttr, ["SPI_MSTR_MODE_EN"])
 
@@ -533,7 +533,7 @@ def instantiateComponent(spiComponent):
         InterruptHandler.append(spiIrqFault + "_INTERRUPT_HANDLER")
         InterruptHandlerLock.append(spiIrqFault + "_INTERRUPT_HANDLER_LOCK")
         InterruptVectorUpdate.append("core." + spiIrqFault + "_INTERRUPT_ENABLE_UPDATE")
-        
+
 
         ## SPI RX Interrupt
         spiIrqrRx = spiInstanceName.getValue() + "_RX"
