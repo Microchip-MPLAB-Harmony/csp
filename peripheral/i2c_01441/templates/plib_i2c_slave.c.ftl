@@ -49,6 +49,9 @@
 // *****************************************************************************
 #include "device.h"
 #include "plib_${I2C_INSTANCE_NAME?lower_case}_slave.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -121,7 +124,7 @@ static void ${I2C_INSTANCE_NAME}_RiseAndSetupTime(uint8_t sdaState)
 
     while((_CP0_GET_COUNT()- startCount) < endCount)
     {
-           /* Nothing to do */
+           /* Wait for timeout */
     }
 }
 
@@ -129,7 +132,7 @@ static void ${I2C_INSTANCE_NAME}_RiseAndSetupTime(uint8_t sdaState)
 static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 {
     uint32_t i2c_addr;
-    uint8_t sdaValue = 0;
+    uint8_t sdaValue = 0U;
     uintptr_t context = ${I2C_INSTANCE_NAME?lower_case}Obj.context;
 
     /* ACK the slave interrupt */
@@ -210,7 +213,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                     if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_R_W_MASK) != 0U)
                     {
                         /* I2C master wants to read */
-                        if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK)  == 0U)
+                        if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U)
                         {
                             /* In the callback, slave must write to transmit register by calling I2Cx_WriteByte() */
                             (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, context);
@@ -228,12 +231,12 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                 ${I2C_INSTANCE_NAME}_RiseAndSetupTime(sdaValue);
 <#else>
                 /* Notify that a address match event has occurred */
-                ${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, context);
+               (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, context);
 
-                if (${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_R_W_MASK)
+                if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_R_W_MASK) != 0U)
                 {
                     /* I2C master wants to read */
-                    if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK)  == 0U)
+                    if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK) == 0U)
                     {
                         /* In the callback, slave must write to transmit register by calling I2Cx_WriteByte() */
                         (void)${I2C_INSTANCE_NAME?lower_case}Obj.callback(I2C_SLAVE_TRANSFER_EVENT_TX_READY, context);
@@ -254,7 +257,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
         /* Master reads from slave, slave transmits */
         if ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_R_W_MASK) != 0U)
         {
-            if (((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK)  == 0U) && ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK)  == 0U))
+            if (((${I2C_INSTANCE_NAME}STAT & (_${I2C_INSTANCE_NAME}STAT_TBF_MASK | _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK))  == 0U))
             {
                 if (${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL)
                 {
@@ -311,7 +314,6 @@ void ${I2C_INSTANCE_NAME}_CallbackRegister(I2C_SLAVE_CALLBACK callback, uintptr_
         ${I2C_INSTANCE_NAME?lower_case}Obj.callback = callback;
         ${I2C_INSTANCE_NAME?lower_case}Obj.context = contextHandle;
     }
-    return;
 }
 
 bool ${I2C_INSTANCE_NAME}_IsBusy(void)
@@ -335,26 +337,12 @@ void ${I2C_INSTANCE_NAME}_WriteByte(uint8_t wrByte)
 
 I2C_SLAVE_TRANSFER_DIR ${I2C_INSTANCE_NAME}_TransferDirGet(void)
 {
-    if((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_R_W_MASK) != 0U)
-    {
-        return I2C_SLAVE_TRANSFER_DIR_READ;
-    }
-    else
-    {
-        return I2C_SLAVE_TRANSFER_DIR_WRITE;
-    }
+    return ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_R_W_MASK) != 0U) ? I2C_SLAVE_TRANSFER_DIR_READ : I2C_SLAVE_TRANSFER_DIR_WRITE;
 }
 
 I2C_SLAVE_ACK_STATUS ${I2C_INSTANCE_NAME}_LastByteAckStatusGet(void)
 {
-    if((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) != 0U)
-    {
-        return I2C_SLAVE_ACK_STATUS_RECEIVED_NAK;
-    }
-    else
-    {
-        return I2C_SLAVE_ACK_STATUS_RECEIVED_ACK;
-    }
+    return ((${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK) != 0U) ? I2C_SLAVE_ACK_STATUS_RECEIVED_NAK : I2C_SLAVE_ACK_STATUS_RECEIVED_ACK;
 }
 
 I2C_SLAVE_ERROR ${I2C_INSTANCE_NAME}_ErrorGet(void)
