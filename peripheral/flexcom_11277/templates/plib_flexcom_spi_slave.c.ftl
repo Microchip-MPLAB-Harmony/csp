@@ -59,7 +59,7 @@
 #include "interrupts.h"
 </#if>
 
-<#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
+<#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
 #define FLEXCOM_SPI_RDR_REG      (*(volatile uint8_t* const)((SPI${FLEXCOM_INSTANCE_NUMBER}_BASE_ADDRESS + SPI_RDR_REG_OFST)))
 #define FLEXCOM_SPI_TDR_REG      (*(volatile uint8_t* const)((SPI${FLEXCOM_INSTANCE_NUMBER}_BASE_ADDRESS + SPI_TDR_REG_OFST)))
 
