@@ -69,7 +69,7 @@
     <#lt>
     <#lt>void CORETIMER_PeriodSet ( uint32_t period )
     <#lt>{
-    <#lt>    coreTmr.period=period;
+    <#lt>    coreTmr.period = period;
     <#lt>
     <#lt>}
     <#lt>
@@ -92,7 +92,7 @@
     <#lt>    ${CORE_TIMER_IEC_REG}SET=${CORE_TIMER_IEC_REG_VALUE};
     <#lt>}
     <#lt>
-    <#lt>void CORETIMER_Stop()
+    <#lt>void CORETIMER_Stop( void )
     <#lt>{
     <#lt>    // Disable Timer by setting Disable Count (DC) bit
     <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() | _CP0_CAUSE_DC_MASK);
@@ -106,8 +106,6 @@
     <#lt>{
     <#lt>    return (CORE_TIMER_FREQUENCY);
     <#lt>}
-    <#lt>
-    <#lt>
     <#lt>
     <#lt>
     <#lt>void __attribute__((used)) CORE_TIMER_InterruptHandler (void)
@@ -144,9 +142,9 @@
 </#if>
 
 <#if CORE_TIMER_INTERRUPT_MODE == true && CORE_TIMER_PERIODIC_INTERRUPT == false>
-    <#lt>CORETIMER_OBJECT coreTmr;
+    <#lt>volatile static CORETIMER_OBJECT coreTmr;
     <#lt>
-    <#lt>void CORETIMER_Initialize()
+    <#lt>void CORETIMER_Initialize( void )
     <#lt>{
     <#lt>    // Disable Timer by setting Disable Count (DC) bit
     <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() | _CP0_CAUSE_DC_MASK);
@@ -163,13 +161,13 @@
     <#lt>    coreTmr.context = context;
     <#lt>}
 
-    <#lt>void CORETIMER_Start()
+    <#lt>void CORETIMER_Start( void )
     <#lt>{
     <#lt>    // Disable Timer by setting Disable Count (DC) bit
     <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() | _CP0_CAUSE_DC_MASK);
     <#lt>
     <#lt>    // Disable Interrupt
-    <#lt>    ${CORE_TIMER_IEC_REG}CLR=${CORE_TIMER_IEC_REG_VALUE};
+    <#lt>    ${CORE_TIMER_IEC_REG}CLR = ${CORE_TIMER_IEC_REG_VALUE};
     <#lt>
     <#lt>    // Clear Core Timer
     <#lt>    _CP0_SET_COUNT(0);
@@ -179,7 +177,7 @@
     <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() & (~_CP0_CAUSE_DC_MASK));
     <#lt>
     <#lt>    // Enable Interrupt
-    <#lt>    ${CORE_TIMER_IEC_REG}SET=${CORE_TIMER_IEC_REG_VALUE};
+    <#lt>    ${CORE_TIMER_IEC_REG}SET = ${CORE_TIMER_IEC_REG_VALUE};
     <#lt>}
 
     <#lt>void CORETIMER_Stop( void )
@@ -188,7 +186,7 @@
     <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() | _CP0_CAUSE_DC_MASK);
     <#lt>
     <#lt>    // Disable Interrupt
-    <#lt>    ${CORE_TIMER_IEC_REG}CLR=${CORE_TIMER_IEC_REG_VALUE};
+    <#lt>    ${CORE_TIMER_IEC_REG}CLR = ${CORE_TIMER_IEC_REG_VALUE};
     <#lt>}
 
     <#lt>uint32_t CORETIMER_FrequencyGet ( void )
@@ -211,14 +209,13 @@
     <#lt>void __attribute__((used)) CORE_TIMER_InterruptHandler (void)
     <#lt>{
     <#lt>    uint32_t status = ${CORE_TIMER_IFS_REG}bits.CTIF;
-    <#lt>    ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};
+    <#lt>    ${CORE_TIMER_IFS_REG}CLR = ${CORE_TIMER_IFS_REG_VALUE};
     <#lt>    if(coreTmr.callback != NULL)
     <#lt>    {
     <#lt>        uintptr_t context = coreTmr.context;
     <#lt>        coreTmr.callback(status, context);
     <#lt>    }
     <#lt>}
-
 </#if>
 
 <#if CORE_TIMER_INTERRUPT_MODE == false >
@@ -245,7 +242,7 @@
     <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() | _CP0_CAUSE_DC_MASK);
 
     <#lt>    // Clear Compare Timer Interrupt Flag
-    <#lt>    ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};
+    <#lt>    ${CORE_TIMER_IFS_REG}CLR = ${CORE_TIMER_IFS_REG_VALUE};
 
     <#lt>    // Clear Core Timer
     <#lt>    _CP0_SET_COUNT(0);
@@ -287,7 +284,7 @@
     <#lt>    if (${CORE_TIMER_IFS_REG}bits.CTIF != 0U)
     <#lt>    {
     <#lt>       // Clear Compare Timer Interrupt Flag
-    <#lt>       ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};
+    <#lt>       ${CORE_TIMER_IFS_REG}CLR = ${CORE_TIMER_IFS_REG_VALUE};
     <#lt>       flagStatus = true;
     <#lt>    }
     <#lt>    return flagStatus;
@@ -299,14 +296,13 @@ void CORETIMER_DelayMs ( uint32_t delay_ms)
     uint32_t startCount, endCount;
 
     /* Calculate the end count for the given delay */
-    endCount=(CORE_TIMER_FREQUENCY/1000U)*delay_ms;
+    endCount=(CORE_TIMER_FREQUENCY / 1000U) * delay_ms;
 
     startCount=_CP0_GET_COUNT();
-    while((_CP0_GET_COUNT()-startCount)<endCount)
+    while((_CP0_GET_COUNT() - startCount) < endCount)
     {
-        /* Nothing to do */
+        /* Wait for compare match */
     }
-
 }
 
 void CORETIMER_DelayUs ( uint32_t delay_us)
@@ -314,13 +310,12 @@ void CORETIMER_DelayUs ( uint32_t delay_us)
     uint32_t startCount, endCount;
 
     /* Calculate the end count for the given delay */
-    endCount=(CORE_TIMER_FREQUENCY/1000000U)*delay_us;
+    endCount=(CORE_TIMER_FREQUENCY / 1000000U) * delay_us;
 
     startCount=_CP0_GET_COUNT();
-    while((_CP0_GET_COUNT()-startCount)<endCount)
+    while((_CP0_GET_COUNT() - startCount) < endCount)
     {
-        /* Nothing to do */
+        /* Wait for compare match */
     }
-
 }
 
