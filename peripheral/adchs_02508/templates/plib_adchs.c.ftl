@@ -102,7 +102,6 @@ volatile static ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${
 void ${ADCHS_INSTANCE_NAME}_Initialize(void)
 {
     ADCCON1bits.ON = 0;
-<#compress> <#-- To remove unwanted new lines -->
 <#if ADCHS_NUM_CHANNELS != 0>
 <#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
     <#assign ADCHS_CH_ENABLE = "ADCHS_"+ i + "_ENABLE">
@@ -112,12 +111,10 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
     <#else>
     ADC${i}CFG = DEVADC${i};
     </#if>
-    ADC${i}TIME = 0x${.vars[ADCHS_TIME]};
-
+    ADC${i}TIME = 0x${.vars[ADCHS_TIME]}U;
     </#if>
 </#list>
 </#if>
-</#compress>
 
 <#if ADCHS_7_ENABLE == true>
     <#if (core.PRODUCT_FAMILY == "PIC32MZW")>
@@ -126,35 +123,35 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
     </#if>
 </#if>
 
-    ADCCON1 = 0x${ADCHS_ADCCON1};
-    ADCCON2 = 0x${ADCHS_ADCCON2};
-    ADCCON3 = 0x${ADCHS_ADCCON3};
+    ADCCON1 = 0x${ADCHS_ADCCON1}U;
+    ADCCON2 = 0x${ADCHS_ADCCON2}U;
+    ADCCON3 = 0x${ADCHS_ADCCON3}U;
 
-    ADCTRGMODE = 0x${ADCHS_ADCTRGMODE};
+    ADCTRGMODE = 0x${ADCHS_ADCTRGMODE}U;
 
-    <#if ADCHS_ADCTRG1??>ADCTRG1 = 0x${ADCHS_ADCTRG1}; </#if>
-    <#if ADCHS_ADCTRG2??>ADCTRG2 = 0x${ADCHS_ADCTRG2}; </#if>
-    <#if ADCHS_ADCTRG3??>ADCTRG3 = 0x${ADCHS_ADCTRG3}; </#if>
-    <#if ADCHS_ADCTRG4??>ADCTRG4 = 0x${ADCHS_ADCTRG4}; </#if>
-    <#if ADCHS_ADCTRG5??>ADCTRG5 = 0x${ADCHS_ADCTRG5}; </#if>
-    <#if ADCHS_ADCTRG6??>ADCTRG6 = 0x${ADCHS_ADCTRG6}; </#if>
-    <#if ADCHS_ADCTRG7??>ADCTRG7 = 0x${ADCHS_ADCTRG7}; </#if>
+    <#if ADCHS_ADCTRG1??>ADCTRG1 = 0x${ADCHS_ADCTRG1}U; </#if>
+    <#if ADCHS_ADCTRG2??>ADCTRG2 = 0x${ADCHS_ADCTRG2}U; </#if>
+    <#if ADCHS_ADCTRG3??>ADCTRG3 = 0x${ADCHS_ADCTRG3}U; </#if>
+    <#if ADCHS_ADCTRG4??>ADCTRG4 = 0x${ADCHS_ADCTRG4}U; </#if>
+    <#if ADCHS_ADCTRG5??>ADCTRG5 = 0x${ADCHS_ADCTRG5}U; </#if>
+    <#if ADCHS_ADCTRG6??>ADCTRG6 = 0x${ADCHS_ADCTRG6}U; </#if>
+    <#if ADCHS_ADCTRG7??>ADCTRG7 = 0x${ADCHS_ADCTRG7}U; </#if>
 
-    ADCTRGSNS = 0x${ADCHS_ADCTRGSNS};
+    ADCTRGSNS = 0x${ADCHS_ADCTRGSNS}U;
 
-    ADCIMCON1 = 0x${ADCHS_ADCIMCON1};
-    <#if ADCHS_ADCIMCON2??>ADCIMCON2 = 0x${ADCHS_ADCIMCON2}; </#if>
-    <#if ADCHS_ADCIMCON3??>ADCIMCON3 = 0x${ADCHS_ADCIMCON3}; </#if>
-    <#if ADCHS_ADCIMCON4??>ADCIMCON4 = 0x${ADCHS_ADCIMCON4}; </#if>
+    ADCIMCON1 = 0x${ADCHS_ADCIMCON1}U;
+    <#if ADCHS_ADCIMCON2??>ADCIMCON2 = 0x${ADCHS_ADCIMCON2}U; </#if>
+    <#if ADCHS_ADCIMCON3??>ADCIMCON3 = 0x${ADCHS_ADCIMCON3}U; </#if>
+    <#if ADCHS_ADCIMCON4??>ADCIMCON4 = 0x${ADCHS_ADCIMCON4}U; </#if>
 
     /* Input scan */
-    ADCCSS1 = 0x${ADCHS_ADCCSS1};
-    <#if ADCHS_NUM_SIGNALS gt 31>ADCCSS2 = 0x${ADCHS_ADCCSS2}; </#if>
+    ADCCSS1 = 0x${ADCHS_ADCCSS1}U;
+    <#if ADCHS_NUM_SIGNALS gt 31>ADCCSS2 = 0x${ADCHS_ADCCSS2}U; </#if>
 
 <#compress> <#-- To remove unwanted new lines -->
 <#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true)>
 <#if ADCHS_ADCDSTAT?? && ADCHS_ADCDSTAT != "0">
-    ${ADCHS_DMA_STATUS_REG} = 0x${ADCHS_ADCDSTAT};
+    ${ADCHS_DMA_STATUS_REG} = 0x${ADCHS_ADCDSTAT}U;
 </#if>
 </#if>
 </#compress>
@@ -166,15 +163,15 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
 <#assign ADCHS_ADCCMPCON = "ADCHS_ADCCMPCON" + i>
 
 <#if .vars[ADCHS_ADCCMPEN] != "0">
-    ADCCMPEN${i} = 0x${.vars[ADCHS_ADCCMPEN]?upper_case};
+    ADCCMPEN${i} = 0x${.vars[ADCHS_ADCCMPEN]?upper_case}U;
 </#if>
 
 <#if .vars[ADCHS_ADCCMP] != "0">
-    ADCCMP${i} = 0x${.vars[ADCHS_ADCCMP]?upper_case};
+    ADCCMP${i} = 0x${.vars[ADCHS_ADCCMP]?upper_case}U;
 </#if>
 
 <#if .vars[ADCHS_ADCCMPCON] != "0">
-    ADCCMPCON${i} = 0x${.vars[ADCHS_ADCCMPCON]?upper_case};
+    ADCCMPCON${i} = 0x${.vars[ADCHS_ADCCMPCON]?upper_case}U;
 </#if>
 </#list>
 </#compress>
@@ -192,18 +189,18 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
 <#compress> <#-- To remove unwanted new lines -->
 <#if ADCHS_INTERRUPT == true>
     /* Result interrupt enable */
-    ADCGIRQEN1 = 0x${ADCHS_ADCGIRQEN1};
-    <#if ADCHS_NUM_SIGNALS gt 31>ADCGIRQEN2 = 0x${ADCHS_ADCGIRQEN2};</#if>
+    ADCGIRQEN1 = 0x${ADCHS_ADCGIRQEN1}U;
+    <#if ADCHS_NUM_SIGNALS gt 31>ADCGIRQEN2 = 0x${ADCHS_ADCGIRQEN2}U;</#if>
 
     /* Interrupt Enable */
     <#if ADCHS_IEC0_REG??>
-    ${ADCHS_IEC0_REG}SET = 0x${ADCHS_IEC0};
+    ${ADCHS_IEC0_REG}SET = 0x${ADCHS_IEC0}U;
     </#if>
     <#if ADCHS_IEC1_REG??>
-    ${ADCHS_IEC1_REG}SET = 0x${ADCHS_IEC1};
+    ${ADCHS_IEC1_REG}SET = 0x${ADCHS_IEC1}U;
     </#if>
     <#if ADCHS_IEC2_REG??>
-    ${ADCHS_IEC2_REG}SET = 0x${ADCHS_IEC2};
+    ${ADCHS_IEC2_REG}SET = 0x${ADCHS_IEC2}U;
     </#if>
 </#if>
 </#compress>
@@ -450,7 +447,7 @@ void ${ADCHS_INSTANCE_NAME}_DMACallbackRegister(ADCHS_DMA_CALLBACK callback, uin
 
 void __attribute__((used)) ADC_DMA_InterruptHandler(void)
 {
-    ADCHS_DMA_STATUS dmaStatus = ${ADCHS_DMA_STATUS_REG} & 0x${ADC_DMA_INT_FLAG_MASK?upper_case};
+    uint32_t dmaStatus = (${ADCHS_DMA_STATUS_REG} & 0x${ADC_DMA_INT_FLAG_MASK?upper_case});
 
     <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
     ${ADCHS_DMA_IFS_REG}CLR = _${ADCHS_DMA_IFS_REG}_ADCFCBTIF_MASK;
@@ -462,7 +459,7 @@ void __attribute__((used)) ADC_DMA_InterruptHandler(void)
     if (${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn != NULL)
     {
         uintptr_t context = ${ADCHS_INSTANCE_NAME}_DMACallbackObj.context;
-        ${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn(dmaStatus, context);
+        ${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn((ADCHS_DMA_STATUS)dmaStatus, context);
     }
 }
 
