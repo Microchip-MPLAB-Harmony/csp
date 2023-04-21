@@ -39,6 +39,9 @@
 *******************************************************************************/
 #include "device.h"
 #include "plib_${MCPWM_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#--Implementation-->
 // *****************************************************************************
@@ -342,27 +345,37 @@ void ${MCPWM_INSTANCE_NAME}_SecondaryEventCallbackRegister(MCPWM_CALLBACK callba
 <#if .vars[interrupt] == 1>
 void __attribute__((used)) PWM${i}_InterruptHandler(void)
 {
-    MCPWM_CH_STATUS status;
-    uintptr_t context = ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].context;     
-    status = (MCPWM_CH_STATUS)(PWMCON${i} & MCPWM_STATUS_MASK);
-    if (((PWMCON${i}bits.PWMHIEN) != 0U) && ((PWMCON${i}bits.PWMHIF) != 0U))
+    uint32_t tmp;
+    uintptr_t context = ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].context;
+    uint32_t status = PWMCON${i} & MCPWM_STATUS_MASK;
+
+    tmp = PWMCON${i}bits.PWMHIF;
+    if (((PWMCON${i}bits.PWMHIEN) != 0U) && (tmp != 0U))
     {
         PWMCON${i}bits.PWMHIF = 0;
     }
-    if (((PWMCON${i}bits.PWMLIEN) != 0U) && ((PWMCON${i}bits.PWMLIF) != 0U))
+
+    tmp = PWMCON${i}bits.PWMLIF;
+    if (((PWMCON${i}bits.PWMLIEN) != 0U) && (tmp != 0U))
     {
         PWMCON${i}bits.PWMLIF = 0;
     }
-    if (((PWMCON${i}bits.TRGIEN) != 0U) && ((PWMCON${i}bits.TRGIF) != 0U))
+
+    tmp = PWMCON${i}bits.TRGIF;
+    if (((PWMCON${i}bits.TRGIEN) != 0U) && (tmp != 0U))
     {
         PWMCON${i}bits.TRGIF = 0;
     }
-    if (((PWMCON${i}bits.CLIEN) != 0U) && ((PWMCON${i}bits.CLIF) != 0U))
+
+    tmp = PWMCON${i}bits.CLIF;
+    if (((PWMCON${i}bits.CLIEN) != 0U) && (tmp != 0U))
     {
         PWMCON${i}bits.CLIEN = 0;
         PWMCON${i}bits.CLIF = 0;
     }
-    if (((PWMCON${i}bits.FLTIEN) != 0U) && ((PWMCON${i}bits.FLTIF) != 0U))
+
+    tmp = PWMCON${i}bits.FLTIF;
+    if (((PWMCON${i}bits.FLTIEN) != 0U) && (tmp != 0U))
     {
         PWMCON${i}bits.FLTIEN = 0;
         PWMCON${i}bits.FLTIF = 0;
@@ -379,7 +392,7 @@ void __attribute__((used)) PWM${i}_InterruptHandler(void)
 
     if( (${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].callback != NULL))
     {
-        ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].callback(status, context);
+        ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].callback((MCPWM_CH_STATUS)status, context);
     }
 }
 
