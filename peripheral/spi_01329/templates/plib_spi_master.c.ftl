@@ -200,9 +200,9 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
 
         /* Flush out any unread data in SPI read buffer from the previous transfer */
-        while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == false)
+        while ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == 0U)
         {
-            receivedData = ${SPI_INSTANCE_NAME}BUF;
+            (void)${SPI_INSTANCE_NAME}BUF;
         }
 
         if (rxSize > txSize)
@@ -226,14 +226,14 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         }
         else
         {
-             /* Do Nothing */
+             /* Nothing to process */
         }
 
-        /* Make sure transmit buffer is empty */
-        while((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == false)
+        while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == 0U)
         {
-            /* Do Nothing */
+            /* Wait for transmit buffer to be empty */
         }
+
         while ((txCount != txSize) || (dummySize != 0U))
         {
             if (txCount != txSize)
@@ -241,18 +241,16 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                 if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
                 {
                     ${SPI_INSTANCE_NAME}BUF = ((uint32_t*)pTransmitData)[txCount];
-            txCount++;
                 }
                 else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
                 {
                     ${SPI_INSTANCE_NAME}BUF = ((uint16_t*)pTransmitData)[txCount];
-            txCount++;
                 }
                 else
                 {
                     ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)pTransmitData)[txCount];
-            txCount++;
                 }
+                txCount++;
             }
             else if (dummySize > 0U)
             {
@@ -261,7 +259,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
             }
             else
             {
-                 /* Do Nothing */
+                 /* Nothing to process */
             }
 
             if (rxCount == rxSize)
@@ -269,14 +267,15 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                 /* If inside this if condition, then it means that txSize > rxSize and all RX bytes are received */
 
                 /* For transmit only request, wait for buffer to become empty */
-                while((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == false)
+                while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == 0U)
                 {
-                     /* Do Nothing */
+                    /* Wait for buffer empty */
                 }
+
                 /* Read until the receive buffer is not empty */
-                while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == false)
+                while ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == 0U)
                 {
-                    receivedData = ${SPI_INSTANCE_NAME}BUF;
+                    (void)${SPI_INSTANCE_NAME}BUF;
                     dummyRxCntr++;
                 }
             }
@@ -313,9 +312,9 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         }
 
         /* Make sure no data is pending in the shift register */
-        while ((bool)((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == false))
+        while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == 0U)
         {
-            /* Do Nothing */
+            /* Data pending in shift register */
         }
         /* Make sure for every character transmitted a character is also received back.
          * If this is not done, we may prematurely exit this routine with the last bit still being
@@ -329,22 +328,19 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                 /* Wait for all the RX bytes to be received. */
                 while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == false)
                 {
-                    receivedData = ${SPI_INSTANCE_NAME}BUF;
+                    (void)${SPI_INSTANCE_NAME}BUF;
                     dummyRxCntr++;
                 }
             }
         }
-
         isSuccess = true;
     }
-
     return isSuccess;
 }
 <#else>
 bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
 {
     bool isRequestAccepted = false;
-    uint32_t dummyData = 0U;
 
     /* Verify the request */
     if((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false) && (((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))))
@@ -389,8 +385,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
         /* Depending on 8/16/32 bit mode, there may be 16/8/4 bytes in the FIFO */
         while ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == 0U)
         {
-            dummyData = ${SPI_INSTANCE_NAME}BUF;
-            (void)dummyData;
+            (void)${SPI_INSTANCE_NAME}BUF;
         }
 
         /* Configure SPI to generate receive interrupt when receive buffer is empty (SRXISEL = '01') */
@@ -432,7 +427,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             }
             else
             {
-                /* Do Nothing */
+                /* Nothing to process */
             }
         }
         else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
@@ -454,7 +449,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             }
             else
             {
-                /* Do Nothing */
+                /* Nothing to process */
             }
         }
         else
@@ -471,7 +466,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             }
             else
             {
-                /* Do Nothing */
+                /* Nothing to process */
             }
         }
 
