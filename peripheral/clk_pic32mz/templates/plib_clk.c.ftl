@@ -233,11 +233,17 @@ void CLK_Initialize( void )
 
     CFGMPLLbits.MPLLVREGDIS = ${CLK_MPLLVREGDIS_BIT_VALUE};
 
-    while(!(CFGMPLLbits.MPLLVREGRDY));
+    while(CFGMPLLbits.MPLLVREGRDY == 0U)
+    {
+        /* Wait for completion */
+    }
 
     CFGMPLL = ${CLK_CFGMPLL_REGVALUE};
 
-    while(!(CFGMPLLbits.MPLLRDY));
+    while(CFGMPLLbits.MPLLRDY == 0U)
+    {
+        /* Wait for completion */
+    }
 </#if>
 </#if>  <#-- CONFIG_HAVE_REFCLOCK == true -->
 
