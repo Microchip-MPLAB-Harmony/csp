@@ -213,10 +213,10 @@ bool ${TMR_INSTANCE_NAME}_PeriodHasExpired(void)
 {
     bool status;
     <#if TIMER_32BIT_MODE_SEL =="0">
-        status = ${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM}IF;
+        status = (${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM}IF != 0U);
         ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
     <#else>
-        status = ${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM?number + 1}IF;
+        status = (${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM?number + 1}IF != 0U);
         ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM?number + 1}IF_MASK;
     </#if>
 
