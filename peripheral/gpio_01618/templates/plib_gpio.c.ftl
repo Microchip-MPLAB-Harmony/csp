@@ -42,6 +42,9 @@
 //DOM-IGNORE-END
 
 #include "plib_gpio.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 <#compress> <#-- To remove unwanted new lines -->
 
 <#-- Initialize variables -->
@@ -87,7 +90,7 @@
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <@compress single_line=true>
-        <#lt>uint8_t portNumCb[${GPIO_CHANNEL_TOTAL} + 1] = {
+        <#lt>volatile static uint8_t portNumCb[${GPIO_CHANNEL_TOTAL} + 1] = {
                                                                 <#list portNumCbList as i>
                                                                     ${i},
                                                                 </#list>
@@ -417,7 +420,7 @@ bool GPIO_PinInterruptCallbackRegister(
     uint8_t i;
     uint8_t portIndex;
 
-    portIndex = pin >> 4;
+    portIndex = (uint8_t)(pin >> 4);
 
     for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
     {
@@ -453,14 +456,12 @@ bool GPIO_PinInterruptCallbackRegister(
   Remarks:
     It is an internal function, user should not call it directly.
 */
-void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
+static void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
 {
     uint8_t i;
     uint32_t status;
     GPIO_PIN pin;
     uintptr_t context;
-
-
     status  = CNSTAT${.vars[channel]};
     status &= CNEN${.vars[channel]};
 
@@ -473,9 +474,9 @@ void __attribute__((used)) CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void
         pin = portPinCbObj[i].pin;
         context = portPinCbObj[i].context;
 
-        if((portPinCbObj[i].callback != NULL) && (status & (1 << (pin & 0xFU))))
+        if((portPinCbObj[i].callback != NULL) && (status & ((uint32_t)1U << (pin & 0xFU))))
         {
-            portPinCbObj[i].callback (pin, context);
+            portPinCbObj[i].callback(pin, context);
         }
     }
 }
@@ -499,7 +500,7 @@ void __attribute__((used)) CHANGE_NOTICE_InterruptHandler(void)
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
     <#if .vars[channel]?has_content>
         <#if .vars["SYS_PORT_${.vars[channel]}_CN_USED"] == true>
-    if(IFS${SYS_PORT_IFS_REG_INDEX}bits.CN${.vars[channel]}IF)
+    if(IFS${SYS_PORT_IFS_REG_INDEX}bits.CN${.vars[channel]}IF != 0U)
     {
         CHANGE_NOTICE_${.vars[channel]}_InterruptHandler();
     }
