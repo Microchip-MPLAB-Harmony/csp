@@ -111,7 +111,7 @@
     #pragma GCC diagnostic pop
     </#if>
 </#if>
-  /* MISRAC 2012 deviation block end */
+    /* MISRAC 2012 deviation block end */
 typedef uint32_t INT_SOURCE;
 
 <#if 0 < NumOfEnabledExtInt>
