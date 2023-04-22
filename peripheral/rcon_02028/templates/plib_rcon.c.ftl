@@ -74,14 +74,14 @@ void __attribute__((noreturn)) ${RCON_INSTANCE_NAME}_SoftwareReset( void )
     (void) __builtin_disable_interrupts();
 
     /* Unlock System */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     RSWRSTSET = _RSWRST_SWRST_MASK;
 
     /* Read RSWRST register to trigger reset */
-    RSWRST;
+    (void)RSWRST;
 
     /* Prevent any unwanted code execution until reset occurs */
     while(true)
