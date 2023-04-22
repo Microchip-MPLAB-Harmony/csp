@@ -42,6 +42,9 @@
 //DOM-IGNORE-END
 
 #include "plib_gpio.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 <#compress> <#-- To remove unwanted new lines -->
 
 <#-- Initialize variables -->
