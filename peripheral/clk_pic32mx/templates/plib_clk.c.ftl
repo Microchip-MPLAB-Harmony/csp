@@ -93,7 +93,7 @@ void CLK_Initialize( void )
 </#if>
 
     /* Code for fuse settings can be found in "initialization.c" */
-    
+
 <#if (CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT) ||
      ((USB_PART = true) && (CONFIG_SYS_CLK_UFRCEN == "ON")) ||
      ((CONFIG_SYS_CLK_REFCLK_ENABLE?has_content) && (CONFIG_SYS_CLK_REFCLK_ENABLE == true)) ||
@@ -167,7 +167,7 @@ void CLK_Initialize( void )
 <#list 1..PMD_COUNT + 1 as i>
     <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
     <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
-        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]};
+        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]}U;
     </#if>
 </#list>
 </#if>
