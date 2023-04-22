@@ -86,11 +86,11 @@
     <#assign portNumCbList = portNumCbList + [TOTAL_NUM_OF_INT_USED] >
 
     <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>volatile GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
+    <#lt>volatile static GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <@compress single_line=true>
-        <#lt>uint8_t portNumCb[${GPIO_CHANNEL_TOTAL} + 1] = {
+        <#lt>static uint8_t portNumCb[${GPIO_CHANNEL_TOTAL} + 1] = {
                                                                 <#list portNumCbList as i>
                                                                     ${i},
                                                                 </#list>
@@ -158,9 +158,9 @@ void GPIO_Initialize ( void )
 <#if IOLOCK_ENABLE?? && IOLOCK_ENABLE == true>
     <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
         <#lt>    /* Unlock system for PPS configuration */
-        <#lt>    SYSKEY = 0x00000000;
-        <#lt>    SYSKEY = 0xAA996655;
-        <#lt>    SYSKEY = 0x556699AA;
+        <#lt>    SYSKEY = 0x00000000U;
+        <#lt>    SYSKEY = 0xAA996655U;
+        <#lt>    SYSKEY = 0x556699AAU;
 
         <#lt>    RPCONbits.IOLOCK = 0;
     </#if>
@@ -421,7 +421,7 @@ void GPIO_PinIntEnable(GPIO_PIN pin, GPIO_INTERRUPT_STYLE style)
     uint32_t mask;
 
     port = (GPIO_PORT)(pin>>4);
-    mask =  0x1 << (pin & 0xF);
+    mask =  (uint32_t)0x1U << (pin & 0xF);
 
     if (style == GPIO_INTERRUPT_ON_MISMATCH)
     {
@@ -442,6 +442,10 @@ void GPIO_PinIntEnable(GPIO_PIN pin, GPIO_INTERRUPT_STYLE style)
         *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
         *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}SET + (port * 0x40U)) = mask;
     }
+    else
+    {
+        /* Nothing to process */
+    }
 }
 
 // *****************************************************************************
@@ -460,7 +464,7 @@ void GPIO_PinIntDisable(GPIO_PIN pin)
     uint32_t mask;
 
     port = (GPIO_PORT)(pin>>4);
-    mask =  0x1UL << (pin & 0xFU);
+    mask =  (uint32_t)0x1U << (pin & 0xFU);
 
     *(volatile uint32_t *)(&CNEN0${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
     *(volatile uint32_t *)(&CNEN1${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40U)) = mask;
@@ -488,7 +492,7 @@ bool GPIO_PinInterruptCallbackRegister(
     uint8_t i;
     uint8_t portIndex;
 
-    portIndex = pin >> 4;
+    portIndex = (uint8_t)(pin >> 4);
 
     for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
     {
