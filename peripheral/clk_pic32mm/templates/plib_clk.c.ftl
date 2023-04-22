@@ -84,10 +84,12 @@
 
 void CLK_Initialize( void )
 {
+    uint32_t status;
+
     /* unlock system for clock configuration */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
 <#if SYS_CLK_FRCDIV != "0">
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
@@ -106,9 +108,12 @@ void CLK_Initialize( void )
     OSCCON = OSCCON | 0x00000101U;    //NOSC = SPLL, initiate clock switch (OSWEN = 1)
 
     /* Wait for PLL to be ready and clock switching operation to complete */
-    while(((CLKSTATbits.SPLLRDY == 0U) || (CLKSTATbits.SPDIVRDY == 0U) || (OSCCONbits.OSWEN != 0U)))
+    status = CLKSTATbits.SPLLRDY;
+    status |= CLKSTATbits.SPDIVRDY;
+    while((OSCCONbits.OSWEN != 0U) || (status == 0U))
     {
-        /* Nothing to do */        
+        status = CLKSTATbits.SPLLRDY;
+        status |= CLKSTATbits.SPDIVRDY;
     }
 <#else>
     /* Configure SPLL */
@@ -162,10 +167,10 @@ void CLK_Initialize( void )
 <#list 1..PMD_COUNT + 1 as i>
     <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
     <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
-        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]};
+        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]}U;
     </#if>
 </#list>
 
     /* Lock system since done with clock configuration */
-    SYSKEY = 0x33333333;
+    SYSKEY = 0x33333333U;
 }
