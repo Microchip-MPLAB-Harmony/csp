@@ -51,6 +51,9 @@
 
 #include "device.h"
 #include "plib_${CCP_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if CCP_TIMER_INTERRUPT == true>
 volatile static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}Obj;
@@ -135,7 +138,7 @@ uint32_t ${CCP_INSTANCE_NAME}_TimerFrequencyGet(void)
 void __attribute__((used)) CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
 {
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
-    uintptr_t context = ${CCP_INSTANCE_NAME?lower_case}Obj.context;     
+    uintptr_t context = ${CCP_INSTANCE_NAME?lower_case}Obj.context;
     uint32_t status = ${CCP_IFS_REG}bits.CCT${CCP_INSTANCE_NUM}IF;
     ${CCP_IFS_REG}CLR = _${CCP_IFS_REG}_CCT${CCP_INSTANCE_NUM}IF_MASK;
 
