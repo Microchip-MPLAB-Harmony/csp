@@ -155,7 +155,7 @@ uint32_t ${CRC_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, uint32
         /* When Using Data Width to 8-bit, a byte access to the
          * CRCDAT register must be used
         */
-        *((uint8_t *)&CRCDAT) = *buffer_8++;
+        *((volatile uint8_t *)&CRCDAT) = *buffer_8++;
 
         length--;
     }
@@ -166,14 +166,15 @@ uint32_t ${CRC_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, uint32
     IFS0CLR = _IFS0_CRCIF_MASK;
 
     /* Write the last Data into FIFO for completing the CRC Calculation */
-    *((uint8_t *)&CRCDAT) = *buffer_8;
+    *((volatile uint8_t *)&CRCDAT) = *buffer_8;
 
     /* Resume CRC Calculation */
     CRCCONbits.CRCGO = 1;
 
-    /* Wait until CRC Calculation is completed */
+
     while(IFS0bits.CRCIF == 0U)
     {
+        /* Wait until CRC Calculation is completed */
     }
 
     /* Read the generated CRC value. */
