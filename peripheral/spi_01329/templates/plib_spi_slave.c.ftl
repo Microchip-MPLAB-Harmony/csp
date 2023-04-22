@@ -452,19 +452,23 @@ void __attribute__((used)) ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-void __attribute__((used)) SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) SPI_${SPI_INSTANCE_NUM}_InterruptHandler(void)
 {
-    if ((${SPI_FLT_IFS_REG} & _${SPI_FLT_IFS_REG}_${SPI_INSTANCE_NAME}EIF_MASK) && (${SPI_FLT_IEC_REG} & _${SPI_FLT_IEC_REG}_${SPI_INSTANCE_NAME}EIE_MASK))
+    bool tmp;
+    tmp = ((${SPI_FLT_IEC_REG} & _${SPI_FLT_IEC_REG}_${SPI_INSTANCE_NAME}EIE_MASK) != 0U);
+    if(((${SPI_FLT_IFS_REG} & _${SPI_FLT_IFS_REG}_${SPI_INSTANCE_NAME}EIF_MASK) != 0U) && tmp)
     {
         /* Call error interrupt handler */
         ${SPI_INSTANCE_NAME}_FAULT_InterruptHandler();
     }
-    if ((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) && (${SPI_RX_IEC_REG} & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK))
+    tmp = ((${SPI_RX_IEC_REG} & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK) != 0U);
+    if(((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) != 0U) && tmp)
     {
         /* RX interrupt is enabled and RX buffer is not empty */
         ${SPI_INSTANCE_NAME}_RX_InterruptHandler();
     }
-    if ((${SPI_TX_IFS_REG} & _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK) && (${SPI_TX_IEC_REG} & _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK))
+    tmp = ((${SPI_TX_IEC_REG} & _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK) != 0U);
+    if(((${SPI_TX_IFS_REG} & _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK) != 0U) && tmp)
     {
         /* TX interrupt is enabled and TX buffer is empty */
         ${SPI_INSTANCE_NAME}_TX_InterruptHandler();
