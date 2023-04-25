@@ -901,9 +901,18 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
                        | SFR_CAN_EXT_MEM_CAN1_ADDR(((uint32_t)msgRAMConfigBaseAddr >> 16));
   </#if>
 <#elseif MCAN_SFR_CAN_ENABLE_VALUE == 3>
+    <#if __PROCESSOR?matches("ATSAMRH707.*") >
+    SFR_REGS->SFR_WPMR = SFR_WPMR_WPKEY_PASSWD;
+
+    </#if>
     SFR_REGS->SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")} =
         (SFR_REGS->SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")} & ~SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")}_EXT_MEM_ADDR_Msk) |
          SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")}_EXT_MEM_ADDR(((uint32_t)msgRAMConfigBaseAddr >> 16));
+
+    <#if __PROCESSOR?matches("ATSAMRH707.*") >
+    SFR_REGS->SFR_WPMR = SFR_WPMR_WPKEY_PASSWD | SFR_WPMR_WPEN_Msk;
+
+    </#if>
 <#elseif MCAN_MATRIX_CAN_ENABLE == true>
   <#if MCAN_INSTANCE_NAME?lower_case == "mcan0">
     MATRIX_REGS->CCFG_CAN0 = (MATRIX_REGS->CCFG_CAN0 & ~CCFG_CAN0_Msk)
