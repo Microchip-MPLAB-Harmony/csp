@@ -42,6 +42,9 @@ def instantiateComponent(supcComponent):
     supcSym_SMMR_SMRSTEN.setLabel("Enable Supply Monitor Reset")
     supcSym_SMMR_SMRSTEN.setDefaultValue(True)
 
+    supcSym_MR_OSCBYPASS = supcComponent.createBooleanSymbol("SUPC_MR_OSCBYPASS", None)
+    supcSym_MR_OSCBYPASS.setVisible(False)
+    supcSym_MR_OSCBYPASS.setDefaultValue((ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/register-group@[name=\"SUPC\"]/register@[name=\"SUPC_MR\"]/bitfield@[name=\"OSCBYPASS\"]") != None))
 
 ############################################################################
 #### Code Generation ####

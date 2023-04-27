@@ -33,7 +33,7 @@ void ${SUPC_INSTANCE_NAME}_Initialize (void)
 {
     <#if !SM_ENABLE || !SUPC_SMMR_SMRSTEN>
     /* Update Supply Monitor settings (preserve clock settings)*/
-    <#rt>SUPC_REGS->SUPC_MR = (SUPC_REGS->SUPC_MR & (SUPC_MR_FXTALSTUP_Msk | SUPC_MR_OSCBYPASS_Msk)) | SUPC_MR_KEY_PASSWD
+    <#rt>SUPC_REGS->SUPC_MR = (SUPC_REGS->SUPC_MR & (SUPC_MR_FXTALSTUP_Msk<#if SUPC_MR_OSCBYPASS == true> | SUPC_MR_OSCBYPASS_Msk</#if>)) | SUPC_MR_KEY_PASSWD
     <#t><#if !SM_ENABLE> | SUPC_MR_CORSMDIS_Msk</#if>
     <#t><#if SUPC_SMMR_SMRSTEN> | SUPC_MR_CORSMRSTEN_Msk</#if>
     <#t>;
