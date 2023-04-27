@@ -1,4 +1,4 @@
-<#assign BARE_METAL = (!HarmonyCore.SELECT_RTOS?? || HarmonyCore.SELECT_RTOS == "BareMetal")>
+<#assign BARE_METAL = ((!((HarmonyCore.SELECT_RTOS)??)) || HarmonyCore.SELECT_RTOS == "BareMetal")>
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
 <#assign dummyHandlers = [] />
 <#list NVIC_VECTOR_MIN..NVIC_VECTOR_MAX as i>
