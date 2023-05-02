@@ -1,5 +1,5 @@
 <#list 1..PORT_PIN_COUNT>
-"Pin Number","Pin ID","Custom Name","Function","Mode", "Direction","Latch","Pull Up","Pull Down","Drive Strength"
+Pin Number,Pin ID,Custom Name,Function,Mode, Direction,Latch,Pull Up,Pull Down${PORT_GROUP_PINCFG_ODRAIN?string(",Open Drain", "")}${PORT_GROUP_PINCFG_SLEWRATE?string(",Slew Rate Control","")}${PORT_GROUP_PINCFG_DRVSTR?string(",Drive Strength","")}
     <#items as INDEX>
         <#assign PORT_GROUP = .vars["PIN_" + INDEX + "_PORT_GROUP"]>
         <#if PORT_GROUP !="">
@@ -25,7 +25,21 @@
                 <#assign PULL_UP = "">
                 <#assign PULL_DOWN = "">
             </#if>
-            <#assign DRIVE_STRENGTH = .vars["PIN_" + INDEX + "_DRVSTR"]>
+            <#if PORT_GROUP_PINCFG_ODRAIN>
+                <#assign OPEN_DRAIN = (.vars["PIN_" + INDEX + "_ODRAIN"] == "True")?string("Yes", "No")>
+            <#else>
+                <#assign OPEN_DRAIN = "">
+            </#if>
+            <#if PORT_GROUP_PINCFG_SLEWRATE>
+                <#assign SLEW_RATE = .vars["PIN_" + INDEX + "_SLEWRATE"]>
+            <#else>
+                <#assign SLEW_RATE = "">
+            </#if>
+            <#if PORT_GROUP_PINCFG_DRVSTR>
+                <#assign DRIVE_STR = .vars["PIN_" + INDEX + "_DRVSTR"]>
+            <#else>
+                <#assign DRIVE_STR = "">
+            </#if>
             <#assign FUNCTION = .vars["PIN_" + INDEX + "_FUNCTION_TYPE"]>
             <#if FUNCTION == "">
                 <#assign FUNCTION = "Available">
@@ -46,7 +60,7 @@
                     <#assign LATCH = "n/a">
                 </#if>
             </#if>
-${PIN_NUMBER},${PIN_ID},${CUSTOM_NAME},${FUNCTION},${MODE},${DIRECTION},${LATCH},${PULL_UP},${PULL_DOWN},${DRIVE_STRENGTH}
+${PIN_NUMBER},${PIN_ID},${CUSTOM_NAME},${FUNCTION},${MODE},${DIRECTION},${LATCH},${PULL_UP},${PULL_DOWN}${PORT_GROUP_PINCFG_ODRAIN?string("," + OPEN_DRAIN, "")}${PORT_GROUP_PINCFG_SLEWRATE?string("," + SLEW_RATE, "")}${PORT_GROUP_PINCFG_DRVSTR?string("," + DRIVE_STR, "")}
         </#if>
     </#items>
 </#list>
