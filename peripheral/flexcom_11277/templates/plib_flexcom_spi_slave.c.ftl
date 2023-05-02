@@ -147,7 +147,7 @@ size_t ${FLEXCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
         rdSize = rdInIndex;
     }
 
-<#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
+<#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
     (void) mem_copy(pRdBuffer, ${FLEXCOM_INSTANCE_NAME}_ReadBuffer, rdSize);
 <#else>
     (void) mem_copy(pRdBuffer, ${FLEXCOM_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
@@ -170,7 +170,7 @@ size_t ${FLEXCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
         wrSize = ${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE;
     }
 
-<#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
+<#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
    (void) mem_copy(${FLEXCOM_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
 <#else>
    (void) mem_copy(${FLEXCOM_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
@@ -246,7 +246,7 @@ FLEXCOM_SPI_SLAVE_ERROR ${FLEXCOM_INSTANCE_NAME}_SPI_ErrorGet(void)
 
 void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 {
-<#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
+<#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
     uint8_t txRxData = 0U;
 <#else>
     uint16_t txRxData = 0U;
