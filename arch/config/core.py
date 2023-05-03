@@ -824,6 +824,9 @@ def instantiateComponent( coreComponent ):
     systemConfigMWList =        coreComponent.createListSymbol( "LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION",        None )
     systemConfigAppList =       coreComponent.createListSymbol( "LIST_SYSTEM_CONFIG_H_APPLICATION_CONFIGURATION",       None )
 
+    # list for sys_task.h file
+    taskHandleDeclList =        coreComponent.createListSymbol( "LIST_SYSTEM_TASKS_HANDLE_DECLARATION",     None )
+
     # list for task.c file
     taskSysList =               coreComponent.createListSymbol( "LIST_SYSTEM_TASKS_C_CALL_SYSTEM_TASKS",    None )
     taskDrvList =               coreComponent.createListSymbol( "LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS",    None )
