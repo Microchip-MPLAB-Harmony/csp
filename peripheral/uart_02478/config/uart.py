@@ -942,7 +942,6 @@ def instantiateComponent(uartComponent):
         uartSym_UxMODE_SLPEN.addKey( ii['key'],ii['value'], ii['desc'] )
 
     uartSym_UxMODE = uartComponent.createHexSymbol("UMODE_VALUE", None)
-    uartSym_UxMODE.setDefaultValue((int(uartSym_UxMODE_BRGH.getSelectedValue()) << 3) | (int(uartSym_UxMODE_PDSEL.getSelectedValue()) << 1) | (int(uartSym_UxMODE_STSEL.getSelectedValue()) << 0))
     uartSym_UxMODE.setVisible(False)
     uartSym_UxMODE.setDependencies(u1ModecombineValues,["UART_STSEL", "UART_PDSEL", "UART_BRGH", "UART_RXINV", "UART_ABAUD", "UART_LPBACK", "UART_WAKE", "UART_RTSMD", "UART_IREN", "UART_SIDL", "UART_RUNOVF", "UART_CLKSEL", "UART_SLPEN", "UART_UEN_SELECT"])
 
@@ -973,6 +972,7 @@ def instantiateComponent(uartComponent):
     brgVal = baudRateCalc(uartClkValue.getValue(), uartBaud.getValue())
     #Use setValue instead of setDefaultValue to store symbol value in default.xml
     uartBRGValue.setValue(brgVal, 1)
+    uartSym_UxMODE.setDefaultValue((int(uartSym_UxMODE_BRGH.getSelectedValue()) << 3) | (int(uartSym_UxMODE_PDSEL.getSelectedValue()) << 1) | (int(uartSym_UxMODE_STSEL.getSelectedValue()) << 0))
 
     ############################################################################
     #### Dependency ####
