@@ -65,6 +65,8 @@ def instantiateComponent(fcwComponent):
     Log.writeInfoMessage("Running " + fcwInstanceName.getValue())
 
     fcwFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FCR_PFM\"]")
+    if fcwFlashNode == None:
+        fcwFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FLASH_PFM\"]")
 
     ##### Do not modify below symbol names as they are used by Memory Driver #####
 
@@ -208,3 +210,9 @@ def instantiateComponent(fcwComponent):
     fcwSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     fcwSystemInitFile.setType("STRING")
     fcwSystemInitFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        fcwSym_HeaderFile.setSecurity("SECURE")
+        fcwSym_SourceFile.setSecurity("SECURE")
+        fcwSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+        fcwSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")

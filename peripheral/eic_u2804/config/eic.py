@@ -89,6 +89,7 @@ def codeGenerationForEVCCTRL_EXTINTEO(symbol, event):
         symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
         if isEVCTL:
             Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+
 def fileGenLogic(symbol, event):
     global EICfilesArray
     if int(Database.getSymbolValue(event["namespace"], "EIC_NONSEC")) > 0 or int(Database.getSymbolValue(event["namespace"], "NMI_IS_NON_SECURE")) == 1:

@@ -91,6 +91,16 @@ void PCR_PrivilegeEnUnLock (void)
     PCR_REGS->PCR_PRIV_EN_LOCK &= ~PCR_PRIV_EN_LOCK_LOCK_EN_Msk;
 }
 
+uint32_t PCR_PowerFailResetStatusRegGet(void)
+{
+    return VTR_REG_BANK_REGS->VTR_REG_BANK_PFRS;
+}
+
+void PCR_PowerFailResetStatusClear(uint32_t pfsr_bits)
+{
+    VTR_REG_BANK_REGS->VTR_REG_BANK_PFRS = pfsr_bits;
+}
+
 
 <#list 0..(NUM_SLEEP_EN_REGS-1) as n>
 <#assign PCR_SLEEP_EN         = "PCR_SLEEP_ENABLE" + n + "_REG_INDEX">

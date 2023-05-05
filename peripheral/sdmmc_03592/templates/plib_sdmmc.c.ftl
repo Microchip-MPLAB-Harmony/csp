@@ -365,8 +365,7 @@ void ${SDMMC_INSTANCE_NAME}_DmaSetup (
         ${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[i-1U].attribute |= (uint16_t)(SDMMC_DESC_TABLE_ATTR_END);
 
         /* Clean the cache associated with the modified descriptors */
-        uint32_t totalCacheSize = i * sizeof(SDMMC_ADMA_DESCR);
-        DCACHE_CLEAN_BY_ADDR(${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable, (int32_t)(totalCacheSize));
+        DCACHE_CLEAN_BY_ADDR(${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable, (int32_t)(i * sizeof(SDMMC_ADMA_DESCR)));
 
         /* Set the starting address of the descriptor table */
         ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_ASAR = (uint32_t)(&${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[0]);

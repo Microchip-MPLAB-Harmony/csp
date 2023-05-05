@@ -99,6 +99,8 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 }
 
 <#if FLEXCOM_USART_INTERRUPT_MODE_ENABLE == true>
+
+<#if !(USE_USART_RECEIVE_DMA??) || (USE_USART_RECEIVE_DMA == false)>
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
@@ -159,6 +161,8 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
     return;
 }
 
+</#if>
+<#if !(USE_USART_TRANSMIT_DMA??) || (USE_USART_TRANSMIT_DMA == false)>
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true)
@@ -218,13 +222,37 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 
     return;
 }
+</#if>
 
 void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Channel status */
     uint32_t channelStatus = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR;
-    uint32_t interruptMask = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IMR;
 
+    <#if !(USE_USART_RECEIVE_DMA??) || (USE_USART_RECEIVE_DMA == false)>
+    uint32_t interruptMask = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IMR;
+    </#if>
+
+    <#if (USE_USART_TRANSMIT_DMA?? && USE_USART_TRANSMIT_DMA == true) || (USE_USART_RECEIVE_DMA?? && USE_USART_RECEIVE_DMA == true)>
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_ERRCLR_Msk;
+    </#if>
+
+    <#if USE_USART_RECEIVE_DMA?? && USE_USART_RECEIVE_DMA == true>
+    if ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTSR & FLEX_PTSR_RXTEN_Msk) && (channelStatus & FLEX_US_CSR_ENDRX_Msk))
+    {
+        if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
+        {
+            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = false;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_RXTDIS_Msk;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_ENDRX_Msk;
+
+            if( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback != NULL )
+            {
+                ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxContext);
+            }
+        }
+    }
+    <#else> 
     /* Error status */
     uint32_t errorStatus = (channelStatus & (FLEX_US_CSR_OVRE_Msk | FLEX_US_CSR_FRAME_Msk | FLEX_US_CSR_PARE_Msk));
 
@@ -253,15 +281,41 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
         }
     }
 
+    /* Receiver status */
+    if(channelStatus & FLEX_US_CSR_RXRDY_Msk)
+    {
+        ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
+    }
+    </#if>
+
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
 
     /* Clear the FIFO related interrupt flags */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
 </#if>
 
-    ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
+    <#if USE_USART_TRANSMIT_DMA?? && USE_USART_TRANSMIT_DMA == true>
+    if ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTSR & FLEX_PTSR_TXTEN_Msk) && (channelStatus & FLEX_US_CSR_ENDTX_Msk))
+    {
+        if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true)
+        {
+            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus = false;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_TXTDIS_Msk;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_ENDTX_Msk;
 
-    ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
+            if( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback != NULL )
+            {
+                ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txContext);
+            }
+        }
+    }
+    <#else>
+    /* Transmitter status */
+    if(channelStatus & FLEX_US_CSR_TXRDY_Msk)
+    {
+        ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
+    }
+    </#if>
 
 }
 
@@ -542,6 +596,13 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = true;
             status = true;
 
+<#if USE_USART_RECEIVE_DMA?? && USE_USART_RECEIVE_DMA == true>
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_RPR = (uint32_t) buffer;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_RCR = (uint32_t) size;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_RXTEN_Msk;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_ENDRX_Msk;
+<#else>
+
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
 
             /* Clear RX FIFO */
@@ -566,6 +627,8 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             /* Enable Read, Overrun, Parity and Framing error interrupts */
             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = (FLEX_US_IER_RXRDY_Msk | FLEX_US_IER_FRAME_Msk | FLEX_US_IER_PARE_Msk | FLEX_US_IER_OVRE_Msk);
 </#if>
+
+</#if>
         }
     }
 
@@ -587,6 +650,13 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize = 0;
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus = true;
             status = true;
+
+        <#if USE_USART_TRANSMIT_DMA?? && USE_USART_TRANSMIT_DMA == true>
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TPR = (uint32_t) buffer;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_TCR = (uint32_t) size;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_TXTEN_Msk;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_ENDTX_Msk;
+        <#else>
 
             /* Initiate the transfer by sending first byte */
             while( (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXRDY_Msk) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize < ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize) )
@@ -611,8 +681,9 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
                 ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIER = FLEX_US_FIER_TXFTHF_Msk;
             }
 <#else>
-             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_TXRDY_Msk;
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_TXRDY_Msk;
 </#if>
+</#if> 
         }
     }
 

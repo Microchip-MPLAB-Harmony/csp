@@ -48,6 +48,8 @@
 /* MISRAC 2012 deviation block start */
 /* MISRA C-2012 Rule 21.2 deviated four times.  Deviation record ID -  H3_MISRAC_2012_R_21_2_DR_1 */
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma coverity compliance block deviate:4 "MISRA C-2012 Rule 21.2" "H3_MISRAC_2012_R_21_2_DR_1"
 </#if>
 
@@ -141,5 +143,6 @@ int write(int handle, void * buffer, size_t count)
 
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
 #pragma coverity compliance end_block "MISRA C-2012 Rule 21.2"
+#pragma GCC diagnostic pop
 </#if>
 /* MISRAC 2012 deviation block end */

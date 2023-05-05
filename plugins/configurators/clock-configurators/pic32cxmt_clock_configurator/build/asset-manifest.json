@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "./static/css/main.aefa0951.css",
+    "main.js": "./static/js/main.01167c34.js",
+    "static/js/976.7856f0ee.chunk.js": "./static/js/976.7856f0ee.chunk.js",
+    "static/media/primeicons.svg": "./static/media/primeicons.c6e2053303524e39530c.svg",
+    "static/media/cleaned_PIC32CXMT_clock_dual_core.svg": "./static/media/cleaned_PIC32CXMT_clock_dual_core.9b711bf08b78a747ed8997969f8fe9d7.svg",
+    "static/media/cleaned_PIC32CXMT_clock_single_core_new.svg": "./static/media/cleaned_PIC32CXMT_clock_single_core_new.4434814eab0b223bf2086b906c0261c1.svg",
+    "static/media/primeicons.eot": "./static/media/primeicons.7fc4d8e224d1ff1b9c62.eot",
+    "static/media/primeicons.woff": "./static/media/primeicons.449aa8c65cdc5c2a8686.woff",
+    "static/media/primeicons.ttf": "./static/media/primeicons.91bacab1f083f2795272.ttf",
+    "index.html": "./index.html",
+    "main.aefa0951.css.map": "./static/css/main.aefa0951.css.map",
+    "main.01167c34.js.map": "./static/js/main.01167c34.js.map",
+    "976.7856f0ee.chunk.js.map": "./static/js/976.7856f0ee.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.aefa0951.css",
+    "static/js/main.01167c34.js"
+  ]
+}

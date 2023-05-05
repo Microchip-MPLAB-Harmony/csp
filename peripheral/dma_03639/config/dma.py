@@ -37,6 +37,12 @@ global enableAllDMAPriorityInterrupts
 global createPeripheralTrigger_IDMap
 global updateDMAInterruptWarringStatus
 
+global DMACfilesArray
+DMACfilesArray = []
+
+global dmacInterruptVectorSecurity
+dmacInterruptVectorSecurity = []
+
 global dmaInstanceName
 dmaInstanceName = ""
 
@@ -79,6 +85,30 @@ triggerSettings = {
 ################################################################################
 
 #-------------------------------------------------------------------------------------------------------------------------#
+def dmacfileUpdate(symbol, event):
+    global DMACfilesArray
+    global dmacInterruptVectorSecurity
+    if event["value"] == False:
+        DMACfilesArray[0].setSecurity("SECURE")
+        DMACfilesArray[1].setSecurity("SECURE")
+        DMACfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        DMACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        if len(dmacInterruptVectorSecurity) != 1:
+            for vector in dmacInterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, False)
+        else:
+            Database.setSymbolValue("core", dmacInterruptVectorSecurity, False)
+    else:
+        DMACfilesArray[0].setSecurity("NON_SECURE")
+        DMACfilesArray[1].setSecurity("NON_SECURE")
+        DMACfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        DMACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        if len(dmacInterruptVectorSecurity) != 1:
+            for vector in dmacInterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, True)
+        else:
+            Database.setSymbolValue("core", dmacInterruptVectorSecurity, True)
+            
 def getDMAVectorName(priority):
     global dmaVectorNameList
 
@@ -154,12 +184,14 @@ def DMAInterruptConfig(coreComponent,dmaMenu):
     global dmaVectorNameList
     global enableAllDMAPriorityInterrupts
     global updateDMAInterruptWarringStatus
+    global dmaInstanceName
     InterruptVectorUpdate = []
+    global dmacInterruptVectorSecurity
 
     vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
     for id in range(0, len(vectorValues)):
-        if vectorValues[id].getAttribute("module-instance") == "DMA":
+        if vectorValues[id].getAttribute("module-instance") == dmaInstanceName.getValue():
             dmaVectorName = vectorValues[id].getAttribute("name")
             dmaVectorNameList.append(dmaVectorName)
 
@@ -180,12 +212,21 @@ def DMAInterruptConfig(coreComponent,dmaMenu):
     for n in range(0, len(dmaVectorNameList)):
         vectorName = dmaVectorNameList[n]
         InterruptVectorUpdate.append("core." + vectorName + "_INTERRUPT_ENABLE_UPDATE")
+        dmacInterruptVectorSecurity.append(vectorName + "_SET_NON_SECURE")
 
     # Interrupt Warning status
     dmaSym_IntEnComment = coreComponent.createCommentSymbol("DMA_INTERRUPT_ENABLE_COMMENT", dmaMenu)
     dmaSym_IntEnComment.setVisible(False)
     dmaSym_IntEnComment.setLabel("Warning!!! DMA Interrupt is Disabled in Interrupt Manager")
-    dmaSym_IntEnComment.setDependencies(updateDMAInterruptWarringStatus, InterruptVectorUpdate)
+    dmaSym_IntEnComment.setDependencies(updateDMAInterruptWarringStatus, InterruptVectorUpdate)  
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        dmacIsNonSecure = Database.getSymbolValue("core", dmaInstanceName.getValue() + "_IS_NON_SECURE")
+        if len(dmacInterruptVectorSecurity) != 1:
+            for vector in dmacInterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, dmacIsNonSecure)
+        else:
+            Database.setSymbolValue("core", dmacInterruptVectorSecurity, dmacIsNonSecure)
 
 #-------------------------------------------------------------------------------------------------------------------------#
 def onDMAChannelEnable(symbol, event):
@@ -418,6 +459,7 @@ def DMA_ATDF_Read(coreComponent, dmaEnable):
     global numGenerators
     global numUsers
     global createPeripheralTrigger_IDMap
+    global dmaInstanceName
 
     dmaChannelNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMA\"]/register-group@[name=\"DMA\"]").getChildren()
     for id in range(0, len(dmaChannelNode)):
@@ -426,12 +468,12 @@ def DMA_ATDF_Read(coreComponent, dmaEnable):
 
     generatorValues = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators").getChildren()
     for id in range(0, len(generatorValues)):
-        if generatorValues[id].getAttribute("module-instance") == "DMA":
+        if generatorValues[id].getAttribute("module-instance") == dmaInstanceName.getValue():
             numGenerators = numGenerators + 1
 
     usersValues = ATDF.getNode("/avr-tools-device-file/devices/device/events/users").getChildren()
     for id in range(0, len(usersValues)):
-        if usersValues[id].getAttribute("module-instance") == "DMA":
+        if usersValues[id].getAttribute("module-instance") == dmaInstanceName.getValue():
             numUsers = numUsers + 1
 
     #Two types of actions DMA can take upon receiving an event. Either start transfer or take action defined in EVAUXACT. Hence divide by 2.
@@ -852,3 +894,27 @@ dmaSystemDefFile.setSourcePath("../peripheral/dma_03639/templates/system/definit
 dmaSystemDefFile.setMarkup(True)
 dmaSystemDefFile.setEnabled(False)
 dmaSystemDefFile.setDependencies(fileGenerationDep, ["DMA_ENABLE"])
+
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    global DMACfilesArray
+    dmacIsNonSecure = Database.getSymbolValue("core", dmaInstanceName.getValue() + "_IS_NON_SECURE")
+
+    dmacDummyFile = coreComponent.createBooleanSymbol("DMA_SECURe_FILE", None)
+    dmacDummyFile.setVisible(False)
+    dmacDummyFile.setDependencies(dmacfileUpdate, ["core." + dmaInstanceName.getValue() + "_IS_NON_SECURE"])
+    
+    DMACfilesArray.append(dmaHeaderFile)
+    DMACfilesArray.append(dmaSourceFile)
+    DMACfilesArray.append(dmaSystemInitFile)
+    DMACfilesArray.append(dmaSystemDefFile)
+    if len(dmacInterruptVectorSecurity) != 1:
+        for vector in dmacInterruptVectorSecurity:
+            Database.setSymbolValue("core", vector, dmacIsNonSecure)
+    else:
+        Database.setSymbolValue("core", dmacInterruptVectorSecurity, dmacIsNonSecure)
+
+    if dmacIsNonSecure == False:
+        DMACfilesArray[0].setSecurity("SECURE")
+        DMACfilesArray[1].setSecurity("SECURE")
+        DMACfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        DMACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")

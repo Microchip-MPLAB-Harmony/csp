@@ -88,6 +88,10 @@ eraseFunctionLock.addKey("0x0", "0", "Not Locked")
 eraseFunctionLock.addKey("0x6", "1", "Disabled(EFL bits are read only)")
 eraseFunctionLock.addKey("0x7", "2", "Disabled(EFL bits are programmable)")
 
+cpuCoreID = coreComponent.createIntegerSymbol("CPU_CORE_ID", None)
+cpuCoreID.setDefaultValue(0)
+cpuCoreID.setVisible(False)
+
 # SysTick External Clock Source
 systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK",
                                                                     devCfgMenu)
@@ -165,12 +169,12 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwdt_04686/config/dwdt.py
 
 # Load Clock
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32cx_mt/config/clk.py")
-coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_UI_MANAGER_ID_PIC32CX_MT", {"plugin_name": "Clock Manager", "main_html_path": "../csp/peripheral/clk_pic32cx_mt/plugins/pic32cxmt_clock_manager/build/index.html"})
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_UI_MANAGER_ID_PIC32CX_MT", {"plugin_name": "Clock Manager", "main_html_path": "../csp/plugins/configurators/clock-configurators/pic32cxmt_clock_configurator/build/index.html"})
 
 #Load RSTC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/rstc_04678/config/rstc.py")
 
-# # load NVIC
+# load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
 coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
 
@@ -187,6 +191,11 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/cmcc_11108/config/cmcc.py
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11264/plugin/pio_11264.jar")
+
+#Load SUPC
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/supc_04670/config/supc.py")
+
+
 
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SEFC\"]")
 modules = periphNode.getChildren()

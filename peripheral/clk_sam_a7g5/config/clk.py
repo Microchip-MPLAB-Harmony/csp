@@ -138,7 +138,7 @@ def update_mainck(symbol, event):
 
 def update_pll_core_freq(symbol, event):
     pll = symbol.getID().split("_")[0]
-    
+
     source_freq = event['source'].getSymbolValue(pll_default_config_dict.get(pll)["source"])
     mul = event['source'].getSymbolValue("CLK_{0}_MUL".format(pll))
     fracr = event['source'].getSymbolValue("CLK_{0}_FRACR".format(pll))
@@ -157,7 +157,7 @@ def update_pll_pmc_freq(symbol, event):
         symbol.setValue(int(round((pllcore_clk / (divpmc + 1)), -2)))
     else:
         symbol.setValue(0)
-    
+
 
 def update_pll_io_freq(symbol, event):
     pll = symbol.getID().split("_")[0]
@@ -255,7 +255,7 @@ def setup_adc_arm_clock_frequency(local_comp, remote_comp, module_name, instance
         clock_id = 26
 
     pcr_menu = remote_comp.getSymbolByID("CLK_PCR_MENU")
-    
+
     #create a dummy clock id symbol so that the clock code generates code for GCLK
     id_name_map = local_comp.createStringSymbol("CLK_ID_NAME_" + str(clock_id), pcr_menu)
     id_name_map.setVisible(False)
@@ -269,7 +269,7 @@ def setup_adc_arm_clock_frequency(local_comp, remote_comp, module_name, instance
 
 
 def setup_tc_clock_frequency(local_comp, remote_comp, module_name, instance_name):
-    pcr_menu = remote_comp.getSymbolByID("CLK_PCR_MENU")   
+    pcr_menu = remote_comp.getSymbolByID("CLK_PCR_MENU")
     for channel in range(4):
         tc_ch_freq = local_comp.createIntegerSymbol("{0}_CH{1}_CLOCK_FREQUENCY".format(instance_name, channel), pcr_menu)
         tc_ch_freq.setVisible(False)
@@ -321,7 +321,7 @@ def setup_pit64b_clock_frequency(local_comp, remote_comp, module_name, instance_
     pcr_freq.setVisible(False)
     pcr_freq.setReadOnly(True)
     pcr_freq.setDefaultValue(remote_comp.getSymbolValue("MCK1_FREQUENCY"))
-    pcr_freq.setDependencies(update_pit64b_clock_frequency, 
+    pcr_freq.setDependencies(update_pit64b_clock_frequency,
                                 ["MCK1_FREQUENCY",
                                 "{0}_GCLK_FREQUENCY".format(instance_name),
                                 "{0}.SGCLK".format(instance_name.lower())])
@@ -339,13 +339,13 @@ def update_tc_clock_frequency(symbol, event):
     tc_comp = Database.getComponentByID("tc{0}".format(instance_num))
     clk_comp = Database.getComponentByID("core")
     mck1_freq = clk_comp.getSymbolValue("MCK1_FREQUENCY")
-    
+
     # check if component exists and the relevant channel is enabled
     if tc_comp is not None and tc_comp.getSymbolValue("TC{0}_ENABLE".format(channel_num)):
         # Find the current clock source for the channel
         clk_src_sym = tc_comp.getSymbolByID("TC{0}_CMR_TCCLKS".format(channel_num))
         clk_src = clk_src_sym.getKeyDescription(clk_src_sym.getValue())
-        
+
         # if clock source is processor independent GCLK
         if (clk_src == "GCLK"):
             clk_frequency = clk_comp.getSymbolValue("TC{0}_GCLK_FREQUENCY".format(instance_num))
@@ -424,7 +424,7 @@ if __name__ == "__main__":
     sckc_menu = clk_component.createMenuSymbol("CLK_SCKC_MENU", menu)
     sckc_menu.setLabel("Slow Clock (SCKC)")
     sckc_menu.setDescription("Slow Clock Controller (SCKC)")
-    
+
     td_oscel_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SCKC"]/register-group@[name="SCKC"]/register@[name="SCKC_CR"]/bitfield@[name="TD_OSCSEL"]')
     td_oscel_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SCKC"]/value-group@[name="'+td_oscel_node.getAttribute("values")+'"]')
     td_oscel = clk_component.createKeyValueSetSymbol("CLK_TD_OSCSEL", sckc_menu)
@@ -434,7 +434,7 @@ if __name__ == "__main__":
     td_oscel.setOutputMode("Key")
     for value in td_oscel_vg_node.getChildren():
         td_oscel.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
-    
+
     td_slck = clk_component.createIntegerSymbol("TD_SLOW_CLOCK_FREQUENCY", sckc_menu)
     td_slck.setReadOnly(True)
     value = 0
@@ -459,7 +459,7 @@ if __name__ == "__main__":
     moscrcen.setLabel(moscrcen_node.getAttribute("name"))
     moscrcen.setDescription(moscrcen_node.getAttribute("caption"))
     moscrcen.setDefaultValue(True)
-    
+
     moscxten_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCXTEN"]')
     moscxten = clk_component.createBooleanSymbol("CLK_MOSCXTEN", mainck_menu)
     moscxten.setLabel(moscxten_node.getAttribute("name"))
@@ -511,9 +511,9 @@ if __name__ == "__main__":
     pll_list = ["CPUPLL", "SYSPLL", "DDRPLL", "IMGPLL", "BAUDPLL", "AUDIOPLL", "ETHPLL"]
 
     #pll freqs
-    
+
     global pll_default_config_dict
-    pll_default_config_dict = { 
+    pll_default_config_dict = {
                         "CPUPLL": {"source": "MAINCK_FREQUENCY", "ioclock": False, "enable": True, "mul": 94, "fracr": 0, "div": 1},
                         "SYSPLL": {"source": "MAINCK_FREQUENCY", "ioclock": False, "enable": True, "mul": 62, "fracr": 0, "div": 1},
                         "DDRPLL": {"source": "MAINCK_FREQUENCY", "ioclock": False, "enable": False, "mul": 0, "fracr": 0, "div": 0},
@@ -523,7 +523,7 @@ if __name__ == "__main__":
                         "ETHPLL": {"source": "CLK_MOSCXT_FREQ", "ioclock": True, "enable": False, "mul": 0, "fracr": 0, "div": 0},
                     }
 
-                    
+
     for index, pll in enumerate(pll_list):
         pll_menu = clk_component.createMenuSymbol("CLK_{0}_MENU".format(pll), menu)
         pll_menu.setLabel(pll)
@@ -582,7 +582,7 @@ if __name__ == "__main__":
             pll_src_freq = mainck.getValue()
         else:
             pll_src_freq = moscxt_freq.getValue()
-        
+
         if pll_mul.getValue() > 0:
             pll_core_frequency.setDefaultValue(int(pll_src_freq * (pll_mul.getValue() + 1 + (float(pll_fracr.getValue()) / pow(2,22)))))
         else:
@@ -590,7 +590,7 @@ if __name__ == "__main__":
         pll_core_frequency.setDependencies(update_pll_core_freq, [  pll_default_config_dict.get(pll)["source"],
                                                                     "CLK_{0}_MUL".format(pll),
                                                                     "CLK_{0}_FRACR".format(pll)])
-        
+
         pll_pmc_frequency = clk_component.createIntegerSymbol("{0}_FREQUENCY".format(pll), pll_menu)
         pll_pmc_frequency.setReadOnly(True)
         if pll_en.getValue() == True:
@@ -615,7 +615,7 @@ if __name__ == "__main__":
             pll_enio.setLabel(pll_enio_node.getAttribute("name"))
             pll_enio.setDescription(pll_enio_node.getAttribute("caption"))
             pll_enio.setDefaultValue(False)
-        
+
             pll_io_frequency = clk_component.createIntegerSymbol("{0}_IO_FREQUENCY".format(pll), pll_menu)
             pll_io_frequency.setReadOnly(True)
             if pll_enio.getValue() == True:
@@ -625,7 +625,7 @@ if __name__ == "__main__":
             pll_io_frequency.setDependencies(update_pll_pmc_freq, ["CLK_{0}_ENIOPLLCK".format(pll),
                                                                    "{0}_CORE_FREQUENCY".format(pll),
                                                                    "CLK_{0}_DIVIO".format(pll)])
-                                                     
+
 
     #Processor Clock
     cpu_menu = clk_component.createMenuSymbol("CLK_CPU_MENU", menu)
@@ -682,7 +682,7 @@ if __name__ == "__main__":
         src_freq = clk_remote_component.getSymbolValue("CPUPLL_FREQUENCY")
     else:
         src_freq = clk_remote_component.getSymbolValue("SYSPLL_FREQUENCY")
-        
+
     pres_value = int(cpu_pres.getSelectedKey().split("CLK_")[1])
     fclk_freq.setDefaultValue(src_freq/pres_value)
     fclk_freq.setDependencies(update_fclk_freq, ["MAINCK_FREQUENCY", "CPUPLL_FREQUENCY", "SYSPLL_FREQUENCY", "CLK_CPU_CKR_PRES"])
@@ -696,21 +696,21 @@ if __name__ == "__main__":
     mck0_freq.setReadOnly(True)
     mck0_freq.setDefaultValue(fclk_freq.getValue()/(int(cpu_mdiv.getSelectedKey().split("PCK_DIV")[1])))
     mck0_freq.setDependencies(update_mck0_freq, ["FCLK_FREQUENCY", "CLK_CPU_CKR_MDIV"])
-    
-    
+
+
     #MCKx clocks
     mckx_config_dict = {1: [["MD_SLOW_CLK", "MAINCK", "MCK0", "SYSPLL"],"SYSPLL", "MASTER_DIV2"],
                 2: [["DDRPLL"], "DDRPLL", 0],
                 3: [["MD_SLOW_CLK", "MAINCK", "MCK0", "SYSPLL", "DDRPLL", "IMGPLL"], "MD_SLOW_CLK", "MASTER_DIV1"],
                 4: [["MD_SLOW_CLK", "MAINCK", "MCK0", "SYSPLL"], "SYSPLL", "MASTER_DIV1"]
                 }
-    
+
     mckx_menu = clk_component.createMenuSymbol("CLK_MCKx_MENU", menu)
     mckx_menu.setLabel("MCKx Clock")
 
     mckx_css_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_MCR"]/bitfield@[name="CSS"]')
     mckx_css_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+mckx_css_node.getAttribute("values")+'"]')
-    
+
     mckx_div_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_MCR"]/bitfield@[name="DIV"]')
     mckx_div_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+mckx_div_node.getAttribute("values")+'"]')
     for x in range(1, 5):
@@ -754,7 +754,7 @@ if __name__ == "__main__":
             mckx_freq_deps.append(src + "_FREQUENCY")
         mckx_freq.setDependencies(update_mckx_freq, mckx_freq_deps)
 
-    
+
     #Set bootloader defaults to the clock generator
     if bootloader_clocks.getValue():
         setup_bootloader_defaults(bootloader_clocks.getComponent(), True)
@@ -763,7 +763,7 @@ if __name__ == "__main__":
     pck_menu = clk_component.createMenuSymbol("CLK_PCK_MENU", menu)
     pck_menu.setLabel("PCK")
     pck_menu.setDescription("Programmable Clocks")
-    
+
     num_pcks = int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PCK"]').getAttribute("count"))
     num_pckx_sym = clk_component.createIntegerSymbol("CLK_NUM_PCKS", pck_menu)
     num_pckx_sym.setVisible(False)
@@ -801,7 +801,7 @@ if __name__ == "__main__":
         if pckx_en.getValue() == True:
             input_freq = pckx_freq.getComponent().getSymbolValue(pckx_css.getKey(pckx_css.getValue())+"_FREQUENCY")
         pckx_freq.setDefaultValue(input_freq / (pckx_pres.getValue() + 1))
- 
+
         pckx_freq.setDependencies(update_pck_freq, pckx_freq_deps)
 
     #peripheral clock controller
@@ -816,7 +816,7 @@ if __name__ == "__main__":
                     "ASRC": (["AUDIOPLL"], 200, setup_generic_gclk_module_clock_frequency),
                     "CSI": (["DDRPLL", "IMGPLL"], 27, setup_generic_gclk_module_clock_frequency),
                     "FLEXCOM": (["SYSPLL", "BAUDPLL"], 200, setup_generic_gclk_module_clock_frequency),
-                    "GEMAC": (["ETHPLL"], 125, setup_generic_gclk_module_clock_frequency),
+                    "GMAC": (["ETHPLL"], 125, setup_generic_gclk_module_clock_frequency),
                     "I2SMCC": (["SYSPLL", "AUDIOPLL"], 100, setup_generic_gclk_module_clock_frequency),
                     "MCAN": (["SYSPLL", "BAUDPLL"], 200, setup_mcan_clock_frequency),
                     "PDMC":(["SYSPLL", "AUDIOPLL"], 50, setup_generic_gclk_module_clock_frequency),
@@ -828,7 +828,7 @@ if __name__ == "__main__":
                     "TC": (["SYSPLL", "IMGPLL", "BAUDPLL", "AUDIOPLL", "ETHPLL"], 200, setup_tc_clock_frequency),
                     "TCPC":([], 0.32, setup_generic_gclk_module_clock_frequency)
                     }
-    
+
     #Create map of name->id's for Java code to know what peripheral supports generic clocks
     generic_clocks_map = coreComponent.createKeyValueSetSymbol("GCLK_INSTANCE_PID", gclk_menu)
     generic_clocks_map.setVisible(False)
@@ -846,7 +846,7 @@ if __name__ == "__main__":
                 for param_node in parameters_node[0].getChildren():
                     if param_node.getAttribute("name").startswith("CLOCK_ID"):
                         clock_id  = param_node.getAttribute("value")
-                        clock_id_suffix = instance_name + param_node.getAttribute("name").split("CLOCK_ID")[1] 
+                        clock_id_suffix = instance_name + param_node.getAttribute("name").split("CLOCK_ID")[1]
                         pcr_en = clk_component.createBooleanSymbol(clock_id_suffix + "_CLOCK_ENABLE", pcr_menu)
                         pcr_en.setLabel(clock_id_suffix)
 
@@ -856,14 +856,14 @@ if __name__ == "__main__":
                         id_name_map = clk_component.createStringSymbol("CLK_ID_NAME_" + clock_id, pcr_menu)
                         id_name_map.setVisible(False)
                         id_name_map.setDefaultValue(clock_id_suffix)
-                        
+
                         if module_node.getAttribute("name") not in gclk_map.keys():
                             pcr_freq = clk_component.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", pcr_menu)
                             pcr_freq.setVisible(False)
                             pcr_freq.setDefaultValue(clk_remote_component.getSymbolValue("MCK{0}_FREQUENCY".format(mck_id)))
                             pcr_freq.setDependencies(lambda symbol, event: symbol.setValue(event["value"]),
                              ['MCK{0}_FREQUENCY'.format(mck_id)])
-                        
+
                         if module_name  in gclk_map.keys():
                             if module_name not in ["TC0", "TC1"] or clock_id_suffix.endswith("CHANNEL0"):
                                 generic_clocks_map.addKey(instance_name, clock_id, "")
@@ -911,9 +911,9 @@ if __name__ == "__main__":
                 gclk_freq.setDependencies(update_gclk_freq, gclk_freq_deps)
 
                 #create module specific gclk dependencies
-                gclk_map[module_name][2](clk_component, clk_remote_component, module_name, instance_name) 
+                gclk_map[module_name][2](clk_component, clk_remote_component, module_name, instance_name)
 
-    
+
     max_clock_id_sym = clk_component.createIntegerSymbol("CLK_MAX_PERIPHERAL_ID", pcr_menu)
     max_clock_id_sym.setVisible(False)
     max_clock_id_sym.setDefaultValue(max_clock_id)
@@ -930,7 +930,7 @@ if __name__ == "__main__":
     system_counter_frequency.setReadOnly(True)
     system_counter_frequency.setDefaultValue(clk_remote_component.getSymbolValue("MAINCK_FREQUENCY"))
     system_counter_frequency.setDependencies(update_timestamp_frequency, ["SYSTEM_COUNTER_ENABLE", "MAINCK_FREQUENCY"])
-       
+
     config = Variables.get("__CONFIGURATION_NAME")
 
     cfile = clk_component.createFileSymbol("CLK_C", None)

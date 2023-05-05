@@ -85,16 +85,16 @@ typedef enum
     Refer to the specific device data sheet to determine availability.
 */
 
-#define    RSTC_RESET_CAUSE_GENERAL      (RSTC_SR_RSTTYP_GENERAL_RST_Val)         // First power reset
-#define    RSTC_RESET_CAUSE_BACKUP       (RSTC_SR_RSTTYP_BACKUP_RST_Val)          // VDD Core reset. Wakeup from Backup mode
-#define    RSTC_RESET_CAUSE_WDT0         (RSTC_SR_RSTTYP_WDT0_RST_Val)            // Watchdog 0 fault occurred
-#define    RSTC_RESET_CAUSE_SOFTWARE     (RSTC_SR_RSTTYP_SOFT_RST_Val)            // Processor reset requested by the software
-#define    RSTC_RESET_CAUSE_USER         (RSTC_SR_RSTTYP_USER_RST_Val)            // NRST pin detected low 
-#define    RSTC_RESET_CAUSE_CORE_SM      (RSTC_SR_RSTTYP_CORE_SM_RST_Val)         // Core Supply Monitor reset
-#define    RSTC_RESET_CAUSE_CPU_FAIL     (RSTC_SR_RSTTYP_CPU_FAIL_RST_Val)        // CPU clock failure detection occurred
-#define    RSTC_RESET_CAUSE_SLCK_XTAL    (RSTC_SR_RSTTYP_SLCK_XTAL_RST_Val)       // 32.768 kHz crystal failure detection fault
-#define    RSTC_RESET_CAUSE_WDT1         (RSTC_SR_RSTTYP_WDT1_RST_Val)            // Watchdog 1 fault occurred
-#define    RSTC_RESET_CAUSE_PORVDD3V3    (RSTC_SR_RSTTYP_PORVDD3V3_RST_Val)       // VDD3V3 PORVDD3V3 reset occurred
+#define    RSTC_RESET_CAUSE_GENERAL      (RSTC_SR_RSTTYP_GENERAL_RST)         // First power reset
+#define    RSTC_RESET_CAUSE_BACKUP       (RSTC_SR_RSTTYP_BACKUP_RST)          // VDD Core reset. Wakeup from Backup mode
+#define    RSTC_RESET_CAUSE_WDT0         (RSTC_SR_RSTTYP_WDT0_RST)            // Watchdog 0 fault occurred
+#define    RSTC_RESET_CAUSE_SOFTWARE     (RSTC_SR_RSTTYP_SOFT_RST)            // Processor reset requested by the software
+#define    RSTC_RESET_CAUSE_USER         (RSTC_SR_RSTTYP_USER_RST)            // NRST pin detected low
+#define    RSTC_RESET_CAUSE_CORE_SM      (RSTC_SR_RSTTYP_CORE_SM_RST)         // Core Supply Monitor reset
+#define    RSTC_RESET_CAUSE_CPU_FAIL     (RSTC_SR_RSTTYP_CPU_FAIL_RST)        // CPU clock failure detection occurred
+#define    RSTC_RESET_CAUSE_SLCK_XTAL    (RSTC_SR_RSTTYP_SLCK_XTAL_RST)       // 32.768 kHz crystal failure detection fault
+#define    RSTC_RESET_CAUSE_WDT1         (RSTC_SR_RSTTYP_WDT1_RST)            // Watchdog 1 fault occurred
+#define    RSTC_RESET_CAUSE_PORVDD3V3    (RSTC_SR_RSTTYP_PORVDD3V3_RST)       // VDD3V3 PORVDD3V3 reset occurred
 
 
 typedef uint32_t RSTC_RESET_CAUSE;
@@ -106,11 +106,15 @@ typedef void (*RSTC_CALLBACK) (uintptr_t context);
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
+<#if CPU_CORE_ID?? && CPU_CORE_ID == 0>
 void ${RSTC_INSTANCE_NAME}_Initialize (void);
 
+</#if>
 void ${RSTC_INSTANCE_NAME}_Reset (RSTC_RESET_TYPE type);
 
 RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void);
+
+bool ${RSTC_INSTANCE_NAME}_PMCResetStatusGet(void);
 <#if RSTC_MR_URSTEN == "No action">
 
 bool ${RSTC_INSTANCE_NAME}_NRSTPinRead (void);
@@ -127,7 +131,6 @@ void ${RSTC_INSTANCE_NAME}_CoProcessorPeripheralEnable(bool enable);
 
 void ${RSTC_INSTANCE_NAME}_CallbackRegister(RSTC_CALLBACK pCallback, uintptr_t context);
 </#if>
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

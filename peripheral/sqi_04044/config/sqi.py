@@ -24,8 +24,29 @@
 global sqiInstanceName
 global sqiLaneMode
 global sqiFlashStatusCheck
+global SQIfilesArray
+SQIfilesArray = []
+global InterruptVectorSecurity
 
 laneMode = ["SINGLE", "QUAD"]
+
+def fileUpdate(symbol, event):
+    global SQIfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        SQIfilesArray[0].setSecurity("SECURE")
+        SQIfilesArray[1].setSecurity("SECURE")
+        SQIfilesArray[2].setSecurity("SECURE")
+        SQIfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        SQIfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        SQIfilesArray[0].setSecurity("NON_SECURE")
+        SQIfilesArray[1].setSecurity("NON_SECURE")
+        SQIfilesArray[2].setSecurity("NON_SECURE")           
+        SQIfilesArray[3].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        SQIfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 def handleMessage(messageID, args):
     global sqiLaneMode
@@ -122,6 +143,7 @@ def instantiateComponent(sqiComponent):
     global sqiInterruptEnable
     global sqiLaneMode
     global sqiFlashStatusCheck
+    global InterruptVectorSecurity
 
     sqiInstanceName = sqiComponent.createStringSymbol("SQI_INSTANCE_NAME", None)
     sqiInstanceName.setVisible(False)
@@ -219,7 +241,13 @@ def instantiateComponent(sqiComponent):
     sqiInterruptHandler = sqiInstanceName.getValue() + "_INTERRUPT_HANDLER"
     sqiInterruptHandlerLock = sqiInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     sqiInterruptVectorUpdate = sqiInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptVectorSecurity = sqiInstanceName.getValue() + "_SET_NON_SECURE"
     sqiIrq_index = int(getIRQnumber(sqiInstanceName.getValue()))
+
+    # Confiure secure/non-secure interrupt
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        sqiIsNonSecure = Database.getSymbolValue("core", sqiComponent.getID().upper() + "_IS_NON_SECURE")
+        Database.setSymbolValue("core", InterruptVectorSecurity, sqiIsNonSecure)      
 
     sqiInterruptEnable = sqiComponent.createBooleanSymbol("INTERRUPT_ENABLE", sqiMenu)
     sqiInterruptEnable.setLabel("SQI Interrupt Enabled")
@@ -326,3 +354,22 @@ def instantiateComponent(sqiComponent):
     sqiSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     sqiSystemDefFile.setSourcePath("../peripheral/sqi_04044/templates/system/definitions.h.ftl")
     sqiSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global SQIfilesArray
+        sqiIsNonSecure = Database.getSymbolValue("core", sqiComponent.getID().upper() + "_IS_NON_SECURE")
+        SQIfilesArray.append(sqiCommonHeaderFile)
+        SQIfilesArray.append(sqiHeaderFile)
+        SQIfilesArray.append(sqiSourceFile)
+        SQIfilesArray.append(sqiSystemInitFile)
+        SQIfilesArray.append(sqiSystemDefFile)
+  
+
+        if sqiIsNonSecure == False:
+            sqiCommonHeaderFile.setSecurity("SECURE")
+            sqiHeaderFile.setSecurity("SECURE")
+            sqiHeaderFile.setSecurity("SECURE")
+            sqiSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            sqiSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+        sqiSystemDefFile.setDependencies(fileUpdate, ["core." + sqiComponent.getID().upper() + "_IS_NON_SECURE"])    

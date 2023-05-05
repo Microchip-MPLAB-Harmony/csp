@@ -25,7 +25,20 @@
 global  cmccHeaderFile
 global  cmccSourceFile
 global  cmccSystemDefFile
+global CMCCfilesArray
+CMCCfilesArray = []
 
+# Trustzone secure/non-secure file generation logic
+def fileUpdate(symbol, event):
+    global CMCCfilesArray
+    if event["value"] == False:
+        CMCCfilesArray[0].setSecurity("SECURE")
+        CMCCfilesArray[1].setSecurity("SECURE")
+        CMCCfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+    else:
+        CMCCfilesArray[0].setSecurity("NON_SECURE")
+        CMCCfilesArray[1].setSecurity("NON_SECURE")
+        CMCCfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 
 ############################################################################
 #### Code Generation ####
@@ -58,3 +71,18 @@ cmccSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 cmccSystemDefFile.setSourcePath("../peripheral/cmcc_u2015/templates/system/definitions.h.ftl")
 cmccSystemDefFile.setMarkup(True)
 cmccSystemDefFile.setEnabled(True)       
+
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    global CMCCfilesArray
+    cmccIsNonSecure = Database.getSymbolValue("core", "CMCC_IS_NON_SECURE")    
+    CMCCfilesArray.append(cmccHeaderFile)
+    CMCCfilesArray.append(cmccSourceFile)
+    CMCCfilesArray.append(cmccSystemDefFile)
+
+    if cmccIsNonSecure == False:
+        cmccHeaderFile.setSecurity("SECURE")
+        cmccSourceFile.setSecurity("SECURE")
+        cmccSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+    #callback function to check if peripheral is secure
+    cmccSystemDefFile.setDependencies(fileUpdate, ["core." +  "CMCC_IS_NON_SECURE"])

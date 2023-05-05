@@ -39,13 +39,13 @@ def handleMessage(messageID, args):
         if args.get("isReadOnly") != None:
             spiSym_MR_MSTR.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None and args["isEnabled"] == True:
-            spiSym_MR_MSTR.setSelectedKey("Master")
+            spiSym_MR_MSTR.setSelectedKey("MASTER")
 
     elif (messageID == "SPI_SLAVE_MODE"):
         if args.get("isReadOnly") != None:
             spiSym_MR_MSTR.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None and args["isEnabled"] == True:
-            spiSym_MR_MSTR.setSelectedKey("Slave")
+            spiSym_MR_MSTR.setSelectedKey("SLAVE")
 
     elif (messageID == "SPI_MASTER_INTERRUPT_MODE"):
         if args.get("isReadOnly") != None:

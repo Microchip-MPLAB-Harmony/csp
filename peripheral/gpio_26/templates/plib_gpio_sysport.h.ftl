@@ -24,10 +24,8 @@
 
 typedef enum
 {
-<#list 0..PORT_GROUP_COUNT - 1 as i>
-    <#assign PORT_GROUP_INDEX = i>
-    <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + i>
-    SYS_PORT_${.vars[PORT_GROUP_NAME]} = ${PORT_REG_NAME}_BASE_ADDRESS + ${.vars[PORT_GROUP_NAME]} * (0x80),
+<#list 0..GPIO_NUM_GROUPS-1 as i>
+    SYS_PORT_${i} = ${i},
 </#list>
 } SYS_PORT;
 
@@ -51,35 +49,19 @@ typedef enum
 
 typedef enum
 {
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-  <#list 0..PORT_PIN_COUNT as k>
-      <#assign pinIndex = k + 1>
-      <#assign pinisSecure = "PIN_" + pinIndex + "_IS_NON_SECURE">
-      <#assign PORT_PIN  = "PIN_" + pinIndex + "_PORT_PIN">
-      <#assign PORT_GROUP = "PIN_" + pinIndex + "_PORT_GROUP">
-      <#if (.vars[pinisSecure]?has_content) && (.vars[pinisSecure]) == "NON-SECURE">
-          <#if .vars[PORT_PIN]?has_content>
-              <#if .vars[PORT_GROUP]?has_content>
-                  <#lt>    /* P${.vars[PORT_GROUP]}${.vars[PORT_PIN]?string["00"]} pin */
-                  <#lt>    SYS_PORT_PIN_P${.vars[PORT_GROUP]}${.vars[PORT_PIN]?string["00"]} = ${.vars[PORT_PIN]},
-
-              </#if>
+<#list 0..GPIO_PIN_MAX_GPIO_PINS as k>
+  <#assign GPIO_PIN_INDEX = "GPIO_PIN_INDEX_" + k>
+  <#assign GPIO_PIN_PAD = "GPIO_PIN_PAD_" + k>
+      <#if .vars[GPIO_PIN_PAD]?has_content>
+          <#if (.vars[GPIO_PIN_PAD] != "None")>
+              <#lt>    /* ${.vars[GPIO_PIN_PAD]} pin */
+              <#lt>    SYS_PORT_PIN_${.vars[GPIO_PIN_PAD]} = ${.vars[GPIO_PIN_INDEX]}U,
           </#if>
       </#if>
-  </#list>
-<#else>
-  <#list 0..PORT_PIN_MAX_INDEX as k>
-      <#assign PORT_PIN_INDEX = "PORT_PIN_INDEX_" + k>
-      <#assign PORT_PIN_PAD = "PORT_PIN_PAD_" + k>
-          <#if .vars[PORT_PIN_PAD]?has_content>
-              <#if (.vars[PORT_PIN_PAD] != "None")>
-                  <#lt>    SYS_PORT_PIN_${.vars[PORT_PIN_PAD]} = ${.vars[PORT_PIN_INDEX]},
+</#list>
 
-              </#if>
-          </#if>
-  </#list>
-</#if>
     /* This element should not be used in any of the PORTS APIs.
        It will be used by other modules or application to denote that none of the PORT Pin is used */
     SYS_PORT_PIN_NONE = -1
+
 } SYS_PORT_PIN;

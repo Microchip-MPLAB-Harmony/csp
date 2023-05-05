@@ -383,10 +383,9 @@ static void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
         do
         {
             lsr = UART${UART_INSTANCE_NUM}_REGS->DATA.UART_LSR;
-            lsr = (lsr & (UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk));
 
             /* Check for overrun, parity and framing errors */
-            ${UART_INSTANCE_NAME?lower_case}Obj.errors = lsr;
+            ${UART_INSTANCE_NAME?lower_case}Obj.errors = (lsr & (UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk));
 
             if (((lsr & UART_DATA_LSR_DATA_READY_Msk) != 0U) && ((uint32_t)${UART_INSTANCE_NAME?lower_case}Obj.errors == 0U))
             {

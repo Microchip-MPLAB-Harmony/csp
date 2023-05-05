@@ -21,6 +21,8 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+global PMfilesArray
+PMfilesArray = []
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
@@ -29,6 +31,22 @@
 def updatePMClockWarringStatus(symbol, event):
 
     symbol.setVisible(not event["value"])
+
+def fileUpdate(symbol, event):
+    global PMfilesArray
+
+    if event["value"] == False:
+        PMfilesArray[0].setSecurity("SECURE")
+        PMfilesArray[1].setSecurity("SECURE")
+        PMfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        PMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+    else:
+        PMfilesArray[0].setSecurity("NON_SECURE")
+        PMfilesArray[1].setSecurity("NON_SECURE")            
+        PMfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        PMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+  
 
 ###################################################################################################
 ########################################## Component  #############################################
@@ -126,3 +144,19 @@ def instantiateComponent(pmComponent):
     pmSymSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     pmSymSystemDefFile.setSourcePath("../peripheral/pm_03926/templates/system/definitions.h.ftl")
     pmSymSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global PMfilesArray
+        pmIsNonSecure = Database.getSymbolValue("core", pmComponent.getID().upper() + "_IS_NON_SECURE")
+        PMfilesArray.append(pmSym_HeaderFile)
+        PMfilesArray.append(pmSym_SourceFile)
+        PMfilesArray.append(pmSym_SystemInitFile)
+        PMfilesArray.append(pmSymSystemDefFile)        
+
+        if pmIsNonSecure == False:
+            pmSym_HeaderFile.setSecurity("SECURE")
+            pmSym_SourceFile.setSecurity("SECURE")
+            pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            pmSymSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+        pmSymSystemDefFile.setDependencies(fileUpdate, ["core." + pmComponent.getID().upper() + "_IS_NON_SECURE"])    

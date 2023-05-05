@@ -24,4 +24,6 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 -->
+<#if CPU_CORE_ID?? && CPU_CORE_ID == 0>
     ${SUPC_INSTANCE_NAME}_Initialize();
+</#if>

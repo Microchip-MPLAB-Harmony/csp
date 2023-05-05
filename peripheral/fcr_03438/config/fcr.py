@@ -72,6 +72,11 @@ def instantiateComponent(fcrComponent):
     nvm_adrws.setLabel("Address Wait State Enable")
     nvm_adrws.setDescription("Enabling address wait state allows to use higher clock frequencies, whereas disabling it allow for higher performance at lower clock frequencies")
     nvm_adrws.setDefaultValue(False)
+    
+    nvm_crc = fcrComponent.createBooleanSymbol("FCR_CRC", None)
+    nvm_crc.setLabel("CRC Enable")
+    nvm_crc.setDescription("Enabling CRC allows CRC calculation")
+    nvm_crc.setDefaultValue(True)
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################
@@ -112,3 +117,10 @@ def instantiateComponent(fcrComponent):
     fcrSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     fcrSystemInitFile.setType("STRING")
     fcrSystemInitFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        fcrSym_HeaderFile.setSecurity("SECURE")
+        fcrSym_SourceFile.setSecurity("SECURE")
+        #fcrSym_SystemInitFile1.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        fcrSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+        fcrSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")

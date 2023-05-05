@@ -23,10 +23,12 @@
 #include <stdbool.h>
 #include "device.h"
 #include "plib_clk.h"
+<#if CPU_CORE_ID == 0>
+#include "peripheral/rstc/plib_rstc.h"
 
-#define PLLA_RECOMMENDED_ACR    0x0F000038U
-#define PLLB_RECOMMENDED_ACR    0x28000058U
-#define PLLC_RECOMMENDED_ACR    0x28000058U
+#define PLLA_RECOMMENDED_ACR    0x0F020038U
+#define PLLB_RECOMMENDED_ACR    0x28020038U
+#define PLLC_RECOMMENDED_ACR    0x28020038U
 
 #define PLLA_UPDT_STUPTIM_VAL   0x02U
 #define PLLB_UPDT_STUPTIM_VAL   0x00U
@@ -256,6 +258,15 @@ static void CPUClockInitialize(void)
 
 </#if>
 <#if CLK_SCER_CPBMCK>
+<#assign DUMMY_CPPRES = "CLK_2">
+<#if CLK_CPU_CKR_CPPRES == DUMMY_CPPRES>
+<#assign DUMMY_CPPRES = "CLK_3">
+</#if>
+    /* Set coprocessor clock dummy prescaler */
+    reg = (PMC_REGS->PMC_CPU_CKR & ~(PMC_CPU_CKR_CPPRES_Msk | PMC_CPU_CKR_RATIO_MCK1DIV_Msk));
+    reg |= (PMC_CPU_CKR_CPPRES_${DUMMY_CPPRES} | PMC_CPU_CKR_RATIO_MCK1DIV_Msk);
+    PMC_REGS->PMC_CPU_CKR = reg;
+
     /* Program PMC_CPU_CKR.CPCSS and Wait for PMC_SR.CPMCKRDY to be set    */
     reg = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_CPCSS_Msk);
     PMC_REGS->PMC_CPU_CKR = (reg | PMC_CPU_CKR_CPCSS_${CLK_CPU_CKR_CPCSS});
@@ -274,13 +285,31 @@ static void CPUClockInitialize(void)
         /* Wait for status CPMCKRDY */
     }
 
-    /* Enable co-processor bus clock ${CLK_SCER_CPCK?string(" and co-processor clock", "")} */
-    PMC_REGS->PMC_SCER = (PMC_SCER_CPKEY_PASSWD | PMC_SCER_CPBMCK_Msk${CLK_SCER_CPCK?string(" | PMC_SCER_CPCK_Msk", "")});
-</#if>
+    /* Enable co-processor bus clock <#if CLK_SCER_CPCK??>${CLK_SCER_CPCK?string(" and co-processor clock", "")}</#if> */
+    PMC_REGS->PMC_SCER = (PMC_SCER_CPKEY_PASSWD | PMC_SCER_CPBMCK_Msk<#if CLK_SCER_CPCK?? && CLK_SCER_CPCK == true> | PMC_SCER_CPCK_Msk</#if>);
+</#if><#-- CLK_SCER_CPBMCK -->
 }
 
 
+</#if><#-- GEN_CPU_CLK -->
+/*********************************************************************************
+                    Enable/Disable flash patch based on core frequency
+*********************************************************************************/
+static void ApplyFlashPatch(void)
+{
+    SFR_REGS->SFR_WPMR = SFR_WPMR_WPKEY_PASSWD;
+<#if CPU_CLOCK_FREQUENCY gte 160000000>
+    /*Enable Flash high speed patch */
+    SFR_REGS->SFR_FLASH = 0x0U;
+<#else>
+    /*Disable Flash high speed patch */;
+    SFR_REGS->SFR_FLASH = SFR_FLASH_Msk;
 </#if>
+    SFR_REGS->SFR_WPMR = (SFR_WPMR_WPKEY_PASSWD | SFR_WPMR_WPEN_Msk);
+}
+
+
+</#if><#-- CPU_CORE_ID -->
 <#compress>
 <#assign PCK_USED = false>
 <#list 0..CLK_NUM_PCKS-1 as i>
@@ -314,7 +343,30 @@ static void PCKInitialize(void)
 }
 
 
-</#if>
+</#if><#-- PCK_USED -->
+/*********************************************************************************
+                        Check Peripheral clock status
+*********************************************************************************/
+static bool PeripheralClockStatus(uint32_t periph_id)
+{
+    bool retval = false;
+    uint32_t status = 0U;
+    const uint32_t csr_offset[] = { PMC_CSR0_REG_OFST,
+                                    PMC_CSR1_REG_OFST,
+                                    PMC_CSR2_REG_OFST,
+                                    PMC_CSR3_REG_OFST
+                                    };
+    uint32_t index = periph_id / 32U;
+    if (index < (sizeof(csr_offset)/sizeof(csr_offset[0])))
+    {
+        status = (*(volatile uint32_t* const)((PMC_BASE_ADDRESS +
+                                                        csr_offset[index])));
+        retval = ((status & (1 << (periph_id % 32U))) != 0U);
+    }
+    return retval;
+}
+
+
 /*********************************************************************************
                         Initialize Peripheral clocks
 *********************************************************************************/
@@ -325,7 +377,7 @@ static void PeripheralClockInitialize(void)
         uint8_t clken;
         uint8_t gclken;
         uint8_t css;
-        uint8_t div;
+        uint8_t divs;
     } periphList[] =
     {
         <#list 0..CLK_MAX_PERIPHERAL_ID as i>
@@ -355,78 +407,82 @@ static void PeripheralClockInitialize(void)
     uint32_t count = sizeof(periphList)/sizeof(periphList[0]);
     uint32_t i = 0U;
 
-    while((i < count) && (periphList[i].id != (ID_PERIPH_MAX + 1U)))
+    while((i < count) && (periphList[i].id != ((uint32_t)ID_PERIPH_MAX + 1U)))
     {
         PMC_REGS->PMC_PCR = PMC_PCR_CMD_Msk |\
                             PMC_PCR_GCLKEN(periphList[i].gclken) |\
                             PMC_PCR_EN(periphList[i].clken) |\
-                            PMC_PCR_GCLKDIV(periphList[i].div) |\
+                            PMC_PCR_GCLKDIV(periphList[i].divs) |\
                             PMC_PCR_GCLKCSS(periphList[i].css) |\
                             PMC_PCR_PID(periphList[i].id);
+        while(PeripheralClockStatus(periphList[i].id) == false)
+        {
+            /* Wait for clock to be initialized */
+        }
         i++;
     }
 }
-
-
-/*********************************************************************************
-                    Enable/Disable flash patch based on core frequency
-*********************************************************************************/
-static void ApplyFlashPatch(void)
-{
-    SFR_REGS->SFR_WPMR = SFR_WPMR_WPKEY_PASSWD;
-<#if CPU_CLOCK_FREQUENCY gte 160000000>
-    /*Enable Flash high speed patch */
-    SFR_REGS->SFR_FLASH = 0x0U;
-<#else>
-    /*Disable Flash high speed patch */;
-    SFR_REGS->SFR_FLASH = SFR_FLASH_Msk;
-</#if>
-    SFR_REGS->SFR_WPMR = (SFR_WPMR_WPKEY_PASSWD | SFR_WPMR_WPEN_Msk);
-}
-
 
 /*********************************************************************************
                                 Clock Initialize
 *********************************************************************************/
 void CLK_Initialize( void )
 {
+<#if CPU_CORE_ID == 0>
+    if(RSTC_PMCResetStatusGet())
+    {
 <#if CLK_TDXTALSEL == "XTAL">
-    /* Initialize TD slow clock */
-    SlowClockInitialize();
+        /* Initialize TD slow clock */
+        SlowClockInitialize();
 
 </#if>
 <#if (CLK_MOSCXTBY || CLK_MOSCXTEN)>
-    /* Initialize MAINCK */
-    MainClockInitialize();
+        /* Initialize MAINCK */
+        MainClockInitialize();
 
 </#if>
 <#if PLL_USED>
 <#list PLL_LIST as PLL_NAME>
 <#if .vars["CLK_" + PLL_NAME + "_ENPLL"]>
-    /* Initialize ${PLL_NAME} */
-    PLLInitialize(${PLL_NAME}, &${PLL_NAME?lower_case}_cfg);
+        /* Initialize ${PLL_NAME} */
+        PLLInitialize((uint32_t)${PLL_NAME}, &${PLL_NAME?lower_case}_cfg);
 
 </#if>
 </#list>
 </#if>
-    /* Apply flash patch */
-    ApplyFlashPatch();
+        /* Apply flash patch */
+        ApplyFlashPatch();
 
 <#if GEN_CPU_CLK>
-    /* Initialize CPU clock */
-    CPUClockInitialize();
+        /* Initialize CPU clock */
+        CPUClockInitialize();
 
 </#if>
 <#if PCK_USED>
+        /* Initialize Programmable clock */
+        PCKInitialize();
+
+</#if>
+        /* Initialize Peripheral clock */
+        PeripheralClockInitialize();
+<#if !CLK_MOSCRCEN>
+
+        /* Disable Main RC Oscillator */
+        DisableMainRCOscillator();
+</#if>
+    }
+    else
+    {
+        /* Apply flash patch */
+        ApplyFlashPatch();
+    }
+<#else><#--CPU_CORE_ID -->
+    <#if PCK_USED>
     /* Initialize Programmable clock */
     PCKInitialize();
 
-</#if>
+    </#if>
     /* Initialize Peripheral clock */
     PeripheralClockInitialize();
-<#if !CLK_MOSCRCEN>
-
-    /* Disable Main RC Oscillator */
-    DisableMainRCOscillator();
 </#if>
 }

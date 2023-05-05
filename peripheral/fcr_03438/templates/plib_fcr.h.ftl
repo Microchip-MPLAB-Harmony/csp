@@ -66,6 +66,8 @@ void ${FCR_INSTANCE_NAME}_Initialize( void );
 
 bool ${FCR_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address );
 
+bool ${FCR_INSTANCE_NAME}_CRCCalculate (uint32_t startAddress, size_t length, uint32_t crcSeed, uint32_t * crc);
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 

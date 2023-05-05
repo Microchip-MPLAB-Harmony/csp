@@ -76,3 +76,35 @@ bool ${FCR_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t 
 
     return true;
 }
+
+<#if FCR_CRC == true>
+bool FCR_CRCCalculate (uint32_t startAddress, size_t length, uint32_t crcSeed, uint32_t * crc)
+{
+	// Clear CRC Registers
+    ${FCR_INSTANCE_NAME}_REGS->FCR_CRCCTRL |= FCR_CRCCTRL_CRCRST(1U);
+    while((${FCR_INSTANCE_NAME}_REGS->FCR_CRCCTRL & FCR_CRCCTRL_CRCRST_Msk) == 1U)
+    {
+        /* Wait for the FCR Operation to Complete */
+    }
+    
+    // Register Setup
+    ${FCR_INSTANCE_NAME}_REGS->FCR_CRCCTRL |=    FCR_CRCCTRL_PLEN32(1U) | FCR_CRCCTRL_RIN(1U) | FCR_CRCCTRL_ROUT(1U);
+
+    ${FCR_INSTANCE_NAME}_REGS->FCR_CRCPOLY  =    FCR_CRCPOLY_CRCPOLY(0x04C11DB7U);
+    ${FCR_INSTANCE_NAME}_REGS->FCR_CRCIV    =    FCR_CRCIV_CRCIV(crcSeed);
+    ${FCR_INSTANCE_NAME}_REGS->FCR_CRCMADR  =    FCR_CRCMADR_CRCMADR(startAddress);
+    ${FCR_INSTANCE_NAME}_REGS->FCR_CRCMLEN  =    FCR_CRCMLEN_CRCMLEN(length);
+
+    // Start CRC calculation
+    ${FCR_INSTANCE_NAME}_REGS->FCR_CRCCTRL |=    FCR_CRCCTRL_CRCEN(0x1U);
+    while((${FCR_INSTANCE_NAME}_REGS->FCR_INTFLAG & FCR_INTFLAG_CRCDONE_Msk) == 0U)
+    {
+        /* Wait for the FCR Operation to Complete */
+    }
+    
+    /* Reading the resultant crc value from the CRCACC register */
+    *crc = (uint32_t) ${FCR_INSTANCE_NAME}_REGS->FCR_CRCACC;
+    
+    return true;
+}
+</#if>

@@ -1,3 +1,4 @@
+<#if CPU_CORE_ID == 0>
 <#assign CMCC_CONFIGURE = true>
 __STATIC_INLINE void CMCC_Configure(void)
 {
@@ -32,3 +33,4 @@ __STATIC_INLINE void CMCC_Configure(void)
 </#if>
 
 }
+</#if>

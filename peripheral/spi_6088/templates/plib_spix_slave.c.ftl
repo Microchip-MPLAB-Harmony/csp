@@ -162,6 +162,7 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
 <#else>
         *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
 </#if>
+        asm("nop");
     }
 
     /* Restore interrupt enable state and also enable TDRE interrupt */
@@ -230,7 +231,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
     uint16_t txRxData = 0;
 </#if>
 
-    uint32_t statusFlags = ${SPI_INSTANCE_NAME}_REGS->SPI_SR;
+    volatile uint32_t statusFlags = ${SPI_INSTANCE_NAME}_REGS->SPI_SR;
 
     if (statusFlags & SPI_SR_OVRES_Msk)
     {

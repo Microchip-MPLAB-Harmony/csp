@@ -148,6 +148,10 @@ void PCR_PrivilegeEnLock (void);
 
 void PCR_PrivilegeEnUnLock (void);
 
+uint32_t PCR_PowerFailResetStatusRegGet(void);
+
+void PCR_PowerFailResetStatusClear(uint32_t pfsr_bits);
+
 <#list 0..(NUM_SLEEP_EN_REGS-1) as n>
 <#assign PCR_SLEEP_EN         = "PCR_SLEEP_ENABLE" + n + "_REG_INDEX">
 void PCR_SleepEnable${.vars[PCR_SLEEP_EN]} (PCR_SLEEP_EN${.vars[PCR_SLEEP_EN]} blockId);

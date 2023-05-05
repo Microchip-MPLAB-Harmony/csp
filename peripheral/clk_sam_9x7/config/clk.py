@@ -305,7 +305,7 @@ def update_sdmmc_clock_frequency(symbol, event):
     mult_clk_sym = event['source'].getSymbolByID(sdmmc_name + "_MULTCLK_FREQUENCY")
     mult_clk_sym.setValue(gclk_clk_freq)
 
-def update_mcan_qspi_clock_frequency(symbol, event):
+def update_mcan_qspi_mipiphy_clock_frequency(symbol, event):
     symbol.setValue(event["value"])
 
 def update_clk_generators(symbol, event):
@@ -358,13 +358,13 @@ gclk_update_map = {
     "FLEXCOM" : update_flexcomm_clock_frequency,
     "ADC" : generic_gclk_update_freq,
     "LCDC" : generic_gclk_update_freq,
-    "MCAN" : update_mcan_qspi_clock_frequency,
+    "MCAN" : update_mcan_qspi_mipiphy_clock_frequency,
     "I2SMCC" : generic_gclk_update_freq,
     "PIT64B" : generic_gclk_update_freq,
-    "QSPI" : update_mcan_qspi_clock_frequency,
+    "QSPI" : update_mcan_qspi_mipiphy_clock_frequency,
     "CLASSD" : generic_gclk_update_freq,
     "DBGU" : generic_gclk_update_freq,
-    "MIPIPHY" : generic_gclk_update_freq,
+    "MIPIPHY" : update_mcan_qspi_mipiphy_clock_frequency,
     "GMAC" : generic_gclk_update_freq
 }
 
@@ -881,13 +881,16 @@ peripherals_node = ATDF.getNode("/avr-tools-device-file/devices/device/periphera
 for module_node in peripherals_node.getChildren():
     for instance_node in module_node.getChildren():
         clock_id_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="'+module_node.getAttribute("name")+'"]/instance@[name="'+instance_node.getAttribute("name")+'"]/parameters/param@[name="CLOCK_ID"]')
-        if clock_id_node is None:
+        if (clock_id_node is None) and (module_node.getAttribute("name") != "MIPIPHY"):
             continue
 
         instance_name = instance_node.getAttribute("name")
-        pcr_en = coreComponent.createBooleanSymbol(instance_name + "_CLOCK_ENABLE", pcr_menu)
-        pcr_en.setLabel(instance_name)
-        peripheral_clock_config.append(instance_name + "_CLOCK_ENABLE")
+        if clock_id_node != None:
+            pcr_en = coreComponent.createBooleanSymbol(instance_name + "_CLOCK_ENABLE", pcr_menu)
+            pcr_en.setLabel(instance_name)
+            peripheral_clock_config.append(instance_name + "_CLOCK_ENABLE")
+        elif module_node.getAttribute("name") == "MIPIPHY":
+            clock_id_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="'+module_node.getAttribute("name")+'"]/instance@[name="'+instance_node.getAttribute("name")+'"]/parameters/param@[name="INSTANCE_ID"]')
 
         id_name_map = coreComponent.createStringSymbol("CLK_ID_NAME_"+clock_id_node.getAttribute("value"), pcr_menu)
         id_name_map.setVisible(False)
@@ -985,8 +988,8 @@ for module_node in peripherals_node.getChildren():
                                           instance_name.lower() + "." + "FLEXCOM_USART_MR_USCLKS",
                                           instance_name.lower() + "." + "FLEXCOM_SPI_MR_BRSRCCLK",
                                           instance_name.lower() + "." + "FLEXCOM_TWI_CWGR_BRSRCCLK"])
-            #MCAN and QSPI
-            elif module_node.getAttribute("name") == "MCAN" or module_node.getAttribute("name") == "QSPI":
+            #MCAN, QSPI and MIPIPHY
+            elif module_node.getAttribute("name") == "MCAN" or module_node.getAttribute("name") == "QSPI" or module_node.getAttribute("name") == "MIPIPHY":
                 pcr_freq.setDependencies(gclk_update_map[module_node.getAttribute("name")], [instance_name + '_GCLK_FREQUENCY'])
             else:
                 pcr_freq.setDependencies(gclk_update_map[module_node.getAttribute("name")],

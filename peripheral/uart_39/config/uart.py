@@ -236,6 +236,11 @@ def configSelUpdate(symbol, event):
 
     symbol.setValue(cfg_sel_polarity << 2 | cfg_sel_clk_src)
 
+def updateUSARTDataBits (symbol, event):
+    word_len = event["source"].getSymbolByID("UART_LCR_WORD_LENGTH_SELECT").getSelectedKey()
+    data_bits = "DRV_USART_DATA_" + word_len
+    symbol.setValue(data_bits)
+    
 def UARTFileGeneration(symbol, event):
     componentID = symbol.getID()
     filepath = ""
@@ -253,6 +258,18 @@ def UARTFileGeneration(symbol, event):
             filepath = "../peripheral/uart_39/templates/plib_uart.c.ftl"
 
     symbol.setSourcePath(filepath)
+    
+def irqn_update(symbol, event):
+    uartInstanceNum = event["source"].getSymbolByID("UART_INSTANCE_NUM").getValue()
+    uartInterruptType = event["source"].getSymbolByID("UART_INTERRUPT_TYPE").getSelectedKey()
+    
+    if (uartInterruptType == "AGGREGATE"):
+        nvic_int_num = {}
+        nvic_int_num = Database.sendMessage("core", "ECIA_GET_INT_SRC_DICT", {"int_source": "UART" + uartInstanceNum})
+        irqn_name = "GIRQ" + str(nvic_int_num["girqn_reg_num"] + 8) + "_IRQn"
+        symbol.setValue(irqn_name)
+    else:
+        symbol.setValue("UART" + uartInstanceNum + "_IRQn")    
 ################################################################################
 #### Component ####
 ################################################################################
@@ -482,6 +499,80 @@ def instantiateComponent(uartComponent):
     uartSym_API_Prefix.setDefaultValue(uartInstanceName.getValue())
     uartSym_API_Prefix.setVisible(False)
 
+    #UART Stop 1-bit Mask
+    uartStopBit_1_Mask = uartComponent.createStringSymbol("USART_STOP_1_BIT_MASK", None)
+    uartStopBit_1_Mask.setDefaultValue("0x0")
+    uartStopBit_1_Mask.setVisible(False)
+    
+    #UART Stop 1-bit Mask
+    uartStopBit_1_5_Mask = uartComponent.createStringSymbol("USART_STOP_1_5_BIT_MASK", None)
+    uartStopBit_1_5_Mask.setDefaultValue("0x4")
+    uartStopBit_1_5_Mask.setVisible(False)
+
+    #UART Stop 2-bit Mask
+    uartStopBit_2_Mask = uartComponent.createStringSymbol("USART_STOP_2_BIT_MASK", None)
+    uartStopBit_2_Mask.setDefaultValue("0x4")
+    uartStopBit_2_Mask.setVisible(False)
+
+    #UART EVEN Parity Mask
+    uartSym_MR_PAR_EVEN_Mask = uartComponent.createStringSymbol("USART_PARITY_EVEN_MASK", None)
+    uartSym_MR_PAR_EVEN_Mask.setDefaultValue("0x10")
+    uartSym_MR_PAR_EVEN_Mask.setVisible(False)
+
+    #UART ODD Parity Mask
+    uartSym_MR_PAR_ODD_Mask = uartComponent.createStringSymbol("USART_PARITY_ODD_MASK", None)
+    uartSym_MR_PAR_ODD_Mask.setDefaultValue("0x0")
+    uartSym_MR_PAR_ODD_Mask.setVisible(False)
+
+    #UART NO Parity Mask
+    uartSym_MR_PAR_NO_Mask = uartComponent.createStringSymbol("USART_PARITY_NONE_MASK", None)
+    uartSym_MR_PAR_NO_Mask.setDefaultValue("0x0")
+    uartSym_MR_PAR_NO_Mask.setVisible(False)
+    
+    #USART Character Size 5 Mask
+    usartSym_CTRLB_CHSIZE_5_Mask = uartComponent.createStringSymbol("USART_DATA_5_BIT_MASK", None)
+    usartSym_CTRLB_CHSIZE_5_Mask.setDefaultValue("0x0")
+    usartSym_CTRLB_CHSIZE_5_Mask.setVisible(False)
+    
+    #USART Character Size 6 Mask
+    usartSym_CTRLB_CHSIZE_6_Mask = uartComponent.createStringSymbol("USART_DATA_6_BIT_MASK", None)
+    usartSym_CTRLB_CHSIZE_6_Mask.setDefaultValue("0x1")
+    usartSym_CTRLB_CHSIZE_6_Mask.setVisible(False)
+    
+    #USART Character Size 7 Mask
+    usartSym_CTRLB_CHSIZE_7_Mask = uartComponent.createStringSymbol("USART_DATA_7_BIT_MASK", None)
+    usartSym_CTRLB_CHSIZE_7_Mask.setDefaultValue("0x2")
+    usartSym_CTRLB_CHSIZE_7_Mask.setVisible(False)
+
+    #USART Character Size 8 Mask
+    usartSym_CTRLB_CHSIZE_8_Mask = uartComponent.createStringSymbol("USART_DATA_8_BIT_MASK", None)
+    usartSym_CTRLB_CHSIZE_8_Mask.setDefaultValue("0x3")
+    usartSym_CTRLB_CHSIZE_8_Mask.setVisible(False)
+
+    #USART Overrun error Mask
+    usartSym_STATUS_BUFOVF_Mask = uartComponent.createStringSymbol("USART_OVERRUN_ERROR_VALUE", None)
+    usartSym_STATUS_BUFOVF_Mask.setDefaultValue("0x2")
+    usartSym_STATUS_BUFOVF_Mask.setVisible(False)
+
+    #USART parity error Mask
+    usartSym_STATUS_PERR_Mask = uartComponent.createStringSymbol("USART_PARITY_ERROR_VALUE", None)
+    usartSym_STATUS_PERR_Mask.setDefaultValue("0x4")
+    usartSym_STATUS_PERR_Mask.setVisible(False)
+
+    #USART framing error Mask
+    usartSym_STATUS_FERR_Mask = uartComponent.createStringSymbol("USART_FRAMING_ERROR_VALUE", None)
+    usartSym_STATUS_FERR_Mask.setDefaultValue("0x8")
+    usartSym_STATUS_FERR_Mask.setVisible(False)    
+    
+    uartSym_DataBits = uartComponent.createStringSymbol("USART_DATA_BITS", None)
+    uartSym_DataBits.setDefaultValue("DRV_USART_DATA_8_BIT")
+    uartSym_DataBits.setVisible(False)
+    uartSym_DataBits.setDependencies(updateUSARTDataBits, ["UART_LCR_WORD_LENGTH_SELECT"])
+
+    uartSymIRQName = uartComponent.createStringSymbol("SINGLE_IRQn", None)
+    uartSymIRQName.setDefaultValue("UART" + uartInstanceNum.getValue() + "_IRQn")
+    uartSymIRQName.setVisible(False)
+    uartSymIRQName.setDependencies(irqn_update, ["UART_INTERRUPT_TYPE"])
     ############################################################################
     #### Code Generation ####
     ############################################################################

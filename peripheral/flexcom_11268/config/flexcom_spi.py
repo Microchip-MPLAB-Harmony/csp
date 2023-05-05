@@ -356,6 +356,13 @@ flexcomSym_SPI_InterruptMode.setDependencies(showSPIDependencies, ["FLEXCOM_MODE
 
 localComponent = flexcomSym_SPI_InterruptMode.getComponent()
 
+flecomSym_SPI_DMAEnable = flexcomComponent.createBooleanSymbol("USE_SPI_DMA", flexcomSym_OperatingMode)
+flecomSym_SPI_DMAEnable.setLabel("Enable DMA for Transmit and Receive")
+flecomSym_SPI_DMAEnable.setVisible(False)
+ptcr_register = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/register-group@[name=\"FLEXCOM\"]/register@[name=\"FLEX_PTCR\"]")
+if ptcr_register is not None:
+    flecomSym_SPI_DMAEnable.setDependencies(updateSPIDMASymbolVisiblity, ["FLEXCOM_MODE", "SPI_INTERRUPT_MODE", "FLEXCOM_SPI_MR_MSTR"])
+
 #Select clock source
 flexcomSym_SPI_MR_BRSRCCLK = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_MR_BRSRCCLK", flexcomSym_OperatingMode)
 flexcomSym_SPI_MR_BRSRCCLK.setLabel("Select Clock Source")

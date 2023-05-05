@@ -128,8 +128,8 @@ def update_mainck(symbol, event):
     symbol.setValue(value)
 
 
-def update_pll_ref_clock(symbol, event):
-    pll = symbol.getID().split("_")[0]
+def update_pll_src_clock(symbol, event):
+    pll = symbol.getID().split("SRC_")[0]
     pllms = int(event['source'].getSymbolValue("CLK_{0}_PLLMS".format(pll)))
     source_freq = event['source'].getSymbolValue(
                                 pll_dict[pll]["source"][pllms][0]+"_FREQUENCY")
@@ -141,7 +141,7 @@ def update_pll_core_freq(symbol, event):
     pll = symbol.getID().split("_")[0]
     enpll =  comp.getSymbolValue("CLK_{0}_ENPLL".format(pll))
     if enpll:
-        source_freq = comp.getSymbolValue("{0}_REFCLK_FREQUENCY".format(pll))
+        source_freq = comp.getSymbolValue("{0}SRC_FREQUENCY".format(pll))
         mul = comp.getSymbolValue("CLK_{0}_MUL".format(pll))
         fracr = comp.getSymbolValue("CLK_{0}_FRACR".format(pll))
         symbol.setValue(int((source_freq * (mul + 1 + (float(fracr)/2**22)))))
@@ -266,7 +266,7 @@ def setup_tc_clock_frequency(lcomp, rcomp, module, instance):
         tc_ch_freq.setReadOnly(True)
         tc_ch_freq.setVisible(show_frequency_sym)
         tc_ch_freq.setDependencies(update_tc_clock_frequency,
-                    ["MCK0DIV_FREQUENCY",
+                    ["MCK0_FREQUENCY",
                     "MD_SLOW_CLK_FREQUENCY",
                     "{0}_GCLK_FREQUENCY".format(instance),
                     "{0}.TC{1}_CMR_TCCLKS".format(instance.lower(), channel),
@@ -285,6 +285,7 @@ def update_tc_clock_frequency(symbol, event):
     tc_comp = Database.getComponentByID("tc{0}".format(instance_num))
     clk_comp = Database.getComponentByID("core")
     mck0div_freq = clk_comp.getSymbolValue("MCK0DIV_FREQUENCY")
+    mck0_freq = clk_comp.getSymbolValue("MCK0_FREQUENCY")
 
     # check if component exists and the relevant channel is enabled
     if tc_comp is not None and tc_comp.getSymbolValue("TC{0}_ENABLE".format(channel_num)):
@@ -296,14 +297,14 @@ def update_tc_clock_frequency(symbol, event):
         if (clk_src == "GCLK"):
             clk_frequency = clk_comp.getSymbolValue("TC{0}_GCLK_FREQUENCY".format(instance_num))
         # if clock  source is MCK/8
-        elif (clk_src == "MCK0DIV/8"):
-            clk_frequency = mck0div_freq / 8
+        elif (clk_src == "MCK0/8"):
+            clk_frequency = mck0_freq / 8
         # if clock  source is MCK/32
-        elif (clk_src == "MCK0DIV/32"):
-            clk_frequency = mck0div_freq / 32
+        elif (clk_src == "MCK0/32"):
+            clk_frequency = mck0_freq / 32
         # if clock  source is MCK/128
-        elif (clk_src == "MCK0DIV/128"):
-            clk_frequency = mck0div_freq / 128
+        elif (clk_src == "MCK0/128"):
+            clk_frequency = mck0_freq / 128
         # if clock  source is SLOW CLOCK
         elif (clk_src == "TD_SLCK"):
             clk_frequency = clk_comp.getSymbolValue("MD_SLOW_CLK_FREQUENCY")
@@ -483,11 +484,11 @@ if __name__ == "__main__":
         nstep.setMax(2**8 -1)
 
         pllrefclk =  clk_component.createIntegerSymbol(
-                                "{0}_REFCLK_FREQUENCY".format(pll),pll_menu)
+                                "{0}SRC_FREQUENCY".format(pll),pll_menu)
         pllrefclk.setVisible(show_frequency_sym)
         pllrefclk.setDefaultValue(clk_remote_component.getSymbolValue(
                                 pll_dict[pll]["source"][0][0]+"_FREQUENCY"))
-        pllrefclk.setDependencies(update_pll_ref_clock,
+        pllrefclk.setDependencies(update_pll_src_clock,
                                 [pll_dict[pll]["source"][0][0]+"_FREQUENCY",
                                  pll_dict[pll]["source"][1][0]+"_FREQUENCY",
                                  "CLK_{0}_PLLMS".format(pll)])
@@ -501,7 +502,7 @@ if __name__ == "__main__":
                                 "{0}_CORECLK_FREQUENCY".format(pll),pll_menu)
         corepllck.setVisible(show_frequency_sym)
         corepllck.setDependencies(update_pll_core_freq,
-                                 ["{0}_REFCLK_FREQUENCY".format(pll),
+                                 ["{0}SRC_FREQUENCY".format(pll),
                                   "CLK_{0}_ENPLL".format(pll),
                                   "CLK_{0}_MUL".format(pll),
                                   "CLK_{0}_FRACR".format(pll)])
@@ -556,15 +557,20 @@ if __name__ == "__main__":
     mck0freq.setReadOnly(True)
     mck0freq.setDefaultValue(mainck.getValue())
 
-    cpufreq = clk_component.createIntegerSymbol("CPU_CLOCK_FREQUENCY",
-                                                                    cpu_menu)
+    if clk_remote_component.getSymbolValue("CPU_CORE_ID") == 1:
+        cpu0_freq_name = "CPU0_CLOCK_FREQUENCY"
+        systick0_freq_name = "SYSTICK0_CLOCK_FREQUENCY"
+    else:
+        cpu0_freq_name = "CPU_CLOCK_FREQUENCY"
+        systick0_freq_name = "SYSTICK_CLOCK_FREQUENCY"
+
+    cpufreq = clk_component.createIntegerSymbol(cpu0_freq_name, cpu_menu)
     cpufreq.setDependencies(lambda symbol,
                 event:symbol.setValue(event["value"]), ["MCK0_FREQUENCY"])
     cpufreq.setReadOnly(True)
     cpufreq.setDefaultValue(mck0freq.getValue())
 
-    systick_ext_freq = clk_component.createIntegerSymbol(
-                                        "SYSTICK_CLOCK_FREQUENCY", cpu_menu)
+    systick_ext_freq = clk_component.createIntegerSymbol(systick0_freq_name, cpu_menu)
     systick_ext_freq.setDependencies(lambda symbol,
                 event:symbol.setValue(event["value"]/8), ["MCK0_FREQUENCY"])
     systick_ext_freq.setReadOnly(True)
@@ -631,14 +637,20 @@ if __name__ == "__main__":
         cpck = clk_component.createBooleanSymbol("CLK_SCER_CPCK", cpu_menu)
         set_symbol_attributes(cpck, pmc_node,"PMC", "PMC_SCER", "CPCK")
 
-        cpu1freq = clk_component.createIntegerSymbol("CPU1_CLOCK_FREQUENCY",
-                                                                    cpu_menu)
+        if clk_remote_component.getSymbolValue("CPU_CORE_ID") == 1:
+            cpck.setDefaultValue(True)
+            cpu1_freq_name = "CPU_CLOCK_FREQUENCY"
+            systick1_freq_name = "SYSTICK_CLOCK_FREQUENCY"
+        else:
+            cpu1_freq_name = "CPU1_CLOCK_FREQUENCY"
+            systick1_freq_name = "SYSTICK1_CLOCK_FREQUENCY"
+
+        cpu1freq = clk_component.createIntegerSymbol(cpu1_freq_name, cpu_menu)
         cpu1freq.setDependencies(update_cpu1_freq, ["CLK_SCER_CPCK",
                                                     "MCK1_FREQUENCY"])
         cpu1freq.setReadOnly(True)
 
-        systick1_ext_freq = clk_component.createIntegerSymbol(
-                                        "SYSTICK1_CLOCK_FREQUENCY", cpu_menu)
+        systick1_ext_freq = clk_component.createIntegerSymbol(systick1_freq_name, cpu_menu)
         systick1_ext_freq.setDependencies(lambda symbol,
                 event:symbol.setValue(event["value"]/8), ["MCK1_FREQUENCY"])
 

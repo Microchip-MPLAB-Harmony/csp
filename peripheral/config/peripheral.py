@@ -39,6 +39,7 @@ peripherals = {
                 "TWIHS_11210"   : ["I2C"],
                 "I2C_01441"     : ["I2C"],
                 "I2C_00774"     : ["I2C"],
+                "SMB_31"        : ["I2C"],
                 "UART_02478"    : ["UART"],
                 "UART_6418"     : ["UART"],
                 "USART_6089"    : ["UART", "SPI"],
@@ -46,6 +47,7 @@ peripherals = {
                 "UART_39"       : ["UART"],
                 "QSPI_U2008"    : ["SQI","SPI"],
                 "QSPI_44132"    : ["SQI","SPI"],
+                "QMSPI_147"     : ["SQI"],
                 "SQI_00206"     : ["SQI"],
                 "SQI_04044"     : ["SQI"],
                 "TC_U2212"      : ["TMR"],
@@ -57,6 +59,9 @@ peripherals = {
                 "RTC_U2202"     : ["TMR"],
                 "TMR_02815"     : ["TMR"],
                 "TMR_00745"     : ["TMR"],
+                "TIMER32_108b"  : ["TMR"],
+                "RTOS_140"      : ["TMR"],
+                "CCT_12"        : ["TMR"],
                 "LCDC_11062"    : ["LCDC"],
                 "SPI_01329"     : ["SPI"],
                 "SPI_00753"     : ["SPI"],
@@ -95,7 +100,8 @@ peripherals = {
                 "SUPC_U2117"    : ["SUPC"],
                 "SUPC_U2407"    : ["SUPC"],
                 "CAN_U2003"     : ["CAN"],
-                "MCAN_11273"    : ["CAN"]
+                "MCAN_11273"    : ["CAN"],
+                "SEFC_04463"    : ["MEMORY"]
 }
 
 # a dictionary to translate the new id mentioned in ATDF to old id used in csp
@@ -103,36 +109,40 @@ peripheral_ID_map = {
     "AC_03784"     : "AC_U2501",
     "AC_04704"     : "AC_U2501",
     "CAN_03723"    : "CAN_U2003",
+    "CCL_03718"    : "CCL_U2225",
     "CCL_04702"    : "CCL_U2225",
     "CMCC_04727"   : "CMCC_U2015",
     "DMAC_04587"   : "DMAC_U2503",
     "DSU_03716"    : "DSU_U2810",
+    "DSU_04850"    : "DSU_U2810",
     "DSU_05006"    : "DSU_U2410",
     "EIC_03706"    : "EIC_U2804",
     "EIC_04714"    : "EIC_U2254",
-    "EVSYS_03601"   : "EVSYS_U2504",
-    "EVSYS_04712"   : "EVSYS_U2504",
+    "EVSYS_03601"  : "EVSYS_U2504",
+    "EVSYS_04712"  : "EVSYS_U2504",
     "FREQM_03707"  : "FREQM_U2257",
-    "FREQM_04703"   :"FREQM_U2257",
-    "PAC_04701"     :"PAC_U2120",
+    "FREQM_04703"  : "FREQM_U2257",
+    "PAC_04701"    : "PAC_U2120",
+    "PAC_03585"    : "PAC_U2120",
+    "PDEC_03604"   : "PDEC_U2263",
     "PTC_03721"    : "PTC_U2215",
-    "QSPI_04708"    :"QSPI_U2008",
+    "QSPI_04708"   : "QSPI_U2008",
     "RTC_03608"    : "RTC_U2250",
     "RTC_04715"    : "RTC_U2250",
     "SERCOM_03715" : "SERCOM_U2201",
     "SERCOM_04707" : "SERCOM_U2201",
-    "TC_04705"      : "TC_U2249",
+    "TC_04705"     : "TC_U2249",
     "TCC_03610"    : "TCC_U2213",
     "TCC_04706"    : "TCC_U2213",
     "TRAM_03938"   : "TRAM_U2801",
     "TRNG_03597"   : "TRNG_U2242"
 }
 
-system_components = ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "DMA", "OSCILLATOR", "PMC", "WDT", "DMT", "PAC", "MATRIX", "L2CC", "CMCC", "ECIA"]
+system_components = ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "DMA", "OSCILLATOR", "PMC", "WDT", "DMT", "PAC", "MATRIX", "L2CC", "CMCC", "ECIA", "EC_REG_BANK"]
 
-#RSTC is loaded as a system component for PIC32CXMT devices
+#RSTC, SUPC is loaded as a system component for PIC32CXMT devices
 if ATDF.getNode("/avr-tools-device-file/devices/device").getAttribute("family") == "PIC32CXMT":
-    system_components.append("RSTC")
+    system_components.extend(["RSTC", "SUPC"])
 
 if("MIPS" in coreArch):
     coreTimerComponent = Module.CreateComponent("core_timer", "CORE TIMER", "/Peripherals/CORE TIMER/", "../peripheral/coretimer/config/coretimer.py")

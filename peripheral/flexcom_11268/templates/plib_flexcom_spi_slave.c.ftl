@@ -60,16 +60,20 @@
 </#if>
 
 <#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
-#define ${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE            ${FLEXCOM_SPIS_RX_BUFFER_SIZE}
-#define ${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${FLEXCOM_SPIS_TX_BUFFER_SIZE}
+#define FLEXCOM_SPI_RDR_REG      (*(volatile uint8_t* const)((${FLEXCOM_INSTANCE_NAME}_BASE_ADDRESS + FLEX_SPI_RDR_REG_OFST)))
+#define FLEXCOM_SPI_TDR_REG      (*(volatile uint8_t* const)((${FLEXCOM_INSTANCE_NAME}_BASE_ADDRESS + FLEX_SPI_TDR_REG_OFST)))
+
+#define ${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE            ${FLEXCOM_SPIS_RX_BUFFER_SIZE}U
+#define ${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${FLEXCOM_SPIS_TX_BUFFER_SIZE}U
 
 static uint8_t ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE];
 static uint8_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
-
 <#else>
+#define FLEXCOM_SPI_RDR_REG      (*(volatile uint16_t* const)((${FLEXCOM_INSTANCE_NAME}_BASE_ADDRESS + FLEX_SPI_RDR_REG_OFST)))
+#define FLEXCOM_SPI_TDR_REG      (*(volatile uint16_t* const)((${FLEXCOM_INSTANCE_NAME}_BASE_ADDRESS + FLEX_SPI_TDR_REG_OFST)))
 
-#define ${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE            ${FLEXCOM_SPIS_RX_BUFFER_SIZE/2}
-#define ${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${FLEXCOM_SPIS_TX_BUFFER_SIZE/2}
+#define ${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE            ${FLEXCOM_SPIS_RX_BUFFER_SIZE/2}U
+#define ${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${FLEXCOM_SPIS_TX_BUFFER_SIZE/2}U
 
 static uint16_t ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE];
 static uint16_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
@@ -82,7 +86,7 @@ static uint16_t ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME}_WR
 // *****************************************************************************
 
 /* Global object to save FLEXCOM SPI Exchange related data */
-FLEXCOM_SPI_SLAVE_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
+static FLEXCOM_SPI_SLAVE_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
 
 void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void )
 {
@@ -99,7 +103,7 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void )
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_MR = FLEX_SPI_MR_MODFDIS_Msk;
 
     /* Set up clock Polarity, data phase, Communication Width */
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[0] = FLEX_SPI_CSR_CPOL(${FLEXCOM_SPI_CSR0_CPOL}) | FLEX_SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR0_NCPHA}) | FLEX_SPI_CSR_BITS_${FLEXCOM_SPI_CSR0_BITS};
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[0] = FLEX_SPI_CSR_CPOL(${FLEXCOM_SPI_CSR0_CPOL}U) | FLEX_SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR0_NCPHA}U) | FLEX_SPI_CSR_BITS_${FLEXCOM_SPI_CSR0_BITS};
 
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rdInIndex = 0;
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex = 0;
@@ -129,6 +133,11 @@ size_t ${FLEXCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
 {
     size_t rdSize = size;
     size_t rdInIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rdInIndex;
+<#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
+    uint8_t* pBuffer = (uint8_t*)pRdBuffer;
+<#else>
+    uint16_t* pBuffer = (uint16_t*)pRdBuffer;
+</#if>
 
     if (rdSize > rdInIndex)
     {
@@ -136,9 +145,9 @@ size_t ${FLEXCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
     }
 
 <#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
-    memcpy(pRdBuffer, ${FLEXCOM_INSTANCE_NAME}_ReadBuffer, rdSize);
+    (void)memcpy(pBuffer, ${FLEXCOM_INSTANCE_NAME}_ReadBuffer, rdSize);
 <#else>
-    memcpy(pRdBuffer, ${FLEXCOM_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
+    (void)memcpy(pBuffer, ${FLEXCOM_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
 </#if>
 
     return rdSize;
@@ -149,6 +158,11 @@ size_t ${FLEXCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
 {
     uint32_t intState = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_IMR;
     size_t wrSize = size;
+<#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
+    uint8_t* pBuffer = (uint8_t*)pWrBuffer;
+<#else>
+    uint16_t* pBuffer = (uint16_t*)pWrBuffer;
+</#if>
 
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_IDR = intState;
 
@@ -158,21 +172,18 @@ size_t ${FLEXCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
     }
 
 <#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
-    memcpy(${FLEXCOM_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
+    (void)memcpy(${FLEXCOM_INSTANCE_NAME}_WriteBuffer, pBuffer, wrSize);
 <#else>
-    memcpy(${FLEXCOM_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
+    (void)memcpy(${FLEXCOM_INSTANCE_NAME}_WriteBuffer, pBuffer, (wrSize << 1));
 </#if>
 
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nWrBytes = wrSize;
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex = 0;
 
-    while ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nWrBytes))
+    while (((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk) != 0U) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nWrBytes))
     {
-<#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
-        *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) = ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex++];
-<#else>
-        *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) = ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex++];
-</#if>
+        FLEXCOM_SPI_TDR_REG = ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex];
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex++;
     }
 
     /* Restore interrupt enable state and also enable TDRE interrupt */
@@ -243,7 +254,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 
     uint32_t statusFlags = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR;
 
-    if (statusFlags & FLEX_SPI_SR_OVRES_Msk)
+    if ((statusFlags & FLEX_SPI_SR_OVRES_Msk) != 0U)
     {
         /*OVRES flag is cleared on reading SPI SR*/
 
@@ -251,7 +262,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.errorStatus = FLEXCOM_SPI_SLAVE_ERROR_BUFOVF;
     }
 
-    if(statusFlags & FLEX_SPI_SR_RDRF_Msk)
+    if((statusFlags & FLEX_SPI_SR_RDRF_Msk) != 0U)
     {
         if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false)
         {
@@ -264,33 +275,27 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
             </#if>
         }
 
-        while ((statusFlags |= ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR) & FLEX_SPI_SR_RDRF_Msk)
+        while (((statusFlags |= ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR) & FLEX_SPI_SR_RDRF_Msk) != 0U)
         {
-<#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
             /* Reading DATA register will also clear the RDRF flag */
-            txRxData = *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_RDR);
-<#else>
-            txRxData = *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_RDR);
-</#if>
+            txRxData = FLEXCOM_SPI_RDR_REG;
 
             if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rdInIndex < ${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE)
             {
-                ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rdInIndex++] = txRxData;
+                ${FLEXCOM_INSTANCE_NAME}_ReadBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rdInIndex] = txRxData;
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rdInIndex++;
             }
 
             statusFlags &= ~FLEX_SPI_SR_RDRF_Msk;
         }
     }
 
-    if(statusFlags & FLEX_SPI_SR_TDRE_Msk)
+    if((statusFlags & FLEX_SPI_SR_TDRE_Msk) != 0U)
     {
-        while (((statusFlags |= ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR) & FLEX_SPI_SR_TDRE_Msk) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nWrBytes))
+        while ((((statusFlags |= ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR) & FLEX_SPI_SR_TDRE_Msk) != 0U) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nWrBytes))
         {
-<#if FLEXCOM_SPI_CSR0_BITS = "8_BIT">
-            *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) = ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex++];
-<#else>
-            *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) = ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex++];
-</#if>
+            FLEXCOM_SPI_TDR_REG = ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex];
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex++;
             statusFlags &= ~FLEX_SPI_SR_TDRE_Msk;
         }
 
@@ -301,7 +306,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
         }
     }
 
-    if(statusFlags & FLEX_SPI_SR_NSSR_Msk)
+    if((statusFlags & FLEX_SPI_SR_NSSR_Msk) != 0U)
     {
         /* NSSR flag is cleared on reading SPI SR */
 
