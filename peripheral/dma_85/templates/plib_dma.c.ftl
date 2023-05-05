@@ -146,14 +146,14 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, volatile const v
             /* Peripheral to memory transfer */
             dmaChRegs->DMA_CHAN00_DSTART = (volatile uint32_t)((const volatile uint8_t*)srcAddr);
             dmaChRegs->DMA_CHAN00_MSTART = (volatile uint32_t)((const volatile uint8_t*)destAddr);
-            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)(((const volatile uint8_t*)destAddr)[blockSize]);
+            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)((const volatile uint8_t*)destAddr + blockSize);
         }
         else
         {
             /* Memory to peripheral transfer */
             dmaChRegs->DMA_CHAN00_DSTART = (volatile uint32_t)((const volatile uint8_t*)destAddr);
             dmaChRegs->DMA_CHAN00_MSTART = (volatile uint32_t)((const volatile uint8_t*)srcAddr);
-            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)(((const volatile uint8_t*)srcAddr)[blockSize]);
+            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)((const volatile uint8_t*)srcAddr + blockSize);
         }
 
         dmaChannelObj[channel].mstartAddr = dmaChRegs->DMA_CHAN00_MSTART;
