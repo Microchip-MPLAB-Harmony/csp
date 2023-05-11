@@ -52,6 +52,7 @@
 // Section: Include Files
 // *****************************************************************************
 // *****************************************************************************
+static const uint8_t* hsmciFifoBaseAddress = (uint8_t*)(${HSMCI_INSTANCE_NAME}_BASE_ADDRESS + HSMCI_FIFO_REG_OFST);
 volatile static HSMCI_OBJECT ${HSMCI_INSTANCE_NAME?lower_case}Obj;
 
 static void ${HSMCI_INSTANCE_NAME}_VariablesInit ( void )
@@ -232,8 +233,8 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
 
        (void) ${XDMAC_INSTANCE_NAME}_ChannelTransfer(
             (XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
-            (const void *)&(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_FIFO[0]),
-            (const void *)buffer,
+            hsmciFifoBaseAddress,
+            buffer,
             (numBytes/4U)
         );
     }
@@ -254,8 +255,8 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
 
        (void) ${XDMAC_INSTANCE_NAME}_ChannelTransfer(
             (XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
-            (const void *)buffer,
-            (const void *)&(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_FIFO[0]),
+            buffer,
+            hsmciFifoBaseAddress,
             (numBytes/4U)
         );
    }
@@ -275,18 +276,18 @@ void ${HSMCI_INSTANCE_NAME}_BlockCountSet ( uint16_t numBlocks )
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR |= ((uint32_t)numBlocks << HSMCI_BLKR_BCNT_Pos);
 }
 
-bool ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clock )
+bool ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clockfreq )
 {
     uint32_t mck = ${HSMCI_CLK};
     uint32_t clkdiv = 0U;
     uint32_t rest = 0U;
 
-    /* Speed = MCK clock / (2 * (CLKDIV + 1)) */
+    /* Speed = MCK clockfreq / (2 * (CLKDIV + 1)) */
 
-    if ((clock * 2U) < mck)
+    if ((clockfreq * 2U) < mck)
     {
-        clkdiv = mck / (2U * clock);
-        rest = mck - (2U*clock)*clkdiv;
+        clkdiv = mck / (2U * clockfreq);
+        rest = mck - (2U * clockfreq) * clkdiv;
 
         if (rest > 0U)
         {

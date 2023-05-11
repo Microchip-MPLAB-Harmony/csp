@@ -67,7 +67,7 @@ bool ${HSMCI_INSTANCE_NAME}_IsCmdLineBusy (void);
 
 bool ${HSMCI_INSTANCE_NAME}_IsDatLineBusy (void);
 
-bool ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clock );
+bool ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clockfreq );
 
 uint16_t ${HSMCI_INSTANCE_NAME}_CommandErrorGet(void);
 
