@@ -414,7 +414,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>        /* Wait for Synchronization before reading value from Count Register */
     <#lt>    }
     <#if SYS_TIME_COMPONENT_ID == "sys_time">
-        <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT + 4);
+        <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT + 4U);
     <#else>
         <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT);
     </#if>
