@@ -174,7 +174,7 @@ bool SYSTICK_TimerInterruptDisable ( void )
 {
     bool interruptStatus = false;
 
-    if (SysTick->CTRL & SysTick_CTRL_TICKINT_Msk)
+    if ((SysTick->CTRL & SysTick_CTRL_TICKINT_Msk) != 0U)
     {
         interruptStatus = true;
     }
@@ -197,7 +197,7 @@ void SYSTICK_TimerInterruptEnable ( void )
 <#else>
     SysTick->CTRL = 0x03U;
 </#if>
-    if(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk)
+    if((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
     {
         SCB->ICSR |= SCB_ICSR_PENDSTSET_Msk;
     }
