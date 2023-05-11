@@ -48,7 +48,7 @@ void ${INTERRUPT_HANDLER} (void);
             <#assign NVIC_VECTOR_ENABLE = "NVIC_" + i + "_0_ENABLE">
             <#assign NVIC_VECTOR_HANDLER = "NVIC_" + i + "_0_HANDLER">
                 <#if .vars[NVIC_VECTOR_ENABLE]?? && .vars[NVIC_VECTOR_ENABLE] && !(INTERRUPT_HANDLERS?contains("," + .vars[NVIC_VECTOR_HANDLER] +","))>
-                <#if !([-5, -2]?seq_contains(i) && BARE_METAL)>
+                <#if !([-5, -2]?seq_contains(i) && (CoreArchitecture?matches("CORTEX-M[2|3]3") || BARE_METAL))>
                 <#assign INTERRUPT_HANDLERS = INTERRUPT_HANDLERS + .vars[NVIC_VECTOR_HANDLER] + "," >
                 </#if>
                 </#if>
