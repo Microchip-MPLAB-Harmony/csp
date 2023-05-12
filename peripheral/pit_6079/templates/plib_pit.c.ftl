@@ -53,7 +53,6 @@
 
 #define PIT_COUNTER_FREQUENCY       (${core.PIT_CLOCK_FREQUENCY}U / 16U)
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: File Scope Data Types
@@ -172,7 +171,9 @@ void ${PIT_INSTANCE_NAME}_DelayUs(uint32_t delay_us)
     }
 }
 
-<#if ENABLE_INTERRUPT == true>
+<#assign BARE_METAL = ((!((HarmonyCore.SELECT_RTOS)??)) || HarmonyCore.SELECT_RTOS == "BareMetal")>
+<#assign INTERRUPT_USED_BY_RTOS = !(__PROCESSOR?matches("ATSAMA5.*")) || BARE_METAL>
+<#if ENABLE_INTERRUPT && INTERRUPT_USED_BY_RTOS>
 void ${PIT_INSTANCE_NAME}_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t context)
 {
     ${PIT_INSTANCE_NAME?lower_case}.callback = callback;

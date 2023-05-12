@@ -1,3 +1,4 @@
+<#assign BARE_METAL = ((!((HarmonyCore.SELECT_RTOS)??)) || HarmonyCore.SELECT_RTOS == "BareMetal")>
 <#list AIC_VECTOR_MIN..AIC_VECTOR_MAX as index>
     <#assign AIC_FIRST_NAME_KEY =  "AIC_FIRST_NAME_KEY" + index>
     <#if .vars[AIC_FIRST_NAME_KEY]?? && .vars[AIC_FIRST_NAME_KEY] != "">
@@ -5,7 +6,10 @@
         <#assign INTERRUPT_ENABLE = .vars[INTERRUPT_NAME + "_INTERRUPT_ENABLE"]>
         <#if INTERRUPT_ENABLE>
             <#assign INTERRUPT_HANDLER = .vars[INTERRUPT_NAME + "_INTERRUPT_HANDLER"]>
+	    <#assign INTERRUPT_USED_BY_RTOS = (INTERRUPT_NAME == "PIT") && __PROCESSOR?matches("ATSAMA5.*")>
+            <#if BARE_METAL || !INTERRUPT_USED_BY_RTOS>
 void ${INTERRUPT_HANDLER} (void);
+            </#if>
         </#if>
     </#if>
 </#list>
