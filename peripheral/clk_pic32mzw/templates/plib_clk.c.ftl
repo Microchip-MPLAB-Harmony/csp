@@ -130,14 +130,13 @@ void CLK_Initialize( void )
     volatile unsigned int *PMDRCLR = (unsigned int *) 0xBF8000B4U;
 	volatile unsigned int *RFSPICTL = (unsigned int *) 0xBF8C8028U;
     
-    uint8_t TempPOR = 0, TempEXTR = 0, TempSWR = 0;
-
     /* unlock system for clock configuration */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655U;
     SYSKEY = 0x556699AA;
 
-    if(((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET) == (uint32_t)PIC32MZW1_B0)
+	if(((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET == (uint32_t)PIC32MZW1_B0)
+            || ((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET == (uint32_t)PIC32MZW1_G))
     {
 		if(SPLLCON_DEFAULT == SPLLCON)
 		{
@@ -153,7 +152,7 @@ void CLK_Initialize( void )
 			/* make sure we properly take out of reset */
 			*RFSPICTL = 0x80000002U;
 
-			if(1U == DEVIDbits.VER)
+			if((1U == DEVIDbits.VER) || (((DEVID & PART_NUM_MASK) >> 20) == (uint32_t)PIC32MZW1_G))
 			{
                 wifi_spi_write(0x85, 0x00F2); /* MBIAS filter and A31 analog_test */
                 wifi_spi_write(0x84, 0x0001); /* A31 Analog test */
@@ -206,17 +205,29 @@ void CLK_Initialize( void )
                 /* Nothing to do */
             }
 			/****************************************************************
-			* check to see if PLL locked; indicates POSC must have started
-			*****************************************************************/
-			if(0U == (*PLLDBG & 0x1U))
-			{
-				/*POSC failed to start!*/
-				while(true)
+             * check to see if PLL locked; indicates POSC must have started
+             * The recommendation is to use SPLL as the System Clock.
+             * Below code assumes that is the case in most practical use cases.
+            *****************************************************************/
+            if(OSCCONbits.COSC & 0x2U)
+            {
+                if(0U == (CLKSTATbits.POSCRDY & 0x1U))
+                {
+                     while(true)
+                    {
+                        /* Nothing to do */
+                    }
+                }
+            }
+            else if(0U == (*PLLDBG & 0x1U))
+            {
+                /*POSC failed to start!*/
+                while(true)
                 {
                    /* Nothing to do */
-                } 
-			}
-			if(1U == DEVIDbits.VER)
+                }
+            }       
+			if(1U == DEVIDbits.VER || (((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET) == (uint32_t)PIC32MZW1_G))
 			{
 				/*Disabling internal schmitt-trigger to increase noise immunity */
 				wifi_spi_write(0x85, 0x00F4);
@@ -603,18 +614,6 @@ void CLK_Initialize( void )
 <#if PMDLOCK_ENABLE?? && PMDLOCK_ENABLE == true>
     CFGCON0bits.PMDLOCK = 1;
 </#if>
-	if(1U == RCONbits.POR)
-    {
-		RCONbits.POR = 0;
-    }
-	if(1U == RCONbits.EXTR)
-    {
-		RCONbits.EXTR = 0;
-    }
-    if(1U == RCONbits.SWR)
-    {
-        RCONbits.SWR = 0;
-    }
 
     /* Lock system since done with clock configuration */
     SYSKEY = 0x33333333;
