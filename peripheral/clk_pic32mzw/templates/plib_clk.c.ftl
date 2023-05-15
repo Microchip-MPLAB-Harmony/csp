@@ -82,14 +82,11 @@
     function of the 'configuration bits' to configure the system oscillators.
 */
 
-#define EWPLLCON_MSK 0x0438080cU
-#define EWPLL_PWRON  0x808U
-
-static void  DelayMs ( uint32_t  delayMs)
+static void  DelayUs ( uint32_t  delayUs)
 {
     uint32_t startCount, endCount;
     /* Calculate the end count for the given delay */
-    endCount=((uint32_t)CORE_TIMER_FREQ/1000U)* delayMs;
+    endCount=((uint32_t)CORE_TIMER_FREQ/1000000U)* delayUs;
     startCount=_CP0_GET_COUNT();
     while((_CP0_GET_COUNT()-startCount)<endCount)
     {
@@ -105,6 +102,7 @@ static void  DelayMs ( uint32_t  delayMs)
     clk_high = 0x1 ;
     cs_high  = 0x2;
     en_bit_bang  = 0x1UL << 31;
+    addr_bit = 0; data_bit = 0;
 
     *wifi_spi_ctrl_reg = en_bit_bang | cs_high ;
     *wifi_spi_ctrl_reg = (en_bit_bang | cs_high | clk_high );
@@ -131,7 +129,7 @@ void CLK_Initialize( void )
     volatile unsigned int *PLLDBG = (unsigned int*) 0xBF8000E0U;
     volatile unsigned int *PMDRCLR = (unsigned int *) 0xBF8000B4U;
 	volatile unsigned int *RFSPICTL = (unsigned int *) 0xBF8C8028U;
-
+    
     uint8_t TempPOR = 0, TempEXTR = 0, TempSWR = 0;
 
     /* unlock system for clock configuration */
@@ -139,23 +137,17 @@ void CLK_Initialize( void )
     SYSKEY = 0xAA996655U;
     SYSKEY = 0x556699AA;
 
-    if(((DEVID & 0x0FF00000U) >> 20) == (uint32_t)PIC32MZW1_B0)
+    if(((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET) == (uint32_t)PIC32MZW1_B0)
     {
-        TempPOR = RCONbits.POR;
-        TempEXTR = RCONbits.EXTR;
-        TempSWR = RCONbits.SWR;
-
-        if(((CLKSTATbits.SPLLRDY == 0U) && (TempPOR == 1U) && (TempEXTR == 1U))
-            || ((1U == CLKSTATbits.SPLLRDY) && (0U == TempPOR) &&
-            ((1U == TempEXTR) || (1U == TempSWR))))
+		if(SPLLCON_DEFAULT == SPLLCON)
 		{
-			EWPLLCON = 0x808; // Start with PWR-OFF PLL
-			SPLLCON  = 0x808; // Start with PWR-OFF PLL
-			 DelayMs(5);
+			EWPLLCON = PLL_PWROFF; // Start with PWR-OFF PLL
+			SPLLCON  = PLL_PWROFF; // Start with PWR-OFF PLL
+			DelayUs(300);
 
-			CFGCON2  |= 0x300U; // Start with POSC Turned OFF
+			CFGCON2  |= POSC_DIS; // Start with POSC Turned OFF
 			/* if POSC was on give some time for POSC to shut off */
-			 DelayMs(5);
+			DelayUs(300);
 			/* make sure we properly reset SPI to a known state */
 			*RFSPICTL = 0x80000022U;
 			/* make sure we properly take out of reset */
@@ -175,10 +167,10 @@ void CLK_Initialize( void )
                 wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */
                 wifi_spi_write(0x82, 0x6400); /* XTAL LDO feedback divider (1.3+v) */
 			}
-             DelayMs(2);
+             DelayUs(200);
 			/* Enable POSC */
-			CFGCON2  &= 0xFFFFFCFFU; // enable POSC
-			 DelayMs(5);
+			CFGCON2  &= POSC_EN; // enable POSC
+			 DelayUs(300);
 
 			/*Configure SPLL*/
 			${CFGCON3_NAME} = ${CFGCON3_VALUE};
@@ -222,7 +214,7 @@ void CLK_Initialize( void )
 				while(true)
                 {
                    /* Nothing to do */
-                }
+                } 
 			}
 			if(1U == DEVIDbits.VER)
 			{
@@ -241,7 +233,7 @@ void CLK_Initialize( void )
                 /* Nothing to do */
             }
 
-            SPLLCON  = 0x808; // Start with PWR-OFF PLL
+            SPLLCON  = PLL_PWROFF; // Start with PWR-OFF PLL
 
             /*Configure SPLL*/
 			${CFGCON3_NAME} = ${CFGCON3_VALUE};
@@ -285,7 +277,7 @@ void CLK_Initialize( void )
                 {
                     /* Nothing to do */
                 }
-
+                
 			}
 </#if>
 		}
@@ -302,8 +294,8 @@ void CLK_Initialize( void )
 		/* ETHCLKOUTEN   = ${EWPLLCON_ETHCLKOUTEN_VALUE} */
 		/* EWPLL_BYP     = ${EWPLLCON_EWPLL_BYP_VALUE} */
 		${EWPLLCON_REG} = 0x${EWPLLCON_VALUE}U ^ EWPLLCON_MSK;
-		 DelayMs(1);
-		${EWPLLCON_REG} &= ~EWPLL_PWRON;
+		 DelayUs(200);
+		${EWPLLCON_REG} &= ~PLL_PWROFF;
 		/****************************************************************
 		* check to see if PLL locked; indicates POSC must have started
 		*****************************************************************/
@@ -356,18 +348,18 @@ void CLK_Initialize( void )
 
         *(PMDRCLR)  = 0x1000;
     }
-    else if(((DEVID & 0x0FF00000U) >> 20) == (uint32_t)PIC32MZW1_A1)
+    else if(((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET) == (uint32_t)PIC32MZW1_A1)
     {
 
-		CFGCON2  |= 0x300U; // Start with POSC Turned OFF
-		 DelayMs(2);
+		CFGCON2  |= POSC_DIS; // Start with POSC Turned OFF
+		 DelayUs(200);
 
 		/* make sure we properly reset SPI to a known state */
 		*RFSPICTL = 0x80000022U;
 		/* now wifi is properly reset enable POSC */
-		CFGCON2  &= 0xFFFFFCFFU; // enable POSC
+		CFGCON2  &= POSC_EN; // enable POSC
 
-		 DelayMs(2);
+		 DelayUs(200);
 
         /* make sure we properly take out of reset */
         *RFSPICTL = 0x80000002U;
@@ -378,7 +370,7 @@ void CLK_Initialize( void )
         wifi_spi_write(0x82, 0x6000); // XTAL LDO feedback divider (1.3+v)
 
 		 /* Wait for POSC ready */
-        while((CLKSTAT & 0x00000004U) == 0U)
+        while((CLKSTAT & 0x00000004U) == 0U) 
         {
             /* Nothing to do */
         }
