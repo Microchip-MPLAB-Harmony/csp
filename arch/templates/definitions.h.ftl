@@ -207,7 +207,7 @@ void SYS_Initialize( void *data );
             <#if LIST_SYSTEM_DEFINITIONS_H_OBJECTS?length gt 0>
                 <#lt>${LIST_SYSTEM_DEFINITIONS_H_OBJECTS}
             <#else>
-                <#lt>    char RESERVED;
+                <#lt>    char reserved;
             </#if>
             <#lt>} SYSTEM_OBJECTS;
         </#if>
