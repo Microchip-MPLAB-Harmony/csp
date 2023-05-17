@@ -350,22 +350,25 @@ void ${PMECC_INSTANCE_NAME}_DataPhaseStart(bool writeEnable)
 
 bool ${PMECC_INSTANCE_NAME}_StatusIsBusy(void)
 {
-    return (${PMECC_INSTANCE_NAME}_REGS->PMECC_SR & PMECC_SR_BUSY_Msk);
+    return ((${PMECC_INSTANCE_NAME}_REGS->PMECC_SR & PMECC_SR_BUSY_Msk) != 0U);
 }
 
 uint8_t ${PMECC_INSTANCE_NAME}_ErrorGet(void)
 {
-    return (${PMECC_INSTANCE_NAME}_REGS->PMECC_ISR & PMECC_ISR_ERRIS_Msk);
+    return (uint8_t)(${PMECC_INSTANCE_NAME}_REGS->PMECC_ISR & PMECC_ISR_ERRIS_Msk);
 }
 
 int16_t ${PMECC_INSTANCE_NAME}_RemainderGet(uint32_t sector, uint32_t remainderIndex)
 {
-    return ((volatile int16_t *)${PMECC_INSTANCE_NAME}_REGS->PMECC_REM[sector].PMECC_REM)[remainderIndex];
+    uint8_t lowByte = ((volatile const uint8_t *)${PMECC_INSTANCE_NAME}_REGS->PMECC_REM[sector].PMECC_REM)[remainderIndex * 2U];
+    uint8_t highByte = ((volatile const uint8_t *)${PMECC_INSTANCE_NAME}_REGS->PMECC_REM[sector].PMECC_REM)[remainderIndex * 2U + 1U];
+    uint32_t retVal = ((uint32_t)highByte << 8) + (uint32_t)lowByte;
+    return (int16_t)retVal;
 }
 
 uint8_t ${PMECC_INSTANCE_NAME}_ECCGet(uint32_t sector, uint32_t byteIndex)
 {
-    return ((volatile uint8_t *)${PMECC_INSTANCE_NAME}_REGS->PMECC_ECC[sector].PMECC_ECC)[byteIndex];
+    return ((volatile const uint8_t *)${PMECC_INSTANCE_NAME}_REGS->PMECC_ECC[sector].PMECC_ECC)[byteIndex];
 }
 </#if>
 
@@ -407,7 +410,8 @@ void ${PMERRLOC_INSTANCE_NAME}_ErrorLocationDisable(void)
 
 void ${PMERRLOC_INSTANCE_NAME}_SigmaSet(uint32_t sigmaVal, uint32_t sigmaNum)
 {
-    *(volatile uint32_t *)(&${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_SIGMA0 + sigmaNum) = sigmaVal;
+    volatile uint32_t* sigma_base_address = (volatile uint32_t*)(PMERRLOC_BASE_ADDRESS + PMERRLOC_SIGMA0_REG_OFST);
+    sigma_base_address[sigmaNum] = sigmaVal;
 }
 
 uint32_t ${PMERRLOC_INSTANCE_NAME}_ErrorLocationFindNumOfRoots(uint32_t sectorSizeInBits, uint32_t errorNumber)
@@ -416,7 +420,10 @@ uint32_t ${PMERRLOC_INSTANCE_NAME}_ErrorLocationFindNumOfRoots(uint32_t sectorSi
     ${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELCFG = (${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELCFG & ~PMERRLOC_ELCFG_ERRNUM_Msk) | PMERRLOC_ELCFG_ERRNUM(errorNumber);
     ${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELEN = sectorSizeInBits;
 
-    while ((${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELISR & PMERRLOC_ELISR_DONE_Msk) == 0);
+    while ((${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELISR & PMERRLOC_ELISR_DONE_Msk) == 0U)
+    {
+        /* Wait for completion */
+    }
 
     return ((${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELISR & PMERRLOC_ELISR_ERR_CNT_Msk) >> PMERRLOC_ELISR_ERR_CNT_Pos);
 }
