@@ -52,7 +52,14 @@
 </#if>
 #include "definitions.h"
 #include "device.h"
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+    <#if COMPILER_CHOICE == "XC32">
 
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+</#if>
 
 
 // ****************************************************************************
@@ -82,10 +89,7 @@ const unsigned int __attribute__((space(prog), keep, address(0x41004000))) SET_S
 /* MISRA C-2012 Rule 11.3 */
 /* MISRA C-2012 Rule 11.8 */
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
-<#if COMPILER_CHOICE == "XC32">
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-</#if>
+#pragma coverity compliance block deviate "MISRA C-2012 Rule 7.2"  "H3_MISRAC_2012_R_7_2_DR_1"
 #pragma coverity compliance block deviate "MISRA C-2012 Rule 11.1" "H3_MISRAC_2012_R_11_1_DR_1"
 #pragma coverity compliance block deviate "MISRA C-2012 Rule 11.3" "H3_MISRAC_2012_R_11_3_DR_1"
 #pragma coverity compliance block deviate "MISRA C-2012 Rule 11.8" "H3_MISRAC_2012_R_11_8_DR_1"
@@ -128,12 +132,10 @@ ${LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION}
 // *****************************************************************************
 ${LIST_SYSTEM_INIT_C_INITIALIZER_STATIC_FUNCTIONS}
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 7.2"
 #pragma coverity compliance end_block "MISRA C-2012 Rule 11.1"
 #pragma coverity compliance end_block "MISRA C-2012 Rule 11.3"
 #pragma coverity compliance end_block "MISRA C-2012 Rule 11.8"
-<#if COMPILER_CHOICE == "XC32">
-#pragma GCC diagnostic pop
-</#if>
 </#if>
 /* MISRAC 2012 deviation block end */
 
@@ -149,12 +151,7 @@ ${LIST_SYSTEM_INIT_C_INITIALIZER_STATIC_FUNCTIONS}
 
 void SYS_Initialize ( void* data )
 {
-<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
-    <#if COMPILER_CHOICE == "XC32">
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-    </#if>
-</#if>
+
     /* MISRAC 2012 deviation block start */
     /* MISRA C-2012 Rule 2.2 deviated in this file.  Deviation record ID -  H3_MISRAC_2012_R_2_2_DR_1 */
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
@@ -196,16 +193,14 @@ void SYS_Initialize ( void* data )
     #pragma coverity compliance end_block "MISRA C-2012 Rule 2.2"
 </#if>
     /* MISRAC 2012 deviation block end */
+}
 
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
     <#if COMPILER_CHOICE == "XC32">
-    #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 
     </#if>
 </#if>
-}
-
-
 /*******************************************************************************
  End of File
 */
