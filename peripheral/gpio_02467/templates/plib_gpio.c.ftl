@@ -45,7 +45,6 @@
 <#if CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
-#include "interrupts.h"
 
 <#compress> <#-- To remove unwanted new lines -->
 
