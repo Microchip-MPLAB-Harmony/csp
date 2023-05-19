@@ -74,7 +74,7 @@
 <#assign ADC_EVCTRL_VAL = "">
 <#assign ADC_INTENSET_VAL = "">
 <#assign ADC_CTRLA_VAL = "">
-<#if ADC_INPUTCTRL_MUXNEG != "GND">
+<#if ADC_INPUTCTRL_MUXNEG != "GND" && ADC_INPUTCTRL_MUXNEG != "AVSS" >
     <#assign ADC_INPUTCTRL_VAL = "ADC_INPUTCTRL_DIFFMODE_Msk">
 </#if>
 <#if ADC_CTRLB_LEFTADJ == true>
