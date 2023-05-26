@@ -389,7 +389,7 @@ static void __attribute__((used)) ${UART_INSTANCE_NAME}_ERROR_InterruptHandler (
 
 static void __attribute__((used)) ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 {
-    uint8_t lsr;
+    uint32_t lsr;
 
     if(${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
@@ -403,7 +403,7 @@ static void __attribute__((used)) ${UART_INSTANCE_NAME}_RX_InterruptHandler (voi
             /* Check for overrun, parity and framing errors */
             ${UART_INSTANCE_NAME?lower_case}Obj.errors = (lsr & (UART_DATA_LSR_OVERRUN_Msk | UART_DATA_LSR_PE_Msk | UART_DATA_LSR_FRAME_ERR_Msk));
 
-            if (((lsr & UART_DATA_LSR_DATA_READY_Msk) != 0U) && ((uint32_t)${UART_INSTANCE_NAME?lower_case}Obj.errors == 0U))
+            if ((${UART_INSTANCE_NAME?lower_case}Obj.errors == 0U) && ((lsr & UART_DATA_LSR_DATA_READY_Msk) != 0U))
             {
                 ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[rxProcessedSize] = UART${UART_INSTANCE_NUM}_REGS->DATA.UART_RX_DAT;
                 rxProcessedSize++;
