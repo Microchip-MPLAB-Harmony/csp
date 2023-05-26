@@ -165,10 +165,10 @@ void GPIO_PinToggle(GPIO_PIN pin)
     *pin_ctrl_reg ^= GPIO_CTRL0_ALT_GPIO_DATA_Msk;
 }
 
-uint8_t GPIO_PinRead(GPIO_PIN pin)
+bool GPIO_PinRead(GPIO_PIN pin)
 {
     volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
-    return (((*pin_ctrl_reg) & (GPIO_CTRL0_GPIO_INP_Msk)) > 0U)? 1U : 0U;
+    return (((*pin_ctrl_reg) & (GPIO_CTRL0_GPIO_INP_Msk)) > 0U);
 }
 
 void GPIO_PinWrite(GPIO_PIN pin, bool value)
@@ -177,10 +177,10 @@ void GPIO_PinWrite(GPIO_PIN pin, bool value)
     *pin_ctrl_reg = (*pin_ctrl_reg & ~GPIO_CTRL0_ALT_GPIO_DATA_Msk) | ((value ? 1UL : 0UL) << GPIO_CTRL0_ALT_GPIO_DATA_Pos);
 }
 
-uint8_t GPIO_PinLatchRead(GPIO_PIN pin)
+bool GPIO_PinLatchRead(GPIO_PIN pin)
 {
     volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
-    return (((*pin_ctrl_reg) & (GPIO_CTRL0_ALT_GPIO_DATA_Msk)) > 0U)? 1U : 0U;
+    return (((*pin_ctrl_reg) & (GPIO_CTRL0_ALT_GPIO_DATA_Msk)) > 0U);
 }
 
 void GPIO_GroupSet(GPIO_GROUP group, uint32_t mask)
