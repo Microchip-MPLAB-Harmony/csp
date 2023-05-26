@@ -183,9 +183,9 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
     <#lt>}
 
 <#if TC_COMMON_INTERRUPT_STATUS?? && TC_COMMON_INTERRUPT_STATUS == true>
-    <#if .vars[TC_INSTANCE_NAME + "_CH" + CH_NUM + "_INTERRUPT_ENABLE"] == true>
-        <#lt>/* Interrupt handler for Channel ${CH_NUM} */
-        <#lt>static void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+    <#if .vars[TC_INSTANCE_NAME + "_CH0" + "_INTERRUPT_ENABLE"] == true>
+        <#lt>/* Interrupt handler for Channel 0 */
+        <#lt>static void __attribute__((used)) ${TC_INSTANCE_NAME}_CH0_InterruptHandler(void)
 	<#lt>{
     <#lt>    uint32_t tc_quad_stat = (${TC_INSTANCE_NAME}_REGS->TC_QISR & (uint32_t)TC_QUADRATURE_STATUS_MSK);
     <#lt>    TC_QUADRATURE_STATUS quadrature_status = (TC_QUADRATURE_STATUS)tc_quad_stat;
@@ -201,8 +201,8 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
     <#lt>}
     </#if>
 <#else>
-    <#lt>/* Interrupt handler for Channel ${CH_NUM} */
-    <#lt>void __attribute__((used)) ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
+    <#lt>/* Interrupt handler for Channel 0 */
+    <#lt>void __attribute__((used)) ${TC_INSTANCE_NAME}_CH0_InterruptHandler(void)
 	<#lt>{
     <#lt>    uint32_t tc_quad_stat = (${TC_INSTANCE_NAME}_REGS->TC_QISR & (uint32_t)TC_QUADRATURE_STATUS_MSK);
     <#lt>    TC_QUADRATURE_STATUS quadrature_status = (TC_QUADRATURE_STATUS)tc_quad_stat;
