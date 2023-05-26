@@ -152,13 +152,13 @@ void __attribute__((used)) CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
 void ${CCP_INSTANCE_NAME}_TimerInterruptEnable(void)
 {
 
-    ${CCP_IEC_REG}SET = _${CCP_IEC_REG}_CCP${CCP_INSTANCE_NUM}IE_MASK;
+    ${CCP_IEC_REG}SET = _${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
 }
 
 
 void ${CCP_INSTANCE_NAME}_TimerInterruptDisable(void)
 {
-    ${CCP_IEC_REG}CLR = _${CCP_IEC_REG}_CCP${CCP_INSTANCE_NUM}IE_MASK;
+    ${CCP_IEC_REG}CLR = _${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
 }
 
 
