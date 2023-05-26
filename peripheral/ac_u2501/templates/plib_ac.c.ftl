@@ -348,7 +348,7 @@ void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
         /* Wait for Synchronization */
     }
     /* Swap inputs of the given comparator */
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] = AC_COMPCTRL_SWAP_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_SWAP_Msk;
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U))
     {
