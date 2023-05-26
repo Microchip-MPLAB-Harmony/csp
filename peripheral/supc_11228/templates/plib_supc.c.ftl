@@ -277,7 +277,7 @@ void __attribute__((used)) ${SUPC_INSTANCE_NAME}_InterruptHandler( void )
     /* Callback user function */
     if(supcObj.callback != NULL)
     {
-        supcObj.callback(supcObj.context);
+        supcObj.callback(context);
     }
 }
 </#if>
