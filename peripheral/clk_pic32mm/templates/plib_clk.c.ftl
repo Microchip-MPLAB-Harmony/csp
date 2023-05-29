@@ -84,8 +84,6 @@
 
 void CLK_Initialize( void )
 {
-    uint32_t status;
-
     /* unlock system for clock configuration */
     SYSKEY = 0x00000000U;
     SYSKEY = 0xAA996655U;
@@ -108,7 +106,7 @@ void CLK_Initialize( void )
     OSCCON = OSCCON | 0x00000101U;    //NOSC = SPLL, initiate clock switch (OSWEN = 1)
 
     /* Wait for PLL to be ready and clock switching operation to complete */
-    status = CLKSTATbits.SPLLRDY;
+    uint32_t status = CLKSTATbits.SPLLRDY;
     status |= CLKSTATbits.SPDIVRDY;
     while((OSCCONbits.OSWEN != 0U) || (status == 0U))
     {
