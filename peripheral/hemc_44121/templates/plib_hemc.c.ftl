@@ -209,6 +209,11 @@ void ${HSDRAMC_INSTANCE_NAME}_Initialize( void )
 </#list>
 
 <#if HSMC_WRITE_PROTECTION>
+    <#if HSMC_INIT_GENERATED == false>
+        <#lt>static void ${HSMC_INSTANCE_NAME}_Initialize( void )
+        <#lt>{
+        <#assign HSMC_INIT_GENERATED = true>
+    </#if>
     /* Enable Write Protection */
     ${HSMC_INSTANCE_NAME}_REGS->HSMC_WPMR = (HSMC_WPMR_WPKEY_PASSWD | HSMC_WPMR_WPEN_Msk);
 </#if>
