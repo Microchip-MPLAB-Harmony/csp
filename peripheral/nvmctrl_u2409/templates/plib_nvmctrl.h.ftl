@@ -162,7 +162,9 @@ bool ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_IsActiveSectorFull(void);
 
 void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMSectorReallocate(void);
 
+<#if NVM_WMODE_ENABLE??>
 void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMFlushPageBuffer(void);
+</#if>
 
 void ${NVMCTRL_INSTANCE_NAME}_BankSwap(void);
 
