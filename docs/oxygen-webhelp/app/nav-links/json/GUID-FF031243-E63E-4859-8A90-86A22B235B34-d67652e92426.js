@@ -1,0 +1,1 @@
+define({"topics":[{"title":"<ph>1.28.24.1<\/ph>\nSMC_Initialize Function","href":"GUID-5574CDCC-EA9C-4D13-ADCC-D8F41CDAAA47.html","attributes":{"data-id":"GUID-5574CDCC-EA9C-4D13-ADCC-D8F41CDAAA47"},"menu":{"hasChildren":false},"tocID":"GUID-5574CDCC-EA9C-4D13-ADCC-D8F41CDAAA47-d67652e92434","topics":[]}]});
