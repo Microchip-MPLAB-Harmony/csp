@@ -11,7 +11,7 @@ package:
       type: "package"
       version: "v3.17.0"
     - name: "CMSIS"
-      type: "dfp"
+      type: "package"
       version: "5.8.0"
     - name: "harmony-services"
       type: "package"
