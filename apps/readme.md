@@ -7,8 +7,10 @@ Microchip MPLAB Harmony provides several application examples for most supported
 | [csp_apps_pic32cm_jh00_jh01](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cm_jh00_jh01) | Application examples for PIC32CM JH01 family |
 | [csp_apps_pic32cm_le_ls](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cm_le_ls) | Application examples for PIC32CM LE/LS family |
 | [csp_apps_pic32cm_mc00](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cm_mc00) | Application examples for PIC32CM MC00 family |
-| [csp_apps_pic32cxbz2_wbz45](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz2_wbz45) | Application examples for PIC32CX-BZ2 family of wireless microcontrollers (MCUs) and WBZ451 modules |
 | [csp_apps_pic32cx_mt](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cx_mt) | Application examples for PIC32CX MT family |
+| [csp_apps_pic32cx_sg41](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cx_sg41) | Application examples for PIC32CX SG family |
+| [csp_apps_pic32cxbz2_wbz45](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz2_wbz45) | Application examples for PIC32CX-BZ2 family of wireless microcontrollers (MCUs) and WBZ451 modules |
+| [csp_apps_pic32cxbz3_wbz3](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz3_wbz3) | Application examples for PIC32CX-BZ3 SoC Family of wireless microcontrollers (MCUs) and WBZ35x Modules |
 | [csp_apps_pic32cz_ca](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cz_ca) | Application examples for PIC32CZ-CA family |
 | [csp_apps_pic32mk](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mk) | Application examples for: <br> PIC32MK GENERAL PURPOSE AND MOTOR CONTROL (GP/MC) family <br> PIC32MK GENERAL PURPOSE AND MOTOR CONTROL (GPG/MCJ) WITH CAN FD family <br> PIC32MK GENERAL PURPOSE AND MOTOR CONTROL (GPK/MCM) WITH CAN FD family |
 | [csp_apps_pic32mm](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mm) | Application examples for PIC32MM family |
@@ -16,6 +18,7 @@ Microchip MPLAB Harmony provides several application examples for most supported
 | [csp_apps_pic32mz_da](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mz_da) | Application examples for: <br> PIC32MZ Graphics (DA) Family <br> PIC32MZ Graphics (DAK/DAL/DAR/DAS) Family |
 | [csp_apps_pic32mz_ef](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mz_ef) | Application examples for PIC32MZ Embedded Connectivity with Floating Point Unit (EF) Family |
 | [csp_apps_pic32mz_w1](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32mz_w1) | Application examples for PIC32MZ W1 and WFI32E01 family|
+| [csp_apps_sam_9x7](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_9x7) | Application examples for SAM 9X7 family|
 | [csp_apps_sam_9x60](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_9x60) | Application examples for SAM9X60 family |
 | [csp_apps_sam_a5d2](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_a5d2) | Application examples for SAMA5D2 family |
 | [csp_apps_sam_a7g5](https://github.com/Microchip-MPLAB-Harmony/csp_apps_sam_a7g5) | Application examples for SAMA7G5 family |

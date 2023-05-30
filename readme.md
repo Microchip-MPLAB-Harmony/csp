@@ -33,6 +33,7 @@ reference information.
 | arch       | Initialization and starter code templates and data        |
 | docs       | CSP library help documentation                            |
 | peripheral | Peripheral library templates and configuration data       |
+| plugins    | UI configurator plugins for different peripherals         |
 
 ____
 
