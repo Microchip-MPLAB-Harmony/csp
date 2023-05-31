@@ -65,7 +65,10 @@ typedef enum
 {
 <#list 0 ..(AC_NUM_COMPARATORS -1) as i >
     <#assign CH_NUM = i>
+    <#assign AC_CMP_NUM = "AC_COMP_ID_ENUM_"+i>
+    <#if .vars[AC_CMP_NUM] != "-1">
     ${AC_INSTANCE_NAME}_CHANNEL${CH_NUM} = ${CH_NUM},
+    </#if>
 </#list>
 }AC_CHANNEL;
 

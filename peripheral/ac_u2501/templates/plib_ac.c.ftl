@@ -206,7 +206,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     ${AC_INSTANCE_NAME}_REGS->AC_CTRLC = AC_CTRLC_PRESCALER_${AC_CTRLC_PRESCALER}_Val | AC_CTRLC_PER(${AC_CTRLC_PERIOD}) | AC_CTRLC_WIDTH(${AC_CTRLC_WIDTH}) <#if (ANALOG_INPUT_CHARGE_PUMP_ENABLE?? && ANALOG_INPUT_CHARGE_PUMP_ENABLE == true)> | AC_CTRLC_AIPMPEN_Msk </#if>;
     </#if>
 
-     /* Disable the module and configure COMPCTRL */
+     
     <#list 0..4 as i>
     <#assign ANALOG_COMPARATOR_ENABLE = "ANALOG_COMPARATOR_ENABLE_" + i>
     <#assign AC_COMPCTRL_SINGLE_MODE = "AC_COMPCTRL_" + i +"SINGLE_MODE">
@@ -224,9 +224,9 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     <#assign AC_DACCTRL_VALUE = "AC" + i + "_DACCTRL_VALUE">
     <#assign AC_DACCTRL_SHEN = "AC" + i + "_DACCTRL_SHEN">
 
-        <#if .vars[ANALOG_COMPARATOR_ENABLE]?has_content>
-            <#if (.vars[ANALOG_COMPARATOR_ENABLE] != false)>
-
+    <#if .vars[ANALOG_COMPARATOR_ENABLE]?has_content>
+        <#if (.vars[ANALOG_COMPARATOR_ENABLE] != false)>
+    /* Disable the module and configure COMPCTRL */
     /**************** Comparator ${i} Configurations ************************/
     <@compress single_line=true>${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] = AC_COMPCTRL_MUXPOS_${.vars[AC_COMPCTRL_MUXPOS]}
                                   | AC_COMPCTRL_MUXNEG_${.vars[AC_COMPCTRL_MUXNEG]}

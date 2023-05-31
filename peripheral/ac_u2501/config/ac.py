@@ -164,6 +164,7 @@ def instantiateComponent(acComponent):
 
     acSym_Enable = []
     acSym_SCALERn = []
+    acSym_COMP_NUM = []
     calibBaseAddr = ""
     #Clock enable
     Database.setSymbolValue("core", acInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
@@ -172,6 +173,8 @@ def instantiateComponent(acComponent):
     node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AC\"]/instance@[name=\"AC""\"]/parameters")
     numOfComparators = 0
     calibRequired = -1
+    channelID = -1
+    cmpPresent = []   # to check which comparator id is present on the device
     parameters = []
     parameters = node.getChildren()
     for param in range (0, len(parameters)):
@@ -179,7 +182,7 @@ def instantiateComponent(acComponent):
             numOfComparators = int(parameters[param].getAttribute("value"))
         if(parameters[param].getAttribute("name") == "LOAD_CALIB"):
             calibRequired = int(parameters[param].getAttribute("value"))
-
+            
     # If LOAD_CALIB parameter is not present, it is assumed that CALIB register update is required to maintain backward compatibility
     if calibRequired == -1:
         calibRequired = 1
@@ -191,6 +194,24 @@ def instantiateComponent(acComponent):
     acCalibAddr = acComponent.createStringSymbol("AC_CALIB_ADDR", None)
     acCalibAddr.setDefaultValue(calibBaseAddr)
     acCalibAddr.setVisible(False)
+
+    #Find which comparator channel is present if there is only one comparator
+    if (numOfComparators == 1):
+        for param in range (0, len(parameters)):
+            if("CMP_CHID_PRESENT" in parameters[param].getAttribute("name")):
+                if (int(parameters[param].getAttribute("value")) >= numOfComparators):
+                    numOfComparators = int(parameters[param].getAttribute("value")) + 1
+                    channelID = int(parameters[param].getAttribute("value"))
+
+    # update cmpPresent array with which channels are available
+    for cmp in range (0, numOfComparators):
+        cmpPresent.append(cmp)
+        if channelID == -1:
+            cmpPresent[cmp] = 1   #by default, all comparator channels are present. 
+        else:
+            if cmp == channelID:
+                cmpPresent[cmp] = 1
+
 
     ctrlc_reg_present = False
     acSym_CTRLC_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"CTRLC\"]")
@@ -239,10 +260,20 @@ def instantiateComponent(acComponent):
 
     #Populate menu for all comparators in the AC peripheral
     for comparatorID in range(0, int(numOfComparators)):
+        # comparator ID enum  
+        acSym_COMP_NUM.append(comparatorID)
+        acSym_COMP_NUM[comparatorID] = acComponent.createStringSymbol("AC_COMP_ID_ENUM_"+str(comparatorID), None)     
+        acSym_COMP_NUM[comparatorID].setVisible(False)
+        if cmpPresent[comparatorID] == 0:
+            acSym_COMP_NUM[comparatorID].setValue("-1")
+        else:
+            acSym_COMP_NUM[comparatorID].setValue("AC_CHANNEL" + str(comparatorID))
+        
         acSym_Enable.append(comparatorID)
-
         acSym_Enable[comparatorID] = acComponent.createBooleanSymbol("ANALOG_COMPARATOR_ENABLE_" + str(comparatorID), None)
         acSym_Enable[comparatorID].setLabel("Comparator " + str(comparatorID) + " Settings")
+        if cmpPresent[comparatorID] == 0:
+            acSym_Enable[comparatorID].setVisible(False)        
 
         #Interrupt Enable
         global acInterrupt_Enable
