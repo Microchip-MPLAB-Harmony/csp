@@ -15,10 +15,10 @@
   - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
 
 - **New Features and Enhancements**
-  - MISRA-C 2012 required rules compliance for all Peripheral Libraries in MCUs and MPUs
+  - MISRA-C 2012 mandatory and required rules compliance for all Peripheral Libraries in MCUs and MPUs
   - Link-time optimization (LTO) support in CSP
   - DMA CRC support in PIC32CZ-CA
-  - Added support for ADC temperature sensor channel in SAM E7X/V7X devices
+  - Added support for ADC temperature sensor channel in SAM SAM E7X/S7X/V7X devices
   - Bug fixes and enhancements
 
 ### Known Issues
@@ -33,9 +33,8 @@ The current known issues are as follows:
 
 ### Development Tools
 
-- [MPLAB® X IDE v6.05](https://www.microchip.com/mplab/mplab-x-ide)
+- [MPLAB® X IDE v6.05](https://www.microchip.com/mplab/mplab-x-ide) or higher
 - [MPLAB® XC32 C/C++ Compiler v4.21](https://www.microchip.com/mplab/compilers)
-- [KEIL MDK v5.37](https://www2.keil.com/mdk5)
 - MPLAB® X IDE plug-ins:
     - MPLAB® Code Configurator 5.3.0 or higher
 
