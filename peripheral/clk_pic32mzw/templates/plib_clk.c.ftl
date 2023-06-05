@@ -105,7 +105,6 @@ static void  DelayMs ( uint32_t  delayMs)
     clk_high = 0x1 ;
     cs_high  = 0x2;
     en_bit_bang  = 0x1UL << 31;
-    addr_bit = 0; data_bit = 0;
 
     *wifi_spi_ctrl_reg = en_bit_bang | cs_high ;
     *wifi_spi_ctrl_reg = (en_bit_bang | cs_high | clk_high );
@@ -132,7 +131,7 @@ void CLK_Initialize( void )
     volatile unsigned int *PLLDBG = (unsigned int*) 0xBF8000E0U;
     volatile unsigned int *PMDRCLR = (unsigned int *) 0xBF8000B4U;
 	volatile unsigned int *RFSPICTL = (unsigned int *) 0xBF8C8028U;
-    
+
     uint8_t TempPOR = 0, TempEXTR = 0, TempSWR = 0;
 
     /* unlock system for clock configuration */
@@ -143,9 +142,9 @@ void CLK_Initialize( void )
     if(((DEVID & 0x0FF00000U) >> 20) == (uint32_t)PIC32MZW1_B0)
     {
         TempPOR = RCONbits.POR;
-        TempEXTR = RCONbits.EXTR; 
+        TempEXTR = RCONbits.EXTR;
         TempSWR = RCONbits.SWR;
-        
+
         if(((CLKSTATbits.SPLLRDY == 0U) && (TempPOR == 1U) && (TempEXTR == 1U))
             || ((1U == CLKSTATbits.SPLLRDY) && (0U == TempPOR) &&
             ((1U == TempEXTR) || (1U == TempSWR))))
@@ -223,7 +222,7 @@ void CLK_Initialize( void )
 				while(true)
                 {
                    /* Nothing to do */
-                } 
+                }
 			}
 			if(1U == DEVIDbits.VER)
 			{
@@ -286,7 +285,7 @@ void CLK_Initialize( void )
                 {
                     /* Nothing to do */
                 }
-                
+
 			}
 </#if>
 		}
@@ -379,7 +378,7 @@ void CLK_Initialize( void )
         wifi_spi_write(0x82, 0x6000); // XTAL LDO feedback divider (1.3+v)
 
 		 /* Wait for POSC ready */
-        while((CLKSTAT & 0x00000004U) == 0U) 
+        while((CLKSTAT & 0x00000004U) == 0U)
         {
             /* Nothing to do */
         }
