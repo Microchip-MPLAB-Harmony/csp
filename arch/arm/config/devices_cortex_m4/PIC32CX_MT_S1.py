@@ -105,9 +105,6 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11264/plugin/pio_11264.jar")
 
-#Load ADC plugin
-coreComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar")
-
 compilerSelected = compilerChoice.getSelectedKey().lower()
 
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
