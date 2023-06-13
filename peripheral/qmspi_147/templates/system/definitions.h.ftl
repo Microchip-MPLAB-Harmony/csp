@@ -24,4 +24,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 -->
+<#if QMSPI_MODE == "QSPI">
 #include "peripheral/qmspi/plib_${QMSPI_INSTANCE_NAME?lower_case}.h"
+<#else>
+#include "peripheral/qmspi/plib_${QMSPI_INSTANCE_NAME?lower_case}_spi.h"
+</#if>

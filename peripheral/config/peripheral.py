@@ -47,7 +47,7 @@ peripherals = {
                 "UART_39"       : ["UART"],
                 "QSPI_U2008"    : ["SQI","SPI"],
                 "QSPI_44132"    : ["SQI","SPI"],
-                "QMSPI_147"     : ["SQI"],
+                "QMSPI_147"     : ["SQI", "SPI"],
                 "SQI_00206"     : ["SQI"],
                 "SQI_04044"     : ["SQI"],
                 "SQI_00307"     : ["SQI"],

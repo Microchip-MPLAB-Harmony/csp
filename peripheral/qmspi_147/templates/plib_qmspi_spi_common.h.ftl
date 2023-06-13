@@ -5,10 +5,11 @@ Interface definition of QMSPI PLIB.
     Microchip Technology Inc.
 
  File Name:
-    plib_qmspi_common.h
+    plib_qmspi_spi_common.h
 
  Summary:
-    Interface definition of the Quad Serial Peripheral Interface Plib (QMSPI).
+    Interface definition of the Quad Serial Peripheral Interface Plib (QMSPI)
+    configured in SPI mode.
 
  Description:
     This file defines the interface for the QMSPI Plib.
@@ -41,8 +42,8 @@ Interface definition of QMSPI PLIB.
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_QMSPI_COMMON_H // Guards against multiple inclusion
-#define PLIB_QMSPI_COMMON_H
+#ifndef PLIB_QMSPI_SPI_COMMON_H // Guards against multiple inclusion
+#define PLIB_QMSPI_SPI_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -67,108 +68,36 @@ Interface definition of QMSPI PLIB.
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-typedef enum
-{
-    QMSPI_CHIP_SELECT_0 = 0U,
-    QMSPI_CHIP_SELECT_1
-} QMSPI_CHIP_SELECT;
 
 typedef enum
 {
-    SINGLE_BIT_SPI = 0U, /* Command(1):Address(1):Data(1) */
-    DUAL_OUTPUT,         /* Command(1):Address(1):Data(2) */
-    QUAD_OUTPUT,         /* Command(1):Address(1):Data(4) */
-    DUAL_IO,             /* Command(1):Address(2):Data(2) */
-    QUAD_IO,             /* Command(1):Address(4):Data(4) */
-    DUAL_CMD,            /* Command(2):Address(2):Data(2) */
-    QUAD_CMD             /* Command(4):Address(4):Data(4) */
-} QMSPI_INTERFACE_MODE;
-
-#define QMSPI_LDMA_CHANNEL_0 0U
-#define QMSPI_LDMA_CHANNEL_1 1U
-#define QMSPI_LDMA_CHANNEL_2 2U
-
-typedef uint32_t QMSPI_LDMA_CHANNEL_NUM;
-
-
-typedef enum
-{
-    QMSPI_CLOCK_PHASE_MOSI_0 = 0 << QMSPI_MODE_CHPA_MOSI_Pos,
-    QMSPI_CLOCK_PHASE_MOSI_1 = 1 << QMSPI_MODE_CHPA_MOSI_Pos,
+    QMSPI_SPI_CLOCK_PHASE_TRAILING_EDGE = QMSPI_MODE_CHPA_MOSI_Msk | QMSPI_MODE_CHPA_MISO_Msk,
+    QMSPI_SPI_CLOCK_PHASE_LEADING_EDGE = 0,
 
     /* Force the compiler to reserve 32-bit space for each enum value */
-    QMSPI_CLOCK_PHASE_MOSI_INVALID = 0xFFFFFFFF
-} QMSPI_CLOCK_PHASE_MOSI;
+    QMSPI_SPI_CLOCK_PHASE_INVALID = 0xFFFFFFFF
+
+}QMSPI_SPI_CLOCK_PHASE;
 
 typedef enum
 {
-    QMSPI_CLOCK_PHASE_MISO_0 = 0 << QMSPI_MODE_CHPA_MISO_Pos,
-    QMSPI_CLOCK_PHASE_MISO_1 = 1 << QMSPI_MODE_CHPA_MISO_Pos,
+    QMSPI_SPI_CLOCK_POLARITY_IDLE_LOW = 0,
+    QMSPI_SPI_CLOCK_POLARITY_IDLE_HIGH = QMSPI_MODE_CPOL_Msk,
 
     /* Force the compiler to reserve 32-bit space for each enum value */
-    QMSPI_CLOCK_PHASE_MISO_INVALID = 0xFFFFFFFF
-} QMSPI_CLOCK_PHASE_MISO;
+    QMSPI_SPI_CLOCK_POLARITY_INVALID = 0xFFFFFFFF
 
-typedef enum
-{
-    QMSPI_CLOCK_POLARITY_IDLE_LOW = 0 << QMSPI_MODE_CPOL_Pos,
-    QMSPI_CLOCK_POLARITY_IDLE_HIGH = 1 << QMSPI_MODE_CPOL_Pos,
-
-    /* Force the compiler to reserve 32-bit space for each enum value */
-    QMSPI_CLOCK_POLARITY_INVALID = 0xFFFFFFFF
-} QMSPI_CLOCK_POLARITY;
+}QMSPI_SPI_CLOCK_POLARITY;
 
 typedef struct
 {
-    uint32_t               clockFrequency;
-    QMSPI_CLOCK_PHASE_MOSI clockPhaseMOSI;
-    QMSPI_CLOCK_PHASE_MISO clockPhaseMISO;
-    QMSPI_CLOCK_POLARITY   clockPolarity;
-} QMSPI_TRANSFER_SETUP;
+    uint32_t                    clockFrequency;
+    QMSPI_SPI_CLOCK_PHASE       clockPhase;
+    QMSPI_SPI_CLOCK_POLARITY    clockPolarity;
 
-typedef struct
-{
-    /* Command */
-    uint8_t command;
-    /* Address Enable */
-    bool address_enable;
-    /* 32-bit Address Enable */
-    bool address_32_bit_en;
-    /* Address */
-    uint32_t address;
-    /* Dummy Byte */
-    uint8_t num_of_dummy_byte;
-    /* QMSPI Mode */
-    QMSPI_INTERFACE_MODE qmspi_ifc_mode;
-} QMSPI_XFER_T;
+}QMSPI_SPI_TRANSFER_SETUP;
 
-typedef struct
-{
-    /* Command */
-    uint8_t command;
-    /* 32-bit Address Enable */
-    bool address_32_bit_en;
-    /* Address */
-    uint32_t address;
-    /* Dummy Byte */
-    uint8_t num_of_dummy_byte;
-    /* Local DMA Enable */
-    bool ldma_enable;
-    /* Local DMA Channel Number */
-    QMSPI_LDMA_CHANNEL_NUM ldma_channel_num;
-    /* Local DMA Increment Address Disable */
-    bool ldma_incr_addr_disable;
-    /* QMSPI Mode */
-    QMSPI_INTERFACE_MODE qmspi_ifc_mode;
-} QMSPI_DESCRIPTOR_XFER_T;
-
-typedef  void (*QMSPI_CALLBACK) (uintptr_t context);
-
-typedef struct
-{
-    QMSPI_CALLBACK callback;
-    uintptr_t      context;
-} QMSPI_OBJECT;
+typedef  void (*QMSPI_SPI_CALLBACK) (uintptr_t context);
 
 
 
@@ -178,4 +107,4 @@ typedef struct
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_QMSPI_COMMON_H */
+#endif /* PLIB_QMSPI_SPI_COMMON_H */
