@@ -198,7 +198,7 @@ def baudRateTrigger(symbol, event):
 
     global usartInstanceName
 
-    if Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_MODE") == 0:
+    if Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_MODE") != 1:
 
         clk = Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_CLOCK_FREQ")
         baud = Database.getSymbolValue(usartInstanceName.getValue().lower(), "BAUD_RATE")
@@ -244,11 +244,14 @@ def updateRingBufferSymbolVisibility(symbol, event):
     uartMode = event["source"].getSymbolByID("USART_MODE").getSelectedKey()
     ringBufferMode = event["source"].getSymbolByID("USART_RING_BUFFER_MODE_ENABLE").getValue()
 
-    symbol.setVisible(uartMode == "USART" and ringBufferMode == True)
+    if ((uartMode == "USART" or  uartMode == "LIN_MASTER" or uartMode == "LIN_SLAVE") and ringBufferMode == True):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 
 def updateUSARTSymVisibility(symbol, event):
-
-    symbol.setVisible( event["symbol"].getValue() == 0)
+    usartMode = event["source"].getSymbolByID("USART_MODE").getSelectedKey()
+    symbol.setVisible( usartMode == "USART" or usartMode == "LIN_MASTER" or usartMode == "LIN_SLAVE")
 
 def updateUSART_SPISymVisibility(symbol, event):
 
@@ -296,14 +299,19 @@ def USARTFileGeneration(symbol, event):
     ringBufferModeEnabled = event["source"].getSymbolByID("USART_RING_BUFFER_MODE_ENABLE").getValue()
     usartInterruptMode = event["source"].getSymbolByID("USART_INTERRUPT_MODE_ENABLE").getValue()
     usartMode = event["source"].getSymbolByID("USART_MODE").getValue()
-
+    usartLinOperatingMode = event["source"].getSymbolByID("USART_LIN_OPERATING_MODE").getSelectedKey()
+    
     if symbolID == "USART_HEADER":       # Common header file
         if usartMode == 0:
             filepath = "../peripheral/usart_6089/templates/plib_usart_common.h"
             outputName = "plib_usart_common.h"
-        else:
+        elif usartMode == 1:  #SPI 
             filepath = "../peripheral/usart_6089/templates/plib_usart_spi_common.h"
             outputName = "plib_usart_spi_common.h"
+        else:
+            filepath = "../peripheral/usart_6089/templates/plib_usart_lin_common.h"
+            outputName = "plib_usart_lin_common.h"
+        
     elif symbolID == "USART_HEADER1":      # Header file
         if usartMode == 0:
             if ringBufferModeEnabled == True and usartInterruptMode == True:
@@ -311,9 +319,17 @@ def USARTFileGeneration(symbol, event):
             else:
                 filepath = "../peripheral/usart_6089/templates/plib_usart.h.ftl"
             outputName = "plib_"+usartInstanceName.getValue().lower()+".h"
-        else:
+        elif usartMode == 1:  #SPI
             filepath = "../peripheral/usart_6089/templates/plib_usart_spi.h.ftl"
             outputName = "plib_"+usartInstanceName.getValue().lower()+"_spi.h"
+        else:
+            if usartLinOperatingMode != "RING_BUFFER":
+                filepath = "../peripheral/usart_6089/templates/plib_usart_lin.h.ftl"
+                outputName = "plib_"+usartInstanceName.getValue().lower()+"_lin.h"
+            else:
+                filepath = "../peripheral/usart_6089/templates/plib_usart_ring_buffer_lin.h.ftl"
+                outputName = "plib_"+usartInstanceName.getValue().lower()+"_lin.h"
+          
     elif symbolID == "USART_SOURCE1":    # Source file
         if usartMode == 0:
             if ringBufferModeEnabled == True and usartInterruptMode == True:
@@ -321,9 +337,16 @@ def USARTFileGeneration(symbol, event):
             else:
                 filepath = "../peripheral/usart_6089/templates/plib_usart.c.ftl"
             outputName = "plib_"+usartInstanceName.getValue().lower()+".c"
-        else:
+        elif usartMode == 1:  #SPI
             filepath = "../peripheral/usart_6089/templates/plib_usart_spi.c.ftl"
             outputName = "plib_"+usartInstanceName.getValue().lower()+"_spi.c"
+        else:
+            if usartLinOperatingMode != "RING_BUFFER":
+                filepath = "../peripheral/usart_6089/templates/plib_usart_lin.c.ftl"
+                outputName = "plib_"+usartInstanceName.getValue().lower()+"_lin.c"
+            else:
+                filepath = "../peripheral/usart_6089/templates/plib_usart_ring_buffer_lin.c.ftl"
+                outputName = "plib_"+usartInstanceName.getValue().lower()+"_lin.c"
 
     symbol.setSourcePath(filepath)
     symbol.setOutputName(outputName)
@@ -422,6 +445,14 @@ def updateOperatingMode (symbol, event):
                 rxDMASym.setValue(True)
     else:
         symbol.setVisible(event["value"] == 0)
+            
+def updateLinOperatingMode (symbol, event):
+    
+    usartMode = event["source"].getSymbolByID("USART_MODE").getSelectedKey()
+    if (usartMode == "LIN_MASTER" or usartMode == "LIN_SLAVE"):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 ################################################################################
 #### Component ####
 ################################################################################
@@ -453,6 +484,8 @@ def instantiateComponent(usartComponent):
     usartSym_Mode.setLabel("Mode")
     usartSym_Mode.addKey("USART", "0x0", "USART")
     usartSym_Mode.addKey("SPI_MASTER", "0xE", "SPI MASTER")
+    usartSym_Mode.addKey("LIN_MASTER", "0xA", "LIN MASTER")
+    usartSym_Mode.addKey("LIN_SLAVE", "0xB", "LIN SLAVE")
     usartSym_Mode.setDisplayMode("Description")
     usartSym_Mode.setOutputMode("Key")
     usartSym_Mode.setDefaultValue(0)
@@ -515,6 +548,17 @@ def instantiateComponent(usartComponent):
     usartSym_OperatingMode.setOutputMode("Key")
     usartSym_OperatingMode.setVisible((usartSym_Mode.getValue() == 0))
     usartSym_OperatingMode.setDependencies(updateOperatingMode, ["USART_MODE", "USART_OPERATING_MODE"])
+
+    # LIN Operating mode
+    usartLINSym_LinOperatingMode = usartComponent.createKeyValueSetSymbol("USART_LIN_OPERATING_MODE", None)
+    usartLINSym_LinOperatingMode.setLabel("Operating Mode")
+    usartLINSym_LinOperatingMode.addKey("BLOCKING", "0", "Blocking mode")
+    usartLINSym_LinOperatingMode.addKey("RING_BUFFER", "1", "Ring buffer mode")
+    usartLINSym_LinOperatingMode.setDefaultValue(1)
+    usartLINSym_LinOperatingMode.setDisplayMode("Description")
+    usartLINSym_LinOperatingMode.setOutputMode("Key")
+    usartLINSym_LinOperatingMode.setVisible(((usartSym_Mode.getValue() == 2) or (usartSym_Mode.getValue() == 3)))
+    usartLINSym_LinOperatingMode.setDependencies(updateLinOperatingMode, ["USART_MODE", "USART_OPERATING_MODE"])
 
     # Enable Interrupts?
     usartSymInterruptModeEnable = usartComponent.createBooleanSymbol("USART_INTERRUPT_MODE_ENABLE", None)
@@ -919,6 +963,7 @@ def instantiateComponent(usartComponent):
     usartSym_DataBits.setVisible(False)
     usartSym_DataBits.setDependencies(updateUSARTDataBits, ["USART_MR_CHRL"])
 
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/usart_6089/config/usart_lin.py")
     ############################################################################
     #### Dependency ####
     ############################################################################
@@ -956,7 +1001,7 @@ def instantiateComponent(usartComponent):
     usartHeaderFile.setProjectPath("config/" + configName + "/peripheral/usart/")
     usartHeaderFile.setType("HEADER")
     usartHeaderFile.setOverwrite(True)
-    usartHeaderFile.setDependencies(USARTFileGeneration, ["USART_MODE"])
+    usartHeaderFile.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_MODE_ENABLE", "USART_MODE", "USART_LIN_OPERATING_MODE"])
 
     usartHeader1File = usartComponent.createFileSymbol("USART_HEADER1", None)
     usartHeader1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.h.ftl")
@@ -966,7 +1011,7 @@ def instantiateComponent(usartComponent):
     usartHeader1File.setType("HEADER")
     usartHeader1File.setOverwrite(True)
     usartHeader1File.setMarkup(True)
-    usartHeader1File.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_MODE_ENABLE", "USART_MODE", "USART_INTERRUPT_MODE_ENABLE"])
+    usartHeader1File.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_MODE_ENABLE", "USART_MODE", "USART_INTERRUPT_MODE_ENABLE", "USART_LIN_OPERATING_MODE"])
 
     usartSource1File = usartComponent.createFileSymbol("USART_SOURCE1", None)
     usartSource1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.c.ftl")
@@ -976,7 +1021,7 @@ def instantiateComponent(usartComponent):
     usartSource1File.setType("SOURCE")
     usartSource1File.setOverwrite(True)
     usartSource1File.setMarkup(True)
-    usartSource1File.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_MODE_ENABLE", "USART_MODE", "USART_INTERRUPT_MODE_ENABLE"])
+    usartSource1File.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_MODE_ENABLE", "USART_MODE", "USART_INTERRUPT_MODE_ENABLE", "USART_LIN_OPERATING_MODE"])
 
     usartSystemInitFile = usartComponent.createFileSymbol("USART_INIT", None)
     usartSystemInitFile.setType("STRING")
