@@ -67,8 +67,8 @@
 #define ${I2C_INSTANCE_NAME}_MRXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_MTR_RXB_REG_OFST)
 
 volatile static I2C_SMB_HOST_OBJ ${I2C_INSTANCE_NAME?lower_case}HostObj;
-static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostWrBuffer[64];
-volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer[64];
+static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostWrBuffer[255];
+volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer[255];
 </#if>
 
 <#if I2C_OPERATING_MODE == "Master">
@@ -303,7 +303,7 @@ static uint8_t I2C${I2C_INSTANCE_NAME}_HostPacketForm(I2C_SMB_HOST_PROTOCOL prot
         (void)memcpy((void*)&pProtoBuff[len], (const void*)pWrdata, nWrBytes);
         len += (uint8_t)nWrBytes;
     }
-    if (protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK)
+    if ((protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK) || (protocol == I2C_SMB_HOST_PROTOCOL_PROCESS_CALL))
     {
         pProtoBuff[len++] = (address << 1) | I2C_SMB_HOST_TRANSFER_TYPE_READ;
     }
@@ -330,7 +330,7 @@ static void I2C${I2C_INSTANCE_NAME}_HostWriteRead(I2C_SMB_HOST_PROTOCOL protocol
 
     hostCmd = (SMB_MCMD_WR_CNT(nWrBytes) | SMB_MCMD_START0_Msk | SMB_MCMD_MPROCEED_Msk | SMB_MCMD_MRUN_Msk | SMB_MCMD_STOP_Msk);
 
-    if ((protocol == I2C_SMB_HOST_PROTOCOL_RD_BYTE) || (protocol == I2C_SMB_HOST_PROTOCOL_RD_WORD) || (protocol == I2C_SMB_HOST_PROTOCOL_RD_BLK) || (protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK))
+    if ((protocol == I2C_SMB_HOST_PROTOCOL_RD_BYTE) || (protocol == I2C_SMB_HOST_PROTOCOL_RD_WORD) || (protocol == I2C_SMB_HOST_PROTOCOL_RD_BLK) || (protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK) || (protocol == I2C_SMB_HOST_PROTOCOL_PROCESS_CALL))
     {
         /* Specify the number of bytes to read from target, generate repeated start and read PEC byte when RD_CNT becomes 0 */
         hostCmd |= (SMB_MCMD_RD_CNT(nRdBytes) | SMB_MCMD_STARTN_Msk) | SMB_MCMD_READ_PEC(PECConfig);
@@ -419,6 +419,15 @@ void I2C${I2C_INSTANCE_NAME}_HostWriteReadBlock(uint8_t address, uint8_t cmd, vo
     I2C${I2C_INSTANCE_NAME}_HostWriteRead(I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK, wrLen, sizeof(i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer));
 }
 
+void I2C${I2C_INSTANCE_NAME}_HostProcessCall(uint8_t address, uint8_t cmd, void* pWrdata)
+{
+    /* <slave_add> <cmd> <data0> <data1> <slave_add> <data0> <data1> */
+    uint8_t wrLen = I2C${I2C_INSTANCE_NAME}_HostPacketForm(I2C_SMB_HOST_PROTOCOL_PROCESS_CALL, address, cmd, pWrdata, 2);
+    I2C${I2C_INSTANCE_NAME}_HostWriteRead(I2C_SMB_HOST_PROTOCOL_PROCESS_CALL, wrLen, 2);
+}
+
+
+
 uint32_t I2C${I2C_INSTANCE_NAME}_HostTransferCountGet(void)
 {
     return DMA_ChannelGetTransferredCount(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL});
@@ -427,11 +436,7 @@ uint32_t I2C${I2C_INSTANCE_NAME}_HostTransferCountGet(void)
 uint32_t I2C${I2C_INSTANCE_NAME}_HostBufferRead(void* pBuffer)
 {
     uint32_t i;
-    uint32_t numBytesAvailable = DMA_ChannelGetTransferredCount(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL});
-    uint8_t PECConfig = ((${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] & SMB_CFG_PECEN_Msk) != 0U)? 1U: 0U;
-
-    /* Discard the PEC byte received from the slave and the PEC register copied by the Master state machine */
-    numBytesAvailable -= (PECConfig == 1U)? 2U : 0U;
+    uint32_t numBytesAvailable = DMA_ChannelGetTransferredCount(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}) - 1;
 
     /* First byte in i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer is always the address byte and hence not copied to application buffer */
     for (i = 0; i < numBytesAvailable; i++)

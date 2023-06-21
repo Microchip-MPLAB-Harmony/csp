@@ -67,8 +67,8 @@
 #define ${I2C_INSTANCE_NAME}_SRXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_SLV_RXB_REG_OFST)
 
 volatile static I2C_SMB_TARGET_OBJ ${I2C_INSTANCE_NAME?lower_case}TargetObj;
-volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetWrBuffer[64];
-volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer[64];
+volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetWrBuffer[255];
+volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}TargetRdBuffer[255];
 </#if>
 
 <#if I2C_OPERATING_MODE == "Slave">
@@ -275,8 +275,8 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
                 {
                     if (${I2C_INSTANCE_NAME?lower_case}TargetObj.dmaDir == I2C_SMB_TARGET_DMA_DIR_PER_TO_MEM)
                     {
-                        /* Read DMA transfer count and discard the address byte and the address byte received after repeated start. Additionally discard the PEC register written by slave state machine if PEC is enabled. */
-                        ${I2C_INSTANCE_NAME?lower_case}TargetObj.rxCount = (DMA_ChannelGetTransferredCount(DMA_CHANNEL_${I2C_SMBUS_SLAVE_DMA_CHANNEL}) - 2U) - ((PECConfig == 1U)? 1U : 0U);
+                        /* Read DMA transfer count and discard the address byte and the address byte received after repeated start */
+                        ${I2C_INSTANCE_NAME?lower_case}TargetObj.rxCount = (DMA_ChannelGetTransferredCount(DMA_CHANNEL_${I2C_SMBUS_SLAVE_DMA_CHANNEL}) - 2U);
 
                         if (${I2C_INSTANCE_NAME?lower_case}TargetObj.callback != NULL)
                         {
@@ -357,8 +357,6 @@ void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_TargetInterruptHandler(uint32
                         {
                             ${I2C_INSTANCE_NAME?lower_case}TargetObj.error |= I2C_SMB_TARGET_ERROR_PEC;
                         }
-                        /* Discard the PEC byte sent by master (last byte) */
-                        ${I2C_INSTANCE_NAME?lower_case}TargetObj.rxCount -= 1U;
                     }
 
                     if (${I2C_INSTANCE_NAME?lower_case}TargetObj.callback != NULL)

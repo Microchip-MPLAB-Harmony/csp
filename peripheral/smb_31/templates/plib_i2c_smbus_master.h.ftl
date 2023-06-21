@@ -86,6 +86,7 @@ void I2C${I2C_INSTANCE_NAME}_HostReadByte(uint8_t address, uint8_t cmd);
 void I2C${I2C_INSTANCE_NAME}_HostReadWord(uint8_t address, uint8_t cmd);
 void I2C${I2C_INSTANCE_NAME}_HostReadBlock(uint8_t address, uint8_t cmd);
 void I2C${I2C_INSTANCE_NAME}_HostWriteReadBlock(uint8_t address, uint8_t cmd, void* pWrdata, uint32_t nWrBytes);
+void I2C${I2C_INSTANCE_NAME}_HostProcessCall(uint8_t address, uint8_t cmd, void* pWrdata);
 uint32_t I2C${I2C_INSTANCE_NAME}_HostTransferCountGet(void);
 uint32_t I2C${I2C_INSTANCE_NAME}_HostBufferRead(void* pBuffer);
 void I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg);
