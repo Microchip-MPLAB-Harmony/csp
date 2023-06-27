@@ -533,9 +533,9 @@ int ${UART_INSTANCE_NAME}_ReadByte(void)
 
 void ${UART_INSTANCE_NAME}_WriteByte( int data )
 {
-    while (UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk))
+    while ((${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk) == 0U)
     {
-        /* Do Nothing */
+        /* Wait for TXRDY flag to rise */
     }
 
     ${UART_INSTANCE_NAME}_REGS->UART_THR = (UART_THR_TXCHR(data) & UART_THR_TXCHR_Msk);
