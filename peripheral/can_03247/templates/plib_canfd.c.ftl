@@ -1087,7 +1087,7 @@ bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_
     return status;
 }
 
-bool ${CAN_INSTANCE_NAME}_BitTimingCalculationGet(CAN_BIT_TIMING_SETUP *setup, CAN_BIT_TIMING *bitTiming)
+bool ${CAN_INSTANCE_NAME}_BitTimingCalculationGet(CANFD_BIT_TIMING_SETUP *setup, CANFD_BIT_TIMING *bitTiming)
 {
     bool status = false;
     uint32_t numOfTimeQuanta;
@@ -1153,7 +1153,7 @@ bool ${CAN_INSTANCE_NAME}_BitTimingCalculationGet(CAN_BIT_TIMING_SETUP *setup, C
     return status;
 }
 
-bool ${CAN_INSTANCE_NAME}_BitTimingSet(CAN_BIT_TIMING *bitTiming)
+bool ${CAN_INSTANCE_NAME}_BitTimingSet(CANFD_BIT_TIMING *bitTiming)
 {
     bool status = false;
     bool nominalBitTimingSet = false;

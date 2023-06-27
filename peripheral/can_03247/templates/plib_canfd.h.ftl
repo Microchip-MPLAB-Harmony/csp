@@ -90,8 +90,8 @@ void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorC
 bool ${CAN_INSTANCE_NAME}_InterruptGet(uint8_t fifoQueueNum, CANFD_FIFO_INTERRUPT_FLAG_MASK fifoInterruptFlagMask);
 bool ${CAN_INSTANCE_NAME}_TxFIFOQueueIsFull(uint8_t fifoQueueNum);
 bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum);
-bool ${CAN_INSTANCE_NAME}_BitTimingCalculationGet(CAN_BIT_TIMING_SETUP *setup, CAN_BIT_TIMING *bitTiming);
-bool ${CAN_INSTANCE_NAME}_BitTimingSet(CAN_BIT_TIMING *bitTiming);
+bool ${CAN_INSTANCE_NAME}_BitTimingCalculationGet(CANFD_BIT_TIMING_SETUP *setup, CANFD_BIT_TIMING *bitTiming);
+bool ${CAN_INSTANCE_NAME}_BitTimingSet(CANFD_BIT_TIMING *bitTiming);
 <#if CAN_INTERRUPT_MODE == true>
 void ${CAN_INSTANCE_NAME}_CallbackRegister(CANFD_CALLBACK callback, uintptr_t contextHandle, uint8_t fifoQueueNum);
 void ${CAN_INSTANCE_NAME}_ErrorCallbackRegister(CANFD_CALLBACK callback, uintptr_t contextHandle);
