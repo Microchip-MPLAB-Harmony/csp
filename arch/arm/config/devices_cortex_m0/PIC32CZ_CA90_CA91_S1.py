@@ -49,7 +49,7 @@ coreFPU.setVisible(False)
 
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
 deviceFamily.setLabel("Device Family")
-deviceFamily.setDefaultValue("PIC32CZ_CA90")
+deviceFamily.setDefaultValue("PIC32CZ_CA90_CA91")
 deviceFamily.setReadOnly(True)
 deviceFamily.setVisible(False)
 

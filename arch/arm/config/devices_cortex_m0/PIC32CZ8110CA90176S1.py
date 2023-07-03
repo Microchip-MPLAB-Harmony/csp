@@ -23,4 +23,4 @@
 *****************************************************************************"""
 
 # load family specific configuration
-execfile(Variables.get("__ARCH_DIR") + "/PIC32CZ_CA90_S1.py")
+execfile(Variables.get("__ARCH_DIR") + "/PIC32CZ_CA90_CA91_S1.py")
