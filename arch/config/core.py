@@ -131,6 +131,8 @@ def handleMessage(messageID, args):
             Database.setSymbolValue("core", "WDT_USE", args["isEnabled"])
         elif (Database.getSymbolValue("core", "wdtENABLE") != None):
             Database.setSymbolValue("core", "wdtENABLE", args["isEnabled"])
+    elif (messageID == "APP_START_ADDRESS"):
+        Database.setSymbolValue("core", "APP_START_ADDRESS", args["start_address"])
 
     return symbolDict
 
