@@ -260,19 +260,11 @@ void PMU_Initialize(void)
             PMUOVERCTRLbits.PHWC = 0U;
 
             // Poll for Buck switching to be complete
-<#if __PROCESSOR?matches("PIC32MZ1025W104132") >
             tmp1 = PMUCMODEbits.CBUCKMODE;
-<#elseif __PROCESSOR?matches("PIC32MZ2051W104132") >
-			tmp1 = PMUCMODEbits.CMODE;
-</#if>
             tmp2 = PMUCMODEbits.CMLDOEN;
             while (!((PMUCMODEbits.CBUCKEN != 0U) && (tmp1 != 0U) && (tmp2 == 0U)))
             {
-<#if __PROCESSOR?matches("PIC32MZ1025W104132") >
                 tmp1 = PMUCMODEbits.CBUCKMODE;
-<#elseif __PROCESSOR?matches("PIC32MZ2051W104132") >
-				tmp1 = PMUCMODEbits.CMODE;
-</#if>
                 tmp2 = PMUCMODEbits.CMLDOEN;
             }
 
