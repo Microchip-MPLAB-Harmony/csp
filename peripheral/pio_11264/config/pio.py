@@ -134,6 +134,9 @@ global debounceFilterEnabledByDefault
 debounceFilterEnabledByDefault = False
 global availablePinDictionary
 availablePinDictionary = {}
+## Dictionary to store symbols created for each pin
+global pinSymbolsDictionary
+pinSymbolsDictionary = dict()
 
 ##########################################################################################################################
 pin = []
@@ -176,6 +179,21 @@ global getAvailablePins
 def getAvailablePins():
     return availablePinDictionary
 
+global setPinSetConfigurationValue
+global setPinClearConfigurationValue
+
+def setPinSetConfigurationValue(pinNumber, setting, value):
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    if symbol:
+        symbol.setReadOnly(True)
+        symbol.clearValue()
+        symbol.setValue(value)
+
+def setPinClearConfigurationValue(pinNumber, setting):
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    if symbol:
+        symbol.setReadOnly(False)
+        symbol.clearValue()
 
 def packageChange(symbol, pinout):
     global uniquePinout
@@ -490,6 +508,7 @@ pinTotalPins.setDefaultValue(internalpackagePinCount)
 # that is why "pinNumber-1" is used to index the lists wherever applicable.
 for pinNumber in range(1, internalpackagePinCount + 1):
     pinIndex = pinNumber - 1
+    symbolsDict = dict()
 
     if pinNumber < packagePinCount + 1:
         currPinPosition = pin_position[pinNumber - 1]
@@ -512,9 +531,11 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     pinNameSym.setLabel("Name")
     pinNameSym.setDefaultValue("")
     pinNameSym.setReadOnly(True)
+    symbolsDict.setdefault('name', pinNameSym)
 
     pinTypeSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_TYPE", pinSym)
     pinTypeSym.setLabel("Type")
+    symbolsDict.setdefault('function', pinTypeSym)
 
     pinPeriphFuncSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pinSym)
     pinPeriphFuncSym.setLabel("Peripheral Selection")
@@ -542,10 +563,12 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     pinDirectionSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pinSym)
     pinDirectionSym.setLabel("Direction")
     pinDirectionSym.setReadOnly(True)
+    symbolsDict.setdefault('direction', pinDirectionSym)
 
     pinLatchSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pinSym)
     pinLatchSym.setLabel("Initial Latch Value")
     pinLatchSym.setReadOnly(True)
+    symbolsDict.setdefault('latch', pinLatchSym)
 
     pinLatchValueSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT_Value", pinSym)
     pinLatchValueSym.setReadOnly(True)
@@ -555,22 +578,27 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     pinOpenDrainSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_OD", pinSym)
     pinOpenDrainSym.setLabel("Open Drain")
     pinOpenDrainSym.setReadOnly(True)
+    symbolsDict.setdefault('open drain', pinOpenDrainSym)
 
     pinPullUpSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PU", pinSym)
     pinPullUpSym.setLabel("Pull Up")
     pinPullUpSym.setReadOnly(True)
+    symbolsDict.setdefault('pull up', pinPullUpSym)
 
     pinPullDownSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PD", pinSym)
     pinPullDownSym.setLabel("Pull Down")
     pinPullDownSym.setReadOnly(True)
+    symbolsDict.setdefault('pull down', pinPullDownSym)
 
     pinSchmitt = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_ST", pinSym)
     pinSchmitt.setLabel("Schmitt Trigger")
     pinSchmitt.setReadOnly(True)
+    symbolsDict.setdefault('st', pinSchmitt)
 
     pinTrigger = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_TAMPER", pinSym)
     pinTrigger.setLabel("Tamper Enable")
     pinTrigger.setReadOnly(True)
+    symbolsDict.setdefault('tamper', pinTrigger)
 
     if driveStrBit:
         pinDRV = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_DRV", pinSym)
@@ -579,7 +607,8 @@ for pinNumber in range(1, internalpackagePinCount + 1):
         pinDRV.setDisplayMode("Description")
         for id in range(0,len(drvSTRVal.getChildren())):
             pinDRV.addKey(drvSTRVal.getChildren()[id].getAttribute("name"), str(drvSTRVal.getChildren()[id].getAttribute("value")) , drvSTRVal.getChildren()[id].getAttribute("caption") )
-
+        symbolsDict.setdefault('drv', pinDRV)
+        
     if slewRateBits:
         pinSlew = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_SLEW", pinSym)
         pinSlew.setLabel("Slew Rate")
@@ -589,7 +618,7 @@ for pinNumber in range(1, internalpackagePinCount + 1):
             pinSlew.addKey(slewRateVal.getChildren()[id].getAttribute("name"),
                         slewRateVal.getChildren()[id].getAttribute("value") ,
                         slewRateVal.getChildren()[id].getAttribute("caption") )
-
+        symbolsDict.setdefault('slewrate', pinSlew)
 
     # This symbol is used to map the UI manager selection to the corresponding symbol in the tree view. Will not be
     # displayed in the tree view
@@ -602,6 +631,7 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     pinFilter.setDependencies(updateInputFilter, ["PIN_" + str(pinNumber) + "_PIO_FILTER"])
     if debounceFilterEnabledByDefault:
         pinFilter.setVisible(False)
+    symbolsDict.setdefault('ifen', pinFilter)
 
     pinFilterClock = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_IFSCEN", pinSym)
     pinFilterClock.setLabel("Glitch filter Clock Source ")
@@ -609,12 +639,14 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     pinFilterClock.addKey("SLCK", str(1) , "The debouncing filter is able to filter pulses with a duration < tdiv_slck/2" )
     if debounceFilterEnabledByDefault:
         pinFilterClock.setVisible(False)
+    symbolsDict.setdefault('ifscen', pinFilterClock)
 
     # This symbol ID name is split and pin number is extracted and used inside "setupInterrupt" function. so be careful while changing the name of this ID.
     pinInterrupt.append(pinNumber)
     pinInterrupt[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_INTERRUPT", pinSym)
     pinInterrupt[pinNumber-1].setLabel("PIO Interrupt")
     pinInterrupt[pinNumber-1].setReadOnly(True)
+    symbolsDict.setdefault('interrupt', pinInterrupt[pinNumber-1])
 
     # This symbol ID name is split and pin number is extracted and used inside "setupInterrupt" function. so be careful while changing the name of this ID.
     pinInterruptValue = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_INTERRUPT_VAL", pinSym)
@@ -627,6 +659,9 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     pincfgrValue[pinNumber-1].setReadOnly(True)
     pincfgrValue[pinNumber-1].setVisible(False)
     pincfgrValue[pinNumber-1].setDependencies(pinCFGR, ["PIN_" + str(pinNumber) + "_PD", "PIN_" + str(pinNumber) + "_PU", "PIN_" + str(pinNumber) + "_OD", "PIN_" + str(pinNumber) + "_DIR", "PIN_" + str(pinNumber) + "_PIO_INTERRUPT", "PIN_" + str(pinNumber) + "_IFSCEN", "PIN_" + str(pinNumber) + "_IFEN", "PIN_" + str(pinNumber) + "_DRV", "PIN_" + str(pinNumber) + "_SLEW", "PIN_" + str(pinNumber) + "_TAMPER", "PIN_" + str(pinNumber) + "_ST" ])
+
+    ## Add symbol to global dictionary
+    pinSymbolsDictionary.setdefault(pinNumber, symbolsDict)
 
 packageUpdate = coreComponent.createBooleanSymbol("PACKAGE_UPDATE_DUMMY", None)
 packageUpdate.setVisible(False)

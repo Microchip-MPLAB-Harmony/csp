@@ -123,6 +123,19 @@ def handleMessage(messageID, args):
     elif messageID == "PIN_LIST":              # Indicates core to return available pins for device
         symbolDict = getAvailablePins()      # this API must be defined as global in every port plibs
 
+    elif messageID == "PIN_SET_CONFIG_VALUE":
+        pinNumber = args.get('pinNumber')
+        setting = args.get('setting')
+        value = args.get('value')
+        if pinNumber != None and setting != None and value != None:
+            setPinSetConfigurationValue(pinNumber, setting, value)
+        
+    elif messageID == "PIN_CLEAR_CONFIG_VALUE":
+        pinNumber = args.get('pinNumber')
+        setting = args.get('setting')
+        if pinNumber != None and setting != None:
+            setPinClearConfigurationValue(pinNumber, setting)
+        
     elif messageID == "WAIT_STATES":
         symbolDict = nvmWaitStates
 
