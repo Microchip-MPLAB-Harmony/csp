@@ -407,8 +407,8 @@ def mcpwmCalcIOCON(symbol, event):
     swap = component.getSymbolValue("IOCON"+str(channelID)+"__SWAP") << 2
     id = component.getSymbolByID("IOCON"+str(channelID)+"__PMOD")
     pmod = int(id.getSelectedValue()) << 10
-    poll = component.getSymbolValue("IOCON"+str(channelID)+"__POLL") << 11
-    polh = component.getSymbolValue("IOCON"+str(channelID)+"__POLH") << 12
+    poll = component.getSymbolValue("IOCON"+str(channelID)+"__POLL") << 12
+    polh = component.getSymbolValue("IOCON"+str(channelID)+"__POLH") << 13
 
     penl = int(component.getSymbolByID("IOCON"+str(channelID)+"__PENL").getSelectedValue()) << 14
     penh = int(component.getSymbolByID("IOCON"+str(channelID)+"__PENH").getSelectedValue()) << 15
@@ -1242,9 +1242,9 @@ def instantiateComponent(mcpwmComponent):
         mcpwmSym_IOCON.setVisible(False)
         num_outputs = _get_num_outputs(channelID)
         if (num_outputs == "1"):
-            mcpwmSym_IOCON.setValue(0xcc00, 2)
+            mcpwmSym_IOCON.setValue(0x3c000, 2)
         else:
-            mcpwmSym_IOCON.setValue(0xc000, 2)
+            mcpwmSym_IOCON.setValue(0x3c000, 2)
         mcpwmSym_IOCON.setDependencies(mcpwmCalcIOCON, ioconDepList[channelID - 1])
 
         mcpwmSym_TRGCON = mcpwmComponent.createHexSymbol("MCPWM_TRGCON"+str(channelID), None)
