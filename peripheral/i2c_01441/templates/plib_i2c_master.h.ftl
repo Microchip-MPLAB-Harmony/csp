@@ -52,6 +52,11 @@
 /* This section lists the other files that are included in this file.
 */
 
+<#assign I2C_API_PREFIX = I2C_INSTANCE_NAME + "_">
+<#if I2C_OPERATING_MODE == "Master and Slave">
+<#assign I2C_API_PREFIX = I2C_INSTANCE_NAME + "_Master">
+</#if>
+
 #include "plib_i2c_master_common.h"
 
 // DOM-IGNORE-BEGIN
@@ -75,7 +80,7 @@
 
 // *****************************************************************************
 /* Function:
-    void ${I2C_INSTANCE_NAME}_Initialize(void)
+    void ${I2C_API_PREFIX}Initialize(void)
 
   Summary:
     Initializes the instance of the I2C peripheral operating in I2C mode.
@@ -96,18 +101,19 @@
 
   Example:
     <code>
-        ${I2C_INSTANCE_NAME}_Initialize();
+        ${I2C_API_PREFIX}Initialize();
     </code>
 
   Remarks:
     Stops the I2C if it was already running and reinitializes it.
 */
 
-void ${I2C_INSTANCE_NAME}_Initialize(void);
+
+void ${I2C_API_PREFIX}Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t *pdata, size_t length)
+    bool ${I2C_API_PREFIX}Read(uint16_t address, uint8_t *pdata, size_t length)
 
   Summary:
     Reads data from the slave.
@@ -118,7 +124,7 @@ void ${I2C_INSTANCE_NAME}_Initialize(void);
     address is specified as address. The I2C Master generate a Start condition,
     read the data and then generate a Stop Condition.
     If the slave NAKs the request or a bus error is encountered on the bus, the
-    transfer is terminated. The application can call ${I2C_INSTANCE_NAME}_ErrorGet()
+    transfer is terminated. The application can call ${I2C_API_PREFIX}ErrorGet()
     function to know that cause of the error.
 
     The function is non-blocking. It initiates bus activity and returns
@@ -131,7 +137,7 @@ void ${I2C_INSTANCE_NAME}_Initialize(void);
     terminated if callback is registered.
 
   Precondition:
-    ${I2C_INSTANCE_NAME}_Initialize must have been called for the associated
+    ${I2C_API_PREFIX}Initialize must have been called for the associated
     I2C instance.
 
   Parameters:
@@ -160,10 +166,10 @@ void ${I2C_INSTANCE_NAME}_Initialize(void);
             that this functioin executes in the context of the I2C interrupt.
         }
 
-        ${I2C_INSTANCE_NAME}_Initialize();
-        ${I2C_INSTANCE_NAME}_CallbackRegister(MyI2CCallback, NULL);
+        ${I2C_API_PREFIX}Initialize();
+        ${I2C_API_PREFIX}CallbackRegister(MyI2CCallback, NULL);
 
-        if(!${I2C_INSTANCE_NAME}_Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+        if(!${I2C_API_PREFIX}Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
         {
             error handling
         }
@@ -175,11 +181,11 @@ void ${I2C_INSTANCE_NAME}_Initialize(void);
     None.
 */
 
-bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t* rdata, size_t rlength);
+bool ${I2C_API_PREFIX}Read(uint16_t address, uint8_t* rdata, size_t rlength);
 
 // *****************************************************************************
 /* Function:
-    bool ${I2C_INSTANCE_NAME}_Write(uint16_t address, uint8_t *pdata, size_t length)
+    bool ${I2C_API_PREFIX}Write(uint16_t address, uint8_t *pdata, size_t length)
 
   Summary:
     Writes data to the slave.
@@ -190,7 +196,7 @@ bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t* rdata, size_t rlength)
     is specified by address. The I2C Master will generate a Start condition,
     write the data and then generate a Stop Condition. If the slave NAKs the request
     or a bus error was encountered on the bus, the transfer is terminated. The
-    application can call the ${I2C_INSTANCE_NAME}_ErrorGet() function to know that
+    application can call the ${I2C_API_PREFIX}ErrorGet() function to know that
     cause of the error.
 
     The function is non-blocking. It initiates bus activity and returns
@@ -203,7 +209,7 @@ bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t* rdata, size_t rlength)
     terminated.
 
   Precondition:
-    ${I2C_INSTANCE_NAME}_Initialize must have been called for the associated
+    ${I2C_API_PREFIX}Initialize must have been called for the associated
     I2C instance.
 
   Parameters:
@@ -231,10 +237,10 @@ bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t* rdata, size_t rlength)
             that this functioin executes in the context of the I2C interrupt.
         }
 
-        ${I2C_INSTANCE_NAME}_Initialize();
-        ${I2C_INSTANCE_NAME}_CallbackRegister(MyI2CCallback, NULL);
+        ${I2C_API_PREFIX}Initialize();
+        ${I2C_API_PREFIX}CallbackRegister(MyI2CCallback, NULL);
 
-        if(!${I2C_INSTANCE_NAME}_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+        if(!${I2C_API_PREFIX}Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
         {
             error handling
         }
@@ -244,12 +250,13 @@ bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t* rdata, size_t rlength)
   Remarks:
     None.
 */
-bool ${I2C_INSTANCE_NAME}_Write(uint16_t address, uint8_t* wdata, size_t wlength);
+bool ${I2C_API_PREFIX}Write(uint16_t address, uint8_t* wdata, size_t wlength);
+
 
 <#if I2C_INCLUDE_FORCED_WRITE_API == true>
 // *****************************************************************************
 /* Function:
-    bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* pdata, size_t length)
+    bool ${I2C_API_PREFIX}WriteForced(uint16_t address, uint8_t* pdata, size_t length)
 
   Summary:
     Writes data to the slave.
@@ -276,7 +283,7 @@ bool ${I2C_INSTANCE_NAME}_Write(uint16_t address, uint8_t* wdata, size_t wlength
     terminated.
 
   Precondition:
-    ${I2C_INSTANCE_NAME}_Initialize must have been called for the associated
+    ${I2C_API_PREFIX}Initialize must have been called for the associated
     I2C instance.
 
   Parameters:
@@ -304,10 +311,10 @@ bool ${I2C_INSTANCE_NAME}_Write(uint16_t address, uint8_t* wdata, size_t wlength
             that this functioin executes in the context of the I2C interrupt.
         }
 
-        ${I2C_INSTANCE_NAME}_Initialize();
-        ${I2C_INSTANCE_NAME}_CallbackRegister(MyI2CCallback, NULL);
+        ${I2C_API_PREFIX}Initialize();
+        ${I2C_API_PREFIX}CallbackRegister(MyI2CCallback, NULL);
 
-        if(!${I2C_INSTANCE_NAME}_WriteForced( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+        if(!${I2C_API_PREFIX}WriteForced( SLAVE_ADDR, &myData[0], NUM_BYTES ))
         {
             error handling
         }
@@ -317,13 +324,12 @@ bool ${I2C_INSTANCE_NAME}_Write(uint16_t address, uint8_t* wdata, size_t wlength
   Remarks:
     None.
 */
-
-bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t wlength);
+bool ${I2C_API_PREFIX}WriteForced(uint16_t address, uint8_t* wdata, size_t wlength);
 </#if>
 
 // *****************************************************************************
 /* Function:
-    bool ${I2C_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t* wdata,
+    bool ${I2C_API_PREFIX}WriteRead(uint16_t address, uint8_t* wdata,
                                size_t wlength, uint8_t* rdata, size_t rlength)
 
   Summary:
@@ -339,7 +345,7 @@ bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t w
     last byte has been received.
 
     If the slave NAKs the request or a bus error was encountered on the bus,
-    the transfer is terminated. The application can call ${I2C_INSTANCE_NAME}_ErrorGet()
+    the transfer is terminated. The application can call ${I2C_API_PREFIX}ErrorGet()
     function to know that cause of the error.
 
     The function is non-blocking. It initiates bus activity and returns
@@ -352,7 +358,7 @@ bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t w
     terminated.
 
   Precondition:
-    ${I2C_INSTANCE_NAME}_Initialize must have been called for the associated
+    ${I2C_API_PREFIX}Initialize must have been called for the associated
     I2C instance.
 
   Parameters:
@@ -384,9 +390,9 @@ bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t w
             that this functioin executes in the context of the I2C interrupt.
         }
 
-        ${I2C_INSTANCE_NAME}_Initialize();
-        ${I2C_INSTANCE_NAME}_CallbackRegister(MyI2CCallback, NULL);
-        if(!${I2C_INSTANCE_NAME}_WriteRead( SLAVE_ADDR, &myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
+        ${I2C_API_PREFIX}Initialize();
+        ${I2C_API_PREFIX}CallbackRegister(MyI2CCallback, NULL);
+        if(!${I2C_API_PREFIX}WriteRead( SLAVE_ADDR, &myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
         {
             error handling
         }
@@ -395,20 +401,20 @@ bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t w
     </code>
 
   Remarks:
-    Calling this function is not the same as calling the ${I2C_INSTANCE_NAME}_Write()
-    function and then calling the ${I2C_INSTANCE_NAME}_Read() function.
-    The ${I2C_INSTANCE_NAME}_WriteRead function will insert a Repeated Start
-    condition between the Write and the Read stages. The ${I2C_INSTANCE_NAME}_Write()
-    and the ${I2C_INSTANCE_NAME}_Read() function insert a stop condtion after
+    Calling this function is not the same as calling the ${I2C_API_PREFIX}Write()
+    function and then calling the ${I2C_API_PREFIX}Read() function.
+    The ${I2C_API_PREFIX}WriteRead function will insert a Repeated Start
+    condition between the Write and the Read stages. The ${I2C_API_PREFIX}Write()
+    and the ${I2C_API_PREFIX}Read() function insert a stop condtion after
     the write and the read has completed.
 */
 
-bool ${I2C_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t* wdata, size_t wlength, uint8_t* rdata, size_t rlength);
+bool ${I2C_API_PREFIX}WriteRead(uint16_t address, uint8_t* wdata, size_t wlength, uint8_t* rdata, size_t rlength);
 
 
 // *****************************************************************************
 /* Function:
-    bool ${I2C_INSTANCE_NAME}_IsBusy(void)
+    bool ${I2C_API_PREFIX}IsBusy(void)
 
   Summary:
     Returns the Peripheral busy status.
@@ -421,7 +427,7 @@ bool ${I2C_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t* wdata, size_t wle
     transfer operation is already in progress.
 
   Precondition:
-    ${I2C_INSTANCE_NAME}_Initialize must have been called for the
+    ${I2C_API_PREFIX}Initialize must have been called for the
     associated I2C instance.
 
   Parameters:
@@ -436,10 +442,10 @@ bool ${I2C_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t* wdata, size_t wle
         uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
 
         wait for the current transfer to complete
-        while(${I2C_INSTANCE_NAME}_IsBusy( ));
+        while(${I2C_API_PREFIX}IsBusy( ));
 
         perform the next transfer
-        if(!${I2C_INSTANCE_NAME}_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+        if(!${I2C_API_PREFIX}Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
         {
             error handling
         }
@@ -450,11 +456,11 @@ bool ${I2C_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t* wdata, size_t wle
     None.
 */
 
-bool ${I2C_INSTANCE_NAME}_IsBusy(void);
+bool ${I2C_API_PREFIX}IsBusy(void);
 
 // *****************************************************************************
 /* Function:
-    I2C_ERROR ${I2C_INSTANCE_NAME}_ErrorGet(void)
+    I2C_ERROR ${I2C_API_PREFIX}ErrorGet(void)
 
   Summary:
     Returns the error occured during transfer.
@@ -463,7 +469,7 @@ bool ${I2C_INSTANCE_NAME}_IsBusy(void);
     This function returns the error during transfer.
 
   Precondition:
-    ${I2C_INSTANCE_NAME}_Initialize must have been called for the
+    ${I2C_API_PREFIX}Initialize must have been called for the
     associated I2C instance.
 
   Parameters:
@@ -475,7 +481,7 @@ bool ${I2C_INSTANCE_NAME}_IsBusy(void);
 
     Example:
     <code>
-    if(I2C_ERROR_NONE == ${I2C_INSTANCE_NAME}_ErrorGet())
+    if(I2C_ERROR_NONE == ${I2C_API_PREFIX}ErrorGet())
     {
         I2C transfer is completed, go to next state.
     }
@@ -485,11 +491,11 @@ bool ${I2C_INSTANCE_NAME}_IsBusy(void);
     None.
 */
 
-I2C_ERROR ${I2C_INSTANCE_NAME}_ErrorGet(void);
+I2C_ERROR ${I2C_API_PREFIX}ErrorGet(void);
 
 // *****************************************************************************
 /* Function:
-    void ${I2C_INSTANCE_NAME}_CallbackRegister(I2C_CALLBACK callback,
+    void ${I2C_API_PREFIX}CallbackRegister(I2C_CALLBACK callback,
                                                               uintptr_t context)
 
    Summary:
@@ -504,7 +510,7 @@ I2C_ERROR ${I2C_INSTANCE_NAME}_ErrorGet(void);
     peripheral interrupt context.
 
   Precondition:
-    ${I2C_INSTANCE_NAME}_Initialize must have been called for the associated
+    ${I2C_API_PREFIX}Initialize must have been called for the associated
     I2C instance.
 
   Parameters:
@@ -527,18 +533,17 @@ I2C_ERROR ${I2C_INSTANCE_NAME}_ErrorGet(void);
   Remarks:
     None.
 */
-
-void ${I2C_INSTANCE_NAME}_CallbackRegister(I2C_CALLBACK callback, uintptr_t contextHandle);
+void ${I2C_API_PREFIX}CallbackRegister(I2C_CALLBACK callback, uintptr_t contextHandle);
 
 // *****************************************************************************
 /* Function:
-    bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq)
+    bool ${I2C_API_PREFIX}TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq)
 
    Summary:
     Dynamic setup of I2C Peripheral.
 
    Precondition:
-    ${I2C_INSTANCE_NAME}_Initialize must have been called for the associated I2C instance.
+    ${I2C_API_PREFIX}Initialize must have been called for the associated I2C instance.
     The transfer status should not be busy.
 
    Parameters:
@@ -557,9 +562,9 @@ void ${I2C_INSTANCE_NAME}_CallbackRegister(I2C_CALLBACK callback, uintptr_t cont
     setup.clkSpeed = 400000;
 
     Make sure that the I2C is not busy before changing the I2C clock frequency
-    if (${I2C_INSTANCE_NAME}_IsBusy() == false)
+    if (${I2C_API_PREFIX}IsBusy() == false)
     {
-        if (${I2C_INSTANCE_NAME}_TransferSetup( &setup, 0 ) == true)
+        if (${I2C_API_PREFIX}TransferSetup( &setup, 0 ) == true)
         {
             Transfer Setup updated successfully
         }
@@ -571,19 +576,36 @@ void ${I2C_INSTANCE_NAME}_CallbackRegister(I2C_CALLBACK callback, uintptr_t cont
     If configured to zero PLib takes the peripheral clock frequency from MHC.
 */
 
-bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq );
 
-void ${I2C_INSTANCE_NAME}_TransferAbort( void );
+bool ${I2C_API_PREFIX}TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq );
+void ${I2C_API_PREFIX}TransferAbort( void );
+
+<#if I2C_SMEN == true>
+bool ${I2C_API_PREFIX}SMBUSSendByte(uint8_t address, void* pWrdata, bool enPEC);
+bool ${I2C_API_PREFIX}SMBUSWriteByte(uint8_t address, uint8_t cmd, void* pWrdata, bool enPEC);
+bool ${I2C_API_PREFIX}SMBUSWriteWord(uint8_t address, uint8_t cmd, void* pWrdata, bool enPEC);
+bool ${I2C_API_PREFIX}SMBUSWriteBlock(uint8_t address, uint8_t cmd, void* pWrdata, uint32_t nWrBytes, bool enPEC);
+bool ${I2C_API_PREFIX}SMBUSReceiveByte(uint8_t address, bool enPEC);
+bool ${I2C_API_PREFIX}SMBUSReadByte(uint8_t address, uint8_t cmd, bool enPEC);
+bool ${I2C_API_PREFIX}SMBUSReadWord(uint8_t address, uint8_t cmd, bool enPEC);
+bool ${I2C_API_PREFIX}SMBUSProcessCall(uint8_t address, uint8_t cmd, void* pWrdata, bool enPEC);
+bool ${I2C_API_PREFIX}SMBUSReadBlock(uint8_t address, uint8_t cmd, bool enPEC);
+bool ${I2C_API_PREFIX}SMBUSWriteReadBlock(uint8_t address, uint8_t cmd, void* pWrdata, uint32_t nWrBytes, bool enPEC);
+uint32_t ${I2C_API_PREFIX}SMBUSBufferRead(void* pBuffer);
+uint32_t ${I2C_API_PREFIX}SMBUSTransferCountGet(void);
+bool ${I2C_API_PREFIX}SMBUSIsPECMatch(void);
+</#if>
+
 
 // *****************************************************************************
 /* Function:
-    bool ${I2C_INSTANCE_NAME}_BusScan(uint16_t start_addr, uint16_t end_addr, void* pDevicesList, uint8_t* nDevicesFound)
+    bool ${I2C_API_PREFIX}BusScan(uint16_t start_addr, uint16_t end_addr, void* pDevicesList, uint8_t* nDevicesFound)
 
    Summary:
     Scan the target devices on the I2C bus.
 
    Precondition:
-    ${I2C_INSTANCE_NAME}_Initialize must have been called for the associated I2C instance.
+    ${I2C_API_PREFIX}Initialize must have been called for the associated I2C instance.
     The transfer status should not be busy.
 
    Parameters:
@@ -602,7 +624,7 @@ void ${I2C_INSTANCE_NAME}_TransferAbort( void );
     uint8_t nDevicesFoundList[10] = {0};
     uint8_t nDevFound = 0;
 
-    ${I2C_INSTANCE_NAME}_BusScan(0x08, 0x77, nDevicesFoundList, &nDevFound);
+    ${I2C_API_PREFIX}BusScan(0x08, 0x77, nDevicesFoundList, &nDevFound);
 
     </code>
 
@@ -610,7 +632,7 @@ void ${I2C_INSTANCE_NAME}_TransferAbort( void );
     If there is a mix of devices with 8 and 10 bit addresses on the bus, then this API must be called separately for
     devices with 8-bit addresses and then for devices with 10-bit addresses.
 */
-bool ${I2C_INSTANCE_NAME}_BusScan(uint16_t start_addr, uint16_t end_addr, void* pDevicesList, uint8_t* nDevicesFound);
+bool ${I2C_API_PREFIX}BusScan(uint16_t start_addr, uint16_t end_addr, void* pDevicesList, uint8_t* nDevicesFound);
 
 
 // DOM-IGNORE-BEGIN
