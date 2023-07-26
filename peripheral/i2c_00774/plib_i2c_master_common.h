@@ -192,6 +192,9 @@ typedef struct
     size_t                  writeCount;
     size_t                  readCount;
     bool                    forcedWrite;
+    bool                    smbusReadBlk;
+    bool                    smbusReadPEC;
+    uint8_t                 pec;
     I2C_TRANSFER_TYPE       transferType;
     I2C_STATE               state;
     I2C_ERROR               error;

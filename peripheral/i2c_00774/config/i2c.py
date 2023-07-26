@@ -20,7 +20,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
-modelist = ["Master", "Slave"]
+modelist = ["Master", "Slave", "Master and Slave"]
 
 I2CS_RISE_SETUP_TIME = [(250, 1000), (100, 300), (50,120)]
 
@@ -193,7 +193,7 @@ def updateI2CClockWarningStatus(symbol, event):
 def masterModeVisibility(symbol, event):
     global i2cSym_OperatingMode
 
-    if i2cSym_OperatingMode.getValue() == "Master":
+    if i2cSym_OperatingMode.getValue() == "Master" or i2cSym_OperatingMode.getValue() == "Master and Slave":
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -211,16 +211,24 @@ def slaveModeVisibility(symbol, event):
             symbol.setMax(127)
 
     elif event["id"] == "I2C_OPERATING_MODE":
-        if i2cSym_OperatingMode.getValue() == "Slave":
+        if i2cSym_OperatingMode.getValue() == "Slave" or i2cSym_OperatingMode.getValue() == "Master and Slave":
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
 
 def masterFilesGeneration(symbol, event):
-    symbol.setEnabled(i2cSym_OperatingMode.getValue() == "Master")
+    mode = i2cSym_OperatingMode.getValue()
+    symbol.setEnabled(mode == "Master" or mode == "Master and Slave")
 
 def slaveFilesGeneration(symbol, event):
-    symbol.setEnabled(i2cSym_OperatingMode.getValue() == "Slave")
+    mode = i2cSym_OperatingMode.getValue()
+    symbol.setEnabled(mode == "Slave" or mode == "Master and Slave")
+
+def masterSlaveCommonFilesGeneration (symbol, event):
+    symbol.setEnabled(i2cSym_OperatingMode.getValue() == "Master and Slave")
+
+def cmnSMBusFilesGeneration(symbol, event):
+    symbol.setEnabled(event["value"])
 
 def onCapabilityConnected(event):
     localComponent = event["localComponent"]
@@ -304,9 +312,9 @@ def instantiateComponent(i2cComponent):
     i2cSym_SlewRateControl.setLabel("Disable Slew Rate Control")
 
     #SMEN: SMBus Input Levels bit
-    i2cSym_SMBusInputLevels = i2cComponent.createBooleanSymbol("I2C_SMEN", None)
-    i2cSym_SMBusInputLevels.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_00774;register:%NOREGISTER%")
-    i2cSym_SMBusInputLevels.setLabel("SMBus Input Levels")
+    i2cSym_SMBusEnable = i2cComponent.createBooleanSymbol("I2C_SMEN", None)
+    i2cSym_SMBusEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_00774;register:%NOREGISTER%")
+    i2cSym_SMBusEnable.setLabel("Enable SMBus")
 
     #SIDL: Stop in Idle Mode bit
     i2cSym_StopInIdleMode = i2cComponent.createBooleanSymbol("I2C_SIDL", None)
@@ -560,6 +568,24 @@ def instantiateComponent(i2cComponent):
     i2cMasterSourceFile.setEnabled(True)
     i2cMasterSourceFile.setDependencies(masterFilesGeneration, ["I2C_OPERATING_MODE"])
 
+    i2cSMBusCommonSourceFile = i2cComponent.createFileSymbol("I2C_COMMON_SOURCE", None)
+    i2cSMBusCommonSourceFile.setSourcePath("../peripheral/i2c_00774/templates/plib_i2c_smbus_common.c")
+    i2cSMBusCommonSourceFile.setOutputName("plib_i2c_smbus_common.c")
+    i2cSMBusCommonSourceFile.setDestPath("peripheral/i2c")
+    i2cSMBusCommonSourceFile.setProjectPath("config/" + configName +"/peripheral/i2c")
+    i2cSMBusCommonSourceFile.setType("SOURCE")
+    i2cSMBusCommonSourceFile.setEnabled(True)
+    i2cSMBusCommonSourceFile.setDependencies(cmnSMBusFilesGeneration, ["I2C_SMEN"])
+
+    i2cSMBusCommonHeaderFile = i2cComponent.createFileSymbol("I2C_COMMON_HEADER", None)
+    i2cSMBusCommonHeaderFile.setSourcePath("../peripheral/i2c_00774/templates/plib_i2c_smbus_common.h")
+    i2cSMBusCommonHeaderFile.setOutputName("plib_i2c_smbus_common.h")
+    i2cSMBusCommonHeaderFile.setDestPath("peripheral/i2c")
+    i2cSMBusCommonHeaderFile.setProjectPath("config/" + configName +"/peripheral/i2c")
+    i2cSMBusCommonHeaderFile.setType("HEADER")
+    i2cSMBusCommonHeaderFile.setEnabled(True)
+    i2cSMBusCommonHeaderFile.setDependencies(cmnSMBusFilesGeneration, ["I2C_SMEN"])
+
     i2cSlaveHeaderFile = i2cComponent.createFileSymbol("I2C_SLAVE_HEADER", None)
     i2cSlaveHeaderFile.setSourcePath("../peripheral/i2c_00774/templates/plib_i2c_slave.h.ftl")
     i2cSlaveHeaderFile.setOutputName("plib_" + i2cInstanceName.getValue().lower() + "_slave.h")
@@ -588,6 +614,26 @@ def instantiateComponent(i2cComponent):
     i2cSlaveSourceFile.setMarkup(True)
     i2cSlaveSourceFile.setEnabled(False)
     i2cSlaveSourceFile.setDependencies(slaveFilesGeneration, ["I2C_OPERATING_MODE"])
+
+    i2cMasterSlaveCmnSourceFile = i2cComponent.createFileSymbol("I2C_MASTER_SLAVE_CMN_SOURCE", None)
+    i2cMasterSlaveCmnSourceFile.setSourcePath("../peripheral/i2c_00774/templates/plib_i2c_master_slave_common.c.ftl")
+    i2cMasterSlaveCmnSourceFile.setOutputName("plib_" + i2cInstanceName.getValue().lower() + "_master_slave_common.c")
+    i2cMasterSlaveCmnSourceFile.setDestPath("peripheral/i2c")
+    i2cMasterSlaveCmnSourceFile.setProjectPath("config/" + configName +"/peripheral/i2c")
+    i2cMasterSlaveCmnSourceFile.setType("SOURCE")
+    i2cMasterSlaveCmnSourceFile.setMarkup(True)
+    i2cMasterSlaveCmnSourceFile.setEnabled(False)
+    i2cMasterSlaveCmnSourceFile.setDependencies(masterSlaveCommonFilesGeneration, ["I2C_OPERATING_MODE"])
+
+    i2cMasterSlaveCmnHeaderFile = i2cComponent.createFileSymbol("I2C_MASTER_SLAVE_CMN_HEADER", None)
+    i2cMasterSlaveCmnHeaderFile.setSourcePath("../peripheral/i2c_00774/templates/plib_i2c_master_slave_common.h.ftl")
+    i2cMasterSlaveCmnHeaderFile.setOutputName("plib_" + i2cInstanceName.getValue().lower() + "_master_slave_common.h")
+    i2cMasterSlaveCmnHeaderFile.setDestPath("peripheral/i2c")
+    i2cMasterSlaveCmnHeaderFile.setProjectPath("config/" + configName +"/peripheral/i2c")
+    i2cMasterSlaveCmnHeaderFile.setType("HEADER")
+    i2cMasterSlaveCmnHeaderFile.setMarkup(True)
+    i2cMasterSlaveCmnHeaderFile.setEnabled(False)
+    i2cMasterSlaveCmnHeaderFile.setDependencies(masterSlaveCommonFilesGeneration, ["I2C_OPERATING_MODE"])
 
     i2cSystemInitFile = i2cComponent.createFileSymbol("I2C_INIT", None)
     i2cSystemInitFile.setType("STRING")

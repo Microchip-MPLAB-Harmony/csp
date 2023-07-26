@@ -1,24 +1,25 @@
 /*******************************************************************************
-  Serial Communication Interface Inter-Integrated Circuit (I2C) Library
-  Instance Header File
+  Inter-Integrated Circuit (I2C) Library
+  Header File
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_${I2C_INSTANCE_NAME?lower_case}_slave.h
+    plib_i2c_smbus_common.h
 
   Summary:
-    I2C PLIB Slave Header file
+    I2C SMBUS PLIB Common Implementation file
 
   Description:
-    This file defines the interface to the I2C peripheral library. This
-    library provides access to and control of the associated peripheral
+    This file defines the interface to the I2C peripheral library.
+    This library provides access to and control of the associated peripheral
     instance.
+
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2019-2020 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -41,8 +42,18 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_${I2C_INSTANCE_NAME}_SLAVE_H
-#define PLIB_${I2C_INSTANCE_NAME}_SLAVE_H
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+
+#ifndef PLIB_I2C_SMBUS_COMMON_H
+#define PLIB_I2C_SMBUS_COMMON_H
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -52,7 +63,8 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_i2c_slave_common.h"
+uint8_t SMBUSCRC8Byte(uint8_t initCRC, uint8_t data);
+uint8_t SMBUSCRC8Buffer(uint8_t initCRC, void* pData, uint32_t size);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -62,32 +74,6 @@
 #endif
 // DOM-IGNORE-END
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface Routines
-// *****************************************************************************
-// *****************************************************************************
-
-/*
- * The following functions make up the methods (set of possible operations) of
- * this interface.
- */
-
-<#assign I2C_API_PREFIX = I2C_INSTANCE_NAME + "_">
-<#if I2C_OPERATING_MODE == "Master and Slave">
-<#assign I2C_API_PREFIX = I2C_INSTANCE_NAME + "_Slave">
-</#if>
-void ${I2C_API_PREFIX}Initialize(void);
-void ${I2C_API_PREFIX}CallbackRegister(I2C_SLAVE_CALLBACK callback, uintptr_t contextHandle);
-bool ${I2C_API_PREFIX}IsBusy(void);
-uint8_t ${I2C_API_PREFIX}ReadByte(void);
-void ${I2C_API_PREFIX}WriteByte(uint8_t wrByte);
-I2C_SLAVE_TRANSFER_DIR ${I2C_API_PREFIX}TransferDirGet(void);
-I2C_SLAVE_ACK_STATUS ${I2C_API_PREFIX}LastByteAckStatusGet(void);
-I2C_SLAVE_ERROR ${I2C_API_PREFIX}ErrorGet(void);
-<#if I2C_SMEN == true>
-uint8_t ${I2C_API_PREFIX}CRCGet(void);
-</#if>
 
 
 // DOM-IGNORE-BEGIN
@@ -96,4 +82,4 @@ uint8_t ${I2C_API_PREFIX}CRCGet(void);
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_${I2C_INSTANCE_NAME}_SLAVE_H */
+#endif /* PLIB_I2C_SMBUS_COMMON_H */

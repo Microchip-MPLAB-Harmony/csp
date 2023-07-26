@@ -161,6 +161,7 @@ typedef struct
     I2C_SLAVE_CALLBACK      callback;
     uintptr_t               context;
     uint8_t                 lastByteWritten;
+    uint8_t                 pec;
 } I2C_SLAVE_OBJ;
 
 // DOM-IGNORE-BEGIN
