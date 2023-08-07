@@ -294,7 +294,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 void ${ADC_INSTANCE_NAME}_Enable( void )
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ADC_CTRLA_ENABLE_Msk;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY != 0U)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_ENABLE_Msk) == ADC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization */
     }
@@ -304,7 +304,7 @@ void ${ADC_INSTANCE_NAME}_Enable( void )
 void ${ADC_INSTANCE_NAME}_Disable( void )
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA &=(uint16_t) ~ADC_CTRLA_ENABLE_Msk;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY != 0U)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_ENABLE_Msk) == ADC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization */
     }
@@ -343,17 +343,21 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = low_threshold;
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = high_threshold;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY != 0U)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_WINLT_Msk) == ADC_SYNCBUSY_WINLT_Msk)
     {
         /* Wait for Synchronization */
     }
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_WINUT_Msk) == ADC_SYNCBUSY_WINUT_Msk)
+    {
+        /* Wait for Synchronization */
+    } 
 }
 
 void ${ADC_INSTANCE_NAME}_WindowModeSet(ADC_WINMODE mode)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB &= (uint16_t)~ADC_CTRLB_WINMODE_Msk;
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB |= (uint16_t)mode << ADC_CTRLB_WINMODE_Pos;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY != 0U)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_CTRLC_Msk) == ADC_SYNCBUSY_CTRLC_Msk)
     {
         /* Wait for Synchronization */
     }
