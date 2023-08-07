@@ -294,7 +294,7 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 {
     /* Reset TCC */
     ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_SWRST_Msk;
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_SWRST_Msk) != 0U)
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_SWRST_Msk) == TCC_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for sync */
     }
@@ -370,7 +370,7 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 void ${TCC_INSTANCE_NAME}_PWMStart(void)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA |= TCC_CTRLA_ENABLE_Msk;
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_ENABLE_Msk) != 0U)
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_ENABLE_Msk) == TCC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for sync */
     }
@@ -380,7 +380,7 @@ void ${TCC_INSTANCE_NAME}_PWMStart(void)
 void ${TCC_INSTANCE_NAME}_PWMStop (void)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA &= ~TCC_CTRLA_ENABLE_Msk;
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_ENABLE_Msk) != 0U)
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_ENABLE_Msk) == TCC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for sync */
     }
@@ -427,7 +427,7 @@ bool ${TCC_INSTANCE_NAME}_PWM32bitPeriodSet (uint32_t period)
 <#if TCC_SIZE == 24>
 uint32_t ${TCC_INSTANCE_NAME}_PWM24bitPeriodGet (void)
 {
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) != 0U)
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) == TCC_SYNCBUSY_PER_Msk)
     {
         /* Wait for sync */
     }
@@ -436,7 +436,7 @@ uint32_t ${TCC_INSTANCE_NAME}_PWM24bitPeriodGet (void)
 <#elseif TCC_SIZE == 16>
 uint16_t ${TCC_INSTANCE_NAME}_PWM16bitPeriodGet (void)
 {
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) != 0U)
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) == TCC_SYNCBUSY_PER_Msk)
     {
         /* Wait for sync */
     }
@@ -445,7 +445,7 @@ uint16_t ${TCC_INSTANCE_NAME}_PWM16bitPeriodGet (void)
 <#elseif TCC_SIZE == 32>
 uint32_t ${TCC_INSTANCE_NAME}_PWM32bitPeriodGet (void)
 {
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) != 0U)
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) == TCC_SYNCBUSY_PER_Msk)
     {
         /* Wait for sync */
     }
@@ -502,7 +502,7 @@ uint32_t ${TCC_INSTANCE_NAME}_PWM24bitCounterGet( void )
 void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet (uint32_t countVal)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal & 0xFFFFFFU;
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) != 0U)
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
     {
         /* Wait for sync */
     }
@@ -532,7 +532,7 @@ uint16_t ${TCC_INSTANCE_NAME}_PWM16bitCounterGet( void )
 void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet (uint16_t countVal)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) != 0U)
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
     {
         /* Wait for sync */
     }
@@ -562,7 +562,7 @@ uint32_t ${TCC_INSTANCE_NAME}_PWM32bitCounterGet( void )
 void ${TCC_INSTANCE_NAME}_PWM32bitCounterSet (uint32_t countVal)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) != 0U)
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
     {
         /* Wait for sync */
     }
@@ -573,7 +573,7 @@ void ${TCC_INSTANCE_NAME}_PWM32bitCounterSet (uint32_t countVal)
 void ${TCC_INSTANCE_NAME}_PWMForceUpdate(void)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET |= (uint8_t)TCC_CTRLBCLR_CMD_UPDATE;
-    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CTRLB_Msk) != 0U)
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CTRLB_Msk) == TCC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for sync */
     }
