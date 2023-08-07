@@ -155,7 +155,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void )
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PositionGet( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY & PDEC_SYNCBUSY_CTRLB_Msk) == PDEC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for read Synchronization */
     }
@@ -170,7 +170,7 @@ uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PositionGet( void )
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}RevolutionsGet( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY & PDEC_SYNCBUSY_CTRLB_Msk) == PDEC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for read Synchronization */
     }
@@ -185,7 +185,7 @@ uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}RevolutionsGet( void )
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}AngleGet( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY & PDEC_SYNCBUSY_CTRLB_Msk) == PDEC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for read Synchronization */
     }

@@ -171,7 +171,7 @@ bool ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare1Set( uint16_t compare1 )
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare0Get( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY & PDEC_SYNCBUSY_CTRLB_Msk) == PDEC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for read Synchronization */
     }
@@ -182,7 +182,7 @@ uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare0Get( void )
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Compare1Get( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
-    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)!= 0U)
+    while((${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY & PDEC_SYNCBUSY_CTRLB_Msk) == PDEC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for read Synchronization */
     }
