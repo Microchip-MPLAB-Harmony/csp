@@ -98,25 +98,25 @@ void ${SPT_INSTANCE_NAME}_QuadModeDisable(void);
 
 void ${SPT_INSTANCE_NAME}_ECInterruptEnable(SPT_EC_INT int_en);
 
-uint32_t ${SPT_INSTANCE_NAME}_MailBoxRead(void);
-
-void ${SPT_INSTANCE_NAME}_MailBoxWrite(uint32_t data);
-
 void ${SPT_INSTANCE_NAME}_CallbackRegister( SPT_CALLBACK callback, uintptr_t context );
+
+void ${SPT_INSTANCE_NAME}_MEM0Config(uint32_t bar, uint32_t wr_lim, uint32_t rd_lim);
+
+void ${SPT_INSTANCE_NAME}_MEM1Config(uint32_t bar, uint32_t wr_lim, uint32_t rd_lim);
 
 <#else>
 
 void ${SPT_INSTANCE_NAME}_ECDataAvailableSet(void);
+
+void ${SPT_INSTANCE_NAME}_MEM0Config(uint32_t bar, uint32_t wr_lim);
+
+void ${SPT_INSTANCE_NAME}_MEM1Config(uint32_t bar, uint32_t rd_lim);
 
 </#if>
 
 uint32_t ${SPT_INSTANCE_NAME}_ECStatusRegGet(void);
 
 void ${SPT_INSTANCE_NAME}_ECStatusRegClear(uint32_t bitmask);
-
-void ${SPT_INSTANCE_NAME}_MEM0Config(uint32_t bar, uint32_t wr_lim, uint32_t rd_lim);
-
-void ${SPT_INSTANCE_NAME}_MEM1Config(uint32_t bar, uint32_t wr_lim, uint32_t rd_lim);
 
 void ${SPT_INSTANCE_NAME}_MEM0Enable(void);
 
@@ -138,6 +138,8 @@ void ${SPT_INSTANCE_NAME}_Enable(void);
 
 void ${SPT_INSTANCE_NAME}_Disable(void);
 
+<#if SPT_MODE == "Advanced">
+
 uint32_t ${SPT_INSTANCE_NAME}_HostToECMBXRead(void);
 
 void ${SPT_INSTANCE_NAME}_HostToECMBXClr(void);
@@ -145,6 +147,8 @@ void ${SPT_INSTANCE_NAME}_HostToECMBXClr(void);
 void ${SPT_INSTANCE_NAME}_ECToHostMBXWrite(uint32_t val);
 
 uint32_t ${SPT_INSTANCE_NAME}_ECToHostMBXRead(void);
+
+</#if>
 
 
 #ifdef __cplusplus // Provide C++ Compatibility

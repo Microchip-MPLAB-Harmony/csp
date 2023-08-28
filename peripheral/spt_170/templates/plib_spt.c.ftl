@@ -100,16 +100,6 @@ void ${SPT_INSTANCE_NAME}_ECInterruptEnable(SPT_EC_INT int_en)
     ${SPT_INSTANCE_NAME}_REGS->SPT_EC_IEN = (uint32_t)int_en;
 }
 
-uint32_t ${SPT_INSTANCE_NAME}_MailBoxRead(void)
-{
-    return ${SPT_INSTANCE_NAME}_REGS->SPT_SPIM2EC_MBX;
-}
-
-void ${SPT_INSTANCE_NAME}_MailBoxWrite(uint32_t data)
-{
-    ${SPT_INSTANCE_NAME}_REGS->SPT_EC2SPIM_MBX = data;
-}
-
 void ${SPT_INSTANCE_NAME}_CallbackRegister( SPT_CALLBACK callback, uintptr_t context )
 {
     ${SPT_INSTANCE_NAME}_CallbackObject.callback = callback;
@@ -134,6 +124,7 @@ void ${SPT_INSTANCE_NAME}_ECStatusRegClear(uint32_t bitmask)
     ${SPT_INSTANCE_NAME}_REGS->SPT_SPI_EC_STS = bitmask;
 }
 
+<#if SPT_MODE == "Advanced">
 void ${SPT_INSTANCE_NAME}_MEM0Config(uint32_t bar, uint32_t wr_lim, uint32_t rd_lim)
 {
     ${SPT_INSTANCE_NAME}_REGS->SPT_MEM_BAR0 = bar;
@@ -149,6 +140,21 @@ void ${SPT_INSTANCE_NAME}_MEM1Config(uint32_t bar, uint32_t wr_lim, uint32_t rd_
     ${SPT_INSTANCE_NAME}_REGS->SPT_MEM_RD_LIM1 = rd_lim;
     ${SPT_INSTANCE_NAME}_REGS->SPT_MEM_CFG |= SPT_MEM_CFG_BAR_EN1_SEL_Msk;
 }
+<#else>
+void ${SPT_INSTANCE_NAME}_MEM0Config(uint32_t bar, uint32_t wr_lim)
+{
+    ${SPT_INSTANCE_NAME}_REGS->SPT_MEM_BAR0 = bar;
+    ${SPT_INSTANCE_NAME}_REGS->SPT_MEM_WR_LIM0 = wr_lim;
+    ${SPT_INSTANCE_NAME}_REGS->SPT_MEM_CFG |= SPT_MEM_CFG_BAR_EN0_SEL_Msk;
+}
+
+void ${SPT_INSTANCE_NAME}_MEM1Config(uint32_t bar, uint32_t rd_lim)
+{
+    ${SPT_INSTANCE_NAME}_REGS->SPT_MEM_BAR1 = bar;
+    ${SPT_INSTANCE_NAME}_REGS->SPT_MEM_RD_LIM1 = rd_lim;
+    ${SPT_INSTANCE_NAME}_REGS->SPT_MEM_CFG |= SPT_MEM_CFG_BAR_EN1_SEL_Msk;
+}
+</#if>
 
 void ${SPT_INSTANCE_NAME}_MEM0Enable(void)
 {
@@ -200,6 +206,8 @@ void ${SPT_INSTANCE_NAME}_Disable(void)
     ${SPT_INSTANCE_NAME}_REGS->SPT_SYS_CFG &= ~SPT_SYS_CFG_SPI_SLV_EN_Msk;
 }
 
+<#if SPT_MODE == "Advanced">
+
 uint32_t ${SPT_INSTANCE_NAME}_HostToECMBXRead(void)
 {
     return ${SPT_INSTANCE_NAME}_REGS->SPT_SPIM2EC_MBX;
@@ -220,7 +228,6 @@ uint32_t ${SPT_INSTANCE_NAME}_ECToHostMBXRead(void)
     return ${SPT_INSTANCE_NAME}_REGS->SPT_EC2SPIM_MBX;
 }
 
-<#if SPT_MODE == "Advanced">
 <#compress>
 <#assign INT_HANDLER_NAME_PREFIX = "">
 <#if .vars["SPT_EC_INTERRUPT_TYPE"] == "AGGREGATE">
