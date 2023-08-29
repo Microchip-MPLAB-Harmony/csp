@@ -70,6 +70,8 @@ bool ${USART_INSTANCE_NAME}_SPI_Write( void* pTransmitData, size_t txSize );
 
 bool ${USART_INSTANCE_NAME}_SPI_Read( void* pReceiveData, size_t rxSize );
 
+bool ${USART_INSTANCE_NAME}_SPI_IsTransmitterBusy(void);
+
 <#if USART_SPI_INTERRUPT_MODE == true >
 bool ${USART_INSTANCE_NAME}_SPI_IsBusy( void );
 

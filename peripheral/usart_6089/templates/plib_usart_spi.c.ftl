@@ -407,6 +407,11 @@ bool ${USART_INSTANCE_NAME}_SPI_Read( void* pReceiveData, size_t rxSize )
     return(${USART_INSTANCE_NAME}_SPI_WriteRead(NULL, 0U, pReceiveData, rxSize));
 }
 
+bool ${USART_INSTANCE_NAME}_SPI_IsTransmitterBusy(void)
+{
+    return ((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_SPI_TXEMPTY_Msk) == 0U)? true : false;
+}
+
 <#if USART_SPI_INTERRUPT_MODE == true >
 bool ${USART_INSTANCE_NAME}_SPI_IsBusy( void )
 {
