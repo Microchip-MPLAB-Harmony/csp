@@ -1,7 +1,7 @@
 package:
   format-version: "1.0.0"
   name: "csp"
-  version: "v3.17.0"
+  version: "v3.18.0"
   type: "api"
   status: "production"
   required: true
@@ -9,7 +9,7 @@ package:
   dependencies:
     - name: "dev_packs"
       type: "package"
-      version: "v3.17.0"
+      version: "v3.18.0"
     - name: "CMSIS_5"
       type: "package"
       version: "5.8.0"
@@ -64,6 +64,9 @@ package:
     - name: "PIC32CZ-CA90_DFP"
       type: "dfp"
       version: "1.3.152"
+    - name: "PIC32CZ-CA91_DFP"
+      type: "dfp"
+      version: "1.0.11"
     - name: "PIC32MK-GP_DFP"
       type: "dfp"
       version: "1.6.144"
@@ -87,7 +90,7 @@ package:
       version: "1.3.58"
     - name: "PIC32MZ-W_DFP"
       type: "dfp"
-      version: "1.6.220"
+      version: "1.8.326"
     - name: "SAM9X6_DFP"
       type: "dfp"
       version: "1.7.85"
