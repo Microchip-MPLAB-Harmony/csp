@@ -176,7 +176,7 @@ bool ${QMSPI_INSTANCE_NAME}_SPI_IsBusy (void)
 
 bool ${QMSPI_INSTANCE_NAME}_SPI_IsTransmitterBusy(void)
 {
-    return ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TRANS_ACTIV_Msk) != 0);
+    return ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TRANS_ACTIV_Msk) != 0U);
 }
 
 </#if>
@@ -209,25 +209,25 @@ bool ${QMSPI_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, v
         ${QMSPI_INSTANCE_NAME?lower_case}Obj.pRxBuffer = pReceiveData;
         ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending = 0;
         ${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending = 0;
-        ${QMSPI_INSTANCE_NAME?lower_case}Obj.txDummyData = 0xFFFFFFFF;
+        ${QMSPI_INSTANCE_NAME?lower_case}Obj.txDummyData = 0xFFFFFFFFU;
 
-        if ((${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize == ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize) || (${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize == 0) || (${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize == 0))
+        if ((rxSize == txSize) || (rxSize == 0U) || (txSize == 0U))
         {
             // Transfer size will be the max of ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize and ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize
-            transferSize = ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize > ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize ? ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize : ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize;
+            transferSize = rxSize > txSize ? rxSize : txSize;
         }
         else
         {
             // Transfer size will be min of ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize and ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize
-            transferSize = ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize > ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize ? ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize : ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize;
+            transferSize = rxSize > txSize ? txSize : rxSize;
 
-            if (${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize > ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (rxSize > txSize)
             {
-                ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending = (${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize - ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize);
+                ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending = (rxSize - txSize);
             }
             else
             {
-                ${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending = (${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize - ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize);
+                ${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending = (txSize - rxSize);
             }
         }
 
@@ -243,9 +243,12 @@ bool ${QMSPI_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, v
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL = QMSPI_CTRL_TRANS_UNITS(0x01) | QMSPI_CTRL_TRANS_LEN(transferSize) | QMSPI_CTRL_TX_TRANS_EN(0x01) | QMSPI_CTRL_TX_DMA_EN(1) | QMSPI_CTRL_RX_TRANS_EN_Msk | QMSPI_CTRL_RX_DMA_EN(1);
 
         <#if QMSPI_HARDWARE_CS_EN == true>
-        if ((${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending == 0U) && (${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending == 0U))
+        if (${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending == 0U)
         {
-            ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL |= QMSPI_CTRL_CLOSE_TRANS_EN_Msk;
+            if (${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending == 0U)
+            {
+                ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL |= QMSPI_CTRL_CLOSE_TRANS_EN_Msk;
+            }
         }
         </#if>
 
@@ -291,11 +294,15 @@ void __attribute__((used)) ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
     bool txAddrInc = false;
     bool rxAddrInc = false;
     size_t transferSize;
+    size_t txPending = ${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending;
+    size_t rxPending = ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending;
+    size_t txSize = ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize;
+    size_t rxSize = ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize;
 
     <#if QMSPI_INTERRUPT_TYPE == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM}))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM}) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM}))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM}) != 0U)
     </#if>
     {
         <#if QMSPI_INTERRUPT_TYPE == "AGGREGATE">
@@ -308,19 +315,19 @@ void __attribute__((used)) ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
         {
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS |= QMSPI_STS_TRANS_COMPL_Msk;
 
-            if ( ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL & QMSPI_CTRL_DESCR_BUFF_EN_Msk) == 0U) && ((${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending > 0U) || (${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending > 0U)) )
+            if ( ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL & QMSPI_CTRL_DESCR_BUFF_EN_Msk) == 0U) && ((txPending > 0U) || (rxPending > 0U)) )
             {
-                txAddrInc = ${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending > 0? true : false;
-                rxAddrInc = ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending > 0? true : false;
+                txAddrInc = ${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending > 0U? true : false;
+                rxAddrInc = ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending > 0U? true : false;
 
-                transferSize = ${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending > ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending? ${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending : ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending;
+                transferSize = txPending > rxPending? txPending : rxPending;
 
                 ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL = QMSPI_CTRL_TRANS_UNITS(0x01) | QMSPI_CTRL_TRANS_LEN(transferSize) | QMSPI_CTRL_TX_TRANS_EN(0x01) | QMSPI_CTRL_TX_DMA_EN(1) | QMSPI_CTRL_RX_TRANS_EN_Msk | QMSPI_CTRL_RX_DMA_EN(1) <#if QMSPI_HARDWARE_CS_EN == true> | QMSPI_CTRL_CLOSE_TRANS_EN_Msk </#if>;
 
                 if (txAddrInc)
                 {
                     ${QMSPI_INSTANCE_NAME}_REGS->LDMA_TX[0].QMSPI_LDMA_TXCTRL = QMSPI_LDMA_TXCTRL_CH_EN_Msk | QMSPI_LDMA_TXCTRL_INC_ADDR_EN_Msk;
-                    ${QMSPI_INSTANCE_NAME}_REGS->LDMA_TX[0].QMSPI_LDMA_TXSTRT_ADDR = (uint32_t)&${QMSPI_INSTANCE_NAME?lower_case}Obj.pTxBuffer[${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize - ${QMSPI_INSTANCE_NAME?lower_case}Obj.txPending];
+                    ${QMSPI_INSTANCE_NAME}_REGS->LDMA_TX[0].QMSPI_LDMA_TXSTRT_ADDR = (uint32_t)&${QMSPI_INSTANCE_NAME?lower_case}Obj.pTxBuffer[txSize - txPending];
                 }
                 else
                 {
@@ -333,7 +340,7 @@ void __attribute__((used)) ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
                 if (rxAddrInc)
                 {
                     ${QMSPI_INSTANCE_NAME}_REGS->LDMA_RX[0].QMSPI_LDMA_RXCTRL = QMSPI_LDMA_RXCTRL_CH_EN_Msk | QMSPI_LDMA_RXCTRL_INC_ADDR_EN_Msk;
-                    ${QMSPI_INSTANCE_NAME}_REGS->LDMA_RX[0].QMSPI_LDMA_RXSTRT_ADDR = (uint32_t)&${QMSPI_INSTANCE_NAME?lower_case}Obj.pRxBuffer[${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize - ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxPending];
+                    ${QMSPI_INSTANCE_NAME}_REGS->LDMA_RX[0].QMSPI_LDMA_RXSTRT_ADDR = (uint32_t)&${QMSPI_INSTANCE_NAME?lower_case}Obj.pRxBuffer[rxSize - rxPending];
                 }
                 else
                 {
@@ -416,6 +423,8 @@ void QMSPI_TransferDescriptorSetup(uint8_t descNum, QMSPI_SPI_DMA_TRANS_DESC des
 bool ${QMSPI_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
 {
     bool isRequestAccepted = false;
+    size_t txCount = 0;
+    size_t dummySize = 0;
 
     /* Verify the request */
     if((${QMSPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false) && (((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))))
@@ -443,22 +452,26 @@ bool ${QMSPI_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, v
         /* Flush out any unread data in SPI DATA Register from the previous transfer */
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_EXE = QMSPI_EXE_CLR_DAT_BUFF_Msk;
 
-        if(${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize > ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize)
+        if(rxSize > txSize)
         {
-            ${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize - ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize;
+            dummySize = rxSize - txSize;
         }
 
-        while ( ((${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount != ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize) || (${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)) && ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TX_BUFF_FULL_Msk) == 0U) )
+        while (((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TX_BUFF_FULL_Msk) == 0U) && ((txCount != txSize) || (dummySize > 0U)))
         {
-            if (${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount != ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (txCount != txSize)
             {
-                *((uint8_t*)&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = ${QMSPI_INSTANCE_NAME?lower_case}Obj.pTxBuffer[${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount];
-                ${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount++;
+                *((volatile uint8_t*)&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = ${QMSPI_INSTANCE_NAME?lower_case}Obj.pTxBuffer[txCount];
+                txCount++;
             }
-            else if (${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
+            else if (dummySize > 0U)
             {
-                *((uint8_t*)&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = 0xFFU;
-                ${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+                *((volatile uint8_t*)&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = 0xFFU;
+                dummySize--;
+            }
+            else
+            {
+                /* Do nothing */
             }
         }
 
@@ -467,11 +480,14 @@ bool ${QMSPI_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, v
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL = QMSPI_CTRL_TRANS_UNITS(0x01) | QMSPI_CTRL_TRANS_LEN(transferCount) | QMSPI_CTRL_TX_TRANS_EN(0x01) | QMSPI_CTRL_RX_TRANS_EN_Msk;
 
         <#if QMSPI_HARDWARE_CS_EN == true>
-        if ((${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount == ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize) && (${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize == 0U))
+        if ((txCount == txSize) && (dummySize == 0U))
         {
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL |= QMSPI_CTRL_CLOSE_TRANS_EN_Msk;
         }
         </#if>
+
+        ${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount = txCount;
+        ${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize = dummySize;
 
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_IEN = QMSPI_IEN_TRANS_COMPL_EN_Msk;
         ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_EXE = QMSPI_EXE_START_Msk;
@@ -485,11 +501,16 @@ bool ${QMSPI_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, v
 void __attribute__((used)) ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     volatile uint8_t receivedData;
+    uint32_t rxSize = ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize;
+    uint32_t rxCount = ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxCount;
+    uint32_t txSize = ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize;
+    uint32_t txCount = ${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount;
+    uint32_t dummySize = ${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize;
 
     <#if QMSPI_INTERRUPT_TYPE == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM}))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM}) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM}))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM}) != 0U)
     </#if>
     {
         <#if QMSPI_INTERRUPT_TYPE == "AGGREGATE">
@@ -505,15 +526,17 @@ void __attribute__((used)) ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
             /* Read the received data from the FIFO */
             while ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_RX_BUFF_EMP_Msk) == 0U)
             {
-                receivedData = *((uint8_t*)&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_RX_FIFO[0]);
-                if(${QMSPI_INSTANCE_NAME?lower_case}Obj.rxCount < ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize)
+                receivedData = *((volatile uint8_t*)&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_RX_FIFO[0]);
+                if(rxCount < rxSize)
                 {
-                    ${QMSPI_INSTANCE_NAME?lower_case}Obj.pRxBuffer[${QMSPI_INSTANCE_NAME?lower_case}Obj.rxCount] = (uint8_t)receivedData;
-                    ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxCount++;
+                    ${QMSPI_INSTANCE_NAME?lower_case}Obj.pRxBuffer[rxCount] = (uint8_t)receivedData;
+                    rxCount++;
                 }
             }
 
-            if ((${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount == ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize) && (${QMSPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxSize))
+            ${QMSPI_INSTANCE_NAME?lower_case}Obj.rxCount = rxCount;
+
+            if ((txCount == txSize) && (rxCount == rxSize))
             {
                 ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_IEN &= ~QMSPI_IEN_TRANS_COMPL_EN_Msk;
 
@@ -528,26 +551,33 @@ void __attribute__((used)) ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
             }
             else
             {
-                while ( ((${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount != ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize) || (${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)) && ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TX_BUFF_FULL_Msk) == 0U) )
+                while ( ((${QMSPI_INSTANCE_NAME}_REGS->QMSPI_STS & QMSPI_STS_TX_BUFF_FULL_Msk) == 0U) && ((txCount != txSize) || (dummySize > 0U)) )
                 {
-                    if (${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount != ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize)
+                    if (txCount != txSize)
                     {
-                        *((uint8_t*)&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = ${QMSPI_INSTANCE_NAME?lower_case}Obj.pTxBuffer[${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount];
-                        ${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount++;
+                        *((volatile uint8_t*)&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = ${QMSPI_INSTANCE_NAME?lower_case}Obj.pTxBuffer[txCount];
+                        txCount++;
                     }
-                    else if (${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
+                    else if (dummySize > 0U)
                     {
-                        *((uint8_t*)&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = 0xFFU;
-                        ${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+                        *((volatile uint8_t*)&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = 0xFFU;
+                        dummySize--;
+                    }
+                    else
+                    {
+                        /* Do nothing */
                     }
                 }
+
+                ${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount = txCount;
+                ${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize = dummySize;
 
                 uint32_t transferCount = ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_BUF_CNT_STS & QMSPI_BUF_CNT_STS_TX_BUFF_CNT_Msk;
 
                 ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL = QMSPI_CTRL_TRANS_UNITS(0x01) | QMSPI_CTRL_TRANS_LEN(transferCount) | QMSPI_CTRL_TX_TRANS_EN(0x01) | QMSPI_CTRL_RX_TRANS_EN_Msk;
 
                 <#if QMSPI_HARDWARE_CS_EN == true>
-                if ((${QMSPI_INSTANCE_NAME?lower_case}Obj.txCount == ${QMSPI_INSTANCE_NAME?lower_case}Obj.txSize) && (${QMSPI_INSTANCE_NAME?lower_case}Obj.dummySize == 0U))
+                if ((txCount == txSize) && (dummySize == 0U))
                 {
                     ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_CTRL |= QMSPI_CTRL_CLOSE_TRANS_EN_Msk;
                 }
@@ -610,6 +640,10 @@ bool ${QMSPI_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, v
                     *((uint8_t*)&${QMSPI_INSTANCE_NAME}_REGS->QMSPI_TX_FIFO[0]) = 0xFFU;
                     dummySize--;
                 }
+            }
+            else
+            {
+                /* Do nothing */
             }
 
             transferCount = ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_BUF_CNT_STS & QMSPI_BUF_CNT_STS_TX_BUFF_CNT_Msk;
