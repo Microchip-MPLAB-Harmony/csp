@@ -102,7 +102,6 @@ static void  DelayUs ( uint32_t  delayUs)
     clk_high = 0x1 ;
     cs_high  = 0x2;
     en_bit_bang  = 0x1UL << 31;
-    addr_bit = 0; data_bit = 0;
 
     *wifi_spi_ctrl_reg = en_bit_bang | cs_high ;
     *wifi_spi_ctrl_reg = (en_bit_bang | cs_high | clk_high );
@@ -128,94 +127,95 @@ void CLK_Initialize( void )
 {
     volatile unsigned int *PLLDBG = (unsigned int*) 0xBF8000E0U;
     volatile unsigned int *PMDRCLR = (unsigned int *) 0xBF8000B4U;
-	volatile unsigned int *RFSPICTL = (unsigned int *) 0xBF8C8028U;
-    
+    volatile unsigned int *RFSPICTL = (unsigned int *) 0xBF8C8028U;
+    uint32_t device_id = DEVID;
+
     /* unlock system for clock configuration */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655U;
     SYSKEY = 0x556699AA;
 
-	if(((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET == (uint32_t)PIC32MZW1_B0)
-            || ((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET == (uint32_t)PIC32MZW1_G))
+    if(((device_id & PART_NUM_MASK) >> PART_NUM_OFFSET == (uint32_t)PIC32MZW1_B0)
+            || ((device_id & PART_NUM_MASK) >> PART_NUM_OFFSET == (uint32_t)PIC32MZW1_G))
     {
-		if(SPLLCON_DEFAULT == SPLLCON)
-		{
-			EWPLLCON = PLL_PWROFF; // Start with PWR-OFF PLL
-			SPLLCON  = PLL_PWROFF; // Start with PWR-OFF PLL
-			DelayUs(300);
+        if(SPLLCON_DEFAULT == SPLLCON)
+        {
+            EWPLLCON = PLL_PWROFF; // Start with PWR-OFF PLL
+            SPLLCON  = PLL_PWROFF; // Start with PWR-OFF PLL
+            DelayUs(300);
 
-			CFGCON2  |= POSC_DIS; // Start with POSC Turned OFF
-			/* if POSC was on give some time for POSC to shut off */
-			DelayUs(300);
-			/* make sure we properly reset SPI to a known state */
-			*RFSPICTL = 0x80000022U;
-			/* make sure we properly take out of reset */
-			*RFSPICTL = 0x80000002U;
+            CFGCON2  |= POSC_DIS; // Start with POSC Turned OFF
+            /* if POSC was on give some time for POSC to shut off */
+            DelayUs(300);
+            /* make sure we properly reset SPI to a known state */
+            *RFSPICTL = 0x80000022U;
+            /* make sure we properly take out of reset */
+            *RFSPICTL = 0x80000002U;
 
-			if((1U == DEVIDbits.VER) || (((DEVID & PART_NUM_MASK) >> 20) == (uint32_t)PIC32MZW1_G))
-			{
+            if((1U == DEVIDbits.VER) || (((device_id & PART_NUM_MASK) >> 20) == (uint32_t)PIC32MZW1_G))
+            {
                 wifi_spi_write(0x85, 0x00F2); /* MBIAS filter and A31 analog_test */
                 wifi_spi_write(0x84, 0x0001); /* A31 Analog test */
                 wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */
                 wifi_spi_write(0x82, 0x6000); /* XTAL LDO feedback divider (1.3+v) */
-			}
-			else
+            }
+            else
             {
                 wifi_spi_write(0x85, 0x00F0); /* MBIAS filter and A31 analog_test */
                 wifi_spi_write(0x84, 0x0001); /* A31 Analog test */
                 wifi_spi_write(0x1e, 0x510); /* MBIAS reference adjustment */
                 wifi_spi_write(0x82, 0x6400); /* XTAL LDO feedback divider (1.3+v) */
-			}
+            }
              DelayUs(200);
-			/* Enable POSC */
-			CFGCON2  &= POSC_EN; // enable POSC
-			 DelayUs(300);
+            /* Enable POSC */
+            CFGCON2  &= POSC_EN; // enable POSC
+             DelayUs(300);
 
-			/*Configure SPLL*/
-			${CFGCON3_NAME} = ${CFGCON3_VALUE};
-			CFGCON0bits.SPLLHWMD = 1;
+            /*Configure SPLL*/
+            ${CFGCON3_NAME} = ${CFGCON3_VALUE};
+            CFGCON0bits.SPLLHWMD = 1;
 
-			/* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
-			/* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
-			/* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
-			/* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
-			/* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
-			/* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
-			/* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
-			/* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
-			/* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
-			${SPLLCON_REG} = 0x${SPLLCON_VALUE};
+            /* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
+            /* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
+            /* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
+            /* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
+            /* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
+            /* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
+            /* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
+            /* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
+            /* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
+            ${SPLLCON_REG} = 0x${SPLLCON_VALUE};
 
-			/* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
-			/* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
-			/* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
-			/* CF       = ${OSCCON_CF_VALUE}       */
-			/* SLPEN    = ${OSCCON_SLPEN_VALUE}    */
-			/* CLKLOCK  = ${OSCCON_CLKLOCK_VALUE}  */
-			/* NOSC     = ${OSCCON_NOSC_VALUE}     */
-			/* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
-			/* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
-			/* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
-			${OSCCON_REG} = 0x${OSCCON_VALUE};
+            /* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
+            /* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
+            /* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
+            /* CF       = ${OSCCON_CF_VALUE}       */
+            /* SLPEN    = ${OSCCON_SLPEN_VALUE}    */
+            /* CLKLOCK  = ${OSCCON_CLKLOCK_VALUE}  */
+            /* NOSC     = ${OSCCON_NOSC_VALUE}     */
+            /* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
+            /* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
+            /* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
+            ${OSCCON_REG} = 0x${OSCCON_VALUE};
 
-			OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
+            OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
 
-			while( OSCCONbits.OSWEN != 0U)
+            while( OSCCONbits.OSWEN != 0U)
             {
                 /* Nothing to do */
             }
-			/****************************************************************
+            /****************************************************************
              * check to see if PLL locked; indicates POSC must have started
              * The recommendation is to use SPLL as the System Clock.
              * Below code assumes that is the case in most practical use cases.
             *****************************************************************/
-            if(OSCCONbits.COSC & 0x2U)
+            if((OSCCONbits.COSC & 0x2U) != 0U)
             {
                 if(0U == (CLKSTATbits.POSCRDY & 0x1U))
                 {
-                     while(true)
+                    while(true)
                     {
-                        /* Nothing to do */
+                        /* Spin forever */
                     }
                 }
             }
@@ -224,14 +224,19 @@ void CLK_Initialize( void )
                 /*POSC failed to start!*/
                 while(true)
                 {
-                   /* Nothing to do */
+                   /* Spin forever */
                 }
-            }       
-			if(1U == DEVIDbits.VER || (((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET) == (uint32_t)PIC32MZW1_G))
-			{
-				/*Disabling internal schmitt-trigger to increase noise immunity */
-				wifi_spi_write(0x85, 0x00F4);
-			}
+            }
+            else
+            {
+                /* Nothing to do */
+            }
+
+            if(1U == DEVIDbits.VER || (((device_id & PART_NUM_MASK) >> PART_NUM_OFFSET) == (uint32_t)PIC32MZW1_G))
+            {
+                /*Disabling internal schmitt-trigger to increase noise immunity */
+                wifi_spi_write(0x85, 0x00F4);
+            }
 <#if APP_RECONFIG_SPLL??>
 /* Leaving this disabled as there is no absolute use-case as yet.
  * Placeholder for cases where a bootloader uses a different frequency
@@ -247,130 +252,130 @@ void CLK_Initialize( void )
             SPLLCON  = PLL_PWROFF; // Start with PWR-OFF PLL
 
             /*Configure SPLL*/
-			${CFGCON3_NAME} = ${CFGCON3_VALUE};
-			CFGCON0bits.SPLLHWMD = 1;
+            ${CFGCON3_NAME} = ${CFGCON3_VALUE};
+            CFGCON0bits.SPLLHWMD = 1;
 
-			/* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
-			/* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
-			/* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
-			/* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
-			/* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
-			/* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
-			/* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
-			/* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
-			/* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
-			${SPLLCON_REG} = 0x${SPLLCON_VALUE};
+            /* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
+            /* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
+            /* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
+            /* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
+            /* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
+            /* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
+            /* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
+            /* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
+            /* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
+            ${SPLLCON_REG} = 0x${SPLLCON_VALUE};
 
-			/* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
-			/* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
-			/* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
-			/* CF       = ${OSCCON_CF_VALUE}       */
-			/* SLPEN    = ${OSCCON_SLPEN_VALUE}    */
-			/* CLKLOCK  = ${OSCCON_CLKLOCK_VALUE}  */
-			/* NOSC     = ${OSCCON_NOSC_VALUE}     */
-			/* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
-			/* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
-			/* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
-			${OSCCON_REG} = 0x${OSCCON_VALUE};
+            /* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
+            /* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
+            /* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
+            /* CF       = ${OSCCON_CF_VALUE}       */
+            /* SLPEN    = ${OSCCON_SLPEN_VALUE}    */
+            /* CLKLOCK  = ${OSCCON_CLKLOCK_VALUE}  */
+            /* NOSC     = ${OSCCON_NOSC_VALUE}     */
+            /* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
+            /* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
+            /* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
+            ${OSCCON_REG} = 0x${OSCCON_VALUE};
             OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
-			while( OSCCONbits.OSWEN != 0U)
+            while( OSCCONbits.OSWEN != 0U)
             {
                 /* Nothing to do */
             }
 
             /****************************************************************
-			* check to see if PLL locked; indicates POSC must have started
-			*****************************************************************/
+            * check to see if PLL locked; indicates POSC must have started
+            *****************************************************************/
             if(0U == (*PLLDBG & 0x1U))
-			{
-				/*POSC failed to start!*/
-				while(true)
+            {
+                /*POSC failed to start!*/
+                while(true)
                 {
                     /* Nothing to do */
                 }
-                
-			}
+
+            }
 </#if>
-		}
+        }
 <#if EWPLL_ENABLE == true>
-		/* Configure EWPLL */
-		/* EWPLLBSWSEL   = ${EWPLLCON_EWPLLBSWSEL_VALUE} */
-		/* EWPLLPWDN     = ${EWPLLCON_EWPLLPWDN_VALUE} */
-		/* EWPLLPOSTDIV1 = ${EWPLLCON_EWPLLPOSTDIV1_VALUE} */
-		/* EWPLLFLOCK    = ${EWPLLCON_EWPLLFLOCK_VALUE} */
-		/* EWPLLRST      = ${EWPLLCON_EWPLLRST_VALUE} */
-		/* EWPLLFBDIV    = ${EWPLLCON_EWPLLFBDIV_VALUE} */
-		/* EWPLLREFDIV   = ${EWPLLCON_EWPLLREFDIV_VALUE} */
-		/* EWPLLICLK     = ${EWPLLCON_EWPLLICLK_VALUE} */
-		/* ETHCLKOUTEN   = ${EWPLLCON_ETHCLKOUTEN_VALUE} */
-		/* EWPLL_BYP     = ${EWPLLCON_EWPLL_BYP_VALUE} */
-		${EWPLLCON_REG} = 0x${EWPLLCON_VALUE}U ^ EWPLLCON_MSK;
-		 DelayUs(200);
-		${EWPLLCON_REG} &= ~PLL_PWROFF;
-		/****************************************************************
-		* check to see if PLL locked; indicates POSC must have started
-		*****************************************************************/
-		if(0U == (*PLLDBG & 0x5U))
-		{
-			/*POSC failed to start!*/
-			while(true)
+        /* Configure EWPLL */
+        /* EWPLLBSWSEL   = ${EWPLLCON_EWPLLBSWSEL_VALUE} */
+        /* EWPLLPWDN     = ${EWPLLCON_EWPLLPWDN_VALUE} */
+        /* EWPLLPOSTDIV1 = ${EWPLLCON_EWPLLPOSTDIV1_VALUE} */
+        /* EWPLLFLOCK    = ${EWPLLCON_EWPLLFLOCK_VALUE} */
+        /* EWPLLRST      = ${EWPLLCON_EWPLLRST_VALUE} */
+        /* EWPLLFBDIV    = ${EWPLLCON_EWPLLFBDIV_VALUE} */
+        /* EWPLLREFDIV   = ${EWPLLCON_EWPLLREFDIV_VALUE} */
+        /* EWPLLICLK     = ${EWPLLCON_EWPLLICLK_VALUE} */
+        /* ETHCLKOUTEN   = ${EWPLLCON_ETHCLKOUTEN_VALUE} */
+        /* EWPLL_BYP     = ${EWPLLCON_EWPLL_BYP_VALUE} */
+        ${EWPLLCON_REG} = 0x${EWPLLCON_VALUE}U ^ EWPLLCON_MSK;
+         DelayUs(200);
+        ${EWPLLCON_REG} &= ~PLL_PWROFF;
+        /****************************************************************
+        * check to see if PLL locked; indicates POSC must have started
+        *****************************************************************/
+        if(0U == (*PLLDBG & 0x5U))
+        {
+            /*POSC failed to start!*/
+            while(true)
             {
                 /* Nothing to do */
             }
-		}
+        }
 <#else>
-		/* Power down the EWPLL */
-		EWPLLCONbits.EWPLLPWDN = 1;
+        /* Power down the EWPLL */
+        EWPLLCONbits.EWPLLPWDN = 1;
 </#if>
 
 <#if USBPLL_ENABLE == true>
-		/* Configure UPLL */
-		/* UPLLBSWSEL   = ${UPLLCON_UPLLBSWSEL_VALUE} */
-		/* UPLLPWDN     = ${UPLLCON_UPLLPWDN_VALUE} */
-		/* UPLLPOSTDIV1 = ${UPLLCON_UPLLPOSTDIV1_VALUE} */
-		/* UPLLFLOCK    = ${UPLLCON_UPLLFLOCK_VALUE} */
-		/* UPLLRST      = ${UPLLCON_UPLLRST_VALUE} */
-		/* UPLLFBDIV    = ${UPLLCON_UPLLFBDIV_VALUE} */
-		/* UPLLREFDIV   = ${UPLLCON_UPLLREFDIV_VALUE} */
-		/* UPLL_BYP     = ${UPLLCON_UPLL_BYP_VALUE} */
-		${UPLLCON_REG} = 0x${UPLLCON_VALUE};
+        /* Configure UPLL */
+        /* UPLLBSWSEL   = ${UPLLCON_UPLLBSWSEL_VALUE} */
+        /* UPLLPWDN     = ${UPLLCON_UPLLPWDN_VALUE} */
+        /* UPLLPOSTDIV1 = ${UPLLCON_UPLLPOSTDIV1_VALUE} */
+        /* UPLLFLOCK    = ${UPLLCON_UPLLFLOCK_VALUE} */
+        /* UPLLRST      = ${UPLLCON_UPLLRST_VALUE} */
+        /* UPLLFBDIV    = ${UPLLCON_UPLLFBDIV_VALUE} */
+        /* UPLLREFDIV   = ${UPLLCON_UPLLREFDIV_VALUE} */
+        /* UPLL_BYP     = ${UPLLCON_UPLL_BYP_VALUE} */
+        ${UPLLCON_REG} = 0x${UPLLCON_VALUE};
 <#else>
-		/* Power down the UPLL */
-		UPLLCONbits.UPLLPWDN = 1;
+        /* Power down the UPLL */
+        UPLLCONbits.UPLLPWDN = 1;
 </#if>
 
 <#if BTPLL_ENABLE == true>
-		/* Configure BYPLL */
-		/* BTPLLBSWSEL   = ${BTPLLCON_BTPLLBSWSEL_VALUE} */
-		/* BTPLLPWDN     = ${BTPLLCON_BTPLLPWDN_VALUE} */
-		/* BTPLLPOSTDIV1 = ${BTPLLCON_BTPLLPOSTDIV1_VALUE} */
-		/* BTPLLFLOCK    = ${BTPLLCON_BTPLLFLOCK_VALUE} */
-		/* BTPLLRST      = ${BTPLLCON_BTPLLRST_VALUE} */
-		/* BTPLLFBDIV    = ${BTPLLCON_BTPLLFBDIV_VALUE} */
-		/* BTPLLREFDIV   = ${BTPLLCON_BTPLLREFDIV_VALUE} */
-		/* BTCLKOUTEN    = ${BTPLLCON_BTCLKOUTEN_VALUE} */
-		/* BTPLLICLK     = ${BTPLLCON_BTPLLCLK_VALUE} */
-		/* BTPLL_BYP     = ${BTPLLCON_BTPLL_BYP_VALUE} */
-		${BTPLLCON_REG} = 0x${BTPLLCON_VALUE};
+        /* Configure BYPLL */
+        /* BTPLLBSWSEL   = ${BTPLLCON_BTPLLBSWSEL_VALUE} */
+        /* BTPLLPWDN     = ${BTPLLCON_BTPLLPWDN_VALUE} */
+        /* BTPLLPOSTDIV1 = ${BTPLLCON_BTPLLPOSTDIV1_VALUE} */
+        /* BTPLLFLOCK    = ${BTPLLCON_BTPLLFLOCK_VALUE} */
+        /* BTPLLRST      = ${BTPLLCON_BTPLLRST_VALUE} */
+        /* BTPLLFBDIV    = ${BTPLLCON_BTPLLFBDIV_VALUE} */
+        /* BTPLLREFDIV   = ${BTPLLCON_BTPLLREFDIV_VALUE} */
+        /* BTCLKOUTEN    = ${BTPLLCON_BTCLKOUTEN_VALUE} */
+        /* BTPLLICLK     = ${BTPLLCON_BTPLLCLK_VALUE} */
+        /* BTPLL_BYP     = ${BTPLLCON_BTPLL_BYP_VALUE} */
+        ${BTPLLCON_REG} = 0x${BTPLLCON_VALUE};
 <#else>
-		/* Power down the BTPLL */
-		BTPLLCONbits.BTPLLPWDN = 1;
+        /* Power down the BTPLL */
+        BTPLLCONbits.BTPLLPWDN = 1;
 </#if>
 
         *(PMDRCLR)  = 0x1000;
     }
-    else if(((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET) == (uint32_t)PIC32MZW1_A1)
+    else if(((device_id & PART_NUM_MASK) >> PART_NUM_OFFSET) == (uint32_t)PIC32MZW1_A1)
     {
 
-		CFGCON2  |= POSC_DIS; // Start with POSC Turned OFF
-		 DelayUs(200);
+        CFGCON2  |= POSC_DIS; // Start with POSC Turned OFF
+         DelayUs(200);
 
-		/* make sure we properly reset SPI to a known state */
-		*RFSPICTL = 0x80000022U;
-		/* now wifi is properly reset enable POSC */
-		CFGCON2  &= POSC_EN; // enable POSC
+        /* make sure we properly reset SPI to a known state */
+        *RFSPICTL = 0x80000022U;
+        /* now wifi is properly reset enable POSC */
+        CFGCON2  &= POSC_EN; // enable POSC
 
-		 DelayUs(200);
+         DelayUs(200);
 
         /* make sure we properly take out of reset */
         *RFSPICTL = 0x80000002U;
@@ -380,113 +385,113 @@ void CLK_Initialize( void )
         wifi_spi_write(0x1e, 0x510); // MBIAS reference adjustment
         wifi_spi_write(0x82, 0x6000); // XTAL LDO feedback divider (1.3+v)
 
-		 /* Wait for POSC ready */
-        while((CLKSTAT & 0x00000004U) == 0U) 
+         /* Wait for POSC ready */
+        while((CLKSTAT & 0x00000004U) == 0U)
         {
             /* Nothing to do */
         }
 
-    	OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
+        OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
 
-		${CFGCON3_NAME} = ${CFGCON3_VALUE};
+        ${CFGCON3_NAME} = ${CFGCON3_VALUE};
         CFGCON0bits.SPLLHWMD = 1;
-		/* SPLLCON = 0x01496869 */
-		/* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
-		/* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
-		/* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
-		/* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
-		/* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
-		/* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
-		/* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
-		/* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
-		/* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
-		${SPLLCON_REG} = 0x${SPLLCON_VALUE};
+        /* SPLLCON = 0x01496869 */
+        /* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
+        /* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
+        /* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
+        /* SPLLFLOCK    = ${SPLLCON_SPLLFLOCK_VALUE}    */
+        /* SPLLRST      = ${SPLLCON_SPLLRST_VALUE}      */
+        /* SPLLFBDIV    = ${SPLLCON_SPLLFBDIV_VALUE}  */
+        /* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
+        /* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
+        /* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
+        ${SPLLCON_REG} = 0x${SPLLCON_VALUE};
 
 
 <#if USBPLL_ENABLE == true>
-		/* Configure UPLL */
-		/* UPLLBSWSEL   = ${UPLLCON_UPLLBSWSEL_VALUE} */
-		/* UPLLPWDN     = ${UPLLCON_UPLLPWDN_VALUE} */
-		/* UPLLPOSTDIV1 = ${UPLLCON_UPLLPOSTDIV1_VALUE} */
-		/* UPLLFLOCK    = ${UPLLCON_UPLLFLOCK_VALUE} */
-		/* UPLLRST      = ${UPLLCON_UPLLRST_VALUE} */
-		/* UPLLFBDIV    = ${UPLLCON_UPLLFBDIV_VALUE} */
-		/* UPLLREFDIV   = ${UPLLCON_UPLLREFDIV_VALUE} */
-		/* UPLL_BYP     = ${UPLLCON_UPLL_BYP_VALUE} */
-		${UPLLCON_REG} = 0x${UPLLCON_VALUE};
+        /* Configure UPLL */
+        /* UPLLBSWSEL   = ${UPLLCON_UPLLBSWSEL_VALUE} */
+        /* UPLLPWDN     = ${UPLLCON_UPLLPWDN_VALUE} */
+        /* UPLLPOSTDIV1 = ${UPLLCON_UPLLPOSTDIV1_VALUE} */
+        /* UPLLFLOCK    = ${UPLLCON_UPLLFLOCK_VALUE} */
+        /* UPLLRST      = ${UPLLCON_UPLLRST_VALUE} */
+        /* UPLLFBDIV    = ${UPLLCON_UPLLFBDIV_VALUE} */
+        /* UPLLREFDIV   = ${UPLLCON_UPLLREFDIV_VALUE} */
+        /* UPLL_BYP     = ${UPLLCON_UPLL_BYP_VALUE} */
+        ${UPLLCON_REG} = 0x${UPLLCON_VALUE};
 <#else>
-		/* Power down the UPLL */
-		UPLLCONbits.UPLLPWDN = 1;
+        /* Power down the UPLL */
+        UPLLCONbits.UPLLPWDN = 1;
 </#if>
 
 <#if EWPLL_ENABLE == true>
-		/* Configure EWPLL */
-		/* EWPLLBSWSEL   = ${EWPLLCON_EWPLLBSWSEL_VALUE} */
-		/* EWPLLPWDN     = ${EWPLLCON_EWPLLPWDN_VALUE} */
-		/* EWPLLPOSTDIV1 = ${EWPLLCON_EWPLLPOSTDIV1_VALUE} */
-		/* EWPLLFLOCK    = ${EWPLLCON_EWPLLFLOCK_VALUE} */
-		/* EWPLLRST      = ${EWPLLCON_EWPLLRST_VALUE} */
-		/* EWPLLFBDIV    = ${EWPLLCON_EWPLLFBDIV_VALUE} */
-		/* EWPLLREFDIV   = ${EWPLLCON_EWPLLREFDIV_VALUE} */
-		/* EWPLLICLK     = ${EWPLLCON_EWPLLICLK_VALUE} */
-		/* ETHCLKOUTEN   = ${EWPLLCON_ETHCLKOUTEN_VALUE} */
-		/* EWPLL_BYP     = ${EWPLLCON_EWPLL_BYP_VALUE} */
-		${EWPLLCON_REG} = 0x${EWPLLCON_VALUE}U ^ 0x438080cU;
-		CFGCON0bits.ETHPLLHWMD = 1;
-		while(((*PLLDBG) & 0x4U) == 0U)
+        /* Configure EWPLL */
+        /* EWPLLBSWSEL   = ${EWPLLCON_EWPLLBSWSEL_VALUE} */
+        /* EWPLLPWDN     = ${EWPLLCON_EWPLLPWDN_VALUE} */
+        /* EWPLLPOSTDIV1 = ${EWPLLCON_EWPLLPOSTDIV1_VALUE} */
+        /* EWPLLFLOCK    = ${EWPLLCON_EWPLLFLOCK_VALUE} */
+        /* EWPLLRST      = ${EWPLLCON_EWPLLRST_VALUE} */
+        /* EWPLLFBDIV    = ${EWPLLCON_EWPLLFBDIV_VALUE} */
+        /* EWPLLREFDIV   = ${EWPLLCON_EWPLLREFDIV_VALUE} */
+        /* EWPLLICLK     = ${EWPLLCON_EWPLLICLK_VALUE} */
+        /* ETHCLKOUTEN   = ${EWPLLCON_ETHCLKOUTEN_VALUE} */
+        /* EWPLL_BYP     = ${EWPLLCON_EWPLL_BYP_VALUE} */
+        ${EWPLLCON_REG} = 0x${EWPLLCON_VALUE}U ^ 0x438080cU;
+        CFGCON0bits.ETHPLLHWMD = 1;
+        while(((*PLLDBG) & 0x4U) == 0U)
         {
             /* Nothing to do */
         }
 <#else>
-		/* Power down the EWPLL */
-		EWPLLCONbits.EWPLLPWDN = 1;
+        /* Power down the EWPLL */
+        EWPLLCONbits.EWPLLPWDN = 1;
 </#if>
 
 <#if BTPLL_ENABLE == true>
-		/* Configure BYPLL */
-		/* BTPLLBSWSEL   = ${BTPLLCON_BTPLLBSWSEL_VALUE} */
-		/* BTPLLPWDN     = ${BTPLLCON_BTPLLPWDN_VALUE} */
-		/* BTPLLPOSTDIV1 = ${BTPLLCON_BTPLLPOSTDIV1_VALUE} */
-		/* BTPLLFLOCK    = ${BTPLLCON_BTPLLFLOCK_VALUE} */
-		/* BTPLLRST      = ${BTPLLCON_BTPLLRST_VALUE} */
-		/* BTPLLFBDIV    = ${BTPLLCON_BTPLLFBDIV_VALUE} */
-		/* BTPLLREFDIV   = ${BTPLLCON_BTPLLREFDIV_VALUE} */
-		/* BTCLKOUTEN    = ${BTPLLCON_BTCLKOUTEN_VALUE} */
-		/* BTPLLICLK     = ${BTPLLCON_BTPLLCLK_VALUE} */
-		/* BTPLL_BYP     = ${BTPLLCON_BTPLL_BYP_VALUE} */
-		${BTPLLCON_REG} = 0x${BTPLLCON_VALUE};
+        /* Configure BYPLL */
+        /* BTPLLBSWSEL   = ${BTPLLCON_BTPLLBSWSEL_VALUE} */
+        /* BTPLLPWDN     = ${BTPLLCON_BTPLLPWDN_VALUE} */
+        /* BTPLLPOSTDIV1 = ${BTPLLCON_BTPLLPOSTDIV1_VALUE} */
+        /* BTPLLFLOCK    = ${BTPLLCON_BTPLLFLOCK_VALUE} */
+        /* BTPLLRST      = ${BTPLLCON_BTPLLRST_VALUE} */
+        /* BTPLLFBDIV    = ${BTPLLCON_BTPLLFBDIV_VALUE} */
+        /* BTPLLREFDIV   = ${BTPLLCON_BTPLLREFDIV_VALUE} */
+        /* BTCLKOUTEN    = ${BTPLLCON_BTCLKOUTEN_VALUE} */
+        /* BTPLLICLK     = ${BTPLLCON_BTPLLCLK_VALUE} */
+        /* BTPLL_BYP     = ${BTPLLCON_BTPLL_BYP_VALUE} */
+        ${BTPLLCON_REG} = 0x${BTPLLCON_VALUE};
 <#else>
-		/* Power down the BTPLL */
-		BTPLLCONbits.BTPLLPWDN = 1;
+        /* Power down the BTPLL */
+        BTPLLCONbits.BTPLLPWDN = 1;
 </#if>
 
-		/* ETHPLLPOSTDIV2 = ${CFG_ETHPLLPOSTDIV2} */
-		/* SPLLPOSTDIV2   = ${CFG_SPLLPOSTDIV2} */
-		/* BTPLLPOSTDIV2  = ${CFG_BTPLLPOSTDIV2} */
-		${CFGCON3_NAME} = ${CFGCON3_VALUE};
+        /* ETHPLLPOSTDIV2 = ${CFG_ETHPLLPOSTDIV2} */
+        /* SPLLPOSTDIV2   = ${CFG_SPLLPOSTDIV2} */
+        /* BTPLLPOSTDIV2  = ${CFG_BTPLLPOSTDIV2} */
+        ${CFGCON3_NAME} = ${CFGCON3_VALUE};
 
-		/* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
-		/* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
-		/* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
-		/* CF       = ${OSCCON_CF_VALUE}       */
-		/* SLPEN    = ${OSCCON_SLPEN_VALUE}    */
-		/* CLKLOCK  = ${OSCCON_CLKLOCK_VALUE}  */
-		/* NOSC     = ${OSCCON_NOSC_VALUE}     */
-		/* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
-		/* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
-		/* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
-		${OSCCON_REG} = 0x${OSCCON_VALUE};
+        /* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
+        /* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
+        /* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
+        /* CF       = ${OSCCON_CF_VALUE}       */
+        /* SLPEN    = ${OSCCON_SLPEN_VALUE}    */
+        /* CLKLOCK  = ${OSCCON_CLKLOCK_VALUE}  */
+        /* NOSC     = ${OSCCON_NOSC_VALUE}     */
+        /* WAKE2SPD = ${OSCCON_WAKE2SPD_VALUE} */
+        /* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
+        /* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
+        ${OSCCON_REG} = 0x${OSCCON_VALUE};
 
-		OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
+        OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
 
-		Nop();
-		Nop();
+        Nop();
+        Nop();
 
-		while( OSCCONbits.OSWEN != 0U)        /* wait for indication of successful clock change before proceeding */
+        while( OSCCONbits.OSWEN != 0U)        /* wait for indication of successful clock change before proceeding */
         {
             /* Nothing to do */
         }
-	}
+    }
     else
     {
         /* Nothing to do */
