@@ -301,7 +301,7 @@ void PMU_Initialize(void)
                 mldocfg1 |= MLDO_ISENSE_CONFIG;
             }
         }
-		else
+        else
         {
             mldocfg1 = *otp_mldocfg1_data | MLDO_ISENSE_CONFIG;
         }
@@ -333,7 +333,7 @@ void PMU_Initialize(void)
         PMUOVERCTRLbits.OBUCKEN = 0U;	//Disable Buck mode
         PMUOVERCTRLbits.OMLDOEN = 1U;	//Enable MLDO mode
 
-		/* Configure Output Voltage Control Bits */
+        /* Configure Output Voltage Control Bits */
         PMUOVERCTRLbits.VREG4OCTRL = (uint8_t)vreg4;
         PMUOVERCTRLbits.VREG3OCTRL = (uint8_t)vreg3;
         PMUOVERCTRLbits.VREG2OCTRL = (uint8_t)vreg2;
@@ -342,10 +342,10 @@ void PMU_Initialize(void)
         PMUOVERCTRLbits.PHWC = 0U;	//Disable Power-up HW Control
         PMUOVERCTRLbits.OVEREN = 1U;	//set override enable bit
     }
-	else if(((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET) == PIC32MZW1_G)
-	{
+    else if(((DEVID & PART_NUM_MASK) >> PART_NUM_OFFSET) == PIC32MZW1_G)
+    {
         nvm_flash_data = *otp_treg3_data;
-        if((nvm_flash_data == 0xFFFFFFFF) || (nvm_flash_data == 0x00000000))
+        if((nvm_flash_data == 0xFFFFFFFFU) || (nvm_flash_data == 0x00000000U))
         {
             nvm_flash_data = TREG_DEFAULT;
         }
@@ -357,56 +357,67 @@ void PMU_Initialize(void)
         PMUOVERCTRLbits.OBUCKEN = 0;	//Disable Buck mode
         PMUOVERCTRLbits.OMLDOEN = 1;	//Enable MLDO mode
 
-		/* Configure Output Voltage Control Bits */
-        PMUOVERCTRLbits.VREG4OCTRL = vreg4;
-        PMUOVERCTRLbits.VREG3OCTRL = vreg3;
-        PMUOVERCTRLbits.VREG2OCTRL = vreg2;
-        PMUOVERCTRLbits.VREG1OCTRL = vreg1;
+        /* Configure Output Voltage Control Bits */
+        PMUOVERCTRLbits.VREG4OCTRL = (uint8_t)vreg4;
+        PMUOVERCTRLbits.VREG3OCTRL = (uint8_t)vreg3;
+        PMUOVERCTRLbits.VREG2OCTRL = (uint8_t)vreg2;
+        PMUOVERCTRLbits.VREG1OCTRL = (uint8_t)vreg1;
 
         PMUOVERCTRLbits.PHWC = 0;	//Disable Power-up HW Control
         PMUOVERCTRLbits.OVEREN = 1;	//set override enable bit
 
         //Read MLDOCFG1 Value
         mldocfg1 = SYS_PMU_SPI_READ(MLDOCFG1_ADDR);
-		nvm_flash_data = *otp_mldocfg1_data;
-        if ((nvm_flash_data == 0xFFFFFFFF) || (nvm_flash_data == 0x0))
+        nvm_flash_data = *otp_mldocfg1_data;
+        if ((nvm_flash_data == 0xFFFFFFFFU) || (nvm_flash_data == 0x0U))
+        {
             mldocfg1 |= MLDOCFG1_DEFAULT_VAL | MLDO_ISENSE_CONFIG;
+        }
         else
+        {
             mldocfg1 |= nvm_flash_data | MLDO_ISENSE_CONFIG;
-		SYS_PMU_SPI_WRITE(MLDOCFG1_ADDR, mldocfg1);
+        }
+        SYS_PMU_SPI_WRITE(MLDOCFG1_ADDR, mldocfg1);
 
-		mldocfg2 = SYS_PMU_SPI_READ(MLDOCFG2_ADDR);
-		nvm_flash_data = *otp_mldocfg2_data;
-		if ((nvm_flash_data == 0xFFFFFFFF) || (nvm_flash_data == 0x0))
-			mldocfg2 = 0xCA80;
-		else
-			mldocfg2 = ((*otp_mldocfg2_data) & 0x00008000);
-
-		mldocfg2 |= MLDO_ENABLE;
+        mldocfg2 = SYS_PMU_SPI_READ(MLDOCFG2_ADDR);
+        nvm_flash_data = *otp_mldocfg2_data;
+        if ((nvm_flash_data == 0xFFFFFFFFU) || (nvm_flash_data == 0x0U))
+        {
+            mldocfg2 = 0xCA80;
+        }
+        else
+        {
+            mldocfg2 = ((*otp_mldocfg2_data) & 0x00008000);
+        }
+        mldocfg2 |= MLDO_ENABLE;
         SYS_PMU_SPI_WRITE(MLDOCFG2_ADDR, mldocfg2);
 
-		/* Set Band gap temp coefficient*/
+        /* Set Band gap temp coefficient*/
         buckcfg3 = SYS_PMU_SPI_READ(BUCKCFG3_ADDR);
         nvm_flash_data = *otp_buckcfg3_data;
-        if ((nvm_flash_data == 0xFFFFFFFF) || (nvm_flash_data == 0x0))
+        if ((nvm_flash_data == 0xFFFFFFFFU) || (nvm_flash_data == 0x0U))
+        {
             buckcfg3 = 0x00C8;
+        }
         else
+        {
             buckcfg3 |= 0x00C8;
-         SYS_PMU_SPI_WRITE(BUCKCFG3_ADDR, buckcfg3);
+        }
+        SYS_PMU_SPI_WRITE(BUCKCFG3_ADDR, buckcfg3);
         //printf("PMU SPI BUCKCFG3 after enabling : %x \n", buckcfg3);
 
-		buckcfg1 = SYS_PMU_SPI_READ(BUCKCFG1_ADDR);
+        buckcfg1 = SYS_PMU_SPI_READ(BUCKCFG1_ADDR);
         buckcfg1 |= 0x0001;
         //printf("Enabling mLDO bandgap_en signal\n");
         SYS_PMU_SPI_WRITE(BUCKCFG1_ADDR, buckcfg1);
         buckcfg1 = SYS_PMU_SPI_READ(BUCKCFG1_ADDR);
 
-		//PMU_MLDO_Set_ParallelBypass()
+        //PMU_MLDO_Set_ParallelBypass()
 
         buckcfg1 = SYS_PMU_SPI_READ(BUCKCFG1_ADDR);
         buckcfg1 |= BUCK_PBYPASS_ENABLE;
         SYS_PMU_SPI_WRITE(BUCKCFG1_ADDR, buckcfg1);
-	}
+    }
     else
     {
         /* Nothing to process */
