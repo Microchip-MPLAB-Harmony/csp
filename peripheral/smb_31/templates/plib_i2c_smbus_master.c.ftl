@@ -436,7 +436,7 @@ uint32_t I2C${I2C_INSTANCE_NAME}_HostTransferCountGet(void)
 uint32_t I2C${I2C_INSTANCE_NAME}_HostBufferRead(void* pBuffer)
 {
     uint32_t i;
-    uint32_t numBytesAvailable = DMA_ChannelGetTransferredCount(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}) - 1;
+    uint32_t numBytesAvailable = DMA_ChannelGetTransferredCount(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}) - 1U;
 
     /* First byte in i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer is always the address byte and hence not copied to application buffer */
     for (i = 0; i < numBytesAvailable; i++)
