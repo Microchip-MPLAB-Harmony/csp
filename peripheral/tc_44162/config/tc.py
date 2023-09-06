@@ -94,6 +94,8 @@ tcSym_CH_IntEnComment = []
 tcSym_CH_ClkEnComment = []
 
 global sysTimeComponentId
+global dvrtComponentId
+global dvrtPlibMode
 
 def sysTimePLIBModeConfig(channelID, plibMode):
     global sysTimeTickRateMs
@@ -121,6 +123,85 @@ def sysTimePLIBModeConfig(channelID, plibMode):
             tcSym_CH_IER_CPAS[channelID].setValue(False)
             #Show Time Period and Set it
             tcSym_CH_TimerPeriod[channelID].setValue(sysTimeTickRateMs.getValue())
+            tcSym_CH_TimerPeriod[channelID].setVisible(True)
+
+        if(channelID==0):
+            #Disable channel
+            tcSym_CH_Enable[1].setValue(False)
+            tcSym_CH_Enable[2].setValue(False)
+            #Show Time Period and clear it
+            tcSym_CH_TimerPeriod[1].setValue(0.0)
+            tcSym_CH_TimerPeriod[2].setValue(0.0)
+            tcSym_CH_TimerPeriod[1].setVisible(True)
+            tcSym_CH_TimerPeriod[2].setVisible(True)
+            #Disable Period Interrupt
+            tcSym_CH_IER_CPCS[1].setValue(False)
+            tcSym_CH_IER_CPCS[2].setValue(False)
+            #Disable Compare Interrupt
+            tcSym_CH_IER_CPAS[1].setValue(False)
+            tcSym_CH_IER_CPAS[2].setValue(False)
+            #Hide Compare Interrupt Option
+            tcSym_CH_IER_CPAS[1].setVisible(False)
+            tcSym_CH_IER_CPAS[2].setVisible(False)
+            #----
+            tcSym_SYS_TIME_CONNECTED[1].setValue(False)
+            tcSym_SYS_TIME_CONNECTED[2].setValue(False)
+        elif (channelID == 1):
+            #Disable channel
+            tcSym_CH_Enable[0].setValue(False)
+            tcSym_CH_Enable[2].setValue(False)
+            #Show Time Period and clear it
+            tcSym_CH_TimerPeriod[0].setValue(0.0)
+            tcSym_CH_TimerPeriod[2].setValue(0.0)
+            tcSym_CH_TimerPeriod[0].setVisible(True)
+            tcSym_CH_TimerPeriod[2].setVisible(True)
+            #Disable Period Interrupt
+            tcSym_CH_IER_CPCS[0].setValue(False)
+            tcSym_CH_IER_CPCS[2].setValue(False)
+            #Disable Compare Interrupt
+            tcSym_CH_IER_CPAS[0].setValue(False)
+            tcSym_CH_IER_CPAS[2].setValue(False)
+            #Hide Compare Interrupt Option
+            tcSym_CH_IER_CPAS[0].setVisible(False)
+            tcSym_CH_IER_CPAS[2].setVisible(False)
+            #----
+            tcSym_SYS_TIME_CONNECTED[0].setValue(False)
+            tcSym_SYS_TIME_CONNECTED[2].setValue(False)
+        elif (channelID == 2):
+            #Disable channel
+            tcSym_CH_Enable[0].setValue(False)
+            tcSym_CH_Enable[1].setValue(False)
+            #Show Time Period and clear it
+            tcSym_CH_TimerPeriod[0].setValue(0.0)
+            tcSym_CH_TimerPeriod[1].setValue(0.0)
+            tcSym_CH_TimerPeriod[0].setVisible(True)
+            tcSym_CH_TimerPeriod[1].setVisible(True)
+            #Disable Period Interrupt
+            tcSym_CH_IER_CPCS[0].setValue(False)
+            tcSym_CH_IER_CPCS[1].setValue(False)
+            #Disable Compare Interrupt
+            tcSym_CH_IER_CPAS[0].setValue(False)
+            tcSym_CH_IER_CPAS[1].setValue(False)
+            #Hide Compare Interrupt Option
+            tcSym_CH_IER_CPAS[0].setVisible(False)
+            tcSym_CH_IER_CPAS[1].setVisible(False)
+            #----
+            tcSym_SYS_TIME_CONNECTED[0].setValue(False)
+            tcSym_SYS_TIME_CONNECTED[1].setValue(False)
+
+def dvrtPLIBModeConfig(channelID, plibMode):
+    global dvrtTickRateMs
+
+    if dvrtComponentId.getValue() != "":
+        #Enable channel
+        tcSym_CH_Enable[channelID].setValue(True)
+        tcSym_SYS_TIME_CONNECTED[channelID].setValue(True)
+
+        if plibMode == "DVRT_PLIB_MODE_PERIOD":
+            #Enable Period Interrupt
+            tcSym_CH_IER_CPCS[channelID].setValue(True)
+            #Show Time Period and Set it
+            tcSym_CH_TimerPeriod[channelID].setValue(dvrtTickRateMs.getValue())
             tcSym_CH_TimerPeriod[channelID].setVisible(True)
 
         if(channelID==0):
@@ -217,12 +298,15 @@ def handleMessage(messageID, args):
     global sysTimeComponentId
     global sysTimeChannel_Sym
     global sysTimePlibMode
+    global dvrtPlibMode
     global sysTimeTickRateMs
+    global dvrtTickRateMs
+    global dvrtComponentId
+    global dvrtChannel_Sym
 
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
-
-    print "handleMessage - " + str(messageID)
+    dvrtPLIBConfig = dict()
 
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
@@ -232,7 +316,8 @@ def handleMessage(messageID, args):
         sysTimeChannel_Sym.setVisible(True)
         tc_channel = sysTimeChannel_Sym.getSelectedKey()
         channelID = int(tc_channel[3])
-        print sysTimePLIBConfig
+        print "channelID1->"
+        print int(channelID)
         sysTimePlibMode.setValue(sysTimePLIBConfig["plib_mode"])
         sysTimePLIBModeConfig(channelID, sysTimePlibMode.getValue())
         if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
@@ -251,6 +336,22 @@ def handleMessage(messageID, args):
         #Set the Time Period (millisecond)
         sysTimeTickRateMs.setValue(args["sys_time_tick_ms"])
         tcSym_CH_TimerPeriod[channelID].setValue(sysTimeTickRateMs.getValue())
+
+    if (messageID == "DVRT_PUBLISH_CAPABILITIES"):
+        dvrtComponentId.setValue(args["ID"])
+        opemode_Dict = {"plib_mode": "PERIOD_MODE"}
+        dvrtPLIBConfig = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_PLIB_CAPABILITY", opemode_Dict)
+        dvrtChannel_Sym.setSelectedKey("_CH0",1)
+        dvrtChannel_Sym.setVisible(True)
+        tc_channel = dvrtChannel_Sym.getSelectedKey()
+        channelID = int(tc_channel[3])
+        dvrtPlibMode.setValue(dvrtPLIBConfig["TIMER_MODE"])
+        dvrtPLIBModeConfig(channelID, dvrtPlibMode.getValue())
+        tcSym_TimerUnit[channelID].setValue("microsecond")
+
+        if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
+            dvrtTickRateMs.setValue(dvrtPLIBConfig["dvrt_tick_microsec"])
+            tcSym_CH_TimerPeriod[channelID].setValue(dvrtTickRateMs.getValue())
 
     return dummy_dict
 
@@ -926,6 +1027,52 @@ def onAttachmentDisconnected(source, target):
         #----
         tcSym_SYS_TIME_CONNECTED[channelID].setValue(False)
 
+    if (remoteID == "dvrt"):
+        dvrtChannel_Sym.setVisible(False)
+        dvrtComponentId.setValue("")
+        tc_channel = dvrtChannel_Sym.getSelectedKey()
+        channelID = int(tc_channel[3])
+        #Show Time Period and clear it
+        tcSym_CH_TimerPeriod[channelID].setValue(0.0)
+        tcSym_CH_TimerPeriod[channelID].setVisible(True)
+        #Enable the period interrupt
+        tcSym_CH_IER_CPCS[channelID].setValue(True)
+
+def dvrt_ChannelSelection(symbol,event):
+    global timerStartApiName_Sym
+    global timeStopApiName_Sym
+    global periodSetApiName_Sym
+    global callbackApiName_Sym
+    global irqEnumName_Sym
+    global tcInstanceName
+    global tcNumInterruptLines
+    global dvrtPlibMode
+
+    symObj=event["symbol"]
+    tc_channel = symObj.getSelectedKey()
+
+    channelID = int(tc_channel[3])
+
+    dvrtPLIBModeConfig(channelID, dvrtPlibMode.getValue())
+    tcSym_TimerUnit[channelID].setValue("microsecond")
+
+    timerStartApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStart"
+    timeStopApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStop "
+    callbackApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerCallbackRegister"
+    periodSetApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerPeriodSet"
+
+    # if there are no per channel interrupts, tie the IRQn to the instance interrupt
+    if int(tcNumInterruptLines) == 1 :
+        irqEnumName = tcInstanceName.getValue() + "_IRQn"
+    else:
+        irqEnumName = tcInstanceName.getValue() + str(tc_channel) + "_IRQn"
+
+    timerStartApiName_Sym.setValue(timerStartApiName,2)
+    timeStopApiName_Sym.setValue(timeStopApiName,2)
+    callbackApiName_Sym.setValue(callbackApiName,2)
+    irqEnumName_Sym.setValue(irqEnumName,2)
+    periodSetApiName_Sym.setValue(periodSetApiName,2)
+
 def sysTime_ChannelSelection(symbol,event):
     global timerStartApiName_Sym
     global timeStopApiName_Sym
@@ -990,11 +1137,14 @@ def instantiateComponent(tcComponent):
     global sysTimeComponentId
     global sysTimePlibMode
     global sysTimeTickRateMs
+    global dvrtTickRateMs
+    global dvrtComponentId
+    global dvrtChannel_Sym
+    global dvrtPlibMode
 
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
     tcInstanceName.setDefaultValue(tcComponent.getID().upper())
-    print("Running " + tcInstanceName.getValue())
 
     global tcSym_QDEC_PRESENT
     tcSym_QDEC_PRESENT = tcComponent.createBooleanSymbol("TC_QDEC_PRESENT", None)
@@ -1088,6 +1238,19 @@ def instantiateComponent(tcComponent):
     sysTimeTrigger_Sym.setVisible(False)
     sysTimeTrigger_Sym.setDependencies(sysTime_ChannelSelection, ["SYS_TIME_TC_CHANNEL"])
 
+    dvrtChannel_Sym = tcComponent.createKeyValueSetSymbol("DVRT_TC_CHANNEL", None)
+    dvrtChannel_Sym.setLabel("Select TC Channel for DVRT")
+    dvrtChannel_Sym.addKey("_CH0", "0", "Channel 0")
+    dvrtChannel_Sym.addKey("_CH1", "1", "Channel 1")
+    dvrtChannel_Sym.addKey("_CH2", "2", "Channel 2")
+    dvrtChannel_Sym.setOutputMode("Key")
+    dvrtChannel_Sym.setDisplayMode("Description")
+    dvrtChannel_Sym.setDefaultValue(0)
+    dvrtChannel_Sym.setVisible(False)
+
+    dvrtTrigger_Sym = tcComponent.createBooleanSymbol("DVRT_ID", None)
+    dvrtTrigger_Sym.setVisible(False)
+    dvrtTrigger_Sym.setDependencies(dvrt_ChannelSelection, ["DVRT_TC_CHANNEL"])
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
@@ -1102,9 +1265,23 @@ def instantiateComponent(tcComponent):
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
 
+    dvrtPlibMode = tcComponent.createStringSymbol("DVRT_PLIB_OPERATION_MODE", None)
+    dvrtPlibMode.setLabel("dvrt PLIB Operation Mode")
+    dvrtPlibMode.setVisible(False)
+    dvrtPlibMode.setDefaultValue("")
+
+    dvrtComponentId = tcComponent.createStringSymbol("DVRT_COMPONENT_ID", None)
+    dvrtComponentId.setLabel("dvrt Component id")
+    dvrtComponentId.setVisible(False)
+    dvrtComponentId.setDefaultValue("")
+
     sysTimeTickRateMs = tcComponent.createFloatSymbol("SYS_TIME_TICK_RATE_MS", None)
     sysTimeTickRateMs.setDefaultValue(1)
     sysTimeTickRateMs.setVisible(False)
+
+    dvrtTickRateMs = tcComponent.createFloatSymbol("DVRT_TICK_RATE_MS", None)
+    dvrtTickRateMs.setDefaultValue(1)
+    dvrtTickRateMs.setVisible(False)
 
     timerWidth_Sym = tcComponent.createIntegerSymbol("TIMER_WIDTH", None)
     timerWidth_Sym.setVisible(False)

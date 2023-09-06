@@ -54,6 +54,8 @@ void GIC_RegisterPeripheralInterruptHandler(IRQn_Type irqID, PPI_SPI_HANDLER pHa
 void GIC_INT_IrqEnable(void);
 bool GIC_INT_IrqDisable(void);
 void GIC_INT_IrqRestore(bool state);
+bool GIC_INT_SourceDisable( IRQn_Type source );
+void GIC_INT_SourceRestore( IRQn_Type source, bool status );
 
 #ifdef __cplusplus
 }

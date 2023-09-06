@@ -174,3 +174,47 @@ void AIC_INT_IrqRestore( bool state )
         __DMB();
     }
 }
+
+static aic_registers_t * _aicInstanceGet( IRQn_Type aSrcSelection )
+{
+    return( AIC_REGS );
+}
+
+bool AIC_INT_IsInterruptEnabled( IRQn_Type aSrcSelection )
+{
+    bool retval = false;
+    aic_registers_t * aicPtr = _aicInstanceGet( aSrcSelection );
+    bool processorStatus = AIC_INT_IrqDisable();
+    aicPtr->AIC_SSR = AIC_SSR_INTSEL( (uint32_t) aSrcSelection );
+    if( aicPtr->AIC_IMR & AIC_IMR_Msk ){
+        retval = true;
+    }
+    AIC_INT_IrqRestore(processorStatus);
+    return( retval );
+}
+
+bool AIC_INT_SourceDisable( IRQn_Type aSrcSelection )
+{
+    bool previousValue = AIC_INT_IsInterruptEnabled( aSrcSelection );
+    aic_registers_t * aicPtr = _aicInstanceGet( aSrcSelection );
+    bool processorStatus = AIC_INT_IrqDisable();
+    aicPtr->AIC_SSR = AIC_SSR_INTSEL( (uint32_t) aSrcSelection );
+    aicPtr->AIC_IDCR = AIC_IDCR_Msk;
+    __DSB();
+    __ISB();
+    AIC_INT_IrqRestore(processorStatus);
+    return( previousValue );
+}
+
+void AIC_INT_SourceRestore( IRQn_Type aSrcSelection, bool status )
+{
+    if( status )
+    {
+        aic_registers_t * aicPtr = _aicInstanceGet( aSrcSelection );
+        bool processorStatus = AIC_INT_IrqDisable();
+        aicPtr->AIC_SSR = AIC_SSR_INTSEL( (uint32_t) aSrcSelection );
+        aicPtr->AIC_IECR = AIC_IECR_Msk;
+        AIC_INT_IrqRestore(processorStatus);
+    }
+    return;
+}

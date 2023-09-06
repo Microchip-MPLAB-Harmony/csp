@@ -65,14 +65,16 @@ PrescalerDict = {
                 }
 global tmrTimerUnit
 tmrTimerUnit = { "millisecond" : 1000.0,
-                "microsecon" : 1000000.0, 
+                "microsecond" : 1000000.0,
                 "nanosecond"  : 1000000000.0,
-                }                 
+                }
 global tmrInterruptVector
 global tmrInterruptHandlerLock
 global tmrInterruptHandler
 global tmrInterruptVectorUpdate
 global sysTimeComponentId
+global dvrtComponentId
+
 global tmrSym_PERIOD_MS
 ################################################################################
 #### Business Logic ####
@@ -94,9 +96,11 @@ def calcAchievableFreq():
 
 def handleMessage(messageID, args):
     global sysTimeComponentId
+    global dvrtComponentId
 
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
+    dvrtPLIBConfig = dict()
 
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
@@ -110,6 +114,14 @@ def handleMessage(messageID, args):
         if sysTimeComponentId.getValue() != "":
             #Set the Time Period (millisecond)
             tmrSym_PERIOD_MS.setValue(args["sys_time_tick_ms"])
+
+    if (messageID == "DVRT_PUBLISH_CAPABILITIES"):
+        dvrtComponentId.setValue(args["ID"])
+        opemode_Dict = {"plib_mode": "PERIOD_MODE"}
+        dvrtPLIBConfig = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_PLIB_CAPABILITY", opemode_Dict)
+        tmrSym_TimerUnit.setValue("microsecond")
+        if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
+            tmrSym_PERIOD_MS.setValue(dvrtPLIBConfig["dvrt_tick_microsec"])
 
     return dummy_dict
 
@@ -277,7 +289,7 @@ def timerPeriodCalc(symbol, event):
     component = symbol.getComponent()
     clock = component.getSymbolValue("TIMER_CLOCK_FREQ")
     unit = tmrTimerUnit[component.getSymbolValue("TIMER_UNIT")]
-    print(unit)    
+    print(unit)
     if(clock != 0):
         resolution = unit/clock
         period = (component.getSymbolValue("TIMER_TIME_PERIOD_MS") / resolution) - 1
@@ -348,12 +360,16 @@ def onAttachmentDisconnected(source, target):
         #Reset the remote component ID to NULL
         sysTimeComponentId.setValue("")
         tmrSym_PERIOD_MS.setValue(0.3)
+
+    if remoteID == "dvrt":
+        dvrtComponentId.setValue("")
+        #Show Time Period and clear it
+        tmrSym_PERIOD_MS.setValue(0.0)
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
 
 def instantiateComponent(tmrComponent):
-
     global tmrInstanceName
     global tmrInterruptVector
     global tmrInterruptHandlerLock
@@ -365,6 +381,7 @@ def instantiateComponent(tmrComponent):
     global tmrSym_PERIOD_MS
     global tmrSym_PR2
     global tmrSym_CLOCK_FREQ
+    global dvrtComponentId
 
     tmrInstanceName = tmrComponent.createStringSymbol("TMR_INSTANCE_NAME", None)
     tmrInstanceName.setVisible(False)
@@ -465,10 +482,10 @@ def instantiateComponent(tmrComponent):
         "TIMER_SRC_SEL", "TIMER_EXT_CLOCK_FREQ"])
 
     global tmrSym_TimerUnit
-    timerUnit = ["millisecond", "microsecon", "nanosecond"]
+    timerUnit = ["millisecond", "microsecond", "nanosecond"]
     tmrSym_TimerUnit = tmrComponent.createComboSymbol("TIMER_UNIT", None, timerUnit)
     tmrSym_TimerUnit.setLabel("Timer Period Unit")
-    tmrSym_TimerUnit.setDefaultValue("millisecond")          
+    tmrSym_TimerUnit.setDefaultValue("millisecond")
 
     clock = Database.getSymbolValue("core", tmrInstanceName.getValue() + "_CLOCK_FREQUENCY")
     if(clock != 0):
@@ -523,6 +540,11 @@ def instantiateComponent(tmrComponent):
     sysTimeComponentId.setLabel("Component id")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
+
+    dvrtComponentId = tmrComponent.createStringSymbol("DVRT_COMPONENT_ID", None)
+    dvrtComponentId.setLabel("dvrt Component id")
+    dvrtComponentId.setVisible(False)
+    dvrtComponentId.setDefaultValue("")
 
     timerStartApiName = tmrInstanceName.getValue() +  "_Start"
     timerStopApiName = tmrInstanceName.getValue() + "_Stop "

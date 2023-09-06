@@ -192,6 +192,29 @@ void EVIC_INT_Restore( bool state )
     }
 }
 
+bool EVIC_INT_SourceDisable( INT_SOURCE source )
+{
+    bool processorStatus;
+    bool intSrcStatus;
+
+    processorStatus = EVIC_INT_Disable();
+    intSrcStatus = (EVIC_SourceIsEnabled(source) != 0U);
+    EVIC_SourceDisable( source );
+    EVIC_INT_Restore( processorStatus );
+
+    /* return the source status */
+    return intSrcStatus;
+}
+
+void EVIC_INT_SourceRestore( INT_SOURCE source, bool status )
+{
+    if( status ) {
+       EVIC_SourceEnable( source );
+    }
+
+    return;
+}
+
 <#if 0 < NumOfEnabledExtInt>
 void EVIC_ExternalInterruptEnable( EXTERNAL_INT_PIN extIntPin )
 {

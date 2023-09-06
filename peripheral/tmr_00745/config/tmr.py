@@ -68,6 +68,7 @@ global tmrInterruptHandler
 global tmrInterruptVectorUpdate
 global sysTimeComponentId
 global tmrSym_PERIOD_MS
+global dvrtComponentId
 
 global interruptsChildren
 interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
@@ -92,9 +93,11 @@ def calcAchievableFreq():
 
 def handleMessage(messageID, args):
     global sysTimeComponentId
-
+    global dvrtComponentId
+    
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
+    dvrtPLIBConfig = dict()
 
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
@@ -109,6 +112,14 @@ def handleMessage(messageID, args):
             #Set the Time Period (millisecond)
             tmrSym_PERIOD_MS.setValue(args["sys_time_tick_ms"])
 
+    if (messageID == "DVRT_PUBLISH_CAPABILITIES"):
+        dvrtComponentId.setValue(args["ID"])
+        opemode_Dict = {"plib_mode": "PERIOD_MODE"}
+        dvrtPLIBConfig = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_PLIB_CAPABILITY", opemode_Dict)
+        tmrSym_TimerUnit.setValue("microsecond")
+        if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
+            tmrSym_PERIOD_MS.setValue(dvrtPLIBConfig["dvrt_tick_microsec"])
+            
     return dummy_dict
 
 def _get_enblReg_parms(vectorNumber):
@@ -396,6 +407,11 @@ def onAttachmentDisconnected(source, target):
         sysTimeComponentId.setValue("")
         tmrSym_PERIOD_MS.setValue(0.3)
 
+    if remoteID == "dvrt":
+        dvrtComponentId.setValue("")
+        #Show Time Period and clear it
+        tmrSym_PERIOD_MS.setValue(0.0)
+        
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -413,6 +429,7 @@ def instantiateComponent(tmrComponent):
     global tmrSym_PERIOD_MS
     global tmrSym_PR2
     global tmrSym_CLOCK_FREQ
+    global dvrtComponentId
 
     tmrInstanceName = tmrComponent.createStringSymbol("TMR_INSTANCE_NAME", None)
     tmrInstanceName.setVisible(False)
@@ -657,6 +674,11 @@ def instantiateComponent(tmrComponent):
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
 
+    dvrtComponentId = tmrComponent.createStringSymbol("DVRT_COMPONENT_ID", None)
+    dvrtComponentId.setLabel("dvrt Component id")
+    dvrtComponentId.setVisible(False)
+    dvrtComponentId.setDefaultValue("")
+    
     timerStartApiName = tmrInstanceName.getValue() +  "_Start"
     timerStopApiName = tmrInstanceName.getValue() + "_Stop "
     counterGetApiName = tmrInstanceName.getValue() +  "_CounterGet"

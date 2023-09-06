@@ -29,7 +29,7 @@
 ###################################################################################################
 global tcTimerUnit
 tcTimerUnit = { "millisecond" : 1,
-                "microsecond" : 1000, 
+                "microsecond" : 1000,
                 "nanosecond"  : 1000000,
                 }
 
@@ -66,7 +66,7 @@ def tcPeriodCalc(symbol, event):
     unit = tcTimerUnit[tcSym_TimerUnit.getValue()]
     period = (time / (resolution * unit)) - 1
     symbol.setValue(long(period), 2)
-    symbol.setMax(pow(2, int(tcSym_CTRLA_MODE.getSelectedKey()[5:])) - 1)    
+    symbol.setMax(pow(2, int(tcSym_CTRLA_MODE.getSelectedKey()[5:])) - 1)
     calcAchievableFreq()
 
 def tcTimerEvsys(symbol, event):

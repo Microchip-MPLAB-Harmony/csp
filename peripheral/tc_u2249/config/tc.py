@@ -32,6 +32,9 @@ global InterruptHandler
 global InterruptHandlerLock
 global tcInstanceName
 
+global dvrtPlibMode
+global dvrtComponentId
+
 global compareSetApiName_Sym
 global periodSetApiName_Sym
 global counterApiName_Sym
@@ -109,6 +112,20 @@ def calcAchievableFreq():
         else:
             dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
 
+def dvrtPLIBModeConfig(plibMode):
+    global tcSym_Timer_TIME_MS
+    global tcSym_CTRLA_MODE
+
+    if dvrtComponentId.getValue() != "":
+        if plibMode == "DVRT_PLIB_MODE_PERIOD":
+            #Enable Period Interrupt
+            tcSym_Timer_INTENSET_OVF.setValue(True,2)
+            #Disable Compare Interrupt
+            tcSym_Timer_INTENSET_MC1.setValue(False,2)
+            tcSym_Timer_INTENSET_MC1.setVisible(False)
+            #Un-Hide Time Period (ms) menu item
+            tcSym_Timer_TIME_MS.setVisible(True)
+
 def sysTimePLIBModeConfig(plibMode):
     if sysTimeComponentId.getValue() != "":
         if (plibMode == "SYS_TIME_PLIB_MODE_COMPARE"):
@@ -135,8 +152,12 @@ def handleMessage(messageID, args):
     global sysTimePlibMode
     global tySym_Slave_Mode
     global tcSym_CTRLA_MODE
+    global dvrtPlibMode
+    global dvrtComponentId
+
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
+    dvrtPLIBConfig = dict()
 
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
@@ -161,6 +182,16 @@ def handleMessage(messageID, args):
             tySym_Slave_Mode.setVisible(False)
             tcSym_CTRLA_MODE.setValue(tcSym_CTRLA_MODE.getDefaultValue())
             tcSym_CTRLA_MODE.setVisible(True)
+
+    if (messageID == "DVRT_PUBLISH_CAPABILITIES"):
+        dvrtComponentId.setValue(args["ID"])
+        opemode_Dict = {"plib_mode": "PERIOD_MODE"}
+        dvrtPLIBConfig = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_PLIB_CAPABILITY", opemode_Dict)
+        dvrtPlibMode.setValue(dvrtPLIBConfig["TIMER_MODE"])
+        dvrtPLIBModeConfig(dvrtPlibMode.getValue())
+        tcSym_TimerUnit.setValue("microsecond")
+        if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
+            tcSym_Timer_TIME_MS.setValue(dvrtPLIBConfig["dvrt_tick_microsec"])
 
     return dummy_dict
 
@@ -318,6 +349,12 @@ def onAttachmentDisconnected(source, target):
         tcSym_Timer_TIME_MS.setVisible(False)
         sysTime8bitComment.setVisible(False)
 
+    if remoteID == "dvrt":
+        dvrtComponentId.setValue("")
+        #Show Time Period and clear it
+        tcSym_Timer_TIME_MS.setValue(0.0)
+        tcSym_Timer_TIME_MS.setVisible(True)
+
 def sysTime_APIUpdate(symbol,event):
     global compareSetApiName_Sym
     global periodSetApiName_Sym
@@ -349,10 +386,10 @@ def destroyComponent(tcComponent):
     instance = int(tcInstanceName.getValue()[-1])
 
     if tySym_Slave_Mode.getValue() == False:
-        # Disable the clock only if master is getting destroyed. 
+        # Disable the clock only if master is getting destroyed.
         Database.sendMessage("core", "TC"+str(instance)+"_CLOCK_ENABLE", {"isEnabled":False})
 
-    # If master is getting destroyed, then disable slave's clock if the slave tc instance is not active. 
+    # If master is getting destroyed, then disable slave's clock if the slave tc instance is not active.
     # If the slave tc is active, then send a message to slave indicating that master is destroyed, thereby allowing slave to work as a normal timer (8/16 bit mode)
     if tcComponent.getSymbolByID("TC_CTRLA_MODE").getSelectedKey() == "COUNT32":
         activeComponentList = Database.getActiveComponentIDs()
@@ -381,6 +418,8 @@ def instantiateComponent(tcComponent):
     global sysTimePlibMode
     global sysTime8bitComment
     global InterruptVectorSecurity
+    global dvrtPlibMode
+    global dvrtComponentId
 
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
@@ -459,6 +498,16 @@ def instantiateComponent(tcComponent):
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
 
+    dvrtPlibMode = tcComponent.createStringSymbol("DVRT_PLIB_OPERATION_MODE", None)
+    dvrtPlibMode.setLabel("dvrt PLIB Operation Mode")
+    dvrtPlibMode.setVisible(False)
+    dvrtPlibMode.setDefaultValue("")
+
+    dvrtComponentId = tcComponent.createStringSymbol("DVRT_COMPONENT_ID", None)
+    dvrtComponentId.setLabel("dvrt Component id")
+    dvrtComponentId.setVisible(False)
+    dvrtComponentId.setDefaultValue("")
+
     sysTime8bitComment = tcComponent.createCommentSymbol("SYS_TIME_8BIT_NOT_SUPPORTED_COMMENT", tcSym_CTRLA_MODE)
     sysTime8bitComment.setLabel("Warning!!! Tickless mode of SYS Time is not supported in 8-bit mode")
     sysTime8bitComment.setVisible(False)
@@ -534,11 +583,11 @@ def instantiateComponent(tcComponent):
     if isMasterSlaveModeEnable == True:
         tcSym_CTRLA_PRESCALER.setVisible(False)
     if (tcInstanceMasterValue == 2):
-        tcSym_CTRLA_PRESCALER.setDependencies(tcSlaveModeVisible, ["TC_SLAVE_MODE"])        
+        tcSym_CTRLA_PRESCALER.setDependencies(tcSlaveModeVisible, ["TC_SLAVE_MODE"])
 
     #clock resolution display
     tcSym_Resolution = tcComponent.createCommentSymbol("TC_Resolution", None)
-    if int(Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")) != 0: 
+    if int(Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")) != 0:
         resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
         tcSym_Resolution.setLabel("****Timer resolution is " + str(resolution) + " nS****")
     else:
@@ -559,11 +608,11 @@ def instantiateComponent(tcComponent):
     values = node.getChildren()
     for index in range(0, len(values)):
         tcSym_CTRLA_PRESCYNC.addKey(values[index].getAttribute("name"), values[index].getAttribute("value"),
-        values[index].getAttribute("caption"))  
+        values[index].getAttribute("caption"))
     if isMasterSlaveModeEnable == True:
         tcSym_CTRLA_PRESCYNC.setVisible(False)
     if (tcInstanceMasterValue == 2):
-        tcSym_CTRLA_PRESCYNC.setDependencies(tcSlaveModeVisible, ["TC_SLAVE_MODE"])   
+        tcSym_CTRLA_PRESCYNC.setDependencies(tcSlaveModeVisible, ["TC_SLAVE_MODE"])
 
     #TC clock frequency
     tcSym_Frequency = tcComponent.createIntegerSymbol("TC_FREQUENCY", None)

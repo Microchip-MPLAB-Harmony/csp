@@ -59,7 +59,8 @@ void NVIC_Initialize( void );
 void NVIC_INT_Enable( void );
 bool NVIC_INT_Disable( void );
 void NVIC_INT_Restore( bool state );
-
+bool NVIC_INT_SourceDisable( IRQn_Type source );
+void NVIC_INT_SourceRestore( IRQn_Type source, bool status );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

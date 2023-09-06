@@ -226,3 +226,28 @@ void GIC_INT_IrqRestore(bool state)
         __DMB();
     }
 }
+
+bool GIC_INT_SourceDisable( IRQn_Type source )
+{
+    bool processorStatus;
+    bool intSrcStatus;
+
+    processorStatus = GIC_INT_IrqDisable();
+
+    intSrcStatus = (GIC_GetEnableIRQ(source) != 0U);
+
+    GIC_DisableIRQ( source );
+
+    GIC_INT_IrqRestore( processorStatus );
+
+    /* return the source status */
+    return intSrcStatus;
+}
+
+void GIC_INT_SourceRestore( IRQn_Type source, bool status )
+{
+    if( status ) {
+        GIC_EnableIRQ( source );
+    }
+    return;
+}

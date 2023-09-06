@@ -24,7 +24,7 @@
 def loadModule():
 
     coreArch = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" )
-
+    
     print("Load Module: Device Family Pack (DFP)")
     dfpComponent = Module.CreateComponent("dfp", "Device Family Pack (DFP)", "/Packs/", "config/dfp.py")
 
