@@ -107,9 +107,25 @@ void CLOCK_Initialize( void )
     {
         /* Nothing to do */
     }
-    // set PLL_enable
-    BLE_REGS->BLE_DPLL_RG2 &= ~((uint16_t)0x02U);
+    CFG_REGS->CFG_SYSKEY = 0x00000000; // Write junk to lock it if it is already unlocked
+    CFG_REGS->CFG_SYSKEY = 0xAA996655;
+    CFG_REGS->CFG_SYSKEY = 0x556699AA;
+    CRU_REGS->CRU_OSCCON = 0x200;// switch to XO
 
+    //Enable oscillator switch from COSC to NOSC
+    CRU_REGS->CRU_OSCCONSET = CRU_OSCCON_OSWEN_Msk;
+
+    //wait for successful clock change before continuing
+    while(CRU_REGS->CRU_OSCCON & CRU_OSCCON_OSWEN_Msk);
+
+    //set PLL_disable
+     BLE_REGS->BLE_DPLL_RG2 |= 0x02;
+
+    // set PLL_enable
+    BLE_REGS->BLE_DPLL_RG2 &= ~(0x02);
+
+    // Set MISC[24]=0, CLKGEN_PLLRST = 0
+    CFG_REGS->CFG_MISCSTAT  &= 0x00FFFFFF;
     //programming delay for pll lock - 500 us
     //32 us steps - check pll spec for final value 
     BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG3 = ((BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG3 & ~BTZBSYS_SUBSYS_CNTRL_REG3_subsys_pll_ready_delay_Msk )
