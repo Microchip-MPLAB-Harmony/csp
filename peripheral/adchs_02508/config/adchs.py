@@ -980,7 +980,90 @@ def resetChannels():
 
     Database.setSymbolValue(component, "ADCGIRQEN"+str((lastAdcChU/4) + 1)+"__AGIEN"+str(lastAdcChU), False)
 
-def handleMessage(messageID, args):
+def setAdcConfigParams( args ):
+    """The ADC PLIB has following configuration data
+                "id" : Unique identifier
+                "instance" : Instance of ADC to be configured
+                "channel"  : Channel of ADC to be set
+                "resolution" : ADC resolution
+                "mode": Conversion mode
+                "reference": ADC PLIB reference signals
+                "conversion_time" : Conversion time in microsecond
+                "trigger" : Trigger source
+                "result_alignment" : Left or right aligned results
+                "enable_eoc_event" : Enable end of conversion event
+                "enable_eoc_interrupt" : Enable end of conversion flag
+                "enable_slave_mode" : Enable slave mode
+                "enable_dma_sequence" : Enable DMA sequencing
+    """
+
+    component = str(adchsInstanceName.getValue()).lower()
+    instanceNum = int(filter(str.isdigit, str(args["instance"])))
+
+    if args["enable"] == True:
+
+        # Calculate prescaler and ADC sample counts based on requested conversion time
+        if not(args["conversion_time"] == "default"):
+            # ToDO: Place Holder. Add the code later
+            pass
+
+        # Set  ADC reference
+        if not(args["reference"] == "default"):
+            # ToDO: Placeholder. To be done later
+            pass
+
+        # Find the key index of the trigger as a PWM channel as per TRIGGER argument
+        count = adchsSym_ADCTRG__TRGSRC[(instanceNum/4) + 1].getKeyCount()
+        triggerIndex = 0
+        for i in range(0,count):
+            if ("PWM Generator "+ args["trigger"] in adchsSym_ADCTRG__TRGSRC[(instanceNum/4) + 1].getKey(i) ):
+                triggerIndex = i
+                break
+
+        # Enable ADC modules, alternate channel, trigger
+        if (instanceNum < 7):
+            Database.setSymbolValue(component, "ADCTRG" + str((instanceNum/4) + 1) + "__TRGSRC" + str(instanceNum), triggerIndex )
+            Database.setSymbolValue(component, "INTERRUPT_ADC_RESULT", "INT_SOURCE_ADC_DATA" + str(instanceNum))
+            Database.setSymbolValue(component, "AN" + str(instanceNum), True)
+
+            #Enable interrupt
+            Database.setSymbolValue(component, "ADCGIRQEN" + str((instanceNum/4) + 1) + "__AGIEN" + str(instanceNum), True )
+            adchsSym_ADCTRGMODE__SHxALT[instanceNum].setSelectedKey( "AN" + args["channel"] )
+
+            # Resolution
+            adchsSym_ADCTIME__SELRES[instanceNum].setSelectedKey(args["resolution"]+" bits")
+
+        else:
+            Database.setSymbolValue(component, "ADCTRG" + str((int(args["channel"])/4) + 1)+"__TRGSRC" + args["channel"], triggerIndex )
+            Database.setSymbolValue(component, "INTERRUPT_ADC_RESULT", "INT_SOURCE_ADC_DATA"+ args["channel"])
+
+            #interrupt
+            Database.setSymbolValue(component, "ADCGIRQEN"+str((instanceNum/4) + 1)+"__AGIEN" + args["channel"], True)
+            Database.setSymbolValue(component, "AN"+ args["channel"], True)
+
+            # Resolution
+            if args["resolution"] == "12":
+                adchsSym_ADCCON1__SELRES.setSelectedKey(args["resolution"] +" bits (default)")
+            else:
+                adchsSym_ADCCON1__SELRES.setSelectedKey(args["resolution"] +" bits")
+
+        #Enable ADC Module
+        Database.setSymbolValue(component, "ADCHS_" + str(instanceNum) + "_ENABLE", True )
+
+    else:
+       # Enable ADC modules, alternate channel, trigger
+        if (instanceNum < 7):
+            Database.setSymbolValue(component, "AN" + str(instanceNum), False)
+        else:
+            Database.setSymbolValue(component, "AN"+ args["channel"], False)
+
+        # Set ADC result interrupt as false
+        Database.setSymbolValue(component, "ADCGIRQEN"+str((int(args["channel"])/4) + 1 )+"__AGIEN"+ args["channel"], False)
+
+        #Enable ADC Module
+        Database.setSymbolValue(component, "ADCHS_" + str(instanceNum) + "_ENABLE", False )
+
+def handleMessage(id, args):
     global adchsSym_ADCTRGMODE__SHxALT
     global adchsSym_ADCCON1__SELRES
     global adchsSym_ADCTRG__TRGSRC
@@ -990,7 +1073,7 @@ def handleMessage(messageID, args):
     global lastADCChVdc
     dict = {}
 
-    if (messageID == "PMSM_FOC_ADC_CH_CONF"):
+    if (id == "PMSM_FOC_ADC_CH_CONF"):
         component = str(adchsInstanceName.getValue()).lower()
 
         resetChannels()
@@ -1026,7 +1109,8 @@ def handleMessage(messageID, args):
             #interrupt of Ph U channel
             Database.setSymbolValue(component, "ADCGIRQEN"+str((phUModule/4) + 1)+"__AGIEN"+str(phUModule), True)
             adchsSym_ADCTRGMODE__SHxALT[phUModule].setSelectedKey("AN"+str(args['PHASE_U_CH']))
-            #resolution
+
+            # Resolution
             adchsSym_ADCTIME__SELRES[phUModule].setSelectedKey(str(resolution)+" bits")
 
         else:
@@ -1084,7 +1168,8 @@ def handleMessage(messageID, args):
             Database.setSymbolValue(component, "ADC_CH_POT", "ADCHS_CH"+str(phPotCh))
             Database.setSymbolValue(component, "ADCTRG"+str((phPotCh/4) + 1)+"__TRGSRC"+str(phPotCh), triggerIndex)
             Database.setSymbolValue(component, "AN"+str(phPotCh), True)
-            #resolution
+
+            # Resolution
             if str(resolution) == "12":
                 adchsSym_ADCCON1__SELRES.setSelectedKey(str(resolution)+" bits (default)")
             else:
@@ -1096,7 +1181,13 @@ def handleMessage(messageID, args):
         Database.setSymbolValue(component, "ADCHS_"+str(phDCBusModule)+"_ENABLE", True)
         Database.setSymbolValue(component, "ADCHS_"+str(phPotModule)+"_ENABLE", True)
 
+    elif (id == "SET_ADC_CONFIG_PARAMS"):
+        # Set ADC configuration parameters
+        print("ADC message", args)
+        setAdcConfigParams( args )
+
     return dict
+
 ###################################################################################################
 ########################### Component   #################################
 ###################################################################################################
