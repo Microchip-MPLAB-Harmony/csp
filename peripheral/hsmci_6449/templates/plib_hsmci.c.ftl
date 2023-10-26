@@ -439,9 +439,21 @@ void ${HSMCI_INSTANCE_NAME}_CommandSend (
         {
             cmd_reg |= HSMCI_CMDR_TRTYP_SINGLE;
         }
-        else
+        else if (transferFlags.transferType == HSMCI_DATA_TRANSFER_TYPE_MULTI)
         {
             cmd_reg |= HSMCI_CMDR_TRTYP_MULTIPLE;
+        }
+        else if (transferFlags.transferType == HSMCI_DATA_TRANSFER_MMC_STREAM)
+        {
+            cmd_reg |= HSMCI_CMDR_TRTYP_STREAM;
+        }
+        else if (transferFlags.transferType == HSMCI_DATA_TRANSFER_SDIO_BYTE)
+        {
+            cmd_reg |= HSMCI_CMDR_TRTYP_BYTE;
+        }
+        else if (transferFlags.transferType == HSMCI_DATA_TRANSFER_SDIO_BLOCK)
+        {
+            cmd_reg |= HSMCI_CMDR_TRTYP_BLOCK;
         }
 
         if (transferFlags.transferDir == HSMCI_DATA_TRANSFER_DIR_READ)
