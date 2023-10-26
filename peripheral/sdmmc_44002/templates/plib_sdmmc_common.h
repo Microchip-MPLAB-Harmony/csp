@@ -168,6 +168,12 @@ typedef enum
 /* Command code to get the SCR register information from the card */
 #define    SDMMC_CMD_READ_SCR              (51U)
 
+/* SDIO Read-Write Direct command */
+#define    SDMMC_CMD_IO_RW_DIR             (52U)
+
+/* SDIO Read-Write Extended command */
+#define    SDMMC_CMD_IO_RW_EXT             (53U)
+
 /* Command code to begin application specific command inputs */
 #define    SDMMC_CMD_APP_CMD               (55U)
 
@@ -179,7 +185,7 @@ typedef enum
 
 typedef uint32_t SDMMC_SD_COMMAND;
 
- 
+
 #define    SDMMC_RESET_ALL   (0x01U)
 #define    SDMMC_RESET_CMD   (0x02U)
 #define    SDMMC_RESET_DAT   (0x04U)
@@ -221,6 +227,9 @@ typedef enum
 {
     SDMMC_DATA_TRANSFER_TYPE_SINGLE = 0,
     SDMMC_DATA_TRANSFER_TYPE_MULTI,
+    SDMMC_DATA_TRANSFER_TYPE_MMC_STREAM,
+    SDMMC_DATA_TRANSFER_TYPE_SDIO_BYTE,
+    SDMMC_DATA_TRANSFER_TYPE_SDIO_BLOCK,
 
 }SDMMC_DATA_TRANSFER_TYPE;
 
