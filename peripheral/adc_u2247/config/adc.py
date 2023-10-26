@@ -297,6 +297,118 @@ def resetChannelsForPMSMFOC():
     if instanceNum == 1 :
        Database.setSymbolValue(component, "ADC_CTRLA_SLAVEEN", False)
 
+def find_prescale_and_conv_samples(desired_conversion_time_us, resolution, input_clock):
+    desired_conversion_frequency = 1e6 / desired_conversion_time_us
+    best_error = float('inf')
+    best_prescaler = 0
+    best_sample_count = 0
+
+    for prescaler in range(7, 0, -1):  # Decreasing order of prescaler values
+        prev_error = float('inf')
+
+        for sample_count in range(1, 33):
+            actual_conversion_frequency = input_clock / ((2 ** (1 + prescaler)) * (sample_count + resolution))
+            error = abs(desired_conversion_frequency - actual_conversion_frequency)
+
+            if error > prev_error:
+                break
+
+            if error == 0:
+                return prescaler, sample_count
+
+            if error < best_error:
+                best_error = error
+                best_prescaler = prescaler
+                best_sample_count = sample_count
+
+            prev_error = error
+
+    return best_prescaler, best_sample_count
+
+def setAdcConfigParams( args ):
+    """The ADC PLIB has following configuration data
+                "id" : Unique identifier
+                "instance" : Instance of ADC to be configured
+                "channel"  : Channel of ADC to be set
+                "resolution" : ADC resolution
+                "mode": Conversion mode
+                "reference": ADC PLIB reference signals
+                "conversion_time" : Conversion time in microsecond
+                "trigger" : Trigger source
+                "result_alignment" : Left or right aligned results
+                "enable_eoc_event" : Enable end of conversion event
+                "enable_eoc_interrupt" : Enable end of conversion flag
+                "enable_slave_mode" : Enable slave mode
+                "enable_dma_sequence" : Enable DMA sequencing
+    """
+    dict = {}
+    component = args["instance"].lower()
+    channel = int(filter(str.isdigit, str(args["channel"])))
+
+    if args["enable"] == True:
+        # Calculate prescaler and ADC sample counts based on requested conversion time
+        if not(args["conversion_time"] == "default"):
+            # Get input clock frequency
+            input_clock = Database.getSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_FREQUENCY")
+
+            resolution = int(args["resolution"])
+
+            # Limit the resolution to 12 bits
+            if (resolution > 12 ):
+                resolution = 12
+
+            prescale, sample_count = find_prescale_and_conv_samples(args["conversion_time"], int(args["resolution"]), input_clock)
+
+            # Set prescaler and sample count values
+            adcSym_CTRLB_PRESCALER.setValue(prescale)
+            adcSym_SAMPCTRL_SAMPLEN.setValue(sample_count)
+
+        # Calculate prescaler and ADC sample counts based on requested conversion time
+        if not(args["reference"] == "default"):
+            # ToDO: Placeholder. To be done later
+            pass
+
+        # Find the key index of the RESOLUTION
+        count = adcSym_CTRLC_RESSEL.getKeyCount()
+        resIndex = 0
+        for i in range(0, count):
+            if ( args["resolution"] in adcSym_CTRLC_RESSEL.getKeyDescription(i) ):
+                resIndex = i
+                break
+
+        # Enable/ Disable slave for ADC module
+        Database.setSymbolValue(component, "ADC_CTRLA_SLAVEEN", args["enable_slave_mode"])
+
+        # Enable channel
+        Database.setSymbolValue(component, "ADC_INPUTCTRL_MUXPOS", int(channel))
+
+        # Enable/ Disable end-of-conversion interrupt
+        Database.setSymbolValue(component, "ADC_INTENSET_RESRDY", args["enable_eoc_interrupt"])
+
+        # Enable/ Disable end-of-conversion event
+        Database.setSymbolValue(component, "ADC_EVCTRL_RESRDYEO", args["enable_eoc_event"])
+
+        # Enable DMA sequencing
+        if not args["enable_dma_sequence"] == "default":
+            # ToDO: Placeholder for later development
+            pass
+
+        if not args["result_alignment"] == "default":
+            # ToDO: Placeholder for later development
+            pass
+
+        if args["trigger"] != "SOFTWARE_TRIGGER":
+            Database.setSymbolValue(component, "ADC_CONV_TRIGGER", "HW Event Trigger")
+
+        Database.setSymbolValue(component, "ADC_EVCTRL_START", 1)
+        Database.setSymbolValue(component, "ADC_CTRLB_RESSEL", resIndex)
+
+    else:
+        # Enable/ Disable end-of-conversion interrupt
+        Database.setSymbolValue(component, "ADC_INTENSET_RESRDY", False)
+
+        # Enable/ Disable end-of-conversion event
+        Database.setSymbolValue(component, "ADC_EVCTRL_RESRDYEO", False)
 
 def handleMessage(messageID, args):
     dict = {}
@@ -309,6 +421,10 @@ def handleMessage(messageID, args):
         #Change ADC channels if they are changed in the PMSM_FOC
         resetChannelsForPMSMFOC()
         AdcConfigForPMSMFOC(component, instanceNum, args)
+
+    elif ( messageID == "SET_ADC_CONFIG_PARAMS"):
+        # Set ADC configuration parameters
+        setAdcConfigParams( args )
 
     return dict
 
