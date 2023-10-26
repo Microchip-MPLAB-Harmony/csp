@@ -318,6 +318,80 @@ def resetChannelsForPMSMFOC():
         Database.setSymbolValue(component, "AFEC_"+str(lastADCChVdc)+"_CHER", False)
     Database.setSymbolValue(component, "AFEC_CONV_MODE", 0)
 
+def setAdcConfigParams( args ):
+    """The ADC PLIB has following configuration data
+                "id" : Unique identifier
+                "instance" : Instance of ADC to be configured
+                "channel"  : Channel of ADC to be set
+                "resolution" : ADC resolution
+                "mode": Conversion mode
+                "reference": ADC PLIB reference signals
+                "conversion_time" : Conversion time in microsecond
+                "trigger" : Trigger source
+                "result_alignment" : Left or right aligned results
+                "enable_eoc_event" : Enable end of conversion event
+                "enable_eoc_interrupt" : Enable end of conversion flag
+                "enable_slave_mode" : Enable slave mode
+                "enable_dma_sequence" : Enable DMA sequencing
+    """
+
+    component = args["instance"].lower()
+
+    if args["enable"] == True:
+        # Calculate prescaler and ADC sample counts based on requested conversion time
+        if not(args["conversion_time"] == "default"):
+            # ToDO: Place Holder. Add the code later
+            pass
+
+        # Calculate prescaler and ADC sample counts based on requested conversion time
+        if not(args["reference"] == "default"):
+            # ToDO: Placeholder. To be done later
+            pass
+
+        # Find the key index of the RESOLUTION
+        count = afecSym_EMR_RES_VALUE.getKeyCount()
+        resIndex = 0
+        for i in range(0,count):
+            if (str(args["resolution"]) in afecSym_EMR_RES_VALUE.getKeyDescription(i) ):
+                resIndex = i
+                break
+
+        # Set resolution value
+        Database.setSymbolValue(component, "AFEC_EMR_RES_VALUE", resIndex)
+
+        if args["trigger"] != "SOFTWARE_TRIGGER":
+            # Find the key index of the trigger as a PWM channel as per TRIGGER argument
+            count = afecSym_MR_TRGSEL_VALUE.getKeyCount()
+            triggerIndex = 0
+            for i in range(0,count):
+                if ("PWM" + str(args["trigger"]) in afecSym_MR_TRGSEL_VALUE.getKeyDescription(i) ):
+                    triggerIndex = i
+                    break
+
+            Database.setSymbolValue(component, "AFEC_MR_TRGSEL_VALUE", triggerIndex)
+            Database.setSymbolValue(component, "AFEC_CONV_MODE", 2)
+
+        # Enable/ Disable end-of-conversion interrupt
+        Database.setSymbolValue(component, "AFEC_"+ args["channel"] +"_IER_EOC", args["enable_eoc_interrupt"])
+
+        # Enable/ Disable channel
+        Database.setSymbolValue(component, "AFEC_"+ args["channel"] +"_CHER", True)
+
+        # Enable DMA sequencing
+        if not args["enable_dma_sequence"] == "default":
+            # ToDO: Placeholder for later development
+            pass
+
+        if not args["result_alignment"] == "default":
+            # ToDO: Placeholder for later development
+            pass
+
+    else:
+        # Enable/ Disable end-of-conversion interrupt
+        Database.setSymbolValue(component, "AFEC_"+ args["channel"] +"_IER_EOC", False)
+
+        # Enable/ Disable channel
+        Database.setSymbolValue(component, "AFEC_"+ args["channel"] +"_CHER", False)
 
 def handleMessage(messageID, args):
     dict = {}
@@ -330,6 +404,10 @@ def handleMessage(messageID, args):
         #Change ADC channels if they are changed in the PMSM_FOC
         resetChannelsForPMSMFOC()
         AdcConfigForPMSMFOC(component, instanceNum, args)
+
+    elif ( messageID == "SET_ADC_CONFIG_PARAMS"):
+        # Set ADC configuration parameters
+        setAdcConfigParams( args )
 
     return dict
 
