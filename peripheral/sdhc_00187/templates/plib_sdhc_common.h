@@ -159,6 +159,12 @@ typedef enum
     /* Command code to get the SCR register information from the card */
     SDHC_CMD_READ_SCR            = 51,
 
+    /* SDIO Read-Write Direct command */
+    SDHC_CMD_IO_RW_DIR          = 52,
+
+    /* SDIO Read-Write Extended command */
+    SDHC_CMD_IO_RW_EXT          = 53,
+
     /* Command code to begin application specific command inputs */
     SDHC_CMD_APP_CMD             = 55,
 
@@ -223,6 +229,9 @@ typedef enum
 {
     SDHC_DATA_TRANSFER_TYPE_SINGLE = 0,
     SDHC_DATA_TRANSFER_TYPE_MULTI,
+    SDHC_DATA_TRANSFER_TYPE_MMC_STREAM,
+    SDHC_DATA_TRANSFER_TYPES_SDIO_BYTE,
+    SDHC_DATA_TRANSFER_TYPE_SDIO_BLOCK,
 
 }SDHC_DATA_TRANSFER_TYPE;
 
