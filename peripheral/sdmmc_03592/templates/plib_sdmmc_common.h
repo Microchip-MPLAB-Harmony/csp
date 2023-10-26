@@ -157,6 +157,12 @@ typedef uint8_t SDMMC_CMD_RESP_TYPE;
     /* Command code to get the SCR register information from the card */
 #define    SDMMC_CMD_READ_SCR            (51U)
 
+/* SDIO Read-Write Direct command */
+#define    SDMMC_CMD_IO_RW_DIR             (52U)
+
+/* SDIO Read-Write Extended command */
+#define    SDMMC_CMD_IO_RW_EXT             (53U)
+
     /* Command code to begin application specific command inputs */
 #define    SDMMC_CMD_APP_CMD             (55U)
 
@@ -222,6 +228,9 @@ typedef enum
 {
     SDMMC_DATA_TRANSFER_TYPE_SINGLE = 0,
     SDMMC_DATA_TRANSFER_TYPE_MULTI,
+    SDMMC_DATA_TRANSFER_TYPE_MMC_STREAM,
+    SDMMC_DATA_TRANSFER_TYPE_SDIO_BYTE,
+    SDMMC_DATA_TRANSFER_TYPE_SDIO_BLOCK,
 
 }SDMMC_DATA_TRANSFER_TYPE;
 
@@ -234,7 +243,7 @@ typedef enum
 
 typedef struct
 {
-    bool                                isDataPresent;
+    bool                                 isDataPresent;
     SDMMC_DATA_TRANSFER_DIR              transferDir;
     SDMMC_DATA_TRANSFER_TYPE             transferType;
 
