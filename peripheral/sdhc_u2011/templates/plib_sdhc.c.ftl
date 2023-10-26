@@ -55,8 +55,8 @@
 #define ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES        (${SDHC_NUM_DESCRIPTOR_LINES}U)
 #define ${SDHC_INSTANCE_NAME}_BASE_CLOCK_FREQUENCY       (${SDHC_CLK_FREQ}U)
 #define ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE             (0x200U)
-#define ${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE	     (8U * ${SDHC_NUM_DESCRIPTOR_LINES})
-#define ${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE_CACHE_ALIGN	 (${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE + ((${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE % CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE % CACHE_LINE_SIZE)) : 0U))
+#define ${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE        (8U * ${SDHC_NUM_DESCRIPTOR_LINES})
+#define ${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE_CACHE_ALIGN    (${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE + ((${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE % CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE % CACHE_LINE_SIZE)) : 0U))
 
 static CACHE_ALIGN SDHC_ADMA_DESCR ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[(${SDHC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE_CACHE_ALIGN/8U)];
 
@@ -70,7 +70,7 @@ static void ${SDHC_INSTANCE_NAME}_VariablesInit ( void )
     ${SDHC_INSTANCE_NAME?lower_case}Obj.callback = NULL;
 }
 
-static void ${SDHC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode )
+static void ${SDHC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode, SDHC_DataTransferFlags transferFlags )
 {
     uint16_t transferMode = 0U;
 
@@ -102,8 +102,21 @@ static void ${SDHC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode )
             transferMode = (SDHC_TMR_DMAEN_ENABLE | SDHC_TMR_MSBSEL_Msk | SDHC_TMR_BCEN_Msk);
             break;
 
+        case SDHC_CMD_IO_RW_EXT:
+            if (transferFlags.transferType == SDHC_DATA_TRANSFER_SDIO_BLOCK)
+            {
+                transferMode = SDHC_TMR_MSBSEL_Msk | SDHC_TMR_BCEN_Msk;
+            }
+            if (transferFlags.transferDir == SDHC_DATA_TRANSFER_DIR_READ)
+            {
+                transferMode |= SDHC_TMR_DTDSEL_Msk;
+            }
+            transferMode |= SDHC_TMR_DMAEN_ENABLE;
+
+            break;
+
         default:
-		   /* Do Nothing here */
+           /* Do Nothing here */
             break;
     }
 
@@ -191,9 +204,9 @@ void ${SDHC_INSTANCE_NAME}_ErrorReset ( SDHC_RESET_TYPE resetType )
 
     /* Wait until host resets the error status */
     while ((${SDHC_INSTANCE_NAME}_REGS->SDHC_SRR & (uint8_t)resetType) != 0U)
-	{
+    {
 
-	}
+    }
 }
 
 uint16_t ${SDHC_INSTANCE_NAME}_GetError(void)
@@ -289,9 +302,9 @@ void ${SDHC_INSTANCE_NAME}_ClockEnable ( void )
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_INTCLKEN_Msk;
 
     while ((${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR & SDHC_CCR_INTCLKS_Msk) == 0U)
-	{
+    {
         /* Wait for the internal clock to stabilize */
-	}
+    }
 
     /* Enable the SD Clock */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_SDCLKEN_Msk;
@@ -384,9 +397,9 @@ bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t speed)
     if ((${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR & SDHC_CCR_SDCLKEN_Msk) != 0U)
     {
         while ((${SDHC_INSTANCE_NAME}_REGS->SDHC_PSR & (SDHC_PSR_CMDINHC_Msk | SDHC_PSR_CMDINHD_Msk)) != 0U)
-		{
+        {
             /* Wait for clock status to clear */
-		}
+        }
         ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR &= (uint16_t)(~SDHC_CCR_SDCLKEN_Msk);
     }
 
@@ -478,7 +491,7 @@ void ${SDHC_INSTANCE_NAME}_ResponseRead (
             response[3] = ${SDHC_INSTANCE_NAME}_REGS->SDHC_RR[3];
             break;
 
-		case SDHC_READ_RESP_REG_0:
+        case SDHC_READ_RESP_REG_0:
         default:
             *response = ${SDHC_INSTANCE_NAME}_REGS->SDHC_RR[0];
             break;
@@ -545,7 +558,7 @@ void ${SDHC_INSTANCE_NAME}_CommandSend (
     if (transferFlags.isDataPresent == true)
     {
         ${SDHC_INSTANCE_NAME?lower_case}Obj.isDataInProgress = true;
-        ${SDHC_INSTANCE_NAME}_TransferModeSet(opCode);
+        ${SDHC_INSTANCE_NAME}_TransferModeSet(opCode, transferFlags);
         /* Enable data transfer complete and DMA interrupt */
         normalIntSigEnable |= (SDHC_NISIER_TRFC_Msk | SDHC_NISIER_DMAINT_Msk);
     }
@@ -577,9 +590,9 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
     /* Reset module*/
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_SRR |= SDHC_SRR_SWRSTALL_Msk;
     while((${SDHC_INSTANCE_NAME}_REGS->SDHC_SRR & SDHC_SRR_SWRSTALL_Msk) == SDHC_SRR_SWRSTALL_Msk)
-	{
+    {
         /* Wait for reset to complete */
-	}
+    }
 
     /* Clear the normal and error interrupt status flags */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_EISTR = SDHC_EISTR_Msk;
