@@ -78,7 +78,7 @@ def calculateSqiClkFreq(sqiClkDiv, gclk_freq):
         sqiClkFreq = gclk_freq / sqiClkDiv
 
     return sqiClkFreq
-    
+
 def setClkDivComment(symbol, event):
     component = symbol.getComponent()
 
@@ -93,11 +93,18 @@ def setClkDivComment(symbol, event):
 def setLaneMode(symbol, event):
     if (event["id"] == "SQI_FLASH_STATUS_CHECK"):
         symbol.setVisible(event["value"])
-    elif (event["id"] == "SQI_LANE_MODE"):        
+    elif (event["id"] == "SQI_LANE_MODE"):
         symbol.setValue(event["value"])
 
 def setFlashStatusCheck(symbol, event):
-    symbol.setVisible(event["value"])
+    if event["id"] == "SQI_STATBYTES":
+        num_stat_bytes = event["source"].getSymbolByID("SQI_STATBYTES").getSelectedKey()
+        if num_stat_bytes == "SQI_STATUS_BYTES_1":
+            symbol.setMax(0xFF)
+        else:
+            symbol.setMax(0xFFFF)
+    else:
+        symbol.setVisible(event["value"])
 
 def setSQIInterruptData(status):
 
@@ -156,12 +163,12 @@ def instantiateComponent(sqiComponent):
 
     sqiMenu = sqiComponent.createMenuSymbol("SQI", None)
     sqiMenu.setLabel("Hardware Settings ")
-    
+
     #Run in StandBy
     sqiRunStdby = sqiComponent.createBooleanSymbol("SQI_RUN_STANDBY", sqiMenu)
     sqiRunStdby.setLabel("Enable Run in Standby")
     sqiRunStdby.setDefaultValue(False)
-    
+
     sqiLaneMode = sqiComponent.createKeyValueSetSymbol("SQI_LANE_MODE", sqiMenu)
     sqiLaneMode.setLabel("SQI Lane Mode")
     sqiLaneMode.addKey("SINGLE", "0x0", "Single")
@@ -224,7 +231,7 @@ def instantiateComponent(sqiComponent):
     sqiClkDiv.setOutputMode("Value")
     sqiClkDiv.setDisplayMode("Description")
     sqiClkDiv.setDefaultValue(11)
-    
+
     gclk_freq = Database.getSymbolValue("core", sqiInstanceName.getValue() + "_CLOCK_FREQUENCY")
 
     sqiClkFreq = calculateSqiClkFreq(sqiClkDiv.getSelectedValue(), gclk_freq)
@@ -267,7 +274,7 @@ def instantiateComponent(sqiComponent):
 
     setSQIInterruptData(True)
 
-    
+
     sqiVectorNum = sqiComponent.createIntegerSymbol("SQI_VECTOR_NUMBER", sqiMenu)
     sqiVectorNum.setDefaultValue(sqiIrq_index)
     sqiVectorNum.setVisible(False)
@@ -296,7 +303,7 @@ def instantiateComponent(sqiComponent):
     sqiStatType.setDefaultValue(sqiLaneMode.getValue())
     sqiStatType.setVisible(sqiFlashStatusCheck.getValue())
     sqiStatType.setReadOnly(True)
-    sqiStatType.setDependencies(setLaneMode, ["SQI_FLASH_STATUS_CHECK", "SQI_LANE_MODE"])        
+    sqiStatType.setDependencies(setLaneMode, ["SQI_FLASH_STATUS_CHECK", "SQI_LANE_MODE"])
 
     sqiStatPos = sqiComponent.createKeyValueSetSymbol("SQI_STATPOS", sqiFlashStatusCheck)
     sqiStatPos.setLabel("Status Register Busy Bit Position")
@@ -311,9 +318,11 @@ def instantiateComponent(sqiComponent):
     sqiStatCmd = sqiComponent.createHexSymbol("SQI_STATCMD", sqiFlashStatusCheck)
     sqiStatCmd.setLabel("Status Command")
     sqiStatCmd.setDefaultValue(0x05)
+    sqiStatCmd.setMin(0)
+    sqiStatCmd.setMax(0xffff)
     sqiStatCmd.setVisible(sqiFlashStatusCheck.getValue())
-    sqiStatCmd.setDependencies(setFlashStatusCheck, ["SQI_FLASH_STATUS_CHECK"])
-    
+    sqiStatCmd.setDependencies(setFlashStatusCheck, ["SQI_FLASH_STATUS_CHECK", "SQI_STATBYTES"])
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
     sqiCommonHeaderFile = sqiComponent.createFileSymbol("SQI_COMMON_HEADER", None)

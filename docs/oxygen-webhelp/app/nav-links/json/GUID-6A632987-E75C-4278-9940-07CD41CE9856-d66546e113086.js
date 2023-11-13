@@ -1,0 +1,1 @@
+define({"topics":[{"title":"<ph>1.34.18.1<\/ph>\nSDRAMC_Initialize Function","href":"GUID-38FDAD9C-61FD-49A0-804B-64842BAA1B5B.html","attributes":{"data-id":"GUID-38FDAD9C-61FD-49A0-804B-64842BAA1B5B"},"menu":{"hasChildren":false},"tocID":"GUID-38FDAD9C-61FD-49A0-804B-64842BAA1B5B-d66546e113094","topics":[]}]});

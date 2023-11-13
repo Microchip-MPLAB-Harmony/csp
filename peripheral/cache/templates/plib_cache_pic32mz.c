@@ -321,8 +321,8 @@ void CACHE_CacheCoherencySet(CACHE_COHERENCY cacheCoherency)
     uint32_t cp0;
     /*LDRA_INSPECTED 496 S */ /*Deviation Reference: MH-4490*/
     cp0 = _mfc0(16, 0);
-    cp0 &= ~0x07;
-    cp0 |= cacheCoherency;
+    cp0 &= ~0x07U;
+    cp0 |= (uint32_t)cacheCoherency;
     /*LDRA_INSPECTED 496 S */ /*Deviation Reference: MH-4491*/
     _mtc0(16, 0, cp0);
 }
@@ -345,7 +345,7 @@ void CACHE_CacheCoherencySet(CACHE_COHERENCY cacheCoherency)
 CACHE_COHERENCY CACHE_CacheCoherencyGet(void)
 {
     /*LDRA_INSPECTED 496 S */ /*Deviation Reference: MH-4492*/
-    return _mfc0(16, 0) & 0x03;
+    return _mfc0(16, 0) & 0x03U;
 }
 
 

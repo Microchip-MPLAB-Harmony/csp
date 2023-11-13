@@ -193,7 +193,7 @@ pmdDict_bz3 =  {
         "TC4":["3","8"],
         "TC5":["3","9"],
         "TC6":["3","10"],
-        "TC7":["3","11"],        
+        "TC7":["3","11"],
         "TCC0":["3","12"],
         "TCC1":["3","13"],
         "TCC2":["3","14"],
@@ -501,7 +501,7 @@ SIDL_MASK = 0x00002000
 
 def refocon_update(symbol, event):
     #This is the callback for REFOCON_VALUEx symbolID.
-    
+
     global refconval
     global rslpSymbolList
     global sidlSymbolList
@@ -509,17 +509,17 @@ def refocon_update(symbol, event):
     # find out which clock we care about by looking at the id.  The last char in the id is clock number
     clk = int(event["id"][-1]) - 1 # "-1" is since indexing starts at 1 (and list indexing starts at 0)
     index = int(event["id"][-1])  # the last char of the event ID is the index needed to be used
-    
+
     newValueWithoutRSLP_SIDL = int(set_refocon_value(index), 16)
 
     if rslpSymbolList[clk].getValue() == False:
         newValue = newValueWithoutRSLP_SIDL & (~RSLP_MASK)
-    else: 
+    else:
         newValue = newValueWithoutRSLP_SIDL | RSLP_MASK
 
     if sidlSymbolList[clk].getValue() == False:
         newValue = newValue & (~SIDL_MASK)
-    else: 
+    else:
         newValue = newValue | SIDL_MASK
 
     # finally, set the symbol value to the newly-calculated value
@@ -695,14 +695,14 @@ def setCFGPCLKGENx_Reg (symbol, event):
     registerNumber = str(clockNumber/8 + 1)
     regValue = Database.getSymbolValue("core", "CFGPCLKGEN"+registerNumber+"_REG")
 
-    
+
     if "CHEN" in event["id"]:
         bitFieldPosition = ((clockNumber % 8)*4) + 3
         if event["value"]:
             regValue |= (1 << bitFieldPosition)
         else:
             regValue &= (~(1 << bitFieldPosition))
-    elif "GENSEL" in event["id"]:   
+    elif "GENSEL" in event["id"]:
         bitFieldPosition = ((clockNumber % 8)*4) + 0
         bitFieldMask = 7 << bitFieldPosition
 
@@ -743,7 +743,7 @@ def updatePMDxRegValue(symbol, event):
     bitShift = 0
     if "REFCLK" in event["id"]:
         periName = event["id"].split("_")[3].replace("CLK", "O") # find the REF OSC name matching with PMD field
-    else:    
+    else:
         periName = event["id"].replace("_CLOCK_ENABLE", "")
 
     if (periName in pmdDict) and (pmdDict[periName]):
@@ -765,38 +765,38 @@ def updatePMDxRegValue(symbol, event):
         Database.setSymbolValue("core", pmdRegId, pmdxValue, 1)
 
 # POSC with POSCMOD effect
-global poscOutDefaultFreq 
+global poscOutDefaultFreq
 def poscOutDefaultFreq():
     if Database.getSymbolValue("core", "CONFIG_POSCMOD") == "OFF":
         return 0
     else:
         return Database.getSymbolValue("core","CONFIG_SYS_CLK_CONFIG_PRIMARY_XTAL")
 
-global poscOutFreqCalc 
+global poscOutFreqCalc
 def poscOutFreqCalc(symbol, event):
     symbol.setValue(int(poscOutDefaultFreq()))
 
 # SOSC with LPOSCEN effect
-global soscOutDefaultFreq 
+global soscOutDefaultFreq
 def soscOutDefaultFreq():
-    if Database.getSymbolValue("core", "CONFIG_LPOSCEN") == "OFF":
+    if Database.getSymbolValue("core", "OSCCON_SOSCEN_VALUE") == "OFF":
         return 0
     else:
         return Database.getSymbolValue("core","CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL")
 
-global soscOutFreqCalc 
+global soscOutFreqCalc
 def soscOutFreqCalc(symbol, event):
     symbol.setValue(int(soscOutDefaultFreq()))
 
 # SPLL3 or RFPLL
-global spll3DefaultFreq 
+global spll3DefaultFreq
 def spll3DefaultFreq():
     if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32CX_BZ2":
         return (Database.getSymbolValue("core","POSC_OUT_FREQ") * 6)
     else: #BZ3
         return (Database.getSymbolValue("core","POSC_OUT_FREQ") * 4)
 
-global spll3OutFreqCalc 
+global spll3OutFreqCalc
 def spll3OutFreqCalc(symbol, event):
     symbol.setValue(spll3DefaultFreq())
 
@@ -853,7 +853,7 @@ def spll2ClockFreqCalc(symbol, event):
 global lpclkClockFreqCalc
 def lpclkClockFreqCalc(symbol, event):
     inputFreq = VBKP_32KCSEL_MuxOutput()
-    
+
     if Database.getSymbolValue("core", "CONFIG_LPCLK_MOD") == "DIV_1":
         dividor = 1
     else:
@@ -905,12 +905,12 @@ def rtcClockFreqCalc(symbol, event):
 
     if Database.getSymbolValue("core", "CONFIG_RTCNTM_CSEL") == "RAW":
         cselOutput = inputFreq
-    else: 
+    else:
         cselOutput = Database.getSymbolValue("core", "LPCLK_FREQ")
 
     if Database.getSymbolValue("core", "CONFIG_VBKP_DIVSEL") == "DIV_32":
         divselOutput = inputFreq/32
-    else: 
+    else:
         divselOutput = inputFreq/31.25
 
     if Database.getSymbolValue("core", "CONFIG_VBKP_1KCSEL") == "_32K":
@@ -985,7 +985,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu):
     SOSC_OUT_FREQ.setLabel("Secondary Oscillator Output Frequency (Hz)")
     SOSC_OUT_FREQ.setDefaultValue(soscOutDefaultFreq())
     SOSC_OUT_FREQ.setReadOnly(True)
-    SOSC_OUT_FREQ.setDependencies(soscOutFreqCalc, ["CONFIG_LPOSCEN", "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
+    SOSC_OUT_FREQ.setDependencies(soscOutFreqCalc, ["OSCCON_SOSCEN_VALUE", "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
 
     # RFPLL frequency
     spll3_rfpll_freq = clk_comp.createIntegerSymbol("SPLL3_RFPLL_FREQ", sym_calc_freq_menu)
@@ -1019,7 +1019,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu):
     spll2_clk_min_freq.setDefaultValue(8000000)
     spll2_clk_min_freq.setReadOnly(True)
     spll2_clk_min_freq.setVisible(False)
-	
+
     lpclk_clk_freq = clk_comp.createIntegerSymbol("LPCLK_FREQ", sym_calc_freq_menu)
     lpclk_clk_freq.setLabel("Low Power Clock (LPCLK) Frequency (Hz)")
     lpclk_clk_freq.setDefaultValue(32000)
@@ -1197,7 +1197,7 @@ def scan_atdf_for_spllcon_fields(component, parentMenu, regNode):
                         {'name':'SPLLPWDN', 'symmaskname':'spllcon_spllpwdn_mask', 'symvaluename':'spllcon_spllpwdn_val', 'keyvalbuf':'spllpwdn', 'visible':'False'},
                         {'name':'SPLLPOSTDIV1', 'symmaskname':'spllcon_spllpostdiv1_mask', 'symvaluename':'spllcon_spllpostdiv1_val', 'keyvalbuf':'spllpostdiv1', 'visible':'True', 'min':'1', 'max':'255'},
                         {'name':'SPLL_BYP', 'symmaskname':'spllcon_spllbyp_mask', 'symvaluename':'spllcon_spllbyp_val', 'keyvalbuf':'spllbyp', 'visible':'True'},
-                        {'name':'SPLLPOSTDIV2', 'symmaskname':'spllcon_spllpostdiv2_mask', 'symvaluename':'spllcon_spllpostdiv2_val', 'keyvalbuf':'spllpostdiv2', 'visible':'True', 'min':'1', 'max':'15'}, 
+                        {'name':'SPLLPOSTDIV2', 'symmaskname':'spllcon_spllpostdiv2_mask', 'symvaluename':'spllcon_spllpostdiv2_val', 'keyvalbuf':'spllpostdiv2', 'visible':'True', 'min':'1', 'max':'15'},
                         {'name':'SPLLFLOCK', 'symmaskname':'spllcon_spllflock_mask', 'symvaluename':'spllcon_spllflock_val', 'keyvalbuf':'spllflock', 'visible':'False'},
                         {'name':'SPLLRST', 'symmaskname':'spllcon_spllrst_mask', 'symvaluename':'spllcon_spllrst_val', 'keyvalbuf':'spllrst', 'visible':'False'}]
 
@@ -1318,7 +1318,7 @@ def scan_atdf_for_osccon_fields(component, parentMenu, regNode):
                     frcdivBfValSym.setDefaultValue(int(ii['keyvalbuf'][(_get_default_value(clkRegGrp_OSCCON, ii['name'], where))]))
 
                 dependencyList.append('OSCCON_'+ii['name'].upper()+'_VALUE')
-                
+
     # get initial value of OSCCON register from 'initval' field in atdf file
     symbolOscconValue = component.createHexSymbol("OSCCON_VALUE", parentMenu)
     symbolOscconValue.setVisible(False)
@@ -1376,7 +1376,7 @@ if __name__ == "__main__":
     else:
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32cx_bz:MZClockModel")
         pmdDict = pmdDict_bz3
-        
+
     # parse atdf file to get key parameters
     atdf_file_path = join(Variables.get("__DFP_PACK_DIR"), "atdf", Variables.get("__PROCESSOR") + ".atdf")
     atdf_file = open(atdf_file_path, "r")
@@ -1415,7 +1415,7 @@ if __name__ == "__main__":
                     scan_atdf_for_spllcon_fields(coreComponent, SPLL_CFG_SETTINGS, register_tag)
                 if("OSCCON" == register_tag.attrib["name"]):
                     scan_atdf_for_osccon_fields(coreComponent, CLK_CFG_SETTINGS, register_tag)
-                
+
 
                 #looking for PB1DIV, PB2DIV, ... (for making menu entries - further down, and ftl-related symbols)
                 if ("PB" in register_tag.attrib["name"]) and ("DIV" == register_tag.attrib["name"][-3:]):
@@ -1955,7 +1955,7 @@ if __name__ == "__main__":
         clkSymExtPeripheralFreq = coreComponent.createIntegerSymbol(name + "_CLOCK_FREQUENCY", clkSymExtPeripheral)
         clkSymExtPeripheralFreq.setLabel(name + " Clock Frequency")
         clkSymExtPeripheralFreq.setReadOnly(True)
-        
+
     # symbol created only to trigger the clock setup logic
     clockTrigger = coreComponent.createBooleanSymbol("TRIGGER_LOGIC", None)
     clockTrigger.setVisible(False)
@@ -1970,14 +1970,14 @@ if __name__ == "__main__":
             else:
                 clksym_CLK_ENABLE.setDefaultValue(False)
             sym_peripheral_clock_enable.append(peripheralName + "_CLOCK_ENABLE") # needed for PMD manipulation
-    
+
     component = clksym_CLK_ENABLE.getComponent()
     rtcClockFrequency = coreComponent.createIntegerSymbol("RTC_CLOCK_FREQUENCY", component.getSymbolByID("RTC_CLOCK_ENABLE"))
     rtcClockFrequency.setLabel("RTC Clock Frequency")
     rtcClockFrequency.setReadOnly(True)
     rtcClockFrequency.setDefaultValue(32000)
     rtcClockFrequency.setDependencies(rtcClockFreqCalc,["LPCLK_FREQ","CONFIG_VBKP_32KCSEL", "SOSC_OUT_FREQ","CONFIG_VBKP_DIVSEL","CONFIG_VBKP_1KCSEL","CONFIG_RTCNTM_CSEL"])
-    
+
     qspiClockFrequency= coreComponent.createIntegerSymbol("QSPI_CLOCK_FREQUENCY", component.getSymbolByID("QSPI_CLOCK_ENABLE"))
     qspiClockFrequency.setLabel("QSPI Clock Frequency")
     qspiClockFrequency.setDefaultValue(0)
@@ -2002,7 +2002,7 @@ if __name__ == "__main__":
 
     #############################################################################################
     # PMD
-    #############################################################################################    
+    #############################################################################################
     cfgRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]').getChildren()
 
     pmdCount = 0
@@ -2018,7 +2018,7 @@ if __name__ == "__main__":
                 bitMask = int(str(bitfield.getAttribute("mask")), 16)
                 if bitfield.getAttribute("name")[:-2] in defaultEnablePeripheralsList:
                     mask &= ~bitMask
-                else:    
+                else:
                     mask |= bitMask
                 pmdRegDict[pmdCount] = mask
 
@@ -2054,7 +2054,7 @@ if __name__ == "__main__":
     if Database.getSymbolValue("core", "PRODUCT_FAMILY") == "PIC32CX_BZ2":
         CLK_SRC_FILE.setSourcePath("../peripheral/clk_pic32cx_bz/templates/plib_clk.c.ftl")
     else: #BZ3
-        CLK_SRC_FILE.setSourcePath("../peripheral/clk_pic32cx_bz/templates/plib_clk_bz3.c.ftl")  
+        CLK_SRC_FILE.setSourcePath("../peripheral/clk_pic32cx_bz/templates/plib_clk_bz3.c.ftl")
     CLK_SRC_FILE.setOutputName("plib_clk.c")
     CLK_SRC_FILE.setDestPath("/peripheral/clk/")
     CLK_SRC_FILE.setProjectPath("config/" + CONFIG_NAME + "/peripheral/clk/")

@@ -67,8 +67,8 @@ typedef uint8_t DAC_CHANNEL_NUM;
 
 void ${DAC_INSTANCE_NAME}_Initialize (void);
 void ${DAC_INSTANCE_NAME}_DataWrite (DAC_CHANNEL_NUM channel, uint16_t data);
-<#if DAC_CHANNEL_0_FILTER>uint16_t ${DAC_INSTANCE_NAME}_Channel0ResultGet (void);</#if>
-<#if DAC_CHANNEL_1_FILTER>uint16_t ${DAC_INSTANCE_NAME}_Channel1ResultGet (void);</#if>
+<#if DAC_CHANNEL_0_FILTER?? && DAC_CHANNEL_0_FILTER == true>uint16_t ${DAC_INSTANCE_NAME}_Channel0ResultGet (void);</#if>
+<#if DAC_CHANNEL_1_FILTER?? && DAC_CHANNEL_1_FILTER == true>uint16_t ${DAC_INSTANCE_NAME}_Channel1ResultGet (void);</#if>
 bool ${DAC_INSTANCE_NAME}_IsReady (DAC_CHANNEL_NUM channel);
 
 #ifdef __cplusplus  // Provide C++ Compatibility

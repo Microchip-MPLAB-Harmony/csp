@@ -57,7 +57,7 @@
 #include "peripheral/ecia/plib_ecia.h"
 
 <#if LED_CLK_SRC == "0x1">
-static LED_WDT_CALLBACK_OBJ ${LED_INSTANCE_NAME}_CallbackObject;
+volatile static LED_WDT_CALLBACK_OBJ ${LED_INSTANCE_NAME}_CallbackObject;
 </#if>
 </#if>
 
@@ -159,7 +159,7 @@ void ${LED_INSTANCE_NAME}_WDT_CallbackRegister( LED_WDT_CALLBACK callback, uintp
 </#if>
 </#compress>
 
-void ${LED_INSTANCE_NAME}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
+void __attribute__((used)) ${LED_INSTANCE_NAME}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if .vars["LED_WDT_INTERRUPT_TYPE"] == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_${LED_INSTANCE_NAME}))
@@ -175,7 +175,9 @@ void ${LED_INSTANCE_NAME}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 
         if (${LED_INSTANCE_NAME}_CallbackObject.callback != NULL)
         {
-            ${LED_INSTANCE_NAME}_CallbackObject.callback(${LED_INSTANCE_NAME}_CallbackObject.context);
+            uintptr_t context = ${LED_INSTANCE_NAME}_CallbackObject.context;
+
+            ${LED_INSTANCE_NAME}_CallbackObject.callback(context);
         }
     }
 }

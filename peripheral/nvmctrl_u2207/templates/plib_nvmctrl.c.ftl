@@ -53,6 +53,17 @@
 </#if>
 #include "plib_${NVMCTRL_INSTANCE_NAME?lower_case}.h"
 
+<#if INTERRUPT_ENABLE == true>
+
+typedef struct
+{
+	NVMCTRL_CALLBACK CallbackFunc;
+	uintptr_t Context;
+}nvmCallbackObjType;
+
+volatile static nvmCallbackObjType ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj;
+</#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${NVMCTRL_INSTANCE_NAME} Implementation
@@ -60,24 +71,21 @@
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>static NVMCTRL_CALLBACK ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackFunc;
-
-    <#lt>static uintptr_t ${NVMCTRL_INSTANCE_NAME?lower_case}Context;
-
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context )
     <#lt>{
     <#lt>    /* Register callback function */
-    <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackFunc = callback;
-    <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}Context = context;
+    <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc = callback;
+    <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.Context = context;
     <#lt>}
 
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${NVMCTRL_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTENCLR = NVMCTRL_INTENCLR_READY_Msk;
 
-    <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackFunc != NULL)
+    <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc != NULL)
     <#lt>    {
-    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackFunc(${NVMCTRL_INSTANCE_NAME?lower_case}Context);
+    <#lt>        uintptr_t context = ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.Context;
+    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc(context);
     <#lt>    }
     <#lt>}
 </#if>
@@ -106,7 +114,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_Read( uint32_t *data, uint32_t length, c
 
 bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PageWrite ( uint32_t *data, const uint32_t address )
 {
-    uint32_t i = 0U;
+    uint32_t i;
     uint32_t * paddress = (uint32_t *)address;
 
     /* Writing 32-bit words in the given address */
@@ -152,7 +160,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint3
 <#if NVMCTRL_WRITE_POLICY == "MANUAL">
 bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t address)
 {
-    uint32_t i = 0U;
+    uint32_t i;
     uint32_t * paddress = (uint32_t *)address;
 
     /* writing 32-bit data into the given address */
@@ -191,7 +199,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit( const uint32_t address)
 
 bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address )
 {
-    uint32_t i = 0U;
+    uint32_t i;
     uint32_t * paddress = (uint32_t *)address;
 
     /* writing 32-bit data into the given address */
@@ -230,7 +238,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
 <#if FLASH_USERROW_START_ADDRESS??>
     <#lt>bool ${USER_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address )
     <#lt>{
-    <#lt>    uint32_t i = 0U;
+    <#lt>    uint32_t i;
     <#lt>    uint32_t * paddress = (uint32_t *)address;
     <#lt>    bool pagewrite_val = false;
 
@@ -281,7 +289,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
 
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
-    uint16_t nvm_error = 0;
+    uint16_t nvm_error;
 
     /* Get the error bits set */
     nvm_error = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_STATUS & (NVMCTRL_STATUS_NVME_Msk | NVMCTRL_STATUS_LOCKE_Msk | NVMCTRL_STATUS_PROGE_Msk));

@@ -71,6 +71,25 @@ extern "C" {
 // *****************************************************************************
 // Section: Data Types
 // *****************************************************************************
+
+#define    ADC_RESULT_BUFFER_0   (0)
+#define    ADC_RESULT_BUFFER_1   (1)
+#define    ADC_RESULT_BUFFER_2   (2)
+#define    ADC_RESULT_BUFFER_3   (3)
+#define    ADC_RESULT_BUFFER_4   (4)
+#define    ADC_RESULT_BUFFER_5   (5)
+#define    ADC_RESULT_BUFFER_6   (6)
+#define    ADC_RESULT_BUFFER_7   (7)
+#define    ADC_RESULT_BUFFER_8   (8)
+#define    ADC_RESULT_BUFFER_9   (9)
+#define    ADC_RESULT_BUFFER_10  (10)
+#define    ADC_RESULT_BUFFER_11  (11)
+#define    ADC_RESULT_BUFFER_12  (12)
+#define    ADC_RESULT_BUFFER_13  (13)
+#define    ADC_RESULT_BUFFER_14  (14)
+#define    ADC_RESULT_BUFFER_15  (15)
+
+typedef uint32_t ${ADC_INSTANCE_NAME}_RESULT_BUFFER;
 // *****************************************************************************
 /*  The following data type definitions are used by the functions in this
     interface and should be considered part it.
@@ -80,24 +99,6 @@ typedef enum {
     ADC_MUX_B
 } ${ADC_INSTANCE_NAME}_MUX;
 
-typedef enum {
-    ADC_RESULT_BUFFER_0 = 0,
-    ADC_RESULT_BUFFER_1,
-    ADC_RESULT_BUFFER_2,
-    ADC_RESULT_BUFFER_3,
-    ADC_RESULT_BUFFER_4,
-    ADC_RESULT_BUFFER_5,
-    ADC_RESULT_BUFFER_6,
-    ADC_RESULT_BUFFER_7,
-    ADC_RESULT_BUFFER_8,
-    ADC_RESULT_BUFFER_9,
-    ADC_RESULT_BUFFER_10,
-    ADC_RESULT_BUFFER_11,
-    ADC_RESULT_BUFFER_12,
-    ADC_RESULT_BUFFER_13,
-    ADC_RESULT_BUFFER_14,
-    ADC_RESULT_BUFFER_15
-}${ADC_INSTANCE_NAME}_RESULT_BUFFER;
 
 typedef enum
 {

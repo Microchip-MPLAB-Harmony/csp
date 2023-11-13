@@ -55,15 +55,15 @@
 #include "plib_${RTOS_TMR_INSTANCE_NAME?lower_case}_tmr.h"
 #include "peripheral/ecia/plib_ecia.h"
 
-static RTOS_TMR_OBJECT ${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj;
+volatile static RTOS_TMR_OBJECT ${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj;
 
 void ${RTOS_TMR_INSTANCE_NAME}Timer_Initialize(void)
 {
     /* Disable RTOS timer. All registers are reset to the default state. */
     ${RTOS_TMR_INSTANCE_NAME}_REGS->RTOS_CTRL &= ~RTOS_CTRL_BLK_EN_Msk;
-    
+
     ${RTOS_TMR_INSTANCE_NAME}_REGS->RTOS_PRLD = ${RTOS_TMR_PRELOAD_VALUE};
-    
+
     /* Enable timer module. Set Auto-reload and hardware halt values based on user settings. Do not start the timer. */
     ${RTOS_TMR_INSTANCE_NAME}_REGS->RTOS_CTRL = RTOS_CTRL_BLK_EN_Msk <#if RTOS_TMR_AUTO_RELOAD_ENABLE == true> | RTOS_CTRL_AU_RELOAD_Msk </#if> <#if RTOS_TMR_HW_HALT_ENABLE == true> | RTOS_CTRL_EXT_HW_HALT_EN_Msk </#if>;
 }
@@ -119,7 +119,7 @@ void ${RTOS_TMR_INSTANCE_NAME}Timer_CallbackRegister( RTOS_TMR_CALLBACK callback
     ${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj.context = context;
 }
 
-void ${RTOS_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${RTOS_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     <#if RTOS_TMR_INTERRUPT_TYPE == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_RTMR) != 0U)
@@ -135,7 +135,8 @@ void ${RTOS_TMR_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 
         if(${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj.callback_fn != NULL)
         {
-            ${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj.callback_fn(${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj.context);
-        }    
+            uintptr_t context = ${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj.context;
+            ${RTOS_TMR_INSTANCE_NAME?lower_case}TimerObj.callback_fn(context);
+        }
     }
 }

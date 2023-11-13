@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Periodic Interval Timer (${PIT_INSTANCE_NAME}) 
+  Periodic Interval Timer (${PIT_INSTANCE_NAME})
 
   Company:
     Microchip Technology Inc.
@@ -100,7 +100,7 @@ typedef void (*${PIT_INSTANCE_NAME}_CALLBACK)(uintptr_t context);
 
   Parameters:
     None.
-  
+
   Returns:
     None.
 */
@@ -121,7 +121,7 @@ void ${PIT_INSTANCE_NAME}_TimerInitialize(void);
 
   Parameters:
     None.
-  
+
   Returns:
     None.
 */
@@ -143,7 +143,7 @@ void ${PIT_INSTANCE_NAME}_TimerRestart(void);
 
   Parameters:
     None.
-  
+
   Returns:
     None.
 */
@@ -164,7 +164,7 @@ void ${PIT_INSTANCE_NAME}_TimerStart(void);
 
   Parameters:
     None.
-  
+
   Returns:
     None.
 */
@@ -184,8 +184,8 @@ void ${PIT_INSTANCE_NAME}_TimerStop(void);
     None.
 
   Parameters:
-   period       - The period (PIV) value of the ${PIT_INSTANCE_NAME}. 
-  
+   period       - The period (PIV) value of the ${PIT_INSTANCE_NAME}.
+
   Returns:
     None.
 */
@@ -206,7 +206,7 @@ void ${PIT_INSTANCE_NAME}_TimerPeriodSet(uint32_t period);
 
   Parameters:
     None.
-  
+
   Returns:
     None.
 */
@@ -227,7 +227,7 @@ uint32_t ${PIT_INSTANCE_NAME}_TimerPeriodGet(void);
 
   Parameters:
     None.
-  
+
   Returns:
     None.
 */
@@ -250,7 +250,7 @@ uint32_t ${PIT_INSTANCE_NAME}_TimerCounterGet(void);
 
   Parameters:
     None.
-  
+
   Returns:
     None.
 */
@@ -272,7 +272,7 @@ void ${PIT_INSTANCE_NAME}_TimerCompareSet( uint16_t compare );
 
   Parameters:
     None.
-  
+
   Returns:
     None.
 */
@@ -287,14 +287,14 @@ uint32_t ${PIT_INSTANCE_NAME}_TimerFrequencyGet(void);
 
   Description:
     Delays execution by using  the ${PIT_INSTANCE_NAME} timer to determine when given number of
-    milliseconds has expired.  
+    milliseconds has expired.
 
   Precondition:
     ${PIT_INSTANCE_NAME} is configured and enabled.  The ${PIT_INSTANCE_NAME} interrupt is also enabled.
 
   Parameters:
     delay_ms - number of milliseconds to delay
-  
+
   Returns:
     None.
 */
@@ -309,19 +309,21 @@ void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t delay_ms);
 
   Description:
     Delays execution by using  the ${PIT_INSTANCE_NAME} timer to determine when given number of
-    microseconds has expired.  
+    microseconds has expired.
 
   Precondition:
     ${PIT_INSTANCE_NAME} is configured and enabled.  The ${PIT_INSTANCE_NAME} interrupt is also enabled.
 
   Parameters:
     delay_us - number of microseconds to delay
-  
+
   Returns:
     None.
 */
 void ${PIT_INSTANCE_NAME}_DelayUs(uint32_t delay_us);
-<#if ENABLE_INTERRUPT == true>
+<#assign BARE_METAL = ((!((HarmonyCore.SELECT_RTOS)??)) || HarmonyCore.SELECT_RTOS == "BareMetal")>
+<#assign INTERRUPT_USED_BY_RTOS = !(__PROCESSOR?matches("ATSAMA5.*")) || BARE_METAL>
+<#if ENABLE_INTERRUPT && INTERRUPT_USED_BY_RTOS>
 
 // *****************************************************************************
 /* Function:
@@ -340,36 +342,12 @@ void ${PIT_INSTANCE_NAME}_DelayUs(uint32_t delay_us);
   Parameters:
     callback    - Callback function
     context     - paramter to callback function
-  
+
   Returns:
     None.
 */
 void ${PIT_INSTANCE_NAME}_TimerCallbackSet(${PIT_INSTANCE_NAME}_CALLBACK callback, uintptr_t context);
 
-// *****************************************************************************
-/* Function:
-    void ${PIT_INSTANCE_NAME}_ClearInterrupt(void);
-
-  Summary:
-    ${PIT_INSTANCE_NAME} Clear Interrupt.
-
-  Description:
-    Clear the ${PIT_INSTANCE_NAME} interrupt by reading the PIVR register.  Meant
-    to be used by external interrupt handlers (e.g. FreeRTOS tick hanlder).
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-  
-  Returns:
-    None.
-*/
-__STATIC_INLINE void ${PIT_INSTANCE_NAME}_ClearInterrupt(void)
-{
-    (uint32_t)${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
-}
 <#else>
 
 // *****************************************************************************
@@ -387,13 +365,38 @@ __STATIC_INLINE void ${PIT_INSTANCE_NAME}_ClearInterrupt(void)
 
   Parameters:
     None.
-  
+
   Returns:
     True    - Indicates period has expired
     False   - Indicates period has not expired
 */
 bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void);
 </#if>
+
+// *****************************************************************************
+/* Function:
+    void ${PIT_INSTANCE_NAME}_ClearInterrupt(void);
+
+  Summary:
+    ${PIT_INSTANCE_NAME} Clear Interrupt.
+
+  Description:
+    Clear the ${PIT_INSTANCE_NAME} interrupt by reading the PIVR register.  Meant
+    to be used by external interrupt handlers (e.g. FreeRTOS tick hanlder).
+
+  Precondition:
+    None.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+*/
+__STATIC_INLINE void ${PIT_INSTANCE_NAME}_ClearInterrupt(void)
+{
+    (uint32_t)${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
+}
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 

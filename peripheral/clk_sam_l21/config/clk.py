@@ -1120,6 +1120,11 @@ indexSymbolMap = defaultdict(list)
 
 
 #------------------------- ATDF Read -------------------------------------
+calibRowAddr = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"OTP5\"]").getAttribute("start")
+swCalibRowAddr = coreComponent.createStringSymbol("SW_CALIB_ROW_ADDR", None)
+swCalibRowAddr.setDefaultValue(calibRowAddr)
+swCalibRowAddr.setVisible(False)
+
 packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
 channel = []
 availablePins = []        # array to save available pins

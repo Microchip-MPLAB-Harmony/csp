@@ -38,6 +38,9 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 #include "plib_${OCMP_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#--Implementation-->
 // *****************************************************************************
@@ -53,7 +56,7 @@
 
 <#if OCMP_INTERRUPT_ENABLE == true>
 
-OCMP_OBJECT ${OCMP_INSTANCE_NAME?lower_case}Obj;
+volatile static OCMP_OBJECT ${OCMP_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${OCMP_INSTANCE_NAME}_Initialize (void)
@@ -75,7 +78,7 @@ void ${OCMP_INSTANCE_NAME}_Initialize (void)
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;  
-    ${OCMP_CFG_REG_NAME} |= ${OCMP_CFGCON_OCACLK_MASK};
+    ${OCMP_CFG_REG_NAME} |= ${OCMP_CFGCON_OCACLK_MASK}U;
     /* Lock system since done with configuration */
     SYSKEY = 0x33333333;    
   </#if>
@@ -168,13 +171,15 @@ void ${OCMP_INSTANCE_NAME}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t co
     ${OCMP_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
-void OUTPUT_COMPARE_${INDEX}_InterruptHandler (void)
+void __attribute__((used)) OUTPUT_COMPARE_${INDEX}_InterruptHandler (void)
 {
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context = ${OCMP_INSTANCE_NAME?lower_case}Obj.context;      
     ${IFS_REG}CLR = _${IFS_REG}_OC${INDEX}IF_MASK;    //Clear IRQ flag
 
     if( (${OCMP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
-        ${OCMP_INSTANCE_NAME?lower_case}Obj.callback(${OCMP_INSTANCE_NAME?lower_case}Obj.context);
+        ${OCMP_INSTANCE_NAME?lower_case}Obj.callback(context);
     }
 }
 

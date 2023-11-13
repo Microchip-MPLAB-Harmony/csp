@@ -126,6 +126,10 @@ void ${CCT_INSTANCE_NAME}_CompareChannel${n}OutputSet( void );
 
 void ${CCT_INSTANCE_NAME}_CompareChannel${n}OutputClear( void );
 
+void ${CCT_INSTANCE_NAME}_CompareChannel${n}InterruptEnable( void );
+
+void ${CCT_INSTANCE_NAME}_CompareChannel${n}InterruptDisable( void );
+
 </#if>
 </#list>
 

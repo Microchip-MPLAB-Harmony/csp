@@ -169,18 +169,18 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwdt_04686/config/dwdt.py
 
 # Load Clock
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32cx_mt/config/clk.py")
-coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_UI_MANAGER_ID_PIC32CX_MT", {"plugin_name": "Clock Manager", "main_html_path": "../csp/plugins/configurators/clock-configurators/pic32cxmt_clock_configurator/build/index.html"})
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_UI_MANAGER_ID_PIC32CX_MT", {"plugin_name": "Clock Manager", "main_html_path": "csp/plugins/configurators/clock-configurators/pic32cxmt_clock_configurator/build/index.html"})
 
 #Load RSTC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/rstc_04678/config/rstc.py")
 
 # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
 
 # #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
-coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "MPU_CONFIGURATOR", {"plugin_name": "MPU Configurator", "main_html_path": "csp/plugins/configurators/mpu-configurators/mpu-configurator/build/index.html"})
 
 # #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
@@ -203,9 +203,6 @@ components = []
 for sefc_instance in range (0, len(modules)):
     components.append(str(modules[sefc_instance].getAttribute("name")).lower())
 Database.activateComponents(components)
-
-#Load ADC plugin
-coreComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar")
 
 compilerSelected = compilerChoice.getSelectedKey().lower()
 

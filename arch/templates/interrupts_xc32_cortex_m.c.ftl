@@ -17,7 +17,7 @@ extern const H3DeviceVectors exception_table;
 extern void Dummy_Handler(void);
 
 /* Brief default interrupt handler for unused IRQs.*/
-void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call, noreturn))Dummy_Handler(void)
+void __attribute__((optimize("-O1"), long_call, noreturn, used))Dummy_Handler(void)
 {
 <#if CoreArchitecture != "CORTEX-M0PLUS">
 #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
@@ -75,7 +75,7 @@ ${LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS}
 ${LIST_SYSTEM_INTERRUPT_MULTIPLE_HANDLERS}
 
 <#if COMPILER_CHOICE == "XC32">
-__attribute__ ((section(".vectors")))
+__attribute__ ((section(".vectors"), used))
 <#elseif COMPILER_CHOICE == "IAR">
 #pragma location = ".intvec"
 <#elseif COMPILER_CHOICE == "KEIL">

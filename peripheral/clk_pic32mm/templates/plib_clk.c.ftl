@@ -85,9 +85,9 @@
 void CLK_Initialize( void )
 {
     /* unlock system for clock configuration */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
 <#if SYS_CLK_FRCDIV != "0">
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
@@ -95,7 +95,7 @@ void CLK_Initialize( void )
 </#if>
 <#if CONFIG_FNOSC?contains("PLL")>
     /* Even though SPLL is selected in FNOSC, Harmony generates #pragma code as FRCDIV, not as SPLL, in "initilization.c".
-    * Switching to SPLL is done here after appropriate setting of SPLLCON register. 
+    * Switching to SPLL is done here after appropriate setting of SPLLCON register.
     * This is done to ensure we don't end-up changing PLL setting when it is ON. */
 
     /* Configure SPLL */
@@ -103,10 +103,16 @@ void CLK_Initialize( void )
     ${SPLLCON_REG} = 0x${SPLLCON_REG_VALUE};
 
     /* Now switch to the PLL source */
-    OSCCON = OSCCON | 0x00000101;    //NOSC = SPLL, initiate clock switch (OSWEN = 1)
-    
+    OSCCON = OSCCON | 0x00000101U;    //NOSC = SPLL, initiate clock switch (OSWEN = 1)
+
     /* Wait for PLL to be ready and clock switching operation to complete */
-    while(!CLKSTATbits.SPLLRDY || !CLKSTATbits.SPDIVRDY || OSCCONbits.OSWEN);
+    uint32_t status = CLKSTATbits.SPLLRDY;
+    status |= CLKSTATbits.SPDIVRDY;
+    while((OSCCONbits.OSWEN != 0U) || (status == 0U))
+    {
+        status = CLKSTATbits.SPLLRDY;
+        status |= CLKSTATbits.SPDIVRDY;
+    }
 <#else>
     /* Configure SPLL */
     /* ${PLLODIV_VAL}, ${PLLMULT_VAL}, PLLSRC= ${CONFIG_PLLSRC} */
@@ -159,10 +165,10 @@ void CLK_Initialize( void )
 <#list 1..PMD_COUNT + 1 as i>
     <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
     <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
-        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]};
+        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]}U;
     </#if>
 </#list>
 
     /* Lock system since done with clock configuration */
-    SYSKEY = 0x33333333;
+    SYSKEY = 0x33333333U;
 }

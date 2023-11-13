@@ -159,7 +159,7 @@
         </#if>
     </#if>
 </#if>
-static AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
+volatile static AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -197,10 +197,8 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   | AC_COMPCTRL_SPEED(${.vars[AC_COMPCTRL_SPEED]}U)
                                   | AC_COMPCTRL_FLEN_${.vars[AC_COMPCTRL_FLEN]}
                                   ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')};</@compress>
-    <#if AC_COMPCTRL_SINGLE_MODE?has_content>
-        <#if (.vars[AC_COMPCTRL_SINGLE_MODE] == false)>
+    <#if (.vars[AC_COMPCTRL_HYSTEN]) && (!.vars[AC_COMPCTRL_SINGLE_MODE])>
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYST_Msk;
-        </#if>
     </#if>
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;
                 <#if .vars[AC_SCALERn]?has_content >
@@ -211,11 +209,12 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
         </#if>
     </#list>
 <#if AC_WINCTRL_VAL?has_content>
+
+    ${AC_INSTANCE_NAME}_REGS->AC_WINCTRL = ${AC_WINCTRL_VAL};
     while((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & AC_STATUSB_SYNCBUSY_Msk) == AC_STATUSB_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization */
-    }
-    ${AC_INSTANCE_NAME}_REGS->AC_WINCTRL = ${AC_WINCTRL_VAL};
+    }    
 </#if>
 <#if AC_EVCTRL_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_EVCTRL = ${AC_EVCTRL_VAL};
@@ -226,11 +225,12 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
 <#if AC_CTRLA_VAL?has_content>
     ${AC_INSTANCE_NAME}_REGS->AC_CTRLA = ${AC_CTRLA_VAL};
 </#if>
+
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA |= AC_CTRLA_ENABLE_Msk;
     while((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & AC_STATUSB_SYNCBUSY_Msk) == AC_STATUSB_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization */
-    }
-    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA |= AC_CTRLA_ENABLE_Msk;
+    }    
 }
 
 void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
@@ -246,11 +246,6 @@ void ${AC_INSTANCE_NAME}_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scala
 
 void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
 {
-    /* Check Synchronization */
-    while((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & AC_STATUSB_SYNCBUSY_Msk) == AC_STATUSB_SYNCBUSY_Msk)
-    {
-        /* Wait for Synchronization */
-    }
     /* Disable comparator before swapping */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
     /* Check Synchronization to ensure that the comparator is disabled */
@@ -259,8 +254,12 @@ void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
         /* Wait for Synchronization */
     }
     /* Swap inputs of the given comparator */
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] = AC_COMPCTRL_SWAP_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_SWAP_Msk;
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
+    while((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & AC_STATUSB_SYNCBUSY_Msk) == AC_STATUSB_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }    
 }
 
 void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT positiveInput, AC_NEGINPUT negativeInput)
@@ -310,17 +309,22 @@ void ${AC_INSTANCE_NAME}_CallbackRegister (AC_CALLBACK callback, uintptr_t conte
 }
 <#if AC_INTENSET_VAL != "">
 
-void ${AC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${AC_INSTANCE_NAME}_InterruptHandler( void )
 {
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context;
+    uint8_t status;
+    context = ${AC_INSTANCE_NAME?lower_case}Obj.context;      
     /* Copy the status to use inside the callback */
-    acObj.int_flags = ${AC_INSTANCE_NAME}_REGS->AC_STATUSA;
+    ${AC_INSTANCE_NAME?lower_case}Obj.int_flags = ${AC_INSTANCE_NAME}_REGS->AC_STATUSA;
+    status = ${AC_INSTANCE_NAME?lower_case}Obj.int_flags;
     /* Clear the interrupt flags*/
     ${AC_INSTANCE_NAME}_REGS->AC_INTFLAG = AC_INTFLAG_Msk;
 
     /* Callback user function */
     if(${AC_INSTANCE_NAME?lower_case}Obj.callback != NULL)
     {
-        ${AC_INSTANCE_NAME?lower_case}Obj.callback(${AC_INSTANCE_NAME?lower_case}Obj.int_flags, ${AC_INSTANCE_NAME?lower_case}Obj.context);
+        ${AC_INSTANCE_NAME?lower_case}Obj.callback(status, context);
     }
 }
 </#if>

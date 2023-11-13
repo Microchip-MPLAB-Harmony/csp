@@ -362,7 +362,7 @@ typedef struct
     uintptr_t context;
 } SUPC_${SUPC_BOD_NAME}_CALLBACK_OBJ;
 
-static SUPC_${SUPC_BOD_NAME}_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
+volatile static SUPC_${SUPC_BOD_NAME}_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 <#if SUPC_INTERRUPT_ENABLE>
@@ -372,15 +372,16 @@ void ${SUPC_INSTANCE_NAME}_${SUPC_BOD_NAME}CallbackRegister( SUPC_${SUPC_BOD_NAM
     ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context = context;
 }
 
-void ${SUPC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${SUPC_INSTANCE_NAME}_InterruptHandler( void )
 {
+    uintptr_t context = ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context; 
     if ((${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG & SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk) == SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk)
     {
         ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk;
 
         if (${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
         {
-            ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback(${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context);
+            ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback(context);
         }
     }
 }

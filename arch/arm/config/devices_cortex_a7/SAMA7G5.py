@@ -102,7 +102,7 @@ deviceFamily.setVisible(False)
 
 cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-A7 Configuration")
-cortexMenu.setDescription("Configuration for Cortex A5")
+cortexMenu.setDescription("Configuration for Cortex A7")
 
 freeRTOSVectors = coreComponent.createBooleanSymbol("USE_FREERTOS_VECTORS", None)
 freeRTOSVectors.setVisible(False)
@@ -159,6 +159,21 @@ ddr_start = int(ddr_node.getAttribute("start"), 0)
 ddr_size = int(ddr_node.getAttribute("size"), 0)
 #Set 16MB as non-cacheable region and rest as cacheable region
 non_cacheable_size = 16 * pow(2, 20)
+
+if processor.endswith("1G"):
+    # 1 Gbit memory
+    ddr_size = (1 * pow(2,30)) / 8
+elif processor.endswith("2G"):
+    # 2 Gbit memory
+    ddr_size = (2 * pow(2,30)) / 8
+elif processor.endswith("4G"):
+    # 4 Gbit memory
+    ddr_size = (4 * pow(2,30)) / 8
+    #increase the non cacheable region to 32 MB
+    non_cacheable_size = 32 * pow(2, 20)
+else:
+    #Non SiP variants, use entire DRAM region
+    ddr_size = int(ddr_node.getAttribute("size"), 0)
 
 #DRAM coherent region
 dram_coherent_region = coreComponent.createIntegerSymbol("DRAM_COHERENT_REGION_SIZE", cortexMenu)
@@ -229,7 +244,7 @@ coreComponent.addPlugin("../peripheral/clk_sam_a7g5/plugin/clk_sam_a7g5.jar")
 
 # load GIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gic/config/gic.py")
-coreComponent.addPlugin("../peripheral/gic/plugin/gic.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_GIC_MANAGER", {"plugin_name": "Interrupt Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/gic_interrupt_configuration/build/index.html"})
 
 #load MMU with default 1:1 mapping so we can use cache
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
@@ -246,11 +261,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/generic_timer/config/gene
 
 # load dma and its manager
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
-coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
-
-# load ADC manager information
-coreComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar") 
-
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_SAMA7G5",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-1/build/index.html",
+                            "symbol_config": "csp/peripheral/xdmac_11161/plugin/symbol-config.json"
+                        }
+                        )
 
 compiler_choice = deviceFamily.getComponent().getSymbolByID("COMPILER_CHOICE")
 if compiler_choice.getSelectedKey() == "XC32":

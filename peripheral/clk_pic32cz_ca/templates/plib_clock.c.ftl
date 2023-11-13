@@ -41,9 +41,9 @@
 #include "plib_clock.h"
 #include "device.h"
 
+<#if CONFIG_CLOCK_XOSC_ENABLE == true>
 static void OSCCTRL_Initialize(void)
 {
-<#assign enable = "CONFIG_CLOCK_XOSC_ENABLE" >
 <#assign agcEnable = "CONFIG_CLOCK_XOSC_AGC_ENABLE" >
 <#assign cfdPrescalar = "CONFIG_CLOCK_XOSC_CFDPRESC" >
 <#assign startup = "CONFIG_CLOCK_XOSC_STARTUP" >
@@ -52,7 +52,6 @@ static void OSCCTRL_Initialize(void)
 <#assign cfdEnable = "CONFIG_CLOCK_XOSC_CFDEN" >
 <#assign UsbHsDiv = "CONFIG_CLOCK_XOSC_USBHSDIV" >
 <#assign onDemand = "CONFIG_CLOCK_XOSC_ONDEMAND" >
-<#if .vars[enable] == true>
     /****************** XOSC Initialization ********************************/
 
     /* Configure External Oscillator */
@@ -68,8 +67,8 @@ static void OSCCTRL_Initialize(void)
         /* Waiting for the XOSC Ready state */
     }
     </#if>
-</#if>
 }
+</#if>
 
 static void OSC32KCTRL_Initialize(void)
 {
@@ -104,9 +103,9 @@ static void PLL0_Initialize(void)
     /* Enable Additional Voltage Regulator */
     SUPC_REGS->SUPC_VREGCTRL |= SUPC_VREGCTRL_AVREGEN_Msk;
     while ((SUPC_REGS->SUPC_STATUS & SUPC_STATUS_ADDVREGRDY_Msk) != SUPC_STATUS_ADDVREGRDY_Msk)
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
 
     <#if CONFIG_CLOCK_PLL0_REF_CLOCK == "0">
     GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_1_INDEX}] = GCLK_PCHCTRL_GEN(${GCLK_ID_1_GENSEL}U)${GCLK_ID_1_WRITELOCK?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')} | GCLK_PCHCTRL_CHEN_Msk;
@@ -165,9 +164,9 @@ static void PLL1_Initialize(void)
     /* Enable Additional Voltage Regulator */
     SUPC_REGS->SUPC_VREGCTRL |= SUPC_VREGCTRL_AVREGEN_Msk;
     while ((SUPC_REGS->SUPC_STATUS & SUPC_STATUS_ADDVREGRDY_Msk) != SUPC_STATUS_ADDVREGRDY_Msk)
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
 
     <#if CONFIG_CLOCK_PLL1_REF_CLOCK == "0">
     GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_1_INDEX}] = GCLK_PCHCTRL_GEN(${GCLK_ID_1_GENSEL})${GCLK_ID_1_WRITELOCK?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')} | GCLK_PCHCTRL_CHEN_Msk;
@@ -219,7 +218,8 @@ static void PLL1_Initialize(void)
     </#if>
 }
 </#if>
-
+<#assign GEN_CODE_DFLL = CONFIG_CLOCK_DFLL_ENABLE && (CONFIG_CLOCK_DFLL_OPMODE == "1" || CONFIG_CLOCK_DFLL_ONDEMAND == "0")>
+<#if GEN_CODE_DFLL>
 static void DFLL_Initialize(void)
 {
 <#if CONFIG_CLOCK_DFLL_ENABLE == true >
@@ -254,20 +254,18 @@ static void DFLL_Initialize(void)
         /* Waiting for the DFLLCTRLB synchronization */
     }
 
-    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk
-    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "1")?then("| OSCCTRL_DFLLCTRLA_ONDEMAND_Msk ", "")}
-    <#lt>                               ;</@compress>
+    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk;</@compress>
 
     while((OSCCTRL_REGS->OSCCTRL_SYNCBUSY & OSCCTRL_SYNCBUSY_DFLLENABLE_Msk) == OSCCTRL_SYNCBUSY_DFLLENABLE_Msk )
     {
         /* Waiting for the DFLL48M enable synchronization */
     }
-    <#if CONFIG_CLOCK_DFLL_ONDEMAND != "1">
-
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
         /* Waiting for the DFLL Ready state */
     }
+    <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
+    OSCCTRL_REGS->OSCCTRL_DFLLCTRLA |= OSCCTRL_DFLLCTRLA_ONDEMAND_Msk;
     </#if>
 <#else>
     <#if (CONFIG_CLOCK_DFLL_ONDEMAND == "0")>
@@ -278,7 +276,7 @@ static void DFLL_Initialize(void)
 </#if>
 </#if>
 }
-
+</#if>
 
 <#list 0..15 as i>
     <#assign GCLK_INST_NUM = "GCLK_INST_NUM" + i>
@@ -334,15 +332,22 @@ static void GCLK${i}_Initialize(void)
             </#if>
         </#if>
 </#list>
+
 void CLOCK_Initialize (void)
 {
+<#if CONFIG_CLOCK_XOSC_ENABLE == true>
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
+</#if>
 
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
 
-${CLK_INIT_LIST}
+<#list CLK_INIT_LIST?split("\n") as list_entry>
+<#if !list_entry?contains("DFLL") || GEN_CODE_DFLL>
+${list_entry}
+</#if>
+</#list>
 
 
 <#list 3..GCLK_MAX_ID as i>

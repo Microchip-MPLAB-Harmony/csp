@@ -35,6 +35,9 @@ global numTriggers
 global InterruptVectorSecurity
 global ADCfilesArray
 
+global defaultCore
+defaultCore = 0
+
 nSARCore = 0
 earlyInterruptPresent = False
 numTriggers = 0
@@ -782,9 +785,20 @@ def readATDF(adcInstanceName, adcComponent):
     adcMaxChannels.setVisible(False)
     adcMaxChannels.setDependencies(updateADCMaxChannels, adcMaxChannelsDepList)
 
+    # Read calibration base address
+    calibBaseAddrNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"FUSES\"]/instance@[name=\"FUSES\"]/register-group@[name=\"FUSES_CALOTP\"]")
+
+    calibBaseAddr = int(calibBaseAddrNode.getAttribute("offset"), 16)
+    # Add offset to the base address
+    calibBaseAddr = calibBaseAddr + 0x184
+
+    adcCalibAddr = adcComponent.createStringSymbol("ADC_CALIB_ADDR", None)
+    adcCalibAddr.setDefaultValue(hex(calibBaseAddr))
+    adcCalibAddr.setVisible(False)
+
 def globalConfig(adcComponent):
     global nSARCore
-       
+
     # Global interrupt config depends on ADC Core n symbols. Assume these symbols will be created and them to the dependency list.
     for n in range(0, nSARCore):
         adcGlobalFIFOIntDepList.append("ADC_CORE_" + str(n) + "_ENABLE")
@@ -857,7 +871,7 @@ def globalConfig(adcComponent):
     ADC_CTRLD_REG_DepList.append("ADC_GLOBAL_CTRLD_VREFSEL")
 
     # CTRLC.COREINTERLEAVED
-    
+
     if (ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CTRLC__COREINTERLEAVED\"]") != None):
         adc_core_interleaved_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CTRLC__COREINTERLEAVED\"]").getChildren()
         CTRLC_COREINTERLEAVED_Config = adcComponent.createKeyValueSetSymbol("ADC_GLOBAL_CTRLC_COREINTERLEAVED", None)
@@ -873,7 +887,7 @@ def globalConfig(adcComponent):
         CTRLC_COREINTERLEAVED_Config.setOutputMode("Key")
         CTRLC_COREINTERLEAVED_Config.setDisplayMode("Description")
         ADC_CTRLC_REG_DepList.append("ADC_GLOBAL_CTRLC_COREINTERLEAVED")
-        
+
     # CTRLC.CNT
     CTRLC_CNT_Config = adcComponent.createIntegerSymbol("ADC_GLOBAL_CTRLC_CNT", None)
     CTRLC_CNT_Config.setLabel("Delay Counter (TQ based) for STRIG Sync Trigger")
@@ -1580,19 +1594,19 @@ def commonRegisterConfig(adcComponent):
 
     # ADC_CTRLD__ANLEN
     ADC_CTRLD__ANLEN_BITS_Config = adcComponent.createHexSymbol("ADC_CTRLD__ANLEN", None)
-    ADC_CTRLD__ANLEN_BITS_Config.setDefaultValue(0x00000000)
+    ADC_CTRLD__ANLEN_BITS_Config.setDefaultValue(1 << (20 + defaultCore))     # Core 0 is enabled by default
     ADC_CTRLD__ANLEN_BITS_Config.setVisible(False)
     ADC_CTRLD__ANLEN_BITS_Config.setDependencies(ADC_CTRLD__ANLEN_Update, ADC_CTRLD__ANLEN_DepList)
 
     # ADC_CTRLD__CHNEN
     ADC_CTRLD__CHNEN_BITS_Config = adcComponent.createHexSymbol("ADC_CTRLD__CHNEN", None)
-    ADC_CTRLD__CHNEN_BITS_Config.setDefaultValue(0x00000000)
+    ADC_CTRLD__CHNEN_BITS_Config.setDefaultValue(1 << (16 + defaultCore))     # Core 0 is enabled by default
     ADC_CTRLD__CHNEN_BITS_Config.setVisible(False)
     ADC_CTRLD__CHNEN_BITS_Config.setDependencies(ADC_CTRLD__ANLEN_Update, ADC_CTRLD__ANLEN_DepList)
 
     # ADC_CTLINTFLAG__CRDY
     ADC_CTLINTFLAG__CRDY_BITS_Config = adcComponent.createHexSymbol("ADC_CTLINTFLAG__CRDY", None)
-    ADC_CTLINTFLAG__CRDY_BITS_Config.setDefaultValue(0x00000000)
+    ADC_CTLINTFLAG__CRDY_BITS_Config.setDefaultValue(1 << defaultCore)        # Core 0 is enabled by default
     ADC_CTLINTFLAG__CRDY_BITS_Config.setVisible(False)
     ADC_CTLINTFLAG__CRDY_BITS_Config.setDependencies(ADC_CTRLD__ANLEN_Update, ADC_CTRLD__ANLEN_DepList)
 
@@ -1630,7 +1644,7 @@ def adcInterruptHandlerConfig(adcComponent):
             for vector in InterruptVectorSecurity:
                 Database.setSymbolValue("core", vector, adcIsNonSecure)
         else:
-            Database.setSymbolValue("core", InterruptVectorSecurity, adcIsNonSecure)       
+            Database.setSymbolValue("core", InterruptVectorSecurity, adcIsNonSecure)
 
 def adcEvsysConfig(adcComponent):
     global nSARCore
@@ -1743,7 +1757,7 @@ def instantiateComponent(adcComponent):
     global nSARCore
     global nSARChannel
     global adcInstanceName
-    
+
     adcInstanceName = adcComponent.createStringSymbol("ADC_INSTANCE_NAME", None)
     adcInstanceName.setVisible(False)
     adcInstanceName.setDefaultValue(adcComponent.getID().upper())
@@ -1774,6 +1788,6 @@ def instantiateComponent(adcComponent):
     adcEvsysConfig(adcComponent)
 
     # Enable ADC Core 0 by default
-    enableCoreNSymbols(adcInstanceName.getComponent(), 0, True)
+    enableCoreNSymbols(adcInstanceName.getComponent(), defaultCore, True)
 
     codeGenerationConfig(adcComponent, Module)

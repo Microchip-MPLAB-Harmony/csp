@@ -86,11 +86,11 @@
     <#assign portNumCbList = portNumCbList + [TOTAL_NUM_OF_INT_USED] >
 
     <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>static PIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
+    <#lt>volatile static PIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <@compress single_line=true>
-        <#lt>static uint8_t portNumCb[${PORT_CHANNEL_TOTAL} + 1] = {
+        <#lt>volatile static uint8_t portNumCb[${PORT_CHANNEL_TOTAL} + 1] = {
                                                                 <#list portNumCbList as i>
                                                                     ${i},
                                                                 </#list>
@@ -506,19 +506,24 @@ bool PIO_PinInterruptCallbackRegister(
   Remarks:
     User should not call this function.
 */
-void PIO${.vars[channel]}_InterruptHandler(void)
+void __attribute__((used)) PIO${.vars[channel]}_InterruptHandler(void)
 {
-    uint32_t status = 0U;
+    uint32_t status;
     uint8_t j;
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    PIO_PIN pin;
+    uintptr_t context;
 
-    status  = PIO${.vars[channel]}_REGS->PIO_ISR;
+    status = PIO${.vars[channel]}_REGS->PIO_ISR;
     status &= PIO${.vars[channel]}_REGS->PIO_IMR;
 
     for( j = ${portNumCbList[i]}U; j < ${portNumCbList[i+1]}U; j++ )
     {
-        if(((status & (1UL << (portPinCbObj[j].pin & 0x1FU))) != 0U) && (portPinCbObj[j].callback != NULL))
+        pin = portPinCbObj[j].pin;
+        context = portPinCbObj[j].context;
+        if((portPinCbObj[j].callback != NULL) && ((status & (1UL << (pin & 0x1FU))) != 0U))
         {
-            portPinCbObj[j].callback ( portPinCbObj[j].pin, portPinCbObj[j].context );
+            portPinCbObj[j].callback ( portPinCbObj[j].pin, context);
         }
     }
 }

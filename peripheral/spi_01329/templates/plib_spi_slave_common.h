@@ -68,15 +68,14 @@
     None
 */
 
-typedef enum
-{
-    /* Error status when no error has occurred */
-    SPI_SLAVE_ERROR_NONE,
 
-    /* Buffer overflow error has occured */
-    SPI_SLAVE_ERROR_BUFOVF = 0x00000040,
+/* Error status when no error has occurred */
+#define    SPI_SLAVE_ERROR_NONE     (0U)
 
-} SPI_SLAVE_ERROR;
+/* Buffer overflow error has occured */
+#define    SPI_SLAVE_ERROR_BUFOVF  (0x00000040U)
+
+typedef uint32_t SPI_SLAVE_ERROR;
 
 // *****************************************************************************
 /* SPI Slave Mode CallBack Function Pointer
@@ -110,7 +109,7 @@ typedef enum
         {
             if( SPI1_ErrorGet() == SPI_SLAVE_ERROR_NONE )
             {
-                //Exchange was completed without error
+                
             }
         }
     </code>
@@ -154,16 +153,16 @@ typedef struct
     uint32_t                        nWrBytes;
 
     /* Index to the number of bytes already written out from the transmit buffer */
-    volatile uint32_t               wrOutIndex;
+    uint32_t                        wrOutIndex;
 
     /* Index into the receive buffer where the next received byte will be copied */
-    volatile uint32_t               rdInIndex;
+    uint32_t                        rdInIndex;
 
     /* Flag to indicate that the RX interrupt is active (being serviced) */
-    volatile bool                   rxInterruptActive;
+    bool                            rxInterruptActive;
 
     /* Flag to indicate that CS interrupt has delegated callback responsibility to the SPI receive interrupt */
-    volatile bool                   csInterruptPending;
+    bool                            csInterruptPending;
 
 } SPI_SLAVE_OBJECT;
 

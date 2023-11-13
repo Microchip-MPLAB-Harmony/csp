@@ -91,7 +91,7 @@
 #define QMSPI_MAX_DESCR              (${QMSPI_NUM_OF_DESC}U)
 #define SWAP32(x)                    ((((x) & 0xffU) << 24U) | (((x) & 0xff00U) << 8U) | (((x) & 0xff0000U) >> 8U) | (((x) & 0xff000000U) >> 24U))
 <#if QMSPI_INTERRUPT_MODE == true>
-static QMSPI_OBJECT ${QMSPI_INSTANCE_NAME?lower_case}Obj;
+volatile static QMSPI_OBJECT ${QMSPI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 static const uint8_t qmspiIoMode[7U][3U] = {{0U, 0U ,0U}, /* IO mode for Command, Address, Data */
                                             {0U, 0U, 1U},
@@ -663,7 +663,7 @@ void ${QMSPI_INSTANCE_NAME}_CallbackRegister(QMSPI_CALLBACK callback, uintptr_t 
     ${QMSPI_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
-void ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     <#if QMSPI_INTERRUPT_TYPE == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_QMSPI${QMSPI_INSTANCE_NUM}))
@@ -683,7 +683,8 @@ void ${QMSPI_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
             ${QMSPI_INSTANCE_NAME}_REGS->QMSPI_IEN &= ~QMSPI_IEN_TRANS_COMPL_EN_Msk;
             if(${QMSPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
             {
-                ${QMSPI_INSTANCE_NAME?lower_case}Obj.callback(${QMSPI_INSTANCE_NAME?lower_case}Obj.context);
+                uintptr_t context = ${QMSPI_INSTANCE_NAME?lower_case}Obj.context;
+                ${QMSPI_INSTANCE_NAME?lower_case}Obj.callback(context);
             }
         }
     }

@@ -95,7 +95,7 @@
 
   Example:
     <code>
-    //Example 1: Do not alter the configuration bit settings
+    Example 1: Do not alter the configuration bit settings
     CLK_Initialize ( );
 
     </code>

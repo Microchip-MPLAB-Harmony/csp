@@ -316,6 +316,7 @@ prioShift = []
 subprioShift = []
 
 vectorIndexList = []
+vectorIndexListGUI = []
 irqIndexList = []
 
 for vectorDict in evicVectorDataStructure:
@@ -398,6 +399,8 @@ for vectorDict in evicVectorDataStructure:
                 evicVectorPeriHandlerLock.setLabel("Vector Peripheral Handler Lock")
                 evicVectorPeriHandlerLock.setVisible(False)
 
+                vectorIndexListGUI.append(str(vIndex) + "_" + str(i))
+
                 evicVectorEnable = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_" + str(i) + "_ENABLE", evicMenu)
                 evicVectorEnable.setLabel("Enable " + vecIRQDescription + " Interrupt")
                 evicVectorEnable.setDependencies(updateEVICVectorParametersValue, [vecIRQName + "_INTERRUPT_ENABLE"])
@@ -416,6 +419,12 @@ for vectorDict in evicVectorDataStructure:
                 evicVectorNumber.setLabel("Vector Number")
                 evicVectorNumber.setDefaultValue(vIndex)
                 evicVectorNumber.setVisible(False)
+
+                # Following symbol is used in EVIC Interrrupt UI to populate the vector caption column
+                evicVectorCaptionUI = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_" + str(i)+ "_CAPTION_UI", evicVectorEnable)
+                evicVectorCaptionUI.setLabel("Vector Caption")
+                evicVectorCaptionUI.setDefaultValue(vDescription)
+                evicVectorCaptionUI.setVisible(False)
 
                 evicVectorPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_" + str(i) + "_PRIORITY", evicVectorEnable, evicPriorityGroup)
                 evicVectorPriority.setLabel("Priority")
@@ -459,6 +468,8 @@ for vectorDict in evicVectorDataStructure:
             evicVectorPeriHandlerLock.setLabel("Vector Peripheral Handler Lock")
             evicVectorPeriHandlerLock.setVisible(False)
 
+            vectorIndexListGUI.append(str(vIndex))
+
             evicVectorEnable = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE", evicMenu)
             evicVectorEnable.setLabel("Enable " + vDescription + " Interrupt")
             evicVectorEnable.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_ENABLE"])
@@ -477,6 +488,12 @@ for vectorDict in evicVectorDataStructure:
             evicVectorNumber.setLabel("Vector Number")
             evicVectorNumber.setDefaultValue(vIndex)
             evicVectorNumber.setVisible(False)
+
+            # Following symbol is used in EVIC Interrrupt UI to populate the vector caption column
+            evicVectorCaptionUI = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_CAPTION_UI", evicVectorEnable)
+            evicVectorCaptionUI.setLabel("Vector Caption")
+            evicVectorCaptionUI.setDefaultValue(vDescription)
+            evicVectorCaptionUI.setVisible(False)
 
             if "EXTERNAL_" == vName[:-1]:
                 evicExtIntPolarity = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_EXT_INT_EDGE_POLARITY", evicVectorEnable, ["Rising Edge", "Falling Edge"])
@@ -592,6 +609,9 @@ for vectorDict in evicVectorDataStructure:
             evicVectorSubPriorityGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
 
 ###################################################################################################
+# Below symbol is only used by EVIC Interrupt UI to know the EVIC Vector number
+evicGUIVectorID = coreComponent.createComboSymbol("EVIC_GUI_COLUMN_VECTOR_ID", evicMenu, vectorIndexListGUI)
+evicGUIVectorID.setVisible(False)
 ####################################### Driver Symbols ############################################
 ###################################################################################################
 
@@ -684,8 +704,8 @@ evicSystemInitStartFile.setMarkup(True)
 
 evicSystemIntWeakHandleFile = coreComponent.createFileSymbol("EVIC_INT_HANDLER", None)
 evicSystemIntWeakHandleFile.setType("STRING")
-evicSystemIntWeakHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS")
-evicSystemIntWeakHandleFile.setSourcePath("../peripheral/evic_01166/templates/system/interrupts_weak_handlers.h.ftl")
+evicSystemIntWeakHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_HANDLER_DECLS")
+evicSystemIntWeakHandleFile.setSourcePath("../peripheral/evic_01166/templates/system/interrupts_handlers_decls.h.ftl")
 evicSystemIntWeakHandleFile.setMarkup(True)
 
 evicSystemIntTableFile = coreComponent.createFileSymbol("EVIC_INT_TABLE", None)

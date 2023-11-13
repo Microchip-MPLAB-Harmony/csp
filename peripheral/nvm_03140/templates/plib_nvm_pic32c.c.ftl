@@ -82,6 +82,15 @@ typedef enum
     NVM_UNLOCK_KEY2 = 0x556699AA
 } NVM_UNLOCK_KEYS;
 
+<#if INTERRUPT_ENABLE == true>
+typedef struct
+{
+    NVM_CALLBACK CallbackFunc;
+    uintptr_t Context;
+}nvmCallbackObjType;
+
+volatile static nvmCallbackObjType ${NVM_INSTANCE_NAME?lower_case}CallbackObj;
+</#if>
 /* ************************************************************************** */
 /* ************************************************************************** */
 // Section: Local Functions                                                   */
@@ -95,22 +104,19 @@ typedef enum
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>static NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
-
-    <#lt>static uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
-
     <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister( NVM_CALLBACK callback, uintptr_t context )
     <#lt>{
     <#lt>    /* Register callback function */
-    <#lt>    ${NVM_INSTANCE_NAME?lower_case}CallbackFunc    = callback;
-    <#lt>    ${NVM_INSTANCE_NAME?lower_case}Context         = context;
+    <#lt>    ${NVM_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc    = callback;
+    <#lt>    ${NVM_INSTANCE_NAME?lower_case}CallbackObj.Context         = context;
     <#lt>}
 
-    <#lt>void ${NVM_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${NVM_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
-    <#lt>    if(${NVM_INSTANCE_NAME?lower_case}CallbackFunc != NULL)
+    <#lt>    if(${NVM_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc != NULL)
     <#lt>    {
-    <#lt>        ${NVM_INSTANCE_NAME?lower_case}CallbackFunc(${NVM_INSTANCE_NAME?lower_case}Context);
+    <#lt>        uintptr_t context = ${NVM_INSTANCE_NAME?lower_case}CallbackObj.Context;
+    <#lt>        ${NVM_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc(context);
     <#lt>    }
     <#lt>}
 </#if>
@@ -275,7 +281,7 @@ void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectUnlock( uint32_t bootFlashPagesMs
     ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
 
     // Disable erase and write protection on the specified pages in bootFlashPagesMsk
-    NVM_REGS->NVM_NVMLBWPCLR = (bootFlashPagesMsk & (NVM_NVMLBWP_Msk & ~(0x80000000)));
+    NVM_REGS->NVM_NVMLBWPCLR = (bootFlashPagesMsk & (NVM_NVMLBWP_Msk & ~(0x80000000U)));
 
     __set_PRIMASK( old_primask );
 }
@@ -288,7 +294,7 @@ void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectLock( uint32_t bootFlashPagesMsk 
     ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
 
     // Enable erase and write protection on the specified pages in bootFlashPagesMsk
-    NVM_REGS->NVM_NVMLBWPSET = (bootFlashPagesMsk & (NVM_NVMLBWP_Msk & ~(0x80000000)));
+    NVM_REGS->NVM_NVMLBWPSET = (bootFlashPagesMsk & (NVM_NVMLBWP_Msk & ~(0x80000000U)));
 
     __set_PRIMASK( old_primask );
 }

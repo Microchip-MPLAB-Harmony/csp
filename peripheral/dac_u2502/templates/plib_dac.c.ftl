@@ -46,20 +46,60 @@
 
 <#assign DAC_OUT_MODE_AND_REF_SEL = "DAC_CTRLB_REFSEL (" + DAC_REFSEL + "U)" + (DAC_OPERATING_MODE == "DIFFERENTIAL")?then(' | DAC_CTRLB_DIFF_Msk ','')>
 
-<#assign DAC_CH_0_CTRL = "DAC_DACCTRL_ENABLE_Msk |" + " DAC_DACCTRL_CCTRL (" + DAC_CHANNEL_0_SPEED + "U) " + (DAC_DATA_ADJUSTMENT0 == "LEFT-ADJUSTED")?then('| DAC_DACCTRL_LEFTADJ_Msk','') +
-                         "| DAC_DACCTRL_OSR (" + DAC_CHANNEL_0_OVERSAMPLE + "U) " + "| DAC_DACCTRL_REFRESH (" + DAC_CHANNEL_0_REFRESH + "U) " +
-                         (DAC_CHANNEL_0_FILTER)?then('| DAC_DACCTRL_FEXT_Msk','') + (DAC_CHANNEL_0_DITHER)?then(' | DAC_DACCTRL_DITHER_Msk ','') +
+<#assign dac_oversample = false>
+<#assign dac_filter = false>
+<#assign dac_refresh = false>
+
+<#if DAC_CHANNEL_0_OVERSAMPLE??>
+    <#assign dac_oversample = true>
+</#if>
+<#if DAC_CHANNEL_0_FILTER?? && DAC_CHANNEL_0_FILTER == true>
+    <#assign dac_filter = true>
+</#if>
+<#if DAC_CHANNEL_0_REFRESH??>
+    <#assign dac_refresh = true>
+</#if>
+
+<#assign DAC_CH_0_CTRL = "DAC_DACCTRL_ENABLE_Msk |" + " DAC_DACCTRL_CCTRL (" + DAC_CHANNEL_0_SPEED + "U) " + (DAC_DATA_ADJUSTMENT0 == "LEFT-ADJUSTED")?then('| DAC_DACCTRL_LEFTADJ_Msk','') + (dac_oversample)?then('| DAC_DACCTRL_OSR (' + .vars["DAC_CHANNEL_0_OVERSAMPLE"] + 'U)', '')
+                         + (dac_refresh)?then('| DAC_DACCTRL_REFRESH (' + .vars["DAC_CHANNEL_0_REFRESH"] + 'U)', '') +
+                         (dac_filter)?then('| DAC_DACCTRL_FEXT_Msk','') + (DAC_CHANNEL_0_DITHER)?then(' | DAC_DACCTRL_DITHER_Msk ','') +
                          (DAC_CHANNEL_0_RSTDBY)?then('| DAC_DACCTRL_RUNSTDBY_Msk','')>
 
-<#assign DAC_CH_1_CTRL = "DAC_DACCTRL_ENABLE_Msk |" + " DAC_DACCTRL_CCTRL (" + DAC_CHANNEL_1_SPEED + "U) " + (DAC_DATA_ADJUSTMENT1 == "LEFT-ADJUSTED")?then('| DAC_DACCTRL_LEFTADJ_Msk','') +
-                         "| DAC_DACCTRL_OSR (" + DAC_CHANNEL_1_OVERSAMPLE + "U) " + "| DAC_DACCTRL_REFRESH (" + DAC_CHANNEL_1_REFRESH + "U) " +
-                         (DAC_CHANNEL_1_FILTER)?then('| DAC_DACCTRL_FEXT_Msk','') + (DAC_CHANNEL_1_DITHER)?then(' | DAC_DACCTRL_DITHER_Msk ','') +
+<#assign dac_oversample = false>
+<#assign dac_filter = false>
+<#assign dac_refresh = false>
+
+<#if DAC_CHANNEL_1_OVERSAMPLE??>
+    <#assign dac_oversample = true>
+</#if>
+<#if DAC_CHANNEL_1_FILTER?? && DAC_CHANNEL_1_FILTER == true>
+    <#assign dac_filter = true>
+</#if>
+<#if DAC_CHANNEL_1_REFRESH??>
+    <#assign dac_refresh = true>
+</#if>
+
+<#assign DAC_CH_1_CTRL = "DAC_DACCTRL_ENABLE_Msk |" + " DAC_DACCTRL_CCTRL (" + DAC_CHANNEL_1_SPEED + "U) " + (DAC_DATA_ADJUSTMENT1 == "LEFT-ADJUSTED")?then('| DAC_DACCTRL_LEFTADJ_Msk','') + (dac_oversample)?then('| DAC_DACCTRL_OSR (' + .vars["DAC_CHANNEL_1_OVERSAMPLE"] + 'U)', '')
+                         + (dac_refresh)?then('| DAC_DACCTRL_REFRESH (' + .vars["DAC_CHANNEL_1_REFRESH"] + 'U)', '') +
+                         (dac_filter)?then('| DAC_DACCTRL_FEXT_Msk','') + (DAC_CHANNEL_1_DITHER)?then(' | DAC_DACCTRL_DITHER_Msk ','') +
                          (DAC_CHANNEL_1_RSTDBY)?then('| DAC_DACCTRL_RUNSTDBY_Msk','')>
 
-<#assign DAC_CH_0_EVE_CTRL = (DAC_CHANNEL_EVENT_RESRDYEO0)?then(" | DAC_EVCTRL_RESRDYEO0_Msk",'') + (DAC_CHANNEL_EVENT_EMPTYEO0)?then(' | DAC_EVCTRL_EMPTYEO0_Msk','') +
+<#assign event_resrdy = false>
+
+<#if DAC_CHANNEL_EVENT_RESRDYEO0?? && DAC_CHANNEL_EVENT_RESRDYEO0 == true>
+    <#assign event_resrdy = true>
+</#if>
+
+<#assign DAC_CH_0_EVE_CTRL = (event_resrdy)?then(" | DAC_EVCTRL_RESRDYEO0_Msk",'') + (DAC_CHANNEL_EVENT_EMPTYEO0)?then(' | DAC_EVCTRL_EMPTYEO0_Msk','') +
                              (DAC_CHANNEL_EVENT_STARTEI0)?then(' | DAC_EVCTRL_STARTEI0_Msk','') + (DAC_CHANNEL_EVENT_INVEI0)?then(' | DAC_EVCTRL_INVEI0_Msk','')>
 
-<#assign DAC_CH_1_EVE_CTRL = (DAC_CHANNEL_EVENT_RESRDYEO1)?then(" | DAC_EVCTRL_RESRDYEO1_Msk",'') + (DAC_CHANNEL_EVENT_EMPTYEO1)?then(' | DAC_EVCTRL_EMPTYEO1_Msk','') +
+<#assign event_resrdy = false>
+
+<#if DAC_CHANNEL_EVENT_RESRDYEO1?? && DAC_CHANNEL_EVENT_RESRDYEO1 == true>
+    <#assign event_resrdy = true>
+</#if>
+
+<#assign DAC_CH_1_EVE_CTRL = (event_resrdy)?then(" | DAC_EVCTRL_RESRDYEO1_Msk",'') + (DAC_CHANNEL_EVENT_EMPTYEO1)?then(' | DAC_EVCTRL_EMPTYEO1_Msk','') +
                              (DAC_CHANNEL_EVENT_STARTEI1)?then(' | DAC_EVCTRL_STARTEI1_Msk','') + (DAC_CHANNEL_EVENT_INVEI1)?then(' | DAC_EVCTRL_INVEI1_Msk','')>
 
 /* (DAC DATA) Mask DATA[15:12] Bit */
@@ -186,12 +226,12 @@ void ${DAC_INSTANCE_NAME}_DataWrite (DAC_CHANNEL_NUM channel, uint16_t data)
     </#if>
 }
 
-<#if DAC_CHANNEL_0_FILTER>uint16_t ${DAC_INSTANCE_NAME}_Channel0ResultGet (void)
+<#if DAC_CHANNEL_0_FILTER?? && DAC_CHANNEL_0_FILTER == true>uint16_t ${DAC_INSTANCE_NAME}_Channel0ResultGet (void)
 {
     return (${DAC_INSTANCE_NAME}_REGS->DAC_RESULT[0]);
 }</#if>
 
-<#if DAC_CHANNEL_1_FILTER>uint16_t ${DAC_INSTANCE_NAME}_Channel1ResultGet (void)
+<#if DAC_CHANNEL_1_FILTER?? && DAC_CHANNEL_1_FILTER == true>uint16_t ${DAC_INSTANCE_NAME}_Channel1ResultGet (void)
 {
     return (${DAC_INSTANCE_NAME}_REGS->DAC_RESULT[1]);
 }</#if>

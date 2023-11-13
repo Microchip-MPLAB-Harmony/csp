@@ -35,24 +35,24 @@
 
 <#if .vars[ENABLE] == true>
 
-	<#if PMC_SCER_PCKX_MSK != "">
-		<#assign PMC_SCER_PCKX_MSK = PMC_SCER_PCKX_MSK + " | " + "PMC_SCER_PCK" + i +"_Msk">
-		<#assign PMC_SCDR_PCKX_MSK = PMC_SCDR_PCKX_MSK + " | " + "PMC_SCDR_PCK" + i +"_Msk">
-		<#assign PMC_SR_PCKRDYX_MSK = PMC_SR_PCKRDYX_MSK + " | " + "PMC_SR_PCKRDY" + i +"_Msk">
-	<#else>
-		<#assign PMC_SCER_PCKX_MSK = "PMC_SCER_PCK" + i +"_Msk">
-		<#assign PMC_SCDR_PCKX_MSK = "PMC_SCDR_PCK" + i +"_Msk">
-		<#assign PMC_SR_PCKRDYX_MSK = "PMC_SR_PCKRDY" + i +"_Msk">
-	</#if>
+    <#if PMC_SCER_PCKX_MSK != "">
+        <#assign PMC_SCER_PCKX_MSK = PMC_SCER_PCKX_MSK + " | " + "PMC_SCER_PCK" + i +"_Msk">
+        <#assign PMC_SCDR_PCKX_MSK = PMC_SCDR_PCKX_MSK + " | " + "PMC_SCDR_PCK" + i +"_Msk">
+        <#assign PMC_SR_PCKRDYX_MSK = PMC_SR_PCKRDYX_MSK + " | " + "PMC_SR_PCKRDY" + i +"_Msk">
+    <#else>
+        <#assign PMC_SCER_PCKX_MSK = "PMC_SCER_PCK" + i +"_Msk">
+        <#assign PMC_SCDR_PCKX_MSK = "PMC_SCDR_PCK" + i +"_Msk">
+        <#assign PMC_SR_PCKRDYX_MSK = "PMC_SR_PCKRDY" + i +"_Msk">
+    </#if>
 
 </#if>
 
 </#list>
 
 <#macro CONFIGURE_PCK INDEX ENABLED CSS PRES>
-	<#if ENABLED>
-	PMC_REGS->PMC_PCK[${INDEX}]= PMC_PCK_CSS_${CSS} | PMC_PCK_PRES(${PRES-1});
-	</#if>
+    <#if ENABLED>
+    PMC_REGS->PMC_PCK[${INDEX}]= PMC_PCK_CSS_${CSS} | PMC_PCK_PRES(${PRES-1}U);
+    </#if>
 </#macro>
 </#compress>
 
@@ -65,13 +65,16 @@ static void CLK_UTMIPLLInitialize(void)
 {
     /* Set the UTMI reference clock */
     uint32_t sfr_utmiclktrim_val = SFR_REGS->SFR_UTMICKTRIM & ~SFR_UTMICKTRIM_FREQ_Msk;
-	SFR_REGS->SFR_UTMICKTRIM = sfr_utmiclktrim_val | SFR_UTMICKTRIM_FREQ${UTMI_CKTRIM_FREQ};
+    SFR_REGS->SFR_UTMICKTRIM = sfr_utmiclktrim_val | SFR_UTMICKTRIM_FREQ${UTMI_CKTRIM_FREQ};
 
-	/* Enable UPLL and configure UPLL lock time */
-	PMC_REGS->CKGR_UCKR = CKGR_UCKR_UPLLEN_Msk | CKGR_UCKR_UPLLCOUNT(${PMC_CKGR_UCKR_UPLLCOUNT});
+    /* Enable UPLL and configure UPLL lock time */
+    PMC_REGS->CKGR_UCKR = CKGR_UCKR_UPLLEN_Msk | CKGR_UCKR_UPLLCOUNT(${PMC_CKGR_UCKR_UPLLCOUNT}U);
 
-	/* Wait until PLL Lock occurs */
-    while ((PMC_REGS->PMC_SR & PMC_SR_LOCKU_Msk) != PMC_SR_LOCKU_Msk);
+    /* Wait until PLL Lock occurs */
+    while ((PMC_REGS->PMC_SR & PMC_SR_LOCKU_Msk) != PMC_SR_LOCKU_Msk)
+    {
+        /* Wait for PLL lock to rise */
+    }
 }
 </#if>
 
@@ -107,10 +110,9 @@ Initialize USB FS clock
 static void CLK_USBClockInitialize ( void )
 {
     /* Configure Full-Speed USB Clock source and Clock Divider */
-	PMC_REGS->PMC_USB = PMC_USB_USBDIV(${PMC_USB_USBDIV-1}) <#if PMC_USB_USBS == "UPLL_CLK"> | PMC_USB_USBS_Msk</#if>;
+    PMC_REGS->PMC_USB = PMC_USB_USBDIV(${PMC_USB_USBDIV-1}) <#if PMC_USB_USBS == "UPLL_CLK"> | PMC_USB_USBS_Msk</#if>;
 
-
-	/* Enable Full-Speed USB Clock Output */
+    /* Enable Full-Speed USB Clock Output */
     PMC_REGS->PMC_SCER = PMC_SCER_UHP(1);
 }
 </#if>
@@ -118,7 +120,16 @@ static void CLK_USBClockInitialize ( void )
 /*********************************************************************************
 Initialize Generic clock
 *********************************************************************************/
+<#assign PMC_PCR_GCLK_EN = false>
+<#list 1..79 as pid>
+    <#assign GEN_ENABLE = "PMC_PCR_PID"+pid+"_GCKEN">
+    <#if .vars[GEN_ENABLE]?? && .vars[GEN_ENABLE]>
+        <#assign PMC_PCR_GCLK_EN = true>
+    <#break>
+    </#if>
+</#list>
 
+<#if PMC_PCR_GCLK_EN>
 static void CLK_GenericClockInitialize(void)
 {
 <#list 1..79 as pid>
@@ -135,6 +146,7 @@ static void CLK_GenericClockInitialize(void)
 </#if>
 </#list>
 }
+</#if>
 
 <#if PMC_SCER_PCK0 || PMC_SCER_PCK1 || PMC_SCER_PCK2>
 /*********************************************************************************
@@ -143,24 +155,22 @@ Initialize Programmable Clock (PCKx)
 
 static void CLK_ProgrammableClockInitialize(void)
 {
-	/* Disable selected programmable clock	*/
-	PMC_REGS->PMC_SCDR = ${PMC_SCDR_PCKX_MSK};
+    /* Disable selected programmable clock	*/
+    PMC_REGS->PMC_SCDR = ${PMC_SCDR_PCKX_MSK};
 
-	/* Configure selected programmable clock	*/
+    /* Configure selected programmable clock	*/
 <@CONFIGURE_PCK INDEX=0 ENABLED=PMC_SCER_PCK0 CSS=PMC_PCK0_CSS PRES=PMC_PCK0_PRES />
 <@CONFIGURE_PCK INDEX=1 ENABLED=PMC_SCER_PCK1 CSS=PMC_PCK1_CSS PRES=PMC_PCK1_PRES />
 <@CONFIGURE_PCK INDEX=2 ENABLED=PMC_SCER_PCK2 CSS=PMC_PCK2_CSS PRES=PMC_PCK2_PRES />
 
-	/* Enable selected programmable clock	*/
-	PMC_REGS->PMC_SCER = ${PMC_SCER_PCKX_MSK};
+    /* Enable selected programmable clock	*/
+    PMC_REGS->PMC_SCER = ${PMC_SCER_PCKX_MSK};
 
-	/* Wait for clock to be ready	*/
-	while((PMC_REGS->PMC_SR & (${PMC_SR_PCKRDYX_MSK}) ) != (${PMC_SR_PCKRDYX_MSK}))
-	{
-			
-			/* Do Nothing */
-			
-	}
+    /* Wait for clock to be ready	*/
+    while((PMC_REGS->PMC_SR & (${PMC_SR_PCKRDYX_MSK}) ) != (${PMC_SR_PCKRDYX_MSK}))
+    {
+        /* Wait for PCKRDY */
+    }
 }
 </#if>
 
@@ -173,9 +183,9 @@ static void CLK_PeripheralClockInitialize(void)
 {
     /* Enable clock for the selected peripherals, since the rom boot will turn on
      * certain clocks turn off all clocks not expressly enabled */
-   	PMC_REGS->PMC_PCER0=0x${PMC_PCER0};
+    PMC_REGS->PMC_PCER0=0x${PMC_PCER0}U;
     PMC_REGS->PMC_PCDR0=~0x${PMC_PCER0}U;
-    PMC_REGS->PMC_PCER1=0x${PMC_PCER1};
+    PMC_REGS->PMC_PCER1=0x${PMC_PCER1}U;
     PMC_REGS->PMC_PCDR1=~0x${PMC_PCER1}U;
 }
 
@@ -186,7 +196,7 @@ Initialize LCDC clock
 
 static void CLK_LCDCClockInitialize(void)
 {
-    PMC_REGS->PMC_SCER = PMC_SCER_LCDCK(1);
+    PMC_REGS->PMC_SCER = PMC_SCER_LCDCK(1U);
 }
 </#if>
 
@@ -197,7 +207,7 @@ Initialize LCDC clock
 
 static void CLK_ISCClockInitialize(void)
 {
-    PMC_REGS->PMC_SCER = PMC_SCER_ISCCK(1);
+    PMC_REGS->PMC_SCER = PMC_SCER_ISCCK(1U);
 }
 </#if>
 
@@ -213,33 +223,35 @@ void CLK_Initialize( void )
 
 </#if>
 <#if PMC_CKGR_UCKR_UPLLEN>
-	/* Initialize UTMI PLL */
-	CLK_UTMIPLLInitialize();
+    /* Initialize UTMI PLL */
+    CLK_UTMIPLLInitialize();
 
 </#if>
 <#if PMC_SCER_UHPCLK>
-	/* Initialize USB Clock */
-	CLK_USBClockInitialize();
+    /* Initialize USB Clock */
+    CLK_USBClockInitialize();
 
 </#if>
-	/* Initialize Generic Clock */
-	CLK_GenericClockInitialize();
+<#if PMC_PCR_GCLK_EN>
+    /* Initialize Generic Clock */
+    CLK_GenericClockInitialize();
 
+</#if>
 <#if PMC_SCER_PCK0 || PMC_SCER_PCK1 || PMC_SCER_PCK2>
-	/* Initialize Programmable Clock */
-	CLK_ProgrammableClockInitialize();
+    /* Initialize Programmable Clock */
+    CLK_ProgrammableClockInitialize();
 
 </#if>
-	/* Initialize Peripheral Clock */
-	CLK_PeripheralClockInitialize();
+    /* Initialize Peripheral Clock */
+    CLK_PeripheralClockInitialize();
 
 <#if PMC_SCER_LCDCK>
-    /* Initalize LCDC (MCKx2) Clock */
+    /* Initialize LCDC (MCKx2) Clock */
     CLK_LCDCClockInitialize();
 
 </#if>
 <#if PMC_SCER_ISCCK>
-    /* Initalize ISC (MCKx2) Clock */
+    /* Initialize ISC (MCKx2) Clock */
     CLK_ISCClockInitialize();
 
 </#if>

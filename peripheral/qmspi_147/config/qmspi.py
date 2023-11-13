@@ -21,6 +21,82 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+def handleMessage(messageID, args):
+    global qmspiInterrupt
+    global qmspiMode
+    global qmspiHardwareCS
+    result_dict = {}
+
+    if (messageID == "SPI_MASTER_MODE"):
+        if args.get("isReadOnly") != None:
+            qmspiMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            qmspiMode.setValue("SPI")
+
+    elif (messageID == "SPI_MASTER_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            qmspiInterrupt.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None :
+            qmspiInterrupt.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            qmspiInterrupt.setVisible(args["isVisible"])
+
+    elif (messageID == "SPI_MASTER_HARDWARE_CS"):
+        if args.get("isReadOnly") != None:
+            qmspiHardwareCS.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            qmspiHardwareCS.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            qmspiHardwareCS.setVisible(args["isVisible"])
+
+    return result_dict
+
+def onAttachmentConnected(source, target):
+
+    global qmspiMode
+    global spiCapabilityId
+    global qspiCapabilityId
+
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
+
+    if connectID == spiCapabilityId:
+        localComponent.setCapabilityEnabled(spiCapabilityId, True)
+        localComponent.setCapabilityEnabled(qspiCapabilityId, False)
+        qmspiMode.setReadOnly(True)
+        qmspiMode.setValue("SPI")
+    elif connectID == qspiCapabilityId:
+        localComponent.setCapabilityEnabled(spiCapabilityId, False)
+        localComponent.setCapabilityEnabled(qspiCapabilityId, True)
+        qmspiMode.setReadOnly(True)
+        qmspiMode.setValue("QSPI")
+
+    qmspiMode.setReadOnly(True)
+
+
+def onAttachmentDisconnected(source, target):
+
+    global qmspiMode
+
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+    localComponent.setCapabilityEnabled(spiCapabilityId, True)
+    localComponent.setCapabilityEnabled(qspiCapabilityId, True)
+
+    qmspiMode.setReadOnly(False)
+
 def setQmspiClkFrequency(symbol, event):
     global qmspiInstanceName
 
@@ -43,17 +119,21 @@ def setupQmspiIntHandler(symbol, event):
     global qmspiInstanceName
     global qmspiAggInterruptName
 
-    interrupt_type = event["source"].getSymbolByID("QMSPI_INTERRUPT_TYPE").getSelectedKey()
-    if(Database.getSymbolValue(qmspiInstanceName.getValue().lower(), "QMSPI_INTERRUPT_MODE") == True):
-        if interrupt_type == "AGGREGATE":
-            setQMSPIInterruptData(qmspiInstanceName.getValue(), False)
-            setQMSPIInterruptData(qmspiAggInterruptName, True)
+    if symbol.getID() == "QMSPI_INTERRUPT_MODE" and (event["id"] == "QMSPI_DMA_EN" or event["id"] == "QMSPI_MODE"):
+        symbol.setReadOnly(event["source"].getSymbolByID("QMSPI_MODE").getValue() == "SPI" and (event["source"].getSymbolByID("QMSPI_DMA_EN").getValue() == True or event["source"].getSymbolByID("QMSPI_MODE").getReadOnly() == True))
+        symbol.setValue(symbol.getReadOnly())
+    else:
+        interrupt_type = event["source"].getSymbolByID("QMSPI_INTERRUPT_TYPE").getSelectedKey()
+        if(Database.getSymbolValue(qmspiInstanceName.getValue().lower(), "QMSPI_INTERRUPT_MODE") == True):
+            if interrupt_type == "AGGREGATE":
+                setQMSPIInterruptData(qmspiInstanceName.getValue(), False)
+                setQMSPIInterruptData(qmspiAggInterruptName, True)
+            else:
+                setQMSPIInterruptData(qmspiAggInterruptName, False)
+                setQMSPIInterruptData(qmspiInstanceName.getValue(), True)
         else:
             setQMSPIInterruptData(qmspiAggInterruptName, False)
-            setQMSPIInterruptData(qmspiInstanceName.getValue(), True)
-    else:
-        setQMSPIInterruptData(qmspiAggInterruptName, False)
-        setQMSPIInterruptData(qmspiInstanceName.getValue(), False)
+            setQMSPIInterruptData(qmspiInstanceName.getValue(), False)
 
 def nvicInterruptNameUpdate (symbol, event):
     global qmspiInstanceName
@@ -63,10 +143,36 @@ def nvicInterruptNameUpdate (symbol, event):
     else:
         symbol.setValue(qmspiInstanceName.getValue())
 
+def qmspiSPIModeVisibility(symbol, event):
+    if symbol.getID() == "QMSPI_HARDWARE_CS_SEL":
+        qmspi_mode = event["source"].getSymbolByID("QMSPI_MODE").getValue()
+        hw_cs_en = event["source"].getSymbolByID("QMSPI_HARDWARE_CS_EN").getValue()
+        symbol.setVisible(qmspi_mode == "SPI" and hw_cs_en == True)
+    elif symbol.getID() == "QMSPI_DESCRIPTOR_MODE_EN":
+        qmspi_mode = event["source"].getSymbolByID("QMSPI_MODE").getValue()
+        dma_en = event["source"].getSymbolByID("QMSPI_DMA_EN").getValue()
+        symbol.setVisible(qmspi_mode == "SPI" and dma_en == True)
+    else:
+        symbol.setVisible(event["value"] == "SPI")
+
+def qmspiQSPIModeVisibility(symbol, event):
+    symbol.setVisible(event["value"] == "QSPI")
+
+def qmspiQSPIModeFileGeneration(symbol, event):
+    symbol.setEnabled(event["value"] == "QSPI")
+
+def qmspiSPIModeFileGeneration(symbol, event):
+    symbol.setEnabled(event["value"] == "SPI")
+
 def instantiateComponent(qmspiComponent):
     global qmspiInstanceName
     global qmspiInstanceNum
     global qmspiAggInterruptName
+    global qmspiInterrupt
+    global qmspiMode
+    global qspiCapabilityId
+    global spiCapabilityId
+    global qmspiHardwareCS
 
     qmspiInstanceName = qmspiComponent.createStringSymbol("QMSPI_INSTANCE_NAME", None)
     qmspiInstanceName.setVisible(False)
@@ -77,9 +183,16 @@ def instantiateComponent(qmspiComponent):
     qmspiInstanceNum.setVisible(False)
     qmspiInstanceNum.setDefaultValue(filter(str.isdigit, str(qmspiComponent.getID())))
 
+    qspiCapabilityId = qmspiInstanceName.getValue() + "_SQI"
+    spiCapabilityId = qmspiInstanceName.getValue() + "_SPI"
+
     nvic_int_num = {}
     nvic_int_num = Database.sendMessage("core", "ECIA_GET_INT_SRC_DICT", {"int_source": "QMSPI" + qmspiInstanceNum.getValue()})
     qmspiAggInterruptName = qmspiInstanceName.getValue() + "_GRP"
+
+    qmspiMode = qmspiComponent.createComboSymbol("QMSPI_MODE", None, ["QSPI", "SPI"])
+    qmspiMode.setLabel("QMSPI Mode")
+    qmspiMode.setDefaultValue("QSPI")
 
     qmspiCPOL = qmspiComponent.createKeyValueSetSymbol("QMSPI_CPOL", None)
     qmspiCPOL.setLabel("Clock Polarity")
@@ -96,14 +209,42 @@ def instantiateComponent(qmspiComponent):
     qmspiCPHA_MOSI.setOutputMode("Key")
     qmspiCPHA_MOSI.setDisplayMode("Description")
     qmspiCPHA_MOSI.setSelectedKey("FALLING")
+    qmspiCPHA_MOSI.setDependencies(qmspiQSPIModeVisibility, ["QMSPI_MODE"])
 
     qmspiCPHA_MISO = qmspiComponent.createKeyValueSetSymbol("QMSPI_CPHA_MISO", None)
     qmspiCPHA_MISO.setLabel("Clock phase of the Master data in")
-    qmspiCPHA_MISO.addKey("RISING", "0", "Data are captured on the rising edge of the SPI clock")
-    qmspiCPHA_MISO.addKey("FALLING", "1", "Data are captured on the falling edge of the SPI clock")
+    qmspiCPHA_MISO.addKey("RISING", "0", "Data is captured on the rising edge of the SPI clock")
+    qmspiCPHA_MISO.addKey("FALLING", "1", "Data is captured on the falling edge of the SPI clock")
     qmspiCPHA_MISO.setOutputMode("Key")
     qmspiCPHA_MISO.setDisplayMode("Description")
     qmspiCPHA_MISO.setSelectedKey("RISING")
+    qmspiCPHA_MISO.setDependencies(qmspiQSPIModeVisibility, ["QMSPI_MODE"])
+
+    qmspiCPHA = qmspiComponent.createKeyValueSetSymbol("QMSPI_CPHA", None)
+    qmspiCPHA.setLabel("Clock Phase")
+    qmspiCPHA.addKey("RISING", "0", "Data is captured on the rising edge of the SPI clock")
+    qmspiCPHA.addKey("FALLING", "1", "Data is captured on the falling edge of the SPI clock")
+    qmspiCPHA.setOutputMode("Key")
+    qmspiCPHA.setDisplayMode("Description")
+    qmspiCPHA.setSelectedKey("RISING")
+    qmspiCPHA.setVisible(False)
+    qmspiCPHA.setDependencies(qmspiSPIModeVisibility, ["QMSPI_MODE"])
+
+    qmspiHardwareCS = qmspiComponent.createBooleanSymbol("QMSPI_HARDWARE_CS_EN", None)
+    qmspiHardwareCS.setLabel("Use Hardware Chip Select?")
+    qmspiHardwareCS.setDefaultValue(False)
+    qmspiHardwareCS.setVisible(False)
+    qmspiHardwareCS.setDependencies(qmspiSPIModeVisibility, ["QMSPI_MODE"])
+
+    qmspiHardwareCSSel = qmspiComponent.createKeyValueSetSymbol("QMSPI_HARDWARE_CS_SEL", qmspiHardwareCS)
+    qmspiHardwareCSSel.setLabel("Chip Select Line")
+    qmspiHardwareCSSel.addKey("CHIP_SEL_0", "0", "Chip Select 0")
+    qmspiHardwareCSSel.addKey("CHIP_SEL_1", "1", "Chip Select 1")
+    qmspiHardwareCSSel.setOutputMode("Value")
+    qmspiHardwareCSSel.setDisplayMode("Description")
+    qmspiHardwareCSSel.setSelectedKey("CHIP_SEL_0")
+    qmspiHardwareCSSel.setVisible(False)
+    qmspiHardwareCSSel.setDependencies(qmspiSPIModeVisibility, ["QMSPI_MODE", "QMSPI_HARDWARE_CS_EN"])
 
     qmspiCLOCK_DIVIDE = qmspiComponent.createIntegerSymbol("QMSPI_CLOCK_DIVIDE", None)
     qmspiCLOCK_DIVIDE.setLabel("Clock Divide")
@@ -129,6 +270,7 @@ def instantiateComponent(qmspiComponent):
     qmspiHOLD_OUT_ENABLE = qmspiComponent.createBooleanSymbol("QMSPI_HOLD_OUT_ENABLE", None)
     qmspiHOLD_OUT_ENABLE.setLabel("HOLD Output Enable")
     qmspiHOLD_OUT_ENABLE.setDefaultValue(False)
+    qmspiHOLD_OUT_ENABLE.setDependencies(qmspiQSPIModeVisibility, ["QMSPI_MODE"])
 
     qmspiHOLD_OUT_VAL = qmspiComponent.createKeyValueSetSymbol("QMSPI_HOLD_OUT_VALUE", qmspiHOLD_OUT_ENABLE)
     qmspiHOLD_OUT_VAL.setLabel("HOLD Output Value")
@@ -137,10 +279,13 @@ def instantiateComponent(qmspiComponent):
     qmspiHOLD_OUT_VAL.setOutputMode("Key")
     qmspiHOLD_OUT_VAL.setDisplayMode("Key")
     qmspiHOLD_OUT_VAL.setSelectedKey("LOW")
+    qmspiHOLD_OUT_VAL.setDependencies(qmspiQSPIModeVisibility, ["QMSPI_MODE"])
 
     qmspiWRITE_PROTECT_OUT_ENABLE = qmspiComponent.createBooleanSymbol("QMSPI_WRITE_PROTECT_OUT_ENABLE", None)
     qmspiWRITE_PROTECT_OUT_ENABLE.setLabel("WRITE PROTECT Output Enable")
     qmspiWRITE_PROTECT_OUT_ENABLE.setDefaultValue(False)
+    qmspiWRITE_PROTECT_OUT_ENABLE.setDependencies(qmspiQSPIModeVisibility, ["QMSPI_MODE"])
+
 
     qmspiWRITE_PROTECT_OUT_VAL = qmspiComponent.createKeyValueSetSymbol("QMSPI_WRITE_PROTECT_OUT_VALUE", qmspiWRITE_PROTECT_OUT_ENABLE)
     qmspiWRITE_PROTECT_OUT_VAL.setLabel("WRITE PROTECT Output Value")
@@ -149,15 +294,30 @@ def instantiateComponent(qmspiComponent):
     qmspiWRITE_PROTECT_OUT_VAL.setOutputMode("Key")
     qmspiWRITE_PROTECT_OUT_VAL.setDisplayMode("Key")
     qmspiWRITE_PROTECT_OUT_VAL.setSelectedKey("LOW")
+    qmspiWRITE_PROTECT_OUT_VAL.setDependencies(qmspiQSPIModeVisibility, ["QMSPI_MODE"])
 
     qmspiNumOfDesc = qmspiComponent.createIntegerSymbol("QMSPI_NUM_OF_DESC", None)
     qmspiNumOfDesc.setVisible(False)
     qmspiNumOfDesc.setDefaultValue(int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="QMSPI"]/register-group@[name="QMSPI"]/register@[name="DESCR"]').getAttribute("count")))
 
+    qmspiDMAEnable = qmspiComponent.createBooleanSymbol("QMSPI_DMA_EN", None)
+    qmspiDMAEnable.setLabel("DMA Enable")
+    qmspiDMAEnable.setDefaultValue(False)
+    qmspiDMAEnable.setVisible(False)
+    qmspiDMAEnable.setDependencies(qmspiSPIModeVisibility, ["QMSPI_MODE"])
+
+    qmspiDMADescEnable = qmspiComponent.createBooleanSymbol("QMSPI_DESCRIPTOR_MODE_EN", qmspiDMAEnable)
+    qmspiDMADescEnable.setLabel("DMA Descriptor Enable")
+    qmspiDMADescEnable.setDefaultValue(False)
+    qmspiDMADescEnable.setVisible(False)
+    qmspiDMADescEnable.setDependencies(qmspiSPIModeVisibility, ["QMSPI_MODE", "QMSPI_DMA_EN"])
+
+
+
     qmspiInterrupt = qmspiComponent.createBooleanSymbol("QMSPI_INTERRUPT_MODE", None)
     qmspiInterrupt.setLabel("Interrupt Mode")
     qmspiInterrupt.setDefaultValue(False)
-    qmspiInterrupt.setDependencies(setupQmspiIntHandler, ["QMSPI_INTERRUPT_MODE"])
+    qmspiInterrupt.setDependencies(setupQmspiIntHandler, ["QMSPI_INTERRUPT_MODE", "QMSPI_DMA_EN", "QMSPI_MODE"])
 
     # QMSPI Interrupt Type - Aggregate or Direct
     qmspiInterruptType = qmspiComponent.createKeyValueSetSymbol("QMSPI_INTERRUPT_TYPE", qmspiInterrupt)
@@ -182,6 +342,35 @@ def instantiateComponent(qmspiComponent):
     qmspi_NVIC_InterruptName.setVisible(False)
 
     ###################################################################################################
+    ####################################### Driver Symbols ############################################
+    ###################################################################################################
+
+    #SPI Clock Phase Leading Edge Mask
+    spiSym_CPHA_LE_Mask = qmspiComponent.createStringSymbol("SPI_CLOCK_PHASE_LEADING_MASK", None)
+    spiSym_CPHA_LE_Mask.setDefaultValue("0x00000000")
+    spiSym_CPHA_LE_Mask.setVisible(False)
+
+    #SPI Clock Phase Trailing Edge Mask
+    spiSym_CPHA_TE_Mask = qmspiComponent.createStringSymbol("SPI_CLOCK_PHASE_TRAILING_MASK", None)
+    spiSym_CPHA_TE_Mask.setDefaultValue("0x00000400")
+    spiSym_CPHA_TE_Mask.setVisible(False)
+
+    #SPI Clock Polarity Idle Low Mask
+    spiSym_CPOL_IL_Mask = qmspiComponent.createStringSymbol("SPI_CLOCK_POLARITY_LOW_MASK", None)
+    spiSym_CPOL_IL_Mask.setDefaultValue("0x00000000")
+    spiSym_CPOL_IL_Mask.setVisible(False)
+
+    #SPI Clock Polarity Idle High Mask
+    spiSym_CPOL_IH_Mask = qmspiComponent.createStringSymbol("SPI_CLOCK_POLARITY_HIGH_MASK", None)
+    spiSym_CPOL_IH_Mask.setDefaultValue("0x00000100")
+    spiSym_CPOL_IH_Mask.setVisible(False)
+
+    #SPI API Prefix
+    spiSym_API_Prefix = qmspiComponent.createStringSymbol("SPI_PLIB_API_PREFIX", None)
+    spiSym_API_Prefix.setDefaultValue(qmspiInstanceName.getValue() + "_SPI")
+    spiSym_API_Prefix.setVisible(False)
+
+    ###################################################################################################
     ######################################### QMSPI ###################################################
     ###################################################################################################
     configName = Variables.get("__CONFIGURATION_NAME")
@@ -192,6 +381,8 @@ def instantiateComponent(qmspiComponent):
     qmspiHeader1File.setDestPath("/peripheral/qmspi/")
     qmspiHeader1File.setProjectPath("config/" + configName + "/peripheral/qmspi/")
     qmspiHeader1File.setType("HEADER")
+    qmspiHeader1File.setEnabled(qmspiMode.getValue() == "QSPI")
+    qmspiHeader1File.setDependencies(qmspiQSPIModeFileGeneration, ["QMSPI_MODE"])
 
     qmspiHeader2File = qmspiComponent.createFileSymbol("QMSPI_HEADER2", None)
     qmspiHeader2File.setSourcePath("../peripheral/qmspi_147/templates/plib_qmspi.h.ftl")
@@ -201,6 +392,8 @@ def instantiateComponent(qmspiComponent):
     qmspiHeader2File.setType("HEADER")
     qmspiHeader2File.setMarkup(True)
     qmspiHeader2File.setOverwrite(True)
+    qmspiHeader2File.setEnabled(qmspiMode.getValue() == "QSPI")
+    qmspiHeader2File.setDependencies(qmspiQSPIModeFileGeneration, ["QMSPI_MODE"])
 
     qmspiSource1File = qmspiComponent.createFileSymbol("QMSPI_SOURCE1", None)
     qmspiSource1File.setSourcePath("../peripheral/qmspi_147/templates/plib_qmspi.c.ftl")
@@ -210,6 +403,42 @@ def instantiateComponent(qmspiComponent):
     qmspiSource1File.setType("SOURCE")
     qmspiSource1File.setMarkup(True)
     qmspiSource1File.setOverwrite(True)
+    qmspiSource1File.setEnabled(qmspiMode.getValue() == "QSPI")
+    qmspiSource1File.setDependencies(qmspiQSPIModeFileGeneration, ["QMSPI_MODE"])
+
+    #QMSPI-SPI related files
+
+    qmspi_spiHeader1File = qmspiComponent.createFileSymbol("QMSPI_SPI_HEADER1", None)
+    qmspi_spiHeader1File.setSourcePath("../peripheral/qmspi_147/templates/plib_qmspi_spi_common.h.ftl")
+    qmspi_spiHeader1File.setOutputName("plib_qmspi_spi_common.h")
+    qmspi_spiHeader1File.setDestPath("/peripheral/qmspi/")
+    qmspi_spiHeader1File.setProjectPath("config/" + configName + "/peripheral/qmspi/")
+    qmspi_spiHeader1File.setType("HEADER")
+    qmspi_spiHeader1File.setMarkup(True)
+    qmspi_spiHeader1File.setEnabled(qmspiMode.getValue() == "SPI")
+    qmspi_spiHeader1File.setDependencies(qmspiSPIModeFileGeneration, ["QMSPI_MODE"])
+
+    qmspi_spiHeader2File = qmspiComponent.createFileSymbol("QMSPI_SPI_HEADER2", None)
+    qmspi_spiHeader2File.setSourcePath("../peripheral/qmspi_147/templates/plib_qmspi_spi.h.ftl")
+    qmspi_spiHeader2File.setOutputName("plib_" + qmspiInstanceName.getValue().lower() + "_spi.h")
+    qmspi_spiHeader2File.setDestPath("/peripheral/qmspi/")
+    qmspi_spiHeader2File.setProjectPath("config/" + configName + "/peripheral/qmspi/")
+    qmspi_spiHeader2File.setType("HEADER")
+    qmspi_spiHeader2File.setMarkup(True)
+    qmspi_spiHeader2File.setOverwrite(True)
+    qmspi_spiHeader2File.setEnabled(qmspiMode.getValue() == "SPI")
+    qmspi_spiHeader2File.setDependencies(qmspiSPIModeFileGeneration, ["QMSPI_MODE"])
+
+    qmspi_spiSource1File = qmspiComponent.createFileSymbol("QMSPI_SPI_SOURCE1", None)
+    qmspi_spiSource1File.setSourcePath("../peripheral/qmspi_147/templates/plib_qmspi_spi.c.ftl")
+    qmspi_spiSource1File.setOutputName("plib_" + qmspiInstanceName.getValue().lower() + "_spi.c")
+    qmspi_spiSource1File.setDestPath("/peripheral/qmspi/")
+    qmspi_spiSource1File.setProjectPath("config/" + configName + "/peripheral/qmspi/")
+    qmspi_spiSource1File.setType("SOURCE")
+    qmspi_spiSource1File.setMarkup(True)
+    qmspi_spiSource1File.setOverwrite(True)
+    qmspi_spiSource1File.setEnabled(qmspiMode.getValue() == "SPI")
+    qmspi_spiSource1File.setDependencies(qmspiSPIModeFileGeneration, ["QMSPI_MODE"])
 
     #QMSPI Initialize
     qmspiSystemInitFile = qmspiComponent.createFileSymbol("QMSPI_INIT", None)

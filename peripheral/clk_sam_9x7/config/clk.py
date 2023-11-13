@@ -323,7 +323,7 @@ def update_clk_generators(symbol, event):
 global gclk_dependency_map
 gclk_dependency_map = {
     "ADC" : "ADC_CLK_SRC",
-    "LCDC" : "SOME_SYMBOL",
+    "XLCDC" : "SOME_SYMBOL",
     "MCAN0" : "SOME_SYMBOL",
     "MCAN1" : "SOME_SYMBOL",
     "I2SMCC" : "SOME_SYMBOL",
@@ -871,7 +871,7 @@ gclk_menu.setLabel("Generic Clocks")
 
 #find all peripherals that have PMC controlls
 #generics
-generic_clocks = ["FLEXCOM", "SDMMC", "TC", "ADC", "XLCDC", "MCAN", "I2SMCC", "PIT64B", "QSPI", "CLASSD", "DBGU", "MIPIPHY", "GMAC"]
+generic_clocks = ["FLEXCOM", "SDMMC", "TC", "ADC", "LCDC", "MCAN", "I2SMCC", "PIT64B", "QSPI", "CLASSD", "DBGU", "MIPIPHY", "GMAC"]
 #Create map of name->id's for Java code to know what supports generic clocks
 generic_clocks_map = coreComponent.createKeyValueSetSymbol("GCLK_INSTANCE_PID", gclk_menu)
 generic_clocks_map.setVisible(False)

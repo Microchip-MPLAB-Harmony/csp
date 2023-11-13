@@ -44,14 +44,13 @@
 #include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 #include <stdlib.h>
-#include <limits.h>
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
 
 <#if ( RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0" ) ||
      ( RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ) >
-    <#lt> static RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
+    <#lt> volatile static RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
 
 </#if>
 static void ${RTC_INSTANCE_NAME}_CountReadSynchronization(void)
@@ -153,25 +152,20 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 <#if RTC_FREQCORR >
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction)
     <#lt>{
-    <#lt>   uint32_t newCorrectionValue = 0U;
-	<#lt>   int32_t freq_correct_val = correction;
-	<#lt>   if(freq_correct_val > INT_MIN)
-	<#lt>   {
-    <#lt>       newCorrectionValue = (uint32_t)abs(freq_correct_val);
-	<#lt>   }
+    <#lt>    uint8_t abs_correction  = (((uint8_t)correction & 0x80U) != 0U) ? \
+    <#lt>                ((0xFFU - (uint8_t)correction) + 0x1U) : (uint8_t)correction;
 
-    <#lt>   /* Convert to positive value and adjust register sign bit. */
-    <#lt>   if (freq_correct_val < 0)
-    <#lt>   {
-    <#lt>       newCorrectionValue |= RTC_FREQCORR_SIGN_Msk;
-    <#lt>   }
+    <#lt>    /* Convert to positive value and adjust Register sign bit. */
+    <#lt>    if (correction < 0)
+    <#lt>    {
+    <#lt>        abs_correction |= RTC_FREQCORR_SIGN_Msk;
+    <#lt>    }
 
-    <#lt>   /* Writing to FREQCORR register will trigger write-synchronization */
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_FREQCORR = (uint8_t)newCorrectionValue;
-    <#lt>   while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
-    <#lt>   {
-    <#lt>       /* Wait for Write-Synchronization */
-    <#lt>   }
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_FREQCORR = abs_correction;
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Write-Synchronization */
+    <#lt>    }
     <#lt>}
 </#if>
 <#if RTC_MODE0_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE0" ||
@@ -311,8 +305,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32PeriodGet ( void )
     <#lt>{
+    <#lt>   <#if RTC_MODE0_MATCHCLR == true>
+    <#lt>   return ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COMP;
+    <#lt>   <#else>
     <#lt>   /* Get 32Bit Compare Value */
     <#lt>   return (RTC_MODE0_COUNT_COUNT_Msk);
+    <#lt>   </#if>
     <#lt>}
 
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32FrequencyGet ( void )
@@ -449,7 +447,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>}
     </#if>
 
-    <#lt>void ${RTC_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${RTC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#if RTC_MODULE_SELECTION = "MODE0">
         <#lt>   ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause = (RTC_TIMER32_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG;
@@ -458,7 +456,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>   /* Invoke registered Callback function */
         <#lt>   if(${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback != NULL)
         <#lt>   {
-        <#lt>       ${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback( ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context );
+        <#lt>       RTC_TIMER32_INT_MASK timer32intCause = ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause;
+        <#lt>       uintptr_t context = ${RTC_INSTANCE_NAME?lower_case}Obj.context;
+        <#lt>       ${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback( timer32intCause, context );
         <#lt>   }
     <#else>
         <#lt>   /* Update the event in RTC Peripheral Callback object */
@@ -468,7 +468,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>   /* Invoke registered Callback function */
         <#lt>   if(${RTC_INSTANCE_NAME?lower_case}Obj.timer16BitCallback != NULL)
         <#lt>   {
-        <#lt>       ${RTC_INSTANCE_NAME?lower_case}Obj.timer16BitCallback( ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context );
+        <#lt>       RTC_TIMER16_INT_MASK timer16intCause = ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause;
+        <#lt>       uintptr_t context = ${RTC_INSTANCE_NAME?lower_case}Obj.context;
+        <#lt>       ${RTC_INSTANCE_NAME?lower_case}Obj.timer16BitCallback( timer16intCause, context );
         <#lt>   }
     </#if>
     <#lt>}

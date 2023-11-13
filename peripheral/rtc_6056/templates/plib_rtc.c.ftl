@@ -45,7 +45,7 @@
 </#if>
 
 <#if rtcEnableInterrupt == true>
-static RTC_OBJECT rtc;
+volatile static RTC_OBJECT rtc;
 </#if>
 
 __STATIC_INLINE uint32_t decimaltobcd( uint32_t aDecValue )
@@ -212,20 +212,23 @@ void ${RTC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t con
     rtc.context = context;
 }
 
-void ${RTC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${RTC_INSTANCE_NAME}_InterruptHandler( void )
 {
     // This handler may be chained with other sys control interrupts. So
     // the user call back should only occur if an RTC stimulus is present.
-    volatile uint32_t rtc_status = ${RTC_INSTANCE_NAME}_REGS->RTC_SR;
+    uint32_t rtc_status = ${RTC_INSTANCE_NAME}_REGS->RTC_SR;
     uint32_t enabledInterrupts = ${RTC_INSTANCE_NAME}_REGS->RTC_IMR;
 
-    if( (rtc_status & enabledInterrupts) != 0U )
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = rtc.context;
+
+    if((rtc_status & enabledInterrupts) != 0U)
     {
         ${RTC_INSTANCE_NAME}_REGS->RTC_SCCR |= enabledInterrupts;
 
-        if( rtc.callback != NULL )
+        if( rtc.callback != NULL)
         {
-            rtc.callback( rtc_status, rtc.context );
+            rtc.callback(rtc_status, context);
         }
     }
 }

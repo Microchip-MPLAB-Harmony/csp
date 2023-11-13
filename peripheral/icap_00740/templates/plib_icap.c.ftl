@@ -38,18 +38,21 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 #include "plib_${ICAP_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#assign INDEX = ICAP_INSTANCE_NUM>
 <#if ICAP_NUM_INT_LINES == 1>
     <#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true" || ICAP_INTERRUPT_ENABLE?c == "true">
-        <#lt>ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
+        <#lt>volatile static ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
     </#if>
 <#else>
     <#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
-        <#lt>ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}errObj;
+        <#lt>volatile static ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}errObj;
     </#if>
     <#if ICAP_INTERRUPT_ENABLE?c == "true">
-        <#lt>ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
+        <#lt>volatile static ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
     </#if>
 </#if>
 <#--Implementation-->
@@ -161,19 +164,28 @@ void ${ICAP_INSTANCE_NAME}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t co
     ${ICAP_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
-void INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
+void __attribute__((used)) INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
 {
+<#if ICAP_NUM_INT_LINES == 1>    
+    uint32_t iec_reg_read = ${ICAPx_IEC_REG};
+    <#if ERROR_IEC_REG??>
+    uint32_t error_reg_read = ${ERROR_IEC_REG};
+    </#if>
+</#if>
+    uintptr_t context = ${ICAP_INSTANCE_NAME?lower_case}Obj.context; 
     if( (${ICAP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
-        ${ICAP_INSTANCE_NAME?lower_case}Obj.callback(${ICAP_INSTANCE_NAME?lower_case}Obj.context);
+        ${ICAP_INSTANCE_NAME?lower_case}Obj.callback(context);
     }
 <#if ICAP_NUM_INT_LINES == 1>
-    if ((${ICAPx_IFS_REG} & _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK) && (${ICAPx_IEC_REG} & _${ICAPx_IEC_REG}_IC${INDEX}IE_MASK))
+    if (((${ICAPx_IFS_REG} & _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK) != 0U) &&
+        ((iec_reg_read & _${ICAPx_IEC_REG}_IC${INDEX}IE_MASK) != 0U))
     {
         ${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK;    //Clear IRQ flag
     }
     <#if ERROR_IEC_REG??>
-    if ((${ERROR_IFS_REG} & _${ERROR_IFS_REG}_IC${INDEX}EIF_MASK) && (${ERROR_IEC_REG} & _${ERROR_IEC_REG}_IC${INDEX}EIE_MASK))
+    if (((${ERROR_IFS_REG} & _${ERROR_IFS_REG}_IC${INDEX}EIF_MASK) != 0U) &&
+        ((error_reg_read & _${ERROR_IEC_REG}_IC${INDEX}EIE_MASK) != 0U))
     {
         ${ERROR_IFS_REG}CLR = _${ERROR_IFS_REG}_IC${INDEX}EIF_MASK;    //Clear IRQ flag
     }
@@ -190,7 +202,7 @@ void INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
 bool ${ICAP_INSTANCE_NAME}_CaptureStatusGet (void)
 {
     bool status = false;
-    status = ((IC${INDEX}CON >> ICAP_STATUS_BUFNOTEMPTY) & 0x1);
+    status = (((IC${INDEX}CON >> ICAP_STATUS_BUFNOTEMPTY) & 0x1U) != 0U);
     return status;
 }
 </#if>
@@ -202,12 +214,12 @@ void ${ICAP_INSTANCE_NAME}_ErrorCallbackRegister(ICAP_CALLBACK callback, uintptr
     ${ICAP_INSTANCE_NAME?lower_case}errObj.context = context;
 }
 
-void INPUT_CAPTURE_${INDEX}_ERROR_InterruptHandler(void)
+void __attribute__((used)) INPUT_CAPTURE_${INDEX}_ERROR_InterruptHandler(void)
 {
     if( (${ICAP_INSTANCE_NAME?lower_case}errObj.callback != NULL))
     {
         ${ICAP_INSTANCE_NAME?lower_case}errObj.callback(${ICAP_INSTANCE_NAME?lower_case}errObj.context);
-    }    
+    }
     ${ERROR_IFS_REG}CLR = _${ERROR_IFS_REG}_IC${INDEX}EIF_MASK;    //Clear IRQ flag
 }
 </#if>
@@ -216,7 +228,7 @@ void INPUT_CAPTURE_${INDEX}_ERROR_InterruptHandler(void)
 bool ${ICAP_INSTANCE_NAME}_ErrorStatusGet (void)
 {
     bool status = false;
-    status = ((IC${INDEX}CON >> ICAP_STATUS_OVERFLOW) & 0x1);
+    status = (((IC${INDEX}CON >> ICAP_STATUS_OVERFLOW) & 0x1U) != 0U);
     return status;
 }
 </#if>

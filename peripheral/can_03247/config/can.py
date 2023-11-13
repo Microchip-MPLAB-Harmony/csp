@@ -974,11 +974,12 @@ def instantiateComponent(canComponent):
 
     #Master Header
     canMasterHeaderFile = canComponent.createFileSymbol("headerFile", None)
-    canMasterHeaderFile.setSourcePath("../peripheral/can_03247/templates/plib_canfd_common.h")
+    canMasterHeaderFile.setSourcePath("../peripheral/can_03247/templates/plib_canfd_common.h.ftl")
     canMasterHeaderFile.setOutputName("plib_canfd_common.h")
     canMasterHeaderFile.setDestPath("/peripheral/canfd/")
     canMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/canfd/")
     canMasterHeaderFile.setType("HEADER")
+    canMasterHeaderFile.setMarkup(True)
 
     #Instance Source File
     canMainSourceFile = canComponent.createFileSymbol("sourceFile", None)

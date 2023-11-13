@@ -53,7 +53,7 @@
 #include "interrupts.h"
 </#if>
 
-static volatile uint16_t nvm_error;
+volatile static uint16_t nvm_error;
 
 <#assign NVMCTRL_CTRLA_VAL = "">
 <#assign NVMCTRL_SEECFG_VAL = "">
@@ -116,11 +116,11 @@ static volatile uint16_t nvm_error;
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true >
-    <#lt>static NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain;
+    <#lt>volatile static NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain;
 </#if>
 
 <#if NVM_INTERRUPT1_ENABLE == true >
-    <#lt>static NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE;
+    <#lt>volatile static NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE;
 </#if>
 
 void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
@@ -164,7 +164,7 @@ void ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_WRITEMODE mode)
 
 bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(const uint32_t *data, const uint32_t address)
 {
-    uint8_t i = 0U;
+    uint8_t i;
     bool wr_status = false;
     uint32_t * paddress = (uint32_t *)address;
     uint16_t wr_mode = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk);
@@ -197,7 +197,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(const uint32_t *data, const uint32_t
 
 bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(const uint32_t *data, const uint32_t address)
 {
-    uint8_t i = 0U;
+    uint8_t i;
     bool wr_status = false;
     uint32_t * paddress = (uint32_t *)address;
     uint16_t wr_mode = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk);
@@ -234,7 +234,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(const uint32_t *data, const uint32
  */
 bool ${NVMCTRL_INSTANCE_NAME}_PageBufferWrite( const uint32_t *data, const uint32_t address)
 {
-    uint32_t i = 0U;
+    uint32_t i;
     uint32_t * paddress = (uint32_t *)address;
 
     /* Clear global error flag */
@@ -274,7 +274,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageBufferCommit(  const uint32_t address )
  */
 bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( const uint32_t *data, const uint32_t address )
 {
-    uint32_t i = 0U;
+    uint32_t i;
     uint32_t * paddress = (uint32_t *)address;
 
     /* Clear global error flag */
@@ -312,8 +312,8 @@ bool ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address )
 <#if FLASH_USERROW_START_ADDRESS??>
     <#lt>bool ${USER_ROW_WRITE_API_NAME}( uint32_t *data, const uint32_t address )
     <#lt>{
-    <#lt>    uint32_t i = 0U;
-    <#lt>    uint32_t wr_count = 0U;
+    <#lt>    uint32_t i;
+    <#lt>    uint32_t wr_count;
     <#lt>    uint32_t * paddress = (uint32_t *)address;
     <#lt>    uint32_t * pdata = data;
     <#lt>    bool rowwrite = false;
@@ -500,7 +500,7 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
     <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn = callback;
     <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.context = context;
     <#lt>}
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_Main_Interrupt_Handler(void)
+    <#lt>void __attribute__((used)) ${NVMCTRL_INSTANCE_NAME}_Main_Interrupt_Handler(void)
     <#lt>{
     <#lt>    uint16_t temp;
     <#lt>    /* Store previous and current error flags */
@@ -511,7 +511,8 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
 
     <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.context);
+    <#lt>        uintptr_t context = ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.context;
+    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn(context);
     <#lt>    }
     <#lt>}
 </#if>
@@ -523,7 +524,7 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
     <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn = callback;
     <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.context = context;
     <#lt>}
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_Interrupt_Handler(void)
+    <#lt>void __attribute__((used)) ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_Interrupt_Handler(void)
     <#lt>{
     <#lt>    uint16_t temp;
     <#lt>    /* Store previous and current error flags */
@@ -534,7 +535,8 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
 
     <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.context);
+    <#lt>        uintptr_t context = ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.context;
+    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn(context);
     <#lt>    }
     <#lt>}
 </#if>

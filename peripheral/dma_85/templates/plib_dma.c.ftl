@@ -71,7 +71,7 @@ typedef struct
 } DMA_CH_OBJECT ;
 
 /* DMA Channels object information structure */
-static DMA_CH_OBJECT dmaChannelObj[DMA_CHANNELS_NUMBER];
+volatile static DMA_CH_OBJECT dmaChannelObj[DMA_CHANNELS_NUMBER];
 </#if>
 
 #define NOP()    asm("NOP")
@@ -127,15 +127,12 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
 }
 
 <#if DMA_LOW_LEVEL_API_ONLY == false>
-bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize )
+bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, volatile const void *srcAddr, volatile const void *destAddr, size_t blockSize )
 {
     bool returnStatus = false;
     dma_chan00_registers_t* dmaChRegs = ${DMA_INSTANCE_NAME}_ChannelBaseAddrGet(channel);
 
-    uint32_t src_addr = (uint32_t)((const uint32_t*)srcAddr);
-    uint32_t dst_addr = (uint32_t)((const uint32_t*)destAddr);
-    uint32_t transferDir = ((src_addr & EC_DEVICE_REGISTERS_ADDR) != 0U)? 0U:1U;
-
+    uint32_t transferDir = ((((volatile uint32_t)((const volatile uint8_t*)srcAddr)) & EC_DEVICE_REGISTERS_ADDR) != 0U)? 0U:1U;
 
     if (dmaChannelObj[channel].busyStatus == false)
     {
@@ -147,16 +144,16 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
         if (transferDir == 0U)
         {
             /* Peripheral to memory transfer */
-            dmaChRegs->DMA_CHAN00_DSTART = src_addr;
-            dmaChRegs->DMA_CHAN00_MSTART = dst_addr;
-            dmaChRegs->DMA_CHAN00_MEND = (uint32_t)(dst_addr + blockSize);
+            dmaChRegs->DMA_CHAN00_DSTART = (volatile uint32_t)((const volatile uint8_t*)srcAddr);
+            dmaChRegs->DMA_CHAN00_MSTART = (volatile uint32_t)((const volatile uint8_t*)destAddr);
+            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)((const volatile uint8_t*)destAddr + blockSize);
         }
         else
         {
             /* Memory to peripheral transfer */
-            dmaChRegs->DMA_CHAN00_DSTART = dst_addr;
-            dmaChRegs->DMA_CHAN00_MSTART = src_addr;
-            dmaChRegs->DMA_CHAN00_MEND = (uint32_t)(src_addr + blockSize);
+            dmaChRegs->DMA_CHAN00_DSTART = (volatile uint32_t)((const volatile uint8_t*)destAddr);
+            dmaChRegs->DMA_CHAN00_MSTART = (volatile uint32_t)((const volatile uint8_t*)srcAddr);
+            dmaChRegs->DMA_CHAN00_MEND = (volatile uint32_t)((const volatile uint8_t*)srcAddr + blockSize);
         }
 
         dmaChannelObj[channel].mstartAddr = dmaChRegs->DMA_CHAN00_MSTART;
@@ -313,14 +310,14 @@ void ${DMA_INSTANCE_NAME}_FillDataSet( uint32_t fillData )
 }
 </#if>
 
-static void DMA_interruptHandler(DMA_CHANNEL channel)
+static void __attribute__((used)) DMA_interruptHandler(DMA_CHANNEL channel)
 {
-    DMA_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMA_CH_OBJECT  *dmacChObj;
     volatile uint8_t chIntFlagStatus = 0U;
 
-    DMA_TRANSFER_EVENT event = 0U;
+    DMA_TRANSFER_EVENT event = DMA_TRANSFER_EVENT_NONE;
 
-    dmacChObj = (DMA_CH_OBJECT *)&dmaChannelObj[channel];
+    dmacChObj = &dmaChannelObj[channel];
 
     dma_chan00_registers_t* dmaChRegs = ${DMA_INSTANCE_NAME}_ChannelBaseAddrGet(channel);
 
@@ -348,7 +345,8 @@ static void DMA_interruptHandler(DMA_CHANNEL channel)
     /* Execute the callback function */
     if ((dmacChObj->callback != NULL) && ((uint32_t)event != 0U))
     {
-        dmacChObj->callback (event, dmacChObj->context);
+        uintptr_t context = dmacChObj->context;
+        dmacChObj->callback (event, context);
     }
 }
 
@@ -362,9 +360,9 @@ static void DMA_interruptHandler(DMA_CHANNEL channel)
 <#assign DMA_CHX_INTERRUPT_NAME = "DMA_CH" + i?string["00"]>
 <#assign DMA_CHX_INT_SRC_NAME = "ECIA_DIR_INT_SRC_DMA_CH" + i?string["00"]>
 </#if>
-void ${DMA_CHX_INTERRUPT_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${DMA_CHX_INTERRUPT_NAME}_InterruptHandler( void )
 {
-    if (ECIA_GIRQResultGet(${DMA_CHX_INT_SRC_NAME}))
+    if (ECIA_GIRQResultGet(${DMA_CHX_INT_SRC_NAME}) != 0U)
     {
         ECIA_GIRQSourceClear(${DMA_CHX_INT_SRC_NAME});
         DMA_interruptHandler(DMA_CHANNEL_${i});

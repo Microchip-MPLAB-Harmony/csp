@@ -54,221 +54,231 @@
 //         Startup routine
 //------------------------------------------------------------------------------
 
-	.align      4
-	.arm
+    .align      4
+    .arm
 
 /* Exception vectors
  *******************/
-	.section    .vectors, code
+    .section    .vectors, code
 
 resetVector:
 /* Reset */
-	ldr     pc, =resetHandler
+    ldr     pc, =resetHandler
 /* Undefined Instruction */
-	ldr     pc, =undefined_instruction_irq_handler
+    ldr     pc, =undefined_instruction_irq_handler
 /* Software Interrupt */
 <#if USE_FREERTOS_VECTORS>
-	ldr     pc, =FreeRTOS_SWI_Handler
+    ldr     pc, =FreeRTOS_SWI_Handler
 <#else>
-	ldr     pc, =software_interrupt_irq_handler
+    ldr     pc, =software_interrupt_irq_handler
 </#if>
 /* Prefetch Abort */
-	ldr     pc, =prefetch_abort_irq_handler
+    ldr     pc, =prefetch_abort_irq_handler
 /* Data Abort */
-	ldr     pc, =data_abort_irq_handler
+    ldr     pc, =data_abort_irq_handler
 /* Reserved for future use */
-	.word   0
+    .word   0
 /* Interrupt */
 <#if USE_FREERTOS_VECTORS>
-	ldr     pc, =FreeRTOS_IRQ_Handler
+    ldr     pc, =FreeRTOS_IRQ_Handler
 <#elseif USE_THREADX_VECTORS>
-	ldr     pc, =ThreadX_IRQ_Handler
+    ldr     pc, =ThreadX_IRQ_Handler
 <#else>
-	ldr     pc, =irqHandler
+    ldr     pc, =irqHandler
 </#if>
 /* Fast interrupt */
-	ldr     pc, =fiqHandler
+    ldr     pc, =fiqHandler
 
-	.section    .text, code
+    .section    .text, code
 
 //------------------------------------------------------------------------------
 /// Handles a fast interrupt request by branching to the address defined in the
 /// AIC.
 //------------------------------------------------------------------------------
 fiqHandler:
-	sub     lr, lr, #4
-	stmfd   sp!, {lr}
-	//mrs     lr, SPSR
-	stmfd   sp!, {r0}
+    sub     lr, lr, #4
+    stmfd   sp!, {lr}
+    //mrs     lr, SPSR
+    stmfd   sp!, {r0}
 
-	/* Write in the IVR to support Protect Mode */
+    /* Write in the IVR to support Protect Mode */
 
-	ldr     lr, =SAIC
-	ldr     r0, [r14, #AIC_IVR]
-	str     lr, [r14, #AIC_IVR]
-	/* Dummy read to force AIC_IVR write completion */
-	ldr     lr, [r14, #AIC_SMR]
+    ldr     lr, =SAIC
+    ldr     r0, [r14, #AIC_IVR]
+    str     lr, [r14, #AIC_IVR]
+    /* Dummy read to force AIC_IVR write completion */
+    ldr     lr, [r14, #AIC_SMR]
 
-	/* Branch to interrupt handler in Supervisor mode */
+    /* Branch to interrupt handler in Supervisor mode */
 
-	msr     CPSR_c, #ARM_MODE_SVC
-	stmfd   sp!, {r1-r3, r4, r12, lr}
+    msr     CPSR_c, #ARM_MODE_SVC
+    stmfd   sp!, {r1-r3, r4, r12, lr}
 
-	blx      r0
+    blx      r0
 
-	ldmia   sp!, {r1-r3, r4, r12, lr}
-	msr     CPSR_c, #ARM_MODE_FIQ | I_BIT | F_BIT
+    ldmia   sp!, {r1-r3, r4, r12, lr}
+    msr     CPSR_c, #ARM_MODE_FIQ | I_BIT | F_BIT
 
-	/* Acknowledge interrupt */
+    /* Acknowledge interrupt */
 
-	ldr     lr, =SAIC
-	str     lr, [r14, #AIC_EOICR]
+    ldr     lr, =SAIC
+    str     lr, [r14, #AIC_EOICR]
 
-	/* Restore interrupt context and branch back to calling code */
+    /* Restore interrupt context and branch back to calling code */
 
-	ldmia   sp!, {r0}
-	//msr     SPSR_cxsf, lr
-	ldmia   sp!, {pc}^
+    ldmia   sp!, {r0}
+    //msr     SPSR_cxsf, lr
+    ldmia   sp!, {pc}^
 
 //------------------------------------------------------------------------------
 /// Handles incoming interrupt requests by branching to the corresponding
 /// handler, as defined in the AIC. Supports interrupt nesting.
 //------------------------------------------------------------------------------
 irqHandler:
-	/* Save interrupt context on the stack to allow nesting */
+    /* Save interrupt context on the stack to allow nesting */
 
-	sub     lr, lr, #4
-	stmfd   sp!, {lr}
-	mrs     lr, SPSR
-	stmfd   sp!, {r0, lr}
+    sub     lr, lr, #4
+    stmfd   sp!, {lr}
+    mrs     lr, SPSR
+    stmfd   sp!, {r0, lr}
 
-	/* Write in the IVR to support Protect Mode */
+    /* Write in the IVR to support Protect Mode */
 
-	ldr     lr, =AIC
-	ldr     r0, [r14, #AIC_IVR]
-	str     lr, [r14, #AIC_IVR]
-	/* Dummy read to force AIC_IVR write completion */
-	ldr     lr, [r14, #AIC_SMR]
+    ldr     lr, =AIC
+    ldr     r0, [r14, #AIC_IVR]
+    str     lr, [r14, #AIC_IVR]
+    /* Dummy read to force AIC_IVR write completion */
+    ldr     lr, [r14, #AIC_SMR]
 
-	/* Branch to interrupt handler in Supervisor mode */
+    /* Branch to interrupt handler in Supervisor mode */
 
-	msr     CPSR_c, #ARM_MODE_SVC
-	stmfd   sp!, {r1-r3, r4, r12, lr}
+    msr     CPSR_c, #ARM_MODE_SVC
+    stmfd   sp!, {r1-r3, r4, r12, lr}
 
-	/* Check for 8-byte alignment and save lr plus a */
-	/* word to indicate the stack adjustment used (0 or 4) */
+    /* Save FPU context */
+    vmrs     r4, fpscr   /* save the FP status register */
+    vpush    {d0-d7}     /* save the VFP registers to the stack */
+    vpush    {d16-d31}
 
-	and     r1, sp, #4
-	sub     sp, sp, r1
-	stmfd   sp!, {r1, lr}
+    /* Check for 8-byte alignment and save lr plus a */
+    /* word to indicate the stack adjustment used (0 or 4) */
 
-	blx     r0
+    and     r1, sp, #4
+    sub     sp, sp, r1
+    stmfd   sp!, {r1, lr}
 
-	ldmia   sp!, {r1, lr}
-	add     sp, sp, r1
+    blx     r0
 
-	ldmia   sp!, {r1-r3, r4, r12, lr}
-	msr     CPSR_c, #ARM_MODE_IRQ | I_BIT | F_BIT
+    ldmia   sp!, {r1, lr}
+    add     sp, sp, r1
 
-	/* Acknowledge interrupt */
+    /* Restore FPU context */
+    vpop     {d16-d31}
+    vpop     {d0-d7}     /* restore the VFP registers */
+    vmsr     fpscr, r4   /* restore the FP status register */
 
-	ldr     lr, =AIC
-	str     lr, [r14, #AIC_EOICR]
+    ldmia   sp!, {r1-r3, r4, r12, lr}
+    msr     CPSR_c, #ARM_MODE_IRQ | I_BIT | F_BIT
 
-	/* Restore interrupt context and branch back to calling code */
+    /* Acknowledge interrupt */
 
-	ldmia   sp!, {r0, lr}
-	msr     SPSR_cxsf, lr
-	ldmia   sp!, {pc}^
+    ldr     lr, =AIC
+    str     lr, [r14, #AIC_EOICR]
+
+    /* Restore interrupt context and branch back to calling code */
+
+    ldmia   sp!, {r0, lr}
+    msr     SPSR_cxsf, lr
+    ldmia   sp!, {pc}^
 
 
 //------------------------------------------------------------------------------
 /// Initializes the chip and branches to the main() function.
 //------------------------------------------------------------------------------
-	.section    .textEntry, code
-	.global     entry
+    .section    .textEntry, code
+    .global     entry
 
 entry:
-	/* Dummy vector table for ROM-code for cases when the real vector table
-	 * is relocated (QSPI-XIP) */
-	ldr     pc, =resetHandler
-	ldr     pc, =resetHandler
-	ldr     pc, =resetHandler
-	ldr     pc, =resetHandler
-	ldr     pc, =resetHandler
-	.word   0
-	ldr     pc, =resetHandler
-	ldr     pc, =resetHandler
+    /* Dummy vector table for ROM-code for cases when the real vector table
+     * is relocated (QSPI-XIP) */
+    ldr     pc, =resetHandler
+    ldr     pc, =resetHandler
+    ldr     pc, =resetHandler
+    ldr     pc, =resetHandler
+    ldr     pc, =resetHandler
+    .word   0
+    ldr     pc, =resetHandler
+    ldr     pc, =resetHandler
 
 resetHandler:
 
 /* Set up the fast interrupt stack pointer */
 
-	mrs     r0, CPSR
-	bic     r0, r0, #MODE_MSK
-	orr     r0, r0, #ARM_MODE_FIQ
-	msr     CPSR_c, r0
-	ldr     sp, =_fiqstack
-	bic     sp, sp, #0x7
+    mrs     r0, CPSR
+    bic     r0, r0, #MODE_MSK
+    orr     r0, r0, #ARM_MODE_FIQ
+    msr     CPSR_c, r0
+    ldr     sp, =_fiqstack
+    bic     sp, sp, #0x7
 
 /* Set up the normal interrupt stack pointer */
 
-	bic     r0, r0, #MODE_MSK
-	orr     r0, r0, #ARM_MODE_IRQ
-	msr     CPSR_c, r0
-	ldr     sp, =_irqstack
-	bic     sp, sp, #0x7
+    bic     r0, r0, #MODE_MSK
+    orr     r0, r0, #ARM_MODE_IRQ
+    msr     CPSR_c, r0
+    ldr     sp, =_irqstack
+    bic     sp, sp, #0x7
 
 /* Set up the abort mode stack pointer */
 
-	bic     r0, r0, #MODE_MSK
-	orr     r0, r0, #ARM_MODE_ABT
-	msr     CPSR_c, r0
-	ldr     sp, =_abtstack
-	bic     sp, sp, #0x7
+    bic     r0, r0, #MODE_MSK
+    orr     r0, r0, #ARM_MODE_ABT
+    msr     CPSR_c, r0
+    ldr     sp, =_abtstack
+    bic     sp, sp, #0x7
 
 /* Set up the undefined mode stack pointer */
 
-	bic     r0, r0, #MODE_MSK
-	orr     r0, r0, #ARM_MODE_UND
-	msr     CPSR_c, r0
-	ldr     sp, =_undstack
-	bic     sp, sp, #0x7
+    bic     r0, r0, #MODE_MSK
+    orr     r0, r0, #ARM_MODE_UND
+    msr     CPSR_c, r0
+    ldr     sp, =_undstack
+    bic     sp, sp, #0x7
 
 /* Set up the user/system mode stack pointer */
 
-	bic     r0, r0, #MODE_MSK
-	orr     r0, r0, #ARM_MODE_SYS
-	msr     CPSR_c, r0
-	ldr     sp, =_cstack
-	bic     sp, sp, #0x7
+    bic     r0, r0, #MODE_MSK
+    orr     r0, r0, #ARM_MODE_SYS
+    msr     CPSR_c, r0
+    ldr     sp, =_cstack
+    bic     sp, sp, #0x7
 
 /* Set up the supervisor mode stack pointer */
 
-	bic     r0, r0, #MODE_MSK
-	orr     r0, r0, #ARM_MODE_SVC
-	msr     CPSR_c, r0
-	ldr     sp, =_svcstack
-	bic     sp, sp, #0x7
+    bic     r0, r0, #MODE_MSK
+    orr     r0, r0, #ARM_MODE_SVC
+    msr     CPSR_c, r0
+    ldr     sp, =_svcstack
+    bic     sp, sp, #0x7
 
 /* Relocate */
-	ldr     r0, =_etext
-	ldr     r1, =_srelocate
-	ldr     r2, =_erelocate
+    ldr     r0, =_etext
+    ldr     r1, =_srelocate
+    ldr     r2, =_erelocate
 1:
-	cmp     r1, r2
-	ldrcc   r3, [r0], #4
-	strcc   r3, [r1], #4
-	bcc     1b
+    cmp     r1, r2
+    ldrcc   r3, [r0], #4
+    strcc   r3, [r1], #4
+    bcc     1b
 
 /* Clear the zero segment */
-	ldr     r0, =_szero
-	ldr     r1, =_ezero
-	mov     r2, #0
+    ldr     r0, =_szero
+    ldr     r1, =_ezero
+    mov     r2, #0
 1:
-	cmp     r0, r1
-	strcc   r2, [r0], #4
-	bcc     1b
+    cmp     r0, r1
+    strcc   r2, [r0], #4
+    bcc     1b
 
 /* Remap 0x0 to SRAM and invalidate I Cache */
     mov     r0, #REMAP_BASE_ADDRESS
@@ -278,26 +288,26 @@ resetHandler:
     mcr     p15, 0, r0, c7, c5, 0
 
 /* Enable fpu */
-	/* Grant non secure access for CP10 and CP11 */
-	mrc	p15, 0, r0, c1, c1, 2
-	orr     r0, r0, #3 << FPU_NON_SECURE_ACCESS_OFFSET
-	mcr	p15, 0, r0, c1, c1, 2
-	/* Set CP10 and CP11 access permission (Privileged and User mode) */
-	ldr	r0, =(0xF << FPU_ACCESS_CONTROL_OFFSET)
-	mcr	p15, 0, r0, c1, c0, 2
-	/* Set the FPEXC EN bit to enable the FPU (and NEON instructions) */
-	mov	r1, #FPU_FPEXC_EN_BIT
-	vmsr	FPEXC, r1
+    /* Grant non secure access for CP10 and CP11 */
+    mrc p15, 0, r0, c1, c1, 2
+    orr     r0, r0, #3 << FPU_NON_SECURE_ACCESS_OFFSET
+    mcr p15, 0, r0, c1, c1, 2
+    /* Set CP10 and CP11 access permission (Privileged and User mode) */
+    ldr r0, =(0xF << FPU_ACCESS_CONTROL_OFFSET)
+    mcr p15, 0, r0, c1, c0, 2
+    /* Set the FPEXC EN bit to enable the FPU (and NEON instructions) */
+    mov r1, #FPU_FPEXC_EN_BIT
+    vmsr    FPEXC, r1
 
 /* Initialize the C library */
 
-	bl      __libc_init_array
+    bl      __libc_init_array
 
 /* Branch to main() */
 
-	bl      main
+    bl      main
 
 /* Loop indefinitely when program is finished */
 
 1:
-	b       1b
+    b       1b

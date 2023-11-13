@@ -39,6 +39,9 @@
 *******************************************************************************/
 #include "device.h"
 #include "plib_${QEI_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#--Implementation-->
 // *****************************************************************************
@@ -53,7 +56,7 @@
 </#if>
 
 <#if INTERRUPT_MODE == true>
-QEI_CH_OBJECT ${QEI_INSTANCE_NAME?lower_case}Obj;
+volatile static QEI_CH_OBJECT ${QEI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${QEI_INSTANCE_NAME}_Initialize (void)
@@ -131,13 +134,13 @@ void ${QEI_INSTANCE_NAME}_Initialize (void)
 void ${QEI_INSTANCE_NAME}_Start(void)
 {
     /* Enable QEI channel */
-    QEI${QEI_INSTANCE_NUM}CON |= _QEI${QEI_INSTANCE_NUM}CON_QEIEN_MASK;
+    QEI${QEI_INSTANCE_NUM}CON |= (uint32_t)_QEI${QEI_INSTANCE_NUM}CON_QEIEN_MASK;
 }
 
 void ${QEI_INSTANCE_NAME}_Stop(void)
 {
     /* Disable QEI channel */
-    QEI${QEI_INSTANCE_NUM}CON &= ~_QEI${QEI_INSTANCE_NUM}CON_QEIEN_MASK;
+    QEI${QEI_INSTANCE_NUM}CON &= ~(uint32_t)_QEI${QEI_INSTANCE_NUM}CON_QEIEN_MASK;
 }
 
 uint32_t ${QEI_INSTANCE_NAME}_PulseIntervalGet(void)
@@ -171,13 +174,15 @@ void ${QEI_INSTANCE_NAME}_CallbackRegister(QEI_CALLBACK callback, uintptr_t cont
 </#if>
 
 <#if INTERRUPT_MODE == true>
-void QEI${QEI_INSTANCE_NUM}_InterruptHandler(void)
+void __attribute__((used)) QEI${QEI_INSTANCE_NUM}_InterruptHandler(void)
 {
-    QEI_STATUS status = (QEI_STATUS)(QEI${QEI_INSTANCE_NUM}STAT & QEI_STATUS_MASK);
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context = ${QEI_INSTANCE_NAME?lower_case}Obj.context;
+    QEI_STATUS status = (QEI${QEI_INSTANCE_NUM}STAT & (uint32_t)QEI_STATUS_MASK);
     ${QEI_IFS_REG}CLR = _${QEI_IFS_REG}_QEI${QEI_INSTANCE_NUM}IF_MASK;
     if( (${QEI_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
-        ${QEI_INSTANCE_NAME?lower_case}Obj.callback(status, ${QEI_INSTANCE_NAME?lower_case}Obj.context);
+        ${QEI_INSTANCE_NAME?lower_case}Obj.callback(status, context);
     }
 }
 </#if>

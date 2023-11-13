@@ -103,7 +103,7 @@ static bool checkGpnvmWordCrc(void)
 
     crc_dscr.ul_tr_addr = (uint32_t) &gpnvm_table[1];
     /* Transfer width: word, interrupt enable, 1 word size */
-    crc_dscr.ul_tr_ctrl = (2U << 24) | 1U;
+    crc_dscr.ul_tr_ctrl = (2UL << 24) | 1U;
 
     __DSB();
     __ISB();
@@ -233,9 +233,11 @@ static void CLK_SlowClockInitialize(void)
     SUPC_REGS->SUPC_CR = SUPC_CR_KEY_PASSWD;
     </#if>
 
-    <#if CLK_SLCK_TDXTALSEL != "0">
-    /* Wait for xtal selection to become effective for TD_SLCK */
-    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_TDOSCSEL_Msk));
+    <#if CLK_SLCK_TDXTALSEL != "0">    
+    while ((SUPC_REGS->SUPC_SR & SUPC_SR_TDOSCSEL_Msk) == 0U)
+    {
+        /* Wait for xtal selection to become effective for TD_SLCK */
+    }
     </#if>
 }
 
@@ -253,8 +255,10 @@ static void CLK_MainClockInitialize(void)
        Switch Main Clock (MAINCK) to External signal on XIN pin */
     PMC_REGS->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
 
-    /* Wait until MAINCK is switched to External Clock Signal (XIN pin) */
-    while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk);
+    while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk)
+    {
+        /* Wait until MAINCK is switched to External Clock Signal (XIN pin) */
+    }
 
 </#if>
 <#if CLK_MAINCK_MOSCRCEN>
@@ -364,7 +368,10 @@ static void CLK_PLLxClockInitialize(void)
                             CKGR_PLLBR_MULB(${CLK_PLLBCK_MULB}) |
                             CKGR_PLLBR_DIVB(${CLK_PLLBCK_DIVB});
 
-    while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKB_Msk) != PMC_SR_LOCKB_Msk);
+    while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKB_Msk) != PMC_SR_LOCKB_Msk)
+    {
+        /* Wait */
+    }
     </#if>
 }
 
@@ -401,17 +408,26 @@ static void CLK_MasterClockInitialize(void)
 <#if CLK_MCK_CSS == "SLOW_CLK" || CLK_MCK_CSS == "MAIN_CLK">
     /* Program PMC_MCKR.CSS and Wait for PMC_SR.MCKRDY to be set    */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_${CLK_MCK_CSS};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait */
+    }
 
 
     /* Program PMC_MCKR.PRES and wait for PMC_SR.MCKRDY to be set   */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_PRES_Msk) | PMC_MCKR_PRES_${CLK_MCK_PRES};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait */
+    }
 
 
     /* Program PMC_MCKR.MDIV and Wait for PMC_SR.MCKRDY to be set   */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_MDIV_Msk) | PMC_MCKR_MDIV_${CLK_MCK_MDIV};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait */
+    }
 
 </#if>
 }
@@ -439,7 +455,10 @@ static void CLK_ProgrammableClockInitialize(void)
     PMC_REGS->PMC_SCER = ${PMC_SCER_PCKX_MSK};
 
     /* Wait for clock to be ready */
-    while( (PMC_REGS->PMC_SR & (${PMC_SR_PCKRDYX_MSK}) ) != (${PMC_SR_PCKRDYX_MSK}));
+    while( (PMC_REGS->PMC_SR & (${PMC_SR_PCKRDYX_MSK}) ) != (${PMC_SR_PCKRDYX_MSK}))
+    {
+        /* Wait */
+    }
 
 }
 

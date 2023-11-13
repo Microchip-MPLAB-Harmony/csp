@@ -53,6 +53,42 @@
     extern "C" {
 
 #endif
+// *****************************************************************************
+/* MCAN Transfer Error
+
+   Summary:
+    MCAN Transfer Error data type.
+
+   Description:
+    This data type defines the MCAN Transfer Error.
+
+   Remarks:
+    None.
+*/
+#define    MCAN_ERROR_NONE              (0x0U)
+#define     MCAN_ERROR_LEC_STUFF        (0x1)
+#define     MCAN_ERROR_LEC_FORM         (0x2U) 
+#define     MCAN_ERROR_LEC_ACK          (0x3U)
+#define     MCAN_ERROR_LEC_BIT1         (0x4U)
+#define     MCAN_ERROR_LEC_BIT0         (0x5U)
+#define     MCAN_ERROR_LEC_CRC          (0x6U)
+#define     MCAN_ERROR_LEC_NO_CHANGE    (0x7U)
+#define     MCAN_ERROR_PASSIVE          (0x20U)
+#define     MCAN_ERROR_WARNING_STATUS   (0x40U)
+#define     MCAN_ERROR_BUS_OFF          (0x80U)
+#define     MCAN_ERROR_DLEC_STUFF       (0x100U)
+#define     MCAN_ERROR_DLEC_FORM        (0x200U)
+#define     MCAN_ERROR_DLEC_ACK         (0x300U)
+#define     MCAN_ERROR_DLEC_BIT1        (0x400U)
+#define     MCAN_ERROR_DLEC_BIT0        (0x500U)
+#define     MCAN_ERROR_DLEC_CRC         (0x600U)
+#define     MCAN_ERROR_DLEC_NO_CHANGE   (0x700U)
+#define     MCAN_ERROR_PROTOCOL_EXCEPTION_EVENT  (0x4000U)
+    /* Force the compiler to reserve 32-bit space for each enum value */
+#define     MCAN_ERROR_INVALID          (0xFFFFFFFFU)
+typedef uint32_t MCAN_ERROR;
+
+
 // DOM-IGNORE-END
 
 // *****************************************************************************
@@ -139,43 +175,6 @@ typedef enum
     MCAN_MSG_RX_DATA_FRAME = 0,
     MCAN_MSG_RX_REMOTE_FRAME
 } MCAN_MSG_RX_FRAME_ATTRIBUTE;
-
-// *****************************************************************************
-/* MCAN Transfer Error
-
-   Summary:
-    MCAN Transfer Error data type.
-
-   Description:
-    This data type defines the MCAN Transfer Error.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    MCAN_ERROR_NONE = 0x0,
-    MCAN_ERROR_LEC_STUFF = 0x1,
-    MCAN_ERROR_LEC_FORM = 0x2,
-    MCAN_ERROR_LEC_ACK = 0x3,
-    MCAN_ERROR_LEC_BIT1 = 0x4,
-    MCAN_ERROR_LEC_BIT0 = 0x5,
-    MCAN_ERROR_LEC_CRC = 0x6,
-    MCAN_ERROR_LEC_NO_CHANGE = 0x7,
-    MCAN_ERROR_PASSIVE = 0x20,
-    MCAN_ERROR_WARNING_STATUS = 0x40,
-    MCAN_ERROR_BUS_OFF = 0x80,
-    MCAN_ERROR_DLEC_STUFF = 0x100,
-    MCAN_ERROR_DLEC_FORM = 0x200,
-    MCAN_ERROR_DLEC_ACK = 0x300,
-    MCAN_ERROR_DLEC_BIT1 = 0x400,
-    MCAN_ERROR_DLEC_BIT0 = 0x500,
-    MCAN_ERROR_DLEC_CRC = 0x600,
-    MCAN_ERROR_DLEC_NO_CHANGE = 0x700,
-    MCAN_ERROR_PROTOCOL_EXCEPTION_EVENT = 0x4000,
-    /* Force the compiler to reserve 32-bit space for each enum value */
-    MCAN_ERROR_INVALID = 0xFFFFFFFF
-} MCAN_ERROR;
 
 // *****************************************************************************
 /* MCAN Interrupt Mask

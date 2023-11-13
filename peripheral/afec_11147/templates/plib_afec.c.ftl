@@ -225,6 +225,15 @@
     <#assign AFEC_IER = AFEC_IER_EOC>
 </#if>
 
+<#if AFEC_11_CHER == true && (AFEC_IER_TEMPCHG?? && AFEC_IER_TEMPCHG == true)>
+<#if AFEC_IER != "">
+    <#assign AFEC_IER = AFEC_IER + " | " + "AFEC_IER_TEMPCHG_Msk">
+<#else>
+    <#assign AFEC_IER = "AFEC_IER_TEMPCHG_Msk">
+</#if>
+    <#assign AFEC_INTERRUPT = true>
+</#if>
+
 </#compress>
 
 <#-- *********************************************************************************************** -->
@@ -235,7 +244,7 @@
 // *****************************************************************************
 <#if AFEC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>static AFEC_CALLBACK_OBJECT ${AFEC_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static AFEC_CALLBACK_OBJECT ${AFEC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize AFEC peripheral */
@@ -245,7 +254,7 @@ void ${AFEC_INSTANCE_NAME}_Initialize(void)
     ${AFEC_INSTANCE_NAME}_REGS->AFEC_CR = AFEC_CR_SWRST_Msk;
 
     /* Prescaler and different time settings as per CLOCK section  */
-    ${AFEC_INSTANCE_NAME}_REGS->AFEC_MR = AFEC_MR_PRESCAL(${AFEC_MR_PRESCAL}U) | AFEC_MR_TRACKTIM(15U) | AFEC_MR_STARTUP_SUT64 |
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_MR = AFEC_MR_PRESCAL(${AFEC_MR_PRESCAL}U) | AFEC_MR_STARTUP_SUT64 |
         AFEC_MR_TRANSFER(2U) | AFEC_MR_ONE_Msk ${(AFEC_CONV_MODE == "0")?then('| AFEC_MR_FREERUN_Msk', '')} <#rt>
         <#lt> ${(AFEC_CONV_MODE == "2")?then('| (AFEC_MR_TRGEN_Msk) | (AFEC_MR_${AFEC_MR_TRGSEL_VALUE})', '')};
 
@@ -301,6 +310,29 @@ void ${AFEC_INSTANCE_NAME}_Initialize(void)
     </#if>
     <#if AFEC_SEQ2R_USCH?has_content>
     <#lt>   ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ2R = ${AFEC_SEQ2R_USCH};
+    </#if>
+</#if>
+
+<#if AFEC_11_CHER == true>
+    <#assign afec_tempr_val = "">
+    <#if AFEC_TEMPMR_RTCT?? && AFEC_TEMPMR_RTCT == true>
+    <#assign afec_tempr_val = "AFEC_TEMPMR_RTCT_Msk">
+    </#if>
+
+    <#if AFEC_TEMP_CMP_MODE_EN?? && AFEC_TEMP_CMP_MODE_EN == true>
+
+    <#if afec_tempr_val == "">
+    <#assign afec_tempr_val = "AFEC_TEMPMR_TEMPCMPMOD_" + .vars["AFEC_TEMPMR_TEMPCMPMOD"]>
+    <#else>
+    <#assign afec_tempr_val = afec_tempr_val + " | " + "AFEC_TEMPMR_TEMPCMPMOD_" + .vars["AFEC_TEMPMR_TEMPCMPMOD"]>
+    </#if>
+
+    <#if afec_tempr_val != "">
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_TEMPMR = ${afec_tempr_val};
+    </#if>
+
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_TEMPCWR = AFEC_TEMPCWR_THIGHTHRES(${AFEC_TEMPCWR_THIGHTHRES}) | AFEC_TEMPCWR_TLOWTHRES(${AFEC_TEMPCWR_TLOWTHRES});
+
     </#if>
 </#if>
 
@@ -434,13 +466,14 @@ void ${AFEC_INSTANCE_NAME}_ComparatorModeSet(AFEC_COMPARATOR_MODE cmpMode)
 
 <#if AFEC_INTERRUPT == true>
     <#lt>/* Interrupt Handler */
-    <#lt>void ${AFEC_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${AFEC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#lt>    uint32_t var_status;
     <#lt>    var_status = ${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR;
     <#lt>    if (${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn(var_status, ${AFEC_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        uintptr_t context = ${AFEC_INSTANCE_NAME}_CallbackObj.context;
+    <#lt>        ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn(var_status, context);
     <#lt>    }
     <#lt>}
 <#else>

@@ -41,6 +41,9 @@
 // DOM-IGNORE-END
 #include "device.h"
 #include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define ADC_SEQ1_CHANNEL_NUM (8U)
 
@@ -199,7 +202,7 @@
 // *****************************************************************************
 <#if ADC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize ADC peripheral */
@@ -209,7 +212,7 @@ void ${ADC_INSTANCE_NAME}_Initialize(void)
     ${ADC_INSTANCE_NAME}_REGS->ADC_CR = ADC_CR_SWRST_Msk;
 
     /* Prescaler and different time settings as per CLOCK section  */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_MR = ADC_MR_PRESCAL(${ADC_MR_PRESCAL}U) | ADC_MR_TRACKTIM(14U) | ADC_MR_STARTUP_SUT512 |
+    ${ADC_INSTANCE_NAME}_REGS->ADC_MR = <#if ADC_MR_ALWAYS1_BIT_PRESENT??> ADC_MR_ALWAYS_Msk | </#if> ADC_MR_PRESCAL(${ADC_MR_PRESCAL}U) | ADC_MR_TRACKTIM(14U) | ADC_MR_STARTUP_SUT512 |
         ADC_MR_TRANSFER(2U) | ADC_MR_ANACH_ALLOWED<#rt>
         <#lt>${((ADC_TRGR_MODE == "EXT_TRIG_RISE") || (ADC_TRGR_MODE == "EXT_TRIG_FALL") || (ADC_TRGR_MODE == "EXT_TRIG_ANY"))?then(' | ADC_MR_TRGSEL_${ADC_MR_TRGSEL_VALUE}', '')}<#rt>
         <#lt>${(ADC_MR_SLEEP == true)?then(' | ADC_MR_SLEEP_Msk | ADC_MR_FWUP_${ADC_MR_FWUP}', '')};
@@ -339,23 +342,23 @@ void ${ADC_INSTANCE_NAME}_ConversionSequenceSet(ADC_CHANNEL_NUM *channelList, ui
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 = 0U;
     </#if>
 
-    if (numChannel > ${ADC_CHANNEL_SEQ_NUM}U)
+    if (numChannel < ${ADC_CHANNEL_SEQ_NUM}U)
     {
-        return;
-    }
-
-    for (channelIndex = 0U; channelIndex < numChannel; channelIndex++)
-    {
-        if (channelIndex < ADC_SEQ1_CHANNEL_NUM)
+        for (channelIndex = 0U; channelIndex < numChannel; channelIndex++)
         {
+            <#if ADC_NUM_CHANNELS gt 8>
+            if (channelIndex < ADC_SEQ1_CHANNEL_NUM)
+            {
+                ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 |= channelList[channelIndex] << (channelIndex * 4U);
+            }
+            else
+            {
+                ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 |= channelList[channelIndex] << ((channelIndex - ADC_SEQ1_CHANNEL_NUM) * 4U);
+            }
+            <#else>
             ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 |= channelList[channelIndex] << (channelIndex * 4U);
+            </#if>
         }
-        <#if ADC_NUM_CHANNELS gt 8>
-        else
-        {
-            ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 |= channelList[channelIndex] << ((channelIndex - ADC_SEQ1_CHANNEL_NUM) * 4U);
-        }
-        </#if>
     }
 }
 
@@ -408,19 +411,19 @@ void ${ADC_INSTANCE_NAME}_FastWakeupDisable(void)
     <#lt>    ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn = callback;
     <#lt>    ${ADC_INSTANCE_NAME}_CallbackObj.context = context;
     <#lt>}
-</#if>
-<#if ADC_INTERRUPT == true>
-    <#lt>/* Interrupt Handler */
-    <#lt>void ${ADC_INSTANCE_NAME}_InterruptHandler(void)
-    <#lt>{
-    <#lt>    uint32_t interruptStatus = 0;
-    <#lt>    uint32_t eocInterruptStatus = 0;
 
-    <#lt>    interruptStatus = ${ADC_INSTANCE_NAME}_REGS->ADC_ISR;
-    <#lt>    eocInterruptStatus = ${ADC_INSTANCE_NAME}_REGS->ADC_EOC_ISR;
+    <#lt>/* Interrupt Handler */
+    <#lt>void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>{
+    <#lt>    uint32_t interruptStatus = ${ADC_INSTANCE_NAME}_REGS->ADC_ISR;
+    <#lt>    uint32_t eocInterruptStatus = ${ADC_INSTANCE_NAME}_REGS->ADC_EOC_ISR;
+
+    <#lt>    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    <#lt>    uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObj.context;
+
     <#lt>    if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(interruptStatus, eocInterruptStatus, ${ADC_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(interruptStatus, eocInterruptStatus, context);
     <#lt>    }
     <#lt>}
 </#if>

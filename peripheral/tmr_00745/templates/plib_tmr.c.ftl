@@ -51,6 +51,9 @@
 
 #include "device.h"
 #include "plib_${TMR_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#assign interrupt = false>
 <#if (TIMER_32BIT_MODE_SEL == "0" && TMR_INTERRUPT_MODE == true) || (TIMER_32BIT_MODE_SEL == "1" && TMR_SLAVE_INTERRUPT_MODE == true)>
@@ -58,7 +61,7 @@
 </#if>
 
 <#if  interrupt == true>
-static TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
+volatile static TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 
@@ -147,7 +150,7 @@ uint32_t ${TMR_INSTANCE_NAME}_FrequencyGet(void)
 }
 
 <#if TIMER_32BIT_MODE_SEL =="1" && TMR_INTERRUPT_MODE == true>
-void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
 {
     /* In 32-bit mode, master interrupt handler is ignored */
     ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
@@ -156,9 +159,9 @@ void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
 
 <#if interrupt == true>
 <#if TIMER_32BIT_MODE_SEL =="0">
-void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
 <#else>
-void TIMER_${TMR_INSTANCE_NUM?number + 1}_InterruptHandler (void)
+void __attribute__((used)) TIMER_${TMR_INSTANCE_NUM?number + 1}_InterruptHandler (void)
 </#if>
 {
     uint32_t status  = 0U;
@@ -172,7 +175,8 @@ void TIMER_${TMR_INSTANCE_NUM?number + 1}_InterruptHandler (void)
 
     if((${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL))
     {
-        ${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn(status, ${TMR_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${TMR_INSTANCE_NAME?lower_case}Obj.context;
+        ${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn(status, context);
     }
 }
 
@@ -202,5 +206,20 @@ void ${TMR_INSTANCE_NAME}_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t 
     /* Save callback_fn and context in local memory */
     ${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn = callback_fn;
     ${TMR_INSTANCE_NAME?lower_case}Obj.context = context;
+}
+<#else>
+
+bool ${TMR_INSTANCE_NAME}_PeriodHasExpired(void)
+{
+    bool status;
+    <#if TIMER_32BIT_MODE_SEL =="0">
+        status = (${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM}IF != 0U);
+        ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
+    <#else>
+        status = (${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM?number + 1}IF != 0U);
+        ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM?number + 1}IF_MASK;
+    </#if>
+
+    return status;
 }
 </#if>

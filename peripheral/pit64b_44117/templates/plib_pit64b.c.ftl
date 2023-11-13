@@ -41,6 +41,9 @@
 
 #include <stddef.h>
 #include "plib_${PIT64B_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define ${PIT64B_INSTANCE_NAME}_COUNTER_FREQUENCY (${SRC_FREQ}U / ${PRESCALER + 1}U)
 
@@ -50,13 +53,13 @@ typedef struct
     uint32_t periodLSB;
     uint32_t periodMSB;
 <#if ENABLE_INTERRUPT == true>
-    ${PIT64B_INSTANCE_NAME}_CALLBACK callback;
-    uintptr_t context;
+    volatile ${PIT64B_INSTANCE_NAME}_CALLBACK callback;
+    volatile uintptr_t context;
 </#if>
 } ${PIT64B_INSTANCE_NAME}_OBJECT;
 
 
-static ${PIT64B_INSTANCE_NAME}_OBJECT ${PIT64B_INSTANCE_NAME?lower_case} = 
+static ${PIT64B_INSTANCE_NAME}_OBJECT ${PIT64B_INSTANCE_NAME?lower_case} =
 {
     false,
     ${PERIOD_LSB}U,
@@ -66,6 +69,7 @@ static ${PIT64B_INSTANCE_NAME}_OBJECT ${PIT64B_INSTANCE_NAME?lower_case} =
     0U
 </#if>
 };
+
 
 
 static inline void ${PIT64B_INSTANCE_NAME}_PERIOD_SET(uint32_t periodLSB, uint32_t periodMSB)
@@ -122,8 +126,8 @@ void ${PIT64B_INSTANCE_NAME}_TimerPeriodSet(uint64_t period)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wlong-long"
 </#if>
-    ${PIT64B_INSTANCE_NAME?lower_case}.periodMSB = (period & 0xFFFFFFFF00000000U) >> 32U;
-    ${PIT64B_INSTANCE_NAME?lower_case}.periodLSB = (period & 0xFFFFFFFFU);
+    ${PIT64B_INSTANCE_NAME?lower_case}.periodMSB = (uint32_t)((period & 0xFFFFFFFF00000000U) >> 32U);
+    ${PIT64B_INSTANCE_NAME?lower_case}.periodLSB = (uint32_t)(period & 0xFFFFFFFFU);
 <#if core.COMPILER_CHOICE == "XC32">
 #pragma GCC diagnostic pop
 </#if>
@@ -162,7 +166,7 @@ void ${PIT64B_INSTANCE_NAME}_DelayMs(uint32_t delay_ms)
 {
     uint64_t newCount = 0U, deltaCount = 0U, elapsedCount = 0U;
     uint64_t period = ${PIT64B_INSTANCE_NAME}_TimerPeriodGet() + 1UL;
-    uint64_t delayCount = (${PIT64B_INSTANCE_NAME}_COUNTER_FREQUENCY / 1000U) * delay_ms;
+    uint64_t delayCount = (${PIT64B_INSTANCE_NAME}_COUNTER_FREQUENCY / 1000U) * (uint64_t)delay_ms;
     uint64_t oldCount = ${PIT64B_INSTANCE_NAME}_TimerCounterGet();
     if(${PIT64B_INSTANCE_NAME?lower_case}.running)
     {
@@ -181,7 +185,7 @@ void ${PIT64B_INSTANCE_NAME}_DelayUs(uint32_t delay_us)
 {
     uint64_t newCount = 0U, deltaCount = 0U, elapsedCount = 0U;
     uint64_t period = ${PIT64B_INSTANCE_NAME}_TimerPeriodGet() + 1UL;
-    uint64_t delayCount = (${PIT64B_INSTANCE_NAME}_COUNTER_FREQUENCY / 1000000U) * delay_us;
+    uint64_t delayCount = (${PIT64B_INSTANCE_NAME}_COUNTER_FREQUENCY / 1000000U) * (uint64_t)delay_us;
     uint64_t oldCount = ${PIT64B_INSTANCE_NAME}_TimerCounterGet();
     if(${PIT64B_INSTANCE_NAME?lower_case}.running)
     {
@@ -204,13 +208,17 @@ void ${PIT64B_INSTANCE_NAME}_TimerCallbackSet(${PIT64B_INSTANCE_NAME}_CALLBACK c
 }
 
 
-void ${PIT64B_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${PIT64B_INSTANCE_NAME}_InterruptHandler(void)
 {
-    volatile uint32_t reg = ${PIT64B_INSTANCE_NAME}_REGS->PIT64B_ISR;
-    (void)reg;
-    if(${PIT64B_INSTANCE_NAME?lower_case}.callback)
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = ${PIT64B_INSTANCE_NAME?lower_case}.context;
+
+    /* Clear interrupts */
+    (void)${PIT64B_INSTANCE_NAME}_REGS->PIT64B_ISR;
+
+    if(${PIT64B_INSTANCE_NAME?lower_case}.callback != NULL)
     {
-        ${PIT64B_INSTANCE_NAME?lower_case}.callback(${PIT64B_INSTANCE_NAME?lower_case}.context);
+        ${PIT64B_INSTANCE_NAME?lower_case}.callback(context);
     }
 }
 <#else>

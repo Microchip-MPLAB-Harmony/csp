@@ -52,13 +52,13 @@ def handleMessage(messageID, args):
             spiSym_SPICON_MSTEN.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None and args["isEnabled"] == True:
             spiSym_SPICON_MSTEN.setSelectedKey("Slave mode")
-            
+
     elif (messageID == "SPI_SLAVE_RX_BUFFER_SIZE"):
         if args.get("isReadOnly") != None:
             spisSym_RXBuffer_Size.setReadOnly(args["isReadOnly"])
         if args.get("size") != None:
             spisSym_RXBuffer_Size.setValue(args["size"], 2)
-            
+
     elif (messageID == "SPI_SLAVE_TX_BUFFER_SIZE"):
         if args.get("isReadOnly") != None:
             spisSym_TXBuffer_Size.setReadOnly(args["isReadOnly"])
@@ -493,7 +493,7 @@ def instantiateComponent(spiComponent):
     Database.setSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     spiSymInterruptMode = spiComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", None)
-    spiSymInterruptMode.setLabel("Enable Interrrupts ?")
+    spiSymInterruptMode.setLabel("Enable Interrupts ?")
     spiSymInterruptMode.setDefaultValue(True)
     spiSymInterruptMode.setDependencies(updateIntReadOnlyAttr, ["SPI_MSTR_MODE_EN"])
 
@@ -533,7 +533,7 @@ def instantiateComponent(spiComponent):
         InterruptHandler.append(spiIrqFault + "_INTERRUPT_HANDLER")
         InterruptHandlerLock.append(spiIrqFault + "_INTERRUPT_HANDLER_LOCK")
         InterruptVectorUpdate.append("core." + spiIrqFault + "_INTERRUPT_ENABLE_UPDATE")
-        
+
 
         ## SPI RX Interrupt
         spiIrqrRx = spiInstanceName.getValue() + "_RX"
@@ -719,7 +719,8 @@ def instantiateComponent(spiComponent):
     spiSym_BaudError_Comment.setLabel("********** WARNING!: Baud Rate is out of range **********")
     spiSym_BaudError_Comment.setVisible(False)
 
-    spixBRG = spiInstanceName.getValue() + "BRG"
+    #Always reading the SPI1BRG bit mask value as the SPIxBRG mask value for other instances of SPI is incorrect in the ATDF file
+    spixBRG = spiInstanceName.getValue()[:-len(spiInstanceNum.getValue())] + '1' + "BRG"
     spixBRG_Bitfield = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="' + spixBRG + '"]/bitfield@[name="' + spixBRG + '"]')
     spiMaxBRG = int(str(spixBRG_Bitfield.getAttribute("mask")), 0)
 

@@ -108,7 +108,7 @@
 // *****************************************************************************
 
 <#if TCC_TIMER_INTENSET_OVF = true || TCC_TIMER_INTENSET_MC1 == true>
-static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
+volatile static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -132,6 +132,7 @@ void ${TCC_INSTANCE_NAME}_TimerInitialize( void )
 <#if TCC_SLAVE_MODE == true>
     /* Configure counter mode & prescaler */
     <@compress single_line=true>${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER}
+                                | TCC_CTRLA_PRESCSYNC_${TCC_CTRLA_PRESCYNC}
                                 | TCC_CTRLA_MSYNC_Msk ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 <#else>
     /* Configure counter mode & prescaler */
@@ -139,7 +140,7 @@ void ${TCC_INSTANCE_NAME}_TimerInitialize( void )
                                 ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 </#if>
     /* Configure in Match Frequency Mode */
-    ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE = TCC_WAVE_WAVEGEN_NPWM;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE = TCC_WAVE_WAVEGEN_NFRQ;
 
 <#if TCC_TIMER_CTRLBSET_ONESHOT == true>
     /* Configure timer one shot mode */
@@ -233,9 +234,9 @@ uint16_t ${TCC_INSTANCE_NAME}_Timer16bitCounterGet( void )
 }
 
 /* Configure timer counter value */
-void ${TCC_INSTANCE_NAME}_Timer16bitCounterSet( uint16_t count )
+void ${TCC_INSTANCE_NAME}_Timer16bitCounterSet( uint16_t countVal )
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
 
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
     {
@@ -293,9 +294,9 @@ uint32_t ${TCC_INSTANCE_NAME}_Timer24bitCounterGet( void )
 }
 
 /* Configure timer counter value */
-void ${TCC_INSTANCE_NAME}_Timer24bitCounterSet( uint32_t count )
+void ${TCC_INSTANCE_NAME}_Timer24bitCounterSet( uint32_t countVal )
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count & 0xFFFFFFU;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal & 0xFFFFFFU;
 
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
     {
@@ -330,6 +331,65 @@ void ${TCC_INSTANCE_NAME}_Timer24bitCompareSet( uint32_t compare )
 }
 </#if>
 
+<#elseif TCC_SIZE == 32>
+/* Configure timer period */
+void ${TCC_INSTANCE_NAME}_Timer32bitPeriodSet( uint32_t period )
+{
+    ${TCC_INSTANCE_NAME}_REGS->TCC_PER = period;
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_PER_Msk) == TCC_SYNCBUSY_PER_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+
+/* Read the timer period value */
+uint32_t ${TCC_INSTANCE_NAME}_Timer32bitPeriodGet( void )
+{
+    return ${TCC_INSTANCE_NAME}_REGS->TCC_PER;
+}
+
+/* Get the current timer counter value */
+uint32_t ${TCC_INSTANCE_NAME}_Timer32bitCounterGet( void )
+{
+    /* Write command to force COUNT register read synchronization */
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET |= (uint8_t)TCC_CTRLBSET_CMD_READSYNC;
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CTRLB_Msk) == TCC_SYNCBUSY_CTRLB_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET & TCC_CTRLBSET_CMD_Msk) != 0U)
+    {
+        /* Wait for CMD to become zero */
+    }
+    
+    /* Read current count value */
+    return ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT;
+}
+
+/* Configure timer counter value */
+void ${TCC_INSTANCE_NAME}_Timer32bitCounterSet( uint32_t countVal )
+{
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = countVal;
+
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_COUNT_Msk) == TCC_SYNCBUSY_COUNT_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+
+<#if TCC_SYS_TIME_CONNECTED == true>
+void ${TCC_INSTANCE_NAME}_Timer32bitCompareSet( uint32_t compare )
+{
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CC[1] = compare;
+    while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & TCC_SYNCBUSY_CC1_Msk) == TCC_SYNCBUSY_CC1_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+</#if>
+
 </#if>
 
 <#if TCC_TIMER_INTENSET_OVF == true || TCC_TIMER_INTENSET_MC1 == true>
@@ -344,47 +404,56 @@ void ${TCC_INSTANCE_NAME}_TimerCallbackRegister( TCC_CALLBACK callback, uintptr_
 <#-- Single interrupt line -->
 <#if TCC_NUM_INT_LINES == 0>
 /* Timer Interrupt handler */
-void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status;
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context;
+    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;
     status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     /* Clear interrupt flags */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
     (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     if( ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
     {
-        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
+        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, context);
     }
 
 }
 <#-- multiple interrupt lines -->
 <#else>
 <#if TCC_TIMER_INTENSET_OVF == true>
-void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
+void __attribute__((used)) ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
     uint32_t status;
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context;
+    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;    
     status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
     /* Clear interrupt flags */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;
     (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     if( ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
     {
-        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
+        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, context);
     }
 }
 </#if>
 
 <#if TCC_TIMER_INTENSET_MC1 == true>
-        <#lt>void ${TCC_INSTANCE_NAME}_MC1_InterruptHandler(void)
+        <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_MC1_InterruptHandler(void)
         <#lt>{
         <#lt>    uint32_t status;
+        <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+        <#lt>    uintptr_t context;
+        <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;
         <#lt>    status = TCC_INTFLAG_MC1_Msk;
         <#lt>    /* Clear interrupt flags */
         <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC1_Msk;
         <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
         <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
         <#lt>    {
-        <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
+        <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, context);
         <#lt>    }
 </#if>
 </#if>  <#-- TCC_NUM_INT_LINES -->

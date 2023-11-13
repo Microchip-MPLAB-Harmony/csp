@@ -329,11 +329,11 @@ coreComponent.addPlugin("../peripheral/gpio_02467/plugin/gpio_02467.jar")
 
 # # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
 
 # #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
-coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "MPU_CONFIGURATOR", {"plugin_name": "MPU Configurator", "main_html_path": "csp/plugins/configurators/mpu-configurators/mpu-configurator/build/index.html"})
 
 # #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
@@ -343,7 +343,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
 
 # # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_u2503/config/dmac.py")
-coreComponent.addPlugin("../peripheral/dmac_u2503/plugin/dmamanager.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_PIC32CX_BZ",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-1/build/index.html",
+                            "symbol_config": "csp/peripheral/dmac_u2503/plugin/symbol-config.json"
+                        }
+                        )
 
 # # load wdt
 periphNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"WDT\"]")

@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Reset Controller Peripheral Library, RSTC PLIB 
+  Reset Controller Peripheral Library, RSTC PLIB
 
   Company:
     Microchip Technology Inc.
@@ -45,6 +45,9 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 #include "plib_rstc${INSTANCE?string}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#--Implementation-->
 // *****************************************************************************
@@ -54,7 +57,7 @@
 // *****************************************************************************
 void RSTC${INSTANCE?string}_Initialize( void )
 {
-    // External reset length (${RSTC_EXTERNAL_RESET_LENGTH_MSECS?string} mSecs) 
+    // External reset length (${RSTC_EXTERNAL_RESET_LENGTH_MSECS?string} mSecs)
     uint32_t regValue = RSTC_MR_KEY_PASSWD | RSTC_MR_ERSTL( ${RSTC_MR_EXTERNAL_RESET_LENGTH} );
     <#if RSTC_MR_EXTERNAL_RESET_ACTION == "RESET">
         <#lt>    // Perform user reset on NRST input
@@ -72,16 +75,16 @@ void RSTC${INSTANCE?string}_Initialize( void )
         <#lt>    // No reset on Slow Clock fault
     </#if>
     <#if RSTC_MR_ASYNCHRONOUS_RESET == true>
-        <#lt>    // Reset is asynchronous to slow clock 
+        <#lt>    // Reset is asynchronous to slow clock
         <#lt>    regValue |= RSTC_MR_URSTASYNC_Msk;
     <#else>
-        <#lt>    // Reset is synchronous to slow clock 
+        <#lt>    // Reset is synchronous to slow clock
     </#if>
     <#if RSTC_MR_IMMEDIATE_GPBR_CLEAR == true>
-        <#lt>    // Immediate GPBR clear on tamper detection 
+        <#lt>    // Immediate GPBR clear on tamper detection
         <#lt>    regValue |= RSTC_MR_ENGCLR_Msk;
     <#else>
-        <#lt>    // Immediate GPBR clear on tamper detection is off 
+        <#lt>    // Immediate GPBR clear on tamper detection is off
     </#if>
 
     RSTC_REGS->RSTC_MR = regValue;
@@ -90,7 +93,7 @@ void RSTC${INSTANCE?string}_Initialize( void )
 void RSTC${INSTANCE?string}_Reset( RSTC_RESET_TYPE type )
 {
     // Issue reset command and wait for command processing
-    RSTC_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | type; 
+    RSTC_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | type;
     while(( RSTC_REGS->RSTC_SR & (uint32_t)RSTC_SR_SRCMP_Msk ) != 0U)
     {
         ;   // busy wait
@@ -108,7 +111,7 @@ bool RSTC${INSTANCE?string}_NRSTPinRead( void )
 }
 
 <#if RSTC_MR_EXTERNAL_RESET_ACTION == "INTERRUPT">
-    <#lt>static RSTC_OBJECT rstcObj;
+    <#lt>volatile static RSTC_OBJECT rstcObj;
 
     <#lt>void RSTC${INSTANCE?string}_CallbackRegister( RSTC_CALLBACK callback, uintptr_t context )
     <#lt>{
@@ -116,15 +119,16 @@ bool RSTC${INSTANCE?string}_NRSTPinRead( void )
     <#lt>    rstcObj.context = context;
     <#lt>}
 
-    <#lt>void RSTC${INSTANCE?string}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) RSTC${INSTANCE?string}_InterruptHandler( void )
     <#lt>{
-    <#lt>    // Capture the status and clear interrupt.  The RSTC status always has
-    <#lt>    // the last reset cause 
-    <#lt>    uint32_t interruptStatus = RSTC_REGS->RSTC_SR;
-    <#lt>    (void) interruptStatus;
+    <#lt>    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    <#lt>    uintptr_t context = rstcObj.context;
+
+    <#lt>    // Clear interrupt
+    <#lt>    (void)RSTC_REGS->RSTC_SR;
     <#lt>    if( rstcObj.callback != NULL )
     <#lt>    {
-    <#lt>        rstcObj.callback( rstcObj.context );
+    <#lt>        rstcObj.callback(context);
     <#lt>    }
     <#lt>}
 </#if>

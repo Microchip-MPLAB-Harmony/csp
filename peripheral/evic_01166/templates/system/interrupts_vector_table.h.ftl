@@ -1,3 +1,37 @@
+<#assign FREERTOS_ENABLED = ((HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "FreeRTOS") || ((FreeRTOS.SET_RTOS)?? && FreeRTOS.SET_RTOS == "FreeRTOS")>
+// *****************************************************************************
+// *****************************************************************************
+// Section: System Interrupt Vector declarations
+// *****************************************************************************
+// *****************************************************************************
+<#list EVIC_VECTOR_MIN..EVIC_VECTOR_MAX as i>
+    <#assign INT_VECTOR_SUB_IRQ_COUNT = "EVIC_" + i + "_VECTOR_SUB_IRQ_COUNT">
+    <#if .vars[INT_VECTOR_SUB_IRQ_COUNT]?? && ((.vars[INT_VECTOR_SUB_IRQ_COUNT] > 1) == true)>
+        <#list 0..(.vars[INT_VECTOR_SUB_IRQ_COUNT]) as j>
+            <#assign INT_ENABLE = "EVIC_" + i + "_" + j + "_ENABLE">
+            <#if .vars[INT_ENABLE]?? && .vars[INT_ENABLE] == true>
+                <#assign INT_NAME = "EVIC_" + i + "_" + j + "_NAME">
+void ${.vars[INT_NAME]}_Handler (void);
+            </#if>
+        </#list>
+    <#else>
+        <#assign INT_ENABLE = "EVIC_" + i + "_ENABLE">
+        <#if .vars[INT_ENABLE]?? && .vars[INT_ENABLE] == true>
+            <#assign INT_ENABLE_GENERATE = "EVIC_" + i + "_ENABLE_GENERATE">
+            <#assign INT_NAME = "EVIC_" + i + "_NAME">
+            <#if (!FREERTOS_ENABLED) || !((.vars[INT_ENABLE_GENERATE]??) && (!.vars[INT_ENABLE_GENERATE]))>
+void ${.vars[INT_NAME]}_Handler (void);
+            </#if>
+        </#if>
+    </#if>
+</#list>
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: System Interrupt Vector definitions
+// *****************************************************************************
+// *****************************************************************************
 <#list EVIC_VECTOR_MIN..EVIC_VECTOR_MAX as i>
     <#assign INT_PRIORITY = "EVIC_" + i + "_PRIORITY">
     <#assign INT_VECTOR_SUB_IRQ_COUNT = "EVIC_" + i + "_VECTOR_SUB_IRQ_COUNT">

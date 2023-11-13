@@ -141,7 +141,7 @@ __STATIC_INLINE ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadratureSpeedGet (
 <#else>
 __STATIC_INLINE ${TC_SIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadraturePositionGet (void)
 {
-    return (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CV);
+    return (${TC_SIGNED_INT_TYPE})(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CV);
 }
 </#if>
 

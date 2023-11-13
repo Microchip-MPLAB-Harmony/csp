@@ -74,7 +74,7 @@
 <#assign ADC_EVCTRL_VAL = "">
 <#assign ADC_INTENSET_VAL = "">
 <#assign ADC_CTRLA_VAL = "">
-<#if ADC_INPUTCTRL_MUXNEG != "GND">
+<#if ADC_INPUTCTRL_MUXNEG != "GND" && ADC_INPUTCTRL_MUXNEG != "AVSS" >
     <#assign ADC_INPUTCTRL_VAL = "ADC_INPUTCTRL_DIFFMODE_Msk">
 </#if>
 <#if ADC_CTRLB_LEFTADJ == true>
@@ -183,7 +183,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if ADC_INTENSET_RESRDY = true || (ADC_CTRLB_WINMODE != "0" && ADC_INTENSET_WINMON = true)>
-static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
+volatile static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 <#if ADC_INSTANCE_NAME = "ADC0">
@@ -272,7 +272,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     /* Enable interrupts */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTENSET = ${ADC_INTENSET_VAL};
 </#if>
-<#if ADC_EVCTRL_VAL?has_content && ADC_CTRLA_SLAVEEN == false>
+<#if ADC_EVCTRL_VAL?has_content >
     /* Events configuration  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_EVCTRL = ${ADC_EVCTRL_VAL};
 </#if>
@@ -392,7 +392,7 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t con
 }
 
 <#if ADC_INTENSET_RESRDY = true>
-void ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
 {
     ADC_STATUS status;
     status = (ADC_STATUS) (${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk);
@@ -400,7 +400,8 @@ void ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObject.context;
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 <#else>
@@ -415,15 +416,16 @@ bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 }
 </#if>
 <#if ADC_INTENSET_WINMON = true && ADC_CTRLB_WINMODE != "0">
-void ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
-    volatile ADC_STATUS status;
+    ADC_STATUS status;
     status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG;
     /* Clear interrupt flag */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObject.context;
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 <#else>

@@ -47,9 +47,11 @@
 #include <stddef.h>
 #include "device.h"
 #include "plib_${PIT_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define PIT_COUNTER_FREQUENCY       (${core.PIT_CLOCK_FREQUENCY}U / 16U)
-
 
 // *****************************************************************************
 // *****************************************************************************
@@ -69,7 +71,7 @@ typedef struct
 // Section: File Scope or Global Constants
 // *****************************************************************************
 // *****************************************************************************
-static PIT_OBJECT ${PIT_INSTANCE_NAME?lower_case};
+volatile static PIT_OBJECT ${PIT_INSTANCE_NAME?lower_case};
 </#if>
 
 
@@ -169,24 +171,27 @@ void ${PIT_INSTANCE_NAME}_DelayUs(uint32_t delay_us)
     }
 }
 
-<#if ENABLE_INTERRUPT == true>
+<#assign BARE_METAL = ((!((HarmonyCore.SELECT_RTOS)??)) || HarmonyCore.SELECT_RTOS == "BareMetal")>
+<#assign INTERRUPT_USED_BY_RTOS = !(__PROCESSOR?matches("ATSAMA5.*")) || BARE_METAL>
+<#if ENABLE_INTERRUPT && INTERRUPT_USED_BY_RTOS>
 void ${PIT_INSTANCE_NAME}_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t context)
 {
     ${PIT_INSTANCE_NAME?lower_case}.callback = callback;
     ${PIT_INSTANCE_NAME?lower_case}.context = context;
 }
 
-void ${PIT_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${PIT_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t interruptStatus = ${PIT_INSTANCE_NAME}_REGS->PIT_SR;
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = ${PIT_INSTANCE_NAME?lower_case}.context;
     if(interruptStatus != 0U)
 	{
-        volatile uint32_t reg = ${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
-        (void)reg;
+        (void)${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
         ${PIT_INSTANCE_NAME?lower_case}.tickCounter++;
         if((${PIT_INSTANCE_NAME?lower_case}.callback) != NULL)
         {
-            ${PIT_INSTANCE_NAME?lower_case}.callback(${PIT_INSTANCE_NAME?lower_case}.context);
+            ${PIT_INSTANCE_NAME?lower_case}.callback(context);
         }
     }
 }

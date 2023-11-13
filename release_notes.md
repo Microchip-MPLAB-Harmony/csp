@@ -3,6 +3,75 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.18.0
+
+### New Features
+
+- **New part support** - This release introduces support for
+  - PIC32CZ CA91
+  - PIC32MZ W1 2MB part
+  - CEC1734 S0 2HW/2ZW parts
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+- **New Features and Enhancements**
+  - For the CEC173X device 
+    - Added SPI master mode support in QMSPI PLib.
+    - Added SPI peripheral target (SPT) PLib support.
+    - Updated SMBUS PLib to return the PEC byte to the application.
+
+### Known Issues
+
+Same as v3.17.0 release
+
+### Development Tools
+
+Same as v3.17.0 release
+
+### Notes
+
+-  None
+
+## CSP Release v3.17.0
+
+### New Features
+
+- **New part support** - This release introduces support for
+  - PIC32CK-GC/SG
+  - PIC32CM LE/LS 128 KB parts
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+- **New Features and Enhancements**
+  - MISRA-C 2012 mandatory and required rules compliance for all Peripheral Libraries in MCUs and MPUs
+  - Link-time optimization (LTO) support in CSP
+  - DMA CRC support in PIC32CZ-CA
+  - Added support for ADC temperature sensor channel in SAM SAM E7X/S7X/V7X devices
+  - Bug fixes and enhancements
+
+### Known Issues
+
+The current known issues are as follows:
+- The following product families specifically requires the below mentioned DFP versions to be [installed](https://microchipdeveloper.com/mplabx:projects-packs)  with MPLABX v6.05. It is always recommended to use the latest version of DFPs for all products provided by Microchip.
+     -  **SAMA7G5 Family**: SAMA7G5 DFP v1.2.176 or higher
+     -  **PIC32CZ-CA80 Family**: PIC32CZ-CA80 DFP v1.2.150 or higher
+     -  **PIC32CZ-CA90 Family**: PIC32CZ-CA80 DFP v1.3.150 or higher
+     -  **PIC32CK-GC Family**: PIC32CK-GC DFP v1.0.131 or higher
+     -  **PIC32CK-SG Family**: PIC32CK-SG DFP v1.0.141 or higher
+
+### Development Tools
+
+- [MPLAB® X IDE v6.05](https://www.microchip.com/mplab/mplab-x-ide) or higher
+- [MPLAB® XC32 C/C++ Compiler v4.21](https://www.microchip.com/mplab/compilers)
+- MPLAB® X IDE plug-ins:
+    - MPLAB® Code Configurator 5.3.0 or higher
+
+### Notes
+
+-  None
+
 ## CSP Release v3.16.0
 
 ### New Features

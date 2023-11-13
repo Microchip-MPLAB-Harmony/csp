@@ -45,7 +45,7 @@
 </#if>
 
 <#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
-static SYSCTRL_CALLBACK_OBJECT SYSCTRL_CallbackObj;
+volatile static SYSCTRL_CALLBACK_OBJECT SYSCTRL_CallbackObj;
 
 </#if>
 static void SYSCTRL_Initialize(void)
@@ -92,6 +92,7 @@ static void SYSCTRL_Initialize(void)
                                                                 ${XOSC32K_RUNSTDBY?then('| SYSCTRL_XOSC32K_RUNSTDBY_Msk',' ')}
                                                                 ${XOSC32K_EN32K?then('| SYSCTRL_XOSC32K_EN32K_Msk',' ')}
                                                                 ${(XOSC32K_ONDEMAND == "ENABLE")?then('| SYSCTRL_XOSC32K_ONDEMAND_Msk',' ')}
+                                                                ${XOSC32K_AAMPEN?then('| SYSCTRL_XOSC32K_AAMPEN_Msk',' ')}
                                                                 ${(XOSC32K_OSCILLATOR_MODE == "1")?then('| SYSCTRL_XOSC32K_XTALEN_Msk',' ')};</@compress>
     <#if XOSC32K_ONDEMAND != "ENABLE">
     while(!((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_XOSC32KRDY_Msk) == SYSCTRL_PCLKSR_XOSC32KRDY_Msk))
@@ -133,7 +134,7 @@ static void DFLL_Initialize(void)
     }
 
     /*Load Calibration Value*/
-    uint8_t calibCoarse = (uint8_t)(((*(uint32_t*)0x806024U) >> 26U ) & 0x3fU);
+    uint8_t calibCoarse = (uint8_t)(((*((uint32_t*)${SW_CALIB_ROW_ADDR}U + 1U)) >> 26U ) & 0x3fU);
     calibCoarse = (((calibCoarse) == 0x3FU) ? 0x1FU : (calibCoarse));
 
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_DFLLVAL = SYSCTRL_DFLLVAL_COARSE((uint32_t)calibCoarse) |
@@ -154,7 +155,6 @@ static void DFLL_Initialize(void)
 
     /* Configure DFLL    */
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_DFLLCTRL = SYSCTRL_DFLLCTRL_ENABLE_Msk ${(CONFIG_CLOCK_DFLL_OPMODE == "1")?then('| SYSCTRL_DFLLCTRL_MODE_Msk ', ' ')}
-    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "1")?then("| SYSCTRL_DFLLCTRL_ONDEMAND_Msk ", "")}
     <#lt>                               ${CONFIG_CLOCK_DFLL_QUICK_LOCK?then('| SYSCTRL_DFLLCTRL_QLDIS_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_CHILL_CYCLE?then('| SYSCTRL_DFLLCTRL_CCDIS_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_LLAW?then('| SYSCTRL_DFLLCTRL_LLAW_Msk ', ' ')}
@@ -166,13 +166,16 @@ static void DFLL_Initialize(void)
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
     }
-    <#elseif CONFIG_CLOCK_DFLL_ONDEMAND != "1">
+    <#else>
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_DFLLRDY_Msk) != SYSCTRL_PCLKSR_DFLLRDY_Msk)
     {
         /* Waiting for DFLL to be ready */
     }
     </#if>
-
+    
+    <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
+    SYSCTRL_REGS->SYSCTRL_DFLLCTRL |= SYSCTRL_DFLLCTRL_ONDEMAND_Msk;
+    </#if>
 }
 </#if>
 
@@ -220,6 +223,42 @@ static void GCLK${i}_Initialize(void)
             </#if>
         </#if>
 </#list>
+
+<#assign BOD33_GEN = false>
+<#if SUPC_BOD33_RUNSTDBY == true || SUPC_BOD33_MODE == "1" || (SUPC_BOD33_MODE == "1" && SUPC_BOD33_PSEL != "0x0")>
+<#assign BOD33_GEN = true>
+</#if>
+
+<#if BOD33_GEN == true>
+static void BOD33_Initialize( void )
+{
+    uint32_t bodEnable = SYSCTRL_REGS->SYSCTRL_BOD33 & SYSCTRL_BOD33_ENABLE_Msk;
+
+    /* Configure BOD33. Mask the values loaded from NVM during reset. */
+    SYSCTRL_REGS->SYSCTRL_BOD33 &= ~SYSCTRL_BOD33_ENABLE_Msk;
+
+    <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_BOD33 = (SYSCTRL_REGS->SYSCTRL_BOD33 & (SYSCTRL_BOD33_ENABLE_Msk | SYSCTRL_BOD33_HYST_Msk | SYSCTRL_BOD33_ACTION_Msk | SYSCTRL_BOD33_LEVEL_Msk))<#if SUPC_BOD33_RUNSTDBY == true > | SYSCTRL_BOD33_RUNSTDBY_Msk </#if> <#if SUPC_BOD33_MODE == "1" > | SYSCTRL_BOD33_MODE_Msk | SYSCTRL_BOD33_CEN_Msk <#if SUPC_BOD33_PSEL != "0" > | SYSCTRL_BOD33_PSEL(${SUPC_BOD33_PSEL}) </#if></#if>;</@compress>
+
+    if (bodEnable != 0U)
+    {
+        SYSCTRL_REGS->SYSCTRL_BOD33 |= SYSCTRL_BOD33_ENABLE_Msk;
+
+        /* Wait for BOD33 Synchronization Ready */
+        while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_B33SRDY_Msk) == 0U)
+        {
+        }
+
+        /* If BOD33 in continuous mode then wait for BOD33 Ready */
+        if((SYSCTRL_REGS->SYSCTRL_BOD33 & SYSCTRL_BOD33_MODE_Msk) == 0U)
+        {
+            while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_BOD33RDY_Msk) == 0U)
+            {
+            }
+        }
+    }
+}
+</#if>
+
 void CLOCK_Initialize (void)
 {
     /* Function to Initialize the Oscillators */
@@ -293,6 +332,11 @@ ${CLK_INIT_LIST}
     /*Disable RC oscillator*/
     SYSCTRL_REGS->SYSCTRL_OSC8M = 0x0U;
 </#if>
+
+<#if BOD33_GEN == true>
+    BOD33_Initialize();
+</#if>
+
 <#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
 
     SYSCTRL_REGS->SYSCTRL_INTENSET = ${SYSCTRL_INTERRUPT_ENABLE_VAL}U;
@@ -306,8 +350,10 @@ void SYSCTRL_CallbackRegister(SYSCTRL_CALLBACK callback, uintptr_t context)
     SYSCTRL_CallbackObj.context = context;
 }
 
-void SYSCTRL_InterruptHandler(void)
+void __attribute__((used)) SYSCTRL_InterruptHandler(void)
 {
+    uintptr_t context_var;
+
 <#if SYSCTRL_INTERRUPT_XOSCRDY>
     if ((SYSCTRL_REGS->SYSCTRL_INTFLAG & SYSCTRL_INTFLAG_XOSCRDY_Msk) == SYSCTRL_INTFLAG_XOSCRDY_Msk)
     {
@@ -315,7 +361,8 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_XOSCRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_XOSCRDY_Msk, context_var);
         }
     }
 </#if>
@@ -327,7 +374,8 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_XOSC32KRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_XOSC32KRDY_Msk, context_var);
         }
     }
 </#if>
@@ -339,7 +387,8 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_OSC32KRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_OSC32KRDY_Msk, context_var);
         }
     }
 </#if>
@@ -351,7 +400,8 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_OSC8MRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_OSC8MRDY_Msk, context_var);
         }
     }
 </#if>
@@ -363,7 +413,8 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLRDY_Msk, context_var);
         }
     }
 </#if>
@@ -376,7 +427,8 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLOOB_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLOOB_Msk, context_var);
         }
     }
 </#if>
@@ -389,7 +441,8 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLLCKF_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLLCKF_Msk, context_var);
         }
     }
 </#if>
@@ -402,7 +455,8 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLLCKC_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLLCKC_Msk, context_var);
         }
     }
 </#if>
@@ -415,7 +469,8 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLRCS_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_DFLLRCS_Msk, context_var);
         }
     }
 </#if>
@@ -429,7 +484,8 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_BOD33RDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_BOD33RDY_Msk, context_var);
         }
     }
 </#if>
@@ -443,7 +499,8 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_BOD33DET_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_BOD33DET_Msk, context_var);
         }
     }
 </#if>
@@ -457,13 +514,14 @@ void SYSCTRL_InterruptHandler(void)
 
         if(SYSCTRL_CallbackObj.callback != NULL)
         {
-            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_B33SRDY_Msk, SYSCTRL_CallbackObj.context);
+            context_var = SYSCTRL_CallbackObj.context;
+            SYSCTRL_CallbackObj.callback(SYSCTRL_INTFLAG_B33SRDY_Msk, context_var);
         }
     }
 </#if>
     else
-	{
-		
-	}
+    {
+
+    }
 }
 </#if>

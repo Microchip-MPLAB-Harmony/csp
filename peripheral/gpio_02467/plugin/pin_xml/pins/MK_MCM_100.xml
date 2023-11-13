@@ -10,6 +10,7 @@
       <function name="AN23" />
       <function name="PWM7L" />
       <function name="PMA23" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="VDD">
        <number package="1" pin="2" />
@@ -84,6 +85,7 @@
       <function name="PWM10L" />
       <function name="VBUSON2" />
       <function name="PMA5" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RG7">
        <number package="1" pin="11" />
@@ -92,6 +94,7 @@
       <function name="SCL1" />
       <function name="RPG7" />
       <function name="PMA4" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RG8">
        <number package="1" pin="12" />
@@ -99,6 +102,7 @@
       <function name="RPG8" />
       <function name="SDA1" />
       <function name="PMA3" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="MCLR">
        <modifiers>
@@ -112,6 +116,7 @@
       <function name="RPG9" />
       <function name="FLT12" />
       <function name="PMA2" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="VSS">
        <number package="1" pin="15" />
@@ -122,6 +127,7 @@
     <pin name="RG10">
        <number package="1" pin="17" />
       <function name="AN22" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RE8">
        <number package="1" pin="18" />
@@ -260,6 +266,7 @@
     <pin name="RG11">
        <number package="1" pin="38" />
       <function name="AN35" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RF13">
        <number package="1" pin="39" />
@@ -577,6 +584,7 @@
       <function name="RPG1" />
       <function name="FLT11" />
       <function name="PMD9" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RG0">
        <modifiers>
@@ -586,6 +594,7 @@
       <function name="RPG0" />
       <function name="FLT10" />
       <function name="PMD8" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RF6">
        <modifiers>
@@ -632,6 +641,7 @@
       <function name="TRD2" />
       <function name="PWM8H" />
       <function name="PMA20" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RG12">
        <modifiers>
@@ -642,6 +652,7 @@
       <function name="RPG12" />
       <function name="PWM8L" />
       <function name="PMA21" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RG13">
        <modifiers>
@@ -651,6 +662,7 @@
       <function name="TRD0" />
       <function name="PWM7H" />
       <function name="PMA22" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RB12">
        <modifiers>

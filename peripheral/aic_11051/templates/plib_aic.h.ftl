@@ -47,16 +47,9 @@
 // DOM-IGNORE-END
 #include <stddef.h>
 #include <stdbool.h>
-#include <device.h>
 
-typedef void (*IrqHandler)(void);
-typedef struct {
-    uint32_t    peripheralId;
-    uint32_t    targetRegisters;
-    IrqHandler  handler;
-    uint32_t    srcType;
-    uint32_t    priority;
-} IrqData;
+
+
 
 void AIC_INT_Initialize( void );
 void AIC_INT_IrqEnable( void );

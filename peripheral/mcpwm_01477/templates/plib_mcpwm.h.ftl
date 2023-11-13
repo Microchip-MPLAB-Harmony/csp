@@ -38,8 +38,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef _PLIB_${MCPWM_INSTANCE_NAME}_H
-#define _PLIB_${MCPWM_INSTANCE_NAME}_H
+#ifndef PLIB_${MCPWM_INSTANCE_NAME}_H
+#define PLIB_${MCPWM_INSTANCE_NAME}_H
 
 #include <stddef.h>
 #include <stdbool.h>

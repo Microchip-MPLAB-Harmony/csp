@@ -123,8 +123,8 @@ def tcComparePeriodCalc(symbol, event):
         else:
             period = max
 
-    time = period * resolution
-    symbol.setLabel("**** Compare Period is " + str(time) + " us ****")
+    time = (period + 1) * resolution
+    symbol.setLabel("**** Waveform Period is " + str(time) + " us ****")
 
 def tcEventVisible(symbol, event):
     if event["value"] == 1:
@@ -257,9 +257,9 @@ clk_freq = Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_F
 if clk_freq == 0:
     clk_freq = 1
 resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / clk_freq
-time = tcSym_CompareDuty0.getValue() * resolution
+time = (tcSym_CompareDuty0.getValue() + 1) * resolution
 tcSym_ComparePeriod_Comment = tcComponent.createCommentSymbol("TC_COMPARE_PERIOD_COMMENT", tcSym_CompareMenu)
-tcSym_ComparePeriod_Comment.setLabel("**** Compare Period is " + str(time) + " us ****")
+tcSym_ComparePeriod_Comment.setLabel("**** Waveform Period is " + str(time) + " us ****")
 tcSym_ComparePeriod_Comment.setDependencies(tcComparePeriodCalc, ["TC_COMPARE_PERIOD", "TC_CTRLA_PRESCALER",\
     "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", "TC_COMPARE_CTRLA_WAVEGEN", "TC_CTRLA_MODE", "TC_COMPARE_CC0"])
 

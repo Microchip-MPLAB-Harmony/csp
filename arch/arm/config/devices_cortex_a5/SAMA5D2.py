@@ -243,19 +243,22 @@ coreComponent.addPlugin("../peripheral/pio_11264/plugin/pio_11264.jar")
 
 # load AIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/aic_11051/config/aic.py")
-coreComponent.addPlugin("../peripheral/aic_11051/plugin/aic_11051.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "INTERRUPT_AIC_MANAGER", {"plugin_name": "AIC Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/aic_11051_interrupt_configuration/build/index.html"})
 
 # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
-coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_SAMA5D2",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-1/build/index.html",
+                            "symbol_config": "csp/peripheral/xdmac_11161/plugin/symbol-config.json"
+                        }
+                        )
 
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
-# load ADC manager information
-coreComponent.addPlugin("../peripheral/adc_44073/plugin/adc_44073.jar")
-# load AIC manager information
-coreComponent.addPlugin("../peripheral/aic_11051/plugin/aic_11051.jar")
 
 compiler_choice = deviceFamily.getComponent().getSymbolByID("COMPILER_CHOICE")
 if compiler_choice.getSelectedKey() == "XC32":

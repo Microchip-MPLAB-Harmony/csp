@@ -165,6 +165,12 @@ def calcDpllXoscDivider(symbol, event):
     div_value = (2 * (divisor + 1))
     symbol.setValue(div_value,2)
 
+def writeEnable(symbol, event):
+    if (event["value"] == True):
+       symbol.setReadOnly(True)
+    elif (event["value"] == False):
+       symbol.setReadOnly(False)
+        
 def interruptControl(symbol, event):
     if event["id"] == "CONFIG_CLOCK_XOSC_CFDEN":
         moduleInterruptName = "OSCCTRL"
@@ -186,9 +192,19 @@ def interruptControl(symbol, event):
         Database.setSymbolValue("core", InterruptHandler, moduleInterruptName + "_Handler")
         Database.setSymbolValue("core", InterruptHandlerLock, False)
 
+def updateXINMaxFreq(symbol, event):
+    if event["source"].getSymbolByID("XOSC_OSCILLATOR_MODE").getSelectedKey() == "EXTERNAL_CLOCK":
+        symbol.setMax(48000000)
+    else:
+        symbol.setMax(32000000)
 ################################################################################
 #######          OSCCTRL Database Components      ##############################
 ################################################################################
+
+calibRowAddr = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"OTP5\"]").getAttribute("start")
+swCalibRowAddr = coreComponent.createStringSymbol("SW_CALIB_ROW_ADDR", None)
+swCalibRowAddr.setDefaultValue(calibRowAddr)
+swCalibRowAddr.setVisible(False)
 
 ############################   XOSC Components    ##############################
 #XOSC Oscillator Enable
@@ -216,6 +232,7 @@ oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setLabel("Frequency")
 oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setDescription("Setting the XOSC Frequency")
 oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setDefaultValue(12000000)
 oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setMax(32000000)
+oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setDependencies(updateXINMaxFreq, ["XOSC_OSCILLATOR_MODE"])
 
 #XOSC Oscillator Gain
 oscctrlSym_XOSCCTRL_OSCILLATOR_GAIN = coreComponent.createIntegerSymbol("CONFIG_CLOCK_XOSC_GAIN", oscctrlXosc_Menu)
@@ -233,7 +250,7 @@ oscctrlSym_XOSCCTRL_ONDEMAND.setOutputMode("Key")
 oscctrlSym_XOSCCTRL_ONDEMAND.setDisplayMode("Description")
 oscctrlSym_XOSCCTRL_ONDEMAND.addKey("DISABLE",str(0),"Always Enable")
 oscctrlSym_XOSCCTRL_ONDEMAND.addKey("ENABLE",str(1),"Only on Peripheral Request")
-oscctrlSym_XOSCCTRL_ONDEMAND.setDefaultValue(0)
+oscctrlSym_XOSCCTRL_ONDEMAND.setDefaultValue(1)
 
 #XOSC Oscillator Startup Time
 oscctrlSym_XOSCCTRL_STARTUP = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_XOSC_STARTUP",oscctrlXosc_Menu)
@@ -315,7 +332,7 @@ oscctrlSym_OSC48MCTRL_ONDEMAND.setDisplayMode("Description")
 oscctrlSym_OSC48MCTRL_ONDEMAND.setDescription("Configures the osc48m on Demand Behavior")
 oscctrlSym_OSC48MCTRL_ONDEMAND.addKey("DISABLE",str(0),"Always Enable")
 oscctrlSym_OSC48MCTRL_ONDEMAND.addKey("ENABLE",str(1),"Only on Peripheral Request")
-oscctrlSym_OSC48MCTRL_ONDEMAND.setDefaultValue(0)
+oscctrlSym_OSC48MCTRL_ONDEMAND.setDefaultValue(1)
 
 #OSC48M Internal Oscillator  Run StandBy Control
 oscctrlSym_OSC48MCTRL_RUNSTDBY = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC48M_RUNSTDY", oscctrlosc48_Menu)
@@ -398,7 +415,7 @@ oscctrlSym_DPLLCTRLA_ONDEMAND.setOutputMode("Value")
 oscctrlSym_DPLLCTRLA_ONDEMAND.setDisplayMode("Description")
 oscctrlSym_DPLLCTRLA_ONDEMAND.addKey("Disable",str(0),"Always Enable")
 oscctrlSym_DPLLCTRLA_ONDEMAND.addKey("Enable",str(1),"Only on Peripheral Request")
-oscctrlSym_DPLLCTRLA_ONDEMAND.setDefaultValue(0)
+oscctrlSym_DPLLCTRLA_ONDEMAND.setDefaultValue(1)
 
 #Digital Phase Locked Loop(DPLL) Run StandBy Control
 oscctrlSym_DPLLCTRLA_RUNSTDBY = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DPLL_RUNSTDY", dpll96_Menu)
@@ -657,7 +674,7 @@ osc32kctrlSym_XOSC32K_ONDEMAND.setOutputMode("Key")
 osc32kctrlSym_XOSC32K_ONDEMAND.setDisplayMode("Description")
 osc32kctrlSym_XOSC32K_ONDEMAND.addKey("DISABLE",str(0),"Always Enable")
 osc32kctrlSym_XOSC32K_ONDEMAND.addKey("ENABLE",str(1),"Only on Peripheral Request")
-osc32kctrlSym_XOSC32K_ONDEMAND.setDefaultValue(0)
+osc32kctrlSym_XOSC32K_ONDEMAND.setDefaultValue(1)
 
 #XOSC32K External Oscillator 1KHz Output Enable Mode
 osc32kctrlSym_XOSC32K_EN1K = coreComponent.createBooleanSymbol("XOSC32K_EN1K", xosc32k_Menu)
@@ -747,7 +764,7 @@ osc32kctrlSym_OSC32K_ONDEMAND.setOutputMode("Key")
 osc32kctrlSym_OSC32K_ONDEMAND.setDisplayMode("Description")
 osc32kctrlSym_OSC32K_ONDEMAND.addKey("DISABLE",str(0),"Always Enable")
 osc32kctrlSym_OSC32K_ONDEMAND.addKey("ENABLE",str(1),"Only on Peripheral Request")
-osc32kctrlSym_OSC32K_ONDEMAND.setDefaultValue(0)
+osc32kctrlSym_OSC32K_ONDEMAND.setDefaultValue(1)
 
 #OSC32K Oscillator 1KHz Output Enable Mode
 osc32kctrlSym_OSC32K_EN1K = coreComponent.createBooleanSymbol("OSC32K_EN1K", osc32k_Menu)
@@ -1123,15 +1140,6 @@ for gclknumber in range(0,9):
     gclkSym_GENCTRL_RUNSTDBY[gclknumber] = coreComponent.createBooleanSymbol("GCLK_" + str(gclknumber) + "_RUNSTDBY", gclkSym_num[gclknumber])
     gclkSym_GENCTRL_RUNSTDBY[gclknumber].setLabel("GCLK should keep running in Standby mode")
 
-    #GCLK External Clock input frequency
-    if(gclk_io_signals[gclknumber]==True):
-        numPads = numPads + 1
-        gclkSym_GCLK_IO_FREQ.append(gclknumber)
-        gclkSym_GCLK_IO_FREQ[gclknumber] = coreComponent.createIntegerSymbol("GCLK_IO_" + str(gclknumber) +"_FREQ", gclkSym_num[gclknumber])
-        gclkSym_GCLK_IO_FREQ[gclknumber].setLabel("External Input (GCLK_IO[" + str(gclknumber) + "]) Frequency")
-        gclkSym_GCLK_IO_FREQ[gclknumber].setDefaultValue(0)
-        gclkSym_GCLK_IO_FREQ[gclknumber].setDependencies(setGCLKIOFreq, ["GCLK_" + str(gclknumber) + "_FREQ", "GCLK_" + str(gclknumber) + "_OUTPUTENABLE" ])
-
     #GCLK Generator Source Selection
     gclkSym_GENCTRL_SRC.append(gclknumber)
     gclkSym_GENCTRL_SRC[gclknumber] = coreComponent.createKeyValueSetSymbol("GCLK_" + str(gclknumber) + "_SRC", gclkSym_num[gclknumber])
@@ -1164,7 +1172,17 @@ for gclknumber in range(0,9):
         gclkSym_GENCTRL_OE.append(gclknumber)
         gclkSym_GENCTRL_OE[gclknumber] = coreComponent.createBooleanSymbol("GCLK_" + str(gclknumber) + "_OUTPUTENABLE", gclkSym_num[gclknumber])
         gclkSym_GENCTRL_OE[gclknumber].setLabel("Output GCLK clock signal on IO pin?")
-
+        
+    #GCLK External Clock Output frequency
+    if(gclk_io_signals[gclknumber]==True):
+        numPads = numPads + 1
+        gclkSym_GCLK_IO_FREQ.append(gclknumber)
+        gclkSym_GCLK_IO_FREQ[gclknumber] = coreComponent.createIntegerSymbol("GCLK_IO_" + str(gclknumber) +"_FREQ", gclkSym_GENCTRL_OE[gclknumber])
+        gclkSym_GCLK_IO_FREQ[gclknumber].setLabel("External Output (GCLK_IO[" + str(gclknumber) + "]) Frequency")
+        gclkSym_GCLK_IO_FREQ[gclknumber].setDefaultValue(0)
+        gclkSym_GCLK_IO_FREQ[gclknumber].setReadOnly(True)
+        gclkSym_GCLK_IO_FREQ[gclknumber].setDependencies(setGCLKIOFreq, ["GCLK_" + str(gclknumber) + "_FREQ", "GCLK_" + str(gclknumber) + "_OUTPUTENABLE" ])
+        
     #GCLK Generator Output Off Value
     if(gclk_io_signals[gclknumber]==True):
         gclkSym_GENCTRL_OOV.append(gclknumber)
@@ -1176,10 +1194,11 @@ for gclknumber in range(0,9):
         gclkSym_GENCTRL_OOV[gclknumber].setOutputMode("Key")
         gclkSym_GENCTRL_OOV[gclknumber].setDisplayMode("Description")
 
-        gclkInFreq = coreComponent.createIntegerSymbol("GCLK_IN_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
-        gclkInFreq.setLabel("Gclk Input Frequency")
-        gclkInFreq.setDefaultValue(0)
-
+    gclkInFreq = coreComponent.createIntegerSymbol("GCLK_IN_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
+    gclkInFreq.setLabel("Gclk Input Frequency")
+    gclkInFreq.setDefaultValue(0)
+    gclkInFreq.setDependencies(writeEnable, ["GCLK_" + str(gclknumber) + "_OUTPUTENABLE"])
+            
     #GCLK Generator Division Selection
     gclkSym_GENCTRL_DIVSEL.append(gclknumber)
     gclkSym_GENCTRL_DIVSEL[gclknumber] = coreComponent.createKeyValueSetSymbol("GCLK_" + str(gclknumber) + "_DIVSEL", gclkSym_num[gclknumber])

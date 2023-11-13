@@ -51,8 +51,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_${SMC_INSTANCE_NAME}_H
-#define _PLIB_${SMC_INSTANCE_NAME}_H
+#ifndef PLIB_${SMC_INSTANCE_NAME}_H
+#define PLIB_${SMC_INSTANCE_NAME}_H
 
 #include <stdint.h>         // uint32_t, uintptr_t
 #include <stdbool.h>
@@ -157,7 +157,7 @@ uint32_t ${PMERRLOC_INSTANCE_NAME}_ErrorLocationFindNumOfRoots(uint32_t sectorSi
 #endif
 // DOM-IGNORE-END
 
-#endif // _PLIB_${SMC_INSTANCE_NAME}_H
+#endif // PLIB_${SMC_INSTANCE_NAME}_H
 
 /*******************************************************************************
  End of File

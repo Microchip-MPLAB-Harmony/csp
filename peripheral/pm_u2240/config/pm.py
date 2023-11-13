@@ -116,6 +116,9 @@ def instantiateComponent(pmComponent):
         pmSym_STDBYCFG_BBIASHS = pmComponent.createBooleanSymbol("PM_STDBYCFG_BBIASHS", None)
         pmSym_STDBYCFG_BBIASHS.setLabel("Put RAM in low power during standby mode")
         pmSym_STDBYCFG_BBIASHS.setDescription("RAM is backbiased in standby mode to reduce power")
+        pm_STDBYCFG_initval = int(ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/register-group@[name=\"PM\"]/register@[name=\"STDBYCFG\"]").getAttribute("initval"), 16)
+        pm_STDBYCFG_BBIASHS_mask = int(ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/register-group@[name=\"PM\"]/register@[name=\"STDBYCFG\"]/bitfield@[name=\"BBIASHS\"]").getAttribute("mask"), 16)
+        pmSym_STDBYCFG_BBIASHS.setDefaultValue(((pm_STDBYCFG_initval & pm_STDBYCFG_BBIASHS_mask) != 0))
 
     if "HAS_BBIASTR_BIT" in parameters:
         #PM standby back biasing is a single bit for few devices

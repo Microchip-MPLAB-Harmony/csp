@@ -39,6 +39,9 @@
 *******************************************************************************/
 
 #include "plib_${CMP_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -49,7 +52,7 @@
 <#list 1..CMP_NUM_OF_INSTANCES as i>
     <#assign CMP_CMxCON_EVPOL = "CMP_" + i + "_CON_EVPOL">
     <#if .vars[CMP_CMxCON_EVPOL] != "0">
-        <#lt>CMP_OBJECT cmp${i}Obj;
+        <#lt>volatile static CMP_OBJECT cmp${i}Obj;
     </#if>
 </#list>
 // *****************************************************************************
@@ -142,12 +145,12 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
     /*  ENPGA   = ${.vars[CMP_CMxCON_ENPGA]?then('true', 'false')}    */
     </#if>
     CM${i}CON = 0x${.vars[CMP_CMxCON_VALUE]};
-    
+
     <#assign CMP_CMxMSKCON_VALUE = "CMP_" + i + "_CMxMSKCON_VALUE">
     <#if .vars[CMP_CMxMSKCON_VALUE]? has_content >
     /* Value loaded into CM${i}MSKCON is formed by combining configuration selected via MHC */
     CM${i}MSKCON = 0x${.vars[CMP_CMxMSKCON_VALUE]};
-    
+
     </#if>
     </#list>
 }
@@ -168,7 +171,7 @@ void ${CMP_INSTANCE_NAME}_${i}_CompareDisable (void)
 
 bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE ch_status)
 {
-    return ((CMSTAT & ch_status)?true:false);
+    return ((CMSTAT & ch_status) != 0U);
 }
 
 <#list 1..CMP_NUM_OF_INSTANCES as i>
@@ -183,13 +186,15 @@ void ${CMP_INSTANCE_NAME}_${i}_CallbackRegister(CMP_CALLBACK callback, uintptr_t
     cmp${i}Obj.context = context;
 }
 
-void COMPARATOR_${i}_InterruptHandler(void)
+void __attribute__((used)) COMPARATOR_${i}_InterruptHandler(void)
 {
     ${.vars[CMP_IFS_REG]}CLR = _${.vars[CMP_IFS_REG]}_${CMP_INSTANCE_NAME}${i}IF_MASK; //Clear IRQ flag
 
     if(cmp${i}Obj.callback != NULL)
     {
-        cmp${i}Obj.callback(cmp${i}Obj.context);
+        uintptr_t context = cmp${i}Obj.context;
+
+        cmp${i}Obj.callback(context);
     }
 }
 </#if>

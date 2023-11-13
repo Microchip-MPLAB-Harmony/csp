@@ -27,6 +27,13 @@ def instantiateComponent(crccuComponent):
     crccuInstanceName = crccuComponent.createStringSymbol("CRCCU_INSTANCE_NAME", None)
     crccuInstanceName.setVisible(False)
     crccuInstanceName.setDefaultValue(crccuComponent.getID().upper())
+    
+    dmaDescLen = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="CRCCU"]/instance@[name="CRCCU"]/parameters/param@[name="DMA_DESC_LEN"]').getAttribute("value")
+    
+    reserveWords = (int(dmaDescLen) - 12)/4
+    crccuDmaDescReserveBytes = crccuComponent.createIntegerSymbol("CRCCU_DMA_DESC_RESV_WORDS", None)
+    crccuDmaDescReserveBytes.setVisible(False)
+    crccuDmaDescReserveBytes.setDefaultValue(reserveWords)
 
     # Clock enable
     Database.setSymbolValue("core", crccuInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)

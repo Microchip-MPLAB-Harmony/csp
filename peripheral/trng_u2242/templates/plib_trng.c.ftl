@@ -46,7 +46,7 @@
 </#if>
 
 <#if trngEnableInterrupt == true>
-	<#lt>static TRNG_OBJECT trng;
+    <#lt>volatile static TRNG_OBJECT trng;
 </#if>
 
 void ${TRNG_INSTANCE_NAME}_Initialize( void )
@@ -58,45 +58,47 @@ void ${TRNG_INSTANCE_NAME}_Initialize( void )
  </#if>
 }
 <#if trngEnableInterrupt == true>
-	
-	<#lt>void ${TRNG_INSTANCE_NAME}_RandomNumberGenerate( void )
-	<#lt>{
-	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA |= TRNG_CTRLA_ENABLE_Msk;
-	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_INTENSET = TRNG_INTENSET_DATARDY_Msk;
-	<#lt>}
 
-	<#lt>void ${TRNG_INSTANCE_NAME}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context )
-	<#lt>{
-	<#lt>	trng.callback = callback;
-	<#lt>	trng.context = context;
-	<#lt>}
+    <#lt>void ${TRNG_INSTANCE_NAME}_RandomNumberGenerate( void )
+    <#lt>{
+    <#lt>   ${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA |= TRNG_CTRLA_ENABLE_Msk;
+    <#lt>   ${TRNG_INSTANCE_NAME}_REGS->TRNG_INTENSET = TRNG_INTENSET_DATARDY_Msk;
+    <#lt>}
+
+    <#lt>void ${TRNG_INSTANCE_NAME}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context )
+    <#lt>{
+    <#lt>   trng.callback = callback;
+    <#lt>   trng.context = context;
+    <#lt>}
 </#if>
 
 <#if trngEnableInterrupt == false>
-	<#lt>uint32_t ${TRNG_INSTANCE_NAME}_ReadData( void )
-	<#lt>{
-	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA |= TRNG_CTRLA_ENABLE_Msk;
-	<#lt>	while(((${TRNG_INSTANCE_NAME}_REGS->TRNG_INTFLAG) & (TRNG_INTFLAG_DATARDY_Msk)) != TRNG_INTFLAG_DATARDY_Msk)
-	<#lt>	{
+    <#lt>uint32_t ${TRNG_INSTANCE_NAME}_ReadData( void )
+    <#lt>{
+    <#lt>   ${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA |= TRNG_CTRLA_ENABLE_Msk;
+    <#lt>   while(((${TRNG_INSTANCE_NAME}_REGS->TRNG_INTFLAG) & (TRNG_INTFLAG_DATARDY_Msk)) != TRNG_INTFLAG_DATARDY_Msk)
+    <#lt>   {
     <#lt>       /* Do Nothing */
-	<#lt>	}				
-	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA &= ~(TRNG_CTRLA_ENABLE_Msk);
-	<#lt>	return (${TRNG_INSTANCE_NAME}_REGS->TRNG_DATA);
-	<#lt>}
+    <#lt>   }
+    <#lt>   ${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA &= ~(TRNG_CTRLA_ENABLE_Msk);
+    <#lt>   return (${TRNG_INSTANCE_NAME}_REGS->TRNG_DATA);
+    <#lt>}
 </#if>
 
 <#if trngEnableInterrupt == true>
-    <#lt>void ${TRNG_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${TRNG_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#lt>   ${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA = ((${TRNG_INSTANCE_NAME}_REGS->TRNG_CTRLA) & (uint8_t)(~TRNG_CTRLA_ENABLE_Msk));
     <#lt>   ${TRNG_INSTANCE_NAME}_REGS->TRNG_INTENCLR = TRNG_INTENCLR_DATARDY_Msk;
     <#lt>   trng.data = ${TRNG_INSTANCE_NAME}_REGS->TRNG_DATA;
     <#lt>   if(trng.callback != NULL)
     <#lt>   {
-    <#lt>       trng.callback(trng.data, trng.context);
+    <#lt>       uint32_t data = trng.data;
+    <#lt>       uintptr_t context = trng.context;
+    <#lt>       trng.callback(data, context);
     <#lt>   }
     <#lt>}
-</#if>	
+</#if>
 </#macro>
 
 <#if TRNG_Reserved == false>

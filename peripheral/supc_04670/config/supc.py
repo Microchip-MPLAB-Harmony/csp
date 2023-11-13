@@ -47,13 +47,13 @@ vdd3v3SMTH = ["1.6 V", "1.72 V", "1.84 V", "1.96 V", "2.08 V", "2.2 V", "2.32 V"
 ################################################################################
 
 def interruptControl(symbol, event):
-    if ((Database.getSymbolValue(supcInstanceName.getValue().lower(), "SUPC_IER_VDD3V3SMEV") == True) or
-        (Database.getSymbolValue(supcInstanceName.getValue().lower(), "SUPC_IER_VBATSMEV") == True) or
-        (Database.getSymbolValue(supcInstanceName.getValue().lower(), "SUPC_IER_LPDBC0") == True) or
-        (Database.getSymbolValue(supcInstanceName.getValue().lower(), "SUPC_IER_LPDBC1") == True) or
-        (Database.getSymbolValue(supcInstanceName.getValue().lower(), "SUPC_IER_LPDBC2") == True) or
-        (Database.getSymbolValue(supcInstanceName.getValue().lower(), "SUPC_IER_LPDBC3") == True) or
-        (Database.getSymbolValue(supcInstanceName.getValue().lower(), "SUPC_IER_LPDBC4") == True)):
+    if ((Database.getSymbolValue("core", "SUPC_IER_VDD3V3SMEV") == True) or
+        (Database.getSymbolValue("core", "SUPC_IER_VBATSMEV") == True) or
+        (Database.getSymbolValue("core", "SUPC_IER_LPDBC0") == True) or
+        (Database.getSymbolValue("core", "SUPC_IER_LPDBC1") == True) or
+        (Database.getSymbolValue("core", "SUPC_IER_LPDBC2") == True) or
+        (Database.getSymbolValue("core", "SUPC_IER_LPDBC3") == True) or
+        (Database.getSymbolValue("core", "SUPC_IER_LPDBC4") == True)):
         Database.setSymbolValue("core", interruptVector, True)
         Database.setSymbolValue("core", interruptHandler, supcInstanceName.getValue() +  "_InterruptHandler")
         Database.setSymbolValue("core", interruptHandlerLock, True)

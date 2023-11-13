@@ -99,7 +99,7 @@
 // *****************************************************************************
 
 <#if TC_TIMER_INTENSET_OVF = true || TC_TIMER_INTENSET_MC1 == true>
-static TC_TIMER_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+volatile static TC_TIMER_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -391,7 +391,7 @@ void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uint
 }
 
 /* Timer Interrupt handler */
-void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
+void __attribute__((used)) ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
 {
     TC_TIMER_STATUS status;
     status = (TC_TIMER_STATUS) (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG);
@@ -399,7 +399,8 @@ void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
     if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${TC_INSTANCE_NAME}_CallbackObject.context;
+        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 

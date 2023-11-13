@@ -49,6 +49,9 @@
 #include "plib_${SPI_INSTANCE_NAME?lower_case}_slave.h"
 #include "peripheral/${PLIB_NAME_LC}/plib_${PLIB_NAME_LC}.h"
 #include <string.h>
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${SPI_INSTANCE_NAME} Slave Implementation
@@ -68,24 +71,24 @@
 #define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE}
 #define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE}
 
-static uint8_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint8_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint8_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 <#elseif SPI_SPICON_MODE == "1">
 
 #define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE/2}
 #define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE/2}
 
-static uint16_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint16_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint16_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 <#else>
 
 #define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE/4}
 #define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE/4}
 
-static uint32_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
-static uint32_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint32_t ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint32_t ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 </#if>
 
@@ -115,6 +118,17 @@ SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 static void ${SPI_INSTANCE_NAME}_CS_Handler(CN_PIN pin, uintptr_t context);
 </#if>
 
+static void mem_copy(volatile void* pDst, volatile void* pSrc, uint32_t nBytes)
+{
+    volatile uint8_t* pSource = (volatile uint8_t*)pSrc;
+    volatile uint8_t* pDest = (volatile uint8_t*)pDst;
+
+    for (uint32_t i = 0U; i < nBytes; i++)
+    {
+        pDest[i] = pSource[i];
+    }
+}
+
 void ${SPI_INSTANCE_NAME}_Initialize ( void )
 {
     /* Disable ${SPI_INSTANCE_NAME} Interrupts */
@@ -139,7 +153,7 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     MSTEN = ${SPI_MSTR_MODE_EN}
     CKP = ${SPI_SPICON_CLK_POL}
     CKE = ${SPI_SPICON_CLK_PH}
-    MODE<32,16> = ${SPI_SPICON_MODE}
+    MODE< 32,16 > = ${SPI_SPICON_MODE}
     ENHBUF = 1
     */
 
@@ -171,7 +185,7 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     </#if>
 <#if SPI_CS_CNX != "">
     /* Register callback and enable notifications on Chip Select logic level change */
-    GPIO_PinInterruptCallbackRegister(${SPI_CS_CNX}_PIN, ${SPI_INSTANCE_NAME}_CS_Handler, (uintptr_t)NULL);
+    (void)GPIO_PinInterruptCallbackRegister(${SPI_CS_CNX}_PIN, ${SPI_INSTANCE_NAME}_CS_Handler, (uintptr_t)NULL);
     GPIO_PinInterruptEnable(${SPI_CS_CNX}_PIN);
 </#if>
 
@@ -195,11 +209,11 @@ size_t ${SPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size)
     }
 
 <#if SPI_SPICON_MODE == "0">
-    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
+    mem_copy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
 <#elseif SPI_SPICON_MODE == "1">
-    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
+    mem_copy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
 <#else>
-    memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 2));
+    mem_copy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 2));
 </#if>
 
     return rdSize;
@@ -209,6 +223,7 @@ size_t ${SPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size)
 size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
 {
     size_t wrSize = size;
+    size_t wrOutIndex = 0;
 
     ${SPI_INSTANCE_NAME}_DISABLE_TX_INT();
 
@@ -218,21 +233,23 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
     }
 
 <#if SPI_SPICON_MODE == "0">
-    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
+    mem_copy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
 <#elseif SPI_SPICON_MODE == "1">
-    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
+    mem_copy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
 <#else>
-    memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 2));
+    mem_copy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 2));
 </#if>
 
     ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes = wrSize;
-    ${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
 
     /* Fill up the FIFO as long as there are empty elements */
-    while ((!(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBF_MASK)) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
+    while ((!(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBF_MASK)) && (wrOutIndex < wrSize))
     {
-        ${SPI_INSTANCE_NAME}BUF = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+        ${SPI_INSTANCE_NAME}BUF = ${SPI_INSTANCE_NAME}_WriteBuffer[wrOutIndex];
+        wrOutIndex++;
     }
+
+    ${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex = wrOutIndex;
 
     /* Enable TX interrupt */
     ${SPI_INSTANCE_NAME}_ENABLE_TX_INT();
@@ -295,7 +312,7 @@ SPI_SLAVE_ERROR ${SPI_INSTANCE_NAME}_ErrorGet(void)
 }
 
 <#if SPI_CS_CNX != "">
-static void ${SPI_INSTANCE_NAME}_CS_Handler(CN_PIN pin, uintptr_t context)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_CS_Handler(CN_PIN pin, uintptr_t context)
 {
     <#if SPIS_CS_PIN_LOGIC_LEVEL == "ACTIVE_LOW">
     bool activeState = 0;
@@ -320,7 +337,9 @@ static void ${SPI_INSTANCE_NAME}_CS_Handler(CN_PIN pin, uintptr_t context)
     {
         /* Give application callback only if RX interrupt is not preempted and RX interrupt is not pending to be serviced */
 
-        if ((${SPI_INSTANCE_NAME?lower_case}Obj.rxInterruptActive == false) && ((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) == 0))
+        bool rxInterruptActive = ${SPI_INSTANCE_NAME?lower_case}Obj.rxInterruptActive;
+
+        if (((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) == 0) && (rxInterruptActive == false))
         {
             /* CS is de-asserted */
             ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
@@ -330,7 +349,9 @@ static void ${SPI_INSTANCE_NAME}_CS_Handler(CN_PIN pin, uintptr_t context)
 
             if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
             {
-                ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+                uintptr_t context_val = ${SPI_INSTANCE_NAME?lower_case}Obj.context;
+
+                ${SPI_INSTANCE_NAME?lower_case}Obj.callback(context_val);
             }
 
             /* Clear the read index. Application must read out the data by calling ${SPI_INSTANCE_NAME}_Read API in the callback */
@@ -348,9 +369,9 @@ static void ${SPI_INSTANCE_NAME}_CS_Handler(CN_PIN pin, uintptr_t context)
 </#if>
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_ERR_InterruptHandler (void)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_ERR_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_ERR_InterruptHandler (void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_ERR_InterruptHandler (void)
 </#if>
 {
     ${SPI_INSTANCE_NAME?lower_case}Obj.errorStatus = (${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK);
@@ -362,21 +383,27 @@ void ${SPI_INSTANCE_NAME}_ERR_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 </#if>
 {
     /* Fill up the FIFO as long as there are empty elements */
-    while ((!(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBF_MASK)) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
+    size_t nWrBytes = ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes;
+    size_t wrOutIndex = ${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
+
+    while ((!(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBF_MASK)) && (wrOutIndex < nWrBytes))
     {
-        ${SPI_INSTANCE_NAME}BUF = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
+        ${SPI_INSTANCE_NAME}BUF = ${SPI_INSTANCE_NAME}_WriteBuffer[wrOutIndex];
+        wrOutIndex++;
     }
+
+    ${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex = wrOutIndex;
 
     /* Clear the transmit interrupt flag */
     ${SPI_INSTANCE_NAME}_CLEAR_TX_INT_FLAG();
 
-    if (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex == ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes)
+    if (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex == nWrBytes)
     {
         /* Nothing to transmit. Disable transmit interrupt. The last byte sent by the master will be shifted out automatically*/
         ${SPI_INSTANCE_NAME}_DISABLE_TX_INT();
@@ -384,9 +411,9 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 </#if>
 {
     uint32_t receivedData = 0;
@@ -404,16 +431,21 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 </#if>
 </#if>
 
+    size_t rdInIndex = ${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+
     while (!(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK))
     {
         /* Receive buffer is not empty. Read the received data. */
         receivedData = ${SPI_INSTANCE_NAME}BUF;
 
-        if (${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex < ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE)
+        if (rdInIndex < ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE)
         {
-            ${SPI_INSTANCE_NAME}_ReadBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex++] = receivedData;
+            ${SPI_INSTANCE_NAME}_ReadBuffer[rdInIndex] = receivedData;
+            rdInIndex++;
         }
     }
+
+    ${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex = rdInIndex;
 
     /* Clear the receive interrupt flag */
     ${SPI_INSTANCE_NAME}_CLEAR_RX_INT_FLAG();
@@ -434,7 +466,9 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 
         if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
         {
-            ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+            uintptr_t context = ${SPI_INSTANCE_NAME?lower_case}Obj.context;
+
+            ${SPI_INSTANCE_NAME?lower_case}Obj.callback(context);
         }
 
         /* Clear the read index. Application must read out the data by calling ${SPI_INSTANCE_NAME}_Read API in the callback */
@@ -443,7 +477,9 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 <#else>
     if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
     {
-        ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${SPI_INSTANCE_NAME?lower_case}Obj.context;
+
+        ${SPI_INSTANCE_NAME?lower_case}Obj.callback(context);
     }
 
     /* Clear the read index. Application must read out the data by calling ${SPI_INSTANCE_NAME}_Read API in the callback */
@@ -452,7 +488,7 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-void SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
 {
     if ((${SPI_FLT_IFS_REG} & _${SPI_FLT_IFS_REG}_${SPI_INSTANCE_NAME}EIF_MASK) && (${SPI_FLT_IEC_REG} & _${SPI_FLT_IEC_REG}_${SPI_INSTANCE_NAME}EIE_MASK))
     {

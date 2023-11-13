@@ -1,0 +1,1 @@
+define({"topics":[{"title":"<ph>1.41.19.1<\/ph>\nSUPC_Initialize Function","href":"GUID-B2F166C6-0536-4641-A9C6-7EAD228A62CC.html","attributes":{"data-id":"GUID-B2F166C6-0536-4641-A9C6-7EAD228A62CC"},"menu":{"hasChildren":false},"tocID":"GUID-B2F166C6-0536-4641-A9C6-7EAD228A62CC-d66546e136561","topics":[]}]});

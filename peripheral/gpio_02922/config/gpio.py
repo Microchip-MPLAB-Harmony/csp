@@ -758,7 +758,7 @@ for portNumber in range(0, len(pioSymChannel)):
 
     gpioSym_GPIO_TRIS.append(portNumber)
     gpioSym_GPIO_TRIS[portNumber] = coreComponent.createHexSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_TRIS", port[portNumber])
-    gpioSym_GPIO_TRIS[portNumber].setLabel("TRIS" + str(pioSymChannel[portNumber]) + " Value")
+    gpioSym_GPIO_TRIS[portNumber].setLabel("TRIS" + str(pioSymChannel[portNumber]) + "CLR" + " Value")
     gpioSym_GPIO_TRIS[portNumber].setDefaultValue(0x00000000)
     gpioSym_GPIO_TRIS[portNumber].setReadOnly(False)
 

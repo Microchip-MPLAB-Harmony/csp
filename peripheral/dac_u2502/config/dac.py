@@ -63,7 +63,7 @@ def restoreEvents(channel, eventComp):
 
 
     statusEvent = Database.getSymbolValue("evsys", "GENERATOR_DAC_RESRDY_" + str(channel) + "_ACTIVE")
-    if statusEvent != resrdyStatus:
+    if resrdyStatus != None and statusEvent != resrdyStatus:
         Database.setSymbolValue("evsys", "GENERATOR_DAC_RESRDY_" + str(channel) + "_ACTIVE", resrdyStatus, 2)
     statusEvent = Database.getSymbolValue("evsys", "GENERATOR_DAC_EMPTY_" + str(channel) + "_ACTIVE")
     if statusEvent != emptyStatus:
@@ -119,7 +119,7 @@ def instantiateComponent(dacComponent):
 
     #Clock enable
     Database.setSymbolValue("core", dacInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
-    
+
     dacMode = dacComponent.createKeyValueSetSymbol("DAC_OPERATING_MODE", None)
     dacMode.setLabel("Select DAC Output Mode")
     dacMode.addKey("SINGLE_ENDED", "0", "Single-Ended Output")
@@ -147,7 +147,7 @@ def instantiateComponent(dacComponent):
     numChannelNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DAC"]/register-group/register@[name="INTENSET"]')
     numChannelValues = numChannelNode.getChildren()
     for index in range(0,len(numChannelValues)):
-        if "RESRDY" in numChannelValues[index].getAttribute("name"):
+        if "EMPTY" in numChannelValues[index].getAttribute("name"):
             numChannels = numChannels + 1
 
     for channel in range(0, numChannels):
@@ -174,8 +174,10 @@ def instantiateComponent(dacComponent):
         channelSpeed.setDisplayMode("Description")
         channelSpeed.setDefaultValue(0)
 
-        channelFilter = dacComponent.createBooleanSymbol("DAC_CHANNEL_" + str(channel) + "_FILTER", channelMenu)
-        channelFilter.setLabel("Enable External Filter")
+        channelFilterBitfield = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DAC"]/register-group@[name="DAC"]/register@[name="DACCTRL"]/bitfield@[name="FEXT"]')
+        if channelFilterBitfield != None:
+            channelFilter = dacComponent.createBooleanSymbol("DAC_CHANNEL_" + str(channel) + "_FILTER", channelMenu)
+            channelFilter.setLabel("Enable External Filter")
 
         channelDataAdjustment = dacComponent.createKeyValueSetSymbol("DAC_DATA_ADJUSTMENT" + str(channel) , channelMenu)
         channelDataAdjustment.setLabel("DAC Data register Adjustment")
@@ -192,40 +194,45 @@ def instantiateComponent(dacComponent):
         channelDither.setLabel("Enable Dithering")
 
         channelOversampleNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DAC"]/value-group@[name="DAC_DACCTRL__OSR"]')
-        channelOversampleValues = channelOversampleNode.getChildren()
+        if channelOversampleNode != None:
+            channelOversampleValues = channelOversampleNode.getChildren()
 
-        channelOversample = dacComponent.createKeyValueSetSymbol("DAC_CHANNEL_" + str(channel) + "_OVERSAMPLE", channelMenu)
-        channelOversample.setLabel("Oversampling Ratio")
-        for index in range(0, len(channelOversampleValues)):
-            channelOversampleKey = channelOversampleValues[index].getAttribute("name")
-            channelOversampleValue = channelOversampleValues[index].getAttribute("value")
-            channelOversampleCaption = channelOversampleValues[index].getAttribute("caption")
-            channelOversample.addKey(channelOversampleKey, channelOversampleValue, channelOversampleCaption)
-        channelOversample.setOutputMode("Value")
-        channelOversample.setDisplayMode("Description")
-        channelOversample.setDefaultValue(0)
+            channelOversample = dacComponent.createKeyValueSetSymbol("DAC_CHANNEL_" + str(channel) + "_OVERSAMPLE", channelMenu)
+            channelOversample.setLabel("Oversampling Ratio")
+            for index in range(0, len(channelOversampleValues)):
+                channelOversampleKey = channelOversampleValues[index].getAttribute("name")
+                channelOversampleValue = channelOversampleValues[index].getAttribute("value")
+                channelOversampleCaption = channelOversampleValues[index].getAttribute("caption")
+                channelOversample.addKey(channelOversampleKey, channelOversampleValue, channelOversampleCaption)
+            channelOversample.setOutputMode("Value")
+            channelOversample.setDisplayMode("Description")
+            channelOversample.setDefaultValue(0)
 
         channelRefreshNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DAC"]/value-group@[name="DAC_DACCTRL__REFRESH"]')
-        channelRefreshValues = channelRefreshNode.getChildren()
+        if channelRefreshNode != None:
+            channelRefreshValues = channelRefreshNode.getChildren()
 
-        channelRefresh = dacComponent.createKeyValueSetSymbol("DAC_CHANNEL_" + str(channel) + "_REFRESH", channelMenu)
-        channelRefresh.setLabel("Refresh Rate")
-        for index in range(0, len(channelRefreshValues)):
-            channelRefreshKey = channelRefreshValues[index].getAttribute("name")
-            channelRefreshValue = channelRefreshValues[index].getAttribute("value")
-            channelRefreshCaption = channelRefreshValues[index].getAttribute("caption")
-            channelRefresh.addKey(channelRefreshKey, channelRefreshValue, channelRefreshCaption)
-        channelRefresh.setOutputMode("Value")
-        channelRefresh.setDisplayMode("Description")
-        channelRefresh.setDefaultValue(0)
-        channelRefresh.setDependencies(refreshVisibility,["DAC_CHANNEL_" + str(channel) + "_OVERSAMPLE"])
+            channelRefresh = dacComponent.createKeyValueSetSymbol("DAC_CHANNEL_" + str(channel) + "_REFRESH", channelMenu)
+            channelRefresh.setLabel("Refresh Rate")
+            for index in range(0, len(channelRefreshValues)):
+                channelRefreshKey = channelRefreshValues[index].getAttribute("name")
+                channelRefreshValue = channelRefreshValues[index].getAttribute("value")
+                channelRefreshCaption = channelRefreshValues[index].getAttribute("caption")
+                channelRefresh.addKey(channelRefreshKey, channelRefreshValue, channelRefreshCaption)
+            channelRefresh.setOutputMode("Value")
+            channelRefresh.setDisplayMode("Description")
+            channelRefresh.setDefaultValue(0)
+            channelRefresh.setDependencies(refreshVisibility,["DAC_CHANNEL_" + str(channel) + "_OVERSAMPLE"])
 
         channelEvent = dacComponent.createMenuSymbol("DAC_EVENT_MENU" + str(channel), channelMenu)
         channelEvent.setLabel("CHANNEL " + str(channel) + " Event Configuration")
 
-        channelResrdy = dacComponent.createBooleanSymbol("DAC_CHANNEL_EVENT_RESRDYEO" + str(channel), channelEvent)
-        channelResrdy.setLabel("Enable Result Ready Event")
-        evctrldep.append("DAC_CHANNEL_EVENT_RESRDYEO" + str(channel))
+        channelEvCtrlValues = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DAC"]/register-group@[name="DAC"]/register@[name="EVCTRL"]').getChildren()
+        for index in range (0, len(channelEvCtrlValues)):
+            if channelEvCtrlValues[index].getAttribute("name") == "RESRDYEO" + str(channel):
+                channelResrdy = dacComponent.createBooleanSymbol("DAC_CHANNEL_EVENT_RESRDYEO" + str(channel), channelEvent)
+                channelResrdy.setLabel("Enable Result Ready Event")
+                evctrldep.append("DAC_CHANNEL_EVENT_RESRDYEO" + str(channel))
 
         channelEmpty = dacComponent.createBooleanSymbol("DAC_CHANNEL_EVENT_EMPTYEO" + str(channel), channelEvent)
         channelEmpty.setLabel("Enable Data Buffer Empty Event")
@@ -242,7 +249,7 @@ def instantiateComponent(dacComponent):
         dacSym_Event = dacComponent.createBooleanSymbol("DAC_EVSYS" + str(channel) , channelEvent)
         dacSym_Event.setVisible(False)
         dacSym_Event.setDependencies(evsysSetup, evctrldep)
-    
+
     # Clock Warning status
     dacSym_ClkEnComment = dacComponent.createCommentSymbol("DAC_CLOCK_ENABLE_COMMENT", None)
     dacSym_ClkEnComment.setLabel("Warning!!!" + dacInstanceName.getValue() + " Clock is Disabled in Clock Manager")

@@ -42,6 +42,9 @@
 
 #include "device.h"
 #include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if WDT_EARLY_RESET_ACTION == 'Interrupt'
     || WDT_LEVEL_EXPIRATION == 'Interrupt'
@@ -54,7 +57,7 @@
     <#lt>    uintptr_t       context;
     <#lt>} WDT_CALLBACK_OBJECT;
 
-    <#lt>WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
+    <#lt>volatile static WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
 
     <#lt>void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
     <#lt>{
@@ -62,14 +65,16 @@
     <#lt>    ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context =  context;
     <#lt>}
 
-    <#lt>void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
+    <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    <#lt>    uintptr_t context =  ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context;
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${WDT_INSTANCE_NAME}_REGS->WDT_ISR;
 
-    <#lt>    if( interruptStatus && (${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL) )
+    <#lt>    if((${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL) && (interruptStatus != 0U))
     <#lt>    {
-    <#lt>        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback( ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context, interruptStatus );
+    <#lt>        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback(context, interruptStatus );
     <#lt>    }
     <#lt>}
 </#if>
@@ -88,7 +93,7 @@ void ${WDT_INSTANCE_NAME}_Initialize( void )
     // clear interrupt status
     (void) ${WDT_INSTANCE_NAME}_REGS->WDT_ISR;
     // enable appropriate interrupts
-    ${WDT_INSTANCE_NAME}_REGS->WDT_IER = 0${(WDT_LEVEL_EXPIRATION=='Interrupt')?then(' | WDT_IER_LVLINT_Msk','')}${(WDT_EARLY_RESET_ACTION=='Interrupt')?then(' | WDT_IER_RPTHINT_Msk','')}${(WDT_PERIOD_EXPIRATION=='Interrupt')?then(' | WDT_IER_PERINT_Msk','')};
+    ${WDT_INSTANCE_NAME}_REGS->WDT_IER = 0U${(WDT_LEVEL_EXPIRATION=='Interrupt')?then(' | WDT_IER_LVLINT_Msk','')}${(WDT_EARLY_RESET_ACTION=='Interrupt')?then(' | WDT_IER_RPTHINT_Msk','')}${(WDT_PERIOD_EXPIRATION=='Interrupt')?then(' | WDT_IER_PERINT_Msk','')};
     // enable WDT and set other mode bits desired
     ${WDT_INSTANCE_NAME}_REGS->WDT_MR =  0U${WDT_STOP_WHEN_IDLE?then(' | WDT_MR_WDIDLEHLT_Msk','')}${WDT_STOP_WHEN_DEBUGGING?then(' | WDT_MR_WDDBGHLT_Msk','')}${(WDT_EARLY_RESET_ACTION=='Reset')?then(' | WDT_MR_RPTHRST_Msk','')}${(WDT_PERIOD_EXPIRATION=='Reset')?then(' | WDT_MR_PERIODRST_Msk','')};
 }
@@ -130,7 +135,7 @@ void ${WDT_INSTANCE_NAME}_Enable( void )
     // clear interrupt status
     (void) ${WDT_INSTANCE_NAME}_REGS->WDT_ISR;
     // enable appropriate interrupts
-    ${WDT_INSTANCE_NAME}_REGS->WDT_IER = 0${(WDT_LEVEL_EXPIRATION=='Interrupt')?then(' | WDT_IER_LVLINT_Msk','')}${(WDT_EARLY_RESET_ACTION=='Interrupt')?then(' | WDT_IER_RPTHINT_Msk','')}${(WDT_PERIOD_EXPIRATION=='Interrupt')?then(' | WDT_IER_PERINT_Msk','')};
+    ${WDT_INSTANCE_NAME}_REGS->WDT_IER = 0U${(WDT_LEVEL_EXPIRATION=='Interrupt')?then(' | WDT_IER_LVLINT_Msk','')}${(WDT_EARLY_RESET_ACTION=='Interrupt')?then(' | WDT_IER_RPTHINT_Msk','')}${(WDT_PERIOD_EXPIRATION=='Interrupt')?then(' | WDT_IER_PERINT_Msk','')};
 }
 
 void ${WDT_INSTANCE_NAME}_Disable( void )

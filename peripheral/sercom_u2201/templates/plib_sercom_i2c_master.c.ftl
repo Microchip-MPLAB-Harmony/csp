@@ -72,7 +72,7 @@
 #define RIGHT_ALIGNED (8U)
 </#if>
 
-static SERCOM_I2C_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CObj;
+volatile static SERCOM_I2C_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CObj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -125,7 +125,8 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
     <#if I2CM_MODE??> | SERCOM_I2CM_CTRLA_SPEED_${I2CM_MODE}  </#if>
     <#if I2C_SCLSM??> | SERCOM_I2CM_CTRLA_SCLSM(${I2C_SCLSM}UL) </#if>
     | SERCOM_I2CM_CTRLA_ENABLE_Msk
-    ${I2C_RUNSTDBY?then(' | SERCOM_I2CM_CTRLA_RUNSTDBY_Msk','')};</@compress>
+    ${I2C_RUNSTDBY?then(' | SERCOM_I2CM_CTRLA_RUNSTDBY_Msk','')}
+    <#if I2C_SLEWRATE??> | SERCOM_I2CM_CTRLA_SLEWRATE(SERCOM_I2CM_CTRLA_SLEWRATE_${I2C_SLEWRATE}_Val)</#if>;</@compress>
 
     /* Wait for synchronization */
 <#if SERCOM_SYNCBUSY = false>
@@ -370,7 +371,11 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
 
 
     /* Baud rate - Master Baud Rate*/
+<#if I2CM_BAUD_SIZE == 2>
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = (uint16_t)baudValue;
+<#else>
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = baudValue;
+</#if>
 
 <#if I2CM_MODE??>
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA  = ((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA & ~SERCOM_I2CM_CTRLA_SPEED_Msk) | (SERCOM_I2CM_CTRLA_SPEED(i2cSpeedMode)));
@@ -427,11 +432,12 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(uint16_t address, bool dir)
     bool isTenBitAddress = false;
     bool isHighSpeed = false;
     bool transferDir = dir;
+    bool txMasterCode = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode;
 
     /* Check for 10-bit address */
     if(address > 0x007FU)
     {
-        if ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true) && (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == true))
+        if ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true) && (txMasterCode == true))
         {
             /* write: <0000-1nnn> <Sr> <1111-10xxW> <xxxx-xxxx> <write-data> <P>
                read: <0000-1nnn> <Sr> <1111-10xxW> <xxxx-xxxx> <Sr> <1111-10xxR> <read-data> <P>
@@ -475,7 +481,7 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(uint16_t address, bool dir)
     }
     else
     {
-        if ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true) && (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == true))
+        if ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true) && (txMasterCode == true))
         {
             /* write: <0000-1nnn> <Sr> <xxxx-xxxW> <write-data> <P>
                read: <0000-1nnn> <Sr> <xxxx-xxxR> <read-data> <P>
@@ -516,7 +522,7 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(uint16_t address, bool dir)
         }
     }
 
-    if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == true)
+    if (txMasterCode == true)
     {
         /* Transmit masterCode */
         ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.masterCode;
@@ -546,8 +552,9 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(uint16_t address, bool dir)
 {
     bool isHighSpeed = false;
     bool transferDir = dir;
+    bool txMasterCode = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode;
 
-    if ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true) && (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == true))
+    if ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true) && (txMasterCode == true))
     {
         /* write: <0000-1nnn> <Sr> <xxxx-xxxW> <write-data> <P>
            read: <0000-1nnn> <Sr> <xxxx-xxxR> <read-data> <P>
@@ -587,7 +594,7 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(uint16_t address, bool dir)
         }
     }
 
-    if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == true)
+    if (txMasterCode == true)
     {
         /* Transmit masterCode */
         ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.masterCode;
@@ -697,7 +704,11 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(uint16_t address, bool dir)
     }
 
 
+<#if I2CM_ADDR_SIZE == 1>
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint8_t)address << 1U) | (dir ? 1U :0U);
+<#else>
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint32_t)address << 1U) | (dir ? 1UL :0UL);
+</#if>
 
     /* Wait for synchronization */
 <#if SERCOM_SYNCBUSY = false>
@@ -904,10 +915,16 @@ void ${SERCOM_INSTANCE_NAME}_I2C_TransferAbort( void )
 </#if>
 }
 
-void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
+void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 {
     if(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTENSET != 0U)
     {
+        uintptr_t context = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.context;
+
+        <#if (I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE")>
+        bool isHighSpeed = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed;
+        bool txMasterCode = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode;
+        </#if>
         /* Checks if the arbitration lost in multi-master scenario */
         if((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_ARBLOST_Msk) == SERCOM_I2CM_STATUS_ARBLOST_Msk)
         {
@@ -925,7 +942,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
         }
         /* Checks slave acknowledge for address or data */
         <#if (I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE")>
-        else if(((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_RXNACK_Msk) == SERCOM_I2CM_STATUS_RXNACK_Msk) && (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == false))
+        else if(((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_RXNACK_Msk) == SERCOM_I2CM_STATUS_RXNACK_Msk) && (txMasterCode == false))
         {
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_ERROR;
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NAK;
@@ -970,7 +987,8 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                      * ADDR.TENBITEN must be cleared
                      */
                     <#if (I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE")>
-                    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed ? 1UL: 0UL) | (((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) >> RIGHT_ALIGNED) << 1U) | (uint32_t)I2C_TRANSFER_READ;
+
+                    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS(isHighSpeed ? 1UL: 0UL) | (((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) >> RIGHT_ALIGNED) << 1U) | (uint32_t)I2C_TRANSFER_READ;
                     <#else>
                     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR =  (((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) >> RIGHT_ALIGNED) << 1U) | (uint32_t)I2C_TRANSFER_READ;
                     </#if>
@@ -1005,8 +1023,10 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                 </#if>
 
                 case SERCOM_I2C_STATE_TRANSFER_WRITE:
+                {
+                    size_t writeCount = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount;
 
-                    if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount == (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize))
+                    if (writeCount == (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize))
                     {
                         if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize != 0U)
                         {
@@ -1040,16 +1060,16 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                                  * Write ADDR[7:0] register to "11110 address[9:8] 1"
                                  * ADDR.TENBITEN must be cleared
                                  */
-                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)? 1UL: 0UL) | (((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) >> RIGHT_ALIGNED) << 1U) | (uint32_t)I2C_TRANSFER_READ;
+                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS((isHighSpeed == true)? 1UL: 0UL) | (((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) >> RIGHT_ALIGNED) << 1U) | (uint32_t)I2C_TRANSFER_READ;
                             }
                             else
                             {
                                 /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
-                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)? 1UL: 0UL) | ((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1U) | (uint32_t)I2C_TRANSFER_READ;
+                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS((isHighSpeed == true)? 1UL: 0UL) | ((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1U) | (uint32_t)I2C_TRANSFER_READ;
                             }
                             <#else>
                             /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
-                             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)? 1UL: 0UL) | ((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1UL) | (uint32_t)I2C_TRANSFER_READ;
+                             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS((isHighSpeed == true)? 1UL: 0UL) | ((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1UL) | (uint32_t)I2C_TRANSFER_READ;
                             </#if>
                             <#else>
                             <#if (I2C_ADDR_TENBITEN?? && I2C_ADDR_TENBITEN = true)>
@@ -1068,7 +1088,11 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                             }
                             <#else>
                             /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
+                            <#if I2CM_ADDR_SIZE == 1>
+                            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR =  ((uint8_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1U) | (uint8_t)I2C_TRANSFER_READ;
+                            <#else>
                             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR =  ((uint32_t)(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address) << 1U) | (uint32_t)I2C_TRANSFER_READ;
+                            </#if>
                             </#if>
                             </#if>
 
@@ -1112,8 +1136,8 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     /* Write next byte */
                     else
                     {
-                        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount];
-                        ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount++;
+                        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer[writeCount];
+                        writeCount++;
                         /* Wait for synchronization */
                         <#if SERCOM_SYNCBUSY = false>
                             while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & (uint16_t)SERCOM_I2CM_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_I2CM_STATUS_SYNCBUSY_Msk)
@@ -1126,14 +1150,19 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                                 /* Do nothing */
                             }
                         </#if>
+                        ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount = writeCount;
                     }
+                }
 
                     break;
 
                 case SERCOM_I2C_STATE_TRANSFER_READ:
+                {
+                    size_t readCount = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount;
+
                     <#if I2C_SCLSM?? && I2C_SCLSM = 1>
 
-                    if((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount + 1U) == (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize - 1U))
+                    if((readCount + 1U) == (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize - 1U))
                     {
                         /* For the next byte, send NAK to the slave */
                         ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_ACKACT_Msk ;
@@ -1151,7 +1180,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                         }
                     </#if>
                     }
-                    if ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount + 1U) == ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize)
+                    if ((readCount + 1U) == ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize)
                     {
                         /* All bytes are received, send Stop bit */
                         ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_CMD(3UL);
@@ -1186,11 +1215,11 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     </#if>
 
                     /* Read the received data */
-                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount] =(uint8_t) ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;
-                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount++;
+                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[readCount] =(uint8_t) ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;
+                    readCount++;
                     <#else>
 
-                    if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount == (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize - 1U))
+                    if(readCount == (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize - 1U))
                     {
                         /* Set NACK and send stop condition to the slave from master */
                         ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_ACKACT_Msk | SERCOM_I2CM_CTRLB_CMD(3UL);
@@ -1225,9 +1254,12 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     </#if>
 
                     /* Read the received data */
-                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount] = (uint8_t) ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;
-                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount++;
+                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[readCount] = (uint8_t) ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;
+                    readCount++;
                     </#if>
+
+                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount = readCount;
+                }
 
                     break;
 
@@ -1265,7 +1297,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 
             if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback != NULL)
             {
-                ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.context);
+                ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback(context);
             }
         }
         /* Transfer Complete */
@@ -1285,7 +1317,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 
             if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback != NULL)
             {
-                ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.context);
+                ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback(context);
             }
 
         }

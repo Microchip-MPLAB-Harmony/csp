@@ -66,12 +66,10 @@
 // *****************************************************************************
 
 
-typedef enum
-{
 <#list 1 .. MCPWM_NUM_CHANNELS as i>
-    MCPWM_CH_${i} ,
+#define    MCPWM_CH_${i}  (${i - 1}U)
 </#list>
-} MCPWM_CH_NUM;
+typedef uint32_t MCPWM_CH_NUM;
 
 typedef enum
 {

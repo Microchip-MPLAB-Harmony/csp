@@ -50,7 +50,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-static DBGU_RING_BUFFER_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
+volatile static DBGU_RING_BUFFER_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
 
 #define ${DBGU_INSTANCE_NAME}_READ_BUFFER_SIZE      ${DBGU_RX_RING_BUFFER_SIZE}U
 /* Disable Read, Overrun, Parity and Framing error interrupts */
@@ -58,13 +58,13 @@ static DBGU_RING_BUFFER_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
 /* Enable Read, Overrun, Parity and Framing error interrupts */
 #define ${DBGU_INSTANCE_NAME}_RX_INT_ENABLE()       ${DBGU_INSTANCE_NAME}_REGS->DBGU_IER = (DBGU_IER_RXRDY_Msk | DBGU_IER_FRAME_Msk | DBGU_IER_PARE_Msk | DBGU_IER_OVRE_Msk);
 
-static uint8_t ${DBGU_INSTANCE_NAME}_ReadBuffer[${DBGU_INSTANCE_NAME}_READ_BUFFER_SIZE];
+volatile static uint8_t ${DBGU_INSTANCE_NAME}_ReadBuffer[${DBGU_INSTANCE_NAME}_READ_BUFFER_SIZE];
 
 #define ${DBGU_INSTANCE_NAME}_WRITE_BUFFER_SIZE     ${DBGU_TX_RING_BUFFER_SIZE}U
 #define ${DBGU_INSTANCE_NAME}_TX_INT_DISABLE()      ${DBGU_INSTANCE_NAME}_REGS->DBGU_IDR = DBGU_IDR_TXRDY_Msk;
 #define ${DBGU_INSTANCE_NAME}_TX_INT_ENABLE()       ${DBGU_INSTANCE_NAME}_REGS->DBGU_IER = DBGU_IER_TXRDY_Msk;
 
-static uint8_t ${DBGU_INSTANCE_NAME}_WriteBuffer[${DBGU_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
+volatile static uint8_t ${DBGU_INSTANCE_NAME}_WriteBuffer[${DBGU_INSTANCE_NAME}_WRITE_BUFFER_SIZE];
 
 void ${DBGU_INSTANCE_NAME}_Initialize( void )
 {
@@ -189,7 +189,8 @@ static inline bool ${DBGU_INSTANCE_NAME}_RxPushByte(uint8_t rdByte)
         /* Queue is full - Report it to the application. Application gets a chance to free up space by reading data out from the RX ring buffer */
         if(${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback != NULL)
         {
-            ${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback(DBGU_EVENT_READ_BUFFER_FULL, ${DBGU_INSTANCE_NAME?lower_case}Obj.rdContext);
+            uintptr_t rdContext = ${DBGU_INSTANCE_NAME?lower_case}Obj.rdContext;
+            ${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback(DBGU_EVENT_READ_BUFFER_FULL, rdContext);
         }
 
         /* Read the indices again in case application has freed up space in RX ring buffer */
@@ -204,7 +205,9 @@ static inline bool ${DBGU_INSTANCE_NAME}_RxPushByte(uint8_t rdByte)
 
     if (tempInIndex != ${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex)
     {
-        ${DBGU_INSTANCE_NAME}_ReadBuffer[${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex] = rdByte;
+        uint32_t rdInIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+
+        ${DBGU_INSTANCE_NAME}_ReadBuffer[rdInIndex] = rdByte;
         ${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex = tempInIndex;
         isSuccess = true;
     }
@@ -227,18 +230,20 @@ static void ${DBGU_INSTANCE_NAME}_ReadNotificationSend(void)
 
         if(${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback != NULL)
         {
+            uintptr_t rdContext = ${DBGU_INSTANCE_NAME?lower_case}Obj.rdContext;
+
             if (${DBGU_INSTANCE_NAME?lower_case}Obj.isRdNotifyPersistently == true)
             {
                 if (nUnreadBytesAvailable >= ${DBGU_INSTANCE_NAME?lower_case}Obj.rdThreshold)
                 {
-                    ${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback(DBGU_EVENT_READ_THRESHOLD_REACHED, ${DBGU_INSTANCE_NAME?lower_case}Obj.rdContext);
+                    ${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback(DBGU_EVENT_READ_THRESHOLD_REACHED, rdContext);
                 }
             }
             else
             {
                 if (nUnreadBytesAvailable == ${DBGU_INSTANCE_NAME?lower_case}Obj.rdThreshold)
                 {
-                    ${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback(DBGU_EVENT_READ_THRESHOLD_REACHED, ${DBGU_INSTANCE_NAME?lower_case}Obj.rdContext);
+                    ${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback(DBGU_EVENT_READ_THRESHOLD_REACHED, rdContext);
                 }
             }
         }
@@ -260,7 +265,7 @@ size_t ${DBGU_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
 
         if (rdOutIndex != rdInIndex)
         {
-            pRdBuffer[nBytesRead] = ${DBGU_INSTANCE_NAME}_ReadBuffer[${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex];
+            pRdBuffer[nBytesRead] = ${DBGU_INSTANCE_NAME}_ReadBuffer[rdOutIndex];
             nBytesRead++;
             ${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex++;
 
@@ -347,7 +352,7 @@ static bool ${DBGU_INSTANCE_NAME}_TxPullByte(uint8_t* pWrByte)
 
     if (wrOutIndex != wrInIndex)
     {
-        *pWrByte = ${DBGU_INSTANCE_NAME}_WriteBuffer[${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex];
+        *pWrByte = ${DBGU_INSTANCE_NAME}_WriteBuffer[wrOutIndex];
         ${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex++;
 
         if (${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex >= ${DBGU_INSTANCE_NAME}_WRITE_BUFFER_SIZE)
@@ -373,7 +378,9 @@ static inline bool ${DBGU_INSTANCE_NAME}_TxPushByte(uint8_t wrByte)
     }
     if (tempInIndex != ${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex)
     {
-        ${DBGU_INSTANCE_NAME}_WriteBuffer[${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex] = wrByte;
+        uint32_t wrInIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex;
+
+        ${DBGU_INSTANCE_NAME}_WriteBuffer[wrInIndex] = wrByte;
         ${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex = tempInIndex;
         isSuccess = true;
     }
@@ -396,18 +403,20 @@ static void ${DBGU_INSTANCE_NAME}_WriteNotificationSend(void)
 
         if(${DBGU_INSTANCE_NAME?lower_case}Obj.wrCallback != NULL)
         {
+            uintptr_t wrContext = ${DBGU_INSTANCE_NAME?lower_case}Obj.wrContext;
+
             if (${DBGU_INSTANCE_NAME?lower_case}Obj.isWrNotifyPersistently == true)
             {
                 if (nFreeWrBufferCount >= ${DBGU_INSTANCE_NAME?lower_case}Obj.wrThreshold)
                 {
-                    ${DBGU_INSTANCE_NAME?lower_case}Obj.wrCallback(DBGU_EVENT_WRITE_THRESHOLD_REACHED, ${DBGU_INSTANCE_NAME?lower_case}Obj.wrContext);
+                    ${DBGU_INSTANCE_NAME?lower_case}Obj.wrCallback(DBGU_EVENT_WRITE_THRESHOLD_REACHED, wrContext);
                 }
             }
             else
             {
                 if (nFreeWrBufferCount == ${DBGU_INSTANCE_NAME?lower_case}Obj.wrThreshold)
                 {
-                    ${DBGU_INSTANCE_NAME?lower_case}Obj.wrCallback(DBGU_EVENT_WRITE_THRESHOLD_REACHED, ${DBGU_INSTANCE_NAME?lower_case}Obj.wrContext);
+                    ${DBGU_INSTANCE_NAME?lower_case}Obj.wrCallback(DBGU_EVENT_WRITE_THRESHOLD_REACHED, wrContext);
                 }
             }
         }
@@ -513,7 +522,7 @@ void ${DBGU_INSTANCE_NAME}_WriteCallbackRegister( DBGU_RING_BUFFER_CALLBACK call
     ${DBGU_INSTANCE_NAME?lower_case}Obj.wrContext = context;
 }
 
-static void ${DBGU_INSTANCE_NAME}_ISR_RX_Handler( void )
+static void __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_RX_Handler( void )
 {
     /* Keep reading until there is a character availabe in the RX FIFO */
     while(DBGU_SR_RXRDY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR& DBGU_SR_RXRDY_Msk))
@@ -529,7 +538,7 @@ static void ${DBGU_INSTANCE_NAME}_ISR_RX_Handler( void )
     }
 }
 
-static void ${DBGU_INSTANCE_NAME}_ISR_TX_Handler( void )
+static void __attribute__((used)) ${DBGU_INSTANCE_NAME}_ISR_TX_Handler( void )
 {
     uint8_t wrByte;
 
@@ -552,7 +561,7 @@ static void ${DBGU_INSTANCE_NAME}_ISR_TX_Handler( void )
     }
 }
 
-void ${DBGU_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${DBGU_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Error status */
     uint32_t errorStatus = (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & (DBGU_SR_OVRE_Msk | DBGU_SR_FRAME_Msk | DBGU_SR_PARE_Msk));
@@ -569,7 +578,9 @@ void ${DBGU_INSTANCE_NAME}_InterruptHandler( void )
          * receiver callback */
         if( ${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback != NULL )
         {
-            ${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback(DBGU_EVENT_READ_ERROR, ${DBGU_INSTANCE_NAME?lower_case}Obj.rdContext);
+            uintptr_t rdContext = ${DBGU_INSTANCE_NAME?lower_case}Obj.rdContext;
+
+            ${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback(DBGU_EVENT_READ_ERROR, rdContext);
         }
     }
 

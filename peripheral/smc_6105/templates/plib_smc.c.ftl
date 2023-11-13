@@ -83,14 +83,17 @@ static void ${PMERRLOC_INSTANCE_NAME}_Initialize( void );
     <#lt>    ${SMC_INSTANCE_NAME?lower_case}CallbackObj.context =  context;
     <#lt>}
 
-    <#lt>void ${SMC_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${SMC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
+    <#lt>    uintptr_t context_var;
+
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${SMC_INSTANCE_NAME}_REGS->SMC_WPSR;
 
     <#lt>    if( interruptStatus && (${SMC_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL) )
     <#lt>    {
-    <#lt>        ${SMC_INSTANCE_NAME?lower_case}CallbackObj.callback( ${SMC_INSTANCE_NAME?lower_case}CallbackObj.context, interruptStatus );
+    <#lt>        context_var = ${SMC_INSTANCE_NAME?lower_case}CallbackObj.context;
+    <#lt>        ${SMC_INSTANCE_NAME?lower_case}CallbackObj.callback(context_var, interruptStatus );
     <#lt>    }
     <#lt>}
 
@@ -258,14 +261,16 @@ uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect)
     <#lt>    ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.context =  context;
     <#lt>}
 
-    <#lt>void ${PMECC_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${PMECC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
+    <#lt>    uintptr_t context_var;
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${PMECC_INSTANCE_NAME}_REGS->PMECC_ISR;
 
     <#lt>    if( interruptStatus && (${PMECC_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL) )
     <#lt>    {
-    <#lt>        ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.callback( ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.context, interruptStatus );
+    <#lt>        context_var = ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.context;
+    <#lt>        ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.callback(context_var , interruptStatus );
     <#lt>    }
     <#lt>}
 
@@ -345,22 +350,25 @@ void ${PMECC_INSTANCE_NAME}_DataPhaseStart(bool writeEnable)
 
 bool ${PMECC_INSTANCE_NAME}_StatusIsBusy(void)
 {
-    return (${PMECC_INSTANCE_NAME}_REGS->PMECC_SR & PMECC_SR_BUSY_Msk);
+    return ((${PMECC_INSTANCE_NAME}_REGS->PMECC_SR & PMECC_SR_BUSY_Msk) != 0U);
 }
 
 uint8_t ${PMECC_INSTANCE_NAME}_ErrorGet(void)
 {
-    return (${PMECC_INSTANCE_NAME}_REGS->PMECC_ISR & PMECC_ISR_ERRIS_Msk);
+    return (uint8_t)(${PMECC_INSTANCE_NAME}_REGS->PMECC_ISR & PMECC_ISR_ERRIS_Msk);
 }
 
 int16_t ${PMECC_INSTANCE_NAME}_RemainderGet(uint32_t sector, uint32_t remainderIndex)
 {
-    return ((volatile int16_t *)${PMECC_INSTANCE_NAME}_REGS->PMECC_REM[sector].PMECC_REM)[remainderIndex];
+    uint8_t lowByte = ((volatile const uint8_t *)${PMECC_INSTANCE_NAME}_REGS->PMECC_REM[sector].PMECC_REM)[remainderIndex * 2U];
+    uint8_t highByte = ((volatile const uint8_t *)${PMECC_INSTANCE_NAME}_REGS->PMECC_REM[sector].PMECC_REM)[remainderIndex * 2U + 1U];
+    uint32_t retVal = ((uint32_t)highByte << 8) + (uint32_t)lowByte;
+    return (int16_t)retVal;
 }
 
 uint8_t ${PMECC_INSTANCE_NAME}_ECCGet(uint32_t sector, uint32_t byteIndex)
 {
-    return ((volatile uint8_t *)${PMECC_INSTANCE_NAME}_REGS->PMECC_ECC[sector].PMECC_ECC)[byteIndex];
+    return ((volatile const uint8_t *)${PMECC_INSTANCE_NAME}_REGS->PMECC_ECC[sector].PMECC_ECC)[byteIndex];
 }
 </#if>
 
@@ -374,14 +382,17 @@ uint8_t ${PMECC_INSTANCE_NAME}_ECCGet(uint32_t sector, uint32_t byteIndex)
     <#lt>    pmerrlocCallbackObj.context =  context;
     <#lt>}
 
-    <#lt>void ${PMERRLOC_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${PMERRLOC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
+    <#lt>    uintptr_t context_var;
+
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELISR;
 
     <#lt>    if( interruptStatus && (pmerrlocCallbackObj.callback != NULL) )
     <#lt>    {
-    <#lt>        pmerrlocCallbackObj.callback( pmerrlocCallbackObj.context, interruptStatus );
+    <#lt>        context_var = pmerrlocCallbackObj.context;
+    <#lt>        pmerrlocCallbackObj.callback(context_var , interruptStatus );
     <#lt>    }
     <#lt>}
 
@@ -399,7 +410,8 @@ void ${PMERRLOC_INSTANCE_NAME}_ErrorLocationDisable(void)
 
 void ${PMERRLOC_INSTANCE_NAME}_SigmaSet(uint32_t sigmaVal, uint32_t sigmaNum)
 {
-    *(volatile uint32_t *)(&${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_SIGMA0 + sigmaNum) = sigmaVal;
+    volatile uint32_t* sigma_base_address = (volatile uint32_t*)(PMERRLOC_BASE_ADDRESS + PMERRLOC_SIGMA0_REG_OFST);
+    sigma_base_address[sigmaNum] = sigmaVal;
 }
 
 uint32_t ${PMERRLOC_INSTANCE_NAME}_ErrorLocationFindNumOfRoots(uint32_t sectorSizeInBits, uint32_t errorNumber)
@@ -408,7 +420,10 @@ uint32_t ${PMERRLOC_INSTANCE_NAME}_ErrorLocationFindNumOfRoots(uint32_t sectorSi
     ${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELCFG = (${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELCFG & ~PMERRLOC_ELCFG_ERRNUM_Msk) | PMERRLOC_ELCFG_ERRNUM(errorNumber);
     ${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELEN = sectorSizeInBits;
 
-    while ((${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELISR & PMERRLOC_ELISR_DONE_Msk) == 0);
+    while ((${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELISR & PMERRLOC_ELISR_DONE_Msk) == 0U)
+    {
+        /* Wait for completion */
+    }
 
     return ((${PMERRLOC_INSTANCE_NAME}_REGS->PMERRLOC_ELISR & PMERRLOC_ELISR_ERR_CNT_Msk) >> PMERRLOC_ELISR_ERR_CNT_Pos);
 }

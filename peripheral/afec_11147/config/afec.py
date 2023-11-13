@@ -266,6 +266,9 @@ def afecTriggerVisible(symbol, event):
 
 def afec_EMR_CMPSEL_Update(symbol, event):
     symbol.setVisible(event["value"] == False)
+
+def afecTempModeVisibility(symbol, event):
+    symbol.setVisible(event["value"])
 ###################################################################################################
 ########################### Dependency   #################################
 ###################################################################################################
@@ -424,6 +427,13 @@ def instantiateComponent(afecComponent):
 
     afec_signals = []
     afec = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AFEC\"]/instance@[name=\""+afecInstanceName.getValue()+"\"]/signals")
+    afec_temperature_sensor_ch_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name=\"AFEC\"]/instance@[name=\"'+afecInstanceName.getValue()+'\"]/parameters/param@[name=\"TEMP_SENSOR_CH_NUM\"]')
+    if afec_temperature_sensor_ch_node != None:
+        afec_temp_sensor_ch = int(afec_temperature_sensor_ch_node.getAttribute("value"))
+    else:
+        afec_temp_sensor_ch = -1
+
+
     afec_signals = afec.getChildren()
     for pad in range(0, len(afec_signals)):
         group = afec_signals[pad].getAttribute("group")
@@ -432,6 +442,10 @@ def instantiateComponent(afecComponent):
             if padSignal in availablePins:
                 channel[int(afec_signals[pad].getAttribute("index"))] = "True"
                 afecChannelsValues.append("CH"+afec_signals[pad].getAttribute("index"))
+
+    if afec_temperature_sensor_ch_node != None:
+        channel[afec_temp_sensor_ch] = "True"
+        afecChannelsValues.append("CH"+afec_temperature_sensor_ch_node.getAttribute("value"))
 
     afecSym_AvailableChannels = afecComponent.createComboSymbol("AFEC_AVAILABLE_CHANNELS", None, channel)
     afecSym_AvailableChannels.setVisible(False)
@@ -696,6 +710,56 @@ def instantiateComponent(afecComponent):
         afecSym_CH_IER_EOC[channelID].setDefaultValue(False)
         afecSym_CH_IER_EOC[channelID].setVisible(False)
         afecSym_CH_IER_EOC[channelID].setDependencies(afecCHInterruptVisible, ["AFEC_"+str(channelID)+"_CHER"])
+
+        if afec_temp_sensor_ch == channelID:
+            afecSym_CH_TEMPMR_RTCT = afecComponent.createBooleanSymbol("AFEC_TEMPMR_RTCT", afecSym_CH_CHER[channelID])
+            afecSym_CH_TEMPMR_RTCT.setLabel("Enable Temperature Sensor Trigger by RTC event")
+            afecSym_CH_TEMPMR_RTCT.setDefaultValue(False)
+            afecSym_CH_TEMPMR_RTCT.setVisible(False)
+            afecSym_CH_TEMPMR_RTCT.setDependencies(afecTempModeVisibility, ["AFEC_"+str(channelID)+"_CHER"])
+
+            afecSym_CH_TEMP_CMP_MODE_EN = afecComponent.createBooleanSymbol("AFEC_TEMP_CMP_MODE_EN", afecSym_CH_CHER[channelID])
+            afecSym_CH_TEMP_CMP_MODE_EN.setLabel("Enable Temperature Comparision")
+            afecSym_CH_TEMP_CMP_MODE_EN.setDefaultValue(False)
+            afecSym_CH_TEMP_CMP_MODE_EN.setVisible(False)
+            afecSym_CH_TEMP_CMP_MODE_EN.setDependencies(afecTempModeVisibility, ["AFEC_"+str(channelID)+"_CHER"])
+
+            afec_tempmr_tempcmpmod_val = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AFEC\"]/value-group@[name=\"AFEC_TEMPMR__TEMPCMPMOD\"]")
+            afec_tempmr_tempcmpmod_values = afec_tempmr_tempcmpmod_val.getChildren()
+
+            afecSym_CH_TEMPMR_TEMPCMPMOD = afecComponent.createKeyValueSetSymbol("AFEC_TEMPMR_TEMPCMPMOD", afecSym_CH_TEMP_CMP_MODE_EN)
+            afecSym_CH_TEMPMR_TEMPCMPMOD.setLabel("Temperature Comparision Mode")
+            afecSym_CH_TEMPMR_TEMPCMPMOD.setOutputMode("Key")
+            afecSym_CH_TEMPMR_TEMPCMPMOD.setDisplayMode("Description")
+            afecSym_CH_TEMPMR_TEMPCMPMOD.setVisible(False)
+            for j in range(0, len(afec_tempmr_tempcmpmod_values)):
+                name = afec_tempmr_tempcmpmod_values[j].getAttribute("name")
+                value = afec_tempmr_tempcmpmod_values[j].getAttribute("value")
+                caption = afec_tempmr_tempcmpmod_values[j].getAttribute("caption")
+                afecSym_CH_TEMPMR_TEMPCMPMOD.addKey(name, value, caption)
+            afecSym_CH_TEMPMR_TEMPCMPMOD.setDependencies(afecTempModeVisibility, ["AFEC_TEMP_CMP_MODE_EN"])
+
+            afecSym_CH_TEMPCWR_THIGHTHRES = afecComponent.createIntegerSymbol("AFEC_TEMPCWR_THIGHTHRES", afecSym_CH_TEMP_CMP_MODE_EN)
+            afecSym_CH_TEMPCWR_THIGHTHRES.setLabel("Temperature High Threshold")
+            afecSym_CH_TEMPCWR_THIGHTHRES.setMin(0)
+            afecSym_CH_TEMPCWR_THIGHTHRES.setMax(65535)
+            afecSym_CH_TEMPCWR_THIGHTHRES.setDefaultValue(0)
+            afecSym_CH_TEMPCWR_THIGHTHRES.setVisible(False)
+            afecSym_CH_TEMPCWR_THIGHTHRES.setDependencies(afecTempModeVisibility, ["AFEC_TEMP_CMP_MODE_EN"])
+
+            afecSym_CH_TEMPCWR_TLOWTHRES = afecComponent.createIntegerSymbol("AFEC_TEMPCWR_TLOWTHRES", afecSym_CH_TEMP_CMP_MODE_EN)
+            afecSym_CH_TEMPCWR_TLOWTHRES.setLabel("Temperature Low Threshold")
+            afecSym_CH_TEMPCWR_TLOWTHRES.setMin(0)
+            afecSym_CH_TEMPCWR_TLOWTHRES.setMax(65535)
+            afecSym_CH_TEMPCWR_TLOWTHRES.setDefaultValue(0)
+            afecSym_CH_TEMPCWR_TLOWTHRES.setVisible(False)
+            afecSym_CH_TEMPCWR_TLOWTHRES.setDependencies(afecTempModeVisibility, ["AFEC_TEMP_CMP_MODE_EN"])
+
+            afecSym_CH_IER_TEMPCHG = afecComponent.createBooleanSymbol("AFEC_IER_TEMPCHG", afecSym_CH_TEMP_CMP_MODE_EN)
+            afecSym_CH_IER_TEMPCHG.setLabel("Temperature Change Interrupt")
+            afecSym_CH_IER_TEMPCHG.setDefaultValue(False)
+            afecSym_CH_IER_TEMPCHG.setVisible(False)
+            afecSym_CH_IER_TEMPCHG.setDependencies(afecTempModeVisibility, ["AFEC_TEMP_CMP_MODE_EN"])
 
     afecComparatorMenu = afecComponent.createMenuSymbol("AFEC_COMPARE_MENU", None)
     afecComparatorMenu.setLabel("Comparator Configuration")

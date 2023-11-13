@@ -23,10 +23,13 @@
 *****************************************************************************"""
 
 tccSym_Channel_Menu = []
+global tccSym_Channel_CC
 tccSym_Channel_CC = []
 tccSym_Channel_Polarity = []
 tccSym_Channel_Polarity_NPWM = []
 tccSym_Channel_WAVE_SWAP = []
+tccSym_Channel_WAVE_CICCEN = []
+global tccSym_Channel_WEXCTRL_DTIEN
 tccSym_Channel_WEXCTRL_DTIEN = []
 tccSym_Channel_INTENSET_MC = []
 tccSym_Channel_EVCTRL_MCEO = []
@@ -41,6 +44,73 @@ pwmInterruptDepList = []
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+def tccRampMenuVisible(symbol, event):
+    symObj = event["symbol"]
+    if (symObj.getSelectedKey() == "NPWM"):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tccRampCycleMenuVisible(symbol, event):
+    symbol.setVisible(event["value"])
+
+def tccRampPeriodCirBuf(symbol, event):
+    symObj = event["symbol"]
+    if (symObj.getSelectedKey() == "RAMP2C"):
+        symbol.setVisible(False)
+    else:
+        symbol.setVisible(True)
+
+def tccRampAPeriodCalc(symbol, event):
+    global tccSym_WAVE_RAMP
+    global tccSym_Channel_CC
+    global tccSym_PER_PER
+    if (tccSym_WAVE_RAMP.getValue() == 1): #RAMP2A
+        symbol.setValue(tccSym_PER_PER.getValue())  ## PER
+        symbol.setLabel("Cycle A Period Value (PER)")
+    elif (tccSym_WAVE_RAMP.getValue() == 2):  #RAMP2
+        symbol.setValue(tccSym_PER_PER.getValue())  ## PER
+        symbol.setLabel("Cycle A Period Value (PER)")
+    elif (tccSym_WAVE_RAMP.getValue() == 3): #RAMP2C
+        symbol.setValue(tccSym_Channel_CC[0].getValue())  ## CC0  value  
+        symbol.setLabel("Cycle A Period Value (CC0)")  
+
+def tccRampCCBuffer(symbol, event):
+    if event["value"] == 1:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tccRampADutyCalc(symbol, event):
+    global tccSym_WAVE_RAMP
+    global tccSym_Channel_CC
+    if (tccSym_WAVE_RAMP.getValue() == 1): #RAMP2A
+        symbol.setValue(tccSym_Channel_CC[0].getValue())  ## CC0 buffered value
+        symbol.setLabel("Cycle A Duty Value (CC0 Buffer)")
+    elif (tccSym_WAVE_RAMP.getValue() == 2):  #RAMP2
+        symbol.setValue(tccSym_Channel_CC[0].getValue())  ## CC0  value
+        symbol.setLabel("Cycle A Duty Value (CC0)")
+    elif (tccSym_WAVE_RAMP.getValue() == 3): #RAMP2C
+        symbol.setValue(tccSym_Channel_CC[2].getValue())  ## CC2  value  
+        symbol.setLabel("Cycle A Duty Value (CC2)")      
+
+def tccRampBdutyCalc(symbol, event):
+    global tccSym_WAVE_RAMP
+    global tccSym_Channel_CC
+    if (tccSym_WAVE_RAMP.getValue() == 1): #RAMP2A
+        symbol.setValue(tccSym_Channel_CC[0].getValue())  ## CC0 value
+        symbol.setLabel("Cycle B Duty Value (CC0)")
+    elif (tccSym_WAVE_RAMP.getValue() == 2):  #RAMP2
+        symbol.setValue(tccSym_Channel_CC[1].getValue())  ## CC1  value
+        symbol.setLabel("Cycle B Duty Value (CC1)")
+    elif (tccSym_WAVE_RAMP.getValue() == 3): #RAMP2C
+        symbol.setValue(tccSym_Channel_CC[1].getValue())  ## CC1  value    
+        symbol.setLabel("Cycle B Duty Value (CC1)")
+
+def tccRampBPeriodCalc(symbol, event):
+    symbol.setValue(event["value"])  
+ 
+
 def tccDirVisible(symbol, event):
     if (event["id"] == "TCC_WAVE_WAVEGEN" and tccSym_Slave_Mode.getValue() == False):
         symObj = event["symbol"]
@@ -69,6 +139,7 @@ def tccFaultVisible(symbol, event):
             symbol.setVisible(False)
 
 def tccDeadTimeVisible(symbol, event):
+    global tccSym_Channel_WEXCTRL_DTIEN
     if (tccSym_Channel_WEXCTRL_DTIEN[0].getValue() == True or tccSym_Channel_WEXCTRL_DTIEN[1].getValue() == True or
         tccSym_Channel_WEXCTRL_DTIEN[2].getValue() == True or tccSym_Channel_WEXCTRL_DTIEN[3].getValue() == True):
         symbol.setVisible(True)
@@ -129,6 +200,13 @@ def tccDualSlopeVisible(symbol, event):
     else:
         symbol.setVisible(False)
 
+def tccCircularBufferVisible(symbol, event):
+    symObj = event["symbol"]
+    if (symObj.getSelectedKey() == "DSBOTH"):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)    
+
 def tccPwmVisible(symbol, event):
     if event["value"] == "PWM":
         symbol.setVisible(True)
@@ -165,7 +243,7 @@ def tccEvsys(symbol, event):
 
         if component.getSymbolValue("TCC_EVCTRL_OVFEO") == True:
             Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_OVF_ACTIVE", True, 2)
-        print(component.getSymbolValue("TCC_EVCTRL_EVACT0"))
+
         if component.getSymbolValue("TCC_EVCTRL_EVACT0") != 0:
             Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_0_READY", True, 2)
         if component.getSymbolValue("TCC_EVCTRL_EVACT1") != 0:
@@ -337,6 +415,15 @@ for channelID in range(0, int(numOfChannels)):
         tccSym_Channel_WAVE_SWAP[channelID].setLabel("Swap Outputs")
         tccSym_Channel_WAVE_SWAP[channelID].setDefaultValue(False)
 
+    if ((channelID < (numOfOutputs/2))):
+        #circular buffer
+        tccSym_Channel_WAVE_CICCEN.append(channelID)
+        tccSym_Channel_WAVE_CICCEN[channelID] = tccComponent.createBooleanSymbol("TCC_"+str(channelID)+"_WAVE_CICCEN", tccSym_Channel_Menu[channelID])
+        tccSym_Channel_WAVE_CICCEN[channelID].setLabel("Enable Circular Buffer")
+        tccSym_Channel_WAVE_CICCEN[channelID].setDefaultValue(False)   
+        tccSym_Channel_WAVE_CICCEN[channelID].setVisible(False) 
+        tccSym_Channel_WAVE_CICCEN[channelID].setDependencies(tccCircularBufferVisible, ["TCC_WAVE_WAVEGEN"])
+
     #compare match event out
     tccSym_Channel_INTENSET_MC.append(channelID)
     tccSym_Channel_INTENSET_MC[channelID] = tccComponent.createBooleanSymbol("TCC_INTENSET_MC_"+str(channelID), tccSym_Channel_Menu[channelID])
@@ -426,6 +513,84 @@ if (patternGenImplemented == 1):
         tccSym_PATT_PGV[output].setDisplayMode("Description")
         tccSym_PATT_PGV[output].setDependencies(tccPattgenVisible, ["TCC_"+str(output)+"PATT_PGE"])
 
+#### Ramp #####
+# Ramp feature is available only for NPWM mode
+tccSym_Ramp_Menu = tccComponent.createMenuSymbol("TCC_RAMP_MENU", tccSym_PWMMenu)
+tccSym_Ramp_Menu.setLabel("Ramp Configurations")
+tccSym_Ramp_Menu.setDependencies (tccRampMenuVisible, ["TCC_WAVE_WAVEGEN"])
+
+global tccSym_WAVE_RAMP
+tccSym_WAVE_RAMP = tccComponent.createKeyValueSetSymbol("TCC_WAVE_RAMP", tccSym_Ramp_Menu)
+tccSym_WAVE_RAMP.setLabel("Select Ramp")
+tcc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TCC\"]/value-group@[name=\"TCC_WAVE__RAMP\"]")
+childrenNodes = tcc.getChildren()
+for param in range(0, len(childrenNodes)):
+    tccSym_WAVE_RAMP.addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"),
+        childrenNodes[param].getAttribute("caption"))
+tccSym_WAVE_RAMP.setDefaultValue(0)
+tccSym_WAVE_RAMP.setOutputMode("Key")
+tccSym_WAVE_RAMP.setDisplayMode("Key")
+
+#Cycle A and cycle B menu will be visible only for RAMP2, RAMP2A, RAMP2C
+tccSym_Ramp_CycleA_Menu = tccComponent.createMenuSymbol("TCC_RAMP_CYCLEA", tccSym_Ramp_Menu)
+tccSym_Ramp_CycleA_Menu.setLabel("Cycle A")
+tccSym_Ramp_CycleA_Menu.setVisible(False)
+tccSym_Ramp_CycleA_Menu.setDependencies(tccRampCycleMenuVisible, ["TCC_WAVE_RAMP"])
+
+if size == 32:
+    tccSym_Ramp_Period = tccComponent.createLongSymbol("TCC_RAMP_CYCLEA_PERIOD", tccSym_Ramp_CycleA_Menu)
+else:
+    tccSym_Ramp_Period = tccComponent.createIntegerSymbol("TCC_RAMP_CYCLEA_PERIOD", tccSym_Ramp_CycleA_Menu)
+tccSym_Ramp_Period.setLabel("Cycle A Period Value (PER)")
+tccSym_Ramp_Period.setValue(tccSym_PER_PER.getValue())
+tccSym_Ramp_Period.setReadOnly(True)
+tccSym_Ramp_Period.setDependencies(tccRampAPeriodCalc, ["TCC_WAVE_RAMP", "TCC_PER_PER", "TCC_0_CC"])
+
+tccSym_WAVE_CICCEN0 = tccComponent.createBooleanSymbol("TCC_WAVE_CICCEN0", tccSym_Ramp_CycleA_Menu)
+tccSym_WAVE_CICCEN0.setLabel("Enable CC0 Circular Buffer")
+tccSym_WAVE_CICCEN0.setDefaultValue(True)
+tccSym_WAVE_CICCEN0.setVisible(False)
+tccSym_WAVE_CICCEN0.setReadOnly(True)
+tccSym_WAVE_CICCEN0.setDependencies(tccRampCCBuffer, ["TCC_WAVE_RAMP"])
+
+if size == 32:
+    tccSym_Ramp_Ch1_Duty = tccComponent.createLongSymbol("TCC_RAMP_CH1_DUTY", tccSym_Ramp_CycleA_Menu)
+else:
+    tccSym_Ramp_Ch1_Duty = tccComponent.createIntegerSymbol("TCC_RAMP_CH1_DUTY", tccSym_Ramp_CycleA_Menu)
+tccSym_Ramp_Ch1_Duty.setLabel("Cycle A Duty Value")
+tccSym_Ramp_Ch1_Duty.setValue(0)
+tccSym_Ramp_Ch1_Duty.setReadOnly(True)
+tccSym_Ramp_Ch1_Duty.setDependencies(tccRampADutyCalc, ["TCC_WAVE_RAMP", "TCC_0_CC", "TCC_2_CC"])
+
+tccSym_Ramp_CycleB_Menu = tccComponent.createMenuSymbol("TCC_RAMP_CYCLEB", tccSym_Ramp_Menu)
+tccSym_Ramp_CycleB_Menu.setLabel("Cycle B")
+tccSym_Ramp_CycleB_Menu.setVisible(False)
+tccSym_Ramp_CycleB_Menu.setDependencies(tccRampCycleMenuVisible, ["TCC_WAVE_RAMP"])
+
+global tccSym_WAVE_CIPEREN
+tccSym_WAVE_CIPEREN = tccComponent.createBooleanSymbol("TCC_WAVE_CIPEREN", tccSym_Ramp_CycleB_Menu)
+tccSym_WAVE_CIPEREN.setLabel("Enable Period Circular Buffer")
+tccSym_WAVE_CIPEREN.setDependencies(tccRampPeriodCirBuf, ["TCC_WAVE_RAMP"])
+
+if size == 32:
+    tccSym_Ramp_CycleB_Period = tccComponent.createLongSymbol("TCC_RAMP_CYCLEB_PERIOD", tccSym_Ramp_CycleB_Menu)
+else:
+    tccSym_Ramp_CycleB_Period = tccComponent.createIntegerSymbol("TCC_RAMP_CYCLEB_PERIOD", tccSym_Ramp_CycleB_Menu)
+tccSym_Ramp_CycleB_Period.setLabel("Cycle B Period Value (PER)")
+tccSym_Ramp_CycleB_Period.setValue(tccSym_PER_PER.getValue())
+tccSym_Ramp_CycleB_Period.setReadOnly(True)
+tccSym_Ramp_CycleB_Period.setDependencies(tccRampBPeriodCalc, ["TCC_PER_PER"])
+
+if size == 32:
+    tccSym_Ramp_Ch2_Duty = tccComponent.createLongSymbol("TCC_RAMP_CH2_DUTY", tccSym_Ramp_CycleB_Menu)
+else:
+    tccSym_Ramp_Ch2_Duty = tccComponent.createIntegerSymbol("TCC_RAMP_CH2_DUTY", tccSym_Ramp_CycleB_Menu)
+tccSym_Ramp_Ch2_Duty.setLabel("Cycle B Duty Value")
+tccSym_Ramp_Ch2_Duty.setDependencies(tccRampBdutyCalc, ["TCC_WAVE_RAMP", "TCC_0_CC", "TCC_1_CC"])
+tccSym_Ramp_Ch2_Duty.setReadOnly(True)
+
+
+##### Input Events ######
 tccSym_InputEvents_Menu = tccComponent.createMenuSymbol("TCC_INPUT_EVENTS", tccSym_PWMMenu)
 tccSym_InputEvents_Menu.setLabel("Input Events Configuration")
 

@@ -164,20 +164,6 @@
         <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_OFFSTDBY_Msk">
     </#if>
 </#if>
-<#if SUPC_VREGCTRL_LVSTDBY == true>
-    <#if SUPC_VREG_VAL != "">
-        <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_LVSTDBY_Msk">
-    <#else>
-        <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_LVSTDBY_Msk">
-    </#if>
-</#if>
-<#if SUPC_VREGCTRL_LVHIB == true>
-    <#if SUPC_VREG_VAL != "">
-        <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_LVHIB_Msk">
-    <#else>
-        <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_LVHIB_Msk">
-    </#if>
-</#if>
 <#if SUPC_VREGCTRL_CPEN == true>
     <#if SUPC_VREG_VAL != "">
         <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_CPEN_Msk">
@@ -207,7 +193,7 @@ typedef struct
     uintptr_t context;
 } SUPC_CALLBACK_OBJ;
 
-SUPC_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
+volatile static SUPC_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
 
 void ${SUPC_INSTANCE_NAME}_Initialize( void )
@@ -274,13 +260,14 @@ void ${SUPC_INSTANCE_NAME}_CallbackRegister(SUPC_CALLBACK callback, uintptr_t co
     ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context = context;
 }
 
-void ${SUPC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${SUPC_INSTANCE_NAME}_InterruptHandler(void)
 {
+    uintptr_t context = ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context;     
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_BORVDDUSB_Msk;
 
     if (${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
     {
-        ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback(${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context);
+        ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback(context);
     }
 }
 </#if>

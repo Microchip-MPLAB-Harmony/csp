@@ -576,11 +576,6 @@ symbol = coreComponent.createStringSymbol(SymId, None)
 symbol.setDefaultValue("0xB0")
 symbol.setVisible(False)
 
-# for DMA manager to work
-dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
-dmaManagerSelect.setVisible(False)
-dmaManagerSelect.setDefaultValue("dmac_01500:DMAC01500Model")
-
 # start of menu-related items
 dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
 dmacMenu.setLabel("DMA (DMAC)")
@@ -637,7 +632,7 @@ for dmaChannel in range(0, numDMAChans):
     dmacPrioritySymId = "DMAC_" + str(dmaChannel) + "_PRIORITY"
     symbol = coreComponent.createComboSymbol(dmacPrioritySymId, dmacChannelEnable, sorted(per_priority.keys()))
     symbol.setLabel(dmaValGrp_DCH0CON_CHPRI.getAttribute("caption"))
-    symbol.setDefaultValue("0")
+    symbol.setDefaultValue("CHPRI0")
 
     symbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_SOURCE_HALF_EMPTY_INT_ENABLE", dmacChannelEnable)
     symbol.setLabel("Source Half Empty Interrupt Enable")

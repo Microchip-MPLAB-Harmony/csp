@@ -66,9 +66,9 @@
 #define ${I2C_INSTANCE_NAME}_MTXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_MTR_TXB_REG_OFST)
 #define ${I2C_INSTANCE_NAME}_MRXB   (uint32_t*)(SMB${I2C_INSTANCE_NUM}_BASE_ADDRESS + SMB_MTR_RXB_REG_OFST)
 
-static I2C_SMB_HOST_OBJ ${I2C_INSTANCE_NAME?lower_case}HostObj;
-static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostWrBuffer[64];
-static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer[64];
+volatile static I2C_SMB_HOST_OBJ ${I2C_INSTANCE_NAME?lower_case}HostObj;
+static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostWrBuffer[255];
+volatile static uint8_t i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer[255];
 </#if>
 
 <#if I2C_OPERATING_MODE == "Master">
@@ -209,7 +209,7 @@ bool I2C${I2C_INSTANCE_NAME}_HostTransferSetup(I2C_SMB_HOST_TRANSFER_SETUP* setu
     uint32_t timingValuesIndex = 0;
     float temp;
 
-    if ((setup == NULL) || (${I2C_INSTANCE_NAME?lower_case}HostObj.state != I2C_SMB_HOST_STATE_IDLE))
+    if ((${I2C_INSTANCE_NAME?lower_case}HostObj.state != I2C_SMB_HOST_STATE_IDLE) || (setup == NULL))
     {
         return false;
     }
@@ -303,7 +303,7 @@ static uint8_t I2C${I2C_INSTANCE_NAME}_HostPacketForm(I2C_SMB_HOST_PROTOCOL prot
         (void)memcpy((void*)&pProtoBuff[len], (const void*)pWrdata, nWrBytes);
         len += (uint8_t)nWrBytes;
     }
-    if (protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK)
+    if ((protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK) || (protocol == I2C_SMB_HOST_PROTOCOL_PROCESS_CALL))
     {
         pProtoBuff[len++] = (address << 1) | I2C_SMB_HOST_TRANSFER_TYPE_READ;
     }
@@ -324,13 +324,13 @@ static void I2C${I2C_INSTANCE_NAME}_HostWriteRead(I2C_SMB_HOST_PROTOCOL protocol
     ${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] |= SMB_CFG_FLUSH_MRBUF_Msk | SMB_CFG_FLUSH_MXBUF_Msk;
 
     /* Configure DMA transfer for the write part (memory to peripheral) of the transfer. DMA channel will be reconfigured for reading (Peripheral to memory ) in the I2CSMB interrupt, once the write part is complete. */
-    (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}, (void*)i2c${I2C_INSTANCE_NAME?lower_case}HostWrBuffer, ${I2C_INSTANCE_NAME}_MTXB, nWrBytes);
+    (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}, i2c${I2C_INSTANCE_NAME?lower_case}HostWrBuffer, ${I2C_INSTANCE_NAME}_MTXB, nWrBytes);
 
     ${I2C_INSTANCE_NAME?lower_case}HostObj.state = I2C_SMB_HOST_STATE_TRANSMIT;
 
     hostCmd = (SMB_MCMD_WR_CNT(nWrBytes) | SMB_MCMD_START0_Msk | SMB_MCMD_MPROCEED_Msk | SMB_MCMD_MRUN_Msk | SMB_MCMD_STOP_Msk);
 
-    if ((protocol == I2C_SMB_HOST_PROTOCOL_RD_BYTE) || (protocol == I2C_SMB_HOST_PROTOCOL_RD_WORD) || (protocol == I2C_SMB_HOST_PROTOCOL_RD_BLK) || (protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK))
+    if ((protocol == I2C_SMB_HOST_PROTOCOL_RD_BYTE) || (protocol == I2C_SMB_HOST_PROTOCOL_RD_WORD) || (protocol == I2C_SMB_HOST_PROTOCOL_RD_BLK) || (protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK) || (protocol == I2C_SMB_HOST_PROTOCOL_PROCESS_CALL))
     {
         /* Specify the number of bytes to read from target, generate repeated start and read PEC byte when RD_CNT becomes 0 */
         hostCmd |= (SMB_MCMD_RD_CNT(nRdBytes) | SMB_MCMD_STARTN_Msk) | SMB_MCMD_READ_PEC(PECConfig);
@@ -419,6 +419,15 @@ void I2C${I2C_INSTANCE_NAME}_HostWriteReadBlock(uint8_t address, uint8_t cmd, vo
     I2C${I2C_INSTANCE_NAME}_HostWriteRead(I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK, wrLen, sizeof(i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer));
 }
 
+void I2C${I2C_INSTANCE_NAME}_HostProcessCall(uint8_t address, uint8_t cmd, void* pWrdata)
+{
+    /* <slave_add> <cmd> <data0> <data1> <slave_add> <data0> <data1> */
+    uint8_t wrLen = I2C${I2C_INSTANCE_NAME}_HostPacketForm(I2C_SMB_HOST_PROTOCOL_PROCESS_CALL, address, cmd, pWrdata, 2);
+    I2C${I2C_INSTANCE_NAME}_HostWriteRead(I2C_SMB_HOST_PROTOCOL_PROCESS_CALL, wrLen, 2);
+}
+
+
+
 uint32_t I2C${I2C_INSTANCE_NAME}_HostTransferCountGet(void)
 {
     return DMA_ChannelGetTransferredCount(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL});
@@ -427,11 +436,7 @@ uint32_t I2C${I2C_INSTANCE_NAME}_HostTransferCountGet(void)
 uint32_t I2C${I2C_INSTANCE_NAME}_HostBufferRead(void* pBuffer)
 {
     uint32_t i;
-    uint32_t numBytesAvailable = DMA_ChannelGetTransferredCount(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL});
-    uint8_t PECConfig = ((${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] & SMB_CFG_PECEN_Msk) != 0U)? 1U: 0U;
-
-    /* Discard the PEC byte received from the slave and the PEC register copied by the Master state machine */
-    numBytesAvailable -= (PECConfig == 1U)? 2U : 0U;
+    uint32_t numBytesAvailable = DMA_ChannelGetTransferredCount(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}) - 1U;
 
     /* First byte in i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer is always the address byte and hence not copied to application buffer */
     for (i = 0; i < numBytesAvailable; i++)
@@ -442,9 +447,10 @@ uint32_t I2C${I2C_INSTANCE_NAME}_HostBufferRead(void* pBuffer)
     return numBytesAvailable;
 }
 
-void I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg)
+void __attribute__((used)) I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg)
 {
     uint8_t PECConfig = ((${I2C_INSTANCE_NAME}_REGS->SMB_CFG[0] & SMB_CFG_PECEN_Msk) != 0U)? 1U: 0U;
+    uintptr_t context = ${I2C_INSTANCE_NAME?lower_case}HostObj.context;
 
     if ((completion_reg & SMB_COMPL_MDONE_Msk) != 0U)
     {
@@ -477,7 +483,7 @@ void I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg)
 
                         ${I2C_INSTANCE_NAME?lower_case}HostObj.state = I2C_SMB_HOST_STATE_RECEIVE;
 
-                        (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}, ${I2C_INSTANCE_NAME}_MRXB, (void*)i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer, ${I2C_INSTANCE_NAME?lower_case}HostObj.dmaRdBytes);
+                        (void)DMA_ChannelTransfer(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL}, ${I2C_INSTANCE_NAME}_MRXB, i2c${I2C_INSTANCE_NAME?lower_case}HostRdBuffer, ${I2C_INSTANCE_NAME?lower_case}HostObj.dmaRdBytes);
 
                         /* Re-start the paused host state machine */
                         ${I2C_INSTANCE_NAME}_REGS->SMB_MCMD[0] |= SMB_MCMD_MPROCEED_Msk;
@@ -487,7 +493,9 @@ void I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg)
             else
             {
                 /* Transfer completed without error. Abort the transfer on DMA channel for bulk read transfers. */
-                if (((${I2C_INSTANCE_NAME?lower_case}HostObj.protocol == I2C_SMB_HOST_PROTOCOL_RD_BLK) || (${I2C_INSTANCE_NAME?lower_case}HostObj.protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK)) && (DMA_ChannelIsBusy(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL})))
+                I2C_SMB_HOST_PROTOCOL protocol = ${I2C_INSTANCE_NAME?lower_case}HostObj.protocol;
+
+                if ((DMA_ChannelIsBusy(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL})) && ((protocol == I2C_SMB_HOST_PROTOCOL_RD_BLK) || (protocol == I2C_SMB_HOST_PROTOCOL_WR_BLK_RD_BLK)))
                 {
                     DMA_ChannelTransferAbort(DMA_CHANNEL_${I2C_SMBUS_MASTER_DMA_CHANNEL});
                 }
@@ -503,7 +511,7 @@ void I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg)
                     {
                         if (${I2C_INSTANCE_NAME?lower_case}HostObj.callback != NULL)
                         {
-                            ${I2C_INSTANCE_NAME?lower_case}HostObj.callback(I2C_SMB_HOST_TRANSFER_EVENT_RX_READY, ${I2C_INSTANCE_NAME?lower_case}HostObj.context);
+                            ${I2C_INSTANCE_NAME?lower_case}HostObj.callback(I2C_SMB_HOST_TRANSFER_EVENT_RX_READY, context);
                         }
                     }
                 }
@@ -514,11 +522,11 @@ void I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg)
                 {
                     if (${I2C_INSTANCE_NAME?lower_case}HostObj.error == I2C_SMB_HOST_ERROR_NONE)
                     {
-                        (void)${I2C_INSTANCE_NAME?lower_case}HostObj.callback(I2C_SMB_HOST_TRANSFER_EVENT_DONE, ${I2C_INSTANCE_NAME?lower_case}HostObj.context);
+                        (void)${I2C_INSTANCE_NAME?lower_case}HostObj.callback(I2C_SMB_HOST_TRANSFER_EVENT_DONE, context);
                     }
                     else
                     {
-                        (void)${I2C_INSTANCE_NAME?lower_case}HostObj.callback(I2C_SMB_HOST_TRANSFER_EVENT_ERROR, ${I2C_INSTANCE_NAME?lower_case}HostObj.context);
+                        (void)${I2C_INSTANCE_NAME?lower_case}HostObj.callback(I2C_SMB_HOST_TRANSFER_EVENT_ERROR, context);
                     }
                 }
             }
@@ -540,21 +548,21 @@ void I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(uint32_t completion_reg)
 
             if (${I2C_INSTANCE_NAME?lower_case}HostObj.callback != NULL)
             {
-                ${I2C_INSTANCE_NAME?lower_case}HostObj.callback(I2C_SMB_HOST_TRANSFER_EVENT_ERROR, ${I2C_INSTANCE_NAME?lower_case}HostObj.context);
+                ${I2C_INSTANCE_NAME?lower_case}HostObj.callback(I2C_SMB_HOST_TRANSFER_EVENT_ERROR, context);
             }
         }
     }
 }
 
 <#if I2C_OPERATING_MODE == "Master">
-void ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     uint32_t completion_reg;
 
     <#if I2C_INTERRUPT_TYPE == "AGGREGATE">
-    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}))
+    if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}) != 0U)
     <#else>
-    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}))
+    if (ECIA_GIRQResultGet(ECIA_DIR_INT_SRC_I2CSMB${I2C_INSTANCE_NUM}) != 0U)
     </#if>
     {
         completion_reg = ${I2C_INSTANCE_NAME}_REGS->SMB_COMPL[0];
@@ -563,7 +571,7 @@ void ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
         ${I2C_INSTANCE_NAME}_REGS->SMB_COMPL[0] = completion_reg;
 
         I2C${I2C_INSTANCE_NAME}_HostInterruptHandler(completion_reg);
-        
+
         <#if I2C_INTERRUPT_TYPE == "AGGREGATE">
         ECIA_GIRQSourceClear(ECIA_AGG_INT_SRC_I2CSMB${I2C_INSTANCE_NUM});
         <#else>

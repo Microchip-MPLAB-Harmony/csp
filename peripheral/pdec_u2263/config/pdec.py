@@ -782,18 +782,20 @@ def instantiateComponent(pdecComponent):
     pdecSym_EVCTRL_EVINV2 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVINV2", pdecSym_EVCTRL_EVEI2)
     pdecSym_EVCTRL_EVINV2.setLabel("Invert Input Event 2")
 
-    pdecSym_EVCTRL_EVACT = pdecComponent.createKeyValueSetSymbol("PDEC_EVCTRL_EVACT", pdecSym_Input_Events)
-    pdecSym_EVCTRL_EVACT.setLabel("Select Event Action")
     pdecNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PDEC\"]/value-group@[name=\"PDEC_EVCTRL__EVACT\"]")
-    pdecValues = []
-    pdecValues = pdecNode.getChildren()
-    for index in range(len(pdecValues)):
-        pdecKeyName = pdecValues[index].getAttribute("name")
-        pdecKeyValue = pdecValues[index].getAttribute("value")
-        pdecSym_EVCTRL_EVACT.addKey(pdecKeyName, pdecKeyValue, pdecValues[index].getAttribute("caption"))
-    pdecSym_EVCTRL_EVACT.setDefaultValue(0)
-    pdecSym_EVCTRL_EVACT.setOutputMode("Key")
-    pdecSym_EVCTRL_EVACT.setDisplayMode("Description")
+    if pdecNode != None:
+        pdecSym_EVCTRL_EVACT = pdecComponent.createKeyValueSetSymbol("PDEC_EVCTRL_EVACT", pdecSym_Input_Events)
+        pdecSym_EVCTRL_EVACT.setLabel("Select Event Action")
+
+        pdecValues = []
+        pdecValues = pdecNode.getChildren()
+        for index in range(len(pdecValues)):
+            pdecKeyName = pdecValues[index].getAttribute("name")
+            pdecKeyValue = pdecValues[index].getAttribute("value")
+            pdecSym_EVCTRL_EVACT.addKey(pdecKeyName, pdecKeyValue, pdecValues[index].getAttribute("caption"))
+        pdecSym_EVCTRL_EVACT.setDefaultValue(0)
+        pdecSym_EVCTRL_EVACT.setOutputMode("Key")
+        pdecSym_EVCTRL_EVACT.setDisplayMode("Description")
 
     eventCounterDepList.append("PDEC_COUNTER_EVINV0")
     eventCounterDepList.append("PDEC_COUNTER_EVINV1")

@@ -84,7 +84,10 @@ static void initPLLAClk(void)
                               PMC_PLL_CTRL0_DIVPMC(${CLK_PLLA_DIVPMC}) |
                               PMC_PLL_CTRL0_ENPLLCK_Msk;
     PMC_REGS->PMC_PLL_UPDT = PMC_PLL_UPDT_UPDATE_Msk | 0;
-    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_LOCKA_Msk) != PMC_PLL_ISR0_LOCKA_Msk);
+    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_LOCKA_Msk) != PMC_PLL_ISR0_LOCKA_Msk)
+    {
+        /* Wait */
+    }
 
     <#if CLK_PLLA_SS>
     PMC_REGS->PMC_PLL_SSR = PMC_PLL_SSR_ENSPREAD_Msk | PMC_PLL_SSR_STEP(${CLK_PLLA_SS_STEP}) | PMC_PLL_SSR_NSTEP(${CLK_PLLA_SS_NSTEP});
@@ -104,16 +107,28 @@ Initialize CPU clock
 static void initCPUClk(void)
 {
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_CSS_Msk) | PMC_CPU_CKR_CSS_SLOW_CLK;
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait */
+    }
 
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_MDIV_Msk) | PMC_CPU_CKR_MDIV_${CLK_CPU_CKR_MDIV};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait */
+    }
 
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_PRES_Msk) | PMC_CPU_CKR_PRES_${CLK_CPU_CKR_PRES};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait */
+    }
 
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_CSS_Msk) | PMC_CPU_CKR_CSS_${CLK_CPU_CKR_CSS};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait */
+    }
 }
 </#if>
 <#if CLK_UPLL_EN>
@@ -134,11 +149,13 @@ static void swDelayUs(uint32_t delay)
     uint32_t i, count;
 
     /* delay * (CPU_FREQ/1000000) / 6 */
-    count = delay *  (${DELAY_SRC_CLK_FREQUENCY}/1000000)/6;
+    count = delay *  (${DELAY_SRC_CLK_FREQUENCY}U/1000000U)/6U;
 
     /* 6 CPU cycles per iteration */
-    for (i = 0; i < count; i++)
+    for (i = 0U; i < count; i++)
+    {
         __NOP();
+    }
 }
 
 /*********************************************************************************
@@ -181,7 +198,10 @@ static void initUPLLCLK(void)
                               PMC_PLL_CTRL0_ENPLLCK_Msk;
 
     /* STEP 10: Wait for the lock bit to rise by polling the PMC_PLL_ISR0 */
-    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_LOCKU_Msk) != PMC_PLL_ISR0_LOCKU_Msk);
+    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_LOCKU_Msk) != PMC_PLL_ISR0_LOCKU_Msk)
+    {
+        /* Wait */
+    }
 }
 </#if>
 
@@ -219,7 +239,10 @@ static void initAUDIOPLLClk(void)
     PMC_REGS->PMC_PLL_UPDT |= PMC_PLL_UPDT_UPDATE_Msk;
 
     /* Wait for the lock bit to rise by polling the PMC_PLL_ISR0 */
-    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_AUDIOLOCK_Msk) != PMC_PLL_ISR0_AUDIOLOCK_Msk);
+    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_AUDIOLOCK_Msk) != PMC_PLL_ISR0_AUDIOLOCK_Msk)
+    {
+        /* Wait */
+    }
 }
 </#if>
 
@@ -256,7 +279,10 @@ static void initLVDSPLLClk(void)
     PMC_REGS->PMC_PLL_UPDT |= PMC_PLL_UPDT_UPDATE_Msk;
 
     /* Wait for the lock bit to rise by polling the PMC_PLL_ISR0 */
-    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_LVDSLOCK_Msk) != PMC_PLL_ISR0_LVDSLOCK_Msk);
+    while ((PMC_REGS->PMC_PLL_ISR0 & PMC_PLL_ISR0_LVDSLOCK_Msk) != PMC_PLL_ISR0_LVDSLOCK_Msk)
+    {
+        /* Wait */
+    }
 }
 </#if>
 
@@ -273,7 +299,10 @@ static void initProgrammableClk(void)
     PMC_REGS->PMC_PCK[${i}] = PMC_PCK_CSS_${css} |
                                 PMC_PCK_PRES(${pres});
     PMC_REGS->PMC_SCER |= PMC_SCDR_PCK${i}_Msk;
-    while ((PMC_REGS->PMC_SR & PMC_SR_PCKRDY${i}_Msk) != PMC_SR_PCKRDY${i}_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_PCKRDY${i}_Msk) != PMC_SR_PCKRDY${i}_Msk)
+    {
+        /* Wait */
+    }
 </#if>
 </#list>
 }
@@ -288,7 +317,7 @@ static void initPeriphClk(void)
         uint8_t clken;
         uint8_t gclken;
         uint8_t css;
-        uint8_t div;
+        uint8_t div_val;
     } periphList[] =
     {
         <#list 0..67 as i>
@@ -319,10 +348,10 @@ static void initPeriphClk(void)
         { ID_PERIPH_MAX + 1, 0, 0, 0, 0}//end of list marker
     };
 
-    int count = sizeof(periphList)/sizeof(periphList[0]);
-    for (int i = 0; i < count; i++)
+    uint32_t count = sizeof(periphList)/sizeof(periphList[0]);
+    for (uint32_t i = 0; i < count; i++)
     {
-        if (periphList[i].id == (ID_PERIPH_MAX + 1))
+        if (periphList[i].id == (uint8_t)((uint32_t)ID_PERIPH_MAX + 1U))
         {
             break;
         }
@@ -330,7 +359,7 @@ static void initPeriphClk(void)
         PMC_REGS->PMC_PCR = PMC_PCR_CMD_Msk |
                             PMC_PCR_GCLKEN(periphList[i].gclken) |
                             PMC_PCR_EN(periphList[i].clken) |
-                            PMC_PCR_GCLKDIV(periphList[i].div) |
+                            PMC_PCR_GCLKDIV(periphList[i].div_val) |
                             PMC_PCR_GCLKCSS(periphList[i].css) |
                             PMC_PCR_PID(periphList[i].id);
     }

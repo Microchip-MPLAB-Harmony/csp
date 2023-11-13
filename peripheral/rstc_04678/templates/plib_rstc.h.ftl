@@ -119,7 +119,7 @@ bool ${RSTC_INSTANCE_NAME}_PMCResetStatusGet(void);
 
 bool ${RSTC_INSTANCE_NAME}_NRSTPinRead (void);
 </#if>
-<#if RSTC_MR_CPROCEN??>
+<#if RSTC_MR_CPROCEN>
 
 void ${RSTC_INSTANCE_NAME}_CoProcessorEnable(bool enable);
 </#if>

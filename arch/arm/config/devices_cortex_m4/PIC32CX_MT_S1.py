@@ -92,11 +92,11 @@ coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CL
 
 # # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
 
 # #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
-coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "MPU_CONFIGURATOR", {"plugin_name": "MPU Configurator", "main_html_path": "csp/plugins/configurators/mpu-configurators/mpu-configurator/build/index.html"})
 
 # #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
@@ -104,9 +104,6 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11264/plugin/pio_11264.jar")
-
-#Load ADC plugin
-coreComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar")
 
 compilerSelected = compilerChoice.getSelectedKey().lower()
 

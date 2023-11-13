@@ -41,6 +41,9 @@
 // DOM-IGNORE-END
 #include "device.h"
 #include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -50,7 +53,7 @@
 
 <#if ADC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 void ${ADC_INSTANCE_NAME}_Initialize(void)
@@ -111,34 +114,34 @@ void ${ADC_INSTANCE_NAME}_ConversionStart(void)
 
 void ${ADC_INSTANCE_NAME}_InputSelect(${ADC_INSTANCE_NAME}_MUX muxType, ${ADC_INSTANCE_NAME}_INPUT_POSITIVE positiveInput, ${ADC_INSTANCE_NAME}_INPUT_NEGATIVE negativeInput)
 {
-	if (muxType == ADC_MUX_B)
-	{
-    	AD1CHSbits.CH0SB = positiveInput;
-        AD1CHSbits.CH0NB = negativeInput;
-	}
-	else
-	{
-    	AD1CHSbits.CH0SA = positiveInput;
-        AD1CHSbits.CH0NA = negativeInput;
-	}
+    if (muxType == ADC_MUX_B)
+    {
+        AD1CHSbits.CH0SB = (uint8_t)positiveInput;
+        AD1CHSbits.CH0NB = (uint8_t)negativeInput;
+    }
+    else
+    {
+        AD1CHSbits.CH0SA = (uint8_t)positiveInput;
+        AD1CHSbits.CH0NA = (uint8_t)negativeInput;
+    }
 }
 
 void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanInputs)
 {
 <#if core.PRODUCT_FAMILY == "PIC32MX1290">
     AD1CSSL = (uint32_t)(scanInputs);
-    <#if AD1CSSL__CSSL_COUNT gt 31> 
-    AD1CSSL2 = (uint32_t)(scanInputs >> 32);
+    <#if AD1CSSL__CSSL_COUNT gt 31>
+    AD1CSSL2 = ((uint64_t)scanInputs >> 32);
     </#if>
 <#else>
-    AD1CSSL = scanInputs;
+    AD1CSSL = (uint32_t)scanInputs;
 </#if>
 }
 
 /*Check if conversion result is available */
 bool ${ADC_INSTANCE_NAME}_ResultIsReady(void)
 {
-    return AD1CON1bits.DONE;
+    return ((AD1CON1bits.DONE) != 0U);
 }
 
 
@@ -155,13 +158,15 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister(ADC_CALLBACK callback, uintptr_t cont
     ${ADC_INSTANCE_NAME}_CallbackObj.context = context;
 }
 
-void ${ADC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler(void)
 {
     IFS${ADC_IFS_REG_INDEX}CLR = _IFS0_AD1IF_MASK;
 
     if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(${ADC_INSTANCE_NAME}_CallbackObj.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObj.context;
+
+        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(context);
     }
 }
 </#if>

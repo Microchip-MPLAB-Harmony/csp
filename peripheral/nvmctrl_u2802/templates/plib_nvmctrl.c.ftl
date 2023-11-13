@@ -62,26 +62,33 @@
 // Section: ${NVMCTRL_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
+<#if INTERRUPT_ENABLE == true>
+
+typedef struct
+{
+	NVMCTRL_CALLBACK CallbackFunc;
+	uintptr_t Context;
+}nvmCallbackObjType;
+
+volatile static nvmCallbackObjType ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj;
+</#if>
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>NVMCTRL_CALLBACK ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackFunc;
-
-    <#lt>uintptr_t ${NVMCTRL_INSTANCE_NAME?lower_case}Context;
-
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context )
     <#lt>{
     <#lt>    /* Register callback function */
-    <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackFunc = callback;
-    <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}Context = context;
+    <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc = callback;
+    <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.Context = context;
     <#lt>}
 
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${NVMCTRL_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#lt>    ${NVMCTRL_REG_NAME}_REGS->NVMCTRL_INTENCLR = NVMCTRL_INTENCLR_DONE_Msk;
 
-    <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackFunc != NULL)
+    <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc != NULL)
     <#lt>    {
-    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackFunc(${NVMCTRL_INSTANCE_NAME?lower_case}Context);
+    <#lt>        uintptr_t context = ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.Context;
+    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc(context);
     <#lt>    }
     <#lt>}
 </#if>

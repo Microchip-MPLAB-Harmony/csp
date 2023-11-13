@@ -53,6 +53,9 @@
 */
 #include "device.h"
 #include "plib_${PWM_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#compress>
 <#assign PWM_INTERRUPT = false>
@@ -68,7 +71,7 @@
 
 <#if PWM_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>static PWM_CALLBACK_OBJECT ${PWM_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static PWM_CALLBACK_OBJECT ${PWM_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize enabled PWM channels */
@@ -182,13 +185,14 @@ void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMa
     <#lt>}
 
     <#lt>/* Interrupt Handler */
-    <#lt>void ${PWM_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${PWM_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>    uint32_t status;
-    <#lt>    status = ${PWM_INSTANCE_NAME}_REGS->PWM_ISR;
+    <#lt>    uint32_t status = ${PWM_INSTANCE_NAME}_REGS->PWM_ISR;
+    <#lt>    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    <#lt>    uintptr_t context = ${PWM_INSTANCE_NAME}_CallbackObj.context;
     <#lt>    if (${PWM_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${PWM_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${PWM_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        ${PWM_INSTANCE_NAME}_CallbackObj.callback_fn(status, context);
     <#lt>    }
     <#lt>}
 
@@ -198,7 +202,7 @@ void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMa
 bool ${PWM_INSTANCE_NAME}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel)
 {
     bool status;
-    status = (${PWM_INSTANCE_NAME}_REGS->PWM_ISR >> channel) & 0x1U;
+    status = (((${PWM_INSTANCE_NAME}_REGS->PWM_ISR >> channel) & 0x1U) != 0U);
     return status;
 }
 </#if>

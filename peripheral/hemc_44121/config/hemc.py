@@ -187,6 +187,33 @@ def InterruptStatusWarning(symbol, event):
 def setVisibleIfEventTrue(symbol, event):
     symbol.setVisible(event["value"])
 
+def updateBchVisibility(symbol, event):
+    if ("_WRITE_ECC_CONF" in event['id']): # Write ECC conf event on CS0
+        memType = Database.getSymbolValue(hemcInstanceName.getValue().lower(), "CS_0_MEMORY_TYPE")
+        # BCH option visible only for HSMC (value=0)
+        if ( memType == 0):
+            symbol.setReadOnly(False)
+            symbol.setVisible(event["value"])
+    else:
+        # BCH option visible only for HSMC (value=0)
+        if (event["value"] == 0):
+            # if CS0, Check if option "WRITE_ECC_CONF" is enabled to update BCH visibility
+            chipSelectId = int(event['id'].split("_")[1])
+            if (chipSelectId == 0):
+                writeEccConf = Database.getSymbolValue(hemcInstanceName.getValue().lower(), "CS_" + str(chipSelectId) + "_WRITE_ECC_CONF")
+                if (writeEccConf):
+                    symbol.setReadOnly(False)
+                    symbol.setVisible(True)
+                else:
+                    symbol.setReadOnly(True)
+                    symbol.setVisible(False)
+            else:
+                symbol.setReadOnly(False)
+                symbol.setVisible(True)
+        else:
+            symbol.setReadOnly(True)
+            symbol.setVisible(False)
+
 def checkAndupdateInitSize(symbol, event):
     if ('_RAM_CHECK_BIT_INIT' in event['id']):
         symbol.setVisible(event["value"])
@@ -277,11 +304,14 @@ def emcBaseCalculation(symbol, event):
 
     if bankSize == 17:
         csBase[chipSelectId].setValue(0x3ffff)
+        chipSelectComment[chipSelectId].setValue(False)
+        Database.setSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_END_ADDRESS", "0x60000000")
     else:
         value = (int(startAddress, 0) - int(0x60000000))
         csBase[chipSelectId].setValue(value >> 14)
         Database.setSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_END_ADDRESS", str(hex(int(startAddress, 0) + memSizeMap[bankSize] -1 )).replace("L", ""))
     for i in range(0, chipSelectCount):
+        chipSelectCommentFlag = False
         if Database.getSymbolValue(event["namespace"], "CS_" + str(i) + "_MEMORY_BANK_SIZE") != 17:
             for j in range(0, chipSelectCount):
                 if j != i and  Database.getSymbolValue(event["namespace"], "CS_" + str(j) + "_MEMORY_BANK_SIZE") != 17:
@@ -290,12 +320,42 @@ def emcBaseCalculation(symbol, event):
                     endA = int(Database.getSymbolValue(event["namespace"], "CS_" + str(j) + "_END_ADDRESS"), 0)
                     endB = int(Database.getSymbolValue(event["namespace"], "CS_" + str(i) + "_END_ADDRESS"), 0)
                     if (startA <= endB) and (startB <= endA):
-                        chipSelectComment[j].setValue(True)
-                    else:
-                        chipSelectComment[j].setValue(False)
+                        chipSelectCommentFlag = True
+            chipSelectComment[i].setValue(chipSelectCommentFlag)
 
 def updateHemcClockComment(symbol, event):
     symbol.setLabel("**** HEMC is running at " + str(event["value"]) + " Hz ****")
+
+def SendUpdateToComponents(symbol, event):
+    import re
+    chipSelectId = int(re.search(r'\d+', symbol.getID()).group())
+    startAddress = Database.getSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_START_ADDRESS")
+
+    csConnectedComponent = Database.getSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_CONNECTED_COMPONENT")
+
+    if ( csConnectedComponent != "None"):
+        argDict = {"address" : startAddress }
+        argDict = Database.sendMessage(csConnectedComponent, "BASE_ADDRESS_UPDATE", argDict)
+
+def onAttachmentConnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+    selectedCS = int(connectID.replace('hemc_cs', ''))
+    localComponent.getSymbolByID("CS_" + str(selectedCS) + "_CONNECTED_COMPONENT").setValue(remoteID)
+
+def onAttachmentDisconnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+    selectedCS = int(connectID.replace('hemc_cs', ''))
+    localComponent.getSymbolByID("CS_" + str(selectedCS) + "_CONNECTED_COMPONENT").clearValue()
 
 ################################################################################
 #### Component ####
@@ -447,8 +507,10 @@ def instantiateComponent(hemcComponent):
         csheccEnableBCH.setDefaultValue(False)
         if (hemcHeccCr0Reg.getValue() == True):
             if (id == 0):
-                csheccEnableBCH.setDependencies(setVisibleIfEventTrue, ["CS_" + str(id) + "_WRITE_ECC_CONF"])
+                csheccEnableBCH.setDependencies(updateBchVisibility, ["CS_" + str(id) + "_MEMORY_TYPE", "CS_" + str(id) + "_WRITE_ECC_CONF"])
                 csheccEnableBCH.setVisible(False)
+            else:
+                csheccEnableBCH.setDependencies(updateBchVisibility, ["CS_" + str(id) + "_MEMORY_TYPE"])
         else:
             csheccEnableBCH.setVisible(False)
 
@@ -464,6 +526,11 @@ def instantiateComponent(hemcComponent):
         csheccRamCheckBitInitSize.setDefaultValue(0)
         csheccRamCheckBitInitSize.setVisible(False)
         csheccRamCheckBitInitSize.setDependencies(checkAndupdateInitSize, ["CS_" + str(id) + "_RAM_CHECK_BIT_INIT", "CS_" + str(id) + "_MEMORY_BANK_SIZE"])
+
+        csConnectedComponent = hemcComponent.createStringSymbol("CS_" + str(id) + "_CONNECTED_COMPONENT", csMenu)
+        csConnectedComponent.setDefaultValue("None")
+        csConnectedComponent.setDependencies(SendUpdateToComponents, ["CS_" + str(id) + "_START_ADDRESS"])
+        csConnectedComponent.setVisible(False)
 
     # HEMC HECC interrupt and test mode menu
     memHeccInterruptMode = hemcComponent.createBooleanSymbol("HECC_INTERRUPT_MODE", memMemu)
@@ -900,4 +967,4 @@ def instantiateComponent(hemcComponent):
     hemcSystemInitFile.setSourcePath("../peripheral/hemc_44121/templates/system/initialization.c.ftl")
     hemcSystemInitFile.setMarkup(True)
 
-    hemcComponent.addPlugin("../peripheral/hemc_44121/plugin/hemc_44121.jar")
+    hemcComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "HEMC_CONFIGURATOR", {"plugin_name": "HEMC Memory Configurator", "main_html_path": "csp/plugins/configurators/memory-configurators/hemc-configurator/build/index.html"})

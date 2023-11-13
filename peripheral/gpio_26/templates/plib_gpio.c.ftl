@@ -66,7 +66,7 @@
 
 <#if TOTAL_NUM_OF_INT_USED gt 0 >
 <#lt>#define TOTAL_NUM_OF_INT_USED ${TOTAL_NUM_OF_INT_USED}U
-static GPIO_PIN_CALLBACK_OBJ pinCallbackObj[TOTAL_NUM_OF_INT_USED];
+volatile static GPIO_PIN_CALLBACK_OBJ pinCallbackObj[TOTAL_NUM_OF_INT_USED];
 </#if>
 
 #define GET_PINCTRL_REG_ADDR(pin)   (&GPIO_REGS->GPIO_CTRL0[0] + (uint32_t)(pin))
@@ -108,7 +108,7 @@ void GPIO_PinDirConfig(GPIO_PIN pin, GPIO_DIR dir)
 void GPIO_PinOutputEnable(GPIO_PIN pin)
 {
     volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
-    *pin_ctrl_reg = (*pin_ctrl_reg) | GPIO_DIR_OUTPUT;
+    *pin_ctrl_reg = (*pin_ctrl_reg) | (uint32_t)GPIO_DIR_OUTPUT;
 }
 
 void GPIO_PinInputEnable(GPIO_PIN pin)
@@ -165,22 +165,22 @@ void GPIO_PinToggle(GPIO_PIN pin)
     *pin_ctrl_reg ^= GPIO_CTRL0_ALT_GPIO_DATA_Msk;
 }
 
-uint8_t GPIO_PinRead(GPIO_PIN pin)
+bool GPIO_PinRead(GPIO_PIN pin)
 {
     volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
-    return (((*pin_ctrl_reg) & (GPIO_CTRL0_GPIO_INP_Msk)) > 0U)? 1U : 0U;
+    return (((*pin_ctrl_reg) & (GPIO_CTRL0_GPIO_INP_Msk)) > 0U);
 }
 
 void GPIO_PinWrite(GPIO_PIN pin, bool value)
 {
     volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
-    *pin_ctrl_reg = (*pin_ctrl_reg & ~GPIO_CTRL0_ALT_GPIO_DATA_Msk) | (value << GPIO_CTRL0_ALT_GPIO_DATA_Pos);
+    *pin_ctrl_reg = (*pin_ctrl_reg & ~GPIO_CTRL0_ALT_GPIO_DATA_Msk) | ((value ? 1UL : 0UL) << GPIO_CTRL0_ALT_GPIO_DATA_Pos);
 }
 
-uint8_t GPIO_PinLatchRead(GPIO_PIN pin)
+bool GPIO_PinLatchRead(GPIO_PIN pin)
 {
     volatile uint32_t* pin_ctrl_reg = GET_PINCTRL_REG_ADDR(pin);
-    return (((*pin_ctrl_reg) & (GPIO_CTRL0_ALT_GPIO_DATA_Msk)) > 0U)? 1U : 0U;
+    return (((*pin_ctrl_reg) & (GPIO_CTRL0_ALT_GPIO_DATA_Msk)) > 0U);
 }
 
 void GPIO_GroupSet(GPIO_GROUP group, uint32_t mask)
@@ -365,14 +365,15 @@ bool GPIO_PinInterruptCallbackRegister(
 <#assign PIN_NAME = "GPIO_PIN_NAME_" + i>
 <#assign GIRQ_NUM = "PIN_" + i + "_GIRQNUM">
 <#assign GIRQ_BITPOS = "PIN_" + i + "_GIRQBITPOS">
-void ${.vars[PIN_NAME]}_GRP_InterruptHandler(void)
+void __attribute__((used)) ${.vars[PIN_NAME]}_GRP_InterruptHandler(void)
 {
     if ((ECIA_REGS->ECIA_RESULT${.vars[GIRQ_NUM]} & ((uint32_t)1U << ${.vars[GIRQ_BITPOS]})) != 0U)
     {
         ECIA_REGS->ECIA_SRC${.vars[GIRQ_NUM]} |= ((uint32_t)1U << ${.vars[GIRQ_BITPOS]});
         if (pinCallbackObj[${ARR_INDEX}].callback != NULL)
         {
-            pinCallbackObj[${ARR_INDEX}].callback(GPIO_PIN_${.vars[PIN_NAME]}, pinCallbackObj[${ARR_INDEX}].context);
+            uintptr_t context = pinCallbackObj[${ARR_INDEX}].context;
+            pinCallbackObj[${ARR_INDEX}].callback(GPIO_PIN_${.vars[PIN_NAME]}, context);
         }
     }
 }

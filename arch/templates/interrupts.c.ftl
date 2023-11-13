@@ -48,7 +48,6 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
 <#if HarmonyCore??>
     <#if HarmonyCore.ENABLE_DRV_COMMON == true ||
          HarmonyCore.ENABLE_SYS_COMMON == true ||
@@ -61,6 +60,7 @@ ${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
 </#if>
 #include "interrupts.h"
 #include "definitions.h"
+${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
 
 
 // *****************************************************************************

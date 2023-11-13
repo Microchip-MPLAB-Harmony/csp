@@ -29,6 +29,7 @@ global getFlexcomTwiClockDividerValue
 global flexcomSym_Twi_OpMode
 
 def getFlexcomTwiClockDividerValue(flexcomTwiClkSpeed):
+    global flexcomSym_TWI_CWGR_BRSRCCLK
 
     ckdiv = 0
     clockDividerMaxValue = 255
@@ -36,7 +37,11 @@ def getFlexcomTwiClockDividerValue(flexcomTwiClkSpeed):
 
     peripheralClockFreq = int(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     flexcomTwiClkSpeed = flexcomTwiClkSpeed * 1000 # FLEXCOM TWI clock speed in Hz
-    cldiv = peripheralClockFreq / ( flexcomTwiClkSpeed * 2 ) - 3
+
+    if flexcomSym_TWI_CWGR_BRSRCCLK.getSelectedKey() == "PERIPH_CLK":
+        cldiv = peripheralClockFreq / ( flexcomTwiClkSpeed * 2 ) - 3
+    else:
+        cldiv = peripheralClockFreq / ( flexcomTwiClkSpeed * 2 )
 
     if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x3:
         flexcomClockInvalidSym.setVisible((cldiv < 1))
@@ -130,6 +135,7 @@ flexcomSym_Twi_Interrupt.setVisible(False)
 flexcomSym_Twi_Interrupt.setDependencies(showTwiDependencies, ["FLEXCOM_TWI_OPMODE", "FLEXCOM_MODE"])
 
 #Select clock source
+global flexcomSym_TWI_CWGR_BRSRCCLK
 flexcomSym_TWI_CWGR_BRSRCCLK = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_TWI_CWGR_BRSRCCLK", flexcomSym_OperatingMode)
 flexcomSym_TWI_CWGR_BRSRCCLK.setLabel("Select Clock Source")
 flexcomSym_TWI_CWGR_BRSRCCLK_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TWI\"]/value-group@[name=\"TWI_CWGR__BRSRCCLK\"]")

@@ -342,10 +342,6 @@ if dmacChannelNode is None:
     dmacChannelNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]/instance@[name=\""+dmacInstanceName.getValue()+"\"]/parameters/param@[name=\"DMA_CH_NUM\"]") 
 dmacChannelCount = int(dmacChannelNode.getAttribute("value"))
 
-dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
-dmaManagerSelect.setVisible(False)
-dmaManagerSelect.setDefaultValue("dmac_u2503:SAME5XDMAModel")
-
 dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
 dmacMenu.setLabel("DMA (DMAC)")
 dmacMenu.setDescription("DMA (DMAC) Configuration")

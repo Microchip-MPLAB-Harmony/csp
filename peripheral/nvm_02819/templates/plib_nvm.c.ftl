@@ -50,6 +50,9 @@
 #include <string.h>
 #include "sys/kmem.h"
 #include "plib_${NVM_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -82,9 +85,18 @@ typedef enum
     NVM_UNLOCK_KEY2 = 0x556699AA
 } NVM_UNLOCK_KEYS;
 
-#define ${NVM_INSTANCE_NAME}_INTERRUPT_ENABLE_MASK   ${NVM_IEC_REG_VALUE}
-#define ${NVM_INSTANCE_NAME}_INTERRUPT_FLAG_MASK     ${NVM_IFS_REG_VALUE}
+#define ${NVM_INSTANCE_NAME}_INTERRUPT_ENABLE_MASK   ${NVM_IEC_REG_VALUE}U
+#define ${NVM_INSTANCE_NAME}_INTERRUPT_FLAG_MASK     ${NVM_IFS_REG_VALUE}U
 
+<#if INTERRUPT_ENABLE == true>
+typedef struct
+{
+    NVM_CALLBACK CallbackFunc;
+    uintptr_t Context;
+}nvmCallbackObjType;
+
+volatile static nvmCallbackObjType ${NVM_INSTANCE_NAME?lower_case}CallbackObj;
+</#if>
 /* ************************************************************************** */
 /* ************************************************************************** */
 // Section: Local Functions                                                   */
@@ -98,24 +110,21 @@ typedef enum
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>NVM_CALLBACK ${NVM_INSTANCE_NAME?lower_case}CallbackFunc;
-
-    <#lt>uintptr_t ${NVM_INSTANCE_NAME?lower_case}Context;
-
     <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister( NVM_CALLBACK callback, uintptr_t context )
     <#lt>{
     <#lt>    /* Register callback function */
-    <#lt>    ${NVM_INSTANCE_NAME?lower_case}CallbackFunc    = callback;
-    <#lt>    ${NVM_INSTANCE_NAME?lower_case}Context         = context;
+    <#lt>    ${NVM_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc    = callback;
+    <#lt>    ${NVM_INSTANCE_NAME?lower_case}CallbackObj.Context         = context;
     <#lt>}
 
-    <#lt>void ${NVM_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>void __attribute__((used)) ${NVM_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#lt>    ${NVM_IFS_REG}CLR = ${NVM_INSTANCE_NAME}_INTERRUPT_FLAG_MASK;
 
-    <#lt>    if(${NVM_INSTANCE_NAME?lower_case}CallbackFunc != NULL)
+    <#lt>    if(${NVM_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc != NULL)
     <#lt>    {
-    <#lt>        ${NVM_INSTANCE_NAME?lower_case}CallbackFunc(${NVM_INSTANCE_NAME?lower_case}Context);
+    <#lt>        uintptr_t context = ${NVM_INSTANCE_NAME?lower_case}CallbackObj.Context;
+    <#lt>        ${NVM_INSTANCE_NAME?lower_case}CallbackObj.CallbackFunc(context);
     <#lt>    }
     <#lt>}
 </#if>
@@ -124,8 +133,8 @@ static void ${NVM_INSTANCE_NAME}_WriteUnlockSequence( void )
 {
     // Write the unlock key sequence
     NVMKEY = 0x0;
-    NVMKEY = NVM_UNLOCK_KEY1;
-    NVMKEY = NVM_UNLOCK_KEY2;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY1;
+    NVMKEY = (uint32_t)NVM_UNLOCK_KEY2;
 }
 
 static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation )
@@ -187,7 +196,20 @@ void ${NVM_INSTANCE_NAME}_Initialize( void )
 
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
+    /* MISRA C-2012 Rule 11.6 violated 1 time below. Deviation record ID - H3_MISRAC_2012_R_11_6_DR_1*/
+    <#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+    <#if core.COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+    #pragma coverity compliance deviate:1 "MISRA C-2012 Rule 11.6" "H3_MISRAC_2012_R_11_6_DR_1"
+    </#if>
+    (void)memcpy(data, (uint32_t*)KVA0_TO_KVA1(address), length);
+    <#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+    <#if core.COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic pop
+    </#if>
+    </#if>
 
     return true;
 }
@@ -203,10 +225,14 @@ bool ${NVM_INSTANCE_NAME}_WordWrite( uint32_t data, uint32_t address )
 
 bool ${NVM_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address )
 {
-   NVMDATA0 = *(data++);
-   NVMDATA1 = *(data++);
-   NVMDATA2 = *(data++);
-   NVMDATA3 = *(data++);
+   NVMDATA0 = *data;
+   data++;
+   NVMDATA1 = *data;
+   data++;
+   NVMDATA2 = *data;
+   data++;
+   NVMDATA3 = *data;
+   data++;
 
    ${NVM_INSTANCE_NAME}_StartOperationAtAddress( address,  QUAD_WORD_PROGRAM_OPERATION);
 
@@ -260,6 +286,25 @@ void ${NVM_INSTANCE_NAME}_ProgramFlashSwapBank( void )
 void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t address )
 {
     volatile uint32_t processorStatus;
+
+    processorStatus = __builtin_disable_interrupts();
+
+    ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
+
+    /* Program the 24-Bit address till where the memory has to be protected
+     * from start of flash memory.
+     * The Page in which the address falls and all the lower pages below it will
+     * be protected from writes
+     */
+    NVMPWPSET = (address & _NVMPWP_PWP_MASK);
+
+    __builtin_mtc0(12, 0, processorStatus);
+}
+
+void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectDisable( void )
+{
+    volatile uint32_t processorStatus;
+	uint32_t address = 0U;
 
     processorStatus = __builtin_disable_interrupts();
 

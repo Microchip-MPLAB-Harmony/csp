@@ -52,7 +52,7 @@
 #include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
 
 <#if WDT_EW_ENABLE = true>
-static WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
+volatile static WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
 </#if>
 
 // *****************************************************************************
@@ -108,19 +108,19 @@ void ${WDT_INSTANCE_NAME}_Disable( void )
 
 void ${WDT_INSTANCE_NAME}_EnableWindowMode( void )
 {
-	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+    while(WDT_REGS->WDT_SYNCBUSY != 0U)
     {
 
     }
-	
+
     /* Window mode can be changed only if peripheral is disabled or ALWAYS ON bit is set */
     if(((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk) == 0U) || ((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != 0U))
     {
         /* Enable window mode */
         ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA |= (uint8_t)WDT_CTRLA_WEN_Msk;
     }
-	
-	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+
+    while(WDT_REGS->WDT_SYNCBUSY != 0U)
     {
 
     }
@@ -128,19 +128,19 @@ void ${WDT_INSTANCE_NAME}_EnableWindowMode( void )
 
 void ${WDT_INSTANCE_NAME}_DisableWindowMode( void )
 {
-	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+    while(WDT_REGS->WDT_SYNCBUSY != 0U)
     {
 
     }
-	
+
     /* Window mode can be changed only if peripheral is disabled or ALWAYS ON bit is set */
     if(((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ENABLE_Msk) == 0U) || ((${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != 0U))
     {
         /* Disable window mode */
         ${WDT_INSTANCE_NAME}_REGS->WDT_CTRLA &= (uint8_t)(~WDT_CTRLA_WEN_Msk);
     }
-	
-	while(WDT_REGS->WDT_SYNCBUSY != 0U)
+
+    while(WDT_REGS->WDT_SYNCBUSY != 0U)
     {
 
     }
@@ -212,14 +212,15 @@ void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t con
     ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context = context;
 }
 
-void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Clear Early Watchdog Interrupt */
     ${WDT_INSTANCE_NAME}_REGS->WDT_INTFLAG = (uint8_t)WDT_INTFLAG_EW_Msk;
 
     if( ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL )
     {
-        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback(${WDT_INSTANCE_NAME?lower_case}CallbackObj.context);
+        uintptr_t context = ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context;
+        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback(context);
     }
 }
 </#if>

@@ -53,7 +53,7 @@ typedef struct
 } OSCCTRL_OBJECT;
 
 /* Reference Object created for the OSCCTRL */
-static OSCCTRL_OBJECT oscctrlObj;
+volatile static OSCCTRL_OBJECT oscctrlObj;
 
 </#if>
 
@@ -66,7 +66,7 @@ typedef struct
 } OSC32KCTRL_OBJECT;
 
 /* Reference Object created for the OSCCTRL */
-static OSC32KCTRL_OBJECT osc32kctrlObj;
+volatile static OSC32KCTRL_OBJECT osc32kctrlObj;
 
 </#if>
 
@@ -79,7 +79,7 @@ typedef struct
 } MCLK_OBJECT;
 
 /* Reference Object created for the MCLK */
-static MCLK_OBJECT mclkObj;
+volatile static MCLK_OBJECT mclkObj;
 
 </#if>
 
@@ -113,16 +113,16 @@ static void OSCCTRL_Initialize(void)
 </#if>
 <#if CONFIG_CLOCK_OSC48M_ENABLE == true>
     <#if CALIBRATION_ROW == "0">
-    uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020UL) >> 19 ) & 0x3fffffUL);
+    uint32_t calibValue = (uint32_t)(((*(uint64_t*)${SW_CALIB_ROW_ADDR}UL) >> 19 ) & 0x3fffffUL);
     <#else>
-    uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020UL) >> 41 ) & 0x3fffffUL);
+    uint32_t calibValue = (uint32_t)(((*(uint64_t*)${SW_CALIB_ROW_ADDR}UL) >> 41 ) & 0x3fffffUL);
     </#if>
     OSCCTRL_REGS->OSCCTRL_CAL48M = calibValue;
-    <#if (CONFIG_CLOCK_OSC48M_RUNSTDY == true) || (CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE")>
+    <#if (CONFIG_CLOCK_OSC48M_RUNSTDY == true) || (CONFIG_CLOCK_OSC48M_ONDEMAND == "DISABLE")>
     /* Configure 48MHz Oscillator */
-    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_OSC48MCTRL = (uint8_t)(OSCCTRL_REGS->OSCCTRL_OSC48MCTRL
+    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_OSC48MCTRL = (uint8_t)(OSCCTRL_OSC48MCTRL_ENABLE_Msk
                                                              ${CONFIG_CLOCK_OSC48M_RUNSTDY?then('| OSCCTRL_OSC48MCTRL_RUNSTDBY_Msk',' ')}
-                                                             ${(CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE")?then('| OSCCTRL_OSC48MCTRL_ONDEMAND_Msk',' ')});</@compress>
+                                                             );</@compress>
     </#if>
 
     <#if CONFIG_CLOCK_OSC48M_STARTUP != "7">
@@ -133,19 +133,21 @@ static void OSCCTRL_Initialize(void)
     <#if CONFIG_CLOCK_OSC48M_DIV != "11">
     /* Selection of the Division Value */
     OSCCTRL_REGS->OSCCTRL_OSC48MDIV = (uint8_t)OSCCTRL_OSC48MDIV_DIV(${CONFIG_CLOCK_OSC48M_DIV}UL);
-    <#if CONFIG_CLOCK_OSC48M_ONDEMAND != "ENABLE">
 
     while((OSCCTRL_REGS->OSCCTRL_OSC48MSYNCBUSY & OSCCTRL_OSC48MSYNCBUSY_OSC48MDIV_Msk) == OSCCTRL_OSC48MSYNCBUSY_OSC48MDIV_Msk)
     {
         /* Waiting for the synchronization */
     }
 
+    </#if>
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_OSC48MRDY_Msk) != OSCCTRL_STATUS_OSC48MRDY_Msk)
     {
         /* Waiting for the OSC48M Ready state */
     }
+    <#if CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE">
+    OSCCTRL_REGS->OSCCTRL_OSC48MCTRL |= OSCCTRL_OSC48MCTRL_ONDEMAND_Msk;
     </#if>
-    </#if>
+     
 </#if>
 }
 
@@ -178,7 +180,7 @@ static void OSC32KCTRL_Initialize(void)
 <#if CONF_CLOCK_OSC32K_ENABLE =true>
     /****************** OSC32K Initialization  ******************************/
 
-    uint32_t calibValue = (((*(uint32_t*)0x806020UL) >> 12 ) & 0x7FUL);
+    uint32_t calibValue = (((*(uint32_t*)${SW_CALIB_ROW_ADDR}UL) >> 12 ) & 0x7FUL);
 
     /* Configure 32K RC oscillator */
     <@compress single_line=true>OSC32KCTRL_REGS->OSC32KCTRL_OSC32K = OSC32KCTRL_OSC32K_CALIB(calibValue)
@@ -316,7 +318,7 @@ void CLOCK_Initialize (void)
 
 ${CLK_INIT_LIST}
 
-<#list 1..GCLK_MAX_ID as i>
+<#list 0..GCLK_MAX_ID as i>
     <#assign GCLK_ID_CHEN = "GCLK_ID_" + i + "_CHEN">
     <#assign GCLK_ID_INDEX = "GCLK_ID_" + i + "_INDEX">
     <#assign GCLK_ID_NAME = "GCLK_ID_" + i + "_NAME">
@@ -394,8 +396,10 @@ void OSCCTRL_CallbackRegister(OSCCTRL_CFD_CALLBACK callback, uintptr_t context)
     oscctrlObj.context = context;
 }
 
-void OSCCTRL_InterruptHandler(void)
+void __attribute__((used)) OSCCTRL_InterruptHandler(void)
 {
+	uintptr_t context_var;
+	
     /* Checking for the Clock Fail status */
     if ((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_XOSCFAIL_Msk) == OSCCTRL_STATUS_XOSCFAIL_Msk)
     {
@@ -404,7 +408,8 @@ void OSCCTRL_InterruptHandler(void)
 
         if (oscctrlObj.callback != NULL)
         {
-            oscctrlObj.callback(oscctrlObj.context);
+			context_var = oscctrlObj.context;
+            oscctrlObj.callback(context_var);
         }
     }
 }
@@ -419,8 +424,10 @@ void OSC32KCTRL_CallbackRegister (OSC32KCTRL_CFD_CALLBACK callback, uintptr_t co
     osc32kctrlObj.context = context;
 }
 
-void OSC32KCTRL_InterruptHandler(void)
+void __attribute__((used)) OSC32KCTRL_InterruptHandler(void)
 {
+	uintptr_t context_var;
+	
     /* Checking for the Clock Failure status */
     if ((OSC32KCTRL_REGS->OSC32KCTRL_STATUS & OSC32KCTRL_STATUS_CLKFAIL_Msk) == OSC32KCTRL_STATUS_CLKFAIL_Msk)
     {
@@ -429,7 +436,8 @@ void OSC32KCTRL_InterruptHandler(void)
 
         if(osc32kctrlObj.callback != NULL)
         {
-            osc32kctrlObj.callback(osc32kctrlObj.context);
+			context_var = osc32kctrlObj.context;
+            osc32kctrlObj.callback(context_var);
         }
     }
 }
@@ -443,8 +451,10 @@ void MCLK_CallbackRegister (MCLK_CKRDY_CALLBACK callback, uintptr_t context)
     mclkObj.context = context;
 }
 
-void MCLK_InterruptHandler(void)
+void __attribute__((used)) MCLK_InterruptHandler(void)
 {
+	uintptr_t context_var;
+	
     /* Checking for the Clock Ready Interrupt */
     if ((MCLK_REGS->MCLK_INTFLAG & MCLK_INTFLAG_CKRDY_Msk) == MCLK_INTFLAG_CKRDY_Msk)
     {
@@ -453,7 +463,8 @@ void MCLK_InterruptHandler(void)
 
         if(mclkObj.callback != NULL)
         {
-            mclkObj.callback(mclkObj.context);
+			context_var = mclkObj.context;
+            mclkObj.callback(context_var);
         }
     }
 }

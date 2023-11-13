@@ -118,7 +118,7 @@ def bsSizeCalculate(symbol, event):
     global bootprot_size
     value = bootprot_size.getValue() \
         - (Database.getSymbolValue("core", "IDAU_BNSC_SIZE") * int(memoryGranularity["IDAU_BNSC"]))
-    symbol.setValue((value / int(memoryGranularity["IDAU_BS"])))    
+    symbol.setValue((value / int(memoryGranularity["IDAU_BS"])))
 ###################################################################################################
 ########################################## Configurations  #############################################
 ###################################################################################################
@@ -149,9 +149,16 @@ dummyList = coreComponent.createListSymbol( "NULL_LIST",       None )
 peripheralList = coreComponent.createListEntrySymbol("TRUSTZONE_PERIPHERAL_LIST", None)
 peripheralList.setVisible(False)
 nonsecPeriphrals = []
+#GUI
+peripheralIndexListTempGUI = []
+peripheralIndexListGUI = []
+mixSecurePeripheralIndexListGUI = []
+systemPeripheralIndexListGUI = []
+####
 #Sort peripheral list in alphabetical order
 for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_")[-1] if '_' in arg[0] else arg[0]):
     trustZonePeripheralSubmenu = trustZonePeripheralMenu
+    peripheralIndexListTempGUI = peripheralIndexListGUI
     if ("NONSEC" in key):
         if (key.split("_")[-1] not in nonsecPeriphrals):
             nonsecPeriphrals.append(key.split("_")[-1])
@@ -159,9 +166,12 @@ for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_
             continue
     if ("NONSEC" in key) and key.split("_")[-1] in mixSecurePeripheralList:
         trustZonePeripheralSubmenu = trustZoneMixSecurePeripheralMenu
+        peripheralIndexListTempGUI = mixSecurePeripheralIndexListGUI
     elif ("NONSEC" in key) and key.split("_")[-1]  in systemResourcesList:
         trustZonePeripheralSubmenu = trustZoneSystemResourcesMenu
+        peripheralIndexListTempGUI = systemPeripheralIndexListGUI
     if ("NONSEC" in key) and key.split("_")[-1] :
+        peripheralIndexListTempGUI.append(key.split("_")[-1])
         peripheralIsNonSecure = coreComponent.createBooleanSymbol(key.split("_")[-1] + "_IS_NON_SECURE", trustZonePeripheralSubmenu)
         peripheralIsNonSecure.setLabel(key.split("_")[-1] + " is Non-Secure")
         peripheralList.addValue(key.split("_")[-1])
@@ -179,6 +189,15 @@ fuseUpdateCallback = coreComponent.createBooleanSymbol("DUMMY_SYMBOL_CALLBACK", 
 fuseUpdateCallback.setVisible(False)
 fuseUpdateCallback.setDependencies(setUpFuse, fusedependencyList)
 
+###################################################################################################
+# Below symbols is only used by TrustZone UI to know Peripherals data
+peripheralsListID = coreComponent.createComboSymbol("TZ_PERIPHERAL_MENU_GUI", trustZoneMenu, peripheralIndexListGUI)
+peripheralsListID.setVisible(False)
+mixSecurePeripheralsListID = coreComponent.createComboSymbol("TZ_MIX_SECURE_PERIPHERAL_MENU_GUI", trustZoneMenu, mixSecurePeripheralIndexListGUI)
+mixSecurePeripheralsListID.setVisible(False)
+systemPeripheralsListID = coreComponent.createComboSymbol("TZ_SYSTEM_RESOURCES_MENU_GUI", trustZoneMenu, systemPeripheralIndexListGUI)
+systemPeripheralsListID.setVisible(False)
+#####################################################
 
 ####################################### Memory Configuration menu ################################################
 
@@ -187,13 +206,13 @@ for parameter in idauNode.getChildren():
     if "GRANULARITY_AS" in parameter.getAttribute("name"):
         memoryGranularity["IDAU_AS"] = int(parameter.getAttribute("value"), 16)
     if "GRANULARITY_ANS" in parameter.getAttribute("name"):
-        memoryGranularity["IDAU_ANS"] = int(parameter.getAttribute("value"), 16) 
+        memoryGranularity["IDAU_ANS"] = int(parameter.getAttribute("value"), 16)
     if "GRANULARITY_ANSC" in parameter.getAttribute("name"):
         memoryGranularity["IDAU_ANSC"] = int(parameter.getAttribute("value"), 16)
     if "GRANULARITY_RS" in parameter.getAttribute("name"):
         memoryGranularity["IDAU_RS"] = int(parameter.getAttribute("value"), 16)
     if "GRANULARITY_RNS" in parameter.getAttribute("name"):
-        memoryGranularity["IDAU_RNS"] = int(parameter.getAttribute("value"), 16)            
+        memoryGranularity["IDAU_RNS"] = int(parameter.getAttribute("value"), 16)
     if "GRANULARITY_BS" in parameter.getAttribute("name"):
         memoryGranularity["IDAU_BS"] = int(parameter.getAttribute("value"), 16)
     if "GRANULARITY_BNSC" in parameter.getAttribute("name"):
@@ -231,15 +250,12 @@ for mem_idx in range(0, len(addr_space_children)):
 
 maxDataflashSize = coreComponent.createIntegerSymbol("DEVICE_DATAFLASH_SIZE", None)
 maxDataflashSize.setVisible(False)
-maxDataflashSize.setDefaultValue(0)    
+maxDataflashSize.setDefaultValue(0)
 
 for key in memoryFuseMaxValue.keys():
     asSizeSymbol = coreComponent.createKeyValueSetSymbol( str(key) + "_SIZE", memoryMenu)
     asSizeSymbol.setLabel(str(key) + " SIZE" )
-    if "ANSC" in key:
-        end = int(memoryFuseMaxValue[key][0]) + 1
-    else:
-        end = int(memoryFuseMaxValue[key][0]) + 2
+    end = int(memoryFuseMaxValue[key][0]) + 1
     for val in range(0, end):
         size = val * memoryGranularity[ key]
         sizeString = str(size) + " Bytes"
@@ -256,7 +272,7 @@ for key in memoryFuseMaxValue.keys():
 
 # AS Size
 asSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_AS_SIZE", memoryMenu)
-asSizeSymbol.setLabel("IDAU AS size") 
+asSizeSymbol.setLabel("IDAU AS size")
 key = 0
 for val in range(0, (int(memoryFuseMaxValue["IDAU_ANS"][0]) + 2)):
     size = val * memoryGranularity["IDAU_ANS"]
@@ -266,13 +282,13 @@ for val in range(0, (int(memoryFuseMaxValue["IDAU_ANS"][0]) + 2)):
 asSizeSymbol.setDefaultValue(key - int(memoryFuseMaxValue["IDAU_ANS"][1]) - int(memoryFuseMaxValue["IDAU_ANSC"][1]))
 asSizeSymbol.setOutputMode("Key")
 asSizeSymbol.setDisplayMode("Description")
-asSizeSymbol.setReadOnly(True)   
+asSizeSymbol.setReadOnly(True)
 asSizeSymbol.setDependencies(asSizeCalculate, ["IDAU_ANSC_SIZE", "IDAU_ANS_SIZE"])
 
 #RS Size
 rsSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_RS_SIZE", memoryMenu)
 rsSizeSymbol.setLabel("IDAU RS size")
-key = 0 
+key = 0
 for val in range(0, int(memoryFuseMaxValue["IDAU_RNS"][0]) + 2):
     size = val * memoryGranularity["IDAU_RNS"]
     sizeString = str(size) + " Bytes"
@@ -287,7 +303,7 @@ rsSizeSymbol.setDependencies(rsSizeCalculate, ["IDAU_RNS_SIZE"])
 #BNSC
 #TODO This symbol will get generated from ATDF when fuse is updated
 bnscSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_BNSC_SIZE", memoryMenu)
-bnscSizeSymbol.setLabel("IDAU BNSC size")       
+bnscSizeSymbol.setLabel("IDAU BNSC size")
 for val in range(0, 2):
     size = val * memoryGranularity["IDAU_BOOTPROT"]
     sizeString = str(size) + " Bytes"
@@ -298,7 +314,7 @@ bnscSizeSymbol.setDisplayMode("Description")
 
 #BS
 bsSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_BS_SIZE", memoryMenu)
-bsSizeSymbol.setLabel("IDAU BS size")       
+bsSizeSymbol.setLabel("IDAU BS size")
 for val in range(0, (int(bootprot_size.getValue()) / memoryGranularity["IDAU_BOOTPROT"] ) + 1):
     size = val * memoryGranularity["IDAU_BOOTPROT"]
     sizeString = str(size) + " Bytes"
@@ -309,14 +325,14 @@ bsSizeSymbol.setDisplayMode("Description")
 bsSizeSymbol.setReadOnly(True)
 bsSizeSymbol.setDependencies(bsSizeCalculate, ["IDAU_BNSC_SIZE"])
 
-#BOORPROT 
+#BOORPROT
 bootSizeSymbol = coreComponent.createKeyValueSetSymbol("IDAU_BOOTPROT_SIZE", memoryMenu)
-bootSizeSymbol.setLabel("IDAU BOOTPROT size")       
+bootSizeSymbol.setLabel("IDAU BOOTPROT size")
 bootSizeSymbol.addKey(str(bootprot_size.getValue()), str(hex(int(bootprot_size.getValue()))), str(bootprot_size.getValue()) + " Bytes")
 bootSizeSymbol.setDefaultValue(0)
 bootSizeSymbol.setOutputMode("Key")
 bootSizeSymbol.setDisplayMode("Description")
-bootSizeSymbol.setReadOnly(True)  
+bootSizeSymbol.setReadOnly(True)
 bootSizeSymbol.setVisible(False)
 
 generateSecureBootMainFile = coreComponent.createBooleanSymbol("GENERATE_SECURE_BOOT_MAIN_FILE", memoryMenu)
@@ -503,6 +519,14 @@ xc32LinkerMacro.setAppend(True, ";=")
 xc32LinkerMacro.setDependencies(calculateBNSCSize, ["IDAU_BNSC_SIZE"])
 xc32LinkerMacro.setSecurity("SECURE")
 
+# set Linker macro VECTOR_REGION=boot_rom for secure project
+xc32LinkerMacro_VECTOR_REGION = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_VECTOR_REGION", None)
+xc32LinkerMacro_VECTOR_REGION.setCategory("C32-LD")
+xc32LinkerMacro_VECTOR_REGION.setKey("preprocessor-macros")
+xc32LinkerMacro_VECTOR_REGION.setValue("VECTOR_REGION=boot_rom")
+xc32LinkerMacro_VECTOR_REGION.setAppend(True, ";=")
+xc32LinkerMacro_VECTOR_REGION.setSecurity("SECURE")
+
 # set Linker Macros required for BS (Boot Secure) Size
 for key in memoryFuseMaxValue.keys():
     if key == "IDAU_BS":
@@ -556,6 +580,13 @@ xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
 xc32LinkerMacro.setValue("NONSECURE")
 xc32LinkerMacro.setAppend(True, ";")
+
+# set Linker macro VECTOR_REGION=CODE_REGION for Non-Secure project
+xc32LinkerMacro_VECTOR_REGION_NS = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_VECTOR_REGION_NS", None)
+xc32LinkerMacro_VECTOR_REGION_NS.setCategory("C32-LD")
+xc32LinkerMacro_VECTOR_REGION_NS.setKey("preprocessor-macros")
+xc32LinkerMacro_VECTOR_REGION_NS.setValue("VECTOR_REGION=CODE_REGION")
+xc32LinkerMacro_VECTOR_REGION_NS.setAppend(True, ";=")
 
 defSym = coreComponent.createSettingSymbol("SEC_XC32_INCLUDE_DIRS", None)
 defSym.setCategory("C32")
@@ -649,3 +680,5 @@ secexceptSourceFile.setProjectPath("config/" + configName + "/")
 secexceptSourceFile.setType("SOURCE")
 secexceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "ADVANCED_EXCEPTION" ] )
 secexceptSourceFile.setSecurity("SECURE")
+
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "TRUSTZONE_MANAGER_UNICORN", {"plugin_name": "Arm\xae TrustZone\xae for Armv8-M", "main_html_path": "csp/plugins/configurators/trustzone_configurators/pic32ck_trustzone_configurator/build/index.html"})

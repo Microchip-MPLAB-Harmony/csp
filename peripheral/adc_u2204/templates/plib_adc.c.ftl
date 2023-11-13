@@ -133,7 +133,7 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if ADC_INTENSET_RESRDY = true || (ADC_WINCTRL_WINMODE != "DISABLE" && ADC_INTENSET_WINMON = true)>
-static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
+volatile static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 <#if ADC_CALIB??>
@@ -214,19 +214,19 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
-    }    
+    }
     /* Upper threshold for window mode  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = ${ADC_WINUT};
     while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
-    }    
+    }
     /* Lower threshold for window mode  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = ${ADC_WINLT};
     while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
-    }    
+    }
 </#if>
     /* Clear all interrupt flags */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_Msk;
@@ -304,7 +304,7 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
     while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
         /* Wait for Synchronization */
-    }    
+    }
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = high_threshold;
     while((${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk) != 0U)
     {
@@ -353,7 +353,7 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t con
 }
 
 
-void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler( void )
 {
     ADC_STATUS status;
     status = (ADC_STATUS) (${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG);
@@ -361,7 +361,8 @@ void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG =  ${ADC_INTENSET_VAL};
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObject.context;
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 </#if>

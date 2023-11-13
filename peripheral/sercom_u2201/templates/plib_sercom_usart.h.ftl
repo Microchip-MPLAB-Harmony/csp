@@ -71,6 +71,10 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void );
 
 bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFrequency );
 
+void ${SERCOM_INSTANCE_NAME}_USART_Enable( void );
+
+void ${SERCOM_INSTANCE_NAME}_USART_Disable( void );
+
 <#if USART_TX_ENABLE = true>
 void ${SERCOM_INSTANCE_NAME}_USART_TransmitterEnable( void );
 

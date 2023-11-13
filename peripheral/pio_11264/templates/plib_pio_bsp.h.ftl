@@ -140,14 +140,14 @@
 						<#if ledName?counter == ledPinPos?counter>
 							<#if ledName?counter == ledActiveLevel?counter>
 								/*** LED Macros for ${ledName} ***/
-								#define ${ledName}_Toggle()     do { PIO${ledChannel}_REGS->PIO_MSKR = (1U<<${ledPinPos}); (PIO${ledChannel}_REGS->PIO_ODSR ^= (1U<<${ledPinPos})); } while (0)
+								#define ${ledName}_Toggle()     do { PIO${ledChannel}_REGS->PIO_MSKR = (1UL<<${ledPinPos}); (PIO${ledChannel}_REGS->PIO_ODSR ^= (1UL<<${ledPinPos})); } while (0)
 								#define ${ledName}_Get()        ((PIO${ledChannel}_REGS->PIO_PDSR >> ${ledPinPos}) & 0x1)
 								<#if ledActiveLevel == "High">
-									#define ${ledName}_On()         (PIO${ledChannel}_REGS->PIO_SODR = (1U<<${ledPinPos}))
-									#define ${ledName}_Off()        (PIO${ledChannel}_REGS->PIO_CODR = (1U<<${ledPinPos}))
+									#define ${ledName}_On()         (PIO${ledChannel}_REGS->PIO_SODR = (1UL<<${ledPinPos}))
+									#define ${ledName}_Off()        (PIO${ledChannel}_REGS->PIO_CODR = (1UL<<${ledPinPos}))
 								<#else>
-									#define ${ledName}_On()         (PIO${ledChannel}_REGS->PIO_CODR = (1U<<${ledPinPos}))
-									#define ${ledName}_Off()        (PIO${ledChannel}_REGS->PIO_SODR = (1U<<${ledPinPos}))
+									#define ${ledName}_On()         (PIO${ledChannel}_REGS->PIO_CODR = (1UL<<${ledPinPos}))
+									#define ${ledName}_Off()        (PIO${ledChannel}_REGS->PIO_SODR = (1UL<<${ledPinPos}))
 								</#if>
 							</#if>
 						</#if>
@@ -198,11 +198,11 @@
 							<#if vbusChannel?counter == vbusActiveLevel?counter>
 								/*** VBUS Macros for ${vbusName} ***/
 								<#if vbusActiveLevel == "High">
-									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_SODR = (1U<<${vbusPinPos}))
-									#define ${vbusName}_PowerDisable()        (PIO${vbusChannel}_REGS->PIO_CODR = (1U<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_SODR = (1UL<<${vbusPinPos}))
+									#define ${vbusName}_PowerDisable()        (PIO${vbusChannel}_REGS->PIO_CODR = (1UL<<${vbusPinPos}))
 								<#else>
-									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_CODR = (1U<<${vbusPinPos}))
-									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_SODR = (1U<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_CODR = (1UL<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_SODR = (1UL<<${vbusPinPos}))
 								</#if>
 							</#if>
 						</#if>

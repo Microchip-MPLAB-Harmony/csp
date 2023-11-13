@@ -1,5 +1,5 @@
 /*******************************************************************************
- Common definition of ${SEFC_INSTANCE_NAME} PLIB.
+ Common definition of SEFCx PLIB.
 
  Company:
     Microchip Technology Inc.
@@ -8,10 +8,10 @@
     plib_sefc_common.h
 
  Summary:
-    Common definition of ${SEFC_INSTANCE_NAME} Plib.
+    Common definition of SEFCx Plib.
 
  Description:
-    This file defines data types and definitions for the ${SEFC_INSTANCE_NAME} Plib.
+    This file defines data types and definitions for the SEFCx Plib.
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -65,8 +65,40 @@
 #define SEFC_LOCK_ERROR              0x4
 /* Flash Error */
 #define SEFC_FLERR_ERROR             0x8
+/* Write Protection Error */
+#define SEFC_WPERR_ERROR             0x10
+/* Flash Suspended Status */
+#define SEFC_FLSUSP_STATUS           0x20
 /* Flash Encountered an ECC error */
-#define SEFC_ECC_ERROR               0xF0000
+#define SEFC_ECC_ERROR               0xFF0000
+
+typedef enum
+{
+    /* Block 0 of user signature. Erasable by erase signal */
+    BLOCK_0 = 1,
+    /* Block 1 of user signature. Erasable by erase signal */
+    BLOCK_1,
+    /* Block 2 of user signature. Erasable by erase signal */
+    BLOCK_2,
+    /* Block 3 of user signature. No erasable by erase signal */
+    BLOCK_3,
+    /* Block 4 of user signature. No erasable by erase signal */
+    BLOCK_4,
+    /* Block 5 of user signature. No erasable by erase signal */
+    BLOCK_5,
+} SEFC_USERSIGNATURE_BLOCK;
+
+typedef enum
+{
+    PAGE_0 = 0,
+    PAGE_1,
+    PAGE_2,
+    PAGE_3,
+    PAGE_4,
+    PAGE_5,
+    PAGE_6,
+    PAGE_7,
+} SEFC_USERSIGNATURE_PAGE;
 
 typedef uint32_t SEFC_ERROR;
 

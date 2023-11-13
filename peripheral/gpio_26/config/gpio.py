@@ -404,6 +404,8 @@ for id in range(0,len(gpioSignalNode)):
         gpioSym_PinIndex.setVisible(False)
         gpioSym_PinIndex.setDefaultValue(num)
 
+        availablePinDictionary[str(num)] = signalPad
+
         signalIndex = signalIndex + 1
 
 gpioSym_PinMaxGPIOPins.setDefaultValue(signalIndex)

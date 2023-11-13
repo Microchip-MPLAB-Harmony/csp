@@ -139,7 +139,7 @@
 </#list>
 
 <#if ec_reg_bank_int_en == true>
-static EC_REG_BANK_OBJECT ec_reg_bank[2] = {0};
+volatile static EC_REG_BANK_OBJECT ec_reg_bank[2] = {0};
 </#if>
 
 void ${ERB_INSTANCE_NAME}_Initialize( void )
@@ -333,7 +333,7 @@ void ${ERB_INSTANCE_NAME}_VTR${n}_CallbackRegister( EC_REG_BANK_CALLBACK callbac
    ec_reg_bank[${n-1}].context = context;
 }
 
-void VTR${n}_PAD_MON${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
+void __attribute__((used)) VTR${n}_PAD_MON${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if ERB_PAD_MON_INTERRUPT_TYPE == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_VTR${n}_PAD_MON) != 0U)
@@ -348,7 +348,8 @@ void VTR${n}_PAD_MON${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
         </#if>
         if (ec_reg_bank[${n-1}].callback != NULL)
         {
-            ec_reg_bank[${n-1}].callback(ec_reg_bank[${n-1}].context);
+            uintptr_t context = ec_reg_bank[${n-1}].context;
+            ec_reg_bank[${n-1}].callback(context);
         }
     }
 }

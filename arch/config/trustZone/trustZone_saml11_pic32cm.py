@@ -110,14 +110,22 @@ trustZoneSystemResourcesMenu.setLabel("System Resources")
 dummyList = coreComponent.createListSymbol( "NULL_LIST",       None )
 peripheralList = coreComponent.createListEntrySymbol("TRUSTZONE_PERIPHERAL_LIST", None)
 peripheralList.setVisible(False)
+peripheralIndexListTempGUI = []
+peripheralIndexListGUI = []
+mixSecurePeripheralIndexListGUI = []
+systemPeripheralIndexListGUI = []
 #Sort peripheral list in alphabetical order
 for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_")[1] if '_' in arg[0] else arg[0]):
     trustZonePeripheralSubmenu = trustZonePeripheralMenu
+    peripheralIndexListTempGUI = peripheralIndexListGUI
     if key.startswith("NONSEC") and key.split("_")[1] in mixSecurePeripheralList:
         trustZonePeripheralSubmenu = trustZoneMixSecurePeripheralMenu
+        peripheralIndexListTempGUI = mixSecurePeripheralIndexListGUI
     elif key.startswith("NONSEC") and key.split("_")[1] in systemResourcesList:
         trustZonePeripheralSubmenu = trustZoneSystemResourcesMenu
+        peripheralIndexListTempGUI = systemPeripheralIndexListGUI
     if key.startswith("NONSEC") and key.split("_")[1]:
+        peripheralIndexListTempGUI.append(key.split("_")[1])
         peripheralIsNonSecure = coreComponent.createBooleanSymbol(key.split("_")[1] + "_IS_NON_SECURE", trustZonePeripheralSubmenu)
         peripheralIsNonSecure.setLabel(key.split("_")[1] + " is Non-Secure")
         peripheralList.addValue(key.split("_")[1])
@@ -130,7 +138,15 @@ for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_
             peripheralIsNonSecure.setReadOnly(True)
             Database.setSymbolValue("core", fuseMapSymbol[key], 1)
 peripheralList.setTarget("core.NULL_LIST")
-
+###################################################################################################
+# Below symbols is only used by TrustZone UI to know Peripherals data
+peripheralsListID = coreComponent.createComboSymbol("TZ_PERIPHERAL_MENU_GUI", trustZoneMenu, peripheralIndexListGUI)
+peripheralsListID.setVisible(False)
+mixSecurePeripheralsListID = coreComponent.createComboSymbol("TZ_MIX_SECURE_PERIPHERAL_MENU_GUI", trustZoneMenu, mixSecurePeripheralIndexListGUI)
+mixSecurePeripheralsListID.setVisible(False)
+systemPeripheralsListID = coreComponent.createComboSymbol("TZ_SYSTEM_RESOURCES_MENU_GUI", trustZoneMenu, systemPeripheralIndexListGUI)
+systemPeripheralsListID.setVisible(False)
+#####################################################
 fuseUpdateCallback = coreComponent.createBooleanSymbol("DUMMY_SYMBOL_CALLBACK", None)
 fuseUpdateCallback.setVisible(False)
 fuseUpdateCallback.setDependencies(setUpFuse, fusedependencyList)
@@ -531,3 +547,4 @@ secexceptSourceFile.setType("SOURCE")
 secexceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "ADVANCED_EXCEPTION" ] )
 secexceptSourceFile.setSecurity("SECURE")
 
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "TRUSTZONE_MANAGER_ARM", {"plugin_name": "Arm TrustZone for Armv8-M", "main_html_path": "csp/plugins/configurators/trustzone_configurators/trustzone_configurator/build/index.html"})

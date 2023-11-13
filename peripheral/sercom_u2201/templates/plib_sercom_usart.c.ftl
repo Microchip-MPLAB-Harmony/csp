@@ -66,7 +66,7 @@
 #define ${SERCOM_INSTANCE_NAME}_USART_INT_BAUD_VALUE            (${USART_BAUD_VALUE}UL)
 
 <#if USART_INTERRUPT_MODE_ENABLE = true>
-static SERCOM_USART_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
+volatile static SERCOM_USART_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
 </#if>
 
 // *****************************************************************************
@@ -379,6 +379,48 @@ USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 }
 </#if>
 
+void ${SERCOM_INSTANCE_NAME}_USART_Enable( void )
+{
+    if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & SERCOM_USART_INT_CTRLA_ENABLE_Msk) == 0U)
+    {
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_ENABLE_Msk;
+
+        /* Wait for sync */
+<#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
+        {
+            /* Do nothing */
+        }
+<#else>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
+        {
+            /* Do nothing */
+        }
+</#if>
+    }
+}
+
+void ${SERCOM_INSTANCE_NAME}_USART_Disable( void )
+{
+    if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA & SERCOM_USART_INT_CTRLA_ENABLE_Msk) != 0U)
+    {
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA &= ~SERCOM_USART_INT_CTRLA_ENABLE_Msk;
+
+        /* Wait for sync */
+<#if SERCOM_SYNCBUSY = false>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_USART_INT_STATUS_SYNCBUSY_Msk)
+        {
+            /* Do nothing */
+        }
+<#else>
+        while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY) != 0U)
+        {
+            /* Do nothing */
+        }
+</#if>
+    }
+}
+
 <#if USART_TX_ENABLE = true>
 
 void ${SERCOM_INSTANCE_NAME}_USART_TransmitterEnable( void )
@@ -463,9 +505,11 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize = size;
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus = true;
 
+            size_t txSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize;
+
             /* Initiate the transfer by sending first byte */
             while (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk) &&
-                    (processedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize))
+                    (processedSize < txSize))
             {
                 if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
                 {
@@ -496,7 +540,10 @@ bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd)
     /* Command strobe bits cannot be set while transmitter is busy */
 
     <#if USART_INTERRUPT_MODE_ENABLE = true>
-    if((${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus == false) && ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_TXE_Msk)!= 0U))
+
+    bool txBusyStatus = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus;
+
+    if(((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_TXE_Msk)!= 0U) && (txBusyStatus == false))
     <#else>
     if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_TXE_Msk) != 0U)
     </#if>
@@ -714,7 +761,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_ReadAbort(void)
 
         /* If required application should read the num bytes processed prior to calling the read abort API */
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0U;
-		${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = 0U;
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = 0U;
     }
 
     return true;
@@ -749,9 +796,9 @@ int ${SERCOM_INSTANCE_NAME}_USART_ReadByte( void )
 <#if USART_INTERRUPT_MODE_ENABLE = true>
 
 <#if USART_INTENSET_ERROR = true>
-void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
+void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 {
-    USART_ERROR errorStatus = USART_ERROR_NONE;
+    USART_ERROR errorStatus;
 
     errorStatus = (USART_ERROR) (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (uint16_t)(SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk));
 
@@ -771,14 +818,16 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
         {
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
+            uintptr_t rxContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext;
+
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(rxContext);
         }
     }
 }
 </#if>
 
 <#if USART_RX_ENABLE = true>
-void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
+void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
     uint16_t temp;
 
@@ -788,8 +837,12 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 
     if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus == true)
     {
-        if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
+        size_t rxSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize;
+
+        if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize < rxSize)
         {
+            uintptr_t rxContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext;
+
             <#if USART_INTENSET_ERROR = false>
             if (errorStatus != USART_ERROR_NONE)
             {
@@ -806,28 +859,30 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 
                 if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
                 {
-                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
+                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(rxContext);
                 }
             }
             else
             {
                 temp = (uint16_t)${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+                size_t rxProcessedSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize;
 
                 if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
                 {
                     /* 8-bit mode */
-                    ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize] = (uint8_t)(temp);
+                    ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[rxProcessedSize] = (uint8_t)(temp);
                 }
                 else
                 {
                     /* 9-bit mode */
-                    ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize] = temp;
+                    ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[rxProcessedSize] = temp;
                 }
 
                 /* Increment processed size */
-                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize++;
+                rxProcessedSize++;
+                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = rxProcessedSize;
 
-                if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
+                if(rxProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
                 {
                     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;
                     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0U;
@@ -835,28 +890,30 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 
                     if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
                     {
-                        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
+                        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(rxContext);
                     }
                 }
             }
             <#else>
             temp = (uint16_t)${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+            size_t rxProcessedSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize;
 
             if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
             {
                 /* 8-bit mode */
-                ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize] = (uint8_t) (temp);
+                ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[rxProcessedSize] = (uint8_t) (temp);
             }
             else
             {
                 /* 9-bit mode */
-                ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize] = temp;
+                ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[rxProcessedSize] = temp;
             }
 
             /* Increment processed size */
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize++;
+            rxProcessedSize++;
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = rxProcessedSize;
 
-            if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
+            if(rxProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
             {
                 ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;
                 ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0U;
@@ -864,7 +921,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 
                 if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
                 {
-                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
+                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(rxContext);
                 }
             }
             </#if>
@@ -875,13 +932,15 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 </#if>
 
 <#if USART_TX_ENABLE = true>
-void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
+void static __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
-    bool  dataRegisterEmpty= false;
-    bool  dataAvailable = false;
+    bool  dataRegisterEmpty;
+    bool  dataAvailable;
     if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus == true)
     {
-        dataAvailable = (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize);
+        size_t txProcessedSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize;
+
+        dataAvailable = (txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize);
         dataRegisterEmpty = ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk);
 
         while(dataRegisterEmpty && dataAvailable)
@@ -889,21 +948,23 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
             if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01U)
             {
                 /* 8-bit mode */
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize];
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint8_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer)[txProcessedSize];
             }
             else
             {
                 /* 9-bit mode */
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize];
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer)[txProcessedSize];
             }
             /* Increment processed size */
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize++;
+            txProcessedSize++;
 
-            dataAvailable = (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize);
+            dataAvailable = (txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize);
             dataRegisterEmpty = ((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk);
         }
 
-        if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize >= ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize)
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize = txProcessedSize;
+
+        if(txProcessedSize >= ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize)
         {
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus = false;
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize = 0U;
@@ -911,17 +972,18 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 
             if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txCallback != NULL)
             {
-                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txContext);
+                uintptr_t txContext = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txContext;
+                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txCallback(txContext);
             }
         }
     }
 }
 </#if>
 
-void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
+void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
 {
 <#if USART_INTENSET_ERROR || USART_TX_ENABLE || USART_RX_ENABLE>
-    bool testCondition = false;
+    bool testCondition;
 </#if>
     if(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET != 0U)
     {

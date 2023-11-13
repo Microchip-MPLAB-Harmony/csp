@@ -79,7 +79,7 @@
 typedef uint32_t NVM_ERROR;
 
 <#if DRV_MEMORY_CONNECTED == true>
-    <#lt>#define ${NVM_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}
+    <#lt>#define ${NVM_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}U
     <#lt>#define ${NVM_INSTANCE_NAME}_MEDIA_SIZE                 ${MEMORY_MEDIA_SIZE}
     <#lt>#define ${NVM_INSTANCE_NAME}_ERASE_BUFFER_SIZE          ${ERASE_BUFFER_SIZE}
 </#if>

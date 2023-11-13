@@ -51,9 +51,12 @@
 
 #include "device.h"
 #include "plib_${TMR_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if TMR_INTERRUPT_MODE == true>
-static TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
+volatile static TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 
@@ -136,14 +139,15 @@ uint32_t ${TMR_INSTANCE_NAME}_FrequencyGet(void)
 }
 
 <#if TMR_INTERRUPT_MODE == true>
-void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
 {
     uint32_t status = ${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM}IF;
     ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
 
     if((${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL))
     {
-        ${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn(status, ${TMR_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${TMR_INSTANCE_NAME?lower_case}Obj.context;
+        ${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn(status, context);
     }
 }
 
@@ -167,4 +171,15 @@ void ${TMR_INSTANCE_NAME}_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t 
     ${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn = callback_fn;
     ${TMR_INSTANCE_NAME?lower_case}Obj.context = context;
 }
+
+<#else>
+
+bool ${TMR_INSTANCE_NAME}_PeriodHasExpired(void)
+{
+    bool status = (${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM}IF != 0U);
+    ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
+
+    return status;
+}
 </#if>
+

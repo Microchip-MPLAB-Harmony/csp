@@ -152,7 +152,7 @@
 </#compress>
 
 <#if TC_INTSET_VAL != "">
-static TC_CAPTURE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+volatile static TC_CAPTURE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -227,7 +227,7 @@ void ${TC_INSTANCE_NAME}_CaptureCommandSet(TC_COMMAND command)
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk)!= 0U)
     {
         /* Wait for Write Synchronization */
-    }   
+    }
 }
 
 <#if TC_CTRLA_MODE = "COUNT8">
@@ -315,7 +315,7 @@ void ${TC_INSTANCE_NAME}_CaptureCallbackRegister( TC_CAPTURE_CALLBACK callback, 
     ${TC_INSTANCE_NAME}_CallbackObject.context = context;
 }
 
-void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
+void __attribute__((used)) ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
 {
     TC_CAPTURE_STATUS status;
     status = (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG);
@@ -324,7 +324,8 @@ void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
 
     if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+        uintptr_t context = ${TC_INSTANCE_NAME}_CallbackObject.context;
+        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, context);
     }
 }
 

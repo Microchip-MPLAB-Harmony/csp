@@ -41,6 +41,9 @@
 // DOM-IGNORE-END
 #include "device.h"
 #include "plib_${ADCHS_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 #define ADCHS_CHANNEL_32  (32U)
 
@@ -52,17 +55,17 @@
 
 <#if ADCHS_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
+    <#lt>volatile static ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
 </#if>
 
 <#if ADCCON2__EOSIEN == true>
     <#lt>/* Object to hold callback function and context for end of scan interrupt*/
-    <#lt>ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
+    <#lt>volatile static ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
 </#if>
 <#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true)>
 <#if ADC_DMA_INT_ENABLED?? && ADC_DMA_INT_ENABLED == true>
     <#lt>/* Object to hold callback function and context for ADC DMA interrupt*/
-    <#lt>ADCHS_DMA_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DMACallbackObj;
+    <#lt>volatile static ADCHS_DMA_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DMACallbackObj;
 </#if>
 </#if>
 
@@ -78,7 +81,7 @@
 </#list>
 
 <#if ADCHS_MAX_FILTER_NUM gt 0>
-ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
+volatile static ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER_NUM}];
 </#if>
 
 <#assign ADCHS_MAX_COMPARATOR_NUM = 0>
@@ -92,14 +95,13 @@ ADCHS_DF_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${ADCHS_MAX_FILTER
 </#list>
 
 <#if ADCHS_MAX_COMPARATOR_NUM gt 0>
-ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
+volatile static ADCHS_DC_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${ADCHS_MAX_COMPARATOR_NUM}];
 </#if>
 </#compress>
 
-void ${ADCHS_INSTANCE_NAME}_Initialize()
+void ${ADCHS_INSTANCE_NAME}_Initialize(void)
 {
     ADCCON1bits.ON = 0;
-<#compress> <#-- To remove unwanted new lines -->
 <#if ADCHS_NUM_CHANNELS != 0>
 <#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
     <#assign ADCHS_CH_ENABLE = "ADCHS_"+ i + "_ENABLE">
@@ -109,12 +111,10 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     <#else>
     ADC${i}CFG = DEVADC${i};
     </#if>
-    ADC${i}TIME = 0x${.vars[ADCHS_TIME]};
-
+    ADC${i}TIME = 0x${.vars[ADCHS_TIME]}U;
     </#if>
 </#list>
 </#if>
-</#compress>
 
 <#if ADCHS_7_ENABLE == true>
     <#if (core.PRODUCT_FAMILY == "PIC32MZW")>
@@ -123,35 +123,35 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     </#if>
 </#if>
 
-    ADCCON1 = 0x${ADCHS_ADCCON1};
-    ADCCON2 = 0x${ADCHS_ADCCON2};
-    ADCCON3 = 0x${ADCHS_ADCCON3};
+    ADCCON1 = 0x${ADCHS_ADCCON1}U;
+    ADCCON2 = 0x${ADCHS_ADCCON2}U;
+    ADCCON3 = 0x${ADCHS_ADCCON3}U;
 
-    ADCTRGMODE = 0x${ADCHS_ADCTRGMODE};
+    ADCTRGMODE = 0x${ADCHS_ADCTRGMODE}U;
 
-    <#if ADCHS_ADCTRG1??>ADCTRG1 = 0x${ADCHS_ADCTRG1}; </#if>
-    <#if ADCHS_ADCTRG2??>ADCTRG2 = 0x${ADCHS_ADCTRG2}; </#if>
-    <#if ADCHS_ADCTRG3??>ADCTRG3 = 0x${ADCHS_ADCTRG3}; </#if>
-    <#if ADCHS_ADCTRG4??>ADCTRG4 = 0x${ADCHS_ADCTRG4}; </#if>
-    <#if ADCHS_ADCTRG5??>ADCTRG5 = 0x${ADCHS_ADCTRG5}; </#if>
-    <#if ADCHS_ADCTRG6??>ADCTRG6 = 0x${ADCHS_ADCTRG6}; </#if>
-    <#if ADCHS_ADCTRG7??>ADCTRG7 = 0x${ADCHS_ADCTRG7}; </#if>
+    <#if ADCHS_ADCTRG1??>ADCTRG1 = 0x${ADCHS_ADCTRG1}U; </#if>
+    <#if ADCHS_ADCTRG2??>ADCTRG2 = 0x${ADCHS_ADCTRG2}U; </#if>
+    <#if ADCHS_ADCTRG3??>ADCTRG3 = 0x${ADCHS_ADCTRG3}U; </#if>
+    <#if ADCHS_ADCTRG4??>ADCTRG4 = 0x${ADCHS_ADCTRG4}U; </#if>
+    <#if ADCHS_ADCTRG5??>ADCTRG5 = 0x${ADCHS_ADCTRG5}U; </#if>
+    <#if ADCHS_ADCTRG6??>ADCTRG6 = 0x${ADCHS_ADCTRG6}U; </#if>
+    <#if ADCHS_ADCTRG7??>ADCTRG7 = 0x${ADCHS_ADCTRG7}U; </#if>
 
-    ADCTRGSNS = 0x${ADCHS_ADCTRGSNS};
+    ADCTRGSNS = 0x${ADCHS_ADCTRGSNS}U;
 
-    ADCIMCON1 = 0x${ADCHS_ADCIMCON1};
-    <#if ADCHS_ADCIMCON2??>ADCIMCON2 = 0x${ADCHS_ADCIMCON2}; </#if>
-    <#if ADCHS_ADCIMCON3??>ADCIMCON3 = 0x${ADCHS_ADCIMCON3}; </#if>
-    <#if ADCHS_ADCIMCON4??>ADCIMCON4 = 0x${ADCHS_ADCIMCON4}; </#if>
+    ADCIMCON1 = 0x${ADCHS_ADCIMCON1}U;
+    <#if ADCHS_ADCIMCON2??>ADCIMCON2 = 0x${ADCHS_ADCIMCON2}U; </#if>
+    <#if ADCHS_ADCIMCON3??>ADCIMCON3 = 0x${ADCHS_ADCIMCON3}U; </#if>
+    <#if ADCHS_ADCIMCON4??>ADCIMCON4 = 0x${ADCHS_ADCIMCON4}U; </#if>
 
     /* Input scan */
-    ADCCSS1 = 0x${ADCHS_ADCCSS1};
-    <#if ADCHS_NUM_SIGNALS gt 31>ADCCSS2 = 0x${ADCHS_ADCCSS2}; </#if>
+    ADCCSS1 = 0x${ADCHS_ADCCSS1}U;
+    <#if ADCHS_NUM_SIGNALS gt 31>ADCCSS2 = 0x${ADCHS_ADCCSS2}U; </#if>
 
 <#compress> <#-- To remove unwanted new lines -->
 <#if ADC_IS_DMA_AVAILABLE == true && (ADC_DMA_ENABLED?? && ADC_DMA_ENABLED == true)>
 <#if ADCHS_ADCDSTAT?? && ADCHS_ADCDSTAT != "0">
-    ${ADCHS_DMA_STATUS_REG} = 0x${ADCHS_ADCDSTAT};
+    ${ADCHS_DMA_STATUS_REG} = 0x${ADCHS_ADCDSTAT}U;
 </#if>
 </#if>
 </#compress>
@@ -163,15 +163,15 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 <#assign ADCHS_ADCCMPCON = "ADCHS_ADCCMPCON" + i>
 
 <#if .vars[ADCHS_ADCCMPEN] != "0">
-    ADCCMPEN${i} = 0x${.vars[ADCHS_ADCCMPEN]?upper_case};
+    ADCCMPEN${i} = 0x${.vars[ADCHS_ADCCMPEN]?upper_case}U;
 </#if>
 
 <#if .vars[ADCHS_ADCCMP] != "0">
-    ADCCMP${i} = 0x${.vars[ADCHS_ADCCMP]?upper_case};
+    ADCCMP${i} = 0x${.vars[ADCHS_ADCCMP]?upper_case}U;
 </#if>
 
 <#if .vars[ADCHS_ADCCMPCON] != "0">
-    ADCCMPCON${i} = 0x${.vars[ADCHS_ADCCMPCON]?upper_case};
+    ADCCMPCON${i} = 0x${.vars[ADCHS_ADCCMPCON]?upper_case}U;
 </#if>
 </#list>
 </#compress>
@@ -189,18 +189,18 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 <#compress> <#-- To remove unwanted new lines -->
 <#if ADCHS_INTERRUPT == true>
     /* Result interrupt enable */
-    ADCGIRQEN1 = 0x${ADCHS_ADCGIRQEN1};
-    <#if ADCHS_NUM_SIGNALS gt 31>ADCGIRQEN2 = 0x${ADCHS_ADCGIRQEN2};</#if>
+    ADCGIRQEN1 = 0x${ADCHS_ADCGIRQEN1}U;
+    <#if ADCHS_NUM_SIGNALS gt 31>ADCGIRQEN2 = 0x${ADCHS_ADCGIRQEN2}U;</#if>
 
     /* Interrupt Enable */
     <#if ADCHS_IEC0_REG??>
-    ${ADCHS_IEC0_REG}SET = 0x${ADCHS_IEC0};
+    ${ADCHS_IEC0_REG}SET = 0x${ADCHS_IEC0}U;
     </#if>
     <#if ADCHS_IEC1_REG??>
-    ${ADCHS_IEC1_REG}SET = 0x${ADCHS_IEC1};
+    ${ADCHS_IEC1_REG}SET = 0x${ADCHS_IEC1}U;
     </#if>
     <#if ADCHS_IEC2_REG??>
-    ${ADCHS_IEC2_REG}SET = 0x${ADCHS_IEC2};
+    ${ADCHS_IEC2_REG}SET = 0x${ADCHS_IEC2}U;
     </#if>
 </#if>
 </#compress>
@@ -258,8 +258,14 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 
     /* Turn ON ADC */
     ADCCON1bits.ON = 1;
-    while(!ADCCON2bits.BGVRRDY); // Wait until the reference voltage is ready
-    while(ADCCON2bits.REFFLT); // Wait if there is a fault with the reference voltage
+    while(ADCCON2bits.BGVRRDY == 0U) // Wait until the reference voltage is ready
+    {
+        /* Nothing to do */
+    }
+    while(ADCCON2bits.REFFLT != 0U) // Wait if there is a fault with the reference voltage
+    {
+        /* Nothing to do */
+    }
 
 <#if ADCHS_NUM_CLASS1_SIGNALS != 0>
 <#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
@@ -267,7 +273,10 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     <#if .vars[ADCHS_CH_ENABLE] == true>
     /* ADC ${i} */
     ADCANCONbits.ANEN${i} = 1;      // Enable the clock to analog bias
-    while(!ADCANCONbits.WKRDY${i}); // Wait until ADC is ready
+    while(ADCANCONbits.WKRDY${i} == 0U) // Wait until ADC is ready
+    {
+        /* Nothing to do */
+    }
     ADCCON3bits.DIGEN${i} = 1;      // Enable ADC
 
     </#if>
@@ -276,7 +285,10 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 <#if ADCHS_7_ENABLE == true>
     /* ADC 7 */
     ADCANCONbits.ANEN7 = 1;      // Enable the clock to analog bias
-    while(!ADCANCONbits.WKRDY7); // Wait until ADC is ready
+    while(ADCANCONbits.WKRDY7 == 0U) // Wait until ADC is ready
+    {
+        /* Nothing to do */
+    }
     ADCCON3bits.DIGEN7 = 1;      // Enable ADC
 </#if>
 
@@ -287,13 +299,13 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 /* Enable ADCHS channels */
 void ${ADCHS_INSTANCE_NAME}_ModulesEnable (ADCHS_MODULE_MASK moduleMask)
 {
-    ADCCON3 |= (moduleMask << 16);
+    ADCCON3 |= ((uint32_t)moduleMask << 16);
 }
 
 /* Disable ADCHS channels */
 void ${ADCHS_INSTANCE_NAME}_ModulesDisable (ADCHS_MODULE_MASK moduleMask)
 {
-    ADCCON3 &= ~(moduleMask << 16);
+    ADCCON3 &= ~(((uint32_t)moduleMask << 16));
 }
 
 
@@ -301,12 +313,12 @@ void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptEnable (ADCHS_CHANNEL_NUM chan
 {
     if (channel < ADCHS_CHANNEL_32)
     {
-        ADCGIRQEN1 |= 0x01 << channel;
+        ADCGIRQEN1 |= 0x01UL << channel;
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
-        ADCGIRQEN2 |= 0x01 << (channel - 32);
+        ADCGIRQEN2 |= 0x01UL << (channel - 32U);
     }
     </#if>
 }
@@ -315,12 +327,12 @@ void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptDisable (ADCHS_CHANNEL_NUM cha
 {
     if (channel < ADCHS_CHANNEL_32)
     {
-        ADCGIRQEN1 &= ~(0x01 << channel);
+        ADCGIRQEN1 &= ~(0x01UL << channel);
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
-        ADCGIRQEN2 &= ~(0x01 << (channel - 32));
+        ADCGIRQEN2 &= ~(0x01UL << (channel - 32U));
     }
     </#if>
 }
@@ -331,12 +343,12 @@ void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptEnable (ADCHS_CHANNEL_NUM chann
 {
     if (channel < ADCHS_CHANNEL_32)
     {
-        ADCEIEN1 |= (0x01 << channel);
+        ADCEIEN1 |= (0x01UL << channel);
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
-        ADCEIEN2 |= (0x01 << (channel - 32));
+        ADCEIEN2 |= (0x01UL << (channel - 32U));
     }
     </#if>
 }
@@ -345,12 +357,12 @@ void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptDisable (ADCHS_CHANNEL_NUM chan
 {
     if (channel < ADCHS_CHANNEL_32)
     {
-        ADCEIEN1 &= ~(0x01 << channel);
+        ADCEIEN1 &= ~(0x01UL << channel);
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
-        ADCEIEN2 &= ~(0x01 << (channel - 32));
+        ADCEIEN2 &= ~(0x01UL << (channel - 32U));
     }
     </#if>
 }
@@ -373,7 +385,7 @@ void ADCHS_GlobalLevelConversionStop(void)
 
 void ADCHS_ChannelConversionStart(ADCHS_CHANNEL_NUM channel)
 {
-    ADCCON3bits.ADINSEL = channel;
+    ADCCON3bits.ADINSEL = (uint8_t)channel;
     ADCCON3bits.RQCNVRT = 1;
 }
 
@@ -384,12 +396,12 @@ bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
     bool status = false;
     if (channel < ADCHS_CHANNEL_32)
     {
-        status = (ADCDSTAT1 >> channel) & 0x01;
+        status = (((ADCDSTAT1 >> channel) & 0x01U) != 0U);
     }
     <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
-        status = (ADCDSTAT2 >> (channel - 32)) & 0x01;
+        status = (((ADCDSTAT2 >> (channel - 32U)) & 0x01U) != 0U);
     }
     </#if>
     return status;
@@ -399,9 +411,9 @@ bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
 {
 <#if (core.PRODUCT_FAMILY?contains("PIC32MK")) || (core.PRODUCT_FAMILY == "PIC32MZW")>
-    return (uint16_t) (*((&ADCDATA0) + (channel << 2)));
+    return (uint16_t)(*((&ADCDATA0) + (channel << 2)));
 <#elseif core.PRODUCT_FAMILY?contains("PIC32MZ")>
-    return (*((&ADCDATA0) + channel));
+    return (uint16_t)(*((&ADCDATA0) + channel));
 </#if>
 
 }
@@ -433,9 +445,9 @@ void ${ADCHS_INSTANCE_NAME}_DMACallbackRegister(ADCHS_DMA_CALLBACK callback, uin
     ${ADCHS_INSTANCE_NAME}_DMACallbackObj.context = context;
 }
 
-void ADC_DMA_InterruptHandler(void)
+void __attribute__((used)) ADC_DMA_InterruptHandler(void)
 {
-    ADCHS_DMA_STATUS dmaStatus = ${ADCHS_DMA_STATUS_REG} & 0x${ADC_DMA_INT_FLAG_MASK?upper_case};
+    uint32_t dmaStatus = (${ADCHS_DMA_STATUS_REG} & 0x${ADC_DMA_INT_FLAG_MASK?upper_case});
 
     <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
     ${ADCHS_DMA_IFS_REG}CLR = _${ADCHS_DMA_IFS_REG}_ADCFCBTIF_MASK;
@@ -446,7 +458,8 @@ void ADC_DMA_InterruptHandler(void)
 
     if (${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn != NULL)
     {
-      ${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn(dmaStatus, ${ADCHS_INSTANCE_NAME}_DMACallbackObj.context);
+        uintptr_t context = ${ADCHS_INSTANCE_NAME}_DMACallbackObj.context;
+        ${ADCHS_INSTANCE_NAME}_DMACallbackObj.callback_fn((ADCHS_DMA_STATUS)dmaStatus, context);
     }
 }
 
@@ -494,7 +507,7 @@ void ${ADCHS_INSTANCE_NAME}_Comparator${i}CallbackRegister(ADCHS_DC_CALLBACK cal
     ${ADCHS_INSTANCE_NAME}_DCCallbackObj[${i-1}].context = context;
 }
 
-void ADC_DC${i}_InterruptHandler(void)
+void __attribute__((used)) ADC_DC${i}_InterruptHandler(void)
 {
     ADCHS_CHANNEL_NUM channelId;
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
@@ -536,7 +549,7 @@ void ${ADCHS_INSTANCE_NAME}_Filter${i}CallbackRegister(ADCHS_DF_CALLBACK callbac
     ${ADCHS_INSTANCE_NAME}_DFCallbackObj[${i-1}].context = context;
 }
 
-void ADC_DF${i}_InterruptHandler(void)
+void __attribute__((used)) ADC_DF${i}_InterruptHandler(void)
 {
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
     ${.vars[ADCHS_DFx_IFS_REG]}CLR = _${.vars[ADCHS_DFx_IFS_REG]}_ADCDF${i}IF_MASK;
@@ -566,7 +579,7 @@ void ${ADCHS_INSTANCE_NAME}_EOSCallbackRegister(ADCHS_EOS_CALLBACK callback, uin
 }
 
 
-void ADC_EOS_InterruptHandler(void)
+void __attribute__((used)) ADC_EOS_InterruptHandler(void)
 {
     uint32_t status = ADCCON2;
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
@@ -577,7 +590,8 @@ void ADC_EOS_InterruptHandler(void)
 </#if>
     if (${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn != NULL)
     {
-      ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn(${ADCHS_INSTANCE_NAME}_EOSCallbackObj.context);
+        uintptr_t context = ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.context;
+        ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn(context);
     }
     (void) status;
 }
@@ -592,11 +606,12 @@ bool ${ADCHS_INSTANCE_NAME}_EOSStatusGet(void)
 <#list 0..31 as i>
 <#assign ADCHS_DATA_INTERRUPT_ENABLE = "ADCGIRQEN1__AGIEN" + i>
 <#if .vars[ADCHS_DATA_INTERRUPT_ENABLE]?? && .vars[ADCHS_DATA_INTERRUPT_ENABLE] == true>
-void ADC_DATA${i}_InterruptHandler(void)
+void __attribute__((used)) ADC_DATA${i}_InterruptHandler(void)
 {
     if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
     {
-      ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
+        uintptr_t context = ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context;
+        ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, context);
     }
 
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
@@ -621,11 +636,12 @@ void ADC_DATA${i}_InterruptHandler(void)
 <#list 32..((ADCHS_NUM_SIGNALS) - 1) as i>
 <#assign ADCHS_DATA_INTERRUPT_ENABLE = "ADCGIRQEN2__AGIEN" + i>
 <#if .vars[ADCHS_DATA_INTERRUPT_ENABLE]?? &&.vars[ADCHS_DATA_INTERRUPT_ENABLE] == true>
-void ADC_DATA${i}_InterruptHandler(void)
+void __attribute__((used)) ADC_DATA${i}_InterruptHandler(void)
 {
     if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
     {
-        ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
+        uintptr_t context = ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context;
+        ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, context);
     }
 <#if core.PRODUCT_FAMILY?contains("PIC32MZ")>
 <#if i < ADCHS_IFS0_NUM_IRQ>

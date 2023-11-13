@@ -28,7 +28,7 @@
 </#if>
 
 <#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT) || ((SUPC_MR_OSCBYPASS == false) && (SUPC_CR_MDXTALSEL == "1") && SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE == true)>
-static PMC_CALLBACK_OBJECT PMC_CallbackObj;
+volatile static PMC_CALLBACK_OBJECT PMC_CallbackObj;
 
 </#if>
 
@@ -93,7 +93,7 @@ static void CLK_SlowClockInitialize(void)
 
     /* Wait until the external clock signal is ready and
        Slow Clock (SLCK) is switched to external clock signal */
-    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk))
+    while ((SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk) == 0U)
     {
     }
 
@@ -104,7 +104,7 @@ static void CLK_SlowClockInitialize(void)
 
     /* Wait until the 32K Crystal oscillator clock is ready and
        Slow Clock (SLCK) is switched to 32KHz Oscillator */
-    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk))
+    while ((SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk) == 0U)
     {
     }
     <#if SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE>
@@ -114,7 +114,7 @@ static void CLK_SlowClockInitialize(void)
 
 <#else>
     SUPC_REGS->SUPC_CR = SUPC_CR_KEY_PASSWD | (SUPC_REGS->SUPC_CR & ~(SUPC_CR_XTALSEL_CRYSTAL_SEL));
-    while ((SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk))
+    while ((SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk) != 0U)
     {
     }
 </#if>
@@ -137,8 +137,10 @@ static void CLK_MainClockInitialize(void)
         Switch Main Clock (MAINCK) to External signal on XIN pin */
     PMC_REGS->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
 
-    /* Wait until MAINCK is switched to External Clock Signal (XIN pin) */
-    while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk);
+    while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk)
+    {
+        /* Wait until MAINCK is switched to External Clock Signal (XIN pin) */
+    }
     </#if>
 
 <#elseif CKGR_MOR_MOSCXTEN>
@@ -153,8 +155,10 @@ static void CLK_MainClockInitialize(void)
     Switch Main Clock (MAINCK) to Main Crystal Oscillator clock */
     PMC_REGS->CKGR_MOR|= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
 
-    /* Wait until MAINCK is switched to Main Crystal Oscillator */
-    while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk);
+    while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk)
+    {
+        /* Wait until MAINCK is switched to Main Crystal Oscillator */
+    }
 
     </#if>
     <#if CLOCK_FAILURE_DETECT>
@@ -224,7 +228,10 @@ static void CLK_PLLBInitialize(void)
     PMC_REGS->CKGR_PLLBR = CKGR_PLLBR_ZERO(0) | CKGR_PLLBR_PLLBCOUNT(0x3f) |
                               CKGR_PLLBR_MULB(${CKGR_PLLBR_MULA}) | CKGR_PLLBR_PLLBEN(1);
 
-    while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKB_Msk) != PMC_SR_LOCKB_Msk);
+    while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKB_Msk) != PMC_SR_LOCKB_Msk)
+    {
+        /* Wait */
+    }
 
 }
 </#if>
@@ -255,12 +262,18 @@ static void CLK_MasterClockInitialize(void)
 <#if PMC_MCKR_CSS == "SLOW_CLK" || PMC_MCKR_CSS == "MAIN_CLK">
     /* Program PMC_MCKR.CSS and Wait for PMC_SR.MCKRDY to be set    */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_${PMC_MCKR_CSS}${PMC_MCKR_PLLADIV2?then('| PMC_MCKR_PLLADIV2_Msk', '')}${PMC_MCKR_PLLBDIV2?then('| PMC_MCKR_PLLBDIV2_Msk', '')};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait */
+    }
 
 
     /* Program PMC_MCKR.PRES and wait for PMC_SR.MCKRDY to be set   */
     PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_PRES_Msk) | PMC_MCKR_PRES_${PMC_MCKR_PRES};
-    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk)
+    {
+        /* Wait */
+    }
 </#if>
 }
 </#if>
@@ -307,8 +320,10 @@ static void CLK_ProgrammableClockInitialize(void)
     /* Enable selected programmable clock   */
     PMC_REGS->PMC_SCER =    ${PMC_SCER_PCKX_MSK};
 
-    /* Wait for clock to be ready   */
-    while( (PMC_REGS->PMC_SR & (${PMC_SR_PCKRDYX_MSK}) ) != (${PMC_SR_PCKRDYX_MSK}));
+    while( (PMC_REGS->PMC_SR & (${PMC_SR_PCKRDYX_MSK}) ) != (${PMC_SR_PCKRDYX_MSK}))
+    {
+        /* Wait for clock to be ready   */
+    }
 
 
 }
@@ -372,16 +387,18 @@ void PMC_CallbackRegister(PMC_CALLBACK callback, uintptr_t context)
     PMC_CallbackObj.context = context;
 }
 
-void PMC_InterruptHandler(void)
+void __attribute__((used)) PMC_InterruptHandler(void)
 {
     uint32_t pmc_status = PMC_REGS->PMC_SR;
+    uintptr_t context_var;
 
 <#if (CKGR_MOR_MOSCXTEN && CLOCK_FAILURE_DETECT)>
     if ((pmc_status & PMC_SR_CFDEV_Msk) == PMC_SR_CFDEV_Msk)
     {
         if (PMC_CallbackObj.callback != NULL)
         {
-            PMC_CallbackObj.callback(PMC_SR_CFDEV_Msk, PMC_CallbackObj.context);
+            context_var = PMC_CallbackObj.context;
+            PMC_CallbackObj.callback(PMC_SR_CFDEV_Msk, context_var);
         }
     }
 </#if>
@@ -391,7 +408,8 @@ void PMC_InterruptHandler(void)
         PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & (~CKGR_MOR_XT32KFME_Msk)) | CKGR_MOR_KEY_PASSWD;
         if (PMC_CallbackObj.callback != NULL)
         {
-            PMC_CallbackObj.callback(PMC_SR_XT32KERR_Msk, PMC_CallbackObj.context);
+            context_var = PMC_CallbackObj.context;
+            PMC_CallbackObj.callback(PMC_SR_XT32KERR_Msk, context_var);
         }
     }
 </#if>

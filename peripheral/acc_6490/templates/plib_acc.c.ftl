@@ -61,8 +61,8 @@ void ${ACC_INSTANCE_NAME}_Initialize (void)
     <#if HAS_PLUS_COMPARATOR_SELECTION??>
     regValue |= ACC_MR_SELPLUS(${ACC_MR_SELPLUS}U);
     </#if>
-    <#if HAS_EDGETYPE??>
-    regValue |= ACC_MR_EDGETYP(${ACC_MR_EDGETYP}U);
+    <#if HAS_EDGETYPE_SELECTION??>
+    regValue |= ACC_MR_EDGETYP_${ACC_MR_EDGETYPE};
     </#if>
     <#if HAS_INVERTED_COMPARATOR??>
     regValue |= ${ACC_ACR_INV?then('ACC_MR_INV_Msk', '0U')};
@@ -101,7 +101,7 @@ bool ${ACC_INSTANCE_NAME}_StatusGet (ACC_STATUS_SOURCE status_var)
 
 <#if INTERRUPT_MODE == true>
 
-static ACC_OBJECT ${ACC_INSTANCE_NAME?lower_case}Obj;
+volatile static ACC_OBJECT ${ACC_INSTANCE_NAME?lower_case}Obj;
 
 void ${ACC_INSTANCE_NAME}_CallbackRegister (ACC_CALLBACK callback, uintptr_t context)
 {
@@ -109,15 +109,17 @@ void ${ACC_INSTANCE_NAME}_CallbackRegister (ACC_CALLBACK callback, uintptr_t con
     ${ACC_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
-void ${ACC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${ACC_INSTANCE_NAME}_InterruptHandler( void )
 {
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context = ${ACC_INSTANCE_NAME?lower_case}Obj.context;      
     // Clear the interrupt
     ${ACC_INSTANCE_NAME}_REGS->ACC_ISR;
 
     // Callback user function
     if(${ACC_INSTANCE_NAME?lower_case}Obj.callback != NULL)
     {
-        ${ACC_INSTANCE_NAME?lower_case}Obj.callback(${ACC_INSTANCE_NAME?lower_case}Obj.context);
+        ${ACC_INSTANCE_NAME?lower_case}Obj.callback(context);
     }
 }
 </#if>

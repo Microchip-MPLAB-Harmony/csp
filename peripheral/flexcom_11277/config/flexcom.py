@@ -255,21 +255,20 @@ def setFLEXCOMCodeGenerationProperty(symbol, event):
         flexcomHeaderFile.setMarkup(True)
         flexcomHeaderFile.setEnabled(True)
 
-        if flexcom_mode == "SPI" and flexcomSym_SPI_MR_MSTR.getValue() == "MASTER":
+        if ((flexcom_mode == "SPI" and flexcomSym_SPI_MR_MSTR.getValue() == "MASTER") or
+            (flexcom_mode == "TWI" and flexcomSym_Twi_OpMode.getValue() == "SLAVE")):
             flexcomCommonHeaderFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom_" + flexcom_mode.lower() + commonHeaderFile + ".h.ftl")
-            flexcomCommonHeaderFile.setOutputName("plib_flexcom_" + flexcom_mode.lower() + commonHeaderFile + ".h")
-            flexcomCommonHeaderFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
-            flexcomCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
-            flexcomCommonHeaderFile.setType("HEADER")
             flexcomCommonHeaderFile.setMarkup(True)
-            flexcomCommonHeaderFile.setEnabled(True)
+
         else:
             flexcomCommonHeaderFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom_" + flexcom_mode.lower() + commonHeaderFile + ".h")
-            flexcomCommonHeaderFile.setOutputName("plib_flexcom_" + flexcom_mode.lower() + commonHeaderFile + ".h")
-            flexcomCommonHeaderFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
-            flexcomCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
-            flexcomCommonHeaderFile.setType("HEADER")
-            flexcomCommonHeaderFile.setEnabled(True)
+            flexcomCommonHeaderFile.setMarkup(False)
+
+        flexcomCommonHeaderFile.setOutputName("plib_flexcom_" + flexcom_mode.lower() + commonHeaderFile + ".h")
+        flexcomCommonHeaderFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
+        flexcomCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
+        flexcomCommonHeaderFile.setType("HEADER")
+        flexcomCommonHeaderFile.setEnabled(True)
 
         flexcomSourceFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom" + "_" + flexcom_mode.lower() + usartRingBufferMode + mode + ".c.ftl")
         flexcomSourceFile.setOutputName("plib_" + deviceNamespace + "_" + flexcom_mode.lower() + mode + ".c")

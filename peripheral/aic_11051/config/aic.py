@@ -90,8 +90,6 @@ aicSrcTypes =               []
 aicMinPriorityName =        ""
 aicMaxPriorityName =        ""
 
-aicCodeGenerationDependencies = []
-
 neverSecureList =           []
 alwaysSecureList =          []
 programmedSecureList =      []
@@ -220,7 +218,7 @@ def aicVectorEnableCallback(aicVectorEnable, eventDictionary):
             aicVectorEnable.setValue(False)
 
 
-def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHandler ):
+def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHandler , anAicNumber, anInterruptDescription, anVectorUniqueIdGUI, anVectorNamesGUI, anNameAndDescriptionGUI):
     global sharedVectors
 
     enableDependencies = []
@@ -233,6 +231,8 @@ def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHan
         aicVectorHandler.setReadOnly( False )
         sharedVectors[ interruptName ] = moduleInstance
         aicVectorHandler.setVisible( False )
+
+        counter = 1
 
         for elem in moduleInstance:
             subVectorToSharedVector[ elem ] = interruptName
@@ -248,6 +248,11 @@ def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHan
             subVectorHandler = component.createStringSymbol( elem + interruptLastNameHandler, subVectorEnable )
             subVectorHandler.setLabel( elem + " Handler" )
             subVectorHandler.setDefaultValue( elem + "_Handler" )
+
+            anVectorUniqueIdGUI.append(str(anAicNumber)+"_"+str(counter))
+            anVectorNamesGUI.append(elem)
+            anNameAndDescriptionGUI.append(str(anAicNumber)+") "+elem + "_IRQn - "+ anInterruptDescription)
+            counter = counter + 1
 
         aicVectorEnable.setDependencies( aicVectorEnableCallback, enableDependencies )
 
@@ -314,7 +319,7 @@ def formAicPyGlobalData( theProcessor, theCoreComponent ):
             aicPriorityChoices.append( ( "MAXIMUM",    "0x7", "Maximum priority" ) )
 
     aicSmrPrioritySymbol = theCoreComponent.createStringSymbol( "AIC_SMR_PRIORITY_SYMBOL", None )
-    aicSmrPrioritySymbol.setDefaultValue( "AIC_SMR_" + aicPrioritySymbolStem )
+    aicSmrPrioritySymbol.setDefaultValue( aicPrioritySymbolStem )
     aicSmrPrioritySymbol.setVisible( False )
     #
     aicSrcTypeSymbolStem =  "SRCTYPE"
@@ -368,6 +373,10 @@ aicVectorMax = coreComponent.createIntegerSymbol( "AIC_VECTOR_MIN", aicMenu )
 aicVectorMax.setDefaultValue( Interrupt.getMinInterruptID() )
 aicVectorMax.setVisible( False )
 
+NameAndDescriptionGUI = []
+vectorNamesGUI = []
+vectorUniqueIdGUI = []
+
 for interrupt in interruptsChildren:
     interruptName = getInterruptName( interrupt )
     aicNumber = str( interrupt.getAttribute( "index" ) )
@@ -399,6 +408,12 @@ for interrupt in interruptsChildren:
     aicVectorSource = coreComponent.createStringSymbol( interruptName + interruptLastNameVector, aicVectorEnable )
     aicVectorSource.setDefaultValue( interruptName + "_IRQn" )
     aicVectorSource.setVisible( False )
+
+    #This is added for GUI purpose
+    vectorUniqueIdGUI.append(str(aicNumber)+"_0")
+    vectorNamesGUI.append(interruptName)
+    NameAndDescriptionGUI.append(str(aicNumber)+") "+interruptName + "_IRQn - "+ getInterruptDescription( interrupt ))
+
     ###
     aicVectorLock = coreComponent.createBooleanSymbol( interruptName + interruptLastNameLock, aicVectorEnable )
     aicVectorLock.setDefaultValue( False )
@@ -408,7 +423,7 @@ for interrupt in interruptsChildren:
     aicVectorHandler.setLabel( "Handler" )
     aicVectorHandler.setDefaultValue( interruptName + "_Handler" )
     ###
-    setupEnableAndHandler( coreComponent, interrupt, aicVectorEnable, aicVectorHandler )
+    setupEnableAndHandler( coreComponent, interrupt, aicVectorEnable, aicVectorHandler , aicNumber, getInterruptDescription(interrupt), vectorUniqueIdGUI, vectorNamesGUI, NameAndDescriptionGUI)
     setupSharedVectorFtlSymbols( coreComponent, interrupt, aicVectorEnable )
     #
     aicMapType = coreComponent.createStringSymbol( interruptName + interruptLastNameMapType, aicVectorEnable )
@@ -445,9 +460,6 @@ for interrupt in interruptsChildren:
         aicVectorPriority.setSelectedKey( aicMinPriorityName, 0 )
     aicVectorPriority.setDependencies( priorityMapTypeCallback, [ interruptName + interruptLastNameMapType ] )
 
-    aicCodeGenerationDependencies.append( interruptName + interruptLastNameEnable )   # add to dependency list for code generation symbol
-    aicCodeGenerationDependencies.append( interruptName + interruptLastNameMapType )  # add to dependency list for code generation symbol
-
 ###
 aicNumSharedVectors = coreComponent.createIntegerSymbol( "NUM_SHARED_VECTORS", aicMenu )
 aicNumSharedVectors.setMin( numSharedVectors )
@@ -457,12 +469,23 @@ aicNumSharedVectors.setValue( numSharedVectors, 1 )
 aicNumSharedVectors.setVisible( showSharedVectorsInMenu )
 ### Symbol for code generation decisions
 aicCodeGeneration = coreComponent.createComboSymbol( "AIC_CODE_GENERATION", aicMenu, [ "NONE", "AIC", "SAIC", "AICandSAIC" ] )
-aicCodeGeneration.setDefaultValue( "NONE" )
-aicCodeGeneration.setDependencies( aicCodeGenerationCallback, aicCodeGenerationDependencies )
+aicCodeGeneration.setDefaultValue("AIC")
 aicCodeGeneration.setVisible( False )
 ###
 aicRedirection.setValue( True, 0 )  # stimulate a aicMapTypeRedirectionCallback() by setting the aicRedirection value
 aicRedirection.setReadOnly( True )
+
+######## GUI Changes ##########
+# Below symbol is only used by AIC UI to know the all AIC  vector unique ids
+aicGUIAllVectorUniqueIds = coreComponent.createComboSymbol("AIC_GUI_VECTOR_IDS", aicMenu, vectorUniqueIdGUI)
+aicGUIAllVectorUniqueIds.setVisible(False)
+# Below symbol is only used by AIC UI to know the all AIC  vector names
+aicGUIAllVectorNames = coreComponent.createComboSymbol("AIC_GUI_VECTOR_NAMES", aicMenu, vectorNamesGUI)
+aicGUIAllVectorNames.setVisible(False)
+# Below symbol is only used by AIC UI to know the AIC Column Name and Description
+aicGUIColumNameAndDescription = coreComponent.createComboSymbol("AIC_GUI_COLUMN_VECTOR_NAME_AND_DESCRIPTION", aicMenu, NameAndDescriptionGUI)
+aicGUIColumNameAndDescription.setVisible(False)
+######################
 
 ############################################################################
 #### Code Generation
@@ -481,15 +504,21 @@ aicSystemInitFile.setSourcePath( "../peripheral/aic_11051/templates/system/initi
 aicSystemInitFile.setOutputName( "core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS" )
 aicSystemInitFile.setMarkup( True )
 
+aicSystemInterruptsHeaderFile = coreComponent.createFileSymbol( "SYS_AIC_INTERRUPT_HANDLER_DECLS", None )
+aicSystemInterruptsHeaderFile.setType( "STRING" )
+aicSystemInterruptsHeaderFile.setSourcePath( "../peripheral/aic_11051/templates/system/interrupt_handlers_decls.h.ftl" )
+aicSystemInterruptsHeaderFile.setOutputName( "core.LIST_SYSTEM_INTERRUPT_HANDLER_DECLS" )
+aicSystemInterruptsHeaderFile.setMarkup( True )
+
 aicSystemIntWeakHandleFile = coreComponent.createFileSymbol( "AIC_WEAK_HANDLERS", None )
 aicSystemIntWeakHandleFile.setType( "STRING" )
-aicSystemIntWeakHandleFile.setSourcePath( "../peripheral/aic_11051/templates/system/interrupt_weak_handlers.h.ftl" )
+aicSystemIntWeakHandleFile.setSourcePath( "../peripheral/aic_11051/templates/system/interrupt_weak_handlers.c.ftl" )
 aicSystemIntWeakHandleFile.setOutputName( "core.LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS" )
 aicSystemIntWeakHandleFile.setMarkup( True )
 
 aicSharedHandlerFile = coreComponent.createFileSymbol( "AIC_SHARED_HANDLERS", None )
 aicSharedHandlerFile.setType( "STRING" )
-aicSharedHandlerFile.setSourcePath( "../peripheral/aic_11051/templates/system/interrupt_shared_handlers.h.ftl" )
+aicSharedHandlerFile.setSourcePath( "../peripheral/aic_11051/templates/system/interrupt_shared_handlers.c.ftl" )
 aicSharedHandlerFile.setOutputName( "core.LIST_SYSTEM_INTERRUPT_SHARED_HANDLERS" )
 aicSharedHandlerFile.setMarkup( True )
 

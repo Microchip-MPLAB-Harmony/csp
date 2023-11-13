@@ -78,16 +78,13 @@
   Remarks:
     None
 */
+/* Error status when no error has occurred */
+#define    FLEXCOM_SPI_SLAVE_ERROR_NONE    (0U)
 
-typedef enum
-{
-    /* Error status when no error has occurred */
-    FLEXCOM_SPI_SLAVE_ERROR_NONE,
+/* Buffer overflow error has occured */
+#define    FLEXCOM_SPI_SLAVE_ERROR_BUFOVF  (SPI_SR_OVRES_Msk)
 
-    /* Buffer overflow error has occured */
-    FLEXCOM_SPI_SLAVE_ERROR_BUFOVF = SPI_SR_OVRES_Msk,
-
-} FLEXCOM_SPI_SLAVE_ERROR;
+typedef uint32_t FLEXCOM_SPI_SLAVE_ERROR;
 
 typedef  void (*FLEXCOM_SPI_SLAVE_CALLBACK) (uintptr_t context);
 
@@ -114,10 +111,10 @@ typedef struct
     uint32_t                        nWrBytes;
 
     /* Index to the number of bytes already written out from the transmit buffer */
-    volatile uint32_t               wrOutIndex;
+    uint32_t                        wrOutIndex;
 
     /* Index into the receive buffer where the next received byte will be copied */
-    volatile uint32_t               rdInIndex;
+    uint32_t                        rdInIndex;
 
 } FLEXCOM_SPI_SLAVE_OBJECT;
 

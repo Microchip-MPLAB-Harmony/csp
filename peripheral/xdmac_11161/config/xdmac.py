@@ -303,8 +303,8 @@ def xdmacChannelAllocLogic(Sym, event):
                 break
 
         if channelAllocated == False:
-            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
             Log.writeWarningMessage("Warning!!! Couldn't Allocate any DMA Channel. Check DMA manager.")
+            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
 
     # Client requested to deallocate channel
     else:
@@ -324,10 +324,6 @@ def xdmacChannelAllocLogic(Sym, event):
 ###############################################################################
 # Component ####
 ###############################################################################
-dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
-dmaManagerSelect.setVisible(False)
-dmaManagerSelect.setDefaultValue("xdmac_11161:SAME70DMAModel")
-
 xdmacBitFieldString = "/avr-tools-device-file/modules/module@[name=\"XDMAC\"]/register-group@[name=\"{0}\"]/register@[name=\"{1}\"]/bitfield@[name=\"{2}\"]"
 xdmacValueGrpString = "/avr-tools-device-file/modules/module@[name=\"XDMAC\"]/value-group@[name=\"{0}\"]"
 
@@ -366,7 +362,7 @@ secureIntNode = ATDF.getNode(secureIntParam)
 secureIntSym = coreComponent.createBooleanSymbol("SECURE_INTERRUPT_AVAILABLE", None)
 secureIntSym.setVisible(False)
 if secureIntNode is not None:
-    secureIntSym.setDefaultValue(True)
+    secureIntSym.setDefaultValue(False) # Currently not supported
 
 
 xdmacHighestCh = coreComponent.createIntegerSymbol("XDMAC_HIGHEST_CHANNEL", xdmacEnable)
@@ -612,8 +608,8 @@ xdmacPERIDChannelUpdate.setDependencies(xdmacChannelAllocLogic, peridValueListSy
 configName = Variables.get("__CONFIGURATION_NAME")
 
 xdmacCommonHeaderFile = coreComponent.createFileSymbol("xdmacCommonHeaderFile", None)
-xdmacCommonHeaderFile.setMarkup(False)
-xdmacCommonHeaderFile.setSourcePath("../peripheral/xdmac_11161/templates/plib_xdmac_common.h")
+xdmacCommonHeaderFile.setMarkup(True)
+xdmacCommonHeaderFile.setSourcePath("../peripheral/xdmac_11161/templates/plib_xdmac_common.h.ftl")
 xdmacCommonHeaderFile.setOutputName("plib_xdmac_common.h")
 xdmacCommonHeaderFile.setDestPath("/peripheral/xdmac/")
 xdmacCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/xdmac/")
@@ -643,7 +639,7 @@ xdmacSourceFile.setEnabled(False)
 
 xdmacSystemInitFile = coreComponent.createFileSymbol("xdmacSystemInitFile", None)
 xdmacSystemInitFile.setType("STRING")
-xdmacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+xdmacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS1")
 xdmacSystemInitFile.setSourcePath("../peripheral/xdmac_11161/templates/system/initialization.c.ftl")
 xdmacSystemInitFile.setMarkup(True)
 xdmacSystemInitFile.setEnabled(False)

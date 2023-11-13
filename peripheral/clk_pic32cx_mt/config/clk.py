@@ -86,17 +86,23 @@ def set_symbol_attributes(symbol, module_node, group, register, bitfield,
 
 
 def set_kv_symbol_attributes(symbol, module_node, group, register, bitfield,
-                                                            set_label = True):
+                                              enum_symbol = None, enum_prefix = "", set_label = True):
+    enum_str = ""
     bitfield_node = get_bitfield_node(module_node, group, register, bitfield)
     xpathstr = "./value-group[@name=\""+ bitfield_node.get("values") +"\"]"
     val_grp_node = module_node.find(xpathstr)
     for value_node in val_grp_node:
-        symbol.addKey(value_node.get("name"),
-                      value_node.get("value"),
-                      value_node.get("caption"))
-    if set_label:
+        if symbol != None:
+            symbol.addKey(value_node.get("name"),
+                          value_node.get("value"),
+                          value_node.get("caption"))
+        if enum_symbol != None:
+            enum_str += enum_prefix + value_node.get("name") + " = " + register + "_" + bitfield + "_" + value_node.get("name") + "_Val" + "," + "\r\n" + "\t"
+    if set_label == True and symbol != None:
         symbol.setLabel(bitfield_node.get("name"))
         symbol.setDescription(bitfield_node.get("caption"))
+    if enum_symbol != None:
+        enum_symbol.setDefaultValue(enum_str)
 
 
 def update_td_slck(symbol, event):
@@ -542,11 +548,15 @@ if __name__ == "__main__":
     cpu_menu.setLabel("Processor Clock ")
 
     css = clk_component.createKeyValueSetSymbol("CLK_CPU_CKR_CSS", cpu_menu)
-    set_kv_symbol_attributes(css, pmc_node, "PMC", "PMC_CPU_CKR", "CSS")
+    cpu0_clk_src_enum = clk_component.createStringSymbol("CPU0_CLK_SRC_ENUM", cpu_menu)
+    cpu0_clk_src_enum.setVisible(False)
+    set_kv_symbol_attributes(css, pmc_node, "PMC", "PMC_CPU_CKR", "CSS", cpu0_clk_src_enum, "CPU0_CLK_SRC_")
     css.setDefaultValue(1)
 
     pres = clk_component.createKeyValueSetSymbol("CLK_CPU_CKR_PRES", cpu_menu)
-    set_kv_symbol_attributes(pres, pmc_node, "PMC", "PMC_CPU_CKR", "PRES")
+    cpu0_clk_pres_enum = clk_component.createStringSymbol("CPU0_CLK_PRES_ENUM", cpu_menu)
+    cpu0_clk_pres_enum.setVisible(False)
+    set_kv_symbol_attributes(pres, pmc_node, "PMC", "PMC_CPU_CKR", "PRES", cpu0_clk_pres_enum, "CPU0_CLK_PRESCALER_")
 
     mck0freq = clk_component.createIntegerSymbol("MCK0_FREQUENCY",cpu_menu)
     mck0freq_dep_list = ["CLK_CPU_CKR_CSS", "CLK_CPU_CKR_PRES"]
@@ -602,11 +612,15 @@ if __name__ == "__main__":
 
     cpcss = clk_component.createKeyValueSetSymbol(
                                             "CLK_CPU_CKR_CPCSS", cpu_menu)
-    set_kv_symbol_attributes(cpcss, pmc_node, "PMC", "PMC_CPU_CKR", "CPCSS")
+    cpu1_clk_src_enum = clk_component.createStringSymbol("CPU1_CLK_SRC_ENUM", cpu_menu)
+    cpu1_clk_src_enum.setVisible(False)
+    set_kv_symbol_attributes(cpcss, pmc_node, "PMC", "PMC_CPU_CKR", "CPCSS", cpu1_clk_src_enum, "CPU1_CLK_SRC_")
 
     cppres = clk_component.createKeyValueSetSymbol(
                                             "CLK_CPU_CKR_CPPRES", cpu_menu)
-    set_kv_symbol_attributes(cppres, pmc_node, "PMC", "PMC_CPU_CKR", "CPPRES")
+    cpu1_clk_pres_enum = clk_component.createStringSymbol("CPU1_CLK_PRES_ENUM", cpu_menu)
+    cpu1_clk_pres_enum.setVisible(False)
+    set_kv_symbol_attributes(cppres, pmc_node, "PMC", "PMC_CPU_CKR", "CPPRES", cpu1_clk_pres_enum, "CPU1_CLK_PRESCALER_")
 
     ratio_mck1div = clk_component.createBooleanSymbol(
                                         "CLK_CPU_CKR_RATIO_MCK1DIV", cpu_menu)
@@ -664,6 +678,10 @@ if __name__ == "__main__":
                 "MCSPI":[range(0,8), setup_gclk_module_freq],
     }
 
+    modulesWithGCLKlist = ""
+    modulesWithGCLK = clk_component.createStringSymbol("MODULES_WITH_GCLK", None)
+    modulesWithGCLK.setVisible(False)
+
     pcr_menu = clk_component.createMenuSymbol("CLK_PCR_MENU", menu)
     pcr_menu.setLabel("Peripheral Clocks")
 
@@ -717,8 +735,9 @@ if __name__ == "__main__":
                                             symbol.setValue(event["value"]),
                                             [mck_id + '_FREQUENCY'])
                     elif (module_name != "TC" or
-                          clock_id_suffix.endswith("_CHANNEL0")):
+                        clock_id_suffix.endswith("_CHANNEL0")):
                         gclk_ui_map.addKey(instance_name, clock_id, "")
+                        modulesWithGCLKlist += "ID_" + clock_id_suffix + ", "
 
             if module_name  in gclk_dict.keys():
                 gclk_freq_deps = []
@@ -759,6 +778,8 @@ if __name__ == "__main__":
                 gclk_dict[module_name][1](clk_component, clk_remote_component,
                                         module_name, instance_name)
 
+    modulesWithGCLK.setDefaultValue(modulesWithGCLKlist)
+
     #Combo symbol for UI to identify peripherals with PMC clock */
     periph_clk_ui_list_sym = clk_component.createComboSymbol(
                      "PERIPHERAL_CLOCK_CONFIG", None, peripheral_clock_list)
@@ -789,7 +810,12 @@ if __name__ == "__main__":
 
         pckx_css = clk_component.createKeyValueSetSymbol(
                                         "CLK_PCK"+str(pckx)+"_CSS", pckx_en)
-        set_kv_symbol_attributes(pckx_css, pmc_node, "PMC", "PMC_PCK", "CSS")
+        if pckx == 0:
+            pck_clk_src_enum = clk_component.createStringSymbol("PCK_CLK_SRC_ENUM", cpu_menu)
+            pck_clk_src_enum.setVisible(False)
+            set_kv_symbol_attributes(pckx_css, pmc_node, "PMC", "PMC_PCK", "CSS", pck_clk_src_enum, "PCK_CLK_SRC_")
+        else:
+            set_kv_symbol_attributes(pckx_css, pmc_node, "PMC", "PMC_PCK", "CSS")
         pckx_freq_deps.append(pckx_css.getID())
         for value_node in get_valuegroup_node(pmc_node, "PMC", "PMC_PCK", "CSS"):
             pckx_freq_deps.append(value_node.get("name") + "_FREQUENCY")
@@ -806,6 +832,9 @@ if __name__ == "__main__":
         pckx_freq.setReadOnly(True)
         pckx_freq.setDependencies(update_pck_freq, pckx_freq_deps)
 
+    gclk_src_enum = clk_component.createStringSymbol("GCLK_SRC_ENUM", cpu_menu)
+    gclk_src_enum.setVisible(False)
+    set_kv_symbol_attributes(None, pmc_node, "PMC", "PMC_PCR", "GCLKCSS", gclk_src_enum, "GCLK_SRC_")
 
     ###################### Default clock settings #############################
     #Configure XTAL as the slow clock source

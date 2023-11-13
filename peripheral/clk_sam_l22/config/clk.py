@@ -220,6 +220,11 @@ def interruptControl(symbol, event):
 ############################   OSC16M Components  ##############################
 global osc16MFreqSel
 
+calibRowAddr = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"OTP5\"]").getAttribute("start")
+swCalibRowAddr = coreComponent.createStringSymbol("SW_CALIB_ROW_ADDR", None)
+swCalibRowAddr.setDefaultValue(calibRowAddr)
+swCalibRowAddr.setVisible(False)
+
 osc16MEnable = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC16M_ENABLE", oscctrlosc16_Menu)
 osc16MEnable.setLabel("Enable 16MHz RC Oscillator")
 osc16MEnable.setDescription("Enable 16MHz RC Oscillator")

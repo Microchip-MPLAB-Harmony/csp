@@ -46,6 +46,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "device.h"
 #include "plib_tmr1_common.h"
 
@@ -77,7 +78,7 @@ void ${TMR1_INSTANCE_NAME}_Start(void);
 
 void ${TMR1_INSTANCE_NAME}_Stop(void);
 
-void ${TMR1_INSTANCE_NAME}_PeriodSet(uint16_t);
+void ${TMR1_INSTANCE_NAME}_PeriodSet(uint16_t period);
 
 uint16_t ${TMR1_INSTANCE_NAME}_PeriodGet(void);
 
@@ -91,6 +92,11 @@ void ${TMR1_INSTANCE_NAME}_InterruptEnable(void);
 void ${TMR1_INSTANCE_NAME}_InterruptDisable(void);
 
 void ${TMR1_INSTANCE_NAME}_CallbackRegister( TMR1_CALLBACK callback_fn, uintptr_t context );
+
+<#else>
+
+bool ${TMR1_INSTANCE_NAME}_PeriodHasExpired(void);
+
 </#if>
 
 // DOM-IGNORE-BEGIN

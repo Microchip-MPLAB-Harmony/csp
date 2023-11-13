@@ -76,7 +76,7 @@
         <#else>
             <#assign TCC_CTRLA_VAL = "TCC_CTRLA_CPTEN" + i + "_Msk">
         </#if>
-    </#if>        
+    </#if>
 </#list>
 <#if TCC_SLAVE_MODE == true>
     <#if TCC_CTRLA_VAL != "">
@@ -109,7 +109,7 @@
         <#else>
             <#assign TCC_INTENSET_VAL = "TCC_INTENSET_MC"+i+"_Msk">
         </#if>
-    </#if>        
+    </#if>
 </#list>
 
 <#-- Events -->
@@ -121,7 +121,7 @@
         <#else>
             <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_MCEO"+i+"_Msk">
         </#if>
-    </#if>        
+    </#if>
 </#list>
 <#if TCC_CAPTURE_EVCTRL_EVACT1 != "OFF">
     <#if TCC_EVCTRL_VAL != "">
@@ -141,12 +141,12 @@
         <#else>
             <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_MCEI" + i + "_Msk">
         </#if>
-    </#if>        
+    </#if>
 </#list>
 </#compress>
 
 <#if TCC_CAPTURE_INTERRUPT_MODE = true>
-static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
+volatile static TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObject;
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -166,13 +166,12 @@ void ${TCC_INSTANCE_NAME}_CaptureInitialize( void )
 
     /* Configure prescaler, standby & capture mode */
     <#if TCC_CTRLA_VAL?has_content>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} | TCC_CTRLA_PRESCSYNC_PRESC
-                                  | ${TCC_CTRLA_VAL}
-                                  ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} | TCC_CTRLA_PRESCSYNC_${TCC_CTRLA_PRESCYNC}
+                                  | ${TCC_CTRLA_VAL} ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};
     <#else>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} | TCC_CTRLA_PRESCSYNC_PRESC
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER} | TCC_CTRLA_PRESCSYNC_${TCC_CTRLA_PRESCYNC}
                                   ${TCC_CTRLA_RUNSTDBY?then('| TCC_CTRLA_RUNSTDBY_Msk', '')};
-    </#if>                                      
+    </#if>
 
 
     <#if TCC_EVCTRL_VAL?has_content>
@@ -222,13 +221,18 @@ void ${TCC_INSTANCE_NAME}_CaptureCommandSet(TCC_COMMAND command)
     while((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
 }
 
 <#if TCC_SIZE = 16>
 
 uint16_t ${TCC_INSTANCE_NAME}_Capture16bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel )
 {
+    while(((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) & (1UL << (TCC_SYNCBUSY_CC0_Pos + (uint32_t)channel))) != 0U)
+    {
+        /* Wait for Write Synchronization */
+    }
+
     return (uint16_t)${TCC_INSTANCE_NAME}_REGS->TCC_CC[channel];
 }
 
@@ -236,6 +240,11 @@ uint16_t ${TCC_INSTANCE_NAME}_Capture16bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL
 
 uint32_t ${TCC_INSTANCE_NAME}_Capture24bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel )
 {
+    while(((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) & (1UL << (TCC_SYNCBUSY_CC0_Pos + (uint32_t)channel))) != 0U)
+    {
+        /* Wait for Write Synchronization */
+    }
+
     return (${TCC_INSTANCE_NAME}_REGS->TCC_CC[channel] & 0xFFFFFFU);
 }
 
@@ -243,6 +252,11 @@ uint32_t ${TCC_INSTANCE_NAME}_Capture24bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL
 
 uint32_t ${TCC_INSTANCE_NAME}_Capture32bitValueGet( ${TCC_INSTANCE_NAME}_CHANNEL_NUM channel )
 {
+    while(((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY) & (1UL << (TCC_SYNCBUSY_CC0_Pos + (uint32_t)channel))) != 0U)
+    {
+        /* Wait for Write Synchronization */
+    }
+
     return (${TCC_INSTANCE_NAME}_REGS->TCC_CC[channel]);
 }
 </#if>
@@ -328,16 +342,19 @@ void ${TCC_INSTANCE_NAME}_CaptureCallbackRegister( TCC_CALLBACK callback, uintpt
 <#-- Single interrupt line -->
 <#if TCC_NUM_INT_LINES == 0>
 /* Capture interrupt handler */
-void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status;
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context;
+    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;    
     status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     /* clear period interrupt */
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
     (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     if(${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
     {
-        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
+        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, context);
     }
 }
 
@@ -345,16 +362,19 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 <#else>
         <#if TCC_CAPTURE_OVF_INTERRUPT_MODE == true || TCC_CAPTURE_ERR_INTERRUPT_MODE == true>
             <#lt>/* Interrupt Handler */
-            <#lt>void ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
+            <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
             <#lt>{
             <#lt>    uint32_t status;
+            <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+            <#lt>    uintptr_t context;
+            <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;
             <#lt>    status = (${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG & 0xFFFFU);
             <#lt>    /* Clear interrupt flags */
             <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFFU;
             <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
             <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
             <#lt>    {
-            <#lt>        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
+            <#lt>        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, context);
             <#lt>    }
 
             <#lt>}
@@ -364,16 +384,19 @@ void ${TCC_INSTANCE_NAME}_InterruptHandler( void )
         <#assign TCC_INT_MC = "TCC_CAPTURE_INTENSET_MC" + i>
             <#if .vars[TCC_INT_MC] == true>
                 <#lt>/* Interrupt Handler */
-                <#lt>void ${TCC_INSTANCE_NAME}_MC${i}_InterruptHandler(void)
+                <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_MC${i}_InterruptHandler(void)
                 <#lt>{
                 <#lt>    uint32_t status;
+                <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+                <#lt>    uintptr_t context;
+                <#lt>    context = ${TCC_INSTANCE_NAME}_CallbackObject.context;
                 <#lt>    status = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    /* Clear interrupt flags */
                 <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC${i}_Msk;
                 <#lt>    (void)${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
                 <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObject.callback_fn != NULL)
                 <#lt>    {
-                <#lt>        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObject.context);
+                <#lt>        ${TCC_INSTANCE_NAME}_CallbackObject.callback_fn(status, context);
                 <#lt>    }
 
                 <#lt>}

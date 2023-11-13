@@ -73,6 +73,8 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
+#define ${MCAN_INSTANCE_NAME}_CLOCK_FREQUENCY    ${MCAN_CORE_CLOCK_FREQ}U
+
 /* ${MCAN_INSTANCE_NAME} Message RAM Configuration Size */
 <#assign MCAN_MESSAGE_RAM_CONFIG_SIZE = 0>
 <#if RXF0_USE>
@@ -186,6 +188,9 @@ bool ${MCAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, mcan_x
 </#if>
 void ${MCAN_INSTANCE_NAME}_SleepModeEnter(void);
 void ${MCAN_INSTANCE_NAME}_SleepModeExit(void);
+bool ${MCAN_INSTANCE_NAME}_BitTimingCalculationGet(MCAN_BIT_TIMING_SETUP *setup, MCAN_BIT_TIMING *bitTiming);
+bool ${MCAN_INSTANCE_NAME}_BitTimingSet(MCAN_BIT_TIMING *bitTiming);
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }

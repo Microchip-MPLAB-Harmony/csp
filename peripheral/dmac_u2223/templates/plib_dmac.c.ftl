@@ -88,7 +88,7 @@ typedef struct
 <#if LPRAM_PRESENT> SECTION(".lpram")</#if> static  dmac_descriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    __ALIGNED(8);
 
 /* DMAC Channels object information structure */
-static DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
+volatile static DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
 
 // *****************************************************************************
 // *****************************************************************************
@@ -102,7 +102,7 @@ This function initializes the DMAC controller of the device.
 
 void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
-    DMAC_CH_OBJECT *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
+    volatile DMAC_CH_OBJECT *dmacChObj = &dmacChannelObj[0];
     uint16_t channel = 0U;
 
     /* Initialize DMAC Channel objects */
@@ -203,6 +203,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
     bool triggerCondition = false;
     const uint32_t* pu32srcAddr = (const uint32_t*)srcAddr;
     const uint32_t* pu32dstAddr = (const uint32_t*)destAddr;
+    bool busyStatus = dmacChannelObj[channel].busyStatus;
 
     /* Save channel ID */
     channelId = ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
@@ -210,7 +211,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
     /* Set the DMA channel */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = (uint8_t)channel;
 
-    if ((dmacChannelObj[channel].busyStatus == false) || ((${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) != 0U))
+    if (((${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) != 0U) || (busyStatus == false))
     {
         /* Clear the transfer complete flag */
         ${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk;
@@ -274,6 +275,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel )
 {
     uint8_t channelId = 0U;
+    bool busyStatus = dmacChannelObj[channel].busyStatus;
     bool isBusy = false;
 
     /* Save channel ID */
@@ -282,7 +284,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel )
     /* Set the DMA channel */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = (uint8_t)channel;
 
-    if ((dmacChannelObj[channel].busyStatus == true) && ((${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) == 0U))
+    if (((${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) == 0U) && (busyStatus == true))
     {
         isBusy = true;
     }
@@ -409,6 +411,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_
 {
     bool returnStatus = false;
     uint8_t channelId = 0U;
+    bool busyStatus = dmacChannelObj[channel].busyStatus;
 
     /* Save channel ID */
     channelId = ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
@@ -416,7 +419,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_
     /* Set the DMA channel */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = (uint8_t)channel;
 
-    if ((dmacChannelObj[channel].busyStatus == false) || (((${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)))!=0U))
+    if ((((${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)))!=0U) || (busyStatus == false))
     {
         /* Clear the transfer complete flag */
         ${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk;
@@ -659,18 +662,17 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_C
 */
 <#if DMAC_MULTIVECTOR_SUPPORTED??>
 <#list 0..3 as x>
-void ${DMA_INSTANCE_NAME}_${x}_InterruptHandler( void )
+<#if .vars["DMAC_ENABLE_CH_" + x] == true>
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_${x}_InterruptHandler( void )
 {
-    DMAC_CH_OBJECT  *dmacChObj = NULL;
-    uint8_t channel = 0U;
+    volatile DMAC_CH_OBJECT  *dmacChObj;
+    /* Get active channel number */
+    uint8_t channel = ${x}U;
     uint8_t channelId = 0U;
     volatile uint32_t chanIntFlagStatus = 0U;
     DMAC_TRANSFER_EVENT event = DMAC_TRANSFER_EVENT_ERROR;
 
-    /* Get active channel number */
-    channel = ${x}U;
-
-    dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel];
+    dmacChObj = &dmacChannelObj[channel];
 
     /* Save channel ID */
     channelId = ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
@@ -706,17 +708,22 @@ void ${DMA_INSTANCE_NAME}_${x}_InterruptHandler( void )
     /* Execute the callback function */
     if (dmacChObj->callback != NULL)
     {
-        dmacChObj->callback (event, dmacChObj->context);
+        uintptr_t context = dmacChObj->context;
+
+        dmacChObj->callback (event, context);
     }
 
     /* Restore channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
 }
+</#if>
 </#list>
 
-void ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
+<#list 4..DMA_CHANNEL_COUNT - 1 as x>
+<#if .vars["DMAC_ENABLE_CH_" + x] == true>
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
-    DMAC_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMAC_CH_OBJECT  *dmacChObj;
     uint8_t channel = 0U;
     uint8_t channelId = 0U;
     volatile uint32_t chanIntFlagStatus = 0U;
@@ -725,7 +732,7 @@ void ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     /* Get active channel number */
     channel = (uint8_t)((uint32_t)${DMA_INSTANCE_NAME}_REGS->DMAC_INTPEND & DMAC_INTPEND_ID_Msk);
 
-    dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel];
+    dmacChObj = &dmacChannelObj[channel];
 
     /* Save channel ID */
     channelId = (uint8_t)${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
@@ -761,16 +768,21 @@ void ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     /* Execute the callback function */
     if (dmacChObj->callback != NULL)
     {
-        dmacChObj->callback (event, dmacChObj->context);
+        uintptr_t context = dmacChObj->context;
+
+        dmacChObj->callback (event, context);
     }
 
     /* Restore channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
 }
+</#if>
+</#list>
+
 <#else>
-void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_InterruptHandler( void )
 {
-    DMAC_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMAC_CH_OBJECT  *dmacChObj;
     uint8_t channel = 0U;
     uint8_t channelId = 0U;
     volatile uint32_t chanIntFlagStatus = 0U;
@@ -779,7 +791,7 @@ void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
     /* Get active channel number */
     channel = (uint8_t)((uint32_t)${DMA_INSTANCE_NAME}_REGS->DMAC_INTPEND & DMAC_INTPEND_ID_Msk);
 
-    dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel];
+    dmacChObj = &dmacChannelObj[channel];
 
     /* Save channel ID */
     channelId = (uint8_t)${DMA_INSTANCE_NAME}_REGS->DMAC_CHID;
@@ -815,7 +827,9 @@ void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
     /* Execute the callback function */
     if (dmacChObj->callback != NULL)
     {
-        dmacChObj->callback (event, dmacChObj->context);
+        uintptr_t context = dmacChObj->context;
+
+        dmacChObj->callback (event, context);
     }
 
     /* Restore channel ID */

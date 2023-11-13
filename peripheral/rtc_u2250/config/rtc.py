@@ -492,7 +492,7 @@ def sysTime_modeSelection(symbol, event):
         irqEnumName_Sym.setValue(irqEnumName, 2)
 
 # Tamper register value calculation
-def RTC_TAMPCTRL_REG_Update(symbol, event):    
+def RTC_TAMPCTRL_REG_Update(symbol, event):
     tampctrl_val = symbol.getValue()
 
     if "LEVEL" in event["id"]:
@@ -507,24 +507,24 @@ def RTC_TAMPCTRL_REG_Update(symbol, event):
             tampctrl_val |= 1 << (tamperChannel + 24)
         else:
             tampctrl_val &= ~(1 << (tamperChannel + 24))
-    elif "ACTION" in event["id"]:  
+    elif "ACTION" in event["id"]:
         tamperChannel = int(event["id"].split("TAMP_CHANNEL")[1].split("_ACTION")[0])
-        
+
         tampctrl_val &= ~(0x3 << (tamperChannel *2))
         tampctrl_val |= event["value"] << (tamperChannel * 2)
 
     symbol.setValue(tampctrl_val)
-    
+
 def RTC_COUNTSYNC_Update (symbol, event):
     symObj = event["symbol"]
-    rtcMode = symObj.getSelectedKey()    
-    
+    rtcMode = symObj.getSelectedKey()
+
     symbol.setVisible(rtcMode != "MODE2")
 
 def RTC_CLOCKSYNC_Update (symbol, event):
     symObj = event["symbol"]
-    rtcMode = symObj.getSelectedKey()    
-    
+    rtcMode = symObj.getSelectedKey()
+
     symbol.setVisible(rtcMode == "MODE2")
 ################################################################################
 #                      RTC DATABASE COMPONENTS                      ########
@@ -608,7 +608,7 @@ def instantiateComponent(rtcComponent):
             InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
             InterruptVectorUpdate.append("core." + name +  "_INTERRUPT_ENABLE_UPDATE")
             InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
-            
+
             if "COMPARE" in name:
                 rtcInterruptVectorDict["COMPARE"] = name + "_IRQn"
             if "PERIOD" in name:
@@ -694,17 +694,17 @@ def instantiateComponent(rtcComponent):
 
     rtcSymMode0_FREQCORR = rtcComponent.createBooleanSymbol("RTC_FREQCORR", rtcSym_Menu)
     rtcSymMode0_FREQCORR.setLabel("Generate Frequency Correction API")
-    
+
     # RTC Count Sync Enable
     rtcSym_CountSyncEnable = rtcComponent.createBooleanSymbol( "RTC_COUNTSYNC_ENABLE", rtcSym_Menu)
-    rtcSym_CountSyncEnable.setLabel("RTC Count Sync Enable")   
+    rtcSym_CountSyncEnable.setLabel("RTC Count Sync Enable")
     rtcSym_CountSyncEnable.setDefaultValue(True)
     rtcSym_CountSyncEnable.setVisible(True)
     rtcSym_CountSyncEnable.setDependencies(RTC_COUNTSYNC_Update, ["RTC_MODULE_SELECTION"])
-    
+
     # RTC Clock Sync Enable
     rtcSym_ClockSyncEnable = rtcComponent.createBooleanSymbol( "RTC_CLOCKSYNC_ENABLE", rtcSym_Menu)
-    rtcSym_ClockSyncEnable.setLabel("RTC Clock Sync Enable")   
+    rtcSym_ClockSyncEnable.setLabel("RTC Clock Sync Enable")
     rtcSym_ClockSyncEnable.setDefaultValue(True)
     rtcSym_ClockSyncEnable.setVisible(False)
     rtcSym_ClockSyncEnable.setDependencies(RTC_CLOCKSYNC_Update, ["RTC_MODULE_SELECTION"])
@@ -738,8 +738,10 @@ def instantiateComponent(rtcComponent):
             tampBKUPRST = rtcComponent.createBooleanSymbol("TAMP_RESET_BACKUP", rtcTampMenu)
             tampBKUPRST.setLabel("Erase Backup Registers on Tamper Detection")
 
+        tampGPRSTNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[modes="MODE0",name="CTRLA"]/bitfield@[name="GPTRST"]')
         tampGPRST = rtcComponent.createBooleanSymbol("TAMP_RESET_GP", rtcTampMenu)
         tampGPRST.setLabel("Erase General Purpose Registers on Tamper Detection")
+        tampGPRST.setVisible(tampGPRSTNode != None)
 
         freqNode = ATDF.getNode(
             '/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MODE2_CTRLB__ACTF"]')
@@ -780,12 +782,14 @@ def instantiateComponent(rtcComponent):
         tamAsync.addKey("Synchronous", "0", "The tamper input debouncers operate synchronously")
         tamAsync.addKey("Asynchronous", "1", "The tamper input debouncers operate asynchronously")
 
+        tampMajNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[modes="MODE0",name="CTRLB"]/bitfield@[name="DEBMAJ"]')
         tampMaj = rtcComponent.createKeyValueSetSymbol("TAMP_DEBOUNCE_MAJ", rtcTampMenu)
         tampMaj.setLabel("Debouncer Value Matching")
         tampMaj.setDisplayMode("Description")
         tampMaj.setOutputMode("Value")
         tampMaj.addKey("Disable", "0", "Match three equal values")
         tampMaj.addKey("Enable", "1", "Match majority two of three values.")
+        tampMaj.setVisible(tampMajNode != None)
 
         TAMPCTRL_Field_List = []
         for id in range(0, tamperChannels):
@@ -1327,7 +1331,7 @@ def instantiateComponent(rtcComponent):
         rtcMode2AlarmRegisterDefType.setDefaultValue("NEW")
     else:
         rtcMode2AlarmRegisterDefType.setDefaultValue("OLD")
-        
+
     ############################################################################
     # Dependency ####
     ############################################################################

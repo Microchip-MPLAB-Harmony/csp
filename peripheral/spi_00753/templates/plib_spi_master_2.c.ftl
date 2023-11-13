@@ -254,7 +254,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
 
                     /* wait until the receive buffer is full */
                     while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBF_MASK) == false);
-                    
+
                     receivedData = ${SPI_INSTANCE_NAME}BUF;
                     dummyRxCntr++;
                 }
@@ -296,7 +296,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
             {
                 /* wait until the receive buffer is full */
                 while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBF_MASK) == false);
-                
+
                 receivedData = ${SPI_INSTANCE_NAME}BUF;
                 dummyRxCntr++;
             }
@@ -313,7 +313,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
     uint32_t dummyData;
 
     /* Verify the request */
-    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false))
+    if((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false) && (((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))))
     {
         isRequestAccepted = true;
         ${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
@@ -439,9 +439,9 @@ void ${SPI_INSTANCE_NAME}_CallbackRegister (SPI_CALLBACK callback, uintptr_t con
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 </#if>
 {
     uint32_t receivedData = 0;
@@ -535,7 +535,7 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-void SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
 {
     if ((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) && (${SPI_RX_IEC_REG} & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK))
     {

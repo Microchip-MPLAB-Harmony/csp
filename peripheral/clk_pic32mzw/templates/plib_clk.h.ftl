@@ -70,6 +70,14 @@
 
 #define PIC32MZW1_B0 0xA4
 #define PIC32MZW1_A1 0x8C
+#define PIC32MZW1_G 0xA6
+#define EWPLLCON_MSK 0x0438080cU
+#define POSC_DIS 0x300U
+#define POSC_EN	0xFFFFFCFFU
+#define PLL_PWROFF  0x808U
+#define SPLLCON_DEFAULT 0xC0000808U
+#define PART_NUM_OFFSET 20
+#define PART_NUM_MASK 0x0FF00000U
 #define CORE_TIMER_FREQ 100000000
 
 void PMU_Initialize(void);
@@ -100,8 +108,7 @@ void PMU_Initialize(void);
     None.
 
   Example:
-    <code>
-    //Example 1: Do not alter the configuration bit settings
+    <code>    
     CLK_Initialize ( );
 
     </code>

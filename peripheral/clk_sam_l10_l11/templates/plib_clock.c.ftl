@@ -38,6 +38,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
+#include <stddef.h>
 #include "plib_clock.h"
 #include "device.h"
 <#if CoreSysIntFile == true>
@@ -53,7 +54,7 @@ typedef struct
 } OSCCTRL_OBJECT;
 
 /* Reference Object created for the OSCCTRL */
-static OSCCTRL_OBJECT oscctrlObj;
+volatile static OSCCTRL_OBJECT oscctrlObj;
 
 </#if>
 
@@ -66,7 +67,7 @@ typedef struct
 } OSC32KCTRL_OBJECT;
 
 /* Reference Object created for the OSCCTRL */
-static OSC32KCTRL_OBJECT osc32kctrlObj;
+volatile static OSC32KCTRL_OBJECT osc32kctrlObj;
 
 </#if>
 
@@ -79,7 +80,7 @@ typedef struct
 } MCLK_OBJECT;
 
 /* Reference Object created for the MCLK */
-static MCLK_OBJECT mclkObj;
+volatile static MCLK_OBJECT mclkObj;
 
 </#if>
 
@@ -166,15 +167,13 @@ static void DFLL_Initialize(void)
 
     /* Configure DFLL    */
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLULPCTRL = OSCCTRL_DFLLULPCTRL_ENABLE_Msk
-    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "1")?then("| OSCCTRL_DFLLULPCTRL_ONDEMAND_Msk ", "")}
     <#lt>                               ${CONFIG_CLOCK_DFLL_RUNSTDY?then('| OSCCTRL_DFLLULPCTRL_RUNSTDBY_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_DITHER?then('| OSCCTRL_DFLLULPCTRL_DITHER_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_SAFE?then('| OSCCTRL_DFLLULPCTRL_SAFE_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_BINSE?then('| OSCCTRL_DFLLULPCTRL_BINSE_Msk ', ' ')}
     <#lt>                               ${(CONFIG_CLOCK_DFLL_DIV != "0") ?then('| OSCCTRL_DFLLULPCTRL_DIV(${CONFIG_CLOCK_DFLL_DIV}U) ', ' ')}
     <#lt>                               ;</@compress>
-    <#if CONFIG_CLOCK_DFLL_ONDEMAND != "1">
-
+    
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLULPRDY_Msk) != OSCCTRL_STATUS_DFLLULPRDY_Msk)
     {
         /* Waiting for the Ready state */
@@ -184,6 +183,9 @@ static void DFLL_Initialize(void)
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
     }
+    
+    <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
+    OSCCTRL_REGS->OSCCTRL_DFLLULPCTRL |= OSCCTRL_DFLLULPCTRL_ONDEMAND_Msk;
     </#if>
 }
 </#if>
@@ -388,8 +390,10 @@ void OSCCTRL_CallbackRegister(OSCCTRL_CFD_CALLBACK callback, uintptr_t context)
     oscctrlObj.context = context;
 }
 
-void OSCCTRL_InterruptHandler(void)
+void __attribute__((used)) OSCCTRL_InterruptHandler(void)
 {
+    uintptr_t context_var;
+
     /* Checking for the Clock Fail status */
     if ((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_XOSCFAIL_Msk) == OSCCTRL_STATUS_XOSCFAIL_Msk)
     {
@@ -398,7 +402,8 @@ void OSCCTRL_InterruptHandler(void)
 
         if (oscctrlObj.callback != NULL)
         {
-            oscctrlObj.callback(oscctrlObj.context);
+            context_var = oscctrlObj.context;
+            oscctrlObj.callback(context_var);
         }
     }
 }
@@ -413,8 +418,10 @@ void OSC32KCTRL_CallbackRegister (OSC32KCTRL_CFD_CALLBACK callback, uintptr_t co
     osc32kctrlObj.context = context;
 }
 
-void OSC32KCTRL_InterruptHandler(void)
+void __attribute__((used)) OSC32KCTRL_InterruptHandler(void)
 {
+    uintptr_t context_var;
+
     /* Checking for the Clock Failure status */
     if ((OSC32KCTRL_REGS->OSC32KCTRL_STATUS & OSC32KCTRL_STATUS_CLKFAIL_Msk) == OSC32KCTRL_STATUS_CLKFAIL_Msk)
     {
@@ -423,7 +430,8 @@ void OSC32KCTRL_InterruptHandler(void)
 
         if(osc32kctrlObj.callback != NULL)
         {
-            osc32kctrlObj.callback(osc32kctrlObj.context);
+            context_var = osc32kctrlObj.context;
+            osc32kctrlObj.callback(context_var);
         }
     }
 }
@@ -437,8 +445,10 @@ void MCLK_CallbackRegister (MCLK_CKRDY_CALLBACK callback, uintptr_t context)
     mclkObj.context = context;
 }
 
-void MCLK_InterruptHandler(void)
+void __attribute__((used)) MCLK_InterruptHandler(void)
 {
+    uintptr_t context_var;
+
     /* Checking for the Clock Ready Interrupt */
     if ((MCLK_REGS->MCLK_INTFLAG & MCLK_INTFLAG_CKRDY_Msk) == MCLK_INTFLAG_CKRDY_Msk)
     {
@@ -447,7 +457,8 @@ void MCLK_InterruptHandler(void)
 
         if(mclkObj.callback != NULL)
         {
-            mclkObj.callback(mclkObj.context);
+            context_var = mclkObj.context;
+            mclkObj.callback(context_var);
         }
     }
 }

@@ -188,7 +188,7 @@ def updateSPISlaveBusyPinVisibility(symbol, event):
     symbol.setVisible(spiMode == "SLAVE" and busyPinEnabled == True)
 
 def updateCSR_SCBR_Value(symbol, baudVal, clockVal):
-    SCBR = clockVal/baudVal
+    SCBR = int(round(float(clockVal)/baudVal, 0))
     spiSymInvalidClock.setVisible(SCBR < 1 or SCBR > 255)
 
     if SCBR == 0:
@@ -593,7 +593,7 @@ def instantiateComponent(spiComponent):
     spiSymCSRIndex.setDependencies(updateCSRIndex, ["SPI_EN_NPCS0", "SPI_EN_NPCS1", "SPI_EN_NPCS2", "SPI_EN_NPCS3"])
 
     defaultbaudRate = 1000000
-    defaultSCBR = int(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))/defaultbaudRate
+    defaultSCBR = int(round((float(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))/defaultbaudRate), 0))
 
 ## Deprecated symbols ----------------------------------------------##
 
@@ -731,6 +731,20 @@ def instantiateComponent(spiComponent):
         spiSym_SPI_CSRx_DLYBCT.setDefaultValue(0)
         spiSym_SPI_CSRx_DLYBCT.setVisible(i == 0)
         spiSym_SPI_CSRx_DLYBCT.setDependencies(updateCSRx_MasterBitFields, ["SPI_MR_MSTR", "SPI_EN_NPCS" + str(i)])
+        
+        # CSRx CSAAT
+        spiSym_SPI_CSRx_CSAAT = spiComponent.createBooleanSymbol("SPI_CSR" + str(i) + "_CSAAT", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_CSAAT.setLabel("Chip Select Active After Transfer")
+        spiSym_SPI_CSRx_CSAAT.setDefaultValue(True)
+        spiSym_SPI_CSRx_CSAAT.setVisible(i == 0)
+        spiSym_SPI_CSRx_CSAAT.setDependencies(updateCSRx_MasterBitFields, ["SPI_MR_MSTR", "SPI_EN_NPCS" + str(i)])
+        
+        # CSRx CSNAAT (Ignored if CSAAT is 1)
+        spiSym_SPI_CSRx_CSNAAT = spiComponent.createBooleanSymbol("SPI_CSR" + str(i) + "_CSNAAT", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_CSNAAT.setLabel("Chip Select Not Active After Transfer")
+        spiSym_SPI_CSRx_CSNAAT.setDefaultValue(False)
+        spiSym_SPI_CSRx_CSNAAT.setVisible(i == 0)
+        spiSym_SPI_CSRx_CSNAAT.setDependencies(updateCSRx_MasterBitFields, ["SPI_MR_MSTR", "SPI_EN_NPCS" + str(i)])
 
         # CSRx CLOCK MODE Comment
         spiSym_SPI_CSRx_ClockModeComment = spiComponent.createCommentSymbol("SPI_CSR" + str(i) + "_CLOCK_MODE_COMMENT", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))

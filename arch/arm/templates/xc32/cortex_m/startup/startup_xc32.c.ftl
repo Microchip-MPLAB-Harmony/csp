@@ -88,6 +88,9 @@ extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) __xc32_on_b
 
 /* Linker defined variables */
 extern uint32_t __svectors;
+#if defined (__REINIT_STACK_POINTER)
+extern uint32_t _stack;
+#endif
 
 <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
 #pragma coverity compliance end_block "MISRA C-2012 Rule 8.6"
@@ -103,7 +106,7 @@ extern int main(void);
     <#include "arch/startup_xc32_cortex_m7.c.ftl">
     <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
 <#elseif CoreArchitecture == "CORTEX-M4" || RAM_INIT??>
-    <#if DeviceFamily != "CEC_173X">
+    <#if DeviceFamily != "CEC_173X" && DeviceFamily != "SAM_G51" && DeviceFamily != "SAM_G53" && DeviceFamily != "SAM_G54">
         <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
     </#if>
 <#elseif CoreArchitecture == "CORTEX-M33">
@@ -115,16 +118,16 @@ extern int main(void);
 #if (__ARM_FP==14) || (__ARM_FP==4)
 
 /* Enable FPU */
-__STATIC_INLINE void FPU_Enable(void)
+__STATIC_INLINE void __attribute__((optimize("-O1"))) FPU_Enable(void)
 {
     uint32_t primask = __get_PRIMASK();
     __disable_irq();
     SCB->CPACR |= (((uint32_t)0xFU) << 20);
     <#if CoreArchitecture == "CORTEX-M33">
     <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-    SCB->NSACR |= (((uint32_t)0x3U) << 10);   
+    SCB->NSACR |= (((uint32_t)0x3U) << 10);
     FPU->FPCCR |= (uint32_t)0x${FPU_FPCCR}U;
-    </#if> 
+    </#if>
     </#if>
     __DSB();
     __ISB();
@@ -162,7 +165,7 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
 
 #if defined (__REINIT_STACK_POINTER)
     /* Initialize SP from linker-defined _stack symbol. */
-    __asm__ volatile ("ldr sp, =_stack" : : : "sp");
+    __set_MSP((uint32_t)&_stack);
 
 #ifdef SCB_VTOR_TBLOFF_Msk
     /* Buy stack for locals */
@@ -210,9 +213,13 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
     CMCC_Configure();
 
 </#if>
+<#if XC32_DATA_INIT??>
+    <#if XC32_DATA_INIT>
     /* Initialize data after TCM is enabled.
      * Data initialization from the XC32 .dinit template */
     __pic32c_data_initialization();
+    </#if>
+</#if>
 
 <#if STACK_IN_TCM??>
 <#if (STACK_IN_TCM)>

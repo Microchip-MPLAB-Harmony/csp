@@ -208,7 +208,7 @@
 </#compress>
 
 <#if TC_INTSET_VAL != "">
-static TC_CAPTURE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+volatile static TC_CAPTURE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -228,7 +228,7 @@ void ${TC_INSTANCE_NAME}_CaptureInitialize( void )
     }
 
     /* Configure counter mode, prescaler, standby & on demand mode */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_MODE_${TC_CTRLA_MODE} | TC_CTRLA_PRESCALER_${TC_CTRLA_PRESCALER} | TC_CTRLA_PRESCSYNC_PRESC
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_MODE_${TC_CTRLA_MODE} | TC_CTRLA_PRESCALER_${TC_CTRLA_PRESCALER} | TC_CTRLA_PRESCSYNC_${TC_CTRLA_PRESCYNC}
                                   <#if TC_CTRLA_VAL?has_content>| ${TC_CTRLA_VAL}</#if> <#rt>
                                   <#lt>${TC_CTRLA_RUNSTDBY?then('| TC_CTRLA_RUNSTDBY_Msk', '')} <#rt>
                                   <#lt>${TC_CTRLA_ONDEMAND?then('| TC_CTRLA_ONDEMAND_Msk', '')};
@@ -331,7 +331,7 @@ void ${TC_INSTANCE_NAME}_CaptureCallbackRegister( TC_CAPTURE_CALLBACK callback, 
     ${TC_INSTANCE_NAME}_CallbackObject.context = context;
 }
 
-void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
+void __attribute__((used)) ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
 {
     if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0U)
     {
@@ -340,9 +340,10 @@ void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
         /* Clear all interrupts */
         ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
 
-        if((status != TC_CAPTURE_STATUS_NONE) && (${TC_INSTANCE_NAME}_CallbackObject.callback != NULL))
+        if((${TC_INSTANCE_NAME}_CallbackObject.callback != NULL) && (status != TC_CAPTURE_STATUS_NONE))
         {
-            ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+            uintptr_t context = ${TC_INSTANCE_NAME}_CallbackObject.context;
+            ${TC_INSTANCE_NAME}_CallbackObject.callback(status, context);
         }
     }
 }

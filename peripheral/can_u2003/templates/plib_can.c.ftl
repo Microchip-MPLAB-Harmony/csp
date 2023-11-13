@@ -173,7 +173,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 <#if TIMESTAMP_ENABLE || CAN_TIMEOUT>
 
     /* Timestamp Counter Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TSCC = CAN_TSCC_TCP(${TIMESTAMP_PRESCALER}UL)<#if TIMESTAMP_ENABLE == true> | ${TIMESTAMP_MODE}</#if>;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_TSCC = CAN_TSCC_TCP(${TIMESTAMP_PRESCALER}UL)<#if TIMESTAMP_ENABLE == true> | CAN_TSCC_TSS_${TIMESTAMP_MODE}</#if>;
 </#if>
 <#if CAN_TIMEOUT>
 
@@ -236,6 +236,8 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint8_t bufferNumber, CAN_TX_BUFFER *t
         txBuf = (uint8_t *)((uint8_t*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)bufferNumber * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
 
        (void) memcpy(txBuf, (uint8_t *)txBuffer, ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
+
+        __DSB();
 
         /* Set Transmission request */
         ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = 1UL << bufferNumber;
@@ -301,6 +303,8 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmitFifo(uint8_t numberOfMessage, CAN_TX_BU
             }
             </#if>
         }
+
+        __DSB();
 
         /* Set Transmission request */
         ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = bufferNumber;
@@ -459,13 +463,14 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, CAN_RX_BUFFER *rx
     uint8_t *rxBuf = NULL;
     bool message_receive_event = false;
 
-    if (!((bufferNumber >= ${RX_BUFFER_ELEMENTS}U) || (rxBuffer == NULL)))
+    if((rxBuffer != NULL) && (bufferNumber < ${RX_BUFFER_ELEMENTS}U))
     {
         rxBuf = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + ((uint32_t)bufferNumber * ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE));
 
         (void) memcpy((uint8_t *)rxBuffer, rxBuf, ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
 
         /* Clear new data flag */
+<#if RX_BUFFER_ELEMENTS gt 32>
         if (bufferNumber < 32U)
         {
             ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1UL << bufferNumber);
@@ -474,7 +479,9 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, CAN_RX_BUFFER *rx
         {
             ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1UL << (bufferNumber - 32U));
         }
-
+<#else>
+        ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1UL << bufferNumber);
+</#if>
         message_receive_event = true;
     }
     return message_receive_event;
@@ -791,6 +798,33 @@ void ${CAN_INSTANCE_NAME}_InterruptClear(CAN_INTERRUPT_MASK interruptMask)
    Returns:
     None
 */
+<#assign DEV_COUNT_11_3 = 0>
+<#if RXF0_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if RXF1_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if RXBUF_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if TX_USE || TXBUF_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 2>
+</#if>
+<#if FILTERS_STD?number gt 0>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if FILTERS_EXT?number gt 0>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+/* MISRA C-2012 Rule 11.3 violated ${DEV_COUNT_11_3} times below. Deviation record ID - H3_MISRAC_2012_R_11_3_DR_1*/
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate:${DEV_COUNT_11_3} "MISRA C-2012 Rule 11.3" "H3_MISRAC_2012_R_11_3_DR_1"
+</#if>
 void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 {
     uint32_t offset = 0U;
@@ -851,8 +885,8 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 </#if>
 <#if FILTERS_STD?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (can_sidfe_registers_t *)(msgRAMConfigBaseAddr + offset);
-    (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
-           (const void *)${CAN_INSTANCE_NAME?lower_case}StdFilter,
+    (void) memcpy((void*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
+           (const void*)${CAN_INSTANCE_NAME?lower_case}StdFilter,
            ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE);
     offset += ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE;
     /* Standard ID Filter Configuration Register */
@@ -862,8 +896,8 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 </#if>
 <#if FILTERS_EXT?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (can_xidfe_registers_t *)(msgRAMConfigBaseAddr + offset);
-    (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
-           (const void *)${CAN_INSTANCE_NAME?lower_case}ExtFilter,
+    (void) memcpy((void*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
+           (const void*)${CAN_INSTANCE_NAME?lower_case}ExtFilter,
            ${CAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE);
     /* Extended ID Filter Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_XIDFC = CAN_XIDFC_LSE(${FILTERS_EXT}UL) |
@@ -880,6 +914,14 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
         /* Wait for configuration complete */
     }
 }
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 11.3"
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
+</#if>
+/* MISRAC 2012 deviation block end for 11.3 */
+
 
 <#if FILTERS_STD?number gt 0>
 // *****************************************************************************
@@ -1033,6 +1075,159 @@ void ${CAN_INSTANCE_NAME}_SleepModeExit(void)
     {
         /* Wait for initialization complete */
     }
+}
+
+bool ${CAN_INSTANCE_NAME}_BitTimingCalculationGet(CAN_BIT_TIMING_SETUP *setup, CAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+    uint32_t numOfTimeQuanta;
+    uint8_t tseg1;
+    float temp1;
+    float temp2;
+
+    if ((setup != NULL) && (bitTiming != NULL))
+    {
+        if (setup->nominalBitTimingSet == true)
+        {
+            numOfTimeQuanta = ${CAN_INSTANCE_NAME}_CLOCK_FREQUENCY / (setup->nominalBitRate * ((uint32_t)setup->nominalPrescaler + 1U));
+            if ((numOfTimeQuanta >= 4U) && (numOfTimeQuanta <= 385U))
+            {
+                if (setup->nominalSamplePoint < 50.0f)
+                {
+                    setup->nominalSamplePoint = 50.0f;
+                }
+                temp1 = (float)numOfTimeQuanta;
+                temp2 = (temp1 * setup->nominalSamplePoint) / 100.0f;
+                tseg1 = (uint8_t)temp2;
+                bitTiming->nominalBitTiming.nominalTimeSegment2 = (uint8_t)(numOfTimeQuanta - tseg1 - 1U);
+                bitTiming->nominalBitTiming.nominalTimeSegment1 = tseg1 - 2U;
+                bitTiming->nominalBitTiming.nominalSJW = bitTiming->nominalBitTiming.nominalTimeSegment2;
+                bitTiming->nominalBitTiming.nominalPrescaler = setup->nominalPrescaler;
+                bitTiming->nominalBitTimingSet = true;
+                status = true;
+            }
+            else
+            {
+                bitTiming->nominalBitTimingSet = false;
+            }
+        }
+<#if CAN_OPMODE != "NORMAL">
+        if (setup->dataBitTimingSet == true)
+        {
+            numOfTimeQuanta = ${CAN_INSTANCE_NAME}_CLOCK_FREQUENCY / (setup->dataBitRate * ((uint32_t)setup->dataPrescaler + 1U));
+            if ((numOfTimeQuanta >= 4U) && (numOfTimeQuanta <= 49U))
+            {
+                if (setup->dataSamplePoint < 50.0f)
+                {
+                    setup->dataSamplePoint = 50.0f;
+                }
+                temp1 = (float)numOfTimeQuanta;
+                temp2 = (temp1 * setup->dataSamplePoint) / 100.0f;
+                tseg1 = (uint8_t)temp2;
+                bitTiming->dataBitTiming.dataTimeSegment2 = (uint8_t)(numOfTimeQuanta - tseg1 - 1U);
+                bitTiming->dataBitTiming.dataTimeSegment1 = tseg1 - 2U;
+                bitTiming->dataBitTiming.dataSJW = bitTiming->dataBitTiming.dataTimeSegment2;
+                bitTiming->dataBitTiming.dataPrescaler = setup->dataPrescaler;
+                bitTiming->dataBitTimingSet = true;
+                status = true;
+            }
+            else
+            {
+                bitTiming->dataBitTimingSet = false;
+                status = false;
+            }
+        }
+</#if>
+    }
+
+    return status;
+}
+
+bool ${CAN_INSTANCE_NAME}_BitTimingSet(CAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+    bool nominalBitTimingSet = false;
+<#if CAN_OPMODE != "NORMAL">
+    bool dataBitTimingSet = false;
+</#if>
+
+    if ((bitTiming->nominalBitTimingSet == true)
+    && (bitTiming->nominalBitTiming.nominalTimeSegment1 >= 0x1U)
+    && (bitTiming->nominalBitTiming.nominalTimeSegment2 <= 0x7FU)
+    && (bitTiming->nominalBitTiming.nominalPrescaler <= 0x1FFU)
+    && (bitTiming->nominalBitTiming.nominalSJW <= 0x7FU))
+    {
+        nominalBitTimingSet = true;
+    }
+
+<#if CAN_OPMODE != "NORMAL">
+    if  ((bitTiming->dataBitTimingSet == true)
+    &&  ((bitTiming->dataBitTiming.dataTimeSegment1 >= 0x1U) && (bitTiming->dataBitTiming.dataTimeSegment1 <= 0x1FU))
+    &&  (bitTiming->dataBitTiming.dataTimeSegment2 <= 0xFU)
+    &&  (bitTiming->dataBitTiming.dataPrescaler <= 0x1FU)
+    &&  (bitTiming->dataBitTiming.dataSJW <= 0xFU))
+    {
+        dataBitTimingSet = true;
+    }
+
+</#if>
+<#if CAN_OPMODE != "NORMAL">
+    if ((nominalBitTimingSet == true) || (dataBitTimingSet == true))
+<#else>
+    if (nominalBitTimingSet == true)
+</#if>
+    {
+        /* Start CAN initialization */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = CAN_CCCR_INIT_Msk;
+        while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) != CAN_CCCR_INIT_Msk)
+        {
+            /* Wait for initialization complete */
+        }
+
+        /* Set CCE to unlock the configuration registers */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_CCE_Msk;
+
+<#if CAN_OPMODE != "NORMAL">
+        if (dataBitTimingSet == true)
+        {
+            /* Set Data Bit Timing and Prescaler Register */
+            ${CAN_INSTANCE_NAME}_REGS->CAN_DBTP = CAN_DBTP_DTSEG2(bitTiming->dataBitTiming.dataTimeSegment2) | CAN_DBTP_DTSEG1(bitTiming->dataBitTiming.dataTimeSegment1) | CAN_DBTP_DBRP(bitTiming->dataBitTiming.dataPrescaler) | CAN_DBTP_DSJW(bitTiming->dataBitTiming.dataSJW);
+        }
+
+        if (nominalBitTimingSet == true)
+        {
+            /* Set Nominal Bit timing and Prescaler Register */
+            ${CAN_INSTANCE_NAME}_REGS->CAN_NBTP  = CAN_NBTP_NTSEG2(bitTiming->nominalBitTiming.nominalTimeSegment2) | CAN_NBTP_NTSEG1(bitTiming->nominalBitTiming.nominalTimeSegment1) | CAN_NBTP_NBRP(bitTiming->nominalBitTiming.nominalPrescaler) | CAN_NBTP_NSJW(bitTiming->nominalBitTiming.nominalSJW);
+        }
+<#else>
+        /* Set Nominal Bit timing and Prescaler Register */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_NBTP  = CAN_NBTP_NTSEG2(bitTiming->nominalBitTiming.nominalTimeSegment2) | CAN_NBTP_NTSEG1(bitTiming->nominalBitTiming.nominalTimeSegment1) | CAN_NBTP_NBRP(bitTiming->nominalBitTiming.nominalPrescaler) | CAN_NBTP_NSJW(bitTiming->nominalBitTiming.nominalSJW);
+</#if>
+
+        /* Set the operation mode */
+        <#if CAN_OPMODE != "NORMAL">
+        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_FDOE_Msk | CAN_CCCR_BRSE_Msk<#rt>
+                                               <#lt><#if CAN_OPMODE == "Restricted Operation Mode"> | CAN_CCCR_ASM_Msk</#if><#rt>
+                                               <#lt><#if CAN_OPMODE == "Bus Monitoring Mode"> | CAN_CCCR_MON_Msk</#if><#rt>
+                                               <#lt><#if CAN_OPMODE == "External Loop Back Mode"> | CAN_CCCR_TEST_Msk</#if><#rt>
+                                               <#lt><#if CAN_OPMODE == "Internal Loop Back Mode"> | CAN_CCCR_TEST_Msk | CAN_CCCR_MON_Msk</#if>;
+        </#if>
+        <#if TX_PAUSE == true>
+        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_TXP_Msk;
+        </#if>
+
+        <#if CAN_OPMODE == "External Loop Back Mode" || CAN_OPMODE == "Internal Loop Back Mode">
+        ${CAN_INSTANCE_NAME}_REGS->CAN_TEST |= CAN_TEST_LBCK_Msk;
+        </#if>
+
+        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR &= ~CAN_CCCR_INIT_Msk;
+        while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk)
+        {
+            /* Wait for initialization complete */
+        }
+        status = true;
+    }
+    return status;
 }
 
 /*******************************************************************************

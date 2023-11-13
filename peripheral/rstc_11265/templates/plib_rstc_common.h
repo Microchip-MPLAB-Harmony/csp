@@ -79,7 +79,7 @@
   Remarks:
     Currently processor reset is the sole stimulus.
 */
- 
+
 /* Processor reset */
 #define    RSTC_RESET_PROC      (RSTC_CR_PROCRST_Msk)
 

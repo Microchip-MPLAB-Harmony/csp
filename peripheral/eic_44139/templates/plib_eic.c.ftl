@@ -51,32 +51,47 @@
 </#if>
 #include "plib_${EIC_INSTANCE_NAME?lower_case}.h"
 
-#define EIC_SCFGR_POL_Pos                    8U                                             
-#define EIC_SCFGR_POL_Msk                    (1U << EIC_SCFGR_POL_Pos) 
+#define EIC_SCFGR_POL_Pos                    8U
+#define EIC_SCFGR_POL_Msk                    (1UL << EIC_SCFGR_POL_Pos)
 
-#define EIC_SCFGR_LVL_Pos                    9U                                  
-#define EIC_SCFGR_LVL_Msk                    (1U << EIC_SCFG0R_LVL_Pos) 
+#define EIC_SCFGR_LVL_Pos                    9U
+#define EIC_SCFGR_LVL_Msk                    (1UL << EIC_SCFG0R_LVL_Pos)
 
-#define EIC_SCFGR_EN_Pos                     16U                                              
-#define EIC_SCFGR_EN_Msk                     (1U << EIC_SCFGR_EN_Pos)
+#define EIC_SCFGR_EN_Pos                     16U
+#define EIC_SCFGR_EN_Msk                     (1UL << EIC_SCFGR_EN_Pos)
 
-#define EIC_SCFGR_FRZ_Pos                    31U                                              
-#define EIC_SCFGR_FRZ_Msk                    (1U << EIC_SCFGR_FRZ_Pos)
+#define EIC_SCFGR_FRZ_Pos                    31U
+#define EIC_SCFGR_FRZ_Msk                    (1UL << EIC_SCFGR_FRZ_Pos)
 
+/* MISRA C-2012 Rule 7.2 violated ${EIC_NUM_INTERRUPTS} times below. Deviation record ID - H3_MISRAC_2012_R_7_2_DR_1*/
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate:${EIC_NUM_INTERRUPTS} "MISRA C-2012 Rule 7.2" "H3_MISRAC_2012_R_7_2_DR_1"
+</#if>
 
-static struct
+volatile static struct
 {
     volatile uint32_t* const pSCFGR;
     bool active;
     EIC_CALLBACK callback;
     uintptr_t context;
-}eicData[] = 
+}eicData[] =
 {
 <#list 0..EIC_NUM_INTERRUPTS - 1 as index>
-    {&(${EIC_INSTANCE_NAME}_REGS->EIC_SCFG${index}R), false, NULL, 0U},
+    {(volatile uint32_t* const)(${EIC_INSTANCE_NAME}_BASE_ADDRESS + EIC_SCFG${index}R_REG_OFST), false, NULL, 0U},
 </#list>
 };
 
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 7.2"
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
+</#if>
+/* MISRAC 2012 deviation block end for Rule 7.2 */
 
 void ${EIC_INSTANCE_NAME}_Initialize(void)
 {
@@ -143,7 +158,7 @@ void ${EIC_INSTANCE_NAME}_Initialize(void)
 
 </#list>
     /**************************************************************************/
- 
+
     /* Enable Write protection */
     ${EIC_INSTANCE_NAME}_REGS->EIC_WPMR = (EIC_WPMR_WPKEY_PASSWD | EIC_WPMR_WPCFEN_Msk);
 }
@@ -167,10 +182,10 @@ bool ${EIC_INSTANCE_NAME}_InterruptEnable(EIC_PIN pin)
         {
             /* Disable Write protection */
             ${EIC_INSTANCE_NAME}_REGS->EIC_WPMR = EIC_WPMR_WPKEY_PASSWD;
-            
+
             /* Enable interrupt */
             *eicData[pin].pSCFGR |= EIC_SCFGR_EN_Msk;
-            
+
             /* Enable Write protection */
             ${EIC_INSTANCE_NAME}_REGS->EIC_WPMR = (EIC_WPMR_WPKEY_PASSWD | EIC_WPMR_WPCFEN_Msk);
             retVal = true;
@@ -191,10 +206,10 @@ bool ${EIC_INSTANCE_NAME}_InterruptDisable(EIC_PIN pin)
         {
             /* Disable Write protection */
             ${EIC_INSTANCE_NAME}_REGS->EIC_WPMR = EIC_WPMR_WPKEY_PASSWD;
-            
+
             /* Disable interrupt */
             *eicData[pin].pSCFGR &= ~(EIC_SCFGR_EN_Msk);
-            
+
             /* Enable Write protection */
             ${EIC_INSTANCE_NAME}_REGS->EIC_WPMR = (EIC_WPMR_WPKEY_PASSWD | EIC_WPMR_WPCFEN_Msk);
             retVal = true;
@@ -215,7 +230,7 @@ bool ${EIC_INSTANCE_NAME}_SetPolarity(EIC_PIN pin, EIC_POLARITY polarity)
         {
             /* Disable Write protection */
             ${EIC_INSTANCE_NAME}_REGS->EIC_WPMR = EIC_WPMR_WPKEY_PASSWD;
-            
+
             /* Set Falling edge/Active Low */
             if (polarity == EIC_POLARITY_FALLING_EDGE)
             {
@@ -262,11 +277,14 @@ bool ${EIC_INSTANCE_NAME}_FreezeConfiguration(EIC_PIN pin)
 
 <#list 0..EIC_NUM_INTERRUPTS - 1 as index>
 <#if  .vars["EIC_SRCx_ACTIVATE"?replace("x", index)]>
-void EIC_EXT_IRQ${index}_InterruptHandler(void)
+void __attribute__((used)) EIC_EXT_IRQ${index}_InterruptHandler(void)
 {
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context = eicData[${index}].context;
+
     if (eicData[${index}].callback != NULL)
     {
-       eicData[${index}].callback(eicData[${index}].context);
+       eicData[${index}].callback(context);
     }
 }
 

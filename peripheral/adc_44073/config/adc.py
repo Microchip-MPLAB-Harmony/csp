@@ -684,3 +684,7 @@ def instantiateComponent(adcComponent):
     adcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     adcSystemDefFile.setSourcePath("../peripheral/adc_"+str(adcID)+"/templates/system/definitions.h.ftl")
     adcSystemDefFile.setMarkup(True)
+    
+    #Load ADC plugin
+    adcComponent.addPlugin("../peripheral/adc_44073/plugin/adc_44073.jar")
+

@@ -66,7 +66,7 @@ void ${ACC_INSTANCE_NAME}_Initialize(void);
 void ${ACC_INSTANCE_NAME}_Enable(void);
 void ${ACC_INSTANCE_NAME}_Disable(void);
 <#if ACC_INTERRUPT_ENABLE>
-void ${ACC_INSTANCE_NAME}_CallbackRegister(ACC_CALLBACK callback, uintptr_t context);
+void ${ACC_INSTANCE_NAME}_CallbackRegister(ACC_CALLBACK pCallback, uintptr_t context);
 <#else>
 bool ${ACC_INSTANCE_NAME}_StatusGet(ACC_STATUS_SOURCE status);
 </#if>

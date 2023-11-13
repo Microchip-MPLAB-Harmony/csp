@@ -40,9 +40,10 @@ def tccComparePeriodCalc(symbol, event):
         wave = tccSym_Compare_WAVE_WAVEGEN.getSelectedKey()
         if (wave == "MFRQ" or wave == "NPWM" or wave == "NFRQ"):
             slope = 1
+            period = tccSym_ComparePeriod.getValue() - 1
         else:
             slope = 2
-        period = tccSym_ComparePeriod.getValue()
+            period = tccSym_ComparePeriod.getValue()
         time = period * slope * resolution
     else:
         time = 0
@@ -197,7 +198,7 @@ if clk_freq != 0:
         slope = 1
     else:
         slope = 2
-    time = tccSym_ComparePeriod.getValue() * resolution * slope
+    time = (tccSym_ComparePeriod.getValue() -1) * resolution * slope
 else:
     time = 0
 tccSym_ComparePeriod_Comment = tccComponent.createCommentSymbol("TCC_COMPARE_PERIOD_COMMENT", tccSym_CompareMenu)

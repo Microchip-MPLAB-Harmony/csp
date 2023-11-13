@@ -41,7 +41,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "interrupts.h"
 </#if>
 
-static NMIC_OBJECT nmic;
+volatile static NMIC_OBJECT nmic;
 
 void ${NMIC_INSTANCE_NAME}_Initialize( void )
 {
@@ -76,11 +76,12 @@ void ${NMIC_INSTANCE_NAME}_CallbackRegister( NMIC_CALLBACK callback, uintptr_t c
 }
 
 
-void ${NMIC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${NMIC_INSTANCE_NAME}_InterruptHandler( void )
 {
 	volatile uint32_t status = NMIC_REGS->NMIC_ISR;
 	if(nmic.callback != NULL)
     {
-        nmic.callback(nmic.context, status);
+        uintptr_t context = nmic.context;
+        nmic.callback(context, status);
     }
 }

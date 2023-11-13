@@ -85,9 +85,9 @@
 void CLK_Initialize( void )
 {
     /* unlock system for clock configuration */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
 <#if SYS_CLK_FRCDIV != "0">
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
@@ -211,7 +211,7 @@ void CLK_Initialize( void )
     </#if>
     <#if (.vars[REFCLKOE]?has_content) && (.vars[REFCLKOE] == true)>
         <#lt>    /* Enable oscillator (ON bit) and Enable Output (OE bit) */
-        <#lt>    ${.vars[REFCONREG]}SET = ${.vars[OEMASK]} | ${.vars[ONMASK]};
+        <#lt>    ${.vars[REFCONREG]}SET = ${.vars[OEMASK]}U | ${.vars[ONMASK]}U;
 
     <#else>
         <#lt>    /* Enable oscillator (ON bit) */
@@ -233,11 +233,17 @@ void CLK_Initialize( void )
 
     CFGMPLLbits.MPLLVREGDIS = ${CLK_MPLLVREGDIS_BIT_VALUE};
 
-    while(!(CFGMPLLbits.MPLLVREGRDY));
+    while(CFGMPLLbits.MPLLVREGRDY == 0U)
+    {
+        /* Wait for completion */
+    }
 
     CFGMPLL = ${CLK_CFGMPLL_REGVALUE};
 
-    while(!(CFGMPLLbits.MPLLRDY));
+    while(CFGMPLLbits.MPLLRDY == 0U)
+    {
+        /* Wait for completion */
+    }
 </#if>
 </#if>  <#-- CONFIG_HAVE_REFCLOCK == true -->
 
@@ -250,7 +256,7 @@ void CLK_Initialize( void )
 <#list 1..PMD_COUNT + 1 as i>
     <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
     <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
-        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]};
+        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]}U;
     </#if>
 </#list>
 
@@ -259,5 +265,5 @@ void CLK_Initialize( void )
 </#if>
 
     /* Lock system since done with clock configuration */
-    SYSKEY = 0x33333333;
+    SYSKEY = 0x33333333U;
 }

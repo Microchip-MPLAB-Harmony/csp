@@ -151,7 +151,7 @@
 // *****************************************************************************
 
 <#if SDADC_INTERRUPT_MODE == true>
-static SDADC_CALLBACK_OBJECT ${SDADC_INSTANCE_NAME}_CallbackObj;
+volatile static SDADC_CALLBACK_OBJECT ${SDADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -184,7 +184,7 @@ void ${SDADC_INSTANCE_NAME}_Initialize( void )
     ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLC = (uint8_t)SDADC_CTRLC_FREERUN_Msk;
     </#if>
     <#if SDADC_SEQCTRL_VAL?has_content>
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_SEQCTRL = ${SDADC_SEQCTRL_VAL}U;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_SEQCTRL = ${SDADC_SEQCTRL_VAL};
     </#if>
     <#if SDADC_AUTO_SEQUENCE == false>
     /* Configure positive and negative input pins */
@@ -230,7 +230,7 @@ void ${SDADC_INSTANCE_NAME}_Enable( void )
     while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_ENABLE_Msk) == SDADC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for synchronization */
-    }    
+    }
 }
 
 void ${SDADC_INSTANCE_NAME}_Disable( void )
@@ -239,7 +239,7 @@ void ${SDADC_INSTANCE_NAME}_Disable( void )
     while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_ENABLE_Msk) == SDADC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for synchronization */
-    }    
+    }
 }
 
 <#if SDADC_TRIGGER == "1"> <#-- SW trigger -->
@@ -296,7 +296,7 @@ void ${SDADC_INSTANCE_NAME}_CallbackRegister( SDADC_CALLBACK callback, uintptr_t
 }
 
 
-void ${SDADC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${SDADC_INSTANCE_NAME}_InterruptHandler( void )
 {
     SDADC_STATUS status;
     status = ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG;
@@ -305,7 +305,8 @@ void ${SDADC_INSTANCE_NAME}_InterruptHandler( void )
 
     if (${SDADC_INSTANCE_NAME}_CallbackObj.callback != NULL)
     {
-        ${SDADC_INSTANCE_NAME}_CallbackObj.callback(status, ${SDADC_INSTANCE_NAME}_CallbackObj.context);
+        uintptr_t context = ${SDADC_INSTANCE_NAME}_CallbackObj.context;
+        ${SDADC_INSTANCE_NAME}_CallbackObj.callback(status, context);
     }
 
 }

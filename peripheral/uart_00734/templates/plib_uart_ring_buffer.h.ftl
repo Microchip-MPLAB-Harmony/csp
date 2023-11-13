@@ -72,6 +72,10 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
 
 UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void );
 
+bool ${UART_INSTANCE_NAME}_AutoBaudQuery( void );
+
+void ${UART_INSTANCE_NAME}_AutoBaudSet( bool enable );
+
 size_t ${UART_INSTANCE_NAME}_Write(uint8_t* pWrBuffer, const size_t size );
 
 size_t ${UART_INSTANCE_NAME}_WriteCountGet(void);

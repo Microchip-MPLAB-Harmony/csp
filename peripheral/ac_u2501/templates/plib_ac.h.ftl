@@ -65,7 +65,10 @@ typedef enum
 {
 <#list 0 ..(AC_NUM_COMPARATORS -1) as i >
     <#assign CH_NUM = i>
+    <#assign AC_CMP_NUM = "AC_COMP_ID_ENUM_"+i>
+    <#if .vars[AC_CMP_NUM] != "-1">
     ${AC_INSTANCE_NAME}_CHANNEL${CH_NUM} = ${CH_NUM},
+    </#if>
 </#list>
 }AC_CHANNEL;
 
@@ -91,14 +94,6 @@ typedef enum
 }AC_NEGINPUT;
 
 typedef void (*${AC_INSTANCE_NAME}_CALLBACK) (uint8_t int_flags, uintptr_t context);
-
-typedef struct
-{
-    uint8_t int_flags;
-    AC_CALLBACK callback;
-    uintptr_t    context;
-
-} AC_OBJECT ;
 
 <#assign AC_SCALER_REG_PRESENT = false>
 

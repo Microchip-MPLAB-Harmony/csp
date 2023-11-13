@@ -194,7 +194,7 @@
 
 <#if ADC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize ADC peripheral */
@@ -348,13 +348,14 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t con
 }
 
 /* Interrupt Handler */
-void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status = ${ADC_INSTANCE_NAME}_REGS->ADC_ISR;
 
     if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${ADC_INSTANCE_NAME}_CallbackObj.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObj.context;
+        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(status, context);
     }
 }
 <#else>

@@ -45,7 +45,7 @@
 #include "plib_systick.h"
 
 <#if USE_SYSTICK_SECURE_INTERRUPT == true>
-    <#lt>static SYSTICK_OBJECT systick;
+    <#lt>volatile static SYSTICK_OBJECT systick;
 </#if>
 
 void SYSTICK_TimerInitialize ( void )
@@ -140,6 +140,7 @@ void SYSTICK_DelayMs ( uint32_t delay_ms)
 
 void SYSTICK_DelayUs ( uint32_t delay_us)
 {
+
    uint32_t elapsedCount=0U, delayCount;
    uint32_t deltaCount, oldCount, newCount, period;
 
@@ -204,12 +205,15 @@ void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
    systick.context = context;
 }
 
-void SysTick_Handler(void)
+void __attribute__((used)) SysTick_Handler(void)
 {
-   systick.tickCounter++;
-   if(systick.callback != NULL)
-   {
-       systick.callback(systick.context);
-   }
+    uintptr_t context_var;
+
+    systick.tickCounter++;
+    if(systick.callback != NULL)
+    {
+        context_var = systick.context;
+        systick.callback(context_var);
+    }
 }
 </#if>

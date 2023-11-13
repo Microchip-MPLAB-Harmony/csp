@@ -51,9 +51,12 @@
 
 #include "device.h"
 #include "plib_${CCP_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if CCP_TIMER_INTERRUPT == true>
-static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}Obj;
+volatile static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 
@@ -132,14 +135,16 @@ uint32_t ${CCP_INSTANCE_NAME}_TimerFrequencyGet(void)
 }
 
 <#if CCP_TIMER_INTERRUPT == true>
-void CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
 {
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context = ${CCP_INSTANCE_NAME?lower_case}Obj.context;
     uint32_t status = ${CCP_IFS_REG}bits.CCT${CCP_INSTANCE_NUM}IF;
     ${CCP_IFS_REG}CLR = _${CCP_IFS_REG}_CCT${CCP_INSTANCE_NUM}IF_MASK;
 
     if((${CCP_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL))
     {
-        ${CCP_INSTANCE_NAME?lower_case}Obj.callback_fn(status, ${CCP_INSTANCE_NAME?lower_case}Obj.context);
+        ${CCP_INSTANCE_NAME?lower_case}Obj.callback_fn(status, context);
     }
 }
 
@@ -147,13 +152,13 @@ void CCT${CCP_INSTANCE_NUM}_InterruptHandler (void)
 void ${CCP_INSTANCE_NAME}_TimerInterruptEnable(void)
 {
 
-    ${CCP_IEC_REG}SET = _${CCP_IEC_REG}_CCP${CCP_INSTANCE_NUM}IE_MASK;
+    ${CCP_IEC_REG}SET = _${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
 }
 
 
 void ${CCP_INSTANCE_NAME}_TimerInterruptDisable(void)
 {
-    ${CCP_IEC_REG}CLR = _${CCP_IEC_REG}_CCP${CCP_INSTANCE_NUM}IE_MASK;
+    ${CCP_IEC_REG}CLR = _${CCP_IEC_REG}_CCT${CCP_INSTANCE_NUM}IE_MASK;
 }
 
 

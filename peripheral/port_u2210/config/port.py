@@ -114,7 +114,12 @@ def setupPortPINCFG(usePortLocalPINCFG, event):
         bitPosition = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
         pullEnable = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_PULLEN")
         inputEnable = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_INEN")
-        driveStrength = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_DRVSTR")
+        if (Database.getSymbolValue("core", "PORT_GROUP_PINCFG_ODRAIN")) == True:
+            openDrain = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_ODRAIN")
+        if (Database.getSymbolValue("core", "PORT_GROUP_PINCFG_SLEWRATE")) == True:
+            slewRate = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_SLEWRATE")
+        if (Database.getSymbolValue("core", "PORT_GROUP_PINCFG_DRVSTR")) == True:
+            driveStrength = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_DRVSTR")
         peripheralFunc = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) +"_PERIPHERAL_FUNCTION")
 
 
@@ -130,10 +135,18 @@ def setupPortPINCFG(usePortLocalPINCFG, event):
                 cfgValue |= (1 << 1)
             if inputEnable == "False":
                 cfgValue &= ~ (1 << 1)
-            if driveStrength == 0:
-                cfgValue &= ~(1 << 6)
-            elif driveStrength == 1:
-                cfgValue |= (1 << 6)
+            if (Database.getSymbolValue("core", "PORT_GROUP_PINCFG_ODRAIN")) == True:
+                if openDrain:
+                    cfgValue |= (1 << 3)
+                if openDrain == "False":
+                    cfgValue &= ~ (1 << 3)
+            if (Database.getSymbolValue("core", "PORT_GROUP_PINCFG_SLEWRATE")) == True:
+                cfgValue |= (slewRate << 4)
+            if (Database.getSymbolValue("core", "PORT_GROUP_PINCFG_DRVSTR")) == True:
+                if driveStrength == 0:
+                    cfgValue &= ~(1 << 6)
+                elif driveStrength == 1:
+                    cfgValue |= (1 << 6)
             if peripheralFunc not in peripheralFunctionality and peripheralFunc != "":
                 cfgValue |= (1 << 0)
             else :
@@ -214,6 +227,7 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
     global prevID
     global prevVal
     global portPackage
+
     component = event["source"]
     groupName = component.getSymbolValue("PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
     #This is a port pin (belongs to a port group)
@@ -232,12 +246,15 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
             component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(peripheralFuncVal)), 1)
         else :
             pinMuxVal = component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
+            initVal = int(component.getSymbolByID("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2)).getDefaultValue(),0)
             intPrePinMuxVal = int(pinMuxVal,0)
 
             if ((bitPosition%2) == 0):
                 intPrePinMuxVal &= 0xf0
+                intPrePinMuxVal |= (initVal & 0x0f)
             else :
                 intPrePinMuxVal &= 0x0f
+                intPrePinMuxVal |= (initVal & 0xf0)
 
             component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)))
 
@@ -274,6 +291,8 @@ global pincount
 pincount = 0
 ## Number of unique pinouts
 global uniquePinout
+global swdPin
+
 uniquePinout = 1
 portMenu = coreComponent.createMenuSymbol("PORT_MENU", None)
 portMenu.setLabel("Ports")
@@ -354,6 +373,8 @@ pinLatch = []
 pinPullEnable = []
 pinInputEnable = []
 pinDrvStr = []
+pinSlewRate = []
+pinOpenDrain = []
 pinDirList = []
 pinLatchList = []
 pinPinMuxList = []
@@ -390,12 +411,27 @@ portSym_PinMaxIndex = coreComponent.createIntegerSymbol("PORT_PIN_MAX_INDEX", No
 portSym_PinMaxIndex.setVisible(False)
 max_index = 0
 
+portPINCFGOpenDrain = coreComponent.createBooleanSymbol("PORT_GROUP_PINCFG_ODRAIN", None)
+portPINCFGOpenDrain.setDefaultValue((ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]/register-group@[name=\"GROUP\"]/register@[name=\"PINCFG\"]/bitfield@[name=\"ODRAIN\"]") != None))
+portPINCFGOpenDrain.setVisible(False)
+
+portPINCFGSlewRate = coreComponent.createBooleanSymbol("PORT_GROUP_PINCFG_SLEWRATE", None)
+portPINCFGSlewRate.setDefaultValue((ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]/register-group@[name=\"GROUP\"]/register@[name=\"PINCFG\"]/bitfield@[name=\"SLEWLIM\"]") != None))
+portPINCFGSlewRate.setVisible(False)
+
+portPINCFGDriverStrength = coreComponent.createBooleanSymbol("PORT_GROUP_PINCFG_DRVSTR", None)
+portPINCFGDriverStrength.setDefaultValue((ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]/register-group@[name=\"GROUP\"]/register@[name=\"PINCFG\"]/bitfield@[name=\"DRVSTR\"]") != None))
+portPINCFGDriverStrength.setVisible(False)
+
 for pinNumber in range(1, internalPincount + 1):
 
     if pinNumber < pincount + 1:
         pinPad = str(pin_map.get(pin_position[pinNumber-1]))
     else:
         pinPad = str(pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]))
+
+    portSym_PinIndexTz = coreComponent.createIntegerSymbol("PORT_PIN_INDEX_TZ_" + str(pinNumber), None)
+    portSym_PinIndexTz.setVisible(False)
 
     portSignalNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/signals/signal@[pad=\""+ pinPad +"\"]")
 
@@ -412,6 +448,9 @@ for pinNumber in range(1, internalPincount + 1):
             portSym_PinIndex = coreComponent.createIntegerSymbol("PORT_PIN_INDEX_" + str(signalIndex), None)
             portSym_PinIndex.setVisible(False)
             portSym_PinIndex.setDefaultValue(signalIndex)
+
+            portSym_PinIndexTz.setDefaultValue(signalIndex)
+
             if signalIndex > max_index:
                 max_index = signalIndex
 
@@ -507,13 +546,34 @@ for pinNumber in range(1, internalPincount + 1):
     pinInputEnable[pinNumber-1].setLabel("Input Enable")
     pinInputEnable[pinNumber-1].setReadOnly(True)
 
-    pinDrvStr.append(pinNumber)
-    pinDrvStr[pinNumber-1] = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_DRVSTR", pin[pinNumber-1])
-    pinDrvStr[pinNumber-1].setLabel("Drive Strength")
-    pinDrvStr[pinNumber-1].setDisplayMode("Key")
-    pinDrvStr[pinNumber-1].addKey("NORMAL", "0", "Normal")
-    pinDrvStr[pinNumber-1].addKey("STRONG", "1", "Strong")
-    pinDrvStr[pinNumber-1].setReadOnly(True)
+    if portPINCFGOpenDrain.getValue() == True:
+        pinOpenDrain.append(pinNumber)
+        pinOpenDrain[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_ODRAIN", pin[pinNumber-1])
+        pinOpenDrain[pinNumber-1].setLabel("Open Drain")
+        pinOpenDrain[pinNumber-1].setReadOnly(True)
+
+    if portPINCFGSlewRate.getValue() == True:
+        portSLEWLIMValueGroupNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]/value-group@[name=\"PINCFG__SLEWLIM\"]")
+        if portSLEWLIMValueGroupNode != None:
+            pinSlewRate.append(pinNumber)
+            pinSlewRate[pinNumber-1] = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_SLEWRATE", pin[pinNumber-1])
+            pinSlewRate[pinNumber-1].setLabel("Slew Rate")
+            pinSlewRate[pinNumber-1].setDisplayMode("Key")
+            for index in range(0, len(portSLEWLIMValueGroupNode.getChildren())):
+                portSLEWLIMKeyName = portSLEWLIMValueGroupNode.getChildren()[index].getAttribute("name")
+                portSLEWLIMValue = portSLEWLIMValueGroupNode.getChildren()[index].getAttribute("value")
+                portSLEWLIMDescription = portSLEWLIMValueGroupNode.getChildren()[index].getAttribute("caption")
+                pinSlewRate[pinNumber-1].addKey(portSLEWLIMKeyName, portSLEWLIMValue, portSLEWLIMDescription)
+            pinSlewRate[pinNumber-1].setReadOnly(True)
+
+    if portPINCFGDriverStrength.getValue() == True:
+        pinDrvStr.append(pinNumber)
+        pinDrvStr[pinNumber-1] = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_DRVSTR", pin[pinNumber-1])
+        pinDrvStr[pinNumber-1].setLabel("Drive Strength")
+        pinDrvStr[pinNumber-1].setDisplayMode("Key")
+        pinDrvStr[pinNumber-1].addKey("NORMAL", "0", "Normal")
+        pinDrvStr[pinNumber-1].addKey("STRONG", "1", "Strong")
+        pinDrvStr[pinNumber-1].setReadOnly(True)
 
     #creating list for direction dependency
     pinDirList.append(pinNumber)
@@ -531,7 +591,7 @@ for pinNumber in range(1, internalPincount + 1):
     portSym_PIN_PINCFG[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_CFG", pin[pinNumber-1])
     portSym_PIN_PINCFG[pinNumber-1].setReadOnly(True)
     portSym_PIN_PINCFG[pinNumber-1].setVisible(False)
-    portSym_PIN_PINCFG[pinNumber-1].setDependencies(setupPortPINCFG, ["PIN_" + str(pinNumber) +"_INEN", "PIN_" + str(pinNumber) +"_PULLEN", "PIN_" + str(pinNumber) +"_PERIPHERAL_FUNCTION", "PIN_" + str(pinNumber) + "_DRVSTR"])
+    portSym_PIN_PINCFG[pinNumber-1].setDependencies(setupPortPINCFG, ["PIN_" + str(pinNumber) +"_INEN", "PIN_" + str(pinNumber) +"_PULLEN", "PIN_" + str(pinNumber) +"_PERIPHERAL_FUNCTION", "PIN_" + str(pinNumber) + "_DRVSTR", "PIN_" + str(pinNumber) + "_ODRAIN", "PIN_" + str(pinNumber) + "_SLEWRATE"])
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         pinSecurity = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_IS_NON_SECURE", pin[pinNumber-1])
@@ -643,7 +703,18 @@ for portNumber in range(0, len(group)):
     for pinNum in range(0, 16):
         portSym_PORT_PMUX = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PMUX" + str(pinNum) , port[portNumber])
         portSym_PORT_PMUX.setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " PMUX" + str(pinNum))
-        portSym_PORT_PMUX.setDefaultValue(str(hex(0)))
+
+        defaultVal = str(hex(0))
+        portPinEven = "P" + chr(ord("A") + portNumber) + str(pinNum * 2)
+        portPinOdd = "P" + chr(ord("A") + portNumber) + str((pinNum * 2) + 1)
+
+        # Overwrite default value of 0 for pins whose init value is not zero at POR
+        if portPinEven in swdPin.keys():
+            defaultVal = swdPin[portPinEven]
+        if portPinOdd in swdPin.keys():
+            defaultVal = str((hex(int(defaultVal, 16) | (int(swdPin[portPinOdd], 16) << 4))))
+
+        portSym_PORT_PMUX.setDefaultValue(defaultVal)
         portSym_PORT_PMUX.setVisible(visibility)
         portSym_PORT_PMUX.setDependencies(setupPortPinMux, pinPinMuxList)
 

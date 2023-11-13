@@ -61,7 +61,7 @@ typedef struct
 }rstcCallback_t;
 
 
-static rstcCallback_t rstcCallbackObj;
+volatile static rstcCallback_t rstcCallbackObj;
 </#if>
 <#if CPU_CORE_ID?? && CPU_CORE_ID == 0>
 
@@ -179,14 +179,15 @@ void ${RSTC_INSTANCE_NAME}_CallbackRegister(RSTC_CALLBACK pCallback, uintptr_t c
 }
 
 
-void ${RSTC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${RSTC_INSTANCE_NAME}_InterruptHandler(void)
 {
     // Clear the interrupt flag
     ${RSTC_INSTANCE_NAME}_REGS->RSTC_SR;
 
     if (rstcCallbackObj.pCallback != NULL)
     {
-        rstcCallbackObj.pCallback(rstcCallbackObj.context);
+        uintptr_t context = rstcCallbackObj.context;
+        rstcCallbackObj.pCallback(context);
     }
 }
 </#if>

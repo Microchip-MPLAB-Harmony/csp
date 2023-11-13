@@ -40,6 +40,9 @@
 *******************************************************************************/
 
 #include "plib_${SPI_INSTANCE_NAME?lower_case}_master.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -49,17 +52,17 @@
 
 <#if SPI_INTERRUPT_MODE == true>
 /* Global object to save SPI Exchange related data */
-SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
+volatile static SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
-#define ${SPI_INSTANCE_NAME}_CON_MSTEN                      (${SPI_MSTR_MODE_EN} << _${SPI_INSTANCE_NAME}CON_MSTEN_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_CKP                        (${SPI_SPICON_CLK_POL} << _${SPI_INSTANCE_NAME}CON_CKP_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_CKE                        (${SPI_SPICON_CLK_PH} << _${SPI_INSTANCE_NAME}CON_CKE_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16            (${SPI_SPICON_MODE} << _${SPI_INSTANCE_NAME}CON_MODE16_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_ENHBUF                     (1 << _${SPI_INSTANCE_NAME}CON_ENHBUF_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_MCLKSEL                    (${SPI_MASTER_CLOCK} << _${SPI_INSTANCE_NAME}CON_MCLKSEL_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_MSSEN                      (${SPI_SPICON_MSSEN} << _${SPI_INSTANCE_NAME}CON_MSSEN_POSITION)
-#define ${SPI_INSTANCE_NAME}_CON_SMP                        (${SPI_SPICON_SMP} << _${SPI_INSTANCE_NAME}CON_SMP_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_MSTEN                      (${SPI_MSTR_MODE_EN}UL << _${SPI_INSTANCE_NAME}CON_MSTEN_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_CKP                        (${SPI_SPICON_CLK_POL}UL << _${SPI_INSTANCE_NAME}CON_CKP_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_CKE                        (${SPI_SPICON_CLK_PH}UL << _${SPI_INSTANCE_NAME}CON_CKE_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16            (${SPI_SPICON_MODE}UL << _${SPI_INSTANCE_NAME}CON_MODE16_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_ENHBUF                     (1UL << _${SPI_INSTANCE_NAME}CON_ENHBUF_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_MCLKSEL                    (${SPI_MASTER_CLOCK}UL << _${SPI_INSTANCE_NAME}CON_MCLKSEL_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_MSSEN                      (${SPI_SPICON_MSSEN}UL << _${SPI_INSTANCE_NAME}CON_MSSEN_POSITION)
+#define ${SPI_INSTANCE_NAME}_CON_SMP                        (${SPI_SPICON_SMP}UL << _${SPI_INSTANCE_NAME}CON_SMP_POSITION)
 
 void ${SPI_INSTANCE_NAME}_Initialize ( void )
 {
@@ -122,12 +125,12 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spi
     uint32_t errorHigh;
     uint32_t errorLow;
 
-    if ((setup == NULL) || (setup->clockFrequency == 0))
+    if ((setup == NULL) || (setup->clockFrequency == 0U))
     {
         return false;
     }
 
-    if(spiSourceClock == 0)
+    if(spiSourceClock == 0U)
     {
         // Use Master Clock Frequency set in GUI
         spiSourceClock = ${spiClockSymbol?eval};
@@ -144,14 +147,14 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spi
         t_brg++;
     }
 
-    if(t_brg > ${SPI_MAX_BRG})
+    if(t_brg > ${SPI_MAX_BRG}U)
     {
         return false;
     }
 
     ${SPI_INSTANCE_NAME}BRG = t_brg;
     ${SPI_INSTANCE_NAME}CON = (${SPI_INSTANCE_NAME}CON & (~(_${SPI_INSTANCE_NAME}CON_MODE16_MASK | _${SPI_INSTANCE_NAME}CON_MODE32_MASK | _${SPI_INSTANCE_NAME}CON_CKP_MASK | _${SPI_INSTANCE_NAME}CON_CKE_MASK))) |
-                            (setup->clockPolarity | setup->clockPhase | setup->dataBits);
+                            ((uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits);
 
     return true;
 }
@@ -168,7 +171,7 @@ bool ${SPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize)
 
 bool ${SPI_INSTANCE_NAME}_IsTransmitterBusy (void)
 {
-    return ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == 0)? true : false;
+    return ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == 0U)? true : false;
 }
 
 <#if SPI_INTERRUPT_MODE == false>
@@ -182,7 +185,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
     bool isSuccess = false;
 
     /* Verify the request */
-    if (((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL)))
+    if (((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL)))
     {
         if (pTransmitData == NULL)
         {
@@ -197,9 +200,9 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
 
         /* Flush out any unread data in SPI read buffer from the previous transfer */
-        while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == false)
+        while ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == 0U)
         {
-            receivedData = ${SPI_INSTANCE_NAME}BUF;
+            (void)${SPI_INSTANCE_NAME}BUF;
         }
 
         if (rxSize > txSize)
@@ -221,31 +224,42 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
             txSize >>= 1;
             dummySize >>= 1;
         }
+        else
+        {
+             /* Nothing to process */
+        }
 
-        /* Make sure transmit buffer is empty */
-        while((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == false);
+        while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == 0U)
+        {
+            /* Wait for transmit buffer to be empty */
+        }
 
-        while ((txCount != txSize) || (dummySize != 0))
+        while ((txCount != txSize) || (dummySize != 0U))
         {
             if (txCount != txSize)
             {
                 if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
                 {
-                    ${SPI_INSTANCE_NAME}BUF = ((uint32_t*)pTransmitData)[txCount++];
+                    ${SPI_INSTANCE_NAME}BUF = ((uint32_t*)pTransmitData)[txCount];
                 }
                 else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
                 {
-                    ${SPI_INSTANCE_NAME}BUF = ((uint16_t*)pTransmitData)[txCount++];
+                    ${SPI_INSTANCE_NAME}BUF = ((uint16_t*)pTransmitData)[txCount];
                 }
                 else
                 {
-                    ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)pTransmitData)[txCount++];
+                    ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)pTransmitData)[txCount];
                 }
+                txCount++;
             }
-            else if (dummySize > 0)
+            else if (dummySize > 0U)
             {
                 ${SPI_INSTANCE_NAME}BUF = 0x${SPI_DUMMY_DATA};
                 dummySize--;
+            }
+            else
+            {
+                 /* Nothing to process */
             }
 
             if (rxCount == rxSize)
@@ -253,19 +267,25 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                 /* If inside this if condition, then it means that txSize > rxSize and all RX bytes are received */
 
                 /* For transmit only request, wait for buffer to become empty */
-                while((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == false);
+                while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == 0U)
+                {
+                    /* Wait for buffer empty */
+                }
 
                 /* Read until the receive buffer is not empty */
-                while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == false)
+                while ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == 0U)
                 {
-                    receivedData = ${SPI_INSTANCE_NAME}BUF;
+                    (void)${SPI_INSTANCE_NAME}BUF;
                     dummyRxCntr++;
                 }
             }
             else
             {
                 /* If data is read, wait for the Receiver Data the data to become available */
-                while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK);
+                while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK)
+                {
+                  /* Do Nothing */
+                }
 
                 /* We have data waiting in the SPI buffer */
                 receivedData = ${SPI_INSTANCE_NAME}BUF;
@@ -274,23 +294,28 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                 {
                     if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
                     {
-                        ((uint32_t*)pReceiveData)[rxCount++]  = receivedData;
+                        ((uint32_t*)pReceiveData)[rxCount]  = receivedData;
+                        rxCount++;
                     }
                     else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
                     {
-                        ((uint16_t*)pReceiveData)[rxCount++]  = receivedData;
+                        ((uint16_t*)pReceiveData)[rxCount]  = (uint16_t)receivedData;
+                        rxCount++;
                     }
                     else
                     {
-                        ((uint8_t*)pReceiveData)[rxCount++]  = receivedData;
+                        ((uint8_t*)pReceiveData)[rxCount]  = (uint8_t)receivedData;
+                        rxCount++;
                     }
                 }
             }
         }
 
         /* Make sure no data is pending in the shift register */
-        while ((bool)((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == false));
-
+        while((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == 0U)
+        {
+            /* Data pending in shift register */
+        }
         /* Make sure for every character transmitted a character is also received back.
          * If this is not done, we may prematurely exit this routine with the last bit still being
          * transmitted out. As a result, the application may prematurely deselect the CS line and also
@@ -303,25 +328,22 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                 /* Wait for all the RX bytes to be received. */
                 while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == false)
                 {
-                    receivedData = ${SPI_INSTANCE_NAME}BUF;
+                    (void)${SPI_INSTANCE_NAME}BUF;
                     dummyRxCntr++;
                 }
             }
         }
-
         isSuccess = true;
     }
-
     return isSuccess;
 }
 <#else>
 bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
 {
     bool isRequestAccepted = false;
-    uint32_t dummyData = 0U;
 
     /* Verify the request */
-    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false))
+    if((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false) && (((txSize > 0U) && (pTransmitData != NULL)) || ((rxSize > 0U) && (pReceiveData != NULL))))
     {
         isRequestAccepted = true;
         ${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
@@ -350,9 +372,10 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 
         ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = true;
 
-        if (${SPI_INSTANCE_NAME?lower_case}Obj.rxSize > ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+        size_t txSz = ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
+        if (${SPI_INSTANCE_NAME?lower_case}Obj.rxSize > txSz)
         {
-            ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize - ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
+            ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize - txSz;
         }
 
         /* Clear the receive overflow error if any */
@@ -360,10 +383,9 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 
         /* Make sure there is no data pending in the RX FIFO */
         /* Depending on 8/16/32 bit mode, there may be 16/8/4 bytes in the FIFO */
-        while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == false)
+        while ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == 0U)
         {
-            dummyData = ${SPI_INSTANCE_NAME}BUF;
-            (void)dummyData;
+            (void)${SPI_INSTANCE_NAME}BUF;
         }
 
         /* Configure SPI to generate receive interrupt when receive buffer is empty (SRXISEL = '01') */
@@ -392,15 +414,20 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 2;
             ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize >>= 2;
 
-            if(${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            txSz = ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
+            if(${SPI_INSTANCE_NAME?lower_case}Obj.txCount < txSz)
             {
                 ${SPI_INSTANCE_NAME}BUF = *((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer);
                 ${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
             }
-            else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
+            else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
             {
-                ${SPI_INSTANCE_NAME}BUF = (uint32_t)(0x${SPI_DUMMY_DATA});
+                ${SPI_INSTANCE_NAME}BUF = (uint32_t)(0x${SPI_DUMMY_DATA}U);
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+            }
+            else
+            {
+                /* Nothing to process */
             }
         }
         else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
@@ -409,32 +436,41 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 1;
             ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize >>= 1;
 
-            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            txSz = ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
+            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < txSz)
             {
                 ${SPI_INSTANCE_NAME}BUF = *((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer);
                 ${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
             }
-            else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
+            else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
             {
-                ${SPI_INSTANCE_NAME}BUF = (uint16_t)(0x${SPI_DUMMY_DATA});
+                ${SPI_INSTANCE_NAME}BUF = (uint16_t)(0x${SPI_DUMMY_DATA}U);
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+            }
+            else
+            {
+                /* Nothing to process */
             }
         }
         else
         {
-            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < txSz)
             {
                 ${SPI_INSTANCE_NAME}BUF = *((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer);
                 ${SPI_INSTANCE_NAME?lower_case}Obj.txCount++;
             }
-            else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
+            else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
             {
-                ${SPI_INSTANCE_NAME}BUF = (uint8_t)(0x${SPI_DUMMY_DATA});
+                ${SPI_INSTANCE_NAME}BUF = (uint8_t)(0x${SPI_DUMMY_DATA}U);
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+            }
+            else
+            {
+                /* Nothing to process */
             }
         }
 
-        if (rxSize > 0)
+        if (rxSize > 0U)
         {
             /* Enable receive interrupt to complete the transfer in ISR context.
              * Keep the transmit interrupt disabled. Transmit interrupt will be
@@ -444,7 +480,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
         }
         else
         {
-            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount != ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount != txSz)
             {
                 /* Configure SPI to generate transmit buffer empty interrupt only if more than
                  * data is pending (STXISEL = '01')  */
@@ -460,7 +496,8 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 
 bool ${SPI_INSTANCE_NAME}_IsBusy (void)
 {
-    return ( (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) || ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == 0));
+    uint32_t StatRead = ${SPI_INSTANCE_NAME}STAT;
+    return (((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) != false) || (( StatRead & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == 0U));
 }
 
 void ${SPI_INSTANCE_NAME}_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
@@ -471,108 +508,139 @@ void ${SPI_INSTANCE_NAME}_CallbackRegister (SPI_CALLBACK callback, uintptr_t con
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 </#if>
 {
     uint32_t receivedData = 0;
 
     /* Check if the receive buffer is empty or not */
-    if ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == false)
+    if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == 0U)
     {
         /* Receive buffer is not empty. Read the received data. */
         receivedData = ${SPI_INSTANCE_NAME}BUF;
 
-        if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
+        size_t rxCount = ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount;
+        size_t txCount = ${SPI_INSTANCE_NAME?lower_case}Obj.txCount;
+        if (rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
             /* Copy the received data to the user buffer */
             if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
             {
-                ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++] = receivedData;
+                ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = receivedData;
+                rxCount++;
             }
             else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
             {
-                ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++] = receivedData;
+                ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = (uint16_t)receivedData;
+                rxCount++;
             }
             else
             {
-                ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++] = receivedData;
+                ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[rxCount] = (uint8_t)receivedData;
+                rxCount++;
             }
-            if ((${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize) && (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize))
+
+            ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount = rxCount;
+
+            if (rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
             {
-                /* Reception of all bytes is complete. However, there are few more
-                 * bytes to be transmitted as txCount != txSize. Finish the
-                 * transmission of the remaining bytes from the transmit interrupt. */
+                if (txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+                {
+                    /* Reception of all bytes is complete. However, there are few more
+                     * bytes to be transmitted as txCount != txSize. Finish the
+                     * transmission of the remaining bytes from the transmit interrupt. */
 
-                /* Disable the receive interrupt */
-                ${SPI_RX_IEC_REG}CLR = ${SPI_RX_IEC_REG_MASK};
+                    /* Disable the receive interrupt */
+                    ${SPI_RX_IEC_REG}CLR = ${SPI_RX_IEC_REG_MASK};
 
-                /* Generate TX interrupt when buffer is completely empty (STXISEL = '00') */
-                ${SPI_INSTANCE_NAME}CONCLR = _${SPI_INSTANCE_NAME}CON_STXISEL_MASK;
-                ${SPI_INSTANCE_NAME}CONSET = 0x00000004;
+                    /* Generate TX interrupt when buffer is completely empty (STXISEL = '00') */
+                    ${SPI_INSTANCE_NAME}CONCLR = _${SPI_INSTANCE_NAME}CON_STXISEL_MASK;
+                    ${SPI_INSTANCE_NAME}CONSET = 0x00000004;
 
-                /* Enable the transmit interrupt. Callback will be given from the
-                 * transmit interrupt, when all bytes are shifted out. */
-                ${SPI_TX_IEC_REG}SET = ${SPI_TX_IEC_REG_MASK};
+                    /* Enable the transmit interrupt. Callback will be given from the
+                     * transmit interrupt, when all bytes are shifted out. */
+                    ${SPI_TX_IEC_REG}SET = ${SPI_TX_IEC_REG_MASK};
+                }
             }
         }
-        if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
+        if (rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
             /* More bytes pending to be received .. */
             if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
             {
-                if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+                if (txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                    ${SPI_INSTANCE_NAME}BUF = ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                    txCount++;
                 }
-                else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
+                else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = (uint32_t)(0x${SPI_DUMMY_DATA});
+                    ${SPI_INSTANCE_NAME}BUF = (uint32_t)(0x${SPI_DUMMY_DATA}U);
                     ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+                }
+                else
+                {
+                    /* Do Nothing */
                 }
             }
             else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
             {
-                if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+                if (txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                    ${SPI_INSTANCE_NAME}BUF = ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                    txCount++;
                 }
-                else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
+                else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = (uint16_t)(0x${SPI_DUMMY_DATA});
+                    ${SPI_INSTANCE_NAME}BUF = (uint16_t)(0x${SPI_DUMMY_DATA}U);
                     ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+                }
+                else
+                {
+                    /* Do Nothing */
                 }
             }
             else
             {
-                if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+                if (txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                    ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                    txCount++;
                 }
-                else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
+                else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0U)
                 {
-                    ${SPI_INSTANCE_NAME}BUF = (uint8_t)(0x${SPI_DUMMY_DATA});
+                    ${SPI_INSTANCE_NAME}BUF = (uint8_t)(0x${SPI_DUMMY_DATA}U);
                     ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
                 }
+                else
+                {
+                    /* Do Nothing */
+                }
             }
+            ${SPI_INSTANCE_NAME?lower_case}Obj.txCount = txCount;
         }
         else
         {
-            if((${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize) && (${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize))
+            if(rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
             {
-                /* Clear receiver overflow error if any */
-                ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
-
-                /* Disable receive interrupt */
-                ${SPI_RX_IEC_REG}CLR = ${SPI_RX_IEC_REG_MASK};
-
-                /* Transfer complete. Give a callback */
-                ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
-
-                if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+                if (txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
                 {
-                    ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+                    /* Clear receiver overflow error if any */
+                    ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
+
+                    /* Disable receive interrupt */
+                    ${SPI_RX_IEC_REG}CLR = ${SPI_RX_IEC_REG_MASK};
+
+                    /* Transfer complete. Give a callback */
+                    ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
+
+                    if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+                    {
+                        uintptr_t context = ${SPI_INSTANCE_NAME?lower_case}Obj.context;
+                        ${SPI_INSTANCE_NAME?lower_case}Obj.callback(context);
+                    }
                 }
             }
         }
@@ -584,53 +652,67 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
+static void __attribute__((used)) ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
+void __attribute__((used)) ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 </#if>
 {
     /* If there are more words to be transmitted, then transmit them here and keep track of the count */
     if((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK) == _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK)
     {
-        if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+        size_t txCount = ${SPI_INSTANCE_NAME?lower_case}Obj.txCount;
+        if (txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
         {
             if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
             {
-                ${SPI_INSTANCE_NAME}BUF = ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                ${SPI_INSTANCE_NAME}BUF = ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                txCount++;
             }
             else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
             {
-                ${SPI_INSTANCE_NAME}BUF = ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                ${SPI_INSTANCE_NAME}BUF = ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                txCount++;
             }
             else
             {
-                ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+                ${SPI_INSTANCE_NAME}BUF = ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[txCount];
+                txCount++;
             }
 
-            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            ${SPI_INSTANCE_NAME?lower_case}Obj.txCount = txCount;
+
+            if (txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
                 /* All bytes are submitted to the SPI module. Now, enable transmit
                  * interrupt when the shift register is empty (STXISEL = '00')*/
                 ${SPI_INSTANCE_NAME}CONCLR = _${SPI_INSTANCE_NAME}CON_STXISEL_MASK;
             }
         }
-        else if ((${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize) && (${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK))
+        else if (txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
         {
-            /* This part of code is executed when the shift register is empty. */
-
-            /* Clear receiver overflow error if any */
-            ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
-
-            /* Disable transmit interrupt */
-            ${SPI_TX_IEC_REG}CLR = ${SPI_TX_IEC_REG_MASK};
-
-            /* Transfer complete. Give a callback */
-            ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
-
-            if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+            if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) != 0U)
             {
-                ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+                /* This part of code is executed when the shift register is empty. */
+
+                /* Clear receiver overflow error if any */
+                ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
+
+                /* Disable transmit interrupt */
+                ${SPI_TX_IEC_REG}CLR = ${SPI_TX_IEC_REG_MASK};
+
+                /* Transfer complete. Give a callback */
+                ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
+
+                if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+                {
+                    uintptr_t context = ${SPI_INSTANCE_NAME?lower_case}Obj.context;
+                    ${SPI_INSTANCE_NAME?lower_case}Obj.callback(context);
+                }
             }
+        }
+        else
+        {
+            /* Do Nothing */
         }
     }
     /* Clear the transmit interrupt flag */
@@ -638,14 +720,16 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-void SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
+void __attribute__((used)) SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
 {
-    if ((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) && (${SPI_RX_IEC_REG} & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK))
+    uint32_t iec_reg_read = ${SPI_RX_IEC_REG};
+    if (((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) != 0U) && (( iec_reg_read & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK) != 0U))
     {
         /* RX interrupt is enabled and RX buffer is not empty */
         ${SPI_INSTANCE_NAME}_RX_InterruptHandler();
     }
-    if ((${SPI_TX_IFS_REG} & _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK) && (${SPI_TX_IEC_REG} & _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK))
+    iec_reg_read = ${SPI_TX_IEC_REG};
+    if (((${SPI_TX_IFS_REG} & _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK) != 0U) && (( iec_reg_read & _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK) != 0U))
     {
         /* TX interrupt is enabled and TX buffer is empty */
         ${SPI_INSTANCE_NAME}_TX_InterruptHandler();

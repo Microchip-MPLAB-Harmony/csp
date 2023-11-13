@@ -61,9 +61,9 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if TWI_INTERRUPT_MODE == true>
-static FLEXCOM_TWI_SLAVE_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj;
+volatile static FLEXCOM_TWI_SLAVE_OBJ ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj;
 </#if>
-static twi_registers_t *${FLEXCOM_INSTANCE_NAME}_TWI_Module = TWI${FLEXCOM_INSTANCE_NUMBER}_REGS;
+volatile static twi_registers_t *${FLEXCOM_INSTANCE_NAME}_TWI_Module = TWI${FLEXCOM_INSTANCE_NUMBER}_REGS;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -150,12 +150,14 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_IsBusy(void)
     return ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.isBusy;
 }
 
-void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
+void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 {
     uint32_t status = ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_SR;
 
     if ((status & ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_IMR) != 0U)
     {
+        uintptr_t context = ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.context;
+
         if((status & TWI_SR_SVACC_Msk) != 0U)
         {
             if (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.isAddrMatchEventNotified == false)
@@ -178,7 +180,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 
                 if (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback != NULL)
                 {
-                   (void) ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.context);
+                   (void) ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_ADDR_MATCH, context);
                 }
 
                 ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.isAddrMatchEventNotified = true;
@@ -193,7 +195,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
                     {
                         if (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback != NULL)
                         {
-                           (void) ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TX_READY, ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.context);
+                           (void) ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TX_READY, context);
                         }
                         ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.isFirstTxPending = false;
                     }
@@ -211,7 +213,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
                 {
                     if (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback != NULL)
                     {
-                       (void) ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_RX_READY, ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.context);
+                       (void) ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_RX_READY, context);
                     }
                 }
             }
@@ -233,7 +235,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 
                 if (${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback != NULL)
                 {
-                   (void) ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE, ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.context);
+                   (void) ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.callback(FLEXCOM_TWI_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE, context);
                 }
 
                 ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_IDR = TWI_IDR_TXCOMP_Msk;

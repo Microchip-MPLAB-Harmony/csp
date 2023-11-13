@@ -41,6 +41,18 @@
 #include "plib_clock.h"
 #include "device.h"
 
+<#assign OSCCTRL_INIT_GENERATE = false>
+
+<#if (CONFIG_CLOCK_OSC16M_FREQSEL != "0x0") || (CONFIG_CLOCK_OSC16M_RUNSTDBY != false) || (CONFIG_CLOCK_OSC16M_ONDEMAND != "ENABLE")>
+    <#if (CONFIG_CLOCK_OSC16M_FREQSEL != "0x0")>
+        <#assign OSCCTRL_INIT_GENERATE = true>
+    </#if>
+</#if>
+<#if CONFIG_CLOCK_XOSC_ENABLE == true>
+    <#assign OSCCTRL_INIT_GENERATE = true>
+</#if>
+
+<#if OSCCTRL_INIT_GENERATE == true>
 static void OSCCTRL_Initialize(void)
 {
 <#if (CONFIG_CLOCK_OSC16M_FREQSEL != "0x0") || (CONFIG_CLOCK_OSC16M_RUNSTDBY != false) || (CONFIG_CLOCK_OSC16M_ONDEMAND != "ENABLE")>
@@ -73,6 +85,7 @@ static void OSCCTRL_Initialize(void)
     </#if>
 </#if>
 }
+</#if>
 
 static void OSC32KCTRL_Initialize(void)
 {
@@ -98,7 +111,7 @@ static void OSC32KCTRL_Initialize(void)
 <#if CONF_CLOCK_OSC32K_ENABLE =true>
     /****************** OSC32K Initialization  ******************************/
 
-   uint32_t calibValue = (((*(uint32_t*)0x806020U) >> 6U ) & 0x7fU);
+   uint32_t calibValue = (((*(uint32_t*)${SW_CALIB_ROW_ADDR}U) >> 6U ) & 0x7fU);
 
     /* Configure 32K RC oscillator */
     <@compress single_line=true>OSC32KCTRL_REGS->OSC32KCTRL_OSC32K = OSC32KCTRL_OSC32K_CALIB(calibValue)
@@ -131,7 +144,7 @@ static void DFLL_Initialize(void)
     }
 
     /*Load Calibration Value*/
-    uint8_t calibCoarse = (uint8_t)(((*(uint32_t*)0x806020U) >> 26U ) & 0x3fU);
+    uint8_t calibCoarse = (uint8_t)(((*(uint32_t*)${SW_CALIB_ROW_ADDR}U) >> 26U ) & 0x3fU);
 
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLVAL = OSCCTRL_DFLLVAL_COARSE((uint32_t)calibCoarse) | OSCCTRL_DFLLVAL_FINE(512U);</@compress>
 
@@ -158,7 +171,6 @@ static void DFLL_Initialize(void)
 
     /* Configure DFLL    */
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRL = OSCCTRL_DFLLCTRL_ENABLE_Msk ${(CONFIG_CLOCK_DFLL_OPMODE == "1")?then('| OSCCTRL_DFLLCTRL_MODE_Msk ', ' ')}
-    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "1")?then("| OSCCTRL_DFLLCTRL_ONDEMAND_Msk ", "")}
     <#lt>                               ${CONFIG_CLOCK_DFLL_RUNSTDY?then('| OSCCTRL_DFLLCTRL_RUNSTDBY_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_USB?then('| OSCCTRL_DFLLCTRL_USBCRM_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_WAIT_LOCK?then('| OSCCTRL_DFLLCTRL_WAITLOCK_Msk ', ' ')}
@@ -174,11 +186,15 @@ static void DFLL_Initialize(void)
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
     }
-    <#elseif CONFIG_CLOCK_DFLL_ONDEMAND != "1">
+    <#else>
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
         /* Waiting for DFLL to be ready */
     }
+    </#if>
+    
+    <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
+    OSCCTRL_REGS->OSCCTRL_DFLLCTRL |= OSCCTRL_DFLLCTRL_ONDEMAND_Msk;
     </#if>
 }
 </#if>
@@ -290,20 +306,22 @@ static void GCLK${i}_Initialize(void)
 </#list>
 void CLOCK_Initialize (void)
 {
+<#if OSCCTRL_INIT_GENERATE == true>
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
+</#if>
 
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
 
-<#if CONF_LP_CLOCK_DIVIDER != "0">
-    /*Initialize low Power Divider*/
-    MCLK_REGS->MCLK_LPDIV = MCLK_LPDIV_LPDIV(${CONF_LP_CLOCK_DIVIDER}U);
-</#if>
-
 <#if CONF_BUP_CLOCK_DIVIDER!= "0">
     /*Initialize Backup Divider*/
     MCLK_REGS->MCLK_BUPDIV = MCLK_BUPDIV_BUPDIV(${CONF_BUP_CLOCK_DIVIDER}U);
+</#if>
+
+<#if CONF_LP_CLOCK_DIVIDER != "0">
+    /*Initialize low Power Divider*/
+    MCLK_REGS->MCLK_LPDIV = MCLK_LPDIV_LPDIV(${CONF_LP_CLOCK_DIVIDER}U);
 </#if>
 
 ${CLK_INIT_LIST}

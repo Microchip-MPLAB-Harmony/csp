@@ -42,7 +42,7 @@ def getFlashParams(app_start):
 
     arch = Database.getSymbolValue("core", "CoreArchitecture")
 
-    if (int(app_start,16) == flash_start) or ("CORTEX-A" in arch) or ("ARM926" in arch):
+    if ("CORTEX-A" in arch) or ("ARM926" in arch):
         return ("")
 
     app_offset  = (int(app_start,16) - flash_start)
@@ -131,6 +131,8 @@ def handleMessage(messageID, args):
             Database.setSymbolValue("core", "WDT_USE", args["isEnabled"])
         elif (Database.getSymbolValue("core", "wdtENABLE") != None):
             Database.setSymbolValue("core", "wdtENABLE", args["isEnabled"])
+    elif (messageID == "APP_START_ADDRESS"):
+        Database.setSymbolValue("core", "APP_START_ADDRESS", args["start_address"])
 
     return symbolDict
 
@@ -138,26 +140,27 @@ def genExceptionAsmSourceFile(symbol, event):
     global compilers
     global coreArch
 
-    coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
-    coreSysExceptionFileEnabled = Database.getSymbolValue("core", "CoreSysExceptionFile")
-    coreSysAdvancedExceptionFileEnabled = Database.getSymbolValue("core", "ADVANCED_EXCEPTION")
+    if ("MIPS" in coreArch.getValue() or compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
+        coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
+        coreSysExceptionFileEnabled = Database.getSymbolValue("core", "CoreSysExceptionFile")
+        coreSysAdvancedExceptionFileEnabled = Database.getSymbolValue("core", "ADVANCED_EXCEPTION")
 
-    if ((coreSysExceptionFileEnabled == True) and
-        (coreSysAdvancedExceptionFileEnabled == True) and
-        (coreSysFileEnabled == True)):
-        symbol.setEnabled(True)
-    else:
-        symbol.setEnabled(False)
+        if ((coreSysExceptionFileEnabled == True) and
+            (coreSysAdvancedExceptionFileEnabled == True) and
+            (coreSysFileEnabled == True)):
+            symbol.setEnabled(True)
+        else:
+            symbol.setEnabled(False)
 
-    if "MIPS" in coreArch.getValue():
-        symbol.setSourcePath("templates/general-exception-context_mips.S.ftl")
-        symbol.setOutputName("exceptionsHandler.S")
-    elif (compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
-        symbol.setSourcePath("templates/exceptionsHandler_iar.s.ftl")
-        symbol.setOutputName("exceptionsHandler.s")
-    else:
-        symbol.setSourcePath("templates/exceptionsHandler.s.ftl")
-        symbol.setOutputName("exceptionsHandler.S")
+        if "MIPS" in coreArch.getValue():
+            symbol.setSourcePath("templates/general-exception-context_mips.S.ftl")
+            symbol.setOutputName("exceptionsHandler.S")
+        elif (compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR"):
+            symbol.setSourcePath("templates/exceptionsHandler_iar.s.ftl")
+            symbol.setOutputName("exceptionsHandler.s")
+        else:
+            symbol.setSourcePath("templates/exceptionsHandler.s.ftl")
+            symbol.setOutputName("exceptionsHandler.S")
 
 def setFileVisibility (symbol, event):
     symbol.setVisible(event["value"])
@@ -188,6 +191,8 @@ def genMainSourceFile(symbol, event):
     else:
         symbol.setEnabled(False)
 
+def updateDataCacheVisibility(symbol, event):
+    symbol.setVisible(event["value"] != 3)
 
 def genSysSourceFile(symbol, event):
     global processor
@@ -589,6 +594,11 @@ def instantiateComponent( coreComponent ):
     xc32HeapSize.setLabel("Heap Size (bytes)")
     xc32HeapSize.setDefaultValue( 512 )
 
+    xc32DataInit = coreComponent.createBooleanSymbol("XC32_DATA_INIT", xc32LdGeneralMenu)
+    xc32DataInit.setLabel("Initialize Data")
+    xc32DataInit.setDefaultValue(True)
+    xc32DataInit.setReadOnly(True)
+
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         xc32SecureHeapSize = coreComponent.createIntegerSymbol("XC32_SECURE_HEAP_SIZE", xc32LdGeneralMenu)
         xc32SecureHeapSize.setLabel("Secure Heap Size (bytes)")
@@ -647,7 +657,11 @@ def instantiateComponent( coreComponent ):
     xc32LdPreprocessroMacroSym = coreComponent.createSettingSymbol("XC32_LINKER_PREPROC_MARCOS", xc32LdSymbolsMacrosMenu)
     xc32LdPreprocessroMacroSym.setCategory("C32-LD")
     xc32LdPreprocessroMacroSym.setKey("preprocessor-macros")
-    xc32LdPreprocessroMacroSym.setValue(getFlashParams(xc32LdAppStartAddress.getValue()))
+    if (int(xc32LdAppStartAddress.getValue(), 16) == flash_start):
+        xc32LdMacorVal = ""
+    else:
+        xc32LdMacorVal = getFlashParams(xc32LdAppStartAddress.getValue())
+    xc32LdPreprocessroMacroSym.setValue(xc32LdMacorVal)
     xc32LdPreprocessroMacroSym.setAppend(True, ";=")
     xc32LdPreprocessroMacroSym.setDependencies(setFlashParams, ["APP_START_ADDRESS"])
 
@@ -732,14 +746,14 @@ def instantiateComponent( coreComponent ):
     keilHeapStackSize.setValue("0x%X" % (keilStackSize.getValue() + keilHeapSize.getValue()))
     keilHeapStackSize.setDependencies(setKeilHeapStackSize, ["KEIL_STACK_SIZE", "KEIL_HEAP_SIZE"])
 
+    # Device name symbol
+    deviceName = coreComponent.createStringSymbol("DEVICE_NAME", None)
+    deviceName.setVisible(False)
+    deviceName.setDefaultValue(Variables.get("__PROCESSOR"))
+
     if "CORTEX-M" in coreArch.getValue():
         #Generate device vector handler related string symbols
         generateDeviceVectorList(coreComponent)
-
-        #Symbols relevant to custom linker scripts
-        deviceName = coreComponent.createStringSymbol("DEVICE_NAME", None)
-        deviceName.setVisible(False)
-        deviceName.setDefaultValue(Variables.get("__PROCESSOR"))
 
         #ROM and RAM memory map
         nodeIFLASH = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[type=\"flash\"]")
@@ -811,6 +825,9 @@ def instantiateComponent( coreComponent ):
     systemConfigDrvList =       coreComponent.createListSymbol( "LIST_SYSTEM_CONFIG_H_DRIVER_CONFIGURATION",            None )
     systemConfigMWList =        coreComponent.createListSymbol( "LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION",        None )
     systemConfigAppList =       coreComponent.createListSymbol( "LIST_SYSTEM_CONFIG_H_APPLICATION_CONFIGURATION",       None )
+
+    # list for sys_task.h file
+    taskHandleDeclList =        coreComponent.createListSymbol( "LIST_SYSTEM_TASKS_HANDLE_DECLARATION",     None )
 
     # list for task.c file
     taskSysList =               coreComponent.createListSymbol( "LIST_SYSTEM_TASKS_C_CALL_SYSTEM_TASKS",    None )

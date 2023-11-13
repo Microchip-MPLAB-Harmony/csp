@@ -42,6 +42,9 @@
 //DOM-IGNORE-END
 
 #include "plib_gpio.h"
+<#if CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 <#compress> <#-- To remove unwanted new lines -->
 
 <#-- Initialize variables -->
@@ -60,9 +63,9 @@
 
 <#-- Create a list of indexes and use it as initialization values for portNumCb array -->
 <#if TOTAL_NUM_OF_INT_USED gt 0 >
-    <#lt>#define TOTAL_NUM_OF_INT_USED ${TOTAL_NUM_OF_INT_USED}
+    <#lt>#define TOTAL_NUM_OF_INT_USED (${TOTAL_NUM_OF_INT_USED}U)
     <#lt>/* Array to store pin objects of each configured interrupt */
-    <#lt>GPIO_PIN_CALLBACK_OBJ cnPinObj[TOTAL_NUM_OF_INT_USED] =
+    <#lt>volatile static GPIO_PIN_CALLBACK_OBJ cnPinObj[TOTAL_NUM_OF_INT_USED] =
                                 <#lt>    {
                                 <#list 0..CN_PIN_TOTAL-1 as i>
                                     <#assign intConfig = "BSP_PIN_" + i + "_CN">
@@ -121,11 +124,11 @@ void GPIO_Initialize ( void )
     uint32_t latestPortValue, mask;
 
     /* save the initial pin value for CN pins */
-    for(i = 0; i < TOTAL_NUM_OF_INT_USED; i++)
+    for(i = 0U; i < TOTAL_NUM_OF_INT_USED; i++)
     {
-        latestPortValue = *(volatile uint32_t *)(&PORT${GPIO_CHANNEL_0_NAME} + ((cnPinObj[i].gpioPin >> 4) * 0x10));
-        bitPosition = cnPinObj[i].gpioPin % 16;
-        mask = 1 << bitPosition;
+        latestPortValue = *(volatile uint32_t *)(&PORT${GPIO_CHANNEL_0_NAME} + ((cnPinObj[i].gpioPin >> 4U) * 0x10U));
+        bitPosition = (uint8_t)(cnPinObj[i].gpioPin % 16U);
+        mask = 1UL << bitPosition;
         cnPinObj[i].prevPinValue = (bool)((latestPortValue & mask) >> bitPosition);
     }
 
@@ -162,7 +165,7 @@ void GPIO_Initialize ( void )
 */
 uint32_t GPIO_PortRead(GPIO_PORT port)
 {
-    return (*(volatile uint32_t *)(&PORT${GPIO_CHANNEL_0_NAME} + (port * 0x10)));
+    return (*(volatile uint32_t *)(&PORT${GPIO_CHANNEL_0_NAME} + (port * 0x10U)));
 }
 
 // *****************************************************************************
@@ -177,7 +180,7 @@ uint32_t GPIO_PortRead(GPIO_PORT port)
 */
 void GPIO_PortWrite(GPIO_PORT port, uint32_t mask, uint32_t value)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x10)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x10)) & (~mask)) | (mask & value);
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x10U)) = (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x10U)) & (~mask)) | (mask & value);
 }
 
 // *****************************************************************************
@@ -192,7 +195,7 @@ void GPIO_PortWrite(GPIO_PORT port, uint32_t mask, uint32_t value)
 */
 uint32_t GPIO_PortLatchRead(GPIO_PORT port)
 {
-    return (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x10)));
+    return (*(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME} + (port * 0x10U)));
 }
 
 // *****************************************************************************
@@ -207,7 +210,7 @@ uint32_t GPIO_PortLatchRead(GPIO_PORT port)
 */
 void GPIO_PortSet(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}SET + (port * 0x10)) = mask;
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}SET + (port * 0x10U)) = mask;
 }
 
 // *****************************************************************************
@@ -222,7 +225,7 @@ void GPIO_PortSet(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortClear(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}CLR + (port * 0x10)) = mask;
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}CLR + (port * 0x10U)) = mask;
 }
 
 // *****************************************************************************
@@ -237,7 +240,7 @@ void GPIO_PortClear(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortToggle(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}INV + (port * 0x10))= mask;
+    *(volatile uint32_t *)(&LAT${GPIO_CHANNEL_0_NAME}INV + (port * 0x10U))= mask;
 }
 
 // *****************************************************************************
@@ -252,7 +255,7 @@ void GPIO_PortToggle(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortInputEnable(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}SET + (port * 0x10)) = mask;
+    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}SET + (port * 0x10U)) = mask;
 }
 
 // *****************************************************************************
@@ -267,19 +270,19 @@ void GPIO_PortInputEnable(GPIO_PORT port, uint32_t mask)
 */
 void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask)
 {
-    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}CLR + (port * 0x10)) = mask;
+    *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}CLR + (port * 0x10U)) = mask;
 }
 
 <#if TOTAL_NUM_OF_INT_USED gt 0>
 
 void GPIO_PinInterruptEnable(CN_PIN cnPin)
 {
-    CNENSET = cnPin;
+    CNENSET = (uint32_t)cnPin;
 }
 
 void GPIO_PinInterruptDisable(CN_PIN cnPin)
 {
-    CNENCLR = cnPin;
+    CNENCLR = (uint32_t)cnPin;
 }
 
 // *****************************************************************************
@@ -295,7 +298,7 @@ bool GPIO_PinInterruptCallbackRegister(
 {
     uint8_t i;
 
-    for(i = 0; i < TOTAL_NUM_OF_INT_USED; i++)
+    for(i = 0U; i < TOTAL_NUM_OF_INT_USED; i++)
     {
         if (cnPinObj[i].cnPin == cnPin)
         {
@@ -324,23 +327,29 @@ bool GPIO_PinInterruptCallbackRegister(
   Remarks:
 	It is an internal function called from ISR, user should not call it directly.
 */
-void CHANGE_NOTICE_InterruptHandler(void)
+void __attribute__((used)) CHANGE_NOTICE_InterruptHandler(void)
 {
     uint8_t i, bitPosition;
     uint32_t latestPortValue, mask;
     bool currPinValue;
+    bool prevPinValue;
+    uintptr_t context;
+    CN_PIN cnPin;
 
     /* Check which CN interrupt has occurred and call callback if registered */
-    for(i = 0; i < TOTAL_NUM_OF_INT_USED; i++)
+    for(i = 0U; i < TOTAL_NUM_OF_INT_USED; i++)
     {
-        latestPortValue = *(volatile uint32_t *)(&PORT${GPIO_CHANNEL_0_NAME} + ((cnPinObj[i].gpioPin >> 4) * 0x10));
-        bitPosition = cnPinObj[i].gpioPin % 16;
-        mask = 1 << bitPosition;
+        latestPortValue = *(volatile uint32_t *)(&PORT${GPIO_CHANNEL_0_NAME} + ((cnPinObj[i].gpioPin >> 4U) * 0x10U));
+        bitPosition = (uint8_t)(cnPinObj[i].gpioPin % 16U);
+        mask = 1UL << bitPosition;
         currPinValue = (bool)((latestPortValue & mask) >> bitPosition);
-        if((cnPinObj[i].prevPinValue != currPinValue) && (cnPinObj[i].callback != NULL))
+        prevPinValue = cnPinObj[i].prevPinValue;
+        if((cnPinObj[i].callback != NULL) && (prevPinValue != currPinValue))
         {
+            context = cnPinObj[i].context;
+            cnPin = cnPinObj[i].cnPin;
             cnPinObj[i].prevPinValue = currPinValue;
-            cnPinObj[i].callback (cnPinObj[i].cnPin, cnPinObj[i].context);
+            cnPinObj[i].callback (cnPin, context);
         }
     }
     IFS${SYS_PORT_IFS_REG_INDEX}CLR = _IFS${SYS_PORT_IFS_REG_INDEX}_CNIF_MASK;

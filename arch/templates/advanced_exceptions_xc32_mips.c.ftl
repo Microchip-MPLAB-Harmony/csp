@@ -39,7 +39,11 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
-
+<#if PRODUCT_FAMILY?contains("PIC32MZ")>
+<#assign DEVIATION_COUNT = 8>
+<#else>
+<#assign DEVIATION_COUNT = 4>
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Exception handling
@@ -56,8 +60,28 @@
 #include "definitions.h"
 #include <stdio.h>
 
+//Get stack pointer value
+#ifndef GET_EXCEP_SP
+#define GET_EXCEP_SP(var) asm volatile("sw $sp,%0" : "=m" (var))
+#endif
 
-typedef struct _XCPT_FRAME  // access to all major registers from the instruction that caused the exception
+/* Exception codes */
+#define EXCEP_IRQ       0U // interrupt
+#define EXCEP_AdEL      4U // address error exception (load or ifetch)
+#define EXCEP_AdES      5U // address error exception (store)
+#define EXCEP_IBE       6U // bus error (ifetch)
+#define EXCEP_DBE       7U // bus error (load/store)
+#define EXCEP_Sys       8U // syscall
+#define EXCEP_Bp        9U // breakpoint
+#define EXCEP_RI        10U // reserved instruction
+#define EXCEP_CpU       11U // coprocessor unusable
+#define EXCEP_Overflow  12U // arithmetic overflow
+#define EXCEP_Trap      13U // trap (possible divide by zero)
+#define EXCEP_IS1       16U // implementation specfic 1
+#define EXCEP_CEU       17U // CorExtend Unuseable
+#define EXCEP_C2E       18U // coprocessor 2
+
+typedef struct XCPT_FRAME_tag  // access to all major registers from the instruction that caused the exception
 {
     uint32_t at;
     uint32_t v0;
@@ -85,30 +109,31 @@ typedef struct _XCPT_FRAME  // access to all major registers from the instructio
 
 } XCPT_FRAME;
 
-typedef enum {
-    EXCEP_IRQ      =  0, // interrupt
-    EXCEP_AdEL     =  4, // address error exception (load or ifetch)
-    EXCEP_AdES     =  5, // address error exception (store)
-    EXCEP_IBE      =  6, // bus error (ifetch)
-    EXCEP_DBE      =  7, // bus error (load/store)
-    EXCEP_Sys      =  8, // syscall
-    EXCEP_Bp       =  9, // breakpoint
-    EXCEP_RI       = 10, // reserved instruction
-    EXCEP_CpU      = 11, // coprocessor unusable
-    EXCEP_Overflow = 12, // arithmetic overflow
-    EXCEP_Trap     = 13, // trap (possible divide by zero)
-    EXCEP_IS1      = 16, // implementation specific 1
-    EXCEP_CEU      = 17, // CorExtend Unusable
-    EXCEP_C2E      = 18, // coprocessor 2
-} excep_code;
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 21.2 deviated ${DEVIATION_COUNT} times. Deviation record ID -  H3_MISRAC_2012_R_21_2_DR_4 */
+/* MISRA C-2012 Rule 21.6 deviated 1 time. Deviation record ID -  H3_MISRAC_2012_R_21_6_DR_2 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block\
+ (deviate:${DEVIATION_COUNT} "MISRA C-2012 Rule 21.2" "H3_MISRAC_2012_R_21_2_DR_4")\
+ (deviate:1 "MISRA C-2012 Rule 21.6" "H3_MISRAC_2012_R_21_6_DR_2")
+</#if>
+void _general_exception_handler(XCPT_FRAME* const pXFrame);
+void _bootstrap_exception_handler(void);
+<#if PRODUCT_FAMILY?contains("PIC32MZ")>
+void _cache_err_exception_handler (void);
+void _simple_tlb_refill_exception_handler(void);
+</#if>
 
 // Use static variables, with fixed addresses, since S/W stack can be unstable
-static excep_code _excep_code;
-static unsigned int _excep_addr;
-static uint32_t  _CP0_StatusValue;   // Status value from CP0 Register 12
-static uintptr_t _StackPointerValue; // Stack pointer value
-static uintptr_t _BadVirtualAddress; // Bad address for address exceptions
-static uintptr_t _ReturnAddress;     // Return Address (ra)
+static uint32_t exception_code;
+static uint32_t exception_address;
+static uint32_t cp0_status_value; // Status value from CP0 Register 12
+static uintptr_t stack_pointer_value; // Stack pointer value
+static uintptr_t bad_virtual_address; // Bad address for address exceptions
+static uintptr_t return_address; // Return Address (ra)
 
 /*******************************************************************************
   Function:
@@ -124,23 +149,23 @@ static uintptr_t _ReturnAddress;     // Return Address (ra)
 
 void __attribute__((nomips16, noreturn)) _general_exception_handler (XCPT_FRAME* const pXFrame)
 {
-    _excep_addr = pXFrame->epc;
-    _excep_code = pXFrame->cause;   // capture exception type
-    _excep_code = (_excep_code & 0x0000007C) >> 2;
+    exception_address = pXFrame->epc;
+    exception_code = pXFrame->cause;   // capture exception type
+    exception_code = (exception_code & 0x0000007CU) >> 2U;
 
-    _CP0_StatusValue   = _CP0_GET_STATUS();
-    asm volatile("sw $sp,%0" : "=m" (_StackPointerValue));
-    _BadVirtualAddress = _CP0_GET_BADVADDR();
-    _ReturnAddress     = pXFrame->ra;
+    cp0_status_value   = _CP0_GET_STATUS();
+    GET_EXCEP_SP(stack_pointer_value);
+    bad_virtual_address = _CP0_GET_BADVADDR();
+    return_address     = pXFrame->ra;
 
-    printf("**EXCEPTION:*\r\n"
+    (void)printf("**EXCEPTION:*\r\n"
            " ECode: %d, EAddr: 0x%08X, CPO Status: 0x%08X\r\n"
            " Stack Ptr: 0x%08X, Bad Addr: 0x%08X, Return Addr: 0x%08X\r\n"
            "**EXCEPTION:*\r\n",
-           _excep_code,_excep_addr,_CP0_StatusValue,
-           _StackPointerValue,_BadVirtualAddress,_ReturnAddress);
+           exception_code,exception_address,cp0_status_value,
+           stack_pointer_value,bad_virtual_address,return_address);
 
-    while(1)
+    while(true)
     {
         #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
             __builtin_software_breakpoint();
@@ -164,10 +189,10 @@ void  __attribute__((noreturn)) _bootstrap_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
-    _excep_code = (_CP0_GET_CAUSE() & 0x0000007C) >> 2;
-    _excep_addr = _CP0_GET_EPC();
+    exception_code = (_CP0_GET_CAUSE() & 0x0000007CU) >> 2U;
+    exception_address = _CP0_GET_EPC();
 
-    while (1)
+    while(true)
     {
         #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
             __builtin_software_breakpoint();
@@ -194,10 +219,10 @@ void  __attribute__((noreturn)) _cache_err_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
-    _excep_code = (_CP0_GET_CAUSE() & 0x0000007C) >> 2;
-    _excep_addr = _CP0_GET_EPC();
+    exception_code = (_CP0_GET_CAUSE() & 0x0000007CU) >> 2U;
+    exception_address = _CP0_GET_EPC();
 
-    while (1)
+    while(true)
     {
         #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
             __builtin_software_breakpoint();
@@ -224,16 +249,21 @@ void  __attribute__((noreturn)) _simple_tlb_refill_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
-    _excep_code = (_CP0_GET_CAUSE() & 0x0000007C) >> 2;
-    _excep_addr = _CP0_GET_EPC();
+    exception_code = (_CP0_GET_CAUSE() & 0x0000007CU) >> 2U;
+    exception_address = _CP0_GET_EPC();
 
-    while (1)
+    while(true)
     {
         #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
             __builtin_software_breakpoint();
         #endif
     }
 }
+</#if>
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.2" "MISRA C-2012 Rule 21.6"
+#pragma GCC diagnostic pop
 </#if>
 /*******************************************************************************
  End of File

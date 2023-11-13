@@ -47,6 +47,7 @@
       <function name="RPG6" />
       <function name="PWM10L" />
       <function name="PMA5" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RG7">
        <number package="1" pin="5" />
@@ -56,6 +57,7 @@
       <function name="PWM10H" />
       <function name="SCL1" />
       <function name="PMA4" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="RG8">
        <number package="1" pin="6" />
@@ -64,6 +66,7 @@
       <function name="RPG8" />
       <function name="SDA1" />
       <function name="PMA3" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="MCLR">
        <modifiers>
@@ -79,6 +82,7 @@
       <function name="RPG9" />
       <function name="FLT12" />
       <function name="PMA2" />
+      <fixed-slew-rate name="Disable" />
     </pin>
     <pin name="VSS">
        <number package="1" pin="9" />

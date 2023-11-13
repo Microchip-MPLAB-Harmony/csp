@@ -59,12 +59,24 @@
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-
     extern "C" {
-
 #endif
 // DOM-IGNORE-END
 
+<#if PMP_INTERRUPT_MODE == true>
+
+typedef void (*PMP_CALLBACK) (uintptr_t context);
+
+typedef struct
+{
+    /* PMP Callback Handler */
+    PMP_CALLBACK    callback;
+
+    /* PMP Callback context */
+    uintptr_t       context;
+
+} PMP_CALLBACK_OBJ;
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -87,6 +99,9 @@ void ${PMP_INSTANCE_NAME}_AddressPortEnable( uint32_t portfunctions );
 
 void ${PMP_INSTANCE_NAME}_AddressPortDisable( uint32_t portfunctions );
 
+<#if PMP_INTERRUPT_MODE == true>
+void ${PMP_INSTANCE_NAME}_CallbackRegister(PMP_CALLBACK callback, uintptr_t context);
+</#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 

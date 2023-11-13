@@ -86,7 +86,7 @@ static  dmac_descriptor_registers_t write_back_section[DMAC_CHANNELS_NUMBER]    
 static  dmac_descriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    __ALIGNED(8);
 
 /* DMAC Channels object information structure */
-static DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
+volatile static DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
 
 // *****************************************************************************
 // *****************************************************************************
@@ -99,7 +99,7 @@ This function initializes the DMAC controller of the device.
 
 void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
-    DMAC_CH_OBJECT *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
+    volatile DMAC_CH_OBJECT *dmacChObj = &dmacChannelObj[0];
     uint32_t channel = 0U;
 
     /* Initialize DMAC Channel objects */
@@ -121,7 +121,7 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     ${DMA_INSTANCE_NAME}_REGS->DMAC_WRBADDR  = (uint32_t) write_back_section;
 
     /* Update the Priority Control register */
-    <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->DMAC_PRICTRL0 = DMAC_PRICTRL0_LVLPRI0(${DMAC_LVLXPRIO_0}U) | <#if DMAC_LVLXPRIO_0 == "1">DMAC_PRICTRL0_RRLVLEN0_Msk |</#if>
+    <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->DMAC_PRICTRL0 |= DMAC_PRICTRL0_LVLPRI0(${DMAC_LVLXPRIO_0}U) | <#if DMAC_LVLXPRIO_0 == "1">DMAC_PRICTRL0_RRLVLEN0_Msk |</#if>
                                                                            DMAC_PRICTRL0_LVLPRI1(${DMAC_LVLXPRIO_1}U) | <#if DMAC_LVLXPRIO_1 == "1">DMAC_PRICTRL0_RRLVLEN1_Msk |</#if>
                                                                            DMAC_PRICTRL0_LVLPRI2(${DMAC_LVLXPRIO_2}U) | <#if DMAC_LVLXPRIO_2 == "1">DMAC_PRICTRL0_RRLVLEN2_Msk |</#if>
                                                                            DMAC_PRICTRL0_LVLPRI3(${DMAC_LVLXPRIO_3}U)<#if DMAC_LVLXPRIO_3 == "1"> | DMAC_PRICTRL0_RRLVLEN3_Msk</#if>;</@compress>
@@ -202,10 +202,11 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
 {
     uint8_t beat_size = 0U;
     bool returnStatus = false;
+    bool isBusy = dmacChannelObj[channel].isBusy;
     const uint32_t* pu32srcAddr = (const uint32_t*)srcAddr;
     const uint32_t* pu32dstAddr = (const uint32_t*)destAddr;
 
-    if ((!dmacChannelObj[channel].isBusy) || ((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) != 0U))
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) != 0U) || (!isBusy) )
     {
         /* Clear the transfer complete flag */
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk;
@@ -272,7 +273,9 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel )
 {
     bool busy_check = false;
-    if ((dmacChannelObj[channel].isBusy) && ((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) == 0U))
+    bool isBusy = dmacChannelObj[channel].isBusy;
+
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) == 0U) && (isBusy))
     {
         busy_check = true;
     }
@@ -380,8 +383,9 @@ void ${DMA_INSTANCE_NAME}_LinkedListDescriptorSetup (dmac_descriptor_registers_t
 bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_descriptor_registers_t* channelDesc)
 {
     bool returnStatus = false;
+    bool isBusy = dmacChannelObj[channel].isBusy;
 
-    if ((!dmacChannelObj[channel].isBusy) || ((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) != 0U))
+    if (((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG & (DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk)) != 0U) || (!isBusy))
     {
         /* Clear the transfer complete flag */
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk | DMAC_CHINTENCLR_TERR_Msk;
@@ -588,13 +592,13 @@ uint32_t ${DMA_INSTANCE_NAME}_CRCCalculate(void *buffer, uint32_t length, DMAC_C
 //*******************************************************************************
 //    Functions to handle DMA interrupt events.
 //*******************************************************************************
-static void DMAC_channel_interruptHandler(uint8_t channel)
+static void __attribute__((used)) DMAC_channel_interruptHandler(uint8_t channel)
 {
-    DMAC_CH_OBJECT  *dmacChObj = NULL;
+    volatile DMAC_CH_OBJECT  *dmacChObj;
     volatile uint32_t chanIntFlagStatus = 0U;
     DMAC_TRANSFER_EVENT event   = DMAC_TRANSFER_EVENT_ERROR;
 
-    dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel];
+    dmacChObj = &dmacChannelObj[channel];
 
     /* Get the DMAC channel interrupt status */
     chanIntFlagStatus = ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG;
@@ -622,7 +626,9 @@ static void DMAC_channel_interruptHandler(uint8_t channel)
     /* Execute the callback function */
     if (dmacChObj->callback != NULL)
     {
-        dmacChObj->callback (event, dmacChObj->context);
+        uintptr_t context = dmacChObj->context;
+
+        dmacChObj->callback (event, context);
     }
 }
 
@@ -631,13 +637,13 @@ static void DMAC_channel_interruptHandler(uint8_t channel)
 <#assign res =.vars[DMAC_INT_NAME]?matches(r"(\d+)")>
 <#assign res2 =.vars[DMAC_INT_NAME]?matches(r"(\d+)_(\d+)")>
 <#if (res) && ((res?groups[1])?number <= DMAC_HIGHEST_CHANNEL)>
-void ${DMA_INSTANCE_NAME}_${res?groups[1]}_InterruptHandler( void )
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_${res?groups[1]}_InterruptHandler( void )
 {
    DMAC_channel_interruptHandler(${res?groups[1]}U);
 }
 
 <#elseif (.vars[DMAC_INT_NAME] == "OTHER") &&  (4 <= DMAC_HIGHEST_CHANNEL) >
-void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
 {
     uint8_t channel = 0U;
 
@@ -651,7 +657,7 @@ void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
 }
 
 <#elseif (res2) && ((res2?groups[1])?number <= DMAC_HIGHEST_CHANNEL) >
-void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
+void __attribute__((used)) ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
 {
     uint8_t channel = 0U;
 

@@ -61,7 +61,7 @@
 
 static CACHE_ALIGN SDMMC_ADMA_DESCR ${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[(${SDMMC_INSTANCE_NAME}_DMA_DESC_TABLE_SIZE_CACHE_ALIGN/8U)];
 
-static SDMMC_OBJECT ${SDMMC_INSTANCE_NAME?lower_case}Obj;
+volatile static SDMMC_OBJECT ${SDMMC_INSTANCE_NAME?lower_case}Obj;
 
 static void ${SDMMC_INSTANCE_NAME}_VariablesInit ( void )
 {
@@ -110,7 +110,7 @@ static void ${SDMMC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode )
     ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_TMR = transferMode;
 }
 
-void ${SDMMC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${SDMMC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint16_t nistr = 0U;
     uint16_t eistr = 0U;
@@ -180,7 +180,8 @@ void ${SDMMC_INSTANCE_NAME}_InterruptHandler(void)
 
     if ((${SDMMC_INSTANCE_NAME?lower_case}Obj.callback != NULL) && ((uint32_t)xferStatus > 0U))
     {
-        ${SDMMC_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, ${SDMMC_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${SDMMC_INSTANCE_NAME?lower_case}Obj.context;
+        ${SDMMC_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, context);
     }
 }
 

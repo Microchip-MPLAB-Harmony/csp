@@ -49,7 +49,7 @@
 // *****************************************************************************
 
 <#if HECC_INTERRUPT_MODE == true>
-static HEMC_OBJ ${HEMC_INSTANCE_NAME?lower_case}Obj;
+volatile static HEMC_OBJ ${HEMC_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 // *****************************************************************************
@@ -59,16 +59,18 @@ static HEMC_OBJ ${HEMC_INSTANCE_NAME?lower_case}Obj;
 // *****************************************************************************
 
 <#if USE_HSDRAM?? && USE_HSDRAM>
-void SW_DelayUs(uint32_t delay)
+static void SW_DelayUs(uint32_t delay)
 {
     uint32_t i, count;
 
     /* delay * (CPU_FREQ/1000000) / 6 */
-    count = delay *  (${HSDRAMC_CPU_CLK_FREQ}/1000000)/6;
+    count = delay *  (${HSDRAMC_CPU_CLK_FREQ}U/1000000U)/6U;
 
     /* 6 CPU cycles per iteration */
     for (i = 0; i < count; i++)
+    {
         __NOP();
+    }
 }
 
 
@@ -117,7 +119,7 @@ void ${HSDRAMC_INSTANCE_NAME}_Initialize( void )
     ${HSDRAMC_INSTANCE_NAME}_REGS->HSDRAMC_MR = HSDRAMC_MR_MODE_AUTO_REFRESH;
     ${HSDRAMC_INSTANCE_NAME}_REGS->HSDRAMC_MR;
     __DMB();
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < 8U; i++)
     {
         *pSdramBaseAddress = i;
     }
@@ -150,8 +152,8 @@ void ${HSDRAMC_INSTANCE_NAME}_Initialize( void )
 }
 </#if>
 
-void ${HSMC_INSTANCE_NAME}_Initialize( void )
-{
+<#assign HSMC_INIT_GENERATED = false>
+
 <#list 0..(HSMC_CHIP_SELECT_COUNT - 1) as i>
     <#assign HSMC_IN_USE = "USE_HSMC_" + i>
     <#assign HSMC_CHIP_SELECT = "HSMC_CHIP_SELECT" + i>
@@ -174,7 +176,11 @@ void ${HSMC_INSTANCE_NAME}_Initialize( void )
     <#if .vars[HSMC_CHIP_SELECT]?has_content>
 
     <#if (.vars[HSMC_CHIP_SELECT] != false)>
-
+    <#if HSMC_INIT_GENERATED == false>
+        <#lt>static void ${HSMC_INSTANCE_NAME}_Initialize( void )
+        <#lt>{
+        <#assign HSMC_INIT_GENERATED = true>
+    </#if>
     /* Chip Select CS${i} Timings */
     /* Setup HSMC SETUP register */
     ${HSMC_INSTANCE_NAME}_REGS->HSMC_CS[${i}].HSMC_SETUP = HSMC_SETUP_NWE_SETUP(${.vars[HSMC_NWE_SETUP_CS]}) | HSMC_SETUP_NCS_WR_SETUP(${.vars[HSMC_NCS_WR_SETUP_CS]}) | HSMC_SETUP_NRD_SETUP(${.vars[HSMC_NRD_SETUP_CS]}) | HSMC_SETUP_NCS_RD_SETUP(${.vars[HSMC_NCS_RD_SETUP_CS]});
@@ -187,16 +193,33 @@ void ${HSMC_INSTANCE_NAME}_Initialize( void )
 
     /* Setup HSMC MODE register */
     ${HSMC_INSTANCE_NAME}_REGS->HSMC_CS[${i}].HSMC_MODE = HSMC_MODE_EXNW_MODE(${.vars[HSMC_NWAIT_MODE_CS]}) | HSMC_MODE_DBW(${.vars[HSMC_DATA_BUS_CS]}) <#if (.vars[HSMC_WRITE_MODE_CS] == true)>| HSMC_MODE_WRITE_MODE_Msk</#if> <#if (.vars[HSMC_READ_MODE_CS] == true)>| HSMC_MODE_READ_MODE_Msk</#if> <#if (.vars[HSMC_RMW] == true)>| HSMC_MODE_RMW_ENABLE_Msk</#if>;
+
+    <#if (i == 0)>
+    /* Memory Barrier and clear instruction cache after re-configuring HSMC for chip select 0 for cases where application boot and execute on this chip select */
+    __DSB();
+    __ISB();
+    if(INSTRUCTION_CACHE_IS_ENABLED() != 0U)
+    {
+        ICACHE_INVALIDATE();
+    }
+    </#if>
     </#if>
     </#if>
     </#if>
 </#list>
 
 <#if HSMC_WRITE_PROTECTION>
+    <#if HSMC_INIT_GENERATED == false>
+        <#lt>static void ${HSMC_INSTANCE_NAME}_Initialize( void )
+        <#lt>{
+        <#assign HSMC_INIT_GENERATED = true>
+    </#if>
     /* Enable Write Protection */
     ${HSMC_INSTANCE_NAME}_REGS->HSMC_WPMR = (HSMC_WPMR_WPKEY_PASSWD | HSMC_WPMR_WPEN_Msk);
 </#if>
+<#if HSMC_INIT_GENERATED == true>
 }
+</#if>
 void ${HEMC_INSTANCE_NAME}_Initialize( void )
 {
 <#assign HEMC_NCS0_WRITE_CONF = "CS_0_WRITE_ECC_CONF" >
@@ -242,7 +265,9 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
   <#if USE_HSDRAM?? && USE_HSDRAM>
     ${HSDRAMC_INSTANCE_NAME}_Initialize();
   </#if>
+  <#if HSMC_INIT_GENERATED == true>
     ${HSMC_INSTANCE_NAME}_Initialize();
+  </#if>
 
 <#assign IS_RAM_INIT = false >
 <#list 0..(HSMC_CHIP_SELECT_COUNT - 1) as i>
@@ -252,10 +277,10 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
 <#assign HEMC_RAM_CHECK_BIT_INIT_SIZE = "CS_" + i + "_RAM_CHECK_BIT_INIT_SIZE" >
 <#if (.vars[HEMC_ECC_ENABLE] == true) && (.vars[HEMC_RAM_CHECK_BIT_INIT] == true)>
     /* For RAM memories on NCS${i}, perform memory initialization of ECC check bit */
-    memset((void*)(${.vars[HEMC_ADDRESS]}), 0x00, 0x${.vars[HEMC_RAM_CHECK_BIT_INIT_SIZE]});
-    if (DATA_CACHE_IS_ENABLED())
+    (void) memset((uint32_t*)(${.vars[HEMC_ADDRESS]}), 0x00, 0x${.vars[HEMC_RAM_CHECK_BIT_INIT_SIZE]});
+    if (DATA_CACHE_IS_ENABLED() != 0U)
     {
-        DCACHE_CLEAN_INVALIDATE_BY_ADDR((void*)(${.vars[HEMC_ADDRESS]}), 0x${.vars[HEMC_RAM_CHECK_BIT_INIT_SIZE]});
+        DCACHE_CLEAN_INVALIDATE_BY_ADDR((uint32_t*)(${.vars[HEMC_ADDRESS]}), 0x${.vars[HEMC_RAM_CHECK_BIT_INIT_SIZE]});
     }
     <#if IS_RAM_INIT == false>
        <#assign IS_RAM_INIT = true >
@@ -278,6 +303,113 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
 </#if>
 
 } /* ${HEMC_INSTANCE_NAME}_Initialize */
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_DisableECC(uint8_t chipSelect);
+
+   Summary:
+    Disable the ECC for the given chip select.
+
+   Precondition:
+    None.
+
+   Parameters:
+    chipSelect - The chip select for which ECC is disabled.
+
+   Returns:
+    True if ECC was disable for this chip select, False otherwise.
+*/
+bool ${HEMC_INSTANCE_NAME}_DisableECC(uint8_t chipSelect)
+{
+    bool ret = false;
+    volatile uint32_t* pHemcCrNcsReg = NULL;
+    uint32_t hemcCrEnableMask = 0;
+    bool DisEccCheck = true;
+
+    switch (chipSelect)
+    {
+<#list 0..(HSMC_CHIP_SELECT_COUNT - 1) as i>
+        case ${i}:
+        {
+            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS${i});
+            hemcCrEnableMask = HEMC_CR_NCS${i}_ECC_ENABLE_Msk;
+            break;
+        }
+</#list>
+        default:
+            DisEccCheck = false;
+            break;
+    }
+
+    if( DisEccCheck == false)
+    {
+        return DisEccCheck;
+    }
+    if ( (*pHemcCrNcsReg & hemcCrEnableMask) == hemcCrEnableMask)
+    {
+        *pHemcCrNcsReg &= ~(hemcCrEnableMask);
+        while((*pHemcCrNcsReg & hemcCrEnableMask) == hemcCrEnableMask)
+        {
+            /* Nothing to do */
+        }
+        ret = true;
+    }
+
+    return ret;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_EnableECC(uint8_t chipSelect);
+
+   Summary:
+    Enable the ECC for the given chip select.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None.
+
+   Returns:
+    True if ECC was enable for this chip select, False otherwise.
+*/
+bool ${HEMC_INSTANCE_NAME}_EnableECC(uint8_t chipSelect)
+{
+    bool ret = false, EnEccCheck = true;
+    volatile uint32_t* pHemcCrNcsReg = NULL;
+    uint32_t hemcCrEnableMask = 0;
+
+    switch (chipSelect)
+    {
+<#list 0..(HSMC_CHIP_SELECT_COUNT - 1) as i>
+        case ${i}:
+        {
+            pHemcCrNcsReg = &(HEMC_REGS->HEMC_CR_NCS${i});
+            hemcCrEnableMask = HEMC_CR_NCS${i}_ECC_ENABLE_Msk;
+            break;
+        }
+</#list>
+        default:
+             EnEccCheck = false;
+             break;
+    }
+
+    if( EnEccCheck == false)
+    {
+        return EnEccCheck;
+    }
+
+    *pHemcCrNcsReg |= hemcCrEnableMask;
+    while((*pHemcCrNcsReg & hemcCrEnableMask) != hemcCrEnableMask)
+    {
+        /* Nothing to do */
+    }
+    ret = true;
+
+    return ret;
+}
 
 // *****************************************************************************
 /* Function:
@@ -405,8 +537,7 @@ void ${HEMC_INSTANCE_NAME}_HeccResetCounters(void)
 
   Example:
     <code>
-        // Refer to the description of the HEMC_CALLBACK data type for
-        // example usage.
+
     </code>
 
   Remarks:
@@ -456,8 +587,7 @@ void ${HEMC_INSTANCE_NAME}_FixCallbackRegister(HEMC_CALLBACK callback, uintptr_t
 
   Example:
     <code>
-        // Refer to the description of the HEMC_CALLBACK data type for
-        // example usage.
+
     </code>
 
   Remarks:
@@ -500,12 +630,14 @@ void ${HEMC_INSTANCE_NAME}_NoFixCallbackRegister(HEMC_CALLBACK callback, uintptr
     instance interrupt is enabled. If peripheral instance's interrupt is not
     enabled user need to call it from the main while loop of the application.
 */
-void ${HEMC_INSTANCE_NAME}_INTFIX_InterruptHandler(void)
+void __attribute__((used)) ${HEMC_INSTANCE_NAME}_INTFIX_InterruptHandler(void)
 {
 
     if (${HEMC_INSTANCE_NAME?lower_case}Obj.fix_callback != NULL)
     {
-        ${HEMC_INSTANCE_NAME?lower_case}Obj.fix_callback(${HEMC_INSTANCE_NAME?lower_case}Obj.fix_context);
+        uintptr_t fix_context = ${HEMC_INSTANCE_NAME?lower_case}Obj.fix_context;
+
+        ${HEMC_INSTANCE_NAME?lower_case}Obj.fix_callback(fix_context);
     }
 }
 
@@ -534,12 +666,14 @@ void ${HEMC_INSTANCE_NAME}_INTFIX_InterruptHandler(void)
     instance interrupt is enabled. If peripheral instance's interrupt is not
     enabled user need to call it from the main while loop of the application.
 */
-void ${HEMC_INSTANCE_NAME}_INTNOFIX_InterruptHandler(void)
+void __attribute__((used)) ${HEMC_INSTANCE_NAME}_INTNOFIX_InterruptHandler(void)
 {
 
     if (${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_callback != NULL)
     {
-        ${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_callback(${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_context);
+        uintptr_t nofix_context = ${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_context;
+
+        ${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_callback(nofix_context);
     }
 }
 </#if>

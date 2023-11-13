@@ -418,7 +418,7 @@ flexcomSym_SPI_FIFOEnable.setDependencies(fifoModeVisible, ["FLEXCOM_MODE", "SPI
 # Slave mode TX Buffer Size
 flexcomSym_TXBuffer_Size = flexcomComponent.createIntegerSymbol("FLEXCOM_SPIS_TX_BUFFER_SIZE", flexcomSym_OperatingMode)
 flexcomSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
-flexcomSym_TXBuffer_Size.setMin(0)
+flexcomSym_TXBuffer_Size.setMin(1)
 flexcomSym_TXBuffer_Size.setMax(65535)
 flexcomSym_TXBuffer_Size.setDefaultValue(256)
 flexcomSym_TXBuffer_Size.setVisible(False)
@@ -427,7 +427,7 @@ flexcomSym_TXBuffer_Size.setDependencies(showSlaveDependencies, ["FLEXCOM_MODE",
 # Slave mode RX Buffer Size
 flexcomSym_RXBuffer_Size = flexcomComponent.createIntegerSymbol("FLEXCOM_SPIS_RX_BUFFER_SIZE", flexcomSym_OperatingMode)
 flexcomSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
-flexcomSym_RXBuffer_Size.setMin(0)
+flexcomSym_RXBuffer_Size.setMin(1)
 flexcomSym_RXBuffer_Size.setMax(65535)
 flexcomSym_RXBuffer_Size.setDefaultValue(256)
 flexcomSym_RXBuffer_Size.setVisible(False)
@@ -580,6 +580,20 @@ for i in range (flexcomSym_SPI_CSR_Count):
     flexcomSym_SPI_CSRx_DLYBCT.setDefaultValue(0)
     flexcomSym_SPI_CSRx_DLYBCT.setVisible(False)
     flexcomSym_SPI_CSRx_DLYBCT.setDependencies(updateCSRx_MasterBitFields, ["FLEXCOM_MODE", "FLEXCOM_SPI_MR_MSTR", "FLEXCOM_SPI_EN_NPCS" + str(i)])
+    
+    # CSRx CSAAT
+    flexcomSym_SPI_CSRx_CSAAT = flexcomComponent.createBooleanSymbol("FLEXCOM_SPI_CSR" + str(i) + "_CSAAT", localComponent.getSymbolByID("FLEXCOM_SPI_EN_NPCS" + str(i)))
+    flexcomSym_SPI_CSRx_CSAAT.setLabel("Chip Select Active After Transfer")
+    flexcomSym_SPI_CSRx_CSAAT.setDefaultValue(True)
+    flexcomSym_SPI_CSRx_CSAAT.setVisible(False)
+    flexcomSym_SPI_CSRx_CSAAT.setDependencies(updateCSRx_MasterBitFields, ["FLEXCOM_MODE", "FLEXCOM_SPI_MR_MSTR", "FLEXCOM_SPI_EN_NPCS" + str(i)])
+    
+    # CSRx CSNAAT (Ignored if CSAAT is 1)
+    flexcomSym_SPI_CSRx_CSNAAT = flexcomComponent.createBooleanSymbol("FLEXCOM_SPI_CSR" + str(i) + "_CSNAAT", localComponent.getSymbolByID("FLEXCOM_SPI_EN_NPCS" + str(i)))
+    flexcomSym_SPI_CSRx_CSNAAT.setLabel("Chip Select Not Active After Transfer")
+    flexcomSym_SPI_CSRx_CSNAAT.setDefaultValue(False)
+    flexcomSym_SPI_CSRx_CSNAAT.setVisible(False)
+    flexcomSym_SPI_CSRx_CSNAAT.setDependencies(updateCSRx_MasterBitFields, ["FLEXCOM_MODE", "FLEXCOM_SPI_MR_MSTR", "FLEXCOM_SPI_EN_NPCS" + str(i)])
 
     # CSRx CLOCK MODE Comment
     flexcomSym_SPI_CSRx_ClockModeComment = flexcomComponent.createCommentSymbol("FLEXCOM_SPI_CSR" + str(i) + "_CLOCK_MODE_COMMENT", localComponent.getSymbolByID("FLEXCOM_SPI_EN_NPCS" + str(i)))

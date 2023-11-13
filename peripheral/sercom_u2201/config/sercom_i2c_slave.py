@@ -53,8 +53,10 @@ def updateI2CSlaveConfigurationVisibleProperty(symbol, event):
         eventSym = event["symbol"]
         if eventSym.getValue() == True:
             symbol.setLabel("I2C Slave Address (10-bit)")
+            symbol.setMax(1023)
         else:
             symbol.setLabel("I2C Slave Address (7-bit)")
+            symbol.setMax(127)
     elif symbol.getID() == "I2CS_SDASETUP_TIME_NS":
         updateSDASetupRegisterValue()
         symbol.setMax(updateSDASetupTimeMaxValueInNanoSeconds())
@@ -243,7 +245,7 @@ if TenBitAddrSupported == True:
 i2csSym_ADDR = sercomComponent.createHexSymbol("I2CS_SLAVE_ADDDRESS", sercomSym_OperationMode)
 i2csSym_ADDR.setLabel("I2C Slave Address (7-bit)")
 i2csSym_ADDR.setMin(0)
-i2csSym_ADDR.setMax(1023)
+i2csSym_ADDR.setMax(127)
 i2csSym_ADDR.setVisible(False)
 i2csSym_ADDR.setDefaultValue(0x54)
 i2csSym_ADDR.setDependencies(updateI2CSlaveConfigurationVisibleProperty, ["SERCOM_MODE", "I2CS_TENBITEN_SUPPORT"])

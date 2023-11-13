@@ -1,0 +1,1 @@
+#include "peripheral/spt/plib_${SPT_INSTANCE_NAME?lower_case}.h"

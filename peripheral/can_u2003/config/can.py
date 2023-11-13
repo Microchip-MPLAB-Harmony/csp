@@ -459,7 +459,7 @@ def updateSourceFileName(symbol, event):
         elif id == "instHeaderFile":
             symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can" + canInt + ".h.ftl")
         elif id == "headerFile":
-            symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can_common.h")
+            symbol.setSourcePath("../peripheral/can_u2003/templates/plib_can_common.h.ftl")
 
 def instantiateComponent(canComponent):
     global canInstanceName
@@ -980,12 +980,14 @@ def instantiateComponent(canComponent):
     canTimestampEnable.setDefaultValue(False)
 
     #timestamp Modes
+    tssNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CAN"]/register-group@[name="CAN"]/register@[name="TSCC"]/bitfield@[name="TSS"]')
+    tssValgrpName = tssNode.getAttribute("values")
+    tssValGrpNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CAN"]/value-group@[name=\"' + tssValgrpName + '\"]')
     canTimestampMode = canComponent.createKeyValueSetSymbol("TIMESTAMP_MODE", canTimestampEnable)
     canTimestampMode.setLabel("Timestamp mode")
-    canTimestampMode.setDescription("EXT TIMESTAMP: external counter (needed for FD). ZERO: timestamp is always 0x0000. TCP INC: incremented according to TCP.")
-    canTimestampMode.addKey("CAN_TSCC_TSS_ZERO", "0", "ZERO")
-    canTimestampMode.addKey("CAN_TSCC_TSS_INC", "1", "TCP INC")
-    canTimestampMode.addKey("CAN_TSCC_TSS_EXT", "2", "EXT TIMESTAMP")
+    canTimestampMode.setDescription(tssNode.getAttribute("caption"))
+    for value in tssValGrpNode.getChildren():
+        canTimestampMode.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     canTimestampMode.setOutputMode("Key")
     canTimestampMode.setDisplayMode("Description")
     canTimestampMode.setDefaultValue(1)
@@ -1031,11 +1033,12 @@ def instantiateComponent(canComponent):
 
     #Master Header
     canMasterHeaderFile = canComponent.createFileSymbol("headerFile", None)
-    canMasterHeaderFile.setSourcePath("../peripheral/can_u2003/templates/plib_can_common.h")
+    canMasterHeaderFile.setSourcePath("../peripheral/can_u2003/templates/plib_can_common.h.ftl")
     canMasterHeaderFile.setOutputName("plib_can_common.h")
     canMasterHeaderFile.setDestPath("/peripheral/can/")
     canMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/can/")
     canMasterHeaderFile.setType("HEADER")
+    canMasterHeaderFile.setMarkup(True)
     canMasterHeaderFile.setDependencies(updateSourceFileName, ["INTERRUPT_MODE", "CAN_GENERATE_LEGACY_APIS"])
 
     #Instance Source File

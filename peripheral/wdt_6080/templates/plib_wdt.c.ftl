@@ -45,11 +45,11 @@
 </#if>
 <#if WDT_CR_LOCKMR??>
 
-#define WDT_CLK_DELAY  ((3 * ${CPU_CLOCK_FREQUENCY}) / 32768)
+#define WDT_CLK_DELAY  ((3U * ${CPU_CLOCK_FREQUENCY}U) / 32768U)
 </#if>
 <#if wdtinterruptMode == true>
 
-  <#lt>WDT_OBJECT wdt;
+  <#lt>volatile static WDT_OBJECT wdt;
 </#if>
 
 void ${WDT_INSTANCE_NAME}_Initialize( void )
@@ -59,13 +59,16 @@ void ${WDT_INSTANCE_NAME}_Initialize( void )
      * WDD and WDV fields in MR cannot be modified, so enable it before proceeding.
      * NOTE: If lock bit is already set, these operations have no effect on WDT.
      */
-    if (${WDT_INSTANCE_NAME}_REGS->WDT_MR & WDT_MR_WDDIS_Msk)
+    if( (${WDT_INSTANCE_NAME}_REGS->WDT_MR & WDT_MR_WDDIS_Msk) != 0U)
     {
         /* Enable Watchdog */
         ${WDT_INSTANCE_NAME}_REGS->WDT_MR &= ~(WDT_MR_WDDIS_Msk);
 
         /* Wait for 3 WDT clk cycles before any further update to MR */
-        for(uint32_t count = 0; count < WDT_CLK_DELAY; count++);
+        for(uint32_t count = 0; count < WDT_CLK_DELAY; count++)
+        {
+            /* Nothing to do */
+        }
     }
 </#if>
 
@@ -89,18 +92,20 @@ void ${WDT_INSTANCE_NAME}_Clear(void)
 <#if wdtinterruptMode == true>
     <#lt>void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
     <#lt>{
-    <#lt>   wdt.callback = callback;
-    <#lt>   wdt.context = context;
+    <#lt>    wdt.callback = callback;
+    <#lt>    wdt.context = context;
     <#lt>}
 </#if>
 
 <#if wdtinterruptMode == true>
-   <#lt>void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
-   <#lt>{
-   <#lt>   ${WDT_INSTANCE_NAME}_REGS->WDT_SR;
-   <#lt>    if(wdt.callback != NULL)
-    <#lt>   {
-    <#lt>       wdt.callback(wdt.context);
-    <#lt>   }
-  <#lt>}
+    <#lt>void __attribute__((used)) ${WDT_INSTANCE_NAME}_InterruptHandler( void )
+    <#lt>{
+    <#lt>    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    <#lt>    uintptr_t context = wdt.context;
+    <#lt>    (void)${WDT_INSTANCE_NAME}_REGS->WDT_SR;
+    <#lt>    if(wdt.callback != NULL)
+    <#lt>    {
+    <#lt>        wdt.callback(context);
+    <#lt>    }
+    <#lt>}
 </#if>

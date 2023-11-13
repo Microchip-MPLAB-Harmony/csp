@@ -87,8 +87,9 @@ typedef enum
 
 typedef enum
 {
-    RTC_INT_ALARM = 0x02,          // Alarm Event
-    RTC_INT_TIME = 0x08 ,          // Time Event
+    RTC_INT_ALARM    = 0x02,          // Alarm Event
+    RTC_INT_SECOND   = 0x04,          // Second Event
+    RTC_INT_TIME     = 0x08,          // Time Event
     RTC_INT_CALENDAR = 0x10,          // Calendar enable
 } RTC_INT_MASK;
 

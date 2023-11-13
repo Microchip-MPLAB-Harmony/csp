@@ -1,0 +1,7 @@
+.secure-combo .secure .p-dropdown-label {
+  color: #4cbb17;
+}
+
+.secure-combo .nonsecure .p-dropdown-label {
+  color: red;
+}

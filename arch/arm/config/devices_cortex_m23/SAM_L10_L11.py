@@ -228,6 +228,9 @@ for nvmctrl_instance in range (0, len(modules)):
     components.append(str(modules[nvmctrl_instance].getAttribute("name")).lower())
 Database.activateComponents(components)
 
+global swdPin
+swdPin = {"PA30": "0x06"}
+
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
 coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
@@ -242,7 +245,7 @@ coreComponent.addPlugin("../peripheral/clk_sam_l10_l11/plugin/clk_sam_l10_l11.ja
 
 # # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
 
 #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
@@ -251,7 +254,14 @@ if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_E
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick_s/config/systick.py")
 #load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_u2223/config/dmac.py")
-coreComponent.addPlugin("../peripheral/dmac_u2223/plugin/dmamanager.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_PIC32CM_SAM_L10_L11",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-1/build/index.html",
+                            "symbol_config": "csp/peripheral/dmac_u2223/plugin/symbol-config.json"
+                        }
+                        )
 
 #load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")

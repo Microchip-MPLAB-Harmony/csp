@@ -39,6 +39,9 @@
 *******************************************************************************/
 #include "device.h"
 #include "plib_${MCPWM_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#--Implementation-->
 // *****************************************************************************
@@ -48,10 +51,10 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if PTCON__SEIEN == true>
-MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}PriEventObj;
+volatile static MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}PriEventObj;
 </#if>
 <#if STCON__SSEIEN == true>
-MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj;
+volatile static MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj;
 </#if>
 <#assign interrupt_mode = false>
 <#list 1 .. MCPWM_NUM_CHANNELS as i>
@@ -61,7 +64,7 @@ MCPWM_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj;
 </#if>
 </#list>
 <#if  interrupt_mode == true>
-MCPWM_CH_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}Obj[${MCPWM_NUM_CHANNELS}];
+volatile static MCPWM_CH_OBJECT ${MCPWM_INSTANCE_NAME?lower_case}Obj[${MCPWM_NUM_CHANNELS}];
 </#if>
 
 void ${MCPWM_INSTANCE_NAME}_Initialize (void)
@@ -229,7 +232,7 @@ void ${MCPWM_INSTANCE_NAME}_PrimaryPeriodSet(uint16_t period)
 
 uint16_t ${MCPWM_INSTANCE_NAME}_PrimaryPeriodGet(void)
 {
-    return PTPER;
+    return (uint16_t)PTPER;
 }
 
 
@@ -240,62 +243,62 @@ void ${MCPWM_INSTANCE_NAME}_SecondaryPeriodSet(uint16_t period)
 
 uint16_t ${MCPWM_INSTANCE_NAME}_SecondaryPeriodGet(void)
 {
-    return STPER;
+    return (uint16_t)STPER;
 }
 
 void ${MCPWM_INSTANCE_NAME}_ChannelPrimaryDutySet(MCPWM_CH_NUM channel, uint16_t duty)
 {
-    *(&PDC1 + (0x40 * (channel))) = duty;
+    *(&PDC1 + (0x40U * (channel))) = duty;
 }
 
 void ${MCPWM_INSTANCE_NAME}_ChannelSecondaryDutySet(MCPWM_CH_NUM channel, uint16_t duty)
 {
-    *(&SDC1 + (0x40 * (channel))) = duty;
+    *(&SDC1 + (0x40U * (channel))) = duty;
 }
 
 void ${MCPWM_INSTANCE_NAME}_ChannelDeadTimeSet(MCPWM_CH_NUM channel, uint16_t high_deadtime, uint16_t low_deadtime)
 {
-    *(&DTR1 + (0x40 * (channel))) = (high_deadtime & 0x3FFF);
-    *(&ALTDTR1 + (0x40 * (channel))) = (low_deadtime & 0x3FFF);
+    *(&DTR1 + (0x40U * (channel))) = ((uint32_t)high_deadtime & (uint32_t)0x3FFFU);
+    *(&ALTDTR1 + (0x40U * (channel))) = ((uint32_t)low_deadtime & (uint32_t)0x3FFFU);
 }
 
 void ${MCPWM_INSTANCE_NAME}_ChannelPrimaryTriggerSet(MCPWM_CH_NUM channel, uint16_t trigger)
 {
-    *(&TRIG1 + (0x40 * (channel))) = trigger;
+    *(&TRIG1 + (0x40U * (channel))) = trigger;
 }
 
 void ${MCPWM_INSTANCE_NAME}_ChannelSecondaryTriggerSet(MCPWM_CH_NUM channel, uint16_t trigger)
 {
-    *(&STRIG1 + (0x40 * (channel))) = trigger;
+    *(&STRIG1 + (0x40U * (channel))) = trigger;
 }
 
 void ${MCPWM_INSTANCE_NAME}_ChannelLeadingEdgeBlankingDelaySet(MCPWM_CH_NUM channel, uint16_t delay)
 {
-    *(&LEBDLY1 + (0x40 * (channel))) = delay;
+    *(&LEBDLY1 + (0x40U * (channel))) = delay;
 }
 
 void ${MCPWM_INSTANCE_NAME}_ChannelPinsOverrideEnable(MCPWM_CH_NUM channel)
 {
-    *(&IOCON1 + (0x40 * (channel))) |= _IOCON1_OVRENL_MASK | _IOCON1_OVRENH_MASK;
+    *(&IOCON1 + (0x40U * (channel))) |= _IOCON1_OVRENL_MASK | _IOCON1_OVRENH_MASK;
 }
 
 void ${MCPWM_INSTANCE_NAME}_ChannelPinsOverrideDisable(MCPWM_CH_NUM channel)
 {
-    *(&IOCON1 + (0x40 * (channel))) &= ~(_IOCON1_OVRENL_MASK | _IOCON1_OVRENH_MASK);
+    *(&IOCON1 + (0x40U * (channel))) &= ~(_IOCON1_OVRENL_MASK | _IOCON1_OVRENH_MASK);
 }
 
 void ${MCPWM_INSTANCE_NAME}_ChannelPinsOwnershipEnable(MCPWM_CH_NUM channel)
 {
-    *(&IOCON1 + (0x40 * (channel))) |= _IOCON1_PENH_MASK | _IOCON1_PENL_MASK;
+    *(&IOCON1 + (0x40U * (channel))) |= _IOCON1_PENH_MASK | _IOCON1_PENL_MASK;
 }
 
 void ${MCPWM_INSTANCE_NAME}_ChannelPinsOwnershipDisable(MCPWM_CH_NUM channel)
 {
-    *(&IOCON1 + (0x40 * (channel))) &= ~(_IOCON1_PENH_MASK | _IOCON1_PENL_MASK);
+    *(&IOCON1 + (0x40U * (channel))) &= ~(_IOCON1_PENH_MASK | _IOCON1_PENL_MASK);
 }
 
 <#if PTCON__SEIEN == true>
-void PWM_PRI_InterruptHandler(void)
+void __attribute__((used)) PWM_PRI_InterruptHandler(void)
 {
     PTCONbits.SEIEN = 0;
     ${MCPWM_IFS_PRI}CLR = _${MCPWM_IFS_PRI}_PWMPEVTIF_MASK;    //Clear IRQ flag
@@ -315,7 +318,7 @@ void ${MCPWM_INSTANCE_NAME}_PrimaryEventCallbackRegister(MCPWM_CALLBACK callback
 </#if>
 
 <#if STCON__SSEIEN == true>
-void PWM_SEC_InterruptHandler(void)
+void __attribute__((used)) PWM_SEC_InterruptHandler(void)
 {
     STCONbits.SSEIEN = 0;
     ${MCPWM_IFS_SEC}CLR = _${MCPWM_IFS_SEC}_PWMSEVTIF_MASK;    //Clear IRQ flag
@@ -340,28 +343,39 @@ void ${MCPWM_INSTANCE_NAME}_SecondaryEventCallbackRegister(MCPWM_CALLBACK callba
 <#assign fault_enable = "PWMCON" + i + "__FLTIEN">
 <#assign cl_enable = "PWMCON" + i + "__CLIEN">
 <#if .vars[interrupt] == 1>
-void PWM${i}_InterruptHandler(void)
+void __attribute__((used)) PWM${i}_InterruptHandler(void)
 {
-    MCPWM_CH_STATUS status;
-    status = (MCPWM_CH_STATUS)(PWMCON${i} & MCPWM_STATUS_MASK);
-    if (PWMCON${i}bits.PWMHIEN && PWMCON${i}bits.PWMHIF)
+    uint32_t tmp;
+    uintptr_t context = ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].context;
+    uint32_t status = PWMCON${i} & MCPWM_STATUS_MASK;
+
+    tmp = PWMCON${i}bits.PWMHIF;
+    if (((PWMCON${i}bits.PWMHIEN) != 0U) && (tmp != 0U))
     {
         PWMCON${i}bits.PWMHIF = 0;
     }
-    if (PWMCON${i}bits.PWMLIEN && PWMCON${i}bits.PWMLIF)
+
+    tmp = PWMCON${i}bits.PWMLIF;
+    if (((PWMCON${i}bits.PWMLIEN) != 0U) && (tmp != 0U))
     {
         PWMCON${i}bits.PWMLIF = 0;
     }
-    if (PWMCON${i}bits.TRGIEN && PWMCON${i}bits.TRGIF)
+
+    tmp = PWMCON${i}bits.TRGIF;
+    if (((PWMCON${i}bits.TRGIEN) != 0U) && (tmp != 0U))
     {
         PWMCON${i}bits.TRGIF = 0;
     }
-    if (PWMCON${i}bits.CLIEN && PWMCON${i}bits.CLIF)
+
+    tmp = PWMCON${i}bits.CLIF;
+    if (((PWMCON${i}bits.CLIEN) != 0U) && (tmp != 0U))
     {
         PWMCON${i}bits.CLIEN = 0;
         PWMCON${i}bits.CLIF = 0;
     }
-    if (PWMCON${i}bits.FLTIEN && PWMCON${i}bits.FLTIF)
+
+    tmp = PWMCON${i}bits.FLTIF;
+    if (((PWMCON${i}bits.FLTIEN) != 0U) && (tmp != 0U))
     {
         PWMCON${i}bits.FLTIEN = 0;
         PWMCON${i}bits.FLTIF = 0;
@@ -378,7 +392,7 @@ void PWM${i}_InterruptHandler(void)
 
     if( (${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].callback != NULL))
     {
-        ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].callback(status, ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].context);
+        ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].callback((MCPWM_CH_STATUS)status, context);
     }
 }
 

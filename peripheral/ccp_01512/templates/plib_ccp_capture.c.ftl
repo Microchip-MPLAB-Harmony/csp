@@ -38,12 +38,15 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 #include "plib_${CCP_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if CCP_TIMER_INTERRUPT == true>
-static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}TimerObj;
+volatile static CCP_TIMER_OBJECT ${CCP_INSTANCE_NAME?lower_case}TimerObj;
 </#if>
 <#if CCP_CAP_INTERRUPT == true>
-static CCP_CAPTURE_OBJECT ${CCP_INSTANCE_NAME?lower_case}CaptureObj;
+volatile static CCP_CAPTURE_OBJECT ${CCP_INSTANCE_NAME?lower_case}CaptureObj;
 </#if>
 <#--Implementation-->
 // *****************************************************************************
@@ -71,7 +74,7 @@ void ${CCP_INSTANCE_NAME}_CaptureInitialize (void)
     <#if CCP_CAP_INTERRUPT == true>
     /* Enable input capture interrupt */
     ${CCP_CAP_COMP_IEC_REG}SET = _${CCP_CAP_COMP_IEC_REG}_CCP${CCP_INSTANCE_NUM}IE_MASK;
-    </#if>    
+    </#if>
 }
 
 
@@ -106,13 +109,15 @@ void ${CCP_INSTANCE_NAME}_TimerCallbackRegister(CCP_TIMER_CALLBACK callback, uin
     ${CCP_INSTANCE_NAME?lower_case}TimerObj.context = context;
 }
 
-void CCT${CCP_INSTANCE_NUM}_InterruptHandler(void)
+void __attribute__((used)) CCT${CCP_INSTANCE_NUM}_InterruptHandler(void)
 {
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context = ${CCP_INSTANCE_NAME?lower_case}TimerObj.context;
     uint32_t status = ${CCP_IFS_REG}bits.CCT${CCP_INSTANCE_NUM}IF;
-    ${CCP_IFS_REG}CLR = _${CCP_IFS_REG}_CCT${CCP_INSTANCE_NUM}IF_MASK;    //Clear IRQ flag    
+    ${CCP_IFS_REG}CLR = _${CCP_IFS_REG}_CCT${CCP_INSTANCE_NUM}IF_MASK;    //Clear IRQ flag
     if( (${CCP_INSTANCE_NAME?lower_case}TimerObj.callback_fn != NULL))
     {
-        ${CCP_INSTANCE_NAME?lower_case}TimerObj.callback_fn(status, ${CCP_INSTANCE_NAME?lower_case}TimerObj.context);
+        ${CCP_INSTANCE_NAME?lower_case}TimerObj.callback_fn(status, context);
     }
 }
 </#if>
@@ -125,12 +130,14 @@ void ${CCP_INSTANCE_NAME}_CaptureCallbackRegister(CCP_CAPTURE_CALLBACK callback,
     ${CCP_INSTANCE_NAME?lower_case}CaptureObj.context = context;
 }
 
-void CCP${CCP_INSTANCE_NUM}_InterruptHandler(void)
+void __attribute__((used)) CCP${CCP_INSTANCE_NUM}_InterruptHandler(void)
 {
+    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */
+    uintptr_t context = ${CCP_INSTANCE_NAME?lower_case}CaptureObj.context;
     ${CCP_CAP_COMP_IFS_REG}CLR = _${CCP_CAP_COMP_IFS_REG}_CCP${CCP_INSTANCE_NUM}IF_MASK;    //Clear IRQ flag
     if( (${CCP_INSTANCE_NAME?lower_case}CaptureObj.callback_fn != NULL))
     {
-        ${CCP_INSTANCE_NAME?lower_case}CaptureObj.callback_fn(${CCP_INSTANCE_NAME?lower_case}CaptureObj.context);
+        ${CCP_INSTANCE_NAME?lower_case}CaptureObj.callback_fn(context);
     }
 }
 
@@ -139,7 +146,7 @@ void CCP${CCP_INSTANCE_NUM}_InterruptHandler(void)
 bool ${CCP_INSTANCE_NAME}_CaptureStatusGet (void)
 {
     bool status = false;
-    status = ((CCP${CCP_INSTANCE_NUM}STAT >> _CCP1STAT_ICBNE_POSITION) & _CCP1STAT_ICBNE_MASK);
+    status = (((CCP${CCP_INSTANCE_NUM}STAT >> _CCP1STAT_ICBNE_POSITION) & _CCP1STAT_ICBNE_MASK) != 0U);
     return status;
 }
 </#if>

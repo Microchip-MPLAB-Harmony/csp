@@ -75,32 +75,31 @@ extern "C" {
 /*  The following data type definitions are used by the functions in this
     interface and should be considered part it.
 */
-typedef enum {
-    ADC_RESULT_BUFFER_0 = 0,
-    ADC_RESULT_BUFFER_1,
-    ADC_RESULT_BUFFER_2,
-    ADC_RESULT_BUFFER_3,
-    ADC_RESULT_BUFFER_4,
-    ADC_RESULT_BUFFER_5,
-    ADC_RESULT_BUFFER_6,
-    ADC_RESULT_BUFFER_7,
-    ADC_RESULT_BUFFER_8,
-    ADC_RESULT_BUFFER_9,
-    ADC_RESULT_BUFFER_10,
-    ADC_RESULT_BUFFER_11,
-    ADC_RESULT_BUFFER_12,
-    ADC_RESULT_BUFFER_13,
-    ADC_RESULT_BUFFER_14,
-    ADC_RESULT_BUFFER_15,
+#define     ADC_RESULT_BUFFER_0    (0U)
+#define     ADC_RESULT_BUFFER_1    (1U)
+#define     ADC_RESULT_BUFFER_2    (2U)
+#define     ADC_RESULT_BUFFER_3    (3U)
+#define     ADC_RESULT_BUFFER_4    (4U)
+#define     ADC_RESULT_BUFFER_5    (5U)
+#define     ADC_RESULT_BUFFER_6    (6U)
+#define     ADC_RESULT_BUFFER_7    (7U)
+#define     ADC_RESULT_BUFFER_8    (8U)
+#define     ADC_RESULT_BUFFER_9    (9U)
+#define     ADC_RESULT_BUFFER_10   (10U)
+#define     ADC_RESULT_BUFFER_11   (11U)
+#define     ADC_RESULT_BUFFER_12   (12U)
+#define     ADC_RESULT_BUFFER_13   (13U)
+#define     ADC_RESULT_BUFFER_14   (14U)
+#define     ADC_RESULT_BUFFER_15   (15U)
 <#if (core.PRODUCT_FAMILY == "PIC32MM1387")>
-    ADC_RESULT_BUFFER_16,
-    ADC_RESULT_BUFFER_17,
-    ADC_RESULT_BUFFER_18,
-    ADC_RESULT_BUFFER_19,
-    ADC_RESULT_BUFFER_20,
-    ADC_RESULT_BUFFER_21,
+#define     ADC_RESULT_BUFFER_16   (16U)
+#define     ADC_RESULT_BUFFER_17   (17U)
+#define     ADC_RESULT_BUFFER_18   (18U)
+#define     ADC_RESULT_BUFFER_19   (19U)
+#define     ADC_RESULT_BUFFER_20   (20U)
+#define     ADC_RESULT_BUFFER_21   (21U)
 </#if>
-}${ADC_INSTANCE_NAME}_RESULT_BUFFER;
+typedef uint32_t ${ADC_INSTANCE_NAME}_RESULT_BUFFER;
 
 typedef enum
 {

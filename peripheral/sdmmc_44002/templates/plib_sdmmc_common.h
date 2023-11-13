@@ -55,21 +55,30 @@
 // DOM-IGNORE-END
 
 /* ADMA Descriptor Table Attribute Mask */
-#define SDMMC_DESC_TABLE_ATTR_NO_OP          (0x00 << 4)
-#define SDMMC_DESC_TABLE_ATTR_RSVD           (0x01 << 4)
-#define SDMMC_DESC_TABLE_ATTR_XFER_DATA      (0x02 << 4)
-#define SDMMC_DESC_TABLE_ATTR_LINK_DESC      (0x03 << 4)
+#define SDMMC_DESC_TABLE_ATTR_NO_OP          (0x00U << 4U)
+#define SDMMC_DESC_TABLE_ATTR_RSVD           (0x01U << 4U)
+#define SDMMC_DESC_TABLE_ATTR_XFER_DATA      (0x02U << 4U)
+#define SDMMC_DESC_TABLE_ATTR_LINK_DESC      (0x03U << 4U)
 
-#define SDMMC_DESC_TABLE_ATTR_VALID          (1 << 0)
-#define SDMMC_DESC_TABLE_ATTR_END            (1 << 1)
-#define SDMMC_DESC_TABLE_ATTR_INTR           (1 << 2)
+#define SDMMC_DESC_TABLE_ATTR_VALID          (1U << 0U)
+#define SDMMC_DESC_TABLE_ATTR_END            (1UL << 1U)
+#define SDMMC_DESC_TABLE_ATTR_INTR           (1U << 2U)
 
-#define SDMMC_CLOCK_FREQ_400_KHZ             (400000)
-#define SDMMC_CLOCK_FREQ_DS_25_MHZ           (25000000)
-#define SDMMC_CLOCK_FREQ_HS_50_MHZ           (50000000)
+#define SDMMC_CLOCK_FREQ_400_KHZ             (400000U)
+#define SDMMC_CLOCK_FREQ_DS_25_MHZ           (25000000U)
+#define SDMMC_CLOCK_FREQ_HS_50_MHZ           (50000000U)
 
-#define SDMMC_CLOCK_FREQ_HS_26_MHZ           (26000000)
-#define SDMMC_CLOCK_FREQ_HS_52_MHZ           (52000000)
+#define SDMMC_CLOCK_FREQ_HS_26_MHZ           (26000000U)
+#define SDMMC_CLOCK_FREQ_HS_52_MHZ           (52000000U)
+
+
+#define    SDMMC_XFER_STATUS_IDLE             (0x00U)
+#define    SDMMC_XFER_STATUS_CMD_COMPLETED    (0x01U)
+#define    SDMMC_XFER_STATUS_DATA_COMPLETED   (0x02U)
+#define    SDMMC_XFER_STATUS_CARD_INSERTED    (0x04U)
+#define    SDMMC_XFER_STATUS_CARD_REMOVED     (0x08U)
+
+typedef uint32_t SDMMC_XFER_STATUS;
 
 typedef enum
 {
@@ -86,104 +95,109 @@ typedef enum
 
 } SDMMC_SPEED_MODE;
 
-typedef enum
-{
-    /* Command code to reset the SD card */
-    SDMMC_CMD_GO_IDLE_STATE = 0,
 
-    /* Command code to initialize the SD card */
-    SDMMC_CMD_SEND_OP_COND  = 1,
+/* Command code to reset the SD card */
+#define   SDMMC_CMD_GO_IDLE_STATE      (0U)
 
-    /* Broadcast command code to get all card IDs */
-    SDMMC_CMD_ALL_SEND_CID  = 2,
+/* Command code to initialize the SD card */
+#define    SDMMC_CMD_SEND_OP_COND      (1U)
 
-    /* Command card to respond with its RCA, tells it to go to standby state */
-    SDMMC_CMD_SEND_RCA  = 3,
+/* Broadcast command code to get all card IDs */
+#define    SDMMC_CMD_ALL_SEND_CID      (2U)
 
-    /* ACMD6 sets the card's bus width between 1-bit and 4-bit, only available when the card is unlocked */
-    SDMMC_CMD_SET_BUS_WIDTH  = 6,
+/* Command card to respond with its RCA, tells it to go to standby state */
+#define    SDMMC_CMD_SEND_RCA          (3U)
 
-    /* Command to switch functions in ext csd register in emmc */
-    SDMMC_CMD_SWITCH      = 6,
+/* ACMD6 sets the card's bus width between 1-bit and 4-bit, only available when the card is unlocked */
+#define    SDMMC_CMD_SET_BUS_WIDTH     (6U)
 
-    /* Select/Deselect card message, sends the card to transfer state */
-    SDMMC_CMD_SELECT_DESELECT_CARD = 7,
+/* Command to switch functions in ext csd register in emmc */
+#define    SDMMC_CMD_SWITCH                  (6U)
 
-    /* This macro defined the command code to check for sector addressing */
-    SDMMC_CMD_SEND_IF_COND  = 8,
+/* Select/Deselect card message, sends the card to transfer state */
+#define    SDMMC_CMD_SELECT_DESELECT_CARD    (7U)
 
-    /* for MMC CMD8 is used to fetch ext csd */
-    SDMMC_CMD_SEND_EXT_CSD = 8,
+/* This macro defined the command code to check for sector addressing */
+#define    SDMMC_CMD_SEND_IF_COND            (8U)
 
-    /* Command code to get the Card Specific Data */
-    SDMMC_CMD_SEND_CSD      = 9,
+/* for MMC CMD8 is used to fetch ext csd */
+#define    SDMMC_CMD_SEND_EXT_CSD            (8U)
 
-    /* Command code to get the Card Information */
-    SDMMC_CMD_SEND_CID      = 10,
+/* Command code to get the Card Specific Data */
+#define    SDMMC_CMD_SEND_CSD                (9U)
 
-    /* Command code to stop transmission during a multi-block read */
-    SDMMC_CMD_STOP_TRANSMISSION = 12,
+/* Command code to get the Card Information */
+#define    SDMMC_CMD_SEND_CID                (10U)
 
-    /* Command code to get the card status information */
-    SDMMC_CMD_SEND_STATUS       = 13,
+/* Command code to stop transmission during a multi-block read */
+#define    SDMMC_CMD_STOP_TRANSMISSION       (12U)
 
-    /* Command code to set the block length of the card */
-    SDMMC_CMD_SET_BLOCKLEN      = 16,
+/* Command code to get the card status information */
+#define    SDMMC_CMD_SEND_STATUS             (13U)
 
-    /* Command code to read one block from the card */
-    SDMMC_CMD_READ_SINGLE_BLOCK  = 17,
+/* Command code to set the block length of the card */
+#define    SDMMC_CMD_SET_BLOCKLEN            (16U)
 
-    /* Command code to read multiple blocks from the card */
-    SDMMC_CMD_READ_MULTI_BLOCK   = 18,
+/* Command code to read one block from the card */
+#define    SDMMC_CMD_READ_SINGLE_BLOCK       (17U)
 
-    /* Command code to tell the media how many blocks to pre-erase */
-    SDMMC_CMD_SET_WR_BLK_ERASE_COUNT =  23,
+/* Command code to read multiple blocks from the card */
+#define    SDMMC_CMD_READ_MULTI_BLOCK        (18U)
 
-    /* Command code to write one block to the card */
-    SDMMC_CMD_WRITE_SINGLE_BLOCK  = 24,
+/* Command code to tell the media how many blocks to pre-erase */
+#define    SDMMC_CMD_SET_WR_BLK_ERASE_COUNT  (23U)
 
-    /* Command code to write multiple blocks to the card */
-    SDMMC_CMD_WRITE_MULTI_BLOCK   = 25,
+/* Command code to write one block to the card */
+#define    SDMMC_CMD_WRITE_SINGLE_BLOCK     (24U)
 
-    /* Command code to set the address of the start of an erase operation */
-    SDMMC_CMD_TAG_SECTOR_START    = 32,
+/* Command code to write multiple blocks to the card */
+#define    SDMMC_CMD_WRITE_MULTI_BLOCK      (25U)
 
-    /* Command code to set the address of the end of an erase operation */
-    SDMMC_CMD_TAG_SECTOR_END      = 33,
+/* Command code to set the address of the start of an erase operation */
+#define    SDMMC_CMD_TAG_SECTOR_START       (32U)
 
-    /* Command code to erase all previously selected blocks */
-    SDMMC_CMD_ERASE              =  38,
+/* Command code to set the address of the end of an erase operation */
+#define    SDMMC_CMD_TAG_SECTOR_END        (33U)
 
-    /* Command code to initialize an SD card and provide the CSD register value */
-    SDMMC_CMD_SD_SEND_OP_COND     = 41,
+/* Command code to erase all previously selected blocks */
+#define    SDMMC_CMD_ERASE                 (38U)
 
-    /* Command code to get the SCR register information from the card */
-    SDMMC_CMD_READ_SCR            = 51,
+/* Command code to initialize an SD card and provide the CSD register value */
+#define    SDMMC_CMD_SD_SEND_OP_COND       (41U)
 
-    /* Command code to begin application specific command inputs */
-    SDMMC_CMD_APP_CMD             = 55,
+/* Command code to get the SCR register information from the card */
+#define    SDMMC_CMD_READ_SCR              (51U)
 
-    /* Command code to get the OCR register information from the card */
-    SDMMC_CMD_READ_OCR            = 58,
+/* Command code to begin application specific command inputs */
+#define    SDMMC_CMD_APP_CMD               (55U)
 
-    /* Command code to disable CRC checking */
-    SDMMC_CMD_CRC_ON_OFF          = 59,
+/* Command code to get the OCR register information from the card */
+#define   SDMMC_CMD_READ_OCR               (58U)
 
-} SDMMC_SD_COMMAND;
+/* Command code to disable CRC checking */
+#define    SDMMC_CMD_CRC_ON_OFF            (59U)
 
-typedef enum
-{
-    SDMMC_CMD_RESP_NONE,   /*!< no response type */
-    SDMMC_CMD_RESP_R1,     /*!< normal response command */
-    SDMMC_CMD_RESP_R1B,    /*!< normal with busy signal */
-    SDMMC_CMD_RESP_R2,     /*!< CID, CSD register */
-    SDMMC_CMD_RESP_R3,     /*!< OCR register */
-    SDMMC_CMD_RESP_R4,     /*!< */
-    SDMMC_CMD_RESP_R5,     /*!< */
-    SDMMC_CMD_RESP_R6,     /*!< Published RCA response  */
-    SDMMC_CMD_RESP_R7      /*!< Card interface condition  */
+typedef uint32_t SDMMC_SD_COMMAND;
 
-} SDMMC_CMD_RESP_TYPE;
+ 
+#define    SDMMC_RESET_ALL   (0x01U)
+#define    SDMMC_RESET_CMD   (0x02U)
+#define    SDMMC_RESET_DAT   (0x04U)
+
+typedef uint8_t SDMMC_RESET_TYPE;
+
+
+#define     SDMMC_CMD_RESP_NONE  (0U)   /*!< no response type */
+#define     SDMMC_CMD_RESP_R1    (1U) /*!< normal response command */
+#define     SDMMC_CMD_RESP_R1B   (2U)    /*!< normal with busy signal */
+#define     SDMMC_CMD_RESP_R2    (3U)     /*!< CID, CSD register */
+#define     SDMMC_CMD_RESP_R3    (4U)     /*!< OCR register */
+#define     SDMMC_CMD_RESP_R4    (5U)     /*!< */
+#define     SDMMC_CMD_RESP_R5    (6U)     /*!< */
+#define     SDMMC_CMD_RESP_R6    (7U)     /*!< Published RCA response  */
+#define     SDMMC_CMD_RESP_R7    (8U)  /*!< Card interface condition  */
+
+typedef uint8_t SDMMC_CMD_RESP_TYPE;
 
 
 typedef enum
@@ -198,28 +212,10 @@ typedef enum
 
 typedef enum
 {
-    SDMMC_RESET_ALL = 0x01,
-    SDMMC_RESET_CMD = 0x02,
-    SDMMC_RESET_DAT = 0x04
-
-} SDMMC_RESET_TYPE;
-
-typedef enum
-{
     SDMMC_DIVIDED_CLK_MODE = 0,
     SDMMC_PROGRAMMABLE_CLK_MODE
 
 }SDMMC_CLK_MODE;
-
-typedef enum
-{
-    SDMMC_XFER_STATUS_IDLE           = 0x00,
-    SDMMC_XFER_STATUS_CMD_COMPLETED  = 0x01,
-    SDMMC_XFER_STATUS_DATA_COMPLETED = 0x02,
-    SDMMC_XFER_STATUS_CARD_INSERTED  = 0x04,
-    SDMMC_XFER_STATUS_CARD_REMOVED   = 0x08
-
-}SDMMC_XFER_STATUS;
 
 typedef enum
 {

@@ -61,18 +61,17 @@
 extern "C" {
 #endif
 
-typedef enum
-{
-    /* 8 Bit FIFO Depth. */
-    CRC_DATA_WIDTH_BYTE     = 8,
 
-    /* 16 Bit FIFO Depth. */
-    CRC_DATA_WIDTH_HWORD    = 16,
+/* 8 Bit FIFO Depth. */
+#define    CRC_DATA_WIDTH_BYTE      (8U)
 
-    /* 32 Bit FIFO Depth. */
-    CRC_DATA_WIDTH_WORD     = 32,
+/* 16 Bit FIFO Depth. */
+#define    CRC_DATA_WIDTH_HWORD     (16U)
 
-} CRC_DATA_WIDTH;
+/* 32 Bit FIFO Depth. */
+#define    CRC_DATA_WIDTH_WORD      (32U)
+
+typedef uint32_t CRC_DATA_WIDTH;
 
 typedef struct
 {

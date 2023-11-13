@@ -50,9 +50,12 @@
 
 #include "device.h"
 #include "plib_${TMR1_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 <#if TMR1_INTERRUPT_MODE == true>
-static TMR1_TIMER_OBJECT ${TMR1_INSTANCE_NAME?lower_case}Obj;
+volatile static TMR1_TIMER_OBJECT ${TMR1_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${TMR1_INSTANCE_NAME}_Initialize(void)
@@ -110,7 +113,7 @@ uint16_t ${TMR1_INSTANCE_NAME}_PeriodGet(void)
 
 uint16_t ${TMR1_INSTANCE_NAME}_CounterGet(void)
 {
-    return(TMR1);
+    return((uint16_t)TMR1);
 }
 
 uint32_t ${TMR1_INSTANCE_NAME}_FrequencyGet(void)
@@ -119,14 +122,15 @@ uint32_t ${TMR1_INSTANCE_NAME}_FrequencyGet(void)
 }
 
 <#if TMR1_INTERRUPT_MODE == true>
-void TIMER_1_InterruptHandler (void)
+void __attribute__((used)) TIMER_1_InterruptHandler (void)
 {
     uint32_t status = ${TMR1_IFS_REG}bits.T1IF;
     ${TMR1_IFS_REG}CLR = _${TMR1_IFS_REG}_T1IF_MASK;
 
     if((${TMR1_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL))
     {
-        ${TMR1_INSTANCE_NAME?lower_case}Obj.callback_fn(status, ${TMR1_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${TMR1_INSTANCE_NAME?lower_case}Obj.context;
+        ${TMR1_INSTANCE_NAME?lower_case}Obj.callback_fn(status, context);
     }
 }
 

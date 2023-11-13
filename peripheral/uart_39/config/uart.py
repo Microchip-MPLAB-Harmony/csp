@@ -29,7 +29,7 @@ uartAggInterruptName = ""
 ################################################################################
 def handleMessage(messageID, args):
     global uartSym_OperatingMode
-    
+
     print "handleMessage"
     print "messageID = " + messageID
 
@@ -131,7 +131,7 @@ def baudDivisorCalc(clk_src, baud_clk_src, sel_baud_rate):
     baud_div = 0
 
     if clk_src == "INTERNAL":
-        if baud_clk_src == "48_MHZ":
+        if baud_clk_src == "48000000_HZ":
             baud_clock = 48000000
         else:
             baud_clock = 1843200
@@ -204,7 +204,7 @@ def regLCRUpdate(symbol, event):
 
 def getBaudMSB(baud_divisor, cfg_sel_clk_src, baud_clk_sel):
     baud_msb_reg = 0
-    
+
     # Get the MSB part of Baud Divisor
     baud_divisor = ((baud_divisor & 0xFF00) >> 8)
 
@@ -213,7 +213,7 @@ def getBaudMSB(baud_divisor, cfg_sel_clk_src, baud_clk_sel):
 
     baud_msb_reg = (baud_clk_sel << 7 | baud_divisor)
     return baud_msb_reg
-    
+
 def regBaudGenMSBUpdate(symbol, event):
 
     baud_divisor = int(event["source"].getSymbolByID("UART_BAUDRATE_DIVISOR").getValue())
@@ -240,7 +240,7 @@ def updateUSARTDataBits (symbol, event):
     word_len = event["source"].getSymbolByID("UART_LCR_WORD_LENGTH_SELECT").getSelectedKey()
     data_bits = "DRV_USART_DATA_" + word_len
     symbol.setValue(data_bits)
-    
+
 def UARTFileGeneration(symbol, event):
     componentID = symbol.getID()
     filepath = ""
@@ -258,18 +258,18 @@ def UARTFileGeneration(symbol, event):
             filepath = "../peripheral/uart_39/templates/plib_uart.c.ftl"
 
     symbol.setSourcePath(filepath)
-    
+
 def irqn_update(symbol, event):
     uartInstanceNum = event["source"].getSymbolByID("UART_INSTANCE_NUM").getValue()
     uartInterruptType = event["source"].getSymbolByID("UART_INTERRUPT_TYPE").getSelectedKey()
-    
+
     if (uartInterruptType == "AGGREGATE"):
         nvic_int_num = {}
         nvic_int_num = Database.sendMessage("core", "ECIA_GET_INT_SRC_DICT", {"int_source": "UART" + uartInstanceNum})
         irqn_name = "GIRQ" + str(nvic_int_num["girqn_reg_num"] + 8) + "_IRQn"
         symbol.setValue(irqn_name)
     else:
-        symbol.setValue("UART" + uartInstanceNum + "_IRQn")    
+        symbol.setValue("UART" + uartInstanceNum + "_IRQn")
 ################################################################################
 #### Component ####
 ################################################################################
@@ -295,7 +295,7 @@ def instantiateComponent(uartComponent):
     nvic_int_num = {}
     nvic_int_num = Database.sendMessage("core", "ECIA_GET_INT_SRC_DICT", {"int_source": "UART" + uartInstanceNum.getValue()})
     uartAggInterruptName = nvic_int_num["group_nvic_name"]
-    
+
     print "uartAggInterruptName = " + uartAggInterruptName
 
     # UART_OPERATING_MODE
@@ -458,7 +458,7 @@ def instantiateComponent(uartComponent):
     uart_NVIC_Update = uartComponent.createBooleanSymbol("UART_UPDATE_NVIC_INTERRUPT", None)
     uart_NVIC_Update.setDependencies(nvicInterruptUpdate, ["UART_OPERATING_MODE", "UART_INTERRUPT_TYPE"])
     uart_NVIC_Update.setVisible(False)
-    
+
 
     ## Enable NVIC interrupt if non-blocking or ring buffer mode is enabled
     setUARTInterruptData(uart_NVIC_InterruptName.getValue(), uartSym_OperatingMode.getSelectedKey() != "BLOCKING")
@@ -481,7 +481,7 @@ def instantiateComponent(uartComponent):
     uartRegBaudGenMSB.setVisible(False)
     uartRegBaudGenMSB.setDependencies(regBaudGenMSBUpdate, ["UART_BAUDRATE_DIVISOR", "UART_CFG_SEL_CLK_SRC", "UART_BAUDRT_MSB_BAUD_CLK_SEL" ])
 
-    
+
     uartRegBaudGenLSB = uartComponent.createHexSymbol("UART_REG_BAUD_GEN_LSB", None)
     uartRegBaudGenLSB.setLabel("Baud Generator LSB")
     uartRegBaudGenLSB.setDefaultValue(int(uartBaudRateDiv.getValue()) & 0xFF)
@@ -503,7 +503,7 @@ def instantiateComponent(uartComponent):
     uartStopBit_1_Mask = uartComponent.createStringSymbol("USART_STOP_1_BIT_MASK", None)
     uartStopBit_1_Mask.setDefaultValue("0x0")
     uartStopBit_1_Mask.setVisible(False)
-    
+
     #UART Stop 1-bit Mask
     uartStopBit_1_5_Mask = uartComponent.createStringSymbol("USART_STOP_1_5_BIT_MASK", None)
     uartStopBit_1_5_Mask.setDefaultValue("0x4")
@@ -528,17 +528,17 @@ def instantiateComponent(uartComponent):
     uartSym_MR_PAR_NO_Mask = uartComponent.createStringSymbol("USART_PARITY_NONE_MASK", None)
     uartSym_MR_PAR_NO_Mask.setDefaultValue("0x0")
     uartSym_MR_PAR_NO_Mask.setVisible(False)
-    
+
     #USART Character Size 5 Mask
     usartSym_CTRLB_CHSIZE_5_Mask = uartComponent.createStringSymbol("USART_DATA_5_BIT_MASK", None)
     usartSym_CTRLB_CHSIZE_5_Mask.setDefaultValue("0x0")
     usartSym_CTRLB_CHSIZE_5_Mask.setVisible(False)
-    
+
     #USART Character Size 6 Mask
     usartSym_CTRLB_CHSIZE_6_Mask = uartComponent.createStringSymbol("USART_DATA_6_BIT_MASK", None)
     usartSym_CTRLB_CHSIZE_6_Mask.setDefaultValue("0x1")
     usartSym_CTRLB_CHSIZE_6_Mask.setVisible(False)
-    
+
     #USART Character Size 7 Mask
     usartSym_CTRLB_CHSIZE_7_Mask = uartComponent.createStringSymbol("USART_DATA_7_BIT_MASK", None)
     usartSym_CTRLB_CHSIZE_7_Mask.setDefaultValue("0x2")
@@ -562,8 +562,8 @@ def instantiateComponent(uartComponent):
     #USART framing error Mask
     usartSym_STATUS_FERR_Mask = uartComponent.createStringSymbol("USART_FRAMING_ERROR_VALUE", None)
     usartSym_STATUS_FERR_Mask.setDefaultValue("0x8")
-    usartSym_STATUS_FERR_Mask.setVisible(False)    
-    
+    usartSym_STATUS_FERR_Mask.setVisible(False)
+
     uartSym_DataBits = uartComponent.createStringSymbol("USART_DATA_BITS", None)
     uartSym_DataBits.setDefaultValue("DRV_USART_DATA_8_BIT")
     uartSym_DataBits.setVisible(False)

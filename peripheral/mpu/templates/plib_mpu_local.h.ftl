@@ -72,24 +72,24 @@
 #define MPU_SUBREGION_DISABLE(value) (MPU_RASR_SRD(value))
 
 /* --- Access Privilege constants --- */
-#define   MPU_RASR_AP_NOACCESS_Val                    (0x0U)    /* Access Privilege: no access for all */
-#define   MPU_RASR_AP_NOACCESS_PRIV_READWRITE_Val     (0x1U)    /* Access Privilege: no access for unprivileged, read/write for privileged */
-#define   MPU_RASR_AP_READONLY_PRIV_READWRITE_Val     (0x2U)    /* Access Privilege: readonly for unprivileged, read/write for privileged */
-#define   MPU_RASR_AP_READWRITE_Val                   (0x3U)    /* Access Privilege: read/write for all */
-#define   MPU_RASR_AP_NOACCESS_PRIV_READONLY_Val      (0x5U)    /* Access Privilege: no access for unprivileged, readonly for privileged */
-#define   MPU_RASR_AP_READONLY_Val                    (0x7U)    /* Access Privilege: readonly for all */
+#define   MPU_RASR_AP_NOACCESS_Val                    (0x0UL)    /* Access Privilege: no access for all */
+#define   MPU_RASR_AP_NOACCESS_PRIV_READWRITE_Val     (0x1UL)    /* Access Privilege: no access for unprivileged, read/write for privileged */
+#define   MPU_RASR_AP_READONLY_PRIV_READWRITE_Val     (0x2UL)    /* Access Privilege: readonly for unprivileged, read/write for privileged */
+#define   MPU_RASR_AP_READWRITE_Val                   (0x3UL)    /* Access Privilege: read/write for all */
+#define   MPU_RASR_AP_NOACCESS_PRIV_READONLY_Val      (0x5UL)    /* Access Privilege: no access for unprivileged, readonly for privileged */
+#define   MPU_RASR_AP_READONLY_Val                    (0x7UL)    /* Access Privilege: readonly for all */
 
 #define MPU_RASR_AP(value)                 (MPU_RASR_AP_Msk & ((value) << MPU_RASR_AP_Pos))
 
 /* --- Memory Types Attributes --- */
 #define MPU_RASR_TEX(value)                (MPU_RASR_TEX_Msk & ((value) << MPU_RASR_TEX_Pos))
 
-#define MPU_ATTR_STRONGLY_ORDERED (MPU_RASR_TEX(0U))                                      /* Strongly-Ordered Shareable */
-#define MPU_ATTR_DEVICE           (MPU_RASR_TEX(0U) | MPU_RASR_B_Msk)                     /* Device Shareable */
-#define MPU_ATTR_NORMAL_WT        (MPU_RASR_TEX(0U) | MPU_RASR_C_Msk)                     /* Normal, Write-Through Read Allocate */
-#define MPU_ATTR_NORMAL_WB        (MPU_RASR_TEX(0U) | MPU_RASR_C_Msk | MPU_RASR_B_Msk)    /* Normal, Write-Back Read Allocate */
-#define MPU_ATTR_NORMAL_WB_WA     (MPU_RASR_TEX(1U) | MPU_RASR_C_Msk | MPU_RASR_B_Msk)    /* Normal, Write-Back Read/Write Allocate */
-#define MPU_ATTR_NORMAL           (MPU_RASR_TEX(1U))                                      /* Normal, Non-cacheable */
+#define MPU_ATTR_STRONGLY_ORDERED (MPU_RASR_TEX(0UL))                                      /* Strongly-Ordered Shareable */
+#define MPU_ATTR_DEVICE           (MPU_RASR_TEX(0UL) | MPU_RASR_B_Msk)                     /* Device Shareable */
+#define MPU_ATTR_NORMAL_WT        (MPU_RASR_TEX(0UL) | MPU_RASR_C_Msk)                     /* Normal, Write-Through Read Allocate */
+#define MPU_ATTR_NORMAL_WB        (MPU_RASR_TEX(0UL) | MPU_RASR_C_Msk | MPU_RASR_B_Msk)    /* Normal, Write-Back Read Allocate */
+#define MPU_ATTR_NORMAL_WB_WA     (MPU_RASR_TEX(1UL) | MPU_RASR_C_Msk | MPU_RASR_B_Msk)    /* Normal, Write-Back Read/Write Allocate */
+#define MPU_ATTR_NORMAL           (MPU_RASR_TEX(1UL))                                      /* Normal, Non-cacheable */
 
 /* Other Attributes */
 #define MPU_ATTR_SHAREABLE     (MPU_RASR_S_Msk)

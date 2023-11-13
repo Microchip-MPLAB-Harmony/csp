@@ -70,7 +70,7 @@ typedef void (*DWDT_CALLBACK) (uint32_t interruptStatus, uintptr_t context);
 void DWDT_Initialize(void);
 <#if DWDT_PS_ENABLE>
 void DWDT_PS_Clear(void);
-<#if DWDT_PS_LOCK_CONFIG>
+<#if !DWDT_PS_LOCK_CONFIG>
 void DWDT_PS_Disable(void);
 </#if>
 </#if>
@@ -79,7 +79,7 @@ void DWDT_PS_CallbackRegister(DWDT_CALLBACK pCallback, uintptr_t context);
 </#if>
 <#if DWDT_NS_ENABLE>
 void DWDT_NS_Clear(void);
-<#if DWDT_NS_LOCK_CONFIG>
+<#if !DWDT_NS_LOCK_CONFIG>
 void DWDT_NS_Disable(void);
 </#if>
 </#if>

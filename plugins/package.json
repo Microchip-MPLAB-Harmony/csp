@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "workspaces": [
+    "harmony_plugin_sdk/packages/*",
+    "configurators/clock-configurators/*",
+    "configurators/dma-configurators/dma*",
+    "configurators/interrupt_configurators/*",
+    "configurators/event-configurators/*",
+    "configurators/mpu-configurators/*",
+    "configurators/memory-configurators/*",
+	  "configurators/trustzone_configurators/*"
+  ],
+  "scripts": {
+    "build": "lerna run build",
+    "start:event": "lerna run start --scope='event-configurator'",
+    "build:event": "lerna run build --scope='event-configurator'",
+    "start:mpu": "lerna run start --scope='mpu-configurator'",
+    "build:mpu": "lerna run build --scope='mpu-configurator'",
+    "start:hemc": "lerna run start --scope='hemc-configurator'",
+    "build:hemc": "lerna run build --scope='hemc-configurator'"
+  },
+  "devDependencies": {
+    "lerna": "^5.5.0"
+  }
+}

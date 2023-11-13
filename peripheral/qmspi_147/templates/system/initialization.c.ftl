@@ -24,4 +24,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 -->
+<#if QMSPI_MODE == "QSPI">
     ${QMSPI_INSTANCE_NAME}_Initialize();
+<#else>
+    ${QMSPI_INSTANCE_NAME}_SPI_Initialize();
+</#if>

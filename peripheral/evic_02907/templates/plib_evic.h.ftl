@@ -76,14 +76,21 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum
-{
+/* MISRAC 2012 deviation block start */
+/* MISRA C-2012 Rule 5.4 deviated: 5  Deviation record ID -  H3_MISRAC_2012_R_5_4_DR_1 */
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+    <#if COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    </#if>
+    #pragma coverity compliance block deviate "MISRA C-2012 Rule 5.4" "H3_MISRAC_2012_R_5_4_DR_1"
+</#if>
 <#if EVIC_IRQ_MIN != -1 && EVIC_IRQ_MAX != -1>
 <#list EVIC_IRQ_MIN..EVIC_IRQ_MAX as i>
     <#assign INT_NAME = "EVIC_" + i + "_IRQ_NAME">
     <#assign IRQ_NAME = "EVIC_" + i + "_IRQ">
     <#if .vars[INT_NAME]?? && .vars[IRQ_NAME]?? && .vars[INT_NAME] != "None" && .vars[IRQ_NAME] != "None">
-        <#lt>    INT_SOURCE_${.vars[INT_NAME]} = ${.vars[IRQ_NAME]},
+        <#lt>#define    INT_SOURCE_${.vars[INT_NAME]}    (${.vars[IRQ_NAME]})
 
     </#if>
 </#list>
@@ -92,12 +99,20 @@ typedef enum
     <#assign INT_NAME = "EVIC_" + i + "_NAME">
     <#assign VECT_NAME = "EVIC_" + i + "_VECTOR">
     <#if .vars[INT_NAME]?? && .vars[VECT_NAME]?? && .vars[INT_NAME] != "None" && .vars[VECT_NAME] != "None">
-        <#lt>    INT_SOURCE_${.vars[INT_NAME]} = ${.vars[VECT_NAME]},
+        <#lt>#define    INT_SOURCE_${.vars[INT_NAME]}   (${.vars[VECT_NAME]})
 
     </#if>
 </#list>
 </#if>
-} INT_SOURCE;
+<#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+
+    #pragma coverity compliance end_block "MISRA C-2012 Rule 5.4"
+    <#if COMPILER_CHOICE == "XC32">
+    #pragma GCC diagnostic pop
+    </#if>
+</#if>
+    /* MISRAC 2012 deviation block end */
+typedef uint32_t INT_SOURCE;
 
 <#if 0 < NumOfEnabledExtInt>
 typedef enum

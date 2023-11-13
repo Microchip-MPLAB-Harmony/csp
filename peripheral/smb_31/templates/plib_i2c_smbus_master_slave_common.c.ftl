@@ -103,7 +103,7 @@ void I2C${I2C_INSTANCE_NAME}_Initialize(void)
 }
 
 <#if I2C_SMBUS_LOW_LEVEL_API_ONLY == false>
-void ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${I2C_NVIC_INTERRUPT_NAME}_InterruptHandler(void)
 {
     uint32_t completion_reg;
 

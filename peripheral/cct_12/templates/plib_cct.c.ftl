@@ -125,18 +125,18 @@
 </#compress>
 
 <#if .vars["CCT_OVF_INTERRUPT_EN"] == true>
-static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_OVF_CallbackObject;
+volatile static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_OVF_CallbackObject;
 </#if>
 
 <#list 0..(CCT_NUM_CAP_CH-1) as n>
 <#if .vars["CCT_ENABLE_CAPTURE_" + n] == true && .vars["CCT_CAP_INTERRUPT_EN_" + n] == true>
-static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject;
+volatile static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject;
 </#if>
 </#list>
 
 <#list 0..(CCT_NUM_CMP_CH-1) as n>
 <#if .vars["CCT_ENABLE_COMPARE_" + n] == true && .vars["CCT_CMP_INTERRUPT_EN_" + n] == true>
-static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject;
+volatile static CCT_CALLBACK_OBJ ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject;
 </#if>
 </#list>
 
@@ -162,13 +162,13 @@ void ${CCT_INSTANCE_NAME}_Initialize(void)
     <#if ict_mux_val != "">
     CCT_REGS->CCT_MUX_SEL = ${ict_mux_val};
     </#if>
-    
+
     <#list 0..(CCT_NUM_CMP_CH-1) as n>
     <#assign CCT_CMP_EN = "CCT_ENABLE_COMPARE_" + n>
     <#if .vars[CCT_CMP_EN]?? && .vars[CCT_CMP_EN] == true>
     <#assign CCT_CMP_VAL = "CCT_COMPARE_VALUE_" + n>
     CCT_REGS->CCT_COMP${n} = ${.vars[CCT_CMP_VAL]};
-    
+
     </#if>
     </#list>
 }
@@ -314,7 +314,7 @@ void ${CCT_INSTANCE_NAME}_CompareChannel${n}InterruptEnable( void )
     ECIA_GIRQSourceEnable(ECIA_AGG_INT_SRC_CCT_CMP${n});
     <#else>
     ECIA_GIRQSourceEnable(ECIA_DIR_INT_SRC_CCT_CMP${n});
-    </#if>        
+    </#if>
 }
 
 void ${CCT_INSTANCE_NAME}_CompareChannel${n}InterruptDisable( void )
@@ -323,7 +323,7 @@ void ${CCT_INSTANCE_NAME}_CompareChannel${n}InterruptDisable( void )
     ECIA_GIRQSourceEnable(ECIA_AGG_INT_SRC_CCT_CMP${n});
     <#else>
     ECIA_GIRQSourceEnable(ECIA_DIR_INT_SRC_CCT_CMP${n});
-    </#if>        
+    </#if>
 }
 
 </#if>
@@ -338,7 +338,7 @@ void ${CCT_INSTANCE_NAME}_CompareChannel${n}InterruptDisable( void )
 </#compress>
 
 <#if .vars["CCT_OVF_INTERRUPT_EN"] == true>
-void CCT${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
+void __attribute__((used)) CCT${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT) != 0U)
@@ -351,10 +351,11 @@ void CCT${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
         <#else>
         ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_CCT);
         </#if>
-        
+
         if (${CCT_INSTANCE_NAME}_OVF_CallbackObject.callback != NULL)
         {
-            ${CCT_INSTANCE_NAME}_OVF_CallbackObject.callback(${CCT_INSTANCE_NAME}_OVF_CallbackObject.context);
+            uintptr_t context = ${CCT_INSTANCE_NAME}_OVF_CallbackObject.context;
+            ${CCT_INSTANCE_NAME}_OVF_CallbackObject.callback(context);
         }
     }
 }
@@ -362,7 +363,7 @@ void CCT${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 
 <#list 0..(CCT_NUM_CAP_CH-1) as n>
 <#if .vars["CCT_ENABLE_CAPTURE_" + n] == true && .vars["CCT_CAP_INTERRUPT_EN_" + n] == true>
-void CCT_CAP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
+void __attribute__((used)) CCT_CAP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT_CAP${n}) != 0U)
@@ -375,10 +376,11 @@ void CCT_CAP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
         <#else>
         ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_CCT_CAP${n});
         </#if>
-        
+
         if (${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject.callback != NULL)
         {
-            ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject.callback(${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject.context);
+            uintptr_t context = ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject.context;
+            ${CCT_INSTANCE_NAME}_CAP${n}_CallbackObject.callback(context);
         }
     }
 }
@@ -387,7 +389,7 @@ void CCT_CAP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 
 <#list 0..(CCT_NUM_CMP_CH-1) as n>
 <#if .vars["CCT_ENABLE_COMPARE_" + n] == true && .vars["CCT_CMP_INTERRUPT_EN_" + n] == true>
-void CCT_CMP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
+void __attribute__((used)) CCT_CMP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
 {
     <#if .vars["CCT_INTERRUPT_TYPE"] == "AGGREGATE">
     if (ECIA_GIRQResultGet(ECIA_AGG_INT_SRC_CCT_CMP${n}) != 0U)
@@ -400,10 +402,11 @@ void CCT_CMP${n}${INT_HANDLER_NAME_PREFIX}_InterruptHandler(void)
         <#else>
         ECIA_GIRQSourceClear(ECIA_DIR_INT_SRC_CCT_CMP${n});
         </#if>
-        
+
         if (${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject.callback != NULL)
         {
-            ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject.callback(${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject.context);
+            uintptr_t context = ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject.context;
+            ${CCT_INSTANCE_NAME}_CMP${n}_CallbackObject.callback(context);
         }
     }
 }

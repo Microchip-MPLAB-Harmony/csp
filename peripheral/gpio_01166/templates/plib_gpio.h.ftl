@@ -136,17 +136,16 @@
     device data sheet to determine which ports are supported.
 */
 
-typedef enum
-{
+
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
     <#if .vars[channel]?has_content>
         <#if (.vars["PORT${.vars[channel]}_Pin_List"])?has_content>
-                <#lt>    GPIO_PORT_${.vars[channel]} = ${i},
+                <#lt>#define    GPIO_PORT_${.vars[channel]}   (${i})
         </#if>
     </#if>
 </#list>
-} GPIO_PORT;
+typedef uint32_t GPIO_PORT;
 
 // *****************************************************************************
 /* GPIO Port Pins
@@ -164,16 +163,13 @@ typedef enum
     Not all pins are available on all devices.  Refer to the specific
     device data sheet to determine which pins are supported.
 */
-
-typedef enum
-{
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
     <#if .vars[channel]?has_content>
         <#if .vars["PORT${.vars[channel]}_Pin_List"]?has_content>
             <@"<#assign PORT${.vars[channel]}_Pin_List =  PORT${.vars[channel]}_Pin_List?sort>"?interpret />
             <#list .vars["PORT${.vars[channel]}_Pin_List"] as pin>
-                <#lt>    GPIO_PIN_R${.vars[channel]}${pin} = ${pin+(16*i)},
+                <#lt>#define    GPIO_PIN_R${.vars[channel]}${pin}   (${pin+(16*i)})
             </#list>
         </#if>
     </#if>
@@ -181,9 +177,9 @@ typedef enum
 
     /* This element should not be used in any of the GPIO APIs.
        It will be used by other modules or application to denote that none of the GPIO Pin is used */
-    GPIO_PIN_NONE = -1
+#define    GPIO_PIN_NONE     (-1)
 
-} GPIO_PIN;
+typedef uint32_t GPIO_PIN;
 
 typedef enum
 {
@@ -259,48 +255,48 @@ typedef struct {
 
 static inline void GPIO_PinWrite(GPIO_PIN pin, bool value)
 {
-    GPIO_PortWrite((GPIO_PORT)(pin>>4), (uint32_t)(0x1) << (pin & 0xF), (uint32_t)(value) << (pin & 0xF));
+    GPIO_PortWrite((GPIO_PORT)(pin>>4), (uint32_t)(0x1UL) << (pin & 0xFU), (uint32_t)(value) << (pin & 0xFU));
 }
 
 static inline bool GPIO_PinRead(GPIO_PIN pin)
 {
-    return (bool)(((GPIO_PortRead((GPIO_PORT)(pin>>4))) >> (pin & 0xF)) & 0x1);
+    return (bool)(((GPIO_PortRead((GPIO_PORT)(pin>>4U))) >> (pin & 0xFU)) & 0x1U);
 }
 
 static inline bool GPIO_PinLatchRead(GPIO_PIN pin)
 {
-    return (bool)((GPIO_PortLatchRead((GPIO_PORT)(pin>>4)) >> (pin & 0xF)) & 0x1);
+    return (bool)((GPIO_PortLatchRead((GPIO_PORT)(pin>>4U)) >> (pin & 0xFU)) & 0x1U);
 }
 
 static inline void GPIO_PinToggle(GPIO_PIN pin)
 {
-    GPIO_PortToggle((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+    GPIO_PortToggle((GPIO_PORT)(pin>>4U), 0x1UL << (pin & 0xFU));
 }
 
 static inline void GPIO_PinSet(GPIO_PIN pin)
 {
-    GPIO_PortSet((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+    GPIO_PortSet((GPIO_PORT)(pin>>4U), 0x1UL << (pin & 0xFU));
 }
 
 static inline void GPIO_PinClear(GPIO_PIN pin)
 {
-    GPIO_PortClear((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+    GPIO_PortClear((GPIO_PORT)(pin>>4U), 0x1UL << (pin & 0xFU));
 }
 
 static inline void GPIO_PinInputEnable(GPIO_PIN pin)
 {
-    GPIO_PortInputEnable((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+    GPIO_PortInputEnable((GPIO_PORT)(pin>>4U), 0x1UL << (pin & 0xFU));
 }
 
 static inline void GPIO_PinOutputEnable(GPIO_PIN pin)
 {
-    GPIO_PortOutputEnable((GPIO_PORT)(pin>>4), 0x1 << (pin & 0xF));
+    GPIO_PortOutputEnable((GPIO_PORT)(pin>>4U), 0x1UL << (pin & 0xFU));
 }
 
 <#if SYS_PORT_ATLEAST_ONE_CN_USED == true >
 bool GPIO_PinInterruptCallbackRegister(
     CN_PIN cnPin,
-    const   GPIO_PIN_CALLBACK callBack,
+    const GPIO_PIN_CALLBACK callback,
     uintptr_t context
 );
 </#if>

@@ -72,7 +72,7 @@ Interface definition of SQI PLIB.
 // *****************************************************************************
 
 #define SQI_BDCTRL_BUFFLEN_POSITION             0x00000000
-#define SQI_BDCTRL_BUFFLEN_VAL(val)             (val << SQI_BDCTRL_BUFFLEN_POSITION)
+#define SQI_BDCTRL_BUFFLEN_VAL(val)             ((val) << SQI_BDCTRL_BUFFLEN_POSITION)
 
 #define SQI_BDCTRL_BDDONEINTIEN                 0x00010000
 
@@ -98,7 +98,7 @@ Interface definition of SQI PLIB.
 
 #define SQI_BDCTRL_DEASSERT                     0x40000000
 
-#define SQI_BDCTRL_DESCEN                       0x80000000
+#define SQI_BDCTRL_DESCEN                       0x80000000U
 
 #define SQI_XCON1_TYPECMD_VAL(val)              (val << _SQI1XCON1_TYPECMD_POSITION)
 #define SQI_XCON1_TYPEADDR_VAL(val)             (val << _SQI1XCON1_TYPEADDR_POSITION)

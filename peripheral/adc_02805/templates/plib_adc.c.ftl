@@ -41,6 +41,7 @@
 // DOM-IGNORE-END
 #include "device.h"
 #include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
+#include "interrupts.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -50,7 +51,7 @@
 
 <#if ADC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 void ${ADC_INSTANCE_NAME}_Initialize(void)
@@ -108,18 +109,18 @@ void ${ADC_INSTANCE_NAME}_ConversionStart(void)
 
 void ${ADC_INSTANCE_NAME}_InputSelect(${ADC_INSTANCE_NAME}_INPUT_POSITIVE positiveInput)
 {
-    AD1CHSbits.CH0SA = positiveInput;
+    AD1CHSbits.CH0SA = (uint8_t)positiveInput;
 }
 
 void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanInputs)
 {
-    AD1CSS = scanInputs;
+    AD1CSS = (uint32_t)scanInputs;
 }
 
 /*Check if conversion result is available */
 bool ${ADC_INSTANCE_NAME}_ResultIsReady(void)
 {
-    return AD1CON1bits.DONE;
+    return (AD1CON1bits.DONE != 0U);
 }
 
 /* Read the conversion result */
@@ -135,13 +136,15 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister(ADC_CALLBACK callback, uintptr_t cont
     ${ADC_INSTANCE_NAME}_CallbackObj.context = context;
 }
 
-void ${ADC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler(void)
 {
     IFS${ADC_IFS_REG_INDEX}CLR = _IFS${ADC_IFS_REG_INDEX}_AD1IF_MASK;
 
     if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(${ADC_INSTANCE_NAME}_CallbackObj.context);
+        uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObj.context;
+
+        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(context);
     }
 }
 </#if>

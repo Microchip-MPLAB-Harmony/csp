@@ -93,16 +93,16 @@ void CLK_Initialize( void )
 </#if>
 
     /* Code for fuse settings can be found in "initialization.c" */
-    
+
 <#if (CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT) ||
      ((USB_PART = true) && (CONFIG_SYS_CLK_UFRCEN == "ON")) ||
      ((CONFIG_SYS_CLK_REFCLK_ENABLE?has_content) && (CONFIG_SYS_CLK_REFCLK_ENABLE == true)) ||
      ((PRODUCT_FAMILY == "PIC32MX1404") && (UPLLCON_VALUE != UPLLCON_DEFAULT_VALUE))>
 
     /* unlock system for clock configuration */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+    SYSKEY = 0x00000000U;
+    SYSKEY = 0xAA996655U;
+    SYSKEY = 0x556699AAU;
 
     <#if CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT>
     OSCCONbits.FRCDIV = ${CONFIG_SYS_CLK_FRCDIV};
@@ -128,7 +128,7 @@ void CLK_Initialize( void )
         </#if>
         <#if (CONFIG_SYS_CLK_OE?has_content) && (CONFIG_SYS_CLK_OE == true)>
             <#lt>    /* Enable Reference Oscillator (ON bit) and Enable its Output (OE bit) */
-            <#lt>    ${REFOCONreg}SET = ${OE_MASK} | ${ON_MASK};
+            <#lt>    ${REFOCONreg}SET = ${OE_MASK}U | ${ON_MASK}U;
         <#else>
             <#lt>    /* Enable Reference Oscillator (ON bit) */
             <#lt>    ${REFOCONreg}SET = ${ON_MASK};
@@ -144,15 +144,21 @@ void CLK_Initialize( void )
 </#if>
 
     /* Lock system since done with clock configuration */
-    SYSKEY = 0x33333333;
+    SYSKEY = 0x33333333U;
 </#if>
 
 <#if PLL_LOCK_STATUS_OPTION?has_content && CONFIG_FNOSC?contains("PLL")>
     <#lt>    /* Wait for PLL to be locked */
     <#if PLL_LOCK_STATUS_OPTION == "SLOCK">
-        <#lt>    while(!OSCCONbits.SLOCK);
+        <#lt>    while(OSCCONbits.SLOCK == 0U)
+                 {
+                      /* Nothing to do */
+                 }
     <#else>
-        <#lt>    while(!OSCCONbits.LOCK);
+        <#lt>    while(OSCCONbits.LOCK == 0U)
+        <#lt>    {
+        <#lt>        /* Nothing to do */
+        <#lt>    }
     </#if>
 </#if>
 
@@ -161,7 +167,7 @@ void CLK_Initialize( void )
 <#list 1..PMD_COUNT + 1 as i>
     <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
     <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
-        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]};
+        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]}U;
     </#if>
 </#list>
 </#if>

@@ -72,7 +72,7 @@ Interface definition of SQI PLIB.
 // *****************************************************************************
 
 #define SQI_BDCTRL_BUFFLEN_POSITION             0x00000000
-#define SQI_BDCTRL_BUFFLEN_VAL(val)             (val << SQI_BDCTRL_BUFFLEN_POSITION)
+#define SQI_BDCTRL_BUFFLEN_VAL(val)             ((val) << SQI_BDCTRL_BUFFLEN_POSITION)
 
 #define SQI_BDCTRL_BDDONEINTIEN                 0x00010000
 
@@ -98,7 +98,7 @@ Interface definition of SQI PLIB.
 
 #define SQI_BDCTRL_DEASSERT                     0x40000000
 
-#define SQI_BDCTRL_DESCEN                       0x80000000
+#define SQI_BDCTRL_DESCEN                       0x80000000U
 
 
 typedef void (*SQI_EVENT_HANDLER)(uintptr_t context);

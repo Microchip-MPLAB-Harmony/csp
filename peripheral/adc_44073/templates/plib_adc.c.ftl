@@ -218,7 +218,7 @@
 // *****************************************************************************
 <#if ADC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
+    <#lt>volatile static ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize ADC peripheral */
@@ -401,13 +401,14 @@ void ${ADC_INSTANCE_NAME}_FastWakeupDisable(void)
 </#if>
 <#if ADC_INTERRUPT == true>
     <#lt>/* Interrupt Handler */
-    <#lt>void ${ADC_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>    uint32_t status;
-    <#lt>    status = ${ADC_INSTANCE_NAME}_REGS->ADC_ISR;
+    <#lt>    uint32_t status = ${ADC_INSTANCE_NAME}_REGS->ADC_ISR;
+    <#lt>    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    <#lt>    uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObj.context;
     <#lt>    if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${ADC_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(status, context);
     <#lt>    }
     <#lt>}
 </#if>

@@ -52,7 +52,8 @@
 // Section: Include Files
 // *****************************************************************************
 // *****************************************************************************
-static HSMCI_OBJECT ${HSMCI_INSTANCE_NAME?lower_case}Obj;
+static const uint8_t* hsmciFifoBaseAddress = (uint8_t*)(${HSMCI_INSTANCE_NAME}_BASE_ADDRESS + HSMCI_FIFO_REG_OFST);
+volatile static HSMCI_OBJECT ${HSMCI_INSTANCE_NAME?lower_case}Obj;
 
 static void ${HSMCI_INSTANCE_NAME}_VariablesInit ( void )
 {
@@ -62,7 +63,7 @@ static void ${HSMCI_INSTANCE_NAME}_VariablesInit ( void )
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.callback = NULL;
 }
 
-void ${HSMCI_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${HSMCI_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t intMask = 0U;
     uint32_t intFlags = 0U;
@@ -143,7 +144,8 @@ void ${HSMCI_INSTANCE_NAME}_InterruptHandler(void)
 
     if ((${HSMCI_INSTANCE_NAME?lower_case}Obj.callback) != NULL)
     {
-        ${HSMCI_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, ${HSMCI_INSTANCE_NAME?lower_case}Obj.context);
+        uintptr_t context = ${HSMCI_INSTANCE_NAME?lower_case}Obj.context;
+        ${HSMCI_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, context);
     }
 }
 
@@ -168,14 +170,14 @@ bool ${HSMCI_INSTANCE_NAME}_IsCmdLineBusy ( void )
 
 bool ${HSMCI_INSTANCE_NAME}_IsDatLineBusy ( void )
 {
-	bool xDatLineBusy = false;
+    bool xDatLineBusy = false;
     if (((${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_XFRDONE_Msk) == 0U) || ((${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_TXRDY_Msk) == 0U))
     {
         xDatLineBusy = true;
     }
-   
+
     return xDatLineBusy;
-    
+
 }
 
 void ${HSMCI_INSTANCE_NAME}_BusWidthSet ( HSMCI_BUS_WIDTH busWidth )
@@ -231,8 +233,8 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
 
        (void) ${XDMAC_INSTANCE_NAME}_ChannelTransfer(
             (XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
-            (const void *)&(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_FIFO[0]),
-            (const void *)buffer,
+            hsmciFifoBaseAddress,
+            buffer,
             (numBytes/4U)
         );
     }
@@ -253,8 +255,8 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
 
        (void) ${XDMAC_INSTANCE_NAME}_ChannelTransfer(
             (XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
-            (const void *)buffer,
-            (const void *)&(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_FIFO[0]),
+            buffer,
+            hsmciFifoBaseAddress,
             (numBytes/4U)
         );
    }
@@ -262,7 +264,7 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
 
 void ${HSMCI_INSTANCE_NAME}_BlockSizeSet ( uint16_t blockSize )
 {
-	uint32_t xblocksize = blockSize;
+    uint32_t xblocksize = blockSize;
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.blockSize = xblocksize;
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR &= ~(HSMCI_BLKR_BLKLEN_Msk);
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR |= (uint32_t)(xblocksize << HSMCI_BLKR_BLKLEN_Pos);
@@ -274,18 +276,18 @@ void ${HSMCI_INSTANCE_NAME}_BlockCountSet ( uint16_t numBlocks )
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR |= ((uint32_t)numBlocks << HSMCI_BLKR_BCNT_Pos);
 }
 
-bool ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clock )
+bool ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clockfreq )
 {
     uint32_t mck = ${HSMCI_CLK};
     uint32_t clkdiv = 0U;
     uint32_t rest = 0U;
 
-    /* Speed = MCK clock / (2 * (CLKDIV + 1)) */
+    /* Speed = MCK clockfreq / (2 * (CLKDIV + 1)) */
 
-    if ((clock * 2U) < mck)
+    if ((clockfreq * 2U) < mck)
     {
-        clkdiv = mck / (2U * clock);
-        rest = mck - (2U*clock)*clkdiv;
+        clkdiv = mck / (2U * clockfreq);
+        rest = mck - (2U * clockfreq) * clkdiv;
 
         if (rest > 0U)
         {
@@ -346,15 +348,15 @@ void ${HSMCI_INSTANCE_NAME}_ResponseRead (
             /* Drop the CRC byte.
              * The CRC byte for the CID and CSD response is not copied.
              */
-			 /* Note: The memcpy function copies n characters from the object pointed to by s2 into the object pointed to by s1. 
-			  * If copying takes place between objects that overlap, the behavior is undefined. Hence, using memmove.
-			 */
+             /* Note: The memcpy function copies n characters from the object pointed to by s2 into the object pointed to by s1.
+              * If copying takes place between objects that overlap, the behavior is undefined. Hence, using memmove.
+             */
            (void)  memmove((void*)response, (void*)((char*)response + 1U),31U);
 
             break;
 
         default:
-		        /* Do nothing*/
+                /* Do nothing*/
             break;
     }
 }
@@ -532,9 +534,9 @@ void ${HSMCI_INSTANCE_NAME}_ModuleInit ( void )
 
     /* Wait end of initialization command */
     while (((${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR & HSMCI_SR_CMDRDY_Msk)) == 0U)
-	{
-			
-	}
+    {
+
+    }
 }
 
 void ${HSMCI_INSTANCE_NAME}_Initialize( void )

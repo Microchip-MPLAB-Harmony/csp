@@ -41,6 +41,7 @@
 #include "plib_clock.h"
 #include "device.h"
 
+<#if .vars["CONFIG_CLOCK_XOSC_ENABLE"]>
 static void OSCCTRL_Initialize(void)
 {
 <#assign enable = "CONFIG_CLOCK_XOSC_ENABLE" >
@@ -70,6 +71,7 @@ static void OSCCTRL_Initialize(void)
     </#if>
 </#if>
 }
+</#if>
 
 static void OSC32KCTRL_Initialize(void)
 {
@@ -174,7 +176,8 @@ static void PLL0_Initialize(void)
     </#if>
 }
 </#if>
-
+<#assign GEN_CODE_DFLL = CONFIG_CLOCK_DFLL_ENABLE && (CONFIG_CLOCK_DFLL_OPMODE == "1" || CONFIG_CLOCK_DFLL_ONDEMAND == "0")>
+<#if GEN_CODE_DFLL>
 static void DFLL_Initialize(void)
 {
 <#if CONFIG_CLOCK_DFLL_ENABLE == true >
@@ -209,21 +212,20 @@ static void DFLL_Initialize(void)
         /* Waiting for the DFLLCTRLB synchronization */
     }
 
-    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk
-    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "1")?then("| OSCCTRL_DFLLCTRLA_ONDEMAND_Msk ", "")}
-    <#lt>                               ;</@compress>
+    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk;</@compress>
 
     while((OSCCTRL_REGS->OSCCTRL_SYNCBUSY & OSCCTRL_SYNCBUSY_DFLLENABLE_Msk) == OSCCTRL_SYNCBUSY_DFLLENABLE_Msk )
     {
         /* Waiting for the DFLL48M enable synchronization */
     }
-    <#if CONFIG_CLOCK_DFLL_ONDEMAND != "1">
-
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
         /* Waiting for the DFLL Ready state */
     }
+    <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
+    OSCCTRL_REGS->OSCCTRL_DFLLCTRLA |= OSCCTRL_DFLLCTRLA_ONDEMAND_Msk;
     </#if>
+
 <#else>
     <#if (CONFIG_CLOCK_DFLL_ONDEMAND == "0")>
     <#lt>    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk
@@ -233,7 +235,7 @@ static void DFLL_Initialize(void)
 </#if>
 </#if>
 }
-
+</#if>
 
 <#list 0..11 as i>
     <#assign GCLK_INST_NUM = "GCLK_INST_NUM" + i>
@@ -282,14 +284,19 @@ static void GCLK${i}_Initialize(void)
 </#list>
 void CLOCK_Initialize (void)
 {
+<#if .vars["CONFIG_CLOCK_XOSC_ENABLE"]>
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
 
+</#if>
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
 
-${CLK_INIT_LIST}
-
+<#list CLK_INIT_LIST?split("\n") as list_entry>
+<#if !list_entry?contains("DFLL") || GEN_CODE_DFLL>
+${list_entry}
+</#if>
+</#list>
 
 <#list 2..GCLK_MAX_ID as i>
     <#assign GCLK_ID_CHEN = "GCLK_ID_" + i + "_CHEN">

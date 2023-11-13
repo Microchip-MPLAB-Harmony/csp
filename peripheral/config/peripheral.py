@@ -47,9 +47,10 @@ peripherals = {
                 "UART_39"       : ["UART"],
                 "QSPI_U2008"    : ["SQI","SPI"],
                 "QSPI_44132"    : ["SQI","SPI"],
-                "QMSPI_147"     : ["SQI"],
+                "QMSPI_147"     : ["SQI", "SPI"],
                 "SQI_00206"     : ["SQI"],
                 "SQI_04044"     : ["SQI"],
+                "SQI_00307"     : ["SQI"],
                 "TC_U2212"      : ["TMR"],
                 "TC_U2249"      : ["TMR"],
                 "TC_44162"      : ["TMR"],
@@ -237,5 +238,9 @@ for module in range (0, len(modules)):
                             ebiChipSelCount = int(ebiRegGroup.getAttribute("count"))
                     for ebiChipSel in range(0, ebiChipSelCount):
                         periphComponent.addCapability("ebi_cs"  + str(ebiChipSel), "EBI_CS", "EBI_CS"  + str(ebiChipSel), False)
+                if periphName == "HEMC":
+                    hemcChipSelectCount = int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="HSMC"]/register-group@[name="HSMC"]/register-group@[name="HSMC_CS"]').getAttribute("count"))
+                    for hemcChipSel in range(0, hemcChipSelectCount):
+                        periphComponent.addCapability("hemc_cs"  + str(hemcChipSel), "HEMC_CS", "HEMC_CS"  + str(hemcChipSel), False)
     else:
         print("CSP: Peripheral [" + periphName + " id=" + periphID + "] is not supported in MCC")

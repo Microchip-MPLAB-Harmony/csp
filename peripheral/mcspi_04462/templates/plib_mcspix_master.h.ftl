@@ -40,7 +40,7 @@
 *******************************************************************************/
 
 #ifndef PLIB_${MCSPI_INSTANCE_NAME}_MASTER_H
-#define PLIB_${MCSPI_INSTANCE_NAME}_MASTER__H
+#define PLIB_${MCSPI_INSTANCE_NAME}_MASTER_H
 
 #include "device.h"
 #include "plib_mcspi_master_common.h"
@@ -73,7 +73,7 @@ void ${MCSPI_INSTANCE_NAME}_ChipSelectSetup(MCSPI_CHIP_SELECT chipSelect);
 <#if MCSPI_INTERRUPT_MODE == true>
 bool ${MCSPI_INSTANCE_NAME}_IsBusy( void );
 
-void ${MCSPI_INSTANCE_NAME}_CallbackRegister( const MCSPI_CALLBACK callback, uintptr_t context );
+void ${MCSPI_INSTANCE_NAME}_CallbackRegister( MCSPI_CALLBACK callback, uintptr_t context );
 
 </#if>
 

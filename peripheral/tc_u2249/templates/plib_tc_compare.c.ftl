@@ -144,7 +144,7 @@
 // *****************************************************************************
 
 <#if TC_COMPARE_INTERRUPT_MODE = true>
-static TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+volatile static TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -167,7 +167,7 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
     /* Configure counter mode & prescaler */
     <@compress single_line=true>${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_MODE_${TC_CTRLA_MODE}
                                 | TC_CTRLA_PRESCALER_${TC_CTRLA_PRESCALER}
-                                | TC_CTRLA_PRESCSYNC_PRESC
+                                | TC_CTRLA_PRESCSYNC_${TC_CTRLA_PRESCYNC}
                                 ${TC_CTRLA_RUNSTDBY?then('| TC_CTRLA_RUNSTDBY_Msk', '')}
                                 ${TC_CTRLA_ONDEMAND?then('| TC_CTRLA_ONDEMAND_Msk', '')};</@compress>
 
@@ -248,7 +248,7 @@ void ${TC_INSTANCE_NAME}_CompareCommandSet(TC_COMMAND command)
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
 }
 
 <#if TC_CTRLA_MODE = "COUNT8">
@@ -289,6 +289,36 @@ bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
 {
     bool status = false;
     <#if TC_COMPARE_CTRLBSET_LUPD == true>
+    if((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_CCBUFV0_Msk) == 0U)
+    {
+        /* Configure period value */
+        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CCBUF[0] = period;
+        status = true;
+    }
+    <#else>
+    /* Configure period value */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = period;
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+    status = true;
+    </#if>
+    return status;
+}
+
+/* Read period value */
+uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
+{
+    /* Get period value */
+    return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
+}
+<#else>
+/* Configure period value */
+bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
+{
+    bool status = false;
+    <#if TC_COMPARE_CTRLBSET_LUPD == true>
     if((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_PERBUFV_Msk) == 0U)
     {
         /* Configure period value */
@@ -301,7 +331,7 @@ bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
     </#if>
     return status;
@@ -310,14 +340,7 @@ bool ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
 /* Read period value */
 uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
 {
-    /* Get period value */
     return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER;
-}
-<#else>
-/* Read period value */
-uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
-{
-    return 0xFFU;
 }
 </#if>
 
@@ -339,7 +362,7 @@ bool ${TC_INSTANCE_NAME}_Compare8bitMatch0Set( uint8_t compareValue )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
 </#if>
     return status;
@@ -361,7 +384,7 @@ bool ${TC_INSTANCE_NAME}_Compare8bitMatch1Set( uint8_t compareValue )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
 </#if>
     return status;
@@ -418,7 +441,7 @@ bool ${TC_INSTANCE_NAME}_Compare16bitPeriodSet( uint16_t period )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
     </#if>
     return status;
@@ -456,7 +479,7 @@ bool ${TC_INSTANCE_NAME}_Compare16bitMatch0Set( uint16_t compareValue )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
 </#if>
     return status;
@@ -479,8 +502,8 @@ bool ${TC_INSTANCE_NAME}_Compare16bitMatch1Set( uint16_t compareValue )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
     {
         /* Wait for Write Synchronization */
-    }  
-    status = true;  
+    }
+    status = true;
 </#if>
     return status;
 }
@@ -536,7 +559,7 @@ bool ${TC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
     status = true;
     </#if>
     return status;
@@ -564,7 +587,7 @@ bool ${TC_INSTANCE_NAME}_Compare32bitMatch0Set( uint32_t compareValue )
     bool status = false;
     <#if TC_COMPARE_CTRLBSET_LUPD == true>
     if((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_CCBUFV0_Msk) == 0U)
-    {  
+    {
         /* Set new compare value for compare channel 0 */
         ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CCBUF[0] = compareValue;
         status = true;
@@ -575,8 +598,8 @@ bool ${TC_INSTANCE_NAME}_Compare32bitMatch0Set( uint32_t compareValue )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
-    } 
-    status = true;   
+    }
+    status = true;
     </#if>
     return status;
 }
@@ -599,7 +622,7 @@ bool ${TC_INSTANCE_NAME}_Compare32bitMatch1Set( uint32_t compareValue )
     {
         /* Wait for Write Synchronization */
     }
-    status = true;    
+    status = true;
     </#if>
     return status;
 }
@@ -618,7 +641,7 @@ void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, 
 }
 
 /* Compare match interrupt handler */
-void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
+void __attribute__((used)) ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
 {
     if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0U)
     {
@@ -626,9 +649,10 @@ void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
         status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
         /* clear interrupt flag */
         ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
-        if((status != TC_COMPARE_STATUS_NONE) && (${TC_INSTANCE_NAME}_CallbackObject.callback != NULL))
+        if((${TC_INSTANCE_NAME}_CallbackObject.callback != NULL) && (status != TC_COMPARE_STATUS_NONE))
         {
-            ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+            uintptr_t context = ${TC_INSTANCE_NAME}_CallbackObject.context;
+            ${TC_INSTANCE_NAME}_CallbackObject.callback(status, context);
         }
     }
 }

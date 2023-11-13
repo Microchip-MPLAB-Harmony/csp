@@ -114,26 +114,26 @@
 #define CAN_STD_ID_Msk        0x7FFU
 
 <#if TX_USE>
-static CAN_TX_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj;
+volatile static CAN_TX_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj;
 </#if>
 <#if TXBUF_USE>
-static CAN_TXRX_BUFFERS_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj;
+volatile static CAN_TXRX_BUFFERS_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj;
 </#if>
 <#if TX_USE || TXBUF_USE>
 <#assign TX_EVENT_FIFO_ELEMENTS = TX_FIFO_ELEMENTS>
 <#if TXBUF_USE>
 <#assign TX_EVENT_FIFO_ELEMENTS = TX_BUFFER_ELEMENTS + TX_FIFO_ELEMENTS>
 </#if>
-static CAN_TX_EVENT_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj;
+volatile static CAN_TX_EVENT_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj;
 </#if>
 <#if RXBUF_USE>
-static CAN_TXRX_BUFFERS_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj;
+volatile static CAN_TXRX_BUFFERS_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj;
 </#if>
 <#if RXF0_USE || RXF1_USE>
-static CAN_RX_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[2];
+volatile static CAN_RX_FIFO_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[2];
 </#if>
-static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj;
-static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
+volatile static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj;
+volatile static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
 
@@ -162,6 +162,15 @@ static const can_xidfe_registers_t ${CAN_INSTANCE_NAME?lower_case}ExtFilter[] =
      </#list>
 };
 </#if>
+
+static inline void ${CAN_INSTANCE_NAME}_ZeroInitialize(volatile void* pData, size_t dataSize)
+{
+    volatile uint8_t* data = (volatile uint8_t*)pData;
+    for (uint32_t index = 0; index < dataSize; index++)
+    {
+        data[index] = 0U;
+    }
+}
 
 // *****************************************************************************
 // *****************************************************************************
@@ -234,7 +243,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 <#if TIMESTAMP_ENABLE || CAN_TIMEOUT>
 
     /* Timestamp Counter Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TSCC = CAN_TSCC_TCP(${TIMESTAMP_PRESCALER}UL)<#if TIMESTAMP_ENABLE == true> | ${TIMESTAMP_MODE}</#if>;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_TSCC = CAN_TSCC_TCP(${TIMESTAMP_PRESCALER}UL)<#if TIMESTAMP_ENABLE == true> | CAN_TSCC_TSS_${TIMESTAMP_MODE}</#if>;
 </#if>
 <#if CAN_TIMEOUT>
 
@@ -283,7 +292,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
                                       <#if RXBUF_USE> | CAN_IE_DRXE_Msk</#if>
                                       | CAN_IE_MRAFE_Msk;
 
-    (void) memset(&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(CAN_MSG_RAM_CONFIG));
+    ${CAN_INSTANCE_NAME}_ZeroInitialize(&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, sizeof(CAN_MSG_RAM_CONFIG));
 }
 
 <#if TXBUF_USE>
@@ -319,6 +328,8 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint8_t bufferNumber, CAN_TX_BUFFER *t
 
         /* Enable Transmission Interrupt */
         ${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE = 1UL << bufferNumber;
+
+        __DSB();
 
         /* Set Transmission request */
         ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = 1UL << bufferNumber;
@@ -383,6 +394,8 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmitFifo(uint8_t numberOfMessage, CAN_TX_BU
             }
             </#if>
         }
+
+        __DSB();
 
         /* Set Transmission request */
         ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = bufferNumber;
@@ -520,13 +533,14 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, CAN_RX_BUFFER *rx
     uint8_t *rxBuf = NULL;
     bool message_receive_event = false;
 
-    if (!((bufferNumber >= ${RX_BUFFER_ELEMENTS}U) || (rxBuffer == NULL)))
+    if((rxBuffer != NULL) && (bufferNumber < ${RX_BUFFER_ELEMENTS}U))
     {
         rxBuf = (uint8_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + ((uint32_t)bufferNumber * ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE));
 
-        (void) memcpy((uint8_t *)rxBuffer, rxBuf, ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
+        (void)memcpy((uint8_t *)rxBuffer, rxBuf, ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
 
         /* Clear new data flag */
+<#if RX_BUFFER_ELEMENTS gt 32>
         if (bufferNumber < 32U)
         {
             ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1UL << bufferNumber);
@@ -535,7 +549,9 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint8_t bufferNumber, CAN_RX_BUFFER *rx
         {
             ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1UL << (bufferNumber - 32U));
         }
-
+<#else>
+        ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1UL << bufferNumber);
+</#if>
         message_receive_event = true;
     }
     return message_receive_event;
@@ -717,9 +733,37 @@ void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorC
    Returns:
     None
 */
+<#assign DEV_COUNT_11_3 = 0>
+<#if RXF0_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if RXF1_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if RXBUF_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if TX_USE || TXBUF_USE>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 2>
+</#if>
+<#if FILTERS_STD?number gt 0>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+<#if FILTERS_EXT?number gt 0>
+<#assign DEV_COUNT_11_3 = DEV_COUNT_11_3 + 1>
+</#if>
+/* MISRA C-2012 Rule 11.3 violated ${DEV_COUNT_11_3} times below. Deviation record ID - H3_MISRAC_2012_R_11_3_DR_1*/
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+</#if>
+#pragma coverity compliance block deviate:${DEV_COUNT_11_3} "MISRA C-2012 Rule 11.3" "H3_MISRAC_2012_R_11_3_DR_1"
+</#if>
 void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 {
     uint32_t offset = 0U;
+    uint32_t msgRAMConfigBaseAddr = (uint32_t)msgRAMConfigBaseAddress;
 
     (void) memset(msgRAMConfigBaseAddress, 0x00, ${CAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
 
@@ -735,11 +779,11 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
 <#if CAN_MRCFG_OFFSET_ENABLE??>
     /* Message RAM Base Address Offset */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_MRCFG = (uint32_t)msgRAMConfigBaseAddress & CAN_MRCFG_OFFSET_Msk;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_MRCFG = (uint32_t)msgRAMConfigBaseAddr & CAN_MRCFG_OFFSET_Msk;
 
 </#if>
 <#if RXF0_USE>
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address = (can_rxf0e_registers_t *)msgRAMConfigBaseAddress;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address = (can_rxf0e_registers_t *)msgRAMConfigBaseAddr;
     offset = ${CAN_INSTANCE_NAME}_RX_FIFO0_SIZE;
     /* Receive FIFO 0 Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0C = CAN_RXF0C_F0S(${RXF0_ELEMENTS}UL) | CAN_RXF0C_F0WM(${RXF0_WATERMARK}UL)<#if RXF0_OVERWRITE> | CAN_RXF0C_F0OM_Msk</#if> |
@@ -747,7 +791,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
 </#if>
 <#if RXF1_USE>
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address = (can_rxf1e_registers_t *)(msgRAMConfigBaseAddress + offset);
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address = (can_rxf1e_registers_t *)(msgRAMConfigBaseAddr + offset);
     offset += ${CAN_INSTANCE_NAME}_RX_FIFO1_SIZE;
     /* Receive FIFO 1 Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1C = CAN_RXF1C_F1S(${RXF1_ELEMENTS}UL) | CAN_RXF1C_F1WM(${RXF1_WATERMARK}UL)<#if RXF1_OVERWRITE> | CAN_RXF1C_F1OM_Msk</#if> |
@@ -755,19 +799,19 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
 </#if>
 <#if RXBUF_USE>
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress = (can_rxbe_registers_t *)(msgRAMConfigBaseAddress + offset);
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress = (can_rxbe_registers_t *)(msgRAMConfigBaseAddr + offset);
     offset += ${CAN_INSTANCE_NAME}_RX_BUFFER_SIZE;
     ${CAN_INSTANCE_NAME}_REGS->CAN_RXBC = CAN_RXBC_RBSA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress);
 
 </#if>
 <#if TX_USE || TXBUF_USE>
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress = (can_txbe_registers_t *)(msgRAMConfigBaseAddress + offset);
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress = (can_txbe_registers_t *)(msgRAMConfigBaseAddr + offset);
     offset += ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE;
     /* Transmit Buffer/FIFO Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_TXBC = CAN_TXBC_TFQS(${TX_FIFO_ELEMENTS}UL)<#if TXBUF_USE> | CAN_TXBC_NDTB(${TX_BUFFER_ELEMENTS}UL)</#if> |
             CAN_TXBC_TBSA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress);
 
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress =  (can_txefe_registers_t *)(msgRAMConfigBaseAddress + offset);
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress =  (can_txefe_registers_t *)(msgRAMConfigBaseAddr + offset);
     offset += ${CAN_INSTANCE_NAME}_TX_EVENT_FIFO_SIZE;
     /* Transmit Event FIFO Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_TXEFC = CAN_TXEFC_EFWM(${TX_FIFO_WATERMARK}UL) | CAN_TXEFC_EFS(${TX_FIFO_ELEMENTS}UL) |
@@ -775,9 +819,9 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
 </#if>
 <#if FILTERS_STD?number gt 0>
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (can_sidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
-           (const void *)${CAN_INSTANCE_NAME?lower_case}StdFilter,
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (can_sidfe_registers_t *)(msgRAMConfigBaseAddr + offset);
+    (void) memcpy((void*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
+           (const void*)${CAN_INSTANCE_NAME?lower_case}StdFilter,
            ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE);
     offset += ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE;
     /* Standard ID Filter Configuration Register */
@@ -786,9 +830,9 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
 </#if>
 <#if FILTERS_EXT?number gt 0>
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (can_xidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    (void) memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
-           (const void *)${CAN_INSTANCE_NAME?lower_case}ExtFilter,
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (can_xidfe_registers_t *)(msgRAMConfigBaseAddr + offset);
+    (void) memcpy((void*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
+           (const void*)${CAN_INSTANCE_NAME?lower_case}ExtFilter,
            ${CAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE);
     /* Extended ID Filter Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_XIDFC = CAN_XIDFC_LSE(${FILTERS_EXT}UL) |
@@ -805,6 +849,14 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
         /* Wait for configuration complete */
     }
 }
+<#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
+#pragma coverity compliance end_block "MISRA C-2012 Rule 11.3"
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
+</#if>
+/* MISRAC 2012 deviation block end for Rule 11.3*/
+
 
 <#if FILTERS_STD?number gt 0>
 // *****************************************************************************
@@ -957,6 +1009,155 @@ void ${CAN_INSTANCE_NAME}_SleepModeExit(void)
     {
         /* Wait for initialization complete */
     }
+}
+
+bool ${CAN_INSTANCE_NAME}_BitTimingCalculationGet(CAN_BIT_TIMING_SETUP *setup, CAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+    uint32_t numOfTimeQuanta;
+    uint8_t tseg1;
+    float temp1;
+    float temp2;
+
+    if ((setup != NULL) && (bitTiming != NULL))
+    {
+        if (setup->nominalBitTimingSet == true)
+        {
+            numOfTimeQuanta = ${CAN_INSTANCE_NAME}_CLOCK_FREQUENCY / (setup->nominalBitRate * ((uint32_t)setup->nominalPrescaler + 1U));
+            if ((numOfTimeQuanta >= 4U) && (numOfTimeQuanta <= 385U))
+            {
+                if (setup->nominalSamplePoint < 50.0f)
+                {
+                    setup->nominalSamplePoint = 50.0f;
+                }
+                temp1 = (float)numOfTimeQuanta;
+                temp2 = (temp1 * setup->nominalSamplePoint) / 100.0f;
+                tseg1 = (uint8_t)temp2;
+                bitTiming->nominalBitTiming.nominalTimeSegment2 = (uint8_t)(numOfTimeQuanta - tseg1 - 1U);
+                bitTiming->nominalBitTiming.nominalTimeSegment1 = tseg1 - 2U;
+                bitTiming->nominalBitTiming.nominalSJW = bitTiming->nominalBitTiming.nominalTimeSegment2;
+                bitTiming->nominalBitTiming.nominalPrescaler = setup->nominalPrescaler;
+                bitTiming->nominalBitTimingSet = true;
+                status = true;
+            }
+            else
+            {
+                bitTiming->nominalBitTimingSet = false;
+            }
+        }
+<#if CAN_OPMODE != "NORMAL">
+        if (setup->dataBitTimingSet == true)
+        {
+            numOfTimeQuanta = ${CAN_INSTANCE_NAME}_CLOCK_FREQUENCY / (setup->dataBitRate * ((uint32_t)setup->dataPrescaler + 1U));
+            if ((numOfTimeQuanta >= 4U) && (numOfTimeQuanta <= 49U))
+            {
+                if (setup->dataSamplePoint < 50.0f)
+                {
+                    setup->dataSamplePoint = 50.0f;
+                }
+                temp1 = (float)numOfTimeQuanta;
+                temp2 = (temp1 * setup->dataSamplePoint) / 100.0f;
+                tseg1 = (uint8_t)temp2;
+                bitTiming->dataBitTiming.dataTimeSegment2 = (uint8_t)(numOfTimeQuanta - tseg1 - 1U);
+                bitTiming->dataBitTiming.dataTimeSegment1 = tseg1 - 2U;
+                bitTiming->dataBitTiming.dataSJW = bitTiming->dataBitTiming.dataTimeSegment2;
+                bitTiming->dataBitTiming.dataPrescaler = setup->dataPrescaler;
+                bitTiming->dataBitTimingSet = true;
+                status = true;
+            }
+            else
+            {
+                bitTiming->dataBitTimingSet = false;
+                status = false;
+            }
+        }
+</#if>
+    }
+
+    return status;
+}
+
+bool ${CAN_INSTANCE_NAME}_BitTimingSet(CAN_BIT_TIMING *bitTiming)
+{
+    bool status = false;
+    bool nominalBitTimingSet = false;
+<#if CAN_OPMODE != "NORMAL">
+    bool dataBitTimingSet = false;
+</#if>
+
+    if ((bitTiming->nominalBitTimingSet == true)
+    && (bitTiming->nominalBitTiming.nominalTimeSegment1 >= 0x1U)
+    && (bitTiming->nominalBitTiming.nominalTimeSegment2 <= 0x7FU)
+    && (bitTiming->nominalBitTiming.nominalPrescaler <= 0x1FFU)
+    && (bitTiming->nominalBitTiming.nominalSJW <= 0x7FU))
+    {
+        nominalBitTimingSet = true;
+    }
+
+<#if CAN_OPMODE != "NORMAL">
+    if  ((bitTiming->dataBitTimingSet == true)
+    &&  ((bitTiming->dataBitTiming.dataTimeSegment1 >= 0x1U) && (bitTiming->dataBitTiming.dataTimeSegment1 <= 0x1FU))
+    &&  (bitTiming->dataBitTiming.dataTimeSegment2 <= 0xFU)
+    &&  (bitTiming->dataBitTiming.dataPrescaler <= 0x1FU)
+    &&  (bitTiming->dataBitTiming.dataSJW <= 0xFU))
+    {
+        dataBitTimingSet = true;
+    }
+
+</#if>
+<#if CAN_OPMODE != "NORMAL">
+    if ((nominalBitTimingSet == true) || (dataBitTimingSet == true))
+<#else>
+    if (nominalBitTimingSet == true)
+</#if>
+    {
+        /* Start CAN initialization */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = CAN_CCCR_INIT_Msk;
+        while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) != CAN_CCCR_INIT_Msk)
+        {
+            /* Wait for initialization complete */
+        }
+
+        /* Set CCE to unlock the configuration registers */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_CCE_Msk;
+
+<#if CAN_OPMODE != "NORMAL">
+        if (dataBitTimingSet == true)
+        {
+            /* Set Data Bit Timing and Prescaler Register */
+            ${CAN_INSTANCE_NAME}_REGS->CAN_DBTP = CAN_DBTP_DTSEG2(bitTiming->dataBitTiming.dataTimeSegment2) | CAN_DBTP_DTSEG1(bitTiming->dataBitTiming.dataTimeSegment1) | CAN_DBTP_DBRP(bitTiming->dataBitTiming.dataPrescaler) | CAN_DBTP_DSJW(bitTiming->dataBitTiming.dataSJW);
+        }
+</#if>
+        if (nominalBitTimingSet == true)
+        {
+            /* Set Nominal Bit timing and Prescaler Register */
+            ${CAN_INSTANCE_NAME}_REGS->CAN_NBTP  = CAN_NBTP_NTSEG2(bitTiming->nominalBitTiming.nominalTimeSegment2) | CAN_NBTP_NTSEG1(bitTiming->nominalBitTiming.nominalTimeSegment1) | CAN_NBTP_NBRP(bitTiming->nominalBitTiming.nominalPrescaler) | CAN_NBTP_NSJW(bitTiming->nominalBitTiming.nominalSJW);
+        }
+
+        /* Set the operation mode */
+        <#if CAN_OPMODE != "NORMAL">
+        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_FDOE_Msk | CAN_CCCR_BRSE_Msk<#rt>
+                                               <#lt><#if CAN_OPMODE == "Restricted Operation Mode"> | CAN_CCCR_ASM_Msk</#if><#rt>
+                                               <#lt><#if CAN_OPMODE == "Bus Monitoring Mode"> | CAN_CCCR_MON_Msk</#if><#rt>
+                                               <#lt><#if CAN_OPMODE == "External Loop Back Mode"> | CAN_CCCR_TEST_Msk</#if><#rt>
+                                               <#lt><#if CAN_OPMODE == "Internal Loop Back Mode"> | CAN_CCCR_TEST_Msk | CAN_CCCR_MON_Msk</#if>;
+        </#if>
+        <#if TX_PAUSE == true>
+        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_TXP_Msk;
+        </#if>
+
+        <#if CAN_OPMODE == "External Loop Back Mode" || CAN_OPMODE == "Internal Loop Back Mode">
+        ${CAN_INSTANCE_NAME}_REGS->CAN_TEST |= CAN_TEST_LBCK_Msk;
+        </#if>
+
+        ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR &= ~CAN_CCCR_INIT_Msk;
+        while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk)
+        {
+            /* Wait for initialization complete */
+        }
+        status = true;
+    }
+    return status;
 }
 
 <#if TXBUF_USE>
@@ -1177,7 +1378,7 @@ void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t cont
     instance interrupt is enabled. If peripheral instance's interrupt is not
     enabled user need to call it from the main while loop of the application.
 */
-void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 {
 <#if RXBUF_USE>
     uint32_t newData1 = 0U;
@@ -1200,12 +1401,16 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
     uint32_t ir = ${CAN_INSTANCE_NAME}_REGS->CAN_IR;
 
+    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+    uintptr_t context;
+
     if ((ir & (~(${CAN_INTERRUPT}))) != 0U)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = (ir & (~(${CAN_INTERRUPT})));
         if (${CAN_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL)
         {
-            ${CAN_INSTANCE_NAME?lower_case}CallbackObj.callback(ir, ${CAN_INSTANCE_NAME?lower_case}CallbackObj.context);
+            context = ${CAN_INSTANCE_NAME?lower_case}CallbackObj.context;
+            ${CAN_INSTANCE_NAME?lower_case}CallbackObj.callback(ir, context);
         }
     }
 <#if RXF0_USE>
@@ -1218,7 +1423,8 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
         if (${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_0].callback != NULL)
         {
-            ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_0].callback(numberOfMessage, ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_0].context);
+            context = ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_0].context;
+            ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_0].callback(numberOfMessage, context);
         }
     }
 </#if>
@@ -1232,7 +1438,8 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
         if (${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_1].callback != NULL)
         {
-            ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_1].callback(numberOfMessage, ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_1].context);
+            context = ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_1].context;
+            ${CAN_INSTANCE_NAME?lower_case}RxFifoCallbackObj[CAN_RX_FIFO_1].callback(numberOfMessage, context);
         }
     }
 </#if>
@@ -1258,7 +1465,8 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 {
                     if (${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback != NULL)
                     {
-                        ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback(bufferNumber, ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context);
+                        context = ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context;
+                        ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback(bufferNumber, context);
                     }
                 }
             }
@@ -1272,7 +1480,8 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 {
                     if (${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback != NULL)
                     {
-                        ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback((bufferNumber + 32U), ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context);
+                        context = ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.context;
+                        ${CAN_INSTANCE_NAME?lower_case}RxBufferCallbackObj.callback((bufferNumber + 32U), context);
                     }
                 }
             }
@@ -1296,7 +1505,8 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 ${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE &= ~txbufferMask;
                 if (${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback != NULL)
                 {
-                    ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback(bufferNumber, ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.context);
+                    context = ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.context;
+                    ${CAN_INSTANCE_NAME?lower_case}TxBufferCallbackObj.callback(bufferNumber, context);
                 }
             }
         }
@@ -1309,7 +1519,8 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_TFE_Msk;
         if (${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback != NULL)
         {
-            ${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback(${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.context);
+            context = ${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.context;
+            ${CAN_INSTANCE_NAME?lower_case}TxFifoCallbackObj.callback(context);
         }
     }
 </#if>
@@ -1323,7 +1534,8 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
         if (${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback != NULL)
         {
-            ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback(numberOfTxEvent, ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.context);
+            context = ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.context;
+            ${CAN_INSTANCE_NAME?lower_case}TxEventFifoCallbackObj.callback(numberOfTxEvent, context);
         }
     }
 </#if>

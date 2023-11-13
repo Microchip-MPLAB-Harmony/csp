@@ -224,7 +224,7 @@ void ${SUPC_INSTANCE_NAME}_BackupModeEnter (void)
 }
 
 <#if SUPC_SMMR_SMIEN>
-static SUPC_OBJECT supcObj;
+volatile static SUPC_OBJECT supcObj;
 
 void ${SUPC_INSTANCE_NAME}_CallbackRegister (SUPC_CALLBACK callback, uintptr_t context)
 {
@@ -232,12 +232,13 @@ void ${SUPC_INSTANCE_NAME}_CallbackRegister (SUPC_CALLBACK callback, uintptr_t c
     supcObj.context = context;
 }
 
-void ${SUPC_INSTANCE_NAME}_InterruptHandler (void)
+void __attribute__((used)) ${SUPC_INSTANCE_NAME}_InterruptHandler (void)
 {
-       // Callback user function
+    uintptr_t context = supcObj.context; 
+    // Callback user function
     if(supcObj.callback != NULL)
     {
-        supcObj.callback (supcObj.context);
+        supcObj.callback (context);
     }
 }
 </#if>

@@ -48,7 +48,7 @@
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>
-    <#lt>static SYSTICK_OBJECT systick;
+    <#lt>volatile static SYSTICK_OBJECT systick;
 </#if>
 
 void SYSTICK_TimerInitialize ( void )
@@ -170,13 +170,21 @@ void SYSTICK_DelayUs ( uint32_t delay_us)
    }
 }
 <#if SYSTICK_USED_BY_SYS_TIME == true>
-void SYSTICK_TimerInterruptDisable ( void )
+bool SYSTICK_TimerInterruptDisable ( void )
 {
+    bool interruptStatus = false;
+
+    if ((SysTick->CTRL & SysTick_CTRL_TICKINT_Msk) != 0U)
+    {
+        interruptStatus = true;
+    }
 <#if SYSTICK_CLOCK == "1">
     SysTick->CTRL = 0x05U;
 <#else>
     SysTick->CTRL = 0x01U;
 </#if>
+
+    return interruptStatus;
 }
 
 void SYSTICK_TimerInterruptEnable ( void )
@@ -189,12 +197,20 @@ void SYSTICK_TimerInterruptEnable ( void )
 <#else>
     SysTick->CTRL = 0x03U;
 </#if>
-    if(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk)
+    if((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
     {
         SCB->ICSR |= SCB_ICSR_PENDSTSET_Msk;
     }
 
     NVIC_INT_Restore(interruptState);
+}
+
+void SYSTICK_TimerInterruptRestore ( bool interruptStatus )
+{
+    if (interruptStatus == true)
+    {
+        SYSTICK_TimerInterruptEnable();
+    }
 }
 </#if>
 
@@ -208,47 +224,50 @@ void SYSTICK_TimerInterruptEnable ( void )
 
 <#if USE_SYSTICK_INTERRUPT == true>
 uint32_t SYSTICK_GetTickCounter(void)
-{ 
-	return systick.tickCounter; 
+{
+    return systick.tickCounter;
 }
 
 void SYSTICK_StartTimeOut (SYSTICK_TIMEOUT* timeout, uint32_t delay_ms)
-{ 
-	timeout->start = SYSTICK_GetTickCounter();
-	timeout->count = (delay_ms*1000U)/SYSTICK_INTERRUPT_PERIOD_IN_US; 
+{
+    timeout->start = SYSTICK_GetTickCounter();
+    timeout->count = (delay_ms*1000U)/SYSTICK_INTERRUPT_PERIOD_IN_US;
 }
 
 void SYSTICK_ResetTimeOut (SYSTICK_TIMEOUT* timeout)
-{ 
-	timeout->start = SYSTICK_GetTickCounter(); 
+{
+    timeout->start = SYSTICK_GetTickCounter();
 }
 
 bool SYSTICK_IsTimeoutReached (SYSTICK_TIMEOUT* timeout)
-{ 
+{
     bool valTimeout  = true;
-	if ((SYSTICK_GetTickCounter() - timeout->start) < timeout->count)
-	{
-		valTimeout = false;
-	}
-	
-	return valTimeout;
-	
-}
-    <#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
-    <#lt>{
-    <#lt>   systick.callback = callback;
-    <#lt>   systick.context = context;
-    <#lt>}
+    if ((SYSTICK_GetTickCounter() - timeout->start) < timeout->count)
+    {
+        valTimeout = false;
+    }
 
-    <#lt>void SysTick_Handler(void)
-    <#lt>{
-    <#lt>   /* Reading control register clears the count flag */
-    <#lt>   uint32_t sysCtrl = SysTick->CTRL;
-    <#lt>   systick.tickCounter++;
-    <#lt>   if(systick.callback != NULL)
-    <#lt>   {
-    <#lt>       systick.callback(systick.context);
-    <#lt>   }
-    <#lt>   (void)sysCtrl;
-    <#lt>}
+    return valTimeout;
+
+}
+void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
+{
+   systick.callback = callback;
+   systick.context = context;
+}
+
+void __attribute__((used)) SysTick_Handler(void)
+{
+   /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
+   uintptr_t context = systick.context;
+
+   /* Reading control register clears the count flag */
+   (void)SysTick->CTRL;
+
+   systick.tickCounter++;
+   if(systick.callback != NULL)
+   {
+       systick.callback(context);
+   }
+}
 </#if>

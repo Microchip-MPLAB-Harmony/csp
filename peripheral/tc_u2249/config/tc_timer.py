@@ -67,7 +67,7 @@ def tcPeriodCalc(symbol, event):
     resolution = (prescaler * 1000.0) / clock_freq   #mSec
     time = tcSym_Timer_TIME_MS.getValue()
     unit = tcTimerUnit[tcSym_TimerUnit.getValue()]
-    period = time / (resolution * unit)
+    period = (time / (resolution * unit)) - 1
     symbol.setValue(long(period), 2)
     symbol.setMax(pow(2, int(tcSym_CTRLA_MODE.getSelectedKey()[5:])) - 1)
 
@@ -135,7 +135,7 @@ tcSym_Timer_TIME_MS.setDependencies(tcTimeMaxValue, ["TC_CTRLA_MODE", "core."+tc
 
 #timer period
 global tcSym_TimerPeriod
-period = tcSym_Timer_TIME_MS.getValue() * 1000000 / resolution
+period = (tcSym_Timer_TIME_MS.getValue() * 1000000 / resolution) - 1
 tcSym_TimerPeriod = tcComponent.createLongSymbol("TC_TIMER_PERIOD", tcSym_Timer_TIME_MS)
 tcSym_TimerPeriod.setLabel("Timer Period")
 tcSym_TimerPeriod.setVisible(True)

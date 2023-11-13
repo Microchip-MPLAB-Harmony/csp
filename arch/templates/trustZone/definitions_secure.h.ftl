@@ -70,6 +70,20 @@ extern "C" {
 #define TZ_START_S 0x${SEC_START_ADDRESS}
 </#if>
 
+/* Device Information */
+<#if DEVICE_NAME??>
+#define DEVICE_NAME			 "${DEVICE_NAME?string}"
+</#if>
+<#if CoreArchitecture??>
+#define DEVICE_ARCH			 "${CoreArchitecture?string}"
+</#if>
+<#if PRODUCT_FAMILY??>
+#define DEVICE_FAMILY		 "${PRODUCT_FAMILY?string}"
+</#if>
+<#if CoreSeries??>
+#define DEVICE_SERIES		 "${CoreSeries?string}"
+</#if>
+
 /* CPU clock frequency */
 #define CPU_CLOCK_FREQUENCY ${CPU_CLOCK_FREQUENCY}
 

@@ -47,6 +47,9 @@
 // *****************************************************************************
 
 #include "plib_${CMP_INSTANCE_NAME?lower_case}.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -57,7 +60,7 @@
 <#list 1..CMP_COUNT as i>
     <#assign CMP_CMxCON_EVPOL = "CMP_CM" + i + "CON_EVPOL">
     <#if .vars[CMP_CMxCON_EVPOL] != "0">
-        <#lt>CMP_OBJECT cmp${i}Obj;
+        <#lt>volatile static CMP_OBJECT cmp${i}Obj;
     </#if>
 </#list>
 
@@ -128,13 +131,14 @@ void ${CMP_INSTANCE_NAME}_${i}_CallbackRegister(CMP_CALLBACK callback, uintptr_t
     cmp${i}Obj.context = context;
 }
 
-void COMPARATOR_${i}_InterruptHandler(void)
+void __attribute__((used)) COMPARATOR_${i}_InterruptHandler(void)
 {
     ${.vars[CMP_IFS_REG]}CLR = _${.vars[CMP_IFS_REG]}_${CMP_INSTANCE_NAME}${i}IF_MASK; //Clear IRQ flag
 
     if(cmp${i}Obj.callback != NULL)
     {
-        cmp${i}Obj.callback(cmp${i}Obj.context);
+        uintptr_t context = cmp${i}Obj.context;
+        cmp${i}Obj.callback(context);
     }
 }
 

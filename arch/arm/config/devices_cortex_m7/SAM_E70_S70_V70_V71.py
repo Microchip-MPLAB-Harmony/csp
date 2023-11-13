@@ -254,11 +254,11 @@ cacheAlign.setVisible(False)
 cacheAlign.setDefaultValue(32)
 
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
 
 # load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
-coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "MPU_CONFIGURATOR", {"plugin_name": "MPU Configurator", "main_html_path": "csp/plugins/configurators/mpu-configurators/mpu-configurator/build/index.html"})
 
 # load systick
 execfile(Variables.get("__CORE_DIR")
@@ -270,7 +270,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
 # load dma manager information
 execfile(Variables.get("__CORE_DIR")
          + "/../peripheral/xdmac_11161/config/xdmac.py")
-coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_SAM_E70_S70_V70_V71",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-1/build/index.html",
+                            "symbol_config": "csp/peripheral/xdmac_11161/plugin/symbol-config.json"
+                        }
+                        )
 
 # load rswdt
 execfile(Variables.get("__CORE_DIR")

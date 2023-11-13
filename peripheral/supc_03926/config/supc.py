@@ -178,16 +178,6 @@ def instantiateComponent(supcComponent):
     supcSym_VREGCTRL_OFFSTDBY = supcComponent.createBooleanSymbol("SUPC_VREGCTRL_OFFSTDBY", supcSym_VREGControl_Menu)
     supcSym_VREGCTRL_OFFSTDBY.setLabel("Off in Standby Control")
 
-    #Low Voltage Standby Enable
-    supcSym_VREGCTRL_LVSTDBY = supcComponent.createBooleanSymbol("SUPC_VREGCTRL_LVSTDBY", supcSym_VREGControl_Menu)
-    supcSym_VREGCTRL_LVSTDBY.setLabel("Low Voltage Standby Enable")
-    supcSym_VREGCTRL_LVSTDBY.setDefaultValue(True)
-
-    #Low Voltage Hibernate Enable
-    supcSym_VREGCTRL_LVHIB = supcComponent.createBooleanSymbol("SUPC_VREGCTRL_LVHIB", supcSym_VREGControl_Menu)
-    supcSym_VREGCTRL_LVHIB.setLabel("Low Voltage Hibernate Enable")
-    supcSym_VREGCTRL_LVHIB.setDefaultValue(True)
-
     #Charge Pump Enable and Auto-enable
     supcSym_VREGCTRL_CPEN = supcComponent.createBooleanSymbol("SUPC_VREGCTRL_CPEN", supcSym_VREGControl_Menu)
     supcSym_VREGCTRL_CPEN.setLabel("Charge Pump Enable and Auto-enable")

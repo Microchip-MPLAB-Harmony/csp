@@ -80,7 +80,7 @@ void ${SDHC_INSTANCE_NAME}_CardDetectEnable( void );
 void ${SDHC_INSTANCE_NAME}_CardDetectDisable( void );
 </#if>
 
-bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t clock);
+bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t speed);
 
 void ${SDHC_INSTANCE_NAME}_ClockEnable ( void );
 
@@ -92,6 +92,8 @@ uint16_t ${SDHC_INSTANCE_NAME}_DataErrorGet (void);
 
 void ${SDHC_INSTANCE_NAME}_ErrorReset ( SDHC_RESET_TYPE resetType );
 
+uint16_t ${SDHC_INSTANCE_NAME}_GetError(void);
+
 void ${SDHC_INSTANCE_NAME}_ResponseRead ( SDHC_READ_RESPONSE_REG respReg, uint32_t* response );
 
 void ${SDHC_INSTANCE_NAME}_ModuleInit ( void );
@@ -101,9 +103,9 @@ void ${SDHC_INSTANCE_NAME}_Initialize( void );
 void ${SDHC_INSTANCE_NAME}_CallbackRegister(SDHC_CALLBACK callback, uintptr_t contextHandle);
 
 void ${SDHC_INSTANCE_NAME}_CommandSend (
-    uint8_t opCode, 
+    uint8_t opCode,
     uint32_t argument,
-    uint8_t respType, 
+    uint8_t respType,
     SDHC_DataTransferFlags transferFlags
 );
 

@@ -38,8 +38,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef _PLIB_${CCP_INSTANCE_NAME}_H
-#define _PLIB_${CCP_INSTANCE_NAME}_H
+#ifndef PLIB_${CCP_INSTANCE_NAME}_H
+#define PLIB_${CCP_INSTANCE_NAME}_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -155,6 +155,11 @@ void ${CCP_INSTANCE_NAME}_Compare16bitRBValueSet (uint16_t value);
 uint16_t ${CCP_INSTANCE_NAME}_Compare16bitRBValueGet (void);
 </#if>
 
+<#if CCP_MCCP_PRESENT == true>
+void ${CCP_INSTANCE_NAME}_CompareDeadTimeSet (uint8_t value);
+
+uint8_t ${CCP_INSTANCE_NAME}_CompareDeadTimeGet (void);
+</#if>
 
 <#if CCP_TIMER_INTERRUPT == true>
 // *****************************************************************************

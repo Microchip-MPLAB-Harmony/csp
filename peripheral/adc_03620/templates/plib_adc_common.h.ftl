@@ -79,57 +79,77 @@ typedef uint32_t ADC_CMPCTRL;
 typedef uint32_t ADC_CORE_INT;
 typedef uint32_t ADC_GLOBAL_INT;
 
+<#if ADC_MAX_CHANNELS gt 0>
 <#list 0..((ADC_MAX_CHANNELS) - 1) as n>
-	<#lt>#define ADC_CORE_INT_CHRDY_${n} 				(1 << (ADC_INTFLAG_CHRDY_Pos + ${n}))
+    <#lt>#define ADC_CORE_INT_CHRDY_${n}                (1 << (ADC_INTFLAG_CHRDY_Pos + ${n}))
 </#list>
-#define ADC_CORE_INT_EOSRDY					(ADC_INTFLAG_EOSRDY_Msk)
-#define ADC_CORE_INT_CHNERRC				(ADC_INTFLAG_CHNERRC_Msk)
-#define ADC_CORE_INT_FLTRDY					(ADC_INTFLAG_FLTRDY_Msk)
-#define ADC_CORE_INT_CHRDYC					(ADC_INTFLAG_CHRDYC_Msk)
-#define ADC_CORE_INT_SOVFL					(ADC_INTFLAG_SOVFL_Msk)
-#define ADC_CORE_INT_CMPHIT					(ADC_INTFLAG_CMPHIT_Msk)
+</#if>
 
-#define ADC_GLOBAL_INT_PFFHFUL				(ADC_CTLINTENSET_PFFHFUL_Msk)
-#define ADC_GLOBAL_INT_PFFRDY				(ADC_CTLINTENSET_PFFRDY_Msk)
-#define ADC_GLOBAL_INT_PFFOVF				(ADC_CTLINTENSET_PFFOVF_Msk)
-#define ADC_GLOBAL_INT_PFFUNF				(ADC_CTLINTENSET_PFFUNF_Msk)
-#define ADC_GLOBAL_INT_VREFRDY				(ADC_CTLINTENSET_VREFRDY_Msk)
-#define ADC_GLOBAL_INT_VREFUPD				(ADC_CTLINTENSET_VREFUPD_Msk)
+#define ADC_CORE_INT_EOSRDY                 (ADC_INTFLAG_EOSRDY_Msk)
+#define ADC_CORE_INT_CHNERRC                (ADC_INTFLAG_CHNERRC_Msk)
+#define ADC_CORE_INT_FLTRDY                 (ADC_INTFLAG_FLTRDY_Msk)
+#define ADC_CORE_INT_CHRDYC                 (ADC_INTFLAG_CHRDYC_Msk)
+#define ADC_CORE_INT_SOVFL                  (ADC_INTFLAG_SOVFL_Msk)
+#define ADC_CORE_INT_CMPHIT                 (ADC_INTFLAG_CMPHIT_Msk)
+
+#define ADC_GLOBAL_INT_PFFHFUL              (ADC_CTLINTENSET_PFFHFUL_Msk)
+#define ADC_GLOBAL_INT_PFFRDY               (ADC_CTLINTENSET_PFFRDY_Msk)
+#define ADC_GLOBAL_INT_PFFOVF               (ADC_CTLINTENSET_PFFOVF_Msk)
+#define ADC_GLOBAL_INT_PFFUNF               (ADC_CTLINTENSET_PFFUNF_Msk)
+#define ADC_GLOBAL_INT_VREFRDY              (ADC_CTLINTENSET_VREFRDY_Msk)
+#define ADC_GLOBAL_INT_VREFUPD              (ADC_CTLINTENSET_VREFUPD_Msk)
 <#list 0..(ADC_NUM_SAR_CORES-1) as n>
-	<#assign ADC_CORE_ENABLED    = "ADC_CORE_" + n + "_ENABLE">
-	<#if .vars[ADC_CORE_ENABLED] == true>
-	<#lt>#define ADC_GLOBAL_INT_CRRDY${n} 				(1 << (ADC_CTLINTENSET_CRRDY_Pos+${n}))
-	</#if>
+    <#assign ADC_CORE_ENABLED    = "ADC_CORE_" + n + "_ENABLE">
+    <#if .vars[ADC_CORE_ENABLED] == true>
+    <#lt>#define ADC_GLOBAL_INT_CRRDY${n}               (1 << (ADC_CTLINTENSET_CRRDY_Pos+${n}))
+    </#if>
 </#list>
 
-#define ADC_CMP_MODE_IEHIHI					(ADC_CMPCTRL_IEHIHI_Msk)
-#define ADC_CMP_MODE_IEHILO					(ADC_CMPCTRL_IEHILO_Msk)
-#define ADC_CMP_MODE_IELOHI					(ADC_CMPCTRL_IELOHI_Msk)
-#define ADC_CMP_MODE_IELOLO					(ADC_CMPCTRL_IELOLO_Msk)
-#define ADC_CMP_MODE_IEBTWN					(ADC_CMPCTRL_IEBTWN_Msk)
+#define ADC_CMP_MODE_IEHIHI                 (ADC_CMPCTRL_IEHIHI_Msk)
+#define ADC_CMP_MODE_IEHILO                 (ADC_CMPCTRL_IEHILO_Msk)
+#define ADC_CMP_MODE_IELOHI                 (ADC_CMPCTRL_IELOHI_Msk)
+#define ADC_CMP_MODE_IELOLO                 (ADC_CMPCTRL_IELOLO_Msk)
+#define ADC_CMP_MODE_IEBTWN                 (ADC_CMPCTRL_IEBTWN_Msk)
 
 /* Helper macros to extract channel id and core id from the ADC result read from the FIFO */
-#define ADC_FIFO_CHNID_GET(fifo_data)			((fifo_data & ADC_PFFDATA_PFFCHNID_Msk) >> ADC_PFFDATA_PFFCHNID_Pos)
-#define ADC_FIFO_CORID_GET(fifo_data)			((fifo_data & ADC_PFFDATA_PFFCORID_Msk) >> ADC_PFFDATA_PFFCORID_Pos)
-#define ADC_FIFO_CNT_GET(fifo_data)				((fifo_data & ADC_PFFDATA_PFFCNT_Msk) >> ADC_PFFDATA_PFFCNT_Pos)
-#define ADC_FIFO_DATA_GET(fifo_data)			((fifo_data & ADC_PFFDATA_PFFDATA_Msk) >> ADC_PFFDATA_PFFDATA_Pos)
+#define ADC_FIFO_CHNID_GET(fifo_data)           ((fifo_data & ADC_PFFDATA_PFFCHNID_Msk) >> ADC_PFFDATA_PFFCHNID_Pos)
+#define ADC_FIFO_CORID_GET(fifo_data)           ((fifo_data & ADC_PFFDATA_PFFCORID_Msk) >> ADC_PFFDATA_PFFCORID_Pos)
+#define ADC_FIFO_CNT_GET(fifo_data)             ((fifo_data & ADC_PFFDATA_PFFCNT_Msk) >> ADC_PFFDATA_PFFCNT_Pos)
+#define ADC_FIFO_DATA_GET(fifo_data)            ((fifo_data & ADC_PFFDATA_PFFDATA_Msk) >> ADC_PFFDATA_PFFDATA_Pos)
+
+<#assign IS_ANY_CORE_EN = false>
+
+<#list 0..(ADC_NUM_SAR_CORES-1) as n>
+    <#assign ADC_CORE_ENABLED    = "ADC_CORE_" + n + "_ENABLE">
+    <#if .vars[ADC_CORE_ENABLED] == true>
+        <#assign IS_ANY_CORE_EN = true>
+    </#if>
+</#list>
 
 typedef enum
 {
+<#if IS_ANY_CORE_EN == true>
 <#list 0..(ADC_NUM_SAR_CORES-1) as n>
-	<#assign ADC_CORE_ENABLED    = "ADC_CORE_" + n + "_ENABLE">
-	<#if .vars[ADC_CORE_ENABLED] == true>
-	ADC_CORE_NUM${n} = ${n}U,
-	</#if>
+    <#assign ADC_CORE_ENABLED    = "ADC_CORE_" + n + "_ENABLE">
+    <#if .vars[ADC_CORE_ENABLED] == true>
+    ADC_CORE_NUM${n} = ${n}U,
+    </#if>
 </#list>
+<#else>
+    ADC_CORE_NUM_INVALID = -1   /* No ADC Core is enabled */
+</#if>
 }ADC_CORE_NUM;
 
 
 typedef enum
 {
+<#if ADC_MAX_CHANNELS gt 0>
 <#list 0..((ADC_MAX_CHANNELS) - 1) as k>
-	ADC_CH${k} = ${k}U,
+    ADC_CH${k} = ${k}U,
 </#list>
+<#else>
+    ADC_CH_INVALID = -1
+</#if>
 }ADC_CHANNEL_NUM;
 
 

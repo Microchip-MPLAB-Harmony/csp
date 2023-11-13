@@ -150,11 +150,11 @@ coreComponent.addPlugin("../peripheral/pio_11264/plugin/pio_11264.jar")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/matrix_44138/config/matrix.py")
 
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "NVIC_MANAGER", {"plugin_name": "NVIC Configuration", "main_html_path": "csp/plugins/configurators/interrupt_configurators/nvic_interrupt_configuration/build/index.html"})
 
 # load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
-coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "MPU_CONFIGURATOR", {"plugin_name": "MPU Configurator", "main_html_path": "csp/plugins/configurators/mpu-configurators/mpu-configurator/build/index.html"})
 
 # load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
@@ -164,7 +164,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
 
 # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
-coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_SAM_RH707",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-1/build/index.html",
+                            "symbol_config": "csp/peripheral/xdmac_11161/plugin/symbol-config.json"
+                        }
+                        )
 
 # load rswdt
 execfile(Variables.get("__CORE_DIR")
@@ -172,9 +179,6 @@ execfile(Variables.get("__CORE_DIR")
 
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
-
-# load ADC manager information
-coreComponent.addPlugin("../peripheral/adc_44073/plugin/adc_44073.jar")
 
 global armLibCSourceFile
 global devconSystemInitFile

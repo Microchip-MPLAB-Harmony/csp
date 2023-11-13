@@ -278,7 +278,8 @@ def setFLEXCOMCodeGenerationProperty(symbol, event):
         flexcomHeaderFile.setMarkup(True)
         flexcomHeaderFile.setEnabled(True)
 
-        if flexcom_mode == "SPI" and flexcomSym_SPI_MR_MSTR.getValue() == "MASTER":
+        if ((flexcom_mode == "SPI" and flexcomSym_SPI_MR_MSTR.getValue() == "MASTER") or
+            (flexcom_mode == "TWI" and flexcomSym_Twi_OpMode.getValue() == "SLAVE")):
             flexcomCommonHeaderFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom_" + flexcom_mode.lower() + commonHeaderFile + ".h.ftl")
             flexcomCommonHeaderFile.setOutputName("plib_flexcom_" + flexcom_mode.lower() + commonHeaderFile + ".h")
             flexcomCommonHeaderFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")

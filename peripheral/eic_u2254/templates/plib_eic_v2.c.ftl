@@ -66,19 +66,19 @@
 
 <#if EIC_INT != "0">
 /* EIC Channel Callback object */
-static EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
+volatile static EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
 </#if>
 
 <#if NMI_CTRL == true>
 /* EIC NMI Callback object */
-static EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
+volatile static EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
 
 </#if>
 
 void ${EIC_INSTANCE_NAME}_Initialize (void)
 {
     /* Reset all registers in the EIC module to their initial state and
-	   EIC will be disabled. */
+       EIC will be disabled. */
     ${EIC_INSTANCE_NAME}_REGS->EIC_CTRLA |= EIC_CTRLA_SWRST_Msk;
 
     while((${EIC_INSTANCE_NAME}_REGS->EIC_SYNCBUSY & EIC_SYNCBUSY_SWRST_Msk) == EIC_SYNCBUSY_SWRST_Msk)
@@ -135,14 +135,14 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
     ${EIC_INSTANCE_NAME}_REGS->EIC_EVCTRL = 0x${EIC_EXTINTEO};
     </#if>
 
-	<#if EIC_DEBOUNCEN?? && EIC_DEBOUNCEN != "0">
+    <#if EIC_DEBOUNCEN?? && EIC_DEBOUNCEN != "0">
     /* Debouncer Setting */
     <@compress single_line=true>${EIC_INSTANCE_NAME}_REGS->EIC_DPRESCALER = EIC_DPRESCALER_PRESCALER0(${EIC_DEBOUNCER_PRESCALER_0})
                                                         | EIC_DPRESCALER_PRESCALER1(${EIC_DEBOUNCER_PRESCALER_1})
                                                         ${(EIC_PRESCALER_TICKON == "1")?then('| EIC_DPRESCALER_TICKON_Msk' , '')}
                                                         ${(EIC_DEBOUNCER_NO_STATES_0 == "1")?then('| EIC_DPRESCALER_STATES0_Msk' , '')}
                                                         ${(EIC_DEBOUNCER_NO_STATES_1 == "1")?then('| EIC_DPRESCALER_STATES1_Msk' , '')};</@compress>
-	</#if>
+    </#if>
 
     <#if EIC_INT != "0">
     /* External Interrupt enable*/
@@ -202,7 +202,7 @@ void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr
 </#if>
 <#if EIC_INT != "0">
 <#if NUM_INT_LINES == 0>
-void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint8_t currentChannel = 0;
     uint32_t eicIntFlagStatus = 0;
@@ -221,7 +221,8 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
                 /* Find any associated callback entries in the callback table */
                 if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback != NULL))
                 {
-                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context);
+                    uintptr_t context = ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context;
+                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(context);
                 }
 
                 /* Clear interrupt flag */
@@ -234,14 +235,15 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 <#list 0..NUM_INT_LINES as x>
 <#assign Enable = "EIC_INT_" + x>
 <#if .vars[Enable]>
-void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
+void __attribute__((used)) ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
 {
     /* Clear interrupt flag */
     ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG = (1UL << ${x});
     /* Find any associated callback entries in the callback table */
     if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback != NULL))
     {
-        ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].context);
+        uintptr_t context = ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].context;
+        ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback(context);
     }
 
 }
@@ -251,7 +253,7 @@ void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
 
 </#if>
 <#if NMI_CTRL == true>
-void NMI_InterruptHandler(void)
+void __attribute__((used)) NMI_InterruptHandler(void)
 {
     /* Find the triggered, run associated callback handlers */
     if ((${EIC_INSTANCE_NAME}_REGS->EIC_NMIFLAG & EIC_NMIFLAG_NMI_Msk) == EIC_NMIFLAG_NMI_Msk)
@@ -262,7 +264,8 @@ void NMI_InterruptHandler(void)
         /* Find any associated callback entries in the callback table */
         if (${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback != NULL)
         {
-            ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback(${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.context);
+            uintptr_t context = ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.context;
+            ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback(context);
         }
     }
 }

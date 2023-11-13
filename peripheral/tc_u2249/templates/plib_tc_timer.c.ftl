@@ -98,7 +98,7 @@
 // *****************************************************************************
 
 <#if TC_TIMER_INTENSET_OVF = true || TC_TIMER_INTENSET_MC1 == true>
-static TC_TIMER_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+volatile static TC_TIMER_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -122,7 +122,7 @@ void ${TC_INSTANCE_NAME}_TimerInitialize( void )
     /* Configure counter mode & prescaler */
     <@compress single_line=true>${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_MODE_${TC_CTRLA_MODE}
                                 | TC_CTRLA_PRESCALER_${TC_CTRLA_PRESCALER}
-                                | TC_CTRLA_PRESCSYNC_PRESC
+                                | TC_CTRLA_PRESCSYNC_${TC_CTRLA_PRESCYNC}
                                 ${TC_CTRLA_RUNSTDBY?then('| TC_CTRLA_RUNSTDBY_Msk', '')}
                                 ${TC_CTRLA_ONDEMAND?then('| TC_CTRLA_ONDEMAND_Msk', '')};</@compress>
 
@@ -196,7 +196,7 @@ void ${TC_INSTANCE_NAME}_TimerCommandSet(TC_COMMAND command)
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY) != 0U)
     {
         /* Wait for Write Synchronization */
-    }    
+    }
 }
 
 <#if TC_CTRLA_MODE = "COUNT8">
@@ -333,7 +333,7 @@ uint32_t ${TC_INSTANCE_NAME}_Timer32bitCounterGet( void )
     {
         /* Wait for CMD to become zero */
     }
-    
+
     /* Read current count value */
     return ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_COUNT;
 
@@ -389,7 +389,7 @@ void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uint
 }
 
 /* Timer Interrupt handler */
-void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
+void __attribute__((used)) ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
 {
     if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0U)
     {
@@ -397,9 +397,10 @@ void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
         status = (TC_TIMER_STATUS) ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
         /* Clear interrupt flags */
         ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;
-        if((status != TC_TIMER_STATUS_NONE) && (${TC_INSTANCE_NAME}_CallbackObject.callback != NULL))
+        if((${TC_INSTANCE_NAME}_CallbackObject.callback != NULL) && (status != TC_TIMER_STATUS_NONE))
         {
-            ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+            uintptr_t context = ${TC_INSTANCE_NAME}_CallbackObject.context;
+            ${TC_INSTANCE_NAME}_CallbackObject.callback(status, context);
         }
     }
 }

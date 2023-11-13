@@ -90,6 +90,7 @@ typedef enum
 
 typedef uint32_t QMSPI_LDMA_CHANNEL_NUM;
 
+
 typedef enum
 {
     QMSPI_CLOCK_PHASE_MOSI_0 = 0 << QMSPI_MODE_CHPA_MOSI_Pos,
@@ -168,6 +169,8 @@ typedef struct
     QMSPI_CALLBACK callback;
     uintptr_t      context;
 } QMSPI_OBJECT;
+
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility

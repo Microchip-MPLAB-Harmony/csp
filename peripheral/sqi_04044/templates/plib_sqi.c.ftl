@@ -47,9 +47,13 @@
 
 #define ${SQI_INSTANCE_NAME}_CFG_CHIP_SELECT         (${SQI_CSEN} << ${SQI_INSTANCE_NAME}CFG_CSEN_POSITION)
 
-static SQI_EVENT_HANDLER ${SQI_INSTANCE_NAME}EventHandler = NULL;
+typedef struct
+{
+    SQI_EVENT_HANDLER EventHandler;
+    uintptr_t Context;
+}sqiCallbackObjType;
 
-static uintptr_t ${SQI_INSTANCE_NAME}Context = (uintptr_t)NULL;
+volatile static sqiCallbackObjType ${SQI_INSTANCE_NAME}CallbackObj;
 
 void ${SQI_INSTANCE_NAME}_Initialize(void)
 {
@@ -135,12 +139,13 @@ void ${SQI_INSTANCE_NAME}_XIPSetup(uint32_t sqiXcon1Val, uint32_t sqiXcon2Val)
 
 void ${SQI_INSTANCE_NAME}_RegisterCallback(SQI_EVENT_HANDLER event_handler, uintptr_t context)
 {
-    ${SQI_INSTANCE_NAME}EventHandler = event_handler;
-    ${SQI_INSTANCE_NAME}Context      = context;
+    ${SQI_INSTANCE_NAME}CallbackObj.EventHandler = event_handler;
+    ${SQI_INSTANCE_NAME}CallbackObj.Context      = context;
 }
 
-void ${SQI_INSTANCE_NAME}_InterruptHandler(void)
+void __attribute__((used)) ${SQI_INSTANCE_NAME}_InterruptHandler(void)
 {
+    <#lt>    uintptr_t context_var;
     ${SQI_INSTANCE_NAME}_REGS->SQI_INTFLAG          = SQI_INTFLAG_SQI_Msk;
 
     if (((${SQI_INSTANCE_NAME}_REGS->SQI_INTSTAT & SQI_INTSTAT_PKTCOMPIF_Msk) != 0U) || ((${SQI_INSTANCE_NAME}_REGS->SQI_INTSTAT & SQI_INTSTAT_BDDONEIF_Msk) != 0U))
@@ -156,9 +161,10 @@ void ${SQI_INSTANCE_NAME}_InterruptHandler(void)
         // Disable DMA
         ${SQI_INSTANCE_NAME}_REGS->SQI_BDCON        = 0x0;
 
-        if (${SQI_INSTANCE_NAME}EventHandler != NULL)
+        if (${SQI_INSTANCE_NAME}CallbackObj.EventHandler != NULL)
         {
-            ${SQI_INSTANCE_NAME}EventHandler(${SQI_INSTANCE_NAME}Context);
+            context_var = ${SQI_INSTANCE_NAME}CallbackObj.Context;
+            ${SQI_INSTANCE_NAME}CallbackObj.EventHandler(context_var);
         }
     }
 }

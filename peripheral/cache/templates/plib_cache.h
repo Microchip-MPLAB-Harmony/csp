@@ -65,17 +65,15 @@ extern "C" {
     Used to read or write cache coherency policy for kseg0.
 */
 
-typedef enum
-{
-    CACHE_WRITETHROUGH_NO_WRITEALLOCATE = 0,
+#define    CACHE_WRITETHROUGH_NO_WRITEALLOCATE    (0U)
 
-    CACHE_WRITETHROUGH_WRITEALLOCATE = 1,
+#define    CACHE_WRITETHROUGH_WRITEALLOCATE       (1U)
 
-    CACHE_DISABLE = 2,
+#define    CACHE_DISABLE                          (2U)
 
-    CACHE_WRITEBACK_WRITEALLOCATE = 3
+#define    CACHE_WRITEBACK_WRITEALLOCATE          (3U)
 
-} CACHE_COHERENCY;
+typedef uint32_t CACHE_COHERENCY;
 
 // *****************************************************************************
 // *****************************************************************************
