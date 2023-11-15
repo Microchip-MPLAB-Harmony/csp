@@ -199,20 +199,33 @@ static inline void ${HEMC_INSTANCE_NAME}_TestModeReadEnable(HEMC_HEMC_CHANNEL ch
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR |= HEMC_HECC_CR_TEST_MODE_RD_Msk;
-        while ( (HEMC_REGS->HEMC_HECC_CR & HEMC_HECC_CR_TEST_MODE_RD_Msk) != HEMC_HECC_CR_TEST_MODE_RD_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR & HEMC_HECC_CR_TEST_MODE_RD_Msk) != HEMC_HECC_CR_TEST_MODE_RD_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
 <#else>
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR0 |= HEMC_HECC_CR0_TEST_MODE_RD_Msk;
-        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_RD_Msk) != HEMC_HECC_CR0_TEST_MODE_RD_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_RD_Msk) != HEMC_HECC_CR0_TEST_MODE_RD_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
     else
     {
         HEMC_REGS->HEMC_HECC_CR1 |= HEMC_HECC_CR1_TEST_MODE_RD_Msk;
-        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_RD_Msk) != HEMC_HECC_CR1_TEST_MODE_RD_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_RD_Msk) != HEMC_HECC_CR1_TEST_MODE_RD_Msk )
+        {
+            /* Wait for register field update */
+        }
+
         HEMC_REGS->HEMC_HECC_CR2 |= HEMC_HECC_CR2_TEST_MODE_RD_Msk;
-        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_RD_Msk) != HEMC_HECC_CR2_TEST_MODE_RD_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_RD_Msk) != HEMC_HECC_CR2_TEST_MODE_RD_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
 </#if>
 }
@@ -239,20 +252,33 @@ static inline void ${HEMC_INSTANCE_NAME}_TestModeReadDisable(HEMC_HEMC_CHANNEL c
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR &= ~(HEMC_HECC_CR_TEST_MODE_RD_Msk);
-        while ( (HEMC_REGS->HEMC_HECC_CR & HEMC_HECC_CR_TEST_MODE_RD_Msk) == HEMC_HECC_CR_TEST_MODE_RD_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR & HEMC_HECC_CR_TEST_MODE_RD_Msk) == HEMC_HECC_CR_TEST_MODE_RD_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
 <#else>
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR0 &= ~(HEMC_HECC_CR0_TEST_MODE_RD_Msk);
-        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_RD_Msk) == HEMC_HECC_CR0_TEST_MODE_RD_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_RD_Msk) == HEMC_HECC_CR0_TEST_MODE_RD_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
     else
     {
         HEMC_REGS->HEMC_HECC_CR1 &= ~(HEMC_HECC_CR1_TEST_MODE_RD_Msk);
-        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_RD_Msk) == HEMC_HECC_CR1_TEST_MODE_RD_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_RD_Msk) == HEMC_HECC_CR1_TEST_MODE_RD_Msk )
+        {
+            /* Wait for register field update */
+        }
+
         HEMC_REGS->HEMC_HECC_CR2 &= ~(HEMC_HECC_CR2_TEST_MODE_RD_Msk);
-        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_RD_Msk) == HEMC_HECC_CR2_TEST_MODE_RD_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_RD_Msk) == HEMC_HECC_CR2_TEST_MODE_RD_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
 </#if>
 }
@@ -281,20 +307,33 @@ static inline void ${HEMC_INSTANCE_NAME}_TestModeWriteEnable(HEMC_HEMC_CHANNEL c
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR |= HEMC_HECC_CR_TEST_MODE_WR_Msk;
-        while ( (HEMC_REGS->HEMC_HECC_CR & HEMC_HECC_CR_TEST_MODE_WR_Msk) != HEMC_HECC_CR_TEST_MODE_WR_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR & HEMC_HECC_CR_TEST_MODE_WR_Msk) != HEMC_HECC_CR_TEST_MODE_WR_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
 <#else>
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR0 |= HEMC_HECC_CR0_TEST_MODE_WR_Msk;
-        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_WR_Msk) != HEMC_HECC_CR0_TEST_MODE_WR_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_WR_Msk) != HEMC_HECC_CR0_TEST_MODE_WR_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
     else
     {
         HEMC_REGS->HEMC_HECC_CR1 |= HEMC_HECC_CR1_TEST_MODE_WR_Msk;
-        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_WR_Msk) != HEMC_HECC_CR1_TEST_MODE_WR_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_WR_Msk) != HEMC_HECC_CR1_TEST_MODE_WR_Msk )
+        {
+            /* Wait for register field update */
+        }
+
         HEMC_REGS->HEMC_HECC_CR2 |= HEMC_HECC_CR2_TEST_MODE_WR_Msk;
-        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_WR_Msk) != HEMC_HECC_CR2_TEST_MODE_WR_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_WR_Msk) != HEMC_HECC_CR2_TEST_MODE_WR_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
 </#if>
 }
@@ -321,20 +360,33 @@ static inline void ${HEMC_INSTANCE_NAME}_TestModeWriteDisable(HEMC_HEMC_CHANNEL 
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR &= ~(HEMC_HECC_CR_TEST_MODE_WR_Msk);
-        while ( (HEMC_REGS->HEMC_HECC_CR & HEMC_HECC_CR_TEST_MODE_WR_Msk) == HEMC_HECC_CR_TEST_MODE_WR_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR & HEMC_HECC_CR_TEST_MODE_WR_Msk) == HEMC_HECC_CR_TEST_MODE_WR_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
 <#else>
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR0 &= ~(HEMC_HECC_CR0_TEST_MODE_WR_Msk);
-        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_WR_Msk) == HEMC_HECC_CR0_TEST_MODE_WR_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_WR_Msk) == HEMC_HECC_CR0_TEST_MODE_WR_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
     else
     {
         HEMC_REGS->HEMC_HECC_CR1 &= ~(HEMC_HECC_CR1_TEST_MODE_WR_Msk);
-        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_WR_Msk) == HEMC_HECC_CR1_TEST_MODE_WR_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_WR_Msk) == HEMC_HECC_CR1_TEST_MODE_WR_Msk )
+        {
+            /* Wait for register field update */
+        }
+
         HEMC_REGS->HEMC_HECC_CR2 &= ~(HEMC_HECC_CR2_TEST_MODE_WR_Msk);
-        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_WR_Msk) == HEMC_HECC_CR2_TEST_MODE_WR_Msk );
+        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_WR_Msk) == HEMC_HECC_CR2_TEST_MODE_WR_Msk )
+        {
+            /* Wait for register field update */
+        }
     }
 </#if>
 }

@@ -229,7 +229,7 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
     uint8_t eccEnableDefault =(uint8_t)( (${HEMC_INSTANCE_NAME}_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ENABLE_Msk) >> HEMC_HECC_CR0_ENABLE_Pos);
     uint8_t eccAlgoDefault = (uint8_t)( (${HEMC_INSTANCE_NAME}_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ECC12_ENABLE_Msk) >> HEMC_HECC_CR0_ECC12_ENABLE_Pos);
 <#else>
-    uint8_t eccEnableDefault = ( (${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS0 & HEMC_CR_NCS0_ECC_ENABLE_Msk) >> HEMC_CR_NCS0_ECC_ENABLE_Pos);
+    uint8_t eccEnableDefault = (uint8_t)( (${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS0 & HEMC_CR_NCS0_ECC_ENABLE_Msk) >> HEMC_CR_NCS0_ECC_ENABLE_Pos);
 </#if>
 </#if>
 
