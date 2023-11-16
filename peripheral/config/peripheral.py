@@ -102,6 +102,9 @@ peripherals = {
                 "SUPC_U2407"    : ["SUPC"],
                 "CAN_U2003"     : ["CAN"],
                 "MCAN_11273"    : ["CAN"],
+                "CAN_01152"     : ["CAN"],
+                "CAN_03247"     : ["CAN"],
+                "CAN_6019"      : ["CAN"],
                 "SEFC_04463"    : ["MEMORY"]
 }
 
