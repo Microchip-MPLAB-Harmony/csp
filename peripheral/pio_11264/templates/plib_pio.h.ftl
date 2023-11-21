@@ -149,22 +149,22 @@
 
                         <#lt>/*** Macros for ${.vars[funcname]} pin ***/
                         <#if .vars[functype] == "GPIO">
-                            <#lt>#define ${.vars[funcname]}_Set()               (PIO${.vars[pinchannel]}_REGS->PIO_SODR = (1<<${.vars[pinport]}))
-                            <#lt>#define ${.vars[funcname]}_Clear()             (PIO${.vars[pinchannel]}_REGS->PIO_CODR = (1<<${.vars[pinport]}))
+                            <#lt>#define ${.vars[funcname]}_Set()               (PIO${.vars[pinchannel]}_REGS->PIO_SODR = ((uint32_t)1U<<${.vars[pinport]}U))
+                            <#lt>#define ${.vars[funcname]}_Clear()             (PIO${.vars[pinchannel]}_REGS->PIO_CODR = ((uint32_t)1U<<${.vars[pinport]}U))
                             <#lt>#define ${.vars[funcname]}_Toggle()            do {\
-                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = (1<<${.vars[pinport]}); \
-                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_ODSR ^= (1<<${.vars[pinport]});\
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = ((uint32_t)1U<<${.vars[pinport]}U); \
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_ODSR ^= ((uint32_t)1U<<${.vars[pinport]}U);\
                             <#lt>                                        } while (0)
                             <#lt>#define ${.vars[funcname]}_OutputEnable()      do {\
-                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = (1<<${.vars[pinport]}); \
-                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_CFGR |=(1 << PIO_CFGR_DIR_Pos);\
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = ((uint32_t)1U<<${.vars[pinport]}U); \
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_CFGR |=((uint32_t)1U << PIO_CFGR_DIR_Pos);\
                             <#lt>                                        }while(0)
                             <#lt>#define ${.vars[funcname]}_InputEnable()       do { \
-                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = (1<<${.vars[pinport]}); \
-                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);\
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = ((uint32_t)1U<<${.vars[pinport]}U); \
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_CFGR &= ~((uint32_t)1U << PIO_CFGR_DIR_Pos);\
                             <#lt>                                        } while (0)
                         </#if>
-                        <#lt>#define ${.vars[funcname]}_Get()               ((PIO${.vars[pinchannel]}_REGS->PIO_PDSR >> ${.vars[pinport]}) & 0x1)
+                        <#lt>#define ${.vars[funcname]}_Get()               ((PIO${.vars[pinchannel]}_REGS->PIO_PDSR >> ${.vars[pinport]}U) & 0x1U)
                         <#lt>#define ${.vars[funcname]}_PIN                  PIO_PIN_P${.vars[pinchannel]}${.vars[pinport]}
                         <#if .vars[interruptType]?has_content>
                             <#lt>#define ${.vars[funcname]}_InterruptEnable()   (PIO${.vars[pinchannel]}_REGS->PIO_IER = (1<<${.vars[pinport]}))
