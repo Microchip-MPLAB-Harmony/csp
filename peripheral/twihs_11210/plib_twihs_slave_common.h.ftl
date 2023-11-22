@@ -101,43 +101,43 @@ typedef enum
 /* TWIHS status flags
 
   Summary:
-	This enum defines the list of possible I2C slave events
+    Defines the list of possible I2C slave events
 
   Description:
-    This enum defines the list of possible I2C slave events
+    Defines the list of possible I2C slave events
 
   Remarks:
     None.
 */
-typedef enum
-{
-	/* Slave Access flag */
-    TWIHS_SLAVE_STATUS_FLAG_SVACC   = TWIHS_SR_SVACC_Msk,
 
-	/* End of slave access flag */
-    TWIHS_SLAVE_STATUS_FLAG_EOSACC  = TWIHS_SR_EOSACC_Msk,
+/* Slave Access flag */
+#define TWIHS_SLAVE_STATUS_FLAG_SVACC   TWIHS_SR_SVACC_Msk
 
-	/* TWIHS transfer direction is read */
-    TWIHS_SLAVE_STATUS_FLAG_SVREAD  = TWIHS_SR_SVREAD_Msk,
+/* End of slave access flag */
+#define TWIHS_SLAVE_STATUS_FLAG_EOSACC  TWIHS_SR_EOSACC_Msk
 
-	/* Transmitter is ready */
-    TWIHS_SLAVE_STATUS_FLAG_TXRDY   = TWIHS_SR_TXRDY_Msk,
+/* TWIHS transfer direction is read */
+#define TWIHS_SLAVE_STATUS_FLAG_SVREAD  TWIHS_SR_SVREAD_Msk
 
-	/* Receiver has an unread character */
-    TWIHS_SLAVE_STATUS_FLAG_RXRDY   = TWIHS_SR_RXRDY_Msk,
+/* Transmitter is ready */
+#define TWIHS_SLAVE_STATUS_FLAG_TXRDY   TWIHS_SR_TXRDY_Msk
 
-	/* NACK received from master */
-	TWIHS_SLAVE_STATUS_FLAG_NACK    = TWIHS_SR_NACK_Msk,
+/* Receiver has an unread character */
+#define TWIHS_SLAVE_STATUS_FLAG_RXRDY   TWIHS_SR_RXRDY_Msk
 
-	/* Stop condtion or start condition with other slave address detected */
-    TWIHS_SLAVE_STATUS_FLAG_TXCOMP  = TWIHS_SR_TXCOMP_Msk,
-}TWIHS_SLAVE_STATUS_FLAG;
+/* NACK received from master */
+#define TWIHS_SLAVE_STATUS_FLAG_NACK    TWIHS_SR_NACK_Msk
+
+/* Stop condtion or start condition with other slave address detected */
+#define TWIHS_SLAVE_STATUS_FLAG_TXCOMP  TWIHS_SR_TXCOMP_Msk
+
+typedef uint32_t TWIHS_SLAVE_STATUS_FLAG;
 
 // *****************************************************************************
 /* TWIHS slave ACK status
 
   Summary:
-	This enum defines ACK/NACK status received from master
+    This enum defines ACK/NACK status received from master
 
   Description:
     This enum defines ACK/NACK status received from master
@@ -155,7 +155,7 @@ typedef enum
 /* TWIHS slave transfer event
 
   Summary:
-	This enum defines list of possible events
+    This enum defines list of possible events
 
   Description:
     This enum defines list of possible events passed to the application callback
@@ -176,7 +176,7 @@ typedef enum
     /* I2C slave can respond to data read request from I2C Master */
     TWIHS_SLAVE_TRANSFER_EVENT_TX_READY,
 
-	/* I2C stop condition received or start condtion with other slave address detected */
+    /* I2C stop condition received or start condtion with other slave address detected */
     TWIHS_SLAVE_TRANSFER_EVENT_TRANSMISSION_COMPLETE,
 
 }TWIHS_SLAVE_TRANSFER_EVENT;
