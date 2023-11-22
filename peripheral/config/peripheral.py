@@ -90,6 +90,7 @@ peripherals = {
                 "ADC_U2247"     : ["ADC"],
                 "ADC_U2204"     : ["ADC"],
                 "ADC_44134"     : ["ADC"],
+                "ADC_44073"     : ["ADC"],
                 "MCPWM_01477"   : ["PWM"],
                 "PWM_6343"      : ["PWM"],
                 "TCC_U2213"     : ["TMR", "PWM"],
@@ -172,8 +173,8 @@ else:
     peripherals["QSPI_11171"]=["SPI","SQI"]   # most parts in the family support QSPI mode from the QSPI peripheral
 
 #Cortex M7 devices support quadrature encoder mode
-if( (("SAMV7" in processor) or ("SAME7" in processor) or ("SAMS7" in processor) or ("SAMRH71" in processor)) ):
-    peripherals["TC_6082"]=["TMR","QDEC"]
+if( (("SAMV7" in processor) or ("SAME7" in processor) or ("SAMS7" in processor) or ("SAMRH71" in processor) or ("SAMRH707" in processor)) ):
+    peripherals["TC_6082"]=["TMR", "QDEC"]
 else:
     peripherals["TC_6082"]=["TMR"]
 

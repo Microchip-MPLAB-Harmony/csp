@@ -394,6 +394,7 @@ def instantiateComponent(adcComponent):
         adcSym_TRGR_MODE.setDefaultValue(0)
 
     #External Trigger Mode
+    global adcSym_MR_TRGSEL_VALUE
     adcSym_MR_TRGSEL_VALUE = adcComponent.createKeyValueSetSymbol("ADC_MR_TRGSEL_VALUE", adcSym_TRGR_MODE)
     adcSym_MR_TRGSEL_VALUE.setLabel("Select External Trigger Input")
     adcSym_MR_TRGSEL_VALUE.setVisible(False)
@@ -684,7 +685,151 @@ def instantiateComponent(adcComponent):
     adcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     adcSystemDefFile.setSourcePath("../peripheral/adc_"+str(adcID)+"/templates/system/definitions.h.ftl")
     adcSystemDefFile.setMarkup(True)
-    
+
     #Load ADC plugin
     adcComponent.addPlugin("../peripheral/adc_44073/plugin/adc_44073.jar")
 
+
+#------------------------------------------------------------------------------------
+#                            Handle message
+#------------------------------------------------------------------------------------
+def find_prescale_and_conv_samples(desired_conversion_time_us, resolution, input_clock):
+    desired_conversion_frequency = 1e6 / desired_conversion_time_us
+    best_error = float('inf')
+    best_prescaler = 0
+    best_sample_count = 0
+
+    for prescaler in range(7, 0, -1):  # Decreasing order of prescaler values
+        prev_error = float('inf')
+
+        for sample_count in range(1, 33):
+            actual_conversion_frequency = input_clock / ((2 ** (1 + prescaler)) * (sample_count + resolution))
+            error = abs(desired_conversion_frequency - actual_conversion_frequency)
+
+            if error > prev_error:
+                break
+
+            if error == 0:
+                return prescaler, sample_count
+
+            if error < best_error:
+                best_error = error
+                best_prescaler = prescaler
+                best_sample_count = sample_count
+
+            prev_error = error
+
+    return best_prescaler, best_sample_count
+
+def setAdcConfigParams( args ):
+    """The ADC PLIB has following configuration data
+                    "id" : Unique identifier
+                    "instance" : Instance of ADC to be configured
+                    "channel"  : Channel of ADC to be set
+                    "resolution" : ADC resolution
+                    "mode": Conversion mode
+                    "reference": ADC PLIB reference signals
+                    "conversion_time" : Conversion time in microsecond
+                    "trigger" : Trigger source
+                    "result_alignment" : Left or right aligned results
+                    "enable_eoc_event" : Enable end of conversion event
+                    "enable_eoc_interrupt" : Enable end of conversion flag
+                    "enable_slave_mode" : Enable slave mode
+                    "enable_dma_sequence" : Enable DMA sequencing
+        """
+
+    component = args["instance"].lower()
+
+    if args["enable"] == True:
+        if args["trigger"] != "SOFTWARE_TRIGGER":
+            # Find the key index of the trigger as a PWM channel as per TRIGGER argument
+            count = adcSym_MR_TRGSEL_VALUE.getKeyCount()
+            triggerIndex = 0
+            for i in range(0,count):
+                if ("PWM" + str(args["trigger"]) in adcSym_MR_TRGSEL_VALUE.getKeyDescription(i) ):
+                    triggerIndex = i
+                    break
+
+            Database.setSymbolValue(component, "ADC_TRGR_MODE", 2)
+            Database.setSymbolValue(component, "ADC_MR_TRGSEL_VALUE", triggerIndex)
+            Database.setSymbolValue(component, "ADC_CONV_MODE", 2)
+
+        # Enable/ Disable end-of-conversion interrupt
+        Database.setSymbolValue(component, "ADC_"+ args["channel"] +"_IER_EOC", args["enable_eoc_interrupt"])
+
+        # Enable/ Disable channel
+        Database.setSymbolValue(component, "ADC_"+ args["channel"] +"_CHER", True)
+
+        # Enable DMA sequencing
+        if not args["enable_dma_sequence"] == "default":
+            # ToDO: Placeholder for later development
+            pass
+
+        if not args["result_alignment"] == "default":
+            # ToDO: Placeholder for later development
+            pass
+
+        # Enable generic clock for the module
+        Database.setSymbolValue("core", "ADC_GCLK_ENABLE", True)
+
+        # Get the clock sources
+        index = 0
+        clock_freq = 0
+        clock_source = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PCR__GCLKCSS"]')
+        for entry in clock_source.getChildren():
+            # Get the clock sources
+            Database.setSymbolValue("core", "ADC_GCLK_CSS", index)
+
+            # Get ADC Clock
+            new_clock_freq = Database.getSymbolValue( component, "ADC_CLK")
+            if new_clock_freq > clock_freq:
+                clock_freq = new_clock_freq
+            else:
+                Database.setSymbolValue("core", "ADC_GCLK_CSS", index - 1)
+
+            index = index + 1
+
+        # Calculate prescale and sample counts
+        prescale, sample_count = find_prescale_and_conv_samples(float(args["conversion_time"] ), int(args["resolution"]), clock_freq)
+
+        # Set prescaler value
+        adcSym_MR_PRESCAL.setValue(prescale)
+
+        # Calculate prescaler and ADC sample counts based on requested conversion time
+        if not(args["conversion_time"] == "default"):
+            # ToDO: Place Holder. Add the code later
+            pass
+
+        # Calculate prescaler and ADC sample counts based on requested conversion time
+        if not(args["reference"] == "default"):
+            # ToDO: Placeholder. To be done later
+            pass
+
+        # Find the key index of the RESOLUTION
+        count = adcSym_EMR_OSR_VALUE.getKeyCount()
+        resIndex = 0
+        for i in range(0,count):
+            if (str(args["resolution"]) in adcSym_EMR_OSR_VALUE.getKeyDescription(i) ):
+                resIndex = i
+                break
+
+        # Set resolution value
+        Database.setSymbolValue(component, "ADC_EMR_OSR_VALUE", resIndex)
+
+    else:
+        # Enable/ Disable end-of-conversion interrupt
+        Database.setSymbolValue(component, "ADC_"+ args["channel"] +"_IER_EOC", False)
+        # Enable/ Disable channel
+        Database.setSymbolValue(component, "ADC_"+ args["channel"] +"_CHER", False)
+
+        # Enable generic clock for the module
+        Database.setSymbolValue("core", "ADC_GCLK_ENABLE", False)
+
+def handleMessage(id, args):
+    dict = {}
+
+    if (id == "SET_ADC_CONFIG_PARAMS"):
+        # Set ADC configuration parameters
+        setAdcConfigParams( args )
+
+    return dict
