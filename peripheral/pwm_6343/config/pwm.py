@@ -385,6 +385,7 @@ def handleMessage(messageID, args):
     global lastPwmChW
     component = str(pwmInstanceName.getValue()).lower()
     dict = {}
+
     if (messageID == "PMSM_FOC_PWM_CONF"):
         resetChannels()
 
@@ -393,17 +394,6 @@ def handleMessage(messageID, args):
         lastPwmChU = pwmChU = args['PWM_PH_U']
         lastPwmChV = pwmChV = args['PWM_PH_V']
         lastPwmChW = pwmChW = args['PWM_PH_W']
-
-        freq = args['PWM_FREQ']
-        clock = int(Database.getSymbolValue("core", pwmInstanceName.getValue() + "_CLOCK_FREQUENCY"))
-        period = int(clock)/int(freq)/2
-
-        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_CPRD", period)
-        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_CPRD", period)
-        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_CPRD", period)
-        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_CDTY", 0)
-        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_CDTY", 0)
-        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_CDTY", 0)
 
         #synchronous Channels
         if (pwmChU != 0):
@@ -430,6 +420,17 @@ def handleMessage(messageID, args):
         Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_CMR_CALG", 1)
         Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_CMR_CALG", 1)
         Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_CMR_CALG", 1)
+
+        freq = args['PWM_FREQ']
+        clock = int(Database.getSymbolValue("core", pwmInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+        period = int(clock)/int(freq)/2
+
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_CPRD", period)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_CPRD", period)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_CPRD", period)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_CDTY", 0)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_CDTY", 0)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_CDTY", 0)
 
         #dead-Time
         dt = args['PWM_DEAD_TIME']
