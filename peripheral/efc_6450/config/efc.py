@@ -189,6 +189,7 @@ def instantiateComponent(efcComponent):
 
     writeApiName = efcInstanceName.getValue() + "_PageWrite"
     eraseApiName = efcInstanceName.getValue() + "_SectorErase"
+    unlockApiName = efcInstanceName.getValue() + "_RegionUnlock"
 
     efcWriteApiName = efcComponent.createStringSymbol("WRITE_API_NAME", efcMenu)
     efcWriteApiName.setVisible(False)
@@ -199,6 +200,11 @@ def instantiateComponent(efcComponent):
     efcEraseApiName.setVisible(False)
     efcEraseApiName.setReadOnly(True)
     efcEraseApiName.setDefaultValue(eraseApiName)
+    
+    efcUnlockApiName = efcComponent.createStringSymbol("UNLOCK_API_NAME", None)
+    efcUnlockApiName.setVisible(False)
+    efcUnlockApiName.setReadOnly(True)
+    efcUnlockApiName.setDefaultValue(unlockApiName)
 
     # NVIC Dynamic settings
     efcinterruptControl = efcComponent.createBooleanSymbol("NVIC_EFC_ENABLE", None)
