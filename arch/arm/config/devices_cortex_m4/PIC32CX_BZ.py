@@ -159,27 +159,61 @@ def populate_config_items(basenode, baseLabel, moduleNode, component, parentMenu
 
 global getWaitStates
 def getWaitStates():
+    adrws = 0
+    pfmws = 0
+    
     sysclk = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
     if productFamily.getValue() == "PIC32CX_BZ3":
         if sysclk <= 32000000:
-            ws = 1
+            pfmws = 1
         else:
-            ws = 2
-    else:
+            pfmws = 2
+    elif productFamily.getValue() == "PIC32CX_BZ2":
         if sysclk <= 33000000:
-            ws = 0
+            pfmws = 0
         else:
-            ws = 1
-    return ws
+            pfmws = 1
+    elif productFamily.getValue() == "PIC32CX_BZ6":
+        if sysclk < 51200000:
+            adrws = 0
+            pfmws = 0
+        elif sysclk < 64000000:
+            adrws = 0
+            pfmws = 1
+        elif sysclk < 76800000:
+            adrws = 1
+            pfmws = 1
+        elif sysclk < 102400000:
+            adrws = 1
+            pfmws = 3
+        elif sysclk <= 128000000:
+            adrws = 1
+            pfmws = 4
+    return adrws, pfmws
 
-def getMaxWaitStateVal():
+def getMaxWaitStateVal_PFMWS():
     if productFamily.getValue() == "PIC32CX_BZ3":
         return (1,2)
-    else:
+    elif productFamily.getValue() == "PIC32CX_BZ2":
+        return (0,1)
+    elif productFamily.getValue() == "PIC32CX_BZ6":
+        return (0,4)
+        
+def getMaxWaitStateVal_ADRWS():
+    if productFamily.getValue() == "PIC32CX_BZ3":
+        return (0,1)
+    elif productFamily.getValue() == "PIC32CX_BZ2":
+        return (0,1)
+    elif productFamily.getValue() == "PIC32CX_BZ6":
         return (0,1)
 
 def calcWaitStates(symbol, event):
-    symbol.setValue(getWaitStates(), 2)
+    sym_pfmws = event["source"].getSymbolByID("CONFIG_CHECON_PFMWS")
+    sym_adrws = event["source"].getSymbolByID("CONFIG_CHECON_ADRWS")
+    
+    adrws, pfmws = getWaitStates()
+    sym_pfmws.setValue(pfmws, 2)
+    sym_adrws.setValue(adrws, 2)
 
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
@@ -217,6 +251,8 @@ deviceFamily.setVisible(False)
 global productFamily
 if "BZ3" in Variables.get("__PROCESSOR"):
     productFamily.setDefaultValue("PIC32CX_BZ3")
+elif "BZ6" in Variables.get("__PROCESSOR"):
+    productFamily.setDefaultValue("PIC32CX_BZ6")    
 else:
     productFamily.setDefaultValue("PIC32CX_BZ2")
 
@@ -315,13 +351,23 @@ SYM_REFEN.setDefaultValue(1)
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32cx_bz/config/clk.py")
 coreComponent.addPlugin("../peripheral/clk_pic32cx_bz/plugin/clockmanager.jar")
 
+adrws, pfmws = getWaitStates()
+
 SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_CHECON_PFMWS", prefetchMenu)
 SYM_PFMWS.setLabel("Program Flash memory Wait states")
-SYM_PFMWS.setDefaultValue(getWaitStates())
-SYM_PFMWS.setMin(getMaxWaitStateVal()[0])
-SYM_PFMWS.setMax(getMaxWaitStateVal()[1])
+SYM_PFMWS.setDefaultValue(pfmws)
+SYM_PFMWS.setMin(getMaxWaitStateVal_PFMWS()[0])
+SYM_PFMWS.setMax(getMaxWaitStateVal_PFMWS()[1])
 SYM_PFMWS.setReadOnly(False)
 SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY"])
+
+SYM_ADRWS = coreComponent.createIntegerSymbol("CONFIG_CHECON_ADRWS", prefetchMenu)
+SYM_ADRWS.setLabel("Address Setup Time")
+SYM_ADRWS.setDefaultValue(adrws)
+SYM_ADRWS.setMin(getMaxWaitStateVal_ADRWS()[0])
+SYM_ADRWS.setMax(getMaxWaitStateVal_ADRWS()[1])
+SYM_ADRWS.setReadOnly(False)
+#SYM_ADRWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY"])
 
 # load pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio_pic32c.py")
@@ -377,6 +423,29 @@ Database.activateComponents(components)
 global armLibCSourceFile
 global devconSystemInitFile
 global compilerSpecifics
+
+addr_space = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space").getChildren()
+for mem_idx in range(0, len(addr_space_children)):
+    if addr_space_children[mem_idx].getAttribute("type") == "ram":
+        ram_start   = addr_space_children[mem_idx].getAttribute("start")
+        ram_size    = addr_space_children[mem_idx].getAttribute("size")
+
+ramStart = coreComponent.createStringSymbol("RAM_START", xc32Menu)
+ramStart.setDefaultValue(ram_start)
+ramStart.setVisible(False)
+
+ramLength = coreComponent.createStringSymbol("RAM_LENGTH", xc32Menu)
+ramLength.setDefaultValue(ram_size)
+ramLength.setVisible(False)
+
+ramLengthECC = coreComponent.createHexSymbol("ECC_RAM_LENGTH", xc32Menu)
+ramLengthECC.setDefaultValue(int(ram_size, 0) - 32768)
+ramLengthECC.setVisible(False)
+
+# ramInit = coreComponent.createBooleanSymbol("RAM_INIT", xc32Menu)
+# ramInit.setLabel("RAM Initialize")
+# ramInit.setDefaultValue(False)
+# ramInit.setVisible(True)
 
 compilerSelected = compilerChoice.getSelectedKey().lower()
 

@@ -18,3 +18,16 @@ __STATIC_INLINE void __attribute__((optimize("-O1"))) CMCC_Configure(void)
     CMCC_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
 </#if>
 }
+
+<#if RAM_INIT?? && RAM_INIT == true>
+
+__STATIC_INLINE void  __attribute__((optimize("-O1")))  RAM_Initialize(void)
+{
+    register uint32_t *pRam;
+    
+    for (pRam = (uint32_t*)${RAM_START}U ; pRam < ((uint32_t*)(${RAM_START}U + ${ECC_RAM_LENGTH}U)) ; pRam++)
+    {
+        *pRam = 0U;
+    }
+}
+</#if>

@@ -39,6 +39,15 @@
 <#if CONFIG_RTCOUT_ALTEN?has_content>
 #pragma config RTCOUT_ALTEN =      ${CONFIG_RTCOUT_ALTEN}
 </#if>
+<#if CONFIG_USBSSEN?has_content>
+#pragma config USBSSEN =      ${CONFIG_USBSSEN}
+</#if>
+<#if CONFIG_EPLLHWMD?has_content>
+#pragma config EPLLHWMD =      ${CONFIG_EPLLHWMD}
+</#if>
+<#if CONFIG_UPLLHWMD?has_content>
+#pragma config UPLLHWMD =      ${CONFIG_UPLLHWMD}
+</#if>
 <#if CONFIG_PMULOCK?has_content>
 #pragma config PMULOCK =      ${CONFIG_PMULOCK}
 </#if>
@@ -68,6 +77,15 @@
 </#if>
 <#if CONFIG_HPLUGDIS?has_content>
 #pragma config HPLUGDIS =      ${CONFIG_HPLUGDIS}
+</#if>
+<#if CONFIG_USBIDIO?has_content>
+#pragma config USBIDIO =      ${CONFIG_USBIDIO}
+</#if>
+<#if CONFIG_VBUSONIO?has_content>
+#pragma config VBUSONIO =      ${CONFIG_VBUSONIO}
+</#if>
+<#if CONFIG_SMBUS3EN2?has_content>
+#pragma config SMBUS3EN2 =      ${CONFIG_SMBUS3EN2}
 </#if>
 <#if CONFIG_SLRTEN0?has_content>
 #pragma config SLRTEN0 =      ${CONFIG_SLRTEN0}
@@ -99,9 +117,16 @@
 <#if CONFIG_EPGMCLK?has_content>
 #pragma config EPGMCLK =      ${CONFIG_EPGMCLK}
 </#if>
+<#if CONFIG_CMEN?has_content>
+#pragma config CMEN =      ${CONFIG_CMEN}
+</#if>
+
 
 
 /*** DEVCFG1 ***/
+<#if CONFIG_CAN0_PIN_EN?has_content>
+#pragma config CAN0_PIN_EN =      ${CONFIG_CAN0_PIN_EN}
+</#if>
 <#if CONFIG_DEBUG?has_content>
 #pragma config DEBUG =      ${CONFIG_DEBUG}
 </#if>
@@ -176,6 +201,21 @@
 </#if>
 <#if CONFIG_FMPDAEN?has_content>
 #pragma config FMPDAEN =      ${CONFIG_FMPDAEN}
+</#if>
+<#if CONFIG_USBDMFTRIM?has_content>
+#pragma config USBDMFTRIM =      ${CONFIG_USBDMFTRIM}
+</#if>
+<#if CONFIG_USBDMRTRIM?has_content>
+#pragma config USBDMRTRIM =      ${CONFIG_USBDMRTRIM}
+</#if>
+<#if CONFIG_USBDPFTRIM?has_content>
+#pragma config USBDPFTRIM =      ${CONFIG_USBDPFTRIM}
+</#if>
+<#if CONFIG_USBDPRTRIM?has_content>
+#pragma config USBDPRTRIM =      ${CONFIG_USBDPRTRIM}
+</#if>
+<#if CONFIG_CAN1_PIN_EN?has_content>
+#pragma config CAN1_PIN_EN =      ${CONFIG_CAN1_PIN_EN}
 </#if>
 
 /*** DEVCFG2 ***/
