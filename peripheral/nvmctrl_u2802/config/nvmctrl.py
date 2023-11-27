@@ -355,6 +355,7 @@ def instantiateComponent(nvmctrlComponent):
     userRowWriteApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_PageWrite"
     bocorRowEraseApiName = nvmctrlComponent.getID().upper() + "_BOCOR_ROW_RowErase"
     bocorRowWriteApiName = nvmctrlComponent.getID().upper() + "_BOCOR_ROW_PageWrite"
+    unlockApiName = nvmctrlComponent.getID().upper() + "_RegionUnlock"
 
     nvmctrlWriteApiName = nvmctrlComponent.createStringSymbol("WRITE_API_NAME", None)
     nvmctrlWriteApiName.setVisible(False)
@@ -390,6 +391,11 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlNonSecureUnlockBNS = nvmctrlComponent.createBooleanSymbol("NVMCTRL_NSULCK_BNS", None)
     nvmctrlNonSecureUnlockBNS.setVisible(False)
     nvmctrlNonSecureUnlockBNS.setDefaultValue(nvmctrlNonSecureUnlockBNSNode != None)
+    
+    nvmctrlUnlockApiName = nvmctrlComponent.createStringSymbol("UNLOCK_API_NAME", None)
+    nvmctrlUnlockApiName.setVisible(False)
+    nvmctrlUnlockApiName.setReadOnly(True)
+    nvmctrlUnlockApiName.setDefaultValue(unlockApiName)
 
     ############################################################################
     #### Dependency ####
