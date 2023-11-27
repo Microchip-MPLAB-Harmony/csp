@@ -274,6 +274,7 @@ def instantiateComponent(nvmctrlComponent):
     eraseApiName = nvmctrlComponent.getID().upper() + "_BlockErase"
     userRowEraseApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_RowErase"
     userRowWriteApiName = nvmctrlComponent.getID().upper() + "_USER_ROW_PageWrite"
+    unlockApiName = nvmctrlComponent.getID().upper() + "_RegionUnlock"
 
     nvmctrlWriteApiName = nvmctrlComponent.createStringSymbol("WRITE_API_NAME", None)
     nvmctrlWriteApiName.setVisible(False)
@@ -294,6 +295,11 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlUserRowWriteApiName.setVisible(False)
     nvmctrlUserRowWriteApiName.setReadOnly(True)
     nvmctrlUserRowWriteApiName.setDefaultValue(userRowWriteApiName)
+    
+    nvmctrlUnlockApiName = nvmctrlComponent.createStringSymbol("UNLOCK_API_NAME", None)
+    nvmctrlUnlockApiName.setVisible(False)
+    nvmctrlUnlockApiName.setReadOnly(True)
+    nvmctrlUnlockApiName.setDefaultValue(unlockApiName)
 
     ############################################################################
     #### Dependency ####
