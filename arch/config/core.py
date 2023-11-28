@@ -21,8 +21,13 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 global ECIA_EN_SET_RegUpdate
+global BootFlashDict
+global isBFMPresent
 
-FlashNames          = ["FLASH", "IFLASH"]
+FlashNames          = ["FLASH", "IFLASH", "FCR_PFM"]
+#BootFlashDict      = {"bfm_region_name":[list of corresponding pfm regions], ..}
+BootFlashDict       = {"FCR_BFM": ["FCR_PFM"], "BOOT_FLASH": ["FLASH"]}
+vtableRegionList    = []
 
 flash_start         = 0
 flash_size          = 0
@@ -53,8 +58,25 @@ def getFlashParams(app_start):
 
     return (rom_origin + ";" + rom_length)
 
+def getVtablePlacementParams(sel_vtable_reg):
+    global BootFlashDict
+
+    if sel_vtable_reg in BootFlashDict.keys():
+        # the selected region is boot flash
+        vector_region = "VECTOR_REGION=boot_rom"
+    else:
+        # the selected region is program flash
+        vector_region = "VECTOR_REGION=rom"
+
+    return vector_region
+
 def setFlashParams(symbol, event):
-    flashParams = getFlashParams(event["value"])
+    global isBFMPresent
+
+    flashParams = getFlashParams(symbol.getComponent().getSymbolValue("APP_START_ADDRESS"))
+    if isBFMPresent == True:
+        vtableParams = getVtablePlacementParams(symbol.getComponent().getSymbolValue("VTABLE_MEM_REGION"))
+        flashParams += ";" + vtableParams
 
     symbol.setValue(flashParams)
 
@@ -335,6 +357,23 @@ def generateDeviceVectorList(component):
         cortexMHandlerSym.setVisible(False)
         cortexMHandlerSym.setDefaultValue(value)
 
+def isBootFlashPresent():
+    addr_space_children = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space").getChildren()
+
+    for mem_idx in range(0, len(addr_space_children)):
+        mem_seg     = addr_space_children[mem_idx].getAttribute("name")
+        mem_type    = addr_space_children[mem_idx].getAttribute("type")
+
+        if ((any(x == mem_seg for x in BootFlashDict) == True) and (mem_type == "flash")):
+            return (True, mem_seg)
+
+    return (False, None)
+
+def populateVtableMemRegionsList(bfm_region):
+    vtableRegionList.append(bfm_region)     # this will be the default vtable region
+
+    for region in BootFlashDict[bfm_region]:
+        vtableRegionList.append(region)
 
 def instantiateComponent( coreComponent ):
     global compilers
@@ -352,6 +391,7 @@ def instantiateComponent( coreComponent ):
     global keilMenu
     global keilAvailable
     global coreArch
+    global isBFMPresent
 
     compilerSpecifics =     None
     armLibCSourceFile =     None
@@ -653,6 +693,14 @@ def instantiateComponent( coreComponent ):
     xc32LdAppStartAddress.setLabel("Application Start Address (Hex)")
     xc32LdAppStartAddress.setDefaultValue(str(hex(flash_start))[2:])
 
+    isBFMPresent, bfm_region = isBootFlashPresent()
+
+    if isBFMPresent == True:
+        populateVtableMemRegionsList(bfm_region)
+        xc32LdAppVtableMemRegion = coreComponent.createComboSymbol("VTABLE_MEM_REGION", xc32LdSymbolsMacrosMenu, vtableRegionList)
+        xc32LdAppVtableMemRegion.setLabel("Place Vector Table in ")
+        xc32LdAppVtableMemRegion.setDefaultValue(vtableRegionList[0])
+
     # set XC32-LD option to Modify ROM Start address and length
     xc32LdPreprocessroMacroSym = coreComponent.createSettingSymbol("XC32_LINKER_PREPROC_MARCOS", xc32LdSymbolsMacrosMenu)
     xc32LdPreprocessroMacroSym.setCategory("C32-LD")
@@ -663,7 +711,7 @@ def instantiateComponent( coreComponent ):
         xc32LdMacorVal = getFlashParams(xc32LdAppStartAddress.getValue())
     xc32LdPreprocessroMacroSym.setValue(xc32LdMacorVal)
     xc32LdPreprocessroMacroSym.setAppend(True, ";=")
-    xc32LdPreprocessroMacroSym.setDependencies(setFlashParams, ["APP_START_ADDRESS"])
+    xc32LdPreprocessroMacroSym.setDependencies(setFlashParams, ["APP_START_ADDRESS", "VTABLE_MEM_REGION"])
 
     ## iar Tool Config
     iarMenu = coreComponent.createMenuSymbol("CoreIARMenu", toolChainMenu)
