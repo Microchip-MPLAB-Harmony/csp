@@ -85,6 +85,8 @@ static bool checkGpnvmWordCrc(void)
 
     /* Read GPNVM bits */
     HEFC_REGS->HEFC_FCR = (HEFC_FCR_FKEY(0x5AU) | HEFC_FCR_FCMD_GGPB);
+    __DSB();
+    __ISB();
     while ((HEFC_REGS-> HEFC_FSR & HEFC_FSR_FRDY_Msk) != HEFC_FSR_FRDY_Msk)
     {
         /* Waiting for the HEFC Ready state */
