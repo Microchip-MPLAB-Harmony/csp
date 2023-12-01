@@ -245,7 +245,10 @@ if Database.getSymbolValue("core","SYSTICK_EXTERNAL_CLOCK"):
 systickClock.addKey("HCLK", str(1) , "Processor clock" )
 systickClock.setDefaultValue(int(Database.getSymbolValue("core","SYSTICK_EXTERNAL_CLOCK")))
 
-systickNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SysTick"]/register-group@[name="SysTick"]/register@[name="CVR"]/bitfield@[name="CURRENT"]')
+systickNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SysTick"]/register-group@[name="SysTick"]/register@[name="VAL"]/bitfield@[name="CURRENT"]')
+#Check for old register name
+if systickNode is None:
+    systickNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SysTick"]/register-group@[name="SysTick"]/register@[name="CVR"]/bitfield@[name="CURRENT"]')
 maxCount = str(systickNode.getAttribute("mask"))
 max = ((float(1) / int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))) * int(maxCount, 0) * 1000)
 
