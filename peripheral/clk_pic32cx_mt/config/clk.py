@@ -892,11 +892,11 @@ if __name__ == "__main__":
     sysdeffile = clk_component.createFileSymbol("CLK_SYSTEM_DEFINITIONS_H", None)
     sysdeffile.setType("STRING")
     sysdeffile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    sysdeffile.setSourcePath("../peripheral/clk_pic32cx_bz/templates/system/definitions.h.ftl")
+    sysdeffile.setSourcePath("../peripheral/clk_pic32cx_mt/templates/system/definitions.h.ftl")
     sysdeffile.setMarkup(True)
 
     sysinitcfile = clk_component.createFileSymbol("CLK_SYSTEM_INITIALIZE_C", None)
     sysinitcfile.setType("STRING")
     sysinitcfile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-    sysinitcfile.setSourcePath("../peripheral/clk_pic32cx_bz/templates/system/initialization.c.ftl")
+    sysinitcfile.setSourcePath("../peripheral/clk_pic32cx_mt/templates/system/initialization.c.ftl")
     sysinitcfile.setMarkup(True)
