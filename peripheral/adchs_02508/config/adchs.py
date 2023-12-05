@@ -1210,6 +1210,7 @@ def instantiateComponent(adchsComponent):
     global InterruptVectorUpdate
     global isDMAFeatureAvailable
     global ADC_Input_Signals_List
+    global ADC_Input_Signals_Type_Map
 
     MAX_AVAILABLE_SIGNALS = 64
 
@@ -1304,6 +1305,7 @@ def instantiateComponent(adchsComponent):
     ADC_Max_Class_1 = 0
     ADC_Class_2_Count = 0
     ADC_Input_Signals_List = [False] * MAX_AVAILABLE_SIGNALS
+    ADC_Input_Signals_Type_Map = dict()
 
     # Each of the dedicated ADCHS SARs must have a DIGEN bit field in the
     # ADCCON3 SFR.
@@ -1354,6 +1356,7 @@ def instantiateComponent(adchsComponent):
                 padSignal = adc_signals[pad].getAttribute("pad")
                 if padSignal in availablePins:
                     ADC_Input_Signals_List[int(adc_signals[pad].getAttribute("index"))] = True
+                    ADC_Input_Signals_Type_Map["AIN" + adc_signals[pad].getAttribute("index")] = "External"
 
         #Find internal ADC signals from ADCHS parameters
         adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADCHS\"]/instance@[name=\""+adchsInstanceName.getValue()+"\"]/parameters")
@@ -1362,6 +1365,7 @@ def instantiateComponent(adchsComponent):
             for pad in range(0, len(adc_parameters)):
                 if ("AIN" in adc_parameters[pad].getAttribute("name")):
                     ADC_Input_Signals_List[int(adc_parameters[pad].getAttribute("value"))] = True
+                    ADC_Input_Signals_Type_Map["AIN" + adc_parameters[pad].getAttribute("value")] = adc_parameters[pad].getAttribute("caption")
 
     # For PIC32M devices: Each Analog channel on the part must have a Data Register.  Each existing
     # Data register should indicate that there is an Analog pin for that signal.
@@ -1644,9 +1648,10 @@ def instantiateComponent(adchsComponent):
         adchsSym_ADCTRGMODE__SHxALT[channelID] = adchsAddKeyValueSetFromATDFInitValue(
             adchsComponent, Module, "ADCTRGMODE", "SH" + str(channelID) + "ALT",
             adchsSym_CH_ENABLE[channelID], False)
-        adchsSym_ADCTRGMODE__SHxALT[channelID].setDependencies(adchsVisibilityOnEvent,
-            ["ADCHS_"+str(channelID)+"_ENABLE"])
-        adctrgmode_deplist.append("ADCTRGMODE__SH" + str(channelID) + "ALT")
+        if adchsSym_ADCTRGMODE__SHxALT[channelID] != None:
+            adchsSym_ADCTRGMODE__SHxALT[channelID].setDependencies(adchsVisibilityOnEvent,
+                ["ADCHS_"+str(channelID)+"_ENABLE"])
+            adctrgmode_deplist.append("ADCTRGMODE__SH" + str(channelID) + "ALT")
 
 
         RegisterNameBase1 = "ADC"
@@ -1925,11 +1930,14 @@ def instantiateComponent(adchsComponent):
 
             adchsCONMenu[signalID] = adchsComponent.createBooleanSymbol(
                 "AN"+str(signalID), menu)
-            adchsCONMenu[signalID].setLabel("Configure Analog Input AN"+str(signalID))
+            signalLabel = "Configure Analog Input AN" + str(signalID)
+            if ADC_Input_Signals_Type_Map["AIN"+str(signalID)] != "External":
+                signalLabel += " (" + ADC_Input_Signals_Type_Map["AIN"+str(signalID)] + ")"
+            adchsCONMenu[signalID].setLabel(signalLabel)
 
             RegisterName = RegisterBaseName_ADCIMCON + str((signalID/16)+1)
             index = int(((signalID/16)))
-
+            
             adchsSym_ADCIMCON__SIGN[signalID] = adchsAddBooleanFromATDF1ValueValueGroup(
                 adchsComponent, Module, RegisterName, BitFieldBaseName_SIGN + str(signalID),
                 adchsCONMenu[signalID], False)

@@ -174,7 +174,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize(void)
     <#if .vars[ADCHS_CH_ENABLE] == true>
     /* ADC ${i} */
     ${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON |= ADCHS_ADCANCON_ANEN${i}_Msk;      // Enable the clock to analog bias
-    while(((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON & ADCHS_ADCANCON_WKRDY${i}_Msk) == 0U) // Wait until ADC is ready
+    while((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCANCON & ADCHS_ADCANCON_WKRDY${i}_Msk) == 0U) // Wait until ADC is ready
     {
         /* Nothing to do */
     }
