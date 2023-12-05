@@ -194,12 +194,15 @@ def pinModeCal(pin, event):
     global pinChannel
     global pinBitPosition
     global pinLatch
+    
+    print ("pinModeCal")
 
     pin_num = int((pin.getID()).split("_")[2])
     portChannel = pinChannel[pin_num-1].getValue()
 
     if portChannel != "" and portChannel != "None":
         bit_pos = pinBitPosition[pin_num-1].getValue()
+        print ("R" + portChannel + str(bit_pos))
         if pinHasAnalogFunctionMap.get("R" + portChannel + str(bit_pos)) == True:
             channelIndex = pioSymChannel.index(portChannel)
             ANSEL_Value = gpioSym_GPIO_ANSEL[channelIndex].getValue()
@@ -369,7 +372,7 @@ def createPinMap(packageSymbol):
         for myPin in myPins.findall('pin'):
             pinHasAnalogFunctionMap[myPin.get("name")] = False
             for myFunction in myPin.findall('function'):
-                if myFunction.get("name").startswith("AN") and myFunction.get("name")[-1].isnumeric():
+                if (myFunction.get("name").startswith("AN") or myFunction.get("name").startswith("AIN")) and myFunction.get("name")[-1].isnumeric():
                     pinHasAnalogFunctionMap[myPin.get("name")] = True
                     break               
 
@@ -384,6 +387,8 @@ def createPinMap(packageSymbol):
         pin_position = sort_alphanumeric(pin_map.keys())
     else:
         pin_position = sorted(pin_map.keys())
+        
+    print (pinHasAnalogFunctionMap)
 
     return (pin_map, pin_position)
 
