@@ -661,7 +661,10 @@ def instantiateComponent(qeiComponent):
 
     qeiHeaderFile = qeiComponent.createFileSymbol("QEI_COMMON_HEADER", None)
     qeiHeaderFile.setMarkup(True)
-    qeiHeaderFile.setSourcePath("../peripheral/qei_01494/templates/plib_qei_common.h.ftl")
+    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):    
+        qeiHeaderFile.setSourcePath("../peripheral/qei_01494/templates/plib_qei_common.h.ftl")
+    else:
+        qeiHeaderFile.setSourcePath("../peripheral/qei_01494/templates/plib_qei_common_pic32c.h.ftl")
     qeiHeaderFile.setOutputName("plib_qei_common.h")
     qeiHeaderFile.setDestPath("peripheral/qei/")
     qeiHeaderFile.setProjectPath("config/" + configName + "/peripheral/qei/")
@@ -670,7 +673,10 @@ def instantiateComponent(qeiComponent):
 
     qeiHeader1File = qeiComponent.createFileSymbol("QEI_HEADER1", None)
     qeiHeader1File.setMarkup(True)
-    qeiHeader1File.setSourcePath("../peripheral/qei_01494/templates/plib_qei.h.ftl")
+    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):    
+        qeiHeader1File.setSourcePath("../peripheral/qei_01494/templates/plib_qei.h.ftl")
+    else:
+        qeiHeader1File.setSourcePath("../peripheral/qei_01494/templates/plib_qei_pic32c.h.ftl")
     qeiHeader1File.setOutputName("plib_" + qeiInstanceName.getValue().lower() + ".h")
     qeiHeader1File.setDestPath("peripheral/qei/")
     qeiHeader1File.setProjectPath("config/" + configName + "/peripheral/qei/")
@@ -679,7 +685,10 @@ def instantiateComponent(qeiComponent):
 
     qeiSource1File = qeiComponent.createFileSymbol("QEI_SOURCE1", None)
     qeiSource1File.setMarkup(True)
-    qeiSource1File.setSourcePath("../peripheral/qei_01494/templates/plib_qei.c.ftl")
+    if "PIC32M" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):    
+        qeiSource1File.setSourcePath("../peripheral/qei_01494/templates/plib_qei.c.ftl")
+    else:
+        qeiSource1File.setSourcePath("../peripheral/qei_01494/templates/plib_qei_pic32c.c.ftl")    
     qeiSource1File.setOutputName("plib_" + qeiInstanceName.getValue().lower() + ".c")
     qeiSource1File.setDestPath("peripheral/qei/")
     qeiSource1File.setProjectPath("config/" + configName + "/peripheral/qei/")
