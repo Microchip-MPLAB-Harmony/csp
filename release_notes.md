@@ -3,6 +3,14 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.18.1
+
+### New Features
+
+- Version dependencies for the following DFPs are updated
+  - PIC32CX-BZ_DFP to version 1.3.238
+  - PIC32CX-BZ3_DFP to version 1.1.171
+
 ## CSP Release v3.18.0
 
 ### New Features
