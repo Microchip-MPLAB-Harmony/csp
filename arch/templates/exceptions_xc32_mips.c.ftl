@@ -120,6 +120,13 @@ static unsigned int exception_address;
 /* Code identifying the cause of the exception (CP0 Cause register). */
 static uint32_t  exception_code;
 
+<#if __PROCESSOR?matches("PIC32MZ1025W104132") || __PROCESSOR?matches("WFI32E01") || __PROCESSOR?matches("WFI32E02")>
+/* Counter must be reset to 0 by the application everytime after waking from Extereme Deep Sleep and after completion of flash erase operation.
+   Counter value of 1 indicates false Flash ECC error.
+*/
+volatile uint32_t ibe_error_cntr = 0;
+</#if>
+
 // </editor-fold>
 
 /*******************************************************************************
@@ -134,13 +141,46 @@ static uint32_t  exception_code;
     Refer to the XC32 User's Guide for additional information.
  */
 
-void __attribute__((noreturn, weak)) _general_exception_handler ( void )
+<#if __PROCESSOR?matches("PIC32MZ1025W104132") || __PROCESSOR?matches("WFI32E01") || __PROCESSOR?matches("WFI32E02")> 
+void __attribute__((weak)) _general_exception_handler ( void )
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
     exception_code = ((_CP0_GET_CAUSE() & 0x0000007CU) >> 2U);
     exception_address = _CP0_GET_EPC();
 
+    if (exception_code == EXCEP_IBE)
+    {
+        ibe_error_cntr++;
+
+        if (ibe_error_cntr > 1)
+        {
+            while (true)
+            {
+                #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+                    __builtin_software_breakpoint();
+                #endif
+            }
+        }
+    }
+    else
+    {
+        while (true)
+        {
+            #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+                __builtin_software_breakpoint();
+            #endif
+        }
+    }
+}
+<#else>
+void __attribute__((noreturn, weak)) _general_exception_handler ( void )
+{
+    /* Mask off the ExcCode Field from the Cause Register
+    Refer to the MIPs Software User's manual */
+    exception_code = ((_CP0_GET_CAUSE() & 0x0000007CU) >> 2U);
+    exception_address = _CP0_GET_EPC();
+    
     while (true)
     {
         #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
@@ -148,7 +188,7 @@ void __attribute__((noreturn, weak)) _general_exception_handler ( void )
         #endif
     }
 }
-
+</#if>
 /*******************************************************************************
   Function:
     void _bootstrap_exception_handler ( void )
