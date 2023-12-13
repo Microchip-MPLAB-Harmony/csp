@@ -7,9 +7,6 @@ package:
   required: true
 
   dependencies:
-    - name: "dev_packs"
-      type: "package"
-      version: "v3.18.0"
     - name: "CMSIS_5"
       type: "package"
       version: "5.8.0"
