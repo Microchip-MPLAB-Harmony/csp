@@ -7,6 +7,7 @@
 
 ### New Features
 
+- Removed dependency on dev_packs package
 - Version dependencies for the following DFPs are updated
   - PIC32CX-BZ_DFP to version 1.3.238
   - PIC32CX-BZ3_DFP to version 1.1.171
