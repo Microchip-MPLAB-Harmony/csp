@@ -76,7 +76,7 @@
 
 // *****************************************************************************
 /* Function:
-    void CLK_Initialize( void )
+    void CLOCK_Initialize( void )
 
   Summary:
     Initializes hardware of the System Clock and Peripheral Clock.

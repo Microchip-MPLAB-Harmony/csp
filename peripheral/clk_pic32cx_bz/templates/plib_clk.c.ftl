@@ -73,7 +73,7 @@
 
 // *****************************************************************************
 /* Function:
-    void CLK_Initialize( void )
+    void CLOCK_Initialize( void )
 
   Summary:
     Initializes hardware and internal data structure of the System Clock.
