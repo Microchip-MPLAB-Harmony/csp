@@ -1,14 +1,22 @@
 <#if RAM_INIT??>
+#ifndef RAM_START_ADDR
+#define RAM_START_ADDR FLEXRAM_ADDR
+#endif
+
 #if defined ECC_INIT_START
 #define START_ADDR  ECC_INIT_START
 #else
-#define START_ADDR  FLEXRAM_ADDR
+#define START_ADDR  RAM_START_ADDR
+#endif
+
+#ifndef RAM_SIZE
+#define RAM_SIZE FLEXRAM_SIZE
 #endif
 
 #if defined ECC_INIT_LEN
 #define INIT_LEN  ECC_INIT_LEN
 #else
-#define INIT_LEN  FLEXRAM_SIZE
+#define INIT_LEN  RAM_SIZE
 #endif
 
 __STATIC_INLINE void  __attribute__((optimize("-O1")))  RAM_Initialize(void)
