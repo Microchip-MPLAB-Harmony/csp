@@ -728,6 +728,10 @@ def instantiateComponent( coreComponent ):
     xc32LdAppStartAddress.setDefaultValue(str(hex(flash_start))[2:])
 
     isBFMPresent, bfm_region = isBootFlashPresent()
+    
+    #Exception for WBZ35 series. For WBZ35 device, the VTABLE must be in PFM although it has Boot Flash Memory.
+    if Database.getSymbolValue("core", "CoreSeries") == "WBZ35":
+        isBFMPresent = False
 
     if isBFMPresent == True:
         populateVtableMemRegionsList(bfm_region)

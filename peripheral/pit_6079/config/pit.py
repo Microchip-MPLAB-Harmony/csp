@@ -111,6 +111,7 @@ def instantiateComponent( pitComponent ):
     provideCommonTimerSymbols( pitComponent )
 
     enable = pitComponent.createBooleanSymbol("ENABLE_COUNTER", None)
+    enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit_6079;register:PIT_MR")
     enable.setLabel("Enable Counter")
     enable.setDefaultValue(True)
 
@@ -119,6 +120,7 @@ def instantiateComponent( pitComponent ):
     rtosInterruptVector.setDefaultValue("")
 
     interrupt = pitComponent.createBooleanSymbol("ENABLE_INTERRUPT", None)
+    interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit_6079;register:PIT_MR")
     interrupt.setLabel("Enable Interrupt")
     interrupt.setDefaultValue(True)
     interrupt.setDependencies(updateInterrupt, ["ENABLE_INTERRUPT", "RTOS_INTERRUPT_HANDLER"])
@@ -132,6 +134,7 @@ def instantiateComponent( pitComponent ):
     clk = clk / 16
     maxval = float(pow(2,20) * 1000.0 / float(clk))
     period = pitComponent.createFloatSymbol("PERIOD_MS", None)
+    period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit_6079;register:%NOREGISTER%")
     period.setLabel("Period (ms)")
     period.setMax(maxval)
     period.setMin(1001.0 / float(clk))
@@ -139,6 +142,7 @@ def instantiateComponent( pitComponent ):
 
     piv = calcPIV(period.getValue())
     piv_sym = pitComponent.createIntegerSymbol("PERIOD_TICKS", None)
+    piv_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit_6079;register:PIT_MR")
     piv_sym.setLabel("Period")
     piv_sym.setDefaultValue(piv)
     piv_sym.setReadOnly(True)

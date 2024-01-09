@@ -95,6 +95,7 @@ global spiSym_Interrupt_Mode
 
 #SPI Interrupt Mode
 spiSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", sercomSym_OperationMode)
+spiSym_Interrupt_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 spiSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
 spiSym_Interrupt_Mode.setDefaultValue(True)
 spiSym_Interrupt_Mode.setVisible(False)
@@ -102,12 +103,14 @@ spiSym_Interrupt_Mode.setDependencies(updateSPIMasterConfigurationVisiblePropert
 
 #SPI Standby Mode
 spiSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("SPI_RUNSTDBY", sercomSym_OperationMode)
+spiSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spiSym_CTRLA_RUNSTDBY.setLabel("Enable operation in Standby mode")
 spiSym_CTRLA_RUNSTDBY.setVisible(False)
 spiSym_CTRLA_RUNSTDBY.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI DataOut PinOut
 spiSym_CTRLA_DOPO = sercomComponent.createKeyValueSetSymbol("SPI_DOPO", sercomSym_OperationMode)
+spiSym_CTRLA_DOPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spiSym_CTRLA_DOPO.setLabel("SPI Data Out Pad")
 spiSym_CTRLA_DOPO.setVisible(False)
 
@@ -127,6 +130,7 @@ spiSym_CTRLA_DOPO.setDependencies(updateSPIMasterConfigurationVisibleProperty, [
 
 #SPI DataIn pinOut
 spiSym_CTRLA_DIPO = sercomComponent.createKeyValueSetSymbol("SPI_DIPO", sercomSym_OperationMode)
+spiSym_CTRLA_DIPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spiSym_CTRLA_DIPO.setLabel("SPI Data In Pad Selection")
 spiSym_CTRLA_DIPO.setVisible(False)
 
@@ -146,6 +150,7 @@ spiSym_CTRLA_DIPO.setDependencies(updateSPIMasterConfigurationVisibleProperty, [
 
 #SPI Data Order
 spiSym_CTRLA_DORD = sercomComponent.createKeyValueSetSymbol("SPI_DATA_ORDER", sercomSym_OperationMode)
+spiSym_CTRLA_DORD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spiSym_CTRLA_DORD.setLabel("SPI Data Order")
 spiSym_CTRLA_DORD.setVisible(False)
 
@@ -165,6 +170,7 @@ spiSym_CTRLA_DORD.setDependencies(updateSPIMasterConfigurationVisibleProperty, [
 
 #SPI BaudRate Value
 spi_BAUDRATE = sercomComponent.createIntegerSymbol("SPI_BAUD_RATE", sercomSym_OperationMode)
+spi_BAUDRATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:BAUD")
 spi_BAUDRATE.setLabel("SPI Speed in Hz")
 spi_BAUDRATE.setDefaultValue(1000000)
 spi_BAUDRATE.setMin(1)
@@ -173,6 +179,7 @@ spi_BAUDRATE.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERC
 
 #SPI Character Size
 spiSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("SPI_CHARSIZE_BITS", sercomSym_OperationMode)
+spiSym_CTRLB_CHSIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 spiSym_CTRLB_CHSIZE.setLabel("SPI Data Character Size")
 spiSym_CTRLB_CHSIZE.setVisible(False)
 
@@ -192,6 +199,7 @@ spiSym_CTRLB_CHSIZE.setDependencies(updateSPIMasterConfigurationVisibleProperty,
 
 #SPI Clock Phase
 spiSym_CTRLA_ClockPhase = sercomComponent.createKeyValueSetSymbol("SPI_CLOCK_PHASE", sercomSym_OperationMode)
+spiSym_CTRLA_ClockPhase.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spiSym_CTRLA_ClockPhase.setLabel("SPI Clock Phase")
 spiSym_CTRLA_ClockPhase.setVisible(False)
 
@@ -211,6 +219,7 @@ spiSym_CTRLA_ClockPhase.setDependencies(updateSPIMasterConfigurationVisiblePrope
 
 #SPI Clock Polarity
 spiSym_CTRLA_ClockPolarity = sercomComponent.createKeyValueSetSymbol("SPI_CLOCK_POLARITY", sercomSym_OperationMode)
+spiSym_CTRLA_ClockPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 spiSym_CTRLA_ClockPolarity.setLabel("SPI Clock Polarity")
 spiSym_CTRLA_ClockPolarity.setVisible(False)
 
@@ -244,6 +253,7 @@ if mssenSupported == True:
     global spiSym_CTRLB_MSSEN
     #SPI Hardware Slave Select control
     spiSym_CTRLB_MSSEN = sercomComponent.createBooleanSymbol("SPI_MSSEN", sercomSym_OperationMode)
+    spiSym_CTRLB_MSSEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
     spiSym_CTRLB_MSSEN.setLabel("Enable SPI Master Hardware Slave Select")
     spiSym_CTRLB_MSSEN.setVisible(False)
     spiSym_CTRLB_MSSEN.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
@@ -266,6 +276,7 @@ spiSym_ERROR.setDefaultValue(errorIntSupported)
 
 #SPI Receiver Enable
 spiSym_CTRLB_RXEN = sercomComponent.createBooleanSymbol("SPI_RECIEVER_ENABLE", sercomSym_OperationMode)
+spiSym_CTRLB_RXEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 spiSym_CTRLB_RXEN.setLabel("SPI Receiver Enable")
 spiSym_CTRLB_RXEN.setDefaultValue(True)
 spiSym_CTRLB_RXEN.setVisible(False)
@@ -286,6 +297,7 @@ spiSym_BaudError_Comment.setDependencies(updateSPIMasterConfigurationVisibleProp
 
 # SPI BAUD REG Value
 spi_BAUDREG = sercomComponent.createIntegerSymbol("SPI_BAUD_REG_VALUE", sercomSym_OperationMode)
+spi_BAUDREG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:BAUD")
 spi_BAUDREG.setLabel("SPI Baud")
 spi_BAUDREG.setVisible(False)
 spi_BAUDREG.setDependencies(updateSPIBaudValueProperty, ["core." + sercomClkFrequencyId, "SPI_BAUD_RATE"])

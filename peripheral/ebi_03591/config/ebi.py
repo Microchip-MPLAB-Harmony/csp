@@ -171,6 +171,7 @@ def instantiateComponent(ebiComponent):
     ebiSmcSym_GlobalMenu.setLabel("SMC Global Features")
 
     ebiSmcSym_WPMR_WPEN = ebiComponent.createBooleanSymbol("EBI_SMC_WRITE_PROTECTION", ebiSmcSym_GlobalMenu)
+    ebiSmcSym_WPMR_WPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:%NOREGISTER%")
     ebiSmcSym_WPMR_WPEN.setLabel("Enable Write Protection")
     ebiSmcSym_WPMR_WPEN.setDefaultValue(False)
 
@@ -186,6 +187,7 @@ def instantiateComponent(ebiComponent):
 
     for ebiChipSelNum in range(0, ebiChipSelCount):
         ebiSmcSym_CS = ebiComponent.createBooleanSymbol("EBI_SMC_CHIP_SELECT" + str(ebiChipSelNum), ebiSmcSym_Chip_Select)
+        ebiSmcSym_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:%NOREGISTER%")
         ebiSmcSym_CS.setLabel("Enable Chip Select "+ str(ebiChipSelNum))
 
         # EBI SMC Read Setup, Pulse and Cycle Timings
@@ -194,12 +196,14 @@ def instantiateComponent(ebiComponent):
 
         # EBI SMC Read Setup Timings
         ebiSmcSym_SETUP_NRD_CS = ebiComponent.createIntegerSymbol("EBI_SMC_NRD_SETUP_CS" + str(ebiChipSelNum), ebiSmcSym_READ_TIMING_CS)
+        ebiSmcSym_SETUP_NRD_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:SMC_SETUP")
         ebiSmcSym_SETUP_NRD_CS.setLabel(ebiSmcRegBitField_SETUP_NRD_SETUP.getAttribute("caption"))
         ebiSmcSym_SETUP_NRD_CS.setMin(EBI_SMC_DEFAULT_MIN_VALUE)
         ebiSmcSym_SETUP_NRD_CS.setMax(ebiSmcConvertMaskToInt(ebiSmcRegBitField_SETUP_NRD_SETUP.getAttribute("mask")))
         ebiSmcSym_SETUP_NRD_CS.setDefaultValue(EBI_SMC_SETUP_DEFAULT_VALUE)
 
         ebiSmcSym_SETUP_NCS_RD_CS = ebiComponent.createIntegerSymbol("EBI_SMC_NCS_RD_SETUP_CS" + str(ebiChipSelNum), ebiSmcSym_READ_TIMING_CS)
+        ebiSmcSym_SETUP_NCS_RD_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:SMC_SETUP")
         ebiSmcSym_SETUP_NCS_RD_CS.setLabel(ebiSmcRegBitField_SETUP_NCS_RD_SETUP.getAttribute("caption"))
         ebiSmcSym_SETUP_NCS_RD_CS.setMin(EBI_SMC_DEFAULT_MIN_VALUE)
         ebiSmcSym_SETUP_NCS_RD_CS.setMax(ebiSmcConvertMaskToInt(ebiSmcRegBitField_SETUP_NCS_RD_SETUP.getAttribute("mask")))
@@ -207,12 +211,14 @@ def instantiateComponent(ebiComponent):
 
         # SMC Read Pulse Timings
         ebiSmcSym_PULSE_NRD_CS = ebiComponent.createIntegerSymbol("EBI_SMC_NRD_PULSE_CS" + str(ebiChipSelNum), ebiSmcSym_READ_TIMING_CS)
+        ebiSmcSym_PULSE_NRD_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:SMC_PULSE")
         ebiSmcSym_PULSE_NRD_CS.setLabel(ebiSmcRegBitField_PULSE_NRD_PULSE.getAttribute("caption"))
         ebiSmcSym_PULSE_NRD_CS.setMin(EBI_SMC_DEFAULT_MIN_VALUE)
         ebiSmcSym_PULSE_NRD_CS.setMax(ebiSmcConvertMaskToInt(ebiSmcRegBitField_PULSE_NRD_PULSE.getAttribute("mask")))
         ebiSmcSym_PULSE_NRD_CS.setDefaultValue(EBI_SMC_PULSE_DEFAULT_VALUE)
 
         ebiSmcSym_PULSE_NCS_RD_CS = ebiComponent.createIntegerSymbol("EBI_SMC_NCS_RD_PULSE_CS" + str(ebiChipSelNum),ebiSmcSym_READ_TIMING_CS)
+        ebiSmcSym_PULSE_NCS_RD_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:SMC_PULSE")
         ebiSmcSym_PULSE_NCS_RD_CS.setLabel(ebiSmcRegBitField_PULSE_NCS_RD_PULSE.getAttribute("caption"))
         ebiSmcSym_PULSE_NCS_RD_CS.setMin(EBI_SMC_DEFAULT_MIN_VALUE)
         ebiSmcSym_PULSE_NCS_RD_CS.setMax(ebiSmcConvertMaskToInt(ebiSmcRegBitField_PULSE_NCS_RD_PULSE.getAttribute("mask")))
@@ -220,6 +226,7 @@ def instantiateComponent(ebiComponent):
 
         # SMC Read Cycle Timings
         ebiSmcSym_SMC_CYCLE_TIMING_NRD_CS = ebiComponent.createIntegerSymbol("EBI_SMC_NRD_CYCLE_CS" + str(ebiChipSelNum), ebiSmcSym_READ_TIMING_CS)
+        ebiSmcSym_SMC_CYCLE_TIMING_NRD_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:SMC_CYCLE")
         ebiSmcSym_SMC_CYCLE_TIMING_NRD_CS.setLabel(ebiSmcRegBitField_CYCLE_NRD_CYCLE.getAttribute("caption"))
         ebiSmcSym_SMC_CYCLE_TIMING_NRD_CS.setMin(EBI_SMC_DEFAULT_MIN_VALUE)
         ebiSmcSym_SMC_CYCLE_TIMING_NRD_CS.setMax(ebiSmcConvertMaskToInt(ebiSmcRegBitField_CYCLE_NRD_CYCLE.getAttribute("mask")))
@@ -231,12 +238,14 @@ def instantiateComponent(ebiComponent):
 
         # SMC Write Setup Timings
         ebiSmcSym_SETUP_NWE_CS = ebiComponent.createIntegerSymbol("EBI_SMC_NWE_SETUP_CS" + str(ebiChipSelNum), ebiSmcSym_WRITE_TIMING_CS)
+        ebiSmcSym_SETUP_NWE_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:SMC_SETUP")
         ebiSmcSym_SETUP_NWE_CS.setLabel(ebiSmcRegBitField_SETUP_NWE_SETUP.getAttribute("caption"))
         ebiSmcSym_SETUP_NWE_CS.setMin(EBI_SMC_DEFAULT_MIN_VALUE)
         ebiSmcSym_SETUP_NWE_CS.setMax(ebiSmcConvertMaskToInt(ebiSmcRegBitField_SETUP_NWE_SETUP.getAttribute("mask")))
         ebiSmcSym_SETUP_NWE_CS.setDefaultValue(EBI_SMC_SETUP_DEFAULT_VALUE)
 
         ebiSmcSym_SETUP_NCS_WR_CS = ebiComponent.createIntegerSymbol("EBI_SMC_NCS_WR_SETUP_CS" + str(ebiChipSelNum), ebiSmcSym_WRITE_TIMING_CS)
+        ebiSmcSym_SETUP_NCS_WR_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:SMC_SETUP")
         ebiSmcSym_SETUP_NCS_WR_CS.setLabel(ebiSmcRegBitField_SETUP_NCS_WR_SETUP.getAttribute("caption"))
         ebiSmcSym_SETUP_NCS_WR_CS.setMin(EBI_SMC_DEFAULT_MIN_VALUE)
         ebiSmcSym_SETUP_NCS_WR_CS.setMax(ebiSmcConvertMaskToInt(ebiSmcRegBitField_SETUP_NCS_WR_SETUP.getAttribute("mask")))
@@ -244,12 +253,14 @@ def instantiateComponent(ebiComponent):
 
         # SMC Write Pulse Timings
         ebiSmcSym_PULSE_NWE_CS = ebiComponent.createIntegerSymbol("EBI_SMC_NWE_PULSE_CS" + str(ebiChipSelNum), ebiSmcSym_WRITE_TIMING_CS)
+        ebiSmcSym_PULSE_NWE_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:SMC_PULSE")
         ebiSmcSym_PULSE_NWE_CS.setLabel(ebiSmcRegBitField_PULSE_NWE_PULSE.getAttribute("caption"))
         ebiSmcSym_PULSE_NWE_CS.setMin(EBI_SMC_DEFAULT_MIN_VALUE)
         ebiSmcSym_PULSE_NWE_CS.setMax(ebiSmcConvertMaskToInt(ebiSmcRegBitField_PULSE_NWE_PULSE.getAttribute("mask")))
         ebiSmcSym_PULSE_NWE_CS.setDefaultValue(EBI_SMC_PULSE_DEFAULT_VALUE)
 
         ebiSmcSym_PULSE_NCS_WR_CS = ebiComponent.createIntegerSymbol("EBI_SMC_NCS_WR_PULSE_CS" + str(ebiChipSelNum), ebiSmcSym_WRITE_TIMING_CS)
+        ebiSmcSym_PULSE_NCS_WR_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:SMC_PULSE")
         ebiSmcSym_PULSE_NCS_WR_CS.setLabel(ebiSmcRegBitField_PULSE_NCS_WR_PULSE.getAttribute("caption"))
         ebiSmcSym_PULSE_NCS_WR_CS.setMin(EBI_SMC_DEFAULT_MIN_VALUE)
         ebiSmcSym_PULSE_NCS_WR_CS.setMax(ebiSmcConvertMaskToInt(ebiSmcRegBitField_PULSE_NCS_WR_PULSE.getAttribute("mask")))
@@ -257,6 +268,7 @@ def instantiateComponent(ebiComponent):
 
         # SMC Write Cycle Timings
         ebiSmcSym_CYCLE_TIMING_NWE_CS = ebiComponent.createIntegerSymbol("EBI_SMC_NWE_CYCLE_CS" + str(ebiChipSelNum), ebiSmcSym_WRITE_TIMING_CS)
+        ebiSmcSym_CYCLE_TIMING_NWE_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:SMC_CYCLE")
         ebiSmcSym_CYCLE_TIMING_NWE_CS.setLabel(ebiSmcRegBitField_CYCLE_NWE_CYCLE.getAttribute("caption"))
         ebiSmcSym_CYCLE_TIMING_NWE_CS.setMin(EBI_SMC_DEFAULT_MIN_VALUE)
         ebiSmcSym_CYCLE_TIMING_NWE_CS.setMax(ebiSmcConvertMaskToInt(ebiSmcRegBitField_CYCLE_NWE_CYCLE.getAttribute("mask")))
@@ -268,6 +280,7 @@ def instantiateComponent(ebiComponent):
 
 
         ebiSmcSym_MODE_DBW = ebiComponent.createKeyValueSetSymbol("EBI_SMC_DATA_BUS_CS" + str(ebiChipSelNum), ebiSmcSym_MODE_CS_REGISTER)
+        ebiSmcSym_MODE_DBW.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:MODE")
         ebiSmcSym_MODE_DBW.setLabel("External Memory Data Bus Width")
         ebiSmcSym_MODE_DBW.setOutputMode("Key")
         ebiSmcSym_MODE_DBW.setDisplayMode("Description")
@@ -277,6 +290,7 @@ def instantiateComponent(ebiComponent):
 
         ebiSmcSym_MODE_BAT.append(ebiChipSelNum)
         ebiSmcSym_MODE_BAT[ebiChipSelNum] = ebiComponent.createKeyValueSetSymbol("EBI_SMC_BAT_CS" + str(ebiChipSelNum), ebiSmcSym_MODE_CS_REGISTER)
+        ebiSmcSym_MODE_BAT[ebiChipSelNum].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:MODE")
         ebiSmcSym_MODE_BAT[ebiChipSelNum].setOutputMode("Key")
         ebiSmcSym_MODE_BAT[ebiChipSelNum].setDisplayMode("Description")
         ebiSmcSym_MODE_BAT[ebiChipSelNum].setLabel("Byte Write or Byte Select Access")
@@ -286,11 +300,13 @@ def instantiateComponent(ebiComponent):
         ebiSmcSym_MODE_BAT[ebiChipSelNum].setDependencies(ebiSmcByteAccessSelModeVisible, ["EBI_SMC_DATA_BUS_CS" + str(ebiChipSelNum)])
 
         ebiSmcSym_MODE_PMEN = ebiComponent.createBooleanSymbol("EBI_SMC_PMEN_CS" + str(ebiChipSelNum), ebiSmcSym_MODE_CS_REGISTER)
+        ebiSmcSym_MODE_PMEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:MODE")
         ebiSmcSym_MODE_PMEN.setLabel("Enable Page mode")
         ebiSmcSym_MODE_PMEN.setDefaultValue(False)
 
         ebiSmcSym_MODE_PS.append(ebiChipSelNum)
         ebiSmcSym_MODE_PS[ebiChipSelNum] = ebiComponent.createKeyValueSetSymbol("EBI_SMC_PS_CS" + str(ebiChipSelNum), ebiSmcSym_MODE_CS_REGISTER)
+        ebiSmcSym_MODE_PS[ebiChipSelNum].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:MODE")
         ebiSmcSym_MODE_PS[ebiChipSelNum].setOutputMode("Key")
         ebiSmcSym_MODE_PS[ebiChipSelNum].setDisplayMode("Description")
         ebiSmcSym_MODE_PS[ebiChipSelNum].setLabel("External Memory Page Size")
@@ -303,11 +319,13 @@ def instantiateComponent(ebiComponent):
         ebiSmcSym_MODE_PS[ebiChipSelNum].setDependencies(ebiSmcMemoryPageSizeModeVisible, ["EBI_SMC_PMEN_CS" + str(ebiChipSelNum)])
 
         ebiSmcSym_MODE_TDF = ebiComponent.createBooleanSymbol("EBI_SMC_TDF_OPTIMIZATION_CS" + str(ebiChipSelNum), ebiSmcSym_MODE_CS_REGISTER)
+        ebiSmcSym_MODE_TDF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:MODE")
         ebiSmcSym_MODE_TDF.setLabel("Enable Optimization of Data Float Time")
         ebiSmcSym_MODE_TDF.setDefaultValue(False)
 
         ebiSmcSym_MODE_TDF_CYCLES.append(ebiChipSelNum)
         ebiSmcSym_MODE_TDF_CYCLES[ebiChipSelNum] = ebiComponent.createIntegerSymbol("EBI_SMC_TDF_CYCLES_CS" + str(ebiChipSelNum), ebiSmcSym_MODE_CS_REGISTER)
+        ebiSmcSym_MODE_TDF_CYCLES[ebiChipSelNum].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:MODE")
         ebiSmcSym_MODE_TDF_CYCLES[ebiChipSelNum].setLabel("Data Float Time (no of cycles)")
         ebiSmcSym_MODE_TDF_CYCLES[ebiChipSelNum].setVisible(False)
         ebiSmcSym_MODE_TDF_CYCLES[ebiChipSelNum].setMin(EBI_SMC_DEFAULT_MIN_VALUE)
@@ -316,6 +334,7 @@ def instantiateComponent(ebiComponent):
         ebiSmcSym_MODE_TDF_CYCLES[ebiChipSelNum].setDependencies(ebiSmcTdfCyclesModeVisible, ["EBI_SMC_TDF_OPTIMIZATION_CS" + str(ebiChipSelNum)])
 
         ebiSmcSym_MODE_EXNW = ebiComponent.createKeyValueSetSymbol("EBI_SMC_NWAIT_MODE_CS" + str(ebiChipSelNum), ebiSmcSym_MODE_CS_REGISTER)
+        ebiSmcSym_MODE_EXNW.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:MODE")
         ebiSmcSym_MODE_EXNW.setOutputMode("Key")
         ebiSmcSym_MODE_EXNW.setDisplayMode("Description")
         ebiSmcSym_MODE_EXNW.setLabel("External Wait Signal (NWAIT)")
@@ -325,10 +344,12 @@ def instantiateComponent(ebiComponent):
         ebiSmcSym_MODE_EXNW.setSelectedKey("EBI_SMC_MODE_EXNW_MODE_DISABLED", 2)
 
         ebiSmcSym_MODE_READ = ebiComponent.createBooleanSymbol("EBI_SMC_READ_ENABLE_MODE_CS" + str(ebiChipSelNum), ebiSmcSym_MODE_CS_REGISTER)
+        ebiSmcSym_MODE_READ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:MODE")
         ebiSmcSym_MODE_READ.setLabel("Read Operation is controlled by NRD Signal")
         ebiSmcSym_MODE_READ.setDefaultValue(True)
 
         ebiSmcSym_MODE_WRITE = ebiComponent.createBooleanSymbol("EBI_SMC_WRITE_ENABLE_MODE_CS" + str(ebiChipSelNum), ebiSmcSym_MODE_CS_REGISTER)
+        ebiSmcSym_MODE_WRITE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_03591;register:MODE")
         ebiSmcSym_MODE_WRITE.setLabel("Write Operation is controlled by NWE Signal")
         ebiSmcSym_MODE_WRITE.setDefaultValue(True)
 

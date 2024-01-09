@@ -256,6 +256,7 @@ def instantiateComponent(acComponent):
 
     if ctrlc_reg_present == True:
         acSym_ChargePumpEnable = acComponent.createBooleanSymbol("ANALOG_INPUT_CHARGE_PUMP_ENABLE", None)
+        acSym_ChargePumpEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:CTRLC")
         acSym_ChargePumpEnable.setLabel("Analog Input Charge Pump Enable")
 
     #Populate menu for all comparators in the AC peripheral
@@ -271,6 +272,7 @@ def instantiateComponent(acComponent):
 
         acSym_Enable.append(comparatorID)
         acSym_Enable[comparatorID] = acComponent.createBooleanSymbol("ANALOG_COMPARATOR_ENABLE_" + str(comparatorID), None)
+        acSym_Enable[comparatorID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:COMPCTRL0")
         acSym_Enable[comparatorID].setLabel("Comparator " + str(comparatorID) + " Settings")
         if cmpPresent[comparatorID] == 0:
             acSym_Enable[comparatorID].setVisible(False)
@@ -278,6 +280,7 @@ def instantiateComponent(acComponent):
         #Interrupt Enable
         global acInterrupt_Enable
         acInterrupt_Enable = acComponent.createBooleanSymbol("COMP" + str(comparatorID) + "INTERRUPT_ENABLE", acSym_Enable[comparatorID])
+        acInterrupt_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:intenset")
         acInterrupt_Enable.setLabel("Comparator Interrupt Enable")
         acInterrupt_Enable.setVisible(False)
         acInterrupt_Enable.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
@@ -285,6 +288,7 @@ def instantiateComponent(acComponent):
 
         #Single-shot Mode
         acSym_COMPCTRL_SINGLE = acComponent.createBooleanSymbol("AC_COMPCTRL_" + str(comparatorID) +"SINGLE_MODE", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_SINGLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:COMPCTRL0")
         acSym_COMPCTRL_SINGLE.setLabel("Enable Single Shot Mode")
         acSym_COMPCTRL_SINGLE.setDefaultValue(False)
         acSym_COMPCTRL_SINGLE.setVisible(False)
@@ -292,6 +296,7 @@ def instantiateComponent(acComponent):
 
         #MUXPOS
         acSym_COMPCTRL_MUXPOS = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_MUXPOS", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_MUXPOS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:COMPCTRL0")
         acSym_COMPCTRL_MUXPOS.setLabel("Positive Input Mux Selection")
         acSym_COMPCTRL_MUXPOS.setVisible(False)
 
@@ -319,6 +324,7 @@ def instantiateComponent(acComponent):
         #MUXNEG
         global acSym_COMPCTRL_MUXNEG
         acSym_COMPCTRL_MUXNEG = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_MUXNEG", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_MUXNEG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:COMPCTRL0")
         acSym_COMPCTRL_MUXNEG.setLabel("Negative Input Mux Selection")
         acSym_COMPCTRL_MUXNEG.setVisible(False)
 
@@ -350,6 +356,7 @@ def instantiateComponent(acComponent):
             #Scaling factor for VDD scaler
             acSym_SCALERn.append(comparatorID)
             acSym_SCALERn[comparatorID] = acComponent.createIntegerSymbol("AC_SCALER_N_" + str(comparatorID), acSym_Enable[comparatorID])
+            acSym_SCALERn[comparatorID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:SCALER0")
             acSym_SCALERn[comparatorID].setLabel("Scaling factor for VDD scaler")
             acSym_SCALERn[comparatorID].setMin(0)
             acSym_SCALERn[comparatorID].setMax(int(acSym_SCALER_MaxVal, 16))
@@ -360,6 +367,7 @@ def instantiateComponent(acComponent):
 
         #Output Mode
         acSym_COMPCTRL_OUT = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_OUTPUT_TYPE", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_OUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:COMPCTRL0")
         acSym_COMPCTRL_OUT.setLabel("Output Edge Type")
         acSym_COMPCTRL_OUT.setVisible(False)
 
@@ -386,6 +394,7 @@ def instantiateComponent(acComponent):
 
         #ISEL
         acSym_COMPCTRL_ISEL = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_ISEL", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_ISEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:COMPCTRL0")
         acSym_COMPCTRL_ISEL.setLabel("Interrupt Selection")
         acSym_COMPCTRL_ISEL.setVisible(False)
 
@@ -413,6 +422,7 @@ def instantiateComponent(acComponent):
         # COMPCTRLx.SUT
         if compctrl_sut_bitfield_present == True:
             acSym_COMPCTRL_SUT = acComponent.createIntegerSymbol("AC" + str(comparatorID) + "_COMPCTRL_SUT", acSym_Enable[comparatorID])
+            acSym_COMPCTRL_SUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:COMPCTRL0")
             acSym_COMPCTRL_SUT.setLabel("Start-up Time")
             acSym_COMPCTRL_SUT.setMin(0)
             acSym_COMPCTRL_SUT.setMax(31)
@@ -422,6 +432,7 @@ def instantiateComponent(acComponent):
 
         #RUNSTDBY Enable
         acSym_COMPCTRL_RUNSTDBY = acComponent.createBooleanSymbol("AC" + str(comparatorID) + "_COMPCTRL_RUNSTDBY", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:COMPCTRL0")
         acSym_COMPCTRL_RUNSTDBY.setLabel("Enable Run in Standby")
         acSym_COMPCTRL_RUNSTDBY.setDefaultValue(False)
         acSym_COMPCTRL_RUNSTDBY.setVisible(False)
@@ -437,6 +448,7 @@ def instantiateComponent(acComponent):
 
             # DACCTRL.VALUEx
             acSym_DACCTRL_VALUE = acComponent.createIntegerSymbol("AC" + str(comparatorID) + "_DACCTRL_VALUE", acSym_Enable[comparatorID])
+            acSym_DACCTRL_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:DACCTRL")
             acSym_DACCTRL_VALUE.setLabel("DAC Output Value")
             acSym_DACCTRL_VALUE.setMin(0)
             acSym_DACCTRL_VALUE.setMax(127)
@@ -451,6 +463,7 @@ def instantiateComponent(acComponent):
 
             # DACCTRL.SHENx
             acSym_DACCTRL_SHEN = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_DACCTRL_SHEN", acSym_Enable[comparatorID])
+            acSym_DACCTRL_SHEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:DACCTRL")
             acSym_DACCTRL_SHEN.setLabel("DAC Enable Sample and Hold Operation Mode")
             acSym_DACCTRL_SHEN.addKey("0x0", "0x0", "Continuous operation mode is enabled")
             acSym_DACCTRL_SHEN.addKey("0x1", "0x1", "Sample-and-hold operation mode is enabled")
@@ -470,6 +483,7 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_HYSTEN_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"COMPCTRL\"]/bitfield@[name=\"HYSTEN\"]")
         if acSym_COMPCTRL_HYSTEN_Node != None:
             acSym_COMPCTRL_HYSTEN = acComponent.createBooleanSymbol("AC" + str(comparatorID) + "_HYSTEN", acSym_AdvConf)
+            acSym_COMPCTRL_HYSTEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:COMPCTRL0")
             acSym_COMPCTRL_HYSTEN.setLabel("Hysteresis Enable")
             acSym_COMPCTRL_HYSTEN.setDefaultValue(False)
             acSym_COMPCTRL_HYSTEN.setVisible(True)
@@ -482,6 +496,7 @@ def instantiateComponent(acComponent):
                 acSym_COMPCTRL_HYST = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_HYST_VAL", acSym_COMPCTRL_HYSTEN)
             else:
                 acSym_COMPCTRL_HYST = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_HYST_VAL", acSym_AdvConf)
+                acSym_COMPCTRL_HYST.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:COMPCTRL0")
             acSym_COMPCTRL_HYST.setLabel("Hysteresis Selection")
             if acSym_COMPCTRL_HYSTEN_Node != None:
                 acSym_COMPCTRL_HYST.setVisible(False)
@@ -513,6 +528,7 @@ def instantiateComponent(acComponent):
 
         #Filter Length selection
         acSym_COMPCTRL_FLEN = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_FLEN_VAL", acSym_AdvConf)
+        acSym_COMPCTRL_FLEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:COMPCTRL0")
         acSym_COMPCTRL_FLEN.setLabel("Filter Length Selection")
         acSym_COMPCTRL_FLEN.setDescription("Filtering must be disabled if continuous measurements will be done during sleep modes")
         acSym_COMPCTRL_FLEN_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__FLEN\"]")
@@ -537,6 +553,7 @@ def instantiateComponent(acComponent):
 
         #Event Input Enable
         acSym_EVCTRL_COMPEI = acComponent.createKeyValueSetSymbol("AC_EVCTRL_COMPEI" + str(comparatorID), acSym_AdvConf)
+        acSym_EVCTRL_COMPEI.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:EVCTRL")
         acSym_EVCTRL_COMPEI.setLabel("Enable Event Input")
         acSym_EVCTRL_COMPEI.setVisible(False)
         acSym_EVCTRL_COMPEI.setOutputMode("Value")
@@ -549,6 +566,7 @@ def instantiateComponent(acComponent):
 
         #Event Output Enable
         acSym_EVCTRL_COMPEO = acComponent.createBooleanSymbol("AC_EVCTRL_COMPEO" + str(comparatorID), acSym_AdvConf)
+        acSym_EVCTRL_COMPEO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:EVCTRL")
         acSym_EVCTRL_COMPEO.setLabel("Enable Event Output")
         acSym_EVCTRL_COMPEO.setDefaultValue(False)
         acSym_EVCTRL_COMPEO.setVisible(False)
@@ -571,11 +589,13 @@ def instantiateComponent(acComponent):
 
     #Window 0 configuration
     acSym_WINCTRL0 = acComponent.createBooleanSymbol("AC_WINCTRL_WIN0", acSym_WindowConf)
+    acSym_WINCTRL0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:WINCTRL")
     acSym_WINCTRL0.setLabel("Window " + win0Str + "Enable")
     acSym_WINCTRL0.setDefaultValue(False)
 
     #Window 0 Interrupt Enable
     acSym_INTENSET_WIN0 = acComponent.createBooleanSymbol("AC_INTENSET_WIN0", acSym_WINCTRL0)
+    acSym_INTENSET_WIN0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:INTENSET")
     acSym_INTENSET_WIN0.setLabel("Window " + win0Str + "Interrupt Enable")
     acSym_INTENSET_WIN0.setDefaultValue(False)
     acSym_INTENSET_WIN0.setVisible(False)
@@ -584,6 +604,7 @@ def instantiateComponent(acComponent):
 
     #Window 0 interrupt configuration
     acSym_WNCTRL_WINT0 = acComponent.createKeyValueSetSymbol("AC_WINTSEL0", acSym_WINCTRL0)
+    acSym_WNCTRL_WINT0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:WINCTRL")
     acSym_WNCTRL_WINT0.setLabel("AC Window " + win0Str + "Interrupt Selection")
     acSym_WNCTRL_WINT0.setVisible(False)
     acSym_WNCTRL_WINT0.setDependencies(setacSymbolVisibility,["AC_WINCTRL_WIN0"])
@@ -614,6 +635,7 @@ def instantiateComponent(acComponent):
 
     #Window 0 Event Output
     acSym_WINCTRL_EVENT_OUT0 = acComponent.createBooleanSymbol("AC_EVCTRL_WINEO0", acSym_WINCTRL0)
+    acSym_WINCTRL_EVENT_OUT0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:EVCTRL")
     acSym_WINCTRL_EVENT_OUT0.setLabel("Enable Window " + win0Str + "Event Output")
     acSym_WINCTRL_EVENT_OUT0.setDefaultValue(False)
     acSym_WINCTRL_EVENT_OUT0.setVisible(False)
@@ -633,6 +655,7 @@ def instantiateComponent(acComponent):
         acSym_CTRLC_PRESCALER_Values = acSym_CTRLC_PRESCALER_Node.getChildren()
 
         acSym_CTRLC_PRESCALSER = acComponent.createKeyValueSetSymbol("AC_CTRLC_PRESCALER", acSym_InternalDAC_SH_Conf)
+        acSym_CTRLC_PRESCALSER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:CTRLC")
         acSym_CTRLC_PRESCALSER.setLabel("Prescaler for DAC sampling clock")
 
         for id in range (len(acSym_CTRLC_PRESCALER_Values)):
@@ -647,6 +670,7 @@ def instantiateComponent(acComponent):
 
         # CTRLC.PERIOD
         acSym_CTRLC_PERIOD = acComponent.createIntegerSymbol("AC_CTRLC_PERIOD", acSym_InternalDAC_SH_Conf)
+        acSym_CTRLC_PERIOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:CTRLC")
         acSym_CTRLC_PERIOD.setLabel("Sample and Hold Clock Period")
         acSym_CTRLC_PERIOD.setMin(0)
         acSym_CTRLC_PERIOD.setMax(511)
@@ -654,6 +678,7 @@ def instantiateComponent(acComponent):
 
         # CTRLC.WIDTH
         acSym_CTRLC_WIDTH = acComponent.createIntegerSymbol("AC_CTRLC_WIDTH", acSym_InternalDAC_SH_Conf)
+        acSym_CTRLC_WIDTH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2501;register:CTRLC")
         acSym_CTRLC_WIDTH.setLabel("Sample and Hold Clock Pulse Width")
         acSym_CTRLC_WIDTH.setMin(0)
         acSym_CTRLC_WIDTH.setMax(511)

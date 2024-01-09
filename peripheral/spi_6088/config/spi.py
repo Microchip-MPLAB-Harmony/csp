@@ -444,6 +444,7 @@ def instantiateComponent(spiComponent):
 
     global spiInterrupt
     spiInterrupt = spiComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", None)
+    spiInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
     spiInterrupt.setLabel("Interrupt Mode")
     spiInterrupt.setDefaultValue(True)
 
@@ -458,11 +459,13 @@ def instantiateComponent(spiComponent):
     for index in range(0, len(spiRegisterList)):
         if (spiRegisterList[index].getAttribute("name") == "SPI_RPR"):
             spiDMAEnable = spiComponent.createBooleanSymbol("USE_SPI_DMA", None)
+            spiDMAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
             spiDMAEnable.setLabel("Enable DMA for Transmit and Receive")
             spiDMAEnable.setDependencies(updateSPIDMAConfigurationVisbleProperty, ["SPI_INTERRUPT_MODE"])
             break
 
     spiSym_MR_MSTR = spiComponent.createKeyValueSetSymbol("SPI_MR_MSTR", None)
+    spiSym_MR_MSTR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:SPI_MR")
     spiSym_MR_MSTR.setLabel(spiBitField_MR_MSTR.getAttribute("caption"))
     spiSym_MR_MSTR.setOutputMode("Key")
     spiSym_MR_MSTR.setDisplayMode("Description")
@@ -481,6 +484,7 @@ def instantiateComponent(spiComponent):
         values = valueGroup.getChildren()
 
         spiSymClockSrc = spiComponent.createKeyValueSetSymbol("SPI_CLK_SRC", None)
+        spiSymClockSrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:SPI_MR")
         spiSymClockSrc.setLabel(valueGroup.getAttribute("caption"))
 
         for index in range(len(values)):
@@ -491,6 +495,7 @@ def instantiateComponent(spiComponent):
 
     # Used to pass master clock frequency to SPI FTL
     spiSymMasterClock = spiComponent.createIntegerSymbol("SPI_MASTER_CLOCK", None)
+    spiSymMasterClock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:CSR")
     spiSymMasterClock.setLabel("Bit rate source clock frequency (Hz)")
     spiSymMasterClock.setDefaultValue(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY" ))
     spiSymMasterClock.setReadOnly(True)
@@ -509,6 +514,7 @@ def instantiateComponent(spiComponent):
     global spiSym_MR_PCS
     spiSym_MR_PCS = spiComponent.createKeyValueSetSymbol("SPI_MR_PCS", None)
     spiSym_MR_PCS.setLabel(spiBitField_MR_PCS.getAttribute("caption"))
+    spiSym_MR_PCS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:SPI_MR")
     spiSym_MR_PCS.setOutputMode("Key")
     spiSym_MR_PCS.setDisplayMode("Key")
     spiSym_MR_PCS.setDefaultValue(DefaultPCS)
@@ -536,6 +542,7 @@ def instantiateComponent(spiComponent):
 
 # MR DLYBCS
     spiSym_SPI_MR_DLYBCS = spiComponent.createIntegerSymbol("SPI_MR_DLYBCS", None)
+    spiSym_SPI_MR_DLYBCS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:SPI_MR")
     spiSym_SPI_MR_DLYBCS.setLabel("Delay between chip selects")
     spiSym_SPI_MR_DLYBCS.setMax(255)
     spiSym_SPI_MR_DLYBCS.setDefaultValue(0)
@@ -544,6 +551,7 @@ def instantiateComponent(spiComponent):
 
 # FIFO Mode
     spisSymFIFOEnable = spiComponent.createBooleanSymbol("SPI_FIFO_ENABLE", None)
+    spisSymFIFOEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
     spisSymFIFOEnable.setLabel("Enable FIFO")
     spisSymFIFOEnable.setDefaultValue(False)
     spisSymFIFOEnable.setVisible(spiBitField_CR_FIFOEN != None)
@@ -552,6 +560,7 @@ def instantiateComponent(spiComponent):
 # Slave mode TX Buffer Size
     spisSym_TXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_TX_BUFFER_SIZE", None)
     spisSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
+    spisSym_TXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
     spisSym_TXBuffer_Size.setMin(0)
     spisSym_TXBuffer_Size.setMax(65535)
     spisSym_TXBuffer_Size.setDefaultValue(256)
@@ -561,6 +570,7 @@ def instantiateComponent(spiComponent):
 # Slave mode RX Buffer Size
     spisSym_RXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_RX_BUFFER_SIZE", None)
     spisSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
+    spisSym_RXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
     spisSym_RXBuffer_Size.setMin(0)
     spisSym_RXBuffer_Size.setMax(65535)
     spisSym_RXBuffer_Size.setDefaultValue(256)
@@ -570,6 +580,7 @@ def instantiateComponent(spiComponent):
     for i in range (spi_CSR_Count):
         # CSR0 Enable
         spiSym_SPI_EnableNPCSx = spiComponent.createBooleanSymbol("SPI_EN_NPCS" + str(i), None)
+        spiSym_SPI_EnableNPCSx.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
         spiSym_SPI_EnableNPCSx.setVisible(True)
         if i == 0:
             spiSym_SPI_EnableNPCSx.setDefaultValue(True)
@@ -600,6 +611,7 @@ def instantiateComponent(spiComponent):
 # BAUD RATE (Unused, maintained for backward compatibility)
     spiSym_CSR_SCBR = spiComponent.createIntegerSymbol("SPI_BAUD_RATE", None)
     spiSym_CSR_SCBR.setLabel("Baud Rate in Hz")
+    spiSym_CSR_SCBR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
     spiSym_CSR_SCBR.setDefaultValue(defaultbaudRate)
     spiSym_CSR_SCBR.setMin(1)
     spiSym_CSR_SCBR.setVisible(False)
@@ -608,6 +620,7 @@ def instantiateComponent(spiComponent):
 # BITS (Unused, maintained for backward compatibility)
     spiSym_CSR_BITS = spiComponent.createKeyValueSetSymbol("SPI_CHARSIZE_BITS", None)
     spiSym_CSR_BITS.setLabel(spiBitField_CSR_BITS.getAttribute("caption"))
+    spiSym_CSR_BITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
     spiSym_CSR_BITS.setOutputMode("Key")
     spiSym_CSR_BITS.setDisplayMode("Description")
     spiSym_CSR_BITS.setDefaultValue(0)
@@ -623,6 +636,7 @@ def instantiateComponent(spiComponent):
 # CPOL (Unused, maintained for backward compatibility)
     spiSym_CSR_CPOL = spiComponent.createKeyValueSetSymbol("SPI_CLOCK_POLARITY", None)
     spiSym_CSR_CPOL.setLabel(spiBitField_CSR_CPOL.getAttribute("caption"))
+    spiSym_CSR_CPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
     spiSym_CSR_CPOL.setOutputMode("Key")
     spiSym_CSR_CPOL.setDisplayMode("Description")
     spiSym_CSR_CPOL.setDefaultValue(0)
@@ -638,6 +652,7 @@ def instantiateComponent(spiComponent):
 # NCPHA (Unused, maintained for backward compatibility)
     spiSym_CSR_NCPHA = spiComponent.createKeyValueSetSymbol("SPI_CLOCK_PHASE", None)
     spiSym_CSR_NCPHA.setLabel(spiBitField_CSR_NCPHA.getAttribute("caption"))
+    spiSym_CSR_NCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
     spiSym_CSR_NCPHA.setOutputMode("Key")
     spiSym_CSR_NCPHA.setDisplayMode("Description")
     spiSym_CSR_NCPHA.setDefaultValue(0)
@@ -660,6 +675,7 @@ def instantiateComponent(spiComponent):
     for i in range (spi_CSR_Count):
         # CSRx BAUD RATE
         spiSym_SPI_CSRx_Baudrate = spiComponent.createIntegerSymbol("SPI_CSR" + str(i) + "_BAUD_RATE", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_Baudrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
         spiSym_SPI_CSRx_Baudrate.setLabel("Baud Rate (Hz)")
         spiSym_SPI_CSRx_Baudrate.setDefaultValue(defaultbaudRate)
         spiSym_SPI_CSRx_Baudrate.setVisible(i == 0)
@@ -673,6 +689,7 @@ def instantiateComponent(spiComponent):
 
         # CSRx BITS
         spiSym_SPI_CSRx_BITS = spiComponent.createKeyValueSetSymbol("SPI_CSR" + str(i) + "_BITS", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_BITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
         spiSym_SPI_CSRx_BITS.setLabel("Bits Per Transfer")
         spiSym_SPI_CSRx_BITS.setOutputMode("Key")
         spiSym_SPI_CSRx_BITS.setDisplayMode("Description")
@@ -688,6 +705,7 @@ def instantiateComponent(spiComponent):
 
         # CSRx CPOL
         spiSym_SPI_CSRx_CPOL = spiComponent.createKeyValueSetSymbol("SPI_CSR" + str(i) + "_CPOL", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_CPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
         spiSym_SPI_CSRx_CPOL.setLabel("Clock Polarity")
         spiSym_SPI_CSRx_CPOL.setOutputMode("Key")
         spiSym_SPI_CSRx_CPOL.setDisplayMode("Description")
@@ -703,6 +721,7 @@ def instantiateComponent(spiComponent):
 
         # CSRx NCPHA
         spiSym_SPI_CSRx_NCPHA = spiComponent.createKeyValueSetSymbol("SPI_CSR" + str(i) + "_NCPHA", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_NCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
         spiSym_SPI_CSRx_NCPHA.setLabel("Clock Phase")
         spiSym_SPI_CSRx_NCPHA.setOutputMode("Key")
         spiSym_SPI_CSRx_NCPHA.setDisplayMode("Description")
@@ -718,6 +737,7 @@ def instantiateComponent(spiComponent):
 
         # CSRx DLYBS
         spiSym_SPI_CSRx_DLYBS = spiComponent.createIntegerSymbol("SPI_CSR" + str(i) + "_DLYBS", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_DLYBS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
         spiSym_SPI_CSRx_DLYBS.setLabel("Delay before SPCK")
         spiSym_SPI_CSRx_DLYBS.setMax(255)
         spiSym_SPI_CSRx_DLYBS.setDefaultValue(0)
@@ -726,6 +746,7 @@ def instantiateComponent(spiComponent):
 
         # CSRx DLYBCT
         spiSym_SPI_CSRx_DLYBCT = spiComponent.createIntegerSymbol("SPI_CSR" + str(i) + "_DLYBCT", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_DLYBCT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
         spiSym_SPI_CSRx_DLYBCT.setLabel("Delay between consecutive transfers")
         spiSym_SPI_CSRx_DLYBCT.setMax(255)
         spiSym_SPI_CSRx_DLYBCT.setDefaultValue(0)
@@ -734,6 +755,7 @@ def instantiateComponent(spiComponent):
         
         # CSRx CSAAT
         spiSym_SPI_CSRx_CSAAT = spiComponent.createBooleanSymbol("SPI_CSR" + str(i) + "_CSAAT", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_CSAAT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
         spiSym_SPI_CSRx_CSAAT.setLabel("Chip Select Active After Transfer")
         spiSym_SPI_CSRx_CSAAT.setDefaultValue(True)
         spiSym_SPI_CSRx_CSAAT.setVisible(i == 0)
@@ -741,6 +763,7 @@ def instantiateComponent(spiComponent):
         
         # CSRx CSNAAT (Ignored if CSAAT is 1)
         spiSym_SPI_CSRx_CSNAAT = spiComponent.createBooleanSymbol("SPI_CSR" + str(i) + "_CSNAAT", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_CSNAAT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
         spiSym_SPI_CSRx_CSNAAT.setLabel("Chip Select Not Active After Transfer")
         spiSym_SPI_CSRx_CSNAAT.setDefaultValue(False)
         spiSym_SPI_CSRx_CSNAAT.setVisible(i == 0)
@@ -808,6 +831,7 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_BITS_16BIT.setVisible(False)
 
     spiSymDummyData = spiComponent.createHexSymbol("SPI_DUMMY_DATA", None)
+    spiSymDummyData.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:SPI_TDR")
     spiSymDummyData.setLabel("Dummy Data")
     spiSymDummyData.setDescription("Dummy Data to be written during SPI Read")
     spiSymDummyData.setDefaultValue(0xFF)
@@ -826,11 +850,13 @@ def instantiateComponent(spiComponent):
 
     spisSymUseBusyPin = spiComponent.createBooleanSymbol("SPIS_USE_BUSY_PIN", None)
     spisSymUseBusyPin.setLabel("Use GPIO pin as Busy signal?")
+    spisSymUseBusyPin.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
     spisSymUseBusyPin.setDefaultValue(True)
     spisSymUseBusyPin.setVisible(False)
     spisSymUseBusyPin.setDependencies(showSlaveDependencies, ["SPI_MR_MSTR"])
 
     spisSymBusyPin = spiComponent.createKeyValueSetSymbol("SPIS_BUSY_PIN", spisSymUseBusyPin)
+    spisSymBusyPin.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
     spisSymBusyPin.setVisible(False)
     spisSymBusyPin.setLabel("Slave Busy Pin")
     spisSymBusyPin.setOutputMode("Key")
@@ -850,6 +876,7 @@ def instantiateComponent(spiComponent):
 
     #SPI Character Size
     spisSymBusyPinLogicLevel = spiComponent.createKeyValueSetSymbol("SPIS_BUSY_PIN_LOGIC_LEVEL", spisSymUseBusyPin)
+    spisSymBusyPinLogicLevel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spi_6088;register:%NOREGISTER%")
     spisSymBusyPinLogicLevel.setLabel("Slave Busy Pin Logic Level")
     spisSymBusyPinLogicLevel.setVisible(False)
     spisSymBusyPinLogicLevel.addKey("ACTIVE_LOW", "0", "Active Low")

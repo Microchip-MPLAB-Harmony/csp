@@ -193,21 +193,25 @@ nvicMenu.setLabel("Interrupts (NVIC)")
 nvicMenu.setDescription("Configuration for NVIC Initialization")
 
 nvicVectorMax = coreComponent.createIntegerSymbol("NVIC_VECTOR_MAX", nvicMenu)
+nvicVectorMax.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
 nvicVectorMax.setLabel("Vector Max Value")
 nvicVectorMax.setDefaultValue(highestID)
 nvicVectorMax.setVisible(False)
 
 nvicVectorMax = coreComponent.createIntegerSymbol("NVIC_VECTOR_MIN", nvicMenu)
+nvicVectorMax.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
 nvicVectorMax.setLabel("Vector Min Value")
 nvicVectorMax.setDefaultValue(lowestID)
 nvicVectorMax.setVisible(False)
 
 nvicVectorMax = coreComponent.createIntegerSymbol("NVIC_VECTOR_MAX_MULTIPLE_HANDLERS", nvicMenu)
+nvicVectorMax.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
 nvicVectorMax.setLabel("Vector Max Multiple Hanler For Vector")
 nvicVectorMax.setDefaultValue(maxPeriAtVector)
 nvicVectorMax.setVisible(False)
 
 nvicTotalVectors = coreComponent.createIntegerSymbol("NVIC_NUM_VECTORS", nvicMenu)
+nvicTotalVectors.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
 nvicTotalVectors.setLabel("Total NVIC Vector Lines")
 nvicTotalVectors.setDefaultValue(len(nvicVectorDataStructure))
 
@@ -243,11 +247,13 @@ for vectorDict in nvicVectorDataStructure:
 
     # Below symbol is only used by NVIC UI to know the NVIC vector number
     nvicVectorNum[index] = coreComponent.createStringSymbol("NVIC_VECTOR_NUM_" + str(index), nvicMenu)
+    nvicVectorNum[index].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
     nvicVectorNum[index].setLabel("Vector Number")
     nvicVectorNum[index].setDefaultValue(str(vIndex))
 
     # Below symbol is only used by NVIC UI to know the number of interrupts on a given NVIC vector number
     nvicVectorNumInterrupts[index] = coreComponent.createIntegerSymbol("NVIC_NUM_INTERRUPTS_" + str(index), nvicMenu)
+    nvicVectorNumInterrupts[index].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
     nvicVectorNumInterrupts[index].setLabel("Number of Interrupts on the NVIC vector line")
     nvicVectorNumInterrupts[index].setDefaultValue(len(handlerList))
 
@@ -272,32 +278,38 @@ for vectorDict in nvicVectorDataStructure:
             priorityList = nvicPriorityGroup
 
         nvicVectorPeriEnableList = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE", nvicMenu)
+        nvicVectorPeriEnableList.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorPeriEnableList.setLabel("Vector Peripheral Enable")
         nvicVectorPeriEnableList.setVisible(False)
         nvicIntUpdateDepList.append(vName + "_INTERRUPT_ENABLE")
 
         nvicVectorPeriHandlerList = coreComponent.createStringSymbol(vName + "_INTERRUPT_HANDLER", nvicMenu)
+        nvicVectorPeriHandlerList.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorPeriHandlerList.setLabel("Vector Peripheral Handler")
         nvicVectorPeriHandlerList.setVisible(False)
         nvicVectorPeriHandlerList.setDefaultValue(vName + "_Handler")
 
         nvicVectorPeriHandlerLockList = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_HANDLER_LOCK", nvicMenu)
+        nvicVectorPeriHandlerLockList.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorPeriHandlerLockList.setLabel("Vector Peripheral Handler Lock")
         nvicVectorPeriHandlerLockList.setVisible(False)
 
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             nvicSecureSetup = coreComponent.createBooleanSymbol(vName + "_SET_NON_SECURE", nvicMenu)
+            nvicSecureSetup.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
             nvicSecureSetup.setLabel("Peripheral Interrupt Security Setup")
             nvicSecureSetup.setVisible(False)
 
         nvicVectorCaption[index].append(listIndex)
         nvicVectorCaption[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_CAPTION", nvicMenu)
+        nvicVectorCaption[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorCaption[index][listIndex].setLabel("Caption")
         nvicVectorCaption[index][listIndex].setDefaultValue(vectorDict.get("caption"))
         nvicVectorCaption[index][listIndex].setVisible(False)
 
         nvicVectorEnable[index].append(listIndex)
         nvicVectorEnable[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE", nvicMenu)
+        nvicVectorEnable[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorEnable[index][listIndex].setLabel("Enable " + vDescription + " Interrupt")
         nvicVectorEnable[index][listIndex].setDefaultValue(vectorSettings[vector][0])
         nvicVectorEnable[index][listIndex].setDependencies(updateNVICVectorParametersValue, [vName + "_INTERRUPT_ENABLE"])
@@ -306,6 +318,7 @@ for vectorDict in nvicVectorDataStructure:
 
         nvicVectorNumber[index].append(listIndex)
         nvicVectorNumber[index][listIndex] = coreComponent.createIntegerSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_NUMBER", nvicVectorEnable[index][listIndex])
+        nvicVectorNumber[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorNumber[index][listIndex].setLabel("Vector Number")
         nvicVectorNumber[index][listIndex].setDefaultValue(int(vIndex))
         nvicVectorNumber[index][listIndex].setVisible(False)
@@ -313,6 +326,7 @@ for vectorDict in nvicVectorDataStructure:
         # Following symbol is used in plib_nvic.c to generate the vector name to be passed into the NVIC APIs
         nvicVectorName[index].append(listIndex)
         nvicVectorName[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_VECTOR", nvicVectorEnable[index][listIndex])
+        nvicVectorName[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorName[index][listIndex].setLabel("Vector Name")
         nvicVectorName[index][listIndex].setVisible(False)
         if ecia_module == None:
@@ -323,53 +337,62 @@ for vectorDict in nvicVectorDataStructure:
         # Following symbol is used in NVIC UI to populate the vector name column
         nvicVectorNameUI[index].append(listIndex)
         nvicVectorNameUI[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_VECTOR_NAME", nvicVectorEnable[index][listIndex])
+        nvicVectorNameUI[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorNameUI[index][listIndex].setLabel("Vector Name UI")
         nvicVectorNameUI[index][listIndex].setVisible(False)
         nvicVectorNameUI[index][listIndex].setDefaultValue(vName)
 
         nvicVectorEnableLock[index].append(listIndex)
         nvicVectorEnableLock[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE_LOCK", nvicVectorEnable[index][listIndex])
+        nvicVectorEnableLock[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorEnableLock[index][listIndex].setLabel("Enable Lock")
         nvicVectorEnableLock[index][listIndex].setVisible(False)
         nvicVectorEnableLock[index][listIndex].setDefaultValue(vectorSettings[vector][1])
 
         nvicVectorEnableGenerate[index].append(listIndex)
         nvicVectorEnableGenerate[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE_GENERATE", nvicVectorEnable[index][listIndex])
+        nvicVectorEnableGenerate[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorEnableGenerate[index][listIndex].setLabel("Enable Generate")
         nvicVectorEnableGenerate[index][listIndex].setVisible(False)
         nvicVectorEnableGenerate[index][listIndex].setDefaultValue(vectorSettings[vector][2])
 
         nvicVectorPriority[index].append(listIndex)
         nvicVectorPriority[index][listIndex] = coreComponent.createComboSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_PRIORITY", nvicVectorEnable[index][listIndex], priorityList)
+        nvicVectorPriority[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorPriority[index][listIndex].setLabel("Priority")
         nvicVectorPriority[index][listIndex].setDefaultValue(vectorSettings[vector][3])
 
         nvicVectorPriorityLock[index].append(index)
         nvicVectorPriorityLock[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_PRIORITY_LOCK", nvicVectorEnable[index][listIndex])
+        nvicVectorPriorityLock[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorPriorityLock[index][listIndex].setLabel("Priority Lock")
         nvicVectorPriorityLock[index][listIndex].setVisible(False)
         nvicVectorPriorityLock[index][listIndex].setDefaultValue(vectorSettings[vector][4])
 
         nvicVectorPriorityGenerate[index].append(index)
         nvicVectorPriorityGenerate[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_PRIORITY_GENERATE", nvicVectorEnable[index][listIndex])
+        nvicVectorPriorityGenerate[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorPriorityGenerate[index][listIndex].setLabel("Priority Generate")
         nvicVectorPriorityGenerate[index][listIndex].setVisible(False)
         nvicVectorPriorityGenerate[index][listIndex].setDefaultValue(vectorSettings[vector][5])
 
         nvicVectorHandler[index].append(listIndex)
         nvicVectorHandler[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_HANDLER", nvicVectorEnable[index][listIndex])
+        nvicVectorHandler[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorHandler[index][listIndex].setLabel("Handler")
         nvicVectorHandler[index][listIndex].setDefaultValue(vName + "_Handler")
         nvicVectorHandler[index][listIndex].setDependencies(updateNVICVectorParametersValue, [vName + "_INTERRUPT_HANDLER"])
 
         nvicVectorHandlerLock[index].append(listIndex)
         nvicVectorHandlerLock[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_HANDLER_LOCK", nvicVectorEnable[index][listIndex])
+        nvicVectorHandlerLock[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorHandlerLock[index][listIndex].setLabel("Handler Lock")
         nvicVectorHandlerLock[index][listIndex].setVisible(False)
         nvicVectorHandlerLock[index][listIndex].setDefaultValue(vectorSettings[vector][6])
         nvicVectorHandlerLock[index][listIndex].setDependencies(updateNVICVectorParametersValue, [vName + "_INTERRUPT_HANDLER_LOCK"])
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             nvicSecurity = coreComponent.createKeyValueSetSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_SECURITY_TYPE", nvicVectorEnable[index][listIndex])
+            nvicSecurity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
             nvicSecurity.setLabel("Interrupt Security mode")
             nvicSecurity.addKey("SECURE", "0", "False")
             nvicSecurity.addKey("NON-SECURE", "1", "True")
@@ -383,11 +406,13 @@ for vectorDict in nvicVectorDataStructure:
 
             nvicVectorGenericHandler[index].append(listIndex)
             nvicVectorGenericHandler[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_GENERIC_HANDLER", nvicVectorEnable[index][listIndex])
+            nvicVectorGenericHandler[index][listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
             nvicVectorGenericHandler[index][listIndex].setLabel("Generic Handler")
             nvicVectorGenericHandler[index][listIndex].setVisible(False)
             nvicVectorGenericHandler[index][listIndex].setDefaultValue(genericName + "_Handler")
 
         nvicVectorPeriEnableUpdate = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE_UPDATE", nvicMenu)
+        nvicVectorPeriEnableUpdate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvic;register:%NOREGISTER%")
         nvicVectorPeriEnableUpdate.setLabel("NVIC Peripheral Enable/Disable Update")
         nvicVectorPeriEnableUpdate.setVisible(False)
         nvicVectorPeriEnableUpdate.setDependencies(updateNVICVectorPeriEnableValue, ["NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE"])

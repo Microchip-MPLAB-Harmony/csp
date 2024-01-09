@@ -140,11 +140,13 @@ def instantiateComponent(nvmctrlComponent):
 
     #Configures AUTOWS
     nvmctrlSym_CTRLA_AUTOWS = nvmctrlComponent.createBooleanSymbol("NVMCTRL_AUTOWS_ENABLE", None)
+    nvmctrlSym_CTRLA_AUTOWS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_u2409;register:CTRLA")
     nvmctrlSym_CTRLA_AUTOWS.setLabel("Enable Automatic Read-Wait-State for Flash")
     nvmctrlSym_CTRLA_AUTOWS.setDefaultValue(True)
 
     #Configures NVM power reduction mode
     nvmctrlSym_CTRLA_SLEEPPRM = nvmctrlComponent.createKeyValueSetSymbol("NVMCTRL_CTRLA_POWER_REDUCTION_MODE", None)
+    nvmctrlSym_CTRLA_SLEEPPRM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_u2409;register:CTRLA")
     nvmctrlSym_CTRLA_SLEEPPRM.setLabel("Power Reduction Mode During Sleep")
 
     nvmctrlSleepPrmNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"NVMCTRL\"]/value-group@[name=\"NVMCTRL_CTRLA__PRM\"]")
@@ -165,6 +167,7 @@ def instantiateComponent(nvmctrlComponent):
 
     # Flash Read Wait State (RWS).
     nvm_rws = nvmctrlComponent.createIntegerSymbol("NVM_RWS", None)
+    nvm_rws.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_u2409;register:CTRLA")
     nvm_rws.setLabel("Wait States")
     nvm_rws.setDefaultValue(waitState)
     nvm_rws.setDependencies(waitStateUpdate, ["core.CPU_CLOCK_FREQUENCY"])
@@ -184,14 +187,17 @@ def instantiateComponent(nvmctrlComponent):
 
     #Disable AHB0 cache
     nvmctrlSym_CTRLA_CACHEDIS0 = nvmctrlComponent.createBooleanSymbol("NVMCTRL_AHB0_CACHE_DISABLE", None)
+    nvmctrlSym_CTRLA_CACHEDIS0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_u2409;register:CTRLA")
     nvmctrlSym_CTRLA_CACHEDIS0.setLabel("Disable NVM Line Cache for AHB0")
 
     #Disable AHB1 cache
     nvmctrlSym_CTRLA_CACHEDIS1 = nvmctrlComponent.createBooleanSymbol("NVMCTRL_AHB1_CACHE_DISABLE", None)
+    nvmctrlSym_CTRLA_CACHEDIS1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_u2409;register:CTRLA")
     nvmctrlSym_CTRLA_CACHEDIS1.setLabel("Disable NVM Line Cache for AHB1")
 
     #Enable interrupt for Flash operations
     nvmctrlSym_Interrupt0 = nvmctrlComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
+    nvmctrlSym_Interrupt0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_u2409;register:INTENSET")
     nvmctrlSym_Interrupt0.setLabel("Enable Interrupt")
     nvmctrlSym_Interrupt0.setDefaultValue(False)
     nvmctrlSym_Interrupt0.setDescription("Enables interrupt for command execution complete (DONE) condition. Rest of the interrupts need to be enabled via code")
@@ -202,6 +208,7 @@ def instantiateComponent(nvmctrlComponent):
 
     #Enable interrupt for SmartEEPROM operations
     nvmctrlSym_Interrupt1 = nvmctrlComponent.createBooleanSymbol("NVM_INTERRUPT1_ENABLE", nvmctrlSymSEEP)
+    nvmctrlSym_Interrupt1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_u2409;register:INTENSET")
     nvmctrlSym_Interrupt1.setLabel("Enable Interrupt for SmartEEPROM")
     nvmctrlSym_Interrupt1.setDefaultValue(False)
     nvmctrlSym_Interrupt1.setDescription("Enables interrupt for 'SmartEEPROM sector full' (SEESFULL) condition. Rest of the interrupts need to be enabled via code")
@@ -213,11 +220,13 @@ def instantiateComponent(nvmctrlComponent):
 
     if bufferedWriteModeSupported == True:
         nvmctrlSym_WMODE = nvmctrlComponent.createBooleanSymbol("NVM_WMODE_ENABLE", nvmctrlSymSEEP)
+        nvmctrlSym_WMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_u2409;register:INTENSET")
         nvmctrlSym_WMODE.setLabel("Enable Buffered Mode")
         nvmctrlSym_WMODE.setDefaultValue(False)
 
     #Automatic Page Reallocation Disable
     nvmctrlSym_APRDIS = nvmctrlComponent.createBooleanSymbol("NVM_APRDIS_ENABLE", nvmctrlSymSEEP)
+    nvmctrlSym_APRDIS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_u2409;register:SEECFG")
     nvmctrlSym_APRDIS.setLabel("Disable Automatic Page Reallocation")
     nvmctrlSym_APRDIS.setDefaultValue(False)
 

@@ -77,6 +77,7 @@ def instantiateComponent(rstcComponent):
     rstcInstanceStr.setVisible(False)
 
     rstcMrExternalResetAction = rstcComponent.createKeyValueSetSymbol("RSTC_MR_EXTERNAL_RESET_ACTION", None)
+    rstcMrExternalResetAction.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_44161;register:%NOREGISTER%")
     rstcMrExternalResetAction.setLabel("External reset action")
     rstcMrExternalResetAction.addKey("RESET",     "0", "Generate reset")
     rstcMrExternalResetAction.addKey("INTERRUPT", "1", "Generate interrupt")
@@ -86,26 +87,31 @@ def instantiateComponent(rstcComponent):
     rstcMrExternalResetAction.setSelectedKey("RESET",1)
 
     rstcMrExternalResetLength = rstcComponent.createIntegerSymbol("RSTC_MR_EXTERNAL_RESET_LENGTH", None)
+    rstcMrExternalResetLength.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_44161;register:RSTC_MR")
     rstcMrExternalResetLength.setLabel("External reset length (ERSTL value)")
     rstcMrExternalResetLength.setMin( 0 )
     rstcMrExternalResetLength.setMax( 15 )
     rstcMrExternalResetLength.setDefaultValue( 0 )
 
     rstcMrExternalResetLengthMilliSecs = rstcComponent.createFloatSymbol("RSTC_EXTERNAL_RESET_LENGTH_MSECS", None)
+    rstcMrExternalResetLengthMilliSecs.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_44161;register:%NOREGISTER%")
     rstcMrExternalResetLengthMilliSecs.setLabel("External reset length (mSecs)")
     rstcMrExternalResetLengthMilliSecs.setDependencies( rstcMilliSecUpdate, ["RSTC_MR_EXTERNAL_RESET_LENGTH"] )
     rstcMrExternalResetLengthMilliSecs.setReadOnly(True)
     rstcMrExternalResetLengthMilliSecs.setDefaultValue( rstcErstlToMilliSecs( rstcMrExternalResetLength.getValue() ) )
 
     rstcMrCrystalFaultReset = rstcComponent.createBooleanSymbol( "RSTC_MR_CRYSTAL_FAULT_RESET", None )
+    rstcMrCrystalFaultReset.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_44161;register:%NOREGISTER%")
     rstcMrCrystalFaultReset.setLabel("Crystal fault resets VDDCORE logic")
     rstcMrCrystalFaultReset.setDefaultValue(False)
 
     rstcMrAsynchronousReset = rstcComponent.createBooleanSymbol( "RSTC_MR_ASYNCHRONOUS_RESET", None )
+    rstcMrAsynchronousReset.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_44161;register:%NOREGISTER%")
     rstcMrAsynchronousReset.setLabel("Reset is asynchronous to slow clock")
     rstcMrAsynchronousReset.setDefaultValue(False)
 
     rstcMrImmediatGpbrClear = rstcComponent.createBooleanSymbol( "RSTC_MR_IMMEDIATE_GPBR_CLEAR", None )
+    rstcMrImmediatGpbrClear.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_44161;register:%NOREGISTER%")
     rstcMrImmediatGpbrClear.setLabel("Immediate GPBR clear on tamper detection")
     rstcMrImmediatGpbrClear.setDefaultValue(False)
     # Interrupt Dynamic settings

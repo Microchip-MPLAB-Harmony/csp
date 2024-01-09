@@ -285,6 +285,7 @@ def instantiateComponent(eicComponent):
 
     # CTRLA - Clock Selection
     CTRLA_CKSEL_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_CLKSEL" , None)
+    CTRLA_CKSEL_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:%NOREGISTER%")
     CTRLA_CKSEL_SelectionSymbol.setLabel("EIC Clock Source Selection")
 
     eicClkselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_CTRLA__CKSEL\"]")
@@ -301,6 +302,7 @@ def instantiateComponent(eicComponent):
 
     #Non-Maskable Interrupt Control
     eicPLX4 = eicComponent.createBooleanSymbol("NMI_CTRL", None)
+    eicPLX4.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:CTRL")
     eicPLX4.setLabel("Non Maskable Interrupt Control")
 
     nmiConfMenu = eicComponent.createMenuSymbol("NMI_MENU", eicPLX4)
@@ -310,6 +312,7 @@ def instantiateComponent(eicComponent):
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         nmiSecurity = eicComponent.createKeyValueSetSymbol("NMI_IS_NON_SECURE", nmiConfMenu)
+        nmiSecurity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:NONSEC")
         nmiSecurity.setLabel("Security mode")
         nmiSecurity.addKey("SECURE", "0", "False")
         nmiSecurity.addKey("NON-SECURE", "1", "True")
@@ -320,6 +323,7 @@ def instantiateComponent(eicComponent):
 
     #NMIASYNCH
     NMI_ASYNCH_Selection = eicComponent.createKeyValueSetSymbol("NMI_ASYNCH" , nmiConfMenu)
+    NMI_ASYNCH_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:NMICTRL")
     NMI_ASYNCH_Selection.setLabel("NMI Detection Clock")
 
     eicNMIAsyncNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_NMICTRL__NMIASYNCH\"]")
@@ -338,10 +342,12 @@ def instantiateComponent(eicComponent):
 
     #NMIFILTEN
     NMI_FILTEN_Selection = eicComponent.createBooleanSymbol("NMI_FILTEN" , nmiConfMenu)
+    NMI_FILTEN_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:NMICTRL")
     NMI_FILTEN_Selection.setLabel("Enable filter")
 
     # NMI - SENSE
     NMI_SENSE_SelectionSymbol = eicComponent.createKeyValueSetSymbol("NMI_SENSE" , nmiConfMenu)
+    NMI_SENSE_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:NMICTRL")
     NMI_SENSE_SelectionSymbol.setLabel("NMI Interrupt Edge Selection")
 
     eicNMISenseNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_NMICTRL__NMISENSE\"]")
@@ -360,6 +366,7 @@ def instantiateComponent(eicComponent):
     for extIntIndex in range(0 , extIntCount):
 
         eicPLX1 = eicComponent.createBooleanSymbol("EIC_CHAN_" + str(extIntIndex) , None)
+        eicPLX1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:%NOREGISTER%")
         eicPLX1.setLabel("Enable EIC Channel" + str(extIntIndex))
 
         eicConfiguration = eicComponent.createMenuSymbol("EIC_MENU" + str(extIntIndex), eicPLX1)
@@ -372,6 +379,7 @@ def instantiateComponent(eicComponent):
 
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             eicSecurity = eicComponent.createKeyValueSetSymbol("EIC_NONSEC_" + str(extIntIndex), eicConfiguration)
+            eicSecurity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:NONSEC")
             eicSecurity.setLabel("Security mode")
             eicSecurity.addKey("SECURE", "0", "False")
             eicSecurity.addKey("NON-SECURE", "1", "True")
@@ -382,11 +390,13 @@ def instantiateComponent(eicComponent):
             eicSym_nonSecList.append("EIC_NONSEC_" + str(extIntIndex))
 
         eicINT = eicComponent.createBooleanSymbol("EIC_INT_" + str(extIntIndex) , eicConfiguration)
+        eicINT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:CTRLA")
         eicINT.setLabel("Enable Interrupt")
         eicSym_InterruptList.append("EIC_INT_" + str(extIntIndex))
 
         #EVCTRL - External Interrupt Event Output Enable 0..7/15 Channel number
         EVCCTRL_EXTINTEO_Selection = eicComponent.createBooleanSymbol("EIC_EXTINTEO_" + str(extIntIndex) , eicConfiguration)
+        EVCCTRL_EXTINTEO_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:%NOREGISTER%")
         EVCCTRL_EXTINTEO_Selection.setLabel("Enable Event Output")
 
         # populate a list with IDs for code generation dependency
@@ -394,6 +404,7 @@ def instantiateComponent(eicComponent):
 
         #ASYNCH
         ASYNCH_ASYNCH_Selection = eicComponent.createKeyValueSetSymbol("EIC_ASYNCH_" + str(extIntIndex) , eicConfiguration)
+        ASYNCH_ASYNCH_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:ASYNCH")
         ASYNCH_ASYNCH_Selection.setLabel("External Interrupt" + str(extIntIndex) + " Detection Clock")
 
         eicAsynchNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_ASYNCH__ASYNCH\"]")
@@ -413,6 +424,7 @@ def instantiateComponent(eicComponent):
 
         #CONFIG - Sense Enable
         CONFIG_SENSE_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_CONFIG_SENSE_" + str(extIntIndex) , eicConfiguration)
+        CONFIG_SENSE_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:CONFIG")
         CONFIG_SENSE_SelectionSymbol.setLabel("External Interrupt" + str(extIntIndex) + " Edge Selection")
 
         eicConfigSenseValGrp = ""
@@ -436,12 +448,14 @@ def instantiateComponent(eicComponent):
         if debounceSupported.getValue():
             #DEBOUNCEN
             DEBOUNCEN_Selection = eicComponent.createBooleanSymbol("EIC_DEBOUNCEN_" + str(extIntIndex) , eicConfiguration)
+            DEBOUNCEN_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:DEBOUNCEN")
             DEBOUNCEN_Selection.setLabel("Enable Debounce")
             DEBOUNCEN_Selection.setVisible(False)
             DEBOUNCEN_Selection.setDependencies(debounceEnable,["EIC_CONFIG_SENSE_" + str(extIntIndex)])
 
         #CONFIG - Filter Enable
         CONFIG_FILTER_Selection = eicComponent.createBooleanSymbol("EIC_CONFIG_FILTEN_" + str(extIntIndex) , eicConfiguration)
+        CONFIG_FILTER_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:CONFIG")
         CONFIG_FILTER_Selection.setLabel("Enable filter")
         CONFIG_FILTER_Selection.setVisible(False)
         CONFIG_FILTER_Selection.setDependencies(filterMenu, ["EIC_CONFIG_SENSE_" + str(extIntIndex)])
@@ -499,6 +513,7 @@ def instantiateComponent(eicComponent):
 
         #DEBOUNCER - TICKON
         PRESCALER_TICKON_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_PRESCALER_TICKON" , eicDebounceMenu)
+        PRESCALER_TICKON_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:DPRESCALER")
         PRESCALER_TICKON_SelectionSymbol.setLabel("Debouncer Sampler Clock Source")
 
         for index in range(len(eicTickOnNode.getChildren())):
@@ -513,6 +528,7 @@ def instantiateComponent(eicComponent):
 
         #DEBOUNCER - Number of States x (7:0)
         DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_0" , eicDebounceMenu)
+        DEBOUNCER_NO_STATES_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:DPRESCALER")
         DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States for EXTINT[7:0]")
 
         eicStates0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"STATES0\"]")
@@ -530,6 +546,7 @@ def instantiateComponent(eicComponent):
 
         #BOUNCER - Prescaler x (7:0)
         DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_0" , eicDebounceMenu)
+        DEBOUNCER_PRESCALER_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:DPRESCALER")
         DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[7:0]")
 
         eicPrescaler0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"PRESCALER0\"]")
@@ -550,6 +567,7 @@ def instantiateComponent(eicComponent):
         if eicStatesxNode != None:
             #DEBOUNCER - Number of States x (8:15)
             DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_1" , eicDebounceMenu)
+            DEBOUNCER_NO_STATES_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:DPRESCALER")
             DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States Duration for EXTINT[15:8]")
 
             for index in range(len(eicStatesxNode.getChildren())):
@@ -564,6 +582,7 @@ def instantiateComponent(eicComponent):
 
             #BOUNCER - Prescaler x (8:15)
             DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_1" , eicDebounceMenu)
+            DEBOUNCER_PRESCALER_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:DPRESCALER")
             DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[15:8]")
 
             eicPrescaler1Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"PRESCALER1\"]")

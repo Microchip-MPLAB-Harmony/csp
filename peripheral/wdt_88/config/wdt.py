@@ -125,10 +125,12 @@ wdtMenu.setLabel("WDT")
 
 #WDT Use
 wdtSym_Enable = coreComponent.createBooleanSymbol("WDT_ENABLE", wdtMenu)
+wdtSym_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:%NOREGISTER%")
 wdtSym_Enable.setLabel("Enable WDT ?")
 wdtSym_Enable.setDefaultValue(False)
 
 wdtSym_TimeoutAction = coreComponent.createComboSymbol("WDT_ACTION", wdtMenu, ["Reset", "Generate Interrupt"])
+wdtSym_TimeoutAction.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:%NOREGISTER%")
 wdtSym_TimeoutAction.setLabel("Timeout Action")
 wdtSym_TimeoutAction.setDefaultValue("Reset")
 wdtSym_TimeoutAction.setVisible(False)
@@ -140,6 +142,7 @@ nvic_int_num = Database.sendMessage("core", "ECIA_GET_INT_SRC_DICT", {"int_sourc
 
 # Interrupt type selection
 wdtTmrInterruptType = coreComponent.createKeyValueSetSymbol("WDT_TMR_INTERRUPT_TYPE", wdtMenu)
+wdtTmrInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:%NOREGISTER%")
 wdtTmrInterruptType.setLabel("Interrupt Type")
 if nvic_int_num["direct_nvic_num"] != None:
     wdtTmrInterruptType.addKey("DIRECT", "0", "Direct")
@@ -169,24 +172,28 @@ wdt_NVIC_InterruptName.setDefaultValue(interruptName)
 wdt_NVIC_InterruptName.setVisible(False)
 
 wdtSym_JtagStall = coreComponent.createBooleanSymbol("WDT_JTAG_STALL", wdtMenu)
+wdtSym_JtagStall.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:%NOREGISTER%")
 wdtSym_JtagStall.setLabel("Stall WDT if JTAG/SWD is Enabled?")
 wdtSym_JtagStall.setDefaultValue(False)
 wdtSym_JtagStall.setVisible(False)
 wdtSym_JtagStall.setDependencies(updateVisibilityOnWDTEnable, ["WDT_ENABLE"])
 
 wdtSym_WeekTimerStall = coreComponent.createBooleanSymbol("WDT_WEEK_TIMER_STALL", wdtMenu)
+wdtSym_WeekTimerStall.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:%NOREGISTER%")
 wdtSym_WeekTimerStall.setLabel("Stall WDT if Week Timer is Enabled?")
 wdtSym_WeekTimerStall.setDefaultValue(False)
 wdtSym_WeekTimerStall.setVisible(False)
 wdtSym_WeekTimerStall.setDependencies(updateVisibilityOnWDTEnable, ["WDT_ENABLE"])
 
 wdtSym_HibTimerStall = coreComponent.createBooleanSymbol("WDT_HIBERNATION_TIMER_STALL", wdtMenu)
+wdtSym_HibTimerStall.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:%NOREGISTER%")
 wdtSym_HibTimerStall.setLabel("Stall WDT if Hibernation Timer is Enabled?")
 wdtSym_HibTimerStall.setDefaultValue(False)
 wdtSym_HibTimerStall.setVisible(False)
 wdtSym_HibTimerStall.setDependencies(updateVisibilityOnWDTEnable, ["WDT_ENABLE"])
 
 wdtSym_TimeOutPeriod = coreComponent.createIntegerSymbol("WDT_TIMEOUT_PERIOD", wdtMenu)
+wdtSym_TimeOutPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_88;register:LOAD")
 wdtSym_TimeOutPeriod.setLabel("WDT Time-out Period")
 wdtSym_TimeOutPeriod.setMin(1)
 wdtSym_TimeOutPeriod.setMax(65535)

@@ -108,6 +108,7 @@ wdtMenu.setLabel("WDT")
 
 #WDT Use
 wdtSym_Use = coreComponent.createBooleanSymbol("WDT_USE", wdtMenu)
+wdtSym_Use.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_00781;register:%NOREGISTER%")
 wdtSym_Use.setLabel("Use WDT ?")
 wdtSym_Use.setDefaultValue(isWDTEnabled)
 wdtSym_Use.setReadOnly(isWDTEnabled)
@@ -121,6 +122,7 @@ wdtSym_ConfigComment.setDependencies(updateWDTConfigCommentVisibleProperty, ["WD
 
 #WDT Time-out Period
 wdtSym_TimeOutPeriod = coreComponent.createStringSymbol("WDT_TIMEOUT_PERIOD", wdtSym_Use)
+wdtSym_TimeOutPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_00781;register:%NOREGISTER%")
 wdtSym_TimeOutPeriod.setLabel("Configured WDT Time-out Period")
 wdtSym_TimeOutPeriod.setDefaultValue(getWDTTimeOutPeriod(wdtTimeOut))
 wdtSym_TimeOutPeriod.setReadOnly(True)

@@ -93,6 +93,7 @@ def instantiateComponent(cvrComponent):
     Database.setSymbolValue("core", cvrInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     cvrSym_CVRCON_CVR = cvrComponent.createIntegerSymbol("CVR_CVRCON_CVR", None)
+    cvrSym_CVRCON_CVR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cvr_00800;register:CVRCON")
     cvrSym_CVRCON_CVR.setLabel("CVREF Value Selection")
     cvrSym_CVRCON_CVR.setDefaultValue(0)
     cvrSym_CVRCON_CVR.setMin(0)
@@ -101,6 +102,7 @@ def instantiateComponent(cvrComponent):
     cvrCVRSS_names = []
     _get_bitfield_names(cvrValGrp_CVRCON_CVRSS, cvrCVRSS_names)
     cvrSym_CVRCON_CVRSS = cvrComponent.createKeyValueSetSymbol("CVR_CVRCON_CVRSS", None)
+    cvrSym_CVRCON_CVRSS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cvr_00800;register:CVRCON")
     cvrSym_CVRCON_CVRSS.setLabel("CVREF Source Selection")
     cvrSym_CVRCON_CVRSS.setDefaultValue(0)
     cvrSym_CVRCON_CVRSS.setOutputMode("Value")
@@ -111,6 +113,7 @@ def instantiateComponent(cvrComponent):
     cvrCVRR_names = []
     _get_bitfield_names(cvrValGrp_CVRCON_CVRR, cvrCVRR_names)
     cvrSym_CVRCON_CVRR = cvrComponent.createKeyValueSetSymbol("CVR_CVRCON_CVRR", None)
+    cvrSym_CVRCON_CVRR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cvr_00800;register:CVRCON")
     cvrSym_CVRCON_CVRR.setLabel("CVREF Range Selection")
     cvrSym_CVRCON_CVRR.setDefaultValue(0)
     cvrSym_CVRCON_CVRR.setOutputMode("Value")
@@ -119,6 +122,7 @@ def instantiateComponent(cvrComponent):
         cvrSym_CVRCON_CVRR.addKey( ii['desc'], ii['value'], ii['key'] )
 
     cvrSym_CVRCON_CVROE = cvrComponent.createBooleanSymbol("CVR_CVRCON_CVROE", None)
+    cvrSym_CVRCON_CVROE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cvr_00800;register:CVRCON")
     cvrSym_CVRCON_CVROE.setLabel("CVREFOUT Enable")
 
     #Collecting user input to combine into ICxCON register

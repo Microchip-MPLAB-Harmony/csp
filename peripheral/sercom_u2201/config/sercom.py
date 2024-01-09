@@ -467,6 +467,7 @@ def instantiateComponent(sercomComponent):
 
     #SERCOM operation mode Menu - Serial Communication Interfaces
     sercomSym_OperationMode = sercomComponent.createKeyValueSetSymbol("SERCOM_MODE", None)
+    sercomSym_OperationMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
     sercomSym_OperationMode.setLabel("Select SERCOM Operation Mode")
 
     if sercomDisableUSART != 1:

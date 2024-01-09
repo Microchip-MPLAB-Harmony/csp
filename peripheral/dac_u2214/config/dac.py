@@ -113,10 +113,12 @@ def instantiateComponent(dacComponent):
     Database.setSymbolValue("core", dacInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
     # Run StandBy
     dacSym_CTRLA_RUNSTDBY = dacComponent.createBooleanSymbol("DAC_RUNSTDBY", None)
+    dacSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2214;register:CTRLA")
     dacSym_CTRLA_RUNSTDBY.setLabel("Enable output buffer in Standby Sleep mode?")
 
     # Reference Selection
     dacSym_CTRLB_REFSEL = dacComponent.createKeyValueSetSymbol("DAC_REFERENCE_SELECTION", None)
+    dacSym_CTRLB_REFSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2214;register:CTRLB")
     dacSym_CTRLB_REFSEL.setLabel("DAC Reference Voltage Source")
 
     dacReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DAC\"]/value-group@[name=\"DAC_CTRLB__REFSEL\"]")
@@ -143,6 +145,7 @@ def instantiateComponent(dacComponent):
 
     # DAC output as input to Analog Comparator or ADC or as External output
     dacSym_CTRLB_IOEN_EOEN = dacComponent.createKeyValueSetSymbol("DAC_OUTPUT_MODE", None)
+    dacSym_CTRLB_IOEN_EOEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2214;register:%NOREGISTER%")
     dacSym_CTRLB_IOEN_EOEN.setLabel("Select DAC Output Mode")
     dacSym_CTRLB_IOEN_EOEN.addKey("ANALOG_COMPARATOR", "0", "DAC output to Analog Comparator")
     dacSym_CTRLB_IOEN_EOEN.addKey("INTERNAL_AND_EXTERNAL_OUTPUT", "1", "DAC output to AC, ADC and VOUT pin")
@@ -154,15 +157,18 @@ def instantiateComponent(dacComponent):
     # Left-Adjusted Data
     dacSym_CTRLB_LEFTADJ = dacComponent.createBooleanSymbol("DAC_LEFTADJUSTED_DATA", None)
     dacSym_CTRLB_LEFTADJ.setLabel("Input Data Alignment?")
+    dacSym_CTRLB_LEFTADJ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2214;register:%NOREGISTER%")
     dacSym_CTRLB_LEFTADJ.setVisible(False)
 
     # Voltage Pump Disabled
     dacSym_CTRLB_VPD = dacComponent.createBooleanSymbol("DAC_VOLTAGE_PUMP_DISABLED", None)
+    dacSym_CTRLB_VPD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2214;register:CTRLB")
     dacSym_CTRLB_VPD.setLabel("Disable voltage pump to save power")
 
     # Dithering Mode
     if ditheringSupported:
         dacSym_CTRLB_DITHER = dacComponent.createBooleanSymbol("DAC_DITHERING_MODE", None)
+        dacSym_CTRLB_DITHER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2214;register:%NOREGISTER%")
         dacSym_CTRLB_DITHER.setLabel("Enable 4-Bit Dithering?")
         dacSym_CTRLB_DITHER.setVisible(True)
 
@@ -171,16 +177,19 @@ def instantiateComponent(dacComponent):
 
     # Data Buffer Empty Event Output
     dacSym_EVCTRL_EMPTYEO = dacComponent.createBooleanSymbol("DAC_BUFFER_EMPTY_EVENT_OUTPUT", dacMenu)
+    dacSym_EVCTRL_EMPTYEO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2214;register:%NOREGISTER%")
     dacSym_EVCTRL_EMPTYEO.setLabel("Generate Event On Data Buffer Empty")
     dacSym_EVCTRL_EMPTYEO.setVisible(True)
 
     # Start Conversion Event Input
     dacSym_EVCTRL_STARTEI = dacComponent.createBooleanSymbol("DAC_START_CONVERSION_EVENT_INPUT", dacMenu)
+    dacSym_EVCTRL_STARTEI.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2214;register:%NOREGISTER%")
     dacSym_EVCTRL_STARTEI.setLabel("Trigger conversion on event Detection")
     dacSym_EVCTRL_STARTEI.setVisible(True)
 
     if invertAvailable:
         dacSym_EVCTRL_INVEI = dacComponent.createKeyValueSetSymbol("DAC_INVERSION_OUTPUT", dacMenu)
+        dacSym_EVCTRL_INVEI.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2214;register:%NOREGISTER%")
         dacSym_EVCTRL_INVEI.setLabel("Edge Detection for Input Event")
         dacSym_EVCTRL_INVEI.addKey("Rising", "0", "Detect on Rising Edge")
         dacSym_EVCTRL_INVEI.addKey("Falling", "1", "Detect on Falling Edge")
@@ -190,6 +199,7 @@ def instantiateComponent(dacComponent):
 
     dacSym_EVCTRL = dacComponent.createHexSymbol("DAC_EVCTRL", None)
     dacSym_EVCTRL.setLabel("Trigger conversion on input event?")
+    dacSym_EVCTRL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2214;register:EVCTRL")
     dacSym_EVCTRL.setVisible(False)
     dacSym_EVCTRL.setDependencies(evsysControl, ["DAC_BUFFER_EMPTY_EVENT_OUTPUT", "DAC_START_CONVERSION_EVENT_INPUT", "DAC_INVERSION_OUTPUT"])
 

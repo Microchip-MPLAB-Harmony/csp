@@ -150,6 +150,7 @@ wdtMenu.setLabel("WDT")
 
 #WDT Use
 wdtSym_Use = coreComponent.createBooleanSymbol("WDT_USE", wdtMenu)
+wdtSym_Use.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_01385;register:%NOREGISTER%")
 wdtSym_Use.setLabel("Use WDT ?")
 wdtSym_Use.setDefaultValue(isWDTEnabled)
 wdtSym_Use.setReadOnly(isWDTEnabled)
@@ -163,6 +164,7 @@ wdtSym_ConfigComment.setDependencies(updateWDTConfigCommentVisibleProperty, ["WD
 
 #WDT Operation mode
 wdtSym_WindowMode = coreComponent.createComboSymbol("WDT_MODE", wdtSym_Use, ["NORMAL", "WINDOW"])
+wdtSym_WindowMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_01385;register:%NOREGISTER%")
 wdtSym_WindowMode.setLabel("Configured WDT Operation Mode")
 if isWDTEnabled and isWDTWindowModeEnabled:
     wdtSym_WindowMode.setDefaultValue("WINDOW")
@@ -174,6 +176,7 @@ wdtSym_WindowMode.setDependencies(updateWDTWindowModeEnableVisibleProperty, ["WD
 
 #WDT Time-out Period
 wdtSym_TimeOutPeriod = coreComponent.createStringSymbol("WDT_TIMEOUT_PERIOD", wdtSym_Use)
+wdtSym_TimeOutPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_01385;register:%NOREGISTER%")
 wdtSym_TimeOutPeriod.setLabel("Configured WDT Time-out Period")
 wdtSym_TimeOutPeriod.setDefaultValue(getWDTTimeOutPeriod(wdtTimeOut))
 wdtSym_TimeOutPeriod.setReadOnly(True)
@@ -182,6 +185,7 @@ wdtSym_TimeOutPeriod.setDependencies(updateWDTTimeOutPeriodVisibleProperty, ["WD
 
 #WDT Allowed Window Period
 wdtSym_AllowedWindowPeriod = coreComponent.createStringSymbol("WDT_ALLOWED_WINDOW_PERIOD", wdtSym_Use)
+wdtSym_AllowedWindowPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_01385;register:%NOREGISTER%")
 wdtSym_AllowedWindowPeriod.setLabel("Configured WDT Allowed Window Period")
 wdtSym_AllowedWindowPeriod.setDefaultValue(getWDTAllowedWindowPeriod(wdtTimeOut, wdtAllowedWindowSize))
 wdtSym_AllowedWindowPeriod.setReadOnly(True)

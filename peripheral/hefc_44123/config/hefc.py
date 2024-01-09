@@ -96,9 +96,11 @@ def instantiateComponent(hefcComponent):
 
     # Create a Checkbox to enable disable interrupts
     hefcInterrupt = hefcComponent.createBooleanSymbol("INTERRUPT_ENABLE", hefcMenu)
+    hefcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hefc_44123;register:%NOREGISTER%")
     hefcInterrupt.setLabel("Enable Interrupts")
 
     hefcMemoryDriver = hefcComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", hefcMenu)
+    hefcMemoryDriver.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hefc_44123;register:%NOREGISTER%")
     hefcMemoryDriver.setLabel("Memory Driver Connected")
     hefcMemoryDriver.setVisible(False)
     hefcMemoryDriver.setDefaultValue(False)
@@ -108,6 +110,7 @@ def instantiateComponent(hefcComponent):
     nvmOffset = str(hex(int(hefcFlashStartAddress.getValue(),16) + offsetStart))
 
     hefcMemoryStartAddr = hefcComponent.createStringSymbol("START_ADDRESS", hefcMenu)
+    hefcMemoryStartAddr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hefc_44123;register:%NOREGISTER%")
     hefcMemoryStartAddr.setLabel("NVM Media Start Address")
     hefcMemoryStartAddr.setVisible(False)
     hefcMemoryStartAddr.setDefaultValue(nvmOffset[2:])
@@ -116,6 +119,7 @@ def instantiateComponent(hefcComponent):
     memMediaSizeKB = (offsetStart / 1024)
 
     hefcMemoryMediaSize = hefcComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", hefcMenu)
+    hefcMemoryMediaSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hefc_44123;register:%NOREGISTER%")
     hefcMemoryMediaSize.setLabel("NVM Media Size (KB)")
     hefcMemoryMediaSize.setVisible(False)
     hefcMemoryMediaSize.setDefaultValue(memMediaSizeKB)
@@ -123,11 +127,13 @@ def instantiateComponent(hefcComponent):
 
     hefcMemoryEraseEnable = hefcComponent.createBooleanSymbol("ERASE_ENABLE", None)
     hefcMemoryEraseEnable.setLabel("NVM Erase Enable")
+    hefcMemoryEraseEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hefc_44123;register:%NOREGISTER%")
     hefcMemoryEraseEnable.setVisible(False)
     hefcMemoryEraseEnable.setDefaultValue(True)
     hefcMemoryEraseEnable.setReadOnly(True)
 
     hefcMemoryEraseBufferSize = hefcComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", hefcMenu)
+    hefcMemoryEraseBufferSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hefc_44123;register:%NOREGISTER%")
     hefcMemoryEraseBufferSize.setLabel("NVM Erase Buffer Size")
     hefcMemoryEraseBufferSize.setVisible(False)
     hefcMemoryEraseBufferSize.setDefaultValue(int(hefcFlashEraseSize.getValue()))

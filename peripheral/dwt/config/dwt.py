@@ -35,6 +35,7 @@ def updateSymbolEnable(symbol, event):
 Log.writeInfoMessage("Loading Data Watchpoint and Trace (DWT) for " + Variables.get("__PROCESSOR"))
 
 dwtEnable = coreComponent.createBooleanSymbol("DWT_ENABLE", cortexMenu)
+dwtEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwt;register:%NOREGISTER%")
 dwtEnable.setLabel("Enable DWT Cycle Counter")
 dwtEnable.setDefaultValue(False)
 

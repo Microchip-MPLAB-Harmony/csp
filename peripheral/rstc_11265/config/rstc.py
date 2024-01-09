@@ -67,6 +67,7 @@ def instantiateComponent(rstcComponent):
     rstcInstanceStr.setVisible(False)
 
     rstcSym_MR_UserReset = rstcComponent.createKeyValueSetSymbol("RSTC_MR_URSTEN", None)
+    rstcSym_MR_UserReset.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_11265;register:RSTC_MR")
     rstcSym_MR_UserReset.setLabel("External Reset (NRST) Pin Usage")
     rstcSym_MR_UserReset.addKey("RESET", "0", "Generate Reset")
     rstcSym_MR_UserReset.addKey("INTERRUPT", "1", "Generate Interrupt")

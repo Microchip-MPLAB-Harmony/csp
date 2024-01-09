@@ -256,6 +256,7 @@ def instantiateComponent(adcComponent):
     #Clock prescaler
     global adcSym_MR_PRESCAL
     adcSym_MR_PRESCAL = adcComponent.createIntegerSymbol("ADC_MR_PRESCAL", adcMenu)
+    adcSym_MR_PRESCAL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_MR")
     adcSym_MR_PRESCAL.setLabel("Select Prescaler")
     adcSym_MR_PRESCAL.setDefaultValue(0)
     adcSym_MR_PRESCAL.setMin(0)
@@ -284,6 +285,7 @@ def instantiateComponent(adcComponent):
     #Added keys here as combining two bit-fields EMR_ASTE and EMR_OSR
     global adcSym_EMR_OSR_VALUE
     adcSym_EMR_OSR_VALUE = adcComponent.createKeyValueSetSymbol("ADC_EMR_OSR_VALUE", adcMenu)
+    adcSym_EMR_OSR_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:adc_emr")
     adcSym_EMR_OSR_VALUE.setLabel("Result Resolution")
     adcSym_EMR_OSR_VALUE.setDefaultValue(0)
     adcSym_EMR_OSR_VALUE.setOutputMode("Value")
@@ -319,6 +321,7 @@ def instantiateComponent(adcComponent):
     valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_EMR__SIGNMODE\"]")
     if valueGroup is not None:
         adcSym_EMR_SIGNMODE_VALUE = adcComponent.createKeyValueSetSymbol("ADC_EMR_SIGNMODE_VALUE", adcMenu)
+        adcSym_EMR_SIGNMODE_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_EMR")
         adcSym_EMR_SIGNMODE_VALUE.setLabel("Result Sign")
         adcSym_EMR_SIGNMODE_VALUE.setDefaultValue(0)
         adcSym_EMR_SIGNMODE_VALUE.setOutputMode("Key")
@@ -329,6 +332,7 @@ def instantiateComponent(adcComponent):
 
     #Trigger Mode
     adcSym_TRGR_MODE = adcComponent.createKeyValueSetSymbol("ADC_TRGR_MODE", adcMenu)
+    adcSym_TRGR_MODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_TRGR")
     adcSym_TRGR_MODE.setLabel("Trigger Mode")
     adcSym_TRGR_MODE.setOutputMode("Key")
     adcSym_TRGR_MODE.setDisplayMode("Description")
@@ -341,6 +345,7 @@ def instantiateComponent(adcComponent):
 
     #External Trigger Mode
     adcSym_MR_TRGSEL_VALUE = adcComponent.createKeyValueSetSymbol("ADC_MR_TRGSEL_VALUE", adcSym_TRGR_MODE)
+    adcSym_MR_TRGSEL_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_MR")
     adcSym_MR_TRGSEL_VALUE.setLabel("Select External Trigger Input")
     adcSym_MR_TRGSEL_VALUE.setVisible(False)
     adcSym_MR_TRGSEL_VALUE.setDefaultValue(1)
@@ -370,11 +375,13 @@ def instantiateComponent(adcComponent):
 
     #Sleep Mode
     adcSym_MR_SLEEP = adcComponent.createBooleanSymbol("ADC_MR_SLEEP", adcMenu)
+    adcSym_MR_SLEEP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_MR")
     adcSym_MR_SLEEP.setLabel("Sleep Mode")
     adcSym_MR_SLEEP.setDefaultValue(False)
 
     adcFastWakeupValues = ["OFF", "ON"]
     adcSym_MR_FWUP = adcComponent.createComboSymbol("ADC_MR_FWUP", adcSym_MR_SLEEP, adcFastWakeupValues)
+    adcSym_MR_FWUP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_MR")
     adcSym_MR_FWUP.setLabel("Fast Wakeup")
     adcSym_MR_FWUP.setDefaultValue(adcFastWakeupValues[0])
     adcSym_MR_FWUP.setVisible(False)
@@ -386,6 +393,7 @@ def instantiateComponent(adcComponent):
     adcSym_COMP_WINDOW.setDefaultValue(False)
 
     adcSym_EMR_CMPMODE = adcComponent.createKeyValueSetSymbol("ADC_EMR_CMPMODE", adcSym_COMP_WINDOW)
+    adcSym_EMR_CMPMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_EMR")
     adcSym_EMR_CMPMODE.setLabel("Comparison Mode")
     adcSym_EMR_CMPMODE.setDefaultValue(0)
     adcSym_EMR_CMPMODE.setOutputMode("Key")
@@ -398,6 +406,7 @@ def instantiateComponent(adcComponent):
     adcSym_EMR_CMPMODE.setDependencies(adcSymbolVisible, ["ADC_COMP_WINDOW"])
 
     adcSym_EMR_CMPTYPE = adcComponent.createKeyValueSetSymbol("ADC_EMR_CMPTYPE", adcSym_COMP_WINDOW)
+    adcSym_EMR_CMPTYPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_EMR")
     adcSym_EMR_CMPTYPE.setLabel("Comparison Type")
     adcSym_EMR_CMPTYPE.setDefaultValue(0)
     adcSym_EMR_CMPTYPE.setOutputMode("Key")
@@ -410,12 +419,14 @@ def instantiateComponent(adcComponent):
     adcCompSelectedChannelValues = adcChannelsValues[1:]
     adcCompSelectedChannelValues.append("All");
     adcSym_EMR_CMPSEL = adcComponent.createComboSymbol("ADC_EMR_CMPSEL", adcSym_COMP_WINDOW, adcCompSelectedChannelValues)
+    adcSym_EMR_CMPSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_EMR")
     adcSym_EMR_CMPSEL.setLabel("Comparison Selected Channel")
     adcSym_EMR_CMPSEL.setDefaultValue(adcCompSelectedChannelValues[0])
     adcSym_EMR_CMPSEL.setVisible(False)
     adcSym_EMR_CMPSEL.setDependencies(adcSymbolVisible, ["ADC_COMP_WINDOW"])
 
     adcSym_CWR_LOWTHRES = adcComponent.createIntegerSymbol("ADC_CWR_LOWTHRES_VALUE", adcSym_COMP_WINDOW)
+    adcSym_CWR_LOWTHRES.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_CWR")
     adcSym_CWR_LOWTHRES.setLabel("Low Threshold")
     adcSym_CWR_LOWTHRES.setDefaultValue(0)
     adcSym_CWR_LOWTHRES.setVisible(False)
@@ -425,6 +436,7 @@ def instantiateComponent(adcComponent):
     adcSym_CWR_LOWTHRES.setDependencies(adcSymbolVisible, ["ADC_COMP_WINDOW"])
 
     adcSym_CWR_HIGHTHRES = adcComponent.createIntegerSymbol("ADC_CWR_HIGHTHRES_VALUE", adcSym_COMP_WINDOW)
+    adcSym_CWR_HIGHTHRES.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_CWR")
     adcSym_CWR_HIGHTHRES.setLabel("High Threshold")
     adcSym_CWR_HIGHTHRES.setDefaultValue(0)
     adcSym_CWR_HIGHTHRES.setVisible(False)
@@ -434,6 +446,7 @@ def instantiateComponent(adcComponent):
 
     global adcSym_IER_COMPE
     adcSym_IER_COMPE = adcComponent.createBooleanSymbol("ADC_IER_COMPE", adcSym_COMP_WINDOW)
+    adcSym_IER_COMPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_IER")
     adcSym_IER_COMPE.setLabel("Comparison Event Interrupt")
     adcSym_IER_COMPE.setDefaultValue(False)
     adcSym_IER_COMPE.setVisible(False)
@@ -441,10 +454,12 @@ def instantiateComponent(adcComponent):
 
     #FIFO Mode
     adcSym_FMR_ENFIFO = adcComponent.createBooleanSymbol("ADC_FMR_ENFIFO", adcMenu)
+    adcSym_FMR_ENFIFO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_FMR")
     adcSym_FMR_ENFIFO.setLabel("Enable FIFO")
     adcSym_FMR_ENFIFO.setDefaultValue(False)
 
     adcSym_FMR_ENLEVEL_VALUE = adcComponent.createKeyValueSetSymbol("ADC_FMR_ENLEVEL_VALUE", adcSym_FMR_ENFIFO)
+    adcSym_FMR_ENLEVEL_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_FMR")
     adcSym_FMR_ENLEVEL_VALUE.setLabel("Enable Level")
     adcSym_FMR_ENLEVEL_VALUE.setVisible(False)
     adcSym_FMR_ENLEVEL_VALUE.setDefaultValue(0)
@@ -458,6 +473,7 @@ def instantiateComponent(adcComponent):
     adcSym_FMR_ENLEVEL_VALUE.setDependencies(adcSymbolVisible, ["ADC_FMR_ENFIFO"])
 
     adcSym_FMR_CHUNK = adcComponent.createIntegerSymbol("ADC_FMR_CHUNK_VALUE", adcSym_FMR_ENFIFO)
+    adcSym_FMR_CHUNK.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_FMR")
     adcSym_FMR_CHUNK.setLabel("Chunk Size")
     adcSym_FMR_CHUNK.setDefaultValue(1)
     adcSym_FMR_CHUNK.setVisible(False)
@@ -488,6 +504,7 @@ def instantiateComponent(adcComponent):
 
     #enable user sequence
     adcSym_MR_USEQ = adcComponent.createBooleanSymbol("ADC_MR_USEQ", adcUserSeq)
+    adcSym_MR_USEQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_MR")
     adcSym_MR_USEQ.setLabel("Enable User Sequence Mode")
     adcSym_MR_USEQ.setDefaultValue(False)
 
@@ -495,6 +512,7 @@ def instantiateComponent(adcComponent):
         #channel selection for user sequence
         adcSym_SEQR1_USCH.append(channelID)
         adcSym_SEQR1_USCH[channelID] = adcComponent.createComboSymbol("ADC_SEQR1_USCH" + str(channelID + 1), adcSym_MR_USEQ, adcChannelsValues)
+        adcSym_SEQR1_USCH[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_SEQR1")
         adcSym_SEQR1_USCH[channelID].setLabel("Select Channel for Sequence Number " + str(channelID + 1))
         adcSym_SEQR1_USCH[channelID].setDefaultValue(adcChannelsValues[0])
         adcSym_SEQR1_USCH[channelID].setVisible(False)
@@ -518,6 +536,7 @@ def instantiateComponent(adcComponent):
         #Channel enable
         adcSym_CH_CHER.append(channelID)
         adcSym_CH_CHER[channelID] = adcComponent.createBooleanSymbol("ADC_"+str(channelID)+"_CHER", adcCHMenu[channelID])
+        adcSym_CH_CHER[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:adc_cher")
         adcSym_CH_CHER[channelID].setLabel("Enable Channel " + str(channelID))
         adcSym_CH_CHER[channelID].setDefaultValue(False)
         #enable corresponding channel pair for diff mode, e.g. CH0 and CH1
@@ -560,6 +579,7 @@ def instantiateComponent(adcComponent):
         #Channel interrupt
         adcSym_CH_IER_EOC.append(channelID)
         adcSym_CH_IER_EOC[channelID] = adcComponent.createBooleanSymbol("ADC_"+str(channelID)+"_IER_EOC", adcSym_CH_CHER[channelID])
+        adcSym_CH_IER_EOC[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:adc_eoc_ier")
         adcSym_CH_IER_EOC[channelID].setLabel("End of conversion interrupt")
         adcSym_CH_IER_EOC[channelID].setDefaultValue(False)
         adcSym_CH_IER_EOC[channelID].setVisible(False)
@@ -579,6 +599,7 @@ def instantiateComponent(adcComponent):
 
             #Channel enable
             adcSym_Channel_CHER = adcComponent.createBooleanSymbol("ADC_"+str(channelID)+"_CHER", adcChannelMenu)
+            adcSym_Channel_CHER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:adc_cher")
             adcSym_Channel_CHER.setLabel("Enable Channel " + str(channelID))
             adcSym_Channel_CHER.setDefaultValue(False)
 
@@ -591,6 +612,7 @@ def instantiateComponent(adcComponent):
 
             if channelID == 31:
                 adcSym_ACR_SRCLCH_VALUE = adcComponent.createKeyValueSetSymbol("ADC_ACR_SRCLCH_VALUE", adcSym_Channel_CHER)
+                adcSym_ACR_SRCLCH_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_ACR")
                 adcSym_ACR_SRCLCH_VALUE.setLabel("Source Last Channel")
                 adcSym_ACR_SRCLCH_VALUE.setVisible(False)
                 adcSym_ACR_SRCLCH_VALUE.setDefaultValue(0)
@@ -604,6 +626,7 @@ def instantiateComponent(adcComponent):
                 adcSym_ACR_SRCLCH_VALUE.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
 
                 adcSym_TEMPMR_TEMPCMPMOD_VALUE = adcComponent.createKeyValueSetSymbol("ADC_TEMPMR_TEMPCMPMOD_VALUE", adcSym_Channel_CHER)
+                adcSym_TEMPMR_TEMPCMPMOD_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_TEMPMR")
                 adcSym_TEMPMR_TEMPCMPMOD_VALUE.setLabel("Temperature Comparison Mode")
                 adcSym_TEMPMR_TEMPCMPMOD_VALUE.setVisible(False)
                 adcSym_TEMPMR_TEMPCMPMOD_VALUE.setDefaultValue(0)
@@ -617,6 +640,7 @@ def instantiateComponent(adcComponent):
                 adcSym_TEMPMR_TEMPCMPMOD_VALUE.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
 
                 adcSym_TEMPCWR_TLOWTHRES = adcComponent.createIntegerSymbol("ADC_TEMPCWR_TLOWTHRES_VALUE", adcSym_Channel_CHER)
+                adcSym_TEMPCWR_TLOWTHRES.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_TEMPCWR")
                 adcSym_TEMPCWR_TLOWTHRES.setLabel("Temperature Low Threshold")
                 adcSym_TEMPCWR_TLOWTHRES.setDefaultValue(0)
                 adcSym_TEMPCWR_TLOWTHRES.setVisible(False)
@@ -626,6 +650,7 @@ def instantiateComponent(adcComponent):
                 adcSym_TEMPCWR_TLOWTHRES.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
 
                 adcSym_TEMPCWR_THIGHTHRES = adcComponent.createIntegerSymbol("ADC_TEMPCWR_THIGHTHRES_VALUE", adcSym_Channel_CHER)
+                adcSym_TEMPCWR_THIGHTHRES.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_TEMPCWR")
                 adcSym_TEMPCWR_THIGHTHRES.setLabel("Temperature High Threshold")
                 adcSym_TEMPCWR_THIGHTHRES.setDefaultValue(0)
                 adcSym_TEMPCWR_THIGHTHRES.setVisible(False)
@@ -634,6 +659,7 @@ def instantiateComponent(adcComponent):
                 adcSym_TEMPCWR_THIGHTHRES.setDependencies(adcSymbolVisible, ["ADC_"+str(channelID)+"_CHER"])
 
                 adcSym_IER_TEMPCHG = adcComponent.createBooleanSymbol("ADC_IER_TEMPCHG", adcSym_Channel_CHER)
+                adcSym_IER_TEMPCHG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:ADC_IER")
                 adcSym_IER_TEMPCHG.setLabel("Temperature Change Interrupt")
                 adcSym_IER_TEMPCHG.setDefaultValue(False)
                 adcSym_IER_TEMPCHG.setVisible(False)
@@ -642,6 +668,7 @@ def instantiateComponent(adcComponent):
 
             #Channel interrupt
             adcSym_Channel_IER_EOC = adcComponent.createBooleanSymbol("ADC_"+str(channelID)+"_IER_EOC", adcSym_Channel_CHER)
+            adcSym_Channel_IER_EOC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_44134;register:adc_eoc_ier")
             adcSym_Channel_IER_EOC.setLabel("End of conversion interrupt")
             adcSym_Channel_IER_EOC.setDefaultValue(False)
             adcSym_Channel_IER_EOC.setVisible(False)

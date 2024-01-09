@@ -306,16 +306,19 @@ portSymAPI_Prefix.setDefaultValue("PORT")
 portSymAPI_Prefix.setVisible(False)
 
 portEnable = coreComponent.createBooleanSymbol("PORT_ENABLE", portMenu)
+portEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
 portEnable.setLabel("Use PORT PLIB ?")
 portEnable.setDefaultValue(True)
 portEnable.setReadOnly(True)
 
 portExport = coreComponent.createBooleanSymbol("PORT_EXPORT", portEnable)
+portExport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
 portExport.setLabel("Export PORT configuration")
 portExport.setDefaultValue(True)
 portExport.setVisible(False)
 
 portExportAs = coreComponent.createComboSymbol("PORT_EXPORT_AS", portExport, ["CSV File"])
+portExportAs.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
 portExportAs.setLabel("Export PORT configuration as ")
 portExportAs.setVisible(False)
 
@@ -328,6 +331,7 @@ for id in range(0,len(packageNode.getChildren())):
 uniquePinout = len(set(package.values()))
 
 portPackage = coreComponent.createComboSymbol("COMPONENT_PACKAGE", portEnable, package.keys())
+portPackage.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
 portPackage.setLabel("Pin Package")
 portPackage.setReadOnly(True)
 
@@ -483,11 +487,13 @@ for pinNumber in range(1, internalPincount + 1):
 
     pinBitPosition.append(pinNumber)
     pinBitPosition[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PORT_PIN", pin[pinNumber-1])
+    pinBitPosition[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinBitPosition[pinNumber-1].setLabel("Bit Position")
     pinBitPosition[pinNumber-1].setReadOnly(True)
 
     pinGroup.append(pinNumber)
     pinGroup[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PORT_GROUP", pin[pinNumber-1])
+    pinGroup[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinGroup[pinNumber-1].setLabel("Group")
     pinGroup[pinNumber-1].setReadOnly(True)
 
@@ -512,6 +518,7 @@ for pinNumber in range(1, internalPincount + 1):
 
     pinName.append(pinNumber)
     pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
+    pinName[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinName[pinNumber-1].setLabel("Name")
     pinName[pinNumber-1].setDefaultValue("")
     pinName[pinNumber-1].setReadOnly(True)
@@ -519,42 +526,50 @@ for pinNumber in range(1, internalPincount + 1):
 
     pinType.append(pinNumber)
     pinType[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_TYPE", pin[pinNumber-1])
+    pinType[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinType[pinNumber-1].setLabel("Type")
     pinType[pinNumber-1].setReadOnly(True)
 
     pinPeripheralFunction.append(pinNumber)
     pinPeripheralFunction[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pin[pinNumber-1])
+    pinPeripheralFunction[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinPeripheralFunction[pinNumber-1].setLabel("Peripheral Selection")
     pinPeripheralFunction[pinNumber-1].setReadOnly(True)
 
     pinMode.append(pinNumber)
     pinMode[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_MODE", pin[pinNumber-1])
+    pinMode[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinMode[pinNumber-1].setLabel("Mode")
     pinMode[pinNumber-1].setReadOnly(True)
 
     pinDirection.append(pinNumber)
     pinDirection[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pin[pinNumber-1])
+    pinDirection[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:DIR")
     pinDirection[pinNumber-1].setLabel("Direction")
     pinDirection[pinNumber-1].setReadOnly(True)
 
     pinLatch.append(pinNumber)
     pinLatch[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pin[pinNumber-1])
+    pinLatch[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinLatch[pinNumber-1].setLabel("Initial Latch Value")
     pinLatch[pinNumber-1].setReadOnly(True)
 
     pinPullEnable.append(pinNumber)
     pinPullEnable[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PULLEN", pin[pinNumber-1])
+    pinPullEnable[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinPullEnable[pinNumber-1].setLabel("Pull Enable")
     pinPullEnable[pinNumber-1].setReadOnly(True)
 
     pinInputEnable.append(pinNumber)
     pinInputEnable[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_INEN", pin[pinNumber-1])
+    pinInputEnable[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinInputEnable[pinNumber-1].setLabel("Input Enable")
     pinInputEnable[pinNumber-1].setReadOnly(True)
 
     if portPINCFGOpenDrain.getValue() == True:
         pinOpenDrain.append(pinNumber)
         pinOpenDrain[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_ODRAIN", pin[pinNumber-1])
+        pinOpenDrain[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
         pinOpenDrain[pinNumber-1].setLabel("Open Drain")
         pinOpenDrain[pinNumber-1].setReadOnly(True)
 
@@ -563,6 +578,7 @@ for pinNumber in range(1, internalPincount + 1):
         if portSLEWLIMValueGroupNode != None:
             pinSlewRate.append(pinNumber)
             pinSlewRate[pinNumber-1] = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_SLEWRATE", pin[pinNumber-1])
+            pinSlewRate[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
             pinSlewRate[pinNumber-1].setLabel("Slew Rate")
             pinSlewRate[pinNumber-1].setDisplayMode("Key")
             for index in range(0, len(portSLEWLIMValueGroupNode.getChildren())):
@@ -575,6 +591,7 @@ for pinNumber in range(1, internalPincount + 1):
     if portPINCFGDriverStrength.getValue() == True:
         pinDrvStr.append(pinNumber)
         pinDrvStr[pinNumber-1] = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_DRVSTR", pin[pinNumber-1])
+        pinDrvStr[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
         pinDrvStr[pinNumber-1].setLabel("Drive Strength")
         pinDrvStr[pinNumber-1].setDisplayMode("Key")
         pinDrvStr[pinNumber-1].addKey("NORMAL", "0", "Normal")
@@ -601,6 +618,7 @@ for pinNumber in range(1, internalPincount + 1):
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         pinSecurity = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_IS_NON_SECURE", pin[pinNumber-1])
+        pinSecurity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
         pinSecurity.setLabel("Security mode")
         pinSecurity.addKey("SECURE", "0", "False")
         pinSecurity.addKey("NON-SECURE", "1", "True")
@@ -668,23 +686,27 @@ for portNumber in range(0, len(group)):
 
     usePort.append(portNumber)
     usePort[portNumber] = coreComponent.createBooleanSymbol("PORT_GROUP_" + str(portNumber), port[portNumber])
+    usePort[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     usePort[portNumber].setLabel("Use PORT GROUP " + str(portGroupName[portNumber]))
     usePort[portNumber].setValue(True, 1)
     usePort[portNumber].setVisible(visibility)
 
     portSym_PORT_DIR = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_DIR", port[portNumber])
+    portSym_PORT_DIR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     portSym_PORT_DIR.setLabel("Port Pin Direction")
     portSym_PORT_DIR.setVisible(visibility)
     portSym_PORT_DIR.setDefaultValue(str(hex(0)))
     portSym_PORT_DIR.setDependencies(setupPortDir, pinDirList)
 
     portSym_PORT_LATCH = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_OUT", port[portNumber])
+    portSym_PORT_LATCH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     portSym_PORT_LATCH.setLabel("Port Pin Output Value")
     portSym_PORT_LATCH.setDefaultValue(str(hex(0)))
     portSym_PORT_LATCH.setDependencies(setupPortLat, pinLatchList)
     portSym_PORT_LATCH.setVisible(visibility)
 
     portSym_PORT_CTRL = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_CTRL", port[portNumber])
+    portSym_PORT_CTRL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     portSym_PORT_CTRL.setLabel("Enable Input Synchronizer")
     portSym_PORT_CTRL.setDefaultValue(str(hex(0)))
     portSym_PORT_CTRL.setVisible(visibility)
@@ -694,6 +716,7 @@ for portNumber in range(0, len(group)):
         portPin.append(str(pinNum))
 
         portSym_PORT_PINCFG = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PINCFG" + str(pinNum) , port[portNumber])
+        portSym_PORT_PINCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
         portSym_PORT_PINCFG.setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " PINCFG" + str(pinNum))
         portSym_PORT_PINCFG.setDefaultValue(str(hex(0)))
         portSym_PORT_PINCFG.setVisible(visibility)
@@ -708,6 +731,7 @@ for portNumber in range(0, len(group)):
 
     for pinNum in range(0, 16):
         portSym_PORT_PMUX = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PMUX" + str(pinNum) , port[portNumber])
+        portSym_PORT_PMUX.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
         portSym_PORT_PMUX.setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " PMUX" + str(pinNum))
 
         defaultVal = str(hex(0))
@@ -730,10 +754,12 @@ for portNumber in range(0, len(group)):
 
         for i in range(0, 4):
             portEVSYSEnable = coreComponent.createBooleanSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE", portEVSYS)
+            portEVSYSEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
             portEVSYSEnable.setLabel("Enable Event" + str(i) + " Input")
             evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE")
 
             portEvsysAction = coreComponent.createKeyValueSetSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ACTION",portEVSYSEnable)
+            portEvsysAction.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
             portEvsysAction.setLabel("Event" + str(i) + " Action")
             for index in range(0, len(portEvsysActionValues)):
                 portEvsysActionKeyName = portEvsysActionValues[index].getAttribute("name")
@@ -747,6 +773,7 @@ for portNumber in range(0, len(group)):
             evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ACTION")
 
             portEvsysPin = coreComponent.createKeyValueSetSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_PIN",portEVSYSEnable)
+            portEvsysPin.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
             portEvsysPin.setLabel("Event" + str(i) + " Pin")
             for index in range(0, 32):
                 portEvsysPin.addKey("P" + str(index), str(index) , "Pin " + str(index))
@@ -757,6 +784,7 @@ for portNumber in range(0, len(group)):
             evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_PIN")
 
         portSym_PORT_EVCTRL = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_EVCTRL", port[portNumber])
+        portSym_PORT_EVCTRL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
         portSym_PORT_EVCTRL.setLabel("Port Event Control")
         portSym_PORT_EVCTRL.setVisible(True)
         #portSym_PORT_EVCTRL.setVisible(visibility)

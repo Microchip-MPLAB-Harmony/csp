@@ -501,6 +501,7 @@ def instantiateComponent(pdecComponent):
     #prescaler
     global pdecSym_PRESC_PRESC
     pdecSym_PRESC_PRESC = pdecComponent.createKeyValueSetSymbol("PDEC_PRESC_PRESC", None)
+    pdecSym_PRESC_PRESC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:PRESC")
     pdecSym_PRESC_PRESC.setLabel("Select Prescaler")
     pdecNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PDEC\"]/value-group@[name=\"PDEC_PRESC__PRESC\"]")
     pdecValues = []
@@ -530,6 +531,7 @@ def instantiateComponent(pdecComponent):
     #PDEC clock frequency
     pdecSym_Frequency = pdecComponent.createIntegerSymbol("PDEC_FREQUENCY", None)
     pdecSym_Frequency.setLabel("Clock Frequency")
+    pdecSym_Frequency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:GENCTRLn")
     pdecSym_Frequency.setVisible(False)
     pdecSym_Frequency.setDefaultValue(Database.getSymbolValue("core", pdecInstanceName.getValue()+"_CLOCK_FREQUENCY"))
     pdecSym_Frequency.setDependencies(pdecFreqCalc, ["core."+pdecInstanceName.getValue()+"_CLOCK_FREQUENCY", "PDEC_PRESC_PRESC"])
@@ -537,6 +539,7 @@ def instantiateComponent(pdecComponent):
     #PDEC operation mode
     global pdecSym_OperationMode
     pdecSym_OperationMode = pdecComponent.createKeyValueSetSymbol("PDEC_CTRLA_MODE", None)
+    pdecSym_OperationMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_OperationMode.setLabel("Operating Mode")
     pdecSym_OperationMode.setReadOnly(False)
     pdecNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PDEC\"]/value-group@[name=\"PDEC_CTRLA__MODE\"]")
@@ -569,6 +572,7 @@ def instantiateComponent(pdecComponent):
 
 ################################## Quadrature Menu #####################################
     pdecSym_CTRLA_CONF = pdecComponent.createKeyValueSetSymbol("PDEC_CTRLA_CONF", pdecSym_QDEC_MENU)
+    pdecSym_CTRLA_CONF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_CTRLA_CONF.setLabel("Operating Mode")
     pdecNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PDEC\"]/value-group@[name=\"PDEC_CTRLA__CONF\"]")
     pdecValues = []
@@ -584,12 +588,14 @@ def instantiateComponent(pdecComponent):
     input_options = ["Disabled", "IO Pin", "Inverted IO Pin", "Input Event", "Inverted Input Event"]
 
     pdecSym_PhaseA = pdecComponent.createComboSymbol("PDEC_PHASE_A", pdecSym_QDEC_MENU, input_options)
+    pdecSym_PhaseA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_PhaseA.setLabel("Select Quadrature Phase A")
     pdecSym_PhaseA.setDefaultValue("IO Pin")
     pdecSym_PhaseA.setDependencies(pdecPhaseA, ["PDEC_CTRLA_CONF"])
     eventDepList.append("PDEC_PHASE_A")
 
     pdecSym_PhaseB = pdecComponent.createComboSymbol("PDEC_PHASE_B", pdecSym_QDEC_MENU, input_options)
+    pdecSym_PhaseB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_PhaseB.setLabel("Select Quadrature Phase B")
     pdecSym_PhaseB.setDefaultValue("IO Pin")
     pdecSym_PhaseB.setDependencies(pdecPhaseB, ["PDEC_CTRLA_CONF"])
@@ -597,28 +603,33 @@ def instantiateComponent(pdecComponent):
 
     index_input_options = ["Disabled", "IO Pin", "Inverted IO Pin", "Input Event", "Inverted Input Event"]
     pdecSym_Index = pdecComponent.createComboSymbol("PDEC_INDEX", pdecSym_QDEC_MENU, index_input_options)
+    pdecSym_Index.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_Index.setLabel("Select Quadrature Index")
     pdecSym_Index.setDefaultValue("IO Pin")
     pdecSym_Index.setDependencies(pdecIndex, ["PDEC_CTRLA_CONF"])
     eventDepList.append("PDEC_INDEX")
 
     pdecSym_FILTER = pdecComponent.createIntegerSymbol("PDEC_FILTER", pdecSym_QDEC_MENU)
+    pdecSym_FILTER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:FILTER")
     pdecSym_FILTER.setLabel("Select Filter Value")
     pdecSym_FILTER.setDefaultValue(2)
     pdecSym_FILTER.setMin(0)
     pdecSym_FILTER.setMax(255)
 
     pdecSym_CTRLA_SWAP = pdecComponent.createBooleanSymbol("PDEC_CTRLA_SWAP", pdecSym_QDEC_MENU)
+    pdecSym_CTRLA_SWAP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_CTRLA_SWAP.setLabel("Swap Phase A and B")
     pdecSym_CTRLA_SWAP.setDefaultValue(False)
 
     pdecSym_CTRLA_ANGULAR = pdecComponent.createIntegerSymbol("PDEC_CTRLA_ANGULAR", pdecSym_QDEC_MENU)
+    pdecSym_CTRLA_ANGULAR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_CTRLA_ANGULAR.setLabel("Select No of Bits for Angular Position")
     pdecSym_CTRLA_ANGULAR.setDefaultValue(10)
     pdecSym_CTRLA_ANGULAR.setMin(9)
     pdecSym_CTRLA_ANGULAR.setMax(16)
 
     pdecSym_CTRLA_REVOLUTION = pdecComponent.createIntegerSymbol("PDEC_CTRLA_REVOLUTION", pdecSym_QDEC_MENU)
+    pdecSym_CTRLA_REVOLUTION.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_CTRLA_REVOLUTION.setLabel("No of Bits for Revolution Counter")
     pdecSym_CTRLA_REVOLUTION.setReadOnly(True)
     pdecSym_CTRLA_REVOLUTION.setDefaultValue(6)
@@ -635,10 +646,12 @@ def instantiateComponent(pdecComponent):
     pdecSym_CTRLA_REVOLUTION_MASK.setDependencies(pdecRevMaskCalculate, ["PDEC_CTRLA_ANGULAR"])
 
     pdecSym_CTRLA_PEREN = pdecComponent.createBooleanSymbol("PDEC_CTRLA_PEREN", pdecSym_QDEC_MENU)
+    pdecSym_CTRLA_PEREN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_CTRLA_PEREN.setLabel("Enable Period Control")
     pdecSym_CTRLA_PEREN.setDefaultValue(True)
 
     pdecSym_CC0_ANGULAR = pdecComponent.createIntegerSymbol("PDEC_CC0_ANGULAR", pdecSym_CTRLA_PEREN)
+    pdecSym_CC0_ANGULAR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CC")
     pdecSym_CC0_ANGULAR.setLabel("Quadrature Pulses per Revolution")
     pdecSym_CC0_ANGULAR.setVisible(True)
     pdecSym_CC0_ANGULAR.setDefaultValue(pow(2, pdecSym_CTRLA_ANGULAR.getValue()) -1 )
@@ -647,6 +660,7 @@ def instantiateComponent(pdecComponent):
     pdecSym_CC0_ANGULAR.setDependencies(pdecOptionVisible, ["PDEC_CTRLA_PEREN", "PDEC_CTRLA_ANGULAR"])
 
     pdecSym_CC0_REVOLUTION = pdecComponent.createIntegerSymbol("PDEC_CC0_REVOLUTION", pdecSym_CTRLA_PEREN)
+    pdecSym_CC0_REVOLUTION.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CC")
     pdecSym_CC0_REVOLUTION.setLabel("Max Number of Revolutions")
     pdecSym_CC0_REVOLUTION.setVisible(True)
     pdecSym_CC0_REVOLUTION.setDefaultValue(pow(2, pdecSym_CTRLA_REVOLUTION.getValue()) - 1)
@@ -655,10 +669,12 @@ def instantiateComponent(pdecComponent):
     pdecSym_CC0_REVOLUTION.setDependencies(pdecOptionVisible, ["PDEC_CTRLA_PEREN", "PDEC_CTRLA_REVOLUTION"])
 
     pdecSym_COMPARE = pdecComponent.createBooleanSymbol("PDEC_COMPARE", pdecSym_QDEC_MENU)
+    pdecSym_COMPARE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CHANNELn")
     pdecSym_COMPARE.setLabel("Enable Compare Control")
     pdecSym_COMPARE.setDefaultValue(False)
 
     pdecSym_CC1_ANGULAR = pdecComponent.createIntegerSymbol("PDEC_CC1_ANGULAR", pdecSym_COMPARE)
+    pdecSym_CC1_ANGULAR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CC")
     pdecSym_CC1_ANGULAR.setLabel("Compare Value for Quadrature Pulses")
     pdecSym_CC1_ANGULAR.setVisible(False)
     pdecSym_CC1_ANGULAR.setDefaultValue((pow(2, pdecSym_CTRLA_ANGULAR.getValue())-1)/2 )
@@ -667,6 +683,7 @@ def instantiateComponent(pdecComponent):
     pdecSym_CC1_ANGULAR.setDependencies(pdecOptionVisible, ["PDEC_COMPARE", "PDEC_CTRLA_ANGULAR"])
 
     pdecSym_CC1_REVOLUTION = pdecComponent.createIntegerSymbol("PDEC_CC1_REVOLUTION", pdecSym_COMPARE)
+    pdecSym_CC1_REVOLUTION.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CC")
     pdecSym_CC1_REVOLUTION.setLabel("Compare Value for Revolutions")
     pdecSym_CC1_REVOLUTION.setVisible(False)
     pdecSym_CC1_REVOLUTION.setDefaultValue((pow(2, pdecSym_CTRLA_REVOLUTION.getValue()) - 1)/2)
@@ -675,6 +692,7 @@ def instantiateComponent(pdecComponent):
     pdecSym_CC1_REVOLUTION.setDependencies(pdecOptionVisible, ["PDEC_COMPARE", "PDEC_CTRLA_REVOLUTION"])
 
     pdecSym_CTRLA_MAXCMP = pdecComponent.createIntegerSymbol("PDEC_CTRLA_MAXCMP", pdecSym_QDEC_MENU)
+    pdecSym_CTRLA_MAXCMP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_CTRLA_MAXCMP.setLabel("Select Maximum Consecutive Missing Pulses")
     pdecSym_CTRLA_MAXCMP.setDefaultValue(4)
     pdecSym_CTRLA_MAXCMP.setVisible(False)
@@ -685,21 +703,25 @@ def instantiateComponent(pdecComponent):
     hall_input_options = ["IO Pin", "Inverted IO Pin", "Input Event", "Inverted Input Event"]
 
     pdecSym_HallA = pdecComponent.createComboSymbol("PDEC_HALL_A", pdecSym_HALL_MENU, hall_input_options)
+    pdecSym_HallA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_HallA.setLabel("Select Hall A")
     pdecSym_HallA.setDefaultValue("IO Pin")
     eventHallDepList.append("PDEC_HALL_A")
 
     pdecSym_HallB = pdecComponent.createComboSymbol("PDEC_HALL_B", pdecSym_HALL_MENU, hall_input_options)
+    pdecSym_HallB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_HallB.setLabel("Select Hall B")
     pdecSym_HallB.setDefaultValue("IO Pin")
     eventHallDepList.append("PDEC_HALL_B")
 
     pdecSym_HallC = pdecComponent.createComboSymbol("PDEC_HALL_C", pdecSym_HALL_MENU, hall_input_options)
+    pdecSym_HallC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_HallC.setLabel("Select Hall C")
     pdecSym_HallC.setDefaultValue("IO Pin")
     eventHallDepList.append("PDEC_HALL_C")
 
     pdecSym_Hall_FILTER = pdecComponent.createIntegerSymbol("PDEC_HALL_FILTER", pdecSym_HALL_MENU)
+    pdecSym_Hall_FILTER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_Hall_FILTER.setLabel("Select Filter Value")
     pdecSym_Hall_FILTER.setDefaultValue(5)
     pdecSym_Hall_FILTER.setMin(0)
@@ -707,10 +729,12 @@ def instantiateComponent(pdecComponent):
 
 ################################ Counter Menu ###########################
     pdecSym_CNTR_CTRLA_PEREN = pdecComponent.createBooleanSymbol("PDEC_CNTR_CTRLA_PEREN", pdecSym_COUNTER_MENU)
+    pdecSym_CNTR_CTRLA_PEREN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_CNTR_CTRLA_PEREN.setLabel("Select TOP as Period")
     pdecSym_CNTR_CTRLA_PEREN.setDefaultValue(True)
 
     pdecSym_CNTR_CC0 = pdecComponent.createIntegerSymbol("PDEC_CNTR_CC0", pdecSym_COUNTER_MENU)
+    pdecSym_CNTR_CC0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CC")
     pdecSym_CNTR_CC0.setLabel("Compare CC0 Value")
     pdecSym_CNTR_CC0.setMin(0)
     pdecSym_CNTR_CC0.setMax(65535)
@@ -718,6 +742,7 @@ def instantiateComponent(pdecComponent):
     pdecSym_CNTR_CC0.setDependencies(pdecCounterLabelChange, ["PDEC_CNTR_CTRLA_PEREN"])
 
     pdecSym_CNTR_CC1 = pdecComponent.createIntegerSymbol("PDEC_CNTR_CC1", pdecSym_COUNTER_MENU)
+    pdecSym_CNTR_CC1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CC")
     pdecSym_CNTR_CC1.setLabel("Compare CC1 Value")
     pdecSym_CNTR_CC1.setMin(0)
     pdecSym_CNTR_CC1.setMax(65535)
@@ -729,6 +754,7 @@ def instantiateComponent(pdecComponent):
     pdecSym_Interrupts_Menu.setLabel("Interrupts")
 
     pdecSym_INTENSET_OVF = pdecComponent.createBooleanSymbol("PDEC_INTENSET_OVF", pdecSym_Interrupts_Menu)
+    pdecSym_INTENSET_OVF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:INTENSET")
     pdecSym_INTENSET_OVF.setLabel("Enable Overflow Interrupt")
     interruptDepList.append("PDEC_INTENSET_OVF")
 
@@ -736,18 +762,22 @@ def instantiateComponent(pdecComponent):
     interruptDepList.append("")
 
     pdecSym_INTENSET_DIR = pdecComponent.createBooleanSymbol("PDEC_INTENSET_DIR", pdecSym_Interrupts_Menu)
+    pdecSym_INTENSET_DIR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:INTENSET")
     pdecSym_INTENSET_DIR.setLabel("Enable Direction Interrupt")
     interruptDepList.append("PDEC_INTENSET_DIR")
 
     pdecSym_INTENSET_VLC = pdecComponent.createBooleanSymbol("PDEC_INTENSET_VLC", pdecSym_Interrupts_Menu)
+    pdecSym_INTENSET_VLC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:INTENSET")
     pdecSym_INTENSET_VLC.setLabel("Enable Velocity Interrupt")
     interruptDepList.append("PDEC_INTENSET_VLC")
 
     pdecSym_INTENSET_MC0 = pdecComponent.createBooleanSymbol("PDEC_INTENSET_MC_0", pdecSym_Interrupts_Menu)
+    pdecSym_INTENSET_MC0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:INTENSET")
     pdecSym_INTENSET_MC0.setLabel("Enable Compare Match 0 Interrupt")
     interruptDepList.append("PDEC_INTENSET_MC_0")
 
     pdecSym_INTENSET_MC1 = pdecComponent.createBooleanSymbol("PDEC_INTENSET_MC_1", pdecSym_Interrupts_Menu)
+    pdecSym_INTENSET_MC1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:INTENSET")
     pdecSym_INTENSET_MC1.setLabel("Enable Compare Match 1 Interrupt")
     interruptDepList.append("PDEC_INTENSET_MC_1")
 
@@ -765,26 +795,33 @@ def instantiateComponent(pdecComponent):
     pdecSym_Input_Events.setDependencies(pdecInputEventsVisible, ["PDEC_CTRLA_MODE"])
 
     pdecSym_EVCTRL_EVEI0 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVEI0", pdecSym_Input_Events)
+    pdecSym_EVCTRL_EVEI0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
     pdecSym_EVCTRL_EVEI0.setLabel("Enable Input Event 0")
     eventCounterDepList.append("PDEC_COUNTER_EVEI0")
     pdecSym_EVCTRL_EVINV0 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVINV0", pdecSym_EVCTRL_EVEI0)
+    pdecSym_EVCTRL_EVINV0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
     pdecSym_EVCTRL_EVINV0.setLabel("Invert Input Event 0")
 
     pdecSym_EVCTRL_EVEI1 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVEI1", pdecSym_Input_Events)
+    pdecSym_EVCTRL_EVEI1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
     pdecSym_EVCTRL_EVEI1.setLabel("Enable Input Event 1")
     eventCounterDepList.append("PDEC_COUNTER_EVEI1")
     pdecSym_EVCTRL_EVINV1 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVINV1", pdecSym_EVCTRL_EVEI1)
+    pdecSym_EVCTRL_EVINV1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
     pdecSym_EVCTRL_EVINV1.setLabel("Invert Input Event 1")
 
     pdecSym_EVCTRL_EVEI2 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVEI2", pdecSym_Input_Events)
+    pdecSym_EVCTRL_EVEI2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
     pdecSym_EVCTRL_EVEI2.setLabel("Enable Input Event 2")
     eventCounterDepList.append("PDEC_COUNTER_EVEI2")
     pdecSym_EVCTRL_EVINV2 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVINV2", pdecSym_EVCTRL_EVEI2)
+    pdecSym_EVCTRL_EVINV2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
     pdecSym_EVCTRL_EVINV2.setLabel("Invert Input Event 2")
 
     pdecNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PDEC\"]/value-group@[name=\"PDEC_EVCTRL__EVACT\"]")
     if pdecNode != None:
         pdecSym_EVCTRL_EVACT = pdecComponent.createKeyValueSetSymbol("PDEC_EVCTRL_EVACT", pdecSym_Input_Events)
+        pdecSym_EVCTRL_EVACT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
         pdecSym_EVCTRL_EVACT.setLabel("Select Event Action")
 
         pdecValues = []
@@ -802,6 +839,7 @@ def instantiateComponent(pdecComponent):
     eventCounterDepList.append("PDEC_COUNTER_EVINV2")
 
     pdecSym_EVCTRL_OVF = pdecComponent.createBooleanSymbol("PDEC_EVCTRL_OVF", pdecSym_Events_Menu)
+    pdecSym_EVCTRL_OVF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
     pdecSym_EVCTRL_OVF.setLabel("Enable Overflow Event")
     eventDepList.append("PDEC_EVCTRL_OVF")
     eventHallDepList.append("PDEC_EVCTRL_OVF")
@@ -813,24 +851,28 @@ def instantiateComponent(pdecComponent):
     eventCounterDepList.append("")
 
     pdecSym_EVCTRL_DIR = pdecComponent.createBooleanSymbol("PDEC_EVCTRL_DIR", pdecSym_Events_Menu)
+    pdecSym_EVCTRL_DIR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
     pdecSym_EVCTRL_DIR.setLabel("Enable Direction Event")
     eventDepList.append("PDEC_EVCTRL_DIR")
     eventHallDepList.append("PDEC_EVCTRL_DIR")
     eventCounterDepList.append("PDEC_EVCTRL_DIR")
 
     pdecSym_EVCTRL_VLC = pdecComponent.createBooleanSymbol("PDEC_EVCTRL_VLC", pdecSym_Events_Menu)
+    pdecSym_EVCTRL_VLC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
     pdecSym_EVCTRL_VLC.setLabel("Enable Velocity Event")
     eventDepList.append("PDEC_EVCTRL_VLC")
     eventHallDepList.append("PDEC_EVCTRL_VLC")
     eventCounterDepList.append("PDEC_EVCTRL_VLC")
 
     pdecSym_EVCTRL_MC0 = pdecComponent.createBooleanSymbol("PDEC_EVCTRL_MC_0", pdecSym_Events_Menu)
+    pdecSym_EVCTRL_MC0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
     pdecSym_EVCTRL_MC0.setLabel("Enable Compare Match 0 Event")
     eventDepList.append("PDEC_EVCTRL_MC_0")
     eventHallDepList.append("PDEC_EVCTRL_MC_0")
     eventCounterDepList.append("PDEC_EVCTRL_MC_0")
 
     pdecSym_EVCTRL_MC1 = pdecComponent.createBooleanSymbol("PDEC_EVCTRL_MC_1", pdecSym_Events_Menu)
+    pdecSym_EVCTRL_MC1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:EVCTRL")
     pdecSym_EVCTRL_MC1.setLabel("Enable Compare Match 1 Event")
     eventDepList.append("PDEC_EVCTRL_MC_1")
     eventHallDepList.append("PDEC_EVCTRL_MC_1")
@@ -876,6 +918,7 @@ def instantiateComponent(pdecComponent):
 
     #run standby mode
     pdecSym_CTRLA_RUNSTDBY = pdecComponent.createBooleanSymbol("PDEC_CTRLA_RUNSTDBY", pdecSym_SleepConfiguration)
+    pdecSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pdec_u2263;register:CTRLA")
     pdecSym_CTRLA_RUNSTDBY.setLabel("Run during Standby")
 
     pdecInstanceName.setDependencies(updateCodeGenerationProperty, ["PDEC_CTRLA_MODE"])

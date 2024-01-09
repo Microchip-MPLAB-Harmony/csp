@@ -171,6 +171,7 @@ def adcAddKeyValueSetFromATDFInitValue(Parent, ModuleName, RegisterName, BitFiel
             if value_groupNode is not None:
                 Component = Parent.createKeyValueSetSymbol(RegisterName + '__' +
                     BitFieldName, Menu)
+                Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:" + str(RegisterName))
                 adcValGrp_names = []
                 _get_bitfield_names(value_groupNode, adcValGrp_names)
 
@@ -243,6 +244,7 @@ def adcAddBooleanFromATDF1ValueValueGroup(Parent, ModuleName, RegisterName, BitF
     labelNode = ATDF.getNode(value_groupPath)
     if labelNode is not None:
         Component = Parent.createBooleanSymbol(RegisterName + '__' + BitFieldName, Menu)
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:" + str(RegisterName))
         Component.setLabel(labelNode.getAttribute('caption'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -258,6 +260,7 @@ def adcAddBooleanFromATDFBitfieldName(Parent, ModuleName, RegisterName, BitField
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createBooleanSymbol(RegisterName + '__' + BitFieldName, Menu)
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:" + str(RegisterName))
         Component.setLabel(labelNode.getAttribute('name'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -273,6 +276,7 @@ def adcAddBooleanFromATDFBitfieldCaption(Parent, ModuleName, RegisterName, BitFi
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createBooleanSymbol(RegisterName + '__' + BitFieldName, Menu)
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:" + str(RegisterName))
         Component.setLabel(labelNode.getAttribute('caption'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -306,6 +310,7 @@ def adcAddLongFromATDFRegisterCaption(Parent, ModuleName, RegisterName, BitField
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createLongSymbol(RegisterName + '__' + BitFieldName, Menu)
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:" + str(RegisterName))
         Component.setLabel(labelNode.getAttribute('caption') + ' - ' + BitFieldName)
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -321,6 +326,7 @@ def adcAddLongFromATDFBitfieldCaption(Parent, ModuleName, RegisterName, BitField
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createLongSymbol(RegisterName + '__' + BitFieldName, Menu)
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:" + str(RegisterName))
         Component.setLabel(labelNode.getAttribute('caption'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -508,6 +514,7 @@ def instantiateComponent(adcComponent):
 
     global adcSym_InterruptMode
     adcSym_InterruptMode = adcComponent.createBooleanSymbol("ADC_INTERRUPT", adcMenu)
+    adcSym_InterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:%NOREGISTER%")
     adcSym_InterruptMode.setLabel("Interrupt Mode")
     adcSym_InterruptMode.setVisible(True)
     adcSym_InterruptMode.setDefaultValue(False)
@@ -517,6 +524,7 @@ def instantiateComponent(adcComponent):
     adcSym_AD1CON3__ADRC = adcAddKeyValueSetFromATDFInitValue(adcComponent, Module, "AD1CON3", "ADRC", adcMenu, True)
 
     adcSym_AD1CON3__ADCS = adcComponent.createIntegerSymbol("AD1CON3__ADCS", adcSym_AD1CON3__ADRC)
+    adcSym_AD1CON3__ADCS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CON3")
     adcSym_AD1CON3__ADCS.setDefaultValue(2)
     adcSym_AD1CON3__ADCS.setLabel("Select Clock Divider")
     adcSym_AD1CON3__ADCS.setMin(0)
@@ -543,6 +551,7 @@ def instantiateComponent(adcComponent):
 
     global adcSym_AD1CON2__CSCNA
     adcSym_AD1CON2__CSCNA = adcComponent.createBooleanSymbol("AD1CON2__CSCNA", adcMenu)
+    adcSym_AD1CON2__CSCNA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CON2")
     adcSym_AD1CON2__CSCNA.setLabel("Enable Input Scan on Mux A")
     adcSym_AD1CON2__CSCNA.setDefaultValue(False)
 
@@ -569,6 +578,7 @@ def instantiateComponent(adcComponent):
             csslPinNumber = int(valueGroupName.split("__CSSL")[1])
             adcSym_AD1CSSL__CSSL.append(ADC_ScanInputCount)
             adcSym_AD1CSSL__CSSL[ADC_ScanInputCount] = adcComponent.createBooleanSymbol("AD1CSSL__CSSL_" + str(ADC_ScanInputCount), adcSym_AD1CON2__CSCNA)
+            adcSym_AD1CSSL__CSSL[ADC_ScanInputCount].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CSSL")
             adcSym_AD1CSSL__CSSL[ADC_ScanInputCount].setLabel("Select " + csslPinName + " for Input Scan")
             adcSym_AD1CSSL__CSSL[ADC_ScanInputCount].setDefaultValue(False)
             adcSym_AD1CSSL__CSSL[ADC_ScanInputCount].setVisible(False)
@@ -663,11 +673,13 @@ def instantiateComponent(adcComponent):
     adcSym_AD1CHS__CH0SB.setDependencies(MuxB_InputsVisibility, ["AD1CON2__ALTS"])
 
     adcSym_AD1CON1__ASAM = adcComponent.createBooleanSymbol("AD1CON1__ASAM", adcMenu)
+    adcSym_AD1CON1__ASAM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CON1")
     adcSym_AD1CON1__ASAM.setLabel("Enable Auto Sampling")
     adcSym_AD1CON1__ASAM.setDescription("Sampling begins immediately after last conversion completes")
     adcSym_AD1CON1__ASAM.setDefaultValue(False)
 
     adcSym_AD1CON1__CLRASAM = adcComponent.createBooleanSymbol("AD1CON1__CLRASAM", adcSym_AD1CON1__ASAM)
+    adcSym_AD1CON1__CLRASAM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CON1")
     adcSym_AD1CON1__CLRASAM.setLabel("Stop Auto Sampling After First Conversion Sequence")
     adcSym_AD1CON1__CLRASAM.setDescription("If enabled, auto sampling will be stopped once first ADC interrupt is generated.\
                                               If disabled, normal operation will occur and ADC buffers will be overwritten \
@@ -680,6 +692,7 @@ def instantiateComponent(adcComponent):
     adcSym_AD1CON1__SSRC = adcAddKeyValueSetFromATDFInitValue(adcComponent, Module, "AD1CON1", "SSRC", adcMenu, True)
 
     adcSym_AD1CON3__SAMC = adcComponent.createIntegerSymbol("AD1CON3__SAMC", adcSym_AD1CON1__SSRC)
+    adcSym_AD1CON3__SAMC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CON3")
     adcSym_AD1CON3__SAMC.setDefaultValue(31)
     adcSym_AD1CON3__SAMC.setLabel("Auto Sample Time (nTAD)")
     adcSym_AD1CON3__SAMC.setMin(1)
@@ -703,6 +716,7 @@ def instantiateComponent(adcComponent):
 
     ad1con1_deplist = ["AD1CON1__ASAM", "AD1CON1__CLRASAM", "AD1CON1__SSRC", "AD1CON1__FORM", "AD1CON1__SIDL"]
     adcSym_AD1CON1 = adcComponent.createHexSymbol("ADC_AD1CON1", adcMenu)
+    adcSym_AD1CON1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CON1")
     adcSym_AD1CON1.setLabel("AD1CON1 register value")
     adcSym_AD1CON1.setVisible(False)
     adcSym_AD1CON1.setDefaultValue(0x0)
@@ -710,6 +724,7 @@ def instantiateComponent(adcComponent):
 
     ad1con2_deplist = ["AD1CON2__ALTS", "AD1CON2__BUFM", "AD1CON2__SMPI", "AD1CON2__CSCNA", "AD1CON2__VCFG"]
     adcSym_AD1CON2 = adcComponent.createHexSymbol("ADC_AD1CON2", adcMenu)
+    adcSym_AD1CON2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CON2")
     adcSym_AD1CON2.setLabel("AD1CON2 register value")
     adcSym_AD1CON2.setVisible(False)
     adcSym_AD1CON2.setDefaultValue(0x0)
@@ -717,6 +732,7 @@ def instantiateComponent(adcComponent):
 
     ad1con3_deplist = ["AD1CON3__ADCS", "AD1CON3__SAMC", "AD1CON3__ADRC"]
     adcSym_AD1CON3 = adcComponent.createHexSymbol("ADC_AD1CON3", adcMenu)
+    adcSym_AD1CON3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CON3")
     adcSym_AD1CON3.setLabel("AD1CON3 register value")
     adcSym_AD1CON3.setVisible(False)
     adcSym_AD1CON3.setDefaultValue(0x0)
@@ -725,12 +741,14 @@ def instantiateComponent(adcComponent):
     ad1chs_deplist = ["AD1CHS__CH0SA", "AD1CHS__CH0NA", "AD1CHS__CH0SB", "AD1CHS__CH0NB"]
     adcSym_AD1CHS = adcComponent.createHexSymbol("ADC_AD1CHS", None)
     adcSym_AD1CHS.setLabel("AD1CHS Register")
+    adcSym_AD1CHS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CHS")
     adcSym_AD1CHS.setVisible(False)
     adcSym_AD1CHS.setDefaultValue(0x0)
     adcSym_AD1CHS.setDependencies(adcCalcAD1CHS, ad1chs_deplist)
 
     adcSym_AD1CSSL = adcComponent.createHexSymbol("ADC_AD1CSSL", None)
     adcSym_AD1CSSL.setLabel("AD1CSSL Register")
+    adcSym_AD1CSSL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CSSL")
     adcSym_AD1CSSL.setVisible(False)
     adcSym_AD1CSSL.setDefaultValue(0x0)
     adcSym_AD1CSSL.setDependencies(adcCalcAD1CSSL, ad1cssl_deplist)
@@ -738,6 +756,7 @@ def instantiateComponent(adcComponent):
     if(ADC_ScanInputCount > 32):
         adcSym_AD1CSSL2 = adcComponent.createHexSymbol("ADC_AD1CSSL2", None)
         adcSym_AD1CSSL2.setLabel("AD1CSSL2 Register")
+        adcSym_AD1CSSL2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:AD1CSSL2")
         adcSym_AD1CSSL2.setVisible(False)
         adcSym_AD1CSSL2.setDefaultValue(0x0)
         adcSym_AD1CSSL2.setDependencies(adcCalcAD1CSSL2, ad1cssl2_deplist)
@@ -754,6 +773,7 @@ def instantiateComponent(adcComponent):
 
     # This symbol gives which IFS/IEC register should be used for interrupt handling.
     adcSym_IFS_RegIndex = adcComponent.createStringSymbol("ADC_IFS_REG_INDEX", adcMenu)
+    adcSym_IFS_RegIndex.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_02486;register:%NOREGISTER%")
     adcSym_IFS_RegIndex.setLabel("IFS/IEC Register Index")
     adcSym_IFS_RegIndex.setDefaultValue(str((int(irqNumber))/32))
     adcSym_IFS_RegIndex.setReadOnly(True)

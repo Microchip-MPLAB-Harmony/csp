@@ -191,10 +191,12 @@ def instantiateComponent(qmspiComponent):
     qmspiAggInterruptName = qmspiInstanceName.getValue() + "_GRP"
 
     qmspiMode = qmspiComponent.createComboSymbol("QMSPI_MODE", None, ["QSPI", "SPI"])
+    qmspiMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:MODE")
     qmspiMode.setLabel("QMSPI Mode")
     qmspiMode.setDefaultValue("QSPI")
 
     qmspiCPOL = qmspiComponent.createKeyValueSetSymbol("QMSPI_CPOL", None)
+    qmspiCPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:MODE")
     qmspiCPOL.setLabel("Clock Polarity")
     qmspiCPOL.addKey("LOW", "0", "Clock is Low when inactive (CPOL=0)")
     qmspiCPOL.addKey("HIGH", "1", "Clock is High when inactive (CPOL=1)")
@@ -203,6 +205,7 @@ def instantiateComponent(qmspiComponent):
     qmspiCPOL.setSelectedKey("LOW")
 
     qmspiCPHA_MOSI = qmspiComponent.createKeyValueSetSymbol("QMSPI_CPHA_MOSI", None)
+    qmspiCPHA_MOSI.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiCPHA_MOSI.setLabel("Clock phase of the Master data out")
     qmspiCPHA_MOSI.addKey("FALLING", "0", "Data changes on the falling edge of the SPI clock")
     qmspiCPHA_MOSI.addKey("RISING", "1", "Data changes on the rising edge of the SPI clock")
@@ -212,6 +215,7 @@ def instantiateComponent(qmspiComponent):
     qmspiCPHA_MOSI.setDependencies(qmspiQSPIModeVisibility, ["QMSPI_MODE"])
 
     qmspiCPHA_MISO = qmspiComponent.createKeyValueSetSymbol("QMSPI_CPHA_MISO", None)
+    qmspiCPHA_MISO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiCPHA_MISO.setLabel("Clock phase of the Master data in")
     qmspiCPHA_MISO.addKey("RISING", "0", "Data is captured on the rising edge of the SPI clock")
     qmspiCPHA_MISO.addKey("FALLING", "1", "Data is captured on the falling edge of the SPI clock")
@@ -222,6 +226,7 @@ def instantiateComponent(qmspiComponent):
 
     qmspiCPHA = qmspiComponent.createKeyValueSetSymbol("QMSPI_CPHA", None)
     qmspiCPHA.setLabel("Clock Phase")
+    qmspiCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiCPHA.addKey("RISING", "0", "Data is captured on the rising edge of the SPI clock")
     qmspiCPHA.addKey("FALLING", "1", "Data is captured on the falling edge of the SPI clock")
     qmspiCPHA.setOutputMode("Key")
@@ -232,11 +237,13 @@ def instantiateComponent(qmspiComponent):
 
     qmspiHardwareCS = qmspiComponent.createBooleanSymbol("QMSPI_HARDWARE_CS_EN", None)
     qmspiHardwareCS.setLabel("Use Hardware Chip Select?")
+    qmspiHardwareCS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:CTRL")
     qmspiHardwareCS.setDefaultValue(False)
     qmspiHardwareCS.setVisible(False)
     qmspiHardwareCS.setDependencies(qmspiSPIModeVisibility, ["QMSPI_MODE"])
 
     qmspiHardwareCSSel = qmspiComponent.createKeyValueSetSymbol("QMSPI_HARDWARE_CS_SEL", qmspiHardwareCS)
+    qmspiHardwareCSSel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiHardwareCSSel.setLabel("Chip Select Line")
     qmspiHardwareCSSel.addKey("CHIP_SEL_0", "0", "Chip Select 0")
     qmspiHardwareCSSel.addKey("CHIP_SEL_1", "1", "Chip Select 1")
@@ -247,6 +254,7 @@ def instantiateComponent(qmspiComponent):
     qmspiHardwareCSSel.setDependencies(qmspiSPIModeVisibility, ["QMSPI_MODE", "QMSPI_HARDWARE_CS_EN"])
 
     qmspiCLOCK_DIVIDE = qmspiComponent.createIntegerSymbol("QMSPI_CLOCK_DIVIDE", None)
+    qmspiCLOCK_DIVIDE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:MODE")
     qmspiCLOCK_DIVIDE.setLabel("Clock Divide")
     qmspiCLOCK_DIVIDE.setMin(0)
     qmspiCLOCK_DIVIDE.setMax(255)
@@ -261,6 +269,7 @@ def instantiateComponent(qmspiComponent):
         clock_divide = 256
     default_qmspi_clk_freq = int(qmspiSrcClkFreq.getValue() / clock_divide)
     qmspiClkFreq = qmspiComponent.createIntegerSymbol("QMSPI_CLK_FREQ", None)
+    qmspiClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiClkFreq.setLabel("QMSPI Clock Frequency (Hz)")
     qmspiClkFreq.setMax(qmspiSrcClkFreq.getValue())
     qmspiClkFreq.setReadOnly(True)
@@ -268,11 +277,13 @@ def instantiateComponent(qmspiComponent):
     qmspiClkFreq.setDependencies(setQmspiClkFrequency, ["QMSPI_CLOCK_DIVIDE"])
 
     qmspiHOLD_OUT_ENABLE = qmspiComponent.createBooleanSymbol("QMSPI_HOLD_OUT_ENABLE", None)
+    qmspiHOLD_OUT_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiHOLD_OUT_ENABLE.setLabel("HOLD Output Enable")
     qmspiHOLD_OUT_ENABLE.setDefaultValue(False)
     qmspiHOLD_OUT_ENABLE.setDependencies(qmspiQSPIModeVisibility, ["QMSPI_MODE"])
 
     qmspiHOLD_OUT_VAL = qmspiComponent.createKeyValueSetSymbol("QMSPI_HOLD_OUT_VALUE", qmspiHOLD_OUT_ENABLE)
+    qmspiHOLD_OUT_VAL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiHOLD_OUT_VAL.setLabel("HOLD Output Value")
     qmspiHOLD_OUT_VAL.addKey("LOW", "0", "HOLD is driven to 0")
     qmspiHOLD_OUT_VAL.addKey("HIGH", "1", "HOLD is driven to 1")
@@ -282,12 +293,14 @@ def instantiateComponent(qmspiComponent):
     qmspiHOLD_OUT_VAL.setDependencies(qmspiQSPIModeVisibility, ["QMSPI_MODE"])
 
     qmspiWRITE_PROTECT_OUT_ENABLE = qmspiComponent.createBooleanSymbol("QMSPI_WRITE_PROTECT_OUT_ENABLE", None)
+    qmspiWRITE_PROTECT_OUT_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiWRITE_PROTECT_OUT_ENABLE.setLabel("WRITE PROTECT Output Enable")
     qmspiWRITE_PROTECT_OUT_ENABLE.setDefaultValue(False)
     qmspiWRITE_PROTECT_OUT_ENABLE.setDependencies(qmspiQSPIModeVisibility, ["QMSPI_MODE"])
 
 
     qmspiWRITE_PROTECT_OUT_VAL = qmspiComponent.createKeyValueSetSymbol("QMSPI_WRITE_PROTECT_OUT_VALUE", qmspiWRITE_PROTECT_OUT_ENABLE)
+    qmspiWRITE_PROTECT_OUT_VAL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiWRITE_PROTECT_OUT_VAL.setLabel("WRITE PROTECT Output Value")
     qmspiWRITE_PROTECT_OUT_VAL.addKey("LOW", "0", "WRITE PROTECT is driven to 0")
     qmspiWRITE_PROTECT_OUT_VAL.addKey("HIGH", "1", "WRITE PROTECT is driven to 1")
@@ -302,11 +315,13 @@ def instantiateComponent(qmspiComponent):
 
     qmspiDMAEnable = qmspiComponent.createBooleanSymbol("QMSPI_DMA_EN", None)
     qmspiDMAEnable.setLabel("DMA Enable")
+    qmspiDMAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiDMAEnable.setDefaultValue(False)
     qmspiDMAEnable.setVisible(False)
     qmspiDMAEnable.setDependencies(qmspiSPIModeVisibility, ["QMSPI_MODE"])
 
     qmspiDMADescEnable = qmspiComponent.createBooleanSymbol("QMSPI_DESCRIPTOR_MODE_EN", qmspiDMAEnable)
+    qmspiDMADescEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:MODE")
     qmspiDMADescEnable.setLabel("DMA Descriptor Enable")
     qmspiDMADescEnable.setDefaultValue(False)
     qmspiDMADescEnable.setVisible(False)
@@ -315,12 +330,14 @@ def instantiateComponent(qmspiComponent):
 
 
     qmspiInterrupt = qmspiComponent.createBooleanSymbol("QMSPI_INTERRUPT_MODE", None)
+    qmspiInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiInterrupt.setLabel("Interrupt Mode")
     qmspiInterrupt.setDefaultValue(False)
     qmspiInterrupt.setDependencies(setupQmspiIntHandler, ["QMSPI_INTERRUPT_MODE", "QMSPI_DMA_EN", "QMSPI_MODE"])
 
     # QMSPI Interrupt Type - Aggregate or Direct
     qmspiInterruptType = qmspiComponent.createKeyValueSetSymbol("QMSPI_INTERRUPT_TYPE", qmspiInterrupt)
+    qmspiInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qmspi_147;register:%NOREGISTER%")
     qmspiInterruptType.setLabel("Interrupt Type")
     if nvic_int_num["direct_nvic_num"] != None:
         qmspiInterruptType.addKey("DIRECT", "0", "Direct")

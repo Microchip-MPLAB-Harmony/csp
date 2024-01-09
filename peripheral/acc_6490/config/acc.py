@@ -88,6 +88,7 @@ def instantiateComponent(accComponent):
 
     if "HAS_PLUS_COMPARATOR_SELECTION" in parameters:
         accSym_MR_SELPLUS = accComponent.createKeyValueSetSymbol("ACC_MR_SELPLUS", None)
+        accSym_MR_SELPLUS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_6490;register:ACC_MR")
         accSym_MR_SELPLUS.setLabel("Select Positive Input")
         accSym_MR_SELPLUS.setDefaultValue(0)
         accSym_MR_SELPLUS.setOutputMode("Value")
@@ -101,6 +102,7 @@ def instantiateComponent(accComponent):
 
     if "HAS_MINUS_COMPARATOR_SELECTION" in parameters:
         accSym_MR_SELMINUS = accComponent.createKeyValueSetSymbol("ACC_MR_SELMINUS", None)
+        accSym_MR_SELMINUS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_6490;register:ACC_MR")
         accSym_MR_SELMINUS.setLabel("Select Negative Input")
         accSym_MR_SELMINUS.setDefaultValue(0)
         accSym_MR_SELMINUS.setOutputMode("Value")
@@ -115,12 +117,14 @@ def instantiateComponent(accComponent):
 
     if "HAS_INVERTED_COMPARATOR" in parameters:
         accSym_MR_INV = accComponent.createBooleanSymbol("ACC_ACR_INV", None)
+        accSym_MR_INV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_6490;register:ACC_MR")
         accSym_MR_INV.setLabel("Invert Comparator Output")
         accSym_MR_INV.setDefaultValue(False)
 
 
     if "HAS_EDGETYPE_SELECTION" in parameters:
         accSym_MR_EDGETYP = accComponent.createKeyValueSetSymbol("ACC_MR_EDGETYPE", None)
+        accSym_MR_EDGETYP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_6490;register:ACC_MR")
         accSym_MR_EDGETYP.setLabel("Select Comparison Edge")
         accSym_MR_EDGETYP.setDefaultValue(0)
         accSym_MR_EDGETYP.setOutputMode("Key")
@@ -134,11 +138,13 @@ def instantiateComponent(accComponent):
 
     if "HAS_INTERRUPTS" in parameters:
         accInterrupt = accComponent.createBooleanSymbol("INTERRUPT_MODE", None)
+        accInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_6490;register:acc_ier")
         accInterrupt.setLabel("Enable Comparison Edge Interrupt")
         accInterrupt.setDefaultValue(False)
 
     if "HAS_CURRENT_SELECTION" in parameters:
         accSym_ACR_ISEL = accComponent.createKeyValueSetSymbol("ACC_ACR_ISEL", None)
+        accSym_ACR_ISEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_6490;register:ACC_ACR")
         accSym_ACR_ISEL.setLabel("Select Current")
         accSym_ACR_ISEL.setDefaultValue(0)
         accSym_ACR_ISEL.setOutputMode("Key")
@@ -153,6 +159,7 @@ def instantiateComponent(accComponent):
 
     if "HAS_HYSTERESIS" in parameters:
         accSym_ACR_HYST = accComponent.createKeyValueSetSymbol("ACC_ACR_HYST", None)
+        accSym_ACR_HYST.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_6490;register:ACC_ACR")
         accSym_ACR_HYST.setLabel("Select Hysteresis")
         accSym_ACR_HYST.addKey("NO_HYSTERESIS", "0", "No Hysteresis")
         accSym_ACR_HYST.addKey("MEDIUM_HYSTERESIS", "1", "Medium Hysteresis")
@@ -164,10 +171,12 @@ def instantiateComponent(accComponent):
 
     if "HAS_FAULT_ENABLE" in parameters:
         accSym_MR_FE = accComponent.createBooleanSymbol("ACC_ACR_FE", None)
+        accSym_MR_FE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_6490;register:ACC_MR")
         accSym_MR_FE.setLabel("Enable Fault Output")
         accSym_MR_FE.setDefaultValue(False)
 
         accSym_MR_SELFS = accComponent.createKeyValueSetSymbol("ACC_MR_SELFS", accSym_MR_FE)
+        accSym_MR_SELFS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_6490;register:ACC_MR")
         accSym_MR_SELFS.setLabel("Select Source for Fault Output")
         accSym_MR_SELFS.addKey("CE", "0", "Comparison Edge")
         accSym_MR_SELFS.addKey("OUTPUT", "1", "Comparator Output")

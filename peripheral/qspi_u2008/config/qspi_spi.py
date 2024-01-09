@@ -75,6 +75,7 @@ qspiValGrp_CTRLB_LOOPEN = qspiRegModule.getValueGroup(qspiBitField_CTRLB_LOOPEN.
 # number of bits per transfer
 count = qspiValGrp_CTRLB_DATALEN.getValueCount()
 qspiDATALEN = qspiComponent.createKeyValueSetSymbol("QSPI_DATALEN", qspiMenu)
+qspiDATALEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_u2008;register:CTRLB")
 qspiDATALEN.setLabel(qspiBitField_CTRLB_DATALEN.getDescription())
 qspiDATALEN.setVisible(False)
 qspiDATALEN.setOutputMode("Value")
@@ -89,6 +90,7 @@ qspiDATALEN.setDependencies(symbolVisible, ["QSPI_SMM"])
 # loopback mode
 count = qspiValGrp_CTRLB_LOOPEN.getValueCount()
 qspiLOOPEN = qspiComponent.createKeyValueSetSymbol("QSPI_LOOPEN", qspiMenu)
+qspiLOOPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_u2008;register:CTRLB")
 qspiLOOPEN.setLabel(qspiBitField_CTRLB_LOOPEN.getDescription())
 qspiLOOPEN.setVisible(False)
 qspiLOOPEN.setOutputMode("Value")
@@ -178,6 +180,7 @@ qspiSym_CSR_NCPHA_LE_Mask.setVisible(False)
 
 qspiSymDummyData = qspiComponent.createHexSymbol("SPI_DUMMY_DATA", None)
 qspiSymDummyData.setVisible(False)
+qspiSymDummyData.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_u2008;register:%NOREGISTER%")
 qspiSymDummyData.setLabel("Dummy Data")
 qspiSymDummyData.setDescription("Dummy Data to be written during SPI Read")
 qspiSymDummyData.setDefaultValue(0xFFFF)

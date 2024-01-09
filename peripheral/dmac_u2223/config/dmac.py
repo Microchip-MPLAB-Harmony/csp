@@ -432,6 +432,7 @@ dmacRUNSTDBYNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DM
 
 # DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
 dmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmacMenu)
+dmacEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:%NOREGISTER%")
 dmacEnable.setLabel("Use DMA Service ?")
 dmacEnable.setVisible(False)
 dmacEnable.setDefaultValue(False)
@@ -441,6 +442,7 @@ dmacIntEnable.setVisible(False)
 
 # DMA_CHANNEL_COUNT: Needed for DMA system service to generate channel enum
 dmacChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", dmacEnable)
+dmacChCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:%NOREGISTER%")
 dmacChCount.setLabel("DMA (DMAC) Channels Count")
 dmacChCount.setDefaultValue(dmacChannelCount)
 dmacChCount.setVisible(False)
@@ -453,10 +455,12 @@ dmacEventCount.setDefaultValue(4)
 dmacEventCount.setVisible(False)
 
 dmacHighestCh = coreComponent.createIntegerSymbol("DMAC_HIGHEST_CHANNEL", dmacEnable)
+dmacHighestCh.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:%NOREGISTER%")
 dmacHighestCh.setLabel("DMA (DMAC) Highest Active Channel")
 dmacHighestCh.setVisible(False)
 
 dmacChannelLinkedList = coreComponent.createBooleanSymbol("DMAC_LL_ENABLE", dmacMenu)
+dmacChannelLinkedList.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:%NOREGISTER%")
 dmacChannelLinkedList.setLabel("Use Linked List Mode ?")
 
 priorityRegisterName = coreComponent.createStringSymbol("PRIORITY_REGISTER_NAME", None)
@@ -471,6 +475,7 @@ for dmacCount in range(0, 4):
 
     # Level 0/1/2/3 Round-Robin Arbitration Enable
     PRICTRL0_LVLPRI_SelectionSym = coreComponent.createKeyValueSetSymbol("DMAC_LVLXPRIO_" + str(dmacCount), dmacMenu)
+    PRICTRL0_LVLPRI_SelectionSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:%NOREGISTER%")
     PRICTRL0_LVLPRI_SelectionSym.setLabel("Priority Level " + str(dmacCount) + " Arbitration Scheme")
 
     PRICTRL0_LVLPRI_SelectionSym.addKey("STATIC_LVL", "0", "Static Priority Arbitration")
@@ -484,26 +489,31 @@ for channelID in range(0, dmacChCount.getValue()):
     global per_instance
 
     dmacChannelEnable = coreComponent.createBooleanSymbol("DMAC_ENABLE_CH_" + str(channelID), dmacMenu)
+    dmacChannelEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:CHCTRLA")
     dmacChannelEnable.setLabel("Use DMAC Channel " + str(channelID))
     dmacChannelIds.append("DMAC_ENABLE_CH_" + str(channelID))
 
     if dmacRUNSTDBYNode != None:
         # Channel Run in Standby
         CH_CHCTRLA_RUNSTDBY_Ctrl = coreComponent.createBooleanSymbol("DMAC_CHCTRLA_RUNSTDBY_CH_" + str(channelID), dmacChannelEnable)
+        CH_CHCTRLA_RUNSTDBY_Ctrl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:CHCTRLA")
         CH_CHCTRLA_RUNSTDBY_Ctrl.setLabel("Run Channel in Standby mode")
 
     # Enable interrupt
     dmacChannelEnableInt = coreComponent.createBooleanSymbol("DMAC_ENABLE_CH_" + str(channelID) + "_INTERRUPT", dmacChannelEnable)
+    dmacChannelEnableInt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:%NOREGISTER%")
     dmacChannelEnableInt.setLabel("Enable Interrupt")
     dmacChannelEnableInt.setDefaultValue(True)
     dmacChannelInt.append("DMAC_ENABLE_CH_" + str(channelID) + "_INTERRUPT")
 
     # CHCTRLB - Trigger Source
     dmacSym_CHCTRLB_TRIGSRC = coreComponent.createComboSymbol("DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID), dmacChannelEnable, sorted(per_instance.keys()))
+    dmacSym_CHCTRLB_TRIGSRC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:CHCTRLB")
     dmacSym_CHCTRLB_TRIGSRC.setLabel("Trigger Source")
     dmacSym_CHCTRLB_TRIGSRC.setDefaultValue("Software Trigger")
 
     dmacSym_PERID_Val = coreComponent.createIntegerSymbol("DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID) + "_PERID_VAL", dmacChannelEnable)
+    dmacSym_PERID_Val.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:CHCTRLB")
     dmacSym_PERID_Val.setLabel("PERID Value")
     dmacSym_PERID_Val.setDefaultValue(0)
     dmacSym_PERID_Val.setDependencies(dmacTriggerCalc, ["DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID)])
@@ -511,12 +521,14 @@ for channelID in range(0, dmacChCount.getValue()):
 
     # DMA manager will use LOCK symbol to lock the "DMAC_CHCTRLB_TRIGSRC_CH_ + str(channelID)" symbol
     dmacSym_CHCTRLB_TRIGSRC_LOCK = coreComponent.createBooleanSymbol("DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID) + "_PERID_LOCK", dmacChannelEnable)
+    dmacSym_CHCTRLB_TRIGSRC_LOCK.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:CHCTRLB")
     dmacSym_CHCTRLB_TRIGSRC_LOCK.setLabel("Lock DMA Request")
     dmacSym_CHCTRLB_TRIGSRC_LOCK.setVisible(False)
     dmacSym_CHCTRLB_TRIGSRC_LOCK.setUseSingleDynamicValue(True)
 
     # CHCTRLB - Trigger Action
     dmacSym_CHCTRLB_TRIGACT = coreComponent.createKeyValueSetSymbol("DMAC_CHCTRLB_TRIGACT_CH_" + str(channelID), dmacChannelEnable)
+    dmacSym_CHCTRLB_TRIGACT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:CHCTRLB")
     dmacSym_CHCTRLB_TRIGACT.setLabel("Trigger Action")
     dmacSym_CHCTRLB_TRIGACT.addKey("BLOCK", "0", "One Block Transfer Per DMA Request")
     dmacSym_CHCTRLB_TRIGACT.addKey("BEAT", "2", "One Beat Transfer per DMA Request")
@@ -528,6 +540,7 @@ for channelID in range(0, dmacChCount.getValue()):
 
     # Channel Priority Level
     CHCTRLB_LVL_SelectionSym = coreComponent.createKeyValueSetSymbol("DMAC_CHCTRLB_LVL_CH_" + str(channelID), dmacChannelEnable)
+    CHCTRLB_LVL_SelectionSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:CHCTRLB")
     CHCTRLB_LVL_SelectionSym.setLabel("Channel Priority Level")
     CHCTRLB_LVL_SelectionSym.addKey("LVL0", "0", "Priority Level 0")
     CHCTRLB_LVL_SelectionSym.addKey("LVL1", "1", "Priority Level 1")
@@ -539,6 +552,7 @@ for channelID in range(0, dmacChCount.getValue()):
 
     # BTCTRL - Destination Increment
     dmacSym_BTCTRL_DSTINC_Val = coreComponent.createKeyValueSetSymbol("DMAC_BTCTRL_DSTINC_CH_" + str(channelID), dmacChannelEnable)
+    dmacSym_BTCTRL_DSTINC_Val.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:BTCTRL")
     dmacSym_BTCTRL_DSTINC_Val.setLabel("Destination Address Mode")
     dmacSym_BTCTRL_DSTINC_Val.addKey("FIXED_AM", "0", "Fixed Address Mode")
     dmacSym_BTCTRL_DSTINC_Val.addKey("INCREMENTED_AM", "1", "Increment Address After Every Transfer")
@@ -549,6 +563,7 @@ for channelID in range(0, dmacChCount.getValue()):
 
     # BTCTRL - Source Increment
     dmacSym_BTCTRL_SRCINC_Val = coreComponent.createKeyValueSetSymbol("DMAC_BTCTRL_SRCINC_CH_" + str(channelID), dmacChannelEnable)
+    dmacSym_BTCTRL_SRCINC_Val.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:BTCTRL")
     dmacSym_BTCTRL_SRCINC_Val.setLabel("Source Address Mode")
     dmacSym_BTCTRL_SRCINC_Val.addKey("FIXED_AM", "0", "Fixed Address Mode")
     dmacSym_BTCTRL_SRCINC_Val.addKey("INCREMENTED_AM", "1", "Increment Address After Every Transfer")
@@ -559,6 +574,7 @@ for channelID in range(0, dmacChCount.getValue()):
 
     # BTCTRL - Beat Size
     dmacSym_BTCTRL_BEATSIZE = coreComponent.createKeyValueSetSymbol("DMAC_BTCTRL_BEATSIZE_CH_" + str(channelID), dmacChannelEnable)
+    dmacSym_BTCTRL_BEATSIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:BTCNT")
     dmacSym_BTCTRL_BEATSIZE.setLabel("Beat Size")
 
     dmacBeatSizeNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]/value-group@[name=\"DMAC_BTCTRL__BEATSIZE\"]")
@@ -587,9 +603,11 @@ for channelID in range(0, dmacChCount.getValue()):
         dmaEVSYSMenu.setLabel("Event System Configuration")
 
         dmaEvsysOut = coreComponent.createBooleanSymbol("DMAC_ENABLE_EVSYS_OUT_" + str(channelID), dmaEVSYSMenu)
+        dmaEvsysOut.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:CHCTRLB")
         dmaEvsysOut.setLabel("Enable Event Output for Channel " + str(channelID))
 
         dmaEvsysEVOSEL = coreComponent.createKeyValueSetSymbol("DMAC_BTCTRL_EVSYS_EVOSEL_" + str(channelID), dmaEVSYSMenu)
+        dmaEvsysEVOSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:BTCTRL")
         dmaEvsysEVOSEL.setLabel("Event Output Selection")
 
         dmaEvsysEVOSELNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]/value-group@[name=\"DMAC_BTCTRL__EVOSEL\"]")
@@ -605,9 +623,11 @@ for channelID in range(0, dmacChCount.getValue()):
         dmaEvsysEVOSEL.setDisplayMode("Description")
 
         dmaEvsysIn = coreComponent.createBooleanSymbol("DMAC_ENABLE_EVSYS_IN_" + str(channelID), dmaEVSYSMenu)
+        dmaEvsysIn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:CHCTRLB")
         dmaEvsysIn.setLabel("Enable Event Input for Channel " + str(channelID))
 
         dmaEvsysEVACT = coreComponent.createKeyValueSetSymbol("DMAC_CHCTRLB_EVACT_" + str(channelID), dmaEVSYSMenu)
+        dmaEvsysEVACT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:CHCTRLB")
         dmaEvsysEVACT.setLabel("Event Input Action")
 
         dmaEvsysEVACTNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]/value-group@[name=\"DMAC_CHCTRLB__EVACT\"]")
@@ -687,16 +707,19 @@ dmacSym_BTCTRL_BEATSIZE_WORD.setVisible(False)
 # Interface for Peripheral clients
 for per in per_instance.keys():
     dmacChannelNeeded = coreComponent.createBooleanSymbol("DMA_CH_NEEDED_FOR_" + str(per), dmacMenu)
+    dmacChannelNeeded.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:%NOREGISTER%")
     dmacChannelNeeded.setLabel("Local DMA_CH_NEEDED_FOR_" + str(per))
     dmacChannelNeeded.setVisible(False)
     peridValueListSymbols.append("DMA_CH_NEEDED_FOR_" + str(per))
 
     dmacChannel = coreComponent.createIntegerSymbol("DMA_CH_FOR_" + str(per), dmacMenu)
+    dmacChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:%NOREGISTER%")
     dmacChannel.setLabel("Local DMA_CH_FOR_" + str(per))
     dmacChannel.setDefaultValue(-1)
     dmacChannel.setVisible(False)
 
 dmacPERIDChannelUpdate = coreComponent.createBooleanSymbol("DMA_CHANNEL_ALLOC", dmacChannelEnable)
+dmacPERIDChannelUpdate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_u2223;register:%NOREGISTER%")
 dmacPERIDChannelUpdate.setLabel("Local dmacChannelAllocLogic")
 dmacPERIDChannelUpdate.setVisible(False)
 dmacPERIDChannelUpdate.setDependencies(dmacChannelAllocLogic, peridValueListSymbols)

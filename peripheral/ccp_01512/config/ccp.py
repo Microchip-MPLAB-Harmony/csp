@@ -395,6 +395,7 @@ def instantiateComponent(ccpComponent):
 
     # SIDL
     ccpSym_CCPCON2_SIDL = ccpComponent.createBooleanSymbol("CCP_CCPCON1_SIDL", None)
+    ccpSym_CCPCON2_SIDL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON2_SIDL.setLabel("Enable Stop in Idle Mode")
     ccpcon1_depList.append("CCP_CCPCON1_SIDL")
     
@@ -404,6 +405,7 @@ def instantiateComponent(ccpComponent):
     clock_names = []
     _get_bitfield_names(ccpValGrp_CCPCON1_CLKSEL, clock_names)    
     ccpSym_CCPCON1_CLKSEL = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON1_CLKSEL", None)
+    ccpSym_CCPCON1_CLKSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON1_CLKSEL.setLabel("Select Clock Source")
     ccpSym_CCPCON1_CLKSEL.setOutputMode("Value")
     ccpSym_CCPCON1_CLKSEL.setDisplayMode("Description")
@@ -414,6 +416,7 @@ def instantiateComponent(ccpComponent):
 
     #External clock freq
     ccpSym_EXT_CLOCK_FREQ = ccpComponent.createIntegerSymbol("CCP_EXT_CLOCK_FREQ", ccpSym_CCPCON1_CLKSEL)
+    ccpSym_EXT_CLOCK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_EXT_CLOCK_FREQ.setLabel("External Clock Frequency")
     ccpSym_EXT_CLOCK_FREQ.setVisible(False)
     ccpSym_EXT_CLOCK_FREQ.setDefaultValue(50000000)
@@ -424,6 +427,7 @@ def instantiateComponent(ccpComponent):
     prescale_names = []
     _get_bitfield_names(ccpValGrp_CCPCON1_TMRPS, prescale_names)
     ccpSym_CCPCON1_TMRPS = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON1_TMRPS", None)
+    ccpSym_CCPCON1_TMRPS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON1_TMRPS.setLabel("Select Prescaler")
     ccpSym_CCPCON1_TMRPS.setOutputMode("Value")
     ccpSym_CCPCON1_TMRPS.setDisplayMode("Description")
@@ -435,6 +439,7 @@ def instantiateComponent(ccpComponent):
     #Prescaler Value
     ccpPrescalerValue = ccpComponent.createIntegerSymbol("CCP_PRESCALER_VALUE", None)
     ccpPrescalerValue.setVisible(False)
+    ccpPrescalerValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpPrescalerValue.setLabel("Prescaler Value")
     ccpPrescalerValue.setDescription("Prescaler value")
     ccpPrescalerValue.setDefaultValue(1)
@@ -442,6 +447,7 @@ def instantiateComponent(ccpComponent):
     ccpPrescalerValue.setDependencies(PreScaler_ValueUpdate, ["CCP_CCPCON1_TMRPS"])
 
     ccpSym_CLOCK_FREQ = ccpComponent.createIntegerSymbol("CCP_CLOCK_FREQ", None)
+    ccpSym_CLOCK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CLOCK_FREQ.setLabel("CCP Clock Frequency")
     ccpSym_CLOCK_FREQ.setReadOnly(True)
     ccpSym_CLOCK_FREQ.setDefaultValue(int(Database.getSymbolValue("core", ccpInstanceName.getValue() + "_CLOCK_FREQUENCY")))
@@ -450,6 +456,7 @@ def instantiateComponent(ccpComponent):
 
      #32 bit timer mode selection bits
     ccpSym_CCPCON1_T32 = ccpComponent.createBooleanSymbol("CCP_CCPCON1_T32", None)
+    ccpSym_CCPCON1_T32.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON1_T32.setLabel("Enable 32 bit mode")
     ccpcon1_depList.append("CCP_CCPCON1_T32")
 
@@ -459,6 +466,7 @@ def instantiateComponent(ccpComponent):
     tgate_names = []
     _get_bitfield_names(ccpValGrp_CCPCON2_ASDG, tgate_names)
     ccpSym_CCPCON2_ASDG = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON2_ASDG", None)
+    ccpSym_CCPCON2_ASDG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON2_ASDG.setLabel("Select Auto Shutdown Source")
     ccpSym_CCPCON2_ASDG.setOutputMode( "Value" )
     ccpSym_CCPCON2_ASDG.setDisplayMode( "Description" )
@@ -473,6 +481,7 @@ def instantiateComponent(ccpComponent):
     asdgm_names = []
     _get_bitfield_names(ccpValGrp_CCPCON2_ASDGM, asdgm_names)
     ccpSym_CCPCON2_ASDGM = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON2_ASDGM", ccpSym_CCPCON2_ASDG)
+    ccpSym_CCPCON2_ASDGM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON2_ASDGM.setLabel("Select Auto Shutdown Gate Mode")
     ccpSym_CCPCON2_ASDGM.setVisible(True)
     ccpSym_CCPCON2_ASDGM.setOutputMode( "Value" )
@@ -486,6 +495,7 @@ def instantiateComponent(ccpComponent):
     shutdown_state = []
     _get_bitfield_names(ccpValGrp_CCPCON3_PSSACE, shutdown_state)
     ccpSym_CCPCON3_PSSACE = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON3_PSSACE", ccpSym_CCPCON2_ASDG)
+    ccpSym_CCPCON3_PSSACE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON3_PSSACE.setLabel("Output pins (A, C, E) Shutdown State")
     ccpSym_CCPCON3_PSSACE.setVisible(True)
     ccpSym_CCPCON3_PSSACE.setOutputMode( "Value" )
@@ -498,6 +508,7 @@ def instantiateComponent(ccpComponent):
     if mccpPresent.getValue() == True:
         global ccpSym_CCPCON3_PSSBDF
         ccpSym_CCPCON3_PSSBDF = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON3_PSSBDF", ccpSym_CCPCON2_ASDG)
+        ccpSym_CCPCON3_PSSBDF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
         ccpSym_CCPCON3_PSSBDF.setLabel("Output pins (B, D, F) Shutdown State")
         ccpSym_CCPCON3_PSSBDF.setVisible(True)
         ccpSym_CCPCON3_PSSBDF.setOutputMode( "Value" )
@@ -510,6 +521,7 @@ def instantiateComponent(ccpComponent):
     #Auto restart enable
     global ccpSym_CCPCON2_PWMRSEN
     ccpSym_CCPCON2_PWMRSEN = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON2_PWMRSEN", ccpSym_CCPCON2_ASDG)
+    ccpSym_CCPCON2_PWMRSEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON2_PWMRSEN.setLabel("Select PWM Restart Option")
     restart_source = []
     _get_bitfield_names(ccpValGrp_CCPCON2_PWMRSEN, restart_source)
@@ -522,6 +534,7 @@ def instantiateComponent(ccpComponent):
     ccpcon2_depList.append("CCP_CCPCON2_PWMRSEN")
 
     ccpSym_CCPCON1_TRIGEN = ccpComponent.createBooleanSymbol("CCP_CCPCON1_TRIGEN", None)
+    ccpSym_CCPCON1_TRIGEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON1_TRIGEN.setLabel("Enable Trigger Operation")
     ccpcon1_depList.append("CCP_CCPCON1_TRIGEN")
 
@@ -530,6 +543,7 @@ def instantiateComponent(ccpComponent):
     sync_names = []
     _get_bitfield_names(ccpValGrp_CCPCON1_SYNC, sync_names)
     ccpSym_CCPCON1_SYNC = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON1_SYNC", None)
+    ccpSym_CCPCON1_SYNC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON1_SYNC.setLabel("Select Trigger/Synchronization Source")
     ccpSym_CCPCON1_SYNC.setOutputMode( "Value" )
     ccpSym_CCPCON1_SYNC.setDisplayMode( "Description" )
@@ -542,6 +556,7 @@ def instantiateComponent(ccpComponent):
     #Timer interrupt
     global ccpSym_TimerInterrupt
     ccpSym_TimerInterrupt = ccpComponent.createBooleanSymbol("CCP_TIMER_INTERRUPT", None)
+    ccpSym_TimerInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_TimerInterrupt.setLabel("Enable Timer Interrupt")
     ccpSym_TimerInterrupt.setDefaultValue(True)
 
@@ -550,6 +565,7 @@ def instantiateComponent(ccpComponent):
     postscale = []
     _get_bitfield_names(ccpValGrp_CCPCON1_OPS, postscale)
     ccpSym_CCPCON1_OPS = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON1_OPS", None)
+    ccpSym_CCPCON1_OPS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON1_OPS.setLabel("Select Interrupt Output Postscale")
     ccpSym_CCPCON1_OPS.setOutputMode( "Value" )
     ccpSym_CCPCON1_OPS.setDisplayMode( "Description" )
@@ -562,6 +578,7 @@ def instantiateComponent(ccpComponent):
     global ccpSym_OprationMode
     operationMode = ["Timer", "Compare", "Capture"]
     ccpSym_OprationMode = ccpComponent.createComboSymbol("CCP_OPERATION_MODE", None, operationMode)
+    ccpSym_OprationMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_OprationMode.setLabel("Operating Mode")
     ccpSym_OprationMode.setDefaultValue("Timer")
     ccpcon1_depList.append("CCP_OPERATION_MODE")

@@ -264,6 +264,7 @@ if numOfShadowSet == 1: # For PIC323xx/4xx and PIC32MX5XX/6XX/7XX series
     evicShadowRegMenu.setLabel("Shadow Register Set Configuration")
 
     SRS_FeatureEnable = coreComponent.createBooleanSymbol("EVIC_SRS_ENABLE", evicShadowRegMenu)
+    SRS_FeatureEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
     SRS_FeatureEnable.setLabel("Enable Shadow Register Set Feature")
     SRS_FeatureEnable.setDefaultValue(True)
     SRS_FeatureEnable.setDependencies(updateShadowEnable, ["HarmonyCore.SELECT_RTOS", "FreeRTOS.SET_RTOS"])
@@ -276,6 +277,7 @@ if numOfShadowSet == 1: # For PIC323xx/4xx and PIC32MX5XX/6XX/7XX series
         SRS_MENU_COMMENT.setVisible(False)
 
     evicNumOfShadowSet = coreComponent.createIntegerSymbol("EVIC_PRIORITY_FOR_SHADOW_SET", evicShadowRegMenu)
+    evicNumOfShadowSet.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
     evicNumOfShadowSet.setLabel("Shadow Set used by Interrupt with a priority level of")
     evicNumOfShadowSet.setDefaultValue(7)
     evicNumOfShadowSet.setReadOnly(True)
@@ -283,6 +285,7 @@ if numOfShadowSet == 1: # For PIC323xx/4xx and PIC32MX5XX/6XX/7XX series
 
     for i in range (1,8):
         evicPriorityISR_Attribute = coreComponent.createComboSymbol("EVIC_PRIORITY_" + str(i) + "ATTRIBUTE", evicShadowRegMenu, ["SOFT", "SRS", "AUTO"])
+        evicPriorityISR_Attribute.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
         evicPriorityISR_Attribute.setLabel("Interrupt with a priority level of " + str(i) + " uses ISR Attribute")
         evicPriorityISR_Attribute.setVisible(False)
         if i == 7:
@@ -387,21 +390,25 @@ for vectorDict in evicVectorDataStructure:
                 vecIRQDescription = vecIRQIndexes[i].get("caption")
 
                 evicVectorPeriEnable = coreComponent.createBooleanSymbol(vecIRQName + "_INTERRUPT_ENABLE", evicMenu)
+                evicVectorPeriEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
                 evicVectorPeriEnable.setLabel("Vector Peripheral Enable")
                 evicVectorPeriEnable.setVisible(False)
 
                 evicVectorPeriHandler = coreComponent.createStringSymbol(vecIRQName + "_INTERRUPT_HANDLER", evicMenu)
+                evicVectorPeriHandler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
                 evicVectorPeriHandler.setLabel("Vector Peripheral Handler")
                 evicVectorPeriHandler.setVisible(False)
                 evicVectorPeriHandler.setDefaultValue(vecIRQName + "_Handler")
 
                 evicVectorPeriHandlerLock = coreComponent.createBooleanSymbol(vecIRQName + "_INTERRUPT_HANDLER_LOCK", evicMenu)
+                evicVectorPeriHandlerLock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
                 evicVectorPeriHandlerLock.setLabel("Vector Peripheral Handler Lock")
                 evicVectorPeriHandlerLock.setVisible(False)
 
                 vectorIndexListGUI.append(str(vIndex) + "_" + str(i))
 
                 evicVectorEnable = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_" + str(i) + "_ENABLE", evicMenu)
+                evicVectorEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
                 evicVectorEnable.setLabel("Enable " + vecIRQDescription + " Interrupt")
                 evicVectorEnable.setDependencies(updateEVICVectorParametersValue, [vecIRQName + "_INTERRUPT_ENABLE"])
 
@@ -411,30 +418,36 @@ for vectorDict in evicVectorDataStructure:
                 evicInterruptVector.setVisible(False)
 
                 evicInterruptName = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_" + str(i) + "_NAME", evicVectorEnable)
+                evicInterruptName.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
                 evicInterruptName.setLabel("Vector Name")
                 evicInterruptName.setDefaultValue(vecIRQName)
                 evicInterruptName.setVisible(False)
 
                 evicVectorNumber = coreComponent.createIntegerSymbol("EVIC_" + str(vIndex) + "_" + str(i) + "_NUMBER", evicVectorEnable)
+                evicVectorNumber.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
                 evicVectorNumber.setLabel("Vector Number")
                 evicVectorNumber.setDefaultValue(vIndex)
                 evicVectorNumber.setVisible(False)
 
                 # Following symbol is used in EVIC Interrrupt UI to populate the vector caption column
                 evicVectorCaptionUI = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_" + str(i)+ "_CAPTION_UI", evicVectorEnable)
+                evicVectorCaptionUI.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
                 evicVectorCaptionUI.setLabel("Vector Caption")
                 evicVectorCaptionUI.setDefaultValue(vDescription)
                 evicVectorCaptionUI.setVisible(False)
 
                 evicVectorPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_" + str(i) + "_PRIORITY", evicVectorEnable, evicPriorityGroup)
+                evicVectorPriority.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
                 evicVectorPriority.setLabel("Priority")
                 evicVectorPriority.setDefaultValue(min(evicPriorityGroup))
 
                 evicVectorSubPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_" + str(i) + "_SUBPRIORITY", evicVectorEnable, evicSubPriorityGroup)
+                evicVectorSubPriority.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
                 evicVectorSubPriority.setLabel("Subpriority")
                 evicVectorSubPriority.setDefaultValue(min(evicSubPriorityGroup))
 
                 evicVectorHandler = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_" + str(i) + "_HANDLER", evicVectorEnable)
+                evicVectorHandler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
                 evicVectorHandler.setLabel("Handler")
                 evicVectorHandler.setDefaultValue(vecIRQName + "_Handler")
 
@@ -456,21 +469,25 @@ for vectorDict in evicVectorDataStructure:
                 vecSubPriorityList.append("EVIC_" + str(vIndex) + "_" + str(i) + "_SUBPRIORITY")
         else:
             evicVectorPeriEnable = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE", evicMenu)
+            evicVectorPeriEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
             evicVectorPeriEnable.setLabel("Vector Peripheral Enable")
             evicVectorPeriEnable.setVisible(False)
 
             evicVectorPeriHandler = coreComponent.createStringSymbol(vName + "_INTERRUPT_HANDLER", evicMenu)
+            evicVectorPeriHandler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
             evicVectorPeriHandler.setLabel("Vector Peripheral Handler")
             evicVectorPeriHandler.setVisible(False)
             evicVectorPeriHandler.setDefaultValue(vName + "_Handler")
 
             evicVectorPeriHandlerLock = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_HANDLER_LOCK", evicMenu)
+            evicVectorPeriHandlerLock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
             evicVectorPeriHandlerLock.setLabel("Vector Peripheral Handler Lock")
             evicVectorPeriHandlerLock.setVisible(False)
 
             vectorIndexListGUI.append(str(vIndex))
 
             evicVectorEnable = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE", evicMenu)
+            evicVectorEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
             evicVectorEnable.setLabel("Enable " + vDescription + " Interrupt")
             evicVectorEnable.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_ENABLE"])
 
@@ -480,23 +497,27 @@ for vectorDict in evicVectorDataStructure:
             evicInterruptVector.setVisible(False)
 
             evicInterruptName = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_NAME", evicVectorEnable)
+            evicInterruptName.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
             evicInterruptName.setLabel("Vector Name")
             evicInterruptName.setDefaultValue(vName)
             evicInterruptName.setVisible(False)
 
             evicVectorNumber = coreComponent.createIntegerSymbol("EVIC_" + str(vIndex) + "_NUMBER", evicVectorEnable)
+            evicVectorNumber.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
             evicVectorNumber.setLabel("Vector Number")
             evicVectorNumber.setDefaultValue(vIndex)
             evicVectorNumber.setVisible(False)
 
             # Following symbol is used in EVIC Interrrupt UI to populate the vector caption column
             evicVectorCaptionUI = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_CAPTION_UI", evicVectorEnable)
+            evicVectorCaptionUI.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
             evicVectorCaptionUI.setLabel("Vector Caption")
             evicVectorCaptionUI.setDefaultValue(vDescription)
             evicVectorCaptionUI.setVisible(False)
 
             if "EXTERNAL_" == vName[:-1]:
                 evicExtIntPolarity = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_EXT_INT_EDGE_POLARITY", evicVectorEnable, ["Rising Edge", "Falling Edge"])
+                evicExtIntPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
                 evicExtIntPolarity.setLabel("Edge Polarity")
                 evicExtIntPolarity.setDefaultValue("Falling Edge")
 
@@ -511,6 +532,7 @@ for vectorDict in evicVectorDataStructure:
             evicVectorHandlerLock.setDependencies(updateEVICVectorParametersValue1, [vName + "_INTERRUPT_HANDLER_LOCK"])
 
             evicVectorHandler = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_HANDLER", evicVectorEnable)
+            evicVectorHandler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
             evicVectorHandler.setLabel("Handler")
             evicVectorHandler.setDefaultValue(vName + "_Handler")
 
@@ -524,10 +546,12 @@ for vectorDict in evicVectorDataStructure:
                 externalIntUpdate.setDependencies(externalInterruptControl, ["EVIC_" + str(vIndex) + "_ENABLE"])
 
         evicVectorPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_PRIORITY", evicVectorEnable, evicPriorityGroup)
+        evicVectorPriority.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
         evicVectorPriority.setLabel("Priority")
         evicVectorPriority.setDefaultValue(min(evicPriorityGroup))
 
         evicVectorSubPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY", evicVectorEnable, evicSubPriorityGroup)
+        evicVectorSubPriority.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evic_01166;register:%NOREGISTER%")
         evicVectorSubPriority.setLabel("Subpriority")
         evicVectorSubPriority.setDefaultValue(min(evicSubPriorityGroup))
 

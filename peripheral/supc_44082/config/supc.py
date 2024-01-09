@@ -35,10 +35,12 @@ def instantiateComponent(supcComponent):
 
     # SM configuration
     supcSMMenu= supcComponent.createBooleanSymbol("SM_ENABLE", None)
+    supcSMMenu.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_44082;register:SUPC_MR")
     supcSMMenu.setLabel("Enable Supply Monitor")
     supcSMMenu.setDefaultValue(True)
 
     supcSym_SMMR_SMRSTEN = supcComponent.createBooleanSymbol("SUPC_SMMR_SMRSTEN", supcSMMenu)
+    supcSym_SMMR_SMRSTEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_44082;register:SUPC_MR")
     supcSym_SMMR_SMRSTEN.setLabel("Enable Supply Monitor Reset")
     supcSym_SMMR_SMRSTEN.setDefaultValue(True)
 

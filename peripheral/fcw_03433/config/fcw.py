@@ -98,6 +98,7 @@ def instantiateComponent(fcwComponent):
 
     fcwSym_MemoryDriver = fcwComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", None)
     fcwSym_MemoryDriver.setLabel("Memory Driver Connected")
+    fcwSym_MemoryDriver.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcw_03433;register:%NOREGISTER%")
     fcwSym_MemoryDriver.setVisible(False)
     fcwSym_MemoryDriver.setDefaultValue(False)
 
@@ -108,6 +109,7 @@ def instantiateComponent(fcwComponent):
 
     fcwSym_MemoryStartAddr = fcwComponent.createStringSymbol("START_ADDRESS", None)
     fcwSym_MemoryStartAddr.setLabel("FCW Media Start Address")
+    fcwSym_MemoryStartAddr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcw_03433;register:%NOREGISTER%")
     fcwSym_MemoryStartAddr.setVisible(False)
     fcwSym_MemoryStartAddr.setDefaultValue(fcwOffset)
     fcwSym_MemoryStartAddr.setDependencies(fcwSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
@@ -116,18 +118,21 @@ def instantiateComponent(fcwComponent):
 
     fcwSym_MemoryMediaSize = fcwComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", None)
     fcwSym_MemoryMediaSize.setLabel("FCW Media Size (KB)")
+    fcwSym_MemoryMediaSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcw_03433;register:%NOREGISTER%")
     fcwSym_MemoryMediaSize.setVisible(False)
     fcwSym_MemoryMediaSize.setDefaultValue(memMediaSizeKB)
     fcwSym_MemoryMediaSize.setDependencies(fcwSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     fcwSym_MemoryEraseEnable = fcwComponent.createBooleanSymbol("ERASE_ENABLE", None)
     fcwSym_MemoryEraseEnable.setLabel("FCW Erase Enable")
+    fcwSym_MemoryEraseEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcw_03433;register:%NOREGISTER%")
     fcwSym_MemoryEraseEnable.setVisible(False)
     fcwSym_MemoryEraseEnable.setDefaultValue(True)
     fcwSym_MemoryEraseEnable.setReadOnly(True)
 
     fcwSym_MemoryEraseBufferSize = fcwComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", None)
     fcwSym_MemoryEraseBufferSize.setLabel("FCW Erase Buffer Size")
+    fcwSym_MemoryEraseBufferSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcw_03433;register:%NOREGISTER%")
     fcwSym_MemoryEraseBufferSize.setVisible(False)
     fcwSym_MemoryEraseBufferSize.setDefaultValue(int(fcwSym_ERASE_SIZE.getValue()))
     fcwSym_MemoryEraseBufferSize.setDependencies(fcwSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
@@ -147,6 +152,7 @@ def instantiateComponent(fcwComponent):
 
     #Configures the library for interrupt mode operations
     fcwInterruptEnable = fcwComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
+    fcwInterruptEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcw_03433;register:%NOREGISTER%")
     fcwInterruptEnable.setLabel("Enable Interrupt?")
     fcwInterruptEnable.setDefaultValue(False)
 
@@ -158,6 +164,7 @@ def instantiateComponent(fcwComponent):
     setFCWInterruptData(False)
 
     fcwSym_preProgramEnable = fcwComponent.createBooleanSymbol("FCW_PRE_PRGM_ENABLE", None)
+    fcwSym_preProgramEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcw_03433;register:%NOREGISTER%")
     fcwSym_preProgramEnable.setLabel("Enable Pre Program")
     fcwSym_preProgramEnable.setDescription("Enabling Pre-Programing increases endurance of Flash but slows the write/erase operation a little")
     fcwSym_preProgramEnable.setVisible(True)

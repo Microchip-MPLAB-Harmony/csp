@@ -161,12 +161,14 @@ def instantiateComponent(rtosTmrComponent):
     max_val = calcRTOSTimeoutInMsec(rtosTimerInputClock, 4294967295)
     
     rtosTmrTimeMs = rtosTmrComponent.createFloatSymbol("RTOS_TMR_TIME_MS", None)
+    rtosTmrTimeMs.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtos_140;register:%NOREGISTER%")
     rtosTmrTimeMs.setLabel("Timeout (ms)")
     rtosTmrTimeMs.setMin(0.0)
     rtosTmrTimeMs.setMax(max_val)
     rtosTmrTimeMs.setDefaultValue(1000)
     
     rtosPreloadVal = rtosTmrComponent.createLongSymbol("RTOS_TMR_PRELOAD_VALUE", None)
+    rtosPreloadVal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtos_140;register:PRLD")
     rtosPreloadVal.setLabel("Preload Value")
     rtosPreloadVal.setMin(0)
     rtosPreloadVal.setMax(long(4294967295))
@@ -175,10 +177,12 @@ def instantiateComponent(rtosTmrComponent):
     rtosPreloadVal.setDependencies(rtosTimeoutUpdate, ["RTOS_TMR_TIME_MS"])
     
     rtosTmrAutoReloadEn = rtosTmrComponent.createBooleanSymbol("RTOS_TMR_AUTO_RELOAD_ENABLE", None)
+    rtosTmrAutoReloadEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtos_140;register:CTRL")
     rtosTmrAutoReloadEn.setLabel("Auto Reload Enable?")
     rtosTmrAutoReloadEn.setDefaultValue(True)
     
     rtosTmrHwHaltEn = rtosTmrComponent.createBooleanSymbol("RTOS_TMR_HW_HALT_ENABLE", None)
+    rtosTmrHwHaltEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtos_140;register:CTRL")
     rtosTmrHwHaltEn.setLabel("Hardware Halt Enable?")
     rtosTmrHwHaltEn.setDefaultValue(False)
     
@@ -188,6 +192,7 @@ def instantiateComponent(rtosTmrComponent):
 
     # Interrupt type selection
     rtosTmrInterruptType = rtosTmrComponent.createKeyValueSetSymbol("RTOS_TMR_INTERRUPT_TYPE", None)
+    rtosTmrInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtos_140;register:%NOREGISTER%")
     rtosTmrInterruptType.setLabel("Interrupt Type")
     if nvic_int_num["direct_nvic_num"] != None:
         rtosTmrInterruptType.addKey("DIRECT", "0", "Direct")
@@ -219,6 +224,7 @@ def instantiateComponent(rtosTmrComponent):
     # Symbol to save SYS Time ID
     sysTimeComponentId = rtosTmrComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
     sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtos_140;register:%NOREGISTER%")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
     

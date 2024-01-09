@@ -634,11 +634,13 @@ def instantiateComponent(rtcComponent):
 
     sysTimeComponentId = rtcComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
     sysTimeComponentId.setLabel("Component id")
+    # sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:%NOREGISTER%")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
 
     sysTimePlibMode = rtcComponent.createStringSymbol("SYS_TIME_PLIB_OPERATION_MODE", None)
     sysTimePlibMode.setLabel("SysTime PLIB Operation Mode")
+    sysTimePlibMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     sysTimePlibMode.setVisible(False)
     sysTimePlibMode.setDefaultValue("")
 
@@ -693,10 +695,12 @@ def instantiateComponent(rtcComponent):
         rtcBkupSupported.setVisible(False)
 
     rtcSymMode0_FREQCORR = rtcComponent.createBooleanSymbol("RTC_FREQCORR", rtcSym_Menu)
+    rtcSymMode0_FREQCORR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:FREQCORR")
     rtcSymMode0_FREQCORR.setLabel("Generate Frequency Correction API")
 
     # RTC Count Sync Enable
     rtcSym_CountSyncEnable = rtcComponent.createBooleanSymbol( "RTC_COUNTSYNC_ENABLE", rtcSym_Menu)
+    rtcSym_CountSyncEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     rtcSym_CountSyncEnable.setLabel("RTC Count Sync Enable")
     rtcSym_CountSyncEnable.setDefaultValue(True)
     rtcSym_CountSyncEnable.setVisible(True)
@@ -704,6 +708,7 @@ def instantiateComponent(rtcComponent):
 
     # RTC Clock Sync Enable
     rtcSym_ClockSyncEnable = rtcComponent.createBooleanSymbol( "RTC_CLOCKSYNC_ENABLE", rtcSym_Menu)
+    rtcSym_ClockSyncEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     rtcSym_ClockSyncEnable.setLabel("RTC Clock Sync Enable")
     rtcSym_ClockSyncEnable.setDefaultValue(True)
     rtcSym_ClockSyncEnable.setVisible(False)
@@ -732,14 +737,17 @@ def instantiateComponent(rtcComponent):
         rtcTampChannels.setDefaultValue(tamperChannels)
 
         tampInterrupt = rtcComponent.createBooleanSymbol("TAMP_INTERRUPT_ENABLE", rtcTampMenu)
+        tampInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:INTENSET")
         tampInterrupt.setLabel("Enable Tamper Detection Interrupt")
 
         if rtcNode != None:
             tampBKUPRST = rtcComponent.createBooleanSymbol("TAMP_RESET_BACKUP", rtcTampMenu)
+            tampBKUPRST.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
             tampBKUPRST.setLabel("Erase Backup Registers on Tamper Detection")
 
         tampGPRSTNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[modes="MODE0",name="CTRLA"]/bitfield@[name="GPTRST"]')
         tampGPRST = rtcComponent.createBooleanSymbol("TAMP_RESET_GP", rtcTampMenu)
+        tampGPRST.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
         tampGPRST.setLabel("Erase General Purpose Registers on Tamper Detection")
         tampGPRST.setVisible(tampGPRSTNode != None)
 
@@ -747,6 +755,7 @@ def instantiateComponent(rtcComponent):
             '/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MODE2_CTRLB__ACTF"]')
         freqValue = freqNode.getChildren()
         tampActiveFreq = rtcComponent.createKeyValueSetSymbol("TAMP_ACTIVE_FREQUENCY", rtcTampMenu)
+        tampActiveFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLB")
         tampActiveFreq.setLabel("Active Layer Prescalar")
         tampActiveFreq.setDisplayMode("Key")
         tampActiveFreq.setOutputMode("Value")
@@ -760,6 +769,7 @@ def instantiateComponent(rtcComponent):
             '/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MODE2_CTRLB__DEBF"]')
         freqValue = freqNode.getChildren()
         tampDebFreq = rtcComponent.createKeyValueSetSymbol("TAMP_DEBOUNCE_FREQUENCY", rtcTampMenu)
+        tampDebFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLB")
         tampDebFreq.setLabel("Debounce Prescalar")
         tampDebFreq.setDisplayMode("Key")
         tampDebFreq.setOutputMode("Value")
@@ -770,12 +780,15 @@ def instantiateComponent(rtcComponent):
             tampDebFreq.addKey(key, str(value), description)
 
         tampDMA = rtcComponent.createBooleanSymbol("TAMP_DMA", rtcTampMenu)
+        tampDMA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLB")
         tampDMA.setLabel("Enable Tamper DMA Request")
 
         tampOUT = rtcComponent.createBooleanSymbol("TAMP_OUT", rtcTampMenu)
+        tampOUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLB")
         tampOUT.setLabel("Enable RTC Active layer Output")
 
         tamAsync = rtcComponent.createKeyValueSetSymbol("TAMP_DEBOUNCE_ASYNCH", rtcTampMenu)
+        tamAsync.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLB")
         tamAsync.setLabel("Debounce Operation Mode")
         tamAsync.setDisplayMode("Key")
         tamAsync.setOutputMode("Value")
@@ -784,6 +797,7 @@ def instantiateComponent(rtcComponent):
 
         tampMajNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[modes="MODE0",name="CTRLB"]/bitfield@[name="DEBMAJ"]')
         tampMaj = rtcComponent.createKeyValueSetSymbol("TAMP_DEBOUNCE_MAJ", rtcTampMenu)
+        tampMaj.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLB")
         tampMaj.setLabel("Debouncer Value Matching")
         tampMaj.setDisplayMode("Description")
         tampMaj.setOutputMode("Value")
@@ -800,6 +814,7 @@ def instantiateComponent(rtcComponent):
             if rtcNode != None:
                 tampChannelLvl = rtcComponent.createKeyValueSetSymbol(
                     "TAMP_CHANNEL" + str(id) + "_LEVEL", tampChannelMenu)
+                tampChannelLvl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:TAMPCTRL")
                 tampChannelLvl.setLabel("Edge Detection ")
                 tampChannelLvl.addKey("Falling Edge", "0",
                                     "A falling edge condition will be detected on Tamper input INn.")
@@ -811,11 +826,13 @@ def instantiateComponent(rtcComponent):
 
                 tampChannelDebounce = rtcComponent.createBooleanSymbol(
                     "TAMP_CHANNEL" + str(id) + "_DEBNC", tampChannelMenu)
+                tampChannelDebounce.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:TAMPCTRL")
                 tampChannelDebounce.setLabel("Enable Debouncing")
                 TAMPCTRL_Field_List.append("TAMP_CHANNEL" + str(id) + "_DEBNC")
 
             tampChannelAction = rtcComponent.createKeyValueSetSymbol(
                 "TAMP_CHANNEL" + str(id) + "_ACTION", tampChannelMenu)
+            tampChannelAction.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:TAMPCTRL")
             tampChannelAction.setLabel("Channel Action")
             TAMPCTRL_Field_List.append("TAMP_CHANNEL" + str(id) + "_ACTION")
 
@@ -842,9 +859,11 @@ def instantiateComponent(rtcComponent):
         tampEventMenu.setLabel("Event System Configuration")
 
         tampEventOut = rtcComponent.createBooleanSymbol("TAMP_EVENTOUT", tampEventMenu)
+        tampEventOut.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:EVCTRL")
         tampEventOut.setLabel("Enable Tamper Event Output")
 
         tampEventIn = rtcComponent.createBooleanSymbol("TAMP_EVENTIN", tampEventMenu)
+        tampEventIn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:EVCTRL")
         tampEventIn.setLabel("Enable Tamper Event Input")
 
         rtcMode0EvctrlDep.append("TAMP_EVENTOUT")
@@ -879,6 +898,7 @@ def instantiateComponent(rtcComponent):
     # Sub Menu - RTC Modes: RTC_MODE0, RTC_MODE1, RTC_MODE2
     rtcModeSelection_Sym = rtcComponent.createKeyValueSetSymbol(
         "RTC_MODULE_SELECTION", rtcSym_Menu)
+    rtcModeSelection_Sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     rtcModeSelection_Sym.setLabel("RTC Operation Mode")
     for index in range(0, len(rtcValues)):
         if rtcValues[index].getAttribute("qualifier") is not None:
@@ -909,6 +929,7 @@ def instantiateComponent(rtcComponent):
     # Interrupt Enable Set
     rtcSymMode0_INTENSET = rtcComponent.createBooleanSymbol(
         "RTC_MODE0_INTERRUPT", rtcSymMode0Menu)
+    rtcSymMode0_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:INTENSET")
     rtcSymMode0_INTENSET.setLabel("Enable Interrupts ?")
     rtcSymMode0_INTENSET.setDefaultValue(True)
 
@@ -927,6 +948,7 @@ def instantiateComponent(rtcComponent):
         if "TAMPER" not in rtcMode0InterruptValues[i].getAttribute("name"):
             rtcSymMode0_Interrupt = rtcComponent.createBooleanSymbol(
                 "RTC_MODE0_INTENSET_" + rtcMode0InterruptValues[i].getAttribute("name") + "_ENABLE", rtcSymMode0_INTENSET)
+            rtcSymMode0_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:INTENSET")
             rtcSymMode0_Interrupt.setLabel(
                 rtcMode0InterruptValues[i].getAttribute("caption"))
             rtcMode0InterruptMap[rtcMode0InterruptValues[i].getAttribute(
@@ -956,6 +978,7 @@ def instantiateComponent(rtcComponent):
     # Prescaler
     rtcSymMode0_CTRLA_PRESCALER = rtcComponent.createKeyValueSetSymbol(
         "RTC_MODE0_PRESCALER", rtcSymMode0Menu)
+    rtcSymMode0_CTRLA_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     rtcSymMode0_CTRLA_PRESCALER.setLabel("RTC Prescaler")
 
     rtcMode0ReferenceNode = ATDF.getNode(
@@ -987,6 +1010,7 @@ def instantiateComponent(rtcComponent):
         # Configure 32-Bit Timer Period
         rtcSymMode0_COMP0 = rtcComponent.createHexSymbol(
             "RTC_MODE0_TIMER_COMPARE", rtcSymMode0Menu)
+        rtcSymMode0_COMP0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:COMPn")
         rtcSymMode0_COMP0.setLabel("Compare Value")
         rtcSymMode0_COMP0.setDefaultValue(0x00000000)
         rtcSymMode0_COMP0.setMax(0xFFFFFFFF)
@@ -996,6 +1020,7 @@ def instantiateComponent(rtcComponent):
             # Configure 32-Bit Timer Period
             rtcSymMode0_COMP0 = rtcComponent.createHexSymbol(
                 "RTC_MODE0_TIMER_COMPARE" + str(id), rtcSymMode0Menu)
+            rtcSymMode0_COMP0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:COMP")
             rtcSymMode0_COMP0.setLabel("Compare Value" + str(id))
             rtcSymMode0_COMP0.setDefaultValue(0x00000000)
             rtcSymMode0_COMP0.setMax(0xFFFFFFFF)
@@ -1004,6 +1029,7 @@ def instantiateComponent(rtcComponent):
     # Interrupt Enable Set
     rtcSymMode0_Matcclr = rtcComponent.createBooleanSymbol(
         "RTC_MODE0_MATCHCLR", rtcSymMode0Menu)
+    rtcSymMode0_Matcclr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     rtcSymMode0_Matcclr.setLabel("Clear on compare Match")
 
     rtcSymMode0Events = rtcComponent.createMenuSymbol(
@@ -1017,6 +1043,7 @@ def instantiateComponent(rtcComponent):
     for i in range(0, len(rtcEventsValues)):
         if "TAMP" not in rtcEventsValues[i].getAttribute("name"):
             rtcSymMode0_Event = rtcComponent.createBooleanSymbol("RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE", rtcSymMode0Events)
+            rtcSymMode0_Event.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:EVCTRL")
             rtcSymMode0_Event.setLabel(rtcEventsValues[i].getAttribute("caption"))
             rtcMode0EvctrlMap[rtcEventsValues[i].getAttribute("name")] = rtcEventsValues[i].getAttribute("mask")
             rtcMode0EvctrlDep.append("RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE")
@@ -1052,6 +1079,7 @@ def instantiateComponent(rtcComponent):
     # Configure the RTC Interrupts
     rtcSymMode1_INTENSET = rtcComponent.createBooleanSymbol(
         "RTC_MODE1_INTERRUPT", rtcSymMode1Menu)
+    rtcSymMode1_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:INTENSET")
     rtcSymMode1_INTENSET.setLabel("Enable Interrupts ?")
     rtcSymMode1_INTENSET.setDefaultValue(True)
 
@@ -1072,6 +1100,7 @@ def instantiateComponent(rtcComponent):
         if "TAMPER" not in rtcMode1InterruptValues[i].getAttribute("name"):
             rtcSymMode1_Interrupt = rtcComponent.createBooleanSymbol(
                 "RTC_MODE1_INTENSET_" + rtcMode1InterruptValues[i].getAttribute("name") + "_ENABLE", rtcSymMode1_INTENSET)
+            rtcSymMode1_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:INTENSET")
             rtcSymMode1_Interrupt.setLabel(
                 rtcMode1InterruptValues[i].getAttribute("caption"))
             rtcMode1InterruptMap[rtcMode1InterruptValues[i].getAttribute(
@@ -1099,6 +1128,7 @@ def instantiateComponent(rtcComponent):
     # Prescaler
     rtcSymMode1_CTRLA_PRESCALER = rtcComponent.createKeyValueSetSymbol(
         "RTC_MODE1_PRESCALER", rtcSymMode1Menu)
+    rtcSymMode1_CTRLA_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     rtcSymMode1_CTRLA_PRESCALER.setLabel("RTC Prescaler")
 
     rtcMode1ReferenceNode = ATDF.getNode(
@@ -1129,6 +1159,7 @@ def instantiateComponent(rtcComponent):
     # Configure 16-Bit Timer Period
     rtcSymMode1_PER = rtcComponent.createHexSymbol(
         "RTC_MODE1_TIMER_COUNTER_PERIOD", rtcSymMode1Menu)
+    rtcSymMode1_PER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:PER")
     rtcSymMode1_PER.setLabel("16-bit Timer Period")
     rtcSymMode1_PER.setDefaultValue(0x0000)
     rtcSymMode1_PER.setMax(0xFFFF)
@@ -1138,6 +1169,7 @@ def instantiateComponent(rtcComponent):
         # Compare 0 Match Value
         rtcSymMode1_CMP0 = rtcComponent.createHexSymbol(
             "RTC_MODE1_COMPARE" + str(id) + "_MATCH_VALUE", rtcSymMode1Menu)
+        rtcSymMode1_CMP0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:COMP")
         rtcSymMode1_CMP0.setLabel("Compare " + str(id) + " Value")
         rtcSymMode1_CMP0.setMax(0xFFFF)
         rtcSymMode1_CMP0.setMin(0x0000)
@@ -1155,6 +1187,7 @@ def instantiateComponent(rtcComponent):
         if "TAMP" not in rtcEventsValues[i].getAttribute("name"):
             rtcSymMode1_Event = rtcComponent.createBooleanSymbol(
                 "RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE", rtcSymMode1Events)
+            rtcSymMode1_Event.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:EVCTRL")
             rtcSymMode1_Event.setLabel(rtcEventsValues[i].getAttribute("caption"))
             rtcMode1EvctrlMap[rtcEventsValues[i].getAttribute(
                 "name")] = rtcEventsValues[i].getAttribute("mask")
@@ -1190,6 +1223,7 @@ def instantiateComponent(rtcComponent):
     # Interrupt Enable Set
     rtcSymMode2_INTENSET = rtcComponent.createBooleanSymbol(
         "RTC_MODE2_INTERRUPT", rtcSymMode2Menu)
+    rtcSymMode2_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:INTENSET")
     rtcSymMode2_INTENSET.setLabel("Enable Interrupts?")
 
     rtcMode2InterruptNode = ATDF.getNode(
@@ -1209,6 +1243,7 @@ def instantiateComponent(rtcComponent):
         if "TAMPER" not in rtcMode2InterruptValues[i].getAttribute("name"):
             rtcSymMode2_Interrupt = rtcComponent.createBooleanSymbol(
                 "RTC_MODE2_INTENSET_" + rtcMode2InterruptValues[i].getAttribute("name") + "_ENABLE", rtcSymMode2_INTENSET)
+            rtcSymMode2_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:INTENSET")
             rtcSymMode2_Interrupt.setLabel(
                 rtcMode2InterruptValues[i].getAttribute("caption"))
             rtcMode2InterruptMap[rtcMode2InterruptValues[i].getAttribute(
@@ -1235,6 +1270,7 @@ def instantiateComponent(rtcComponent):
     # Prescaler
     rtcSymMode2_CTRLA_PRESCALER = rtcComponent.createKeyValueSetSymbol(
         "RTC_MODE2_PRESCALER", rtcSymMode2Menu)
+    rtcSymMode2_CTRLA_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     rtcSymMode2_CTRLA_PRESCALER.setLabel("RTC Prescaler")
 
     rtcMode2ReferenceNode = ATDF.getNode(
@@ -1264,12 +1300,14 @@ def instantiateComponent(rtcComponent):
     # Reference Year
     rtcSymMode2_REFERENCE_YEAR = rtcComponent.createIntegerSymbol(
         "RTC_MODE2_REFERENCE_YEAR", rtcSymMode2Menu)
+    rtcSymMode2_REFERENCE_YEAR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CLOCK")
     rtcSymMode2_REFERENCE_YEAR.setLabel("Reference Year(Leap Year)")
     rtcSymMode2_REFERENCE_YEAR.setDefaultValue(2016)
 
     # Do not reset RTC if it is already enabled
     rtcSymMode2_DisableRtcReset = rtcComponent.createBooleanSymbol(
         "RTC_MODE2_DISABLE_RTC_RESET", rtcSymMode2Menu)
+    rtcSymMode2_DisableRtcReset.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     rtcSymMode2_DisableRtcReset.setLabel("Disable RTC Reset")
     rtcSymMode2_DisableRtcReset.setDescription("Do not reset RTC if it is already enabled")
     rtcSymMode2_DisableRtcReset.setDefaultValue(False)
@@ -1286,6 +1324,7 @@ def instantiateComponent(rtcComponent):
         if "TAMP" not in rtcEventsValues[i].getAttribute("name"):
             rtcSymMode2_Event = rtcComponent.createBooleanSymbol(
                 "RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE", rtcSymMode2Events)
+            rtcSymMode2_Event.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:EVCTRL")
             rtcSymMode2_Event.setLabel(rtcEventsValues[i].getAttribute("caption"))
             rtcMode2EvctrlMap[rtcEventsValues[i].getAttribute(
                 "name")] = rtcEventsValues[i].getAttribute("mask")

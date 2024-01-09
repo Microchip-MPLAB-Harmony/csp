@@ -63,31 +63,37 @@ def instantiateComponent(sdhcComponent):
 
     sdhcCDSupport = sdhcComponent.createBooleanSymbol("SDCARD_SDCD_SUPPORT", None)
     sdhcCDSupport.setLabel("SDHC SDCD Support")
+    sdhcCDSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdhc_u2011;register:%NOREGISTER%")
     sdhcCDSupport.setDefaultValue(True)
     sdhcCDSupport.setVisible(False)
 
     sdhcWPSupport = sdhcComponent.createBooleanSymbol("SDCARD_SDWP_SUPPORT", None)
     sdhcWPSupport.setLabel("SDHC SDWP Support")
+    sdhcWPSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdhc_u2011;register:%NOREGISTER%")
     sdhcWPSupport.setDefaultValue(True)
     sdhcWPSupport.setVisible(False)
 
     sdhc8BitSupport = sdhcComponent.createBooleanSymbol("SDCARD_8BIT_SUPPORT", None)
     sdhc8BitSupport.setLabel("SDHC 8 Bit Support")
+    sdhc8BitSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdhc_u2011;register:%NOREGISTER%")
     sdhc8BitSupport.setDefaultValue(False)
     sdhc8BitSupport.setVisible(False)
 
     sdhcEMMCSupport = sdhcComponent.createBooleanSymbol("SDCARD_EMMC_SUPPORT", None)
     sdhcEMMCSupport.setLabel("SDHC EMMC Support")
+    sdhcEMMCSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdhc_u2011;register:%NOREGISTER%")
     sdhcEMMCSupport.setDefaultValue(True)
     sdhcEMMCSupport.setVisible(False)
 
     sdhcCD = sdhcComponent.createBooleanSymbol("SDCARD_SDCDEN", None)
     sdhcCD.setLabel("Use SD Card Detect (SDCD#) Pin")
+    sdhcCD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdhc_u2011;register:%NOREGISTER%")
     sdhcCD.setDefaultValue(False)
     sdhcCD.setVisible(False)
 
     sdhcWP = sdhcComponent.createBooleanSymbol("SDCARD_SDWPEN", None)
     sdhcWP.setLabel("Use SD Write Protect (SDWP#) Pin")
+    sdhcWP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdhc_u2011;register:%NOREGISTER%")
     sdhcWP.setDefaultValue(False)
     sdhcWP.setVisible(False)
 
@@ -97,6 +103,7 @@ def instantiateComponent(sdhcComponent):
     sdhcUseEMMC.setDefaultValue(False)
 
     sdhcDescLines = sdhcComponent.createIntegerSymbol("SDHC_NUM_DESCRIPTOR_LINES", None)
+    sdhcDescLines.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdhc_u2011;register:%NOREGISTER%")
     sdhcDescLines.setLabel("Number of ADMA2 Descriptor Lines")
     sdhcDescLines.setMin(1)
     sdhcDescLines.setMax(10)

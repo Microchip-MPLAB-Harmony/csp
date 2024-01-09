@@ -452,6 +452,7 @@ def instantiateComponent(tcComponent):
 
     global tySym_Slave_Mode
     tySym_Slave_Mode = tcComponent.createBooleanSymbol("TC_SLAVE_MODE", None)
+    tySym_Slave_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:%NOREGISTER%")
     tySym_Slave_Mode.setLabel("Slave Mode")
     tySym_Slave_Mode.setDefaultValue(isMasterSlaveModeEnable)
     if isMasterSlaveModeEnable == True:
@@ -466,6 +467,7 @@ def instantiateComponent(tcComponent):
     global tcSym_CTRLA_MODE
     tcSym_CTRLA_MODE = tcComponent.createKeyValueSetSymbol("TC_CTRLA_MODE", None)
     tcSym_CTRLA_MODE.setLabel("Counter Mode")
+    tcSym_CTRLA_MODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLA")
     tcModeNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CTRLA__MODE\"]")
     tcModeValues = []
     tcModeValues = tcModeNode.getChildren()
@@ -497,11 +499,13 @@ def instantiateComponent(tcComponent):
 
     sysTimePlibMode = tcComponent.createStringSymbol("SYS_TIME_PLIB_OPERATION_MODE", None)
     sysTimePlibMode.setLabel("SysTime PLIB Operation Mode")
+    sysTimePlibMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:%NOREGISTER%")
     sysTimePlibMode.setVisible(False)
     sysTimePlibMode.setDefaultValue("")
 
     sysTimeComponentId = tcComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
     sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:%NOREGISTER%")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
 
@@ -573,6 +577,7 @@ def instantiateComponent(tcComponent):
     global tcSym_CTRLA_PRESCALER
     tcSym_CTRLA_PRESCALER = tcComponent.createKeyValueSetSymbol("TC_CTRLA_PRESCALER", None)
     tcSym_CTRLA_PRESCALER.setLabel("Select Prescaler")
+    tcSym_CTRLA_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLA")
     tcPrescalerSelectionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CTRLA__PRESCALER\"]")
     tcPrescalerSelectionValues = []
     tcPrescalerSelectionValues = tcPrescalerSelectionNode.getChildren()
@@ -607,6 +612,7 @@ def instantiateComponent(tcComponent):
     #TC clock frequency
     tcSym_Frequency = tcComponent.createIntegerSymbol("TC_FREQUENCY", None)
     tcSym_Frequency.setLabel("Clock Frequency")
+    tcSym_Frequency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:%NOREGISTER%")
     tcSym_Frequency.setVisible(False)
     tcSym_Frequency.setDefaultValue (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_FREQUENCY"))
     tcSym_Frequency.setDependencies(tcFreqCalc, ["core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", "TC_CTRLA_PRESCALER"])
@@ -616,6 +622,7 @@ def instantiateComponent(tcComponent):
     global tcSym_OperationMode
     tcSym_OperationMode = tcComponent.createComboSymbol("TC_OPERATION_MODE", None, tcOperationModeList)
     tcSym_OperationMode.setLabel("Operating Mode")
+    tcSym_OperationMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:%NOREGISTER%")
     tcSym_OperationMode.setDefaultValue("Timer")
     if isMasterSlaveModeEnable == True:
         tcSym_OperationMode.setVisible(False)
@@ -644,6 +651,7 @@ def instantiateComponent(tcComponent):
 
     #run standby mode
     tcSym_CTRLA_RUNSTDBY = tcComponent.createBooleanSymbol("TC_CTRLA_RUNSTDBY", tcSym_SleepConfiguration)
+    tcSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLA")
     tcSym_CTRLA_RUNSTDBY.setLabel("Run during Standby")
 
     tcModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]")

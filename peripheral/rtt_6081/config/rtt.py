@@ -163,6 +163,7 @@ def instantiateComponent(rttComponent):
 
     sysTimeComponentId = rttComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
     sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:%NOREGISTER%")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
 
@@ -205,16 +206,19 @@ def instantiateComponent(rttComponent):
 
     global rttPeriodicInterrupt
     rttPeriodicInterrupt = rttComponent.createBooleanSymbol("rttINCIEN", rttMenu)
+    rttPeriodicInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:RTT_MR")
     rttPeriodicInterrupt.setLabel("Enable Prescale Rollover Interrupt")
     rttPeriodicInterrupt.setDefaultValue(False)
 
     global rttAlarm
     rttAlarm = rttComponent.createBooleanSymbol("rttALMIEN", rttMenu)
+    rttAlarm.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:%NOREGISTER%")
     rttAlarm.setLabel("Enable Alarm Interrupt")
     rttAlarm.setDefaultValue(True)
 
     if rttINC2Support.getValue():
         rttInc2Enable = rttComponent.createBooleanSymbol("rttINC2EN", rttMenu)
+        rttInc2Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:%NOREGISTER%")
         rttInc2Enable.setLabel("Enable RTTINC2 Interrupt")
         rttInc2Enable.setDefaultValue(False)
 
@@ -222,6 +226,7 @@ def instantiateComponent(rttComponent):
         rttInc2Values = rttInc2Node.getChildren()
 
         rttSelinc2 = rttComponent.createKeyValueSetSymbol("RTT_SELINC2", rttMenu)
+        rttSelinc2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:RTT_MODR")
         rttSelinc2.setLabel("Periodicity of RTTINC2 Interrupt")
         for index in range(0, len(rttInc2Values)):
             key =  rttInc2Values[index].getAttribute("name")
@@ -234,6 +239,7 @@ def instantiateComponent(rttComponent):
 
     if rttEVASupport.getValue():
         rttEventEnable = rttComponent.createBooleanSymbol("rttEVAEN", rttMenu)
+        rttEventEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:%NOREGISTER%")
         rttEventEnable.setLabel("Generate Alarm Interrupt on RTT event")
         rttEventEnable.setDefaultValue(False)
 
@@ -241,6 +247,7 @@ def instantiateComponent(rttComponent):
         rttInc2Values = rttInc2Node.getChildren()
 
         rttSeltrgev = rttComponent.createKeyValueSetSymbol("RTT_SELTRGEV", rttMenu)
+        rttSeltrgev.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:RTT_MODR")
         rttSeltrgev.setLabel("Periodicity of RTT Event")
         for index in range(0, len(rttInc2Values)):
             key =  rttInc2Values[index].getAttribute("name")
@@ -252,10 +259,12 @@ def instantiateComponent(rttComponent):
         rttSeltrgev.setDisplayMode("Description")
 
     rttClkSrc = rttComponent.createBooleanSymbol("rttRTC1HZ", rttMenu)
+    rttClkSrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:%NOREGISTER%")
     rttClkSrc.setLabel("Use RTC 1Hz as clock Source")
     rttClkSrc.setDefaultValue(False)
 
     rttPrescaleValue = rttComponent.createIntegerSymbol("rttRTPRES", rttMenu)
+    rttPrescaleValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtt_6081;register:RTT_MR")
     rttPrescaleValue.setLabel("Prescalar Value ")
     rttPrescaleValue.setMax(65535)
     rttPrescaleValue.setMin(0)

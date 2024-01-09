@@ -33,6 +33,7 @@ def instantiateComponent(rconComponent):
     rconInstanceName.setDefaultValue(rconComponent.getID().upper())
 
     rconSym_Enable = rconComponent.createBooleanSymbol("RCON_ENABLE", None)
+    rconSym_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rcon_03100;register:RCON")
     rconSym_Enable.setLabel("Use Resets ?")
     rconSym_Enable.setDefaultValue(True)
     rconSym_Enable.setReadOnly(True)
@@ -46,6 +47,7 @@ def instantiateComponent(rconComponent):
     for id in range(len(rconRegister.getChildren())):
         rconSym_Cause = rconComponent.createKeyValueSetSymbol("RCON_CAUSE_" + str(id), None)
         rconSym_Cause.setLabel(str(rconRegister.getChildren()[id].getAttribute("caption")))
+        rconSym_Cause.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rcon_03100;register:RCON")
         rconSym_Cause.addKey(rconRegister.getChildren()[id].getAttribute("name"), str(id), rconRegister.getChildren()[id].getAttribute("caption"))
         rconSym_Cause.setOutputMode("Key")
         rconSym_Cause.setDisplayMode("Description")

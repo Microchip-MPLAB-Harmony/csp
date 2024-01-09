@@ -75,14 +75,17 @@ if __name__ == "__main__":
             interrupt_sym.setVisible(False)
 
             sym_enable = coreComponent.createBooleanSymbol ("{0}_INTERRUPT_ENABLE".format(name), interrupt_menu)
+            sym_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gic;register:%NOREGISTER%")
             sym_enable.setLabel("Enable {0} interrupt".format(name))
             sym_enable.setDescription(caption)
 
             sym_handler = coreComponent.createStringSymbol("{0}_INTERRUPT_HANDLER".format(name), sym_enable)
+            sym_handler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gic;register:%NOREGISTER%")
             sym_handler.setLabel("{0} Handler".format(name))
             sym_handler.setDefaultValue("{0}_Handler".format(name))
 
             sym_config = coreComponent.createKeyValueSetSymbol("{0}_INTERRUPT_CONFIG".format(name), sym_enable)
+            sym_config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gic;register:%NOREGISTER%")
             sym_config.setLabel("{0} Configuration".format(name))
             sym_config.addKey("LEVEL", "0", "Level Sensitive interrupt")
             sym_config.addKey("EDGE", "2", "Edge triggered interrupt")
@@ -90,20 +93,24 @@ if __name__ == "__main__":
             sym_config.setReadOnly(index < 32)
 
             sym_priority = coreComponent.createIntegerSymbol ("{0}_INTERRUPT_PRIORITY".format(name), sym_enable)
+            sym_priority.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gic;register:%NOREGISTER%")
             sym_priority.setLabel(" {0} interrupt priority".format(name))
             sym_priority.setMax(255)
 
             sym_security = coreComponent.createComboSymbol("{0}_INTERRUPT_SECURITY".format(name), sym_enable, ["SECURE", "NON_SECURE"])
+            sym_security.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gic;register:%NOREGISTER%")
             sym_security.setLabel("{0} security".format(name))
 
             if len(module_instances) > 1 and index > 31:
                 sym_sub_list = []
                 for instance in module_instances:
                     sym_sub_enable = coreComponent.createBooleanSymbol ("{0}_INTERRUPT_ENABLE".format(instance), sym_enable)
+                    sym_sub_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gic;register:%NOREGISTER%")
                     sym_sub_enable.setLabel("Enable {0}".format(instance))
                     sym_sub_list.append(sym_sub_enable.getID())
 
                     sym_sub_handler = coreComponent.createStringSymbol("{0}_INTERRUPT_HANDLER".format(instance), sym_enable)
+                    sym_sub_handler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gic;register:%NOREGISTER%")
                     sym_sub_handler.setLabel("{0} Handler".format(instance))
                     sym_sub_handler.setDefaultValue("{0}_Handler".format(instance))
 

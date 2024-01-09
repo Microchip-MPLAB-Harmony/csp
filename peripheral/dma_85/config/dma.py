@@ -247,6 +247,7 @@ def DMA_ATDF_Read(coreComponent, dmaEnable):
 
     # DMA_CHANNEL_COUNT: Needed for DMA system service to generate channel enum
     dmaChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", dmaEnable)
+    dmaChCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
     dmaChCount.setLabel("DMA (DMAC) Channels Count")
     dmaChCount.setDefaultValue(dmaChannelCount)
     dmaChCount.setVisible(False)
@@ -324,12 +325,14 @@ dmaMenu.setDescription("DMA (DMAC) Configuration")
 
 # DMA_IP: Needed to generate IP specific code in DMA System Service
 dmaPLIBIp = coreComponent.createStringSymbol("DMA_IP", dmaMenu)
+dmaPLIBIp.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
 dmaPLIBIp.setLabel("DMA IP")
 dmaPLIBIp.setDefaultValue("dma_85")
 dmaPLIBIp.setVisible(False)
 
 # DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
 dmaEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmaMenu)
+dmaEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CTRL")
 dmaEnable.setLabel("Use DMA Service ?")
 dmaEnable.setVisible(True)
 dmaEnable.setReadOnly(True)
@@ -337,12 +340,14 @@ dmaEnable.setDefaultValue(False)
 
 # Enable only low-level APIs 
 dmaLowLevelAPIOnly = coreComponent.createBooleanSymbol("DMA_LOW_LEVEL_API_ONLY", dmaEnable)
+dmaLowLevelAPIOnly.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
 dmaLowLevelAPIOnly.setLabel("Generate low-level APIs only")
 dmaLowLevelAPIOnly.setDefaultValue(False)
 dmaLowLevelAPIOnly.setVisible(True)
 
 # Interrupt type selection
 dmaInterruptType = coreComponent.createKeyValueSetSymbol("DMA_INTERRUPT_TYPE", dmaEnable)
+dmaInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
 dmaInterruptType.setLabel("Interrupt Type")
 dmaInterruptType.addKey("DIRECT", "0", "Direct")
 dmaInterruptType.addKey("AGGREGATE", "1", "Aggregate")
@@ -354,6 +359,7 @@ dmaInterruptType.setDependencies(interruptTypeChange, ["DMA_INTERRUPT_TYPE"])
 
 # Needed for code generation
 dmaHighestCh = coreComponent.createIntegerSymbol("DMA_HIGHEST_CHANNEL", dmaEnable)
+dmaHighestCh.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
 dmaHighestCh.setLabel("DMA (DMAC) Highest Active Channel")
 dmaHighestCh.setVisible(False)
 
@@ -370,6 +376,7 @@ for channelID in range(0, channelCount):
 
     # Channel enable
     dmaChannelEnable = coreComponent.createBooleanSymbol("DMA_ENABLE_CH_" + str(channelID), dmaMenu)
+    dmaChannelEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
     dmaChannelEnable.setLabel("Use DMA Channel " + str(channelID))
     dmaChannelEnable.setDefaultValue(False)
     dmaChannelEnable.setDependencies(onDMAChannelEnable, ["DMA_ENABLE_CH_" + str(channelID)])
@@ -377,12 +384,14 @@ for channelID in range(0, channelCount):
 
     # Enable hardware flow control?
     dmaHwFlowCtrlEn = coreComponent.createBooleanSymbol("DMA_ENABLE_HW_FLOW_CTRL_CH_" + str(channelID), dmaChannelEnable)
+    dmaHwFlowCtrlEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CTRL")
     dmaHwFlowCtrlEn.setLabel("Enable hardware flow control")
     dmaHwFlowCtrlEn.setDefaultValue(True)
     dmaHwFlowCtrlEn.setDependencies(setVisibleOnDMAChEnable, ["DMA_ENABLE_CH_" + str(channelID)])
 
     # Select hardware flow control device
     dmaHwFlowCtrlDevice = coreComponent.createKeyValueSetSymbol("DMA_HW_FLOW_CTRL_DEV_CH_" + str(channelID), dmaHwFlowCtrlEn)
+    dmaHwFlowCtrlDevice.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CTRL")
     dmaHwFlowCtrlDevice.setLabel("Hardware flow control device")
     hardwareFlowCtrlDevKeyList = sorted(per_instance.keys())
 
@@ -397,12 +406,14 @@ for channelID in range(0, channelCount):
     
     # DMA manager will use LOCK symbol to lock the "DMA_HW_FLOW_CTRL_DEV_CH_ + str(channelID)" symbol
     dmaHwFlowCtrlDevLock = coreComponent.createBooleanSymbol("DMA_HW_FLOW_CTRL_DEV_CH_" + str(channelID) + "_PERID_LOCK", dmaChannelEnable)
+    dmaHwFlowCtrlDevLock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CTRL")
     dmaHwFlowCtrlDevLock.setLabel("Lock DMA Request")
     dmaHwFlowCtrlDevLock.setVisible(False)
     dmaHwFlowCtrlDevLock.setUseSingleDynamicValue(True)
 
     # Select DMA transfer size
     dmaTransferSize = coreComponent.createKeyValueSetSymbol("DMA_TRANS_SIZE_CH_" + str(channelID), dmaChannelEnable)
+    dmaTransferSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CTRL")
     dmaTransferSize.setLabel("Transfer Size")
 
     for index in range(len(dmaTransferSizeValues)):
@@ -417,18 +428,21 @@ for channelID in range(0, channelCount):
 
     # Device address increment
     dmaDevAddrInc = coreComponent.createBooleanSymbol("DMA_DEVICE_ADDR_INC_CH_" + str(channelID), dmaChannelEnable)
+    dmaDevAddrInc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CTRL")
     dmaDevAddrInc.setLabel("Device address increment")
     dmaDevAddrInc.setDefaultValue(False)
     dmaDevAddrInc.setDependencies(setVisibleOnDMAChEnable, ["DMA_ENABLE_CH_" + str(channelID)])
 
     # Memory address increment
     dmaMemAddrInc = coreComponent.createBooleanSymbol("DMA_MEMORY_ADDR_INC_CH_" + str(channelID), dmaChannelEnable)
+    dmaMemAddrInc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CTRL")
     dmaMemAddrInc.setLabel("Memory address increment")
     dmaMemAddrInc.setDefaultValue(False)
     dmaMemAddrInc.setDependencies(setVisibleOnDMAChEnable, ["DMA_ENABLE_CH_" + str(channelID)])
 
     # Transfer Direction
     dmaTransferDir = coreComponent.createKeyValueSetSymbol("DMA_TRANFER_DIR_CH_" + str(channelID), dmaChannelEnable)
+    dmaTransferDir.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:CTRL")
     dmaTransferDir.setLabel("Transfer direction")
 
     for index in range(len(dmaTransferDirValues)):
@@ -443,12 +457,14 @@ for channelID in range(0, channelCount):
     if channelID == 0:
         # CRC engine configuration
         dmaCRCEnable = coreComponent.createBooleanSymbol("DMA_CRC_ENABLE_CH_" + str(channelID), dmaChannelEnable)
+        dmaCRCEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
         dmaCRCEnable.setLabel("CRC Engine Enable")
         dmaCRCEnable.setDefaultValue(False)
         dmaCRCEnable.setDependencies(setVisibleOnDMAChEnable, ["DMA_ENABLE_CH_" + str(channelID)])
     if channelID == 1:
         # Fill engine configuration
         dmaFillEnable = coreComponent.createBooleanSymbol("DMA_FILL_ENABLE_CH_" + str(channelID), dmaChannelEnable)
+        dmaFillEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
         dmaFillEnable.setLabel("Fill Engine Enable")
         dmaFillEnable.setDefaultValue(False)
         dmaFillEnable.setDependencies(updateConfigOnFillEnable, ["DMA_FILL_ENABLE_CH_" + str(channelID)])
@@ -464,16 +480,19 @@ dmaHighestCh.setDependencies(onDMAChannelEnable, dmaChannelIds)
 # Interface for Peripheral clients
 for per in per_instance.keys():
     dmaChannelNeeded = coreComponent.createBooleanSymbol("DMA_CH_NEEDED_FOR_" + str(per), dmaMenu)
+    dmaChannelNeeded.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
     dmaChannelNeeded.setLabel("Local DMA_CH_NEEDED_FOR_" + str(per))
     dmaChannelNeeded.setVisible(False)
     peridValueListSymbols.append("DMA_CH_NEEDED_FOR_" + str(per))
 
     dmaChannel = coreComponent.createIntegerSymbol("DMA_CH_FOR_" + str(per), dmaMenu)
+    dmaChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
     dmaChannel.setLabel("Local DMA_CH_FOR_" + str(per))
     dmaChannel.setDefaultValue(-1)
     dmaChannel.setVisible(False)
 
 dmaPERIDChannelUpdate = coreComponent.createBooleanSymbol("DMA_CHANNEL_ALLOC", dmaChannelEnable)
+dmaPERIDChannelUpdate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_85;register:%NOREGISTER%")
 dmaPERIDChannelUpdate.setLabel("Local dmaChannelAllocLogic")
 dmaPERIDChannelUpdate.setVisible(False)
 dmaPERIDChannelUpdate.setDependencies(dmaChannelAllocLogic, peridValueListSymbols)

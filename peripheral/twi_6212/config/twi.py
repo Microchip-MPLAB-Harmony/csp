@@ -108,12 +108,14 @@ def instantiateComponent(twiComponent):
 
 
     twiOpMode = twiComponent.createComboSymbol("TWI_OPMODE", None, twiOpModeValues)
+    twiOpMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twi_6212;register:%NOREGISTER%")
     twiOpMode.setLabel("TWI Operation Mode")
     twiOpMode.setDefaultValue("MASTER")
     twiOpMode.setReadOnly(True)
 
     #Peripheral Clock Frequency
     twiClockSourceFreq = twiComponent.createIntegerSymbol("TWI_CLK_SRC_FREQ", None)
+    twiClockSourceFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twi_6212;register:%NOREGISTER%")
     twiClockSourceFreq.setLabel("Source Clock Frequency (Hz)")
     twiClockSourceFreq.setDefaultValue(int(Database.getSymbolValue("core", twiInstanceName.getValue() + "_CLOCK_FREQUENCY")))
     twiClockSourceFreq.setDependencies(setTwiClockSourceFreq, ["core." + twiInstanceName.getValue() + "_CLOCK_FREQUENCY"])
@@ -121,6 +123,7 @@ def instantiateComponent(twiComponent):
 
     #Operating speed
     twiClockSpeed = twiComponent.createIntegerSymbol("I2C_CLOCK_SPEED", None)
+    twiClockSpeed.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twi_6212;register:%NOREGISTER%")
     twiClockSpeed.setLabel("Clock Speed (Hz)")
     twiClockSpeed.setMin(100000)
     twiClockSpeed.setMax(400000)
@@ -129,6 +132,7 @@ def instantiateComponent(twiComponent):
     #Operating speed (HZ)
     twiClockSpeedHz = twiComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", None)
     twiClockSpeedHz.setLabel("Clock Speed (Hz)")
+    twiClockSpeedHz.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twi_6212;register:%NOREGISTER%")
     twiClockSpeedHz.setDefaultValue(twiClockSpeed.getValue())
     twiClockSpeedHz.setVisible(False)
     twiClockSpeedHz.setDependencies(updateI2CBaudHz, ["I2C_CLOCK_SPEED"])

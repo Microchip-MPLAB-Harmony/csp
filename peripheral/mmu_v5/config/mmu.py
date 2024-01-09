@@ -28,14 +28,17 @@ cacheMenu.setLabel("CACHE")
 cacheMenu.setDescription("CACHE Configuration")
 
 dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)
+dcacheEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mmu_v5;register:%NOREGISTER%")
 dcacheEnable.setLabel("Enable Data Cache")
 dcacheEnable.setDefaultValue(True)
 
 icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cacheMenu)
+icacheEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mmu_v5;register:%NOREGISTER%")
 icacheEnable.setLabel("Enable Instruction Cache")
 icacheEnable.setDefaultValue(True)
 
 cacheAlign = coreComponent.createIntegerSymbol("CACHE_ALIGN", cacheMenu)
+cacheAlign.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mmu_v5;register:%NOREGISTER%")
 cacheAlign.setLabel("Cache Alignment Length")
 cacheAlign.setVisible(False)
 cacheAlign.setDefaultValue(32)

@@ -105,12 +105,14 @@ def instantiateComponent(htmTmrComponent):
     htmTmrInstanceNum.setDefaultValue(instanceNum)
 
     htmTmrReloadValue = htmTmrComponent.createIntegerSymbol("HTM_TMR_PRELOAD_VALUE", None)
+    htmTmrReloadValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:htm_29;register:PRLD")
     htmTmrReloadValue.setLabel("Timer Preload Value")
     htmTmrReloadValue.setMin(0)
     htmTmrReloadValue.setMax(65535)
     htmTmrReloadValue.setDefaultValue(65535)
 
     htmTmrResolution = htmTmrComponent.createKeyValueSetSymbol("HTM_TMR_RESOLUTION", None)
+    htmTmrResolution.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:htm_29;register:%NOREGISTER%")
     htmTmrResolution.setLabel("Timer Resolution")
     htmTmrResolution.addKey("32768_HZ", "0", "32768 Hz")
     htmTmrResolution.addKey("8_HZ", "1", "8 Hz")
@@ -130,6 +132,7 @@ def instantiateComponent(htmTmrComponent):
 
     # Interrupt type selection
     htmTmrInterruptType = htmTmrComponent.createKeyValueSetSymbol("HTM_TMR_INTERRUPT_TYPE", None)
+    htmTmrInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:htm_29;register:%NOREGISTER%")
     htmTmrInterruptType.setLabel("Interrupt Type")
     if nvic_int_num["direct_nvic_num"] != None:
         htmTmrInterruptType.addKey("DIRECT", "0", "Direct")

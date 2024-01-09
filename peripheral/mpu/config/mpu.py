@@ -113,6 +113,7 @@ mpuMenu = coreComponent.createMenuSymbol("MPU_MENU", cortexMenu)
 mpuMenu.setLabel("MPU")
 
 coreUseMPU = coreComponent.createBooleanSymbol("CoreUseMPU", mpuMenu)
+coreUseMPU.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:%NOREGISTER%")
 coreUseMPU.setLabel("Enable MPU?")
 
 mpuConfMenu = coreComponent.createMenuSymbol("MPU_MENU_CONF", mpuMenu)
@@ -121,6 +122,7 @@ mpuConfMenu.setDependencies(enableMenu, ["CoreUseMPU"])
 mpuConfMenu.setVisible(False)
 
 mpuFileGen = coreComponent.createBooleanSymbol("MPU_BOOL_0", coreUseMPU)
+mpuFileGen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:%NOREGISTER%")
 mpuFileGen.setLabel("MPU File Generation")
 mpuFileGen.setDependencies(enableFileGen, ["CoreUseMPU"])
 mpuFileGen.setVisible(False)
@@ -130,16 +132,19 @@ mpuNumRegions.setVisible(False)
 mpuNumRegions.setDefaultValue(mpuRegions)
 
 coreMPUHFNMIENA  = coreComponent.createBooleanSymbol("CoreMPU_HFNMIENA", mpuConfMenu)
+coreMPUHFNMIENA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:CTRL")
 coreMPUHFNMIENA.setLabel("HFNMIENA")
 coreMPUHFNMIENA.setDescription("Enables MPU during HardFault, NMI, or  when FAULTMASK is set")
 coreMPUHFNMIENA.setDefaultValue(False)
 
 coreUseMPUPRIVDEFENA = coreComponent.createBooleanSymbol("CoreMPU_PRIVDEFENA", mpuConfMenu)
+coreUseMPUPRIVDEFENA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:CTRL")
 coreUseMPUPRIVDEFENA.setLabel("PRIVDEFENA")
 coreUseMPUPRIVDEFENA.setDefaultValue(True)
 coreUseMPUPRIVDEFENA.setDescription("Enables privileged software access to the default memory map")
 
 coreUseDefault = coreComponent.createBooleanSymbol("CoreMPU_DEFAULT", mpuConfMenu)
+coreUseDefault.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:%NOREGISTER%")
 coreUseDefault.setLabel("Use Recommended settings")
 coreUseDefault.setDefaultValue(False)
 coreUseDefault.setDescription("Sets up recommended settings for the different peripheral")
@@ -147,6 +152,7 @@ coreUseDefault.setDescription("Sets up recommended settings for the different pe
 for i in range(0,mpuRegions):
 
     coreMPURegEnable = coreComponent.createBooleanSymbol(("MPU_Region_" + str(i) + "_Enable"), mpuConfMenu)
+    coreMPURegEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:%NOREGISTER%")
     coreMPURegEnable.setLabel("Enable MPU Region" + str(i))
 
     coreMPURegMenu = coreComponent.createMenuSymbol("MPU_MENU_" + str(i), coreMPURegEnable)
@@ -156,21 +162,25 @@ for i in range(0,mpuRegions):
     coreMPURegMenu.setVisible(False)
 
     coreMPURegNameOptions = coreComponent.createComboSymbol(("MPU_Region_Name" + str(i) +"_Options"), coreMPURegMenu, mpuSettings.keys())
+    coreMPURegNameOptions.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:%NOREGISTER%")
     coreMPURegNameOptions.setLabel("Region Name Options")
     coreMPURegNameOptions.setVisible(False)
 
 
     coreMPURegName = coreComponent.createStringSymbol(("MPU_Region_Name" + str(i)), coreMPURegMenu)
+    coreMPURegName.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:%NOREGISTER%")
     coreMPURegName.setLabel("Region Name")
     # Default value is set later to trigger business logic for the first time
 
     coreMPURegAddress = coreComponent.createHexSymbol(("MPU_Region_" + str(i) + "_Address"), coreMPURegMenu)
+    coreMPURegAddress.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:RBAR")
     coreMPURegAddress.setLabel("Base Address")
     coreMPURegAddress.setMin(0x0)
     coreMPURegAddress.setMax(0xFFFFFFFF)
     coreMPURegAddress.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
     coreMPURegSize = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Size"), coreMPURegMenu)
+    coreMPURegSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:RASR")
     coreMPURegSize.setLabel("Size")
     coreMPURegSize.setOutputMode("Value")
     coreMPURegSize.setDisplayMode("Description")
@@ -209,12 +219,14 @@ for i in range(0,mpuRegions):
     coreMPURegSize.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
     coreMPURegLength = coreComponent.createStringSymbol(("MPU_Region_" + str(i)) + "_Length", coreMPURegMenu)
+    coreMPURegLength.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:%NOREGISTER%")
     coreMPURegLength.setLabel("Region Length")
     coreMPURegLength.setVisible(False)
     coreMPURegLength.setDependencies(storeLength, ["MPU_Region_" + str(i) + "_Size"])
 
 
     coreMPURegType = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Type"), coreMPURegMenu)
+    coreMPURegType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:RASR")
     coreMPURegType.setLabel("Memory Type and Cache policy")
     coreMPURegType.setOutputMode("Key")
     coreMPURegType.setDisplayMode("Description")
@@ -236,6 +248,7 @@ for i in range(0,mpuRegions):
 
 
     coreMPURegAccess = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Access"), coreMPURegMenu)
+    coreMPURegAccess.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:RASR")
     coreMPURegAccess.setLabel("Data Access Permission")
     coreMPURegAccess.setOutputMode("Key")
     coreMPURegAccess.setDisplayMode("Description")
@@ -248,11 +261,13 @@ for i in range(0,mpuRegions):
     coreMPURegAccess.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
     coreMPURegExecute = coreComponent.createBooleanSymbol(("MPU_Region_" + str(i) + "_Execute"), coreMPURegMenu)
+    coreMPURegExecute.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:RASR")
     coreMPURegExecute.setLabel("Instruction Access Permission")
     coreMPURegExecute.setDefaultValue(False)
     coreMPURegExecute.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
     coreMPURegShare= coreComponent.createBooleanSymbol(("MPU_Region_" + str(i) + "_Share" ), coreMPURegMenu)
+    coreMPURegShare.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mpu;register:RASR")
     coreMPURegShare.setLabel("Shareable Attribute")
     coreMPURegShare.setDefaultValue(False)
     coreMPURegShare.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])

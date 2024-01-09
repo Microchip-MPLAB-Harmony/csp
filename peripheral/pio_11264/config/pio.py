@@ -438,16 +438,19 @@ else:
     Database.setSymbolValue("core",  "PIO_CLOCK_ENABLE", True)
 
 pioEnable = coreComponent.createBooleanSymbol("PIO_ENABLE", pioMenu)
+pioEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
 pioEnable.setLabel("Use PIO PLIB?")
 pioEnable.setDefaultValue(True)
 pioEnable.setReadOnly(True)
 
 pioExport = coreComponent.createBooleanSymbol("PIO_EXPORT", pioEnable)
+pioExport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
 pioExport.setLabel("Export PIO configuration")
 pioExport.setDefaultValue(True)
 pioExport.setVisible(False)
 
 pioExportAs = coreComponent.createComboSymbol("PIO_EXPORT_AS", pioExport, ["CSV File"])
+pioExportAs.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
 pioExportAs.setLabel("Export PIO configuration as ")
 pioExportAs.setVisible(False)
 
@@ -463,6 +466,7 @@ uniquePinout = len(set(package.values()))
 packagePinCount = int(re.findall(r'\d+', package.keys()[0])[0])
 
 pioPackage = coreComponent.createComboSymbol("COMPONENT_PACKAGE", pioEnable, package.values())
+pioPackage.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
 pioPackage.setLabel("Pin Package")
 pioPackage.setReadOnly(True)
 
@@ -528,25 +532,30 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     pinExportName.append(pinExportSym)
 
     pinNameSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pinSym)
+    pinNameSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinNameSym.setLabel("Name")
     pinNameSym.setDefaultValue("")
     pinNameSym.setReadOnly(True)
     symbolsDict.setdefault('name', pinNameSym)
 
     pinTypeSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_TYPE", pinSym)
+    pinTypeSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinTypeSym.setLabel("Type")
     symbolsDict.setdefault('function', pinTypeSym)
 
     pinPeriphFuncSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pinSym)
+    pinPeriphFuncSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinPeriphFuncSym.setLabel("Peripheral Selection")
     pinPeriphFuncSym.setReadOnly(True)
 
     pinBitPosSym = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PIO_PIN", pinSym)
+    pinBitPosSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinBitPosSym.setLabel("Bit Position")
     pinBitPosSym.setReadOnly(True)
     pinBitPosSym.setDependencies(portFunc, ["PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION"])
 
     pinChannelSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_CHANNEL", pinSym)
+    pinChannelSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinChannelSym.setLabel("Channel")
     pinChannelSym.setReadOnly(True)
     pinChannel.append(pinChannelSym)
@@ -557,15 +566,18 @@ for pinNumber in range(1, internalpackagePinCount + 1):
         availablePinDictionary[str(pinNumber)] = currPinPad
 
     pinModeSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_MODE", pinSym)
+    pinModeSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinModeSym.setLabel("Mode")
     pinModeSym.setReadOnly(True)
 
     pinDirectionSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pinSym)
+    pinDirectionSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinDirectionSym.setLabel("Direction")
     pinDirectionSym.setReadOnly(True)
     symbolsDict.setdefault('direction', pinDirectionSym)
 
     pinLatchSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pinSym)
+    pinLatchSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinLatchSym.setLabel("Initial Latch Value")
     pinLatchSym.setReadOnly(True)
     symbolsDict.setdefault('latch', pinLatchSym)
@@ -576,32 +588,38 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     pinLatchValueSym.setDependencies(portLatch, ["PIN_" + str(pinNumber) + "_LAT"])
 
     pinOpenDrainSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_OD", pinSym)
+    pinOpenDrainSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinOpenDrainSym.setLabel("Open Drain")
     pinOpenDrainSym.setReadOnly(True)
     symbolsDict.setdefault('open drain', pinOpenDrainSym)
 
     pinPullUpSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PU", pinSym)
+    pinPullUpSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinPullUpSym.setLabel("Pull Up")
     pinPullUpSym.setReadOnly(True)
     symbolsDict.setdefault('pull up', pinPullUpSym)
 
     pinPullDownSym = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PD", pinSym)
+    pinPullDownSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinPullDownSym.setLabel("Pull Down")
     pinPullDownSym.setReadOnly(True)
     symbolsDict.setdefault('pull down', pinPullDownSym)
 
     pinSchmitt = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_ST", pinSym)
+    pinSchmitt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinSchmitt.setLabel("Schmitt Trigger")
     pinSchmitt.setReadOnly(True)
     symbolsDict.setdefault('st', pinSchmitt)
 
     pinTrigger = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_TAMPER", pinSym)
+    pinTrigger.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinTrigger.setLabel("Tamper Enable")
     pinTrigger.setReadOnly(True)
     symbolsDict.setdefault('tamper', pinTrigger)
 
     if driveStrBit:
         pinDRV = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_DRV", pinSym)
+        pinDRV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
         pinDRV.setLabel("Driver Strength")
         pinDRV.setOutputMode("Value")
         pinDRV.setDisplayMode("Description")
@@ -611,6 +629,7 @@ for pinNumber in range(1, internalpackagePinCount + 1):
         
     if slewRateBits:
         pinSlew = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_SLEW", pinSym)
+        pinSlew.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
         pinSlew.setLabel("Slew Rate")
         pinSlew.setOutputMode("Value")
         pinSlew.setDisplayMode("Description")
@@ -627,6 +646,7 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     pinFilterTypeString.setReadOnly(True)
 
     pinFilter = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_IFEN", pinSym)
+    pinFilter.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinFilter.setLabel("Glitch Filter Enable")
     pinFilter.setDependencies(updateInputFilter, ["PIN_" + str(pinNumber) + "_PIO_FILTER"])
     if debounceFilterEnabledByDefault:
@@ -634,6 +654,7 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     symbolsDict.setdefault('ifen', pinFilter)
 
     pinFilterClock = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_IFSCEN", pinSym)
+    pinFilterClock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinFilterClock.setLabel("Glitch filter Clock Source ")
     pinFilterClock.addKey("MCK", str(0) , "The glitch filter is able to filter glitches with a duration < tmck/2" )
     pinFilterClock.addKey("SLCK", str(1) , "The debouncing filter is able to filter pulses with a duration < tdiv_slck/2" )
@@ -644,6 +665,7 @@ for pinNumber in range(1, internalpackagePinCount + 1):
     # This symbol ID name is split and pin number is extracted and used inside "setupInterrupt" function. so be careful while changing the name of this ID.
     pinInterrupt.append(pinNumber)
     pinInterrupt[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_INTERRUPT", pinSym)
+    pinInterrupt[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:%NOREGISTER%")
     pinInterrupt[pinNumber-1].setLabel("PIO Interrupt")
     pinInterrupt[pinNumber-1].setReadOnly(True)
     symbolsDict.setdefault('interrupt', pinInterrupt[pinNumber-1])
@@ -720,6 +742,7 @@ portConfiguration.setLabel("PIO Registers Configuration")
 scdrNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PIO\"]/register-group@[name=\"PIO\"]/register@[name=\"PIO_SCDR\"]")
 if scdrNode:
     pioSCLKDIV = coreComponent.createIntegerSymbol("PORT_SCLK_DIV", portConfiguration)
+    pioSCLKDIV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pio_11264;register:PIO_SCDR")
     pioSCLKDIV.setLabel("Slow Clock Divider Selection for Debouncing")
     pioSCLKDIV.setMax(16383)
     pioSCLKDIV.setMin(0)

@@ -198,6 +198,7 @@ tcSym_CompareMenu.setDependencies(updateCompareMenuVisibleProperty, ["TC_OPERATI
 #waveform mode
 global tcSym_Compare_WAVE_WAVEGEN
 tcSym_Compare_WAVE_WAVEGEN = tcComponent.createKeyValueSetSymbol("TC_COMPARE_CTRLA_WAVEGEN", tcSym_CompareMenu)
+tcSym_Compare_WAVE_WAVEGEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLA")
 tcSym_Compare_WAVE_WAVEGEN.setLabel("Waveform Mode")
 tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CTRLA__WAVEGEN\"]")
 childrenNodes = tc.getChildren()
@@ -210,6 +211,7 @@ tcSym_Compare_WAVE_WAVEGEN.setDisplayMode("Key")
 
 #compare direction
 tcSym_Compare_CTRLBSET_DIR = tcComponent.createKeyValueSetSymbol("TC_COMPARE_CTRLBSET_DIR", tcSym_CompareMenu)
+tcSym_Compare_CTRLBSET_DIR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLBSET")
 tcSym_Compare_CTRLBSET_DIR.setLabel("Counter Direction")
 tcSym_Compare_CTRLBSET_DIR.addKey("DIR_COUNT_UP", "0", "UP Count")
 tcSym_Compare_CTRLBSET_DIR.addKey("DIR_COUNT_DOWN", "1", "DOWN Count")
@@ -220,6 +222,7 @@ tcSym_Compare_CTRLBSET_DIR.setDisplayMode("Description")
 #compare period
 global tcSym_ComparePeriod
 tcSym_ComparePeriod = tcComponent.createLongSymbol("TC_COMPARE_PERIOD", tcSym_CompareMenu)
+tcSym_ComparePeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:PER")
 tcSym_ComparePeriod.setLabel("Period Value")
 tcSym_ComparePeriod.setDefaultValue(65535)
 tcSym_ComparePeriod.setMin(0)
@@ -235,6 +238,7 @@ tcSym_CompareTopComment.setDependencies(topSymbolChange, ["TC_CTRLA_MODE", "TC_C
 #compare value
 global tcSym_CompareDuty0
 tcSym_CompareDuty0 = tcComponent.createLongSymbol("TC_COMPARE_CC0", tcSym_CompareMenu)
+tcSym_CompareDuty0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CC")
 tcSym_CompareDuty0.setLabel("Compare 0 Value (Period)")
 tcSym_CompareDuty0.setDefaultValue(24)
 tcSym_CompareDuty0.setMin(0)
@@ -244,6 +248,7 @@ tcSym_CompareDuty0.setDependencies(updateCompare0, ["TC_COMPARE_CTRLA_WAVEGEN", 
 
 #compare value
 tcSym_CompareDuty = tcComponent.createLongSymbol("TC_COMPARE_CC1", tcSym_CompareMenu)
+tcSym_CompareDuty.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CC")
 tcSym_CompareDuty.setLabel("Compare 1 Value")
 tcSym_CompareDuty.setDefaultValue(24)
 tcSym_CompareDuty.setMin(0)
@@ -266,27 +271,33 @@ tcSym_ComparePeriod_Comment.setDependencies(tcComparePeriodCalc, ["TC_COMPARE_PE
 
 #compare one shot mode
 tcSym_Compare_CTRLBSET_ONESHOT = tcComponent.createBooleanSymbol("TC_COMPARE_CTRLBSET_ONESHOT", tcSym_CompareMenu)
+tcSym_Compare_CTRLBSET_ONESHOT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLBSET")
 tcSym_Compare_CTRLBSET_ONESHOT.setLabel("Enable One-Shot Mode")
 
 tcSym_Compare_DRVCTRL_INVEN0 = tcComponent.createBooleanSymbol("TC_COMPARE_CTRLC_INVEN0", tcSym_CompareMenu)
+tcSym_Compare_DRVCTRL_INVEN0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLC")
 tcSym_Compare_DRVCTRL_INVEN0.setLabel("Invert Output WO[0]")
 tcSym_Compare_DRVCTRL_INVEN0.setDefaultValue(False)
 
 tcSym_Compare_DRVCTRL_INVEN1 = tcComponent.createBooleanSymbol("TC_COMPARE_CTRLC_INVEN1", tcSym_CompareMenu)
+tcSym_Compare_DRVCTRL_INVEN1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:CTRLC")
 tcSym_Compare_DRVCTRL_INVEN1.setLabel("Invert Output WO[1]")
 tcSym_Compare_DRVCTRL_INVEN1.setDefaultValue(False)
 
 #compare channel counter/compare interrupt
 global tcSym_Compare_INTENSET_OVF
 tcSym_Compare_INTENSET_OVF = tcComponent.createBooleanSymbol("TC_COMPARE_INTENSET_OVF", tcSym_CompareMenu)
+tcSym_Compare_INTENSET_OVF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:INTENSET")
 tcSym_Compare_INTENSET_OVF.setLabel("Enable Period Interrupt")
 tcSym_Compare_INTENSET_OVF.setDefaultValue(False)
 
 tcSym_Compare_INTENSET_MC0 = tcComponent.createBooleanSymbol("TC_COMPARE_INTENSET_MC0", tcSym_CompareMenu)
+tcSym_Compare_INTENSET_MC0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:INTENSET")
 tcSym_Compare_INTENSET_MC0.setLabel("Enable Compare Match 0 Interrupt")
 tcSym_Compare_INTENSET_MC0.setDefaultValue(False)
 
 tcSym_Compare_INTENSET_MC1 = tcComponent.createBooleanSymbol("TC_COMPARE_INTENSET_MC1", tcSym_CompareMenu)
+tcSym_Compare_INTENSET_MC1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:INTENSET")
 tcSym_Compare_INTENSET_MC1.setLabel("Enable Compare Match 1 Interrupt")
 tcSym_Compare_INTENSET_MC1.setDefaultValue(False)
 
@@ -300,23 +311,28 @@ tcSym_Compare_Events_Menu = tcComponent.createMenuSymbol("TC_COMPARE_EVENT_MENU"
 tcSym_Compare_Events_Menu.setLabel("Events")
 
 tcSym_Compare_EVCTRL_OVFEO = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_OVFEO", tcSym_Compare_Events_Menu)
+tcSym_Compare_EVCTRL_OVFEO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:EVCTRL")
 tcSym_Compare_EVCTRL_OVFEO.setLabel("Enable Compare Period Overflow Event")
 tcSym_Compare_EVCTRL_OVFEO.setDefaultValue(False)
 
 tcSym_Compare_EVCTRL_MCEO0 = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_MCEO0", tcSym_Compare_Events_Menu)
+tcSym_Compare_EVCTRL_MCEO0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:EVCTRL")
 tcSym_Compare_EVCTRL_MCEO0.setLabel("Enable Compare Match 0 Output Event")
 tcSym_Compare_EVCTRL_MCEO0.setDefaultValue(False)
 
 tcSym_Compare_EVCTRL_MCEO1 = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_MCEO1", tcSym_Compare_Events_Menu)
+tcSym_Compare_EVCTRL_MCEO1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:EVCTRL")
 tcSym_Compare_EVCTRL_MCEO1.setLabel("Enable Compare Match 1 Output Event")
 tcSym_Compare_EVCTRL_MCEO1.setDefaultValue(False)
 #tcSym_Compare_EVCTRL_MCEO1.setDependencies(tcEventVisible, ["TC_COMPARE_CTRLA_WAVEGEN"])
 
 tcSym_Compare_EVCTRL_EV = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_EV", tcSym_Compare_Events_Menu)
+tcSym_Compare_EVCTRL_EV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:EVCTRL")
 tcSym_Compare_EVCTRL_EV.setLabel("Enable Compare Input Event")
 tcSym_Compare_EVCTRL_EV.setDefaultValue(False)
 
 tcSym_Compare_EVCTRL_EVACT = tcComponent.createKeyValueSetSymbol("TC_COMPARE_EVCTRL_EVACT", tcSym_Compare_EVCTRL_EV)
+tcSym_Compare_EVCTRL_EVACT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:EVCTRL")
 tcSym_Compare_EVCTRL_EVACT.setLabel("Select Input Event Action")
 tcSym_Compare_EVCTRL_EVACT.setVisible(False)
 tcSym_Compare_EVCTRL_EVACT.addKey("START", "0", "Start Compare")
@@ -325,6 +341,7 @@ tcSym_Compare_EVCTRL_EVACT.addKey("COUNT", "2", "Count on Event")
 tcSym_Compare_EVCTRL_EVACT.setDependencies(tcCompareEVACTVisible, ["TC_COMPARE_EVCTRL_EV"])
 
 tcSym_Compare_EVCTRL_TCINV = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_TCINV", tcSym_Compare_EVCTRL_EV)
+tcSym_Compare_EVCTRL_TCINV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tc_u2212;register:EVCTRL")
 tcSym_Compare_EVCTRL_TCINV.setLabel("Invert Input Event")
 tcSym_Compare_EVCTRL_TCINV.setVisible(False)
 tcSym_Compare_EVCTRL_TCINV.setDependencies(tcEVACTVisible, ["TC_COMPARE_EVCTRL_EV"])

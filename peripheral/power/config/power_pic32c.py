@@ -60,14 +60,17 @@ if (ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCTRL"]') != Non
     deepSleepSymExist.setDefaultValue(True)
 
     deepSleepSym_RTCDIS = powerComponent.createBooleanSymbol("DS_RTCC_ENABLE", deepSleepSymMenu)
+    deepSleepSym_RTCDIS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:power;register:%NOREGISTER%")
     deepSleepSym_RTCDIS.setLabel("Enable Power to RTCC during Deep Sleep")
     deepSleepSym_RTCDIS.setDefaultValue(True)
 
     deepSleepSym_RTCCWDIS = powerComponent.createBooleanSymbol("DS_RTCC_WAKEUP_DISABLE", deepSleepSymMenu)
+    deepSleepSym_RTCCWDIS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:power;register:%NOREGISTER%")
     deepSleepSym_RTCCWDIS.setLabel("Enable Deep Sleep Wakeup from RTCC")
     deepSleepSym_RTCCWDIS.setDefaultValue(True)
 
     deepSleepSym_DSGPREN = powerComponent.createBooleanSymbol("DS_EXTENDED_REG_ENABLE", deepSleepSymMenu)
+    deepSleepSym_DSGPREN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:power;register:%NOREGISTER%")
     deepSleepSym_DSGPREN.setLabel("Enable Extended Semaphore Register")
     deepSleepSym_DSGPREN.setDefaultValue(False)
 
@@ -96,6 +99,7 @@ if (ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCTRL"]') != Non
 
     for id in range(len(dswakeRegister.getChildren())):
         deepSleepSym_Cause = powerComponent.createKeyValueSetSymbol("DS_WAKEUP_CAUSE_" + str(id), deepSleepSymMenu)
+        deepSleepSym_Cause.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:power;register:%NOREGISTER%")
         deepSleepSym_Cause.setLabel(str(dswakeRegister.getChildren()[id].getAttribute("name")))
         deepSleepSym_Cause.addKey(dswakeRegister.getChildren()[id].getAttribute("name"), str(id), dswakeRegister.getChildren()[id].getAttribute("caption"))
         deepSleepSym_Cause.setOutputMode("Key")

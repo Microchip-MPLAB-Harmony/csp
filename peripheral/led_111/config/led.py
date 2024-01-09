@@ -236,6 +236,7 @@ def instantiateComponent(ledComponent):
     ledClkSrc_Values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"LED\"]/value-group@[name=\"LED_CFG__CLK_SRC\"]").getChildren()
 
     ledMode = ledComponent.createKeyValueSetSymbol("LED_MODE", None)
+    ledMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:%NOREGISTER%")
     ledMode.setLabel("Operating Mode")
     for index in range(len(ledCtrl_Values)):
         if ledCtrl_Values[index].getAttribute("value") == "0x1" or ledCtrl_Values[index].getAttribute("value") == "0x2":
@@ -246,6 +247,7 @@ def instantiateComponent(ledComponent):
     blinking_led_dependencyList.append("LED_MODE")
 
     ledClkSrc = ledComponent.createKeyValueSetSymbol("LED_CLK_SRC", ledMode)
+    ledClkSrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:LED_CFG")
     ledClkSrc.setLabel("Clock Source")
     for index in range(len(ledClkSrc_Values)):
         ledClkSrc.addKey(ledClkSrc_Values[index].getAttribute("name"), ledClkSrc_Values[index].getAttribute("value"), ledClkSrc_Values[index].getAttribute("caption"))
@@ -256,6 +258,7 @@ def instantiateComponent(ledComponent):
     blinking_led_dependencyList.append("LED_CLK_SRC")
 
     ledClkPrescaler = ledComponent.createIntegerSymbol("LED_CLK_PRESCALER", ledMode)
+    ledClkPrescaler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:DLY")
     ledClkPrescaler.setLabel("Clock Prescaler")
     ledClkPrescaler.setMin(0)
     ledClkPrescaler.setMax(4095)
@@ -265,6 +268,7 @@ def instantiateComponent(ledComponent):
     blinking_led_dependencyList.append("LED_CLK_PRESCALER")
 
     ledDutyCycle = ledComponent.createIntegerSymbol("LED_DUTY_CYCLE", ledMode)
+    ledDutyCycle.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:LIMIT")
     ledDutyCycle.setLabel("Duty Cycle")
     ledDutyCycle.setMin(0)
     ledDutyCycle.setMax(255)
@@ -274,6 +278,7 @@ def instantiateComponent(ledComponent):
     blinking_led_dependencyList.append("LED_DUTY_CYCLE")
 
     ledWDTReloadVal = ledComponent.createIntegerSymbol("LED_WDT_RELOAD", ledMode)
+    ledWDTReloadVal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:LED_CFG")
     ledWDTReloadVal.setLabel("WDT Reload Value")
     ledWDTReloadVal.setMin(0)
     ledWDTReloadVal.setMax(255)
@@ -288,6 +293,7 @@ def instantiateComponent(ledComponent):
 
     # Interrupt type selection
     ledWDTInterruptType = ledComponent.createKeyValueSetSymbol("LED_WDT_INTERRUPT_TYPE", ledMode)
+    ledWDTInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:%NOREGISTER%")
     ledWDTInterruptType.setLabel("Interrupt Type")
     if nvic_int_num["direct_nvic_num"] != None:
         ledWDTInterruptType.addKey("DIRECT", "0", "Direct")
@@ -305,6 +311,7 @@ def instantiateComponent(ledComponent):
     ledWDTNVICUpdate.setDependencies(nvicInterruptUpdate, ["LED_MODE", "LED_WDT_INTERRUPT_TYPE", "LED_CLK_SRC"])
 
     ledPWMSize = ledComponent.createKeyValueSetSymbol("LED_PWM_SIZE", ledMode)
+    ledPWMSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:LED_CFG")
     ledPWMSize.setLabel("PWM Size")
     for index in range(len(ledPWMSize_Values)):
         ledPWMSize.addKey(ledPWMSize_Values[index].getAttribute("name"), ledPWMSize_Values[index].getAttribute("value"), ledPWMSize_Values[index].getAttribute("caption"))
@@ -315,6 +322,7 @@ def instantiateComponent(ledComponent):
     breathing_led_dependencyList.append("LED_PWM_SIZE")
 
     ledSymmetry = ledComponent.createKeyValueSetSymbol("LED_SYMMETRY", ledMode)
+    ledSymmetry.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:LED_CFG")
     ledSymmetry.setLabel("Rising and Falling Ramp Symmetry")
     ledSymmetry.addKey("LED_SYMMETRY", "0", "Symmetrical")
     ledSymmetry.addKey("LED_ASYMMETRY", "1", "Asymmetrical")
@@ -325,6 +333,7 @@ def instantiateComponent(ledComponent):
     breathing_led_dependencyList.append("LED_SYMMETRY")
 
     ledDutyCycleMin = ledComponent.createIntegerSymbol("LED_DUTY_CYCLE_MIN", ledMode)
+    ledDutyCycleMin.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:LIMIT")
     ledDutyCycleMin.setLabel("LED Duty Cycle Min")
     ledDutyCycleMin.setMin(0)
     ledDutyCycleMin.setMax(255)
@@ -334,6 +343,7 @@ def instantiateComponent(ledComponent):
     breathing_led_dependencyList.append("LED_DUTY_CYCLE_MIN")
 
     ledDutyCycleMax = ledComponent.createIntegerSymbol("LED_DUTY_CYCLE_MAX", ledMode)
+    ledDutyCycleMax.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:LIMIT")
     ledDutyCycleMax.setLabel("LED Duty Cycle Max")
     ledDutyCycleMax.setMin(0)
     ledDutyCycleMax.setMax(255)
@@ -343,6 +353,7 @@ def instantiateComponent(ledComponent):
     breathing_led_dependencyList.append("LED_DUTY_CYCLE_MAX")
 
     ledHighDelay = ledComponent.createIntegerSymbol("LED_HIGH_DELAY", ledMode)
+    ledHighDelay.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:DLY")
     ledHighDelay.setLabel("High Delay (PWM cycles to wait when duty cycle reaches MAX)")
     ledHighDelay.setMin(0)
     ledHighDelay.setMax(4095)
@@ -352,6 +363,7 @@ def instantiateComponent(ledComponent):
     breathing_led_dependencyList.append("LED_HIGH_DELAY")
 
     ledLowDelay = ledComponent.createIntegerSymbol("LED_LOW_DELAY", ledMode)
+    ledLowDelay.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:DLY")
     ledLowDelay.setLabel("Low Delay (PWM cycles to wait when duty cycle reaches MIN)")
     ledLowDelay.setMin(0)
     ledLowDelay.setMax(4095)
@@ -367,6 +379,7 @@ def instantiateComponent(ledComponent):
 
     for x in range(8):
         ledSegmentUpdateStepSize = ledComponent.createIntegerSymbol("LED_UPDATE_STEPSIZE_" + str(x) , ledUpdateStepSize)
+        ledSegmentUpdateStepSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:%NOREGISTER%")
         ledSegmentUpdateStepSize.setLabel("Segment " + str(x) + " Update Step Size")
         ledSegmentUpdateStepSize.setMin(0)
         ledSegmentUpdateStepSize.setMax(15)
@@ -382,6 +395,7 @@ def instantiateComponent(ledComponent):
 
     for x in range(8):
         ledSegmentUpdateInterval = ledComponent.createIntegerSymbol("LED_UPDATE_INTERVAL_" + str(x) , ledUpdateInterval)
+        ledSegmentUpdateInterval.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:led_111;register:%NOREGISTER%")
         ledSegmentUpdateInterval.setLabel("Segment " + str(x) + " Update Interval")
         ledSegmentUpdateInterval.setMin(0)
         ledSegmentUpdateInterval.setMax(15)

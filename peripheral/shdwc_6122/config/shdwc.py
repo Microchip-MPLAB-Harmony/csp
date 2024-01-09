@@ -46,6 +46,7 @@ def instantiateComponent(shdwcComponent):
             continue
         bitfield = mrReg.getBitfield(bitfieldName)
         eventSym = shdwcComponent.createBooleanSymbol(bitfieldName, None)
+        eventSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:shdwc_6122;register:%NOREGISTER%")
         eventSym.setLabel(bitfieldName)
         eventSym.setDescription(bitfield.getDescription())
         eventSym.setDefaultValue(False)
@@ -73,6 +74,7 @@ def instantiateComponent(shdwcComponent):
             continue
         bitfield = wuiReg.getBitfield(bitfieldNames[i])
         eventSym = shdwcComponent.createBooleanSymbol(bitfieldNames[i], None)
+        eventSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:shdwc_6122;register:%NOREGISTER%")
         eventSym.setLabel(bitfield.getName())
         eventSym.setDescription(bitfield.getDescription())
         eventSym.setDefaultValue(False)

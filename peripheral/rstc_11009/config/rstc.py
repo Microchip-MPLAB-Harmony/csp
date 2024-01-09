@@ -82,6 +82,7 @@ def instantiateComponent(rstcComponent):
     rstcSym_MR_URSTEN = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_MR\"]/bitfield@[name=\"URSTEN\"]")
     rstcSym_MR_URSTIEN = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_MR\"]/bitfield@[name=\"URSTIEN\"]")
     rstcSym_MR_UserReset = rstcComponent.createKeyValueSetSymbol("RSTC_MR_URSTEN", None)
+    rstcSym_MR_UserReset.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_11009;register:RSTC_MR")
     rstcSym_MR_UserReset.setLabel("External Reset (NRST) Pin Usage")
     rstcSym_MR_UserReset.addKey("RESET", "0", "Generate Reset")
     if rstcSym_MR_URSTIEN != None:
@@ -99,16 +100,19 @@ def instantiateComponent(rstcComponent):
     rstcCrNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_MR\"]/bitfield@[name=\"SCKSW\"]")
     if rstcCrNode != None:
         clockFail = rstcComponent.createBooleanSymbol("ENABLE_32K_FAIL_DETECT", None)
+        clockFail.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_11009;register:RSTC_MR")
         clockFail.setLabel("Reset the device on 32.768 kHz Crystal Oscillator Failure Detection")
 
     rstcCPUFEN_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RSTC"]/register-group@[name="RSTC"]/register@[name="RSTC_MR"]/bitfield@[name="CPUFEN"]')
     if rstcCPUFEN_node != None:
         rstcSym_MR_CPUFEN = rstcComponent.createBooleanSymbol("RSTC_MR_CPUFEN", None)
+        rstcSym_MR_CPUFEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_11009;register:RSTC_MR")
         rstcSym_MR_CPUFEN.setLabel("Reset the device on CPU Clock Failure Detection")
 
     rstcERSTL_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RSTC"]/register-group@[name="RSTC"]/register@[name="RSTC_MR"]/bitfield@[name="ERSTL"]')
     if rstcERSTL_node != None:
         rstcSym_MR_ERSTL = rstcComponent.createIntegerSymbol("RSTC_MR_ERSTL", None)
+        rstcSym_MR_ERSTL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_11009;register:RSTC_MR")
         rstcSym_MR_ERSTL.setLabel("External Reset Assertion duration on WDT/SW Reset")
         rstcSym_MR_ERSTL.setMin(0)
         rstcSym_MR_ERSTL.setMax(15)

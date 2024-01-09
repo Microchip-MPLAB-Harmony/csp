@@ -105,10 +105,12 @@ wdtMenu.setLabel("WDT")
 
 #WDT Use
 wdtSym_Use = coreComponent.createBooleanSymbol("WDT_USE", wdtMenu)
+wdtSym_Use.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_u2251;register:CTRLA")
 wdtSym_Use.setLabel("Use WDT ?")
 
 #Enable Early Interrupt
 wdtSym_CTRLA_EW = coreComponent.createBooleanSymbol("WDT_EW_ENABLE", wdtSym_Use)
+wdtSym_CTRLA_EW.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_u2251;register:CTRLA") 
 wdtSym_CTRLA_EW.setLabel("Enable Watchdog Early Interrupt")
 wdtSym_CTRLA_EW.setVisible(False)
 wdtSym_CTRLA_EW.setDependencies(updateWDTEnarlyInterruptVisibleProperty, ["WDT_USE"])

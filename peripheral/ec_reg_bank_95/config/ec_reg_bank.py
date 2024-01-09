@@ -84,27 +84,32 @@ erbMenu = coreComponent.createMenuSymbol("ERB_MENU", None)
 erbMenu.setLabel("EC Register Bank")
 
 erbAHBErrorCtrl = coreComponent.createBooleanSymbol("ERB_AHB_ERROR_CTRL", erbMenu)
+erbAHBErrorCtrl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbAHBErrorCtrl.setLabel("AHB Error Enable")
 erbAHBErrorCtrl.setDefaultValue(False)
 
 erbAltNvicIntEn = coreComponent.createBooleanSymbol("ERB_ALT_NVIC_INT_EN", erbMenu)
+erbAltNvicIntEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbAltNvicIntEn.setLabel("Alternate NVIC Interrupt Enable")
 erbAltNvicIntEn.setDefaultValue(True)
 
 vtr1CtrlNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EC_REG_BANK\"]/register-group@[name=\"EC_REG_BANK\"]/register@[name=\"PD_MON_CTRL\"]/bitfield@[name=\"CTRL_VTR1\"]")
 
 erbVTR1PadMonOverrideEn = coreComponent.createBooleanSymbol("ERB_VTR1_PAD_MON_OVERRIDE_EN", erbMenu)
+erbVTR1PadMonOverrideEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbVTR1PadMonOverrideEn.setLabel("VTR1 Pad Monitor Override Enable")
 erbVTR1PadMonOverrideEn.setDefaultValue(False)
 erbVTR1PadMonOverrideEn.setVisible(vtr1CtrlNode != None)
 
 erbVTR1InpBuffDis = coreComponent.createBooleanSymbol("ERB_VTR1_INP_BUF_DIS", erbVTR1PadMonOverrideEn)
+erbVTR1InpBuffDis.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbVTR1InpBuffDis.setLabel("Input Buffer Disable")
 erbVTR1InpBuffDis.setDefaultValue(False)
 erbVTR1InpBuffDis.setVisible(False)
 erbVTR1InpBuffDis.setDependencies(updateVisibilityOnVTREnable, ["ERB_VTR1_PAD_MON_OVERRIDE_EN"])
 
 erbVTR1PadMonProtectEn = coreComponent.createBooleanSymbol("ERB_VTR1_PAD_MON_PROTECT_EN", erbVTR1PadMonOverrideEn)
+erbVTR1PadMonProtectEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbVTR1PadMonProtectEn.setLabel("Power off Input/Output buffers and apply weak pull-down")
 erbVTR1PadMonProtectEn.setDefaultValue(False)
 erbVTR1PadMonProtectEn.setVisible(False)
@@ -114,6 +119,7 @@ vtr1_ctrl_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"E
 
 if vtr1_ctrl_values != None:
     erbVTR1Ctrl = coreComponent.createKeyValueSetSymbol("ERB_VTR1_CTRL", erbMenu)
+    erbVTR1Ctrl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
     erbVTR1Ctrl.setLabel("Pad Monitor VTR1 I/O Rail Power")
     for index in range(len(vtr1_ctrl_values)):
         key = vtr1_ctrl_values[index].getAttribute("name")
@@ -125,11 +131,13 @@ if vtr1_ctrl_values != None:
     erbVTR1Ctrl.setDefaultValue(0)
 
 erbVTR1PadMonPUIntEn = coreComponent.createBooleanSymbol("ERB_PAD_MON_VTR1_PU_INT_EN", erbMenu)
+erbVTR1PadMonPUIntEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbVTR1PadMonPUIntEn.setLabel("VTR1 Pad Monitor Power Up Interrupt Enable")
 erbVTR1PadMonPUIntEn.setDefaultValue(False)
 erbVTR1PadMonPUIntEn.setVisible(vtr1CtrlNode != None)
 
 erbVTR1PadMonPDIntEn = coreComponent.createBooleanSymbol("ERB_PAD_MON_VTR1_PD_INT_EN", erbMenu)
+erbVTR1PadMonPDIntEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbVTR1PadMonPDIntEn.setLabel("VTR1 Pad Monitor Power Down Interrupt Enable")
 erbVTR1PadMonPDIntEn.setDefaultValue(False)
 erbVTR1PadMonPDIntEn.setVisible(vtr1CtrlNode != None)
@@ -137,17 +145,20 @@ erbVTR1PadMonPDIntEn.setVisible(vtr1CtrlNode != None)
 vtr2CtrlNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EC_REG_BANK\"]/register-group@[name=\"EC_REG_BANK\"]/register@[name=\"PD_MON_CTRL\"]/bitfield@[name=\"CTRL_VTR2\"]")
 
 erbVTR2PadMonOverrideEn = coreComponent.createBooleanSymbol("ERB_VTR2_PAD_MON_OVERRIDE_EN", erbMenu)
+erbVTR2PadMonOverrideEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbVTR2PadMonOverrideEn.setLabel("VTR2 Pad Monitor Override Enable")
 erbVTR2PadMonOverrideEn.setDefaultValue(False)
 erbVTR2PadMonOverrideEn.setVisible(vtr2CtrlNode != None)
 
 erbVTR2InpBuffDis = coreComponent.createBooleanSymbol("ERB_VTR2_INP_BUF_DIS", erbVTR2PadMonOverrideEn)
+erbVTR2InpBuffDis.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbVTR2InpBuffDis.setLabel("Input Buffer Disable")
 erbVTR2InpBuffDis.setDefaultValue(False)
 erbVTR2InpBuffDis.setVisible(False)
 erbVTR2InpBuffDis.setDependencies(updateVisibilityOnVTREnable, ["ERB_VTR2_PAD_MON_OVERRIDE_EN"])
 
 erbVTR2PadMonProtectEn = coreComponent.createBooleanSymbol("ERB_VTR2_PAD_MON_PROTECT_EN", erbVTR2PadMonOverrideEn)
+erbVTR2PadMonProtectEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbVTR2PadMonProtectEn.setLabel("Power off Input/Output buffers and apply weak pull-down")
 erbVTR2PadMonProtectEn.setDefaultValue(False)
 erbVTR2PadMonProtectEn.setVisible(False)
@@ -157,6 +168,7 @@ vtr2_ctrl_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"E
 
 if vtr2_ctrl_values != None:
     erbVTR2Ctrl = coreComponent.createKeyValueSetSymbol("ERB_VTR2_CTRL", erbMenu)
+    erbVTR2Ctrl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
     erbVTR2Ctrl.setLabel("Pad Monitor VTR2 I/O Rail Power")
     for index in range(len(vtr2_ctrl_values)):
         key = vtr2_ctrl_values[index].getAttribute("name")
@@ -168,11 +180,13 @@ if vtr2_ctrl_values != None:
     erbVTR2Ctrl.setDefaultValue(0)
 
 erbVTR2PadMonPUIntEn = coreComponent.createBooleanSymbol("ERB_PAD_MON_VTR2_PU_INT_EN", erbMenu)
+erbVTR2PadMonPUIntEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbVTR2PadMonPUIntEn.setLabel("VTR2 Pad Monitor Power Up Interrupt Enable")
 erbVTR2PadMonPUIntEn.setDefaultValue(False)
 erbVTR2PadMonPUIntEn.setVisible(vtr2CtrlNode != None)
 
 erbVTR2PadMonPDIntEn = coreComponent.createBooleanSymbol("ERB_PAD_MON_VTR2_PD_INT_EN", erbMenu)
+erbVTR2PadMonPDIntEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbVTR2PadMonPDIntEn.setLabel("VTR2 Pad Monitor Power Down Interrupt Enable")
 erbVTR2PadMonPDIntEn.setDefaultValue(False)
 erbVTR2PadMonPDIntEn.setVisible(vtr2CtrlNode != None)
@@ -183,6 +197,7 @@ nvic_int_num = Database.sendMessage("core", "ECIA_GET_INT_SRC_DICT", {"int_sourc
 
 # Interrupt type selection
 erbInterruptType = coreComponent.createKeyValueSetSymbol("ERB_PAD_MON_INTERRUPT_TYPE", erbMenu)
+erbInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ec_reg_bank_95;register:%NOREGISTER%")
 erbInterruptType.setLabel("Interrupt Type")
 if nvic_int_num["direct_nvic_num"] != None:
     erbInterruptType.addKey("DIRECT", "0", "Direct")

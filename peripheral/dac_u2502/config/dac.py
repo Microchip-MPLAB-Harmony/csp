@@ -121,6 +121,7 @@ def instantiateComponent(dacComponent):
     Database.setSymbolValue("core", dacInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
     dacMode = dacComponent.createKeyValueSetSymbol("DAC_OPERATING_MODE", None)
+    dacMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:CTRLB")
     dacMode.setLabel("Select DAC Output Mode")
     dacMode.addKey("SINGLE_ENDED", "0", "Single-Ended Output")
     dacMode.addKey("DIFFERENTIAL", "1", "Differential Output")
@@ -133,6 +134,7 @@ def instantiateComponent(dacComponent):
     dacRefSelValues = dacRefSelNode.getChildren()
 
     dacRefSel = dacComponent.createKeyValueSetSymbol("DAC_REFSEL", None)
+    dacRefSel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:CTRLB")
     dacRefSel.setLabel("Reference Selection for DAC0/1")
     for index in range(0, len(dacRefSelValues)):
         dacRefSelKey = dacRefSelValues[index].getAttribute("name")
@@ -152,6 +154,7 @@ def instantiateComponent(dacComponent):
 
     for channel in range(0, numChannels):
         channelEnable = dacComponent.createBooleanSymbol("DAC_CHANNEL_" + str(channel) + "_ENABLE", None)
+        channelEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:DACCTRL0")
         channelEnable.setLabel("Enable DAC CHANNEL " +  str(channel))
         if channel % 2   == 1:
             channelEnable.setDependencies(menuVisiblity, ["DAC_OPERATING_MODE"])
@@ -164,6 +167,7 @@ def instantiateComponent(dacComponent):
         channelSpeedValues = channelSpeedNode.getChildren()
 
         channelSpeed = dacComponent.createKeyValueSetSymbol("DAC_CHANNEL_" + str(channel) + "_SPEED", channelMenu)
+        channelSpeed.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:DACCTRL0")
         channelSpeed.setLabel("Conversion speed")
         for index in range(0, len(channelSpeedValues)):
             channelSpeedKey = channelSpeedValues[index].getAttribute("name")
@@ -177,9 +181,11 @@ def instantiateComponent(dacComponent):
         channelFilterBitfield = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DAC"]/register-group@[name="DAC"]/register@[name="DACCTRL"]/bitfield@[name="FEXT"]')
         if channelFilterBitfield != None:
             channelFilter = dacComponent.createBooleanSymbol("DAC_CHANNEL_" + str(channel) + "_FILTER", channelMenu)
+            channelFilter.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:DACCTRL0")
             channelFilter.setLabel("Enable External Filter")
 
         channelDataAdjustment = dacComponent.createKeyValueSetSymbol("DAC_DATA_ADJUSTMENT" + str(channel) , channelMenu)
+        channelDataAdjustment.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:DACCTRL0 ")
         channelDataAdjustment.setLabel("DAC Data register Adjustment")
         channelDataAdjustment.addKey("RIGHT-ADJUSTED", "0", "DATA and DATABUF registers are right-adjusted")
         channelDataAdjustment.addKey("LEFT-ADJUSTED", "1", "DATA and DATABUF registers are left-adjusted")
@@ -188,9 +194,11 @@ def instantiateComponent(dacComponent):
         channelDataAdjustment.setDefaultValue(0)
 
         channelRunStdby = dacComponent.createBooleanSymbol("DAC_CHANNEL_" + str(channel) + "_RSTDBY", channelMenu)
+        channelRunStdby.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:DACCTRL0")
         channelRunStdby.setLabel("Run in Standby")
 
         channelDither = dacComponent.createBooleanSymbol("DAC_CHANNEL_" + str(channel) + "_DITHER", channelMenu)
+        channelDither.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:DACCTRL0")
         channelDither.setLabel("Enable Dithering")
 
         channelOversampleNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DAC"]/value-group@[name="DAC_DACCTRL__OSR"]')
@@ -198,6 +206,7 @@ def instantiateComponent(dacComponent):
             channelOversampleValues = channelOversampleNode.getChildren()
 
             channelOversample = dacComponent.createKeyValueSetSymbol("DAC_CHANNEL_" + str(channel) + "_OVERSAMPLE", channelMenu)
+            channelOversample.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:DACCTRL0")
             channelOversample.setLabel("Oversampling Ratio")
             for index in range(0, len(channelOversampleValues)):
                 channelOversampleKey = channelOversampleValues[index].getAttribute("name")
@@ -213,6 +222,7 @@ def instantiateComponent(dacComponent):
             channelRefreshValues = channelRefreshNode.getChildren()
 
             channelRefresh = dacComponent.createKeyValueSetSymbol("DAC_CHANNEL_" + str(channel) + "_REFRESH", channelMenu)
+            channelRefresh.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:DACCTRL0")
             channelRefresh.setLabel("Refresh Rate")
             for index in range(0, len(channelRefreshValues)):
                 channelRefreshKey = channelRefreshValues[index].getAttribute("name")
@@ -231,18 +241,22 @@ def instantiateComponent(dacComponent):
         for index in range (0, len(channelEvCtrlValues)):
             if channelEvCtrlValues[index].getAttribute("name") == "RESRDYEO" + str(channel):
                 channelResrdy = dacComponent.createBooleanSymbol("DAC_CHANNEL_EVENT_RESRDYEO" + str(channel), channelEvent)
+                channelResrdy.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:DACCTRL0")
                 channelResrdy.setLabel("Enable Result Ready Event")
                 evctrldep.append("DAC_CHANNEL_EVENT_RESRDYEO" + str(channel))
 
         channelEmpty = dacComponent.createBooleanSymbol("DAC_CHANNEL_EVENT_EMPTYEO" + str(channel), channelEvent)
+        channelEmpty.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:EVCTRL")
         channelEmpty.setLabel("Enable Data Buffer Empty Event")
         evctrldep.append("DAC_CHANNEL_EVENT_EMPTYEO" + str(channel))
 
         channelStart = dacComponent.createBooleanSymbol("DAC_CHANNEL_EVENT_STARTEI" + str(channel), channelEvent)
+        channelStart.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:EVCTRL")
         channelStart.setLabel("Start Conversion on event detection")
         evctrldep.append("DAC_CHANNEL_EVENT_STARTEI" + str(channel))
 
         channelInvert = dacComponent.createBooleanSymbol("DAC_CHANNEL_EVENT_INVEI" + str(channel), channelEvent)
+        channelInvert.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_u2502;register:EVCTRL")
         channelInvert.setLabel("Invert Start Conversion Event")
 
         #Error Event

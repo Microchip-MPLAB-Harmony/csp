@@ -230,6 +230,7 @@ def instantiateComponent(twihsComponent):
     twihsSym_SMR_NACKEN.setDefaultValue(twihsBitField_SMR_NACKEN != None)
 
     twihsOpMode = twihsComponent.createComboSymbol("TWIHS_OPMODE", None, opModeValues)
+    twihsOpMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twihs_11210;register:%NOREGISTER%")
     twihsOpMode.setLabel("TWIHS Operation Mode")
     twihsOpMode.setDefaultValue("MASTER")
 
@@ -238,6 +239,7 @@ def instantiateComponent(twihsComponent):
     if valueGroup is not None:
         values = valueGroup.getChildren()
         twihsSymClockSrc = twihsComponent.createKeyValueSetSymbol("TWIHS_CLK_SRC", None)
+        twihsSymClockSrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twihs_11210;register:TWIHS_CWGR")
         twihsSymClockSrc.setLabel(valueGroup.getAttribute("caption"))
         for index in range(len(values)):
             twihsSymClockSrc.addKey(values[index].getAttribute("name"), values[index].getAttribute("value"), values[index].getAttribute("caption"))
@@ -246,6 +248,7 @@ def instantiateComponent(twihsComponent):
 
     # Source Clock Frequency
     twihsSymMasterClkFreq = twihsComponent.createIntegerSymbol("TWIHS_CLK_SRC_FREQ", None)
+    twihsSymMasterClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twihs_11210;register:%NOREGISTER%")
     twihsSymMasterClkFreq.setLabel("Source Clock Frequency (Hz)")
     twihsSymMasterClkFreq.setReadOnly(True)
     twihsSymMasterClkFreq.setVisible(twihsOpMode.getValue() == "MASTER")
@@ -254,6 +257,7 @@ def instantiateComponent(twihsComponent):
 
     # Clock speed
     twihsSymClockSpeed = twihsComponent.createIntegerSymbol("I2C_CLOCK_SPEED", None)
+    twihsSymClockSpeed.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twihs_11210;register:%NOREGISTER%")
     twihsSymClockSpeed.setLabel("Clock Speed (Hz)")
     twihsSymClockSpeed.setDefaultValue(400000)
     twihsSymClockSpeed.setMax(400000)
@@ -262,6 +266,7 @@ def instantiateComponent(twihsComponent):
     # Clock speed (Hz)
     twihsSymClockSpeedHz = twihsComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", None)
     twihsSymClockSpeedHz.setLabel("Clock Speed (Hz)")
+    twihsSymClockSpeedHz.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twihs_11210;register:%NOREGISTER%")
     twihsSymClockSpeedHz.setDefaultValue(twihsSymClockSpeed.getValue())
     twihsSymClockSpeedHz.setVisible(False)
     twihsSymClockSpeedHz.setDependencies(updateI2CBaudHz, ["I2C_CLOCK_SPEED"])
@@ -270,6 +275,7 @@ def instantiateComponent(twihsComponent):
     # Slave Address
     twihsSym_ADDR = twihsComponent.createHexSymbol("TWIHS_SLAVE_ADDRESS", None)
     twihsSym_ADDR.setLabel("I2C Slave Address (7-bit)")
+    twihsSym_ADDR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twihs_11210;register:TWIHS_SMR")
     twihsSym_ADDR.setMax(1023)
     twihsSym_ADDR.setVisible(False)
     twihsSym_ADDR.setDefaultValue(0x54)
@@ -277,6 +283,7 @@ def instantiateComponent(twihsComponent):
 
     #I2C Interrupt Mode
     twihsSym_Interrupt_Mode = twihsComponent.createBooleanSymbol("TWIHS_INTERRUPT_MODE", None)
+    twihsSym_Interrupt_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twihs_11210;register:%NOREGISTER%")
     twihsSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
     twihsSym_Interrupt_Mode.setDefaultValue(True)
     twihsSym_Interrupt_Mode.setReadOnly(twihsOpMode.getValue() == "MASTER")
@@ -284,6 +291,7 @@ def instantiateComponent(twihsComponent):
 
     twihsSym_Interrupt_Update = twihsComponent.createBooleanSymbol("TWIHS_INTERRUPT_UPDATE", None)
     twihsSym_Interrupt_Update.setLabel("Interrupt Update")
+    twihsSym_Interrupt_Update.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:twihs_11210;register:%NOREGISTER%")
     twihsSym_Interrupt_Update.setVisible(False)
     twihsSym_Interrupt_Update.setDependencies(updateNVICInterrupt, ["TWIHS_OPMODE", "TWIHS_INTERRUPT_MODE"])
 

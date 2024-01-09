@@ -265,6 +265,7 @@ def instantiateComponent( staticMemoryComponent ):
     pmeccCtrlEnableNameStem = "PMECC_CTRL_ENABLE"
     pmeccCtrlEnableName = pmeccCtrlEnableNameStem
     pmeccCtrlEnable = staticMemoryComponent.createBooleanSymbol( pmeccCtrlEnableName, None )
+    pmeccCtrlEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccCtrlEnable.setLabel( atdfPmeccCtrlBitField_ENABLE.getAttribute( "caption" ) )
 
     pmeccControlsMenu = staticMemoryComponent.createMenuSymbol( "PMECC_CONTROLS_MENU", pmeccCtrlEnable )
@@ -284,15 +285,18 @@ def instantiateComponent( staticMemoryComponent ):
 
     smcSrierSrieName = "SMC_SRIER_SRIE"
     smcSrierSrie = staticMemoryComponent.createBooleanSymbol( smcSrierSrieName, smcGlobalMenu )
+    smcSrierSrie.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     smcSrierSrie.setLabel( atdfSmcSrierBitField_SRIE.getAttribute( "caption" ) )
     smcSrierSrie.setDefaultValue( False )
     smcSrierSrie.setDependencies( updateInterrupt, [ smcSrierSrieName ] )
 
     smcWpmrWpen = staticMemoryComponent.createBooleanSymbol( "SMC_WPMR_WPEN", smcGlobalMenu )
+    smcWpmrWpen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     smcWpmrWpen.setLabel( "Enable Write Protection" )
     smcWpmrWpen.setDefaultValue( False )
 
     smcOcmsTampclr = staticMemoryComponent.createBooleanSymbol( "SMC_OCMS_TAMPCLR", smcGlobalMenu )
+    smcOcmsTampclr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:SMC_OCMS")
     smcOcmsTampclr.setLabel( atdfSmcOcmsBitField_TAMPCLR.getAttribute( "caption" ) )
     smcOcmsTampclr.setDefaultValue( False )
 
@@ -300,9 +304,11 @@ def instantiateComponent( staticMemoryComponent ):
     smcKeyMenu.setLabel( "Scrambling Keys" )
 
     smcSmcKey1 = staticMemoryComponent.createHexSymbol( "SMC_KEY1", smcKeyMenu )
+    smcSmcKey1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:SMC_KEY1")
     smcSmcKey1.setLabel( "Key 1" )
 
     smcSmcKey2 = staticMemoryComponent.createHexSymbol( "SMC_KEY2", smcKeyMenu )
+    smcSmcKey2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:SMC_KEY2")
     smcSmcKey2.setLabel( "Key 2" )
     #----
     # SMC Chip Select Selection and Settings
@@ -333,10 +339,12 @@ def instantiateComponent( staticMemoryComponent ):
     for csNumIndex in range( 0, atdfSmcCsCount ):
         csNum = str( csNumIndex )
         smcCsEnable = staticMemoryComponent.createBooleanSymbol( "SMC_CS_ENABLE_" + csNum, chipSelectionAndSettingsMenu )
+        smcCsEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcCsEnable.setLabel( "Enable Chip Select " + csNum )
 
         if atdfSmcOcmsEnablesCount > csNumIndex:
             smcOcmsCsse = staticMemoryComponent.createBooleanSymbol( "SMC_OCMS_CS" + csNum + "SE", smcCsEnable )
+            smcOcmsCsse.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:PMECC_CTRL")
             smcOcmsCsse.setLabel( "Enable Off Chip Memory Scrambling" )
             smcOcmsCsse.setDefaultValue( False )
 
@@ -346,12 +354,14 @@ def instantiateComponent( staticMemoryComponent ):
 
         # Read Setup Timings
         smcNrdSetup = staticMemoryComponent.createIntegerSymbol( "SMC_NRD_SETUP_" + csNum, smcReadCycleTimingMenu )
+        smcNrdSetup.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcNrdSetup.setLabel( atdfSmcCsSetupBitField_NRD_SETUP.getAttribute( "caption" ) )
         smcNrdSetup.setMin( DEFAULT_SMC_MIN_VALUE )
         smcNrdSetup.setMax( convertMaskToInt( atdfSmcCsSetupBitField_NRD_SETUP.getAttribute( "mask" ) ) )
         smcNrdSetup.setDefaultValue( DEFAULT_SMC_SETUP_VALUE )
 
         smcNcsRdSetup = staticMemoryComponent.createIntegerSymbol( "SMC_NCS_RD_SETUP_" + csNum, smcReadCycleTimingMenu )
+        smcNcsRdSetup.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcNcsRdSetup.setLabel( atdfSmcCsSetupBitField_NCS_RD_SETUP.getAttribute( "caption" ) )
         smcNcsRdSetup.setMin( DEFAULT_SMC_MIN_VALUE )
         smcNcsRdSetup.setMax( convertMaskToInt( atdfSmcCsSetupBitField_NCS_RD_SETUP.getAttribute( "mask" ) ) )
@@ -359,12 +369,14 @@ def instantiateComponent( staticMemoryComponent ):
 
         # Read Pulse Timings
         smcNrdPulse = staticMemoryComponent.createIntegerSymbol( "SMC_NRD_PULSE_" + csNum, smcReadCycleTimingMenu )
+        smcNrdPulse.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcNrdPulse.setLabel( atdfSmcCsPulseBitField_NRD_PULSE.getAttribute( "caption" ) )
         smcNrdPulse.setMin( DEFAULT_SMC_MIN_VALUE )
         smcNrdPulse.setMax( convertMaskToInt( atdfSmcCsPulseBitField_NRD_PULSE.getAttribute( "mask" ) ) )
         smcNrdPulse.setDefaultValue( DEFAULT_SMC_PULSE_VALUE )
 
         smcNcsRdPulse = staticMemoryComponent.createIntegerSymbol( "SMC_NCS_RD_PULSE_" + csNum, smcReadCycleTimingMenu )
+        smcNcsRdPulse.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcNcsRdPulse.setLabel( atdfSmcCsPulseBitField_NCS_RD_PULSE.getAttribute( "caption" ) )
         smcNcsRdPulse.setMin( DEFAULT_SMC_MIN_VALUE )
         smcNcsRdPulse.setMax( convertMaskToInt( atdfSmcCsPulseBitField_NCS_RD_PULSE.getAttribute( "mask" ) ) )
@@ -372,6 +384,7 @@ def instantiateComponent( staticMemoryComponent ):
 
         # Read Cycle Timings
         smcNrdCycle = staticMemoryComponent.createIntegerSymbol( "SMC_NRD_CYCLE_" + csNum, smcReadCycleTimingMenu )
+        smcNrdCycle.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcNrdCycle.setLabel( atdfSmcCsCycleBitField_NRD_CYCLE.getAttribute( "caption" ) )
         smcNrdCycle.setMin( DEFAULT_SMC_MIN_VALUE )
         smcNrdCycle.setMax( convertMaskToInt( atdfSmcCsCycleBitField_NRD_CYCLE.getAttribute( "mask" ) ) )
@@ -383,12 +396,14 @@ def instantiateComponent( staticMemoryComponent ):
 
         # Write Setup Timings
         smcNweSetup = staticMemoryComponent.createIntegerSymbol( "SMC_NWE_SETUP_" + csNum, smcWriteCycleTimingMenu )
+        smcNweSetup.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcNweSetup.setLabel( atdfSmcCsSetupBitField_NWE_SETUP.getAttribute( "caption" ) )
         smcNweSetup.setMin( DEFAULT_SMC_MIN_VALUE )
         smcNweSetup.setMax( convertMaskToInt( atdfSmcCsSetupBitField_NWE_SETUP.getAttribute( "mask" ) ) )
         smcNweSetup.setDefaultValue( DEFAULT_SMC_SETUP_VALUE )
 
         smcNcsWrSetup = staticMemoryComponent.createIntegerSymbol( "SMC_NCS_WR_SETUP_" + csNum, smcWriteCycleTimingMenu )
+        smcNcsWrSetup.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcNcsWrSetup.setLabel( atdfSmcCsSetupBitField_NCS_WR_SETUP.getAttribute( "caption" ) )
         smcNcsWrSetup.setMin( DEFAULT_SMC_MIN_VALUE )
         smcNcsWrSetup.setMax( convertMaskToInt( atdfSmcCsSetupBitField_NCS_WR_SETUP.getAttribute( "mask" ) ) )
@@ -396,12 +411,14 @@ def instantiateComponent( staticMemoryComponent ):
 
         # Write Pulse Timings
         smcNwePulse = staticMemoryComponent.createIntegerSymbol( "SMC_NWE_PULSE_" + csNum, smcWriteCycleTimingMenu )
+        smcNwePulse.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcNwePulse.setLabel( atdfSmcCsPulseBitField_NWE_PULSE.getAttribute( "caption" ) )
         smcNwePulse.setMin( DEFAULT_SMC_MIN_VALUE )
         smcNwePulse.setMax( convertMaskToInt( atdfSmcCsPulseBitField_NWE_PULSE.getAttribute( "mask" ) ) )
         smcNwePulse.setDefaultValue( DEFAULT_SMC_PULSE_VALUE )
 
         smcNcsWrPulse = staticMemoryComponent.createIntegerSymbol( "SMC_NCS_WR_PULSE_" + csNum, smcWriteCycleTimingMenu )
+        smcNcsWrPulse.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcNcsWrPulse.setLabel( atdfSmcCsPulseBitField_NCS_WR_PULSE.getAttribute( "caption" ) )
         smcNcsWrPulse.setMin( DEFAULT_SMC_MIN_VALUE )
         smcNcsWrPulse.setMax( convertMaskToInt( atdfSmcCsPulseBitField_NCS_WR_PULSE.getAttribute( "mask" ) ) )
@@ -409,6 +426,7 @@ def instantiateComponent( staticMemoryComponent ):
 
         # Write Cycle Timings
         smcNweCycle = staticMemoryComponent.createIntegerSymbol( "SMC_NWE_CYCLE_" + csNum, smcWriteCycleTimingMenu )
+        smcNweCycle.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcNweCycle.setLabel( atdfSmcCsCycleBitField_NWE_CYCLE.getAttribute( "caption" ) )
         smcNweCycle.setMin( DEFAULT_SMC_MIN_VALUE )
         smcNweCycle.setMax( convertMaskToInt( atdfSmcCsCycleBitField_NWE_CYCLE.getAttribute( "mask" ) ) )
@@ -421,6 +439,7 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeDbwNameStem = "SMC_MODE_DBW"
         smcModeDbwName = smcModeDbwNameStem + "_" + csNum
         smcModeDbw = staticMemoryComponent.createKeyValueSetSymbol( smcModeDbwName, smcModeSettingsMenu )
+        smcModeDbw.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcModeDbw.setLabel( atdfSmcCsModeBitField_MODE_DBW.getAttribute( "caption" ) )
         smcModeDbw.setOutputMode( "Key" )
         smcModeDbw.setDisplayMode( "Description" )
@@ -434,6 +453,7 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeBatNameStem = "SMC_MODE_BAT"
         smcModeBatName = smcModeBatNameStem + "_" + csNum
         smcModeBat = staticMemoryComponent.createKeyValueSetSymbol( smcModeBatName, smcModeSettingsMenu )
+        smcModeBat.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcModeBat.setLabel( atdfSmcCsModeBitField_MODE_BAT.getAttribute( "caption" ) )
         smcModeBat.setOutputMode( "Key" )
         smcModeBat.setDisplayMode( "Description" )
@@ -447,12 +467,14 @@ def instantiateComponent( staticMemoryComponent ):
         smcModePmenNameStem = "SMC_MODE_PMEN"
         smcModePmenName = smcModePmenNameStem + "_" + csNum
         smcModePmen = staticMemoryComponent.createBooleanSymbol( smcModePmenName, smcModeSettingsMenu )
+        smcModePmen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcModePmen.setLabel( "Enable Page Mode" )
         smcModePmen.setDefaultValue( False )
 
         smcModePsNameStem = "SMC_MODE_PS"
         smcModePsName = smcModePsNameStem + "_" + csNum
         smcModePs = staticMemoryComponent.createKeyValueSetSymbol( smcModePsName, smcModeSettingsMenu )
+        smcModePs.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcModePs.setLabel( atdfSmcCsModeBitField_MODE_PS.getAttribute( "caption" ) )
         smcModePs.setOutputMode( "Key" )
         smcModePs.setDisplayMode( "Description" )
@@ -464,12 +486,14 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeTdfModeNameStem = "SMC_MODE_TDF_MODE"
         smcModeTdfModeName = smcModeTdfModeNameStem + "_" + csNum
         smcModeTdfMode = staticMemoryComponent.createBooleanSymbol( smcModeTdfModeName, smcModeSettingsMenu )
+        smcModeTdfMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcModeTdfMode.setLabel( "Enable Data Float Time Optimization" )
         smcModeTdfMode.setDefaultValue( True )
 
         smcModeTdfCyclesNameStem = "SMC_MODE_TDF_CYCLES"
         smcModeTdfCyclesName = smcModeTdfCyclesNameStem + "_" + csNum
         smcModeTdfCycles = staticMemoryComponent.createIntegerSymbol( smcModeTdfCyclesName, smcModeSettingsMenu )
+        smcModeTdfCycles.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcModeTdfCycles.setLabel( atdfSmcCsModeBitField_MODE_TDF_CYCLES.getAttribute( "caption" ) + " (cycles)" )
         smcModeTdfCycles.setMin( DEFAULT_SMC_MIN_VALUE )
         smcModeTdfCycles.setMax( convertMaskToInt( atdfSmcCsModeBitField_MODE_TDF_CYCLES.getAttribute( "mask" ) ) )
@@ -479,6 +503,7 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeExnwModeNameStem = "SMC_MODE_EXNW_MODE"
         smcModeExnwModeName = smcModeExnwModeNameStem + "_" + csNum
         smcModeExnwMode = staticMemoryComponent.createKeyValueSetSymbol( smcModeExnwModeName, smcModeSettingsMenu )
+        smcModeExnwMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcModeExnwMode.setLabel( atdfSmcCsModeBitField_MODE_EXNW_MODE.getAttribute( "caption" ) )
         smcModeExnwMode.setOutputMode( "Key" )
         smcModeExnwMode.setDisplayMode( "Description" )
@@ -490,6 +515,7 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeReadModeNameStem = "SMC_MODE_READ_MODE"
         smcModeReadModeName = smcModeReadModeNameStem + "_" + csNum
         smcModeReadMode = staticMemoryComponent.createKeyValueSetSymbol( smcModeReadModeName, smcModeSettingsMenu )
+        smcModeReadMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcModeReadMode.setLabel( atdfSmcCsModeBitField_MODE_READ_MODE.getAttribute( "name" ) + " Control Signal" )
         smcModeReadMode.setOutputMode( "Key" )
         smcModeReadMode.setDisplayMode( "Description" )
@@ -504,6 +530,7 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeWriteModeNameStem = "SMC_MODE_WRITE_MODE"
         smcModeWriteModeName = smcModeWriteModeNameStem + "_" + csNum
         smcModeWriteMode = staticMemoryComponent.createKeyValueSetSymbol( smcModeWriteModeName, smcModeSettingsMenu )
+        smcModeWriteMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
         smcModeWriteMode.setLabel( atdfSmcCsModeBitField_MODE_WRITE_MODE.getAttribute( "name" ) + " Control Signal" )
         smcModeWriteMode.setOutputMode( "Key" )
         smcModeWriteMode.setDisplayMode( "Description" )
@@ -517,10 +544,12 @@ def instantiateComponent( staticMemoryComponent ):
 
         if csNumIndex == smcNandCsNum.getValue():
             smcEbiCS = staticMemoryComponent.createBooleanSymbol("SFR_CCFG_EBICSA_EBI_CS" + str(smcNandCsNum.getValue()) + "A", smcCsEnable)
+            smcEbiCS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:SFR_CCFG_EBICSA")
             smcEbiCS.setLabel("Enable NAND Flash Logic")
             smcEbiCS.setDefaultValue(True)
 
             smcEbiCSNFD = staticMemoryComponent.createBooleanSymbol("SFR_CCFG_EBICSA_NFD0_ON_D16", smcCsEnable)
+            smcEbiCSNFD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:SFR_CCFG_EBICSA")
             smcEbiCSNFD.setLabel("Enable NAND Flash I/Os on D16-D23")
             smcEbiCSNFD.setDefaultValue(True)
 
@@ -531,6 +560,7 @@ def instantiateComponent( staticMemoryComponent ):
     # Interrupt Enable
     pmeccIerErrieName = "PMECC_IER_ERRIE"
     pmeccIerErrie = staticMemoryComponent.createBooleanSymbol( pmeccIerErrieName, pmeccControlsMenu )
+    pmeccIerErrie.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccIerErrie.setLabel( atdfPmeccIerBitField_ERRIE.getAttribute( "caption" ) )
     pmeccIerErrie.setDefaultValue( False )
     pmeccIerErrie.setDependencies( updateInterrupt, [ pmeccIerErrieName ] )
@@ -538,6 +568,7 @@ def instantiateComponent( staticMemoryComponent ):
     # SAREA Register
     pmeccSareaSpareSizeName = "PMECC_SAREA_SPARESIZE"
     pmeccSareaSpareSize = staticMemoryComponent.createIntegerSymbol( pmeccSareaSpareSizeName, pmeccControlsMenu )
+    pmeccSareaSpareSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccSareaSpareSize.setLabel( atdfPmeccSareaBitField_SPARESIZE.getAttribute( "caption" ) + " (bytes)" )
     pmeccSareaSpareSize.setMin( 1 )
     pmeccSareaSpareSize.setMax( 1 + convertMaskToInt( atdfPmeccSareaBitField_SPARESIZE.getAttribute( "mask" ) ) )
@@ -546,6 +577,7 @@ def instantiateComponent( staticMemoryComponent ):
     # SADDR Register
     pmeccSaddrStartAddrName = "PMECC_SADDR_STARTADDR"
     pmeccSaddrStartAddr = staticMemoryComponent.createIntegerSymbol( pmeccSaddrStartAddrName, pmeccControlsMenu )
+    pmeccSaddrStartAddr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccSaddrStartAddr.setLabel( atdfPmeccSaddrBitField_STARTADDR.getAttribute( "caption" ) )
     pmeccSaddrStartAddr.setMin( 0 )
     pmeccSaddrStartAddr.setMax( convertMaskToInt( atdfPmeccSaddrBitField_STARTADDR.getAttribute( "mask" ) ) )
@@ -554,6 +586,7 @@ def instantiateComponent( staticMemoryComponent ):
     # EADDR Register
     pmeccEaddrEndAddrName = "PMECC_EADDR_ENDADDR"
     pmeccEaddrEndAddr = staticMemoryComponent.createIntegerSymbol( pmeccEaddrEndAddrName, pmeccControlsMenu )
+    pmeccEaddrEndAddr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccEaddrEndAddr.setLabel( atdfPmeccEaddrBitField_ENDADDR.getAttribute( "caption" ) )
     pmeccEaddrEndAddr.setMin( 0 )
     pmeccEaddrEndAddr.setMax( convertMaskToInt( atdfPmeccEaddrBitField_ENDADDR.getAttribute( "mask" ) ) )
@@ -562,6 +595,7 @@ def instantiateComponent( staticMemoryComponent ):
     # Clk Control Register
     pmeccClkClkCtrlName = "PMECC_CLK_CLKCTRL"
     pmeccClkClkCtrl = staticMemoryComponent.createIntegerSymbol( pmeccClkClkCtrlName, pmeccControlsMenu )
+    pmeccClkClkCtrl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccClkClkCtrl.setLabel( atdfPmeccClkBitField_CLKCTRL.getAttribute( "caption" ) + " (cycles)" )
     pmeccClkClkCtrl.setMin( 0 )
     pmeccClkClkCtrl.setMax( convertMaskToInt( atdfPmeccClkBitField_CLKCTRL.getAttribute( "mask" ) ) )
@@ -574,10 +608,12 @@ def instantiateComponent( staticMemoryComponent ):
 
     pmeccCfgSpareenName = "PMECC_CFG_SPAREEN"
     pmeccCfgSpareen = staticMemoryComponent.createBooleanSymbol( pmeccCfgSpareenName, pmeccConfigurationMenu )
+    pmeccCfgSpareen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccCfgSpareen.setLabel( atdfPmeccCfgBitField_SPAREEN.getAttribute( "caption" ) )
 
     pmeccCfgAutoName = "PMECC_CFG_AUTO"
     pmeccCfgAuto = staticMemoryComponent.createBooleanSymbol( pmeccCfgAutoName, pmeccConfigurationMenu )
+    pmeccCfgAuto.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccCfgAuto.setLabel( atdfPmeccCfgBitField_AUTO.getAttribute( "caption" ) )
     pmeccCfgAuto.setDefaultValue(pmeccCfgSpareen.getValue() == False)
     pmeccCfgAuto.setReadOnly(True)
@@ -585,10 +621,12 @@ def instantiateComponent( staticMemoryComponent ):
 
     pmeccCfgNandWrName = "PMECC_CFG_NANDWR"
     pmeccCfgNandWr = staticMemoryComponent.createBooleanSymbol( pmeccCfgNandWrName, pmeccConfigurationMenu )
+    pmeccCfgNandWr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccCfgNandWr.setLabel( atdfPmeccCfgBitField_NANDWR.getAttribute( "caption" ) )
 
     pmeccCfgPageSizeName = "PMECC_CFG_PAGESIZE"
     pmeccCfgPageSize = staticMemoryComponent.createKeyValueSetSymbol( pmeccCfgPageSizeName, pmeccConfigurationMenu )
+    pmeccCfgPageSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccCfgPageSize.setLabel( atdfPmeccCfgBitField_PAGESIZE.getAttribute( "caption" ) )
     pmeccCfgPageSize.setOutputMode( "Value" )
     pmeccCfgPageSize.setDisplayMode( "Description" )
@@ -598,6 +636,7 @@ def instantiateComponent( staticMemoryComponent ):
 
     pmeccCfgSectorSzName = "PMECC_CFG_SECTORSZ"
     pmeccCfgSectorSz = staticMemoryComponent.createIntegerSymbol( pmeccCfgSectorSzName, pmeccConfigurationMenu )
+    pmeccCfgSectorSz.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccCfgSectorSz.setLabel( atdfPmeccCfgBitField_SECTORSZ.getAttribute( "caption" )  + " (bytes), 0: 512, 1: 1024" )
     pmeccCfgSectorSz.setMin( 0 )
     pmeccCfgSectorSz.setMax( convertMaskToInt( atdfPmeccCfgBitField_SECTORSZ.getAttribute( "mask" ) ) )
@@ -606,6 +645,7 @@ def instantiateComponent( staticMemoryComponent ):
     pmeccCfgBchErrNameStem = "PMECC_CFG_BCH_ERR"
     pmeccCfgBchErrName = pmeccCfgBchErrNameStem
     pmeccCfgBchErr = staticMemoryComponent.createKeyValueSetSymbol( pmeccCfgBchErrName, pmeccConfigurationMenu )
+    pmeccCfgBchErr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmeccCfgBchErr.setLabel( atdfPmeccCfgBitField_BCH_ERR.getAttribute( "caption" ) )
     pmeccCfgBchErr.setOutputMode( "Value" )
     pmeccCfgBchErr.setDisplayMode( "Description" )
@@ -623,6 +663,7 @@ def instantiateComponent( staticMemoryComponent ):
     # ELIER Register
     pmerrlocElierDoneName = "PMERRLOC_ELIER_DONE"
     pmerrlocElierDone = staticMemoryComponent.createBooleanSymbol( pmerrlocElierDoneName, pmerrlocControlsMenu )
+    pmerrlocElierDone.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmerrlocElierDone.setLabel( atdfPmerrlocElierBitField_DONE.getAttribute( "caption" ) )
     pmerrlocElierDone.setDefaultValue( False )
     pmerrlocElierDone.setDependencies( updateInterrupt, [ pmerrlocElierDoneName ] )
@@ -631,6 +672,7 @@ def instantiateComponent( staticMemoryComponent ):
     # ELCFG Register
     pmerrlocElcfgSectorSzName = "PMERRLOC_ELCFG_SECTORSZ"
     pmerrlocElcfgSectorSz = staticMemoryComponent.createIntegerSymbol( pmerrlocElcfgSectorSzName, pmerrlocControlsMenu )
+    pmerrlocElcfgSectorSz.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6105;register:%NOREGISTER%")
     pmerrlocElcfgSectorSz.setLabel( atdfPmerrlocElcfgBitField_SECTORSZ.getAttribute( "caption" ) + " (see PMECC Configuration Menu)" )
     pmerrlocElcfgSectorSz.setMin( 0 )
     pmerrlocElcfgSectorSz.setMax( convertMaskToInt( atdfPmerrlocElcfgBitField_SECTORSZ.getAttribute( "mask" ) ) )

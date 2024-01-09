@@ -49,6 +49,7 @@ def instantiateComponent(pmComponent):
     
     #Idle Sleep configuration
     pmSym_PM_SLEEP_IDLE = pmComponent.createKeyValueSetSymbol("PM_SLEEP_IDLE_OPTION", None)
+    pmSym_PM_SLEEP_IDLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2206;register:SLEEP")
     pmSym_PM_SLEEP_IDLE.setLabel("Idle Sleep - Mode Configuration")
     pmSym_PM_SLEEP_IDLE.setOutputMode("Value")
     pmSym_PM_SLEEP_IDLE.setDisplayMode("Description")
@@ -77,6 +78,7 @@ def instantiateComponent(pmComponent):
         pmSym_RCAUSE.append(id)
         pmSym_RCAUSE[id] = pmComponent.createKeyValueSetSymbol("PM_RCAUSE"+str(id), None)
         pmSym_RCAUSE[id].setLabel(str(pmResetCause.getChildren()[id].getAttribute("caption")))
+        pmSym_RCAUSE[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2206;register:RCAUSE")
         pmSym_RCAUSE[id].addKey(pmResetCause.getChildren()[id].getAttribute("name"), str(id), pmResetCause.getChildren()[id].getAttribute("caption"))
         pmSym_RCAUSE[id].setOutputMode("Key")
         pmSym_RCAUSE[id].setDisplayMode("Description")

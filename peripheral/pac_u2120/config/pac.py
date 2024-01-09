@@ -107,10 +107,12 @@ pacInstanceName.setDefaultValue(instances[0].getAttribute("name"))
 
 # PAC Use
 pacSym_Use = coreComponent.createBooleanSymbol("PAC_USE", pacSym_Menu)
+pacSym_Use.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pac_u2120;register:WRCTRL")
 pacSym_Use.setLabel("Use PAC ?")
 
 # interrupt mode
 pacSym_INTENSET = coreComponent.createBooleanSymbol("PAC_INTERRRUPT_MODE", pacSym_Use)
+pacSym_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pac_u2120;register:INTENSET")
 pacSym_INTENSET.setLabel("Enable PAC Interrupt ?")
 pacSym_INTENSET.setVisible(False)
 pacSym_INTENSET.setDefaultValue(True)
@@ -118,6 +120,7 @@ pacSym_INTENSET.setDependencies(updatePACInterruptVisibleProperty, ["PAC_USE"])
 
 # Error Event
 pacSym_ErrEventSET = coreComponent.createBooleanSymbol("PAC_ERROR_EVENT", pacSym_Use)
+pacSym_ErrEventSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pac_u2120;register:EVCTRL")
 pacSym_ErrEventSET.setLabel("Generate Peripheral Access Error Event Output")
 pacSym_ErrEventSET.setVisible(False)
 pacSym_ErrEventSET.setDependencies(updatePACErrorEventVisibleProperty, ["PAC_USE"])

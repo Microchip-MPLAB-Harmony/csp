@@ -137,6 +137,7 @@ def instantiateComponent(sdadcComponent):
     #Prescaler Configuration
     global sdadcSym_CTRLB_PRESCALER
     sdadcSym_CTRLB_PRESCALER = sdadcComponent.createKeyValueSetSymbol("SDADC_CTRLB_PRESCALER", None)
+    sdadcSym_CTRLB_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:CTRLB")
     sdadcSym_CTRLB_PRESCALER.setLabel("Select Prescaler")
     sdadcPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SDADC\"]/value-group@[name=\"SDADC_CTRLB__PRESCALER\"]")
     sdadcPrescalerValues = []
@@ -154,6 +155,7 @@ def instantiateComponent(sdadcComponent):
     #Over Sampling Ratio
     global sdadcSym_CTRLB_OSR
     sdadcSym_CTRLB_OSR = sdadcComponent.createKeyValueSetSymbol("SDADC_CTRLB_OSR", None)
+    sdadcSym_CTRLB_OSR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:CTRLB")
     sdadcSym_CTRLB_OSR.setLabel("Over Sampling Ratio")
     sdadcSymOSRSelectionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SDADC\"]/value-group@[name=\"SDADC_CTRLB__OSR\"]")
     sdadcSymOSRSelectionValues = []
@@ -182,6 +184,7 @@ def instantiateComponent(sdadcComponent):
 
     #Reference Selection
     sdadcSym_REFCTRL_REFSEL = sdadcComponent.createKeyValueSetSymbol("SDADC_REFCTRL_REFSEL", None)
+    sdadcSym_REFCTRL_REFSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:REFCTRL")
     sdadcSym_REFCTRL_REFSEL.setLabel("Select Reference")
     sdadcReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SDADC\"]/value-group@[name=\"SDADC_REFCTRL__REFSEL\"]")
     sdadcReferenceValues = []
@@ -199,6 +202,7 @@ def instantiateComponent(sdadcComponent):
     #Trigger selection
     global sdadcSym_TRIGGER
     sdadcSym_TRIGGER = sdadcComponent.createKeyValueSetSymbol("SDADC_TRIGGER", None)
+    sdadcSym_TRIGGER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:%NOREGISTER%")
     sdadcSym_TRIGGER.setLabel("Select Conversion Trigger")
     sdadcSym_TRIGGER.addKey("FREE_RUN", "0", "Free Run")
     sdadcSym_TRIGGER.addKey("SW_TRIGGER", "1", "Software Trigger")
@@ -208,6 +212,7 @@ def instantiateComponent(sdadcComponent):
     sdadcSym_TRIGGER.setDisplayMode("Description")
 
     sdadcSym_FLUSH_EVENT = sdadcComponent.createKeyValueSetSymbol("SDADC_EVCTRL_FLUSH", sdadcSym_TRIGGER)
+    sdadcSym_FLUSH_EVENT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:EVCTRL")
     sdadcSym_FLUSH_EVENT.setLabel("Flush Event Input")
     sdadcSym_FLUSH_EVENT.setVisible(False)
     sdadcSym_FLUSH_EVENT.setOutputMode("Value")
@@ -218,6 +223,7 @@ def instantiateComponent(sdadcComponent):
     sdadcSym_FLUSH_EVENT.setDependencies(sdadcHWEventVisible, ["SDADC_TRIGGER"])
 
     sdadcSym_START_EVENT = sdadcComponent.createKeyValueSetSymbol("SDADC_EVCTRL_START", sdadcSym_TRIGGER)
+    sdadcSym_START_EVENT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:EVCTRL")
     sdadcSym_START_EVENT.setLabel("Start Event Input")
     sdadcSym_START_EVENT.setVisible(False)
     sdadcSym_START_EVENT.setOutputMode("Value")
@@ -230,6 +236,7 @@ def instantiateComponent(sdadcComponent):
     # Auto sequencer
     sdadcSym_AUTO_SEQUENCE = sdadcComponent.createBooleanSymbol("SDADC_AUTO_SEQUENCE", None)
     sdadcSym_AUTO_SEQUENCE.setLabel("Enable Automatic Sequencing")
+    sdadcSym_AUTO_SEQUENCE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:%NOREGISTER%")
     sdadcSym_AUTO_SEQUENCE.setVisible(False)
     sdadcSym_AUTO_SEQUENCE.setDependencies(sdadcOptionVisible, ["SDADC_TRIGGER"])
 
@@ -237,12 +244,14 @@ def instantiateComponent(sdadcComponent):
         #Enable channel in sequencer
         sdadcSym_SEQCTRL_SEQ.append(channelID)
         sdadcSym_SEQCTRL_SEQ[channelID] = sdadcComponent.createBooleanSymbol("SDADC_SEQCTRL_SEQ"+str(channelID), sdadcSym_AUTO_SEQUENCE)
+        sdadcSym_SEQCTRL_SEQ[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:SEQCTRL")
         sdadcSym_SEQCTRL_SEQ[channelID].setLabel("Enable Channel " + str(channelID))
         sdadcSym_SEQCTRL_SEQ[channelID].setVisible(False)
         sdadcSym_SEQCTRL_SEQ[channelID].setDependencies(sdadcChannelVisible, ["SDADC_AUTO_SEQUENCE"])
 
     #MUX Selection
     sdadcSym_INPUTCTRL_MUXSEL = sdadcComponent.createKeyValueSetSymbol("SDADC_INPUTCTRL_MUXSEL", None)
+    sdadcSym_INPUTCTRL_MUXSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:INPUTCTRL")
     sdadcSym_INPUTCTRL_MUXSEL.setLabel("MUX Selection")
     sdadcMuxSelectionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SDADC\"]/value-group@[name=\"SDADC_INPUTCTRL__MUXSEL\"]")
     sdadcMuxSelectionValues = []
@@ -261,10 +270,12 @@ def instantiateComponent(sdadcComponent):
     #result ready interrupt
     global sdadcSym_INTENSET_RESRDY
     sdadcSym_INTENSET_RESRDY = sdadcComponent.createBooleanSymbol("SDADC_INTENSET_RESRDY", None)
+    sdadcSym_INTENSET_RESRDY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:INTENSET")
     sdadcSym_INTENSET_RESRDY.setLabel("Enable Result Ready Interrupt")
 
     #result ready event out
     sdadcSym_EVCTRL_RESRDYEO = sdadcComponent.createBooleanSymbol("SDADC_EVCTRL_RESRDYEO", None)
+    sdadcSym_EVCTRL_RESRDYEO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:EVCTRL")
     sdadcSym_EVCTRL_RESRDYEO.setLabel("Enable Result Ready Event Out")
 
     sdadcSym_WINMODE_MENU = sdadcComponent.createMenuSymbol("SDADC_WINMODE_MENU", None)
@@ -272,6 +283,7 @@ def instantiateComponent(sdadcComponent):
 
     #Window monitor mode
     sdadcSym_WINCTRL_WINMODE = sdadcComponent.createKeyValueSetSymbol("SDADC_WINCTRL_WINMODE", sdadcSym_WINMODE_MENU)
+    sdadcSym_WINCTRL_WINMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:WINCTRL")
     sdadcSym_WINCTRL_WINMODE.setLabel("Select Window Monitor Mode")
     sdadcSym_WINCTRL_WINMODE.addKey("DISABLED", "0", "Disabled")
     sdadcSym_WINCTRL_WINMODE.addKey("ABOVE", "1", "Result is greater than lower threshold")
@@ -283,6 +295,7 @@ def instantiateComponent(sdadcComponent):
 
     #Upper threshold value
     sdadcSym_WINUT = sdadcComponent.createIntegerSymbol("SDADC_WINUT", sdadcSym_WINCTRL_WINMODE)
+    sdadcSym_WINUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:WINUT")
     sdadcSym_WINUT.setLabel("Window Upper Threshold")
     sdadcSym_WINUT.setDefaultValue(10000)
     sdadcSym_WINUT.setMin(-32768)
@@ -292,6 +305,7 @@ def instantiateComponent(sdadcComponent):
 
     #Lower threshold value
     sdadcSym_WINLT = sdadcComponent.createIntegerSymbol("SDADC_WINLT", sdadcSym_WINCTRL_WINMODE)
+    sdadcSym_WINLT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:WINLT")
     sdadcSym_WINLT.setLabel("Window Lower Threshold")
     sdadcSym_WINLT.setDefaultValue(5000)
     sdadcSym_WINLT.setMin(-32768)
@@ -301,12 +315,14 @@ def instantiateComponent(sdadcComponent):
 
     #window monitor event
     sdadcSym_INTENSET_WINMON = sdadcComponent.createBooleanSymbol("SDADC_INTENSET_WINMON", sdadcSym_WINCTRL_WINMODE)
+    sdadcSym_INTENSET_WINMON.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:INTENSET")
     sdadcSym_INTENSET_WINMON.setLabel("Enable Window Monitor Interrupt")
     sdadcSym_INTENSET_WINMON.setVisible(False)
     sdadcSym_INTENSET_WINMON.setDependencies(sdadcOptionVisible, ["SDADC_WINCTRL_WINMODE"])
 
     #window monitor event out
     sdadcSym_EVCTRL_WINMONEO = sdadcComponent.createBooleanSymbol("SDADC_EVCTRL_WINMONEO", sdadcSym_WINCTRL_WINMODE)
+    sdadcSym_EVCTRL_WINMONEO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:EVCTRL")
     sdadcSym_EVCTRL_WINMONEO.setLabel("Enable Window Monitor Event Out")
     sdadcSym_EVCTRL_WINMONEO.setVisible(False)
     sdadcSym_EVCTRL_WINMONEO.setDependencies(sdadcOptionVisible, ["SDADC_WINCTRL_WINMODE"])
@@ -322,10 +338,12 @@ def instantiateComponent(sdadcComponent):
 
     #Run StandBy
     sdadcSym_CTRLA_RUNSTDBY = sdadcComponent.createBooleanSymbol("SDADC_RUNSTDBY", sdadcSym_Sleep_Menu)
+    sdadcSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:%NOREGISTER%")
     sdadcSym_CTRLA_RUNSTDBY.setLabel("Run During Standby")
 
     #On Demand
     sdadcSym_CTRLA_ONDEMAND = sdadcComponent.createBooleanSymbol("SDADC_ONDEMAND", sdadcSym_Sleep_Menu)
+    sdadcSym_CTRLA_ONDEMAND.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdadc_u2260;register:%NOREGISTER%")
     sdadcSym_CTRLA_ONDEMAND.setLabel("On Demand Control")
 
     ############################################################################

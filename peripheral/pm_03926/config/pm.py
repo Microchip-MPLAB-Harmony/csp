@@ -66,6 +66,7 @@ def instantiateComponent(pmComponent):
 
     #System RAM Retention in Stanby Sleep
     pmSym_PM_STDBYCFG_RAMCFG = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_RAMCFG", pmSym_Standby_Menu)
+    pmSym_PM_STDBYCFG_RAMCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_03926;register:STDBYCFG")
     pmSym_PM_STDBYCFG_RAMCFG.setLabel("System RAM Retention")
     pmSym_PM_STDBYCFG_RAMCFG.setOutputMode("Value")
     pmSym_PM_STDBYCFG_RAMCFG.setDisplayMode("Description")
@@ -78,6 +79,7 @@ def instantiateComponent(pmComponent):
 
     #Low Power RAM Enable in Stanby Sleep
     pmSym_PM_STDBYCFG_LPRAM = pmComponent.createBooleanSymbol("PM_STDBYCFG_LPRAM", pmSym_Standby_Menu)
+    pmSym_PM_STDBYCFG_LPRAM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_03926;register:STDBYCFG")
     pmSym_PM_STDBYCFG_LPRAM.setLabel("Low Power RAM Enable")
     pmSym_PM_STDBYCFG_LPRAM.setDefaultValue(True)
 
@@ -87,6 +89,7 @@ def instantiateComponent(pmComponent):
 
     #System RAM Retention in Hibernate Sleep
     pmSym_PM_HIBCFG_RAMCFG = pmComponent.createKeyValueSetSymbol("PM_HIBCFG_RAMCFG", pmSym_Hibernate_Menu)
+    pmSym_PM_HIBCFG_RAMCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_03926;register:HIBCFG")
     pmSym_PM_HIBCFG_RAMCFG.setLabel("System RAM Retention")
     pmSym_PM_HIBCFG_RAMCFG.setOutputMode("Value")
     pmSym_PM_HIBCFG_RAMCFG.setDisplayMode("Description")
@@ -99,6 +102,7 @@ def instantiateComponent(pmComponent):
 
     #Low Power RAM Enable in Hibernate Sleep
     pmSym_PM_HIBCFG_LPRAM = pmComponent.createBooleanSymbol("PM_HIBCFG_LPRAM", pmSym_Hibernate_Menu)
+    pmSym_PM_HIBCFG_LPRAM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_03926;register:HIBCFG")
     pmSym_PM_HIBCFG_LPRAM.setLabel("Low Power RAM Enable")
     pmSym_PM_HIBCFG_LPRAM.setDefaultValue(True)
 

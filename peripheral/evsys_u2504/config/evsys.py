@@ -359,6 +359,7 @@ def instantiateComponent(evsysComponent):
     for id in range(0,len(user_node_children)):
         users_list.append(user_node_children[id].getAttribute("name")+"-"+user_node_children[id].getAttribute("index"))
     symEvsysUsersList = evsysComponent.createComboSymbol("EVSYS_USERS", evsysSym_Menu, users_list)
+    symEvsysUsersList.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:%NOREGISTER%")
     symEvsysUsersList.setLabel("User list")
     symEvsysUsersList.setVisible(False)
 
@@ -387,6 +388,7 @@ def instantiateComponent(evsysComponent):
 
     evsysPriority=evsysComponent.createKeyValueSetSymbol(
         "EVSYS_CHANNEL_SCHEDULING", evsysSym_Menu)
+    evsysPriority.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHANNEL")
     evsysPriority.setLabel("Scheduling Policy")
     evsysPriority.addKey(
         "STATIC", "0", "Static scheduling scheme for channels with level priority")
@@ -410,6 +412,7 @@ def instantiateComponent(evsysComponent):
     for id in range(0, channel):
         evsysChannel=evsysComponent.createBooleanSymbol(
             "EVSYS_CHANNEL_" + str(id), evsysSym_Menu)
+        evsysChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHANNEL")
         evsysChannel.setLabel("Enable Channel " + str(id))
         evsysChannel.setDefaultValue(False)
 
@@ -430,6 +433,7 @@ def instantiateComponent(evsysComponent):
 
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == True:
             evsysSecurity = evsysComponent.createKeyValueSetSymbol("EVSYS_NONSEC_" + str(id), evsysChannelMenu)
+            evsysSecurity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:NONSECUSER0")
             evsysSecurity.setLabel("Security mode")
             evsysSecurity.addKey("SECURE", "0", "False")
             evsysSecurity.addKey("NON-SECURE", "1", "True")
@@ -445,6 +449,7 @@ def instantiateComponent(evsysComponent):
         evsysGenerator.append(id)
         evsysGenerator[id]=evsysComponent.createKeyValueSetSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_GENERATOR", evsysChannelMenu)
+        evsysGenerator[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHANNEL")
         evsysGenerator[id].setLabel("Event Generator")
         evsysGenerator[id].setOutputMode("Value")
         for key in sorted(generator.keys()):
@@ -452,6 +457,7 @@ def instantiateComponent(evsysComponent):
 
         evsysGeneratorActive=evsysComponent.createBooleanSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_GENERATOR_ACTIVE", evsysChannelMenu)
+        evsysGeneratorActive.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHANNEL")
         evsysGeneratorActive.setDefaultValue(False)
         evsysGeneratorActive.setVisible(True)
         evsysGeneratorActive.setLabel("Channel Generator source Active")
@@ -462,6 +468,7 @@ def instantiateComponent(evsysComponent):
 
         evsysPath=evsysComponent.createKeyValueSetSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_PATH", evsysChannelMenu)
+        evsysPath.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHANNEL")
         evsysPath.setLabel("Path Selection")
         evsysPath.setOutputMode("Value")
         pathNode = getValueGroupNode__EVSYS("EVSYS", "CHANNEL", "CHANNEL", "PATH")        
@@ -476,6 +483,7 @@ def instantiateComponent(evsysComponent):
 
         evsysEdge=evsysComponent.createKeyValueSetSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_EDGE", evsysChannelMenu)
+        evsysEdge.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHANNEL")
         evsysEdge.setLabel("Event Edge Selection")
         edgeNode = getValueGroupNode__EVSYS("EVSYS", "CHANNEL", "CHANNEL", "EDGSEL")
         for i in range(0, len(edgeNode.getChildren())):
@@ -486,16 +494,19 @@ def instantiateComponent(evsysComponent):
 
         evsysOnDemand=evsysComponent.createBooleanSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_ONDEMAND", evsysChannelMenu)
+        evsysOnDemand.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHANNEL")
         evsysOnDemand.setLabel("Generic Clock On Demand")
         evsysOnDemand.setDefaultValue(False)
 
         evsysRunStandby=evsysComponent.createBooleanSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_RUNSTANDBY", evsysChannelMenu)
+        evsysRunStandby.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHANNEL")
         evsysRunStandby.setLabel("Run In Standby Sleep Mode")
         evsysRunStandby.setDefaultValue(False)
 
         evsysEvent=evsysComponent.createBooleanSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_EVENT", evsysChannelMenu)
+        evsysEvent.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHINTENSET")
         evsysEvent.setLabel("Enable Event Detection Interrupt")
         evsysEvent.setDefaultValue(False)
         evsysEvent.setVisible(False)
@@ -504,6 +515,7 @@ def instantiateComponent(evsysComponent):
 
         evsysOverRun=evsysComponent.createBooleanSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_OVERRUN", evsysChannelMenu)
+        evsysOverRun.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHINTENSET")
         evsysOverRun.setLabel("Enable Overrun Interrupt")
         evsysOverRun.setDefaultValue(False)
         evsysOverRun.setVisible(False)
@@ -512,6 +524,7 @@ def instantiateComponent(evsysComponent):
 
         evsysUserReady=evsysComponent.createBooleanSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_USER_READY", evsysChannelMenu)
+        evsysUserReady.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHANNEL")
         evsysUserReady.setDefaultValue(False)
         evsysUserReady.setVisible(True)
         evsysUserReady.setLabel("Channel Users Ready")
@@ -539,6 +552,7 @@ def instantiateComponent(evsysComponent):
     for id in user.keys():
         evsysUserChannel=evsysComponent.createKeyValueSetSymbol(
             "EVSYS_USER_" + str(id), evsysUserMenu)
+        evsysUserChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:USER")
         evsysUserChannel.setLabel(str(user.get(id)) + " Channel Selection")
         evsysUserChannel.addKey("NONE", str(0), "No Channel Selected")
         for i in range(0, channel):
@@ -547,6 +561,7 @@ def instantiateComponent(evsysComponent):
         evsysUserChannel.setOutputMode("Value")
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == True:
             evsysUserSecurity = evsysComponent.createKeyValueSetSymbol("EVSYS_USER_NONSEC_" + str(id), evsysUserChannel)
+            evsysUserSecurity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:USER")
             evsysUserSecurity.setLabel("Security mode")
             evsysUserSecurity.addKey("SECURE", "0", "False")
             evsysUserSecurity.addKey("NON-SECURE", "1", "True")

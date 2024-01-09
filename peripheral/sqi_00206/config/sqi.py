@@ -157,10 +157,12 @@ def instantiateComponent(sqiComponent):
     sqiMenu.setLabel("Hardware Settings ")
 
     sqiLaneMode = sqiComponent.createComboSymbol("SQI_LANE_MODE", sqiMenu, laneMode)
+    sqiLaneMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiLaneMode.setLabel("SQI Lane Mode")
     sqiLaneMode.setDefaultValue("QUAD")
 
     sqiCSEN = sqiComponent.createKeyValueSetSymbol("SQI_CSEN", sqiMenu)
+    sqiCSEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiCSEN.setLabel("Chip Select Output Enable Bits")
     sqiCSEN.addKey("SQI_CS_NONE", "0x0", "None")
     sqiCSEN.addKey("SQI_CS_0", "0x1", "Chip Select 0 is used")
@@ -171,6 +173,7 @@ def instantiateComponent(sqiComponent):
     sqiCSEN.setDefaultValue(3)
 
     sqiCPOL = sqiComponent.createKeyValueSetSymbol("SQI_CPOL", sqiMenu)
+    sqiCPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiCPOL.setLabel("Clock Polarity")
     sqiCPOL.addKey("LOW", "0", "Clock is Low when inactive (CPOL=0)")
     sqiCPOL.addKey("HIGH", "1", "Clock is High when inactive (CPOL=1)")
@@ -179,6 +182,7 @@ def instantiateComponent(sqiComponent):
     sqiCPOL.setDefaultValue(0)
 
     sqiCPHA = sqiComponent.createKeyValueSetSymbol("SQI_CPHA", sqiMenu)
+    sqiCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiCPHA.setLabel("Clock Phase")
     sqiCPHA.addKey("LEADING", "0", "Data is Valid on Clock Leading Edge (CPHA=0)")
     sqiCPHA.addKey("TRAILING", "1", "Data is Valid on Clock Trailing Edge (CPHA=1)")
@@ -189,6 +193,7 @@ def instantiateComponent(sqiComponent):
     sqiCPHA.setDependencies(setClockPhase, ["SQI_CPOL"])
 
     sqiLSBF = sqiComponent.createKeyValueSetSymbol("SQI_LSBF", sqiMenu)
+    sqiLSBF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiLSBF.setLabel("Data Format")
     sqiLSBF.addKey("MSB", "0", "MSB is sent or received first")
     sqiLSBF.addKey("LSB", "1", "LSB is sent or received first")
@@ -197,6 +202,7 @@ def instantiateComponent(sqiComponent):
     sqiLSBF.setDefaultValue(0)
 
     sqiClkDiv = sqiComponent.createKeyValueSetSymbol("SQI_CLKDIV", sqiMenu)
+    sqiClkDiv.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiClkDiv.setLabel("SQI Clock Divider")
     sqiClkDiv.addKey("SQI_CLK_DIV_2048", "0x400", "Base clock is divided by 2048")
     sqiClkDiv.addKey("SQI_CLK_DIV_1024", "0x200", "Base clock is divided by 1024")
@@ -233,6 +239,7 @@ def instantiateComponent(sqiComponent):
     sqiIrq_index = int(getIRQnumber(sqiInstanceName.getValue()))
 
     sqiInterruptEnable = sqiComponent.createBooleanSymbol("INTERRUPT_ENABLE", sqiMenu)
+    sqiInterruptEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiInterruptEnable.setLabel("SQI Interrupt Enabled")
     sqiInterruptEnable.setDefaultValue(True)
     sqiInterruptEnable.setReadOnly(True)
@@ -275,10 +282,12 @@ def instantiateComponent(sqiComponent):
     sqiVectorNum.setVisible(False)
 
     sqiFlashStatusCheck = sqiComponent.createBooleanSymbol("SQI_FLASH_STATUS_CHECK", sqiMenu)
+    sqiFlashStatusCheck.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiFlashStatusCheck.setLabel("Enable Flash Status Check?")
     sqiFlashStatusCheck.setDefaultValue(True)
 
     sqiStatBytes = sqiComponent.createKeyValueSetSymbol("SQI_STATBYTES", sqiFlashStatusCheck)
+    sqiStatBytes.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiStatBytes.setLabel("Number of Status Command/Read Bytes")
     sqiStatBytes.addKey("SQI_STATUS_BYTES_1", "0x1", "1 byte long")
     sqiStatBytes.addKey("SQI_STATUS_BYTES_2", "0x2", "2 bytes long")
@@ -289,6 +298,7 @@ def instantiateComponent(sqiComponent):
     sqiStatBytes.setDependencies(setFlashStatusCheck, ["SQI_FLASH_STATUS_CHECK"])
 
     sqiStatType = sqiComponent.createComboSymbol("SQI_STATTYPE", sqiFlashStatusCheck, laneMode)
+    sqiStatType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiStatType.setLabel("Status Command/Read Lane Mode")
     sqiStatType.setDefaultValue(sqiLaneMode.getValue())
     sqiStatType.setVisible(sqiFlashStatusCheck.getValue())
@@ -296,6 +306,7 @@ def instantiateComponent(sqiComponent):
     sqiStatType.setDependencies(setLaneMode, ["SQI_FLASH_STATUS_CHECK", "SQI_LANE_MODE"])
 
     sqiStatPos = sqiComponent.createKeyValueSetSymbol("SQI_STATPOS", sqiFlashStatusCheck)
+    sqiStatPos.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiStatPos.setLabel("Status Register Busy Bit Position")
     sqiStatPos.addKey("SQI_STATUS_BIT_0", "0x0", "Position 0")
     sqiStatPos.addKey("SQI_STATUS_BIT_7", "0x1", "Position 7")
@@ -306,6 +317,7 @@ def instantiateComponent(sqiComponent):
     sqiStatPos.setDependencies(setFlashStatusCheck, ["SQI_FLASH_STATUS_CHECK"])
 
     sqiStatCmd = sqiComponent.createHexSymbol("SQI_STATCMD", sqiFlashStatusCheck)
+    sqiStatCmd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sqi_00206;register:%NOREGISTER%")
     sqiStatCmd.setLabel("Status Command")
     sqiStatCmd.setDefaultValue(0x05)
     sqiStatCmd.setVisible(sqiFlashStatusCheck.getValue())

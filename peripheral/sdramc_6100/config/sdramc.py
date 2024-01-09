@@ -116,6 +116,7 @@ def instantiateComponent(sdramcComponent):
 
     sdramcSymClkFreq = sdramcComponent.createIntegerSymbol("SDRAMC_CPU_CLK_FREQ", None)
     sdramcSymClkFreq.setLabel("Get Core Clock Frequency")
+    sdramcSymClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:%NOREGISTER%")
     sdramcSymClkFreq.setVisible(False)
     sdramcSymClkFreq.setDefaultValue(cpuclk)
 
@@ -124,6 +125,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSymMenu_features.setLabel("Configure SDRAM features")
 
     sdramcSym_MDR__MD = sdramcComponent.createKeyValueSetSymbol("SDRAMC_MDR_MD", sdramcSymMenu_features)
+    sdramcSym_MDR__MD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_MDR")
     sdramcSym_MDR__MD.setOutputMode("Key")
     sdramcSym_MDR__MD.setDisplayMode("Description")
     sdramcSym_MDR__MD.setLabel("SDRAM Type")
@@ -131,6 +133,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_MDR__MD.setSelectedKey("SDRAM",2)
 
     sdramcSym_CR__NR = sdramcComponent.createKeyValueSetSymbol("SDRAMC_CR__NR", sdramcSymMenu_features)
+    sdramcSym_CR__NR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CR")
     sdramcSym_CR__NR.setOutputMode("Key")
     sdramcSym_CR__NR.setDisplayMode("Description")
     sdramcSym_CR__NR.setLabel("Number of Row Bits")
@@ -141,6 +144,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_CR__NR.setSelectedKey("ROW11",2)
 
     sdramcSym_CR__NC = sdramcComponent.createKeyValueSetSymbol("SDRAMC_CR__NC", sdramcSymMenu_features)
+    sdramcSym_CR__NC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CR")
     sdramcSym_CR__NC.setOutputMode("Key")
     sdramcSym_CR__NC.setDisplayMode("Description")
     sdramcSym_CR__NC.setLabel("Number of Column Bits")
@@ -151,6 +155,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_CR__NC.setSelectedKey("COL8",2)
 
     sdramcSym_CR__NB = sdramcComponent.createKeyValueSetSymbol("SDRAMC_CR__NB", sdramcSymMenu_features)
+    sdramcSym_CR__NB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CR")
     sdramcSym_CR__NB.setOutputMode("Key")
     sdramcSym_CR__NB.setDisplayMode("Description")
     sdramcSym_CR__NB.setLabel("Number of Banks")
@@ -161,6 +166,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_CR__NB.setSelectedKey("BANK2",2)
 
     sdramcSym_CR_DBW = sdramcComponent.createComboSymbol("SDRAMC_CR_DBW", sdramcSymMenu_features,ComboVal_CR_DBW)
+    sdramcSym_CR_DBW.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CR")
     sdramcSym_CR_DBW.setLabel("Data Bus Width")
     sdramcSym_CR_DBW.setDefaultValue("16-bits")
     sdramcSym_CR_DBW.setReadOnly(True)
@@ -170,6 +176,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSymMenu_TIMING_MENU.setLabel("Configure SDRAM Timing Parameters")
 
     sdramcSym_CR_TRCD = sdramcComponent.createIntegerSymbol("SDRAMC_CR_TRCD", sdramcSymMenu_TIMING_MENU)
+    sdramcSym_CR_TRCD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CR")
     sdramcSym_CR_TRCD.setLabel("Row Active to Column Read/Write Delay (TRCD)")
     sdramcSym_CR_TRCD.setMin(0)
     sdramcSym_CR_TRCD.setMax(15)
@@ -178,6 +185,7 @@ def instantiateComponent(sdramcComponent):
     sdramc_cr_cas_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SDRAMC"]/register-group@[name="SDRAMC"]/register@[name="SDRAMC_CR"]/bitfield@[name="CAS"]')
     sdramc_cr_cas_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SDRAMC"]/value-group@[name="'+sdramc_cr_cas_node.getAttribute("values")+'"]')
     sdramcSym_CR_CAS = sdramcComponent.createKeyValueSetSymbol("SDRAMC_CR_CAS", sdramcSymMenu_TIMING_MENU)
+    sdramcSym_CR_CAS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CR")
     sdramcSym_CR_CAS.setLabel("CAS Latency (TCAS)")
     sdramcSym_CR_CAS.setDisplayMode("Value")
     sdramcSym_CR_CAS.setOutputMode("Value")
@@ -186,36 +194,42 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_CR_CAS.setDefaultValue(sdramcSym_CR_CAS.getKeyCount()-1)
 
     sdramcSym_CR_TRAS = sdramcComponent.createIntegerSymbol("SDRAMC_CR_TRAS", sdramcSymMenu_TIMING_MENU)
+    sdramcSym_CR_TRAS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CR")
     sdramcSym_CR_TRAS.setLabel("Row Active to Precharge Delay(RAS)")
     sdramcSym_CR_TRAS.setMin(0)
     sdramcSym_CR_TRAS.setMax(15)
     sdramcSym_CR_TRAS.setDefaultValue(SDRAMC_CR_TRAS_DEFAULT_VALUE)
 
     sdramcSym_CR_TRP = sdramcComponent.createIntegerSymbol("SDRAMC_CR_TRP", sdramcSymMenu_TIMING_MENU)
+    sdramcSym_CR_TRP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CR")
     sdramcSym_CR_TRP.setLabel("Row Precharge Delay (TRP)")
     sdramcSym_CR_TRP.setMin(0)
     sdramcSym_CR_TRP.setMax(15)
     sdramcSym_CR_TRP.setDefaultValue(SDRAMC_CR_TRP_DEFAULT_VALUE)
 
     sdramcSym_CR_TRC_TRFC = sdramcComponent.createIntegerSymbol("SDRAMC_CR_TRC_TRFC", sdramcSymMenu_TIMING_MENU)
+    sdramcSym_CR_TRC_TRFC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CR")
     sdramcSym_CR_TRC_TRFC.setLabel("Row Cycle Delay/Row Refresh Cycle(TRC_TRFC)")
     sdramcSym_CR_TRC_TRFC.setMin(0)
     sdramcSym_CR_TRC_TRFC.setMax(15)
     sdramcSym_CR_TRC_TRFC.setDefaultValue(SDRAMC_CR_TRC_TRFC_DEFAULT_VALUE)
 
     sdramcSym_CR_TWR = sdramcComponent.createIntegerSymbol("SDRAMC_CR_TWR", sdramcSymMenu_TIMING_MENU)
+    sdramcSym_CR_TWR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CR")
     sdramcSym_CR_TWR.setLabel("Write Recovery Delay (TWR)")
     sdramcSym_CR_TWR.setMin(0)
     sdramcSym_CR_TWR.setMax(15)
     sdramcSym_CR_TWR.setDefaultValue(SDARMC_CR_TWR_DEFAULT_VALUE)
 
     sdramcSym_CFR1_TMRD = sdramcComponent.createIntegerSymbol("SDRAMC_CFR1_TMRD", sdramcSymMenu_TIMING_MENU)
+    sdramcSym_CFR1_TMRD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CFR1")
     sdramcSym_CFR1_TMRD.setLabel("Mode Register Set to Command Delay Time(TMRD)")
     sdramcSym_CFR1_TMRD.setMin(0)
     sdramcSym_CFR1_TMRD.setMax(15)
     sdramcSym_CFR1_TMRD.setDefaultValue(SDARMC_CFR1_TMRD_DEFAULT_VALUE)
 
     sdramcSym_REFRESH_TIME_IN_MS = sdramcComponent.createIntegerSymbol("SDRAMC_REFRESH_TIME_IN_MS", sdramcSymMenu_TIMING_MENU)
+    sdramcSym_REFRESH_TIME_IN_MS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:%NOREGISTER%")
     sdramcSym_REFRESH_TIME_IN_MS.setLabel("Refresh time in ms")
     sdramcSym_REFRESH_TIME_IN_MS.setDefaultValue(SDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE)
     sdramcSym_REFRESH_TIME_IN_MS.setMin(0)
@@ -229,6 +243,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_SDRAMC_TR_COUNT.setVisible(False)
 
     sdramcSym_CR_TXSR = sdramcComponent.createIntegerSymbol("SDRAMC_CR_TXSR", sdramcSymMenu_TIMING_MENU)
+    sdramcSym_CR_TXSR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:SDRAMC_CR")
     sdramcSym_CR_TXSR.setLabel("Exit Self Refresh to Active Time (TXSR)")
     sdramcSym_CR_TXSR.setMin(0)
     sdramcSym_CR_TXSR.setMax(15)
@@ -239,12 +254,14 @@ def instantiateComponent(sdramcComponent):
     sdramcSymMenu_MR_MENU.setLabel("SDRAMC Mode Register Configurations")
 
     sdramcSym_BURST_LENGTH = sdramcComponent.createIntegerSymbol("SDRAMC_BURST_LENGTH", sdramcSymMenu_MR_MENU)
+    sdramcSym_BURST_LENGTH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:%NOREGISTER%")
     sdramcSym_BURST_LENGTH.setLabel("Burst Length")
     sdramcSym_BURST_LENGTH.setMin(SDRAMC_DEFAULT_MIN_VALUE)
     sdramcSym_BURST_LENGTH.setMax(SDRAMC_BURST_LENGHT_MAX_VALUE)
     sdramcSym_BURST_LENGTH.setDefaultValue(SDRAMC_DEFAULT_MIN_VALUE)
 
     sdramcSym_BURST_TYPE = sdramcComponent.createComboSymbol("SDRAMC_BURST_TYPE", sdramcSymMenu_MR_MENU, ComboVal_BURST_TYPE)
+    sdramcSym_BURST_TYPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sdramc_6100;register:%NOREGISTER%")
     sdramcSym_BURST_TYPE.setLabel("Burst Type")
     sdramcSym_BURST_TYPE.setDefaultValue("SEQUENTIAL")
 

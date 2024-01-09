@@ -287,6 +287,7 @@ tccSym_PWMMenu.setDependencies(tccPwmVisible, ["TCC_OPERATION_MODE"])
 #waveform option
 global tccSym_WAVE_WAVEGEN
 tccSym_WAVE_WAVEGEN = tccComponent.createKeyValueSetSymbol("TCC_WAVE_WAVEGEN", tccSym_PWMMenu)
+tccSym_WAVE_WAVEGEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WAVE")
 tccSym_WAVE_WAVEGEN.setLabel("Select PWM Type")
 tccSym_WAVE_WAVEGEN.setDefaultValue(0)
 tccSym_WAVE_WAVEGEN.setOutputMode("Key")
@@ -300,6 +301,7 @@ tccSym_WAVE_WAVEGEN.setDependencies(tccSlaveModeVisibility, ["TCC_SLAVE_MODE"])
 
 
 tccSym_CTRLBSET_DIR = tccComponent.createBooleanSymbol("TCC_CTRLBSET_DIR", tccSym_PWMMenu)
+tccSym_CTRLBSET_DIR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:CTRLBSET")
 tccSym_CTRLBSET_DIR.setLabel("PWM Direction - Count Down")
 tccSym_CTRLBSET_DIR.setDefaultValue(False)
 tccSym_CTRLBSET_DIR.setDependencies(tccDirVisible, ["TCC_WAVE_WAVEGEN", "TCC_SLAVE_MODE"]) 
@@ -310,6 +312,7 @@ if size == 32:
     tccSym_PER_PER = tccComponent.createLongSymbol("TCC_PER_PER", tccSym_PWMMenu)
 else:
     tccSym_PER_PER = tccComponent.createIntegerSymbol("TCC_PER_PER", tccSym_PWMMenu)
+    tccSym_PER_PER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:PER")
 tccSym_PER_PER.setLabel("Period Value")
 tccSym_PER_PER.setDefaultValue(2399)
 tccSym_PER_PER.setMin(0)
@@ -338,6 +341,7 @@ tccSym_Frequency.setDependencies(tccPWMFreqCalc, ["core."+tccInstanceName.getVal
 
 #Period interrupt
 tccSym_INTENSET_OVF = tccComponent.createBooleanSymbol("TCC_INTENSET_OVF", tccSym_PWMMenu)
+tccSym_INTENSET_OVF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:INTENSET")
 tccSym_INTENSET_OVF.setLabel("Enable Period Interrupt")
 tccSym_INTENSET_OVF.setDefaultValue(False)
 interruptDepList.append("TCC_INTENSET_OVF")
@@ -345,12 +349,14 @@ pwmInterruptDepList.append("TCC_INTENSET_OVF")
 
 #Period out event
 tccSym_EVCTRL_OVFEO = tccComponent.createBooleanSymbol("TCC_EVCTRL_OVFEO", tccSym_PWMMenu)
+tccSym_EVCTRL_OVFEO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_EVCTRL_OVFEO.setLabel("Enable Period Event Out")
 tccSym_EVCTRL_OVFEO.setDefaultValue(False)
 eventDepList.append("TCC_EVCTRL_OVFEO")   
 
 if (outputMatrixImplemented == 1):
     tccSym_WEXCTRL_OTMX = tccComponent.createKeyValueSetSymbol("TCC_WEXCTRL_OTMX", tccSym_PWMMenu)
+    tccSym_WEXCTRL_OTMX.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WEXCTRL")
     tccSym_WEXCTRL_OTMX.setLabel("Select Output Matrix")
     tccSym_WEXCTRL_OTMX.setDefaultValue(0)
     tccSym_WEXCTRL_OTMX.setOutputMode("Value")
@@ -375,6 +381,7 @@ for channelID in range(0, int(numOfChannels)):
         tccSym_Channel_CC[channelID] = tccComponent.createLongSymbol("TCC_"+str(channelID)+"_CC", tccSym_Channel_Menu[channelID])
     else:
         tccSym_Channel_CC[channelID] = tccComponent.createIntegerSymbol("TCC_"+str(channelID)+"_CC", tccSym_Channel_Menu[channelID])
+        tccSym_Channel_CC[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:CC")
     tccSym_Channel_CC[channelID].setLabel("Duty Value")
     tccSym_Channel_CC[channelID].setMin(0)
     tccSym_Channel_CC[channelID].setMax(pow(2, size) - 1)
@@ -382,6 +389,7 @@ for channelID in range(0, int(numOfChannels)):
     #output polarity for dual slope
     tccSym_Channel_Polarity.append(channelID)
     tccSym_Channel_Polarity[channelID] = tccComponent.createKeyValueSetSymbol("TCC_"+str(channelID)+"_WAVE_POL", tccSym_Channel_Menu[channelID])
+    tccSym_Channel_Polarity[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WAVE")
     tccSym_Channel_Polarity[channelID].setLabel("Output Polarity")
     tccSym_Channel_Polarity[channelID].addKey("LOW","0","Output is ~DIR when counter matches CCx value")
     tccSym_Channel_Polarity[channelID].addKey("HIGH","1","Output is DIR when counter matches CCx value")
@@ -393,6 +401,7 @@ for channelID in range(0, int(numOfChannels)):
     #output polarity for single slope
     tccSym_Channel_Polarity_NPWM.append(channelID)
     tccSym_Channel_Polarity_NPWM[channelID] = tccComponent.createKeyValueSetSymbol("TCC_"+str(channelID)+"_WAVE_POL_NPWM", tccSym_Channel_Menu[channelID])
+    tccSym_Channel_Polarity_NPWM[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WAVE")
     tccSym_Channel_Polarity_NPWM[channelID].setLabel("Output Polarity")
     tccSym_Channel_Polarity_NPWM[channelID].addKey("LOW","0","Output is ~DIR and set to DIR when counter matches CCx value")
     tccSym_Channel_Polarity_NPWM[channelID].addKey("HIGH","1","Output is DIR and set to ~DIR when counter matches CCx value")
@@ -405,6 +414,7 @@ for channelID in range(0, int(numOfChannels)):
         #dead time
         tccSym_Channel_WEXCTRL_DTIEN.append(channelID)
         tccSym_Channel_WEXCTRL_DTIEN[channelID] = tccComponent.createBooleanSymbol("TCC_"+str(channelID)+"_WEXCTRL_DTIEN", tccSym_Channel_Menu[channelID])
+        tccSym_Channel_WEXCTRL_DTIEN[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WEXCTRL")
         tccSym_Channel_WEXCTRL_DTIEN[channelID].setLabel("Enable Dead Time")
         tccSym_Channel_WEXCTRL_DTIEN[channelID].setDefaultValue(True)
 
@@ -412,6 +422,7 @@ for channelID in range(0, int(numOfChannels)):
         #swap dead time outputs
         tccSym_Channel_WAVE_SWAP.append(channelID)
         tccSym_Channel_WAVE_SWAP[channelID] = tccComponent.createBooleanSymbol("TCC_"+str(channelID)+"_WAVE_SWAP", tccSym_Channel_Menu[channelID])
+        tccSym_Channel_WAVE_SWAP[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WAVE")
         tccSym_Channel_WAVE_SWAP[channelID].setLabel("Swap Outputs")
         tccSym_Channel_WAVE_SWAP[channelID].setDefaultValue(False)
 
@@ -419,6 +430,7 @@ for channelID in range(0, int(numOfChannels)):
         #circular buffer
         tccSym_Channel_WAVE_CICCEN.append(channelID)
         tccSym_Channel_WAVE_CICCEN[channelID] = tccComponent.createBooleanSymbol("TCC_"+str(channelID)+"_WAVE_CICCEN", tccSym_Channel_Menu[channelID])
+        tccSym_Channel_WAVE_CICCEN[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WAVE")
         tccSym_Channel_WAVE_CICCEN[channelID].setLabel("Enable Circular Buffer")
         tccSym_Channel_WAVE_CICCEN[channelID].setDefaultValue(False)   
         tccSym_Channel_WAVE_CICCEN[channelID].setVisible(False) 
@@ -427,6 +439,7 @@ for channelID in range(0, int(numOfChannels)):
     #compare match event out
     tccSym_Channel_INTENSET_MC.append(channelID)
     tccSym_Channel_INTENSET_MC[channelID] = tccComponent.createBooleanSymbol("TCC_INTENSET_MC_"+str(channelID), tccSym_Channel_Menu[channelID])
+    tccSym_Channel_INTENSET_MC[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:INTENSET")
     tccSym_Channel_INTENSET_MC[channelID].setLabel("Enable Compare Match Interrupt")
     tccSym_Channel_INTENSET_MC[channelID].setDefaultValue(False)
     interruptDepList.append("TCC_INTENSET_MC_"+str(channelID))
@@ -435,6 +448,7 @@ for channelID in range(0, int(numOfChannels)):
     #compare match event out
     tccSym_Channel_EVCTRL_MCEO.append(channelID)
     tccSym_Channel_EVCTRL_MCEO[channelID] = tccComponent.createBooleanSymbol("TCC_EVCTRL_MCEO_"+str(channelID), tccSym_Channel_Menu[channelID])
+    tccSym_Channel_EVCTRL_MCEO[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
     tccSym_Channel_EVCTRL_MCEO[channelID].setLabel("Enable Compare Match Event OUT")
     tccSym_Channel_EVCTRL_MCEO[channelID].setDefaultValue(False)
     eventDepList.append("TCC_EVCTRL_MCEO_"+str(channelID))
@@ -442,6 +456,7 @@ for channelID in range(0, int(numOfChannels)):
     #compare match event in
     tccSym_Channel_EVCTRL_MCEI.append(channelID)
     tccSym_Channel_EVCTRL_MCEI[channelID] = tccComponent.createBooleanSymbol("TCC_EVCTRL_MCEI_"+str(channelID), tccSym_Channel_Menu[channelID])
+    tccSym_Channel_EVCTRL_MCEI[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
     tccSym_Channel_EVCTRL_MCEI[channelID].setLabel("Enable Compare Match Event IN")
     tccSym_Channel_EVCTRL_MCEI[channelID].setDefaultValue(False)
     eventDepList.append("TCC_EVCTRL_MCEI_"+str(channelID))
@@ -452,6 +467,7 @@ tccSym_Outputs_Menu.setLabel("Outputs")
 
 for output in range (0, numOfOutputs):
     tccSym_DRVCTRL_INVEN = tccComponent.createBooleanSymbol("TCC_DRVCTRL_INVEN"+str(output), tccSym_Outputs_Menu)
+    tccSym_DRVCTRL_INVEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:DRVCTRL")
     tccSym_DRVCTRL_INVEN.setLabel("Invert Output " + str(output))
 
 #dead time menu
@@ -466,6 +482,7 @@ tccSym_DeadTime_Menu.setDependencies(tccDeadTimeVisible, ["TCC_0_WEXCTRL_DTIEN",
 #Low dead time
 global tccSym_WEXCTRL_DTLS
 tccSym_WEXCTRL_DTLS = tccComponent.createIntegerSymbol("TCC_WEXCTRL_DTLS", tccSym_DeadTime_Menu)
+tccSym_WEXCTRL_DTLS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WEXCTRL")
 tccSym_WEXCTRL_DTLS.setLabel("Dead Time for Low Side Output")
 tccSym_WEXCTRL_DTLS.setDefaultValue(64)
 tccSym_WEXCTRL_DTLS.setMin(0)
@@ -483,6 +500,7 @@ tccSym_DTLS_COMMENT.setDependencies(tccDeadTimeCalc, ["TCC_WEXCTRL_DTLS", "core.
 #High dead time
 global tccSym_WEXCTRL_DTHS
 tccSym_WEXCTRL_DTHS = tccComponent.createIntegerSymbol("TCC_WEXCTRL_DTHS", tccSym_DeadTime_Menu)
+tccSym_WEXCTRL_DTHS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WEXCTRL")
 tccSym_WEXCTRL_DTHS.setLabel("Dead Time for High Side Output")
 tccSym_WEXCTRL_DTHS.setDefaultValue(64)
 tccSym_WEXCTRL_DTHS.setMin(0)
@@ -506,11 +524,13 @@ if (patternGenImplemented == 1):
     for output in range(0, numOfOutputs):
         tccSym_PATT_PGE.append(output)
         tccSym_PATT_PGE[output] = tccComponent.createBooleanSymbol("TCC_"+str(output)+"PATT_PGE", tccSym_PatGen_Menu)
+        tccSym_PATT_PGE[output].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:PATT")
         tccSym_PATT_PGE[output].setLabel("Enable for Output " +str(output))
         tccSym_PATT_PGE[output].setDefaultValue(False)
 
         tccSym_PATT_PGV.append(output)
         tccSym_PATT_PGV[output] = tccComponent.createKeyValueSetSymbol("TCC_"+str(output)+"PATT_PGV", tccSym_PATT_PGE[output])
+        tccSym_PATT_PGV[output].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:PATT")
         tccSym_PATT_PGV[output].setLabel("Select Pattern Level for Output " +str(output))
         tccSym_PATT_PGV[output].setVisible(False)
         tccSym_PATT_PGV[output].addKey("Low", "0", "Low")
@@ -527,6 +547,7 @@ tccSym_Ramp_Menu.setDependencies (tccRampMenuVisible, ["TCC_WAVE_WAVEGEN"])
 
 global tccSym_WAVE_RAMP
 tccSym_WAVE_RAMP = tccComponent.createKeyValueSetSymbol("TCC_WAVE_RAMP", tccSym_Ramp_Menu)
+tccSym_WAVE_RAMP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WAVE")
 tccSym_WAVE_RAMP.setLabel("Select Ramp")
 tcc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TCC\"]/value-group@[name=\"TCC_WAVE__RAMP\"]")
 childrenNodes = tcc.getChildren()
@@ -547,12 +568,14 @@ if size == 32:
     tccSym_Ramp_Period = tccComponent.createLongSymbol("TCC_RAMP_CYCLEA_PERIOD", tccSym_Ramp_CycleA_Menu)
 else:
     tccSym_Ramp_Period = tccComponent.createIntegerSymbol("TCC_RAMP_CYCLEA_PERIOD", tccSym_Ramp_CycleA_Menu)
+    tccSym_Ramp_Period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:%NOREGISTER%")
 tccSym_Ramp_Period.setLabel("Cycle A Period Value (PER)")
 tccSym_Ramp_Period.setValue(tccSym_PER_PER.getValue())
 tccSym_Ramp_Period.setReadOnly(True)
 tccSym_Ramp_Period.setDependencies(tccRampAPeriodCalc, ["TCC_WAVE_RAMP", "TCC_PER_PER", "TCC_0_CC"])
 
 tccSym_WAVE_CICCEN0 = tccComponent.createBooleanSymbol("TCC_WAVE_CICCEN0", tccSym_Ramp_CycleA_Menu)
+tccSym_WAVE_CICCEN0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WAVE")
 tccSym_WAVE_CICCEN0.setLabel("Enable CC0 Circular Buffer")
 tccSym_WAVE_CICCEN0.setDefaultValue(True)
 tccSym_WAVE_CICCEN0.setVisible(False)
@@ -563,6 +586,7 @@ if size == 32:
     tccSym_Ramp_Ch1_Duty = tccComponent.createLongSymbol("TCC_RAMP_CH1_DUTY", tccSym_Ramp_CycleA_Menu)
 else:
     tccSym_Ramp_Ch1_Duty = tccComponent.createIntegerSymbol("TCC_RAMP_CH1_DUTY", tccSym_Ramp_CycleA_Menu)
+    tccSym_Ramp_Ch1_Duty.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:%NOREGISTER%")
 tccSym_Ramp_Ch1_Duty.setLabel("Cycle A Duty Value")
 tccSym_Ramp_Ch1_Duty.setValue(0)
 tccSym_Ramp_Ch1_Duty.setReadOnly(True)
@@ -575,6 +599,7 @@ tccSym_Ramp_CycleB_Menu.setDependencies(tccRampCycleMenuVisible, ["TCC_WAVE_RAMP
 
 global tccSym_WAVE_CIPEREN
 tccSym_WAVE_CIPEREN = tccComponent.createBooleanSymbol("TCC_WAVE_CIPEREN", tccSym_Ramp_CycleB_Menu)
+tccSym_WAVE_CIPEREN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WAVE")
 tccSym_WAVE_CIPEREN.setLabel("Enable Period Circular Buffer")
 tccSym_WAVE_CIPEREN.setDependencies(tccRampPeriodCirBuf, ["TCC_WAVE_RAMP"])
 
@@ -582,6 +607,7 @@ if size == 32:
     tccSym_Ramp_CycleB_Period = tccComponent.createLongSymbol("TCC_RAMP_CYCLEB_PERIOD", tccSym_Ramp_CycleB_Menu)
 else:
     tccSym_Ramp_CycleB_Period = tccComponent.createIntegerSymbol("TCC_RAMP_CYCLEB_PERIOD", tccSym_Ramp_CycleB_Menu)
+    tccSym_Ramp_CycleB_Period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:%NOREGISTER%")
 tccSym_Ramp_CycleB_Period.setLabel("Cycle B Period Value (PER)")
 tccSym_Ramp_CycleB_Period.setValue(tccSym_PER_PER.getValue())
 tccSym_Ramp_CycleB_Period.setReadOnly(True)
@@ -591,6 +617,7 @@ if size == 32:
     tccSym_Ramp_Ch2_Duty = tccComponent.createLongSymbol("TCC_RAMP_CH2_DUTY", tccSym_Ramp_CycleB_Menu)
 else:
     tccSym_Ramp_Ch2_Duty = tccComponent.createIntegerSymbol("TCC_RAMP_CH2_DUTY", tccSym_Ramp_CycleB_Menu)
+    tccSym_Ramp_Ch2_Duty.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:%NOREGISTER%")
 tccSym_Ramp_Ch2_Duty.setLabel("Cycle B Duty Value")
 tccSym_Ramp_Ch2_Duty.setDependencies(tccRampBdutyCalc, ["TCC_WAVE_RAMP", "TCC_0_CC", "TCC_1_CC"])
 tccSym_Ramp_Ch2_Duty.setReadOnly(True)
@@ -602,6 +629,7 @@ tccSym_InputEvents_Menu.setLabel("Input Events Configuration")
 
 global tccSym_EVCTRL_EVACT0
 tccSym_EVCTRL_EVACT0 = tccComponent.createKeyValueSetSymbol("TCC_EVCTRL_EVACT0", tccSym_InputEvents_Menu)
+tccSym_EVCTRL_EVACT0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_EVCTRL_EVACT0.setLabel("Select Input Event 0 Action")
 tccSym_EVCTRL_EVACT0.addKey("OFF", "0", "Disabled")
 tccSym_EVCTRL_EVACT0.addKey("RETRIGGER", "1", "Start, restart or retrigger counter")
@@ -615,12 +643,14 @@ tccSym_EVCTRL_EVACT0.setOutputMode("Key")
 eventDepList.append("TCC_EVCTRL_EVACT0")
 
 tccSym_EVCTRL_TCINV0 = tccComponent.createBooleanSymbol("TCC_EVCTRL_TCINV0", tccSym_EVCTRL_EVACT0)
+tccSym_EVCTRL_TCINV0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_EVCTRL_TCINV0.setLabel("Invert Input Event 0")
 tccSym_EVCTRL_TCINV0.setVisible(False)
 tccSym_EVCTRL_TCINV0.setDependencies(tccPwmIpEventVisible, ["TCC_EVCTRL_EVACT0"])
 
 global tccSym_EVCTRL_EVACT1
 tccSym_EVCTRL_EVACT1 = tccComponent.createKeyValueSetSymbol("TCC_EVCTRL_EVACT1", tccSym_InputEvents_Menu)
+tccSym_EVCTRL_EVACT1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_EVCTRL_EVACT1.setLabel("Select Input Event 1 Action")
 tccSym_EVCTRL_EVACT1.addKey("OFF", "0", "Disabled")
 tccSym_EVCTRL_EVACT1.addKey("RETRIGGER", "1", "Start, restart or retrigger counter")
@@ -633,6 +663,7 @@ tccSym_EVCTRL_EVACT1.setOutputMode("Key")
 eventDepList.append("TCC_EVCTRL_EVACT1")
 
 tccSym_EVCTRL_TCINV1 = tccComponent.createBooleanSymbol("TCC_EVCTRL_TCINV1", tccSym_EVCTRL_EVACT1)
+tccSym_EVCTRL_TCINV1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_EVCTRL_TCINV1.setLabel("Invert Input Event 1")
 tccSym_EVCTRL_TCINV1.setVisible(False)
 tccSym_EVCTRL_TCINV1.setDependencies(tccPwmIpEventVisible, ["TCC_EVCTRL_EVACT1"])
@@ -647,6 +678,7 @@ tccSym_Fault_Comment.setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT0", "TCC
 
 #fault filter value
 tccSym_DRVCTRL_FILTERVAL = tccComponent.createIntegerSymbol("TCC_DRVCTRL_FILTERVAL", tccSym_Fault_Menu)
+tccSym_DRVCTRL_FILTERVAL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:DRVCTRL")
 tccSym_DRVCTRL_FILTERVAL.setLabel(" Fault 0 Filter Value")
 tccSym_DRVCTRL_FILTERVAL.setMin(0)
 tccSym_DRVCTRL_FILTERVAL.setMax(15)
@@ -655,6 +687,7 @@ tccSym_DRVCTRL_FILTERVAL.setVisible(False)
 tccSym_DRVCTRL_FILTERVAL.setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT0", "TCC_EVCTRL_EVACT1"])
 
 tccSym_DRVCTRL_FILTERVAL1 = tccComponent.createIntegerSymbol("TCC_DRVCTRL_FILTERVAL1", tccSym_Fault_Menu)
+tccSym_DRVCTRL_FILTERVAL1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:DRVCTRL")
 tccSym_DRVCTRL_FILTERVAL1.setLabel(" Fault 1 Filter Value")
 tccSym_DRVCTRL_FILTERVAL1.setMin(0)
 tccSym_DRVCTRL_FILTERVAL1.setMax(15)
@@ -666,6 +699,7 @@ tccSym_DRVCTRL_FILTERVAL1.setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT0",
 for output in range(0, numOfOutputs):
     tccSym_DRVCTRL_NRE_NRV.append(output)
     tccSym_DRVCTRL_NRE_NRV[output] = tccComponent.createKeyValueSetSymbol("TCC_"+str(output)+"_DRVCTRL_NRE_NRV", tccSym_Fault_Menu)
+    tccSym_DRVCTRL_NRE_NRV[output].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:DRVCTRL")
     tccSym_DRVCTRL_NRE_NRV[output].setLabel("Select Level for Output " +str(output))
     tccSym_DRVCTRL_NRE_NRV[output].setVisible(False)
     tccSym_DRVCTRL_NRE_NRV[output].addKey("Tri-state", "-1", "Tri-state")
@@ -676,6 +710,7 @@ for output in range(0, numOfOutputs):
     tccSym_DRVCTRL_NRE_NRV[output].setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT0", "TCC_EVCTRL_EVACT1"])
 
 tccSym_INTENSET_FAULT0 = tccComponent.createBooleanSymbol("TCC_INTENSET_FAULT0", tccSym_Fault_Menu)
+tccSym_INTENSET_FAULT0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:INTENSET")
 tccSym_INTENSET_FAULT0.setLabel("Enable Fault 0 Interrupt")
 tccSym_INTENSET_FAULT0.setDefaultValue(False)
 tccSym_INTENSET_FAULT0.setVisible(False)
@@ -684,6 +719,7 @@ interruptDepList.append("TCC_INTENSET_FAULT0")
 pwmInterruptDepList.append("TCC_INTENSET_FAULT0")
 
 tccSym_INTENSET_FAULT1 = tccComponent.createBooleanSymbol("TCC_INTENSET_FAULT1", tccSym_Fault_Menu)
+tccSym_INTENSET_FAULT1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:INTENSET")
 tccSym_INTENSET_FAULT1.setLabel("Enable Fault 1 Interrupt")
 tccSym_INTENSET_FAULT1.setDefaultValue(False)
 tccSym_INTENSET_FAULT1.setVisible(False)

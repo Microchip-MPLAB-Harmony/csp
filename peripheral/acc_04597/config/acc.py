@@ -58,28 +58,34 @@ def instantiateComponent(accComponent):
     Database.setSymbolValue("core", acc_instance_name.getValue()+"_CLOCK_ENABLE", True)
 
     acc_selplus_sym = accComponent.createKeyValueSetSymbol("ACC_INPUT_SELPLUS", None)
+    acc_selplus_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_04597;register:ACC_MR")
     acc_selplus_sym.setLabel("Plus input")
     for value in get_bitfield_valuegroup("ACC_MR", "SELPLUS"):
         acc_selplus_sym.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
 
     acc_selminus_sym = accComponent.createKeyValueSetSymbol("ACC_INPUT_SELMINUS", None)
+    acc_selminus_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_04597;register:ACC_MR")
     acc_selminus_sym.setLabel("Minus input")
     for value in get_bitfield_valuegroup("ACC_MR", "SELMINUS"):
         acc_selminus_sym.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     
     acc_inv_sym = accComponent.createBooleanSymbol("ACC_OUTPUT_INVERT", None)
+    acc_inv_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_04597;register:ACC_MR")
     acc_inv_sym.setLabel("Invert output")
 
     acc_mask_sym = accComponent.createKeyValueSetSymbol("ACC_OUTPUT_MASK", None)
+    acc_mask_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_04597;register:ACC_ACR")
     acc_mask_sym.setLabel("Output mask duration")
     for value in get_bitfield_valuegroup("ACC_ACR", "MSEL"):
         acc_mask_sym.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     acc_mask_sym.setDisplayMode("Description")
 
     acc_fault_sym = accComponent.createBooleanSymbol("ACC_FAULT_ENABLE", None)
+    acc_fault_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_04597;register:ACC_MR")
     acc_fault_sym.setLabel("Enable Fault")
 
     acc_fault_src_sym  = accComponent.createKeyValueSetSymbol("ACC_FAULT_SOURCE", acc_fault_sym)
+    acc_fault_src_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_04597;register:ACC_MR")
     acc_fault_src_sym.setLabel("Fault source")
     acc_fault_src_sym.setDisplayMode("Description")
     for value in get_bitfield_valuegroup("ACC_MR", "SELFS"):
@@ -90,10 +96,12 @@ def instantiateComponent(accComponent):
     acc_fault_src_sym.setDependencies(lambda symbol, event:symbol.setReadOnly(not event["value"]), ["ACC_FAULT_ENABLE"])
 
     acc_interrupt_enable = accComponent.createBooleanSymbol("ACC_INTERRUPT_ENABLE", None)
+    acc_interrupt_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_04597;register:ACC_IER")
     acc_interrupt_enable.setLabel("Enable Interrupt")
     acc_interrupt_enable.setDependencies(update_interrupt, ["ACC_INTERRUPT_ENABLE"])
 
     acc_edgetype_sym = accComponent.createKeyValueSetSymbol("ACC_INTERRUPT_EDGETYPE", acc_interrupt_enable)
+    acc_edgetype_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:acc_04597;register:ACC_MR")
     acc_edgetype_sym.setLabel("Interrupt trigger edge")
     for value in get_bitfield_valuegroup("ACC_MR", "EDGETYP"):
         acc_edgetype_sym.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))

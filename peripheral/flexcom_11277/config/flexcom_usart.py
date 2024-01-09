@@ -240,6 +240,7 @@ global flexcomSym_UsartOperatingMode
 
 # Depricated symbols ---------------------------------------------------------------------------------------------------
 flexcomSym_UsartInterrupt = flexcomComponent.createBooleanSymbol("USART_INTERRUPT_MODE", flexcomSym_OperatingMode)
+flexcomSym_UsartInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 flexcomSym_UsartInterrupt.setLabel("Interrupt Mode (Non-blocking Transfer)")
 flexcomSym_UsartInterrupt.setDefaultValue(True)
 flexcomSym_UsartInterrupt.setVisible(False)
@@ -248,6 +249,7 @@ flexcomSym_UsartInterrupt.setDependencies(updateInterruptMode, ["USART_INTERRUPT
 
 #Enable Ring buffer?
 flexcomSym_RingBuffer_Enable = flexcomComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", flexcomSym_OperatingMode)
+flexcomSym_RingBuffer_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 flexcomSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
 flexcomSym_RingBuffer_Enable.setDefaultValue(False)
 flexcomSym_RingBuffer_Enable.setVisible(False)
@@ -255,12 +257,14 @@ flexcomSym_RingBuffer_Enable.setReadOnly(True)
 flexcomSym_RingBuffer_Enable.setDependencies(updateRingBufferMode, ["USART_RING_BUFFER_ENABLE"])
 
 flecomRxdmaEnable = flexcomComponent.createBooleanSymbol("USE_USART_RX_DMA", flexcomSym_OperatingMode)
+flecomRxdmaEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 flecomRxdmaEnable.setLabel("Enable DMA for Receive")
 flecomRxdmaEnable.setVisible(False)
 flecomRxdmaEnable.setReadOnly(True)
 flecomRxdmaEnable.setDependencies(updateRxDMAMode, ["USE_USART_RX_DMA"])
 
 flecomTxdmaEnable = flexcomComponent.createBooleanSymbol("USE_USART_TX_DMA", flexcomSym_OperatingMode)
+flecomTxdmaEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 flecomTxdmaEnable.setLabel("Enable DMA for Transmit")
 flecomTxdmaEnable.setVisible(False)
 flecomTxdmaEnable.setReadOnly(True)
@@ -270,6 +274,7 @@ flecomTxdmaEnable.setDependencies(updateTxDMAMode, ["USE_USART_TX_DMA"])
 
 #Interrupt/Non-Interrupt Mode
 flexcomSym_UsartIntMode = flexcomComponent.createBooleanSymbol("FLEXCOM_USART_INTERRUPT_MODE_ENABLE", flexcomSym_OperatingMode)
+flexcomSym_UsartIntMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 flexcomSym_UsartIntMode.setLabel("Enable Interrupts ?")
 flexcomSym_UsartIntMode.setDefaultValue(True)
 flexcomSym_UsartIntMode.setVisible(False)
@@ -277,12 +282,14 @@ flexcomSym_UsartIntMode.setReadOnly(True)
 
 #Enable Ring buffer?
 flexcomSym_RingBuffer_Mode = flexcomComponent.createBooleanSymbol("FLEXCOM_USART_RING_BUFFER_MODE_ENABLE", flexcomSym_OperatingMode)
+flexcomSym_RingBuffer_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 flexcomSym_RingBuffer_Mode.setLabel("Enable Ring Buffer ?")
 flexcomSym_RingBuffer_Mode.setDefaultValue(False)
 flexcomSym_RingBuffer_Mode.setVisible(False)
 flexcomSym_RingBuffer_Mode.setReadOnly(True)
 
 flexcomSym_UsartOperatingMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_OPERATING_MODE", flexcomSym_OperatingMode)
+flexcomSym_UsartOperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 flexcomSym_UsartOperatingMode.setLabel("Operating Mode")
 flexcomSym_UsartOperatingMode.addKey("BLOCKING", "0", "Blocking mode")
 flexcomSym_UsartOperatingMode.addKey("NON_BLOCKING", "1", "Non-blocking mode")
@@ -302,6 +309,7 @@ flexcomSym_UsartRingBufferSizeConfig.setVisible(False)
 flexcomSym_UsartRingBufferSizeConfig.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "FLEXCOM_USART_RING_BUFFER_MODE_ENABLE"])
 
 flexcomSym_TXRingBuffer_Size = flexcomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", flexcomSym_UsartRingBufferSizeConfig)
+flexcomSym_TXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:US_IDR")
 flexcomSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
 flexcomSym_TXRingBuffer_Size.setMin(2)
 flexcomSym_TXRingBuffer_Size.setMax(65535)
@@ -310,6 +318,7 @@ flexcomSym_TXRingBuffer_Size.setVisible(False)
 flexcomSym_TXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "FLEXCOM_USART_RING_BUFFER_MODE_ENABLE"])
 
 flexcomSym_RXRingBuffer_Size = flexcomComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", flexcomSym_UsartRingBufferSizeConfig)
+flexcomSym_RXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 flexcomSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
 flexcomSym_RXRingBuffer_Size.setMin(2)
 flexcomSym_RXRingBuffer_Size.setMax(65535)
@@ -318,16 +327,19 @@ flexcomSym_RXRingBuffer_Size.setVisible(False)
 flexcomSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "FLEXCOM_USART_RING_BUFFER_MODE_ENABLE"])
 
 usartReceiveDMAEnable = flexcomComponent.createBooleanSymbol("USE_USART_RECEIVE_DMA", flexcomSym_OperatingMode)
+usartReceiveDMAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 usartReceiveDMAEnable.setLabel("Enable DMA for Receive")
 usartReceiveDMAEnable.setVisible(False)
 usartReceiveDMAEnable.setReadOnly(True)
 
 usartTransmitDMAEnable = flexcomComponent.createBooleanSymbol("USE_USART_TRANSMIT_DMA", flexcomSym_OperatingMode)
+usartTransmitDMAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 usartTransmitDMAEnable.setLabel("Enable DMA for Transmit")
 usartTransmitDMAEnable.setVisible(False)
 usartTransmitDMAEnable.setReadOnly(True)
 
 flexcomSym_UsartClkSrc = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_MR_USCLKS", flexcomSym_OperatingMode)
+flexcomSym_UsartClkSrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:US_MR")
 flexcomSym_UsartClkSrc.setLabel("Select Clock Source")
 flexcomSym_UsartClkSrc_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/value-group@[name=\"US_MR__USCLKS\"]")
 flexcomSym_UsartClkSrc_Values = []
@@ -344,6 +356,7 @@ flexcomSym_UsartClkSrc.setVisible(False)
 flexcomSym_UsartClkSrc.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
 flexcomSym_UsartExternalClkValue = flexcomComponent.createIntegerSymbol("EXTERNAL_CLOCK_FREQ", flexcomSym_UsartClkSrc)
+flexcomSym_UsartExternalClkValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 flexcomSym_UsartExternalClkValue.setLabel("External Clock Source")
 flexcomSym_UsartExternalClkValue.setDefaultValue(clock_source.get("Ext_clk_src_Freq"))
 flexcomSym_UsartExternalClkValue.setMin(1)
@@ -352,6 +365,7 @@ flexcomSym_UsartExternalClkValue.setVisible(False)
 flexcomSym_UsartExternalClkValue.setDependencies(ExternalClkSymbolVisible, ["FLEXCOM_USART_MR_USCLKS"])
 
 flexcomSym_UsartClkValue = flexcomComponent.createIntegerSymbol("FLEX_USART_CLOCK_FREQ", flexcomSym_OperatingMode)
+flexcomSym_UsartClkValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 flexcomSym_UsartClkValue.setLabel("Clock Source Value")
 flexcomSym_UsartClkValue.setReadOnly(True)
 flexcomSym_UsartClkValue.setDefaultValue(int(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY")))
@@ -359,6 +373,7 @@ flexcomSym_UsartClkValue.setVisible(False)
 flexcomSym_UsartClkValue.setDependencies(clockSourceFreq, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USCLKS", "core." + flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
 flexcomSym_UsartBaud = flexcomComponent.createIntegerSymbol("BAUD_RATE", flexcomSym_OperatingMode)
+flexcomSym_UsartBaud.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
 flexcomSym_UsartBaud.setLabel("Baud Rate")
 flexcomSym_UsartBaud.setDefaultValue(115200)
 flexcomSym_UsartBaud.setVisible(False)
@@ -382,6 +397,7 @@ flexcomSym_UsartFPValue.setDefaultValue(fp)
 flexcomSym_UsartFPValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "FLEX_USART_CLOCK_FREQ", "EXTERNAL_CLOCK_FREQ"])
 
 flexcomSym_Usart_MR_CHRL = flexcomComponent.createKeyValueSetSymbol("FLEX_USART_MR_CHRL", flexcomSym_OperatingMode)
+flexcomSym_Usart_MR_CHRL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:US_MR")
 flexcomSym_Usart_MR_CHRL.setLabel("Character Length")
 flexcomSym_Usart_MR_CHRL_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/value-group@[name=\"US_MR__CHRL\"]")
 flexcomSym_Usart_MR_CHRL_Values = []
@@ -401,11 +417,13 @@ flexcomSym_Usart_MR_CHRL.setVisible(False)
 flexcomSym_Usart_MR_CHRL.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
 flexcomSym_Usart_MR_MODE9 = flexcomComponent.createBooleanSymbol("FLEX_USART_MR_MODE9", flexcomSym_OperatingMode)
+flexcomSym_Usart_MR_MODE9.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:US_MR")
 flexcomSym_Usart_MR_MODE9.setLabel("9 Bit Data Width")
 flexcomSym_Usart_MR_MODE9.setVisible(False)
 flexcomSym_Usart_MR_MODE9.setDependencies(dataWidthLogic, ["FLEX_USART_MR_CHRL"])
 
 flexcomSym_Usart_MR_PAR = flexcomComponent.createKeyValueSetSymbol("FLEX_USART_MR_PAR", flexcomSym_OperatingMode)
+flexcomSym_Usart_MR_PAR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:US_MR")
 flexcomSym_Usart_MR_PAR.setLabel("Parity Type")
 flexcomSym_Usart_MR_PAR_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/value-group@[name=\"US_MR__PAR\"]")
 flexcomSym_Usart_MR_PAR_Values = []
@@ -422,6 +440,7 @@ flexcomSym_Usart_MR_PAR.setVisible(False)
 flexcomSym_Usart_MR_PAR.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
 flexcomSym_Usart_MR_NBSTOP = flexcomComponent.createKeyValueSetSymbol("FLEX_USART_MR_NBSTOP", flexcomSym_OperatingMode)
+flexcomSym_Usart_MR_NBSTOP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:US_MR")
 flexcomSym_Usart_MR_NBSTOP.setLabel("Stop Bits")
 flexcomSym_Usart_MR_NBSTOP_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/value-group@[name=\"US_MR__NBSTOP\"]")
 flexcomSym_Usart_MR_NBSTOP_Values = []

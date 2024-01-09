@@ -82,6 +82,7 @@ def instantiateComponent(eicComponent):
 
     for index in range (0, num_registers):
         activate_sym = eicComponent.createBooleanSymbol("EIC_SRC{0}_ACTIVATE".format(index), None)
+        activate_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_44139;register:%NOREGISTER%")
         activate_sym.setLabel("Activate EIC Interrupt {0}".format(index))
         activate_sym.setDescription(("Generates code for interrupt {0}.User should "
                                    " still enable the interrupt after registering"
@@ -91,6 +92,7 @@ def instantiateComponent(eicComponent):
         detection_sym = eicComponent.createComboSymbol("EIC_SRC{0}_DETECT".format(index),
                                                         activate_sym, 
                                                         ["Edge", "Level"])
+        detection_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_44139;register:%NOREGISTER%")
         detection_sym.setLabel("Detection")
         detection_sym.setDescription ("Edge or Level Interrupt")
         detection_sym.setVisible(False)                                                               
@@ -98,12 +100,14 @@ def instantiateComponent(eicComponent):
         polarity_edge_sym = eicComponent.createComboSymbol("EIC_SRC{0}_POLARITY_EDGE".format(index),
                                                             detection_sym,
                                                             ["Falling Edge", "Rising Edge"])
+        polarity_edge_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_44139;register:%NOREGISTER%")
         polarity_edge_sym.setLabel("Polarity")
         polarity_edge_sym.setDescription("Trigger interrupt on Rising or falling edge")
 
         polarity_level_sym = eicComponent.createComboSymbol("EIC_SRC{0}_POLARITY_LEVEL".format(index),
                                                             detection_sym,
                                                             ["Active Low", "Active High"])
+        polarity_level_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_44139;register:%NOREGISTER%")
         polarity_level_sym.setLabel("Polarity")
         polarity_level_sym.setDescription("Trigger interrupt on Low or High level")
         polarity_level_sym.setVisible(False)
@@ -113,11 +117,13 @@ def instantiateComponent(eicComponent):
         detection_comment_sym.setLabel("Set the appropriate interrupt type (Level/Edge) in the interrupt controller")
 
         glitch_filter_enable_sym = eicComponent.createBooleanSymbol("EIC_SRC{0}_GLITCH_FILTER_ENABLE".format(index), activate_sym)
+        glitch_filter_enable_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_44139;register:%NOREGISTER%")
         glitch_filter_enable_sym.setLabel("Glitch Filter")
         glitch_filter_enable_sym.setDescription ("Enable glitch filter for EIC{0}".format(index))
         glitch_filter_enable_sym.setVisible(False)
 
         glitch_filter_select_sym = eicComponent.createKeyValueSetSymbol("EIC_SRC{0}_GLITCH_FILTER_VALUE".format(index), glitch_filter_enable_sym)
+        glitch_filter_select_sym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_44139;register:%NOREGISTER%")
         glitch_filter_select_sym.setLabel("Glitch Filter Selector")
         glitch_filter_select_sym.setDescription("Input level is forwarded only if it is maintained for x cycles")
         for cycles in range(0,4):

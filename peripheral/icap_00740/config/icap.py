@@ -256,6 +256,7 @@ def instantiateComponent(icapComponent):
     icapxICM_names = []
     _get_bitfield_names(icapValGrp_IC1CON_ICM, icapxICM_names)
     icapSym_ICxCON_ICM = icapComponent.createKeyValueSetSymbol("ICAP_ICxCON_ICM", None)
+    icapSym_ICxCON_ICM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:icap_00740;register:%NOREGISTER%")
     icapSym_ICxCON_ICM.setLabel("Select Input Capture Mode")
     icapSym_ICxCON_ICM.setDefaultValue(1)
     icapSym_ICxCON_ICM.setOutputMode("Value")
@@ -266,6 +267,7 @@ def instantiateComponent(icapComponent):
 
     if (cfgBifield_ICACLK != None):
         icapSym_CFGCON_ICACLK = icapComponent.createBooleanSymbol("ICAP_CFGCON_ICACLK", None)
+        icapSym_CFGCON_ICACLK.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:icap_00740;register:%NOREGISTER%")
         icapSym_CFGCON_ICACLK.setLabel("Use Alternate Timer Source")
         icapSym_CFGCON_ICACLK.setDefaultValue(0)
 
@@ -276,6 +278,7 @@ def instantiateComponent(icapComponent):
     #Timer source
     icapxICTMR_names = []
     icapSym_ICxCON_ICTMR = icapComponent.createKeyValueSetSymbol("ICAP_ICxCON_ICTMR", None)
+    icapSym_ICxCON_ICTMR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:icap_00740;register:%NOREGISTER%")
     icapSym_ICxCON_ICTMR.setLabel("Select Timer Source")
     icapSym_ICxCON_ICTMR.setDefaultValue(0)
     icapSym_ICxCON_ICTMR.setOutputMode("Value")
@@ -293,6 +296,7 @@ def instantiateComponent(icapComponent):
     icapxICTMR_names = []
     icapSym_ICxCON_ICTMR_ALT = icapComponent.createKeyValueSetSymbol("ICAP_ICxCON_ICTMR_ALT", None)
     icapSym_ICxCON_ICTMR_ALT.setLabel("Select Timer Source")
+    icapSym_ICxCON_ICTMR_ALT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:icap_00740;register:%NOREGISTER%")
     icapSym_ICxCON_ICTMR_ALT.setDefaultValue(0)
     icapSym_ICxCON_ICTMR_ALT.setOutputMode("Value")
     icapSym_ICxCON_ICTMR_ALT.setDisplayMode("Description")
@@ -312,6 +316,7 @@ def instantiateComponent(icapComponent):
     icapxC32_names = []
     _get_bitfield_names(icapValGrp_IC1CON_C32, icapxC32_names)
     icapSym_ICxCON_C32 = icapComponent.createKeyValueSetSymbol("ICAP_ICxCON_C32", None)
+    icapSym_ICxCON_C32.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:icap_00740;register:%NOREGISTER%")
     icapSym_ICxCON_C32.setLabel("Select Timer Width")
     icapSym_ICxCON_C32.setDefaultValue(0)
     icapSym_ICxCON_C32.setOutputMode("Value")
@@ -323,6 +328,7 @@ def instantiateComponent(icapComponent):
     icapxFEDGE_names = []
     _get_bitfield_names(icapValGrp_IC1CON_FEDGE, icapxFEDGE_names)
     icapSym_ICxCON_FEDGE = icapComponent.createKeyValueSetSymbol("ICAP_ICxCON_FEDGE", None)
+    icapSym_ICxCON_FEDGE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:icap_00740;register:%NOREGISTER%")
     icapSym_ICxCON_FEDGE.setLabel("Select First Capture Edge")
     icapSym_ICxCON_FEDGE.setDefaultValue(0)
     icapSym_ICxCON_FEDGE.setVisible(False)
@@ -334,6 +340,7 @@ def instantiateComponent(icapComponent):
     icapSym_ICxCON_FEDGE.setDependencies(icapFirstEdgeVisible, ["ICAP_ICxCON_ICM"])
 
     icapSym_ICxCON_SIDL = icapComponent.createBooleanSymbol("ICAP_ICxCON_SIDL", None)
+    icapSym_ICxCON_SIDL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:icap_00740;register:%NOREGISTER%")
     icapSym_ICxCON_SIDL.setLabel("Stop in IDLE")
     icapSym_ICxCON_SIDL.setDefaultValue(False)
     icapSym_ICxCON_SIDL.setVisible(True)
@@ -397,6 +404,7 @@ def instantiateComponent(icapComponent):
 
     # NVIC Dynamic settings
     icapinterrupt1Control = icapComponent.createBooleanSymbol("ICAP_INTERRUPT_ENABLE", None)
+    icapinterrupt1Control.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:icap_00740;register:%NOREGISTER%")
     icapinterrupt1Control.setVisible(True)
     icapinterrupt1Control.setLabel("Enable Capture Interrupt")
     icapinterrupt1Control.setDefaultValue(False)
@@ -404,6 +412,7 @@ def instantiateComponent(icapComponent):
     icapxICI_names = []
     _get_bitfield_names(icapValGrp_IC1CON_ICI, icapxICI_names)
     icapSym_ICxCON_ICI = icapComponent.createKeyValueSetSymbol("ICAP_ICxCON_ICI", icapinterrupt1Control)
+    icapSym_ICxCON_ICI.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:icap_00740;register:%NOREGISTER%")
     icapSym_ICxCON_ICI.setLabel("Select Interrupt Mode")
     icapSym_ICxCON_ICI.setDefaultValue(0)
     icapSym_ICxCON_ICI.setOutputMode("Value")
@@ -414,6 +423,7 @@ def instantiateComponent(icapComponent):
     icapSym_ICxCON_ICI.setDependencies(icapSymbolVisible, ["ICAP_INTERRUPT_ENABLE"])
 
     icapinterrupt2Control = icapComponent.createBooleanSymbol("ICAP_ERROR_INTERRUPT_ENABLE", None)
+    icapinterrupt2Control.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:icap_00740;register:%NOREGISTER%")
     icapinterrupt2Control.setLabel("Enable Error Interrupt")
     icapinterrupt2Control.setDefaultValue(False)
 

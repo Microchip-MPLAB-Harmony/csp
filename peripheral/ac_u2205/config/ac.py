@@ -162,11 +162,13 @@ def instantiateComponent(acComponent):
     
     #Enable Low Power mux
     acLPMux_Enable = acComponent.createBooleanSymbol("AC_LPMUX_ENABLE", None)
+    acLPMux_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:ctrla")
     acLPMux_Enable.setLabel("Enable Low Power mux")
     acLPMux_Enable.setDefaultValue(False)
     
     #RUNSTDBY Enable
     acSym_COMPCTRL_RUNSTDBY = acComponent.createBooleanSymbol("AC_RUNSTDBY", None)
+    acSym_COMPCTRL_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:ctrla")
     acSym_COMPCTRL_RUNSTDBY.setLabel("Enable Run in Standby")
     acSym_COMPCTRL_RUNSTDBY.setDefaultValue(False)
 
@@ -176,11 +178,13 @@ def instantiateComponent(acComponent):
         acSym_Enable.append(comparatorID)
 
         acSym_Enable[comparatorID] = acComponent.createBooleanSymbol("ANALOG_COMPARATOR_ENABLE_" + str(comparatorID), None)
+        acSym_Enable[comparatorID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:compctrl0")
         acSym_Enable[comparatorID].setLabel("Comparator " + str(comparatorID) + " Settings")
 
         #Interrupt Enable
         global acInterrupt_Enable
         acInterrupt_Enable = acComponent.createBooleanSymbol("COMP" + str(comparatorID) + "INTERRUPT_ENABLE", acSym_Enable[comparatorID])
+        acInterrupt_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:intenset")
         acInterrupt_Enable.setLabel("Comparator Interrupt Enable")
         acInterrupt_Enable.setVisible(False)
         acInterrupt_Enable.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
@@ -188,6 +192,7 @@ def instantiateComponent(acComponent):
 
         #Single-shot Mode
         acSym_COMPCTRL_SINGLE = acComponent.createBooleanSymbol("AC_COMPCTRL_" + str(comparatorID) +"SINGLE_MODE", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_SINGLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:COMPCTRL0")
         acSym_COMPCTRL_SINGLE.setLabel("Enable Single Shot Mode")
         acSym_COMPCTRL_SINGLE.setDefaultValue(False)
         acSym_COMPCTRL_SINGLE.setVisible(False)
@@ -195,6 +200,7 @@ def instantiateComponent(acComponent):
 
         #MUXPOS
         acSym_COMPCTRL_MUXPOS = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_MUX_POS", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_MUXPOS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:COMPCTRL0")
         acSym_COMPCTRL_MUXPOS.setLabel("Positive Input Mux Selection")
         acSym_COMPCTRL_MUXPOS.setVisible(False)
 
@@ -222,6 +228,7 @@ def instantiateComponent(acComponent):
         #MUXNEG
         global acSym_COMPCTRL_MUXNEG
         acSym_COMPCTRL_MUXNEG = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_MUX_NEG", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_MUXNEG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:COMPCTRL0")
         acSym_COMPCTRL_MUXNEG.setLabel("Negative Input Mux Selection")
         acSym_COMPCTRL_MUXNEG.setVisible(False)
 
@@ -250,6 +257,7 @@ def instantiateComponent(acComponent):
         #Scaling factor for VDD scaler
         acSym_SCALERn.append(comparatorID)
         acSym_SCALERn[comparatorID] = acComponent.createIntegerSymbol("AC_SCALER_N_" + str(comparatorID), acSym_Enable[comparatorID])
+        acSym_SCALERn[comparatorID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:SCALER0")
         acSym_SCALERn[comparatorID].setLabel("Scaling factor for VDD scaler")
         acSym_SCALERn[comparatorID].setMin(0)
         acSym_SCALERn[comparatorID].setMax(63)
@@ -260,6 +268,7 @@ def instantiateComponent(acComponent):
 
         #Output Mode
         acSym_COMPCTRL_OUT = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_OUTPUT_TYPE", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_OUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:COMPCTRL0")
         acSym_COMPCTRL_OUT.setLabel("Output Edge Type")
         acSym_COMPCTRL_OUT.setVisible(False)
 
@@ -286,6 +295,7 @@ def instantiateComponent(acComponent):
 
         #ISEL
         acSym_COMPCTRL_ISEL = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_ISEL", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_ISEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:COMPCTRL0")
         acSym_COMPCTRL_ISEL.setLabel("Interrupt Selection")
         acSym_COMPCTRL_ISEL.setVisible(False)
 
@@ -318,6 +328,7 @@ def instantiateComponent(acComponent):
     
         #Hysteresis Enable
         acSym_COMPCTRL_HYST = acComponent.createBooleanSymbol("AC" + str(comparatorID) + "_HYSTEN", acSym_AdvConf)
+        acSym_COMPCTRL_HYST.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:compctrl0")
         acSym_COMPCTRL_HYST.setLabel("Hysteresis Enable")
         acSym_COMPCTRL_HYST.setDefaultValue(False)
         acSym_COMPCTRL_HYST.setVisible(True)
@@ -326,6 +337,7 @@ def instantiateComponent(acComponent):
         
         #Speed selection
         acSym_COMPCTRL_SPEED = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_SPEED", acSym_AdvConf)
+        acSym_COMPCTRL_SPEED.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:COMPCTRL0")
         acSym_COMPCTRL_SPEED.setLabel("Speed Selection")
         acSym_COMPCTRL_SPEED.setVisible(False)
         
@@ -352,6 +364,7 @@ def instantiateComponent(acComponent):
 
         #Filter Length selection
         acSym_COMPCTRL_FLEN = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_FLEN_VAL", acSym_AdvConf)
+        acSym_COMPCTRL_FLEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:COMPCTRL0")
         acSym_COMPCTRL_FLEN.setLabel("Filter Length Selection")
         acSym_COMPCTRL_FLEN.setDescription("Filtering must be disabled if continuous measurements will be done during sleep modes")
         acSym_COMPCTRL_FLEN_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__FLEN\"]")
@@ -376,6 +389,7 @@ def instantiateComponent(acComponent):
 
         #Event Input Enable
         acSym_EVCTRL_COMPEI = acComponent.createBooleanSymbol("AC_EVCTRL_COMPEI" + str(comparatorID), acSym_AdvConf)
+        acSym_EVCTRL_COMPEI.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:EVCTRL")
         acSym_EVCTRL_COMPEI.setLabel("Enable Event Input")
         acSym_EVCTRL_COMPEI.setDefaultValue(False)
         acSym_EVCTRL_COMPEI.setVisible(False)
@@ -384,6 +398,7 @@ def instantiateComponent(acComponent):
         
         #Event Output Enable
         acSym_EVCTRL_COMPEO = acComponent.createBooleanSymbol("AC_EVCTRL_COMPEO" + str(comparatorID), acSym_AdvConf)
+        acSym_EVCTRL_COMPEO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:EVCTRL")
         acSym_EVCTRL_COMPEO.setLabel("Enable Event Output")
         acSym_EVCTRL_COMPEO.setDefaultValue(False)
         acSym_EVCTRL_COMPEO.setVisible(False)
@@ -396,17 +411,20 @@ def instantiateComponent(acComponent):
     
     #Window 0 configuration
     acSym_WINCTRL0 = acComponent.createBooleanSymbol("AC_WINCTRL_WIN0", acSym_WindowConf)
+    acSym_WINCTRL0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:WINCTRL")
     acSym_WINCTRL0.setLabel("Window 0 Enable")
     acSym_WINCTRL0.setDefaultValue(False)
     
     #Window 0 Interrupt Enable
     acSym_INTENSET_WIN0 = acComponent.createBooleanSymbol("AC_INTENSET_WIN0", acSym_WINCTRL0)
+    acSym_INTENSET_WIN0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:INTENSET")
     acSym_INTENSET_WIN0.setLabel("Window 0 Interrupt Enable")
     acSym_INTENSET_WIN0.setDefaultValue(False)
     nvicDep.append("AC_INTENSET_WIN0")
     
     #Window 0 interrupt configuration
     acSym_WNCTRL_WINT0 = acComponent.createKeyValueSetSymbol("AC_WINTSEL0", acSym_WINCTRL0)
+    acSym_WNCTRL_WINT0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:WINCTRL")
     acSym_WNCTRL_WINT0.setLabel("AC Window 0 Interrupt Selection")
     
     acSym_WNCTRL_WINT0_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_WINCTRL__WINTSEL0\"]")
@@ -431,6 +449,7 @@ def instantiateComponent(acComponent):
     
     #Window 0 Event Output
     acSym_WINCTRL_EVENT_OUT0 = acComponent.createBooleanSymbol("AC_EVCTRL_WINEO0", acSym_WINCTRL0)
+    acSym_WINCTRL_EVENT_OUT0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ac_u2205;register:EVCTRL")
     acSym_WINCTRL_EVENT_OUT0.setLabel("Enable Window 0 Event Output")
     acSym_WINCTRL_EVENT_OUT0.setDefaultValue(False)
     evsysDep.append("AC_EVCTRL_WINEO0")

@@ -51,6 +51,7 @@ clkMenu.setDescription("Configuration for Clock System Service")
 # pllRefClkValues = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PCR\"]/value-group@[name=\"PCR_PLL_REF__PLL_REF_SRC\"]").getChildren()
 
 # pllReferenceClk = coreComponent.createKeyValueSetSymbol("PLL_REFERENCE_CLOCK", clkMenu)
+# pllReferenceClk.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pcr_cec_173x;register:%NOREGISTER%")
 # pllReferenceClk.setLabel("PLL Reference Clock")
 
 # for id in range(len(pllRefClkValues)):
@@ -69,6 +70,7 @@ processorClkInitValue = ATDF.getNode("/avr-tools-device-file/modules/module@[nam
 processorClkInitValue = int(processorClkInitValue, 16)
 
 processorClkDiv = coreComponent.createKeyValueSetSymbol("PROCESSOR_CLK_DIV", clkMenu)
+processorClkDiv.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pcr_cec_173x;register:PROC_CLK_CTRL")
 processorClkDiv.setLabel("Processor Clock Divide")
 
 for id in range(len(processorClkDivValues)):
@@ -90,6 +92,7 @@ slowClkDivideInitialValue = ATDF.getNode("/avr-tools-device-file/modules/module@
 slowClkDivideInitialValue = int(slowClkDivideInitialValue, 16)
 
 slowClkDivide = coreComponent.createIntegerSymbol("SLOW_CLK_DIVIDE", clkMenu)
+slowClkDivide.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pcr_cec_173x;register:SLOW_CLK_CTRL")
 slowClkDivide.setLabel("Slow Clock Divide (Configures the 100KHz clock domain)")
 slowClkDivide.setMin(0)
 slowClkDivide.setMax(slowClkDivideMaxValue)
@@ -99,6 +102,7 @@ slowClkDivide.setDefaultValue(slowClkDivideInitialValue)
 # per32KHzClkSelValues = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"VBAT\"]/value-group@[name=\"VBAT_CLK_EN__PRPHL_32KHZ_CLK\"]").getChildren()
 
 # per32KHzClkSel = coreComponent.createKeyValueSetSymbol("PERIPHERAL_32KHZ_CLK_SEL", clkMenu)
+# per32KHzClkSel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pcr_cec_173x;register:%NOREGISTER%")
 # per32KHzClkSel.setLabel("Peripheral 32KHz Clock Source")
 
 # for id in range(len(per32KHzClkSelValues)):
@@ -116,6 +120,7 @@ calculatedFreq_Menu = coreComponent.createMenuSymbol("FREQ_MENU", clkMenu)
 calculatedFreq_Menu.setLabel("Calculated Clock Frequencies")
 
 clkSym_PROCESSOR_CLK_FREQ = coreComponent.createIntegerSymbol("CPU_CLOCK_FREQUENCY", calculatedFreq_Menu)
+clkSym_PROCESSOR_CLK_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pcr_cec_173x;register:%NOREGISTER%")
 clkSym_PROCESSOR_CLK_FREQ.setLabel("CPU Clock Frequency")
 clkSym_PROCESSOR_CLK_FREQ.setReadOnly(True)
 clkSym_PROCESSOR_CLK_FREQ.setDefaultValue(96000000/int(processorClkDiv.getSelectedValue(), 16))
@@ -156,6 +161,7 @@ for id in range(len(pcr_registers_node)):
             bitfield_name = reg_bit_fields[idx].getAttribute("name")
             bitfield_caption = reg_bit_fields[idx].getAttribute("caption")
             slpEnableBitfield = coreComponent.createBooleanSymbol(register_name + bitfield_name, slpEnableMenu)
+            slpEnableBitfield.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pcr_cec_173x;register:%NOREGISTER%")
             slpEnableBitfield.setLabel(bitfield_caption)
             slpEnableBitfield.setDefaultValue(False)
             sleep_en_reg_dep_list[numRegs].append(register_name + bitfield_name)
@@ -219,6 +225,7 @@ for id in range(len(pcr_registers_node)):
             bitfield_name = reg_bit_fields[idx].getAttribute("name")
             bitfield_caption = reg_bit_fields[idx].getAttribute("caption")
             privEnableBitfield = coreComponent.createBooleanSymbol(register_name + bitfield_name, privEnableMenu)
+            privEnableBitfield.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pcr_cec_173x;register:%NOREGISTER%")
             privEnableBitfield.setLabel(bitfield_caption)
             privEnableBitfield.setDefaultValue(False)
             priv_en_reg_dep_list[numRegs].append(register_name + bitfield_name)

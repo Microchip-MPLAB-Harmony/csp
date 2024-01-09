@@ -27,6 +27,7 @@ def instantiateComponent(rxlpComponent):
     instanceName.setDefaultValue(rxlpComponent.getID().upper());
 
     filterSym = rxlpComponent.createBooleanSymbol("FILTER", None)
+    filterSym.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rxlp_11285;register:RXLP_MR")
     filterSym.setLabel("Filter")
     filterSym.setDescription("Enable Rx Digital Filter")
     filterSym.setVisible(True)
@@ -35,6 +36,7 @@ def instantiateComponent(rxlpComponent):
     mrRegParity = Register.getRegisterModule("RXLP").getRegisterGroup("RXLP").getRegister("RXLP_MR").getBitfield("PAR")
     mrRegParityValues = Register.getRegisterModule("RXLP").getValueGroup(mrRegParity.getValueGroupName())
     parity = rxlpComponent.createKeyValueSetSymbol("PARITY", None)
+    parity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rxlp_11285;register:RXLP_MR")
     parity.setLabel("Parity")
     parity.setVisible(True)
     parity.setOutputMode("Value")
@@ -45,6 +47,7 @@ def instantiateComponent(rxlpComponent):
 
 
     cd = rxlpComponent.createIntegerSymbol("CD", None)
+    cd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rxlp_11285;register:RXLP_BRGR")
     cd.setVisible(True)
     cd.setLabel("CD")
     cd.setDescription("Baud rate is 32.768Khz / (16 * CD)")
@@ -57,11 +60,13 @@ def instantiateComponent(rxlpComponent):
     cdComment.setDependencies(lambda symbol, event: symbol.setLabel("Baud Rate: " + str(32768/(16*int(cd.getValue())))), ["CD"])
 
     val1 = rxlpComponent.createIntegerSymbol("VAL1", None)
+    val1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rxlp_11285;register:RXLP_CMPR")
     val1.setLabel("VAL1")
     val1.setMin(0)
     val1.setMax(255)
 
     val2 = rxlpComponent.createIntegerSymbol("VAL2", None)
+    val2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rxlp_11285;register:RXLP_CMPR")
     val2.setLabel("VAL2")
     val2.setMin(0)
     val2.setMax(255)

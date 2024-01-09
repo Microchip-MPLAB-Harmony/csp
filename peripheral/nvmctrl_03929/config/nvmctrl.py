@@ -150,6 +150,7 @@ def instantiateComponent(nvmctrlComponent):
 
     # Configures NVM read mode
     nvmctrlSym_CTRLB_READMODE = nvmctrlComponent.createKeyValueSetSymbol("NVMCTRL_CTRLB_READMODE_SELECTION", None)
+    nvmctrlSym_CTRLB_READMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:CTRLB")
     nvmctrlSym_CTRLB_READMODE.setLabel("NVMCTRL Read Mode")
 
     nvmctrlReadModeNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"NVMCTRL\"]/value-group@[name=\"NVMCTRL_CTRLB__READMODE\"]")
@@ -189,6 +190,7 @@ def instantiateComponent(nvmctrlComponent):
 
     # Flash Read Wait State (RWS).
     nvm_rws = nvmctrlComponent.createIntegerSymbol("NVM_RWS", None)
+    nvm_rws.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:CTRLB")
     nvm_rws.setLabel("Wait States")
     nvm_rws.setMin(0)
     nvm_rws.setMax(15)
@@ -197,6 +199,7 @@ def instantiateComponent(nvmctrlComponent):
 
     # Configures NVM power reduction mode
     nvmctrlSym_CTRLB_SLEEPPRM = nvmctrlComponent.createKeyValueSetSymbol("NVMCTRL_CTRLB_POWER_REDUCTION_MODE", None)
+    nvmctrlSym_CTRLB_SLEEPPRM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:CTRLB")
     nvmctrlSym_CTRLB_SLEEPPRM.setLabel("Power Reduction Mode During Sleep")
 
     nvmctrlSleepPrmNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"NVMCTRL\"]/value-group@[name=\"NVMCTRL_CTRLB__SLEEPPRM\"]")
@@ -226,11 +229,13 @@ def instantiateComponent(nvmctrlComponent):
 
     # Configures Manual Write operation
     nvmctrlSym_CTRLB_WRITEPOLICY = nvmctrlComponent.createComboSymbol("NVMCTRL_WRITE_POLICY", None, ["MANUAL", "AUTOMATIC"])
+    nvmctrlSym_CTRLB_WRITEPOLICY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:CTRLB")
     nvmctrlSym_CTRLB_WRITEPOLICY.setLabel("Write Policy")
     nvmctrlSym_CTRLB_WRITEPOLICY.setDefaultValue("MANUAL")
 
     # Configures cache operation
     nvmctrlSym_CTRLB_CACHEDIS = nvmctrlComponent.createKeyValueSetSymbol("NVMCTRL_CTRLB_CACHEDIS_SELECTION", None)
+    nvmctrlSym_CTRLB_CACHEDIS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:CTRLB")
     nvmctrlSym_CTRLB_CACHEDIS.setLabel("NVMCTRL Data and Main Cache Mode")
 
     nvmctrlCachModeNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"NVMCTRL\"]/value-group@[name=\"NVMCTRL_CTRLB__CACHEDIS\"]")
@@ -259,12 +264,14 @@ def instantiateComponent(nvmctrlComponent):
 
     # Configures the library for interrupt mode operations
     nvmctrlSym_Interrupt = nvmctrlComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
+    nvmctrlSym_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
     nvmctrlSym_Interrupt.setLabel("Enable Interrupt?")
     nvmctrlSym_Interrupt.setDefaultValue(False)
 
     # Configuration when interfaced with memory driver
     nvmctrlSym_MemoryDriver = nvmctrlComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", None)
     nvmctrlSym_MemoryDriver.setLabel("Memory Driver Connected")
+    nvmctrlSym_MemoryDriver.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
     nvmctrlSym_MemoryDriver.setVisible(False)
     nvmctrlSym_MemoryDriver.setDefaultValue(False)
 
@@ -274,6 +281,7 @@ def instantiateComponent(nvmctrlComponent):
 
     nvmctrlSym_MemoryStartAddr = nvmctrlComponent.createStringSymbol("START_ADDRESS", None)
     nvmctrlSym_MemoryStartAddr.setLabel("NVM Media Start Address")
+    nvmctrlSym_MemoryStartAddr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
     nvmctrlSym_MemoryStartAddr.setVisible(False)
     nvmctrlSym_MemoryStartAddr.setDefaultValue(nvmOffset[2:])
     nvmctrlSym_MemoryStartAddr.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
@@ -282,18 +290,21 @@ def instantiateComponent(nvmctrlComponent):
 
     nvmctrlSym_MemoryMediaSize = nvmctrlComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", None)
     nvmctrlSym_MemoryMediaSize.setLabel("NVM Media Size (KB)")
+    nvmctrlSym_MemoryMediaSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
     nvmctrlSym_MemoryMediaSize.setVisible(False)
     nvmctrlSym_MemoryMediaSize.setDefaultValue(memMediaSizeKB)
     nvmctrlSym_MemoryMediaSize.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     nvmctrlSym_MemoryEraseEnable = nvmctrlComponent.createBooleanSymbol("ERASE_ENABLE", None)
     nvmctrlSym_MemoryEraseEnable.setLabel("NVM Erase Enable")
+    nvmctrlSym_MemoryEraseEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
     nvmctrlSym_MemoryEraseEnable.setVisible(False)
     nvmctrlSym_MemoryEraseEnable.setDefaultValue(True)
     nvmctrlSym_MemoryEraseEnable.setReadOnly(True)
 
     nvmctrlSym_MemoryEraseBufferSize = nvmctrlComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", None)
     nvmctrlSym_MemoryEraseBufferSize.setLabel("NVM Erase Buffer Size")
+    nvmctrlSym_MemoryEraseBufferSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
     nvmctrlSym_MemoryEraseBufferSize.setVisible(False)
     nvmctrlSym_MemoryEraseBufferSize.setDefaultValue(int(nvmctrlSym_ERASE_SIZE.getValue()))
     nvmctrlSym_MemoryEraseBufferSize.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
@@ -361,22 +372,26 @@ def instantiateComponent(nvmctrlComponent):
 
     if isEccPresent == True:
         nvmctrlSym_ECCTestingEnable = nvmctrlComponent.createBooleanSymbol("NVMCTRL_ECC_TESTING_ENABLE", None)
+        nvmctrlSym_ECCTestingEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:%NOREGISTER%")
         nvmctrlSym_ECCTestingEnable.setLabel("ECC Testing Enable")
         nvmctrlSym_ECCTestingEnable.setDefaultValue(False)
 
         nvmctrlSym_MainArrECCDisable = nvmctrlComponent.createBooleanSymbol("NVMCTRL_ECC_MAIN_ARR_DIS", nvmctrlSym_ECCTestingEnable)
+        nvmctrlSym_MainArrECCDisable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:ECCCTRL")
         nvmctrlSym_MainArrECCDisable.setLabel("Main Array ECC Disable")
         nvmctrlSym_MainArrECCDisable.setDefaultValue(False)
         nvmctrlSym_MainArrECCDisable.setVisible(False)
         nvmctrlSym_MainArrECCDisable.setDependencies(updateVisibility, ["NVMCTRL_ECC_TESTING_ENABLE"])
 
         nvmctrlSym_DataFlashECCDisable = nvmctrlComponent.createBooleanSymbol("NVMCTRL_ECC_DATA_FLASH_DIS", nvmctrlSym_ECCTestingEnable)
+        nvmctrlSym_DataFlashECCDisable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:ECCCTRL")
         nvmctrlSym_DataFlashECCDisable.setLabel("Data Flash ECC Disable")
         nvmctrlSym_DataFlashECCDisable.setDefaultValue(False)
         nvmctrlSym_DataFlashECCDisable.setVisible(False)
         nvmctrlSym_DataFlashECCDisable.setDependencies(updateVisibility, ["NVMCTRL_ECC_TESTING_ENABLE"])
 
         nvmctrlSym_InitECCCnt = nvmctrlComponent.createIntegerSymbol("NVMCTRL_ECC_ERR_INIT_COUNT", nvmctrlSym_ECCTestingEnable)
+        nvmctrlSym_InitECCCnt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvmctrl_03929;register:ECCCTRL")
         nvmctrlSym_InitECCCnt.setLabel("ECC Error Counter Initial Value")
         nvmctrlSym_InitECCCnt.setMin(0)
         nvmctrlSym_InitECCCnt.setMax(255)

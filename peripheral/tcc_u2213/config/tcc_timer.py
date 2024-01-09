@@ -140,6 +140,7 @@ tccSym_TimerMenu.setDependencies(updateTimerMenuVisibleProperty, ["TCC_OPERATION
 
 #timer one shot mode
 tccSym_Timer_CTRLBSET_ONESHOT = tccComponent.createBooleanSymbol("TCC_TIMER_CTRLBSET_ONESHOT", tccSym_TimerMenu)
+tccSym_Timer_CTRLBSET_ONESHOT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:CTRLBSET")
 tccSym_Timer_CTRLBSET_ONESHOT.setLabel("Enable One-Shot Mode")
 
 global tccSym_TimerUnit
@@ -172,6 +173,7 @@ if resolution != 0:
 else:
     period = 0
 tccSym_TimerPeriod = tccComponent.createLongSymbol("TCC_TIMER_PERIOD", tccSym_Timer_TIME_MS)
+tccSym_TimerPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:PER")
 tccSym_TimerPeriod.setLabel("Period Register")
 tccSym_TimerPeriod.setVisible(True)
 tccSym_TimerPeriod.setReadOnly(True)
@@ -184,6 +186,7 @@ tccSym_TimerPeriod.setDependencies(tccPeriodCalc, ["core."+tccInstanceName.getVa
 #timer interrupt mode
 global tccSym_Timer_INTENSET_OVF
 tccSym_Timer_INTENSET_OVF = tccComponent.createBooleanSymbol("TCC_TIMER_INTENSET_OVF", tccSym_TimerMenu)
+tccSym_Timer_INTENSET_OVF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:INTENSET")
 tccSym_Timer_INTENSET_OVF.setLabel("Enable Timer Period Interrupt")
 tccSym_Timer_INTENSET_OVF.setDefaultValue(True)
 interruptDepList.append("TCC_TIMER_INTENSET_OVF")
@@ -192,11 +195,13 @@ tccSym_TimerEventMenu = tccComponent.createMenuSymbol("TCC_TIMER_EVENT_MENU", tc
 tccSym_TimerEventMenu.setLabel("Events")
 
 tccSym_Timer_EVCTRL_OVFEO = tccComponent.createBooleanSymbol("TCC_TIMER_EVCTRL_OVFEO", tccSym_TimerEventMenu)
+tccSym_Timer_EVCTRL_OVFEO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_Timer_EVCTRL_OVFEO.setLabel("Enable Timer Period Overflow Event")
 tccSym_Timer_EVCTRL_OVFEO.setDefaultValue(False)
 
 global tccSym_Timer_EVCTRL_EVACT0
 tccSym_Timer_EVCTRL_EVACT0 = tccComponent.createKeyValueSetSymbol("TCC_TIMER_EVCTRL_EVACT0", tccSym_TimerEventMenu)
+tccSym_Timer_EVCTRL_EVACT0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_Timer_EVCTRL_EVACT0.setLabel("Select Input Event 0 Action")
 tccSym_Timer_EVCTRL_EVACT0.addKey("OFF", "0", "Disabled")
 tccSym_Timer_EVCTRL_EVACT0.addKey("RETRIGGER", "1", "Start, restart or retrigger counter")
@@ -208,12 +213,14 @@ tccSym_Timer_EVCTRL_EVACT0.setDisplayMode("Description")
 tccSym_Timer_EVCTRL_EVACT0.setOutputMode("Key")
 
 tccSym_Timer_EVCTRL_TCINV0 = tccComponent.createBooleanSymbol("TCC_TIMER_EVCTRL_TCINV0", tccSym_Timer_EVCTRL_EVACT0)
+tccSym_Timer_EVCTRL_TCINV0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_Timer_EVCTRL_TCINV0.setLabel("Invert Input Event 0")
 tccSym_Timer_EVCTRL_TCINV0.setVisible(False)
 tccSym_Timer_EVCTRL_TCINV0.setDependencies(tccTimerIpEventVisible, ["TCC_TIMER_EVCTRL_EVACT0"])
 
 global tccSym_Timer_EVCTRL_EVACT1
 tccSym_Timer_EVCTRL_EVACT1 = tccComponent.createKeyValueSetSymbol("TCC_TIMER_EVCTRL_EVACT1", tccSym_TimerEventMenu)
+tccSym_Timer_EVCTRL_EVACT1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_Timer_EVCTRL_EVACT1.setLabel("Select Input Event 1 Action")
 tccSym_Timer_EVCTRL_EVACT1.addKey("OFF", "0", "Disabled")
 tccSym_Timer_EVCTRL_EVACT1.addKey("RETRIGGER", "1", "Start, restart or retrigger counter")
@@ -224,12 +231,14 @@ tccSym_Timer_EVCTRL_EVACT1.setDisplayMode("Description")
 tccSym_Timer_EVCTRL_EVACT1.setOutputMode("Key")
 
 tccSym_Timer_EVCTRL_TCINV1 = tccComponent.createBooleanSymbol("TCC_TIMER_EVCTRL_TCINV1", tccSym_Timer_EVCTRL_EVACT1)
+tccSym_Timer_EVCTRL_TCINV1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_Timer_EVCTRL_TCINV1.setLabel("Invert Input Event 1")
 tccSym_Timer_EVCTRL_TCINV1.setVisible(False)
 tccSym_Timer_EVCTRL_TCINV1.setDependencies(tccTimerIpEventVisible, ["TCC_TIMER_EVCTRL_EVACT1"])
 
 global tccSym_Timer_INTENSET_MC1
 tccSym_Timer_INTENSET_MC1 = tccComponent.createBooleanSymbol("TCC_TIMER_INTENSET_MC1", tccSym_TimerMenu)
+tccSym_Timer_INTENSET_MC1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:INTENSET")
 tccSym_Timer_INTENSET_MC1.setLabel("Enable Timer Compare Interrupt")
 tccSym_Timer_INTENSET_MC1.setVisible(False)
 tccSym_Timer_INTENSET_MC1.setDefaultValue(False)

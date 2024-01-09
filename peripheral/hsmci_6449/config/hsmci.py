@@ -70,6 +70,7 @@ def instantiateComponent(hsmciComponent):
     Database.setSymbolValue("core","DMA_CH_NEEDED_FOR_HSMCI", True)
 
     sdhcDMA = hsmciComponent.createIntegerSymbol("HSMCI_DMA", None)
+    sdhcDMA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hsmci_6449;register:HSMCI_DMA")
     sdhcDMA.setLabel("DMA Channel For Transmit and Receive")
     sdhcDMA.setReadOnly(True)
     sdhcDMA.setValue(int(Database.getSymbolValue("core", "DMA_CH_FOR_HSMCI")))
@@ -89,21 +90,25 @@ def instantiateComponent(hsmciComponent):
 
     hsmciCDSupport = hsmciComponent.createBooleanSymbol("SDCARD_SDCD_SUPPORT", None)
     hsmciCDSupport.setLabel("HSMCI SDCD Support")
+    hsmciCDSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hsmci_6449;register:%NOREGISTER%")
     hsmciCDSupport.setDefaultValue(False)
     hsmciCDSupport.setVisible(False)
 
     hsmciWPSupport = hsmciComponent.createBooleanSymbol("SDCARD_SDWP_SUPPORT", None)
     hsmciWPSupport.setLabel("HSMCI SDWP Support")
+    hsmciWPSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hsmci_6449;register:%NOREGISTER%")
     hsmciWPSupport.setDefaultValue(False)
     hsmciWPSupport.setVisible(False)
 
     hsmci8BitSupport = hsmciComponent.createBooleanSymbol("SDCARD_8BIT_SUPPORT", None)
     hsmci8BitSupport.setLabel("HSMCI 8Bit Support")
+    hsmci8BitSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hsmci_6449;register:%NOREGISTER%")
     hsmci8BitSupport.setDefaultValue(False)
     hsmci8BitSupport.setVisible(False)
 
     hsmciEMMCSupport = hsmciComponent.createBooleanSymbol("SDCARD_EMMC_SUPPORT", None)
     hsmciEMMCSupport.setLabel("HSMCI EMMC Support")
+    hsmciEMMCSupport.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hsmci_6449;register:%NOREGISTER%")
     hsmciEMMCSupport.setDefaultValue(True)
     hsmciEMMCSupport.setVisible(False)
 

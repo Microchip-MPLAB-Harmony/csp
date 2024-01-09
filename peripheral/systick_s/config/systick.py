@@ -123,6 +123,7 @@ sysTickMenu = coreComponent.createMenuSymbol("SYSTICK_SECURE_MENU", cortexMenu)
 sysTickMenu.setLabel("SysTick Secure")
 
 systickEnable = coreComponent.createBooleanSymbol("systickSecureEnable", sysTickMenu)
+systickEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:systick_s;register:%NOREGISTER%")
 systickEnable.setLabel("Enable Secure SysTick")
 
 systickConfigMenu = coreComponent.createMenuSymbol("SYSTICK_SECURE_MENU_0", systickEnable)
@@ -131,9 +132,11 @@ systickConfigMenu.setVisible(False)
 systickConfigMenu.setDependencies(sysTickSecureEnableCfgMenu, ["systickSecureEnable"])
 
 systickInterrupt = coreComponent.createBooleanSymbol("USE_SYSTICK_SECURE_INTERRUPT", systickConfigMenu)
+systickInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:systick_s;register:%NOREGISTER%")
 systickInterrupt.setLabel("Enable Interrupt")
 
 systickClock = coreComponent.createKeyValueSetSymbol("SYSTICK_SECURE_CLOCK", systickConfigMenu)
+systickClock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:systick_s;register:%NOREGISTER%")
 systickClock.setLabel("SysTick Clock")
 systickClock.setOutputMode("Value")
 systickClock.setDisplayMode("Description")
@@ -147,6 +150,7 @@ maxCount = str(systickNode.getAttribute("mask"))
 max = ((float(1) / int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))) * int(maxCount, 0) * 1000)
 
 systickPeriodMS = coreComponent.createFloatSymbol("SYSTICK_SECURE_PERIOD_MS", systickConfigMenu)
+systickPeriodMS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:systick_s;register:%NOREGISTER%")
 systickPeriodMS.setLabel("Systick Period(Milliseconds)")
 systickPeriodMS.setVisible(True)
 systickPeriodMS.setDefaultValue(float(1.0))
@@ -157,6 +161,7 @@ systickPeriodMS.setDependencies(sysTickSecureMax, ["core.CPU_CLOCK_FREQUENCY", "
 
 systickDefault = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")) / 1000
 systickPeriod = coreComponent.createStringSymbol("SYSTICK_SECURE_PERIOD", systickConfigMenu)
+systickPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:systick_s;register:LOAD")
 systickPeriod.setLabel("SysTick Period")
 systickPeriod.setVisible(False)
 systickPeriod.setDefaultValue(str(hex(systickDefault)))

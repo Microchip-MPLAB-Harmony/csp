@@ -53,6 +53,7 @@ def instantiateComponent(pmComponent):
     
     #System RAM Retention in Stanby Sleep
     pmSym_PM_STDBYCFG_RAMCFG = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_RAMCFG", pmSym_Standby_Menu)
+    pmSym_PM_STDBYCFG_RAMCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2406;register:STDBYCFG")
     pmSym_PM_STDBYCFG_RAMCFG.setLabel("System RAM Retention")
     pmSym_PM_STDBYCFG_RAMCFG.setOutputMode("Value")
     pmSym_PM_STDBYCFG_RAMCFG.setDisplayMode("Description")
@@ -69,6 +70,7 @@ def instantiateComponent(pmComponent):
 
     #Fast Wakeup
     pmSym_PM_STDBYCFG_FASTWKUP = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_FASTWKUP", pmSym_Standby_Menu)
+    pmSym_PM_STDBYCFG_FASTWKUP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2406;register:STDBYCFG")
     pmSym_PM_STDBYCFG_FASTWKUP.setLabel("Fast Wakeup for NVM and Main Regulator")
     pmSym_PM_STDBYCFG_FASTWKUP.setOutputMode("Value")
     pmSym_PM_STDBYCFG_FASTWKUP.setDisplayMode("Description")
@@ -89,6 +91,7 @@ def instantiateComponent(pmComponent):
 
     #System RAM Retention in Hibernate Sleep
     pmSym_PM_HIBCFG_RAMCFG = pmComponent.createKeyValueSetSymbol("PM_HIBCFG_RAMCFG", pmSym_Hibernate_Menu)
+    pmSym_PM_HIBCFG_RAMCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2406;register:HIBCFG")
     pmSym_PM_HIBCFG_RAMCFG.setLabel("System RAM Retention")
     pmSym_PM_HIBCFG_RAMCFG.setOutputMode("Value")
     pmSym_PM_HIBCFG_RAMCFG.setDisplayMode("Description")
@@ -105,6 +108,7 @@ def instantiateComponent(pmComponent):
     
     #Backup RAM Retention in Hibernate Sleep
     pmSym_PM_HIBCFG_BRAMCFG = pmComponent.createKeyValueSetSymbol("PM_HIBCFG_BRAMCFG", pmSym_Hibernate_Menu)
+    pmSym_PM_HIBCFG_BRAMCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2406;register:HIBCFG")
     pmSym_PM_HIBCFG_BRAMCFG.setLabel("Backup RAM Retention")
     pmSym_PM_HIBCFG_BRAMCFG.setOutputMode("Value")
     pmSym_PM_HIBCFG_BRAMCFG.setDisplayMode("Description")
@@ -125,6 +129,7 @@ def instantiateComponent(pmComponent):
     
     #Backup RAM Retention in Backup Sleep
     pmSym_PM_BKUPCFG_BRAMCFG = pmComponent.createKeyValueSetSymbol("PM_BKUPCFG_BRAMCFG", pmSym_Backup_Menu)
+    pmSym_PM_BKUPCFG_BRAMCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2406;register:BKUPCFG")
     pmSym_PM_BKUPCFG_BRAMCFG.setLabel("Backup RAM Retention")
     pmSym_PM_BKUPCFG_BRAMCFG.setOutputMode("Value")
     pmSym_PM_BKUPCFG_BRAMCFG.setDisplayMode("Description")

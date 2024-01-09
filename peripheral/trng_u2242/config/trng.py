@@ -97,11 +97,13 @@ def instantiateComponent(trngComponent):
 
     #Create a Checkbox to enable disable interrupts
     trngInterrupt = trngComponent.createBooleanSymbol("trngEnableInterrupt", trngMenu)
+    trngInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:trng_u2242;register:INTENSET")
     trngInterrupt.setLabel("Enable Interrupts")
     trngInterrupt.setDefaultValue(False)
 
         #Create a Checkbox to enable disable interrupts
     trngInterrupt = trngComponent.createBooleanSymbol("trngEnableEvent", trngMenu)
+    trngInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:trng_u2242;register:EVCTRL")
     trngInterrupt.setLabel("Enable Data Ready Event Output")
     trngInterrupt.setDefaultValue(False)
 
@@ -110,6 +112,7 @@ def instantiateComponent(trngComponent):
     trngEvent.setDependencies(trngEVSYS, ["trngEnableEvent"])
 
     trngSTDBY = trngComponent.createBooleanSymbol("TRNG_STANDBY", trngMenu)
+    trngSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:trng_u2242;register:CTRLA")
     trngSTDBY.setLabel("Run Trng in Standby sleep mode")
 
     Database.setSymbolValue("core", trngInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)

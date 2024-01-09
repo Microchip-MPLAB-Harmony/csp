@@ -119,11 +119,13 @@ def instantiateComponent(opampComponent):
         #Enable op amp
         opampSym_OPAMPCTRL_ENABLE.append(opampID)
         opampSym_OPAMPCTRL_ENABLE[opampID] = opampComponent.createBooleanSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_ENABLE", opampSym_Menu)
+        opampSym_OPAMPCTRL_ENABLE[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_ENABLE[opampID].setLabel("Op Amp " + str(opampID) + " Enable")
 
         #MUXPOS
         opampSym_OPAMPCTRL_MUXPOS.append(opampID)
         opampSym_OPAMPCTRL_MUXPOS[opampID] = opampComponent.createKeyValueSetSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_MUXPOS", opampSym_Menu)
+        opampSym_OPAMPCTRL_MUXPOS[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_MUXPOS[opampID].setLabel("Positive Input Mux Selection")
 
         if (opampID == 0):
@@ -148,6 +150,7 @@ def instantiateComponent(opampComponent):
         #MUXNEG
         opampSym_OPAMPCTRL_MUXNEG.append(opampID)
         opampSym_OPAMPCTRL_MUXNEG[opampID] = opampComponent.createKeyValueSetSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_MUXNEG", opampSym_Menu)
+        opampSym_OPAMPCTRL_MUXNEG[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_MUXNEG[opampID].setLabel("Negative Input Mux Selection")
 
         if (opampID == 0):
@@ -172,6 +175,7 @@ def instantiateComponent(opampComponent):
         #RES1EN
         opampSym_OPAMPCTRL_RES1EN.append(opampID)
         opampSym_OPAMPCTRL_RES1EN[opampID] = opampComponent.createBooleanSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_RES1EN", opampSym_Menu)
+        opampSym_OPAMPCTRL_RES1EN[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_RES1EN[opampID].setLabel("Connect R1 to the multiplexer")
         opampSym_OPAMPCTRL_RES1EN[opampID].setDescription("Connecting R1 to the MUX allows it to be connected to the op amp input, GND or the internal DAC output");
         opampSym_OPAMPCTRL_RES1EN[opampID].setDefaultValue(False)
@@ -179,6 +183,7 @@ def instantiateComponent(opampComponent):
         #RES1MUX
         opampSym_OPAMPCTRL_RES1MUX.append(opampID)
         opampSym_OPAMPCTRL_RES1MUX[opampID] = opampComponent.createKeyValueSetSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_RES1MUX", opampSym_OPAMPCTRL_RES1EN[opampID])
+        opampSym_OPAMPCTRL_RES1MUX[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_RES1MUX[opampID].setLabel("Resistor R1 connection")
         opampSym_OPAMPCTRL_RES1MUX[opampID].setDescription("These bits select the connection of R1 resistor of the potentiometer")
 
@@ -211,12 +216,14 @@ def instantiateComponent(opampComponent):
         #RES2OUT
         opampSym_OPAMPCTRL_RES2OUT.append(opampID)
         opampSym_OPAMPCTRL_RES2OUT[opampID] = opampComponent.createBooleanSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_RES2OUT", opampSym_Menu)
+        opampSym_OPAMPCTRL_RES2OUT[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_RES2OUT[opampID].setLabel("Connect resistor ladder to op amp output")
         opampSym_OPAMPCTRL_RES2OUT[opampID].setDescription("Enable this if the resistor ladder is going to be used in the feedback path of the op amp");
 
         #RES2VCC
         opampSym_OPAMPCTRL_RES2VCC.append(opampID)
         opampSym_OPAMPCTRL_RES2VCC[opampID] = opampComponent.createBooleanSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_RES2VCC", opampSym_Menu)
+        opampSym_OPAMPCTRL_RES2VCC[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_RES2VCC[opampID].setLabel("Connect resistor ladder to VCC")
         opampSym_OPAMPCTRL_RES2VCC[opampID].setDefaultValue(False)
         opampSym_OPAMPCTRL_RES2VCC[opampID].setDescription("Enable this if the resistor ladder is used to form a voltage divider. In this case resistor R1 should be connected to GND");
@@ -224,6 +231,7 @@ def instantiateComponent(opampComponent):
         #POTMUX
         opampSym_OPAMPCTRL_POTMUX.append(opampID)
         opampSym_OPAMPCTRL_POTMUX[opampID] = opampComponent.createKeyValueSetSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_POTMUX", opampSym_Menu)
+        opampSym_OPAMPCTRL_POTMUX[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_POTMUX[opampID].setLabel("Select potentiometer configuration")
 
         opampSym_OPAMPCTRL_POTMUX_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OPAMP\"]/value-group@[name=\"OPAMP_OPAMPCTRL__POTMUX\"]")
@@ -249,11 +257,13 @@ def instantiateComponent(opampComponent):
         #Analog Output
         opampSym_OPAMPCTRL_ANAOUT.append(opampID)
         opampSym_OPAMPCTRL_ANAOUT[opampID] = opampComponent.createBooleanSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_ANAOUT", opampSym_Menu)
+        opampSym_OPAMPCTRL_ANAOUT[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_ANAOUT[opampID].setLabel("Enable output to ADC or AC")
         
         #BIAS
         opampSym_OPAMPCTRL_BIAS.append(opampID)
         opampSym_OPAMPCTRL_BIAS[opampID] = opampComponent.createKeyValueSetSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_BIAS", opampSym_Menu)
+        opampSym_OPAMPCTRL_BIAS[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_BIAS[opampID].setLabel("Bias Mode Selection")
 
         opampSym_OPAMPCTRL_BIAS_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OPAMP\"]/value-group@[name=\"OPAMP_OPAMPCTRL__BIAS\"]")
@@ -279,16 +289,19 @@ def instantiateComponent(opampComponent):
         #RUNSTDBY
         opampSym_OPAMPCTRL_RUNSTDBY.append(opampID)
         opampSym_OPAMPCTRL_RUNSTDBY[opampID] = opampComponent.createBooleanSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_RUNSTDBY", opampSym_Menu)
+        opampSym_OPAMPCTRL_RUNSTDBY[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_RUNSTDBY[opampID].setLabel("Run op amp in Standby Sleep")
         
         #ONDEMAND
         opampSym_OPAMPCTRL_ONDEMAND.append(opampID)
         opampSym_OPAMPCTRL_ONDEMAND[opampID] = opampComponent.createBooleanSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_ONDEMAND", opampSym_Menu)
+        opampSym_OPAMPCTRL_ONDEMAND[opampID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:OPAMPCTRL0")
         opampSym_OPAMPCTRL_ONDEMAND[opampID].setLabel("Enable On-demand operation")
         opampSym_OPAMPCTRL_ONDEMAND[opampID].setDescription("Enable op amp only when another peripheral is requesting the op amp to be used as an input");
         
     #Disable voltage doubler
     opampSym_CTRLA_LPMUX = opampComponent.createBooleanSymbol("OPAMP_CTRLA_LPMUX", None)
+    opampSym_CTRLA_LPMUX.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:CTRLA")
     opampSym_CTRLA_LPMUX.setLabel("Disable voltage doubler")
     opampSym_CTRLA_LPMUX.setDefaultValue(True)
     opampSym_CTRLA_LPMUX.setDescription("If the supply voltage is always above 2.5V, the voltage doubler can be disabled")
@@ -300,16 +313,19 @@ def instantiateComponent(opampComponent):
         resctrlMenu.setLabel("Resistor Control Menu")
 
         res2Out = opampComponent.createBooleanSymbol("RESCTRL_RES2OUT", resctrlMenu)
+        res2Out.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:RESCTRL")
         res2Out.setLabel("Resistor ladder To Output")
         res2Out.setDefaultValue(False)
 
         res1En = opampComponent.createBooleanSymbol("RESCTRL_RES1EN", resctrlMenu)
+        res1En.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:RESCTRL")
         res1En.setLabel("Enable Resistor 1 (DAC/REFBUF) output to Mux")
         res1En.setDefaultValue(False)
 
         node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OPAMP"]/value-group@[name="OPAMP_RESCTRL__RES1MUX"]')
         nodeValues = node.getChildren()
         res1Mux = opampComponent.createKeyValueSetSymbol("RESCTRL_RES1MUX", resctrlMenu)
+        res1Mux.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:RESCTRL")
         res1Mux.setLabel("Resistor1 Source")
         for index in range(0, len(nodeValues)):
             key =  nodeValues[index].getAttribute("name")
@@ -323,6 +339,7 @@ def instantiateComponent(opampComponent):
         node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OPAMP"]/value-group@[name="OPAMP_RESCTRL__POTMUX"]')
         nodeValues = node.getChildren()
         resctrlPotmux = opampComponent.createKeyValueSetSymbol("RESCTRL_POTMUX", resctrlMenu)
+        resctrlPotmux.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:RESCTRL")
         resctrlPotmux.setLabel("Potentiometer selection")
         for index in range(0, len(nodeValues)):
             key =  nodeValues[index].getAttribute("name")
@@ -336,6 +353,7 @@ def instantiateComponent(opampComponent):
         node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OPAMP"]/value-group@[name="OPAMP_RESCTRL__REFBUFLEVEL"]')
         nodeValues = node.getChildren()
         resctrlREFBUFLEVEL = opampComponent.createKeyValueSetSymbol("RESCTRL_REFBUFLEVEL", resctrlMenu)
+        resctrlREFBUFLEVEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:opamp_u2237;register:RESCTRL")
         resctrlREFBUFLEVEL.setLabel("Reference output voltage")
         for index in range(0, len(nodeValues)):
             key =  nodeValues[index].getAttribute("name")

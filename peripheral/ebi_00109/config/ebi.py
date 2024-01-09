@@ -390,6 +390,7 @@ def instantiateComponent(ebiComponent):
     ebiADDWIDTH_names = []
     populate_CFGEBIA_values(addressLines, ebiADDWIDTH_names)
     ebiSym_CFGEBIA_EBIADD = ebiComponent.createKeyValueSetSymbol("CFGEBIA_EBIADD", ebiSym_PIN_SETUP)
+    ebiSym_CFGEBIA_EBIADD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIA_EBIADD.setLabel("Address Bus Width")
     ebiSym_CFGEBIA_EBIADD.setDefaultValue(24)
     ebiSym_CFGEBIA_EBIADD.setOutputMode("Value")
@@ -399,6 +400,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_CFGEBIA_EBIADD.setVisible(True)
 
     ebiSym_CFGEBIC_EBIDAT = ebiComponent.createKeyValueSetSymbol("CFGEBIC_EBIDAT", ebiSym_PIN_SETUP)
+    ebiSym_CFGEBIC_EBIDAT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIDAT.setLabel("Data Bus Width")
     ebiSym_CFGEBIC_EBIDAT.setDefaultValue(0)
     ebiSym_CFGEBIC_EBIDAT.setOutputMode("Value")
@@ -427,78 +429,91 @@ def instantiateComponent(ebiComponent):
 
     #EBIRDYINV1_ENABLE
     ebiSym_CFGEBIC_EBIRDYINV1 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYINV1", ebiSym_EBIRDYPIN_SETUP)
+    ebiSym_CFGEBIC_EBIRDYINV1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIRDYINV1.setLabel("EBIRDY1 Inversion Control bit")
     ebiSym_CFGEBIC_EBIRDYINV1.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYINV1.setVisible(True)
 
     #EBIRDYEN1_ENABLE
     ebiSym_CFGEBIC_EBIRDYEN1 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYEN1", ebiSym_EBIRDYPIN_SETUP)
+    ebiSym_CFGEBIC_EBIRDYEN1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIRDYEN1.setLabel("EBIRDY1 Pin Enable bit")
     ebiSym_CFGEBIC_EBIRDYEN1.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYEN1.setVisible(True)
 
     #EBIRDYINV2_ENABLE
     ebiSym_CFGEBIC_EBIRDYINV2 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYINV2", ebiSym_EBIRDYPIN_SETUP)
+    ebiSym_CFGEBIC_EBIRDYINV2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIRDYINV2.setLabel("EBIRDY2 Inversion Control bit")
     ebiSym_CFGEBIC_EBIRDYINV2.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYINV2.setVisible(True)
 
     #EBIRDYEN2_ENABLE
     ebiSym_CFGEBIC_EBIRDYEN2 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYEN2", ebiSym_EBIRDYPIN_SETUP)
+    ebiSym_CFGEBIC_EBIRDYEN2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIRDYEN2.setLabel("EBIRDY2 Pin Enable bit")
     ebiSym_CFGEBIC_EBIRDYEN2.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYEN2.setVisible(True)
 
     #EBIRDYINV3_ENABLE
     ebiSym_CFGEBIC_EBIRDYINV3 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYINV3", ebiSym_EBIRDYPIN_SETUP)
+    ebiSym_CFGEBIC_EBIRDYINV3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIRDYINV3.setLabel("EBIRDY3 Inversion Control bit")
     ebiSym_CFGEBIC_EBIRDYINV3.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYINV3.setVisible(True)
 
     #EBIRDYEN3_ENABLE
     ebiSym_CFGEBIC_EBIRDYEN3 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYEN3", ebiSym_EBIRDYPIN_SETUP)
+    ebiSym_CFGEBIC_EBIRDYEN3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIRDYEN3.setLabel("EBIRDY3 Pin Enable bit")
     ebiSym_CFGEBIC_EBIRDYEN3.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYEN3.setVisible(True)
 
     #EBIRDYLVL_ENABLE
     ebiSym_CFGEBIC_EBIRDYLVL = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRDYLVL", ebiSym_PIN_SETUP)
+    ebiSym_CFGEBIC_EBIRDYLVL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIRDYLVL.setLabel("EBIRDYx Pin Sensitivity Control bit")
     ebiSym_CFGEBIC_EBIRDYLVL.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRDYLVL.setVisible(True)
 
     #EBIRPEN_ENABLE
     ebiSym_CFGEBIC_EBIRPEN = ebiComponent.createBooleanSymbol("CFGEBIC_EBIRPEN", ebiSym_PIN_SETUP)
+    ebiSym_CFGEBIC_EBIRPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIRPEN.setLabel("/EBIRP Pin Sensitivity Control bit")
     ebiSym_CFGEBIC_EBIRPEN.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIRPEN.setVisible(True)
 
     #EBIWEEN_ENABLE
     ebiSym_CFGEBIC_EBIWEEN = ebiComponent.createBooleanSymbol("CFGEBIC_EBIWEEN", ebiSym_PIN_SETUP)
+    ebiSym_CFGEBIC_EBIWEEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIWEEN.setLabel("/EBIWE Pin Enable bit")
     ebiSym_CFGEBIC_EBIWEEN.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIWEEN.setVisible(True)
 
     #EBIOEEN_ENABLE
     ebiSym_CFGEBIC_EBIOEEN = ebiComponent.createBooleanSymbol("CFGEBIC_EBIOEEN", ebiSym_PIN_SETUP)
+    ebiSym_CFGEBIC_EBIOEEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIOEEN.setLabel("/EBIOE Pin Enable bit")
     ebiSym_CFGEBIC_EBIOEEN.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIOEEN.setVisible(True)
 
     #EBIBSEN0_ENABLE
     ebiSym_CFGEBIC_EBIBSEN0 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIBSEN0", ebiSym_PIN_SETUP)
+    ebiSym_CFGEBIC_EBIBSEN0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIBSEN0.setLabel("/EBIBS1 Pin Enable bit")
     ebiSym_CFGEBIC_EBIBSEN0.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIBSEN0.setVisible(True)
 
     #EBIBSEN1_ENABLE
     ebiSym_CFGEBIC_EBIBSEN1 = ebiComponent.createBooleanSymbol("CFGEBIC_EBIBSEN1", ebiSym_PIN_SETUP)
+    ebiSym_CFGEBIC_EBIBSEN1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBIBSEN1.setLabel("/EBIBS0 Pin Enable bit")
     ebiSym_CFGEBIC_EBIBSEN1.setDefaultValue(False)
     ebiSym_CFGEBIC_EBIBSEN1.setVisible(True)
 
     #EBICS0_ENABLE
     ebiSym_CFGEBIC_EBICSEN0 = ebiComponent.createBooleanSymbol("CFGEBIC_EBICSEN0", None)
+    ebiSym_CFGEBIC_EBICSEN0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBICSEN0.setLabel("/EBICS0 Pin Enable bit")
     ebiSym_CFGEBIC_EBICSEN0.setDefaultValue(False)
     ebiSym_CFGEBIC_EBICSEN0.setVisible(True)
@@ -506,6 +521,7 @@ def instantiateComponent(ebiComponent):
 
     #EBICS0
     ebiSym_EBICS0_CSADDR = ebiComponent.createHexSymbol("EBICS0_CSADDR", ebiSym_CFGEBIC_EBICSEN0)
+    ebiSym_EBICS0_CSADDR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBICS0")
     ebiSym_EBICS0_CSADDR.setLabel("EBICS0 " + ebiBitFld_EBICS0_CSADDR.getAttribute("caption"))
     ebiSym_EBICS0_CSADDR.setDefaultValue(0x20000000)
     ebiSym_EBICS0_CSADDR.setMin(0x20000000)
@@ -514,6 +530,7 @@ def instantiateComponent(ebiComponent):
 
     #EBICS1_ENABLE
     ebiSym_CFGEBIC_EBICSEN1 = ebiComponent.createBooleanSymbol("CFGEBIC_EBICSEN1", None)
+    ebiSym_CFGEBIC_EBICSEN1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBICSEN1.setLabel("/EBICS1 Pin Enable bit")
     ebiSym_CFGEBIC_EBICSEN1.setDefaultValue(False)
     ebiSym_CFGEBIC_EBICSEN1.setVisible(chipSelects)
@@ -521,6 +538,7 @@ def instantiateComponent(ebiComponent):
 
     #EBICS1
     ebiSym_EBICS1_CSADDR = ebiComponent.createHexSymbol("EBICS1_CSADDR", ebiSym_CFGEBIC_EBICSEN1)
+    ebiSym_EBICS1_CSADDR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBICS1")
     ebiSym_EBICS1_CSADDR.setLabel("EBICS1 " + ebiBitFld_EBICS0_CSADDR.getAttribute("caption"))
     ebiSym_EBICS1_CSADDR.setDefaultValue(0x20000000)
     ebiSym_EBICS1_CSADDR.setMin(0x20000000)
@@ -529,6 +547,7 @@ def instantiateComponent(ebiComponent):
 
     #EBICS2_ENABLE
     ebiSym_CFGEBIC_EBICSEN2 = ebiComponent.createBooleanSymbol("CFGEBIC_EBICSEN2", None)
+    ebiSym_CFGEBIC_EBICSEN2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBICSEN2.setLabel("/EBICS2 Pin Enable bit")
     ebiSym_CFGEBIC_EBICSEN2.setDefaultValue(False)
     ebiSym_CFGEBIC_EBICSEN2.setVisible(chipSelects)
@@ -536,6 +555,7 @@ def instantiateComponent(ebiComponent):
 
     #EBICS2
     ebiSym_EBICS2_CSADDR = ebiComponent.createHexSymbol("EBICS2_CSADDR", ebiSym_CFGEBIC_EBICSEN2)
+    ebiSym_EBICS2_CSADDR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBICS2")
     ebiSym_EBICS2_CSADDR.setLabel("EBICS2 " + ebiBitFld_EBICS0_CSADDR.getAttribute("caption"))
     ebiSym_EBICS2_CSADDR.setDefaultValue(0x20000000)
     ebiSym_EBICS2_CSADDR.setMin(0x20000000)
@@ -544,6 +564,7 @@ def instantiateComponent(ebiComponent):
 
     #EBICS3_ENABLE
     ebiSym_CFGEBIC_EBICSEN3 = ebiComponent.createBooleanSymbol("CFGEBIC_EBICSEN3", None)
+    ebiSym_CFGEBIC_EBICSEN3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:%NOREGISTER%")
     ebiSym_CFGEBIC_EBICSEN3.setLabel("/EBICS3 Pin Enable bit")
     ebiSym_CFGEBIC_EBICSEN3.setDefaultValue(False)
     ebiSym_CFGEBIC_EBICSEN3.setVisible(chipSelects)
@@ -552,6 +573,7 @@ def instantiateComponent(ebiComponent):
 
     #EBICS3
     ebiSym_EBICS3_CSADDR = ebiComponent.createHexSymbol("EBICS3_CSADDR", ebiSym_CFGEBIC_EBICSEN3)
+    ebiSym_EBICS3_CSADDR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBICS3")
     ebiSym_EBICS3_CSADDR.setLabel("EBICS3 " + ebiBitFld_EBICS0_CSADDR.getAttribute("caption"))
     ebiSym_EBICS3_CSADDR.setDefaultValue(0x20000000)
     ebiSym_EBICS3_CSADDR.setMin(0x20000000)
@@ -584,6 +606,7 @@ def instantiateComponent(ebiComponent):
     ebiMEMSIZE_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_MEMSIZE, ebiMEMSIZE_names)
     ebiSym_EBIMSK0_MEMSIZE = ebiComponent.createKeyValueSetSymbol("EBIMSK0_MEMSIZE", ebiSym_EBICS0_CSADDR)
+    ebiSym_EBIMSK0_MEMSIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK0")
     ebiSym_EBIMSK0_MEMSIZE.setLabel(ebiBitFld_EBIMSK0_MEMSIZE.getAttribute("caption"))
     ebiSym_EBIMSK0_MEMSIZE.setDefaultValue(0)
     ebiSym_EBIMSK0_MEMSIZE.setOutputMode("Value")
@@ -595,6 +618,7 @@ def instantiateComponent(ebiComponent):
     ebiMEMTYPE_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_MEMTYPE, ebiMEMTYPE_names)
     ebiSym_EBIMSK0_MEMTYPE = ebiComponent.createKeyValueSetSymbol("EBIMSK0_MEMTYPE", ebiSym_EBICS0_CSADDR)
+    ebiSym_EBIMSK0_MEMTYPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK0")
     ebiSym_EBIMSK0_MEMTYPE.setLabel(ebiBitFld_EBIMSK0_MEMTYPE.getAttribute("caption"))
     ebiSym_EBIMSK0_MEMTYPE.setDefaultValue(0)
     ebiSym_EBIMSK0_MEMTYPE.setOutputMode("Value")
@@ -607,6 +631,7 @@ def instantiateComponent(ebiComponent):
     ebiREGSEL_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_REGSEL, ebiREGSEL_names)
     ebiSym_EBIMSK0_REGSEL = ebiComponent.createKeyValueSetSymbol("EBIMSK0_REGSEL", ebiSym_EBICS0_CSADDR)
+    ebiSym_EBIMSK0_REGSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK0")
     ebiSym_EBIMSK0_REGSEL.setLabel(ebiBitFld_EBIMSK0_REGSEL.getAttribute("caption"))
     ebiSym_EBIMSK0_REGSEL.setDefaultValue(0)
     ebiSym_EBIMSK0_REGSEL.setOutputMode("Value")
@@ -625,6 +650,7 @@ def instantiateComponent(ebiComponent):
     ebiMEMSIZE_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_MEMSIZE, ebiMEMSIZE_names)
     ebiSym_EBIMSK1_MEMSIZE = ebiComponent.createKeyValueSetSymbol("EBIMSK1_MEMSIZE", ebiSym_EBICS1_CSADDR)
+    ebiSym_EBIMSK1_MEMSIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK1")
     ebiSym_EBIMSK1_MEMSIZE.setLabel(ebiBitFld_EBIMSK0_MEMSIZE.getAttribute("caption"))
     ebiSym_EBIMSK1_MEMSIZE.setDefaultValue(0)
     ebiSym_EBIMSK1_MEMSIZE.setOutputMode("Value")
@@ -636,6 +662,7 @@ def instantiateComponent(ebiComponent):
     ebiMEMTYPE_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_MEMTYPE, ebiMEMTYPE_names)
     ebiSym_EBIMSK1_MEMTYPE = ebiComponent.createKeyValueSetSymbol("EBIMSK1_MEMTYPE", ebiSym_EBICS1_CSADDR)
+    ebiSym_EBIMSK1_MEMTYPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK1")
     ebiSym_EBIMSK1_MEMTYPE.setLabel(ebiBitFld_EBIMSK0_MEMTYPE.getAttribute("caption"))
     ebiSym_EBIMSK1_MEMTYPE.setDefaultValue(0)
     ebiSym_EBIMSK1_MEMTYPE.setOutputMode("Value")
@@ -647,6 +674,7 @@ def instantiateComponent(ebiComponent):
     ebiREGSEL_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_REGSEL, ebiREGSEL_names)
     ebiSym_EBIMSK1_REGSEL = ebiComponent.createKeyValueSetSymbol("EBIMSK1_REGSEL", ebiSym_EBICS1_CSADDR)
+    ebiSym_EBIMSK1_REGSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK1")
     ebiSym_EBIMSK1_REGSEL.setLabel(ebiBitFld_EBIMSK0_REGSEL.getAttribute("caption"))
     ebiSym_EBIMSK1_REGSEL.setDefaultValue(0)
     ebiSym_EBIMSK1_REGSEL.setOutputMode("Value")
@@ -665,6 +693,7 @@ def instantiateComponent(ebiComponent):
     ebiMEMSIZE_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_MEMSIZE, ebiMEMSIZE_names)
     ebiSym_EBIMSK2_MEMSIZE = ebiComponent.createKeyValueSetSymbol("EBIMSK2_MEMSIZE", ebiSym_EBICS2_CSADDR)
+    ebiSym_EBIMSK2_MEMSIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK2")
     ebiSym_EBIMSK2_MEMSIZE.setLabel(ebiBitFld_EBIMSK0_MEMSIZE.getAttribute("caption"))
     ebiSym_EBIMSK2_MEMSIZE.setDefaultValue(0)
     ebiSym_EBIMSK2_MEMSIZE.setOutputMode("Value")
@@ -676,6 +705,7 @@ def instantiateComponent(ebiComponent):
     ebiMEMTYPE_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_MEMTYPE, ebiMEMTYPE_names)
     ebiSym_EBIMSK2_MEMTYPE = ebiComponent.createKeyValueSetSymbol("EBIMSK2_MEMTYPE", ebiSym_EBICS2_CSADDR)
+    ebiSym_EBIMSK2_MEMTYPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK2")
     ebiSym_EBIMSK2_MEMTYPE.setLabel(ebiBitFld_EBIMSK0_MEMTYPE.getAttribute("caption"))
     ebiSym_EBIMSK2_MEMTYPE.setDefaultValue(0)
     ebiSym_EBIMSK2_MEMTYPE.setOutputMode("Value")
@@ -687,6 +717,7 @@ def instantiateComponent(ebiComponent):
     ebiREGSEL_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_REGSEL, ebiREGSEL_names)
     ebiSym_EBIMSK2_REGSEL = ebiComponent.createKeyValueSetSymbol("EBIMSK2_REGSEL", ebiSym_EBICS2_CSADDR)
+    ebiSym_EBIMSK2_REGSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK2")
     ebiSym_EBIMSK2_REGSEL.setLabel(ebiBitFld_EBIMSK0_REGSEL.getAttribute("caption"))
     ebiSym_EBIMSK2_REGSEL.setOutputMode("Value")
     ebiSym_EBIMSK2_REGSEL.setDisplayMode("Description")
@@ -705,6 +736,7 @@ def instantiateComponent(ebiComponent):
     ebiMEMSIZE_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_MEMSIZE, ebiMEMSIZE_names)
     ebiSym_EBIMSK3_MEMSIZE = ebiComponent.createKeyValueSetSymbol("EBIMSK3_MEMSIZE", ebiSym_EBICS3_CSADDR)
+    ebiSym_EBIMSK3_MEMSIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK3")
     ebiSym_EBIMSK3_MEMSIZE.setLabel(ebiBitFld_EBIMSK0_MEMSIZE.getAttribute("caption"))
     ebiSym_EBIMSK3_MEMSIZE.setDefaultValue(0)
     ebiSym_EBIMSK3_MEMSIZE.setOutputMode("Value")
@@ -716,6 +748,7 @@ def instantiateComponent(ebiComponent):
     ebiMEMTYPE_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_MEMTYPE, ebiMEMTYPE_names)
     ebiSym_EBIMSK3_MEMTYPE = ebiComponent.createKeyValueSetSymbol("EBIMSK3_MEMTYPE", ebiSym_EBICS3_CSADDR)
+    ebiSym_EBIMSK3_MEMTYPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK3")
     ebiSym_EBIMSK3_MEMTYPE.setLabel(ebiBitFld_EBIMSK0_MEMTYPE.getAttribute("caption"))
     ebiSym_EBIMSK3_MEMTYPE.setDefaultValue(0)
     ebiSym_EBIMSK3_MEMTYPE.setOutputMode("Value")
@@ -727,6 +760,7 @@ def instantiateComponent(ebiComponent):
     ebiREGSEL_names = []
     _get_bitfield_names(ebiValGrp_EBIMSK0_REGSEL, ebiREGSEL_names)
     ebiSym_EBIMSK3_REGSEL = ebiComponent.createKeyValueSetSymbol("EBIMSK3_REGSEL", ebiSym_EBICS3_CSADDR)
+    ebiSym_EBIMSK3_REGSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIMSK3")
     ebiSym_EBIMSK3_REGSEL.setLabel(ebiBitFld_EBIMSK0_REGSEL.getAttribute("caption"))
     ebiSym_EBIMSK3_REGSEL.setOutputMode("Value")
     ebiSym_EBIMSK3_REGSEL.setDisplayMode("Description")
@@ -747,6 +781,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT0_Comment.setLabel("EBI Static Memory Timing 0 (EBISMT0)")
 
     ebiSym_EBISMT0_TRC = ebiComponent.createIntegerSymbol("EBISMT0_TRC", ebiSym_EBISMT0_Comment)
+    ebiSym_EBISMT0_TRC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT0")
     ebiSym_EBISMT0_TRC.setLabel(ebiBitFld_EBISMT0_TRC.getAttribute("caption"))
     ebiSym_EBISMT0_TRC.setDefaultValue(11)
     ebiSym_EBISMT0_TRC.setMin(0)
@@ -754,6 +789,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT0_TRC.setVisible(True)
 
     ebiSym_EBISMT0_TAS = ebiComponent.createIntegerSymbol("EBISMT0_TAS", ebiSym_EBISMT0_Comment)
+    ebiSym_EBISMT0_TAS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT0")
     ebiSym_EBISMT0_TAS.setLabel(ebiBitFld_EBISMT0_TAS.getAttribute("caption"))
     ebiSym_EBISMT0_TAS.setDefaultValue(1)
     ebiSym_EBISMT0_TAS.setMin(0)
@@ -761,6 +797,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT0_TAS.setVisible(True)
 
     ebiSym_EBISMT0_TWR = ebiComponent.createIntegerSymbol("EBISMT0_TWR", ebiSym_EBISMT0_Comment)
+    ebiSym_EBISMT0_TWR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT0")
     ebiSym_EBISMT0_TWR.setLabel(ebiBitFld_EBISMT0_TWR.getAttribute("caption"))
     ebiSym_EBISMT0_TWR.setDefaultValue(1)
     ebiSym_EBISMT0_TWR.setMin(0)
@@ -768,6 +805,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT0_TWR.setVisible(True)
 
     ebiSym_EBISMT0_TWP = ebiComponent.createIntegerSymbol("EBISMT0_TWP", ebiSym_EBISMT0_Comment)
+    ebiSym_EBISMT0_TWP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT0")
     ebiSym_EBISMT0_TWP.setLabel(ebiBitFld_EBISMT0_TWP.getAttribute("caption"))
     ebiSym_EBISMT0_TWP.setDefaultValue(11)
     ebiSym_EBISMT0_TWP.setMin(0)
@@ -775,6 +813,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT0_TWP.setVisible(True)
 
     ebiSym_EBISMT0_TBTA = ebiComponent.createIntegerSymbol("EBISMT0_TBTA", ebiSym_EBISMT0_Comment)
+    ebiSym_EBISMT0_TBTA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT0")
     ebiSym_EBISMT0_TBTA.setLabel(ebiBitFld_EBISMT0_TBTA.getAttribute("caption"))
     ebiSym_EBISMT0_TBTA.setDefaultValue(4)
     ebiSym_EBISMT0_TBTA.setMin(0)
@@ -782,6 +821,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT0_TBTA.setVisible(True)
 
     ebiSym_EBISMT0_TPRC = ebiComponent.createIntegerSymbol("EBISMT0_TPRC", ebiSym_EBISMT0_Comment)
+    ebiSym_EBISMT0_TPRC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT0")
     ebiSym_EBISMT0_TPRC.setLabel(ebiBitFld_EBISMT0_TPRC.getAttribute("caption"))
     ebiSym_EBISMT0_TPRC.setDefaultValue(3)
     ebiSym_EBISMT0_TPRC.setMin(0)
@@ -789,6 +829,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT0_TPRC.setVisible(True)
 
     ebiSym_EBISMT0_PAGEMODE = ebiComponent.createBooleanSymbol("EBISMT0_PAGEMODE", ebiSym_EBISMT0_Comment)
+    ebiSym_EBISMT0_PAGEMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT0")
     ebiSym_EBISMT0_PAGEMODE.setLabel(ebiBitFld_EBISMT0_PAGEMODE.getAttribute("caption"))
     ebiSym_EBISMT0_PAGEMODE.setDefaultValue(False)
     ebiSym_EBISMT0_PAGEMODE.setVisible(True)
@@ -796,6 +837,7 @@ def instantiateComponent(ebiComponent):
     ebiPAGESIZE_names = []
     _get_bitfield_names(ebiValGrp_EBISMT0_PAGESIZE, ebiPAGESIZE_names)
     ebiSym_EBISMT0_PAGESIZE = ebiComponent.createKeyValueSetSymbol("EBISMT0_PAGESIZE", ebiSym_EBISMT0_Comment)
+    ebiSym_EBISMT0_PAGESIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT0")
     ebiSym_EBISMT0_PAGESIZE.setLabel(ebiBitFld_EBISMT0_PAGESIZE.getAttribute("caption"))
     ebiSym_EBISMT0_PAGESIZE.setDefaultValue(0)
     ebiSym_EBISMT0_PAGESIZE.setOutputMode("Value")
@@ -805,6 +847,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT0_PAGESIZE.setVisible(True)
 
     ebiSym_EBISMT0_RDYMODE = ebiComponent.createBooleanSymbol("EBISMT0_RDYMODE", ebiSym_EBISMT0_Comment)
+    ebiSym_EBISMT0_RDYMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT0")
     ebiSym_EBISMT0_RDYMODE.setLabel(ebiBitFld_EBISMT0_RDYMODE.getAttribute("caption"))
     ebiSym_EBISMT0_RDYMODE.setDefaultValue(False)
     ebiSym_EBISMT0_RDYMODE.setVisible(True)
@@ -829,6 +872,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT1_Comment.setLabel("EBI Static Memory Timing 1 (EBISMT1)")
 
     ebiSym_EBISMT1_TRC = ebiComponent.createIntegerSymbol("EBISMT1_TRC", ebiSym_EBISMT1_Comment)
+    ebiSym_EBISMT1_TRC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT1")
     ebiSym_EBISMT1_TRC.setLabel(ebiBitFld_EBISMT0_TRC.getAttribute("caption"))
     ebiSym_EBISMT1_TRC.setDefaultValue(11)
     ebiSym_EBISMT1_TRC.setMin(0)
@@ -836,6 +880,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT1_TRC.setVisible(True)
 
     ebiSym_EBISMT1_TAS = ebiComponent.createIntegerSymbol("EBISMT1_TAS", ebiSym_EBISMT1_Comment)
+    ebiSym_EBISMT1_TAS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT1")
     ebiSym_EBISMT1_TAS.setLabel(ebiBitFld_EBISMT0_TAS.getAttribute("caption"))
     ebiSym_EBISMT1_TAS.setDefaultValue(1)
     ebiSym_EBISMT1_TAS.setMin(0)
@@ -843,6 +888,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT1_TAS.setVisible(True)
 
     ebiSym_EBISMT1_TWR = ebiComponent.createIntegerSymbol("EBISMT1_TWR", ebiSym_EBISMT1_Comment)
+    ebiSym_EBISMT1_TWR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT1")
     ebiSym_EBISMT1_TWR.setLabel(ebiBitFld_EBISMT0_TWR.getAttribute("caption"))
     ebiSym_EBISMT1_TWR.setDefaultValue(1)
     ebiSym_EBISMT1_TWR.setMin(0)
@@ -850,6 +896,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT1_TWR.setVisible(True)
 
     ebiSym_EBISMT1_TWP = ebiComponent.createIntegerSymbol("EBISMT1_TWP", ebiSym_EBISMT1_Comment)
+    ebiSym_EBISMT1_TWP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT1")
     ebiSym_EBISMT1_TWP.setLabel(ebiBitFld_EBISMT0_TWP.getAttribute("caption"))
     ebiSym_EBISMT1_TWP.setDefaultValue(11)
     ebiSym_EBISMT1_TWP.setMin(0)
@@ -857,6 +904,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT1_TWP.setVisible(True)
 
     ebiSym_EBISMT1_TBTA = ebiComponent.createIntegerSymbol("EBISMT1_TBTA", ebiSym_EBISMT1_Comment)
+    ebiSym_EBISMT1_TBTA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT1")
     ebiSym_EBISMT1_TBTA.setLabel(ebiBitFld_EBISMT0_TBTA.getAttribute("caption"))
     ebiSym_EBISMT1_TBTA.setDefaultValue(4)
     ebiSym_EBISMT1_TBTA.setMin(0)
@@ -864,6 +912,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT1_TBTA.setVisible(True)
 
     ebiSym_EBISMT1_TPRC = ebiComponent.createIntegerSymbol("EBISMT1_TPRC", ebiSym_EBISMT1_Comment)
+    ebiSym_EBISMT1_TPRC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT1")
     ebiSym_EBISMT1_TPRC.setLabel(ebiBitFld_EBISMT0_TPRC.getAttribute("caption"))
     ebiSym_EBISMT1_TPRC.setDefaultValue(3)
     ebiSym_EBISMT1_TPRC.setMin(0)
@@ -871,6 +920,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT1_TPRC.setVisible(True)
 
     ebiSym_EBISMT1_PAGEMODE = ebiComponent.createBooleanSymbol("EBISMT1_PAGEMODE", ebiSym_EBISMT1_Comment)
+    ebiSym_EBISMT1_PAGEMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT1")
     ebiSym_EBISMT1_PAGEMODE.setLabel(ebiBitFld_EBISMT0_PAGEMODE.getAttribute("caption"))
     ebiSym_EBISMT1_PAGEMODE.setDefaultValue(False)
     ebiSym_EBISMT1_PAGEMODE.setVisible(True)
@@ -878,6 +928,7 @@ def instantiateComponent(ebiComponent):
     ebiPAGESIZE_names = []
     _get_bitfield_names(ebiValGrp_EBISMT0_PAGESIZE, ebiPAGESIZE_names)
     ebiSym_EBISMT1_PAGESIZE = ebiComponent.createKeyValueSetSymbol("EBISMT1_PAGESIZE", ebiSym_EBISMT1_Comment)
+    ebiSym_EBISMT1_PAGESIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT1")
     ebiSym_EBISMT1_PAGESIZE.setLabel(ebiBitFld_EBISMT0_PAGESIZE.getAttribute("caption"))
     ebiSym_EBISMT1_PAGESIZE.setDefaultValue(0)
     ebiSym_EBISMT1_PAGESIZE.setOutputMode("Value")
@@ -887,6 +938,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT1_PAGESIZE.setVisible(True)
 
     ebiSym_EBISMT1_RDYMODE = ebiComponent.createBooleanSymbol("EBISMT1_RDYMODE", ebiSym_EBISMT1_Comment)
+    ebiSym_EBISMT1_RDYMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT1")
     ebiSym_EBISMT1_RDYMODE.setLabel(ebiBitFld_EBISMT0_RDYMODE.getAttribute("caption"))
     ebiSym_EBISMT1_RDYMODE.setDefaultValue(False)
     ebiSym_EBISMT1_RDYMODE.setVisible(True)
@@ -911,6 +963,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT2_Comment.setLabel("EBI Static Memory Timing 2 (EBISMT2)")
 
     ebiSym_EBISMT2_TRC = ebiComponent.createIntegerSymbol("EBISMT2_TRC", ebiSym_EBISMT2_Comment)
+    ebiSym_EBISMT2_TRC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT2")
     ebiSym_EBISMT2_TRC.setLabel(ebiBitFld_EBISMT0_TRC.getAttribute("caption"))
     ebiSym_EBISMT2_TRC.setDefaultValue(11)
     ebiSym_EBISMT2_TRC.setMin(0)
@@ -918,6 +971,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT2_TRC.setVisible(True)
 
     ebiSym_EBISMT2_TAS = ebiComponent.createIntegerSymbol("EBISMT2_TAS", ebiSym_EBISMT2_Comment)
+    ebiSym_EBISMT2_TAS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT2")
     ebiSym_EBISMT2_TAS.setLabel(ebiBitFld_EBISMT0_TAS.getAttribute("caption"))
     ebiSym_EBISMT2_TAS.setDefaultValue(1)
     ebiSym_EBISMT2_TAS.setMin(0)
@@ -925,6 +979,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT2_TAS.setVisible(True)
 
     ebiSym_EBISMT2_TWR = ebiComponent.createIntegerSymbol("EBISMT2_TWR", ebiSym_EBISMT2_Comment)
+    ebiSym_EBISMT2_TWR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT2")
     ebiSym_EBISMT2_TWR.setLabel(ebiBitFld_EBISMT0_TWR.getAttribute("caption"))
     ebiSym_EBISMT2_TWR.setDefaultValue(1)
     ebiSym_EBISMT2_TWR.setMin(0)
@@ -932,6 +987,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT2_TWR.setVisible(True)
 
     ebiSym_EBISMT2_TWP = ebiComponent.createIntegerSymbol("EBISMT2_TWP", ebiSym_EBISMT2_Comment)
+    ebiSym_EBISMT2_TWP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT2")
     ebiSym_EBISMT2_TWP.setLabel(ebiBitFld_EBISMT0_TWP.getAttribute("caption"))
     ebiSym_EBISMT2_TWP.setDefaultValue(11)
     ebiSym_EBISMT2_TWP.setMin(0)
@@ -939,6 +995,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT2_TWP.setVisible(True)
 
     ebiSym_EBISMT2_TBTA = ebiComponent.createIntegerSymbol("EBISMT2_TBTA", ebiSym_EBISMT2_Comment)
+    ebiSym_EBISMT2_TBTA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT2")
     ebiSym_EBISMT2_TBTA.setLabel(ebiBitFld_EBISMT0_TBTA.getAttribute("caption"))
     ebiSym_EBISMT2_TBTA.setDefaultValue(4)
     ebiSym_EBISMT2_TBTA.setMin(0)
@@ -946,6 +1003,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT2_TBTA.setVisible(True)
 
     ebiSym_EBISMT2_TPRC = ebiComponent.createIntegerSymbol("EBISMT2_TPRC", ebiSym_EBISMT2_Comment)
+    ebiSym_EBISMT2_TPRC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT2")
     ebiSym_EBISMT2_TPRC.setLabel(ebiBitFld_EBISMT0_TPRC.getAttribute("caption"))
     ebiSym_EBISMT2_TPRC.setDefaultValue(3)
     ebiSym_EBISMT2_TPRC.setMin(0)
@@ -953,6 +1011,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT2_TPRC.setVisible(True)
 
     ebiSym_EBISMT2_PAGEMODE = ebiComponent.createBooleanSymbol("EBISMT2_PAGEMODE", ebiSym_EBISMT2_Comment)
+    ebiSym_EBISMT2_PAGEMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT2")
     ebiSym_EBISMT2_PAGEMODE.setLabel(ebiBitFld_EBISMT0_PAGEMODE.getAttribute("caption"))
     ebiSym_EBISMT2_PAGEMODE.setDefaultValue(False)
     ebiSym_EBISMT2_PAGEMODE.setVisible(True)
@@ -960,6 +1019,7 @@ def instantiateComponent(ebiComponent):
     ebiPAGESIZE_names = []
     _get_bitfield_names(ebiValGrp_EBISMT0_PAGESIZE, ebiPAGESIZE_names)
     ebiSym_EBISMT2_PAGESIZE = ebiComponent.createKeyValueSetSymbol("EBISMT2_PAGESIZE", ebiSym_EBISMT2_Comment)
+    ebiSym_EBISMT2_PAGESIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT2")
     ebiSym_EBISMT2_PAGESIZE.setLabel(ebiBitFld_EBISMT0_PAGESIZE.getAttribute("caption"))
     ebiSym_EBISMT2_PAGESIZE.setDefaultValue(0)
     ebiSym_EBISMT2_PAGESIZE.setOutputMode("Value")
@@ -969,6 +1029,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT2_PAGESIZE.setVisible(True)
 
     ebiSym_EBISMT2_RDYMODE = ebiComponent.createBooleanSymbol("EBISMT2_RDYMODE", ebiSym_EBISMT2_Comment)
+    ebiSym_EBISMT2_RDYMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMT2")
     ebiSym_EBISMT2_RDYMODE.setLabel(ebiBitFld_EBISMT0_RDYMODE.getAttribute("caption"))
     ebiSym_EBISMT2_RDYMODE.setDefaultValue(False)
     ebiSym_EBISMT2_RDYMODE.setVisible(True)
@@ -989,6 +1050,7 @@ def instantiateComponent(ebiComponent):
 
     #EBIFTRPD
     ebiSym_EBIFTRPD_TRPD = ebiComponent.createHexSymbol("EBIFTRPD_TRPD", None)
+    ebiSym_EBIFTRPD_TRPD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBIFTRPD")
     ebiSym_EBIFTRPD_TRPD.setLabel(ebiBitFld_EBIFTRPD_TRPD.getAttribute("caption"))
     ebiSym_EBIFTRPD_TRPD.setDefaultValue(200)
     ebiSym_EBIFTRPD_TRPD.setMin(0)
@@ -999,6 +1061,7 @@ def instantiateComponent(ebiComponent):
     ebiSMDWIDTH_names = []
     _get_bitfield_names(ebiValGrp_EBISMCON_SMDWIDTH0, ebiSMDWIDTH_names)
     ebiSym_EBISMCON_SMDWIDTH0 = ebiComponent.createKeyValueSetSymbol("EBISMCON_SMDWIDTH0", ebiSym_EBISMT0_Comment)
+    ebiSym_EBISMCON_SMDWIDTH0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMCON")
     ebiSym_EBISMCON_SMDWIDTH0.setLabel(ebiBitFld_EBISMCON_SMDWIDTH0.getAttribute("caption"))
 
     ebiSym_EBISMCON_SMDWIDTH0.setOutputMode("Value")
@@ -1009,6 +1072,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMCON_SMDWIDTH0.setVisible(True)
 
     ebiSym_EBISMCON_SMDWIDTH1 = ebiComponent.createKeyValueSetSymbol("EBISMCON_SMDWIDTH1", ebiSym_EBISMT1_Comment)
+    ebiSym_EBISMCON_SMDWIDTH1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMCON")
     ebiSym_EBISMCON_SMDWIDTH1.setLabel(ebiBitFld_EBISMCON_SMDWIDTH1.getAttribute("caption"))
     ebiSym_EBISMCON_SMDWIDTH1.setDefaultValue(0)
     ebiSym_EBISMCON_SMDWIDTH1.setOutputMode("Value")
@@ -1018,6 +1082,7 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMCON_SMDWIDTH1.setVisible(True)
 
     ebiSym_EBISMCON_SMDWIDTH2 = ebiComponent.createKeyValueSetSymbol("EBISMCON_SMDWIDTH2", ebiSym_EBISMT2_Comment)
+    ebiSym_EBISMCON_SMDWIDTH2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ebi_00109;register:EBISMCON")
     ebiSym_EBISMCON_SMDWIDTH2.setLabel(ebiBitFld_EBISMCON_SMDWIDTH2.getAttribute("caption"))
     ebiSym_EBISMCON_SMDWIDTH2.setDefaultValue(0)
     ebiSym_EBISMCON_SMDWIDTH2.setOutputMode("Value")

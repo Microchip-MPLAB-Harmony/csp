@@ -112,11 +112,13 @@ if __name__ == "__main__":
         error_sym_dep_list = []
         wdt_enable = wdt_component.createBooleanSymbol(
                                 "WDT{0}_ENABLE".format(index), dwdt_menu)
+        wdt_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_enable.setLabel("Enable WDT{0}".format(index))
         error_sym_dep_list.append(wdt_enable.getID())
 
         wdt_prescaler = wdt_component.createKeyValueSetSymbol(
             "WDT{0}_PRESCALER".format(index), wdt_enable)
+        wdt_prescaler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:WDT0_IL")
         wdt_prescaler.setLabel("Prescaler")
         prescaler_node = ATDF.getNode("/avr-tools-device-file/modules/module"
             "@[name=\"DWDT\"]/register-group@[name=\"DWDT\"]/register@[name="
@@ -134,6 +136,7 @@ if __name__ == "__main__":
 
         wdt_event = wdt_component.createComboSymbol(
             "WDT{0}_EVENT".format(index), wdt_enable, ["Reset", "Interrupt"])
+        wdt_event.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_event.setLabel ("WDT event")
         wdt_event.setDescription("Watchdog timer event configuration")
         wdt_event.setReadOnly(True)
@@ -142,6 +145,7 @@ if __name__ == "__main__":
 
         wdt_period = wdt_component.createIntegerSymbol(
                         "WDT{0}_PERIOD".format(index), wdt_enable)
+        wdt_period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:WDT0_WL")
         wdt_period.setLabel("Period count")
         wdt_period.setMin(0)
         wdt_period.setMax(max_count)
@@ -151,6 +155,7 @@ if __name__ == "__main__":
 
         wdt_period_ms = wdt_component.createIntegerSymbol(
                             "WDT{0}_PERIOD_MS".format(index), wdt_enable)
+        wdt_period_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_period_ms.setLabel("Period (ms)")
         wdt_period_ms.setReadOnly(True)
         wdt_period_ms.setDependencies(calculate_ms,
@@ -159,6 +164,7 @@ if __name__ == "__main__":
 
         wdt_level_enable = wdt_component.createBooleanSymbol(
                     "WDT{0}_LEVEL_ENABLE".format(index), wdt_enable)
+        wdt_level_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_level_enable.setLabel("Enable level interrupt")
         wdt_level_enable.setReadOnly(True)
         wdt_level_enable.setDependencies(lambda symbol, event:
@@ -167,6 +173,7 @@ if __name__ == "__main__":
 
         wdt_level = wdt_component.createIntegerSymbol(
                                 "WDT{0}_LEVEL".format(index), wdt_level_enable)
+        wdt_level.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:WDT0_IL")
         wdt_level.setLabel("Level count")
         wdt_level.setMin(0)
         wdt_level.setMax(max_count)
@@ -177,6 +184,7 @@ if __name__ == "__main__":
 
         wdt_level_ms = wdt_component.createIntegerSymbol(
                         "WDT{0}_LEVEL_MS".format(index), wdt_level_enable)
+        wdt_level_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_level_ms.setLabel("Level (ms)")
         wdt_level_ms.setReadOnly(True)
         wdt_level_ms.setDependencies(calculate_ms,
@@ -185,6 +193,7 @@ if __name__ == "__main__":
         wdt_rpth_enable = wdt_component.createComboSymbol(
                             "WDT{0}_RPTH_ENABLE".format(index), wdt_enable,
                             ["Disable", "Reset", "Interrupt"])
+        wdt_rpth_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_rpth_enable.setLabel("Repeat threshold violation event")
         wdt_rpth_enable.setDependencies(lambda symbol, event:
                 symbol.setReadOnly(not event["value"]), [wdt_enable.getID()])
@@ -193,6 +202,7 @@ if __name__ == "__main__":
 
         wdt_rpth = wdt_component.createIntegerSymbol(
                             "WDT{0}_RPTH".format(index), wdt_rpth_enable)
+        wdt_rpth.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:WDT0_WL")
         wdt_rpth.setLabel("Repeat threshold count")
         wdt_rpth.setMin(0)
         wdt_rpth.setMax(max_count)
@@ -204,6 +214,7 @@ if __name__ == "__main__":
 
         wdt_rpth_ms = wdt_component.createIntegerSymbol(
                         "WDT{0}_RPTH_MS".format(index), wdt_rpth_enable)
+        wdt_rpth_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_rpth_ms.setLabel("Repeat threshold (ms)")
         wdt_rpth_ms.setReadOnly(True)
         wdt_rpth_ms.setDependencies(calculate_ms,
@@ -213,6 +224,7 @@ if __name__ == "__main__":
 
         wdt_rlderr_enable = wdt_component.createBooleanSymbol(
                     "WDT{0}_RLDERR_ENABLE".format(index), wdt_enable)
+        wdt_rlderr_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_rlderr_enable.setLabel("Enable reload command error interrupt")
         wdt_rlderr_enable.setReadOnly(True)
         wdt_rlderr_enable.setDependencies(lambda symbol, event:
@@ -227,6 +239,7 @@ if __name__ == "__main__":
         if index == 0:
             wdt_w1perint_enable = wdt_component.createBooleanSymbol(
                         "WDT{0}_W1PERINT_ENABLE".format(index), wdt_enable)
+            wdt_w1perint_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
             wdt_w1perint_enable.setLabel("Enable watchdog 1 overflow interrupt")
             wdt_w1perint_enable.setReadOnly(True)
             wdt_w1perint_enable.setDependencies(lambda symbol, event:
@@ -235,6 +248,7 @@ if __name__ == "__main__":
 
             wdt_w1rpthint_enable = wdt_component.createBooleanSymbol(
                         "WDT{0}_W1RPTHINT_ENABLE".format(index), wdt_enable)
+            wdt_w1rpthint_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
             wdt_w1rpthint_enable.setLabel(
                                 "Enable watchdog 1 repeat threshold interrupt")
             wdt_w1rpthint_enable.setReadOnly(True)
@@ -250,6 +264,7 @@ if __name__ == "__main__":
 
         wdt_debug0_halt = wdt_component.createBooleanSymbol(
                             "WDT{0}_DBG0HLT".format(index), wdt_enable)
+        wdt_debug0_halt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_debug0_halt.setLabel("Halt on core 0 debug")
         wdt_debug0_halt.setReadOnly(True)
         wdt_debug0_halt.setDependencies(lambda symbol, event:
@@ -257,6 +272,7 @@ if __name__ == "__main__":
 
         wdt_debug1_halt = wdt_component.createBooleanSymbol(
                             "WDT{0}_DBG1HLT".format(index), wdt_enable)
+        wdt_debug1_halt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_debug1_halt.setLabel("Halt on core 1 debug")
         wdt_debug1_halt.setReadOnly(True)
         wdt_debug1_halt.setDependencies(lambda symbol, event:
@@ -264,6 +280,7 @@ if __name__ == "__main__":
 
         wdt_idle_halt = wdt_component.createBooleanSymbol(
                                     "WDT{0}_IDLEHLT".format(index), wdt_enable)
+        wdt_idle_halt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_idle_halt.setLabel("Halt on idle")
         wdt_idle_halt.setReadOnly(True)
         wdt_idle_halt.setDependencies(lambda symbol, event:
@@ -271,6 +288,7 @@ if __name__ == "__main__":
 
         wdt_nrst_assert = wdt_component.createBooleanSymbol(
                                     "WDT{0}_NRSTDIS".format(index), wdt_enable)
+        wdt_nrst_assert.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_nrst_assert.setLabel("Assert NRST pin on Reset")
         wdt_nrst_assert.setReadOnly(True)
         wdt_nrst_assert.setDependencies(lambda symbol, event:
@@ -279,6 +297,7 @@ if __name__ == "__main__":
 
         wdt_lock_config = wdt_component.createBooleanSymbol(
                                 "WDT{0}_LOCK_CONFIG".format(index), wdt_enable)
+        wdt_lock_config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:%NOREGISTER%")
         wdt_lock_config.setLabel("Lock configuration")
         wdt_lock_config.setDependencies(lambda symbol, event:
                 symbol.setReadOnly(not event["value"]), [wdt_enable.getID()])
@@ -290,6 +309,7 @@ if __name__ == "__main__":
 
             wdt_period_max = wdt_component.createIntegerSymbol(
                             "WDT{0}_PERIOD_MAX".format(index), wdt_limits_menu)
+            wdt_period_max.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:WDT1_PLIM")
             wdt_period_max.setLabel("Maximum period value")
             wdt_period_max.setMin(0)
             wdt_period_max.setMax(max_count)
@@ -297,6 +317,7 @@ if __name__ == "__main__":
 
             wdt_period_min = wdt_component.createIntegerSymbol(
                             "WDT{0}_PERIOD_MIN".format(index), wdt_limits_menu)
+            wdt_period_min.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:WDT1_PLIM")
             wdt_period_min.setLabel("Minimum period value")
             wdt_period_min.setMin(0)
             wdt_period_min.setMax(max_count)
@@ -304,6 +325,7 @@ if __name__ == "__main__":
 
             wdt_level_max = wdt_component.createIntegerSymbol(
                             "WDT{0}_LEVEL_MAX".format(index), wdt_limits_menu)
+            wdt_level_max.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:WDT1_LVLLIM")
             wdt_level_max.setLabel("Maximum level value")
             wdt_level_max.setMin(0)
             wdt_level_max.setMax(max_count)
@@ -311,6 +333,7 @@ if __name__ == "__main__":
 
             wdt_level_min = wdt_component.createIntegerSymbol(
                             "WDT{0}_LEVEL_MIN".format(index), wdt_limits_menu)
+            wdt_level_min.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:WDT1_LVLLIM")
             wdt_level_min.setLabel("Minimum level value")
             wdt_level_min.setMin(0)
             wdt_level_min.setMax(max_count)
@@ -318,6 +341,7 @@ if __name__ == "__main__":
 
             wdt_rpth_max = wdt_component.createIntegerSymbol(
                             "WDT{0}_RPTH_MAX".format(index), wdt_limits_menu)
+            wdt_rpth_max.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:WDT1_RLIM")
             wdt_rpth_max.setLabel("Maximum repeat value")
             wdt_rpth_max.setMin(0)
             wdt_rpth_max.setMax(max_count)
@@ -325,6 +349,7 @@ if __name__ == "__main__":
 
             wdt_rpth_min = wdt_component.createIntegerSymbol(
                             "WDT{0}_RPTH_MIN".format(index), wdt_limits_menu)
+            wdt_rpth_min.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_04686;register:WDT1_RLIM")
             wdt_rpth_min.setLabel("Minimum repeat value")
             wdt_rpth_min.setMin(0)
             wdt_rpth_min.setMax(max_count)

@@ -112,6 +112,7 @@ if __name__ == "__main__":
         supcSMMenu.setLabel("Supply Monitor")
 
         supcSym_SMMR_VDD3V3SMTH = supcComponent.createKeyValueSetSymbol("SUPC_SMMR_VDD3V3SMTH", supcSMMenu)
+        supcSym_SMMR_VDD3V3SMTH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_SMMR")
         supcSym_SMMR_VDD3V3SMTH.setLabel("VDD3V3 Supply Monitor Threshold")
         for index in range(len(vdd3v3SMTH)):
             supcSym_SMMR_VDD3V3SMTH.addKey(vdd3v3SMTH[index], str(index), vdd3v3SMTH[index])
@@ -120,6 +121,7 @@ if __name__ == "__main__":
         supcSym_SMMR_VDD3V3SMTH.setSelectedKey(vdd3v3SMTH[len(vdd3v3SMTH) - 1])
 
         supcSym_SMMR_VDD3V3SMSMPL = supcComponent.createKeyValueSetSymbol("SUPC_SMMR_VDD3V3SMSMPL", supcSMMenu)
+        supcSym_SMMR_VDD3V3SMSMPL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_SMMR")
         supcSym_SMMR_VDD3V3SMSMPL.setLabel("VDD3V3 Supply Monitor Sampling Period")
         supcValGrp_SMMR_VDD3V3SMSMPL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/value-group@[name="SUPC_SMMR__VDD3V3SMSMPL"]')
         supcValGrp_SMMR_VDD3V3SMSMPL_Values = supcValGrp_SMMR_VDD3V3SMSMPL.getChildren()
@@ -133,9 +135,11 @@ if __name__ == "__main__":
         supcSym_SMMR_VDD3V3SMSMPL.setDefaultValue(0)
 
         supcSym_IER_VDD3V3SMEV = supcComponent.createBooleanSymbol("SUPC_IER_VDD3V3SMEV", supcSym_SMMR_VDD3V3SMSMPL)
+        supcSym_IER_VDD3V3SMEV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_IER")
         supcSym_IER_VDD3V3SMEV.setLabel("Enable VDD3V3 Supply Monitor Event Interrupt")
 
         supcSym_SMMR_VDD3V3SMPWRM = supcComponent.createKeyValueSetSymbol("SUPC_SMMR_VDD3V3SMPWRM", supcSMMenu)
+        supcSym_SMMR_VDD3V3SMPWRM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_SMMR")
         supcSym_SMMR_VDD3V3SMPWRM.setLabel("VDD3V3 Supply Monitor Power Supply Mode")
         supcValGrp_SMMR_VDD3V3SMPWRM = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/value-group@[name="SUPC_SMMR__VDD3V3SMPWRM"]')
         supcValGrp_SMMR_VDD3V3SMPWRM_Values = supcValGrp_SMMR_VDD3V3SMPWRM.getChildren()
@@ -149,65 +153,84 @@ if __name__ == "__main__":
         supcSym_SMMR_VDD3V3SMPWRM.setDefaultValue(0)
 
         supcSym_SMMR_VDD3V3SMRSTEN = supcComponent.createBooleanSymbol("SUPC_SMMR_VDD3V3SMRSTEN", supcSMMenu)
+        supcSym_SMMR_VDD3V3SMRSTEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_SMMR")
         supcSym_SMMR_VDD3V3SMRSTEN.setLabel("Enable VDD3V3 Supply Monitor Reset")
 
         supcSym_MR_IO_BACKUP_ISO = supcComponent.createBooleanSymbol("SUPC_MR_IO_BACKUP_ISO", supcMenu)
+        supcSym_MR_IO_BACKUP_ISO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_MR")
         supcSym_MR_IO_BACKUP_ISO.setLabel("Backup Domain IO Isolation Control")
         supcSym_MR_IO_BACKUP_ISO.setDefaultValue(True)
 
         supcSym_MR_CORSMDIS = supcComponent.createBooleanSymbol("SUPC_MR_CORSMDIS", supcMenu)
+        supcSym_MR_CORSMDIS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_MR")
         supcSym_MR_CORSMDIS.setLabel("Disable VDDCORE Supply Monitor")
 
         supcSym_MR_CORSMRSTEN = supcComponent.createBooleanSymbol("SUPC_MR_CORSMRSTEN", supcMenu)
+        supcSym_MR_CORSMRSTEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_MR")
         supcSym_MR_CORSMRSTEN.setLabel("Enable VDDCORE Supply Monitor Reset")
         supcSym_MR_CORSMRSTEN.setDefaultValue(True)
 
         supcSym_MR_VREGDIS = supcComponent.createBooleanSymbol("SUPC_MR_VREGDIS", supcMenu)
+        supcSym_MR_VREGDIS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_MR")
         supcSym_MR_VREGDIS.setLabel("Disable Internal VDDCORE Voltage Regulator")
 
         supcSym_MR_CORSMM = supcComponent.createBooleanSymbol("SUPC_MR_CORSMM", supcMenu)
+        supcSym_MR_CORSMM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_MR")
         supcSym_MR_CORSMM.setLabel("VDDCORE Supply Monitor Output Mode")
 
         supcSym_EMR_COREBGEN = supcComponent.createBooleanSymbol("SUPC_EMR_COREBGEN", supcMenu)
+        supcSym_EMR_COREBGEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_EMR")
         supcSym_EMR_COREBGEN.setLabel("Enable VDDCORE Voltage Regulator Bandgap")
 
         supcSym_EMR_FULLGPBRC = supcComponent.createBooleanSymbol("SUPC_EMR_FULLGPBRC", supcMenu)
+        supcSym_EMR_FULLGPBRC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_EMR")
         supcSym_EMR_FULLGPBRC.setLabel("Full GPBR Clean")
 
         supcSym_EMR_FLRSGPBR = supcComponent.createBooleanSymbol("SUPC_EMR_FLRSGPBR", supcMenu)
+        supcSym_EMR_FLRSGPBR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_EMR")
         supcSym_EMR_FLRSGPBR.setLabel("Flash Erase GPBR")
 
         supcBMRMenu = supcComponent.createMenuSymbol("SUPC_BACKUP_MODE", supcMenu)
         supcBMRMenu.setLabel("Backup Mode Configuration")
 
         supcSym_BMR_RTTWKEN = supcComponent.createBooleanSymbol("SUPC_BMR_RTTWKEN", supcBMRMenu)
+        supcSym_BMR_RTTWKEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_BMR")
         supcSym_BMR_RTTWKEN.setLabel("Enable Real-time Timer Wake-up")
 
         supcSym_BMR_RTCWKEN = supcComponent.createBooleanSymbol("SUPC_BMR_RTCWKEN", supcBMRMenu)
+        supcSym_BMR_RTCWKEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_BMR")
         supcSym_BMR_RTCWKEN.setLabel("Enable Real-time Clock Wake-up")
 
         supcSym_BMR_VBATWKEN = supcComponent.createBooleanSymbol("SUPC_BMR_VBATWKEN", supcBMRMenu)
+        supcSym_BMR_VBATWKEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_BMR")
         supcSym_BMR_VBATWKEN.setLabel("Enable VBAT Supply Monitor Wake-up")
 
         supcSym_BMR_FWUPEN = supcComponent.createBooleanSymbol("SUPC_BMR_FWUPEN", supcBMRMenu)
+        supcSym_BMR_FWUPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_BMR")
         supcSym_BMR_FWUPEN.setLabel("Enable Force Wake-up Pin Wake-up")
 
         supcSym_BMR_CORPORWKEN = supcComponent.createBooleanSymbol("SUPC_BMR_CORPORWKEN", supcBMRMenu)
+        supcSym_BMR_CORPORWKEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_BMR")
         supcSym_BMR_CORPORWKEN.setLabel("Enable VDDCORE POR Wake-up")
 
         supcSym_BMR_VDD3V3SMWKEN = supcComponent.createBooleanSymbol("SUPC_BMR_VDD3V3SMWKEN", supcBMRMenu)
+        supcSym_BMR_VDD3V3SMWKEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_BMR")
         supcSym_BMR_VDD3V3SMWKEN.setLabel("Enable VDD3V3 Supply Monitor Wake-up")
 
         supcSym_BMR_VBATREN = supcComponent.createBooleanSymbol("SUPC_BMR_VBATREN", supcBMRMenu)
+        supcSym_BMR_VBATREN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_BMR")
         supcSym_BMR_VBATREN.setLabel("Enable Battery Voltage Event Report")
 
         supcSym_IER_VBATSMEV = supcComponent.createBooleanSymbol("SUPC_IER_VBATSMEV", supcSym_BMR_VBATREN)
+        supcSym_IER_VBATSMEV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_IER")
         supcSym_IER_VBATSMEV.setLabel("Enable VBAT Supply Monitor Event Interrupt")
 
         supcSym_BMR_MRTCOUT = supcComponent.createBooleanSymbol("SUPC_BMR_MRTCOUT", supcBMRMenu)
+        supcSym_BMR_MRTCOUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_BMR")
         supcSym_BMR_MRTCOUT.setLabel("RTCOUT0 Outputs Drive Mode")
 
         supcSym_BMR_BADXTWKEN = supcComponent.createBooleanSymbol("SUPC_BMR_BADXTWKEN", supcBMRMenu)
+        supcSym_BMR_BADXTWKEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_BMR")
         supcSym_BMR_BADXTWKEN.setLabel("Enable Slow Crystal Oscillator Frequency Error Wake-up")
 
         supcRegister_WUMR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_WUMR"]')
@@ -229,6 +252,7 @@ if __name__ == "__main__":
             supcWKUPMenu.setLabel("Configure Wakeup Pins (WKUPx)")
 
             supcSym_WUMR_WKUPDBC = supcComponent.createKeyValueSetSymbol("SUPC_WUMR_WKUPDBC", supcWKUPMenu)
+            supcSym_WUMR_WKUPDBC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_WUMR")
             supcSym_WUMR_WKUPDBC.setLabel("Minimum Pulse Width for Wakeup Input")
 
             supcValGrp_WUMR_WKUPDBC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/value-group@[name="SUPC_WUMR__WKUPDBC"]')
@@ -249,6 +273,7 @@ if __name__ == "__main__":
             supcSym_PULSE_WIDTH_COMMENT.setDependencies(calcPulseWidth, ["SUPC_WUMR_WKUPDBC"])
 
             supcSym_WUMR_FWUPDBC = supcComponent.createKeyValueSetSymbol("SUPC_WUMR_FWUPDBC", supcWKUPMenu)
+            supcSym_WUMR_FWUPDBC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_WUMR")
             supcSym_WUMR_FWUPDBC.setLabel("Force Pulse Width for Wakeup Input")
 
             supcValGrp_WUMR_FWUPDBC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/value-group@[name="SUPC_WUMR__FWUPDBC"]')
@@ -304,12 +329,14 @@ if __name__ == "__main__":
             for id in range (0, len(signal)):
                 supcSym_WUIR_WKUPEN.append(id)
                 supcSym_WUIR_WKUPEN[id] = supcComponent.createBooleanSymbol("SUPC_WUIR_WKUPEN" + str(id), supcWKUPMenu)
+                supcSym_WUIR_WKUPEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_WUIR")
                 supcSym_WUIR_WKUPEN[id].setLabel("Enable WKUP" + str(id) + " Input")
                 if signal[id] == False:
                     supcSym_WUIR_WKUPEN[id].setVisible(False)
 
                 supcSym_WUIR_WKUPT.append(id)
                 supcSym_WUIR_WKUPT[id] = supcComponent.createKeyValueSetSymbol("SUPC_WUIR_WKUPT" + str(id), supcSym_WUIR_WKUPEN[id])
+                supcSym_WUIR_WKUPT[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:%NOREGISTER%")
                 supcSym_WUIR_WKUPT[id].setLabel("Select Wakeup Edge")
                 supcSym_WUIR_WKUPT[id].addKey("LOW", "0", "Falling Edge")
                 supcSym_WUIR_WKUPT[id].addKey("HIGH", "1", "Rising Edge")
@@ -333,6 +360,7 @@ if __name__ == "__main__":
             for id in range (0, 5):
                 supcSym_WUMR_LPDBC.append(id)
                 supcSym_WUMR_LPDBC[id] = supcComponent.createKeyValueSetSymbol("SUPC_WUMR_LPDBC" + str(id), supcDBMenu)
+                supcSym_WUMR_LPDBC[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:%NOREGISTER%")
                 supcSym_WUMR_LPDBC[id].setLabel("Minimum Pulse Width on WKUP" + str(id) + " pin")
                 supcValGrp_WUMR_LPDBC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/value-group@[name="SUPC_WUMR__LPDBC' + str(id) + '"]')
                 supcValGrp_WUMR_LPDBC_Values = supcValGrp_WUMR_LPDBC.getChildren()
@@ -347,10 +375,12 @@ if __name__ == "__main__":
 
                 supcSym_WUMR_LPDBCEN.append(id)
                 supcSym_WUMR_LPDBCEN[id] = supcComponent.createBooleanSymbol("SUPC_WUMR_LPDBCEN" + str(id), supcDBMenu)
+                supcSym_WUMR_LPDBCEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:%NOREGISTER%")
                 supcSym_WUMR_LPDBCEN[id].setLabel("Enable Low-Power Debouncer WKUP" + str(id))
 
                 supcSym_IER_LPDBC.append(id)
                 supcSym_IER_LPDBC[id] = supcComponent.createBooleanSymbol("SUPC_IER_LPDBC" + str(id), supcDBMenu)
+                supcSym_IER_LPDBC[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_04670;register:SUPC_IER")
                 supcSym_IER_LPDBC[id].setLabel("Enable WKUP" + str(id) + " Pin Tamper Detection Interrupt")
 
             ############################################################################

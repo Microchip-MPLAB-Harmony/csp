@@ -115,6 +115,7 @@ def instantiateComponent(sefcComponent):
 
     # Flash Read Wait State (RWS).
     nvm_rws = sefcComponent.createIntegerSymbol("NVM_RWS", sefcMenu)
+    nvm_rws.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sefc_04463;register:EEFC_FMR")
     nvm_rws.setLabel("Wait States")
     nvm_rws.setMin(0)
     nvm_rws.setMax(15)
@@ -123,9 +124,11 @@ def instantiateComponent(sefcComponent):
 
     #Create a Checkbox to enable disable interrupts
     sefcInterrupt = sefcComponent.createBooleanSymbol("INTERRUPT_ENABLE", sefcMenu)
+    sefcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sefc_04463;register:%NOREGISTER%")
     sefcInterrupt.setLabel("Enable Interrupts")
 
     sefcMemoryDriver = sefcComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", sefcMenu)
+    sefcMemoryDriver.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sefc_04463;register:%NOREGISTER%")
     sefcMemoryDriver.setLabel("Memory Driver Connected")
     sefcMemoryDriver.setVisible(False)
     sefcMemoryDriver.setDefaultValue(False)
@@ -135,6 +138,7 @@ def instantiateComponent(sefcComponent):
     nvmOffset = str(hex(int(sefcFlashStartAddress.getValue(),16) + offsetStart))
 
     sefcMemoryStartAddr = sefcComponent.createStringSymbol("START_ADDRESS", sefcMenu)
+    sefcMemoryStartAddr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sefc_04463;register:%NOREGISTER%")
     sefcMemoryStartAddr.setLabel("NVM Media Start Address")
     sefcMemoryStartAddr.setVisible(False)
     sefcMemoryStartAddr.setDefaultValue(nvmOffset[2:])
@@ -143,6 +147,7 @@ def instantiateComponent(sefcComponent):
     memMediaSizeKB = (offsetStart / 1024)
 
     sefcMemoryMediaSize = sefcComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", sefcMenu)
+    sefcMemoryMediaSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sefc_04463;register:%NOREGISTER%")
     sefcMemoryMediaSize.setLabel("NVM Media Size (KB)")
     sefcMemoryMediaSize.setVisible(False)
     sefcMemoryMediaSize.setDefaultValue(memMediaSizeKB)
@@ -150,11 +155,13 @@ def instantiateComponent(sefcComponent):
 
     sefcMemoryEraseEnable = sefcComponent.createBooleanSymbol("ERASE_ENABLE", None)
     sefcMemoryEraseEnable.setLabel("NVM Erase Enable")
+    sefcMemoryEraseEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sefc_04463;register:%NOREGISTER%")
     sefcMemoryEraseEnable.setVisible(False)
     sefcMemoryEraseEnable.setDefaultValue(True)
     sefcMemoryEraseEnable.setReadOnly(True)
 
     sefcMemoryEraseBufferSize = sefcComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", sefcMenu)
+    sefcMemoryEraseBufferSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sefc_04463;register:%NOREGISTER%")
     sefcMemoryEraseBufferSize.setLabel("NVM Erase Buffer Size")
     sefcMemoryEraseBufferSize.setVisible(False)
     sefcMemoryEraseBufferSize.setDefaultValue(int(sefcFlashEraseSize.getValue()))

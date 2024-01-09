@@ -118,11 +118,13 @@ def instantiateComponent(freqmComponent):
 
     #FREQM Interrupt Mode
     freqmSym_INTERRUPTMODE = freqmComponent.createBooleanSymbol("FREQM_INTERRUPT_MODE", None)
+    freqmSym_INTERRUPTMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:freqm_u2257;register:INTENSET")
     freqmSym_INTERRUPTMODE.setLabel("Enable Interrupt ?")
     freqmSym_INTERRUPTMODE.setDescription("Selection of polled or Interrupt Mode")
 
     #FREQM Selection of the division for the Reference Clock
     freqmSym_CFGA_DIVREF = freqmComponent.createBooleanSymbol("FREQM_REF_CLK_DIV", None)
+    freqmSym_CFGA_DIVREF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:freqm_u2257;register:CFGA")
     freqmSym_CFGA_DIVREF.setLabel("Divide reference clock by 8")
     freqmSym_CFGA_DIVREF.setDescription("selection of either refclk1 or refclk8")
     freqmSym_CFGA_DIVREF.setVisible(False)
@@ -146,6 +148,7 @@ def instantiateComponent(freqmComponent):
 
     #FREQM Selection of the Reference Clock Cycles
     freqmSym_CFGA_REFNUM = freqmComponent.createKeyValueSetSymbol("FREQM_REF_CLK_CYCLES", None)
+    freqmSym_CFGA_REFNUM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:freqm_u2257;register:CFGA")
     freqmSym_CFGA_REFNUM.setLabel("Measurement Time (Ref Cycles)")
     freqmSym_CFGA_REFNUM.setDescription(" Measurement Time specified in terms of reference clock cycles")
     freqmSym_CFGA_REFNUM.addKey("1_CLOCK", "1", "1 Clock Cycles")

@@ -51,6 +51,7 @@ def create_bool_symbols(component, parent, reg_name, bit_name):
     if bf_node is not None:
         bit_symbol = component.createBooleanSymbol(
                                 "{0}_{1}".format(reg_name, bit_name), parent)
+        bit_symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_04678;register:RSTC_MR")
         bit_symbol.setLabel(bf_node.getAttribute("caption"))
         mask = int(bf_node.getAttribute("mask"), 0)
         if (mask & init_val) != 0:
@@ -106,6 +107,7 @@ if __name__ == "__main__":
 
     ursten = rstc_component.createKeyValueSetSymbol("RSTC_MR_URSTEN",
                                                                     rstc_menu)
+    ursten.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_04678;register:RSTC_MR")
     ursten.setLabel("Low level on NRST pin will trigger")
     ursten.addKey("Reset", "0", "Generates Reset")
     ursten.addKey("Interrupt", "1", "Generates Interrupt")
@@ -118,6 +120,7 @@ if __name__ == "__main__":
     if pwrsw_node is not None:
         pwrsw = rstc_component.createKeyValueSetSymbol("RSTC_MR_PWRSW",
                                                                  rstc_menu)
+        pwrsw.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_04678;register:RSTC_MR")
         pwrsw.setLabel(pwrsw_node.getAttribute("caption"))
         pwrsw_vg_node = get_value_group_node(pwrsw_node.getAttribute("values"))
         for value in pwrsw_vg_node.getChildren():
@@ -163,6 +166,7 @@ if __name__ == "__main__":
     erstl_node = get_bit_field_node("RSTC_MR", "ERSTL")
     if erstl_node is not None:
         erstl = rstc_component.createIntegerSymbol("RSTC_MR_ERSTL", rstc_menu)
+        erstl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_04678;register:RSTC_MR")
         erstl.setLabel(erstl_node.getAttribute("caption"))
         erstl.setMin(0)
         erstl.setMax(2**4 - 1)

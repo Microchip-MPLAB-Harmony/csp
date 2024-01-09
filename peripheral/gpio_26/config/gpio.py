@@ -208,6 +208,7 @@ gpioSymAPI_Prefix.setDefaultValue("GPIO")
 gpioSymAPI_Prefix.setVisible(False)
 
 gpioEnable = coreComponent.createBooleanSymbol("GPIO_ENABLE", gpioMenu)
+gpioEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
 gpioEnable.setLabel("Use GPIO PLIB ?")
 gpioEnable.setDefaultValue(True)
 gpioEnable.setReadOnly(True)
@@ -221,6 +222,7 @@ for id in range(0,len(packageNode.getChildren())):
 uniquePinout = len(set(package.values()))
 
 gpioPackage = coreComponent.createComboSymbol("COMPONENT_PACKAGE", gpioEnable, package.keys())
+gpioPackage.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
 gpioPackage.setLabel("Pin Package")
 gpioPackage.setReadOnly(True)
 
@@ -305,11 +307,13 @@ for pinNumber in range(1, internalPincount + 1):
     pinCtrlRegIndex.setVisible(False)
 
     pinName = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin)
+    pinName.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinName.setLabel("Name")
     pinName.setDefaultValue("")
     pinName.setReadOnly(True)
 
     pinType = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_TYPE", pin)
+    pinType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinType.setLabel("Type")
     pinType.setReadOnly(True)
 
@@ -318,55 +322,67 @@ for pinNumber in range(1, internalPincount + 1):
     gpioSym_PinPad.setDefaultValue(pinPad)
 
     pinPeripheralFunction = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pin)
+    pinPeripheralFunction.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinPeripheralFunction.setLabel("Peripheral Selection")
     pinPeripheralFunction.setReadOnly(True)
 
     pinDirection = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pin)
+    pinDirection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinDirection.setLabel("Direction")
     pinDirection.setReadOnly(True)
 
     pinLatch = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pin)
+    pinLatch.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:LAT")
     pinLatch.setLabel("Initial Latch Value")
     pinLatch.setReadOnly(True)
 
     pin_PU_PD_Enable = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PUPD", pin)
+    pin_PU_PD_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pin_PU_PD_Enable.setLabel("Pull Up / Pull Down Enable")
     pin_PU_PD_Enable.setReadOnly(True)
 
     pinInterruptDetection = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_INTDET", pin)
+    pinInterruptDetection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinInterruptDetection.setLabel("Interrupt Detection")
     pinInterruptDetection.setReadOnly(True)
 
     pinGIRQNum = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_GIRQNUM", pin)
+    pinGIRQNum.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinGIRQNum.setLabel("GIRQ Number")
     pinGIRQNum.setReadOnly(False)
     pinGIRQNum.setDefaultValue(0)
     pinGIRQNum.setVisible(False)
 
     pinGIRQBitPos = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_GIRQBITPOS", pin)
+    pinGIRQBitPos.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinGIRQBitPos.setLabel("GIRQ Bit Position")
     pinGIRQBitPos.setReadOnly(False)
     pinGIRQBitPos.setDefaultValue(0)
     pinGIRQBitPos.setVisible(False)
 
     pinPolarity = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_POLARITY", pin)
+    pinPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinPolarity.setLabel("Polarity")
     pinPolarity.setReadOnly(True)
 
     pinInputDisable = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_INDIS", pin)
+    pinInputDisable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinInputDisable.setLabel("Input Disable")
     pinInputDisable.setVisible(False)
     pinInputDisable.setReadOnly(True)
 
     pinOutputBufferType = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_OUTBUFTYPE", pin)
+    pinOutputBufferType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinOutputBufferType.setLabel("Output Buffer Type")
     pinOutputBufferType.setReadOnly(True)
 
     pinDriveStrength = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DRVSTR", pin)
+    pinDriveStrength.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinDriveStrength.setLabel("Drive Strength")
     pinDriveStrength.setReadOnly(True)
 
     pinSlewRate = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_SLEW_RATE", pin)
+    pinSlewRate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_26;register:%NOREGISTER%")
     pinSlewRate.setLabel("Slew Rate")
     pinSlewRate.setReadOnly(True)
 

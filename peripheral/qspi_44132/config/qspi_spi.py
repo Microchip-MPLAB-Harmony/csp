@@ -62,6 +62,7 @@ qspiValGrp_MR_NBBITS = qspiRegModule.getValueGroup(qspiBitField_MR_NBBITS.getVal
 # number of bits per transfer
 count = qspiValGrp_MR_NBBITS.getValueCount()
 qspiNBBITS = qspiComponent.createKeyValueSetSymbol("QSPI_NBBITS", qspiMenu)
+qspiNBBITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:QSPI_MR")
 qspiNBBITS.setLabel(qspiBitField_MR_NBBITS.getDescription())
 qspiNBBITS.setVisible(False)
 qspiNBBITS.setOutputMode("Value")
@@ -115,6 +116,7 @@ qspiSym_CSR_NCPHA_LE_Mask.setVisible(False)
 
 qspiSymDummyData = qspiComponent.createHexSymbol("SPI_DUMMY_DATA", None)
 qspiSymDummyData.setVisible(False)
+qspiSymDummyData.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:%NOREGISTER%")
 qspiSymDummyData.setLabel("Dummy Data")
 qspiSymDummyData.setDescription("Dummy Data to be written during SPI Read")
 qspiSymDummyData.setDefaultValue(0xFFFF)

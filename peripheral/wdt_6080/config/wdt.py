@@ -34,6 +34,7 @@ wdtMenu = coreComponent.createMenuSymbol("WDT_MENU_0", None)
 wdtMenu.setLabel("WDT")
 
 wdtEnable = coreComponent.createBooleanSymbol("wdtENABLE", wdtMenu)
+wdtEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_6080;register:%NOREGISTER%")
 wdtEnable.setLabel("Enable Watchdog Timer?")
 wdtEnable.setDefaultValue(False)
 
@@ -55,6 +56,7 @@ wdtCfgMenu.setDependencies(wdtEnableCfgMenu, ["wdtENABLE"])
 wdtCfgMenu.setVisible(False)
 
 wdtReset = coreComponent.createBooleanSymbol("wdtEnableReset", wdtCfgMenu)
+wdtReset.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_6080;register:%NOREGISTER%")
 wdtReset.setLabel("Enable Reset")
 wdtReset.setDefaultValue(True)
 
@@ -66,12 +68,14 @@ def wdtResetEnable(wdtInterrupt, event):
         wdtInterrupt.setVisible(True)
 
 wdtInterrupt = coreComponent.createBooleanSymbol("wdtinterruptMode", wdtCfgMenu)
+wdtInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_6080;register:%NOREGISTER%")
 wdtInterrupt.setLabel("Enable Interrupts")
 wdtInterrupt.setDefaultValue(False)
 wdtInterrupt.setDependencies(wdtResetEnable, ["wdtEnableReset"])
 wdtInterrupt.setVisible(False)
 
 wdtCounterValue = coreComponent.createIntegerSymbol("wdtWDV", wdtCfgMenu)
+wdtCounterValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_6080;register:WDT_MR")
 wdtCounterValue.setLabel("Counter value")
 wdtCounterValue.setMax(0xfff)
 wdtCounterValue.setDefaultValue(0xfff)
@@ -81,12 +85,14 @@ def wdtcounter_cal(wdtCounterValueTime, event):
     wdtCounterValueTime.setValue(int(round(data)),2)
 
 wdtCounterValueTime = coreComponent.createIntegerSymbol("wdtWDVTIME", wdtCfgMenu)
+wdtCounterValueTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_6080;register:%NOREGISTER%")
 wdtCounterValueTime.setLabel("WDT Counter value in ms")
 wdtCounterValueTime.setDependencies(wdtcounter_cal, ["wdtWDV"])
 wdtCounterValueTime.setReadOnly(True)
 wdtCounterValueTime.setDefaultValue(15996)
 
 wdtDeltaValue = coreComponent.createIntegerSymbol("wdtWDD", wdtCfgMenu)
+wdtDeltaValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_6080;register:WDT_MR")
 wdtDeltaValue.setLabel("Delta value")
 wdtDeltaValue.setMax(0xfff)
 wdtDeltaValue.setDefaultValue(0xfff)
@@ -96,16 +102,19 @@ def wdtdelta_cal(wdtDeltaValueTime, event):
     wdtDeltaValueTime.setValue(int(round(data)),2)
 
 wdtDeltaValueTime = coreComponent.createIntegerSymbol("wdtWDDTIME", wdtCfgMenu)
+wdtDeltaValueTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_6080;register:%NOREGISTER%")
 wdtDeltaValueTime.setLabel("WDT Delta value in ms")
 wdtDeltaValueTime.setDependencies(wdtdelta_cal, ["wdtWDD"])
 wdtDeltaValueTime.setReadOnly(True)
 wdtDeltaValueTime.setDefaultValue(15996)
 
 wdtDebugHalt = coreComponent.createBooleanSymbol("wdtdebugHalt", wdtCfgMenu)
+wdtDebugHalt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_6080;register:%NOREGISTER%")
 wdtDebugHalt.setLabel("Enable Debug halt")
 wdtDebugHalt.setDefaultValue(False)
 
 wdtIdleHalt = coreComponent.createBooleanSymbol("wdtidleHalt", wdtCfgMenu)
+wdtIdleHalt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_6080;register:%NOREGISTER%")
 wdtIdleHalt.setLabel("Enable Idle halt")
 wdtIdleHalt.setDefaultValue(False)
 
@@ -147,6 +156,7 @@ wdtinterruptControl.setVisible(False)
 wdtCrNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"WDT\"]/register-group/register@[name=\"WDT_MR\"]/bitfield@[name=\"WDRPROC\"]")
 if wdtCrNode != None:
     wdrProc = coreComponent.createKeyValueSetSymbol("WDT_MR_WDRPROC", wdtCfgMenu)
+    wdrProc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_6080;register:%NOREGISTER%")
     wdrProc.setLabel("WDT Resets")
     wdrProc.addKey("System", "0", "WDT resets peripherals and processor")
     wdrProc.addKey("PROCESSOR", "1", "WDT resets processor")
@@ -157,6 +167,7 @@ if wdtCrNode != None:
 wdtCrLockNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"WDT\"]/register-group/register@[name=\"WDT_CR\"]/bitfield@[name=\"LOCKMR\"]")
 if wdtCrLockNode is not None:
     lockMr = coreComponent.createBooleanSymbol("WDT_CR_LOCKMR", wdtCfgMenu)
+    lockMr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_6080;register:WDT_CR")
     lockMr.setLabel("Lock watchdog after initialization ")
     lockMr.setDescription("If the watchdog is locked, its configurations cannot be modified after initialization")
     lockMr.setDefaultValue(True)

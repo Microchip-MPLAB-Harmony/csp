@@ -922,6 +922,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
     sym_calc_freq_menu = clk_comp.createMenuSymbol("CALC_CLOCK_FREQ_MENU", clk_menu)
     sym_calc_freq_menu.setLabel("Calculated Clock Frequencies")
     sys_clk_freq = clk_comp.createStringSymbol("SYS_CLK_FREQ", sym_calc_freq_menu)
+    sys_clk_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     sys_clk_freq.setLabel("System Clock Frequency (Hz)")
     node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__SYS_DEF_FREQ"]')
     sys_clk_freq.setDefaultValue(node.getAttribute("value"))
@@ -929,6 +930,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
 
     # CPU_CLOCK_FREQUENCY symbol is needed for SYS_TIME
     cpu_clk_freq = clk_comp.createStringSymbol("CPU_CLOCK_FREQUENCY", sym_calc_freq_menu)
+    cpu_clk_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     cpu_clk_freq.setLabel("CPU Clock Frequency (Hz)")
     cpu_clk_freq.setReadOnly(True)
     cpu_clk_freq.setDefaultValue(node.getAttribute("value"))
@@ -936,23 +938,27 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
 
     # output clock frequency for this BTPLL
     btpllclkFreq = clk_comp.createStringSymbol('BTCLK', sym_calc_freq_menu)
+    btpllclkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     btpllclkFreq.setDefaultValue('0')  # by default disabled
     btpllclkFreq.setLabel("Bluetooth Clock Frequency (Hz)")
     btpllclkFreq.setVisible(True)
 
     # output clock frequencies for this PLL - there are 2 signals generated
     ethclkFreq = clk_comp.createStringSymbol('ETHCLK', sym_calc_freq_menu)
+    ethclkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     ethclkFreq.setDefaultValue('0')   # by default disabled
     ethclkFreq.setLabel("Ethernet Clock Frequency (Hz)")
     ethclkFreq.setVisible(True)
 
     wificlkFreq = clk_comp.createStringSymbol('WIFICLK', sym_calc_freq_menu)
+    wificlkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     wificlkFreq.setDefaultValue('0')   # by default disabled
     wificlkFreq.setLabel("Wifi Clock Frequency (Hz)")
     wificlkFreq.setVisible(True)
 
     # output clock frequency for this PLL
     upllclkFreq = clk_comp.createStringSymbol('USBCLK', sym_calc_freq_menu)
+    upllclkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     upllclkFreq.setDefaultValue('0')   # by default disabled
     upllclkFreq.setLabel("USB Clock Frequency (Hz)")
     upllclkFreq.setVisible(True)
@@ -966,6 +972,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
         symbolPbFreqList.append([])
         targetName = "CONFIG_SYS_CLK_PBCLK" + clkInstance + "_FREQ"
         symbolPbFreqList[index] = clk_comp.createStringSymbol(targetName, sym_calc_freq_menu)
+        symbolPbFreqList[index].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
         symbolPbFreqList[index].setLabel("Peripheral Bus Clock #"+clkInstance+" Frequency (Hz)")
         targetName = "__PB" + clkInstance + "_DEF_FREQ"
         params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
@@ -982,6 +989,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
         symbolRefoscFreqList.append([])
         targetName = "CONFIG_SYS_CLK_REFCLK"+ii+"_FREQ"
         symbolRefoscFreqList[index] = clk_comp.createStringSymbol(targetName, sym_calc_freq_menu)
+        symbolRefoscFreqList[index].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
         symbolRefoscFreqList[index].setLabel("Reference Clock #"+ii+" Frequency (Hz)")
         symbolRefoscFreqList[index].setVisible(True)
         symbolRefoscFreqList[index].setDefaultValue("0")
@@ -991,6 +999,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
         index += 1
 
     dswdt_clk_freq = clk_comp.createIntegerSymbol("DSWDT_CLOCK_FREQUENCY", sym_calc_freq_menu)
+    dswdt_clk_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     dswdt_clk_freq.setLabel("Deep Sleep WDT Clock Frequency (Hz)")
     dswdt_clk_freq.setDefaultValue(dswdtClockDefaultFreq())
     dswdt_clk_freq.setReadOnly(True)
@@ -1195,6 +1204,7 @@ def scan_atdf_for_btpllcon_fields(component, parentMenu, regNode, enableSymbolId
                     ii['symvaluename'].setDefaultValue(_get_default_value(clkRegGrp_BTPLLCON, ii['name'], where))
                 else:   # numeric bitfield (no <value-group ..> section associated with it)
                     ii['symvaluename'] = component.createIntegerSymbol('BTPLLCON_'+ii['name']+'_VALUE', parentMenu)
+                    ii['symvaluename'].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
                     ii['symvaluename'].setDefaultValue(_get_default_value(clkRegGrp_BTPLLCON, ii['name'], 'None'))
                     if('min' in ii.keys()):
                         ii['symvaluename'].setMin(int(ii['min']))
@@ -1273,6 +1283,7 @@ def scan_atdf_for_ewpllcon_fields(component, parentMenu, regNode, enableSymbolId
                     ii['symvaluename'].setDefaultValue(_get_default_value(clkRegGrp_EWPLLCON, ii['name'], where))
                 else:   # numeric bitfield (no <value-group ..> section associated with it)
                     ii['symvaluename'] = component.createIntegerSymbol('EWPLLCON_'+ii['name']+'_VALUE', parentMenu)
+                    ii['symvaluename'].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
                     ii['symvaluename'].setDefaultValue(_get_default_value(clkRegGrp_EWPLLCON, ii['name'], 'None'))
                     if('min' in ii.keys()):
                         ii['symvaluename'].setMin(int(ii['min']))
@@ -1349,6 +1360,7 @@ def scan_atdf_for_upllcon_fields(component, parentMenu, regNode, enableSymbolId)
                     ii['symvaluename'].setDefaultValue(_get_default_value(clkRegGrp_UPLLCON, ii['name'], where))
                 else:   # numeric bitfield (no <value-group ..> section associated with it)
                     ii['symvaluename'] = component.createIntegerSymbol('UPLLCON_'+ii['name']+'_VALUE', parentMenu)
+                    ii['symvaluename'].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
                     ii['symvaluename'].setDefaultValue(_get_default_value(clkRegGrp_UPLLCON, ii['name'], 'None'))
                     if('min' in ii.keys()):
                         ii['symvaluename'].setMin(int(ii['min']))
@@ -1420,6 +1432,7 @@ def scan_atdf_for_spllcon_fields(component, parentMenu, regNode):
                     ii['symvaluename'].setDefaultValue(_get_default_value(clkRegGrp_SPLLCON, ii['name'], where))
                 else:   # numeric bitfield (no <value-group ..> section associated with it)
                     ii['symvaluename'] = component.createIntegerSymbol('SPLLCON_'+ii['name']+'_VALUE', parentMenu)
+                    ii['symvaluename'].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
                     ii['symvaluename'].setDefaultValue(_get_default_value(clkRegGrp_SPLLCON, ii['name'], 'None'))
                     if('min' in ii.keys()):
                         ii['symvaluename'].setMin(int(ii['min']))
@@ -1513,6 +1526,7 @@ def scan_atdf_for_osccon_fields(component, parentMenu, regNode):
                         ii['symvaluename'].setDependencies(item_update, ["core."+targetSym])  # update SOSCEN whenever user updates DEVCFG4:SOSCEN
                 else:   # numeric bitfield (no <value-group ..> section associated with it)
                     ii['symvaluename'] = component.createIntegerSymbol('OSCCON_'+ii['name']+'_VALUE', parentMenu)
+                    ii['symvaluename'].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
                     ii['symvaluename'].setDefaultValue(_get_default_value(clkRegGrp_OSCCON, ii['name'], 'None'))
                     if('min' in ii.keys()):
                         ii['symvaluename'].setMin(int(ii['min']))
@@ -1635,18 +1649,21 @@ if __name__ == "__main__":
 
     usbPllEnSymId = "USBPLL_ENABLE"
     UPLL_CFG_SETTINGS = coreComponent.createBooleanSymbol(usbPllEnSymId, CLK_CFG_SETTINGS)
+    UPLL_CFG_SETTINGS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     UPLL_CFG_SETTINGS.setLabel("Enable USB PLL")
     UPLL_CFG_SETTINGS.setDescription("Sets whether to have USBPLL enabled")
     UPLL_CFG_SETTINGS.setDefaultValue(False)
 
     ewpllEnSymId = "EWPLL_ENABLE"
     EWPLL_CFG_SETTINGS = coreComponent.createBooleanSymbol(ewpllEnSymId, CLK_CFG_SETTINGS)
+    EWPLL_CFG_SETTINGS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     EWPLL_CFG_SETTINGS.setLabel("Enable Ethernet/Wifi PLL")
     EWPLL_CFG_SETTINGS.setDescription("Sets whether to have EWPLL enabled")
     EWPLL_CFG_SETTINGS.setDefaultValue(False)
 
     btpllEnSymId = "BTPLL_ENABLE"
     BTPLL_CFG_SETTINGS = coreComponent.createBooleanSymbol(btpllEnSymId, CLK_CFG_SETTINGS)
+    BTPLL_CFG_SETTINGS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     BTPLL_CFG_SETTINGS.setLabel("Enable Bluetooth PLL")
     BTPLL_CFG_SETTINGS.setDescription("Sets whether to have BTPLL enabled")
     BTPLL_CFG_SETTINGS.setDefaultValue(False)
@@ -1816,6 +1833,7 @@ if __name__ == "__main__":
 
     # Hiding temperature range selection feature for now - no such specification mentioned
     TEMP_RANGE = coreComponent.createKeyValueSetSymbol("CONFIG_TEMPERATURE_RANGE", CLK_CFG_SETTINGS)
+    TEMP_RANGE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     TEMP_RANGE.setLabel("Operating Temperature Range")
     TEMP_RANGE.setDescription("Maximum allowed System Clock Frequency will depend on selected Temperature Range")
     TEMP_RANGE.setVisible(False)
@@ -1823,6 +1841,7 @@ if __name__ == "__main__":
     TEMP_RANGE.setDisplayMode("Description")
 
     max_clk_freq_for_selected_temp = coreComponent.createIntegerSymbol("MAX_CLK_FREQ_FOR_SELECTED_TEMP_RANGE", CLK_CFG_SETTINGS)
+    max_clk_freq_for_selected_temp.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     max_clk_freq_for_selected_temp.setLabel("Max System Clock Frequency (HZ) For Selected Temperature")
     max_clk_freq_for_selected_temp.setReadOnly(True)
     max_clk_freq_for_selected_temp.setVisible(False)
@@ -1836,6 +1855,7 @@ if __name__ == "__main__":
     max_clk_freq_for_selected_temp.setDependencies(updateMaxFreq, ["CONFIG_TEMPERATURE_RANGE"])
 
     HAVE_REFCLK = coreComponent.createBooleanSymbol("CONFIG_HAVE_REFCLOCK", CLK_CFG_SETTINGS)
+    HAVE_REFCLK.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     HAVE_REFCLK.setLabel("Have reference clock available")
     HAVE_REFCLK.setVisible(False)
     HAVE_REFCLK.setDefaultValue(True)
@@ -1844,6 +1864,7 @@ if __name__ == "__main__":
     soscen = {}
     _get_bitfield_names(clkValGrp_CFGCON4__SOSCEN, soscen)
     SOSC_EN_SETTING = coreComponent.createComboSymbol("CONFIG_SYS_CLK_CONFIG_SOSCEN", CLK_CFG_SETTINGS, sorted(soscen.keys()))
+    SOSC_EN_SETTING.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     SOSC_EN_SETTING.setLabel("Secondary oscillator enable")
     SOSC_EN_SETTING.setDescription(clkValGrp_CFGCON4__SOSCEN.getAttribute('caption'))
     SOSC_EN_SETTING.setVisible(False)
@@ -1887,6 +1908,7 @@ if __name__ == "__main__":
         symbolDivId = "CONFIG_SYS_CLK_PBDIV"+pbus
         labelDivVal = "Peripheral Clock Bus #"+pbus+" Divisor (1-128)"
         symbolEnName = coreComponent.createBooleanSymbol(symbolEnId, CLK_CFG_SETTINGS)
+        symbolEnName.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
         pbclkEnNameList.append(symbolEnId)
         symbolEnName.setLabel(labelEnVal)
         if(pbus=='1'):
@@ -1895,6 +1917,7 @@ if __name__ == "__main__":
 
         # PBDIV field
         symbolDivName = coreComponent.createIntegerSymbol(symbolDivId, symbolEnName)
+        symbolDivName.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
         if(pbus!='1'):  # cannot disable peripheral bus 1
             symbolDivName.setDependencies(enableMenu, [symbolEnId])
         symbolDivName.setLabel(labelDivVal)
@@ -1931,6 +1954,7 @@ if __name__ == "__main__":
 
         enSymId = "CONFIG_SYS_CLK_REFCLK"+clk+"_ENABLE"
         enSymbolList[listIndex] = coreComponent.createBooleanSymbol(enSymId, CLK_CFG_SETTINGS)
+        enSymbolList[listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
         enSymbolList[listIndex].setLabel("Enable Reference Clock "+clk)
         enSymbolList[listIndex].setDescription("Sets whether to have reference clock 1 enabled")
         enSymbolList[listIndex].setDefaultValue(False)
@@ -1938,6 +1962,7 @@ if __name__ == "__main__":
         # output enable of ref clk
         oeSymId = "CONFIG_SYS_CLK_REFCLK"+clk+"_OE"
         oeSymbolList[listIndex] = coreComponent.createBooleanSymbol(oeSymId, enSymbolList[listIndex])
+        oeSymbolList[listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
         oeSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
         oeSymbolList[listIndex].setLabel("Reference Clock "+clk+" Output Enable")
         oeSymbolList[listIndex].setDescription("Sets whether to have reference clock 1 output enable")
@@ -1952,6 +1977,7 @@ if __name__ == "__main__":
         roselsrc = {}
         _get_bitfield_names(clkValGrp_REFO1CON__ROSEL, roselsrc)
         sourceSymbolList[listIndex] = coreComponent.createComboSymbol(srcSymId, enSymbolList[listIndex], sorted(roselsrc.keys()))
+        sourceSymbolList[listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
         sourceSymbolList[listIndex].setLabel("Reference Clock Source Select ROSEL")
         sourceSymbolList[listIndex].setDescription(clkValGrp_REFO1CON__ROSEL.getAttribute('caption'))
         sourceSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
@@ -1966,6 +1992,7 @@ if __name__ == "__main__":
         maxValue, minValue = find_max_min(clkValGrp_REFO1CON__RODIV)
         rodivSymId = "CONFIG_SYS_CLK_RODIV"+clk
         rodivSymbolList[listIndex] = coreComponent.createIntegerSymbol(rodivSymId, enSymbolList[listIndex])
+        rodivSymbolList[listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
         rodivSymbolList[listIndex].setLabel("Select Reference Clock Output Divider RODIV")
         rodivSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
         rodivSymbolList[listIndex].setMin(minValue)
@@ -1978,6 +2005,7 @@ if __name__ == "__main__":
         maxValue, minValue = find_max_min(clkValGrp_REFO1TRIM__ROTRIM)
         rotrimSymId = "CONFIG_SYS_CLK_ROTRIM"+clk
         rotrimSymbolList[listIndex] = coreComponent.createIntegerSymbol(rotrimSymId, enSymbolList[listIndex])
+        rotrimSymbolList[listIndex].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
         rotrimSymbolList[listIndex].setLabel("Select Reference Clock Output Trim Value ROTRIM")
         rotrimSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
         rotrimSymbolList[listIndex].setMin(minValue)
@@ -2007,6 +2035,7 @@ if __name__ == "__main__":
 
     # primary oscillator frequency
     POSC_IN_FREQ = coreComponent.createIntegerSymbol("CONFIG_SYS_CLK_CONFIG_PRIMARY_XTAL", CLK_CFG_SETTINGS)
+    POSC_IN_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     POSC_IN_FREQ.setLabel("Primary Oscillator Input Frequency (Hz)")
     POSC_IN_FREQ.setDependencies(updatePoscFreq, ["CONFIG_SYS_CLK_CONFIG_PRIMARY_XTAL"])
     node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__POSC_DEF_FREQ"]')
@@ -2014,6 +2043,7 @@ if __name__ == "__main__":
 
     # secondary oscillator frequency
     SOSC_IN_FREQ = coreComponent.createIntegerSymbol("CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL", CLK_CFG_SETTINGS)
+    SOSC_IN_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     SOSC_IN_FREQ.setLabel("Secondary Oscillator Input Frequency (Hz)")
     node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__SOSC_DEF_FREQ"]')
     newPoscFreq = node.getAttribute("value")
@@ -2021,6 +2051,7 @@ if __name__ == "__main__":
 
     # REFCLKI pin frequency
     REFCLKI_IN_FREQ = coreComponent.createIntegerSymbol("CONFIG_SYS_CLK_CONFIG_REFCLKI_PIN", CLK_CFG_SETTINGS)
+    REFCLKI_IN_FREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
     REFCLKI_IN_FREQ.setLabel("REFCLKI Input Pin Frequency (Hz)")
     node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__REFCLKI_DEF_FREQ"]')
     newRefclkiFreq = node.getAttribute("value")
@@ -2077,6 +2108,7 @@ if __name__ == "__main__":
         if peripheralName.startswith("REFO") or peripheralName.startswith("BA414E") or peripheralName.startswith("WIFI") or peripheralName in availablePeripherals:
             sym_peripheral_clock_enable.append(peripheralName + "_CLOCK_ENABLE")
             peripheral_clock_enable = coreComponent.createBooleanSymbol(peripheralName + "_CLOCK_ENABLE", peripheralClockMenu)
+            peripheral_clock_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
             peripheral_clock_enable.setLabel(peripheralName + " Clock Enable")
             peripheral_clock_enable.setReadOnly(len(peripheralBus) == 1)
 
@@ -2087,6 +2119,7 @@ if __name__ == "__main__":
 
             sym_peripheral_clock_freq.append(peripheralName + "_CLOCK_FREQUENCY")
             peripheral_clock_freq = coreComponent.createIntegerSymbol(peripheralName + "_CLOCK_FREQUENCY", peripheral_clock_enable)
+            peripheral_clock_freq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
             peripheral_clock_freq.setLabel(peripheralName + " Clock Frequency")
             peripheral_clock_freq.setReadOnly(True)
 
@@ -2144,6 +2177,7 @@ if __name__ == "__main__":
 
     for i in range(1, pmdCount + 1):
         pmdxRegMaskValue = coreComponent.createHexSymbol("PMD" + str(i) + "_REG_VALUE", peripheralModuleDisableMenu)
+        pmdxRegMaskValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_pic32mzw;register:%NOREGISTER%")
         pmdxRegMaskValue.setLabel("PMD" + str(i) + " Register Value")
         pmdxRegMaskValue.setDefaultValue(pmdDict[i])
         pmdxRegMaskValue.setReadOnly(True)

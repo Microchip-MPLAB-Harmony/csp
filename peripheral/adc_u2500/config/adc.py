@@ -554,6 +554,7 @@ def instantiateComponent(adcComponent):
     #slave mode
     global adcSym_CTRLA_SLAVEEN
     adcSym_CTRLA_SLAVEEN = adcComponent.createBooleanSymbol("ADC_CTRLA_SLAVEEN", None)
+    adcSym_CTRLA_SLAVEEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:CTRLA")
     adcSym_CTRLA_SLAVEEN.setLabel("Enable Slave")
     adcSym_CTRLA_SLAVEEN.setDefaultValue(False)
     mode = "0"
@@ -571,6 +572,7 @@ def instantiateComponent(adcComponent):
     #prescaler configuration
     global adcSym_CTRLB_PRESCALER
     adcSym_CTRLB_PRESCALER = adcComponent.createKeyValueSetSymbol("ADC_CTRLA_PRESCALER", None)
+    adcSym_CTRLB_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:CTRLA")
     adcSym_CTRLB_PRESCALER.setLabel("Select Prescaler")
     adcSym_CTRLB_PRESCALER.setDefaultValue(2)
     adcSym_CTRLB_PRESCALER.setOutputMode("Key")
@@ -585,6 +587,7 @@ def instantiateComponent(adcComponent):
     #sampling time
     global adcSym_SAMPCTRL_SAMPLEN
     adcSym_SAMPCTRL_SAMPLEN = adcComponent.createIntegerSymbol("ADC_SAMPCTRL_SAMPLEN", None)
+    adcSym_SAMPCTRL_SAMPLEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:SAMPCTRL")
     adcSym_SAMPCTRL_SAMPLEN.setLabel("Select Sample Length (cycles)")
     adcSym_SAMPCTRL_SAMPLEN.setMin(1)
     adcSym_SAMPCTRL_SAMPLEN.setMax(64)
@@ -610,6 +613,7 @@ def instantiateComponent(adcComponent):
 
     #reference selection
     adcSym_REFCTRL_REFSEL = adcComponent.createKeyValueSetSymbol("ADC_REFCTRL_REFSEL", None)
+    adcSym_REFCTRL_REFSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:REFCTRL")
     adcSym_REFCTRL_REFSEL.setLabel("Select Reference")
     default = 0
     adcSym_REFCTRL_REFSEL.setOutputMode("Key")
@@ -629,11 +633,13 @@ def instantiateComponent(adcComponent):
     #trigger
     global adcSym_CONV_TRIGGER
     adcSym_CONV_TRIGGER = adcComponent.createComboSymbol("ADC_CONV_TRIGGER", None, ["Free Run", "SW Trigger", "HW Event Trigger"])
+    adcSym_CONV_TRIGGER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:EVCTRL")
     adcSym_CONV_TRIGGER.setDefaultValue("Free Run")
     adcSym_CONV_TRIGGER.setLabel("Select Conversion Trigger")
     adcSym_CONV_TRIGGER.setDependencies(adcSlaveModeVisibility, ["ADC_CTRLA_SLAVEEN"])
 
     adcSym_FLUSH_EVENT = adcComponent.createKeyValueSetSymbol("ADC_EVCTRL_FLUSH", adcSym_CONV_TRIGGER)
+    adcSym_FLUSH_EVENT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:EVCTRL")
     adcSym_FLUSH_EVENT.setLabel("Flush Event Input")
     adcSym_FLUSH_EVENT.setVisible(False)
     adcSym_FLUSH_EVENT.setOutputMode("Value")
@@ -644,6 +650,7 @@ def instantiateComponent(adcComponent):
     adcSym_FLUSH_EVENT.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
 
     adcSym_START_EVENT = adcComponent.createKeyValueSetSymbol("ADC_EVCTRL_START", adcSym_CONV_TRIGGER)
+    adcSym_START_EVENT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:EVCTRL")
     adcSym_START_EVENT.setLabel("Start Event Input")
     adcSym_START_EVENT.setVisible(False)
     adcSym_START_EVENT.setOutputMode("Value")
@@ -655,6 +662,7 @@ def instantiateComponent(adcComponent):
 
     global adcSym_SEQ_ENABLE
     adcSym_SEQ_ENABLE = adcComponent.createBooleanSymbol("ADC_SEQ_ENABLE", None)
+    adcSym_SEQ_ENABLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:DSEQCTRL")
     adcSym_SEQ_ENABLE.setLabel("Enable DMA Sequencing")
     adcSym_SEQ_ENABLE.setDependencies(adcDmaVisible, ["ADC_SEQ_ENABLE"])
 
@@ -665,6 +673,7 @@ def instantiateComponent(adcComponent):
     for index in range(0, len(adcSequenceInputValues)):
         adcSym_SEQCTRL_SEQ.append(index)
         adcSym_SEQCTRL_SEQ[index] = adcComponent.createBooleanSymbol("ADC_SEQCTRL_SEQ"+str(index), adcSym_SEQ_ENABLE)
+        adcSym_SEQCTRL_SEQ[index].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:DSEQCTRL")
         adcSym_SEQCTRL_SEQ[index].setLabel("Enable "+ str(adcSequenceInputValues[index].getAttribute("caption")))
         adcSym_SEQCTRL_SEQ[index].setDependencies(adcOptionVisible, ["ADC_SEQ_ENABLE"])
         adcSym_SEQCTRL_SEQ[index].setVisible(False)
@@ -685,6 +694,7 @@ def instantiateComponent(adcComponent):
 
     #positive input
     adcSym_INPUTCTRL_MUXPOS = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_MUXPOS", adcChannelMenu)
+    adcSym_INPUTCTRL_MUXPOS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:INPUTCTRL")
     adcSym_INPUTCTRL_MUXPOS.setLabel("Select Positive Input")
     adcSym_INPUTCTRL_MUXPOS.setDefaultValue(0)
     adcSym_INPUTCTRL_MUXPOS.setOutputMode("Key")
@@ -711,6 +721,7 @@ def instantiateComponent(adcComponent):
 
     #negative input
     adcSym_INPUTCTRL_MUXNEG = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_MUXNEG", adcChannelMenu)
+    adcSym_INPUTCTRL_MUXNEG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:INPUTCTRL")
     adcSym_INPUTCTRL_MUXNEG.setLabel("Select Negative Input")
     adcSym_INPUTCTRL_MUXNEG.setOutputMode("Key")
     adcSym_INPUTCTRL_MUXNEG.setDisplayMode("Description")
@@ -748,6 +759,7 @@ def instantiateComponent(adcComponent):
     #resolution configuration
     global adcSym_CTRLC_RESSEL
     adcSym_CTRLC_RESSEL = adcComponent.createKeyValueSetSymbol("ADC_CTRLB_RESSEL", adcResultMenu)
+    adcSym_CTRLC_RESSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:CTRLB")
     adcSym_CTRLC_RESSEL.setLabel("Select Result Resolution")
     adcSym_CTRLC_RESSEL.setDefaultValue(0)
     adcSym_CTRLC_RESSEL.setOutputMode("Key")
@@ -761,12 +773,14 @@ def instantiateComponent(adcComponent):
 
     adcBits = ["13 Bit", "14 Bit", "15 Bit", "16 Bit", "Accumulation/Averaging"]
     adcSym_RES_BIT = adcComponent.createComboSymbol("ADC_RES_BIT", adcSym_CTRLC_RESSEL, adcBits)
+    adcSym_RES_BIT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:CTRLB")
     adcSym_RES_BIT.setLabel("Number of Bits")
     adcSym_RES_BIT.setVisible(False)
     adcSym_RES_BIT.setDependencies(adcResultBitVisibility, ["ADC_CTRLB_RESSEL"])        
 
     #Averaging
     adcSym_AVGCTRL_SAMPLENUM = adcComponent.createKeyValueSetSymbol("ADC_AVGCTRL_SAMPLENUM", adcSym_RES_BIT)
+    adcSym_AVGCTRL_SAMPLENUM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:AVGCTRL")
     adcSym_AVGCTRL_SAMPLENUM.setLabel("Number of Accumulated Samples")
     adcSym_AVGCTRL_SAMPLENUM.setDefaultValue(0)
     adcSym_AVGCTRL_SAMPLENUM.setOutputMode("Key")
@@ -782,6 +796,7 @@ def instantiateComponent(adcComponent):
 
     #division coefficient
     adcSym_AVGCTRL_ADJRES = adcComponent.createIntegerSymbol("ADC_AVGCTRL_ADJRES", adcSym_RES_BIT)
+    adcSym_AVGCTRL_ADJRES.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:AVGCTRL")
     adcSym_AVGCTRL_ADJRES.setLabel("Number of Right Shifts")
     adcSym_AVGCTRL_ADJRES.setMin(0)
     adcSym_AVGCTRL_ADJRES.setMax(7)
@@ -799,16 +814,19 @@ def instantiateComponent(adcComponent):
 
     #left adjusted mode
     adcSym_CTRLC_LEFTADJ = adcComponent.createBooleanSymbol("ADC_CTRLB_LEFTADJ", adcResultMenu)
+    adcSym_CTRLC_LEFTADJ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:CTRLB")
     adcSym_CTRLC_LEFTADJ.setLabel("Left Aligned Result")
     adcSym_CTRLC_LEFTADJ.setVisible(True)
 
     #interrupt mode
     global adcSym_INTENSET_RESRDY
     adcSym_INTENSET_RESRDY = adcComponent.createBooleanSymbol("ADC_INTENSET_RESRDY", adcResultMenu)
+    adcSym_INTENSET_RESRDY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:INTENSET")
     adcSym_INTENSET_RESRDY.setLabel("Enable Result Ready Interrupt")
 
     #event out mode
     adcSym_EVCTRL_RSERDYEO = adcComponent.createBooleanSymbol("ADC_EVCTRL_RESRDYEO", adcResultMenu)
+    adcSym_EVCTRL_RSERDYEO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:EVCTRL")
     adcSym_EVCTRL_RSERDYEO.setLabel("Enable Result Ready Event Out")
 
     adcWindowMenu = adcComponent.createMenuSymbol("ADC_WINDOW_CONFIG_MENU", None)
@@ -816,6 +834,7 @@ def instantiateComponent(adcComponent):
 
     #Configure mode for Window operation
     adcSym_CTRLC_WINMODE = adcComponent.createKeyValueSetSymbol("ADC_CTRLB_WINMODE", adcWindowMenu)
+    adcSym_CTRLC_WINMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:CTRLB")
     adcSym_CTRLC_WINMODE.setLabel("Select Window Monitor Mode")
     adcSym_CTRLC_WINMODE.setDefaultValue(0)
     adcSym_CTRLC_WINMODE.setOutputMode("Value")
@@ -829,6 +848,7 @@ def instantiateComponent(adcComponent):
 
     #Window upper threshold
     adcSym_WINUT = adcComponent.createIntegerSymbol("ADC_WINUT", adcWindowMenu)
+    adcSym_WINUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:WINUT")
     adcSym_WINUT.setLabel("Window Upper Threshold")
     adcSym_WINUT.setMin(-32768)
     adcSym_WINUT.setMax(32767)
@@ -838,6 +858,7 @@ def instantiateComponent(adcComponent):
 
     #Window lower threshold
     adcSym_WINLT = adcComponent.createIntegerSymbol("ADC_WINLT", adcWindowMenu)
+    adcSym_WINLT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:WINLT")
     adcSym_WINLT.setLabel("Window Lower Threshold")
     adcSym_WINLT.setMin(-32768)
     adcSym_WINLT.setMax(32767)
@@ -847,6 +868,7 @@ def instantiateComponent(adcComponent):
 
     global adcSym_INTENSET_WINMON
     adcSym_INTENSET_WINMON = adcComponent.createBooleanSymbol("ADC_INTENSET_WINMON", adcWindowMenu)
+    adcSym_INTENSET_WINMON.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:INTENSET")
     adcSym_INTENSET_WINMON.setLabel("Enable Window Monitor Interrupt")
     adcSym_INTENSET_WINMON.setDefaultValue(False)
     adcSym_INTENSET_WINMON.setVisible(False)
@@ -854,6 +876,7 @@ def instantiateComponent(adcComponent):
 
     #Enable Window Monitor Event Out
     adcSym_HW_INP_EVENT = adcComponent.createBooleanSymbol("ADC_WINDOW_OUTPUT_EVENT", adcWindowMenu)
+    adcSym_HW_INP_EVENT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:EVCTRL")
     adcSym_HW_INP_EVENT.setLabel("Enable Window Monitor Event Out")
     adcSym_HW_INP_EVENT.setVisible(False)
     adcSym_HW_INP_EVENT.setDependencies(adcWindowVisible, ["ADC_CTRLB_WINMODE"])
@@ -866,11 +889,13 @@ def instantiateComponent(adcComponent):
 
     #run in standby mode
     adcSym_CTRLA_RUNSTDBY = adcComponent.createBooleanSymbol("ADC_CTRLA_RUNSTDBY", adcSleepMenu)
+    adcSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:CTRLA")
     adcSym_CTRLA_RUNSTDBY.setLabel("Run During Standby")
     adcSym_CTRLA_RUNSTDBY.setVisible(True)
 
     #run in on demand control mode
     adcSym_CTRLA_ONDEMAND = adcComponent.createBooleanSymbol("ADC_CTRLA_ONDEMAND", adcSleepMenu)
+    adcSym_CTRLA_ONDEMAND.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2500;register:CTRLA")
     adcSym_CTRLA_ONDEMAND.setLabel("On Demand Control")
     adcSym_CTRLA_ONDEMAND.setVisible(True)
 

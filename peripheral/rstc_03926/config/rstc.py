@@ -49,6 +49,7 @@ def instantiateComponent(rstcComponent):
     rstcInstanceName.setDefaultValue(rstcComponent.getID().upper())
 
     rstcSym_Enable = rstcComponent.createBooleanSymbol("RSTC_ENABLE", None)
+    rstcSym_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_03926;register:%NOREGISTER%")
     rstcSym_Enable.setLabel("Use Reset Controller ?")
     rstcSym_Enable.setDefaultValue(True)
     rstcSym_Enable.setReadOnly(True)
@@ -60,6 +61,7 @@ def instantiateComponent(rstcComponent):
     for id in range(0,len(rstcResetCause.getChildren())):
         rstcSym_RCAUSE = rstcComponent.createKeyValueSetSymbol("RSTC_RCAUSE" + str(id), None)
         rstcSym_RCAUSE.setLabel(str(rstcResetCause.getChildren()[id].getAttribute("caption")))
+        rstcSym_RCAUSE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_03926;register:RCAUSE")
         rstcSym_RCAUSE.addKey(rstcResetCause.getChildren()[id].getAttribute("name"), str(id), rstcResetCause.getChildren()[id].getAttribute("caption"))
         rstcSym_RCAUSE.setOutputMode("Key")
         rstcSym_RCAUSE.setDisplayMode("Description")
@@ -72,6 +74,7 @@ def instantiateComponent(rstcComponent):
     for id in range(0,len(rstcBkup.getChildren())):
         rstcSym_BKUPEXIT = rstcComponent.createKeyValueSetSymbol("RSTC_BKUPEXIT" + str(id), None)
         rstcSym_BKUPEXIT.setLabel(str(rstcBkup.getChildren()[id].getAttribute("caption")))
+        rstcSym_BKUPEXIT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_03926;register:BKUPEXIT")
         rstcSym_BKUPEXIT.addKey(rstcBkup.getChildren()[id].getAttribute("name"), str(id), rstcBkup.getChildren()[id].getAttribute("caption"))
         rstcSym_BKUPEXIT.setOutputMode("Key")
         rstcSym_BKUPEXIT.setDisplayMode("Description")

@@ -101,6 +101,7 @@ tccSym_CaptureMenu.setVisible(False)
 tccSym_CaptureMenu.setDependencies(updateCaptureMenuVisibleProperty, ["TCC_OPERATION_MODE"])
 
 tccSym_CaptureNumChannels = tccComponent.createIntegerSymbol("TCC_CAPTURE_NUM_CHANNELS", tccSym_OperationMode)
+tccSym_CaptureNumChannels.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:SYNCBUSY")
 tccSym_CaptureNumChannels.setLabel("Number of capture channels")
 tccSym_CaptureNumChannels.setVisible(False)
 tccSym_CaptureNumChannels.setDefaultValue(int(numOfChannels))
@@ -108,6 +109,7 @@ tccSym_CaptureNumChannels.setDefaultValue(int(numOfChannels))
 
 
 tccSym_Capture_EVCTRL_EVACT1 = tccComponent.createKeyValueSetSymbol("TCC_CAPTURE_EVCTRL_EVACT1", tccSym_CaptureMenu)
+tccSym_Capture_EVCTRL_EVACT1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_Capture_EVCTRL_EVACT1.setLabel("Select Input Event 1 Action")
 tccSym_Capture_EVCTRL_EVACT1.addKey("OFF", "0", "Disabled")
 if ATDF.getNode('/avr-tools-device-file/modules/module@[name="TCC"]/value-group@[name="EVCTRL__EVACT1"]/value@[name="PPW"]') is not None:
@@ -118,6 +120,7 @@ tccSym_Capture_EVCTRL_EVACT1.setOutputMode("Key")
 captureEvsysDep.append("TCC_CAPTURE_EVCTRL_EVACT1")
 
 tccSym_Capture_EVCTRL_TCINV1 = tccComponent.createBooleanSymbol("TCC_CAPTURE_EVCTRL_TCINV1", tccSym_Capture_EVCTRL_EVACT1)
+tccSym_Capture_EVCTRL_TCINV1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_Capture_EVCTRL_TCINV1.setLabel("Invert Input Event 1")
 tccSym_Capture_EVCTRL_TCINV1.setVisible(False)
 tccSym_Capture_EVCTRL_TCINV1.setDependencies(tccCaptureIpEventVisible, ["TCC_CAPTURE_EVCTRL_EVACT1"])
@@ -132,15 +135,18 @@ for channelID in range (0, int(numOfChannels)):
     #capture channel 0
     tccSym_Capture_Channel.append(channelID)
     tccSym_Capture_Channel[channelID] = tccComponent.createBooleanSymbol("TCC_CAPTURE_CTRLA_CAPTEN"+str(channelID), tccSym_CaptureMenu)
+    tccSym_Capture_Channel[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:CTRLA")
     tccSym_Capture_Channel[channelID].setLabel("Enable Capture Channel "+str(channelID))
     captureEvsysDep.append("TCC_CAPTURE_CTRLA_CAPTEN"+str(channelID))
 
     tccSym_Capture_Interrupt = tccComponent.createBooleanSymbol("TCC_CAPTURE_INTENSET_MC"+str(channelID), tccSym_Capture_Channel[channelID])
+    tccSym_Capture_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:INTENSET")
     tccSym_Capture_Interrupt.setLabel("Enable Capture Interrupt")
     captureInterruptDep.append("TCC_CAPTURE_INTENSET_MC"+str(channelID))
     interruptDepList.append("TCC_CAPTURE_INTENSET_MC"+str(channelID))
 
     tccSym_Capture_Event_Out = tccComponent.createBooleanSymbol("TCC_CAPTURE_EVCTRL_MCEO"+str(channelID), tccSym_Capture_Channel[channelID])
+    tccSym_Capture_Event_Out.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
     tccSym_Capture_Event_Out.setLabel("Enable Capture Event OUT")
     captureEvsysDep.append("TCC_CAPTURE_EVCTRL_MCEO"+str(channelID))
 
@@ -151,12 +157,14 @@ for channelID in range (0, int(numOfChannels)):
 
 #capture error interrupt
 tccSym_Capture_INTENSET_ERR = tccComponent.createBooleanSymbol("TCC_CAPTURE_ERR_INTERRUPT_MODE", tccSym_CaptureMenu)
+tccSym_Capture_INTENSET_ERR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:INTENSET")
 tccSym_Capture_INTENSET_ERR.setLabel("Enable Capture Error Interrupt")
 captureInterruptDep.append("TCC_CAPTURE_ERR_INTERRUPT_MODE")
 interruptDepList.append("TCC_CAPTURE_ERR_INTERRUPT_MODE")
 
 #capture overflow interrupt
 tccSym_Capture_INTENSET_OVF = tccComponent.createBooleanSymbol("TCC_CAPTURE_OVF_INTERRUPT_MODE", tccSym_CaptureMenu)
+tccSym_Capture_INTENSET_OVF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:INTENCLR")
 tccSym_Capture_INTENSET_OVF.setLabel("Enable Capture Overflow Interrupt")
 captureInterruptDep.append("TCC_CAPTURE_OVF_INTERRUPT_MODE")
 interruptDepList.append("TCC_CAPTURE_OVF_INTERRUPT_MODE")

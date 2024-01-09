@@ -143,6 +143,7 @@ def instantiateComponent(evsysComponent):
     evsysSym_Menu.setLabel("EVSYS MODULE SETTINGS ")
 
     evsysOnDemand = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_ONDEMAND", evsysSym_Menu)
+    evsysOnDemand.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2208;register:CHANNEL")
     evsysOnDemand.setLabel("Generic Clock On Demand")
     evsysOnDemand.setDefaultValue(False)
 
@@ -170,6 +171,7 @@ def instantiateComponent(evsysComponent):
     for id in range(0,len(user_node_children)):
         users_list.append(user_node_children[id].getAttribute("name")+"-"+user_node_children[id].getAttribute("index"))    
     symEvsysUsersList = evsysComponent.createComboSymbol("EVSYS_USERS", evsysSym_Menu, users_list)    
+    symEvsysUsersList.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2208;register:%NOREGISTER%")
     symEvsysUsersList.setLabel("User list")
     symEvsysUsersList.setVisible(True)
     
@@ -188,6 +190,7 @@ def instantiateComponent(evsysComponent):
     evsysUserNum.setDefaultValue((max(user.keys())))
     for id in range(0,channel):
         evsysChannel = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" + str(id), evsysSym_Menu)
+        evsysChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2208;register:CHANNEL")
         evsysChannel.setLabel("Enable Channel " + str(id))
         evsysChannel.setDefaultValue(False)
 
@@ -204,12 +207,14 @@ def instantiateComponent(evsysComponent):
 
         evsysGenerator.append(id)
         evsysGenerator[id] = evsysComponent.createKeyValueSetSymbol("EVSYS_CHANNEL_" +  str(id) + "_GENERATOR", evsysChannelMenu)
+        evsysGenerator[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2208;register:CHANNEL")
         evsysGenerator[id].setLabel("Event Source")
         evsysGenerator[id].setOutputMode("Value")
         for key in sorted(generator.keys()):
             evsysGenerator[id].addKey(key, str(generator.get(key)), key)
 
         evsysGeneratorActive = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" +  str(id) + "_GENERATOR_ACTIVE",evsysChannelMenu)
+        evsysGeneratorActive.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2208;register:CHANNEL")
         evsysGeneratorActive.setDefaultValue(False)
         evsysGeneratorActive.setVisible(True)
         evsysGeneratorActive.setLabel("Event Source Status")
@@ -219,6 +224,7 @@ def instantiateComponent(evsysComponent):
         del generatorSymbol[-1]
 
         evsysPath = evsysComponent.createKeyValueSetSymbol("EVSYS_CHANNEL_" +  str(id) + "_PATH", evsysChannelMenu)
+        evsysPath.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2208;register:CHANNEL")
         evsysPath.setLabel("Path Selection")
         evsysPath.setOutputMode("Value")
         pathNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="EVSYS"]/value-group@[name="EVSYS_CHANNEL__PATH"]')
@@ -227,6 +233,7 @@ def instantiateComponent(evsysComponent):
         evsysPath.setDefaultValue(2)
 
         evsysEdge = evsysComponent.createKeyValueSetSymbol("EVSYS_CHANNEL_" +  str(id) + "_EDGE", evsysChannelMenu)
+        evsysEdge.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2208;register:CHANNEL")
         evsysEdge.setLabel("Event Edge Selection")
         edgeNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="EVSYS"]/value-group@[name="EVSYS_CHANNEL__EDGSEL"]')
         for i in range(0, len(edgeNode.getChildren())):
@@ -235,18 +242,21 @@ def instantiateComponent(evsysComponent):
         evsysEdge.setOutputMode("Value")
 
         evsysEvent = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" + str(id) + "_EVENT", evsysChannelMenu)
+        evsysEvent.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2208;register:CHANNEL")
         evsysEvent.setLabel("Enable Event Detection Interrupt")
         evsysEvent.setDefaultValue(False)
         evsysEvent.setVisible(False)
         evsysEvent.setDependencies(eventInterrupt, ["EVSYS_CHANNEL_" +  str(id) + "_PATH"])
 
         evsysOverRun = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" + str(id) + "_OVERRUN", evsysChannelMenu)
+        evsysOverRun.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2208;register:CHANNEL")
         evsysOverRun.setLabel("Enable Overrun Interrupt")
         evsysOverRun.setDefaultValue(False)
         evsysOverRun.setVisible(False)
         evsysOverRun.setDependencies(overrunInterrupt, ["EVSYS_CHANNEL_" +  str(id) + "_PATH"])
 
         evsysUserReady = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" +  str(id) + "_USER_READY",evsysChannelMenu)
+        evsysUserReady.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2208;register:CHANNEL")
         evsysUserReady.setDefaultValue(False)
         evsysUserReady.setVisible(True)
         evsysUserReady.setLabel("Event Users Status")
@@ -272,6 +282,7 @@ def instantiateComponent(evsysComponent):
 
     for id in user.keys():
         evsysUserChannel = evsysComponent.createKeyValueSetSymbol("EVSYS_USER_" + str(id), evsysUserMenu)
+        evsysUserChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2208;register:USER")
         evsysUserChannel.setLabel(str(user.get(id)) + " Channel Selection")
         evsysUserChannel.addKey("NONE", str(0), "No Channel Selected")
         for i in range(0, channel):

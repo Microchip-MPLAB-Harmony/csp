@@ -582,6 +582,7 @@ def instantiateComponent(afecComponent):
     #Clock prescaler
     global afecSym_MR_PRESCAL
     afecSym_MR_PRESCAL = afecComponent.createIntegerSymbol("AFEC_MR_PRESCAL", afecMenu)
+    afecSym_MR_PRESCAL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_MR")
     afecSym_MR_PRESCAL.setLabel("Select Prescaler")
     afecSym_MR_PRESCAL.setDefaultValue(7)
     afecSym_MR_PRESCAL.setMin(1)
@@ -590,6 +591,7 @@ def instantiateComponent(afecComponent):
     #clock selection
     global afecSym_Clock
     afecSym_Clock = afecComponent.createIntegerSymbol("AFEC_CLK", afecMenu)
+    afecSym_Clock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
     afecSym_Clock.setLabel("Clock Frequency (Hz)")
     afecSym_Clock.setDefaultValue(18750000)
     afecSym_Clock.setVisible(True)
@@ -605,6 +607,7 @@ def instantiateComponent(afecComponent):
     #Added keys here as combining two bit-fields EMR_STM and EMR_RES
     global afecSym_EMR_RES_VALUE
     afecSym_EMR_RES_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_EMR_RES_VALUE", afecMenu)
+    afecSym_EMR_RES_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
     afecSym_EMR_RES_VALUE.setLabel("Result Resolution")
     afecSym_EMR_RES_VALUE.setDefaultValue(0)
     afecSym_EMR_RES_VALUE.setOutputMode("Value")
@@ -626,6 +629,7 @@ def instantiateComponent(afecComponent):
 
     #Result sign
     afecSym_EMR_SIGNMODE_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_EMR_SIGNMODE_VALUE", afecMenu)
+    afecSym_EMR_SIGNMODE_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_EMR")
     afecSym_EMR_SIGNMODE_VALUE.setLabel("Result Sign")
     afecSym_EMR_SIGNMODE_VALUE.setDefaultValue(0)
     afecSym_EMR_SIGNMODE_VALUE.setOutputMode("Key")
@@ -636,6 +640,7 @@ def instantiateComponent(afecComponent):
     afecSym_EMR_SIGNMODE_VALUE.addKey("ALL_SIGNED", "3", "Single Ended: Signed, Differential: Signed")
 
     afecSym_CONV_MODE = afecComponent.createKeyValueSetSymbol("AFEC_CONV_MODE", afecMenu)
+    afecSym_CONV_MODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_MR")
     afecSym_CONV_MODE.setLabel("Conversion Mode")
     afecSym_CONV_MODE.setDefaultValue(0)
     afecSym_CONV_MODE.setOutputMode("Value")
@@ -647,6 +652,7 @@ def instantiateComponent(afecComponent):
     #Trigger
     global afecSym_MR_TRGSEL_VALUE
     afecSym_MR_TRGSEL_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_MR_TRGSEL_VALUE", afecSym_CONV_MODE)
+    afecSym_MR_TRGSEL_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_MR")
     afecSym_MR_TRGSEL_VALUE.setLabel("Select External Trigger Input")
     afecSym_MR_TRGSEL_VALUE.setVisible(False)
     afecSym_MR_TRGSEL_VALUE.setDefaultValue(1)
@@ -670,6 +676,7 @@ def instantiateComponent(afecComponent):
 
     #enable user sequence
     afecSym_MR_USEQ = afecComponent.createBooleanSymbol("AFEC_MR_USEQ", afecUserSeq)
+    afecSym_MR_USEQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_MR")
     afecSym_MR_USEQ.setLabel("Enable User Sequence Mode")
     afecSym_MR_USEQ.setDefaultValue(False)
 
@@ -677,6 +684,7 @@ def instantiateComponent(afecComponent):
         #channel selection for user sequence
         afecSym_SEQ1R_USCH.append(channelID)
         afecSym_SEQ1R_USCH[channelID] = afecComponent.createComboSymbol("AFEC_SEQ1R_USCH"+str(channelID), afecSym_MR_USEQ, afecChannelsValues)
+        afecSym_SEQ1R_USCH[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_SEQ1R")
         afecSym_SEQ1R_USCH[channelID].setLabel("Select Channel for Sequence Number " + str(channelID))
         afecSym_SEQ1R_USCH[channelID].setDefaultValue(afecChannelsValues[0])
         afecSym_SEQ1R_USCH[channelID].setVisible(False)
@@ -700,6 +708,7 @@ def instantiateComponent(afecComponent):
         #Channel enable
         afecSym_CH_CHER.append(channelID)
         afecSym_CH_CHER[channelID] = afecComponent.createBooleanSymbol("AFEC_"+str(channelID)+"_CHER", afecCHMenu[channelID])
+        afecSym_CH_CHER[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
         afecSym_CH_CHER[channelID].setLabel("Enable Channel " + str(channelID))
         afecSym_CH_CHER[channelID].setDefaultValue(False)
         #enable corresponding channel pair of dual mode
@@ -716,6 +725,7 @@ def instantiateComponent(afecComponent):
         #Channel name
         afecSym_CH_NAME.append(channelID)
         afecSym_CH_NAME[channelID] = afecComponent.createStringSymbol("AFEC_"+str(channelID)+"_NAME", afecSym_CH_CHER[channelID])
+        afecSym_CH_NAME[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
         afecSym_CH_NAME[channelID].setLabel("Name")
         afecSym_CH_NAME[channelID].setDefaultValue("CHANNEL_"+str(channelID))
         afecSym_CH_NAME[channelID].setVisible(False)
@@ -724,6 +734,7 @@ def instantiateComponent(afecComponent):
         #Channel positive input
         afecSym_CH_PositiveInput.append(channelID)
         afecSym_CH_PositiveInput[channelID] = afecComponent.createStringSymbol("AFEC_"+str(channelID)+"_POS_INP", afecSym_CH_CHER[channelID])
+        afecSym_CH_PositiveInput[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
         afecSym_CH_PositiveInput[channelID].setLabel("Positive Input")
         afecSym_CH_PositiveInput[channelID].setDefaultValue("AN"+str(channelID))
         afecSym_CH_PositiveInput[channelID].setReadOnly(True)
@@ -739,6 +750,7 @@ def instantiateComponent(afecComponent):
             afecSym_CH_NegativeInput[channelID].setReadOnly(True)
         else:
             afecSym_CH_NegativeInput[channelID] = afecComponent.createComboSymbol("AFEC_"+str(channelID)+"_NEG_INP", afecSym_CH_CHER[channelID], afec_EvenChNegInput)
+            afecSym_CH_NegativeInput[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
             if (channel[channelID + 1] == "False"):
                 afecSym_CH_NegativeInput[channelID].setReadOnly(True)
         afecSym_CH_NegativeInput[channelID].setLabel("Negative Input")
@@ -750,6 +762,7 @@ def instantiateComponent(afecComponent):
         afecSym_CH_SHMR_DUAL.append(channelID)
         if(channelID < len(channel)/2):
             afecSym_CH_SHMR_DUAL[channelID] = afecComponent.createBooleanSymbol("AFEC_"+str(channelID)+"_SHMR_DUAL", afecSym_CH_CHER[channelID])
+            afecSym_CH_SHMR_DUAL[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
             afecSym_CH_SHMR_DUAL[channelID].setLabel("Dual Sample and Hold")
             afecSym_CH_SHMR_DUAL[channelID].setDefaultValue(False)
             afecSym_CH_SHMR_DUAL[channelID].setVisible(False)
@@ -766,6 +779,7 @@ def instantiateComponent(afecComponent):
         afecGainValues = ["X1", "X2", "X4"]
         afecSym_CH_CGR_GAIN.append(channelID)
         afecSym_CH_CGR_GAIN[channelID] = afecComponent.createComboSymbol("AFEC_"+str(channelID)+"_CGR_GAIN", afecSym_CH_CHER[channelID], afecGainValues)
+        afecSym_CH_CGR_GAIN[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
         afecSym_CH_CGR_GAIN[channelID].setLabel("Gain")
         afecSym_CH_CGR_GAIN[channelID].setDefaultValue("X1")
         afecSym_CH_CGR_GAIN[channelID].setVisible(False)
@@ -774,6 +788,7 @@ def instantiateComponent(afecComponent):
         #Channel offset
         afecSym_CH_COCR_AOFF.append(channelID)
         afecSym_CH_COCR_AOFF[channelID] = afecComponent.createIntegerSymbol("AFEC_"+str(channelID)+"_COCR_AOFF", afecSym_CH_CHER[channelID])
+        afecSym_CH_COCR_AOFF[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_COCR")
         afecSym_CH_COCR_AOFF[channelID].setLabel("Offset")
         afecSym_CH_COCR_AOFF[channelID].setDefaultValue(512)
         afecSym_CH_COCR_AOFF[channelID].setVisible(False)
@@ -784,6 +799,7 @@ def instantiateComponent(afecComponent):
         #Channel interrupt
         afecSym_CH_IER_EOC.append(channelID)
         afecSym_CH_IER_EOC[channelID] = afecComponent.createBooleanSymbol("AFEC_"+str(channelID)+"_IER_EOC", afecSym_CH_CHER[channelID])
+        afecSym_CH_IER_EOC[channelID].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
         afecSym_CH_IER_EOC[channelID].setLabel("End of conversion interrupt")
         afecSym_CH_IER_EOC[channelID].setDefaultValue(False)
         afecSym_CH_IER_EOC[channelID].setVisible(False)
@@ -791,12 +807,14 @@ def instantiateComponent(afecComponent):
 
         if afec_temp_sensor_ch == channelID:
             afecSym_CH_TEMPMR_RTCT = afecComponent.createBooleanSymbol("AFEC_TEMPMR_RTCT", afecSym_CH_CHER[channelID])
+            afecSym_CH_TEMPMR_RTCT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_TEMPMR")
             afecSym_CH_TEMPMR_RTCT.setLabel("Enable Temperature Sensor Trigger by RTC event")
             afecSym_CH_TEMPMR_RTCT.setDefaultValue(False)
             afecSym_CH_TEMPMR_RTCT.setVisible(False)
             afecSym_CH_TEMPMR_RTCT.setDependencies(afecTempModeVisibility, ["AFEC_"+str(channelID)+"_CHER"])
 
             afecSym_CH_TEMP_CMP_MODE_EN = afecComponent.createBooleanSymbol("AFEC_TEMP_CMP_MODE_EN", afecSym_CH_CHER[channelID])
+            afecSym_CH_TEMP_CMP_MODE_EN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:%NOREGISTER%")
             afecSym_CH_TEMP_CMP_MODE_EN.setLabel("Enable Temperature Comparision")
             afecSym_CH_TEMP_CMP_MODE_EN.setDefaultValue(False)
             afecSym_CH_TEMP_CMP_MODE_EN.setVisible(False)
@@ -806,6 +824,7 @@ def instantiateComponent(afecComponent):
             afec_tempmr_tempcmpmod_values = afec_tempmr_tempcmpmod_val.getChildren()
 
             afecSym_CH_TEMPMR_TEMPCMPMOD = afecComponent.createKeyValueSetSymbol("AFEC_TEMPMR_TEMPCMPMOD", afecSym_CH_TEMP_CMP_MODE_EN)
+            afecSym_CH_TEMPMR_TEMPCMPMOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_TEMPMR")
             afecSym_CH_TEMPMR_TEMPCMPMOD.setLabel("Temperature Comparision Mode")
             afecSym_CH_TEMPMR_TEMPCMPMOD.setOutputMode("Key")
             afecSym_CH_TEMPMR_TEMPCMPMOD.setDisplayMode("Description")
@@ -818,6 +837,7 @@ def instantiateComponent(afecComponent):
             afecSym_CH_TEMPMR_TEMPCMPMOD.setDependencies(afecTempModeVisibility, ["AFEC_TEMP_CMP_MODE_EN"])
 
             afecSym_CH_TEMPCWR_THIGHTHRES = afecComponent.createIntegerSymbol("AFEC_TEMPCWR_THIGHTHRES", afecSym_CH_TEMP_CMP_MODE_EN)
+            afecSym_CH_TEMPCWR_THIGHTHRES.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_TEMPCWR")
             afecSym_CH_TEMPCWR_THIGHTHRES.setLabel("Temperature High Threshold")
             afecSym_CH_TEMPCWR_THIGHTHRES.setMin(0)
             afecSym_CH_TEMPCWR_THIGHTHRES.setMax(65535)
@@ -826,6 +846,7 @@ def instantiateComponent(afecComponent):
             afecSym_CH_TEMPCWR_THIGHTHRES.setDependencies(afecTempModeVisibility, ["AFEC_TEMP_CMP_MODE_EN"])
 
             afecSym_CH_TEMPCWR_TLOWTHRES = afecComponent.createIntegerSymbol("AFEC_TEMPCWR_TLOWTHRES", afecSym_CH_TEMP_CMP_MODE_EN)
+            afecSym_CH_TEMPCWR_TLOWTHRES.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_TEMPCWR")
             afecSym_CH_TEMPCWR_TLOWTHRES.setLabel("Temperature Low Threshold")
             afecSym_CH_TEMPCWR_TLOWTHRES.setMin(0)
             afecSym_CH_TEMPCWR_TLOWTHRES.setMax(65535)
@@ -834,6 +855,7 @@ def instantiateComponent(afecComponent):
             afecSym_CH_TEMPCWR_TLOWTHRES.setDependencies(afecTempModeVisibility, ["AFEC_TEMP_CMP_MODE_EN"])
 
             afecSym_CH_IER_TEMPCHG = afecComponent.createBooleanSymbol("AFEC_IER_TEMPCHG", afecSym_CH_TEMP_CMP_MODE_EN)
+            afecSym_CH_IER_TEMPCHG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_IER")
             afecSym_CH_IER_TEMPCHG.setLabel("Temperature Change Interrupt")
             afecSym_CH_IER_TEMPCHG.setDefaultValue(False)
             afecSym_CH_IER_TEMPCHG.setVisible(False)
@@ -843,10 +865,12 @@ def instantiateComponent(afecComponent):
     afecComparatorMenu.setLabel("Comparator Configuration")
 
     afecSym_EMR_CMPALL = afecComponent.createBooleanSymbol("AFEC_EMR_CMPALL", afecComparatorMenu)
+    afecSym_EMR_CMPALL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_EMR")
     afecSym_EMR_CMPALL.setLabel("Compare all channels")
     afecSym_EMR_CMPALL.setDefaultValue(False)
 
     afecSym_EMR_CMPSEL = afecComponent.createKeyValueSetSymbol("AFEC_EMR_CMPSEL", afecComparatorMenu)
+    afecSym_EMR_CMPSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_EMR")
     afecSym_EMR_CMPSEL.setLabel("Compare Channel")
     afecSym_EMR_CMPSEL.setOutputMode("Value")
     afecSym_EMR_CMPSEL.setDisplayMode("Description")
@@ -858,24 +882,28 @@ def instantiateComponent(afecComponent):
     afecSym_EMR_CMPSEL.setDependencies(afec_EMR_CMPSEL_Update, ["AFEC_EMR_CMPALL"])
 
     afecSym_CWR_HIGHTHRES = afecComponent.createIntegerSymbol("AFEC_CWR_HIGHTHRES", afecComparatorMenu)
+    afecSym_CWR_HIGHTHRES.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_CWR")
     afecSym_CWR_HIGHTHRES.setLabel("High Threshold")
     afecSym_CWR_HIGHTHRES.setMin(0)
     afecSym_CWR_HIGHTHRES.setMax(65535)
     afecSym_CWR_HIGHTHRES.setDefaultValue(0)
 
     afecSym_CWR_LOWTHRES = afecComponent.createIntegerSymbol("AFEC_CWR_LOWTHRES", afecComparatorMenu)
+    afecSym_CWR_LOWTHRES.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_CWR")
     afecSym_CWR_LOWTHRES.setLabel("Low Threshold")
     afecSym_CWR_LOWTHRES.setMin(0)
     afecSym_CWR_LOWTHRES.setMax(65535)
     afecSym_CWR_LOWTHRES.setDefaultValue(0)
 
     afecSym_EMR_CMPFILTER = afecComponent.createIntegerSymbol("AFEC_EMR_CMPFILTER", afecComparatorMenu)
+    afecSym_EMR_CMPFILTER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_EMR")
     afecSym_EMR_CMPFILTER.setLabel("Compare Event Filter")
     afecSym_EMR_CMPFILTER.setDefaultValue(0)
     afecSym_EMR_CMPFILTER.setMin(0)
     afecSym_EMR_CMPFILTER.setMax(3)
 
     afecSym_EMR_CMPMODE = afecComponent.createKeyValueSetSymbol("AFEC_EMR_CMPMODE", afecComparatorMenu)
+    afecSym_EMR_CMPMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_EMR")
     afecSym_EMR_CMPMODE.setLabel("Compare Mode")
     afecSym_EMR_CMPMODE.setDefaultValue(0)
     afecSym_EMR_CMPMODE.setOutputMode("Key")
@@ -886,6 +914,7 @@ def instantiateComponent(afecComponent):
     afecSym_EMR_CMPMODE.addKey("OUT", "3", "Generates an event when the converted data is out of the comparison window")
 
     afecSym_EMR_COMPE = afecComponent.createBooleanSymbol("AFEC_IER_COMPE", afecComparatorMenu)
+    afecSym_EMR_COMPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:afec_11147;register:AFEC_IER")
     afecSym_EMR_COMPE.setLabel("Enable Compare Interrupt")
     afecSym_EMR_COMPE.setDefaultValue(False)
 

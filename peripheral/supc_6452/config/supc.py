@@ -106,10 +106,12 @@ def instantiateComponent(supcComponent):
 
     # SM configuration
     supcSMMenu= supcComponent.createBooleanSymbol("SM_ENABLE", None)
+    supcSMMenu.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:%NOREGISTER%")
     supcSMMenu.setLabel("Enable Supply Monitor")
     supcSMMenu.setDependencies(enableSM,["SUPC_WUMR_SMEN"])
 
     supcSym_SMMR_SMTH = supcComponent.createKeyValueSetSymbol("SUPC_SMMR_SMTH", supcSMMenu)
+    supcSym_SMMR_SMTH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_SMMR")
     supcSym_SMMR_SMTH.setLabel("Supply Monitor Threshold")
     supcSym_SMMR_SMTH.addKey("V1P6", "0", "1.6 V")
     supcSym_SMMR_SMTH.addKey("V1P72", "1", "1.72 V")
@@ -133,6 +135,7 @@ def instantiateComponent(supcComponent):
 
 
     supcSym_SMMR_SMSMPL = supcComponent.createKeyValueSetSymbol("SUPC_SMMR_SMSMPL", supcSMMenu)
+    supcSym_SMMR_SMSMPL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_SMMR")
     supcSym_SMMR_SMSMPL.setLabel("Supply Monitor Sampling Period")
     supcSym_SMMR_SMSMPL.addKey("_CSM", "1", "Monitor Continuously")
     supcSym_SMMR_SMSMPL.addKey("_32SLCK", "2", "Monitor 1 SLCK per 32 SLCK period")
@@ -143,10 +146,12 @@ def instantiateComponent(supcComponent):
     supcSym_SMMR_SMSMPL.setSelectedKey("_CSM",1)
 
     supcSym_SMMR_SMIEN = supcComponent.createBooleanSymbol("SUPC_SMMR_SMIEN", supcSMMenu)
+    supcSym_SMMR_SMIEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_SMMR")
     supcSym_SMMR_SMIEN.setLabel("Enable Supply Monitor Interrupt")
     supcSym_SMMR_SMIEN.setDefaultValue(False)
 
     supcSym_SMMR_SMRSTEN = supcComponent.createBooleanSymbol("SUPC_SMMR_SMRSTEN", supcSMMenu)
+    supcSym_SMMR_SMRSTEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_SMMR")
     supcSym_SMMR_SMRSTEN.setLabel("Enable Supply Monitor Reset")
     supcSym_SMMR_SMRSTEN.setDefaultValue(False)
 
@@ -156,18 +161,22 @@ def instantiateComponent(supcComponent):
     supcBKUPMenu.setLabel("Configure Backup Mode")
 
     supcSym_MR_BKUPRETON = supcComponent.createBooleanSymbol("SUPC_MR_BKUPRETON", supcBKUPMenu)
+    supcSym_MR_BKUPRETON.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_MR")
     supcSym_MR_BKUPRETON.setLabel("Retain Backup SRAM in Backup mode")
     supcSym_MR_BKUPRETON.setDefaultValue(True)
 
     supcSym_WUMR_RTCEN = supcComponent.createBooleanSymbol("SUPC_WUMR_RTCEN", supcBKUPMenu)
+    supcSym_WUMR_RTCEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_WUMR")
     supcSym_WUMR_RTCEN.setLabel("Enable RTC Alarm Wakeup")
     supcSym_WUMR_RTCEN.setDefaultValue(False)
 
     supcSym_WUMR_RTTEN = supcComponent.createBooleanSymbol("SUPC_WUMR_RTTEN", supcBKUPMenu)
+    supcSym_WUMR_RTTEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_WUMR")
     supcSym_WUMR_RTTEN.setLabel("Enable RTT Alarm Wakeup")
     supcSym_WUMR_RTTEN.setDefaultValue(False)
 
     supcSym_WUMR_SMEN = supcComponent.createBooleanSymbol("SUPC_WUMR_SMEN", supcBKUPMenu)
+    supcSym_WUMR_SMEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_WUMR")
     supcSym_WUMR_SMEN.setLabel("Enable Supply Monitor Wakeup")
     supcSym_WUMR_SMEN.setDefaultValue(False)
 
@@ -175,6 +184,7 @@ def instantiateComponent(supcComponent):
     supcWKUPMenu.setLabel("Configure Wakeup Pins (WKUPx)")
 
     supcSym_WUMR_WKUPDBC = supcComponent.createKeyValueSetSymbol("SUPC_WUMR_WKUPDBC", supcWKUPMenu)
+    supcSym_WUMR_WKUPDBC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_WUMR")
     supcSym_WUMR_WKUPDBC.setLabel("Minimum Pulse Width for Wakeup Input")
     supcSym_WUMR_WKUPDBC.addKey("IMMEDIATE", "0", "1 SLCK Period")
     supcSym_WUMR_WKUPDBC.addKey("_3_SLCK", "1", "3 SLCK periods")
@@ -228,6 +238,7 @@ def instantiateComponent(supcComponent):
     for id in range (0, len(signal)):
        supcSym_WUIR_WKUPEN.append(id)
        supcSym_WUIR_WKUPEN[id] = supcComponent.createBooleanSymbol("SUPC_WUIR_WKUPEN" + str(id), supcWKUPMenu)
+       supcSym_WUIR_WKUPEN[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_WUIR")
        supcSym_WUIR_WKUPEN[id].setLabel("Enable WKUP"+ str(id) +" Input")
        supcSym_WUIR_WKUPEN[id].setDefaultValue(False)
        if(signal[id] == False):
@@ -235,6 +246,7 @@ def instantiateComponent(supcComponent):
 
        supcSym_WUIR_WKUPT.append(id)
        supcSym_WUIR_WKUPT[id] = supcComponent.createKeyValueSetSymbol("SUPC_WUIR_WKUPT" + str(id), supcSym_WUIR_WKUPEN[id])
+       supcSym_WUIR_WKUPT[id].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:%NOREGISTER%")
        supcSym_WUIR_WKUPT[id].setLabel("Select Wakeup Edge")
        supcSym_WUIR_WKUPT[id].addKey("LOW", "0", "Falling Edge")
        supcSym_WUIR_WKUPT[id].addKey("HIGH", "1", "Rising Edge")
@@ -253,10 +265,12 @@ def instantiateComponent(supcComponent):
     supcBODMenu.setLabel("Configure Brownout Detector")
 
     supcSym_MR_BODDIS = supcComponent.createBooleanSymbol("SUPC_MR_BODDIS", supcBODMenu)
+    supcSym_MR_BODDIS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_MR")
     supcSym_MR_BODDIS.setLabel("Enable Brownout detector")
     supcSym_MR_BODDIS.setDefaultValue(True)
 
     supcSym_MR_BODRSTEN = supcComponent.createBooleanSymbol("SUPC_MR_BODRSTEN", supcSym_MR_BODDIS)
+    supcSym_MR_BODRSTEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_MR")
     supcSym_MR_BODRSTEN.setLabel("Enable Brownout Detector Reset")
     supcSym_MR_BODRSTEN.setDefaultValue(True)
     supcSym_MR_BODRSTEN.setDependencies(disableBKUPRST,["SUPC_MR_BODDIS"])
@@ -267,6 +281,7 @@ def instantiateComponent(supcComponent):
     supcDBMenu.setLabel("Configure Low-Power Tamper Detection")
 
     supcSym_WUMR_LPDBC = supcComponent.createKeyValueSetSymbol("SUPC_WUMR_LPDBC", supcDBMenu)
+    supcSym_WUMR_LPDBC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_WUMR")
     supcSym_WUMR_LPDBC.setLabel("Minimum Pulse Width on WKUP0/WKUP1 pins")
     supcSym_WUMR_LPDBC.addKey("DISABLE", "0", "Disable")
     supcSym_WUMR_LPDBC.addKey("_2_RTCOUT", "1", "2 RTCOUTx clock periods")
@@ -281,14 +296,17 @@ def instantiateComponent(supcComponent):
     supcSym_WUMR_LPDBC.setSelectedKey("DISABLE",1)
 
     supcSym_WUMR_LPDBCEN0 = supcComponent.createBooleanSymbol("SUPC_WUMR_LPDBCEN0", supcDBMenu)
+    supcSym_WUMR_LPDBCEN0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_WUMR")
     supcSym_WUMR_LPDBCEN0.setLabel("Low-Power Debouncer Enable (WKUP0)")
     supcSym_WUMR_LPDBCEN0.setDefaultValue(False)
 
     supcSym_WUMR_LPDBCEN1 = supcComponent.createBooleanSymbol("SUPC_WUMR_LPDBCEN1", supcDBMenu)
+    supcSym_WUMR_LPDBCEN1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_WUMR")
     supcSym_WUMR_LPDBCEN1.setLabel("Low-Power Debouncer Enable (WKUP1)")
     supcSym_WUMR_LPDBCEN1.setDefaultValue(False)
 
     supcSym_WUMR_LPDBCCLR = supcComponent.createBooleanSymbol("SUPC_WUMR_LPDBCCLR", supcDBMenu)
+    supcSym_WUMR_LPDBCCLR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_6452;register:SUPC_WUMR")
     supcSym_WUMR_LPDBCCLR.setLabel("Clear general-purpose backup register (GPBR) on tamper detection ")
     supcSym_WUMR_LPDBCCLR.setDefaultValue(False)
 

@@ -400,11 +400,13 @@ def instantiateComponent(i2cComponent):
     i2cNumSMBUSInstances.setDefaultValue(len(numSMBUSInstances))
 
     i2cOperatingMode = i2cComponent.createComboSymbol("I2C_OPERATING_MODE", None, modelist)
+    i2cOperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:%NOREGISTER%")
     i2cOperatingMode.setLabel("Operating Mode")
     i2cOperatingMode.setDefaultValue("Master")
 
     #SMBUS protocol enable
     smbusProtocolEn = i2cComponent.createBooleanSymbol("I2C_SMBUS_PROTOCOL_EN", None)
+    smbusProtocolEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:%NOREGISTER%")
     smbusProtocolEn.setLabel("SMBUS Protocol Enable")
     smbusProtocolEn.setDefaultValue(False)
     smbusProtocolEn.setDependencies(smbusProtocolUpdate, ["I2C_OPERATING_MODE"])
@@ -412,6 +414,7 @@ def instantiateComponent(i2cComponent):
     #Low level APIs only enable
     smbusLowLevelAPIGen = i2cComponent.createBooleanSymbol("I2C_SMBUS_LOW_LEVEL_API_ONLY", None)
     smbusLowLevelAPIGen.setLabel("Generate low-level APIs only")
+    smbusLowLevelAPIGen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:%NOREGISTER%")
     smbusLowLevelAPIGen.setVisible(False)
     smbusLowLevelAPIGen.setDefaultValue(False)
     smbusLowLevelAPIGen.setDependencies(smbusLowLevelAPIGenUpdate, ["I2C_OPERATING_MODE"])
@@ -419,6 +422,7 @@ def instantiateComponent(i2cComponent):
     #SMBUS Error Check enable
     smbusPECEn = i2cComponent.createBooleanSymbol("I2C_SMBUS_PEC_ENABLE", None)
     smbusPECEn.setLabel("PEC Enable")
+    smbusPECEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:CFG")
     smbusPECEn.setDefaultValue(False)
     smbusPECEn.setVisible(False)
     smbusPECEn.setDependencies(smbusPECUpdate, ["I2C_SMBUS_PROTOCOL_EN"])
@@ -426,6 +430,7 @@ def instantiateComponent(i2cComponent):
     #SMBUS Timing Check enable
     smbusTimingCheckEn = i2cComponent.createBooleanSymbol("I2C_SMBUS_TIMING_CHK_ENABLE", None)
     smbusTimingCheckEn.setLabel("Timing Check Enable")
+    smbusTimingCheckEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:CFG")
     smbusTimingCheckEn.setDefaultValue(False)
     smbusTimingCheckEn.setVisible(False)
     smbusTimingCheckEn.setDependencies(smbusTimingCheckEnUpdate, ["I2C_SMBUS_PROTOCOL_EN"])
@@ -433,6 +438,7 @@ def instantiateComponent(i2cComponent):
     #Slave Address 1
     i2cSlaveADDR1 = i2cComponent.createHexSymbol("I2C_SLAVE_ADDDRESS_1", None)
     i2cSlaveADDR1.setLabel("I2C Slave Address 1 (7-bit)")
+    i2cSlaveADDR1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:OWN_ADDR")
     i2cSlaveADDR1.setMax(128)
     i2cSlaveADDR1.setVisible(False)
     i2cSlaveADDR1.setDefaultValue(0x54)
@@ -441,6 +447,7 @@ def instantiateComponent(i2cComponent):
     #Slave Address 2
     i2cSlaveADDR2 = i2cComponent.createHexSymbol("I2C_SLAVE_ADDDRESS_2", None)
     i2cSlaveADDR2.setLabel("I2C Slave Address 2 (7-bit)")
+    i2cSlaveADDR2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:OWN_ADDR")
     i2cSlaveADDR2.setMax(128)
     i2cSlaveADDR2.setVisible(False)
     i2cSlaveADDR2.setDefaultValue(0x55)
@@ -448,6 +455,7 @@ def instantiateComponent(i2cComponent):
 
     ##I2C Input Clock Frequency
     i2cInputClkFreq = i2cComponent.createIntegerSymbol("I2C_INPUT_CLOCK_FREQ", None)
+    i2cInputClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:BUSCLK")
     i2cInputClkFreq.setLabel("I2C Clock Frequency")
     i2cInputClkFreq.setReadOnly(True)
     i2cInputClkFreq.setDefaultValue(16000000)
@@ -455,6 +463,7 @@ def instantiateComponent(i2cComponent):
     # Master DMA channel for SMBUS protocol
     smbusMasterDMAChannel = i2cComponent.createIntegerSymbol("I2C_SMBUS_MASTER_DMA_CHANNEL", None)
     smbusMasterDMAChannel.setLabel("DMA Channel For SMBUS Master")
+    smbusMasterDMAChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:%NOREGISTER%")
     smbusMasterDMAChannel.setDefaultValue(-1)
     smbusMasterDMAChannel.setVisible(False)
     smbusMasterDMAChannel.setReadOnly(True)
@@ -463,6 +472,7 @@ def instantiateComponent(i2cComponent):
     # Slave DMA channel for SMBUS protocol
     smbusSlaveDMAChannel = i2cComponent.createIntegerSymbol("I2C_SMBUS_SLAVE_DMA_CHANNEL", None)
     smbusSlaveDMAChannel.setLabel("DMA Channel For SMBUS Slave")
+    smbusSlaveDMAChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:%NOREGISTER%")
     smbusSlaveDMAChannel.setDefaultValue(-1)
     smbusSlaveDMAChannel.setVisible(False)
     smbusSlaveDMAChannel.setReadOnly(True)
@@ -470,6 +480,7 @@ def instantiateComponent(i2cComponent):
 
     #Baud Rate (Hz)
     i2cBAUD_HZ = i2cComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", None)
+    i2cBAUD_HZ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:%NOREGISTER%")
     i2cBAUD_HZ.setLabel("I2C Baud Rate (Hz)")
     i2cBAUD_HZ.setMin(1)
     i2cBAUD_HZ.setMax(1000000)
@@ -510,6 +521,7 @@ def instantiateComponent(i2cComponent):
 
     # Interrupt type selection
     i2cInterruptType = i2cComponent.createKeyValueSetSymbol("I2C_INTERRUPT_TYPE", None)
+    i2cInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:%NOREGISTER%")
     i2cInterruptType.setLabel("Interrupt Type")
     if nvic_int_num["direct_nvic_num"] != None:
         i2cInterruptType.addKey("DIRECT", "0", "Direct")
@@ -528,6 +540,7 @@ def instantiateComponent(i2cComponent):
     nvicInterruptUpdateI2C(i2cInstanceNum.getValue(), i2cInterruptType.getValue())
 
     i2cPortSel = i2cComponent.createKeyValueSetSymbol("I2C_PORT_SEL", None)
+    i2cPortSel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smb_31;register:CFG")
     i2cPortSel.setLabel("Port Select")
 
     i2cSignalNodeValues = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="SMB"]/instance@[name="' + i2cInstanceName.getValue()+'"]/signals').getChildren()

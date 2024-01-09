@@ -123,6 +123,7 @@ def instantiateComponent(efcComponent):
 
     # Flash Read Wait State (RWS).
     nvm_rws = efcComponent.createIntegerSymbol("NVM_RWS", efcMenu)
+    nvm_rws.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:efc_6450;register:EEFC_FMR")
     nvm_rws.setLabel("Wait States")
     nvm_rws.setMin(0)
     nvm_rws.setMax(15)
@@ -131,6 +132,7 @@ def instantiateComponent(efcComponent):
     efcNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EFC\"]/register-group/register@[name=\"EEFC_FMR\"]/bitfield@[name=\"FAM\"]")
     if efcNode!= None:
         efcFam = efcComponent.createKeyValueSetSymbol("EFC_FAM", efcMenu)
+        efcFam.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:efc_6450;register:EEFC_FMR")
         efcFam.setLabel("Flash Access Mode")
         efcFam.addKey("128-Bit", "0", "Use 128-bit access to enhance access speed")
         efcFam.addKey("64-Bit", "1", "Use 64-bit access to enhance power consumption")
@@ -140,9 +142,11 @@ def instantiateComponent(efcComponent):
 
     #Create a Checkbox to enable disable interrupts
     efcInterrupt = efcComponent.createBooleanSymbol("INTERRUPT_ENABLE", efcMenu)
+    efcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:efc_6450;register:%NOREGISTER%")
     efcInterrupt.setLabel("Enable Interrupts")
 
     efcMemoryDriver = efcComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", efcMenu)
+    efcMemoryDriver.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:efc_6450;register:%NOREGISTER%")
     efcMemoryDriver.setLabel("Memory Driver Connected")
     efcMemoryDriver.setVisible(False)
     efcMemoryDriver.setDefaultValue(False)
@@ -152,6 +156,7 @@ def instantiateComponent(efcComponent):
     nvmOffset = str(hex(int(efcFlashStartAddress.getValue(),16) + offsetStart))
 
     efcMemoryStartAddr = efcComponent.createStringSymbol("START_ADDRESS", efcMenu)
+    efcMemoryStartAddr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:efc_6450;register:%NOREGISTER%")
     efcMemoryStartAddr.setLabel("NVM Media Start Address")
     efcMemoryStartAddr.setVisible(False)
     efcMemoryStartAddr.setDefaultValue(nvmOffset[2:])
@@ -160,6 +165,7 @@ def instantiateComponent(efcComponent):
     memMediaSizeKB = (offsetStart / 1024)
 
     efcMemoryMediaSize = efcComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", efcMenu)
+    efcMemoryMediaSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:efc_6450;register:%NOREGISTER%")
     efcMemoryMediaSize.setLabel("NVM Media Size (KB)")
     efcMemoryMediaSize.setVisible(False)
     efcMemoryMediaSize.setDefaultValue(memMediaSizeKB)
@@ -167,11 +173,13 @@ def instantiateComponent(efcComponent):
 
     efcMemoryEraseEnable = efcComponent.createBooleanSymbol("ERASE_ENABLE", None)
     efcMemoryEraseEnable.setLabel("NVM Erase Enable")
+    efcMemoryEraseEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:efc_6450;register:%NOREGISTER%")
     efcMemoryEraseEnable.setVisible(False)
     efcMemoryEraseEnable.setDefaultValue(True)
     efcMemoryEraseEnable.setReadOnly(True)
 
     efcMemoryEraseBufferSize = efcComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", efcMenu)
+    efcMemoryEraseBufferSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:efc_6450;register:%NOREGISTER%")
     efcMemoryEraseBufferSize.setLabel("NVM Erase Buffer Size")
     efcMemoryEraseBufferSize.setVisible(False)
     efcMemoryEraseBufferSize.setDefaultValue(int(efcFlashEraseSize.getValue()))

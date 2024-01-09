@@ -147,17 +147,20 @@ def instantiateComponent(sptComponent):
     sptInstanceNum.setDefaultValue(instanceNum)
 
     sptMode = sptComponent.createComboSymbol("SPT_MODE", None, ["Simple", "Advanced"])
+    sptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spt_170;register:%NOREGISTER%")
     sptMode.setLabel("Mode")
     sptMode.setDefaultValue("Advanced")
     sptLock_Dict["SPT_MODE"] = (1<<18)
     sptSysConfigDepList.append("SPT_MODE")
 
     sptWireConfig = sptComponent.createComboSymbol("SPT_WIRE_CONFIG", None, ["Single", "Quad"])
+    sptWireConfig.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spt_170;register:CFG")
     sptWireConfig.setLabel("Wire Configuration")
     sptWireConfig.setDefaultValue("Single")
     sptWireConfig.setDependencies(sptWireConfigUpdate, ["SPT_MODE"])
 
     sptWaitTime = sptComponent.createIntegerSymbol("SPT_WAIT_TIME", None)
+    sptWaitTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spt_170;register:CFG")
     sptWaitTime.setLabel("Wait Time")
     sptWaitTime.setMin(0)
     sptWaitTime.setMax(255)
@@ -167,6 +170,7 @@ def instantiateComponent(sptComponent):
     sptTARValues = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SPT\"]/value-group@[name=\"SPT_SPI_CFG__TAR_TIM_SEL\"]").getChildren()
 
     sptTARTime = sptComponent.createKeyValueSetSymbol("SPT_TAR_TIME", None)
+    sptTARTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spt_170;register:CFG")
     sptTARTime.setLabel("Turn Around Time")
     for index in range(len(sptTARValues)):
         sptTARTime.addKey(sptTARValues[index].getAttribute("name"), sptTARValues[index].getAttribute("value"), sptTARValues[index].getAttribute("caption"))
@@ -180,6 +184,7 @@ def instantiateComponent(sptComponent):
 
     # Interrupt type selection
     sptECInterruptType = sptComponent.createKeyValueSetSymbol("SPT_EC_INTERRUPT_TYPE", None)
+    sptECInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spt_170;register:%NOREGISTER%")
     sptECInterruptType.setLabel("Interrupt Type")
     if nvic_int_num["direct_nvic_num"] != None:
         sptECInterruptType.addKey("DIRECT", "0", "Direct")
@@ -207,6 +212,7 @@ def instantiateComponent(sptComponent):
         caption = caption[:-len(" Interrupt to SPI Master.")]
         sptHostIEN_Dict["SPT_HOST_IEN_" + sptHostIENBitfields[index].getAttribute("name")] = int(sptHostIENBitfields[index].getAttribute("mask"), 16)
         sptHostIENx = sptComponent.createBooleanSymbol("SPT_HOST_IEN_" + sptHostIENBitfields[index].getAttribute("name"), sptHostIEN)
+        sptHostIENx.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spt_170;register:%NOREGISTER%")
         sptHostIENx.setLabel(caption)
         sptHostIENx.setDefaultValue(False)
         sptHostIENx.setDependencies(sptAdvancedModeVisibility, ["SPT_MODE"])
@@ -225,6 +231,7 @@ def instantiateComponent(sptComponent):
         caption = caption[:-len(" Interrupt to EC.")]
         sptECIEN_Dict["SPT_EC_IEN_" + sptECIENBitfields[index].getAttribute("name")] = sptECIENBitfields[index].getAttribute("mask")
         sptECIENx = sptComponent.createBooleanSymbol("SPT_EC_IEN_" + sptECIENBitfields[index].getAttribute("name"), sptECIEN)
+        sptECIENx.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spt_170;register:%NOREGISTER%")
         sptECIENx.setLabel(caption)
         sptECIENx.setDefaultValue(False)
         sptECIENx.setDependencies(sptAdvancedModeVisibility, ["SPT_MODE"])
@@ -243,6 +250,7 @@ def instantiateComponent(sptComponent):
             caption = caption[:-len(", write access from SPI Master.")]
             sptLock_Dict["SPT_" + sptSycCfgBitfields[index].getAttribute("name")] = int(sptSycCfgBitfields[index].getAttribute("mask"), 16)
             sptHostLockx = sptComponent.createBooleanSymbol("SPT_" + sptSycCfgBitfields[index].getAttribute("name"), sptLockHostWrites)
+            sptHostLockx.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:spt_170;register:%NOREGISTER%")
             sptHostLockx.setLabel(caption)
             sptHostLockx.setDefaultValue(False)
             sptHostLockx.setDependencies(sptAdvancedModeVisibility, ["SPT_MODE"])

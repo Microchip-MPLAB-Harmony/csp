@@ -95,6 +95,7 @@ wdtMenu = coreComponent.createMenuSymbol("WDT_MENU", None)
 wdtMenu.setLabel("WDT")
 
 wdtEnable = coreComponent.createBooleanSymbol("WDT_ENABLE", wdtMenu)
+wdtEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:%NOREGISTER%")
 wdtEnable.setLabel("Enable Watch Dog Timer?")
 wdtEnable.setDefaultValue(False)
 
@@ -105,6 +106,7 @@ wdtCfgMenu.setVisible(False)
 ###
 wdtPeriodExpireTuple = [ ("None", "0", "No Action"), ("Interrupt", "1", "Interrupt"), ("Reset", "2", "Reset") ]
 wdtPeriodExpiration = coreComponent.createKeyValueSetSymbol( "WDT_PERIOD_EXPIRATION", wdtCfgMenu )
+wdtPeriodExpiration.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_IER")
 wdtPeriodExpiration.setLabel( "Period Expiration Action" )
 for tupleElem in wdtPeriodExpireTuple:
     wdtPeriodExpiration.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
@@ -115,6 +117,7 @@ wdtPeriodExpiration.setSelectedKey( str( wdtPeriodExpireTuple[ 0 ][ 0 ] ), 0 )
 wdtPeriodExpiration.setDependencies(wdtUpdateInterrupt, ["WDT_PERIOD_EXPIRATION"])
 
 wdtPeriodCount = coreComponent.createIntegerSymbol("WDT_PERIOD_COUNT", wdtPeriodExpiration)
+wdtPeriodCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_WLR")
 wdtPeriodCount.setLabel("Period (counts)")
 wdtPeriodCount.setMin(0x002)
 wdtPeriodCount.setMax(0xfff)        # just under 16 seconds
@@ -122,6 +125,7 @@ wdtPeriodCount.setDefaultValue( wdtMilliSecsToCounts( 16000 ) )
 wdtPeriodCount.setValue(wdtPeriodCount.getDefaultValue(), 1)
 
 wdtPeriodMilliSeconds = coreComponent.createIntegerSymbol("WDT_PERIOD_MILLISECONDS", wdtPeriodExpiration)
+wdtPeriodMilliSeconds.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_WLR")
 wdtPeriodMilliSeconds.setLabel("Period (mSecs)")
 wdtPeriodMilliSeconds.setDependencies(wdtMilliSecUpdate, ["WDT_PERIOD_COUNT"])
 wdtPeriodMilliSeconds.setReadOnly(True)
@@ -129,6 +133,7 @@ wdtPeriodMilliSeconds.setDefaultValue( wdtCountsToMilliSecs( wdtPeriodCount.getV
 ###
 wdtLevelExpireTuple = [ ("None", "0", "No Action"), ("Interrupt", "1", "Interrupt")]
 wdtLevelExpiration = coreComponent.createKeyValueSetSymbol( "WDT_LEVEL_EXPIRATION", wdtCfgMenu )
+wdtLevelExpiration.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_IER")
 wdtLevelExpiration.setLabel( "Level Expiration Action" )
 for tupleElem in wdtLevelExpireTuple:
     wdtLevelExpiration.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
@@ -139,6 +144,7 @@ wdtLevelExpiration.setSelectedKey( str( wdtLevelExpireTuple[ 0 ][ 0 ] ), 0 )
 wdtLevelExpiration.setDependencies(wdtUpdateInterrupt, ["WDT_LEVEL_EXPIRATION"])
 
 wdtLevelThresholdCount = coreComponent.createIntegerSymbol("WDT_LEVEL_THRESHOLD_COUNT", wdtLevelExpiration)
+wdtLevelThresholdCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_ILR")
 wdtLevelThresholdCount.setLabel("Level Threshold (counts)")
 wdtLevelThresholdCount.setMin(0x001)
 wdtLevelThresholdCount.setMax(wdtPeriodCount.getMax() - 1)
@@ -146,6 +152,7 @@ wdtLevelThresholdCount.setDependencies(wdtCountChange, ["WDT_PERIOD_COUNT"])
 wdtLevelThresholdCount.setDefaultValue( wdtMilliSecsToCounts( 15000 ) )
 
 wdtLevelThresholdMilliSeconds = coreComponent.createIntegerSymbol("WDT_LEVEL_THRESHOLD_MILLISECONDS", wdtLevelExpiration)
+wdtLevelThresholdMilliSeconds.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_ILR")
 wdtLevelThresholdMilliSeconds.setLabel("Level Threshold (mSecs)")
 wdtLevelThresholdMilliSeconds.setDependencies(wdtMilliSecUpdate, ["WDT_LEVEL_THRESHOLD_COUNT"])
 wdtLevelThresholdMilliSeconds.setReadOnly(True)
@@ -153,6 +160,7 @@ wdtLevelThresholdMilliSeconds.setDefaultValue( wdtCountsToMilliSecs( wdtLevelThr
 ###
 wdtEarlyResetTuple = [ ("None", "0", "No Action"), ("Interrupt", "1", "Interrupt"), ("Reset", "2", "Reset") ]
 wdtEarlyResetAction = coreComponent.createKeyValueSetSymbol( "WDT_EARLY_RESET_ACTION", wdtCfgMenu )
+wdtEarlyResetAction.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_IER")
 wdtEarlyResetAction.setLabel( "Early Reset Action" )
 for tupleElem in wdtEarlyResetTuple:
     wdtEarlyResetAction.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
@@ -163,6 +171,7 @@ wdtEarlyResetAction.setSelectedKey( str( wdtEarlyResetTuple[ 0 ][ 0 ] ), 0 )
 wdtEarlyResetAction.setDependencies(wdtUpdateInterrupt, ["WDT_EARLY_RESET_ACTION"])
 
 wdtEarlyResetThresholdCount = coreComponent.createIntegerSymbol("WDT_EARLY_RESET_THRESHOLD_COUNT", wdtEarlyResetAction)
+wdtEarlyResetThresholdCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_WLR")
 wdtEarlyResetThresholdCount.setLabel("Early Reset Threshold (counts)")
 wdtEarlyResetThresholdCount.setMin(0x000)
 wdtEarlyResetThresholdCount.setMax(wdtPeriodCount.getMax() - 2)
@@ -170,16 +179,19 @@ wdtEarlyResetThresholdCount.setDependencies(wdtCountChange, ["WDT_LEVEL_THRESHOL
 wdtEarlyResetThresholdCount.setDefaultValue(wdtMilliSecsToCounts( 1000 ))
 
 wdtEarlyResetThresholdMilliSeconds = coreComponent.createIntegerSymbol("WDT_EARLY_RESET_THRESHOLD_MILLISECONDS", wdtEarlyResetAction)
+wdtEarlyResetThresholdMilliSeconds.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_WLR")
 wdtEarlyResetThresholdMilliSeconds.setLabel("Early Reset Threshold (mSecs)")
 wdtEarlyResetThresholdMilliSeconds.setDependencies( wdtMilliSecUpdate, ["WDT_EARLY_RESET_THRESHOLD_COUNT"])
 wdtEarlyResetThresholdMilliSeconds.setReadOnly(True)
 wdtEarlyResetThresholdMilliSeconds.setDefaultValue( wdtCountsToMilliSecs( wdtEarlyResetThresholdCount.getValue() ) )
 ###
 wdtStopWhenIdle = coreComponent.createBooleanSymbol("WDT_STOP_WHEN_IDLE", wdtCfgMenu)
+wdtStopWhenIdle.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_MR")
 wdtStopWhenIdle.setLabel("Stop When Idle")
 wdtStopWhenIdle.setDefaultValue(True)
 
 wdtStopWhenDebugging = coreComponent.createBooleanSymbol("WDT_STOP_WHEN_DEBUGGING", wdtCfgMenu)
+wdtStopWhenDebugging.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:wdt_44154;register:WDT_MR")
 wdtStopWhenDebugging.setLabel("Stop When Debugging")
 wdtStopWhenDebugging.setDefaultValue(True)
 ###

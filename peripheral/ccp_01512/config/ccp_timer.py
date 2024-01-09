@@ -78,6 +78,7 @@ ccpSym_TimerMenu.setDependencies(ccpTimerVisible, ["CCP_OPERATION_MODE"])
 global ccpSym_TimerUnit
 timerUnit = ["millisecond", "microsecond", "nanosecond"]
 ccpSym_TimerUnit = ccpComponent.createComboSymbol("CCP_UNIT", ccpSym_TimerMenu, timerUnit)
+ccpSym_TimerUnit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
 ccpSym_TimerUnit.setLabel("Timer Period Unit")
 ccpSym_TimerUnit.setDefaultValue("millisecond")          
 
@@ -89,6 +90,7 @@ else:
     max = 0
 
 ccpSym_PERIOD_MS = ccpComponent.createFloatSymbol("CCP_TIME_PERIOD_MS", ccpSym_TimerMenu)
+ccpSym_PERIOD_MS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
 ccpSym_PERIOD_MS.setLabel("Time")
 ccpSym_PERIOD_MS.setDefaultValue(0.3)
 ccpSym_PERIOD_MS.setMin(0.0)
@@ -103,6 +105,7 @@ else:
 
 #Timer1 Period Register
 ccpSym_PR2 = ccpComponent.createLongSymbol("CCP_PERIOD", ccpSym_PERIOD_MS)
+ccpSym_PR2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
 ccpSym_PR2.setLabel("Period Register")
 ccpSym_PR2.setDefaultValue(long(period))
 ccpSym_PR2.setReadOnly(True)
@@ -112,6 +115,7 @@ ccpSym_PR2.setDependencies(timerPeriodCalc, ["core." + ccpInstanceName.getValue(
     "CCP_CLOCK_FREQ", "CCP_CCPCON1_T32", "CCP_UNIT"])
 
 ccpSym_CCPCON1_ONESHOT = ccpComponent.createBooleanSymbol("CCP_CCPCON1_ONESHOT", ccpSym_TimerMenu)
+ccpSym_CCPCON1_ONESHOT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
 ccpSym_CCPCON1_ONESHOT.setLabel("Enable One Shot")
 ccpcon1_depList.append("CCP_CCPCON1_ONESHOT")
 

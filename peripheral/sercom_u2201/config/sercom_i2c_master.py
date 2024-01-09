@@ -179,6 +179,7 @@ global i2cSym_Interrupt_Mode
 
 #I2C Interrupt Mode
 i2cSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("I2C_INTERRUPT_MODE", sercomSym_OperationMode)
+i2cSym_Interrupt_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 i2cSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
 i2cSym_Interrupt_Mode.setDefaultValue(True)
 i2cSym_Interrupt_Mode.setVisible(False)
@@ -198,6 +199,7 @@ for index in range(len(ctrlaValue)):
 if speedSupported == True:
     # I2C Transfer Speed Mode
     i2cmSym_mode = sercomComponent.createKeyValueSetSymbol("I2CM_MODE", sercomSym_OperationMode)
+    i2cmSym_mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
     i2cmSym_mode.setLabel("Transfer Speed Mode")
 
     i2cmTransferSpeedNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/value-group@[name="SERCOM_I2CM_CTRLA__SPEED"]')
@@ -216,6 +218,7 @@ if speedSupported == True:
     i2cmSym_mode.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
     i2cmSym_HSMasterCode = sercomComponent.createIntegerSymbol("I2C_MASTER_CODE", sercomSym_OperationMode)
+    i2cmSym_HSMasterCode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:ADDR")
     i2cmSym_HSMasterCode.setLabel("Master Code (0-7)")
     i2cmSym_HSMasterCode.setVisible(False)
     i2cmSym_HSMasterCode.setMin(0)
@@ -235,6 +238,7 @@ for index in range(len(ctrlaValue)):
 
 if sclsmSupported == True:
     i2cmSym_CTRLA_SCLSM = sercomComponent.createIntegerSymbol("I2C_SCLSM", sercomSym_OperationMode)
+    i2cmSym_CTRLA_SCLSM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
     i2cmSym_CTRLA_SCLSM.setLabel("Clock Stretch Mode")
     i2cmSym_CTRLA_SCLSM.setVisible(False)
     i2cmSym_CTRLA_SCLSM.setDefaultValue(0)
@@ -242,12 +246,14 @@ if sclsmSupported == True:
 
 # Run In Standby
 i2cmSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("I2C_RUNSTDBY", sercomSym_OperationMode)
+i2cmSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 i2cmSym_CTRLA_RUNSTDBY.setLabel("Enable operation in Standby mode")
 i2cmSym_CTRLA_RUNSTDBY.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 i2cmSym_CTRLA_RUNSTDBY.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 # SDA Hold Time
 i2cmSym_CTRLA_SDAHOLD = sercomComponent.createKeyValueSetSymbol("I2C_SDAHOLD_TIME", sercomSym_OperationMode)
+i2cmSym_CTRLA_SDAHOLD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 i2cmSym_CTRLA_SDAHOLD.setLabel("SDA Hold Time")
 
 i2cmSDAHoldTimeReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_I2CM_CTRLA__SDAHOLD\"]")
@@ -267,6 +273,7 @@ i2cmSym_CTRLA_SDAHOLD.setDependencies(updateI2CMasterConfigurationVisiblePropert
 
 # Operating speed
 i2cmSym_BAUD = sercomComponent.createIntegerSymbol("I2C_CLOCK_SPEED", sercomSym_OperationMode)
+i2cmSym_BAUD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 i2cmSym_BAUD.setLabel("I2C Speed in KHz")
 i2cmSym_BAUD.setMin(1)
 i2cmSym_BAUD.setMax(400)
@@ -280,6 +287,7 @@ i2cmSym_BAUD.setDependencies(baudDependencyChanged, ["SERCOM_MODE", "I2CM_MODE"]
 
 # Operating speed (Hz)
 i2cmSym_BAUD_Hz = sercomComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", sercomSym_OperationMode)
+i2cmSym_BAUD_Hz.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 i2cmSym_BAUD_Hz.setLabel("I2C Speed in Hz")
 i2cmSym_BAUD_Hz.setDefaultValue(i2cmSym_BAUD.getValue() * 1000)
 i2cmSym_BAUD_Hz.setVisible(False)
@@ -287,6 +295,7 @@ i2cmSym_BAUD_Hz.setDependencies(updateI2CBaudHz, ["I2C_CLOCK_SPEED"])
 
 # I2C BAUD register value
 i2cmSym_TRISEVALUE = sercomComponent.createIntegerSymbol("I2CM_TRISE", sercomSym_OperationMode)
+i2cmSym_TRISEVALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:BAUD")
 i2cmSym_TRISEVALUE.setLabel("I2C Trise in nano seconds")
 i2cmSym_TRISEVALUE.setMin(1)
 i2cmSym_TRISEVALUE.setMax(1000)
@@ -296,6 +305,7 @@ i2cmSym_TRISEVALUE.setDependencies(updateI2CMasterConfigurationVisibleProperty, 
 
 # I2C BAUD register value
 i2cmSym_BAUDREGVALUE = sercomComponent.createHexSymbol("I2CM_BAUD", sercomSym_OperationMode)
+i2cmSym_BAUDREGVALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:BAUD")
 i2cmSym_BAUDREGVALUE.setLabel("I2C BAUD")
 i2cmSym_BAUDREGVALUE.setVisible(False)
 i2cmSym_BAUDREGVALUE.setReadOnly(True)
@@ -323,6 +333,7 @@ for index in range(len(ctrlaValue)):
 # SLEW RATE Control
 if slewRateSupported == True:
     i2cmSym_CTRLA_SLEWRATE = sercomComponent.createKeyValueSetSymbol("I2C_SLEWRATE", sercomSym_OperationMode)
+    i2cmSym_CTRLA_SLEWRATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
     i2cmSym_CTRLA_SLEWRATE.setLabel("I2C Slew Rate Control")
 
     i2cmSlewRateReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_I2CM_CTRLA__SLEWRATE\"]")
@@ -354,6 +365,7 @@ for index in range(len(addrValue)):
 #I2C 10-bit Address support
 if tenBitAddrSupported == True:
     i2cSym_TENBITEN = sercomComponent.createBooleanSymbol("I2C_ADDR_TENBITEN", sercomSym_OperationMode)
+    i2cSym_TENBITEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:ADDR")
     i2cSym_TENBITEN.setLabel("Enable 10-bit Addressing")
     i2cSym_TENBITEN.setDefaultValue(False)
     i2cSym_TENBITEN.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")

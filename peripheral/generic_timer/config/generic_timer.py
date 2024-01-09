@@ -59,15 +59,18 @@ if __name__ == "__main__":
     gen_timer_menu.setLabel("Generic Timer")
 
     gen_timer_enable = coreComponent.createBooleanSymbol("GENERIC_TIMER_ENABLE", gen_timer_menu)
+    gen_timer_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:generic_timer;register:%NOREGISTER%")
     gen_timer_enable.setLabel("Enable Generic Timer")
     gen_timer_enable.setDependencies(enable_generic_timer, ["GENERIC_TIMER_ENABLE"])
 
     gen_timer_interrupt = coreComponent.createBooleanSymbol("GENERIC_TIMER_INTERRUPT", gen_timer_enable)
+    gen_timer_interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:generic_timer;register:%NOREGISTER%")
     gen_timer_interrupt.setLabel("Enable timer interrupt")
     gen_timer_interrupt.setReadOnly(True)
     gen_timer_interrupt.setDependencies(lambda symbol, event: symbol.setReadOnly(not event["value"]), ["GENERIC_TIMER_ENABLE"])
 
     gen_timer_period = coreComponent.createIntegerSymbol("GENERIC_TIMER_PERIOD", gen_timer_interrupt)
+    gen_timer_period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:generic_timer;register:%NOREGISTER%")
     gen_timer_period.setLabel("Timer period (milliseconds)")
     gen_timer_period.setMin(1)
     gen_timer_period.setMax(10000)

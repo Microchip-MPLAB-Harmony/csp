@@ -108,6 +108,7 @@ def instantiateComponent(rngComponent):
     Database.setSymbolValue("core", rngInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     rngSym_RNGCON_PLEN = rngComponent.createIntegerSymbol("RNGCON_PLEN", None)
+    rngSym_RNGCON_PLEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rng_00350;register:RNGCON")
     rngSym_RNGCON_PLEN.setLabel(rngBitFld_RNGCON_PLEN.getAttribute("caption"))
     rngSym_RNGCON_PLEN.setDefaultValue(0)
     rngSym_RNGCON_PLEN.setMin(0)
@@ -116,6 +117,7 @@ def instantiateComponent(rngComponent):
     rngTRNGEN_names = []
     _get_bitfield_names(rngValGrp_RNGCON_TRNGEN, rngTRNGEN_names)
     rngSym_RNGCON_TRNGEN = rngComponent.createKeyValueSetSymbol("RNGCON_TRNGEN", None)
+    rngSym_RNGCON_TRNGEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rng_00350;register:RNGCON")
     rngSym_RNGCON_TRNGEN.setLabel(rngBitFld_RNGCON_TRNGEN.getAttribute("caption"))
     rngSym_RNGCON_TRNGEN.setDefaultValue(0)
     rngSym_RNGCON_TRNGEN.setOutputMode("Value")
@@ -126,6 +128,7 @@ def instantiateComponent(rngComponent):
     rngPRNGEN_names = []
     _get_bitfield_names(rngValGrp_RNGCON_PRNGEN, rngPRNGEN_names)
     rngSym_RNGCON_PRNGEN = rngComponent.createKeyValueSetSymbol("RNGCON_PRNGEN", None)
+    rngSym_RNGCON_PRNGEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rng_00350;register:RNGCON")
     rngSym_RNGCON_PRNGEN.setLabel(rngBitFld_RNGCON_PRNGEN.getAttribute("caption"))
     rngSym_RNGCON_PRNGEN.setDefaultValue(0)
     rngSym_RNGCON_PRNGEN.setOutputMode("Value")
@@ -136,6 +139,7 @@ def instantiateComponent(rngComponent):
     rngCONT_names = []
     _get_bitfield_names(rngValGrp_RNGCON_CONT, rngCONT_names)
     rngSym_RNGCON_CONT = rngComponent.createKeyValueSetSymbol("RNGCON_CONT", None)
+    rngSym_RNGCON_CONT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rng_00350;register:RNGCON")
     rngSym_RNGCON_CONT.setLabel(rngBitFld_RNGCON_CONT.getAttribute("caption"))
     rngSym_RNGCON_CONT.setDefaultValue(0)
     rngSym_RNGCON_CONT.setOutputMode("Value")
@@ -146,6 +150,7 @@ def instantiateComponent(rngComponent):
     rngTRNGMODE_names = []
     _get_bitfield_names(rngValGrp_RNGCON_TRNGMODE, rngTRNGMODE_names)
     rngSym_RNGCON_TRNGMODE = rngComponent.createKeyValueSetSymbol("RNGCON_TRNGMODE", None)
+    rngSym_RNGCON_TRNGMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rng_00350;register:RNGCON")
     rngSym_RNGCON_TRNGMODE.setLabel(rngBitFld_RNGCON_TRNGMODE.getAttribute("caption"))
     rngSym_RNGCON_TRNGMODE.setDefaultValue(0)
     rngSym_RNGCON_TRNGMODE.setOutputMode("Value")

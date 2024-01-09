@@ -79,6 +79,7 @@ def instantiateComponent(pmComponent):
     if "HAS_PLCFG" in parameters:
         #PM performance level select
         pmSym_PM_PLCFG_PLSEL = pmComponent.createKeyValueSetSymbol("PM_PLCFG_PLSEL", None)
+        pmSym_PM_PLCFG_PLSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:PLCFG")
         pmSym_PM_PLCFG_PLSEL.setLabel("Performance Level Select")
         pmSym_PM_PLCFG_PLSEL.setDescription("Selects Performance Level")
         pmSym_PM_PLCFG_PLSEL.addKey("PL0", "0x0", "Performance Level 0")
@@ -88,6 +89,7 @@ def instantiateComponent(pmComponent):
         pmSym_PM_PLCFG_PLSEL.setDisplayMode("Description")
 
         pmSym_PM_PLCFG_PLDIS = pmComponent.createBooleanSymbol("PLCFG_PLDIS", None)
+        pmSym_PM_PLCFG_PLDIS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:PLCFG")
         pmSym_PM_PLCFG_PLDIS.setLabel("Force device to run in PL0")
         pmSym_PM_PLCFG_PLDIS.setDefaultValue(False)
 
@@ -99,6 +101,7 @@ def instantiateComponent(pmComponent):
         pmStandbyConfigurationValues = pmStandbyConfigurationNode.getChildren()
 
         pmSym_STDBYCFG_BBIASHS = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_BBIASHS", None)
+        pmSym_STDBYCFG_BBIASHS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:STDBYCFG")
         pmSym_STDBYCFG_BBIASHS.setLabel("Back Bias option for SRAM")
         pmSym_STDBYCFG_BBIASHS.setDescription("Selects low power option for SRAM")
 
@@ -114,6 +117,7 @@ def instantiateComponent(pmComponent):
     else:
         #PM standby back biasing is a single bit for few devices
         pmSym_STDBYCFG_BBIASHS = pmComponent.createBooleanSymbol("PM_STDBYCFG_BBIASHS", None)
+        pmSym_STDBYCFG_BBIASHS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:STDBYCFG")
         pmSym_STDBYCFG_BBIASHS.setLabel("Put RAM in low power during standby mode")
         pmSym_STDBYCFG_BBIASHS.setDescription("RAM is backbiased in standby mode to reduce power")
         pm_STDBYCFG_initval = int(ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/register-group@[name=\"PM\"]/register@[name=\"STDBYCFG\"]").getAttribute("initval"), 16)
@@ -123,12 +127,14 @@ def instantiateComponent(pmComponent):
     if "HAS_BBIASTR_BIT" in parameters:
         #PM standby back biasing is a single bit for few devices
         pmSym_STDBYCFG_BBIASTR = pmComponent.createBooleanSymbol("PM_STDBYCFG_BBIASTR", None)
+        pmSym_STDBYCFG_BBIASTR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:STDBYCFG")
         pmSym_STDBYCFG_BBIASTR.setLabel("Put TrustRAM in low power during standby mode")
         pmSym_STDBYCFG_BBIASTR.setDescription("RAM is backbiased in standby mode to reduce power")
 
     if "HAS_BBIASLP_FIELD" in parameters:
         #PM standby back biasing for LP SRAM
         pmSym_STDBYCFG_BBIASLP = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_BBIASLP", None)
+        pmSym_STDBYCFG_BBIASLP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:STDBYCFG")
         pmSym_STDBYCFG_BBIASLP.setLabel("Back Bias option for LP SRAM")
         pmSym_STDBYCFG_BBIASLP.setDescription("Selects low power option for LP SRAM")
 
@@ -149,6 +155,7 @@ def instantiateComponent(pmComponent):
     if "HAS_LINKPD_FIELD" in parameters:
         #PM Linked Power Domain
         pmSym_STDBYCFG_LINKPD = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_LINKPD", None)
+        pmSym_STDBYCFG_LINKPD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:STDBYCFG")
         pmSym_STDBYCFG_LINKPD.setLabel("Power Domain Linking")
         pmSym_STDBYCFG_LINKPD.setDescription("Power domains can be linked to each other. When PDn (n=0,1) is active, the linked power domain(s) of higher index PDm (m>n) will be in active state even if there is no activity in PDm.")
 
@@ -169,6 +176,7 @@ def instantiateComponent(pmComponent):
     if "HAS_PDCFG_FIELD" in parameters:
         #PM Power Domain Configuration
         pmSym_STDBYCFG_PDCFG = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_PDCFG", None)
+        pmSym_STDBYCFG_PDCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:STDBYCFG")
         pmSym_STDBYCFG_PDCFG.setLabel("Power Domain Keep Active")
         pmSym_STDBYCFG_PDCFG.setDescription("Power domains can be forced to remain in active state during standby sleep mode, this will accelerate wake-up time")
 
@@ -189,6 +197,7 @@ def instantiateComponent(pmComponent):
     if "HAS_PDCFG_BIT" in parameters:
         #PM Power Domain Configuration
         pmSym_STDBYCFG_PDCFG = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_PDCFG", None)
+        pmSym_STDBYCFG_PDCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:STDBYCFG")
         pmSym_STDBYCFG_PDCFG.setLabel("Power Domain Configuration")
         pmSym_STDBYCFG_PDCFG.setDescription("Power domains can be forced to remain in active state during standby sleep mode, this will accelerate wake-up time")
 
@@ -208,24 +217,28 @@ def instantiateComponent(pmComponent):
 
     if "HAS_DPGPD0_BIT" in parameters:
         pmSym_STDBYCFG_DPGPD0 = pmComponent.createBooleanSymbol("PM_STDBYCFG_DPGPD0", None)
+        pmSym_STDBYCFG_DPGPD0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:STDBYCFG")
         pmSym_STDBYCFG_DPGPD0.setLabel("PD0 Dynamic Power Gating Enable")
         pmSym_STDBYCFG_DPGPD0.setDefaultValue(0)
         pmSym_STDBYCFG_DPGPD0.setDescription("PD0 and PD1 supports dynamic power gating")
 
     if "HAS_DPGPD1_BIT" in parameters:
         pmSym_STDBYCFG_DPGPD1 = pmComponent.createBooleanSymbol("PM_STDBYCFG_DPGPD1", None)
+        pmSym_STDBYCFG_DPGPD1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:STDBYCFG")
         pmSym_STDBYCFG_DPGPD1.setLabel("PD1 Dynamic Power Gating Enable")
         pmSym_STDBYCFG_DPGPD1.setDefaultValue(0)
         pmSym_STDBYCFG_DPGPD1.setDescription("PD0 and PD1 supports dynamic power gating")
 
     if "HAS_DPGPDSW_BIT" in parameters:
         pmSym_STDBYCFG_DPGPD = pmComponent.createBooleanSymbol("PM_STDBYCFG_DPGPD", None)
+        pmSym_STDBYCFG_DPGPD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:STDBYCFG")
         pmSym_STDBYCFG_DPGPD.setLabel("Dynamic Power Gating Enable")
         pmSym_STDBYCFG_DPGPD.setDefaultValue(0)
         pmSym_STDBYCFG_DPGPD.setDescription("Dynamic Power Gating for Switchable Power Domain")
 
     #PM standby VREGMOD configuration
     pmSym_STDBYCFG_VREGSMOD = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_VREGSMOD", None)
+    pmSym_STDBYCFG_VREGSMOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:STDBYCFG")
     pmSym_STDBYCFG_VREGSMOD.setLabel("Voltage Regulator operation in Standby mode")
     pmSym_STDBYCFG_VREGSMOD.setDescription("Configures the VDDCORE Supply source in Standby Sleep mode.")
 
@@ -245,6 +258,7 @@ def instantiateComponent(pmComponent):
 
     if "HAS_PWCFG" in parameters:
         pmSym_PWCFG = pmComponent.createKeyValueSetSymbol("PM_PWCFG_RAMPSWC", None)
+        pmSym_PWCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:PWCFG")
         pmSym_PWCFG.setLabel("RAM Power Switch Configuration")
 
         pmStandbyConfigurationNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/value-group@[name=\"PM_PWCFG__RAMPSWC\"]")
@@ -275,6 +289,7 @@ def instantiateComponent(pmComponent):
     if IdleModeCount > 1:
         #Idle configuration
         pmSym_PM_IDLE = pmComponent.createKeyValueSetSymbol("PM_IDLE_OPTION", None)
+        pmSym_PM_IDLE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pm_u2240;register:SLEEPCFG")
         pmSym_PM_IDLE.setLabel("Idle Mode Configuration")
         pmSym_PM_IDLE.setOutputMode("Value")
         pmSym_PM_IDLE.setDisplayMode("Description")

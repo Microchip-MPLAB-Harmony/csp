@@ -586,6 +586,7 @@ def instantiateComponent(cclComponent):
     # Enable for entire CCL module
     cclEnSymId = cclInstanceName.getValue() + "_ENABLE"
     cclEnable = cclComponent.createBooleanSymbol(cclEnSymId, None)
+    cclEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccl_u2225;register:CTRL")
     cclEnable.setLabel("Enable CCL Module?")
 
     # CTRL register bitfields
@@ -611,6 +612,7 @@ def instantiateComponent(cclComponent):
     # register SEQCTRLx value for ftl file
     cclsym_CTRL = cclComponent.createHexSymbol("CCL_CTRL_REGVALUE", None)
     cclsym_CTRL.setVisible(False)
+    cclsym_CTRL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccl_u2225;register:CTRL")
     cclsym_CTRL.setLabel("CTRL register value")
     cclsym_CTRL.setDependencies(cclCalcCTRL, ['CTRL0__RUNSTDBY','CTRL0__ENABLE'])
 
@@ -653,6 +655,7 @@ def instantiateComponent(cclComponent):
         fieldName = "ENABLE"
         cclLutctrlEnable.append(lut)
         cclLutctrlEnable[lut] = cclComponent.createBooleanSymbol(symLutctrlEnableName[lut], cclEnable)
+        cclLutctrlEnable[lut].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccl_u2225;register:LUTCTRL")
         cclLutctrlEnable[lut].setLabel("Enable LUT"+str(lut)+"?")
         cclLutctrlEnable[lut].setVisible(False)
         cclLutctrlEnable[lut].setDependencies(hideMenu_clearValues, [cclEnSymId])
@@ -723,6 +726,7 @@ def instantiateComponent(cclComponent):
         fieldName = "TRUTH"
         cclLuctrlTruth.append(lut)
         cclLuctrlTruth[lut] = cclComponent.createHexSymbol(regName+str(lut)+'__'+fieldName, cclLutctrlEnable[lut])
+        cclLuctrlTruth[lut].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccl_u2225;register:LUTCTRL")
         cclLuctrlTruth[lut].setDefaultValue(0)
         cclLuctrlTruth[lut].setVisible(False)
         cclLuctrlTruth[lut].setLabel("Truth Table")
@@ -740,6 +744,7 @@ def instantiateComponent(cclComponent):
         cclSym_LUTCTRL.append(lut)
         cclSym_LUTCTRL[lut] = cclComponent.createHexSymbol("CCL_LUTCTRL_REGVALUE"+str(lut), None)
         cclSym_LUTCTRL[lut].setLabel("LUTCTRL"+str(lut)+" register value")
+        cclSym_LUTCTRL[lut].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccl_u2225;register:LUTCTRL")
         cclSym_LUTCTRL[lut].setVisible(False)
         cclSym_LUTCTRL[lut].setDependencies(cclCalcLUTCTRL, clccon_LUTCTRL_deplist[lut])
 
@@ -771,6 +776,7 @@ def instantiateComponent(cclComponent):
         cclsym_SEQCTRL.append(ii)
         cclsym_SEQCTRL[ii] = cclComponent.createHexSymbol("CCL_SEQCTRL_REGVALUE"+str(ii), None)
         cclsym_SEQCTRL[ii].setVisible(False)
+        cclsym_SEQCTRL[ii].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccl_u2225;register:SEQCTRL")
         cclsym_SEQCTRL[ii].setLabel("SEQCTRL"+str(ii)+" register value")
         cclsym_SEQCTRL[ii].setDependencies(cclCalcSEQCTRL, ['SEQCTRL'+str(ii)+'__SEQSEL'])
 

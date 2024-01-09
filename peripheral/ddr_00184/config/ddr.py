@@ -80,6 +80,7 @@ def instantiateComponent(ddrComponent):
 
     #DDR Type
     ddrSym_DDR_TYPE = ddrComponent.createKeyValueSetSymbol("DDR_TYPE", None)
+    ddrSym_DDR_TYPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDR_TYPE.setLabel("DDR Type")
     ddrSym_DDR_TYPE.setDefaultValue(0)
     ddrSym_DDR_TYPE.setOutputMode("Value")
@@ -90,6 +91,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDR_TYPE.setVisible(True)
     #DDR Size (MB)
     ddrSym_DDRsize = ddrComponent.createIntegerSymbol("DDR_SIZE_MB", None)
+    ddrSym_DDRsize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRsize.setLabel("DDR Size (MB)")
     ddrSym_DDRsize.setDefaultValue(32)
     ddrSym_DDRsize.setMin(0)
@@ -101,6 +103,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_ARBITER_STRING.setVisible(True)
     #Target 0 Minimum Burst Limit - hex field
     ddrSym_DDRMINLIM_MINLIM0 = ddrComponent.createHexSymbol("DDR_MINLIM_TGT0", ddrSym_ARBITER_STRING)
+    ddrSym_DDRMINLIM_MINLIM0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRMINLIM_MINLIM0.setLabel("Target 0 Minimum Burst Limit")
     ddrSym_DDRMINLIM_MINLIM0.setDefaultValue(31)
     ddrSym_DDRMINLIM_MINLIM0.setMin(0)
@@ -108,6 +111,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRMINLIM_MINLIM0.setVisible(True)
     #Target 0 Request Period - hex field
     ddrSym_DDRRQPER_RQPER0 = ddrComponent.createHexSymbol("DDR_REQPER_TGT0", ddrSym_ARBITER_STRING)
+    ddrSym_DDRRQPER_RQPER0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRRQPER_RQPER0.setLabel("Target 0 Request Period")
     ddrSym_DDRRQPER_RQPER0.setDefaultValue(255)
     ddrSym_DDRRQPER_RQPER0.setMin(0)
@@ -115,6 +119,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRRQPER_RQPER0.setVisible(True)
     #Target 0 Minimum Command - hex field
     ddrSym_DDRMINCMD_MINCMD0 = ddrComponent.createHexSymbol("DDR_MINCMD_TGT0", ddrSym_ARBITER_STRING)
+    ddrSym_DDRMINCMD_MINCMD0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRMINCMD_MINCMD0.setLabel("Target 0 Minimum Command")
     ddrSym_DDRMINCMD_MINCMD0.setDefaultValue(4)
     ddrSym_DDRMINCMD_MINCMD0.setMin(0)
@@ -122,6 +127,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRMINCMD_MINCMD0.setVisible(True)
     #Target 1 Minimum Burst Limit - hex field
     ddrSym_DDRMINLIM_MINLIM1 = ddrComponent.createHexSymbol("DDR_MINLIM_TGT1", ddrSym_ARBITER_STRING)
+    ddrSym_DDRMINLIM_MINLIM1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRMINLIM_MINLIM1.setLabel("Target 1 Minimum Burst Limit")
     ddrSym_DDRMINLIM_MINLIM1.setDefaultValue(31)
     ddrSym_DDRMINLIM_MINLIM1.setMin(0)
@@ -129,6 +135,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRMINLIM_MINLIM1.setVisible(True)
     #Target 1 Request Period - hex field
     ddrSym_DDRRQPER_RQPER1 = ddrComponent.createHexSymbol("DDR_REQPER_TGT1", ddrSym_ARBITER_STRING)
+    ddrSym_DDRRQPER_RQPER1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRRQPER_RQPER1.setLabel("Target 1 Request Period")
     ddrSym_DDRRQPER_RQPER1.setDefaultValue(255)
     ddrSym_DDRRQPER_RQPER1.setMin(0)
@@ -136,6 +143,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRRQPER_RQPER1.setVisible(True)
     #Target 1 Minimum Command - hex field
     ddrSym_DDRMINCMD_MINCMD1 = ddrComponent.createHexSymbol("DDR_MINCMD_TGT1", ddrSym_ARBITER_STRING)
+    ddrSym_DDRMINCMD_MINCMD1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRMINCMD_MINCMD1.setLabel("Target 1 Minimum Command")
     ddrSym_DDRMINCMD_MINCMD1.setDefaultValue(16)
     ddrSym_DDRMINCMD_MINCMD1.setMin(0)
@@ -143,6 +151,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRMINCMD_MINCMD1.setVisible(True)
     #Target 2 Minimum Burst Limit - hex field
     ddrSym_DDRMINLIM_MINLIM2 = ddrComponent.createHexSymbol("DDR_MINLIM_TGT2", ddrSym_ARBITER_STRING)
+    ddrSym_DDRMINLIM_MINLIM2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRMINLIM_MINLIM2.setLabel("Target 2 Minimum Burst Limit")
     ddrSym_DDRMINLIM_MINLIM2.setDefaultValue(31)
     ddrSym_DDRMINLIM_MINLIM2.setMin(0)
@@ -150,6 +159,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRMINLIM_MINLIM2.setVisible(True)
     #Target 2 Request Period - hex field
     ddrSym_DDRRQPER_RQPER2 = ddrComponent.createHexSymbol("DDR_REQPER_TGT2", ddrSym_ARBITER_STRING)
+    ddrSym_DDRRQPER_RQPER2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRRQPER_RQPER2.setLabel("Target 2 Request Period")
     ddrSym_DDRRQPER_RQPER2.setDefaultValue(255)
     ddrSym_DDRRQPER_RQPER2.setMin(0)
@@ -157,6 +167,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRRQPER_RQPER2.setVisible(True)
     #Target 2 Minimum Command - hex field
     ddrSym_DDRMINCMD_MINCMD2 = ddrComponent.createHexSymbol("DDR_MINCMD_TGT2", ddrSym_ARBITER_STRING)
+    ddrSym_DDRMINCMD_MINCMD2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRMINCMD_MINCMD2.setLabel("Target 2 Minimum Command")
     ddrSym_DDRMINCMD_MINCMD2.setDefaultValue(16)
     ddrSym_DDRMINCMD_MINCMD2.setMin(0)
@@ -164,6 +175,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRMINCMD_MINCMD2.setVisible(True)
     #Target 3 Minimum Burst Limit - hex field
     ddrSym_DDRMINLIM_MINLIM3 = ddrComponent.createHexSymbol("DDR_MINLIM_TGT3", ddrSym_ARBITER_STRING)
+    ddrSym_DDRMINLIM_MINLIM3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRMINLIM_MINLIM3.setLabel("Target 3 Minimum Burst Limit")
     ddrSym_DDRMINLIM_MINLIM3.setDefaultValue(4)
     ddrSym_DDRMINLIM_MINLIM3.setMin(0)
@@ -171,6 +183,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRMINLIM_MINLIM3.setVisible(True)
     #Target 3 Request Period - hex field
     ddrSym_DDRRQPER_RQPER3 = ddrComponent.createHexSymbol("DDR_REQPER_TGT3", ddrSym_ARBITER_STRING)
+    ddrSym_DDRRQPER_RQPER3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRRQPER_RQPER3.setLabel("Target 3 Request Period")
     ddrSym_DDRRQPER_RQPER3.setDefaultValue(255)
     ddrSym_DDRRQPER_RQPER3.setMin(0)
@@ -178,6 +191,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRRQPER_RQPER3.setVisible(True)
     #Target 3 Minimum Command - hex field
     ddrSym_DDRMINCMD_MINCMD3 = ddrComponent.createHexSymbol("DDR_MINCMD_TGT3", ddrSym_ARBITER_STRING)
+    ddrSym_DDRMINCMD_MINCMD3.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRMINCMD_MINCMD3.setLabel("Target 3 Minimum Command")
     ddrSym_DDRMINCMD_MINCMD3.setDefaultValue(4)
     ddrSym_DDRMINCMD_MINCMD3.setMin(0)
@@ -185,6 +199,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRMINCMD_MINCMD3.setVisible(True)
     #Target 4 Minimum Burst Limit - hex field
     ddrSym_DDRMINLIM_MINLIM4 = ddrComponent.createHexSymbol("DDR_MINLIM_TGT4", ddrSym_ARBITER_STRING)
+    ddrSym_DDRMINLIM_MINLIM4.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRMINLIM_MINLIM4.setLabel("Target 4 Minimum Burst Limit")
     ddrSym_DDRMINLIM_MINLIM4.setDefaultValue(4)
     ddrSym_DDRMINLIM_MINLIM4.setMin(0)
@@ -192,6 +207,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRMINLIM_MINLIM4.setVisible(True)
     #Target 4 Request Period - hex field
     ddrSym_DDRRQPER_RQPER4 = ddrComponent.createHexSymbol("DDR_REQPER_TGT4", ddrSym_ARBITER_STRING)
+    ddrSym_DDRRQPER_RQPER4.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRRQPER_RQPER4.setLabel("Target 4 Request Period")
     ddrSym_DDRRQPER_RQPER4.setDefaultValue(255)
     ddrSym_DDRRQPER_RQPER4.setMin(0)
@@ -199,6 +215,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRRQPER_RQPER4.setVisible(True)
     #Target 4 Minimum Command - hex field
     ddrSym_DDRMINCMD_MINCMD4 = ddrComponent.createHexSymbol("DDR_MINCMD_TGT4", ddrSym_ARBITER_STRING)
+    ddrSym_DDRMINCMD_MINCMD4.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRMINCMD_MINCMD4.setLabel("Target 4 Minimum Command")
     ddrSym_DDRMINCMD_MINCMD4.setDefaultValue(4)
     ddrSym_DDRMINCMD_MINCMD4.setMin(0)
@@ -211,6 +228,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_ADDRESSING_STRING.setVisible(True)
     #Number of Column Bits - number field
     ddrSym_ColumnBits = ddrComponent.createIntegerSymbol("DDR_COL_BITS", ddrSym_ADDRESSING_STRING)
+    ddrSym_ColumnBits.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_ColumnBits.setLabel("Number of Column Bits")
     ddrSym_ColumnBits.setDefaultValue(9)
     ddrSym_ColumnBits.setMin(0)
@@ -218,6 +236,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_ColumnBits.setVisible(True)
     #Number of Row Bits - number field
     ddrSym_RowBits = ddrComponent.createIntegerSymbol("DDR_ROW_BITS", ddrSym_ADDRESSING_STRING)
+    ddrSym_RowBits.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_RowBits.setLabel("Number of Row Bits")
     ddrSym_RowBits.setDefaultValue(13)
     ddrSym_RowBits.setMin(0)
@@ -225,6 +244,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_RowBits.setVisible(True)
     #Number of Bank Bits - number field
     ddrSym_BankBits = ddrComponent.createIntegerSymbol("DDR_BANK_BITS", ddrSym_ADDRESSING_STRING)
+    ddrSym_BankBits.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_BankBits.setLabel("Number of Bank Bits")
     ddrSym_BankBits.setDefaultValue(2)
     ddrSym_BankBits.setMin(0)
@@ -237,6 +257,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_TIMING_STRING.setVisible(True)
     #DDR Clock Period (psec)
     ddrSym_ClockPeriod = ddrComponent.createIntegerSymbol("DDR_CLK_PER", ddrSym_TIMING_STRING)
+    ddrSym_ClockPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_ClockPeriod.setLabel("DDR Clock Period (psec)")
     ddrSym_ClockPeriod.setDefaultValue(2500)
     #ddrSym_ClockPeriod.setMin(0)
@@ -244,6 +265,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_ClockPeriod.setVisible(True)
     #Burst Length (BL)
     ddrSym_BurstLength = ddrComponent.createIntegerSymbol("DDR_BRST_LEN", ddrSym_TIMING_STRING)
+    ddrSym_BurstLength.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_BurstLength.setLabel("Burst Length (BL)")
     ddrSym_BurstLength.setDefaultValue(2)
     #ddrSym_BurstLength.setMin(0)
@@ -251,6 +273,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_BurstLength.setVisible(True)
     #Read Latency (CAS, clock cycles)
     ddrSym_ReadLatency = ddrComponent.createIntegerSymbol("DDR_CAS_LAT", ddrSym_TIMING_STRING)
+    ddrSym_ReadLatency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_ReadLatency.setLabel("Read Latency (CAS, clock cycles)")
     ddrSym_ReadLatency.setDefaultValue(5)
     #ddrSym_ReadLatency.setMin(0)
@@ -258,6 +281,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_ReadLatency.setVisible(True)
     #Write Latency (WL, clock cycles)
     ddrSym_WriteLatency = ddrComponent.createIntegerSymbol("DDR_WR_LAT", ddrSym_TIMING_STRING)
+    ddrSym_WriteLatency.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_WriteLatency.setLabel("Write Latency (WL, clock cycles)")
     ddrSym_WriteLatency.setDefaultValue(4)
     #ddrSym_WriteLatency.setMin(0)
@@ -265,6 +289,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_WriteLatency.setVisible(True)
     #Refresh Cycle Time (tRFC, psec)
     ddrSym_RefreshCycTime = ddrComponent.createIntegerSymbol("DDR_TRFC", ddrSym_TIMING_STRING)
+    ddrSym_RefreshCycTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_RefreshCycTime.setLabel("Refresh Cycle Time (tRFC, psec)")
     ddrSym_RefreshCycTime.setDefaultValue(127500)
     #ddrSym_RefreshCycTime.setMin(0)
@@ -272,6 +297,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_RefreshCycTime.setVisible(True)
     #Refresh Interval (tRFI, clock cycles)
     ddrSym_RefreshInterval = ddrComponent.createIntegerSymbol("DDR_TRFI", ddrSym_TIMING_STRING)
+    ddrSym_RefreshInterval.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_RefreshInterval.setLabel("Refresh Interval (tRFI, clock cycles)")
     ddrSym_RefreshInterval.setDefaultValue(7800000)
     #ddrSym_RefreshInterval.setMin(0)
@@ -279,6 +305,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_RefreshInterval.setVisible(True)
     #Maximum Number of Pending Refreshes
     ddrSym_MaxPendRefresh = ddrComponent.createIntegerSymbol("DDR_MAX_PEND_REFS", ddrSym_TIMING_STRING)
+    ddrSym_MaxPendRefresh.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_MaxPendRefresh.setLabel("Maximum Number of Pending Refreshes")
     ddrSym_MaxPendRefresh.setDefaultValue(7)
     ddrSym_MaxPendRefresh.setMin(0)
@@ -286,6 +313,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_MaxPendRefresh.setVisible(True)
     #Write Recovery Time (tWR, psec)
     ddrSym_WriteRecTime = ddrComponent.createIntegerSymbol("DDR_TWR", ddrSym_TIMING_STRING)
+    ddrSym_WriteRecTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_WriteRecTime.setLabel("Write Recovery Time (tWR, psec)")
     ddrSym_WriteRecTime.setDefaultValue(15000)
     #ddrSym_WriteRecTime.setMin(0)
@@ -293,6 +321,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_WriteRecTime.setVisible(True)
     #RAS Precharge Time (tRP, psec)
     ddrSym_RAS_PrecharTime = ddrComponent.createIntegerSymbol("DDR_TRP", ddrSym_TIMING_STRING)
+    ddrSym_RAS_PrecharTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_RAS_PrecharTime.setLabel("RAS Precharge Time (tRP, psec)")
     ddrSym_RAS_PrecharTime.setDefaultValue(12500)
     #ddrSym_RAS_PrecharTime.setMin(0)
@@ -300,6 +329,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_RAS_PrecharTime.setVisible(True)
     #RAS to CAS Delay Time (tRCD, psec)
     ddrSym_RAS_CAS_Delay = ddrComponent.createIntegerSymbol("DDR_TRCD", ddrSym_TIMING_STRING)
+    ddrSym_RAS_CAS_Delay.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_RAS_CAS_Delay.setLabel("RAS to CAS Delay Time (tRCD, psec)")
     ddrSym_RAS_CAS_Delay.setDefaultValue(12500)
     #ddrSym_RAS_CAS_Delay.setMin(0)
@@ -307,6 +337,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_RAS_CAS_Delay.setVisible(True)
     #Activate to Activate Delay Time (tWTR, psec)
     ddrSym_Act_Act_Delay = ddrComponent.createIntegerSymbol("DDR_TRRD", ddrSym_TIMING_STRING)
+    ddrSym_Act_Act_Delay.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_Act_Act_Delay.setLabel("Activate to Activate Delay Time (tRRD, psec)")
     ddrSym_Act_Act_Delay.setDefaultValue(7500)
     #ddrSym_Act_Act_Delay.setMin(0)
@@ -314,6 +345,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_Act_Act_Delay.setVisible(True)
     #Write to Read Command Delay Time (tWTR, psec)
     ddrSym_Write_ReadCmdDelay = ddrComponent.createIntegerSymbol("DDR_TWTR", ddrSym_TIMING_STRING)
+    ddrSym_Write_ReadCmdDelay.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_Write_ReadCmdDelay.setLabel("Write to Read Command Delay Time (tWTR, psec)")
     ddrSym_Write_ReadCmdDelay.setDefaultValue(7500)
     #ddrSym_Write_ReadCmdDelay.setMin(0)
@@ -321,6 +353,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_Write_ReadCmdDelay.setVisible(True)
     #Read to Precharge Delay Time (tRTP, psec)
     ddrSym_Read_Precharg_Delay = ddrComponent.createIntegerSymbol("DDR_TRTP", ddrSym_TIMING_STRING)
+    ddrSym_Read_Precharg_Delay.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_Read_Precharg_Delay.setLabel("Read to Precharge Delay Time (tRTP, psec)")
     ddrSym_Read_Precharg_Delay.setDefaultValue(7500)
     #ddrSym_Read_Precharg_Delay.setMin(0)
@@ -328,6 +361,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_Read_Precharg_Delay.setVisible(True)
     #Active to Precharge Delay Time (tRAS, psec)
     ddrSym_Act_Precharg_Delay = ddrComponent.createIntegerSymbol("DDR_TRAS", ddrSym_TIMING_STRING)
+    ddrSym_Act_Precharg_Delay.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_Act_Precharg_Delay.setLabel("Active to Precharge Delay Time (tRAS, psec)")
     ddrSym_Act_Precharg_Delay.setDefaultValue(45000)
     #ddrSym_Act_Precharg_Delay.setMin(0)
@@ -335,6 +369,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_Act_Precharg_Delay.setVisible(True)
     #Row Cycle Time (tRC, psec)
     ddrSym_RowCycleTime = ddrComponent.createIntegerSymbol("DDR_TRC", ddrSym_TIMING_STRING)
+    ddrSym_RowCycleTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_RowCycleTime.setLabel("Row Cycle Time (tRC, psec)")
     ddrSym_RowCycleTime.setDefaultValue(57500)
     #ddrSym_RowCycleTime.setMin(0)
@@ -345,6 +380,7 @@ def instantiateComponent(ddrComponent):
     #default 35000 if SYS_MEMORY_DDR_TYPE = "Internal"
     #default 0
     ddrSym_FourBankActWin = ddrComponent.createIntegerSymbol("DDR_TFAW", ddrSym_TIMING_STRING)
+    ddrSym_FourBankActWin.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_FourBankActWin.setLabel("Four Bank Activate Window (tFAW, psec)")
     ddrSym_FourBankActWin.setDefaultValue(35000)
     #ddrSym_FourBankActWin.setMin(0)
@@ -352,6 +388,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_FourBankActWin.setVisible(True)
     #Exit Precharge Power Down to Any Command Time (tXP, clock cycles)
     ddrSym_ExitPregchargPwrDwn = ddrComponent.createIntegerSymbol("DDR_TXP", ddrSym_TIMING_STRING)
+    ddrSym_ExitPregchargPwrDwn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_ExitPregchargPwrDwn.setLabel("Exit Precharge Power Down to Any Command Time (tXP, clock cycles)")
     ddrSym_ExitPregchargPwrDwn.setDefaultValue(2)
     #ddrSym_ExitPregchargPwrDwn.setMin(0)
@@ -359,6 +396,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_ExitPregchargPwrDwn.setVisible(True)
     #CKE Minimum High/Low Time (tCKE, clock cycles)
     ddrSym_CKE_MinHLTime = ddrComponent.createIntegerSymbol("DDR_TCKE", ddrSym_TIMING_STRING)
+    ddrSym_CKE_MinHLTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_CKE_MinHLTime.setLabel("CKE Minimum High/Low Time (tCKE, clock cycles)")
     ddrSym_CKE_MinHLTime.setDefaultValue(3)
     #ddrSym_CKE_MinHLTime.setMin(0)
@@ -366,6 +404,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_CKE_MinHLTime.setVisible(True)
     #Mode Register Set Command Cycle Time (tMRD, clock cycles)
     ddrSym_ModeRegSetCmdCycTime = ddrComponent.createIntegerSymbol("DDR_TMRD", ddrSym_TIMING_STRING)
+    ddrSym_ModeRegSetCmdCycTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_ModeRegSetCmdCycTime.setLabel("Mode Register Set Command Cycle Time (tMRD, clock cycles)")
     ddrSym_ModeRegSetCmdCycTime.setDefaultValue(2)
     #ddrSym_ModeRegSetCmdCycTime.setMin(0)
@@ -373,6 +412,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_ModeRegSetCmdCycTime.setVisible(True)
     #DLL Lock Time (number of clocks)
     ddrSym_DLL_LockTime = ddrComponent.createIntegerSymbol("DDR_TDLLK", ddrSym_TIMING_STRING)
+    ddrSym_DLL_LockTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DLL_LockTime.setLabel("DLL Lock Time (number of clocks)")
     ddrSym_DLL_LockTime.setDefaultValue(200)
     #ddrSym_DLL_LockTime.setMin(0)
@@ -385,26 +425,31 @@ def instantiateComponent(ddrComponent):
     ddrSym_PWRCONTROL_STRING.setVisible(True)
     #Enable Auto Power Down?
     ddrSym_DDRPWRCFG_APWRDNEN = ddrComponent.createBooleanSymbol("DDR_AUTO_PWR_DOWN", ddrSym_PWRCONTROL_STRING)
+    ddrSym_DDRPWRCFG_APWRDNEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPWRCFG_APWRDNEN.setLabel("Enable Automatic Power Down")
     ddrSym_DDRPWRCFG_APWRDNEN.setDefaultValue(False)
     ddrSym_DDRPWRCFG_APWRDNEN.setVisible(True)
     #Enable Auto Self Refresh  - Bool ****************************NOT IN H2****************
 ##    ddrSym_DDRPWRCFG_ASLFREFEN = ddrComponent.createBooleanSymbol("ASLFREFEN", ddrSym_PWRCONTROL_STRING)
+##    ddrSym_DDRPWRCFG_ASLFREFEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
 ##    ddrSym_DDRPWRCFG_ASLFREFEN.setLabel("Automatic Self Refresh Enable bit")
 ##    ddrSym_DDRPWRCFG_ASLFREFEN.setDefaultValue(False)
 ##    ddrSym_DDRPWRCFG_ASLFREFEN.setVisible(True)
     #Enable Auto Precharge?
     ddrSym_DDRMEMCFG0_APCHRGEN = ddrComponent.createBooleanSymbol("DDR_AUTO_PCHRG", ddrSym_PWRCONTROL_STRING)
+    ddrSym_DDRMEMCFG0_APCHRGEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRMEMCFG0_APCHRGEN.setLabel("Enable Auto Precharge")
     ddrSym_DDRMEMCFG0_APCHRGEN.setDefaultValue(False)
     ddrSym_DDRMEMCFG0_APCHRGEN.setVisible(True)
     #Enable Auto Precharge Power Down?
     ddrSym_DDRPWRCFG_PCHRGPWDN = ddrComponent.createBooleanSymbol("DDR_AUTO_PCHRG_PWR_DOWN", ddrSym_PWRCONTROL_STRING)
+    ddrSym_DDRPWRCFG_PCHRGPWDN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPWRCFG_PCHRGPWDN.setLabel("Enable Auto Precharge Power Down")
     ddrSym_DDRPWRCFG_PCHRGPWDN.setDefaultValue(False)
     ddrSym_DDRPWRCFG_PCHRGPWDN.setVisible(True)
     #Self Refresh Delay
     ddrSym_DDRPWRCFG_SLFREFDLY = ddrComponent.createIntegerSymbol("DDR_SELF_REFRESH_DELAY", ddrSym_PWRCONTROL_STRING)
+    ddrSym_DDRPWRCFG_SLFREFDLY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPWRCFG_SLFREFDLY.setLabel("Self Refresh Delay")
     ddrSym_DDRPWRCFG_SLFREFDLY.setDefaultValue(17)
     ddrSym_DDRPWRCFG_SLFREFDLY.setMin(1)
@@ -412,6 +457,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRPWRCFG_SLFREFDLY.setVisible(True)
     #Power Down Delay
     ddrSym_DDRPWRCFG_PWRDNDLY = ddrComponent.createIntegerSymbol("DDR_PWR_DOWN_DELAY", ddrSym_PWRCONTROL_STRING)
+    ddrSym_DDRPWRCFG_PWRDNDLY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPWRCFG_PWRDNDLY.setLabel("Power Down Delay")
     ddrSym_DDRPWRCFG_PWRDNDLY.setDefaultValue(8)
     ddrSym_DDRPWRCFG_PWRDNDLY.setMin(1)
@@ -424,6 +470,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_HOSTCMD_STRING.setVisible(True)
     #Number of Host Commands
     ddrSym_DDRCMDISSUE_NUMHOSTCMDS = ddrComponent.createHexSymbol("DDR_NUM_CMDS", ddrSym_HOSTCMD_STRING)
+    ddrSym_DDRCMDISSUE_NUMHOSTCMDS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRCMDISSUE_NUMHOSTCMDS.setLabel("Number of Host Commands")
     ddrSym_DDRCMDISSUE_NUMHOSTCMDS.setDefaultValue(12-1)
     ddrSym_DDRCMDISSUE_NUMHOSTCMDS.setVisible(True)
@@ -435,11 +482,13 @@ def instantiateComponent(ddrComponent):
 
     #Enable ODT for Reads
     ddrSym_DDRODTENCFG_ODTREN = ddrComponent.createBooleanSymbol("DDR_ODT_READ_ENABLE", ddrSym_TERMINATION_STRING)
+    ddrSym_DDRODTENCFG_ODTREN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRODTENCFG_ODTREN.setLabel("Enable On-Die Termination for Reads")
     ddrSym_DDRODTENCFG_ODTREN.setDefaultValue(False)
     ddrSym_DDRODTENCFG_ODTREN.setVisible(True)
         #Number of Clocks ODT is Turned on for Reads
     ddrSym_DDRODTCFG_ODTRLEN = ddrComponent.createIntegerSymbol("DDR_ODT_READ_CLOCKS", ddrSym_DDRODTENCFG_ODTREN)
+    ddrSym_DDRODTCFG_ODTRLEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRODTCFG_ODTRLEN.setLabel("On-Die Termination Read Length bits")
     ddrSym_DDRODTCFG_ODTRLEN.setDefaultValue(2)
     ddrSym_DDRODTCFG_ODTRLEN.setMin(0)
@@ -447,6 +496,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRODTCFG_ODTRLEN.setVisible(True)
         #Number of Clocks After Write Command Before Turning on ODT
     ddrSym_DDRODTCFG_ODTRDLY = ddrComponent.createIntegerSymbol("DDR_ODT_READ_DLY", ddrSym_DDRODTENCFG_ODTREN)
+    ddrSym_DDRODTCFG_ODTRDLY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRODTCFG_ODTRDLY.setLabel("On-Die Termination Read Delay bits")
     ddrSym_DDRODTCFG_ODTRDLY.setDefaultValue(4)
     ddrSym_DDRODTCFG_ODTRDLY.setMin(0)
@@ -455,11 +505,13 @@ def instantiateComponent(ddrComponent):
 
     #Enable ODT for Writes?
     ddrSym_DDRODTENCFG_ODTWEN = ddrComponent.createBooleanSymbol("DDR_ODT_WRITE_ENABLE", ddrSym_TERMINATION_STRING)
+    ddrSym_DDRODTENCFG_ODTWEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRODTENCFG_ODTWEN.setLabel("Enable On-Die Termination for Writes")
     ddrSym_DDRODTENCFG_ODTWEN.setDefaultValue(True)
     ddrSym_DDRODTENCFG_ODTWEN.setVisible(True)
         #Number of Clocks ODT is Turned on for Writes
     ddrSym_DDRODTCFG_ODTWLEN = ddrComponent.createIntegerSymbol("DDR_ODT_WRITE_CLOCKS", ddrSym_DDRODTENCFG_ODTWEN)
+    ddrSym_DDRODTCFG_ODTWLEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRODTCFG_ODTWLEN.setLabel("On-Die Termination Write Length bits")
     ddrSym_DDRODTCFG_ODTWLEN.setDefaultValue(3)
     ddrSym_DDRODTCFG_ODTWLEN.setMin(0)
@@ -467,6 +519,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRODTCFG_ODTWLEN.setVisible(True)
         #Number of Clocks After Write Command Before turning on ODT
     ddrSym_DDRODTCFG_ODTWDLY = ddrComponent.createIntegerSymbol("DDR_ODT_WRITE_DLY", ddrSym_DDRODTENCFG_ODTWEN)
+    ddrSym_DDRODTCFG_ODTWDLY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRODTCFG_ODTWDLY.setLabel("On-Die Termination Write Delay bits")
     ddrSym_DDRODTCFG_ODTWDLY.setDefaultValue(1)
     ddrSym_DDRODTCFG_ODTWDLY.setMin(0)
@@ -479,6 +532,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_PHYCONFIG_STRING.setVisible(True)
     #Enable PHY ODT - Boolean
     ddrSym_DDRPHYPADCON_ODTEN = ddrComponent.createBooleanSymbol("DDR_PHY_ODT_ENABLE", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_ODTEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_ODTEN.setLabel("On-Die Termination Enable bit")
     ddrSym_DDRPHYPADCON_ODTEN.setDefaultValue(True)
     ddrSym_DDRPHYPADCON_ODTEN.setVisible(True)
@@ -486,6 +540,7 @@ def instantiateComponent(ddrComponent):
     ddrODTSEL_names = []
     _get_bitfield_names(ddrValGrp_DDRPHYPADCON_ODTSEL, ddrODTSEL_names)
     ddrSym_DDRPHYPADCON_ODTSEL = ddrComponent.createKeyValueSetSymbol("DDR_PHY_ODT_VALUE", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_ODTSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_ODTSEL.setLabel("PHY On-Die Termination Value")
     ddrSym_DDRPHYPADCON_ODTSEL.setDefaultValue(1)
     ddrSym_DDRPHYPADCON_ODTSEL.setOutputMode("Value")
@@ -497,6 +552,7 @@ def instantiateComponent(ddrComponent):
     ddrDATDRVSEL_names = []
     _get_bitfield_names(ddrValGrp_DDRPHYPADCON_DATDRVSEL, ddrDATDRVSEL_names)
     ddrSym_DDRPHYPADCON_DATDRVSEL = ddrComponent.createKeyValueSetSymbol("DDR_PHY_SYS_MEMORY_STRENGTH_DATA", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_DATDRVSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_DATDRVSEL.setLabel("Data Pad Drive Strength Select bit")
     ddrSym_DDRPHYPADCON_DATDRVSEL.setDefaultValue(0)
     ddrSym_DDRPHYPADCON_DATDRVSEL.setOutputMode("Value")
@@ -508,6 +564,7 @@ def instantiateComponent(ddrComponent):
     ddrADDCDRVSEL_names = []
     _get_bitfield_names(ddrValGrp_DDRPHYPADCON_ADDCDRVSEL, ddrADDCDRVSEL_names)
     ddrSym_DDRPHYPADCON_ADDCDRVSEL = ddrComponent.createKeyValueSetSymbol("DDR_PHY_SYS_MEMORY_STRENGTH_ADDC", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_ADDCDRVSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_ADDCDRVSEL.setLabel("Address and Control Pads Drive Strength Select bit")
     ddrSym_DDRPHYPADCON_ADDCDRVSEL.setDefaultValue(0)
     ddrSym_DDRPHYPADCON_ADDCDRVSEL.setOutputMode("Value")
@@ -517,6 +574,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRPHYPADCON_ADDCDRVSEL.setVisible(True)
     #PHY ODT Pull-Up Calibration Value (0-3)
     ddrSym_DDRPHYPADCON_ODTPUCAL = ddrComponent.createIntegerSymbol("DDR_PHY_ODT_PU_CAL", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_ODTPUCAL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_ODTPUCAL.setLabel("On-Die Termination Pull-Up Calibration bits")
     ddrSym_DDRPHYPADCON_ODTPUCAL.setDefaultValue(3)
     ddrSym_DDRPHYPADCON_ODTPUCAL.setMin(0)
@@ -524,6 +582,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRPHYPADCON_ODTPUCAL.setVisible(True)
     #PHY ODT Pull-Up Calibration Value (0-3)
     ddrSym_DDRPHYPADCON_ODTPDCAL = ddrComponent.createIntegerSymbol("DDR_PHY_ODT_PD_CAL", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_ODTPDCAL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_ODTPDCAL.setLabel("On-Die Termination Pull-Down Calibration bits")
     ddrSym_DDRPHYPADCON_ODTPDCAL.setDefaultValue(2)
     ddrSym_DDRPHYPADCON_ODTPDCAL.setMin(0)
@@ -531,6 +590,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRPHYPADCON_ODTPDCAL.setVisible(True)
     #PHY Drive Strength (NFET) Calibration Value (0-15)
     ddrSym_DDRPHYPADCON_DRVSTRNFET = ddrComponent.createIntegerSymbol("DDR_PHY_SYS_MEMORY_STR_NFET_CAL", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_DRVSTRNFET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_DRVSTRNFET.setLabel("NFET Drive Strength bits")
     ddrSym_DDRPHYPADCON_DRVSTRNFET.setDefaultValue(14)
     ddrSym_DDRPHYPADCON_DRVSTRNFET.setMin(0)
@@ -538,6 +598,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRPHYPADCON_DRVSTRNFET.setVisible(True)
     #PHY Drive Strength (PFET) Calibration Value (0-15)
     ddrSym_DDRPHYPADCON_DRVSTRPFET = ddrComponent.createIntegerSymbol("DDR_PHY_SYS_MEMORY_STR_PFET_CAL", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_DRVSTRPFET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_DRVSTRPFET.setLabel("PFET Drive Strength bits")
     ddrSym_DDRPHYPADCON_DRVSTRPFET.setDefaultValue(14)
     ddrSym_DDRPHYPADCON_DRVSTRPFET.setMin(0)
@@ -545,6 +606,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRPHYPADCON_DRVSTRPFET.setVisible(True)
     #Enable Drive Pad for an Extra Clock After Write Burst
     ddrSym_DDRPHYPADCON_EOENCLKCYC = ddrComponent.createBooleanSymbol("DDR_PHY_EXTRA_CLK", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_EOENCLKCYC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_EOENCLKCYC.setLabel("Extra Output Enable bit")
     ddrSym_DDRPHYPADCON_EOENCLKCYC.setDefaultValue(False)
     ddrSym_DDRPHYPADCON_EOENCLKCYC.setVisible(True)
@@ -553,11 +615,13 @@ def instantiateComponent(ddrComponent):
 
     #Enable Pad Receivers on Bidirectional I/Os?
     ddrSym_DDRPHYPADCON_RCVREN = ddrComponent.createBooleanSymbol("DDR_PHY_RCVREN", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_RCVREN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_RCVREN.setLabel("Receiver Enable bit")
     ddrSym_DDRPHYPADCON_RCVREN.setDefaultValue(True)
     ddrSym_DDRPHYPADCON_RCVREN.setVisible(True)
     #Enable Pad Write Command Delay?
     ddrSym_DDRPHYPADCON_WRCMDDLY = ddrComponent.createBooleanSymbol("DDR_PHY_WR_CMD_DLY", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_WRCMDDLY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_WRCMDDLY.setLabel("Write Command Delay bit")
     ddrSym_DDRPHYPADCON_WRCMDDLY.setDefaultValue(True)
     ddrSym_DDRPHYPADCON_WRCMDDLY.setVisible(True)
@@ -565,6 +629,7 @@ def instantiateComponent(ddrComponent):
     ddrPREAMBDLY_names = []
     _get_bitfield_names(ddrValGrp_DDRPHYPADCON_PREAMBDLY, ddrPREAMBDLY_names)
     ddrSym_DDRPHYPADCON_PREAMBDLY = ddrComponent.createKeyValueSetSymbol("DDR_PHY_PRE_DLY", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYPADCON_PREAMBDLY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYPADCON_PREAMBDLY.setLabel("Preamble Delay bits")
     ddrSym_DDRPHYPADCON_PREAMBDLY.setDefaultValue(2)
     ddrSym_DDRPHYPADCON_PREAMBDLY.setOutputMode("Value")
@@ -574,11 +639,13 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRPHYPADCON_PREAMBDLY.setVisible(True)
     #Enable DLL Recalibration
     ddrSym_DDRPHYDLLR_DISRECALIB = ddrComponent.createBooleanSymbol("DDR_PHY_RECALIB_EN", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYDLLR_DISRECALIB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYDLLR_DISRECALIB.setLabel("Disable Recalibration bit")
     ddrSym_DDRPHYDLLR_DISRECALIB.setDefaultValue(True)
     ddrSym_DDRPHYDLLR_DISRECALIB.setVisible(True)
         #DLL Recalibraion Count
     ddrSym_DDRPHYDLLR_RECALIBCNT = ddrComponent.createIntegerSymbol("DDR_PHY_RECALIB_COUNT", ddrSym_DDRPHYDLLR_DISRECALIB)
+    ddrSym_DDRPHYDLLR_RECALIBCNT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYDLLR_RECALIBCNT.setLabel("Recalibration Count bits")
     ddrSym_DDRPHYDLLR_RECALIBCNT.setDefaultValue(16)
     ddrSym_DDRPHYDLLR_RECALIBCNT.setMin(0)
@@ -586,6 +653,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRPHYDLLR_RECALIBCNT.setVisible(True)
     #Start Value of the DLL Master Delay Line
     ddrSym_DDRPHYDLLR_DLYSTVAL = ddrComponent.createIntegerSymbol("DDR_PHY_DLL_MASTER_DELAY_START", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYDLLR_DLYSTVAL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYDLLR_DLYSTVAL.setLabel("Delay Start Value bits")
     ddrSym_DDRPHYDLLR_DLYSTVAL.setDefaultValue(3)
     ddrSym_DDRPHYDLLR_DLYSTVAL.setMin(0)
@@ -593,6 +661,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRPHYDLLR_DLYSTVAL.setVisible(True)
     #PHY SCL Capture Clock Delay
     ddrSym_DDRPHYDLLR_DLYSTVAL = ddrComponent.createIntegerSymbol("DDR_PHY_SCL_CAP_CLK_DELAY", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYDLLR_DLYSTVAL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYDLLR_DLYSTVAL.setLabel("PHY SCL Capture Clock Delay ")
     ddrSym_DDRPHYDLLR_DLYSTVAL.setDefaultValue(3)
     ddrSym_DDRPHYDLLR_DLYSTVAL.setMin(0)
@@ -600,6 +669,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRPHYDLLR_DLYSTVAL.setVisible(True)
     #PHY SCL Main Clock Delay
     ddrSym_DDRPHYDLLR_DLYSTVAL = ddrComponent.createIntegerSymbol("DDR_PHY_SCL_MAIN_CLK_DELAY", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYDLLR_DLYSTVAL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYDLLR_DLYSTVAL.setLabel("PHY SCL Main Clock Delay")
     ddrSym_DDRPHYDLLR_DLYSTVAL.setDefaultValue(4)
     ddrSym_DDRPHYDLLR_DLYSTVAL.setMin(0)
@@ -607,16 +677,19 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRPHYDLLR_DLYSTVAL.setVisible(True)
     #SCL Burst Mode - text field - DDR_PHY_SCL_BURST_MODE
     ddrSym_burstString = ddrComponent.createStringSymbol("DDR_PHY_SCL_BURST_MODE", ddrSym_PHYCONFIG_STRING)
+    ddrSym_burstString.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_burstString.setLabel("SCL Burst Mode")
     ddrSym_burstString.setDefaultValue("DDR_PHY_SCL_BURST_MODE_8")
     ddrSym_burstString.setVisible(True)
     #DDR Type (for PHY configuration) - text field - DDR_PHY_DDR_TYPE
     ddrSym_burstString = ddrComponent.createStringSymbol("DDR_PHY_DDR_TYPE", ddrSym_PHYCONFIG_STRING)
+    ddrSym_burstString.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_burstString.setLabel("DDR Type (for PHY configuration)")
     ddrSym_burstString.setDefaultValue("DDR_PHY_DDR_TYPE_DDR2")
     ddrSym_burstString.setVisible(True)
     #Enable ODT on Chip Select Line While Running SCL?
     ddrSym_DDRPHYDLLR_DISRECALIB = ddrComponent.createBooleanSymbol("DDR_PHY_ODT_CS_EN", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYDLLR_DISRECALIB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYDLLR_DISRECALIB.setLabel("Enable ODT on Chip Select Line While Running SCL?")
     ddrSym_DDRPHYDLLR_DISRECALIB.setDefaultValue(True)
     ddrSym_DDRPHYDLLR_DISRECALIB.setVisible(True)
@@ -624,6 +697,7 @@ def instantiateComponent(ddrComponent):
     ddrDBLREFDLY_names = []
     _get_bitfield_names(ddrValGrp_DDRSCLCFG1_DBLREFDLY, ddrDBLREFDLY_names)
     ddrSym_DDRSCLCFG1_DBLREFDLY = ddrComponent.createKeyValueSetSymbol("DDR_PHY_SCL_DLY", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRSCLCFG1_DBLREFDLY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRSCLCFG1_DBLREFDLY.setLabel("SCL Reference Delay ")
     ddrSym_DDRSCLCFG1_DBLREFDLY.setDefaultValue(0)
     ddrSym_DDRSCLCFG1_DBLREFDLY.setOutputMode("Value")
@@ -633,6 +707,7 @@ def instantiateComponent(ddrComponent):
     ddrSym_DDRSCLCFG1_DBLREFDLY.setVisible(True)
     #Enable SCL on Chip Select 0
     ddrSym_DDRPHYDLLR_DISRECALIB = ddrComponent.createBooleanSymbol("DDR_SCL_CS_EN", ddrSym_PHYCONFIG_STRING)
+    ddrSym_DDRPHYDLLR_DISRECALIB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ddr_00184;register:%NOREGISTER%")
     ddrSym_DDRPHYDLLR_DISRECALIB.setLabel("Enable SCL on Chip Select 0")
     ddrSym_DDRPHYDLLR_DISRECALIB.setDefaultValue(True)
     ddrSym_DDRPHYDLLR_DISRECALIB.setVisible(True)

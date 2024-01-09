@@ -145,6 +145,7 @@ def instantiateComponent(qspiComponent):
 
     # this symbol functions as the operating mode - differentiating between SPI and QSPI modes
     qspiSMM = qspiComponent.createKeyValueSetSymbol("QSPI_SMM", qspiMenu)
+    qspiSMM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_u2008;register:CTRLB")
     qspiSMM.setLabel("Operating Mode")
     qspiSMM.setVisible(True)
     for i in range(0, len(qspiModeNodeValues)):
@@ -165,11 +166,13 @@ def instantiateComponent(qspiComponent):
         qspiCS.append(qspiCSNodeValues[i].getAttribute("name"))
 
     qspiCSMODE = qspiComponent.createComboSymbol("QSPI_CSMODE", qspiMenu, qspiCS)
+    qspiCSMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_u2008;register:CTRLB")
     qspiCSMODE.setVisible(False)
     qspiCSMODE.setLabel("Chip Select Mode")
     qspiCSMODE.setDefaultValue("NORELOAD")
 
     qspiCPOL = qspiComponent.createKeyValueSetSymbol("QSPI_CPOL", qspiMenu)
+    qspiCPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_u2008;register:BAUD")
     qspiCPOL.setLabel("Clock Polarity")
     qspiCPOL.setVisible(True)
     qspiCPOL.addKey("LOW", "0", "Clock is Low when inactive (CPOL=0)")
@@ -179,6 +182,7 @@ def instantiateComponent(qspiComponent):
     qspiCPOL.setSelectedKey("LOW",1)
 
     qspiCPHA = qspiComponent.createKeyValueSetSymbol("QSPI_CPHA", qspiMenu)
+    qspiCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_u2008;register:BAUD")
     qspiCPHA.setLabel("Clock Phase")
     qspiCPHA.setVisible(True)
     qspiCPHA.addKey("LEADING", "1", "Data is Valid on Clock Leading Edge (CPHA=0)")

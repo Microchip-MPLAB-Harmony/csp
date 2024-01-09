@@ -241,6 +241,7 @@ isErrorInterruptSupported = False
 # Depricated symbols ---------------------------------------------------------------------------------------------------
 #Interrupt/Non-Interrupt Mode
 usartSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("USART_INTERRUPT_MODE", sercomSym_OperationMode)
+usartSym_Interrupt_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 usartSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
 usartSym_Interrupt_Mode.setDefaultValue(True)
 usartSym_Interrupt_Mode.setVisible(False)
@@ -249,6 +250,7 @@ usartSym_Interrupt_Mode.setDependencies(updateInterruptMode, ["USART_INTERRUPT_M
 
 #Enable Ring buffer?
 usartSym_RingBuffer_Enable = sercomComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", sercomSym_OperationMode)
+usartSym_RingBuffer_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 usartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
 usartSym_RingBuffer_Enable.setDefaultValue(False)
 usartSym_RingBuffer_Enable.setVisible(False)
@@ -259,6 +261,7 @@ usartSym_RingBuffer_Enable.setDependencies(updateRingBufferMode, ["USART_RING_BU
 
 #Interrupt/Non-Interrupt Mode
 usartSym_Int_Mode = sercomComponent.createBooleanSymbol("USART_INTERRUPT_MODE_ENABLE", sercomSym_OperationMode)
+usartSym_Int_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 usartSym_Int_Mode.setLabel("Enable Interrupts ?")
 usartSym_Int_Mode.setDefaultValue(True)
 usartSym_Int_Mode.setVisible(False)
@@ -266,12 +269,14 @@ usartSym_Int_Mode.setReadOnly(True)
 
 #Enable Ring buffer?
 usartSym_RingBuffer_Mode = sercomComponent.createBooleanSymbol("USART_RING_BUFFER_MODE_ENABLE", sercomSym_OperationMode)
+usartSym_RingBuffer_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 usartSym_RingBuffer_Mode.setLabel("Enable Ring Buffer ?")
 usartSym_RingBuffer_Mode.setDefaultValue(False)
 usartSym_RingBuffer_Mode.setVisible(False)
 usartSym_RingBuffer_Mode.setReadOnly(True)
 
 usartSym_OperatingMode = sercomComponent.createKeyValueSetSymbol("USART_OPERATING_MODE", sercomSym_OperationMode)
+usartSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 usartSym_OperatingMode.setLabel("Operating Mode")
 usartSym_OperatingMode.addKey("BLOCKING", "0", "Blocking mode")
 usartSym_OperatingMode.addKey("NON_BLOCKING", "1", "Non-blocking mode")
@@ -288,6 +293,7 @@ usartSym_UsartRingBufferSizeConfig.setVisible(False)
 usartSym_UsartRingBufferSizeConfig.setDependencies(ringBufferConfigVisibility, ["SERCOM_MODE", "USART_RING_BUFFER_MODE_ENABLE"])
 
 usartSym_TXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", usartSym_UsartRingBufferSizeConfig)
+usartSym_TXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 usartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
 usartSym_TXRingBuffer_Size.setMin(2)
 usartSym_TXRingBuffer_Size.setMax(65535)
@@ -296,6 +302,7 @@ usartSym_TXRingBuffer_Size.setVisible(False)
 usartSym_TXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_RING_BUFFER_MODE_ENABLE", "USART_TX_ENABLE"])
 
 usartSym_RXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", usartSym_UsartRingBufferSizeConfig)
+usartSym_RXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 usartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
 usartSym_RXRingBuffer_Size.setMin(2)
 usartSym_RXRingBuffer_Size.setMax(65535)
@@ -305,6 +312,7 @@ usartSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, 
 
 #Receive Enable
 usartSym_CTRLB_RXEN = sercomComponent.createBooleanSymbol("USART_RX_ENABLE", sercomSym_OperationMode)
+usartSym_CTRLB_RXEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 usartSym_CTRLB_RXEN.setLabel("Receive Enable")
 usartSym_CTRLB_RXEN.setDefaultValue(True)
 usartSym_CTRLB_RXEN.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
@@ -312,6 +320,7 @@ usartSym_CTRLB_RXEN.setDependencies(updateUSARTConfigurationVisibleProperty, ["S
 
 #Transmit Enable
 usartSym_CTRLB_TXEN = sercomComponent.createBooleanSymbol("USART_TX_ENABLE", sercomSym_OperationMode)
+usartSym_CTRLB_TXEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 usartSym_CTRLB_TXEN.setLabel("Transmit Enable")
 usartSym_CTRLB_TXEN.setDefaultValue(True)
 usartSym_CTRLB_TXEN.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
@@ -320,6 +329,7 @@ usartSym_CTRLB_TXEN.setDependencies(updateUSARTConfigurationVisibleProperty, ["S
 #USART Frame Format
 isLINMasterModeSupported = False
 usartSym_CTRLA_FORM = sercomComponent.createKeyValueSetSymbol("USART_FORM", sercomSym_OperationMode)
+usartSym_CTRLA_FORM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_CTRLA_FORM.setLabel("Frame Format")
 
 usartSym_CTRLA_FORM_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__FORM\"]")
@@ -351,6 +361,7 @@ usartSym_CTRLC_BRKLEN_Node = ATDF.getNode("/avr-tools-device-file/modules/module
 
 if usartSym_CTRLC_BRKLEN_Node != None:
     usartSym_CTRLC_BRKLEN = sercomComponent.createKeyValueSetSymbol("USART_LIN_MASTER_BREAK_LEN", sercomSym_OperationMode)
+    usartSym_CTRLC_BRKLEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
     usartSym_CTRLC_BRKLEN.setLabel("LIN Master Break Length")
     usartSym_CTRLC_BRKLEN_Values = usartSym_CTRLC_BRKLEN_Node.getChildren()
 
@@ -373,6 +384,7 @@ usartSym_CTRLC_HDRDLY_Node = ATDF.getNode("/avr-tools-device-file/modules/module
 
 if usartSym_CTRLC_HDRDLY_Node != None:
     usartSym_CTRLC_HDRDLY = sercomComponent.createKeyValueSetSymbol("USART_LIN_MASTER_HDRDLY", sercomSym_OperationMode)
+    usartSym_CTRLC_HDRDLY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
     usartSym_CTRLC_HDRDLY.setLabel("LIN Master Hardware Delay")
     usartSym_CTRLC_HDRDLY_Values = usartSym_CTRLC_HDRDLY_Node.getChildren()
 
@@ -393,6 +405,7 @@ if usartSym_CTRLC_HDRDLY_Node != None:
 
 #USART Baud Rate
 usartSym_BAUD_RATE = sercomComponent.createIntegerSymbol("USART_BAUD_RATE", sercomSym_OperationMode)
+usartSym_BAUD_RATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:BAUD")
 usartSym_BAUD_RATE.setLabel("Baud Rate in Hz")
 usartSym_BAUD_RATE.setDefaultValue(115200)
 usartSym_BAUD_RATE.setMin(1)
@@ -401,6 +414,7 @@ usartSym_BAUD_RATE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SE
 
 #USART Baud Value
 usartSym_BAUD_VALUE = sercomComponent.createIntegerSymbol("USART_BAUD_VALUE", sercomSym_OperationMode)
+usartSym_BAUD_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:BAUD")
 usartSym_BAUD_VALUE.setLabel("Baud Rate Value")
 usartSym_BAUD_VALUE.setVisible(False)
 usartSym_BAUD_VALUE.setDependencies(updateUSARTBaudValueProperty, ["USART_BAUD_RATE", "core." + sercomClkFrequencyId, "USART_FORM"])
@@ -413,6 +427,7 @@ usartSym_BaudError_Comment.setDependencies(updateUSARTConfigurationVisibleProper
 
 #PMODE : USART PARITY MODE
 usartSym_CTRLB_PMODE = sercomComponent.createKeyValueSetSymbol("USART_PARITY_MODE", sercomSym_OperationMode)
+usartSym_CTRLB_PMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 usartSym_CTRLB_PMODE.setLabel("Parity Mode")
 usartSym_CTRLB_PMODE.addKey("EVEN", "0x0", "Even Parity")
 usartSym_CTRLB_PMODE.addKey("ODD", "0x1", "Odd Parity")
@@ -425,6 +440,7 @@ usartSym_CTRLB_PMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["
 
 #Character Size
 usartSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("USART_CHARSIZE_BITS", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 usartSym_CTRLB_CHSIZE.setLabel("Character Size")
 
 usartSym_CTRLA_CHSIZE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__CHSIZE\"]")
@@ -444,6 +460,7 @@ usartSym_CTRLB_CHSIZE.setDependencies(updateUSARTConfigurationVisibleProperty, [
 
 #Stop Bit
 usartSym_CTRLB_SBMODE = sercomComponent.createKeyValueSetSymbol("USART_STOP_BIT", sercomSym_OperationMode)
+usartSym_CTRLB_SBMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 usartSym_CTRLB_SBMODE.setLabel("Stop Bit Mode")
 
 usartSym_CTRLA_SBMODE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__SBMODE\"]")
@@ -462,12 +479,14 @@ usartSym_CTRLB_SBMODE.setVisible(sercomSym_OperationMode.getSelectedKey() == "US
 usartSym_CTRLB_SBMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 usartSym_CTRLB_SFDE = sercomComponent.createBooleanSymbol("USART_SFDE", sercomSym_OperationMode)
+usartSym_CTRLB_SFDE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 usartSym_CTRLB_SFDE.setLabel("Start-of-Frame Detection Enable")
 usartSym_CTRLB_SFDE.setDefaultValue(False)
 usartSym_CTRLB_SFDE.setDependencies(update_CTRLB_SFDE_Visibility, ["SERCOM_MODE", "USART_OPERATING_MODE"])
 
 #RXPO - Receive Pin Out
 usartSym_CTRLA_RXPO = sercomComponent.createKeyValueSetSymbol("USART_RXPO", sercomSym_OperationMode)
+usartSym_CTRLA_RXPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_CTRLA_RXPO.setLabel("Receive Pinout")
 
 usartSym_CTRLA_RXPO_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__RXPO\"]")
@@ -487,6 +506,7 @@ usartSym_CTRLA_RXPO.setDependencies(updateUSARTConfigurationVisibleProperty, ["S
 
 #TXPO - Transmit Pin Out
 usartSym_CTRLA_TXPO = sercomComponent.createKeyValueSetSymbol("USART_TXPO", sercomSym_OperationMode)
+usartSym_CTRLA_TXPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_CTRLA_TXPO.setLabel("Transmit Pinout")
 
 usartSym_CTRLA_TXPO_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__TXPO\"]")
@@ -512,6 +532,7 @@ usartSym_CTRLA_TXPO.setDependencies(updateUSARTConfigurationVisibleProperty, ["S
 if isRS485Supported == True:
     #USART RS485 mode Guard Time
     usartSym_CTRLC_GTIME = sercomComponent.createIntegerSymbol("USART_CTRLC_GTIME", sercomSym_OperationMode)
+    usartSym_CTRLC_GTIME.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLC")
     usartSym_CTRLC_GTIME.setLabel("RS485 Guard Time")
     usartSym_CTRLC_GTIME.setDefaultValue(0)
     usartSym_CTRLC_GTIME.setMin(0)
@@ -521,6 +542,7 @@ if isRS485Supported == True:
 
 #Run in StandBy
 usartSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("USART_RUNSTDBY", sercomSym_OperationMode)
+usartSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_CTRLA_RUNSTDBY.setLabel("Enable Run in Standby")
 usartSym_CTRLA_RUNSTDBY.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLA_RUNSTDBY.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
@@ -537,12 +559,14 @@ for index in range(len(sampleRateValue)):
 if sampleRateSupported == True:
     #USART Over-Sampling using Baud Rate generation
     usartSym_CTRLA_SAMPR = sercomComponent.createIntegerSymbol("USART_SAMPLE_RATE", sercomSym_OperationMode)
+    usartSym_CTRLA_SAMPR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
     usartSym_CTRLA_SAMPR.setLabel("Sample Rate")
     usartSym_CTRLA_SAMPR.setDefaultValue(0)
     usartSym_CTRLA_SAMPR.setVisible(False)
 
 #USART No Of Samples
 usartSym_SAMPLE_COUNT = sercomComponent.createIntegerSymbol("USART_SAMPLE_COUNT", sercomSym_OperationMode)
+usartSym_SAMPLE_COUNT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 usartSym_SAMPLE_COUNT.setLabel("No Of Samples")
 usartSym_SAMPLE_COUNT.setDefaultValue(16)
 usartSym_SAMPLE_COUNT.setVisible(False)

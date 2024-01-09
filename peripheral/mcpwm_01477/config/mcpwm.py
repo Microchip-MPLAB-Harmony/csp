@@ -175,6 +175,7 @@ def mcpwmAddKeyValueSetFromATDFInitValue(Parent, ModuleName, RegisterName, BitFi
             if value_groupNode is not None:
                 Component = Parent.createKeyValueSetSymbol(RegisterName + '__' +
                     BitFieldName, Menu)
+                Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
                 mcpwmValGrp_names = []
                 _get_bitfield_names(value_groupNode, mcpwmValGrp_names)
 
@@ -236,6 +237,7 @@ def mcpwmAddBooleanFromATDF1ValueValueGroup(Parent, ModuleName, RegisterName, Bi
     labelNode = ATDF.getNode(value_groupPath)
     if labelNode is not None:
         Component = Parent.createBooleanSymbol(RegisterName + '__' + BitFieldName, Menu)
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
         Component.setLabel(labelNode.getAttribute('caption'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -251,6 +253,7 @@ def mcpwmAddBooleanFromATDFBitfieldName(Parent, ModuleName, RegisterName, BitFie
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createBooleanSymbol(RegisterName + '__' + BitFieldName, Menu)
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
         Component.setLabel(labelNode.getAttribute('name'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -266,6 +269,7 @@ def mcpwmAddBooleanFromATDFBitfieldCaption(Parent, ModuleName, RegisterName, Bit
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createBooleanSymbol(RegisterName + '__' + BitFieldName, Menu)
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
         Component.setLabel(labelNode.getAttribute('caption'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -299,6 +303,7 @@ def mcpwmAddLongFromATDFRegisterCaption(Parent, ModuleName, RegisterName, BitFie
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createLongSymbol(RegisterName + '__' + BitFieldName, Menu)
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
         Component.setLabel(labelNode.getAttribute('caption') + ' - ' + BitFieldName)
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -314,6 +319,7 @@ def mcpwmAddLongFromATDFBitfieldCaption(Parent, ModuleName, RegisterName, BitFie
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createLongSymbol(RegisterName + '__' + BitFieldName, Menu)
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
         Component.setLabel(labelNode.getAttribute('caption'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -815,12 +821,14 @@ def instantiateComponent(mcpwmComponent):
     ptconDepList.append("PTCON__PCLKDIV")
 
     mcpwm_PTPER_PTPER = mcpwmComponent.createIntegerSymbol("PTPER__PTPER", mcpwmSym_PRIMARY_TIMEBASE_CONF)
+    mcpwm_PTPER_PTPER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PTPER")
     mcpwm_PTPER_PTPER.setLabel("Primary Master Time Base Period")
     mcpwm_PTPER_PTPER.setDefaultValue(2000)
     mcpwm_PTPER_PTPER.setMin(0)
     mcpwm_PTPER_PTPER.setMax(pow(2, 16) - 1)
 
     mcpwmSym_PRI_FREQUENCY = mcpwmComponent.createFloatSymbol("MCPWM_PRI_FREQ", mcpwmSym_PRIMARY_TIMEBASE_CONF)
+    mcpwmSym_PRI_FREQUENCY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
     mcpwmSym_PRI_FREQUENCY.setLabel("Primary Frequency (Hz)")
     mcpwmSym_PRI_FREQUENCY.setVisible(False)
     mcpwmSym_PRI_FREQUENCY.setReadOnly(True)
@@ -833,12 +841,14 @@ def instantiateComponent(mcpwmComponent):
     ptconDepList.append("PTCON__SEVTPS")
 
     mcpwm_SEVTCMP_SEVTCMP = mcpwmComponent.createIntegerSymbol("SEVTCMP_SEVTCMP", mcpwmSym_PRIMARY_TIMEBASE_CONF)
+    mcpwm_SEVTCMP_SEVTCMP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:SEVTCMP")
     mcpwm_SEVTCMP_SEVTCMP.setLabel("Primary Special Event Compare")
     mcpwm_SEVTCMP_SEVTCMP.setDefaultValue(10)
     mcpwm_SEVTCMP_SEVTCMP.setMin(0)
     mcpwm_SEVTCMP_SEVTCMP.setMax(pow(2, 16) - 1)
 
     mcpwmSym_PTCON_SEIEN = mcpwmComponent.createBooleanSymbol("PTCON__SEIEN", mcpwmSym_PRIMARY_TIMEBASE_CONF)
+    mcpwmSym_PTCON_SEIEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PTCON")
     mcpwmSym_PTCON_SEIEN.setLabel("Primary Special Event Interrupt Enable")
     mcpwmSym_PTCON_SEIEN.setDefaultValue(False)
     ptconDepList.append("PTCON__SEIEN")
@@ -851,12 +861,14 @@ def instantiateComponent(mcpwmComponent):
     stconDepList.append("STCON__SCLKDIV")
 
     mcpwm_STPER_STPER = mcpwmComponent.createIntegerSymbol("STPER__STPER", mcpwmSym_SECONDARY_TIMEBASE_CONF)
+    mcpwm_STPER_STPER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:STPER")
     mcpwm_STPER_STPER.setLabel("Secondary Master Time Base Period")
     mcpwm_STPER_STPER.setDefaultValue(2000)
     mcpwm_STPER_STPER.setMin(0)
     mcpwm_STPER_STPER.setMax(pow(2, 16) - 1)
 
     mcpwmSym_SEC_FREQUENCY = mcpwmComponent.createFloatSymbol("MCPWM_SEC_FREQ", mcpwmSym_SECONDARY_TIMEBASE_CONF)
+    mcpwmSym_SEC_FREQUENCY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
     mcpwmSym_SEC_FREQUENCY.setLabel("Secondary Frequency (Hz)")
     mcpwmSym_SEC_FREQUENCY.setVisible(False)
     mcpwmSym_SEC_FREQUENCY.setReadOnly(True)
@@ -869,12 +881,14 @@ def instantiateComponent(mcpwmComponent):
     stconDepList.append("STCON__SEVTPS")
 
     mcpwm_SSEVTCMP_SEVTCMP = mcpwmComponent.createIntegerSymbol("SSEVTCMP_SEVTCMP", mcpwmSym_SECONDARY_TIMEBASE_CONF)
+    mcpwm_SSEVTCMP_SEVTCMP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:SEVTCMP")
     mcpwm_SSEVTCMP_SEVTCMP.setLabel("Secondary Special Event Compare")
     mcpwm_SSEVTCMP_SEVTCMP.setDefaultValue(10)
     mcpwm_SSEVTCMP_SEVTCMP.setMin(0)
     mcpwm_SSEVTCMP_SEVTCMP.setMax(pow(2, 16) - 1)
 
     mcpwmSym_STCON_SSEIEN = mcpwmComponent.createBooleanSymbol("STCON__SSEIEN", mcpwmSym_SECONDARY_TIMEBASE_CONF)
+    mcpwmSym_STCON_SSEIEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:STCON")
     mcpwmSym_STCON_SSEIEN.setLabel("Secondary Special Event Interrupt Enable")
     mcpwmSym_STCON_SSEIEN.setDefaultValue(False)
     stconDepList.append("STCON__SSEIEN")
@@ -885,6 +899,7 @@ def instantiateComponent(mcpwmComponent):
     # channel configurations
     for channelID in range (1, mcpwmSym_NUM_CHANNELS.getValue() + 1):
         mcpwmSym_CHANNEL_MENU = mcpwmComponent.createBooleanSymbol("MCPWM_CHANNEL"+str(channelID), None)
+        mcpwmSym_CHANNEL_MENU.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
         mcpwmSym_CHANNEL_MENU.setLabel("Enable PWM Channel " + str(channelID))
 
         mcpwmSym_CLOCK_ENABLE = mcpwmComponent.createStringSymbol("MCPWM_CH_CLOCK_ENABLE"+str(channelID), mcpwmSym_CHANNEL_MENU)
@@ -913,6 +928,7 @@ def instantiateComponent(mcpwmComponent):
 
         if (num_outputs == "1"):
             mcpwmSym_IOCON_PMOD = mcpwmComponent.createKeyValueSetSymbol("IOCON"+str(channelID)+"__PMOD", mcpwmSym_CHANNEL_MENU)
+            mcpwmSym_IOCON_PMOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:IOCON1")
             mcpwmSym_IOCON_PMOD.setLabel("PWM x I/O Pin Mode bits")
             mcpwmSym_IOCON_PMOD.addKey("PWMxL output is held at logic 0 (adjusted by the POLL bit)", "0x3", "0x3")
             mcpwmSym_IOCON_PMOD.setOutputMode("Value")
@@ -939,6 +955,7 @@ def instantiateComponent(mcpwmComponent):
         if IOCON__PENH_Node != None and IOCON__PENH_ValGroup != None:
             IOCON__PENH_Node.getAttribute("caption")
             mcpwmSym_IOCON_PENH = mcpwmComponent.createKeyValueSetSymbol("IOCON"+ str(channelID) + "__PENH", mcpwmSym_CHANNEL_MENU)
+            mcpwmSym_IOCON_PENH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:IOCON1")
             mcpwmSym_IOCON_PENH.setLabel(IOCON__PENH_Node.getAttribute('caption'))
             mcpwmSym_IOCON_PENH.setOutputMode("Value")
             mcpwmSym_IOCON_PENH.setDisplayMode("Description")
@@ -957,6 +974,7 @@ def instantiateComponent(mcpwmComponent):
         if IOCON__PENL_Node != None and IOCON__PENL_ValGroup != None:
             IOCON__PENL_Node.getAttribute("caption")
             mcpwmSym_IOCON_PENL = mcpwmComponent.createKeyValueSetSymbol("IOCON"+ str(channelID) + "__PENL", mcpwmSym_CHANNEL_MENU)
+            mcpwmSym_IOCON_PENL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:IOCON1")
             mcpwmSym_IOCON_PENL.setLabel(IOCON__PENL_Node.getAttribute('caption'))
             mcpwmSym_IOCON_PENL.setOutputMode("Value")
             mcpwmSym_IOCON_PENL.setDisplayMode("Description")
@@ -972,12 +990,14 @@ def instantiateComponent(mcpwmComponent):
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__PENL")
 
         mcpwm_PHASE_PHASE = mcpwmComponent.createIntegerSymbol("PHASE"+str(channelID)+"__PHASE", mcpwmSym_CHANNEL_MENU)
+        mcpwm_PHASE_PHASE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PHASE1")
         mcpwm_PHASE_PHASE.setLabel("Phase Shift")
         mcpwm_PHASE_PHASE.setDefaultValue(0)
         mcpwm_PHASE_PHASE.setMin(0)
         mcpwm_PHASE_PHASE.setMax(pow(2, 16) - 1)
 
         mcpwm_CH_PERIOD = mcpwmComponent.createIntegerSymbol("MCPWM_PERIOD_CH"+str(channelID), mcpwmSym_CHANNEL_MENU)
+        mcpwm_CH_PERIOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
         mcpwm_CH_PERIOD.setLabel("PWM Period")
         mcpwm_CH_PERIOD.setDefaultValue(2000)
         mcpwm_CH_PERIOD.setMin(0)
@@ -993,6 +1013,7 @@ def instantiateComponent(mcpwmComponent):
             "PWMCON"+str(channelID)+"__ECAM", "PWMCON"+str(channelID)+"__MTBS", "PTCON__PCLKDIV", "STCON__SCLKDIV"])
 
         mcpwm_PDC_PDC = mcpwmComponent.createIntegerSymbol("PDC"+str(channelID)+"__PDC", mcpwmSym_CHANNEL_MENU)
+        mcpwm_PDC_PDC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PDC1")
         mcpwm_PDC_PDC.setLabel("Primary Duty Cycle")
         mcpwm_PDC_PDC.setDefaultValue(1000)
         mcpwm_PDC_PDC.setMin(0)
@@ -1001,6 +1022,7 @@ def instantiateComponent(mcpwmComponent):
                 "PWMCON"+str(channelID)+"__ECAM", "PTPER__PTPER", "STPER__STPER", "PHASE"+str(channelID)+"__PHASE"])
 
         mcpwm_SDC_SDC = mcpwmComponent.createIntegerSymbol("SDC"+str(channelID)+"__SDC", mcpwmSym_CHANNEL_MENU)
+        mcpwm_SDC_SDC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:SDC1")
         mcpwm_SDC_SDC.setLabel("Secondary Duty Cycle")
         mcpwm_SDC_SDC.setDefaultValue(500)
         mcpwm_SDC_SDC.setMin(0)
@@ -1010,12 +1032,14 @@ def instantiateComponent(mcpwmComponent):
                 "PWMCON"+str(channelID)+"__ECAM", "PTPER__PTPER", "STPER__STPER", "PHASE"+str(channelID)+"__PHASE"])
 
         mcpwmSym_PWMCON_PWMHIEN = mcpwmComponent.createBooleanSymbol("PWMCON"+str(channelID)+"__PWMHIEN", mcpwmSym_CHANNEL_MENU)
+        mcpwmSym_PWMCON_PWMHIEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PWMCON1")
         mcpwmSym_PWMCON_PWMHIEN.setLabel("Enable Period Match Interrupt")
         mcpwmSym_PWMCON_PWMHIEN.setDefaultValue(False)
         evicDeplist[channelID - 1].append("PWMCON"+str(channelID)+"__PWMHIEN")
         pwmconDepList[channelID - 1].append("PWMCON"+str(channelID)+"__PWMHIEN")
 
         mcpwmSym_PWMCON_PWMLIEN = mcpwmComponent.createBooleanSymbol("PWMCON"+str(channelID)+"__PWMLIEN", mcpwmSym_CHANNEL_MENU)
+        mcpwmSym_PWMCON_PWMLIEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PWMCON1")
         mcpwmSym_PWMCON_PWMLIEN.setLabel("Enable Zero Match Interrupt")
         mcpwmSym_PWMCON_PWMLIEN.setDefaultValue(False)
         evicDeplist[channelID - 1].append("PWMCON"+str(channelID)+"__PWMLIEN")
@@ -1032,6 +1056,7 @@ def instantiateComponent(mcpwmComponent):
         pwmconDepList[channelID - 1].append("PWMCON"+str(channelID)+"__DTCP")
 
         mcpwm_DTR_DTR = mcpwmComponent.createIntegerSymbol("DTR"+str(channelID)+"__DTR", mcpwmSym_DEADTIME_MENU)
+        mcpwm_DTR_DTR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:DTR1")
         mcpwm_DTR_DTR.setLabel("Leading Edge Dead Time")
         mcpwm_DTR_DTR.setDefaultValue(75)
         mcpwm_DTR_DTR.setMin(0)
@@ -1043,6 +1068,7 @@ def instantiateComponent(mcpwmComponent):
         mcpwmSym_HIGH_DEADTIME.setDependencies(mcpwmDeadTimeCalc, ["core.CPU_CLOCK_FREQUENCY", "DTR"+str(channelID)+"__DTR"])
 
         mcpwm_ALTDTR_ALTDTR = mcpwmComponent.createIntegerSymbol("ALTDTR"+str(channelID)+"__ALTDTR", mcpwmSym_DEADTIME_MENU)
+        mcpwm_ALTDTR_ALTDTR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:ALTDTR1")
         mcpwm_ALTDTR_ALTDTR.setLabel("Trailing Edge Dead Time")
         mcpwm_ALTDTR_ALTDTR.setDefaultValue(75)
         mcpwm_ALTDTR_ALTDTR.setMin(0)
@@ -1054,6 +1080,7 @@ def instantiateComponent(mcpwmComponent):
         mcpwmSym_LOW_DEADTIME.setDependencies(mcpwmDeadTimeCalc, ["core.CPU_CLOCK_FREQUENCY", "ALTDTR"+str(channelID)+"__ALTDTR"])
 
         mcpwm_DTCOMP_DTCOMP = mcpwmComponent.createIntegerSymbol("DTCOMP"+str(channelID)+"__DTCOMP", mcpwmSym_DEADTIME_MENU)
+        mcpwm_DTCOMP_DTCOMP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:DTCOMP1")
         mcpwm_DTCOMP_DTCOMP.setLabel("Dead Time Compensation Value")
         mcpwm_DTCOMP_DTCOMP.setDefaultValue(75)
         mcpwm_DTCOMP_DTCOMP.setMin(0)
@@ -1073,6 +1100,7 @@ def instantiateComponent(mcpwmComponent):
         trgconDepList[channelID - 1].append("TRGCON"+str(channelID)+"__DTM")
 
         mcpwm_TRIG_TRGCMP = mcpwmComponent.createIntegerSymbol("TRIG"+str(channelID)+"__TRGCMP", mcpwmSym_TRIGGER_MENU)
+        mcpwm_TRIG_TRGCMP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:TRIG1")
         mcpwm_TRIG_TRGCMP.setLabel("Primary Trigger Value")
         mcpwm_TRIG_TRGCMP.setDefaultValue(0)
         mcpwm_TRIG_TRGCMP.setMin(0)
@@ -1082,12 +1110,14 @@ def instantiateComponent(mcpwmComponent):
         trgconDepList[channelID - 1].append("TRGCON"+str(channelID)+"__STRGSEL")
 
         mcpwm_STRIG_STRGCMP = mcpwmComponent.createIntegerSymbol("STRIG"+str(channelID)+"__STRGCMP", mcpwmSym_TRIGGER_MENU)
+        mcpwm_STRIG_STRGCMP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:STRIG1")
         mcpwm_STRIG_STRGCMP.setLabel("Secondary Trigger Value")
         mcpwm_STRIG_STRGCMP.setDefaultValue(0)
         mcpwm_STRIG_STRGCMP.setMin(0)
         mcpwm_STRIG_STRGCMP.setMax(pow(2, 16) - 1)
 
         mcpwmSym_PWMCON_TRIGIEN = mcpwmComponent.createBooleanSymbol("PWMCON"+str(channelID)+"__TRGIEN", mcpwmSym_TRIGGER_MENU)
+        mcpwmSym_PWMCON_TRIGIEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PWMCON1")
         mcpwmSym_PWMCON_TRIGIEN.setLabel("Enable Trigger Interrupt")
         mcpwmSym_PWMCON_TRIGIEN.setDefaultValue(False)
         evicDeplist[channelID - 1].append("PWMCON"+str(channelID)+"__TRGIEN")
@@ -1106,6 +1136,7 @@ def instantiateComponent(mcpwmComponent):
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__FLTPOL")
 
         mcpwmSym_IOCON_FLTDAT_PWMH = mcpwmComponent.createKeyValueSetSymbol("IOCON"+str(channelID)+"__FLTDAT_PWMH", mcpwmSym_FAULT_MENU)
+        mcpwmSym_IOCON_FLTDAT_PWMH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:IOCON1")
         mcpwmSym_IOCON_FLTDAT_PWMH.setLabel("PWMH State")
         mcpwmSym_IOCON_FLTDAT_PWMH.addKey("Low", "0", "Low")
         mcpwmSym_IOCON_FLTDAT_PWMH.addKey("High", "1", "High")
@@ -1114,6 +1145,7 @@ def instantiateComponent(mcpwmComponent):
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__FLTDAT_PWMH")
 
         mcpwmSym_IOCON_FLTDAT_PWML = mcpwmComponent.createKeyValueSetSymbol("IOCON"+str(channelID)+"__FLTDAT_PWML", mcpwmSym_FAULT_MENU)
+        mcpwmSym_IOCON_FLTDAT_PWML.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:IOCON1")
         mcpwmSym_IOCON_FLTDAT_PWML.setLabel("PWML State")
         mcpwmSym_IOCON_FLTDAT_PWML.addKey("Low", "0", "Low")
         mcpwmSym_IOCON_FLTDAT_PWML.addKey("High", "1", "High")
@@ -1122,6 +1154,7 @@ def instantiateComponent(mcpwmComponent):
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__FLTDAT_PWML")
 
         mcpwmSym_PWMCON_FLTIEN = mcpwmComponent.createBooleanSymbol("PWMCON"+str(channelID)+"__FLTIEN", mcpwmSym_FAULT_MENU)
+        mcpwmSym_PWMCON_FLTIEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PWMCON1")
         mcpwmSym_PWMCON_FLTIEN.setLabel("Enable Fault Interrupt")
         mcpwmSym_PWMCON_FLTIEN.setDefaultValue(False)
         evicDeplist[channelID - 1].append("PWMCON"+str(channelID)+"__FLTIEN")
@@ -1138,6 +1171,7 @@ def instantiateComponent(mcpwmComponent):
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__CLPOL")
 
         mcpwmSym_IOCON_CLDAT_PWMH = mcpwmComponent.createKeyValueSetSymbol("IOCON"+str(channelID)+"__CLDAT_PWMH", mcpwmSym_CURLIM_MENU)
+        mcpwmSym_IOCON_CLDAT_PWMH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:IOCON1")
         mcpwmSym_IOCON_CLDAT_PWMH.setLabel("PWMH State")
         mcpwmSym_IOCON_CLDAT_PWMH.addKey("Low", "0", "Low")
         mcpwmSym_IOCON_CLDAT_PWMH.addKey("High", "1", "High")
@@ -1146,6 +1180,7 @@ def instantiateComponent(mcpwmComponent):
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__CLDAT_PWMH")
 
         mcpwmSym_IOCON_CLDAT_PWML = mcpwmComponent.createKeyValueSetSymbol("IOCON"+str(channelID)+"__CLDAT_PWML", mcpwmSym_CURLIM_MENU)
+        mcpwmSym_IOCON_CLDAT_PWML.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:IOCON1")
         mcpwmSym_IOCON_CLDAT_PWML.setLabel("PWML State")
         mcpwmSym_IOCON_CLDAT_PWML.addKey("Low", "0", "Low")
         mcpwmSym_IOCON_CLDAT_PWML.addKey("High", "1", "High")
@@ -1154,6 +1189,7 @@ def instantiateComponent(mcpwmComponent):
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__CLDAT_PWML")
 
         mcpwmSym_PWMCON_CLIEN = mcpwmComponent.createBooleanSymbol("PWMCON"+str(channelID)+"__CLIEN", mcpwmSym_CURLIM_MENU)
+        mcpwmSym_PWMCON_CLIEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PWMCON1")
         mcpwmSym_PWMCON_CLIEN.setLabel("Enable Current Limit Interrupt")
         mcpwmSym_PWMCON_CLIEN.setDefaultValue(False)
         evicDeplist[channelID - 1].append("PWMCON"+str(channelID)+"__CLIEN")
@@ -1163,10 +1199,12 @@ def instantiateComponent(mcpwmComponent):
         mcpwmSym_LEB_MENU.setLabel("Leading Edge Blanking Configurations")
 
         mcpwmSym_LEBCON_CLLENBEN = mcpwmComponent.createBooleanSymbol("LEBCON"+str(channelID)+"__CLLENBEN", mcpwmSym_LEB_MENU)
+        mcpwmSym_LEBCON_CLLENBEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:LEBCON1")
         mcpwmSym_LEBCON_CLLENBEN.setLabel("Enable Leading Edge Blanking for Current Limit Input")
         lebconDepList[channelID - 1].append("LEBCON"+str(channelID)+"__CLLENBEN")
 
         mcpwmSym_LEBCON_FLTLENBEN = mcpwmComponent.createBooleanSymbol("LEBCON"+str(channelID)+"__FLTLEBEN", mcpwmSym_LEB_MENU)
+        mcpwmSym_LEBCON_FLTLENBEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:LEBCON1")
         mcpwmSym_LEBCON_FLTLENBEN.setLabel("Enable Leading Edge Blanking for Fault Input")
         lebconDepList[channelID - 1].append("LEBCON"+str(channelID)+"__FLTLEBEN")
 
@@ -1180,6 +1218,7 @@ def instantiateComponent(mcpwmComponent):
         lebconDepList[channelID - 1].append("LEBCON"+str(channelID)+"__PHR")
 
         mcpwmSym_LEBDLY = mcpwmComponent.createIntegerSymbol("LEBDLY"+str(channelID)+"__LEB", mcpwmSym_LEB_MENU)
+        mcpwmSym_LEBDLY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:LEBDLY1")
         mcpwmSym_LEBDLY.setLabel("Leading Edge Blanking Delay")
         mcpwmSym_LEBDLY.setDefaultValue(10)
         mcpwmSym_LEBDLY.setMin(0)

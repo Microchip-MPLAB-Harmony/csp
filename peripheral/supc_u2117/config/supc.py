@@ -133,6 +133,7 @@ def instantiateComponent(supcComponent):
     
     #Interrupt mode
     supcSym_INTENSET = supcComponent.createBooleanSymbol("SUPC_INTERRUPT_ENABLE", supcSym_BODVDD_Menu)
+    supcSym_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
     supcSym_INTENSET.setLabel("Enable BOD Interrupt")
     supcSym_INTENSET.setDefaultValue(False)
 
@@ -144,6 +145,7 @@ def instantiateComponent(supcComponent):
 
     #BODVDD ACTCFG mode
     supcSym_BODVDD_ACTCFG = supcComponent.createKeyValueSetSymbol("SUPC_"+BODname+"_ACTCFG", supcSym_BODVDD_Menu)
+    supcSym_BODVDD_ACTCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
     supcSym_BODVDD_ACTCFG.setLabel("Select Active mode operation")
     supcSym_BODVDD_ACTCFG.setDescription("Configures whether BODVDD should operate in continuous or sampling mode in Active mode")
     supcSym_BODVDD_ACTCFG.addKey("CONT_MODE", "0", "Continuous Mode")
@@ -154,11 +156,13 @@ def instantiateComponent(supcComponent):
     
     #BODVDD RUNSTDBY enable
     supcSym_BODVDD_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_"+BODname+"_RUNSTDBY", supcSym_BODVDD_Menu)
+    supcSym_BODVDD_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
     supcSym_BODVDD_RUNSTDBY.setLabel("Run in Standby mode")
     supcSym_BODVDD_RUNSTDBY.setDescription("Configures BODVDD operation in Standby Sleep Mode")
 
     #BODVDD STDBYCFG mode
     supcSym_BODVDD_STDBYCFG = supcComponent.createKeyValueSetSymbol("SUPC_"+BODname+"_STDBYCFG", supcSym_BODVDD_Menu)
+    supcSym_BODVDD_STDBYCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
     supcSym_BODVDD_STDBYCFG.setLabel("Select Standby mode operation")
     supcSym_BODVDD_STDBYCFG.setDescription("Configures whether BODVDD should operate in continuous or sampling mode in Standby Sleep mode")
     supcSym_BODVDD_STDBYCFG.addKey("CONT_MODE", "0", "Continuous Mode")
@@ -172,11 +176,13 @@ def instantiateComponent(supcComponent):
     if "HAS_RUNBKUP_BIT" in parameters:
         #BODVDD RUNBKUP enable
         supcSym_BOD33_RUNBKUP = supcComponent.createBooleanSymbol("SUPC_"+BODname+"_RUNBKUP", supcSym_BODVDD_Menu)
+        supcSym_BOD33_RUNBKUP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
         supcSym_BOD33_RUNBKUP.setLabel("Run in Backup mode")
         supcSym_BOD33_RUNBKUP.setDescription("Configures BODVDD operation in Backup Sleep Mode")
         
     #BODVDD PSEL
     supcSym_BODVDD_PSEL = supcComponent.createKeyValueSetSymbol("SUPC_"+BODname+"_PSEL", supcSym_BODVDD_Menu)
+    supcSym_BODVDD_PSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
     supcSym_BODVDD_PSEL.setLabel("Select Prescaler for Sampling Clock")
     supcSym_BODVDD_PSEL.setDescription("Configures the sampling clock prescaler when BODVDD is operating in sampling mode")
     supcSym_BODVDD_PSEL.setVisible(True)
@@ -196,6 +202,7 @@ def instantiateComponent(supcComponent):
 
     if "HAS_VREFSEL_BIT" in parameters:
         supcSym_BODVDD_VREFSEL = supcComponent.createKeyValueSetSymbol("SUPC_"+BODname+"_VREFSEL", supcSym_BODVDD_Menu)
+        supcSym_BODVDD_VREFSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
         supcSym_BODVDD_VREFSEL.setLabel("BOD33 Voltage Reference Selection")    
         supcBODVrefselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"SUPC_"+BODname+"__VREFSEL\"]")
         supcBODVrefselValues = []
@@ -214,6 +221,7 @@ def instantiateComponent(supcComponent):
     if "HAS_VMON_BIT" in parameters:
         #BODVDD VMON selection
         supcSym_BOD33_VMON = supcComponent.createBooleanSymbol("SUPC_"+BODname+"_VMON", supcSym_BODVDD_Menu)
+        supcSym_BOD33_VMON.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:%NOREGISTER%")
         supcSym_BOD33_VMON.setLabel("Monitor VBAT supply?")
         supcSym_BOD33_VMON.setDescription("BOD33 monitors either VDD or VBAT in active and standby mode")
 
@@ -224,12 +232,14 @@ def instantiateComponent(supcComponent):
     if "HAS_SEL_BIT" in parameters:    
         #Select LDO or BUCK regulator
         supcSym_VREG_SEL = supcComponent.createBooleanSymbol("SUPC_VREG_SEL", supcSym_VREG_Menu)
+        supcSym_VREG_SEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREG")
         supcSym_VREG_SEL.setLabel("Use Buck regulator instead of LDO")
         supcSym_VREG_SEL.setDefaultValue(0)
         supcSym_VREG_SEL.setDescription("When this option is selected, the voltage regulator used will be the Buck Regulator. Refer schematic checklist for Inductor connection.")
 
     #VREG RUNSTDBY mode
     supcSym_VREG_RUNSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREG_RUNSTDBY", supcSym_VREG_Menu)
+    supcSym_VREG_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREG")
     supcSym_VREG_RUNSTDBY.setLabel("Select Standby mode operation")
     supcSym_VREG_RUNSTDBY.setDescription("Configures VREG operation in Standby Sleep Mode")
     supcSym_VREG_RUNSTDBY.addKey("LP_OP", "0", "Low Power Operation")
@@ -240,6 +250,7 @@ def instantiateComponent(supcComponent):
     
     if "HAS_VREFSEL_BIT" in parameters:
         supcSym_VREG_VREFSEL = supcComponent.createKeyValueSetSymbol("SUPC_VREG_VREFSEL", supcSym_VREG_Menu)
+        supcSym_VREG_VREFSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREG")
         supcSym_VREG_VREFSEL.setLabel("Voltage Regulator Voltage Reference Selection")    
         supcVREGVrefselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"SUPC_VREG__VREFSEL\"]")
         supcVREGVrefselValues = []
@@ -258,6 +269,7 @@ def instantiateComponent(supcComponent):
     if "HAS_STDBYPL0_BIT" in parameters:
         #VREG performance level in standby sleep
         supcSym_VREG_STDBYPL0 = supcComponent.createBooleanSymbol("SUPC_VREG_STDBYPL0", supcSym_VREG_Menu)
+        supcSym_VREG_STDBYPL0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREG")
         supcSym_VREG_STDBYPL0.setLabel("Set Main regulator to PL0 voltage level in Standby State")
         supcSym_VREG_STDBYPL0.setDefaultValue(1)
         supcSym_VREG_STDBYPL0.setDescription("In Standby sleep mode, the voltage regulator can be configured to set VDDCORE at PL0 voltage level")
@@ -265,12 +277,14 @@ def instantiateComponent(supcComponent):
     if "HAS_LPEFF_BIT" in parameters:    
         #VREG Low power Mode Efficiency
         supcSym_VREG_LPEFF = supcComponent.createBooleanSymbol("SUPC_VREG_LPEFF", supcSym_VREG_Menu)
+        supcSym_VREG_LPEFF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREG")
         supcSym_VREG_LPEFF.setLabel("Increase low power mode efficiency")
         supcSym_VREG_LPEFF.setDefaultValue(0)
         supcSym_VREG_LPEFF.setDescription("When this is set to 1, the voltage regulator in Low power mode has the highest efficiency but it supports a limited VDD range (2.5V to 3.6V).")
 
     if vsvstepPresent:
         supcSym_VREG_VSVSTEP = supcComponent.createIntegerSymbol("SUPC_VREG_VSVSTEP", supcSym_VREG_Menu)
+        supcSym_VREG_VSVSTEP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREG")
         supcSym_VREG_VSVSTEP.setLabel("Voltage Scaling Voltage Step")
         supcSym_VREG_VSVSTEP.setDefaultValue(0)
         supcSym_VREG_VSVSTEP.setMax(15)
@@ -278,6 +292,7 @@ def instantiateComponent(supcComponent):
     
     if vsperPresent:
         supcSym_VREG_VSPER = supcComponent.createIntegerSymbol("SUPC_VREG_VSPER", supcSym_VREG_Menu)
+        supcSym_VREG_VSPER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREG")
         supcSym_VREG_VSPER.setLabel("Voltage Scaling Period")
         supcSym_VREG_VSPER.setDefaultValue(0)
         supcSym_VREG_VSPER.setMax(255)
@@ -289,12 +304,14 @@ def instantiateComponent(supcComponent):
 
     #VREF VREFOE mode
     supcSym_VREF_VREFOE = supcComponent.createBooleanSymbol("SUPC_VREF_VREFOE", supcSym_VREF_Menu)
+    supcSym_VREF_VREFOE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREF")
     supcSym_VREF_VREFOE.setLabel("Enable Voltage Reference Output")
     supcSym_VREF_VREFOE.setDescription("Voltage Reference Output Enable")
     supcSym_VREF_VREFOE.setDefaultValue(False)
 
     #VREF selection
     supcSym_VREF_SEL = supcComponent.createKeyValueSetSymbol("SUPC_VREF_SEL", supcSym_VREF_Menu)
+    supcSym_VREF_SEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREF")
     supcSym_VREF_SEL.setLabel("Select Reference Voltage Level")
     supcSym_VREF_SEL.setDescription("Configures VREF voltage level")
 
@@ -314,6 +331,7 @@ def instantiateComponent(supcComponent):
 
     #VREF ONDEMAND mode
     supcSym_VREF_ONDEMAND = supcComponent.createBooleanSymbol("SUPC_VREF_ONDEMAND", supcSym_VREF_Menu)
+    supcSym_VREF_ONDEMAND.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREF")
     supcSym_VREF_ONDEMAND.setLabel("Enable On demand")
     supcSym_VREF_ONDEMAND.setDescription("If this option is enabled, the voltage reference is disabled when no peripheral is requesting it.")
     supcSym_VREF_ONDEMAND.setDefaultValue(False)
@@ -321,12 +339,14 @@ def instantiateComponent(supcComponent):
     if "HAS_NO_TSEN" not in parameters:
         #VREF TSEN
         supcSym_VREF_TSEN = supcComponent.createBooleanSymbol("SUPC_VREF_TSEN", supcSym_VREF_Menu)
+        supcSym_VREF_TSEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREF")
         supcSym_VREF_TSEN.setLabel("Enable Temperature Sensor")
         supcSym_VREF_TSEN.setDescription("Enable Temperature Sensor connection to ADC")
         supcSym_VREF_TSEN.setDefaultValue(False)
   
     #VREF RUNSTDBY mode
     supcSym_VREF_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_VREF_RUNSTDBY", supcSym_VREF_Menu)
+    supcSym_VREF_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:VREF")
     supcSym_VREF_RUNSTDBY.setLabel("Run in Standby mode")
     supcSym_VREF_RUNSTDBY.setDescription("Enable VREF operation in Standby Sleep Mode")
 
@@ -337,11 +357,13 @@ def instantiateComponent(supcComponent):
 
         #BBPS WAKEEN
         supcSym_BBPS = supcComponent.createBooleanSymbol("SUPC_BBPS_WAKEEN", supcSym_BBPS_Menu)
+        supcSym_BBPS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BBPS")
         supcSym_BBPS.setLabel("Wake Device on BBPS Switching")
         supcSym_BBPS.setDescription("The device can be woken up when switched from battery backup power to Main Power.")
 
         #Battery Backup Power Switch Configuration
         supcSym_BBPS_CONF = supcComponent.createKeyValueSetSymbol("SUPC_BBPS_CONF", supcSym_BBPS_Menu)
+        supcSym_BBPS_CONF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BBPS")
         supcSym_BBPS_CONF.setLabel("Select Reference Voltage Level")
         supcSym_BBPS_CONF.setDescription("Configures VREF voltage level")
 
@@ -361,6 +383,7 @@ def instantiateComponent(supcComponent):
         
         #BBPS supply switching
         supcSym_PSOKEN = supcComponent.createBooleanSymbol("SUPC_BBPS_PSOKEN", supcSym_BBPS_Menu)
+        supcSym_PSOKEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BBPS")
         supcSym_PSOKEN.setLabel("Use PSOK pin for supply switching?")
         supcSym_PSOKEN.setDefaultValue(0)
         supcSym_PSOKEN.setDescription("If APWS is not used, when the Main Power Supply OK Pin Enable bit in the BBPS register is written to '1' (BBPS.PSOKEN), restoring VDD will form a low-to-high transition on the PSOK pin. This low-to-high transition will switch the Backup Power Supply back to VDD.")
@@ -373,12 +396,14 @@ def instantiateComponent(supcComponent):
 
         #SUPC Output pin 0
         supcSym_BKOUT0 = supcComponent.createBooleanSymbol("SUPC_BKOUT_0", supcSym_BKOUT_Menu)
+        supcSym_BKOUT0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BKOUT")
         supcSym_BKOUT0.setLabel("Enable OUT0")
         supcSym_BKOUT0.setDescription("OUT0 pin can be driven by SUPC. It can be toggled by SUPC, based on RTC Events")
         supcSym_BKOUT0.setDefaultValue(False)
 
         #RTCTGCL 0
         supcSym_BKOUT_RTCTGL0 = supcComponent.createBooleanSymbol("SUPC_BKOUT_RTCTGCL0", supcSym_BKOUT0)
+        supcSym_BKOUT_RTCTGL0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BKOUT")
         supcSym_BKOUT_RTCTGL0.setLabel("Toggle OUT0 on RTC Event")
         supcSym_BKOUT_RTCTGL0.setDescription("OUT0 pin can be toggled by SUPC, based on RTC Events")
         supcSym_BKOUT_RTCTGL0.setDependencies(updateBODVisibleProperty, ["SUPC_BKOUT_0"])
@@ -386,12 +411,14 @@ def instantiateComponent(supcComponent):
 
         #SUPC Output pin 1
         supcSym_BKOUT1 = supcComponent.createBooleanSymbol("SUPC_BKOUT_1", supcSym_BKOUT_Menu)
+        supcSym_BKOUT1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BKOUT")
         supcSym_BKOUT1.setLabel("Enable OUT1")
         supcSym_BKOUT1.setDescription("OUT1 pin can be driven by SUPC. It can be toggled by SUPC, based on RTC Events")
         supcSym_BKOUT1.setDefaultValue(False)
 
         #RTCTGCL 1
         supcSym_BKOUT_RTCTGL1 = supcComponent.createBooleanSymbol("SUPC_BKOUT_RTCTGCL1", supcSym_BKOUT1)
+        supcSym_BKOUT_RTCTGL1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2117;register:BKOUT")
         supcSym_BKOUT_RTCTGL1.setLabel("Toggle OUT1 on RTC Event")
         supcSym_BKOUT_RTCTGL1.setDescription("OUT1 pin can be toggled by SUPC, based on RTC Events")
         supcSym_BKOUT_RTCTGL1.setDependencies(updateBODVisibleProperty, ["SUPC_BKOUT_1"])

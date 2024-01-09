@@ -175,16 +175,19 @@ def instantiateComponent(tmrComponent):
     global tmrPeriodicInterrupt
 
     tmrInterruptEnable = tmrComponent.createBooleanSymbol("CORE_TIMER_INTERRUPT_MODE", None)
+    tmrInterruptEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:coretimer;register:%NOREGISTER%")
     tmrInterruptEnable.setLabel("Enable Interrupt mode")
     tmrInterruptEnable.setDefaultValue(False)
 
     tmrPeriodicInterrupt = tmrComponent.createBooleanSymbol("CORE_TIMER_PERIODIC_INTERRUPT", tmrInterruptEnable)
+    tmrPeriodicInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:coretimer;register:%NOREGISTER%")
     tmrPeriodicInterrupt.setLabel("Generate Periodic interrupt")
     tmrPeriodicInterrupt.setDefaultValue(False)
     tmrPeriodicInterrupt.setVisible(False)
     tmrPeriodicInterrupt.setDependencies(setVisibility, ["CORE_TIMER_INTERRUPT_MODE"])
 
     coretimerStopInDebug = tmrComponent.createBooleanSymbol("CORE_TIMER_STOP_IN_DEBUG", None)
+    coretimerStopInDebug.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:coretimer;register:%NOREGISTER%")
     coretimerStopInDebug.setLabel("Stop Timer in Debug mode")
 
     SysClkFreq=Database.getSymbolValue("core", "SYS_CLK_FREQ")
@@ -193,6 +196,7 @@ def instantiateComponent(tmrComponent):
     max = ((float(1) / timerFrequency) * (2**32) * 1000)
 
     coretimerCompareMS = tmrComponent.createFloatSymbol("CORE_TIMER_COMPARE_MS", None)
+    coretimerCompareMS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:coretimer;register:%NOREGISTER%")
     coretimerCompareMS.setLabel("Compare period (milliseconds)")
     coretimerCompareMS.setDefaultValue(float(1.0))
     coretimerCompareMS.setMin(0)
@@ -201,6 +205,7 @@ def instantiateComponent(tmrComponent):
     coretimerCompareMS.setDependencies(setCompareVisibility, ["CORE_TIMER_INTERRUPT_MODE"])
 
     coretimerPeriodMS = tmrComponent.createFloatSymbol("CORE_TIMER_PERIOD_MS", tmrPeriodicInterrupt)
+    coretimerPeriodMS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:coretimer;register:%NOREGISTER%")
     coretimerPeriodMS.setLabel("Timer interrupt period (milliseconds)")
     coretimerPeriodMS.setDefaultValue(float(1.0))
     coretimerPeriodMS.setMin(0)
@@ -216,6 +221,7 @@ def instantiateComponent(tmrComponent):
     defaultPeriod = int(timerFrequency / 1000)
     coretimerPeriodValue = tmrComponent.createStringSymbol("CORE_TIMER_PERIOD_VALUE", None)
     coretimerPeriodValue.setLabel("Timer Interrupt Period")
+    coretimerPeriodValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:coretimer;register:%NOREGISTER%")
     coretimerPeriodValue.setVisible(False)
     coretimerPeriodValue.setDefaultValue(str(hex(defaultPeriod)))
 

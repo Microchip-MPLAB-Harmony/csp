@@ -92,6 +92,7 @@ def slckFreq(symbol, event):
 ################################ Slow clock Configuration #################################
 
 mdSourceClock = coreComponent.createKeyValueSetSymbol("SUPC_CR_MDXTALSEL", slowclkMenu)
+mdSourceClock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 mdSourceClock.setLabel("Slow Clock Source")
 mdSourceClock.setOutputMode("Value")
 mdSourceClock.setDisplayMode("Description")
@@ -99,19 +100,23 @@ mdSourceClock.addKey("Internal RC", str(0), "Internal RC Oscilator")
 mdSourceClock.addKey("External Osc", str(1), "External 32.768 KHz Oscillator")
 
 externalClockVal = coreComponent.createIntegerSymbol("SLCK_EXTERNAL_VAL", slowclkMenu)
+externalClockVal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 externalClockVal.setLabel("External Clock Value")
 externalClockVal.setDefaultValue(32768)
 
 xtalBypass32K = coreComponent.createBooleanSymbol("SUPC_MR_OSCBYPASS", slowclkMenu)
+xtalBypass32K.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:SUPC_MR")
 xtalBypass32K.setLabel("Bypass Crystal Oscillator")
 xtalBypass32K.setDefaultValue(False)
 
 xtalFreqMonitoringEnable = coreComponent.createBooleanSymbol("SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE", slowclkMenu)
+xtalFreqMonitoringEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 xtalFreqMonitoringEnable.setLabel("Enable 32768 Hz Crystal Oscillator Frequency Monitoring")
 xtalFreqMonitoringEnable.setDefaultValue(False)
 xtalFreqMonitoringEnable.setDependencies(interruptControl, ["SLCK_CLOCK_FREQUENCY_MONITORING_ENABLE"])
 
 slckFreqVal = coreComponent.createIntegerSymbol("SLCK_CLOCK_FREQUENCY", slowclkMenu)
+slckFreqVal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 slckFreqVal.setLabel("Monitoring Domain Clock Frequency")
 slckFreqVal.setDefaultValue(32768)
 slckFreqVal.setMin(0)
@@ -146,6 +151,7 @@ def mainFreq(symbol, event):
 ############################# Main Clock Configuration #############################################
 
 mainclkRCOSCEN = coreComponent.createBooleanSymbol("CKGR_MOR_MOSCRCEN", mainclkMenu)
+mainclkRCOSCEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:CKGR_MOR")
 mainclkRCOSCEN.setLabel("Enable RC Oscillator")
 mainclkRCOSCEN.setDefaultValue(True)
 
@@ -158,29 +164,35 @@ for id in range(0, len(pmcValGrp_CKGR_MOR_MOSCRCF.getChildren())):
 
 mainclkRCOSFREQ = coreComponent.createComboSymbol(
     "CKGR_MOR_MOSCRCF", mainclkMenu, moscrcf_names)
+mainclkRCOSFREQ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:CKGR_MOR")
 mainclkRCOSFREQ.setLabel("RC Oscillator Frequency")
 mainclkRCOSFREQ.setDefaultValue("_8_MHz")
 
 mainclkXtalEN = coreComponent.createBooleanSymbol("CKGR_MOR_MOSCXTEN", mainclkMenu)
+mainclkXtalEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:CKGR_MOR")
 mainclkXtalEN.setLabel("Enable External Oscillator")
 mainclkXtalEN.setDefaultValue(False)
 
 mainclkXtalStartup = coreComponent.createIntegerSymbol("CKGR_MOSCXTST", mainclkMenu)
+mainclkXtalStartup.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:CKGR_MOR")
 mainclkXtalStartup.setLabel("External Oscillator Startup")
 mainclkXtalStartup.setDefaultValue(255)
 mainclkXtalStartup.setMax(255)
 mainclkXtalStartup.setMin(0)
 
 xtalBypass = coreComponent.createBooleanSymbol("CKGR_MOR_MOSCXTBY", mainclkMenu)
+xtalBypass.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:CKGR_MOR")
 xtalBypass.setLabel("Bypass Crystal Oscillator")
 xtalBypass.setDefaultValue(False)
 
 mainclkFailure = coreComponent.createBooleanSymbol("CLOCK_FAILURE_DETECT", mainclkMenu)
+mainclkFailure.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:CKGR_MOR")
 mainclkFailure.setLabel("Enable Clock Failure Detection")
 mainclkFailure.setDefaultValue(False)
 mainclkFailure.setDependencies(interruptControl, ["CLOCK_FAILURE_DETECT"])
 
 mainclksrc = coreComponent.createKeyValueSetSymbol("CKGR_MOR_MOSCSEL", mainclkMenu)
+mainclksrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:CKGR_MOR")
 mainclksrc.setLabel("Main Clock Source")
 mainclksrc.setOutputMode("Value")
 mainclksrc.setDisplayMode("Description")
@@ -188,11 +200,13 @@ mainclksrc.addKey("Internal RC", str(0), "Internal RC Oscilator")
 mainclksrc.addKey("External Osc", str(1), "External Oscillator")
 
 externalMainClockVal = coreComponent.createIntegerSymbol("MAIN_CLOCK_EXTERNAL_VAL", mainclkMenu)
+externalMainClockVal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 externalMainClockVal.setLabel("External Clock Value")
 externalMainClockVal.setDefaultValue(12000000)
 externalMainClockVal.setMin(0)
 
 mainFreqVal = coreComponent.createIntegerSymbol("MAIN_CLOCK_FREQUENCY", mainclkMenu)
+mainFreqVal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 mainFreqVal.setLabel("MAIN Clock Frequency")
 mainFreqVal.setDefaultValue(8000000)
 mainFreqVal.setDependencies(mainFreq, ["CKGR_MOR_MOSCSEL", "MAIN_CLOCK_EXTERNAL_VAL", "CKGR_MOR_MOSCRCF", "CKGR_MOR_MOSCXTEN", "CKGR_MOR_MOSCXTBY"])
@@ -232,16 +246,19 @@ def pllbFreq(symbol, event):
 #################################PLLA Configuration #####################################################
 
 pllclkEnable = coreComponent.createBooleanSymbol("PLLA_ENABLE", pllclkMenu)
+pllclkEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 pllclkEnable.setLabel("Enable PLLA")
 pllclkEnable.setDefaultValue(True)
 
 pllclkMultiplier = coreComponent.createIntegerSymbol("CKGR_PLLAR_MULA", pllclkMenu)
+pllclkMultiplier.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:CKGR_PLLAR")
 pllclkMultiplier.setLabel("PLLA Multiplier")
 pllclkMultiplier.setDefaultValue(3051)
 pllclkMultiplier.setMin(8)
 pllclkMultiplier.setMax(7500)
 
 pllClkFreq = coreComponent.createIntegerSymbol("PLLA_CLOCK_FREQUENCY", pllclkMenu)
+pllClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 pllClkFreq.setLabel("PLLA Clock Frequency")
 pllClkFreq.setDefaultValue(100007936)
 pllClkFreq.setDependencies(pllaFreq, ["CKGR_PLLAR_MULA", "PLLA_ENABLE", "SLCK_CLOCK_FREQUENCY", "PMC_MCKR_PLLADIV2"])
@@ -249,10 +266,12 @@ pllClkFreq.setReadOnly(True)
 
 #################################PLLB Configuration #####################################################
 pllclkEnable = coreComponent.createBooleanSymbol("PLLB_ENABLE", pllclkMenu)
+pllclkEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 pllclkEnable.setLabel("Enable PLLB")
 pllclkEnable.setDefaultValue(False)
 
 pllclkMultiplier = coreComponent.createIntegerSymbol("CKGR_PLLBR_MULA", pllclkMenu)
+pllclkMultiplier.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:CKGR_PLLBR")
 pllclkMultiplier.setLabel("PLLB Multiplier")
 pllclkMultiplier.setDefaultValue(1464)
 pllclkMultiplier.setMin(8)
@@ -260,6 +279,7 @@ pllclkMultiplier.setMax(2400)
 
 
 pllClkFreq = coreComponent.createIntegerSymbol("PLLB_CLOCK_FREQUENCY", pllclkMenu)
+pllClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 pllClkFreq.setLabel("PLLB Clock Frequency")
 pllClkFreq.setDefaultValue(0)
 pllClkFreq.setDependencies(pllbFreq, ["CKGR_PLLBR_MULA", "PLLB_ENABLE", "SLCK_CLOCK_FREQUENCY", "PMC_MCKR_PLLBDIV2"])
@@ -288,6 +308,7 @@ for peripheral in atdf_content.iter("module"):
                 symbol_id = instance.attrib["name"] + \
                     param.attrib["name"].split("CLOCK_ID")[1] + "_CLOCK_ENABLE"
                 sym_perip_clk = coreComponent.createBooleanSymbol(symbol_id, peripheralclkMenu)
+                sym_perip_clk.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
                 sym_perip_clk.setLabel(
                     instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1])
                 sym_perip_clk.setVisible(True)
@@ -308,18 +329,22 @@ for id in range(0, len(pmcValGrp_PMC_MCKR_PRES.getChildren())):
 
 
 procclkPLLADIV = coreComponent.createBooleanSymbol("PMC_MCKR_PLLADIV2", procclkMenu)
+procclkPLLADIV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:PMC_MCKR")
 procclkPLLADIV.setLabel("Enable PLLA/2 DIV")
 procclkPLLADIV.setDefaultValue(False)
 
 procclkPLLBDIV = coreComponent.createBooleanSymbol("PMC_MCKR_PLLBDIV2", procclkMenu)
+procclkPLLBDIV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:PMC_MCKR")
 procclkPLLBDIV.setLabel("Enable PLLB/2 DIV")
 procclkPLLBDIV.setDefaultValue(False)
 
 procclkSRC = coreComponent.createComboSymbol("PMC_MCKR_CSS", procclkMenu, procclk_src)
+procclkSRC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:PMC_MCKR")
 procclkSRC.setLabel("Clock Source")
 procclkSRC.setDefaultValue("PLLA_CLK")
 
 procclkPRES = coreComponent.createComboSymbol("PMC_MCKR_PRES", procclkMenu, procclk_pres)
+procclkPRES.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:PMC_MCKR")
 procclkPRES.setLabel("Clock Prescalar")
 procclkPRES.setDefaultValue("CLK_1")
 ###########################################################################################################
@@ -360,6 +385,7 @@ for id in range(0, len(pmcValGrp_PMC_PCK_CSS.getChildren())):
 for id in range(0, 8):
     sym_prog_clk = coreComponent.createBooleanSymbol(
         "PMC_SCER_PCK" + str(id), programmableclkMenu)
+    sym_prog_clk.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:PMC_PCR")
     sym_prog_clk.setLabel("Enable Programmable Clock" + str(id))
     sym_prog_clk.setDefaultValue(False)
 
@@ -368,18 +394,21 @@ for id in range(0, 8):
 
     prog_clk_div = coreComponent.createIntegerSymbol(
         "PMC_PCK" + str(id) + "_PRES", prog_clk_menu)
+    prog_clk_div.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
     prog_clk_div.setLabel("Programmable Clock Divider")
     prog_clk_div.setDefaultValue(0)
     prog_clk_div.setMax(255)
 
     prog_clk_src = coreComponent.createComboSymbol(
         "PMC_PCK" + str(id) + "_CSS", prog_clk_menu, progclk_src)
+    prog_clk_src.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
     prog_clk_src.setLabel("Clock Source")
     prog_clk_src.setDefaultValue("MAIN_CLK")
 
 
     progClkFreq = coreComponent.createIntegerSymbol(
         "PROG_" + str(id) + "_CLOCK_FREQUENCY", prog_clk_menu)
+    progClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
     progClkFreq.setLabel("Programmable Clock" + str(id) + " Frequency")
     progClkFreq.setDefaultValue(0)
     progClkFreq.setDependencies(progClk, ["PMC_SCER_PCK" + str(id),
@@ -577,16 +606,19 @@ def usbfsFreqCal(symbol, event):
 
 ###############################################################################
 systickFreq = coreComponent.createIntegerSymbol("SYSTICK_CLOCK_FREQUENCY", calculatedclkMenu)
+systickFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 systickFreq.setLabel("SysTick Frequency")
 systickFreq.setDefaultValue(12500992)
 systickFreq.setReadOnly(True)
 
 processorFreq = coreComponent.createIntegerSymbol("CPU_CLOCK_FREQUENCY", calculatedclkMenu)
+processorFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 processorFreq.setLabel("Processor Frequency")
 processorFreq.setDefaultValue(100007936)
 processorFreq.setReadOnly(True)
 
 usbSRC = coreComponent.createKeyValueSetSymbol("PMC_USB_USBS", usbclkMenu)
+usbSRC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:PMC_USB")
 usbSRC.setLabel("USB_48M Clock Source")
 usbSRC.setOutputMode("Value")
 usbSRC.setDisplayMode("Description")
@@ -595,22 +627,26 @@ usbSRC.addKey("PLLB", str(1), "USB_48M input is PLLB")
 usbSRC.setDefaultValue(1)
 
 usbDIV = coreComponent.createIntegerSymbol("PMC_USB_USBDIV", usbclkMenu)
+usbDIV.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:PMC_USB")
 usbDIV.setLabel("USB_48M Divider")
 usbDIV.setDefaultValue(1)
 usbDIV.setMin(0)
 usbDIV.setMax(15)
 
 uhpEn = coreComponent.createBooleanSymbol("PMC_SCER_UDP", usbclkMenu)
+uhpEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:PMC_SCER")
 uhpEn.setLabel("Enable UDP Clock")
 uhpEn.setDefaultValue(False)
 
 udpEn = coreComponent.createBooleanSymbol("PMC_SCER_UHP", usbclkMenu)
+udpEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:PMC_SCER")
 udpEn.setLabel("Enable UHP Clock")
 udpEn.setDefaultValue(False)
 
 for index in range(0, 2):
     i2smccClockSelection = coreComponent.createKeyValueSetSymbol(
         "CLK_I2S" + str(index) + "_CLKSEL", mainclkMenu)
+    i2smccClockSelection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
     i2smccClockSelection.setLabel("I2SC" + str(index) + " Clock Source")
     i2smccClockSelection.setOutputMode("Value")
     i2smccClockSelection.setDisplayMode("Description")
@@ -618,6 +654,7 @@ for index in range(0, 2):
     i2smccClockSelection.addKey("Programmable Clock 4", str(1), "PCK4")
 
 masterFreqVal = coreComponent.createIntegerSymbol("MASTER_CLOCK_FREQUENCY", calculatedclkMenu)
+masterFreqVal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 masterFreqVal.setLabel("Master Clock Frequency (Hz)")
 masterFreqVal.setDefaultValue(100007936)
 masterFreqVal.setReadOnly(True)
@@ -631,6 +668,7 @@ masterFreqVal.setDependencies(masterFreq, ["PMC_MCKR_CSS",
                                         ] )
 
 usbfsFreq = coreComponent.createIntegerSymbol("USBFS_CLOCK_FREQUENCY", calculatedclkMenu)
+usbfsFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
 usbfsFreq.setLabel("USBFS Frequency (Hz)")
 usbfsFreq.setDefaultValue(0)
 usbfsFreq.setReadOnly(True)
@@ -651,6 +689,7 @@ for id in clocks:
 
     peripClock = coreComponent.createIntegerSymbol(
         str(name) + "_CLOCK_FREQUENCY", calculatedclkMenu)
+    peripClock.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_g55;register:%NOREGISTER%")
     peripClock.setLabel(str(clock_id.get(id)) + " Clock Frequency (Hz)")
     peripClock.setDefaultValue(0)
     peripClock.setReadOnly(True)

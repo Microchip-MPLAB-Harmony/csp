@@ -29,10 +29,12 @@ def cacheFilesEnable(symbol, event):
     symbol.setEnabled(event["value"])
 
 dcacheEnable = coreComponent.createBooleanSymbol("USE_CACHE_MAINTENANCE", cacheMenu)
+dcacheEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cache;register:%NOREGISTER%")
 dcacheEnable.setLabel("Use Cache Maintenance")
 dcacheEnable.setDefaultValue(False)
 
 dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)
+dcacheEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cache;register:%NOREGISTER%")
 dcacheEnable.setLabel("Enable Data Cache")
 dcacheEnable.setDefaultValue(False)
 dcacheEnable.setVisible(False)
@@ -40,6 +42,7 @@ dcacheEnable.setReadOnly(True)
 dcacheEnable.setDependencies(cacheEnable, ["USE_CACHE_MAINTENANCE"])
 
 icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cacheMenu)
+icacheEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cache;register:%NOREGISTER%")
 icacheEnable.setLabel("Enable Instruction Cache")
 icacheEnable.setDefaultValue(False)
 icacheEnable.setVisible(False)
@@ -47,6 +50,7 @@ icacheEnable.setReadOnly(True)
 icacheEnable.setDependencies(cacheEnable, ["USE_CACHE_MAINTENANCE"])
 
 cacheAlign = coreComponent.createIntegerSymbol("CACHE_ALIGN", cacheMenu)
+cacheAlign.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cache;register:%NOREGISTER%")
 cacheAlign.setLabel("Cache Alignment Length")
 cacheAlign.setVisible(False)
 cacheAlign.setDefaultValue(16)

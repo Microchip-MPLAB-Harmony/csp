@@ -512,6 +512,7 @@ def instantiateComponent(tccComponent):
 
     global tccSym_Slave_Mode
     tccSym_Slave_Mode = tccComponent.createBooleanSymbol("TCC_SLAVE_MODE", None)
+    tccSym_Slave_Mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:CTRLA")
     tccSym_Slave_Mode.setLabel("Enable Slave")
     tccSym_Slave_Mode.setDefaultValue(False)
     if ((tccInstanceMasterValue == 2)):
@@ -584,11 +585,13 @@ def instantiateComponent(tccComponent):
 
 
     tccSym_CTRLA_RUNSTDBY = tccComponent.createBooleanSymbol("TCC_CTRLA_RUNSTDBY", None)
+    tccSym_CTRLA_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:CTRLA")
     tccSym_CTRLA_RUNSTDBY.setLabel("Run during Standby")
 
     #prescaler configuration
     global tccSym_CTRLA_PRESCALER
     tccSym_CTRLA_PRESCALER = tccComponent.createKeyValueSetSymbol("TCC_CTRLA_PRESCALER", None)
+    tccSym_CTRLA_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:CTRLA")
     tccSym_CTRLA_PRESCALER.setLabel("Select Prescaler")
     tccSym_CTRLA_PRESCALER.setDefaultValue(0)
     tccSym_CTRLA_PRESCALER.setOutputMode("Key")
@@ -602,6 +605,7 @@ def instantiateComponent(tccComponent):
     #tccSym_CTRLA_PRESCALER.setDependencies(tccSlaveModeVisibility, ["TCC_SLAVE_MODE"])
 
     tccSym_CTRLA_PRESCYNC = tccComponent.createKeyValueSetSymbol("TCC_CTRLA_PRESCYNC", None)
+    tccSym_CTRLA_PRESCYNC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:STATUS")
     tccSym_CTRLA_PRESCYNC.setLabel("Prescaler and Counter Synchronization")
     tccSym_CTRLA_PRESCYNC.setDefaultValue(1)
     tccSym_CTRLA_PRESCYNC.setOutputMode("Key")

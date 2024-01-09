@@ -78,10 +78,12 @@ def canCreateFilter(component, menu, filterNumber):
     filterMenu.setLabel("Filter " + str(filterNumber))
 
     filterEnable = component.createBooleanSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ENABLE", filterMenu)
+    filterEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     filterEnable.setLabel("Filter Enable")
     filterEnable.setDefaultValue(True if filterNumber < 1 else False)
 
     id = component.createHexSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ID", filterMenu)
+    id.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     id.setLabel("ID")
     id.setMin(0)
     id.setMax(0x1FFFFFFF)
@@ -93,6 +95,7 @@ def canCreateFilter(component, menu, filterNumber):
     idDecimal.setDependencies(symbolSetValue, [canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ID"])
 
     fifoSelect = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_FIFO_SELECT", filterMenu)
+    fifoSelect.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     fifoSelect.setLabel("Select FIFO")
     fifoSelect_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"C" + canInstanceNum.getValue() + "FLTCON" + str(filterNumber / 4) + "__FSEL" + str(filterNumber) + "\"]")
     fifoSelect_Values = []
@@ -107,6 +110,7 @@ def canCreateFilter(component, menu, filterNumber):
     fifoSelect.setDefaultValue(1)
 
     maskSelect = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_MASK_SELECT", filterMenu)
+    maskSelect.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     maskSelect.setLabel("Select Acceptance Mask")
     maskSelect_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"C" + canInstanceNum.getValue() + "FLTCON" + str(filterNumber / 4) + "__MSEL" + str(filterNumber) + "\"]")
     maskSelect_Values = []
@@ -130,6 +134,7 @@ def canCreateAcceptanceFilterMask(component, menu, maskNumber):
     acceptanceFilterMaskMenu.setLabel("Acceptance Filter Mask " + str(maskNumber))
 
     maskId = component.createHexSymbol(canInstanceName.getValue() + "_MASK" + str(maskNumber) + "_ID", acceptanceFilterMaskMenu)
+    maskId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     maskId.setLabel("Mask ID")
     maskId.setMin(0)
     maskId.setMax(0x1FFFFFFF)
@@ -150,12 +155,14 @@ def canCreateFifoConfig(component, menu, fifoNumber):
     fifoMenu.setLabel("FIFO " + str(fifoNumber))
 
     fifoSize = component.createIntegerSymbol(canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_SIZE", fifoMenu)
+    fifoSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     fifoSize.setLabel("Number of Message Buffer")
     fifoSize.setMin(1)
     fifoSize.setMax(32)
     fifoSize.setDefaultValue(1)
 
     fifoTxEnable = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_TXEN", fifoMenu)
+    fifoTxEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     fifoTxEnable.setLabel("Select Trasmit/Receive FIFO")
     fifoTxEnable.addKey("RECEIVE_FIFO", "0x0", "FIFO is a Receive FIFO")
     fifoTxEnable.addKey("TRASMIT_FIFO", "0x1", "FIFO is a Transmit FIFO")
@@ -164,6 +171,7 @@ def canCreateFifoConfig(component, menu, fifoNumber):
     fifoTxEnable.setDefaultValue(0x1 if fifoNumber < 1 else 0x0)
 
     fifoTxPriority = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_TXPR", fifoMenu)
+    fifoTxPriority.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     fifoTxPriority.setLabel("Transmit Priority")
     fifoTxPriority.addKey("LOWEST_MSG_PRIORITY", "0x0", "Lowest Message Priority")
     fifoTxPriority.addKey("LOW_INT_MSG_PRIORITY", "0x1", "Low Intermediate Message Priority")
@@ -176,6 +184,7 @@ def canCreateFifoConfig(component, menu, fifoNumber):
     fifoTxPriority.setDependencies(hideMenu, [canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_TXEN"])
 
     fifoRTREnable = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_RTREN", fifoMenu)
+    fifoRTREnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     fifoRTREnable.setLabel("Auto RTR Enable")
     fifoRTREnable_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"C" + canInstanceNum.getValue() + "FIFOCON" + str(fifoNumber) + "__RTREN\"]")
     fifoRTREnable_Values = []
@@ -440,6 +449,7 @@ def instantiateComponent(canComponent):
     Database.setSymbolValue("core", canInstanceName.getValue()+"_CLOCK_ENABLE", True)
 
     canOpMode = canComponent.createKeyValueSetSymbol("CAN_OPMODE", None)
+    canOpMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canOpMode.setLabel("CAN Operation Mode")
     canOpMode_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"C" + canInstanceNum.getValue() + "CON__REQOP\"]")
     canOpMode_Values = []
@@ -456,6 +466,7 @@ def instantiateComponent(canComponent):
     canOpMode.setDefaultValue(0)
 
     canInterruptMode = canComponent.createBooleanSymbol("CAN_INTERRUPT_MODE", None)
+    canInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canInterruptMode.setLabel("Interrupt Mode")
     canInterruptMode.setDefaultValue(False)
 
@@ -485,6 +496,7 @@ def instantiateComponent(canComponent):
     canBitTimingCalculationMenu.setDescription("CAN Bit Timing Calculation for Normal Operation")
 
     canCoreClockValue = canComponent.createIntegerSymbol("CAN_CORE_CLOCK_FREQ", canBitTimingCalculationMenu)
+    canCoreClockValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canCoreClockValue.setLabel("Clock Frequency")
     canCoreClockValue.setReadOnly(True)
     canCoreClockValue.setDefaultValue(int(Database.getSymbolValue("core", canInstanceName.getValue() + "_CLOCK_FREQUENCY")))
@@ -505,11 +517,13 @@ def instantiateComponent(canComponent):
     canNominalBitTimingMenu.setDescription("Nominal Bit Timing for CAN Message Frame")
 
     canAutomaticNominalBitTimingCalculation = canComponent.createBooleanSymbol("AUTO_NOMINAL_BIT_TIMING_CALCULATION", canNominalBitTimingMenu)
+    canAutomaticNominalBitTimingCalculation.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canAutomaticNominalBitTimingCalculation.setLabel("Automatic Nominal Bit Timing Calculation")
     canAutomaticNominalBitTimingCalculation.setDefaultValue(False)
     canAutomaticNominalBitTimingCalculation.setDependencies(updateNominalBitTimingSymbols, ["AUTO_NOMINAL_BIT_TIMING_CALCULATION"])
 
     canNominalBitrate = canComponent.createIntegerSymbol("NOMINAL_BITRATE", canNominalBitTimingMenu)
+    canNominalBitrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canNominalBitrate.setLabel("Bit Rate (Kbps)")
     canNominalBitrate.setMin(1)
     canNominalBitrate.setMax(1000)
@@ -517,6 +531,7 @@ def instantiateComponent(canComponent):
     canNominalBitrate.setDependencies(nominalBitTimingCalculation, ["NOMINAL_BITRATE", "AUTO_NOMINAL_BIT_TIMING_CALCULATION", "core." + canInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     canNominalSamplePoint = canComponent.createFloatSymbol("NOMINAL_SAMPLE_POINT", canNominalBitTimingMenu)
+    canNominalSamplePoint.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canNominalSamplePoint.setLabel("Sample Point %")
     canNominalSamplePoint.setMin(50.0)
     canNominalSamplePoint.setMax(100.0)
@@ -525,6 +540,7 @@ def instantiateComponent(canComponent):
     canNominalSamplePoint.setReadOnly(Database.getSymbolValue(canInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
     brpPrescaler = canComponent.createIntegerSymbol("BRP", canNominalBitTimingMenu)
+    brpPrescaler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     brpPrescaler.setLabel("Baudrate Prescaler")
     brpPrescaler.setMin(0)
     brpPrescaler.setMax(63)
@@ -533,6 +549,7 @@ def instantiateComponent(canComponent):
     brpPrescaler.setReadOnly(Database.getSymbolValue(canInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
     propagSegmentTime = canComponent.createIntegerSymbol("PROPAG_TIME", canNominalBitTimingMenu)
+    propagSegmentTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     propagSegmentTime.setLabel("Propagation Segment Time (ns)")
     propagSegmentTime.setMin(1)
     propagSegmentTime.setDefaultValue(300)
@@ -540,27 +557,32 @@ def instantiateComponent(canComponent):
     propagSegmentTime.setReadOnly(Database.getSymbolValue(canInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
     totalTimeQuanta = canComponent.createIntegerSymbol("TOTAL_TIME_QUANTA", canNominalBitTimingMenu)
+    totalTimeQuanta.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     totalTimeQuanta.setLabel("Total Time Quanta (TQ)")
     totalTimeQuanta.setReadOnly(True)
 
     syncSegment = canComponent.createIntegerSymbol("SYNC", totalTimeQuanta)
+    syncSegment.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     syncSegment.setLabel("Sync Segment (TQ)")
     syncSegment.setDefaultValue(1)
     syncSegment.setReadOnly(True)
 
     propagSegment = canComponent.createIntegerSymbol("PROPAG", totalTimeQuanta)
+    propagSegment.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     propagSegment.setLabel("Propagation Segment (TQ)")
     propagSegment.setMin(1)
     propagSegment.setMax(8)
     propagSegment.setReadOnly(True)
 
     phase1Segment = canComponent.createIntegerSymbol("PHASE1", totalTimeQuanta)
+    phase1Segment.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     phase1Segment.setLabel("Phase 1 Segment (TQ)")
     phase1Segment.setMin(1)
     phase1Segment.setMax(8)
     phase1Segment.setReadOnly(True)
 
     phase2Segment = canComponent.createIntegerSymbol("PHASE2", totalTimeQuanta)
+    phase2Segment.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     phase2Segment.setLabel("Phase 2 Segment (TQ)")
     phase2Segment.setMin(1)
     phase2Segment.setMax(8)
@@ -577,6 +599,7 @@ def instantiateComponent(canComponent):
     phase2Segment.setDefaultValue(phase2)
 
     syncJumpWidth = canComponent.createIntegerSymbol("SJW", canNominalBitTimingMenu)
+    syncJumpWidth.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     syncJumpWidth.setLabel("Synchronization Jump Width (TQ)")
     syncJumpWidth.setMin(1)
     syncJumpWidth.setMax(4)
@@ -584,16 +607,19 @@ def instantiateComponent(canComponent):
     syncJumpWidth.setReadOnly(True)
 
     canTimeQuantaPeriod = canComponent.createStringSymbol("TIME_QUANTA_PERIOD", canNominalBitTimingMenu)
+    canTimeQuantaPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canTimeQuantaPeriod.setLabel("Time Quanta (ns)")
     canTimeQuantaPeriod.setDefaultValue(str(tqPeriod))
     canTimeQuantaPeriod.setReadOnly(True)
 
     canCalculatedNominalBitrate = canComponent.createIntegerSymbol("CALCULATED_NOMINAL_BITRATE", canNominalBitTimingMenu)
+    canCalculatedNominalBitrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canCalculatedNominalBitrate.setLabel("Calculated Bit Rate (Kbps)")
     canCalculatedNominalBitrate.setDefaultValue(calculatedNominalBitrate)
     canCalculatedNominalBitrate.setReadOnly(True)
 
     canCalculatedError = canComponent.createStringSymbol("CALCULATED_ERRORRATE", canNominalBitTimingMenu)
+    canCalculatedError.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canCalculatedError.setLabel("Error %")
     canCalculatedError.setDefaultValue(str(errorRate))
     canCalculatedError.setReadOnly(True)
@@ -603,6 +629,7 @@ def instantiateComponent(canComponent):
     canErrorRateCommentSym.setVisible(abs(float(errorRate)) > 1)
 
     canConfigSAM = canComponent.createKeyValueSetSymbol("CAN_CFG_SAM", canNominalBitTimingMenu)
+    canConfigSAM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canConfigSAM.setLabel("Sample of the CAN Bus Line bit")
     canConfigSAM.setDescription("3 Time bit sampling is not allowed if BRP is less than 2")
     canConfigSAM_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"C" + canInstanceNum.getValue() + "CFG__SAM\"]")
@@ -624,6 +651,7 @@ def instantiateComponent(canComponent):
 
     # Number of FIFOs
     canFifoNumber = canComponent.createIntegerSymbol("NUMBER_OF_FIFO", canFifoConfMenu)
+    canFifoNumber.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canFifoNumber.setLabel("Number of FIFOs")
     canFifoNumber.setDefaultValue(2)
     canFifoNumber.setMin(1)
@@ -648,6 +676,7 @@ def instantiateComponent(canComponent):
 
     # Number of Filters
     canFilterNumber = canComponent.createIntegerSymbol("NUMBER_OF_FILTER", canFilterMenu)
+    canFilterNumber.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canFilterNumber.setLabel("Number of Filters")
     canFilterNumber.setDefaultValue(1)
     canFilterNumber.setMin(1)
@@ -668,6 +697,7 @@ def instantiateComponent(canComponent):
     canAcceptanceMaskMenu.setDependencies(adjustAcceptanceMask, ["NUMBER_OF_ACCEPTANCE_FILTER_MASK"])
 
     canAcceptanceMaskNumber = canComponent.createIntegerSymbol("NUMBER_OF_ACCEPTANCE_FILTER_MASK", canAcceptanceMaskMenu)
+    canAcceptanceMaskNumber.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canAcceptanceMaskNumber.setLabel("Number of Acceptance Filter Mask")
     canAcceptanceMaskNumber.setDefaultValue(1)
     canAcceptanceMaskNumber.setMin(1)
@@ -683,10 +713,12 @@ def instantiateComponent(canComponent):
         AcceptanceMaskList.append(canCreateAcceptanceFilterMask(canComponent, canAcceptanceMaskMenu, mask))
 
     canTimestampEnable = canComponent.createBooleanSymbol("CAN_TIMESTAMP_ENABLE", None)
+    canTimestampEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canTimestampEnable.setLabel("Timestamp Enable")
     canTimestampEnable.setDefaultValue(False)
 
     canTimestampPrescaler = canComponent.createIntegerSymbol("CAN_TIMESTAMP_PRESCALER", canTimestampEnable)
+    canTimestampPrescaler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_01152;register:%NOREGISTER%")
     canTimestampPrescaler.setLabel("Timestamp Timer Prescaler")
     canTimestampPrescaler.setDefaultValue(0)
     canTimestampPrescaler.setMin(0)

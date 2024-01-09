@@ -77,6 +77,7 @@ def instantiateComponent(supcComponent):
 
     #BOD33 interrupt mode
     supcSym_INTENSET = supcComponent.createBooleanSymbol("SUPC_INTERRUPT_ENABLE", supcSym_BOD33_Menu)
+    supcSym_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:INTENSET")
     supcSym_INTENSET.setLabel("Enable BOD Interrupt")
     supcSym_INTENSET.setDefaultValue(False)
 
@@ -88,24 +89,28 @@ def instantiateComponent(supcComponent):
 
     #BOD33 RUNHIB
     supcSym_BOD33_RUNHIB = supcComponent.createBooleanSymbol("SUPC_BOD33_RUNHIB", supcSym_BOD33_Menu)
+    supcSym_BOD33_RUNHIB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:BOD12")
     supcSym_BOD33_RUNHIB.setLabel("Run in Hibernate Mode")
     supcSym_BOD33_RUNHIB.setDescription("Configures BOD33 operation in Hibernate Sleep Mode")
     supcSym_BOD33_RUNHIB.setDefaultValue(False)
     
     #BOD33 RUNBKUP
     supcSym_BOD33_RUNBKUP = supcComponent.createBooleanSymbol("SUPC_BOD33_RUNBKUP", supcSym_BOD33_Menu)
+    supcSym_BOD33_RUNBKUP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:BOD12")
     supcSym_BOD33_RUNBKUP.setLabel("Run in Backup Mode")
     supcSym_BOD33_RUNBKUP.setDescription("Configures BOD33 operation in Backup Sleep Mode")
     supcSym_BOD33_RUNBKUP.setDefaultValue(False)
 
     #BOD33 RUNSTDBY
     supcSym_BOD33_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_BOD33_RUNSTDBY", supcSym_BOD33_Menu)
+    supcSym_BOD33_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:BOD12")
     supcSym_BOD33_RUNSTDBY.setLabel("Run in Standby Mode")
     supcSym_BOD33_RUNSTDBY.setDescription("Configures BOD33 operation in Standby Sleep Mode")
     supcSym_BOD33_RUNSTDBY.setDefaultValue(False)
 
     #BOD33 STDBYCFG mode
     supcSym_BOD33_STDBYCFG = supcComponent.createKeyValueSetSymbol("SUPC_BOD33_STDBYCFG", supcSym_BOD33_Menu)
+    supcSym_BOD33_STDBYCFG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:BOD12")
     supcSym_BOD33_STDBYCFG.setLabel("Select Standby Mode Operation")
     supcSym_BOD33_STDBYCFG.setDescription("Configures whether BOD33 should operate in continuous or sampling mode in Standby Sleep Mode")
     supcSym_BOD33_STDBYCFG.addKey("CONT_MODE", "0", "Continuous Mode")
@@ -118,6 +123,7 @@ def instantiateComponent(supcComponent):
 
     #BOD33 PSEL
     supcSym_BOD33_PSEL = supcComponent.createKeyValueSetSymbol("SUPC_BOD33_PSEL", supcSym_BOD33_Menu)
+    supcSym_BOD33_PSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:BOD12")
     supcSym_BOD33_PSEL.setLabel("Select Prescaler for Sampling Clock")
     supcSym_BOD33_PSEL.setDescription("Configures the sampling clock prescaler when BOD33 is operating in sampling Mode")
     supcSym_BOD33_PSEL.setVisible(False)
@@ -148,6 +154,7 @@ def instantiateComponent(supcComponent):
 
     #VREG RUNBKUP mode
     supcSym_VREG_RUNBKUP = supcComponent.createKeyValueSetSymbol("SUPC_VREG_RUNBKUP", supcSym_VREG_Menu)
+    supcSym_VREG_RUNBKUP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:VREG")
     supcSym_VREG_RUNBKUP.setLabel("Main Voltage Regulator operation in backup sleep")
     supcSym_VREG_RUNBKUP.setDescription("Selects Main Voltage Regulator operation in backup sleep")
     supcSym_VREG_RUNBKUP.addKey("REG_OFF", "0", "Regulator stopped")
@@ -158,12 +165,14 @@ def instantiateComponent(supcComponent):
 
     #VREG VESN
     supcSym_VREG_VSEN = supcComponent.createBooleanSymbol("SUPC_VREG_VSEN", supcSym_VREG_Menu)
+    supcSym_VREG_VSEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:VREG")
     supcSym_VREG_VSEN.setLabel("Enable Voltage Scaling")
     supcSym_VREG_VSEN.setDescription("Enable smooth transition of VDDCORE")
     supcSym_VREG_VSEN.setDefaultValue(False)
 
     #VREG VSPER
     supcSym_VREG_VSPER = supcComponent.createIntegerSymbol("SUPC_VREG_VSPER", supcSym_VREG_Menu)
+    supcSym_VREG_VSPER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:VREG")
     supcSym_VREG_VSPER.setLabel("Voltage Scaling Period")
     supcSym_VREG_VSEN.setDescription("The time is ((2^VSPER) * T), where T is an internal period (typ 250 ns).")
     supcSym_VREG_VSPER.setDefaultValue(0)
@@ -177,6 +186,7 @@ def instantiateComponent(supcComponent):
     supcSym_VREF_Menu.setLabel("Voltage Reference (VREF) Configuration")
 
     supcSym_VREF_SEL = supcComponent.createKeyValueSetSymbol("SUPC_VREF_SEL", supcSym_VREF_Menu)
+    supcSym_VREF_SEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:VREF")
     supcSym_VREF_SEL.setLabel("Voltage Reference value")
     supcSym_VREF_SEL.setDescription("Select the Voltage Reference typical value")
 
@@ -196,12 +206,14 @@ def instantiateComponent(supcComponent):
 
     #VREF ONDEMAND mode
     supcSym_VREF_ONDEMAND = supcComponent.createBooleanSymbol("SUPC_VREF_ONDEMAND", supcSym_VREF_Menu)
+    supcSym_VREF_ONDEMAND.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:VREF")
     supcSym_VREF_ONDEMAND.setLabel("Enable On demand")
     supcSym_VREF_ONDEMAND.setDescription("If this option is enabled, the voltage reference is disabled when no peripheral is requesting it.")
     supcSym_VREF_ONDEMAND.setDefaultValue(False)
 
     #VREF RUNSTDBY mode
     supcSym_VREF_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_VREF_RUNSTDBY", supcSym_VREF_Menu)
+    supcSym_VREF_RUNSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:VREF")
     supcSym_VREF_RUNSTDBY.setLabel("Enable Run in Standby")
     supcSym_VREF_RUNSTDBY.setDescription("Enable VREF operation in Standby Sleep Mode")
     
@@ -213,6 +225,7 @@ def instantiateComponent(supcComponent):
 
     #VREF VREFOE
     supcSym_VREF_VREFOE = supcComponent.createBooleanSymbol("SUPC_VREF_VREFOE", supcSym_VREF_Menu)
+    supcSym_VREF_VREFOE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:VREF")
     supcSym_VREF_VREFOE.setLabel("Enable VREF output")
     if supcVREF_TSEN_Node != None:
         supcSym_VREF_VREFOE.setDescription("Enable VREF connection to ADC. If ONDEMAND is 0 and VREF is enabled, Temperature Sensor cannot be used")
@@ -222,6 +235,7 @@ def instantiateComponent(supcComponent):
 
     #VREF TSEN
     supcSym_VREF_TSEN = supcComponent.createBooleanSymbol("SUPC_VREF_TSEN", supcSym_VREF_Menu)
+    supcSym_VREF_TSEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:VREF")
     supcSym_VREF_TSEN.setLabel("Enable Temperature Sensor")
     supcSym_VREF_TSEN.setDescription("Enable Temperature Sensor connection to ADC")
     supcSym_VREF_TSEN.setDefaultValue(False)
@@ -235,6 +249,7 @@ def instantiateComponent(supcComponent):
 
     #BBPS supply switching
     supcSym_BBPS = supcComponent.createBooleanSymbol("SUPC_BBPS_WAKEEN", supcSym_BBPS_Menu)
+    supcSym_BBPS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:BBPS")
     supcSym_BBPS.setLabel("Wake Device on BBPS Switching")
     supcSym_BBPS.setDescription("The device can be woken up when switched from battery backup power to Main Power.")
 
@@ -245,12 +260,14 @@ def instantiateComponent(supcComponent):
 
     #SUPC Output pin 0
     supcSym_BKOUT0 = supcComponent.createBooleanSymbol("SUPC_BKOUT_0", supcSym_BKOUT_Menu)
+    supcSym_BKOUT0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:BKOUT")
     supcSym_BKOUT0.setLabel("Enable OUT0")
     supcSym_BKOUT0.setDescription("OUT0 pin can be driven by SUPC. It can be toggled by SUPC, based on RTC Events")
     supcSym_BKOUT0.setDefaultValue(False)
 
     #RTCTGCL 0
     supcSym_BKOUT_RTCTGL0 = supcComponent.createBooleanSymbol("SUPC_BKOUT_RTCTGCL0", supcSym_BKOUT0)
+    supcSym_BKOUT_RTCTGL0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:BKOUT")
     supcSym_BKOUT_RTCTGL0.setLabel("Toggle OUT0 on RTC Event")
     supcSym_BKOUT_RTCTGL0.setDescription("OUT0 pin can be toggled by SUPC, based on RTC Events")
     supcSym_BKOUT_RTCTGL0.setDependencies(updateSupcConfigVisibleProperty, ["SUPC_BKOUT_0"])
@@ -258,12 +275,14 @@ def instantiateComponent(supcComponent):
 
     #SUPC Output pin 1
     supcSym_BKOUT1 = supcComponent.createBooleanSymbol("SUPC_BKOUT_1", supcSym_BKOUT_Menu)
+    supcSym_BKOUT1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:BKOUT")
     supcSym_BKOUT1.setLabel("Enable OUT1")
     supcSym_BKOUT1.setDescription("OUT1 pin can be driven by SUPC. It can be toggled by SUPC, based on RTC Events")
     supcSym_BKOUT1.setDefaultValue(False)
 
     #RTCTGCL 1
     supcSym_BKOUT_RTCTGL1 = supcComponent.createBooleanSymbol("SUPC_BKOUT_RTCTGCL1", supcSym_BKOUT1)
+    supcSym_BKOUT_RTCTGL1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_u2407;register:BKOUT")
     supcSym_BKOUT_RTCTGL1.setLabel("Toggle OUT1 on RTC Event")
     supcSym_BKOUT_RTCTGL1.setDescription("OUT1 pin can be toggled by SUPC, based on RTC Events")
     supcSym_BKOUT_RTCTGL1.setDependencies(updateSupcConfigVisibleProperty, ["SUPC_BKOUT_1"])

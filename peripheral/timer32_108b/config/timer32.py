@@ -176,24 +176,28 @@ def instantiateComponent(tmr32Component):
     tmr32InputClk.setDefaultValue(48000000)
 
     tmr32PrescaleVal = tmr32Component.createIntegerSymbol("TMR32_PRESCALE_VALUE", None)
+    tmr32PrescaleVal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:timer32_108b;register:CTRL")
     tmr32PrescaleVal.setLabel("Pre-scale Value")
     tmr32PrescaleVal.setDefaultValue(0)
     tmr32PrescaleVal.setMin(0)
     tmr32PrescaleVal.setMax(65535)
     
     tmr32CountDir = tmr32Component.createComboSymbol("TMR32_COUNT_DIR", None, ["Up", "Down"])
+    tmr32CountDir.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:timer32_108b;register:CTRL")
     tmr32CountDir.setLabel("Count Direction")
     tmr32CountDir.setDefaultValue("Down")
     
     max_val = calcTimeoutInMsec(tmr32InputClk.getValue(), tmr32PrescaleVal.getValue(), 4294967295, tmr32CountDir.getValue())
     
     tmr32TimeMs = tmr32Component.createFloatSymbol("TMR32_TIME_MS", None)
+    tmr32TimeMs.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:timer32_108b;register:%NOREGISTER%")
     tmr32TimeMs.setLabel("Timeout (ms)")
     tmr32TimeMs.setMin(0.0)
     tmr32TimeMs.setMax(max_val)
     tmr32TimeMs.setDefaultValue(1000)
     
     tmr32CountInitVal = tmr32Component.createLongSymbol("TMR32_COUNT_INIT_VAL", None)
+    tmr32CountInitVal.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:timer32_108b;register:PRLD")
     tmr32CountInitVal.setLabel("Initial Counter Value")
     tmr32CountInitVal.setMin(0)
     tmr32CountInitVal.setMax(4294967295)
@@ -202,15 +206,18 @@ def instantiateComponent(tmr32Component):
     tmr32CountInitVal.setDependencies(timeUpdate, ["TMR32_PRESCALE_VALUE", "TMR32_COUNT_DIR", "TMR32_TIME_MS"])
     
     tmr32AutoRestartEn = tmr32Component.createBooleanSymbol("TMR32_AUTO_RESTART_EN", None)
+    tmr32AutoRestartEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:timer32_108b;register:CTRL")
     tmr32AutoRestartEn.setLabel("Auto-Restart Enable")
     tmr32AutoRestartEn.setDefaultValue(True)
     
     tmr32IntEn = tmr32Component.createBooleanSymbol("TMR32_INTERRUPT_EN", None)
+    tmr32IntEn.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:timer32_108b;register:%NOREGISTER%")
     tmr32IntEn.setLabel("Interrupt Enable")
     tmr32IntEn.setDefaultValue(True)
     
     # Interrupt type selection
     tmr32InterruptType = tmr32Component.createKeyValueSetSymbol("TMR32_INTERRUPT_TYPE", tmr32IntEn)
+    tmr32InterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:timer32_108b;register:%NOREGISTER%")
     tmr32InterruptType.setLabel("Interrupt Type")
     tmr32InterruptType.addKey("DIRECT", "0", "Direct")
     tmr32InterruptType.addKey("AGGREGATE", "1", "Aggregate")
@@ -232,6 +239,7 @@ def instantiateComponent(tmr32Component):
     # Symbol to save SYS Time ID
     sysTimeComponentId = tmr32Component.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
     sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:timer32_108b;register:%NOREGISTER%")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
     

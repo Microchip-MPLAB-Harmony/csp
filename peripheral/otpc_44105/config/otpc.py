@@ -33,6 +33,7 @@ def instantiateComponent(otpcComponent):
 
     #OTPC emulation
     otpcEmulation = otpcComponent.createBooleanSymbol("ENABLE_OTPC_EMULATION", None)
+    otpcEmulation.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:otpc_44105;register:%NOREGISTER%")
     otpcEmulation.setLabel("Enable Emulation mode")
     otpcEmulation.setDefaultValue(True)
 

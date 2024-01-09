@@ -170,11 +170,13 @@ def instantiateComponent(pmpComponent):
 
     #Stop in Idle mode
     pmpSym_SIDL = pmpComponent.createBooleanSymbol("PMP_SIDL", None)
+    pmpSym_SIDL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:%NOREGISTER%")
     pmpSym_SIDL.setLabel("Stop in Idle Mode bit")
 
     pmpMODE_names = []
     _get_bitfield_names(pmpValGrp_PMMODE_MODE, pmpMODE_names)
     pmpCommunicationMode = pmpComponent.createKeyValueSetSymbol("PMMODE_MODE", None)
+    pmpCommunicationMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMMODE")
     pmpCommunicationMode.setLabel("PMP Mode Selection")
     pmpCommunicationMode.setDefaultValue(0)
     pmpCommunicationMode.setOutputMode("Value")
@@ -189,6 +191,7 @@ def instantiateComponent(pmpComponent):
     pmpSym_MasterModeMenu.setLabel("Master Mode Configuration")
 
     pmpSymInterruptMode = pmpComponent.createBooleanSymbol("PMP_INTERRUPT_MODE", pmpSym_MasterModeMenu)
+    pmpSymInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:%NOREGISTER%")
     pmpSymInterruptMode.setLabel("Enable Interrrupts ?")
 
     ## PMP IRQ
@@ -264,6 +267,7 @@ def instantiateComponent(pmpComponent):
     pmpCSF_names = []
     _get_bitfield_names(pmpValGrp_PMCON_CSF, pmpCSF_names)
     pmpCSF = pmpComponent.createKeyValueSetSymbol("PMCON_CSF", pmpSym_MasterModeMenu)
+    pmpCSF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMCON")
     pmpCSF.setLabel(pmpValGrp_PMCON_CSF.getAttribute("caption"))
     pmpCSF.setDefaultValue(0)
     pmpCSF.setOutputMode("Value")
@@ -274,6 +278,7 @@ def instantiateComponent(pmpComponent):
     pmpCS1P_names = []
     _get_bitfield_names(pmpValGrp_PMCON_CS1P, pmpCS1P_names)
     pmpCS1P = pmpComponent.createKeyValueSetSymbol("PMCON_CS1P", pmpSym_MasterModeMenu)
+    pmpCS1P.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMCON")
     pmpCS1P.setLabel("Chip Select 1 Polarity bit")
     pmpCS1P.setDefaultValue(0)
     pmpCS1P.setOutputMode("Value")
@@ -285,6 +290,7 @@ def instantiateComponent(pmpComponent):
         pmpCS2P_names = []
         _get_bitfield_names(pmpValGrp_PMCON_CS2P, pmpCS2P_names)
         pmpCS2P = pmpComponent.createKeyValueSetSymbol("PMCON_CS2P", pmpSym_MasterModeMenu)
+        pmpCS2P.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMCON")
         pmpCS2P.setLabel("Chip Select 2 Polarity bit")
         pmpCS2P.setDefaultValue(0)
         pmpCS2P.setOutputMode("Value")
@@ -295,6 +301,7 @@ def instantiateComponent(pmpComponent):
     pmpWAITB_names = []
     _get_bitfield_names(pmpValGrp_PMMODE_WAITB, pmpWAITB_names)
     pmpWaitB = pmpComponent.createKeyValueSetSymbol("PMMODE_WAITB", pmpSym_MasterModeMenu)
+    pmpWaitB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMMODE")
     pmpWaitB.setLabel("Data Setup Wait States")
     pmpWaitB.setDefaultValue(0)
     pmpWaitB.setOutputMode("Value")
@@ -305,6 +312,7 @@ def instantiateComponent(pmpComponent):
     pmpWAITM_names = []
     _get_bitfield_names(pmpValGrp_PMMODE_WAITM, pmpWAITM_names)
     pmpWaitM = pmpComponent.createKeyValueSetSymbol("PMMODE_WAITM", pmpSym_MasterModeMenu)
+    pmpWaitM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMMODE")
     pmpWaitM.setLabel("Strobe Wait States")
     pmpWaitM.setDefaultValue(0)
     pmpWaitM.setOutputMode("Value")
@@ -315,6 +323,7 @@ def instantiateComponent(pmpComponent):
     pmpWAITE_names = []
     _get_bitfield_names(pmpValGrp_PMMODE_WAITE, pmpWAITE_names)
     pmpWaitE = pmpComponent.createKeyValueSetSymbol("PMMODE_WAITE", pmpSym_MasterModeMenu)
+    pmpWaitE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMMODE")
     pmpWaitE.setLabel("Data Hold Wait States")
     pmpWaitE.setDefaultValue(0)
     pmpWaitE.setOutputMode("Value")
@@ -326,6 +335,7 @@ def instantiateComponent(pmpComponent):
         pmpMODE16_names = []
         _get_bitfield_names(pmpValGrp_PMMODE_MODE16, pmpMODE16_names)
         pmpMode16 = pmpComponent.createKeyValueSetSymbol("PMMODE_MODE16", pmpSym_MasterModeMenu)
+        pmpMode16.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMMODE")
         pmpMode16.setLabel("Transfer Size")
         pmpMode16.setDefaultValue(0)
         pmpMode16.setOutputMode("Value")
@@ -336,6 +346,7 @@ def instantiateComponent(pmpComponent):
     pmpINCM_names = []
     _get_bitfield_names(pmpValGrp_PMMODE_INCM, pmpINCM_names)
     pmpINCM = pmpComponent.createKeyValueSetSymbol("PMMODE_INCM", pmpSym_MasterModeMenu)
+    pmpINCM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMMODE")
     pmpINCM.setLabel("Address Incrment Mode")
     pmpINCM.setDefaultValue(0)
     pmpINCM.setOutputMode("Value")
@@ -348,6 +359,7 @@ def instantiateComponent(pmpComponent):
     pmpIRQM_names = []
     _get_bitfield_names(pmpValGrp_PMMODE_IRQM, pmpIRQM_names)
     pmpIRQM = pmpComponent.createKeyValueSetSymbol("PMMODE_IRQM", pmpSym_MasterModeMenu)
+    pmpIRQM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMMODE")
     pmpIRQM.setLabel("Interrupt Request Mode")
     pmpIRQM.setVisible(False)
     pmpIRQM.setDefaultValue(1)
@@ -358,12 +370,14 @@ def instantiateComponent(pmpComponent):
             pmpIRQM.addKey( ii['desc'], ii['value'], ii['key'] )
 
     pmpReadStrobeEnable = pmpComponent.createBooleanSymbol("PMMODE_READ_STROBE", pmpSym_MasterModeMenu)
+    pmpReadStrobeEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMMODE")
     pmpReadStrobeEnable.setLabel("Read Strobe Enable")
     pmpReadStrobeEnable.setDefaultValue(True)
 
     pmpCONRDSP_names = []
     _get_bitfield_names(pmpValGrp_PMCON_RDSP, pmpCONRDSP_names)
     pmpCONRDSP = pmpComponent.createKeyValueSetSymbol("PMCON_RDSP", pmpReadStrobeEnable)
+    pmpCONRDSP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMCON")
     pmpCONRDSP.setLabel(pmpValGrp_PMCON_RDSP.getAttribute("caption"))
     pmpCONRDSP.setDefaultValue(0)
     pmpCONRDSP.setOutputMode("Value")
@@ -373,12 +387,14 @@ def instantiateComponent(pmpComponent):
     pmpCONRDSP.setDependencies(pmpCONRDSPVisiblity,["PMMODE_READ_STROBE"])
 
     pmpWriteStrobeEnable = pmpComponent.createBooleanSymbol("PMMODE_WRITE_STROBE", pmpSym_MasterModeMenu)
+    pmpWriteStrobeEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMMODE")
     pmpWriteStrobeEnable.setLabel("Write Strobe Enable")
     pmpWriteStrobeEnable.setDefaultValue(True)
 
     pmpCONWRSP_names = []
     _get_bitfield_names(pmpValGrp_PMCON_WRSP,pmpCONWRSP_names)
     pmpCONWRSP = pmpComponent.createKeyValueSetSymbol("PMCON_WRSP", pmpWriteStrobeEnable)
+    pmpCONWRSP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMCON")
     pmpCONWRSP.setLabel(pmpValGrp_PMCON_WRSP.getAttribute("caption"))
     pmpCONWRSP.setDefaultValue(0)
     pmpCONWRSP.setOutputMode("Value")
@@ -388,9 +404,11 @@ def instantiateComponent(pmpComponent):
     pmpCONWRSP.setDependencies(pmpCONWRSPVisiblity,["PMMODE_WRITE_STROBE"])
 
     pmpAddressPortEnable = pmpComponent.createBooleanSymbol("PMMODE_ADDRESSPORT_ENABLE", pmpSym_MasterModeMenu)
+    pmpAddressPortEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMMODE")
     pmpAddressPortEnable.setLabel("Address Port Enable")
 
     pmpAddressPortBitWidth = pmpComponent.createIntegerSymbol("PMMODE_ADDRESS_PORT_BITWIDTH", pmpAddressPortEnable)
+    pmpAddressPortBitWidth.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pmp_00751;register:PMMODE")
     pmpAddressPortBitWidth.setLabel("Address Port Bit width")
     pmpAddressPortBitWidth.setMin(0)
     pmpAddressPortBitWidth.setMax(16)

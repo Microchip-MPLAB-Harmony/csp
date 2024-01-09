@@ -106,6 +106,7 @@ def instantiateComponent(rtcComponent):
 
     #Create a Checkbox to enable disable interrupts
     rtcInterrupt = rtcComponent.createBooleanSymbol("rtcEnableInterrupt", None)
+    rtcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_6056;register:%NOREGISTER%")
     rtcInterrupt.setLabel("Enable Interrupt")
     rtcInterrupt.setDefaultValue(True)
 
@@ -128,16 +129,19 @@ def instantiateComponent(rtcComponent):
     # Create a Checkbox to enable 12 -v- 24 HR mode
     rtc12HrMode = rtcComponent.createBooleanSymbol("RTC_12HR_MODE", None)
     rtc12HrMode.setLabel("Enable 12 HR Mode")
+    rtc12HrMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_6056;register:RTC_MR")
     rtc12HrMode.setVisible(False)
 
     if rtcBitField_MR_UTC:
         rtcSym_MR_UTC = rtcComponent.createBooleanSymbol("RTC_MR_UTC", None)
+        rtcSym_MR_UTC.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_6056;register:RTC_MR")
         rtcSym_MR_UTC.setLabel("Enable UTC Mode")
 
     for id in range(0,len(rtcValGrp_MR_OUT0.getChildren())):
         out0_names.append(rtcValGrp_MR_OUT0.getChildren()[id].getAttribute("name"))
 
     rtcSym_MR_OUT0 = rtcComponent.createComboSymbol("RTC_MR_OUT0", None, out0_names)
+    rtcSym_MR_OUT0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_6056;register:RTC_MR")
     rtcSym_MR_OUT0.setLabel(rtcBitField_MR_OUT0.getAttribute("caption"))
     rtcSym_MR_OUT0.setDefaultValue("NO_WAVE")
 
@@ -145,6 +149,7 @@ def instantiateComponent(rtcComponent):
         out1_names.append(rtcValGrp_MR_OUT1.getChildren()[id].getAttribute("name"))
 
     rtcSym_MR_OUT1 = rtcComponent.createComboSymbol("RTC_MR_OUT1", None, out1_names)
+    rtcSym_MR_OUT1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_6056;register:RTC_MR")
     rtcSym_MR_OUT1.setLabel(rtcBitField_MR_OUT1.getAttribute("caption"))
     rtcSym_MR_OUT1.setDefaultValue("NO_WAVE")
 
@@ -156,6 +161,7 @@ def instantiateComponent(rtcComponent):
 
             rtcSym_MR_THIGH = rtcComponent.createComboSymbol("RTC_MR_THIGH", None, thigh_names)
             rtcSym_MR_THIGH.setLabel(rtcBitField_MR_THIGH.getAttribute("caption"))
+            rtcSym_MR_THIGH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_6056;register:RTC_MR")
             rtcSym_MR_THIGH.setDefaultValue("H_31MS")
             rtcSym_MR_THIGH.setVisible(False)
             rtcSym_MR_THIGH.setDependencies(rtcTHIGH, ["RTC_MR_OUT0", "RTC_MR_OUT1"])
@@ -168,6 +174,7 @@ def instantiateComponent(rtcComponent):
 
             rtcSym_MR_TPERIOD = rtcComponent.createComboSymbol("RTC_MR_TPERIOD", None, tperiod_names)
             rtcSym_MR_TPERIOD.setLabel(rtcBitField_MR_TPERIOD.getAttribute("caption"))
+            rtcSym_MR_TPERIOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_6056;register:RTC_MR")
             rtcSym_MR_TPERIOD.setDefaultValue("P_1S")
             rtcSym_MR_TPERIOD.setVisible(False)
             rtcSym_MR_TPERIOD.setDependencies(rtcTPERIOD, ["RTC_MR_OUT0", "RTC_MR_OUT1"])
@@ -176,6 +183,7 @@ def instantiateComponent(rtcComponent):
         timevsel_names.append(rtcValGrp_CR_TIMEVSEL.getChildren()[id].getAttribute("name"))
 
     rtcSym_CR_TIMEVSEL= rtcComponent.createComboSymbol("RTC_CR_TIMEVSEL", None, timevsel_names)
+    rtcSym_CR_TIMEVSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_6056;register:RTC_CR")
     rtcSym_CR_TIMEVSEL.setLabel(rtcBitField_CR_TIMEVSEL.getAttribute("caption"))
     rtcSym_CR_TIMEVSEL.setDefaultValue("MINUTE")
 
@@ -183,6 +191,7 @@ def instantiateComponent(rtcComponent):
         calevsel_names.append(rtcValGrp_CR_CALEVSEL.getChildren()[id].getAttribute("name"))
 
     rtcSym_CR_CALEVSEL = rtcComponent.createComboSymbol("RTC_CR_CALEVSEL", None, calevsel_names)
+    rtcSym_CR_CALEVSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_6056;register:RTC_CR")
     rtcSym_CR_CALEVSEL.setLabel(rtcBitField_CR_CALEVSEL.getAttribute("caption"))
     rtcSym_CR_CALEVSEL.setDefaultValue("WEEK")
 

@@ -115,13 +115,16 @@ def mcanCreateStdFilter(component, menu, filterNumber):
     stdFilter = component.createMenuSymbol(mcanInstanceName.getValue() + "_STD_FILTER"+ str(filterNumber), menu)
     stdFilter.setLabel("Standard Filter " + str(filterNumber))
     stdFilterType = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_TYPE", stdFilter)
+    stdFilterType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     stdFilterType.setLabel("Type")
     adornFilterType(stdFilterType)
     sfid1 = component.createHexSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1", stdFilter)
+    sfid1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     sfid1.setLabel("ID1")
     sfid1.setMin(0)
     sfid1.setMax(0x7FF)
     sfid2 = component.createHexSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2", stdFilter)
+    sfid2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     sfid2.setLabel("ID2")
     sfid2.setMin(0)
     sfid2.setMax(0x7FF)
@@ -131,6 +134,7 @@ def mcanCreateStdFilter(component, menu, filterNumber):
     stdFilterRangeInvalidSym.setVisible(False)
 
     config = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_CONFIG", stdFilter)
+    config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     config.setLabel("Element Configuration")
     adornFilterConfig(config)
 
@@ -162,13 +166,16 @@ def mcanCreateExtFilter(component, menu, filterNumber):
     extFilter = component.createMenuSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber), menu)
     extFilter.setLabel("Extended Filter " + str(filterNumber))
     extFilterType = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_TYPE", extFilter)
+    extFilterType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     extFilterType.setLabel("Type")
     adornFilterType(extFilterType)
     efid1 = component.createHexSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1", extFilter)
+    efid1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     efid1.setLabel("ID1")
     efid1.setMin(0)
     efid1.setMax(0x1FFFFFFF)
     efid2 = component.createHexSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2", extFilter)
+    efid2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     efid2.setLabel("ID2")
     efid2.setMin(0)
     efid2.setMax(0x1FFFFFFF)
@@ -178,6 +185,7 @@ def mcanCreateExtFilter(component, menu, filterNumber):
     extFilterRangeInvalidSym.setVisible(False)
 
     config = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_CONFIG", extFilter)
+    config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     config.setLabel("Element Configuration")
     adornFilterConfig(config)
 
@@ -488,10 +496,12 @@ def instantiateComponent(mcanComponent):
 
     # MCAN operation mode - default to FD
     mcanOpMode = mcanComponent.createComboSymbol("MCAN_OPMODE", None, opModeValues)
+    mcanOpMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanOpMode.setLabel("MCAN Operation Mode")
     mcanOpMode.setDefaultValue("NORMAL")
 
     mcanInterruptMode = mcanComponent.createBooleanSymbol("INTERRUPT_MODE", None)
+    mcanInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanInterruptMode.setLabel("Interrupt Mode")
     mcanInterruptMode.setDefaultValue(False)
 
@@ -547,6 +557,7 @@ def instantiateComponent(mcanComponent):
     mcanBitTimingCalculationMenu.setDescription("MCAN Bit Timing Calculation for Normal and CAN-FD Operation")
 
     mcanCoreClockValue = mcanComponent.createIntegerSymbol("MCAN_CORE_CLOCK_FREQ", mcanBitTimingCalculationMenu)
+    mcanCoreClockValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanCoreClockValue.setLabel("Clock Frequency")
     mcanCoreClockValue.setReadOnly(True)
     mcanCoreClockValue.setDefaultValue(int(Database.getSymbolValue("core", mcanInstanceName.getValue() + "_CLOCK_FREQUENCY")))
@@ -567,11 +578,13 @@ def instantiateComponent(mcanComponent):
     mcanNominalBitTimingMenu.setDescription("This timing must be less or equal to the CAN-FD Data Bit Timing if used")
 
     mcanAutomaticNominalBitTimingCalculation = mcanComponent.createBooleanSymbol("AUTO_NOMINAL_BIT_TIMING_CALCULATION", mcanNominalBitTimingMenu)
+    mcanAutomaticNominalBitTimingCalculation.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanAutomaticNominalBitTimingCalculation.setLabel("Automatic Nominal Bit Timing Calculation")
     mcanAutomaticNominalBitTimingCalculation.setDefaultValue(False)
     mcanAutomaticNominalBitTimingCalculation.setDependencies(updateNominalBitTimingSymbols, ["AUTO_NOMINAL_BIT_TIMING_CALCULATION"])
 
     mcanNominalBitrate = mcanComponent.createIntegerSymbol("NOMINAL_BITRATE", mcanNominalBitTimingMenu)
+    mcanNominalBitrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanNominalBitrate.setLabel("Bit Rate (Kbps)")
     mcanNominalBitrate.setMin(1)
     mcanNominalBitrate.setMax(1000)
@@ -579,6 +592,7 @@ def instantiateComponent(mcanComponent):
     mcanNominalBitrate.setDependencies(nominalBitTimingCalculation, ["NOMINAL_BITRATE", "AUTO_NOMINAL_BIT_TIMING_CALCULATION", "core." + mcanInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     mcanNominalSamplePoint = mcanComponent.createFloatSymbol("NOMINAL_SAMPLE_POINT", mcanNominalBitTimingMenu)
+    mcanNominalSamplePoint.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanNominalSamplePoint.setLabel("Sample Point %")
     mcanNominalSamplePoint.setMin(50.0)
     mcanNominalSamplePoint.setMax(100.0)
@@ -587,6 +601,7 @@ def instantiateComponent(mcanComponent):
     mcanNominalSamplePoint.setReadOnly(Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
     NBTPprescale = mcanComponent.createIntegerSymbol("NBTP_NBRP", mcanNominalBitTimingMenu)
+    NBTPprescale.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_BTP")
     NBTPprescale.setLabel("Bit Rate Prescaler")
     NBTPprescale.setMin(0)
     NBTPprescale.setMax(511)
@@ -595,21 +610,25 @@ def instantiateComponent(mcanComponent):
     NBTPprescale.setReadOnly(Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
     mcanNominalTotalTimeQuanta = mcanComponent.createIntegerSymbol("NBTP_TOTAL_TIME_QUANTA", mcanNominalBitTimingMenu)
+    mcanNominalTotalTimeQuanta.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanNominalTotalTimeQuanta.setLabel("Total Time Quanta (TQ)")
     mcanNominalTotalTimeQuanta.setReadOnly(True)
 
     mcanNominalSyncSegment = mcanComponent.createIntegerSymbol("NBTP_SYNC", mcanNominalTotalTimeQuanta)
+    mcanNominalSyncSegment.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanNominalSyncSegment.setLabel("Sync Segment (TQ)")
     mcanNominalSyncSegment.setDefaultValue(1)
     mcanNominalSyncSegment.setReadOnly(True)
 
     NBTPBeforeSP = mcanComponent.createIntegerSymbol("NBTP_NTSEG1", mcanNominalTotalTimeQuanta)
+    NBTPBeforeSP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_BTP")
     NBTPBeforeSP.setLabel("Time Segment Before Sample Point (TQ)")
     NBTPBeforeSP.setMin(2)
     NBTPBeforeSP.setMax(256)
     NBTPBeforeSP.setReadOnly(True)
 
     NBTPAfterSP = mcanComponent.createIntegerSymbol("NBTP_NTSEG2", mcanNominalTotalTimeQuanta)
+    NBTPAfterSP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_BTP")
     NBTPAfterSP.setLabel("Time Segment After Sample Point (TQ)")
     NBTPAfterSP.setMin(1)
     NBTPAfterSP.setMax(128)
@@ -625,22 +644,26 @@ def instantiateComponent(mcanComponent):
     NBTPAfterSP.setDefaultValue(tseg2)
 
     NBTPsyncJump = mcanComponent.createIntegerSymbol("NBTP_NSJW", mcanNominalBitTimingMenu)
+    NBTPsyncJump.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_BTP")
     NBTPsyncJump.setLabel("Synchronization Jump Width (TQ)")
     NBTPsyncJump.setMin(1)
     NBTPsyncJump.setMax(128)
     NBTPsyncJump.setDefaultValue(sjw)
 
     mcanNominalTimeQuantaPeriod = mcanComponent.createStringSymbol("NOMINAL_TIME_QUANTA_PERIOD", mcanNominalBitTimingMenu)
+    mcanNominalTimeQuantaPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanNominalTimeQuantaPeriod.setLabel("Time Quanta (ns)")
     mcanNominalTimeQuantaPeriod.setDefaultValue(str(tqPeriod))
     mcanNominalTimeQuantaPeriod.setReadOnly(True)
 
     mcanCalculatedNominalBitrate = mcanComponent.createIntegerSymbol("CALCULATED_NOMINAL_BITRATE", mcanNominalBitTimingMenu)
+    mcanCalculatedNominalBitrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanCalculatedNominalBitrate.setLabel("Calculated Bit Rate (Kbps)")
     mcanCalculatedNominalBitrate.setDefaultValue(calculatedNominalBitrate)
     mcanCalculatedNominalBitrate.setReadOnly(True)
 
     mcanNominalCalculatedError = mcanComponent.createStringSymbol("CALCULATED_NOMINAL_ERRORRATE", mcanNominalBitTimingMenu)
+    mcanNominalCalculatedError.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanNominalCalculatedError.setLabel("Error %")
     mcanNominalCalculatedError.setDefaultValue(str(errorRate))
     mcanNominalCalculatedError.setReadOnly(True)
@@ -657,17 +680,20 @@ def instantiateComponent(mcanComponent):
     mcanDataBitTimingMenu.setDependencies(showWhenFD, ["MCAN_OPMODE"])
 
     mcanAutomaticDataBitTimingCalculation = mcanComponent.createBooleanSymbol("AUTO_DATA_BIT_TIMING_CALCULATION", mcanDataBitTimingMenu)
+    mcanAutomaticDataBitTimingCalculation.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanAutomaticDataBitTimingCalculation.setLabel("Automatic Data Bit Timing Calculation")
     mcanAutomaticDataBitTimingCalculation.setDefaultValue(False)
     mcanAutomaticDataBitTimingCalculation.setDependencies(updateDataBitTimingSymbols, ["AUTO_DATA_BIT_TIMING_CALCULATION"])
 
     mcanDataBitrate = mcanComponent.createIntegerSymbol("DATA_BITRATE", mcanDataBitTimingMenu)
+    mcanDataBitrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanDataBitrate.setLabel("Bit Rate (Kbps)")
     mcanDataBitrate.setMin(1)
     mcanDataBitrate.setDefaultValue(500)
     mcanDataBitrate.setDependencies(dataBitTimingCalculation, ["DATA_BITRATE", "AUTO_DATA_BIT_TIMING_CALCULATION", "MCAN_OPMODE", "core." + mcanInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     mcanDataSamplePoint = mcanComponent.createFloatSymbol("DATA_SAMPLE_POINT", mcanDataBitTimingMenu)
+    mcanDataSamplePoint.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanDataSamplePoint.setLabel("Sample Point %")
     mcanDataSamplePoint.setMin(50.0)
     mcanDataSamplePoint.setMax(100.0)
@@ -676,6 +702,7 @@ def instantiateComponent(mcanComponent):
     mcanDataSamplePoint.setReadOnly(Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_DATA_BIT_TIMING_CALCULATION") == True)
 
     DBTPprescale = mcanComponent.createIntegerSymbol("DBTP_DBRP", mcanDataBitTimingMenu)
+    DBTPprescale.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_FBTP")
     DBTPprescale.setLabel("Bit Rate Prescaler")
     DBTPprescale.setMin(0)
     DBTPprescale.setMax(31)
@@ -684,21 +711,25 @@ def instantiateComponent(mcanComponent):
     DBTPprescale.setReadOnly(Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_DATA_BIT_TIMING_CALCULATION") == True)
 
     mcanDataTotalTimeQuanta = mcanComponent.createIntegerSymbol("DBTP_TOTAL_TIME_QUANTA", mcanDataBitTimingMenu)
+    mcanDataTotalTimeQuanta.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanDataTotalTimeQuanta.setLabel("Total Time Quanta (TQ)")
     mcanDataTotalTimeQuanta.setReadOnly(True)
 
     mcanDataSyncSegment = mcanComponent.createIntegerSymbol("DBTP_SYNC", mcanDataTotalTimeQuanta)
+    mcanDataSyncSegment.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanDataSyncSegment.setLabel("Sync Segment (TQ)")
     mcanDataSyncSegment.setDefaultValue(1)
     mcanDataSyncSegment.setReadOnly(True)
 
     DBTPBeforeSP = mcanComponent.createIntegerSymbol("DBTP_DTSEG1", mcanDataTotalTimeQuanta)
+    DBTPBeforeSP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_FBTP")
     DBTPBeforeSP.setLabel("Time Segment Before Sample Point (TQ)")
     DBTPBeforeSP.setMin(2)
     DBTPBeforeSP.setMax(32)
     DBTPBeforeSP.setReadOnly(True)
 
     DBTPAfterSP = mcanComponent.createIntegerSymbol("DBTP_DTSEG2", mcanDataTotalTimeQuanta)
+    DBTPAfterSP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_FBTP")
     DBTPAfterSP.setLabel("Time Segment After Sample Point (TQ)")
     DBTPAfterSP.setMin(1)
     DBTPAfterSP.setMax(16)
@@ -714,22 +745,26 @@ def instantiateComponent(mcanComponent):
     DBTPAfterSP.setDefaultValue(tseg2)
 
     DBTPsyncJump = mcanComponent.createIntegerSymbol("DBTP_DSJW", mcanDataBitTimingMenu)
+    DBTPsyncJump.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_FBTP")
     DBTPsyncJump.setLabel("Synchronization Jump Width (TQ)")
     DBTPsyncJump.setMin(1)
     DBTPsyncJump.setDefaultValue(sjw)
     DBTPsyncJump.setMax(8)
 
     mcanDataTimeQuantaPeriod = mcanComponent.createStringSymbol("DATA_TIME_QUANTA_PERIOD", mcanDataBitTimingMenu)
+    mcanDataTimeQuantaPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanDataTimeQuantaPeriod.setLabel("Time Quanta (ns)")
     mcanDataTimeQuantaPeriod.setDefaultValue(str(tqPeriod))
     mcanDataTimeQuantaPeriod.setReadOnly(True)
 
     mcanCalculatedDataBitrate = mcanComponent.createIntegerSymbol("CALCULATED_DATA_BITRATE", mcanDataBitTimingMenu)
+    mcanCalculatedDataBitrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanCalculatedDataBitrate.setLabel("Calculated Bit Rate (Kbps)")
     mcanCalculatedDataBitrate.setDefaultValue(calculatedDataBitrate)
     mcanCalculatedDataBitrate.setReadOnly(True)
 
     mcanDataCalculatedError = mcanComponent.createStringSymbol("CALCULATED_DATA_ERRORRATE", mcanDataBitTimingMenu)
+    mcanDataCalculatedError.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanDataCalculatedError.setLabel("Error %")
     mcanDataCalculatedError.setDefaultValue(str(errorRate))
     mcanDataCalculatedError.setReadOnly(True)
@@ -740,6 +775,7 @@ def instantiateComponent(mcanComponent):
 
     # ----- Rx FIFO 0 -----
     mcanRXF0 = mcanComponent.createBooleanSymbol("RXF0_USE", None)
+    mcanRXF0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXESC")
     mcanRXF0.setLabel("Use RX FIFO 0")
     mcanRXF0.setDefaultValue(True)
     mcanRXF0.setReadOnly(True)
@@ -750,12 +786,14 @@ def instantiateComponent(mcanComponent):
 
     # number of RX FIFO 0 elements
     mcanRXF0Elements = mcanComponent.createIntegerSymbol("RXF0_ELEMENTS", mcanRXF0Menu)
+    mcanRXF0Elements.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXF0C")
     mcanRXF0Elements.setLabel("Number of Elements")
     mcanRXF0Elements.setDefaultValue(1)
     mcanRXF0Elements.setMin(0)
     mcanRXF0Elements.setMax(64)
 
     mcanRXF0watermarkP = mcanComponent.createIntegerSymbol("RXF0_WP", mcanRXF0Menu)
+    mcanRXF0watermarkP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanRXF0watermarkP.setLabel("Watermark %")
     mcanRXF0watermarkP.setDefaultValue(0)
     mcanRXF0watermarkP.setMin(0)
@@ -763,6 +801,7 @@ def instantiateComponent(mcanComponent):
 
     #This is a computed value
     mcanRXF0watermark = mcanComponent.createIntegerSymbol("RXF0_WATERMARK", mcanRXF0Menu)
+    mcanRXF0watermark.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXF0C")
     mcanRXF0watermark.setLabel("Watermark at element")
     mcanRXF0watermark.setDescription("A value of 0 disables watermark")
     mcanRXF0watermark.setDefaultValue(0)
@@ -770,18 +809,21 @@ def instantiateComponent(mcanComponent):
     mcanRXF0watermark.setDependencies(RXF0WatermarkUpdate, ["RXF0_ELEMENTS", "RXF0_WP"])
 
     mcanRXF0elementSize = mcanComponent.createKeyValueSetSymbol("RXF0_BYTES_CFG", mcanRXF0Menu)
+    mcanRXF0elementSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXESC")
     mcanRXF0elementSize.setLabel("Element Size")
     mcanRXF0elementSize.setVisible(False)
     adornElementSize(mcanRXF0elementSize)
     mcanRXF0elementSize.setDependencies(updateElementSize, ["MCAN_OPMODE"])
 
     mcanRx0overwrite = mcanComponent.createBooleanSymbol("RXF0_OVERWRITE", mcanRXF0Menu)
+    mcanRx0overwrite.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXF0C")
     mcanRx0overwrite.setLabel("Use Overwrite Mode")
     mcanRx0overwrite.setDescription("Overwrite RX FIFO 0 entries without blocking")
     mcanRx0overwrite.setDefaultValue(True)
 
     # ----- Rx FIFO 1 -----
     mcanRXF1 = mcanComponent.createBooleanSymbol("RXF1_USE", None)
+    mcanRXF1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXESC")
     mcanRXF1.setLabel("Use RX FIFO 1")
     mcanRXF1.setDefaultValue(True)
 
@@ -790,12 +832,14 @@ def instantiateComponent(mcanComponent):
     mcanRXF1Menu.setDependencies(hideMenu, ["RXF1_USE"])
 
     mcanRXF1Elements = mcanComponent.createIntegerSymbol("RXF1_ELEMENTS", mcanRXF1Menu)
+    mcanRXF1Elements.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXF1C")
     mcanRXF1Elements.setLabel("Number of Elements")
     mcanRXF1Elements.setDefaultValue(1)
     mcanRXF1Elements.setMin(1)
     mcanRXF1Elements.setMax(64)
 
     mcanRXF1watermarkP = mcanComponent.createIntegerSymbol("RXF1_WP", mcanRXF1Menu)
+    mcanRXF1watermarkP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanRXF1watermarkP.setLabel("Watermark %")
     mcanRXF1watermarkP.setDefaultValue(0)
     mcanRXF1watermarkP.setMin(0)
@@ -803,6 +847,7 @@ def instantiateComponent(mcanComponent):
 
     #This is a computed value for watermark
     mcanRX1watermark = mcanComponent.createIntegerSymbol("RXF1_WATERMARK", mcanRXF1Menu)
+    mcanRX1watermark.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXF1C")
     mcanRX1watermark.setLabel("Watermark at element")
     mcanRX1watermark.setDescription("A value of 0 disables watermark")
     mcanRX1watermark.setDefaultValue(0)
@@ -810,22 +855,26 @@ def instantiateComponent(mcanComponent):
     mcanRX1watermark.setDependencies(RXF1WatermarkUpdate, ["RXF1_ELEMENTS", "RXF1_WP"])
 
     mcanRXF1elementSize = mcanComponent.createKeyValueSetSymbol("RXF1_BYTES_CFG", mcanRXF1Menu)
+    mcanRXF1elementSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXESC")
     mcanRXF1elementSize.setLabel("Element Size")
     mcanRXF1elementSize.setVisible(False)
     adornElementSize(mcanRXF1elementSize)
     mcanRXF1elementSize.setDependencies(updateElementSize, ["MCAN_OPMODE"])
 
     mcanRXF1overwrite = mcanComponent.createBooleanSymbol("RXF1_OVERWRITE", mcanRXF1Menu)
+    mcanRXF1overwrite.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXF1C")
     mcanRXF1overwrite.setLabel("Use Overwrite Mode")
     mcanRXF1overwrite.setDescription("Overwrite RX FIFO 1 entries without blocking")
     mcanRXF1overwrite.setDefaultValue(True)
 
     # ----- Rx Buffer -----
     mcanRXBuf = mcanComponent.createBooleanSymbol("RXBUF_USE", None)
+    mcanRXBuf.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXESC")
     mcanRXBuf.setLabel("Use Dedicated Rx Buffer")
     mcanRXBuf.setDefaultValue(False)
 
     mcanRXBufElements = mcanComponent.createIntegerSymbol("RX_BUFFER_ELEMENTS", mcanRXBuf)
+    mcanRXBufElements.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanRXBufElements.setLabel("Number of Elements")
     mcanRXBufElements.setDefaultValue(1)
     mcanRXBufElements.setMin(1)
@@ -834,6 +883,7 @@ def instantiateComponent(mcanComponent):
     mcanRXBufElements.setDependencies(hideMenu, ["RXBUF_USE"])
 
     mcanRXBufelementSize = mcanComponent.createKeyValueSetSymbol("RX_BUFFER_BYTES_CFG", mcanRXBuf)
+    mcanRXBufelementSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXESC")
     mcanRXBufelementSize.setLabel("Element Size")
     mcanRXBufelementSize.setVisible(False)
     adornElementSize(mcanRXBufelementSize)
@@ -842,6 +892,7 @@ def instantiateComponent(mcanComponent):
     # ------  T X  --------------
     # ----- Tx FIFO -----
     mcanTX = mcanComponent.createBooleanSymbol("TX_USE", None)
+    mcanTX.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_IE")
     mcanTX.setLabel("Use TX FIFO")
     mcanTX.setDefaultValue(True)
     mcanTX.setReadOnly(True)
@@ -853,12 +904,14 @@ def instantiateComponent(mcanComponent):
 
     # number of TX FIFO elements
     mcanTXnumElements = mcanComponent.createIntegerSymbol("TX_FIFO_ELEMENTS", mcanTXmenu)
+    mcanTXnumElements.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_TXBC")
     mcanTXnumElements.setLabel("Number of Elements")
     mcanTXnumElements.setDefaultValue(1)
     mcanTXnumElements.setMin(1)
     mcanTXnumElements.setMax(32)
 
     mcanTXwatermarkP = mcanComponent.createIntegerSymbol("TX_FIFO_WP", mcanTXmenu)
+    mcanTXwatermarkP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanTXwatermarkP.setLabel("Watermark %")
     mcanTXwatermarkP.setDefaultValue(0)
     mcanTXwatermarkP.setMin(0)
@@ -866,6 +919,7 @@ def instantiateComponent(mcanComponent):
 
     #This is a computed value for watermark
     mcanTXwatermark = mcanComponent.createIntegerSymbol("TX_FIFO_WATERMARK", mcanTXmenu)
+    mcanTXwatermark.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_TXEFC")
     mcanTXwatermark.setLabel("Watermark at element")
     mcanTXwatermark.setDescription("A value of 0 disables watermark")
     mcanTXwatermark.setDefaultValue(0)
@@ -873,23 +927,27 @@ def instantiateComponent(mcanComponent):
     mcanTXwatermark.setDependencies(TXWatermarkUpdate, ["TX_FIFO_ELEMENTS", "TX_FIFO_WP"])
 
     mcanTXElementCfg = mcanComponent.createKeyValueSetSymbol("TX_FIFO_BYTES_CFG", mcanTXmenu)
+    mcanTXElementCfg.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_TXESC")
     mcanTXElementCfg.setLabel("Element Size")
     adornElementSize(mcanTXElementCfg)
     mcanTXElementCfg.setVisible(False)
     mcanTXElementCfg.setDependencies(updateElementSize, ["MCAN_OPMODE"])
 
     mcanTXpause = mcanComponent.createBooleanSymbol("TX_PAUSE", None)
+    mcanTXpause.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanTXpause.setLabel("Enable TX Pause")
     mcanTXpause.setDescription("Pause 2 MCAN bit times between transmissions")
     mcanTXpause.setDefaultValue(False)
 
     # ----- Tx Buffer -----
     mcanTXBuf = mcanComponent.createBooleanSymbol("TXBUF_USE", None)
+    mcanTXBuf.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_TXBC")
     mcanTXBuf.setLabel("Use Dedicated Tx Buffer")
     mcanTXBuf.setDefaultValue(False)
 
     # number of TX buffer elements
     mcanTXBufElements = mcanComponent.createIntegerSymbol("TX_BUFFER_ELEMENTS", mcanTXBuf)
+    mcanTXBufElements.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_RXESC")
     mcanTXBufElements.setLabel("Number of TX Buffer Elements")
     mcanTXBufElements.setDefaultValue(1)
     mcanTXBufElements.setMin(1)
@@ -903,6 +961,7 @@ def instantiateComponent(mcanComponent):
     mcanStdFilterMenu.setDependencies(adjustStdFilters, ["FILTERS_STD"])
 
     mcanStdFilterNumber = mcanComponent.createIntegerSymbol("FILTERS_STD", mcanStdFilterMenu)
+    mcanStdFilterNumber.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_GFC")
     mcanStdFilterNumber.setLabel("Number of Standard Filters:")
     mcanStdFilterNumber.setDefaultValue(0)
     mcanStdFilterNumber.setMin(0)
@@ -914,6 +973,7 @@ def instantiateComponent(mcanComponent):
 
     #What to do when a NO-MATCH is detected on a standard packet
     mcanNoMatchStandard = mcanComponent.createKeyValueSetSymbol("FILTERS_STD_NOMATCH", None)
+    mcanNoMatchStandard.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_GFC")
     mcanNoMatchStandard.setLabel("Standard message No-Match disposition:")
     mcanNoMatchStandard.addKey("MCAN_GFC_ANFS_RX_FIFO_0", "0", "Move to RX FIFO 0")
     mcanNoMatchStandard.addKey("MCAN_GFC_ANFS_RX_FIFO_1", "1", "Move to RX FIFO 1")
@@ -924,6 +984,7 @@ def instantiateComponent(mcanComponent):
 
     # Reject all standard IDs?
     mcanStdReject = mcanComponent.createBooleanSymbol("FILTERS_STD_REJECT", None)
+    mcanStdReject.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_GFC")
     mcanStdReject.setLabel("Reject Standard Remote Frames")
     mcanStdReject.setDescription("Reject all remote frames with 11-bit standard IDs")
     mcanStdReject.setDefaultValue(False)
@@ -935,6 +996,7 @@ def instantiateComponent(mcanComponent):
 
     #How many extended filters
     mcanExtFilterNumber = mcanComponent.createIntegerSymbol("FILTERS_EXT", mcanExtFilterMenu)
+    mcanExtFilterNumber.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_GFC")
     mcanExtFilterNumber.setLabel("Number of Extended Filters:")
     mcanExtFilterNumber.setDefaultValue(0)
     mcanExtFilterNumber.setMin(0)
@@ -946,6 +1008,7 @@ def instantiateComponent(mcanComponent):
 
     #What to do when a NO-MATCH is detected on an extended message
     mcanNoMatchExtended = mcanComponent.createKeyValueSetSymbol("FILTERS_EXT_NOMATCH", None)
+    mcanNoMatchExtended.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_GFC")
     mcanNoMatchExtended.setLabel("Extended message No-Match disposition:")
     mcanNoMatchExtended.addKey("MCAN_GFC_ANFE_RX_FIFO_0", "0", "Move to RX FIFO 0")
     mcanNoMatchExtended.addKey("MCAN_GFC_ANFE_RX_FIFO_1", "1", "Move to RX FIFO 1")
@@ -956,18 +1019,21 @@ def instantiateComponent(mcanComponent):
 
     # Reject all extended IDs?
     mcanExtReject = mcanComponent.createBooleanSymbol("FILTERS_EXT_REJECT", None)
+    mcanExtReject.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_GFC")
     mcanExtReject.setLabel("Reject Extended Remote Frames")
     mcanExtReject.setDescription("Reject all remote frames with 29-bit extended IDs")
     mcanExtReject.setDefaultValue(False)
 
     #use timeout?
     mcanUseTimeout = mcanComponent.createBooleanSymbol("MCAN_TIMEOUT", None)
+    mcanUseTimeout.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_IE")
     mcanUseTimeout.setLabel("Use Timeout Counter")
     mcanUseTimeout.setDescription("Enables Timeout Counter")
     mcanUseTimeout.setDefaultValue(False)
 
     #timout count
     mcanTimeoutCount = mcanComponent.createIntegerSymbol("TIMEOUT_COUNT", mcanUseTimeout)
+    mcanTimeoutCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_TOCC")
     mcanTimeoutCount.setDependencies(hideMenu, ["MCAN_TIMEOUT"])
     mcanTimeoutCount.setLabel("Timeout Countdown from: ")
     mcanTimeoutCount.setDefaultValue(40000)
@@ -978,6 +1044,7 @@ def instantiateComponent(mcanComponent):
 
     #timeout mode
     mcanTimeoutMode = mcanComponent.createKeyValueSetSymbol("TIMEOUT_SELECT", mcanUseTimeout)
+    mcanTimeoutMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_TOCC")
     mcanTimeoutMode.setLabel("Timeout mode:")
     mcanTimeoutMode.addKey("MCAN_TOCC_TOS_CONTINUOUS", "0", "CONTINUOUS")
     mcanTimeoutMode.addKey("MCAN_TOCC_TOS_TX_EV_TIMEOUT", "1", "TX EVENT")
@@ -990,11 +1057,13 @@ def instantiateComponent(mcanComponent):
     mcanTimeoutMode.setDefaultValue(1)
 
     mcanTimestampEnable = mcanComponent.createBooleanSymbol("TIMESTAMP_ENABLE", None)
+    mcanTimestampEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_TSCC")
     mcanTimestampEnable.setLabel("Timestamp Enable")
     mcanTimestampEnable.setDefaultValue(False)
 
     #timestamp Modes
     mcanTimestampMode = mcanComponent.createKeyValueSetSymbol("TIMESTAMP_MODE", mcanTimestampEnable)
+    mcanTimestampMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_TSCC")
     mcanTimestampMode.setLabel("Timestamp mode")
     mcanTimestampMode.setDescription("EXT TIMESTAMP: external counter (needed for FD). ZERO: timestamp is always 0x0000. TCP INC: incremented according to TCP.")
     mcanTimestampMode.addKey("MCAN_TSCC_TSS_ALWAYS_0", "0", "ZERO")
@@ -1008,6 +1077,7 @@ def instantiateComponent(mcanComponent):
 
     #timestamp/timeout Counter Prescaler
     mcanTCP = mcanComponent.createIntegerSymbol("TIMESTAMP_PRESCALER", None)
+    mcanTCP.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:MCAN_TSCC")
     mcanTCP.setLabel("Timestamp/Timeout Counter Prescaler (TCP):")
     mcanTCP.setDescription("Configures Timestamp & Timeout counter prescaler in multiples of MCAN bit times.")
     mcanTCP.setDefaultValue(0)
@@ -1015,6 +1085,7 @@ def instantiateComponent(mcanComponent):
     mcanTCP.setMax(15)
 
     mcanGenerateLegacyAPIs = mcanComponent.createBooleanSymbol("MCAN_GENERATE_LEGACY_APIS", None)
+    mcanGenerateLegacyAPIs.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcan_11273;register:%NOREGISTER%")
     mcanGenerateLegacyAPIs.setLabel("Generate Legacy APIs")
     mcanGenerateLegacyAPIs.setDescription("Generates Legacy APIs for backward compatibility. Legacy APIs will be deprecated in future")
     mcanGenerateLegacyAPIs.setDefaultValue(False)

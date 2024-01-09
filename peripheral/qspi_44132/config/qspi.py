@@ -177,6 +177,7 @@ def instantiateComponent(qspiComponent):
 
     # this symbol functions as the operating mode - differentiating between SPI and QSPI modes
     qspiSMM = qspiComponent.createKeyValueSetSymbol("QSPI_SMM", qspiMenu)
+    qspiSMM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:QSPI_MR")
     qspiSMM.setLabel(qspiBitField_MR_SMM.getDescription())
     qspiSMM.setVisible(True)
     qspiSMM.setOutputMode("Key")
@@ -191,11 +192,13 @@ def instantiateComponent(qspiComponent):
     qspiSMM.setDependencies(setupQspiIntSymbolAndIntHandler, ["QSPI_SMM"])
 
     qspiCSMODE = qspiComponent.createComboSymbol("QSPI_CSMODE", qspiMenu, qspiValGrp_MR_CSMODE.getValueNames())
+    qspiCSMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:%NOREGISTER%")
     qspiCSMODE.setVisible(False)
     qspiCSMODE.setLabel(qspiBitField_MR_CSMODE.getDescription())
     qspiCSMODE.setDefaultValue("LASTXFER")
 
     qspiCPOL = qspiComponent.createKeyValueSetSymbol("QSPI_CPOL", qspiMenu)
+    qspiCPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:%NOREGISTER%")
     qspiCPOL.setLabel(qspiBitField_SCR_CPOL.getDescription())
     qspiCPOL.setVisible(True)
     qspiCPOL.addKey("LOW", "0", "Clock is Low when inactive (CPOL=0)")
@@ -205,6 +208,7 @@ def instantiateComponent(qspiComponent):
     qspiCPOL.setSelectedKey("LOW")
 
     qspiCPHA = qspiComponent.createKeyValueSetSymbol("QSPI_CPHA", qspiMenu)
+    qspiCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:%NOREGISTER%")
     qspiCPHA.setLabel(qspiBitField_SCR_CPHA.getDescription())
     qspiCPHA.setVisible(True)
     qspiCPHA.addKey("LEADING", "1", "Data is Valid on Clock Leading Edge (CPHA=0)")
@@ -214,6 +218,7 @@ def instantiateComponent(qspiComponent):
     qspiCPOL.setSelectedKey("LEADING")
 
     qspiClkFreq = qspiComponent.createIntegerSymbol("QSPI_CLK_FREQ", qspiMenu)
+    qspiClkFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:%NOREGISTER%")
     qspiClkFreq.setLabel("QSPI Core Clock Frequency")
     qspiClkFreq.setVisible(False)
     qspiClkFreq.setMax(200000000)
@@ -235,12 +240,14 @@ def instantiateComponent(qspiComponent):
 
     if ATDF.getNode('/avr-tools-device-file/modules/module@[name="QSPI"]/register-group@[name="QSPI"]/register@[name="QSPI_PCALCFG"]/bitfield@[name="CLKDIV"]') != None:
         qspiPcalcfgClkdiv = qspiComponent.createIntegerSymbol("QSPI_PCALCFG_CLKDIV", qspiMenu)
+        qspiPcalcfgClkdiv.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:QSPI_PCALCFG")
         qspiPcalcfgClkdiv.setLabel("Calibration Clock Division")
         qspiPcalcfgClkdiv.setVisible(False)
         qspiPcalcfgClkdiv.setDefaultValue(7)
         qspiPcalcfgClkdiv.setDependencies(setQspiClkdiv, ["core." + qspiInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
         qspiDllcfgRange = qspiComponent.createBooleanSymbol("QSPI_DLLCFG_RANGE", qspiMenu)
+        qspiDllcfgRange.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:qspi_44132;register:QSPI_DLLCFG")
         qspiDllcfgRange.setLabel("DLL Range")
         qspiDllcfgRange.setVisible(False)
         qspiDllcfgRange.setDefaultValue((qspiClkFreq.getValue() > 100000000))

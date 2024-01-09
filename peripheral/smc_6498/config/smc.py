@@ -159,6 +159,7 @@ def instantiateComponent(smcComponent):
     smcSym_GlobalMenu.setLabel("SMC Global Features")
 
     smcSym_WPMR_WPEN = smcComponent.createBooleanSymbol("SMC_WRITE_PROTECTION", smcSym_GlobalMenu)
+    smcSym_WPMR_WPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:%NOREGISTER%")
     smcSym_WPMR_WPEN.setLabel("Enable Write Protection")
     smcSym_WPMR_WPEN.setDefaultValue(False)
 
@@ -166,9 +167,11 @@ def instantiateComponent(smcComponent):
     smcSym_Key.setLabel("Scrambling Key")
 
     smcSym_SMC_KEY1 = smcComponent.createHexSymbol("SMC_KEY1", smcSym_Key)
+    smcSym_SMC_KEY1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_KEY1")
     smcSym_SMC_KEY1.setLabel("Scrambling Key 1")
 
     smcSym_SMC_KEY2 = smcComponent.createHexSymbol("SMC_KEY2", smcSym_Key)
+    smcSym_SMC_KEY2.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_KEY2")
     smcSym_SMC_KEY2.setLabel("Scrambling Key 2")
 
     #--------------------------------------------------------------------------
@@ -183,9 +186,11 @@ def instantiateComponent(smcComponent):
 
     for smcChipSelNum in range(0, smcChipSelCount):
         smcSym_CS = smcComponent.createBooleanSymbol("SMC_CHIP_SELECT" + str(smcChipSelNum), smcSym_Chip_Select)
+        smcSym_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:%NOREGISTER%")
         smcSym_CS.setLabel("Enable Chip Select "+ str(smcChipSelNum))
 
         smcSym_OCMS_CS_SE = smcComponent.createBooleanSymbol("SMC_MEM_SCRAMBLING_CS" + str(smcChipSelNum), smcSym_CS)
+        smcSym_OCMS_CS_SE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:MODE")
         smcSym_OCMS_CS_SE.setLabel("Enable Memory Scrambling")
         smcSym_OCMS_CS_SE.setDefaultValue(False)
 
@@ -195,12 +200,14 @@ def instantiateComponent(smcComponent):
 
         # SMC Read Setup Timings
         smcSym_SETUP_NRD_CS = smcComponent.createIntegerSymbol("SMC_NRD_SETUP_CS" + str(smcChipSelNum), smcSym_READ_TIMING_CS)
+        smcSym_SETUP_NRD_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_SETUP")
         smcSym_SETUP_NRD_CS.setLabel(smcRegBitField_SETUP_NRD_SETUP.getAttribute("caption"))
         smcSym_SETUP_NRD_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_SETUP_NRD_CS.setMax(smcConvertMaskToInt(smcRegBitField_SETUP_NRD_SETUP.getAttribute("mask")))
         smcSym_SETUP_NRD_CS.setDefaultValue(SMC_SETUP_DEFAULT_VALUE)
 
         smcSym_SETUP_NCS_RD_CS = smcComponent.createIntegerSymbol("SMC_NCS_RD_SETUP_CS" + str(smcChipSelNum), smcSym_READ_TIMING_CS)
+        smcSym_SETUP_NCS_RD_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_SETUP")
         smcSym_SETUP_NCS_RD_CS.setLabel(smcRegBitField_SETUP_NCS_RD_SETUP.getAttribute("caption"))
         smcSym_SETUP_NCS_RD_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_SETUP_NCS_RD_CS.setMax(smcConvertMaskToInt(smcRegBitField_SETUP_NCS_RD_SETUP.getAttribute("mask")))
@@ -208,12 +215,14 @@ def instantiateComponent(smcComponent):
 
         # SMC Read Pulse Timings
         smcSym_PULSE_NRD_CS = smcComponent.createIntegerSymbol("SMC_NRD_PULSE_CS" + str(smcChipSelNum), smcSym_READ_TIMING_CS)
+        smcSym_PULSE_NRD_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_PULSE")
         smcSym_PULSE_NRD_CS.setLabel(smcRegBitField_PULSE_NRD_PULSE.getAttribute("caption"))
         smcSym_PULSE_NRD_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_PULSE_NRD_CS.setMax(smcConvertMaskToInt(smcRegBitField_PULSE_NRD_PULSE.getAttribute("mask")))
         smcSym_PULSE_NRD_CS.setDefaultValue(SMC_PULSE_DEFAULT_VALUE)
 
         smcSym_PULSE_NCS_RD_CS = smcComponent.createIntegerSymbol("SMC_NCS_RD_PULSE_CS" + str(smcChipSelNum),smcSym_READ_TIMING_CS)
+        smcSym_PULSE_NCS_RD_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_PULSE")
         smcSym_PULSE_NCS_RD_CS.setLabel(smcRegBitField_PULSE_NCS_RD_PULSE.getAttribute("caption"))
         smcSym_PULSE_NCS_RD_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_PULSE_NCS_RD_CS.setMax(smcConvertMaskToInt(smcRegBitField_PULSE_NCS_RD_PULSE.getAttribute("mask")))
@@ -221,6 +230,7 @@ def instantiateComponent(smcComponent):
 
         # SMC Read Cycle Timings
         smcSym_SMC_CYCLE_TIMING_NRD_CS = smcComponent.createIntegerSymbol("SMC_NRD_CYCLE_CS" + str(smcChipSelNum), smcSym_READ_TIMING_CS)
+        smcSym_SMC_CYCLE_TIMING_NRD_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_CYCLE")
         smcSym_SMC_CYCLE_TIMING_NRD_CS.setLabel(smcRegBitField_CYCLE_NRD_CYCLE.getAttribute("caption"))
         smcSym_SMC_CYCLE_TIMING_NRD_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_SMC_CYCLE_TIMING_NRD_CS.setMax(smcConvertMaskToInt(smcRegBitField_CYCLE_NRD_CYCLE.getAttribute("mask")))
@@ -232,12 +242,14 @@ def instantiateComponent(smcComponent):
 
         # SMC Write Setup Timings
         smcSym_SETUP_NWE_CS = smcComponent.createIntegerSymbol("SMC_NWE_SETUP_CS" + str(smcChipSelNum), smcSym_WRITE_TIMING_CS)
+        smcSym_SETUP_NWE_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_SETUP")
         smcSym_SETUP_NWE_CS.setLabel(smcRegBitField_SETUP_NWE_SETUP.getAttribute("caption"))
         smcSym_SETUP_NWE_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_SETUP_NWE_CS.setMax(smcConvertMaskToInt(smcRegBitField_SETUP_NWE_SETUP.getAttribute("mask")))
         smcSym_SETUP_NWE_CS.setDefaultValue(SMC_SETUP_DEFAULT_VALUE)
 
         smcSym_SETUP_NCS_WR_CS = smcComponent.createIntegerSymbol("SMC_NCS_WR_SETUP_CS" + str(smcChipSelNum), smcSym_WRITE_TIMING_CS)
+        smcSym_SETUP_NCS_WR_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_SETUP")
         smcSym_SETUP_NCS_WR_CS.setLabel(smcRegBitField_SETUP_NCS_WR_SETUP.getAttribute("caption"))
         smcSym_SETUP_NCS_WR_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_SETUP_NCS_WR_CS.setMax(smcConvertMaskToInt(smcRegBitField_SETUP_NCS_WR_SETUP.getAttribute("mask")))
@@ -245,12 +257,14 @@ def instantiateComponent(smcComponent):
 
         # SMC Write Pulse Timings
         smcSym_PULSE_NWE_CS = smcComponent.createIntegerSymbol("SMC_NWE_PULSE_CS" + str(smcChipSelNum), smcSym_WRITE_TIMING_CS)
+        smcSym_PULSE_NWE_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_PULSE")
         smcSym_PULSE_NWE_CS.setLabel(smcRegBitField_PULSE_NWE_PULSE.getAttribute("caption"))
         smcSym_PULSE_NWE_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_PULSE_NWE_CS.setMax(smcConvertMaskToInt(smcRegBitField_PULSE_NWE_PULSE.getAttribute("mask")))
         smcSym_PULSE_NWE_CS.setDefaultValue(SMC_PULSE_DEFAULT_VALUE)
 
         smcSym_PULSE_NCS_WR_CS = smcComponent.createIntegerSymbol("SMC_NCS_WR_PULSE_CS" + str(smcChipSelNum), smcSym_WRITE_TIMING_CS)
+        smcSym_PULSE_NCS_WR_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_PULSE")
         smcSym_PULSE_NCS_WR_CS.setLabel(smcRegBitField_PULSE_NCS_WR_PULSE.getAttribute("caption"))
         smcSym_PULSE_NCS_WR_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_PULSE_NCS_WR_CS.setMax(smcConvertMaskToInt(smcRegBitField_PULSE_NCS_WR_PULSE.getAttribute("mask")))
@@ -258,6 +272,7 @@ def instantiateComponent(smcComponent):
 
         # SMC Write Cycle Timings
         smcSym_CYCLE_TIMING_NWE_CS = smcComponent.createIntegerSymbol("SMC_NWE_CYCLE_CS" + str(smcChipSelNum), smcSym_WRITE_TIMING_CS)
+        smcSym_CYCLE_TIMING_NWE_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:SMC_CYCLE")
         smcSym_CYCLE_TIMING_NWE_CS.setLabel(smcRegBitField_CYCLE_NWE_CYCLE.getAttribute("caption"))
         smcSym_CYCLE_TIMING_NWE_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_CYCLE_TIMING_NWE_CS.setMax(smcConvertMaskToInt(smcRegBitField_CYCLE_NWE_CYCLE.getAttribute("mask")))
@@ -269,6 +284,7 @@ def instantiateComponent(smcComponent):
 
 
         smcSym_MODE_DBW = smcComponent.createKeyValueSetSymbol("SMC_DATA_BUS_CS" + str(smcChipSelNum), smcSym_MODE_CS_REGISTER)
+        smcSym_MODE_DBW.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:MODE")
         smcSym_MODE_DBW.setLabel("External Memory Data Bus Width")
         smcSym_MODE_DBW.setOutputMode("Key")
         smcSym_MODE_DBW.setDisplayMode("Description")
@@ -278,6 +294,7 @@ def instantiateComponent(smcComponent):
 
         smcSym_MODE_BAT.append(smcChipSelNum)
         smcSym_MODE_BAT[smcChipSelNum] = smcComponent.createKeyValueSetSymbol("SMC_BAT_CS" + str(smcChipSelNum), smcSym_MODE_CS_REGISTER)
+        smcSym_MODE_BAT[smcChipSelNum].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:MODE")
         smcSym_MODE_BAT[smcChipSelNum].setOutputMode("Key")
         smcSym_MODE_BAT[smcChipSelNum].setDisplayMode("Description")
         smcSym_MODE_BAT[smcChipSelNum].setLabel("Byte Write or Byte Select Access")
@@ -287,11 +304,13 @@ def instantiateComponent(smcComponent):
         smcSym_MODE_BAT[smcChipSelNum].setDependencies(smcByteAccessSelModeVisible, ["SMC_DATA_BUS_CS" + str(smcChipSelNum)])
 
         smcSym_MODE_PMEN = smcComponent.createBooleanSymbol("SMC_PMEN_CS" + str(smcChipSelNum), smcSym_MODE_CS_REGISTER)
+        smcSym_MODE_PMEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:MODE")
         smcSym_MODE_PMEN.setLabel("Enable Page mode")
         smcSym_MODE_PMEN.setDefaultValue(False)
 
         smcSym_MODE_PS.append(smcChipSelNum)
         smcSym_MODE_PS[smcChipSelNum] = smcComponent.createKeyValueSetSymbol("SMC_PS_CS" + str(smcChipSelNum), smcSym_MODE_CS_REGISTER)
+        smcSym_MODE_PS[smcChipSelNum].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:MODE")
         smcSym_MODE_PS[smcChipSelNum].setOutputMode("Key")
         smcSym_MODE_PS[smcChipSelNum].setDisplayMode("Description")
         smcSym_MODE_PS[smcChipSelNum].setLabel("External Memory Page Size")
@@ -304,11 +323,13 @@ def instantiateComponent(smcComponent):
         smcSym_MODE_PS[smcChipSelNum].setDependencies(smcMemoryPageSizeModeVisible, ["SMC_PMEN_CS" + str(smcChipSelNum)])
 
         smcSym_MODE_TDF = smcComponent.createBooleanSymbol("SMC_TDF_OPTIMIZATION_CS" + str(smcChipSelNum), smcSym_MODE_CS_REGISTER)
+        smcSym_MODE_TDF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:MODE")
         smcSym_MODE_TDF.setLabel("Enable Optimization of Data Float Time")
         smcSym_MODE_TDF.setDefaultValue(False)
 
         smcSym_MODE_TDF_CYCLES.append(smcChipSelNum)
         smcSym_MODE_TDF_CYCLES[smcChipSelNum] = smcComponent.createIntegerSymbol("SMC_TDF_CYCLES_CS" + str(smcChipSelNum), smcSym_MODE_CS_REGISTER)
+        smcSym_MODE_TDF_CYCLES[smcChipSelNum].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:MODE")
         smcSym_MODE_TDF_CYCLES[smcChipSelNum].setLabel("Data Float Time (no of cycles)")
         smcSym_MODE_TDF_CYCLES[smcChipSelNum].setVisible(False)
         smcSym_MODE_TDF_CYCLES[smcChipSelNum].setMin(SMC_DEFAULT_MIN_VALUE)
@@ -317,6 +338,7 @@ def instantiateComponent(smcComponent):
         smcSym_MODE_TDF_CYCLES[smcChipSelNum].setDependencies(smcTdfCyclesModeVisible, ["SMC_TDF_OPTIMIZATION_CS" + str(smcChipSelNum)])
 
         smcSym_MODE_EXNW = smcComponent.createKeyValueSetSymbol("SMC_NWAIT_MODE_CS" + str(smcChipSelNum), smcSym_MODE_CS_REGISTER)
+        smcSym_MODE_EXNW.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:MODE")
         smcSym_MODE_EXNW.setOutputMode("Key")
         smcSym_MODE_EXNW.setDisplayMode("Description")
         smcSym_MODE_EXNW.setLabel("External Wait Signal (NWAIT)")
@@ -326,10 +348,12 @@ def instantiateComponent(smcComponent):
         smcSym_MODE_EXNW.setSelectedKey("SMC_MODE_EXNW_MODE_DISABLED", 2)
 
         smcSym_MODE_READ = smcComponent.createBooleanSymbol("SMC_READ_ENABLE_MODE_CS" + str(smcChipSelNum), smcSym_MODE_CS_REGISTER)
+        smcSym_MODE_READ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:MODE")
         smcSym_MODE_READ.setLabel("Read Operation is controlled by NRD Signal")
         smcSym_MODE_READ.setDefaultValue(True)
 
         smcSym_MODE_WRITE = smcComponent.createBooleanSymbol("SMC_WRITE_ENABLE_MODE_CS" + str(smcChipSelNum), smcSym_MODE_CS_REGISTER)
+        smcSym_MODE_WRITE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_6498;register:MODE")
         smcSym_MODE_WRITE.setLabel("Write Operation is controlled by NWE Signal")
         smcSym_MODE_WRITE.setDefaultValue(True)
 

@@ -80,6 +80,7 @@ def instantiateComponent(supcComponent):
 
     #BORVDDUSB Interrupt Enable
     supcSym_INTENSET = supcComponent.createBooleanSymbol("SUPC_INTERRUPT_ENABLE", None)
+    supcSym_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:%NOREGISTER%")
     supcSym_INTENSET.setLabel("Enable BORVDDUSB Interrupt")
     supcSym_INTENSET.setDefaultValue(False)
     supcSym_INTENSET.setDependencies(interruptControl, ["SUPC_INTERRUPT_ENABLE"])
@@ -96,6 +97,7 @@ def instantiateComponent(supcComponent):
 
     #BOR DCBORPSEL
     supcSym_BOR_DCBORPSEL = supcComponent.createKeyValueSetSymbol("SUPC_BOR_DCBORPSEL", supcSym_BOR_Menu)
+    supcSym_BOR_DCBORPSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BOR")
     supcSym_BOR_DCBORPSEL.setLabel("Select Duty Cycle BOR Prescaler")
     supcBORDcborpselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"BOR__DCBORPSEL\"]")
     supcDcborpselValues = []
@@ -111,6 +113,7 @@ def instantiateComponent(supcComponent):
 
     #BOR BORFILT
     supcSym_BOR_BORFILT = supcComponent.createKeyValueSetSymbol("SUPC_BOR_BORFILT", supcSym_BOR_Menu)
+    supcSym_BOR_BORFILT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BOR")
     supcSym_BOR_BORFILT.setLabel("BOR Filtering")
     supcBORFiltNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"BOR__BORFILT\"]")
     supcBORFiltValues = []
@@ -130,10 +133,12 @@ def instantiateComponent(supcComponent):
 
     #LVD Enable
     supcSym_LVD_Enable = supcComponent.createBooleanSymbol("SUPC_LVD_ENABLE", supcSym_LVD_Menu)
+    supcSym_LVD_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:LVD")
     supcSym_LVD_Enable.setLabel("Enable")
 
     #LVD DIR
     supcSym_LVD_DIR = supcComponent.createKeyValueSetSymbol("SUPC_LVD_DIR", supcSym_LVD_Menu)
+    supcSym_LVD_DIR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:LVD")
     supcSym_LVD_DIR.setLabel("Direction")
     supcLvdDirNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"LVD__DIR\"]")
     supcLvdDirValues = []
@@ -149,10 +154,12 @@ def instantiateComponent(supcComponent):
 
     #LVD OEVEN
     supcSym_LVD_Oeven = supcComponent.createBooleanSymbol("SUPC_LVD_OEVEN", supcSym_LVD_Menu)
+    supcSym_LVD_Oeven.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:LVD")
     supcSym_LVD_Oeven.setLabel("Output Event Enable")
 
     #LVD RUNSTDBY
     supcSym_LVD_RunStdby = supcComponent.createBooleanSymbol("SUPC_LVD_RUNSTDBY", supcSym_LVD_Menu)
+    supcSym_LVD_RunStdby.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:LVD")
     supcSym_LVD_RunStdby.setLabel("Run during Standby")
 
     #VREG Menu
@@ -161,6 +168,7 @@ def instantiateComponent(supcComponent):
 
     #VREG Output Control in RUN mode
     supcSym_VREGCTRL_VREGOUT = supcComponent.createKeyValueSetSymbol("SUPC_VREGCTRL_VREGOUT", supcSym_VREGControl_Menu)
+    supcSym_VREGCTRL_VREGOUT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
     supcSym_VREGCTRL_VREGOUT.setLabel("VREG Output Control in RUN mode")
     supcVregOutNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"VREGCTRL__VREGOUT\"]")
     supcVregOutValues = []
@@ -176,19 +184,23 @@ def instantiateComponent(supcComponent):
 
     #Off in Standby Control for VREGSW[N-1]
     supcSym_VREGCTRL_OFFSTDBY = supcComponent.createBooleanSymbol("SUPC_VREGCTRL_OFFSTDBY", supcSym_VREGControl_Menu)
+    supcSym_VREGCTRL_OFFSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
     supcSym_VREGCTRL_OFFSTDBY.setLabel("Off in Standby Control")
 
     #Charge Pump Enable and Auto-enable
     supcSym_VREGCTRL_CPEN = supcComponent.createBooleanSymbol("SUPC_VREGCTRL_CPEN", supcSym_VREGControl_Menu)
+    supcSym_VREGCTRL_CPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
     supcSym_VREGCTRL_CPEN.setLabel("Charge Pump Enable and Auto-enable")
 
     #Additional Voltage Regulator Enable
     supcSym_VREGCTRL_AVREGEN = supcComponent.createBooleanSymbol("SUPC_VREGCTRL_AVREGEN", supcSym_VREGControl_Menu)
+    supcSym_VREGCTRL_AVREGEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
     supcSym_VREGCTRL_AVREGEN.setLabel("Additional Voltage Regulator Enable")
     supcSym_VREGCTRL_AVREGEN.setDefaultValue(True)
 
     #Additional Voltage Regulator Configuration
     supcSym_VREGCTRL_AVREGSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREGCTRL_AVREGSTDBY", supcSym_VREGControl_Menu)
+    supcSym_VREGCTRL_AVREGSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
     supcSym_VREGCTRL_AVREGSTDBY.setLabel("Additional Voltage Regulator Configuration")
     supcAvregStdbyNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"VREGCTRL__AVREGSTDBY\"]")
     supcAvregStdbyValues = []
@@ -208,6 +220,7 @@ def instantiateComponent(supcComponent):
 
     #Bandgap and Regulators Low Power Standby
     supcSym_VREF_LPSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREF_LPSTDBY", supcSym_VREF_Menu)
+    supcSym_VREF_LPSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREFCTRL")
     supcSym_VREF_LPSTDBY.setLabel("Enable Bandgap and Regulators Low Power Standby")
     supcLPStdbyNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"VREFCTRL__LPSTDBY\"]")
     supcLPStdbyValues = []
@@ -223,6 +236,7 @@ def instantiateComponent(supcComponent):
 
     #Bandgap and Regulators Low Power Hibernate
     supcSym_VREF_LPHIB = supcComponent.createKeyValueSetSymbol("SUPC_VREF_LPHIB", supcSym_VREF_Menu)
+    supcSym_VREF_LPHIB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREFCTRL")
     supcSym_VREF_LPHIB.setLabel("Enable Bandgap and Regulators Low Power Hibernate")
     supcLPHibNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"VREFCTRL__LPHIB\"]")
     supcLPHibValues = []
@@ -238,6 +252,7 @@ def instantiateComponent(supcComponent):
 
     #VREF TSEN
     supcSym_VREF_TSEN = supcComponent.createBooleanSymbol("SUPC_VREF_TSEN", supcSym_VREF_Menu)
+    supcSym_VREF_TSEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREF")
     supcSym_VREF_TSEN.setLabel("Enable Temperature Sensor Output")
     supcSym_VREF_TSEN.setDefaultValue(False)
 
@@ -248,12 +263,14 @@ def instantiateComponent(supcComponent):
 
     #SUPC Output pin 0
     supcSym_BKOUT0 = supcComponent.createBooleanSymbol("SUPC_BKOUT_0", supcSym_BKOUT_Menu)
+    supcSym_BKOUT0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BKOUT")
     supcSym_BKOUT0.setLabel("Enable OUT0")
     supcSym_BKOUT0.setDescription("OUT0 pin can be driven by SUPC. It can be toggled by SUPC, based on Toggle Output Mode")
     supcSym_BKOUT0.setDefaultValue(False)
 
     #TGLOM 0
     supcSym_BKOUT_TGLOM0 = supcComponent.createKeyValueSetSymbol("SUPC_BKOUT_TGLOM0", supcSym_BKOUT0)
+    supcSym_BKOUT_TGLOM0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BKOUT")
     supcSym_BKOUT_TGLOM0.setLabel("Toggle Output Mode 0")
     supcTglomNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"BKOUT__TGLOM\"]")
     supcTglomValues = []
@@ -269,12 +286,14 @@ def instantiateComponent(supcComponent):
 
     #SUPC Output pin 1
     supcSym_BKOUT1 = supcComponent.createBooleanSymbol("SUPC_BKOUT_1", supcSym_BKOUT_Menu)
+    supcSym_BKOUT1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BKOUT")
     supcSym_BKOUT1.setLabel("Enable OUT1")
     supcSym_BKOUT1.setDescription("OUT1 pin can be driven by SUPC. It can be toggled by SUPC, based on Toggle Output Mode")
     supcSym_BKOUT1.setDefaultValue(False)
 
     #TGLOM 1
     supcSym_BKOUT_TGLOM1 = supcComponent.createKeyValueSetSymbol("SUPC_BKOUT_TGLOM1", supcSym_BKOUT1)
+    supcSym_BKOUT_TGLOM1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:BKOUT")
     supcSym_BKOUT_TGLOM1.setLabel("Toggle Output Mode 1")
     for index in range (0, len(supcTglomValues)):
         supcTglom1KeyName = supcTglomValues[index].getAttribute("name")

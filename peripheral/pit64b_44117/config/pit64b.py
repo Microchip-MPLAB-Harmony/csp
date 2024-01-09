@@ -64,11 +64,13 @@ def instantiateComponent(pit64Component):
 
     cont_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIT64B"]/register-group@[name="PIT64B"]/register@[name="PIT64B_MR"]/bitfield@[name="CONT"]')
     cont = pit64Component.createBooleanSymbol("CONT", None)
+    cont.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit64b_44117;register:PIT64B_MR")
     cont.setLabel(cont_node.getAttribute("name"))
     cont.setDescription(cont_node.getAttribute("caption"))
 
     sgclk_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIT64B"]/register-group@[name="PIT64B"]/register@[name="PIT64B_MR"]/bitfield@[name="SGCLK"]')
     sgclk = pit64Component.createBooleanSymbol("SGCLK", None)
+    sgclk.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit64b_44117;register:PIT64B_MR")
     sgclk.setLabel(sgclk_node.getAttribute("name"))
     sgclk.setDescription(sgclk_node.getAttribute("caption"))
 
@@ -79,17 +81,20 @@ def instantiateComponent(pit64Component):
 
     smod_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIT64B"]/register-group@[name="PIT64B"]/register@[name="PIT64B_MR"]/bitfield@[name="SMOD"]')
     smod = pit64Component.createBooleanSymbol("SMOD", None)
+    smod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit64b_44117;register:PIT64B_MR")
     smod.setLabel(smod_node.getAttribute("name"))
     smod.setDescription(smod_node.getAttribute("caption"))
 
     prescaler_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIT64B"]/register-group@[name="PIT64B"]/register@[name="PIT64B_MR"]/bitfield@[name="PRESCALER"]')
     prescaler = pit64Component.createIntegerSymbol("PRESCALER", None)
+    prescaler.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit64b_44117;register:PIT64B_MR")
     prescaler.setLabel(prescaler_node.getAttribute("name"))
     prescaler.setDescription(prescaler_node.getAttribute("caption"))
     prescaler.setMin(0)
     prescaler.setMax(15)
 
     period = pit64Component.createLongSymbol("PERIOD", None)
+    period.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit64b_44117;register:PIT64B_MSBPR")
     period.setLabel("Timer Period")
     period.setDescription("Number of clock source ticks per period")
     period.setMin(0)
@@ -105,6 +110,7 @@ def instantiateComponent(pit64Component):
     period_lsb.setDependencies(lambda symbol, event:symbol.setValue(event['value'] & 0xFFFFFFFF), ['PERIOD'])
 
     period_us = pit64Component.createFloatSymbol("PERIOD_US", None)
+    period_us.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit64b_44117;register:%NOREGISTER%")
     period_us.setLabel("Timer Period(us)")
     period_us.setReadOnly(True)
     input_freq = Database.getSymbolValue("core", instanceName.getValue() + "_CLOCK_FREQUENCY")
@@ -118,12 +124,15 @@ def instantiateComponent(pit64Component):
     freq_sym.setDependencies(lambda symbol, event: symbol.setValue(event['value']), ["core." + instanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     period_int = pit64Component.createBooleanSymbol("PERIOD_INT", None)
+    period_int.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit64b_44117;register:PIT64B_IER")
     period_int.setLabel("Timer Interrupt")
 
     ovre_int = pit64Component.createBooleanSymbol("OVRE_INT", None)
+    ovre_int.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit64b_44117;register:PIT64B_IER")
     ovre_int.setLabel("Overrun Error Interrupt")
 
     sece_int = pit64Component.createBooleanSymbol("SECE_INT", None)
+    sece_int.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pit64b_44117;register:PIT64B_IER")
     sece_int.setLabel("Safety/Security Interrupt")
 
     int_en = pit64Component.createBooleanSymbol("ENABLE_INTERRUPT", None)

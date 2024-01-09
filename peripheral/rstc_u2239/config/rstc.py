@@ -70,6 +70,7 @@ def instantiateComponent(rstcComponent):
     rstcInstanceName.setDefaultValue(rstcComponent.getID().upper())
 
     rstcSym_Enable = rstcComponent.createBooleanSymbol("RSTC_ENABLE", None)
+    rstcSym_Enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:%NOREGISTER%")
     rstcSym_Enable.setLabel("Use Reset Controller ?")
     rstcSym_Enable.setDefaultValue(True)
     rstcSym_Enable.setReadOnly(True)
@@ -83,6 +84,7 @@ def instantiateComponent(rstcComponent):
     for id in range(0,len(rstcResetCause.getChildren())):
         rstcSym_RCAUSE = rstcComponent.createKeyValueSetSymbol("RSTC_RCAUSE"+str(id), None)
         rstcSym_RCAUSE.setLabel(str(rstcResetCause.getChildren()[id].getAttribute("caption")))
+        rstcSym_RCAUSE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:RCAUSE")
         rstcSym_RCAUSE.addKey(rstcResetCause.getChildren()[id].getAttribute("name"), str(id), rstcResetCause.getChildren()[id].getAttribute("caption"))
         rstcSym_RCAUSE.setOutputMode("Key")
         rstcSym_RCAUSE.setDisplayMode("Description")
@@ -97,6 +99,7 @@ def instantiateComponent(rstcComponent):
         for id in range(0,len(rstcBkup.getChildren())):
             rstcSym_BKUPEXIT = rstcComponent.createKeyValueSetSymbol("RSTC_BKUPEXIT"+str(id), None)
             rstcSym_BKUPEXIT.setLabel(str(rstcBkup.getChildren()[id].getAttribute("caption")))
+            rstcSym_BKUPEXIT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:BKUPEXIT")
             rstcSym_BKUPEXIT.addKey(rstcBkup.getChildren()[id].getAttribute("name"), str(id), rstcBkup.getChildren()[id].getAttribute("caption"))
             rstcSym_BKUPEXIT.setOutputMode("Key")
             rstcSym_BKUPEXIT.setDisplayMode("Description")
@@ -119,6 +122,7 @@ def instantiateComponent(rstcComponent):
                 node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RSTC"]/value-group@[name="RSTC_WKDBCONF__WKDBCNT"]')
                 nodeValues = node.getChildren()
                 rstcDebounce = rstcComponent.createKeyValueSetSymbol("RSTC_DEBOUNCE", rstcwakeupMenu)
+                rstcDebounce.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:WKDBCONF")
                 rstcDebounce.setLabel("Wakeup Debounce Counter Value")
                 for index in range(0, len(nodeValues)):
                     key =  nodeValues[index].getAttribute("name")
@@ -131,11 +135,13 @@ def instantiateComponent(rstcComponent):
 
                 for i in range(0, rstcWakeupNum.getValue()):
                     wakeupEnable = rstcComponent.createBooleanSymbol("WAKEUP_" + str(i) + "_ENABLE" , rstcwakeupMenu)
+                    wakeupEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:%NOREGISTER%")
                     wakeupEnable.setLabel("Enable Wakeup " + str(i))
                     wakeupEnable.setDefaultValue(False)
                     wakeupEnableDependencyList.append("WAKEUP_" + str(i) + "_ENABLE")
 
                     wakeupPolarity = rstcComponent.createKeyValueSetSymbol("WAKEUP_" + str(i) + "_POLARITY", wakeupEnable)
+                    wakeupPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rstc_u2239;register:%NOREGISTER%")
                     wakeupPolarity.setLabel("Wakeup Polarity")
                     wakeupPolarity.addKey("Active Low", "0", "Input pin x is active low.")
                     wakeupPolarity.addKey("Active High", "1", "Input pin x is active High.")

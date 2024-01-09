@@ -133,6 +133,7 @@ def instantiateComponent(pwmComponent):
     pwmInstanceNum.setDefaultValue(instanceNum)
 
     pwmClkSelect = pwmComponent.createKeyValueSetSymbol("PWM_CLOCK_SELECT", None)
+    pwmClkSelect.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_54;register:CFG")
     pwmClkSelect.setLabel("PWM Clock Select")
     pwmClkSelect.addKey("CLOCK_LOW", "1", "Clock Low (100 KHz)")
     pwmClkSelect.addKey("CLOCK_HIGH", "0", "Clock High (48 MHz)")
@@ -141,20 +142,24 @@ def instantiateComponent(pwmComponent):
     pwmClkSelect.setOutputMode("Value")
 
     pwmClkDivider = pwmComponent.createIntegerSymbol("PWM_CLOCK_DIVIDER", None)
+    pwmClkDivider.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_54;register:CFG")
     pwmClkDivider.setLabel("PWM Clock Divider")
     pwmClkDivider.setMin(0)
     pwmClkDivider.setMax(15)
     pwmClkDivider.setDefaultValue(0)
 
     pwmOnTimeCounter = pwmComponent.createIntegerSymbol("PWM_ON_TIME_COUNTER", None)
+    pwmOnTimeCounter.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_54;register:%NOREGISTER%")
     pwmOnTimeCounter.setLabel("PWM On Time Counter")
     pwmOnTimeCounter.setDefaultValue(100)
 
     pwmOffTimeCounter = pwmComponent.createIntegerSymbol("PWM_OFF_TIME_COUNTER", None)
+    pwmOffTimeCounter.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_54;register:%NOREGISTER%")
     pwmOffTimeCounter.setLabel("PWM Off Time Counter")
     pwmOffTimeCounter.setDefaultValue(100)
 
     pwmOutputInvert = pwmComponent.createBooleanSymbol("PWM_OUTPUT_INVERT", None)
+    pwmOutputInvert.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:pwm_54;register:CFG")
     pwmOutputInvert.setLabel("PWM Output Invert?")
     pwmOutputInvert.setDefaultValue(False)
 

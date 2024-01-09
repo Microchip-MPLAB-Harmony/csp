@@ -60,6 +60,7 @@ def instantiateComponent(nmicComponent):
 
     for id in range(0, numSource):
         nmicSRCEnable = nmicComponent.createBooleanSymbol("NMIC_SRC_EN_" + str(id), None)
+        nmicSRCEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nmic_44062;register:%NOREGISTER%")
         nmicSRCEnable.setLabel(captions["NMIC_SOURCE_" + str(id)])
         nmicSRCEnable.setDefaultValue(False)
 
@@ -69,6 +70,7 @@ def instantiateComponent(nmicComponent):
         nmicConfigurationMenu.setVisible(False)
 
         nmicConfigurationLVL = nmicComponent.createKeyValueSetSymbol(("NMIC_SRC_" + str(id) + "_LVL"), nmicConfigurationMenu)
+        nmicConfigurationLVL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nmic_44062;register:NMIC_SCFG0R")
         nmicConfigurationLVL.setLabel("Level/Edge selection")
         nmicConfigurationLVL.setOutputMode("Value")
         nmicConfigurationLVL.setDisplayMode("Description")
@@ -77,6 +79,7 @@ def instantiateComponent(nmicComponent):
         nmicConfigurationLVL.setVisible(id == 0)
 
         nmicConfigurationPOL = nmicComponent.createKeyValueSetSymbol(("NMIC_SRC_" + str(id) + "_POL"), nmicConfigurationMenu)
+        nmicConfigurationPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nmic_44062;register:NMIC_SCFG0R")
         nmicConfigurationPOL.setLabel("Polarity selection")
         nmicConfigurationPOL.setOutputMode("Value")
         nmicConfigurationPOL.setDisplayMode("Description")
@@ -85,11 +88,13 @@ def instantiateComponent(nmicComponent):
         nmicConfigurationPOL.setVisible(id == 0)
 
         nmicGFEnable = nmicComponent.createBooleanSymbol("NMIC_SRC_GF_EN_" + str(id), nmicConfigurationMenu)
+        nmicGFEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nmic_44062;register:NMIC_SCFG0R")
         nmicGFEnable.setLabel("Enable Glitch Filter")
         nmicGFEnable.setDefaultValue(False)
         nmicGFEnable.setVisible(id == 0)
 
         nmicGFSEL = nmicComponent.createIntegerSymbol("NMIC_SRC_GFSEL_" + str(id), nmicConfigurationMenu)
+        nmicGFSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nmic_44062;register:NMIC_SCFG0R")
         nmicGFSEL.setLabel("Glitch Filter Selector")
         nmicGFSEL.setDefaultValue(1)
         nmicGFSEL.setMax(3)
@@ -103,6 +108,7 @@ def instantiateComponent(nmicComponent):
         nmicGCLKComment.setDependencies(gclkComment, ["NMIC_SRC_GF_EN_" + str(id)])
 
         nmicFZEnable = nmicComponent.createBooleanSymbol("NMIC_SRC_FZ_" + str(id), nmicConfigurationMenu)
+        nmicFZEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nmic_44062;register:NMIC_SCFG0R")
         nmicFZEnable.setLabel("Freeze Configuration")
         nmicFZEnable.setDefaultValue(False)
         nmicFZEnable.setVisible(id == 0)

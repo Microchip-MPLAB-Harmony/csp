@@ -73,6 +73,7 @@ def instantiateComponent(eepromComponent):
     eepromMenu.setDescription("EEPROM Memory Configuration")
 
     eepromCFGCON_EEWS = eepromComponent.createIntegerSymbol("EEPROM_CFGCON_EEWS", eepromMenu)
+    eepromCFGCON_EEWS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eeprom_02514;register:%NOREGISTER%")
     eepromCFGCON_EEWS.setLabel("EEPROM Memory Wait states")
     eepromCFGCON_EEWS.setDescription("Number of Wait states configured.")
     eepromCFGCON_EEWS.setDefaultValue(getWaitStates())

@@ -300,6 +300,7 @@ def instantiateComponent(uartComponent):
 
     # UART_OPERATING_MODE
     uartSym_OperatingMode = uartComponent.createKeyValueSetSymbol("UART_OPERATING_MODE", None)
+    uartSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
     uartSym_OperatingMode.setLabel("Operating Mode")
     uartSym_OperatingMode.addKey("BLOCKING", "0", "Blocking mode")
     uartSym_OperatingMode.addKey("NON_BLOCKING", "1", "Non-blocking mode")
@@ -311,6 +312,7 @@ def instantiateComponent(uartComponent):
 
     # UART Interrupt Type - Aggregate or Direct
     uartInterruptType = uartComponent.createKeyValueSetSymbol("UART_INTERRUPT_TYPE", None)
+    uartInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
     uartInterruptType.setLabel("Interrupt Type")
     if nvic_int_num["direct_nvic_num"] != None:
         uartInterruptType.addKey("DIRECT", "0", "Direct")
@@ -329,6 +331,7 @@ def instantiateComponent(uartComponent):
 
     # UART_TX_RING_BUFFER_SIZE
     uartSym_TXRingBuffer_Size = uartComponent.createIntegerSymbol("UART_TX_RING_BUFFER_SIZE", uartSym_RingBufferSizeConfig)
+    uartSym_TXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
     uartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
     uartSym_TXRingBuffer_Size.setMin(2)
     uartSym_TXRingBuffer_Size.setMax(65535)
@@ -338,6 +341,7 @@ def instantiateComponent(uartComponent):
 
     # UART_RX_RING_BUFFER_SIZE
     uartSym_RXRingBuffer_Size = uartComponent.createIntegerSymbol("UART_RX_RING_BUFFER_SIZE", uartSym_RingBufferSizeConfig)
+    uartSym_RXRingBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
     uartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
     uartSym_RXRingBuffer_Size.setMin(2)
     uartSym_RXRingBuffer_Size.setMax(65535)
@@ -352,6 +356,7 @@ def instantiateComponent(uartComponent):
     _get_bitfield_names(uartValGrp_UART_CFG_SEL__CLK_SRC, clk_src_bitfields)
 
     uart_CFG_SEL_CLK_SRC_SELECT = uartComponent.createKeyValueSetSymbol("UART_CFG_SEL_CLK_SRC", None)
+    uart_CFG_SEL_CLK_SRC_SELECT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
     uart_CFG_SEL_CLK_SRC_SELECT.setLabel("Clock Source")
     uart_CFG_SEL_CLK_SRC_SELECT.setDefaultValue(0)
     uart_CFG_SEL_CLK_SRC_SELECT.setOutputMode( "Value" )
@@ -365,6 +370,7 @@ def instantiateComponent(uartComponent):
     baud_clk_bitfields = []
     _get_bitfield_names(uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL, baud_clk_bitfields)
     uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL = uartComponent.createKeyValueSetSymbol("UART_BAUDRT_MSB_BAUD_CLK_SEL", None)
+    uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
     uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL.setLabel("Baud Clock Select")
     uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL.setOutputMode( "Value" )
     uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL.setDisplayMode( "Key" )
@@ -379,11 +385,13 @@ def instantiateComponent(uartComponent):
 
     # Baud Rate
     uartBaudRate = uartComponent.createIntegerSymbol("UART_BAUDRATE", None)
+    uartBaudRate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
     uartBaudRate.setLabel("Baud Rate")
     uartBaudRate.setDefaultValue(115200)
 
     # Baud Rate Divisor
     uartBaudRateDiv = uartComponent.createIntegerSymbol("UART_BAUDRATE_DIVISOR", None)
+    uartBaudRateDiv.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
     uartBaudRateDiv.setLabel("Baud Rate Divisor")
     uartBaudRateDiv.setDefaultValue(baudDivisorCalc(uart_CFG_SEL_CLK_SRC_SELECT.getSelectedKey(), uartValGrp_UART_BAUDRT_MSB__BAUD_CLK_SEL.getSelectedKey(), uartBaudRate.getValue()))
     uartBaudRateDiv.setVisible(True)
@@ -398,6 +406,7 @@ def instantiateComponent(uartComponent):
     _get_bitfield_names(uartValGrp_UART_LCR__STOP_BIT, stop_bit_bitfields)
 
     uart_LCR_STOP_BITS = uartComponent.createKeyValueSetSymbol("UART_LCR_STOP_BITS_SELECT", None)
+    uart_LCR_STOP_BITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:LCR")
     uart_LCR_STOP_BITS.setLabel("Stop Bits")
     uart_LCR_STOP_BITS.setOutputMode( "Value" )
     uart_LCR_STOP_BITS.setDisplayMode( "Description" )
@@ -413,6 +422,7 @@ def instantiateComponent(uartComponent):
     _get_bitfield_names(uartValGrp_UART_LCR__WORD_LEN, word_len_bitfields)
 
     uart_LCR_WORD_LEN = uartComponent.createKeyValueSetSymbol("UART_LCR_WORD_LENGTH_SELECT", None)
+    uart_LCR_WORD_LEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:LCR")
     uart_LCR_WORD_LEN.setLabel("Word Length")
     uart_LCR_WORD_LEN.setOutputMode( "Value" )
     uart_LCR_WORD_LEN.setDisplayMode( "Description" )
@@ -432,6 +442,7 @@ def instantiateComponent(uartComponent):
     _get_bitfield_names(uartValGrp_UART_LCR__PAR_SEL, parity_bitfields)
 
     uart_LCR_PARITY_SELECT = uartComponent.createKeyValueSetSymbol("UART_LCR_PARITY_SELECT", None)
+    uart_LCR_PARITY_SELECT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:LCR")
     uart_LCR_PARITY_SELECT.setLabel("Parity")
     uart_LCR_PARITY_SELECT.setOutputMode( "Value" )
     uart_LCR_PARITY_SELECT.setDisplayMode( "Description" )
@@ -442,6 +453,7 @@ def instantiateComponent(uartComponent):
     uartLCRRegDepList.append("UART_LCR_PARITY_SELECT")
 
     uart_CFG_SEL_POLARITY = uartComponent.createBooleanSymbol("UART_CFG_SEL_POLARITY", None)
+    uart_CFG_SEL_POLARITY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
     uart_CFG_SEL_POLARITY.setLabel("Invert UART RX and TX pins ?")
     uart_CFG_SEL_POLARITY.setDefaultValue(False)
 
@@ -469,6 +481,7 @@ def instantiateComponent(uartComponent):
 
     uartRegLCR = uartComponent.createHexSymbol("UART_REG_LCR", None)
     uartRegLCR.setLabel("Line Control Register")
+    uartRegLCR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:LCR")
     uartRegLCR.setDefaultValue(0x03)                                       # 8-bit mode is default
     uartRegLCR.setVisible(False)
     uartRegLCR.setDependencies(regLCRUpdate, uartLCRRegDepList)
@@ -477,6 +490,7 @@ def instantiateComponent(uartComponent):
 
     uartRegBaudGenMSB = uartComponent.createHexSymbol("UART_REG_BAUD_GEN_MSB", None)
     uartRegBaudGenMSB.setLabel("Baud Generator MSB")
+    uartRegBaudGenMSB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:BAUDRT_MSB")
     uartRegBaudGenMSB.setDefaultValue(0x00)
     uartRegBaudGenMSB.setVisible(False)
     uartRegBaudGenMSB.setDependencies(regBaudGenMSBUpdate, ["UART_BAUDRATE_DIVISOR", "UART_CFG_SEL_CLK_SRC", "UART_BAUDRT_MSB_BAUD_CLK_SEL" ])
@@ -484,12 +498,14 @@ def instantiateComponent(uartComponent):
 
     uartRegBaudGenLSB = uartComponent.createHexSymbol("UART_REG_BAUD_GEN_LSB", None)
     uartRegBaudGenLSB.setLabel("Baud Generator LSB")
+    uartRegBaudGenLSB.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:%NOREGISTER%")
     uartRegBaudGenLSB.setDefaultValue(int(uartBaudRateDiv.getValue()) & 0xFF)
     uartRegBaudGenLSB.setVisible(False)
     uartRegBaudGenLSB.setDependencies(regBaudGenLSBUpdate, ["UART_BAUDRATE_DIVISOR"])
 
     uartRegConfigSel = uartComponent.createHexSymbol("UART_REG_CONFIG_SEL", None)
     uartRegConfigSel.setLabel("Configuration Select")
+    uartRegConfigSel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_39;register:CFG_SEL")
     uartRegConfigSel.setDefaultValue(0x00)
     uartRegConfigSel.setVisible(False)
     uartRegConfigSel.setDependencies(configSelUpdate, ["UART_CFG_SEL_CLK_SRC", "UART_CFG_SEL_POLARITY"])
