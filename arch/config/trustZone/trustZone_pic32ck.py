@@ -21,6 +21,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+
 #Fuse settings for memory attributes
 def setUpMemFuse(symbol, event):
     global fuseMapSymbol
@@ -58,14 +59,22 @@ def updateSecureEnabledState(symbol, event):
 def updateSecureBootloaderEnabledState(symbol, event):
     symbol.setEnabled(event["value"])
 
+
+global get_implib_details
+def get_implib_details(boot_suffix=""):
+    from os import path
+    lib_name = "{0}{1}_sg_veneer.lib".format(
+                    Variables.get("__SECURE_PROJECT_FOLDER_NAME").replace('.X', ''), boot_suffix)
+    secure_project_path = path.join(Variables.get("__SECURE_PROJECT_FIRMWARE_PATH"),
+                                     Variables.get("__SECURE_PROJECT_FOLDER_NAME"))
+    lib_path = path.join(Variables.get("__NON_SECURE_PROJECT_FIRMWARE_PATH"),
+                                        Variables.get("__NON_SECURE_PROJECT_FOLDER_NAME"),
+                                        lib_name)
+    lib_rel_path = path.relpath(lib_path, secure_project_path).replace("\\", "/")
+    return lib_name, lib_rel_path
+
+
 def updateSecureBootSettings(symbol, event):
-    SecureBoot = ""
-    if event["value"] == True:
-        SecureBoot = "_boot"
-    id = symbol.getID()
-
-    eventId = event["id"]
-
     if ((event["id"] == "IDAU_ANSC_SIZE") or (event["id"] == "IDAU_BNSC_SIZE")):
         anscSize = Database.getSymbolValue("core", "IDAU_ANSC_SIZE")
         bnscSize = Database.getSymbolValue("core", "IDAU_BNSC_SIZE")
@@ -76,17 +85,19 @@ def updateSecureBootSettings(symbol, event):
             symbol.setEnabled(False)
         else:
             symbol.setEnabled(True)
+    else:
+        id = symbol.getID()
+        boot_suffix = "_boot" if event["value"] else ""
 
-        return
-
-    if id == "NONSECURE_ENTRY_C":
-        symbol.setOutputName("nonsecure_entry" + SecureBoot + ".c")
-    elif id == "NONSECURE_ENTRY_H":
-        symbol.setOutputName("nonsecure_entry" + SecureBoot + ".h")
-    elif id == "SEC_XC32_LINKER_CMSE_FLAG":
-        symbol.setValue( "--out-implib=" + "../../../NonSecure/firmware/" + str(Variables.get("__NON_SECURE_PROJECT_FOLDER_NAME")) + "/" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + SecureBoot + "_sg_veneer.lib" + " ,--cmse-implib")
-    elif id == "XC32_LINKER_LIBRARY_":
-        symbol.setValue( "-l:" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + SecureBoot + "_sg_veneer.lib")
+        implib_name, implib_rel_path = get_implib_details(boot_suffix)
+        if id == "NONSECURE_ENTRY_C":
+            symbol.setOutputName("nonsecure_entry" + boot_suffix + ".c")
+        elif id == "NONSECURE_ENTRY_H":
+            symbol.setOutputName("nonsecure_entry" + boot_suffix + ".h")
+        elif id == "SEC_XC32_LINKER_CMSE_FLAG":
+            symbol.setValue( "--out-implib={0} ,--cmse-implib".format(implib_rel_path))
+        elif id == "XC32_LINKER_LIBRARY_":
+            symbol.setValue( "-l:{0}".format(implib_name))
 
 def calculateANSSize(symbol, event):
     symbol.setValue("ANS_SIZE=" + str(hex(Database.getSymbolValue("core", "IDAU_ANS_SIZE") * int(memoryGranularity["IDAU_ANS"]))).replace("L", ""))
@@ -616,10 +627,11 @@ xc32cppCMSECompilerFlag.setValue(xc32CMSECompilerFlag.getValue())
 xc32cppCMSECompilerFlag.setAppend(True, " ")
 xc32cppCMSECompilerFlag.setSecurity("SECURE")
 
-xc32CMSELinkerFlag =  coreComponent.createSettingSymbol("SEC_XC32_LINKER_CMSE_FLAG", None)
+implib_name, implib_rel_path = get_implib_details()
+xc32CMSELinkerFlag = coreComponent.createSettingSymbol("SEC_XC32_LINKER_CMSE_FLAG", None)
 xc32CMSELinkerFlag.setCategory("C32-LD")
 xc32CMSELinkerFlag.setKey("appendMe")
-xc32CMSELinkerFlag.setValue( "--out-implib=" + "../../../NonSecure/firmware/" + str(Variables.get("__NON_SECURE_PROJECT_FOLDER_NAME")) + "/" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + "_sg_veneer.lib" + " ,--cmse-implib")
+xc32CMSELinkerFlag.setValue( "--out-implib={0} ,--cmse-implib".format(implib_rel_path))
 xc32CMSELinkerFlag.setAppend(True, " ")
 xc32CMSELinkerFlag.setSecurity("SECURE")
 xc32CMSELinkerFlag.setDependencies(updateSecureBootSettings, ["GENERATE_SECURE_BOOT_MAIN_FILE", "IDAU_ANSC_SIZE", "IDAU_BNSC_SIZE"])
@@ -627,7 +639,7 @@ xc32CMSELinkerFlag.setDependencies(updateSecureBootSettings, ["GENERATE_SECURE_B
 xc32LinkerLibraryPath =  coreComponent.createSettingSymbol("XC32_LINKER_LIBRARY_", None)
 xc32LinkerLibraryPath.setCategory("C32-LD")
 xc32LinkerLibraryPath.setKey("appendMe")
-xc32LinkerLibraryPath.setValue( "-l:" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + "_sg_veneer.lib")
+xc32LinkerLibraryPath.setValue( "-l:{0}".format(implib_name))
 xc32LinkerLibraryPath.setAppend(True, " ")
 xc32LinkerLibraryPath.setDependencies(updateSecureBootSettings, ["GENERATE_SECURE_BOOT_MAIN_FILE", "IDAU_ANSC_SIZE", "IDAU_BNSC_SIZE"])
 
