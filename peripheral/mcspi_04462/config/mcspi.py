@@ -191,7 +191,7 @@ def updateCSR_SCBR_Value(symbol, baudVal, clockVal):
 
 def updateCSRx_SCBR_Value(symbol, event):
 
-    csx = symbol.getID()[7]
+    csx = symbol.getID()[len("MCSPI_CSR")]
     if event["id"] == "MCSPI_MASTER_CLOCK":
         clk = int(event["value"])
         baud = Database.getSymbolValue(mcspiInstanceName.getValue().lower(), "MCSPI_CSR" + csx + "_BAUD_RATE")
