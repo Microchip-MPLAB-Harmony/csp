@@ -932,8 +932,11 @@ def codeGen(symbol, event):
 
     for i in range(0, 16):
         if Database.getSymbolValue("core", "GCLK_INST_NUM" + str(i)):
-            if gclkSym_GENCTRL_SRC[i].getSelectedKey() in ["DFLL", "PLL0", "PLL1", "GCLK1"]:
-                sourceDestmap[gclkSym_GENCTRL_SRC[i].getSelectedKey()].append(
+            gclk_src = gclkSym_GENCTRL_SRC[i].getSelectedKey()
+            if "PLL" in gclk_src:
+                gclk_src = gclk_src[0:4]
+            if gclk_src in ["DFLL", "PLL0", "PLL1", "GCLK1"]:
+                sourceDestmap[gclk_src].append(
                     "GCLK" + str(i))
 
     codeList = topsort(sourceDestmap)
@@ -945,7 +948,7 @@ def codeGen(symbol, event):
             codeList.remove("PLL1")
         for i in range(0, 16):
             if Database.getSymbolValue("core", "GCLK_INST_NUM" + str(i)) == False:
-                codeList.remove("GCLK" + str(i))
+                codeList.remove("GCLK" + str(i)) 
         for i in range(0, len(codeList)):
             symbol.addValue("    " + codeList[i] + "_Initialize();")
 
