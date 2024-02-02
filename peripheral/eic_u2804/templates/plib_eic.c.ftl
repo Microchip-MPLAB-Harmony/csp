@@ -317,7 +317,7 @@ void __attribute__((used)) ${EIC_INSTANCE_NAME}_InterruptHandler(void)
     }
 }
     <#else>
-    <#list 0..(NUM_INT_LINES-1) as x>
+    <#list 0..(NUM_INT_LINES) as x>
     <#assign Enable = "EIC_INT_" + x>
     <#assign EIC_NON_SEC = "EIC_NONSEC_" + x>
     <#if .vars[Enable] && (.vars[EIC_NON_SEC] == "SECURE")>
@@ -408,7 +408,7 @@ void __attribute__((used)) ${EIC_INSTANCE_NAME}_InterruptHandler(void)
     }
 }
     <#else>
-    <#list 0..(NUM_INT_LINES-1) as x>
+    <#list 0..(NUM_INT_LINES) as x>
     <#assign Enable = "EIC_INT_" + x>
     <#if .vars[Enable]>
     <#assign EIC_INT_HANDLER_NAME = "EIC_INT_HANDLER_NAME_" + x>
