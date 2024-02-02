@@ -494,14 +494,14 @@ void ${HSMCI_INSTANCE_NAME}_CommandSend (
     /* Disable all the interrupt sources to begin with */
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_IDR = HSMCI_IDR_Msk;
 
-    /* Enable the needed interrupts */
-    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_IER = ier_reg;
-
     /* Write the argument register */
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_ARGR = argument;
 
     /* Write to the command register and the operation */
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_CMDR = cmd_reg;
+    
+    /* Enable the needed interrupts */
+    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_IER = ier_reg;
 }
 
 void ${HSMCI_INSTANCE_NAME}_ModuleInit ( void )
