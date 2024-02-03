@@ -35,6 +35,11 @@ global tccInstanceName
 global intPrev
 intPrev =  0
 global numOfChannels
+global tccSym_TimerUnit
+global tccSym_Timer_TIME_MS
+global sysTimeComponentId
+global tccSym_SYS_TIME_CONNECTED
+global sysTimePlibMode
 
 global TCCfilesArray
 global InterruptVectorSecurity
@@ -54,7 +59,7 @@ def fileUpdate(symbol, event):
         TCCfilesArray[5].setSecurity("SECURE")
         TCCfilesArray[6].setSecurity("SECURE")
         TCCfilesArray[7].setSecurity("SECURE")
-        TCCfilesArray[8].setSecurity("SECURE")                
+        TCCfilesArray[8].setSecurity("SECURE")
         TCCfilesArray[9].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         TCCfilesArray[10].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
         Database.setSymbolValue("core", InterruptVectorSecurity, False)
@@ -67,7 +72,7 @@ def fileUpdate(symbol, event):
         TCCfilesArray[5].setSecurity("NON_SECURE")
         TCCfilesArray[6].setSecurity("NON_SECURE")
         TCCfilesArray[7].setSecurity("NON_SECURE")
-        TCCfilesArray[8].setSecurity("NON_SECURE")        
+        TCCfilesArray[8].setSecurity("NON_SECURE")
         TCCfilesArray[9].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         TCCfilesArray[10].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
         Database.setSymbolValue("core", InterruptVectorSecurity, True)
@@ -82,7 +87,7 @@ def updateCodeGenerationProperty(symbol, event):
     component.getSymbolByID("TCC_CAPTURE_HEADER").setEnabled(False)
     component.getSymbolByID("TCC_CAPTURE_SOURCE").setEnabled(False)
     component.getSymbolByID("TCC_PWM_HEADER").setEnabled(False)
-    component.getSymbolByID("TCC_PWM_SOURCE").setEnabled(False)    
+    component.getSymbolByID("TCC_PWM_SOURCE").setEnabled(False)
 
     if tccSym_OperationMode.getValue() == "Timer":
         component.getSymbolByID("TCC_TIMER_HEADER").setEnabled(True)
@@ -95,7 +100,7 @@ def updateCodeGenerationProperty(symbol, event):
         component.getSymbolByID("TCC_CAPTURE_SOURCE").setEnabled(True)
     elif tccSym_OperationMode.getValue() == "PWM":
         component.getSymbolByID("TCC_PWM_HEADER").setEnabled(True)
-        component.getSymbolByID("TCC_PWM_SOURCE").setEnabled(True)        
+        component.getSymbolByID("TCC_PWM_SOURCE").setEnabled(True)
 
 def updateTCCInterruptStatus(symbol, event):
     component = symbol.getComponent()
@@ -106,15 +111,15 @@ def updateTCCInterruptStatus(symbol, event):
         Database.setSymbolValue("core", InterruptVector[0], False, 2)
         Database.setSymbolValue("core", InterruptHandlerLock[0], False, 2)
         Database.setSymbolValue("core", InterruptHandler[0], tccInstanceName.getValue() + "_Handler", 2)
-        
+
         if ((mode == "Timer" and component.getSymbolValue("TCC_TIMER_INTERRUPT_MODE") == True)
             or (mode == "Compare" and component.getSymbolValue("TCC_COMPARE_INTERRUPT_MODE") == True)
             or (mode == "Capture" and component.getSymbolValue("TCC_CAPTURE_INTERRUPT_MODE") == True)
             or (mode == "PWM" and component.getSymbolValue("TCC_PWM_INTERRUPT_MODE") == True)):
             Database.setSymbolValue("core", InterruptVector[0], True, 2)
             Database.setSymbolValue("core", InterruptHandlerLock[0], True, 2)
-            Database.setSymbolValue("core", InterruptHandler[0], tccInstanceName.getValue() + "_InterruptHandler", 2)                            
-    
+            Database.setSymbolValue("core", InterruptHandler[0], tccInstanceName.getValue() + "_InterruptHandler", 2)
+
     # For multiple interrupt lines for peripheral
     else:
         for intr in range(0, len(InterruptVector)):
@@ -154,13 +159,13 @@ def updateTCCInterruptStatus(symbol, event):
                     if component.getSymbolValue("TCC_CAPTURE_INTENSET_MC" + str(channelIndex)) == True:
                         Database.setSymbolValue("core", InterruptVector[intr], True, 2)
                         Database.setSymbolValue("core", InterruptHandlerLock[intr], True, 2)
-                        Database.setSymbolValue("core", InterruptHandler[intr], InterruptHandler[intr].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)  
+                        Database.setSymbolValue("core", InterruptHandler[intr], InterruptHandler[intr].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
 
         if (mode == "PWM"):
             for intr in range(0, len(InterruptVector)):
                 z = re.match("TCC\d+_MC(\d+)",InterruptHandler[intr].split("_INTERRUPT_HANDLER")[0])
                 if (z):
-                    channelIndex = z.groups()[0]                
+                    channelIndex = z.groups()[0]
                     if component.getSymbolValue("TCC_INTENSET_MC_" + str(channelIndex)) == True:
                         Database.setSymbolValue("core", InterruptVector[intr],True, 2)
                         Database.setSymbolValue("core", InterruptHandlerLock[intr], True, 2)
@@ -202,11 +207,11 @@ def tccSlaveModeVisibility(symbol, event):
 def tccFrequencyCalc(symbol, event):
     clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY")
     if clock_freq != 0:
-        prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:]) 
+        prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
         freq = clock_freq /  prescaler
     else:
         freq = 0
-    symbol.setValue(freq)  
+    symbol.setValue(freq)
 ################################################################################
 #### Dependency ####
 ################################################################################
@@ -217,6 +222,13 @@ def onAttachmentConnected(source, target):
     connectID = source["id"]
     targetID = target["id"]
 
+    if connectID == tmrCapabilityId:
+        localComponent.setCapabilityEnabled(tmrCapabilityId, True)
+        localComponent.setCapabilityEnabled(pwmCapabilityId, False)
+    elif connectID == pwmCapabilityId:
+        localComponent.setCapabilityEnabled(tmrCapabilityId, False)
+        localComponent.setCapabilityEnabled(pwmCapabilityId, True)
+
 def onAttachmentDisconnected(source, target):
     localComponent = source["component"]
     remoteComponent = target["component"]
@@ -224,6 +236,17 @@ def onAttachmentDisconnected(source, target):
     connectID = source["id"]
     targetID = target["id"]
     resetChannels()
+
+    localComponent.setCapabilityEnabled(tmrCapabilityId, True)
+    localComponent.setCapabilityEnabled(pwmCapabilityId, True)
+
+    if remoteID == "sys_time":
+        sysTimeComponentId.setValue("")
+        tccSym_SYS_TIME_CONNECTED.setValue(False, 2)
+        tccSym_OperationMode.setReadOnly(False)
+        tccSym_TimerUnit.setReadOnly(False)
+        tccSym_Timer_TIME_MS.setReadOnly(False)
+        tccSym_Timer_INTENSET_OVF.setReadOnly(False)
 
 # motor phases
 global lastPwmChU
@@ -242,10 +265,37 @@ def resetChannels():
     Database.setSymbolValue(component, "TCC_EVCTRL_EVACT1", 0)
     Database.setSymbolValue(component, "TCC_INTENSET_FAULT1", False)
 
+def sysTimePLIBModeConfig(plibMode):
+    global tccSym_TimerUnit
+    global tccSym_OperationMode
+    global tccSym_Timer_INTENSET_OVF
+
+    if sysTimeComponentId.getValue() != "":
+        if (plibMode == "SYS_TIME_PLIB_MODE_COMPARE"):
+            print ("To be supported")
+        if (plibMode == "SYS_TIME_PLIB_MODE_PERIOD"):
+            #Set Timer mode
+            tccSym_OperationMode.setReadOnly(True)
+            tccSym_OperationMode.setValue("Timer")
+            #Fix the timer unit to milliseconds
+            tccSym_TimerUnit.setReadOnly(True)
+            tccSym_TimerUnit.setValue("millisecond")
+            #Enable the interrupt
+            tccSym_Timer_INTENSET_OVF.setReadOnly(True)
+            tccSym_Timer_INTENSET_OVF.setValue(True)
+
 def handleMessage(messageID, args):
     global lastPwmChU
     global lastPwmChV
     global lastPwmChW
+
+    global sysTimeComponentId
+    global tccSym_SYS_TIME_CONNECTED
+    global sysTimePlibMode
+    global tccSym_Timer_TIME_MS
+
+    print ("messageID = " + messageID)
+
     component = str(tccInstanceName.getValue()).lower()
     dict = {}
     if (messageID == "PMSM_FOC_PWM_CONF"):
@@ -301,6 +351,26 @@ def handleMessage(messageID, args):
         Database.setSymbolValue(component, "TCC_6_DRVCTRL_NRE_NRV", 1)
         Database.setSymbolValue(component, "TCC_7_DRVCTRL_NRE_NRV", 1)
 
+    if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
+        sysTimeComponentId.setValue(args["ID"])
+        tccSym_SYS_TIME_CONNECTED.setValue(True, 2)
+        modeDict = {"plib_mode": "PERIOD_MODE"}
+        sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
+        sysTimePlibMode.setValue(sysTimePLIBConfig["plib_mode"])
+        # Set up timer for either period mode or compare mode operation
+        sysTimePLIBModeConfig(sysTimePLIBConfig["plib_mode"])
+        # For period mode operation, also setup the time period
+        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
+            tccSym_Timer_TIME_MS.setReadOnly(True)
+            tccSym_Timer_TIME_MS.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
+
+    if ((messageID == "SYS_TIME_PLIB_MODE_COMPARE") or (messageID == "SYS_TIME_PLIB_MODE_PERIOD")):
+        sysTimePlibMode.setValue(messageID)
+        sysTimePLIBModeConfig(messageID)
+
+    if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
+        tccSym_Timer_TIME_MS.setValue(args["sys_time_tick_ms"])
+
     return dict
 ###################################################################################################
 ########################################## Component  #############################################
@@ -316,12 +386,21 @@ def instantiateComponent(tccComponent):
     global InterruptVectorUpdate
     global InterruptVectorSecurity
     global size
+    global sysTimePlibMode
+    global tccSym_SYS_TIME_CONNECTED
+    global sysTimeComponentId
+    global tmrCapabilityId
+    global pwmCapabilityId
+
     eventDepList = []
     interruptDepList = []
 
     tccInstanceName = tccComponent.createStringSymbol("TCC_INSTANCE_NAME", None)
     tccInstanceName.setVisible(False)
     tccInstanceName.setDefaultValue(tccComponent.getID().upper())
+
+    tmrCapabilityId = tccInstanceName.getValue() + "_TMR"
+    pwmCapabilityId = tccInstanceName.getValue() + "_PWM"
 
     InterruptVectorSecurity = tccInstanceName.getValue() + "_SET_NON_SECURE"
 
@@ -503,13 +582,6 @@ def instantiateComponent(tccComponent):
     tccFaultInt.setVisible(False)
     tccFaultInt.setValue(tccInstanceName.getValue()+"_OTHER_IRQn")
 
-#--------------------------------------- SYS_TIME -------------------------------------------------------
-    tccSym_SYS_TIME_CONNECTED = tccComponent.createBooleanSymbol("TCC_SYS_TIME_CONNECTED", None)
-    tccSym_SYS_TIME_CONNECTED.setDefaultValue(False)
-    tccSym_SYS_TIME_CONNECTED.setVisible(False)
-
-#----------------------------------------------------------------------------------------------
-
 
     tccSym_CTRLA_RUNSTDBY = tccComponent.createBooleanSymbol("TCC_CTRLA_RUNSTDBY", None)
     tccSym_CTRLA_RUNSTDBY.setLabel("Run during Standby")
@@ -539,7 +611,7 @@ def instantiateComponent(tccComponent):
     values = node.getChildren()
     for index in range(0, len(values)):
         tccSym_CTRLA_PRESCYNC.addKey(values[index].getAttribute("name"), values[index].getAttribute("value"),
-        values[index].getAttribute("caption"))    
+        values[index].getAttribute("caption"))
 
     tccSym_Frequency = tccComponent.createIntegerSymbol("TCC_MODULE_FREQUENCY", None)
     tccSym_Frequency.setVisible(False)
@@ -555,7 +627,7 @@ def instantiateComponent(tccComponent):
     # if isMasterSlaveModeEnable == True:
     #     tccSym_OperationMode.setVisible(False)
     # if (tcInstanceMasterValue == 2):
-    #     tccSym_OperationMode.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])    
+    #     tccSym_OperationMode.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
 
 
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/tcc_u2213/config/tcc_pwm.py")
@@ -585,7 +657,7 @@ def instantiateComponent(tccComponent):
     interruptDepList.append("TCC_OPERATION_MODE")
     # Interrupt Dynamic settings
     tccSym_UpdateInterruptStatus = tccComponent.createBooleanSymbol("TCC_INTERRUPT_STATUS", None)
-    tccSym_UpdateInterruptStatus.setDependencies(updateTCCInterruptStatus, ["TCC_TIMER_INTERRUPT_MODE", "TCC_PWM_INTERRUPT_MODE", 
+    tccSym_UpdateInterruptStatus.setDependencies(updateTCCInterruptStatus, ["TCC_TIMER_INTERRUPT_MODE", "TCC_PWM_INTERRUPT_MODE",
             "TCC_COMPARE_INTERRUPT_MODE", "TCC_CAPTURE_INTERRUPT_MODE", "TCC_OPERATION_MODE"])
     tccSym_UpdateInterruptStatus.setVisible(False)
 
@@ -602,6 +674,79 @@ def instantiateComponent(tccComponent):
     tccSym_ClkEnComment.setDependencies(updateTCCClockWarningStatus, ["core." + tccInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     tccInstanceName.setDependencies(updateCodeGenerationProperty, ["TCC_OPERATION_MODE"])
+#------------------------------------------------------------
+# Common Symbols needed for SYS_TIME usage
+#------------------------------------------------------------
+    sysTimePlibMode = tccComponent.createStringSymbol("SYS_TIME_PLIB_OPERATION_MODE", None)
+    sysTimePlibMode.setLabel("SysTime PLIB Operation Mode")
+    sysTimePlibMode.setVisible(False)
+    sysTimePlibMode.setDefaultValue("")
+
+    sysTimeComponentId = tccComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
+    sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setVisible(False)
+    sysTimeComponentId.setDefaultValue("")
+
+    # sysTimeTrigger_Sym = tccComponent.createBooleanSymbol("SYS_TIME", None)
+    # sysTimeTrigger_Sym.setVisible(False)
+    # sysTimeTrigger_Sym.setDependencies(sysTime_APIUpdate, ["TC_CTRLA_MODE"])
+
+    tccSym_SYS_TIME_CONNECTED = tccComponent.createBooleanSymbol("TCC_SYS_TIME_CONNECTED", None)
+    tccSym_SYS_TIME_CONNECTED.setDefaultValue(False)
+    tccSym_SYS_TIME_CONNECTED.setVisible(False)
+
+    tccTimerPrefix = tccInstanceName.getValue() + "_Timer"
+    if tccSym_SIZE.getValue() == 32:
+        tccTimerPrefix += "32bit"
+    elif tccSym_SIZE.getValue() == 24:
+        tccTimerPrefix += "24bit"
+    else:
+        tccTimerPrefix += "16bit"
+
+
+    timerStartApiName = tccInstanceName.getValue() + "_TimerStart"
+    timerStopApiName = tccInstanceName.getValue() + "_TimerStop "
+    counterGetApiName = tccTimerPrefix +  "CounterGet"
+    frequencyGetApiName = tccInstanceName.getValue() + "_TimerFrequencyGet"
+    callbackApiName = tccInstanceName.getValue() + "_TimerCallbackRegister"
+    periodSetApiName = tccTimerPrefix + "PeriodSet"
+
+    timerWidth_Sym = tccComponent.createIntegerSymbol("TIMER_WIDTH", None)
+    timerWidth_Sym.setVisible(False)
+    timerWidth_Sym.setDefaultValue(32)
+
+    timerPeriodMax_Sym = tccComponent.createStringSymbol("TIMER_PERIOD_MAX", None)
+    timerPeriodMax_Sym.setVisible(False)
+    timerPeriodMax_Sym.setDefaultValue("0xFFFFFFFF")
+
+    timerStartApiName_Sym = tccComponent.createStringSymbol("TIMER_START_API_NAME", None)
+    timerStartApiName_Sym.setVisible(False)
+    timerStartApiName_Sym.setDefaultValue(timerStartApiName)
+
+    timeStopApiName_Sym = tccComponent.createStringSymbol("TIMER_STOP_API_NAME", None)
+    timeStopApiName_Sym.setVisible(False)
+    timeStopApiName_Sym.setDefaultValue(timerStopApiName)
+
+    counterApiName_Sym = tccComponent.createStringSymbol("COUNTER_GET_API_NAME", None)
+    counterApiName_Sym.setVisible(False)
+    counterApiName_Sym.setDefaultValue(counterGetApiName)
+
+    frequencyGetApiName_Sym = tccComponent.createStringSymbol("FREQUENCY_GET_API_NAME", None)
+    frequencyGetApiName_Sym.setVisible(False)
+    frequencyGetApiName_Sym.setDefaultValue(frequencyGetApiName)
+
+    callbackApiName_Sym = tccComponent.createStringSymbol("CALLBACK_API_NAME", None)
+    callbackApiName_Sym.setVisible(False)
+    callbackApiName_Sym.setDefaultValue(callbackApiName)
+
+    periodSetApiName_Sym = tccComponent.createStringSymbol("PERIOD_SET_API_NAME", None)
+    periodSetApiName_Sym.setVisible(False)
+    periodSetApiName_Sym.setDefaultValue(periodSetApiName)
+
+    irqEnumName_Sym = tccComponent.createStringSymbol("IRQ_ENUM_NAME", None)
+    irqEnumName_Sym.setVisible(False)
+    irqEnumName_Sym.setDefaultValue(InterruptVector[0][:-len("_INTERRUPT_ENABLE")] + "_IRQn")
+#------------------------------------------------------------
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################
@@ -638,7 +783,7 @@ def instantiateComponent(tccComponent):
     tccSym_TimerSourceFile.setDestPath("/peripheral/tcc/")
     tccSym_TimerSourceFile.setProjectPath("config/" + configName + "/peripheral/tcc/")
     tccSym_TimerSourceFile.setType("SOURCE")
-    tccSym_TimerSourceFile.setMarkup(True)   
+    tccSym_TimerSourceFile.setMarkup(True)
 
     tccSym_CompareHeaderFile = tccComponent.createFileSymbol("TCC_COMPARE_HEADER", None)
     tccSym_CompareHeaderFile.setSourcePath("../peripheral/tcc_u2213/templates/plib_tcc_compare.h.ftl")
@@ -654,7 +799,7 @@ def instantiateComponent(tccComponent):
     tccSym_CompareSourceFile.setDestPath("/peripheral/tcc/")
     tccSym_CompareSourceFile.setProjectPath("config/" + configName + "/peripheral/tcc/")
     tccSym_CompareSourceFile.setType("SOURCE")
-    tccSym_CompareSourceFile.setMarkup(True)    
+    tccSym_CompareSourceFile.setMarkup(True)
 
     tccSym_CaptureHeaderFile = tccComponent.createFileSymbol("TCC_CAPTURE_HEADER", None)
     tccSym_CaptureHeaderFile.setSourcePath("../peripheral/tcc_u2213/templates/plib_tcc_capture.h.ftl")
@@ -670,7 +815,7 @@ def instantiateComponent(tccComponent):
     tccSym_CaptureSourceFile.setDestPath("/peripheral/tcc/")
     tccSym_CaptureSourceFile.setProjectPath("config/" + configName + "/peripheral/tcc/")
     tccSym_CaptureSourceFile.setType("SOURCE")
-    tccSym_CaptureSourceFile.setMarkup(True)     
+    tccSym_CaptureSourceFile.setMarkup(True)
 
     tccSym_PWMGlobalHeaderFile = tccComponent.createFileSymbol("TCC_GLOBAL_HEADER", None)
     tccSym_PWMGlobalHeaderFile.setSourcePath("../peripheral/tcc_u2213/templates/plib_tcc_common.h")
@@ -700,13 +845,13 @@ def instantiateComponent(tccComponent):
         TCCfilesArray.append(tccSym_PWMSourceFile)
         TCCfilesArray.append(tccSym_PWMGlobalHeaderFile)
 
-        TCCfilesArray.append(tccSym_TimerHeaderFile)        
+        TCCfilesArray.append(tccSym_TimerHeaderFile)
         TCCfilesArray.append(tccSym_TimerSourceFile)
-        TCCfilesArray.append(tccSym_CompareHeaderFile)        
+        TCCfilesArray.append(tccSym_CompareHeaderFile)
         TCCfilesArray.append(tccSym_CompareSourceFile)
-        TCCfilesArray.append(tccSym_CaptureHeaderFile)        
-        TCCfilesArray.append(tccSym_CaptureSourceFile)                
-        
+        TCCfilesArray.append(tccSym_CaptureHeaderFile)
+        TCCfilesArray.append(tccSym_CaptureSourceFile)
+
         TCCfilesArray.append(tccSym_SystemInitFile)
         TCCfilesArray.append(tccSym_SystemDefFile)
         Database.setSymbolValue("core", InterruptVectorSecurity, tccIsNonSecure)
@@ -716,10 +861,10 @@ def instantiateComponent(tccComponent):
             TCCfilesArray[2].setSecurity("SECURE")
             TCCfilesArray[3].setSecurity("SECURE")
             TCCfilesArray[4].setSecurity("SECURE")
-            TCCfilesArray[5].setSecurity("SECURE")  
+            TCCfilesArray[5].setSecurity("SECURE")
             TCCfilesArray[6].setSecurity("SECURE")
             TCCfilesArray[7].setSecurity("SECURE")
-            TCCfilesArray[8].setSecurity("SECURE")                      
+            TCCfilesArray[8].setSecurity("SECURE")
 
             TCCfilesArray[9].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
             TCCfilesArray[10].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
