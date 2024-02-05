@@ -264,7 +264,9 @@ static inline bool ${UART_INSTANCE_NAME}_RxPushByte(uint16_t rdByte)
 {
     uint32_t tempInIndex;
     bool isSuccess = false;
+<#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == false>    
     uint32_t rdInIdx;
+</#if>
 
     tempInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex + 1U;
 
@@ -359,8 +361,10 @@ size_t ${UART_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
     size_t nBytesRead = 0;
     uint32_t rdOutIndex = 0;
     uint32_t rdInIndex = 0;
+<#if UART_AUTOMATIC_ADDR_DETECTION_ENABLE == false>    
     uint32_t rdOut16Idx;
     uint32_t nBytesRead16Idx;
+</#if>    
 
     /* Take a snapshot of indices to avoid creation of critical section */
     rdOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
