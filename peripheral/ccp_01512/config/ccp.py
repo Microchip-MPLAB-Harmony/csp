@@ -483,7 +483,7 @@ def instantiateComponent(ccpComponent):
     ccpSym_CCPCON2_ASDGM = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON2_ASDGM", ccpSym_CCPCON2_ASDG)
     ccpSym_CCPCON2_ASDGM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON2_ASDGM.setLabel("Select Auto Shutdown Gate Mode")
-    ccpSym_CCPCON2_ASDGM.setVisible(True)
+    ccpSym_CCPCON2_ASDGM.setVisible(False if ccpSym_CCPCON2_ASDG.getSelectedValue() == "0" else True)
     ccpSym_CCPCON2_ASDGM.setOutputMode( "Value" )
     ccpSym_CCPCON2_ASDGM.setDisplayMode( "Description" )
     for ii in asdgm_names:
@@ -497,7 +497,7 @@ def instantiateComponent(ccpComponent):
     ccpSym_CCPCON3_PSSACE = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON3_PSSACE", ccpSym_CCPCON2_ASDG)
     ccpSym_CCPCON3_PSSACE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
     ccpSym_CCPCON3_PSSACE.setLabel("Output pins (A, C, E) Shutdown State")
-    ccpSym_CCPCON3_PSSACE.setVisible(True)
+    ccpSym_CCPCON3_PSSACE.setVisible(False if ccpSym_CCPCON2_ASDG.getSelectedValue() == "0" else True)
     ccpSym_CCPCON3_PSSACE.setOutputMode( "Value" )
     ccpSym_CCPCON3_PSSACE.setDisplayMode( "Description" )
     for ii in shutdown_state:
@@ -510,7 +510,7 @@ def instantiateComponent(ccpComponent):
         ccpSym_CCPCON3_PSSBDF = ccpComponent.createKeyValueSetSymbol("CCP_CCPCON3_PSSBDF", ccpSym_CCPCON2_ASDG)
         ccpSym_CCPCON3_PSSBDF.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
         ccpSym_CCPCON3_PSSBDF.setLabel("Output pins (B, D, F) Shutdown State")
-        ccpSym_CCPCON3_PSSBDF.setVisible(True)
+        ccpSym_CCPCON3_PSSBDF.setVisible(False if ccpSym_CCPCON2_ASDG.getSelectedValue() == "0" else True)
         ccpSym_CCPCON3_PSSBDF.setOutputMode( "Value" )
         ccpSym_CCPCON3_PSSBDF.setDisplayMode( "Description" )
         for ii in shutdown_state:
@@ -530,6 +530,7 @@ def instantiateComponent(ccpComponent):
     for ii in restart_source:
         ccpSym_CCPCON2_PWMRSEN.addKey( ii['key'],ii['value'], ii['desc'] )
     ccpSym_CCPCON2_PWMRSEN.setDefaultValue(0)
+    ccpSym_CCPCON2_PWMRSEN.setVisible(False if ccpSym_CCPCON2_ASDG.getSelectedValue() == "0" else True)
     ccpSym_CCPCON2_PWMRSEN.setDependencies(autoShutdownVisibility, ["CCP_CCPCON2_ASDG"])
     ccpcon2_depList.append("CCP_CCPCON2_PWMRSEN")
 
