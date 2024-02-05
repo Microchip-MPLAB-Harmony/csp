@@ -30,6 +30,8 @@ ccpValGrp_CCPCON3_POLACE = ATDF.getNode("/avr-tools-device-file/modules/module@[
 ccpBitField_CCPCON2_OENSYNC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CCP"]/register-group@[name="CCP"]/register@[name="CCP1CON2"]/bitfield@[name="OENSYNC"]')
 ccpValGrp_CCPCON2_OENSYNC = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON2__OENSYNC\"]")
 
+ccpValGrp_CCPCON2_ICS = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CCP\"]/value-group@[name=\"CCP1CON2__ICS\"]")
+
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
@@ -83,7 +85,7 @@ ccpSym_Comp_CCPCON2_ICS = ccpComponent.createKeyValueSetSymbol("CCP_COMP_CCPCON2
 ccpSym_Comp_CCPCON2_ICS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:ccp_01512;register:%NOREGISTER%")
 ccpSym_Comp_CCPCON2_ICS.setLabel("Select Input Capture Source")
 capture_source = []
-_get_bitfield_names(ccpValGrp_CCPCON1_SYNC, capture_source)
+_get_bitfield_names(ccpValGrp_CCPCON2_ICS, capture_source)
 ccpSym_Comp_CCPCON2_ICS.setOutputMode( "Value" )
 ccpSym_Comp_CCPCON2_ICS.setDisplayMode( "Description" )
 for ii in capture_source:
