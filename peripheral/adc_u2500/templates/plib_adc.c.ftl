@@ -418,8 +418,11 @@ bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 {
     bool status;
     status =  (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos) !=0U);
-    /* Clear interrupt flag */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    if (status == true)
+    {
+        /* Clear interrupt flag */
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    }
     return status;
 }
 </#if>
