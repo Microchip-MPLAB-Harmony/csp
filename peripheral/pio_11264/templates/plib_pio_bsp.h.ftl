@@ -141,7 +141,7 @@
 							<#if ledName?counter == ledActiveLevel?counter>
 								/*** LED Macros for ${ledName} ***/
 								#define ${ledName}_Toggle()     do { PIO${ledChannel}_REGS->PIO_MSKR = (1UL<<${ledPinPos}); (PIO${ledChannel}_REGS->PIO_ODSR ^= (1UL<<${ledPinPos})); } while (0)
-								#define ${ledName}_Get()        ((PIO${ledChannel}_REGS->PIO_PDSR >> ${ledPinPos}) & 0x1)
+								#define ${ledName}_Get()        ((PIO${ledChannel}_REGS->PIO_PDSR >> ${ledPinPos}) & 0x1U)
 								<#if ledActiveLevel == "High">
 									#define ${ledName}_On()         (PIO${ledChannel}_REGS->PIO_SODR = (1UL<<${ledPinPos}))
 									#define ${ledName}_Off()        (PIO${ledChannel}_REGS->PIO_CODR = (1UL<<${ledPinPos}))
@@ -169,7 +169,7 @@
 						<#if switchName?counter == switchPinPos?counter>
 							<#if switchName?counter == switchActiveLevel?counter>
 								/*** SWITCH Macros for ${switchName} ***/
-								#define ${switchName}_Get()     ((PIO${switchChannel}_REGS->PIO_PDSR >> ${switchPinPos}) & 0x1)
+								#define ${switchName}_Get()     ((PIO${switchChannel}_REGS->PIO_PDSR >> ${switchPinPos}) & 0x1U)
 								<#if switchActiveLevel == "High">
 									#define ${switchName}_STATE_PRESSED  1
 									#define ${switchName}_STATE_RELEASED 0

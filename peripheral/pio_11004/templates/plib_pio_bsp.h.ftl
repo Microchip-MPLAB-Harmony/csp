@@ -159,7 +159,7 @@
 						<#if switchName?counter == switchPinPos?counter>
 							<#if switchName?counter == switchActiveLevel?counter>
 								/*** SWITCH Macros for ${switchName} ***/
-								#define ${switchName}_Get()     ((PIO${switchChannel}_REGS->PIO_PDSR >> ${switchPinPos}) & 0x1)
+								#define ${switchName}_Get()     ((PIO${switchChannel}_REGS->PIO_PDSR >> ${switchPinPos}) & 0x1U)
 								<#if switchActiveLevel == "High">
 									#define ${switchName}_STATE_PRESSED  1
 									#define ${switchName}_STATE_RELEASED 0
