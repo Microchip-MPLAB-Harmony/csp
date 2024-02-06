@@ -71,6 +71,10 @@ void MPU_Initialize(void)
     MPU->RBAR = MPU_REGION(${i}U, 0x${.vars[MPU_ADDRESS]}U);
     MPU->RASR = MPU_REGION_SIZE(${.vars[MPU_SIZE]}U) | MPU_RASR_AP(${.vars[MPU_ACCESS]}) | ${.vars[MPU_TYPE]} \
                 | MPU_ATTR_ENABLE ${.vars[MPU_EXECUTE]?then('', '| MPU_ATTR_EXECUTE_NEVER')} ${.vars[MPU_SHARE]?then('| MPU_ATTR_SHAREABLE', '')};
+    <#else>
+    /* Disable Region ${i}*/
+    MPU->RBAR = MPU_RBAR_REGION(${i}) | MPU_RBAR_VALID_Msk;
+    MPU->RASR &= ~MPU_ATTR_ENABLE;
     </#if>
     </#if>
 </#list>
