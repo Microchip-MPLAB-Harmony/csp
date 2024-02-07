@@ -236,11 +236,12 @@ tcmMenu.setDescription("TCM Configuration")
 
 tcmComment = coreComponent.createCommentSymbol("TCM_COMMENT", tcmMenu)
 tcmComment.setLabel("Configure the TCM using the Device Configuration Fuse Setting")
+tcmComment.setVisible(False)
 
 tcmEnable = coreComponent.createBooleanSymbol("TCM_ENABLE", tcmMenu)
 tcmEnable.setLabel("Enable TCM")
 tcmEnable.setDefaultValue(True)
-tcmEnable.setVisible(False)
+tcmEnable.setVisible(True)
 
 stackTCM = coreComponent.createBooleanSymbol("STACK_IN_TCM", xc32Menu)
 stackTCM.setLabel("Locate Stack in TCM")
