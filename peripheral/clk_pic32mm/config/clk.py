@@ -43,7 +43,7 @@ peripheralBusDict_GPM =  {
 
         #Peripheral : ["PMD register no", "PMD register bit no"]
         "ADC": ["1", "0"],
-        "VREF": ["1", "12"],
+        "CDAC1": ["1", "12"],
         "HLVD": ["1", "20"],
 
         "CMP1": ["2", "0"],
@@ -89,7 +89,7 @@ peripheralBusDict_GPL =  {
 
         #Peripheral : ["PMD register no", "PMD register bit no"]
         "ADC": ["1", "0"],
-        "VREF": ["1", "12"],
+        "CDAC1": ["1", "12"],
         "HLVD": ["1", "20"],
 
         "CMP1": ["2", "0"],
