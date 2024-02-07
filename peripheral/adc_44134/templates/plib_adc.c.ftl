@@ -112,7 +112,7 @@
 
 <#-- User conversion sequence -->
 <#if ADC_MR_USEQ == true>
-    <#if i < (ADC_NUM_CHANNELS - 1)>
+    <#if i < (ADC_NUM_CHANNELS)>
     <#if .vars[ADC_CH_SEQR1_USCH] != "NONE">
         <#if i < 8>
             <#if ADC_SEQR1_USCH != "">
