@@ -301,7 +301,7 @@ static void ${PMECC_INSTANCE_NAME}_Initialize( void )
     <#lt></#if>
     <#lt>    ${INDENT};
     <#lt>    // Spare area size register
-    <#assign SAREA_SZ_VALUE = PMECC_SAREA_SPARESIZE + 1>
+    <#assign SAREA_SZ_VALUE = PMECC_SAREA_SPARESIZE - 1>
     <#lt>    ${PMECC_INSTANCE_NAME}_REGS->PMECC_SAREA = PMECC_SAREA_SPARESIZE( ${SAREA_SZ_VALUE}U ); // ${PMECC_SAREA_SPARESIZE} bytes
     <#lt>    // Start address register
     <#lt>    ${PMECC_INSTANCE_NAME}_REGS->PMECC_SADDR = ${PMECC_SADDR_STARTADDR};
