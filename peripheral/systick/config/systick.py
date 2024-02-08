@@ -116,12 +116,16 @@ def calAchievableTickRate(periodVal, sourceFreq):
 
     if systickUsedBySysTime.getValue() == True:
         dummy_dict = dict()
-        if Database.getSymbolValue("core","SYSTICK_SYS_TIME_COMPONENT_ID") != "":
+        if Database.getSymbolValue("core","SYSTICK_CONNECTED_COMPONENT_ID") != "":
             #Read the calculated timer count and Calculate the actual tick rate
             achievableTickRateHz = (1.0/sourceFreq) * periodVal
             achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
-            dummy_dict = Database.sendMessage(Database.getSymbolValue("core","SYSTICK_SYS_TIME_COMPONENT_ID"), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", {"tick_rate_hz": long(achievableTickRateHz)})
-
+            if Database.getSymbolValue("core","SYSTICK_CONNECTED_COMPONENT_ID") == "sys_time":
+                dummy_dict = Database.sendMessage(Database.getSymbolValue("core","SYSTICK_CONNECTED_COMPONENT_ID"), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", {"tick_rate_hz": long(achievableTickRateHz)})
+            elif Database.getSymbolValue("core","SYSTICK_CONNECTED_COMPONENT_ID") == "dvrt":
+                dummy_dict = Database.sendMessage(Database.getSymbolValue("core","SYSTICK_CONNECTED_COMPONENT_ID"), "DVRT_ACHIEVABLE_TICK_RATE_HZ", {"tick_rate_hz": long(achievableTickRateHz)})
+                
+                
 def systickCal(symbol, event):
     global calAchievableTickRate
     clock = 0
@@ -159,16 +163,28 @@ def systickPubCapabilities(symbol, event):
     # Send SYS TICK capability ("PERIOD_MODE") and get SYS TIME Tick Ms in return from SYS Time
     if event["value"] == True:
         modeDict = {"plib_mode": "PERIOD_MODE"}
-        sysTimePLIBConfig = Database.sendMessage(Database.getSymbolValue("core","SYSTICK_SYS_TIME_COMPONENT_ID"), "SYS_TIME_PLIB_CAPABILITY", modeDict)
-        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
-            systickPeriodMS.setReadOnly(True)
-            systickEnable.setReadOnly(True)
-            systickInterrupt.setReadOnly(True)
-            systickEnable.setValue(True)
-            systickInterrupt.setValue(True)
-            systickCommentForSysTime.setVisible(True)
-            systickUsedBySysTime.setValue(True)
-            systickPeriodMS.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
+        if Database.getSymbolValue("core","SYSTICK_CONNECTED_COMPONENT_ID") == "sys_time":
+            sysTimePLIBConfig = Database.sendMessage(Database.getSymbolValue("core","SYSTICK_CONNECTED_COMPONENT_ID"), "SYS_TIME_PLIB_CAPABILITY", modeDict)
+            if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
+                systickPeriodMS.setReadOnly(True)
+                systickEnable.setReadOnly(True)
+                systickInterrupt.setReadOnly(True)
+                systickEnable.setValue(True)
+                systickInterrupt.setValue(True)
+                systickCommentForSysTime.setVisible(True)
+                systickUsedBySysTime.setValue(True)
+                systickPeriodMS.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
+        elif Database.getSymbolValue("core","SYSTICK_CONNECTED_COMPONENT_ID") == "dvrt":
+            sysTimePLIBConfig = Database.sendMessage(Database.getSymbolValue("core","SYSTICK_CONNECTED_COMPONENT_ID"), "DVRT_SYS_TICK_PLIB_CAPABILITY", modeDict)
+            if sysTimePLIBConfig["plib_mode"] == "DVRT_PLIB_MODE_PERIOD":
+                systickPeriodMS.setReadOnly(True)
+                systickEnable.setReadOnly(True)
+                systickInterrupt.setReadOnly(True)
+                systickEnable.setValue(True)
+                systickInterrupt.setValue(True)
+                systickCommentForSysTime.setVisible(True)
+                systickUsedBySysTime.setValue(True)
+                systickPeriodMS.setValue(sysTimePLIBConfig["sys_tick_ms"])
     else:
         systickUsedBySysTime.setValue(False)
         systickPeriodMS.setReadOnly(False)
@@ -198,7 +214,7 @@ def setInterruptEnable(symbol, event):
 sysTickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU", cortexMenu)
 sysTickMenu.setLabel("SysTick")
 
-systickSysTimeComponentId = coreComponent.createStringSymbol("SYSTICK_SYS_TIME_COMPONENT_ID", sysTickMenu)
+systickSysTimeComponentId = coreComponent.createStringSymbol("SYSTICK_CONNECTED_COMPONENT_ID", sysTickMenu)
 systickSysTimeComponentId.setLabel("Component id")
 systickSysTimeComponentId.setVisible(False)
 systickSysTimeComponentId.setDefaultValue("")
@@ -221,6 +237,11 @@ systickPublishCapabilities.setLabel("Systick Publish Capabilities")
 systickPublishCapabilities.setVisible(False)
 systickPublishCapabilities.setDefaultValue(False)
 systickPublishCapabilities.setDependencies(systickPubCapabilities, ["SYSTICK_PUBLISH_CAPABILITIES"])
+
+systickAvailableStatus = coreComponent.createBooleanSymbol("SYSTICK_BUSY", sysTickMenu)
+systickAvailableStatus.setLabel("Systick Busy")
+systickAvailableStatus.setVisible(False)
+systickAvailableStatus.setDefaultValue(False)
 
 systickUsedBySysTime = coreComponent.createBooleanSymbol("SYSTICK_USED_BY_SYS_TIME", sysTickMenu)
 systickUsedBySysTime.setLabel("Systick Used By SYS Time")
