@@ -20,8 +20,24 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+import re
 
 global _find_default_value
+global getMaxValue
+
+def getMaxValue(mask):
+    import re
+    
+    if mask == 0 :
+        return hex(0)
+
+    mask = "0x" + re.findall(r'[a-f, 0-9]+', mask.lower())[1]
+    
+    mask = int(mask, 16)
+    while (mask % 2) == 0:
+        mask = mask >> 1
+
+    return mask
 
 def _find_default_value(bitfieldNode, initialRegValue):
     '''
@@ -205,6 +221,8 @@ def populate_config_items(basenode, bitfieldHexSymbols, baseLabel, moduleNode, c
                 bitfielditem.setVisible(visibility)
 
                 if(bitfieldName in bitfieldHexSymbols):
+                    bitfielditem.setMin(0)
+                    bitfielditem.setMax(getMaxValue(bitfields[jj].getAttribute('mask')))
                     bitfielditem.setDefaultValue(_find_default_value(bitfields[jj], porValue))
 
                 label = bitfields[jj].getAttribute('caption')+' ('+bitfields[jj].getAttribute('name')+')'
