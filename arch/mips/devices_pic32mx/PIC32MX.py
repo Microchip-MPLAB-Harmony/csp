@@ -211,7 +211,8 @@ for ii in range(len(register)):
                     valuenode = submodnode[kk].getChildren()  # look at all the <value ..> entries underneath <value-group >
                     keyVals = {}
                     for ll in range(len(valuenode)):  # do this for each child <value ..> attribute for this bitfield
-                        keyVals[valuenode[ll].getAttribute("name")] = _process_valuegroup_entry(valuenode[ll])
+                        if valuenode[ll].getAttribute("name") !=  "Reserved":
+                            keyVals[valuenode[ll].getAttribute("name")] = _process_valuegroup_entry(valuenode[ll])
             bitfielditem = coreComponent.createComboSymbol('CONFIG_'+bitfieldName, menuitem, sort_alphanumeric(keyVals.keys()))
             bitfielditem.setDefaultValue(_find_key(_find_default_value(bitfields[jj], porValue),keyVals))
 
