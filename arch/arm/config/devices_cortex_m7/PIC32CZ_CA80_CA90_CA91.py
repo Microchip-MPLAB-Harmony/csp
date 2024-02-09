@@ -247,9 +247,10 @@ stackTCM = coreComponent.createBooleanSymbol("STACK_IN_TCM", xc32Menu)
 stackTCM.setLabel("Locate Stack in TCM")
 stackTCM.setDefaultValue(False)
 
-ramInit = coreComponent.createBooleanSymbol("RAM_INIT", xc32Menu)
-ramInit.setDefaultValue(True)
-ramInit.setVisible(False)
+# SRAM + ITCM + DTCM are initialized by the Boot ROM code if ECC is enabled via fuse settings.
+# ramInit = coreComponent.createBooleanSymbol("RAM_INIT", xc32Menu)
+# ramInit.setDefaultValue(False)
+# ramInit.setVisible(False)
 
 cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", cortexMenu)
 cacheMenu.setLabel("CACHE")
