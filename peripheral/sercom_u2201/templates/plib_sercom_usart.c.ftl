@@ -210,8 +210,9 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
     uint32_t baudValue     = 0U;
 <#if USART_SAMPLE_RATE??>
     uint32_t sampleRate    = 0U;
+    uint32_t sampleCount   = 0U;
 </#if>
-<#if USART_FORM == "0x2">
+<#if USART_USE_FRACTIONAL_BAUD == true>
     float f_baudValue      = 0.0f;
     float f_temp           = 0.0f;
     uint32_t fractionPart  = 0U;
@@ -233,53 +234,75 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
         {
             clkFrequency = ${SERCOM_INSTANCE_NAME}_USART_FrequencyGet();
         }
-
-        <#if USART_SAMPLE_RATE??>
+        
+        <#if USART_USE_FRACTIONAL_BAUD == true>
         <#if USART_FORM == "0x2">
         if(clkFrequency >= (16U * serialSetup->baudRate))
         {
-            f_baudValue = (float)clkFrequency/(16.0f * (float)serialSetup->baudRate);
-            f_temp = ((f_baudValue - ((float)((int)f_baudValue))) * 8.0f);
-            fractionPart = ((uint32_t)f_temp & 0xFFU);
-            baudValue = (uint32_t)f_baudValue;
-            if ((baudValue == 0U) || (baudValue >= 8192U))
-            {
-                baudValue = 0U;
-            }
-            else
-            {
-                baudValue |= (fractionPart << 13U);
-            }
             sampleRate = 1U;
+            sampleCount = 16U;
+        }
+        else
+        {
+            return setupStatus;
         }
         <#else>
         if(clkFrequency >= (16U * serialSetup->baudRate))
         {
-            baudValue = 65536U - (uint32_t)(((uint64_t)65536U * 16U * serialSetup->baudRate) / clkFrequency);
+            sampleRate = 1U;
+            sampleCount = 16U;
+        }
+        else if (clkFrequency >= (8U * serialSetup->baudRate))
+        {
+            sampleRate = 3U;
+            sampleCount = 8U;
+        }
+        else
+        {
+            return setupStatus;
+        }
+        </#if>
+        f_baudValue = (float)clkFrequency/(sampleCount * (float)serialSetup->baudRate);
+        f_temp = ((f_baudValue - ((float)((int)f_baudValue))) * 8.0f);
+        fractionPart = ((uint32_t)f_temp & 0xFFU);
+        baudValue = (uint32_t)f_baudValue;
+        if ((baudValue == 0U) || (baudValue >= 8192U))
+        {
+            baudValue = 0U;
+        }
+        else
+        {
+            baudValue |= (fractionPart << 13U);
+        } 
+        <#else>
+        <#if USART_SAMPLE_RATE??>
+        if(clkFrequency >= (16U * serialSetup->baudRate))
+        {
             sampleRate = 0U;
+            sampleCount = 16U;
         }
         else if(clkFrequency >= (8U * serialSetup->baudRate))
         {
-            baudValue = 65536U - (uint32_t)(((uint64_t)65536U * 8U * serialSetup->baudRate) / clkFrequency);
             sampleRate = 2U;
+            sampleCount = 8U;
         }
         else if(clkFrequency >= (3U * serialSetup->baudRate))
         {
-            baudValue = 65536U - (uint32_t)(((uint64_t)65536U * 3U * serialSetup->baudRate) / clkFrequency);
             sampleRate = 4U;
+            sampleCount = 3U;
         }
         else
         {
             /* Do nothing */
         }
-        </#if>
+        baudValue = 65536U - (uint32_t)(((uint64_t)65536U * sampleCount * serialSetup->baudRate) / clkFrequency);
         <#else>
         if(clkFrequency >= (16U * serialSetup->baudRate))
         {
             baudValue = 65536U - (uint32_t)(((uint64_t)65536U * 16U * serialSetup->baudRate) / clkFrequency);
         }
         </#if>
-
+        </#if>
         /* Disable the USART before configurations */
         ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_USART_REG_NAME}.SERCOM_CTRLA &= ~SERCOM_${SERCOM_USART_REG_NAME}_CTRLA_ENABLE_Msk;
 

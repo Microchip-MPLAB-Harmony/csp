@@ -45,60 +45,68 @@ def getUSARTBaudValue():
 
     refClkFreq = int(Database.getSymbolValue("core", sercomClkFrequencyId))
     baudRate = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_BAUD_RATE"))
-
     frameFormat = usartSym_CTRLA_FORM.getSelectedKey()
+    useFractionalBaud = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_USE_FRACTIONAL_BAUD")
 
-    if refClkFreq != 0:
-        if sampleRateSupported == False:
-            # Check if baudrate is outside of valid range
+    if refClkFreq == 0:
+        desiredUSARTBaudRate = False
+        usartSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+        return baudValue
+
+    if useFractionalBaud == False:
+        if sampleRateSupported == True:
+            # find S (Number of samples per bit)
+            if refClkFreq >= (16 * baudRate):
+                sampleRate = 0
+                sampleCount = 16
+            elif refClkFreq >= (8 * baudRate):
+                sampleRate = 2
+                sampleCount = 8
+            elif refClkFreq >= (3 * baudRate):
+                sampleRate = 4
+                sampleCount = 3
+            else:
+                desiredUSARTBaudRate = False
+        else:
             if refClkFreq >= (16 * baudRate):
                 sampleCount = 16
             else:
                 desiredUSARTBaudRate = False
-        else:
-            # Check if baudrate is outside of valid range
-            if frameFormat == "USART_FRAME_LIN_MASTER_MODE" or frameFormat == "USART_FRAME_AUTO_BAUD_NO_PARITY" or frameFormat == "USART_FRAME_AUTO_BAUD_WITH_PARITY":
-                if refClkFreq >= (16 * baudRate):
-                    sampleRate = 1
-                    sampleCount = 16
-                else:
-                    desiredUSARTBaudRate = False
-            else:
-                if refClkFreq >= (16 * baudRate):
-                    sampleRate = 0
-                    sampleCount = 16
-                elif refClkFreq >= (8 * baudRate):
-                    sampleRate = 2
-                    sampleCount = 8
-                elif refClkFreq >= (3 * baudRate):
-                    sampleRate = 4
-                    sampleCount = 3
-                else:
-                    desiredUSARTBaudRate = False
-
-        if desiredUSARTBaudRate == True:
-
-            usartSym_BaudError_Comment.setVisible(False)
-
-            if frameFormat == "USART_FRAME_LIN_MASTER_MODE" or frameFormat == "USART_FRAME_AUTO_BAUD_NO_PARITY" or frameFormat == "USART_FRAME_AUTO_BAUD_WITH_PARITY":
-                baudValue = float(refClkFreq)/(float(sampleCount) * baudRate)
-                fp = int((float(baudValue) - int(baudValue)) * 8.0)
-                baudValue = int(baudValue)
-                if (baudValue == 0) or (baudValue >= 8192):
-                    desiredUSARTBaudRate = False
-                    usartSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-                else:
-                    baudValue |= (fp << 13)
-            else:
-                baudValue = int(65536 * (1 - float("{0:.15f}".format(float(sampleCount * baudRate) / refClkFreq))))
-
-            if sampleRateSupported == True:
-                usartSym_CTRLA_SAMPR.setValue(sampleRate, 1)
-                usartSym_SAMPLE_COUNT.setValue(sampleCount, 1)
-        else:
-            usartSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
     else:
-        desiredUSARTBaudRate = False
+        if frameFormat == "USART_FRAME_LIN_MASTER_MODE" or frameFormat == "USART_FRAME_AUTO_BAUD_NO_PARITY" or frameFormat == "USART_FRAME_AUTO_BAUD_WITH_PARITY":
+            if refClkFreq >= (16 * baudRate):
+                sampleRate = 1
+                sampleCount = 16
+            else:
+                desiredUSARTBaudRate = False
+        else:
+            if refClkFreq >= (16 * baudRate):
+                sampleRate = 1
+                sampleCount = 16
+            elif refClkFreq >= (8 * baudRate):
+                sampleRate = 3
+                sampleCount = 8
+            else:
+                desiredUSARTBaudRate = False
+
+    if desiredUSARTBaudRate == True:
+        if useFractionalBaud == True:
+            #fractional formula
+            baudValue = float(refClkFreq)/(float(sampleCount) * baudRate)
+            fp = int((float(baudValue) - int(baudValue)) * 8.0)
+            baudValue = int(baudValue)
+            if (baudValue == 0) or (baudValue >= 8192):
+                desiredUSARTBaudRate = False
+                usartSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+            else:
+                baudValue |= (fp << 13)
+        else:
+            #arithmetic formula
+            baudValue = int(65536 * (1 - float("{0:.15f}".format(float(sampleCount * baudRate) / refClkFreq))))
+        if sampleRateSupported == True:
+            usartSym_CTRLA_SAMPR.setValue(sampleRate, 1)
+            usartSym_SAMPLE_COUNT.setValue(sampleCount, 1)
+    else:
         usartSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 
     return baudValue
@@ -172,7 +180,7 @@ def updateUSARTDataBits (symbol, event):
 
     dataBits = event["symbol"].getSelectedKey()
     symbol.setValue(dataBitsDict[dataBits])
-    
+
 def update_CTRLB_SFDE_Visibility(symbol, event):
     usartOperatingMode = event["source"].getSymbolByID("USART_OPERATING_MODE").getSelectedKey()
     symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and (usartOperatingMode != "BLOCKING"))
@@ -218,6 +226,17 @@ def usartChszieEnumHelper(chsizeValuesList, bits):
             return chsizeValuesList[index].getAttribute("name")
     
     return None
+
+def updateFractionalBaudConfig(symbol, event):
+    usart_frame_format = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
+    if (sercomSym_OperationMode.getSelectedKey() == "USART_INT" and (usart_frame_format == "USART_FRAME_LIN_MASTER_MODE" or usart_frame_format == "USART_FRAME_AUTO_BAUD_NO_PARITY" or usart_frame_format == "USART_FRAME_AUTO_BAUD_WITH_PARITY")):
+        symbol.setReadOnly(True)
+        symbol.setValue(True)
+    else:
+        symbol.setValue(False)
+        symbol.setReadOnly(False)
+
+
 ###################################################################################################
 ############################################ USART ################################################
 ###################################################################################################
@@ -239,6 +258,22 @@ sampleRateSupported = False
 isFlowControlSupported = False
 isRS485Supported = False
 isErrorInterruptSupported = False
+
+sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="CTRLA"]')
+sampleRateValue = sampleRateNode.getChildren()
+
+for index in range(len(sampleRateValue)):
+    bitFieldName = str(sampleRateValue[index].getAttribute("name"))
+    if bitFieldName == "SAMPR":
+        sampleRateSupported = True
+        break
+
+if sampleRateSupported == True:
+    #USART Over-Sampling using Baud Rate generation
+    usartSym_CTRLA_SAMPR = sercomComponent.createIntegerSymbol("USART_SAMPLE_RATE", sercomSym_OperationMode)
+    usartSym_CTRLA_SAMPR.setLabel("Sample Rate")
+    usartSym_CTRLA_SAMPR.setDefaultValue(0)
+    usartSym_CTRLA_SAMPR.setVisible(False)
 
 # Depricated symbols ---------------------------------------------------------------------------------------------------
 #Interrupt/Non-Interrupt Mode
@@ -414,12 +449,18 @@ usartSym_BAUD_RATE.setMin(1)
 usartSym_BAUD_RATE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_BAUD_RATE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
+usartSym_UseFractionalBaud = sercomComponent.createBooleanSymbol("USART_USE_FRACTIONAL_BAUD", sercomSym_OperationMode)
+usartSym_UseFractionalBaud.setLabel("Use fractional baud?")
+usartSym_UseFractionalBaud.setValue(False)
+usartSym_UseFractionalBaud.setVisible(sampleRateSupported == True)
+usartSym_UseFractionalBaud.setDependencies(updateFractionalBaudConfig, ["USART_FORM"])
+
 #USART Baud Value
 usartSym_BAUD_VALUE = sercomComponent.createIntegerSymbol("USART_BAUD_VALUE", sercomSym_OperationMode)
 usartSym_BAUD_VALUE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:BAUD")
 usartSym_BAUD_VALUE.setLabel("Baud Rate Value")
 usartSym_BAUD_VALUE.setVisible(False)
-usartSym_BAUD_VALUE.setDependencies(updateUSARTBaudValueProperty, ["USART_BAUD_RATE", "core." + sercomClkFrequencyId, "USART_FORM"])
+usartSym_BAUD_VALUE.setDependencies(updateUSARTBaudValueProperty, ["USART_BAUD_RATE", "core." + sercomClkFrequencyId, "USART_FORM", "USART_USE_FRACTIONAL_BAUD"])
 
 #USART Baud Rate not supported comment
 usartSym_BaudError_Comment = sercomComponent.createCommentSymbol("USART_BAUD_ERROR_COMMENT", sercomSym_OperationMode)
@@ -575,20 +616,6 @@ usartSym_CTRLA_RUNSTDBY.setDependencies(updateUSARTConfigurationVisibleProperty,
 
 sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="{0}",name="CTRLA"]'.format(sercomSymUSARTRegName.getValue()))
 sampleRateValue = sampleRateNode.getChildren()
-
-for index in range(len(sampleRateValue)):
-    bitFieldName = str(sampleRateValue[index].getAttribute("name"))
-    if bitFieldName == "SAMPR":
-        sampleRateSupported = True
-        break
-
-if sampleRateSupported == True:
-    #USART Over-Sampling using Baud Rate generation
-    usartSym_CTRLA_SAMPR = sercomComponent.createIntegerSymbol("USART_SAMPLE_RATE", sercomSym_OperationMode)
-    usartSym_CTRLA_SAMPR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
-    usartSym_CTRLA_SAMPR.setLabel("Sample Rate")
-    usartSym_CTRLA_SAMPR.setDefaultValue(0)
-    usartSym_CTRLA_SAMPR.setVisible(False)
 
 #USART No Of Samples
 usartSym_SAMPLE_COUNT = sercomComponent.createIntegerSymbol("USART_SAMPLE_COUNT", sercomSym_OperationMode)
