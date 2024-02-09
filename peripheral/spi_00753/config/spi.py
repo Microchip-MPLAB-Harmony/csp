@@ -695,6 +695,10 @@ def instantiateComponent(spiComponent):
     #Always reading the SPI1BRG bit mask value as the SPIxBRG mask value for other instances of SPI is incorrect in the ATDF file
     spixBRG = spiInstanceName.getValue()[:-len(spiInstanceNum.getValue())] + '1' + "BRG"
     spixBRG_Bitfield = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="' + spixBRG + '"]/bitfield@[name="' + spixBRG + '"]')
+    if spixBRG_Bitfield == None:    # for devices where SPI instance 1 is not available.
+        spixBRG = spiInstanceName.getValue() + "BRG"
+        spixBRG_Bitfield = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="' + spixBRG + '"]/bitfield@[name="' + spixBRG + '"]')
+        
     spiMaxBRG = int(str(spixBRG_Bitfield.getAttribute("mask")), 0)
 
     spiSymMaxBRG = spiComponent.createIntegerSymbol("SPI_MAX_BRG", None)
