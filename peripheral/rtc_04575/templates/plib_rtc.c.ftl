@@ -308,6 +308,7 @@ void __attribute__((used)) ${RTC_INSTANCE_NAME}_InterruptHandler( void )
     if( (rtc_status & enabledInterrupts) != 0U )
     {
         ${RTC_INSTANCE_NAME}_REGS->RTC_SCCR |= enabledInterrupts;
+        (void)${RTC_INSTANCE_NAME}_REGS->RTC_SCCR;
 
         if( rtc.callback != NULL )
         {
