@@ -678,6 +678,13 @@ def instantiateComponent(adcComponent):
     #--------------------------------------------------------------------------------------
     configName = Variables.get("__CONFIGURATION_NAME")
 
+    regName_CCR_COR = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[offset=\"0x4C\"]").getAttribute("name")
+
+    adcSym_ChnCfgName = adcComponent.createStringSymbol("ADC_CHN_CFG_NAME", None)
+    adcSym_ChnCfgName.setVisible(False)
+    adcSym_ChnCfgName.setDefaultValue(regName_CCR_COR)
+
+
 ###################################################################################################
 ########################### Code Generation   #################################
 ###################################################################################################

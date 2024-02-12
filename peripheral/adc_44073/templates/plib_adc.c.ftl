@@ -77,9 +77,9 @@
 <#if i % 2 == 0>
     <#if .vars[ADC_CH_CHER] == true && .vars[ADC_CH_NEG_INP] != "GND">
         <#if ADC_COR_DIFF != "">
-            <#assign ADC_COR_DIFF = ADC_COR_DIFF + " | " + "ADC_COR_DIFF"+i+"_Msk">
+            <#assign ADC_COR_DIFF = ADC_COR_DIFF + " | " + ADC_CHN_CFG_NAME + "_DIFF"+i+"_Msk">
         <#else>
-            <#assign ADC_COR_DIFF = "ADC_COR_DIFF"+i+"_Msk">
+            <#assign ADC_COR_DIFF = ADC_CHN_CFG_NAME + "_DIFF"+i+"_Msk">
         </#if>
     </#if>
 </#if>
@@ -106,9 +106,9 @@
     <#if (i % 2 != 0) && (.vars[ADC_CH_DIFF_PAIR] != "GND")>
     <#else>
         <#if ADC_COR_OFFSET != "">
-            <#assign ADC_COR_OFFSET = ADC_COR_OFFSET + " | " + "ADC_COR_OFFSET" + i + "_Msk">
+            <#assign ADC_COR_OFFSET = ADC_COR_OFFSET + " | " + ADC_CHN_CFG_NAME + "_OFFSET" + i + "_Msk">
         <#else>
-            <#assign ADC_COR_OFFSET = "ADC_COR_OFFSET" + i + "_Msk">
+            <#assign ADC_COR_OFFSET = ADC_CHN_CFG_NAME + "_OFFSET" + i + "_Msk">
         </#if>
     </#if>
 </#if>
@@ -259,7 +259,7 @@ void ${ADC_INSTANCE_NAME}_Initialize(void)
 </#if>
 <#if ADC_COR_VALUE?has_content>
     /* Differential mode and offset */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_COR = ${ADC_COR_VALUE};
+    ${ADC_INSTANCE_NAME}_REGS->${ADC_CHN_CFG_NAME} = ${ADC_COR_VALUE};
 
 </#if>
 <#if ADC_MR_USEQ == true>
