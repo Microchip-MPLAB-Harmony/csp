@@ -167,7 +167,7 @@ def showSlaveDependencies(symbol, event):
 
 def showMasterDependencies(mcspiSym_MR_Dependencies, event):
 
-    if event["symbol"].getKey(event["value"]) == "MASTER":
+    if event["symbol"].getValue() == "MASTER":
         mcspiSym_MR_Dependencies.setVisible(True)
     else:
         mcspiSym_MR_Dependencies.setVisible(False)
