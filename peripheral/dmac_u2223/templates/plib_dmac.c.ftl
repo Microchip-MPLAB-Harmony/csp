@@ -776,6 +776,7 @@ void __attribute__((used)) ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     /* Restore channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channelId;
 }
+<#break>        <#-- Exit the list loop -->
 </#if>
 </#list>
 
