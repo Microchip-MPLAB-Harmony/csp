@@ -262,6 +262,7 @@ def updateInterruptLogic(symbol, event):
     dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
 
     if dmacMultiVectorSupported:
+
         vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
         # First disable all the DMAC channel interrupt lines, unlock them and set the default handler
@@ -271,6 +272,8 @@ def updateInterruptLogic(symbol, event):
                 Database.setSymbolValue("core", vectorName + "_INTERRUPT_ENABLE", False, 2)
                 Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER_LOCK", False, 2)
                 Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER", vectorName + "_Handler", 2)
+                if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                    Database.setSymbolValue("core", vectorName + "_SET_NON_SECURE", False)  #By default set to "SECURE" state
 
         # Now enable DMAC channel interrupt lines for which DMAC channel is enabled
         for n in range(0, dmaChannelCount):
@@ -282,12 +285,15 @@ def updateInterruptLogic(symbol, event):
                 Database.setSymbolValue("core", vectorName + "_INTERRUPT_ENABLE", True, 2)
                 Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER_LOCK", True, 2)
                 Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER", vectorName + "_InterruptHandler", 2)
+                
+                if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                    dmacXisNonSecure = Database.getSymbolValue("core", dmacInstanceName.getValue() + "_IS_NON_SECURE")
+                    Database.setSymbolValue("core", vectorName + "_SET_NON_SECURE", dmacXisNonSecure)
 
     else:
         InterruptVector = dmacInstanceName.getValue()+"_INTERRUPT_ENABLE"
         InterruptHandler = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER"
         InterruptHandlerLock = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
-        dmacInterruptVectorSecurity = dmacInstanceName.getValue() + "_SET_NON_SECURE"
 
         dmaIntEnabled = False
 
@@ -302,8 +308,13 @@ def updateInterruptLogic(symbol, event):
 
         if dmaIntEnabled == True:
             Database.setSymbolValue("core", InterruptHandler, dmacInstanceName.getValue()+"_InterruptHandler", 2)
+            if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                dmacXisNonSecure = Database.getSymbolValue("core", dmacInstanceName.getValue() + "_IS_NON_SECURE")
+                Database.setSymbolValue("core", dmacInstanceName.getValue() + "_SET_NON_SECURE", dmacXisNonSecure)
         else:
             Database.setSymbolValue("core", InterruptHandler, "DMAC_Handler", 2)
+            if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                Database.setSymbolValue("core", dmacInstanceName.getValue() + "_SET_NON_SECURE", False)  #By default set to "SECURE" state
 
 
 def updateDMACInterruptWarringStatus(symbol, event):
@@ -618,7 +629,7 @@ for channelID in range(0, dmacChCount.getValue()):
 
 dmacEnable.setDependencies(onChannelEnable, dmacChannelIds)
 dmacHighestCh.setDependencies(onChannelEnable, dmacChannelIds)
-dmacIntEnable.setDependencies(updateInterruptLogic, dmacChannelIds + dmacChannelInt)
+dmacIntEnable.setDependencies(updateInterruptLogic, dmacChannelIds + dmacChannelInt + ["core." + dmacInstanceName.getValue() + "_IS_NON_SECURE"])
 
 # DMA - Source AM Mask
 xdmacSym_BTCTRL_SRCINC_MASK = coreComponent.createStringSymbol("DMA_SRC_AM_MASK", dmacChannelEnable)
