@@ -410,7 +410,7 @@ def mcpwmCalcIOCON(symbol, event):
     iocon = 0x0
     component = symbol.getComponent()
     channelID = filter(str.isdigit,str(symbol.getID()))
-    swap = component.getSymbolValue("IOCON"+str(channelID)+"__SWAP") << 2
+    swap = component.getSymbolValue("IOCON"+str(channelID)+"__SWAP") << 1
     id = component.getSymbolByID("IOCON"+str(channelID)+"__PMOD")
     pmod = int(id.getSelectedValue()) << 10
     poll = component.getSymbolValue("IOCON"+str(channelID)+"__POLL") << 12
