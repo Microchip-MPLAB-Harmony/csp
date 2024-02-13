@@ -471,7 +471,10 @@ tccSym_WEXCTRL_DTLS.setDefaultValue(64)
 tccSym_WEXCTRL_DTLS.setMin(0)
 tccSym_WEXCTRL_DTLS.setMax(255)
 
-low_deadtime = (tccSym_WEXCTRL_DTLS.getValue() * 1000000.0 / (clock_freq))
+if clock_freq != 0:
+    low_deadtime = (tccSym_WEXCTRL_DTLS.getValue() * 1000000.0 / (clock_freq))
+else:
+    low_deadtime = 0
 
 tccSym_DTLS_COMMENT = tccComponent. createCommentSymbol("TCC_DTLS_COMMENT", tccSym_DeadTime_Menu)
 tccSym_DTLS_COMMENT.setLabel("**** Low side dead time is "+str(low_deadtime)+ " uS ****")
@@ -485,7 +488,10 @@ tccSym_WEXCTRL_DTHS.setDefaultValue(64)
 tccSym_WEXCTRL_DTHS.setMin(0)
 tccSym_WEXCTRL_DTHS.setMax(255)
 
-high_deadtime = (tccSym_WEXCTRL_DTHS.getValue() * 1000000.0 / (clock_freq))
+if clock_freq != 0:
+    high_deadtime = (tccSym_WEXCTRL_DTHS.getValue() * 1000000.0 / (clock_freq))
+else:
+    high_deadtime =0
 
 tccSym_DTHS_COMMENT = tccComponent. createCommentSymbol("TCC_DTHS_COMMENT", tccSym_DeadTime_Menu)
 tccSym_DTHS_COMMENT.setLabel("**** High side dead time is "+str(high_deadtime)+ " uS ****")

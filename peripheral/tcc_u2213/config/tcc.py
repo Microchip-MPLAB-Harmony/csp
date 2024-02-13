@@ -197,6 +197,8 @@ def updateTCCClockWarningStatus(symbol, event):
     else:
         symbol.setVisible(False)
 
+def updateTCCZeroClockFreqWarningStatus (symbol, event):
+    symbol.setVisible(event["value"] == 0)
 
 def tccSlaveCommentVisible(symbol, event):
     symbol.setVisible(event["value"])
@@ -672,6 +674,12 @@ def instantiateComponent(tccComponent):
     tccSym_ClkEnComment.setLabel("Warning!!! TCC Peripheral Clock is Disabled in Clock Manager")
     tccSym_ClkEnComment.setVisible(False)
     tccSym_ClkEnComment.setDependencies(updateTCCClockWarningStatus, ["core." + tccInstanceName.getValue() + "_CLOCK_ENABLE"])
+
+    # Zero Clock Frequency Warning status
+    tccSym_ZeroClkFreqComment = tccComponent.createCommentSymbol("TCC_ZERO_CLOCK_FREQ_COMMENT", None)
+    tccSym_ZeroClkFreqComment.setLabel("Warning!!! TCC Peripheral Clock is 0 Hz")
+    tccSym_ZeroClkFreqComment.setVisible(Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY") == 0)
+    tccSym_ZeroClkFreqComment.setDependencies(updateTCCZeroClockFreqWarningStatus, ["core." + tccInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     tccInstanceName.setDependencies(updateCodeGenerationProperty, ["TCC_OPERATION_MODE"])
 #------------------------------------------------------------

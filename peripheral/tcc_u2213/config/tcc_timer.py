@@ -138,6 +138,7 @@ if clock_freq != 0:
     resolution = (int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / clock_freq
     max = ((pow(2, size) + 1) * resolution / 1000000.0)
 else:
+    resolution = 0
     max = 0    
 tccSym_Timer_TIME_MS = tccComponent.createFloatSymbol("TCC_TIMER_TIME_MS", tccSym_TimerMenu)
 tccSym_Timer_TIME_MS.setLabel("Time")
@@ -149,7 +150,10 @@ tccSym_Timer_TIME_MS.setDependencies(tccTimeMaxValue, ["core."+tccInstanceName.g
 
 #timer period
 global tccSym_TimerPeriod
-period = ((tccSym_Timer_TIME_MS.getValue() * 1000000.0) / resolution) - 1
+if resolution != 0:
+    period = ((tccSym_Timer_TIME_MS.getValue() * 1000000.0) / resolution) - 1
+else:
+    period = 0
 tccSym_TimerPeriod = tccComponent.createLongSymbol("TCC_TIMER_PERIOD", tccSym_Timer_TIME_MS)
 tccSym_TimerPeriod.setLabel("Period Register")
 tccSym_TimerPeriod.setVisible(True)
