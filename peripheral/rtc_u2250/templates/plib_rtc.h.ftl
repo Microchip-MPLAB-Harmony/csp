@@ -66,15 +66,15 @@ extern "C" {
 
 <#if RTC_MODULE_SELECTION = "MODE0">
     <#lt>/* Frequency of Counter Clock for RTC */
-    <#if RTC_MODE0_PRESCALER = "0x0">
-        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY         0U
+    <#if RTC_MODE0_PRESCALER == "0x0">
+        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY}U)
     <#else>
         <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY}U / (1UL << (${RTC_MODE0_PRESCALER}U - 1U)))
     </#if>
 <#elseif RTC_MODULE_SELECTION = "MODE1">
     <#lt>/* Frequency of Counter Clock for RTC */
-    <#if RTC_MODE1_PRESCALER = "0x0">
-        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY         0U
+    <#if RTC_MODE1_PRESCALER == "0x0">
+        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY}U)
     <#else>
         <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY}U / (1UL << (${RTC_MODE1_PRESCALER}U - 1U)))
     </#if>
