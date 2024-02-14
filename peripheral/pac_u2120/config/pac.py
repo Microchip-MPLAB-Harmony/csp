@@ -149,6 +149,7 @@ for module in range(0, len(modules)):
                     pacSym_PeripheralName.setVisible(False)
 
                     pacIndex += 1
+                    break       # Certain ATDFs have 2 "INSTANCE_ID" entries. Instead of updating ATDF, break the loop after first INSTANCE_ID is found.
 
 pacSym_PeriCount = coreComponent.createIntegerSymbol("PAC_PERI_COUNT", pacSym_Use)
 pacSym_PeriCount.setDefaultValue(pacIndex)
