@@ -49,6 +49,14 @@ void Reset_Handler(void);
 <#include "devices/startup_keil_${DeviceFamily}.c.ftl">
 </#if>
 </#if>
+<#if CoreArchitecture == "CORTEX-M33">
+<#if FPU_Available>
+<#include "arch/startup_keil_cortex_m33.c.ftl">
+</#if>
+<#if DATA_CACHE_ENABLE??>
+<#include "devices/startup_keil_${DeviceFamily}.c.ftl">
+</#if>
+</#if>
 /* Optional application-provided functions */
 extern void __attribute__((weak)) _on_reset(void);
 extern void __attribute__((weak)) _on_bootstrap(void);
@@ -73,7 +81,13 @@ void __attribute__((section(".text.Reset_Handler"))) Reset_Handler(void)
     FPU_Enable();
 #endif
 </#if>
+<#if CoreArchitecture == "CORTEX-M33">
+<#if CMCC_CONFIGURE??>
+    /* Configure CMCC */
+    CMCC_Configure();
 
+</#if>
+<#else>
 <#if TCM_ENABLE??>
 	TCM_Configure(${DEVICE_TCM_SIZE});
 <#if TCM_ENABLE>
@@ -82,6 +96,7 @@ void __attribute__((section(".text.Reset_Handler"))) Reset_Handler(void)
 <#else>
     /* Disable TCM  */
     TCM_Disable();
+</#if>
 </#if>
 </#if>
 
@@ -98,6 +113,7 @@ void __attribute__((section(".text.Reset_Handler"))) Reset_Handler(void)
 </#if>
 </#if>
 
+<#if CoreArchitecture != "CORTEX-M33">
 <#if (INSTRUCTION_CACHE_ENABLE)??>
 <#if (INSTRUCTION_CACHE_ENABLE)>
     /* Enable Instruction Cache */
@@ -109,6 +125,7 @@ void __attribute__((section(".text.Reset_Handler"))) Reset_Handler(void)
 <#if (DATA_CACHE_ENABLE)>
     /* Enable Data Cache    */
     DCache_Enable();
+</#if>
 </#if>
 </#if>
 

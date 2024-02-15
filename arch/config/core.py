@@ -859,7 +859,13 @@ def instantiateComponent( coreComponent ):
             endAddressInt = startAddressInt + sizeInt - 1
             endAddressIROM1.setDefaultValue("0x%08X" % endAddressInt)
 
-        nodeIRAM = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[type=\"ram\"]")
+        if coreArch.getValue() == "CORTEX-M33":
+            nodeIRAM = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"HSRAM_RET\"]")
+            if nodeIRAM == None:
+                nodeIRAM = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[type=\"ram\"]")
+        else:
+            nodeIRAM = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[type=\"ram\"]")
+
         if nodeIRAM is not None:
             startAddressIRAM1 = coreComponent.createStringSymbol("IRAM1_START", None)
             startAddressIRAM1.setVisible(False)
