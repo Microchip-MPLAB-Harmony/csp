@@ -32,7 +32,7 @@ void ${.vars[INT_HANDLER]} (void);
     <#if .vars[INT_ENABLE]?? && .vars[INT_ENABLE] == true>
         <#if ((HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "FreeRTOS") || ((FreeRTOS.SET_RTOS)?? && FreeRTOS.SET_RTOS == "FreeRTOS")>
             <#if !((.vars[INT_ENABLE_GENERATE]??) && (.vars[INT_ENABLE_GENERATE] == false))>
-                <#lt>void ${.vars[INT_HANDLER]} (void)
+                <#lt>void __attribute__((used)) ${.vars[INT_HANDLER]} (void)
                 <#lt>{
                 <#if .vars[INT_HANDLER_LOCK] == true>
                     <#lt>    ${.vars[INTERRUT_HANDLER]}();
@@ -41,7 +41,7 @@ void ${.vars[INT_HANDLER]} (void);
             </#if>
         <#elseif (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "ThreadX">
             <#if !((.vars[INT_ENABLE_GENERATE]??) && (.vars[INT_ENABLE_GENERATE] == false))>
-                <#lt>void __ISR(${.vars[INT_VECTOR]}, ipl${.vars[INT_PRIORITY]}SAVEALL) ${.vars[INT_HANDLER]} (void)
+                <#lt>void __attribute__((used)) __ISR(${.vars[INT_VECTOR]}, ipl${.vars[INT_PRIORITY]}SAVEALL) ${.vars[INT_HANDLER]} (void)
                 <#lt>{
                 <#lt>    /* Call ThreadX context save. */
                 <#lt>    _tx_thread_context_save();
@@ -55,7 +55,7 @@ void ${.vars[INT_HANDLER]} (void);
                 <#lt>}
             </#if>
         <#else>
-            <#lt>void __ISR(${.vars[INT_VECTOR]}, ipl${.vars[INT_PRIORITY]}${.vars["EVIC_PRIORITY_" + .vars[INT_PRIORITY] + "ATTRIBUTE"]}) ${.vars[INT_HANDLER]} (void)
+            <#lt>void __attribute__((used)) __ISR(${.vars[INT_VECTOR]}, ipl${.vars[INT_PRIORITY]}${.vars["EVIC_PRIORITY_" + .vars[INT_PRIORITY] + "ATTRIBUTE"]}) ${.vars[INT_HANDLER]} (void)
             <#lt>{
             <#if .vars[INT_HANDLER_LOCK] == true>
                 <#lt>    ${.vars[INTERRUT_HANDLER]}();
