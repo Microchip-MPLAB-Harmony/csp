@@ -410,6 +410,10 @@ def instantiateComponent(uartComponent):
     node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"UART\"]/instance@[name=\"" + uartInstanceName.getValue() + "\"]/parameters")
     uart_clock = node.getChildren()
 
+    # Enable UART clock
+    Database.clearSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_ENABLE")
+    Database.setSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
+
     uartClkSrc = uartComponent.createKeyValueSetSymbol("UART_CLK_SRC", None)
     uartClkSrc.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:uart_6418;register:UART_MR")
     uartClkSrc.setLabel("Select Clock Source")
@@ -556,9 +560,7 @@ def instantiateComponent(uartComponent):
     interruptHandlerLock = uartInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     interruptVectorUpdate = uartInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
-    # Initial settings for CLK and NVIC
-    Database.clearSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_ENABLE")
-    Database.setSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
+    # Initial settings for NVIC
     Database.clearSymbolValue("core", interruptVector)
     Database.setSymbolValue("core", interruptVector, True, 2)
     Database.clearSymbolValue("core", interruptHandler)
