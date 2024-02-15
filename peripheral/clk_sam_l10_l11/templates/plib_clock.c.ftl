@@ -84,14 +84,18 @@ volatile static MCLK_OBJECT mclkObj;
 
 </#if>
 
+<#if (CONFIG_CLOCK_XOSC_ENABLE == true) || (CONFIG_CLOCK_OSC16M_ENABLE == true &&
+((CONFIG_CLOCK_OSC16M_FREQSEL != "0x0") || (CONFIG_CLOCK_OSC16M_RUNSTDBY != false) || (CONFIG_CLOCK_OSC16M_ONDEMAND != "ENABLE")))>
 static void OSCCTRL_Initialize(void)
 {
+<#if CONFIG_CLOCK_OSC16M_ENABLE == true>
 <#if (CONFIG_CLOCK_OSC16M_FREQSEL != "0x0") || (CONFIG_CLOCK_OSC16M_RUNSTDBY != false) || (CONFIG_CLOCK_OSC16M_ONDEMAND != "ENABLE")>
     /**************** OSC16M IniTialization *************/
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_OSC16MCTRL = OSCCTRL_OSC16MCTRL_FSEL(${CONFIG_CLOCK_OSC16M_FREQSEL}U)
                                                          ${CONFIG_CLOCK_OSC16M_RUNSTDBY?then('| OSCCTRL_OSC16MCTRL_RUNSTDBY_Msk',' ')}
                                                          ${(CONFIG_CLOCK_OSC16M_ONDEMAND == "ENABLE")?then('| OSCCTRL_OSC16MCTRL_ONDEMAND_Msk',' ')}
                                                          | OSCCTRL_OSC16MCTRL_ENABLE_Msk;</@compress>
+</#if>
 </#if>
 <#if CONFIG_CLOCK_XOSC_ENABLE == true>
 /****************** XOSC Initialization   ********************************/
@@ -120,6 +124,7 @@ OSCCTRL_REGS->OSCCTRL_XOSCCTRL |= OSCCTRL_XOSCCTRL_AMPGC_Msk;
 </#if>
 </#if>
 }
+</#if>
 
 static void OSC32KCTRL_Initialize(void)
 {
@@ -173,7 +178,7 @@ static void DFLL_Initialize(void)
     <#lt>                               ${CONFIG_CLOCK_DFLL_BINSE?then('| OSCCTRL_DFLLULPCTRL_BINSE_Msk ', ' ')}
     <#lt>                               ${(CONFIG_CLOCK_DFLL_DIV != "0") ?then('| OSCCTRL_DFLLULPCTRL_DIV(${CONFIG_CLOCK_DFLL_DIV}U) ', ' ')}
     <#lt>                               ;</@compress>
-    
+
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLULPRDY_Msk) != OSCCTRL_STATUS_DFLLULPRDY_Msk)
     {
         /* Waiting for the Ready state */
@@ -183,7 +188,7 @@ static void DFLL_Initialize(void)
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
     }
-    
+
     <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
     OSCCTRL_REGS->OSCCTRL_DFLLULPCTRL |= OSCCTRL_DFLLULPCTRL_ONDEMAND_Msk;
     </#if>
@@ -297,8 +302,11 @@ static void GCLK${i}_Initialize(void)
 </#list>
 void CLOCK_Initialize (void)
 {
+<#if (CONFIG_CLOCK_XOSC_ENABLE == true) || (CONFIG_CLOCK_OSC16M_ENABLE == true &&
+((CONFIG_CLOCK_OSC16M_FREQSEL != "0x0") || (CONFIG_CLOCK_OSC16M_RUNSTDBY != false) || (CONFIG_CLOCK_OSC16M_ONDEMAND != "ENABLE")))>
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
+</#if>
 
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();

@@ -26,6 +26,8 @@ global BootFlashDict
 global isBFMPresent
 global getAppPlacementParams
 
+coreSymListOfSupportedMethods = [ "setValue", "setReadOnly", "setEnabled", "setVisible", "clearValue"]
+
 FlashNames          = ["FLASH", "IFLASH", "IFLASH0", "FCR_PFM"]
 #BootFlashDict      = {"bfm_region_name":[list of corresponding pfm regions], ..}
 BootFlashDict       = {"FCR_BFM": ["FCR_PFM"], "BOOT_FLASH": ["FLASH"]}
@@ -170,6 +172,30 @@ def handleMessage(messageID, args):
     elif ("CLOCK_ENABLE" in messageID):
         Database.setSymbolValue("core", messageID, args["isEnabled"])
 
+    elif (messageID == "SYSTICK_CONFIG"):
+        if "isSystickEnRdOnly" in args:
+            Database.getComponentByID("core").getSymbolByID("systickEnable").setReadOnly(args["isSystickEnRdOnly"])
+        if "isSystickEn" in args:
+            Database.setSymbolValue("core", "systickEnable", args["isSystickEn"])
+        if "isSystickIntRdOnly" in args:
+            Database.getComponentByID("core").getSymbolByID("USE_SYSTICK_INTERRUPT").setReadOnly(args["isSystickIntRdOnly"])
+        if "isSystickIntEn" in args:
+            Database.setSymbolValue("core", "USE_SYSTICK_INTERRUPT", args["isSystickIntEn"])
+
+    elif (messageID == "GENERIC_TIMER_CONFIG"):
+        if "isGenTmrEn" in args:
+            Database.getComponentByID("core").getSymbolByID("GENERIC_TIMER_ENABLE").setReadOnly(True)
+            Database.setSymbolValue("core", "GENERIC_TIMER_ENABLE", args["isGenTmrEn"])
+            Database.getComponentByID("core").getSymbolByID("GENERIC_TIMER_ENABLE").setReadOnly(False)
+        if "isGenTmrIntEn" in args:
+            Database.getComponentByID("core").getSymbolByID("GENERIC_TIMER_INTERRUPT").setReadOnly(True)
+            Database.setSymbolValue("core", "GENERIC_TIMER_INTERRUPT", args["isGenTmrIntEn"])
+            Database.getComponentByID("core").getSymbolByID("GENERIC_TIMER_INTERRUPT").setReadOnly(False)
+        if "isGenTmrAutoStart" in args:
+            Database.getComponentByID("core").getSymbolByID("GENERIC_TIMER_AUTOSTART").setReadOnly(True)
+            Database.setSymbolValue("core", "GENERIC_TIMER_AUTOSTART", args["isGenTmrAutoStart"])
+            Database.getComponentByID("core").getSymbolByID("GENERIC_TIMER_AUTOSTART").setReadOnly(False)
+
     elif ((messageID == "SysTick_INTERRUPT_ENABLE") or (messageID == "SysTick_INTERRUPT_HANDLER_LOCK") or
           (messageID == "PendSV_INTERRUPT_ENABLE") or (messageID == "PendSV_INTERRUPT_HANDLER_LOCK") or
           (messageID == "SVCall_INTERRUPT_ENABLE") or (messageID == "SVCall_INTERRUPT_HANDLER_LOCK") or
@@ -200,6 +226,18 @@ def handleMessage(messageID, args):
         Database.setSymbolValue("core", "APP_START_ADDRESS", args["start_address"])
     elif (messageID == "DMA_CONFIGURATION"):
         dmaConfiguration(args)
+    elif (messageID == "FREERTOS_CONFIG"):
+        for sym, attrib_dict in args.items():
+            for attrib_method, attrib_val in attrib_dict.items():
+                if attrib_method in coreSymListOfSupportedMethods:
+                    if type (attrib_val) == str:
+                        exp = 'Database.getComponentByID("core")' + '.getSymbolByID(sym)' + '.' + attrib_method + "(" + '"' + attrib_val + '"' + ")"
+                    else:
+                        if attrib_val == None:
+                            exp = 'Database.getComponentByID("core")' + '.getSymbolByID(sym)' + '.' + attrib_method + "()"
+                        else:
+                            exp = 'Database.getComponentByID("core")' + '.getSymbolByID(sym)' + '.' + attrib_method + "(" + str(attrib_val) + ")"
+                    eval(exp)
 
     return symbolDict
 
