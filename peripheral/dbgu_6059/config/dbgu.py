@@ -55,7 +55,7 @@ def handleMessage(messageID, args):
         if args.get("isEnabled") != None:
             if args["isEnabled"] == True:
                 dbguSym_UsartOperatingMode.setSelectedKey("NON_BLOCKING")
-                
+
     elif (messageID == "UART_BLOCKING_MODE"):
         if args.get("isReadOnly") != None:
             dbguSym_UsartOperatingMode.setReadOnly(args["isReadOnly"])
@@ -248,6 +248,9 @@ def instantiateComponent(dbguComponent):
     dbguSym_RXRingBuffer_Size.setVisible(False)
     dbguSym_RXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_MODE_ENABLE"])
 
+    # Enable DBGU Clock
+    Database.setSymbolValue("core", dbguInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
+
     dbguClkSrc = dbguComponent.createKeyValueSetSymbol("DBGU_CLK_SRC", None)
     dbguClkSrc.setLabel("Select Clock Source")
     dbgu_clock = []
@@ -379,7 +382,6 @@ def instantiateComponent(dbguComponent):
     interruptVectorUpdate = dbguInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     # Initial settings for CLK and Interrupt
-    Database.setSymbolValue("core", dbguInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
     Database.setSymbolValue("core", interruptVector, True, 2)
     Database.setSymbolValue("core", interruptHandler, dbguInstanceName.getValue() + "_InterruptHandler", 2)
     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
