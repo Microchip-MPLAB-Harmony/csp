@@ -76,7 +76,11 @@
 /* ${MCAN_INSTANCE_NAME} Message RAM Configuration Size */
 <#assign MCAN_MESSAGE_RAM_CONFIG_SIZE = 0>
 <#if RXF0_USE>
+  <#if MCAN_OPMODE != "NORMAL">
   <#assign RXF0_BYTES_CFG = RXF0_BYTES_CFG!0>
+  <#else>
+  <#assign RXF0_BYTES_CFG = 0>
+  </#if>
   <#if RXF0_BYTES_CFG?number < 5>
     <#assign RXF0_ELEMENT_BYTES = 16 + RXF0_BYTES_CFG?number * 4>
   <#else>
@@ -88,7 +92,11 @@
   <#assign MCAN_MESSAGE_RAM_CONFIG_SIZE = MCAN_MESSAGE_RAM_CONFIG_SIZE + RX_FIFO0_SIZE>
 </#if>
 <#if RXF1_USE>
+  <#if MCAN_OPMODE != "NORMAL">
   <#assign RXF1_BYTES_CFG = RXF1_BYTES_CFG!0>
+  <#else>
+  <#assign RXF1_BYTES_CFG = 0>
+  </#if>
   <#if RXF1_BYTES_CFG?number < 5>
     <#assign RXF1_ELEMENT_BYTES = 16 + RXF1_BYTES_CFG?number * 4>
   <#else>
@@ -100,7 +108,11 @@
   <#assign MCAN_MESSAGE_RAM_CONFIG_SIZE = MCAN_MESSAGE_RAM_CONFIG_SIZE + RX_FIFO1_SIZE>
 </#if>
 <#if RXBUF_USE>
+  <#if MCAN_OPMODE != "NORMAL">
   <#assign RX_BUFFER_BYTES_CFG = RX_BUFFER_BYTES_CFG!0>
+  <#else>
+  <#assign RX_BUFFER_BYTES_CFG = 0>
+  </#if>
   <#if RX_BUFFER_BYTES_CFG?number < 5>
     <#assign RX_BUFFER_ELEMENT_BYTES = 16 + RX_BUFFER_BYTES_CFG?number * 4>
   <#else>
@@ -112,7 +124,11 @@
   <#assign MCAN_MESSAGE_RAM_CONFIG_SIZE = MCAN_MESSAGE_RAM_CONFIG_SIZE + RX_BUFFER_SIZE>
 </#if>
 <#if TX_USE || TXBUF_USE>
+  <#if MCAN_OPMODE != "NORMAL">
   <#assign TX_FIFO_BYTES_CFG = TX_FIFO_BYTES_CFG!0>
+  <#else>
+  <#assign TX_FIFO_BYTES_CFG = 0>
+  </#if>
   <#if TX_FIFO_BYTES_CFG?number < 5>
     <#assign TX_ELEMENT_BYTES = 16 + TX_FIFO_BYTES_CFG?number * 4>
   <#else>

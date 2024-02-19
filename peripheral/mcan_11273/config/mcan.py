@@ -44,10 +44,8 @@ def RxBufferElementSize(element, event):
     if ((event["id"] == 'MCAN_OPMODE' and event["value"] != 'NORMAL' and Database.getSymbolValue(mcanInstanceName.getValue().lower(), "RXBUF_USE") == True)
     or (event["id"] == 'RXBUF_USE' and event["value"] == True and Database.getSymbolValue(mcanInstanceName.getValue().lower(), "MCAN_OPMODE") != 'NORMAL')):
         element.setVisible(True)
-        element.setReadOnly(False)
     else:
         element.setVisible(False)
-        element.setReadOnly(True)
 
 # for FD. Expects keyValue symbol. Use for RX and TX
 def adornElementSize(fifo):
@@ -67,10 +65,8 @@ def adornElementSize(fifo):
 def updateElementSize(symbol, event):
     if event["value"] != 'NORMAL':
         symbol.setVisible(True)
-        symbol.setReadOnly(False)
     else:
         symbol.setVisible(False)
-        symbol.setReadOnly(True)
 
 # for extended and standard filters
 def adornFilterType(filterType):
