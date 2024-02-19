@@ -37,13 +37,22 @@ global tmrPeriodicInterrupt
 global setTimerInterruptData
 
 def handleMessage(messageID, args):
+    global coretimerPeriodMS
+    
     dummy_dict = {}
+    dvrtPLIBConfig = dict()
 
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         modeDict = {"plib_mode": "COMPARE_MODE"}
         dummy_dict = Database.sendMessage(args["ID"], "SYS_TIME_PLIB_CAPABILITY", modeDict)
+        return dummy_dict
+        
+    elif (messageID == "DVRT_PUBLISH_CAPABILITIES"):
+        modeDict = {"plib_mode": "PERIOD_MODE"}
+        dvrtPLIBConfig = Database.sendMessage(args["ID"], "DVRT_PLIB_CAPABILITY", modeDict)
+        if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
+            coretimerPeriodMS.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
 
-    return dummy_dict
 
 def coreFreqCalc(symbol, event):
     SysClkFreq=Database.getSymbolValue("core", "SYS_CLK_FREQ")
@@ -126,14 +135,19 @@ def onAttachmentConnected(source, target):
     remoteComponent = target["component"]
     remoteID = remoteComponent.getID()
 
-    if (remoteID == "sys_time"):
+    if remoteID == "sys_time":
         tmrInterruptEnable.setValue(True,1)
         tmrPeriodicInterrupt.setValue(False,1)
+        
+    if remoteID == "dvrt":
+        tmrInterruptEnable.setValue(True,1)
+        tmrPeriodicInterrupt.setValue(True,1)
 
 def onAttachmentDisconnected(source, target):
     remoteComponent = target["component"]
     remoteID = remoteComponent.getID()
-    if (remoteID == "sys_time"):
+    
+    if ((remoteID == "sys_time") or (remoteID == "dvrt")):
         tmrInterruptEnable.setValue(False,1)
         tmrPeriodicInterrupt.setValue(False,1)
 
@@ -272,6 +286,10 @@ def instantiateComponent(tmrComponent):
     timeStopApiName_Sym = tmrComponent.createStringSymbol("TIMER_STOP_API_NAME", None)
     timeStopApiName_Sym.setVisible(False)
 
+    periodSetApiName_Sym = tmrComponent.createStringSymbol("PERIOD_SET_API_NAME", None)
+    periodSetApiName_Sym.setVisible(False)
+    
+    
     compareSetApiName_Sym = tmrComponent.createStringSymbol("COMPARE_SET_API_NAME", None)
     compareSetApiName_Sym.setVisible(False)
 
@@ -289,6 +307,7 @@ def instantiateComponent(tmrComponent):
 
     timerStartApiName = "CORETIMER_Start"
     timeStopApiName = "CORETIMER_Stop "
+    periodSetApiName = "CORETIMER_PeriodSet"
     compareSetApiName = "CORETIMER_CompareSet"
     counterGetApiName = "CORETIMER_CounterGet"
     frequencyGetApiName = "CORETIMER_FrequencyGet"
@@ -296,6 +315,7 @@ def instantiateComponent(tmrComponent):
 
     timerStartApiName_Sym.setDefaultValue(timerStartApiName)
     timeStopApiName_Sym.setDefaultValue(timeStopApiName)
+    periodSetApiName_Sym.setDefaultValue(periodSetApiName)
     compareSetApiName_Sym.setDefaultValue(compareSetApiName)
     counterApiName_Sym.setDefaultValue(counterGetApiName)
     frequencyGetApiName_Sym.setDefaultValue(frequencyGetApiName)
