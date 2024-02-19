@@ -91,7 +91,7 @@ def updateSRAMCoherency(symbol, event):
     else:
         seg_symbol.clearValue()
 
-    
+
 print ("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
@@ -322,3 +322,9 @@ faultSourceFile.setOverwrite(True)
 faultSourceFile.setDestPath("")
 faultSourceFile.setProjectPath("config/" + configName + "/")
 faultSourceFile.setType("SOURCE")
+
+xc32MPUARMCompilerFlag = coreComponent.createSettingSymbol("XC32_MPU_ARM_FLAG", None)
+xc32MPUARMCompilerFlag.setCategory("C32")
+xc32MPUARMCompilerFlag.setKey("appendMe")
+xc32MPUARMCompilerFlag.setValue("-marm")
+xc32MPUARMCompilerFlag.setAppend(True, " ")

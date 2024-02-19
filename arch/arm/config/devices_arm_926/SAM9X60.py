@@ -254,4 +254,10 @@ linkerFile.setType("LINKER")
 linkerFile.setEnabled(compiler_choice.getSelectedKey() == "IAR")
 linkerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["symbol"].getSelectedKey() == "IAR"), ["COMPILER_CHOICE"])
 
+xc32MPUARMCompilerFlag = coreComponent.createSettingSymbol("XC32_MPU_ARM_FLAG", None)
+xc32MPUARMCompilerFlag.setCategory("C32")
+xc32MPUARMCompilerFlag.setKey("appendMe")
+xc32MPUARMCompilerFlag.setValue("-marm")
+xc32MPUARMCompilerFlag.setAppend(True, " ")
+
 
