@@ -119,19 +119,17 @@
 */
 
 
-typedef enum
-{
 <#list ["A", "B", "C", "D", "E", "F", "G", "H"]>
 <#items as GROUP>
 <#if .vars["PORT" + GROUP +"_Pin_List"]?has_content>
 <#assign PIO_BASE = .vars["PIO" + GROUP +"_BASE_INDEX"]?split(":")[0]>
 <#assign PIO_GROUP = .vars["PIO" + GROUP +"_BASE_INDEX"]?split(":")[1]>
-    SYS_PORT_${GROUP} = (uint32_t)&(${PIO_BASE}_REGS->PIO_GROUP[${PIO_GROUP}]),
+#define SYS_PORT_${GROUP} ((uint32_t)&(${PIO_BASE}_REGS->PIO_GROUP[${PIO_GROUP}]))
 </#if>
 </#items>
 </#list>
-} SYS_PORT;
 
+typedef uint32_t SYS_PORT;
 
 // *****************************************************************************
 /* Sys Port Pins
