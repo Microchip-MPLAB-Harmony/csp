@@ -48,11 +48,19 @@
 #ifndef PLIB_GENERIC_TIMER_H
 #define PLIB_GENERIC_TIMER_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus  // Provide C++ Compatibility
 extern "C" {
 #endif //__cplusplus
 
-<#if GENERIC_TIMER_INTERRUPT>   
+<#if GENERIC_TIMER_INTERRUPT>
+typedef struct
+{
+    uint32_t start;
+    uint32_t count;
+}GENERIC_TIMER_TIMEOUT;
+
 typedef void (*GENERIC_TIMER_CALLBACK) (uintptr_t context);
 
 </#if>
@@ -74,7 +82,16 @@ void GENERIC_TIMER_PeriodSet(uint64_t period);
 uint64_t GENERIC_TIMER_PeriodGet(void);
 
 void GENERIC_TIMER_Stop(void);
+
 <#if RTOS_INTERRUPT_HANDLER == "">
+
+uint32_t GENERIC_TIMER_GetTickCounter(void);
+
+void GENERIC_TIMER_StartTimeOut (GENERIC_TIMER_TIMEOUT* timeout, uint32_t delay_ms);
+
+void GENERIC_TIMER_ResetTimeOut (GENERIC_TIMER_TIMEOUT* timeout);
+
+bool GENERIC_TIMER_IsTimeoutReached (GENERIC_TIMER_TIMEOUT* timeout);
 
 void GENERIC_TIMER_CallbackRegister(GENERIC_TIMER_CALLBACK pCallback, uintptr_t context);
 </#if>

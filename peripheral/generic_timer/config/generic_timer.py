@@ -48,6 +48,7 @@ def update_generic_timer_delta(symbol, event):
         component.setSymbolValue(interrupt_prefix + "_INTERRUPT_HANDLER", 
             rtosHandler if rtosHandler != "" else "GENERIC_TIMER_InterruptHandler")
         symbol.setValue((sourceFreq / 1000) * targetPeriodMs)
+        component.setSymbolValue("GENERIC_TIMER_PERIOD_US", int(round(targetPeriodMs * 1000)), 2)
     else:
         component.clearSymbolValue(interrupt_prefix + "_INTERRUPT_ENABLE")
         component.clearSymbolValue(interrupt_prefix + "_INTERRUPT_HANDLER")
@@ -88,6 +89,16 @@ if __name__ == "__main__":
 
     gen_timer_rtos_vector = coreComponent.createStringSymbol("RTOS_INTERRUPT_HANDLER", None)
     gen_timer_rtos_vector.setVisible(False)
+    
+    gen_timer_period_us = coreComponent.createIntegerSymbol("GENERIC_TIMER_PERIOD_US", None)
+    gen_timer_period_us.setVisible(False)
+    gen_timer_period_us.setDefaultValue(1000)
+    gen_timer_period_us.setMin(0)
+    
+    gen_timner_auto_start = coreComponent.createBooleanSymbol("GENERIC_TIMER_AUTOSTART", None)
+    gen_timner_auto_start.setLabel("Auto start timer after initialization")
+    gen_timner_auto_start.setDefaultValue(False)
+    gen_timner_auto_start.setVisible(False)
 
     
     config = Variables.get("__CONFIGURATION_NAME")
