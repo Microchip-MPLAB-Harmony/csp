@@ -45,7 +45,7 @@ def handleMessage(messageID, args):
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         modeDict = {"plib_mode": "COMPARE_MODE"}
         dummy_dict = Database.sendMessage(args["ID"], "SYS_TIME_PLIB_CAPABILITY", modeDict)
-        return dummy_dict
+
         
     elif (messageID == "DVRT_PUBLISH_CAPABILITIES"):
         modeDict = {"plib_mode": "PERIOD_MODE"}
@@ -53,6 +53,19 @@ def handleMessage(messageID, args):
         if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
             coretimerPeriodMS.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
 
+    elif (messageID == "CORE_TIMER_CONFIG"):
+        if "isCoreTmrIntRdOnly" in args:
+            Database.getComponentByID("core_timer").getSymbolByID("CORE_TIMER_INTERRUPT_MODE").setReadOnly(args["isCoreTmrIntRdOnly"])
+        if "isCoreTmrIntEn" in args:
+            Database.setSymbolValue("core_timer", "CORE_TIMER_INTERRUPT_MODE", args["isCoreTmrIntEn"])
+        if "isCoreTmrPeriodicIntRdOnly" in args:
+            Database.getComponentByID("core_timer").getSymbolByID("CORE_TIMER_PERIODIC_INTERRUPT").setReadOnly(args["isCoreTmrPeriodicIntRdOnly"])
+        if "isCoreTmrPeriodicIntEn" in args:
+            Database.setSymbolValue("core_timer", "CORE_TIMER_PERIODIC_INTERRUPT", args["isCoreTmrPeriodicIntEn"])
+        if "isCoreTmrAutoStart" in args:
+            Database.setSymbolValue("core_timer", "CORE_TIMER_AUTOSTART", args["isCoreTmrAutoStart"])
+
+    return dummy_dict
 
 def coreFreqCalc(symbol, event):
     SysClkFreq=Database.getSymbolValue("core", "SYS_CLK_FREQ")
@@ -232,6 +245,11 @@ def instantiateComponent(tmrComponent):
 
     coretimerFreqComment = tmrComponent.createCommentSymbol("CORE_TIMER_FREQUENCY_COMMENT", None)
     coretimerFreqComment.setLabel("*** Core Timer Clock Frequency " + str(timerFrequency) + " Hz ***")
+
+    coretimerAutoStart = tmrComponent.createBooleanSymbol("CORE_TIMER_AUTOSTART", None)
+    coretimerAutoStart.setLabel("Auto start timer after initialization")
+    coretimerAutoStart.setDefaultValue(False)
+    coretimerAutoStart.setVisible(False)
 
     ################# Interrupt Settings ###########################
 

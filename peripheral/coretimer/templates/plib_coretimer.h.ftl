@@ -50,6 +50,12 @@
 #define CORE_TIMER_FREQUENCY    (${CORE_TIMER_FREQUENCY}U)
 
 <#if CORE_TIMER_INTERRUPT_MODE == true && CORE_TIMER_PERIODIC_INTERRUPT == true>
+    <#lt>typedef struct
+    <#lt>{
+    <#lt>    uint32_t start;
+    <#lt>    uint32_t count;
+    <#lt>}CORETIMER_TIMEOUT;
+
     <#lt>#define CORE_TIMER_INTERRUPT_PERIOD_VALUE    ${CORE_TIMER_PERIOD_VALUE}
     <#lt>#define CORE_TIMER_INTERRUPT_PERIOD_IN_US     ${CORE_TIMER_PERIOD_US}
 
@@ -69,6 +75,10 @@
     <#lt>void CORETIMER_PeriodSet (uint32_t period);
     <#lt>void CORETIMER_Start(void);
     <#lt>void CORETIMER_Stop(void);
+    <#lt>uint32_t CORETIMER_GetTickCounter(void);
+    <#lt>void CORETIMER_StartTimeOut (CORETIMER_TIMEOUT* timeout, uint32_t delay_ms);
+    <#lt>void CORETIMER_ResetTimeOut (CORETIMER_TIMEOUT* timeout);
+    <#lt>bool CORETIMER_IsTimeoutReached (CORETIMER_TIMEOUT* timeout);
 </#if>
 
 <#if CORE_TIMER_INTERRUPT_MODE == true && CORE_TIMER_PERIODIC_INTERRUPT == false>
