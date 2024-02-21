@@ -52,6 +52,9 @@
 </#if>
 
 #define PIT_COUNTER_FREQUENCY       (${core.PIT_CLOCK_FREQUENCY}U / 16U)
+<#if ENABLE_INTERRUPT == true>
+#define PIT_INTERRUPT_PERIOD_IN_US  (${(PIT_PERIOD_US != 0)?then(PIT_PERIOD_US, "1")}U)
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -174,6 +177,35 @@ void ${PIT_INSTANCE_NAME}_DelayUs(uint32_t delay_us)
 <#assign BARE_METAL = ((!((HarmonyCore.SELECT_RTOS)??)) || HarmonyCore.SELECT_RTOS == "BareMetal")>
 <#assign INTERRUPT_USED_BY_RTOS = !(__PROCESSOR?matches("ATSAMA5.*")) || BARE_METAL>
 <#if ENABLE_INTERRUPT && INTERRUPT_USED_BY_RTOS>
+
+uint32_t ${PIT_INSTANCE_NAME}_GetTickCounter(void)
+{
+    return ${PIT_INSTANCE_NAME?lower_case}.tickCounter;
+}
+
+void ${PIT_INSTANCE_NAME}_StartTimeOut (PIT_TIMEOUT* timeout, uint32_t delay_ms)
+{
+    timeout->start = ${PIT_INSTANCE_NAME}_GetTickCounter();
+    timeout->count = (delay_ms*1000U)/PIT_INTERRUPT_PERIOD_IN_US;
+}
+
+void ${PIT_INSTANCE_NAME}_ResetTimeOut (PIT_TIMEOUT* timeout)
+{
+    timeout->start = ${PIT_INSTANCE_NAME}_GetTickCounter();
+}
+
+bool ${PIT_INSTANCE_NAME}_IsTimeoutReached (PIT_TIMEOUT* timeout)
+{
+    bool valTimeout  = true;
+    if ((${PIT_INSTANCE_NAME}_GetTickCounter() - timeout->start) < timeout->count)
+    {
+        valTimeout = false;
+    }
+
+    return valTimeout;
+
+}
+
 void ${PIT_INSTANCE_NAME}_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t context)
 {
     ${PIT_INSTANCE_NAME?lower_case}.callback = callback;

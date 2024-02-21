@@ -59,6 +59,14 @@
 
 #endif
 
+<#if ENABLE_INTERRUPT == true>
+typedef struct
+{ 
+    uint32_t start; 
+    uint32_t count; 
+}PIT_TIMEOUT;
+</#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Types
@@ -347,6 +355,11 @@ void ${PIT_INSTANCE_NAME}_DelayUs(uint32_t delay_us);
     None.
 */
 void ${PIT_INSTANCE_NAME}_TimerCallbackSet(${PIT_INSTANCE_NAME}_CALLBACK callback, uintptr_t context);
+
+uint32_t ${PIT_INSTANCE_NAME}_GetTickCounter(void);
+void ${PIT_INSTANCE_NAME}_StartTimeOut (PIT_TIMEOUT* timeout, uint32_t delay_ms);
+void ${PIT_INSTANCE_NAME}_ResetTimeOut (PIT_TIMEOUT* timeout);
+bool ${PIT_INSTANCE_NAME}_IsTimeoutReached (PIT_TIMEOUT* timeout);
 
 <#else>
 

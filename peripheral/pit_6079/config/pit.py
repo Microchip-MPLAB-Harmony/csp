@@ -23,6 +23,27 @@
 
 global instanceName
 
+def handleMessage(messageID, args):
+    dummy_dict = {}
+
+    if (messageID == "PIT_TIMER_CONFIG"):
+        if "isPitEnRdOnly" in args:
+            Database.getComponentByID("pit").getSymbolByID("ENABLE_COUNTER").setReadOnly(args["isPitEnRdOnly"])
+        if "isPitEn" in args:
+            Database.setSymbolValue("pit", "ENABLE_COUNTER", args["isPitEn"])
+        if "isPitIntRdOnly" in args:
+            Database.getComponentByID("pit").getSymbolByID("ENABLE_INTERRUPT").setReadOnly(args["isPitIntRdOnly"])
+        if "isPitIntEn" in args:
+            Database.setSymbolValue("pit", "ENABLE_INTERRUPT", args["isPitIntEn"])
+        if "rtosInterruptHandler" in args:
+            if args["rtosInterruptHandler"] != "":
+                Database.setSymbolValue("pit", "RTOS_INTERRUPT_HANDLER", args["rtosInterruptHandler"])
+            else:
+                instanceName = Database.getComponentByID("pit").getSymbolByID("PIT_INSTANCE_NAME")
+                Database.setSymbolValue("pit", "RTOS_INTERRUPT_HANDLER", instanceName.getValue()+"_InterruptHandler")
+
+    return dummy_dict
+
 def updateInterrupt(symbol, event):
     instanceName = symbol.getComponent().getSymbolByID("PIT_INSTANCE_NAME")
     if event["source"].getSymbolValue("ENABLE_INTERRUPT") == True:
@@ -46,6 +67,8 @@ def updatePIV(symbol, event):
     period = symbol.getComponent().getSymbolValue("PERIOD_MS")
     piv = calcPIV(period)
     symbol.setValue(piv, 1)
+
+    event["source"].getSymbolByID("PIT_PERIOD_US").setValue(int(round(period * 1000)))
 
 
 def provideCommonTimerSymbols( aComponent ):
@@ -147,6 +170,11 @@ def instantiateComponent( pitComponent ):
     piv_sym.setDefaultValue(piv)
     piv_sym.setReadOnly(True)
     piv_sym.setDependencies(updatePIV,["PERIOD_MS", "core.PIT_CLOCK_FREQUENCY"])
+
+    pitPeriodUS = pitComponent.createIntegerSymbol("PIT_PERIOD_US", None)
+    pitPeriodUS.setVisible(False)
+    pitPeriodUS.setDefaultValue(1000)
+    pitPeriodUS.setMin(0)
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
