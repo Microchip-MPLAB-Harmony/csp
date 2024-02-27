@@ -145,24 +145,27 @@ def dmacTriggerLogic(symbol, event):
 
     symbolID = symbol.getID()
 
+    trigger = ""
+
     if event["value"] in triggerSettings:
         trigger = event["value"]
     else:
         if "Receive" in event["value"]:
             trigger = "Standard_Receive"
-        else:
+        elif "Transmit" in event["value"]:
             trigger = "Standard_Transmit"
 
-    symbol.clearValue()
+    if trigger != "":
+        symbol.clearValue()
 
-    if "TRIGACT" in symbolID:
-        symbol.setSelectedKey(str(triggerSettings[trigger][0]), 2)
-    elif "SRCINC" in symbolID:
-        symbol.setSelectedKey(str(triggerSettings[trigger][1]), 2)
-    elif "DSTINC" in symbolID:
-        symbol.setSelectedKey(str(triggerSettings[trigger][2]), 2)
-    elif "BEATSIZE" in symbolID:
-        symbol.setSelectedKey(str(triggerSettings[trigger][3]), 2)
+        if "TRIGACT" in symbolID:
+            symbol.setSelectedKey(str(triggerSettings[trigger][0]), 2)
+        elif "SRCINC" in symbolID:
+            symbol.setSelectedKey(str(triggerSettings[trigger][1]), 2)
+        elif "DSTINC" in symbolID:
+            symbol.setSelectedKey(str(triggerSettings[trigger][2]), 2)
+        elif "BEATSIZE" in symbolID:
+            symbol.setSelectedKey(str(triggerSettings[trigger][3]), 2)
 
 # The following business logic creates a list of enabled DMA channels and sorts
 # them in the descending order. The left most channel number will be the highest
@@ -285,7 +288,7 @@ def updateInterruptLogic(symbol, event):
                 Database.setSymbolValue("core", vectorName + "_INTERRUPT_ENABLE", True, 2)
                 Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER_LOCK", True, 2)
                 Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER", vectorName + "_InterruptHandler", 2)
-                
+
                 if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
                     dmacXisNonSecure = Database.getSymbolValue("core", dmacInstanceName.getValue() + "_IS_NON_SECURE")
                     Database.setSymbolValue("core", vectorName + "_SET_NON_SECURE", dmacXisNonSecure)
