@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2024 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -96,7 +96,7 @@ print ("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
 deviceFamily.setLabel("Device Family")
-deviceFamily.setDefaultValue("SAMA7G5")
+deviceFamily.setDefaultValue("SAMA7D65")
 deviceFamily.setReadOnly(True)
 deviceFamily.setVisible(False)
 
@@ -136,20 +136,18 @@ mmu_segments = [
                     ("UDPHS_RAMA", 0x00200000, 0x100000, "strongly-ordered", "rw", "no-exec"),
                     ("UDPHS_RAMB", 0x00300000, 0x100000, "strongly-ordered", "rw", "no-exec"),
                     ("UHPHS_OHCI", 0x00400000, 0x1000, "strongly-ordered", "rw", "no-exec"),
-                    ("UHPHS_EHCI", 0x00500000, 0x100000, "strongly-ordered", "rw", "no-exec"),
-                    ("NFC_RAM", 0x00600000, 0x3000, "strongly-ordered", "rw", "exec"),
+                    ("UHPHS_EHCI", 0x00500000, 0x1000, "strongly-ordered", "rw", "no-exec"),
+                    ("NFC_RAM", 0x00600000, 0x2400, "strongly-ordered", "rw", "exec"),
                     ("NFC", 0x10000000, 0x8000000, "strongly-ordered", "rw", "no-exec"),
-                    ("QSPIMEM0", 0x20000000, 0x10000000, "strongly-ordered", "rw", "exec"),
-                    ("QSPIMEM1", 0x30000000, 0x10000000, "strongly-ordered", "rw", "exec"),
+                    ("QSPI_MEM0", 0x20000000, 0x10000000, "strongly-ordered", "rw", "exec"),
+                    ("QSPI_MEM1", 0x30000000, 0x10000000, "strongly-ordered", "rw", "exec"),
                     ("EBI_CS0", 0x40000000, 0x8000000, "strongly-ordered", "rw", "no-exec"),
                     ("EBI_CS1", 0x48000000, 0x8000000, "strongly-ordered", "rw", "no-exec"),
-                    ("EBI_CS2", 0x50000000, 0x8000000, "strongly-ordered", "rw", "no-exec"),
-                    ("EBI_CS3", 0x58000000, 0x8000000, "strongly-ordered", "rw", "no-exec"),
                     ("PERIPHERALS", 0xE0000000, 0x10000000,  "strongly-ordered", "rw", "no-exec"),
                     ("SDMMC", 0xE1200000, 0x10000,  "strongly-ordered", "rw", "no-exec"),
+                    ("NICGPV1", 0xE1500000, 0x100000,  "strongly-ordered", "rw", "no-exec"),
                     ("APB_DBG_S", 0xE8800000, 0x60000,  "strongly-ordered", "rw", "no-exec"),
-                    ("APB_DBG", 0xE8900000, 0x1000,  "strongly-ordered", "rw", "no-exec"),
-                    ("NICGPV", 0xE8B00000, 0x100000,  "strongly-ordered", "rw", "no-exec"),
+                    ("NICGPV0", 0xE8B00000, 0x100000,  "strongly-ordered", "rw", "no-exec"),
                     ("PERIPHERALS_2", 0xE8C00000, 0xC000, "device", "rw", "no-exec")
             ]
 #DRAM cache configuration
@@ -171,6 +169,11 @@ elif processor.endswith("4G"):
     ddr_size = (4 * pow(2,30)) / 8
     #increase the non cacheable region to 32 MB
     non_cacheable_size = 32 * pow(2, 20)
+elif processor.endswith("5M"):
+    #512 Mbit memory
+    ddr_size = (512 * pow(2,20)) / 8
+    #reduce the non cacheable region to 8 MB
+    non_cacheable_size = 8 * pow(2, 20)
 else:
     #Non SiP variants, use entire DRAM region
     ddr_size = int(ddr_node.getAttribute("size"), 0)
@@ -239,8 +242,8 @@ cacheAlign.setDefaultValue(64)
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwdt_44149/config/dwdt.py")
 
 # load clock manager information
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_a7g5/config/clk.py")
-coreComponent.addPlugin("../peripheral/clk_sam_a7g5/plugin/clk_sam_a7g5.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_a7d65/config/clk.py")
+#coreComponent.addPlugin("../peripheral/clk_sam_a7d65/plugin/clk_sam_a7d65.jar")
 
 # load GIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gic/config/gic.py")
@@ -250,7 +253,7 @@ coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "IN
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
 
 #load Matrix -- default all peripherals to non-secure
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/matrix_6342/config/matrix.py")
+#execfile(Variables.get("__CORE_DIR") + "/../peripheral/matrix_6342/config/matrix.py")
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
