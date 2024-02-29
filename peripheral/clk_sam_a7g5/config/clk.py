@@ -581,7 +581,7 @@ if __name__ == "__main__":
                         "IMGPLL": {"source": "MAINCK_FREQUENCY", "ioclock": False, "enable": False, "mul": 0, "fracr": 0, "div": 0},
                         "BAUDPLL": {"source": "MAINCK_FREQUENCY", "ioclock": False, "enable": False, "mul": 0, "fracr": 0, "div": 0},
                         "AUDIOPLL":{"source": "CLK_MOSCXT_FREQ", "ioclock": True, "enable": False, "mul": 0, "fracr": 0, "div": 0},
-                        "ETHPLL": {"source": "CLK_MOSCXT_FREQ", "ioclock": True, "enable": False, "mul": 0, "fracr": 0, "div": 0},
+                        "ETHPLL": {"source": "CLK_MOSCXT_FREQ", "ioclock": False, "enable": False, "mul": 0, "fracr": 0, "div": 0},
                     }
 
 
@@ -683,7 +683,7 @@ if __name__ == "__main__":
                 pll_io_frequency.setDefaultValue(int(pll_core_frequency.getValue() / (pll_divio.getValue() + 1)))
             else:
                 pll_io_frequency.setDefaultValue(0)
-            pll_io_frequency.setDependencies(update_pll_pmc_freq, ["CLK_{0}_ENIOPLLCK".format(pll),
+            pll_io_frequency.setDependencies(update_pll_io_freq, ["CLK_{0}_ENIOPLLCK".format(pll),
                                                                    "{0}_CORE_FREQUENCY".format(pll),
                                                                    "CLK_{0}_DIVIO".format(pll)])
 
