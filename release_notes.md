@@ -3,6 +3,21 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.18.3
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Forcing all MPU applications to build with ARM mode.
+
+### Notes
+
+- Version dependencies for the following DFPs are updated
+  - SAMA5D2_DFP to version 1.10.213
+
 ## CSP Release v3.18.2
 
 ### New Features
