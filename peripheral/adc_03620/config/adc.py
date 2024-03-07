@@ -189,8 +189,8 @@ def conversionTimeCalculate(localComponent, n):
 
     if TQ != 0:
         TAD = 2 * (ADCDIV * TQ)
-        sample_time = (SAMC + 1.5) * TAD
-        conversion_time = (sample_time + ((SELRES + 0.5) * TAD))
+        sample_time = (SAMC + 2.0) * TAD
+        conversion_time = (sample_time + ((SELRES + 1.0) * TAD))
         conversion_time_usec = "{:.4f}".format(conversion_time*1e6 )
         conversion_freq_mhz = "{:.4f}".format(1.0/(conversion_time*1e6))
         sample_time_usec = "{:.4f}".format(sample_time*1e6 )
