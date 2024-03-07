@@ -379,16 +379,6 @@ static void initUSBClk ( void )
     PMC_REGS->PMC_SCER |= PMC_SCER_UHP_Msk;
 }
 </#if>
-<#if CLK_QSPICLK_ENABLE>
-
-/*********************************************************************************
-Initialize QSPI Clock
-*********************************************************************************/
-static void initQSPIClk(void)
-{
-    PMC_REGS->PMC_SCER |= PMC_SCER_QSPICLK_Msk;
-}
-</#if>
 
 <#if CLK_GENERATOR_CODE && CLK_DDR_ENABLE>
 
@@ -461,11 +451,6 @@ void CLK_Initialize( void )
 
     /* Initialize DDR Clock */
     initDDRClk();
-    </#if>
-    <#if CLK_QSPICLK_ENABLE>
-
-    /* Initialize QSPI Clock */
-    initQSPIClk();
     </#if>
     <#if CLK_USB_EN>
 

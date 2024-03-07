@@ -73,7 +73,7 @@ def update_plla_freq(symbol, event):
     enable = event['source'].getSymbolValue("CLK_PLLA_EN")
     if enable is True:
         pllcore_clk = (mainckf * (mul + 1 + (float(fracr) / pow(2, 22))))
-        symbol.setValue(int(pllcore_clk / (divpmc + 1)), 0)
+        symbol.setValue(int(pllcore_clk / (2 * (divpmc + 1))), 0)
     else:
         symbol.setValue(0)
 
@@ -85,7 +85,7 @@ def update_plladiv2ck_freq(symbol, event):
     enable = event['source'].getSymbolValue("CLK_PLLADIV2_EN")
     if enable == True:
         pllcore_clk = (mainckf * (mul + 1 + (float(fracr) / pow(2, 22))))
-        symbol.setValue(int((pllcore_clk / (divpmc + 1)) / 2))
+        symbol.setValue(int((pllcore_clk / (2 * (divpmc + 1))) / 2))
     else:
         symbol.setValue(0)
 
@@ -552,7 +552,7 @@ pll_divpmc.setLabel(pll_divpmc_node.getAttribute("name"))
 pll_divpmc.setDescription(pll_divpmc_node.getAttribute("caption"))
 pll_divpmc.setMin(0)
 pll_divpmc.setMax(255)
-pll_divpmc.setDefaultValue(1)
+pll_divpmc.setDefaultValue(0)
 pll_divpmc.setReadOnly(True)
 generator_symbols_list.addValue("CLK_PLLA_DIVPMC")
 
@@ -584,7 +584,7 @@ generator_symbols_list.addValue("CLK_PLLA_SS_STEP")
 pllack = coreComponent.createIntegerSymbol("PLLA_FREQUENCY", pll_en)
 pllack.setVisible(False)
 if pll_en.getValue() == True:
-    pllack.setDefaultValue(int(mainck.getValue() * (pll_mul.getValue() + 1 + (float(pll_fracr.getValue()) / pow(2,22))) / (pll_divpmc.getValue() + 1)))
+    pllack.setDefaultValue(int((mainck.getValue() * (pll_mul.getValue() + 1 + (float(pll_fracr.getValue()) / pow(2,22)))) / (2 * (pll_divpmc.getValue() + 1))))
 else:
     pllack.setDefaultValue(0)
 pllack.setDependencies(update_plla_freq, ['CLK_PLLA_EN', 'MAINCK_FREQUENCY', 'CLK_PLLA_MUL', 'CLK_PLLA_FRACR', 'CLK_PLLA_DIVPMC'])
@@ -1035,10 +1035,6 @@ else:
 ddr_frq.setDependencies(lambda symbol, event: symbol.setValue(((event['source'].getSymbolValue('MCK_FREQUENCY') * 2)
                         if event['source'].getSymbolValue('CLK_DDR_ENABLE') is True else 0),0),
                         ['MCK_FREQUENCY','CLK_DDR_ENABLE'])
-
-qspi_clk = coreComponent.createBooleanSymbol("CLK_QSPICLK_ENABLE", sys_clk_menu)
-qspi_clk.setLabel("Enable QSPI Clock")
-qspi_clk.setDependencies(lambda symbol, event: symbol.setValue(event["value"]), ['QSPI_CLOCK_ENABLE'])
 
 gen_code = coreComponent.createBooleanSymbol("CLK_GENERATOR_CODE", menu)
 gen_code.setLabel("Enable generator initialization code")
