@@ -316,7 +316,6 @@ typedef struct
 
 } CANFD_NOMINAL_BIT_TIMING;
 
-<#if CAN_OPMODE != "0x6">
 // *****************************************************************************
 /* CAN Data Bit Timing Parameters
 
@@ -345,7 +344,6 @@ typedef struct
 
 } CANFD_DATA_BIT_TIMING;
 
-</#if>
 // *****************************************************************************
 /* CAN Bit Timing Parameters
 
@@ -366,13 +364,11 @@ typedef struct
     /* Nominal bit timing parameters */
     CANFD_NOMINAL_BIT_TIMING nominalBitTiming;
 
-<#if CAN_OPMODE != "0x6">
     /* Data bit timing set flag */
     bool dataBitTimingSet;
 
     /* Data bit timing parameters */
     CANFD_DATA_BIT_TIMING dataBitTiming;
-</#if>
 } CANFD_BIT_TIMING;
 
 // *****************************************************************************
@@ -401,7 +397,6 @@ typedef struct
     /* Nominal Baud Rate Prescaler */
     uint8_t nominalPrescaler;
 
-<#if CAN_OPMODE != "0x6">
     /* Data bit timing set flag */
     bool dataBitTimingSet;
 
@@ -414,7 +409,6 @@ typedef struct
     /* Data Baud Rate Prescaler */
     uint8_t dataPrescaler;
 
-</#if>
 } CANFD_BIT_TIMING_SETUP;
 
 // *****************************************************************************
