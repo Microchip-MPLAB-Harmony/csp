@@ -188,9 +188,10 @@ for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_
         peripheralList.addValue(key.split("_")[-1])
         fusedependencyList.append(key.split("_")[-1] + "_IS_NON_SECURE")
         if ((("NONSEC" in key) and key.split("_")[-1]  in mixSecurePeripheralList) or
-            (("NONSEC" in key) and key.split("_")[-1]  in systemResourcesList)):
+            (("NONSEC" in key) and key.split("_")[-1]  in systemResourcesList)     or
+            (("NONSEC" in key) and key.split("_")[-1]  in securePeripheralList)):
             peripheralIsNonSecure.setReadOnly(True)
-        if ("NONSEC" in key) and key.split("_")[-1] == "DSU":
+        if ("NONSEC" in key) and key.split("_")[-1] in nonSecurePeripheralList:
             peripheralIsNonSecure.setDefaultValue(True)
             peripheralIsNonSecure.setReadOnly(True)
             Database.setSymbolValue("core", fuseMapSymbol[key], 1)
