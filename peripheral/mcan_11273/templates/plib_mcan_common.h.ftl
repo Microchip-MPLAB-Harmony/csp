@@ -437,7 +437,6 @@ typedef struct
 
 } MCAN_NOMINAL_BIT_TIMING;
 
-<#if MCAN_OPMODE != "NORMAL">
 // *****************************************************************************
 /* MCAN Data Bit Timing Parameters
 
@@ -466,7 +465,6 @@ typedef struct
 
 } MCAN_DATA_BIT_TIMING;
 
-</#if>
 // *****************************************************************************
 /* MCAN Bit Timing Parameters
 
@@ -487,13 +485,11 @@ typedef struct
     /* Nominal bit timing parameters */
     MCAN_NOMINAL_BIT_TIMING nominalBitTiming;
 
-<#if MCAN_OPMODE != "NORMAL">
     /* Data bit timing set flag */
     bool dataBitTimingSet;
 
     /* Data bit timing parameters */
     MCAN_DATA_BIT_TIMING dataBitTiming;
-</#if>
 } MCAN_BIT_TIMING;
 
 // *****************************************************************************
@@ -522,7 +518,6 @@ typedef struct
     /* Nominal Baud Rate Prescaler */
     uint16_t nominalPrescaler;
 
-<#if MCAN_OPMODE != "NORMAL">
     /* Data bit timing set flag */
     bool dataBitTimingSet;
 
@@ -535,7 +530,6 @@ typedef struct
     /* Data Baud Rate Prescaler */
     uint8_t dataPrescaler;
 
-</#if>
 } MCAN_BIT_TIMING_SETUP;
 
 // *****************************************************************************
