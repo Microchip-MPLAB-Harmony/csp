@@ -3,6 +3,16 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.18.4
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Fixed general exception handler and NVM erase/write APIs for PIC32MZ-W devices.
+
 ## CSP Release v3.18.3
 
 ### New Features
