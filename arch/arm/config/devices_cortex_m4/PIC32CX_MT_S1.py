@@ -101,6 +101,9 @@ coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "MP
 # #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
+# #load DWT
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
+
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11264/plugin/pio_11264.jar")

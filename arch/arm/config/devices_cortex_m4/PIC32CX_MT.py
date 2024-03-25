@@ -185,6 +185,9 @@ coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "MP
 # #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
+# #load DWT
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
+
 # #  load CMCC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/cmcc_11108/config/cmcc.py")
 
