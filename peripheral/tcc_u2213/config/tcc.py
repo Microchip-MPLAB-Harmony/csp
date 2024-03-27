@@ -296,8 +296,6 @@ def handleMessage(messageID, args):
     global sysTimePlibMode
     global tccSym_Timer_TIME_MS
 
-    print ("messageID = " + messageID)
-
     component = str(tccInstanceName.getValue()).lower()
     dict = {}
     if (messageID == "PMSM_FOC_PWM_CONF"):

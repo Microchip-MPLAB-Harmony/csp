@@ -30,10 +30,25 @@
 
 global calcAchievableFreq
 global tcTimerUnit
+global sysTimeComponentId
+
 tcTimerUnit = { "millisecond" : 1,
-                "microsecond" : 1000, 
+                "microsecond" : 1000,
                 "nanosecond"  : 1000000,
                 }
+def calcAchievableFreq(inputClk, prescale, countVal):
+    global sysTimeComponentId
+
+    tickRateDict = {"tick_rate_hz": 0}
+    dummy_dict = dict()
+
+    if sysTimeComponentId.getValue() != "":
+        #Input clock frequency
+        clk = float(inputClk)/prescale
+        achievableTickRateHz = float(1.0/clk) * countVal
+        achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
+        tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
+        dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
 
 def updateTimerMenuVisibleProperty(symbol, event):
     if event["value"] == "Timer":
@@ -54,17 +69,19 @@ def tccTimeMaxValue(symbol, event):
     symbol.setMax(max)
 
 def tccPeriodCalc(symbol, event):
+    prescaler = 0
+    period = 0
     clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY")
     if clock_freq != 0:
         prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
         resolution = (prescaler * 1000.0) / clock_freq   #mSec
         unit = tcTimerUnit[tccSym_TimerUnit.getValue()]
-        period = (tccSym_Timer_TIME_MS.getValue() / (resolution * unit)) - 1        
+        period = (tccSym_Timer_TIME_MS.getValue() / (resolution * unit)) - 1
     else:
         period = 0
     symbol.setValue(long(period))
-    
-    #calcAchievableFreq()
+
+    calcAchievableFreq(clock_freq, prescaler, period)
 
 def tccTimerEvsys(symbol, event):
     component = symbol.getComponent()
@@ -82,7 +99,7 @@ def tccTimerEvsys(symbol, event):
             if ((tccVal_ev0) != 0):
                 Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_0_READY", True, 2)
             if ((tccVal_ev1) != 0):
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", True, 2)                
+                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", True, 2)
 
     else:
         if(event["id"] == "TCC_TIMER_EVCTRL_OVFEO"):
@@ -96,7 +113,7 @@ def tccTimerEvsys(symbol, event):
             if (event["value"] != 0):
                 Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", True, 2)
             else:
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", False, 2)                
+                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", False, 2)
 
 def tccTimerIpEventVisible(symbol, event):
     if event["value"] != 0:
@@ -107,7 +124,7 @@ def tccTimerIpEventVisible(symbol, event):
 def tccTimerInterrupt(symbol, event):
     component = symbol.getComponent()
     interrupt = False
-    if (component.getSymbolValue("TCC_TIMER_INTENSET_OVF") == True or 
+    if (component.getSymbolValue("TCC_TIMER_INTENSET_OVF") == True or
         component.getSymbolValue("TCC_TIMER_INTENSET_MC1") == True) :
         interrupt = True
     symbol.setValue(interrupt)
@@ -139,7 +156,7 @@ if clock_freq != 0:
     max = ((pow(2, size) + 1) * resolution / 1000000.0)
 else:
     resolution = 0
-    max = 0    
+    max = 0
 tccSym_Timer_TIME_MS = tccComponent.createFloatSymbol("TCC_TIMER_TIME_MS", tccSym_TimerMenu)
 tccSym_Timer_TIME_MS.setLabel("Time")
 tccSym_Timer_TIME_MS.setDefaultValue(1)
