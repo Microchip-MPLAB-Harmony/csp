@@ -32,6 +32,7 @@ global interruptVector
 global interruptHandler
 global interruptHandlerLock
 global supcInstanceName
+global sclk
 
 supcSym_WUIR_WKUPEN = []
 supcSym_WUIR_WKUPT = []
@@ -67,6 +68,8 @@ def disableWKUP(symbol, event):
         symbol.setValue(False)
 
 def calcPulseWidth(symbol, event):
+    global sclk
+
     i = event["symbol"].getSelectedValue()
     numSlck = sclk[int(i, 16)]
     time = float(numSlck) / 32768
