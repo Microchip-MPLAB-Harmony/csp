@@ -148,9 +148,9 @@ static void initUPLLCLK(void)
                              PMC_PLL_UPDT_ID(PLL_ID_UPLL);
 
     /* STEP 2: Set the Analog controls to the values recommended by data sheet */
-    PMC_REGS->PMC_PLL_ACR = PMC_PLL_ACR_LOOP_FILTER(0x1BU) |\
+    PMC_REGS->PMC_PLL_ACR = PMC_PLL_ACR_LOOP_FILTER(0x12U) |\
                             PMC_PLL_ACR_LOCK_THR(0x4U) |\
-                            PMC_PLL_ACR_CONTROL(0x10U);
+                            PMC_PLL_ACR_CONTROL(0x810U);
 
     /* STEP 3: Set loop paramaters for the fractional PLL */
     PMC_REGS->PMC_PLL_CTRL1 = PMC_PLL_CTRL1_MUL(${CLK_UPLL_MUL}U) |\
