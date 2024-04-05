@@ -22,21 +22,11 @@
 *****************************************************************************"""
 import os
 import xml.etree.ElementTree as ET
-def setDspLibParameters(dspLibSym, compilerID):
-    cmsisPath = Variables.get("__CMSIS_PACK_DIR")
-    libCoreName = dspLibSym.getID().split("CMSIS_DSP_LIB_")[1]
-    # For IAR compiler, M7 fp libraries are named differently
-    if compilerID == 1:
-        libCoreName = libCoreName.replace("M7lfdp", "M7lf").replace("M7lfsp", "M7lfs")
-    compilerList = ["GCC", "IAR", "ARM"]
-    prefixList   = ["libarm_", "iar_", "arm_"]
-    suffixList   = ["_math.a", "_math.a", "_math.lib"]
-    cmsisRelPath = os.path.relpath(cmsisPath, Module.getPath())
-    libFileName = prefixList[compilerID] + libCoreName + suffixList[compilerID]
+
 
 def instantiateComponent(cmsisComponent):
-
-    cmsisPath = Variables.get("__FRAMEWORK_ROOT") + "/CMSIS_6/"
+    
+    cmsisPath = Variables.get("__FRAMEWORK_ROOT") + "/CMSIS_5/"
 
     pdscPath = os.path.join(cmsisPath, "ARM.CMSIS.pdsc")
     cmsisReleaseInfo = ET.parse(pdscPath).getroot().find("releases/release")
@@ -67,16 +57,16 @@ def instantiateComponent(cmsisComponent):
 ############################### CMSIS Core #####################################
 ################################################################################
         # add core header files
-        coreHeaderFileNames = [ "core_c" + cortexType + ".h",
-                                "cmsis_version.h",
+        coreHeaderFileNames = [ "cmsis_version.h",
                                 "cmsis_compiler.h",
-                                "m-profile/cmsis_iccarm_m.h",
+                                "cmsis_iccarm.h",
                                 "cmsis_gcc.h",
-                                "m-profile/cmsis_gcc_m.h",
+                                "cmsis_armcc.h",
                                 "cmsis_armclang.h",
-                                "m-profile/cmsis_armclang_m.h",
-                                "m-profile/armv" + ("8" if cortexType in v8Cores else "7") + "m_mpu.h",  #v8 cores uses MPUv8
-                                "m-profile/armv7m_cachel1.h" #v3.7.0 supports  enhanced cache functions for ARM-v7M
+                                "cmsis_armclang_ltm.h",
+                                "core_c" + cortexType + ".h",
+                                "mpu_armv" + ("8" if cortexType in v8Cores else "7") + ".h",  #v8 cores uses MPUv8
+                                "cachel1_armv7.h" #v3.7.0 supports  enhanced cache functions for ARM-v7M
                               ]
 
         #v8 cores support trustZone
@@ -87,11 +77,7 @@ def instantiateComponent(cmsisComponent):
             szSymbol = headerFileName.replace(".", "_").upper()
             headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
             headerFile.setRelative(False)
-            # Patch header file with inline function for ACLE intrinsics to build with XC32
-            if headerFileName == "cmsis_gcc.h":
-                headerFile.setSourcePath(Module.getPath() + "config/cmsis_patch/cmsis_gcc.h")
-            else:
-                headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
+            headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
             headerFile.setOutputName(headerFileName)
             headerFile.setMarkup(False)
             headerFile.setOverwrite(True)
@@ -115,24 +101,3 @@ def instantiateComponent(cmsisComponent):
                 headerFile.setSecurity("SECURE")
                 headerFile.setEnabled(cmsisCoreEnableSym.getValue())
                 headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_CORE_ENABLE"])
-
-    #If this is a cortex A device
-    elif cortexType.startswith("a"):
-################################################################################
-############################### CMSIS Core #####################################
-################################################################################
-
-        headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "a-profile/cmsis_gcc_a.h", "a-profile/cmsis_iccarm_a.h", "a-profile/cmsis_cp15.h", "core_ca.h"]
-
-        # add core header files for cortex a devices
-        for headerFileName in headerFileNames:
-            szSymbol = "CORE_A_{}_H".format(headerFileName[:-2].upper())
-            headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
-            headerFile.setRelative(False)
-            headerFile.setSourcePath(cmsisPath + "/CMSIS/Core_A/Include/" + headerFileName)
-            headerFile.setOutputName(headerFileName)
-            headerFile.setMarkup(False)
-            headerFile.setOverwrite(True)
-            headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core_A/Include/")
-            headerFile.setProjectPath("packs/CMSIS/CMSIS/Core_A/Include/")
-            headerFile.setType("HEADER")

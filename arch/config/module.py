@@ -30,6 +30,14 @@ def loadModule():
     dfpComponent.setHelpKeyword("MH3_CSP_dfp")
 
 
+    archNode = ATDF.getNode('/avr-tools-device-file/devices')
+    cortexType = archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()
+
+    #If it is a cortex M device
+    if cortexType.startswith("m"):
+        cmsisDspComponent = Module.CreateComponent("cmsis_dsp", "CMSIS DSP", "/Packs/", "config/cmsis_dsp.py")
+        cmsisNnComponent = Module.CreateComponent("cmsis_nn", "CMSIS NN", "/Packs/", "config/cmsis_nn.py")
+
     # Avoid loading CMSIS for non-relevant processors
     if ("CORTEX" in coreArch):
         print("Load Module: CMSIS Pack")
