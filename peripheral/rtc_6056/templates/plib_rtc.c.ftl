@@ -62,7 +62,7 @@ __STATIC_INLINE uint32_t bcdtodecimal( uint32_t aBcdValue )
 
 void ${RTC_INSTANCE_NAME}_Initialize( void )
 {
-    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->RTC_MR = RTC_MR_PERSIAN( 0U ) | RTC_MR_OUT1_${RTC_MR_OUT1} | RTC_MR_OUT0_${RTC_MR_OUT0}
+    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->RTC_MR = RTC_MR_OUT1_${RTC_MR_OUT1} | RTC_MR_OUT0_${RTC_MR_OUT0}
                                                                    <#if RTC_MR_TPERIOD??>| RTC_MR_TPERIOD_${RTC_MR_TPERIOD}</#if>
                                                                    <#if RTC_MR_THIGH??>| RTC_MR_THIGH_${RTC_MR_THIGH}</#if>
                                                                    <#if RTC_MR_UTC??>| RTC_MR_UTC(${RTC_MR_UTC?then('1', '0')})</#if>
