@@ -80,6 +80,7 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG = (${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG & ~QSPI_PCALCFG_CLKDIV_Msk) |
                                                 QSPI_PCALCFG_CLKDIV(${QSPI_PCALCFG_CLKDIV}U);
 
+<#if QSPI_CR_DLLON??>
     <#if QSPI_DLLCFG_RANGE>
     /* DLL Range */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_DLLCFG = QSPI_DLLCFG_RANGE_Msk;
@@ -87,15 +88,18 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
 
     /* Enable DLL */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_DLLON_Msk;
+</#if>
     /* Start Pad Calibration */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_STPCAL_Msk;
 
+<#if QSPI_CR_DLLON??>
     /* Wait for DLL lock */
     while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_DLOCK_Msk) == 0U)
     {
         /* Do Nothing */
     }
 
+</#if>
     /* Wait for Pad Calibration complete */
     while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_CALBSY_Msk) != 0U)
     {

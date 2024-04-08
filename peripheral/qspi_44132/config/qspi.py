@@ -251,6 +251,8 @@ def instantiateComponent(qspiComponent):
     qspiMemoryAddress = "QSPIMEM" + qspiInstanceNum.getValue() + "_ADDR"
     if ATDF.getNode('/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name="QSPI_MEM"]') != None:
         qspiMemoryAddress = "QSPI_MEM_ADDR"
+    elif ATDF.getNode('/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name="QSPI_MEM' + qspiInstanceNum.getValue() + '"]') != None:
+        qspiMemoryAddress = "QSPI_MEM" + qspiInstanceNum.getValue() + "_ADDR"
     qspiMemAddr.setDefaultValue(qspiMemoryAddress)
 
     if ATDF.getNode('/avr-tools-device-file/modules/module@[name="QSPI"]/value-group@[name="QSPI_IFR__PROTTYP"]/value@[name="OCTAFLASH"]') != None:
@@ -268,6 +270,10 @@ def instantiateComponent(qspiComponent):
         qspiIfrHfwben.setDefaultValue(True)
         qspiIfrHfwben.setVisible(False)
 
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="QSPI"]/register-group@[name="QSPI"]/register@[name="QSPI_CR"]/bitfield@[name="DLLON"]') != None:
+        qspiCrDllonen = qspiComponent.createBooleanSymbol("QSPI_CR_DLLON", None)
+        qspiCrDllonen.setDefaultValue(True)
+        qspiCrDllonen.setVisible(False)
     ###################################################################################################
     ######################################### QSPI-SPI MODE ###########################################
     ###################################################################################################

@@ -75,6 +75,7 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG = (${QSPI_INSTANCE_NAME}_REGS->QSPI_PCALCFG & ~QSPI_PCALCFG_CLKDIV_Msk) |
                                                 QSPI_PCALCFG_CLKDIV(${QSPI_PCALCFG_CLKDIV}U);
 
+<#if QSPI_CR_DLLON??>
     <#if QSPI_DLLCFG_RANGE>
     /* DLL Range */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_DLLCFG = QSPI_DLLCFG_RANGE_Msk;
@@ -82,15 +83,18 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
 
     /* Enable DLL */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_DLLON_Msk;
+</#if>
     /* Start Pad Calibration */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_STPCAL_Msk;
 
+<#if QSPI_CR_DLLON??>
     /* Wait for DLL lock */
     while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_DLOCK_Msk) == 0U)
     {
         /* Do Nothing */
     }
 
+</#if>
     /* Wait for Pad Calibration complete */
     while((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_CALBSY_Msk) != 0U)
     {
@@ -535,7 +539,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 </#if>
-#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 11.3" "H3_MISRAC_2012_R_11_3_DR_1"    
+#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 11.3" "H3_MISRAC_2012_R_11_3_DR_1"
 </#if>
 
 bool
@@ -667,7 +671,7 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
         {
             ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit( pRxBuffer, qspi_mem, numSrcPostWordBytes );
         }
-        
+
         if((numWordTransferBytes + numSrcPostWordBytes) > 0U)
         {
             // Shift the data to right to its final destination buffer location
@@ -712,7 +716,7 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
 #pragma coverity compliance end_block "MISRA C-2012 Rule 11.3"
 <#if core.COMPILER_CHOICE == "XC32">
 #pragma GCC diagnostic pop
-</#if>    
+</#if>
 </#if>
 /* MISRAC 2012 deviation block end */
 
