@@ -64,6 +64,10 @@
 <#assign TC_UNSIGNED_INT_TYPE = "uint32_t">
 <#assign TC_SIGNED_INT_TYPE = "int32_t">
 </#if>
+<#assign TC_CMR_WAVE_MASK = "TC_CMR_WAVE_Msk">
+<#if TC_CMR_WAVEFORM_WAVE??>
+<#assign TC_CMR_WAVE_MASK = "TC_CMR_WAVEFORM_WAVE_Msk">
+</#if>
 </#compress>
 <#assign start = 0>
 
@@ -126,9 +130,9 @@ void ${TC_INSTANCE_NAME}_QuadratureInitialize (void)
         <#if TC3_CMR_TCCLKS == "">
         <#lt>    /* Use peripheral clock */
         <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_EMR = TC_EMR_NODIVCLK_Msk;
-        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_CMR = TC_CMR_WAVEFORM_WAVSEL_UP_RC | TC_CMR_WAVE_Msk;
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_CMR = TC_CMR_WAVEFORM_WAVSEL_UP_RC | ${TC_CMR_WAVE_MASK};
         <#else>
-        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_CMR = TC_CMR_TCCLKS_${TC3_CMR_TCCLKS} | TC_CMR_WAVEFORM_WAVSEL_UP_RC | TC_CMR_WAVE_Msk;
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_CMR = TC_CMR_TCCLKS_${TC3_CMR_TCCLKS} | TC_CMR_WAVEFORM_WAVSEL_UP_RC | ${TC_CMR_WAVE_MASK};
         </#if>
     <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_RC = ${TC_QEI_PERIOD}U;
     </#if>
@@ -295,11 +299,11 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerInitialize(void)
     /* Use peripheral clock */
     <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_EMR = TC_EMR_NODIVCLK_Msk;
     <#lt>    /* clock selection and waveform selection */
-    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVEFORM_WAVSEL_UP_RC | TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('| (TC_CMR_WAVEFORM_CPCSTOP_Msk)', '')};
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVEFORM_WAVSEL_UP_RC | ${TC_CMR_WAVE_MASK} ${.vars[TC_CMR_CPCSTOP]?then('| (TC_CMR_WAVEFORM_CPCSTOP_Msk)', '')};
     <#else>
     /* clock selection and waveform selection */
     <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_TCCLKS_${.vars[TC_CMR_TCCLKS]} | TC_CMR_WAVEFORM_WAVSEL_UP_RC | \
-                                                        TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('|(TC_CMR_WAVEFORM_CPCSTOP_Msk)', '')};
+                                                        ${TC_CMR_WAVE_MASK} ${.vars[TC_CMR_CPCSTOP]?then('|(TC_CMR_WAVEFORM_CPCSTOP_Msk)', '')};
     </#if>
 
     /* write period */
@@ -585,13 +589,13 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareInitialize (void)
     /* Use peripheral clock */
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_EMR = TC_EMR_NODIVCLK_Msk;
     /* clock selection and waveform selection */
-    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVEFORM_WAVSEL_${.vars[TC_CMR_WAVSEL]} | TC_CMR_WAVE_Msk | \
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVEFORM_WAVSEL_${.vars[TC_CMR_WAVSEL]} | ${TC_CMR_WAVE_MASK} | \
                 TC_CMR_WAVEFORM_ACPA_${.vars[TC_CMR_ACPA]} | TC_CMR_WAVEFORM_ACPC_${.vars[TC_CMR_ACPC]} | TC_CMR_WAVEFORM_AEEVT_${.vars[TC_CMR_AEEVT]}\
 <#if .vars[TC_CMR_EEVT] != "TIOB">           | TC_CMR_WAVEFORM_BCPB_${.vars[TC_CMR_BCPB]} | TC_CMR_WAVEFORM_BCPC_${.vars[TC_CMR_BCPC]} | TC_CMR_WAVEFORM_BEEVT_${.vars[TC_CMR_BEEVT]}</#if> <#rt>
                 <#lt>${.vars[TC_COMPARE_CMR_CPCSTOP]?then('| (TC_CMR_WAVEFORM_CPCSTOP_Msk)', '')};
     <#else>
     /* clock selection and waveform selection */
-    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_TCCLKS_${.vars[TC_CMR_TCCLKS]} | TC_CMR_WAVEFORM_WAVSEL_${.vars[TC_CMR_WAVSEL]} | TC_CMR_WAVE_Msk | \
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_TCCLKS_${.vars[TC_CMR_TCCLKS]} | TC_CMR_WAVEFORM_WAVSEL_${.vars[TC_CMR_WAVSEL]} | ${TC_CMR_WAVE_MASK} | \
             TC_CMR_WAVEFORM_ACPA_${.vars[TC_CMR_ACPA]} | TC_CMR_WAVEFORM_ACPC_${.vars[TC_CMR_ACPC]} | TC_CMR_WAVEFORM_AEEVT_${.vars[TC_CMR_AEEVT]} \
 <#if .vars[TC_CMR_EEVT] != "TIOB">           | TC_CMR_WAVEFORM_BCPB_${.vars[TC_CMR_BCPB]} | TC_CMR_WAVEFORM_BCPC_${.vars[TC_CMR_BCPC]} | TC_CMR_WAVEFORM_BEEVT_${.vars[TC_CMR_BEEVT]}</#if> <#rt>
                 <#lt>${.vars[TC_COMPARE_CMR_CPCSTOP]?then('| (TC_CMR_WAVEFORM_CPCSTOP_Msk)', '')};

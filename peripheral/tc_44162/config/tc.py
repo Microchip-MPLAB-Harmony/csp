@@ -29,7 +29,7 @@ global extClock
 global tcNumInterruptLines
 global tcTimerUnit
 tcTimerUnit = { "millisecond" : 1000000,
-                "microsecond" : 1000, 
+                "microsecond" : 1000,
                 "nanosecond"  : 1,
                 }
 
@@ -687,11 +687,11 @@ def tcPeriodCountCalc(symbol, event):
         time = tcSym_CH_TimerPeriod[channelID].getValue()
 
     resolution_ns = tcGetClockResolution(clock, channelID)
-    unit = tcTimerUnit[tcSym_TimerUnit[channelID].getValue()]    
+    unit = tcTimerUnit[tcSym_TimerUnit[channelID].getValue()]
     if (float(resolution_ns) == 0.0):
         resolution_ns = 1
     time_period = int((time * unit / float(resolution_ns)))
-    
+
     if (mode == "TIMER"):
         if (time_period > tcCounterMaxValue):
             tcSym_CH_TimerPeriodComment[channelID].setLabel("****Period Count is >" + str(tcCounterMaxValue) + ". Reduce timer period ****")
@@ -1054,17 +1054,25 @@ def instantiateComponent(tcComponent):
         tc_signals = tc.getChildren()
         for pad in range(0, len(tc_signals)):
             if "TIOA" in tc_signals[pad].getAttribute("group"):
+                if (any(x.isdigit() for x in tc_signals[pad].getAttribute("group"))):
+                    index = int(tc_signals[pad].getAttribute("group").split("TIOA")[1])
+                else:
+                    index = int(tc_signals[pad].getAttribute("index"))
                 padSignal = tc_signals[pad].getAttribute("pad")
                 if padSignal in availablePins:
-                    channel[int(tc_signals[pad].getAttribute("index"))%3] = True
+                    channel[index % 3] = True
                 else:
-                    channel[int(tc_signals[pad].getAttribute("index"))%3] = False
+                    channel[index % 3] = False
             if "TCLK" in tc_signals[pad].getAttribute("group"):
+                if (any(x.isdigit() for x in tc_signals[pad].getAttribute("group"))):
+                    index = int(tc_signals[pad].getAttribute("group").split("TCLK")[1])
+                else:
+                    index = int(tc_signals[pad].getAttribute("index"))
                 padSignal = tc_signals[pad].getAttribute("pad")
                 if padSignal in availablePins:
-                    extClock[int(tc_signals[pad].getAttribute("index"))%3] = True
+                    extClock[index % 3] = True
                 else:
-                    extClock[int(tc_signals[pad].getAttribute("index"))%3] = False
+                    extClock[index % 3] = False
 
     sysTimeChannel_Sym = tcComponent.createKeyValueSetSymbol("SYS_TIME_TC_CHANNEL", None)
     sysTimeChannel_Sym.setLabel("Select TC Channel for Time System Service")
@@ -1383,7 +1391,7 @@ def instantiateComponent(tcComponent):
         timerUnit = ["millisecond", "microsecond", "nanosecond"]
         tcSym_TimerUnit[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_TIMER_UNIT", tcTimerMenu[channelID], timerUnit)
         tcSym_TimerUnit[channelID].setLabel("Timer Period Unit")
-        tcSym_TimerUnit[channelID].setDefaultValue("millisecond")     
+        tcSym_TimerUnit[channelID].setDefaultValue("millisecond")
 
         if (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") != 0):
             max =  (tcCounterMaxValue + 1) * 1000.0 / int((Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") ))
@@ -1737,6 +1745,11 @@ def instantiateComponent(tcComponent):
 
     tcSym_CH_PCK_CLKSRC.setDependencies(tcPCKVisible, ["TC0_CMR_TCCLKS", "TC1_CMR_TCCLKS", "TC2_CMR_TCCLKS", \
             "TC3_CMR_TCCLKS", "TC_BMR_POSEN", "TC_ENABLE_QEI"])
+
+    if ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "WAVE")).getAttribute("modes") != None:
+        tcSym_CH_CMR_WAVEFORM_WAVE = tcComponent.createBooleanSymbol("TC_CMR_WAVEFORM_WAVE", None)
+        tcSym_CH_CMR_WAVEFORM_WAVE.setVisible(False)
+        tcSym_CH_CMR_WAVEFORM_WAVE.setDefaultValue(True)
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
