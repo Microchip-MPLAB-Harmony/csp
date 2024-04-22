@@ -57,17 +57,17 @@
 
 <#if AC_WINCTRL_WIN0 == true>
     <#if AC_WINCTRL_VAL != "">
-        <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WEN0_Msk">
+        <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WEN" + AC_WINCTRL_WEN0 + "_Msk">
     <#else>
-        <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WEN0_Msk">
+        <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WEN" + AC_WINCTRL_WEN0 + "_Msk">
     </#if>
 </#if>
 <#if AC_WINCTRL_WIN0 == true>
     <#if AC_WINTSEL0 ?has_content >
         <#if AC_WINCTRL_VAL != "">
-            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL0(${AC_WINTSEL0}U)">
+            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL" + AC_WINCTRL_WEN0 + "(${AC_WINTSEL0}U)">
         <#else>
-            <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL0(${AC_WINTSEL0})">
+            <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL" + AC_WINCTRL_WEN0 + "(${AC_WINTSEL0})">
         </#if>
     </#if>
 </#if>
@@ -206,7 +206,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     ${AC_INSTANCE_NAME}_REGS->AC_CTRLC = AC_CTRLC_PRESCALER_${AC_CTRLC_PRESCALER}_Val | AC_CTRLC_PER(${AC_CTRLC_PERIOD}) | AC_CTRLC_WIDTH(${AC_CTRLC_WIDTH}) <#if (ANALOG_INPUT_CHARGE_PUMP_ENABLE?? && ANALOG_INPUT_CHARGE_PUMP_ENABLE == true)> | AC_CTRLC_AIPMPEN_Msk </#if>;
     </#if>
 
-     
+
     <#list 0..4 as i>
     <#assign ANALOG_COMPARATOR_ENABLE = "ANALOG_COMPARATOR_ENABLE_" + i>
     <#assign AC_COMPCTRL_SINGLE_MODE = "AC_COMPCTRL_" + i +"SINGLE_MODE">

@@ -182,7 +182,7 @@ def instantiateComponent(acComponent):
             numOfComparators = int(parameters[param].getAttribute("value"))
         if(parameters[param].getAttribute("name") == "LOAD_CALIB"):
             calibRequired = int(parameters[param].getAttribute("value"))
-            
+
     # If LOAD_CALIB parameter is not present, it is assumed that CALIB register update is required to maintain backward compatibility
     if calibRequired == -1:
         calibRequired = 1
@@ -207,7 +207,7 @@ def instantiateComponent(acComponent):
     for cmp in range (0, numOfComparators):
         cmpPresent.append(cmp)
         if channelID == -1:
-            cmpPresent[cmp] = 1   #by default, all comparator channels are present. 
+            cmpPresent[cmp] = 1   #by default, all comparator channels are present.
         else:
             if cmp == channelID:
                 cmpPresent[cmp] = 1
@@ -260,20 +260,20 @@ def instantiateComponent(acComponent):
 
     #Populate menu for all comparators in the AC peripheral
     for comparatorID in range(0, int(numOfComparators)):
-        # comparator ID enum  
+        # comparator ID enum
         acSym_COMP_NUM.append(comparatorID)
-        acSym_COMP_NUM[comparatorID] = acComponent.createStringSymbol("AC_COMP_ID_ENUM_"+str(comparatorID), None)     
+        acSym_COMP_NUM[comparatorID] = acComponent.createStringSymbol("AC_COMP_ID_ENUM_"+str(comparatorID), None)
         acSym_COMP_NUM[comparatorID].setVisible(False)
         if cmpPresent[comparatorID] == 0:
             acSym_COMP_NUM[comparatorID].setValue("-1")
         else:
             acSym_COMP_NUM[comparatorID].setValue("AC_CHANNEL" + str(comparatorID))
-        
+
         acSym_Enable.append(comparatorID)
         acSym_Enable[comparatorID] = acComponent.createBooleanSymbol("ANALOG_COMPARATOR_ENABLE_" + str(comparatorID), None)
         acSym_Enable[comparatorID].setLabel("Comparator " + str(comparatorID) + " Settings")
         if cmpPresent[comparatorID] == 0:
-            acSym_Enable[comparatorID].setVisible(False)        
+            acSym_Enable[comparatorID].setVisible(False)
 
         #Interrupt Enable
         global acInterrupt_Enable
@@ -559,14 +559,24 @@ def instantiateComponent(acComponent):
     acSym_WindowConf = acComponent.createMenuSymbol("WINDOW_CONFIGURATION", None)
     acSym_WindowConf.setLabel("Comparator Window Configurations")
 
+    win0Str = "0"
+    if ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"WINCTRL\"]/bitfield@[name=\"WEN\"]") != None:
+        win0Str = ""
+    acSym_WINCTRL_WEN0 = acComponent.createStringSymbol("AC_WINCTRL_WEN0", None)
+    acSym_WINCTRL_WEN0.setDefaultValue(win0Str)
+    acSym_WINCTRL_WEN0.setVisible(False)
+
+    if win0Str != "":
+        win0Str = "0 "
+
     #Window 0 configuration
     acSym_WINCTRL0 = acComponent.createBooleanSymbol("AC_WINCTRL_WIN0", acSym_WindowConf)
-    acSym_WINCTRL0.setLabel("Window 0 Enable")
+    acSym_WINCTRL0.setLabel("Window " + win0Str + "Enable")
     acSym_WINCTRL0.setDefaultValue(False)
 
     #Window 0 Interrupt Enable
     acSym_INTENSET_WIN0 = acComponent.createBooleanSymbol("AC_INTENSET_WIN0", acSym_WINCTRL0)
-    acSym_INTENSET_WIN0.setLabel("Window 0 Interrupt Enable")
+    acSym_INTENSET_WIN0.setLabel("Window " + win0Str + "Interrupt Enable")
     acSym_INTENSET_WIN0.setDefaultValue(False)
     acSym_INTENSET_WIN0.setVisible(False)
     acSym_INTENSET_WIN0.setDependencies(setacSymbolVisibility,["AC_WINCTRL_WIN0"])
@@ -574,11 +584,15 @@ def instantiateComponent(acComponent):
 
     #Window 0 interrupt configuration
     acSym_WNCTRL_WINT0 = acComponent.createKeyValueSetSymbol("AC_WINTSEL0", acSym_WINCTRL0)
-    acSym_WNCTRL_WINT0.setLabel("AC Window 0 Interrupt Selection")
+    acSym_WNCTRL_WINT0.setLabel("AC Window " + win0Str + "Interrupt Selection")
     acSym_WNCTRL_WINT0.setVisible(False)
     acSym_WNCTRL_WINT0.setDependencies(setacSymbolVisibility,["AC_WINCTRL_WIN0"])
 
-    acSym_WNCTRL_WINT0_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_WINCTRL__WINTSEL0\"]")
+    winselValGroup = "AC_WINCTRL__WINTSEL0"
+    winselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/register-group@[name=\"AC\"]/register@[name=\"WINCTRL\"]/bitfield@[name=\"WINTSEL\"]")
+    if winselNode != None:
+        winselValGroup =  winselNode.getAttribute("values")
+    acSym_WNCTRL_WINT0_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="AC"]/value-group@[name="' + winselValGroup + '"]')
     acSym_WNCTRL_WINT0_Values = []
     acSym_WNCTRL_WINT0_Values = acSym_WNCTRL_WINT0_node.getChildren()
 
@@ -600,7 +614,7 @@ def instantiateComponent(acComponent):
 
     #Window 0 Event Output
     acSym_WINCTRL_EVENT_OUT0 = acComponent.createBooleanSymbol("AC_EVCTRL_WINEO0", acSym_WINCTRL0)
-    acSym_WINCTRL_EVENT_OUT0.setLabel("Enable Window 0 Event Output")
+    acSym_WINCTRL_EVENT_OUT0.setLabel("Enable Window " + win0Str + "Event Output")
     acSym_WINCTRL_EVENT_OUT0.setDefaultValue(False)
     acSym_WINCTRL_EVENT_OUT0.setVisible(False)
     acSym_WINCTRL_EVENT_OUT0.setDependencies(setacSymbolVisibility,["AC_WINCTRL_WIN0"])
