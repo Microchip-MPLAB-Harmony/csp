@@ -40,9 +40,11 @@ global InterruptHandler
 global InterruptHandlerLock
 
 global EVSYSfilesArray
+EVSYSfilesArray = []
+
 global InterruptVectorSecurity
 InterruptVectorSecurity = []
-EVSYSfilesArray = []
+
 
 channel = 0
 path = {}
@@ -50,6 +52,50 @@ user = {}
 generator = {}
 generator_module = {}
 user_module = {}
+
+def getValueGroupNode__EVSYS(module_name, register_group, register_name, bitfield_name , mode = None):
+    bitfield_node_path = ""
+    value_group_node = None
+
+    if mode != None:
+        bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module_name, register_group, mode, register_name, bitfield_name)
+    else:
+         bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module_name, register_group, register_name, bitfield_name)
+
+    print (bitfield_node_path)
+    bitfield_node = ATDF.getNode(bitfield_node_path)
+
+    if bitfield_node != None:
+        if bitfield_node.getAttribute("values") == None:
+            print (register_name + "_" + bitfield_name + "does not have value-group attribute")
+        else:
+            value_group_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module_name, bitfield_node.getAttribute("values")))
+            if value_group_node == None:
+                print ("value-group = " + bitfield_node.getAttribute("values") + " not defined")
+    else:
+        print ("bitfield_name = " + bitfield_name + " not found" )
+
+    return value_group_node
+
+def interruptSecurityUpdate(symbol, event):
+    global EVSYSfilesArray
+    global InterruptVectorSecurity
+
+    if event["value"] == False:
+        EVSYSfilesArray[0].setSecurity("SECURE")
+        EVSYSfilesArray[1].setSecurity("SECURE")
+        EVSYSfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        EVSYSfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        for vec in InterruptVectorSecurity:
+            Database.setSymbolValue("core", vec, False)
+    else:
+        EVSYSfilesArray[0].setSecurity("NON_SECURE")
+        EVSYSfilesArray[1].setSecurity("NON_SECURE")
+        EVSYSfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        EVSYSfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        for vec in InterruptVectorSecurity:
+            Database.setSymbolValue("core", vec, True)
+
 
 
 def userStatus(symbol, event):
@@ -262,6 +308,8 @@ def instantiateComponent(evsysComponent):
     global evsysGenerator
     evsysGenerator=[]
     channelUserDependency=[]
+    global InterruptVectorSecurity
+
 
     # Get the number of channels supporting Synchronous and asynchronous path
     dummyNode=ATDF.getNode(
@@ -305,15 +353,15 @@ def instantiateComponent(evsysComponent):
             "EVSYS_USER_" + str(usersNode.getChildren()[id].getAttribute("index")))
         channelUserDependency.append(
             "USER_" + str(usersNode.getChildren()[id].getAttribute("name")) + "_READY")
-    
+
     users_list = []
     user_node_children = usersNode.getChildren()
     for id in range(0,len(user_node_children)):
-        users_list.append(user_node_children[id].getAttribute("name")+"-"+user_node_children[id].getAttribute("index"))    
-    symEvsysUsersList = evsysComponent.createComboSymbol("EVSYS_USERS", evsysSym_Menu, users_list)    
+        users_list.append(user_node_children[id].getAttribute("name")+"-"+user_node_children[id].getAttribute("index"))
+    symEvsysUsersList = evsysComponent.createComboSymbol("EVSYS_USERS", evsysSym_Menu, users_list)
     symEvsysUsersList.setLabel("User list")
     symEvsysUsersList.setVisible(False)
-    
+
     channelNode=ATDF.getNode(
         '/avr-tools-device-file/devices/device/peripherals/module@[name="EVSYS"]/instance@[name="' + evsysInstanceName.getValue() + '"]/parameters')
     for id in range(0, len(channelNode.getChildren())):
@@ -348,6 +396,17 @@ def instantiateComponent(evsysComponent):
 
     createEVSYSChannelVectorList(int(channel), evsysComponent)
 
+    evsysSecImplemented = evsysComponent.createBooleanSymbol("EVSYS_SEC_IMPLEMENTED", evsysSym_Menu)
+    evsysSecImplemented.setVisible(False)
+
+    secureImplementedNode = ATDF.getNode(
+        '/avr-tools-device-file/devices/device/peripherals/module@[name=\"EVSYS"\]/instance@[name="' + evsysInstanceName.getValue() + '"]/parameters/param@[name=\"SECURE_IMPLEMENTED\"]')
+
+    if secureImplementedNode != None:
+        evsysSecImplemented.setDefaultValue(secureImplementedNode.getAttribute("value") == "1")
+    else:
+        evsysSecImplemented.setDefaultValue(False)
+
     for id in range(0, channel):
         evsysChannel=evsysComponent.createBooleanSymbol(
             "EVSYS_CHANNEL_" + str(id), evsysSym_Menu)
@@ -369,7 +428,7 @@ def instantiateComponent(evsysComponent):
         evsysChannelMenu.setDependencies(
             channelMenu, ["EVSYS_CHANNEL_" + str(id)])
 
-        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == True:
             evsysSecurity = evsysComponent.createKeyValueSetSymbol("EVSYS_NONSEC_" + str(id), evsysChannelMenu)
             evsysSecurity.setLabel("Security mode")
             evsysSecurity.addKey("SECURE", "0", "False")
@@ -405,8 +464,7 @@ def instantiateComponent(evsysComponent):
             "EVSYS_CHANNEL_" + str(id) + "_PATH", evsysChannelMenu)
         evsysPath.setLabel("Path Selection")
         evsysPath.setOutputMode("Value")
-        pathNode=ATDF.getNode(
-            '/avr-tools-device-file/modules/module@[name="EVSYS"]/value-group@[name="EVSYS_CHANNEL__PATH"]')
+        pathNode = getValueGroupNode__EVSYS("EVSYS", "CHANNEL", "CHANNEL", "PATH")        
         for i in range(0, len(pathNode.getChildren())):
             evsysPath.addKey(pathNode.getChildren()[i].getAttribute("name"), str(pathNode.getChildren()[
                              i].getAttribute("value")), pathNode.getChildren()[i].getAttribute("caption"))
@@ -419,8 +477,7 @@ def instantiateComponent(evsysComponent):
         evsysEdge=evsysComponent.createKeyValueSetSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_EDGE", evsysChannelMenu)
         evsysEdge.setLabel("Event Edge Selection")
-        edgeNode=ATDF.getNode(
-            '/avr-tools-device-file/modules/module@[name="EVSYS"]/value-group@[name="EVSYS_CHANNEL__EDGSEL"]')
+        edgeNode = getValueGroupNode__EVSYS("EVSYS", "CHANNEL", "CHANNEL", "EDGSEL")
         for i in range(0, len(edgeNode.getChildren())):
             evsysEdge.addKey(edgeNode.getChildren()[i].getAttribute("name"), str(edgeNode.getChildren()[
                              i].getAttribute("value")), edgeNode.getChildren()[i].getAttribute("caption"))
@@ -473,7 +530,7 @@ def instantiateComponent(evsysComponent):
         "EVSYS_USER_MENU", evsysSym_Menu)
     evsysUserMenu.setLabel("EVSYS User SETTINGS ")
 
-    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == True:
         nonSecReg = evsysComponent.createHexSymbol("EVSYS_NONSEC" , None)
         nonSecReg.setDefaultValue(0)
         nonSecReg.setVisible(False)
@@ -488,7 +545,7 @@ def instantiateComponent(evsysComponent):
             evsysUserChannel.addKey(
                 "CHANNEL_" + str(i), str(hex(i + 1)), "Use Channel" + str(id))
         evsysUserChannel.setOutputMode("Value")
-        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == True:
             evsysUserSecurity = evsysComponent.createKeyValueSetSymbol("EVSYS_USER_NONSEC_" + str(id), evsysUserChannel)
             evsysUserSecurity.setLabel("Security mode")
             evsysUserSecurity.addKey("SECURE", "0", "False")
@@ -500,7 +557,7 @@ def instantiateComponent(evsysComponent):
             evsysUserSecurity.setDependencies(evsysUserNonSecVisible, ["EVSYS_USER_" + str(id)])
             evsysUserNonSecList.append("EVSYS_USER_NONSEC_" + str(id))
 
-    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == True:
         nonSecUser0Reg = evsysComponent.createHexSymbol("EVSYS_NONSEC_USER0" , None)
         nonSecUser0Reg.setDefaultValue(0)
         nonSecUser0Reg.setVisible(False)
@@ -560,11 +617,29 @@ def instantiateComponent(evsysComponent):
     evsysIntEnableForMaxChannel = evsysComponent.createIntegerSymbol("EVSYS_INTERRUPT_MAX_CHANNEL", evsysSym_Menu)
     evsysIntEnableForMaxChannel.setVisible(False)
     evsysIntEnableForMaxChannel.setDefaultValue(0)
+
+    reg_group_name = evsysInstanceName.getValue() + "SEC"
+    evsysSecAliasRegSpace = ATDF.getNode(
+        '/avr-tools-device-file/devices/device/peripherals/module@[name="EVSYS"]/instance@[name="' + evsysInstanceName.getValue() + '"]/register-group@[name="' + reg_group_name + '"]')
+
+    evsysRegName = evsysComponent.createStringSymbol("EVSYS_REG_NAME", None)
+    evsysRegName.setVisible(False)
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecAliasRegSpace != None:
+        evsysRegName.setValue(evsysInstanceName.getValue() + "_SEC")
+    else:
+        evsysRegName.setValue(evsysInstanceName.getValue())
     # ################################################################################
     # ##########             CODE GENERATION             #############################
     # ################################################################################
 
     configName=Variables.get("__CONFIGURATION_NAME")
+
+    evsysIsNonSecure = False
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == False:
+        evsysIsNonSecure = Database.getSymbolValue("core", evsysComponent.getID().upper() + "_IS_NON_SECURE")
+        for vec in InterruptVectorSecurity:
+            Database.setSymbolValue("core", vec, evsysIsNonSecure)
 
     evsysSym_HeaderFile=evsysComponent.createFileSymbol("EVSYS_HEADER", None)
     evsysSym_HeaderFile.setSourcePath(
@@ -576,6 +651,10 @@ def instantiateComponent(evsysComponent):
         "config/" + configName + "/peripheral/evsys")
     evsysSym_HeaderFile.setType("HEADER")
     evsysSym_HeaderFile.setMarkup(True)
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == False:
+        EVSYSfilesArray.append(evsysSym_HeaderFile)
+        if evsysIsNonSecure == False:
+            evsysSym_HeaderFile.setSecurity("SECURE")
 
     evsysSym_SourceFile=evsysComponent.createFileSymbol("EVSYS_SOURCE", None)
     evsysSym_SourceFile.setSourcePath(
@@ -587,6 +666,10 @@ def instantiateComponent(evsysComponent):
         "config/" + configName + "/peripheral/evsys")
     evsysSym_SourceFile.setType("SOURCE")
     evsysSym_SourceFile.setMarkup(True)
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == False:
+        EVSYSfilesArray.append(evsysSym_SourceFile)
+        if evsysIsNonSecure == False:
+            evsysSym_SourceFile.setSecurity("SECURE")
 
     evsysSystemInitFile=evsysComponent.createFileSymbol(
         "EVSYS_SYS_INIT", None)
@@ -596,6 +679,11 @@ def instantiateComponent(evsysComponent):
     evsysSystemInitFile.setSourcePath(
         "../peripheral/evsys_u2504/templates/system/initialization.c.ftl")
     evsysSystemInitFile.setMarkup(True)
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == False:
+        EVSYSfilesArray.append(evsysSystemInitFile)
+        if evsysIsNonSecure == False:
+            evsysSystemInitFile.setSecurity("SECURE")
+            evsysSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 
     evsysSystemDefFile=evsysComponent.createFileSymbol("EVSYS_SYS_DEF", None)
     evsysSystemDefFile.setType("STRING")
@@ -603,10 +691,21 @@ def instantiateComponent(evsysComponent):
     evsysSystemDefFile.setSourcePath(
         "../peripheral/evsys_u2504/templates/system/definitions.h.ftl")
     evsysSystemDefFile.setMarkup(True)
-    
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == False:
+        EVSYSfilesArray.append(evsysSystemDefFile)
+        if evsysIsNonSecure == False:
+            evsysSystemDefFile.setSecurity("SECURE")
+            evsysSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == False:
+        # callback function to check if peripheral is secure
+        evsysIntSecMode = evsysComponent.createBooleanSymbol("EVSYS_INT_SECURITY_MODE", None)
+        evsysIntSecMode.setVisible(False)
+        evsysIntSecMode.setDependencies(interruptSecurityUpdate, ["core." + evsysComponent.getID().upper() + "_IS_NON_SECURE"])
+
     evsysComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "EVE_SYS_MGR", {"plugin_name": "Event Configurator", "main_html_path": "csp/plugins/configurators/event-configurators/event-configurator/build/index.html"})
 
-    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and evsysSecImplemented.getValue() == True:
         nonSecevsysSym_HeaderFile=evsysComponent.createFileSymbol("EVSYS_HEADER_NON_SEC", None)
         nonSecevsysSym_HeaderFile.setSourcePath("../peripheral/evsys_u2504/templates/trustZone/plib_evsys.h.ftl")
         nonSecevsysSym_HeaderFile.setOutputName("plib_" + evsysInstanceName.getValue().lower() + ".h")

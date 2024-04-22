@@ -56,7 +56,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && EVSYS_SEC_IMPLEMENTED == true>
     <#assign EVSYS_CHANNEL_EN = 0>
     <#list 0..EVSYS_CHANNEL_NUMBER as i>
     <#assign EVSYS_CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
@@ -154,7 +154,7 @@
 </#if>
 /***************************** EVSYS API *******************************/
 void ${EVSYS_INSTANCE_NAME}_Initialize( void );
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && EVSYS_SEC_IMPLEMENTED == true>
     <#list 0..EVSYS_CHANNEL_NUMBER as i>
     <#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
     <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
@@ -181,7 +181,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void );
     </#list>
 </#if>
 
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && EVSYS_SEC_IMPLEMENTED == true>
 <#if INTERRUPT_ACTIVE>
 <#list 0..NUM_SYNC_CHANNELS as i>
     <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >

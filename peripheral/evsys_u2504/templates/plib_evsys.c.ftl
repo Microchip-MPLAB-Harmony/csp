@@ -43,13 +43,8 @@
 #include "interrupts.h"
 </#if>
 
-<#assign EVSYS_REG_NAME = EVSYS_INSTANCE_NAME>
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-    <#assign EVSYS_REG_NAME = EVSYS_INSTANCE_NAME + "_SEC">
-</#if>
 
-
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && EVSYS_SEC_IMPLEMENTED == true>
 <#if INTERRUPT_ACTIVE>
 <#assign CONFIGURED_SYNC_CHANNEL = 0>
     <#list 0..NUM_SYNC_CHANNELS as i>
@@ -102,7 +97,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     </#if>
     </#if>
 </#list>
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && EVSYS_SEC_IMPLEMENTED == true>
     <#if EVSYS_NONSEC_USER0 != '0'>
 
     <#if EVSYS_NONSEC_USER_REG == true>
@@ -150,14 +145,14 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     </#if>
     </#if>
 </#list>
-    <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+    <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && EVSYS_SEC_IMPLEMENTED == true>
     <#if EVSYS_NONSEC != "0">
     ${EVSYS_REG_NAME}_REGS->EVSYS_NONSECCHAN = 0x${EVSYS_NONSEC};
     </#if>
     </#if>
 }
 
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && EVSYS_SEC_IMPLEMENTED == true>
     <#list 0..EVSYS_CHANNEL_NUMBER as i>
     <#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
     <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
@@ -215,7 +210,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 </#if>
 
 <#if INTERRUPT_ACTIVE>
-    <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+    <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && EVSYS_SEC_IMPLEMENTED == true>
         <#list 0..NUM_SYNC_CHANNELS as i>
             <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
             <#if .vars[EVSYS_NONSEC]?has_content>
@@ -258,7 +253,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
         <#lt>   evsys[channel].context = context;
         <#lt>}
     </#if>
-    <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+    <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && EVSYS_SEC_IMPLEMENTED == true>
         <#list 0..NUM_SYNC_CHANNELS as x>
             <#assign INTERRUPT_MODE = "EVSYS_INTERRUPT_MODE" + x>
             <#if .vars[INTERRUPT_MODE]??>
