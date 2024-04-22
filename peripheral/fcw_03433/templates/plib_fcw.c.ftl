@@ -184,6 +184,12 @@ bool ${FCW_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t 
 {
     /* Add this as per the misra rule 11.6 */
     uint32_t *xaddress = (uint32_t *)address;
+<#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >
+    if (DATA_CACHE_IS_ENABLED() != 0U)
+    {
+        DCACHE_INVALIDATE_BY_ADDR(xaddress, (int32_t)length);
+    }
+</#if>
     (void) memcpy(data, xaddress, length);
 
     return true;
