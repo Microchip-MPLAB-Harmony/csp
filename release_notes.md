@@ -3,6 +3,18 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.18.5
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Fixed peripheral security attributes and FUSEs for PIC32CK-SG devices
+- Fixed AC, EVSYS and DMAC PLIB build issues for PIC32CK-SG devices
+- Fixed FCW and FCR read routine by adding cache invalidate operation
+
 ## CSP Release v3.18.4
 
 ### New Features
