@@ -210,6 +210,20 @@ def instantiateComponent(nvmComponent):
     nvmSym_MemoryEraseComment.setLabel("*** Should be equal to Page Erase Size ***")
     nvmSym_MemoryEraseComment.setDependencies(nvmSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
 
+    product_faimily = Database.getSymbolValue("core", "PRODUCT_FAMILY")
+
+    if "PIC32C" in product_faimily:
+        nvmFlashWriteWordSz = nvmComponent.createStringSymbol("FLASH_WRITE_WORD_SIZE", None)
+        nvmFlashWriteWordSz.setVisible(False)
+        nvmFlashWriteWordSz.setReadOnly(True)
+
+        if product_faimily == "PIC32CX_BZ6":
+            nvmFlashWriteWordSz.setDefaultValue("64_BITS")
+        elif product_faimily == "PIC32CX_BZ2" or product_faimily == "PIC32CX_BZ3":
+            nvmFlashWriteWordSz.setDefaultValue("32_BITS")
+
+
+
     ################# Interrupt Settings ###########################
 
     # Get register names, mask values, bit shifts based on vector number

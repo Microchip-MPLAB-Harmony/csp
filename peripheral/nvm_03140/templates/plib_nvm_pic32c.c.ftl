@@ -68,7 +68,11 @@ typedef enum
     PROGRAM_ERASE_OPERATION                 = 0x7,
     PAGE_ERASE_OPERATION                    = 0x4,
     ROW_PROGRAM_OPERATION                   = 0x3,
+<#if FLASH_WRITE_WORD_SIZE == "32_BITS">
     QUAD_WORD_PROGRAM_OPERATION             = 0x2,
+<#else>
+    QUAD_DOUBLE_WORD_PROGRAM_OPERATION      = 0x2,
+</#if>
     WORD_PROGRAM_OPERATION                  = 0x1,
     NO_OPERATION                            = 0x0,
 } NVM_OPERATION_MODE;
@@ -189,6 +193,7 @@ bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t 
     return true;
 }
 
+<#if FLASH_WRITE_WORD_SIZE == "32_BITS">
 bool ${NVM_INSTANCE_NAME}_WordWrite( uint32_t data, uint32_t address )
 {
    NVM_REGS->NVM_NVMDATA0 = data;
@@ -213,6 +218,43 @@ bool ${NVM_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address )
 
    return true;
 }
+<#else>
+bool ${NVM_INSTANCE_NAME}_SingleDoubleWordWrite( uint32_t *data, uint32_t address )
+{
+   NVM_REGS->NVM_NVMDATA0 = *data;
+   data++;
+   NVM_REGS->NVM_NVMDATA1 = *data;
+   data++;
+
+   ${NVM_INSTANCE_NAME}_StartOperationAtAddress( address,  WORD_PROGRAM_OPERATION);
+
+   return true;
+}
+
+bool ${NVM_INSTANCE_NAME}_QuadDoubleWordWrite( uint32_t *data, uint32_t address )
+{
+   NVM_REGS->NVM_NVMDATA0 = *data;
+   data++;
+   NVM_REGS->NVM_NVMDATA1 = *data;
+   data++;
+   NVM_REGS->NVM_NVMDATA2 = *data;
+   data++;
+   NVM_REGS->NVM_NVMDATA3 = *data;
+   data++;
+   NVM_REGS->NVM_NVMDATA4 = *data;
+   data++;
+   NVM_REGS->NVM_NVMDATA5 = *data;
+   data++;
+   NVM_REGS->NVM_NVMDATA6 = *data;
+   data++;
+   NVM_REGS->NVM_NVMDATA7 = *data;
+   data++;
+
+   ${NVM_INSTANCE_NAME}_StartOperationAtAddress( address,  QUAD_DOUBLE_WORD_PROGRAM_OPERATION);
+
+   return true;
+}
+</#if>
 
 bool ${NVM_INSTANCE_NAME}_RowWrite( uint32_t *data, uint32_t address )
 {
