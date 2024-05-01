@@ -136,6 +136,8 @@ typedef struct
     size_t                  rxProcessedSize;
     USART_CALLBACK          rxCallback;
     uintptr_t               rxContext;
+    USART_CALLBACK          rxTimeoutCallback;
+    uintptr_t               rxTimeoutContext;
     bool                    rxBusyStatus;
 
     USART_ERROR             errorStatus;
