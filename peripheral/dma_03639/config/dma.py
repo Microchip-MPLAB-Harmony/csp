@@ -83,6 +83,72 @@ triggerSettings = {
 ################################################################################
 #### Business Logic ####
 ################################################################################
+global dmaConfiguration
+def dmaConfiguration(dmaConfig):
+    #Example usage
+    #{"channel_number": 0, "trigger_source": "SPI", "trigger_action": "cell_xfer", "source_addr_mode": "increment", "dest_addr_mode": "fixed", "bytes_xfer_on_trigger": 20, "interface_width": 4}
+    #The above is an example where data is transferred from RAM buffer to SPI FIFO. The FIFO can hold 5 words, where each word is 32-bits. That is, the FIFO can
+    #hold 20 bytes of data. But the SPI transfer width is 4 bytes. Hence, DMA should read 20 bytes from RAM, and write in chunks of 4 bytes into the FIFO. #Thereby, DMA will write in chunks of 4 bytes, 5 times at which point the FIFO will be full.
+
+    ch = ""
+    cell_size = 0
+    interface_width = 0
+    component = Database.getComponentByID("core")
+
+    if "channel_number" in dmaConfig:
+        ch = str(dmaConfig["channel_number"])
+        sym = "DMA_CHXSIZ_CSZ_CH_" + ch
+        cell_size = component.getSymbolByID(sym).getValue()
+    if "trigger_source" in dmaConfig:
+        sym = "DMA_CHCTRLB_TRIG_CH_" + ch
+        component.getSymbolByID(sym).setValue(dmaConfig["trigger_source"])
+    if "trigger_action" in dmaConfig:
+        sym = "DMA_CHCTRLB_CASTEN_CH_" + ch
+        action = dmaConfig["trigger_action"]
+        if action == "cell_xfer":
+            component.getSymbolByID(sym).setSelectedKey("CELL_TRANSFER")
+        elif action == "block_xfer":
+            component.getSymbolByID(sym).setSelectedKey("BLOCK_TRANSFER")
+    if "bytes_xfer_on_trigger" in dmaConfig:
+        sym = "DMA_CHXSIZ_CSZ_CH_" + ch
+        cell_size = dmaConfig["bytes_xfer_on_trigger"]
+        component.getSymbolByID(sym).setValue(cell_size)
+    if "interface_width" in dmaConfig:
+        interface_width = dmaConfig["interface_width"]
+    if "source_addr_mode" in dmaConfig:
+        sym = "DMA_CHCTRLB_RAS_CH_" + ch
+        addr_mode = dmaConfig["source_addr_mode"]
+        if addr_mode == "increment":
+            if interface_width == 1:
+                component.getSymbolByID(sym).setSelectedKey("BYTE_ADDR_INCR")
+            elif interface_width == 2:
+                component.getSymbolByID(sym).setSelectedKey("HALF_WORD_ADDR_INCR")
+            else:
+                component.getSymbolByID(sym).setSelectedKey("AUTO_ADDR_INCR")
+        if addr_mode == "fixed":
+            if interface_width == 1:
+                component.getSymbolByID(sym).setSelectedKey("FIXED_BYTE_ADDR_INCR")
+            elif interface_width == 2:
+                component.getSymbolByID(sym).setSelectedKey("FIXED_HALF_WORD_ADDR_INCR")
+            else:
+                component.getSymbolByID(sym).setSelectedKey("FIXED_WORD_ADDR_INCR")
+    if "dest_addr_mode" in dmaConfig:
+        sym = "DMA_CHCTRLB_WAS_CH_" + ch
+        addr_mode = dmaConfig["dest_addr_mode"]
+        if addr_mode == "increment":
+            if interface_width == 1:
+                component.getSymbolByID(sym).setSelectedKey("BYTE_ADDR_INCR")
+            elif interface_width == 2:
+                component.getSymbolByID(sym).setSelectedKey("HALF_WORD_ADDR_INCR")
+            else:
+                component.getSymbolByID(sym).setSelectedKey("AUTO_ADDR_INCR")
+        if addr_mode == "fixed":
+            if interface_width == 1:
+                component.getSymbolByID(sym).setSelectedKey("FIXED_BYTE_ADDR_INCR")
+            elif interface_width == 2:
+                component.getSymbolByID(sym).setSelectedKey("FIXED_HALF_WORD_ADDR_INCR")
+            else:
+                component.getSymbolByID(sym).setSelectedKey("FIXED_WORD_ADDR_INCR")
 
 #-------------------------------------------------------------------------------------------------------------------------#
 def dmacfileUpdate(symbol, event):
@@ -108,7 +174,7 @@ def dmacfileUpdate(symbol, event):
                 Database.setSymbolValue("core", vector, True)
         else:
             Database.setSymbolValue("core", dmacInterruptVectorSecurity, True)
-            
+
 def getDMAVectorName(priority):
     global dmaVectorNameList
 
@@ -218,7 +284,7 @@ def DMAInterruptConfig(coreComponent,dmaMenu):
     dmaSym_IntEnComment = coreComponent.createCommentSymbol("DMA_INTERRUPT_ENABLE_COMMENT", dmaMenu)
     dmaSym_IntEnComment.setVisible(False)
     dmaSym_IntEnComment.setLabel("Warning!!! DMA Interrupt is Disabled in Interrupt Manager")
-    dmaSym_IntEnComment.setDependencies(updateDMAInterruptWarringStatus, InterruptVectorUpdate)  
+    dmaSym_IntEnComment.setDependencies(updateDMAInterruptWarringStatus, InterruptVectorUpdate)
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         dmacIsNonSecure = Database.getSymbolValue("core", dmaInstanceName.getValue() + "_IS_NON_SECURE")
@@ -268,7 +334,8 @@ def onChannelPriorityChange(symbol, event):
     global updateDMAInterrupt
     localComponent = symbol.getComponent()
 
-    priority_level = localComponent.getSymbolByID(event["id"]).getSelectedKey().split("_")[1]
+    priority_level = int (localComponent.getSymbolByID(event["id"]).getSelectedKey().split("_")[1])
+    priority_level = str(priority_level - 1)
     symbol.setValue(dmaInstanceName.getValue() + "_PRI" + priority_level + "_IRQn")
 
     # Make sure the DMA interrupt for the new priority level is enabled
@@ -756,7 +823,7 @@ for channelID in range(0, channelCount):
     # DMA channel interrupt number - needed by core drivers to disable during critical section
     DMA_ChannelX_VectorEnum = coreComponent.createStringSymbol(dmaInstanceName.getValue() + "_CHANNEL" + str(channelID) + "_INT_SRC", dmaChannelEnable)
     DMA_ChannelX_VectorEnum.setLabel("DMA Channel X interrupt Vector Number Enum")
-    DMA_ChannelX_VectorEnum.setDefaultValue(dmaInstanceName.getValue() + "_PRI" + CHCTRLB_PRI_Config.getSelectedKey().split("_")[1] + "_IRQn")
+    DMA_ChannelX_VectorEnum.setDefaultValue(dmaInstanceName.getValue() + "_PRI" + str(int (CHCTRLB_PRI_Config.getSelectedKey().split("_")[1]) - 1) + "_IRQn")
     DMA_ChannelX_VectorEnum.setDependencies(onChannelPriorityChange, ["DMA_CHCTRLB_PRI_CH_" + str(channelID)])
     DMA_ChannelX_VectorEnum.setVisible(False)
 
@@ -898,7 +965,7 @@ if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_E
     dmacDummyFile = coreComponent.createBooleanSymbol("DMA_SECURe_FILE", None)
     dmacDummyFile.setVisible(False)
     dmacDummyFile.setDependencies(dmacfileUpdate, ["core." + dmaInstanceName.getValue() + "_IS_NON_SECURE"])
-    
+
     DMACfilesArray.append(dmaHeaderFile)
     DMACfilesArray.append(dmaSourceFile)
     DMACfilesArray.append(dmaSystemInitFile)

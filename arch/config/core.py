@@ -21,6 +21,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 global ECIA_EN_SET_RegUpdate
+global dmaConfiguration
 global BootFlashDict
 global isBFMPresent
 
@@ -173,6 +174,8 @@ def handleMessage(messageID, args):
             Database.setSymbolValue("core", "wdtENABLE", args["isEnabled"])
     elif (messageID == "APP_START_ADDRESS"):
         Database.setSymbolValue("core", "APP_START_ADDRESS", args["start_address"])
+    elif (messageID == "DMA_CONFIGURATION"):
+        dmaConfiguration(args)
 
     return symbolDict
 
@@ -1218,7 +1221,7 @@ def compilerUpdate( symbol, event ):
             armLibCSourceFile.setEnabled( False )
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             if secarmLibCSourceFile != None:
-                secarmLibCSourceFile.setEnabled( False )
+                secarmLibCSourceFile.setEnabled( False )                    
 
     for file in compilerSpecifics:
         updatePath( file, compilerSelected.lower() )
