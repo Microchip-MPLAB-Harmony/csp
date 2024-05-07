@@ -1,0 +1,181 @@
+.mainBlockDiagram {
+    position: absolute;
+    width: 1100px;
+    left: 0;
+    top: 0;
+    height: 700px;
+    background-image: none;
+    background-color: transparent
+    }
+.runStandby {
+    position: absolute;
+    left: 581px;
+    top: 185px
+    }
+.demandControl {
+    position: absolute;
+    left: 595px;
+    top: 227px
+    }
+.coversionTrigger0 {
+    position: absolute;
+    top: 137px;
+    left: 296px
+    }
+.coversionTrigger1 {
+    position: absolute;
+    top: 169px;
+    left: 296px
+    }
+.coversionTrigger2 {
+    position: absolute;
+    top: 205px;
+    left: 296px
+    }
+.sequence {
+    position: absolute;
+    width: 100px;
+    height: 35px;
+    left: 341px;
+    top: 104px
+    }
+.sequencerCheck {
+    position: absolute;
+    left: 418px;
+    top: 184px
+    }
+.prescaler {
+    position: absolute;
+    height: 24px;
+    width: 200px;
+    left: 690px;
+    top: 225px
+    }
+.leftAlignResult {
+    position: absolute;
+    left: 865px;
+    top: 290px
+    }
+.resultInterrupt {
+    position: absolute;
+    top: 300px;
+    left: 936px
+    }
+.resultEvent {
+    position: absolute;
+    top: 409px;
+    left: 937px
+    }
+.winmonInterrupt {
+    position: absolute;
+    top: 486px;
+    left: 737px
+    }
+.win {
+    position: absolute;
+    top: 564px;
+    left: 739px
+    }
+.comparisonMode {
+    position: absolute;
+    width: 170px;
+    height: 25px;
+    left: 532px;
+    top: 567px
+    }
+.vhi {
+    position: absolute;
+    width: 65px;
+    left: 545px;
+    height: 25px;
+    top: 403px
+    }
+.vlo {
+    position: absolute;
+    width: 65px;
+    height: 25px;
+    left: 544px;
+    top: 490px
+    }
+.reference {
+    position: absolute;
+    height: 25px;
+    width: 145px;
+    top: 560px;
+    left: 341px
+    }
+.clockCycle {
+    position: absolute;
+    width: 60px;
+    height: 25px;
+    left: 270px;
+    top: 561px
+    }
+.channelConfigNegative {
+    position: absolute;
+    height: 25px;
+    width: 135px;
+    left: 130px;
+    top: 561px
+    }
+.conversion {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 295px;
+    top: 526px
+    }
+.channelConfigPositve {
+    position: absolute;
+    height: 24px;
+    width: 135px;
+    top: 366px;
+    left: 132px
+    }
+.resultResolution {
+    position: absolute;
+    height: 24px;
+    width: 170px;
+    left: 202px;
+    top: 335px
+    }
+.flushEvent {
+    position: absolute;
+    height: 25px;
+    width: 160px;
+    left: 116px;
+    top: 287px
+    }
+.startEvent {
+    position: absolute;
+    height: 25px;
+    width: 160px;
+    left: 110px;
+    top: 100px
+    }
+.preScalarValue {
+    position: absolute;
+    height: 20px;
+    background-image: none;
+    background-color: transparent;
+    font-size: 20px;
+    font-family: calibri;
+    width: 30px;
+    color: black;
+    left: 788px;
+    top: 156px
+    }
+.enableSlaveCheckBox {
+    position: absolute;
+    left: 860px;
+    top: 82px
+    }
+.enableSlaveLabel {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    font-size: 16px;
+    font-weight: 400;
+    left: 890px;
+    top: 82px
+    }

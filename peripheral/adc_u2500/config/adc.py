@@ -1028,4 +1028,12 @@ def instantiateComponent(adcComponent):
     adcSym_SystemDefFile.setMarkup(True)
 
     # load ADC manager
-    adcComponent.addPlugin("../peripheral/adc_u2500/plugin/adc_u2500.jar")
+    adcComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "ADC_UI_MANAGER_ID_adc_u2500",
+        {
+            "plugin_name": "ADC Configuration" + "-" +adcComponent.getID(),
+            "main_html_path": "csp/plugins/configurators/adc-configurators/adc_u2500/build/index.html",
+            "componentId": adcComponent.getID()
+        }
+    )
