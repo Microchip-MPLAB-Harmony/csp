@@ -1,0 +1,161 @@
+.mainBlockDiagram {
+    position: absolute;
+    width: 1100px;
+    height: 700px;
+    left: 0;
+    top: 0
+    }
+.componentList {
+    position: absolute;
+    height: 200px;
+    width: 180px;
+    left: 1011px;
+    top: 174px
+    }
+.channelEnable {
+    position: absolute;
+    left: 978px;
+    top: 183px
+    }
+.enableLabel {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 870px;
+    top: 183px;
+    text-align: right
+    }
+.channelInterrupt {
+    position: absolute;
+    top: 619px;
+    left: 399px
+    }
+.eventOutput {
+    position: absolute;
+    top: 559px;
+    left: 496px
+    }
+.eventInput {
+    position: absolute;
+    top: 627px;
+    left: 583px
+    }
+.endOfScanInterrupt {
+    position: absolute;
+    top: 554px;
+    left: 684px
+    }
+.adcResult {
+    position: absolute;
+    top: 628px;
+    left: 762px
+    }
+.triggerSource {
+    position: absolute;
+    width: 180px;
+    left: 211px;
+    top: 552px
+    }
+.resolution {
+    position: absolute;
+    left: 660px;
+    width: 180px;
+    top: 192px
+    }
+.globalTriggerSource {
+    position: absolute;
+    top: 612px;
+    width: 180px;
+    left: 887px
+    }
+.clockSource {
+    position: absolute;
+    height: 20px;
+    top: 279px;
+    text-align: right;
+    width: 300px;
+    left: 333px
+    }
+.tad {
+    position: absolute;
+    top: 299px;
+    height: 20px;
+    text-align: right;
+    width: 300px;
+    left: 334px
+    }
+.actualRate {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    top: 350px;
+    left: 691px
+    }
+.VREFRDY {
+    position: absolute;
+    top: 194px;
+    left: 168px
+    }
+.VREFUPD {
+    position: absolute;
+    top: 194px;
+    left: 306px
+    }
+.VREFSelection {
+    position: absolute;
+    width: 200px;
+    left: 91px;
+    top: 119px
+    }
+.clockDivider {
+    position: absolute;
+    width: 70px;
+    top: 84px;
+    left: 341px
+    }
+.controlClock {
+    position: absolute;
+    height: 20px;
+    left: 421px;
+    width: 300px;
+    top: 110px
+    }
+.periodTQ {
+    position: absolute;
+    height: 20px;
+    width: 300px;
+    left: 421px;
+    top: 136px
+    }
+.clockFrequecncy {
+    position: absolute;
+    height: 20px;
+    width: 200px;
+    text-align: right;
+    top: 35px;
+    left: 78px
+    }
+.snLabel {
+    position: absolute;
+    width: 100px;
+    left: 93px;
+    top: 516px
+    }
+.channelConfigButton {
+    position: absolute;
+    width: 200px;
+    top: 470px;
+    left: 80px
+    }
+.clkDiv {
+    position: absolute;
+    left: 467.111px;
+    top: 321.333px;
+    width: 110px
+    }
+.sampleCount {
+    position: absolute;
+    left: 465.778px;
+    top: 385.333px;
+    width: 110px
+    }

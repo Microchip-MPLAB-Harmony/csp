@@ -1,0 +1,18 @@
+.summary-tab-container {
+  display: grid;
+  grid-template-columns:  1fr;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.summary-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-size: 14px;
+  padding: 5px;
+  column-gap: 5px;
+}
+
+.summary-options:nth-child(even) {
+  background-color: rgb(245, 245, 245);
+}

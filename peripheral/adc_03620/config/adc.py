@@ -1896,8 +1896,6 @@ def codeGenerationConfig (adcComponent, Module):
 
         adcSystemDefFile.setDependencies(fileUpdate, ["core." + adcComponent.getID().upper() + "_IS_NON_SECURE"])
 
-    adcComponent.addPlugin("../peripheral/adc_03620/plugin/adc_03620.jar")
-
 def handleMessage(messageID, args):
     retDict = {}
     if (messageID == "ADC_CONFIG_HW_IO"):
@@ -1946,6 +1944,7 @@ def handleMessage(messageID, args):
 
     return retDict
 
+
 def instantiateComponent(adcComponent):
     global nSARCore
     global nSARChannel
@@ -1988,3 +1987,12 @@ def instantiateComponent(adcComponent):
     enableCoreNSymbols(adcInstanceName.getComponent(), defaultCore, True)
 
     codeGenerationConfig(adcComponent, Module)
+
+    adcComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+        "ADCHS_UI_MANAGER_ID_adc_03620",
+        {
+            "plugin_name": "ADC Configuration",
+            "main_html_path": "csp/plugins/configurators/adc-configurators/adc_03620/build/index.html",
+            "componentId": adcComponent.getID(),
+        }
+    )

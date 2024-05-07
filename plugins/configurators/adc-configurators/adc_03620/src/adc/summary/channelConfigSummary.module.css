@@ -1,0 +1,23 @@
+.config-options {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  /* .config-item {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    border: 1px solid rgb(207, 204, 204);
+    border-radius: 4px;
+    padding: 10px;
+    background-color: rgb(252, 249, 249);
+  } */
+
+  .config-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    font-size: 12px;
+    padding: 2px;
+    column-gap: 1px;
+  }

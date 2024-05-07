@@ -8,7 +8,8 @@
     "configurators/event-configurators/*",
     "configurators/mpu-configurators/*",
     "configurators/memory-configurators/*",
-	  "configurators/trustzone_configurators/*"
+	  "configurators/trustzone_configurators/*",
+    "configurators/adc-configurators/*"
   ],
   "scripts": {
     "build": "lerna run build",

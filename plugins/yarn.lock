@@ -2269,27 +2269,6 @@
     npmlog "^6.0.2"
     write-file-atomic "^4.0.1"
 
-"@mplab_harmony/harmony-plugin-ui@^1.0.0":
-  version "1.0.0"
-  resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/@mplab_harmony/harmony-plugin-ui/-/@mplab_harmony/harmony-plugin-ui-1.0.0.tgz#83dc640212f3c72583ec1efa868533addbae7562"
-  integrity sha512-t69PaqQqIM4mluL6WUdOWc8Q1X66MpZsGEmwq9Q7vIbGPYtKISJFEtfkL2NDNLrTdg8YOq7dVUeqe5oIk8WxAw==
-  dependencies:
-    "@mplab_harmony/harmony-plugin-core-service" "^1.0.0"
-    "@testing-library/jest-dom" "^5.14.1"
-    "@testing-library/react" "^13.0.0"
-    "@testing-library/user-event" "^13.2.1"
-    "@types/jest" "^27.0.1"
-    "@types/node" "^16.7.13"
-    "@types/react" "^18.0.0"
-    "@types/react-dom" "^18.0.0"
-    primeflex "^3.2.1"
-    primeicons "^5.0.0"
-    primereact "^8.3.0"
-    react "^18.2.0"
-    react-dom "^18.2.0"
-    react-transition-group "^4.4.2"
-    typescript "^4.7.4"
-
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
   resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz#dbf733a965ca47b1973177dc0bb6c889edcfb129"
@@ -3026,6 +3005,13 @@
     jest-matcher-utils "^27.0.0"
     pretty-format "^27.0.0"
 
+"@types/jquery@3.5.29":
+  version "3.5.29"
+  resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/@types/jquery/-/jquery-3.5.29.tgz#3c06a1f519cd5fc3a7a108971436c00685b5dcea"
+  integrity sha512-oXQQC9X9MOPRrMhPHHOsXqeQDnWeCDT3PelUIg/Oy8FAbzSZtFHRjc7IpbfFVmpLtJ+UOoywpRsuO5Jxjybyeg==
+  dependencies:
+    "@types/sizzle" "*"
+
 "@types/json-schema@*", "@types/json-schema@^7.0.4", "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.8", "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
@@ -3035,11 +3021,6 @@
   version "0.0.29"
   resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
-
-"@types/lodash@^4.14.182":
-  version "4.14.191"
-  resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/@types/lodash/-/lodash-4.14.191.tgz#09511e7f7cba275acd8b419ddac8da9a6a79e2fa"
-  integrity sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==
 
 "@types/mime@*":
   version "3.0.1"
@@ -3184,6 +3165,11 @@
     "@types/mime" "*"
     "@types/node" "*"
 
+"@types/sizzle@*":
+  version "2.3.8"
+  resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/@types/sizzle/-/sizzle-2.3.8.tgz#518609aefb797da19bf222feb199e8f653ff7627"
+  integrity sha512-0vWLNK2D5MT9dg0iOo8GlKguPAU02QjmZitPEsXRuJXU/OGIOt9vT9Fc26wtYuavLxtO45v9PGleoL9Z0k1LHg==
+
 "@types/sockjs@^0.3.33":
   version "0.3.33"
   resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/@types/sockjs/-/sockjs-0.3.33.tgz#570d3a0b99ac995360e3136fd6045113b1bd236f"
@@ -3207,6 +3193,11 @@
   version "2.0.2"
   resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/@types/trusted-types/-/trusted-types-2.0.2.tgz#fc25ad9943bcac11cceb8168db4f275e0e72e756"
   integrity sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==
+
+"@types/uuid@^9.0.6":
+  version "9.0.8"
+  resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/@types/uuid/-/uuid-9.0.8.tgz#7545ba4fc3c003d6c756f651f3bf163d8f0f29ba"
+  integrity sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==
 
 "@types/ws@^8.5.1":
   version "8.5.3"
@@ -5432,6 +5423,11 @@ dom-serializer@^1.0.1:
     domelementtype "^2.0.1"
     domhandler "^4.2.0"
     entities "^2.0.0"
+
+dom-to-image-more@3.2.0:
+  version "3.2.0"
+  resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/dom-to-image-more/-/dom-to-image-more-3.2.0.tgz#8bc4e0299bb2da9d27d77b89910a4cfd65de49be"
+  integrity sha512-2bGQTB6m17MBseVhIjShwZqqqCyVS9GgTykWqvVXMqr56fSgHhXnEvZfZkaSuHJYW3ICZQ3sZwAu+UY5tfsF9Q==
 
 domelementtype@1:
   version "1.3.1"
@@ -8122,6 +8118,11 @@ jest@^27.4.3:
     import-local "^3.0.2"
     jest-cli "^27.5.1"
 
+jquery@3.7.1:
+  version "3.7.1"
+  resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/jquery/-/jquery-3.7.1.tgz#083ef98927c9a6a74d05a6af02806566d16274de"
+  integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==
+
 js-sdsl@^4.1.4:
   version "4.2.0"
   resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/js-sdsl/-/js-sdsl-4.2.0.tgz#278e98b7bea589b8baaf048c20aeb19eb7ad09d0"
@@ -10751,11 +10752,6 @@ redent@^3.0.0:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
 
-reflect-metadata@^0.1.13:
-  version "0.1.13"
-  resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
-  integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
-
 regenerate-unicode-properties@^10.1.0:
   version "10.1.0"
   resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/regenerate-unicode-properties/-/regenerate-unicode-properties-10.1.0.tgz#7c3192cab6dd24e21cb4461e5ddd7dd24fa8374c"
@@ -12183,11 +12179,6 @@ use-between@^1.3.4:
   resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/use-between/-/use-between-1.3.4.tgz#e1a4487458689d95f0921fab431f3acb989c39f2"
   integrity sha512-jtLCBVeytJUjAc9+/r/0SREuNLyn3KO9VjvSi7eozeThPfnbOedKuH9qep/C+jgfJ9Ohx4bf714ri78Hev9BGA==
 
-use-force-update@^1.0.8:
-  version "1.0.11"
-  resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/use-force-update/-/use-force-update-1.0.11.tgz#9483e9cf3e3cfba0f486cce141b66426bcb27619"
-  integrity sha512-h4SICYgTJHon8w9dFIqdqR1Vrzdgl4YaRfRwhmAh01kBGljzTICanyfaFU8C4etuEfRdYpE+04XX2ZrEhOWKXQ==
-
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
@@ -12222,6 +12213,11 @@ uuid@^8.3.2:
   version "8.3.2"
   resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+uuid@^9.0.1:
+  version "9.0.1"
+  resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 v8-compile-cache@2.3.0:
   version "2.3.0"
@@ -12321,7 +12317,7 @@ wcwidth@^1.0.0, wcwidth@^1.0.1:
   dependencies:
     defaults "^1.0.3"
 
-web-vitals@^2.1.0, web-vitals@^2.1.2:
+web-vitals@^2.1.2:
   version "2.1.4"
   resolved "https://artifacts.microchip.com:443/artifactory/api/npm/npm/web-vitals/-/web-vitals-2.1.4.tgz#76563175a475a5e835264d373704f9dde718290c"
   integrity sha512-sVWcwhU5mX6crfI5Vd2dC4qchyTqxV8URinzt25XqVh+bHEPGH4C3NPrNionCP7Obx59wrYEbNlw4Z8sjALzZg==
