@@ -2414,4 +2414,13 @@ def instantiateComponent(adchsComponent):
     adchsSystemDefFile.setSourcePath("../peripheral/adchs_02508/templates/system/definitions.h.ftl")
     adchsSystemDefFile.setMarkup(True)
 
-    adchsComponent.addPlugin("../peripheral/adchs_02508/plugin/adchs_02508.jar")
+    
+    adchsComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "ADCHS_UI_MANAGER_ID_adchs_02508",
+        {
+            "plugin_name": "ADCHS Configuration",
+            "main_html_path": "csp/plugins/configurators/adc-configurators/adchs_02508/build/index.html",
+            "componentId": adchsComponent.getID(),
+        }
+    )

@@ -1,0 +1,362 @@
+{
+  "device": "SAMRH707",
+  "valueGroups": [
+    {
+      "id": "ADC_0_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_1_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_2_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_3_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_4_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_5_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_6_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_7_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_8_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_9_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_10_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_11_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_12_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_13_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_14_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_15_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    },
+    {
+      "id": "ADC_16_CGR_GAIN",
+      "values": [
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 0.5 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 0.5"
+        },
+        {
+          "caption": "Single-ended gain = 1 (ADC_COR.DIFFx = 0), differential gain = 1 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 1, DIFF gain = 1"
+        },
+        {
+          "caption": "Single-ended gain = 2 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 2, DIFF gain = 2"
+        },
+        {
+          "caption": "Single-ended gain = 4 (ADC_COR.DIFFx = 0), differential gain = 2 (ADC_COR.DIFFx = 1)",
+          "name": "SE gain = 4, DIFF gain = 2"
+        }
+      ]
+    }
+  ]
+}

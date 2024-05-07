@@ -1,0 +1,360 @@
+.mainBlockDiagram {
+    position: absolute;
+    width: 1100px;
+    height: 700px;
+    left: 3px;
+    top: -1px
+    }
+.clockSource0 {
+    position: absolute;
+    top: 42px;
+    left: 268px
+    }
+.clockSource1 {
+    position: absolute;
+    top: 83px;
+    left: 268px
+    }
+.clockSource2 {
+    position: absolute;
+    top: 122px;
+    left: 267px
+    }
+.clockSource3 {
+    position: absolute;
+    top: 159px;
+    left: 268px
+    }
+.clkSrcLable0 {
+    position: absolute;
+    height: 20px;
+    text-align: right;
+    top: 38px;
+    width: 180px;
+    left: 15px
+    }
+.clkSrcLable1 {
+    position: absolute;
+    height: 20px;
+    text-align: right;
+    top: 76px;
+    width: 180px;
+    left: 15px
+    }
+.clkSrcLable2 {
+    position: absolute;
+    height: 20px;
+    text-align: right;
+    top: 119px;
+    width: 180px;
+    left: 14px
+    }
+.clkSrcLable3 {
+    position: absolute;
+    height: 20px;
+    text-align: right;
+    top: 152px;
+    width: 180px;
+    left: 15px
+    }
+.controlClockDivider {
+    position: absolute;
+    left: 330px;
+    top: 152px;
+    width: 110px
+    }
+.labelTCLK {
+    position: absolute;
+    height: 20px;
+    left: 313px;
+    top: 55px;
+    width: 150px
+    }
+.labelTQ {
+    position: absolute;
+    height: 20px;
+    top: 183px;
+    width: 150px;
+    left: 355px
+    }
+.clkFreq {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 311px;
+    top: 30px
+    }
+.referenceVoltage0 {
+    position: absolute;
+    top: 32px;
+    left: 661px
+    }
+.referenceVoltage1 {
+    position: absolute;
+    left: 662px;
+    top: 81px
+    }
+.referenceVoltage2 {
+    position: absolute;
+    left: 661px;
+    top: 144px
+    }
+.referenceVoltage3 {
+    position: absolute;
+    left: 662px;
+    top: 188px
+    }
+.avdd {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 500px;
+    text-align: right;
+    top: 31px
+    }
+.vrefh {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 499px;
+    text-align: right;
+    top: 80px
+    }
+.avss {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 499px;
+    text-align: right;
+    top: 145px
+    }
+.vrefl {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 499px;
+    text-align: right;
+    top: 188px
+    }
+.componentList {
+    position: absolute;
+    height: 200px;
+    left: 1016px;
+    top: 225px;
+    width: 160px
+    }
+.resolution {
+    position: absolute;
+    width: 150px;
+    left: 608px;
+    top: 251px
+    }
+.pin0 {
+    position: absolute;
+    top: 262px;
+    left: 211px
+    }
+.pin1 {
+    position: absolute;
+    top: 298px;
+    left: 211px
+    }
+.pinVr0 {
+    position: absolute;
+    left: 209px;
+    top: 468px
+    }
+.pinVr1 {
+    position: absolute;
+    top: 516px;
+    left: 210px
+    }
+.pinLabel0 {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 54px;
+    top: 262px;
+    text-align: right
+    }
+.pinLabel1 {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 51px;
+    top: 298px;
+    text-align: right
+    }
+.pinLabelVr0 {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 54px;
+    top: 467px;
+    text-align: right
+    }
+.pinLabelVr1 {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 52px;
+    top: 514px;
+    text-align: right
+    }
+.pinLabel2 {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 54px;
+    top: 334px;
+    text-align: right
+    }
+.pinLabel3 {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 53px;
+    top: 374px;
+    text-align: right
+    }
+.referenceVoltage {
+    position: absolute;
+    width: 200px;
+    left: 567px;
+    top: 115px
+    }
+.conversionRate {
+    position: absolute;
+    border-style: solid;
+    border-width: 1px;
+    padding: 4px;
+    text-align: right;
+    top: 386px;
+    height: 25px;
+    left: 656px;
+    width: 68px;
+    background-color: rgb(213, 232, 212);
+    border-image-source: none;
+    border-image-width: 1;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+    border-color: rgb(130, 179, 102)
+    }
+.tad {
+    position: absolute;
+    height: 20px;
+    top: 336px;
+    width: 200px;
+    left: 447px
+    }
+.adcData {
+    position: absolute;
+    left: 829px;
+    border-style: solid;
+    border-width: 1px;
+    margin: 0;
+    padding: 5px;
+    width: 150px;
+    height: 30px;
+    text-align: center;
+    background-color: rgb(213, 232, 212);
+    border-image-source: none;
+    border-image-width: 1;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+    border-color: rgb(130, 179, 102);
+    top: 385px
+    }
+.channelEnable {
+    position: absolute;
+    top: 248px;
+    left: 953px
+    }
+.signedMode {
+    position: absolute;
+    top: 279px;
+    left: 953px
+    }
+.inputScan {
+    position: absolute;
+    top: 307px;
+    left: 953px
+    }
+.interrupt {
+    position: absolute;
+    top: 334px;
+    left: 953px
+    }
+.signedModeLabel {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    top: 280px;
+    left: 853px
+    }
+.inputScanLabel {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 853px;
+    top: 307px
+    }
+.interruptLabel {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 854px;
+    top: 334px
+    }
+.dedicatedTrigger {
+    position: absolute;
+    width: 300px;
+    left: 335px;
+    top: 575px
+    }
+.sharedTrigger {
+    position: absolute;
+    width: 300px;
+    left: 335px;
+    top: 657px
+    }
+.pin2 {
+    position: absolute;
+    top: 334px;
+    left: 211px
+    }
+.pin3 {
+    position: absolute;
+    top: 368px;
+    left: 211px
+    }
+.channelConfig {
+    position: absolute;
+    left: 117px;
+    top: 416px;
+    width: 180px
+    }
+.scanInterrupt {
+    position: absolute;
+    top: 660px;
+    left: 846px
+    }
+.scanInterruptLabel {
+    position: absolute;
+    height: 20px;
+    top: 662px;
+    width: 150px;
+    left: 697px
+    }
+.clkDiv {
+    position: absolute;
+    left: 463px;
+    top: 366px;
+    width: 80px
+    }
+.sampleCount {
+    position: absolute;
+    left: 461.333px;
+    top: 421.667px;
+    width: 80px
+    }
