@@ -1,0 +1,250 @@
+.mainBlockDiagram {
+    position: absolute;
+    height: 700px;
+    transform-origin: 50% 50%;
+    width: 1100px;
+    top: 0;
+    left: 0
+    }
+.triggerMode0 {
+    position: absolute;
+    left: 339px;
+    top: 93px
+    }
+.triggerMode1 {
+    position: absolute;
+    top: 121px;
+    left: 339px
+    }
+.triggerMode2 {
+    position: absolute;
+    top: 149px;
+    left: 339px
+    }
+.triggerMode3 {
+    position: absolute;
+    top: 180px;
+    left: 339px
+    }
+.triggerMode4 {
+    position: absolute;
+    top: 212px;
+    left: 339px
+    }
+.triggerMode5 {
+    position: absolute;
+    top: 243px;
+    left: 338px
+    }
+.windowComparisonBoolean {
+    position: absolute;
+    left: 836px;
+    top: 313px
+    }
+.interrupt {
+    position: absolute;
+    top: 512px;
+    left: 784px
+    }
+.channelCombo {
+    position: absolute;
+    width: 100px;
+    height: 24px;
+    left: 575px;
+    top: 476px
+    }
+.vhi {
+    position: absolute;
+    width: 70px;
+    height: 25px;
+    top: 418px;
+    left: 577px
+    }
+.vlo {
+    position: absolute;
+    width: 70px;
+    left: 577px;
+    height: 25px;
+    top: 519px
+    }
+.comparisonMode {
+    position: absolute;
+    width: 150px;
+    left: 578px;
+    height: 25px;
+    top: 588px
+    }
+.comparisonType0 {
+    position: absolute;
+    top: 329px;
+    left: 801px
+    }
+.comparisonType1 {
+    position: absolute;
+    top: 363px;
+    left: 801px
+    }
+.triggerSelection {
+    position: absolute;
+    width: 140px;
+    left: 134px;
+    height: 25px;
+    top: 311px
+    }
+.triggerPeriod {
+    position: absolute;
+    height: 25px;
+    left: 131px;
+    top: 126px;
+    width: 70px
+    }
+.triggerPeriodLabel {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 130px;
+    fill: rgb(32, 56, 100);
+    font-family: Calibri;
+    font-size: 1.00001em;
+    top: 156px
+    }
+.sleepMode {
+    position: absolute;
+    left: 629px;
+    top: 116px
+    }
+.enableFifo {
+    position: absolute;
+    top: 167px;
+    left: 649px
+    }
+.fastWakeUp0 {
+    position: absolute;
+    left: 628px;
+    top: 142px
+    }
+.fastWakeUpLabel {
+    position: absolute;
+    height: 20px;
+    left: 559px;
+    width: 70px;
+    top: 144px
+    }
+.fastWakeUpLabel0 {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 650px;
+    top: 144px
+    }
+.fastWakeUp1 {
+    position: absolute;
+    left: 683px;
+    top: 143px
+    }
+.fastWakeUpLabel1 {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 707px;
+    top: 144px
+    }
+.prescalerLabel {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 800px;
+    top: 93px;
+    font-size: large
+    }
+.prescaler {
+    position: absolute;
+    width: 80px;
+    left: 758px;
+    height: 25px;
+    top: 171px
+    }
+.fifoEnableLevelLabel {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    top: 207px;
+    left: 552px
+    }
+.fifoEnableLevel {
+    position: absolute;
+    left: 648px;
+    width: 280px;
+    height: 25px;
+    top: 204px
+    }
+.fifoChunkSizeLabel {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 559px;
+    top: 241px
+    }
+.fifoChunkSize {
+    position: absolute;
+    width: 80px;
+    left: 648px;
+    height: 25px;
+    top: 235px
+    }
+.resultSign {
+    position: absolute;
+    width: 200px;
+    left: 788px;
+    height: 25px;
+    top: 257px
+    }
+.channelSequencerButton {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    left: 386px;
+    top: 87px
+    }
+.isChannelSequencer {
+    position: absolute;
+    top: 165px;
+    left: 467px
+    }
+.resultResolution {
+    position: absolute;
+    width: 200px;
+    left: 305px;
+    height: 25px;
+    top: 386px
+    }
+.conversionTime {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    top: 563px;
+    left: 374px
+    }
+.channelConfigButton {
+    position: absolute;
+    height: 50px;
+    width: 120px;
+    left: 230px;
+    top: 542px
+    }
+.clockFrequencyLabel {
+    position: absolute;
+    height: 20px;
+    color: red;
+    top: 90px;
+    left: 699px;
+    width: 100px
+    }
+.frequencyComment {
+    position: absolute;
+    height: 20px;
+    color: red;
+    width: 170px;
+    left: 570px;
+    top: 53px
+    }

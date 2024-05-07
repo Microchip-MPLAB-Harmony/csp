@@ -1,0 +1,166 @@
+{
+  "device": "SAMA7G54",
+  "valueGroups": [
+    {
+      "id": "ADC_EMR_OSR_VALUE",
+      "values": [
+        { "caption": "12-bit", "name": "12-bit" },
+        {
+          "caption": "13-bit - single trigger averaging",
+          "name": "13-bit - single trigger averaging"
+        },
+        {
+          "caption": "13-bit - multi trigger averaging",
+          "name": "13-bit - multi trigger averaging"
+        },
+        {
+          "caption": "14-bit - single trigger averaging",
+          "name": "14-bit - single trigger averaging"
+        },
+        {
+          "caption": "14-bit - multi trigger averaging",
+          "name": "14-bit - multi trigger averaging"
+        },
+        {
+          "caption": "15-bit - single trigger averaging",
+          "name": "15-bit - single trigger averaging"
+        },
+        {
+          "caption": "15-bit - multi trigger averaging",
+          "name": "15-bit - multi trigger averaging"
+        },
+        {
+          "caption": "16-bit - single trigger averaging",
+          "name": "16-bit - single trigger averaging"
+        },
+        {
+          "caption": "16-bit - multi trigger averaging",
+          "name": "16-bit - multi trigger averaging"
+        }
+      ]
+    },
+    {
+      "id": "ADC_EMR_SIGNMODE_VALUE",
+      "values": [
+        {
+          "caption": "Single-ended channels: unsigned conversions Differential channels: signed conversions",
+          "name": "SE_CH: unsigned, DF_CH: signed"
+        },
+        {
+          "caption": "Single-ended channels: signed conversions Differential channels: unsigned conversions",
+          "name": "SE_CH: signed, DF_CH: unsigned"
+        },
+        {
+          "caption": "All channels: unsigned conversions",
+          "name": "All channels: unsigned conversions"
+        },
+        {
+          "caption": "All channels: signed conversions",
+          "name": "All channels: signed conversions"
+        }
+      ]
+    },
+    {
+      "id": "ADC_TRGR_MODE",
+      "values": [
+        {
+          "caption": "No hardware trigger, only software trigger can start conversions",
+          "name": "Software Trigger"
+        },
+        {
+          "caption": "Rising edge of the selected trigger event, defined in ADC_MR.TRGSEL",
+          "name": "External Trigger : Rising Edge"
+        },
+        {
+          "caption": "Falling edge of the selected trigger event",
+          "name": "External Trigger : Falling Edge"
+        },
+        {
+          "caption": "Any edge of the selected trigger event",
+          "name": "External Trigger : Any Edge"
+        },
+        {
+          "caption": "ADC internal periodic trigger (see TRGPER)",
+          "name": "Internal Periodic Trigger"
+        },
+        { "caption": "Continuous mode, free run mode", "name": "Continuous" }
+      ]
+    },
+    {
+      "id": "ADC_MR_TRGSEL_VALUE",
+      "values": [
+        { "caption": "ADTRG", "name": "ADTRG" },
+        { "caption": "TIOA0 TC0", "name": "TIOA0 TC0" },
+        { "caption": "TIOA1 TC0", "name": "TIOA1 TC0" },
+        { "caption": "TIOA2 TC0", "name": "TIOA2 TC0" },
+        { "caption": "PWM event line 0", "name": "PWM event line 0" },
+        { "caption": "PWM event line 1", "name": "PWM event line 1" },
+        { "caption": "TIOA3/ACC", "name": "TIOA3/ACC" },
+        { "caption": "RTCOUT0", "name": "RTCOUT0" }
+      ]
+    },
+    {
+      "id": "ADC_EMR_CMPMODE",
+      "values": [
+        { "caption": "Vin < VLo", "name": "Vin < VLo" },
+        { "caption": "Vin < VHi", "name": "Vin < VHi" },
+        { "caption": "VLo < Vin < VHi", "name": "VLo < Vin < VHi" },
+        { "caption": "VHi < Vin < VLo", "name": "VHi < Vin < VLo" }
+      ]
+    },
+    {
+      "id": "ADC_EMR_CMPTYPE",
+      "values": [
+        { "caption": "0-No Comparison", "name": "0-No Comparison" },
+        { "caption": "1-Comparison match", "name": "1-Comparison match" }
+      ]
+    },
+    {
+      "id": "ADC_FMR_ENLEVEL_VALUE",
+      "values": [
+        {
+          "caption": "Request to DMA is generated as soon as one data is written in FIFO when FIFO is enabled. CHUNK is not used.",
+          "name": "Generate DMA Request if FIFO data >= 1"
+        },
+        {
+          "caption": "Request to DMA is generated as soon as the number of written elements in the FIFO is greater than or equal to CHUNK.",
+          "name": "Generate DMA Request if FIFO data >= CHUNK"
+        }
+      ]
+    },
+    {
+      "id": "ADC_ACR_SRCLCH_VALUE",
+      "values": [
+        {
+          "caption": "The highest index channel is driven by the output of the temperature sensor.",
+          "name": "Output of the temperature sensor"
+        },
+        {
+          "caption": "The highest index channel is driven by the reference voltage of the temperature sensor.",
+          "name": "Reference voltage of the temperature sensor"
+        }
+      ]
+    },
+    {
+      "id": "ADC_TEMPMR_TEMPCMPMOD_VALUE",
+      "values": [
+        {
+          "caption": "Generates the TEMPCHG flag in ADC_ISR when the converted data is lower than the low threshold of the window.",
+          "name": "Vin < VLo"
+        },
+        {
+          "caption": "Generates the TEMPCHG flag in ADC_ISR when the converted data is higher than the high threshold of the window.",
+          "name": "Vin < VHi"
+        },
+        {
+          "caption": "Generates the TEMPCHG flag in ADC_ISR when the converted data is in the comparison window.",
+          "name": "VLo < Vin < VHi"
+        },
+        {
+          "caption": "Generates the TEMPCHG flag in ADC_ISR when the converted data is out of the comparison window.",
+          "name": "VHi < Vin < VLo"
+        }
+      ]
+    }
+  ]
+}

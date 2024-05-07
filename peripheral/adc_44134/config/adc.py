@@ -757,5 +757,12 @@ def instantiateComponent(adcComponent):
     adcSystemDefFile.setMarkup(True)
 
     #Load ADC plugin
-    adcComponent.addPlugin("../peripheral/adc_44134/plugin/adc_44134.jar")
-
+    adcComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "ADC_UI_MANAGER_ID_adc_44134",
+        {
+            "plugin_name": "ADC Configuration",
+            "main_html_path": "csp/plugins/configurators/adc-configurators/adc_44134/build/index.html",
+            "componentId": adcComponent.getID()
+        }
+    )
