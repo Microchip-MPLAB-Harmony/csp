@@ -1,0 +1,281 @@
+.mainBlockDiagram {
+    position: absolute;
+    height: 700px;
+    transform-origin: 50% 50%;
+    width: 1100px;
+    left: 0;
+    top: 0
+    }
+.triggerMode0 {
+    position: absolute;
+    top: 93px;
+    left: 338px
+    }
+.triggerMode1 {
+    position: absolute;
+    top: 121px;
+    left: 338px
+    }
+.triggerMode2 {
+    position: absolute;
+    top: 149px;
+    left: 339px
+    }
+.triggerMode3 {
+    position: absolute;
+    top: 180px;
+    left: 338px
+    }
+.triggerMode4 {
+    position: absolute;
+    top: 212px;
+    left: 339px
+    }
+.triggerMode5 {
+    position: absolute;
+    top: 243px;
+    left: 338px
+    }
+.windowComparisonBoolean {
+    position: absolute;
+    left: 836px;
+    top: 313px
+    }
+.interrupt {
+    position: absolute;
+    top: 512px;
+    left: 784px
+    }
+.channelCombo {
+    position: absolute;
+    width: 100px;
+    height: 24px;
+    left: 575px;
+    top: 476px
+    }
+.vhi {
+    position: absolute;
+    width: 70px;
+    height: 25px;
+    top: 418px;
+    left: 577px
+    }
+.vlo {
+    position: absolute;
+    width: 70px;
+    left: 577px;
+    height: 25px;
+    top: 519px
+    }
+.comparisonMode {
+    position: absolute;
+    width: 150px;
+    left: 578px;
+    height: 25px;
+    top: 588px
+    }
+.comparisonType0 {
+    position: absolute;
+    top: 329px;
+    left: 801px
+    }
+.comparisonType1 {
+    position: absolute;
+    top: 363px;
+    left: 801px
+    }
+.triggerSelection {
+    position: absolute;
+    width: 140px;
+    left: 134px;
+    height: 25px;
+    top: 311px
+    }
+.triggerPeriod {
+    position: absolute;
+    height: 25px;
+    top: 126px;
+    width: 70px;
+    left: 129px
+    }
+.triggerPeriodLabel {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 130px;
+    fill: rgb(32, 56, 100);
+    font-family: Calibri;
+    font-size: 1.00001em;
+    top: 156px
+    }
+.sleepMode {
+    position: absolute;
+    left: 629px;
+    top: 116px
+    }
+.fastWakeUp0 {
+    position: absolute;
+    left: 628px;
+    top: 142px
+    }
+.fastWakeUpLabel {
+    position: absolute;
+    height: 20px;
+    left: 559px;
+    width: 70px;
+    top: 144px
+    }
+.fastWakeUpLabel0 {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 650px;
+    top: 144px
+    }
+.fastWakeUp1 {
+    position: absolute;
+    left: 683px;
+    top: 143px
+    }
+.fastWakeUpLabel1 {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 707px;
+    top: 144px
+    }
+.prescalerLabel {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 800px;
+    top: 93px;
+    font-size: large
+    }
+.prescaler {
+    position: absolute;
+    width: 80px;
+    left: 758px;
+    height: 25px;
+    top: 171px
+    }
+.resultSign {
+    position: absolute;
+    width: 200px;
+    left: 788px;
+    height: 25px;
+    top: 257px
+    }
+.channelSequencerButton {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    top: 87px;
+    left: 387px
+    }
+.isChannelSequencer {
+    position: absolute;
+    left: 467px;
+    top: 164px
+    }
+.resultResolution {
+    position: absolute;
+    width: 200px;
+    left: 305px;
+    height: 25px;
+    top: 386px
+    }
+.conversionTime {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    top: 563px;
+    left: 374px
+    }
+.channelConfigButton {
+    position: absolute;
+    height: 50px;
+    width: 120px;
+    left: 230px;
+    top: 542px
+    }
+.clockFrequencyLabel {
+    position: absolute;
+    height: 20px;
+    color: red;
+    top: 90px;
+    width: 120px;
+    left: 641px;
+    text-align: right
+    }
+.frequencyComment {
+    position: absolute;
+    height: 20px;
+    color: red;
+    width: 170px;
+    left: 570px;
+    top: 53px
+    }
+.label0 {
+    position: absolute;
+    height: 20px;
+    top: 79px;
+    width: 120px;
+    text-align: right;
+    left: 218px
+    }
+.label1 {
+    position: absolute;
+    height: 20px;
+    top: 107px;
+    text-align: right;
+    width: 150px;
+    left: 187px
+    }
+.label2 {
+    position: absolute;
+    height: 20px;
+    text-align: right;
+    top: 137px;
+    width: 150px;
+    left: 187px
+    }
+.label3 {
+    position: absolute;
+    height: 20px;
+    left: 187px;
+    top: 166px;
+    width: 150px;
+    text-align: right
+    }
+.label4 {
+    position: absolute;
+    height: 20px;
+    top: 197px;
+    width: 150px;
+    text-align: right;
+    left: 186px
+    }
+.label5 {
+    position: absolute;
+    height: 20px;
+    top: 233px;
+    width: 150px;
+    text-align: right;
+    left: 187px
+    }
+.triggerModeSAMH0 {
+    position: absolute;
+    top: 149px;
+    left: 338px
+    }
+.triggerModeSAMH1 {
+    position: absolute;
+    top: 178px;
+    left: 338px
+    }
+.triggerModeSAMH2 {
+    position: absolute;
+    top: 211px;
+    left: 338px
+    }

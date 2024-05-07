@@ -1,0 +1,14 @@
+.sequence-options {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    /* font-size: large; */
+  }
+  .sequence-item {
+    font-size: 12px;
+    border: 1px solid rgb(207, 204, 204);
+    border-radius: 4px;
+    padding: 5px;
+    background-color: rgb(252, 249, 249);
+  }
