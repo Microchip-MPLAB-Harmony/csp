@@ -1,0 +1,34 @@
+
+.summary-tab-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    font-size: 14px;
+  }
+  
+  .summary-options {
+    display: grid;
+    grid-template-columns: 1fr  1fr;
+    font-size: 14px;
+    padding: 5px;
+    column-gap:5px
+  }
+   
+  .summary-options:nth-child(even) {
+    background-color: rgb(245, 245, 245);
+  }
+
+  .sequence-options {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    /* font-size: large; */
+  }
+  .sequence-item {
+    /* font-size: 12px; */
+    /* font-weight: lighter; */
+  }
+ 
+  
+  

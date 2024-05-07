@@ -896,4 +896,12 @@ def instantiateComponent(adcComponent):
     adcSym_SystemDefFile.setMarkup(True)
 
     # load ADC manager
-    adcComponent.addPlugin("../peripheral/adc_u2204/plugin/adc_u2204.jar")
+    adcComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "ADC_UI_MANAGER_ID_adc_u2204",
+        {
+            "plugin_name": "ADC Configuration",
+            "main_html_path": "csp/plugins/configurators/adc-configurators/adc_u2204/build/index.html",
+            "componentId": adcComponent.getID()
+        }
+    )

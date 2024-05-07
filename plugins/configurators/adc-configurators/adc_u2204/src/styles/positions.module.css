@@ -1,0 +1,172 @@
+.mainBlockDiagram {
+    position: absolute;
+    height: 700px;
+    width: 1100px;
+    top: 0;
+    left: 0
+    }
+.inputScan {
+    position: absolute;
+    width: 60px;
+    top: 128px;
+    left: 307px;
+    height: 25px
+    }
+.scanStart {
+    position: absolute;
+    width: 60px;
+    left: 385px;
+    top: 128px;
+    height: 25px
+    }
+.coversionTrigger {
+    position: absolute;
+    height: 25px;
+    width: 140px;
+    left: 219px;
+    top: 247px
+    }
+.resultResolution {
+    position: absolute;
+    height: 25px;
+    top: 340px;
+    width: 170px;
+    left: 190px
+    }
+.channelConfigPositve {
+    position: absolute;
+    height: 25px;
+    width: 120px;
+    left: 116px;
+    top: 370px
+    }
+.channelConfigNegative {
+    position: absolute;
+    height: 25px;
+    width: 120px;
+    left: 116px;
+    top: 560px
+    }
+.gain {
+    position: absolute;
+    height: 25px;
+    width: 63px;
+    left: 194px;
+    top: 516px
+    }
+.clockCycle {
+    position: absolute;
+    height: 25px;
+    width: 60px;
+    left: 248px;
+    top: 560px
+    }
+.reference {
+    position: absolute;
+    height: 25px;
+    width: 135px;
+    left: 320px;
+    top: 560px
+    }
+.runStandby {
+    position: absolute;
+    left: 542px;
+    top: 185px
+    }
+.prescaler {
+    position: absolute;
+    height: 24px;
+    width: 200px;
+    left: 632px;
+    top: 223px
+    }
+.leftAlignResult {
+    position: absolute;
+    top: 294px;
+    left: 855px
+    }
+.resultInterrupt {
+    position: absolute;
+    top: 310px;
+    left: 930px
+    }
+.resultEvent {
+    position: absolute;
+    top: 411px;
+    left: 931px
+    }
+.winmonInterrupt {
+    position: absolute;
+    left: 761px;
+    top: 478px
+    }
+.win {
+    position: absolute;
+    top: 551px;
+    left: 761px
+    }
+.vhi {
+    position: absolute;
+    width: 65px;
+    left: 518px;
+    height: 25px;
+    top: 405px
+    }
+.comparisonMode {
+    position: absolute;
+    height: 25px;
+    width: 170px;
+    left: 507px;
+    top: 549px
+    }
+.vlo {
+    position: absolute;
+    width: 65px;
+    left: 519px;
+    height: 25px;
+    top: 493px
+    }
+.startEvent {
+    position: absolute;
+    left: 135px;
+    top: 129px
+    }
+.flushEvent {
+    position: absolute;
+    top: 268px;
+    left: 136px
+    }
+.conversion {
+    position: absolute;
+    width: 70px;
+    height: 15px;
+    left: 279px;
+    top: 530px
+    }
+.preScalarValue {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    font-family: Calibri;
+    font-size: 20px;
+    align-content: center;
+    align-items: center;
+    color: black;
+    left: 742px;
+    top: 153px
+    }
+.conversionTriggerRadio0 {
+    position: absolute;
+    top: 143px;
+    left: 276px
+    }
+.conversionTriggerRadio1 {
+    position: absolute;
+    top: 172px;
+    left: 276px
+    }
+.conversionTriggerRadio2 {
+    position: absolute;
+    top: 201px;
+    left: 276px
+    }
