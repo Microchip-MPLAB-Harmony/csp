@@ -1,0 +1,6 @@
+.input-scan-configuration-container {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  row-gap: 10px;
+  column-gap: 20px;
+}

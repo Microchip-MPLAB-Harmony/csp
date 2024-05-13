@@ -1,0 +1,251 @@
+{
+  "device": "PIC32MM0256GPM064",
+  "valueGroups": [
+    {
+      "id": "AD1CON3__ADRC",
+      "values": [
+        { "caption": "Clock derived from Peripheral Bus Clock (PBCLK)", "name": "PBCLK" },
+        { "caption": "Clock derived from FRC", "name": "FRC" }
+      ]
+    },
+    {
+      "id": "AD1CON1__MODE12",
+      "values": [
+        { "caption": "10-bit ADC operation", "name": "10-bit" },
+        { "caption": "12-bit ADC operation", "name": "12-bit" }
+      ]
+    },
+    {
+      "id": "AD1CON2__VCFG",
+      "values": [
+        {
+          "caption": "VREFH is External VREF+ pin and VREFL is External VREF- pin",
+          "name": "External VREF+ and External VREF-"
+        },
+        {
+          "caption": "VREFH is AVDD and VREFL is External VREF- pin",
+          "name": "AVDD and External VREF-"
+        },
+        {
+          "caption": "VREFH is External VREF + pin and VREFL is AVSS",
+          "name": "External VREF+ and AVSS"
+        },
+        { "caption": "VREFH is AVDD and VREFL is AVSS", "name": "AVDD and AVSS" }
+      ]
+    },
+    {
+      "id": "AD1CON1__SIDL",
+      "values": [
+        {
+          "caption": "Continue module operation in Idle mode",
+          "name": "Continue operation in Idle mode"
+        },
+        {
+          "caption": "Discontinue module operation when device enters Idle mode",
+          "name": "Discontinue operation in Idle mode"
+        }
+      ]
+    },
+    {
+      "id": "AD1CHS__CH0SA",
+      "values": [
+        { "caption": "Positive input is AN0", "name": "AN0" },
+        { "caption": "Positive input is AN1", "name": "AN1" },
+        { "caption": "Positive input is AN2", "name": "AN2" },
+        { "caption": "Positive input is AN3", "name": "AN3" },
+        { "caption": "Positive input is AN4", "name": "AN4" },
+        { "caption": "Positive input is AN5", "name": "AN5" },
+        { "caption": "Positive input is AN6", "name": "AN6" },
+        { "caption": "Positive input is AN7", "name": "AN7" },
+        { "caption": "Positive input is AN8", "name": "AN8" },
+        { "caption": "Positive input is AN9", "name": "AN9" },
+        { "caption": "Positive input is AN10", "name": "AN10" },
+        { "caption": "Positive input is AN11", "name": "AN11" },
+        { "caption": "Positive input is AN12", "name": "AN12" },
+        { "caption": "Positive input is AN13", "name": "AN13" },
+        { "caption": "Positive input is AN14", "name": "AN14" },
+        { "caption": "Positive input is AN15", "name": "AN15" },
+        { "caption": "Positive input is AN16", "name": "AN16" },
+        { "caption": "Positive input is AN17", "name": "AN17" },
+        { "caption": "Positive input is AN18", "name": "AN18" },
+        { "caption": "Positive input is AN19", "name": "AN19" },
+        { "caption": "Positive input is VDD Core", "name": "VDDcore" },
+        { "caption": "Positive input is Band Gape Reference (VBG)", "name": "VBG" },
+        { "caption": "Positive input is AVSS", "name": "AVSS" },
+        { "caption": "Positive input is AVDD", "name": "AVDD" }
+      ]
+    },
+    {
+      "id": "AD1CON1__SSRC",
+      "values": [
+        {
+          "caption": "Clearing SAMP bit ends sampling and starts conversion",
+          "name": "Clearing SAMP bit"
+        },
+        {
+          "caption": "Active transition on INT0 pin ends sampling and starts conversion",
+          "name": "Active transition on INT0 pin"
+        },
+        {
+          "caption": "Timer 3 period match ends sampling and starts conversion",
+          "name": "Timer 3 period match"
+        },
+        {
+          "caption": "Timer1 period match ends sampling and starts conversion (will not trigger during Sleep mode)",
+          "name": "Timer1 period match (Only Run Mode)"
+        },
+        {
+          "caption": "Timer1 period match ends sampling and starts conversion (can trigger during Sleep mode)",
+          "name": "Timer1 period match (Sleep Mode also)"
+        },
+        {
+          "caption": "Internal counter ends sampling and starts conversion (auto convert)",
+          "name": "Auto Convert"
+        },
+        {
+          "caption": "MCCP1 module event ends sampling and starts conversion",
+          "name": "MCCP1 module event"
+        },
+        {
+          "caption": "MCCP2 module event ends sampling and starts conversion",
+          "name": "MCCP2 module event"
+        },
+        {
+          "caption": "MCCP3 module event ends sampling and starts conversion",
+          "name": "MCCP3 module event"
+        },
+        {
+          "caption": "SCCP2 module event ends sampling and starts conversion",
+          "name": "SCCP2 module event"
+        },
+        {
+          "caption": "SCCP3 module event ends sampling and starts conversion",
+          "name": "SCCP3 module event"
+        },
+        {
+          "caption": "SCCP4 module event ends sampling and starts conversion",
+          "name": "SCCP4 module event"
+        },
+        {
+          "caption": "SCCP5 module event ends sampling and starts conversion",
+          "name": "SCCP5 module event"
+        },
+        {
+          "caption": "SCCP6 module event ends sampling and starts conversion",
+          "name": "SCCP6 module event"
+        },
+        {
+          "caption": "CLC1 module event ends sampling and starts conversion",
+          "name": "CLC1 module event"
+        },
+        {
+          "caption": "CLC2 module event ends sampling and starts conversion",
+          "name": "CLC2 module event"
+        }
+      ]
+    },
+    {
+      "id": "AD1CON1__FORM",
+      "values": [
+        { "caption": "Integer 32-bit", "name": "Integer 32-bit" },
+        { "caption": "Signed Integer 32-bit", "name": "Signed Integer 32-bit" },
+        { "caption": "Fractional 32-bit", "name": "Fractional 32-bit" },
+        { "caption": "Signed Fractional 32-bit", "name": "Signed Fractional 32-bit" },
+        { "caption": "Integer 16-bit", "name": "Integer 16-bit" },
+        { "caption": "Signed Integer 16-bit", "name": "Signed Integer 16-bit" },
+        { "caption": "Fractional 16-bit", "name": "Fractional 16-bit" },
+        { "caption": "Signed Fractional 16-bit", "name": "Signed Fractional 16-bit" }
+      ]
+    },
+    {
+      "id": "AD1CON2__BUFM",
+      "values": [
+        {
+          "caption": "Buffer configured as one 16-word buffer ADC1BUF15-ADC1BUF0",
+          "name": "One 16-word buffer"
+        },
+        {
+          "caption": "Buffer configured as one 22-word buffer ADC1BUF21-ADC1BUF0",
+          "name": "One 22-word buffer"
+        },
+        {
+          "caption": "Buffer configured as two 8-word buffers ADC1BUF7-ADC1BUF0 / ADC1BUF15-ADCBUF8",
+          "name": "Two 8-word buffers"
+        },
+        {
+          "caption": "Buffer configured as two 11-word buffers ADC1BUF10-ADC1BUF0 / ADC1BUF21-ADCBUF11",
+          "name": "Two 11-word buffers"
+        }
+      ]
+    },
+    {
+      "id": "AD1CON2__SMPI",
+      "values": [
+        {
+          "caption": "Interrupts at the completion of conversion for each sample/convert sequence",
+          "name": "1 Sample"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 2nd sample/convert sequence",
+          "name": "2 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 3rd sample/convert sequence",
+          "name": "3 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 4th sample/convert sequence",
+          "name": "4 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 5th sample/convert sequence",
+          "name": "5 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 6th sample/convert sequence",
+          "name": "6 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 7th sample/convert sequence",
+          "name": "7 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 8th sample/convert sequence",
+          "name": "8 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 9th sample/convert sequence",
+          "name": "9 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 10th sample/convert sequence",
+          "name": "10 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 11th sample/convert sequence",
+          "name": "11 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 12th sample/convert sequence",
+          "name": "12 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 13th sample/convert sequence",
+          "name": "13 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 14th sample/convert sequence",
+          "name": "14 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 15th sample/convert sequence",
+          "name": "15 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 16th sample/convert sequence",
+          "name": "16 Samples"
+        }
+      ]
+    }
+  ]
+}

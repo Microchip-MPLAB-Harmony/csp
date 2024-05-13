@@ -1,0 +1,154 @@
+.main-block-diagram {
+    position: absolute;
+    top: 0;
+    height: 673px;
+    width: 1045px;
+    left: 0
+    }
+.clockDivider {
+    position: absolute;
+    left: 253px;
+    height: 26px;
+    width: 60px;
+    top: 70px
+    }
+.clockSourceInput1 {
+    position: absolute;
+    height: 40px;
+    top: 46px;
+    width: 120px;
+    left: 35px
+    }
+.clockSourceInput2 {
+    position: absolute;
+    left: 35px;
+    top: 85px;
+    width: 120px;
+    height: 40px
+    }
+.tad {
+    position: absolute;
+    left: 341px;
+    top: 66px;
+    width: 100px;
+    height: 20px
+    }
+.avdd {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 523px;
+    top: 41px
+    }
+.vrefh {
+    position: absolute;
+    left: 523px;
+    width: 100px;
+    height: 20px;
+    top: 69px
+    }
+.avss {
+    position: absolute;
+    left: 523px;
+    width: 100px;
+    height: 20px;
+    top: 130px
+    }
+.vrefl {
+    position: absolute;
+    left: 523px;
+    width: 100px;
+    height: 20px;
+    top: 158px
+    }
+.outputControlContainer {
+    top: 237px;
+    position: absolute;
+    width: 280px;
+    left: 745px;
+    height: 80px
+    }
+.samplingContainer {
+    position: absolute;
+    width: 280px;
+    height: 153px;
+    left: 398px;
+    top: 377px
+    }
+.conversionTriggerSource {
+    position: absolute;
+    left: 441px;
+    width: 235px;
+    height: 26px;
+    top: 628px
+    }
+.interruptOptions {
+    left: 419px;
+    position: absolute;
+    width: 280px;
+    top: 220px;
+    height: 90px
+    }
+.scanEnable {
+    position: absolute;
+    width: 100px;
+    left: 129px;
+    top: 477px;
+    height: 26px
+    }
+.positiveInputA {
+    position: absolute;
+    height: 26px;
+    width: 110px;
+    left: 43px;
+    top: 432px
+    }
+.channelScanSettings {
+    position: absolute;
+    width: 110px;
+    left: 43px;
+    height: 30px;
+    top: 387px
+    }
+.clockSourceRadio0 {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 199px;
+    top: 55px
+    }
+.clockSourceRadio1 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 199px;
+    top: 91px
+    }
+.voltageReferenceRadio0 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 675px;
+    top: 38px
+    }
+.voltageReferenceRadio1 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 675px;
+    top: 66px
+    }
+.voltageReferenceRadio2 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 675px;
+    top: 126px
+    }
+.voltageReferenceRadio3 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 675px;
+    top: 154px
+    }
