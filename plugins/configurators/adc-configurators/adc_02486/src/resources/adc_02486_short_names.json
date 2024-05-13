@@ -1,0 +1,664 @@
+{
+  "valueGroups": [
+    {
+      "id": "AD1CON3__ADRC",
+      "values": [
+        {
+          "caption": "Clock derived from Peripheral Bus Clock (PBCLK)",
+          "name": "PBCLK"
+        },
+        {
+          "caption": "Clock derived from FRC",
+          "name": "FRC"
+        }
+      ]
+    },
+    {
+      "id": "AD1CON2__VCFG",
+      "values": [
+        {
+          "caption": "VREFH is AVDD and VREFL is AVSS",
+          "name": "AVDD and AVSS"
+        },
+        {
+          "caption": "VREFH is External VREF+ pin and VREFL is External VREF- pin",
+          "name": "External VREF+ and External VREF-"
+        },
+        {
+          "caption": "VREFH is AVDD and VREFL is External VREF- pin",
+          "name": "AVDD and External VREF-"
+        },
+        {
+          "caption": "VREFH is Ext VREF + pin and VREFL is AVSS",
+          "name": "External VREF+ and AVSS"
+        },
+        {
+          "caption": "VREFH is External VREF+ pin and VREFL is AVSS",
+          "name": "External VREF+ and AVSS"
+        }
+      ]
+    },
+    {
+      "id": "AD1CON1__SIDL",
+      "values": [
+        {
+          "caption": "Continue module operation in Idle mode",
+          "name": "Continue operation in Idle mode"
+        },
+        {
+          "caption": "Discontinue module operation when device enters Idle mode",
+          "name": "Discontinue operation in Idle mode"
+        }
+      ]
+    },
+    {
+      "id": "AD1CON2__ALTS",
+      "values": [
+        {
+          "caption": "Always use Sample A input multiplexer settings",
+          "name": "Use Sample A input multiplexer"
+        },
+        {
+          "caption": "Uses Sample A input multiplexer settings for first sample then alternates between Sample B and Sample A input multiplexer settings for all subsequent samples",
+          "name": "Alternate between Sample A and B input multiplexer"
+        }
+      ]
+    },
+    {
+      "id": "AD1CHS__CH0NA",
+      "values": [
+        {
+          "caption": "Channel 0 negative input is VREFL",
+          "name": "VREFL"
+        },
+        {
+          "caption": "Channel 0 negative input is AN1",
+          "name": "AN1"
+        }
+      ]
+    },
+    {
+      "id": "AD1CHS__CH0SA",
+      "values": [
+        {
+          "caption": "Channel 0 positive input is AN0",
+          "name": "AN0"
+        },
+        {
+          "caption": "Channel 0 positive input is AN1",
+          "name": "AN1"
+        },
+        {
+          "caption": "Channel 0 positive input is AN2",
+          "name": "AN2"
+        },
+        {
+          "caption": "Channel 0 positive input is AN3",
+          "name": "AN3"
+        },
+        {
+          "caption": "Channel 0 positive input is AN4",
+          "name": "AN4"
+        },
+        {
+          "caption": "Channel 0 positive input is AN5",
+          "name": "AN5"
+        },
+        {
+          "caption": "Channel 0 positive input is AN6",
+          "name": "AN6"
+        },
+        {
+          "caption": "Channel 0 positive input is AN7",
+          "name": "AN7"
+        },
+        {
+          "caption": "Channel 0 positive input is AN8",
+          "name": "AN8"
+        },
+        {
+          "caption": "Channel 0 positive input is AN9",
+          "name": "AN9"
+        },
+        {
+          "caption": "Channel 0 positive input is AN10",
+          "name": "AN10"
+        },
+        {
+          "caption": "Channel 0 positive input is AN11",
+          "name": "AN11"
+        },
+        {
+          "caption": "Channel 0 positive input is AN12",
+          "name": "AN12"
+        },
+        {
+          "caption": "Channel 0 positive input is AN13",
+          "name": "AN13"
+        },
+        {
+          "caption": "Channel 0 positive input is AN14",
+          "name": "AN14"
+        },
+        {
+          "caption": "Channel 0 positive input is AN15",
+          "name": "AN15"
+        },
+        {
+          "caption": "Channel 0 positive input is AN16",
+          "name": "AN16"
+        },
+        {
+          "caption": "Channel 0 positive input is AN17",
+          "name": "AN17"
+        },
+        {
+          "caption": "Channel 0 positive input is AN18",
+          "name": "AN18"
+        },
+        {
+          "caption": "Channel 0 positive input is AN19",
+          "name": "AN19"
+        },
+        {
+          "caption": "Channel 0 positive input is AN20",
+          "name": "AN20"
+        },
+        {
+          "caption": "Channel 0 positive input is AN21",
+          "name": "AN21"
+        },
+        {
+          "caption": "Channel 0 positive input is AN22",
+          "name": "AN22"
+        },
+        {
+          "caption": "Channel 0 positive input is AN23",
+          "name": "AN23"
+        },
+        {
+          "caption": "Channel 0 positive input is AN24",
+          "name": "AN24"
+        },
+        {
+          "caption": "Channel 0 positive input is AN25",
+          "name": "AN25"
+        },
+        {
+          "caption": "Channel 0 positive input is AN26",
+          "name": "AN26"
+        },
+        {
+          "caption": "Channel 0 positive input is AN27",
+          "name": "AN27"
+        },
+        {
+          "caption": "Channel 0 positive input is AN28",
+          "name": "AN28"
+        },
+        {
+          "caption": "Channel 0 positive input is AN29",
+          "name": "AN29"
+        },
+        {
+          "caption": "Channel 0 positive input is AN30",
+          "name": "AN30"
+        },
+        {
+          "caption": "Channel 0 positive input is AN31",
+          "name": "AN31"
+        },
+        {
+          "caption": "Channel 0 positive input is AN32",
+          "name": "AN32"
+        },
+        {
+          "caption": "Channel 0 positive input is AN33",
+          "name": "AN33"
+        },
+        {
+          "caption": "Channel 0 positive input is AN34",
+          "name": "AN34"
+        },
+        {
+          "caption": "Channel 0 positive input is AN35",
+          "name": "AN35"
+        },
+        {
+          "caption": "Channel 0 positive input is AN36",
+          "name": "AN36"
+        },
+        {
+          "caption": "Channel 0 positive input is AN37",
+          "name": "AN37"
+        },
+        {
+          "caption": "Channel 0 positive input is AN38",
+          "name": "AN38"
+        },
+        {
+          "caption": "Channel 0 positive input is AN39",
+          "name": "AN39"
+        },
+        {
+          "caption": "Channel 0 positive input is AN40",
+          "name": "AN40"
+        },
+        {
+          "caption": "Channel 0 positive input is AN41",
+          "name": "AN41"
+        },
+        {
+          "caption": "Channel 0 positive input is AN42",
+          "name": "AN42"
+        },
+        {
+          "caption": "Channel 0 positive input is AN43",
+          "name": "AN43"
+        },
+        {
+          "caption": "Channel 0 positive input is AN44",
+          "name": "AN44"
+        },
+        {
+          "caption": "Channel 0 positive input is AN45",
+          "name": "AN45"
+        },
+        {
+          "caption": "Channel 0 positive input is AN46",
+          "name": "AN46"
+        },
+        {
+          "caption": "Channel 0 positive input is AN47",
+          "name": "AN47"
+        },
+        {
+          "caption": "Channel 0 positive input is IVREF",
+          "name": "IVREF"
+        },
+        {
+          "caption": "Channel 0 positive input is CTMU temperature sensor (CTMUT)",
+          "name": "CTMUT"
+        },
+        {
+          "caption": "Channel 0 positive input is VDD/2",
+          "name": "VDD/2"
+        },
+        {
+          "caption": "Channel 0 positive input is Open",
+          "name": "Open"
+        }
+      ]
+    },
+    {
+      "id": "AD1CHS__CH0NB",
+      "values": [
+        {
+          "caption": "Channel 0 negative input is VREFL",
+          "name": "VREFL"
+        },
+        {
+          "caption": "Channel 0 negative input is AN1",
+          "name": "AN1"
+        }
+      ]
+    },
+    {
+      "id": "AD1CHS__CH0SB",
+      "values": [
+        {
+          "caption": "Channel 0 positive input is AN0",
+          "name": "AN0"
+        },
+        {
+          "caption": "Channel 0 positive input is AN1",
+          "name": "AN1"
+        },
+        {
+          "caption": "Channel 0 positive input is AN2",
+          "name": "AN2"
+        },
+        {
+          "caption": "Channel 0 positive input is AN3",
+          "name": "AN3"
+        },
+        {
+          "caption": "Channel 0 positive input is AN4",
+          "name": "AN4"
+        },
+        {
+          "caption": "Channel 0 positive input is AN5",
+          "name": "AN5"
+        },
+        {
+          "caption": "Channel 0 positive input is AN6",
+          "name": "AN6"
+        },
+        {
+          "caption": "Channel 0 positive input is AN7",
+          "name": "AN7"
+        },
+        {
+          "caption": "Channel 0 positive input is AN8",
+          "name": "AN8"
+        },
+        {
+          "caption": "Channel 0 positive input is AN9",
+          "name": "AN9"
+        },
+        {
+          "caption": "Channel 0 positive input is AN10",
+          "name": "AN10"
+        },
+        {
+          "caption": "Channel 0 positive input is AN11",
+          "name": "AN11"
+        },
+        {
+          "caption": "Channel 0 positive input is AN12",
+          "name": "AN12"
+        },
+        {
+          "caption": "Channel 0 positive input is AN13",
+          "name": "AN13"
+        },
+        {
+          "caption": "Channel 0 positive input is AN14",
+          "name": "AN14"
+        },
+        {
+          "caption": "Channel 0 positive input is AN15",
+          "name": "AN15"
+        },
+        {
+          "caption": "Channel 0 positive input is AN16",
+          "name": "AN16"
+        },
+        {
+          "caption": "Channel 0 positive input is AN17",
+          "name": "AN17"
+        },
+        {
+          "caption": "Channel 0 positive input is AN18",
+          "name": "AN18"
+        },
+        {
+          "caption": "Channel 0 positive input is AN19",
+          "name": "AN19"
+        },
+        {
+          "caption": "Channel 0 positive input is AN20",
+          "name": "AN20"
+        },
+        {
+          "caption": "Channel 0 positive input is AN21",
+          "name": "AN21"
+        },
+        {
+          "caption": "Channel 0 positive input is AN22",
+          "name": "AN22"
+        },
+        {
+          "caption": "Channel 0 positive input is AN23",
+          "name": "AN23"
+        },
+        {
+          "caption": "Channel 0 positive input is AN24",
+          "name": "AN24"
+        },
+        {
+          "caption": "Channel 0 positive input is AN25",
+          "name": "AN25"
+        },
+        {
+          "caption": "Channel 0 positive input is AN26",
+          "name": "AN26"
+        },
+        {
+          "caption": "Channel 0 positive input is AN27",
+          "name": "AN27"
+        },
+        {
+          "caption": "Channel 0 positive input is AN28",
+          "name": "AN28"
+        },
+        {
+          "caption": "Channel 0 positive input is AN29",
+          "name": "AN29"
+        },
+        {
+          "caption": "Channel 0 positive input is AN30",
+          "name": "AN30"
+        },
+        {
+          "caption": "Channel 0 positive input is AN31",
+          "name": "AN31"
+        },
+        {
+          "caption": "Channel 0 positive input is AN32",
+          "name": "AN32"
+        },
+        {
+          "caption": "Channel 0 positive input is AN33",
+          "name": "AN33"
+        },
+        {
+          "caption": "Channel 0 positive input is AN34",
+          "name": "AN34"
+        },
+        {
+          "caption": "Channel 0 positive input is AN35",
+          "name": "AN35"
+        },
+        {
+          "caption": "Channel 0 positive input is AN36",
+          "name": "AN36"
+        },
+        {
+          "caption": "Channel 0 positive input is AN37",
+          "name": "AN37"
+        },
+        {
+          "caption": "Channel 0 positive input is AN38",
+          "name": "AN38"
+        },
+        {
+          "caption": "Channel 0 positive input is AN39",
+          "name": "AN39"
+        },
+        {
+          "caption": "Channel 0 positive input is AN40",
+          "name": "AN40"
+        },
+        {
+          "caption": "Channel 0 positive input is AN41",
+          "name": "AN41"
+        },
+        {
+          "caption": "Channel 0 positive input is AN42",
+          "name": "AN42"
+        },
+        {
+          "caption": "Channel 0 positive input is AN43",
+          "name": "AN43"
+        },
+        {
+          "caption": "Channel 0 positive input is AN44",
+          "name": "AN44"
+        },
+        {
+          "caption": "Channel 0 positive input is AN45",
+          "name": "AN45"
+        },
+        {
+          "caption": "Channel 0 positive input is AN46",
+          "name": "AN46"
+        },
+        {
+          "caption": "Channel 0 positive input is AN47",
+          "name": "AN47"
+        },
+        {
+          "caption": "Channel 0 positive input is IVREF",
+          "name": "IVREF"
+        },
+        {
+          "caption": "Channel 0 positive input is CTMU temperature sensor (CTMUT)",
+          "name": "CTMUT"
+        },
+        {
+          "caption": "Channel 0 positive input is VDD/2",
+          "name": "VDD/2"
+        },
+        {
+          "caption": "Channel 0 positive input is Open",
+          "name": "Open"
+        }
+      ]
+    },
+    {
+      "id": "AD1CON1__SSRC",
+      "values": [
+        {
+          "caption": "Clearing SAMP bit ends sampling and starts conversion",
+          "name": "Clearing SAMP bit"
+        },
+        {
+          "caption": "Active transition on INT0 pin ends sampling and starts conversion",
+          "name": "Active transition on INT0 pin"
+        },
+        {
+          "caption": "Timer 3 period match ends sampling and starts conversion",
+          "name": "Timer 3 period match"
+        },
+        {
+          "caption": "CTMU ends sampling and starts conversion",
+          "name": "CTMU"
+        },
+        {
+          "caption": "Internal counter ends sampling and starts conversion (auto convert)",
+          "name": "Internal counter"
+        }
+      ]
+    },
+    {
+      "id": "AD1CON1__FORM",
+      "values": [
+        {
+          "caption": "Integer 16-bit",
+          "name": "Integer 16-bit"
+        },
+        {
+          "caption": "Integer 32-bit",
+          "name": "Integer 32-bit"
+        },
+        {
+          "caption": "Signed Integer 32-bit",
+          "name": "Signed Integer 32-bit"
+        },
+        {
+          "caption": "Fractional 32-bit",
+          "name": "Fractional 32-bit"
+        },
+        {
+          "caption": "Signed Fractional 32-bit",
+          "name": "Signed Fractional 32-bit"
+        },
+        {
+          "caption": "Signed Integer 16-bit",
+          "name": "Signed Integer 16-bit"
+        },
+        {
+          "caption": "Fractional 16-bit",
+          "name": "Fractional 16-bit"
+        },
+        {
+          "caption": "Signed Fractional 16-bit",
+          "name": "Signed Fractional 16-bit"
+        }
+      ]
+    },
+    {
+      "id": "AD1CON2__BUFM",
+      "values": [
+        {
+          "caption": "Buffer configured as one 16-word buffer ADC1BUFF-ADC1BUF0",
+          "name": "One 16-word buffer"
+        },
+        {
+          "caption": "Buffer configured as two 8-word buffers ADC1BUF7-ADC1BUF0 / ADC1BUFF-ADCBUF8",
+          "name": "Two 8-word buffers"
+        }
+      ]
+    },
+    {
+      "id": "AD1CON2__SMPI",
+      "values": [
+        {
+          "caption": "Interrupts at the completion of conversion for each sample/convert sequence",
+          "name": "1 Sample"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 2nd sample/convert sequence",
+          "name": "2 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 3rd sample/convert sequence",
+          "name": "3 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 4th sample/convert sequence",
+          "name": "4 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 5th sample/convert sequence",
+          "name": "5 Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 6th sample/convert sequence",
+          "name": "6  Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 7th sample/convert sequence",
+          "name": "7  Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 8th sample/convert sequence",
+          "name": "8  Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 9th sample/convert sequence",
+          "name": "9  Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 10th sample/convert sequence",
+          "name": "10  Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 11th sample/convert sequence",
+          "name": "11  Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 12th sample/convert sequence",
+          "name": "12  Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 13th sample/convert sequence",
+          "name": "13  Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 14th sample/convert sequence",
+          "name": "14  Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 15th sample/convert sequence",
+          "name": "15  Samples"
+        },
+        {
+          "caption": "Interrupts at the completion of conversion for each 16th sample/convert sequence",
+          "name": "16  Samples"
+        }
+      ]
+    }
+  ]
+}

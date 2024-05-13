@@ -827,4 +827,12 @@ def instantiateComponent(adcComponent):
     adcSystemDefFile.setSourcePath("../peripheral/adc_02486/templates/system/definitions.h.ftl")
     adcSystemDefFile.setMarkup(True)
 
-    adcComponent.addPlugin("../peripheral/adc_02486/plugin/adc_02486.jar")
+    adcComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "ADC_UI_MANAGER_ID_adc_02486",
+        {
+            "plugin_name": "ADC Configuration",
+            "main_html_path": "csp/plugins/configurators/adc-configurators/adc_02486/build/index.html",
+            "componentId": adcComponent.getID()
+        }
+    )
