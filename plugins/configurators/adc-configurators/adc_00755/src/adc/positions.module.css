@@ -1,0 +1,196 @@
+.main-block-diagram {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 736px;
+    width: 1051px
+    }
+.clockDivider {
+    position: absolute;
+    height: 26px;
+    width: 50px;
+    left: 208px;
+    top: 50px
+    }
+.clockSourceInput1 {
+    position: absolute;
+    height: 40px;
+    width: 120px;
+    left: 38px;
+    top: 47px
+    }
+.clockSourceInput1_freq {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 65px;
+    top: 60px
+    }
+.clockSourceInput2 {
+    position: absolute;
+    height: 40px;
+    width: 120px;
+    left: 38px;
+    top: 86px
+    }
+.clockSourceInput2_freq {
+    position: absolute;
+    left: 65px;
+    top: 102px;
+    width: 100px;
+    height: 20px
+    }
+.clockSourceRadio0 {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 330px;
+    top: 55px
+    }
+.clockSourceRadio1 {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    top: 92px;
+    left: 330px
+    }
+.voltageReferenceRadio0 {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 679px;
+    top: 39px
+    }
+.voltageReferenceRadio1 {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 679px;
+    top: 66px
+    }
+.voltageReferenceRadio2 {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 679px;
+    top: 129px
+    }
+.voltageReferenceRadio3 {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 679px;
+    top: 156px
+    }
+.avdd {
+    position: absolute;
+    height: 20px;
+    top: 40px;
+    width: 100px;
+    left: 523px
+    }
+.vrefh {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    left: 523px;
+    top: 67px
+    }
+.avss {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    left: 523px;
+    top: 129px
+    }
+.vrefl {
+    position: absolute;
+    height: 20px;
+    width: 100px;
+    left: 523px;
+    top: 157px
+    }
+.outputControlContainer {
+    position: absolute;
+    height: 80px;
+    top: 237px;
+    width: 280px;
+    left: 746px
+    }
+.conversionTriggerSource {
+    height: 26px;
+    position: absolute;
+    width: 235px;
+    top: 627px;
+    left: 435px
+    }
+.interruptOptions {
+    position: absolute;
+    height: 90px;
+    top: 220px;
+    width: 280px;
+    left: 433px
+    }
+.samplingContainer {
+    position: absolute;
+    height: 153px;
+    width: 280px;
+    top: 379px;
+    left: 409px
+    }
+.channelScanSettings {
+    position: absolute;
+    height: 30px;
+    width: 110px;
+    top: 404px;
+    left: 37px
+    }
+.positiveInputA {
+    position: absolute;
+    height: 26px;
+    width: 110px;
+    top: 442px;
+    left: 37px
+    }
+.positiveInputB {
+    position: absolute;
+    height: 26px;
+    width: 73px;
+    top: 427px;
+    left: 245px
+    }
+.negativeInputA {
+    position: absolute;
+    height: 26px;
+    width: 100px;
+    left: 14px;
+    top: 623px
+    }
+.negativeInputB {
+    position: absolute;
+    height: 26px;
+    width: 100px;
+    left: 123px;
+    top: 623px
+    }
+.scanEnable {
+    position: absolute;
+    height: 26px;
+    width: 100px;
+    left: 142px;
+    top: 484px
+    }
+.tad {
+    height: 20px;
+    position: absolute;
+    width: 100px;
+    top: 66px;
+    left: 370px
+    }
+.alternateInputSampleMode {
+    position: absolute;
+    height: 26px;
+    top: 701px;
+    width: 293px;
+    left: 241px
+    }

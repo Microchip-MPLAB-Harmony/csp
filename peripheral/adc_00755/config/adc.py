@@ -525,7 +525,7 @@ def instantiateComponent(adcComponent):
 ########################################################################
     adcMenu = adcComponent.createMenuSymbol("ADC_MENU", None)
     adcMenu.setLabel("ADC Configuration")
-
+    
     global adcSym_InterruptMode
     adcSym_InterruptMode = adcComponent.createBooleanSymbol("ADC_INTERRUPT", adcMenu)
     adcSym_InterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_00755;register:IEC0")
@@ -832,4 +832,12 @@ def instantiateComponent(adcComponent):
     adcSystemDefFile.setSourcePath("../peripheral/adc_00755/templates/system/definitions.h.ftl")
     adcSystemDefFile.setMarkup(True)
 
-    adcComponent.addPlugin("../peripheral/adc_00755/plugin/adc_00755.jar")
+    adcComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "ADC_UI_MANAGER_ID_adc_00755",
+        {
+            "plugin_name": "ADC Configuration",
+            "main_html_path": "csp/plugins/configurators/adc-configurators/adc_00755/build/index.html",
+            "componentId": adcComponent.getID()
+        }
+    )
