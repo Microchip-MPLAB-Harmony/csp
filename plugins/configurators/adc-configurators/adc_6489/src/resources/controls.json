@@ -1,0 +1,14 @@
+[
+  { "id": "react_adc_6489", "class": ["main-block-diagram"] },
+  { "id": "prescalar", "class": ["prescalar"], "symbol_id": "ADC_MR_PRESCAL" },
+  {
+    "id": "enableUserSequenceMode",
+    "class": ["enableUserSequenceMode"],
+    "symbol_id": "ADC_MR_USEQ"
+  },
+  { "id": "clockSource", "class": ["clockSource"], "symbol_id": "ADC_CLK_SRC" },
+  { "id": "conversionMode", "class": ["conversionMode"], "symbol_id": "ADC_CONV_MODE" },
+  { "id": "resultResolution", "class": ["resultResolution"], "symbol_id": "ADC_EMR_RES_VALUE" },
+  { "id": "triggerSelection", "class": ["triggerSelection"], "symbol_id": "ADC_MR_TRGSEL_VALUE" },
+  { "id": "button_1", "class": ["channel-sequence"], "type": "button" }
+]
