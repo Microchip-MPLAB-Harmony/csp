@@ -1183,4 +1183,13 @@ def instantiateComponent(adcComponent):
             adcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
 
     # load ADC manager
-    adcComponent.addPlugin("../peripheral/adc_u2247/plugin/adc_u2247.jar")
+    adcComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "ADC_UI_MANAGER_ID_adc_u2247",
+        {
+            "plugin_name": "ADC Configuration",
+            "main_html_path": "csp/plugins/configurators/adc-configurators/adc_u2247/build/index.html",
+            "componentId": adcComponent.getID()
+        }
+    )
+

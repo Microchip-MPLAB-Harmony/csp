@@ -1,0 +1,85 @@
+.clockFreq {
+  text-align: right;
+}
+
+.prescalarLabel {
+  color: black;
+}
+
+.channel-sequence {
+  cursor: pointer;
+}
+
+.convTime {
+  text-align: right;
+}
+
+.freqWarning {
+  color: red;
+}
+
+.text-red {
+  color: red;
+}
+
+.pannable-container {
+  /* max-width: 900px; */
+  /* max-height: 485px; */
+
+  /* width: 100vw; */
+  height: calc(100vh - 45px);
+  /* width: clamp(900px, 100vw, 100vw); */
+  /* height: clamp(0px, calc(100vh - 45px), 100vh); */
+  /* min-width: 0px; */
+  /* min-height: 0px; */
+  overflow: auto;
+  /* background-color: lightgreen; */
+  /* background-color: green; */
+  /* border: 2px dotted red; */
+  /* padding: 5px; */
+  position: relative;
+}
+
+.svg-container {
+  width: 900px;
+  height: 485px;
+  background-color: white;
+  position: relative;
+}
+
+.svg-wrapper {
+  width: 900px;
+  height: 485px;
+  /* background-color: blue; */
+}
+
+.block-diagram-menu {
+  position: absolute;
+  z-index: 1;
+}
+
+.main-block-diagram {
+  /* border: 1px solid black; */
+}
+
+body {
+  /* max-width: 910px;
+  min-height: 495px; */
+  /* background-color: yellow; */
+}
+
+.samplingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+  gap: 5px;
+}
+
+.labeledControlContainer {
+  display: flex;
+  gap: 5px;
+  justify-content: right;
+  align-items: center;
+  color: #0070c0;
+}

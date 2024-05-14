@@ -1,0 +1,203 @@
+.main-block-diagram {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 570px;
+    width: 1283px
+    }
+.startEventInput {
+    position: absolute;
+    width: 163px;
+    height: 26px;
+    top: 28px;
+    left: 155px
+    }
+.flushEventInput {
+    position: absolute;
+    top: 231px;
+    height: 26px;
+    width: 160px;
+    left: 155px
+    }
+.conversionTrigger {
+    position: absolute;
+    height: 26px;
+    left: 265px;
+    top: 181px;
+    width: 180px
+    }
+.channelSequenceButton {
+    position: absolute;
+    width: 139px;
+    left: 389px;
+    top: 29px;
+    height: 35px
+    }
+.enableUserSequenceMode {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 113px;
+    left: 483px
+    }
+.samplingContainer {
+    position: absolute;
+    top: 311px;
+    height: 62px;
+    width: 235px;
+    left: 343px
+    }
+.slaveEnable {
+    position: absolute;
+    top: 18px;
+    left: 1018px;
+    width: 109px;
+    height: 26px
+    }
+.enableRunInStandby {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 114px;
+    left: 680px
+    }
+.enableOnDemandControl {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 140px;
+    left: 708px
+    }
+.resultResolution {
+    position: absolute;
+    top: 279px;
+    height: 26px;
+    left: 255px;
+    width: 171px
+    }
+.positiveInputCombo {
+    position: absolute;
+    top: 311px;
+    height: 26px;
+    left: 142px;
+    width: 152px
+    }
+.negativeInputCombo {
+    position: absolute;
+    top: 517px;
+    height: 26px;
+    left: 142px;
+    width: 152px
+    }
+.sampleLength {
+    position: absolute;
+    height: 26px;
+    width: 86px;
+    top: 508px;
+    left: 303px
+    }
+.referenceCombo {
+    position: absolute;
+    top: 508px;
+    height: 26px;
+    left: 395px;
+    width: 185px
+    }
+.convTime {
+    position: absolute;
+    top: 482px;
+    height: 20px;
+    width: 87px;
+    left: 346px
+    }
+.highThresholdSpinner {
+    position: absolute;
+    height: 26px;
+    top: 357px;
+    width: 58px;
+    left: 642px
+    }
+.lowThresholdSpinner {
+    position: absolute;
+    height: 26px;
+    width: 58px;
+    top: 452px;
+    left: 642px
+    }
+.comparsionModeCombo {
+    position: absolute;
+    height: 26px;
+    top: 508px;
+    width: 181px;
+    left: 631px
+    }
+.enableWinmonInterrupt {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    top: 437px;
+    left: 855px
+    }
+.enableWinmonEvenOut {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 508px;
+    left: 855px
+    }
+.conversionTrigger0 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 350px;
+    top: 72px
+    }
+.conversionTrigger1 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 350px;
+    top: 103px
+    }
+.conversionTrigger2 {
+    position: absolute;
+    top: 134px;
+    width: 20px;
+    height: 20px;
+    left: 350px
+    }
+.prescaler {
+    position: absolute;
+    height: 26px;
+    top: 157px;
+    left: 811px;
+    width: 202px
+    }
+.prescalerLabel {
+    position: absolute;
+    height: 20px;
+    left: 908px;
+    width: 38px;
+    top: 88px
+    }
+.enableleft_alignedResult {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 998px;
+    top: 232px
+    }
+.enableResultInterrupt {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 259px;
+    left: 1076px
+    }
+.enableResultIEvent {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 348px;
+    left: 1078px
+    }
