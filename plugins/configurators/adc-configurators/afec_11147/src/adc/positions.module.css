@@ -1,0 +1,105 @@
+.prescalar {
+    position: absolute;
+    height: 26px;
+    width: 80px;
+    top: 133px;
+    left: 716px
+    }
+.enableUserSequenceMode {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    top: 80px;
+    left: 482px
+    }
+.triggerSelection {
+    position: absolute;
+    height: 26px;
+    top: 194px;
+    left: 164px;
+    width: 258px
+    }
+.resultResolution {
+    position: absolute;
+    height: 26px;
+    width: 206px;
+    left: 415px;
+    top: 275px
+    }
+.channel-sequence {
+    position: absolute;
+    width: 124px;
+    height: 32px;
+    top: 22px;
+    left: 386px
+    }
+.main-block-diagram {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 957px;
+    height: 515.72px
+    }
+.clockFreq {
+    position: absolute;
+    height: 20px;
+    width: 95px;
+    left: 574px;
+    top: 72px
+    }
+.prescalarLabel {
+    position: absolute;
+    height: 20px;
+    width: 30px;
+    top: 84px;
+    left: 752px
+    }
+.convTime {
+    position: absolute;
+    height: 20px;
+    width: 125px;
+    left: 429px;
+    top: 425px
+    }
+.freqWarning {
+    position: absolute;
+    height: 20px;
+    width: 230px;
+    left: 537px;
+    top: 24px
+    }
+.channel-configuration {
+    position: absolute;
+    width: 118px;
+    height: 42px;
+    top: 344px;
+    left: 236px
+    }
+.conversionModeRadio0 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 340px;
+    top: 43px
+    }
+.conversionModeRadio1 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 340px;
+    top: 83px
+    }
+.conversionModeRadio2 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 340px;
+    top: 120px
+    }
+.resultSign {
+    position: absolute;
+    top: 191px;
+    height: 26px;
+    width: 277px;
+    left: 549px
+    }

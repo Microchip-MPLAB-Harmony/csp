@@ -1005,4 +1005,23 @@ def instantiateComponent(afecComponent):
     afecSystemDefFile.setSourcePath("../peripheral/afec_11147/templates/system/definitions.h.ftl")
     afecSystemDefFile.setMarkup(True)
 
-    afecComponent.addPlugin("../peripheral/afec_11147/plugin/afec_11147.jar")
+    afecComponent.addPlugin(
+        "../../harmony-services/plugins/generic_plugin.jar",
+        "ADC_UI_MANAGER_ID_afec_11147",
+        {
+            "plugin_name": "AFEC " + get_suffix_number(afecComponent.getID()) + " Configuration",
+            "main_html_path": "csp/plugins/configurators/adc-configurators/afec_11147/build/index.html",
+            "componentId": afecComponent.getID()
+        }
+    )
+
+import re
+
+def get_suffix_number(value):
+    pattern = r"\d+$"
+    match = re.search(pattern, value)
+    if match:
+        return match.group()
+    else:
+        ""
+
