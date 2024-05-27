@@ -12,5 +12,6 @@
         <package diagram="CQFP164" id="9" name="CQFP164" />
         <package diagram="TQFP128" id="10" name="TQFP128" />
         <package diagram="QFN64" id="11" name="QFN64" />
+        <package diagram="TFBGA343" id="12" name="TFBGA343" />
     </packages>
 </pinfile>
