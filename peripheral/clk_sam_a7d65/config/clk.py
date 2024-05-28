@@ -1030,6 +1030,7 @@ if __name__ == "__main__":
 
     peripherals_node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
     max_clock_id = 0
+    peripheral_clock_list = []
     for module_node in peripherals_node.getChildren():
         module_name = module_node.getAttribute("name")
         for instance_node in module_node.getChildren():
@@ -1045,6 +1046,7 @@ if __name__ == "__main__":
                             clock_id_suffix = instance_name + param_node.getAttribute("name").split("CLOCK_ID")[1]
                         pcr_en = clk_component.createBooleanSymbol(clock_id_suffix + "_CLOCK_ENABLE", pcr_menu)
                         pcr_en.setLabel(clock_id_suffix)
+                        peripheral_clock_list.append(clock_id_suffix + "_CLOCK_ENABLE")
 
                         if int(clock_id) > max_clock_id:
                             max_clock_id = int(clock_id)
@@ -1127,6 +1129,11 @@ if __name__ == "__main__":
     system_counter_frequency.setReadOnly(True)
     system_counter_frequency.setDefaultValue(clk_remote_component.getSymbolValue("MAINCK_FREQUENCY"))
     system_counter_frequency.setDependencies(update_timestamp_frequency, ["SYSTEM_COUNTER_ENABLE", "MAINCK_FREQUENCY"])
+    
+    #Combo symbol for UI to identify peripherals with PMC clock */
+    periph_clk_ui_list_sym = clk_component.createComboSymbol(
+                     "PERIPHERAL_CLOCK_CONFIG", None, peripheral_clock_list)
+    periph_clk_ui_list_sym.setVisible(False)
 
     config = Variables.get("__CONFIGURATION_NAME")
 

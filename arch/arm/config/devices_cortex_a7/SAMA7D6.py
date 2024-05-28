@@ -243,7 +243,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwdt_44149/config/dwdt.py
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_a7d65/config/clk.py")
-#coreComponent.addPlugin("../peripheral/clk_sam_a7d65/plugin/clk_sam_a7d65.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_SAMA7D6_MANAGER", {"componentId": "core","plugin_name": "Clock Configuration", "main_html_path": "csp/plugins/configurators/clock-configurators/clk_sam_a7d65_configurator/build/index.html"})
 
 # load GIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gic/config/gic.py")
