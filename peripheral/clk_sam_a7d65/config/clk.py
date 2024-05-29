@@ -1129,7 +1129,11 @@ if __name__ == "__main__":
     system_counter_frequency.setReadOnly(True)
     system_counter_frequency.setDefaultValue(clk_remote_component.getSymbolValue("MAINCK_FREQUENCY"))
     system_counter_frequency.setDependencies(update_timestamp_frequency, ["SYSTEM_COUNTER_ENABLE", "MAINCK_FREQUENCY"])
-    
+
+    sfrbu_pswbu_softswitch_vbatEnable = clk_component.createBooleanSymbol("SFRBU_PSWBU_SOFTSWITCH_VBAT", menu)
+    sfrbu_pswbu_softswitch_vbatEnable.setLabel("Enable LDO Supply source is VBAT")
+    sfrbu_pswbu_softswitch_vbatEnable.setDefaultValue(True)
+
     #Combo symbol for UI to identify peripherals with PMC clock */
     periph_clk_ui_list_sym = clk_component.createComboSymbol(
                      "PERIPHERAL_CLOCK_CONFIG", None, peripheral_clock_list)

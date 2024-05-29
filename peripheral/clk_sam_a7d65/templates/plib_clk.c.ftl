@@ -374,6 +374,9 @@ void CLK_Initialize( void )
 {
     /* Set main crystal frequency for UTMI PLL */
     PMC_REGS->PMC_XTALF = PMC_XTALF_XTALF_${XTALF};
+<#if SFRBU_PSWBU_SOFTSWITCH_VBAT>
+    SFRBU_REGS->SFRBU_PSWBU = SFRBU_PSWBU_CTRL_SOFT | SFRBU_PSWBU_PSWKEY_PASSWD;
+</#if>
 
 <#list PLL_LIST as PLL_NAME>
 <#if .vars["CLK_" + PLL_NAME + "_EN"]>
