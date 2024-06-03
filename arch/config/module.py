@@ -39,6 +39,7 @@ def loadModule():
     # initiate stdio
     stdioComponent = Module.CreateComponent("stdio", "STDIO", "/Tools/", "../arch/stdio/config/stdio.py")
     stdioComponent.addDependency("UART","UART",False,True)
+    stdioComponent.addCapability("STDIO", "STDIO", True)
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         # initiate stdio
