@@ -1136,9 +1136,9 @@ for gclknumber in range(0, 12):
     gclkSym_GENCTRL_SRC[gclknumber].addKey(
         "PLL0_3", "9", "PLL0 Output 3")
     gclkSym_GENCTRL_SRC[gclknumber].addKey(
-        "PLL0_4", "9", "PLL0 Output 4")
+        "PLL0_4", "10", "PLL0 Output 4")
     gclkSym_GENCTRL_SRC[gclknumber].addKey(
-        "PLL0_5", "9", "PLL0 Output 5")
+        "PLL0_5", "11", "PLL0 Output 5")
     gclkSym_GENCTRL_SRC[gclknumber].setDefaultValue(5)
     gclkSym_GENCTRL_SRC[gclknumber].setOutputMode("Value")
     gclkSym_GENCTRL_SRC[gclknumber].setDisplayMode("Key")
