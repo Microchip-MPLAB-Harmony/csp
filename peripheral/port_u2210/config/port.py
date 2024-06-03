@@ -33,15 +33,36 @@ peripheralFunctionality = ["GPIO", "Alternate", "LED_AH", "LED_AL", "SWITCH_AH",
 global availablePinDictionary
 availablePinDictionary = {}
 
+global port_evsys_usersNamesList
+port_evsys_usersNamesList = []
+
+def portEvsysUserNamesPopulate(instanceName):
+    global port_evsys_usersNamesList
+
+    usersNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/users")
+    usersValues = usersNode.getChildren()
+    for id in range(0, len(usersNode.getChildren())):
+        if usersValues[id].getAttribute("module-instance") == instanceName:
+            port_evsys_usersNamesList.append(usersValues[id].getAttribute("name"))
+
+def portEvsysUserNameGet(usrNameMatchList):
+    global port_evsys_usersNamesList
+
+    for userName in port_evsys_usersNamesList:
+        if all ( x in userName for x in usrNameMatchList):
+            return userName
+
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
 
 global getAvailablePins
 
+portSecAliasRegSpace = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/register-group@[name=\"PORT_SEC\"]")
+
 portRegName = coreComponent.createStringSymbol("PORT_REG_NAME", None)
 portRegName.setVisible(False)
-if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true" and portSecAliasRegSpace != None:
     portRegName.setValue("PORT_SEC")
 else:
     portRegName.setValue("PORT")
@@ -49,6 +70,30 @@ else:
 def getAvailablePins():
 
     return availablePinDictionary
+
+def getValueGroupNode__Port(module_name, register_group, register_name, bitfield_name , mode = None):
+    bitfield_node_path = ""
+    value_group_node = None
+
+    if mode != None:
+        bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module_name, register_group, mode, register_name, bitfield_name)
+    else:
+         bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module_name, register_group, register_name, bitfield_name)
+
+    print (bitfield_node_path)
+    bitfield_node = ATDF.getNode(bitfield_node_path)
+
+    if bitfield_node != None:
+        if bitfield_node.getAttribute("values") == None:
+            print (register_name + "_" + bitfield_name + "does not have value-group attribute")
+        else:
+            value_group_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module_name, bitfield_node.getAttribute("values")))
+            if value_group_node == None:
+                print ("value-group = " + bitfield_node.getAttribute("values") + " not defined")
+    else:
+        print ("bitfield_name = " + bitfield_name + " not found" )
+
+    return value_group_node
 
 def packageChange(symbol, pinout):
     global uniquePinout
@@ -208,8 +253,9 @@ def evsysControl(symbol, event):
             if(Database.getSymbolValue("core", "PORT_"+ str(j) + "_EVACT"+str(i)+"_ENABLE")) == True:
                 status = True
                 break
-        if Database.getSymbolValue("evsys", "USER_PORT_EV_" + str(i) + "_READY") != status:
-            Database.setSymbolValue("evsys", "USER_PORT_EV_" + str(i) + "_READY", status, 2)
+        evsysUserName = portEvsysUserNameGet(["EV", str(i)])
+        if Database.getSymbolValue("evsys", "USER_" + evsysUserName + "_READY") != status:
+            Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", status, 2)
 
     evctrl = 0
 
@@ -272,14 +318,34 @@ def update_port_nonsec_mask(symbol, event):
     pinNum = event["id"].split("_IS_NON_SECURE")[0].split("PIN_")[1]
     portGroup = ord(Database.getSymbolValue("core", "PIN_" + str(pinNum) + "_PORT_GROUP")) - 65
     pinPos = int(Database.getSymbolValue("core", "PIN_" + str(pinNum) + "_PORT_PIN"))
-    portNonSecRegValue = int(Database.getSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC"))
+    if Database.getSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC") != None:
+        portNonSecRegValue = int(Database.getSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC"))
 
-    if event["value"] == 1:
-        portNonSecRegValue = portNonSecRegValue | 1<<pinPos
-    else:
-        portNonSecRegValue = portNonSecRegValue & ~(1<<pinPos)
+        if event["value"] == 1:
+            portNonSecRegValue = portNonSecRegValue | 1<<pinPos
+        else:
+            portNonSecRegValue = portNonSecRegValue & ~(1<<pinPos)
 
-    Database.setSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC", long(portNonSecRegValue))
+        Database.setSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC", long(portNonSecRegValue))
+        
+
+def updateSecurityAttributeVisibility(symbol, event):
+    component = event["source"]
+    portPinCount = component.getSymbolValue("PORT_PIN_COUNT")
+
+    print (portPinCount)
+
+    for pinNumber in range(1, portPinCount + 1):
+        pinSecuritySym = component.getSymbolByID("PIN_" + str(pinNumber) + "_IS_NON_SECURE")
+
+        print (pinSecuritySym.getLabel())
+
+        if event["value"] == True:
+            pinSecuritySym.setReadOnly(False)
+        else:
+            pinSecuritySym.setReadOnly(True)
+            pinSecuritySym.setSelectedKey("SECURE")
+
 ###################################################################################################
 ######################################### PORT Main Menu  #########################################
 ###################################################################################################
@@ -294,6 +360,8 @@ pincount = 0
 ## Number of unique pinouts
 global uniquePinout
 global swdPin
+
+portEvsysUserNamesPopulate("PORT")
 
 uniquePinout = 1
 portMenu = coreComponent.createMenuSymbol("PORT_MENU", None)
@@ -574,7 +642,7 @@ for pinNumber in range(1, internalPincount + 1):
         pinOpenDrain[pinNumber-1].setReadOnly(True)
 
     if portPINCFGSlewRate.getValue() == True:
-        portSLEWLIMValueGroupNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]/value-group@[name=\"PINCFG__SLEWLIM\"]")
+        portSLEWLIMValueGroupNode = getValueGroupNode__Port("PORT", "GROUP", "PINCFG", "SLEWLIM")
         if portSLEWLIMValueGroupNode != None:
             pinSlewRate.append(pinNumber)
             pinSlewRate[pinNumber-1] = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_SLEWRATE", pin[pinNumber-1])
@@ -626,9 +694,19 @@ for pinNumber in range(1, internalPincount + 1):
         pinSecurity.setDisplayMode("Key")
         pinSecurity.setVisible(True)
         pinSecurity.setDefaultValue(0)
+        if Database.getSymbolValue("core", "CONFIG_OVERALL_SEC_TO_NONSEC_FOR_MIXSEC") != None:
+            pinSecurity.setReadOnly(Database.getSymbolValue("core", "PORT_IS_NON_SECURE") == False)
         pinSecurity.setDependencies(update_port_nonsec_mask, ["PIN_" + str(pinNumber) + "_IS_NON_SECURE"])
 
 portSym_PinMaxIndex.setDefaultValue(max_index)
+
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    if Database.getSymbolValue("core", "CONFIG_OVERALL_SEC_TO_NONSEC_FOR_MIXSEC") != None:
+        pinSecurityVisibility = coreComponent.createBooleanSymbol("PIN_SECURITY_VISIBILITY", None)
+        pinSecurityVisibility.setVisible(False)
+        pinSecurityVisibility.setDependencies(updateSecurityAttributeVisibility, ["core.PORT_IS_NON_SECURE"])
+
+
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################
@@ -668,7 +746,7 @@ port = []
 visibility = False
 portSym_GroupName = []
 
-portEvsysActionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]/value-group@[name=\"PORT_EVCTRL__EVACT0\"]")
+portEvsysActionNode = getValueGroupNode__Port("PORT", "GROUP", "EVCTRL", "EVACT0")
 if portEvsysActionNode != None:
     portEvsysActionValues = portEvsysActionNode.getChildren()
 
@@ -804,7 +882,8 @@ portSymPMUX_FUNCTIONS.setTarget("core.PERIPHERAL_PMUX_FUNCTIONS_LIST")
 portSymPMUX_FUNCTIONS.setVisible(False)
 
 portPMUXValueGroupValues = 0
-portPMUXValueGroupNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]/value-group@[name=\"PORT_PMUX__PMUXE\"]")
+portPMUXValueGroupNode = getValueGroupNode__Port("PORT", "GROUP", "PMUX", "PMUXE")
+
 if portPMUXValueGroupNode != None:
     portPMUXValueGroupValues = portPMUXValueGroupNode.getChildren()
 
@@ -883,6 +962,7 @@ portSym_SystemDefFile.setType("STRING")
 portSym_SystemDefFile.setMarkup(True)
 
 if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+
     nonSecportSym_HeaderFile = coreComponent.createFileSymbol("PORT_HEADER_NONSEC", None)
     nonSecportSym_HeaderFile.setSourcePath("../peripheral/port_u2210/templates/trustZone/plib_port_nonsecure.h.ftl")
     nonSecportSym_HeaderFile.setOutputName("plib_port.h")
