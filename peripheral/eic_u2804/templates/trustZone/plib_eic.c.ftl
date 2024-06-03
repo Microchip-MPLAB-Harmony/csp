@@ -163,7 +163,8 @@ void __attribute__((used)) ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 <#assign Enable = "EIC_INT_" + x>
 <#assign EIC_NON_SEC = "EIC_NONSEC_" + x>
 <#if .vars[Enable] && (.vars[EIC_NON_SEC] == "NON-SECURE")>
-void __attribute__((used)) ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
+<#assign EIC_INT_HANDLER_NAME = "EIC_INT_HANDLER_NAME_" + x>
+void __attribute__((used)) ${.vars[EIC_INT_HANDLER_NAME]}_InterruptHandler(void)
 {
     /* Clear interrupt flag */
     ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << ${x});

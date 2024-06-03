@@ -21,6 +21,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+import re
 
 global InterruptVector
 InterruptVector = []
@@ -39,11 +40,54 @@ global intPrev
 intPrev = 0
 global secPrev
 secPrev = 0
+global evsys_generatorsNamesList
+evsys_generatorsNamesList = []
+global has_digits
 ###################################################################################################
 ######################################### Callbacks ###############################################
 ###################################################################################################
 
 global DEBOUNCEN_Code
+
+def eicEvsysGeneratorNamesPopulate(instanceName):
+    global evsys_generatorsNamesList
+
+    generatorNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators")
+    generatorValues = generatorNode.getChildren()
+    for id in range(0, len(generatorNode.getChildren())):
+        if generatorValues[id].getAttribute("module-instance") == instanceName:
+            evsys_generatorsNamesList.append(generatorValues[id].getAttribute("name"))
+
+def eicEvsysGenNameGet(genNameMatchList):
+    global evsys_generatorsNamesList
+
+    for genName in evsys_generatorsNamesList:
+        if all ( x in genName for x in genNameMatchList):
+            return genName
+
+def getValueGroupNode__EIC(module_name, register_group, register_name, bitfield_name , mode = None):
+    bitfield_node_path = ""
+    value_group_node = None
+
+    if mode != None:
+        bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module_name, register_group, mode, register_name, bitfield_name)
+    else:
+         bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module_name, register_group, register_name, bitfield_name)
+
+    print (bitfield_node_path)
+    bitfield_node = ATDF.getNode(bitfield_node_path)
+
+    if bitfield_node != None:
+        if bitfield_node.getAttribute("values") == None:
+            print (register_name + "_" + bitfield_name + "does not have value-group attribute")
+        else:
+            value_group_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module_name, bitfield_node.getAttribute("values")))
+            if value_group_node == None:
+                print ("value-group = " + bitfield_node.getAttribute("values") + " not defined")
+    else:
+        print ("bitfield_name = " + bitfield_name + " not found" )
+
+    return value_group_node
 
 def confMenu(symbol, event):
 
@@ -64,35 +108,50 @@ def codeGenerationForEVCCTRL_EXTINTEO(symbol, event):
     if symbol.getID() == "EIC_EXTINTEO":
         isEVCTL = True
     channel = int(event["id"].split("_")[2])
+    evsysGenName = eicEvsysGenNameGet(["EXTINT", str(channel)])
     if Database.getSymbolValue(event["namespace"], "EIC_CHAN_" + str(channel)):
         if not str(event["id"]).startswith("EIC_CHAN_"):
             if(event["value"] == True):
                 symbol.setValue((symbol.getValue() | (0x1 << channel)) , 1)
                 if isEVCTL:
-                    Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
+                    Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", True, 2)
             else:
                 symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
                 if isEVCTL:
-                    Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+                    Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", False, 2)
         else:
             parameter = symbol.getID().split("EIC_")[1]
             if(Database.getSymbolValue(event["namespace"], "EIC_" + str(parameter) + "_" + str(channel)) == True):
                 symbol.setValue((symbol.getValue() | (0x1 << channel)) , 1)
                 if isEVCTL:
-                    Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
+                    Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", True, 2)
             else:
                 symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
                 if isEVCTL:
-                    Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+                    Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", False, 2)
 
     else:
         symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
         if isEVCTL:
-            Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+            Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", False, 2)
 
 def fileGenLogic(symbol, event):
     global EICfilesArray
-    if int(Database.getSymbolValue(event["namespace"], "EIC_NONSEC")) > 0 or int(Database.getSymbolValue(event["namespace"], "NMI_IS_NON_SECURE")) == 1:
+    global eicInstanceName
+
+    overallSecurity = "NON_SECURE"
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        if Database.getSymbolValue("core", "CONFIG_OVERALL_SEC_TO_NONSEC_FOR_MIXSEC") != None:
+            if Database.getSymbolValue(event["namespace"], "IS_EIC_NONSEC") == True:
+                overallSecurity = "NON_SECURE"
+            else:
+                overallSecurity = "SECURE"
+
+
+    print (overallSecurity)
+
+    if (int(Database.getSymbolValue(event["namespace"], "EIC_NONSEC")) > 0 or int(Database.getSymbolValue(event["namespace"], "NMI_IS_NON_SECURE")) == 1) and (overallSecurity == "NON_SECURE"):
         EICfilesArray[0].setEnabled(True)
         EICfilesArray[1].setEnabled(True)
         EICfilesArray[2].setEnabled(True)
@@ -102,6 +161,8 @@ def fileGenLogic(symbol, event):
         EICfilesArray[1].setEnabled(False)
         EICfilesArray[2].setEnabled(False)
         EICfilesArray[3].setEnabled(False)
+
+    print ("Enable status = " + str(EICfilesArray[0].getEnabled()))
 
 def updateEicInterruptSecurity(symbol, event):
     global InterruptVectorSecurity
@@ -240,6 +301,20 @@ def debounceMenu(symbol, event):
 def filterMenu(symbol, event):
     symbol.setVisible((event["value"] > 0))
 
+def eicIsNonsecUpdate(symbol, event):
+    symbol.setValue(event["value"])
+
+def eicSecurityModeVisibility(symbol, event):
+    #If the EIC is configured as Non Secure in TZ manager, then show the inidividual EIC pin Security configuration for mixed secure behavior
+    if event["value"] == True:
+        symbol.setReadOnly(False)
+    else:
+        symbol.setReadOnly(True)
+        symbol.setSelectedKey("SECURE")
+
+def has_digits(string):
+    res = re.compile('\d').search(string)
+    return res is not None
 ###################################################################################################
 ######################################### Component ###############################################
 ###################################################################################################
@@ -263,8 +338,9 @@ def instantiateComponent(eicComponent):
     global sharedVector
     InterruptVectorUpdate = []
 
+    eicTickOnNode = getValueGroupNode__EIC("EIC", "EIC", "DPRESCALER", "TICKON")
+
     debounceSupported = eicComponent.createBooleanSymbol("DEBOUNCE_SUPPORT", None)
-    eicTickOnNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__TICKON\"]")
     if eicTickOnNode != None:
         debounceSupported.setDefaultValue(True)
     debounceSupported.setVisible(False)
@@ -272,6 +348,8 @@ def instantiateComponent(eicComponent):
     eicInstanceName = eicComponent.createStringSymbol("EIC_INSTANCE_NAME", None)
     eicInstanceName.setVisible(False)
     eicInstanceName.setDefaultValue(eicComponent.getID().upper())
+
+    eicEvsysGeneratorNamesPopulate(eicInstanceName.getValue())
 
     #clock enable
     Database.clearSymbolValue("core", eicInstanceName.getValue()+"_CLOCK_ENABLE")
@@ -288,7 +366,7 @@ def instantiateComponent(eicComponent):
     CTRLA_CKSEL_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:%NOREGISTER%")
     CTRLA_CKSEL_SelectionSymbol.setLabel("EIC Clock Source Selection")
 
-    eicClkselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_CTRLA__CKSEL\"]")
+    eicClkselNode = getValueGroupNode__EIC("EIC", "EIC", "CTRLA", "CKSEL")
 
     for index in range(len(eicClkselNode.getChildren())):
         eicClkselKeyName = eicClkselNode.getChildren()[index].getAttribute("name")
@@ -301,6 +379,7 @@ def instantiateComponent(eicComponent):
     CTRLA_CKSEL_SelectionSymbol.setDisplayMode("Description")
 
     #Non-Maskable Interrupt Control
+
     eicPLX4 = eicComponent.createBooleanSymbol("NMI_CTRL", None)
     eicPLX4.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:CTRL")
     eicPLX4.setLabel("Non Maskable Interrupt Control")
@@ -311,6 +390,13 @@ def instantiateComponent(eicComponent):
     nmiConfMenu.setVisible(False)
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        if Database.getSymbolValue("core", "CONFIG_OVERALL_SEC_TO_NONSEC_FOR_MIXSEC") != None:
+            eicIsNonsec = eicComponent.createBooleanSymbol("IS_EIC_NONSEC", None)
+            eicIsNonsec.setVisible(False)
+            eicIsNonsec.setDefaultValue(Database.getSymbolValue("core", eicInstanceName.getValue() + "_IS_NON_SECURE"))
+            eicIsNonsec.setDependencies(eicIsNonsecUpdate, ["core." + eicInstanceName.getValue() + "_IS_NON_SECURE"])
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         nmiSecurity = eicComponent.createKeyValueSetSymbol("NMI_IS_NON_SECURE", nmiConfMenu)
         nmiSecurity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:NONSEC")
         nmiSecurity.setLabel("Security mode")
@@ -318,15 +404,17 @@ def instantiateComponent(eicComponent):
         nmiSecurity.addKey("NON-SECURE", "1", "True")
         nmiSecurity.setOutputMode("Key")
         nmiSecurity.setDisplayMode("Key")
-        nmiSecurity.setVisible(True)
         nmiSecurity.setDefaultValue(0)
+        if Database.getSymbolValue("core", "CONFIG_OVERALL_SEC_TO_NONSEC_FOR_MIXSEC") != None:
+            nmiSecurity.setDependencies(eicSecurityModeVisibility, ["IS_EIC_NONSEC"])
+            nmiSecurity.setReadOnly(eicIsNonsec.getValue() == False)
 
     #NMIASYNCH
     NMI_ASYNCH_Selection = eicComponent.createKeyValueSetSymbol("NMI_ASYNCH" , nmiConfMenu)
     NMI_ASYNCH_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:NMICTRL")
     NMI_ASYNCH_Selection.setLabel("NMI Detection Clock")
 
-    eicNMIAsyncNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_NMICTRL__NMIASYNCH\"]")
+    eicNMIAsyncNode = getValueGroupNode__EIC("EIC", "EIC", "NMICTRL", "NMIASYNCH")
     eicNMIAsyncValues = []
     eicNMIAsyncValues = eicNMIAsyncNode.getChildren()
 
@@ -350,7 +438,7 @@ def instantiateComponent(eicComponent):
     NMI_SENSE_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:NMICTRL")
     NMI_SENSE_SelectionSymbol.setLabel("NMI Interrupt Edge Selection")
 
-    eicNMISenseNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_NMICTRL__NMISENSE\"]")
+    eicNMISenseNode = getValueGroupNode__EIC("EIC", "EIC", "NMICTRL", "NMISENSE")
 
     for index in range(len(eicNMISenseNode.getChildren())):
         eicNMISenseKeyName = eicNMISenseNode.getChildren()[index].getAttribute("name")
@@ -361,6 +449,15 @@ def instantiateComponent(eicComponent):
     NMI_SENSE_SelectionSymbol.setDefaultValue(0)
     NMI_SENSE_SelectionSymbol.setOutputMode("Key")
     NMI_SENSE_SelectionSymbol.setDisplayMode("Description")
+
+    configRegArrBased = eicComponent.createBooleanSymbol("EIC_CONFIG_REG_ARR_BASED" , None)
+    configRegArrBased.setVisible(False)
+
+    config_reg_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"CONFIG\"]")
+    if config_reg_node != None and int(config_reg_node.getAttribute("count")) > 1:
+        configRegArrBased.setDefaultValue(True)
+    else:
+        configRegArrBased.setDefaultValue(False)
 
     #Interrupt 0 - EXTINT Settings
     for extIntIndex in range(0 , extIntCount):
@@ -385,9 +482,11 @@ def instantiateComponent(eicComponent):
             eicSecurity.addKey("NON-SECURE", "1", "True")
             eicSecurity.setOutputMode("Key")
             eicSecurity.setDisplayMode("Key")
-            eicSecurity.setVisible(True)
             eicSecurity.setDefaultValue(0)
             eicSym_nonSecList.append("EIC_NONSEC_" + str(extIntIndex))
+            if Database.getSymbolValue("core", "CONFIG_OVERALL_SEC_TO_NONSEC_FOR_MIXSEC") != None:
+                eicSecurity.setDependencies(eicSecurityModeVisibility, ["IS_EIC_NONSEC"])
+                eicSecurity.setReadOnly(eicIsNonsec.getValue() == False)
 
         eicINT = eicComponent.createBooleanSymbol("EIC_INT_" + str(extIntIndex) , eicConfiguration)
         eicINT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:CTRLA")
@@ -407,7 +506,7 @@ def instantiateComponent(eicComponent):
         ASYNCH_ASYNCH_Selection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:ASYNCH")
         ASYNCH_ASYNCH_Selection.setLabel("External Interrupt" + str(extIntIndex) + " Detection Clock")
 
-        eicAsynchNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_ASYNCH__ASYNCH\"]")
+        eicAsynchNode = getValueGroupNode__EIC("EIC", "EIC", "ASYNCH", "ASYNCH")
 
         for index in range(len(eicAsynchNode.getChildren())):
             eicAsynchKeyName = eicAsynchNode.getChildren()[index].getAttribute("name")
@@ -427,13 +526,10 @@ def instantiateComponent(eicComponent):
         CONFIG_SENSE_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:CONFIG")
         CONFIG_SENSE_SelectionSymbol.setLabel("External Interrupt" + str(extIntIndex) + " Edge Selection")
 
-        eicConfigSenseValGrp = ""
-        eicConfigSenseModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]")
-        for index in range(len(eicConfigSenseModuleNode.getChildren())):
-            if "EIC_CONFIG__SENSE" in eicConfigSenseModuleNode.getChildren()[index].getAttribute("name"):
-                eicConfigSenseValGrp = eicConfigSenseModuleNode.getChildren()[index].getAttribute("name")
-                break;
-        eicConfigSenseNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicConfigSenseValGrp + "\"]")
+        if configRegArrBased.getValue() == True or extIntCount < 9:
+            eicConfigSenseNode = getValueGroupNode__EIC("EIC", "EIC", "CONFIG", "SENSE0")
+        else:
+            eicConfigSenseNode = getValueGroupNode__EIC("EIC", "EIC", "CONFIG0", "SENSE0")
 
         for index in range(len(eicConfigSenseNode.getChildren())):
             eicConfigSenseKeyName = eicConfigSenseNode.getChildren()[index].getAttribute("name")
@@ -461,6 +557,8 @@ def instantiateComponent(eicComponent):
         CONFIG_FILTER_Selection.setDependencies(filterMenu, ["EIC_CONFIG_SENSE_" + str(extIntIndex)])
         # populate a list with IDs for code generation dependency
         eicSym_debounceList.append("EIC_DEBOUNCEN_" + str(extIntIndex))
+
+
 
 ################################################################################
 ################### Business Logic calls for generating code ###################
@@ -531,8 +629,7 @@ def instantiateComponent(eicComponent):
         DEBOUNCER_NO_STATES_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:DPRESCALER")
         DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States for EXTINT[7:0]")
 
-        eicStates0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"STATES0\"]")
-        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicStates0Node.getAttribute("values") + "\"]")
+        eicStatesxNode = getValueGroupNode__EIC("EIC", "EIC", "DPRESCALER", "STATES0")
 
         for index in range(len(eicStatesxNode.getChildren())):
             eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
@@ -549,8 +646,7 @@ def instantiateComponent(eicComponent):
         DEBOUNCER_PRESCALER_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:DPRESCALER")
         DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[7:0]")
 
-        eicPrescaler0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"PRESCALER0\"]")
-        eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicPrescaler0Node.getAttribute("values") + "\"]")
+        eicPrescalerNode = getValueGroupNode__EIC("EIC", "EIC", "DPRESCALER", "PRESCALER0")
 
         for index in range(len(eicPrescalerNode.getChildren())):
             eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
@@ -562,8 +658,8 @@ def instantiateComponent(eicComponent):
         DEBOUNCER_PRESCALER_SelectionSymbol.setOutputMode("Value")
         DEBOUNCER_PRESCALER_SelectionSymbol.setDisplayMode("Description")
 
-        eicStates1Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"STATES1\"]")
-        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicStates1Node.getAttribute("values") + "\"]")
+        eicStatesxNode = getValueGroupNode__EIC("EIC", "EIC", "DPRESCALER", "STATES1")
+
         if eicStatesxNode != None:
             #DEBOUNCER - Number of States x (8:15)
             DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_1" , eicDebounceMenu)
@@ -585,8 +681,7 @@ def instantiateComponent(eicComponent):
             DEBOUNCER_PRESCALER_SelectionSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:eic_u2804;register:DPRESCALER")
             DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[15:8]")
 
-            eicPrescaler1Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"PRESCALER1\"]")
-            eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicPrescaler1Node.getAttribute("values") + "\"]")
+            eicPrescalerNode = getValueGroupNode__EIC("EIC", "EIC", "DPRESCALER", "PRESCALER1")
 
             for index in range(len(eicPrescalerNode.getChildren())):
                 eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
@@ -607,6 +702,15 @@ def instantiateComponent(eicComponent):
     for id in range(0, len(vectorNode.getChildren())):
         if vectorValues[id].getAttribute("module-instance") == "EIC":
             name=vectorValues[id].getAttribute("name")
+
+            if has_digits(name) == True:
+                eicChannel = re.sub("[^0-9]", "", name)        #Extract the EIC channel number from the vector name
+            else:
+                eicChannel = name                               # When vector name is OTHER or NSCHK or just EIC in case of single vector line
+            eicIntHandlerName = eicComponent.createStringSymbol("EIC_INT_HANDLER_NAME_" + str(eicChannel) , None)
+            eicIntHandlerName.setDefaultValue(name)
+            eicIntHandlerName.setVisible(False)
+
             InterruptVector.append(name + "_INTERRUPT_ENABLE")
             InterruptHandler.append(name + "_INTERRUPT_HANDLER")
             InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
@@ -691,6 +795,11 @@ def instantiateComponent(eicComponent):
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
 
+        if ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EIC\"]/instance@[name=\"EIC\"]/register-group@[name=\"EIC_SEC\"]") != None:
+            eicSecureAlias = eicComponent.createBooleanSymbol("EIC_SECURE_ALIAS", None)
+            eicSecureAlias.setValue(True)
+            eicSecureAlias.setVisible(False)
+
         nonseceicHeader1File = eicComponent.createFileSymbol("EIC_HEADER_NONSEC", None)
         nonseceicHeader1File.setSourcePath("../peripheral/eic_u2804/templates/trustZone/plib_eic.h.ftl")
         nonseceicHeader1File.setOutputName("plib_"+eicInstanceName.getValue().lower()+".h")
@@ -722,7 +831,7 @@ def instantiateComponent(eicComponent):
         nonseceicSystemDefFile.setSourcePath("../peripheral/eic_u2804/templates/system/definitions.h.ftl")
         nonseceicSystemDefFile.setMarkup(True)
         nonseceicSystemDefFile.setEnabled(False)
-        nonseceicSystemDefFile.setDependencies(fileGenLogic, ["EIC_NONSEC", "NMI_IS_NON_SECURE"])
+        nonseceicSystemDefFile.setDependencies(fileGenLogic, ["EIC_NONSEC", "NMI_IS_NON_SECURE", "IS_EIC_NONSEC"])
 
         EICfilesArray.append(nonseceicHeader1File)
         EICfilesArray.append(nonseceicSource1File)
