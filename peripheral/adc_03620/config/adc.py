@@ -22,6 +22,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 import math
+import re
 
 ###################################################################################################
 ########################### Component   #################################
@@ -34,6 +35,8 @@ global earlyInterruptPresent
 global numTriggers
 global InterruptVectorSecurity
 global ADCfilesArray
+global evsys_generatorsNamesList
+global evsys_usersNamesList
 
 global defaultCore
 defaultCore = 0
@@ -56,6 +59,8 @@ adcMaxChannelsDepList = []
 adcEvsysGenCHRDYCDepList = []
 adcEvsysGenCMPDepList = []
 adcEvsysUserDepList = []
+evsys_generatorsNamesList = []
+evsys_usersNamesList = []
 
 ADC_CORCTRL_REG_DepList = []
 ADC_CHNCFG1_REG_DepList = []
@@ -73,6 +78,65 @@ ADC_CTRLD_REG_DepList = []
 ADC_CTRLC_REG_DepList = []
 ADC_CTRLA_REG_DepList = []
 ADC_CTRLD__ANLEN_DepList = []
+
+ADC_Global_InterruptNames = ["GLOBAL", "REQ0"]
+ADC_Core_InterruptNames = ["CORE1","CORE2","CORE3","CORE4","REQ1","REQ2","REQ3","REQ4"]
+
+def adcEvsysGeneratorNamesPopulate(instanceName):
+    global evsys_generatorsNamesList
+
+    generatorNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators")
+    generatorValues = generatorNode.getChildren()
+    for id in range(0, len(generatorNode.getChildren())):
+        if generatorValues[id].getAttribute("module-instance") == instanceName:
+            evsys_generatorsNamesList.append(generatorValues[id].getAttribute("name"))
+
+def adcEvsysUserNamesPopulate(instanceName):
+    global evsys_usersNamesList
+
+    usersNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/users")
+    usersValues = usersNode.getChildren()
+    for id in range(0, len(usersNode.getChildren())):
+        if usersValues[id].getAttribute("module-instance") == instanceName:
+            evsys_usersNamesList.append(usersValues[id].getAttribute("name"))
+
+def adcEvsysGenNameGet(genNameMatchList):
+    global evsys_generatorsNamesList
+
+    for genName in evsys_generatorsNamesList:
+        if all ( x in genName for x in genNameMatchList):
+            return genName
+
+def adcEvsysUserNameGet(usrNameMatchList):
+    global evsys_usersNamesList
+
+    for userName in evsys_usersNamesList:
+        if all ( x in userName for x in usrNameMatchList):
+            return userName
+
+def getValueGroupNode__ADC(module_name, register_group, register_name, bitfield_name , mode = None):
+    bitfield_node_path = ""
+    value_group_node = None
+
+    if mode != None:
+        bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module_name, register_group, mode, register_name, bitfield_name)
+    else:
+         bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module_name, register_group, register_name, bitfield_name)
+
+    print (bitfield_node_path)
+    bitfield_node = ATDF.getNode(bitfield_node_path)
+
+    if bitfield_node != None:
+        if bitfield_node.getAttribute("values") == None:
+            print (register_name + "_" + bitfield_name + "does not have value-group attribute")
+        else:
+            value_group_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module_name, bitfield_node.getAttribute("values")))
+            if value_group_node == None:
+                print ("value-group = " + bitfield_node.getAttribute("values") + " not defined")
+    else:
+        print ("bitfield_name = " + bitfield_name + " not found" )
+
+    return value_group_node
 
 def getChannel(symbol_id):
     return int(symbol_id.split("_")[4])
@@ -271,23 +335,28 @@ def coreSymVisibilityUpdate (symbol, event):
     enableCoreNSymbols(localComponent, n, event["value"])
 
 def updateAdcNVICInterrutps(symbol, event):
+    localComponent = symbol.getComponent()
     intEnable = False if event["value"] == 0 else True
 
     if symbol.getID() == "ADC_GLOBAL_NVIC_INT":
-        Database.setSymbolValue("core", "ADC_GLOBAL" + "_INTERRUPT_ENABLE", intEnable, 2)
-        Database.setSymbolValue("core", "ADC_GLOBAL" + "_INTERRUPT_HANDLER_LOCK", intEnable, 2)
+        int_name = localComponent.getSymbolValue("ADC_CORE_GLOBAL_INT_HANDLER_NAME")
+
+        Database.setSymbolValue("core", int_name + "_INTERRUPT_ENABLE", intEnable, 2)
+        Database.setSymbolValue("core", int_name + "_INTERRUPT_HANDLER_LOCK", intEnable, 2)
         if intEnable == False:
-            Database.setSymbolValue("core", "ADC_GLOBAL" + "_INTERRUPT_HANDLER", "ADC_GLOBAL" + "_Handler", 2)
+            Database.setSymbolValue("core", int_name + "_INTERRUPT_HANDLER", int_name + "_Handler", 2)
         else:
-            Database.setSymbolValue("core", "ADC_GLOBAL" + "_INTERRUPT_HANDLER", "ADC_GLOBAL" + "_InterruptHandler", 2)
+            Database.setSymbolValue("core", int_name + "_INTERRUPT_HANDLER", int_name + "_InterruptHandler", 2)
     else:
         n = getCore(symbol.getID()) + 1
-        Database.setSymbolValue("core", "ADC_CORE" + str(n) + "_INTERRUPT_ENABLE", intEnable, 2)
-        Database.setSymbolValue("core", "ADC_CORE"  + str(n) + "_INTERRUPT_HANDLER_LOCK", intEnable, 2)
+        int_name = localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_INT_HANDLER_NAME")
+
+        Database.setSymbolValue("core", int_name + "_INTERRUPT_ENABLE", intEnable, 2)
+        Database.setSymbolValue("core", int_name + "_INTERRUPT_HANDLER_LOCK", intEnable, 2)
         if intEnable == False:
-            Database.setSymbolValue("core", "ADC_CORE" + str(n) + "_INTERRUPT_HANDLER", "ADC_CORE" + str(n) + "_Handler", 2)
+            Database.setSymbolValue("core", int_name + "_INTERRUPT_HANDLER", int_name + "_Handler", 2)
         else:
-            Database.setSymbolValue("core", "ADC_CORE" + str(n) + "_INTERRUPT_HANDLER", "ADC_CORE" + str(n) + "_InterruptHandler", 2)
+            Database.setSymbolValue("core", int_name + "_INTERRUPT_HANDLER", int_name + "_InterruptHandler", 2)
 
 def updateCoreIntEnabled (symbol, event):
     global nSARCore
@@ -373,6 +442,7 @@ def updateEvctrlRESRDYEO (symbol, event):
 
 def updateEvsysChrdyGeneratorSymbols (symbol, event):
     global adcInstanceName
+    global nSARCore
     localComponent = symbol.getComponent()
     n = getCore(symbol.getID())
 
@@ -384,10 +454,17 @@ def updateEvsysChrdyGeneratorSymbols (symbol, event):
     if core_enabled == True and evctrl_resrdyeo == True:
         isADC_CHRDYC_x_Active = True
 
-    Database.setSymbolValue("evsys", "GENERATOR_" + str(adcInstanceName.getValue()) + "_CHRDYC_" + str(n) + "_ACTIVE", isADC_CHRDYC_x_Active, 2)
+    if (nSARCore == 1):
+        evsysGenName = adcEvsysGenNameGet(["CHRDY"])
+    else:
+        evsysGenName = adcEvsysGenNameGet(["CHRDY", str(n)])
+
+    Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", isADC_CHRDYC_x_Active, 2)
 
 def updateEvsysCmpGeneratorSymbols (symbol, event):
     global adcInstanceName
+    global nSARCore
+
     localComponent = symbol.getComponent()
     n = getCore(symbol.getID())
 
@@ -399,7 +476,12 @@ def updateEvsysCmpGeneratorSymbols (symbol, event):
     if core_enabled == True and evctrl_cmpeo == True:
         isADC_CMP_x_Active = True
 
-    Database.setSymbolValue("evsys", "GENERATOR_" + str(adcInstanceName.getValue()) + "_CMP_" + str(n) + "_ACTIVE", isADC_CMP_x_Active, 2)
+    if (nSARCore == 1):
+        evsysGenName = adcEvsysGenNameGet(["CMP"])
+    else:
+        evsysGenName = adcEvsysGenNameGet(["CMP", str(n)])
+
+    Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", isADC_CMP_x_Active, 2)
 
 def updateEvsysUserSymbols (symbol, event):
     global adcInstanceName
@@ -435,7 +517,8 @@ def updateEvsysUserSymbols (symbol, event):
             isADC_TRIGGERS_x_Ready = True
         else:
             isADC_TRIGGERS_x_Ready = False
-        Database.setSymbolValue("evsys", "USER_" + str(adcInstanceName.getValue()) + "_TRIGGERS_" + str(n) + "_READY", isADC_TRIGGERS_x_Ready, 2)
+        evsysUserName = adcEvsysUserNameGet(["TRIG", str(n)])
+        Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", isADC_TRIGGERS_x_Ready, 2)
 #---------------------------------------------------------------------------------
 def ADC_CORCTRL_REG_Update(symbol, event):
     global earlyInterruptPresent
@@ -859,7 +942,7 @@ def globalConfig(adcComponent):
 
 
     # CTRLD.VREFSEL
-    adc_vref_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CTRLD__VREFSEL\"]").getChildren()
+    adc_vref_values = getValueGroupNode__ADC("ADC", "ADC", "CTRLD", "VREFSEL").getChildren()
 
     CTRLD_VREFSEL_Config = adcComponent.createKeyValueSetSymbol("ADC_GLOBAL_CTRLD_VREFSEL", None)
     CTRLD_VREFSEL_Config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_03620;register:CTRLD")
@@ -877,8 +960,8 @@ def globalConfig(adcComponent):
 
     # CTRLC.COREINTERLEAVED
 
-    if (ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CTRLC__COREINTERLEAVED\"]") != None):
-        adc_core_interleaved_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CTRLC__COREINTERLEAVED\"]").getChildren()
+    if (getValueGroupNode__ADC("ADC", "ADC", "CTRLC", "COREINTERLEAVED") != None):
+        adc_core_interleaved_values = getValueGroupNode__ADC("ADC", "ADC", "CTRLC", "COREINTERLEAVED").getChildren()
         CTRLC_COREINTERLEAVED_Config = adcComponent.createKeyValueSetSymbol("ADC_GLOBAL_CTRLC_COREINTERLEAVED", None)
         CTRLC_COREINTERLEAVED_Config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_03620;register:CTRLC")
         CTRLC_COREINTERLEAVED_Config.setLabel("ADC Core Interleaving")
@@ -888,7 +971,7 @@ def globalConfig(adcComponent):
             value = adc_core_interleaved_values[id].getAttribute("value")
             description = adc_core_interleaved_values[id].getAttribute("caption")
             CTRLC_COREINTERLEAVED_Config.addKey(key, value, description)
-            if value == "0x0":
+            if int (value, 0) == 0:
                 CTRLC_COREINTERLEAVED_Config.setDefaultValue(id)
         CTRLC_COREINTERLEAVED_Config.setOutputMode("Key")
         CTRLC_COREINTERLEAVED_Config.setDisplayMode("Description")
@@ -910,7 +993,7 @@ def globalConfig(adcComponent):
     adc_delay_time.setDependencies(updateDelayTime, ["ADC_GLOBAL_CONTROL_CLOCK_FREQ", "ADC_GLOBAL_CTRLC_CNT"])
 
     # PFFCTRL.PFFRDYDMA
-    pffrdydma_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"PFFCTRL__PFFRDYDMA\"]").getChildren()
+    pffrdydma_values = getValueGroupNode__ADC("ADC", "ADC", "PFFCTRL", "PFFRDYDM").getChildren()
 
     PFFCTRL_PFFRDYDMA_Config = adcComponent.createKeyValueSetSymbol("ADC_GLOBAL_PFFCTRL_PFFRDYDMA", None)
     PFFCTRL_PFFRDYDMA_Config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_03620;register:PFFCTRL")
@@ -992,6 +1075,7 @@ def globalConfig(adcComponent):
 
 
 def channelConfig(n, channel, adcComponent, channel_config_menu):
+    global nSARCore
     ##Channel Configuration Menu:
     channel_k_enable = adcComponent.createBooleanSymbol("ADC_CORE_" + str(n) + "_CH_" + str(channel) + "_ENABLE", channel_config_menu)
     channel_k_enable.setLabel("Enable Channel " + str(channel))
@@ -1034,13 +1118,16 @@ def channelConfig(n, channel, adcComponent, channel_config_menu):
     CHNCFG3_DIFF_Config.setLabel("Mode")
     CHNCFG3_DIFF_Config.setDefaultValue("Single Ended")
     # Differential mode is not supported on Core 0. On other ADC Cores 1,2,3, the only differential channels allowed are {0,1}, {2,3}, {4,5}
-    CHNCFG3_DIFF_Config.setReadOnly(n == 0 or not(channel == 0 or channel == 2 or channel == 4))
+    if (nSARCore == 1):
+        CHNCFG3_DIFF_Config.setReadOnly(not(channel == 0 or channel == 2 or channel == 4))
+    else:
+        CHNCFG3_DIFF_Config.setReadOnly(n == 0 or not(channel == 0 or channel == 2 or channel == 4))
     CHNCFG3_DIFF_Config.setVisible(False)
     CHNCFG3_DIFF_Config.setDependencies(channelVisibility, ["ADC_CORE_" + str(n) + "_CH_" + str(channel) + "_ENABLE"])
     ADC_CHNCFG3_REG_DepList[n].append("ADC_CORE_" + str(n) + "_CH_" + str(channel) + "_CHNCFG3_DIFF")
 
     # CHNCFG4n.TRGSRCk / CHNCFG5n.TRGSRCk
-    trgsrc_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CHNCFG4_CHNCFG5__TRGSRC\"]").getChildren()
+    trgsrc_values = getValueGroupNode__ADC("ADC", "CONFIG", "CHNCFG4", "TRGSRC0").getChildren()
 
     CHNCFG4_5_TRGSRC_Config = adcComponent.createKeyValueSetSymbol("ADC_CORE_" + str(n) + "_CH_" + str(channel) + "_CHNCFG4_5_TRGSRC", channel_k_enable)
     CHNCFG4_5_TRGSRC_Config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_03620;register:config[" + str(channel) + "].chncfg4")
@@ -1050,7 +1137,7 @@ def channelConfig(n, channel, adcComponent, channel_config_menu):
         value = trgsrc_values[id].getAttribute("value")
         description = trgsrc_values[id].getAttribute("caption")
         CHNCFG4_5_TRGSRC_Config.addKey(key, value, description)
-        if value == "0x0":
+        if int (value, 0) == 0:
             CHNCFG4_5_TRGSRC_Config.setDefaultValue(id)
     CHNCFG4_5_TRGSRC_Config.setOutputMode("Value")
     CHNCFG4_5_TRGSRC_Config.setDisplayMode("Description")
@@ -1151,7 +1238,7 @@ def coreConfig(n, nChannels, adcComponent):
     adcEvsysGenCMPDepList[n].append("ADC_CORE_" + str(n) + "_ENABLE")
 
     # CORCTRL_SELRES
-    adc_resolution_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CORCTRL__SELRES\"]").getChildren()
+    adc_resolution_values = getValueGroupNode__ADC("ADC", "CONFIG", "CORCTRL", "SELRES").getChildren()
 
     CORCTRL_SELRES_Config = adcComponent.createKeyValueSetSymbol("ADC_CORE_" + str(n) + "_CORCTRL_SELRES", adcCoreEnable)
     CORCTRL_SELRES_Config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_03620;register:config0.corctrl")
@@ -1162,7 +1249,7 @@ def coreConfig(n, nChannels, adcComponent):
         value = adc_resolution_values[id].getAttribute("value")
         description = adc_resolution_values[id].getAttribute("caption")
         CORCTRL_SELRES_Config.addKey(key, value, description)
-        if value == "0x3":
+        if int (value, 0) == 3:
             CORCTRL_SELRES_Config.setDefaultValue(id)
     CORCTRL_SELRES_Config.setOutputMode("Key")
     CORCTRL_SELRES_Config.setDisplayMode("Description")
@@ -1226,7 +1313,7 @@ def coreConfig(n, nChannels, adcComponent):
     adc_conversion_rate.setDefaultValue(conversion_freq_mhz)
 
     # CORCTRL_STRGSRC
-    scan_trigger_src_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"CORCTRL__STRGSRC\"]").getChildren()
+    scan_trigger_src_values = getValueGroupNode__ADC("ADC", "CONFIG", "CORCTRL", "STRGSRC").getChildren()
 
     CORCTRL_STRGSRC_Config = adcComponent.createKeyValueSetSymbol("ADC_CORE_" + str(n) + "_CORCTRL_STRGSRC", adcCoreEnable)
     CORCTRL_STRGSRC_Config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_03620;register:config0.corctrl")
@@ -1418,7 +1505,7 @@ def coreConfig(n, nChannels, adcComponent):
     adcCoreConfigSymbolsList[n].append("ADC_CORE_" + str(n) + "_FLTCTRL_FMODE")
 
     # FLTCTRL.OVRSAM
-    oversampling_ratio_values = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"FLTCTRL__OVRSAM\"]").getChildren()
+    oversampling_ratio_values = getValueGroupNode__ADC("ADC", "ADC", "FLTCTRL", "OVRSAM").getChildren()
 
     FLTCTRL_OVRSAM_Config = adcComponent.createKeyValueSetSymbol("ADC_CORE_" + str(n) + "_FLTCTRL_OVRSAM", dig_filter_config_menu)
     FLTCTRL_OVRSAM_Config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_03620;register:FLTCTRL[0]")
@@ -1666,6 +1753,33 @@ def adcInterruptHandlerConfig(adcComponent):
     global nSARCore
     global InterruptVectorSecurity
 
+    vectorNode=ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
+    vectorValues = vectorNode.getChildren()
+    for id in range(0, len(vectorNode.getChildren())):
+        if vectorValues[id].getAttribute("module-instance") == adcInstanceName.getValue():
+            name = vectorValues[id].getAttribute("name")
+            #Create symbols for ADC interrupt names to be used in the FTL
+            adcIntType = name.split("_")[1]
+            if adcIntType in ADC_Global_InterruptNames:
+                adcIntHandlerName = adcComponent.createStringSymbol("ADC_CORE_GLOBAL_INT_HANDLER_NAME", None)
+                adcIntHandlerName.setDefaultValue(adcComponent.getID().upper() + "_" + adcIntType)
+                adcIntHandlerName.setVisible(True)
+            elif adcIntType in ADC_Core_InterruptNames:
+                adcIntHandlerName = adcComponent.createStringSymbol("ADC_CORE_" + re.sub("[A-Z, _]", "", name) + "_INT_HANDLER_NAME", None)
+                adcIntHandlerName.setDefaultValue(adcComponent.getID().upper() + "_" + adcIntType)
+                adcIntHandlerName.setVisible(True)
+
+            InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
+
+    # Confiure secure/non-secure interrupt
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        adcIsNonSecure = Database.getSymbolValue("core", adcComponent.getID().upper() + "_IS_NON_SECURE")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, adcIsNonSecure)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, adcIsNonSecure)
+
     # Dummy symbol to update ADC GLOBAL NVIC Interrupt
     adcGlobalNVICInt = adcComponent.createBooleanSymbol("ADC_GLOBAL_NVIC_INT", None)
     adcGlobalNVICInt.setVisible(False)
@@ -1681,22 +1795,6 @@ def adcInterruptHandlerConfig(adcComponent):
     adcCoreIntEnabled = adcComponent.createBooleanSymbol("ADC_CORE_CORE_INT_ENABLED", None)
     adcCoreIntEnabled.setVisible(False)
     adcCoreIntEnabled.setDependencies(updateCoreIntEnabled, adcCoreIntEnabledDepList)
-
-    vectorNode=ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
-    vectorValues = vectorNode.getChildren()
-    for id in range(0, len(vectorNode.getChildren())):
-        if vectorValues[id].getAttribute("module-instance") == adcInstanceName.getValue():
-            name = vectorValues[id].getAttribute("name")
-            InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
-
-    # Confiure secure/non-secure interrupt
-    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
-        adcIsNonSecure = Database.getSymbolValue("core", adcComponent.getID().upper() + "_IS_NON_SECURE")
-        if len(InterruptVectorSecurity) != 1:
-            for vector in InterruptVectorSecurity:
-                Database.setSymbolValue("core", vector, adcIsNonSecure)
-        else:
-            Database.setSymbolValue("core", InterruptVectorSecurity, adcIsNonSecure)
 
 def adcEvsysConfig(adcComponent):
     global nSARCore
@@ -1801,7 +1899,6 @@ def codeGenerationConfig (adcComponent, Module):
 
         adcSystemDefFile.setDependencies(fileUpdate, ["core." + adcComponent.getID().upper() + "_IS_NON_SECURE"])
 
-
     adcComponent.addPlugin("../peripheral/adc_03620/plugin/adc_03620.jar")
 
 
@@ -1838,6 +1935,10 @@ def instantiateComponent(adcComponent):
     adcInterruptHandlerConfig(adcComponent)
 
     adcEvsysConfig(adcComponent)
+
+    adcEvsysGeneratorNamesPopulate(adcInstanceName.getValue())
+
+    adcEvsysUserNamesPopulate(adcInstanceName.getValue())
 
     # Enable ADC Core 0 by default
     enableCoreNSymbols(adcInstanceName.getComponent(), defaultCore, True)

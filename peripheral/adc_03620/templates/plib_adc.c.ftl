@@ -621,7 +621,7 @@ void ${ADC_INSTANCE_NAME}_GlobalCallbackRegister(ADC_GLOBAL_CALLBACK callback, u
 </#list>
 
 <#if ADC_CTLINTENSET != "0">
-void __attribute__((used)) ${ADC_INSTANCE_NAME}_GLOBAL_InterruptHandler( void )
+void __attribute__((used)) ${ADC_CORE_GLOBAL_INT_HANDLER_NAME}_InterruptHandler( void )
 {
     uint32_t status;
 
@@ -651,7 +651,8 @@ void __attribute__((used)) ${ADC_INSTANCE_NAME}_GLOBAL_InterruptHandler( void )
 <#list 0..(ADC_NUM_SAR_CORES-1) as n>
         <#assign ADC_CORE_INT_ENABLED    = "ADC_CORE_" + n + "_ADC_INTENSET">
         <#if .vars[ADC_CORE_INT_ENABLED] != "0">
-        <#lt>void __attribute__((used)) ${ADC_INSTANCE_NAME}_CORE${n+1}_InterruptHandler( void )
+        <#assign ADC_CORE_NUM = n+1>
+        <#lt>void __attribute__((used)) ${.vars["ADC_CORE_" + ADC_CORE_NUM + "_INT_HANDLER_NAME"]}_InterruptHandler( void )
         <#lt>{
         <#lt>   uint32_t status;
 
