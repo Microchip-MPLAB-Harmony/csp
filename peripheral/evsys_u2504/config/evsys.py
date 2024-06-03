@@ -21,7 +21,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
-
+import re
 ################################################################################
 ##########            EVSYS DATABASE COMPONENTS           #####################
 ################################################################################
@@ -45,6 +45,9 @@ EVSYSfilesArray = []
 global InterruptVectorSecurity
 InterruptVectorSecurity = []
 
+global has_digits
+global gclk_ch_dict
+gclk_ch_dict = {}
 
 channel = 0
 path = {}
@@ -132,13 +135,15 @@ def channelMenu(symbol, event):
 
 
 def channelClockEnable(symbol, event):
+    global gclk_ch_dict
+
     chID = event["id"].split('EVSYS_CHANNEL_')[1]
+    clock_en_sym = gclk_ch_dict[chID]
+
     if event["value"] == True:
-        Database.setSymbolValue(
-            "core", evsysInstanceName.getValue() + "_" + chID + "_CLOCK_ENABLE", True, 1)
+        Database.setSymbolValue("core", clock_en_sym, True, 1)
     else:
-        Database.setSymbolValue("core", evsysInstanceName.getValue(
-        ) + "_" + chID + "_CLOCK_ENABLE", False, 1)
+        Database.setSymbolValue("core", clock_en_sym, False, 1)
 
 
 def overrunInterrupt(interrupt, event):
@@ -279,7 +284,7 @@ def createEVSYSChannelVectorList(evsysChannelCount, localComponent):
         else:
             channelList = n[6:].split("_")
             if len(channelList) == 1:
-                evsysChannelVectorList.append({channelList[0]: n})
+                evsysChannelVectorList.append({re.sub("[^0-9]", "", channelList[0]): n})
             else:
                 startCh = channelList[0]
                 endCh = channelList[1]
@@ -287,6 +292,10 @@ def createEVSYSChannelVectorList(evsysChannelCount, localComponent):
                     evsysChannelVectorList.append({str(x): n})
 
     return evsysChannelVectorList
+
+def has_digits(string):
+    res = re.compile('\d').search(string)
+    return res is not None
 
 def instantiateComponent(evsysComponent):
     global evsysInstanceName
@@ -309,6 +318,7 @@ def instantiateComponent(evsysComponent):
     evsysGenerator=[]
     channelUserDependency=[]
     global InterruptVectorSecurity
+    global gclk_ch_dict
 
 
     # Get the number of channels supporting Synchronous and asynchronous path
@@ -320,6 +330,16 @@ def instantiateComponent(evsysComponent):
     evsysInstanceName.setVisible(False)
     evsysInstanceName.setDefaultValue(evsysComponent.getID().upper())
     Log.writeInfoMessage("Running " + evsysInstanceName.getValue())
+
+    paramNode = ATDF.getNode(
+        '/avr-tools-device-file/devices/device/peripherals/module@[name="EVSYS"]/instance@[name="' + evsysInstanceName.getValue() + '"]/parameters')
+    paramNodeValues = paramNode.getChildren()
+
+    for id in range(0, len(paramNodeValues)):
+        paramName = paramNodeValues[id].getAttribute("name")
+        if "GCLK_ID" in paramName:
+            ch_num = re.sub("[A-Z, _]", "", paramName)
+            gclk_ch_dict[ch_num] = evsysInstanceName.getValue() + "_" + paramName.split("_")[2] + "_CLOCK_ENABLE"
 
     # EVSYS Main Menu
     evsysSym_Menu=evsysComponent.createMenuSymbol("EVSYS_MENU", None)
@@ -471,7 +491,7 @@ def instantiateComponent(evsysComponent):
         evsysPath.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:evsys_u2504;register:CHANNEL")
         evsysPath.setLabel("Path Selection")
         evsysPath.setOutputMode("Value")
-        pathNode = getValueGroupNode__EVSYS("EVSYS", "CHANNEL", "CHANNEL", "PATH")        
+        pathNode = getValueGroupNode__EVSYS("EVSYS", "CHANNEL", "CHANNEL", "PATH")
         for i in range(0, len(pathNode.getChildren())):
             evsysPath.addKey(pathNode.getChildren()[i].getAttribute("name"), str(pathNode.getChildren()[
                              i].getAttribute("value")), pathNode.getChildren()[i].getAttribute("caption"))
@@ -606,8 +626,17 @@ def instantiateComponent(evsysComponent):
                 "core." + name + "_INTERRUPT_ENABLE_UPDATE")
             InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
 
+            evsysIntHandlerName = evsysComponent.createStringSymbol("EVSYS_INT_HANDLER_NAME_" + str(evsysNumIntLines) , evsysUserMenu)
+            evsysIntHandlerName.setDefaultValue(vectorValues[id].getAttribute("name"))
+            evsysIntHandlerName.setVisible(False)
+
             evsysIntName = evsysComponent.createStringSymbol("EVSYS_INT_NAME_" + str(evsysNumIntLines) , evsysUserMenu)
-            evsysIntName.setDefaultValue(vectorValues[id].getAttribute("name").replace("EVSYS_", ""))
+
+            vec_name = vectorValues[id].getAttribute("name")
+            vec_name = vec_name.replace("EVSYS_", "")
+            if has_digits(vec_name) == True:
+                vec_name = re.sub("[^0-9, _]", "", vec_name)
+            evsysIntName.setDefaultValue(vec_name)  #vec_name will be set to either '0', '1', '2', ... or '0_3', '4_11' ... or 'OTHER' or 'NSCHK'
             evsysIntName.setVisible(False)
 
             evsysNumIntLines = evsysNumIntLines + 1

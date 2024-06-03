@@ -261,7 +261,8 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
                     <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + x >
                     <#if .vars[EVSYS_NONSEC]?has_content>
                         <#if .vars[EVSYS_NONSEC] == "SECURE">
-                            <#lt>void __attribute__((used)) ${EVSYS_INSTANCE_NAME}_${x}_InterruptHandler( void )
+                            <#assign EVSYS_INT_HANDLER_NAME = "EVSYS_INT_HANDLER_NAME_" + x>
+                            <#lt>void __attribute__((used)) ${.vars[EVSYS_INT_HANDLER_NAME]}_InterruptHandler( void )
                             <#lt>{
                             <#lt>   volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG;
                             <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
@@ -279,12 +280,13 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     <#else>
         <#list 0..EVSYS_INT_LINES-1 as x>
             <#assign EVENT_SYSTEM_INT_NAME  = "EVSYS_INT_NAME_"  + x>
+            <#assign EVSYS_INT_HANDLER_NAME = "EVSYS_INT_HANDLER_NAME_" + x>
             <#assign res =.vars[EVENT_SYSTEM_INT_NAME]?matches(r"(\d+)")>
             <#assign res2 =.vars[EVENT_SYSTEM_INT_NAME]?matches(r"(\d+)_(\d+)")>
             <#if res>
                 <#assign INTERRUPT_MODE = "EVSYS_INTERRUPT_MODE" + (res?groups[1])?number>
                 <#if .vars[INTERRUPT_MODE]?? && (.vars[INTERRUPT_MODE] == true)>
-                    <#lt>void __attribute__((used)) ${EVSYS_INSTANCE_NAME}_${res?groups[1]}_InterruptHandler( void )
+                    <#lt>void __attribute__((used)) ${.vars[EVSYS_INT_HANDLER_NAME]}_InterruptHandler( void )
                     <#lt>{
                     <#lt>   volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[${res?groups[1]}].EVSYS_CHINTFLAG;
                     <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[${res?groups[1]}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
@@ -305,7 +307,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
                     </#if>
                 </#list>
                 <#if GENERATE_ISR == true>
-                    <#lt>void __attribute__((used)) ${EVSYS_INSTANCE_NAME}_${.vars[EVENT_SYSTEM_INT_NAME]}_InterruptHandler( void )
+                    <#lt>void __attribute__((used)) ${.vars[EVSYS_INT_HANDLER_NAME]}_InterruptHandler( void )
                     <#lt>{
                     <#lt>    uint8_t channel = 0;
 
@@ -327,7 +329,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
             <#elseif .vars[EVENT_SYSTEM_INT_NAME] == "OTHER">
                 <#if EVSYS_INTERRUPT_MODE_OTHER??>
                     <#if EVSYS_INTERRUPT_MODE_OTHER>
-                        <#lt>void __attribute__((used)) ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
+                        <#lt>void __attribute__((used)) ${.vars[EVSYS_INT_HANDLER_NAME]}_InterruptHandler( void )
                         <#lt>{
                         <#lt>   uint8_t channel;
                         <#lt>   for(channel = 4; channel <= ${EVSYS_INTERRUPT_MAX_CHANNEL}U; channel++)

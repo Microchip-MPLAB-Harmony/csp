@@ -127,7 +127,8 @@ void ${EVSYS_INSTANCE_NAME}_UserDisable(uint8_t user)
         <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + x >
             <#if .vars[EVSYS_NONSEC]?has_content>
                 <#if .vars[EVSYS_NONSEC] == "NON-SECURE">
-                    <#lt>void __attribute__((used)) ${EVSYS_INSTANCE_NAME}_${x}_InterruptHandler( void )
+                <#assign EVSYS_INT_HANDLER_NAME = "EVSYS_INT_HANDLER_NAME_" + x>
+                    <#lt>void __attribute__((used)) ${.vars[EVSYS_INT_HANDLER_NAME]}_InterruptHandler( void )
                     <#lt>{
                     <#lt>   volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG;
                     <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
