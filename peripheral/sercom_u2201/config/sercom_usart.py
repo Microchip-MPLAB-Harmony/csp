@@ -27,16 +27,11 @@
 ###################################################################################################
 
 global getUSARTBaudValue
+global getValueGrp
 
 global dataBitsDict
 
-dataBitsDict = {
-    "5_BIT": "DRV_USART_DATA_5_BIT",
-    "6_BIT": "DRV_USART_DATA_6_BIT",
-    "7_BIT": "DRV_USART_DATA_7_BIT",
-    "8_BIT": "DRV_USART_DATA_8_BIT",
-    "9_BIT": "DRV_USART_DATA_9_BIT"
-}
+dataBitsDict = dict()
 
 def getUSARTBaudValue():
 
@@ -216,6 +211,13 @@ def updateOperatingMode (symbol, event):
 def ringBufferConfigVisibility (symbol, event):
     ringBufferModeEnabled = event["source"].getSymbolByID("USART_RING_BUFFER_MODE_ENABLE").getValue()
     symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and ringBufferModeEnabled == True)
+    
+def usartChszieEnumHelper(chsizeValuesList, bits):
+    for index in range(len(chsizeValuesList)):
+        if bits in chsizeValuesList[index].getAttribute("name"):
+            return chsizeValuesList[index].getAttribute("name")
+    
+    return None
 ###################################################################################################
 ############################################ USART ################################################
 ###################################################################################################
@@ -332,7 +334,7 @@ usartSym_CTRLA_FORM = sercomComponent.createKeyValueSetSymbol("USART_FORM", serc
 usartSym_CTRLA_FORM.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_CTRLA_FORM.setLabel("Frame Format")
 
-usartSym_CTRLA_FORM_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__FORM\"]")
+usartSym_CTRLA_FORM_Node = getValueGrp("SERCOM", "SERCOM", "CTRLA", "FORM", sercomSymUSARTRegName.getValue())
 usartSym_CTRLA_FORM_Values = usartSym_CTRLA_FORM_Node.getChildren()
 
 for index in range(len(usartSym_CTRLA_FORM_Values)):
@@ -357,7 +359,7 @@ usartSym_LIN_MasterSupport.setValue(isLINMasterModeSupported)
 usartSym_LIN_MasterSupport.setVisible(False)
 
 # BREAK Length - Applicable when LIN Master mode is selected
-usartSym_CTRLC_BRKLEN_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLC__BRKLEN\"]")
+usartSym_CTRLC_BRKLEN_Node = getValueGrp("SERCOM", "SERCOM", "CTRLC", "BRKLEN", sercomSymUSARTRegName.getValue())
 
 if usartSym_CTRLC_BRKLEN_Node != None:
     usartSym_CTRLC_BRKLEN = sercomComponent.createKeyValueSetSymbol("USART_LIN_MASTER_BREAK_LEN", sercomSym_OperationMode)
@@ -380,7 +382,7 @@ if usartSym_CTRLC_BRKLEN_Node != None:
     usartSym_CTRLC_BRKLEN.setDependencies(updateLinMasterModeOptionsVisibility, ["USART_FORM"])
 
 # Hardware Delay - Applicable when LIN Master mode is selected
-usartSym_CTRLC_HDRDLY_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLC__HDRDLY\"]")
+usartSym_CTRLC_HDRDLY_Node = getValueGrp("SERCOM", "SERCOM", "CTRLC", "HDRDLY", sercomSymUSARTRegName.getValue())
 
 if usartSym_CTRLC_HDRDLY_Node != None:
     usartSym_CTRLC_HDRDLY = sercomComponent.createKeyValueSetSymbol("USART_LIN_MASTER_HDRDLY", sercomSym_OperationMode)
@@ -443,7 +445,7 @@ usartSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("USART_CHARSIZE_
 usartSym_CTRLB_CHSIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 usartSym_CTRLB_CHSIZE.setLabel("Character Size")
 
-usartSym_CTRLA_CHSIZE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__CHSIZE\"]")
+usartSym_CTRLA_CHSIZE_Node = getValueGrp("SERCOM", "SERCOM", "CTRLB", "CHSIZE", sercomSymUSARTRegName.getValue())
 usartSym_CTRLA_CHSIZE_Values = usartSym_CTRLA_CHSIZE_Node.getChildren()
 
 for index in range(len(usartSym_CTRLA_CHSIZE_Values)):
@@ -458,12 +460,26 @@ usartSym_CTRLB_CHSIZE.setDisplayMode("Description")
 usartSym_CTRLB_CHSIZE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLB_CHSIZE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
+usartChsizeEnumList = sercomComponent.createListSymbol("SERCOM_CHSIZE_ENUM_LIST", None)
+usartChsizeEnumList.setVisible(False)
+
+usartChsizeEnums = sercomComponent.createListEntrySymbol("SERCOM_CHSIZE_ENUM", None)
+usartChsizeEnums.setVisible(False)
+for i in range (5,10):
+    chsizeEnumVal = usartChszieEnumHelper(usartSym_CTRLA_CHSIZE_Values, str(i))
+    if chsizeEnumVal != None:
+        dataBitsDict[chsizeEnumVal] = "DRV_USART_DATA_" + str(i) + "_BIT"
+        chsizeEnumVal = "    USART_DATA_" + str(i) + "_BIT = SERCOM_" + sercomSymUSARTRegName.getValue() + "_CTRLB_CHSIZE_" + chsizeEnumVal + ","
+        usartChsizeEnums.addValue(chsizeEnumVal)
+        
+usartChsizeEnums.setTarget(sercomInstanceName.getValue().lower() + ".SERCOM_CHSIZE_ENUM_LIST")
+
 #Stop Bit
 usartSym_CTRLB_SBMODE = sercomComponent.createKeyValueSetSymbol("USART_STOP_BIT", sercomSym_OperationMode)
 usartSym_CTRLB_SBMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 usartSym_CTRLB_SBMODE.setLabel("Stop Bit Mode")
 
-usartSym_CTRLA_SBMODE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__SBMODE\"]")
+usartSym_CTRLA_SBMODE_Node = getValueGrp("SERCOM", "SERCOM", "CTRLB", "SBMODE", sercomSymUSARTRegName.getValue())
 usartSym_CTRLA_SBMODE_Values = usartSym_CTRLA_SBMODE_Node.getChildren()
 
 for index in range(len(usartSym_CTRLA_SBMODE_Values)):
@@ -478,6 +494,16 @@ usartSym_CTRLB_SBMODE.setDisplayMode("Description")
 usartSym_CTRLB_SBMODE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLB_SBMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
+usartSbmodeEnumList = sercomComponent.createListSymbol("SERCOM_SBMODE_ENUM_LIST", None)
+usartSbmodeEnumList.setVisible(False)
+usartSbmodeEnums = sercomComponent.createListEntrySymbol("SERCOM_SBMODE_ENUM", None)
+usartSbmodeEnums.setVisible(False)
+for i in range (0, 2):
+    if int(usartSym_CTRLA_SBMODE_Values[i].getAttribute("value"), 0) == i:
+        sbmodeEnumVal = "    USART_STOP_" + str(i) + "_BIT = " + "SERCOM_" + sercomSymUSARTRegName.getValue() + "_CTRLB_SBMODE_" + usartSym_CTRLA_SBMODE_Values[i].getAttribute("name") + ","
+        usartSbmodeEnums.addValue(sbmodeEnumVal)
+usartSbmodeEnums.setTarget(sercomInstanceName.getValue().lower() + ".SERCOM_SBMODE_ENUM_LIST")
+
 usartSym_CTRLB_SFDE = sercomComponent.createBooleanSymbol("USART_SFDE", sercomSym_OperationMode)
 usartSym_CTRLB_SFDE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
 usartSym_CTRLB_SFDE.setLabel("Start-of-Frame Detection Enable")
@@ -489,7 +515,7 @@ usartSym_CTRLA_RXPO = sercomComponent.createKeyValueSetSymbol("USART_RXPO", serc
 usartSym_CTRLA_RXPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_CTRLA_RXPO.setLabel("Receive Pinout")
 
-usartSym_CTRLA_RXPO_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__RXPO\"]")
+usartSym_CTRLA_RXPO_Node = getValueGrp("SERCOM", "SERCOM", "CTRLA", "RXPO", sercomSymUSARTRegName.getValue())
 usartSym_CTRLA_RXPO_Values = usartSym_CTRLA_RXPO_Node.getChildren()
 
 for index in range(len(usartSym_CTRLA_RXPO_Values)):
@@ -509,7 +535,7 @@ usartSym_CTRLA_TXPO = sercomComponent.createKeyValueSetSymbol("USART_TXPO", serc
 usartSym_CTRLA_TXPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLA")
 usartSym_CTRLA_TXPO.setLabel("Transmit Pinout")
 
-usartSym_CTRLA_TXPO_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__TXPO\"]")
+usartSym_CTRLA_TXPO_Node = getValueGrp("SERCOM", "SERCOM", "CTRLA", "TXPO", sercomSymUSARTRegName.getValue())
 usartSym_CTRLA_TXPO_Values = usartSym_CTRLA_TXPO_Node.getChildren()
 
 for index in range(len(usartSym_CTRLA_TXPO_Values)):
@@ -547,7 +573,7 @@ usartSym_CTRLA_RUNSTDBY.setLabel("Enable Run in Standby")
 usartSym_CTRLA_RUNSTDBY.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLA_RUNSTDBY.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="CTRLA"]')
+sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="{0}",name="CTRLA"]'.format(sercomSymUSARTRegName.getValue()))
 sampleRateValue = sampleRateNode.getChildren()
 
 for index in range(len(sampleRateValue)):
@@ -571,7 +597,7 @@ usartSym_SAMPLE_COUNT.setLabel("No Of Samples")
 usartSym_SAMPLE_COUNT.setDefaultValue(16)
 usartSym_SAMPLE_COUNT.setVisible(False)
 
-intensetNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="INTENSET"]')
+intensetNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="{0}",name="INTENSET"]'.format(sercomSymUSARTRegName.getValue()))
 intensetValue = intensetNode.getChildren()
 
 for index in range(len(intensetValue)):
@@ -596,7 +622,16 @@ usartSym_RS485.setVisible(False)
 usartSym_RS485.setDefaultValue(isRS485Supported)
 
 #Use setValue instead of setDefaultValue to store symbol value in default.xml
-usartSym_BAUD_VALUE.setValue(getUSARTBaudValue(), 1)
+usartSym_BAUD_VALUE.setValue(getUSARTBaudValue(), 1)   
+
+usartSym_CTRLA_MODE_Values = getValueGrp("SERCOM", "SERCOM", "CTRLA", "MODE", sercomSymUSARTRegName.getValue()).getChildren()
+
+usartSymMode = sercomComponent.createStringSymbol("USART_MODE", sercomSym_OperationMode)
+usartSymMode.setVisible(False)
+for index in range(len(usartSym_CTRLA_MODE_Values)):
+    if int(usartSym_CTRLA_MODE_Values[index].getAttribute("value"), 0) == 1:
+        usartSymMode.setDefaultValue(usartSym_CTRLA_MODE_Values[index].getAttribute("name"))
+        break
 
 
 

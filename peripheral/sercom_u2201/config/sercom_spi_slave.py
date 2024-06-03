@@ -27,6 +27,7 @@
 ###################################################################################################
 
 global sort_alphanumeric
+global getValueGrp
 
 def sort_alphanumeric(l):
     import re
@@ -97,7 +98,8 @@ spisSym_CTRLA_DOPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";co
 spisSym_CTRLA_DOPO.setLabel("SPI Data Out Pad")
 spisSym_CTRLA_DOPO.setVisible(False)
 
-spisDOPONode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__DOPO\"]")
+spisDOPONode = getValueGrp("SERCOM", "SERCOM", "CTRLA", "DOPO", sercomSymSPIRegName.getValue())
+
 spisDOPOValues = spisDOPONode.getChildren()
 
 for index in range(len(spisDOPOValues)):
@@ -117,7 +119,8 @@ spisSym_CTRLA_DIPO.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";co
 spisSym_CTRLA_DIPO.setLabel("SPI Data In Pad Selection")
 spisSym_CTRLA_DIPO.setVisible(False)
 
-spisDIPONode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__DIPO\"]")
+spisDIPONode = getValueGrp("SERCOM", "SERCOM", "CTRLA", "DIPO", sercomSymSPIRegName.getValue())
+
 spisDIPOValues = spisDIPONode.getChildren()
 
 for index in range(len(spisDIPOValues)):
@@ -137,7 +140,8 @@ spisSym_CTRLA_DORD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";co
 spisSym_CTRLA_DORD.setLabel("SPI Data Order")
 spisSym_CTRLA_DORD.setVisible(False)
 
-spisDORDNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__DORD\"]")
+spisDORDNode = getValueGrp("SERCOM", "SERCOM", "CTRLA", "DORD", sercomSymSPIRegName.getValue())
+
 spisDORDValues = spisDORDNode.getChildren()
 
 for index in range(len(spisDORDValues)):
@@ -157,7 +161,7 @@ spisSym_CTRLB_CHSIZE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";
 spisSym_CTRLB_CHSIZE.setLabel("SPI Data Character Size")
 spisSym_CTRLB_CHSIZE.setVisible(False)
 
-spisCHSIZENode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLB__CHSIZE\"]")
+spisCHSIZENode = getValueGrp("SERCOM", "SERCOM", "CTRLB", "CHSIZE", sercomSymSPIRegName.getValue())
 spisCHSIZEValues = spisCHSIZENode.getChildren()
 
 for index in range(len(spisCHSIZEValues)):
@@ -177,7 +181,7 @@ spisSym_CTRLA_ClockPhase.setHelp("atmel;device:" + Variables.get("__PROCESSOR") 
 spisSym_CTRLA_ClockPhase.setLabel("SPI Clock Phase")
 spisSym_CTRLA_ClockPhase.setVisible(False)
 
-spsiCLKPHASENode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__CPHA\"]")
+spsiCLKPHASENode = getValueGrp("SERCOM", "SERCOM", "CTRLA", "CPHA", sercomSymSPIRegName.getValue())
 spisCLKPHASEValues = spsiCLKPHASENode.getChildren()
 
 for index in range(len(spisCLKPHASEValues)):
@@ -197,7 +201,7 @@ spisSym_CTRLA_ClockPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR
 spisSym_CTRLA_ClockPolarity.setLabel("SPI Clock Polarity")
 spisSym_CTRLA_ClockPolarity.setVisible(False)
 
-spisCLKPLORITYNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__CPOL\"]")
+spisCLKPLORITYNode = getValueGrp("SERCOM", "SERCOM", "CTRLA", "CPOL", sercomSymSPIRegName.getValue())
 spisCLKPLORITYValues = spisCLKPLORITYNode.getChildren()
 
 for index in range(len(spisCLKPLORITYValues)):
@@ -213,7 +217,7 @@ spisSym_CTRLA_ClockPolarity.setDependencies(updateSPISlaveConfigurationVisiblePr
 
 ssdeSupported = False
 
-ctrlbNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="SPIS",name="CTRLB"]')
+ctrlbNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="{0}",name="CTRLB"]'.format(sercomSymSPIRegName.getValue()))
 ctrlbValue = ctrlbNode.getChildren()
 
 for index in range(len(ctrlbValue)):
@@ -295,7 +299,7 @@ spisSymBusyPinConfigComment.setDependencies(updateSPISlaveBusyPinVisibility, ["S
 
 errorIntSupported = False
 
-intensetNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="SPIS",name="INTENSET"]')
+intensetNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="{0}",name="INTENSET"]'.format(sercomSymSPIRegName.getValue()))
 intensetValue = intensetNode.getChildren()
 
 for index in range(len(intensetValue)):
@@ -317,8 +321,17 @@ spisSym_ClockModeComment.setVisible(False)
 spisSym_ClockModeComment.setDependencies(setSPIClockModeInfo, ["SERCOM_MODE", "SPIS_CLOCK_PHASE", "SPIS_CLOCK_POLARITY"])
 
 spisSym_DATA_SIZE = sercomComponent.createIntegerSymbol("SPIS_DATA_SIZE", None)
-spisSym_DATA_SIZE.setDefaultValue(int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="SPIS",name="DATA"]').getAttribute("size")))
+spisSym_DATA_SIZE.setDefaultValue(int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="{0}",name="DATA"]'.format(sercomSymSPIRegName.getValue())).getAttribute("size")))
 spisSym_DATA_SIZE.setVisible(False)
+
+spiSym_CTRLA_MODE_Values = getValueGrp("SERCOM", "SERCOM", "CTRLA", "MODE", sercomSymSPIRegName.getValue()).getChildren()
+
+spiSymSlaveMode = sercomComponent.createStringSymbol("SPIS_MODE", sercomSym_OperationMode)
+spiSymSlaveMode.setVisible(False)
+for index in range(len(spiSym_CTRLA_MODE_Values)):
+    if int(spiSym_CTRLA_MODE_Values[index].getAttribute("value"), 0) == 2:
+        spiSymSlaveMode.setDefaultValue(spiSym_CTRLA_MODE_Values[index].getAttribute("name"))
+        break
 
 ###################################################################################################
 ####################################### Driver Symbols ############################################

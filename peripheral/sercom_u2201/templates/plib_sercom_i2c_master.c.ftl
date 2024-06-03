@@ -120,7 +120,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
 
     /* Set Operation Mode (Master), SDA Hold time, run in stand by and i2c master enable */
     <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA =
-    SERCOM_I2CM_CTRLA_MODE_I2C_MASTER
+    SERCOM_I2CM_CTRLA_MODE_${I2C_MASTER_MODE}
     | SERCOM_I2CM_CTRLA_SDAHOLD_${I2C_SDAHOLD_TIME}
     <#if I2CM_MODE??> | SERCOM_I2CM_CTRLA_SPEED_${I2CM_MODE}  </#if>
     <#if I2C_SCLSM??> | SERCOM_I2CM_CTRLA_SCLSM(${I2C_SCLSM}UL) </#if>

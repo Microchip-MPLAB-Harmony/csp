@@ -5,13 +5,13 @@
     Microchip Technology Inc.
 
   File Name
-    plib_sercom_spi_slave_common.h
+    plib_sercom_spi_master_common.h
 
   Summary
-   SERCOM SPI Slave common definitions file
+   SERCOM_SPI PLIB Master Local Header File.
 
   Description
-    This file defines the definitions for the SERCOM SPI slave interface.
+    This file defines the interface to the SERCOM SPI peripheral library.
     This library provides access to and control of the associated
     peripheral instance.
 
@@ -22,7 +22,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -45,8 +45,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_SERCOM_SPI_SLAVE_COMMON_H  // Guards against multiple inclusion
-#define PLIB_SERCOM_SPI_SLAVE_COMMON_H
+#ifndef PLIB_SERCOM_SPI_MASTER_COMMON_H  // Guards against multiple inclusion
+#define PLIB_SERCOM_SPI_MASTER_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -69,39 +69,106 @@
 
 // *****************************************************************************
 // *****************************************************************************
-// Section:Preprocessor macros
-// *****************************************************************************
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-/* SPI slave Error convenience macros */
-// *****************************************************************************
-// *****************************************************************************
-/* Error status when no error has occurred */
-#define SPI_SLAVE_ERROR_NONE 0U
-
-/* Buffer overflow error has occured */
-#define SPI_SLAVE_ERROR_BUFOVF SERCOM_SPIS_STATUS_BUFOVF_Msk
-
-// *****************************************************************************
-// *****************************************************************************
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
+
 // *****************************************************************************
-/* SPI Slave Errors
+/* SPI Clock Phase
 
   Summary:
-    Defines the data type for the SPI Slave mode errors
+    Identifies SPI Clock Phase Options
 
   Description:
-    This may be used to check the type of error occurred
+    This enumeration identifies possible SPI Clock Phase Options.
 
   Remarks:
-    None
+    None.
 */
-typedef uint32_t SPI_SLAVE_ERROR;
+
+typedef enum
+{
+    ${SERCOM_SPI_CLOCK_PHASE_ENUM_LIST}
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_CLOCK_PHASE_INVALID = 0xFFFFFFFFU
+
+} SPI_CLOCK_PHASE;
+
+// *****************************************************************************
+/* SPI Clock Polarity
+
+  Summary:
+    Identifies SPI Clock Polarity Options
+
+  Description:
+    This enumeration identifies possible SPI Clock Polarity Options.
+
+  Remarks:
+    None.
+*/
+
+typedef enum
+{
+     ${SERCOM_SPI_CLOCK_POLARITY_ENUM_LIST}
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_CLOCK_POLARITY_INVALID = 0xFFFFFFFFU
+
+} SPI_CLOCK_POLARITY;
+
+// *****************************************************************************
+/* SPI Data Bits
+
+  Summary:
+    Identifies SPI bits per transfer
+
+  Description:
+    This enumeration identifies number of bits per SPI transfer.
+
+  Remarks:
+    For 9 bit mode, data should be right aligned in the 16 bit
+    memory location.
+*/
+
+typedef enum
+{
+    ${SERCOM_SPI_DATA_BITS_ENUM_LIST}
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_DATA_BITS_INVALID = 0xFFFFFFFFU
+
+} SPI_DATA_BITS;
+
+// *****************************************************************************
+/* SPI Transfer Setup Parameters
+
+  Summary:
+    Identifies the setup parameters which can be changed dynamically.
+
+  Description
+    This structure identifies the possible setup parameters for SPI
+    which can be changed dynamically if needed.
+
+  Remarks:
+    None.
+*/
+
+typedef struct
+{
+    /* Baud Rate or clock frequency */
+    uint32_t            clockFrequency;
+
+    /* Clock Phase */
+    SPI_CLOCK_PHASE     clockPhase;
+
+    /* Clock Polarity */
+    SPI_CLOCK_POLARITY  clockPolarity;
+
+    /* Number of bits per transfer */
+    SPI_DATA_BITS       dataBits;
+
+} SPI_TRANSFER_SETUP;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -110,14 +177,14 @@ typedef uint32_t SPI_SLAVE_ERROR;
 // *****************************************************************************
 
 // *****************************************************************************
-/* SPI Slave Mode CallBack Function Pointer
+/* SPI CallBack Function Pointer
 
   Summary:
-    Pointer to a SPI Call back function when SPI is configued in slave mode.
+    Pointer to a SPI Call back function.
 
   Description:
     This data type defines the required function signature for the
-    SPI slave event handling callback function. Application must register
+    SPI event handling callback function. Application must register
     a pointer to an event handling function whose function signature (parameter
     and return value types) match the types specified by this function pointer
     in order to receive event calls back from the PLIB.
@@ -135,13 +202,12 @@ typedef uint32_t SPI_SLAVE_ERROR;
   Example:
     <code>
     <code>
-        SERCOM1_SPI_CallbackRegister(&APP_SPICallBack, NULL);
-
+        SPI1_CallbackRegister(&APP_SPICallBack, NULL);
         void APP_SPICallBack(uintptr_t contextHandle)
         {
-            if( SERCOM1_SPI_ErrorGet() == SPI_SLAVE_ERROR_NONE )
+            if( SPI_ERROR_NONE == SPI1_ErrorGet())
             {
-                Exchange was completed without error
+                Exchange was completed without error, do something else now.
             }
         }
     </code>
@@ -160,7 +226,7 @@ typedef uint32_t SPI_SLAVE_ERROR;
     operations with in this function.
 */
 
-typedef void (*SERCOM_SPI_SLAVE_CALLBACK)(uintptr_t context);
+typedef void (*SERCOM_SPI_CALLBACK)(uintptr_t context);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -184,27 +250,36 @@ typedef void (*SERCOM_SPI_SLAVE_CALLBACK)(uintptr_t context);
 
 typedef struct
 {
+    /* Pointer to the transmitter buffer */
+    void *                   txBuffer;
+
+    /* Pointer to the received buffer */
+    void *                   rxBuffer;
+
+    size_t                   txSize;
+
+    size_t                   rxSize;
+
+    size_t                   dummySize;
+
+    /* Size of the receive processed exchange size */
+    size_t                   rxCount;
+
+    /* Size of the transmit processed exchange size */
+    size_t                   txCount;
+
     /* Exchange busy status of the SPI */
-    bool                            transferIsBusy;
+    bool                     transferIsBusy;
 
     /* SPI Event handler */
-    SERCOM_SPI_SLAVE_CALLBACK       callback;
+    SERCOM_SPI_CALLBACK      callback;
 
     /* Context */
-    uintptr_t                       context;
+    uintptr_t                context;
 
-    SPI_SLAVE_ERROR                 errorStatus;
+    uint32_t                 status;
 
-    /* Number of bytes to write in the transmit buffer */
-    uint32_t                        nWrBytes;
-
-    /* Index to the number of bytes already written out from the transmit buffer */
-    uint32_t                        wrOutIndex;
-
-    /* Index into the receive buffer where the next received byte will be copied */
-    uint32_t                        rdInIndex;
-
-} SPI_SLAVE_OBJECT;
+} SPI_OBJECT;
 
 #ifdef __cplusplus // Provide C++ Compatibility
 
@@ -212,4 +287,4 @@ typedef struct
 
 #endif
 
-#endif //PLIB_SERCOM_SPI_SLAVE_COMMON_H
+#endif //PLIB_SERCOM_SPI_MASTER_COMMON_H

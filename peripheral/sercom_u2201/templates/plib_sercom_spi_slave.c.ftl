@@ -50,6 +50,12 @@
 <#assign SPI_BUSY_PIN = PLIB_NAME + "_PIN_" + SPIS_BUSY_PIN>
 </#if>
 
+<#if SERCOM_SPI_REG_NAME == "SPIM">
+<#assign SERCOM_SPI_MODE = "SPIS">
+<#else>
+<#assign SERCOM_SPI_MODE = "SPI">
+</#if>
+
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
@@ -106,20 +112,20 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
      * <#if (SPIS_SSDE??) && (SPIS_SSDE = true)> SSDE - 1 </#if>
      * RXEN - 1
      */
-    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_CTRLB =
-    SERCOM_SPIS_CTRLB_CHSIZE_${SPIS_CHARSIZE_BITS}
-    | SERCOM_SPIS_CTRLB_PLOADEN_Msk
-    | SERCOM_SPIS_CTRLB_RXEN_Msk
-    <#if (SPIS_SSDE??) && (SPIS_SSDE = true)> | SERCOM_SPIS_CTRLB_SSDE_Msk</#if>;</@compress>
+    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_CTRLB =
+    SERCOM_${SERCOM_SPI_MODE}_CTRLB_CHSIZE_${SPIS_CHARSIZE_BITS}
+    | SERCOM_${SERCOM_SPI_MODE}_CTRLB_PLOADEN_Msk
+    | SERCOM_${SERCOM_SPI_MODE}_CTRLB_RXEN_Msk
+    <#if (SPIS_SSDE??) && (SPIS_SSDE = true)> | SERCOM_${SERCOM_SPI_MODE}_CTRLB_SSDE_Msk</#if>;</@compress>
 
     /* Wait for synchronization */
     <#if SERCOM_SYNCBUSY = false>
-    while((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_STATUS & (uint16_t)SERCOM_SPIS_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_SPIS_STATUS_SYNCBUSY_Msk)
+    while((${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_STATUS & (uint16_t)SERCOM_${SERCOM_SPI_MODE}_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_${SERCOM_SPI_MODE}_STATUS_SYNCBUSY_Msk)
     {
         /* Do nothing */
     }
     <#else>
-    while(${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_SYNCBUSY != 0U)
+    while(${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_SYNCBUSY != 0U)
     {
         /* Do nothing */
     }
@@ -134,25 +140,25 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
      * DORD - ${SPIS_DATA_ORDER}
      * ENABLE - 1
      */
-    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_CTRLA =
-    SERCOM_SPIS_CTRLA_MODE_SPI_SLAVE |
-    SERCOM_SPIS_CTRLA_IBON_Msk |
-    SERCOM_SPIS_CTRLA_DOPO_${SPIS_DOPO} |
-    SERCOM_SPIS_CTRLA_DIPO_${SPIS_DIPO} |
-    SERCOM_SPIS_CTRLA_CPOL_${SPIS_CLOCK_POLARITY} |
-    SERCOM_SPIS_CTRLA_CPHA_${SPIS_CLOCK_PHASE} |
-    SERCOM_SPIS_CTRLA_DORD_${SPIS_DATA_ORDER} |
-    SERCOM_SPIS_CTRLA_ENABLE_Msk
-    ${SPIS_RUNSTDBY?then(' | SERCOM_SPIS_CTRLA_RUNSTDBY_Msk', '')};</@compress>
+    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_CTRLA =
+    SERCOM_${SERCOM_SPI_MODE}_CTRLA_MODE_${SPIS_MODE} |
+    SERCOM_${SERCOM_SPI_MODE}_CTRLA_IBON_Msk |
+    SERCOM_${SERCOM_SPI_MODE}_CTRLA_DOPO_${SPIS_DOPO} |
+    SERCOM_${SERCOM_SPI_MODE}_CTRLA_DIPO_${SPIS_DIPO} |
+    SERCOM_${SERCOM_SPI_MODE}_CTRLA_CPOL_${SPIS_CLOCK_POLARITY} |
+    SERCOM_${SERCOM_SPI_MODE}_CTRLA_CPHA_${SPIS_CLOCK_PHASE} |
+    SERCOM_${SERCOM_SPI_MODE}_CTRLA_DORD_${SPIS_DATA_ORDER} |
+    SERCOM_${SERCOM_SPI_MODE}_CTRLA_ENABLE_Msk
+    ${SPIS_RUNSTDBY?then(' | SERCOM_${SERCOM_SPI_MODE}_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 
     /* Wait for synchronization */
     <#if SERCOM_SYNCBUSY = false>
-    while((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_STATUS & (uint16_t)SERCOM_SPIS_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_SPIS_STATUS_SYNCBUSY_Msk)
+    while((${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_STATUS & (uint16_t)SERCOM_${SERCOM_SPI_MODE}_STATUS_SYNCBUSY_Msk) == (uint16_t)SERCOM_${SERCOM_SPI_MODE}_STATUS_SYNCBUSY_Msk)
     {
         /* Do nothing */
     }
     <#else>
-    while(${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_SYNCBUSY != 0U)
+    while(${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_SYNCBUSY != 0U)
     {
         /* Do nothing */
     }
@@ -166,9 +172,9 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
     ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.transferIsBusy = false ;
 
     <#if (SPIS_SSDE??) && (SPIS_SSDE = true)>
-    ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET = (uint8_t)(SERCOM_SPIS_INTENSET_SSL_Msk | SERCOM_SPIS_INTENCLR_RXC_Msk);
+    ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTENSET = (uint8_t)(SERCOM_${SERCOM_SPI_MODE}_INTENSET_SSL_Msk | SERCOM_${SERCOM_SPI_MODE}_INTENCLR_RXC_Msk);
     <#else>
-    ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET = (uint8_t)(SERCOM_SPIS_INTENCLR_RXC_Msk| SERCOM_SPIS_INTENSET_TXC_Msk);
+    ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTENSET = (uint8_t)(SERCOM_${SERCOM_SPI_MODE}_INTENCLR_RXC_Msk| SERCOM_${SERCOM_SPI_MODE}_INTENSET_TXC_Msk);
     </#if>
 
     <#if SPIS_USE_BUSY_PIN == true>
@@ -184,11 +190,11 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
 /* For 9-bit mode, the "size" must be specified in terms of 16-bit words */
 size_t ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
 {
-    uint8_t intState = ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET;
+    uint8_t intState = ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTENSET;
     size_t rdSize = size;
     ${TXRX_DATA_T}* pDstBuffer = (${TXRX_DATA_T}*)pRdBuffer;
 
-    ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENCLR = intState;
+    ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTENCLR = intState;
 
     if (rdSize > ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex)
     {
@@ -201,7 +207,7 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
     (void) mem_copy(pDstBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, (rdSize << 1U));
 </#if>
 
-    ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET = intState;
+    ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTENSET = intState;
 
     return rdSize;
 }
@@ -209,13 +215,13 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
 /* For 9-bit mode, the "size" must be specified in terms of 16-bit words */
 size_t ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
 {
-    uint8_t intState = ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET;
+    uint8_t intState = ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTENSET;
     size_t wrSize = size;
     bool writeReady = false;
     uint32_t wrOutIndex = 0;
     ${TXRX_DATA_T}* pSrcBuffer = (${TXRX_DATA_T}*)pWrBuffer;
 
-    ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENCLR = intState;
+    ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTENCLR = intState;
 
     if (wrSize > ${SERCOM_INSTANCE_NAME}_SPI_WRITE_BUFFER_SIZE)
     {
@@ -231,19 +237,19 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
     ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes = wrSize;
 
     writeReady = (wrOutIndex < ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes);
-    writeReady = ((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_DRE_Msk) == SERCOM_SPIS_INTFLAG_DRE_Msk) && writeReady;
+    writeReady = ((${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTFLAG & SERCOM_${SERCOM_SPI_MODE}_INTFLAG_DRE_Msk) == SERCOM_${SERCOM_SPI_MODE}_INTFLAG_DRE_Msk) && writeReady;
     while (writeReady)
     {
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA = ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[wrOutIndex];
+        ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_DATA = ${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer[wrOutIndex];
         wrOutIndex++;
         writeReady = (wrOutIndex < ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes);
-        writeReady = ((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_DRE_Msk) == SERCOM_SPIS_INTFLAG_DRE_Msk) && writeReady;
+        writeReady = ((${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTFLAG & SERCOM_${SERCOM_SPI_MODE}_INTFLAG_DRE_Msk) == SERCOM_${SERCOM_SPI_MODE}_INTFLAG_DRE_Msk) && writeReady;
     }
 
     ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex = wrOutIndex;
 
     /* Restore interrupt enable state and also enable DRE interrupt to start pre-loading of DATA register */
-    ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET = (intState | (uint8_t)SERCOM_SPIS_INTENSET_DRE_Msk);
+    ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTENSET = (intState | (uint8_t)SERCOM_${SERCOM_SPI_MODE}_INTENSET_DRE_Msk);
 
     return wrSize;
 }
@@ -303,14 +309,14 @@ SPI_SLAVE_ERROR ${SERCOM_INSTANCE_NAME}_SPI_ErrorGet(void)
 void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
 {
     ${TXRX_DATA_T} txRxData;
-    uint8_t intFlag = ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG;
+    uint8_t intFlag = ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTFLAG;
 
 <#if (SPIS_SSDE??) && (SPIS_SSDE = true)>
-    if((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_SSL_Msk) == SERCOM_SPIS_INTFLAG_SSL_Msk)
+    if((${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTFLAG & SERCOM_${SERCOM_SPI_MODE}_INTFLAG_SSL_Msk) == SERCOM_${SERCOM_SPI_MODE}_INTFLAG_SSL_Msk)
     {
         /* Clear the SSL flag and enable TXC interrupt */
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG = (uint8_t)SERCOM_SPIS_INTFLAG_SSL_Msk;
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET = (uint8_t)SERCOM_SPIS_INTENSET_TXC_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTFLAG = (uint8_t)SERCOM_${SERCOM_SPI_MODE}_INTFLAG_SSL_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTENSET = (uint8_t)SERCOM_${SERCOM_SPI_MODE}_INTENSET_TXC_Msk;
         ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex = 0U;
         ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.transferIsBusy = true;
 <#if SPIS_USE_BUSY_PIN == true && SPIS_BUSY_PIN_LOGIC_LEVEL = "ACTIVE_HIGH">
@@ -321,28 +327,28 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
     }
 </#if>
 
-    if ((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_STATUS & SERCOM_SPIS_STATUS_BUFOVF_Msk) == SERCOM_SPIS_STATUS_BUFOVF_Msk)
+    if ((${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_STATUS & SERCOM_${SERCOM_SPI_MODE}_STATUS_BUFOVF_Msk) == SERCOM_${SERCOM_SPI_MODE}_STATUS_BUFOVF_Msk)
     {
         /* Save the error to report it to application later, when the transfer is complete (TXC = 1) */
-        ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.errorStatus = SERCOM_SPIS_STATUS_BUFOVF_Msk;
+        ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.errorStatus = SERCOM_${SERCOM_SPI_MODE}_STATUS_BUFOVF_Msk;
 
         /* Clear the status register */
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_STATUS = SERCOM_SPIS_STATUS_BUFOVF_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_STATUS = SERCOM_${SERCOM_SPI_MODE}_STATUS_BUFOVF_Msk;
 
         /* Flush out the received data until RXC flag is set */
-        while((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_RXC_Msk) == SERCOM_SPIS_INTFLAG_RXC_Msk)
+        while((${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTFLAG & SERCOM_${SERCOM_SPI_MODE}_INTFLAG_RXC_Msk) == SERCOM_${SERCOM_SPI_MODE}_INTFLAG_RXC_Msk)
         {
             /* Reading DATA register will also clear the RXC flag */
-            txRxData = (${TXRX_DATA_T})${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA;
+            txRxData = (${TXRX_DATA_T})${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_DATA;
         }
 
         <#if SPIS_INTENSET_ERROR??>
         /* Clear the Error Interrupt Flag */
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG = (uint8_t)SERCOM_SPIS_INTFLAG_ERROR_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTFLAG = (uint8_t)SERCOM_${SERCOM_SPI_MODE}_INTFLAG_ERROR_Msk;
         </#if>
     }
 
-    if((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_RXC_Msk) == SERCOM_SPIS_INTFLAG_RXC_Msk)
+    if((${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTFLAG & SERCOM_${SERCOM_SPI_MODE}_INTFLAG_RXC_Msk) == SERCOM_${SERCOM_SPI_MODE}_INTFLAG_RXC_Msk)
     {
 <#if !(SPIS_SSDE??) >
         ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.transferIsBusy = true;
@@ -353,7 +359,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
 </#if>
 </#if>
         /* Reading DATA register will also clear the RXC flag */
-        txRxData = (${TXRX_DATA_T})${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA;
+        txRxData = (${TXRX_DATA_T})${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_DATA;
 
         if (${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex < ${SERCOM_INSTANCE_NAME}_SPI_READ_BUFFER_SIZE)
         {
@@ -364,7 +370,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
         }
     }
 
-    if((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_DRE_Msk) == SERCOM_SPIS_INTFLAG_DRE_Msk)
+    if((${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTFLAG & SERCOM_${SERCOM_SPI_MODE}_INTFLAG_DRE_Msk) == SERCOM_${SERCOM_SPI_MODE}_INTFLAG_DRE_Msk)
     {
         uint32_t wrOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex;
 
@@ -374,29 +380,29 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void)
             wrOutIndex++;
 
             /* Before writing to DATA register (which clears TXC flag), check if TXC flag is set */
-            if((${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_TXC_Msk) == SERCOM_SPIS_INTFLAG_TXC_Msk)
+            if((${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTFLAG & SERCOM_${SERCOM_SPI_MODE}_INTFLAG_TXC_Msk) == SERCOM_${SERCOM_SPI_MODE}_INTFLAG_TXC_Msk)
             {
-                intFlag = (uint8_t)SERCOM_SPIS_INTFLAG_TXC_Msk;
+                intFlag = (uint8_t)SERCOM_${SERCOM_SPI_MODE}_INTFLAG_TXC_Msk;
             }
             <#if SPIS_DATA_SIZE == 2>
-            ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA = (uint16_t)txRxData;
+            ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_DATA = (uint16_t)txRxData;
             <#else>
-            ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_DATA = (uint32_t)txRxData;
+            ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_DATA = (uint32_t)txRxData;
             </#if>
         }
         else
         {
             /* Disable DRE interrupt. The last byte sent by the master will be shifted out automatically */
-            ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENCLR = (uint8_t)SERCOM_SPIS_INTENCLR_DRE_Msk;
+            ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTENCLR = (uint8_t)SERCOM_${SERCOM_SPI_MODE}_INTENCLR_DRE_Msk;
         }
 
         ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex = wrOutIndex;
     }
 
-    if((intFlag & SERCOM_SPIS_INTFLAG_TXC_Msk) == SERCOM_SPIS_INTFLAG_TXC_Msk)
+    if((intFlag & SERCOM_${SERCOM_SPI_MODE}_INTFLAG_TXC_Msk) == SERCOM_${SERCOM_SPI_MODE}_INTFLAG_TXC_Msk)
     {
         /* Clear TXC flag */
-        ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTFLAG = (uint8_t)SERCOM_SPIS_INTFLAG_TXC_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_MODE}.SERCOM_INTFLAG = (uint8_t)SERCOM_${SERCOM_SPI_MODE}_INTFLAG_TXC_Msk;
 
         ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.transferIsBusy = false;
 

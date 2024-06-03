@@ -27,6 +27,7 @@
 
 global updateSDASetupRegisterValue
 global updateSDASetupTimeMaxValueInNanoSeconds
+global getValueGrp
 
 def updateSDASetupTimeMaxValueInNanoSeconds():
     sda_setup_reg_max_value = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CS_SDASETUP_MAX_VALUE"))
@@ -117,7 +118,8 @@ if speedSupported == True:
     i2csSym_mode.setLabel("Transfer Speed Mode")
     i2csSym_mode.setVisible(False)
 
-    i2csTransferSpeedNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/value-group@[name="SERCOM_I2CM_CTRLA__SPEED"]')
+    i2csTransferSpeedNode = getValueGrp("SERCOM", "SERCOM", "CTRLA", "SPEED", "I2CS")
+    
     i2csTransferSpeedNodeValues = i2csTransferSpeedNode.getChildren()
 
     for index in range((len(i2cmTransferSpeedNodeValues))):
@@ -163,7 +165,8 @@ i2csSym_CTRLA_SDAHOLD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + "
 i2csSym_CTRLA_SDAHOLD.setLabel("SDA Hold Time")
 i2csSym_CTRLA_SDAHOLD.setVisible(False)
 
-i2csSDAHoldTimeReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_I2CM_CTRLA__SDAHOLD\"]")
+i2csSDAHoldTimeReferenceNode = getValueGrp("SERCOM", "SERCOM", "CTRLA", "SDAHOLD", "I2CS")
+
 i2csSDAHoldTimeReferenceValues = i2csSDAHoldTimeReferenceNode.getChildren()
 
 for index in range(len(i2csSDAHoldTimeReferenceValues)):
@@ -339,6 +342,14 @@ i2csSym_CTRLA_RUNSTDBY.setVisible(False)
 i2csSym_CTRLA_RUNSTDBY.setDependencies(updateI2CSlaveConfigurationVisibleProperty, ["SERCOM_MODE"])
 #-----------------------------------------------------------------------------------
 
+i2cSym_CTRLA_MODE_Values = getValueGrp("SERCOM", "SERCOM", "CTRLA", "MODE", "I2CS").getChildren()
+
+i2cSymSlaveMode = sercomComponent.createStringSymbol("I2C_SLAVE_MODE", sercomSym_OperationMode)
+i2cSymSlaveMode.setVisible(False)
+for index in range(len(i2cSym_CTRLA_MODE_Values)):
+    if int(i2cSym_CTRLA_MODE_Values[index].getAttribute("value"), 0) == 4:
+        i2cSymSlaveMode.setDefaultValue(i2cSym_CTRLA_MODE_Values[index].getAttribute("name"))
+        break
 ###################################################################################################
 ####################################### Driver Symbols ############################################
 ###################################################################################################

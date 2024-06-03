@@ -28,6 +28,7 @@
 
 global getI2CBaudValue
 global getCalculatedI2CClockSpeed
+global getValueGrp
 
 global transferModeBaud
 
@@ -37,6 +38,7 @@ transferModeBaud = {
     1:1000,
     2:3400
 }
+        
 
 def getCalculatedI2CClockSpeed(f_gclk, trise, baud):
     global desiredI2CBaudRate
@@ -201,8 +203,9 @@ if speedSupported == True:
     i2cmSym_mode = sercomComponent.createKeyValueSetSymbol("I2CM_MODE", sercomSym_OperationMode)
     i2cmSym_mode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
     i2cmSym_mode.setLabel("Transfer Speed Mode")
+    
+    i2cmTransferSpeedNode = getValueGrp("SERCOM", "SERCOM", "CTRLA", "SPEED", "I2CM")
 
-    i2cmTransferSpeedNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/value-group@[name="SERCOM_I2CM_CTRLA__SPEED"]')
     i2cmTransferSpeedNodeValues = i2cmTransferSpeedNode.getChildren()
 
     for index in range((len(i2cmTransferSpeedNodeValues))):
@@ -256,7 +259,7 @@ i2cmSym_CTRLA_SDAHOLD = sercomComponent.createKeyValueSetSymbol("I2C_SDAHOLD_TIM
 i2cmSym_CTRLA_SDAHOLD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
 i2cmSym_CTRLA_SDAHOLD.setLabel("SDA Hold Time")
 
-i2cmSDAHoldTimeReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_I2CM_CTRLA__SDAHOLD\"]")
+i2cmSDAHoldTimeReferenceNode = getValueGrp("SERCOM", "SERCOM", "CTRLA", "SDAHOLD", "I2CM")
 i2cmSDAHoldTimeReferenceValues = i2cmSDAHoldTimeReferenceNode.getChildren()
 
 for index in range(len(i2cmSDAHoldTimeReferenceValues)):
@@ -322,22 +325,16 @@ i2cmSym_BaudError_Comment.setLabel("********** value is not suitable for the des
 i2cmSym_BaudError_Comment.setVisible(False)
 i2cmSym_BaudError_Comment.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-slewRateSupported = False
 
-for index in range(len(ctrlaValue)):
-    bitFieldName = str(ctrlaValue[index].getAttribute("name"))
-    if bitFieldName == "SLEWRATE":
-        slewRateSupported = True
-        break
+slewRateValGrp = getValueGrp("SERCOM", "SERCOM", "CTRLA", "SLEWRATE", "I2CM")
 
 # SLEW RATE Control
-if slewRateSupported == True:
+if slewRateValGrp != None:
     i2cmSym_CTRLA_SLEWRATE = sercomComponent.createKeyValueSetSymbol("I2C_SLEWRATE", sercomSym_OperationMode)
     i2cmSym_CTRLA_SLEWRATE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:%NOREGISTER%")
     i2cmSym_CTRLA_SLEWRATE.setLabel("I2C Slew Rate Control")
-
-    i2cmSlewRateReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_I2CM_CTRLA__SLEWRATE\"]")
-    i2cmSlewRateReferenceValues = i2cmSlewRateReferenceNode.getChildren()
+    
+    i2cmSlewRateReferenceValues = slewRateValGrp.getChildren()
 
     for index in range(len(i2cmSlewRateReferenceValues)):
         i2cmSlewRateReferenceKeyName = i2cmSlewRateReferenceValues[index].getAttribute("name")
@@ -381,6 +378,15 @@ i2cmSym_BAUD_SIZE.setVisible(False)
 i2cmSym_ADDR_SIZE = sercomComponent.createIntegerSymbol("I2CM_ADDR_SIZE", None)
 i2cmSym_ADDR_SIZE.setDefaultValue(int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="I2CM",name="ADDR"]').getAttribute("size")))
 i2cmSym_ADDR_SIZE.setVisible(False)
+
+i2cSym_CTRLA_MODE_Values = getValueGrp("SERCOM", "SERCOM", "CTRLA", "MODE", "I2CM").getChildren()
+
+i2cSymMasterMode = sercomComponent.createStringSymbol("I2C_MASTER_MODE", sercomSym_OperationMode)
+i2cSymMasterMode.setVisible(False)
+for index in range(len(i2cSym_CTRLA_MODE_Values)):
+    if int(i2cSym_CTRLA_MODE_Values[index].getAttribute("value"), 0) == 5:
+        i2cSymMasterMode.setDefaultValue(i2cSym_CTRLA_MODE_Values[index].getAttribute("name"))
+        break
 ###################################################################################################
 ####################################### Driver Symbols ############################################
 ###################################################################################################
