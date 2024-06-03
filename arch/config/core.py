@@ -24,6 +24,7 @@ global ECIA_EN_SET_RegUpdate
 global dmaConfiguration
 global BootFlashDict
 global isBFMPresent
+global getAppPlacementParams
 
 FlashNames          = ["FLASH", "IFLASH", "IFLASH0", "FCR_PFM"]
 #BootFlashDict      = {"bfm_region_name":[list of corresponding pfm regions], ..}
@@ -71,15 +72,25 @@ def getVtablePlacementParams(sel_vtable_reg):
 
     return vector_region
 
-def setFlashParams(symbol, event):
-    global isBFMPresent
+def getAppPlacementParams(appStartAddr, vtableMemRegion = None):
 
-    flashParams = getFlashParams(symbol.getComponent().getSymbolValue("APP_START_ADDRESS"))
-    if isBFMPresent == True:
-        vtableParams = getVtablePlacementParams(symbol.getComponent().getSymbolValue("VTABLE_MEM_REGION"))
+    flashParams = getFlashParams(appStartAddr)
+    if vtableMemRegion != None:
+        vtableParams = getVtablePlacementParams(vtableMemRegion)
         flashParams += ";" + vtableParams
 
-    symbol.setValue(flashParams)
+    return flashParams
+
+def updateAppPlacementParams(symbol, event):
+    global isBFMPresent
+    global getAppPlacementParams
+
+    appStartAddr = symbol.getComponent().getSymbolValue("APP_START_ADDRESS")
+    vtableMemRegion = None
+    if isBFMPresent == True:
+        vtableMemRegion = symbol.getComponent().getSymbolValue("VTABLE_MEM_REGION")
+
+    symbol.setValue(getAppPlacementParams(appStartAddr, vtableMemRegion))
 
 # Callback for all the messages sent to core component
 def handleMessage(messageID, args):
@@ -96,14 +107,14 @@ def handleMessage(messageID, args):
         else:
             Database.setSymbolValue("core", "SYSTICK_PUBLISH_CAPABILITIES", False)
             Database.setSymbolValue("core", "SYSTICK_BUSY", False)
-            
+
     elif (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
         if Database.getSymbolValue("core", "SYSTICK_SYS_TIME_COMPONENT_ID") != "":
             #Set the Time Period (Milli Sec)
             #Using an intermediate long symbol to pass tick period, as setSymbolValue does not allow passing float values
             sys_time_tick_ms = (long)(args["sys_time_tick_ms"]*1000)
             Database.setSymbolValue("core","SYSTICK_PERIOD_MS_LONG_INT", sys_time_tick_ms)
-    
+
     elif (messageID == "DVRT_PUBLISH_CAPABILITIES"):
         Database.setSymbolValue("core", "SYSTICK_SYS_TIME_COMPONENT_ID", args["ID"])
         if args["ID"] != "None":
@@ -112,14 +123,14 @@ def handleMessage(messageID, args):
         else:
             Database.setSymbolValue("core", "SYSTICK_PUBLISH_CAPABILITIES", False)
             Database.setSymbolValue("core", "SYSTICK_BUSY", False)
-            
+
     elif (messageID == "DVRT_TICK_RATE_CHANGED"):
         if Database.getSymbolValue("core", "SYSTICK_SYS_TIME_COMPONENT_ID") != "":
             #Set the Time Period (Milli Sec)
             #Using an intermediate long symbol to pass tick period, as setSymbolValue does not allow passing float values
             dvrt_tick_ms = (long)(args["dvrt_tick_ms"]*1000)
             Database.setSymbolValue("core","SYSTICK_PERIOD_MS_LONG_INT", dvrt_tick_ms)
-            
+
     elif messageID == "PIN_LIST":              # Indicates core to return available pins for device
         symbolDict = getAvailablePins()      # this API must be defined as global in every port plibs
 
@@ -129,13 +140,13 @@ def handleMessage(messageID, args):
         value = args.get('value')
         if pinNumber != None and setting != None and value != None:
             setPinSetConfigurationValue(pinNumber, setting, value)
-        
+
     elif messageID == "PIN_CLEAR_CONFIG_VALUE":
         pinNumber = args.get('pinNumber')
         setting = args.get('setting')
         if pinNumber != None and setting != None:
             setPinClearConfigurationValue(pinNumber, setting)
-        
+
     elif messageID == "WAIT_STATES":
         symbolDict = nvmWaitStates
 
@@ -728,7 +739,11 @@ def instantiateComponent( coreComponent ):
     xc32LdAppStartAddress.setDefaultValue(str(hex(flash_start))[2:])
 
     isBFMPresent, bfm_region = isBootFlashPresent()
-    
+
+    #Exception for WBZ35 series. For WBZ35 device, the VTABLE must be in PFM although it has Boot Flash Memory.
+    if Database.getSymbolValue("core", "CoreSeries") == "WBZ35":
+        isBFMPresent = False
+
     #Exception for WBZ35 series. For WBZ35 device, the VTABLE must be in PFM although it has Boot Flash Memory.
     if Database.getSymbolValue("core", "CoreSeries") == "WBZ35":
         isBFMPresent = False
@@ -743,13 +758,12 @@ def instantiateComponent( coreComponent ):
     xc32LdPreprocessroMacroSym = coreComponent.createSettingSymbol("XC32_LINKER_PREPROC_MARCOS", xc32LdSymbolsMacrosMenu)
     xc32LdPreprocessroMacroSym.setCategory("C32-LD")
     xc32LdPreprocessroMacroSym.setKey("preprocessor-macros")
-    if (int(xc32LdAppStartAddress.getValue(), 16) == flash_start):
-        xc32LdMacorVal = ""
-    else:
-        xc32LdMacorVal = getFlashParams(xc32LdAppStartAddress.getValue())
+    xc32LdMacorVal = ""
+    if isBFMPresent == True:
+        xc32LdMacorVal = getVtablePlacementParams(xc32LdAppVtableMemRegion.getValue())
     xc32LdPreprocessroMacroSym.setValue(xc32LdMacorVal)
     xc32LdPreprocessroMacroSym.setAppend(True, ";=")
-    xc32LdPreprocessroMacroSym.setDependencies(setFlashParams, ["APP_START_ADDRESS", "VTABLE_MEM_REGION"])
+    xc32LdPreprocessroMacroSym.setDependencies(updateAppPlacementParams, ["APP_START_ADDRESS", "VTABLE_MEM_REGION"])
 
     ## iar Tool Config
     iarMenu = coreComponent.createMenuSymbol("CoreIARMenu", toolChainMenu)
@@ -1244,7 +1258,7 @@ def compilerUpdate( symbol, event ):
             armLibCSourceFile.setEnabled( False )
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             if secarmLibCSourceFile != None:
-                secarmLibCSourceFile.setEnabled( False )                    
+                secarmLibCSourceFile.setEnabled( False )
 
     for file in compilerSpecifics:
         updatePath( file, compilerSelected.lower() )

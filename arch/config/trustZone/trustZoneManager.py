@@ -25,6 +25,7 @@
 global family
 node = ATDF.getNode("/avr-tools-device-file/devices")
 family = node.getChildren()[0].getAttribute("family")
+series = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" )
 
 trustZoneMenu = coreComponent.createMenuSymbol("TRUSTZONE_MENU", devCfgMenu)
 trustZoneMenu.setLabel('Arm\xae TrustZone\xae for Armv8-M') #Arm® TrustZone® for Armv8-M
@@ -53,5 +54,7 @@ BspSecureInitList            = coreComponent.createListSymbol( "LIST_BSP_SECURE_
 
 if family == "PIC32CK":
     execfile(Variables.get("__CORE_DIR") + "/config/trustZone/trustZone_pic32ck.py")
+elif family == "PIC32CM" and "SG" in series:
+    execfile(Variables.get("__CORE_DIR") + "/config/trustZone/trustZone_pic32cm.py")
 else:
     execfile(Variables.get("__CORE_DIR") + "/config/trustZone/trustZone_saml11_pic32cm.py")
