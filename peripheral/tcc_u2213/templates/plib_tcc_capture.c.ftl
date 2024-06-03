@@ -362,7 +362,7 @@ void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 <#else>
         <#if TCC_CAPTURE_OVF_INTERRUPT_MODE == true || TCC_CAPTURE_ERR_INTERRUPT_MODE == true>
             <#lt>/* Interrupt Handler */
-            <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
+            <#lt>void __attribute__((used)) ${TCC_INSTANCE_NAME}_${TCC_OTHER_INT_HANDLER_NAME}_InterruptHandler(void)
             <#lt>{
             <#lt>    uint32_t status;
             <#lt>    /* Additional local variable to prevent MISRA C violations (Rule 13.x) */

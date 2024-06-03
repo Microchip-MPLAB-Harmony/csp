@@ -27,15 +27,20 @@
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
-
+global getValueGroupNode__TCC
 global calcAchievableFreq
 global tcTimerUnit
 global sysTimeComponentId
+
+global tccEvsysGenNameGet
+global tccEvsysUserNameGet
+global gclk_name
 
 tcTimerUnit = { "millisecond" : 1,
                 "microsecond" : 1000,
                 "nanosecond"  : 1000000,
                 }
+
 def calcAchievableFreq(inputClk, prescale, countVal):
     global sysTimeComponentId
 
@@ -58,7 +63,7 @@ def updateTimerMenuVisibleProperty(symbol, event):
 
 def tccTimeMaxValue(symbol, event):
     global size
-    clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", gclk_name + "_CLOCK_FREQUENCY")
     if clock_freq != 0:
         prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
         resolution = (prescaler * 1000.0) / clock_freq   #msec
@@ -71,7 +76,8 @@ def tccTimeMaxValue(symbol, event):
 def tccPeriodCalc(symbol, event):
     prescaler = 0
     period = 0
-    clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", gclk_name + "_CLOCK_FREQUENCY")
+
     if clock_freq != 0:
         prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
         resolution = (prescaler * 1000.0) / clock_freq   #mSec
@@ -85,35 +91,41 @@ def tccPeriodCalc(symbol, event):
 
 def tccTimerEvsys(symbol, event):
     component = symbol.getComponent()
+    evsysGenName = tccEvsysGenNameGet(["OVF"])
     if (event["id"] == "TCC_OPERATION_MODE"):
         tccVal = component.getSymbolValue("TCC_TIMER_EVCTRL_OVFEO")
         tccVal_ev0 = component.getSymbolValue("TCC_TIMER_EVCTRL_EVACT0")
         tccVal_ev1 = component.getSymbolValue("TCC_TIMER_EVCTRL_EVACT1")
 
         if (event["value"] == "Timer"):
-            Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_OVF_ACTIVE", False, 2)
-            Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_0_READY", False, 2)
-            Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", False, 2)
+            Database.setSymbolValue("evsys", "GENERATOR_"+evsysGenName+"_ACTIVE", False, 2)
+            evsysUserName = tccEvsysUserNameGet(["EV", "0"])
+            Database.setSymbolValue("evsys", "USER_"+evsysUserName+"_READY", False, 2)
+            evsysUserName = tccEvsysUserNameGet(["EV", "1"])
+            Database.setSymbolValue("evsys", "USER_"+evsysUserName+"_READY" , False, 2)
 
-            Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_OVF_ACTIVE", tccVal, 2)
+            Database.setSymbolValue("evsys", "GENERATOR_"+evsysGenName+"_ACTIVE", tccVal, 2)
             if ((tccVal_ev0) != 0):
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_0_READY", True, 2)
+                evsysUserName = tccEvsysUserNameGet(["EV", "0"])
+                Database.setSymbolValue("evsys", "USER_"+evsysUserName+"_READY", True, 2)
             if ((tccVal_ev1) != 0):
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", True, 2)
-
+                evsysUserName = tccEvsysUserNameGet(["EV", "1"])
+                Database.setSymbolValue("evsys", "USER_"+evsysUserName+"_READY", True, 2)
     else:
         if(event["id"] == "TCC_TIMER_EVCTRL_OVFEO"):
-            Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_OVF_ACTIVE", event["value"], 2)
+            Database.setSymbolValue("evsys", "GENERATOR_"+evsysGenName+"_ACTIVE", event["value"], 2)
         if(event["id"] == "TCC_TIMER_EVCTRL_EVACT0"):
+            evsysUserName = tccEvsysUserNameGet(["EV", "0"])
             if (event["value"] != 0):
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_0_READY", True, 2)
+                Database.setSymbolValue("evsys", "USER_"+evsysUserName+"_READY", True, 2)
             else:
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_0_READY", False, 2)
+                Database.setSymbolValue("evsys", "USER_"+evsysUserName+"_READY", False, 2)
         if(event["id"] == "TCC_TIMER_EVCTRL_EVACT1"):
+            evsysUserName = tccEvsysUserNameGet(["EV", "1"])
             if (event["value"] != 0):
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", True, 2)
+                Database.setSymbolValue("evsys", "USER_"+evsysUserName+"_READY", True, 2)
             else:
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", False, 2)
+                Database.setSymbolValue("evsys", "USER_"+evsysUserName+"_READY", False, 2)
 
 def tccTimerIpEventVisible(symbol, event):
     if event["value"] != 0:
@@ -151,7 +163,7 @@ tccSym_TimerUnit.setDefaultValue("millisecond")
 
 #time in float
 global tccSym_Timer_TIME_MS
-clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY")
+clock_freq = Database.getSymbolValue("core", gclk_name + "_CLOCK_FREQUENCY")
 if clock_freq != 0:
     resolution = (int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / clock_freq
     max = ((pow(2, size) + 1) * resolution / 1000000.0)
@@ -163,7 +175,7 @@ tccSym_Timer_TIME_MS.setLabel("Time")
 tccSym_Timer_TIME_MS.setDefaultValue(1)
 tccSym_Timer_TIME_MS.setMin(0.0)
 tccSym_Timer_TIME_MS.setMax(max)
-tccSym_Timer_TIME_MS.setDependencies(tccTimeMaxValue, ["core."+tccInstanceName.getValue()+"_CLOCK_FREQUENCY", \
+tccSym_Timer_TIME_MS.setDependencies(tccTimeMaxValue, ["core."+gclk_name+"_CLOCK_FREQUENCY", \
     "TCC_CTRLA_PRESCALER", "TCC_TIMER_UNIT"])
 
 #timer period
@@ -180,7 +192,7 @@ tccSym_TimerPeriod.setReadOnly(True)
 tccSym_TimerPeriod.setDefaultValue(long(period))
 tccSym_TimerPeriod.setMin(0)
 tccSym_TimerPeriod.setMax((pow(2, size) - 1))
-tccSym_TimerPeriod.setDependencies(tccPeriodCalc, ["core."+tccInstanceName.getValue()+"_CLOCK_FREQUENCY", \
+tccSym_TimerPeriod.setDependencies(tccPeriodCalc, ["core."+gclk_name+"_CLOCK_FREQUENCY", \
     "TCC_CTRLA_PRESCALER", "TCC_TIMER_TIME_MS", "TCC_TIMER_UNIT"])
 
 #timer interrupt mode

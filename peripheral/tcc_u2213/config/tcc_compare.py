@@ -21,11 +21,14 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+global tccEvsysGenNameGet
+global tccEvsysUserNameGet
+global gclk_name
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
-
+global getValueGroupNode__TCC
 def updateCompareMenuVisibleProperty(symbol, event):
     if event["value"] == "Compare":
         symbol.setVisible(True)
@@ -34,7 +37,7 @@ def updateCompareMenuVisibleProperty(symbol, event):
 
 def tccComparePeriodCalc(symbol, event):
     wave = ""
-    clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", gclk_name + "_CLOCK_FREQUENCY")
     if clock_freq != 0:
         resolution = (int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / clock_freq
         wave = tccSym_Compare_WAVE_WAVEGEN.getSelectedKey()
@@ -64,32 +67,44 @@ def tccCompareEvsys(symbol, event):
     component = symbol.getComponent()
     if (event["id"] == "TCC_OPERATION_MODE"):
         if (event["value"] == "Compare"):
-            Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_OVF_ACTIVE", False, 2)
-            Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_0_READY", False, 2)
-            Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", False, 2)
+            evsysGenName = tccEvsysGenNameGet(["OVF"])
+            Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", False, 2)
+            evsysUserName = tccEvsysUserNameGet(["EV", "0"])
+            Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", False, 2)
+            evsysUserName = tccEvsysUserNameGet(["EV", "1"])
+            Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", False, 2)
             for channelID in range(0, int(numOfChannels)):
-                Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_ACTIVE", False, 2)
+                evsysGenName = tccEvsysGenNameGet(["MC", str(channelID)])
+
+                Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", False, 2)
                 if component.getSymbolValue("TCC_COMPARE_EVCTRL_MCEO" + str(channelID)) == True:
-                    Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_ACTIVE", True, 2)
+                    Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName +"_ACTIVE", True, 2)
 
             if component.getSymbolValue("TCC_COMPARE_EVCTRL_OVFEO") == True:
-                Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_OVF_ACTIVE", True, 2)
+                evsysGenName = tccEvsysGenNameGet(["OVF"])
+                Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName +"_ACTIVE", True, 2)
             if component.getSymbolValue("TCC_COMPARE_EVCTRL_EVACT0") == True:
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_0_READY", True, 2)
+                evsysUserName = tccEvsysUserNameGet(["EV", "0"])
+                Database.setSymbolValue("evsys","USER_" + evsysUserName + "_READY", True, 2)
             if component.getSymbolValue("TCC_COMPARE_EVCTRL_EVACT1") == True:
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", True, 2)
+                evsysUserName = tccEvsysUserNameGet(["EV", "1"])
+                Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", True, 2)
     else:
         if(event["id"] == "TCC_COMPARE_EVCTRL_OVFEO"):
-            Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_OVF_ACTIVE", event["value"], 2)
+            evsysGenName = tccEvsysGenNameGet(["OVF"])
+            Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", event["value"], 2)
         if(event["id"] == "TCC_COMPARE_EVCTRL_EVACT0"):
-            Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_0_READY", event["value"], 2)
+            evsysUserName = tccEvsysUserNameGet(["EV", "0"])
+            Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", event["value"], 2)
         if(event["id"] == "TCC_COMPARE_EVCTRL_EVACT1"):
-            Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", event["value"], 2) 
+            evsysUserName = tccEvsysUserNameGet(["EV", "1"])
+            Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", event["value"], 2)
         for channelID in range(0, int(numOfChannels)):
+            evsysGenName = tccEvsysGenNameGet(["MC", str(channelID)])
             if component.getSymbolValue("TCC_COMPARE_EVCTRL_MCEO" + str(channelID)) == True:
-                Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_ACTIVE", True, 2)           
+                Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName +"_ACTIVE", True, 2)
             else:
-                Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_ACTIVE", False, 2)
+                Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName +"_ACTIVE", False, 2)
 
 def tccCompareEVACTVisible(symbol, event):
     symbol.setVisible(event["value"])
@@ -118,7 +133,7 @@ def tccCompareIpEventVisible(symbol, event):
     if event["value"] != 0:
         symbol.setVisible(True)
     else:
-        symbol.setVisible(False)        
+        symbol.setVisible(False)
 ###################################################################################################
 ####################################### Compare Mode ##############################################
 ###################################################################################################
@@ -140,7 +155,7 @@ global tccSym_Compare_WAVE_WAVEGEN
 tccSym_Compare_WAVE_WAVEGEN = tccComponent.createKeyValueSetSymbol("TCC_COMPARE_WAVE_WAVEGEN", tccSym_CompareMenu)
 tccSym_Compare_WAVE_WAVEGEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:WAVE")
 tccSym_Compare_WAVE_WAVEGEN.setLabel("Waveform Mode")
-tcc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TCC\"]/value-group@[name=\"TCC_WAVE__WAVEGEN\"]")
+tcc = getValueGroupNode__TCC("TCC", "TCC", "WAVE", "WAVEGEN")
 childrenNodes = tcc.getChildren()
 for param in range(0, len(childrenNodes)):
     tccSym_Compare_WAVE_WAVEGEN.addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"),
@@ -196,7 +211,7 @@ tccSym_ComparePeriod.setVisible(True)
 tccSym_ComparePeriod.setDependencies(tcccomparePeriodVisible, ["TCC_COMPARE_WAVE_WAVEGEN"])
 
 #period time in us
-clk_freq = Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY")
+clk_freq = Database.getSymbolValue("core", gclk_name + "_CLOCK_FREQUENCY")
 if clk_freq != 0:
     resolution = (int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / clk_freq
     wave = tccSym_Compare_WAVE_WAVEGEN.getSelectedKey()
@@ -210,7 +225,7 @@ else:
 tccSym_ComparePeriod_Comment = tccComponent.createCommentSymbol("TCC_COMPARE_PERIOD_COMMENT", tccSym_CompareMenu)
 tccSym_ComparePeriod_Comment.setLabel("**** Waveform Period is " + str(time) + " us ****")
 tccSym_ComparePeriod_Comment.setDependencies(tccComparePeriodCalc, ["TCC_COMPARE_PERIOD", "TCC_CTRLA_PRESCALER",\
-    "core."+tccInstanceName.getValue()+"_CLOCK_FREQUENCY", "TCC_COMPARE_WAVE_WAVEGEN"])
+    "core."+gclk_name+"_CLOCK_FREQUENCY", "TCC_COMPARE_WAVE_WAVEGEN"])
 
 #compare channel counter/compare interrupt
 global tccSym_Compare_INTENSET_OVF
@@ -233,7 +248,7 @@ for channelID in range(0, int(numOfChannels)):
     tccSym_CompareDuty0.setLabel("Compare Value")
     tccSym_CompareDuty0.setDefaultValue(24)
     tccSym_CompareDuty0.setMin(0)
-    tccSym_CompareDuty0.setMax(tccSym_ComparePeriod.getValue()) 
+    tccSym_CompareDuty0.setMax(tccSym_ComparePeriod.getValue())
 
     tccSym_Compare_INTENSET_MC0 = tccComponent.createBooleanSymbol("TCC_COMPARE_INTENSET_MC" + str(channelID), tccSym_Compare_Channel_Menu)
     tccSym_Compare_INTENSET_MC0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:INTENSET")
@@ -245,10 +260,10 @@ for channelID in range(0, int(numOfChannels)):
     tccSym_Compare_EVCTRL_MCEO0 = tccComponent.createBooleanSymbol("TCC_COMPARE_EVCTRL_MCEO" + str(channelID), tccSym_Compare_Channel_Menu)
     tccSym_Compare_EVCTRL_MCEO0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
     tccSym_Compare_EVCTRL_MCEO0.setLabel("Enable Compare Match Output Event")
-    tccSym_Compare_EVCTRL_MCEO0.setDefaultValue(False)     
-    compareEvsysDep.append("TCC_COMPARE_EVCTRL_MCEO" + str(channelID))  
+    tccSym_Compare_EVCTRL_MCEO0.setDefaultValue(False)
+    compareEvsysDep.append("TCC_COMPARE_EVCTRL_MCEO" + str(channelID))
 
-tccSym_Compare_Output_Menu = tccComponent.createMenuSymbol("TCC_COMPARE_OUTPUT_MENU", tccSym_CompareMenu) 
+tccSym_Compare_Output_Menu = tccComponent.createMenuSymbol("TCC_COMPARE_OUTPUT_MENU", tccSym_CompareMenu)
 tccSym_Compare_Output_Menu.setLabel("Outputs")
 
 for output in range (0, int(numOfOutputs)):

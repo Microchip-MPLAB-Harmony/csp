@@ -423,7 +423,7 @@ void __attribute__((used)) ${TCC_INSTANCE_NAME}_InterruptHandler( void )
 <#-- multiple interrupt lines -->
 <#else>
 <#if TCC_TIMER_INTENSET_OVF == true>
-void __attribute__((used)) ${TCC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
+void __attribute__((used)) ${TCC_INSTANCE_NAME}_${TCC_OTHER_INT_HANDLER_NAME}_InterruptHandler( void )
 {
     uint32_t status;
     /* Additional local variable to prevent MISRA C violations (Rule 13.x) */

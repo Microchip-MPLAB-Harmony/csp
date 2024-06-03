@@ -44,6 +44,72 @@ global sysTimePlibMode
 global TCCfilesArray
 global InterruptVectorSecurity
 TCCfilesArray = []
+
+global evsys_generatorsNamesList
+global evsys_usersNamesList
+evsys_generatorsNamesList = []
+evsys_usersNamesList = []
+
+global gclk_name
+gclk_name = ""
+
+
+def tccEvsysGeneratorNamesPopulate(instanceName):
+    global evsys_generatorsNamesList
+
+    generatorNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators")
+    generatorValues = generatorNode.getChildren()
+    for id in range(0, len(generatorNode.getChildren())):
+        if generatorValues[id].getAttribute("module-instance") == instanceName:
+            evsys_generatorsNamesList.append(generatorValues[id].getAttribute("name"))
+
+def tccEvsysUserNamesPopulate(instanceName):
+    global evsys_usersNamesList
+
+    usersNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/users")
+    usersValues = usersNode.getChildren()
+    for id in range(0, len(usersNode.getChildren())):
+        if usersValues[id].getAttribute("module-instance") == instanceName:
+            evsys_usersNamesList.append(usersValues[id].getAttribute("name"))
+
+def tccEvsysGenNameGet(genNameMatchList):
+    global evsys_generatorsNamesList
+
+    for genName in evsys_generatorsNamesList:
+        if all ( x in genName for x in genNameMatchList):
+            return genName
+
+def tccEvsysUserNameGet(usrNameMatchList):
+    global evsys_usersNamesList
+
+    for userName in evsys_usersNamesList:
+        if all ( x in userName for x in usrNameMatchList):
+            return userName
+
+
+def getValueGroupNode__TCC(module_name, register_group, register_name, bitfield_name , mode = None):
+    bitfield_node_path = ""
+    value_group_node = None
+
+    if mode != None:
+        bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module_name, register_group, mode, register_name, bitfield_name)
+    else:
+         bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module_name, register_group, register_name, bitfield_name)
+
+    print (bitfield_node_path)
+    bitfield_node = ATDF.getNode(bitfield_node_path)
+
+    if bitfield_node != None:
+        if bitfield_node.getAttribute("values") == None:
+            print (register_name + "_" + bitfield_name + "does not have value-group attribute")
+        else:
+            value_group_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module_name, bitfield_node.getAttribute("values")))
+            if value_group_node == None:
+                print ("value-group = " + bitfield_node.getAttribute("values") + " not defined")
+    else:
+        print ("bitfield_name = " + bitfield_name + " not found" )
+
+    return value_group_node
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
@@ -207,7 +273,8 @@ def tccSlaveModeVisibility(symbol, event):
     symbol.setVisible(not event["value"])
 
 def tccFrequencyCalc(symbol, event):
-    clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    global gclk_name
+    clock_freq = Database.getSymbolValue("core", gclk_name + "_CLOCK_FREQUENCY")
     if clock_freq != 0:
         prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
         freq = clock_freq /  prescaler
@@ -296,6 +363,8 @@ def handleMessage(messageID, args):
     global sysTimePlibMode
     global tccSym_Timer_TIME_MS
 
+    global gclk_name
+
     component = str(tccInstanceName.getValue()).lower()
     dict = {}
     if (messageID == "PMSM_FOC_PWM_CONF"):
@@ -308,7 +377,7 @@ def handleMessage(messageID, args):
         lastPwmChW = pwmChW = args['PWM_PH_W']
 
         freq = args['PWM_FREQ']
-        clock = int(Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+        clock = int(Database.getSymbolValue("core", gclk_name + "_CLOCK_FREQUENCY"))
         period = int(clock)/int(freq)/2
 
         Database.setSymbolValue(component, "TCC_PER_PER", period)
@@ -391,6 +460,7 @@ def instantiateComponent(tccComponent):
     global sysTimeComponentId
     global tmrCapabilityId
     global pwmCapabilityId
+    global gclk_name
 
     eventDepList = []
     interruptDepList = []
@@ -402,10 +472,22 @@ def instantiateComponent(tccComponent):
     tmrCapabilityId = tccInstanceName.getValue() + "_TMR"
     pwmCapabilityId = tccInstanceName.getValue() + "_PWM"
 
+    tccEvsysGeneratorNamesPopulate(tccInstanceName.getValue())
+    tccEvsysUserNamesPopulate(tccInstanceName.getValue())
+
     InterruptVectorSecurity = tccInstanceName.getValue() + "_SET_NON_SECURE"
 
+    tcc_param_node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TCC\"]/instance@[name=\""+tccInstanceName.getValue()+"\"]/parameters")
+
+    parameters = tcc_param_node.getChildren()
+
+    gclk_name = ""
+    for param in range (0, len(parameters)):
+        if "GCLK_ID" in parameters[param].getAttribute("name"):
+            gclk_name = tccInstanceName.getValue() + parameters[param].getAttribute("name").replace("GCLK_ID", "")
+
     #clock enable
-    Database.setSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
+    Database.setSymbolValue("core", gclk_name + "_CLOCK_ENABLE", True, 2)
 
     ################################ ATDF ####################################################
     node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TCC\"]/instance@[name=\""+tccInstanceName.getValue()+"\"]/parameters")
@@ -596,7 +678,7 @@ def instantiateComponent(tccComponent):
     tccSym_CTRLA_PRESCALER.setDefaultValue(0)
     tccSym_CTRLA_PRESCALER.setOutputMode("Key")
     tccSym_CTRLA_PRESCALER.setDisplayMode("Description")
-    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TCC\"]/value-group@[name=\"TCC_CTRLA__PRESCALER\"]")
+    node = getValueGroupNode__TCC("TCC", "TCC", "CTRLA", "PRESCALER")
     values = []
     values = node.getChildren()
     for index in range(0, len(values)):
@@ -610,7 +692,7 @@ def instantiateComponent(tccComponent):
     tccSym_CTRLA_PRESCYNC.setDefaultValue(1)
     tccSym_CTRLA_PRESCYNC.setOutputMode("Key")
     tccSym_CTRLA_PRESCYNC.setDisplayMode("Description")
-    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TCC\"]/value-group@[name=\"TCC_CTRLA__PRESCSYNC\"]")
+    node = getValueGroupNode__TCC("TCC", "TCC", "CTRLA", "PRESCSYNC")
     values = []
     values = node.getChildren()
     for index in range(0, len(values)):
@@ -619,8 +701,8 @@ def instantiateComponent(tccComponent):
 
     tccSym_Frequency = tccComponent.createIntegerSymbol("TCC_MODULE_FREQUENCY", None)
     tccSym_Frequency.setVisible(False)
-    tccSym_Frequency.setDefaultValue(int(Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY")))
-    tccSym_Frequency.setDependencies(tccFrequencyCalc, ["TCC_CTRLA_PRESCALER", "core."+tccInstanceName.getValue()+"_CLOCK_FREQUENCY"])
+    tccSym_Frequency.setDefaultValue(int(Database.getSymbolValue("core", gclk_name + "_CLOCK_FREQUENCY")))
+    tccSym_Frequency.setDependencies(tccFrequencyCalc, ["TCC_CTRLA_PRESCALER", "core."+ gclk_name +"_CLOCK_FREQUENCY"])
 
     #tcc operation mode
     tccOperationModeList = ["PWM", "Timer", "Compare", "Capture"]
@@ -638,6 +720,9 @@ def instantiateComponent(tccComponent):
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/tcc_u2213/config/tcc_timer.py")
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/tcc_u2213/config/tcc_compare.py")
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/tcc_u2213/config/tcc_capture.py")
+    
+    tccSym_OtherIntHandler = tccComponent.createStringSymbol("TCC_OTHER_INT_HANDLER_NAME", None)
+    tccSym_OtherIntHandler.setVisible(False)
 
     ############################################################################
     #### Dependency ####
@@ -648,6 +733,8 @@ def instantiateComponent(tccComponent):
     for id in range(0, len(vectorNode.getChildren())):
         if vectorValues[id].getAttribute("module-instance") == tccInstanceName.getValue():
             name = vectorValues[id].getAttribute("name")
+            if any (int_name in name for int_name in ["OTHER", "DFS"]):
+                tccSym_OtherIntHandler.setDefaultValue(name.replace(tccInstanceName.getValue() + "_", ""))
             InterruptVector.append(name + "_INTERRUPT_ENABLE")
             InterruptHandler.append(name + "_INTERRUPT_HANDLER")
             InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
@@ -675,7 +762,7 @@ def instantiateComponent(tccComponent):
     tccSym_ClkEnComment = tccComponent.createCommentSymbol("TCC_CLOCK_ENABLE_COMMENT", None)
     tccSym_ClkEnComment.setLabel("Warning!!! TCC Peripheral Clock is Disabled in Clock Manager")
     tccSym_ClkEnComment.setVisible(False)
-    tccSym_ClkEnComment.setDependencies(updateTCCClockWarningStatus, ["core." + tccInstanceName.getValue() + "_CLOCK_ENABLE"])
+    tccSym_ClkEnComment.setDependencies(updateTCCClockWarningStatus, ["core." + gclk_name + "_CLOCK_ENABLE"])
 
     # Zero Clock Frequency Warning status
     tccSym_ZeroClkFreqComment = tccComponent.createCommentSymbol("TCC_ZERO_CLOCK_FREQ_COMMENT", None)

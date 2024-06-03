@@ -24,7 +24,9 @@
 
 global tccSym_Capture_Channel
 tccSym_Capture_Channel = []
-
+global getValueGroupNode__TCC
+global tccEvsysGenNameGet
+global tccEvsysUserNameGet
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
@@ -47,34 +49,45 @@ def tccCaptureEvsys(symbol, event):
     component = symbol.getComponent()
     if (event["id"] == "TCC_OPERATION_MODE"):
         if (event["value"] == "Capture"):
-            Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_OVF_ACTIVE", False, 2)
-            Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_0_READY", False, 2)
-            Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", False, 2)
+            evsysGenName = tccEvsysGenNameGet(["OVF"])
+            Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", False, 2)
+            evsysUserName = tccEvsysUserNameGet(["EV", "0"])
+            Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", False, 2)
+            evsysUserName = tccEvsysUserNameGet(["EV", "1"])
+            Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", False, 2)
             for channelID in range(0, int(numOfChannels)):
-                Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_ACTIVE", False, 2)
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_READY", False, 2)
+                evsysGenName = tccEvsysGenNameGet(["MC", str(channelID)])
+                evsysUserName = tccEvsysUserNameGet(["MC", str(channelID)])
+
+                Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName +"_ACTIVE", False, 2)
+                Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", False, 2)
                 if component.getSymbolValue("TCC_CAPTURE_EVCTRL_MCEO" + str(channelID)) == True:
-                    Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_ACTIVE", True, 2)
+                    Database.setSymbolValue("evsys", "GENERATOR_"+ evsysGenName + "_ACTIVE", True, 2)
                 if component.getSymbolValue("TCC_CAPTURE_CTRLA_CAPTEN"+str(channelID)) == True:
-                    Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_READY", True, 2)                    
+                    Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", True, 2)
 
             if component.getSymbolValue("TCC_CAPTURE_EVCTRL_EVACT1") != 0: # 0 stands for Event OFF
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", True, 2)
+                evsysUserName = tccEvsysUserNameGet(["EV", "1"])
+                Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", True, 2)
     else:
         if(event["id"] == "TCC_CAPTURE_EVCTRL_EVACT1"):
+            evsysUserName = tccEvsysUserNameGet(["EV", "1"])
             if(event["value"] == 0): # 0 stands for Event OFF
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", False, 2)
+                Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", False, 2)
             else:
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_EV_1_READY", True, 2) 
+                Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", True, 2)
         for channelID in range(0, int(numOfChannels)):
+            evsysGenName = tccEvsysGenNameGet(["MC", str(channelID)])
+            evsysUserName = tccEvsysUserNameGet(["MC", str(channelID)])
+
             if component.getSymbolValue("TCC_CAPTURE_EVCTRL_MCEO" + str(channelID)) == True:
-                Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_ACTIVE", True, 2)           
+                Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", True, 2)
             else:
-                Database.setSymbolValue("evsys", "GENERATOR_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_ACTIVE", False, 2)
+                Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", False, 2)
             if component.getSymbolValue("TCC_CAPTURE_CTRLA_CAPTEN"+str(channelID)) == True:
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_READY", True, 2)
+                Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", True, 2)
             else:
-                Database.setSymbolValue("evsys", "USER_"+tccInstanceName.getValue()+"_MC_"+str(channelID)+"_READY", False, 2)
+                Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", False, 2)
 
 def tccCaptureIpEventVisible(symbol, event):
     symbol.setVisible(event["value"])
@@ -112,7 +125,8 @@ tccSym_Capture_EVCTRL_EVACT1 = tccComponent.createKeyValueSetSymbol("TCC_CAPTURE
 tccSym_Capture_EVCTRL_EVACT1.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tcc_u2213;register:EVCTRL")
 tccSym_Capture_EVCTRL_EVACT1.setLabel("Select Input Event 1 Action")
 tccSym_Capture_EVCTRL_EVACT1.addKey("OFF", "0", "Disabled")
-if ATDF.getNode('/avr-tools-device-file/modules/module@[name="TCC"]/value-group@[name="EVCTRL__EVACT1"]/value@[name="PPW"]') is not None:
+evctrl_evact1_val_group = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TCC"]/register-group@[name="TCC"]/register@[name="EVCTRL"]/bitfield@[name="EVACT1"]').getAttribute("values")
+if ATDF.getNode('/avr-tools-device-file/modules/module@[name="TCC"]/value-group@[name="{0}"]/value@[name="PPW"]'.format(evctrl_evact1_val_group)) is not None:
     tccSym_Capture_EVCTRL_EVACT1.addKey("PPW", "5", "Period captured into CC0 Pulse Width on CC1")
 tccSym_Capture_EVCTRL_EVACT1.addKey("PWP", "6", "Period captured into CC1 Pulse Width on CC0")
 tccSym_Capture_EVCTRL_EVACT1.setDisplayMode("Description")
