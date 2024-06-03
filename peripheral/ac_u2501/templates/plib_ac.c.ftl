@@ -48,6 +48,23 @@
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
+
+<#function AC_CMP_CHN_REG_GET chn, index>
+    <#if AC_CHANNEL_GROUP == "CHANNEL">
+        <#return "CHANNEL[" + chn + "]" + ".AC_COMPCTRL[" + index + "]">
+    <#else>
+        <#return "AC_COMPCTRL[" + index + "]">
+    </#if>
+</#function>
+
+<#function AC_DAC_WIN_CHN_REG_GET chn, reg>
+    <#if AC_CHANNEL_GROUP == "CHANNEL">
+        <#return "CHANNEL[" + chn + "]." + reg>
+    <#else>
+        <#return reg>
+    </#if>
+</#function>
+
 <#assign AC_WINCTRL_VAL = "">
 <#assign AC_EVCTRL_VAL = "">
 <#assign AC_INTENSET_VAL = "">
@@ -193,6 +210,8 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
         /* Wait for Synchronization */
     }
 
+
+
     <#if AC_LOAD_CALIB == 1>
     /*Load Calibration Value*/
     uint8_t calibVal = (uint8_t)((*(uint32_t*)${AC_CALIB_ADDR}) & 0x3U);
@@ -226,9 +245,10 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
 
     <#if .vars[ANALOG_COMPARATOR_ENABLE]?has_content>
         <#if (.vars[ANALOG_COMPARATOR_ENABLE] != false)>
+
     /* Disable the module and configure COMPCTRL */
     /**************** Comparator ${i} Configurations ************************/
-    <@compress single_line=true>${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] = AC_COMPCTRL_MUXPOS_${.vars[AC_COMPCTRL_MUXPOS]}
+    <@compress single_line=true>${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, i)} = AC_COMPCTRL_MUXPOS_${.vars[AC_COMPCTRL_MUXPOS]}
                                   | AC_COMPCTRL_MUXNEG_${.vars[AC_COMPCTRL_MUXNEG]}
                                   | AC_COMPCTRL_INTSEL_${.vars[AC_COMPCTRL_INTSEL]}
                                   | AC_COMPCTRL_OUT_${.vars[AC_COMPCTRL_OUTPUT_TYPE]}
@@ -239,19 +259,19 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   <#if .vars[AC_COMPCTRL_SUT]?has_content> | AC_COMPCTRL_SUT(${.vars[AC_COMPCTRL_SUT]}) </#if>;</@compress>
 
     <#if .vars[AC_COMPCTRL_MUXPOS] == "INTDAC" || .vars[AC_COMPCTRL_MUXNEG] == "INTDAC">
-    ${AC_INSTANCE_NAME}_REGS->AC_DACCTRL |=  AC_DACCTRL_VALUE${i}(${.vars[AC_DACCTRL_VALUE]}) <#if .vars[AC_DACCTRL_SHEN] == "0x1"> | AC_DACCTRL_SHEN${i}_Msk </#if>;
+    ${AC_INSTANCE_NAME}_REGS->${AC_DAC_WIN_CHN_REG_GET(0, "AC_DACCTRL")} |=  AC_DACCTRL_VALUE${i}(${.vars[AC_DACCTRL_VALUE]}) <#if .vars[AC_DACCTRL_SHEN] == "0x1"> | AC_DACCTRL_SHEN${i}_Msk </#if>;
     </#if>
 
     <#if AC_COMPCTRL_SINGLE_MODE?has_content && .vars[AC_COMPCTRL_HYSTEN]?has_content>
         <#if (.vars[AC_COMPCTRL_SINGLE_MODE] == false) & (.vars[AC_COMPCTRL_HYSTEN] == true)>
             <#if AC_COMPCTRL_HYST_VAL?has_content>
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYST(${.vars[AC_COMPCTRL_HYST_VAL]}U) | AC_COMPCTRL_HYSTEN_Msk;
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, i)}|= AC_COMPCTRL_HYST(${.vars[AC_COMPCTRL_HYST_VAL]}U) | AC_COMPCTRL_HYSTEN_Msk;
             <#else>
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYSTEN_Msk;
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, i)} |= AC_COMPCTRL_HYSTEN_Msk;
             </#if>
         </#if>
     </#if>
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, i)} |= AC_COMPCTRL_ENABLE_Msk;
                 <#if .vars[AC_SCALERn]?has_content >
     ${AC_INSTANCE_NAME}_REGS->AC_SCALER[${i}] = ${.vars[AC_SCALERn]}U;
                 </#if>
@@ -261,7 +281,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     </#list>
 <#if AC_WINCTRL_VAL?has_content>
 
-    ${AC_INSTANCE_NAME}_REGS->AC_WINCTRL = ${AC_WINCTRL_VAL};
+    ${AC_INSTANCE_NAME}_REGS->${AC_DAC_WIN_CHN_REG_GET(0, "AC_WINCTRL")} = ${AC_WINCTRL_VAL};
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_WINCTRL_Msk) == AC_SYNCBUSY_WINCTRL_Msk)
     {
         /* Wait for Synchronization */
@@ -306,7 +326,7 @@ void ${AC_INSTANCE_NAME}_SetDACOutput( AC_CHANNEL channel_id , uint8_t value)
         /* Wait for Synchronization */
     }
 
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, "channel_id")} &= ~AC_COMPCTRL_ENABLE_Msk;
 
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
     {
@@ -315,14 +335,16 @@ void ${AC_INSTANCE_NAME}_SetDACOutput( AC_CHANNEL channel_id , uint8_t value)
 
     if (channel_id == AC_CHANNEL0)
     {
-        ${AC_INSTANCE_NAME}_REGS->AC_DACCTRL = (${AC_INSTANCE_NAME}_REGS->AC_DACCTRL & ~AC_DACCTRL_VALUE0_Msk) | (value);
+        ${AC_INSTANCE_NAME}_REGS->${AC_DAC_WIN_CHN_REG_GET(0, "AC_DACCTRL")} = (${AC_INSTANCE_NAME}_REGS->${AC_DAC_WIN_CHN_REG_GET(0, "AC_DACCTRL")} & ~AC_DACCTRL_VALUE0_Msk) | (value);
     }
     else
     {
-        ${AC_INSTANCE_NAME}_REGS->AC_DACCTRL = (${AC_INSTANCE_NAME}_REGS->AC_DACCTRL & ~AC_DACCTRL_VALUE1_Msk) | ((uint32_t)value << AC_DACCTRL_VALUE1_Pos);
+        ${AC_INSTANCE_NAME}_REGS->${AC_DAC_WIN_CHN_REG_GET(0, "AC_DACCTRL")} = (${AC_INSTANCE_NAME}_REGS->${AC_DAC_WIN_CHN_REG_GET(0, "AC_DACCTRL")} & ~AC_DACCTRL_VALUE1_Msk) | ((uint32_t)value << AC_DACCTRL_VALUE1_Pos);
     }
 
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, "channel_id")} |= AC_COMPCTRL_ENABLE_Msk;
+
+
 
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
     {
@@ -341,15 +363,18 @@ void ${AC_INSTANCE_NAME}_SetDACOutput( AC_CHANNEL channel_id , uint8_t value)
 void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
 {
     /* Disable comparator before swapping */
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, "channel_id")} &= ~AC_COMPCTRL_ENABLE_Msk;
+
+
     /* Check Synchronization to ensure that the comparator is disabled */
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U))
     {
         /* Wait for Synchronization */
     }
     /* Swap inputs of the given comparator */
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_SWAP_Msk;
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, "channel_id")} |= AC_COMPCTRL_SWAP_Msk;
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, "channel_id")} |= AC_COMPCTRL_ENABLE_Msk;
+
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U))
     {
         /* Wait for Synchronization */
@@ -359,17 +384,20 @@ void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
 void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT positiveInput, AC_NEGINPUT negativeInput)
 {
     /* Disable comparator before swapping */
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, "channel_id")} &= ~AC_COMPCTRL_ENABLE_Msk;
+
     /* Check Synchronization to ensure that the comparator is disabled */
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U))
     {
         /* Wait for Synchronization */
     }
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~(AC_COMPCTRL_MUXPOS_Msk | AC_COMPCTRL_MUXNEG_Msk);
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= ((uint32_t)positiveInput | (uint32_t)negativeInput);
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, "channel_id")} &= ~(AC_COMPCTRL_MUXPOS_Msk | AC_COMPCTRL_MUXNEG_Msk);
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, "channel_id")} |= ((uint32_t)positiveInput | (uint32_t)negativeInput);
 
     /* Enable comparator channel */
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->${AC_CMP_CHN_REG_GET(0, "channel_id")} |= AC_COMPCTRL_ENABLE_Msk;
+
+
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY != 0U))
     {
         /* Wait for Synchronization */
