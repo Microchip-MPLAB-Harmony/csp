@@ -61,9 +61,17 @@ def instantiateComponent(tramComponent):
     tramTamper.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:tram_u2801;register:%NOREGISTER%")
     tramTamper.setLabel("Erase Data on Tamper Detection")
     tramTamper.setDefaultValue(False)
-
+    
+    tramWordRegName = tramComponent.createStringSymbol("TRAM_WORD_REG", None)
+    tramWordRegName.setVisible(False)
 
     tramRAMNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TRAM"]/register-group@[name="TRAM"]/register@[name="RAM"]')
+    if tramRAMNode == None:
+        tramRAMNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TRAM"]/register-group@[name="TRAM"]/register@[name="WORD"]')
+        tramWordRegName.setDefaultValue("TRAM_WORD")
+    else:
+        tramWordRegName.setDefaultValue("TRAM_RAM")
+    
     ramCount = int(tramRAMNode.getAttribute("count")) - 1
 
     tramRAMCount = tramComponent.createIntegerSymbol("TRAM_RAM_COUNT", None)

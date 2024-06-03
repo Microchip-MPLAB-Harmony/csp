@@ -66,7 +66,7 @@ bool ${TRAM_INSTANCE_NAME}_RAMSet(uint32_t ramIndex, uint32_t data)
     bool ramIndexStatus = false;
     if (ramIndex < ${TRAM_RAM_COUNT + 1}U)
     {
-        ${TRAM_INSTANCE_NAME}_REGS->TRAM_RAM[ramIndex] = TRAM_RAM_DATA(data);
+        ${TRAM_INSTANCE_NAME}_REGS->${TRAM_WORD_REG}[ramIndex] = ${TRAM_WORD_REG}_DATA(data);
         ramIndexStatus = true;
     }
     return ramIndexStatus;
@@ -77,7 +77,7 @@ bool ${TRAM_INSTANCE_NAME}_RAMGet(uint32_t ramIndex, uint32_t *data)
     bool ramIndexStatus = false;
     if (ramIndex < ${TRAM_RAM_COUNT + 1}U)
     {
-        *data = ${TRAM_INSTANCE_NAME}_REGS->TRAM_RAM[ramIndex];
+        *data = ${TRAM_INSTANCE_NAME}_REGS->${TRAM_WORD_REG}[ramIndex];
         ramIndexStatus = true;
     }
     return ramIndexStatus;
