@@ -38,6 +38,7 @@ global  systickInterrupt
 global  systickUsedBySysTime
 global  systickCommentForSysTime
 global  calAchievableTickRate
+global  systickMaxCount
 
 Log.writeInfoMessage("Loading SYSTICK for " + Variables.get("__PROCESSOR"))
 
@@ -100,8 +101,7 @@ def sysTickMax(systick, event):
 
     freq_proc = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
 
-    systickCVRNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SysTick"]/register-group@[name="SysTick"]/register@[name="CVR"]/bitfield@[name="CURRENT"]')
-    currentValueMask = str(systickCVRNode.getAttribute("mask"))
+    currentValueMask = systickMaxCount
 
     if clock == 0:
         if freq_ext != 0 and freq_ext != None:
@@ -272,12 +272,17 @@ if Database.getSymbolValue("core","SYSTICK_EXTERNAL_CLOCK"):
 systickClock.addKey("HCLK", str(1) , "Processor clock" )
 systickClock.setDefaultValue(int(Database.getSymbolValue("core","SYSTICK_EXTERNAL_CLOCK")))
 
+systickRegPrefixStr = ""
+
 systickNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SysTick"]/register-group@[name="SysTick"]/register@[name="VAL"]/bitfield@[name="CURRENT"]')
 #Check for old register name
 if systickNode is None:
     systickNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SysTick"]/register-group@[name="SysTick"]/register@[name="CVR"]/bitfield@[name="CURRENT"]')
-maxCount = str(systickNode.getAttribute("mask"))
-max = ((float(1) / int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))) * int(maxCount, 0) * 1000)
+if systickNode == None:
+    systickNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SysTick"]/register-group@[name="SysTick"]/register@[name="SYST_CVR"]/bitfield@[name="CURRENT"]')
+    #systickRegPrefixStr = "SYST_"
+systickMaxCount = str(systickNode.getAttribute("mask"))
+max = ((float(1) / int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))) * int(systickMaxCount, 0) * 1000)
 
 systickPeriodMS = coreComponent.createFloatSymbol("SYSTICK_PERIOD_MS", systickConfigMenu)
 systickPeriodMS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:systick;register:%NOREGISTER%")
@@ -308,6 +313,10 @@ systickPeriodUS = coreComponent.createIntegerSymbol("SYSTICK_PERIOD_US", systick
 systickPeriodUS.setVisible(False)
 systickPeriodUS.setDefaultValue(1000)
 systickPeriodUS.setMin(0)
+
+systickRegisterPrefix = coreComponent.createStringSymbol("SYSTICK_REG_PREFIX", systickConfigMenu)
+systickRegisterPrefix.setDefaultValue(systickRegPrefixStr)
+systickRegisterPrefix.setVisible(False)
 
 # Setup Peripheral Interrupt in Interrupt manager
 systickinterruptVector = "SysTick_INTERRUPT_ENABLE"

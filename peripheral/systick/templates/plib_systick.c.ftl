@@ -53,17 +53,17 @@
 
 void SYSTICK_TimerInitialize ( void )
 {
-    SysTick->CTRL = 0U;
-    SysTick->VAL = 0U;
+    SysTick->${SYSTICK_REG_PREFIX}CTRL = 0U;
+    SysTick->${SYSTICK_REG_PREFIX}VAL = 0U;
     <#if SYSTICK_PERIOD != "0x0">
-    SysTick->LOAD = ${SYSTICK_PERIOD}U - 1U;
+    SysTick->${SYSTICK_REG_PREFIX}LOAD = ${SYSTICK_PERIOD}U - 1U;
     </#if>
     <#if USE_SYSTICK_INTERRUPT == true && SYSTICK_CLOCK == "0">
-        <#lt>    SysTick->CTRL = SysTick_CTRL_TICKINT_Msk;
+        <#lt>    SysTick->${SYSTICK_REG_PREFIX}CTRL = SysTick_CTRL_TICKINT_Msk;
     <#elseif USE_SYSTICK_INTERRUPT == true && SYSTICK_CLOCK == "1">
-        <#lt>    SysTick->CTRL = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk;
+        <#lt>    SysTick->${SYSTICK_REG_PREFIX}CTRL = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk;
     <#elseif USE_SYSTICK_INTERRUPT == false && SYSTICK_CLOCK == "1">
-        <#lt>    SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk;
+        <#lt>    SysTick->${SYSTICK_REG_PREFIX}CTRL = SysTick_CTRL_CLKSOURCE_Msk;
     </#if>
     <#if USE_SYSTICK_INTERRUPT == true >
 
@@ -74,35 +74,35 @@ void SYSTICK_TimerInitialize ( void )
 
 void SYSTICK_TimerRestart ( void )
 {
-    SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
-    SysTick->VAL = 0U;
-    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+    SysTick->${SYSTICK_REG_PREFIX}CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
+    SysTick->${SYSTICK_REG_PREFIX}VAL = 0U;
+    SysTick->${SYSTICK_REG_PREFIX}CTRL |= SysTick_CTRL_ENABLE_Msk;
 }
 
 void SYSTICK_TimerStart ( void )
 {
-    SysTick->VAL = 0U;
-    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+    SysTick->${SYSTICK_REG_PREFIX}VAL = 0U;
+    SysTick->${SYSTICK_REG_PREFIX}CTRL |= SysTick_CTRL_ENABLE_Msk;
 }
 
 void SYSTICK_TimerStop ( void )
 {
-    SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
+    SysTick->${SYSTICK_REG_PREFIX}CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
 }
 
 void SYSTICK_TimerPeriodSet ( uint32_t period )
 {
-    SysTick->LOAD = period - 1U;
+    SysTick->${SYSTICK_REG_PREFIX}LOAD = period - 1U;
 }
 
 uint32_t SYSTICK_TimerPeriodGet ( void )
 {
-        return(SysTick->LOAD);
+        return(SysTick->${SYSTICK_REG_PREFIX}LOAD);
 }
 
 uint32_t SYSTICK_TimerCounterGet ( void )
 {
-    return (SysTick->VAL);
+    return (SysTick->${SYSTICK_REG_PREFIX}VAL);
 }
 
 uint32_t SYSTICK_TimerFrequencyGet ( void )
@@ -115,18 +115,18 @@ void SYSTICK_DelayMs ( uint32_t delay_ms)
    uint32_t elapsedCount=0U, delayCount;
    uint32_t deltaCount, oldCount, newCount, period;
 
-   period = SysTick->LOAD + 1U;
+   period = SysTick->${SYSTICK_REG_PREFIX}LOAD + 1U;
 
    /* Calculate the count for the given delay */
    delayCount=(SYSTICK_FREQ/1000U)*delay_ms;
 
-   if((SysTick->CTRL & SysTick_CTRL_ENABLE_Msk) == SysTick_CTRL_ENABLE_Msk)
+   if((SysTick->${SYSTICK_REG_PREFIX}CTRL & SysTick_CTRL_ENABLE_Msk) == SysTick_CTRL_ENABLE_Msk)
    {
-       oldCount = SysTick->VAL;
+       oldCount = SysTick->${SYSTICK_REG_PREFIX}VAL;
 
        while (elapsedCount < delayCount)
        {
-           newCount = SysTick->VAL;
+           newCount = SysTick->${SYSTICK_REG_PREFIX}VAL;
            deltaCount = oldCount - newCount;
 
            if(newCount > oldCount)
@@ -145,18 +145,18 @@ void SYSTICK_DelayUs ( uint32_t delay_us)
    uint32_t elapsedCount=0U, delayCount;
    uint32_t deltaCount, oldCount, newCount, period;
 
-   period = SysTick->LOAD + 1U;
+   period = SysTick->${SYSTICK_REG_PREFIX}LOAD + 1U;
 
     /* Calculate the count for the given delay */
    delayCount=(SYSTICK_FREQ/1000000U)*delay_us;
 
-   if((SysTick->CTRL & SysTick_CTRL_ENABLE_Msk) == SysTick_CTRL_ENABLE_Msk)
+   if((SysTick->${SYSTICK_REG_PREFIX}CTRL & SysTick_CTRL_ENABLE_Msk) == SysTick_CTRL_ENABLE_Msk)
    {
-       oldCount = SysTick->VAL;
+       oldCount = SysTick->${SYSTICK_REG_PREFIX}VAL;
 
        while (elapsedCount < delayCount)
        {
-           newCount = SysTick->VAL;
+           newCount = SysTick->${SYSTICK_REG_PREFIX}VAL;
            deltaCount = oldCount - newCount;
 
            if(newCount > oldCount)
@@ -174,14 +174,14 @@ bool SYSTICK_TimerInterruptDisable ( void )
 {
     bool interruptStatus = false;
 
-    if ((SysTick->CTRL & SysTick_CTRL_TICKINT_Msk) != 0U)
+    if ((SysTick->${SYSTICK_REG_PREFIX}CTRL & SysTick_CTRL_TICKINT_Msk) != 0U)
     {
         interruptStatus = true;
     }
 <#if SYSTICK_CLOCK == "1">
-    SysTick->CTRL = 0x05U;
+    SysTick->${SYSTICK_REG_PREFIX}CTRL = 0x05U;
 <#else>
-    SysTick->CTRL = 0x01U;
+    SysTick->${SYSTICK_REG_PREFIX}CTRL = 0x01U;
 </#if>
 
     return interruptStatus;
@@ -193,11 +193,11 @@ void SYSTICK_TimerInterruptEnable ( void )
     bool interruptState = NVIC_INT_Disable();
 
 <#if SYSTICK_CLOCK == "1">
-    SysTick->CTRL = 0x07U;
+    SysTick->${SYSTICK_REG_PREFIX}CTRL = 0x07U;
 <#else>
-    SysTick->CTRL = 0x03U;
+    SysTick->${SYSTICK_REG_PREFIX}CTRL = 0x03U;
 </#if>
-    if((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+    if((SysTick->${SYSTICK_REG_PREFIX}CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
     {
         SCB->ICSR |= SCB_ICSR_PENDSTSET_Msk;
     }
@@ -218,7 +218,7 @@ void SYSTICK_TimerInterruptRestore ( bool interruptStatus )
 <#if USE_SYSTICK_INTERRUPT == false>
     <#lt>bool SYSTICK_TimerPeriodHasExpired(void)
     <#lt>{
-    <#lt>   return ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) > 0U);
+    <#lt>   return ((SysTick->${SYSTICK_REG_PREFIX}CTRL & SysTick_CTRL_COUNTFLAG_Msk) > 0U);
     <#lt>}
 </#if>
 
@@ -262,7 +262,7 @@ void __attribute__((used)) SysTick_Handler(void)
    uintptr_t context = systick.context;
 
    /* Reading control register clears the count flag */
-   (void)SysTick->CTRL;
+   (void)SysTick->${SYSTICK_REG_PREFIX}CTRL;
 
    systick.tickCounter++;
    if(systick.callback != NULL)
