@@ -30,6 +30,44 @@ global shiftDict
 global CCLfilesArray
 CCLfilesArray = []
 
+global evsys_generatorsNamesList
+global evsys_usersNamesList
+evsys_generatorsNamesList = []
+evsys_usersNamesList = []
+
+
+def cclEvsysGeneratorNamesPopulate(instanceName):
+    global evsys_generatorsNamesList
+
+    generatorNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators")
+    generatorValues = generatorNode.getChildren()
+    for id in range(0, len(generatorNode.getChildren())):
+        if generatorValues[id].getAttribute("module-instance") == instanceName:
+            evsys_generatorsNamesList.append(generatorValues[id].getAttribute("name"))
+
+def cclEvsysUserNamesPopulate(instanceName):
+    global evsys_usersNamesList
+
+    usersNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/users")
+    usersValues = usersNode.getChildren()
+    for id in range(0, len(usersNode.getChildren())):
+        if usersValues[id].getAttribute("module-instance") == instanceName:
+            evsys_usersNamesList.append(usersValues[id].getAttribute("name"))
+
+def cclEvsysGenNameGet(genNameMatchList):
+    global evsys_generatorsNamesList
+
+    for genName in evsys_generatorsNamesList:
+        if all ( x in genName for x in genNameMatchList):
+            return genName
+
+def cclEvsysUserNameGet(usrNameMatchList):
+    global evsys_usersNamesList
+
+    for userName in evsys_usersNamesList:
+        if all ( x in userName for x in usrNameMatchList):
+            return userName
+
 def fileUpdate(symbol, event):
     global CCLfilesArray
     if event["value"] == False:
@@ -528,10 +566,12 @@ def computeRegValue(symbolList, maskList):
 def cclEvsysConfigure(symbol, event):
     if ("LUTEO" in event["id"]):
         instance = event["id"].split("LUTCTRL")[1].split("__LUTEO")[0]
-        Database.setSymbolValue("evsys", "GENERATOR_CCL_LUTOUT_" + str(instance) + "_ACTIVE", (event["value"] == 1))
+        evsysGenName = cclEvsysGenNameGet(["LUT", "OUT", str(instance)])
+        Database.setSymbolValue("evsys", "GENERATOR_" + evsysGenName + "_ACTIVE", (event["value"] == 1))
     elif ("LUTEI" in event["id"]):
         instance = event["id"].split("LUTCTRL")[1].split("__LUTEI")[0]
-        Database.setSymbolValue("evsys", "USER_CCL_LUTIN_" + str(instance) + "_READY", (event["value"] == 1))
+        evsysUserName = cclEvsysUserNameGet(["LUT", "IN", str(instance)])
+        Database.setSymbolValue("evsys", "USER_" + evsysUserName + "_READY", (event["value"] == 1))
 
 def instantiateComponent(cclComponent):
     global cclInstanceName
@@ -582,6 +622,9 @@ def instantiateComponent(cclComponent):
     cclInstanceName.setVisible(False)
     cclInstanceName.setDefaultValue(cclComponent.getID().upper())
     print("Running " + cclInstanceName.getValue())
+
+    cclEvsysGeneratorNamesPopulate(cclInstanceName.getValue())
+    cclEvsysUserNamesPopulate(cclInstanceName.getValue())
 
     # Enable for entire CCL module
     cclEnSymId = cclInstanceName.getValue() + "_ENABLE"
