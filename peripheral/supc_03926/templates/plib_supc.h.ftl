@@ -77,13 +77,13 @@ void ${SUPC_INSTANCE_NAME}_SetOutputPin( SUPC_OUTPIN pin );
 
 void ${SUPC_INSTANCE_NAME}_ClearOutputPin( SUPC_OUTPIN pin );
 
-<#if SUPC_INTERRUPT_ENABLE = true>
+<#if SUPC_INTERRUPT_ENABLE?? && SUPC_INTERRUPT_ENABLE = true>
 typedef void (*SUPC_CALLBACK)( uintptr_t context );
 </#if>
 
 void ${SUPC_INSTANCE_NAME}_Initialize( void );
 
-<#if SUPC_INTERRUPT_ENABLE = true>
+<#if SUPC_INTERRUPT_ENABLE?? && SUPC_INTERRUPT_ENABLE = true>
 void ${SUPC_INSTANCE_NAME}_CallbackRegister( SUPC_CALLBACK callback, uintptr_t context );
 </#if>
 

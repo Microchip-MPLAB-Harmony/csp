@@ -171,7 +171,14 @@
         <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_CPEN_Msk">
     </#if>
 </#if>
-<#if SUPC_VREGCTRL_AVREGSTDBY?has_content>
+<#if SUPC_VREGCTRL_AVREGEN?? && SUPC_VREGCTRL_AVREGEN == true>
+    <#if SUPC_VREG_VAL != "">
+        <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_AVREGEN_Msk">
+    <#else>
+        <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_AVREGEN_Msk">
+    </#if>
+</#if>
+<#if SUPC_VREGCTRL_AVREGSTDBY?? && SUPC_VREGCTRL_AVREGSTDBY?has_content>
     <#if SUPC_VREG_VAL != "">
         <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_AVREGSTDBY("+SUPC_VREGCTRL_AVREGSTDBY+"U)">
     <#else>
@@ -179,7 +186,7 @@
     </#if>
 </#if>
 
-<#if SUPC_INTERRUPT_ENABLE = true>
+<#if SUPC_INTERRUPT_ENABLE?? && SUPC_INTERRUPT_ENABLE = true>
 typedef struct
 {
     SUPC_CALLBACK callback;
@@ -211,7 +218,7 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT = ${SUPC_BKOUT_VAL};
 
 </#if>
-<#if SUPC_INTERRUPT_ENABLE = true>
+<#if SUPC_INTERRUPT_ENABLE?? && SUPC_INTERRUPT_ENABLE = true>
     /* Enable BORVDDUSB interrupt */
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTENSET = SUPC_INTENSET_BORVDDUSB_Msk;
 
@@ -246,7 +253,7 @@ void ${SUPC_INSTANCE_NAME}_ClearOutputPin( SUPC_OUTPIN pin )
     }
 }
 
-<#if SUPC_INTERRUPT_ENABLE = true>
+<#if SUPC_INTERRUPT_ENABLE?? && SUPC_INTERRUPT_ENABLE = true>
 void ${SUPC_INSTANCE_NAME}_CallbackRegister(SUPC_CALLBACK callback, uintptr_t context)
 {
     ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback = callback;
@@ -255,7 +262,7 @@ void ${SUPC_INSTANCE_NAME}_CallbackRegister(SUPC_CALLBACK callback, uintptr_t co
 
 void __attribute__((used)) ${SUPC_INSTANCE_NAME}_InterruptHandler(void)
 {
-    uintptr_t context = ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context;     
+    uintptr_t context = ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context;
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_BORVDDUSB_Msk;
 
     if (${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)

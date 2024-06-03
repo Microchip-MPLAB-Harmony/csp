@@ -42,7 +42,7 @@ def fileUpdate(symbol, event):
         supcfilesArray[1].setSecurity("NON_SECURE")
         supcfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         supcfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-        Database.setSymbolValue("core", InterruptVectorSecurity, True)   
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 def interruptControl(symbol, event):
     Database.setSymbolValue("core", InterruptVector, event["value"])
@@ -65,7 +65,7 @@ def instantiateComponent(supcComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
-    global InterruptVectorSecurity    
+    global InterruptVectorSecurity
     global supcSym_INTENSET
 
     supcInstanceName = supcComponent.createStringSymbol("SUPC_INSTANCE_NAME", None)
@@ -76,20 +76,26 @@ def instantiateComponent(supcComponent):
     InterruptHandler = supcInstanceName.getValue() + "_INTERRUPT_HANDLER"
     InterruptHandlerLock = supcInstanceName.getValue()+ "_INTERRUPT_HANDLER_LOCK"
     InterruptVectorUpdate = supcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
-    InterruptVectorSecurity = supcInstanceName.getValue() + "_SET_NON_SECURE"    
+    InterruptVectorSecurity = supcInstanceName.getValue() + "_SET_NON_SECURE"
 
-    #BORVDDUSB Interrupt Enable
-    supcSym_INTENSET = supcComponent.createBooleanSymbol("SUPC_INTERRUPT_ENABLE", None)
-    supcSym_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:%NOREGISTER%")
-    supcSym_INTENSET.setLabel("Enable BORVDDUSB Interrupt")
-    supcSym_INTENSET.setDefaultValue(False)
-    supcSym_INTENSET.setDependencies(interruptControl, ["SUPC_INTERRUPT_ENABLE"])
+    ADDVREG_NUM_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="SUPC"]/instance@[name=\"{0}\"]/parameters/param@[name="ADDVREG_NUM"]'.format(supcInstanceName.getValue()))
 
-    # Interrupt Warning status
-    supcSym_IntEnComment = supcComponent.createCommentSymbol("SUPC_INTERRUPT_ENABLE_COMMENT", None)
-    supcSym_IntEnComment.setVisible(False)
-    supcSym_IntEnComment.setLabel("Warning!!! SUPC Interrupt is Disabled in Interrupt Manager")
-    supcSym_IntEnComment.setDependencies(interruptEnableComment, ["core." + InterruptVectorUpdate])
+    BORVDDUSB_NUM_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="SUPC"]/instance@[name=\"{0}\"]/parameters/param@[name="BORVDDUSB_NUM"]'.format(supcInstanceName.getValue()))
+
+    if BORVDDUSB_NUM_node != None:
+
+        #BORVDDUSB Interrupt Enable
+        supcSym_INTENSET = supcComponent.createBooleanSymbol("SUPC_INTERRUPT_ENABLE", None)
+        supcSym_INTENSET.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:%NOREGISTER%")
+        supcSym_INTENSET.setLabel("Enable BORVDDUSB Interrupt")
+        supcSym_INTENSET.setDefaultValue(False)
+        supcSym_INTENSET.setDependencies(interruptControl, ["SUPC_INTERRUPT_ENABLE"])
+
+        # Interrupt Warning status
+        supcSym_IntEnComment = supcComponent.createCommentSymbol("SUPC_INTERRUPT_ENABLE_COMMENT", None)
+        supcSym_IntEnComment.setVisible(False)
+        supcSym_IntEnComment.setLabel("Warning!!! SUPC Interrupt is Disabled in Interrupt Manager")
+        supcSym_IntEnComment.setDependencies(interruptEnableComment, ["core." + InterruptVectorUpdate])
 
     #BOR Menu
     supcSym_BOR_Menu= supcComponent.createMenuSymbol("SUPC_BOR_MENU", None)
@@ -192,21 +198,23 @@ def instantiateComponent(supcComponent):
     supcSym_VREGCTRL_CPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
     supcSym_VREGCTRL_CPEN.setLabel("Charge Pump Enable and Auto-enable")
 
-    #Additional Voltage Regulator Configuration
-    supcSym_VREGCTRL_AVREGSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREGCTRL_AVREGSTDBY", supcSym_VREGControl_Menu)
-    supcSym_VREGCTRL_AVREGSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
-    supcSym_VREGCTRL_AVREGSTDBY.setLabel("Additional Voltage Regulator Configuration")
-    supcAvregStdbyNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"VREGCTRL__AVREGSTDBY\"]")
-    supcAvregStdbyValues = []
-    supcAvregStdbyValues = supcAvregStdbyNode.getChildren()
-    for index in range (0, len(supcAvregStdbyValues)):
-        supcAvregStdbyKeyName = supcAvregStdbyValues[index].getAttribute("name")
-        supcAvregStdbyKeyDescription = supcAvregStdbyValues[index].getAttribute("caption")
-        supcAvregStdbyKeyValue =  supcAvregStdbyValues[index].getAttribute("value")
-        supcSym_VREGCTRL_AVREGSTDBY.addKey(supcAvregStdbyKeyName, supcAvregStdbyKeyValue, supcAvregStdbyKeyDescription)
-    supcSym_VREGCTRL_AVREGSTDBY.setDefaultValue(1)
-    supcSym_VREGCTRL_AVREGSTDBY.setOutputMode("Value")
-    supcSym_VREGCTRL_AVREGSTDBY.setDisplayMode("Description")
+    if ADDVREG_NUM_node != None:
+
+        #Additional Voltage Regulator Configuration
+        supcSym_VREGCTRL_AVREGSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREGCTRL_AVREGSTDBY", supcSym_VREGControl_Menu)
+        supcSym_VREGCTRL_AVREGSTDBY.setLabel("Additional Voltage Regulator Configuration")
+        supcSym_VREGCTRL_AVREGSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
+        supcAvregStdbyNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"VREGCTRL__AVREGSTDBY\"]")
+        supcAvregStdbyValues = []
+        supcAvregStdbyValues = supcAvregStdbyNode.getChildren()
+        for index in range (0, len(supcAvregStdbyValues)):
+            supcAvregStdbyKeyName = supcAvregStdbyValues[index].getAttribute("name")
+            supcAvregStdbyKeyDescription = supcAvregStdbyValues[index].getAttribute("caption")
+            supcAvregStdbyKeyValue =  supcAvregStdbyValues[index].getAttribute("value")
+            supcSym_VREGCTRL_AVREGSTDBY.addKey(supcAvregStdbyKeyName, supcAvregStdbyKeyValue, supcAvregStdbyKeyDescription)
+        supcSym_VREGCTRL_AVREGSTDBY.setDefaultValue(1)
+        supcSym_VREGCTRL_AVREGSTDBY.setOutputMode("Value")
+        supcSym_VREGCTRL_AVREGSTDBY.setDisplayMode("Description")
 
     #VREF Menu
     supcSym_VREF_Menu= supcComponent.createMenuSymbol("VREF_MENU", None)
@@ -335,7 +343,7 @@ def instantiateComponent(supcComponent):
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         global supcfilesArray
         supcIsNonSecure = Database.getSymbolValue("core", supcComponent.getID().upper() + "_IS_NON_SECURE")
-        Database.setSymbolValue("core", InterruptVectorSecurity, supcIsNonSecure) 
+        Database.setSymbolValue("core", InterruptVectorSecurity, supcIsNonSecure)
         supcfilesArray.append(supcSym_HeaderFile)
         supcfilesArray.append(supcSym_SourceFile)
         supcfilesArray.append(supcSym_SystemInitFile)
