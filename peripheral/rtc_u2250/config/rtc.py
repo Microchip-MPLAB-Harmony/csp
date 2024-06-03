@@ -33,6 +33,9 @@ global eventMapInverse
 global RTCfilesArray
 global InterruptVectorSecurity
 global rtcInterruptVectorDict
+global evsys_generatorsNamesList
+global evsys_usersNamesList
+
 RTCfilesArray = []
 InterruptVector = []
 InterruptHandler = []
@@ -40,13 +43,72 @@ InterruptHandlerLock = []
 InterruptVectorUpdate = []
 InterruptVectorSecurity = []
 
+evsys_generatorsNamesList = []
+evsys_usersNamesList = []
+
 # Needed by SYS TIME to disable RTC interrupt during critical code execution
 rtcInterruptVectorDict = {
     "COMPARE": "RTC_IRQn", "PERIOD": "RTC_IRQn"
 }
+
+
+def rtcEvsysGeneratorNamesPopulate(instanceName):
+    global evsys_generatorsNamesList
+
+    generatorNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators")
+    generatorValues = generatorNode.getChildren()
+    for id in range(0, len(generatorNode.getChildren())):
+        if generatorValues[id].getAttribute("module-instance") == instanceName:
+            evsys_generatorsNamesList.append(generatorValues[id].getAttribute("name"))
+
+def rtcEvsysUserNamesPopulate(instanceName):
+    global evsys_usersNamesList
+
+    usersNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/users")
+    usersValues = usersNode.getChildren()
+    for id in range(0, len(usersNode.getChildren())):
+        if usersValues[id].getAttribute("module-instance") == instanceName:
+            evsys_usersNamesList.append(usersValues[id].getAttribute("name"))
+
+def rtcEvsysGenNameGet(genNameMatchList):
+    global evsys_generatorsNamesList
+
+    for genName in evsys_generatorsNamesList:
+        if all ( x in genName for x in genNameMatchList):
+            return genName
+
+def rtcEvsysUserNameGet(usrNameMatchList):
+    global evsys_usersNamesList
+
+    for userName in evsys_usersNamesList:
+        if all ( x in userName for x in usrNameMatchList):
+            return userName
+
 ################################################################################
 #                        Callback Functions                      ########
 ################################################################################
+def getValueGrp(module, reg_grp, reg_name, bitfield_name , mode = None):
+    node_str = ""
+    val_grp_node = None
+
+    if mode != None:
+        node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module, reg_grp, mode, reg_name, bitfield_name)
+    else:
+         node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module, reg_grp, reg_name, bitfield_name)
+
+    print (node_str)
+    bitfield_node = ATDF.getNode(node_str)
+
+    if bitfield_node != None:
+        val_grp = bitfield_node.getAttribute("values")
+        node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module, val_grp)
+        val_grp_node = ATDF.getNode(node_str)
+        if val_grp_node == None:
+            print ("value-group = " + val_grp + " not found")
+    else:
+        print ("bitfield_name = " + bitfield_name + " not found" )
+
+    return val_grp_node
 
 def fileUpdate(symbol, event):
     global RTCfilesArray
@@ -595,6 +657,11 @@ def instantiateComponent(rtcComponent):
     rtcInstanceName.setDefaultValue(rtcComponent.getID().upper())
     Log.writeInfoMessage("Running " + rtcInstanceName.getValue())
 
+
+    rtcEvsysGeneratorNamesPopulate(rtcInstanceName.getValue())
+
+    rtcEvsysUserNamesPopulate(rtcInstanceName.getValue())
+
     interruptValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
     for index in range(len(interruptValues)):
@@ -609,9 +676,9 @@ def instantiateComponent(rtcComponent):
             InterruptVectorUpdate.append("core." + name +  "_INTERRUPT_ENABLE_UPDATE")
             InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
 
-            if "COMPARE" in name:
+            if "COMPARE" or "CMP" in name:
                 rtcInterruptVectorDict["COMPARE"] = name + "_IRQn"
-            if "PERIOD" in name:
+            if "PERIOD" or "PER" in name:
                 rtcInterruptVectorDict["PERIOD"] = name + "_IRQn"
 
     rtcNode = ATDF.getNode(
@@ -751,8 +818,8 @@ def instantiateComponent(rtcComponent):
         tampGPRST.setLabel("Erase General Purpose Registers on Tamper Detection")
         tampGPRST.setVisible(tampGPRSTNode != None)
 
-        freqNode = ATDF.getNode(
-            '/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MODE2_CTRLB__ACTF"]')
+        freqNode = getValueGrp("RTC", "RTC", "CTRLB", "ACTF", "MODE2")
+
         freqValue = freqNode.getChildren()
         tampActiveFreq = rtcComponent.createKeyValueSetSymbol("TAMP_ACTIVE_FREQUENCY", rtcTampMenu)
         tampActiveFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLB")
@@ -765,8 +832,8 @@ def instantiateComponent(rtcComponent):
             description = freqValue[id].getAttribute("caption")
             tampActiveFreq.addKey(key, str(value), description)
 
-        freqNode = ATDF.getNode(
-            '/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MODE2_CTRLB__DEBF"]')
+        freqNode = getValueGrp("RTC", "RTC", "CTRLB", "DEBF", "MODE2")
+
         freqValue = freqNode.getChildren()
         tampDebFreq = rtcComponent.createKeyValueSetSymbol("TAMP_DEBOUNCE_FREQUENCY", rtcTampMenu)
         tampDebFreq.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLB")
@@ -836,7 +903,8 @@ def instantiateComponent(rtcComponent):
             tampChannelAction.setLabel("Channel Action")
             TAMPCTRL_Field_List.append("TAMP_CHANNEL" + str(id) + "_ACTION")
 
-            channelActionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RTC\"]/value-group@[name=\"" "RTC_TAMPCTRL__IN" + str(id) + "ACT""\"]")
+            channelActionNode = getValueGrp("RTC", "RTC", "TAMPCTRL", "IN" + str(id) + "ACT")
+
             if channelActionNode!= None:
                 channelActionValue = channelActionNode.getChildren()
                 for id in range(0, len(channelActionValue)):
@@ -981,8 +1049,8 @@ def instantiateComponent(rtcComponent):
     rtcSymMode0_CTRLA_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     rtcSymMode0_CTRLA_PRESCALER.setLabel("RTC Prescaler")
 
-    rtcMode0ReferenceNode = ATDF.getNode(
-        "/avr-tools-device-file/modules/module@[name=\"RTC\"]/value-group@[name=\"RTC_MODE0_CTRLA__PRESCALER\"]")
+    rtcMode0ReferenceNode = getValueGrp("RTC", "RTC", "CTRLA", "PRESCALER", "MODE0")
+
     rtcMode0ReferenceValues = []
     rtcMode0ReferenceValues = rtcMode0ReferenceNode.getChildren()
 
@@ -1048,13 +1116,18 @@ def instantiateComponent(rtcComponent):
             rtcMode0EvctrlMap[rtcEventsValues[i].getAttribute("name")] = rtcEventsValues[i].getAttribute("mask")
             rtcMode0EvctrlDep.append("RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE")
             if "PERE" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PER_" + str(rtcEventsValues[i].getAttribute("name")).replace("PEREO", "") + "_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["PER", str(rtcEventsValues[i].getAttribute("name")).replace("PEREO", "")])
+                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
             if "OVF" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_OVF_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["OVF"])
+                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
             if "CMP" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_CMP_" + str(rtcEventsValues[i].getAttribute("name")).replace("CMPEO", "") + "_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["CMP", str(rtcEventsValues[i].getAttribute("name")).replace("CMPEO", "")])
+                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
             if "PERD" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PERD_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["PERD"])
+                eventMap["RTC_MODE0_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
+
     # Periodic Interval Notification
     rtcSymMode0_PERIN = rtcComponent.createHexSymbol("RTC_MODE0_EVCTRL", rtcSymMode0Menu)
     rtcSymMode0_PERIN.setDefaultValue(0)
@@ -1131,8 +1204,7 @@ def instantiateComponent(rtcComponent):
     rtcSymMode1_CTRLA_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     rtcSymMode1_CTRLA_PRESCALER.setLabel("RTC Prescaler")
 
-    rtcMode1ReferenceNode = ATDF.getNode(
-        "/avr-tools-device-file/modules/module@[name=\"RTC\"]/value-group@[name=\"RTC_MODE1_CTRLA__PRESCALER\"]")
+    rtcMode1ReferenceNode = getValueGrp("RTC", "RTC", "CTRLA", "PRESCALER", "MODE1")
     rtcMode1ReferenceValues = []
     rtcMode1ReferenceValues = rtcMode1ReferenceNode.getChildren()
 
@@ -1194,16 +1266,17 @@ def instantiateComponent(rtcComponent):
             rtcMode1EvctrlDep.append(
                 "RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE")
             if "PERE" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PER_" + str(
-                    rtcEventsValues[i].getAttribute("name")).replace("PEREO", "") + "_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["PER", str(rtcEventsValues[i].getAttribute("name")).replace("PEREO", "")])
+                eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
             if "OVF" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute(
-                    "name") + "_ENABLE"] = "GENERATOR_RTC_OVF_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["OVF"])
+                eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
             if "CMP" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_CMP_" + str(
-                    rtcEventsValues[i].getAttribute("name")).replace("CMPEO", "") + "_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["CMP", str(rtcEventsValues[i].getAttribute("name")).replace("CMPEO", "")])
+                eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
             if "PERD" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PERD_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["PERD"])
+                eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
 
     # Periodic Interval Notification
     rtcSymMode1_PERIN = rtcComponent.createHexSymbol(
@@ -1273,8 +1346,7 @@ def instantiateComponent(rtcComponent):
     rtcSymMode2_CTRLA_PRESCALER.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rtc_u2250;register:CTRLA")
     rtcSymMode2_CTRLA_PRESCALER.setLabel("RTC Prescaler")
 
-    rtcMode2ReferenceNode = ATDF.getNode(
-        "/avr-tools-device-file/modules/module@[name=\"RTC\"]/value-group@[name=\"RTC_MODE2_CTRLA__PRESCALER\"]")
+    rtcMode2ReferenceNode = getValueGrp("RTC", "RTC", "CTRLA", "PRESCALER", "MODE2")
     rtcMode2ReferenceValues = []
     rtcMode2ReferenceValues = rtcMode2ReferenceNode.getChildren()
 
@@ -1331,16 +1403,17 @@ def instantiateComponent(rtcComponent):
             rtcMode2EvctrlDep.append(
                 "RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE")
             if "PERE" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PER_" + str(
-                    rtcEventsValues[i].getAttribute("name")).replace("PEREO", "") + "_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["PER", str(rtcEventsValues[i].getAttribute("name")).replace("PEREO", "")])
+                eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
             if "OVF" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute(
-                    "name") + "_ENABLE"] = "GENERATOR_RTC_OVF_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["OVF"])
+                eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
             if "ALARM" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_CMP_" + str(
-                    rtcEventsValues[i].getAttribute("name")).replace("ALARMEO", "") + "_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["CMP", str(rtcEventsValues[i].getAttribute("name")).replace("ALARMEO", "")])
+                eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
             if "PERD" in rtcEventsValues[i].getAttribute("name"):
-                eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_PERD_ACTIVE"
+                evsysGenName = rtcEvsysGenNameGet(["PERD"])
+                eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_" + evsysGenName + "_ACTIVE"
 
     # Periodic Interval Notification
     rtcSymMode2_PERIN = rtcComponent.createHexSymbol(

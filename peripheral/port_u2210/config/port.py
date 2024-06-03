@@ -316,17 +316,19 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
 
 def update_port_nonsec_mask(symbol, event):
     pinNum = event["id"].split("_IS_NON_SECURE")[0].split("PIN_")[1]
-    portGroup = ord(Database.getSymbolValue("core", "PIN_" + str(pinNum) + "_PORT_GROUP")) - 65
-    pinPos = int(Database.getSymbolValue("core", "PIN_" + str(pinNum) + "_PORT_PIN"))
-    if Database.getSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC") != None:
-        portNonSecRegValue = int(Database.getSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC"))
+    groupName = Database.getSymbolValue("core", "PIN_" + str(pinNum) + "_PORT_GROUP")
+    if groupName:
+        portGroup = ord(groupName) - 65
+        pinPos = int(Database.getSymbolValue("core", "PIN_" + str(pinNum) + "_PORT_PIN"))
+        if Database.getSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC") != None:
+            portNonSecRegValue = int(Database.getSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC"))
 
-        if event["value"] == 1:
-            portNonSecRegValue = portNonSecRegValue | 1<<pinPos
-        else:
-            portNonSecRegValue = portNonSecRegValue & ~(1<<pinPos)
+            if event["value"] == 1:
+                portNonSecRegValue = portNonSecRegValue | 1<<pinPos
+            else:
+                portNonSecRegValue = portNonSecRegValue & ~(1<<pinPos)
 
-        Database.setSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC", long(portNonSecRegValue))
+            Database.setSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC", long(portNonSecRegValue))
         
 
 def updateSecurityAttributeVisibility(symbol, event):
