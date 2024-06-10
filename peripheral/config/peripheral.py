@@ -107,6 +107,7 @@ peripherals = {
                 "CAN_01152"     : ["CAN"],
                 "CAN_03247"     : ["CAN"],
                 "CAN_6019"      : ["CAN"],
+                "CAN_05010"     : ["CAN"],
                 "SEFC_04463"    : ["MEMORY"]
 }
 
