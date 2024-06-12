@@ -421,7 +421,14 @@ if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_E
 
 #load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dma_03639/config/dma.py")
-coreComponent.addPlugin("../peripheral/dma_03639/plugin/dmamanager.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar",
+                        "DMA_UI_MANAGER_ID_PIC32CZ_CA80_CA90",
+                        {
+                            "plugin_name": "DMA Configuration",
+                            "main_html_path": "csp/plugins/configurators/dma-configurators/dma-configurator-1/build/index.html",
+                            "symbol_config": "csp/peripheral/dma_03639/plugin/symbol-config.json"
+                        }
+                        )
 
 #load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")
