@@ -3,6 +3,40 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.19.0
+
+### New Features
+
+- **New part support** - This release introduces support for
+  - SAMA7D65
+  - WBZ451H
+- Enhancements to ADC and PWM PLIBs for Harmony QSpin support
+
+### Bug fixes
+
+- Updated TCC PLIB to connect with Time System Service
+- Fixed baudrate issue in DBGU PLIB
+
+### Known Issues
+
+-  None
+
+### Development Tools
+
+For SAMA7D65 and WBZ451H family of devices:
+- [MPLAB® X IDE v6.20](https://www.microchip.com/mplab/mplab-x-ide) or higher
+- [MPLAB® XC32 C/C++ Compiler v4.40](https://www.microchip.com/mplab/compilers)
+- MPLAB® X IDE plug-ins:
+    - MPLAB® Code Configurator 5.5.1 or higher
+
+For all other parts:
+
+- Same as v3.18.0
+
+### Notes
+
+-  None
+
 ## CSP Release v3.18.5
 
 ### New Features
