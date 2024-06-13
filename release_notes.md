@@ -9,7 +9,7 @@
 
 - **New part support** - This release introduces support for
   - SAMA7D65
-  - WBZ451H
+  - WBZ451H (For example applications, Refer to PIC32CX-BZ2/WBZ451 family [csp](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz2_wbz45) and [core](https://github.com/Microchip-MPLAB-Harmony/core_apps_pic32cxbz2_wbz45) application repositories)
 - Enhancements to ADC and PWM PLIBs for Harmony QSpin support
 
 ### Bug fixes
