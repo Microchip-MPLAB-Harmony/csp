@@ -2,6 +2,7 @@ import { Toast } from 'primereact/toast';
 import { useRef } from 'react';
 import { GetIconButton } from './NodeType';
 import { confirmDialog } from 'primereact/confirmdialog';
+import { symbolUtilApi } from '@mplab_harmony/harmony-plugin-client-lib';
 
 const ResetSymbolsIcon = (props: {
   tooltip: string;
@@ -23,7 +24,7 @@ const ResetSymbolsIcon = (props: {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function callConfirmDialog(componentID: string, _symbolsArray: string[]) {
     function acceptAction() {
-      //Clear pending
+      symbolUtilApi.clearUserValue(componentID, _symbolsArray);
       showToast();
     }
     confirmDialog({

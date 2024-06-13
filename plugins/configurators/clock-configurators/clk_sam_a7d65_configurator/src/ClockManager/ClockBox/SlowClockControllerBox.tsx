@@ -4,6 +4,7 @@ import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
 import LoadDynamicComponents from 'clock-common/lib/Components/LoadDynamicComponents';
 import { useContext, useState } from 'react';
 import {
+  KeyValueSetRadio,
   PluginConfigContext,
   useKeyValueSetSymbol
 } from '@mplab_harmony/harmony-plugin-client-lib';
@@ -14,7 +15,6 @@ import {
 } from 'clock-common/lib/Tools/ClockJSONTools';
 import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
 import FreqencyLabels from 'clock-common/lib/Components/LabelComponent/FreqencyLabels';
-import KeyValueSetRadio from './ClientLib/KeyValueSetRadio';
 
 const SlowClockControllerBox = (props: {
   slowClockController: ControlInterface[];
@@ -62,7 +62,7 @@ const SlowClockControllerBox = (props: {
         tooltip='Slow Clock Settings Configuration'
         componentId={componentId}
         className={props.cx('slclk_settings')}
-        symbolArray={allJsonSymbols}
+        symbolArray={['CLK_TD_OSCSEL']}
         dialogWidth='40rem'
         dialogHeight='20rem'
       />
@@ -70,7 +70,7 @@ const SlowClockControllerBox = (props: {
         tooltip='Reset Slow Clock symbols to default value'
         className={props.cx('slclk_reset')}
         componentId={componentId}
-        resetSymbolsArray={allJsonSymbols}
+        resetSymbolsArray={['CLK_TD_OSCSEL']}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
 import {
   CheckBoxDefault,
   InputNumberDefault,
+  KeyValueSetRadio,
   PluginConfigContext,
   useIntegerSymbol,
   useKeyValueSetSymbol
@@ -12,7 +13,6 @@ import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
 import React, { useContext } from 'react';
 import { getFreqSymbolId } from '../../MainBlock';
-import KeyValueSetRadio from '../ClientLib/KeyValueSetRadio';
 
 const PCKClockControllerBoxTemplate = (props: {
   tabTitle: string;
@@ -55,7 +55,7 @@ const PCKClockControllerBoxTemplate = (props: {
       <KeyValueSetRadio
         keyValueSetSymbolHook={pckCss}
         classPrefix='pckClkRadio'
-        radioNameClassPrefix='pckClkRadioName'
+        labelClassPrefix='pckClkRadioName'
         classResolver={props.cx}
       />
       <FrequencyLabelComponent

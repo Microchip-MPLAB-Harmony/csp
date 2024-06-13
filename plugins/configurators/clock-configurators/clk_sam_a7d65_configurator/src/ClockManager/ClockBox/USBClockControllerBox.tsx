@@ -4,6 +4,7 @@ import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
 import LoadDynamicComponents from 'clock-common/lib/Components/LoadDynamicComponents';
 import { useContext, useState } from 'react';
 import {
+  KeyValueSetRadio,
   PluginConfigContext,
   useIntegerSymbol,
   useKeyValueSetSymbol
@@ -13,7 +14,6 @@ import {
   getDynamicSymbolsFromJSON
 } from 'clock-common/lib/Tools/ClockJSONTools';
 import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
-import KeyValueSetRadio from './ClientLib/KeyValueSetRadio';
 
 const USBClockControllerBox = (props: {
   slowClockController: ControlInterface[];
@@ -47,7 +47,7 @@ const USBClockControllerBox = (props: {
       <KeyValueSetRadio
         keyValueSetSymbolHook={source}
         classPrefix='usbRadio'
-        radioNameClassPrefix='usbRadioName'
+        labelClassPrefix='usbRadioName'
         classResolver={props.cx}
       />
       <SettingsDialog

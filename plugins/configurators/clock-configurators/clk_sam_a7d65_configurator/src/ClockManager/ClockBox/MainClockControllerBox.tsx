@@ -4,6 +4,7 @@ import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
 import LoadDynamicComponents from 'clock-common/lib/Components/LoadDynamicComponents';
 import { useContext, useState } from 'react';
 import {
+  KeyValueSetRadio,
   PluginConfigContext,
   useKeyValueSetSymbol
 } from '@mplab_harmony/harmony-plugin-client-lib';
@@ -13,7 +14,6 @@ import {
   getDynamicSymbolsFromJSON
 } from 'clock-common/lib/Tools/ClockJSONTools';
 import FreqencyLabels from 'clock-common/lib/Components/LabelComponent/FreqencyLabels';
-import KeyValueSetRadio from './ClientLib/KeyValueSetRadio';
 
 const MainClockControllerBox = (props: {
   controller: ControlInterface[];

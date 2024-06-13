@@ -4,6 +4,7 @@ import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
 import LoadDynamicComponents from 'clock-common/lib/Components/LoadDynamicComponents';
 import { useContext, useState } from 'react';
 import {
+  KeyValueSetRadio,
   PluginConfigContext,
   useIntegerSymbol,
   useKeyValueSetSymbol
@@ -17,7 +18,6 @@ import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
 import FreqencyLabels from 'clock-common/lib/Components/LabelComponent/FreqencyLabels';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
 import { getFreqSymbolId } from '../../MainBlock';
-import KeyValueSetRadio from '../ClientLib/KeyValueSetRadio';
 
 const ProcessClockControllerBox = (props: {
   controller: ControlInterface[];
@@ -80,7 +80,7 @@ const ProcessClockControllerBox = (props: {
       <KeyValueSetRadio
         keyValueSetSymbolHook={pclkCSS}
         classPrefix='processClkR'
-        radioNameClassPrefix='processClkRName'
+        labelClassPrefix='processClkRName'
         classResolver={props.cx}
       />
       <SettingsDialog

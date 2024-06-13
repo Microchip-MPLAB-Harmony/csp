@@ -5,6 +5,7 @@ const toast_1 = require("primereact/toast");
 const react_1 = require("react");
 const NodeType_1 = require("./NodeType");
 const confirmdialog_1 = require("primereact/confirmdialog");
+const harmony_plugin_client_lib_1 = require("@mplab_harmony/harmony-plugin-client-lib");
 const ResetSymbolsIcon = (props) => {
     const toastRef = (0, react_1.useRef)();
     function showToast() {
@@ -17,6 +18,7 @@ const ResetSymbolsIcon = (props) => {
     }
     function callConfirmDialog(componentID, _symbolsArray) {
         function acceptAction() {
+            harmony_plugin_client_lib_1.symbolUtilApi.clearUserValue(componentID, _symbolsArray);
             showToast();
         }
         (0, confirmdialog_1.confirmDialog)({
