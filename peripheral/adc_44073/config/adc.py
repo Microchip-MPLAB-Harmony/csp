@@ -245,7 +245,12 @@ def instantiateComponent(adcComponent):
     adcChannelsValues.append("NONE")
 
     children = []
-    val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + Database.getSymbolValue("core", "COMPONENT_PACKAGE") + "\"]")
+    packageNode = ATDF.getNode("/avr-tools-device-file/variants")
+    for index in range(0, len(packageNode.getChildren())):
+        if packageNode.getChildren()[index].getAttribute("package") == Database.getSymbolValue("core", "COMPONENT_PACKAGE"):
+            val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + packageNode.getChildren()[index].getAttribute("pinout") + "\"]")
+            break
+
     children = val.getChildren()
     for pad in range(0, len(children)):
         availablePins.append(children[pad].getAttribute("pad"))
@@ -501,7 +506,14 @@ def instantiateComponent(adcComponent):
 
     adcSym_ChannelSeqNum = adcComponent.createIntegerSymbol("ADC_CHANNEL_SEQ_NUM", adcUserSeq)
     adcSym_ChannelSeqNum.setLabel("Total number of User Channel Sequence")
-    adcSym_ChannelSeqNum.setDefaultValue(len(ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_SEQR2\"]").getChildren()) + 8)
+    adcChSeqNum = 0
+    adcSeq1Reg = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_SEQR1\"]")
+    if adcSeq1Reg != None:
+        adcChSeqNum = len(adcSeq1Reg.getChildren())
+    adcSeq2Reg = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group@[name=\"ADC\"]/register@[name=\"ADC_SEQR2\"]")
+    if adcSeq2Reg != None:
+        adcChSeqNum += len(adcSeq2Reg.getChildren())
+    adcSym_ChannelSeqNum.setDefaultValue(adcChSeqNum)
     adcSym_ChannelSeqNum.setVisible(False)
 
     #user sequence comment

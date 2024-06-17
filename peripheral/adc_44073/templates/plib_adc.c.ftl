@@ -330,21 +330,25 @@ void ${ADC_INSTANCE_NAME}_ConversionSequenceSet(ADC_CHANNEL_NUM *channelList, ui
 {
     uint8_t channelIndex;
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 = 0U;
+<#if ADC_SEQR2_USCH?has_content>
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 = 0U;
+</#if>
 
     if (numChannel <= ${ADC_CHANNEL_SEQ_NUM}U)
     {
         for (channelIndex = 0U; channelIndex < numChannel; channelIndex++)
-    {
-        if (channelIndex < ADC_SEQ1_CHANNEL_NUM)
         {
-            ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 |= (uint32_t)channelList[channelIndex] << (channelIndex * 4U);
+            if (channelIndex < ADC_SEQ1_CHANNEL_NUM)
+            {
+                ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 |= (uint32_t)channelList[channelIndex] << (channelIndex * 4U);
+            }
+<#if ADC_SEQR2_USCH?has_content>
+            else
+            {
+                ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 |= (uint32_t)channelList[channelIndex] << ((channelIndex - ADC_SEQ1_CHANNEL_NUM) * 4U);
+            }
+</#if>
         }
-        else
-        {
-            ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR2 |= (uint32_t)channelList[channelIndex] << ((channelIndex - ADC_SEQ1_CHANNEL_NUM) * 4U);
-        }
-    }
     }
 
 }
