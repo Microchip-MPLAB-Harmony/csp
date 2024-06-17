@@ -1,5 +1,5 @@
 import { component_id } from './MainBlock';
-import { AddPlainLabel, AddInputFormatSymbolLabel } from 'clock-common/lib/utils/ClockLabelUtils';
+import { AddPlainLabel, AddInputFormatSymbolLabel } from '../clock-common/utils/ClockLabelUtils';
 import CPUCLKCSSController from './BoldLabelController/CPUCLKCSSController';
 import CLKUSBUSBSController from './BoldLabelController/CLKUSBUSBSController';
 
@@ -29,7 +29,7 @@ export function AddCustomLabels() {
           'label_pllaDivpmcVal',
           component_id,
           'CLK_PLLA_DIVPMC',
-          AddDivioType
+          AddDivioTypePLLA
         )}
 
         {AddInputFormatSymbolLabel(
@@ -71,6 +71,13 @@ function GetDiVAddedText(text: any) {
 export function AddDivioType(text: string) {
   try {
     const newvalue = '( ' + text + ' + 1 )';
+    return '/ ' + newvalue;
+  } catch (err) {}
+}
+
+export function AddDivioTypePLLA(text: string) {
+  try {
+    const newvalue = '(2*( ' + text + ' + 1 ))';
     return '/ ' + newvalue;
   } catch (err) {}
 }

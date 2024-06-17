@@ -86,10 +86,7 @@
 			
 			<path d="M0 1683.82 L13.5 1683.82 L13.5 1683.94 L116.64 1683.94" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
 		</g>
-		<g id="shape635-31" transform="translate(1088.37,-1378.21)">
-			
-			<path d="M0 1674.88 L-98.37 1674.88 L-98.37 1610.54" style="marker-end:url(#mrkr10-27);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
-		</g>
+		
 		<g id="shape568-36" transform="translate(402.838,-643.027)">
 			
 			<path d="M0 1665.88 L23.64 1665.88" style="marker-end:url(#mrkr10-27);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
@@ -630,25 +627,12 @@
 			
 			<path d="M24.73 1674.88 L12.36 1653.27 L0 1674.88 L24.73 1674.88 Z" style="fill:#ffffff;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
 		</g>
-		<g id="group632-408" transform="translate(1080.28,-1354.43)">
-			
-			<g id="shape633-409">
-				
-				<path d="M9 1674.88 L9 1656.88" style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
-			</g>
-			<g id="shape634-412" transform="translate(1675.77,1638.74) rotate(90)">
-				
-				<path d="M24.73 1674.88 L12.36 1653.27 L0 1674.88 L24.73 1674.88 Z" style="fill:#ffffff;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
-			</g>
-		</g>
+		
 		<g id="shape640-414" transform="translate(1102.5,-1453.69)">
 			
 			<path d="M0 1683.69 L96.96 1684.05" style="marker-end:url(#mrkr4-21);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
 		</g>
-		<g id="shape641-419" transform="translate(1102.78,-1369.21)">
-			
-			<path d="M0 1665.88 L96.68 1665.88" style="marker-end:url(#mrkr4-21);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
-		</g>
+		
 		<g id="shape644-424" transform="translate(895.004,-1427.25)">
 			
 			<rect x="0" y="1639.38" width="76.4496" height="35.5032" style="fill:#ffffff;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
@@ -662,11 +646,7 @@
 			<desc>DDRCLK (2 x MCK)</desc>
 			<rect x="0" y="1665.88" width="103.642" height="8.99998" style="fill:none;stroke:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
 			<text x="4" y="1673.98" style="fill:#000000;font-family:Calibri;font-size:1.00001em">DDRCLK (2 x MCK)</text>		</g>
-		<g id="shape648-434" transform="translate(989.749,-1388.25)">
-			
-			<desc>QSPICLK (2 x MCK)</desc>
-			<rect x="0" y="1665.88" width="108.251" height="8.99998" style="fill:none;stroke:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
-			<text x="4" y="1673.68" style="fill:#000000;font-family:Calibri;font-size:0.916672em">QSPICLK (2 x MCK)</text>		</g>
+		
 		<g id="shape649-437" transform="translate(1029.37,-1334.75)">
 			
 			<desc>MCK</desc>
@@ -729,15 +709,8 @@
 			
 			<path d="M2.09 1683.83 L2.45 1683.83 L79.86 1683.92" style="marker-end:url(#mrkr4-21);marker-start:url(#mrkr10-78);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
 		</g>
-		<g id="shape677-490" transform="translate(666.241,-990.5)">
-			
-			<path d="M2.09 1683.88 L2.45 1683.88 L114.38 1683.88" style="marker-end:url(#mrkr4-21);marker-start:url(#mrkr10-78);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
-		</g>
-		<g id="shape678-497" transform="translate(711.276,-983.75)">
-			
-			<desc>PLLACK</desc>
-			<rect x="0" y="1665.88" width="44.9011" height="8.99998" style="fill:none;stroke:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>
-			<text x="4" y="1673.38" style="fill:#000000;font-family:Calibri;font-size:0.833336em">PLLACK</text>		</g>
+		
+		
 		<g id="shape679-500" transform="translate(443.338,-652.027)">
 			
 			<path d="M0 1674.88 L240.66 1674.88 L240.66 1362.4 L338.18 1362.4" style="marker-end:url(#mrkr4-21);stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75"/>

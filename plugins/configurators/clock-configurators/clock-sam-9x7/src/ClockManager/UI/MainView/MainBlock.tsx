@@ -1,12 +1,9 @@
-import { useEffect } from 'react';
 import ClockSVG from '../../../Resources/Svgs/SAM9X7_clock.svg';
 import symbolJSON from '../../../Resources/Json/symbol.json';
 import { AddCustomLabels } from './CustomLabels';
 import { AddCustomButtons, SummaryPageHeading, callPopUp } from './CustomButtons';
 import TabbedButton from './PCKController/ProgrammableClockController';
-import SummaryPage from './Summary';
 import {
-  ChangeValueState,
   SymbolChanged,
   ConfigSymbolEvent,
   CheckForSymbolLinkedLabel,
@@ -21,8 +18,8 @@ import {
 } from '@mplab_harmony/harmony-plugin-ui/build/components/Components';
 import { GetUIComponentWithOutLabel } from '@mplab_harmony/harmony-plugin-ui/build/components/Components';
 import FrequencyLabels from './FrequencyLabels';
-import { Toolbar } from 'clock-common';
 import GenericPopUp from './CustomPopUp';
+import Toolbar from '../clock-common/utils/ToolBar';
 
 export const component_id = 'core';
 export const toolBarHeight = '60px';
@@ -36,7 +33,8 @@ const dynamicSymbolsIgnoreList = [
   'CLK_PCK0_CSS',
   'CLK_PCK0_PRES',
   'CLK_PCK0_EN',
-  'CLK_PCK0_FREQUENCY'
+  'CLK_PCK0_FREQUENCY',
+  'QSPI_CLOCK_FREQUENCY'
 ];
 
 (window as any).SymbolValueChanged = (value: any) => {

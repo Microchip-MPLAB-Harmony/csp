@@ -22,7 +22,7 @@
  */
 import React from 'react';
 import { component_id, frequencyLabelsArray } from './MainBlock';
-import { AddSymboLabelWithSuffix } from 'clock-common/lib/utils/ClockLabelUtils';
+import { AddSymboLabelWithSuffix } from '../clock-common/utils/ClockLabelUtils';
 
 interface IProps {}
 interface IState {}

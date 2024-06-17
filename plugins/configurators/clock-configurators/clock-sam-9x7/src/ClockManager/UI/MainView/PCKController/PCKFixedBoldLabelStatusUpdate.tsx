@@ -26,7 +26,7 @@ import React from 'react';
 import { RegisterLabelSymbolSStateData } from '@mplab_harmony/harmony-plugin-ui/build/global/Data';
 import { GetSymbolValue } from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess';
 import { CompareStrings } from '@mplab_harmony/harmony-plugin-ui';
-import { AddPlainLabelWithBold } from 'clock-common/lib/utils/ClockLabelUtils';
+import { AddPlainLabelWithBold } from '../../clock-common/utils/ClockLabelUtils';
 
 interface IProps {
   symboListenerValue: any;

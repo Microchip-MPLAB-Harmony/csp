@@ -3,7 +3,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { GetSymbolArray } from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess';
 import { GetUIComponentWithOutLabel } from '@mplab_harmony/harmony-plugin-ui/build/components/Components';
-import { AddSymboLabelWithSuffix } from 'clock-common/lib/utils/ClockLabelUtils';
+import { AddSymboLabelWithSuffix } from '../clock-common/utils/ClockLabelUtils';
 
 const GenericClockConfiguration = () => {
   const channelPeripipheralMap = GetSymbolArray(component_id, 'GCLK_INSTANCE_PID');

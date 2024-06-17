@@ -2,24 +2,45 @@ import { useState } from 'react';
 import { ListBox } from 'primereact/listbox';
 import { component_id } from '../MainBlock';
 import { GetStyle } from '@mplab_harmony/harmony-plugin-ui/build/components/Components';
-import { AddCheckBox, AddCombobox, AddInputNumber } from 'clock-common/lib/utils/ClockCommonUtils';
+import {
+  AddCheckBox,
+  AddCombobox,
+  AddInputNumber
+} from '../../clock-common/utils/ClockCommonUtils';
+import { AddDivioType } from '../CustomLabels';
+import PCKFixedBoldLabelStatusUpdate from './PCKFixedBoldLabelStatusUpdate';
 import {
   AddInputFormatSymbolLabel,
   AddSymboLabelWithSuffix
-} from 'clock-common/lib/utils/ClockLabelUtils';
-import { AddDivioType } from '../CustomLabels';
-import PCKFixedBoldLabelStatusUpdate from './PCKFixedBoldLabelStatusUpdate';
+} from '../../clock-common/utils/ClockLabelUtils';
 
 const ProgrammableClockController = () => {
   const [value, setValue] = useState('PCK 0');
   const tabs = ['PCK 0', 'PCK 1'];
-
+  alert(GetStyle('CLK_PCK0_CSS'));
   function AddPCK(index: number) {
     return (
       <div className='p-fluid'>
-        {AddCombobox(component_id, 'CLK_PCK' + index + '_CSS', 'CLK_PCK0_CSS')}
-        {AddInputNumber(component_id, 'CLK_PCK' + index + '_PRES', 'CLK_PCK0_PRES')}
-        {AddCheckBox(component_id, 'CLK_PCK' + index + '_EN', 'CLK_PCK0_EN')}
+        {}
+        <AddCombobox
+          component_id={component_id}
+          symbolId={'CLK_PCK' + index + '_CSS'}
+          className={''}
+          styleObj={GetStyle('CLK_PCK0_CSS')}
+        />
+        <AddInputNumber
+          component_id={component_id}
+          symbolId={'CLK_PCK' + index + '_PRES'}
+          className={''}
+          styleObj={GetStyle('CLK_PCK0_PRES')}
+        />
+        <AddCheckBox
+          component_id={component_id}
+          symbolId={'CLK_PCK' + index + '_EN'}
+          className={''}
+          styleObj={GetStyle('CLK_PCK0_EN')}
+        />
+
         {AddSymboLabelWithSuffix(
           'CLK_PCK0_FREQUENCY',
           component_id,
