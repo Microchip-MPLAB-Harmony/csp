@@ -1145,6 +1145,7 @@ def instantiateComponent(tcComponent):
     #----------- Formatter strings for bitfields and value groups -------#
     tcBitFieldString = "/avr-tools-device-file/modules/module@[name=\"TC\"]/register-group@[name=\"{0}\"]/register@[name=\"{1}\"]/bitfield@[name=\"{2}\"]"
     tcValueGroupString = "/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"{0}\"]"
+    tcRegisterString = "/avr-tools-device-file/modules/module@[name=\"TC\"]/register-group@[name=\"{0}\"]/register@[name=\"{1}\"]"
 
     #*****************************QUADRATURE******************************
     if tcSym_QDEC_PRESENT.getValue() == True:
@@ -1746,10 +1747,13 @@ def instantiateComponent(tcComponent):
     tcSym_CH_PCK_CLKSRC.setDependencies(tcPCKVisible, ["TC0_CMR_TCCLKS", "TC1_CMR_TCCLKS", "TC2_CMR_TCCLKS", \
             "TC3_CMR_TCCLKS", "TC_BMR_POSEN", "TC_ENABLE_QEI"])
 
-    if ATDF.getNode(tcBitFieldString.format("TC_CHANNEL", "TC_CMR", "WAVE")).getAttribute("modes") != None:
-        tcSym_CH_CMR_WAVEFORM_WAVE = tcComponent.createBooleanSymbol("TC_CMR_WAVEFORM_WAVE", None)
-        tcSym_CH_CMR_WAVEFORM_WAVE.setVisible(False)
-        tcSym_CH_CMR_WAVEFORM_WAVE.setDefaultValue(True)
+    tcSym_CH_CMR = ATDF.getNode(tcRegisterString.format("TC_CHANNEL", "TC_CMR"))
+    for index in range(0, len(tcSym_CH_CMR.getChildren())):
+        if tcSym_CH_CMR.getChildren()[index].getAttribute("name") == "WAVE" and tcSym_CH_CMR.getChildren()[index].getAttribute("modes") == "WAVEFORM":
+            tcSym_CH_CMR_WAVEFORM_WAVE = tcComponent.createBooleanSymbol("TC_CMR_WAVEFORM_WAVE", None)
+            tcSym_CH_CMR_WAVEFORM_WAVE.setVisible(False)
+            tcSym_CH_CMR_WAVEFORM_WAVE.setDefaultValue(True)
+            break
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
