@@ -33,7 +33,7 @@ def updateClockFrequency(symbol, event):
 
 # Show warning when a symbol value is false
 def showCommentOnDisable(symbol, event):
-    symbol.setVisible(event["value"])
+    symbol.setVisible(not event["value"])
 
 
 # Show warning when a symbol value is zero 
