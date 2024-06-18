@@ -90,6 +90,19 @@ def calcAchievableFreq():
         achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
         tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
         dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+        
+    elif (dvrtComponentId.getValue() != ""):
+        timer_Frequency = tmrSym_CLOCK_FREQ.getValue()
+        if timer_Frequency != 0:
+            achievableTickRateHz = float(1.0/timer_Frequency) * (tmrSym_PR2.getValue())
+            if achievableTickRateHz != 0:
+                achievableTickRateHz = ((1.0/achievableTickRateHz) * 100000.0)
+                tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
+                dummy_dict = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+            else:
+                dummy_dict = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+        else:
+            dummy_dict = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
 
 def handleMessage(messageID, args):
     global sysTimeComponentId
@@ -98,7 +111,8 @@ def handleMessage(messageID, args):
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
     dvrtPLIBConfig = dict()
-
+    dvrt_tick_ms = {"dvrt_tick_ms" : 0.0}
+    
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
         modeDict = {"plib_mode": "PERIOD_MODE"}
@@ -116,9 +130,14 @@ def handleMessage(messageID, args):
         dvrtComponentId.setValue(args["ID"])
         opemode_Dict = {"plib_mode": "PERIOD_MODE"}
         dvrtPLIBConfig = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_PLIB_CAPABILITY", opemode_Dict)
-        tmrSym_TimerUnit.setValue("microsecond")
+        tmrSym_TimerUnit.setValue("millisecond")
         if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
-            tmrSym_PERIOD_MS.setValue(dvrtPLIBConfig["dvrt_tick_microsec"])
+            tmrSym_PERIOD_MS.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
+            
+    if (messageID == "DVRT_TICK_RATE_CHANGED"):
+        if dvrtComponentId.getValue() != "":
+            #Set the Time Period (Milli Sec)
+            tmrSym_PERIOD_MS.setValue(args["dvrt_tick_ms"])
             
     return dummy_dict
 

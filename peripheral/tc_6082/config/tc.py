@@ -275,11 +275,14 @@ def calcAchievableFreq(channelID):
     global tcSym_CH_TimerPeriodCount
     global sysTimePlibMode
     global sysTimeChannel_Sym
-
+    global dvrtComponentId
+    
     dummy_dict = dict()
     tc_channel = sysTimeChannel_Sym.getSelectedKey()
     sysTimeChannelID = int(tc_channel[3])
-
+    dvrt_channel_sel = dvrtChannel_Sym.getSelectedKey()
+    dvrtChannelID = int(dvrt_channel_sel[3])
+    
     tickRateDict = {"tick_rate_hz": 0}
     if (sysTimeChannelID == channelID) and (sysTimeComponentId.getValue() != "") and (sysTimePlibMode.getValue() == "SYS_TIME_PLIB_MODE_PERIOD"):
         #Read the input clock frequency of the timer instance
@@ -295,6 +298,20 @@ def calcAchievableFreq(channelID):
                 dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
         else:
             dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+            
+    elif (dvrtChannelID == channelID) and (dvrtComponentId.getValue() != ""):
+        source_clk_freq = Database.getSymbolValue("core",tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY")
+        if source_clk_freq != 0:
+            #Read the calculated timer count to achieve the set Time Period and Calculate the actual tick rate
+            achievableTickRateHz = float(1.0/source_clk_freq) * float(tcSym_CH_TimerPeriodCount[channelID].getValue())
+            if achievableTickRateHz != 0:
+                achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
+                tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
+                dummy_dict = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+            else:
+                dummy_dict = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+        else:
+            dummy_dict = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
 
 def handleMessage(messageID, args):
     global sysTimeComponentId
@@ -309,9 +326,8 @@ def handleMessage(messageID, args):
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
     dvrtPLIBConfig = dict()
+    dvrt_tick_ms = {"dvrt_tick_ms" : 0.0}
     
-    print "handleMessage - " + str(messageID)
-
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
         modeDict = {"plib_mode": "PERIOD_AND_COMPARE_MODES"}
@@ -355,11 +371,17 @@ def handleMessage(messageID, args):
         channelID = int(tc_channel[3])
         dvrtPlibMode.setValue(dvrtPLIBConfig["TIMER_MODE"])
         dvrtPLIBModeConfig(channelID, dvrtPlibMode.getValue())
-        tcSym_TimerUnit[channelID].setValue("microsecond")
+        tcSym_TimerUnit[channelID].setValue("millisecond")
         if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
-            dvrtTickRateMs.setValue(dvrtPLIBConfig["dvrt_tick_microsec"])
+            dvrtTickRateMs.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
             tcSym_CH_TimerPeriod[channelID].setValue(dvrtTickRateMs.getValue())
             
+    if (messageID == "DVRT_TICK_RATE_CHANGED"):
+        tc_channel = dvrtChannel_Sym.getSelectedKey()
+        channelID = int(tc_channel[3])
+        #Set the Time Period (Milli Sec)
+        dvrtTickRateMs.setValue(args["dvrt_tick_ms"])
+        tcSym_CH_TimerPeriod[channelID].setValue(dvrtTickRateMs.getValue())
     return dummy_dict
 
 ###################################################################################################
@@ -1066,7 +1088,7 @@ def dvrt_ChannelSelection(symbol,event):
     channelID = int(tc_channel[3])
 
     dvrtPLIBModeConfig(channelID, dvrtPlibMode.getValue())
-    tcSym_TimerUnit[channelID].setValue("microsecond")
+    tcSym_TimerUnit[channelID].setValue("millisecond")
     
     timerStartApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStart"
     timeStopApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStop "

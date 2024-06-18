@@ -96,6 +96,8 @@ def calcAchievableFreq():
     global timer_Frequency
     global tcSym_TimerPeriod
     global sysTimePlibMode
+    global dvrtComponentId
+    
     tickRateDict = {"tick_rate_hz": 0}
     dummy_dict = dict()
 
@@ -111,6 +113,19 @@ def calcAchievableFreq():
                 dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
         else:
             dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+            
+    elif (dvrtComponentId.getValue() != ""):
+        timer_Frequency = Database.getSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_FREQUENCY") / int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:])
+        if timer_Frequency != 0:
+            achievableTickRateHz = (1.0/float(timer_Frequency)) * (tcSym_TimerPeriod.getValue())
+            if achievableTickRateHz != 0:
+                achievableTickRateHz = long((1.0/achievableTickRateHz) * 100000.0)
+                tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
+                dummy_dict = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+            else:
+                dummy_dict = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+        else:
+            dummy_dict = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
 
 def dvrtPLIBModeConfig(plibMode):
     global tcSym_Timer_TIME_MS
@@ -158,7 +173,8 @@ def handleMessage(messageID, args):
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
     dvrtPLIBConfig = dict()
-
+    dvrt_tick_ms = {"dvrt_tick_ms" : 0.0}
+    
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
         tcSym_SYS_TIME_CONNECTED.setValue(True, 2)
@@ -189,9 +205,16 @@ def handleMessage(messageID, args):
         dvrtPLIBConfig = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_PLIB_CAPABILITY", opemode_Dict)
         dvrtPlibMode.setValue(dvrtPLIBConfig["TIMER_MODE"])
         dvrtPLIBModeConfig(dvrtPlibMode.getValue())
-        tcSym_TimerUnit.setValue("microsecond")
+        tcSym_TimerUnit.setValue("millisecond")
         if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
-            tcSym_Timer_TIME_MS.setValue(dvrtPLIBConfig["dvrt_tick_microsec"])
+            tcSym_Timer_TIME_MS.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
+            
+    if (messageID == "DVRT_TICK_RATE_CHANGED"):
+        if dvrtComponentId.getValue() != "":
+            #Set the Time Period (Milli Sec)
+            #Using an intermediate long symbol to pass tick period, as setSymbolValue does not allow passing float values
+            dvrt_tick_ms = (long)(args["dvrt_tick_ms"]*1000)
+            tcSym_Timer_TIME_MS.setValue(args["dvrt_tick_ms"])
 
     return dummy_dict
 
