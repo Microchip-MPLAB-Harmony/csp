@@ -363,8 +363,6 @@ def handleMessage(messageID, args):
         channelID = int(tc_channel[3])
         dvrtPlibMode.setValue(dvrtPLIBConfig["TIMER_MODE"])
         dvrtPLIBModeConfig(channelID, dvrtPlibMode.getValue())
-        tcSym_TimerUnit[channelID].setValue("millisecond")
-
         if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
             dvrtTickRateMs.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
             tcSym_CH_TimerPeriod[channelID].setValue(dvrtTickRateMs.getValue())
@@ -1056,7 +1054,7 @@ def onAttachmentDisconnected(source, target):
         tc_channel = dvrtChannel_Sym.getSelectedKey()
         channelID = int(tc_channel[3])
         #Show Time Period and clear it
-        tcSym_CH_TimerPeriod[channelID].setValue(0.0)
+        tcSym_CH_TimerPeriod[channelID].clearValue()
         tcSym_CH_TimerPeriod[channelID].setVisible(True)
         #Enable the period interrupt
         tcSym_CH_IER_CPCS[channelID].setValue(True)

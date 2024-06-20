@@ -117,7 +117,6 @@ def handleMessage(messageID, args):
         sysTimeComponentId.setValue(args["ID"])
         modeDict = {"plib_mode": "PERIOD_MODE"}
         sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
-        print sysTimePLIBConfig
         if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
             tmrSym_PERIOD_MS.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
 
@@ -130,7 +129,6 @@ def handleMessage(messageID, args):
         dvrtComponentId.setValue(args["ID"])
         opemode_Dict = {"plib_mode": "PERIOD_MODE"}
         dvrtPLIBConfig = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_PLIB_CAPABILITY", opemode_Dict)
-        tmrSym_TimerUnit.setValue("millisecond")
         if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
             tmrSym_PERIOD_MS.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
             
@@ -429,7 +427,7 @@ def onAttachmentDisconnected(source, target):
     if remoteID == "dvrt":
         dvrtComponentId.setValue("")
         #Show Time Period and clear it
-        tmrSym_PERIOD_MS.setValue(0.0)
+        tmrSym_PERIOD_MS.clearValue()
         
 ###################################################################################################
 ########################################## Component  #############################################

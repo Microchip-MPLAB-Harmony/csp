@@ -88,7 +88,7 @@ def handleMessage(messageID, args):
 
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
 
-        Database.setSymbolValue("core", "SYSTICK_CONNECTED_COMPONENT_ID", args["ID"])
+        Database.setSymbolValue("core", "SYSTICK_SYS_TIME_COMPONENT_ID", args["ID"])
         if args["ID"] != "None":
             Database.setSymbolValue("core", "SYSTICK_PUBLISH_CAPABILITIES", True)
             Database.setSymbolValue("core", "SYSTICK_BUSY", True)
@@ -97,14 +97,14 @@ def handleMessage(messageID, args):
             Database.setSymbolValue("core", "SYSTICK_BUSY", False)
             
     elif (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
-        if Database.getSymbolValue("core", "SYSTICK_CONNECTED_COMPONENT_ID") != "":
+        if Database.getSymbolValue("core", "SYSTICK_SYS_TIME_COMPONENT_ID") != "":
             #Set the Time Period (Milli Sec)
             #Using an intermediate long symbol to pass tick period, as setSymbolValue does not allow passing float values
             sys_time_tick_ms = (long)(args["sys_time_tick_ms"]*1000)
             Database.setSymbolValue("core","SYSTICK_PERIOD_MS_LONG_INT", sys_time_tick_ms)
     
     elif (messageID == "DVRT_PUBLISH_CAPABILITIES"):
-        Database.setSymbolValue("core", "SYSTICK_CONNECTED_COMPONENT_ID", args["ID"])
+        Database.setSymbolValue("core", "SYSTICK_SYS_TIME_COMPONENT_ID", args["ID"])
         if args["ID"] != "None":
             Database.setSymbolValue("core", "SYSTICK_PUBLISH_CAPABILITIES", True)
             Database.setSymbolValue("core", "SYSTICK_BUSY", True)
@@ -113,7 +113,7 @@ def handleMessage(messageID, args):
             Database.setSymbolValue("core", "SYSTICK_BUSY", False)
             
     elif (messageID == "DVRT_TICK_RATE_CHANGED"):
-        if Database.getSymbolValue("core", "SYSTICK_CONNECTED_COMPONENT_ID") != "":
+        if Database.getSymbolValue("core", "SYSTICK_SYS_TIME_COMPONENT_ID") != "":
             #Set the Time Period (Milli Sec)
             #Using an intermediate long symbol to pass tick period, as setSymbolValue does not allow passing float values
             dvrt_tick_ms = (long)(args["dvrt_tick_ms"]*1000)

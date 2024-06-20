@@ -205,7 +205,6 @@ def handleMessage(messageID, args):
         dvrtPLIBConfig = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_PLIB_CAPABILITY", opemode_Dict)
         dvrtPlibMode.setValue(dvrtPLIBConfig["TIMER_MODE"])
         dvrtPLIBModeConfig(dvrtPlibMode.getValue())
-        tcSym_TimerUnit.setValue("millisecond")
         if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
             tcSym_Timer_TIME_MS.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
             
@@ -375,7 +374,7 @@ def onAttachmentDisconnected(source, target):
     if remoteID == "dvrt":
         dvrtComponentId.setValue("")
         #Show Time Period and clear it
-        tcSym_Timer_TIME_MS.setValue(0.0)
+        tcSym_Timer_TIME_MS.clearValue()
         tcSym_Timer_TIME_MS.setVisible(True)
 
 def sysTime_APIUpdate(symbol,event):

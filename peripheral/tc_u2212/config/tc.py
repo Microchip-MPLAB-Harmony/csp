@@ -356,7 +356,7 @@ def onAttachmentDisconnected(source, target):
     if remoteID == "dvrt":
         dvrtComponentId.setValue("")
         #Show Time Period and clear it
-        tcSym_Timer_TIME_MS.setValue(0.0)
+        tcSym_Timer_TIME_MS.clearValue()
         tcSym_Timer_TIME_MS.setVisible(True)
 
 
