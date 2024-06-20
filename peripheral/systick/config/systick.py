@@ -124,8 +124,8 @@ def calAchievableTickRate(periodVal, sourceFreq):
                 dummy_dict = Database.sendMessage(Database.getSymbolValue("core","SYSTICK_SYS_TIME_COMPONENT_ID"), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", {"tick_rate_hz": long(achievableTickRateHz)})
             elif Database.getSymbolValue("core","SYSTICK_SYS_TIME_COMPONENT_ID") == "dvrt":
                 dummy_dict = Database.sendMessage(Database.getSymbolValue("core","SYSTICK_SYS_TIME_COMPONENT_ID"), "DVRT_ACHIEVABLE_TICK_RATE_HZ", {"tick_rate_hz": long(achievableTickRateHz)})
-                
-                
+
+
 def systickCal(symbol, event):
     global calAchievableTickRate
     clock = 0

@@ -58,9 +58,9 @@ PrescalerDict = {
                 }
 global tmrTimerUnit
 tmrTimerUnit = { "millisecond" : 1000.0,
-                "microsecond" : 1000000.0, 
+                "microsecond" : 1000000.0,
                 "nanosecond"  : 1000000000.0,
-                } 
+                }
 global sysTimeComponentId
 global dvrtComponentId
 global tmr1Sym_PERIOD_MS
@@ -84,7 +84,7 @@ def calcAchievableFreq():
         achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
         tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
         dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
-        
+
     elif (dvrtComponentId.getValue() != ""):
         timer_Frequency = tmr1Sym_CLOCK_FREQ.getValue()
         #Read the calculated timer count to achieve the set Time Period and Calculate the actual tick rate
@@ -103,12 +103,12 @@ def handleMessage(messageID, args):
     global sysTimeComponentId
     global dvrtComponentId
     global tmrSym_TimerUnit
-    
+
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
     dvrtPLIBConfig = dict()
     dvrt_tick_ms = {"dvrt_tick_ms" : 0.0}
-    
+
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
         modeDict = {"plib_mode": "PERIOD_MODE"}
@@ -127,12 +127,12 @@ def handleMessage(messageID, args):
         dvrtPLIBConfig = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_PLIB_CAPABILITY", opemode_Dict)
         if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
             tmr1Sym_PERIOD_MS.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
-            
+
     if (messageID == "DVRT_TICK_RATE_CHANGED"):
         if dvrtComponentId.getValue() != "":
             #Set the Time Period (Milli Sec)
             tmr1Sym_PERIOD_MS.setValue(args["dvrt_tick_ms"])
-            
+
     return dummy_dict
 
 def _get_enblReg_parms(vectorNumber):
@@ -324,7 +324,7 @@ def calcTimerFreq(symbol, event):
 def timerMaxValue(symbol, event):
     component = symbol.getComponent()
     clock = component.getSymbolValue("TIMER1_CLOCK_FREQ")
-    unit = tmrTimerUnit[component.getSymbolValue("TIMER_UNIT")]    
+    unit = tmrTimerUnit[component.getSymbolValue("TIMER_UNIT")]
     if(clock != 0):
         resolution = unit/float(clock)
     else:
@@ -334,7 +334,7 @@ def timerMaxValue(symbol, event):
 def timerPeriodCalc(symbol, event):
     component = symbol.getComponent()
     clock = component.getSymbolValue("TIMER1_CLOCK_FREQ")
-    unit = tmrTimerUnit[component.getSymbolValue("TIMER_UNIT")]    
+    unit = tmrTimerUnit[component.getSymbolValue("TIMER_UNIT")]
     if(clock != 0):
         resolution = unit/clock
         period = (component.getSymbolValue("TIMER1_TIME_PERIOD_MS") / resolution) - 1
@@ -354,7 +354,7 @@ def onAttachmentConnected(source, target):
 def onAttachmentDisconnected(source, target):
     global sysTimeComponentId
     global dvrtComponentId
-    
+
     remoteComponent = target["component"]
     remoteID = remoteComponent.getID()
 
@@ -367,7 +367,7 @@ def onAttachmentDisconnected(source, target):
         dvrtComponentId.setValue("")
         #Show Time Period and clear it
         tmr1Sym_PERIOD_MS.clearValue()
-        
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -385,7 +385,7 @@ def instantiateComponent(tmr1Component):
     global tmr1Sym_CLOCK_FREQ
     global tmr1Sym_PR1
     global dvrtComponentId
-    
+
     tmr1InstanceName = tmr1Component.createStringSymbol("TMR1_INSTANCE_NAME", None)
     tmr1InstanceName.setVisible(False)
     tmr1InstanceName.setDefaultValue(tmr1Component.getID().upper())
@@ -491,7 +491,7 @@ def instantiateComponent(tmr1Component):
     timerUnit = ["millisecond", "microsecond", "nanosecond"]
     tmrSym_TimerUnit = tmr1Component.createComboSymbol("TIMER_UNIT", None, timerUnit)
     tmrSym_TimerUnit.setLabel("Timer Period Unit")
-    tmrSym_TimerUnit.setDefaultValue("millisecond")          
+    tmrSym_TimerUnit.setDefaultValue("millisecond")
 
     clock = Database.getSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY")
     if(clock != 0):
@@ -505,7 +505,7 @@ def instantiateComponent(tmr1Component):
     tmr1Sym_PERIOD_MS.setDefaultValue(0.3)
     tmr1Sym_PERIOD_MS.setMin(0.0)
     tmr1Sym_PERIOD_MS.setMax(max)
-    tmr1Sym_PERIOD_MS.setDependencies(timerMaxValue, ["core." + tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY", 
+    tmr1Sym_PERIOD_MS.setDependencies(timerMaxValue, ["core." + tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY",
         "TIMER1_CLOCK_FREQ", "TIMER_UNIT"])
 
     if clock != 0:
@@ -520,7 +520,7 @@ def instantiateComponent(tmr1Component):
     tmr1Sym_PR1.setReadOnly(True)
     tmr1Sym_PR1.setMin(0)
     tmr1Sym_PR1.setMax(65535)
-    tmr1Sym_PR1.setDependencies(timerPeriodCalc, ["core." + tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY", 
+    tmr1Sym_PR1.setDependencies(timerPeriodCalc, ["core." + tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY",
         "TIMER1_TIME_PERIOD_MS", "TIMER1_CLOCK_FREQ", "TIMER_UNIT"])
 
     #timer SIDL configuration
@@ -593,12 +593,12 @@ def instantiateComponent(tmr1Component):
     sysTimeComponentId.setLabel("Component id")
     sysTimeComponentId.setVisible(False)
     sysTimeComponentId.setDefaultValue("")
-    
+
     dvrtComponentId = tmr1Component.createStringSymbol("DVRT_COMPONENT_ID", None)
     dvrtComponentId.setLabel("dvrt Component id")
     dvrtComponentId.setVisible(False)
     dvrtComponentId.setDefaultValue("")
-    
+
     timerStartApiName = tmr1InstanceName.getValue() +  "_Start"
     timerStopApiName = tmr1InstanceName.getValue() + "_Stop "
     counterGetApiName = tmr1InstanceName.getValue() +  "_CounterGet"

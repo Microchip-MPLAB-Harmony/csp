@@ -85,7 +85,7 @@ def calcAchievableFreq():
                 dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
         else:
             dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
-            
+
     elif (dvrtComponentId.getValue() != ""):
         timer_Frequency = Database.getSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_FREQUENCY") / int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:])
         if timer_Frequency != 0:
@@ -150,8 +150,8 @@ def handleMessage(messageID, args):
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
     dvrtPLIBConfig = dict()
-    dvrt_tick_ms = {"dvrt_tick_ms" : 0.0}     
-        
+    dvrt_tick_ms = {"dvrt_tick_ms" : 0.0}
+
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
         modeDict = {"plib_mode": "PERIOD_AND_COMPARE_MODES"}
@@ -186,14 +186,14 @@ def handleMessage(messageID, args):
         tcSym_TimerUnit.setValue("millisecond")
         if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
             tcSym_Timer_TIME_MS.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
-            
+
     if (messageID == "DVRT_TICK_RATE_CHANGED"):
         if dvrtComponentId.getValue() != "":
             #Set the Time Period (Milli Sec)
             #Using an intermediate long symbol to pass tick period, as setSymbolValue does not allow passing float values
             dvrt_tick_ms = (long)(args["dvrt_tick_ms"]*1000)
             tcSym_Timer_TIME_MS.setValue(args["dvrt_tick_ms"])
-            
+
     return dummy_dict
 
 def updateCodeGenerationProperty(symbol, event):

@@ -31,7 +31,7 @@ global tcNumInterruptLines
 
 global tcTimerUnit
 tcTimerUnit = { "millisecond" : 1000000,
-                "microsecond" : 1000, 
+                "microsecond" : 1000,
                 "nanosecond"  : 1,
                 }
 
@@ -106,7 +106,7 @@ def dvrtPLIBModeConfig(channelID, plibMode):
         #Enable channel
         tcSym_CH_Enable[channelID].setValue(True)
         tcSym_SYS_TIME_CONNECTED[channelID].setValue(True)
-               
+
         if plibMode == "DVRT_PLIB_MODE_PERIOD":
             #Enable Period Interrupt
             tcSym_CH_IER_CPCS[channelID].setValue(True)
@@ -177,7 +177,7 @@ def dvrtPLIBModeConfig(channelID, plibMode):
             #----
             tcSym_SYS_TIME_CONNECTED[0].setValue(False)
             tcSym_SYS_TIME_CONNECTED[1].setValue(False)
-            
+
 def sysTimePLIBModeConfig(channelID, plibMode):
     global sysTimeTickRateMs
 
@@ -276,13 +276,13 @@ def calcAchievableFreq(channelID):
     global sysTimePlibMode
     global sysTimeChannel_Sym
     global dvrtComponentId
-    
+
     dummy_dict = dict()
     tc_channel = sysTimeChannel_Sym.getSelectedKey()
     sysTimeChannelID = int(tc_channel[3])
     dvrt_channel_sel = dvrtChannel_Sym.getSelectedKey()
     dvrtChannelID = int(dvrt_channel_sel[3])
-    
+
     tickRateDict = {"tick_rate_hz": 0}
     if (sysTimeChannelID == channelID) and (sysTimeComponentId.getValue() != "") and (sysTimePlibMode.getValue() == "SYS_TIME_PLIB_MODE_PERIOD"):
         #Read the input clock frequency of the timer instance
@@ -298,7 +298,7 @@ def calcAchievableFreq(channelID):
                 dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
         else:
             dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
-            
+
     elif (dvrtChannelID == channelID) and (dvrtComponentId.getValue() != ""):
         source_clk_freq = Database.getSymbolValue("core",tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY")
         if source_clk_freq != 0:
@@ -322,12 +322,12 @@ def handleMessage(messageID, args):
     global dvrtComponentId
     global dvrtChannel_Sym
     global dvrtPlibMode
-    
+
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
     dvrtPLIBConfig = dict()
     dvrt_tick_ms = {"dvrt_tick_ms" : 0.0}
-    
+
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
         modeDict = {"plib_mode": "PERIOD_AND_COMPARE_MODES"}
@@ -374,7 +374,7 @@ def handleMessage(messageID, args):
         if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
             dvrtTickRateMs.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
             tcSym_CH_TimerPeriod[channelID].setValue(dvrtTickRateMs.getValue())
-            
+
     if (messageID == "DVRT_TICK_RATE_CHANGED"):
         tc_channel = dvrtChannel_Sym.getSelectedKey()
         channelID = int(tc_channel[3])
@@ -1059,7 +1059,7 @@ def onAttachmentDisconnected(source, target):
     if (remoteID == "pmsm_foc"):
         component = str(tcInstanceName.getValue()).lower()
         Database.setSymbolValue(component, "TC_ENABLE_QEI", False)
-        
+
     if (remoteID == "dvrt"):
         dvrtChannel_Sym.setVisible(False)
         dvrtComponentId.setValue("")
@@ -1070,7 +1070,7 @@ def onAttachmentDisconnected(source, target):
         tcSym_CH_TimerPeriod[channelID].setVisible(True)
         #Enable the period interrupt
         tcSym_CH_IER_CPCS[channelID].setValue(True)
-        
+
 def dvrt_ChannelSelection(symbol,event):
     global timerStartApiName_Sym
     global timeStopApiName_Sym
@@ -1087,7 +1087,7 @@ def dvrt_ChannelSelection(symbol,event):
     channelID = int(tc_channel[3])
 
     dvrtPLIBModeConfig(channelID, dvrtPlibMode.getValue())
-    
+
     timerStartApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStart"
     timeStopApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStop "
     callbackApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerCallbackRegister"
@@ -1272,7 +1272,7 @@ def instantiateComponent(tcComponent):
     dvrtChannel_Sym.setDisplayMode("Description")
     dvrtChannel_Sym.setDefaultValue(0)
     dvrtChannel_Sym.setVisible(False)
-    
+
     dvrtTrigger_Sym = tcComponent.createBooleanSymbol("DVRT_ID", None)
     dvrtTrigger_Sym.setVisible(False)
     dvrtTrigger_Sym.setDependencies(dvrt_ChannelSelection, ["DVRT_TC_CHANNEL"])
@@ -1298,16 +1298,16 @@ def instantiateComponent(tcComponent):
     dvrtPlibMode.setLabel("dvrt PLIB Operation Mode")
     dvrtPlibMode.setVisible(False)
     dvrtPlibMode.setDefaultValue("")
-    
+
     dvrtComponentId = tcComponent.createStringSymbol("DVRT_COMPONENT_ID", None)
     dvrtComponentId.setLabel("dvrt Component id")
     dvrtComponentId.setVisible(False)
     dvrtComponentId.setDefaultValue("")
-    
+
     dvrtTickRateMs = tcComponent.createFloatSymbol("DVRT_TICK_RATE_MS", None)
     dvrtTickRateMs.setDefaultValue(1)
     dvrtTickRateMs.setVisible(False)
-    
+
     timerWidth_Sym = tcComponent.createIntegerSymbol("TIMER_WIDTH", None)
     timerWidth_Sym.setVisible(False)
     #Set the counter bitwidth based on the masks. Some masks support 32 bit timers
@@ -1615,7 +1615,7 @@ def instantiateComponent(tcComponent):
         timerUnit = ["millisecond", "microsecond", "nanosecond"]
         tcSym_TimerUnit[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_TIMER_UNIT", tcTimerMenu[channelID], timerUnit)
         tcSym_TimerUnit[channelID].setLabel("Timer Period Unit")
-        tcSym_TimerUnit[channelID].setDefaultValue("millisecond")    
+        tcSym_TimerUnit[channelID].setDefaultValue("millisecond")
 
         if (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") != 0):
             max =  (tcCounterMaxValue+1) * 1000.0 / int((Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") ))

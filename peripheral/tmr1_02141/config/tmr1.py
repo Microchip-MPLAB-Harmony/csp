@@ -89,7 +89,7 @@ def calcAchievableFreq():
         achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
         tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
         dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
-        
+
     elif (dvrtComponentId.getValue() != ""):
         timer_Frequency = tmr1Sym_CLOCK_FREQ.getValue()
         #Read the calculated timer count to achieve the set Time Period and Calculate the actual tick rate
@@ -112,12 +112,12 @@ def handleMessage(messageID, args):
     sysTimePLIBConfig = dict()
     dvrtPLIBConfig = dict()
     dvrt_tick_ms = {"dvrt_tick_ms" : 0.0}
-    
+
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
         modeDict = {"plib_mode": "PERIOD_MODE"}
         sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
-0        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
+        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
             tmr1Sym_PERIOD_MS.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
 
     if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
@@ -136,7 +136,7 @@ def handleMessage(messageID, args):
         if dvrtComponentId.getValue() != "":
             #Set the Time Period (Milli Sec)
             tmr1Sym_PERIOD_MS.setValue(args["dvrt_tick_ms"])
-            
+
     return dummy_dict
 
 def _get_enblReg_parms(vectorNumber):

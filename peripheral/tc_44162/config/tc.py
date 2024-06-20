@@ -274,13 +274,13 @@ def calcAchievableFreq(channelID):
     global sysTimePlibMode
     global sysTimeChannel_Sym
     global dvrtComponentId
-    
+
     dummy_dict = dict()
     tc_channel = sysTimeChannel_Sym.getSelectedKey()
     sysTimeChannelID = int(tc_channel[3])
     dvrt_channel_sel = dvrtChannel_Sym.getSelectedKey()
     dvrtChannelID = int(dvrt_channel_sel[3])
-    
+
     tickRateDict = {"tick_rate_hz": 0}
     if (sysTimeChannelID == channelID) and (sysTimeComponentId.getValue() != "") and (sysTimePlibMode.getValue() == "SYS_TIME_PLIB_MODE_PERIOD"):
         #Read the input clock frequency of the timer instance
@@ -296,7 +296,7 @@ def calcAchievableFreq(channelID):
                 dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
         else:
             dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
-            
+
     elif (dvrtChannelID == channelID) and (dvrtComponentId.getValue() != ""):
         source_clk_freq = Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY")
         if source_clk_freq != 0:
@@ -310,7 +310,7 @@ def calcAchievableFreq(channelID):
                 dummy_dict = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
         else:
             dummy_dict = Database.sendMessage(dvrtComponentId.getValue(), "DVRT_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
-            
+
 def handleMessage(messageID, args):
     global sysTimeComponentId
     global sysTimeChannel_Sym
@@ -324,8 +324,8 @@ def handleMessage(messageID, args):
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
     dvrtPLIBConfig = dict()
-    dvrt_tick_ms = {"dvrt_tick_ms" : 0.0}     
-    
+    dvrt_tick_ms = {"dvrt_tick_ms" : 0.0}
+
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
         modeDict = {"plib_mode": "PERIOD_AND_COMPARE_MODES"}
@@ -366,7 +366,7 @@ def handleMessage(messageID, args):
         if dvrtPLIBConfig["TIMER_MODE"] == "DVRT_PLIB_MODE_PERIOD":
             dvrtTickRateMs.setValue(dvrtPLIBConfig["dvrt_tick_millisec"])
             tcSym_CH_TimerPeriod[channelID].setValue(dvrtTickRateMs.getValue())
-            
+
     if (messageID == "DVRT_TICK_RATE_CHANGED"):
         tc_channel = dvrtChannel_Sym.getSelectedKey()
         channelID = int(tc_channel[3])
