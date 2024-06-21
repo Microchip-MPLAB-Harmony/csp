@@ -307,7 +307,7 @@ def instantiateComponent(tmrComponent):
 
     timerStartApiName = "CORETIMER_Start"
     timeStopApiName = "CORETIMER_Stop "
-    periodSetApiName = "CORETIMER_PeriodSet"
+    
     compareSetApiName = "CORETIMER_CompareSet"
     counterGetApiName = "CORETIMER_CounterGet"
     frequencyGetApiName = "CORETIMER_FrequencyGet"
@@ -315,7 +315,7 @@ def instantiateComponent(tmrComponent):
 
     timerStartApiName_Sym.setDefaultValue(timerStartApiName)
     timeStopApiName_Sym.setDefaultValue(timeStopApiName)
-    periodSetApiName_Sym.setDefaultValue(periodSetApiName)
+    
     compareSetApiName_Sym.setDefaultValue(compareSetApiName)
     counterApiName_Sym.setDefaultValue(counterGetApiName)
     frequencyGetApiName_Sym.setDefaultValue(frequencyGetApiName)
