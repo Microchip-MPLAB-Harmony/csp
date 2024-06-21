@@ -299,7 +299,7 @@ def npcsxEnableVisible(symbol, event):
     symbol.setVisible(mcspi_mode == "MASTER")
 
 def updateCSRx_MasterBitFields(symbol, event):
-    csx = symbol.getID()[7]
+    csx = symbol.getID().split("MCSPI_CSR")[1].split("_")[0]
     mcspi_mode = event["source"].getSymbolByID("MCSPI_MR_MSTR").getValue()
     en_npcsx = event["source"].getSymbolByID("MCSPI_EN_NPCS" + csx).getValue()
     symbol.setVisible(mcspi_mode == "MASTER" and en_npcsx == True)
@@ -309,7 +309,7 @@ def updateCSRx_BitFields(symbol, event):
 
 def updateCSRxClockModeInfo(symbol, event):
     # visibility
-    csx = symbol.getID()[7]
+    csx = symbol.getID().split("MCSPI_CSR")[1].split("_")[0]
     en_npcsx = event["source"].getSymbolByID("MCSPI_EN_NPCS" + csx).getValue()
     symbol.setVisible(en_npcsx == True)
 
