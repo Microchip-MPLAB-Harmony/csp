@@ -38,5 +38,6 @@
         <package diagram="TQFP176" id="30" name="TQFP176" />
         <package diagram="TQFP208" id="31" name="TQFP208" />
         <package diagram="SAM_64_WLCSPGLW" id="32" name="WLCSP64GLW" />
+        <package diagram="BGA208" id="33" name="BGA208" />
     </packages>
 </pinfile>
