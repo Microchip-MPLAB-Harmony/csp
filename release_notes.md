@@ -3,6 +3,20 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.19.1
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Fixed Clock PLIB issue for SAM9X75, PIC32CK-GC/SG and PIC32CZ-CA devices
+- Fixed ADC, PIO and TC PLIB build issue for SAM9X75 devices
+- Fixed SUPC PLIB issue for PIC32CX-MT devices
+- Updated TC, TMR, TMR1, CORETIMER, NVIC, EVIC, AIC and GIC PLIB for DVRT support
+- Updated SAM9X7, PIC32CZ-CA70 and PIC32CZ-MC70 DFP version in package.yml
+
 ## CSP Release v3.19.0
 
 ### New Features
