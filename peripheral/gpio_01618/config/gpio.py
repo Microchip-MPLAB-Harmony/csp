@@ -48,15 +48,55 @@ global createPinMap
 global availablePinDictionary
 availablePinDictionary = {}
 
+## SHD: Dictionary to store symbols created for each pin
+global pinSymbolsDictionary
+pinSymbolsDictionary = dict()
+
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
 
 global getAvailablePins
+global getFunctionListByPinName
+# global getInstanceNameFromPinFunction
 
 # API used by core to return available pins to sender component
 def getAvailablePins():
     return availablePinDictionary
+
+global setPinConfigurationValue
+global getPinConfigurationValue
+global clearPinConfigurationValue
+
+def setPinConfigurationValue(pinNumber, setting, value):
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    # Adapt Exception in Function Name for SPI SS signal from XML family files
+    if setting == "function":
+        valueToCheck = "".join(filter(lambda x: x.isalpha(), value))
+        if valueToCheck == "SSIN":
+            if "IN" in value:
+                value = value.replace("IN", "out")
+            elif "OUT" in value:
+                value = value.replace("OUT", "out")
+    # print("GPIO setPinConfigurationValue[{}][{}] : {}".format(pinNumber, setting, value))
+    if symbol:
+        symbol.setReadOnly(False)
+        symbol.clearValue()
+        symbol.setValue(value)
+        symbol.setReadOnly(True)
+
+def getPinConfigurationValue(pinNumber, setting):
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    if symbol:
+        return symbol.getValue()
+
+def clearPinConfigurationValue(pinNumber, setting):
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    if symbol:
+        symbol.setReadOnly(False)
+        symbol.clearValue()
+        # print("GPIO  clearPinSetConfigurationValue[{}][{}]".format(pinNumber, setting))
+
 
 # Dependency Function to show or hide the warning message depending on Interrupt
 def InterruptStatusWarning(symbol, event):
@@ -337,6 +377,41 @@ def createPinMap(packageSymbol):
 
     return (pin_map, pin_position)
 
+def getFunctionListByPinName(pinName):
+    import xml.etree.ElementTree as ET
+
+    # Look for fixed functions
+    global pinoutXmlPath
+    tree = ET.parse(pinoutXmlPath)
+    root = tree.getroot()
+
+    fnList = []
+    for myPins in root.findall('pins'):
+        for myPin in myPins.findall('pin'):
+           if myPin.get("name") == pinName:
+                # Found pin, add fixed functions
+                for myFunction in myPin.findall('function'):
+                    fnList.append(myFunction.get("name"))
+                break
+
+    # Look for mappeable functions
+    global ppsXmlPath
+    tree = ET.parse(ppsXmlPath)
+    root = tree.getroot()
+
+    # Adapt pinName to names used in xml files
+    pinName = pinName.replace("R", "RP")
+    for myGroups in root.findall('groups'):
+        for myGroup in myGroups.findall('group'):
+            for myPin in myGroup.findall('pin'):
+                if myPin.get("name") == pinName:
+                    # Found pin, add remappable functions
+                    for myFunction in myGroup.findall('function'):
+                        fnList.append(myFunction.get("name"))
+
+    return fnList
+
+
 ###################################################################################################
 ######################################### GPIO Main Menu  ##########################################
 ###################################################################################################
@@ -425,6 +500,9 @@ pin_map, pin_position = createPinMap(pioPackage)
 # that is why "pinNumber-1" is used to index the lists wherever applicable.
 
 for pinNumber in range(1, packagePinCount + 1):
+
+    symbolsDict = dict()
+    
     pin.append(pinNumber)
     pin[pinNumber-1]= coreComponent.createMenuSymbol("GPIO_PIN_CONFIGURATION" + str(pinNumber - 1), pinConfiguration)
     pin[pinNumber-1].setLabel("Pin " + str(pinNumber))
@@ -436,6 +514,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinName[pinNumber-1].setLabel("Name")
     pinName[pinNumber-1].setDefaultValue("")
     pinName[pinNumber-1].setReadOnly(False)
+    symbolsDict.setdefault('name', pinName[pinNumber-1])
 
 
     pinType.append(pinNumber)
@@ -444,6 +523,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinType[pinNumber-1].setLabel("Type")
     pinType[pinNumber-1].setReadOnly(False)
     #pinType[pinNumber-1].setDependencies(pinFunctionCal, ["PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION"])
+    symbolsDict.setdefault('function', pinType[pinNumber-1])
 
     pinBitPosition.append(pinNumber)
     pinBitPosition[pinNumber-1] = coreComponent.createIntegerSymbol("BSP_PIN_" + str(pinNumber) + "_PORT_PIN", pin[pinNumber-1])
@@ -486,6 +566,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinDirection[pinNumber-1].setLabel("Direction")
     pinDirection[pinNumber-1].setReadOnly(False)
     pinDirection[pinNumber-1].setDependencies(pinDirCal, ["BSP_PIN_" + str(pinNumber) + "_DIR" ])
+    symbolsDict.setdefault('direction', pinDirection[pinNumber-1])
 
     pinLatch.append(pinNumber)
     pinLatch[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_LAT", pin[pinNumber-1])
@@ -494,6 +575,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinLatch[pinNumber-1].setReadOnly(False)
     pinLatch[pinNumber-1].setDefaultValue("")
     pinLatch[pinNumber-1].setDependencies(pinLatchCal, ["BSP_PIN_" + str(pinNumber) + "_LAT"])
+    symbolsDict.setdefault('latch', pinLatch[pinNumber-1])
 
     pinOpenDrain.append(pinNumber)
     pinOpenDrain[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_OD", pin[pinNumber-1])
@@ -501,6 +583,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinOpenDrain[pinNumber-1].setLabel("Open Drain")
     pinOpenDrain[pinNumber-1].setReadOnly(False)
     pinOpenDrain[pinNumber-1].setDependencies(pinOpenDrainCal, ["BSP_PIN_" + str(pinNumber) + "_OD"])
+    symbolsDict.setdefault('open drain', pinOpenDrain[pinNumber-1])
 
     pinInterrupt.append(pinNumber)
     pinInterrupt[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_CN", pin[pinNumber-1])
@@ -508,6 +591,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinInterrupt[pinNumber-1].setLabel("Change Notice")
     pinInterrupt[pinNumber-1].setReadOnly(False)
     pinInterrupt[pinNumber-1].setDependencies(pinInterruptCal, ["BSP_PIN_" + str(pinNumber) + "_CN"])
+    symbolsDict.setdefault('change notification', pinInterrupt[pinNumber-1])
 
     pinPullUp.append(pinNumber)
     pinPullUp[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_PU", pin[pinNumber-1])
@@ -515,6 +599,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinPullUp[pinNumber-1].setLabel("Pull Up")
     pinPullUp[pinNumber-1].setReadOnly(False)
     pinPullUp[pinNumber-1].setDependencies(pinPullUpCal, ["BSP_PIN_" + str(pinNumber) + "_PU"])
+    symbolsDict.setdefault('pull up', pinPullUp[pinNumber-1])
 
     pinPullDown.append(pinNumber)
     pinPullDown[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_PD", pin[pinNumber-1])
@@ -522,10 +607,14 @@ for pinNumber in range(1, packagePinCount + 1):
     pinPullDown[pinNumber-1].setLabel("Pull Down")
     pinPullDown[pinNumber-1].setReadOnly(False)
     pinPullDown[pinNumber-1].setDependencies(pinPullDownCal, ["BSP_PIN_" + str(pinNumber) + "_PD"])
+    symbolsDict.setdefault('pull down', pinPullDown[pinNumber-1])
 
     #list created only for dependency
     pinInterruptList.append(pinNumber)
     pinInterruptList[pinNumber-1] = "BSP_PIN_" + str(pinNumber) + "_CN"
+
+    ## Add symbol to global dictionary
+    pinSymbolsDictionary.setdefault(pinNumber, symbolsDict)
 
 ###################################################################################################
 ################################# PPS Pins Configuration related code #################################
@@ -561,6 +650,7 @@ PORTS_REMAP_OUTPUT_PIN = []
 PORTS_REMAP_INPUT_FUNCTION= []
 
 # parse XML and populate PPS lists and dictionaries
+global ppsXmlPath
 ppsXmlName = deviceXmlRoot.get("families")
 ppsXmlPath = os.path.join(currentPath, "../plugin/pin_xml/families/" + ppsXmlName + ".xml")
 ppsXmlPath = os.path.normpath(ppsXmlPath)

@@ -29,6 +29,9 @@ import math
 global adchsInstanceName
 global adchsSym_ADCTRGMODE__SHxALT
 global isDMAFeatureAvailable
+#SHD variable
+global adchsSharedModuleInputs
+adchsSharedModuleInputs = 0
 # A set of arrays for keeping track of each chanel's parameters.
 adchsCHMenu = []
 adchsCONMenu = [None] * 64
@@ -1190,6 +1193,44 @@ def handleMessage(id, args):
     elif (id == "SET_ADC_CONFIG_PARAMS"):
         # Set ADC configuration parameters
         setAdcConfigParams( args )
+
+    elif (id == "ADC_CONFIG_HW_IO"):
+        global adchsSharedModuleInputs
+        component = str(adchsInstanceName.getValue()).lower()
+        channel, enable = args['config']
+
+        symbolName3 = ""
+
+        if channel > 5:
+            symbolName = "ADCHS_7_ENABLE"
+            if channel < 33:
+                symbolName3 = "ADCCSS1__CSS{}".format(channel)
+            else:
+                symbolName3 = "ADCCSS2__CSS{}".format(channel)
+                
+            if enable == False:
+                if adchsSharedModuleInputs > 0:
+                    adchsSharedModuleInputs = adchsSharedModuleInputs - 1
+            else:
+                adchsSharedModuleInputs = adchsSharedModuleInputs + 1
+        else:
+            symbolName = "ADCHS_{}_ENABLE".format(channel)
+            
+        symbolName2 = "AN{}".format(channel)
+            
+        if enable == False:
+            Database.clearSymbolValue(component, symbolName2)
+            if symbolName == "ADCHS_7_ENABLE" and adchsSharedModuleInputs == 0:
+                Database.clearSymbolValue(component, symbolName)
+            if symbolName3 != "":
+                Database.clearSymbolValue(component, symbolName3)
+        else:
+            Database.setSymbolValue(component, symbolName, True)
+            Database.setSymbolValue(component, symbolName2, True)
+            if symbolName3 != "":
+                Database.setSymbolValue(component, symbolName3, True)
+            
+        dict = {"Result": "Success"}
 
     return dict
 

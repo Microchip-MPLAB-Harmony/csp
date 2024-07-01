@@ -337,6 +337,30 @@ def ccpFileGen(symbol, event):
         component.getSymbolByID("CCP_CAPTURE_HEADER").setEnabled(True)
         component.getSymbolByID("CCP_CAPTURE_SOURCE").setEnabled(True)    
 
+def handleMessage(messageID, args):
+    retDict = {}
+    # print("CCP handleMessage: {} args: {}".format(messageID, args))
+    
+    if (messageID == "CCP_CONFIG_HW_IO"):
+        global ccpSym_OprationMode
+        
+        component = str(ccpInstanceName.getValue()).lower()
+        opMode, outputPin, enable = args['config']
+
+        if enable == True:
+            res = ccpSym_OprationMode.setValue(opMode)
+            symbol = "CCP_COMP_CCPCON2_OC{}EN".format(outputPin)
+            res = Database.setSymbolValue(component, symbol, True)
+        else:
+            res = Database.clearSymbolValue(component, "CCP_OPERATION_MODE")
+
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+
+    return retDict
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################

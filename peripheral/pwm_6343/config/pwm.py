@@ -462,6 +462,24 @@ def handleMessage(messageID, args):
         pwmSym_PWM_FPE[pwmChV].setSelectedKey(str(fault))
         pwmSym_PWM_FPE[pwmChW].setSelectedKey(str(fault))
 
+    elif (messageID == "PWM_CONFIG_HW_IO"):
+        channel, polarity, enable = args['config']
+
+        if enable == True:
+            Database.setSymbolValue(component, "PWM_CH_{}_ENABLE".format(channel), enable)
+            if polarity == 'l': # 'l': low
+                symbolValue = 0
+            else: # 'h': high
+                symbolValue = 1
+            res = Database.setSymbolValue(component, "PWM_CH_{}_CMR_CPOL".format(channel), symbolValue)
+        else:
+            res = Database.clearSymbolValue(component, "PWM_CH_{}_ENABLE".format(channel))
+
+        if res == True:
+            dict = {"Result": "Success"}
+        else:
+            dict = {"Result": "Fail"}
+            
     return dict
 ###################################################################################################
 ########################### Component   #################################

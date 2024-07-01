@@ -45,6 +45,31 @@ def update_interrupt(symbol, event):
         comp.clearSymbolValue(acc_instance + "_INTERRUPT_ENABLE")
         comp.clearSymbolValue(acc_instance + "_INTERRUPT_HANDLER")
 
+def handleMessage(messageID, args):
+    retDict = {}
+    # print("ACC handleMessage: {} args: {}".format(messageID, args))
+    
+    if (messageID == "ACC_CONFIG_HW_IO"):
+        component = "acc"
+        accIndex, accPin, enable = args['config']
+
+        if accPin == 'n':
+            symbolName = "ACC_INPUT_SELMINUS"
+        else: #'p'
+            symbolName = "ACC_INPUT_SELPLUS"
+
+        if enable == True:
+            res = Database.setSymbolValue(component, symbolName, accIndex)
+        else:
+            res = Database.clearSymbolValue(component, symbolName)
+
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+            
+    return retDict
+
 ###################################################################################################
 ######################################### Component ###############################################
 ###################################################################################################

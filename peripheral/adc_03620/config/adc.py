@@ -1902,6 +1902,56 @@ def codeGenerationConfig (adcComponent, Module):
 
     adcComponent.addPlugin("../peripheral/adc_03620/plugin/adc_03620.jar")
 
+def handleMessage(messageID, args):
+    retDict = {}
+    # print("ADC handleMessage: {} args: {}".format(messageID, args))
+    
+    if (messageID == "ADC_CONFIG_HW_IO"):
+        global nSARCore
+        global nSARChannel
+        
+        component = str(adcInstanceName.getValue()).lower()
+        channel, enable = args['config']
+
+        # Get core from channel number
+        core = 0
+        numchannels = 0
+        for n in range(0, nSARCore):
+            numchannels += int(nSARChannel[n])
+            if channel < numchannels:
+                core = n
+                break
+        
+        for n in range(0, core):
+            channel -= nSARChannel[n]
+
+        coreSymbolName = "ADC_CORE_{}_ENABLE".format(core)
+        channelSymbolName = "ADC_CORE_{}_CH_{}_ENABLE".format(core, channel)
+        # print("ADC handleMessage: channelSymbolName {}".format(channelSymbolName))
+
+        if enable == True:
+            Database.setSymbolValue(component, coreSymbolName, enable)
+            res = Database.setSymbolValue(component, channelSymbolName, enable)
+        else:
+            res = Database.clearSymbolValue(component, channelSymbolName)
+
+            # Check if Core Symbol has to be cleared
+            clearCoreSymbol = True
+            for n in range(0, nSARChannel[core]):
+                channelSymbolName = "ADC_CORE_{}_CH_{}_ENABLE".format(core, n)
+                if Database.getSymbolValue(component, channelSymbolName) == True:
+                    clearCoreSymbol = False
+                    break
+
+            if clearCoreSymbol == True:
+                Database.clearSymbolValue(component, coreSymbolName)
+        
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+
+    return retDict
 
 def instantiateComponent(adcComponent):
     global nSARCore

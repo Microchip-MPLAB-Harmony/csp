@@ -408,6 +408,21 @@ def handleMessage(messageID, args):
     elif ( messageID == "SET_ADC_CONFIG_PARAMS"):
         # Set ADC configuration parameters
         setAdcConfigParams( args )
+    
+    elif (messageID == "ADC_CONFIG_HW_IO"):
+        # print("AFEC handleMessage: {} args: {}".format(messageID, args))
+        component = str(afecInstanceName.getValue()).lower()
+        channel, isNegInput, enable = args['config']
+
+        res = Database.setSymbolValue(component, "AFEC_{}_CHER".format(channel), enable)
+        if channel % 2 == 1 and isNegInput == True:
+            res = Database.setSymbolValue(component, "AFEC_{}_NEG_INP".format(channel - 1), "AN{}".format(channel))
+        
+        if res == True:
+            dict = {"Result": "Success"}
+        else:
+            dict = {"Result": "Fail"}
+
 
     return dict
 

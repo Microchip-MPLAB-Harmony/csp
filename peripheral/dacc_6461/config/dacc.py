@@ -48,6 +48,29 @@ def setDacSpeed(symbol, event):
 
 def symbolVisible(symbol, event):
     symbol.setVisible(not event["value"])
+        
+def handleMessage(messageID, args):
+    retDict = {}
+    # print("DACC handleMessage: {} args: {}".format(messageID, args))
+    component = daccInstanceName.getValue().lower()
+    if (messageID == "DAC_CONFIG_HW_IO"):
+        channel = args['config']
+        enable = args['enable']
+
+        if enable == True:
+            res = Database.setSymbolValue(component, "DACC_CHER_CH{}".format(channel), enable)
+        else:
+            res = Database.clearSymbolValue(component, "DACC_CHER_CH{}".format(channel))
+            
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+            
+    else:
+        retDict= {"Result": "DACC UnImplemented Command"}
+    
+    return retDict
 
 ################################################################################
 #### Component ####

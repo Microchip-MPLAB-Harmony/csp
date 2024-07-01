@@ -103,7 +103,22 @@ def evsysSetup(symbol, event):
     else:
         manageEvent(event["id"], event["namespace"], event["value"])
 
-
+def handleMessage(messageID, args):
+    retDict = {}
+    # print("DAC handleMessage: {} args: {}".format(messageID, args))
+    if (messageID == "DAC_CONFIG_HW_IO"):
+        channel = args['config']
+        enable = args['enable']
+        res = Database.setSymbolValue('dac', "DAC_CHANNEL_{}_ENABLE".format(channel), enable)
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+            
+    else:
+        retDict= {"Result": "DAC UnImplemented Command"}
+    
+    return retDict
 
 ################################################################################
 ########                        DAC Data Base Components               #########

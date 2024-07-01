@@ -33,6 +33,10 @@ peripheralFunctionality = ["GPIO", "Alternate", "LED_AH", "LED_AL", "SWITCH_AH",
 global availablePinDictionary
 availablePinDictionary = {}
 
+## SHD: Dictionary to store symbols created for each pin
+global pinSymbolsDictionary
+pinSymbolsDictionary = dict()
+
 global port_evsys_usersNamesList
 port_evsys_usersNamesList = []
 
@@ -58,6 +62,44 @@ def portEvsysUserNameGet(usrNameMatchList):
 
 global getAvailablePins
 
+global setPinConfigurationValue
+global getPinConfigurationValue
+global clearPinConfigurationValue
+
+def setPinConfigurationValue(pinNumber, setting, value):
+    if setting == "direction" and value == "In":
+        setting = "input"
+        value = "True"
+        
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    # print("PORT_u2210 setPinConfigurationValue[{}][{}] : {}".format(pinNumber, setting, value))
+    if symbol:
+        symbol.setReadOnly(False)
+        symbol.clearValue()
+        symbol.setValue(value)
+
+def getPinConfigurationValue(pinNumber, setting):
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    if symbol:
+        return symbol.getValue()
+
+def clearPinConfigurationValue(pinNumber, setting):
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    if symbol:
+        symbol.setReadOnly(False)
+        if setting == "direction":
+            symbolInput = pinSymbolsDictionary.get(pinNumber).get("input")
+            if symbolInput.getValue() == "True":
+                symbolInput.setReadOnly(False)
+                symbolInput.clearValue()
+                # print("PORT_u2210 1 clearPinSetConfigurationValue[{}][input]".format(pinNumber))
+            else:
+                symbol.clearValue()
+                # print("PORT_u2210 2 clearPinSetConfigurationValue[{}][{}]".format(pinNumber, setting))
+        else:
+            symbol.clearValue()
+            # print("PORT_u2210 3 clearPinSetConfigurationValue[{}][{}]".format(pinNumber, setting))
+    
 portSecAliasRegSpace = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/register-group@[name=\"PORT_SEC\"]")
 
 portRegName = coreComponent.createStringSymbol("PORT_REG_NAME", None)
@@ -486,6 +528,10 @@ else:
 
 internalPincount = pincount + len(pin_map_internal.keys())
 
+pinTotalPins = coreComponent.createIntegerSymbol("PIO_PIN_TOTAL" , pinConfiguration)
+pinTotalPins.setVisible(False)
+pinTotalPins.setDefaultValue(internalPincount)
+
 portSym_PinMaxIndex = coreComponent.createIntegerSymbol("PORT_PIN_MAX_INDEX", None)
 portSym_PinMaxIndex.setVisible(False)
 max_index = 0
@@ -503,6 +549,8 @@ portPINCFGDriverStrength.setDefaultValue((ATDF.getNode("/avr-tools-device-file/m
 portPINCFGDriverStrength.setVisible(False)
 
 for pinNumber in range(1, internalPincount + 1):
+
+    symbolsDict = dict()
 
     if pinNumber < pincount + 1:
         pinPad = str(pin_map.get(pin_position[pinNumber-1]))
@@ -592,6 +640,7 @@ for pinNumber in range(1, internalPincount + 1):
     pinName[pinNumber-1].setLabel("Name")
     pinName[pinNumber-1].setDefaultValue("")
     pinName[pinNumber-1].setReadOnly(True)
+    symbolsDict.setdefault('name', pinName[pinNumber-1])
 
 
     pinType.append(pinNumber)
@@ -599,6 +648,7 @@ for pinNumber in range(1, internalPincount + 1):
     pinType[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinType[pinNumber-1].setLabel("Type")
     pinType[pinNumber-1].setReadOnly(True)
+    symbolsDict.setdefault('function', pinType[pinNumber-1])
 
     pinPeripheralFunction.append(pinNumber)
     pinPeripheralFunction[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pin[pinNumber-1])
@@ -617,24 +667,28 @@ for pinNumber in range(1, internalPincount + 1):
     pinDirection[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:DIR")
     pinDirection[pinNumber-1].setLabel("Direction")
     pinDirection[pinNumber-1].setReadOnly(True)
+    symbolsDict.setdefault('direction', pinDirection[pinNumber-1])
 
     pinLatch.append(pinNumber)
     pinLatch[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pin[pinNumber-1])
     pinLatch[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinLatch[pinNumber-1].setLabel("Initial Latch Value")
     pinLatch[pinNumber-1].setReadOnly(True)
+    symbolsDict.setdefault('latch', pinLatch[pinNumber-1])
 
     pinPullEnable.append(pinNumber)
     pinPullEnable[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PULLEN", pin[pinNumber-1])
     pinPullEnable[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinPullEnable[pinNumber-1].setLabel("Pull Enable")
     pinPullEnable[pinNumber-1].setReadOnly(True)
+    symbolsDict.setdefault('pull up', pinPullEnable[pinNumber-1])
 
     pinInputEnable.append(pinNumber)
     pinInputEnable[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_INEN", pin[pinNumber-1])
     pinInputEnable[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
     pinInputEnable[pinNumber-1].setLabel("Input Enable")
     pinInputEnable[pinNumber-1].setReadOnly(True)
+    symbolsDict.setdefault('input', pinInputEnable[pinNumber-1])
 
     if portPINCFGOpenDrain.getValue() == True:
         pinOpenDrain.append(pinNumber)
@@ -642,6 +696,7 @@ for pinNumber in range(1, internalPincount + 1):
         pinOpenDrain[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:port_u2210;register:%NOREGISTER%")
         pinOpenDrain[pinNumber-1].setLabel("Open Drain")
         pinOpenDrain[pinNumber-1].setReadOnly(True)
+        symbolsDict.setdefault('open drain', pinOpenDrain[pinNumber-1])
 
     if portPINCFGSlewRate.getValue() == True:
         portSLEWLIMValueGroupNode = getValueGroupNode__Port("PORT", "GROUP", "PINCFG", "SLEWLIM")
@@ -657,6 +712,7 @@ for pinNumber in range(1, internalPincount + 1):
                 portSLEWLIMDescription = portSLEWLIMValueGroupNode.getChildren()[index].getAttribute("caption")
                 pinSlewRate[pinNumber-1].addKey(portSLEWLIMKeyName, portSLEWLIMValue, portSLEWLIMDescription)
             pinSlewRate[pinNumber-1].setReadOnly(True)
+            symbolsDict.setdefault('slewrate', pinSlewRate[pinNumber-1])
 
     if portPINCFGDriverStrength.getValue() == True:
         pinDrvStr.append(pinNumber)
@@ -667,7 +723,11 @@ for pinNumber in range(1, internalPincount + 1):
         pinDrvStr[pinNumber-1].addKey("NORMAL", "0", "Normal")
         pinDrvStr[pinNumber-1].addKey("STRONG", "1", "Strong")
         pinDrvStr[pinNumber-1].setReadOnly(True)
+        symbolsDict.setdefault('drv', pinDrvStr[pinNumber-1])
 
+    ## Add symbol to global dictionary
+    pinSymbolsDictionary.setdefault(pinNumber, symbolsDict)
+    
     #creating list for direction dependency
     pinDirList.append(pinNumber)
     pinDirList[pinNumber-1] = "PIN_" + str(pinNumber) +"_DIR"

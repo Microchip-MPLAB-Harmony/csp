@@ -106,6 +106,64 @@ def fileUpdate(symbol, event):
         else:
             Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
+def getSERCOMSymbolValues(mode, signalId, padId):
+    symbolName = ""
+    symbolValue = ""
+    if mode == "USART":
+        if signalId == 'rx':
+            symbolName = "USART_RXPO"
+            symbolValue = int(padId)
+        else:
+            symbolName = "USART_TXPO"
+            txpoNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__TXPO\"]")
+            txpoValues = txpoNode.getChildren()
+
+            ctrlATXPO = []
+            for index in range(len(txpoValues)):
+                ctrlATXPO.append(txpoValues[index].getAttribute("caption").replace(" ", ""))
+
+            # print("getSERCOMSymbolValues : {}".format(ctrlATXPO))
+                
+            if signalId == 'tx':
+                for index in range(len(ctrlATXPO)):
+                    if "PAD[{}]=TxD".format(padId) in ctrlATXPO[index]:
+                        # print("getSERCOMSymbolValues found : {}".format("PAD[{}]=TxD".format(padId)))
+                        symbolValue = index
+                        break
+            elif signalId in ['rts', 'cts']:
+                for index in range(len(ctrlATXPO)):
+                    if "PAD[{}]=CTS".format(padId) in ctrlATXPO[index]:
+                        # print("getSERCOMSymbolValues found : {}".format("PAD[{}]=CTS".format(padId)))
+                        symbolValue = index
+                        break
+        
+    elif mode =="SPI":
+        if signalId == 'miso':
+            symbolName = "SPI_DIPO"
+            symbolValue = int(padId)
+        elif signalId == 'mosi':
+            symbolName = "SPI_DOPO"
+            dopoNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__DOPO\"]")
+            dopoValues = dopoNode.getChildren()
+
+            ctrlADOPO = []
+            for index in range(len(dopoValues)):
+                ctrlADOPO.append(dopoValues[index].getAttribute("caption").replace(" ", ""))
+
+            # print("getSERCOMSymbolValues : {}".format(ctrlADOPO))
+                
+            if signalId == 'mosi':
+                for index in range(len(ctrlADOPO)):
+                    if "DOonPAD[{}]".format(padId) in ctrlADOPO[index]:
+                        # print("getSERCOMSymbolValues found : {}".format("DOonPAD[{}]".format(padId)))
+                        symbolValue = index
+                        break
+        else:
+            symbolName = ""
+            symbolValue = ""
+            
+    return (symbolName, symbolValue)
+    
 def handleMessage(messageID, args):
     global sercomSym_OperationMode
     global spiSym_Interrupt_Mode
@@ -118,6 +176,7 @@ def handleMessage(messageID, args):
     global i2csSym_CTRLB_SMEN
     global usartSym_OperatingMode
     result_dict = {}
+    global sercomInstanceName
 
     if (messageID == "I2C_MASTER_MODE"):
         if args.get("isReadOnly") != None:
@@ -226,6 +285,28 @@ def handleMessage(messageID, args):
             if args["isEnabled"] == True:
                 usartSym_OperatingMode.setSelectedKey("RING_BUFFER")
 
+    elif (messageID == "SERCOM_CONFIG_HW_IO"):
+        # print("SERCOM handleMessage: {} args: {}".format(messageID, args))
+        mode, pinCtrl, enable = args['config']
+
+        signalId = pinCtrl.get("signalId")
+        padId = pinCtrl.get("padId")
+
+        (symbolName, symbolValue) = getSERCOMSymbolValues(mode, signalId, padId)
+        
+        deviceNamespace = sercomInstanceName.getValue().lower()
+        res = False
+        if enable == True:
+            if symbolValue != "":
+                res = Database.setSymbolValue(deviceNamespace, symbolName, symbolValue)
+        else:
+            res = Database.clearSymbolValue(deviceNamespace, symbolName)
+
+        if res == True:
+            result_dict = {"Result": "Success"}
+        else:
+            result_dict = {"Result": "Fail"}
+            
     return result_dict
 
 def onAttachmentConnected(source, target):

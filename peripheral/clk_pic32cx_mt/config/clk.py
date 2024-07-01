@@ -323,7 +323,8 @@ def update_tc_clock_frequency(symbol, event):
 global update_flexcom_clock_frequency
 def update_flexcom_clock_frequency(symbol,event):
     frequency = -1
-    clk_sym_map = { "USART": "FLEXCOM_USART_MR_USCLKS",
+    clk_sym_map = { "NO_COM": "",
+                    "USART": "FLEXCOM_USART_MR_USCLKS",
                     "SPI": "FLEXCOM_SPI_MR_BRSRCCLK",
                     "TWI": "FLEXCOM_TWI_CWGR_BRSRCCLK"
                   }
@@ -331,20 +332,23 @@ def update_flexcom_clock_frequency(symbol,event):
     flexcom_comp = Database.getComponentByID(instance_name.lower())
     if flexcom_comp is not None:
         clk_sym = clk_sym_map[flexcom_comp.getSymbolByID("FLEXCOM_MODE").getSelectedKey()]
-        source_clock = flexcom_comp.getSymbolByID(clk_sym).getSelectedKey()
-        mck0div_freq = event["source"].getSymbolValue("MCK0DIV_FREQUENCY")
-        # Source clock is bus clock
-        if source_clock == "MCK" or source_clock == "PERIPH_CLK":
-            frequency = mck0div_freq
-        # Source clock is bus clock / 8
-        elif source_clock == "DIV":
-            frequency = mck0div_freq / 8
-        # Source clock is GCLK
-        elif source_clock == "GCLK":
-            frequency = event["source"].getSymbolValue(instance_name + "_GCLK_FREQUENCY")
-        # Source clock is external, set the internal frequency to zero
-        else:
+        if clk_sym == "":
             frequency = 0
+        else:
+            source_clock = flexcom_comp.getSymbolByID(clk_sym).getSelectedKey()
+            mck0div_freq = event["source"].getSymbolValue("MCK0DIV_FREQUENCY")
+            # Source clock is bus clock
+            if source_clock == "MCK" or source_clock == "PERIPH_CLK":
+                frequency = mck0div_freq
+            # Source clock is bus clock / 8
+            elif source_clock == "DIV":
+                frequency = mck0div_freq / 8
+            # Source clock is GCLK
+            elif source_clock == "GCLK":
+                frequency = event["source"].getSymbolValue(instance_name + "_GCLK_FREQUENCY")
+            # Source clock is external, set the internal frequency to zero
+            else:
+                frequency = 0
 
         symbol.setValue(frequency)
 

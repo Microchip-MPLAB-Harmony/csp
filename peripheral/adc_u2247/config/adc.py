@@ -430,6 +430,36 @@ def handleMessage(messageID, args):
         # Set ADC configuration parameters
         setAdcConfigParams( args )
 
+    elif (messageID == "ADC_CONFIG_HW_IO"):
+        # print("ADC handleMessage: {} args: {}".format(messageID, args))
+        component = str(adcInstanceName.getValue()).lower()
+        channel, muxInput, enable = args['config']
+
+        adcInputCtrlNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_INPUTCTRL__{}\"]".format(muxInput))
+        adcInputValues = adcInputCtrlNode.getChildren()
+
+        dict = {"Result": "AIN{} is not a permitted value for ADC_INPUTCTRL_{}".format(channel, muxInput)}
+
+        if enable == False:
+            res = Database.clearSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput))
+            if muxInput == 'MUXNEG':
+                Database.clearSymbolValue(component, "ADC_CTRLC_DIFFMODE")
+        else:
+            for adcInputValue in adcInputValues:
+                if adcInputValue.getAttribute("name") == "AIN{}".format(channel):
+                    if muxInput == 'MUXNEG':
+                        Database.setSymbolValue(component, "ADC_CTRLC_DIFFMODE", enable)
+                        adcSym_INPUTCTRL_MUXNEG.setSelectedKey("AIN{}".format(channel))
+                    else:
+                        adcSym_INPUTCTRL_MUXPOS.setSelectedKey("AIN{}".format(channel))
+
+                    # print("ADC handleMessage: setSymbolValue ADC_INPUTCTRL_{} : AIN{}".format(muxInput, channel))
+                    
+                    if res == True:
+                        dict = {"Result": "Success"}
+                    else:
+                        dict = {"Result": "DB Error in setting ADC_INPUTCTRL_{} value".format(muxInput)}
+
     return dict
 
 # ADC configurations needed for PMSM_FOC component
@@ -804,6 +834,7 @@ def instantiateComponent(adcComponent):
     adcSym_INPUTCTRL_MUXPOS.setDependencies(adcPosInpVisible, ["ADC_CONV_TRIGGER", "ADC_SEQ_ENABLE"])
 
     # negative input
+    global adcSym_INPUTCTRL_MUXNEG
     adcSym_INPUTCTRL_MUXNEG = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_MUXNEG", adcChannelMenu)
     adcSym_INPUTCTRL_MUXNEG.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_u2247;register:INPUTCTRL")
     adcSym_INPUTCTRL_MUXNEG.setLabel("Select Negative Input")

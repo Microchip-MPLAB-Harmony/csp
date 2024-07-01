@@ -55,6 +55,15 @@ def handleMessage(messageID, args):
         if args.get("isVisible") != None:
             spiInterrupt.setVisible(args["isVisible"])
 
+    elif (messageID == "SPI_CONFIG_HW_IO"):
+        # print("SPI handleMessage: {} args: {}".format(messageID, args))
+        npcs, enable = args['config']
+        res = Database.setSymbolValue(spiInstanceName.getValue().lower(), "SPI_EN_{}".format(npcs.upper()), enable)
+        if res == True:
+            result_dict = {"Result": "Success"}
+        else:
+            result_dict = {"Result": "Fail"}
+
     #elif (messageID == "SPI_SLAVE_INTERRUPT_MODE"):
         # To be implemented
 

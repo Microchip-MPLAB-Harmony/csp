@@ -82,6 +82,28 @@ def disableBKUPRST(symbol, event):
     if event["value"] == False:
         symbol.setValue(False, 1)
 
+def handleMessage(messageID, args):
+    retDict = {}
+    component = supcInstanceName.getValue().lower()
+    # print("SUPC handleMessage: {} args: {}".format(messageID, args))
+    if (messageID == "SUPC_CONFIG_HW_IO"):
+        input, enable = args['config']
+        symbolId = "SUPC_WUIR_WKUPEN{}".format(input)
+        if enable == True:
+            res = Database.setSymbolValue(component, symbolId, enable)
+        else:
+            res = Database.clearSymbolValue(component, symbolId)
+
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+        
+    else:
+        retDict= {"Result": "SUPC UnImplemented Command"}
+    
+    return retDict
+
 ################################################################################
 #### Component ####
 ################################################################################

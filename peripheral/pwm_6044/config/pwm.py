@@ -94,6 +94,24 @@ def UpdatePWMInterruptEnable(symbol, event):
                                             pwmInstanceName.getValue() + handlerSuffix, 0)
     Database.setSymbolValue("core", pwmInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK", interruptEnable, 0)
 
+def handleMessage(messageID, args):
+    component = str(pwmInstanceName.getValue()).lower()
+    dict = {}
+
+    if (messageID == "PWM_CONFIG_HW_IO"):
+        channel, enable = args['config']
+
+        if enable == True:
+            res = Database.setSymbolValue(component, "CH{}_EN".format(channel), enable)
+        else:
+            res = Database.clearSymbolValue(component, "CH{}_EN".format(channel))
+
+        if res == True:
+            dict = {"Result": "Success"}
+        else:
+            dict = {"Result": "Fail"}
+            
+    return dict
 
 ###################################################################################################
 ########################### Component   #################################

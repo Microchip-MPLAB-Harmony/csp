@@ -367,7 +367,8 @@ def setAdcConfigParams( args ):
 
 def handleMessage(messageID, args):
     dict = {}
-
+    # print("ADC handleMessage: {} args: {}".format(messageID, args))
+    
     if (messageID == "PMSM_FOC_ADC_CH_CONF"):
         component = str(adcInstanceName.getValue()).lower()
         instanceNum = int(filter(str.isdigit,str(adcInstanceName.getValue())))
@@ -380,6 +381,28 @@ def handleMessage(messageID, args):
     elif ( messageID == "SET_ADC_CONFIG_PARAMS"):
         # Set ADC configuration parameters
         setAdcConfigParams( args )
+        
+    elif (messageID == "ADC_CONFIG_HW_IO"):
+        component = str(adcInstanceName.getValue()).lower()
+        channel, muxInput, enable = args['config']
+
+        adcInputCtrlNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_INPUTCTRL__{}\"]".format(muxInput))
+        adcInputValues = adcInputCtrlNode.getChildren()
+
+        dict = {"Result": "AIN{} is not a permitted value for ADC_INPUTCTRL_{} - adcInputValues: {}".format(channel, muxInput, adcInputValues)}
+        
+        for adcInputValue in adcInputValues:
+            if adcInputValue.getAttribute("name") == "AIN{}".format(channel):
+                if enable == False:
+                    res = Database.clearSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput))
+                else:
+                    # print("ADC handleMessage setSymbolValue: {} = {}".format("ADC_INPUTCTRL_{}".format(muxInput), int(channel)))
+                    res = Database.setSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput), int(channel))
+                    
+                if res == True:
+                    dict = {"Result": "Success"}
+                else:
+                    dict = {"Result": "DB Error in setting ADC_INPUTCTRL_{} value".format(muxInput)}
 
     return dict
 

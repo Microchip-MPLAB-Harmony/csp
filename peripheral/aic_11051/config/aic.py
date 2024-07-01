@@ -27,6 +27,7 @@ Log.writeInfoMessage( "Loading Interrupt Manager for " + Variables.get( "__PROCE
 ################################################################################
 #### Public Globals -- variables used in this module and accessible from other files
 ################################################################################
+global aicConfigHwIO
 global getInterruptName
 
 global interruptNamespace
@@ -73,6 +74,7 @@ global aicSrcTypes
 global aicMinPriorityName
 global aicMaxPriorityName
 
+global pinActiveList
 
 interruptLastNameMapType =  "_INTERRUPT_MAP_TYPE"
 interruptLastNameVector =   "_INTERRUPT_VECTOR"
@@ -95,9 +97,41 @@ alwaysSecureList =          []
 programmedSecureList =      []
 externalList =              []
 
+pinActiveList =             []
+
 ################################################################################
 #### Global Methods
 ################################################################################
+def aicConfigHwIO(messageID, args):
+    global pinActiveList
+    
+    retDict = {}
+    # print("AIC handleMessage: {} args: {}".format(messageID, args))
+    if (messageID == "AIC_CONFIG_HW_IO"):
+        component = "core"
+        pinId, enable = args['config']
+        symbolId = "EXT_FIQ_INTERRUPT_ENABLE"
+        if enable == True:
+            res = Database.setSymbolValue(component, symbolId, enable)
+            if res == True:
+                pinActiveList.append(pinId)
+        else:
+            if pinId in pinActiveList:
+                pinActiveList.remove(pinId)
+                
+            if len(pinActiveList) == 0:
+                res = Database.clearSymbolValue(component, symbolId)
+
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+            
+    else:
+        retDict = {"Result": "EIC UnImplemented Command"}
+    
+    return retDict
+
 def getInterruptName( interruptNode ):
     if "header:alternate-name" in interruptNode.getAttributeList():
         retval = interruptNode.getAttribute( "header:alternate-name" )

@@ -479,6 +479,37 @@ def InterruptStatusWarning(symbol, event):
 def updateADCClockWarningStatus(symbol, event):
     symbol.setVisible(not event["value"])
 
+def handleMessage(messageID, args):
+    retDict = {}
+    # print("ADC handleMessage: {} args: {}".format(messageID, args))
+    
+    if (messageID == "ADC_CONFIG_HW_IO"):
+        component = str(adcInstanceName.getValue()).lower()
+        channel, isNegInput, enable = args['config']
+
+        if isNegInput == True:
+            global adcSym_AD1CHS__CH0NA
+
+            res = adcSym_AD1CHS__CH0NA.setValue(channel)
+        else:
+            scanSymbolName = "AD1CON2__CSCNA"
+            inputSymbolName = "AD1CSSL__CSSL_{}".format(channel)
+            
+            # print("ADC handleMessage: inputSymbolName {}".format(inputSymbolName))
+            
+            if enable == True:
+                Database.setSymbolValue(component, scanSymbolName, enable)
+                res = Database.setSymbolValue(component, inputSymbolName, enable)
+            else:
+                res = Database.clearSymbolValue(component, inputSymbolName)
+
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+
+    return retDict
+
 ###################################################################################################
 ########################### Component   #################################
 ###################################################################################################

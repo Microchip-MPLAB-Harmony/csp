@@ -51,6 +51,28 @@ def interruptControl(symbol, event):
     else:
         Database.setSymbolValue("core", InterruptHandler, supcInstanceName.getValue() + "_BODDET_Handler", 2)
 
+def handleMessage(messageID, args):
+    retDict = {}
+    # print("SUPC handleMessage: {} args: {}".format(messageID, args))
+    if (messageID == "SUPC_CONFIG_HW_IO"):
+        output, enable = args['config']
+        component = supcInstanceName.getValue().lower()
+        symbolId = "SUPC_BKOUT_{}".format(output)
+        if enable == True:
+            res = Database.setSymbolValue(component, symbolId, enable)
+        else:
+            res = Database.clearSymbolValue(component, symbolId)
+            
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail {}: {}".format(component, symbolId)}
+            
+    else:
+        retDict= {"Result": "SUPC UnImplemented Command"}
+    
+    return retDict
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################

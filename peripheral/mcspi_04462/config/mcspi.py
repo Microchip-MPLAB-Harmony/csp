@@ -58,6 +58,21 @@ def handleMessage(messageID, args):
     #elif (messageID == "MCSPI_SLAVE_INTERRUPT_MODE"):
         # To be implemented
 
+    elif (messageID == "MCSPI_CONFIG_HW_IO"):
+        # print("MCSPI handleMessage: {} args: {}".format(messageID, args))
+        npcs, enable = args['config']
+
+        deviceNamespace = 'mcspi'
+        if enable == True:
+            res = Database.setSymbolValue(deviceNamespace, "MCSPI_EN_{}".format(npcs.upper()), enable)
+        else:
+            res = Database.clearSymbolValue(deviceNamespace, "MCSPI_EN_{}".format(npcs.upper()))
+
+        if res == True:
+            result_dict = {"Result": "Success"}
+        else:
+            result_dict = {"Result": "Fail"}
+        
     return result_dict
 
 global dummyDataDict

@@ -315,6 +315,37 @@ def eicSecurityModeVisibility(symbol, event):
 def has_digits(string):
     res = re.compile('\d').search(string)
     return res is not None
+
+def handleMessage(messageID, args):
+    global eicInstanceName
+    
+    retDict = {}
+    # print("EIC handleMessage: {} args: {}".format(messageID, args))
+    if (messageID == "EIC_CONFIG_HW_IO"):
+        component = eicInstanceName.getValue().lower()
+        channel, enable = args['config']
+        symbolId = "EIC_CHAN_{}".format(int(channel))
+        if enable == True:
+            res = Database.setSymbolValue(component, symbolId, enable)
+        else:
+            res = Database.clearSymbolValue(component, symbolId)
+
+        symbolId = "EIC_INT_{}".format(int(channel))
+        if enable == True:
+            res = Database.setSymbolValue(component, symbolId, enable)
+        else:
+            res = Database.clearSymbolValue(component, symbolId)
+            
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+            
+    else:
+        retDict= {"Result": "EIC UnImplemented Command"}
+    
+    return retDict
+
 ###################################################################################################
 ######################################### Component ###############################################
 ###################################################################################################

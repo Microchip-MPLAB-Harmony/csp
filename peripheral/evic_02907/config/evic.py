@@ -84,9 +84,46 @@ evicVectorSettings = {
     "Peripheral"      : [False, False, True,  str(min(evicPriorityGroup)), False, True,  str(min(evicSubPriorityGroup)), False, True, False]  # With Baremetal
 }
 
+# SHD configurations
+global setExternalInterrupt
+global clearExternalInterrupt
+
 ################################################################################
 #### Business Logic ####
 ################################################################################
+def setExternalInterrupt(extIntNum):
+    interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+    extIntName = "EXTERNAL_{}".format(extIntNum)
+
+    symbolId = ""
+    res = False
+    for interrupt in range (len(interruptsChildrenList)):
+        vecName = str(interruptsChildrenList[interrupt].getAttribute("name"))
+        if vecName == extIntName:
+            symbolId = "EVIC_" + str(interrupt) + "_ENABLE"
+            break
+
+    if symbolId != "":
+        res = Database.setSymbolValue("core", symbolId, True)
+
+    return res
+
+def clearExternalInterrupt(extIntNum):
+    interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+    extIntName = "EXTERNAL_{}".format(extIntNum)
+
+    symbolId = ""
+    res = False
+    for interrupt in range (len(interruptsChildrenList)):
+        vecName = str(interruptsChildrenList[interrupt].getAttribute("name"))
+        if vecName == extIntName:
+            symbolId = "EVIC_" + str(interrupt) + "_ENABLE"
+            break
+
+    if symbolId != "":
+        res = Database.clearSymbolValue("core", symbolId)
+
+    return res
 
 def _get_sub_priority_parms(vectorNumber):
 

@@ -237,6 +237,29 @@ def adcTriggerVisible(symbol, event):
 
 def adc_EMR_CMPSEL_Update(symbol, event):
     symbol.setVisible(event["value"] == False)
+
+def handleMessage(messageID, args):
+    retDict = {}
+    # print("ADC handleMessage: {} args: {}".format(messageID, args))
+    
+    if (messageID == "ADC_CONFIG_HW_IO"):
+        component = str(adcInstanceName.getValue()).lower()
+        channel, isNegInput, enable = args['config']
+
+        if isNegInput == True:
+            if  channel == 1 or channel == 3 or channel == 5 or channel == 7:
+                Database.setSymbolValue(component, "ADC_{}_CHER".format(channel - 1), enable)
+                res = Database.setSymbolValue(component, "ADC_{}_NEG_INP".format(channel - 1), "AN{}".format(channel))
+        else:
+            res = Database.setSymbolValue(component, "ADC_{}_CHER".format(channel), enable)
+        
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+
+    return retDict
+
 ###################################################################################################
 ######################################### Component ###############################################
 ###################################################################################################

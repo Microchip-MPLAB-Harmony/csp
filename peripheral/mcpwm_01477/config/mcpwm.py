@@ -714,6 +714,23 @@ def handleMessage(messageID, args):
         Database.setSymbolValue(component, "IOCON"+str(pwmChW)+"__FLTPOL", 1)
         Database.setSymbolValue(component, "PWMCON"+str(pwmChU)+"__FLTIEN", True)
 
+    elif (messageID == "PWM_CONFIG_HW_IO"):
+        # print("MCPWM handleMessage: {} args: {}".format(messageID, args))
+        channel, polarity, enable = args['config']
+
+        if enable == True:
+            res = Database.setSymbolValue(component, "MCPWM_CHANNEL{}".format(channel), enable)
+        else:
+            res = Database.clearSymbolValue(component, "MCPWM_CHANNEL{}".format(channel))
+
+        if res == True:
+            mask = mcpwmPhMask.getValue()
+            mask += (1 << int(channel))
+            mcpwmPhMask.setValue(mask)
+            dict = {"Result": "Success"}
+        else:
+            dict = {"Result": "Fail"}
+            
     return dict
 
 ################################################################################

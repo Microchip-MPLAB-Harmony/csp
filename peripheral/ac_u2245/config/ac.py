@@ -123,6 +123,35 @@ def acEvesysConfigure(symbol, event):
         instance = filter(str.isdigit,str(event["id"]))
         Database.setSymbolValue("evsys", "USER_AC_SOC_"+str(instance) + "_READY", event["value"], 2)
 
+def handleMessage(messageID, args):
+    retDict = {}
+    # print("AC handleMessage: {} args: {}".format(messageID, args))
+    if (messageID == "AC_CONFIG_HW_IO"):
+        component = 'ac'
+        comparatorID, muxInput, ioPin = args['config']
+        symbolId = "AC{}_{}_{}".format(comparatorID, muxInput[0:3], muxInput[3:6])
+        enable = args['enable']
+        if enable == True:
+            Database.setSymbolValue(component, "ANALOG_COMPARATOR_ENABLE_" + str(comparatorID), enable)
+            # print("AC handleMessage symbolId: {} - {}".format(symbolId, ioPin))
+            if ioPin == -1:
+                res = Database.clearSymbolValue(component, symbolId)
+            else:
+                res = Database.setSymbolValue(component, symbolId, int(ioPin))
+
+        else:
+            # print("AC handleMessage symbolId: {} - {}".format(symbolId, ioPin))
+            res = Database.clearSymbolValue(component, symbolId)
+            
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+            
+    else:
+        retDict= {"Result": "AC UnImplemented Command"}
+    
+    return retDict
 
 #######################################################################################################################################
 #####################################        Callback Funtions ---- END      ##########################################################

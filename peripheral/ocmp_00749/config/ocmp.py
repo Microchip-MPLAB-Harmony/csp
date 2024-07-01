@@ -198,6 +198,34 @@ def updateOCMPClockWarningStatus(symbol, event):
 
     symbol.setVisible(not event["value"])
 
+def handleMessage(messageID, args):
+    global ocmpInstanceName
+    global ocmpSym_OCxCON_OCM
+    
+    retDict = {}
+    # print("OCMP handleMessage: {} args: {}".format(messageID, args))
+    if (messageID == "OCMP_CONFIG_HW_IO"):
+        component = ocmpInstanceName.getValue().lower()
+        output, enable = args['config']
+        symbolId = "OCMP_OCxCON_OCM"
+        retDict = {"Result": "Fail"}
+
+        if output == "pwm":
+            # <value caption="PWM mode on OCx; Fault pin disabled" name="" value="0x6" />
+            outputValue = 6
+            if enable == True:
+                res = ocmpSym_OCxCON_OCM.setValue(outputValue)
+            else:
+                res = Database.clearSymbolValue(component, symbolId)
+
+            if res == True:
+                retDict = {"Result": "Success"}
+            
+    else:
+        retDict= {"Result": "OCMP UnImplemented Command"}
+    
+    return retDict
+
 ################################################################################
 #### Component ####
 ################################################################################

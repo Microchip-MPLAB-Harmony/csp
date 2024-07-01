@@ -134,7 +134,7 @@ global debounceFilterEnabledByDefault
 debounceFilterEnabledByDefault = False
 global availablePinDictionary
 availablePinDictionary = {}
-## Dictionary to store symbols created for each pin
+## SHD: Dictionary to store symbols created for each pin
 global pinSymbolsDictionary
 pinSymbolsDictionary = dict()
 
@@ -179,17 +179,22 @@ global getAvailablePins
 def getAvailablePins():
     return availablePinDictionary
 
-global setPinSetConfigurationValue
-global setPinClearConfigurationValue
+global setPinConfigurationValue
+global getPinConfigurationValue
+global clearPinConfigurationValue
 
-def setPinSetConfigurationValue(pinNumber, setting, value):
+def setPinConfigurationValue(pinNumber, setting, value):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
-        symbol.setReadOnly(True)
         symbol.clearValue()
         symbol.setValue(value)
+        symbol.setReadOnly(True)
 
-def setPinClearConfigurationValue(pinNumber, setting):
+def getPinConfigurationValue(pinNumber, setting):
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    return symbol.getValue()
+
+def clearPinConfigurationValue(pinNumber, setting):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
     if symbol:
         symbol.setReadOnly(False)

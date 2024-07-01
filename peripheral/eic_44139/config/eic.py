@@ -24,6 +24,7 @@
 ###################################################################################################
 ######################################### Callbacks ###############################################
 ###################################################################################################
+global eic_instance_name
 
 def show_polarity(symbol, event):
     index = symbol.getID().split("EIC_SRC")[1].split("_")[0]
@@ -57,12 +58,37 @@ def show_eic_symbols(symbol, event):
         Database.clearSymbolValue("core", "EIC_EXT_IRQ{0}_INTERRUPT_ENABLE".format(index))
         Database.clearSymbolValue("core", "EIC_EXT_IRQ{0}_INTERRUPT_HANDLER".format(index))
 
+def handleMessage(messageID, args):
+    global eic_instance_name
+    
+    retDict = {}
+    # print("EIC handleMessage: {} args: {}".format(messageID, args))
+    if (messageID == "EIC_CONFIG_HW_IO"):
+        component = eic_instance_name.getValue().lower()
+        channel, enable = args['config']
+        symbolId = "EIC_SRC{}_ACTIVATE".format(int(channel))
+        if enable == True:
+            res = Database.setSymbolValue(component, symbolId, enable)
+        else:
+            res = Database.clearSymbolValue(component, symbolId)
+            
+        if res == True:
+            retDict = {"Result": "Success"}
+        else:
+            retDict = {"Result": "Fail"}
+            
+    else:
+        retDict= {"Result": "EIC UnImplemented Command"}
+    
+    return retDict
 
 ###################################################################################################
 ######################################### Component ###############################################
 ###################################################################################################
 
 def instantiateComponent(eicComponent):
+    global eic_instance_name
+    
     eic_instance_name = eicComponent.createStringSymbol("EIC_INSTANCE_NAME", None)
     eic_instance_name.setVisible(False)
     eic_instance_name.setDefaultValue(eicComponent.getID().upper())

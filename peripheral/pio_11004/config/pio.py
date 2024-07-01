@@ -40,6 +40,9 @@ global sort_alphanumeric
 
 global availablePinDictionary
 availablePinDictionary = {}
+## SHD: Dictionary to store symbols created for each pin
+global pinSymbolsDictionary
+pinSymbolsDictionary = dict()
 
 registerNodeTemplate = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]"
 
@@ -61,6 +64,29 @@ global getAvailablePins
 def getAvailablePins():
 
     return availablePinDictionary
+
+global setPinConfigurationValue
+global getPinConfigurationValue
+global clearPinConfigurationValue
+
+def setPinConfigurationValue(pinNumber, setting, value):
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    # print("setPinConfigurationValue[{}][{}] : {}".format(pinNumber, setting, symbol))
+    if symbol:
+        symbol.clearValue()
+        symbol.setValue(value)
+        symbol.setReadOnly(True)
+
+def getPinConfigurationValue(pinNumber, setting):
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    return symbol.getValue()
+
+def clearPinConfigurationValue(pinNumber, setting):
+    symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
+    # print("clearPinConfigurationValue[{}][{}] : {}".format(pinNumber, setting, symbol))
+    if symbol:
+        symbol.setReadOnly(False)
+        symbol.clearValue()
 
 # Dependency Function to show or hide the warning message depending on Interrupt
 def InterruptStatusWarning(symbol, event):
@@ -539,6 +565,7 @@ else:
 # But actual pin numbers on the device starts from 1 (not from 0) and goes till "packagePinCount"
 # that is why "pinNumber-1" is used to index the lists wherever applicable.
 for pinNumber in range(1, packagePinCount + 1):
+    symbolsDict = dict()
     pin.append(pinNumber)
     pin[pinNumber-1]= coreComponent.createMenuSymbol("PIO_PIN_CONFIGURATION" + str(pinNumber - 1), pinConfiguration)
     pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
@@ -555,6 +582,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinName[pinNumber-1].setLabel("Name")
     pinName[pinNumber-1].setDefaultValue("")
     pinName[pinNumber-1].setReadOnly(True)
+    symbolsDict.setdefault('name', pinName[pinNumber-1])
 
     pinPeripheralFunction.append(pinNumber)
     pinPeripheralFunction[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pin[pinNumber-1])
@@ -568,6 +596,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinType[pinNumber-1].setLabel("Type")
     pinType[pinNumber-1].setReadOnly(True)
     pinType[pinNumber-1].setDependencies(pinFunctionCal, ["PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION"])
+    symbolsDict.setdefault('function', pinType[pinNumber-1])
 
     pinBitPosition.append(pinNumber)
     pinBitPosition[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PIO_PIN", pin[pinNumber-1])
@@ -594,6 +623,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinDirection[pinNumber-1].setLabel("Direction")
     pinDirection[pinNumber-1].setReadOnly(True)
     pinDirection[pinNumber-1].setDependencies(pinDirCal, ["PIN_" + str(pinNumber) + "_DIR" ])
+    symbolsDict.setdefault('direction', pinDirection[pinNumber-1])
 
     pinLatch.append(pinNumber)
     pinLatch[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pin[pinNumber-1])
@@ -602,6 +632,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinLatch[pinNumber-1].setReadOnly(True)
     pinLatch[pinNumber-1].setDefaultValue("")
     pinLatch[pinNumber-1].setDependencies(pinLatchCal, ["PIN_" + str(pinNumber) + "_LAT"])
+    symbolsDict.setdefault('latch', pinLatch[pinNumber-1])
 
     pinOpenDrain.append(pinNumber)
     pinOpenDrain[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_OD", pin[pinNumber-1])
@@ -609,6 +640,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinOpenDrain[pinNumber-1].setLabel("Open Drain")
     pinOpenDrain[pinNumber-1].setReadOnly(True)
     pinOpenDrain[pinNumber-1].setDependencies(pinOpenDrainCal, ["PIN_" + str(pinNumber) + "_OD"])
+    symbolsDict.setdefault('open drain', pinOpenDrain[pinNumber-1])
 
     pinPullUp.append(pinNumber)
     pinPullUp[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PU", pin[pinNumber-1])
@@ -616,6 +648,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinPullUp[pinNumber-1].setLabel("Pull Up")
     pinPullUp[pinNumber-1].setReadOnly(True)
     pinPullUp[pinNumber-1].setDependencies(pinPullUpCal, ["PIN_" + str(pinNumber) + "_PU"])
+    symbolsDict.setdefault('pull up', pinPullUp[pinNumber-1])
 
     pinPullDown.append(pinNumber)
     pinPullDown[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PD", pin[pinNumber-1])
@@ -623,6 +656,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinPullDown[pinNumber-1].setLabel("Pull Down")
     pinPullDown[pinNumber-1].setReadOnly(True)
     pinPullDown[pinNumber-1].setDependencies(pinPullDownCal, ["PIN_" + str(pinNumber) + "_PD"])
+    symbolsDict.setdefault('pull down', pinPullDown[pinNumber-1])
 
     pinInterrupt.append(pinNumber)
     # This symbol ID name is split and pin number is extracted and used inside "pinInterruptCal" function. so be careful while changing the name of this ID.
@@ -631,6 +665,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinInterrupt[pinNumber-1].setLabel("PIO Interrupt")
     pinInterrupt[pinNumber-1].setReadOnly(True)
     pinInterrupt[pinNumber-1].setDependencies(pinInterruptCal, ["PIN_" + str(pinNumber) + "_PIO_INTERRUPT"])
+    symbolsDict.setdefault('interrupt', pinInterrupt[pinNumber-1])
 
     pinGlitchFilter.append(pinNumber)
     pinGlitchFilter[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_FILTER", pin[pinNumber-1])
@@ -638,6 +673,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinGlitchFilter[pinNumber-1].setLabel("PIO Filter")
     pinGlitchFilter[pinNumber-1].setReadOnly(True)
     pinGlitchFilter[pinNumber-1].setDependencies(pinFilterCal, ["PIN_" + str(pinNumber) + "_PIO_FILTER"])
+    symbolsDict.setdefault('ifen', pinGlitchFilter[pinNumber-1])
 
     if slewRateControlPresent.getValue():
         pinSlewRateList.append(pinNumber)
@@ -646,6 +682,7 @@ for pinNumber in range(1, packagePinCount + 1):
         pinSlewRateList[pinNumber - 1].setLabel("PIO Slew Rate Control")
         pinSlewRateList[pinNumber - 1].setReadOnly(True)
         pinSlewRateList[pinNumber - 1].setDependencies(pinSlewRateControlCal, ["PIN_" + str(pinNumber) + "_SLEW_RATE"])
+        symbolsDict.setdefault('slewrate', pinSlewRateList[pinNumber - 1])
 
     if driverControlPresent.getValue():
         pinDriverList.append(pinNumber)
@@ -654,6 +691,7 @@ for pinNumber in range(1, packagePinCount + 1):
         pinDriverList[pinNumber - 1].setLabel("PIO Drive")
         pinDriverList[pinNumber - 1].setReadOnly(True)
         pinDriverList[pinNumber - 1].setDependencies(pinDriverCal, ["PIN_" + str(pinNumber) + "_DRIVER"])
+        symbolsDict.setdefault('drv', pinDriverList[pinNumber - 1])
 
     #list created only for dependency
     pinFunctionTypelList.append(pinNumber)
@@ -662,6 +700,9 @@ for pinNumber in range(1, packagePinCount + 1):
     #list created only for dependency
     pinInterruptList.append(pinNumber)
     pinInterruptList[pinNumber-1] = "PIN_" + str(pinNumber) +"_PIO_INTERRUPT"
+
+    ## Add symbol to global dictionary
+    pinSymbolsDictionary.setdefault(pinNumber, symbolsDict)
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################
