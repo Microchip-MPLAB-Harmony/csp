@@ -948,7 +948,7 @@ def codeGen(symbol, event):
             codeList.remove("PLL1")
         for i in range(0, 16):
             if Database.getSymbolValue("core", "GCLK_INST_NUM" + str(i)) == False:
-                codeList.remove("GCLK" + str(i)) 
+                codeList.remove("GCLK" + str(i))
         for i in range(0, len(codeList)):
             symbol.addValue("    " + codeList[i] + "_Initialize();")
 
@@ -1095,10 +1095,9 @@ for gclknumber in range(0, 16):
         "GCLK should keep running in Standby mode")
 
     # GCLK External Clock input frequency
-
+    gclkSym_GCLK_IO_FREQ.append(gclknumber)
     if(gclk_io_signals[gclknumber] == True):
         numPads = numPads + 1
-        gclkSym_GCLK_IO_FREQ.append(gclknumber)
         gclkSym_GCLK_IO_FREQ[gclknumber] = coreComponent.createIntegerSymbol(
             "GCLK_IO_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
         gclkSym_GCLK_IO_FREQ[gclknumber].setLabel(
@@ -1154,16 +1153,16 @@ for gclknumber in range(0, 16):
     gclkSym_GENCTRL_SRC[gclknumber].setDisplayMode("Key")
 
     # GCLK Generator Output Enable
+    gclkSym_GENCTRL_OE.append(gclknumber)
     if(gclk_io_signals[gclknumber] == True):
-        gclkSym_GENCTRL_OE.append(gclknumber)
         gclkSym_GENCTRL_OE[gclknumber] = coreComponent.createBooleanSymbol(
             "GCLK_" + str(gclknumber) + "_OUTPUTENABLE", gclkSym_num[gclknumber])
         gclkSym_GENCTRL_OE[gclknumber].setLabel(
             "Output GCLK clock signal on IO pin?")
 
     # GCLK Generator Output Off Value
+    gclkSym_GENCTRL_OOV.append(gclknumber)
     if(gclk_io_signals[gclknumber] == True):
-        gclkSym_GENCTRL_OOV.append(gclknumber)
         gclkSym_GENCTRL_OOV[gclknumber] = coreComponent.createKeyValueSetSymbol(
             "GCLK_" + str(gclknumber) + "_OUTPUTOFFVALUE", gclkSym_GENCTRL_OE[gclknumber])
         gclkSym_GENCTRL_OOV[gclknumber].setLabel("Output Off Value")
