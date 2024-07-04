@@ -25,7 +25,7 @@ global dmaConfiguration
 global BootFlashDict
 global isBFMPresent
 
-FlashNames          = ["FLASH", "IFLASH", "FCR_PFM"]
+FlashNames          = ["FLASH", "IFLASH", "IFLASH0", "IFLASH1", "FCR_PFM"]
 #BootFlashDict      = {"bfm_region_name":[list of corresponding pfm regions], ..}
 BootFlashDict       = {"FCR_BFM": ["FCR_PFM"], "BOOT_FLASH": ["FLASH"]}
 vtableRegionList    = []
