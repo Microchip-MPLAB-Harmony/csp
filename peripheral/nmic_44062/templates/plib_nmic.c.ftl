@@ -51,12 +51,10 @@ void ${NMIC_INSTANCE_NAME}_Initialize( void )
 	<#assign NMIC_POL = "NMIC_SRC_" + i + "_POL">
 	<#assign NMIC_GF_EN = "NMIC_SRC_GF_EN_" + i>
 	<#assign NMIC_GFSEL = "NMIC_SRC_GFSEL_" + i>
-	<#assign NMIC_FZ = "NMIC_SRC_FZ_" + i>
 	<#if .vars[NMIC_ENABLE]?has_content>
 	<#if (.vars[NMIC_ENABLE] != false)>
 	<#if i == 0>
-	<#lt>	NMIC_REGS->NMIC_SCFG${i}R = NMIC_SCFG${i}R_EN_Msk ${(.vars[NMIC_LVL] == '1')?then('| NMIC_SCFG${i}R_LVL_Msk', '')} ${.vars[NMIC_FZ]?then('| NMIC_SCFG${i}R_FRZ_Msk', '')}\
-							 ${(.vars[NMIC_POL] == '1')?then('| NMIC_SCFG${i}R_POL_Msk', '')} ${.vars[NMIC_GF_EN]?then('| NMIC_SCFG${i}R_GFEN_Msk | NMIC_SCFG${i}R_GFSEL(${.vars[NMIC_GFSEL]}U)', '')};
+	<#lt>	NMIC_REGS->NMIC_SCFG${i}R = NMIC_SCFG${i}R_EN_Msk ${(.vars[NMIC_LVL] == '1')?then('| NMIC_SCFG${i}R_LVL_Msk', '')} ${(.vars[NMIC_POL] == '1')?then('| NMIC_SCFG${i}R_POL_Msk', '')} ${.vars[NMIC_GF_EN]?then('| NMIC_SCFG${i}R_GFEN_Msk | NMIC_SCFG${i}R_GFSEL(${.vars[NMIC_GFSEL]}U)', '')};
 	<#elseif i == 4>
 	<#lt>	NMIC_REGS->NMIC_SCFG${i}R = NMIC_SCFG${i}R_EN_Msk | (NMIC_REGS->NMIC_SCFG${i}R & (~NMIC_SCFG${i}R_POL_Msk));
 	<#else>
@@ -66,6 +64,12 @@ void ${NMIC_INSTANCE_NAME}_Initialize( void )
 	</#if>
 </#list>
 <#lt>	NMIC_REGS->NMIC_IER = 0x${NMIC_INTERRUPT}U;
+<#list 0..NUM_NMIC_SOURCE-1 as i>
+<#assign NMIC_FZ = "NMIC_SRC_FZ_" + i>
+	<#if i == 0>
+	<#lt>	${.vars[NMIC_FZ]?then('NMIC_REGS->NMIC_SCFG${i}R |= NMIC_SCFG${i}R_FRZ_Msk;', '')}
+	</#if>
+</#list>
 }
 
 
