@@ -116,13 +116,16 @@ void CLOCK_Initialize( void )
     CRU_REGS->CRU_OSCCONSET = CRU_OSCCON_OSWEN_Msk;
 
     //wait for successful clock change before continuing
-    while(CRU_REGS->CRU_OSCCON & CRU_OSCCON_OSWEN_Msk);
+	while (((CRU_REGS->CRU_OSCCON & CRU_OSCCON_OSWEN_Msk) != 0U)
+    {
+        /* Nothing to do */
+    }	
 
     //set PLL_disable
-     BLE_REGS->BLE_DPLL_RG2 |= 0x02;
+     BLE_REGS->BLE_DPLL_RG2 |= 0x02U;
 
     // set PLL_enable
-    BLE_REGS->BLE_DPLL_RG2 &= ~(0x02);
+    BLE_REGS->BLE_DPLL_RG2 &= ~(0x02U);
 
     // Set MISC[24]=0, CLKGEN_PLLRST = 0
     CFG_REGS->CFG_MISCSTAT  &= 0x00FFFFFF;
