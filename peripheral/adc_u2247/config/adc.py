@@ -736,8 +736,12 @@ def instantiateComponent(adcComponent):
     for index in range(0, len(adcReferenceValues)):
         if adcReferenceValues[index].getAttribute("caption") == "VDDANA":
             default = index
-        adcSym_REFCTRL_REFSEL.addKey(adcReferenceValues[index].getAttribute("name"), adcReferenceValues[index].getAttribute("value"),
-        adcReferenceValues[index].getAttribute("caption"))
+        if adcReferenceValues[index].getAttribute("caption").lower() == "external reference":
+            adcSym_REFCTRL_REFSEL.addKey(adcReferenceValues[index].getAttribute("name"), adcReferenceValues[index].getAttribute("value"),
+            adcReferenceValues[index].getAttribute("caption") + " (" + adcReferenceValues[index].getAttribute("name") + ")")
+        else:
+            adcSym_REFCTRL_REFSEL.addKey(adcReferenceValues[index].getAttribute("name"), adcReferenceValues[index].getAttribute("value"),
+            adcReferenceValues[index].getAttribute("caption"))
     adcSym_REFCTRL_REFSEL.setDefaultValue(default)
 
     # trigger
