@@ -149,13 +149,11 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister(ADC_CALLBACK callback, uintptr_t cont
 
 void __attribute__((used)) ${ADC_INSTANCE_NAME}_InterruptHandler(void)
 {
-    IFS${ADC_IFS_REG_INDEX}CLR = _IFS${ADC_IFS_REG_INDEX}_AD1IF_MASK;
-
     if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     {
         uintptr_t context = ${ADC_INSTANCE_NAME}_CallbackObj.context;
-
         ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(context);
+        IFS${ADC_IFS_REG_INDEX}CLR = _IFS${ADC_IFS_REG_INDEX}_AD1IF_MASK;
     }
 }
 </#if>
