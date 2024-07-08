@@ -3,6 +3,18 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.19.2
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Fixed CLOCK, PORT PLIBs and pin configuration UI issues for PIC32CZ-CA devices
+- Added 64 pin part support for PIC32CX-SG41 device
+- Updated PIC32CX-SG41 and PIC32CZ-CA91 DFP version in package.yml
+
 ## CSP Release v3.19.1
 
 ### New Features
