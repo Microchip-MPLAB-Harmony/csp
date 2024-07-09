@@ -192,12 +192,6 @@ def instantiateComponent(supcComponent):
     supcSym_VREGCTRL_CPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
     supcSym_VREGCTRL_CPEN.setLabel("Charge Pump Enable and Auto-enable")
 
-    #Additional Voltage Regulator Enable
-    supcSym_VREGCTRL_AVREGEN = supcComponent.createBooleanSymbol("SUPC_VREGCTRL_AVREGEN", supcSym_VREGControl_Menu)
-    supcSym_VREGCTRL_AVREGEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")
-    supcSym_VREGCTRL_AVREGEN.setLabel("Additional Voltage Regulator Enable")
-    supcSym_VREGCTRL_AVREGEN.setDefaultValue(True)
-
     #Additional Voltage Regulator Configuration
     supcSym_VREGCTRL_AVREGSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREGCTRL_AVREGSTDBY", supcSym_VREGControl_Menu)
     supcSym_VREGCTRL_AVREGSTDBY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:supc_03926;register:VREGCTRL")

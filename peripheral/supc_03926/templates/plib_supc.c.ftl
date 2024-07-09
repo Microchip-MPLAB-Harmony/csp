@@ -171,13 +171,6 @@
         <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_CPEN_Msk">
     </#if>
 </#if>
-<#if SUPC_VREGCTRL_AVREGEN == true>
-    <#if SUPC_VREG_VAL != "">
-        <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_AVREGEN_Msk">
-    <#else>
-        <#assign SUPC_VREG_VAL = "SUPC_VREGCTRL_AVREGEN_Msk">
-    </#if>
-</#if>
 <#if SUPC_VREGCTRL_AVREGSTDBY?has_content>
     <#if SUPC_VREG_VAL != "">
         <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREGCTRL_AVREGSTDBY("+SUPC_VREGCTRL_AVREGSTDBY+"U)">
@@ -225,7 +218,7 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
 </#if>
 <#if SUPC_VREG_VAL?has_content>
     /* Configure VREG */
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREGCTRL = ${SUPC_VREG_VAL};
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREGCTRL = (${SUPC_INSTANCE_NAME}_REGS->SUPC_VREGCTRL & SUPC_VREGCTRL_AVREGEN_Msk) | ${SUPC_VREG_VAL};
 </#if>
 }
 
