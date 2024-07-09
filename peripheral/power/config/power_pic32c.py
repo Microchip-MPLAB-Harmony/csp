@@ -75,8 +75,20 @@ if (ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCTRL"]') != Non
     deepSleepSym_DSCON_RegValue.setDefaultValue(0x00000000)
     deepSleepSym_DSCON_RegValue.setVisible(False)
     deepSleepSym_DSCON_RegValue.setDependencies(updateDSCON, ["DS_EXTENDED_REG_ENABLE", "DS_RTCC_WAKEUP_DISABLE", "DS_RTCC_ENABLE"])
+    
+    dsconDSWSRC_RegName = powerComponent.createStringSymbol("DSCON_DSWSRC_REG_NAME", deepSleepSymMenu)
+    dsconDSWSRC_RegName.setReadOnly(True)
+    dsconDSWSRC_RegName.setVisible(False)
 
     dswakeRegister = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCON"]/register-group@[name="DSCON"]/register@[name="DSWAKE"]')
+    
+    # For PIC32CX-BZ6, the register name is changed to DSWSRC
+    if dswakeRegister == None:
+        dswakeRegister = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCON"]/register-group@[name="DSCON"]/register@[name="DSWSRC"]')
+        
+        dsconDSWSRC_RegName.setDefaultValue("DSWSRC")
+    else:
+        dsconDSWSRC_RegName.setDefaultValue("DSWAKE")
 
     deepSleepSym_ResetCount = powerComponent.createIntegerSymbol("DS_WAKEUP_CAUSE_COUNT", deepSleepSymMenu)
     deepSleepSym_ResetCount.setDefaultValue(len(dswakeRegister.getChildren()))

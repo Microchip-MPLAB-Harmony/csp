@@ -148,7 +148,7 @@ void POWER_LowPowerModeEnter (POWER_LOW_POWER_MODE mode)
 <#if DEEP_SLEEP_MODE_EXIST??>
 POWER_DS_WAKEUP_SOURCE POWER_DS_WakeupSourceGet( void )
 {
-    return (POWER_DS_WAKEUP_SOURCE)(DSCON_REGS->DSCON_DSWAKE);
+    return (POWER_DS_WAKEUP_SOURCE)(DSCON_REGS->DSCON_${DSCON_DSWSRC_REG_NAME});
 }
 
 void POWER_DS_SoftwareRestore(void)
@@ -168,7 +168,7 @@ void POWER_DS_SoftwareRestore(void)
 // DSCON.RELEASE must be 0 before calling this
 void POWER_DS_WakeupSourceClear( POWER_DS_WAKEUP_SOURCE wakeupSource )
 {
-    DSCON_REGS->DSCON_DSWAKE &= ~((uint32_t)wakeupSource);
+    DSCON_REGS->DSCON_${DSCON_DSWSRC_REG_NAME} &= ~((uint32_t)wakeupSource);
 }
 
 void POWER_DS_ExtendedSemaphoreEnable(void)
