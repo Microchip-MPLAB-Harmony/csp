@@ -341,7 +341,7 @@ coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32cm_gc_sg/config/clk.py")
-coreComponent.addPlugin("../peripheral/clk_pic32cm_gc_sg/plugin/clk_pic32cm_gc_sg.jar")
+coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLK_PIC32CM_GC_CONFIGURATOR", {"plugin_name": "Clock Configurator", "main_html_path": "csp/plugins/configurators/clock-configurators/clk_pic32cm_gc_sg_configurator/build/index.html"})
 
 #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
