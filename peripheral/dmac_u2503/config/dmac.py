@@ -21,7 +21,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
-
+import re
 from os.path import join
 from xml.etree import ElementTree
 
@@ -30,9 +30,9 @@ Log.writeInfoMessage("Loading DMA Manager for " + Variables.get("__PROCESSOR"))
 ################################################################################
 #### Global Variables ####
 ################################################################################
-global createDMAChannelVectorList
-global dmaChannelVectorList
-dmaChannelVectorList = []
+global createDMAChannelVectorDict
+global dmaChannelVectorDict
+dmaChannelVectorDict = {}
 global dmacInstanceName
 global dmacHeaderFile
 global dmacSourceFile
@@ -61,6 +61,8 @@ dmacChannelIds = []
 
 global dmacChannelInt
 dmacChannelInt = []
+
+global has_digits
 
 dmacDep = []
 # Create lists for peripheral triggers and the corresponding ID values
@@ -186,13 +188,20 @@ def onChannelEnable(symbol, event):
         dmacSystemInitFile.setEnabled(dmaGlobalEnable)
         dmacSystemDefFile.setEnabled(dmaGlobalEnable)
 
-def createDMAChannelVectorList():
+def has_digits(string):
+    import re
+    res = re.compile('\d').search(string)
+    return res is not None
+
+def createDMAChannelVectorDict():
     # Returns a list containing dictionary {channel_number : vector_name}, where vector_name is read from ATDF
     # The list index corelates to DMAC channel and contains a dictionary with channel number and the vector name to use for that channel
     # Total size of the list will be equal to DMA_CHANNEL_COUNT (read from ATDF)
-    # Example: dmaChannelVectorList = [{0 : DMAC_0}, {1 : DMAC_1}, {2 : DMAC_2}, {3 : DMAC_3}, {4 : DMAC_OTHER}, {5 : DMAC_OTHER} ... {31 : DMAC_OTHER}]
-    global dmaChannelVectorList
+    # Example: dmaChannelVectorDict = {"0" : "DMAC_0", "1" : "DMAC_1", "2" : "DMAC_2", "3" : "DMAC_3", "4" : "DMAC_OTHER", "5" : "DMAC_OTHER" ... "31" : "DMAC_OTHER"}
+    global dmaChannelVectorDict
+    import re
     dmaVectorNameList = []
+    highest_ch_num = 0
 
     dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
     vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
@@ -200,25 +209,35 @@ def createDMAChannelVectorList():
     for id in range(0, len(vectorValues)):
         if vectorValues[id].getAttribute("module-instance") == "DMAC":
             dmaVectorNameList.append(vectorValues[id].getAttribute("name"))
-
+            
     for n in dmaVectorNameList:
-        if "OTHER" in n:
-            for y in range(len(dmaChannelVectorList), dmaChannelCount):
-                dmaChannelVectorList.append({str(y): n})
-        else:
-            channelList = n[5:].split("_")
+        if "OTHER" not in n:
+            name = n.replace("DMAC_", "")
+            if has_digits(name) == True:
+                name = re.sub("[^0-9, _]", "", name)
+            if name.startswith('_') == True:
+                name = name[1:]
+            channelList = name.split("_")
             if len(channelList) == 1:
-                dmaChannelVectorList.append({channelList[0]: n})
+                # Enter here where DMA vector names are defined as "DMAC_0" and "DMAC_OTHER"
+                dmaChannelVectorDict[channelList[0]] = n
+                highest_ch_num = max(highest_ch_num, int(channelList[0]))
             else:
+                # Enter here for PIC32CX where NVIC interrupt vector names are defined as "DMAC_0_3" and "DMAC_4_15"
                 startCh = channelList[0]
                 endCh = channelList[1]
                 for x in range(int(startCh), int(endCh) + 1):
-                    dmaChannelVectorList.append({str(x): n})
-
-    return dmaChannelVectorList
+                    dmaChannelVectorDict[str(x)] = n
+                    highest_ch_num = max(highest_ch_num, x)
+    for n in dmaVectorNameList:
+        if "OTHER" in n:
+            for y in range(highest_ch_num + 1, dmaChannelCount):
+                dmaChannelVectorDict[str(y)] = n
+    
+    return dmaChannelVectorDict
 
 def updateInterruptLogic(symbol, event):
-    global dmaChannelVectorList
+    global dmaChannelVectorDict
 
     dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
     vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
@@ -236,7 +255,7 @@ def updateInterruptLogic(symbol, event):
         dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(n))
         dmaChannelInterrupt = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(n) + "_INTERRUPT")
         # Get the vector name to use for the given DMAC channel
-        vectorName = dmaChannelVectorList[n].get(str(n))
+        vectorName = dmaChannelVectorDict[str(n)]
         if dmaChannelEnable == True and dmaChannelInterrupt == True:
             Database.setSymbolValue("core", vectorName + "_INTERRUPT_ENABLE", True, 2)
             Database.setSymbolValue("core", vectorName + "_INTERRUPT_HANDLER_LOCK", True, 2)
@@ -362,6 +381,11 @@ dmacIntLines = coreComponent.createIntegerSymbol("DMA_INT_LINES", dmacMenu)
 dmacIntLines.setDefaultValue(dmacNumIntLines)
 dmacIntLines.setVisible(False)
 
+if dmacNumIntLines > 1:
+    nvic_multi_vector = coreComponent.createBooleanSymbol(dmacInstanceName.getValue() + "_MULTI_IRQn", None)
+    nvic_multi_vector.setDefaultValue(True)
+    nvic_multi_vector.setVisible(False)
+
 # DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
 dmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmacMenu)
 dmacEnable.setLabel("Use DMA Service ?")
@@ -376,7 +400,7 @@ dmacChCount.setLabel("DMA (DMAC) Channels Count")
 dmacChCount.setDefaultValue(dmacChannelCount)
 dmacChCount.setVisible(False)
 
-createDMAChannelVectorList()
+createDMAChannelVectorDict()
 
 dmacEventCount = coreComponent.createIntegerSymbol("DMA_EVSYS_GENERATOR_COUNT", dmacEnable)
 dmacEventCount.setDefaultValue(numGenerators)
@@ -542,6 +566,12 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacSym_BTCTRL_BEATSIZE.setOutputMode("Key")
     dmacSym_BTCTRL_BEATSIZE.setDisplayMode("Description")
     dmacSym_BTCTRL_BEATSIZE.setDependencies(dmacTriggerLogic, ["DMAC_CHCTRLA_TRIGSRC_CH_"+ str(channelID)])
+    
+    # DMA channel interrupt number - needed by core drivers to disable during critical section
+    DMAC_ChannelX_VectorEnum = coreComponent.createStringSymbol(dmacInstanceName.getValue() + "_CHANNEL" + str(channelID) + "_INT_SRC", dmacChannelEnable)
+    DMAC_ChannelX_VectorEnum.setLabel("DMAC Channel X interrupt Vector Number Enum")    
+    DMAC_ChannelX_VectorEnum.setDefaultValue(dmaChannelVectorDict[str(channelID)] + "_IRQn")
+    DMAC_ChannelX_VectorEnum.setVisible(False)
 
     if channelID < numUsers:
         dmaEVSYSMenu = coreComponent.createMenuSymbol("DMAC_EVSYS_MENU"+str(channelID), dmacChannelEnable)
