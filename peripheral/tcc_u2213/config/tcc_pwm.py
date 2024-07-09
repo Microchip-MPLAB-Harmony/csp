@@ -401,7 +401,7 @@ for channelID in range(0, int(numOfChannels)):
     tccSym_Channel_Polarity_NPWM[channelID].setVisible(True)
     tccSym_Channel_Polarity_NPWM[channelID].setDependencies(tccSingleSlopeVisible, ["TCC_WAVE_WAVEGEN"])
 
-    if (deadTimeImplemented == 1 and (channelID < (numOfOutputs/2))):
+    if (deadTimeImplemented != 0 and (channelID < (numOfOutputs/2))):
         #dead time
         tccSym_Channel_WEXCTRL_DTIEN.append(channelID)
         tccSym_Channel_WEXCTRL_DTIEN[channelID] = tccComponent.createBooleanSymbol("TCC_"+str(channelID)+"_WEXCTRL_DTIEN", tccSym_Channel_Menu[channelID])
@@ -457,10 +457,10 @@ for output in range (0, numOfOutputs):
 #dead time menu
 tccSym_DeadTime_Menu = tccComponent.createMenuSymbol("TCC_DEAD_TIME_MENU", tccSym_PWMMenu)
 tccSym_DeadTime_Menu.setLabel("Dead Time")
-if (deadTimeImplemented == 1):
-    tccSym_DeadTime_Menu.setVisible(True)
-else:
+if (deadTimeImplemented == 0):
     tccSym_DeadTime_Menu.setVisible(False)
+else:
+    tccSym_DeadTime_Menu.setVisible(True)
 tccSym_DeadTime_Menu.setDependencies(tccDeadTimeVisible, ["TCC_0_WEXCTRL_DTIEN","TCC_1_WEXCTRL_DTIEN", "TCC_2_WEXCTRL_DTIEN", "TCC_3_WEXCTRL_DTIEN"])
 
 #Low dead time

@@ -135,7 +135,7 @@ void ${TCC_INSTANCE_NAME}_PWMStart(void);
 
 void ${TCC_INSTANCE_NAME}_PWMStop(void);
 
-<#if TCC_IS_DEAD_TIME == 1>
+<#if TCC_IS_DEAD_TIME gte 1>
 void ${TCC_INSTANCE_NAME}_PWMDeadTimeSet(uint8_t deadtime_high, uint8_t deadtime_low);
 </#if>
 

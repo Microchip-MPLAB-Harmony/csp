@@ -80,7 +80,7 @@
 <#assign TCC_MCEI = "TCC_EVCTRL_MCEI_" + i>
 <#assign TCC_INT_MC = "TCC_INTENSET_MC_" + i>
 <#-- Dead Time -->
-<#if TCC_IS_DEAD_TIME == 1 && i < TCC_NUM_OUTPUTS/2>
+<#if TCC_IS_DEAD_TIME gte 1 && i < TCC_NUM_OUTPUTS/2>
     <#assign TCC_DT_ENABLE = "TCC_"+i+"_WEXCTRL_DTIEN">
     <#if .vars[TCC_DT_ENABLE] == true>
         <#if TCC_WEXCTRL_DT_VAL != "">
@@ -312,7 +312,7 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 <#if TCC_IS_OTM == 1>
     ${TCC_INSTANCE_NAME}_REGS->TCC_WEXCTRL = TCC_WEXCTRL_OTMX(${TCC_WEXCTRL_OTMX}UL);
 </#if>
-<#if TCC_WEXCTRL_DT_VAL?has_content && TCC_IS_DEAD_TIME == 1>
+<#if TCC_WEXCTRL_DT_VAL?has_content && TCC_IS_DEAD_TIME gte 1>
     /* Dead time configurations */
     ${TCC_INSTANCE_NAME}_REGS->TCC_WEXCTRL |= ${TCC_WEXCTRL_DT_VAL};
 </#if>
@@ -453,7 +453,7 @@ uint32_t ${TCC_INSTANCE_NAME}_PWM32bitPeriodGet (void)
 }
 </#if>
 
-<#if TCC_IS_DEAD_TIME == 1>
+<#if TCC_IS_DEAD_TIME gte 1>
 /* Configure dead time */
 void ${TCC_INSTANCE_NAME}_PWMDeadTimeSet (uint8_t deadtime_high, uint8_t deadtime_low)
 {
