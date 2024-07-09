@@ -101,8 +101,8 @@ static void OSC32KCTRL_Initialize(void)
 static void PLL0_Initialize(void)
 {
     /* Enable Additional Voltage Regulator */
-    SUPC_REGS->SUPC_VREGCTRL |= SUPC_VREGCTRL_AVREGEN_Msk;
-    while ((SUPC_REGS->SUPC_STATUS & SUPC_STATUS_ADDVREGRDY_Msk) != SUPC_STATUS_ADDVREGRDY_Msk)
+    SUPC_REGS->SUPC_VREGCTRL |= SUPC_VREGCTRL_AVREGEN(4U);
+    while ((SUPC_REGS->SUPC_STATUS & (4U << SUPC_STATUS_ADDVREGRDY_Pos)) != (4U << SUPC_STATUS_ADDVREGRDY_Pos))
     {
         /* Do Nothing */
     }
@@ -162,8 +162,8 @@ static void PLL0_Initialize(void)
 static void PLL1_Initialize(void)
 {
     /* Enable Additional Voltage Regulator */
-    SUPC_REGS->SUPC_VREGCTRL |= SUPC_VREGCTRL_AVREGEN_Msk;
-    while ((SUPC_REGS->SUPC_STATUS & SUPC_STATUS_ADDVREGRDY_Msk) != SUPC_STATUS_ADDVREGRDY_Msk)
+    SUPC_REGS->SUPC_VREGCTRL |= SUPC_VREGCTRL_AVREGEN(4U);
+    while ((SUPC_REGS->SUPC_STATUS & (4U << SUPC_STATUS_ADDVREGRDY_Pos)) != (4U << SUPC_STATUS_ADDVREGRDY_Pos))
     {
         /* Do Nothing */
     }
