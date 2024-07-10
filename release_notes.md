@@ -3,6 +3,18 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.19.3
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Fixed EVSYS register name in secure project for PIC32CM-LS devices
+- Fixed issue in SAMV7x pin manager UI
+- Updated PIC32CZ-CA80, PIC32CZ-CA90 and SAMR21 DFP version in package.yml
+
 ## CSP Release v3.19.2
 
 ### New Features
