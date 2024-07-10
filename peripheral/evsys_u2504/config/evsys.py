@@ -618,7 +618,7 @@ def instantiateComponent(evsysComponent):
     evsysIntEnableForMaxChannel.setVisible(False)
     evsysIntEnableForMaxChannel.setDefaultValue(0)
 
-    reg_group_name = evsysInstanceName.getValue() + "SEC"
+    reg_group_name = evsysInstanceName.getValue() + "_SEC"
     evsysSecAliasRegSpace = ATDF.getNode(
         '/avr-tools-device-file/devices/device/peripherals/module@[name="EVSYS"]/instance@[name="' + evsysInstanceName.getValue() + '"]/register-group@[name="' + reg_group_name + '"]')
 
