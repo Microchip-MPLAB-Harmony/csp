@@ -285,7 +285,12 @@ void ${USART_INSTANCE_NAME}_Initialize( void )
     </#if>
 
     /* Configure ${USART_INSTANCE_NAME} Baud Rate */
+    <#if USART_USE_FRACTIONAL_BAUD == true>
+    ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE}U) | US_BRGR_FP(${BRG_FP_VALUE}U);
+    <#else>
     ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE}U);
+    </#if>
+    
 <#if USART_INTERRUPT_MODE_ENABLE == true>
 
     /* Initialize instance object */
@@ -340,6 +345,12 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
     uint32_t usartMode;
     bool status = false;
 
+<#if USART_USE_FRACTIONAL_BAUD == true>
+    float f_baudValue      = 0.0f;
+    float f_temp           = 0.0f;
+    uint32_t brgFpVal = 0U;
+</#if>
+
 <#if USART_INTERRUPT_MODE_ENABLE == true>
     if(${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
@@ -366,10 +377,20 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
         if (srcClkFreq >= (16U * baud))
         {
             brgVal = (srcClkFreq / (16U * baud));
+            <#if USART_USE_FRACTIONAL_BAUD == true>
+            f_baudValue = (srcClkFreq / (16.0f * baud));
+            f_temp = ((f_baudValue - ((float)((int)f_baudValue))) * 8.0f);
+            brgFpVal = ((uint32_t)f_temp & 0xFFU);
+            </#if>
         }
         else if (srcClkFreq >= (8U * baud))
         {
             brgVal = (srcClkFreq / (8U * baud));
+            <#if USART_USE_FRACTIONAL_BAUD == true>
+            f_baudValue = (srcClkFreq / (8.0f * baud));
+            f_temp = ((f_baudValue - ((float)((int)f_baudValue))) * 8.0f);
+            brgFpVal = ((uint32_t)f_temp & 0xFFU);
+            </#if>
             overSampVal = US_MR_USART_OVER(1U);
         }
         else
@@ -389,7 +410,12 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
         ${USART_INSTANCE_NAME}_REGS->US_MR = usartMode | ((uint32_t)setup->dataWidth | (uint32_t)setup->parity | (uint32_t)setup->stopBits | (uint32_t)overSampVal);
 
         /* Configure ${USART_INSTANCE_NAME} Baud Rate */
+        <#if USART_USE_FRACTIONAL_BAUD == false>
         ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(brgVal);
+        <#else>
+        ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(brgVal) |  US_BRGR_FP(brgFpVal);
+        </#if>
+        
         status = true;
     }
 

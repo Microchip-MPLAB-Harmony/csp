@@ -177,6 +177,22 @@ def baudRateCalc(clk, baud, overSamp):
         brgVal = (clk / (8 * baud))
 
     return brgVal
+    
+# Calculates BRG - FP value
+def baudRateCalc_FP(clk, baud, overSamp):
+    
+    brgVal_FP = 0.0
+    
+    if (overSamp == 0):
+        brgVal_FP = float((clk / (16.0 * baud)))
+        brgVal_FP = (brgVal_FP - int(brgVal_FP)) * 8
+    else :
+        brgVal_FP = (clk % (8.0 * baud))
+        brgVal_FP = (brgVal_FP - int(brgVal_FP)) * 8
+       
+    brgVal_FP = int(brgVal_FP)
+    
+    return brgVal_FP    
 
 def baudRateTrigger(symbol, event):
 
@@ -194,6 +210,20 @@ def baudRateTrigger(symbol, event):
         usartBaudComment.setVisible(brgVal < 1)
 
         symbol.setValue(brgVal, 2)
+        
+def baudRateFPTrigger(symbol, event):
+
+    global usartInstanceName
+
+    if Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_MODE") == 0:
+
+        clk = Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_CLOCK_FREQ")
+        baud = Database.getSymbolValue(usartInstanceName.getValue().lower(), "BAUD_RATE")
+        overSamp = Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_MR_OVER")
+
+        brgFpVal = baudRateCalc_FP(clk, baud, overSamp)
+        
+        symbol.setValue(brgFpVal, 2)
 
 def clockSourceFreq(symbol, event):
 
@@ -594,6 +624,12 @@ def instantiateComponent(usartComponent):
     usartSym_MR_OVER.setOutputMode("Key")
     usartSym_MR_OVER.setDefaultValue(0)
     usartSym_MR_OVER.setDependencies(updateUSARTSymVisibility, ["USART_MODE"])
+    
+    usartSym_UseFractionalBaud = usartComponent.createBooleanSymbol("USART_USE_FRACTIONAL_BAUD", None)
+    usartSym_UseFractionalBaud.setLabel("Use fractional baud?")
+    usartSym_UseFractionalBaud.setDefaultValue(False)
+    usartSym_UseFractionalBaud.setVisible(True)
+    usartSym_UseFractionalBaud.setDependencies(updateUSARTSymVisibility, ["USART_MODE"])
 
     brgVal = baudRateCalc(usartClkValue.getValue(), usartBaud.getValue(), usartSym_MR_OVER.getValue())
 
@@ -603,8 +639,13 @@ def instantiateComponent(usartComponent):
     usartBRGValue.setVisible(False)
     usartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "USART_MR_OVER", "USART_CLOCK_FREQ", "USART_MODE"])
     usartBRGValue.setDefaultValue(brgVal)
+    
+    brgFpVal = baudRateCalc_FP(usartClkValue.getValue(), usartBaud.getValue(), usartSym_MR_OVER.getValue())
 
-
+    usartBRGFPValue = usartComponent.createIntegerSymbol("BRG_FP_VALUE", None)
+    usartBRGFPValue.setVisible(False)
+    usartBRGFPValue.setDependencies(baudRateFPTrigger, ["BAUD_RATE", "USART_MR_OVER", "USART_CLOCK_FREQ", "USART_MODE", "USART_USE_FRACTIONAL_BAUD"])
+    usartBRGFPValue.setDefaultValue(brgFpVal)
 
     usartSym_MR_CHRL = usartComponent.createKeyValueSetSymbol("USART_MR_CHRL", None)
     usartSym_MR_CHRL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:usart_6089;register:US_MR")
