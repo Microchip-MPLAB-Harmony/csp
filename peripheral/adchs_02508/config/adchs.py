@@ -731,10 +731,15 @@ def adchsCalcIEC0(symbol, event):
     iec0 = 0x00
     agien = 0x0
     component = symbol.getComponent()
-    start = Irq_index % 32
     for channelID in range(0, len(adciec_depList[0])):
+        str_len = len(adciec_depList[0][channelID])
+        signalID = (adciec_depList[0][channelID])[str_len-2:]
+        if signalID.isnumeric() != True:
+            signalID = (adciec_depList[0][channelID])[str_len-1:]
+        reg_name = "ADC_DATA" + signalID 
+        iec_bit_pos = int (getIRQnumber(reg_name)) % 32
         if (component.getSymbolValue(adciec_depList[0][channelID]) != None):
-            agien = agien + (component.getSymbolValue(adciec_depList[0][channelID]) << (start + channelID))
+            agien = agien + (component.getSymbolValue(adciec_depList[0][channelID]) << (iec_bit_pos))   
     iec0 = agien
     symbol.setValue(iec0, 2)
 
@@ -743,8 +748,14 @@ def adchsCalcIEC1(symbol, event):
     agien = 0x0
     component = symbol.getComponent()
     for channelID in range(0, len(adciec_depList[1])):
+        str_len = len(adciec_depList[1][channelID])
+        signalID = (adciec_depList[1][channelID])[str_len-2:]
+        if signalID.isnumeric() != True:
+            signalID = (adciec_depList[1][channelID])[str_len-1:]
+        reg_name = "ADC_DATA" + signalID 
+        iec_bit_pos = int (getIRQnumber(reg_name)) % 32
         if (component.getSymbolValue(adciec_depList[1][channelID]) != None):
-            agien = agien + (component.getSymbolValue(adciec_depList[1][channelID]) << (channelID))
+            agien = agien + (component.getSymbolValue(adciec_depList[1][channelID]) << iec_bit_pos)
     iec1 = agien
     symbol.setValue(iec1, 2)
 
@@ -753,8 +764,14 @@ def adchsCalcIEC2(symbol, event):
     agien = 0x0
     component = symbol.getComponent()
     for channelID in range(0, len(adciec_depList[2])):
+        str_len = len(adciec_depList[2][channelID])
+        signalID = (adciec_depList[2][channelID])[str_len-2:]
+        if signalID.isnumeric() != True:
+            signalID = (adciec_depList[2][channelID])[str_len-1:]
+        reg_name = "ADC_DATA" + signalID 
+        iec_bit_pos = int (getIRQnumber(reg_name)) % 32
         if (component.getSymbolValue(adciec_depList[2][channelID]) != None):
-            agien = agien + (component.getSymbolValue(adciec_depList[2][channelID]) << (channelID))
+            agien = agien + (component.getSymbolValue(adciec_depList[2][channelID]) << (iec_bit_pos))
     iec2 = agien
     symbol.setValue(iec2, 2)
 
