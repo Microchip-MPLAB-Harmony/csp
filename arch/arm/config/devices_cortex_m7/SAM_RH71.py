@@ -53,7 +53,7 @@ def setMPUDefaultSettings():
                    "SRAM":        ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x21000000",   "1MB"],
                    "PERIPHERALS": ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB"],
                    "HEMC":     ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x60000000",   "256MB"],
-                   "QSPI":        ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x18000000",   "256MB"],
+                   "QSPI":        ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x18000000",   "128MB"],
                    "USBHS_RAM":   ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xA0100000",   "1MB"],
                    "SYSTEM":      ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"]}
     mpuSetUpLogicList = ['ITCM', 'FLASH', 'DTCM', 'SRAM', 'HEMC', 'QSPI']
