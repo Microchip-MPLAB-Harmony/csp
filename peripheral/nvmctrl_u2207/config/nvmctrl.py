@@ -31,7 +31,28 @@ global waitStates
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+def getSelectedEEPSize(eep_size_sym):
+    selectedKeyIndex = 0
+    coreComponent = Database.getComponentByID("core")
+    eepromSizeSym = coreComponent.getSymbolByID(eep_size_sym)
+    selectedKey = eepromSizeSym.getSelectedKey()
 
+    for index in range(eepromSizeSym.getKeyCount()):
+        if eepromSizeSym.getKey(index) == selectedKey:
+            selectedKeyIndex = index
+            break
+
+    return int(eepromSizeSym.getKeyDescription(selectedKeyIndex).split()[0])
+
+def updateEmuEEPROMStartAddr(symbol, event):
+    localComponent = symbol.getComponent()
+
+    nvmctrlFlashStartAddr = int(localComponent.getSymbolValue("FLASH_START_ADDRESS"), 16)
+    nvmctrlFlashSize = int(localComponent.getSymbolValue("FLASH_SIZE"), 16)
+    eep_emu_EEPROMSize = getSelectedEEPSize("DEVICE_NVMCTRL_EEPROM_SIZE")
+
+    localComponent.setSymbolValue("NVMCTRL_EMU_EEPROM_SIZE", str(eep_emu_EEPROMSize))
+    symbol.setValue(str(hex(nvmctrlFlashStartAddr + nvmctrlFlashSize - eep_emu_EEPROMSize)))
 
 def updateNVMCTRLInterruptStatus(symbol, event):
 
@@ -329,11 +350,28 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlUserRowWriteApiName.setVisible(False)
     nvmctrlUserRowWriteApiName.setReadOnly(True)
     nvmctrlUserRowWriteApiName.setDefaultValue(userRowWriteApiName)
-    
+
     nvmctrlUnlockApiName = nvmctrlComponent.createStringSymbol("UNLOCK_API_NAME", None)
     nvmctrlUnlockApiName.setVisible(False)
     nvmctrlUnlockApiName.setReadOnly(True)
     nvmctrlUnlockApiName.setDefaultValue(unlockApiName)
+
+    eep_size_sym =  Database.getComponentByID("core").getSymbolValue("DEVICE_NVMCTRL_EEPROM_SIZE")
+
+    if eep_size_sym != None:
+        eep_emu_EEPROMSize = getSelectedEEPSize("DEVICE_NVMCTRL_EEPROM_SIZE")
+
+        nvmctrlEmuEEPROMSize = nvmctrlComponent.createStringSymbol("NVMCTRL_EMU_EEPROM_SIZE", None)
+        nvmctrlEmuEEPROMSize.setDefaultValue(str(eep_emu_EEPROMSize))
+        nvmctrlEmuEEPROMSize.setVisible(False)
+
+        nvmctrlFlashStartAddr = int(nvmctrlSym_FLASH_ADDRESS.getValue(), 16)
+        nvmctrlFlashSize = int(nvmctrlSym_FLASH_SIZE.getValue(), 16)
+
+        nvmctrlEmuEEPROMStartAddr = nvmctrlComponent.createStringSymbol("NVMCTRL_EMU_EEPROM_START_ADDR", None)
+        nvmctrlEmuEEPROMStartAddr.setVisible(False)
+        nvmctrlEmuEEPROMStartAddr.setDefaultValue(str(hex(nvmctrlFlashStartAddr + nvmctrlFlashSize - eep_emu_EEPROMSize)))
+        nvmctrlEmuEEPROMStartAddr.setDependencies(updateEmuEEPROMStartAddr, ["core.DEVICE_NVMCTRL_EEPROM_SIZE"])
 
     ############################################################################
     #### Dependency ####
