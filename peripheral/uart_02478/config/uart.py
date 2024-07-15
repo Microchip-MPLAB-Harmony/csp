@@ -234,11 +234,11 @@ def baudRateTrigger(symbol, event):
 
     if brgh == 0:
         UxBRG_BRGH = (((clk >> 4) + (baud >> 1)) / baud) - 1
-        if UxBRG_BRGH > 0:
+        if UxBRG_BRGH >= 0:
             actualBaud = (clk/(16*(UxBRG_BRGH + 1)))
     else:
         UxBRG_BRGH = (((clk >> 2) + (baud >> 1)) / baud) - 1
-        if UxBRG_BRGH > 0:
+        if UxBRG_BRGH >= 0:
             actualBaud = (clk/(4*(UxBRG_BRGH + 1)))
 
     per_error = ((actualBaud - baud)/float(baud))*100.0
