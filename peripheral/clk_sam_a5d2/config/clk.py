@@ -721,6 +721,7 @@ def __plla_clock_menu(clk_comp, clk_menu):
     sym_plla_stabilization_count.setLabel("PLLA stabilization count (in SCLK cycles)")
     sym_plla_stabilization_count.setMin(0)
     sym_plla_stabilization_count.setMax(63)
+    sym_plla_stabilization_count.setDefaultValue(63)
     sama5d2_fixed_clk_sym_dict["CKGR_PLLAR_PLLACOUNT"] = sym_plla_stabilization_count
 
     # symbol for output clock frequency
@@ -747,6 +748,7 @@ def __utmi_pll_clock_menu(clk_comp, clk_menu):
     sym_utmi_pllen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a5d2;register:%NOREGISTER%")
     sym_utmi_pllen.setLabel("UTMI PLL enable")
     sym_utmi_pllen.setDefaultValue(False)
+    sama5d2_fixed_clk_sym_dict["PMC_CKGR_UCKR_UPLLEN"] = sym_utmi_pllen
 
     # UPLL startup time
     sym_ckgr_uckr_upllcount = clk_comp.createIntegerSymbol("PMC_CKGR_UCKR_UPLLCOUNT", utmi_clock_menu)
@@ -766,17 +768,20 @@ def __utmi_pll_clock_menu(clk_comp, clk_menu):
     sym_utmi_cktrim.setReadOnly(True)
     sym_utmi_cktrim.setDisplayMode("Description")
     sym_utmi_cktrim.setOutputMode("Key")
+    sama5d2_fixed_clk_sym_dict["UTMI_CKTRIM_FREQ"] = sym_utmi_cktrim
 
     sym_main_clk_multiplier = clk_comp.createIntegerSymbol("CLK_UTMI_MULTIPLIER", utmi_clock_menu)
     sym_main_clk_multiplier.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a5d2;register:%NOREGISTER%")
     sym_main_clk_multiplier.setLabel("Main clock multiplier")
     sym_main_clk_multiplier.setDefaultValue(40)
     sym_main_clk_multiplier.setVisible(False)
+    sama5d2_fixed_clk_sym_dict["CLK_UTMI_MULTIPLIER"] = sym_main_clk_multiplier
 
     # utmi invalid main clock comment
     sym_utmi_invalid_comment = clk_comp.createCommentSymbol("CLK_UTMI_INVALID_MAIN_CLOCK", utmi_clock_menu)
     sym_utmi_invalid_comment.setLabel("Current main clock cannot generate a valid UTMI clock of 480 MHz !!!")
     sym_utmi_invalid_comment.setVisible(False)
+    sama5d2_fixed_clk_sym_dict["CLK_UTMI_INVALID_MAIN_CLOCK"] = sym_utmi_invalid_comment
 
     # utmi clock frequency symbol
     sym_clk_utmi_freq = clk_comp.createIntegerSymbol("UPLL_CLK_FREQUENCY", utmi_clock_menu)
@@ -784,6 +789,7 @@ def __utmi_pll_clock_menu(clk_comp, clk_menu):
     sym_clk_utmi_freq.setLabel("UTMI clock frequency(Hz)")
     sym_clk_utmi_freq.setDefaultValue(CLK_SAMA5D2_CONSTANTS_DICT["UTMI_PLL_FREQ"])
     sym_clk_utmi_freq.setReadOnly(True)
+    sama5d2_fixed_clk_sym_dict["UPLL_CLK_FREQUENCY"] = sym_clk_utmi_freq
 
 
 def __mck_clock_menu(clk_comp, clk_menu):
@@ -1655,11 +1661,15 @@ def set_fixed_clock_symbol_dependencies():
 
 
 # Lock all fixed clock menus
-def use_fixed_clocks():
+global use_fixed_clocks
+def use_fixed_clocks(value):
     for name, symbol in sama5d2_fixed_clk_sym_dict.items():
         if symbol.getType() != "Comment":
-            symbol.setReadOnly(True)
+            symbol.setReadOnly(not value)
 
+global update_clk_generators
+def update_clk_generators(symbol, event):
+    use_fixed_clocks(event['value'])
 
 if __name__ == "__main__":
     # Clock Manager Configuration Menu
@@ -1676,9 +1686,13 @@ if __name__ == "__main__":
 
     # Define a symbol to identify whether the clocks configured by the bootloaders should be used or not
     # This symbol is not visible to the user
-    sym_use_bootloader_clocks = coreComponent.createBooleanSymbol("USE_BOOTLOADER_CLOCKS", SYM_CLK_MENU)
-    sym_use_bootloader_clocks.setVisible(False)
-    sym_use_bootloader_clocks.setDefaultValue(True)
+    sym_clk_generator_clocks = coreComponent.createBooleanSymbol("CLK_GENERATOR_CODE", SYM_CLK_MENU)
+    sym_clk_generator_clocks.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_a5d2;register:%NOREGISTER%")
+    sym_clk_generator_clocks.setLabel("Enable generator initialization code")
+    sym_clk_generator_clocks.setDescription("Generate code for initializing Slow clocks, mainclock, and PLL's.  This should only be done if running out of SRAM.")
+    sym_clk_generator_clocks.setVisible(True)
+    sym_clk_generator_clocks.setDefaultValue(False)
+    sym_clk_generator_clocks.setDependencies(update_clk_generators,["CLK_GENERATOR_CODE"])
 
     # Slow Oscillator
     __slow_clock_menu(coreComponent, SYM_CLK_MENU)
@@ -1724,11 +1738,8 @@ if __name__ == "__main__":
 
     # If the system is configured to use clocks set by bootloader, do not allow the
     # user to modify the processor and master clocks
-    if sym_use_bootloader_clocks.getValue() == True:
-        use_fixed_clocks()
-    # else enable dependency callbacks for the clock logic to work correctly
-    else:
-        set_fixed_clock_symbol_dependencies()
+    use_fixed_clocks(sym_clk_generator_clocks.getValue())
+    set_fixed_clock_symbol_dependencies()
 
     # MPDDRC is enabled by bootloader so make sure we don't disable it
     Database.setSymbolValue("core", "MPDDRC_CLOCK_ENABLE", True, 1)
