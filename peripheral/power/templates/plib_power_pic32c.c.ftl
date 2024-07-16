@@ -264,8 +264,8 @@ void POWER_DS_SemaphoreWrite(POWER_DS_SEMAPHORE sema, uint32_t semaValue)
     }
     else
     {
-        DSCON_REGS->DSCON_DSSEMA1 = semaValue;
-        DSCON_REGS->DSCON_DSSEMA1 = semaValue;
+        DSCON_REGS->DSCON_DSXSEMA1 = semaValue;
+        DSCON_REGS->DSCON_DSXSEMA1 = semaValue;
     }
 
     /* Lock System */
