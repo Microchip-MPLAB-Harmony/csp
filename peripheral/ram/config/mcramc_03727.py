@@ -21,6 +21,20 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+def updateSecurity(symbol, event):
+    if event["id"] == "MCRAMC_ECC_TESTING_ENABLE":
+        symbol.setEnabled(event["value"])
+    else:
+        isNonSecure = event["value"]
+        symbol.setSecurity("SECURE" if isNonSecure == False else "NON_SECURE")
+
+        if symbol.getID() == "RAM_SYS_DEF":
+            symbol.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES" if isNonSecure == False else "core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        elif symbol.getID() == "RAM_SYS_INIT":
+            symbol.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS" if isNonSecure == False else "core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        #update interrupt security
+        Database.setSymbolValue("core", "MCRAMC_SET_NON_SECURE", isNonSecure)
+
 def updateVisibility (symbol, event):
     symbol.setVisible(event["value"])
 
@@ -43,6 +57,10 @@ def updateNVICInterrupt(symbol, event):
         Database.setSymbolValue("core", "MCRAMC" + "_INTERRUPT_HANDLER", "MCRAMC" + "_Handler", 2)
     else:
         Database.setSymbolValue("core", "MCRAMC" + "_INTERRUPT_HANDLER", "RAM_ECC" + "_InterruptHandler", 2)
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            isNonSecure = Database.getSymbolValue("core", "MCRAMC_IS_NON_SECURE")
+            #update interrupt security
+            Database.setSymbolValue("core", "MCRAMC_SET_NON_SECURE", isNonSecure)
 
 ramInitFuncPrefix = ramComponent.createStringSymbol("RAM_INIT_FUNC_PREFIX", None)
 ramInitFuncPrefix.setVisible(False)
@@ -86,6 +104,13 @@ ramECCNVICInterruptEnable.setDependencies(updateNVICInterrupt, ["MCRAMC_ECC_TEST
 
 configName = Variables.get("__CONFIGURATION_NAME")
 
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    mcramcIsNonSecure = Database.getSymbolValue("core", "MCRAMC_IS_NON_SECURE")
+    #update interrupt security
+    Database.setSymbolValue("core", "MCRAMC_SET_NON_SECURE", mcramcIsNonSecure)
+
+    print ("mcramcIsNonSecure = " + str(mcramcIsNonSecure))
+
 # Instance Header File
 ramHeaderFile = ramComponent.createFileSymbol("RAM_INSTANCE_HEADER", None)
 ramHeaderFile.setSourcePath("../peripheral/ram/templates/plib_mcramc_03727.h.ftl")
@@ -94,6 +119,10 @@ ramHeaderFile.setDestPath("/peripheral/ram/")
 ramHeaderFile.setProjectPath("config/" + configName + "/peripheral/ram/")
 ramHeaderFile.setType("HEADER")
 ramHeaderFile.setMarkup(True)
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    ramHeaderFile.setSecurity("SECURE" if mcramcIsNonSecure == False else "NON_SECURE")
+    ramHeaderFile.setDependencies(updateSecurity, ["core.MCRAMC_IS_NON_SECURE"])
+
 
 # Source File
 ramSourceFile = ramComponent.createFileSymbol("RAM_SOURCE", None)
@@ -103,6 +132,9 @@ ramSourceFile.setDestPath("/peripheral/ram/")
 ramSourceFile.setProjectPath("config/" + configName + "/peripheral/ram/")
 ramSourceFile.setType("SOURCE")
 ramSourceFile.setMarkup(True)
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    ramSourceFile.setSecurity("SECURE" if mcramcIsNonSecure == False else "NON_SECURE")
+    ramSourceFile.setDependencies(updateSecurity, ["core.MCRAMC_IS_NON_SECURE"])
 
 # System Definition
 ramSystemDefFile = ramComponent.createFileSymbol("RAM_SYS_DEF", None)
@@ -110,6 +142,10 @@ ramSystemDefFile.setType("STRING")
 ramSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 ramSystemDefFile.setSourcePath("../peripheral/ram/templates/system/definitions.h.ftl")
 ramSystemDefFile.setMarkup(True)
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    ramSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES" if mcramcIsNonSecure == False else "core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    ramSystemDefFile.setSecurity("SECURE" if mcramcIsNonSecure == False else "NON_SECURE")
+    ramSystemDefFile.setDependencies(updateSecurity, ["core.MCRAMC_IS_NON_SECURE"])
 
 # System Initialize
 ramSystemInitFile = ramComponent.createFileSymbol("RAM_SYS_INIT", None)
@@ -119,3 +155,7 @@ ramSystemInitFile.setSourcePath("../peripheral/ram/templates/system/initializati
 ramSystemInitFile.setMarkup(True)
 ramSystemInitFile.setEnabled(False)
 ramSystemInitFile.setDependencies(initFileGen, ["MCRAMC_ECC_TESTING_ENABLE"])
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    ramSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS" if mcramcIsNonSecure == False else "core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+    ramSystemInitFile.setSecurity("SECURE" if mcramcIsNonSecure == False else "NON_SECURE")
+    ramSystemInitFile.setDependencies(updateSecurity, ["core.MCRAMC_IS_NON_SECURE", "MCRAMC_ECC_TESTING_ENABLE"])

@@ -65,7 +65,7 @@ def instantiateComponent(ramComponent):
         mcramcPlibId = mcramcPlib.getAttribute("id")
         plibId = "mcramc_" + mcramcPlibId
 
-    if plibId == "mcramc_03727":
+    if plibId == "mcramc_03727" or plibId == "mcramc_04921":
         execfile(Module.getPath() + "../../csp/peripheral/ram/config/" + "mcramc_03727.py")
 
     ##### Do not modify below symbol names as they are used by Memory Driver #####
