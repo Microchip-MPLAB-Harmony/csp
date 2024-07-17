@@ -249,9 +249,6 @@ coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "IN
 #load MMU with default 1:1 mapping so we can use cache
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
 
-#load Matrix -- default all peripherals to non-secure
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/matrix_6342/config/matrix.py")
-
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11264/plugin/pio_11264.jar")
