@@ -114,7 +114,7 @@ void POWER_LowPowerModeEnter (POWER_LOW_POWER_MODE mode)
                         DSCON_REGS->DSCON_DSCON |= DSCON_DSCON_DSEN_Msk;
                         break;
 </#if>
-<#if EXTREME_DEEP_SLEEP_MODE_EXIST??>                        
+<#if EXTREME_DEEP_SLEEP_MODE_EXIST?? && EXTREME_DEEP_SLEEP_MODE_EXIST == true>                        
         case LOW_POWER_EXTREME_DEEP_SLEEP_MODE:
                         DSCON_REGS->DSCON_DSCON &= (~DSCON_DSCON_XSEMAEN_Msk); // Disable Extended semaphore register
                         DSCON_REGS->DSCON_DSCON &= (~DSCON_DSCON_XSEMAEN_Msk);

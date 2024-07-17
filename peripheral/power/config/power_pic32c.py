@@ -58,6 +58,14 @@ if (ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCTRL"]') != Non
     deepSleepSymExist = powerComponent.createBooleanSymbol("DEEP_SLEEP_MODE_EXIST", deepSleepSymMenu)
     deepSleepSymExist.setVisible(False)
     deepSleepSymExist.setDefaultValue(True)
+    
+    extremeDeepSleepSymExist = powerComponent.createBooleanSymbol("EXTREME_DEEP_SLEEP_MODE_EXIST", deepSleepSymMenu)
+    extremeDeepSleepSymExist.setVisible(False)
+    extremeDeepNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DSCON\"]/register-group@[name=\"DSCON\"]/register@[name=\"DSXSEMA1\"]")
+    if extremeDeepNode != None:
+        extremeDeepSleepSymExist.setDefaultValue(True)
+    else:
+        extremeDeepSleepSymExist.setDefaultValue(False)
 
     deepSleepSym_RTCDIS = powerComponent.createBooleanSymbol("DS_RTCC_ENABLE", deepSleepSymMenu)
     deepSleepSym_RTCDIS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:power;register:%NOREGISTER%")
