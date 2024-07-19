@@ -28,15 +28,15 @@ from xml.etree import ElementTree
 def getValueGrp(module, reg_grp, reg_name, bitfield_name , mode = None):
     node_str = ""
     val_grp_node = None
-    
+
     if mode != None:
         node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module, reg_grp, mode, reg_name, bitfield_name)
     else:
          node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module, reg_grp, reg_name, bitfield_name)
-    
+
     print (node_str)
     bitfield_node = ATDF.getNode(node_str)
-    
+
     if bitfield_node != None:
         val_grp = bitfield_node.getAttribute("values")
         node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module, val_grp)
@@ -45,7 +45,7 @@ def getValueGrp(module, reg_grp, reg_name, bitfield_name , mode = None):
             print ("value-group = " + val_grp + " not found")
     else:
         print ("bitfield_name = " + bitfield_name + " not found" )
-    
+
     return val_grp_node
 
 Log.writeInfoMessage(
@@ -129,7 +129,7 @@ def setXOSCFreq(symbol, event):
 ####    PLL Configuration Callback Functions    ###############################
 def setPLLClockFreq(symbol, event):
     global OSCCTRL_FRACDIV0_RegNode
-    
+
     index = symbol.getID().split("PLL")[1][0]
     clockOutputNum = symbol.getID().split("FREQ")[1][0]
 
@@ -157,7 +157,7 @@ def setPLLClockFreq(symbol, event):
         postdiv = int(Database.getSymbolValue("core", "CONFIG_CLOCK_PLL" + index + "_PLLPOSTDIV_POSTDIV" + clockOutputNum))
 
         pllFreq = int((srcFreq * fbdiv) / (refdiv * postdiv))
-        
+
         if OSCCTRL_FRACDIV0_RegNode != None:
             intdiv = int(Database.getSymbolValue("core", "CONFIG_CLOCK_PLL" + index + "_FRACDIV_INTDIV"))
             if intdiv > 0:
@@ -371,7 +371,7 @@ for i in range(0, 1):
         "CONFIG_CLOCK_PLL" + str(i) + "_BWSEL", pll_Menu[i])
     oscctrlSym_PLLCTRL_BWSEL.setLabel("Bandwidth selection")
     oscctrlSym_PLLCTRL_BWSEL.setDescription("Bandwidth selection for the PLL" + str(i))
-    oscctrlSym_BWSELNode = getValueGrp("OSCCTRL", "OSCCTRL", "PLL0CTRL", "BWSEL")    
+    oscctrlSym_BWSELNode = getValueGrp("OSCCTRL", "OSCCTRL", "PLL0CTRL", "BWSEL")
     oscctrlSym_BWSELValues = []
     oscctrlSym_BWSELValues = oscctrlSym_BWSELNode.getChildren()
     for index in range(0, len(oscctrlSym_BWSELValues)):
@@ -424,7 +424,7 @@ for i in range(0, 1):
         "PLL reference division factor, fPFD = fCKR/REFDIV")
     oscctrlSym_PLLREFDIV_REFDIV.setDefaultValue(1)
     oscctrlSym_PLLREFDIV_REFDIV.setMin(1)
-    oscctrlSym_PLLREFDIV_REFDIV.setMax(63)       
+    oscctrlSym_PLLREFDIV_REFDIV.setMax(63)
 
     if OSCCTRL_FRACDIV0_RegNode != None:
         # Phase Locked Loop(PLL) Frequency division factor integer part
@@ -446,16 +446,16 @@ for i in range(0, 1):
         oscctrlSym_FRACDIV_REMDIV.setDefaultValue(0)
         oscctrlSym_FRACDIV_REMDIV.setMin(0)
         oscctrlSym_FRACDIV_REMDIV.setMax(511)
-    
-    
+
+
     numPLLOutputs = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name=\"OSCCTRL\"]/instance@[name=\"OSCCTRL\"]/parameters/param@[name=\"PLL0_OUTPUTS_NUM\"]').getAttribute("value")
-    
+
     numPLLOutputs = int(numPLLOutputs)
-    
+
     oscctrlSym_NumPLLOutput = coreComponent.createIntegerSymbol("NUM_PLLOUT", pll_Menu[i])
     oscctrlSym_NumPLLOutput.setDefaultValue(numPLLOutputs)
     oscctrlSym_NumPLLOutput.setVisible(False)
-        
+
     for index in range(0, numPLLOutputs):
         # Phase Locked Loop(PLL) PLLx output n clock division factor
         oscctrlSym_PLLPOSTDIV_POSTDIV = coreComponent.createIntegerSymbol(
@@ -969,7 +969,7 @@ def codeGen(symbol, event):
             if "PLL" in gclk_src:
                 gclk_src = gclk_src[0:4]
             if gclk_src in ["DFLL", "PLL0", "GCLK1"]:
-                sourceDestmap[gclk_src].append("GCLK" + str(i))            
+                sourceDestmap[gclk_src].append("GCLK" + str(i))
 
     codeList = topsort(sourceDestmap)
     if len(codeList) != 0:
@@ -1173,7 +1173,7 @@ for gclknumber in range(0, 12):
     gclkSym_GENCTRL_SRC[gclknumber].addKey(
         "PLL0_3", "9", "PLL0 Output 3")
     gclkSym_GENCTRL_SRC[gclknumber].addKey(
-        "PLL0_4", "10", "PLL0 Output 4")    
+        "PLL0_4", "10", "PLL0 Output 4")
     gclkSym_GENCTRL_SRC[gclknumber].setDefaultValue(5)
     gclkSym_GENCTRL_SRC[gclknumber].setOutputMode("Value")
     gclkSym_GENCTRL_SRC[gclknumber].setDisplayMode("Key")
@@ -1208,7 +1208,7 @@ for gclknumber in range(0, 12):
     gclkSym_GENCTRL_DIVSEL[gclknumber] = coreComponent.createKeyValueSetSymbol(
         "GCLK_" + str(gclknumber) + "_DIVSEL", gclkSym_num[gclknumber])
     gclkSym_GENCTRL_DIVSEL[gclknumber].setLabel("Divide Selection")
-    gclkSymGenDivSelNode = getValueGrp("GCLK", "GCLK", "GENCTRL", "DIVSEL")    
+    gclkSymGenDivSelNode = getValueGrp("GCLK", "GCLK", "GENCTRL", "DIVSEL")
     gclkSymGenDivSelNodeValues = []
     gclkSymGenDivSelNodeValues = gclkSymGenDivSelNode.getChildren()
     gclkSymGenDivSelDefaultValue = 0
@@ -1379,7 +1379,7 @@ for index in sorted(channelMap.iterkeys()):
         key + "_GENSEL", clkSymPeripheral)
     gclkSym_PCHCTRL_GEN.setLabel("Generator Selection")
 
-    gclkSymPCHCTRLGenNode = getValueGrp("GCLK", "GCLK", "PCHCTRL", "GEN")    
+    gclkSymPCHCTRLGenNode = getValueGrp("GCLK", "GCLK", "PCHCTRL", "GEN")
     gclkSymPCHCTRLGenNodeValues = []
     gclkSymPCHCTRLGenNodeValues = gclkSymPCHCTRLGenNode.getChildren()
 
@@ -1497,7 +1497,7 @@ for count in range(0, numMclkClkdiv):
     mclkSym_CLKDIV[count] = coreComponent.createKeyValueSetSymbol(
         "CONF_MCLK_CLKDIV" + str(count), mclkSym_Menu)
     mclkSym_CLKDIV[count].setLabel("Clock Domain Division Factor " + str(count))
-    mclkcpudivNode = getValueGrp("MCLK", "MCLK", "CLKDIV", "DIV")    
+    mclkcpudivNode = getValueGrp("MCLK", "MCLK", "CLKDIV", "DIV")
     mclkcpudivNodeValues = []
     mclkcpudivNodeValues = mclkcpudivNode.getChildren()
     for index in range(0, len(mclkcpudivNodeValues)):
@@ -1520,6 +1520,18 @@ def setMainClockFreq(symbol, event):
 
     symbol.setValue(gclk0_freq / (1 << divider), 1)
     Database.setSymbolValue(event["namespace"], "MAIN_CLOCK_FREQUENCY", gclk0_freq, 2)
+
+def setH2PB2ClockFreq(symbol, event):
+    divider = int(Database.getSymbolValue("core", "CONF_MCLK_CLKDIV1"))
+    gclk0_freq = int(Database.getSymbolValue("core", "GCLK_0_FREQ"))
+
+    symbol.setValue(gclk0_freq / (1 << divider), 1)
+
+def setMBISTINTFClockFreq(symbol, event):
+    divider = int(Database.getSymbolValue("core", "CONF_MCLK_CLKDIV2"))
+    gclk0_freq = int(Database.getSymbolValue("core", "GCLK_0_FREQ"))
+
+    symbol.setValue(gclk0_freq / (1 << divider), 1)
 
 def setFreq(symbol, event):
     global rtcClockSourceSelection
@@ -1567,6 +1579,16 @@ clkSym_RTC_CLK_FREQ.setLabel("RTC Clock Frequency")
 clkSym_RTC_CLK_FREQ.setReadOnly(True)
 clkSym_RTC_CLK_FREQ.setDefaultValue(1024)
 clkSym_RTC_CLK_FREQ.setDependencies(setFreq, ["CONFIG_CLOCK_RTC_SRC", "OSCULP32K_FREQ", "OSCULP1K_FREQ", "XOSC32K_FREQ", "XOSC1K_FREQ"])
+
+clkSym_h2pb2_CLK_FREQ = coreComponent.createIntegerSymbol("H2PB2_CLOCK_FREQUENCY", calculatedFreq_Menu)
+clkSym_h2pb2_CLK_FREQ.setLabel("H2PB2 Clock Frequency")
+clkSym_h2pb2_CLK_FREQ.setReadOnly(True)
+clkSym_h2pb2_CLK_FREQ.setDependencies(setH2PB2ClockFreq, ["GCLK_0_FREQ", "CONF_MCLK_CLKDIV1"])
+
+clkSym_mbistintf_CLK_FREQ = coreComponent.createIntegerSymbol("MBISTINTF_CLOCK_FREQUENCY", calculatedFreq_Menu)
+clkSym_mbistintf_CLK_FREQ.setLabel("MBISTINTF Clock Frequency")
+clkSym_mbistintf_CLK_FREQ.setReadOnly(True)
+clkSym_mbistintf_CLK_FREQ.setDependencies(setMBISTINTFClockFreq, ["GCLK_0_FREQ", "CONF_MCLK_CLKDIV2"])
 
 #########################Default Clock##########################################
 gclkSym_num[1].setValue(True)

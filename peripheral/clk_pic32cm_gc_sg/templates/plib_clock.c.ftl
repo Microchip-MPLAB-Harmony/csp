@@ -103,15 +103,13 @@ static void OSC32KCTRL_Initialize(void)
 <#if CONFIG_CLOCK_PLL0_ENABLE == true >
 static void PLL0_Initialize(void)
 {
-    <#if SUPC_VREGCTRL_AVREGEN??>
     /* Enable Additional Voltage Regulator */
     SUPC_REGS->SUPC_VREGCTRL |= SUPC_VREGCTRL_AVREGEN_Msk;
     while ((SUPC_REGS->SUPC_STATUS & SUPC_STATUS_ADDVREGRDY_Msk) != SUPC_STATUS_ADDVREGRDY_Msk)
     {
         /* Do Nothing */
     }
-    </#if>
-    
+
     <#if CONFIG_CLOCK_PLL0_REF_CLOCK == "0">
     GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_1_INDEX}] = GCLK_PCHCTRL_GEN(${GCLK_ID_1_GENSEL}U)${GCLK_ID_1_WRITELOCK?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')} | GCLK_PCHCTRL_CHEN_Msk;
     while ((GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_1_INDEX}] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
@@ -136,13 +134,13 @@ static void PLL0_Initialize(void)
     </#if>
 
     <#assign OSCCTRL_PLL0POSTDIVA_VALUE = "">
-    
+
     <#if NUM_PLLOUT gt 4>
         <#assign max_pllout = 3>
     <#else>
         <#assign max_pllout = (NUM_PLLOUT-1)>
-    </#if>  
-    
+    </#if>
+
     <#list 0..max_pllout as i>
     <#assign PLL0_PLLPOSTDIVA_OUTEN = "CONFIG_CLOCK_PLL0_PLLPOSTDIV_OUTEN" + i>
     <#assign CONFIG_CLOCK_PLL0_PLLPOSTDIVA_POSTDIV = "CONFIG_CLOCK_PLL0_PLLPOSTDIV_POSTDIV" + i>
@@ -232,10 +230,16 @@ static void DFLL_Initialize(void)
     {
         /* Waiting for the DFLL48M enable synchronization */
     }
-    while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
+
+    /* Wait for DFLL ready status only if CPU is the consumer of the clock. Otherwise, in absence of any consumers, the DFLLRDY bit is not set. */
+    if ((GCLK_REGS->GCLK_GENCTRL[0] & GCLK_GENCTRL_SRC_Msk) == 0x05)
     {
-        /* Waiting for the DFLL Ready state */
+        while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
+        {
+            /* Waiting for the DFLL Ready state */
+        }
     }
+
     <#if CONFIG_CLOCK_DFLL_ONDEMAND == "1">
     OSCCTRL_REGS->OSCCTRL_DFLLCTRLA |= OSCCTRL_DFLLCTRLA_ONDEMAND_Msk;
     </#if>
