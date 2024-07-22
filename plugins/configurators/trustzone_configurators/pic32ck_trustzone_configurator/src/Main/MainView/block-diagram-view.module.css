@@ -1,0 +1,40 @@
+.clockFreq {
+  text-align: right;
+}
+
+.prescalarLabel {
+  color: white;
+}
+
+.channel-sequence {
+  cursor: pointer;
+}
+
+.convTime {
+  text-align: right;
+}
+
+.freqWarning {
+  color: red;
+}
+
+.text-red {
+  color: red;
+}
+
+.content-container {
+  background-color: white;
+  position: relative;
+  padding-top: 10px;
+}
+
+.pannable-container {
+  height: calc(100vh - 45px);
+  overflow: auto;
+  position: relative;
+}
+
+.block-diagram-menu {
+  position: absolute;
+  z-index: 1;
+}

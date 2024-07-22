@@ -1,66 +1,36 @@
-import {
-  AddSymbolListener,
-  GetSymbolValue,
-} from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess';
-import { convertToBoolean } from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolUtils';
 import { Button } from 'primereact/button';
 import { useEffect, useState } from 'react';
-import {
-  component_id,
-  nonSecureColor,
-  secureColor,
-} from '../MainView/TrustZoneMainView';
-import { globalSymbolSStateData } from '@mplab_harmony/harmony-plugin-ui/build/components/Components';
-import { ConfigSymbolEvent } from '@mplab_harmony/harmony-plugin-ui/build/utils/ComponentStateChangeUtils';
+import { nonSecureColor, secureColor } from '../MainView/TrustZoneMainView';
+import { useBooleanSymbol } from '@mplab_harmony/harmony-plugin-client-lib';
 
 const PeripheralButton = (props: {
+  componentId: string;
   symbolId: string;
   nonSecureAppendText: string;
   secureText: string;
   nonSecureText: string;
-  ButtonClicked: (buttonText: any) => boolean;
+  ButtonClicked: (buttonText: string, symbolValue: boolean, readOnlyState: boolean) => boolean;
 }) => {
-  useEffect(() => {
-    addListener(props.symbolId + props.nonSecureAppendText);
-  }, []);
-
-  function addListener(symbolId: string) {
-    AddSymbolListener(symbolId);
-    globalSymbolSStateData.set(symbolId, {
-      symbolChanged: symbolChanged,
-    });
-  }
-
-  const symbolChanged = (symbol: ConfigSymbolEvent) => {
-    let bNonSecure = convertToBoolean(symbol.value);
-    if (bNonSecure) {
-      setColor(nonSecureColor);
-    } else {
-      setColor(secureColor);
-    }
-  };
-
+  const bNonSecureSymbol = useBooleanSymbol({
+    componentId: props.componentId,
+    symbolId: props.symbolId + props.nonSecureAppendText
+  });
   function updateButtonState(butttonText: any) {
-    let updateColor = props.ButtonClicked(butttonText);
+    let updateColor = props.ButtonClicked(
+      butttonText,
+      bNonSecureSymbol.value,
+      bNonSecureSymbol.readOnly
+    );
     if (updateColor) {
-      if (color === nonSecureColor) {
-        setColor(secureColor);
-      } else {
-        setColor(nonSecureColor);
-      }
+      bNonSecureSymbol.writeValue(!bNonSecureSymbol.value);
     }
   }
-  let symbolIdStatus = props.symbolId + props.nonSecureAppendText;
-  let bNonSecure = convertToBoolean(
-    GetSymbolValue(component_id, symbolIdStatus)
-  );
   let ttip = props.secureText;
-  const [color, setColor] = useState(bNonSecure ? nonSecureColor : secureColor);
-  if (bNonSecure) {
+  if (bNonSecureSymbol.value) {
     ttip = props.nonSecureText;
   }
   return (
-    <div className="row p-3">
+    <div className='row p-3'>
       <Button
         label={props.symbolId}
         tooltip={ttip}
@@ -71,8 +41,8 @@ const PeripheralButton = (props: {
           fontSize: '14px',
           fontWeight: 'bold',
           borderWidth: '0px',
-          backgroundColor: color,
-          color: 'white',
+          backgroundColor: bNonSecureSymbol.value ? nonSecureColor : secureColor,
+          color: 'white'
         }}
         onClick={() => updateButtonState(props.symbolId)}
       />

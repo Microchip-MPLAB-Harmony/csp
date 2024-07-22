@@ -1,16 +1,8 @@
-import {
-  nonSecureCallableColor,
-  nonSecureColor,
-  secureColor,
-} from '../MainView/TrustZoneMainView';
+import { nonSecureCallableColor, nonSecureColor, secureColor } from '../MainView/TrustZoneMainView';
+import GetBoxWithText from './GetBoxWithText';
+import GetSlider from './GetSlider';
 
-import {
-  GetBoxBottomHeight,
-  GetBoxTopHeight,
-  GetBoxWithText,
-  GetSlider,
-  sliderWidth,
-} from './Memory';
+import { GetBoxBottomHeight, GetBoxTopHeight, sliderWidth } from './Memory';
 
 export function GetBSOrASDiv(
   customClassName: string,
@@ -43,21 +35,18 @@ export function GetBSOrASDiv(
   return (
     <div className={customClassName}>
       <div style={{ paddingRight: sliderWidth }}>
-        {
-          //Adding slider
-          GetSlider(
-            parentSliderTopText,
-            parentSliderBottomText,
-            parentSliderValue,
-            parentSliderMin,
-            parentSliderMax,
-            parentSliderHeight,
-            parentUpdateSliderValue
-          )
-        }
+        <GetSlider
+          sliderTopText={parentSliderTopText}
+          sliderBottomText={parentSliderBottomText}
+          sliderValue={parentSliderValue}
+          sliderMin={parentSliderMin}
+          sliderMax={parentSliderMax}
+          sliderHeight={parentSliderHeight}
+          updateSliderValue={parentUpdateSliderValue}
+        />
       </div>
       <div>
-        <div className="flex flex-column ">
+        <div className='flex flex-column '>
           <div>
             {GetBNSCOrANSCDiv(
               sliderTopText,
@@ -75,21 +64,14 @@ export function GetBSOrASDiv(
             )}
           </div>
           <div style={{ paddingLeft: nonSecureBoxPaddingLeft + 'px' }}>
-            {
-              // Adding Box
-              GetBoxWithText(
-                'flex flex-row',
-                box3Text,
-                nonSecureColor,
-                GetBoxBottomHeight(
-                  parentSliderValue,
-                  parentSliderMax,
-                  parentSliderHeight
-                ),
-                box3HexText,
-                parentSliderValue !== parentSliderMin
-              )
-            }
+            <GetBoxWithText
+              classCustom={'flex flex-row'}
+              displayText={box3Text}
+              color={nonSecureColor}
+              boxHeight={GetBoxBottomHeight(parentSliderValue, parentSliderMax, parentSliderHeight)}
+              hexDisplayText={box3HexText}
+              textDisplayStatus={parentSliderValue !== parentSliderMin}
+            />
           </div>
         </div>
       </div>
@@ -115,47 +97,43 @@ export function GetBNSCOrANSCDiv(
     return;
   }
   return (
-    <div className="flex flex-row border-bottom-2">
+    <div className='flex flex-row border-bottom-2'>
       <div>
-        {GetSlider(
-          sliderTopText,
-          sliderBottomText,
-          sliderValue,
-          sliderMin,
-          sliderMax,
-          sliderHeight,
-          updateSliderValue
-        )}
+        <GetSlider
+          sliderTopText={sliderTopText}
+          sliderBottomText={sliderBottomText}
+          sliderValue={sliderValue}
+          sliderMin={sliderMin}
+          sliderMax={sliderMax}
+          sliderHeight={sliderHeight}
+          updateSliderValue={updateSliderValue}
+        />
       </div>
       <div>
-        <div className="flex flex-column">
+        <div className='flex flex-column'>
           <div>
-            {
-              // Adding Box
-              GetBoxWithText(
+            <GetBoxWithText
+              classCustom={
                 sliderValue !== sliderMax && sliderValue !== sliderMin
                   ? 'flex flex-row border-bottom-2'
-                  : 'flex flex-row',
-                box1Text,
-                secureColor,
-                GetBoxTopHeight(sliderValue, sliderMax, sliderHeight),
-                box1HexText,
-                sliderValue !== sliderMax
-              )
-            }
+                  : 'flex flex-row'
+              }
+              displayText={box1Text}
+              color={secureColor}
+              boxHeight={GetBoxTopHeight(sliderValue, sliderMax, sliderHeight)}
+              hexDisplayText={box1HexText}
+              textDisplayStatus={sliderValue !== sliderMax}
+            />
           </div>
           <div>
-            {
-              // Adding Box
-              GetBoxWithText(
-                'flex flex-row',
-                box2Text,
-                nonSecureCallableColor,
-                GetBoxBottomHeight(sliderValue, sliderMax, sliderHeight),
-                box2HexText,
-                sliderValue !== sliderMin
-              )
-            }
+            <GetBoxWithText
+              classCustom={'flex flex-row'}
+              displayText={box2Text}
+              color={nonSecureCallableColor}
+              boxHeight={GetBoxBottomHeight(sliderValue, sliderMax, sliderHeight)}
+              hexDisplayText={box2HexText}
+              textDisplayStatus={sliderValue !== sliderMin}
+            />
           </div>
         </div>
       </div>
@@ -177,41 +155,43 @@ export function GetBootRegion(
 ) {
   return (
     <div>
-      <div className="flex flex-row border-y-2">
+      <div className='flex flex-row border-y-2'>
         <div>
-          {GetSlider(
-            'BS',
-            'BNSC',
-            slider1Value,
-            slider1Min,
-            slider1Max,
-            slider1Height,
-            updateSlider1Value
-          )}
+          <GetSlider
+            sliderTopText={'BS'}
+            sliderBottomText={'BNSC'}
+            sliderValue={slider1Value}
+            sliderMin={slider1Min}
+            sliderMax={slider1Max}
+            sliderHeight={slider1Height}
+            updateSliderValue={updateSlider1Value}
+          />
         </div>
         <div style={{ paddingLeft: bootPadding + 'px' }}>
-          <div className="flex flex-column ">
+          <div className='flex flex-column '>
             <div>
-              {GetBoxWithText(
-                slider1Value !== slider1Max && slider1Value !== slider1Min
-                  ? 'flex flex-row border-bottom-2'
-                  : 'flex flex-row',
-                box1Text,
-                secureColor,
-                GetBoxTopHeight(slider1Value, slider1Max, slider1Height),
-                box1HexText,
-                slider1Value !== slider1Max
-              )}
+              <GetBoxWithText
+                classCustom={
+                  slider1Value !== slider1Max && slider1Value !== slider1Min
+                    ? 'flex flex-row border-bottom-2'
+                    : 'flex flex-row'
+                }
+                displayText={box1Text}
+                color={secureColor}
+                boxHeight={GetBoxTopHeight(slider1Value, slider1Max, slider1Height)}
+                hexDisplayText={box1HexText}
+                textDisplayStatus={slider1Value !== slider1Max}
+              />
             </div>
             <div>
-              {GetBoxWithText(
-                'flex flex-row',
-                box2Text,
-                nonSecureCallableColor,
-                GetBoxBottomHeight(slider1Value, slider1Max, slider1Height),
-                box2HexText,
-                slider1Value !== slider1Min
-              )}
+              <GetBoxWithText
+                classCustom={'flex flex-row'}
+                displayText={box2Text}
+                color={nonSecureCallableColor}
+                boxHeight={GetBoxBottomHeight(slider1Value, slider1Max, slider1Height)}
+                hexDisplayText={box2HexText}
+                textDisplayStatus={slider1Value !== slider1Min}
+              />
             </div>
           </div>
         </div>

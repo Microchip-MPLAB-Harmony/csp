@@ -1,9 +1,3 @@
-import {
-  GetSymbolValue,
-  UpdateSymbolValue,
-} from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess';
-import { component_id } from '../MainView/TrustZoneMainView';
-
 export function SetMinMaxSliderCallableSlider(
   nParentSliderValue: any,
   nGranularityFactor: any,
@@ -38,20 +32,14 @@ export const RemoveBytesStr = (byte: any) => {
   return Number(byte);
 };
 
-export function SetSliderValueUpperValueSymbolType(
-  sliderValue: any,
-  sliderMaxValue: any
-) {
+export function SetSliderValueUpperValueSymbolType(sliderValue: any, sliderMaxValue: any) {
   if (sliderValue == null) {
     return 0;
   } else {
     return sliderMaxValue - sliderValue;
   }
 }
-export function SetSliderValueLowerValueSymbolType(
-  value: any,
-  sliderMaxValue: any
-) {
+export function SetSliderValueLowerValueSymbolType(value: any, sliderMaxValue: any) {
   if (value == null) {
     return sliderMaxValue;
   } else {
@@ -59,18 +47,13 @@ export function SetSliderValueLowerValueSymbolType(
   }
 }
 
-export function GetValidSilderSymbolValue(
-  symbolId: string,
-  sliderMax: any,
-  nSliderRestricRange: any
-) {
-  let value = GetSymbolValue(component_id, symbolId);
+export function GetValidSilderSymbolValue(value: number, sliderMax: any, nSliderRestricRange: any) {
   if (value == null) {
     return null;
   }
   if (nSliderRestricRange < value) {
     value = sliderMax;
-    UpdateSymbolValue(component_id, symbolId, value);
+    return value;
   }
   return value;
 }

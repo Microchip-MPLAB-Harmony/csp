@@ -1,16 +1,9 @@
 import { Fieldset } from 'primereact/fieldset';
-import {
-  GetSymbolArray,
-  GetSymbolReadOnlyStatus,
-  GetSymbolValue,
-  UpdateSymbolValue,
-} from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess';
-import { component_id } from '../MainView/TrustZoneMainView';
-import { convertToBoolean } from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolUtils';
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { GetColorNote } from '../Memory/Memory';
 import PeripheralButton from './PeripheralButton';
+import { PluginConfigContext, useComboSymbol } from '@mplab_harmony/harmony-plugin-client-lib';
 
 let nonSecureAppendText = '_IS_NON_SECURE';
 let secureText = 'Secure';
@@ -19,18 +12,20 @@ let warnType = 'warn';
 let warningHeading = 'Warning';
 
 const TrustZone = () => {
-  let peripehralSymbolArray = GetSymbolArray(
-    component_id,
-    'TZ_PERIPHERAL_MENU_GUI'
-  );
-  let mixSecurePeripehralSymbolArray = GetSymbolArray(
-    component_id,
-    'TZ_MIX_SECURE_PERIPHERAL_MENU_GUI'
-  );
-  let systemPeripehralSymbolArray = GetSymbolArray(
-    component_id,
-    'TZ_SYSTEM_RESOURCES_MENU_GUI'
-  );
+  const { componentId = 'core' } = useContext(PluginConfigContext);
+  const peripehralSymbol = useComboSymbol({
+    componentId: componentId,
+    symbolId: 'TZ_PERIPHERAL_MENU_GUI'
+  });
+  const mixSecurePeripehralSymbol = useComboSymbol({
+    componentId: componentId,
+    symbolId: 'TZ_MIX_SECURE_PERIPHERAL_MENU_GUI'
+  });
+  const systemPeripehralSymbol = useComboSymbol({
+    componentId: componentId,
+    symbolId: 'TZ_SYSTEM_RESOURCES_MENU_GUI'
+  });
+
   const toastRef = useRef<any>();
 
   const showToast = (type: string, header: string, message: any) => {
@@ -38,60 +33,42 @@ const TrustZone = () => {
       severity: type,
       summary: header,
       detail: message,
-      life: 3000,
+      life: 5000
     });
   };
 
-  function ButtonClicked(butttonText: any) {
-    if (mixSecurePeripehralSymbolArray.includes(butttonText)) {
-      showToast(
-        warnType,
-        warningHeading,
-        GetMixSecureErrorMesssage(butttonText)
-      );
+  function ButtonClicked(butttonText: string, symbolValue: boolean, readOnlyState: boolean) {
+    if (mixSecurePeripehralSymbol.options.includes(butttonText)) {
+      showToast(warnType, warningHeading, GetMixSecureErrorMesssage(butttonText, symbolValue));
       return false;
     }
-    if (systemPeripehralSymbolArray.includes(butttonText)) {
-      showToast(warnType, warningHeading, GetCommonErrorMessage(butttonText));
+    if (systemPeripehralSymbol.options.includes(butttonText)) {
+      showToast(warnType, warningHeading, GetCommonErrorMessage(butttonText, symbolValue));
       return false;
     }
-    let readOnlyState = GetSymbolReadOnlyStatus(
-      component_id,
-      butttonText + nonSecureAppendText
-    );
     if (readOnlyState) {
-      showToast(warnType, warningHeading, GetCommonErrorMessage(butttonText));
+      showToast(warnType, warningHeading, GetCommonErrorMessage(butttonText, symbolValue));
       return false;
     }
-    let symbolId = butttonText + nonSecureAppendText;
-    let bNonSecureStatus = convertToBoolean(
-      GetSymbolValue(component_id, symbolId)
-    );
-    UpdateSymbolValue(component_id, symbolId, !bNonSecureStatus);
     return true;
   }
 
-  function GetCommonErrorMessage(id: string) {
-    let bNonSecure = convertToBoolean(
-      GetSymbolValue(component_id, id + nonSecureAppendText)
-    );
+  function GetCommonErrorMessage(id: string, symbolValue: boolean) {
     let toolTip = secureText;
-    if (bNonSecure) {
+    if (symbolValue) {
       toolTip = nonSecureText;
     }
     return id + ' is configured as ' + toolTip + ' .';
   }
 
-  function GetMixSecureErrorMesssage(id: string) {
+  function GetMixSecureErrorMesssage(id: string, symbolValue: boolean) {
     let errorMessage;
     switch (id) {
       case 'PORT':
-        errorMessage =
-          'Use PIN configurations (UI configurator) to configure PORT Pins.';
+        errorMessage = 'Use PIN configurations (UI configurator) to configure PORT Pins.';
         break;
       case 'EVSYS':
-        errorMessage =
-          'Use EVSYS configurations (UI configurator) to configure Event System.';
+        errorMessage = 'Use EVSYS configurations (UI configurator) to configure Event System.';
         break;
       case 'EIC':
         errorMessage =
@@ -99,7 +76,7 @@ const TrustZone = () => {
         break;
       case 'NVMCTRL':
       case 'PAC':
-        errorMessage = GetCommonErrorMessage(id);
+        errorMessage = GetCommonErrorMessage(id, symbolValue);
         break;
       default:
         errorMessage =
@@ -110,47 +87,77 @@ const TrustZone = () => {
     return errorMessage;
   }
 
-  function AddButton(symbolArray: any) {
-    try {
-      return (
-        <div className="grid">
-          {symbolArray.map((id: string) => (
-            <div>
-              <PeripheralButton
-                symbolId={id}
-                nonSecureAppendText={nonSecureAppendText}
-                secureText={secureText}
-                nonSecureText={nonSecureText}
-                ButtonClicked={ButtonClicked}
-              />
-            </div>
-          ))}
-        </div>
-      );
-    } catch (err) {}
-  }
-
   return (
     <div>
-      <Toast ref={toastRef} position="top-right"></Toast>
-      <div className="flex flex-column">
-        <div className="p-3">{GetColorNote(20, 'flex flex-row gap-3')}</div>
-        <div className="p-3">
-          <div className="p-2">
-            <Fieldset className="p-3" legend="Peripherals">
-              <div>{AddButton(peripehralSymbolArray)}</div>
+      <Toast
+        ref={toastRef}
+        position='top-right'></Toast>
+      <div className='flex flex-column'>
+        <div className='p-3'>{GetColorNote(20, 'flex flex-row gap-3')}</div>
+        <div className='p-3'>
+          <div className='p-2'>
+            <Fieldset
+              className='p-3'
+              legend='Peripherals'>
+              <div className='grid'>
+                {peripehralSymbol.options.map((id: string) => (
+                  <div>
+                    <PeripheralButton
+                      key={id}
+                      componentId={componentId}
+                      symbolId={id}
+                      nonSecureAppendText={nonSecureAppendText}
+                      secureText={secureText}
+                      nonSecureText={nonSecureText}
+                      ButtonClicked={ButtonClicked}
+                    />
+                  </div>
+                ))}
+              </div>
             </Fieldset>
           </div>
 
-          <div className="p-3">
-            <Fieldset className="p-5" legend="Mix-Secure Peripherals">
-              <div>{AddButton(mixSecurePeripehralSymbolArray)}</div>
+          <div className='p-3'>
+            <Fieldset
+              className='p-5'
+              legend='Mix-Secure Peripherals'>
+              <div className='grid'>
+                {mixSecurePeripehralSymbol.options.map((id: string) => (
+                  <div>
+                    <PeripheralButton
+                      key={id}
+                      componentId={componentId}
+                      symbolId={id}
+                      nonSecureAppendText={nonSecureAppendText}
+                      secureText={secureText}
+                      nonSecureText={nonSecureText}
+                      ButtonClicked={ButtonClicked}
+                    />
+                  </div>
+                ))}
+              </div>
             </Fieldset>
           </div>
 
-          <div className="p-3">
-            <Fieldset className="p-5" legend="System Resources">
-              <div>{AddButton(systemPeripehralSymbolArray)}</div>
+          <div className='p-3'>
+            <Fieldset
+              className='p-5'
+              legend='System Resources'>
+              <div className='grid'>
+                {systemPeripehralSymbol.options.map((id: string) => (
+                  <div>
+                    <PeripheralButton
+                      key={id}
+                      componentId={componentId}
+                      symbolId={id}
+                      nonSecureAppendText={nonSecureAppendText}
+                      secureText={secureText}
+                      nonSecureText={nonSecureText}
+                      ButtonClicked={ButtonClicked}
+                    />
+                  </div>
+                ))}
+              </div>
             </Fieldset>
           </div>
         </div>
