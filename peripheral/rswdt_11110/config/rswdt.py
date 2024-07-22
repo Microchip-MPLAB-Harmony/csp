@@ -26,6 +26,7 @@ global rswdtInstanceName
 global rswdtinterruptVector
 global rswdtinterruptHandler
 global rswdtinterruptHandlerLock
+global rswdt_WdtDisabled_Comment
 
 rswdtInstanceName = coreComponent.createStringSymbol("RSWDT_INSTANCE_NAME", None)
 rswdtInstanceName.setVisible(False)
@@ -41,6 +42,20 @@ rswdtEnable = coreComponent.createBooleanSymbol("rswdtENABLE", rswdtMenu)
 rswdtEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:rswdt_11110;register:RSWDT_MR")
 rswdtEnable.setLabel("Enable Reinforced Safety Watchdog Timer (RSWDT)?")
 rswdtEnable.setDefaultValue(False)
+
+def commentVisibility(symbol, event):
+    rswdtEnabled = event["source"].getSymbolByID("rswdtENABLE")
+    wdtEnabled = event["source"].getSymbolByID("wdtENABLE")
+    
+    if (rswdtEnabled.getValue() == True and wdtEnabled.getValue() == False):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+    
+rswdt_WdtDisabled_Comment = coreComponent.createCommentSymbol("WDT_IS_DISABLED_COMMENT", rswdtMenu)
+rswdt_WdtDisabled_Comment.setLabel("******** WDT is Disabled. Please Enable WDT ********")
+rswdt_WdtDisabled_Comment.setVisible(False)
+rswdt_WdtDisabled_Comment.setDependencies(commentVisibility, ["wdtENABLE", "rswdtENABLE"])
 
 def rswdtEnableCfgMenu(rswdtCfgMenu, event):
     rswdtCfgMenu.setVisible(event["value"])
