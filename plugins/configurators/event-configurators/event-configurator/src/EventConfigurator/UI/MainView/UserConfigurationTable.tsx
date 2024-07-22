@@ -16,7 +16,7 @@ import {
   GetSymbolArray,
   UpdateSymbolValue,
   clearSymbol,
-  AddSymbolListener,
+  AddSymbolListener
 } from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess';
 
 import { IsTrustZoneSupported } from '@mplab_harmony/harmony-plugin-core-service/build/project-service/ProjectService';
@@ -37,6 +37,10 @@ interface UserData {
 const UserTable = (props: UserData) => {
   let modifiedKeysList: string[] = [];
   let trustzoneSupported = convertToBoolean(IsTrustZoneSupported());
+  let securityModeDisplay = convertToBoolean(GetSymbolValue(component_id, 'EVSYS_SEC_IMPLEMENTED'));
+  if (securityModeDisplay !== null && securityModeDisplay !== undefined) {
+    trustzoneSupported = securityModeDisplay;
+  }
 
   function GetTrustZoneClassName(value: any) {
     if (value === 'SECURE') {
@@ -64,16 +68,10 @@ const UserTable = (props: UserData) => {
 
     const updateValue = (event: { value: any }) => {
       console.log(event.value);
-      const userIndex: number | undefined = getUserNameIndexMap().get(
-        event.value
-      );
+      const userIndex: number | undefined = getUserNameIndexMap().get(event.value);
       if (userIndex !== undefined) {
         let value: string = GetSymbolValue(component_id, rowData.symId);
-        UpdateSymbolValue(
-          component_id,
-          'EVSYS_USER_' + userIndex.toString(),
-          value
-        );
+        UpdateSymbolValue(component_id, 'EVSYS_USER_' + userIndex.toString(), value);
         UpdateSymbolValue(component_id, rowData.symId, 'NONE');
         clearSymbol(component_id, rowData.symId);
       }
@@ -99,11 +97,7 @@ const UserTable = (props: UserData) => {
     );
   };
 
-  const ChannelNumber = (rowData: {
-    symId: string;
-    key: string;
-    chnl: string;
-  }) => {
+  const ChannelNumber = (rowData: { symId: string; key: string; chnl: string }) => {
     let channelList: string[] = [];
     let [selectedChnl, setSelectedchnl] = useState<String>(rowData.chnl);
 
@@ -134,27 +128,17 @@ const UserTable = (props: UserData) => {
     );
   };
 
-  const SecurityMode = (rowData: {
-    symId: string;
-    key: string;
-    chnl: string;
-  }) => {
+  const SecurityMode = (rowData: { symId: string; key: string; chnl: string }) => {
     const userId: string = rowData.symId.replace(/^\D+/g, '');
     const symbol = 'EVSYS_USER_NONSEC_' + userId;
 
-    const changeComponentstate = (
-      value: any,
-      editable: boolean,
-      visible: boolean
-    ) => {
-      alert('changed Value' + value);
+    const changeComponentstate = (value: any, editable: boolean, visible: boolean) => {
       setSelectedMode(value);
     };
 
     let [selectedMode, setSelectedMode] = useState<String>(() => {
-      alert('register listener: ' + symbol);
       globalSymbolSStateData.set(symbol, {
-        changeComponentState: changeComponentstate,
+        changeComponentState: changeComponentstate
       });
       AddSymbolListener(symbol);
       return GetSymbolValue(component_id, symbol);
@@ -170,7 +154,7 @@ const UserTable = (props: UserData) => {
     }
 
     return (
-      <div className="p-d-flex secure-combo">
+      <div className='p-d-flex secure-combo'>
         <PrimeDropDown
           id={rowData.symId}
           style={{}}
@@ -178,9 +162,7 @@ const UserTable = (props: UserData) => {
           options={GetSymbolArray(component_id, symbol)}
           disabled={false}
           onChange={(e) => ConfigurationChanged(e)}
-          className={GetTrustZoneClassName(
-            GetSymbolValue(component_id, symbol)
-          )}
+          className={GetTrustZoneClassName(GetSymbolValue(component_id, symbol))}
         />
       </div>
     );
@@ -192,48 +174,43 @@ const UserTable = (props: UserData) => {
         className={PrimeIcons.TRASH}
         onClick={(e) => {
           props.onRemoveUser(rowData.symId);
-        }}
-      ></div>
+        }}></div>
     );
   };
 
   return (
     <div>
-      <div className="card">
+      <div className='card'>
         <DataTable
           value={props.userData}
           stripedRows
-          size="small"
+          size='small'
           autoLayout
           resizableColumns
-          columnResizeMode="expand"
+          columnResizeMode='expand'
           // scrollable
-          scrollHeight="18rem"
+          scrollHeight='18rem'
           showGridlines
-          responsiveLayout="scroll"
-        >
+          responsiveLayout='scroll'>
           <Column
-            field="User"
-            header="User"
-            align="center"
-            body={User}
-          ></Column>
+            field='User'
+            header='User'
+            align='center'
+            body={User}></Column>
           <Column
-            field="channel_number"
-            header="Channel Number"
+            field='channel_number'
+            header='Channel Number'
             body={ChannelNumber}
-            align="center"
-          ></Column>
+            align='center'></Column>
           {trustzoneSupported !== null && trustzoneSupported && (
             <Column
-              field="Security Mode"
-              header="Security Mode"
-              align="center"
-              body={SecurityMode}
-            ></Column>
+              field='Security Mode'
+              header='Security Mode'
+              align='center'
+              body={SecurityMode}></Column>
           )}
           <Column
-            field="Remove_User"
+            field='Remove_User'
             header={() => {
               return (
                 <React.Fragment>
@@ -243,9 +220,8 @@ const UserTable = (props: UserData) => {
                 </React.Fragment>
               );
             }}
-            align="center"
-            body={RemoveUser}
-          ></Column>
+            align='center'
+            body={RemoveUser}></Column>
         </DataTable>
       </div>
     </div>

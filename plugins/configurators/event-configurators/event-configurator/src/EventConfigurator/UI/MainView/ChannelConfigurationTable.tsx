@@ -17,7 +17,7 @@ import { component_id } from './MainBlock';
 import {
   GetSymbolValue,
   GetSymbolArray,
-  GetSymbolReadOnlyStatus,
+  GetSymbolReadOnlyStatus
 } from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess';
 
 import { IsTrustZoneSupported } from '@mplab_harmony/harmony-plugin-core-service/build/project-service/ProjectService';
@@ -38,6 +38,10 @@ const ChannelTable = (props: {
   const [dummyState, setDummyState] = useState<boolean>(false);
 
   let trustzoneSupported = convertToBoolean(IsTrustZoneSupported());
+  let securityModeDisplay = convertToBoolean(GetSymbolValue(component_id, 'EVSYS_SEC_IMPLEMENTED'));
+  if (securityModeDisplay!==null && securityModeDisplay !== undefined) {
+    trustzoneSupported = securityModeDisplay;
+  }
 
   function GetTrustZoneClassName(value: any) {
     if (value === 'SECURE') {
@@ -79,10 +83,7 @@ const ChannelTable = (props: {
 
   const SecurityMode = (rowData: any) => {
     function ConfigurationChanged(event: { value: any }) {
-      ChangeClassNameState(
-        'EVSYS_NONSEC_' + chnlNum,
-        GetTrustZoneClassName(event.value)
-      );
+      ChangeClassNameState('EVSYS_NONSEC_' + chnlNum, GetTrustZoneClassName(event.value));
     }
 
     const chnlNum: Number = rowData.replace(/^\D+/g, '');
@@ -90,7 +91,7 @@ const ChannelTable = (props: {
 
     const symValue = GetSymbolValue(component_id, symbol);
     return (
-      <div className="p-d-flex secure-combo">
+      <div className='p-d-flex secure-combo'>
         <DropDown
           componentId={component_id}
           symbolId={symbol}
@@ -144,8 +145,7 @@ const ChannelTable = (props: {
         onClick={(e) => {
           props.onRemoveChannel(rowData);
           setDummyState(() => !dummyState);
-        }}
-      ></div>
+        }}></div>
     );
   };
 
@@ -155,44 +155,40 @@ const ChannelTable = (props: {
 
   return (
     <div key={props.channelList.length}>
-      <div className="card">
+      <div className='card'>
         <DataTable
           value={props.channelList}
           autoLayout
           stripedRows
           showGridlines
-          size="small"
+          size='small'
           resizableColumns
           // scrollable
-          scrollHeight="18rem"
+          scrollHeight='18rem'
           // responsiveLayout="scroll"
-          columnResizeMode="expand"
-          selectionMode="single"
+          columnResizeMode='expand'
+          selectionMode='single'
           selection={props.selectedChnl}
-          onSelectionChange={selectionChanged}
-        >
+          onSelectionChange={selectionChanged}>
           <Column
-            field="channel_number"
-            header="Channel Number"
-            align="center"
-            body={ChannelNumber}
-          ></Column>
+            field='channel_number'
+            header='Channel Number'
+            align='center'
+            body={ChannelNumber}></Column>
           <Column
-            field="Event_Generator"
-            header="Event Generator"
-            align="center"
-            body={EventGenerator}
-          ></Column>
+            field='Event_Generator'
+            header='Event Generator'
+            align='center'
+            body={EventGenerator}></Column>
           {trustzoneSupported !== null && trustzoneSupported && (
             <Column
-              field="Security Mode"
-              header="Security Mode"
-              align="center"
-              body={SecurityMode}
-            ></Column>
+              field='Security Mode'
+              header='Security Mode'
+              align='center'
+              body={SecurityMode}></Column>
           )}
           <Column
-            field="Event_Status"
+            field='Event_Status'
             header={() => {
               return (
                 <React.Fragment>
@@ -202,12 +198,11 @@ const ChannelTable = (props: {
                 </React.Fragment>
               );
             }}
-            align="center"
+            align='center'
             resizeable
-            body={EventStatus}
-          ></Column>
+            body={EventStatus}></Column>
           <Column
-            field="User_Ready"
+            field='User_Ready'
             header={() => {
               return (
                 <React.Fragment>
@@ -217,11 +212,10 @@ const ChannelTable = (props: {
                 </React.Fragment>
               );
             }}
-            align="center"
-            body={UserReady}
-          ></Column>
+            align='center'
+            body={UserReady}></Column>
           <Column
-            field="Remove_Channel"
+            field='Remove_Channel'
             header={() => {
               return (
                 <React.Fragment>
@@ -231,9 +225,8 @@ const ChannelTable = (props: {
                 </React.Fragment>
               );
             }}
-            align="center"
-            body={RemoveChannel}
-          ></Column>
+            align='center'
+            body={RemoveChannel}></Column>
         </DataTable>
       </div>
     </div>

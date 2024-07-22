@@ -2,7 +2,7 @@ import Header from './ToolBar';
 import {
   SetComponentId,
   clearSymbol,
-  UpdateSymbolValue,
+  UpdateSymbolValue
 } from '@mplab_harmony/harmony-plugin-core-service/build/database-access/SymbolAccess';
 import { globalSymbolSStateData } from '@mplab_harmony/harmony-plugin-ui/build/components/Components';
 import { convertToBoolean } from '@mplab_harmony/harmony-plugin-ui/build/utils/CommonUtil';
@@ -14,14 +14,14 @@ import {
   getEnabledChannelList,
   GetMaxChannels,
   GetUsersData,
-  registerForUsersUpdateCallback,
+  registerForUsersUpdateCallback
 } from '../../EventService';
 import UserConfigruation from './UserConfiguration';
 import './MainBlock.css';
 
 import {
   ChangeClassNameState,
-  ChangeComponentState,
+  ChangeComponentState
 } from '@mplab_harmony/harmony-plugin-ui/build/utils/ComponentStateChangeUtils';
 import { useState } from 'react';
 import { registerForChannelUpdateCallback } from '../../EventService';
@@ -45,15 +45,14 @@ const MainBlock = () => {
   }>({
     channelList: getEnabledChannelList(),
     selectedChannel: '',
-    maxChannels: GetMaxChannels(),
+    maxChannels: GetMaxChannels()
   });
 
-  const [displayChannelLocked, setDisplayChannelLocked] =
-    useState<boolean>(false);
+  const [displayChannelLocked, setDisplayChannelLocked] = useState<boolean>(false);
 
-  const [users, setUsers] = useState<
-    { symId: string; key: string; chnl: string }[]
-  >(GetUsersData());
+  const [users, setUsers] = useState<{ symId: string; key: string; chnl: string }[]>(
+    GetUsersData()
+  );
 
   (window as any).SymbolValueChanged = (value: any) => {
     if (value !== null && value !== undefined) {
@@ -63,15 +62,9 @@ const MainBlock = () => {
       const readOnlyStatus = convertToBoolean(symbolData[2]);
       const visibleStatus = convertToBoolean(symbolData[3]);
 
-      alert('symbolData ' + symbolData);
       if (globalSymbolSStateData.get(symbolId) != null) {
         // ChangeValueState(symbolId, symbolValue);
-        ChangeComponentState(
-          symbolId,
-          symbolValue,
-          readOnlyStatus,
-          visibleStatus
-        );
+        ChangeComponentState(symbolId, symbolValue, readOnlyStatus, visibleStatus);
       }
 
       checkChannelsUpdate(symbolId);
@@ -96,7 +89,7 @@ const MainBlock = () => {
       setChannels((prevState) => {
         return {
           ...prevState,
-          channelList: getEnabledChannelList(),
+          channelList: getEnabledChannelList()
         };
       });
     }
@@ -115,7 +108,7 @@ const MainBlock = () => {
     setChannels((prevState) => {
       return {
         ...prevState,
-        channelList: getEnabledChannelList(),
+        channelList: getEnabledChannelList()
       };
     });
   };
@@ -147,7 +140,7 @@ const MainBlock = () => {
         return {
           channelList: channelList,
           selectedChannel: selectedChnl,
-          maxChannels: prevState.maxChannels,
+          maxChannels: prevState.maxChannels
         };
       });
       enableDisableChannel(chnl, false);
@@ -187,7 +180,11 @@ const MainBlock = () => {
   const renderFooter = () => {
     return (
       <div>
-        <Button label="Ok" onClick={() => onHide()} className="p-button-text" />
+        <Button
+          label='Ok'
+          onClick={() => onHide()}
+          className='p-button-text'
+        />
       </div>
     );
   };
@@ -195,21 +192,20 @@ const MainBlock = () => {
   return (
     <div>
       <Header />
-      <div className="main_view">
+      <div className='main_view'>
         <ChannelConfigruation
           channels={channels}
           onAddChannel={addChannel}
           onRemoveChannel={removeChannel}
           onSetSelectedChannel={setSelectedChannel}
         />
-        <div className="dialog">
+        <div className='dialog'>
           <Dialog
-            header="Channel Locked"
+            header='Channel Locked'
             visible={displayChannelLocked}
             style={{ width: '50vw' }}
             footer={renderFooter()}
-            onHide={() => onHide()}
-          >
+            onHide={() => onHide()}>
             <p>Not able to remove channel. This channel is locked by user.</p>
           </Dialog>
         </div>
