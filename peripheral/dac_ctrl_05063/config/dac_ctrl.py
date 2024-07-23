@@ -108,6 +108,8 @@ def instantiateComponent(dacComponent):
     dacSnhClockPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_ctrl_05063;register:%NOREGISTER%")
     dacSnhClockPeriod.setLabel("Sample and Hold Clock Period")
     dacSnhClockPeriod.setDefaultValue(0x0)
+    dacSnhClockPeriod.setMin(0)
+    dacSnhClockPeriod.setMax(1023)
     dacSnhClockPeriod.setVisible(True)
     dacSnhClockPeriod.setDependencies(visibility_Control, ["DAC_LPRC_ENABLE", "DAC_MODE"])
 
@@ -115,6 +117,8 @@ def instantiateComponent(dacComponent):
     dacSnhClockWidth.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dac_ctrl_05063;register:%NOREGISTER%")
     dacSnhClockWidth.setLabel("Sample and Hold Clock Width")
     dacSnhClockWidth.setDefaultValue(0x0)
+    dacSnhClockWidth.setMin(0)
+    dacSnhClockWidth.setMax(1023)
     dacSnhClockWidth.setVisible(True)
     dacSnhClockWidth.setDependencies(visibility_Control, ["DAC_LPRC_ENABLE", "DAC_MODE"])
 
