@@ -50,6 +50,8 @@
 /* This section lists the other files that are included in this file.
 */
 #include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
