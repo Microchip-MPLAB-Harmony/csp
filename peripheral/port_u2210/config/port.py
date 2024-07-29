@@ -72,9 +72,11 @@ def packageChange(symbol, pinout):
             portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(pinout["value"])) + "\"]")
             for id in range(0,len(portBitPositionNode.getChildren())):
                 if "BGA" in pinout["value"] or "WLCSP" in pinout["value"] or "DRQFN" in pinout["value"]:
-                    pin_map[portBitPositionNode.getChildren()[id].getAttribute("position")] = portBitPositionNode.getChildren()[id].getAttribute("pad")
+                    # Convert single digit [0-9] string to the two digit [00-09] string, For example "PA9" to "PA09"
+                    pin_map[portBitPositionNode.getChildren()[id].getAttribute("position")] = re.sub(r'(?<!\d)(\d)(?!\d)', r'0\1', portBitPositionNode.getChildren()[id].getAttribute("pad"))
                 else:
-                    pin_map[int(portBitPositionNode.getChildren()[id].getAttribute("position"))] = portBitPositionNode.getChildren()[id].getAttribute("pad")
+                    # Convert single digit [0-9] string to the two digit [00-09] string, For example "PA9" to "PA09"
+                    pin_map[int(portBitPositionNode.getChildren()[id].getAttribute("position"))] = re.sub(r'(?<!\d)(\d)(?!\d)', r'0\1', portBitPositionNode.getChildren()[id].getAttribute("pad"))
 
             if "BGA" in pinout["value"] or "WLCSP" in pinout["value"] or "DRQFN" in pinout["value"]:
                 ## BGA package ID's are alphanumeric unlike TQFP special sorting required
@@ -392,11 +394,14 @@ pinoutNode = ATDF.getNode('/avr-tools-device-file/pinouts/pinout@[name= "' + str
 for id in range(0,len(pinoutNode.getChildren())):
     if pinoutNode.getChildren()[id].getAttribute("type") == None:
         if "BGA" in portPackage.getValue() or "WLCSP" in portPackage.getValue() or "DRQFN" in portPackage.getValue():
-            pin_map[pinoutNode.getChildren()[id].getAttribute("position")] = pinoutNode.getChildren()[id].getAttribute("pad")
+            # Convert single digit [0-9] string to the two digit [00-09] string, For example "PA9" to "PA09"
+            pin_map[pinoutNode.getChildren()[id].getAttribute("position")] = re.sub(r'(?<!\d)(\d)(?!\d)', r'0\1', pinoutNode.getChildren()[id].getAttribute("pad"))
         else:
-            pin_map[int(pinoutNode.getChildren()[id].getAttribute("position"))] = pinoutNode.getChildren()[id].getAttribute("pad")
+            # Convert single digit [0-9] string to the two digit [00-09] string, For example "PA9" to "PA09"
+            pin_map[int(pinoutNode.getChildren()[id].getAttribute("position"))] = re.sub(r'(?<!\d)(\d)(?!\d)', r'0\1', pinoutNode.getChildren()[id].getAttribute("pad"))
     else:
-        pin_map_internal[pinoutNode.getChildren()[id].getAttribute("type").split("INTERNAL_")[1]] = pinoutNode.getChildren()[id].getAttribute("pad")
+        # Convert single digit [0-9] string to the two digit [00-09] string, For example "PA9" to "PA09"
+        pin_map_internal[pinoutNode.getChildren()[id].getAttribute("type").split("INTERNAL_")[1]] = re.sub(r'(?<!\d)(\d)(?!\d)', r'0\1', pinoutNode.getChildren()[id].getAttribute("pad"))
 
 if "BGA" in portPackage.getValue() or "WLCSP" in portPackage.getValue() or "DRQFN" in portPackage.getValue():
     pin_position = sort_alphanumeric(pin_map.keys())
@@ -438,7 +443,8 @@ for pinNumber in range(1, internalPincount + 1):
     if portSignalNode != None:
 
         signalIndex = int(portSignalNode.getAttribute("index"))
-        signalPad = str(portSignalNode.getAttribute("pad"))
+        # Convert single digit [0-9] string to the two digit [00-09] string, For example "PA9" to "PA09"
+        signalPad = str(re.sub(r'(?<!\d)(\d)(?!\d)', r'0\1', portSignalNode.getAttribute("pad")))
 
         if signalIndex != None and signalPad != None:
             portSym_PinPad = coreComponent.createStringSymbol("PORT_PIN_PAD_" + str(signalIndex), None)
