@@ -13,7 +13,9 @@
 
 - Fixed unavailable GLCK IO signals issue for PIC32CZ-CA devices
 - Updated default value of BOR Trip points FUSEs for PIC32CZ-CA devices
-- Fixed MISRA-C violations in TC PLIB
+- Fixed MISRA-C violations in TC PLIB and SAMG55 clock
+- Fixed PORT PIN enum code generation issue
+- Updated PIC32CZ-CA80, PIC32CZ-CA90 and PIC32CZ-CA91 version in package.yml
 
 ## CSP Release v3.19.3
 
