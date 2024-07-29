@@ -3,6 +3,18 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.19.4
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Fixed unavailable GLCK IO signals issue for PIC32CZ-CA devices
+- Updated default value of BOR Trip points FUSEs for PIC32CZ-CA devices
+- Fixed MISRA-C violations in TC PLIB
+
 ## CSP Release v3.19.3
 
 ### New Features
