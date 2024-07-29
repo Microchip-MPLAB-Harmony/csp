@@ -82,7 +82,9 @@ typedef struct
 volatile static MCLK_OBJECT mclkObj;
 
 </#if>
+<#assign OSCCTRL_GEN = CONFIG_CLOCK_XOSC_ENABLE | CONFIG_CLOCK_OSC48M_ENABLE>
 
+<#if OSCCTRL_GEN>
 static void OSCCTRL_Initialize(void)
 {
 <#if CONFIG_CLOCK_XOSC_ENABLE == true>
@@ -147,9 +149,10 @@ static void OSCCTRL_Initialize(void)
     <#if CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE">
     OSCCTRL_REGS->OSCCTRL_OSC48MCTRL |= OSCCTRL_OSC48MCTRL_ONDEMAND_Msk;
     </#if>
-     
+
 </#if>
 }
+</#if>
 
 static void OSC32KCTRL_Initialize(void)
 {
@@ -310,9 +313,11 @@ static void GCLK${i}_Initialize(void)
 </#list>
 void CLOCK_Initialize (void)
 {
+    <#if OSCCTRL_GEN>
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
 
+    </#if>
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
 
@@ -399,7 +404,7 @@ void OSCCTRL_CallbackRegister(OSCCTRL_CFD_CALLBACK callback, uintptr_t context)
 void __attribute__((used)) OSCCTRL_InterruptHandler(void)
 {
 	uintptr_t context_var;
-	
+
     /* Checking for the Clock Fail status */
     if ((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_XOSCFAIL_Msk) == OSCCTRL_STATUS_XOSCFAIL_Msk)
     {
@@ -427,7 +432,7 @@ void OSC32KCTRL_CallbackRegister (OSC32KCTRL_CFD_CALLBACK callback, uintptr_t co
 void __attribute__((used)) OSC32KCTRL_InterruptHandler(void)
 {
 	uintptr_t context_var;
-	
+
     /* Checking for the Clock Failure status */
     if ((OSC32KCTRL_REGS->OSC32KCTRL_STATUS & OSC32KCTRL_STATUS_CLKFAIL_Msk) == OSC32KCTRL_STATUS_CLKFAIL_Msk)
     {
@@ -454,7 +459,7 @@ void MCLK_CallbackRegister (MCLK_CKRDY_CALLBACK callback, uintptr_t context)
 void __attribute__((used)) MCLK_InterruptHandler(void)
 {
 	uintptr_t context_var;
-	
+
     /* Checking for the Clock Ready Interrupt */
     if ((MCLK_REGS->MCLK_INTFLAG & MCLK_INTFLAG_CKRDY_Msk) == MCLK_INTFLAG_CKRDY_Msk)
     {
