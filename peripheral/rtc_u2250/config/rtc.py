@@ -784,15 +784,18 @@ def instantiateComponent(rtcComponent):
     rtcTampAvailable = rtcComponent.createBooleanSymbol("TAMP_DETECTION_SUPPORTED", rtcSym_Menu)
     rtcTampAvailable.setVisible(False)
     tamperChannels = 0
-    numChannelNode = ATDF.getNode(
+    channelNode = ATDF.getNode(
         '/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="TAMPCTRL"]')
-    if numChannelNode is not None:
+    if channelNode is not None:
         rtcTampAvailable.setDefaultValue(True)
+        numChannelNode = ATDF.getNode(
+        '/avr-tools-device-file/devices/device/peripherals/module@[name="RTC"]/instance@[name="RTC"]/signals')
         numChannelValue = numChannelNode.getChildren()
         for id in range(0, len(numChannelValue)):
-            if ("TAMLVL") in numChannelValue[id].getAttribute("name"):
-                if (int(numChannelValue[id].getAttribute("name").split("TAMLVL")[1]) + 1) > tamperChannels:
-                    tamperChannels = int(numChannelValue[id].getAttribute("name").split("TAMLVL")[1]) + 1
+                if ("IN") in numChannelValue[id].getAttribute("group"):
+                    if(int(numChannelValue[id].getAttribute("index")) + 1) > tamperChannels:
+                        tamperChannels = int(numChannelValue[id].getAttribute("index")) + 1
+        
 
         # Frequency Correction
         rtcTampMenu = rtcComponent.createMenuSymbol(
