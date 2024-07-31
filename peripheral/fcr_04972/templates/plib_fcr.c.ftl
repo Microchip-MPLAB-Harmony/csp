@@ -58,15 +58,7 @@
 
 void ${FCR_INSTANCE_NAME}_Initialize( void )
 {
-    ${FCR_INSTANCE_NAME}_REGS->FCR_CTRLA =
-                  <#if FCR_AUTOWS == false>
-<#lt>                     ((${FCR_INSTANCE_NAME}_REGS->FCR_CTRLA) & (FCR_CTRLA_RDBUFWS_Msk)) | \
-<#lt>                     FCR_CTRLA_FWS(${FCR_FWS}) | \
-                  <#else>
-<#lt>                     ((${FCR_INSTANCE_NAME}_REGS->FCR_CTRLA) & (FCR_CTRLA_RDBUFWS_Msk | FCR_CTRLA_FWS_Msk)) | \
-                  </#if>
-<#lt>                     FCR_CTRLA_ADRWS(${FCR_ADRWS?then('1U', '0U')}) | \
-<#lt>                     FCR_CTRLA_AUTOWS(${FCR_AUTOWS?then('1U', '0U')});
+    /* Flash wait state initialization is performed at the start of the SYS_Initialize routine */
 }
 
 bool ${FCR_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )

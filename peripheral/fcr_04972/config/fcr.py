@@ -22,6 +22,8 @@
 *****************************************************************************"""
 
 global fcrInstanceName
+global fcrfilesArray
+fcrfilesArray = []
 
 def waitStateUpdateCalc():
     global waitStates
@@ -39,6 +41,23 @@ def waitStateUpdate(symbol, event):
     else:
         symbol.setValue(waitStateUpdateCalc())
 
+def fcrSecurityUpdate(symbol, event):
+    global fcrfilesArray
+    global fcrInstanceName
+
+    if event["value"] == False:
+        fcrfilesArray[0].setSecurity("SECURE")
+        fcrfilesArray[1].setSecurity("SECURE")
+        fcrfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+        fcrfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", fcrInstanceName.getValue() + "_SET_NON_SECURE", False)
+
+    else:
+        fcrfilesArray[0].setSecurity("NON_SECURE")
+        fcrfilesArray[1].setSecurity("NON_SECURE")
+        fcrfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
+        fcrfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", fcrInstanceName.getValue() + "_SET_NON_SECURE", True)
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -46,6 +65,9 @@ def waitStateUpdate(symbol, event):
 def instantiateComponent(fcrComponent):
 
     global waitStates
+    global fcrInstanceName
+    global fcrfilesArray
+    
     waitStates = {}
     waitStates = Database.sendMessage("core", "WAIT_STATES", waitStates)
 
@@ -99,13 +121,6 @@ def instantiateComponent(fcrComponent):
     fcrSym_SourceFile.setType("SOURCE")
     fcrSym_SourceFile.setMarkup(True)
     
-# for PIC32CZ-CA family of device, auto waitstate is set by default, so no need of setting through this code
-    #fcrSym_SystemInitFile1 = fcrComponent.createFileSymbol("FCR_SYS_INIT_0", None)
-    #fcrSym_SystemInitFile1.setSourcePath("../peripheral/fcr_04972/templates/system/fcr_waitstate.h.ftl")
-    #fcrSym_SystemInitFile1.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
-    #fcrSym_SystemInitFile1.setType("STRING")
-    #fcrSym_SystemInitFile1.setMarkup(True)
-    
     fcrSystemDefFile = fcrComponent.createFileSymbol("FCR_SYS_DEF", None)
     fcrSystemDefFile.setSourcePath("../peripheral/fcr_04972/templates/system/definitions.h.ftl")
     fcrSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
@@ -114,13 +129,30 @@ def instantiateComponent(fcrComponent):
 
     fcrSystemInitFile = fcrComponent.createFileSymbol("FCR_SYS_INIT", None)
     fcrSystemInitFile.setSourcePath("../peripheral/fcr_04972/templates/system/initialization.c.ftl")
-    fcrSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+    fcrSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
     fcrSystemInitFile.setType("STRING")
     fcrSystemInitFile.setMarkup(True)
+    
+    fcrSystemInitFile_ws = fcrComponent.createFileSymbol("FCR_SYS_INIT_0", None)
+    fcrSystemInitFile_ws.setSourcePath("../peripheral/fcr_04972/templates/system/fcr_waitstate.h.ftl")
+    fcrSystemInitFile_ws.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
+    fcrSystemInitFile_ws.setType("STRING")
+    fcrSystemInitFile_ws.setMarkup(True)
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
-        fcrSym_HeaderFile.setSecurity("SECURE")
-        fcrSym_SourceFile.setSecurity("SECURE")
-        #fcrSym_SystemInitFile1.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-        fcrSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
-        fcrSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        fcrIsNonSecure = Database.getSymbolValue("core", fcrInstanceName.getValue() + "_IS_NON_SECURE")
+        fcrSystemDefFile.setDependencies(fcrSecurityUpdate, ["core." + fcrInstanceName.getValue() + "_IS_NON_SECURE"])
+        
+        fcrSystemInitFile_ws.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+        fcrfilesArray.append(fcrSym_SourceFile)
+        fcrfilesArray.append(fcrSym_HeaderFile)
+        fcrfilesArray.append(fcrSystemInitFile)
+        fcrfilesArray.append(fcrSystemDefFile)
+        #Set interrupt security
+        Database.setSymbolValue("core", fcrInstanceName.getValue() + "_SET_NON_SECURE", fcrIsNonSecure)
+        
+        if fcrIsNonSecure == False:
+            fcrfilesArray[0].setSecurity("SECURE")
+            fcrfilesArray[1].setSecurity("SECURE")
+            fcrfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+            fcrfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")

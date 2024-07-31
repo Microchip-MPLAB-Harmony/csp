@@ -325,11 +325,8 @@ def setMPUDefaultSettings():
 global nvmWaitStates
 nvmWaitStates = { #VDD > 2.7
                     24000000 : 0,
-                    51000000 : 1,
-                    77000000 : 2,
-                    101000000 : 3,
-                    119000000 : 4,
-                    120000000 : 5
+                    48000000 : 1,
+                    72000000 : 2
                 }
 
 global swdPin
