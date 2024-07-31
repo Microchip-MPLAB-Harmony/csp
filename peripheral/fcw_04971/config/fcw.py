@@ -22,6 +22,26 @@
 *****************************************************************************"""
 
 global fcwInstanceName
+global fcwfilesArray
+fcwfilesArray = []
+
+def fcwSecurityUpdate(symbol, event):
+    global fcwfilesArray
+    global fcwInstanceName
+
+    if event["value"] == False:
+        fcwfilesArray[0].setSecurity("SECURE")
+        fcwfilesArray[1].setSecurity("SECURE")
+        fcwfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+        fcwfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", fcwInstanceName.getValue() + "_SET_NON_SECURE", False)
+
+    else:
+        fcwfilesArray[0].setSecurity("NON_SECURE")
+        fcwfilesArray[1].setSecurity("NON_SECURE")
+        fcwfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
+        fcwfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", fcwInstanceName.getValue() + "_SET_NON_SECURE", True)
 
 def fcwSetMemoryDependency(symbol, event):
     symbol.setVisible(event["value"])
@@ -58,6 +78,7 @@ def instantiateComponent(fcwComponent):
     global fcwInterruptHandler
     global fcwInterruptVectorUpdate
     global fcwInterruptEnable
+    global fcwfilesArray
 
     fcwInstanceName = fcwComponent.createStringSymbol("FCW_INSTANCE_NAME", None)
     fcwInstanceName.setVisible(False)
@@ -212,7 +233,19 @@ def instantiateComponent(fcwComponent):
     fcwSystemInitFile.setMarkup(True)
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
-        fcwSym_HeaderFile.setSecurity("SECURE")
-        fcwSym_SourceFile.setSecurity("SECURE")
-        fcwSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
-        fcwSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        fcwIsNonSecure = Database.getSymbolValue("core", fcwInstanceName.getValue() + "_IS_NON_SECURE")
+        fcwSystemDefFile.setDependencies(fcwSecurityUpdate, ["core." + fcwInstanceName.getValue() + "_IS_NON_SECURE"])
+        
+        fcwfilesArray.append(fcwSym_SourceFile)
+        fcwfilesArray.append(fcwSym_HeaderFile)
+        fcwfilesArray.append(fcwSystemInitFile)
+        fcwfilesArray.append(fcwSystemDefFile)
+        
+        #Set interrupt security
+        Database.setSymbolValue("core", fcwInstanceName.getValue() + "_SET_NON_SECURE", fcwIsNonSecure)
+        
+        if fcwIsNonSecure == False:
+            fcwfilesArray[0].setSecurity("SECURE")
+            fcwfilesArray[1].setSecurity("SECURE")
+            fcwfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+            fcwfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
