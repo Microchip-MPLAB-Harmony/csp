@@ -183,7 +183,7 @@ bool ${SEFC_INSTANCE_NAME}_SectorErase( uint32_t address )
     page_number = (uint16_t)((address - ${SEFC_INSTANCE_NAME}_PanelBaseAddr) / ${MEM_SEGMENT_NAME}_PAGE_SIZE);
 
     /* Issue the FLASH erase operation */
-    ${SEFC_INSTANCE_NAME}_REGS->SEFC_EEFC_FCR = (SEFC_EEFC_FCR_FCMD_EPA | SEFC_EEFC_FCR_FARG((uint32_t)page_number | 0x2U) | SEFC_EEFC_FCR_FKEY_PASSWD);
+    ${SEFC_INSTANCE_NAME}_REGS->SEFC_EEFC_FCR = (SEFC_EEFC_FCR_FCMD_ES | SEFC_EEFC_FCR_FARG((uint32_t)page_number | 0x2U) | SEFC_EEFC_FCR_FKEY_PASSWD);
 
     sefc_status = 0;
 
