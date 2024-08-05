@@ -98,6 +98,7 @@ tcSym_CH_ClkEnComment = []
 global sysTimeComponentId
 global dvrtComponentId
 global dvrtPlibMode
+global i2cbbComponentId
 
 def dvrtPLIBModeConfig(channelID, plibMode):
     global dvrtTickRateMs
@@ -322,6 +323,8 @@ def handleMessage(messageID, args):
     global dvrtComponentId
     global dvrtChannel_Sym
     global dvrtPlibMode
+    global i2cbbComponentId
+    global tcSym_CH_Enable
 
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
@@ -381,6 +384,15 @@ def handleMessage(messageID, args):
         #Set the Time Period (Milli Sec)
         dvrtTickRateMs.setValue(args["dvrt_tick_ms"])
         tcSym_CH_TimerPeriod[channelID].setValue(dvrtTickRateMs.getValue())
+        
+    if (messageID == "TIMER_FREQ_GET"):
+        i2cbbComponentId.setValue(args["ID"])
+        channelID = args["timer_ch"]
+        source_clk_freq = Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+channelID+"_CLOCK_FREQUENCY")
+        dummy_dict["TIMER_FREQ"] = source_clk_freq
+        channelID_temp = int(channelID)
+        tcSym_CH_Enable[channelID_temp].setValue(True)
+        
     return dummy_dict
 
 ###################################################################################################
@@ -800,6 +812,7 @@ def tcPeriodCalc(tcSym_CH_ComparePeriodLocal, event):
         tcSym_CH_ComparePeriod[channelID].setLabel("**** Waveform Period is " + str(time_us) + " uS****")
 
 def tcPeriodCountCalc(symbol, event):
+    global i2cbbComponentId
     global tcSym_CH_CMR_TCCLKS
     global tcSym_CH_ComparePeriodCount
     global tcSym_CH_OperatingMode
@@ -828,6 +841,13 @@ def tcPeriodCountCalc(symbol, event):
             tcSym_CH_TimerPeriodComment[channelID].setLabel("****Period Count is " + str(time_period) + "****")
         tcSym_CH_TimerPeriodCount[channelID].setValue(int(time_period), 2)
     calcAchievableFreq(channelID)
+    #Read the input clock frequency of the timer instance
+    source_clk_freq = Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY")
+    tcFrequencyDict = {"ID" : "","CHANNEL_ID" : "", "frequency" : ""}
+    tcFrequencyDict["ID"] = tcInstanceName.getValue()
+    tcFrequencyDict["CHANNEL_ID"] = channelID
+    tcFrequencyDict["frequency"] = source_clk_freq
+    Database.sendMessage(i2cbbComponentId.getValue(), "TIMER_FREQUENCY", tcFrequencyDict)
 
 def tcPeriodMaxVal(symbol, event):
     id = symbol.getID()
@@ -1037,7 +1057,8 @@ def onAttachmentConnected(source, target):
 def onAttachmentDisconnected(source, target):
     global sysTimeChannel_Sym
     global sysTimeComponentId
-
+    global i2cbbComponentId
+    
     localComponent = source["component"]
     remoteComponent = target["component"]
     remoteID = remoteComponent.getID()
@@ -1074,6 +1095,9 @@ def onAttachmentDisconnected(source, target):
         tcSym_CH_TimerPeriod[channelID].setVisible(True)
         #Enable the period interrupt
         tcSym_CH_IER_CPCS[channelID].setValue(True)
+        
+    if (remoteID == "i2c_bb"):
+        i2cbbComponentId.setValue("")
 
 def dvrt_ChannelSelection(symbol,event):
     global timerStartApiName_Sym
@@ -1152,7 +1176,39 @@ def sysTime_ChannelSelection(symbol,event):
     irqEnumName_Sym.setValue(irqEnumName,2)
     periodSetApiName_Sym.setValue(periodSetApiName,2)
 
+def i2cbb_ChannelSelection(symbol,event):
+    global i2cbbComponentId
+    global timerStartApiName_Sym
+    global timeStopApiName_Sym
+    global compareSetApiName_Sym
+    global periodSetApiName_Sym
+    global counterApiName_Sym
+    global frequencyGetApiName_Sym
+    global callbackApiName_Sym
+    global irqEnumName_Sym
+    global tcNumInterruptLines
+    
+    if i2cbbComponentId != "":
+        timerStartApiName = tcInstanceName.getValue() + "_CH0" + "_TimerStart"
+        timerStopApiName = tcInstanceName.getValue() + "_CH0" + "_TimerStop "
+        counterGetApiName = tcInstanceName.getValue() + "_CH0" +  "_TimerCounterGet"
+        frequencyGetApiName = tcInstanceName.getValue() + "_CH0" + "_TimerFrequencyGet"
+        callbackApiName = tcInstanceName.getValue() + "_CH0" + "_TimerCallbackRegister"
+        periodSetApiName = tcInstanceName.getValue() + "_CH0" + "_TimerPeriodSet"
 
+        timerStartApiName_Sym.setValue(timerStartApiName,2)
+        timeStopApiName_Sym.setValue(timerStopApiName,2)
+        periodSetApiName_Sym.setValue(periodSetApiName,2)
+        counterApiName_Sym.setValue(counterGetApiName,2)
+        frequencyGetApiName_Sym.setValue(frequencyGetApiName,2)
+        callbackApiName_Sym.setValue(callbackApiName,2)
+        
+        if int(tcNumInterruptLines) == 1 :
+            irqEnumName = tcInstanceName.getValue() + "_IRQn"
+        else:
+            irqEnumName = tcInstanceName.getValue() + "_CH0" + "_IRQn"
+
+        irqEnumName_Sym.setValue(irqEnumName,2)
 ###################################################################################################
 ########################### Instantiation   #################################
 ###################################################################################################
@@ -1177,6 +1233,7 @@ def instantiateComponent(tcComponent):
     global dvrtComponentId
     global dvrtChannel_Sym
     global dvrtPlibMode
+    global i2cbbComponentId
 
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
@@ -1281,6 +1338,20 @@ def instantiateComponent(tcComponent):
     dvrtTrigger_Sym = tcComponent.createBooleanSymbol("DVRT_ID", None)
     dvrtTrigger_Sym.setVisible(False)
     dvrtTrigger_Sym.setDependencies(dvrt_ChannelSelection, ["DVRT_TC_CHANNEL"])
+    
+#------------------------------------------------------------
+# Common Symbols needed for I2C_BB usage
+#------------------------------------------------------------    
+    
+    i2cbbComponentId = tcComponent.createStringSymbol("I2C_BB_COMPONENT_ID", None)
+    i2cbbComponentId.setLabel("Component id")
+    i2cbbComponentId.setVisible(False)
+    i2cbbComponentId.setDefaultValue("")
+    
+    i2cbbTimeTrigger_Sym = tcComponent.createBooleanSymbol("i2cbb_TIME", None)
+    i2cbbTimeTrigger_Sym.setVisible(False)
+    i2cbbTimeTrigger_Sym.setDependencies(i2cbb_ChannelSelection, ["I2C_BB_COMPONENT_ID"])
+    
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
@@ -1325,13 +1396,13 @@ def instantiateComponent(tcComponent):
     timerPeriodMax_Sym = tcComponent.createStringSymbol("TIMER_PERIOD_MAX", None)
     timerPeriodMax_Sym.setVisible(False)
     timerPeriodMax_Sym.setDefaultValue(str(tcCounterMaxValue))
-
+    
     timerStartApiName_Sym = tcComponent.createStringSymbol("TIMER_START_API_NAME", None)
     timerStartApiName_Sym.setVisible(False)
 
     timeStopApiName_Sym = tcComponent.createStringSymbol("TIMER_STOP_API_NAME", None)
     timeStopApiName_Sym.setVisible(False)
-
+    
     compareSetApiName_Sym = tcComponent.createStringSymbol("COMPARE_SET_API_NAME", None)
     compareSetApiName_Sym.setVisible(False)
 
@@ -1346,9 +1417,10 @@ def instantiateComponent(tcComponent):
 
     callbackApiName_Sym = tcComponent.createStringSymbol("CALLBACK_API_NAME", None)
     callbackApiName_Sym.setVisible(False)
-
+        
     irqEnumName_Sym = tcComponent.createStringSymbol("IRQ_ENUM_NAME", None)
     irqEnumName_Sym.setVisible(False)
+
 #------------------------------------------------------------
 
     #----------------- motor control APIs ---------------------------------

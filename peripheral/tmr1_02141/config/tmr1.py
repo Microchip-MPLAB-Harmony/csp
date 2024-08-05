@@ -66,7 +66,10 @@ tmrTimerUnit = { "millisecond" : 1000.0,
                 }
 global sysTimeComponentId
 global dvrtComponentId
-
+global i2cbbComponentId
+global tmr1Sym_T1CON_SOURCE_SEL
+global tmr1SymField_T1CON_TECS
+global tmr1Sym_EXT_CLOCK_FREQ
 
 global tmr1Sym_PERIOD_MS
 global interruptsChildren
@@ -107,6 +110,10 @@ def calcAchievableFreq():
 def handleMessage(messageID, args):
     global sysTimeComponentId
     global dvrtComponentId
+    global i2cbbComponentId
+    global tmr1Sym_T1CON_SOURCE_SEL
+    global tmr1SymField_T1CON_TECS
+    global tmr1Sym_EXT_CLOCK_FREQ
 
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
@@ -136,6 +143,17 @@ def handleMessage(messageID, args):
         if dvrtComponentId.getValue() != "":
             #Set the Time Period (Milli Sec)
             tmr1Sym_PERIOD_MS.setValue(args["dvrt_tick_ms"])
+            
+    if (messageID == "TIMER_FREQ_GET"):
+        print("***Message Received***")
+        i2cbbComponentId.setValue(args["ID"])
+        src = tmr1Sym_T1CON_SOURCE_SEL.getValue()
+        ext_src = tmr1SymField_T1CON_TECS.getValue()
+        if(src == 0 and ext_src == 1):
+            source_clk_freq = tmr1Sym_EXT_CLOCK_FREQ.getValue()
+        else:
+            source_clk_freq = Database.getSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY")
+        dummy_dict["TIMER_FREQ"] = source_clk_freq    
 
     return dummy_dict
 
@@ -340,6 +358,8 @@ def tmr1AsyncSetting(symbol, event):
 
 
 def calcTimerFreq(symbol, event):
+    global i2cbbComponentId
+    
     component = symbol.getComponent()
     src = component.getSymbolValue("TIMER1_SRC_SEL")
     ext_src = component.getSymbolValue("TIMER1_TECS")
@@ -349,6 +369,13 @@ def calcTimerFreq(symbol, event):
         clock = Database.getSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY")
     prescaler = component.getSymbolValue("TMR1_PRESCALER_VALUE")
     symbol.setValue(int(clock)/int(prescaler), 2)
+    
+    #Read the input clock frequency of the timer instance
+    source_clk_freq = clock
+    tmrFrequencyDict = {"ID" : "", "frequency" : ""}
+    tmrFrequencyDict["ID"] = tmr1InstanceName.getValue()
+    tmrFrequencyDict["frequency"] = source_clk_freq
+    Database.sendMessage(i2cbbComponentId.getValue(), "TIMER_FREQUENCY", tmrFrequencyDict)    
 
 def timerMaxValue(symbol, event):
     component = symbol.getComponent()
@@ -398,6 +425,9 @@ def onAttachmentDisconnected(source, target):
         dvrtComponentId.setValue("")
         #Show Time Period and clear it
         tmr1Sym_PERIOD_MS.clearValue()
+    
+    if (remoteID == "i2c_bb"):
+        i2cbbComponentId.setValue("")
 
 ###################################################################################################
 ########################################## Component  #############################################
@@ -411,12 +441,16 @@ def instantiateComponent(tmr1Component):
     global tmr1InterruptHandler
     global tmr1InterruptVectorUpdate
     global tmr1SymInterruptMode
+    global tmr1Sym_T1CON_SOURCE_SEL
+    global tmr1SymField_T1CON_TECS
+    global tmr1Sym_EXT_CLOCK_FREQ
     global tcs_names
     global sysTimeComponentId
     global tmr1Sym_PERIOD_MS
     global tmr1Sym_CLOCK_FREQ
     global tmr1Sym_PR1
     global dvrtComponentId
+    global i2cbbComponentId
 
     tmr1InstanceName = tmr1Component.createStringSymbol("TMR1_INSTANCE_NAME", None)
     tmr1InstanceName.setVisible(False)
@@ -655,6 +689,11 @@ def instantiateComponent(tmr1Component):
     dvrtComponentId.setLabel("dvrt Component id")
     dvrtComponentId.setVisible(False)
     dvrtComponentId.setDefaultValue("")
+    
+    i2cbbComponentId = tmr1Component.createStringSymbol("I2C_BB_COMPONENT_ID", None)
+    i2cbbComponentId.setLabel("Component id")
+    i2cbbComponentId.setVisible(False)
+    i2cbbComponentId.setDefaultValue("")
 
     timerStartApiName = tmr1InstanceName.getValue() +  "_Start"
     timerStopApiName = tmr1InstanceName.getValue() + "_Stop "
