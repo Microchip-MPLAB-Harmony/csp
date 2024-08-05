@@ -117,6 +117,10 @@ uint32_t ${SEFC_INSTANCE_NAME}_WriteProtectionGet(void);
     <#lt>void ${SEFC_INSTANCE_NAME}_CallbackRegister( SEFC_CALLBACK callback, uintptr_t context );
 </#if>
 
+<#if SEFC_DUAL_PANEL == true>
+uint32_t ${SEFC_INSTANCE_NAME}_FlashPanelBaseAddrGet(void);
+</#if>
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 }

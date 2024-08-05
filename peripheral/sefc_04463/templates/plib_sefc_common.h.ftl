@@ -45,6 +45,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <sys/attribs.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -108,7 +109,33 @@ typedef struct
 {
     SEFC_CALLBACK callback;
     uintptr_t     context;
+    uint32_t      panelBaseAddr;
 } SEFC_OBJECT;
+
+<#if SEFC_DUAL_PANEL == true>
+
+typedef enum
+{
+    SEFC_FLASH_PANEL0 = 0,
+    SEFC_FLASH_PANEL1,
+    
+}SEFC_FLASH_PANEL;
+
+__longramfunc__ uint32_t SEFC_GpnvmBitRead(void);
+__longramfunc__ void SEFC_GpnvmBitSet(uint8_t GpnvmBitNumber);
+__longramfunc__ void SEFC_GpnvmBitClear(uint8_t GpnvmBitNumber);
+SEFC_FLASH_PANEL SEFC_FlashPanelGet(uint32_t address);
+bool SEFC_SectorErase( uint32_t address );
+bool SEFC_PageBufferWrite( uint32_t *data, const uint32_t address);
+bool SEFC_PageBufferCommit( const uint32_t address);
+bool SEFC_PageWrite( uint32_t *data, uint32_t address );
+bool SEFC_QuadWordWrite( uint32_t *data, uint32_t address );
+void SEFC_RegionLock(uint32_t address);
+void SEFC_RegionUnlock(uint32_t address);
+bool SEFC_IsBusy(uint32_t address);
+SEFC_ERROR SEFC_ErrorGet(uint32_t address);
+
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility

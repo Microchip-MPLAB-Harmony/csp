@@ -73,6 +73,23 @@ def instantiateComponent(sefcComponent):
     sefcInstanceName.setVisible(False)
     sefcInstanceName.setDefaultValue(sefcComponent.getID().upper())
 
+    sefcInstanceNum = sefcComponent.createStringSymbol("SEFC_INSTANCE_NUM", None)
+    sefcInstanceNum.setVisible(False)
+    sefcInstanceNum.setDefaultValue(sefcInstanceName.getValue()[-1])
+
+    sefcDualPanel = sefcComponent.createBooleanSymbol("SEFC_DUAL_PANEL", None)
+    sefcDualPanel.setVisible(False)
+
+    sefcFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SEFC\"]/instance@[name=\"SEFC0\"]")
+    if sefcFlashNode != None:
+        sefcFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SEFC\"]/instance@[name=\"SEFC1\"]")
+
+    if sefcFlashNode != None:
+        sefcDualPanel.setDefaultValue(True)
+    else:
+        sefcDualPanel.setDefaultValue(False)
+
+
     Log.writeInfoMessage("Running " + sefcInstanceName.getValue())
 
     #Create the top menu
@@ -209,8 +226,8 @@ def instantiateComponent(sefcComponent):
 
     #Generate Output common Header
     sefcCommonHeaderFile = sefcComponent.createFileSymbol("SEFC_FILE_COMMON_H", None)
-    sefcCommonHeaderFile.setSourcePath("../peripheral/sefc_04463/templates/plib_sefc_common.h")
-    sefcCommonHeaderFile.setMarkup(False)
+    sefcCommonHeaderFile.setSourcePath("../peripheral/sefc_04463/templates/plib_sefc_common.h.ftl")
+    sefcCommonHeaderFile.setMarkup(True)
     sefcCommonHeaderFile.setOutputName("plib_sefc_common.h")
     sefcCommonHeaderFile.setOverwrite(True)
     sefcCommonHeaderFile.setDestPath("peripheral/sefc/")
@@ -238,6 +255,18 @@ def instantiateComponent(sefcComponent):
     sefcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
     sefcSystemInitFile.setSourcePath("../peripheral/sefc_04463/templates/system/initialization.c.ftl")
     sefcSystemInitFile.setMarkup(True)
+
+    if sefcDualPanel.getValue() == True:
+        #Generate Output source
+        sefcCommonSourceFile = sefcComponent.createFileSymbol("SEFC_COMMON_FILE_C", None)
+        sefcCommonSourceFile.setSourcePath("../peripheral/sefc_04463/templates/plib_sefc_common.c.ftl")
+        sefcCommonSourceFile.setMarkup(True)
+        sefcCommonSourceFile.setOutputName("plib_sefc_common.c")
+        sefcCommonSourceFile.setOverwrite(True)
+        sefcCommonSourceFile.setDestPath("peripheral/sefc/")
+        sefcCommonSourceFile.setProjectPath("config/" + configName + "/peripheral/sefc/")
+        sefcCommonSourceFile.setType("SOURCE")
+
 
 def destroyComponent(sefcComponent):
 
