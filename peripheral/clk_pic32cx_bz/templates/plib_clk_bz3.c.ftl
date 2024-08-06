@@ -333,7 +333,7 @@ void CLOCK_Initialize( void )
         /* EPLLFBDIV    = ${EPLLCON_EPLLFBDIV_VALUE} */
         /* EPLLREFDIV   = ${EPLLCON_EPLLREFDIV_VALUE} */
         /* EPLL_BYP     = ${EPLLCON_EPLL_BYP_VALUE} */
-        CRU_REGS->CRU_${EPLLCON_REG} = 0x${EPLLCON_VALUE}U ^ 0x438080cU;
+        CRU_REGS->CRU_${EPLLCON_REG} = 0x${EPLLCON_VALUE}U;
         CFG_REGS->CFG_CFGCON0SET = CFG_CFGCON0_EPLLHWMD_Msk;
 <#else>
         /* Power down the EPLL */

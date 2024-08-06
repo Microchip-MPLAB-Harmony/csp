@@ -805,132 +805,92 @@ def updatePLLBwselValue(refDivider, fbDivider, postDiv, sourceUsed):
 
     Fvco = Fref * fbDivider / refDivider
 
-    if((refDivider == 1) and (fbDivider >= 16 and fbDivider <=400)):
+    if((refDivider == 1) and (fbDivider >= 21 and fbDivider <=400)):
         if(Fref >= _4Mhz  and Fref <  _10Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
         if(Fref >= _10Mhz and Fref <  _20Mhz):
             value = 2
         if(Fref >= _20Mhz and Fref <  _30Mhz):
             value = 3
-        if(Fref >= _30Mhz and Fref <  _40Mhz):
+        if(Fref >= _30Mhz and Fref <  _60Mhz):
             value = 4
-        if(Fref >= _40Mhz and Fref <= _60Mhz):
-            value = 5
 
     elif((refDivider == 2) and (fbDivider >= 27 and fbDivider <=800)):
-        if(Fref >= _4Mhz  and Fref <  _8Mhz):
-            value = CHECK_LOW_PLL(Fvco)
-        if(Fref >= _8Mhz and Fref <  _20Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+        if(Fref >= _8Mhz  and Fref <  _20Mhz):
+            value = 1
         if(Fref >= _20Mhz and Fref <  _40Mhz):
             value = 2
         if(Fref >= _40Mhz and Fref < _60Mhz):
-            if(CHECK_800_1600_FVCO(Fvco)==True):
-                value = 3
+            value = 3
         if(Fref == _60Mhz):
-            if(CHECK_800_1600_FVCO(Fvco)==True):
-                value = 4
+            value = 4
 
     elif((refDivider == 3) and (fbDivider >= 40 and fbDivider <=1023)):
-        if(Fref >= _4Mhz  and Fref <  _12Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _12Mhz and Fref <  _30Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
         if(Fref >= _30Mhz and Fref <  _60Mhz):
-            if(CHECK_800_1600_FVCO(Fvco)==True):
-                value = 2
+            value = 2
         if(Fref == _60Mhz):
-            if(CHECK_800_1600_FVCO(Fvco)==True):
-                value = 3
+            value = 3
 
     elif((refDivider == 4) and (fbDivider >= 54 and fbDivider <=1023)):
-        if(Fref >= _4Mhz  and Fref <  _16Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _16Mhz and Fref <  _40Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
         if(Fref >= _40Mhz and Fref <= _60Mhz):
-            if(CHECK_800_1600_FVCO(Fvco)==True):
-                value = 2
+            value = 2
 
     elif((refDivider == 5) and (fbDivider >= 67 and fbDivider <=1023)):
-        if(Fref >= _5Mhz  and Fref <  _20Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _20Mhz and Fref <  _50Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
         if(Fref >= _50Mhz and Fref <= _60Mhz):
-            if(CHECK_800_1600_FVCO(Fvco)==True):
-                value = 2
+            value = 2
 
     elif((refDivider == 6) and (fbDivider >= 80 and fbDivider <=1023)):
-        if(Fref >= _6Mhz  and Fref <  _24Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _24Mhz and Fref <  _60Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
         if(Fref == _60Mhz):
-            if(CHECK_800_1600_FVCO(Fvco)==True):
-                value = 2
+            value = 2
 
     elif((refDivider == 7) and (fbDivider >= 94 and fbDivider <=1023)):
-        if(Fref >= _7Mhz  and Fref <  _28Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _28Mhz and Fref <=  _60Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
 
     elif((refDivider == 8) and (fbDivider >= 107 and fbDivider <=1023)):
-        if(Fref >= _8Mhz  and Fref <  _32Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _32Mhz and Fref <= _60Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
 
     elif((refDivider == 9) and (fbDivider >= 120 and fbDivider <=1023)):
-        if(Fref >= _9Mhz  and Fref <  _36Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _36Mhz and Fref <= _60Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
 
     elif((refDivider == 10) and (fbDivider >= 134 and fbDivider <=1023)):
-        if(Fref >= _10Mhz  and Fref <  _40Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _40Mhz and Fref <= _60Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
 
     elif((refDivider == 11) and (fbDivider >= 147 and fbDivider <=1023)):
-        if(Fref >= _11Mhz  and Fref <  _44Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _44Mhz and Fref <= _60Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
 
     elif((refDivider == 12) and (fbDivider >= 160 and fbDivider <=1023)):
-        if(Fref >= _12Mhz  and Fref <  _48Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _48Mhz and Fref <= _60Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
 
     elif((refDivider == 13) and (fbDivider >= 174 and fbDivider <=1023)):
-        if(Fref >= _13Mhz  and Fref <  _52Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _52Mhz and Fref <= _60Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
 
     elif((refDivider == 14) and (fbDivider >= 187 and fbDivider <=1023)):
-        if(Fref >= _14Mhz  and Fref <  _56Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref >= _56Mhz and Fref <= _60Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
 
     elif((refDivider == 15) and (fbDivider >= 200 and fbDivider <=1023)):
-        if(Fref >= _15Mhz  and Fref <  _60Mhz):
-            value = CHECK_LOW_PLL(Fvco)
         if(Fref == _60Mhz):
-            value = CHECK_HIGH_PLL(Fvco)
+            value = 1
 
-    elif((refDivider >= 16 and refDivider <=59)):
-        value = CHECK_LOW_PLL(Fvco)
-
-    elif (refDivider == 60 and (fbDivider >= 800 and fbDivider <=1023)):
-        value = 0
-
-    return value
+    if CHECK_800_1600_FVCO(Fvco) == True and value != None:
+        return value
+    else:
+        return None
 
 global bwselCB
 
@@ -964,15 +924,15 @@ def bwselCB(symbol, event):
             eth_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv
             print ("eth_clk_freq1 = " + str(eth_clk_freq))
             Database.setSymbolValue("core", "ETHCLK1", str(eth_clk_freq), 1)
-            
+
             eth_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv2
             print ("eth_clk_freq2 = " + str(eth_clk_freq))
             Database.setSymbolValue("core", "ETHCLK2", str(eth_clk_freq), 1)
         else:
             usb_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv
             print ("usb_clk_freq = " + str(usb_clk_freq))
-            Database.setSymbolValue("core", "USBCLK", str(usb_clk_freq), 1)  
-            
+            Database.setSymbolValue("core", "USBCLK", str(usb_clk_freq), 1)
+
         symId.setVisible(False)
     else:   # something was out of range - notify user
         symId.setVisible(True)
@@ -1215,7 +1175,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu):
     cpu_clk_freq.setDefaultValue(node.getAttribute("value"))
     cpu_clk_freq.setDependencies(cpuClockFreqCalc,["SYS_CLK_FREQ"])
     cpu_clk_freq.setVisible(False)
-    
+
     if Database.getSymbolValue("core", "EPLL_ENABLE") != None:
 
         # output clock frequencies for this PLL - there are 2 signals generated
@@ -1223,20 +1183,23 @@ def calculated_clock_frequencies(clk_comp, clk_menu):
         ethclkFreq1.setDefaultValue('0')   # by default disabled
         ethclkFreq1.setLabel("Ethernet Clock Frequency Output 1 (Hz)")
         ethclkFreq1.setVisible(True)
-        
+        ethclkFreq1.setReadOnly(True)
+
         # output clock frequencies for this PLL - there are 2 signals generated
         ethclkFreq2 = clk_comp.createStringSymbol('ETHCLK2', sym_calc_freq_menu)
         ethclkFreq2.setDefaultValue('0')   # by default disabled
         ethclkFreq2.setLabel("Ethernet Clock Frequency Output 2 (Hz)")
         ethclkFreq2.setVisible(True)
+        ethclkFreq2.setReadOnly(True)
 
     if Database.getSymbolValue("core", "USBPLL_ENABLE") != None:
-        
+
         # output clock frequency for this PLL
         upllclkFreq = clk_comp.createStringSymbol('USBCLK', sym_calc_freq_menu)
         upllclkFreq.setDefaultValue('0')   # by default disabled
         upllclkFreq.setLabel("USB Clock Frequency (Hz)")
         upllclkFreq.setVisible(True)
+        upllclkFreq.setReadOnly(True)
 
     POSC_OUT_FREQ = clk_comp.createIntegerSymbol("POSC_OUT_FREQ", sym_calc_freq_menu)
     POSC_OUT_FREQ.setLabel("Primary Oscillator Output Frequency (Hz)")
@@ -1348,7 +1311,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu):
     sercomSlowClockFrequency.setLabel("SERCOM Slow Clock Frequency")
     sercomSlowClockFrequency.setDefaultValue(Database.getSymbolValue("core", "LPCLK_FREQ"))
     sercomSlowClockFrequency.setReadOnly(True)
-    sercomSlowClockFrequency.setDependencies(item_update, ["LPCLK_FREQ"])        
+    sercomSlowClockFrequency.setDependencies(item_update, ["LPCLK_FREQ"])
 
 def find_lsb_position(field):
     # Take a field, and return the least significant bit position.  Range: 0-31
@@ -1646,7 +1609,7 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
     epllcon_symbols = [
                         {'name':'EPLLBSWSEL', 'symmaskname':'epllcon_epllbswsel_mask', 'symvaluename':'epllcon_epllbswsel_val', 'keyvalbuf':'epllbswsel', 'visible':'True', 'min':'0', 'max':'7', 'readonly':True},
                         {'name':'EPLLPWDN', 'symmaskname':'epllcon_epllpwdn_mask', 'symvaluename':'epllcon_epllpwdn_val', 'keyvalbuf':'epllpwdn', 'visible':'True'},
-                        {'name':'EPLLPOSTDIV1', 'symmaskname':'epllcon_epllpostdiv1_mask', 'symvaluename':'epllcon_epllpostdiv1_val', 'keyvalbuf':'epllpostdiv1', 'visible':'True', 'min':'1','max':'63'},                        
+                        {'name':'EPLLPOSTDIV1', 'symmaskname':'epllcon_epllpostdiv1_mask', 'symvaluename':'epllcon_epllpostdiv1_val', 'keyvalbuf':'epllpostdiv1', 'visible':'True', 'min':'1','max':'63'},
                         {'name':'EPLLFLOCK', 'symmaskname':'epllcon_epllflock_mask', 'symvaluename':'epllcon_epllflock_val', 'keyvalbuf':'epllflock', 'visible':'True'},
                         {'name':'EPLLRST', 'symmaskname':'epllcon_epllrst_mask', 'symvaluename':'epllcon_epllrst_val', 'keyvalbuf':'epllrst', 'visible':'True'},
                         {'name':'EPLLFBDIV', 'symmaskname':'epllcon_epllfbdiv_mask', 'symvaluename':'epllcon_epllfbdiv_val', 'keyvalbuf':'epllfbdiv', 'visible':'True', 'min':'16', 'max':'1023'},
@@ -1684,7 +1647,6 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
                 dependencyList.append('EPLLCON_'+ii['name'].upper()+'_VALUE')
                 if((ii['name'] == 'EPLLREFDIV') or (ii['name'] == 'EPLLFBDIV') or (ii['name'] == 'EPLLPOSTDIV1')):
                     bwselDependencyList.append('EPLLCON_'+ii['name']+'_VALUE')
-                    bwselDependencyList.append("EPLLPOSTDIV2")
                 if('readonly' in ii.keys()):
                     ii['symvaluename'].setReadOnly(ii['readonly'])
     # add warning display if parameter combination is outside of usable range so user can make adjustments
@@ -1701,7 +1663,7 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
     symbolEpllconValue.setVisible(False)
     initialEpllconVal = int((clkRegGrp_EPLLCON.getAttribute('initval')),16)
     symbolEpllconValue.setDefaultValue(initialEpllconVal)
-    symbolEpllconValue.setDependencies(updateEPLLCon, dependencyList)    
+    symbolEpllconValue.setDependencies(updateEPLLCon, dependencyList)
     node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CRU\"]/register-group@[name=\"CRU\"]/register@[name=\"APLLCON\"]")
     if node != None:
         ethpllpostdiv2 = component.createIntegerSymbol("EPLLPOSTDIV2", parentMenu)
@@ -1711,6 +1673,7 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
         ethpllpostdiv2.setVisible(False)
         ethpllpostdiv2.setDefaultValue(int(node.getAttribute('initval'), 0))
         ethpllpostdiv2.setDependencies(enableMenu, [enableSymbolId])
+        bwselDependencyList.append("EPLLPOSTDIV2")
 
 def scan_atdf_for_upllcon_fields(component, parentMenu, regNode, enableSymbolId):
     '''
@@ -1763,7 +1726,7 @@ def scan_atdf_for_upllcon_fields(component, parentMenu, regNode, enableSymbolId)
                     ii['symvaluename'].setVisible(False)
                 dependencyList.append('UPLLCON_'+ii['name'].upper()+'_VALUE')
 
-                if((ii['name'] == 'UPLLREFDIV') or (ii['name'] == 'UPLLFBDIV')):
+                if((ii['name'] == 'UPLLREFDIV') or (ii['name'] == 'UPLLFBDIV') or (ii['name'] == 'UPLLPOSTDIV1')):
                     bwselDependencyList.append('UPLLCON_'+ii['name']+'_VALUE')
     bwselDependencyList.append('OSCCON_UFRCEN_VALUE')
     # add warning display if parameter combination is outside of usable range so user can make adjustments
