@@ -218,9 +218,15 @@ for group in range(0, len(registerGroup)):
                             hexSymbol.setMin(0)
                             hexSymbol.setMax(getMaxValue(mask))
                             if fuseNodeValues[index].getAttribute("name") == "SEQ":
-                                hexSymbol.setDefaultValue(0x01)
+                                if registerGroup[group] == "FUSES_BOOTCFG1":
+                                    hexSymbol.setDefaultValue(0x01)
+                                else:
+                                    hexSymbol.setDefaultValue(0x02)
                             elif fuseNodeValues[index].getAttribute("name") == "SEQBAR":
-                                hexSymbol.setDefaultValue(0xFFFE)
+                                if registerGroup[group] == "FUSES_BOOTCFG1":
+                                    hexSymbol.setDefaultValue(0xFFFE)
+                                else:
+                                    hexSymbol.setDefaultValue(0xFFFD)
                             else:
                                 hexSymbol.setDefaultValue(getDefaultVal(fuseInitVal, mask))
                             if ("None" in key):
