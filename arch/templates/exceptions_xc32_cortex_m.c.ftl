@@ -70,10 +70,9 @@
 
 typedef void(*advanced_handler_t)(uint32_t * fault_args, unsigned int lr_value);
 
-
 static inline void call_advanced_exception_handler(advanced_handler_t pHandler)
 {
-<#if CoreArchitecture == "CORTEX-M0PLUS">
+<#if CoreArchitecture == "CORTEX-M0PLUS" || CoreArchitecture == "CORTEX-M23">
     asm volatile (
         "MOVS   R0, #4\n\t"
         "MOV    R1, LR\n\t"
