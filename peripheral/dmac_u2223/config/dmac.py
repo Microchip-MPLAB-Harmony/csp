@@ -545,9 +545,11 @@ dmacChCount.setVisible(False)
 if dmacMultiVectorSupported == True:
     createDMAChannelVectorList()
 
-    nvic_multi_vector = coreComponent.createBooleanSymbol(dmacInstanceName.getValue() + "_MULTI_IRQn", None)
-    nvic_multi_vector.setDefaultValue(True)
-    nvic_multi_vector.setVisible(False)
+    multi_iqrn_sym_exists = Database.getSymbolValue("core", dmacInstanceName.getValue() + "_MULTI_IRQn")
+    if multi_iqrn_sym_exists == None:
+        nvic_multi_vector = coreComponent.createBooleanSymbol(dmacInstanceName.getValue() + "_MULTI_IRQn", None)
+        nvic_multi_vector.setDefaultValue(True)
+        nvic_multi_vector.setVisible(False)
 
     for n in range(0, len(dmaChannelVectorList)):
         # Get the vector name to use for the given DMAC channel
@@ -556,11 +558,13 @@ if dmacMultiVectorSupported == True:
             dmacIntHandlerName.setDefaultValue(isr_name)
             dmacIntHandlerName.setVisible(False)
 
-            # DMA channel interrupt number - needed by core drivers to disable during critical section
-            DMA_ChannelX_VectorEnum = coreComponent.createStringSymbol(dmacInstanceName.getValue() + "_CHANNEL" + str(chn) + "_INT_SRC", None)
-            DMA_ChannelX_VectorEnum.setLabel("DMA Channel " + str(chn) + " interrupt Vector Number Enum")
-            DMA_ChannelX_VectorEnum.setDefaultValue(isr_name + "_IRQn")
-            DMA_ChannelX_VectorEnum.setVisible(False)
+            if multi_iqrn_sym_exists == None:
+
+                # DMA channel interrupt number - needed by core drivers to disable during critical section
+                DMA_ChannelX_VectorEnum = coreComponent.createStringSymbol(dmacInstanceName.getValue() + "_CHANNEL" + str(chn) + "_INT_SRC", None)
+                DMA_ChannelX_VectorEnum.setLabel("DMA Channel " + str(chn) + " interrupt Vector Number Enum")
+                DMA_ChannelX_VectorEnum.setDefaultValue(isr_name + "_IRQn")
+                DMA_ChannelX_VectorEnum.setVisible(False)
 
 dmacEventCount = coreComponent.createIntegerSymbol("DMA_EVSYS_CHANNEL_COUNT", dmacEnable)
 dmacEventCount.setDefaultValue(4)
