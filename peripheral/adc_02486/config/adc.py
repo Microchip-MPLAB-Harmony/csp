@@ -437,7 +437,7 @@ def adcCalcAD1CSSL(symbol, event):
     scanPinNumber = event["id"].split("__CSSL_")[1]
     csslMask = component.getSymbolValue("AD1CSSL__CSSL_ENUM_VALUE_" + scanPinNumber)
     if event["value"] == True:
-        ad1cssl = ad1cssl + csslMask
+        ad1cssl = ad1cssl | csslMask
     else:
         ad1cssl = ad1cssl & (~csslMask)
     symbol.setValue(ad1cssl, 2)
