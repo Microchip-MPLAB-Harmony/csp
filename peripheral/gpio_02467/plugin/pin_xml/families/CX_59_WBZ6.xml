@@ -724,6 +724,16 @@
 		</module>
 		<module name="ETH">
 			<function name="ETH_TSUCOMP"/>
+            <function name="GMAC_GTXEN" />
+            <function name="GMAC_GCRS_DV" />
+            <function name="GMAC_GRXER" />
+            <function name="GMAC_GMDIO" />
+            <function name="GMAC_GMDC" />
+            <function name="GMAC_CLK_OUT" />
+            <function name="GMAC_GRX0" />
+            <function name="GMAC_GRX1" />
+            <function name="GMAC_GTX0" />
+            <function name="GMAC_GTX1" />
 		</module>
 		<module name="PMU">
 			<function name="PMU_INT0"/>

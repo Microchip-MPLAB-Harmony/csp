@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 16:05:35 06/21/24 -->
+<!-- This is an auto-generated pin data file created: 12:41:58 08/21/24 -->
 <pinfile family="WBZ653">
    <packages>
      <package diagram="LGA59" id="1" name="LGA59" />
@@ -328,6 +328,7 @@
       </modifiers>
       <number package="1" pin="47" />
       <function name="RPC9" />
+      <function name="GMAC_GTXEN" />
     </pin>
     <pin name="RE2">
        <modifiers>
@@ -335,6 +336,7 @@
       </modifiers>
       <number package="1" pin="49" />
       <function name="RPE2" />
+      <function name="GMAC_GCRS_DV" />
       <function name="USBCORE_TSTRCV" />
     </pin>
     <pin name="RC8">
@@ -343,6 +345,7 @@
       </modifiers>
       <number package="1" pin="50" />
       <function name="RPC8" />
+      <function name="GMAC_GRXER" />
     </pin>
     <pin name="RD6">
        <number package="1" pin="51" />
@@ -350,6 +353,7 @@
       <function name="CVD12" />
       <function name="CVDR12" />
       <function name="CVDT12" />
+      <function name="GMAC_GMDIO" />
       <function name="RPD6" />
     </pin>
     <pin name="RD7">
@@ -358,6 +362,7 @@
       <function name="CVD13" />
       <function name="CVDR13" />
       <function name="CVDT13" />
+      <function name="GMAC_GMDC" />
       <function name="RPD7" />
     </pin>
     <pin name="RA13">
@@ -367,12 +372,14 @@
       <number package="1" pin="53" />
       <function name="RPA13" />
       <function name="SERCOM6_I2C_SERCOM_PAD0" />
+      <function name="GMAC_GRX1" />
     </pin>
     <pin name="RA14">
        <number package="1" pin="54" />
       <function name="ANN0" />
       <function name="RPA14" />
       <function name="SERCOM6_I2C_SERCOM_PAD1" />
+      <function name="GMAC_GRX0" />
     </pin>
     <pin name="RC1">
        <modifiers>
@@ -380,6 +387,7 @@
       </modifiers>
       <number package="1" pin="55" />
       <function name="RPC1" />
+      <function name="GMAC_CLK_OUT" />
       <function name="SERCOM2_PAD3" />
     </pin>
     <pin name="RC0">
@@ -388,6 +396,7 @@
       </modifiers>
       <number package="1" pin="57" />
       <function name="RPC0" />
+      <function name="GMAC_GTX0" />
       <function name="SERCOM2_PAD2" />
     </pin>
     <pin name="RE1">
@@ -396,6 +405,7 @@
       </modifiers>
       <number package="1" pin="58" />
       <function name="RPE1" />
+      <function name="GMAC_GTX1" />
       <function name="SERCOM2_PAD1" />
     </pin>
     <pin name="RB8">
