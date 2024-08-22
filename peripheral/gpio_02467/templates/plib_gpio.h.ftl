@@ -115,6 +115,7 @@
                                 <#lt>#define ${.vars[funcname]}_InputEnable()       (TRIS${.vars[pinChannel]}SET = (1U<<${.vars[pinPort]}))
                             </#if>
                             <#lt>#define ${.vars[funcname]}_Get()               ((PORT${.vars[pinChannel]} >> ${.vars[pinPort]}) & 0x1U)
+                            <#lt>#define ${.vars[funcname]}_GetLatch()          ((LAT${.vars[pinChannel]} >> ${.vars[pinPort]}) & 0x1U)
                             <#lt>#define ${.vars[funcname]}_PIN                  GPIO_PIN_R${.vars[pinChannel]}${.vars[pinPort]}
                             <#if .vars[interruptType]?has_content>
                                 <#lt>#define ${.vars[funcname]}_InterruptEnable()   (CNEN${.vars[pinChannel]}SET = (1U<<${.vars[pinPort]}))
@@ -261,7 +262,7 @@ typedef struct {
 
 static inline void GPIO_PinWrite(GPIO_PIN pin, bool value)
 {
-	 uint32_t xvalue = (uint32_t)value;
+     uint32_t xvalue = (uint32_t)value;
     GPIO_PortWrite((pin>>4U), (uint32_t)(0x1U) << (pin & 0xFU), (xvalue) << (pin & 0xFU));
 }
 
