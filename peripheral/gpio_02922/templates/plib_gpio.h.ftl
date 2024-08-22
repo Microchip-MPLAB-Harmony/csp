@@ -115,6 +115,7 @@
                                 <#lt>#define ${.vars[funcname]}_InputEnable()       (TRIS${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
                             </#if>
                             <#lt>#define ${.vars[funcname]}_Get()               ((PORT${.vars[pinChannel]} >> ${.vars[pinPort]}) & 0x1)
+                            <#lt>#define ${.vars[funcname]}_GetLatch()          ((LAT${.vars[pinChannel]} >> ${.vars[pinPort]}) & 0x1)
                             <#lt>#define ${.vars[funcname]}_PIN                  GPIO_PIN_R${.vars[pinChannel]}${.vars[pinPort]}
                             <#if .vars[interruptType]?has_content>
                                 <#lt>#define ${.vars[funcname]}_InterruptEnable()   (CNEN0${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
