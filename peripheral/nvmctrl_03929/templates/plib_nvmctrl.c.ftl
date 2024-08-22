@@ -57,8 +57,8 @@
 
 typedef struct
 {
-	NVMCTRL_CALLBACK CallbackFunc;
-	uintptr_t Context;
+    NVMCTRL_CALLBACK CallbackFunc;
+    uintptr_t Context;
 }nvmCallbackObjType;
 
 volatile static nvmCallbackObjType ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObj;
@@ -70,7 +70,7 @@ volatile static nvmCallbackObjType ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackOb
 // *****************************************************************************
 
 <#if INTERRUPT_ENABLE == true>
-    
+
 
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context )
     <#lt>{
@@ -347,9 +347,9 @@ void ${NVMCTRL_INSTANCE_NAME}_ECC_SingleBitFaultInject(uint32_t fltaddr, uint8_t
 
     /* Dummy Read back for synchronization purpose */
     while  ((${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL & NVMCTRL_FLTCTRL_FLTEN_En)!= 0U)
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
 
     /* Set the fault address */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FFLTADR = NVMCTRL_FFLTADR_FLTADR ((uint32_t)fltaddr);
@@ -364,9 +364,9 @@ void ${NVMCTRL_INSTANCE_NAME}_ECC_SingleBitFaultInject(uint32_t fltaddr, uint8_t
 
         /* Dummy Read back for synchronization purpose */
         while  (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL != (NVMCTRL_FLTCTRL_FLTMD (0x4UL) | NVMCTRL_FLTCTRL_FLTEN_En))
-		{
-		        /* Do Nothing */
-	    }
+        {
+                /* Do Nothing */
+        }
     }
     else
     {
@@ -374,9 +374,9 @@ void ${NVMCTRL_INSTANCE_NAME}_ECC_SingleBitFaultInject(uint32_t fltaddr, uint8_t
         ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL = (uint16_t)(NVMCTRL_FLTCTRL_FLTMD (0x6UL) | NVMCTRL_FLTCTRL_FLTEN_En);
 
         while  (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL != (NVMCTRL_FLTCTRL_FLTMD (0x6UL) | NVMCTRL_FLTCTRL_FLTEN_En))
-	    {
-		       /* Do Nothing */
-	    }
+        {
+               /* Do Nothing */
+        }
     }
 }
 
@@ -387,9 +387,9 @@ void ${NVMCTRL_INSTANCE_NAME}_ECC_DoubleBitFaultInject(uint32_t fltaddr, uint8_t
 
     /* Dummy Read back for synchronization purpose */
     while ((${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL & NVMCTRL_FLTCTRL_FLTEN_En) != 0U)
-	{
-		/* Do Nothing */
-	}
+    {
+        /* Do Nothing */
+    }
 
     /* Set the fault address */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FFLTADR = NVMCTRL_FFLTADR_FLTADR ((uint32_t)fltaddr);
@@ -403,9 +403,9 @@ void ${NVMCTRL_INSTANCE_NAME}_ECC_DoubleBitFaultInject(uint32_t fltaddr, uint8_t
         ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL = (uint16_t)(NVMCTRL_FLTCTRL_FLTMD (0x5UL) | NVMCTRL_FLTCTRL_FLTEN_En);
         /* Dummy Read back for synchronization purpose */
         while  (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL != (NVMCTRL_FLTCTRL_FLTMD (0x5UL) | NVMCTRL_FLTCTRL_FLTEN_En))
-		{
-		    /* Do Nothing */
-	    }
+        {
+            /* Do Nothing */
+        }
     }
     else
     {
@@ -413,9 +413,9 @@ void ${NVMCTRL_INSTANCE_NAME}_ECC_DoubleBitFaultInject(uint32_t fltaddr, uint8_t
         ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL = (uint16_t)(NVMCTRL_FLTCTRL_FLTMD (0x7UL) | NVMCTRL_FLTCTRL_FLTEN_En);
         /* Dummy Read back for synchronization purpose */
         while  (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_FLTCTRL != (NVMCTRL_FLTCTRL_FLTMD (0x7UL) | NVMCTRL_FLTCTRL_FLTEN_En))
-		{
-		     /* Do Nothing */
-	    }
+        {
+             /* Do Nothing */
+        }
     }
 }
 
@@ -464,4 +464,9 @@ void ${NVMCTRL_INSTANCE_NAME}_ECC_FaultLogicReset(void)
 void ${NVMCTRL_INSTANCE_NAME}_SecurityBitSet(void)
 {
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_SSB_Val | NVMCTRL_CTRLA_CMDEX_KEY;
+}
+
+void ${NVMCTRL_INSTANCE_NAME}_ChipEraseHardLockSet(void)
+{
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_SCEHL_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 }

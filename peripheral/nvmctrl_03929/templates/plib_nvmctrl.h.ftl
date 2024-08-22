@@ -137,6 +137,8 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (uint32_t address);
 
 void ${NVMCTRL_INSTANCE_NAME}_SecurityBitSet(void);
 
+void ${NVMCTRL_INSTANCE_NAME}_ChipEraseHardLockSet(void);
+
 <#if INTERRUPT_ENABLE == true>
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister ( NVMCTRL_CALLBACK callback, uintptr_t context );
 </#if>
