@@ -344,7 +344,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_IDLE;
             ${I2C_MASTER_IEC_REG}CLR = _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK;
             ${I2C_BUS_IEC_REG}CLR = _${I2C_BUS_IEC_REG}_${I2C_BUS_COLLISION_INT_ENABLE_BIT_NAME}_MASK;
-            if (${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+            if ((${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL) && (${I2C_INSTANCE_NAME?lower_case}Obj.busScanInProgress == false))
             {
                 uintptr_t context = ${I2C_INSTANCE_NAME?lower_case}Obj.context;
 
@@ -503,6 +503,60 @@ bool ${I2C_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t* wdata, size_t wle
     return statusWriteread;
 }
 
+bool ${I2C_INSTANCE_NAME}_BusScan(uint16_t start_addr, uint16_t end_addr, void* pDevicesList, uint8_t* nDevicesFound)
+{
+    uint8_t* pDevList = (uint8_t*)pDevicesList;
+    uint8_t nDevFound = 0;
+
+    if (${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE)
+    {
+        return false;
+    }
+
+    if (pDevList == NULL)
+    {
+        return false;
+    }
+
+    ${I2C_INSTANCE_NAME?lower_case}Obj.busScanInProgress = true;
+
+    *nDevicesFound = 0;
+
+    for (uint16_t dev_addr = start_addr; dev_addr <= end_addr; dev_addr++)
+    {
+        while (${I2C_INSTANCE_NAME}_Write(dev_addr, NULL, 0) == false)
+        {
+
+        }
+
+        while (${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE)
+        {
+            /* Wait for the transfer to complete */
+        }
+
+        if (${I2C_INSTANCE_NAME?lower_case}Obj.error == I2C_ERROR_NONE)
+        {
+            /* No error and device responded with an ACK. Add the device to the list of found devices. */
+            if (dev_addr > 0x007FU)
+            {
+                ((uint16_t*)&pDevList)[nDevFound] = dev_addr;
+            }
+            else
+            {
+                pDevList[nDevFound] = dev_addr;
+            }
+
+            nDevFound += 1;
+        }
+    }
+
+    *nDevicesFound = nDevFound;
+
+    ${I2C_INSTANCE_NAME?lower_case}Obj.busScanInProgress = false;
+
+    return true;
+}
+
 I2C_ERROR ${I2C_INSTANCE_NAME}_ErrorGet(void)
 {
     I2C_ERROR error;
@@ -589,7 +643,7 @@ void __attribute__((used)) ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
 
     ${I2C_INSTANCE_NAME?lower_case}Obj.error = I2C_ERROR_BUS_COLLISION;
 
-    if (${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+    if ((${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL) && (${I2C_INSTANCE_NAME?lower_case}Obj.busScanInProgress == false))
     {
         uintptr_t context = ${I2C_INSTANCE_NAME?lower_case}Obj.context;
 

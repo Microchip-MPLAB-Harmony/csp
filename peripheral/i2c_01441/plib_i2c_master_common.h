@@ -201,6 +201,7 @@ typedef struct
     I2C_ERROR               error;
     I2C_CALLBACK            callback;
     uintptr_t               context;
+    bool                    busScanInProgress;
 
 } I2C_OBJ;
 

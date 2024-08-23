@@ -539,7 +539,7 @@ void ${I2C_INSTANCE_NAME}_CallbackRegister(I2C_CALLBACK callback, uintptr_t cont
 
    Precondition:
     ${I2C_INSTANCE_NAME}_Initialize must have been called for the associated I2C instance.
-	The transfer status should not be busy.
+    The transfer status should not be busy.
 
    Parameters:
     setup - Pointer to the structure containing the transfer setup.
@@ -574,6 +574,43 @@ void ${I2C_INSTANCE_NAME}_CallbackRegister(I2C_CALLBACK callback, uintptr_t cont
 bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq );
 
 void ${I2C_INSTANCE_NAME}_TransferAbort( void );
+
+// *****************************************************************************
+/* Function:
+    bool ${I2C_INSTANCE_NAME}_BusScan(uint16_t start_addr, uint16_t end_addr, void* pDevicesList, uint8_t* nDevicesFound)
+
+   Summary:
+    Scan the target devices on the I2C bus.
+
+   Precondition:
+    ${I2C_INSTANCE_NAME}_Initialize must have been called for the associated I2C instance.
+    The transfer status should not be busy.
+
+   Parameters:
+    start_addr - Starting address of the target device.
+    end_addr - Ending address of the target device.
+    pDevicesList - Pointer to the application buffer where the address of the devices found on the bus will be returned.
+    nDevicesFound - Indicates number of devices found on the bus
+
+   Returns:
+    true - The call to this API executed successfully.
+    false - There was an error during the execution of this API.
+
+   Example:
+    <code>
+
+    uint8_t nDevicesFoundList[10] = {0};
+    uint8_t nDevFound = 0;
+
+    ${I2C_INSTANCE_NAME}_BusScan(0x08, 0x77, nDevicesFoundList, &nDevFound);
+
+    </code>
+
+   Remarks:
+    If there is a mix of devices with 8 and 10 bit addresses on the bus, then this API must be called separately for
+    devices with 8-bit addresses and then for devices with 10-bit addresses.
+*/
+bool ${I2C_INSTANCE_NAME}_BusScan(uint16_t start_addr, uint16_t end_addr, void* pDevicesList, uint8_t* nDevicesFound);
 
 
 // DOM-IGNORE-BEGIN
