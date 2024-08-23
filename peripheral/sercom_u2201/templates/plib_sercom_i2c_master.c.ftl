@@ -841,6 +841,92 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_WriteRead_HighSpeed(uint16_t address, uint8_t* 
 }
 </#if>
 
+bool ${SERCOM_INSTANCE_NAME}_I2C_BusScan(uint16_t start_addr, uint16_t end_addr, void* pDevicesList, uint8_t* nDevicesFound)
+{
+    uint8_t* pDevList = (uint8_t*)pDevicesList;
+    uint8_t nDevFound = 0;
+
+    /* Check for ongoing transfer */
+    if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE)
+    {
+        return false;
+    }
+
+    if (pDevList == NULL)
+    {
+        return false;
+    }
+
+    *nDevicesFound = 0;
+
+    /* Clear all flags */
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG = (uint8_t)SERCOM_I2CM_INTFLAG_Msk;
+
+    /* Disable all interrupts */
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTENCLR = (uint8_t)SERCOM_I2CM_INTENCLR_Msk;
+
+    for (uint16_t dev_addr = start_addr; dev_addr <= end_addr; dev_addr++)
+    {
+        while(((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) != SERCOM_I2CM_STATUS_BUSSTATE(0x01U)))
+        {
+            /* Wait for the bus to become IDLE */
+        }
+
+        if (dev_addr > 0x007FU)
+        {
+            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint32_t)dev_addr << 1U) | SERCOM_I2CM_ADDR_TENBITEN_Msk;
+        }
+        else
+        {
+            /* Put the 7-bit device address on the bus with WR bit */
+            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint32_t)dev_addr << 1U);
+        }
+
+        /* Wait for synchronization */
+        while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY) != 0U)
+        {
+            /* Do nothing */
+        }
+
+        while ((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG & SERCOM_I2CM_INTFLAG_MB_Msk) == 0)
+        {
+            /* Wait for the address transfer to complete */
+        }
+
+        if (((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG & SERCOM_I2CM_INTFLAG_ERROR_Msk) == 0) &&
+                ((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_RXNACK_Msk) == 0))
+        {
+            /* No error and device responded with an ACK. Add the device to the list of found devices. */
+            if (dev_addr > 0x007FU)
+            {
+                ((uint16_t*)&pDevList)[nDevFound] = dev_addr;
+            }
+            else
+            {
+                pDevList[nDevFound] = dev_addr;
+            }
+
+            nDevFound += 1;
+        }
+
+        /* Issue stop condition */
+        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_CMD(3UL);
+
+        /* Wait for synchronization */
+        while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY) != 0U)
+        {
+            /* Do nothing */
+        }
+    }
+
+    *nDevicesFound = nDevFound;
+
+    /* Re-enable all interrupts */
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTENSET = (uint8_t)SERCOM_I2CM_INTENSET_Msk;
+
+    return true;
+}
+
 bool ${SERCOM_INSTANCE_NAME}_I2C_IsBusy(void)
 {
     bool isBusy = true;
