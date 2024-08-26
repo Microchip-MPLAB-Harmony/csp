@@ -68,8 +68,16 @@ bool ${EFC_INSTANCE_NAME}_SectorErase( uint32_t address )
 {
     uint16_t page_number;
 
+    <#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >
+    if (DATA_CACHE_IS_ENABLED() != 0U)
+    {
+        DCACHE_INVALIDATE_BY_ADDR((void*)address, (int32_t)${EFC_INSTANCE_NAME}_SECTORSIZE);
+    }
+    </#if>
+
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (uint16_t)((address - ${MEM_SEGMENT_NAME}_ADDR) / ${MEM_SEGMENT_NAME}_PAGE_SIZE);
+
     /* Issue the FLASH erase operation*/
     ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_EPA|EEFC_FCR_FARG((uint32_t)page_number|0x2U)|EEFC_FCR_FKEY_PASSWD);
 
@@ -98,6 +106,13 @@ bool ${EFC_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t addres
 
     __DSB();
     __ISB();
+
+    <#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >
+    if (DATA_CACHE_IS_ENABLED() != 0U)
+    {
+        DCACHE_CLEAN_BY_ADDR((void*)address, (int32_t)${EFC_INSTANCE_NAME}_PAGESIZE);
+    }
+    </#if>
 
     return true;
 }
@@ -141,6 +156,13 @@ bool ${EFC_INSTANCE_NAME}_PageWrite( uint32_t *data, uint32_t address )
     __DSB();
     __ISB();
 
+    <#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >
+    if (DATA_CACHE_IS_ENABLED() != 0U)
+    {
+        DCACHE_CLEAN_BY_ADDR((void*)address, (int32_t)${EFC_INSTANCE_NAME}_PAGESIZE);
+    }
+    </#if>
+
     /* Issue the FLASH write operation*/
     ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG((uint32_t)page_number)| EEFC_FCR_FKEY_PASSWD);
 
@@ -165,6 +187,14 @@ bool ${EFC_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address )
         *((uint32_t *)(( address ) + i )) = *data;
         data++;
     }
+
+    <#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >
+    if (DATA_CACHE_IS_ENABLED() != 0U)
+    {
+        DCACHE_CLEAN_BY_ADDR((void*)address, (int32_t)16);
+    }
+    </#if>
+
     /* Issue the FLASH write operation*/
     ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG((uint32_t)page_number)| EEFC_FCR_FKEY_PASSWD);
 
