@@ -55,6 +55,7 @@
 */
 
 #include <stddef.h>
+#include "toolchain_specifics.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -219,7 +220,12 @@ typedef struct {
 */
 
 /* View 0 */
-typedef struct {
+<#if CoreArchitecture != "CORTEX-M4" && CoreArchitecture != "CORTEX-M33" && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
+CACHE_ALIGN typedef struct
+<#else>
+typedef struct
+</#if>
+{
 
     /* Next Descriptor Address number. */
     uint32_t mbr_nda;
@@ -230,10 +236,19 @@ typedef struct {
     /* Destination Address Member. */
     uint32_t mbr_da;
 
+    <#if CoreArchitecture != "CORTEX-M4" && CoreArchitecture != "CORTEX-M33" && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
+    uint8_t dummy_for_cache_align[CACHE_ALIGNED_SIZE_GET(12) - 12];
+    </#if>
+
 } XDMAC_DESCRIPTOR_VIEW_0;
 
 /* View 1 */
-typedef struct {
+<#if CoreArchitecture != "CORTEX-M4" && CoreArchitecture != "CORTEX-M33" && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
+CACHE_ALIGN typedef struct
+<#else>
+typedef struct
+</#if>
+{
 
     /* Next Descriptor Address number. */
     uint32_t mbr_nda;
@@ -247,10 +262,19 @@ typedef struct {
     /* Destination Address Member. */
     uint32_t mbr_da;
 
+    <#if CoreArchitecture != "CORTEX-M4" && CoreArchitecture != "CORTEX-M33" && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
+    uint8_t dummy_for_cache_align[CACHE_ALIGNED_SIZE_GET(16) - 16];
+    </#if>
+
 } XDMAC_DESCRIPTOR_VIEW_1;
 
 /* View 2 */
-typedef struct {
+<#if CoreArchitecture != "CORTEX-M4" && CoreArchitecture != "CORTEX-M33" && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
+CACHE_ALIGN typedef struct
+<#else>
+typedef struct
+</#if>
+{
 
     /* Next Descriptor Address number. */
     uint32_t mbr_nda;
@@ -268,10 +292,19 @@ typedef struct {
     /* TODO: Redefine type to XDMAC_CC white updating to N type */
     uint32_t mbr_cfg;
 
+    <#if CoreArchitecture != "CORTEX-M4" && CoreArchitecture != "CORTEX-M33" && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
+    uint8_t dummy_for_cache_align[CACHE_ALIGNED_SIZE_GET(20) - 20];
+    </#if>
+
 } XDMAC_DESCRIPTOR_VIEW_2;
 
 /* View 3 */
-typedef struct {
+<#if CoreArchitecture != "CORTEX-M4" && CoreArchitecture != "CORTEX-M33" && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
+CACHE_ALIGN typedef struct
+<#else>
+typedef struct
+</#if>
+{
 
     /* Next Descriptor Address number. */
     uint32_t mbr_nda;
@@ -299,6 +332,10 @@ typedef struct {
 
     /* Destination Micro-block Stride Member. */
     uint32_t mbr_dus;
+
+    <#if CoreArchitecture != "CORTEX-M4" && CoreArchitecture != "CORTEX-M33" && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
+    uint8_t dummy_for_cache_align[CACHE_ALIGNED_SIZE_GET(36) - 36];
+    </#if>
 
 } XDMAC_DESCRIPTOR_VIEW_3;
 
