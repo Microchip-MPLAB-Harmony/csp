@@ -88,6 +88,14 @@ void CLK_Initialize( void )
     SYSKEY = 0x00000000U;
     SYSKEY = 0xAA996655U;
     SYSKEY = 0x556699AAU;
+    
+    /* Peripheral Module Disable Configuration */
+<#list 1..PMD_COUNT + 1 as i>
+    <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
+    <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
+        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]}U;
+    </#if>
+</#list>
 
 <#if SYS_CLK_FRCDIV != "0">
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
@@ -161,13 +169,6 @@ void CLK_Initialize( void )
     OSCTUN = 0x${OSCTUN_REG_VALUE};
 
 </#if>
-    /* Peripheral Module Disable Configuration */
-<#list 1..PMD_COUNT + 1 as i>
-    <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
-    <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
-        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]}U;
-    </#if>
-</#list>
 
     /* Lock system since done with clock configuration */
     SYSKEY = 0x33333333U;
