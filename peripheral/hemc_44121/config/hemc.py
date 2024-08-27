@@ -99,12 +99,6 @@ def hideMenus(symbol, event):
     for id in range(0, chipSelectCount):
         if int(Database.getSymbolValue(event["namespace"], "CS_" + str(id) + "_MEMORY_TYPE")) == 1:
             sdRamcs = id
-            if useHSDRAM.getValue() == False:
-                commentHSDRAM.setVisible(False)
-                useHSDRAM.setValue(True)
-                hsdramcSymMenu_MR_MENU.setVisible(True)
-                hsdramcSymMenu_features.setVisible(True)
-                hsdramcSymMenu_TIMING_MENU.setVisible(True)
             useHSMC[id].setValue(False)
             hsmcCSmenu[id].setVisible(False)
         else:
@@ -114,9 +108,15 @@ def hideMenus(symbol, event):
     if sdRamcs == None:
         commentHSDRAM.setVisible(True)
         useHSDRAM.setValue(False)
-        #hsdramcSymMenu_MR_MENU.setVisible(False)
+        hsdramcSymMenu_MR_MENU.setVisible(False)
         hsdramcSymMenu_features.setVisible(False)
         hsdramcSymMenu_TIMING_MENU.setVisible(False)
+    else:
+        commentHSDRAM.setVisible(False)
+        useHSDRAM.setValue(True)
+        hsdramcSymMenu_MR_MENU.setVisible(True)
+        hsdramcSymMenu_features.setVisible(True)
+        hsdramcSymMenu_TIMING_MENU.setVisible(True)
 
 def calcRefreshCount(time, rowlines, clk):
     rowlines = rowlines[-2:]
