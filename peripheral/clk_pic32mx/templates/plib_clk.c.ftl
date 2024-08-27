@@ -92,6 +92,16 @@ void CLK_Initialize( void )
     <#assign REFOCONreg = "REFOCON">
 </#if>
 
+<#if PMD_COUNT?has_content>
+    /* Peripheral Module Disable Configuration */
+<#list 1..PMD_COUNT + 1 as i>
+    <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
+    <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
+        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]}U;
+    </#if>
+</#list>
+</#if>
+
     /* Code for fuse settings can be found in "initialization.c" */
 
 <#if (CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT) ||
@@ -160,15 +170,5 @@ void CLK_Initialize( void )
         <#lt>        /* Nothing to do */
         <#lt>    }
     </#if>
-</#if>
-
-<#if PMD_COUNT?has_content>
-    /* Peripheral Module Disable Configuration */
-<#list 1..PMD_COUNT + 1 as i>
-    <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
-    <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
-        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]}U;
-    </#if>
-</#list>
 </#if>
 }
