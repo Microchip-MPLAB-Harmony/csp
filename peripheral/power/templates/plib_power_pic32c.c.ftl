@@ -169,6 +169,7 @@ void POWER_DS_SoftwareRestore(void)
 void POWER_DS_WakeupSourceClear( POWER_DS_WAKEUP_SOURCE wakeupSource )
 {
     DSCON_REGS->DSCON_${DSCON_DSWSRC_REG_NAME} &= ~((uint32_t)wakeupSource);
+    DSCON_REGS->DSCON_${DSCON_DSWSRC_REG_NAME} &= ~((uint32_t)wakeupSource);
 }
 
 void POWER_DS_ExtendedSemaphoreEnable(void)
