@@ -3,6 +3,16 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.19.5
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Updated PIC32CX-SG41 DFP version in package.yml
+
 ## CSP Release v3.19.4
 
 ### New Features
