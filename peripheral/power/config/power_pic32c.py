@@ -113,6 +113,9 @@ if (ATDF.getNode('/avr-tools-device-file/modules/module@[name="DSCTRL"]') != Non
         deepSleepSym_Cause.setOutputMode("Key")
         deepSleepSym_Cause.setDisplayMode("Description")
         deepSleepSym_Cause.setVisible(False)
+        
+    deepSleepSym_FuseEnComment = powerComponent.createCommentSymbol("DEEP_SLEEP_MODE_FUSE_ENABLE_COMMENT", None)
+    deepSleepSym_FuseEnComment.setLabel("** Ensure Deep sleep related fuses are configured under Device & Project Configuration > Fuse Settings **")
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
