@@ -181,6 +181,9 @@ static void initUPLLCLK(void)
     {
         /* Wait for PLL lock to rise */
     }
+    <#if CLK_UPLL_SS>
+    PMC_REGS->PMC_PLL_SSR = PMC_PLL_SSR_ENSPREAD_Msk | PMC_PLL_SSR_STEP(${CLK_UPLL_SS_STEP}U) | PMC_PLL_SSR_NSTEP(${CLK_UPLL_SS_NSTEP}U);
+    </#if>
 }
 </#if>
 

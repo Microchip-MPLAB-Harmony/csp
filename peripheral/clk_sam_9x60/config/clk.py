@@ -586,6 +586,28 @@ upll_fracr.setDescription(upll_fracr_node.getAttribute("caption"))
 upll_fracr.setMin(0)
 upll_fracr.setMax(4194303)
 
+upll_ss_en_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_SSR"]/bitfield@[name="ENSPREAD"]')
+upll_ss_en = coreComponent.createBooleanSymbol("CLK_UPLL_SS", upll_en)
+upll_ss_en.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_9x60;register:PMC_PLL_SSR")
+upll_ss_en.setLabel(upll_ss_en_node.getAttribute("name"))
+upll_ss_en.setDescription(upll_ss_en_node.getAttribute("caption"))
+
+upll_ss_nstep_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_SSR"]/bitfield@[name="NSTEP"]')
+upll_ss_nstep = coreComponent.createIntegerSymbol("CLK_UPLL_SS_NSTEP", upll_ss_en)
+upll_ss_nstep.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_9x60;register:PMC_PLL_SSR")
+upll_ss_nstep.setLabel(upll_ss_nstep_node.getAttribute("name"))
+upll_ss_nstep.setDescription(upll_ss_nstep_node.getAttribute("caption"))
+upll_ss_nstep.setMin(0)
+upll_ss_nstep.setMax(255)
+
+upll_ss_step_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_SSR"]/bitfield@[name="STEP"]')
+upll_ss_step = coreComponent.createIntegerSymbol("CLK_UPLL_SS_STEP", upll_ss_en)
+upll_ss_step.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clk_sam_9x60;register:PMC_PLL_SSR")
+upll_ss_step.setLabel(upll_ss_step_node.getAttribute("name"))
+upll_ss_step.setDescription(upll_ss_step_node.getAttribute("caption"))
+upll_ss_step.setMin(0)
+upll_ss_step.setMax(65535)
+
 upllck = coreComponent.createIntegerSymbol("UPLL_FREQUENCY", upll_en)
 upllck.setVisible(False)
 if upll_en.getValue() == True:
