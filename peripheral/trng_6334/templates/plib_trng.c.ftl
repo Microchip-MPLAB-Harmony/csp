@@ -50,14 +50,20 @@
     <#lt>typedef struct
     <#lt>{
     <#lt>    TRNG_CALLBACK          callback;
-    <#lt>	 uintptr_t               context;
+    <#lt>    uintptr_t               context;
     <#lt>} TRNG_OBJECT ;
 
     <#lt>volatile static TRNG_OBJECT trng;
+</#if>
 
+<#lt>void ${TRNG_INSTANCE_NAME}_Initialize( void )
+<#lt>{
+<#lt>    ${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_${CRKEYNAME} | TRNG_CR_ENABLE_Msk;
+<#lt>}
+
+<#if trngEnableInterrupt == true>
     <#lt>void ${TRNG_INSTANCE_NAME}_RandomNumberGenerate( void )
     <#lt>{
-    <#lt>    ${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_${CRKEYNAME} | TRNG_CR_ENABLE_Msk;
     <#lt>    ${TRNG_INSTANCE_NAME}_REGS->TRNG_IER = TRNG_IER_DATRDY_Msk;
     <#lt>}
 
@@ -71,15 +77,23 @@
 <#if trngEnableInterrupt == false>
     <#lt>uint32_t ${TRNG_INSTANCE_NAME}_ReadData( void )
     <#lt>{
-    <#lt>    ${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_${CRKEYNAME} | TRNG_CR_ENABLE_Msk;
-    <#lt>	 while(((${TRNG_INSTANCE_NAME}_REGS->TRNG_ISR) & (TRNG_ISR_DATRDY_Msk)) != TRNG_ISR_DATRDY_Msk)
+    <#lt>    while(((${TRNG_INSTANCE_NAME}_REGS->TRNG_ISR) & (TRNG_ISR_DATRDY_Msk)) != TRNG_ISR_DATRDY_Msk)
     <#lt>    {
                  /* Wait for read to complete */
     <#lt>    }
-    <#lt>	 ${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_${CRKEYNAME};
-    <#lt>	 return (${TRNG_INSTANCE_NAME}_REGS->TRNG_ODATA);
+    <#lt>    return (${TRNG_INSTANCE_NAME}_REGS->TRNG_ODATA);
     <#lt>}
 </#if>
+
+    <#lt>void ${TRNG_INSTANCE_NAME}_Enable( void )
+    <#lt>{
+    <#lt>    ${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_${CRKEYNAME} | TRNG_CR_ENABLE_Msk;
+    <#lt>}
+
+    <#lt>void ${TRNG_INSTANCE_NAME}_Disable( void )
+    <#lt>{
+    <#lt>    ${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_${CRKEYNAME};
+    <#lt>}
 
 <#if trngEnableInterrupt == true>
     <#lt>void __attribute__((used)) ${TRNG_INSTANCE_NAME}_InterruptHandler( void )
@@ -87,9 +101,9 @@
     <#lt>    uint32_t data;
     <#lt>    /* Additional temporary variable used to prevent MISRA violations (Rule 13.x) */
     <#lt>    uintptr_t context = trng.context;
-    <#lt>    ${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_${CRKEYNAME};
     <#lt>    data = ${TRNG_INSTANCE_NAME}_REGS->TRNG_ODATA;
-    <#lt>    if(trng.callback != NULL)
+    <#lt>    ${TRNG_INSTANCE_NAME}_REGS->TRNG_IDR = TRNG_IDR_DATRDY_Msk;
+    <#lt>    if ((trng.callback != NULL) && (${TRNG_INSTANCE_NAME}_REGS->TRNG_ISR & TRNG_ISR_DATRDY_Msk))
     <#lt>    {
     <#lt>         trng.callback(data, context);
     <#lt>    }

@@ -56,20 +56,26 @@
 // *****************************************************************************
 // *****************************************************************************
 
+void ${TRNG_INSTANCE_NAME}_Initialize(void);
+
 <#if trngEnableInterrupt == true>
-	<#lt>typedef void (*TRNG_CALLBACK)(uint32_t random, uintptr_t context);
+    <#lt>typedef void (*TRNG_CALLBACK)(uint32_t random, uintptr_t context);
 </#if>
 
 /***************************** TRNG API *******************************/
 <#if trngEnableInterrupt == true>
-	<#lt>void ${TRNG_INSTANCE_NAME}_RandomNumberGenerate( void );
+    <#lt>void ${TRNG_INSTANCE_NAME}_RandomNumberGenerate( void );
 </#if>
 <#if trngEnableInterrupt == false>
-	<#lt>uint32_t ${TRNG_INSTANCE_NAME}_ReadData( void );
+    <#lt>uint32_t ${TRNG_INSTANCE_NAME}_ReadData( void );
 </#if>
 <#if trngEnableInterrupt == true>
-	<#lt>void ${TRNG_INSTANCE_NAME}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context );
+    <#lt>void ${TRNG_INSTANCE_NAME}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context );
 </#if>
+
+void ${TRNG_INSTANCE_NAME}_Enable( void );
+
+void ${TRNG_INSTANCE_NAME}_Disable( void );
 
 #ifdef __cplusplus // Provide C++ Compatibility
  }

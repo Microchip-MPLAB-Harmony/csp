@@ -154,6 +154,13 @@ def instantiateComponent(trngComponent):
     trngSystemDefFile.setSourcePath("../peripheral/trng_6334/templates/system/definitions.h.ftl")
     trngSystemDefFile.setMarkup(True)
 
+    #System Initialization
+    trngSystemInitFile = trngComponent.createFileSymbol("TRNG_SYS_INIT", None)
+    trngSystemInitFile.setType("STRING")
+    trngSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+    trngSystemInitFile.setSourcePath("../peripheral/trng_6334/templates/system/initialization.c.ftl")
+    trngSystemInitFile.setMarkup(True)
+
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         global TRNGfilesArray
         trngIsNonSecure = Database.getSymbolValue("core", trngComponent.getID().upper() + "_IS_NON_SECURE")
