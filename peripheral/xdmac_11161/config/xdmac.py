@@ -489,7 +489,7 @@ for channelID in range(0, xdmacChCount.getValue()):
         xdmacSym_CC_SIF.addKey("AHB_IF1", "1", "DMA Interface Bus 1")
         xdmacSym_CC_SIF.setOutputMode("Key")
         xdmacSym_CC_SIF.setDisplayMode("Description")
-        xdmacSym_CC_SIF.setDefaultValue(1)
+        xdmacSym_CC_SIF.setDefaultValue(0 if triggerSettings["Software Trigger"][5] == "AHB_IF0" else 1)
         xdmacSym_CC_SIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC" + str(channelID) + "_PERID"])
 
     if ATDF.getNode(xdmacBitFieldString.format("XDMAC_CHID", "XDMAC_CC", "DIF")) is not None:
@@ -500,7 +500,7 @@ for channelID in range(0, xdmacChCount.getValue()):
         xdmacSym_CC_DIF.addKey("AHB_IF1", "1", "DMA Interface Bus 1")
         xdmacSym_CC_DIF.setOutputMode("Key")
         xdmacSym_CC_DIF.setDisplayMode("Description")
-        xdmacSym_CC_DIF.setDefaultValue(1)
+        xdmacSym_CC_DIF.setDefaultValue(0 if triggerSettings["Software Trigger"][6] == "AHB_IF0" else 1)
         xdmacSym_CC_DIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC" + str(channelID) + "_PERID"])
 
     xdmacSym_CC_DWIDTH = coreComponent.createKeyValueSetSymbol("XDMAC_CC" + str(channelID) + "_DWIDTH", xdmacChannelMenu)

@@ -38,9 +38,9 @@ def xc32SetStackInTcm(symbol, event):
 # Channel x Configuration Register[0..31] defaults
 #"TYPE" "DSYNC" "SWREQ" "SAM" "DAM" "SIF" "DIF" "DWIDTH" "CSIZE" "MBSIZE"
 def setXDMACDefaultSettings():
-    triggerSettings = {"Software Trigger":  ["MEM_TRAN", "PER2MEM", "HWR_CONNECTED", "INCREMENTED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                       "Standard_Transmit": ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM",       "AHB_IF0", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                       "Standard_Receive":  ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM",       "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "BYTE", "CHK_1", "SINGLE"]}
+    triggerSettings = {"Software Trigger":  ["MEM_TRAN", "PER2MEM", "HWR_CONNECTED", "INCREMENTED_AM", "INCREMENTED_AM", "AHB_IF0", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
+                       "Standard_Transmit": ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM",       "AHB_IF1", "AHB_IF0", "BYTE", "CHK_1", "SINGLE"],
+                       "Standard_Receive":  ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM",       "INCREMENTED_AM", "AHB_IF0", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"]}
 
     return triggerSettings
 
