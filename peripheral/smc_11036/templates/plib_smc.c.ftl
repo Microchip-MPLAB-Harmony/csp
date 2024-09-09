@@ -41,6 +41,7 @@
 *******************************************************************************/
 #include "plib_${SMC_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
+#include <stddef.h>         // NULL
 
 /* Function:
     void ${SMC_INSTANCE_NAME}_Initialize( void )
@@ -49,15 +50,14 @@
     Initializes hardware and data for the given instance of the SMC module.
 
   Description:
-    This function initializes the SMC timings according to the external parallel 
+    This function initializes the SMC timings according to the external parallel
     device requirements.
 
   Returns:
     None
  */
 
-void 
-${SMC_INSTANCE_NAME}_Initialize( void )
+void ${SMC_INSTANCE_NAME}_Initialize( void )
 {
     <#lt>   // ------------------------------------------------------------------------
     <#lt>   // Disable Write Protection
@@ -67,16 +67,16 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
     <#lt>   // NAND Flash Controller (NFC) Configuration
     <#lt>   ${SMC_REGS}->HSMC_CFG = HSMC_CFG_PAGESIZE_${SMC_NFC_PAGE_SIZE}
     <#lt><#if SMC_NFC_WRITE_SPARE>
-    <#lt>                           | HSMC_CFG_WSPARE_Msk  
+    <#lt>                           | HSMC_CFG_WSPARE_Msk
     <#lt></#if>
     <#lt><#if SMC_NFC_READ_SPARE>
-    <#lt>                           | HSMC_CFG_RSPARE_Msk  
+    <#lt>                           | HSMC_CFG_RSPARE_Msk
     <#lt></#if>
     <#lt><#if SMC_NFC_EDGE_DETECT>
-    <#lt>                           | HSMC_CFG_EDGECTRL_Msk  
+    <#lt>                           | HSMC_CFG_EDGECTRL_Msk
     <#lt></#if>
     <#lt><#if SMC_NFC_READY_BUSY_DETECT>
-    <#lt>                           | HSMC_CFG_RBEDGE_Msk  
+    <#lt>                           | HSMC_CFG_RBEDGE_Msk
     <#lt></#if>
     <#lt><#if 0 != SMC_NFC_DATA_TIMEOUT_CYCLE>
     <#lt>                           | HSMC_CFG_DTOCYC( ${SMC_NFC_DATA_TIMEOUT_CYCLE} )
@@ -94,17 +94,15 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
     <#lt>   ${SMC_REGS}->HSMC_CTRL = HSMC_CTRL_NFCDIS_Msk;
     <#lt></#if>
 
-    <#lt>   ${SMC_REGS}->HSMC_ADDR = HSMC_ADDR_ADDR_CYCLE0( ${SMC_NFC_ADDRESS_CYCLE_0} ); 
-    
-    <#lt>   ${SMC_REGS}->HSMC_BANK = ${SMC_NFC_BANK_ADDRESS}; 
-    
+    <#lt>   ${SMC_REGS}->HSMC_ADDR = HSMC_ADDR_ADDR_CYCLE0( ${SMC_NFC_ADDRESS_CYCLE_0} );
+
+    <#lt>   ${SMC_REGS}->HSMC_BANK = ${SMC_NFC_BANK_ADDRESS};
+
     <#lt>   // ------------------------------------------------------------------------
     <#lt>   // Programmable Multi-bit Error Correction Code
-    <#lt>   ${SMC_REGS}->HSMC_PMECCFG = HSMC_PMECCFG_BCH_ERR_${SMC_PMECC_ERROR_CORRECTION_CAPABILITY}
-    <#lt><#if "SECTORSZ1" == SMC_PMECC_SECTOR_SIZE>
-        <#lt>                               | HSMC_PMECCFG_SECTORSZ_Msk
-    <#lt></#if>
-    <#lt>                               | HSMC_PMECCFG_PAGESIZE_${SMC_PMECC_SECTORS_PER_PAGE}
+    <#lt>   ${SMC_REGS}->HSMC_PMECCFG = HSMC_PMECCFG_BCH_ERR(${SMC_PMECC_ERROR_CORRECTION_CAPABILITY})
+    <#lt>                               | HSMC_PMECCFG_SECTORSZ(${SMC_PMECC_SECTOR_SIZE})
+    <#lt>                               | HSMC_PMECCFG_PAGESIZE(${SMC_PMECC_SECTORS_PER_PAGE})
     <#lt><#if SMC_PMECC_NAND_WRITE_ACCESS>
         <#lt>                               | HSMC_PMECCFG_NANDWR_Msk
     <#lt></#if>
@@ -115,8 +113,9 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
         <#lt>                               | HSMC_PMECCFG_AUTO_Msk
     <#lt></#if>
     <#lt>                               ;
+    <#assign SAREA_SZ_VALUE = SMC_PMECC_SPARE_AREA_SIZE + 1>
     <#lt>   // PMECC Spare Area Size
-    <#lt>   ${SMC_REGS}->HSMC_PMECCSAREA = HSMC_PMECCSAREA_SPARESIZE( ${SMC_PMECC_SPARE_AREA_SIZE} );
+    <#lt>   ${SMC_REGS}->HSMC_PMECCSAREA = HSMC_PMECCSAREA_SPARESIZE( ${SAREA_SZ_VALUE}U ); // ${SMC_PMECC_SPARE_AREA_SIZE} bytes
     <#lt>   // PMECC Start Address
     <#lt>   ${SMC_REGS}->HSMC_PMECCSADDR = HSMC_PMECCSADDR_STARTADDR( ${SMC_PMECC_START_ADDRESS} );
     <#lt>   // PMECC End Address
@@ -223,7 +222,7 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
         <#lt></#if>
     <#lt></#list>
     <#lt><#if SMC_OCMS_SCRAMBLING_ENABLE || SMC_OCMS_SRAM_SCRAMBLING_ENABLE>
-    
+
         <#lt>   // ------------------------------------------------------------------------
         <#lt>   // Off Chip Memory Scrambling
         <#lt>   // Note: corresponding OCMS bit in HSMC_TIMINGS register is required
@@ -245,6 +244,101 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
         <#lt>   ${SMC_REGS}->HSMC_WPMR = (HSMC_WPMR_WPKEY_PASSWD | HSMC_WPMR_WPEN_Msk);
     <#lt></#if>
 }
+
+uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect)
+{
+    uint32_t dataAddress = 0;
+
+    switch (chipSelect)
+    {
+        <#list 0..(SMC_CS_COUNT - 1) as cs>
+        case ${cs}:
+            dataAddress = EBI_CS${cs}_ADDR;
+            break;
+
+        </#list>
+        default:
+            /*default*/
+            break;
+    }
+    return dataAddress;
+}
+
+<#if SMC_PMECC_ENABLE == true>
+void ${SMC_INSTANCE_NAME}_DataPhaseStart(bool writeEnable)
+{
+    ${SMC_INSTANCE_NAME}_REGS->HSMC_PMECCTRL = HSMC_PMECCTRL_RST_Msk;
+
+    if (writeEnable)
+    {
+        ${SMC_INSTANCE_NAME}_REGS->HSMC_PMECCFG &= ~HSMC_PMECCFG_AUTO_Msk;
+        ${SMC_INSTANCE_NAME}_REGS->HSMC_PMECCFG |= HSMC_PMECCFG_NANDWR_Msk;
+    }
+    else
+    {
+        ${SMC_INSTANCE_NAME}_REGS->HSMC_PMECCFG &= ~HSMC_PMECCFG_NANDWR_Msk;
+        if ((${SMC_INSTANCE_NAME}_REGS->HSMC_PMECCFG & HSMC_PMECCFG_SPAREEN_Msk) != HSMC_PMECCFG_SPAREEN_Msk)
+        {
+            ${SMC_INSTANCE_NAME}_REGS->HSMC_PMECCFG |= HSMC_PMECCFG_AUTO_Msk;
+        }
+    }
+
+    ${SMC_INSTANCE_NAME}_REGS->HSMC_PMECCTRL = HSMC_PMECCTRL_DATA_Msk;
+}
+
+bool ${SMC_INSTANCE_NAME}_StatusIsBusy(void)
+{
+    return ((${SMC_INSTANCE_NAME}_REGS->HSMC_PMECCSR & HSMC_PMECCSR_BUSY_Msk) != 0U);
+}
+
+uint8_t ${SMC_INSTANCE_NAME}_ErrorGet(void)
+{
+    return (uint8_t)(${SMC_INSTANCE_NAME}_REGS->HSMC_PMECCISR & HSMC_PMECCISR_ERRIS_Msk);
+}
+
+int16_t ${SMC_INSTANCE_NAME}_RemainderGet(uint32_t sector, uint32_t remainderIndex)
+{
+    uint8_t lowByte = ((volatile const uint8_t *)${SMC_INSTANCE_NAME}_REGS->SMC_REM[sector].HSMC_REM)[remainderIndex * 2U];
+    uint8_t highByte = ((volatile const uint8_t *)${SMC_INSTANCE_NAME}_REGS->SMC_REM[sector].HSMC_REM)[remainderIndex * 2U + 1U];
+    uint32_t retVal = ((uint32_t)highByte << 8) + (uint32_t)lowByte;
+    return (int16_t)retVal;
+}
+
+uint8_t ${SMC_INSTANCE_NAME}_ECCGet(uint32_t sector, uint32_t byteIndex)
+{
+    return ((volatile const uint8_t *)${SMC_INSTANCE_NAME}_REGS->SMC_PMECC[sector].HSMC_PMECC)[byteIndex];
+}
+
+uint32_t ${SMC_INSTANCE_NAME}_ErrorLocationGet(uint8_t position)
+{
+    return ${SMC_INSTANCE_NAME}_REGS->HSMC_ERRLOC[position];
+}
+
+void ${SMC_INSTANCE_NAME}_ErrorLocationDisable(void)
+{
+    ${SMC_INSTANCE_NAME}_REGS->HSMC_ELDIS = HSMC_ELDIS_DIS_Msk;
+}
+
+void ${SMC_INSTANCE_NAME}_SigmaSet(uint32_t sigmaVal, uint32_t sigmaNum)
+{
+    volatile uint32_t* sigma_base_address = (volatile uint32_t*)(HSMC_BASE_ADDRESS + HSMC_SIGMA0_REG_OFST);
+    sigma_base_address[sigmaNum] = sigmaVal;
+}
+
+uint32_t ${SMC_INSTANCE_NAME}_ErrorLocationFindNumOfRoots(uint32_t sectorSizeInBits, uint32_t errorNumber)
+{
+    /* Configure and enable error location process */
+    ${SMC_INSTANCE_NAME}_REGS->HSMC_ELCFG = (${SMC_INSTANCE_NAME}_REGS->HSMC_ELCFG & ~HSMC_ELCFG_ERRNUM_Msk) | HSMC_ELCFG_ERRNUM(errorNumber);
+    ${SMC_INSTANCE_NAME}_REGS->HSMC_ELEN = sectorSizeInBits;
+
+    while ((${SMC_INSTANCE_NAME}_REGS->HSMC_ELISR & HSMC_ELISR_DONE_Msk) == 0U)
+    {
+        /* Wait for completion */
+    }
+
+    return ((${SMC_INSTANCE_NAME}_REGS->HSMC_ELISR & HSMC_ELISR_ERR_CNT_Msk) >> HSMC_ELISR_ERR_CNT_Pos);
+}
+</#if>
 
 /*******************************************************************************
  End of File

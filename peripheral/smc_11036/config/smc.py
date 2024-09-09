@@ -160,23 +160,24 @@ DEFAULT_NFC_MIN_VALUE =             0
 DEFAULT_NFC_SPARE_AREA_SIZE =       0
 
 DEFAULT_PMECC_MIN_VALUE =           0
-DEFAULT_PMECC_SPARE_AREA_SIZE =     0
-DEFAULT_PMECC_START_ADDRESS =       0
-DEFAULT_PMECC_END_ADDRESS =         0
+DEFAULT_PMECC_SPARE_AREA_SIZE =     56
+DEFAULT_PMECC_START_ADDRESS =       2
+DEFAULT_PMECC_END_ADDRESS =         57
 
-DEFAULT_PMECC_ERROR_LOCATION_MIN_VALUE = 0 
+DEFAULT_PMECC_ERROR_LOCATION_MIN_VALUE = 0
 DEFAULT_PMECC_ERROR_LOCATION_SECTOR_SIZE = 0
 DEFAULT_PMECC_ERROR_LOCATION_CODEWORD = 0
 
-DEFAULT_SMC_SETUP_VALUE =           16
+DEFAULT_SMC_SETUP_VALUE =           4
 DEFAULT_SMC_SETUP_MIN_VALUE =       1
-DEFAULT_SMC_PULSE_VALUE =           16
+DEFAULT_SMC_PULSE_VALUE =           10
 DEFAULT_SMC_PULSE_MIN_VALUE =       1
+DEFAULT_SMC_CYCLE_VALUE =           20
 DEFAULT_SMC_CYCLE_MIN_VALUE =       4
 DEFAULT_SMC_TIMINGS_VALUE =         0
 DEFAULT_SMC_TIMINGS_MIN_VALUE =     0
 DEFAULT_SMC_MODE_MIN_VALUE =        0
-DEFAULT_SMC_MODE_TDF_CYCLES_VALUE = 0
+DEFAULT_SMC_MODE_TDF_CYCLES_VALUE = 15
 
 global myNamespace
 global nfcDataTimeOutCycleName
@@ -209,6 +210,26 @@ global modeReadModeNameStem
 #------------------------------------------------------------------------------
 # Dependency Functions
 #------------------------------------------------------------------------------
+
+def handleMessage(messageID, args):
+    global pmeccEnable
+    result_dict = {}
+
+    component = pmeccEnable.getComponent()
+
+    if ("SMC_CS_ENABLE_" in messageID):
+        if args.get("isReadOnly") != None:
+            component.getSymbolByID("SMC_CHIP_SELECT_ENABLE" + messageID.split("SMC_CS_ENABLE_")[1]).setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            component.getSymbolByID("SMC_CHIP_SELECT_ENABLE" + messageID.split("SMC_CS_ENABLE_")[1]).setValue(args["isEnabled"])
+    elif (messageID == "PMECC_CTRL_ENABLE"):
+        if args.get("isReadOnly") != None:
+            component.getSymbolByID("SMC_PMECC_ENABLE").setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            component.getSymbolByID("SMC_PMECC_ENABLE").setValue(args["isEnabled"])
+
+    return result_dict
+
 def getNameValueCaptionTuple( aGroupName ):
     choiceNode = ATDF.getNode( atdfModuleSmc + '/value-group@[name="' + aGroupName + '"]' )
     tupleArray = []
@@ -218,7 +239,7 @@ def getNameValueCaptionTuple( aGroupName ):
         choiceValues = choiceNode.getChildren()
 
     for ii in range( 0, len( choiceValues ) ):
-        tupleArray.append( ( choiceValues[ ii ].getAttribute( "name" ), 
+        tupleArray.append( ( choiceValues[ ii ].getAttribute( "name" ),
                              choiceValues[ ii ].getAttribute( "value" ),
                              choiceValues[ ii ].getAttribute( "caption" )
                              ) )
@@ -244,16 +265,18 @@ def visibilityBasedOnBoolSymbol( symbol, event ):
 
 
 def smcModeByteWriteOrSelectAccessVisible( symbol, event ):
-    """ function to enable visibility based on selection of Byte Access Type """ 
+    """ function to enable visibility based on selection of Byte Access Type """
     if( event[ "symbol" ].getSelectedKey() == "BIT_16" ):
         symbol.setVisible( True )
     else:
         symbol.setVisible( False )
 
+def updateSymbolValue( symbol, event ):
+    symbol.setValue(not event["value"])
 
 def instantiateComponent( smcComponent ):
-    """ Create the menu display and symbols for the SMC component """ 
-    global myNamespace 
+    """ Create the menu display and symbols for the SMC component """
+    global myNamespace
     global nfcDataTimeOutCycleName
     global nfcDataTimeOutMultiplierName
     global setupNCsRdNameStem,      setupNCsWrNameStem,     pulseNCsRdNameStem,     pulseNCsWrNameStem
@@ -263,7 +286,8 @@ def instantiateComponent( smcComponent ):
     global timingsTarNameStem,      timingsTadlNameStem,    timingsTclrNameStem
     global modeTdfModeNameStem,     modeTdfCyclesNameStem,  modeDbwNameStem,        modeBatNameStem
     global modeNWaitNameStem,       modeReadModeNameStem,   modeWriteModeNameStem
-    
+    global pmeccEnable
+
     myNamespace = str( smcComponent.getID() )
     smcInstanceName = smcComponent.createStringSymbol( "SMC_INSTANCE_NAME", None )
     smcInstanceName.setVisible( False )
@@ -274,17 +298,17 @@ def instantiateComponent( smcComponent ):
     smcRegName = ATDF.getNode( '/avr-tools-device-file/devices/device/peripherals/module@[name="SMC"]/instance@[name="' + smcInstanceName.getValue() + '"]/register-group' ).getAttribute("name") + "_REGS"
     smcRegisterName.setDefaultValue( smcRegName )
     #--------------------------------------------------------------------------
-    nandFlashControllerMenu = smcComponent.createMenuSymbol( "SMC_NAND_FLASH_CONTROLLER", None ) 
+    nandFlashControllerMenu = smcComponent.createMenuSymbol( "SMC_NAND_FLASH_CONTROLLER", None )
     nandFlashControllerMenu.setLabel( "NAND Flash Controller" )
-    # ----- 
-    nfcConfigurationMenu = smcComponent.createMenuSymbol( "SMC_NFC_CONFIGURATION", nandFlashControllerMenu ) 
+    # -----
+    nfcConfigurationMenu = smcComponent.createMenuSymbol( "SMC_NFC_CONFIGURATION", nandFlashControllerMenu )
     nfcConfigurationMenu.setLabel( "NFC Configuration" )
-    # ----- 
-    nfcControllerEnable = smcComponent.createBooleanSymbol( "SMC_NFC_CONTROLLER_ENABLE", nfcConfigurationMenu ) 
+    # -----
+    nfcControllerEnable = smcComponent.createBooleanSymbol( "SMC_NFC_CONTROLLER_ENABLE", nfcConfigurationMenu )
     nfcControllerEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
-    nfcControllerEnable.setLabel( bitField_CTRL_NFCEN.getAttribute( "caption" ) ) 
+    nfcControllerEnable.setLabel( bitField_CTRL_NFCEN.getAttribute( "caption" ) )
 
-    nfcPageSize = smcComponent.createKeyValueSetSymbol( "SMC_NFC_PAGE_SIZE", nfcConfigurationMenu ) 
+    nfcPageSize = smcComponent.createKeyValueSetSymbol( "SMC_NFC_PAGE_SIZE", nfcConfigurationMenu )
     nfcPageSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CFG")
     nfcPageSize.setLabel( bitField_CFG_PAGESIZE.getAttribute( "caption" ) )
     nfcPageSize.setOutputMode( "Key" )
@@ -293,24 +317,24 @@ def instantiateComponent( smcComponent ):
     for tupleElem in getNameValueCaptionTuple( "HSMC_CFG__PAGESIZE" ):
         nfcPageSize.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
-    nfcWriteSpare = smcComponent.createBooleanSymbol( "SMC_NFC_WRITE_SPARE", nfcConfigurationMenu ) 
+    nfcWriteSpare = smcComponent.createBooleanSymbol( "SMC_NFC_WRITE_SPARE", nfcConfigurationMenu )
     nfcWriteSpare.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CFG")
     nfcWriteSpare.setLabel( bitField_CFG_WSPARE.getAttribute( "caption" ) )
 
-    nfcReadSpare = smcComponent.createBooleanSymbol( "SMC_NFC_READ_SPARE", nfcConfigurationMenu ) 
+    nfcReadSpare = smcComponent.createBooleanSymbol( "SMC_NFC_READ_SPARE", nfcConfigurationMenu )
     nfcReadSpare.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CFG")
     nfcReadSpare.setLabel( bitField_CFG_RSPARE.getAttribute( "caption" ) )
 
-    nfcEdgeDetect = smcComponent.createBooleanSymbol( "SMC_NFC_EDGE_DETECT", nfcConfigurationMenu ) 
+    nfcEdgeDetect = smcComponent.createBooleanSymbol( "SMC_NFC_EDGE_DETECT", nfcConfigurationMenu )
     nfcEdgeDetect.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CFG")
     nfcEdgeDetect.setLabel( bitField_CFG_EDGECTRL.getAttribute( "caption" ) )
 
-    nfcReadyBusyDetect = smcComponent.createBooleanSymbol( "SMC_NFC_READY_BUSY_DETECT", nfcConfigurationMenu ) 
+    nfcReadyBusyDetect = smcComponent.createBooleanSymbol( "SMC_NFC_READY_BUSY_DETECT", nfcConfigurationMenu )
     nfcReadyBusyDetect.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_CFG")
     nfcReadyBusyDetect.setLabel( bitField_CFG_RBEDGE.getAttribute( "caption" ) )
 
     nfcDataTimeOutCycleName = "SMC_NFC_DATA_TIMEOUT_CYCLE"
-    nfcDataTimeOutCycle = smcComponent.createIntegerSymbol( nfcDataTimeOutCycleName, nfcConfigurationMenu ) 
+    nfcDataTimeOutCycle = smcComponent.createIntegerSymbol( nfcDataTimeOutCycleName, nfcConfigurationMenu )
     nfcDataTimeOutCycle.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
     nfcDataTimeOutCycle.setLabel( bitField_CFG_DTOCYC.getAttribute( "caption" ) )
     nfcDataTimeOutCycle.setMin( DEFAULT_NFC_MIN_VALUE )
@@ -325,112 +349,120 @@ def instantiateComponent( smcComponent ):
     nfcDataTimeOutMuliplier.setDefaultValue( 0 )
     for tupleElem in getNameValueCaptionTuple( "HSMC_CFG__DTOMUL" ):
         nfcDataTimeOutMuliplier.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
-    
+
     nfcSpareAreaSizeName = "SMC_NFC_SPARE_AREA_SIZE"
     nfcSpareAreaSizeCaption = bitField_CFG_NFCSPARESIZE.getAttribute( "caption" )
-    nfcSpareAreaSize = smcComponent.createIntegerSymbol( nfcSpareAreaSizeName, nfcConfigurationMenu ) 
+    nfcSpareAreaSize = smcComponent.createIntegerSymbol( nfcSpareAreaSizeName, nfcConfigurationMenu )
     nfcSpareAreaSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
     nfcSpareAreaSize.setLabel( nfcSpareAreaSizeCaption )
     nfcSpareAreaSize.setMin( DEFAULT_NFC_MIN_VALUE )
     nfcSpareAreaSize.setMax( convertMaskToInt( bitField_CFG_NFCSPARESIZE.getAttribute( "mask" ) ) )
     nfcSpareAreaSize.setDefaultValue( DEFAULT_NFC_SPARE_AREA_SIZE )
-    # -----     
-    nfcAddressCycle0 = smcComponent.createIntegerSymbol( "SMC_NFC_ADDRESS_CYCLE_0", nandFlashControllerMenu ) 
+    # -----
+    nfcAddressCycle0 = smcComponent.createIntegerSymbol( "SMC_NFC_ADDRESS_CYCLE_0", nandFlashControllerMenu )
     nfcAddressCycle0.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_ADDR")
-    nfcAddressCycle0.setLabel( bitField_ADDR_ADDR_CYCLE0.getAttribute( "caption" ) ) 
+    nfcAddressCycle0.setLabel( bitField_ADDR_ADDR_CYCLE0.getAttribute( "caption" ) )
     nfcAddressCycle0.setMin( DEFAULT_NFC_MIN_VALUE )
     nfcAddressCycle0.setMax( convertMaskToInt( bitField_ADDR_ADDR_CYCLE0.getAttribute( "mask" ) ) )
     nfcAddressCycle0.setDefaultValue( DEFAULT_NFC_MIN_VALUE )
 
-    nfcBankAddress = smcComponent.createIntegerSymbol( "SMC_NFC_BANK_ADDRESS", nandFlashControllerMenu ) 
+    nfcBankAddress = smcComponent.createIntegerSymbol( "SMC_NFC_BANK_ADDRESS", nandFlashControllerMenu )
     nfcBankAddress.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_BANK")
-    nfcBankAddress.setLabel( bitField_BANK_BANK.getAttribute( "caption" ) ) 
+    nfcBankAddress.setLabel( bitField_BANK_BANK.getAttribute( "caption" ) )
     nfcBankAddress.setMin( DEFAULT_NFC_MIN_VALUE )
     nfcBankAddress.setMax( convertMaskToInt( bitField_BANK_BANK.getAttribute( "mask" ) ) )
     nfcBankAddress.setDefaultValue( DEFAULT_NFC_MIN_VALUE )
-    # ----- 
-    pmeccMenu = smcComponent.createMenuSymbol( "SMC_PMECC", None ) 
+    # -----
+    pmeccMenu = smcComponent.createMenuSymbol( "SMC_PMECC", None )
     pmeccMenu.setLabel( "Programmable Multi-bit Error Correction Code" )
-    # ----- 
-    pmeccEnable = smcComponent.createBooleanSymbol( "SMC_PMECC_ENABLE", pmeccMenu ) 
+    # -----
+    pmeccEnable = smcComponent.createBooleanSymbol( "SMC_PMECC_ENABLE", pmeccMenu )
     pmeccEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
     pmeccEnable.setLabel( bitField_PMECCTRL_ENABLE.getAttribute( "caption" ) )
-    # ----- 
+    # -----
     pmeccErrorCorrectionCapability = smcComponent.createKeyValueSetSymbol( "SMC_PMECC_ERROR_CORRECTION_CAPABILITY", pmeccMenu )
     pmeccErrorCorrectionCapability.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCFG")
     pmeccErrorCorrectionCapability.setLabel( bitField_PMECCFG_BCH_ERR.getAttribute( "caption" ) )
-    pmeccErrorCorrectionCapability.setOutputMode( "Key" )
+    pmeccErrorCorrectionCapability.setOutputMode( "Value" )
     pmeccErrorCorrectionCapability.setDisplayMode( "Description" )
-    pmeccErrorCorrectionCapability.setDefaultValue( 0 )
+    pmeccErrorCorrectionCapability.setDefaultValue( 1 )
     for tupleElem in getNameValueCaptionTuple( "HSMC_PMECCFG__BCH_ERR" ):
         pmeccErrorCorrectionCapability.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
-    pmeccSectorSize = smcComponent.createKeyValueSetSymbol( "SMC_PMECC_SECTOR_SIZE", pmeccMenu ) 
+    pmeccSectorSize = smcComponent.createKeyValueSetSymbol( "SMC_PMECC_SECTOR_SIZE", pmeccMenu )
     pmeccSectorSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCFG")
     pmeccSectorSize.setLabel( bitField_PMECCFG_SECTORSZ.getAttribute( "caption" ) )
-    pmeccSectorSize.setOutputMode( "Key" )
+    pmeccSectorSize.setOutputMode( "Value" )
     pmeccSectorSize.setDisplayMode( "Description" )
     pmeccSectorSize.setDefaultValue( 0 )
     for tupleElem in getNameValueCaptionTuple( "HSMC_PMECCFG__SECTORSZ" ):
         pmeccSectorSize.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
-    pmeccSectorsPerPage = smcComponent.createKeyValueSetSymbol( "SMC_PMECC_SECTORS_PER_PAGE", pmeccMenu ) 
+    pmeccSectorsPerPage = smcComponent.createKeyValueSetSymbol( "SMC_PMECC_SECTORS_PER_PAGE", pmeccMenu )
     pmeccSectorsPerPage.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCFG")
     pmeccSectorsPerPage.setLabel( bitField_PMECCFG_PAGESIZE.getAttribute( "caption" ) )
-    pmeccSectorsPerPage.setOutputMode( "Key" )
+    pmeccSectorsPerPage.setOutputMode( "Value" )
     pmeccSectorsPerPage.setDisplayMode( "Description" )
-    pmeccSectorsPerPage.setDefaultValue( 0 )
+    pmeccSectorsPerPage.setDefaultValue( 3 )
     for tupleElem in getNameValueCaptionTuple( "HSMC_PMECCFG__PAGESIZE" ):
         pmeccSectorsPerPage.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
-    pmeccNandWriteAccess = smcComponent.createBooleanSymbol( "SMC_PMECC_NAND_WRITE_ACCESS", pmeccMenu ) 
+    pmeccNandWriteAccess = smcComponent.createBooleanSymbol( "SMC_PMECC_NAND_WRITE_ACCESS", pmeccMenu )
     pmeccNandWriteAccess.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCFG")
     pmeccNandWriteAccess.setLabel( bitField_PMECCFG_NANDWR.getAttribute( "caption" ) )
 
-    pmeccSpareAreaEnable = smcComponent.createBooleanSymbol( "SMC_PMECC_SPARE_AREA_ENABLE", pmeccMenu ) 
+    pmeccSpareAreaEnable = smcComponent.createBooleanSymbol( "SMC_PMECC_SPARE_AREA_ENABLE", pmeccMenu )
     pmeccSpareAreaEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCFG")
     pmeccSpareAreaEnable.setLabel( bitField_PMECCFG_SPAREEN.getAttribute( "caption" ) )
 
-    pmeccAutomaticModeEnable = smcComponent.createBooleanSymbol( "SMC_PMECC_AUTOMATIC_MODE_ENABLE", pmeccMenu ) 
+    pmeccAutomaticModeEnable = smcComponent.createBooleanSymbol( "SMC_PMECC_AUTOMATIC_MODE_ENABLE", pmeccMenu )
     pmeccAutomaticModeEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCFG")
     pmeccAutomaticModeEnable.setLabel( bitField_PMECCFG_AUTO.getAttribute( "caption" ) )
-    # ----- 
-    pmeccSpareAreaSize = smcComponent.createIntegerSymbol( "SMC_PMECC_SPARE_AREA_SIZE", pmeccMenu ) 
+    pmeccAutomaticModeEnable.setDefaultValue(pmeccSpareAreaEnable.getValue() == False)
+    pmeccAutomaticModeEnable.setReadOnly(True)
+    pmeccAutomaticModeEnable.setDependencies(updateSymbolValue, ["SMC_PMECC_SPARE_AREA_ENABLE"])
+    # -----
+    pmeccSpareAreaSize = smcComponent.createIntegerSymbol( "SMC_PMECC_SPARE_AREA_SIZE", pmeccMenu )
     pmeccSpareAreaSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCSAREA")
     pmeccSpareAreaSize.setLabel( bitField_PMECCSAREA_SPARESIZE.getAttribute( "caption" ) )
     pmeccSpareAreaSize.setMin( DEFAULT_PMECC_MIN_VALUE )
     pmeccSpareAreaSize.setMax( convertMaskToInt( bitField_PMECCSAREA_SPARESIZE.getAttribute( "mask" ) ) )
     pmeccSpareAreaSize.setDefaultValue( DEFAULT_PMECC_SPARE_AREA_SIZE )
-    # ----- 
-    pmeccStartAddress = smcComponent.createIntegerSymbol( "SMC_PMECC_START_ADDRESS", pmeccMenu ) 
+    # -----
+    pmeccStartAddress = smcComponent.createIntegerSymbol( "SMC_PMECC_START_ADDRESS", pmeccMenu )
     pmeccStartAddress.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCSADDR")
     pmeccStartAddress.setLabel( bitField_PMECCSADDR_STARTADDR.getAttribute( "caption" ) )
     pmeccStartAddress.setMin( DEFAULT_PMECC_MIN_VALUE )
     pmeccStartAddress.setMax( convertMaskToInt( bitField_PMECCSADDR_STARTADDR.getAttribute( "mask" ) ) )
     pmeccStartAddress.setDefaultValue( DEFAULT_PMECC_START_ADDRESS )
-    # ----- 
-    pmeccEndAddress = smcComponent.createIntegerSymbol( "SMC_PMECC_END_ADDRESS", pmeccMenu ) 
+    # -----
+    pmeccEndAddress = smcComponent.createIntegerSymbol( "SMC_PMECC_END_ADDRESS", pmeccMenu )
     pmeccEndAddress.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_PMECCEADDR")
     pmeccEndAddress.setLabel( bitField_PMECCEADDR_ENDADDR.getAttribute( "caption" ) )
     pmeccEndAddress.setMin( DEFAULT_PMECC_MIN_VALUE )
     pmeccEndAddress.setMax( convertMaskToInt( bitField_PMECCEADDR_ENDADDR.getAttribute( "mask" ) ) )
     pmeccEndAddress.setDefaultValue( DEFAULT_PMECC_END_ADDRESS )
-    # ----- 
-    pmeccErrorLocationMenu = smcComponent.createMenuSymbol( "SMC_PMECC_ERROR_LOCATION", None ) 
+
+    #PMECC API Prefix for NAND Flash Driver
+    pmeccSym_API_Prefix = smcComponent.createStringSymbol("PMECC_API_PREFIX", None)
+    pmeccSym_API_Prefix.setDefaultValue(smcInstanceName.getValue())
+    pmeccSym_API_Prefix.setVisible(False)
+    # -----
+    pmeccErrorLocationMenu = smcComponent.createMenuSymbol( "SMC_PMECC_ERROR_LOCATION", None )
     pmeccErrorLocationMenu.setLabel( "PMECC Error Location" )
-    # ----- 
-    pmeccErrorLocationDisable = smcComponent.createBooleanSymbol( "SMC_PMECC_ERROR_LOCATION_DISABLE", pmeccErrorLocationMenu ) 
+    # -----
+    pmeccErrorLocationDisable = smcComponent.createBooleanSymbol( "SMC_PMECC_ERROR_LOCATION_DISABLE", pmeccErrorLocationMenu )
     pmeccErrorLocationDisable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
     pmeccErrorLocationDisable.setLabel( bitField_ELDIS_DIS.getAttribute( "caption" ) )
     # -----
-    pmeccErrorLocationEnable = smcComponent.createIntegerSymbol( "SMC_PMECC_ERROR_LOCATION_ENABLE_CODEWORD", pmeccErrorLocationMenu ) 
+    pmeccErrorLocationEnable = smcComponent.createIntegerSymbol( "SMC_PMECC_ERROR_LOCATION_ENABLE_CODEWORD", pmeccErrorLocationMenu )
     pmeccErrorLocationEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:HSMC_ELEN")
     pmeccErrorLocationEnable.setLabel( bitField_ELEN_ENINIT.getAttribute( "caption" ) )
     pmeccErrorLocationEnable.setMin( DEFAULT_PMECC_ERROR_LOCATION_MIN_VALUE )
     pmeccErrorLocationEnable.setMax( convertMaskToInt( bitField_ELEN_ENINIT.getAttribute( "mask" ) ) )
     pmeccErrorLocationEnable.setDefaultValue( DEFAULT_PMECC_ERROR_LOCATION_CODEWORD )
-    # ----- 
-    pmeccErrorLocationSectorSize = smcComponent.createKeyValueSetSymbol( "SMC_PMECC_ERROR_LOCATION_SECTOR_SIZE", pmeccErrorLocationMenu ) 
+    # -----
+    pmeccErrorLocationSectorSize = smcComponent.createKeyValueSetSymbol( "SMC_PMECC_ERROR_LOCATION_SECTOR_SIZE", pmeccErrorLocationMenu )
     pmeccErrorLocationSectorSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
     pmeccErrorLocationSectorSize.setLabel( bitField_ELCFG_SECTORSZ.getAttribute( "caption" ) )
     pmeccErrorLocationSectorSize.setOutputMode( "Key" )
@@ -438,32 +470,43 @@ def instantiateComponent( smcComponent ):
     pmeccErrorLocationSectorSize.setDefaultValue( 0 )
     for tupleElem in getNameValueCaptionTuple( "HSMC_ELCFG__SECTORSZ" ):
         pmeccErrorLocationSectorSize.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
-    # ----- 
-    chipSelectionMenu = smcComponent.createMenuSymbol( "SMC_CHIP_SELECTION", None ) 
+
+    #PMERRLOC API Prefix for NAND Flash Driver
+    pmerrlocSym_API_Prefix = smcComponent.createStringSymbol("PMERRLOC_API_PREFIX", None)
+    pmerrlocSym_API_Prefix.setDefaultValue(smcInstanceName.getValue())
+    pmerrlocSym_API_Prefix.setVisible(False)
+    # -----
+    chipSelectionMenu = smcComponent.createMenuSymbol( "SMC_CHIP_SELECTION", None )
     chipSelectionMenu.setLabel( "Chip Selection and Settings" )
 
     smcCsCount = int( atdfSmcCsNumber.getAttribute( "count" ) )
     csCountSymbol = smcComponent.createIntegerSymbol( "SMC_CS_COUNT", chipSelectionMenu )
     csCountSymbol.setDefaultValue( smcCsCount )
     csCountSymbol.setVisible( False )
+
+    smcNandCsNum = smcComponent.createIntegerSymbol("SMC_NAND_CS_NUM", chipSelectionMenu)
+    smcNandCsNum.setLabel("NAND Chip Select Number")
+    smcNandCsNum.setDefaultValue(3 if (csCountSymbol.getValue() > 2) else 0)
+    smcNandCsNum.setVisible(False)
+
     for csNumIndex in range(0, smcCsCount):
         csNum = str( csNumIndex )
         chipSelectEnable = smcComponent.createBooleanSymbol( "SMC_CHIP_SELECT_ENABLE" + csNum, chipSelectionMenu)
         chipSelectEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
-        chipSelectEnable.setLabel( "Chip Select " + csNum + " Enable" ) 
+        chipSelectEnable.setLabel( "Chip Select " + csNum + " Enable" )
         # Mode register
         modeSettingsMenu = smcComponent.createMenuSymbol( "SMC_MODE_SETTINGS" + csNum, chipSelectEnable )
         modeSettingsMenu.setLabel( "Mode Settings" )
 
         modeTdfModeNameStem = "SMC_MODE_TDF_MODE"
-        modeTdfModeName = modeTdfModeNameStem + csNum  
+        modeTdfModeName = modeTdfModeNameStem + csNum
         modeTdfMode = smcComponent.createBooleanSymbol( modeTdfModeName, modeSettingsMenu )
         modeTdfMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         modeTdfMode.setLabel( bitField_MODE_TDF_MODE.getAttribute( "caption" ) )
-        modeTdfMode.setDefaultValue( False )
+        modeTdfMode.setDefaultValue(True)
 
         modeTdfCyclesNameStem = "SMC_MODE_TDF_CYCLES"
-        modeTdfCyclesName = modeTdfCyclesNameStem + csNum  
+        modeTdfCyclesName = modeTdfCyclesNameStem + csNum
         modeTdfCycles = smcComponent.createIntegerSymbol( modeTdfCyclesName, modeSettingsMenu )
         modeTdfCycles.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         modeTdfCycles.setLabel( bitField_MODE_TDF_CYCLES.getAttribute( "caption" ) )
@@ -473,30 +516,30 @@ def instantiateComponent( smcComponent ):
         modeTdfCycles.setDependencies( visibilityBasedOnBoolSymbol, [modeTdfModeName] )
 
         modeDbwNameStem = "SMC_MODE_DBW"
-        modeDbwName = modeDbwNameStem + csNum  
-        modeDbw = smcComponent.createKeyValueSetSymbol( modeDbwName, modeSettingsMenu ) 
+        modeDbwName = modeDbwNameStem + csNum
+        modeDbw = smcComponent.createKeyValueSetSymbol( modeDbwName, modeSettingsMenu )
         modeDbw.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         modeDbw.setLabel( bitField_MODE_DBW.getAttribute( "caption" ) )
         modeDbw.setOutputMode( "Key" )
         modeDbw.setDisplayMode( "Description" )
-        modeDbw.setDefaultValue( 1 )
+        modeDbw.setDefaultValue( 0 )
         for tupleElem in getNameValueCaptionTuple( bitField_MODE_DBW.getAttribute( "values" ) ):
             modeDbw.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
         modeBatNameStem = "SMC_MODE_BAT"
-        modeBatName = modeBatNameStem + csNum  
-        modeBat = smcComponent.createKeyValueSetSymbol( modeBatName, modeSettingsMenu ) 
+        modeBatName = modeBatNameStem + csNum
+        modeBat = smcComponent.createKeyValueSetSymbol( modeBatName, modeSettingsMenu )
         modeBat.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         modeBat.setLabel( bitField_MODE_BAT.getAttribute( "caption" ) )
         modeBat.setOutputMode( "Key" )
         modeBat.setDisplayMode( "Description" )
-        modeBat.setDefaultValue( 1 )
+        modeBat.setDefaultValue( 0 )
         for tupleElem in getNameValueCaptionTuple( bitField_MODE_BAT.getAttribute( "values" ) ):
             modeBat.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
         modeBat.setDependencies( smcModeByteWriteOrSelectAccessVisible, [modeDbwName] )
 
         modeNWaitNameStem = "SMC_MODE_NWAIT"
-        modeNWaitName = modeNWaitNameStem + csNum  
+        modeNWaitName = modeNWaitNameStem + csNum
         modeNWait = smcComponent.createKeyValueSetSymbol( modeNWaitName, modeSettingsMenu )
         modeNWait.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         modeNWait.setLabel( bitField_MODE_EXNW_MODE.getAttribute( "caption" ) )
@@ -514,7 +557,7 @@ def instantiateComponent( smcComponent ):
         writeCycleConfiguration.setLabel( "Write Cycle Configuration" )
         #####
         modeReadModeNameStem = "SMC_MODE_READ_MODE"
-        modeReadModeName = modeReadModeNameStem + csNum  
+        modeReadModeName = modeReadModeNameStem + csNum
         modeReadMode = smcComponent.createKeyValueSetSymbol( modeReadModeName, readCycleConfiguration )
         modeReadMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         modeReadMode.setLabel( bitField_MODE_READ_MODE.getAttribute( "caption" ) )
@@ -525,7 +568,7 @@ def instantiateComponent( smcComponent ):
             modeReadMode.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
         setupNCsRdNameStem = "SMC_SETUP_NCS_RD"
-        setupNCsRdName = setupNCsRdNameStem + csNum  
+        setupNCsRdName = setupNCsRdNameStem + csNum
         setupNCsRdCaption = bitField_SETUP_NCS_RD.getAttribute( "caption" )
         setupNCsRd = smcComponent.createIntegerSymbol( setupNCsRdName, readCycleConfiguration)
         setupNCsRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
@@ -535,17 +578,17 @@ def instantiateComponent( smcComponent ):
         setupNCsRd.setDefaultValue( DEFAULT_SMC_SETUP_VALUE )
 
         pulseNCsRdNameStem = "SMC_PULSE_NCS_RD"
-        pulseNCsRdName = pulseNCsRdNameStem + csNum  
+        pulseNCsRdName = pulseNCsRdNameStem + csNum
         pulseNCsRdCaption = bitField_PULSE_NCS_RD.getAttribute( "caption" )
         pulseNCsRd = smcComponent.createIntegerSymbol( pulseNCsRdName, readCycleConfiguration)
         pulseNCsRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         pulseNCsRd.setLabel( pulseNCsRdCaption )
         pulseNCsRd.setMin( DEFAULT_SMC_PULSE_MIN_VALUE )
         pulseNCsRd.setMax( convertMaskToInt( bitField_PULSE_NCS_RD.getAttribute( "mask" ) ) )
-        pulseNCsRd.setDefaultValue( DEFAULT_SMC_PULSE_VALUE )
+        pulseNCsRd.setDefaultValue(20)
 
         setupNRdNameStem = "SMC_SETUP_NRD"
-        setupNRdName = setupNRdNameStem + csNum  
+        setupNRdName = setupNRdNameStem + csNum
         setupNRdCaption = bitField_SETUP_NRD.getAttribute( "caption" )
         setupNRd = smcComponent.createIntegerSymbol( setupNRdName, readCycleConfiguration)
         setupNRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
@@ -555,7 +598,7 @@ def instantiateComponent( smcComponent ):
         setupNRd.setDefaultValue( DEFAULT_SMC_SETUP_VALUE )
 
         pulseNRdNameStem = "SMC_PULSE_NRD"
-        pulseNRdName = pulseNRdNameStem + csNum  
+        pulseNRdName = pulseNRdNameStem + csNum
         pulseNRdCaption = bitField_PULSE_NRD.getAttribute( "caption" )
         pulseNRd = smcComponent.createIntegerSymbol( pulseNRdName, readCycleConfiguration)
         pulseNRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
@@ -565,17 +608,17 @@ def instantiateComponent( smcComponent ):
         pulseNRd.setDefaultValue( DEFAULT_SMC_PULSE_VALUE )
 
         cycleNRdNameStem = "SMC_CYCLE_NRD"
-        cycleNRdName = cycleNRdNameStem + csNum  
+        cycleNRdName = cycleNRdNameStem + csNum
         cycleNRdCaption = bitField_CYCLE_NRD.getAttribute( "caption" )
         cycleNRd = smcComponent.createIntegerSymbol( cycleNRdName, readCycleConfiguration )
         cycleNRd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         cycleNRd.setLabel( cycleNRdCaption )
         cycleNRd.setMin( DEFAULT_SMC_CYCLE_MIN_VALUE )
         cycleNRd.setMax( convertMaskToInt( bitField_CYCLE_NRD.getAttribute( "mask" ) ) )
-        cycleNRd.setDefaultValue( DEFAULT_SMC_CYCLE_MIN_VALUE )
+        cycleNRd.setDefaultValue( DEFAULT_SMC_CYCLE_VALUE )
         #####
         modeWriteModeNameStem = "SMC_MODE_WRITE_MODE"
-        modeWriteModeName = modeWriteModeNameStem + csNum  
+        modeWriteModeName = modeWriteModeNameStem + csNum
         modeWriteMode = smcComponent.createKeyValueSetSymbol( modeWriteModeName, writeCycleConfiguration )
         modeWriteMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         modeWriteMode.setLabel( bitField_MODE_WRITE_MODE.getAttribute( "caption" ) )
@@ -586,7 +629,7 @@ def instantiateComponent( smcComponent ):
             modeWriteMode.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
         setupNCsWrNameStem = "SMC_SETUP_NCS_WR"
-        setupNCsWrName = setupNCsWrNameStem + csNum  
+        setupNCsWrName = setupNCsWrNameStem + csNum
         setupNCsWrCaption = bitField_SETUP_NCS_WR.getAttribute( "caption" )
         setupNCsWr = smcComponent.createIntegerSymbol( setupNCsWrName, writeCycleConfiguration)
         setupNCsWr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
@@ -596,17 +639,17 @@ def instantiateComponent( smcComponent ):
         setupNCsWr.setDefaultValue( DEFAULT_SMC_SETUP_VALUE )
 
         pulseNCsWrNameStem = "SMC_PULSE_NCS_WR"
-        pulseNCsWrName = pulseNCsWrNameStem + csNum  
+        pulseNCsWrName = pulseNCsWrNameStem + csNum
         pulseNCsWrCaption = bitField_PULSE_NCS_WR.getAttribute( "caption" )
         pulseNCsWr = smcComponent.createIntegerSymbol( pulseNCsWrName, writeCycleConfiguration)
         pulseNCsWr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         pulseNCsWr.setLabel( pulseNCsWrCaption )
         pulseNCsWr.setMin( DEFAULT_SMC_PULSE_MIN_VALUE )
         pulseNCsWr.setMax( convertMaskToInt( bitField_PULSE_NCS_WR.getAttribute( "mask" ) ) )
-        pulseNCsWr.setDefaultValue( DEFAULT_SMC_PULSE_VALUE )
+        pulseNCsWr.setDefaultValue(20)
 
         setupNWeNameStem = "SMC_SETUP_NWE"
-        setupNWeName = setupNWeNameStem + csNum  
+        setupNWeName = setupNWeNameStem + csNum
         setupNWeCaption = bitField_SETUP_NWE.getAttribute( "caption" )
         setupNWe = smcComponent.createIntegerSymbol( setupNWeName, writeCycleConfiguration )
         setupNWe.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
@@ -616,7 +659,7 @@ def instantiateComponent( smcComponent ):
         setupNWe.setDefaultValue( DEFAULT_SMC_SETUP_VALUE )
 
         pulseNWeNameStem = "SMC_PULSE_NWE"
-        pulseNWeName = pulseNWeNameStem + csNum  
+        pulseNWeName = pulseNWeNameStem + csNum
         pulseNWeCaption = bitField_PULSE_NWE.getAttribute( "caption" )
         pulseNWe = smcComponent.createIntegerSymbol( pulseNWeName, writeCycleConfiguration )
         pulseNWe.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
@@ -626,82 +669,82 @@ def instantiateComponent( smcComponent ):
         pulseNWe.setDefaultValue( DEFAULT_SMC_PULSE_VALUE )
 
         cycleNWeNameStem = "SMC_CYCLE_NWE"
-        cycleNWeName = cycleNWeNameStem + csNum  
+        cycleNWeName = cycleNWeNameStem + csNum
         cycleNWeCaption = bitField_CYCLE_NWE.getAttribute( "caption" )
         cycleNWe = smcComponent.createIntegerSymbol( cycleNWeName, writeCycleConfiguration)
         cycleNWe.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         cycleNWe.setLabel( cycleNWeCaption )
         cycleNWe.setMin( DEFAULT_SMC_CYCLE_MIN_VALUE )
         cycleNWe.setMax( convertMaskToInt( bitField_CYCLE_NWE.getAttribute( "mask" ) ) )
-        cycleNWe.setDefaultValue( DEFAULT_SMC_CYCLE_MIN_VALUE )
+        cycleNWe.setDefaultValue( DEFAULT_SMC_CYCLE_VALUE )
         # Timings register
         timingsMenu = smcComponent.createMenuSymbol( "SMC_TIMINGS" + csNum, chipSelectEnable)
         timingsMenu.setLabel( "Timings" )
 
         timingsNfSelNameStem = "SMC_TIMINGS_NFSEL"
-        timingsNfSelName = timingsNfSelNameStem + csNum  
+        timingsNfSelName = timingsNfSelNameStem + csNum
         timingsNfSel = smcComponent.createBooleanSymbol( timingsNfSelName, timingsMenu)
         timingsNfSel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         timingsNfSel.setLabel( bitField_TIMINGS_NFSEL.getAttribute( "caption" ) )
-        timingsNfSel.setDefaultValue( False )
+        timingsNfSel.setDefaultValue(True)
 
         timingsTwbNameStem = "SMC_TIMINGS_TWB"
-        timingsTwbName = timingsTwbNameStem + csNum  
+        timingsTwbName = timingsTwbNameStem + csNum
         timingsTwbCaption = bitField_TIMINGS_TWB.getAttribute( "caption" )
         timingsTwb = smcComponent.createIntegerSymbol( timingsTwbName, timingsMenu)
         timingsTwb.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         timingsTwb.setLabel( timingsTwbCaption )
         timingsTwb.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
         timingsTwb.setMax( convertMaskToInt( bitField_TIMINGS_TWB.getAttribute( "mask" ) ) )
-        timingsTwb.setDefaultValue( DEFAULT_SMC_TIMINGS_VALUE )
+        timingsTwb.setDefaultValue( 8 )
 
         timingsTrrNameStem = "SMC_TIMINGS_TRR"
-        timingsTrrName = timingsTrrNameStem + csNum  
+        timingsTrrName = timingsTrrNameStem + csNum
         timingsTrrCaption = bitField_TIMINGS_TRR.getAttribute( "caption" )
         timingsTrr = smcComponent.createIntegerSymbol( timingsTrrName, timingsMenu)
         timingsTrr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         timingsTrr.setLabel( timingsTrrCaption )
         timingsTrr.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
         timingsTrr.setMax( convertMaskToInt( bitField_TIMINGS_TRR.getAttribute( "mask" ) ) )
-        timingsTrr.setDefaultValue( DEFAULT_SMC_TIMINGS_VALUE )
+        timingsTrr.setDefaultValue( 8 )
 
         timingsOcmsNameStem = "SMC_TIMINGS_OCMS"
-        timingsOcmsName = timingsOcmsNameStem + csNum  
+        timingsOcmsName = timingsOcmsNameStem + csNum
         timingsOcms = smcComponent.createBooleanSymbol( timingsOcmsName, timingsMenu )
         timingsOcms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         timingsOcms.setLabel( bitField_TIMINGS_OCMS.getAttribute( "caption" ) )
         timingsOcms.setDefaultValue( False )
 
         timingsTarNameStem = "SMC_TIMINGS_TAR"
-        timingsTarName = timingsTarNameStem + csNum  
+        timingsTarName = timingsTarNameStem + csNum
         timingsTarCaption = bitField_TIMINGS_TAR.getAttribute( "caption" )
         timingsTar = smcComponent.createIntegerSymbol( timingsTarName, timingsMenu)
         timingsTar.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         timingsTar.setLabel( timingsTarCaption )
         timingsTar.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
         timingsTar.setMax( convertMaskToInt( bitField_TIMINGS_TAR.getAttribute( "mask" ) ) )
-        timingsTar.setDefaultValue( DEFAULT_SMC_TIMINGS_VALUE )
+        timingsTar.setDefaultValue( 5 )
 
         timingsTadlNameStem = "SMC_TIMINGS_TADL"
-        timingsTadlName = timingsTadlNameStem + csNum  
+        timingsTadlName = timingsTadlNameStem + csNum
         timingsTadlCaption = bitField_TIMINGS_TADL.getAttribute( "caption" )
         timingsTadl = smcComponent.createIntegerSymbol( timingsTadlName, timingsMenu )
         timingsTadl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         timingsTadl.setLabel( timingsTadlCaption )
         timingsTadl.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
         timingsTadl.setMax( convertMaskToInt( bitField_TIMINGS_TADL.getAttribute( "mask" ) ) )
-        timingsTadl.setDefaultValue( DEFAULT_SMC_TIMINGS_VALUE )
+        timingsTadl.setDefaultValue( 15 )
 
         timingsTclrNameStem = "SMC_TIMINGS_TCLR"
-        timingsTclrName = timingsTclrNameStem + csNum  
+        timingsTclrName = timingsTclrNameStem + csNum
         timingsTclrCaption = bitField_TIMINGS_TCLR.getAttribute( "caption" )
         timingsTclr = smcComponent.createIntegerSymbol( timingsTclrName, timingsMenu)
         timingsTclr.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:smc_11036;register:%NOREGISTER%")
         timingsTclr.setLabel( timingsTclrCaption )
         timingsTclr.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
         timingsTclr.setMax( convertMaskToInt( bitField_TIMINGS_TCLR.getAttribute( "mask" ) ) )
-        timingsTclr.setDefaultValue( DEFAULT_SMC_TIMINGS_VALUE )
-    # ----- 
+        timingsTclr.setDefaultValue( 4 )
+    # -----
     offChipMemoryScramblingMenu = smcComponent.createMenuSymbol( "SMC_OCMS_MENU", None )
     offChipMemoryScramblingMenu.setLabel( "Off Chip Memory Scrambling" )
     ocmsScramblingEnable = smcComponent.createBooleanSymbol( "SMC_OCMS_SCRAMBLING_ENABLE", offChipMemoryScramblingMenu )
@@ -727,7 +770,7 @@ def instantiateComponent( smcComponent ):
     # Dependency
     #------------------------------------------------------------------------------
     # Enable Peripheral Clock in Clock manager
-    Database.setSymbolValue(    "core", myNamespace.upper() + "_CLOCK_ENABLE", True, 2 ) 
+    Database.setSymbolValue(    "core", myNamespace.upper() + "_CLOCK_ENABLE", True, 2 )
     #------------------------------------------------------------------------------
     # Code Generation
     #------------------------------------------------------------------------------
