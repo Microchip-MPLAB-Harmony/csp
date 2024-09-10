@@ -38,6 +38,7 @@ static void STDIO_BufferModeSet(void)
     /* Make stdout unbuffered */
     setbuf(stdout, NULL);
 </#if>
+    /* MISRAC 2012 deviation block end */
 <#if core.COVERITY_SUPPRESS_DEVIATION?? && core.COVERITY_SUPPRESS_DEVIATION>
 
     #pragma coverity compliance end_block "MISRA C-2012 Rule 21.6"
