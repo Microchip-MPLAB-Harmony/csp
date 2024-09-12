@@ -1,4 +1,4 @@
-<#if RAM_INIT??>
+<#if RAM_INIT?? && RAM_INIT == "true">
 #ifndef RAM_START_ADDR
 #define RAM_START_ADDR FLEXRAM_ADDR
 #endif
@@ -19,7 +19,7 @@
 #define INIT_LEN  RAM_SIZE
 #endif
 
-__STATIC_INLINE void  __attribute__((optimize("-O1")))  RAM_Initialize(void)
+__STATIC_INLINE void  __attribute__((optimize("-O1"))) __attribute__((always_inline)) RAM_Initialize(void)
 {
     register uint64_t *pFlexRam;
 
