@@ -430,6 +430,7 @@ void ${AC_INSTANCE_NAME}_CallbackRegister (AC_CALLBACK callback, uintptr_t conte
     ${AC_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
+<#if AC_INTENSET_VAL != "">
 void __attribute__((used)) ${AC_INSTANCE_NAME}_InterruptHandler( void )
 {
     uintptr_t context_var;
@@ -449,3 +450,4 @@ void __attribute__((used)) ${AC_INSTANCE_NAME}_InterruptHandler( void )
         ${AC_INSTANCE_NAME?lower_case}Obj.callback(int_flags_var, context_var);
     }
 }
+</#if>
