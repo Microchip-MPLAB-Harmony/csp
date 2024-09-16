@@ -985,8 +985,12 @@ bool ${I2C_API_PREFIX}TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFr
     {
         srcClkFreq = ${I2C_PLIB_CLOCK_FREQUENCY?eval}UL;
     }
-
+    
+<#if (core.PRODUCT_FAMILY == "PIC32MZW")>
+    fBaudValue = (((float)srcClkFreq / 2.0f) * ((1.0f / (float)i2cClkSpeed) - (0.000000200f * 2.0f))) - 3.0f;
+<#else>
     fBaudValue = (((float)srcClkFreq / 2.0f) * ((1.0f / (float)i2cClkSpeed) - 0.000000130f)) - 1.0f;
+</#if>
     baudValue = (uint32_t)fBaudValue;
 
     /* I2CxBRG value cannot be from 0 to 3 or more than the size of the baud rate register */

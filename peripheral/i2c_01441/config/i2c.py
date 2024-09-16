@@ -88,8 +88,10 @@ def baudRateCalc(clk, baud):
     # Equation from FRM
     #I2CxBRG = [PBCLK/(2*FSCK) - (PBCLK*TPGOB)/2]  - 1
     #where TPGD = 130ns
-
-    I2CxBRG = (clk / (2 * baud) - (clk * 0.000000130) / 2)  - 1
+    if "PIC32MZW" in Database.getSymbolValue("core", "PRODUCT_FAMILY"):
+        I2CxBRG = (clk / (2 * baud) - (clk * 0.000000200))  - 3
+    else:
+        I2CxBRG = (clk / (2 * baud) - (clk * 0.000000130) / 2)  - 1
 
     i2cSym_BaudError_Comment.setVisible(False)
 
