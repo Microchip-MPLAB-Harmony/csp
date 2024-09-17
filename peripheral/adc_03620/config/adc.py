@@ -397,14 +397,14 @@ def updateEvctrlSTARTEI (symbol, event):
     numChannels = getNumCoreChannels(n)
 
     # Enable (ReadOnly = False) STARTEI, if either the scan trigger source is >= 5 or any core channel trigger source is >=5
-    scan_trigger_src = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CORCTRL_STRGSRC").getSelectedValue(), 16)
+    scan_trigger_src = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CORCTRL_STRGSRC").getSelectedValue(), 0)
 
     if (scan_trigger_src >= 5):
         isTriggerSrcEventInput = True
     else:
         for k in range(0, numChannels):
             if isChannelEnabled(localComponent, n, k) == True:
-                ch_trigger_src = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CH_" + str(k) + "_CHNCFG4_5_TRGSRC").getSelectedValue(), 16)
+                ch_trigger_src = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CH_" + str(k) + "_CHNCFG4_5_TRGSRC").getSelectedValue(), 0)
                 if (ch_trigger_src >= 5):
                     isTriggerSrcEventInput = True
                     break
@@ -499,13 +499,13 @@ def updateEvsysUserSymbols (symbol, event):
 
         if (core_enabled == True) and (evctrl_startei == True):
             # Find the trigger source of SCAN Trigger and add to the list if trigger source is set to ADC Trigger Event User 0 – 10
-            trigger_src = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CORCTRL_STRGSRC").getSelectedValue(), 16)
+            trigger_src = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CORCTRL_STRGSRC").getSelectedValue(), 0)
             if (trigger_src >= 5):
                 trigger_src_list.append(trigger_src-5)      #Save x in ADC_TRIGGERS_x
             # Find channels that has the trigger source set to ADC Trigger Event User 0 – 10
             for k in range(0, numChannels):
                 if localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_CH_" + str(k) + "_ENABLE") == True:
-                    trigger_src = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CH_" + str(k) + "_CHNCFG4_5_TRGSRC").getSelectedValue(), 16)
+                    trigger_src = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CH_" + str(k) + "_CHNCFG4_5_TRGSRC").getSelectedValue(), 0)
                     if (trigger_src >= 5):
                         trigger_src_list.append(trigger_src-5)      #Save x in ADC_TRIGGERS_x
 
@@ -533,7 +533,7 @@ def ADC_CORCTRL_REG_Update(symbol, event):
     if core_enabled == True:
         adcdiv = localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_CORCTRL_ADCDIV")
         strglvl = 0 if localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_CORCTRL_STRGLVL") == "Edge" else 1
-        strgsrc = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CORCTRL_STRGSRC").getSelectedValue(), 16)
+        strgsrc = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CORCTRL_STRGSRC").getSelectedValue(), 0)
         scnrtds = int(localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_CORCTRL_SCNRTDS"))
 
         if earlyInterruptPresent == True:
@@ -542,7 +542,7 @@ def ADC_CORCTRL_REG_Update(symbol, event):
         else:
             eirqovr = 0
             eis = 0
-        selres = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CORCTRL_SELRES").getSelectedValue(), 16)
+        selres = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CORCTRL_SELRES").getSelectedValue(), 0)
         samc = localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_CORCTRL_SAMC")
 
         corctrl_val = (adcdiv << 24) | (scnrtds << 22) | (strglvl << 21) | (strgsrc << 16) | (eirqovr << 15) | (eis << 12) | (selres << 10) | (samc)
@@ -616,7 +616,7 @@ def ADC_CHNCFG4_REG_Update(symbol, event):
     if core_enabled == True:
         for k in range(0, numChannels):
             if localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_CH_" + str(k) + "_ENABLE") == True:
-                trgsrc = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CH_" + str(k) + "_CHNCFG4_5_TRGSRC").getSelectedValue(), 16)
+                trgsrc = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CH_" + str(k) + "_CHNCFG4_5_TRGSRC").getSelectedValue(), 0)
                 chncfg4_val |= (trgsrc << (k*4))
 
     symbol.setValue(chncfg4_val)
@@ -634,7 +634,7 @@ def ADC_CHNCFG5_REG_Update(symbol, event):
     if core_enabled == True:
         for k in range(0, numChannels):
             if localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_CH_" + str(k+8) + "_ENABLE") == True:
-                trgsrc = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CH_" + str(k+8) + "_CHNCFG4_5_TRGSRC").getSelectedValue(), 16)
+                trgsrc = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_CH_" + str(k+8) + "_CHNCFG4_5_TRGSRC").getSelectedValue(), 0)
                 chncfg5_val |= (trgsrc << (k*4))
 
     symbol.setValue(chncfg5_val)
@@ -692,7 +692,7 @@ def ADC_FLTCTRL_REG_Update(symbol, event):
         fltchnid = localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_FLTCTRL_FLTCHNID")
         flten = int(localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_FLTCTRL_FLTEN"))
         fmode = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_FLTCTRL_FMODE").getSelectedValue())
-        ovrsam = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_FLTCTRL_OVRSAM").getSelectedValue(), 16)
+        ovrsam = int(localComponent.getSymbolByID("ADC_CORE_" + str(n) + "_FLTCTRL_OVRSAM").getSelectedValue(), 0)
 
         if flten == 1:
             fltctrl_val = (fltchnid << 10) | (flten << 8) | (fmode << 3) | (ovrsam)
@@ -729,7 +729,7 @@ def ADC_PFFCTRL_REG_Update (symbol, event):
     pffctrl_val = 0
     pffcr = 0
 
-    pffrdydma = int(localComponent.getSymbolByID("ADC_GLOBAL_PFFCTRL_PFFRDYDMA").getSelectedValue(), 16)
+    pffrdydma = int(localComponent.getSymbolByID("ADC_GLOBAL_PFFCTRL_PFFRDYDMA").getSelectedValue(), 0)
     for n in range(0, nSARCore):
         if localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_ENABLE") == True:
             pffcr |= int(localComponent.getSymbolValue("ADC_CORE_" + str(n) + "_PFFCTRL_PFFCR")) << n
@@ -767,7 +767,7 @@ def ADC_CTRLD_REG_Update (symbol, event):
 
     ctrld_val = 0
 
-    vrefsel = int(localComponent.getSymbolByID("ADC_GLOBAL_CTRLD_VREFSEL").getSelectedValue(), 16)
+    vrefsel = int(localComponent.getSymbolByID("ADC_GLOBAL_CTRLD_VREFSEL").getSelectedValue(), 0)
     wkupexp = localComponent.getSymbolValue("ADC_GLOBAL_CTRLD_WKUPEXP")
     clkdiv = localComponent.getSymbolValue("ADC_GLOBAL_CTRLD_CTLCKDIV")
 
@@ -782,7 +782,7 @@ def ADC_CTRLC_REG_Update (symbol, event):
     ctrlc_val = 0
 
     if (localComponent.getSymbolValue("ADC_GLOBAL_CTRLC_COREINTERLEAVED") != None):
-        coreinterleaved = int(localComponent.getSymbolByID("ADC_GLOBAL_CTRLC_COREINTERLEAVED").getSelectedValue(), 16)
+        coreinterleaved = int(localComponent.getSymbolByID("ADC_GLOBAL_CTRLC_COREINTERLEAVED").getSelectedValue(), 0)
         cnt = localComponent.getSymbolValue("ADC_GLOBAL_CTRLC_CNT")
 
         ctrlc_val = (coreinterleaved << 28) | cnt
@@ -871,7 +871,7 @@ def readATDF(adcInstanceName, adcComponent):
     # Read calibration base address
     calibBaseAddrNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"FUSES\"]/instance@[name=\"FUSES\"]/register-group@[name=\"FUSES_CALOTP\"]")
 
-    calibBaseAddr = int(calibBaseAddrNode.getAttribute("offset"), 16)
+    calibBaseAddr = int(calibBaseAddrNode.getAttribute("offset"), 0)
     # Add offset to the base address
     calibBaseAddr = calibBaseAddr + 0x184
 
@@ -1759,17 +1759,18 @@ def adcInterruptHandlerConfig(adcComponent):
         if vectorValues[id].getAttribute("module-instance") == adcInstanceName.getValue():
             name = vectorValues[id].getAttribute("name")
             #Create symbols for ADC interrupt names to be used in the FTL
-            adcIntType = name.split("_")[1]
-            if adcIntType in ADC_Global_InterruptNames:
-                adcIntHandlerName = adcComponent.createStringSymbol("ADC_CORE_GLOBAL_INT_HANDLER_NAME", None)
-                adcIntHandlerName.setDefaultValue(adcComponent.getID().upper() + "_" + adcIntType)
-                adcIntHandlerName.setVisible(True)
-            elif adcIntType in ADC_Core_InterruptNames:
-                adcIntHandlerName = adcComponent.createStringSymbol("ADC_CORE_" + re.sub("[A-Z, _]", "", name) + "_INT_HANDLER_NAME", None)
-                adcIntHandlerName.setDefaultValue(adcComponent.getID().upper() + "_" + adcIntType)
-                adcIntHandlerName.setVisible(True)
+            if ("Reserved" not in name) and (len(name.split("_")) >= 2):
+                adcIntType = name.split("_")[1]
+                if adcIntType in ADC_Global_InterruptNames:
+                    adcIntHandlerName = adcComponent.createStringSymbol("ADC_CORE_GLOBAL_INT_HANDLER_NAME", None)
+                    adcIntHandlerName.setDefaultValue(adcComponent.getID().upper() + "_" + adcIntType)
+                    adcIntHandlerName.setVisible(True)
+                elif adcIntType in ADC_Core_InterruptNames:
+                    adcIntHandlerName = adcComponent.createStringSymbol("ADC_CORE_" + re.sub("[A-Z, _]", "", name) + "_INT_HANDLER_NAME", None)
+                    adcIntHandlerName.setDefaultValue(adcComponent.getID().upper() + "_" + adcIntType)
+                    adcIntHandlerName.setVisible(True)
 
-            InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
+                InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
 
     # Confiure secure/non-secure interrupt
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
