@@ -3,6 +3,18 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.19.6
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Added PIC32CX1025SG41080 part support
+- Fixed EOC interrupt enable issue in ADCHS PLIB
+- Updated PIC32CX-SG41 DFP version in package.yml
+
 ## CSP Release v3.19.5
 
 ### New Features
