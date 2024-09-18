@@ -1523,7 +1523,7 @@ def scan_atdf_for_spllcon_fields(component, parentMenu, regNode):
     symbolSpllconValue = component.createHexSymbol("SPLLCON_VALUE", parentMenu)
     symbolSpllconValue.setVisible(False)
     initialSpllconVal = int((clkRegGrp_SPLLCON.getAttribute('initval')),16)
-    symbolSpllconValue.setDefaultValue(initialSpllconVal)
+    symbolSpllconValue.setDefaultValue(initialSpllconVal | (1<<8))  # Setting the default value for SPLLPOSTDIV1 to 1 as the initial in ATDF is incorrect (set to 0).
     symbolSpllconValue.setDependencies(updateSPLLCon, dependencyList)
 
 def scan_atdf_for_osccon_fields(component, parentMenu, regNode):
@@ -1615,7 +1615,7 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
                         {'name':'EPLLFBDIV', 'symmaskname':'epllcon_epllfbdiv_mask', 'symvaluename':'epllcon_epllfbdiv_val', 'keyvalbuf':'epllfbdiv', 'visible':'True', 'min':'16', 'max':'1023'},
                         {'name':'EPLLREFDIV', 'symmaskname':'epllcon_epllrefdiv_mask', 'symvaluename':'epllcon_epllrefdiv_val', 'keyvalbuf':'epllrefdiv', 'visible':'True', 'min':'1', 'max':'63'}, # no fuse for it - option made available to user here
                         {'name':'EWPLLICLK', 'symmaskname':'ewpllcon_ewplliclk_mask', 'symvaluename':'ewpllcon_ewplliclk_val', 'keyvalbuf':'ewplliclk', 'visible':'True'},
-                        {'name':'EPLLCLKOUTEN', 'symmaskname':'epllcon_epllclkouten_mask', 'symvaluename':'epllcon_epllclkouten_val', 'keyvalbuf':'epllclkouten', 'visible':'True'},
+                        {'name':'ECLKOUTEN', 'symmaskname':'epllcon_epllclkouten_mask', 'symvaluename':'epllcon_epllclkouten_val', 'keyvalbuf':'epllclkouten', 'visible':'True'},
                         {'name':'EPLL_BYP', 'symmaskname':'epllcon_epll_byp_mask', 'symvaluename':'epllcon_epll_byp_val', 'keyvalbuf':'epll_byp', 'visible':'True'},
                       ]
     dependencyList = []
@@ -1662,7 +1662,7 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
     symbolEpllconValue = component.createHexSymbol("EPLLCON_VALUE", parentMenu)
     symbolEpllconValue.setVisible(False)
     initialEpllconVal = int((clkRegGrp_EPLLCON.getAttribute('initval')),16)
-    symbolEpllconValue.setDefaultValue(initialEpllconVal)
+    symbolEpllconValue.setDefaultValue(initialEpllconVal | (1<<22))     #The default value is incorrect for the EPLLREFDIV bitfield. Value of 0 is incorrect. Setting it to 1 explicitly.
     symbolEpllconValue.setDependencies(updateEPLLCon, dependencyList)
     node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CRU\"]/register-group@[name=\"CRU\"]/register@[name=\"APLLCON\"]")
     if node != None:
