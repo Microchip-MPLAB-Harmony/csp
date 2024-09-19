@@ -2,7 +2,7 @@
 <!-- This is an auto-generated pin data file created: 14:45:16 08/21/24 -->
 <pinfile family="CX_BZ6">
    <packages>
-     <package diagram="MX_48_QFN" id="1" name="DQFN" />
+     <package diagram="CX_BZ6_132_DQFN" id="1" name="DQFN" />
   </packages>
   <pins>
      <pin name="NC">
