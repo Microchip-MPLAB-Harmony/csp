@@ -454,7 +454,7 @@ def instantiateComponent(eicComponent):
     configRegArrBased.setVisible(False)
 
     config_reg_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"CONFIG\"]")
-    if config_reg_node != None and int(config_reg_node.getAttribute("count")) > 1:
+    if config_reg_node != None and config_reg_node.getAttribute("count") != None and int(config_reg_node.getAttribute("count")) > 1:
         configRegArrBased.setDefaultValue(True)
     else:
         configRegArrBased.setDefaultValue(False)
@@ -507,6 +507,8 @@ def instantiateComponent(eicComponent):
         ASYNCH_ASYNCH_Selection.setLabel("External Interrupt" + str(extIntIndex) + " Detection Clock")
 
         eicAsynchNode = getValueGroupNode__EIC("EIC", "EIC", "ASYNCH", "ASYNCH")
+        if eicAsynchNode == None:
+            eicAsynchNode = getValueGroupNode__EIC("EIC", "EIC", "ASYNCH", "ASYNCH0")
 
         for index in range(len(eicAsynchNode.getChildren())):
             eicAsynchKeyName = eicAsynchNode.getChildren()[index].getAttribute("name")
@@ -696,6 +698,7 @@ def instantiateComponent(eicComponent):
     ############################################################################
     #### Dependency ####
     ############################################################################
+    eicDedicatedVectors = 0
     vectorNode=ATDF.getNode(
         "/avr-tools-device-file/devices/device/interrupts")
     vectorValues=vectorNode.getChildren()
@@ -705,6 +708,7 @@ def instantiateComponent(eicComponent):
 
             if has_digits(name) == True:
                 eicChannel = re.sub("[^0-9]", "", name)        #Extract the EIC channel number from the vector name
+                eicDedicatedVectors += 1
             else:
                 eicChannel = name                               # When vector name is OTHER or NSCHK or just EIC in case of single vector line
             eicIntHandlerName = eicComponent.createStringSymbol("EIC_INT_HANDLER_NAME_" + str(eicChannel) , None)
@@ -721,7 +725,7 @@ def instantiateComponent(eicComponent):
 
     eicIntLines = eicComponent.createIntegerSymbol("NUM_INT_LINES", None)
     eicIntLines.setVisible(False)
-    eicIntLines.setDefaultValue((len(InterruptVector) - 1))
+    eicIntLines.setDefaultValue(eicDedicatedVectors)
 
     sharedVector = False
     if (len(InterruptVector) < extIntCount):
