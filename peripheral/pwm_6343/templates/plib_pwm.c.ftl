@@ -81,16 +81,16 @@
 <#-- Fault configuration preparation -->
 <#if .vars[PWM_CH_ENABLE] == true && .vars[PWM_Fault_Enable] == true>
     <#if PWM_FPE_VAL != "">
-        <#assign PWM_FPE_VAL = PWM_FPE_VAL + " | \n\t\t (0x1U << (${.vars[PWM_FPE]}U + (PWM_FPE_FPE${CH_NUM}_Pos)))">
+        <#assign PWM_FPE_VAL = PWM_FPE_VAL + " | \n\t\t (0x1UL << (${.vars[PWM_FPE]}U + (PWM_FPE_FPE${CH_NUM}_Pos)))">
     <#else>
-        <#assign PWM_FPE_VAL = "(0x1U << (${.vars[PWM_FPE]}U + (PWM_FPE_FPE${CH_NUM}_Pos)))">
+        <#assign PWM_FPE_VAL = "(0x1UL << (${.vars[PWM_FPE]}U + (PWM_FPE_FPE${CH_NUM}_Pos)))">
     </#if>
     <#-- Register values of PWM_FPV1 and PWM_FPV2 -->
     <#if .vars[PWM_FPV_FPVH] != "2">
         <#if PWM_FPV1_VAL != "">
-            <#assign PWM_FPV1_VAL = PWM_FPV1_VAL + "\n\t\t | (${.vars[PWM_FPV_FPVH]} << PWM_FPV1_FPVH${CH_NUM}_Pos)">
+            <#assign PWM_FPV1_VAL = PWM_FPV1_VAL + "\n\t\t | (${.vars[PWM_FPV_FPVH]}U << PWM_FPV1_FPVH${CH_NUM}_Pos)">
         <#else>
-            <#assign PWM_FPV1_VAL = "(${.vars[PWM_FPV_FPVH]} << PWM_FPV1_FPVH${CH_NUM}_Pos)">
+            <#assign PWM_FPV1_VAL = "(${.vars[PWM_FPV_FPVH]}U << PWM_FPV1_FPVH${CH_NUM}_Pos)">
         </#if>
     <#else>
         <#if PWM_FPV2_VAL != "">
@@ -101,9 +101,9 @@
     </#if>
     <#if .vars[PWM_FPV_FPVL] != "2">
         <#if PWM_FPV1_VAL != "">
-            <#assign PWM_FPV1_VAL = PWM_FPV1_VAL + " | (${.vars[PWM_FPV_FPVL]} << PWM_FPV1_FPVL${CH_NUM}_Pos)">
+            <#assign PWM_FPV1_VAL = PWM_FPV1_VAL + " | (${.vars[PWM_FPV_FPVL]}UL << PWM_FPV1_FPVL${CH_NUM}_Pos)">
         <#else>
-            <#assign PWM_FPV1_VAL = "(${.vars[PWM_FPV_FPVH]} << PWM_FPV1_FPVH${CH_NUM}_Pos)">
+            <#assign PWM_FPV1_VAL = "(${.vars[PWM_FPV_FPVH]}UL << PWM_FPV1_FPVH${CH_NUM}_Pos)">
         </#if>
     <#else>
         <#if PWM_FPV2_VAL != "">
