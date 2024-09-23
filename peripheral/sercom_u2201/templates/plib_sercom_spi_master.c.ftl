@@ -199,6 +199,7 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
     /* Disable the SPI Module */
     ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_SPI_REG_NAME}.SERCOM_CTRLA &= ~(SERCOM_${SERCOM_SPI_REG_NAME}_CTRLA_ENABLE_Msk);
 
+<#if SPI_INTERRUPT_MODE = true>
     /* Disabling SPI module, also clears the TXC (Transmit Complete) bit to 0. TXC = 0 means transfer is not complete (busy).
        As a result, calling ${SERCOM_INSTANCE_NAME}_SPI_IsBusy() after a call to ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup() always returns busy.
        Since, application must call the ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup() API only after ensuring that no transfer is in progress,
@@ -206,6 +207,7 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
     */
     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize = 0;
     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize = 0;
+</#if>
 
     /* Wait for synchronization */
     <#if SERCOM_SYNCBUSY = false>
