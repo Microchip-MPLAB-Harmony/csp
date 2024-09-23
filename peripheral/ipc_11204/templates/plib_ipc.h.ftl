@@ -98,6 +98,6 @@ static inline ipc_irq_mask_t ${IPC_INSTANCE_NAME}_GetIRQStatus(void)
 void  ${IPC_INSTANCE_NAME}_Initialize(void);
 </#if>
 
-void ${IPC_INSTANCE_NAME}_SetIRQHandler(ipc_irq_mask_t irq, IPC_CALLBACK handler, uintptr_t context);
+void ${IPC_INSTANCE_NAME}_SetIRQHandler(ipc_irq_mask_t irq_mask, IPC_CALLBACK handler, uintptr_t context);
 
 #endif //PLIB_${IPC_INSTANCE_NAME}_H
