@@ -105,7 +105,7 @@ extern int main(void);
 <#if CoreArchitecture == "CORTEX-M7">
     <#include "arch/startup_xc32_cortex_m7.c.ftl">
     <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
-<#elseif CoreArchitecture == "CORTEX-M4" || (RAM_INIT?? && RAM_INIT == "true")>
+<#elseif CoreArchitecture == "CORTEX-M4" || (RAM_INIT?? && RAM_INIT == true)>
     <#if DeviceFamily != "CEC_173X" && DeviceFamily != "SAM_G51" && DeviceFamily != "SAM_G53" && DeviceFamily != "SAM_G54">
         <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
     </#if>
@@ -155,7 +155,7 @@ void __attribute__((optimize("-O1"),long_call))Dummy_App_Func(void)
  */
 void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, noreturn)) Reset_Handler(void)
 {
-<#if RAM_INIT?? && RAM_INIT == "true">
+<#if RAM_INIT?? && RAM_INIT == true>
     RAM_Initialize();
 
 </#if>
