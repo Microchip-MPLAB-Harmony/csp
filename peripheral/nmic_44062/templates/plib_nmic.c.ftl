@@ -82,7 +82,7 @@ void ${NMIC_INSTANCE_NAME}_CallbackRegister( NMIC_CALLBACK callback, uintptr_t c
 
 void __attribute__((used)) ${NMIC_INSTANCE_NAME}_InterruptHandler( void )
 {
-	volatile uint32_t status = NMIC_REGS->NMIC_ISR;
+	uint32_t status = NMIC_REGS->NMIC_ISR;
 	if(nmic.callback != NULL)
     {
         uintptr_t context = nmic.context;

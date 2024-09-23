@@ -533,6 +533,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setu
     return setupStatus;
 }
 
+<#if TWI_INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
     void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
@@ -766,6 +767,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 
     return;
 }
+</#if>
 
 /*******************************************************************************
  End of File
