@@ -136,7 +136,7 @@ __longramfunc__ uint32_t ${SEFC_INSTANCE_NAME}_GpnvmBitRead(void)
 <#if SEFC_DUAL_PANEL == true>
 uint32_t ${SEFC_INSTANCE_NAME}_FlashPanelBaseAddrGet(void)
 {
-    bool isPanelSwap = (${SEFC_INSTANCE_NAME}_GpnvmBitRead() & 0x02U) ? true: false;
+    bool isPanelSwap = ((${SEFC_INSTANCE_NAME}_GpnvmBitRead() & 0x02U) != 0U);
 
 <#if SEFC_INSTANCE_NUM == '0'>
     return isPanelSwap == false? IFLASH0_ADDR : IFLASH1_ADDR;
