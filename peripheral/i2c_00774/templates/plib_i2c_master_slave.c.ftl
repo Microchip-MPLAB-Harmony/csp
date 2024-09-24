@@ -6,7 +6,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${I2C_INSTANCE_NAME?lower_case}_master_slave_common.c
+    plib_${I2C_INSTANCE_NAME?lower_case}_master_slave.c
 
   Summary:
     I2C PLIB Master Slave Common Implementation file
@@ -48,15 +48,12 @@
 // *****************************************************************************
 // *****************************************************************************
 #include "device.h"
-#include "plib_${I2C_INSTANCE_NAME?lower_case}_master_slave_common.h"
-
-extern void ${I2C_INSTANCE_NAME}_MasterBUS_InterruptHandler(void);
-
-extern void ${I2C_INSTANCE_NAME}_SlaveBUS_InterruptHandler(void);
-
-extern void ${I2C_INSTANCE_NAME}_MASTER_InterruptHandler(void);
-
-extern void ${I2C_INSTANCE_NAME}_SLAVE_InterruptHandler(void);
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
+#include "plib_${I2C_INSTANCE_NAME?lower_case}_master_slave.h"
+#include "peripheral/i2c/master/plib_${I2C_INSTANCE_NAME?lower_case}_master_local.h"
+#include "peripheral/i2c/slave/plib_${I2C_INSTANCE_NAME?lower_case}_slave_local.h"
 
 // *****************************************************************************
 // *****************************************************************************

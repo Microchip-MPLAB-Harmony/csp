@@ -119,7 +119,7 @@ static uint8_t SMBUS_CRCTable[256] =
 
     0xde,0xd9,0xd0,0xd7,0xc2,0xc5,0xcc,0xcb,
 
-    0xe6,0xe1,0xe8,0xef,0xfa,0xfd,0xf4
+    0xe6,0xe1,0xe8,0xef,0xfa,0xfd,0xf4,0xf3
 };
 
 uint8_t SMBUSCRC8Byte(uint8_t initCRC, uint8_t data)
@@ -132,11 +132,13 @@ uint8_t SMBUSCRC8Buffer(uint8_t initCRC, void* pData, uint32_t size)
     uint8_t crc = initCRC;
     uint8_t* pDataBuffer = (uint8_t*)pData;
 
-    while(size--)
+    while(size != 0U)
     {
         crc = crc ^ *pDataBuffer++;
 
         crc = SMBUS_CRCTable[crc];
+        
+        size--;
     }
 
     return(crc);

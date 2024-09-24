@@ -6,7 +6,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${I2C_INSTANCE_NAME?lower_case}_master_slave_common.h
+    plib_${I2C_INSTANCE_NAME?lower_case}_master_slave.h
 
   Summary:
     I2C PLIB Common Implementation file
@@ -48,8 +48,8 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#ifndef PLIB_${I2C_INSTANCE_NAME}_MASTER_SLAVE_COMMON_H
-#define PLIB_${I2C_INSTANCE_NAME}_MASTER_SLAVE_COMMON_H
+#ifndef PLIB_${I2C_INSTANCE_NAME}_MASTER_SLAVE_H
+#define PLIB_${I2C_INSTANCE_NAME}_MASTER_SLAVE_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -83,4 +83,4 @@ void ${I2C_INSTANCE_NAME}_Initialize(void);
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_${I2C_INSTANCE_NAME}_MASTER_SLAVE_COMMON_H */
+#endif /* PLIB_${I2C_INSTANCE_NAME}_MASTER_SLAVE_H */

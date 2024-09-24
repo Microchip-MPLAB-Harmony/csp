@@ -49,7 +49,7 @@
 // *****************************************************************************
 #include "device.h"
 #include "plib_${I2C_INSTANCE_NAME?lower_case}_slave.h"
-<#if core.CoreSysIntFile == true>
+<#if core.CoreSysIntFile == true && I2C_OPERATING_MODE != "Master and Slave">
 #include "interrupts.h"
 </#if>
 <#if I2C_SMEN == true>
@@ -59,6 +59,7 @@
 <#assign I2C_API_PREFIX = I2C_INSTANCE_NAME + "_">
 <#if I2C_OPERATING_MODE == "Master and Slave">
 <#assign I2C_API_PREFIX = I2C_INSTANCE_NAME + "_Slave">
+#include "peripheral/i2c/slave/plib_${I2C_INSTANCE_NAME?lower_case}_slave_local.h"
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -177,7 +178,7 @@ static void ${I2C_API_PREFIX}TransferSM(void)
             i2c_addr = ${I2C_INSTANCE_NAME}RCV;
             <#if I2C_SMEN == true>
             /* Update PEC calculation */
-            ${I2C_INSTANCE_NAME?lower_case}SlaveObj.pec = SMBUSCRC8Byte(${I2C_INSTANCE_NAME?lower_case}SlaveObj.pec, i2c_addr);
+            ${I2C_INSTANCE_NAME?lower_case}SlaveObj.pec = SMBUSCRC8Byte(${I2C_INSTANCE_NAME?lower_case}SlaveObj.pec, (uint8_t)i2c_addr);
             <#else>
             (void)i2c_addr;
             </#if>
