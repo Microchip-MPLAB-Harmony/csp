@@ -121,7 +121,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     ${CAN_INSTANCE_NAME}_REGS->CAN_MB[${mailbox}].CAN_MCR = 0;
     <#if .vars[MMR_MOT] == "MB_RX" || .vars[MMR_MOT] == "MB_RX_OVERWRITE" || .vars[MMR_MOT] == "MB_CONSUMER">
     ${CAN_INSTANCE_NAME}_REGS->CAN_MB[${mailbox}].CAN_MID = ${(.vars[MID_ID]?number > 2047)?then('${.vars[MID_ID]}', 'CAN_MID_MIDvA(${.vars[MID_ID]})')} | CAN_MID_MIDE_Msk;
-    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[${mailbox}].CAN_MAM = ${(.vars[MAM_ID]?number > 2047)?then('${.vars[MAM_ID]} | CAN_MAM_MIDE_Msk', 'CAN_MAM_MIDvA(${.vars[MAM_ID]})')};
+    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[${mailbox}].CAN_MAM = ${(.vars[MAM_ID]?number > 2047)?then('${.vars[MAM_ID]}U | CAN_MAM_MIDE_Msk', 'CAN_MAM_MIDvA(${.vars[MAM_ID]})')};
     </#if>
     ${CAN_INSTANCE_NAME}_REGS->CAN_MB[${mailbox}].CAN_MMR = CAN_MMR_MOT_${.vars[MMR_MOT]};
     </#list>
