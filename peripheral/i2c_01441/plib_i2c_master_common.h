@@ -189,8 +189,8 @@ typedef void (*I2C_CALLBACK) (uintptr_t contextHandle);
 typedef struct
 {
     uint16_t                address;
-    uint8_t*                writeBuffer;
-    uint8_t*                readBuffer;
+    volatile uint8_t*       writeBuffer;
+    volatile uint8_t*       readBuffer;
     size_t                  writeSize;
     size_t                  readSize;
     size_t                  writeCount;

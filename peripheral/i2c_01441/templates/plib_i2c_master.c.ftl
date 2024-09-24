@@ -50,7 +50,7 @@
 
 #include "device.h"
 #include "plib_${I2C_INSTANCE_NAME?lower_case}_master.h"
-<#if core.CoreSysIntFile == true>
+<#if core.CoreSysIntFile == true && I2C_OPERATING_MODE != "Master and Slave">
 #include "interrupts.h"
 </#if>
 <#if I2C_SMEN == true>
@@ -61,6 +61,7 @@
 <#assign I2C_API_PREFIX = I2C_INSTANCE_NAME + "_">
 <#if I2C_OPERATING_MODE == "Master and Slave">
 <#assign I2C_API_PREFIX = I2C_INSTANCE_NAME + "_Master">
+#include "peripheral/i2c/master/plib_${I2C_INSTANCE_NAME?lower_case}_master_local.h"
 </#if>
 
 // *****************************************************************************
@@ -78,10 +79,10 @@ volatile static I2C_OBJ ${I2C_INSTANCE_NAME?lower_case}MasterObj;
 <#if I2C_SMEN == true>
 /* <cmd> <blocklen n> <data 1> ... <data n> <pec>*/
 /* Total 1 + 1 + 255 + 1 = 258 bytes*/
-volatile static uint8_t ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[258];
+static uint8_t ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[258];
 /* <blocklen n> <data 1> ... <data n> <pec>*/
 /* Total 1 + 255 + 1 = 257 bytes*/
-volatile static uint8_t ${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer[257];
+static uint8_t ${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer[257];
 </#if>
 
 void ${I2C_API_PREFIX}Initialize(void)
@@ -131,6 +132,7 @@ void ${I2C_API_PREFIX}Initialize(void)
 static void ${I2C_API_PREFIX}TransferSM(void)
 {
     uint8_t tempVar = 0;
+    bool isScanInProgress = false;
     ${I2C_MASTER_IFS_REG}CLR = _${I2C_MASTER_IFS_REG}_${I2C_INSTANCE_NAME}MIF_MASK;
     <#if I2C_INCLUDE_FORCED_WRITE_API == true>
     bool forcedWrite = ${I2C_INSTANCE_NAME?lower_case}MasterObj.forcedWrite;
@@ -390,7 +392,9 @@ static void ${I2C_API_PREFIX}TransferSM(void)
             ${I2C_MASTER_IEC_REG}CLR = _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK;
             ${I2C_BUS_IEC_REG}CLR = _${I2C_BUS_IEC_REG}_${I2C_BUS_COLLISION_INT_ENABLE_BIT_NAME}_MASK;
 
-            if ((${I2C_INSTANCE_NAME?lower_case}MasterObj.callback != NULL) && (${I2C_INSTANCE_NAME?lower_case}MasterObj.busScanInProgress == false))
+            isScanInProgress = ${I2C_INSTANCE_NAME?lower_case}MasterObj.busScanInProgress;
+
+            if ((${I2C_INSTANCE_NAME?lower_case}MasterObj.callback != NULL) && (isScanInProgress == false))
             {
                 uintptr_t context = ${I2C_INSTANCE_NAME?lower_case}MasterObj.context;
 
@@ -606,7 +610,7 @@ bool ${I2C_API_PREFIX}SMBUSSendByte(uint8_t address, void* pWrdata, bool enPEC)
         ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = *((uint8_t*)pWrdata);
         if (enPEC)
         {
-            crc = SMBUSCRC8Byte(crc, (address << 1));
+            crc = SMBUSCRC8Byte(crc, (address << 1U));
             crc = SMBUSCRC8Byte(crc, *((uint8_t*)pWrdata));
 
             ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = crc;
@@ -637,7 +641,7 @@ bool ${I2C_API_PREFIX}SMBUSWriteByte(uint8_t address, uint8_t cmd, void* pWrdata
         ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = *((uint8_t*)pWrdata);
         if (enPEC)
         {
-            crc = SMBUSCRC8Byte(crc, (address << 1));
+            crc = SMBUSCRC8Byte(crc, (address << 1U));
             crc = SMBUSCRC8Buffer(crc, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen);
 
             ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = crc;
@@ -670,7 +674,7 @@ bool ${I2C_API_PREFIX}SMBUSWriteWord(uint8_t address, uint8_t cmd, void* pWrdata
         ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = wrData[1];
         if (enPEC)
         {
-            crc = SMBUSCRC8Byte(crc, (address << 1));
+            crc = SMBUSCRC8Byte(crc, (address << 1U));
             crc = SMBUSCRC8Buffer(crc, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen);
 
             ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = crc;
@@ -698,14 +702,14 @@ bool ${I2C_API_PREFIX}SMBUSWriteBlock(uint8_t address, uint8_t cmd, void* pWrdat
     {
         /* <slave_add> <cmd> <wr_block_sz n> <data1> <data2> .. <datan> <pec_from_master>*/
         ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = cmd;
-        ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = nWrBytes;
+        ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = (uint8_t)nWrBytes;
 
-        memcpy((void*)&${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen], (const void*)pWrdata, nWrBytes);
+        (void)memcpy((void*)&${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen], (const void*)pWrdata, nWrBytes);
         xferLen += nWrBytes;
 
         if (enPEC)
         {
-            crc = SMBUSCRC8Byte(crc, (address << 1));
+            crc = SMBUSCRC8Byte(crc, (address << 1U));
             crc = SMBUSCRC8Buffer(crc, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen);
 
             ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = crc;
@@ -735,12 +739,12 @@ bool ${I2C_API_PREFIX}SMBUSReceiveByte(uint8_t address, bool enPEC)
         if (enPEC)
         {
             /*PEC will be sent by slave and will be calculated over all the bytes in this transfer. Here master only calculates the CRC on the bytes it is transmitting. */
-            crc = SMBUSCRC8Byte(crc, ((address << 1) | 1));
+            crc = SMBUSCRC8Byte(crc, ((address << 1U) | 1U));
 
             ${I2C_INSTANCE_NAME?lower_case}MasterObj.pec = crc;
         }
 
-        status = ${I2C_API_PREFIX}XferSetup(address, NULL, 0, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer, enPEC == true? 2 : 1, false, false, enPEC == true? true : false);
+        status = ${I2C_API_PREFIX}XferSetup(address, NULL, 0, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer, enPEC == true? 2U : 1U, false, false, enPEC == true? true : false);
 
         if (status == true)
         {
@@ -765,14 +769,14 @@ bool ${I2C_API_PREFIX}SMBUSReadByte(uint8_t address, uint8_t cmd, bool enPEC)
         if (enPEC)
         {
             /*PEC will be sent by slave and will be calculated over all the bytes in this transfer. Here master only calculates the CRC on the bytes it is transmitting. */
-            crc = SMBUSCRC8Byte(crc, (address << 1));
+            crc = SMBUSCRC8Byte(crc, (address << 1U));
             crc = SMBUSCRC8Buffer(crc, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen);
-            crc = SMBUSCRC8Byte(crc, ((address << 1) | 1));
+            crc = SMBUSCRC8Byte(crc, ((address << 1U) | 1U));
 
             ${I2C_INSTANCE_NAME?lower_case}MasterObj.pec = crc;
         }
 
-        status = ${I2C_API_PREFIX}XferSetup(address, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer, enPEC == true? 2 : 1, false, false, enPEC == true? true : false);
+        status = ${I2C_API_PREFIX}XferSetup(address, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer, enPEC == true? 2U : 1U, false, false, enPEC == true? true : false);
 
         if (status == true)
         {
@@ -797,14 +801,14 @@ bool ${I2C_API_PREFIX}SMBUSReadWord(uint8_t address, uint8_t cmd, bool enPEC)
         if (enPEC)
         {
             /*PEC will be sent by slave and will be calculated over all the bytes in this transfer. Here master only calculates the CRC on the bytes it is transmitting. */
-            crc = SMBUSCRC8Byte(crc, (address << 1));
+            crc = SMBUSCRC8Byte(crc, (address << 1U));
             crc = SMBUSCRC8Buffer(crc, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen);
-            crc = SMBUSCRC8Byte(crc, ((address << 1) | 1));
+            crc = SMBUSCRC8Byte(crc, ((address << 1U) | 1U));
 
             ${I2C_INSTANCE_NAME?lower_case}MasterObj.pec = crc;
         }
 
-        status = ${I2C_API_PREFIX}XferSetup(address, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, 1, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer, enPEC == true? 3 : 2, false, false, enPEC == true? true : false);
+        status = ${I2C_API_PREFIX}XferSetup(address, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, 1, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer, enPEC == true? 3U : 2U, false, false, enPEC == true? true : false);
 
         if (status == true)
         {
@@ -831,14 +835,14 @@ bool ${I2C_API_PREFIX}SMBUSProcessCall(uint8_t address, uint8_t cmd, void* pWrda
         if (enPEC)
         {
             /*PEC will be sent by slave and will be calculated over all the bytes in this transfer. Here master only calculates the CRC on the bytes it is transmitting. */
-            crc = SMBUSCRC8Byte(crc, (address << 1));
+            crc = SMBUSCRC8Byte(crc, (address << 1U));
             crc = SMBUSCRC8Buffer(crc, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen);
-            crc = SMBUSCRC8Byte(crc, ((address << 1) | 1));
+            crc = SMBUSCRC8Byte(crc, ((address << 1U) | 1U));
 
             ${I2C_INSTANCE_NAME?lower_case}MasterObj.pec = crc;
         }
 
-        status = ${I2C_API_PREFIX}XferSetup(address, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer, enPEC == true? 3 : 2, false, false, enPEC == true? true : false);
+        status = ${I2C_API_PREFIX}XferSetup(address, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer, enPEC == true? 3U : 2U, false, false, enPEC == true? true : false);
 
         if (status == true)
         {
@@ -863,9 +867,9 @@ bool ${I2C_API_PREFIX}SMBUSReadBlock(uint8_t address, uint8_t cmd, bool enPEC)
         if (enPEC)
         {
             /*PEC will be sent by slave and will be calculated over all the bytes in this transfer. Here master only calculates the CRC on the bytes it is transmitting. */
-            crc = SMBUSCRC8Byte(crc, (address << 1));
+            crc = SMBUSCRC8Byte(crc, (address << 1U));
             crc = SMBUSCRC8Buffer(crc, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen);
-            crc = SMBUSCRC8Byte(crc, ((address << 1) | 1));
+            crc = SMBUSCRC8Byte(crc, ((address << 1U) | 1U));
 
             ${I2C_INSTANCE_NAME?lower_case}MasterObj.pec = crc;
         }
@@ -891,16 +895,16 @@ bool ${I2C_API_PREFIX}SMBUSWriteReadBlock(uint8_t address, uint8_t cmd, void* pW
     {
         /* <slave_add> <cmd> <wr_block_sz n> <data1> <data2> .. <datan> <slave_add> <rd_block_sz n> <data1> <data1> .. <datan><pec_from_slave>*/
         ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = cmd;
-        ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = nWrBytes;
-        memcpy((void*)&${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen], (const void*)pWrdata, nWrBytes);
+        ${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen++] = (uint8_t)nWrBytes;
+        (void)memcpy((void*)&${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer[xferLen], (const void*)pWrdata, nWrBytes);
         xferLen += nWrBytes;
 
         if (enPEC)
         {
             /*PEC will be sent by slave and will be calculated over all the bytes in this transfer. Here master only calculates the CRC on the bytes it is transmitting. */
-            crc = SMBUSCRC8Byte(crc, (address << 1));
+            crc = SMBUSCRC8Byte(crc, (address << 1U));
             crc = SMBUSCRC8Buffer(crc, (uint8_t*)${I2C_INSTANCE_NAME?lower_case}SMBUSWrBuffer, xferLen);
-            crc = SMBUSCRC8Byte(crc, ((address << 1) | 1));
+            crc = SMBUSCRC8Byte(crc, ((address << 1U) | 1U));
 
             ${I2C_INSTANCE_NAME?lower_case}MasterObj.pec = crc;
         }
@@ -925,10 +929,11 @@ uint32_t ${I2C_API_PREFIX}SMBUSBufferRead(void* pBuffer)
 {
     uint32_t i;
     uint32_t numBytesAvailable = ${I2C_INSTANCE_NAME?lower_case}MasterObj.readCount;
+    volatile uint8_t* pSMBRdBuffer = ${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer;
 
     for (i = 0; i < numBytesAvailable; i++)
     {
-        ((uint8_t*)pBuffer)[i] = ${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer[i];
+        ((uint8_t*)pBuffer)[i] = pSMBRdBuffer[i];
     }
 
     return numBytesAvailable;
@@ -937,9 +942,10 @@ uint32_t ${I2C_API_PREFIX}SMBUSBufferRead(void* pBuffer)
 /* Must be called to check if the PEC sent by target matches with the PEC calculated by host */
 bool ${I2C_API_PREFIX}SMBUSIsPECMatch(void)
 {
-    uint8_t lastRcvdByteIndex = ${I2C_INSTANCE_NAME?lower_case}MasterObj.readCount - 1;
+    uint8_t lastRcvdByteIndex = (uint8_t)(${I2C_INSTANCE_NAME?lower_case}MasterObj.readCount - 1U);
+    volatile uint8_t* pSMBRdBuffer = ${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer;
 
-    uint8_t rcvdPEC = ${I2C_INSTANCE_NAME?lower_case}SMBUSRdBuffer[lastRcvdByteIndex];
+    uint8_t rcvdPEC = pSMBRdBuffer[lastRcvdByteIndex];
 
     return ${I2C_INSTANCE_NAME?lower_case}MasterObj.pec == rcvdPEC;
 }
@@ -1037,6 +1043,8 @@ void __attribute__((used)) ${I2C_API_PREFIX}BUS_InterruptHandler(void)
 <#else>
 void __attribute__((used)) ${I2C_API_PREFIX}BUS_InterruptHandler(void)
 {
+    bool isScanInProgress = ${I2C_INSTANCE_NAME?lower_case}MasterObj.busScanInProgress;
+
     /* Clear the bus collision error status bit */
     ${I2C_INSTANCE_NAME}STATCLR = _${I2C_INSTANCE_NAME}STAT_BCL_MASK;
 
@@ -1047,7 +1055,7 @@ void __attribute__((used)) ${I2C_API_PREFIX}BUS_InterruptHandler(void)
 
     ${I2C_INSTANCE_NAME?lower_case}MasterObj.error = I2C_ERROR_BUS_COLLISION;
 
-    if ((${I2C_INSTANCE_NAME?lower_case}MasterObj.callback != NULL) && (${I2C_INSTANCE_NAME?lower_case}MasterObj.busScanInProgress == false))
+    if ((${I2C_INSTANCE_NAME?lower_case}MasterObj.callback != NULL) && (isScanInProgress == false))
     {
         uintptr_t context = ${I2C_INSTANCE_NAME?lower_case}MasterObj.context;
 

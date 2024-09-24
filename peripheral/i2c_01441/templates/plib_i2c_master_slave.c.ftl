@@ -1,15 +1,15 @@
 /*******************************************************************************
   Inter-Integrated Circuit (I2C) Library
-  Header File
+  Source File
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_${I2C_INSTANCE_NAME?lower_case}_master_slave_common.h
+    plib_${I2C_INSTANCE_NAME?lower_case}_master_slave.c
 
   Summary:
-    I2C PLIB Common Implementation file
+    I2C PLIB Master Slave Common Implementation file
 
   Description:
     This file defines the interface to the I2C peripheral library.
@@ -47,40 +47,53 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
-#ifndef PLIB_${I2C_INSTANCE_NAME}_MASTER_SLAVE_COMMON_H
-#define PLIB_${I2C_INSTANCE_NAME}_MASTER_SLAVE_COMMON_H
-
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include "master/plib_${I2C_INSTANCE_NAME?lower_case}_master.h"
-#include "slave/plib_${I2C_INSTANCE_NAME?lower_case}_slave.h"
+#include "device.h"
+<#if core.CoreSysIntFile == true>
+#include "interrupts.h"
+</#if>
+#include "plib_${I2C_INSTANCE_NAME?lower_case}_master_slave.h"
+#include "peripheral/i2c/master/plib_${I2C_INSTANCE_NAME?lower_case}_master_local.h"
+#include "peripheral/i2c/slave/plib_${I2C_INSTANCE_NAME?lower_case}_slave_local.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files
+// Section: Global Data
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
+void ${I2C_INSTANCE_NAME}_Initialize(void)
+{
+    /* Turn off the I2C module */
+    ${I2C_INSTANCE_NAME}CONCLR = _${I2C_INSTANCE_NAME}CON_ON_MASK;
+    
+    ${I2C_INSTANCE_NAME}_MasterInitialize();
+    
+    ${I2C_INSTANCE_NAME}_SlaveInitialize();
+    
+<#if I2C_SIDL == true>
+    ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_SIDL_MASK;
+</#if>
 
-void ${I2C_INSTANCE_NAME}_Initialize(void);
+<#if I2C_DISSLW == true>
+    ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_DISSLW_MASK;
+</#if>
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
-
-    extern "C" {
-
-#endif
-// DOM-IGNORE-END
-
-
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+<#if I2C_SMEN == true>
+    ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_SMEN_MASK;
+</#if>
+    
+    /* Turn on the I2C module */
+    ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_ON_MASK;
 }
-#endif
-// DOM-IGNORE-END
 
-#endif /* PLIB_${I2C_INSTANCE_NAME}_MASTER_SLAVE_COMMON_H */
+void __attribute__((used)) ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)
+{
+    /* Clear the bus collision error status bit */
+    ${I2C_INSTANCE_NAME}STATCLR = _${I2C_INSTANCE_NAME}STAT_BCL_MASK;
+
+    /* ACK the bus interrupt */
+    ${I2C_MASTER_IFS_REG}CLR = _${I2C_MASTER_IFS_REG}_${I2C_BUS_COLLISION_INT_FLAG_BIT_NAME}_MASK;
+    
+    ${I2C_INSTANCE_NAME}_MasterBUS_InterruptHandler();
+    
+    ${I2C_INSTANCE_NAME}_SlaveBUS_InterruptHandler();
+}

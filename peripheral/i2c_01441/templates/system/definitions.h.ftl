@@ -3,5 +3,5 @@
 <#elseif I2C_OPERATING_MODE = "Slave">
 #include "peripheral/i2c/slave/plib_${I2C_INSTANCE_NAME?lower_case}_slave.h"
 <#else>
-#include "peripheral/i2c/plib_${I2C_INSTANCE_NAME?lower_case}_master_slave_common.h"
+#include "peripheral/i2c/plib_${I2C_INSTANCE_NAME?lower_case}_master_slave.h"
 </#if>
