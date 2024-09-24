@@ -170,7 +170,7 @@ void CLOCK_Initialize( void )
      BLE_REGS->BLE_DPLL_RG2 |= 0x02U;
 
     // set PLL_enable
-    BLE_REGS->BLE_DPLL_RG2 &= (uint16_t) (~(0x02U));
+    BLE_REGS->BLE_DPLL_RG2 &= ((uint8_t)~(0x02U));
 
     // Set MISC[24]=0, CLKGEN_PLLRST = 0
     CFG_REGS->CFG_MISCSTAT  &= 0x00FFFFFFU;
