@@ -41,6 +41,7 @@
 *******************************************************************************/
 #include "plib_${SMC_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
+#include "interrupts.h"
 #include <stddef.h>         // NULL
 
 <#assign SFR_CCFG_EBICSA_EBI_CS = "SFR_CCFG_EBICSA_EBI_CS" + SMC_NAND_CS_NUM + "A">
@@ -253,7 +254,7 @@ uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect)
 
 // PMECC =======================================================================
 <#if PMECC_IER_ERRIE == true>
-    <#lt>PMECC_CALLBACK_OBJECT ${PMECC_INSTANCE_NAME?lower_case}CallbackObj;
+    <#lt>volatile static PMECC_CALLBACK_OBJECT ${PMECC_INSTANCE_NAME?lower_case}CallbackObj;
 
     <#lt>void ${PMECC_INSTANCE_NAME}_CallbackRegister( PMECC_CALLBACK callback, uintptr_t context )
     <#lt>{
@@ -266,8 +267,9 @@ uint32_t ${SMC_INSTANCE_NAME}_DataAddressGet(uint8_t chipSelect)
     <#lt>    uintptr_t context_var;
     <#lt>    // Capture and clear interrupt status
     <#lt>    uint32_t interruptStatus = ${PMECC_INSTANCE_NAME}_REGS->PMECC_ISR;
-
-    <#lt>    if( interruptStatus && (${PMECC_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL) )
+	
+    <#lt>    bool pmecc_callback = (${PMECC_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL);
+    <#lt>    if( (interruptStatus != 0U) && pmecc_callback )
     <#lt>    {
     <#lt>        context_var = ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.context;
     <#lt>        ${PMECC_INSTANCE_NAME?lower_case}CallbackObj.callback(context_var , interruptStatus );
