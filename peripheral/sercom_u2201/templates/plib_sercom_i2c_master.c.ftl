@@ -852,7 +852,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_BusScan(uint16_t start_addr, uint16_t end_addr,
         return false;
     }
 
-    if (pDevList == NULL)
+    if (pDevicesList == NULL)
     {
         return false;
     }
@@ -900,7 +900,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_BusScan(uint16_t start_addr, uint16_t end_addr,
         }
         </#if>
 
-        while ((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG & SERCOM_I2CM_INTFLAG_MB_Msk) == 0)
+        while ((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG & SERCOM_I2CM_INTFLAG_MB_Msk) == 0U)
         {
             /* Wait for the address transfer to complete */
         }
@@ -911,17 +911,17 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_BusScan(uint16_t start_addr, uint16_t end_addr,
             <#if (I2C_ADDR_TENBITEN?? && I2C_ADDR_TENBITEN = true)>
             if (dev_addr > 0x007FU)
             {
-                ((uint16_t*)&pDevList)[nDevFound] = dev_addr;
+                ((uint16_t*)&pDevicesList)[nDevFound] = dev_addr;
             }
             else
             {
-                pDevList[nDevFound] = dev_addr;
+                pDevList[nDevFound] = (uint8_t)dev_addr;
             }
             <#else>
-            pDevList[nDevFound] = dev_addr;
+            pDevList[nDevFound] = (uint8_t)dev_addr;
             </#if>
 
-            nDevFound += 1;
+            nDevFound += 1U;
         }
 
         /* Issue stop condition */
