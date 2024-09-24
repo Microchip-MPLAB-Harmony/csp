@@ -64,8 +64,8 @@ extern "C" {
 
 void ${DAC_INSTANCE_NAME}_Initialize (void);
 void ${DAC_INSTANCE_NAME}_DataWrite (uint8_t data);
-void ${DAC_INSTANCE_NAME}_Enable ();
-void ${DAC_INSTANCE_NAME}_Disable ();
+void ${DAC_INSTANCE_NAME}_Enable (void);
+void ${DAC_INSTANCE_NAME}_Disable (void);
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 }
