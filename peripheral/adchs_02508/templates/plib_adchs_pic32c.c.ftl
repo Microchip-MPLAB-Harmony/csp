@@ -326,7 +326,7 @@ void ${ADCHS_INSTANCE_NAME}_Comparator${i}CallbackRegister(ADCHS_DC_CALLBACK cal
 <#else>
 bool ${ADCHS_INSTANCE_NAME}_Comparator${i}StatusGet(void)
 {
-    return (ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON${i}_DCMPED_Msk);
+    return ((ADCHS_REGS->ADCHS_ADCCMPCON${i} & ADCHS_ADCCMPCON${i}_DCMPED_Msk) != 0U);
 }
 </#if>
 
@@ -351,7 +351,7 @@ void ${ADCHS_INSTANCE_NAME}_Filter${i}CallbackRegister(ADCHS_DF_CALLBACK callbac
 <#else>
 bool ${ADCHS_INSTANCE_NAME}_Filter${i}IsReady(void)
 {
-    return ADCHS_REGS->ADCHS_ADCFLTR${i} & ADCHS_ADCFLTR${i}_AFIF_Msk;
+    return ((ADCHS_REGS->ADCHS_ADCFLTR${i} & ADCHS_ADCFLTR${i}_AFIF_Msk) != 0U);
 }
 </#if>
 </#if>
