@@ -152,9 +152,9 @@ void CLOCK_Initialize( void )
     {
         /* Nothing to do */
     }
-    CFG_REGS->CFG_SYSKEY = 0x00000000; // Write junk to lock it if it is already unlocked
-    CFG_REGS->CFG_SYSKEY = 0xAA996655;
-    CFG_REGS->CFG_SYSKEY = 0x556699AA;
+    CFG_REGS->CFG_SYSKEY = 0x00000000U; // Write junk to lock it if it is already unlocked
+    CFG_REGS->CFG_SYSKEY = 0xAA996655U;
+    CFG_REGS->CFG_SYSKEY = 0x556699AAU;
     CRU_REGS->CRU_OSCCON = 0x200U;// switch to XO
 
     //Enable oscillator switch from COSC to NOSC
