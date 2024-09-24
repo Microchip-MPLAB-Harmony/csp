@@ -43,7 +43,7 @@
 // Section: SDRAMC Implementation
 // *****************************************************************************
 // *****************************************************************************
-void SW_DelayUs(uint32_t delay)
+static void SW_DelayUs(uint32_t delay)
 {
     uint32_t i, count;
 
