@@ -71,7 +71,7 @@ bool ${EFC_INSTANCE_NAME}_SectorErase( uint32_t address )
     <#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >
     if (DATA_CACHE_IS_ENABLED() != 0U)
     {
-        DCACHE_INVALIDATE_BY_ADDR((void*)address, (int32_t)${EFC_INSTANCE_NAME}_SECTORSIZE);
+        DCACHE_INVALIDATE_BY_ADDR((uint32_t*)address, (int32_t)${EFC_INSTANCE_NAME}_SECTORSIZE);
     }
     </#if>
 
@@ -110,7 +110,7 @@ bool ${EFC_INSTANCE_NAME}_PageBufferWrite( uint32_t *data, const uint32_t addres
     <#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >
     if (DATA_CACHE_IS_ENABLED() != 0U)
     {
-        DCACHE_CLEAN_BY_ADDR((void*)address, (int32_t)${EFC_INSTANCE_NAME}_PAGESIZE);
+        DCACHE_CLEAN_BY_ADDR((uint32_t*)address, (int32_t)${EFC_INSTANCE_NAME}_PAGESIZE);
     }
     </#if>
 
@@ -159,7 +159,7 @@ bool ${EFC_INSTANCE_NAME}_PageWrite( uint32_t *data, uint32_t address )
     <#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >
     if (DATA_CACHE_IS_ENABLED() != 0U)
     {
-        DCACHE_CLEAN_BY_ADDR((void*)address, (int32_t)${EFC_INSTANCE_NAME}_PAGESIZE);
+        DCACHE_CLEAN_BY_ADDR((uint32_t*)address, (int32_t)${EFC_INSTANCE_NAME}_PAGESIZE);
     }
     </#if>
 
@@ -191,7 +191,7 @@ bool ${EFC_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address )
     <#if core.CoreArchitecture != "CORTEX-M4" && core.CoreArchitecture != "CORTEX-M33" && core.DATA_CACHE_ENABLE?? && core.DATA_CACHE_ENABLE == true >
     if (DATA_CACHE_IS_ENABLED() != 0U)
     {
-        DCACHE_CLEAN_BY_ADDR((void*)address, (int32_t)16);
+        DCACHE_CLEAN_BY_ADDR((uint32_t*)address, (int32_t)16);
     }
     </#if>
 
