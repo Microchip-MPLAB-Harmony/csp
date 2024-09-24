@@ -72,13 +72,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 /* TTB Section Descriptor: Section Base Address */
 #define TTB_SECT_ADDR(x)           ((x) & 0xFFF00000U)
-<#if DATA_CACHE_ENABLE>
+
 /* L1 data cache line size, Number of ways and Number of sets */
 #define L1_DATA_CACHE_BYTES        32U
 #define L1_DATA_CACHE_WAYS         4U
 #define L1_DATA_CACHE_SETS         256U
 #define L1_DATA_CACHE_SETWAY(set, way) (((set) << 5) | ((way) << 30))
-</#if>
+
 
 __ALIGNED(16384) static uint32_t trns_tbl[4096];
 
@@ -122,7 +122,6 @@ static void mmu_enable(void)
     }
 }
 
-<#if INSTRUCTION_CACHE_ENABLE>
 void icache_InvalidateAll(void)
 {
     cp15_icache_invalidate();
@@ -148,9 +147,7 @@ void icache_Disable(void)
         icache_InvalidateAll();
     }
 }
-</#if>
 
-<#if DATA_CACHE_ENABLE>
 void dcache_InvalidateAll(void)
 {
     uint32_t set, way;
@@ -262,8 +259,6 @@ void dcache_Disable(void)
     }
 }
 
-</#if>
-
 // *****************************************************************************
 /* Function:
     void MMU_Initialize(void);
@@ -287,6 +282,13 @@ void dcache_Disable(void)
 void MMU_Initialize(void)
 {
     uint32_t addr;
+
+    <#if !INSTRUCTION_CACHE_ENABLE>
+    icache_Disable();
+    </#if>
+    <#if !DATA_CACHE_ENABLE>
+    dcache_Disable();
+    </#if>
 
     /* Reset table entries */
     for (addr = 0U; addr < 4096U; addr++) {
