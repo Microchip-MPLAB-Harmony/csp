@@ -109,9 +109,9 @@ void ${RTCC_INSTANCE_NAME}_TimeGet(struct tm  *Time );
 
 bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarmFreq );
 
+<#if RTCC_INTERRUPT_MODE == true>
 void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTCC_CALLBACK callback, uintptr_t context );
 
-<#if RTCC_INTERRUPT_MODE == true>
 void ${RTCC_INSTANCE_NAME}_InterruptEnable( RTCC_INT_MASK interrupt );
 
 void ${RTCC_INSTANCE_NAME}_InterruptDisable( RTCC_INT_MASK interrupt );
