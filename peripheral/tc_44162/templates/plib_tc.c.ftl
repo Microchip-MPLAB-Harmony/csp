@@ -226,7 +226,8 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
 <#else>
 TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 {
-    return (TC_QUADRATURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK);
+    uint32_t result = TC1_REGS->TC_QISR & (uint32_t) TC_QUADRATURE_STATUS_MSK;
+    return (TC_QUADRATURE_STATUS)result;
 }
 </#if>
 </#if> <#-- QUADRATURE -->
