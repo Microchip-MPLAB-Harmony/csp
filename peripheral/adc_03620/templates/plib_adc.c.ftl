@@ -628,13 +628,13 @@ void __attribute__((used)) ${ADC_CORE_GLOBAL_INT_HANDLER_NAME}_InterruptHandler(
     status = ${ADC_INSTANCE_NAME}_REGS->ADC_CTLINTFLAG;
 
     /* Disable VREFRDY and CRRDYn interrupts to prevent continuous firing of ISR */
-    if (status & (ADC_CTLINTFLAG_VREFRDY_Msk | ADC_CTLINTFLAG_CRRDY_Msk))
+    if ((status & (ADC_CTLINTFLAG_VREFRDY_Msk | ADC_CTLINTFLAG_CRRDY_Msk)) != 0U)
     {
         ${ADC_INSTANCE_NAME}_REGS->ADC_CTLINTENCLR = status & (ADC_CTLINTFLAG_VREFRDY_Msk | ADC_CTLINTFLAG_CRRDY_Msk);
     }
 
     /* ACK VREFUPD, PFFUNF and PFFOVM interrupts by clearing (writing 1) the interrupt flags */
-    if (status & (ADC_CTLINTFLAG_VREFUPD_Msk | ADC_CTLINTFLAG_PFFUNF_Msk | ADC_CTLINTFLAG_PFFOVF_Msk))
+    if ((status & (ADC_CTLINTFLAG_VREFUPD_Msk | ADC_CTLINTFLAG_PFFUNF_Msk | ADC_CTLINTFLAG_PFFOVF_Msk)) != 0U)
     {
         ${ADC_INSTANCE_NAME}_REGS->ADC_CTLINTFLAG = status & (ADC_CTLINTFLAG_VREFUPD_Msk | ADC_CTLINTFLAG_PFFUNF_Msk | ADC_CTLINTFLAG_PFFOVF_Msk);
     }
