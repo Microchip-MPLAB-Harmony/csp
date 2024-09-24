@@ -196,12 +196,13 @@ def instantiateComponent(sdmmcComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     sdmmcHeaderFile = sdmmcComponent.createFileSymbol("SDMMC_HEADER", None)
-    sdmmcHeaderFile.setSourcePath("../peripheral/sdmmc_44002/templates/plib_sdmmc_common.h")
+    sdmmcHeaderFile.setSourcePath("../peripheral/sdmmc_44002/templates/plib_sdmmc_common.h.ftl")
     sdmmcHeaderFile.setOutputName("plib_sdmmc_common.h")
     sdmmcHeaderFile.setDestPath("peripheral/sdmmc/")
     sdmmcHeaderFile.setProjectPath("config/" + configName + "/peripheral/sdmmc/")
     sdmmcHeaderFile.setType("HEADER")
     sdmmcHeaderFile.setOverwrite(True)
+    sdmmcHeaderFile.setMarkup(True)
 
     sdmmcHeader1File = sdmmcComponent.createFileSymbol("SDMMC_HEADER1", None)
     sdmmcHeader1File.setSourcePath("../peripheral/sdmmc_44002/templates/plib_sdmmc.h.ftl")
