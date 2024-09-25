@@ -335,7 +335,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
             }
             else
             {
-                if (rxSize > 0)
+                if (rxSize > 0U)
                 {
                     /* txSize is 0. Need to use the dummy data buffer for transmission.
                      * Find out the max data that can be received, given the limited size of the dummy data buffer.
@@ -572,7 +572,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
         }
         else
         {
-            if (rxSize > 0)
+            if (rxSize > 0U)
             {
                 /* txSize is 0. Need to use the dummy data buffer for transmission.
                  * Find out the max data that can be received, given the limited size of the dummy data buffer.
@@ -779,7 +779,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_ERRCLR_Msk;
 
-    if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount > 0)
+    if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount > 0U)
     {
         /* txPending is 0. Need to use the dummy data buffer for transmission.
          * Find out the max data that can be received, given the limited size of the dummy data buffer.
@@ -795,7 +795,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 
         setupDMA(dummyDataBuffer,&((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[index],size);
     }
-    else if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount > 0)
+    else if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount > 0U)
     {
         /* rxSize is 0. Need to use the dummy data buffer for reception.
          * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
@@ -981,7 +981,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_PTCR = FLEX_PTCR_ERRCLR_Msk;
 
-    if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount > 0)
+    if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount > 0U)
     {
         /* txPending is 0. Need to use the dummy data buffer for transmission.
          * Find out the max data that can be received, given the limited size of the dummy data buffer.
@@ -997,7 +997,7 @@ void __attribute__((used)) ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 
         setupDMA(dummyDataBuffer,&((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[index],size);
     }
-    else if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount > 0)
+    else if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount > 0U)
     {
         /* rxSize is 0. Need to use the dummy data buffer for reception.
          * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
