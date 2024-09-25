@@ -261,6 +261,9 @@ def T2CONcombineValues(symbol, event):
         maskvalue = tmrBitField_T2CON_TCS.getAttribute("mask")
         t2conValue = t2conValue & (~int(maskvalue, 0))
         t2conValue = t2conValue | (tmrSrcSelValue << 1)
+        if tmrSrcSelValue == True :    #External clock input
+            gatemask = tmrBitField_T2CON_TGATE.getAttribute("mask")
+            t2conValue = t2conValue & (~int(gatemask, 0))
     symbol.setValue(t2conValue, 2)
 
 def PreScaler_ValueUpdate(symbol, event):
