@@ -209,7 +209,7 @@ def createDMAChannelVectorDict():
     for id in range(0, len(vectorValues)):
         if vectorValues[id].getAttribute("module-instance") == "DMAC":
             dmaVectorNameList.append(vectorValues[id].getAttribute("name"))
-            
+
     for n in dmaVectorNameList:
         if "OTHER" not in n:
             name = n.replace("DMAC_", "")
@@ -233,7 +233,7 @@ def createDMAChannelVectorDict():
         if "OTHER" in n:
             for y in range(highest_ch_num + 1, dmaChannelCount):
                 dmaChannelVectorDict[str(y)] = n
-    
+
     return dmaChannelVectorDict
 
 def updateInterruptLogic(symbol, event):
@@ -358,7 +358,7 @@ dmacInstanceName.setVisible(False)
 
 dmacChannelNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]/instance@[name=\""+dmacInstanceName.getValue()+"\"]/parameters/param@[name=\"CH_NUM\"]")
 if dmacChannelNode is None:
-    dmacChannelNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]/instance@[name=\""+dmacInstanceName.getValue()+"\"]/parameters/param@[name=\"DMA_CH_NUM\"]") 
+    dmacChannelNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]/instance@[name=\""+dmacInstanceName.getValue()+"\"]/parameters/param@[name=\"DMA_CH_NUM\"]")
 dmacChannelCount = int(dmacChannelNode.getAttribute("value"))
 
 dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
@@ -381,7 +381,9 @@ dmacIntLines = coreComponent.createIntegerSymbol("DMA_INT_LINES", dmacMenu)
 dmacIntLines.setDefaultValue(dmacNumIntLines)
 dmacIntLines.setVisible(False)
 
-if dmacNumIntLines > 1:
+multi_iqrn_sym_exists = Database.getSymbolValue("core", dmacInstanceName.getValue() + "_MULTI_IRQn")
+
+if dmacNumIntLines > 1 and multi_iqrn_sym_exists == None:
     nvic_multi_vector = coreComponent.createBooleanSymbol(dmacInstanceName.getValue() + "_MULTI_IRQn", None)
     nvic_multi_vector.setDefaultValue(True)
     nvic_multi_vector.setVisible(False)
@@ -566,12 +568,13 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacSym_BTCTRL_BEATSIZE.setOutputMode("Key")
     dmacSym_BTCTRL_BEATSIZE.setDisplayMode("Description")
     dmacSym_BTCTRL_BEATSIZE.setDependencies(dmacTriggerLogic, ["DMAC_CHCTRLA_TRIGSRC_CH_"+ str(channelID)])
-    
-    # DMA channel interrupt number - needed by core drivers to disable during critical section
-    DMAC_ChannelX_VectorEnum = coreComponent.createStringSymbol(dmacInstanceName.getValue() + "_CHANNEL" + str(channelID) + "_INT_SRC", dmacChannelEnable)
-    DMAC_ChannelX_VectorEnum.setLabel("DMAC Channel X interrupt Vector Number Enum")    
-    DMAC_ChannelX_VectorEnum.setDefaultValue(dmaChannelVectorDict[str(channelID)] + "_IRQn")
-    DMAC_ChannelX_VectorEnum.setVisible(False)
+
+    if dmacNumIntLines > 1 and multi_iqrn_sym_exists == None:
+        # DMA channel interrupt number - needed by core drivers to disable during critical section
+        DMAC_ChannelX_VectorEnum = coreComponent.createStringSymbol(dmacInstanceName.getValue() + "_CHANNEL" + str(channelID) + "_INT_SRC", dmacChannelEnable)
+        DMAC_ChannelX_VectorEnum.setLabel("DMAC Channel X interrupt Vector Number Enum")
+        DMAC_ChannelX_VectorEnum.setDefaultValue(dmaChannelVectorDict[str(channelID)] + "_IRQn")
+        DMAC_ChannelX_VectorEnum.setVisible(False)
 
     if channelID < numUsers:
         dmaEVSYSMenu = coreComponent.createMenuSymbol("DMAC_EVSYS_MENU"+str(channelID), dmacChannelEnable)
