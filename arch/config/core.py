@@ -28,9 +28,9 @@ global getAppPlacementParams
 
 coreSymListOfSupportedMethods = [ "setValue", "setReadOnly", "setEnabled", "setVisible", "clearValue"]
 
-FlashNames          = ["FLASH", "IFLASH", "IFLASH0", "FCR_PFM"]
+FlashNames          = ["FLASH", "IFLASH", "IFLASH0", "FCR_PFM", "FLASH_PFM"]
 #BootFlashDict      = {"bfm_region_name":[list of corresponding pfm regions], ..}
-BootFlashDict       = {"FCR_BFM": ["FCR_PFM"], "BOOT_FLASH": ["FLASH"]}
+BootFlashDict       = {"FCR_BFM": ["FCR_PFM"], "BOOT_FLASH": ["FLASH"], "FLASH_BFM": ["FLASH_PFM"]}
 vtableRegionList    = []
 
 flash_start         = 0
