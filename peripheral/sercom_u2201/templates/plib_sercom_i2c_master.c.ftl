@@ -852,7 +852,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_BusScan(uint16_t start_addr, uint16_t end_addr,
         return false;
     }
 
-    if (pDevicesList == NULL)
+    if ((pDevicesList == NULL) || (nDevicesFound == NULL))
     {
         return false;
     }
@@ -875,16 +875,28 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_BusScan(uint16_t start_addr, uint16_t end_addr,
         <#if (I2C_ADDR_TENBITEN?? && I2C_ADDR_TENBITEN = true)>
         if (dev_addr > 0x007FU)
         {
-            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint32_t)dev_addr << 1U) | SERCOM_I2CM_ADDR_TENBITEN_Msk;
+            <#if I2CM_ADDR_SIZE == 1>
+                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint8_t)dev_addr << 1U) | SERCOM_I2CM_ADDR_TENBITEN_Msk;
+            <#else>
+                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint32_t)dev_addr << 1U) | SERCOM_I2CM_ADDR_TENBITEN_Msk;
+            </#if>
         }
         else
         {
             /* Put the 7-bit device address on the bus with WR bit */
-            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint32_t)dev_addr << 1U);
+            <#if I2CM_ADDR_SIZE == 1>
+                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint8_t)dev_addr << 1U);
+            <#else>
+                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint32_t)dev_addr << 1U);
+            </#if>
         }
         <#else>
         /* Put the 7-bit device address on the bus with WR bit */
-        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint32_t)dev_addr << 1U);
+            <#if I2CM_ADDR_SIZE == 1>
+            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint8_t)dev_addr << 1U);
+            <#else>
+            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ((uint32_t)dev_addr << 1U);
+            </#if>
         </#if>
 
         /* Wait for synchronization */
