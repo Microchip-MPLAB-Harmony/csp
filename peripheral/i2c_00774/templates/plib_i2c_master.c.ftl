@@ -839,7 +839,7 @@ bool ${I2C_API_PREFIX}BusScan(uint16_t start_addr, uint16_t end_addr, void* pDev
         return false;
     }
 
-    if ((pDevList == NULL) || (nDevicesFound == NULL))
+    if ((pDevicesList == NULL) || (nDevicesFound == NULL))
     {
         return false;
     }
@@ -865,7 +865,7 @@ bool ${I2C_API_PREFIX}BusScan(uint16_t start_addr, uint16_t end_addr, void* pDev
             /* No error and device responded with an ACK. Add the device to the list of found devices. */
             if (dev_addr > 0x007FU)
             {
-                ((uint16_t*)&pDevList)[nDevFound] = dev_addr;
+                ((uint16_t*)&pDevicesList)[nDevFound] = dev_addr;
             }
             else
             {
