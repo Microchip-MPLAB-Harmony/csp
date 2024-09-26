@@ -1,4 +1,4 @@
-<#if RAM_INIT?? && RAM_INIT == "true">
+<#if RAM_INIT?? && RAM_INIT == true>
 
 __STATIC_INLINE void  __attribute__((optimize("-O1"))) __attribute__((always_inline)) RAM_Initialize(void)
 {

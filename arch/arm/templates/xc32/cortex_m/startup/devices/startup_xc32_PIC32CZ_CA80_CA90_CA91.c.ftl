@@ -1,4 +1,4 @@
-<#if RAM_INIT?? && RAM_INIT == "true">
+<#if RAM_INIT?? && RAM_INIT == true>
 #ifndef RAM_START_ADDR
 #define RAM_START_ADDR FLEXRAM_ADDR
 #endif
