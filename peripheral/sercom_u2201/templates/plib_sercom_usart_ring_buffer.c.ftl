@@ -278,7 +278,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
         }
         </#if>
 
-        f_baudValue = (float)clkFrequency/(sampleCount * (float)serialSetup->baudRate);
+        f_baudValue = (float)clkFrequency/((float)sampleCount * (float)serialSetup->baudRate);
         f_temp = ((f_baudValue - ((float)((int)f_baudValue))) * 8.0f);
         fractionPart = ((uint32_t)f_temp & 0xFFU);
         baudValue = (uint32_t)f_baudValue;
