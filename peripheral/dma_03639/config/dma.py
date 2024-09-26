@@ -36,6 +36,7 @@ global updateDMAInterrupt
 global enableAllDMAPriorityInterrupts
 global createPeripheralTrigger_IDMap
 global updateDMAInterruptWarringStatus
+global multi_iqrn_sym_exists
 
 global DMACfilesArray
 DMACfilesArray = []
@@ -251,6 +252,7 @@ def DMAInterruptConfig(coreComponent,dmaMenu):
     global enableAllDMAPriorityInterrupts
     global updateDMAInterruptWarringStatus
     global dmaInstanceName
+    global multi_iqrn_sym_exists
     InterruptVectorUpdate = []
     global dmacInterruptVectorSecurity
 
@@ -267,7 +269,9 @@ def DMAInterruptConfig(coreComponent,dmaMenu):
     dmaNumIntPriorities.setDefaultValue(len(dmaVectorNameList))
     dmaNumIntPriorities.setVisible(False)
 
-    if len(dmaVectorNameList) > 1:
+    multi_iqrn_sym_exists = Database.getSymbolValue("core", dmaInstanceName.getValue() + "_MULTI_IRQn")
+
+    if len(dmaVectorNameList) > 1 and multi_iqrn_sym_exists == None:
         nvic_multi_vector = coreComponent.createBooleanSymbol(dmaInstanceName.getValue() + "_MULTI_IRQn", None)
         nvic_multi_vector.setDefaultValue(True)
         nvic_multi_vector.setVisible(False)
@@ -843,12 +847,13 @@ for channelID in range(0, channelCount):
     CHPDAT_PIGN_Config.setDependencies(updatePatternMatchLength, ["DMA_CHCTRLB_PIGNEN_CH_" + str(channelID)])
 
     # DMA channel interrupt number - needed by core drivers to disable during critical section
-    DMA_ChannelX_VectorEnum = coreComponent.createStringSymbol(dmaInstanceName.getValue() + "_CHANNEL" + str(channelID) + "_INT_SRC", dmaChannelEnable)
-    DMA_ChannelX_VectorEnum.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:%NOREGISTER%")
-    DMA_ChannelX_VectorEnum.setLabel("DMA Channel X interrupt Vector Number Enum")
-    DMA_ChannelX_VectorEnum.setDefaultValue(dmaInstanceName.getValue() + "_PRI" + str(int (CHCTRLB_PRI_Config.getSelectedKey().split("_")[1]) - 1) + "_IRQn")
-    DMA_ChannelX_VectorEnum.setDependencies(onChannelPriorityChange, ["DMA_CHCTRLB_PRI_CH_" + str(channelID)])
-    DMA_ChannelX_VectorEnum.setVisible(False)
+    if len(dmaVectorNameList) > 1 and multi_iqrn_sym_exists == None:
+        DMA_ChannelX_VectorEnum = coreComponent.createStringSymbol(dmaInstanceName.getValue() + "_CHANNEL" + str(channelID) + "_INT_SRC", dmaChannelEnable)
+        DMA_ChannelX_VectorEnum.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:%NOREGISTER%")
+        DMA_ChannelX_VectorEnum.setLabel("DMA Channel X interrupt Vector Number Enum")
+        DMA_ChannelX_VectorEnum.setDefaultValue(dmaInstanceName.getValue() + "_PRI" + str(int (CHCTRLB_PRI_Config.getSelectedKey().split("_")[1]) - 1) + "_IRQn")
+        DMA_ChannelX_VectorEnum.setDependencies(onChannelPriorityChange, ["DMA_CHCTRLB_PRI_CH_" + str(channelID)])
+        DMA_ChannelX_VectorEnum.setVisible(False)
 
 ####################################################################################################
 
