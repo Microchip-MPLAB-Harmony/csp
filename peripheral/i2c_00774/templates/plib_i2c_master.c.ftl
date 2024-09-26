@@ -869,7 +869,7 @@ bool ${I2C_API_PREFIX}BusScan(uint16_t start_addr, uint16_t end_addr, void* pDev
             }
             else
             {
-                pDevList[nDevFound] = dev_addr;
+                pDevList[nDevFound] = (uint8_t)dev_addr;
             }
 
             nDevFound += 1;
