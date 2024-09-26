@@ -1942,8 +1942,9 @@ def instantiateComponent(adchsComponent):
             adchsCONMenu[signalID] = adchsComponent.createBooleanSymbol(
                 "AN"+str(signalID), menu)
             signalLabel = "Configure Analog Input AN" + str(signalID)
-            if ("AIN"+str(signalID) in ADC_Input_Signals_Type_Map) and (ADC_Input_Signals_Type_Map["AIN"+str(signalID)] != "External"):
-                signalLabel += " (" + ADC_Input_Signals_Type_Map["AIN"+str(signalID)] + ")"
+            ain_sig = "AIN"+str(signalID)
+            if (ain_sig in ADC_Input_Signals_Type_Map) and (ADC_Input_Signals_Type_Map[ain_sig] != "External"):
+                signalLabel += " (" + ADC_Input_Signals_Type_Map[ain_sig] + ")"
             adchsCONMenu[signalID].setLabel(signalLabel)
 
             RegisterName = RegisterBaseName_ADCIMCON + str((signalID/16)+1)
