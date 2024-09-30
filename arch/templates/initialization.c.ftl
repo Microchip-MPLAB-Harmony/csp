@@ -164,7 +164,7 @@ void SYS_Initialize ( void* data )
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS1}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE1}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS}
-<#if HarmonyCore?? && HarmonyCore.ENABLE_DRV_COMMON == true >
+<#if LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS?has_content || LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES?has_content || LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE?has_content>
     /* MISRAC 2012 deviation block start */
     /* Following MISRA-C rules deviated in this block  */
     /* MISRA C-2012 Rule 11.3 - Deviation record ID - H3_MISRAC_2012_R_11_3_DR_1 */
