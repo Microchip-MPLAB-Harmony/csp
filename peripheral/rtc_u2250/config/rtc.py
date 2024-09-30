@@ -1222,7 +1222,7 @@ def instantiateComponent(rtcComponent):
         rtcMode1ReferenceKeyValue = rtcMode1ReferenceValues[index].getAttribute(
             "value")
         rtcSymMode1_CTRLA_PRESCALER.addKey(
-            rtcMode1ReferenceKeyName, rtcMode1ReferenceKeyValue, rtcMode1ReferenceKeyDescription)
+            rtcMode1ReferenceKeyName, hex(int(rtcMode1ReferenceKeyValue, 0)), rtcMode1ReferenceKeyDescription)
 
     rtcSymMode1_CTRLA_PRESCALER.setDefaultValue(rtcMode1ReferenceDefaultValue)
     rtcSymMode1_CTRLA_PRESCALER.setOutputMode("Value")
