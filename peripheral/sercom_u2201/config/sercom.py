@@ -27,6 +27,7 @@
 ###################################################################################################
 
 global sercomSymSPIRegName
+global sercomSymSPISlaveRegName
 global sercomSymUSARTRegName
 global SERCOMfilesArray
 global InterruptVectorSecurity
@@ -123,7 +124,7 @@ def getSERCOMSymbolValues(mode, signalId, padId):
                 ctrlATXPO.append(txpoValues[index].getAttribute("caption").replace(" ", ""))
 
             # print("getSERCOMSymbolValues : {}".format(ctrlATXPO))
-                
+
             if signalId == 'tx':
                 for index in range(len(ctrlATXPO)):
                     if "PAD[{}]=TxD".format(padId) in ctrlATXPO[index]:
@@ -136,7 +137,7 @@ def getSERCOMSymbolValues(mode, signalId, padId):
                         # print("getSERCOMSymbolValues found : {}".format("PAD[{}]=CTS".format(padId)))
                         symbolValue = index
                         break
-        
+
     elif mode =="SPI":
         if signalId == 'miso':
             symbolName = "SPI_DIPO"
@@ -151,7 +152,7 @@ def getSERCOMSymbolValues(mode, signalId, padId):
                 ctrlADOPO.append(dopoValues[index].getAttribute("caption").replace(" ", ""))
 
             # print("getSERCOMSymbolValues : {}".format(ctrlADOPO))
-                
+
             if signalId == 'mosi':
                 for index in range(len(ctrlADOPO)):
                     if "DOonPAD[{}]".format(padId) in ctrlADOPO[index]:
@@ -161,9 +162,9 @@ def getSERCOMSymbolValues(mode, signalId, padId):
         else:
             symbolName = ""
             symbolValue = ""
-            
+
     return (symbolName, symbolValue)
-    
+
 def handleMessage(messageID, args):
     global sercomSym_OperationMode
     global spiSym_Interrupt_Mode
@@ -293,7 +294,7 @@ def handleMessage(messageID, args):
         padId = pinCtrl.get("padId")
 
         (symbolName, symbolValue) = getSERCOMSymbolValues(mode, signalId, padId)
-        
+
         deviceNamespace = sercomInstanceName.getValue().lower()
         res = False
         if enable == True:
@@ -306,7 +307,7 @@ def handleMessage(messageID, args):
             result_dict = {"Result": "Success"}
         else:
             result_dict = {"Result": "Fail"}
-            
+
     return result_dict
 
 def onAttachmentConnected(source, target):
@@ -532,6 +533,7 @@ def instantiateComponent(sercomComponent):
     global InterruptVectorSecurity
     global sercomSymUSARTRegName
     global sercomSymSPIRegName
+    global sercomSymSPISlaveRegName
 
     InterruptVector = []
     InterruptHandler = []
@@ -553,6 +555,10 @@ def instantiateComponent(sercomComponent):
     sercomSymSPIRegName = sercomComponent.createStringSymbol("SERCOM_SPI_REG_NAME", None)
     sercomSymSPIRegName.setDefaultValue("SPI" if sercomSPIMMode == None else "SPIM")
     sercomSymSPIRegName.setVisible(False)
+
+    sercomSymSPISlaveRegName = sercomComponent.createStringSymbol("SERCOM_SPI_SLAVE_REG_NAME", None)
+    sercomSymSPISlaveRegName.setDefaultValue("SPI" if sercomSPIMMode == None else "SPIS")
+    sercomSymSPISlaveRegName.setVisible(False)
 
     sercomUSARTMMode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/mode@[name="USART_INT"]')
 
