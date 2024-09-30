@@ -259,7 +259,8 @@ isFlowControlSupported = False
 isRS485Supported = False
 isErrorInterruptSupported = False
 
-sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="CTRLA"]')
+sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="{0}",name="CTRLA"]'.format(sercomSymUSARTRegName.getValue()))
+
 sampleRateValue = sampleRateNode.getChildren()
 
 for index in range(len(sampleRateValue)):
