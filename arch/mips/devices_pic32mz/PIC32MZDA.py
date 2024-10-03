@@ -217,7 +217,7 @@ symbol.setVisible(False)
 
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")
-coreFPU.setDefaultValue(True)
+coreFPU.setDefaultValue(False)
 coreFPU.setReadOnly(True)
 coreFPU.setVisible(False)
 
