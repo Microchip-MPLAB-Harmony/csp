@@ -3,6 +3,38 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.20.0-E1
+
+### New Features
+
+- **New part support** - This **engineering release** adds support for
+  - PIC32CX-BZ6 and WBZ653 family of devices
+  - For demo applications, refer to PIC32CX-BZ6/WBZ653 family [csp apps](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz6_wbz6) and [core apps](https://github.com/Microchip-MPLAB-Harmony/core_apps_pic32cxbz6_wbz6) application repositories
+
+### Bug fixes
+
+- None
+
+### Known Issues
+
+-  None
+
+### Development Tools
+
+For PIC32CX-BZ6 and WBZ653 family of devices:
+- [MPLAB® X IDE v6.20](https://www.microchip.com/mplab/mplab-x-ide) or higher
+- [MPLAB® XC32 C/C++ Compiler v4.45](https://www.microchip.com/mplab/compilers)
+- MPLAB® X IDE plug-ins:
+    - MPLAB® Code Configurator 5.5.1 or higher
+
+For all other parts:
+
+- Same as v3.18.0
+
+### Notes
+
+-  None
+
 ## CSP Release v3.19.6
 
 ### New Features
