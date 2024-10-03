@@ -23,6 +23,7 @@
 import os
 global setDspLibParameters
 def setDspLibParameters(dspLibSym, compilerID):
+    cmsisPath = os.path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS_5")
     libCoreName = dspLibSym.getID().split("CMSIS_DSP_LIB_")[1]
     # For IAR compiler, M7 fp libraries are named differently
     if compilerID == 1:
@@ -30,7 +31,7 @@ def setDspLibParameters(dspLibSym, compilerID):
     compilerList = ["GCC", "IAR", "ARM"]
     prefixList   = ["libarm_", "iar_", "arm_"]
     suffixList   = ["_math.a", "_math.a", "_math.lib"]
-    cmsisRelPath = os.path.relpath(Variables.get("__CMSIS_PACK_DIR"), Module.getPath())
+    cmsisRelPath = os.path.relpath(cmsisPath, Module.getPath())
     libFileName = prefixList[compilerID] + libCoreName + suffixList[compilerID]
 
     sourcePath = os.path.join(cmsisRelPath, "CMSIS", "DSP", "Lib",compilerList[compilerID], libFileName)
@@ -47,7 +48,8 @@ def dspLibCallback(symbol, event):
 
 def instantiateComponent(cmsisComponent):
     import xml.etree.ElementTree as ET
-    pdscPath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "ARM.CMSIS.pdsc")
+    cmsisPath = os.path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS_5")
+    pdscPath = os.path.join(cmsisPath, "ARM.CMSIS.pdsc")
     cmsisReleaseInfo = ET.parse(pdscPath).getroot().find("releases/release")
 
     cmsisVersion = cmsisComponent.createCommentSymbol("CMSIS_VERSION", None)
@@ -96,7 +98,7 @@ def instantiateComponent(cmsisComponent):
             szSymbol = headerFileName.replace(".", "_").upper()
             headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
             headerFile.setRelative(False)
-            headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/Core/Include/" + headerFileName)
+            headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
             headerFile.setOutputName(headerFileName)
             headerFile.setMarkup(False)
             headerFile.setOverwrite(True)
@@ -110,7 +112,7 @@ def instantiateComponent(cmsisComponent):
                 #for Secure
                 headerFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
                 headerFile.setRelative(False)
-                headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/Core/Include/" + headerFileName)
+                headerFile.setSourcePath(cmsisPath + "/CMSIS/Core/Include/" + headerFileName)
                 headerFile.setOutputName(headerFileName)
                 headerFile.setMarkup(False)
                 headerFile.setOverwrite(True)
@@ -128,14 +130,16 @@ def instantiateComponent(cmsisComponent):
         #Enables cmsis-dsp
         cmsisDSPEnableSym = cmsisComponent.createBooleanSymbol("CMSIS_DSP_ENABLE", None)
         cmsisDSPEnableSym.setLabel("Enable CMSIS DSP")
+        # Disable support for CMSIS-DSP until migration to CMSIS-6
+        cmsisDSPEnableSym.setReadOnly(True)
         cmsisDSPEnableSym.setDescription("Copies cmsis-dsp files into the project and adds it into project path")
 
         # add dsp header files
-        cmsisDSPIncludePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "DSP", "Include")
+        cmsisDSPIncludePath = os.path.join(cmsisPath, "CMSIS", "DSP", "Include")
         for includePath, _, headerFiles in os.walk(cmsisDSPIncludePath):
             for headerFileName in headerFiles:
                 filePath = os.path.join(includePath, headerFileName).replace("\\", "/")
-                projPath = os.path.relpath(includePath, Variables.get("__CMSIS_PACK_DIR")).replace("\\", "/")
+                projPath = os.path.relpath(includePath, cmsisPath).replace("\\", "/")
                 szSymbol = headerFileName.replace(".", "_").upper()
                 headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
                 headerFile.setRelative(False)
@@ -246,10 +250,12 @@ def instantiateComponent(cmsisComponent):
         #Enables cmsis-nn
         cmsisNNEnableSym = cmsisComponent.createBooleanSymbol("CMSIS_NN_ENABLE", None)
         cmsisNNEnableSym.setLabel("Enable CMSIS NN")
+        # Disable support for CMSIS-DSP until migration to CMSIS-6
+        cmsisNNEnableSym.setReadOnly(True)
         cmsisNNEnableSym.setDescription("Copies cmsis Neural Network (NN) files into the project and adds it into project path")
 
         #Create Include file symbols
-        cmsisNNIncludePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "NN", "Include")
+        cmsisNNIncludePath = os.path.join(cmsisPath, "CMSIS", "NN", "Include")
         for headerFileName in  os.listdir(cmsisNNIncludePath):
             szSymbol = headerFileName.replace(".", "_").upper()
             headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
@@ -317,7 +323,7 @@ def instantiateComponent(cmsisComponent):
             cmsisNNXc32cppIncludeSetting.setSecurity("SECURE")
 
         #Create source file symbols
-        cmsisNNSourcePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "NN", "Source")
+        cmsisNNSourcePath = os.path.join(cmsisPath, "CMSIS", "NN", "Source")
         supportedExtension = ["c", "h", "s"]
         for root,_,files in os.walk(cmsisNNSourcePath):
             for sourceFileName in files:
@@ -363,7 +369,7 @@ def instantiateComponent(cmsisComponent):
             szSymbol = "CORE_A_{}_H".format(headerFileName[:-2].upper())
             headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
             headerFile.setRelative(False)
-            headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/Core_A/Include/" + headerFileName)
+            headerFile.setSourcePath(cmsisPath + "/CMSIS/Core_A/Include/" + headerFileName)
             headerFile.setOutputName(headerFileName)
             headerFile.setMarkup(False)
             headerFile.setOverwrite(True)
