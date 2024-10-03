@@ -175,7 +175,7 @@ void ${SUPC_INSTANCE_NAME}_Initialize(void)
                                                                       ${SUPC_MR_CORSMDIS?then('| SUPC_MR_CORSMDIS_Msk', '')}
                                                                       ${SUPC_MR_CORSMRSTEN?then('| SUPC_MR_CORSMRSTEN_Msk', '')}
                                                                       ${SUPC_MR_VREGDIS?then('', '| SUPC_MR_VREGDIS_Msk')}
-                                                                      ${SUPC_MR_CORSMM?then('', '| SUPC_MR_CORSMM_Msk')};</@compress>
+                                                                      ${SUPC_MR_CORSMM?then('| SUPC_MR_CORSMM_Msk', '')};</@compress>
 
 <#if SUPC_EMR_COREBGEN || SUPC_EMR_FULLGPBRC || SUPC_EMR_FLRSGPBR>
         <@compress single_line=true>${SUPC_INSTANCE_NAME}_REGS->SUPC_EMR = (${SUPC_INSTANCE_NAME}_REGS->SUPC_EMR & ~SUPC_EMR_Msk)
