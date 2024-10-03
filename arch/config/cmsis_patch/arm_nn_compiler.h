@@ -185,7 +185,7 @@ __STATIC_FORCEINLINE uint8_t CLZ(uint32_t value)
 // Note: Just __ARM_FEATURE_DSP is checked to collect all intrinsics from the above mentioned groups
 
 #if (defined(__ARM_FEATURE_DSP) && (__ARM_FEATURE_DSP == 1))
-#if defined ( __GNUC__ )
+#if __GNUC__ < 10
 static inline int32_t SMLABB(int32_t x,	int32_t y,	int32_t acc)
 {
     register int32_t r;

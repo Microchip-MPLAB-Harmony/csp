@@ -21,6 +21,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+from os import path
+
 def loadModule():
 
     coreArch = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" )
@@ -33,17 +35,25 @@ def loadModule():
     archNode = ATDF.getNode('/avr-tools-device-file/devices')
     cortexType = archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()
 
-    #If it is a cortex M device
-    if cortexType.startswith("m"):
-        cmsisDspComponent = Module.CreateComponent("cmsis_dsp", "CMSIS DSP", "/Packs/", "config/cmsis_dsp.py")
-        cmsisNnComponent = Module.CreateComponent("cmsis_nn", "CMSIS NN", "/Packs/", "config/cmsis_nn.py")
-
-    # Avoid loading CMSIS for non-relevant processors
+    #Load CMSIS for relevant architecture
     if ("CORTEX" in coreArch):
         print("Load Module: CMSIS Pack")
-        cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis.py")
+        if path.isfile(path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS_6", "ARM.CMSIS.pdsc")): 
+            cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis_v6.py")
         cmsisComponent.setHelpKeyword("MH3_CSP_cmsis")
 
+            #Show components for CMSIS_
+            if cortexType.startswith("m"):
+                if path.isfile(path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS-DSP", "ARM.CMSIS-DSP.pdsc")):
+                    cmsisDspComponent = Module.CreateComponent("cmsis_dsp", "CMSIS DSP", "/Packs/", "config/cmsis_dsp.py")
+                
+                if path.isfile(path.join(Variables.get("__FRAMEWORK_ROOT"), "CMSIS-NN", "ARM.CMSIS-NN.pdsc")):
+                    cmsisNnComponent = Module.CreateComponent("cmsis_nn", "CMSIS NN", "/Packs/", "config/cmsis_nn.py")
+
+        else:
+            cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis_v5.py")
+
+   
     print("Load Module: CSP System")
 
     coreSeries = ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" )
