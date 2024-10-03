@@ -9,7 +9,7 @@ package:
   dependencies:
     - name: "CMSIS_5"
       type: "package"
-      version: "5.8.0"
+      version: "5.9.0"
     - name: "harmony-services"
       type: "package"
       version: "v1.5.0"
