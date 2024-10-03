@@ -47,28 +47,51 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
 #include "plib_${SERCOM_INSTANCE_NAME?lower_case}_usart.h"
+<#if USART_7816_ENABLE == true>
+<#if core.PORT_API_PREFIX??>
+<#assign PLIB_NAME  = core.PORT_API_PREFIX?string>
+<#assign PLIB_NAME_LC  = core.PORT_API_PREFIX?lower_case>
 
+<#assign RESET_PIN = PLIB_NAME + "_PIN_" + USART_7816_RESET>
+<#assign VCC_SUPPLY_PIN = PLIB_NAME + "_PIN_" + USART_7816_VCC_ENABLE>
+<#assign CARD_DETECT_PIN = PLIB_NAME + "_PIN_" + USART_7816_CARD_DETECT>
+</#if>
+#include "peripheral/${PLIB_NAME_LC}/plib_${PLIB_NAME_LC}.h"
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data
 // *****************************************************************************
 // *****************************************************************************
-
 <#assign USART_PLIB = "SERCOM_INSTANCE_NAME">
 <#assign USART_PLIB_CLOCK_FREQUENCY = "core." + USART_PLIB?eval + "_CORE_CLOCK_FREQUENCY">
+<#if USART_7816_ENABLE == true>
+#define OUTPUT_CLOCK    ${USART_7816_CLOCK_OUTPUT}U
 
+#define USART_SEND      0U
+#define USART_RCV       1U
+
+/** Case for APDU commands. */
+#define CASE1           1U
+#define CASE2           2U
+#define CASE3           3U
+
+/** NULL byte to restart byte procedure. */
+#define ISO_NULL_VAL    0x60U
+
+static uint8_t usart_state = USART_RCV;
+<#else>
 /* ${SERCOM_INSTANCE_NAME} USART baud value for ${USART_BAUD_RATE} Hz baud rate */
 #define ${SERCOM_INSTANCE_NAME}_USART_INT_BAUD_VALUE            (${USART_BAUD_VALUE}UL)
 
+</#if>
 <#if USART_INTERRUPT_MODE_ENABLE = true>
 volatile static SERCOM_USART_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
 </#if>
-
 
 
 // *****************************************************************************
@@ -112,7 +135,9 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
      * Configures Sampling rate
      * Configures IBON
      */
+
     <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_USART_REG_NAME}.SERCOM_CTRLA =      SERCOM_${SERCOM_USART_REG_NAME}_CTRLA_MODE_${USART_MODE} |
+     <#if USART_7816_ENABLE == true> SERCOM_${SERCOM_USART_REG_NAME}_CTRLA_CMODE(${USART_COMM_MODE}U) |</#if>
     SERCOM_${SERCOM_USART_REG_NAME}_CTRLA_RXPO(${USART_RXPO}UL) |
     SERCOM_${SERCOM_USART_REG_NAME}_CTRLA_TXPO(${USART_TXPO}UL) |
     SERCOM_${SERCOM_USART_REG_NAME}_CTRLA_DORD_Msk |
@@ -122,7 +147,11 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
     ${USART_RUNSTDBY?then('| SERCOM_${SERCOM_USART_REG_NAME}_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 
     /* Configure Baud Rate */
+<#if USART_7816_ENABLE == true>
+    ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_USART_REG_NAME}.SERCOM_BAUD = ${USART_7816_BAUD_VALUE};
+<#else>
     ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_USART_REG_NAME}.SERCOM_BAUD = (uint16_t)SERCOM_${SERCOM_USART_REG_NAME}_BAUD_BAUD(${SERCOM_INSTANCE_NAME}_USART_INT_BAUD_VALUE);
+</#if>
 
     /*
      * Configures RXEN
@@ -162,6 +191,14 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
         SERCOM_${SERCOM_USART_REG_NAME}_CTRLC_HDRDLY(${USART_LIN_MASTER_HDRDLY}UL)
         | SERCOM_${SERCOM_USART_REG_NAME}_CTRLC_BRKLEN(${USART_LIN_MASTER_BREAK_LEN}UL);</@compress>
 </#if>
+<#if (USART_FORM == "0x7" && USART_7816_ENABLE?? && USART_7816_ENABLE == true)>
+    /* Configures IEC7816 Guard Time and Maxiter values*/
+    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLC =
+        SERCOM_USART_INT_CTRLC_GTIME(${USART_7816_GTIME}U)
+        | SERCOM_USART_INT_CTRLC_MAXITER(${USART_7816_MAXITER}U)
+        ${USART_7816_INACK?then('| SERCOM_USART_INT_CTRLC_INACK_Msk', '')}
+        ${USART_7816_DSNACK?then('| SERCOM_USART_INT_CTRLC_DSNACK_Msk', '')};</@compress>
+</#if>
 
     /* Enable the UART after the configurations */
     ${SERCOM_INSTANCE_NAME}_REGS->${SERCOM_USART_REG_NAME}.SERCOM_CTRLA |= SERCOM_${SERCOM_USART_REG_NAME}_CTRLA_ENABLE_Msk;
@@ -194,6 +231,10 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.errorStatus = USART_ERROR_NONE;
 </#if>
 }
+
+
+
+
 
 uint32_t ${SERCOM_INSTANCE_NAME}_USART_FrequencyGet( void )
 {
@@ -234,7 +275,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
         {
             clkFrequency = ${SERCOM_INSTANCE_NAME}_USART_FrequencyGet();
         }
-        
+
         <#if USART_USE_FRACTIONAL_BAUD == true>
         <#if USART_FORM == "0x2">
         if(clkFrequency >= (16U * serialSetup->baudRate))
@@ -273,7 +314,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
         else
         {
             baudValue |= (fractionPart << 13U);
-        } 
+        }
         <#else>
         <#if USART_SAMPLE_RATE??>
         if(clkFrequency >= (16U * serialSetup->baudRate))
@@ -1044,3 +1085,7 @@ void __attribute__((used)) ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void 
     }
 }
 </#if>
+
+
+
+${LIST_SERCOM_7816_C}

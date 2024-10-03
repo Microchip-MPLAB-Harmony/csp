@@ -388,7 +388,26 @@ typedef struct
 
 } SERCOM_USART_RING_BUFFER_OBJECT;
 
+// *****************************************************************************
+<#if (USART_7816_ENABLE == true)>
+/* SERCOM USART ISO7816 COMMAND_LENGTH
 
+  Summary:
+    Defines the command length sent to USART ISO7816 Smartcard for data Write/Read.
+
+  Description:
+    This may be used to check the various command lengths of USART ISO7816 protocol.
+
+  Remarks:
+    None.
+*/
+enum{
+    CMD_LEN_4 = 4U,
+    CMD_LEN_5,
+    CMD_LEN_6,
+    CMD_LEN_7
+};
+</#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 

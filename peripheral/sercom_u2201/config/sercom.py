@@ -69,6 +69,8 @@ def fileUpdate(symbol, event):
         SERCOMfilesArray[14].setSecurity("SECURE")
         SERCOMfilesArray[15].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         SERCOMfilesArray[16].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        SERCOMfilesArray[17].setSecurity("SECURE")
+        SERCOMfilesArray[18].setSecurity("SECURE")
         if len(InterruptVectorSecurity) != 1:
             for vector in InterruptVectorSecurity:
                 Database.setSymbolValue("core", vector, False)
@@ -92,6 +94,8 @@ def fileUpdate(symbol, event):
         SERCOMfilesArray[14].setSecurity("NON_SECURE")
         SERCOMfilesArray[15].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         SERCOMfilesArray[16].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        SERCOMfilesArray[17].setSecurity("NON_SECURE")
+        SERCOMfilesArray[18].setSecurity("NON_SECURE")
         if len(InterruptVectorSecurity) != 1:
             for vector in InterruptVectorSecurity:
                 Database.setSymbolValue("core", vector, True)
@@ -484,6 +488,22 @@ def USARTFileGeneration(symbol, event):
     filepath = ""
     ringBufferModeEnabled = event["value"]
 
+    if componentID == "SERCOM_USART_7816_SOURCE":
+        usart_form = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
+        if usart_form == "USART_FRAME_ISO_7816" or usart_form == "ISO7816" :
+            symbol.setEnabled(True)
+            filepath = "../peripheral/sercom_u2201/templates/plib_sercom_7816.c.ftl"
+        elif usart_form != "USART_FRAME_ISO_7816" or usart_form != "ISO7816" :
+            symbol.setEnabled(False)
+
+    if componentID == "SERCOM_USART_7816_HEADER":
+        usart_form = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
+        if usart_form == "USART_FRAME_ISO_7816" or usart_form == "ISO7816" :
+            symbol.setEnabled(True)
+            filepath = "../peripheral/sercom_u2201/templates/plib_sercom_7816.h.ftl"
+        elif usart_form != "USART_FRAME_ISO_7816" or usart_form != "ISO7816" :
+            symbol.setEnabled(False)
+
     if componentID == "SERCOM_USART_HEADER":
         if ringBufferModeEnabled == True:
             filepath = "../peripheral/sercom_u2201/templates/plib_sercom_usart_ring_buffer.h.ftl"
@@ -783,6 +803,21 @@ def instantiateComponent(sercomComponent):
     usartSourceFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
     usartSourceFile.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_MODE_ENABLE"])
 
+    usart7816SourceFile = sercomComponent.createFileSymbol("SERCOM_USART_7816_SOURCE", None)
+    usart7816SourceFile.setType("STRING")
+    usart7816SourceFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_7816.c.ftl")
+    usart7816SourceFile.setOutputName(sercomComponent.getID() + ".LIST_SERCOM_7816_C")
+    usart7816SourceFile.setMarkup(True)
+    usart7816SourceFile.setEnabled(False)
+    usart7816SourceFile.setDependencies(USARTFileGeneration, ["USART_FORM"])
+
+    usart7816HeaderFile = sercomComponent.createFileSymbol("SERCOM_USART_7816_HEADER", None)
+    usart7816HeaderFile.setType("STRING")
+    usart7816HeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_7816.h.ftl")
+    usart7816HeaderFile.setOutputName(sercomComponent.getID() + ".LIST_SERCOM_7816_H")
+    usart7816HeaderFile.setMarkup(True)
+    usart7816HeaderFile.setEnabled(False)
+    usart7816HeaderFile.setDependencies(USARTFileGeneration, ["USART_FORM"])
 
     spiSym_HeaderFile = sercomComponent.createFileSymbol("SERCOM_SPIM_HEADER", None)
     spiSym_HeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi_master.h.ftl")
@@ -925,6 +960,8 @@ def instantiateComponent(sercomComponent):
         SERCOMfilesArray.append(i2csSourceFile)
         SERCOMfilesArray.append(sercomSystemInitFile)
         SERCOMfilesArray.append(sercomSystemDefFile)
+        SERCOMfilesArray.append(usart7816SourceFile)
+        SERCOMfilesArray.append(usart7816HeaderFile)
         if len(InterruptVectorSecurity) != 1:
             for vector in InterruptVectorSecurity:
                 Database.setSymbolValue("core", vector, sercomIsNonSecure)
@@ -949,3 +986,5 @@ def instantiateComponent(sercomComponent):
             SERCOMfilesArray[14].setSecurity("SECURE")
             SERCOMfilesArray[15].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
             SERCOMfilesArray[16].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+            SERCOMfilesArray[17].setSecurity("SECURE")
+            SERCOMfilesArray[18].setSecurity("SECURE")

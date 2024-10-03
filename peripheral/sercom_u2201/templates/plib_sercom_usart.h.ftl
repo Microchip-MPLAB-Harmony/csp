@@ -52,6 +52,9 @@
 // *****************************************************************************
 
 #include "plib_sercom_usart_common.h"
+<#if USART_7816_ENABLE == true>
+#include "definitions.h"
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -127,6 +130,7 @@ int ${SERCOM_INSTANCE_NAME}_USART_ReadByte( void );
 USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void );
 
 uint32_t ${SERCOM_INSTANCE_NAME}_USART_FrequencyGet( void );
+${LIST_SERCOM_7816_H}
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

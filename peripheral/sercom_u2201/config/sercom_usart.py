@@ -29,9 +29,18 @@
 global getUSARTBaudValue
 global getValueGrp
 
+global sort_alphanumeric
+
 global dataBitsDict
 
+
 dataBitsDict = dict()
+
+def sort_alphanumeric(l):
+    import re
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+    return sorted(l, key = alphanum_key)
 
 def getUSARTBaudValue():
 
@@ -136,9 +145,30 @@ def updateUSARTConfigurationVisibleProperty(symbol, event):
     else:
         symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 
+    if event["id"] == "USART_7816_CLOCK_OUTPUT":
+        event['source'].getSymbolByID("USART_BAUD_RATE").setValue(event['source'].getSymbolByID("USART_7816_CLOCK_OUTPUT").getValue()/372)
+    elif event["id"] == "USART_FORM":
+        usart_form = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
+        if usart_form == "USART_FRAME_ISO_7816" or usart_form == "ISO7816" :
+            event['source'].getSymbolByID("USART_BAUD_RATE").setValue(event['source'].getSymbolByID("USART_7816_CLOCK_OUTPUT").getValue()/372)
+            event['source'].getSymbolByID("USART_PARITY_MODE").setValue(0)
+        else:
+            event['source'].getSymbolByID("USART_BAUD_RATE").clearValue()
+            event['source'].getSymbolByID("USART_PARITY_MODE").clearValue()
+
+    if event["id"] == "SERCOM_MODE":
+        symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+
 def updateUSARTBaudValueProperty(symbol, event):
 
     symbol.setValue(getUSARTBaudValue(), 1)
+
+def updateUSART7816BaudValueProperty(symbol, event):
+
+    baudRate = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_BAUD_RATE"))
+    Refclock = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_7816_CLOCK_OUTPUT"))
+    baudvalue = int((Refclock/(2*baudRate)) - 1)
+    event['source'].getSymbolByID("USART_7816_BAUD_VALUE").setValue(baudvalue)
 
 def updateUSARTRS485GuardTimeValueProperty(symbol, event):
 
@@ -146,13 +176,37 @@ def updateUSARTRS485GuardTimeValueProperty(symbol, event):
 
     symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and usartSym_CTRLA_TXPO.getSelectedValue() == "0x3" and (usart_frame_format == "USART_FRAME_NO_PARITY" or usart_frame_format == "USART_FRAME_WITH_PARITY"))
 
+def updateSMARTCARDValueProperty(symbol, event):
+
+    if event["id"] == "USART_FORM":
+        usart_form = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
+        usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
+        if usart_form == "USART_FRAME_ISO_7816" or usart_form == "ISO7816" :
+            usartOperatingModeSym.setReadOnly(True)
+            usartOperatingModeSym.setSelectedKey("BLOCKING")
+            if symbol.getValue() == 0:
+                symbol.setValue(1)
+        else:
+            usartOperatingModeSym.setReadOnly(False)
+            usartOperatingModeSym.setSelectedKey("NON_BLOCKING")
+            if symbol.getValue() == 1:
+                symbol.setValue(0)
+
+def updateSMARTCARDPinProperty(symbol, event):
+
+    if event["id"] == "USART_FORM":
+        symbol.setVisible(event['source'].getSymbolByID("USART_FORM").getSelectedKey() == "USART_FRAME_ISO_7816" or event['source'].getSymbolByID("USART_FORM").getSelectedKey() == "ISO7816")
+
+    if event["id"] == "SERCOM_MODE":
+        symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and (usartSym_CTRLA_FORM.getSelectedKey() == "USART_FRAME_ISO_7816" or usartSym_CTRLA_FORM.getSelectedKey() == "ISO7816"))
+
 def updateUSARTFORMValueProperty(symbol, event):
 
     symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 
     if event["id"] == "USART_PARITY_MODE":
 
-        if event["symbol"].getSelectedKey() == "NONE":
+        if event['source'].getSymbolByID("USART_PARITY_MODE").getSelectedKey() == "NONE":
             if symbol.getValue() == 1:
                 symbol.setReadOnly(True)
                 symbol.setValue(0)
@@ -219,23 +273,27 @@ def updateOperatingMode (symbol, event):
 def ringBufferConfigVisibility (symbol, event):
     ringBufferModeEnabled = event["source"].getSymbolByID("USART_RING_BUFFER_MODE_ENABLE").getValue()
     symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and ringBufferModeEnabled == True)
-    
+
 def usartChszieEnumHelper(chsizeValuesList, bits):
     for index in range(len(chsizeValuesList)):
         if bits in chsizeValuesList[index].getAttribute("name"):
             return chsizeValuesList[index].getAttribute("name")
-    
+
     return None
 
 def updateFractionalBaudConfig(symbol, event):
-    usart_frame_format = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
-    if (sercomSym_OperationMode.getSelectedKey() == "USART_INT" and (usart_frame_format == "USART_FRAME_LIN_MASTER_MODE" or usart_frame_format == "USART_FRAME_AUTO_BAUD_NO_PARITY" or usart_frame_format == "USART_FRAME_AUTO_BAUD_WITH_PARITY")):
-        symbol.setReadOnly(True)
-        symbol.setValue(True)
-    else:
-        symbol.setValue(False)
-        symbol.setReadOnly(False)
 
+    if event["id"] == "USART_FORM":
+        usart_frame_format = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
+        if (sercomSym_OperationMode.getSelectedKey() == "USART_INT" and (usart_frame_format == "USART_FRAME_LIN_MASTER_MODE" or usart_frame_format == "USART_FRAME_AUTO_BAUD_NO_PARITY" or usart_frame_format == "USART_FRAME_AUTO_BAUD_WITH_PARITY")):
+            symbol.setReadOnly(True)
+            symbol.setValue(True)
+        else:
+            symbol.setValue(False)
+            symbol.setReadOnly(False)
+
+    elif event["id"] == "SERCOM_MODE":
+        symbol.setVisible(sampleRateSupported == True and sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 
 ###################################################################################################
 ############################################ USART ################################################
@@ -377,7 +435,7 @@ for index in range(len(usartSym_CTRLA_FORM_Values)):
     form_value = usartSym_CTRLA_FORM_Values[index].getAttribute("value")
     if form_value == "0x2":
         isLINMasterModeSupported = True
-    if form_value <= "0x4":
+    if form_value <= "0x7":
         usartSym_CTRLA_FORM_Key_Name = usartSym_CTRLA_FORM_Values[index].getAttribute("name")
         usartSym_CTRLA_FORM_Key_Description = usartSym_CTRLA_FORM_Values[index].getAttribute("caption")
         usartSym_CTRLA_FORM_Key_Value = usartSym_CTRLA_FORM_Values[index].getAttribute("value")
@@ -440,6 +498,36 @@ if usartSym_CTRLC_HDRDLY_Node != None:
     usartSym_CTRLC_HDRDLY.setVisible(False)
     usartSym_CTRLC_HDRDLY.setDependencies(updateLinMasterModeOptionsVisibility, ["USART_FORM"])
 
+#USART 7816 SMARTCARD Symbol
+usartSym_smartcard = sercomComponent.createBooleanSymbol("USART_7816_ENABLE", sercomSym_OperationMode)
+usartSym_smartcard.setDefaultValue(0)
+usartSym_smartcard.setVisible(False)
+usartSym_smartcard.setDependencies(updateSMARTCARDValueProperty, ["USART_FORM"])
+
+usart7816SourceList = sercomComponent.createListSymbol("LIST_SERCOM_7816_C", None)
+usart7816HeaderList = sercomComponent.createListSymbol("LIST_SERCOM_7816_H", None)
+
+#USART Communication Mode
+usartSym_COMM_MODE = sercomComponent.createIntegerSymbol("USART_COMM_MODE", sercomSym_OperationMode)
+usartSym_COMM_MODE.setLabel("USART Communication Mode")
+usartSym_COMM_MODE.setDefaultValue(0)
+usartSym_COMM_MODE.setVisible(False)
+usartSym_COMM_MODE.setDependencies(updateSMARTCARDValueProperty, ["USART_FORM"])
+
+#USART 7816 Clock input comment
+usartSym_7816_clk_input_Comment = sercomComponent.createCommentSymbol("USART_CLOCK_INPUT_COMMENT", sercomSym_OperationMode)
+usartSym_7816_clk_input_Comment.setLabel("**** Enter the configured clock source for smartcard ****")
+usartSym_7816_clk_input_Comment.setVisible(False)
+usartSym_7816_clk_input_Comment.setDependencies(updateSMARTCARDPinProperty, ["SERCOM_MODE","USART_FORM"])
+
+#USART 7816 Output Clock
+usartSym_CLOCK_OUTPUT = sercomComponent.createIntegerSymbol("USART_7816_CLOCK_OUTPUT", sercomSym_OperationMode)
+usartSym_CLOCK_OUTPUT.setLabel("Output clock in Hz")
+usartSym_CLOCK_OUTPUT.setDefaultValue(3571200)
+usartSym_CLOCK_OUTPUT.setMin(1000000)
+usartSym_CLOCK_OUTPUT.setMax(20000000)
+usartSym_CLOCK_OUTPUT.setVisible(False)
+usartSym_CLOCK_OUTPUT.setDependencies(updateSMARTCARDPinProperty, ["SERCOM_MODE","USART_FORM"])
 
 #USART Baud Rate
 usartSym_BAUD_RATE = sercomComponent.createIntegerSymbol("USART_BAUD_RATE", sercomSym_OperationMode)
@@ -448,13 +536,20 @@ usartSym_BAUD_RATE.setLabel("Baud Rate in Hz")
 usartSym_BAUD_RATE.setDefaultValue(115200)
 usartSym_BAUD_RATE.setMin(1)
 usartSym_BAUD_RATE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-usartSym_BAUD_RATE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+usartSym_BAUD_RATE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE", "USART_7816_CLOCK_OUTPUT"])
+
+#USART ISO7816 Baud Value
+usartSym_7816_BAUD_VALUE = sercomComponent.createIntegerSymbol("USART_7816_BAUD_VALUE", sercomSym_OperationMode)
+usartSym_7816_BAUD_VALUE.setLabel("ISO7816 Baud Rate Value")
+usartSym_7816_BAUD_VALUE.setDefaultValue(185)
+usartSym_7816_BAUD_VALUE.setVisible(False)
+usartSym_7816_BAUD_VALUE.setDependencies(updateUSART7816BaudValueProperty, ["USART_7816_CLOCK_OUTPUT", "USART_BAUD_RATE"])
 
 usartSym_UseFractionalBaud = sercomComponent.createBooleanSymbol("USART_USE_FRACTIONAL_BAUD", sercomSym_OperationMode)
 usartSym_UseFractionalBaud.setLabel("Use fractional baud?")
 usartSym_UseFractionalBaud.setValue(False)
 usartSym_UseFractionalBaud.setVisible(sampleRateSupported == True)
-usartSym_UseFractionalBaud.setDependencies(updateFractionalBaudConfig, ["USART_FORM"])
+usartSym_UseFractionalBaud.setDependencies(updateFractionalBaudConfig, ["USART_FORM", "SERCOM_MODE"])
 
 #USART Baud Value
 usartSym_BAUD_VALUE = sercomComponent.createIntegerSymbol("USART_BAUD_VALUE", sercomSym_OperationMode)
@@ -469,6 +564,66 @@ usartSym_BaudError_Comment.setLabel("********** USART Clock source value is low 
 usartSym_BaudError_Comment.setVisible(False)
 usartSym_BaudError_Comment.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
+#CARD DETECT Pin Selection
+usartSym_CardDetectPin = sercomComponent.createKeyValueSetSymbol("USART_7816_CARD_DETECT", sercomSym_OperationMode)
+usartSym_CardDetectPin.setLabel("Card Detect Pin")
+usartSym_CardDetectPin.setVisible(False)
+usartSym_CardDetectPin.setOutputMode("Key")
+usartSym_CardDetectPin.setDisplayMode("Description")
+usartSym_CardDetectPin.setDependencies(updateSMARTCARDPinProperty, ["SERCOM_MODE","USART_FORM"])
+usartSym_CardDetectPin.addKey("SYS_PORT_PIN_NONE", "-1", "None")
+
+availablePinDictionary = {}
+
+# Send message to core to get available pins
+availablePinDictionary = Database.sendMessage("core", "PIN_LIST", availablePinDictionary)
+
+for pad in sort_alphanumeric(availablePinDictionary.values()):
+    key = pad
+    value = list(availablePinDictionary.keys())[list(availablePinDictionary.values()).index(pad)]
+    description = pad
+    usartSym_CardDetectPin.addKey(key, value, description)
+
+#VCC Enable Pin Selection
+usartSym_VCCEnablePin = sercomComponent.createKeyValueSetSymbol("USART_7816_VCC_ENABLE", sercomSym_OperationMode)
+usartSym_VCCEnablePin.setLabel("VCC Enable Pin")
+usartSym_VCCEnablePin.setVisible(False)
+usartSym_VCCEnablePin.setOutputMode("Key")
+usartSym_VCCEnablePin.setDisplayMode("Description")
+usartSym_VCCEnablePin.setDependencies(updateSMARTCARDPinProperty, ["SERCOM_MODE","USART_FORM"])
+usartSym_VCCEnablePin.addKey("SYS_PORT_PIN_NONE", "-1", "None")
+
+availablePinDictionary = {}
+
+# Send message to core to get available pins
+availablePinDictionary = Database.sendMessage("core", "PIN_LIST", availablePinDictionary)
+
+for pad in sort_alphanumeric(availablePinDictionary.values()):
+    key = pad
+    value = list(availablePinDictionary.keys())[list(availablePinDictionary.values()).index(pad)]
+    description = pad
+    usartSym_VCCEnablePin.addKey(key, value, description)
+
+#RESET Pin Selection
+usartSym_ResetPin = sercomComponent.createKeyValueSetSymbol("USART_7816_RESET", sercomSym_OperationMode)
+usartSym_ResetPin.setLabel("RESET Pin")
+usartSym_ResetPin.setVisible(False)
+usartSym_ResetPin.setOutputMode("Key")
+usartSym_ResetPin.setDisplayMode("Description")
+usartSym_ResetPin.setDependencies(updateSMARTCARDPinProperty, ["SERCOM_MODE","USART_FORM"])
+usartSym_ResetPin.addKey("SYS_PORT_PIN_NONE", "-1", "None")
+
+availablePinDictionary = {}
+
+# Send message to core to get available pins
+availablePinDictionary = Database.sendMessage("core", "PIN_LIST", availablePinDictionary)
+
+for pad in sort_alphanumeric(availablePinDictionary.values()):
+    key = pad
+    value = list(availablePinDictionary.keys())[list(availablePinDictionary.values()).index(pad)]
+    description = pad
+    usartSym_ResetPin.addKey(key, value, description)
+
 #PMODE : USART PARITY MODE
 usartSym_CTRLB_PMODE = sercomComponent.createKeyValueSetSymbol("USART_PARITY_MODE", sercomSym_OperationMode)
 usartSym_CTRLB_PMODE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:sercom_u2201;register:CTRLB")
@@ -480,7 +635,39 @@ usartSym_CTRLB_PMODE.setDefaultValue(2)
 usartSym_CTRLB_PMODE.setOutputMode("Key")
 usartSym_CTRLB_PMODE.setDisplayMode("Description")
 usartSym_CTRLB_PMODE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-usartSym_CTRLB_PMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+usartSym_CTRLB_PMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE", "USART_FORM"])
+
+#USART 7816 GTIME
+usartSym_GTIME = sercomComponent.createIntegerSymbol("USART_7816_GTIME", sercomSym_OperationMode)
+usartSym_GTIME.setLabel("Guard Time")
+usartSym_GTIME.setDefaultValue(0)
+usartSym_GTIME.setMin(0)
+usartSym_GTIME.setMax(7)
+usartSym_GTIME.setVisible(False)
+usartSym_GTIME.setDependencies(updateSMARTCARDPinProperty, ["SERCOM_MODE","USART_FORM"])
+
+#USART 7816 MAXITER
+usartSym_MAXITER = sercomComponent.createIntegerSymbol("USART_7816_MAXITER", sercomSym_OperationMode)
+usartSym_MAXITER.setLabel("Maximum Iterations")
+usartSym_MAXITER.setDefaultValue(0)
+usartSym_MAXITER.setMin(0)
+usartSym_MAXITER.setMax(7)
+usartSym_MAXITER.setVisible(False)
+usartSym_MAXITER.setDependencies(updateSMARTCARDPinProperty, ["SERCOM_MODE","USART_FORM"])
+
+#USART 7816 INACK
+usartSym_INACK = sercomComponent.createBooleanSymbol("USART_7816_INACK", sercomSym_OperationMode)
+usartSym_INACK.setLabel("Disable NACK when parity error received")
+usartSym_INACK.setDefaultValue(False)
+usartSym_INACK.setVisible(False)
+usartSym_INACK.setDependencies(updateSMARTCARDPinProperty, ["SERCOM_MODE","USART_FORM"])
+
+#USART 7816 DSNACK
+usartSym_DSNACK = sercomComponent.createBooleanSymbol("USART_7816_DSNACK", sercomSym_OperationMode)
+usartSym_DSNACK.setLabel("Disable Successive Not Acknowledge")
+usartSym_DSNACK.setDefaultValue(False)
+usartSym_DSNACK.setVisible(False)
+usartSym_DSNACK.setDependencies(updateSMARTCARDPinProperty, ["SERCOM_MODE","USART_FORM"])
 
 #Character Size
 usartSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("USART_CHARSIZE_BITS", sercomSym_OperationMode)
@@ -513,7 +700,7 @@ for i in range (5,10):
         dataBitsDict[chsizeEnumVal] = "DRV_USART_DATA_" + str(i) + "_BIT"
         chsizeEnumVal = "    USART_DATA_" + str(i) + "_BIT = SERCOM_" + sercomSymUSARTRegName.getValue() + "_CTRLB_CHSIZE_" + chsizeEnumVal + ","
         usartChsizeEnums.addValue(chsizeEnumVal)
-        
+
 usartChsizeEnums.setTarget(sercomInstanceName.getValue().lower() + ".SERCOM_CHSIZE_ENUM_LIST")
 
 #Stop Bit
@@ -615,8 +802,11 @@ usartSym_CTRLA_RUNSTDBY.setLabel("Enable Run in Standby")
 usartSym_CTRLA_RUNSTDBY.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLA_RUNSTDBY.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="{0}",name="CTRLA"]'.format(sercomSymUSARTRegName.getValue()))
-sampleRateValue = sampleRateNode.getChildren()
+#USART 7816 Clock configuration comment
+usartSym_7816_clkcfg_Comment = sercomComponent.createCommentSymbol("USART_CLOCK_CFG_COMMENT", sercomSym_OperationMode)
+usartSym_7816_clkcfg_Comment.setLabel("********** Configure GCLK I/O pin as clock output to smartcard **********")
+usartSym_7816_clkcfg_Comment.setVisible(False)
+usartSym_7816_clkcfg_Comment.setDependencies(updateSMARTCARDPinProperty, ["SERCOM_MODE","USART_FORM"])
 
 #USART No Of Samples
 usartSym_SAMPLE_COUNT = sercomComponent.createIntegerSymbol("USART_SAMPLE_COUNT", sercomSym_OperationMode)
@@ -650,7 +840,7 @@ usartSym_RS485.setVisible(False)
 usartSym_RS485.setDefaultValue(isRS485Supported)
 
 #Use setValue instead of setDefaultValue to store symbol value in default.xml
-usartSym_BAUD_VALUE.setValue(getUSARTBaudValue(), 1)   
+usartSym_BAUD_VALUE.setValue(getUSARTBaudValue(), 1)
 
 usartSym_CTRLA_MODE_Values = getValueGrp("SERCOM", "SERCOM", "CTRLA", "MODE", sercomSymUSARTRegName.getValue()).getChildren()
 
