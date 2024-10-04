@@ -111,7 +111,8 @@ static void ${SDMMC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode, SDMMC_Data
             {
                 transferMode |= SDMMC_TMR_DTDSEL_Msk;
             }
-            transferMode |= SDMMC_TMR_DMAEN_ENABLE;            
+            transferMode |= SDMMC_TMR_DMAEN_ENABLE; 
+            break;
         default: /* Do Nothing */
             break;
     }
