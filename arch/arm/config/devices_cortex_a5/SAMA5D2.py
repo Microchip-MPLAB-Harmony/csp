@@ -80,7 +80,7 @@ def setDRAMAddresses(symbol, event):
     comp.setSymbolValue("DDRAM_CACHE_SIZE", "0x%08X" % cache_size)
 
 
-print ("Loading System Services for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
 deviceFamily.setLabel("Device Family")

@@ -69,7 +69,7 @@ def _find_key(value, keypairs):
     for keyname, val in keypairs.items():
         if(val == str(value)):
             return keyname
-    print("_find_key: could not find value in dictionary") # should never get here
+    Log.writeDebugMessage("_find_key: could not find value in dictionary {0}: {1}: {2}".format(val, str(value), keyname)) # should never get here
     return ""
 
 def _process_valuegroup_entry(node):
@@ -156,7 +156,7 @@ def calcWaitStates(symbol, event):
     symbol.setValue(getWaitStates(), 2)
 
 processor = Variables.get("__PROCESSOR")
-print("Loading System Services for " + processor)
+Log.writeInfoMessage("Loading System Services for " + processor)
 
 fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
 fuseSettings.setLabel("Generate Fuse Settings")

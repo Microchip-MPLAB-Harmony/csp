@@ -26,7 +26,7 @@ def udpateSymbolEnableAndVisibility (symbol, event):
     symbol.setVisible(event["symbol"].getSelectedKey() == "XC32")
 
 # load family specific configurations
-print("Loading System Services for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")

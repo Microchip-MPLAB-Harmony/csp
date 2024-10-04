@@ -92,7 +92,7 @@ def updateSRAMCoherency(symbol, event):
         seg_symbol.clearValue()
 
 
-print ("Loading System Services for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
 deviceFamily.setLabel("Device Family")

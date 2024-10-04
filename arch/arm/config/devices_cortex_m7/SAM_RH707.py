@@ -60,7 +60,7 @@ def setMPUDefaultSettings():
     return mpuRegions, mpuSettings, mpuSetUpLogicList
 
 
-print ("Loading System Services for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 # DEVICE & PROJECT CONFIGURATION MENU
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)

@@ -74,7 +74,7 @@ def _find_key(value, keypairs):
     for keyname, val in keypairs.items():
         if(val == str(value)):
             return keyname
-    print("_find_key: could not find value in dictionary",val,str(value)) # should never get here
+    Log.writeDebugMessage("_find_key: could not find value in dictionary {0}: {1}".format(val,str(value))) # should never get here
     return ""
 
 global _process_valuegroup_entry
@@ -230,7 +230,7 @@ def populate_config_items(basenode, bitfieldHexSymbols, baseLabel, moduleNode, c
                 bitfielditem.setDescription(bitfields[jj].getAttribute('caption'))
 
 clkValGrp_DEVCFG0__FECCCON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]/value-group@[name="DEVCFG0__FECCCON"]')
-print("Loading System Services for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading System Services for " + Variables.get("__PROCESSOR"))
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
 
 fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)

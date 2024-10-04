@@ -39,7 +39,7 @@ def set_startup_file(symbol,event):
 
 
 # load family specific configurations
-print("Loading System Services for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 # productFamily (ID = "PRODUCT_FAMILY") symbol should be used everywhere to
 # identify the product family.This symbol is created inside core.py with the

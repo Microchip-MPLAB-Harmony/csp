@@ -72,7 +72,7 @@ def calculateRAMLength(symbol, event):
         symbol.setValue("")
 
 # load family specific configurations
-print("Loading System Services for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 # load device specific configurations (fuses), temporary, to be removed once XC32 updated
 devCfgComment = coreComponent.createCommentSymbol("CoreCfgComment1", devCfgMenu)

@@ -162,7 +162,6 @@ def handleMessage(messageID, args):
             clearPinConfigurationValue(pinNumber, setting)
 
     elif messageID == "SUPC_CONFIG_HW_IO":
-        # print("CORE_SUPC handleMessage: {} args: {}".format(messageID, args))
         input, enable = args['config']
         symbolId = "SUPC_WUIR_WKUPEN{}".format(input)
         if enable == True:
@@ -176,11 +175,9 @@ def handleMessage(messageID, args):
             symbolDict = {"Result": "Fail"}
         
     elif messageID == "AIC_CONFIG_HW_IO": # only for MPUs (aic.py)
-        # print("CORE_AIC handleMessage: {} args: {}".format(messageID, args))
         symbolDict = aicConfigHwIO(messageID, args)
         
     elif messageID == "INT_CONFIG_HW_IO": # only for MIPS
-        # print("CORE_INT (EVIC) handleMessage: {} args: {}".format(messageID, args))
         extIntNum, enable = args['config']
         if enable == True:
             res = setExternalInterrupt(extIntNum)
