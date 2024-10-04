@@ -67,6 +67,11 @@ static void OSCCTRL_Initialize(void)
         /* Waiting for the XOSC Ready state */
     }
     </#if>
+    
+    <#if CONFIG_CLOCK_XOSC_GRES == true>
+    /* Use internal XOSC shunt Gain resistor */
+    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_XOSCCTRLB |= 0x04U;</@compress>
+    </#if>
 }
 </#if>
 

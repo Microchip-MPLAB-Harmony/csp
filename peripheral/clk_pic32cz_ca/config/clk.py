@@ -86,6 +86,18 @@ calculatedFreq_Menu.setLabel("Calculated Clock Frequencies")
 ################################################################################
 ##########              Callback Functions            ##########################
 ################################################################################
+def update_XOSC_GRES(symbol, event):
+    xosc_oscillator_mode = event["symbol"].getSelectedKey()
+            
+    if xosc_oscillator_mode == "EXTERNAL_CLOCK":
+        symbol.setReadOnly(True)
+        symbol.setValue(False)
+        symbol.setVisible(False)
+    else:
+        symbol.setReadOnly(True)
+        symbol.setValue(True)
+        symbol.setVisible(True)
+        symbol.setReadOnly(False)
 
 ####    XOSC Configuration callback functions    ###############################
 def setXOSCFreq(symbol, event):
@@ -207,6 +219,12 @@ oscctrlSym_XOSC_OSCILLATORMODE.addKey(
     "CRYSTAL", "1", "crystal oscillator enable")
 oscctrlSym_XOSC_OSCILLATORMODE.setOutputMode("Value")
 oscctrlSym_XOSC_OSCILLATORMODE.setDefaultValue(1)
+
+oscctrlSym_XOSC_GRES = coreComponent.createBooleanSymbol(
+    "CONFIG_CLOCK_XOSC_GRES", oscctrlXosc_Menu)
+oscctrlSym_XOSC_GRES.setLabel("Use internal XOSC shunt Gain resistor")
+oscctrlSym_XOSC_GRES.setDefaultValue(True)
+oscctrlSym_XOSC_GRES.setDependencies(update_XOSC_GRES, ["XOSC_OSCILLATOR_MODE"])
 
 # XOSC Oscillator Frequency
 oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY = coreComponent.createIntegerSymbol(
