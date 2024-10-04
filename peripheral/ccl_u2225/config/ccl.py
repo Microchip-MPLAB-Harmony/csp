@@ -621,7 +621,7 @@ def instantiateComponent(cclComponent):
     cclInstanceName = cclComponent.createStringSymbol("CCL_INSTANCE_NAME", None)
     cclInstanceName.setVisible(False)
     cclInstanceName.setDefaultValue(cclComponent.getID().upper())
-    print("Running " + cclInstanceName.getValue())
+    Log.writeInfoMessage("Running " + cclInstanceName.getValue())
 
     cclEvsysGeneratorNamesPopulate(cclInstanceName.getValue())
     cclEvsysUserNamesPopulate(cclInstanceName.getValue())

@@ -328,7 +328,7 @@ def _find_key(value, keypairs):
             return ii["value"]
 
 
-    print("_find_key: could not find value in dictionary") # should never get here
+    Log.writeDebugMessage("_find_key: could not find value in dictionary") # should never get here
     return ""
 
 def DummyData_ValueUpdate(symbol, event):

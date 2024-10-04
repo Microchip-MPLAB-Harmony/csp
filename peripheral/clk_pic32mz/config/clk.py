@@ -250,7 +250,7 @@ def _find_key(value, keypairs):
     for keyname, val in keypairs.items():
         if(val == str(value)):
             return keyname
-    print("_find_key: could not find value in dictionary") # should never get here
+    Log.writeDebugMessage("_find_key: could not find value in dictionary") # should never get here
     return ""
 
 def _get_default_value(register, bitfield, value_group):
@@ -799,7 +799,7 @@ def getBitMask(node, bitfield):
     for ii in children:
         if(ii.getAttribute('name') == bitfield):
             return ii.getAttribute('mask')
-    print("getBitMask:  cannot find ",bitfield)
+    Log.writeDebugMessage("getBitMask:  cannot find {0}".format(bitfield))
     return ''  # should never get here
 
 def updateMpllBitfield(symbol, event):

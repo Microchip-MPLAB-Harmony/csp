@@ -29,10 +29,6 @@ uartAggInterruptName = ""
 ################################################################################
 def handleMessage(messageID, args):
     global uartSym_OperatingMode
-
-    print "handleMessage"
-    print "messageID = " + messageID
-
     result_dict = {}
 
     if (messageID == "UART_INTERRUPT_MODE"):
@@ -70,9 +66,6 @@ def handleMessage(messageID, args):
 def onCapabilityConnected(event):
     localComponent = event["localComponent"]
     remoteComponent = event["remoteComponent"]
-
-    print ("onCapabilityConnected")
-
     # This message should indicate to the dependent component that PLIB has finished its initialization and
     # is ready to accept configuration parameters from the dependent component
     argDict = {"localComponentID" : localComponent.getID()}
@@ -88,10 +81,6 @@ def onCapabilityConnected(event):
 
 
 def setUARTInterruptData(uart_interrupt_name, status):
-
-    print uart_interrupt_name
-    print status
-
     Database.setSymbolValue("core", uart_interrupt_name + "_INTERRUPT_ENABLE" , status, 1)
     Database.setSymbolValue("core", uart_interrupt_name + "_INTERRUPT_HANDLER_LOCK" , status, 1)
 
@@ -170,8 +159,6 @@ def nvicInterruptUpdate(symbol, event):
     uartInterruptType = event["source"].getSymbolByID("UART_INTERRUPT_TYPE").getSelectedKey()
 
     interruptName = "UART" + uartInstanceNum
-    print "uartAggInterruptName = " + uartAggInterruptName
-
     if uartOperatingMode != "BLOCKING":
         if uartInterruptType == "AGGREGATE":
             setUARTInterruptData(interruptName, False)
@@ -295,8 +282,6 @@ def instantiateComponent(uartComponent):
     nvic_int_num = {}
     nvic_int_num = Database.sendMessage("core", "ECIA_GET_INT_SRC_DICT", {"int_source": "UART" + uartInstanceNum.getValue()})
     uartAggInterruptName = nvic_int_num["group_nvic_name"]
-
-    print "uartAggInterruptName = " + uartAggInterruptName
 
     # UART_OPERATING_MODE
     uartSym_OperatingMode = uartComponent.createKeyValueSetSymbol("UART_OPERATING_MODE", None)

@@ -125,7 +125,6 @@ def acEvesysConfigure(symbol, event):
 
 def handleMessage(messageID, args):
     retDict = {}
-    # print("AC handleMessage: {} args: {}".format(messageID, args))
     if (messageID == "AC_CONFIG_HW_IO"):
         component = 'ac'
         comparatorID, muxInput, ioPin = args['config']
@@ -133,14 +132,12 @@ def handleMessage(messageID, args):
         enable = args['enable']
         if enable == True:
             Database.setSymbolValue(component, "ANALOG_COMPARATOR_ENABLE_" + str(comparatorID), enable)
-            # print("AC handleMessage symbolId: {} - {}".format(symbolId, ioPin))
             if ioPin == -1:
                 res = Database.clearSymbolValue(component, symbolId)
             else:
                 res = Database.setSymbolValue(component, symbolId, int(ioPin))
 
         else:
-            # print("AC handleMessage symbolId: {} - {}".format(symbolId, ioPin))
             res = Database.clearSymbolValue(component, symbolId)
             
         if res == True:

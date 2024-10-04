@@ -302,7 +302,7 @@ if __name__ == "__main__":
 
             #------------------------- ATDF Read -------------------------------------
             packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
-            print("Package name is: " + packageName)
+            Log.writeDebugMessage("Package name is: " + packageName)
             availablePins = []        # array to save available pins
             signal = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False] #array to save available signals
 

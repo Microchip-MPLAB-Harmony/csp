@@ -71,7 +71,6 @@ def setPinConfigurationValue(pinNumber, setting, value):
         symbol.clearValue()
         symbol.setValue(value)
         symbol.setReadOnly(True)
-        # print("GPIO setPinConfigurationValue[{}][{}] : {}".format(pin_num, setting, value))
 
 def getPinConfigurationValue(pinNumber, setting):
     global pad_map
@@ -93,7 +92,6 @@ def clearPinConfigurationValue(pinNumber, setting):
     if symbol:
         symbol.setReadOnly(False)
         symbol.clearValue()
-        # print("GPIO  clearPinSetConfigurationValue[{}][{}]".format(pin_num, setting))
 
 def packageChange(symbol, pinout):
     global uniquePinout

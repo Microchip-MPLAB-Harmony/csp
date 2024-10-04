@@ -239,9 +239,6 @@ def adc_EMR_CMPSEL_Update(symbol, event):
     symbol.setVisible(event["value"] == False)
 
 def handleMessage(messageID, args):
-    retDict = {}
-    # print("ADC handleMessage: {} args: {}".format(messageID, args))
-    
     if (messageID == "ADC_CONFIG_HW_IO"):
         component = str(adcInstanceName.getValue()).lower()
         channel, isNegInput, enable = args['config']

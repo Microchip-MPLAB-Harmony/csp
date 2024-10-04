@@ -75,18 +75,12 @@ def getValueGrp(module, reg_grp, reg_name, bitfield_name , mode = None):
         node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module, reg_grp, mode, reg_name, bitfield_name)
     else:
          node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module, reg_grp, reg_name, bitfield_name)
-
-    print (node_str)
     bitfield_node = ATDF.getNode(node_str)
 
     if bitfield_node != None:
         val_grp = bitfield_node.getAttribute("values")
         node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module, val_grp)
         val_grp_node = ATDF.getNode(node_str)
-        if val_grp_node == None:
-            print ("value-group = " + val_grp + " not found")
-    else:
-        print ("bitfield_name = " + bitfield_name + " not found" )
 
     return val_grp_node
 #######################################################################################################################################
@@ -201,7 +195,6 @@ def acEvesysConfigure(symbol, event):
 
 def handleMessage(messageID, args):
     retDict = {}
-    # print("AC handleMessage: {} args: {}".format(messageID, args))
     if (messageID == "AC_CONFIG_HW_IO"):
         component = 'ac'
         comparatorID, muxInput, ioPin = args['config']
@@ -209,14 +202,12 @@ def handleMessage(messageID, args):
         enable = args['enable']
         if enable == True:
             Database.setSymbolValue(component, "ANALOG_COMPARATOR_ENABLE_" + str(comparatorID), enable)
-            # print("AC handleMessage symbolId: {} - {}".format(symbolId, ioPin))
             if ioPin == -1:
                 res = Database.clearSymbolValue(component, symbolId)
             else:
                 res = Database.setSymbolValue(component, symbolId, int(ioPin))
 
         else:
-            # print("AC handleMessage symbolId: {} - {}".format(symbolId, ioPin))
             res = Database.clearSymbolValue(component, symbolId)
             
         if res == True:

@@ -122,19 +122,17 @@ def getValueGroupNode__ADC(module_name, register_group, register_name, bitfield_
         bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module_name, register_group, mode, register_name, bitfield_name)
     else:
          bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module_name, register_group, register_name, bitfield_name)
-
-    print (bitfield_node_path)
     bitfield_node = ATDF.getNode(bitfield_node_path)
 
     if bitfield_node != None:
         if bitfield_node.getAttribute("values") == None:
-            print (register_name + "_" + bitfield_name + "does not have value-group attribute")
+            Log.writeDebugMessage(register_name + "_" + bitfield_name + "does not have value-group attribute")
         else:
             value_group_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module_name, bitfield_node.getAttribute("values")))
             if value_group_node == None:
-                print ("value-group = " + bitfield_node.getAttribute("values") + " not defined")
+                Log.writeDebugMessage("value-group = " + bitfield_node.getAttribute("values") + " not defined")
     else:
-        print ("bitfield_name = " + bitfield_name + " not found" )
+        Log.writeDebugMessage("bitfield_name = " + bitfield_name + " not found" )
 
     return value_group_node
 
@@ -824,8 +822,6 @@ def readATDF(adcInstanceName, adcComponent):
     global nSARChannel
     global earlyInterruptPresent
     global numTriggers
-
-    print "adcInstanceName = " + str(adcInstanceName)
 
     # Read Number of SAR Cores
     adc_param_node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\""+adcInstanceName+"\"]/parameters")
@@ -1904,8 +1900,6 @@ def codeGenerationConfig (adcComponent, Module):
 
 def handleMessage(messageID, args):
     retDict = {}
-    # print("ADC handleMessage: {} args: {}".format(messageID, args))
-    
     if (messageID == "ADC_CONFIG_HW_IO"):
         global nSARCore
         global nSARChannel
@@ -1927,7 +1921,6 @@ def handleMessage(messageID, args):
 
         coreSymbolName = "ADC_CORE_{}_ENABLE".format(core)
         channelSymbolName = "ADC_CORE_{}_CH_{}_ENABLE".format(core, channel)
-        # print("ADC handleMessage: channelSymbolName {}".format(channelSymbolName))
 
         if enable == True:
             Database.setSymbolValue(component, coreSymbolName, enable)

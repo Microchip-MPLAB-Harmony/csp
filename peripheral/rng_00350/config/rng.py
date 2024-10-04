@@ -102,7 +102,7 @@ def instantiateComponent(rngComponent):
     rngInstanceName = rngComponent.createStringSymbol("RNG_INSTANCE_NAME", None)
     rngInstanceName.setVisible(False)
     rngInstanceName.setDefaultValue(rngComponent.getID().upper())
-    print("Running " + rngInstanceName.getValue())
+    Log.writeInfoMessage("Running " + rngInstanceName.getValue())
 
     #Clock enable
     Database.setSymbolValue("core", rngInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)

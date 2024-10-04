@@ -77,7 +77,7 @@ def instantiateComponent(rstcComponent):
     rstcInstanceName = rstcComponent.createStringSymbol("RSTC_INSTANCE_NAME", None)
     rstcInstanceName.setVisible(False)
     rstcInstanceName.setDefaultValue(rstcComponent.getID().upper())
-    print("Running " + rstcInstanceName.getValue())
+    Log.writeInfoMessage("Running " + rstcInstanceName.getValue())
 
     rstcSym_MR_URSTEN = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_MR\"]/bitfield@[name=\"URSTEN\"]")
     rstcSym_MR_URSTIEN = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_MR\"]/bitfield@[name=\"URSTIEN\"]")

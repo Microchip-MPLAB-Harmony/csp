@@ -148,7 +148,7 @@ def find_key_value(value, keypairs):
             return index  # return occurrence of <bitfield > entry which has matching value
         index += 1
 
-    print("find_key: could not find value in dictionary") # should never get here
+    Log.writeDebugMessage("find_key: could not find value in dictionary") # should never get here
     return ""
 
 ################################################################################
@@ -339,8 +339,6 @@ def ccpFileGen(symbol, event):
 
 def handleMessage(messageID, args):
     retDict = {}
-    # print("CCP handleMessage: {} args: {}".format(messageID, args))
-    
     if (messageID == "CCP_CONFIG_HW_IO"):
         global ccpSym_OprationMode
         

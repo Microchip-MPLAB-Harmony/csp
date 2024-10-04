@@ -97,7 +97,7 @@ if __name__ == "__main__":
                                                                     rstc_menu)
     rstc_name.setVisible(False)
     rstc_name.setDefaultValue("RSTC")
-    print("Running " + rstc_name.getValue())
+    Log.writeInfoMessage("Running " + rstc_name.getValue())
 
     per_reset_support = rstc_component.createBooleanSymbol(
                                                 "RSTC_PERRST_SUPPORT", None)

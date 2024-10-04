@@ -47,8 +47,6 @@ def update_interrupt(symbol, event):
 
 def handleMessage(messageID, args):
     retDict = {}
-    # print("ACC handleMessage: {} args: {}".format(messageID, args))
-    
     if (messageID == "ACC_CONFIG_HW_IO"):
         component = "acc"
         accIndex, accPin, enable = args['config']

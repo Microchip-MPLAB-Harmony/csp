@@ -109,8 +109,6 @@ if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_E
     #update interrupt security
     Database.setSymbolValue("core", "MCRAMC_SET_NON_SECURE", mcramcIsNonSecure)
 
-    print ("mcramcIsNonSecure = " + str(mcramcIsNonSecure))
-
 # Instance Header File
 ramHeaderFile = ramComponent.createFileSymbol("RAM_INSTANCE_HEADER", None)
 ramHeaderFile.setSourcePath("../peripheral/ram/templates/plib_mcramc_03727.h.ftl")

@@ -58,10 +58,6 @@ global dmaTransferDirValues
 ################################################################################
 
 def setDMAInterruptData(dma_interrupt_name, status):
-
-    print "dma_interrupt_name = " + dma_interrupt_name
-    print "status = " + str(status)
-
     Database.setSymbolValue("core", dma_interrupt_name + "_INTERRUPT_ENABLE" , status, 1)
     Database.setSymbolValue("core", dma_interrupt_name + "_INTERRUPT_HANDLER_LOCK" , status, 1)
 

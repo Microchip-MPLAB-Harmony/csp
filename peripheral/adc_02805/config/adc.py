@@ -457,8 +457,6 @@ def updateADCClockWarningStatus(symbol, event):
 
 def handleMessage(messageID, args):
     retDict = {}
-    # print("ADC handleMessage: {} args: {}".format(messageID, args))
-    
     if (messageID == "ADC_CONFIG_HW_IO"):
         global adcSym_AD1CHS__CH0SA
         

@@ -430,7 +430,7 @@ def instantiateComponent(cmpComponent):
     cmpInstanceName = cmpComponent.createStringSymbol("CMP_INSTANCE_NAME", None)
     cmpInstanceName.setVisible(False)
     cmpInstanceName.setDefaultValue(cmpComponent.getID().upper())
-    print("Running " + cmpInstanceName.getValue())
+    Log.writeInfoMessage("Running " + cmpInstanceName.getValue())
 
     #Stop in Idle mode if device is not
     global cmpSym_CMSTAT_SIDL

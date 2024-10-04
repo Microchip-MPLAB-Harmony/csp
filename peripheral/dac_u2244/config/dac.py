@@ -111,7 +111,6 @@ def evsysSetup(symbol, event):
 
 def handleMessage(messageID, args):
     retDict = {}
-    # print("DAC handleMessage: {} args: {}".format(messageID, args))
     if (messageID == "DAC_CONFIG_HW_IO"):
         channel = args['config']
         enable = args['enable']

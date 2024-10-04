@@ -59,7 +59,6 @@ def handleMessage(messageID, args):
         # To be implemented
 
     elif (messageID == "MCSPI_CONFIG_HW_IO"):
-        # print("MCSPI handleMessage: {} args: {}".format(messageID, args))
         npcs, enable = args['config']
 
         deviceNamespace = 'mcspi'

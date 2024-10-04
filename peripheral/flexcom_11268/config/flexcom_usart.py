@@ -189,9 +189,7 @@ def updateUSARTDataBits (symbol, event):
     symbol.setValue(dataBitsDict[dataBits])
 
 def updateInterruptMode (symbol, event):
-    print "updateInterruptMode - " + str(event["value"])
     if symbol.getLabel() != "---":
-        print "entered"
         if event["value"] == True and event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE").getSelectedKey() != "RING_BUFFER" :
             event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE").setSelectedKey("NON_BLOCKING")
         elif event["value"] == False:
@@ -200,9 +198,7 @@ def updateInterruptMode (symbol, event):
         symbol.setVisible(False)
 
 def updateRingBufferMode (symbol, event):
-    print "updateRingBufferMode - " + str(event["value"])
     if symbol.getLabel() != "---":
-        print "entered"
         if event["value"] == True:
             event["source"].getSymbolByID("FLEXCOM_USART_OPERATING_MODE").setSelectedKey("RING_BUFFER")
         symbol.setLabel("---")

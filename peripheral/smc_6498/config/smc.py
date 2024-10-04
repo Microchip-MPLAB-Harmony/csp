@@ -142,14 +142,13 @@ def instantiateComponent(smcComponent):
     smcInstanceName = smcComponent.createStringSymbol("SMC_INSTANCE_NAME", None)
     smcInstanceName.setVisible(False)
     smcInstanceName.setDefaultValue(smcComponent.getID().upper())
-    print"--------------------------------------------------------------------"
-    print("************************** Running " + smcInstanceName.getValue() + " ****************************")
-    print"--------------------------------------------------------------------"
+    
+    Log.writeInfoMessage("Running " + smcInstanceName.getValue())
 
     smcRegModule    = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SMC\"]/register-group@[name=\"SMC\"]/register-group@[name=\"SMC_CS_NUMBER\"]")
     smcChipSelCount = int (smcRegModule.getAttribute("count"))
 
-    print("Total available SMC Chip Select Count is : " + str(smcChipSelCount))
+    Log.writeDebugMessage("Total available SMC Chip Select Count is : " + str(smcChipSelCount))
 
     smcMenu = smcComponent.createMenuSymbol("SMC_MENU", None)
     smcMenu.setLabel("SMC Configurations")

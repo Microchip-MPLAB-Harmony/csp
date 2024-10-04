@@ -156,12 +156,12 @@ def instantiateComponent(ebiComponent):
     ebiInstanceName = ebiComponent.createStringSymbol("EBI_INSTANCE_NAME", None)
     ebiInstanceName.setVisible(False)
     ebiInstanceName.setDefaultValue(ebiComponent.getID().upper())
-    print("************************** Running " + ebiInstanceName.getValue() + " ****************************")
+    Log.writeInfoMessage("************************** Running " + ebiInstanceName.getValue() + " ****************************")
 
     ebiRegModule    = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EBI\"]/register-group@[name=\"EBI\"]/register-group@[name=\"CS_X\"]")
     ebiChipSelCount = int (ebiRegModule.getAttribute("count"))
 
-    print("Total available EBI Chip Select Count is : " + str(ebiChipSelCount))
+    Log.writeInfoMessage("Total available EBI Chip Select Count is : " + str(ebiChipSelCount))
 
     ebiMenu = ebiComponent.createMenuSymbol("EBI_MENU", None)
     ebiMenu.setLabel("SMC Configurations")

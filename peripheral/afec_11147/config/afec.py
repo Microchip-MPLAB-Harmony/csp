@@ -410,7 +410,6 @@ def handleMessage(messageID, args):
         setAdcConfigParams( args )
     
     elif (messageID == "ADC_CONFIG_HW_IO"):
-        # print("AFEC handleMessage: {} args: {}".format(messageID, args))
         component = str(afecInstanceName.getValue()).lower()
         channel, isNegInput, enable = args['config']
 

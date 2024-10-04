@@ -85,7 +85,6 @@ def disableBKUPRST(symbol, event):
 def handleMessage(messageID, args):
     retDict = {}
     component = supcInstanceName.getValue().lower()
-    # print("SUPC handleMessage: {} args: {}".format(messageID, args))
     if (messageID == "SUPC_CONFIG_HW_IO"):
         input, enable = args['config']
         symbolId = "SUPC_WUIR_WKUPEN{}".format(input)

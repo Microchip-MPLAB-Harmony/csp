@@ -31,7 +31,7 @@ def instantiateComponent(supcComponent):
     supcInstanceName = supcComponent.createStringSymbol("SUPC_INSTANCE_NAME", None)
     supcInstanceName.setVisible(False)
     supcInstanceName.setDefaultValue(supcComponent.getID().upper())
-    print("Running " + supcInstanceName.getValue())
+    Log.writeInfoMessage("Running " + supcInstanceName.getValue())
 
     # SM configuration
     supcSMMenu= supcComponent.createBooleanSymbol("SM_ENABLE", None)

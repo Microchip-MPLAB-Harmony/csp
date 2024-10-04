@@ -37,24 +37,15 @@ SERCOMfilesArray = []
 def getValueGrp(module, reg_grp, reg_name, bitfield_name , mode = None):
     node_str = ""
     val_grp_node = None
-
     if mode != None:
         node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module, reg_grp, mode, reg_name, bitfield_name)
     else:
          node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module, reg_grp, reg_name, bitfield_name)
-
-    print (node_str)
     bitfield_node = ATDF.getNode(node_str)
-
     if bitfield_node != None:
         val_grp = bitfield_node.getAttribute("values")
         node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module, val_grp)
         val_grp_node = ATDF.getNode(node_str)
-        if val_grp_node == None:
-            print ("value-group = " + val_grp + " not found")
-    else:
-        print ("bitfield_name = " + bitfield_name + " not found" )
-
     return val_grp_node
 
 def fileUpdate(symbol, event):
@@ -123,18 +114,14 @@ def getSERCOMSymbolValues(mode, signalId, padId):
             for index in range(len(txpoValues)):
                 ctrlATXPO.append(txpoValues[index].getAttribute("caption").replace(" ", ""))
 
-            # print("getSERCOMSymbolValues : {}".format(ctrlATXPO))
-
             if signalId == 'tx':
                 for index in range(len(ctrlATXPO)):
                     if "PAD[{}]=TxD".format(padId) in ctrlATXPO[index]:
-                        # print("getSERCOMSymbolValues found : {}".format("PAD[{}]=TxD".format(padId)))
                         symbolValue = index
                         break
             elif signalId in ['rts', 'cts']:
                 for index in range(len(ctrlATXPO)):
                     if "PAD[{}]=CTS".format(padId) in ctrlATXPO[index]:
-                        # print("getSERCOMSymbolValues found : {}".format("PAD[{}]=CTS".format(padId)))
                         symbolValue = index
                         break
 
@@ -151,12 +138,9 @@ def getSERCOMSymbolValues(mode, signalId, padId):
             for index in range(len(dopoValues)):
                 ctrlADOPO.append(dopoValues[index].getAttribute("caption").replace(" ", ""))
 
-            # print("getSERCOMSymbolValues : {}".format(ctrlADOPO))
-
             if signalId == 'mosi':
                 for index in range(len(ctrlADOPO)):
                     if "DOonPAD[{}]".format(padId) in ctrlADOPO[index]:
-                        # print("getSERCOMSymbolValues found : {}".format("DOonPAD[{}]".format(padId)))
                         symbolValue = index
                         break
         else:
@@ -287,7 +271,6 @@ def handleMessage(messageID, args):
                 usartSym_OperatingMode.setSelectedKey("RING_BUFFER")
 
     elif (messageID == "SERCOM_CONFIG_HW_IO"):
-        # print("SERCOM handleMessage: {} args: {}".format(messageID, args))
         mode, pinCtrl, enable = args['config']
 
         signalId = pinCtrl.get("signalId")

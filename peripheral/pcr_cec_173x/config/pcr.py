@@ -27,7 +27,6 @@ global priv_en_reg_mask_dic
 priv_en_reg_mask_dic = {}
 
 def setProcessorClockFreq(symbol, event):
-    print event["symbol"].getSelectedValue()
     symbol.setValue(96000000/int(event["symbol"].getSelectedValue(), 16))
 
 def sleep_reg_val_update (symbol, event):

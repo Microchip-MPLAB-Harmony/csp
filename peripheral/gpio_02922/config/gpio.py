@@ -27,7 +27,7 @@ import xml.etree.ElementTree as ET
 import os.path
 import inspect
 
-print("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 
 # "pioSymChannel" list will hold the port channels which are present in particular device.
 # it will be dynamically populated based on ATDF pinout info.
@@ -70,7 +70,6 @@ global clearPinConfigurationValue
 
 def setPinConfigurationValue(pinNumber, setting, value):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
-    # print("GPIO setPinConfigurationValue[{}][{}] : {}".format(pinNumber, setting, value))
     if symbol:
         symbol.setReadOnly(False)
         symbol.clearValue()
@@ -87,7 +86,6 @@ def clearPinConfigurationValue(pinNumber, setting):
     if symbol:
         symbol.setReadOnly(False)
         symbol.clearValue()
-        # print("GPIO  clearPinSetConfigurationValue[{}][{}]".format(pinNumber, setting))
 
 # Dependency Function to show or hide the warning message depending on Interrupt
 def InterruptStatusWarning(symbol, event):

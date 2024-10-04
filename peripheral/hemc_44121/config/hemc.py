@@ -782,13 +782,11 @@ def instantiateComponent(hemcComponent):
     # Deafult value for HSMC MODE TDF CYCLE Register
     HSMC_MODE_TDF_CYCLES_DEFAULT_VALUE   = 0
 
-    print"--------------------------------------------------------------------"
-    print("************************** Running " + hsmcInstanceName.getValue() + " ****************************")
-    print"--------------------------------------------------------------------"
+    Log.writeInfoMessage("Running " + hsmcInstanceName.getValue())
 
     hsmcChipSelCount = chipSelectCount
 
-    print("Total available HSMC Chip Select Count is : " + str(hsmcChipSelCount))
+    Log.writeDebugMessage("Total available HSMC Chip Select Count is : " + str(hsmcChipSelCount))
 
     # HSMC Global features
     hsmcSym_GlobalMenu= hemcComponent.createMenuSymbol("HSMC_GLOBAL_MENU", hsmcMenu)

@@ -80,7 +80,6 @@ def tcTimerEvsys(symbol, event):
             if (evsysVal != tcVal):
                 Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", tcVal, 2)
             if ((evsysVal_evu) != tcVal_evu):
-                print("Timer event")
                 Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", bool(tcVal_evu), 2)
         else:
             if(evsysVal == True and component.getSymbolValue("TC_COMPARE_EVCTRL_OVFEO") == False):

@@ -476,7 +476,7 @@ def instantiateComponent(canComponent):
     canInstanceName = canComponent.createStringSymbol("CAN_INSTANCE_NAME", None)
     canInstanceName.setVisible(False)
     canInstanceName.setDefaultValue(canComponent.getID().upper())
-    print("Running " + canInstanceName.getValue())
+    Log.writeInfoMessage("Running " + canInstanceName.getValue())
 
     def hideMenu(menu, event):
         menu.setVisible(event["value"])

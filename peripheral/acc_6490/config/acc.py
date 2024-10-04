@@ -75,7 +75,7 @@ def instantiateComponent(accComponent):
     accInstanceName = accComponent.createStringSymbol("ACC_INSTANCE_NAME", None)
     accInstanceName.setVisible(False)
     accInstanceName.setDefaultValue(accComponent.getID().upper())
-    print("Running " + accInstanceName.getValue())
+    Log.writeInfoMessage("Running " + accInstanceName.getValue())
 
     parameters = []
     parametersNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ACC\"]/instance@[name=\""+accInstanceName.getValue()+"\"]/parameters")

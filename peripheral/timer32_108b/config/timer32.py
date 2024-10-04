@@ -47,15 +47,11 @@ def calcAchievableFreq(inputClk, prescale, dirn, countVal):
 def handleMessage(messageID, args):
     global sysTimeComponentId
     global tmr32TimeMs
-
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
-    
-    print "message = " + messageID
 
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])
-        print sysTimeComponentId.getValue()
         modeDict = {"plib_mode": "PERIOD_MODE"}
         sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
         if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
@@ -71,10 +67,6 @@ def handleMessage(messageID, args):
 ########################################## Component  #############################################
 ###################################################################################################
 def setTIMER32InterruptData(timer32_interrupt_name, status):
-
-    print "timer32_interrupt_name = " + timer32_interrupt_name
-    print "status = " + str(status)
-    
     Database.setSymbolValue("core", timer32_interrupt_name + "_INTERRUPT_ENABLE" , status, 1)
     Database.setSymbolValue("core", timer32_interrupt_name + "_INTERRUPT_HANDLER_LOCK" , status, 1)
 
@@ -162,8 +154,6 @@ def instantiateComponent(tmr32Component):
     tmr32InstanceName = tmr32Component.createStringSymbol("TMR32_INSTANCE_NAME", None)
     tmr32InstanceName.setVisible(False)
     tmr32InstanceName.setDefaultValue(tmr32Component.getID().upper())
-    
-    print "tmr32InstanceName = " + tmr32InstanceName.getValue()
     
     tmr32InstanceNum = tmr32Component.createStringSymbol("TMR32_INSTANCE_NUMBER", None)
     tmr32InstanceNum.setVisible(False)

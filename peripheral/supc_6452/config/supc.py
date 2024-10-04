@@ -91,7 +91,6 @@ def disableBKUPRST(symbol,event):
 def handleMessage(messageID, args):
     retDict = {}
     component = supcInstanceName.getValue().lower()
-    # print("SUPC handleMessage: {} args: {}".format(messageID, args))
     if (messageID == "SUPC_CONFIG_HW_IO"):
         input, enable = args['config']
         symbolId = "SUPC_WUIR_WKUPEN{}".format(input)
@@ -123,7 +122,7 @@ def instantiateComponent(supcComponent):
     supcInstanceName = supcComponent.createStringSymbol("SUPC_INSTANCE_NAME", None)
     supcInstanceName.setVisible(False)
     supcInstanceName.setDefaultValue(supcComponent.getID().upper())
-    print("Running " + supcInstanceName.getValue())
+    Log.writeInfoMessage("Running " + supcInstanceName.getValue())
 
     # SM configuration
     supcSMMenu= supcComponent.createBooleanSymbol("SM_ENABLE", None)

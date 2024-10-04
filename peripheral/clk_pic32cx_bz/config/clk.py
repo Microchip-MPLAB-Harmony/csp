@@ -356,7 +356,7 @@ def _find_key(value, keypairs):
     for keyname, val in keypairs.items():
         if(val == str(value)):
             return keyname
-    print("_find_key: could not find value in dictionary") # should never get here
+    Log.writeDebugMessage("_find_key: could not find value in dictionary") # should never get here
     return ""
 
 global _get_default_value
@@ -909,16 +909,10 @@ def bwselCB(symbol, event):
         fbDiv = Database.getSymbolValue("core","UPLLCON_UPLLFBDIV_VALUE")
         postDiv = Database.getSymbolValue("core","UPLLCON_UPLLPOSTDIV1_VALUE")
         pllSource = 16000000
-        print ("refDiv = " + str(refDiv))
-        print ("fbDiv = " + str(fbDiv))
-        print ("postDiv = " + str(postDiv))
-        print ("pllSource = " + str(pllSource))
         pllBwSelSymbolID = "UPLLCON_UPLLBSWSEL_VALUE"
         pllBypass = Database.getSymbolValue("core", "UPLLCON_UPLL_BYP_VALUE")
         symId = upllWarningItem
     bwselValue = updatePLLBwselValue(refDiv, fbDiv, postDiv, pllSource)
-    print ("bwselValue = " + str(bwselValue))
-
     if pllBypass == "BYPASS":
         if 'EPLL' in event['id']:
             Database.setSymbolValue("core", "ETHCLK1", str(pllSource), 1)

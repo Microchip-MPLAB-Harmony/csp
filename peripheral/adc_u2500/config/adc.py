@@ -263,7 +263,7 @@ def find_prescale_and_conv_samples(desired_conversion_time_us, resolution, input
         for sample_count in range(1, 33):
             actual_conversion_frequency = input_clock / ((2 ** (1 + prescaler)) * (sample_count + resolution))
             error = abs(desired_conversion_frequency - actual_conversion_frequency)
-            print(error)
+            Log.writeDebugMessage(error)
 
             if error > prev_error:
                 break
@@ -367,8 +367,6 @@ def setAdcConfigParams( args ):
 
 def handleMessage(messageID, args):
     dict = {}
-    # print("ADC handleMessage: {} args: {}".format(messageID, args))
-    
     if (messageID == "PMSM_FOC_ADC_CH_CONF"):
         component = str(adcInstanceName.getValue()).lower()
         instanceNum = int(filter(str.isdigit,str(adcInstanceName.getValue())))
@@ -396,7 +394,6 @@ def handleMessage(messageID, args):
                 if enable == False:
                     res = Database.clearSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput))
                 else:
-                    # print("ADC handleMessage setSymbolValue: {} = {}".format("ADC_INPUTCTRL_{}".format(muxInput), int(channel)))
                     res = Database.setSymbolValue(component, "ADC_INPUTCTRL_{}".format(muxInput), int(channel))
                     
                 if res == True:

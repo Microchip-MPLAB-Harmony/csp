@@ -62,7 +62,6 @@ def handleMessage(messageID, args):
     global eic_instance_name
     
     retDict = {}
-    # print("EIC handleMessage: {} args: {}".format(messageID, args))
     if (messageID == "EIC_CONFIG_HW_IO"):
         component = eic_instance_name.getValue().lower()
         channel, enable = args['config']

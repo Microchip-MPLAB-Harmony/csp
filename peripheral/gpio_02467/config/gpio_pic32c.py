@@ -27,7 +27,7 @@ import xml.etree.ElementTree as ET
 import os.path
 import inspect
 
-print("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 
 # "pioSymChannel" list will hold the port channels which are present in particular device.
 # it will be dynamically populated based on ATDF pinout info.
@@ -71,7 +71,6 @@ global clearPinConfigurationValue
 
 def setPinConfigurationValue(pinNumber, setting, value):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
-    # print("GPIO setPinConfigurationValue[{}][{}] : {}".format(pinNumber, setting, value))
     if symbol:
         symbol.setReadOnly(False)
         symbol.clearValue()
@@ -88,7 +87,6 @@ def clearPinConfigurationValue(pinNumber, setting):
     if symbol:
         symbol.setReadOnly(False)
         symbol.clearValue()
-        # print("GPIO  clearPinSetConfigurationValue[{}][{}]".format(pinNumber, setting))
 
 # Dependency Function to show or hide the warning message depending on Interrupt
 def InterruptStatusWarning(symbol, event):
@@ -226,14 +224,11 @@ def pinModeCal(pin, event):
     global pinBitPosition
     global pinLatch
     
-    print ("pinModeCal")
-
     pin_num = int((pin.getID()).split("_")[2])
     portChannel = pinChannel[pin_num-1].getValue()
 
     if portChannel != "" and portChannel != "None":
         bit_pos = pinBitPosition[pin_num-1].getValue()
-        print ("R" + portChannel + str(bit_pos))
         if pinHasAnalogFunctionMap.get("R" + portChannel + str(bit_pos)) == True:
             channelIndex = pioSymChannel.index(portChannel)
             ANSEL_Value = gpioSym_GPIO_ANSEL[channelIndex].getValue()
@@ -418,8 +413,6 @@ def createPinMap(packageSymbol):
         pin_position = sort_alphanumeric(pin_map.keys())
     else:
         pin_position = sorted(pin_map.keys())
-        
-    print (pinHasAnalogFunctionMap)
 
     return (pin_map, pin_position)
 

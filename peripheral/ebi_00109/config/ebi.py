@@ -355,7 +355,7 @@ def instantiateComponent(ebiComponent):
     ebiInstanceName = ebiComponent.createStringSymbol("EBI_INSTANCE_NAME", None)
     ebiInstanceName.setVisible(False)
     ebiInstanceName.setDefaultValue(ebiComponent.getID().upper())
-    print("Running " + ebiInstanceName.getValue())
+    Log.writeInfoMessage("Running " + ebiInstanceName.getValue())
 
     #Clock enable
     Database.setSymbolValue("core", ebiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)

@@ -53,7 +53,6 @@ def interruptControl(symbol, event):
 
 def handleMessage(messageID, args):
     retDict = {}
-    # print("SUPC handleMessage: {} args: {}".format(messageID, args))
     if (messageID == "SUPC_CONFIG_HW_IO"):
         output, enable = args['config']
         component = supcInstanceName.getValue().lower()

@@ -23,7 +23,7 @@
 *****************************************************************************"""
 
 import re
-print("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 
 global pioSymChannel
 pioSymChannel = ["A", "B", "C", "D", "E"]
@@ -71,7 +71,6 @@ global clearPinConfigurationValue
 
 def setPinConfigurationValue(pinNumber, setting, value):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
-    # print("setPinConfigurationValue[{}][{}] : {}".format(pinNumber, setting, symbol))
     if symbol:
         symbol.clearValue()
         symbol.setValue(value)
@@ -83,7 +82,6 @@ def getPinConfigurationValue(pinNumber, setting):
 
 def clearPinConfigurationValue(pinNumber, setting):
     symbol = pinSymbolsDictionary.get(pinNumber).get(setting)
-    # print("clearPinConfigurationValue[{}][{}] : {}".format(pinNumber, setting, symbol))
     if symbol:
         symbol.setReadOnly(False)
         symbol.clearValue()

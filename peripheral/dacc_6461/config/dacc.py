@@ -51,7 +51,6 @@ def symbolVisible(symbol, event):
         
 def handleMessage(messageID, args):
     retDict = {}
-    # print("DACC handleMessage: {} args: {}".format(messageID, args))
     component = daccInstanceName.getValue().lower()
     if (messageID == "DAC_CONFIG_HW_IO"):
         channel = args['config']

@@ -56,7 +56,6 @@ def handleMessage(messageID, args):
             spiInterrupt.setVisible(args["isVisible"])
 
     elif (messageID == "SPI_CONFIG_HW_IO"):
-        # print("SPI handleMessage: {} args: {}".format(messageID, args))
         npcs, enable = args['config']
         res = Database.setSymbolValue(spiInstanceName.getValue().lower(), "SPI_EN_{}".format(npcs.upper()), enable)
         if res == True:

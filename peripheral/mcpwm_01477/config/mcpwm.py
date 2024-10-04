@@ -715,7 +715,6 @@ def handleMessage(messageID, args):
         Database.setSymbolValue(component, "PWMCON"+str(pwmChU)+"__FLTIEN", True)
 
     elif (messageID == "PWM_CONFIG_HW_IO"):
-        # print("MCPWM handleMessage: {} args: {}".format(messageID, args))
         channel, polarity, enable = args['config']
 
         if enable == True:

@@ -55,8 +55,6 @@ def handleMessage(messageID, args):
 
     dummy_dict = dict()
     sysTimePLIBConfig = dict()
-    
-    print "message = " + messageID
 
     if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
         sysTimeComponentId.setValue(args["ID"])

@@ -106,7 +106,6 @@ def aicConfigHwIO(messageID, args):
     global pinActiveList
     
     retDict = {}
-    # print("AIC handleMessage: {} args: {}".format(messageID, args))
     if (messageID == "AIC_CONFIG_HW_IO"):
         component = "core"
         pinId, enable = args['config']

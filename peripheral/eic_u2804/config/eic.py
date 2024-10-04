@@ -74,18 +74,17 @@ def getValueGroupNode__EIC(module_name, register_group, register_name, bitfield_
     else:
          bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module_name, register_group, register_name, bitfield_name)
 
-    print (bitfield_node_path)
     bitfield_node = ATDF.getNode(bitfield_node_path)
 
     if bitfield_node != None:
         if bitfield_node.getAttribute("values") == None:
-            print (register_name + "_" + bitfield_name + "does not have value-group attribute")
+            Log.writeDebugMessage(register_name + "_" + bitfield_name + "does not have value-group attribute")
         else:
             value_group_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module_name, bitfield_node.getAttribute("values")))
             if value_group_node == None:
-                print ("value-group = " + bitfield_node.getAttribute("values") + " not defined")
+                Log.writeDebugMessage("value-group = " + bitfield_node.getAttribute("values") + " not defined")
     else:
-        print ("bitfield_name = " + bitfield_name + " not found" )
+        Log.writeDebugMessage("bitfield_name = " + bitfield_name + " not found" )
 
     return value_group_node
 
@@ -148,9 +147,6 @@ def fileGenLogic(symbol, event):
             else:
                 overallSecurity = "SECURE"
 
-
-    print (overallSecurity)
-
     if (int(Database.getSymbolValue(event["namespace"], "EIC_NONSEC")) > 0 or int(Database.getSymbolValue(event["namespace"], "NMI_IS_NON_SECURE")) == 1) and (overallSecurity == "NON_SECURE"):
         EICfilesArray[0].setEnabled(True)
         EICfilesArray[1].setEnabled(True)
@@ -162,7 +158,7 @@ def fileGenLogic(symbol, event):
         EICfilesArray[2].setEnabled(False)
         EICfilesArray[3].setEnabled(False)
 
-    print ("Enable status = " + str(EICfilesArray[0].getEnabled()))
+    Log.writeDebugMessage("Enable status = " + str(EICfilesArray[0].getEnabled()))
 
 def updateEicInterruptSecurity(symbol, event):
     global InterruptVectorSecurity
@@ -320,7 +316,6 @@ def handleMessage(messageID, args):
     global eicInstanceName
     
     retDict = {}
-    # print("EIC handleMessage: {} args: {}".format(messageID, args))
     if (messageID == "EIC_CONFIG_HW_IO"):
         component = eicInstanceName.getValue().lower()
         channel, enable = args['config']

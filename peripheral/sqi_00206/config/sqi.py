@@ -148,7 +148,7 @@ def instantiateComponent(sqiComponent):
     sqiInstanceName.setVisible(False)
     sqiInstanceName.setDefaultValue(sqiComponent.getID().upper())
 
-    print("Running " + sqiInstanceName.getValue())
+    Log.writeInfoMessage("Running " + sqiInstanceName.getValue())
 
     #Clock enable
     Database.setSymbolValue("core", sqiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)

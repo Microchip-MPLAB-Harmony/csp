@@ -70,7 +70,7 @@ def instantiateComponent(clcComponent):
     clcInstanceName.setDefaultValue(clcComponent.getID().upper())
     clcID = clcComponent.getID().split("clc")[1]
 
-    print("Running " + clcInstanceName.getValue())
+    Log.writeInfoMessage("Running " + clcInstanceName.getValue())
 
     # Enable clock
     Database.setSymbolValue("core", clcInstanceName.getValue() + "_CLOCK_ENABLE", True)

@@ -466,7 +466,7 @@ def instantiateComponent(mcanComponent):
     mcanInstanceName = mcanComponent.createStringSymbol("MCAN_INSTANCE_NAME", None)
     mcanInstanceName.setVisible(False)
     mcanInstanceName.setDefaultValue(mcanComponent.getID().upper())
-    print("Running " + mcanInstanceName.getValue())
+    Log.writeInfoMessage("Running " + mcanInstanceName.getValue())
 
     def hideMenu(menu, event):
         menu.setVisible(event["value"])

@@ -224,8 +224,6 @@ def adcSymbolVisible(symbol, event):
 
 def handleMessage(messageID, args):
     retDict = {}
-    # print("ADC handleMessage: {} args: {}".format(messageID, args))
-    
     if (messageID == "ADC_CONFIG_HW_IO"):
         component = str(adcInstanceName.getValue()).lower()
         channel, isNegInput, enable = args['config']

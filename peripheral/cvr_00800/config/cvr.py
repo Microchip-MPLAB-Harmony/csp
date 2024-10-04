@@ -87,7 +87,7 @@ def instantiateComponent(cvrComponent):
     cvrInstanceName = cvrComponent.createStringSymbol("CVR_INSTANCE_NAME", None)
     cvrInstanceName.setVisible(False)
     cvrInstanceName.setDefaultValue(cvrComponent.getID().upper())
-    print("Running " + cvrInstanceName.getValue())
+    Log.writeInfoMessage("Running " + cvrInstanceName.getValue())
 
     #Clock enable
     Database.setSymbolValue("core", cvrInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)

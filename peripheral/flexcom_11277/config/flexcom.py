@@ -135,7 +135,6 @@ def handleMessage(messageID, args):
                 flexcomSym_UsartOperatingMode.setSelectedKey("RING_BUFFER")
 
     elif (messageID == "FLEXCOM_CONFIG_HW_IO"):
-        # print("FLEXCOM handleMessage: {} args: {}".format(messageID, args))
         npcs, enable = args['config']
         res = Database.setSymbolValue(deviceNamespace, "FLEXCOM_SPI_EN_{}".format(npcs.upper()), enable)
         if res == True:

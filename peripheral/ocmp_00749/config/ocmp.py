@@ -203,7 +203,6 @@ def handleMessage(messageID, args):
     global ocmpSym_OCxCON_OCM
     
     retDict = {}
-    # print("OCMP handleMessage: {} args: {}".format(messageID, args))
     if (messageID == "OCMP_CONFIG_HW_IO"):
         component = ocmpInstanceName.getValue().lower()
         output, enable = args['config']

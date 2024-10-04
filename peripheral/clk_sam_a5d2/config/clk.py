@@ -1129,7 +1129,7 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module):
 
         pid = get_pid_from_instance(periph)
         if pid is None:
-            print "Unable to locate periph " + periph
+            Log.writeDebugMessage("Unable to locate periph " + periph)
             continue
 
         # Add element to the map

@@ -231,7 +231,7 @@ def find_key_value(value, keypairs):
             return index  # return occurrence of <bitfield > entry which has matching value
         index += 1
 
-    print("find_key: could not find value in dictionary") # should never get here
+    Log.writeDebugMessage("find_key: could not find value in dictionary") # should never get here
     return ""
 
 ###################################################################################################

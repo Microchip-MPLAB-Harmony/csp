@@ -95,19 +95,17 @@ def getValueGroupNode__TCC(module_name, register_group, register_name, bitfield_
         bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module_name, register_group, mode, register_name, bitfield_name)
     else:
          bitfield_node_path = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module_name, register_group, register_name, bitfield_name)
-
-    print (bitfield_node_path)
     bitfield_node = ATDF.getNode(bitfield_node_path)
 
     if bitfield_node != None:
         if bitfield_node.getAttribute("values") == None:
-            print (register_name + "_" + bitfield_name + "does not have value-group attribute")
+            Log.writeDebugMessage(register_name + "_" + bitfield_name + "does not have value-group attribute")
         else:
             value_group_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module_name, bitfield_node.getAttribute("values")))
             if value_group_node == None:
-                print ("value-group = " + bitfield_node.getAttribute("values") + " not defined")
+                Log.writeDebugMessage("value-group = " + bitfield_node.getAttribute("values") + " not defined")
     else:
-        print ("bitfield_name = " + bitfield_name + " not found" )
+        Log.writeDebugMessage("bitfield_name = " + bitfield_name + " not found" )
 
     return value_group_node
 ###################################################################################################
@@ -341,7 +339,7 @@ def sysTimePLIBModeConfig(plibMode):
 
     if sysTimeComponentId.getValue() != "":
         if (plibMode == "SYS_TIME_PLIB_MODE_COMPARE"):
-            print ("To be supported")
+            Log.writeDebugMessage ("To be supported")
         if (plibMode == "SYS_TIME_PLIB_MODE_PERIOD"):
             #Set Timer mode
             tccSym_OperationMode.setReadOnly(True)

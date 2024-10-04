@@ -431,7 +431,6 @@ def handleMessage(messageID, args):
         setAdcConfigParams( args )
 
     elif (messageID == "ADC_CONFIG_HW_IO"):
-        # print("ADC handleMessage: {} args: {}".format(messageID, args))
         component = str(adcInstanceName.getValue()).lower()
         channel, muxInput, enable = args['config']
 
@@ -452,8 +451,6 @@ def handleMessage(messageID, args):
                         adcSym_INPUTCTRL_MUXNEG.setSelectedKey("AIN{}".format(channel))
                     else:
                         adcSym_INPUTCTRL_MUXPOS.setSelectedKey("AIN{}".format(channel))
-
-                    # print("ADC handleMessage: setSymbolValue ADC_INPUTCTRL_{} : AIN{}".format(muxInput, channel))
                     
                     if res == True:
                         dict = {"Result": "Success"}

@@ -1238,7 +1238,7 @@ def instantiateComponent(tcComponent):
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
     tcInstanceName.setDefaultValue(tcComponent.getID().upper())
-    print("Running " + tcInstanceName.getValue())
+    Log.writeInfoMessage("Running " + tcInstanceName.getValue())
 
     global tcSym_QDEC_PRESENT
     tcSym_QDEC_PRESENT = tcComponent.createBooleanSymbol("TC_QDEC_PRESENT", None)

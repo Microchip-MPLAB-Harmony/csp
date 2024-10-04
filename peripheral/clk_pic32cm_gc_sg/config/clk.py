@@ -33,23 +33,16 @@ def getValueGrp(module, reg_grp, reg_name, bitfield_name , mode = None):
         node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[modes=\"{2}\",name=\"{3}\"]/bitfield@[name=\"{4}\"]".format(module, reg_grp, mode, reg_name, bitfield_name)
     else:
          node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]/bitfield@[name=\"{3}\"]".format(module, reg_grp, reg_name, bitfield_name)
-
-    print (node_str)
     bitfield_node = ATDF.getNode(node_str)
 
     if bitfield_node != None:
         val_grp = bitfield_node.getAttribute("values")
         node_str = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/value-group@[name=\"{1}\"]".format(module, val_grp)
         val_grp_node = ATDF.getNode(node_str)
-        if val_grp_node == None:
-            print ("value-group = " + val_grp + " not found")
-    else:
-        print ("bitfield_name = " + bitfield_name + " not found" )
 
     return val_grp_node
 
-Log.writeInfoMessage(
-    "Loading osctrl Manager for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading osctrl Manager for " + Variables.get("__PROCESSOR"))
 
 pll_Menu = []
 global topsort
@@ -187,8 +180,6 @@ def setDfllFreq(symbol, event):
             freq = 48000000
         elif ((mode == 1) and (usbCrm == False)):
             refFreq = int(Database.getSymbolValue("core", "GCLK_ID_0_FREQ"))
-            print ("refFreq = " + str(refFreq))
-            print ("mul =" + str(mul))
             freq = mul * refFreq
 
         elif (mode == 1) and (usbCrm == True):

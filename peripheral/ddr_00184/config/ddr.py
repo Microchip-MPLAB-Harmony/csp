@@ -73,7 +73,7 @@ def instantiateComponent(ddrComponent):
     ddrInstanceName = ddrComponent.createStringSymbol("DDR_INSTANCE_NAME", None)
     ddrInstanceName.setVisible(False)
     ddrInstanceName.setDefaultValue(ddrComponent.getID().upper())
-    print("Running " + ddrInstanceName.getValue())
+    Log.writeInfoMessage("Running " + ddrInstanceName.getValue())
 
     #Clock enable
     Database.setSymbolValue("core", ddrInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)

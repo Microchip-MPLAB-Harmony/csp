@@ -27,7 +27,7 @@ import xml.etree.ElementTree as ET
 import os.path
 import inspect
 
-print("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 
 # "pioSymChannel" list will hold the port channels which are present in particular device.
 # it will be dynamically populated based on ATDF pinout info.

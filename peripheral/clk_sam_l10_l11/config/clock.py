@@ -1151,8 +1151,6 @@ for index in range(0, len(children)):
     if packageName in children[index].getAttribute("package"):
         pinout = children[index].getAttribute("pinout")
 
-print pinout
-
 children = []
 val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(pinout)+"\"]")
 children = val.getChildren()
