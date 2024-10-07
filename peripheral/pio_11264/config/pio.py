@@ -336,7 +336,7 @@ def pinCFGR (pin, cfgr_reg):
             cfgr |= 1 << 10
         if opendrain:
             cfgr |= 1 << 14
-        if direction:
+        if direction == "Out":
             cfgr |= 1 << 8
         if interrupt:
             cfgr |= interruptValues.get(interrupt) << 24
