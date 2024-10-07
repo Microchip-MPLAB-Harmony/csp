@@ -50,6 +50,9 @@
 <#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
+<#if USART_7816_ENABLE == true>
+#include "definitions.h"
+</#if>
 #include "plib_${SERCOM_INSTANCE_NAME?lower_case}_usart.h"
 <#if USART_7816_ENABLE == true>
 <#if core.PORT_API_PREFIX??>

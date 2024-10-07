@@ -24,24 +24,24 @@
 -->
 
 <#if (USART_7816_ENABLE == true)>
-void ${SERCOM_INSTANCE_NAME}_iso7816_icc_power_on( void );
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Icc_Power_On( void );
 
-void ${SERCOM_INSTANCE_NAME}_iso7816_icc_power_off( void );
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Icc_Power_Off( void );
 
-bool ${SERCOM_INSTANCE_NAME}_iso7816_card_detect( void );
+bool ${SERCOM_INSTANCE_NAME}_ISO7816_Card_Detect( void );
 
-void ${SERCOM_INSTANCE_NAME}_iso7816_vcc_enable( void );
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Vcc_Enable( void );
 
-void ${SERCOM_INSTANCE_NAME}_iso7816_vcc_disable( void );
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Vcc_Disable( void );
 
-void ${SERCOM_INSTANCE_NAME}_iso7816_cold_reset( void );
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Cold_Reset( void );
 
-void ${SERCOM_INSTANCE_NAME}_iso7816_warm_reset( void );
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Warm_Reset( void );
 
-void ${SERCOM_INSTANCE_NAME}_iso7816_decode_atr( uint8_t *p_atr );
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Decode_Atr( uint8_t *p_atr );
 
-uint8_t ${SERCOM_INSTANCE_NAME}_iso7816_data_read_atr( uint8_t *p_atr );
+uint8_t ${SERCOM_INSTANCE_NAME}_ISO7816_Data_Read_Atr( uint8_t *p_atr );
 
-uint16_t ${SERCOM_INSTANCE_NAME}_iso7816_xfr_block_tpdu( uint8_t *apdu_cmd_buffer, uint8_t *apdu_res_buffer, const size_t apdu_cmd_length );
+uint16_t ${SERCOM_INSTANCE_NAME}_ISO7816_Xfr_Block_Tpdu( uint8_t *apdu_cmd_buffer, uint8_t *apdu_res_buffer, const size_t apdu_cmd_length );
 
 </#if>

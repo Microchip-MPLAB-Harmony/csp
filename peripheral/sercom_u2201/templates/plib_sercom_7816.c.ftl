@@ -34,19 +34,19 @@
 </#if>
 
 <#if (USART_7816_ENABLE == true) && (USART_7816_RESET != "SYS_PORT_PIN_NONE")>
-void ${SERCOM_INSTANCE_NAME}_iso7816_icc_power_on( void )
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Icc_Power_On( void )
 {
     ${PLIB_NAME}_PinWrite(${RESET_PIN}, true);
 }
 
-void ${SERCOM_INSTANCE_NAME}_iso7816_icc_power_off( void )
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Icc_Power_Off( void )
 {
     ${PLIB_NAME}_PinWrite(${RESET_PIN}, false);
 }
 </#if>
 
 <#if (USART_7816_ENABLE == true) && (USART_7816_CARD_DETECT != "SYS_PORT_PIN_NONE")>
-bool ${SERCOM_INSTANCE_NAME}_iso7816_card_detect(void)
+bool ${SERCOM_INSTANCE_NAME}_ISO7816_Card_Detect(void)
 {
     if(${PLIB_NAME}_PinRead(${CARD_DETECT_PIN}) == true){
         return true;
@@ -57,35 +57,35 @@ bool ${SERCOM_INSTANCE_NAME}_iso7816_card_detect(void)
 </#if>
 
 <#if (USART_7816_ENABLE == true) && (USART_7816_VCC_ENABLE != "SYS_PORT_PIN_NONE")>
-void ${SERCOM_INSTANCE_NAME}_iso7816_vcc_enable( void )
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Vcc_Enable( void )
 {
     ${PLIB_NAME}_PinWrite(${VCC_SUPPLY_PIN}, true);
 }
 
-void ${SERCOM_INSTANCE_NAME}_iso7816_vcc_disable( void )
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Vcc_Disable( void )
 {
     ${PLIB_NAME}_PinWrite(${VCC_SUPPLY_PIN}, false);
 }
 </#if>
 
 <#if (USART_7816_ENABLE == true)>
-static uint32_t receive_timeoutcount(void)
+static uint32_t Receive_Timeoutcount(void)
 {
     return ((CPU_CLOCK_FREQUENCY/OUTPUT_CLOCK)*40000U);
 }
 
-static uint32_t reset_waitcount(void)
+static uint32_t Reset_Waitcount(void)
 {
     return ((CPU_CLOCK_FREQUENCY/OUTPUT_CLOCK)*400U);
 }
 </#if>
 
 <#if (USART_7816_ENABLE == true) && (USART_7816_RESET != "PORT_PIN_NONE")>
-void ${SERCOM_INSTANCE_NAME}_iso7816_cold_reset(void)
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Cold_Reset(void)
 {
     uint32_t i, rst_wait_time;
 
-    rst_wait_time = reset_waitcount();
+    rst_wait_time = Reset_Waitcount();
 
     /* tb: wait 400 cycles */
     for (i = 0; i < rst_wait_time; i++) {
@@ -104,17 +104,17 @@ void ${SERCOM_INSTANCE_NAME}_iso7816_cold_reset(void)
     }
 
     //Enable Reset pin to high
-    ${SERCOM_INSTANCE_NAME}_iso7816_icc_power_on();
+    ${SERCOM_INSTANCE_NAME}_ISO7816_Icc_Power_On();
 }
 
-void ${SERCOM_INSTANCE_NAME}_iso7816_warm_reset(void)
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Warm_Reset(void)
 {
     uint32_t count, rst_wait_time;
 
-    rst_wait_time = reset_waitcount();
+    rst_wait_time = Reset_Waitcount();
 
     //Enable Reset pin to high
-    ${SERCOM_INSTANCE_NAME}_iso7816_icc_power_off();
+    ${SERCOM_INSTANCE_NAME}_ISO7816_Icc_Power_Off();
 
     /* tb: wait 400 cycles */
     for (count = 0; count < rst_wait_time; count++) {
@@ -133,11 +133,11 @@ void ${SERCOM_INSTANCE_NAME}_iso7816_warm_reset(void)
     }
 
     //Enable Reset pin to high
-    ${SERCOM_INSTANCE_NAME}_iso7816_icc_power_on();
+    ${SERCOM_INSTANCE_NAME}_ISO7816_Icc_Power_On();
 }
 </#if>
 
-void ${SERCOM_INSTANCE_NAME}_iso7816_decode_atr(uint8_t *p_atr)
+void ${SERCOM_INSTANCE_NAME}_ISO7816_Decode_Atr(uint8_t *p_atr)
 {
     uint32_t index;
     uint8_t j, y, HB_count, uc_offset;
@@ -174,11 +174,11 @@ void ${SERCOM_INSTANCE_NAME}_iso7816_decode_atr(uint8_t *p_atr)
     }
 }
 
-static uint8_t ${SERCOM_INSTANCE_NAME}_iso7816_get_char(uint8_t *p_char_received)
+static uint8_t ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(uint8_t *p_char_received)
 {
     uint32_t timeout = 0, rx_timeout;
 
-    rx_timeout = receive_timeoutcount();
+    rx_timeout = Receive_Timeoutcount();
 
     if (usart_state == USART_SEND)
     {
@@ -211,7 +211,7 @@ static uint8_t ${SERCOM_INSTANCE_NAME}_iso7816_get_char(uint8_t *p_char_received
 
 }
 
-static void ${SERCOM_INSTANCE_NAME}_iso7816_send_char(uint8_t uc_char)
+static void ${SERCOM_INSTANCE_NAME}_ISO7816_Send_Char(uint8_t uc_char)
 {
 
     if (usart_state == USART_RCV)
@@ -240,7 +240,7 @@ static void ${SERCOM_INSTANCE_NAME}_iso7816_send_char(uint8_t uc_char)
 
 }
 
-uint8_t ${SERCOM_INSTANCE_NAME}_iso7816_data_read_atr( uint8_t *p_atr )
+uint8_t ${SERCOM_INSTANCE_NAME}_ISO7816_Data_Read_Atr( uint8_t *p_atr )
 {
     uint8_t j, response_length, uc_value;
     uint8_t status;
@@ -266,10 +266,10 @@ uint8_t ${SERCOM_INSTANCE_NAME}_iso7816_data_read_atr( uint8_t *p_atr )
     }
 
     /* Read ATR TS. */
-    (void)${SERCOM_INSTANCE_NAME}_iso7816_get_char(&p_atr[0]);
+    (void)${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&p_atr[0]);
 
     /* Read ATR T0. */
-    status = ${SERCOM_INSTANCE_NAME}_iso7816_get_char(&p_atr[1]);
+    status = ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&p_atr[1]);
     if (status == 0U)
     {
             return 0;
@@ -281,7 +281,7 @@ uint8_t ${SERCOM_INSTANCE_NAME}_iso7816_data_read_atr( uint8_t *p_atr )
     /* Read ATR Ti. */
     while (uc_value != 0U) {
         if ((uc_value & 0x10U) == 0x10U) { /* TA[response_length] */
-            status = ${SERCOM_INSTANCE_NAME}_iso7816_get_char(&p_atr[response_length++]);
+            status = ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&p_atr[response_length++]);
             if (status == 0U)
             {
                     return 0;
@@ -289,7 +289,7 @@ uint8_t ${SERCOM_INSTANCE_NAME}_iso7816_data_read_atr( uint8_t *p_atr )
         }
 
         if ((uc_value & 0x20U) == 0x20U) { /* TB[response_length] */
-            status = ${SERCOM_INSTANCE_NAME}_iso7816_get_char(&p_atr[response_length++]);
+            status = ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&p_atr[response_length++]);
             if (status == 0U)
             {
                     return 0;
@@ -297,7 +297,7 @@ uint8_t ${SERCOM_INSTANCE_NAME}_iso7816_data_read_atr( uint8_t *p_atr )
         }
 
         if ((uc_value & 0x40U) == 0x40U) { /* TC[response_length] */
-            status = ${SERCOM_INSTANCE_NAME}_iso7816_get_char(&p_atr[response_length++]);
+            status = ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&p_atr[response_length++]);
             if (status == 0U)
             {
                     return 0;
@@ -305,7 +305,7 @@ uint8_t ${SERCOM_INSTANCE_NAME}_iso7816_data_read_atr( uint8_t *p_atr )
         }
 
         if ((uc_value & 0x80U) == 0X80U) { /* TD[response_length] */
-            status = ${SERCOM_INSTANCE_NAME}_iso7816_get_char(&p_atr[response_length]);
+            status = ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&p_atr[response_length]);
             if (status == 0U)
             {
                     return 0;
@@ -320,7 +320,7 @@ uint8_t ${SERCOM_INSTANCE_NAME}_iso7816_data_read_atr( uint8_t *p_atr )
     /* Historical Bytes. */
     uc_value = p_atr[1] & 0x0FU;
     for (j = 0; j < uc_value; j++) {
-        status = ${SERCOM_INSTANCE_NAME}_iso7816_get_char(&p_atr[response_length++]);
+        status = ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&p_atr[response_length++]);
         if (status == 0U)
         {
                 return 0;
@@ -330,18 +330,18 @@ uint8_t ${SERCOM_INSTANCE_NAME}_iso7816_data_read_atr( uint8_t *p_atr )
     return (response_length);
 }
 
-uint16_t ${SERCOM_INSTANCE_NAME}_iso7816_xfr_block_tpdu( uint8_t *apdu_cmd_buffer, uint8_t *apdu_res_buffer, const size_t apdu_cmd_length )
+uint16_t ${SERCOM_INSTANCE_NAME}_ISO7816_Xfr_Block_Tpdu( uint8_t *apdu_cmd_buffer, uint8_t *apdu_res_buffer, const size_t apdu_cmd_length )
 {
     uint16_t us_ne_nc, cmd_index = 4;
     uint16_t resp_index = 0;
     uint8_t sw1_rcvd = 0, cmd_type, status;
     uint8_t proc_byte, dummy_byte=0;
 
-    ${SERCOM_INSTANCE_NAME}_iso7816_send_char(apdu_cmd_buffer[0]);    /* CLA */
-    ${SERCOM_INSTANCE_NAME}_iso7816_send_char(apdu_cmd_buffer[1]);    /* INS */
-    ${SERCOM_INSTANCE_NAME}_iso7816_send_char(apdu_cmd_buffer[2]);    /* P1 */
-    ${SERCOM_INSTANCE_NAME}_iso7816_send_char(apdu_cmd_buffer[3]);    /* P2 */
-    ${SERCOM_INSTANCE_NAME}_iso7816_send_char(apdu_cmd_buffer[4]);    /* P3 */
+    ${SERCOM_INSTANCE_NAME}_ISO7816_Send_Char(apdu_cmd_buffer[0]);    /* CLA */
+    ${SERCOM_INSTANCE_NAME}_ISO7816_Send_Char(apdu_cmd_buffer[1]);    /* INS */
+    ${SERCOM_INSTANCE_NAME}_ISO7816_Send_Char(apdu_cmd_buffer[2]);    /* P1 */
+    ${SERCOM_INSTANCE_NAME}_ISO7816_Send_Char(apdu_cmd_buffer[3]);    /* P2 */
+    ${SERCOM_INSTANCE_NAME}_ISO7816_Send_Char(apdu_cmd_buffer[4]);    /* P3 */
 
     /* Handle the four structures of command APDU. */
     switch (apdu_cmd_length)
@@ -404,12 +404,12 @@ uint16_t ${SERCOM_INSTANCE_NAME}_iso7816_xfr_block_tpdu( uint8_t *apdu_cmd_buffe
     /* Handle Procedure Bytes. */
     do{
         /* Dummy Read - Start */
-        (void)${SERCOM_INSTANCE_NAME}_iso7816_get_char(&dummy_byte);
-        (void)${SERCOM_INSTANCE_NAME}_iso7816_get_char(&dummy_byte);
-        (void)${SERCOM_INSTANCE_NAME}_iso7816_get_char(&dummy_byte);
+        (void)${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&dummy_byte);
+        (void)${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&dummy_byte);
+        (void)${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&dummy_byte);
         /* Dummy Read - End */
 
-        status = ${SERCOM_INSTANCE_NAME}_iso7816_get_char(&proc_byte);
+        status = ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&proc_byte);
         if(status == 0U)
         {
             return 0;
@@ -431,7 +431,7 @@ uint16_t ${SERCOM_INSTANCE_NAME}_iso7816_xfr_block_tpdu( uint8_t *apdu_cmd_buffe
             {
                 /* Receive data from card. */
                 do {
-                    status = ${SERCOM_INSTANCE_NAME}_iso7816_get_char(&apdu_res_buffer[resp_index]);
+                    status = ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&apdu_res_buffer[resp_index]);
                     resp_index++;
                 } while (0U != --us_ne_nc);
             }
@@ -440,12 +440,12 @@ uint16_t ${SERCOM_INSTANCE_NAME}_iso7816_xfr_block_tpdu( uint8_t *apdu_cmd_buffe
                 /* Send data. */
                 do {
                     cmd_index++;
-                    ${SERCOM_INSTANCE_NAME}_iso7816_send_char(apdu_cmd_buffer[cmd_index]);
+                    ${SERCOM_INSTANCE_NAME}_ISO7816_Send_Char(apdu_cmd_buffer[cmd_index]);
                 } while (0U != --us_ne_nc);
 
                 /* Dummy Read - Start */
-                status = ${SERCOM_INSTANCE_NAME}_iso7816_get_char(&dummy_byte);
-                status = ${SERCOM_INSTANCE_NAME}_iso7816_get_char(&dummy_byte);
+                status = ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&dummy_byte);
+                status = ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&dummy_byte);
                 /* Dummy Read - End */
             }
         }
@@ -455,12 +455,12 @@ uint16_t ${SERCOM_INSTANCE_NAME}_iso7816_xfr_block_tpdu( uint8_t *apdu_cmd_buffe
             if (cmd_type == CASE2)
             {
                 /* receive data from card. */
-                status = ${SERCOM_INSTANCE_NAME}_iso7816_get_char(&apdu_res_buffer[resp_index]);
+                status = ${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&apdu_res_buffer[resp_index]);
                 resp_index++;
             }
             else
             {
-                ${SERCOM_INSTANCE_NAME}_iso7816_send_char(apdu_cmd_buffer[cmd_index]);
+                ${SERCOM_INSTANCE_NAME}_ISO7816_Send_Char(apdu_cmd_buffer[cmd_index]);
                 cmd_index++;
             }
             us_ne_nc--;
@@ -474,7 +474,7 @@ uint16_t ${SERCOM_INSTANCE_NAME}_iso7816_xfr_block_tpdu( uint8_t *apdu_cmd_buffe
     /* Status Bytes. */
     if (sw1_rcvd == 0U)
     {
-        (void)${SERCOM_INSTANCE_NAME}_iso7816_get_char(&apdu_res_buffer[resp_index]);                 /* sw1_rcvd */
+        (void)${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&apdu_res_buffer[resp_index]);                 /* sw1_rcvd */
         resp_index++;
     }
     else
@@ -482,7 +482,7 @@ uint16_t ${SERCOM_INSTANCE_NAME}_iso7816_xfr_block_tpdu( uint8_t *apdu_cmd_buffe
         apdu_res_buffer[resp_index] = proc_byte;
         resp_index++;
     }
-    (void)${SERCOM_INSTANCE_NAME}_iso7816_get_char(&apdu_res_buffer[resp_index]);                     /* SW2 */
+    (void)${SERCOM_INSTANCE_NAME}_ISO7816_Get_Char(&apdu_res_buffer[resp_index]);                     /* SW2 */
 
     resp_index++;
 

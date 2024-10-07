@@ -152,10 +152,12 @@ def updateUSARTConfigurationVisibleProperty(symbol, event):
         if usart_form == "USART_FRAME_ISO_7816" or usart_form == "ISO7816" :
             event['source'].getSymbolByID("USART_BAUD_RATE").setValue(event['source'].getSymbolByID("USART_7816_CLOCK_OUTPUT").getValue()/372)
             event['source'].getSymbolByID("USART_PARITY_MODE").setValue(0)
+            event['source'].getSymbolByID("USART_BAUD_ERROR_COMMENT").setVisible(0)
         else:
             event['source'].getSymbolByID("USART_BAUD_RATE").clearValue()
             event['source'].getSymbolByID("USART_PARITY_MODE").clearValue()
-
+            event['source'].getSymbolByID("USART_BAUD_ERROR_COMMENT").setVisible(desiredUSARTBaudRate == False and sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+            
     if event["id"] == "SERCOM_MODE":
         symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 
@@ -184,6 +186,7 @@ def updateSMARTCARDValueProperty(symbol, event):
         if usart_form == "USART_FRAME_ISO_7816" or usart_form == "ISO7816" :
             usartOperatingModeSym.setReadOnly(True)
             usartOperatingModeSym.setSelectedKey("BLOCKING")
+            usartOperatingModeSym.setReadOnly(True)
             if symbol.getValue() == 0:
                 symbol.setValue(1)
         else:

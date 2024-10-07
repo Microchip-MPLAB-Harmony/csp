@@ -52,9 +52,6 @@
 // *****************************************************************************
 
 #include "plib_sercom_usart_common.h"
-<#if USART_7816_ENABLE == true>
-#include "definitions.h"
-</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
