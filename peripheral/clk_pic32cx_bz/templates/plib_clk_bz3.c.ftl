@@ -122,8 +122,10 @@ void CLOCK_Initialize( void )
 </#if>
     //programming 4ms delay -  programming subsys_xtal_ready_delay
     //check xtal spec for delay required
+<#if !PRODUCT_FAMILY?contains("PIC32CX_BZ6")>
     BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 = ((BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 & ~BTZBSYS_SUBSYS_CNTRL_REG1_subsys_xtal_ready_delay_Msk)
                                                 | ((0x01UL) << BTZBSYS_SUBSYS_CNTRL_REG1_subsys_xtal_ready_delay_Pos));
+</#if>
     //wait for crystal ready
     while((BTZBSYS_REGS->BTZBSYS_SUBSYS_STATUS_REG1 & BTZBSYS_SUBSYS_STATUS_REG1_xtal_ready_out_Msk) != BTZBSYS_SUBSYS_STATUS_REG1_xtal_ready_out_Msk)
     {

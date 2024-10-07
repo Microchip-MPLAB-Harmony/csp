@@ -1653,10 +1653,6 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
     epllWarningItem = component.createMenuSymbol('EPLL_OUT_OF_RANGE', parentMenu)
     epllWarningItem.setLabel("****REFDIV, FBDIV, source frequency combination not in usable range.  Please adjust values.****")
     epllWarningItem.setVisible(False)
-    # after have gone through all bitfields, add callback dependency for update of one of them:  BWSEL
-    for ii in epllcon_symbols:
-        if(ii['name'] == 'EPLLBSWSEL'):
-            ii['symvaluename'].setDependencies(bwselCB, bwselDependencyList)
 
     # get initial value of EPLLCON register from 'initval' field in atdf file
     symbolEpllconValue = component.createHexSymbol("EPLLCON_VALUE", parentMenu)
@@ -1674,6 +1670,11 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
         ethpllpostdiv2.setDefaultValue(int(node.getAttribute('initval'), 0))
         ethpllpostdiv2.setDependencies(enableMenu, [enableSymbolId])
         bwselDependencyList.append("EPLLPOSTDIV2")
+
+    # after have gone through all bitfields, add callback dependency for update of one of them:  BWSEL
+    for ii in epllcon_symbols:
+        if(ii['name'] == 'EPLLBSWSEL'):
+            ii['symvaluename'].setDependencies(bwselCB, bwselDependencyList)
 
 def scan_atdf_for_upllcon_fields(component, parentMenu, regNode, enableSymbolId):
     '''
