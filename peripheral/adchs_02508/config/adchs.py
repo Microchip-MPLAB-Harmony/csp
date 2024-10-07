@@ -21,6 +21,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 import math
+import re
 
 ###################################################################################################
 ########################### Global variables   #################################
@@ -732,10 +733,7 @@ def adchsCalcIEC0(symbol, event):
     agien = 0x0
     component = symbol.getComponent()
     for channelID in range(0, len(adciec_depList[0])):
-        str_len = len(adciec_depList[0][channelID])
-        signalID = (adciec_depList[0][channelID])[str_len-2:]
-        if signalID.isnumeric() != True:
-            signalID = (adciec_depList[0][channelID])[str_len-1:]
+        signalID = re.search(r'\d+', (adciec_depList[0][channelID])[::-1]).group()[::-1]
         reg_name = "ADC_DATA" + signalID 
         iec_bit_pos = int (getIRQnumber(reg_name)) % 32
         if (component.getSymbolValue(adciec_depList[0][channelID]) != None):
@@ -748,10 +746,7 @@ def adchsCalcIEC1(symbol, event):
     agien = 0x0
     component = symbol.getComponent()
     for channelID in range(0, len(adciec_depList[1])):
-        str_len = len(adciec_depList[1][channelID])
-        signalID = (adciec_depList[1][channelID])[str_len-2:]
-        if signalID.isnumeric() != True:
-            signalID = (adciec_depList[1][channelID])[str_len-1:]
+        signalID = re.search(r'\d+', (adciec_depList[1][channelID])[::-1]).group()[::-1]
         reg_name = "ADC_DATA" + signalID 
         iec_bit_pos = int (getIRQnumber(reg_name)) % 32
         if (component.getSymbolValue(adciec_depList[1][channelID]) != None):
@@ -764,10 +759,7 @@ def adchsCalcIEC2(symbol, event):
     agien = 0x0
     component = symbol.getComponent()
     for channelID in range(0, len(adciec_depList[2])):
-        str_len = len(adciec_depList[2][channelID])
-        signalID = (adciec_depList[2][channelID])[str_len-2:]
-        if signalID.isnumeric() != True:
-            signalID = (adciec_depList[2][channelID])[str_len-1:]
+        signalID = re.search(r'\d+', (adciec_depList[2][channelID])[::-1]).group()[::-1]
         reg_name = "ADC_DATA" + signalID 
         iec_bit_pos = int (getIRQnumber(reg_name)) % 32
         if (component.getSymbolValue(adciec_depList[2][channelID]) != None):
