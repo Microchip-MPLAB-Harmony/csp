@@ -157,7 +157,7 @@ def updateUSARTConfigurationVisibleProperty(symbol, event):
             event['source'].getSymbolByID("USART_BAUD_RATE").clearValue()
             event['source'].getSymbolByID("USART_PARITY_MODE").clearValue()
             event['source'].getSymbolByID("USART_BAUD_ERROR_COMMENT").setVisible(desiredUSARTBaudRate == False and sercomSym_OperationMode.getSelectedKey() == "USART_INT")
-            
+
     if event["id"] == "SERCOM_MODE":
         symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 
@@ -178,23 +178,6 @@ def updateUSARTRS485GuardTimeValueProperty(symbol, event):
 
     symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and usartSym_CTRLA_TXPO.getSelectedValue() == "0x3" and (usart_frame_format == "USART_FRAME_NO_PARITY" or usart_frame_format == "USART_FRAME_WITH_PARITY"))
 
-def updateSMARTCARDValueProperty(symbol, event):
-
-    if event["id"] == "USART_FORM":
-        usart_form = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
-        usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
-        if usart_form == "USART_FRAME_ISO_7816" or usart_form == "ISO7816" :
-            usartOperatingModeSym.setReadOnly(True)
-            usartOperatingModeSym.setSelectedKey("BLOCKING")
-            usartOperatingModeSym.setReadOnly(True)
-            if symbol.getValue() == 0:
-                symbol.setValue(1)
-        else:
-            usartOperatingModeSym.setReadOnly(False)
-            usartOperatingModeSym.setSelectedKey("NON_BLOCKING")
-            if symbol.getValue() == 1:
-                symbol.setValue(0)
-
 def updateSMARTCARDPinProperty(symbol, event):
 
     if event["id"] == "USART_FORM":
@@ -205,7 +188,8 @@ def updateSMARTCARDPinProperty(symbol, event):
 
 def updateUSARTFORMValueProperty(symbol, event):
 
-    symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+    if symbol.getID() == "USART_FORM":
+        symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 
     if event["id"] == "USART_PARITY_MODE":
 
@@ -223,11 +207,21 @@ def updateUSARTFORMValueProperty(symbol, event):
     if event["id"] == "USART_FORM":
             usart_form = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
             usartOperatingModeSym = event["source"].getSymbolByID("USART_OPERATING_MODE")
+
             if usart_form == "USART_FRAME_AUTO_BAUD_NO_PARITY":
                 usartOperatingModeSym.setReadOnly(True)
                 usartOperatingModeSym.setSelectedKey("RING_BUFFER")
+            elif usart_form == "USART_FRAME_ISO_7816" or usart_form == "ISO7816" :
+                usartOperatingModeSym.setSelectedKey("BLOCKING")
+                usartOperatingModeSym.setReadOnly(True)
+                event["source"].getSymbolByID("USART_7816_ENABLE").setValue(True)
+                event["source"].getSymbolByID("USART_COMM_MODE").setValue(1)
             else:
                 usartOperatingModeSym.setReadOnly(False)
+                if event["source"].getSymbolByID("USART_7816_ENABLE").getValue() == True :
+                    event["source"].getSymbolByID("USART_7816_ENABLE").setValue(False)
+                if(event["source"].getSymbolByID("USART_COMM_MODE").getValue() == 1):
+                    event["source"].getSymbolByID("USART_COMM_MODE").setValue(0)
 
 def updateLinMasterModeOptionsVisibility(symbol, event):
 
@@ -505,7 +499,7 @@ if usartSym_CTRLC_HDRDLY_Node != None:
 usartSym_smartcard = sercomComponent.createBooleanSymbol("USART_7816_ENABLE", sercomSym_OperationMode)
 usartSym_smartcard.setDefaultValue(0)
 usartSym_smartcard.setVisible(False)
-usartSym_smartcard.setDependencies(updateSMARTCARDValueProperty, ["USART_FORM"])
+usartSym_smartcard.setDependencies(updateUSARTFORMValueProperty, ["USART_FORM"])
 
 usart7816SourceList = sercomComponent.createListSymbol("LIST_SERCOM_7816_C", None)
 usart7816HeaderList = sercomComponent.createListSymbol("LIST_SERCOM_7816_H", None)
@@ -515,7 +509,7 @@ usartSym_COMM_MODE = sercomComponent.createIntegerSymbol("USART_COMM_MODE", serc
 usartSym_COMM_MODE.setLabel("USART Communication Mode")
 usartSym_COMM_MODE.setDefaultValue(0)
 usartSym_COMM_MODE.setVisible(False)
-usartSym_COMM_MODE.setDependencies(updateSMARTCARDValueProperty, ["USART_FORM"])
+usartSym_COMM_MODE.setDependencies(updateUSARTFORMValueProperty, ["USART_FORM"])
 
 #USART 7816 Clock input comment
 usartSym_7816_clk_input_Comment = sercomComponent.createCommentSymbol("USART_CLOCK_INPUT_COMMENT", sercomSym_OperationMode)
