@@ -130,7 +130,7 @@ static uint16_t ${SDHC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode, SDHC_Da
                 transfer_mode_reg |= _SDHCMODE_DTXDSEL_MASK;
             }
             transfer_mode_reg |= _SDHCMODE_DMAEN_MASK;
-
+            break;
         default:
                  /* Nothing to do */
             break;
