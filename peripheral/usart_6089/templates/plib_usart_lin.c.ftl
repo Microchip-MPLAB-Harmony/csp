@@ -303,56 +303,68 @@ bool ${USART_INSTANCE_NAME}_LIN_IdentifierWrite( uint8_t id)
 
 uint8_t ${USART_INSTANCE_NAME}_LIN_IdentifierRead( void)
 {
-    return ${USART_INSTANCE_NAME}_REGS->US_LINIR;
+    return (uint8_t)${USART_INSTANCE_NAME}_REGS->US_LINIR;
 }
 
 void ${USART_INSTANCE_NAME}_LIN_ParityEnable(bool parityEnable)
 {
     if(parityEnable == true)
+    {
         USART0_REGS->US_LINMR &= ~US_LINMR_PARDIS_Msk;
+    }
     else
+    {
         USART0_REGS->US_LINMR |= US_LINMR_PARDIS_Msk;
+    }
 }
 
 void ${USART_INSTANCE_NAME}_LIN_ChecksumEnable(bool checksumEnable)
 {
     if(checksumEnable == true)
+    {
         ${USART_INSTANCE_NAME}_REGS->US_LINMR &= ~US_LINMR_CHKDIS_Msk;
+    }
     else
+    {
         ${USART_INSTANCE_NAME}_REGS->US_LINMR |= US_LINMR_CHKDIS_Msk;
+    }
 }
 
 void ${USART_INSTANCE_NAME}_LIN_ChecksumTypeSet(USART_LIN_CHECKSUM_TYPE checksumType)
 {
 	${USART_INSTANCE_NAME}_REGS->US_LINMR &= ~US_LINMR_CHKTYP_Msk;
-	${USART_INSTANCE_NAME}_REGS->US_LINMR |= checksumType;
+	${USART_INSTANCE_NAME}_REGS->US_LINMR |= (uint32_t)checksumType;
 }
 
 <#if USART_MODE == "LIN_MASTER">
 void ${USART_INSTANCE_NAME}_LIN_FrameSlotEnable(bool frameSlotEnable)
 {
     if(frameSlotEnable == true)
+    {
         ${USART_INSTANCE_NAME}_REGS->US_LINMR &= ~US_LINMR_FSDIS_Msk;
+    }
     else
+    {
         ${USART_INSTANCE_NAME}_REGS->US_LINMR |= US_LINMR_FSDIS_Msk;
+    }
 }
 </#if>
 
 void ${USART_INSTANCE_NAME}_LIN_DataLenModeSet(USART_LIN_DATA_LEN dataLenMode)
 {
     ${USART_INSTANCE_NAME}_REGS->US_LINMR &= ~US_LINMR_DLM_Msk;
-    ${USART_INSTANCE_NAME}_REGS->US_LINMR |= dataLenMode;    
+    ${USART_INSTANCE_NAME}_REGS->US_LINMR |= (uint32_t)dataLenMode;    
 }
 
 void ${USART_INSTANCE_NAME}_LIN_ResponseDataLenSet(uint8_t len)
 {
     ${USART_INSTANCE_NAME}_REGS->US_LINMR &= ~US_LINMR_DLC_Msk;
-    ${USART_INSTANCE_NAME}_REGS->US_LINMR |= US_LINMR_DLC(len-1);
+    ${USART_INSTANCE_NAME}_REGS->US_LINMR |= US_LINMR_DLC((uint32_t)len-1U);
 }
 
 uint8_t ${USART_INSTANCE_NAME}_LIN_TransferComplete(void)
 {
-	return ((USART0_REGS->US_CSR & US_CSR_LIN_LINTC_Msk) > 0);
+	return (uint8_t)((USART0_REGS->US_CSR & US_CSR_LIN_LINTC_Msk) > 0U);
 }
 
 </#if>

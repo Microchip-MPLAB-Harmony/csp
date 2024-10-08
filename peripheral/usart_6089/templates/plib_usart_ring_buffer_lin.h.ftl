@@ -38,8 +38,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef PLIB_${USART_INSTANCE_NAME}_H
-#define PLIB_${USART_INSTANCE_NAME}_H
+#ifndef PLIB_${USART_INSTANCE_NAME}_LIN_H
+#define PLIB_${USART_INSTANCE_NAME}_LIN_H
 
 #include "plib_usart_lin_common.h"
 
@@ -111,9 +111,11 @@ void ${USART_INSTANCE_NAME}_LIN_ChecksumEnable(bool checksumEnable);
 
 void ${USART_INSTANCE_NAME}_LIN_ChecksumTypeSet(USART_LIN_CHECKSUM_TYPE checksumType);
 
+<#if USART_MODE == "LIN_MASTER">
 void ${USART_INSTANCE_NAME}_LIN_FrameSlotEnable(bool frameSlotEnable);
+</#if>
 
-void ${USART_INSTANCE_NAME}_LIN_DataLenModeSet(USART_LIN_DATA_LEN dataLen);
+void ${USART_INSTANCE_NAME}_LIN_DataLenModeSet(USART_LIN_DATA_LEN dataLenMode);
 
 void ${USART_INSTANCE_NAME}_LIN_ResponseDataLenSet(uint8_t len);
 

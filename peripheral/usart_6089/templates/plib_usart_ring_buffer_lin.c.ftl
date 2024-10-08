@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${USART_INSTANCE_NAME?lower_case}.c
+    plib_${USART_INSTANCE_NAME?lower_case}_LIN.c
 
   Summary:
-    ${USART_INSTANCE_NAME} PLIB Implementation File
+    ${USART_INSTANCE_NAME} PLIB Implementation File in LIN mode
 
   Description:
     None
@@ -746,7 +746,7 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
 <#if USART_LIN_OPERATING_MODE == "RING_BUFFER">
 	<#if USART_LIN_LINBK_INTERRUPT_ENABLE == true>
 	/* LIN Break Detected */
-    if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_LIN_LINBK_Msk) != 0 )
+    if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_LIN_LINBK_Msk) != 0U)
     {
         ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_USART_RSTSTA_Msk;
        
@@ -760,7 +760,7 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
     
 	<#if USART_LIN_LINID_INTERRUPT_ENABLE == true>
     /* LIN ID Receive */
-    if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_LIN_LINID_Msk) != 0 )
+    if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_LIN_LINID_Msk) != 0U)
     {
         ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_USART_RSTSTA_Msk;
        
@@ -774,7 +774,7 @@ void __attribute__((used)) ${USART_INSTANCE_NAME}_InterruptHandler( void )
 	
 	<#if USART_LIN_LINTC_INTERRUPT_ENABLE == true>
     /* LIN Transfer Complete */
-    if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_LIN_LINTC_Msk) != 0 )
+    if((${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_LIN_LINTC_Msk) != 0U)
     {
         ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_USART_RSTSTA_Msk;
        
@@ -813,56 +813,68 @@ bool ${USART_INSTANCE_NAME}_LIN_IdentifierWrite( uint8_t id)
 
 uint8_t ${USART_INSTANCE_NAME}_LIN_IdentifierRead( void)
 {
-    return ${USART_INSTANCE_NAME}_REGS->US_LINIR;
+    return (uint8_t)(${USART_INSTANCE_NAME}_REGS->US_LINIR);
 }
 
 void ${USART_INSTANCE_NAME}_LIN_ParityEnable(bool parityEnable)
 {
     if(parityEnable == true)
+    {
         USART0_REGS->US_LINMR &= ~US_LINMR_PARDIS_Msk;
+    }
     else
+    {
         USART0_REGS->US_LINMR |= US_LINMR_PARDIS_Msk;
+    }
 }
 
 void ${USART_INSTANCE_NAME}_LIN_ChecksumEnable(bool checksumEnable)
 {
     if(checksumEnable == true)
+    {
         ${USART_INSTANCE_NAME}_REGS->US_LINMR &= ~US_LINMR_CHKDIS_Msk;
+    }
     else
+    {
         ${USART_INSTANCE_NAME}_REGS->US_LINMR |= US_LINMR_CHKDIS_Msk;
+    }
 }
 
 void ${USART_INSTANCE_NAME}_LIN_ChecksumTypeSet(USART_LIN_CHECKSUM_TYPE checksumType)
 {
 	${USART_INSTANCE_NAME}_REGS->US_LINMR &= ~US_LINMR_CHKTYP_Msk;
-	${USART_INSTANCE_NAME}_REGS->US_LINMR |= checksumType;
+	${USART_INSTANCE_NAME}_REGS->US_LINMR |= (uint32_t)checksumType;
 }
 
 <#if USART_MODE == "LIN_MASTER">
 void ${USART_INSTANCE_NAME}_LIN_FrameSlotEnable(bool frameSlotEnable)
 {
     if(frameSlotEnable == true)
+    {
         ${USART_INSTANCE_NAME}_REGS->US_LINMR &= ~US_LINMR_FSDIS_Msk;
+    }
     else
+    {
         ${USART_INSTANCE_NAME}_REGS->US_LINMR |= US_LINMR_FSDIS_Msk;
+    }
 }
 </#if>
 
 void ${USART_INSTANCE_NAME}_LIN_DataLenModeSet(USART_LIN_DATA_LEN dataLenMode)
 {
     ${USART_INSTANCE_NAME}_REGS->US_LINMR &= ~US_LINMR_DLM_Msk;
-    ${USART_INSTANCE_NAME}_REGS->US_LINMR |= dataLenMode;    
+    ${USART_INSTANCE_NAME}_REGS->US_LINMR |= (uint32_t)dataLenMode;    
 }
 
 void ${USART_INSTANCE_NAME}_LIN_ResponseDataLenSet(uint8_t len)
 {
     ${USART_INSTANCE_NAME}_REGS->US_LINMR &= ~US_LINMR_DLC_Msk;
-    ${USART_INSTANCE_NAME}_REGS->US_LINMR |= US_LINMR_DLC(len-1);
+    ${USART_INSTANCE_NAME}_REGS->US_LINMR |= US_LINMR_DLC((uint32_t)len-1U);
 }
 
 uint8_t ${USART_INSTANCE_NAME}_LIN_TransferComplete(void)
 {
-	return ((USART0_REGS->US_CSR & US_CSR_LIN_LINTC_Msk) > 0);
+	return (uint8_t)((USART0_REGS->US_CSR & US_CSR_LIN_LINTC_Msk) > 0U);
 }
 
 <#if USART_LIN_OPERATING_MODE == "RING_BUFFER">
