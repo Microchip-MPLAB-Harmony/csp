@@ -21,6 +21,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+import re
 from collections import defaultdict
 
 global InterruptVector
@@ -784,9 +785,13 @@ def instantiateComponent(rtcComponent):
         numChannelValue = numChannelNode.getChildren()
         for id in range(0, len(numChannelValue)):
                 if ("IN") in numChannelValue[id].getAttribute("group"):
-                    if(int(numChannelValue[id].getAttribute("index")) + 1) > tamperChannels:
-                        tamperChannels = int(numChannelValue[id].getAttribute("index")) + 1
-        
+                    if numChannelValue[id].getAttribute("index") != None:
+                        if(int(numChannelValue[id].getAttribute("index")) + 1) > tamperChannels:
+                            tamperChannels = int(numChannelValue[id].getAttribute("index")) + 1
+                    else:
+                        index = re.search(r'\d+', numChannelValue[id].getAttribute("group")[::-1]).group()[::-1]
+                        if(int(index) + 1) > tamperChannels:
+                            tamperChannels = int(index) + 1
 
         # Frequency Correction
         rtcTampMenu = rtcComponent.createMenuSymbol(
