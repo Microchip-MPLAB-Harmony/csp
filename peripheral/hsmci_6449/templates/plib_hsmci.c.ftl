@@ -455,6 +455,10 @@ void ${HSMCI_INSTANCE_NAME}_CommandSend (
         {
             cmd_reg |= HSMCI_CMDR_TRTYP_BLOCK;
         }
+        else
+        {
+            //Do Nothing
+        }
 
         if (transferFlags.transferDir == HSMCI_DATA_TRANSFER_DIR_READ)
         {
