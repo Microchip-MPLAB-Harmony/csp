@@ -50,7 +50,7 @@
 
 #include "device.h"
 #include "plib_${I2C_INSTANCE_NAME?lower_case}_master.h"
-<#if core.CoreSysIntFile == true && I2C_OPERATING_MODE != "Master and Slave">
+<#if core.CoreSysIntFile == true>
 #include "interrupts.h"
 </#if>
 <#if I2C_SMEN == true>
