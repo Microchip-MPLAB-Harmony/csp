@@ -49,6 +49,7 @@ def portEvsysUserNamesPopulate(instanceName):
         if usersValues[id].getAttribute("module-instance") == instanceName:
             port_evsys_usersNamesList.append(usersValues[id].getAttribute("name"))
 
+global portEvsysUserNameGet
 def portEvsysUserNameGet(usrNameMatchList):
     global port_evsys_usersNamesList
 
