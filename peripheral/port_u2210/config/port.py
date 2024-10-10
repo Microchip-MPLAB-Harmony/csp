@@ -28,7 +28,7 @@ import re
 global sort_alphanumeric
 global peripheralFunctionality
 
-peripheralFunctionality = ["GPIO", "Alternate", "LED_AH", "LED_AL", "SWITCH_AH", "SWITCH_AL", "VBUS_AH", "VBUS_AL", "RTC", "SUPC"]
+peripheralFunctionality = ["GPIO", "Alternate", "LED_AH", "LED_AL", "SWITCH_AH", "SWITCH_AL", "VBUS_AH", "VBUS_AL", "RTC", "SUPC", "RTC_IN", "RTC_OUT"]
 
 global availablePinDictionary
 availablePinDictionary = {}
@@ -324,10 +324,13 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
             prePinMuxVal = component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
             intPrePinMuxVal = int(prePinMuxVal,0)
 
-            if ((bitPosition%2) == 0):
-                peripheralFuncVal = portPeripheralFunc.index(event["value"]) | ( intPrePinMuxVal & 0xf0 )
-            else :
-                peripheralFuncVal = (portPeripheralFunc.index(event["value"]) << 4) | ( intPrePinMuxVal & 0x0f )
+            if event["value"] in portPeripheralFunc:
+                if ((bitPosition%2) == 0):
+                    peripheralFuncVal = portPeripheralFunc.index(event["value"]) | ( intPrePinMuxVal & 0xf0 )
+                else :
+                    peripheralFuncVal = (portPeripheralFunc.index(event["value"]) << 4) | ( intPrePinMuxVal & 0x0f )
+            else:
+                Log.writeWarningMessage("{0} is not a peripheral function for pin P{1}{2}".format(event["value"], groupName, bitPosition))
 
             component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(peripheralFuncVal)), 1)
         else :
