@@ -75,8 +75,11 @@ static void CLOCK_RF_Write_Reg(uint8_t addr, uint16_t value)
 {
     BLE_REGS->BLE_SPI_REG_ADDR = addr;
     BLE_REGS->BLE_SPI_WR_DATA = value;
-    BLE_REGS->BLE_RFPWRMGMT |= 0x00100000;
-    while (BLE_REGS->BLE_RFPWRMGMT & 0x00100000);
+    BLE_REGS->BLE_RFPWRMGMT |= 0x00100000U;
+    while ((BLE_REGS->BLE_RFPWRMGMT & 0x00100000U) != 0U)
+    {
+        /* Do nothing */
+    }
 }
 </#if>
 // *****************************************************************************
@@ -106,18 +109,36 @@ void CLOCK_Initialize( void )
         /* Nothing to do */
     }
 <#if PRODUCT_FAMILY?contains("PIC32CX_BZ6")>
-    CLOCK_RF_Write_Reg(0x27, 0x2078);
+    CLOCK_RF_Write_Reg(0x27U, 0x2078U);
 
     //Current Oscillator is 8MHz FRC or 16MHz POSC
     if ((CRU_REGS->CRU_OSCCON & CRU_OSCCON_COSC_Msk) != CRU_OSCCON_COSC_SPLL)
     {
         //Setup 128MHz PLL
-        CLOCK_RF_Write_Reg(0x2E, 0x4328);
+        CLOCK_RF_Write_Reg(0x2EU, 0x4328U);
 
+        /* MISRAC 2012 deviation block start */
+        /* MISRA C-2012 Rule 11.1 deviated 1 time. Deviation record ID -  H3_MISRAC_2012_R_11_1_DR_1 */
+        <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+        <#if COMPILER_CHOICE == "XC32">
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+        </#if>
+        #pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 11.1" "H3_MISRAC_2012_R_11_1_DR_1"
+        
+        </#if>
         /* Configure Prefetch, Wait States by calling the ROM function whose address is available at address 0xF2D0 */
         typedef void (*FUNC_PCHE_SETUP)(uint32_t setup);
         (void)((FUNC_PCHE_SETUP)(*(uint32_t*)0xF2D0))((PCHE_REGS->PCHE_CHECON & (~(PCHE_CHECON_PFMWS_Msk | PCHE_CHECON_ADRWS_Msk | PCHE_CHECON_PREFEN_Msk)))
                                         | (PCHE_CHECON_PFMWS(${CONFIG_CHECON_PFMWS}) | PCHE_CHECON_PREFEN(${CONFIG_CHECON_PREFEN}) | PCHE_CHECON_ADRWS(${CONFIG_CHECON_ADRWS})));
+        <#if COVERITY_SUPPRESS_DEVIATION?? && COVERITY_SUPPRESS_DEVIATION>
+        
+        #pragma coverity compliance end_block "MISRA C-2012 Rule 11.1"
+        <#if COMPILER_CHOICE == "XC32">
+        #pragma GCC diagnostic pop
+        </#if>
+        /* MISRA C-2012 Rule 11.1 deviation block end  */
+	</#if>
     }
 </#if>
     //programming 4ms delay -  programming subsys_xtal_ready_delay
@@ -134,7 +155,7 @@ void CLOCK_Initialize( void )
     CFG_REGS->CFG_SYSKEY = 0x00000000; // Write junk to lock it if it is already unlocked
     CFG_REGS->CFG_SYSKEY = 0xAA996655;
     CFG_REGS->CFG_SYSKEY = 0x556699AA;
-    CRU_REGS->CRU_OSCCON = 0x200;// switch to XO
+    CRU_REGS->CRU_OSCCON = 0x200U;// switch to XO
 
     //Enable oscillator switch from COSC to NOSC
     CRU_REGS->CRU_OSCCONSET = CRU_OSCCON_OSWEN_Msk;
@@ -198,14 +219,14 @@ void CLOCK_Initialize( void )
 <#if CONFIG_SYS_CLK_PBDIV1 != 1>
     <#lt>    /* Peripheral Bus 1 is by default enabled, set its divisor */
     <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV1} */
-    <#lt>    CRU_REGS->CRU_${PBREGNAME1} = CRU_PB1DIV_PBDIVON_Msk | CRU_PB1DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV1 - 1});
+    <#lt>    CRU_REGS->CRU_${PBREGNAME1} = CRU_PB1DIV_PBDIVON_Msk | CRU_PB1DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV1 - 1}U);
 
 </#if>
 <#if CONFIG_SYS_CLK_PBCLK2_ENABLE == true>
     <#if CONFIG_SYS_CLK_PBDIV2 != 1>
         <#lt>    /* Peripheral Bus 2 is by default enabled, set its divisor */
         <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV2} */
-        <#lt>    CRU_REGS->CRU_${PBREGNAME2} = CRU_PB2DIV_PBDIVON_Msk | CRU_PB2DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV2 - 1});
+        <#lt>    CRU_REGS->CRU_${PBREGNAME2} = CRU_PB2DIV_PBDIVON_Msk | CRU_PB2DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV2 - 1}U);
 
     </#if>
 <#else>
@@ -217,12 +238,12 @@ void CLOCK_Initialize( void )
     <#if CONFIG_SYS_CLK_PBDIV3 != 1>
         <#lt>    /* Peripheral Bus 3 is by default enabled, set its divisor */
         <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV3} */
-        <#lt>    CRU_REGS->CRU_${PBREGNAME3} = CRU_PB3DIV_PBDIVON_Msk | CRU_PB3DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV3 - 1});
+        <#lt>    CRU_REGS->CRU_${PBREGNAME3} = CRU_PB3DIV_PBDIVON_Msk | CRU_PB3DIV_PBDIV(${CONFIG_SYS_CLK_PBDIV3 - 1}U);
 
     </#if>
 <#else>
     /* Disable Peripheral Bus 3 */
-    CRU_REGS->CRU_${PBREGNAME3}CLR = ${PBONMASK3};
+    CRU_REGS->CRU_${PBREGNAME3}CLR = ${PBONMASK3}U;
 
 </#if>
 
@@ -249,12 +270,12 @@ void CLOCK_Initialize( void )
         <#lt>    /* RSLP = ${.vars[REFOCONRSLP]?c} */
         <#lt>    /* SIDL = ${.vars[REFOCONSIDL]?c} */
         <#lt>    /* RODIV = ${.vars[REFOCONRODIV]} */
-        <#lt>    CRU_REGS->CRU_${.vars[REFCONREG]} = ${.vars[REFCONVAL]};
+        <#lt>    CRU_REGS->CRU_${.vars[REFCONREG]} = ${.vars[REFCONVAL]}U;
 
     <#if .vars[REFOTRIMVAL] != "0x0">
         <#lt>    /* REFO${i}TRIM register */
         <#lt>    /* ROTRIM = ${.vars[ROTRIMVAL]} */
-        <#lt>    CRU_REGS->CRU_${.vars[REFTRIMREG]} = ${.vars[REFOTRIMVAL]};
+        <#lt>    CRU_REGS->CRU_${.vars[REFTRIMREG]} = ${.vars[REFOTRIMVAL]}U;
 
     </#if>
     <#if (.vars[REFCLKOE]?has_content) && (.vars[REFCLKOE] == true)>
@@ -263,7 +284,7 @@ void CLOCK_Initialize( void )
 
     <#else>
         <#lt>    /* Enable oscillator (ON bit) */
-        <#lt>    CRU_REGS->CRU_${.vars[REFCONREG]}SET = ${.vars[ONMASK]};
+        <#lt>    CRU_REGS->CRU_${.vars[REFCONREG]}SET = ${.vars[ONMASK]}U;
 
     </#if>
 </#if>
@@ -272,7 +293,7 @@ void CLOCK_Initialize( void )
     /* Peripheral Clock Generators */
 <#list 1..PER_GEN_REG_COUNT as i>
     <#assign CFGPCLKGEN_REG_VALUE = "CFGPCLKGEN" + i + "_REG">
-    CFG_REGS->CFG_CFGPCLKGEN${i} = 0x${.vars[CFGPCLKGEN_REG_VALUE]};
+    CFG_REGS->CFG_CFGPCLKGEN${i} = 0x${.vars[CFGPCLKGEN_REG_VALUE]}U;
 </#list>
 
     /* Peripheral Module Disable Configuration */
@@ -284,7 +305,7 @@ void CLOCK_Initialize( void )
 <#list 1..PMD_COUNT + 1 as i>
     <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
     <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
-        <#lt>    CFG_REGS->CFG_PMD${i} = 0x${.vars[PMDREG_VALUE]};
+        <#lt>    CFG_REGS->CFG_PMD${i} = 0x${.vars[PMDREG_VALUE]}U;
     </#if>
 </#list>
 
@@ -359,7 +380,7 @@ void CLOCK_Initialize( void )
         ${BTPLLCON_REG} = 0x${BTPLLCON_VALUE};
 <#else>
         /* Power down the BTPLL */
-        BTPLLCONbits.BTPLLPWDN = 1;
+        BTPLLCONbits.BTPLLPWDN = 1U;
 </#if>
 </#if>
     /* Lock system since done with clock configuration */
