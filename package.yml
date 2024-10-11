@@ -150,7 +150,7 @@ package:
       version: "4.11.257"
     - name: "SAMG_DFP"
       type: "dfp"
-      version: "3.8.197"
+      version: "3.9.204"
     - name: "SAMHA0_DFP"
       type: "dfp"
       version: "2.2.63"
