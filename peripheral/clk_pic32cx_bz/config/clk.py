@@ -1676,6 +1676,12 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
         if(ii['name'] == 'EPLLBSWSEL'):
             ii['symvaluename'].setDependencies(bwselCB, bwselDependencyList)
 
+    Database.setSymbolValue("core", "EPLLCON_EPLLPWDN_VALUE", "PLL_ON")
+    Database.setSymbolValue("core", "EPLLCON_EPLLPOSTDIV1_VALUE", 24)
+    Database.setSymbolValue("core", "EPLLCON_EPLLFBDIV_VALUE", 75)
+    Database.setSymbolValue("core", "EPLLCON_EPLLRST_VALUE", "NO_ASSERT")
+    Database.setSymbolValue("core", "EPLLCON_EPLL_BYP_VALUE", "NOT_BYPASS")
+
 def scan_atdf_for_upllcon_fields(component, parentMenu, regNode, enableSymbolId):
     '''
     This creates all the symbols for UPLLCON register, obtaining all key/value pairs from atdf file
@@ -1745,6 +1751,12 @@ def scan_atdf_for_upllcon_fields(component, parentMenu, regNode, enableSymbolId)
     initialUpllconVal = int((clkRegGrp_UPLLCON.getAttribute('initval')),16)
     symbolUpllconValue.setDefaultValue(initialUpllconVal)
     symbolUpllconValue.setDependencies(updateUPLLCon, dependencyList)
+
+    Database.setSymbolValue("core", "UPLLCON_UPLLPWDN_VALUE", "PLL_ON")
+    Database.setSymbolValue("core", "UPLLCON_UPLLPOSTDIV1_VALUE", 16)
+    Database.setSymbolValue("core", "UPLLCON_UPLLFBDIV_VALUE", 96)
+    Database.setSymbolValue("core", "UPLLCON_UPLLRST_VALUE", "NO_ASSERT")
+    Database.setSymbolValue("core", "UPLLCON_UPLL_BYP_VALUE", "NOT_BYPASS")
 
 if __name__ == "__main__":
 
@@ -2131,15 +2143,12 @@ if __name__ == "__main__":
         if clk in ["1", "2", "3", "4"]: #since REFO5 and REFO6 pins are not available, remove corresponding OE symbols also
             oeSymId = "CONFIG_SYS_CLK_REFCLK"+clk+"_OE"
             oeSymbolList[listIndex] = coreComponent.createBooleanSymbol(oeSymId, enSymbolList[listIndex])
-            oeSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
+            #oeSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
             oeSymbolList[listIndex].setLabel("Reference Clock "+clk+" Output Enable")
             oeSymbolList[listIndex].setDescription("Sets whether to have reference clock 1 output enable")
             oeSymbolList[listIndex].setReadOnly(False)
             oeSymbolList[listIndex].setDefaultValue(False)
-            if clk == "1": # refo1 is enabled by default, so corresponding symbols should be visible by default
-                oeSymbolList[listIndex].setVisible(True)
-            else:
-                oeSymbolList[listIndex].setVisible(False)
+            oeSymbolList[listIndex].setVisible(True)
 
         # ROSEL
         srcSymId = "CONFIG_SYS_CLK_REFCLK_SOURCE" + clk
@@ -2150,12 +2159,9 @@ if __name__ == "__main__":
         sourceSymbolList[listIndex] = coreComponent.createComboSymbol(srcSymId, enSymbolList[listIndex], sorted(roselsrc.keys()))
         sourceSymbolList[listIndex].setLabel("Reference Clock Source Select ROSEL")
         sourceSymbolList[listIndex].setDescription(clkValGrp_REFO1CON__ROSEL.getAttribute('caption'))
-        sourceSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
+        #sourceSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
         sourceSymbolList[listIndex].setDefaultValue("SPLL1")
-        if clk == "1": # refo1 is enabled by default, so corresponding symbols should be visible by default
-            sourceSymbolList[listIndex].setVisible(True)
-        else:
-            sourceSymbolList[listIndex].setVisible(False)
+        sourceSymbolList[listIndex].setVisible(True)
         symbolRoselValueList.append({'symbol':sourceSymbolList[listIndex],'index':clk})
         for ii in roselsrc:
             roselMap[ii] = roselsrc[ii]
@@ -2166,14 +2172,11 @@ if __name__ == "__main__":
         rodivSymId = "CONFIG_SYS_CLK_RODIV"+clk
         rodivSymbolList[listIndex] = coreComponent.createIntegerSymbol(rodivSymId, enSymbolList[listIndex])
         rodivSymbolList[listIndex].setLabel("Select Reference Clock Output Divider RODIV")
-        rodivSymbolList[listIndex].setDependencies(updateRODIVmin, [enSymId, srcSymId])
+        rodivSymbolList[listIndex].setDependencies(updateRODIVmin, [srcSymId])
         rodivSymbolList[listIndex].setMin(minValue)
         rodivSymbolList[listIndex].setMax(maxValue)
         rodivSymbolList[listIndex].setDefaultValue(0)
-        if clk == "1": # refo1 is enabled by default, so corresponding symbols should be visible by default
-            rodivSymbolList[listIndex].setVisible(True)
-        else:
-            rodivSymbolList[listIndex].setVisible(False)
+        rodivSymbolList[listIndex].setVisible(True)
         symbolRodivValueList.append({'symbol':rodivSymbolList[listIndex],'index':clk})
 
         # ROTRIM
@@ -2181,20 +2184,17 @@ if __name__ == "__main__":
         rotrimSymId = "CONFIG_SYS_CLK_ROTRIM"+clk
         rotrimSymbolList[listIndex] = coreComponent.createIntegerSymbol(rotrimSymId, enSymbolList[listIndex])
         rotrimSymbolList[listIndex].setLabel("Select Reference Clock Output Trim Value ROTRIM")
-        rotrimSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
+        #rotrimSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
         rotrimSymbolList[listIndex].setMin(minValue)
         rotrimSymbolList[listIndex].setMax(maxValue)
         rotrimSymbolList[listIndex].setDefaultValue(0)
-        if clk == "1": # refo1 is enabled by default, so corresponding symbols should be visible by default
-            rotrimSymbolList[listIndex].setVisible(True)
-        else:
-            rotrimSymbolList[listIndex].setVisible(False)
+        rotrimSymbolList[listIndex].setVisible(True)
         symbolRotrimUserVal.append({'symbol':rotrimSymbolList[listIndex],'index':clk})
 
         #RSLP
         rslpSymId = "CONFIG_SYS_CLK_REFCLK_RSLP" + clk
         rslpSymbolList[listIndex] = coreComponent.createBooleanSymbol(rslpSymId, enSymbolList[listIndex])
-        rslpSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
+        #rslpSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
         rslpSymbolList[listIndex].setLabel("Reference Clock "+clk+" Run in Sleep Mode")
         rslpSymbolList[listIndex].setDescription("Sets whether to run the reference clock 1 output in sleep mode or not")
         rslpSymbolList[listIndex].setReadOnly(False)
@@ -2207,15 +2207,12 @@ if __name__ == "__main__":
         #SIDL
         sidlSymId = "CONFIG_SYS_CLK_REFCLK_SIDL" + clk
         sidlSymbolList[listIndex] = coreComponent.createBooleanSymbol(sidlSymId, enSymbolList[listIndex])
-        sidlSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
+        #sidlSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
         sidlSymbolList[listIndex].setLabel("Reference Clock "+clk+" Run in Idle Mode")
         sidlSymbolList[listIndex].setDescription("Sets whether to run the reference clock 1 output in idle mode or not")
         sidlSymbolList[listIndex].setReadOnly(False)
         sidlSymbolList[listIndex].setDefaultValue(False)
-        if clk == "1": # refo1 is enabled by default, so corresponding symbols should be visible by default
-            sidlSymbolList[listIndex].setVisible(True)
-        else:
-            sidlSymbolList[listIndex].setVisible(False)
+        sidlSymbolList[listIndex].setVisible(True)
 
         # python-computed REFOxCON register setting to use in ftl file
         refconval.append([])
