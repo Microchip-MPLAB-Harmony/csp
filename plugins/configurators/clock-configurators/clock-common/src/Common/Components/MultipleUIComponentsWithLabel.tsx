@@ -41,9 +41,9 @@ const MultipleUIComponentsWithLabel = (props: { componentId: any; symbolsArray: 
     symbolUtilApi.getSymbolTypes(props.componentId, props.symbolsArray).then((e: ISymbol[]) => {
       setSymbols(e);
     });
-  }, []);
+  }, [props.componentId, props.symbolsArray]);
 
-  labelNames.map((e, index) => {
+  labelNames.map((e) => {
     const labelName = e.label;
     const isComponentVisible = e.visible;
     if (labelName !== null && symbols.length !== 0 && isComponentVisible) {
@@ -51,7 +51,7 @@ const MultipleUIComponentsWithLabel = (props: { componentId: any; symbolsArray: 
       symbolsComponent.push(
         <DefaultControl
           key={e.symbolId}
-          symbol={symbols[index]}
+          symbol={e}
         />
       );
     }

@@ -5,5 +5,5 @@ declare const SettingsDialog: (props: {
     symbolArray: string[];
     dialogWidth: string;
     dialogHeight: string;
-}) => JSX.Element;
+}) => import("react/jsx-runtime").JSX.Element;
 export default SettingsDialog;

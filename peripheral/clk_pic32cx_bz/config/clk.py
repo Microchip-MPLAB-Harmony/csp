@@ -1808,7 +1808,6 @@ if __name__ == "__main__":
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32cx_bz:MZClockModel")
         pmdDict = pmdDict_bz3
     else:
-        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32cx_bz:MZClockModel")
         pmdDict = pmdDict_bz6
 
     # parse atdf file to get key parameters
@@ -2307,6 +2306,7 @@ if __name__ == "__main__":
     gclkSym_PeriGenRegCount.setDefaultValue(int(PeriGenRegCount))
 
     channelMap = {}
+    gclkIOConfiguration_UI = []
     for key in indexSymbolMap.keys():
         index=key.split("GCLK_ID_")[1]
         channelMap[int(index)]=key
@@ -2316,6 +2316,8 @@ if __name__ == "__main__":
         key=channelMap[index]
         name = indexSymbolMap.get(key)
         name = " ".join(name)
+        
+        gclkIOConfiguration_UI.append(key)
 
         #GCLK Peripheral Channel Enable
         clkSymPeripheral = coreComponent.createBooleanSymbol(key + "_CHEN", gclkPeriChannel_menu)
@@ -2395,6 +2397,12 @@ if __name__ == "__main__":
     clockTrigger = coreComponent.createBooleanSymbol("TRIGGER_LOGIC", None)
     clockTrigger.setVisible(False)
     clockTrigger.setDependencies(clkSetup, triggerdepList)
+    
+    #Combo symbol for UI to identify gclk IO configuration */
+    gclk_io_clk_ui_list_sym = coreComponent.createComboSymbol(
+                     "GCLK_IO_CLOCK_CONFIG_UI", None, gclkIOConfiguration_UI)
+    gclk_io_clk_ui_list_sym.setVisible(False)
+    #####################################################################
 
     for peripheralName, PmdReg in sorted(pmdDict.items()):
         if (peripheralName not in peripheralList) and ("REF" not in peripheralName):

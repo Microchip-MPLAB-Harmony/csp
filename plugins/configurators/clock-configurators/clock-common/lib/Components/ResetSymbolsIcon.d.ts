@@ -3,5 +3,5 @@ declare const ResetSymbolsIcon: (props: {
     className: string;
     componentId: string;
     resetSymbolsArray: string[];
-}) => JSX.Element;
+}) => import("react/jsx-runtime").JSX.Element;
 export default ResetSymbolsIcon;

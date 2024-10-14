@@ -349,7 +349,10 @@ SYM_REFEN.setDefaultValue(1)
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32cx_bz/config/clk.py")
-coreComponent.addPlugin("../peripheral/clk_pic32cx_bz/plugin/clockmanager.jar")
+if productFamily.getValue() == "PIC32CX_BZ6":
+    coreComponent.addPlugin("../../harmony-services/plugins/generic_plugin.jar", "CLOCK_MANAGER_BZ6", {"plugin_name": "Clock Configuration", "main_html_path": "csp/plugins/configurators/clock-configurators/clk_pic32cx_bz6_configurator/build/index.html"})
+else:
+    coreComponent.addPlugin("../peripheral/clk_pic32cx_bz/plugin/clockmanager.jar")
 
 adrws, pfmws = getWaitStates()
 

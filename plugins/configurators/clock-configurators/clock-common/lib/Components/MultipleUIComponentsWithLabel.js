@@ -16,13 +16,13 @@ const MultipleUIComponentsWithLabel = (props) => {
         harmony_plugin_client_lib_1.symbolUtilApi.getSymbolTypes(props.componentId, props.symbolsArray).then((e) => {
             setSymbols(e);
         });
-    }, []);
-    labelNames.map((e, index) => {
+    }, [props.componentId, props.symbolsArray]);
+    labelNames.map((e) => {
         const labelName = e.label;
         const isComponentVisible = e.visible;
         if (labelName !== null && symbols.length !== 0 && isComponentVisible) {
             symbolsComponent.push((0, jsx_runtime_1.jsx)("label", { children: e.label }));
-            symbolsComponent.push((0, jsx_runtime_1.jsx)(harmony_plugin_client_lib_1.DefaultControl, { symbol: symbols[index] }, e.symbolId));
+            symbolsComponent.push((0, jsx_runtime_1.jsx)(harmony_plugin_client_lib_1.DefaultControl, { symbol: e }, e.symbolId));
         }
     });
     return ((0, jsx_runtime_1.jsx)("div", Object.assign({ className: 'grid', style: { width: '30rem' } }, { children: symbolsComponent.map((component, index) => ((0, jsx_runtime_1.jsx)("div", Object.assign({ className: 'col-6 flex align-self-center flex align-items-center' }, { children: component }), index))) })));

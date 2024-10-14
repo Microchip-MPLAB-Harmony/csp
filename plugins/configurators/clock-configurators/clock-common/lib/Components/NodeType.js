@@ -10,7 +10,7 @@ const GetIconButton = (props) => {
 exports.GetIconButton = GetIconButton;
 function GetButton(props) {
     try {
-        return ((0, jsx_runtime_1.jsx)(button_1.Button, { "aria-label": 'Filter', tooltip: props.toolTip, onChange: props.buttonClick, label: props.buttonDisplayText, className: props.className }));
+        return ((0, jsx_runtime_1.jsx)(button_1.Button, { "aria-label": 'Filter', tooltip: props.toolTip, onClick: props.buttonClick, label: props.buttonDisplayText, className: props.className }));
     }
     catch (err) {
         return (0, jsx_runtime_1.jsx)("div", {});

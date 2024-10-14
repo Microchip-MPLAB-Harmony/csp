@@ -1,5 +1,5 @@
 declare const SummaryMultipleSymbols: (props: {
     componentId: any;
     symbolsArray: string[];
-}) => JSX.Element;
+}) => import("react/jsx-runtime").JSX.Element;
 export default SummaryMultipleSymbols;

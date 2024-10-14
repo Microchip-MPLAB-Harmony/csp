@@ -6,5 +6,5 @@ interface LabelProps {
     labelTooltip: string;
     boldLabelStatus?: boolean;
 }
-declare const FrequencyLabelRangeComponent: (props: SymbolProps & LabelProps) => JSX.Element;
+declare const FrequencyLabelRangeComponent: (props: SymbolProps & LabelProps) => import("react/jsx-runtime").JSX.Element;
 export default FrequencyLabelRangeComponent;

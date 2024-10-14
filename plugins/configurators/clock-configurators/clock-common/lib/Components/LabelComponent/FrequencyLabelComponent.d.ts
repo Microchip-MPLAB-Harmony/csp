@@ -1,8 +1,10 @@
 import { SymbolProps } from '@mplab_harmony/harmony-plugin-client-lib';
-interface LabelProps {
-    class: string;
+export interface LabelProps {
+    className: string;
     boldLabelStatus?: boolean;
+    tooltip?: string;
     redColorForZeroFrequency?: boolean;
+    minMaxOutofRangeRedColorStatus?: boolean;
 }
-declare const FrequencyLabelComponent: (props: SymbolProps & LabelProps) => JSX.Element;
+declare const FrequencyLabelComponent: (props: SymbolProps & LabelProps) => import("react/jsx-runtime").JSX.Element;
 export default FrequencyLabelComponent;

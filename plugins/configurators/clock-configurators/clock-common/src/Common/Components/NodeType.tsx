@@ -34,7 +34,7 @@ export function GetButton(props: {
       <Button
         aria-label='Filter'
         tooltip={props.toolTip}
-        onChange={props.buttonClick}
+        onClick={props.buttonClick}
         label={props.buttonDisplayText}
         className={props.className}
       />
