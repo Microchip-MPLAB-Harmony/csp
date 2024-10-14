@@ -111,6 +111,10 @@
 */
 void GPIO_Initialize ( void )
 {
+    <#if PRODUCT_FAMILY?contains("PIC32CX_BZ6")>
+        <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
+        <#lt>    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_JTAGEN_Msk;
+    <#else>
       <#if (GPIO_PIN_TOTAL == 48)>
         <#if ((BSP_PIN_35_FUNCTION_TYPE == "TDI" || BSP_PIN_35_FUNCTION_TYPE == "") &&
           (BSP_PIN_38_FUNCTION_TYPE == "TDO" || BSP_PIN_38_FUNCTION_TYPE == "") &&
@@ -152,6 +156,7 @@ void GPIO_Initialize ( void )
 
         </#if>
       </#if>
+    </#if>
 <#assign CFGCON2_SOSCSEL_VAL = false>
 <#list 1..GPIO_PIN_TOTAL as i>
     <#assign functype = "BSP_PIN_" + i + "_FUNCTION_TYPE">
