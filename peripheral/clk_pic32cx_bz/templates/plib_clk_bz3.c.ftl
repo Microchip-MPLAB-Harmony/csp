@@ -170,10 +170,10 @@ void CLOCK_Initialize( void )
      BLE_REGS->BLE_DPLL_RG2 |= 0x02U;
 
     // set PLL_enable
-    BLE_REGS->BLE_DPLL_RG2 &= ~(0x02U);
+    BLE_REGS->BLE_DPLL_RG2 &= (uint16_t) (~(0x02U));
 
     // Set MISC[24]=0, CLKGEN_PLLRST = 0
-    CFG_REGS->CFG_MISCSTAT  &= 0x00FFFFFF;
+    CFG_REGS->CFG_MISCSTAT  &= 0x00FFFFFFU;
     //programming delay for pll lock - 500 us
     //32 us steps - check pll spec for final value
     BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG3 = ((BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG3 & ~BTZBSYS_SUBSYS_CNTRL_REG3_subsys_pll_ready_delay_Msk )
