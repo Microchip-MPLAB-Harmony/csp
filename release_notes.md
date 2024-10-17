@@ -8,8 +8,7 @@
 ### New Features
 
 - **New part support** - This **engineering release** adds support for
-  - PIC32CX-BZ6 and WBZ653 family of devices
-  - For demo applications, refer to PIC32CX-BZ6/WBZ653 family [csp apps](https://github.com/Microchip-MPLAB-Harmony/csp_apps_pic32cxbz6_wbz6) and [core apps](https://github.com/Microchip-MPLAB-Harmony/core_apps_pic32cxbz6_wbz6) application repositories
+  - PIC32CX-BZ6 and WBZ653 family of devices  
 
 ### Bug fixes
 
