@@ -902,6 +902,7 @@ def bwselCB(symbol, event):
         postDiv2 = Database.getSymbolValue("core","EPLLPOSTDIV2")
         pllSource = 16000000
         pllBwSelSymbolID = "EPLLCON_EPLLBSWSEL_VALUE"
+        pllBypass = Database.getSymbolValue("core", "EPLLCON_EPLL_BYP_VALUE")
         symId = epllWarningItem
     elif(('UPLL' in event['id']) or ('OSCCON' in event['id']) or('USBPLL' in event['id'])):  # one field is part of OSCCON instead of UPLLCON
         refDiv = Database.getSymbolValue("core","UPLLCON_UPLLREFDIV_VALUE")
@@ -913,29 +914,37 @@ def bwselCB(symbol, event):
         print ("postDiv = " + str(postDiv))
         print ("pllSource = " + str(pllSource))
         pllBwSelSymbolID = "UPLLCON_UPLLBSWSEL_VALUE"
+        pllBypass = Database.getSymbolValue("core", "UPLLCON_UPLL_BYP_VALUE")
         symId = upllWarningItem
     bwselValue = updatePLLBwselValue(refDiv, fbDiv, postDiv, pllSource)
     print ("bwselValue = " + str(bwselValue))
 
-    if(bwselValue != None):
-        bwsel_dict = {1:"400KHz", 2:"1MHz", 3:"2MHz", 4:"3MHz"}
-        Database.setSymbolValue("core", pllBwSelSymbolID, bwsel_dict[bwselValue], 1)
+    if pllBypass == "BYPASS":
         if 'EPLL' in event['id']:
-            eth_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv
-            print ("eth_clk_freq1 = " + str(eth_clk_freq))
-            Database.setSymbolValue("core", "ETHCLK1", str(eth_clk_freq), 1)
-
-            eth_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv2
-            print ("eth_clk_freq2 = " + str(eth_clk_freq))
-            Database.setSymbolValue("core", "ETHCLK2", str(eth_clk_freq), 1)
+            Database.setSymbolValue("core", "ETHCLK1", str(pllSource), 1)
+            Database.setSymbolValue("core", "ETHCLK2", str(pllSource), 1)
         else:
-            usb_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv
-            print ("usb_clk_freq = " + str(usb_clk_freq))
-            Database.setSymbolValue("core", "USBCLK", str(usb_clk_freq), 1)
+            Database.setSymbolValue("core", "USBCLK", str(pllSource), 1)
+    else:
+        if(bwselValue != None):
+            bwsel_dict = {1:"400KHz", 2:"1MHz", 3:"2MHz", 4:"3MHz"}
+            Database.setSymbolValue("core", pllBwSelSymbolID, bwsel_dict[bwselValue], 1)
+            if 'EPLL' in event['id']:
+                eth_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv
+                print ("eth_clk_freq1 = " + str(eth_clk_freq))
+                Database.setSymbolValue("core", "ETHCLK1", str(eth_clk_freq), 1)
 
-        symId.setVisible(False)
-    else:   # something was out of range - notify user
-        symId.setVisible(True)
+                eth_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv2
+                print ("eth_clk_freq2 = " + str(eth_clk_freq))
+                Database.setSymbolValue("core", "ETHCLK2", str(eth_clk_freq), 1)
+            else:
+                usb_clk_freq = ((pllSource/refDiv) * fbDiv)/postDiv
+                print ("usb_clk_freq = " + str(usb_clk_freq))
+                Database.setSymbolValue("core", "USBCLK", str(usb_clk_freq), 1)
+
+            symId.setVisible(False)
+        else:   # something was out of range - notify user
+            symId.setVisible(True)
 
 def updatePMDxRegValue(symbol, event):
 
@@ -1645,7 +1654,7 @@ def scan_atdf_for_epllcon_fields(component, parentMenu, regNode, enableSymbolId)
                 else:
                     ii['symvaluename'].setVisible(False)
                 dependencyList.append('EPLLCON_'+ii['name'].upper()+'_VALUE')
-                if((ii['name'] == 'EPLLREFDIV') or (ii['name'] == 'EPLLFBDIV') or (ii['name'] == 'EPLLPOSTDIV1')):
+                if((ii['name'] == 'EPLLREFDIV') or (ii['name'] == 'EPLLFBDIV') or (ii['name'] == 'EPLLPOSTDIV1') or (ii['name'] == 'EPLL_BYP')):
                     bwselDependencyList.append('EPLLCON_'+ii['name']+'_VALUE')
                 if('readonly' in ii.keys()):
                     ii['symvaluename'].setReadOnly(ii['readonly'])
@@ -1733,7 +1742,7 @@ def scan_atdf_for_upllcon_fields(component, parentMenu, regNode, enableSymbolId)
                     ii['symvaluename'].setVisible(False)
                 dependencyList.append('UPLLCON_'+ii['name'].upper()+'_VALUE')
 
-                if((ii['name'] == 'UPLLREFDIV') or (ii['name'] == 'UPLLFBDIV') or (ii['name'] == 'UPLLPOSTDIV1')):
+                if((ii['name'] == 'UPLLREFDIV') or (ii['name'] == 'UPLLFBDIV') or (ii['name'] == 'UPLLPOSTDIV1') or (ii['name'] == 'UPLL_BYP')):
                     bwselDependencyList.append('UPLLCON_'+ii['name']+'_VALUE')
     bwselDependencyList.append('OSCCON_UFRCEN_VALUE')
     # add warning display if parameter combination is outside of usable range so user can make adjustments
@@ -2316,7 +2325,7 @@ if __name__ == "__main__":
         key=channelMap[index]
         name = indexSymbolMap.get(key)
         name = " ".join(name)
-        
+
         gclkIOConfiguration_UI.append(key)
 
         #GCLK Peripheral Channel Enable
@@ -2397,7 +2406,7 @@ if __name__ == "__main__":
     clockTrigger = coreComponent.createBooleanSymbol("TRIGGER_LOGIC", None)
     clockTrigger.setVisible(False)
     clockTrigger.setDependencies(clkSetup, triggerdepList)
-    
+
     #Combo symbol for UI to identify gclk IO configuration */
     gclk_io_clk_ui_list_sym = coreComponent.createComboSymbol(
                      "GCLK_IO_CLOCK_CONFIG_UI", None, gclkIOConfiguration_UI)
