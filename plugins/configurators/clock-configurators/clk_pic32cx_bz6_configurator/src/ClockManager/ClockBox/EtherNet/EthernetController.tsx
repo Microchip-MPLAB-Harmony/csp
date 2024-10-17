@@ -1,14 +1,15 @@
 import ResetSymbolsIcon from 'clock-common/lib/Components/ResetSymbolsIcon';
 import ControlInterface from 'clock-common/lib/Tools/ControlInterface';
 import SettingsDialog from 'clock-common/lib/Components/SettingsDialog';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   CheckBoxDefault,
   ComboBoxDefault,
   configSymbolApi,
   PluginConfigContext,
   useComboSymbol,
-  useIntegerSymbol
+  useIntegerSymbol,
+  useStringSymbol
 } from '@mplab_harmony/harmony-plugin-client-lib';
 import PlainLabel from 'clock-common/lib/Components/LabelComponent/PlainLabel';
 import { Dropdown } from 'primereact/dropdown';
@@ -16,6 +17,7 @@ import { GetButton } from 'clock-common/lib/Components/NodeType';
 import { Dialog } from 'primereact/dialog';
 import EthernetAutoCalculation from './EthernetAutoCalculation';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
+import { GetClockDisplayFreqValue } from 'clock-common/lib/Tools/Tools';
 const settingsArray = [
   'EPLL_ENABLE',
   'EPLLCON_EPLLPOSTDIV1_VALUE',
@@ -46,6 +48,22 @@ const EthernetController = (props: {
 }) => {
   const { componentId = 'core' } = useContext(PluginConfigContext);
 
+  const ethClkOutEn = useComboSymbol({
+    componentId,
+    symbolId: 'EPLLCON_ECLKOUTEN_VALUE'
+  });
+  const eth1ClockFreq = useStringSymbol({
+    componentId,
+    symbolId: 'ETHCLK1'
+  });
+  useEffect(() => {
+    if (ethClkOutEn.value === 'Enable') {
+      setethclockoutEnFreq(GetClockDisplayFreqValue(Number(eth1ClockFreq.value)));
+    } else {
+      setethclockoutEnFreq('0 Hz');
+    }
+  }, [eth1ClockFreq.value, ethClkOutEn.value]);
+
   const epllDiv1 = useIntegerSymbol({
     componentId,
     symbolId: 'EPLLCON_EPLLPOSTDIV1_VALUE'
@@ -68,7 +86,11 @@ const EthernetController = (props: {
     componentId,
     symbolId: 'CONFIG_POSCMOD'
   });
+
   const [dialogStatus, setdialogStatus] = useState(false);
+  const [ethclokoutEnFreq, setethclockoutEnFreq] = useState(
+    GetClockDisplayFreqValue(Number(eth1ClockFreq.value))
+  );
 
   function ethernetAutoCalculationButtonClicked() {
     setdialogStatus(true);
@@ -193,6 +215,11 @@ const EthernetController = (props: {
           className={props.cx('lbl_err_posc_ew')}
         />
       )}
+
+      <PlainLabel
+        disPlayText={ethclokoutEnFreq}
+        className={props.cx('ethclkOutENFreq')}
+      />
 
       {/* <GetButton
         buttonDisplayText={'Auto Calculate'}

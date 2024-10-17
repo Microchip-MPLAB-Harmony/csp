@@ -94,8 +94,8 @@
     height: 30px;
     position: absolute;
     width: 100px;
-    left: 455px;
-    top: 848px
+    left: 468px;
+    top: 813px
     }
 .cb_refclk_enable1 {
     height: 20px;
@@ -122,120 +122,120 @@
     height: 20px;
     position: absolute;
     width: 20px;
-    left: 599px;
-    top: 652px
+    left: 598px;
+    top: 649px
     }
 .refClk0Radio1 {
     height: 20px;
     position: absolute;
     width: 20px;
-    left: 599px;
-    top: 679px
+    left: 598px;
+    top: 677px
     }
 .refClk0Radio2 {
     height: 20px;
     position: absolute;
     width: 20px;
-    top: 705px;
-    left: 599px
+    top: 703px;
+    left: 598px
     }
 .refClk0Radio3 {
     height: 20px;
     position: absolute;
     width: 20px;
-    left: 599px;
-    top: 729px
+    top: 728px;
+    left: 598px
     }
 .refClk0Radio4 {
     height: 20px;
     position: absolute;
     width: 20px;
-    top: 761px;
+    top: 755px;
     left: 599px
     }
 .refClk0Radio5 {
     height: 20px;
     position: absolute;
     width: 20px;
-    left: 599px;
-    top: 792px
+    top: 788px;
+    left: 599px
     }
 .refClk0Radio6 {
     height: 20px;
     position: absolute;
     width: 20px;
-    top: 833px;
-    left: 599px
+    left: 599px;
+    top: 846px
     }
 .refClk0Radio7 {
     height: 20px;
     position: absolute;
     width: 20px;
-    left: 599px;
-    top: 875px
+    top: 872px;
+    left: 598px
     }
 .refClk0Radio8 {
     height: 20px;
     position: absolute;
     width: 20px;
-    left: 599px;
-    top: 904px
+    left: 598px;
+    top: 900px
     }
 .sysclk_res1 {
     height: 20px;
     position: absolute;
-    top: 984px;
-    left: 499.98px;
-    width: 90px
+    width: 90px;
+    left: 509px;
+    top: 963px
     }
 .pbclk1Freq {
     height: 20px;
     position: absolute;
-    top: 773px;
-    left: 499.98px;
-    width: 90px
+    width: 90px;
+    top: 748px;
+    left: 514px
     }
 .label_spll3Freq {
     height: 20px;
     position: absolute;
-    top: 954px;
-    left: 499.98px;
-    width: 90px
+    width: 90px;
+    left: 510px;
+    top: 933px
     }
 .lprc_res1 {
     height: 20px;
     position: absolute;
-    top: 740px;
-    left: 499.98px;
-    width: 90px
+    width: 90px;
+    left: 515px;
+    top: 718px
     }
 .sosc_res1 {
     height: 20px;
     position: absolute;
-    top: 887px;
-    left: 499.98px;
-    width: 90px
+    width: 90px;
+    top: 864px;
+    left: 510px
     }
 .lbl_poscFreq1 {
     height: 20px;
     position: absolute;
-    top: 802px;
-    left: 499.98px;
-    width: 90px
+    width: 90px;
+    left: 516px;
+    top: 780px
     }
 .label_spll1Freq {
     height: 20px;
     position: absolute;
-    top: 917px;
-    left: 499.98px;
-    width: 90px
+    width: 90px;
+    top: 891px;
+    left: 509px
     }
 .lbl_frcFreq1 {
     height: 20px;
     position: absolute;
-    top: 714px;
-    left: 499.98px;
-    width: 90px
+    width: 90px;
+    left: 517px;
+    top: 694px
     }
 .trimvalue1 {
     height: 30px;
@@ -278,8 +278,8 @@
     position: absolute;
     height: 20px;
     width: 25px;
-    left: 558px;
-    top: 855px
+    left: 571px;
+    top: 823px
     }
 .refClkTab {
     position: absolute;
@@ -291,16 +291,16 @@
 .refClckNumber {
     height: 20px;
     position: absolute;
-    top: 653px;
     width: 30px;
-    left: 781px
+    left: 782px;
+    top: 651px
     }
 .refclkRefoNumber {
     height: 20px;
     position: absolute;
     width: 50px;
     left: 1014px;
-    top: 985px
+    top: 984px
     }
 .lbl_refClkOxFreq {
     height: 20px;
@@ -384,7 +384,7 @@
     position: absolute;
     width: 90px;
     left: 172px;
-    top: 172px
+    top: 168px
     }
 .ewpllEnable {
     height: 20px;
@@ -398,56 +398,56 @@
     position: absolute;
     width: 30px;
     left: 215px;
-    top: 136px
+    top: 133px
     }
 .ewpllfbdiv {
     height: 30px;
     position: absolute;
     width: 90px;
     left: 301px;
-    top: 240px
+    top: 237px
     }
 .ewpll_bwsel1 {
     height: 30px;
     position: absolute;
     width: 80px;
-    left: 302px;
-    top: 92px
+    left: 301px;
+    top: 89px
     }
 .lbl_ewpllfbdiv {
     height: 20px;
     position: absolute;
     width: 50px;
     left: 345px;
-    top: 205px
+    top: 202px
     }
 .ewpllodiv2 {
     height: 30px;
     position: absolute;
     width: 80px;
     left: 452px;
-    top: 244px
+    top: 240px
     }
 .lbl_ewplloutputdiv2 {
     height: 20px;
     position: absolute;
     width: 30px;
     left: 492px;
-    top: 209px
+    top: 204px
     }
 .ewpllodiv1 {
     height: 30px;
     position: absolute;
     width: 80px;
-    left: 455px;
-    top: 103px
+    left: 454px;
+    top: 99px
     }
 .lbl_ewoutMHz1 {
     height: 20px;
     position: absolute;
-    top: 78px;
     left: 581px;
-    width: 80px
+    width: 80px;
+    top: 75px
     }
 .lbl_ewinMHz {
     height: 20px;
@@ -467,8 +467,8 @@
     height: 20px;
     position: absolute;
     width: 80px;
-    top: 217px;
-    left: 581px
+    left: 581px;
+    top: 214px
     }
 .ewbypass {
     position: absolute;
@@ -481,8 +481,8 @@
     position: absolute;
     height: 30px;
     width: 80px;
-    left: 766px;
-    top: 20px
+    left: 899px;
+    top: 95px
     }
 .lbl_cm_epllFreq1 {
     height: 20px;
@@ -495,36 +495,36 @@
     height: 20px;
     position: absolute;
     width: 30px;
-    top: 69px;
-    left: 491px
+    left: 491px;
+    top: 65px
     }
 .EWautoCalculate {
     height: 50px;
     position: absolute;
     width: 120px;
     left: 159px;
-    top: 262px
+    top: 259px
     }
 .upllidiv {
     height: 30px;
     position: absolute;
     width: 90px;
     left: 170px;
-    top: 466px
+    top: 464px
     }
 .upllfbdiv {
     height: 30px;
     position: absolute;
     width: 100px;
     left: 288px;
-    top: 540px
+    top: 535px
     }
 .lbl_upllidiv {
     height: 20px;
     position: absolute;
     width: 50px;
-    top: 433px;
-    left: 218px
+    left: 218px;
+    top: 431px
     }
 .usbpllEnable {
     height: 20px;
@@ -538,14 +538,14 @@
     position: absolute;
     width: 90px;
     left: 500px;
-    top: 472px
+    top: 466px
     }
 .uposcen {
     height: 30px;
     position: absolute;
     width: 110px;
     left: 679px;
-    top: 469px
+    top: 466px
     }
 .lbl_cm_upllFreq {
     height: 20px;
@@ -558,15 +558,15 @@
     height: 20px;
     position: absolute;
     width: 30px;
-    top: 502px;
-    left: 342px
+    left: 342px;
+    top: 500px
     }
 .lbl_upllodiv {
     height: 20px;
     position: absolute;
     width: 30px;
-    top: 433px;
-    left: 545px
+    left: 545px;
+    top: 429px
     }
 .lbl_upllpfd1 {
     height: 20px;
@@ -587,7 +587,7 @@
     position: absolute;
     width: 90px;
     left: 297px;
-    top: 390px
+    top: 385px
     }
 .USBAutoCalculate {
     height: 50px;
@@ -677,43 +677,43 @@
     height: 30px;
     position: absolute;
     width: 95px;
-    left: 547px;
-    top: 1284px
+    left: 549px;
+    top: 1278px
     }
 .label_spll1Freq1 {
     height: 20px;
     position: absolute;
     width: 75px;
-    left: 646px;
-    top: 1171px
+    left: 647px;
+    top: 1154px
     }
 .lbl_poscFreq {
     height: 20px;
     position: absolute;
     width: 75px;
-    top: 1209px;
-    left: 646px
+    left: 645px;
+    top: 1189px
     }
 .lbl_frcdivFreq {
     height: 20px;
     position: absolute;
     width: 75px;
-    left: 646px;
-    top: 1262px
+    top: 1241px;
+    left: 645px
     }
 .lprc_res {
     height: 20px;
     position: absolute;
     width: 75px;
     left: 646px;
-    top: 1384px
+    top: 1363px
     }
 .sosc_res {
     height: 20px;
     position: absolute;
     width: 75px;
     left: 646px;
-    top: 1443px
+    top: 1423px
     }
 .pllrefdiv {
     height: 30px;
@@ -775,43 +775,49 @@
     height: 20px;
     position: absolute;
     width: 66.7625px;
-    top: 1189px;
-    left: 579px
+    text-align: center;
+    left: 580px;
+    top: 1189px
     }
 .noscSourceLabelName1 {
     height: 20px;
     position: absolute;
     width: 66.7625px;
-    left: 579px;
-    top: 1424px
+    text-align: center;
+    left: 580px;
+    top: 1423px
     }
 .noscSourceLabelName2 {
     height: 20px;
     position: absolute;
     width: 66.7625px;
+    text-align: center;
     top: 1116px;
-    left: 579px
+    left: 580px
     }
 .noscSourceLabelName3 {
     height: 20px;
     position: absolute;
     width: 66.7625px;
-    top: 1242px;
-    left: 646px
+    text-align: center;
+    top: 1226px;
+    left: 580px
     }
 .noscSourceLabelName4 {
     height: 20px;
     position: absolute;
     width: 66.7625px;
-    top: 1363px;
-    left: 579px
+    text-align: center;
+    left: 580px;
+    top: 1363px
     }
 .noscSourceLabelName5 {
     height: 20px;
     position: absolute;
     width: 66.7625px;
-    left: 579px;
-    top: 1154px
+    text-align: center;
+    top: 1154px;
+    left: 580px
     }
 .sysclk_res {
     height: 20px;
@@ -928,9 +934,9 @@
 .epll1RefFreq {
     height: 20px;
     position: absolute;
-    top: 662px;
-    left: 499px;
-    width: 89.02px
+    width: 89.02px;
+    top: 642px;
+    left: 516px
     }
 .wdtrmcsSourceRadio0 {
     height: 20px;
@@ -985,22 +991,22 @@
     height: 20px;
     position: absolute;
     width: 20px;
-    left: 599px;
-    top: 942px
+    top: 941px;
+    left: 598px
     }
 .refClk0Radio10 {
     height: 20px;
     position: absolute;
     width: 20px;
     left: 599px;
-    top: 974px
+    top: 973px
     }
 .refClk0Radio11 {
     height: 20px;
     position: absolute;
     width: 20px;
-    top: 1006px;
-    left: 599px
+    left: 599px;
+    top: 1005px
     }
 .noscSourceRadio5 {
     height: 20px;
@@ -1027,8 +1033,9 @@
     height: 20px;
     position: absolute;
     width: 67px;
-    left: 643px;
-    top: 1327px
+    text-align: center;
+    left: 579px;
+    top: 1328px
     }
 .jlabel_rtcdiv {
     height: 20px;
@@ -1089,16 +1096,16 @@
 .epllFreqDisplay {
     height: 20px;
     position: absolute;
-    left: 646px;
     width: 80px;
-    top: 1133px
+    top: 1116px;
+    left: 645px
     }
 .upllFreqDisplay {
     height: 20px;
     position: absolute;
-    top: 1347px;
     width: 80px;
-    left: 646px
+    left: 646px;
+    top: 1328px
     }
 .cb_pbclk_enable1 {
     height: 20px;
@@ -1180,19 +1187,18 @@
 .epll2RefFreq {
     height: 20px;
     position: absolute;
-    top: 688px;
     width: 89.02px;
-    left: 499.98px
+    top: 668px;
+    left: 516px
     }
 .usbPLLRefFreq {
     height: 20px;
     position: absolute;
-    top: 1017px;
     width: 88.55px;
-    left: 499.98px
+    left: 510px;
+    top: 995px
     }
 .clko {
-    display: block;
     height: 20px;
     position: absolute;
     left: 234px;
@@ -1200,98 +1206,105 @@
     width: 50px
     }
 .refClk0RadioName0 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 66.7656px;
+    text-align: center;
     left: 453px;
-    top: 647px
+    top: 643px
     }
 .refClk0RadioName1 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 66.7656px;
-    left: 453px;
-    top: 673px
+    text-align: center;
+    left: 452px;
+    top: 669px
     }
 .refClk0RadioName2 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 66.7656px;
+    text-align: center;
     left: 453px;
-    top: 700px
+    top: 695px
     }
 .refClk0RadioName3 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 66.7656px;
-    left: 453px;
-    top: 725px
+    text-align: center;
+    left: 452px;
+    top: 719px
     }
 .refClk0RadioName4 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 66.7656px;
-    left: 453px;
-    top: 756px
+    text-align: center;
+    left: 452px;
+    top: 749px
     }
 .refClk0RadioName5 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 66.7656px;
-    left: 453px;
-    top: 787px
+    text-align: center;
+    left: 452px;
+    top: 781px
     }
 .refClk0RadioName6 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 66.7656px;
-    left: 453px;
-    top: 829px
+    text-align: center;
+    top: 845px;
+    left: 440px
     }
 .refClk0RadioName7 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 66.7656px;
-    left: 453px;
-    top: 881px
+    text-align: center;
+    top: 866px;
+    left: 448px
     }
 .refClk0RadioName8 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 66.7656px;
-    left: 453px;
-    top: 917px
+    text-align: center;
+    top: 893px;
+    left: 448px
     }
 .refClk0RadioName9 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 64.9688px;
-    left: 453px;
-    top: 941px
+    text-align: center;
+    top: 935px;
+    left: 450px
     }
 .refClk0RadioName10 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 67px;
-    left: 453px;
-    top: 970px
+    text-align: center;
+    top: 965px;
+    left: 449px
     }
 .refClk0RadioName11 {
-    display: block;
     height: 20px;
     position: absolute;
     width: 67px;
-    left: 453px;
-    top: 1003px
+    text-align: center;
+    top: 997px;
+    left: 449px
+    }
+.ethclkOutENFreq {
+    height: 20px;
+    position: absolute;
+    width: 80px;
+    left: 978px;
+    top: 149px
     }

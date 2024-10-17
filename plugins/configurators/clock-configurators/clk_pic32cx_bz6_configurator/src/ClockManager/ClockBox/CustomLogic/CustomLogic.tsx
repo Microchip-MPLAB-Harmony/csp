@@ -30,6 +30,7 @@ const refRoTrimIds = getClockIds('CONFIG_SYS_CLK_ROTRIM', '', nReferenceClockLen
 const refClockSourceIds = getClockIds('CONFIG_SYS_CLK_REFCLK_SOURCE', '', nReferenceClockLenght);
 const refClkEnableIds = getClockIds('CONFIG_SYS_CLK_REFCLK', '_ENABLE', nReferenceClockLenght);
 
+export let refInputFreqs: number[] = [];
 const CustomLogic = (props: { cx: (...classNames: string[]) => string }) => {
   const { componentId = 'core' } = useContext(PluginConfigContext);
   const poscFreqHook = useIntegerSymbol({ componentId, symbolId: 'POSC_OUT_FREQ' });
@@ -136,6 +137,8 @@ const CustomLogic = (props: { cx: (...classNames: string[]) => string }) => {
           refclk1InputFreq = Number(upllfreq.value);
         }
 
+        refInputFreqs[newIndex] = refclk1InputFreq;
+
         let ref1div = refRodivSymbolHooks[newIndex].value;
         let ref1trim = refRoTrimSymbolHooks[newIndex].value;
 
@@ -223,6 +226,7 @@ const CustomLogic = (props: { cx: (...classNames: string[]) => string }) => {
     <>
       <PlainLabel
         disPlayText={GetClockDisplayFreqValue(Number(sysClockFreq.value))}
+        booldStatus={true}
         className={props.cx('sysclk_res')}
       />
       <PlainLabel

@@ -95,9 +95,9 @@ const SystemPLLControllerBox = (props: {
         componentId={componentId}
         symbolId={'SPLL2_FREQ'}
         className={props.cx('label_spll2Freq')}
-        minMaxOutofRangeRedColorStatus={
-          spll2Freq.value < minSPLL2Freq.value || spll2Freq.value > maxSPLL2Freq.value
-        }
+        // minMaxOutofRangeRedColorStatus={
+        //   spll2Freq.value < minSPLL2Freq.value || spll2Freq.value > maxSPLL2Freq.value
+        // }
         tooltip={
           'SPLL2 has to be between ' + minSPLL2Freq.value + ' Hz and ' + maxSPLL2Freq.value + ' Hz'
         }

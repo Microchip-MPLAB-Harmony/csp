@@ -141,9 +141,9 @@ const PrimaryAndScondaryControllerBox = (props: {
         componentId={componentId}
         symbolId={'POSC_OUT_FREQ'}
         tooltip='When in HS mode, POSC input frequency needs to be between 4 Mhz and 32 Mhz.'
-        minMaxOutofRangeRedColorStatus={
-          (poscFreqHook.value < 4000000 || poscFreqHook.value > 32000000) && poscMod.value === 'HS'
-        }
+        // minMaxOutofRangeRedColorStatus={
+        //   (poscFreqHook.value < 4000000 || poscFreqHook.value > 32000000) && poscMod.value === 'HS'
+        // }
         className={props.cx('lbl_poscFreq')}
       />
 

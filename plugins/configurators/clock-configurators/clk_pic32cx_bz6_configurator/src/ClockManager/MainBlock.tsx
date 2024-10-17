@@ -26,7 +26,7 @@ import CustomLogic from './ClockBox/CustomLogic/CustomLogic';
 
 export let controlJsonData = ClockSamC20C21Json as ControlInterfac[];
 
-const cx = createClassResolver(positions, styles, tabCss);
+export const cx = createClassResolver(positions, styles, tabCss);
 
 const MainBlock = () => {
   const { componentId = 'core' } = useContext(PluginConfigContext);

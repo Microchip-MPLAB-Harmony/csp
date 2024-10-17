@@ -15,6 +15,7 @@ import React, { useContext } from 'react';
 import { GetClockDisplayFreqValue } from 'clock-common/lib/Tools/Tools';
 import FrequencyLabelComponent from 'clock-common/lib/Components/LabelComponent/FrequencyLabelComponent';
 
+let maximumPeripheralFreq = 100000000;
 const PeripheralBusClockControllerBox = (props: {
   tabTitle: string;
   componentId: string;
@@ -59,15 +60,15 @@ const PeripheralBusClockControllerBox = (props: {
         <FrequencyLabelComponent
           componentId={componentId}
           symbolId={'CONFIG_SYS_CLK_PBCLK' + props.tabTitle + '_FREQ'}
-          minMaxOutofRangeRedColorStatus={
-            props.tabTitle === '3' && Number(pb3ClockFreq.value) > pb3ClockFreqMaxRange.value
-          }
-          tooltip={
-            props.tabTitle === '3'
-              ? 'Maximum frequency of PBCLK3 is ' +
-                GetClockDisplayFreqValue(pb3ClockFreqMaxRange.value)
-              : ''
-          }
+          // minMaxOutofRangeRedColorStatus={
+          //   props.tabTitle === '3' && Number(pb3ClockFreq.value) > pb3ClockFreqMaxRange.value
+          // }
+          // tooltip={
+          //   props.tabTitle === '3'
+          //     ? 'Maximum frequency of PBCLK3 is ' +
+          //       GetClockDisplayFreqValue(pb3ClockFreqMaxRange.value)
+          //     : ''
+          // }
           className={props.cx('pbclkxFreq')}
         />
       )}

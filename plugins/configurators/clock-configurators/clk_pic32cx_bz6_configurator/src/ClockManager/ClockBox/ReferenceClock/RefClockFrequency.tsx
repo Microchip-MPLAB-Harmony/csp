@@ -13,7 +13,7 @@ const RefClockFrequency = (props: {
   return (
     <div>
       <PlainLabel
-        disPlayText={GetClockDisplayFreqValue(80000000)}
+        disPlayText={GetClockDisplayFreqValue(8000000)}
         className={props.cx('lbl_frcFreq1')}
       />
       <PlainLabel

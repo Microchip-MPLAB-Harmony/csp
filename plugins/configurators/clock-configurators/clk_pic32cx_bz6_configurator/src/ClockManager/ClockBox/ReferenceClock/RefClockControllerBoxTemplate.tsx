@@ -47,6 +47,10 @@ const RefClkControllerBoxTemplate = (props: {
     setDialogStatus(true);
   }
 
+  const close = () => {
+    setDialogStatus(false);
+  };
+
   return (
     <div>
       <InputNumberDefault
@@ -141,13 +145,19 @@ const RefClkControllerBoxTemplate = (props: {
         buttonClick={refClkAutoCalculationButtonClicked}
       /> */}
       <Dialog
-        header='Reference Clock Divider and Trim Auto-Calculator'
+        header={'Reference Clock Divider and Trim Auto-Calculator ' + props.index}
         visible={dialogStatus}
+        style={{ width: '40rem', height: '20rem' }}
         maximizable={true}
         onHide={() => {
-          setDialogStatus(false);
+          close();
         }}>
-        <ReferenceAutoCalculation />
+        <ReferenceAutoCalculation
+          intialTargetFrequency={Number(freq.value)}
+          close={close}
+          index={Number(props.index)}
+          componentId={componentId}
+        />
       </Dialog>
     </div>
   );
