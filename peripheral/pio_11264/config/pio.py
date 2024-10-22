@@ -362,7 +362,7 @@ def portLatch(pin, latch):
     port = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_CHANNEL")
     bit_pos = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_PIN")
     if port in latchValues:
-        if latch["value"]:
+        if latch["value"].lower() == 'high':
             latchValues[port] |= 1 << bit_pos
         else:
             latchValues[port] &= ~(1 << bit_pos)
