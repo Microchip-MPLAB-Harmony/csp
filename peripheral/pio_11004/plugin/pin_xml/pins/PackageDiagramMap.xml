@@ -16,7 +16,7 @@
         <package diagram="MX_233_TFBGA" id="11" name="BGA233" />
         <package diagram="MX_196_TFBGA" id="12" name="BGA196" />
         <package diagram="BGA240_BGA243" id="13" name="BGA240" />
-        <package diagram="BGA240_BGA243" id="14" name="BGA243" />
+        <package diagram="SAM9X75D_BGA243" id="14" name="BGA243" />
         <package diagram="BGA240_BGA243" id="15" name="TFBGA240" />
     </packages>
 </pinfile>
