@@ -1027,7 +1027,7 @@ def setAdcConfigParams( args ):
             Database.setSymbolValue(component, "AN" + str(instanceNum), True)
 
             #Enable interrupt
-            Database.setSymbolValue(component, "ADCGIRQEN" + str((instanceNum/4) + 1) + "__AGIEN" + str(instanceNum), args['enable_eoc_interrupt'] )
+            Database.setSymbolValue(component, "ADCGIRQEN" + str((instanceNum >> 4 ) + 1) + "__AGIEN" + str(instanceNum), args['enable_eoc_interrupt'] )
             adchsSym_ADCTRGMODE__SHxALT[instanceNum].setSelectedKey( "AN" + args["channel"] )
 
             # Resolution
@@ -1038,7 +1038,7 @@ def setAdcConfigParams( args ):
             Database.setSymbolValue(component, "INTERRUPT_ADC_RESULT", "INT_SOURCE_ADC_DATA"+ args["channel"])
 
             #interrupt
-            Database.setSymbolValue(component, "ADCGIRQEN"+str((instanceNum/4) + 1)+"__AGIEN" + args["channel"], args['enable_eoc_interrupt'] )
+            Database.setSymbolValue(component, "ADCGIRQEN"+ str((int(args["channel"]) >> 4) + "__AGIEN" + args["channel"], args['enable_eoc_interrupt'] )
             Database.setSymbolValue(component, "AN"+ args["channel"], True)
 
             # Resolution
@@ -1058,7 +1058,7 @@ def setAdcConfigParams( args ):
             Database.setSymbolValue(component, "AN"+ args["channel"], False)
 
         # Set ADC result interrupt as false
-        Database.setSymbolValue(component, "ADCGIRQEN"+str((int(args["channel"])/4) + 1 )+"__AGIEN"+ args["channel"], False)
+        Database.setSymbolValue(component, "ADCGIRQEN"+str((int(args["channel"]) >> 4) + 1 )+"__AGIEN"+ args["channel"], False)
 
         #Disable ADC Module
         Database.setSymbolValue(component, "ADCHS_" + str(instanceNum) + "_ENABLE", False )
