@@ -210,7 +210,7 @@ def evsysNonSecCalculation(symbol, event):
                 symbol.setValue((symbol.getValue() & (~(0x1 << channel))))
                 nonSecure = False
         else:
-            if(Database.getSymbolValue(event["namespace"], "EIC_NONSEC_" + str(channel)) == True):
+            if(Database.getSymbolValue(event["namespace"], "EVSYS_NONSEC_" + str(channel)) == True):
                 symbol.setValue((symbol.getValue() | (0x1 << channel)))
                 nonSecure = True
             else:
