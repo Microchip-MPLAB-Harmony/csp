@@ -263,7 +263,6 @@ def find_prescale_and_conv_samples(desired_conversion_time_us, resolution, input
         for sample_count in range(1, 33):
             actual_conversion_frequency = input_clock / ((2 ** (1 + prescaler)) * (sample_count + resolution))
             error = abs(desired_conversion_frequency - actual_conversion_frequency)
-            Log.writeDebugMessage(error)
 
             if error > prev_error:
                 break
