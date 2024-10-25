@@ -1038,7 +1038,7 @@ def setAdcConfigParams( args ):
             Database.setSymbolValue(component, "INTERRUPT_ADC_RESULT", "INT_SOURCE_ADC_DATA"+ args["channel"])
 
             #interrupt
-            Database.setSymbolValue(component, "ADCGIRQEN"+ str((int(args["channel"]) >> 4) + "__AGIEN" + args["channel"], args['enable_eoc_interrupt'] )
+            Database.setSymbolValue(component, "ADCGIRQEN"+ str(int(args["channel"]) >> 4) + "__AGIEN" + args["channel"], args['enable_eoc_interrupt'] )
             Database.setSymbolValue(component, "AN"+ args["channel"], True)
 
             # Resolution
