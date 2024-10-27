@@ -157,6 +157,7 @@ if("MIPS" in coreArch):
     coreTimerComponent = Module.CreateComponent("core_timer", "CORE TIMER", "/Peripherals/CORE TIMER/", "../peripheral/coretimer/config/coretimer.py")
     coreTimerComponent.addCapability("CORE_TIMER_TMR", "TMR")
     coreTimerComponent.setDisplayType("Peripheral Library")
+    coreTimerComponent.setHelpKeyword("MH3_CSP_core")
 
 valueGroup_OSCCON_SLPEN = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CRU\"]/value-group@[name=\"OSCCON__SLPEN\"]")
 if valueGroup_OSCCON_SLPEN is None:
@@ -188,6 +189,7 @@ if ("CEC173" not in processor):
     ramComponent = Module.CreateComponent("ram", "RAM", "/Peripherals/RAM/", "../peripheral/ram/config/ram.py")
     ramComponent.setDisplayType("Peripheral Library")
     ramComponent.addCapability("RAM_MEMORY", "MEMORY")
+    ramComponent.setHelpKeyword("MH3_CSP_ram")
 
 
 for module in range (0, len(modules)):
@@ -199,6 +201,7 @@ for module in range (0, len(modules)):
 
     periphScript = "/peripheral/" + periphName.lower() + "_" + periphID.lower() + \
                     "/config/" + periphName.lower() + ".py"
+    periphKeyword = "MH3_CSP_{0}_{1}".format(periphName.lower(), periphID.lower())
 
     # Don't load system services. They will be loaded by family specific script
     if any(x in periphName for x in system_components):
@@ -216,6 +219,7 @@ for module in range (0, len(modules)):
 
             periphComponent = Module.CreateComponent(periphInstanceName.lower(), periphInstanceName.upper(), "/Peripherals/" +
                             periphName.upper() + "/", ".." + periphScript)
+            periphComponent.setHelpKeyword(periphKeyword)
 
             periphComponent.setDisplayType("Peripheral Library")
 

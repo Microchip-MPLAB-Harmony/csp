@@ -27,24 +27,30 @@ def loadModule():
     
     print("Load Module: Device Family Pack (DFP)")
     dfpComponent = Module.CreateComponent("dfp", "Device Family Pack (DFP)", "/Packs/", "config/dfp.py")
+    dfpComponent.setHelpKeyword("MH3_CSP_dfp")
+
 
     # Avoid loading CMSIS for non-relevant processors
     if ("CORTEX" in coreArch):
         print("Load Module: CMSIS Pack")
         cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis.py")
+        cmsisComponent.setHelpKeyword("MH3_CSP_cmsis")
 
     print("Load Module: CSP System")
     coreComponent = Module.CreateSharedComponent("core", "System", "/", "config/core.py")
+    coreComponent.setHelpKeyword("MH3_CSP_system")
 
     # initiate stdio
     stdioComponent = Module.CreateComponent("stdio", "STDIO", "/Tools/", "../arch/stdio/config/stdio.py")
     stdioComponent.addDependency("UART","UART",False,True)
     stdioComponent.addCapability("STDIO", "STDIO", True)
+    stdioComponent.setHelpKeyword("MH3_CSP_stdio")
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         # initiate stdio
         stdioComponent = Module.CreateComponent("stdio_s", "Secure STDIO", "/Tools/", "../arch/stdio/config/stdio_secure.py")
         stdioComponent.addDependency("UART","UART",False,True)
+        stdioComponent.setHelpKeyword("MH3_CSP_stdio_secure")
 
     # load device specific peripherals
     d = dict(locals(), **globals())
