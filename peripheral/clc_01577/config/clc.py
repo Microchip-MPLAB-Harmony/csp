@@ -84,7 +84,7 @@ def instantiateComponent(clcComponent):
     clcDSMenu.setLabel("Data Sources")
     for dsCount in range(1,5):
         clcSourceSelection = clcComponent.createKeyValueSetSymbol("CLC_DS{0}_OUTPUT".format(dsCount), clcDSMenu)
-        clcSourceSelection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:%NOREGISTER%")
+        clcSourceSelection.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:CLC1SEL")
         clcSourceSelection.setLabel("Data Source {0}".format(dsCount))
         addKeyValueSetFromATDF(clcSourceSelection, "CLC", "CLC{0}SEL__DS{1}".format(clcID, dsCount), "SEL__DS")
         clcSourceSelection.setDefaultValue(0)
@@ -105,27 +105,27 @@ def instantiateComponent(clcComponent):
         clcGateInputMenu.setLabel("Inputs (Ouput is logical OR of all enabled inputs)")
         for dsCount in range(1, 5):
             clcGateInput = clcComponent.createBooleanSymbol("CLC_GATE{0}_DS{1}_ENABLE".format(gateCount, dsCount),clcGateInputMenu)
-            clcGateInput.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:%NOREGISTER%")
+            clcGateInput.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:CLC1SEL")
             clcGateInput.setLabel("Enable Data Source {0}".format(dsCount))
 
             clcGateInputNeg = clcComponent.createBooleanSymbol("CLC_GATE{0}_DS{1}_NEG_ENABLE".format(gateCount, dsCount), clcGateInputMenu)
-            clcGateInputNeg.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:%NOREGISTER%")
+            clcGateInputNeg.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:CLC1SEL")
             clcGateInputNeg.setLabel("Enable Data Source {0} inverted".format(dsCount))
 
         clcGateOutputPolarity = clcComponent.createBooleanSymbol("CLC_GATE{0}_OUTPUT_POLARITY".format(gateCount), clcGateMenu)
-        clcGateOutputPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:%NOREGISTER%")
+        clcGateOutputPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:CLC1GLS")
         clcGateOutputPolarity.setLabel("Invert output".format(gateCount))
 
     clcLogicCellMenu = clcComponent.createMenuSymbol("CLC_LOGIC_CELL_MENU", None)
     clcLogicCellMenu.setLabel ("Logic Cell ")
 
     clcLogicCellEnable = clcComponent.createBooleanSymbol("CLC_LOGIC_CELL_ENABLE", clcLogicCellMenu)
-    clcLogicCellEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:%NOREGISTER%")
+    clcLogicCellEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:CLC1CON")
     clcLogicCellEnable.setLabel("Enable Logic Cell")
     clcLogicCellEnable.setDefaultValue(True)
 
     clcLogicCellMode = clcComponent.createKeyValueSetSymbol("CLC_LOGIC_CELL_MODE", clcLogicCellMenu)
-    clcLogicCellMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:%NOREGISTER%")
+    clcLogicCellMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:CLC1CON")
     clcLogicCellMode.setLabel("Mode")
     addKeyValueSetFromATDF(clcLogicCellMode, "CLC", "CLC{0}CON__MODE".format(clcID), "CON__MODE")
     clcLogicCellMode.setDisplayMode("Description")
@@ -136,11 +136,11 @@ def instantiateComponent(clcComponent):
             break
 
     clcLogicCellOutputPolarity = clcComponent.createBooleanSymbol("CLC_LOGIC_CELL_OUTPUT_POLARITY", clcLogicCellMenu)
-    clcLogicCellOutputPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:%NOREGISTER%")
+    clcLogicCellOutputPolarity.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:CLC1CON")
     clcLogicCellOutputPolarity.setLabel("Invert output")
 
     clcLogicInterruptType = clcComponent.createComboSymbol("CLC_INTERRUPT_TYPE",clcLogicCellMenu,  ["Disabled", "Rising Edge", "Falling Edge"])
-    clcLogicInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:%NOREGISTER%")
+    clcLogicInterruptType.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:CLC1CON")
     clcLogicInterruptType.setLabel("Enable Interrupt")
     clcLogicInterruptType.setDependencies(configureInterrupt, ["CLC_INTERRUPT_TYPE"])
 
@@ -156,7 +156,7 @@ def instantiateComponent(clcComponent):
     clcSymIrqRegIndex.setDefaultValue(str(int(irqNode.getAttribute("index"))/32))
 
     clcLogicPortEnable = clcComponent.createBooleanSymbol("CLC_PORT_ENABLE", clcLogicCellMenu)
-    clcLogicPortEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:%NOREGISTER%")
+    clcLogicPortEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:clc_01577;register:CLC1CON")
     clcLogicPortEnable.setLabel("Enable output pin")
 
     ###################################################################################################
