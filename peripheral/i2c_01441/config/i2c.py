@@ -267,7 +267,7 @@ def instantiateComponent(i2cComponent):
     i2cInstanceNum.setDefaultValue(instanceNum)
 
     i2cSym_OperatingMode = i2cComponent.createComboSymbol("I2C_OPERATING_MODE", None, modelist)
-    i2cSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+    i2cSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
     i2cSym_OperatingMode.setLabel("Operating Mode")
     i2cSym_OperatingMode.setDefaultValue("Master")
     i2cSym_OperatingMode.setDependencies(interruptSetupOnModeChange, ["I2C_OPERATING_MODE"])
@@ -278,7 +278,7 @@ def instantiateComponent(i2cComponent):
     ## I2C Clock Frequency
     i2cSym_ClkValue = i2cComponent.createIntegerSymbol("I2C_CLOCK_FREQ", None)
     i2cSym_ClkValue.setLabel("I2C Clock Frequency")
-    i2cSym_ClkValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+    i2cSym_ClkValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
     i2cSym_ClkValue.setMin(0)
     i2cSym_ClkValue.setReadOnly(True)
     i2cSym_ClkValue.setVisible(False)
@@ -288,7 +288,7 @@ def instantiateComponent(i2cComponent):
     # 10-bit addressing
     i2csSym_A10M = i2cComponent.createBooleanSymbol("I2CS_A10M_SUPPORT", None)
     i2csSym_A10M.setLabel("Enable 10-bit Addressing")
-    i2csSym_A10M.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+    i2csSym_A10M.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
     i2csSym_A10M.setVisible(False)
     i2csSym_A10M.setDefaultValue(False)
     i2csSym_A10M.setDependencies(slaveModeVisibility, ["I2C_OPERATING_MODE"])
@@ -296,7 +296,7 @@ def instantiateComponent(i2cComponent):
     #Slave Address
     i2csSym_ADDR = i2cComponent.createHexSymbol("I2C_SLAVE_ADDDRESS", None)
     i2csSym_ADDR.setLabel("I2C Slave Address (7-bit)")
-    i2csSym_ADDR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+    i2csSym_ADDR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
     i2csSym_ADDR.setMin(0)
     i2csSym_ADDR.setMax(127)
     i2csSym_ADDR.setVisible(False)
@@ -305,22 +305,22 @@ def instantiateComponent(i2cComponent):
 
     #DISSLW: Slew Rate Control Disable bit
     i2cSym_SlewRateControl = i2cComponent.createBooleanSymbol("I2C_DISSLW", None)
-    i2cSym_SlewRateControl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+    i2cSym_SlewRateControl.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
     i2cSym_SlewRateControl.setLabel("Disable Slew Rate Control")
 
     #SMEN: SMBus Input Levels bit
     i2cSym_SMBusEnable = i2cComponent.createBooleanSymbol("I2C_SMEN", None)
-    i2cSym_SMBusEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+    i2cSym_SMBusEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
     i2cSym_SMBusEnable.setLabel("Enable SMBus")
 
     #SIDL: Stop in Idle Mode bit
     i2cSym_StopInIdleMode = i2cComponent.createBooleanSymbol("I2C_SIDL", None)
-    i2cSym_StopInIdleMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+    i2cSym_StopInIdleMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
     i2cSym_StopInIdleMode.setLabel("Stop in Idle Mode bit")
 
     #Baud Rate
     i2cSym_BAUD = i2cComponent.createLongSymbol("I2C_CLOCK_SPEED", None)
-    i2cSym_BAUD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+    i2cSym_BAUD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
     i2cSym_BAUD.setLabel("I2C Baud Rate (Hz)")
     i2cSym_BAUD.setDefaultValue(50000)
     i2cSym_BAUD.setMin(1)
@@ -329,7 +329,7 @@ def instantiateComponent(i2cComponent):
 
     i2cSym_BAUD_HZ = i2cComponent.createLongSymbol("I2C_CLOCK_SPEED_HZ", None)
     i2cSym_BAUD_HZ.setLabel("I2C Baud Rate (Hz)")
-    i2cSym_BAUD_HZ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+    i2cSym_BAUD_HZ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
     i2cSym_BAUD_HZ.setDefaultValue(i2cSym_BAUD.getValue())
     i2cSym_BAUD_HZ.setVisible(False)
     i2cSym_BAUD_HZ.setDependencies(updateI2CBaudHz, ["I2C_CLOCK_SPEED"])
@@ -364,7 +364,7 @@ def instantiateComponent(i2cComponent):
         i2cxCON_SDAHT_ValueGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/value-group@[name="' + i2cxCON_SDAHT.getAttribute("values") + '"]')
 
         i2cCON_SDAHT_Support = i2cComponent.createKeyValueSetSymbol("I2CS_SDAHT_SUPPORT", None)
-        i2cCON_SDAHT_Support.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+        i2cCON_SDAHT_Support.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
         i2cCON_SDAHT_Support.setLabel("SDA Hold Time")
         i2cCON_SDAHT_Support.addKey(i2cxCON_SDAHT_ValueGroup.getChildren()[0].getAttribute("value"), "0" , i2cxCON_SDAHT_ValueGroup.getChildren()[0].getAttribute("caption"))
         i2cCON_SDAHT_Support.addKey(i2cxCON_SDAHT_ValueGroup.getChildren()[1].getAttribute("value"), "1" , i2cxCON_SDAHT_ValueGroup.getChildren()[1].getAttribute("caption"))
@@ -375,7 +375,7 @@ def instantiateComponent(i2cComponent):
 
     #I2C Forced Write API Inclusion
     i2cSym_ForcedWrite = i2cComponent.createBooleanSymbol("I2C_INCLUDE_FORCED_WRITE_API", None)
-    i2cSym_ForcedWrite.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+    i2cSym_ForcedWrite.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
     i2cSym_ForcedWrite.setLabel("Include Force Write I2C Function" + "\r\n" + "(Master Mode Only - Ignore NACK from Slave)")
     i2cSym_ForcedWrite.setDefaultValue(False)
     i2cSym_ForcedWrite.setVisible(True)
@@ -485,7 +485,7 @@ def instantiateComponent(i2cComponent):
 
     if i2cxCON_AHEN != None and i2cxCON_DHEN != None:
         i2cCON_AHEN_DHEN_Support = i2cComponent.createBooleanSymbol("I2CS_AHEN_DHEN_SUPPORT", None)
-        i2cCON_AHEN_DHEN_Support.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+        i2cCON_AHEN_DHEN_Support.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
         i2cCON_AHEN_DHEN_Support.setLabel("Enable Address and Data Hold")
         i2cCON_AHEN_DHEN_Support.setVisible(i2cSym_OperatingMode.getValue() == "Slave")
         i2cCON_AHEN_DHEN_Support.setDefaultValue(True)
@@ -497,7 +497,7 @@ def instantiateComponent(i2cComponent):
     if i2cxCON_PCIE != None:
         i2cCON_PCIE_Support = i2cComponent.createBooleanSymbol("I2CS_PCIE_SUPPORT", None)
         i2cCON_PCIE_Support.setLabel("Enable Stop Condition Interrupt")
-        i2cCON_PCIE_Support.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+        i2cCON_PCIE_Support.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
         i2cCON_PCIE_Support.setVisible(False)
         i2cCON_PCIE_Support.setDefaultValue(True)
 
@@ -510,7 +510,7 @@ def instantiateComponent(i2cComponent):
     i2cSymCoretimerFrequency.setDependencies(coreFreqUpdate, ["core.SYS_CLK_FREQ"])
 
     i2cSymSetupAndRiseTime = i2cComponent.createKeyValueSetSymbol("I2CS_SETUP_RISE_TIME", None)
-    i2cSymSetupAndRiseTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:%NOREGISTER%")
+    i2cSymSetupAndRiseTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:i2c_01441;register:I2CXCON")
     i2cSymSetupAndRiseTime.setLabel("Setup and Rise Time")
     i2cSymSetupAndRiseTime.addKey("0", "0" , "100 kHz - Setup time 250ns, Rise time 1000ns")
     i2cSymSetupAndRiseTime.addKey("1", "1" , "400 kHz - Setup time 100ns, Rise time 300ns")
