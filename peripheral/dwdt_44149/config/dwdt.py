@@ -182,14 +182,14 @@ if __name__ == "__main__":
     dwdt_menu.setDescription("Dual watchdog timer configurations")
 
     dwdt_ps_enable = coreComponent.createBooleanSymbol("DWDT_PS_ENABLE", dwdt_menu)
-    dwdt_ps_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    dwdt_ps_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:PS_WDT_MR")
     dwdt_ps_enable.setLabel("Enable PS WDT")
     dwdt_ps_enable.setDescription("Enable Programmable secure watchdog timer")
     ps_interrupt_dep_list.append(dwdt_ps_enable.getID())
     ps_config_error_dep_list.append(dwdt_ps_enable.getID())
 
     ps_wdt_event = coreComponent.createComboSymbol("DWDT_PS_EVENT", dwdt_ps_enable, ["Reset", "Interrupt"])
-    ps_wdt_event.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ps_wdt_event.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:PS_WDT_MR")
     ps_wdt_event.setLabel ("WDT event")
     ps_wdt_event.setDescription("Programmable secure watchdog timer event configuration")
     ps_wdt_event.setReadOnly(True)
@@ -207,13 +207,13 @@ if __name__ == "__main__":
     ps_config_error_dep_list.append(ps_wdt_period.getID())
 
     ps_wdt_period_ms = coreComponent.createIntegerSymbol("DWDT_PS_PERIOD_MS", dwdt_ps_enable)
-    ps_wdt_period_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ps_wdt_period_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:PS_WDT_WL")
     ps_wdt_period_ms.setLabel("Period (ms)")
     ps_wdt_period_ms.setReadOnly(True)
     ps_wdt_period_ms.setDependencies(lambda symbol, event: symbol.setValue((event["value"]*128*1000)/md_slow_clk), ["DWDT_PS_PERIOD"])
 
     ps_wdt_lvl_enable = coreComponent.createBooleanSymbol("DWDT_PS_LEVEL_ENABLE", dwdt_ps_enable)
-    ps_wdt_lvl_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ps_wdt_lvl_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:PS_WDT_IL")
     ps_wdt_lvl_enable.setLabel("Enable level interrupt")
     ps_wdt_lvl_enable.setReadOnly(True)
     ps_wdt_lvl_enable.setDependencies(lambda symbol, event: symbol.setReadOnly(not event["value"]), ["DWDT_PS_ENABLE"])
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     ps_config_error_dep_list.append(ps_wdt_level.getID())
 
     ps_wdt_level_ms = coreComponent.createIntegerSymbol("DWDT_PS_LEVEL_MS", ps_wdt_lvl_enable)
-    ps_wdt_level_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ps_wdt_level_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:PS_WDT_IL")
     ps_wdt_level_ms.setLabel("Level (ms)")
     ps_wdt_level_ms.setReadOnly(True)
     ps_wdt_level_ms.setDependencies(lambda symbol, event: symbol.setValue((event["value"]*128*1000)/md_slow_clk), ["DWDT_PS_LEVEL"])
@@ -253,25 +253,25 @@ if __name__ == "__main__":
     ps_config_error_dep_list.append(ps_wdt_rpt_thrshold.getID())
 
     ps_wdt_rpt_thrshold_ms = coreComponent.createIntegerSymbol("DWDT_PS_REPEAT_THRESHOLD_MS", ps_wdt_repeat_enable)
-    ps_wdt_rpt_thrshold_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ps_wdt_rpt_thrshold_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:PS_WDT_WL")
     ps_wdt_rpt_thrshold_ms.setLabel("Repeat threshold (ms)")
     ps_wdt_rpt_thrshold_ms.setReadOnly(True)
     ps_wdt_rpt_thrshold_ms.setDependencies(lambda symbol, event: symbol.setValue((event["value"]*128*1000)/md_slow_clk), ["DWDT_PS_REPEAT_THRESHOLD"])
 
     ps_wdt_debug_halt = coreComponent.createBooleanSymbol("DWDT_PS_DEBUG_HALT", dwdt_ps_enable)
-    ps_wdt_debug_halt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ps_wdt_debug_halt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:PS_WDT_MR")
     ps_wdt_debug_halt.setLabel("Halt on debug")
     ps_wdt_debug_halt.setReadOnly(True)
     ps_wdt_debug_halt.setDependencies(lambda symbol, event: symbol.setReadOnly(not event["value"]), ["DWDT_PS_ENABLE"])
 
     ps_wdt_idle_halt = coreComponent.createBooleanSymbol("DWDT_PS_IDLE_HALT", dwdt_ps_enable)
-    ps_wdt_idle_halt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ps_wdt_idle_halt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:PS_WDT_MR")
     ps_wdt_idle_halt.setLabel("Halt on idle")
     ps_wdt_idle_halt.setReadOnly(True)
     ps_wdt_idle_halt.setDependencies(lambda symbol, event: symbol.setReadOnly(not event["value"]), ["DWDT_PS_ENABLE"])
 
     ps_wdt_lock_config = coreComponent.createBooleanSymbol("DWDT_PS_LOCK_CONFIG", dwdt_ps_enable)
-    ps_wdt_lock_config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ps_wdt_lock_config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:PS_WDT_CR")
     ps_wdt_lock_config.setLabel("Lock changes")
 
     ps_wdt_config_error = coreComponent.createStringSymbol("DWDT_PS_CONFIG_ERROR", dwdt_ps_enable)
@@ -287,12 +287,12 @@ if __name__ == "__main__":
     ps_wdt_ns_config_deps = []
 
     ps_wdt_ns_period_interrupt = coreComponent.createBooleanSymbol("DWDT_PS_NS_PERIOD_INTERRUPT_ENABLE", ps_wdt_ns_menu)
-    ps_wdt_ns_period_interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ps_wdt_ns_period_interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:PS_WDT_IER")
     ps_wdt_ns_period_interrupt.setLabel("Generate secure interrupt on NS WDT period event")
     ps_interrupt_dep_list.append(ps_wdt_ns_period_interrupt.getID())
 
     ps_wdt_ns_repeat_interrupt = coreComponent.createBooleanSymbol("DWDT_PS_NS_REPEAT_INTERRUPT_ENABLE", ps_wdt_ns_menu)
-    ps_wdt_ns_repeat_interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ps_wdt_ns_repeat_interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:PS_WDT_IER")
     ps_wdt_ns_repeat_interrupt.setLabel("Generate secure interrupt on NS WDT repeat event")
     ps_interrupt_dep_list.append(ps_wdt_ns_repeat_interrupt.getID())
 
@@ -367,7 +367,7 @@ if __name__ == "__main__":
     ns_config_error_dep_list = ["DWDT_PS_NS_PERIOD_LIMIT", "DWDT_PS_NS_REPEAT_LIMIT", "DWDT_PS_NS_LEVEL_LIMIT"]
 
     ns_wdt_enable = coreComponent.createBooleanSymbol("DWDT_NS_ENABLE", dwdt_menu)
-    ns_wdt_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ns_wdt_enable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:NS_WDT_MR")
     ns_wdt_enable.setLabel("Enable NS WDT")
     ns_wdt_enable.setDescription("Never secure watchdog timer event configuaration")
     ns_config_error_dep_list.append(ns_wdt_enable.getID())
@@ -382,20 +382,20 @@ if __name__ == "__main__":
     ns_config_error_dep_list.append(ns_wdt_period.getID())
 
     ns_wdt_period_ms = coreComponent.createIntegerSymbol("DWDT_NS_PERIOD_MS", ns_wdt_enable)
-    ns_wdt_period_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ns_wdt_period_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:NS_WDT_IL")
     ns_wdt_period_ms.setLabel("Period (ms)")
     ns_wdt_period_ms.setReadOnly(True)
     ns_wdt_period_ms.setDependencies(lambda symbol, event: symbol.setValue((event["value"]*128*1000)/md_slow_clk), ["DWDT_NS_PERIOD"])
 
     ns_wdt_period_interrupt = coreComponent.createBooleanSymbol("DWDT_NS_PERIOD_ENABLE", ns_wdt_enable)
-    ns_wdt_period_interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ns_wdt_period_interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:NS_WDT_IER")
     ns_wdt_period_interrupt.setLabel("Enable period failure interrupt")
     ns_wdt_period_interrupt.setReadOnly(True)
     ns_wdt_period_interrupt.setDependencies(lambda symbol, event: symbol.setReadOnly(not event["value"]), ["DWDT_NS_ENABLE"])
     ns_config_error_dep_list.append(ns_wdt_period_interrupt.getID())
 
     ns_wdt_level_interrupt = coreComponent.createBooleanSymbol("DWDT_NS_LEVEL_ENABLE", ns_wdt_enable)
-    ns_wdt_level_interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ns_wdt_level_interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:NS_WDT_IL")
     ns_wdt_level_interrupt.setLabel("Enable level threshold failure interrupt")
     ns_wdt_level_interrupt.setReadOnly(True)
     ns_wdt_level_interrupt.setDependencies(lambda symbol, event: symbol.setReadOnly(not event["value"]), ["DWDT_NS_ENABLE"])
@@ -411,7 +411,7 @@ if __name__ == "__main__":
     ns_config_error_dep_list.append(ns_wdt_level.getID())
 
     ns_wdt_level_ms = coreComponent.createIntegerSymbol("DWDT_NS_LEVEL_MS", ns_wdt_level_interrupt)
-    ns_wdt_level_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ns_wdt_level_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:NS_WDT_IL")
     ns_wdt_level_ms.setLabel("Repeat threshold (ms)")
     ns_wdt_level_ms.setReadOnly(True)
     ns_wdt_level_ms.setDependencies(lambda symbol, event: symbol.setValue((event["value"]*128*1000)/md_slow_clk), ["DWDT_NS_LEVEL"])
@@ -426,7 +426,7 @@ if __name__ == "__main__":
     ns_config_error_dep_list.append(ns_wdt_repeat.getID())
 
     ns_wdt_repeat_ms = coreComponent.createIntegerSymbol("DWDT_NS_REPEAT_THRESHOLD_MS", ns_wdt_enable)
-    ns_wdt_repeat_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ns_wdt_repeat_ms.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:NS_WDT_IL")
     ns_wdt_repeat_ms.setLabel("Repeat threshold (ms)")
     ns_wdt_repeat_ms.setReadOnly(True)
     ns_wdt_repeat_ms.setDependencies(lambda symbol, event: symbol.setValue((event["value"]*128*1000)/md_slow_clk), ["DWDT_NS_REPEAT_THRESHOLD"])
@@ -440,26 +440,26 @@ if __name__ == "__main__":
 
 
     ns_wdt_debug_halt = coreComponent.createBooleanSymbol("DWDT_NS_DEBUG_HALT", ns_wdt_enable)
-    ns_wdt_debug_halt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ns_wdt_debug_halt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:NS_WDT_MR")
     ns_wdt_debug_halt.setLabel("Halt on debug")
     ns_wdt_debug_halt.setReadOnly(True)
     ns_wdt_debug_halt.setDependencies(lambda symbol, event: symbol.setReadOnly(not event["value"]), ["DWDT_NS_ENABLE"])
 
     ns_wdt_idle_halt = coreComponent.createBooleanSymbol("DWDT_NS_IDLE_HALT", ns_wdt_enable)
-    ns_wdt_idle_halt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ns_wdt_idle_halt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:NS_WDT_MR")
     ns_wdt_idle_halt.setLabel("Halt on idle")
     ns_wdt_idle_halt.setReadOnly(True)
     ns_wdt_idle_halt.setDependencies(lambda symbol, event: symbol.setReadOnly(not event["value"]), ["DWDT_NS_ENABLE"])
 
     ns_wdt_rpthalm = coreComponent.createBooleanSymbol("DWDT_NS_RPTHALM", ns_wdt_enable)
-    ns_wdt_rpthalm.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ns_wdt_rpthalm.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:NS_WDT_MR")
     ns_wdt_rpthalm.setLabel("Repeat Threshold Alarm")
     ns_wdt_rpthalm.setDescription("Enable Repeat Threshold Alarm to security module")
     ns_wdt_rpthalm.setReadOnly(True)
     ns_wdt_rpthalm.setDependencies(lambda symbol, event: symbol.setReadOnly(not event["value"]), ["DWDT_NS_ENABLE"])
 
     ns_wdt_lock_config = coreComponent.createBooleanSymbol("DWDT_NS_LOCK_CONFIG", ns_wdt_enable)
-    ns_wdt_lock_config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:%NOREGISTER%")
+    ns_wdt_lock_config.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dwdt_44149;register:NS_WDT_CR")
     ns_wdt_lock_config.setLabel("Lock changes")
 
     ns_wdt_config_error = coreComponent.createStringSymbol("DWDT_NS_CONFIG_ERROR", ns_wdt_enable)
