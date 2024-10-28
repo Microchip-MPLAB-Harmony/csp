@@ -35,7 +35,7 @@ def instantiateComponent(divasComponent):
 
     #Enable or Disable lead zero optimization
     divasSym_DLZ = divasComponent.createBooleanSymbol("DIVAS_DLZ", None)
-    divasSym_DLZ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:divas_u2258;register:%NOREGISTER%")
+    divasSym_DLZ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:divas_u2258;register:CTRLA")
     divasSym_DLZ.setLabel("Enable Leading Zero optimization?")
     divasSym_DLZ.setDescription("32 bit divisions take 2-16 cycles when enabled; 16 cycles when disabled")
     divasSym_DLZ.setVisible(True)
@@ -43,7 +43,7 @@ def instantiateComponent(divasComponent):
 
     #Overload Divider operation
     divasSym_DLZ = divasComponent.createBooleanSymbol("DIVAS_DIV_OVERLOAD", None)
-    divasSym_DLZ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:divas_u2258;register:%NOREGISTER%")
+    divasSym_DLZ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:divas_u2258;register:CTRLA")
     divasSym_DLZ.setLabel("Overload  Divide Operator?")
     divasSym_DLZ.setVisible(True)
     divasSym_DLZ.setDefaultValue(False)
