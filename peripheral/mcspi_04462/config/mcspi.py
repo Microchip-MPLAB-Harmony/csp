@@ -449,7 +449,7 @@ def instantiateComponent(mcspiComponent):
 
     global mcspiInterrupt
     mcspiInterrupt = mcspiComponent.createBooleanSymbol("MCSPI_INTERRUPT_MODE", None)
-    mcspiInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+    mcspiInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_IER")
     mcspiInterrupt.setLabel("Interrupt Mode")
     mcspiInterrupt.setDefaultValue(True)
 
@@ -464,7 +464,7 @@ def instantiateComponent(mcspiComponent):
     for index in range(0, len(mcspiRegisterList)):
         if (mcspiRegisterList[index].getAttribute("name") == "MCSPI_RPR"):
             mcspiDMAEnable = mcspiComponent.createBooleanSymbol("USE_MCSPI_DMA", None)
-            mcspiDMAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+            mcspiDMAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_PTCR")
             mcspiDMAEnable.setLabel("Enable DMA for Transmit and Receive")
             mcspiDMAEnable.setDependencies(updateMCSPIDMAConfigurationVisbleProperty, ["MCSPI_INTERRUPT_MODE"])
             break
@@ -543,7 +543,7 @@ def instantiateComponent(mcspiComponent):
 
 # FIFO Mode
     mcspiSymFIFOEnable = mcspiComponent.createBooleanSymbol("MCSPI_FIFO_ENABLE", None)
-    mcspiSymFIFOEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+    mcspiSymFIFOEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_CR")
     mcspiSymFIFOEnable.setLabel("Enable FIFO")
     mcspiSymFIFOEnable.setDefaultValue(False)
     mcspiSymFIFOEnable.setVisible(mcspiBitField_CR_FIFOEN != None)
@@ -552,7 +552,7 @@ def instantiateComponent(mcspiComponent):
 # Slave mode TX Buffer Size
     mcspiSym_TXBuffer_Size = mcspiComponent.createIntegerSymbol("MCSPIS_TX_BUFFER_SIZE", None)
     mcspiSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
-    mcspiSym_TXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+    mcspiSym_TXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_TDR")
     mcspiSym_TXBuffer_Size.setMin(0)
     mcspiSym_TXBuffer_Size.setMax(65535)
     mcspiSym_TXBuffer_Size.setDefaultValue(256)
@@ -562,7 +562,7 @@ def instantiateComponent(mcspiComponent):
 # Slave mode RX Buffer Size
     mcspiSym_RXBuffer_Size = mcspiComponent.createIntegerSymbol("MCSPIS_RX_BUFFER_SIZE", None)
     mcspiSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
-    mcspiSym_RXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+    mcspiSym_RXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_RDR")
     mcspiSym_RXBuffer_Size.setMin(0)
     mcspiSym_RXBuffer_Size.setMax(65535)
     mcspiSym_RXBuffer_Size.setDefaultValue(256)
@@ -572,7 +572,7 @@ def instantiateComponent(mcspiComponent):
     for i in range (mcspi_CSR_Count):
         # CSR0 Enable
         mcspiSym_MCSPI_EnableNPCSx = mcspiComponent.createBooleanSymbol("MCSPI_EN_NPCS" + str(i), None)
-        mcspiSym_MCSPI_EnableNPCSx.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+        mcspiSym_MCSPI_EnableNPCSx.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_MR")
         mcspiSym_MCSPI_EnableNPCSx.setVisible(True)
         if i == 0:
             mcspiSym_MCSPI_EnableNPCSx.setDefaultValue(True)
@@ -603,7 +603,7 @@ def instantiateComponent(mcspiComponent):
 # BAUD RATE (Unused, maintained for backward compatibility)
     mcspiSym_CSR_SCBR = mcspiComponent.createIntegerSymbol("MCSPI_BAUD_RATE", None)
     mcspiSym_CSR_SCBR.setLabel("Baud Rate in Hz")
-    mcspiSym_CSR_SCBR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+    mcspiSym_CSR_SCBR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_MR")
     mcspiSym_CSR_SCBR.setDefaultValue(defaultbaudRate)
     mcspiSym_CSR_SCBR.setMin(1)
     mcspiSym_CSR_SCBR.setVisible(False)
@@ -612,7 +612,7 @@ def instantiateComponent(mcspiComponent):
 # BITS (Unused, maintained for backward compatibility)
     mcspiSym_CSR_BITS = mcspiComponent.createKeyValueSetSymbol("MCSPI_CHARSIZE_BITS", None)
     mcspiSym_CSR_BITS.setLabel(mcspiBitField_CSR_BITS.getAttribute("caption"))
-    mcspiSym_CSR_BITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+    mcspiSym_CSR_BITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_MR")
     mcspiSym_CSR_BITS.setOutputMode("Key")
     mcspiSym_CSR_BITS.setDisplayMode("Description")
     mcspiSym_CSR_BITS.setDefaultValue(0)
@@ -628,7 +628,7 @@ def instantiateComponent(mcspiComponent):
 # CPOL (Unused, maintained for backward compatibility)
     mcspiSym_CSR_CPOL = mcspiComponent.createKeyValueSetSymbol("MCSPI_CLOCK_POLARITY", None)
     mcspiSym_CSR_CPOL.setLabel(mcspiBitField_CSR_CPOL.getAttribute("caption"))
-    mcspiSym_CSR_CPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+    mcspiSym_CSR_CPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:CSPI_CSR")
     mcspiSym_CSR_CPOL.setOutputMode("Value")
     mcspiSym_CSR_CPOL.setDisplayMode("Description")
     mcspiSym_CSR_CPOL.setDefaultValue(0)
@@ -640,7 +640,7 @@ def instantiateComponent(mcspiComponent):
 # NCPHA (Unused, maintained for backward compatibility)
     mcspiSym_CSR_NCPHA = mcspiComponent.createKeyValueSetSymbol("MCSPI_CLOCK_PHASE", None)
     mcspiSym_CSR_NCPHA.setLabel(mcspiBitField_CSR_NCPHA.getAttribute("caption"))
-    mcspiSym_CSR_NCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+    mcspiSym_CSR_NCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:CSPI_CSR")
     mcspiSym_CSR_NCPHA.setOutputMode("Value")
     mcspiSym_CSR_NCPHA.setDisplayMode("Description")
     mcspiSym_CSR_NCPHA.setDefaultValue(1)
@@ -659,7 +659,7 @@ def instantiateComponent(mcspiComponent):
     for i in range (mcspi_CSR_Count):
         # CSRx BAUD RATE
         mcspiSym_MCSPI_CSRx_Baudrate = mcspiComponent.createIntegerSymbol("MCSPI_CSR" + str(i) + "_BAUD_RATE", localComponent.getSymbolByID("MCSPI_EN_NPCS" + str(i)))
-        mcspiSym_MCSPI_CSRx_Baudrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+        mcspiSym_MCSPI_CSRx_Baudrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_CSR")
         mcspiSym_MCSPI_CSRx_Baudrate.setLabel("Baud Rate (Hz)")
         mcspiSym_MCSPI_CSRx_Baudrate.setDefaultValue(defaultbaudRate)
         mcspiSym_MCSPI_CSRx_Baudrate.setVisible(i == 0)
@@ -673,7 +673,7 @@ def instantiateComponent(mcspiComponent):
 
         # CSRx BITS
         mcspiSym_MCSPI_CSRx_BITS = mcspiComponent.createKeyValueSetSymbol("MCSPI_CSR" + str(i) + "_BITS", localComponent.getSymbolByID("MCSPI_EN_NPCS" + str(i)))
-        mcspiSym_MCSPI_CSRx_BITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+        mcspiSym_MCSPI_CSRx_BITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_CSR")
         mcspiSym_MCSPI_CSRx_BITS.setLabel("Bits Per Transfer")
         mcspiSym_MCSPI_CSRx_BITS.setOutputMode("Key")
         mcspiSym_MCSPI_CSRx_BITS.setDisplayMode("Description")
@@ -689,7 +689,7 @@ def instantiateComponent(mcspiComponent):
 
         # CSRx CPOL
         mcspiSym_MCSPI_CSRx_CPOL = mcspiComponent.createKeyValueSetSymbol("MCSPI_CSR" + str(i) + "_CPOL", localComponent.getSymbolByID("MCSPI_EN_NPCS" + str(i)))
-        mcspiSym_MCSPI_CSRx_CPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+        mcspiSym_MCSPI_CSRx_CPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_MR")
         mcspiSym_MCSPI_CSRx_CPOL.setLabel("Clock Polarity")
         mcspiSym_MCSPI_CSRx_CPOL.setOutputMode("Value")
         mcspiSym_MCSPI_CSRx_CPOL.setDisplayMode("Description")
@@ -701,7 +701,7 @@ def instantiateComponent(mcspiComponent):
 
         # CSRx NCPHA
         mcspiSym_MCSPI_CSRx_NCPHA = mcspiComponent.createKeyValueSetSymbol("MCSPI_CSR" + str(i) + "_NCPHA", localComponent.getSymbolByID("MCSPI_EN_NPCS" + str(i)))
-        mcspiSym_MCSPI_CSRx_NCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+        mcspiSym_MCSPI_CSRx_NCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_MR")
         mcspiSym_MCSPI_CSRx_NCPHA.setLabel("Clock Phase")
         mcspiSym_MCSPI_CSRx_NCPHA.setOutputMode("Value")
         mcspiSym_MCSPI_CSRx_NCPHA.setDisplayMode("Description")
@@ -713,7 +713,7 @@ def instantiateComponent(mcspiComponent):
 
         # CSRx DLYBS
         mcspiSym_MCSPI_CSRx_DLYBS = mcspiComponent.createIntegerSymbol("MCSPI_CSR" + str(i) + "_DLYBS", localComponent.getSymbolByID("MCSPI_EN_NPCS" + str(i)))
-        mcspiSym_MCSPI_CSRx_DLYBS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+        mcspiSym_MCSPI_CSRx_DLYBS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_CSR")
         mcspiSym_MCSPI_CSRx_DLYBS.setLabel("Delay before SPCK")
         mcspiSym_MCSPI_CSRx_DLYBS.setMax(255)
         mcspiSym_MCSPI_CSRx_DLYBS.setDefaultValue(0)
@@ -722,7 +722,7 @@ def instantiateComponent(mcspiComponent):
 
         # CSRx DLYBCT
         mcspiSym_MCSPI_CSRx_DLYBCT = mcspiComponent.createIntegerSymbol("MCSPI_CSR" + str(i) + "_DLYBCT", localComponent.getSymbolByID("MCSPI_EN_NPCS" + str(i)))
-        mcspiSym_MCSPI_CSRx_DLYBCT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:%NOREGISTER%")
+        mcspiSym_MCSPI_CSRx_DLYBCT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcspi_04462;register:MCSPI_CSR")
         mcspiSym_MCSPI_CSRx_DLYBCT.setLabel("Delay between consecutive transfers")
         mcspiSym_MCSPI_CSRx_DLYBCT.setMax(255)
         mcspiSym_MCSPI_CSRx_DLYBCT.setDefaultValue(0)
