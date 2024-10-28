@@ -175,7 +175,7 @@ def mcpwmAddKeyValueSetFromATDFInitValue(Parent, ModuleName, RegisterName, BitFi
             if value_groupNode is not None:
                 Component = Parent.createKeyValueSetSymbol(RegisterName + '__' +
                     BitFieldName, Menu)
-                Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
+                Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PTCON")
                 mcpwmValGrp_names = []
                 _get_bitfield_names(value_groupNode, mcpwmValGrp_names)
 
@@ -237,7 +237,7 @@ def mcpwmAddBooleanFromATDF1ValueValueGroup(Parent, ModuleName, RegisterName, Bi
     labelNode = ATDF.getNode(value_groupPath)
     if labelNode is not None:
         Component = Parent.createBooleanSymbol(RegisterName + '__' + BitFieldName, Menu)
-        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PTCON")
         Component.setLabel(labelNode.getAttribute('caption'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -253,7 +253,7 @@ def mcpwmAddBooleanFromATDFBitfieldName(Parent, ModuleName, RegisterName, BitFie
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createBooleanSymbol(RegisterName + '__' + BitFieldName, Menu)
-        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PTCON")
         Component.setLabel(labelNode.getAttribute('name'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -269,7 +269,7 @@ def mcpwmAddBooleanFromATDFBitfieldCaption(Parent, ModuleName, RegisterName, Bit
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createBooleanSymbol(RegisterName + '__' + BitFieldName, Menu)
-        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PTCON")
         Component.setLabel(labelNode.getAttribute('caption'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -303,7 +303,7 @@ def mcpwmAddLongFromATDFRegisterCaption(Parent, ModuleName, RegisterName, BitFie
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createLongSymbol(RegisterName + '__' + BitFieldName, Menu)
-        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PTCON")
         Component.setLabel(labelNode.getAttribute('caption') + ' - ' + BitFieldName)
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -319,7 +319,7 @@ def mcpwmAddLongFromATDFBitfieldCaption(Parent, ModuleName, RegisterName, BitFie
     labelNode = ATDF.getNode(labelPath)
     if labelNode is not None:
         Component = Parent.createLongSymbol(RegisterName + '__' + BitFieldName, Menu)
-        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
+        Component.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PTCON")
         Component.setLabel(labelNode.getAttribute('caption'))
         Component.setDefaultValue(0)
         Component.setVisible(Visibility)
@@ -844,7 +844,7 @@ def instantiateComponent(mcpwmComponent):
     mcpwm_PTPER_PTPER.setMax(pow(2, 16) - 1)
 
     mcpwmSym_PRI_FREQUENCY = mcpwmComponent.createFloatSymbol("MCPWM_PRI_FREQ", mcpwmSym_PRIMARY_TIMEBASE_CONF)
-    mcpwmSym_PRI_FREQUENCY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
+    mcpwmSym_PRI_FREQUENCY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PTCON")
     mcpwmSym_PRI_FREQUENCY.setLabel("Primary Frequency (Hz)")
     mcpwmSym_PRI_FREQUENCY.setVisible(False)
     mcpwmSym_PRI_FREQUENCY.setReadOnly(True)
@@ -884,7 +884,7 @@ def instantiateComponent(mcpwmComponent):
     mcpwm_STPER_STPER.setMax(pow(2, 16) - 1)
 
     mcpwmSym_SEC_FREQUENCY = mcpwmComponent.createFloatSymbol("MCPWM_SEC_FREQ", mcpwmSym_SECONDARY_TIMEBASE_CONF)
-    mcpwmSym_SEC_FREQUENCY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
+    mcpwmSym_SEC_FREQUENCY.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PTCON")
     mcpwmSym_SEC_FREQUENCY.setLabel("Secondary Frequency (Hz)")
     mcpwmSym_SEC_FREQUENCY.setVisible(False)
     mcpwmSym_SEC_FREQUENCY.setReadOnly(True)
@@ -915,7 +915,7 @@ def instantiateComponent(mcpwmComponent):
     # channel configurations
     for channelID in range (1, mcpwmSym_NUM_CHANNELS.getValue() + 1):
         mcpwmSym_CHANNEL_MENU = mcpwmComponent.createBooleanSymbol("MCPWM_CHANNEL"+str(channelID), None)
-        mcpwmSym_CHANNEL_MENU.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
+        mcpwmSym_CHANNEL_MENU.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PWMCON2")
         mcpwmSym_CHANNEL_MENU.setLabel("Enable PWM Channel " + str(channelID))
 
         mcpwmSym_CLOCK_ENABLE = mcpwmComponent.createStringSymbol("MCPWM_CH_CLOCK_ENABLE"+str(channelID), mcpwmSym_CHANNEL_MENU)
@@ -1013,7 +1013,7 @@ def instantiateComponent(mcpwmComponent):
         mcpwm_PHASE_PHASE.setMax(pow(2, 16) - 1)
 
         mcpwm_CH_PERIOD = mcpwmComponent.createIntegerSymbol("MCPWM_PERIOD_CH"+str(channelID), mcpwmSym_CHANNEL_MENU)
-        mcpwm_CH_PERIOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:%NOREGISTER%")
+        mcpwm_CH_PERIOD.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:mcpwm_01477;register:PTPER")
         mcpwm_CH_PERIOD.setLabel("PWM Period")
         mcpwm_CH_PERIOD.setDefaultValue(2000)
         mcpwm_CH_PERIOD.setMin(0)
