@@ -528,7 +528,7 @@ def instantiateComponent(adcComponent):
 
     global adcSym_InterruptMode
     adcSym_InterruptMode = adcComponent.createBooleanSymbol("ADC_INTERRUPT", adcMenu)
-    adcSym_InterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_00755;register:%NOREGISTER%")
+    adcSym_InterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:adc_00755;register:IEC0")
     adcSym_InterruptMode.setLabel("Interrupt Mode")
     adcSym_InterruptMode.setVisible(True)
     adcSym_InterruptMode.setDefaultValue(False)
