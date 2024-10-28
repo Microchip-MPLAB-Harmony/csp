@@ -63,77 +63,77 @@ __longramfunc__ void SEFC_GpnvmBitClear(uint8_t GpnvmBitNumber)
 
 SEFC_FLASH_PANEL SEFC_FlashPanelGet(uint32_t address)
 {
-    bool isPanelSwap = (SEFC_GpnvmBitRead() & FUSES_GPNVMBITS_PLANE_SELECTION_Msk) ? true: false;
-    
+    bool isPanelSwap = ((SEFC_GpnvmBitRead() & FUSES_GPNVMBITS_PLANE_SELECTION_Msk) == FUSES_GPNVMBITS_PLANE_SELECTION_Msk) ? true: false;
+
     if (address < IFLASH1_ADDR)
     {
-        return isPanelSwap == false? SEFC_FLASH_PANEL0 : SEFC_FLASH_PANEL1;        
+        return isPanelSwap == false? SEFC_FLASH_PANEL0 : SEFC_FLASH_PANEL1;
     }
     else
     {
-        return isPanelSwap == false? SEFC_FLASH_PANEL1 : SEFC_FLASH_PANEL0;        
+        return isPanelSwap == false? SEFC_FLASH_PANEL1 : SEFC_FLASH_PANEL0;
     }
 }
 
 bool SEFC_SectorErase( uint32_t address )
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
-    
-    return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_SectorErase(address) : SEFC1_SectorErase(address);    
+
+    return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_SectorErase(address) : SEFC1_SectorErase(address);
 }
 
 bool SEFC_PageBufferWrite( uint32_t *data, const uint32_t address)
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
-    
-    return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_PageBufferWrite(data, address) : SEFC1_PageBufferWrite(data, address);    
+
+    return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_PageBufferWrite(data, address) : SEFC1_PageBufferWrite(data, address);
 }
 
 bool SEFC_PageBufferCommit( const uint32_t address)
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
-    
+
     return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_PageBufferCommit(address) : SEFC1_PageBufferCommit(address);
 }
 
 bool SEFC_PageWrite( uint32_t *data, uint32_t address )
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
-    
+
     return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_PageWrite(data, address) : SEFC1_PageWrite(data, address);
 }
 
 bool SEFC_QuadWordWrite( uint32_t *data, uint32_t address )
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
-    
+
     return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_QuadWordWrite(data, address) : SEFC1_QuadWordWrite(data, address);
 }
 
 void SEFC_RegionLock(uint32_t address)
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
-    
+
     return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_RegionLock(address) : SEFC1_RegionLock(address);
 }
 
 void SEFC_RegionUnlock(uint32_t address)
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
-    
+
     return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_RegionUnlock(address) : SEFC1_RegionUnlock(address);
 }
 
 bool SEFC_IsBusy(uint32_t address)
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
-    
+
     return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_IsBusy() : SEFC1_IsBusy();
 }
 
 SEFC_ERROR SEFC_ErrorGet(uint32_t address)
 {
     SEFC_FLASH_PANEL flash_panel = SEFC_FlashPanelGet(address);
-    
+
     return (flash_panel == SEFC_FLASH_PANEL0)? SEFC0_ErrorGet() : SEFC1_ErrorGet();
 }
