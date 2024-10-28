@@ -559,7 +559,7 @@ for pinNumber in range(1, packagePinCount + 1):
 
     pinDirection.append(pinNumber)
     pinDirection[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_DIR", pin[pinNumber-1])
-    pinDirection[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    pinDirection[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:TRISA")
     pinDirection[pinNumber-1].setLabel("Direction")
     pinDirection[pinNumber-1].setReadOnly(False)
     pinDirection[pinNumber-1].setDependencies(pinDirCal, ["BSP_PIN_" + str(pinNumber) + "_DIR" ])
@@ -567,7 +567,7 @@ for pinNumber in range(1, packagePinCount + 1):
 
     pinLatch.append(pinNumber)
     pinLatch[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_LAT", pin[pinNumber-1])
-    pinLatch[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    pinLatch[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:LATA")
     pinLatch[pinNumber-1].setLabel("Initial Latch Value")
     pinLatch[pinNumber-1].setReadOnly(False)
     pinLatch[pinNumber-1].setDefaultValue("")
@@ -576,7 +576,7 @@ for pinNumber in range(1, packagePinCount + 1):
 
     pinOpenDrain.append(pinNumber)
     pinOpenDrain[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_OD", pin[pinNumber-1])
-    pinOpenDrain[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    pinOpenDrain[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:ODCA")
     pinOpenDrain[pinNumber-1].setLabel("Open Drain")
     pinOpenDrain[pinNumber-1].setReadOnly(False)
     pinOpenDrain[pinNumber-1].setDependencies(pinOpenDrainCal, ["BSP_PIN_" + str(pinNumber) + "_OD"])
@@ -584,7 +584,7 @@ for pinNumber in range(1, packagePinCount + 1):
 
     pinInterrupt.append(pinNumber)
     pinInterrupt[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_CN", pin[pinNumber-1])
-    pinInterrupt[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    pinInterrupt[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:CNENA")
     pinInterrupt[pinNumber-1].setLabel("Change Notice")
     pinInterrupt[pinNumber-1].setReadOnly(False)
     pinInterrupt[pinNumber-1].setDependencies(pinInterruptCal, ["BSP_PIN_" + str(pinNumber) + "_CN"])
@@ -592,7 +592,7 @@ for pinNumber in range(1, packagePinCount + 1):
 
     pinPullUp.append(pinNumber)
     pinPullUp[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_PU", pin[pinNumber-1])
-    pinPullUp[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    pinPullUp[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:CNPUA")
     pinPullUp[pinNumber-1].setLabel("Pull Up")
     pinPullUp[pinNumber-1].setReadOnly(False)
     pinPullUp[pinNumber-1].setDependencies(pinPullUpCal, ["BSP_PIN_" + str(pinNumber) + "_PU"])
@@ -600,7 +600,7 @@ for pinNumber in range(1, packagePinCount + 1):
 
     pinPullDown.append(pinNumber)
     pinPullDown[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_PD", pin[pinNumber-1])
-    pinPullDown[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    pinPullDown[pinNumber-1].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:CNPDA")
     pinPullDown[pinNumber-1].setLabel("Pull Down")
     pinPullDown[pinNumber-1].setReadOnly(False)
     pinPullDown[pinNumber-1].setDependencies(pinPullDownCal, ["BSP_PIN_" + str(pinNumber) + "_PD"])
@@ -788,7 +788,7 @@ for portNumber in range(0, len(pioSymChannel)):
 
     portInterrupt.append(portNumber)
     portInterrupt[portNumber] = coreComponent.createBooleanSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_CN_USED", port[portNumber])
-    portInterrupt[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    portInterrupt[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:CNCONB")
     portInterrupt[portNumber].setLabel("Use Change Notice On PORT " + pioSymChannel[portNumber])
     portInterrupt[portNumber].setDefaultValue(False)
     portInterrupt[portNumber].setVisible(True)
@@ -796,21 +796,21 @@ for portNumber in range(0, len(pioSymChannel)):
 
     gpioSym_GPIO_CNPU.append(portNumber)
     gpioSym_GPIO_CNPU[portNumber] = coreComponent.createHexSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_CNPU", port[portNumber])
-    gpioSym_GPIO_CNPU[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    gpioSym_GPIO_CNPU[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:CNPU")
     gpioSym_GPIO_CNPU[portNumber].setLabel("CNPU" + str(pioSymChannel[portNumber]) + " Value")
     gpioSym_GPIO_CNPU[portNumber].setDefaultValue(0x00000000)
     gpioSym_GPIO_CNPU[portNumber].setReadOnly(False)
 
     gpioSym_GPIO_CNPD.append(portNumber)
     gpioSym_GPIO_CNPD[portNumber] = coreComponent.createHexSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_CNPD", port[portNumber])
-    gpioSym_GPIO_CNPD[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    gpioSym_GPIO_CNPD[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:CNPD")
     gpioSym_GPIO_CNPD[portNumber].setLabel("CNPD" + str(pioSymChannel[portNumber]) + " Value")
     gpioSym_GPIO_CNPD[portNumber].setDefaultValue(0x00000000)
     gpioSym_GPIO_CNPD[portNumber].setReadOnly(False)
 
     gpioSym_GPIO_TRIS.append(portNumber)
     gpioSym_GPIO_TRIS[portNumber] = coreComponent.createHexSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_TRIS", port[portNumber])
-    gpioSym_GPIO_TRIS[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    gpioSym_GPIO_TRIS[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:TRISA")
     gpioSym_GPIO_TRIS[portNumber].setLabel("TRIS" + str(pioSymChannel[portNumber]) + "CLR" + " Value")
     gpioSym_GPIO_TRIS[portNumber].setDefaultValue(0x00000000)
     gpioSym_GPIO_TRIS[portNumber].setReadOnly(False)
@@ -824,21 +824,21 @@ for portNumber in range(0, len(pioSymChannel)):
 
     gpioSym_GPIO_ODC.append(portNumber)
     gpioSym_GPIO_ODC[portNumber] = coreComponent.createHexSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_ODC", port[portNumber])
-    gpioSym_GPIO_ODC[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    gpioSym_GPIO_ODC[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:ODCA")
     gpioSym_GPIO_ODC[portNumber].setLabel("ODC" + str(pioSymChannel[portNumber]) + " Value")
     gpioSym_GPIO_ODC[portNumber].setDefaultValue(0x00000000)
     gpioSym_GPIO_ODC[portNumber].setReadOnly(False)
 
     gpioSym_GPIO_ANSEL.append(portNumber)
     gpioSym_GPIO_ANSEL[portNumber] = coreComponent.createHexSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_ANSEL", port[portNumber])
-    gpioSym_GPIO_ANSEL[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    gpioSym_GPIO_ANSEL[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:ANSEL")
     gpioSym_GPIO_ANSEL[portNumber].setLabel("ANSEL" + str(pioSymChannel[portNumber]) + " Value")
     gpioSym_GPIO_ANSEL[portNumber].setDefaultValue(0x00000000)
     gpioSym_GPIO_ANSEL[portNumber].setReadOnly(False)
 
     gpioSym_GPIO_CNEN.append(portNumber)
     gpioSym_GPIO_CNEN[portNumber] = coreComponent.createHexSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_CNEN", port[portNumber])
-    gpioSym_GPIO_CNEN[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:%NOREGISTER%")
+    gpioSym_GPIO_CNEN[portNumber].setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:gpio_01618;register:CNEN")
     gpioSym_GPIO_CNEN[portNumber].setLabel("CNEN" + str(pioSymChannel[portNumber]) + " Value")
     gpioSym_GPIO_CNEN[portNumber].setDefaultValue(0x00000000)
     gpioSym_GPIO_CNEN[portNumber].setReadOnly(False)
