@@ -235,7 +235,7 @@ def instantiateComponent(canComponent):
     Database.setSymbolValue("core", canInstanceName.getValue()+"_CLOCK_ENABLE", True)
 
     canInterruptMode = canComponent.createBooleanSymbol("INTERRUPT_MODE", None)
-    canInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    canInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_IER")
     canInterruptMode.setLabel("Interrupt Mode")
     canInterruptMode.setDefaultValue(False)
 
@@ -250,7 +250,7 @@ def instantiateComponent(canComponent):
     canBitTimingCalculationMenu.setDescription("CAN Bit Timing Calculation for Normal Operation")
 
     canCoreClockValue = canComponent.createIntegerSymbol("CAN_CORE_CLOCK_FREQ", canBitTimingCalculationMenu)
-    canCoreClockValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    canCoreClockValue.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_MR")
     canCoreClockValue.setLabel("Clock Frequency")
     canCoreClockValue.setReadOnly(True)
     canCoreClockValue.setDefaultValue(int(Database.getSymbolValue("core", canInstanceName.getValue() + "_CLOCK_FREQUENCY")))
@@ -271,13 +271,13 @@ def instantiateComponent(canComponent):
     canNominalBitTimingMenu.setDescription("Nominal Bit Timing for CAN Message Frame")
 
     canAutomaticNominalBitTimingCalculation = canComponent.createBooleanSymbol("AUTO_NOMINAL_BIT_TIMING_CALCULATION", canNominalBitTimingMenu)
-    canAutomaticNominalBitTimingCalculation.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    canAutomaticNominalBitTimingCalculation.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_BR")
     canAutomaticNominalBitTimingCalculation.setLabel("Automatic Nominal Bit Timing Calculation")
     canAutomaticNominalBitTimingCalculation.setDefaultValue(False)
     canAutomaticNominalBitTimingCalculation.setDependencies(updateNominalBitTimingSymbols, ["AUTO_NOMINAL_BIT_TIMING_CALCULATION"])
 
     canNominalBitrate = canComponent.createIntegerSymbol("NOMINAL_BITRATE", canNominalBitTimingMenu)
-    canNominalBitrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    canNominalBitrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_BR")
     canNominalBitrate.setLabel("Bit Rate (Kbps)")
     canNominalBitrate.setMin(1)
     canNominalBitrate.setMax(1000)
@@ -285,7 +285,7 @@ def instantiateComponent(canComponent):
     canNominalBitrate.setDependencies(nominalBitTimingCalculation, ["NOMINAL_BITRATE", "AUTO_NOMINAL_BIT_TIMING_CALCULATION", "core." + canInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     canNominalSamplePoint = canComponent.createFloatSymbol("NOMINAL_SAMPLE_POINT", canNominalBitTimingMenu)
-    canNominalSamplePoint.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    canNominalSamplePoint.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_BR")
     canNominalSamplePoint.setLabel("Sample Point %")
     canNominalSamplePoint.setMin(50.0)
     canNominalSamplePoint.setMax(100.0)
@@ -303,7 +303,7 @@ def instantiateComponent(canComponent):
     brpPrescaler.setReadOnly(Database.getSymbolValue(canInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
     propagSegmentTime = canComponent.createIntegerSymbol("PROPAG_TIME", canNominalBitTimingMenu)
-    propagSegmentTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    propagSegmentTime.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_BR")
     propagSegmentTime.setLabel("Propagation Segment Time (ns)")
     propagSegmentTime.setMin(1)
     propagSegmentTime.setDefaultValue(380)
@@ -311,12 +311,12 @@ def instantiateComponent(canComponent):
     propagSegmentTime.setReadOnly(Database.getSymbolValue(canInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
     totalTimeQuanta = canComponent.createIntegerSymbol("TOTAL_TIME_QUANTA", canNominalBitTimingMenu)
-    totalTimeQuanta.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    totalTimeQuanta.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_BR")
     totalTimeQuanta.setLabel("Total Time Quanta (TQ)")
     totalTimeQuanta.setReadOnly(True)
 
     syncSegment = canComponent.createIntegerSymbol("SYNC", totalTimeQuanta)
-    syncSegment.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    syncSegment.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_BR")
     syncSegment.setLabel("Sync Segment (TQ)")
     syncSegment.setDefaultValue(1)
     syncSegment.setReadOnly(True)
@@ -361,19 +361,19 @@ def instantiateComponent(canComponent):
     syncJumpWidth.setReadOnly(True)
 
     canTimeQuantaPeriod = canComponent.createStringSymbol("TIME_QUANTA_PERIOD", canNominalBitTimingMenu)
-    canTimeQuantaPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    canTimeQuantaPeriod.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_BR")
     canTimeQuantaPeriod.setLabel("Time Quanta (ns)")
     canTimeQuantaPeriod.setDefaultValue(str(tqPeriod))
     canTimeQuantaPeriod.setReadOnly(True)
 
     canCalculatedNominalBitrate = canComponent.createIntegerSymbol("CALCULATED_NOMINAL_BITRATE", canNominalBitTimingMenu)
-    canCalculatedNominalBitrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    canCalculatedNominalBitrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_BR")
     canCalculatedNominalBitrate.setLabel("Calculated Bit Rate (Kbps)")
     canCalculatedNominalBitrate.setDefaultValue(calculatedNominalBitrate)
     canCalculatedNominalBitrate.setReadOnly(True)
 
     canCalculatedError = canComponent.createStringSymbol("CALCULATED_ERRORRATE", canNominalBitTimingMenu)
-    canCalculatedError.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    canCalculatedError.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_BR")
     canCalculatedError.setLabel("Error %")
     canCalculatedError.setDefaultValue(str(errorRate))
     canCalculatedError.setReadOnly(True)
@@ -404,7 +404,7 @@ def instantiateComponent(canComponent):
     canMailboxConfigurationMenu.setDescription("Mailbox configuration for mailbox object type and message acceptance")
 
     canNumberOfMailbox = canComponent.createIntegerSymbol("NUMBER_OF_MAILBOX", canMailboxConfigurationMenu)
-    canNumberOfMailbox.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    canNumberOfMailbox.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_MMR")
     canNumberOfMailbox.setLabel("Number of mailbox")
     canNumberOfMailbox_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/register-group@[name=\"CAN\"]/register@[name=\"CAN_TCR\"]")
     canNumberOfMailbox_Values = canNumberOfMailbox_Node.getChildren()
@@ -436,7 +436,7 @@ def instantiateComponent(canComponent):
         canMailbox_MMR_MOT.setVisible(True)
 
         canMailbox_MID_Identifier = canComponent.createHexSymbol("CAN_MID" + str(MBNum) + "_ID", canMailboxMenu)
-        canMailbox_MID_Identifier.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+        canMailbox_MID_Identifier.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_MID")
         canMailbox_MID_Identifier.setLabel("Message ID")
         canMailbox_MID_Identifier.setMin(0)
         canMailbox_MID_Identifier.setMax(0x1FFFFFFF)
@@ -454,7 +454,7 @@ def instantiateComponent(canComponent):
         canMailbox_MID_IdentifierDecimal.setDependencies(symbolSetValue, ["CAN_MID" + str(MBNum) + "_ID"])
 
         canMailbox_MAM_Identifier = canComponent.createHexSymbol("CAN_MAM" + str(MBNum) + "_ID", canMailboxMenu)
-        canMailbox_MAM_Identifier.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+        canMailbox_MAM_Identifier.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_MAM")
         canMailbox_MAM_Identifier.setLabel("Message Acceptance Mask ID")
         canMailbox_MAM_Identifier.setMin(0)
         canMailbox_MAM_Identifier.setMax(0x1FFFFFFF)
@@ -472,7 +472,7 @@ def instantiateComponent(canComponent):
         canMailbox_MAM_IdentifierDecimal.setDependencies(symbolSetValue, ["CAN_MAM" + str(MBNum) + "_ID"])
 
     canTimestampEnable = canComponent.createBooleanSymbol("TIMESTAMP_ENABLE", None)
-    canTimestampEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:%NOREGISTER%")
+    canTimestampEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:can_6019;register:CAN_MR")
     canTimestampEnable.setLabel("Timestamp Enable")
     canTimestampEnable.setDefaultValue(True)
     canTimestampEnable.setReadOnly(True)
