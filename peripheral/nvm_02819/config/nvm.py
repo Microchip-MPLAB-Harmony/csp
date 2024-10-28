@@ -145,7 +145,7 @@ def instantiateComponent(nvmComponent):
 
     nvmSym_MemoryDriver = nvmComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", None)
     nvmSym_MemoryDriver.setLabel("Memory Driver Connected")
-    nvmSym_MemoryDriver.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvm_02819;register:%NOREGISTER%")
+    nvmSym_MemoryDriver.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvm_02819;register:IEC0")
     nvmSym_MemoryDriver.setVisible(False)
     nvmSym_MemoryDriver.setDefaultValue(False)
 
@@ -200,7 +200,7 @@ def instantiateComponent(nvmComponent):
 
     #Configures the library for interrupt mode operations
     nvmInterruptEnable = nvmComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
-    nvmInterruptEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvm_02819;register:%NOREGISTER%")
+    nvmInterruptEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvm_02819;register:IEC5")
     nvmInterruptEnable.setLabel("Enable Interrupt?")
     nvmInterruptEnable.setDefaultValue(True)
 

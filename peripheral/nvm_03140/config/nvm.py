@@ -241,7 +241,7 @@ def instantiateComponent(nvmComponent):
 
     #Configures the library for interrupt mode operations
     nvmInterruptEnable = nvmComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
-    nvmInterruptEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvm_03140;register:%NOREGISTER%")
+    nvmInterruptEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:nvm_03140;register:NVMCON")
     nvmInterruptEnable.setLabel("Enable Interrupt?")
     nvmInterruptEnable.setDefaultValue(True)
 
