@@ -96,7 +96,7 @@ def instantiateComponent(hefcComponent):
 
     # Create a Checkbox to enable disable interrupts
     hefcInterrupt = hefcComponent.createBooleanSymbol("INTERRUPT_ENABLE", hefcMenu)
-    hefcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hefc_44123;register:%NOREGISTER%")
+    hefcInterrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hefc_44123;register:HEFC_FMR")
     hefcInterrupt.setLabel("Enable Interrupts")
 
     hefcMemoryDriver = hefcComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", hefcMenu)
