@@ -55,7 +55,7 @@ def instantiateComponent(fcrComponent):
     Log.writeInfoMessage("Running " + fcrInstanceName.getValue())
 
     nvm_autows = fcrComponent.createBooleanSymbol("FCR_AUTOWS", None)
-    nvm_autows.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcr_03438;register:%NOREGISTER%")
+    nvm_autows.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcr_03438;register:CTRLA")
     nvm_autows.setLabel("Automatic Wait State Enable")
     nvm_autows.setDescription("If enabled, Total flash wait states = ADRWS + (Tacc + 5ns + 2 clocks); if disabled, Total flash wait states = ADRWS + FWS")
     nvm_autows.setDefaultValue(True)
@@ -63,7 +63,7 @@ def instantiateComponent(fcrComponent):
     # Flash Read Wait State (RWS).
     nvm_rws = fcrComponent.createIntegerSymbol("FCR_FWS", None)
     nvm_rws.setLabel("Wait States (FWS)")
-    nvm_rws.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcr_03438;register:%NOREGISTER%")
+    nvm_rws.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcr_03438;register:CTRLA")
     nvm_rws.setDefaultValue(waitStateUpdateCalc())
     nvm_rws.setMin(0)
     nvm_rws.setMax(15)
@@ -71,7 +71,7 @@ def instantiateComponent(fcrComponent):
     nvm_rws.setDependencies(waitStateUpdate, ["core.CPU_CLOCK_FREQUENCY", "FCR_AUTOWS"])
 
     nvm_adrws = fcrComponent.createBooleanSymbol("FCR_ADRWS", None)
-    nvm_adrws.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcr_03438;register:%NOREGISTER%")
+    nvm_adrws.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:fcr_03438;register:CTRLA")
     nvm_adrws.setLabel("Address Wait State Enable")
     nvm_adrws.setDescription("Enabling address wait state allows to use higher clock frequencies, whereas disabling it allow for higher performance at lower clock frequencies")
     nvm_adrws.setDefaultValue(False)
