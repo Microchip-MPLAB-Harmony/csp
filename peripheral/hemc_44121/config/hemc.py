@@ -455,7 +455,7 @@ def instantiateComponent(hemcComponent):
         csStart.setVisible(True)
 
         csEnd = hemcComponent.createStringSymbol("CS_" + str(id) + "_END_ADDRESS", csMenu)
-        csEnd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+        csEnd.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HEMC_CR_NCS0")
         csEnd.setLabel("End  Address")
         csEnd.setDefaultValue("0x60000000")
         csEnd.setVisible(False)
@@ -497,12 +497,12 @@ def instantiateComponent(hemcComponent):
         # HEMC HECC Enable and Algorithm selection by chip select
         if (id == 0):
             csheccWriteEccConf = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_WRITE_ECC_CONF", csMenu)
-            csheccWriteEccConf.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+            csheccWriteEccConf.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HEMC_CR_NCS0")
             csheccWriteEccConf.setLabel("Override NCS0 ECC configuration Pins")
             csheccWriteEccConf.setDefaultValue(False)
 
         csheccEnable = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_HECC_ENABLE", csMenu)
-        csheccEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+        csheccEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HEMC_CR_NCS0")
         csheccEnable.setLabel("Enable ECC")
         csheccEnable.setDefaultValue(False)
         if (id == 0):
@@ -510,7 +510,7 @@ def instantiateComponent(hemcComponent):
             csheccEnable.setVisible(csheccWriteEccConf.getValue())
 
         csheccEnableBCH = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_HECC_BCH_ENABLE", csMenu)
-        csheccEnableBCH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+        csheccEnableBCH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HEMC_CR_NCS0")
         csheccEnableBCH.setLabel("ECC use BCH Algorithm")
         csheccEnableBCH.setDefaultValue(False)
         if (hemcHeccCr0Reg.getValue() == True):
@@ -523,7 +523,7 @@ def instantiateComponent(hemcComponent):
             csheccEnableBCH.setVisible(False)
 
         csheccRamCheckBitInit = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_RAM_CHECK_BIT_INIT", csMenu)
-        csheccRamCheckBitInit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+        csheccRamCheckBitInit.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HEMC_CR_NCS0")
         csheccRamCheckBitInit.setLabel("RAM need check bit initialization")
         csheccEnableBCH.setDefaultValue(False)
         if (id == 0):
@@ -531,7 +531,7 @@ def instantiateComponent(hemcComponent):
             csheccRamCheckBitInit.setVisible(False)
 
         csheccRamCheckBitInitSize = hemcComponent.createHexSymbol("CS_" + str(id) + "_RAM_CHECK_BIT_INIT_SIZE", csheccRamCheckBitInit)
-        csheccRamCheckBitInitSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+        csheccRamCheckBitInitSize.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HEMC_CR_NCS0")
         csheccRamCheckBitInitSize.setLabel("Initialization size")
         csheccRamCheckBitInitSize.setDefaultValue(0)
         csheccRamCheckBitInitSize.setVisible(False)
@@ -544,7 +544,7 @@ def instantiateComponent(hemcComponent):
 
     # HEMC HECC interrupt and test mode menu
     memHeccInterruptMode = hemcComponent.createBooleanSymbol("HECC_INTERRUPT_MODE", memMemu)
-    memHeccInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+    memHeccInterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HEMC_HECC_IER")
     memHeccInterruptMode.setLabel("HECC Interrupt Mode")
     memHeccInterruptMode.setDefaultValue(False)
 
@@ -576,7 +576,7 @@ def instantiateComponent(hemcComponent):
         hsdramcSymMenu_features.setVisible(False)
 
         sdRamStartAddress = hemcComponent.createHexSymbol("SDRAMC_START_ADDRESS", hsdramcSymMenu_features)
-        sdRamStartAddress.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+        sdRamStartAddress.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HSDRAMC_CR")
         sdRamStartAddress.setLabel("SDRAMC Start Address")
         sdRamStartAddress.setDefaultValue(0x60000000)
 
@@ -617,7 +617,7 @@ def instantiateComponent(hemcComponent):
         hsdramcSym_CR_DBW.setReadOnly(False)
 
         hsdramcSym_WPMR_WPEN = hemcComponent.createBooleanSymbol("HSDRAMC_WRITE_PROTECTION", hsdramcSymMenu_features)
-        hsdramcSym_WPMR_WPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+        hsdramcSym_WPMR_WPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HSDRAMC_WPMR")
         hsdramcSym_WPMR_WPEN.setLabel("Enable Write Protection")
         hsdramcSym_WPMR_WPEN.setDefaultValue(False)
 
@@ -681,7 +681,7 @@ def instantiateComponent(hemcComponent):
         hsdramcSym_CFR1_TMRD.setDefaultValue(HSDRAMC_CFR1_TMRD_DEFAULT_VALUE)
 
         hsdramcSym_REFRESH_TIME_IN_MS = hemcComponent.createIntegerSymbol("HSDRAMC_REFRESH_TIME_IN_MS", hsdramcSymMenu_TIMING_MENU)
-        hsdramcSym_REFRESH_TIME_IN_MS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+        hsdramcSym_REFRESH_TIME_IN_MS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HSDRAMC_TR")
         hsdramcSym_REFRESH_TIME_IN_MS.setLabel("Refresh time in ms")
         hsdramcSym_REFRESH_TIME_IN_MS.setDefaultValue(HSDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE)
 
@@ -706,14 +706,14 @@ def instantiateComponent(hemcComponent):
         hsdramcSymMenu_MR_MENU.setVisible(False)
 
         hsdramcSym_BURST_LENGTH = hemcComponent.createIntegerSymbol("HSDRAMC_BURST_LENGTH", hsdramcSymMenu_MR_MENU)
-        hsdramcSym_BURST_LENGTH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+        hsdramcSym_BURST_LENGTH.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HSDRAMC_MR")
         hsdramcSym_BURST_LENGTH.setLabel("Burst Length")
         hsdramcSym_BURST_LENGTH.setMin(HSDRAMC_DEFAULT_MIN_VALUE)
         hsdramcSym_BURST_LENGTH.setMax(HSDRAMC_BURST_LENGHT_MAX_VALUE)
         hsdramcSym_BURST_LENGTH.setDefaultValue(HSDRAMC_DEFAULT_MIN_VALUE)
 
         hsdramcSym_BURST_TYPE = hemcComponent.createComboSymbol("HSDRAMC_BURST_TYPE", hsdramcSymMenu_MR_MENU, ComboVal_BURST_TYPE)
-        hsdramcSym_BURST_TYPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+        hsdramcSym_BURST_TYPE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HSDRAMC_MR")
         hsdramcSym_BURST_TYPE.setLabel("Burst Type")
         hsdramcSym_BURST_TYPE.setDefaultValue("SEQUENTIAL")
 
@@ -793,7 +793,7 @@ def instantiateComponent(hemcComponent):
     hsmcSym_GlobalMenu.setLabel("HSMC Global Features")
 
     hsmcSym_WPMR_WPEN = hemcComponent.createBooleanSymbol("HSMC_WRITE_PROTECTION", hsmcSym_GlobalMenu)
-    hsmcSym_WPMR_WPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+    hsmcSym_WPMR_WPEN.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HSMC_WPMR")
     hsmcSym_WPMR_WPEN.setLabel("Enable Write Protection")
     hsmcSym_WPMR_WPEN.setDefaultValue(False)
 
@@ -809,7 +809,7 @@ def instantiateComponent(hemcComponent):
 
     for hsmcChipSelNum in range(0, hsmcChipSelCount):
         hsmcSym_CS = hemcComponent.createBooleanSymbol("HSMC_CHIP_SELECT" + str(hsmcChipSelNum), hsmcSym_Chip_Select)
-        hsmcSym_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:%NOREGISTER%")
+        hsmcSym_CS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:hemc_44121;register:HSMC_SETUP")
         hsmcSym_CS.setLabel("Enable Chip Select "+ str(hsmcChipSelNum))
         hsmcCSmenu.append(hsmcSym_CS)
 
