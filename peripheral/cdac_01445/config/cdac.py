@@ -70,7 +70,7 @@ def instantiateComponent(cdacComponent):
     dacResolution = node.getAttribute("value")
 
     cdacSym_Resolution = cdacComponent.createStringSymbol("CDAC_RESOLUTION", None)
-    cdacSym_Resolution.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cdac_01445;register:%NOREGISTER%")
+    cdacSym_Resolution.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cdac_01445;register:DAC1CON")
     cdacSym_Resolution.setLabel("CDAC Resolution")
     cdacSym_Resolution.setDefaultValue(dacResolution + "-bit")
     cdacSym_Resolution.setReadOnly(True)
@@ -81,7 +81,7 @@ def instantiateComponent(cdacComponent):
 
     # Reference Selection
     cdacSym_REFSEL = cdacComponent.createKeyValueSetSymbol("CDAC_REFSEL", None)
-    cdacSym_REFSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cdac_01445;register:%NOREGISTER%")
+    cdacSym_REFSEL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cdac_01445;register:DAC1CON")
     cdacSym_REFSEL.setLabel(cdacReferenceNode.getAttribute("caption"))
     cdacSym_REFSEL.setDefaultValue(0)
     cdacSym_REFSEL.setOutputMode("Value")
@@ -96,7 +96,7 @@ def instantiateComponent(cdacComponent):
 
     # Output Buffer Enable
     cdacSym_DACOE = cdacComponent.createKeyValueSetSymbol("CDAC_DACOE", None)
-    cdacSym_DACOE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cdac_01445;register:%NOREGISTER%")
+    cdacSym_DACOE.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:cdac_01445;register:DAC1CON")
     cdacSym_DACOE.setLabel(cdacOutputBufferNode.getAttribute("caption"))
     cdacSym_DACOE.setDefaultValue(0)
     cdacSym_DACOE.setOutputMode("Value")
