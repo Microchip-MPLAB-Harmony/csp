@@ -3,12 +3,25 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.19.7
+
+### New Features
+
+- None
+
+### Bug fixes
+
+- Fixed issues with message handling in ADC PLIBs
+
+### Development Tools
+- Same as v3.20.0-E1
+
 ## CSP Release v3.20.0-E1
 
 ### New Features
 
 - **New part support** - This **engineering release** adds support for
-  - PIC32CX-BZ6 and WBZ653 family of devices  
+  - PIC32CX-BZ6 and WBZ653 family of devices
 
 ### Bug fixes
 
@@ -212,7 +225,7 @@ For all other parts:
   - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
 
 - **New Features and Enhancements**
-  - For the CEC173X device 
+  - For the CEC173X device
     - Added SPI master mode support in QMSPI PLib.
     - Added SPI peripheral target (SPT) PLib support.
     - Updated SMBUS PLib to return the PEC byte to the application.
