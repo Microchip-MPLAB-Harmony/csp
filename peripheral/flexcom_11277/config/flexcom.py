@@ -389,7 +389,7 @@ def instantiateComponent(flexcomComponent):
 
     #Flexcom Mode - NO_COM, USART, SPI, TWI
     flexcomSym_OperatingMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_MODE", None)
-    flexcomSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
+    flexcomSym_OperatingMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:FLEX_MR")
     flexcomSym_OperatingMode.setLabel("FLEXCOM Operating Mode")
 
     flexcomSym_OperatingMode_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEXCOM_MR__OPMODE\"]")

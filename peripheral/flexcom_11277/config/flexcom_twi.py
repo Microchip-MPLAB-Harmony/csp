@@ -121,7 +121,7 @@ def updateTimeoutCount(symbol, event):
 #Operation Mode
 flexcomSym_Twi_OpModeValues = ["MASTER", "SLAVE"]
 flexcomSym_Twi_OpMode = flexcomComponent.createComboSymbol("FLEXCOM_TWI_OPMODE", flexcomSym_OperatingMode, flexcomSym_Twi_OpModeValues)
-flexcomSym_Twi_OpMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
+flexcomSym_Twi_OpMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:FLEXCOM_MR")
 flexcomSym_Twi_OpMode.setLabel("FLEXCOM TWI Operation Mode")
 flexcomSym_Twi_OpMode.setDefaultValue("MASTER")
 flexcomSym_Twi_OpMode.setVisible(False)
@@ -129,7 +129,7 @@ flexcomSym_Twi_OpMode.setDependencies(showTwiDependencies, ["FLEXCOM_MODE"])
 
 #Interrupt Mode
 flexcomSym_Twi_Interrupt = flexcomComponent.createBooleanSymbol("TWI_INTERRUPT_MODE", flexcomSym_OperatingMode)
-flexcomSym_Twi_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
+flexcomSym_Twi_Interrupt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:TWI_IER")
 flexcomSym_Twi_Interrupt.setLabel("Enable Interrupts ?")
 flexcomSym_Twi_Interrupt.setDefaultValue(True)
 flexcomSym_Twi_Interrupt.setReadOnly(True)
@@ -157,7 +157,7 @@ flexcomSym_TWI_CWGR_BRSRCCLK.setDependencies(showMasterDependencies, ["FLEXCOM_T
 
 # Operating speed
 flexcomSym_Twi_CLK_SPEED = flexcomComponent.createIntegerSymbol("I2C_CLOCK_SPEED", flexcomSym_OperatingMode)
-flexcomSym_Twi_CLK_SPEED.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
+flexcomSym_Twi_CLK_SPEED.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:TWI_CWGR")
 flexcomSym_Twi_CLK_SPEED.setLabel("Clock Speed (KHz)")
 flexcomSym_Twi_CLK_SPEED.setMin(100)
 flexcomSym_Twi_CLK_SPEED.setMax(400)
@@ -167,7 +167,7 @@ flexcomSym_Twi_CLK_SPEED.setDependencies(showMasterDependencies, ["FLEXCOM_TWI_O
 
 # Operating speed (Hz)
 flexcomSym_Twi_CLK_SPEED_HZ = flexcomComponent.createIntegerSymbol("I2C_CLOCK_SPEED_HZ", flexcomSym_OperatingMode)
-flexcomSym_Twi_CLK_SPEED_HZ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:%NOREGISTER%")
+flexcomSym_Twi_CLK_SPEED_HZ.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11277;register:TWI_CWGR")
 flexcomSym_Twi_CLK_SPEED_HZ.setLabel("Clock Speed (Hz)")
 flexcomSym_Twi_CLK_SPEED_HZ.setDefaultValue(flexcomSym_Twi_CLK_SPEED.getValue() * 1000)
 flexcomSym_Twi_CLK_SPEED_HZ.setVisible(False)

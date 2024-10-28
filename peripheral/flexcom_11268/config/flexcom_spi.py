@@ -341,7 +341,7 @@ flexcomSym_SPI_FIFOSize.setVisible(False)
 
 flexcomSPIModeValues = ["MASTER", "SLAVE"]
 flexcomSym_SPI_MR_MSTR = flexcomComponent.createComboSymbol("FLEXCOM_SPI_MR_MSTR", flexcomSym_OperatingMode, flexcomSPIModeValues)
-flexcomSym_SPI_MR_MSTR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+flexcomSym_SPI_MR_MSTR.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_MR")
 flexcomSym_SPI_MR_MSTR.setLabel("Master/Slave Mode")
 flexcomSym_SPI_MR_MSTR.setDefaultValue(flexcomSPIModeValues[0])
 flexcomSym_SPI_MR_MSTR.setReadOnly(False)
@@ -350,7 +350,7 @@ flexcomSym_SPI_MR_MSTR.setDependencies(showSPIDependencies, ["FLEXCOM_MODE"])
 
 global flexcomSym_SPI_InterruptMode
 flexcomSym_SPI_InterruptMode = flexcomComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", flexcomSym_OperatingMode)
-flexcomSym_SPI_InterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+flexcomSym_SPI_InterruptMode.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_IER")
 flexcomSym_SPI_InterruptMode.setLabel("Interrupt Mode")
 flexcomSym_SPI_InterruptMode.setDefaultValue(True)
 flexcomSym_SPI_InterruptMode.setVisible(False)
@@ -359,7 +359,7 @@ flexcomSym_SPI_InterruptMode.setDependencies(showSPIDependencies, ["FLEXCOM_MODE
 localComponent = flexcomSym_SPI_InterruptMode.getComponent()
 
 flecomSym_SPI_DMAEnable = flexcomComponent.createBooleanSymbol("USE_SPI_DMA", flexcomSym_OperatingMode)
-flecomSym_SPI_DMAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+flecomSym_SPI_DMAEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_MR)
 flecomSym_SPI_DMAEnable.setLabel("Enable DMA for Transmit and Receive")
 flecomSym_SPI_DMAEnable.setVisible(False)
 ptcr_register = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/register-group@[name=\"FLEXCOM\"]/register@[name=\"FLEX_PTCR\"]")
@@ -387,7 +387,7 @@ flexcomSym_SPI_MR_BRSRCCLK.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 # MR PCS (Unused, maintained for backward compatibility)
 global flexcomSym_SPI_MR_PCS
 flexcomSym_SPI_MR_PCS = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_MR_PCS", flexcomSym_OperatingMode)
-flexcomSym_SPI_MR_PCS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+flexcomSym_SPI_MR_PCS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_MR")
 flexcomSym_SPI_MR_PCS.setLabel("Peripheral Chip Select")
 flexcomSym_SPI_MR_PCS.setOutputMode("Key")
 flexcomSym_SPI_MR_PCS.setDisplayMode("Key")
@@ -417,7 +417,7 @@ flexcomSym_SPI_MR_DLYBCS.setDependencies(showMasterDependencies, ["FLEXCOM_MODE"
 
 # FIFO Enable
 flexcomSym_SPI_FIFOEnable = flexcomComponent.createBooleanSymbol("FLEXCOM_SPI_FIFO_ENABLE", flexcomSym_OperatingMode)
-flexcomSym_SPI_FIFOEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+flexcomSym_SPI_FIFOEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CR")
 flexcomSym_SPI_FIFOEnable.setLabel("Enable FIFO")
 flexcomSym_SPI_FIFOEnable.setDefaultValue(False)
 flexcomSym_SPI_FIFOEnable.setVisible(False)
@@ -425,7 +425,7 @@ flexcomSym_SPI_FIFOEnable.setDependencies(fifoModeVisible, ["FLEXCOM_MODE", "SPI
 
 # Slave mode TX Buffer Size
 flexcomSym_TXBuffer_Size = flexcomComponent.createIntegerSymbol("FLEXCOM_SPIS_TX_BUFFER_SIZE", flexcomSym_OperatingMode)
-flexcomSym_TXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+flexcomSym_TXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_TDR")
 flexcomSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
 flexcomSym_TXBuffer_Size.setMin(1)
 flexcomSym_TXBuffer_Size.setMax(65535)
@@ -435,7 +435,7 @@ flexcomSym_TXBuffer_Size.setDependencies(showSlaveDependencies, ["FLEXCOM_MODE",
 
 # Slave mode RX Buffer Size
 flexcomSym_RXBuffer_Size = flexcomComponent.createIntegerSymbol("FLEXCOM_SPIS_RX_BUFFER_SIZE", flexcomSym_OperatingMode)
-flexcomSym_RXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+flexcomSym_RXBuffer_Size.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_TDR")
 flexcomSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
 flexcomSym_RXBuffer_Size.setMin(1)
 flexcomSym_RXBuffer_Size.setMax(65535)
@@ -456,7 +456,7 @@ defaultSCBR = int(Database.getSymbolValue("core", flexcomInstanceName.getValue()
 
 flexcomSym_SPI_Baudrate = flexcomComponent.createIntegerSymbol("FLEXCOM_SPI_BAUD_RATE", None)
 flexcomSym_SPI_Baudrate.setLabel("Baud Rate (Hz)")
-flexcomSym_SPI_Baudrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+flexcomSym_SPI_Baudrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
 flexcomSym_SPI_Baudrate.setDefaultValue(defaultbaudRate)
 flexcomSym_SPI_Baudrate.setVisible(False)
 flexcomSym_SPI_Baudrate.setDependencies(updateBaudRateFromDatabase, ["FLEXCOM_SPI_BAUD_RATE"])
@@ -464,7 +464,7 @@ flexcomSym_SPI_Baudrate.setDependencies(updateBaudRateFromDatabase, ["FLEXCOM_SP
 # BITS (Unused, maintained for backward compatibility)
 flexcomSym_SPI_CSR_BITS = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_CSR_BITS", None)
 flexcomSym_SPI_CSR_BITS.setLabel("Bits Per Transfer")
-flexcomSym_SPI_CSR_BITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+flexcomSym_SPI_CSR_BITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
 flexcomSym_SPI_CSR_BITS.setOutputMode("Key")
 flexcomSym_SPI_CSR_BITS.setDisplayMode("Description")
 flexcomSym_SPI_CSR_BITS.setDefaultValue(0)
@@ -484,7 +484,7 @@ for index in range(len(flexcomSym_SPI_CSR_BITS_Values)):
 # CPOL (Unused, maintained for backward compatibility)
 flexcomSym_SPI_CSR_CPOL = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_CSR_CPOL", None)
 flexcomSym_SPI_CSR_CPOL.setLabel("Clock Polarity")
-flexcomSym_SPI_CSR_CPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+flexcomSym_SPI_CSR_CPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
 flexcomSym_SPI_CSR_CPOL.setOutputMode("Value")
 flexcomSym_SPI_CSR_CPOL.setDisplayMode("Description")
 flexcomSym_SPI_CSR_CPOL.setDefaultValue(0)
@@ -496,7 +496,7 @@ flexcomSym_SPI_CSR_CPOL.setDependencies(updateCPOLFromDatabase, ["FLEXCOM_SPI_CS
 # NCPHA (Unused, maintained for backward compatibility)
 flexcomSym_SPI_CSR_NCPHA = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_CSR_NCPHA", None)
 flexcomSym_SPI_CSR_NCPHA.setLabel("Clock Phase")
-flexcomSym_SPI_CSR_NCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+flexcomSym_SPI_CSR_NCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
 flexcomSym_SPI_CSR_NCPHA.setOutputMode("Value")
 flexcomSym_SPI_CSR_NCPHA.setDisplayMode("Description")
 flexcomSym_SPI_CSR_NCPHA.setDefaultValue(1)
@@ -519,7 +519,7 @@ for i in range (flexcomSym_SPI_CSR_Count):
 
     # CSRx Enable
     flexcomSym_SPI_EnableNPCSx = flexcomComponent.createBooleanSymbol("FLEXCOM_SPI_EN_NPCS" + str(i), flexcomSym_OperatingMode)
-    flexcomSym_SPI_EnableNPCSx.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+    flexcomSym_SPI_EnableNPCSx.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
     flexcomSym_SPI_EnableNPCSx.setVisible(False)
     if i == 0:
         flexcomSym_SPI_EnableNPCSx.setLabel("Enable NPCS0/ Use GPIO?")
@@ -532,7 +532,7 @@ for i in range (flexcomSym_SPI_CSR_Count):
 
     # CSRx BAUD RATE
     flexcomSym_SPI_CSRx_Baudrate = flexcomComponent.createIntegerSymbol("FLEXCOM_SPI_CSR" + str(i) + "_BAUD_RATE", localComponent.getSymbolByID("FLEXCOM_SPI_EN_NPCS" + str(i)))
-    flexcomSym_SPI_CSRx_Baudrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+    flexcomSym_SPI_CSRx_Baudrate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
     flexcomSym_SPI_CSRx_Baudrate.setLabel("Baud Rate (Hz)")
     flexcomSym_SPI_CSRx_Baudrate.setDefaultValue(defaultbaudRate)
     flexcomSym_SPI_CSRx_Baudrate.setVisible(False)
@@ -547,7 +547,7 @@ for i in range (flexcomSym_SPI_CSR_Count):
 
     # CSRx BITS
     flexcomSym_SPI_CSRx_BITS = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_CSR" + str(i) + "_BITS", localComponent.getSymbolByID("FLEXCOM_SPI_EN_NPCS" + str(i)))
-    flexcomSym_SPI_CSRx_BITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+    flexcomSym_SPI_CSRx_BITS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
     flexcomSym_SPI_CSRx_BITS.setLabel("Bits Per Transfer")
     flexcomSym_SPI_CSRx_BITS.setOutputMode("Key")
     flexcomSym_SPI_CSRx_BITS.setDisplayMode("Description")
@@ -563,7 +563,7 @@ for i in range (flexcomSym_SPI_CSR_Count):
 
     # CSRx CPOL
     flexcomSym_SPI_CSRx_CPOL = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_CSR" + str(i) + "_CPOL", localComponent.getSymbolByID("FLEXCOM_SPI_EN_NPCS" + str(i)))
-    flexcomSym_SPI_CSRx_CPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+    flexcomSym_SPI_CSRx_CPOL.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
     flexcomSym_SPI_CSRx_CPOL.setLabel("Clock Polarity")
     flexcomSym_SPI_CSRx_CPOL.setOutputMode("Value")
     flexcomSym_SPI_CSRx_CPOL.setDisplayMode("Description")
@@ -575,7 +575,7 @@ for i in range (flexcomSym_SPI_CSR_Count):
 
     # CSRx NCPHA
     flexcomSym_SPI_CSRx_NCPHA = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_CSR" + str(i) + "_NCPHA", localComponent.getSymbolByID("FLEXCOM_SPI_EN_NPCS" + str(i)))
-    flexcomSym_SPI_CSRx_NCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+    flexcomSym_SPI_CSRx_NCPHA.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
     flexcomSym_SPI_CSRx_NCPHA.setLabel("Clock Phase")
     flexcomSym_SPI_CSRx_NCPHA.setOutputMode("Value")
     flexcomSym_SPI_CSRx_NCPHA.setDisplayMode("Description")
@@ -587,7 +587,7 @@ for i in range (flexcomSym_SPI_CSR_Count):
 
     # CSRx DLYBS
     flexcomSym_SPI_CSRx_DLYBS = flexcomComponent.createIntegerSymbol("FLEXCOM_SPI_CSR" + str(i) + "_DLYBS", localComponent.getSymbolByID("FLEXCOM_SPI_EN_NPCS" + str(i)))
-    flexcomSym_SPI_CSRx_DLYBS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+    flexcomSym_SPI_CSRx_DLYBS.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
     flexcomSym_SPI_CSRx_DLYBS.setLabel("Delay before SPCK")
     flexcomSym_SPI_CSRx_DLYBS.setMax(255)
     flexcomSym_SPI_CSRx_DLYBS.setMin(0)
@@ -597,7 +597,7 @@ for i in range (flexcomSym_SPI_CSR_Count):
 
     # CSRx DLYBCT
     flexcomSym_SPI_CSRx_DLYBCT = flexcomComponent.createIntegerSymbol("FLEXCOM_SPI_CSR" + str(i) + "_DLYBCT", localComponent.getSymbolByID("FLEXCOM_SPI_EN_NPCS" + str(i)))
-    flexcomSym_SPI_CSRx_DLYBCT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+    flexcomSym_SPI_CSRx_DLYBCT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
     flexcomSym_SPI_CSRx_DLYBCT.setLabel("Delay between consecutive transfers")
     flexcomSym_SPI_CSRx_DLYBCT.setMax(255)
     flexcomSym_SPI_CSRx_DLYBCT.setMin(0)
@@ -607,7 +607,7 @@ for i in range (flexcomSym_SPI_CSR_Count):
     
     # CSRx CSAAT
     flexcomSym_SPI_CSRx_CSAAT = flexcomComponent.createBooleanSymbol("FLEXCOM_SPI_CSR" + str(i) + "_CSAAT", localComponent.getSymbolByID("FLEXCOM_SPI_EN_NPCS" + str(i)))
-    flexcomSym_SPI_CSRx_CSAAT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+    flexcomSym_SPI_CSRx_CSAAT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
     flexcomSym_SPI_CSRx_CSAAT.setLabel("Chip Select Active After Transfer")
     flexcomSym_SPI_CSRx_CSAAT.setDefaultValue(True)
     flexcomSym_SPI_CSRx_CSAAT.setVisible(False)
@@ -615,7 +615,7 @@ for i in range (flexcomSym_SPI_CSR_Count):
     
     # CSRx CSNAAT (Ignored if CSAAT is 1)
     flexcomSym_SPI_CSRx_CSNAAT = flexcomComponent.createBooleanSymbol("FLEXCOM_SPI_CSR" + str(i) + "_CSNAAT", localComponent.getSymbolByID("FLEXCOM_SPI_EN_NPCS" + str(i)))
-    flexcomSym_SPI_CSRx_CSNAAT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:%NOREGISTER%")
+    flexcomSym_SPI_CSRx_CSNAAT.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:flexcom_11268;register:FLEX_SPI_CSR")
     flexcomSym_SPI_CSRx_CSNAAT.setLabel("Chip Select Not Active After Transfer")
     flexcomSym_SPI_CSRx_CSNAAT.setDefaultValue(False)
     flexcomSym_SPI_CSRx_CSNAAT.setVisible(False)
