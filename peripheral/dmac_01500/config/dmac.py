@@ -583,25 +583,25 @@ dmacMenu.setDescription("DMA (DMAC) Configuration")
 
 # DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
 dmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmacMenu)
-dmacEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+dmacEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DMACON")
 dmacEnable.setLabel("Use DMA Service ?")
 dmacEnable.setVisible(False)
 
 # DMA_CHANNEL_COUNT: Needed for DMA system service to generate channel enum
 dmacChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", dmacEnable)
-dmacChCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+dmacChCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxCON")
 dmacChCount.setLabel("DMA (DMAC) Channels Count")
 dmacChCount.setDefaultValue(numDMAChans)
 dmacChCount.setVisible(False)
 
 dmacFileGen = coreComponent.createBooleanSymbol("DMAC_FILE_GEN", dmacEnable)
-dmacFileGen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+dmacFileGen.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxCON")
 dmacFileGen.setLabel("DMA (DMAC) File Generation")
 dmacFileGen.setVisible(False)
 dmacFileGen.setDependencies(onGlobalEnableLogic, ["DMA_ENABLE"])
 
 dmacHighestCh = coreComponent.createIntegerSymbol("DMAC_HIGHEST_CHANNEL", dmacEnable)
-dmacHighestCh.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+dmacHighestCh.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxCON")
 dmacHighestCh.setLabel("DMA (DMAC) Highest Active Channel")
 dmacHighestCh.setVisible(False)
 
@@ -612,60 +612,60 @@ for dmaChannel in range(0, numDMAChans):
     # DMA channel enable - menu item
     dmacChanEnSymId = "DMAC_CHAN" + str(dmaChannel) + "_ENBL"
     dmacChannelEnable = coreComponent.createBooleanSymbol(dmacChanEnSymId, dmacMenu)
-    dmacChannelEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    dmacChannelEnable.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DMACON")
     dmacChannelEnable.setLabel("Enable Channel " + str(dmaChannel) + " ?")
     dmacChannelIds.append(dmacChanEnSymId)
 
     # Enable interrupt
     dmacChanIntEnSymId = "DMAC_" + str(dmaChannel) + "_ENABLE_INTERRUPT"
     dmacChannelEnableInt = coreComponent.createBooleanSymbol(dmacChanIntEnSymId, dmacChannelEnable)
-    dmacChannelEnableInt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    dmacChannelEnableInt.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxINT")
     dmacChannelEnableInt.setLabel("Enable Interrupt")
     dmacChannelEnableInt.setDefaultValue(True)
 
     # DMA requestor source - menu item.  Name of particular interrupt for src.  SW trigger, or peripheral-triggered.
     dmacChanReqSymId = "DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE"
     symbol = coreComponent.createComboSymbol(dmacChanReqSymId, dmacChannelEnable, sorted(per_instance.keys()))
-    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxECON")
     symbol.setLabel("DMA requestor source")
     symbol.setDefaultValue("Software Trigger")
 
     # DMA manager will use LOCK symbol to lock the "DMAC_CHCTRLB_TRIGSRC_CH_ + str(dmaChannel)" symbol
     symbol = coreComponent.createBooleanSymbol("DMAC_REQUEST_" + str(dmaChannel) + "_PERID_LOCK", dmacChannelEnable)
-    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxECON")
     symbol.setLabel("Lock DMA Request")
     symbol.setVisible(False)
 
     # DMA channel priority
     dmacPrioritySymId = "DMAC_" + str(dmaChannel) + "_PRIORITY"
     symbol = coreComponent.createComboSymbol(dmacPrioritySymId, dmacChannelEnable, sorted(per_priority.keys()))
-    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxCON")
     symbol.setLabel(dmaValGrp_DCH0CON_CHPRI.getAttribute("caption"))
     symbol.setDefaultValue("CHPRI0")
 
     symbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_SOURCE_HALF_EMPTY_INT_ENABLE", dmacChannelEnable)
-    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxINT")
     symbol.setLabel("Source Half Empty Interrupt Enable")
     symbol.setDefaultValue(False)
 
     symbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_DESTINATION_HALF_FULL_INT_ENABLE", dmacChannelEnable)
-    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxINT")
     symbol.setLabel("Destination Half Full Interrupt Enable")
     symbol.setDefaultValue(False)
 
     symbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_ALWAYS_ENABLE", dmacChannelEnable)
-    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxCON")
     symbol.setLabel("Channel Always Enable")
     symbol.setDescription("Once enabled, channel is continuously enabled; and do not automatically disable after a block transfer is complete")
     symbol.setDefaultValue(False)
 
     chainSymbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_CHAIN_ENABLE", dmacChannelEnable)
-    chainSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    chainSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxCON")
     chainSymbol.setLabel("Chain Enable")
     chainSymbol.setDefaultValue(False)
 
     symbol = coreComponent.createKeyValueSetSymbol("DMAC_" + str(dmaChannel) + "_CHAIN_DIRECTION", chainSymbol)
-    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    symbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxCON")
     symbol.setLabel("Chain Direction")
     symbol.setDefaultValue(0)
     symbol.setOutputMode("Value")
@@ -673,7 +673,7 @@ for dmaChannel in range(0, numDMAChans):
     symbol.addKey("CHAIN_FROM_HIGHER_PRIORITY", "0x1", "This channel will be Chained from channel higher in natural priority (CH1 will be enabled by CH2 transfer complete)")
 
     chainSymbol = coreComponent.createBooleanSymbol("DMAC_" + str(dmaChannel) + "_EVENTS_WHEN_DISABLED", dmacChannelEnable)
-    chainSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    chainSymbol.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxCON")
     chainSymbol.setLabel("Allow Events When Channel is Disabled")
     chainSymbol.setDescription("Channel start/abort events will be registered, even if the channel is disabled")
     chainSymbol.setDefaultValue(False)
@@ -794,19 +794,19 @@ for per in per_instance.keys():
         name = name.replace('RX', 'Receive')
 
     dmacChannelNeeded = coreComponent.createBooleanSymbol("DMA_CH_NEEDED_FOR_" + str(name), dmacMenu)
-    dmacChannelNeeded.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    dmacChannelNeeded.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxCON")
     dmacChannelNeeded.setLabel("Local DMA_CH_NEEDED_FOR_" + str(name))
     dmacChannelNeeded.setVisible(False)
     peridValueListSymbols.append("DMA_CH_NEEDED_FOR_" + str(name))
 
     dmacChannel = coreComponent.createIntegerSymbol("DMA_CH_FOR_" + str(name), dmacMenu)
-    dmacChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+    dmacChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxCON")
     dmacChannel.setLabel("Local DMA_CH_FOR_" + str(name))
     dmacChannel.setDefaultValue(-1)
     dmacChannel.setVisible(False)
 
 dmacPERIDChannelUpdate = coreComponent.createBooleanSymbol("DMA_CHANNEL_ALLOC", dmacMenu)
-dmacPERIDChannelUpdate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:%NOREGISTER%")
+dmacPERIDChannelUpdate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dmac_01500;register:DCHxCON")
 dmacPERIDChannelUpdate.setLabel("Local dmacChannelAllocLogic")
 dmacPERIDChannelUpdate.setVisible(False)
 dmacPERIDChannelUpdate.setDependencies(dmacChannelAllocLogic, peridValueListSymbols)

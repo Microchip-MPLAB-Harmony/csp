@@ -264,7 +264,7 @@ def DMAInterruptConfig(coreComponent,dmaMenu):
             dmaVectorNameList.append(dmaVectorName)
 
     dmaNumIntPriorities = coreComponent.createIntegerSymbol("DMA_NUM_INT_PRIO", dmaMenu)
-    dmaNumIntPriorities.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:%NOREGISTER%")
+    dmaNumIntPriorities.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:CHINTEN")
     dmaNumIntPriorities.setLabel("Number of interrupt priorities")
     dmaNumIntPriorities.setDefaultValue(len(dmaVectorNameList))
     dmaNumIntPriorities.setVisible(False)
@@ -553,7 +553,7 @@ def DMA_ATDF_Read(coreComponent, dmaEnable):
 
     # DMA_CHANNEL_COUNT: Needed for DMA system service to generate channel enum
     dmaChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", dmaEnable)
-    dmaChCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:%NOREGISTER%")
+    dmaChCount.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:CHCTRLA")
     dmaChCount.setLabel("DMA (DMAC) Channels Count")
     dmaChCount.setDefaultValue(dmaChannelCount)
     dmaChCount.setVisible(False)
@@ -628,7 +628,7 @@ dmaMenu.setDescription("DMA (DMAC) Configuration")
 
 # DMA_IP: Needed to generate IP specific code in DMA System Service
 dmaPLIBIp = coreComponent.createStringSymbol("DMA_IP", dmaMenu)
-dmaPLIBIp.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:%NOREGISTER%")
+dmaPLIBIp.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:CHCTRLA")
 dmaPLIBIp.setLabel("DMA IP")
 dmaPLIBIp.setValue("dma_03639")
 dmaPLIBIp.setVisible(False)
@@ -642,12 +642,12 @@ dmaEnable.setDefaultValue(False)
 
 # Needed to generate Linked list APIs
 dmaChannelLinkedList = coreComponent.createBooleanSymbol("DMA_LL_ENABLE", dmaMenu)
-dmaChannelLinkedList.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:%NOREGISTER%")
+dmaChannelLinkedList.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:CHCTRLA")
 dmaChannelLinkedList.setLabel("Use Linked List Mode ?")
 
 # Needed for code generation
 dmaHighestCh = coreComponent.createIntegerSymbol("DMA_HIGHEST_CHANNEL", dmaEnable)
-dmaHighestCh.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:%NOREGISTER%")
+dmaHighestCh.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:CHCTRLA")
 dmaHighestCh.setLabel("DMA (DMAC) Highest Active Channel")
 dmaHighestCh.setVisible(False)
 
@@ -925,19 +925,19 @@ dmaSymbolsForDMASysService(coreComponent, dmaChannelEnable)
 # Interface for Peripheral clients
 for per in per_instance.keys():
     dmaChannelNeeded = coreComponent.createBooleanSymbol("DMA_CH_NEEDED_FOR_" + str(per), dmaMenu)
-    dmaChannelNeeded.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:%NOREGISTER%")
+    dmaChannelNeeded.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:CHEVCTRL")
     dmaChannelNeeded.setLabel("Local DMA_CH_NEEDED_FOR_" + str(per))
     dmaChannelNeeded.setVisible(False)
     peridValueListSymbols.append("DMA_CH_NEEDED_FOR_" + str(per))
 
     dmaChannel = coreComponent.createIntegerSymbol("DMA_CH_FOR_" + str(per), dmaMenu)
-    dmaChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:%NOREGISTER%")
+    dmaChannel.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:CHEVCTRL")
     dmaChannel.setLabel("Local DMA_CH_FOR_" + str(per))
     dmaChannel.setDefaultValue(-1)
     dmaChannel.setVisible(False)
 
 dmaPERIDChannelUpdate = coreComponent.createBooleanSymbol("DMA_CHANNEL_ALLOC", dmaChannelEnable)
-dmaPERIDChannelUpdate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:%NOREGISTER%")
+dmaPERIDChannelUpdate.setHelp("atmel;device:" + Variables.get("__PROCESSOR") + ";comp:dma_03639;register:CHEVCTRL")
 dmaPERIDChannelUpdate.setLabel("Local dmaChannelAllocLogic")
 dmaPERIDChannelUpdate.setVisible(False)
 dmaPERIDChannelUpdate.setDependencies(dmaChannelAllocLogic, peridValueListSymbols)
